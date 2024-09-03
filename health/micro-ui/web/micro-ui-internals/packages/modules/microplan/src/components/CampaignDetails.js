@@ -3,9 +3,9 @@ import { UploadIcon, FileIcon, DeleteIconv2, Toast, Card, Header, Loader } from 
 import { useTranslation } from "react-i18next";
 import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
 import { Button, CardText, Dropdown, ErrorMessage, PopUp, MultiSelectDropdown } from "@egovernments/digit-ui-components";
-
+import { useMyContext } from "../utils/context";
 const CampaignDetails = ({onSelect,props}) => {
-
+  const { dispatch,state } = useMyContext();
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getStateId();
   const [campaignType, setCampaignType] = useState(Digit.SessionStorage.get("microplanData")?.campaignDetails?.campaignType);
@@ -18,26 +18,14 @@ const CampaignDetails = ({onSelect,props}) => {
   );
   const [distributionStrat, setDistributionStrat] = useState(Digit.SessionStorage.get("microplanData")?.campaignDetails?.distributionStrat);
   const { isLoading, data } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }], {
-    select: (data) => {
-      let projectOptions = data?.["HCM-PROJECT-TYPES"]?.projectTypes;
-      projectOptions = Digit.Utils.microplan.filterUniqueByKey(projectOptions, "code").map((row) => {
-        return {
-          ...row,
-          i18nKey: Digit.Utils.locale.getTransformedLocale(`CAMPAIGN_TYPE_${row.code}`),
-        };
-      });
-      return {
-        campaignTypes: projectOptions,
-        diseases: [
-          {
-            code: "MALARIA",
-          },
-        ],
-        distributionStrategies: data?.["HCM-PROJECT-TYPES"]?.projectTypes?.[0]?.distributionStrategy,
-      };
-    },
-  });
+    select: function (params) {
+      debugger
+    }
+  },
+  {schemaCode:"ProjectType"}
+);
 
+debugger
   useEffect(() => {
     onSelect(props.name,{
       distributionStrat,disease,campaignType
