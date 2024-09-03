@@ -61,20 +61,6 @@ const Profile = ({ info, stateName, t }) => {
     </div>
   );
 };
-const PoweredBy = () => (
-  <div className="digit-footer" style={{ marginBottom: 0 }}>
-    <img
-      alt="Powered by DIGIT"
-      src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER")}
-      style={{ cursor: "pointer" }}
-      onClick={() => {
-        window
-          .open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank")
-          .focus();
-      }}
-    />{" "}
-  </div>
-);
 
 /* 
 Feature :: Citizen Webview sidebar
@@ -177,7 +163,6 @@ export const CitizenSideBar = ({
   };
 
   const handleModuleClick = (url) => { 
-    console.log(url,"url")
     url[0]==="/" ? 
       history.push(`/${window?.contextPath}/${isEmployee ? "employee" : "citizen"}${url}`) :
       history.push(`/${window?.contextPath}/${isEmployee ? "employee" : "citizen"}/${url}`);
@@ -264,7 +249,7 @@ export const CitizenSideBar = ({
           type: "link",
           text: t(`ACTION_TEST_${getSingleDisplayName}`),
           link: configEmployeeSideBar[keys[i]][0]?.navigationURL,
-          icon: configEmployeeSideBar[keys[i]][0]?.leftIcon?.split?.(":")[1],
+          icon: configEmployeeSideBar[keys[i]][0]?.leftIcon,
           populators: {
             onClick: () => {
               history.push(configEmployeeSideBar[keys[i]][0]?.navigationURL);
@@ -317,8 +302,6 @@ export const CitizenSideBar = ({
 
   const city =  t(`TENANT_TENANTS_${stringReplaceAll(Digit.SessionStorage.get("Employee.tenantId"), ".", "_")?.toUpperCase()}`)
   const onItemSelect = ({ item, index, parentIndex }) => {
-    console.log(item, index, parentIndex, "eeeeeeeeee");
-    console.log(index == "2","cseeeeeeeeeeeeeeeeeeee")
     if(item?.navigationURL){
       handleModuleClick(item?.navigationURL)
     }
@@ -344,38 +327,6 @@ export const CitizenSideBar = ({
     else{
       return ;
     }
-
-    // switch (index) {
-    //   case "0-0":
-        // handleChangeCity(item);
-        // toggleSidebar();
-        // break;
-    //   case "1-0":
-    //   case "1-1":
-    //   case "1-2":
-        // handleChangeLanguage(item);
-        // toggleSidebar();
-        // break;
-    //   debugger
-    //   case 2:
-        // userProfile();
-        // toggleSidebar();
-        // break;
-    //   case "3-0":
-    //   case "3-1":
-    //   case "3-2":
-    //   case "3-3":
-    //   case "3-4":
-    //   case "3-5":
-    //   case "3-6":
-    //   case "3-7":
-    //   case "3-8":
-    //   case "3-9":
-    //     handleModuleClick(item);
-    //     break;
-    //   default:
-    //     null;
-    // }
   };
 
   const transformedMenuItems = menuItems.map((item) => {
@@ -385,7 +336,7 @@ export const CitizenSideBar = ({
         children: item.links.map((link) => ({
           ...link,
           label: link?.displayName,
-          icon: link.leftIcon?.split?.(":")[1],
+          icon: link.leftIcon,
         })),
       };
     } else {

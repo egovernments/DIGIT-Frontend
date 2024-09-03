@@ -14,7 +14,7 @@ const EmployeeSideBar = () => {
     for (const key in data) {
       const item = data[key];
       if (key === "item" && item?.leftIcon !== "") {
-        return item?.leftIcon?.split(":")?.[1];
+        return item?.leftIcon;
       }
       if (typeof data[key] === "object" && !Array.isArray(data[key])) {
         const subResult = extractLeftIcon(data[key]);
@@ -101,39 +101,20 @@ const EmployeeSideBar = () => {
     }
   };
 
-  const IconsObject = {
-    home: "Home",
-    announcement: "ComplaintIcon",
-    business: "BPAHomeIcon",
-    store: "PropertyHouse",
-    assignment: "CaseIcon",
-    receipt: "ReceiptIcon",
-    "business-center": "PersonIcon",
-    description: "DocumentIconSolid",
-    "water-tap": "DropIcon",
-    "collections-bookmark": "CollectionsBookmarIcons",
-    "insert-chart": "FinanceChartIcon",
-    edcr: "CollectionIcon",
-    collections: "CollectionIcon",
-  };
-
   function transformData(data) {
     const transformItem = (key, value) => {
       if (value.item) {
-        const iconKey = value.item.leftIcon?.split?.(":")[1];
-        const iconValue = IconsObject[iconKey] || iconKey;
         return {
           label: value.item.displayName,
-          icon: { icon: iconValue, width: "1.5rem", height: "1.5rem" },
+          icon: { icon: value.item.leftIcon, width: "1.5rem", height: "1.5rem" },
           navigationUrl: value.item.navigationURL,
         };
       }
       const children = Object.keys(value).map((childKey) => transformItem(childKey, value[childKey]));
       const iconKey = extractLeftIcon(value);
-      const iconValue = IconsObject[iconKey] || iconKey;
       return {
         label: key,
-        icon: { icon: iconValue, width: "1.5rem", height: "1.5rem" },
+        icon: { icon: iconKey, width: "1.5rem", height: "1.5rem" },
         children: children,
       };
     };

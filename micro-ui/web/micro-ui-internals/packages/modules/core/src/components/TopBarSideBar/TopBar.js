@@ -118,9 +118,7 @@ const TopBar = ({
   return (
     <TopBarComponentMain
       actionFields={[
-        !window.location.href.includes("employee/user/login") && !window.location.href.includes("employee/user/language-selection") && (
-          <ChangeCity dropdown={true} t={t} />
-        ),
+        <ChangeCity dropdown={true} t={t} />,
         showLanguageChange && <ChangeLanguage dropdown={true} />,
         userDetails?.access_token && (
           <Dropdown
