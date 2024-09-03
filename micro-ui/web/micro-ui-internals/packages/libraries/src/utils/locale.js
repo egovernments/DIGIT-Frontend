@@ -88,8 +88,9 @@ export const convertToLocaleData = (dropdownValues = [], key = "", t) => {
  */
 export const getTransformedLocale = (label) => {
   if (typeof label === "number") return label;
-  label = label?.trim();
-  return label && label.toUpperCase().replace(/[.:-\s\/]/g, "_");
+  if (typeof label != "string") return "NA";
+  label = label.trim();
+  return label.toUpperCase().replace(/[.:-\s\/]/g, "_");
 };
 
 /**
