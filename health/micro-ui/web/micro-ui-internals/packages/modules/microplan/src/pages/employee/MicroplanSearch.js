@@ -1,14 +1,13 @@
 import { Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { TabSearchconfig} from '../../configs/MicroplanSearchConfig'
+import { TabSearchconfig } from '../../configs/MicroplanSearchConfig'
 
 
 
 const defaultSearchValues = {
   individualName: "",
-  mobileNumber: "",
-  IndividualID: "",
+
 };
 
 const MicroplanSearch = () => {
@@ -28,10 +27,14 @@ const MicroplanSearch = () => {
     debugger
     setTabData((prev) => prev.map((i, c) => ({ ...i, active: c === n ? true : false }))); //setting tab enable which is being clicked
     setConfig(TabSearchconfig?.TabSearchconfig?.[n]);// as per tab number filtering the config
+    const url = new URL(window.location.href);
+    url.searchParams.set("tabId", `${n}`);
+    window.history.replaceState({}, "", url);
+
   };
   return (
     <React.Fragment>
-  
+
       <Header styles={{ fontSize: "32px" }}>{t(config?.label)}</Header>
       <div className="inbox-search-wrapper">
         {/* Pass defaultValues as props to InboxSearchComposer */}
@@ -40,7 +43,7 @@ const MicroplanSearch = () => {
           defaultValues={defaultValues}
           showTab={true}
           tabData={tabData}
-          onTabChange={onTabChange}
+          onTabChange={onTabChange} //!activated ion tabChange
         ></InboxSearchComposer>
       </div>
     </React.Fragment>

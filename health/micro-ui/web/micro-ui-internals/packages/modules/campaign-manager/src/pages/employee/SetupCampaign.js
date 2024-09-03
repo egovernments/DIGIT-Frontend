@@ -229,9 +229,9 @@ function groupByTypeRemap(data) {
 function updateUrlParams(params) {
   const url = new URL(window.location.href);
   Object.entries(params).forEach(([key, value]) => {
-    url.searchParams.set(key, value);
+    url.searchParams.set(key, value);         // Modifying the query params
   });
-  window.history.replaceState({}, "", url);
+  window.history.replaceState({}, "", url);   // modify current history without creating a new one
 }
 
 const SetupCampaign = ({ hierarchyType }) => {

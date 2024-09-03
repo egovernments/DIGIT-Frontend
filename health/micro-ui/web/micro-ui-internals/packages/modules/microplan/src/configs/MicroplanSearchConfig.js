@@ -80,8 +80,9 @@ const defaultSearchValues = {
             uiConfig: {
               columns: [
                 {
-                  label: "Name of the Microplan ",
+                  label: "Name of the Microplan",
                   jsonPath: "data.name",
+                  additionalCustomization:true
                 },
   
                 {

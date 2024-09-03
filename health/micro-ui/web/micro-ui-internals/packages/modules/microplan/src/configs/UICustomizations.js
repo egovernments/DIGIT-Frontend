@@ -187,6 +187,31 @@ export const UICustomizations = {
         );
       }
 
+      if(key==="Name of the Microplan"){
+        if (value && value !== "NA"){
+          
+        return(
+          <div 
+          style={{
+            maxWidth: '15rem', // Set the desired maximum width
+            wordWrap: 'break-word', // Allows breaking within words
+            whiteSpace: 'normal', // Ensures text wraps normally
+            overflowWrap: 'break-word' // Break long words at the edge
+          }}
+        >
+          <p>{value}</p>
+        </div>
+        )
+      }else{
+        return(
+          <div>
+            <p>NA</p>
+          </div>
+        )
+      }
+
+      }
+
     },
   },
 
