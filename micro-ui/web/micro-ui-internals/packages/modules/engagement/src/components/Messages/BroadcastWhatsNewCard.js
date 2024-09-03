@@ -55,7 +55,9 @@ const BroadcastWhatsNewCard = ({ header, actions, eventNotificationText, timePas
   const uploadedDocuments = props.eventDetails.documents;
   const getTransformedLocale = (label) => {
     if (typeof label === "number") return label;
-    return label && label.toUpperCase().replace(/[.:-\s\/]/g, "_");
+    if (typeof label != "string") return "NA";
+    label = label.trim();
+    return label.toUpperCase().replace(/[.:-\s\/]/g, "_");
   };
 
   return (
