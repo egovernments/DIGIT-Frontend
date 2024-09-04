@@ -216,7 +216,7 @@ function CustomFieldTemplate(props) {
           {/* <span >{label}</span> */}
           <span className={`tooltip`}>
             {t(titleCode)} {additionalCode}
-            <span className="tooltiptext">
+            <span className="tooltiptext" style={{maxWidth:"540px"}}>
               <span className="tooltiptextvalue">{t(`TIP_${titleCode}`)}</span>
             </span>
           </span>

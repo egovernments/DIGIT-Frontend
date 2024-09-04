@@ -133,11 +133,32 @@ const MDMSEdit = ({...props}) => {
 
   }
 
+  const convertEpochToDate = (dateEpoch) => {
+    if (dateEpoch == null || dateEpoch == undefined || dateEpoch == "") {
+      return "NA";
+    }
+    const dateFromApi = new Date(dateEpoch);
+    let month = dateFromApi.getUTCMonth() + 1;
+    let day = dateFromApi.getUTCDate();
+    let year = dateFromApi.getUTCFullYear();
+    month = (month > 9 ? "" : "0") + month;
+    day = (day > 9 ? "" : "0") + day;
+    return `${day}/${month}/${year}`;
+  };
+
+
+  const formattedData = data?.data
+  ? {
+      ...data?.data,
+      validFrom: convertEpochToDate(Number(data?.data?.validFrom)),
+    }
+  : null;
+
   if(isLoading || isLoadingSchema || renderLoader ) return <Loader />
   
   return (
     <React.Fragment>
-      <MDMSAdd defaultFormData = {data?.data} screenType={"edit"} onSubmitEditAction={handleUpdate} updatesToUISchema ={schemaData?.updatesToUiSchema} />
+      <MDMSAdd defaultFormData = {formattedData} screenType={"edit"} onSubmitEditAction={handleUpdate} updatesToUISchema ={schemaData?.updatesToUiSchema} />
       {showToast && <Toast label={t(showToast.label)} error={showToast?.isError} onClose={()=>setShowToast(null)} ></Toast>}
     </React.Fragment>
   )

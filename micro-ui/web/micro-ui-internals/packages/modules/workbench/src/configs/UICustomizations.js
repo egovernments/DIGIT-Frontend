@@ -17,6 +17,19 @@ const inboxModuleNameMap = {
   "muster-roll-approval": "muster-roll-service",
 };
 
+const convertEpochToDate = (dateEpoch) => {
+  if (dateEpoch == null || dateEpoch == undefined || dateEpoch == "") {
+    return "NA";
+  }
+  const dateFromApi = new Date(dateEpoch);
+  let month = dateFromApi.getUTCMonth() + 1;
+  let day = dateFromApi.getUTCDate();
+  let year = dateFromApi.getUTCFullYear();
+  month = (month > 9 ? "" : "0") + month;
+  day = (day > 9 ? "" : "0") + day;
+  return `${day}/${month}/${year}`;
+};
+
 export const UICustomizations = {
   businessServiceMap,
   updatePayload: (applicationDetails, data, action, businessService) => {
@@ -458,6 +471,11 @@ export const UICustomizations = {
       //like if a cell is link then we return link
       //first we can identify which column it belongs to then we can return relevant result
       switch (key) {
+        case "WORKS_SOR_RATES_VALIDFROM":
+        case "WORKS_SOR_COMPOSITION_EFFECTIVEFROM":
+        case "WORKS_SOR_RATES_VALIDTO":
+        case "WORKS_SOR_COMPOSITION_TO":
+          return value ? convertEpochToDate(Number(value)) : t("ES_COMMON_NA");
         case "WBH_UNIQUE_IDENTIFIER":
           const [moduleName, masterName] = row.schemaCode.split(".");
           return (

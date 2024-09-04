@@ -111,7 +111,11 @@ const MDMSSearchv2 = () => {
           });
         }
       });
-      dropDownOptions = dropDownOptions?.length > 0 && Digit?.Customizations?.["commonUiConfig"]?.["SearchMDMSv2Config"]?.[schemaCodeToValidate]?.sortValidDatesFirst(dropDownOptions) ? Digit?.Customizations?.["commonUiConfig"]?.["SearchMDMSv2Config"]?.[schemaCodeToValidate]?.sortValidDatesFirst(dropDownOptions) : dropDownOptions;
+      dropDownOptions =
+        dropDownOptions?.length > 0 &&
+        Digit?.Customizations?.["commonUiConfig"]?.["SearchMDMSv2Config"]?.[schemaCodeToValidate]?.sortValidDatesFirst(dropDownOptions)
+          ? Digit?.Customizations?.["commonUiConfig"]?.["SearchMDMSv2Config"]?.[schemaCodeToValidate]?.sortValidDatesFirst(dropDownOptions)
+          : dropDownOptions;
       
       Config.sections.search.uiConfig.fields[0].populators.options = dropDownOptions;
       Config.actionLink=Config.actionLink+`?moduleName=${masterName?.name}&masterName=${moduleName?.name}`;
@@ -141,7 +145,8 @@ const MDMSSearchv2 = () => {
           label:option.i18nKey,
           i18nKey:option.i18nKey,
           jsonPath:`data.${option.code}`,
-          dontShowNA:true
+          dontShowNA:true,
+          additionalCustomization:(option?.name === 'validFrom' || option?.name === 'validTo' || option?.name ==="effectiveFrom" || option?.name === "effectiveTo") ? true : false
         }
       }),{
         label:"WBH_ISACTIVE",
