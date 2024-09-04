@@ -14,20 +14,58 @@ export const CreateComplaint = ({ parentUrl }) => {
 
   const getCities = () => cities?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
 
+  const requestCriteria = {
+    url: "/tenant-management/tenant/_search",
+    params: {
+      code: Digit.ULBService.getCurrentTenantId(),
+      includeSubTenants: true
+    },
+    body: {
+      "inbox": {
+        "limit": 10,
+        "offset": 0
+      },
+      apiOperation: "SEARCH",
+    },
+    config: {
+      select: (data) => {
+        return data?.Tenants;
+      },
+    },
+  };
+
+  const { data: subTenants, refetch,isLoading:isLoadingSubTenants } = Digit.Hooks.useCustomAPIHook(requestCriteria);
+  const getSubTenants = () => subTenants?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
+
   const [complaintType, setComplaintType] = useState({});
   const [subTypeMenu, setSubTypeMenu] = useState([]);
   const [subType, setSubType] = useState({});
   const [pincode, setPincode] = useState("");
-  const [selectedCity, setSelectedCity] = useState(getCities()[0] ? getCities()[0] : null);
+  const [selectedCity, setSelectedCity] = useState(
+    window.globalPath === "sandbox-ui"
+      ? getSubTenants()[0] || null
+      : getCities()[0] || null
+  );
+
+  const cityData = window.globalPath === "sandbox-ui" ? getSubTenants() : getCities();
 
   const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
-    getCities()[0]?.code,
-    "admin",
-    {
-      enabled: !!getCities()[0],
-    },
-    t
-  );
+  cityData[0]?.code,
+  "REVENUE",
+  {
+    enabled: !!cityData[0],
+  },
+  t
+);
+
+  // const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
+  //   getCities()[0]?.code,
+  //   "admin",
+  //   {
+  //     enabled: !!getCities()[0],
+  //   },
+  //   t
+  // );
 
   const [localities, setLocalities] = useState(fetchedLocalities);
   const [selectedLocality, setSelectedLocality] = useState(null);
@@ -56,6 +94,7 @@ export const CreateComplaint = ({ parentUrl }) => {
     setLocalities(fetchedLocalities);
   }, [fetchedLocalities]);
 
+  if(window.globalPath !== "sandbox-ui"){
   useEffect(() => {
     const city = cities.find((obj) => obj.pincode?.find((item) => item == pincode));
     if (city?.code&&city?.code === getCities()[0]?.code) {
@@ -72,6 +111,7 @@ export const CreateComplaint = ({ parentUrl }) => {
       setPincodeNotValid(true);
     }
   }, [pincode]);
+}
 
   async function selectedType(value) {
     if (value.key !== complaintType.key) {
@@ -111,9 +151,17 @@ export const CreateComplaint = ({ parentUrl }) => {
   const onSubmit = async (data) => {
     if (!canSubmit) return;
     const cityCode = selectedCity.code;
-    const city = selectedCity.city.name;
-    const district = selectedCity.city.name;
-    const region = selectedCity.city.name;
+    const city = window.globalPath === "sandbox-ui"
+    ? selectedCity.name
+    : selectedCity.city.name;
+  
+  const district = window.globalPath === "sandbox-ui"
+    ? selectedCity.name
+    : selectedCity.city.name;
+  
+  const region = window.globalPath === "sandbox-ui"
+    ? selectedCity.name
+    : selectedCity.city.name;
     const localityCode = selectedLocality.code;
     const localityName = selectedLocality.name;
     const landmark = data.landmark;
@@ -210,10 +258,12 @@ export const CreateComplaint = ({ parentUrl }) => {
               isMandatory
               selected={selectedCity}
               freeze={true}
-              option={getCities()}
+              option={
+                window.globalPath === "sandbox-ui" ? getSubTenants() : getCities()
+              }
               id="city"
               select={selectCity}
-              optionKey="i18nKey"
+              optionKey={window.globalPath === "sandbox-ui" ? "name" : "i18nKey"}
               t={t}
             />
           ),

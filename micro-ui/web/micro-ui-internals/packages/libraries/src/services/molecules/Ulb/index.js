@@ -56,7 +56,9 @@ export const ULBService = {
     const pathname = window.location.pathname;
     const context = window?.globalConfigs?.getConfig("CONTEXT_PATH");
     const start = pathname.indexOf(context) + context.length + 1;
-    const end = pathname.indexOf("employee");
+    const employeeIndex = pathname.indexOf("employee");
+    const citizenIndex = pathname.indexOf("citizen");
+    const end = (employeeIndex !== -1) ? employeeIndex : (citizenIndex !== -1) ? citizenIndex : -1;
     const tenant = end > start ? pathname.substring(start, end).replace(/\/$/, "") : "";
 
     return isMultiRootTenant && tenant ? tenant : window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
