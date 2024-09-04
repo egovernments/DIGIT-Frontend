@@ -146,7 +146,7 @@ const MDMSSearchv2 = () => {
           i18nKey:option.i18nKey,
           jsonPath:`data.${option.code}`,
           dontShowNA:true,
-          additionalCustomization:(option?.name === 'validFrom' || option?.name === 'validTo' || option?.name ==="effectiveFrom" || option?.name === "effectiveTo") ? true : false
+          additionalCustomization: currentSchema?.definition?.["x-ui-schema"]?.[option?.name]?.formatType === "EPOC" ? true : false
         }
       }),{
         label:"WBH_ISACTIVE",
