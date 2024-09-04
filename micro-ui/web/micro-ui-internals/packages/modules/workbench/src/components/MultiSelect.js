@@ -92,6 +92,27 @@ const CustomSelectWidget = (props) => {
   const [isSelect, setIsSelect] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [isSeeAll, setIsSeeAll] = useState(false);  
+
+  const fetchDetailsForSelectedOption = async (value) => {
+    const response = await fetch(`/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      params:{},
+      body: JSON.stringify({
+        MdmsCriteria: {
+          tenantId,
+          schemaCode,
+          filters: { "id": value },
+        },
+      }),
+    });
+    const result = await response.json();
+    setSelectedDetails([result?.mdms?.[0]]);
+    setShowDetails([result?.mdms?.[0]]);
+  };
+
   const handleSeeAll = () => {
     setShowModal(true);
   };
@@ -136,7 +157,9 @@ const CustomSelectWidget = (props) => {
   if (value && value !== "") {
     const existingOption = formattedOptions.find((option) => option.value === value);
     if (!existingOption) {
-      newFormattedOptions2.push({ value, label: `${schemaCode}_${value}` });
+      const formattedLabel = `${schemaCode}_${value}`.replace(/[-.]/g, '_');
+      newFormattedOptions2.push({ value, label: formattedLabel });
+      fetchDetailsForSelectedOption(value);
     }
   }
   setFormattedOptions2(newFormattedOptions2);
