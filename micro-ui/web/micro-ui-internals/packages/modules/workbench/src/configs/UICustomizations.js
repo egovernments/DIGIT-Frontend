@@ -474,7 +474,7 @@ export const UICustomizations = {
         case "WORKS_SOR_RATES_VALIDFROM":
         case "WORKS_SOR_COMPOSITION_EFFECTIVEFROM":
         case "WORKS_SOR_RATES_VALIDTO":
-        case "WORKS_SOR_COMPOSITION_TO":
+        case "WORKS_SOR_COMPOSITION_EFFECTIVETO":
           return value ? convertEpochToDate(Number(value)) : t("ES_COMMON_NA");
         case "WBH_UNIQUE_IDENTIFIER":
           const [moduleName, masterName] = row.schemaCode.split(".");
