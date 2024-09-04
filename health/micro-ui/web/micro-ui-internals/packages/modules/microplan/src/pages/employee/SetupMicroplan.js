@@ -58,7 +58,6 @@ const SetupMicroplan = () => {
     setMicroplanConfig(MicroplanConfig(totalFormData, null, isSubmitting));
   }, [totalFormData, isSubmitting]);
 
-  const config = filteredConfig?.[0];
 
   // setting the current step when the key is changed on the basis of the config
   useEffect(() => {
@@ -72,6 +71,7 @@ const SetupMicroplan = () => {
     // setSummaryErrors(null);
   }, [currentKey]);
 
+  //sync session with state
   useEffect(() => {
     setTotalFormData(params);
   }, [params]);
@@ -134,7 +134,7 @@ const SetupMicroplan = () => {
           activeSteps={active}
         />
       <FormComposerV2
-        config={config?.form.map((config) => {
+        config={filteredConfig?.[0]?.form.map((config) => {
           return {
             ...config,
             body: config?.body.filter((a) => !a.hideInEmployee),
