@@ -15,7 +15,7 @@ const useModuleTenants = (module, config = {}) => {
           ddrKey: t(
             `DDR_${data.tenants
               .filter((t) => t.code === tenant.code)?.[0]
-              .city?.districtTenantCode?.toUpperCase?.()
+              ?.city?.districtTenantCode?.toUpperCase?.()
               .replace(".", "_")}`
           ),
         }))
@@ -28,7 +28,7 @@ const useModuleTenants = (module, config = {}) => {
           ddrKey: t(
             `DDR_${data.tenants
               .filter((t) => t.code === tenant.code)?.[0]
-              .city?.districtTenantCode?.toUpperCase?.()
+              ?.city?.districtTenantCode?.toUpperCase?.()
               .replace(".", "_")}`
           ),
         })),
