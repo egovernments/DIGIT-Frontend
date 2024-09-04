@@ -35,7 +35,13 @@ config:
     build:
       - work-dir: micro-ui/
         dockerfile: micro-ui/web/sandbox/Dockerfile
-        image-name: sandbox-ui      
+        image-name: sandbox-ui   
+
+  - name: builds/Digit-Frontend/karnataka-ui
+    build:
+      - work-dir: micro-ui/
+        dockerfile: micro-ui/web/docker/Dockerfile
+        image-name: karnataka-ui   
 
   - name: builds/Digit-Frontend/microplan-ui
     build:
