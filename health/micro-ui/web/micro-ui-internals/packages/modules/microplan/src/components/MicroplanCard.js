@@ -14,11 +14,11 @@ const MicroplanCard = () => {
     return {
       label: t(labelKey),
       link: `/${window?.contextPath}/employee/microplan/${pathSuffix}`,
-      roles: ROLES.MICROPLAN,
+      roles: ROLES.MICROPLAN,   //!only if the user has this role the link will be visible
     };
   };
 
-  let links = [generateLink("SETUP_MICROLAN","setup-microplan")];
+  let links = [generateLink("SETUP_MICROCLAN","setup-microplan"),generateLink("SEARCH_MICROPLANS","microplan-search")];
 
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));
 

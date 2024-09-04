@@ -16,23 +16,17 @@ const defaultSearchValues = {
         label: "My microplans",
         type: "search",
         apiDetails: {
-          serviceName: "/mdms-v2/v2/_search",
-          requestParam: {
-              "tenantId":Digit.ULBService.getCurrentTenantId()
-          },
-          requestBody: {
-            apiOperation: "SEARCH",
-            MdmsCriteria: {
-              
-            },
-          },
+          serviceName: "/plan-service/config/_search", //! Note
+          requestParam: {},
+          requestBody: {},
          masterName: "commonUiConfig",
           moduleName: "MicroplanSearchConfig",
           minParametersForSearchForm: 0,
-          tableFormJsonPath: "requestParam",
-          filterFormJsonPath: "requestBody.MdmsCriteria.customs",
-          searchFormJsonPath: "requestBody.MdmsCriteria.customs",
+          tableFormJsonPath: "requestBody.PlanConfigurationSearchCriteria.pagination",
+          // filterFormJsonPath: "requestBody.MdmsCriteria.customs",
+          searchFormJsonPath: "requestBody.PlanConfigurationSearchCriteria",
         },
+
         sections: {
           search: {
             uiConfig: {
@@ -81,39 +75,43 @@ const defaultSearchValues = {
               columns: [
                 {
                   label: "Name of the Microplan",
-                  jsonPath: "data.name",
+                  jsonPath: "name",
                   additionalCustomization:true
                 },
   
                 {
                   label: "Microplan Status",
-                  jsonPath: "data.description",
+                  jsonPath: "status",
                 },
                 {
                   label: "Campaign Disease",
-                  jsonPath: "data.executingDepartment",
+                  jsonPath:  "CampaignDetails.campaignName",
                 },
                 {
                   label:"Camapaign Type",
-                  jsonPath:"data.wfStatus"
+                  jsonPath:"CampaignDetails.startDate"
                 },
-                {
-                  label:"Distribution Strategy",
-                  jsonPath:" proposalDate"
-                },
+                // {
+                //   label:"Distribution Strategy",
+                //   jsonPath:" proposalDate"
+                // },
                 {
                   label:"Actions",
-                  jsonPath:"data.status",
+                  jsonPath:"",
                   additionalCustomization:true
                 }
               ],
+              resultsJsonPath: "PlanConfiguration",
   
               enableColumnSort: true,
-              resultsJsonPath: "mdms",
+              // resultsJsonPath: "mdms",
             },
             show: true,
           },
+         // customHookName: "microplanv1.useSavedMicroplans",  //! Note
+          
         },
+        customHookName:"microplanv1.useSavedMicroplans"
       },
       {
         label: "My microplans 1",
@@ -215,6 +213,8 @@ const defaultSearchValues = {
             },
             show: true,
           },
+          customHookName: "microplanv1.useSavedMicroplans",  //! Note
+
         },
       },
       {
@@ -321,3 +321,4 @@ const defaultSearchValues = {
     ],
   };
   
+

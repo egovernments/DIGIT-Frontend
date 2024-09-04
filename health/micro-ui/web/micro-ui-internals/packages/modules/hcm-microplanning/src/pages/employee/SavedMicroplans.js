@@ -19,6 +19,7 @@ const configs = {
     tableFormJsonPath: "requestBody.PlanConfigurationSearchCriteria.pagination",
     searchFormJsonPath: "requestBody.PlanConfigurationSearchCriteria",
   },
+  
   sections: {
     search: {
       uiConfig: {

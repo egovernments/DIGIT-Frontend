@@ -16,6 +16,27 @@ const businessServiceMap = {};
 
 const inboxModuleNameMap = {};
 
+function cleanObject(obj) {
+  for (const key in obj) {
+    if (Object.hasOwn(obj, key)) {
+      if (Array.isArray(obj[key])) {
+        if (obj[key].length === 0) {
+          delete obj[key];
+        }
+      } else if (
+        obj[key] === undefined ||
+        obj[key] === null ||
+        obj[key] === false ||
+        obj[key] === "" || // Check for empty string
+        (typeof obj[key] === "object" && Object.keys(obj[key]).length === 0)
+      ) {
+        delete obj[key];
+      }
+    }
+  }
+  return obj;
+}
+
 export const UICustomizations = {
   SearchPucarConfig: {
     customValidationCheck: (data) => {
@@ -152,22 +173,21 @@ export const UICustomizations = {
 
 
   MicroplanSearchConfig: {
-    preProcess: (data) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
-      data.body.MdmsCriteria.tenantId = tenantId;
+    preProcess: (data, additionalDetails) => {
+      const { name, status } = data?.state?.searchForm || {};
 
-      const filters = {};
-      const custom = data.body.MdmsCriteria.customs;
-
-      const { field, value } = custom || {};
-      if (field && field.name && value) {
-        filters[field.name] = value;
-      }
-
-      data.body.MdmsCriteria.filters = filters;
-      delete data.body.customs;
+      data.body.PlanConfigurationSearchCriteria = {};
+      data.body.PlanConfigurationSearchCriteria.limit = data?.state?.tableForm?.limit;
+      // data.body.PlanConfigurationSearchCriteria.limit = 10
+      data.body.PlanConfigurationSearchCriteria.offset = data?.state?.tableForm?.offset;
+      data.body.PlanConfigurationSearchCriteria.name = name;
+      data.body.PlanConfigurationSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
+      data.body.PlanConfigurationSearchCriteria.userUuid = Digit.UserService.getUser().info.uuid;
+      // delete data.body.PlanConfigurationSearchCriteria.pagination
+      data.body.PlanConfigurationSearchCriteria.status = status?.status;
+      cleanObject(data.body.PlanConfigurationSearchCriteria);
+      // debugger;
       return data;
-
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       if(key==="Actions"){

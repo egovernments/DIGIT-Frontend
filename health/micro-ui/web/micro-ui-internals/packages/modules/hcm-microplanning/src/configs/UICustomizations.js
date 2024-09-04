@@ -272,6 +272,7 @@ export const UICustomizations = {
       data.body.CampaignDetails.projectType = projectType?.[0]?.code;
 
       cleanObject(data.body.CampaignDetails);
+      debugger;
 
       return data;
     },
@@ -342,6 +343,7 @@ export const UICustomizations = {
       // delete data.body.PlanConfigurationSearchCriteria.pagination
       data.body.PlanConfigurationSearchCriteria.status = status?.status;
       cleanObject(data.body.PlanConfigurationSearchCriteria);
+      // debugger;
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
