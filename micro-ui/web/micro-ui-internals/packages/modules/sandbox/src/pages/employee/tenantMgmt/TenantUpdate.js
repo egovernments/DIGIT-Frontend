@@ -65,7 +65,7 @@ const TenantUpdate = () => {
             setShowToast({ key: "success", label: t("SANDBOX_TENANT_UPDATE_SUCCESS_TOAST") });
             setTimeout(() => {
               closeToast();
-              history.push(`/${window?.contextPath}/employee/sandbox/tenant-management/_search`);
+              history.push(`/${window?.contextPath}/employee/sandbox/tenant-management/search`);
             }, 3000);
           },
         }
