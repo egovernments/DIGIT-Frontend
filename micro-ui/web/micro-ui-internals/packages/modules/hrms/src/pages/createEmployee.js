@@ -139,8 +139,6 @@ const CreateEmployee = () => {
 
 
   const onSubmit = (data) => {
-    // data.Jurisdictions?.
-    console.log("SKSKSKS", data)
     if (data.Jurisdictions.filter(juris => juris.tenantId == "pg.citya").length == 0) {
       setShowToast({ key: true, label: "ERR_BASE_TENANT_MANDATORY" });
       return;

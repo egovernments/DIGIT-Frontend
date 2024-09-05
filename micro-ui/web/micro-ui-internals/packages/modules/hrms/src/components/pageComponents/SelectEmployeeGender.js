@@ -47,7 +47,7 @@ const SelectEmployeeGender = ({ t, config, onSelect, formData = {}, userType, re
             <div className="field">
               <RadioButtons
                 style={{ display: "flex", justifyContent: "space-between" }}
-                options={[
+               /* options={[
                   {
                     code: "MALE",
                     name: "COMMON_GENDER_MALE",
@@ -60,8 +60,8 @@ const SelectEmployeeGender = ({ t, config, onSelect, formData = {}, userType, re
                     code: "TRANSGENDER",
                     name: "COMMON_GENDER_TRANSGENDER",
                   },
-                ]}
-                /*options={HRMenu} */
+                ]} */
+                options={HRMenu}
                 key={input.name}
                 optionsKey="name"
                 selectedOption={formData && formData[config.key] ? formData[config.key][input.name] : null}
