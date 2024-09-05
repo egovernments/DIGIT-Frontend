@@ -21,7 +21,7 @@ export const AppModules = ({ stateCode, userType, modules, appTenants, additiona
     return <Redirect to={{ pathname: `/${window?.contextPath}/employee/user/login`, state: { from: location.pathname + location.search } }} />;
   }
 
-  const appRoutes = modules.map(({ code, tenants }, index) => {
+  const appRoutes = modules?.map(({ code, tenants }, index) => {
     const Module = Digit.ComponentRegistryService.getComponent(`${code}Module`);
     return Module ? (
       <Route key={index} path={`${path}/${code.toLowerCase()}`}>

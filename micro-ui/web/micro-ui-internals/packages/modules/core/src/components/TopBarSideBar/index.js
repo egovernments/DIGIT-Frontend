@@ -72,6 +72,7 @@ const TopBarSideBar = ({
           mobileView={mobileView}
           userDetails={userDetails}
           linkData={linkData}
+          userProfile={userProfile}
           islinkDataLoading={islinkDataLoading}
         />
       )}

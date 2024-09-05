@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.8.2-beta.20]
+- Updated topbar,breadcrumb,actionbar,toast,sidebar css.
+
 ## [1.8.2-beta.9]
 - Updated LanguageSelection Style.
 

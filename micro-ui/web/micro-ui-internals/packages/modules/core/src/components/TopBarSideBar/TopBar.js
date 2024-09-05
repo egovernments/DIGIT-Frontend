@@ -1,15 +1,11 @@
 import { Hamburger, TopBar as TopBarComponent } from "@egovernments/digit-ui-react-components";
 import { Dropdown } from "@egovernments/digit-ui-components";
-import React from "react";
+import React,{Fragment} from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import ChangeCity from "../ChangeCity";
 import ChangeLanguage from "../ChangeLanguage";
+import {TopBar as TopBarComponentMain } from "@egovernments/digit-ui-components";
 
-const TextToImg = (props) => (
-  <span className="user-img-txt" onClick={props.toggleMenu} title={props.name}>
-    {props?.name?.[0]?.toUpperCase()}
-  </span>
-);
 const TopBar = ({
   t,
   stateInfo,
@@ -120,57 +116,53 @@ const TopBar = ({
       loggedin}} />
   }
   return (
-    <div className="topbar">
-      <div className="digit-hamburger-class">{<Hamburger  handleClick={toggleSidebar} color="#9E9E9E" />}</div>
-      <img className="city" src={loggedin ? cityDetails?.logoId : stateInfo?.statelogo} />
-      <span className="digit-topbar-container">
-        {loggedin &&
-          (cityDetails?.city?.ulbGrade ? (
-            <p className="ulb">
+    <TopBarComponentMain
+      actionFields={[
+        <ChangeCity dropdown={true} t={t} />,
+        showLanguageChange && <ChangeLanguage dropdown={true} />,
+        userDetails?.access_token && (
+          <Dropdown
+            option={userOptions}
+            optionKey="name"
+            profilePic={profilePic ? profilePic : userDetails?.info?.name || userDetails?.info?.userInfo?.name || "Employee"}
+            select={handleUserDropdownSelection}
+            showArrow={true}
+            menuStyles={{ marginTop: "1rem" }}
+            theme="light"
+          />
+        ),
+      ]}
+      onHamburgerClick={() => {
+        toggleSidebar();
+      }}
+      className=""
+      img={logoUrl}
+      logoWidth={"48px"}
+      logoHeight={"48px"}
+      logo={loggedin ? cityDetails?.logoId : stateInfo?.statelogo}
+      onImageClick={() => {}}
+      onLogoClick={() => {}}
+      props={{}}
+      showDeafultImg
+      style={{}}
+      theme="light"
+      ulb={
+        loggedin ? (
+          cityDetails?.city?.ulbGrade ? (
+            <>
               {t(cityDetails?.i18nKey).toUpperCase()}{" "}
               {t(`ULBGRADE_${cityDetails?.city?.ulbGrade.toUpperCase().replace(" ", "_").replace(".", "_")}`).toUpperCase()}
-            </p>
+            </>
           ) : (
-            <img className="state" src={logoUrl} />
-          ))}
-        {!loggedin && (
-          <p className="ulb">
+            <img className="state" src={logoUrl} alt="State Logo" />
+          )
+        ) : (
+          <>
             {t(`MYCITY_${stateInfo?.code?.toUpperCase()}_LABEL`)} {t(`MYCITY_STATECODE_LABEL`)}
-          </p>
-        )}
-        <div className={mobileView ? "right" : "flex-right right w-80 column-gap-15"} style={!loggedin ? { width: "80%" } : {}}>
-          <div className="left">
-            {!window.location.href.includes("employee/user/login") && !window.location.href.includes("employee/user/language-selection") && (
-              <ChangeCity dropdown={true} t={t} />
-            )}
-          </div>
-          <div className="left">{showLanguageChange && <ChangeLanguage dropdown={true} />}</div>
-          {userDetails?.access_token && (
-            <div className="left">
-              <Dropdown
-                option={userOptions}
-                optionKey={"name"}
-                select={handleUserDropdownSelection}
-                showArrow={true}
-                freeze={true}
-                style={{}}
-                optionCardStyles={{ overflow: "revert", display: "table" }}
-                topbarOptionsClassName={"topbarOptionsClassName"}
-                customSelector={
-                  profilePic == null ? (
-                    <TextToImg name={userDetails?.info?.name || userDetails?.info?.userInfo?.name || "Employee"} />
-                  ) : (
-                    <img src={profilePic} style={{ height: "48px", width: "48px", borderRadius: "50%" }} />
-                  )
-                }
-                showIcon={true}
-              />
-            </div>
-          )}
-          <img className="state" src={logoUrl} />
-        </div>
-      </span>
-    </div>
+          </>
+        )
+      }
+    />
   );
 };
 
