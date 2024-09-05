@@ -7,6 +7,7 @@ import { useMyContext } from "../utils/context";
 const CampaignDetails = ({onSelect,props:customProps,...props}) => {
   const {campaignType:campaignTypeSession,disease:diseaseSession,distributionStrat:distributionStratSession} = customProps?.sessionData?.CAMPAIGN_DETAILS?.[customProps?.name] || {}
   const { dispatch,state } = useMyContext();
+  const [executionCount, setExecutionCount] = useState(0);
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getStateId();
   const [campaignType, setCampaignType] = useState(campaignTypeSession);
@@ -48,6 +49,15 @@ const CampaignDetails = ({onSelect,props:customProps,...props}) => {
       distributionStrat,disease,campaignType
     })
   }, [distributionStrat,disease,campaignType]);
+
+  useEffect(() => {
+    if (executionCount < 5) {
+      onSelect(customProps.name, {
+        distributionStrat,disease,campaignType
+      });
+      setExecutionCount((prevCount) => prevCount + 1);
+    }
+  });
 
   if(isLoading){
     return <Loader />

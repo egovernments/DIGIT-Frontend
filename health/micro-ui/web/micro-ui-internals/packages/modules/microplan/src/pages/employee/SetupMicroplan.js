@@ -23,19 +23,23 @@ const SetupMicroplan = () => {
   const { dispatch,state } = useMyContext();
   const history = useHistory()
   const {t} = useTranslation();
-  const searchParams = new URLSearchParams(location.search);
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [totalFormData, setTotalFormData] = useState({});
   const [active, setActive] = useState(0);
-  const [microplanConfig, setMicroplanConfig] = useState(MicroplanConfig(totalFormData, null, isSubmitting));
+  const {campaignId,microplanId,key,...queryParams} = Digit.Hooks.useQueryParams();
+  const [shouldUpdate,setShouldUpdate] = useState(false)
   const [currentKey, setCurrentKey] = useState(() => {
-    const keyParam = searchParams.get("key");
-    return keyParam ? parseInt(keyParam) : 1;
+    return key ? parseInt(key) : 1;
   });
 
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("MICROPLAN_DATA", {});
+  const [microplanConfig, setMicroplanConfig] = useState(MicroplanConfig(params, null, isSubmitting));
 
+  const { mutate:createCampaign } = Digit.Hooks.microplanv1.useCreateCampaign();
+  const { mutate: updateCampaign } = Digit.Hooks.microplanv1.useUpdateCampaign();
+  const { mutate:createMicroplan } = Digit.Hooks.microplanv1.useCreatePlanConfig();
+  const { mutate:updateMicroplan } = Digit.Hooks.microplanv1.useUpdatePlanConfig();
 
   const filterMicroplanConfig = (microplanConfig, currentKey) => {
     return microplanConfig
@@ -55,7 +59,7 @@ const SetupMicroplan = () => {
   }, [microplanConfig, currentKey]);
 
   useEffect(() => {
-    setMicroplanConfig(MicroplanConfig(totalFormData, null, isSubmitting));
+    setMicroplanConfig(MicroplanConfig(params, null, isSubmitting));
   }, [totalFormData, isSubmitting]);
 
 
@@ -77,12 +81,12 @@ const SetupMicroplan = () => {
   }, [params]);
 
   const onSubmit = (formData) => {
+    debugger
     //run validations
     // setIsSubmittting to true -> to run inline validations within the components
     setIsSubmitting(true);
     const name = filteredConfig?.[0]?.form?.[0]?.name;
-    
-    
+    const currentConfBody = filteredConfig?.[0]?.form?.[0]?.body
     // run toast level validations 
     // decide whether to call api or not based on config
     // update totalFormData
@@ -97,9 +101,24 @@ const SetupMicroplan = () => {
       ...params,
       [name]:formData
     })
+
+    //decide to call api
+    if(currentConfBody?.resourceToUpdate){
+      setShouldUpdate(currentConfBody?.resourceToUpdate)
+    }
+
+    //for now on every next click updating this later we'll remove
     setCurrentStep(prev => prev + 1)
     setCurrentKey(prev => prev + 1)
   }
+
+  //Calling API
+  useEffect(() => {
+    if(shouldUpdate){
+      //trigger an API call here
+    }
+  }, [shouldUpdate])
+  
 
   const onStepClick = (step) =>{
     // setCurrentStep(prev => prev + 1)
