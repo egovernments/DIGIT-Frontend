@@ -10,6 +10,19 @@ const MDMSView = ({...props}) => {
   const { t } = useTranslation()
   const [showToast, setShowToast] = useState(false);
   let { moduleName, masterName, tenantId,uniqueIdentifier } = Digit.Hooks.useQueryParams();
+  let {from, screen, action} = Digit.Hooks.useQueryParams()
+
+  const additionalParams = {
+    from: from,
+    screen: screen,
+    action: action
+  }
+  
+  Object.keys(additionalParams).forEach(key => {
+    if (additionalParams[key] === undefined || additionalParams[key] === null) {
+      delete additionalParams[key];
+    }
+  });
   // const stateId = Digit.ULBService.getStateId();
   tenantId = Digit.ULBService.getCurrentTenantId();
   const fetchActionItems = (data) => {
@@ -115,7 +128,8 @@ const MDMSView = ({...props}) => {
     const {action:actionSelected} = action 
     //action===EDIT go to edit screen 
     if(actionSelected==="EDIT") {
-      history.push(`/${window?.contextPath}/employee/workbench/mdms-edit?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}`)
+      const additionalParamString = new URLSearchParams(additionalParams).toString();
+      history.push(`/${window?.contextPath}/employee/workbench/mdms-edit?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}${additionalParamString ? "&"+additionalParamString : ""}`)
     }
     //action===DISABLE || ENABLE call update api and show toast respectively
     else{

@@ -146,7 +146,7 @@ const EmployeeHome = ({ modules, additionalComponent }) => {
     <>
       <div className="employee-app-container digit-home-employee-app">
         <div className="ground-container moduleCardWrapper gridModuleWrapper digit-home-moduleCardWrapper">
-          {modules.map(({ code }, index) => {
+          {modules?.map(({ code }, index) => {
             const Card =
               Digit.ComponentRegistryService.getComponent(`${code}Card`) ||
               (() => <React.Fragment />);
