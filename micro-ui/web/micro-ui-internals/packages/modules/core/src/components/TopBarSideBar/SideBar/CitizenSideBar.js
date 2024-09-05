@@ -21,7 +21,7 @@ const Profile = ({ info, stateName, t }) => {
         {}
       );
 
-      if (usersResponse && usersResponse.user && usersResponse.user.length) {
+      if (usersResponse && usersResponse.user && usersResponse?.user?.length) {
         const userDetails = usersResponse.user[0];
         const thumbs = userDetails?.photo?.split(",");
         setProfilePic(thumbs?.at(0));
@@ -127,7 +127,7 @@ export const CitizenSideBar = ({
       const uuid = user?.info?.uuid;
       if (uuid) {
         const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
-        if (usersResponse && usersResponse.user && usersResponse.user.length) {
+        if (usersResponse && usersResponse.user && usersResponse?.user?.length) {
           const userDetails = usersResponse.user[0];
           const thumbs = userDetails?.photo?.split(",");
           setProfilePic(thumbs?.at(0));
@@ -234,7 +234,7 @@ export const CitizenSideBar = ({
         }
       });
     const keys = Object.keys(configEmployeeSideBar);
-    for (let i = 0; i < keys.length; i++) {
+    for (let i = 0; i < keys?.length; i++) {
       const getSingleDisplayName = configEmployeeSideBar[
         keys[i]
       ][0]?.displayName
@@ -294,7 +294,7 @@ export const CitizenSideBar = ({
     menuItems = menuItems.filter((ele) => ele.element === "LANGUAGE");
   }
 
-  menuItems = menuItems.map((item) => ({
+  menuItems = menuItems?.map((item) => ({
     ...item,
     label: item?.text || item?.moduleName || "",  
     icon: item?.icon ? item?.icon : undefined
@@ -329,14 +329,14 @@ export const CitizenSideBar = ({
     }
   };
 
-  const transformedMenuItems = menuItems.map((item) => {
+  const transformedMenuItems = menuItems?.map((item) => {
     if (item?.type === "dynamic") {
       return {
         ...item,
-        children: item.links.map((link) => ({
+        children: item?.links?.map((link) => ({
           ...link,
           label: link?.displayName,
-          icon: link.leftIcon,
+          icon: link?.leftIcon,
         })),
       };
     } else {
@@ -344,13 +344,13 @@ export const CitizenSideBar = ({
     }
   });
 
-  const transformedSelectedCityData = selectCityData.map((city) => ({
+  const transformedSelectedCityData = selectCityData?.map((city) => ({
     ...city,
     type: "custom",
     key:"city"
   }));
   
-  const transformedLanguageData = languages.map((language) => ({
+  const transformedLanguageData = languages?.map((language) => ({
     ...language,
     type: "custom",
     key:"language"
@@ -360,13 +360,13 @@ export const CitizenSideBar = ({
     {
       label:city,
       value:city,
-      children: transformedSelectedCityData.length>0 ? transformedSelectedCityData : undefined,
+      children: transformedSelectedCityData?.length>0 ? transformedSelectedCityData : undefined,
       type:"custom",
       key:"city"
     },
     {
       label: t("Language"),
-      children: transformedLanguageData.length>0 ? transformedLanguageData: undefined,
+      children: transformedLanguageData?.length>0 ? transformedLanguageData: undefined,
       type:"custom",
       key:"language"
     },
