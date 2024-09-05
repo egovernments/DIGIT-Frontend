@@ -81,7 +81,7 @@ const SetupMicroplan = () => {
   }, [params]);
 
   const onSubmit = (formData) => {
-    debugger
+    
     //run validations
     // setIsSubmittting to true -> to run inline validations within the components
     setIsSubmitting(true);
