@@ -44,7 +44,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         });
       }
     },
-    {schemaCode:"hcm-microplanning"} //mdmsv2
+    {schemaCode:"BASE_MASTER_DATA"} //mdmsv2
   );
   
 
