@@ -96,14 +96,14 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [comments, setComments] = useState("");
   const [file, setFile] = useState(null);
+  const [fileUploading, setFileUploading] = useState(false);
+
   const [uploadedFile, setUploadedFile] = useState(null);
   const [error, setError] = useState(null);
   const cityDetails = Digit.ULBService.getCurrentUlb();
   const [selectedReopenReason, setSelectedReopenReason] = useState(null);
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    setUploadedFile(file);
-  };
+
+  
   useEffect(() => {
     (async () => {
       setError(null);
@@ -112,6 +112,7 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
           setError(t("CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED"));
         } else {
           try {
+            setFileUploading(true);
             // TODO: change module in file storage
             const response = await Digit.UploadServices.Filestorage("property-upload", file, cityDetails.code);
             if (response?.data?.files?.length > 0) {
@@ -119,6 +120,8 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
             } else {
               setError(t("CS_FILE_UPLOAD_ERROR"));
             }
+            setFileUploading(false);
+
           } catch (err) {
             setError(t("CS_FILE_UPLOAD_ERROR"));
           }
@@ -216,7 +219,7 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
 <UploadFile
   id="pgr-doc"
   accept=".jpg"
-  onUpload={handleFileUpload}
+  onUpload={selectfile}
   onDelete={() => setUploadedFile(null)}
   uploadedFiles={uploadedFile ? [[uploadedFile.name, uploadedFile]] : []}
   message={uploadedFile ? `1 ${t('CS_ACTION_FILEUPLOADED')}` : ''}
@@ -346,7 +349,7 @@ export const ComplaintDetails = (props) => {
   }
 
   async function onAssign(selectedEmployee, comments, uploadedFile) {
-    setPopup(false);
+    setPopup(false);    
     const response = await Digit.Complaint.assign(complaintDetails, selectedAction, selectedEmployee, comments, uploadedFile, tenantId);
     setAssignResponse(response);
     setToast(true);
