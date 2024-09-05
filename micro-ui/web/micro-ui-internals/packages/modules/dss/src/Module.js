@@ -14,7 +14,7 @@ const DssBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
   const {fromModule=false,title}= Digit.Hooks.useQueryParams();
   const moduleName=Digit.Utils.dss.getCurrentModuleName();
-  const landingPageHiddenIn=["works-ui","sanitation-ui"];
+  const landingPageHiddenIn=["works-ui","sanitation-ui","core-ui"];
   const crumbs = [
     {
       path: `/${window?.contextPath}/employee`,
