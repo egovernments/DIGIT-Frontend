@@ -9,25 +9,76 @@ import { FormComposer } from "../../../components/FormComposer";
 import { createComplaint } from "../../../redux/actions/index";
 
 export const CreateComplaint = ({ parentUrl }) => {
-  const cities = Digit.Hooks.pgr.useTenants();
+  const cities = window.globalPath === "sandbox-ui" ? Digit.Hooks.pgr.useTenants() : null;
+
   const { t } = useTranslation();
 
   const getCities = () => cities?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
+
+ // Define the requestCriteria
+let requestCriteria = null;
+
+// Check the value of window.globalPath
+if (window.globalPath === 'sandbox-ui') {
+  requestCriteria = {
+    url: "/tenant-management/tenant/_search",
+    params: {
+      code: Digit.ULBService.getCurrentTenantId(),
+      includeSubTenants: true
+    },
+    body: {
+      "inbox": {
+        "limit": 10,
+        "offset": 0
+      },
+      apiOperation: "SEARCH",
+    },
+    config: {
+      select: (data) => {
+        return data?.Tenants;
+      },
+    },
+  };
+}
+
+// Use the requestCriteria only if it's not null
+const { data: subTenants, refetch, isLoading: isLoadingSubTenants } = requestCriteria
+  ? Digit.Hooks.useCustomAPIHook(requestCriteria)
+  : { data: null, refetch: () => {}, isLoading: false };
+
+// Now you can use subTenants, refetch, and isLoadingSubTenants
+
+  const getSubTenants = () => subTenants?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
 
   const [complaintType, setComplaintType] = useState({});
   const [subTypeMenu, setSubTypeMenu] = useState([]);
   const [subType, setSubType] = useState({});
   const [pincode, setPincode] = useState("");
-  const [selectedCity, setSelectedCity] = useState(getCities()[0] ? getCities()[0] : null);
+  const [selectedCity, setSelectedCity] = useState(
+    window.globalPath === "sandbox-ui"
+      ? getSubTenants()[0] || null
+      : getCities()[0] || null
+  );
+
+  const cityData = window.globalPath === "sandbox-ui" ? getSubTenants() : getCities();
 
   const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
-    getCities()[0]?.code,
-    "admin",
-    {
-      enabled: !!getCities()[0],
-    },
-    t
-  );
+  cityData[0]?.code,
+  window.globalPath === "sandbox-ui" ? "REVENUE" : "admin",
+  {
+    enabled: !!cityData[0],
+  },
+  t
+);
+
+  // const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
+  //   getCities()[0]?.code,
+  //   "admin",
+  //   {
+  //     enabled: !!getCities()[0],
+  //   },
+  //   t
+  // );
 
   const [localities, setLocalities] = useState(fetchedLocalities);
   const [selectedLocality, setSelectedLocality] = useState(null);
@@ -57,6 +108,7 @@ export const CreateComplaint = ({ parentUrl }) => {
   }, [fetchedLocalities]);
 
   useEffect(() => {
+    if(window.globalPath !== "sandbox-ui"){
     const city = cities.find((obj) => obj.pincode?.find((item) => item == pincode));
     if (city?.code&&city?.code === getCities()[0]?.code) {
       setPincodeNotValid(false);
@@ -71,7 +123,9 @@ export const CreateComplaint = ({ parentUrl }) => {
     } else {
       setPincodeNotValid(true);
     }
+  }
   }, [pincode]);
+
 
   async function selectedType(value) {
     if (value.key !== complaintType.key) {
@@ -111,9 +165,17 @@ export const CreateComplaint = ({ parentUrl }) => {
   const onSubmit = async (data) => {
     if (!canSubmit) return;
     const cityCode = selectedCity.code;
-    const city = selectedCity.city.name;
-    const district = selectedCity.city.name;
-    const region = selectedCity.city.name;
+    const city = window.globalPath === "sandbox-ui"
+    ? selectedCity.name
+    : selectedCity.city.name;
+  
+  const district = window.globalPath === "sandbox-ui"
+    ? selectedCity.name
+    : selectedCity.city.name;
+  
+  const region = window.globalPath === "sandbox-ui"
+    ? selectedCity.name
+    : selectedCity.city.name;
     const localityCode = selectedLocality.code;
     const localityName = selectedLocality.name;
     const landmark = data.landmark;
@@ -210,10 +272,12 @@ export const CreateComplaint = ({ parentUrl }) => {
               isMandatory
               selected={selectedCity}
               freeze={true}
-              option={getCities()}
+              option={
+                window.globalPath === "sandbox-ui" ? getSubTenants() : getCities()
+              }
               id="city"
               select={selectCity}
-              optionKey="i18nKey"
+              optionKey={window.globalPath === "sandbox-ui" ? "name" : "i18nKey"}
               t={t}
             />
           ),

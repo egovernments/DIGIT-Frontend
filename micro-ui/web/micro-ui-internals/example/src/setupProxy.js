@@ -92,7 +92,8 @@ module.exports = function (app) {
     "/project-factory",
     "/project-factory/v1/data/_autoGenerateBoundaryCode",
     "/billing-service/bill/v2/_fetchbill",
-    "/tenant-management"
+    "/tenant-management",
+    "/default-data-handler"
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));

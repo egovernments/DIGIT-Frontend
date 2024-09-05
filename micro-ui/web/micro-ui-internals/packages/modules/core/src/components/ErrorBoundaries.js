@@ -18,12 +18,12 @@ const Redircter = () => {
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { error: null, errorStack: null, hasError: false };
+    this.state = { error: null, errorStack: null, hasError: false, module: null, action: null, info: null };
   }
 
   static getDerivedStateFromError(error) {
     // Update state so the next render will show the fallback UI.
-    return { error: error?.message, hasError: true, errorStack: error?.stack };
+    return { error: error?.message, hasError: true, errorStack: error?.stack, module: error?.module, action: error?.action, info: error?.info };
   }
 
   componentDidCatch(error, errorInfo) {
@@ -40,7 +40,7 @@ class ErrorBoundary extends React.Component {
       return (
         <div className="error-boundary">
           <Redircter />
-          <ErrorComponent initData={this.props.initData} />
+          <ErrorComponent initData={this.props.initData} errorData={this.state} />
 
           {/* <summary>Something went wrong</summary>
           <details style={{ whiteSpace: "pre-wrap" }}>

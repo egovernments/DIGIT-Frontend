@@ -1,16 +1,18 @@
 import { useIndividualView } from "./useIndividualView";
 import utils from "../utils";
+import useDefaultMasterHandler from "./useDefaultMasterHandler";
 const sandbox = {
-  useIndividualView
+  useIndividualView,
+  useDefaultMasterHandler,
 };
 
 const Hooks = {
-  sandbox
+  sandbox,
 };
 
 const Utils = {
   browser: {
-    sandbox: () => { },
+    sandbox: () => {},
   },
   sandbox: {
     ...utils,

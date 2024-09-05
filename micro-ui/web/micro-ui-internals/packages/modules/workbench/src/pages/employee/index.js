@@ -21,49 +21,73 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
   const search = useLocation().search;
   const fromScreen = new URLSearchParams(search).get("from") || null;
-  const pathVar = location.pathname.replace(defaultPath + '/', "").split("?")?.[0];
-  const { masterName, moduleName, uniqueIdentifier } = Digit.Hooks.useQueryParams()
+  const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
+  const { masterName, moduleName, uniqueIdentifier, from, screen, action } = Digit.Hooks.useQueryParams();
 
-  const crumbs = [
-    {
-      path: `/${window?.contextPath}/employee`,
-      content: t("WORKBENCH_HOME"),
-      show: true,
-    },
-    {
-      path: `/${window.contextPath}/employee/workbench/manage-master-data`,
-      content: t(`WBH_MANAGE_MASTER_DATA`),
-      show: pathVar.includes("mdms-") ? true : false,
-      // query:`moduleName=${moduleName}&masterName=${masterName}`
-    },
-    {
-      path: `/${window.contextPath}/employee/workbench/localisation-search`,
-      content: t(`LOCALISATION_SEARCH`),
-      show: pathVar.includes("localisation-") ? true : false,
-      isBack: pathVar.includes("localisation-search") ? true : false
-      // query:`moduleName=${moduleName}&masterName=${masterName}`
-    },
+  const crumbs = from
+    ? [
+        {
+          path: `/${window?.contextPath}/employee`,
+          content: t("WORKBENCH_HOME"),
+          show: true,
+        },
+        {
+          path: pathVar !== "mdms-search-v2" ? `/${window.contextPath}/employee/workbench/mdms-search-v2` : "",
+          query: `moduleName=${moduleName}&masterName=${masterName}&from=${from}&screen=${screen}&action=${action}`,
+          content: t(`${Digit.Utils.workbench.getMDMSLabel(pathVar, masterName, moduleName)}`),
+          show: masterName && moduleName ? true : false,
+        },
+        {
+          path: `/${window.contextPath}/employee/workbench/mdms-view`,
+          content: t(`MDMS_VIEW`),
+          show: pathVar.includes("mdms-edit") ? true : false,
+          query: `moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}&from=${from}&screen=${screen}&action=${action}`,
+        },
+        {
+          path: `/${window.contextPath}/employee/masters/response`,
+          content: t(`${Digit.Utils.workbench.getMDMSLabel(pathVar, "", "")}`),
+          show: Digit.Utils.workbench.getMDMSLabel(pathVar, "", "", ["mdms-search-v2", "localisation-search"]) ? true : false,
+        },
+      ]
+    : [
+        {
+          path: `/${window?.contextPath}/employee`,
+          content: t("WORKBENCH_HOME"),
+          show: true,
+        },
+        {
+          path: `/${window.contextPath}/employee/workbench/manage-master-data`,
+          content: t(`WBH_MANAGE_MASTER_DATA`),
+          show: pathVar.includes("mdms-") ? true : false,
+          // query:`moduleName=${moduleName}&masterName=${masterName}`
+        },
+        {
+          path: `/${window.contextPath}/employee/workbench/localisation-search`,
+          content: t(`LOCALISATION_SEARCH`),
+          show: pathVar.includes("localisation-") ? true : false,
+          isBack: pathVar.includes("localisation-search") ? true : false,
+          // query:`moduleName=${moduleName}&masterName=${masterName}`
+        },
 
-    {
-      path: `/${window.contextPath}/employee/workbench/mdms-search-v2`,
-      query: `moduleName=${moduleName}&masterName=${masterName}`,
-      content: t(`${Digit.Utils.workbench.getMDMSLabel(pathVar, masterName, moduleName)}`),
-      show: (masterName && moduleName) ? true : false,
-      isBack: pathVar.includes("mdms-search-v2") ? true : false
-    },
-    {
-      path: `/${window.contextPath}/employee/workbench/mdms-view`,
-      content: t(`MDMS_VIEW`),
-      show: pathVar.includes("mdms-edit") ? true : false,
-      query: `moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}`
-    },
-    {
-      path: `/${window.contextPath}/employee/masters/response`,
-      content: t(`${Digit.Utils.workbench.getMDMSLabel(pathVar, "", "")}`),
-      show: Digit.Utils.workbench.getMDMSLabel(pathVar, "", "", ["mdms-search-v2", "localisation-search"]) ? true : false,
-    },
-
-  ];
+        {
+          path: `/${window.contextPath}/employee/workbench/mdms-search-v2`,
+          query: `moduleName=${moduleName}&masterName=${masterName}`,
+          content: t(`${Digit.Utils.workbench.getMDMSLabel(pathVar, masterName, moduleName)}`),
+          show: masterName && moduleName ? true : false,
+          isBack: pathVar.includes("mdms-search-v2") ? true : false,
+        },
+        {
+          path: `/${window.contextPath}/employee/workbench/mdms-view`,
+          content: t(`MDMS_VIEW`),
+          show: pathVar.includes("mdms-edit") ? true : false,
+          query: `moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}`,
+        },
+        {
+          path: `/${window.contextPath}/employee/masters/response`,
+          content: t(`${Digit.Utils.workbench.getMDMSLabel(pathVar, "", "")}`),
+          show: Digit.Utils.workbench.getMDMSLabel(pathVar, "", "", ["mdms-search-v2", "localisation-search"]) ? true : false,
+        },
+      ];
   return <BreadCrumb className="workbench-bredcrumb" crumbs={crumbs} spanStyle={{ maxWidth: "min-content" }} />;
 };
 
