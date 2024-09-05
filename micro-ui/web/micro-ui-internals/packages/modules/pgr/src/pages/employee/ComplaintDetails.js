@@ -47,10 +47,7 @@ const Heading = (props) => {
   return <h1 className="heading-m">{props.label}</h1>;
 };
 
-const handleFileUpload = (event) => {
-  const file = event.target.files[0];
-  setUploadedFile(file);
-};
+
 
 
 
@@ -103,7 +100,10 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   const [error, setError] = useState(null);
   const cityDetails = Digit.ULBService.getCurrentUlb();
   const [selectedReopenReason, setSelectedReopenReason] = useState(null);
-
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    setUploadedFile(file);
+  };
   useEffect(() => {
     (async () => {
       setError(null);
