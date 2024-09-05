@@ -18,7 +18,7 @@ import {
   DeathIcon,
   FirenocIcon,
   Loader
-} from "@egovernments/digit-ui-components";
+} from "@egovernments/digit-ui-react-components";
 import { Link, useLocation } from "react-router-dom";
 import SideBarMenu from "../../../config/sidebar-menu";
 import { useTranslation } from "react-i18next";

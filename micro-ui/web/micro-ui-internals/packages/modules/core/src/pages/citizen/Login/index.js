@@ -1,4 +1,4 @@
-import { AppContainer, BackButton ,Toast} from "@egovernments/digit-ui-components";
+import { AppContainer, BackLink ,Toast} from "@egovernments/digit-ui-components";
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router-dom";
@@ -233,7 +233,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     <div className="citizen-form-wrapper">
       <Switch>
         <AppContainer>
-          <BackButton />
+          <BackLink />
           <Route path={`${path}`} exact>
             <SelectMobileNumber
               onSelect={selectMobileNumber}
