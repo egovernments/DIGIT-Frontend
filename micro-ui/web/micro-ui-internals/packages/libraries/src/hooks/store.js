@@ -10,7 +10,7 @@ export const useStore = ({ stateCode, moduleCode, language ,modulePrefix = "rain
 export const useInitStore = (stateCode, enabledModules,modulePrefix = "rainmaker" ) => {
   const { isLoading, error, isError, data } = useQuery(
     ["initStore", stateCode, enabledModules,modulePrefix],
-    () => StoreService.digitInitData(stateCode, enabledModules ,modulePrefix),
+    () => StoreService.digitInitData(stateCode, enabledModules ,modulePrefix, window?.globalPath === "sandbox-ui" ? true : false),
     {
       staleTime: Infinity,
     }

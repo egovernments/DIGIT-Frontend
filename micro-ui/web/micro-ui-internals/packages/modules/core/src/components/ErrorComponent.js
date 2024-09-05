@@ -19,11 +19,19 @@ const ErrorConfig = {
   },
 };
 
+const ModuleBasedErrorConfig = {
+  sandbox: {
+    imgUrl: `https://s3.ap-south-1.amazonaws.com/egov-qa-assets/error-image.png`,
+    infoMessage: "WRONG_TENANT_SIGN_UP",
+    buttonInfo: "CREATE_TENANT_ERROR_BUTTON",
+  },
+};
+
 const ErrorComponent = (props) => {
   const { type = "error" } = Digit.Hooks.useQueryParams();
-  const config = ErrorConfig[type];
+  const module = props?.errorData?.module;
   const { t } = useTranslation();
-
+  const config = module ? ModuleBasedErrorConfig[module] : ErrorConfig[type];
   const stateInfo = props.stateInfo;
 
   return (
@@ -33,7 +41,7 @@ const ErrorComponent = (props) => {
         <h1>{t(config.infoMessage)}</h1>
         <button
           onClick={() => {
-            props.goToHome();
+            module ? props?.errorData?.action() : props.goToHome();
           }}
         >
           {t(config.buttonInfo)}
