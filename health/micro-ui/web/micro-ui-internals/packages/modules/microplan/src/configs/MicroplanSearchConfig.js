@@ -13,7 +13,7 @@ const defaultSearchValues = {
     showTab: true, // setting true will enable tab screen
     TabSearchconfig: [ // all tab config should be added in json array
       {
-        label: "My microplans",
+        label: "ALL",
         type: "search",
         apiDetails: {
           serviceName: "/plan-service/config/_search", //! Note
@@ -91,10 +91,10 @@ const defaultSearchValues = {
                   label:"Camapaign Type",
                   jsonPath:"CampaignDetails.startDate"
                 },
-                // {
-                //   label:"Distribution Strategy",
-                //   jsonPath:" proposalDate"
-                // },
+                {
+                  label:"Distribution Strategy",
+                  jsonPath:" proposalDate"
+                },
                 {
                   label:"Actions",
                   jsonPath:"",
@@ -113,9 +113,15 @@ const defaultSearchValues = {
         },
         customHookName:"microplanv1.useSavedMicroplans"
       },
-      {label: "My microplans1",},
-      {label: "My microplans2",}
+
+ 
+      {label: "DRAFTED_SETUP"},
+      {label: "EXECUTION_TO_BE_DONE",},
+      {label:"EXECUTION_IN_PROGRESS"},
+      {label:"MICROPLAN_EXECUTED"}
+
     ],
   };
   
+
 
