@@ -55,11 +55,10 @@ const SearchSavedPlans = async (body) => {
       },
     });
 
-    debugger;
-    
     const finalResult = {
       PlanConfiguration: mergeArrays(responsePlan?.PlanConfiguration, "executionPlanId", responseCampaign?.CampaignDetails, "id"),
     };
+    debugger;
     return finalResult;
   } catch (error) {
     if (error?.response?.data?.Errors) {

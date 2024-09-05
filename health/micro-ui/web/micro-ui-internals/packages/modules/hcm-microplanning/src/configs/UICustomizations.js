@@ -64,6 +64,35 @@ function cleanObject(obj) {
 }
 
 export const UICustomizations = {
+  VehicleSearchConfig: {
+    preProcess: (data) => {
+            const tenantId = Digit.ULBService.getCurrentTenantId();
+      data.body.MdmsCriteria.tenantId = tenantId;
+
+      const filters = {};
+      const custom = data.body.MdmsCriteria.customs;
+
+      const { field, value } = custom || {};
+      if (field && field.name && value) {
+        filters[field.name] = value;
+      }
+
+      data.body.MdmsCriteria.filters = filters;
+      delete data.body.customs;
+      return data;
+
+    },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      
+      if (key === "Vehicle Type") {
+        return (
+          <div>{`₹ ${value}`}</div>
+        );
+      }
+
+      
+    },
+  },
   businessServiceMap,
   updatePayload: (applicationDetails, data, action, businessService) => {
     if (businessService === businessServiceMap.estimate) {
@@ -243,6 +272,7 @@ export const UICustomizations = {
       data.body.CampaignDetails.projectType = projectType?.[0]?.code;
 
       cleanObject(data.body.CampaignDetails);
+      debugger;
 
       return data;
     },
@@ -313,6 +343,7 @@ export const UICustomizations = {
       // delete data.body.PlanConfigurationSearchCriteria.pagination
       data.body.PlanConfigurationSearchCriteria.status = status?.status;
       cleanObject(data.body.PlanConfigurationSearchCriteria);
+      // debugger;
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {

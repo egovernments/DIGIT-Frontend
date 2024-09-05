@@ -10,7 +10,7 @@ const configs = {
   label: "SAVED_MICROPLANS",
   type: "search",
   apiDetails: {
-    serviceName: "/plan-service/config/_search",
+    serviceName: "/plan-service/config/_search", //! Note
     requestParam: {},
     requestBody: {},
     minParametersForSearchForm: 0,
@@ -19,6 +19,7 @@ const configs = {
     tableFormJsonPath: "requestBody.PlanConfigurationSearchCriteria.pagination",
     searchFormJsonPath: "requestBody.PlanConfigurationSearchCriteria",
   },
+  
   sections: {
     search: {
       uiConfig: {
@@ -41,7 +42,7 @@ const configs = {
             isMandatory: false,
             disable: false,
             populators: {
-              name: "name",
+              name: "name",   //!searching based on fields
               style: {
                 marginBottom: "0px",
               },
@@ -58,7 +59,7 @@ const configs = {
               optionsCustomStyle: {
                 top: "2.3rem",
               },
-              mdmsConfig: {
+              mdmsConfig: {            
                 masterName: "MicroplanStatus",
                 moduleName: "hcm-microplanning",
                 localePrefix: "MICROPLAN_STATUS",
@@ -111,7 +112,7 @@ const configs = {
   additionalSections: {},
   persistFormData: true,
   showAsRemovableTagsInMobile: false,
-  customHookName: "microplan.useSavedMicroplans",
+  customHookName: "microplan.useSavedMicroplans",  //! Note
 };
 
 const SavedMicroplans = () => {
@@ -122,7 +123,7 @@ const SavedMicroplans = () => {
 
   const fetchHierarchyData = async (hierarchyType) => {
     const response = await Digit.CustomService.getResponse({
-      url: "/boundary-service/boundary-hierarchy-definition/_search",
+      url: "/boundary-service/boundary-hierarchy-definition/_search", //! Note
       useCache: false,
       method: "POST",
       userService: false,
@@ -172,7 +173,7 @@ const SavedMicroplans = () => {
         });
 
         setShowLoader(false);
-        history.push(`/${window.contextPath}/employee/microplanning/edit-saved-microplan?id=${row?.original?.executionPlanId}`);
+        history.push(`/${window.contextPath}/employee/microplanning/edit-saved-microplan?id=${row?.original?.executionPlanId}`);  //! changes to another page
       } catch (error) {
         console.error(`Failed to process the request: ${error.message}`);
         setShowLoader(false);

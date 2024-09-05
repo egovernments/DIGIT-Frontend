@@ -12,13 +12,15 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               key: "campaignDetails",
               type: "component",
               skipAPICall: false,
+
               resourceToUpdate:"CAMPAIGN",//which api to call enum ["CAMPAIGN","PLAN"]
               component: "CampaignDetails",
+
               withoutLabel: true,
               disable: false,
               customProps: {
                 module: "HCM",
-                sessionData: totalFormData,
+                sessionData: totalFormData,  //!session data
                 isSubmitting: isSubmitting,
               },
               populators: {
@@ -43,7 +45,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               disable: false,
               customProps: {
                 module: "HCM",
-                sessionData: totalFormData,
+                sessionData: totalFormData,  //!Session data again
                 isSubmitting: isSubmitting,
               },
               populators: {

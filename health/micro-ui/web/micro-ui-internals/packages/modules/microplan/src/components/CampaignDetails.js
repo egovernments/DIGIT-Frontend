@@ -69,7 +69,7 @@ const CampaignDetails = ({onSelect,props:customProps,...props}) => {
         <p className="description-type">{t(`HCM_CAMPAIGN_DETAILS_DESC`)}</p>
         <LabelFieldPair>
           <div className="campaign-type" style={{ minWidth: "17rem" }}>
-            <span>{`${t("HCM_DISEASE_TYPE")}`}</span>
+            <span>{`${t("HCM_DISEASE_TYPEE")}`}</span>
             <span className="mandatory-span">*</span>
           </div>
           <Dropdown

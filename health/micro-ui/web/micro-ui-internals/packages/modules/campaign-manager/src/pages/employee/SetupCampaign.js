@@ -1,3 +1,4 @@
+//random1 comment
 import {
   Loader,
   FormComposerV2,
@@ -228,9 +229,9 @@ function groupByTypeRemap(data) {
 function updateUrlParams(params) {
   const url = new URL(window.location.href);
   Object.entries(params).forEach(([key, value]) => {
-    url.searchParams.set(key, value);
+    url.searchParams.set(key, value);         // Modifying the query params
   });
-  window.history.replaceState({}, "", url);
+  window.history.replaceState({}, "", url);   // modify current history without creating a new one
 }
 
 const SetupCampaign = ({ hierarchyType }) => {
@@ -248,7 +249,7 @@ const SetupCampaign = ({ hierarchyType }) => {
   const [summaryErrors, setSummaryErrors] = useState({});
   const { mutate } = Digit.Hooks.campaign.useCreateCampaign(tenantId);
   const { mutate: updateCampaign } = Digit.Hooks.campaign.useUpdateCampaign(tenantId);
-  const searchParams = new URLSearchParams(location.search);
+  const searchParams = new URLSearchParams(location.search);  //!see
   const id = searchParams.get("id");
   const isPreview = searchParams.get("preview");
   const isSummary = searchParams.get("summary");
@@ -501,6 +502,7 @@ const SetupCampaign = ({ hierarchyType }) => {
   }, [currentKey]);
 
   function restructureData(data) {
+    debugger;
     const dateData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleData;
     const restructuredData = [];
 
@@ -576,6 +578,7 @@ const SetupCampaign = ({ hierarchyType }) => {
   }
 
   function resourceData(facilityData, boundaryData, userData) {
+    debugger;
     const resources = [facilityData, boundaryData, userData].filter((data) => data !== null && data !== undefined);
     return resources;
   }
@@ -861,6 +864,7 @@ const SetupCampaign = ({ hierarchyType }) => {
   }, [shouldUpdate]);
 
   function validateCycleData(data) {
+    debugger;
     const { cycle, deliveries } = data?.cycleConfigure?.cycleConfgureDate;
     const cycleData = data.cycleConfigure.cycleData;
     let dateError = [];
@@ -904,6 +908,7 @@ const SetupCampaign = ({ hierarchyType }) => {
   }
 
   function validateDeliveryRules(data, projectType, cycleConfigureData) {
+    debugger;
     let isValid = true;
     let deliveryRulesError = [];
     let dateError = validateCycleData(cycleConfigureData);
@@ -1003,6 +1008,7 @@ const SetupCampaign = ({ hierarchyType }) => {
   }
 
   function checkAttributeValidity(data) {
+    debugger;
     for (const rule of data?.deliveryRule) {
       for (const delivery of rule?.deliveries) {
         for (const rule of delivery?.deliveryRules) {
@@ -1044,6 +1050,7 @@ const SetupCampaign = ({ hierarchyType }) => {
   // }
 
   function validateBoundaryLevel(data) {
+    debugger;
     // Extracting boundary hierarchy from hierarchy definition
     const boundaryHierarchy = hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
 
@@ -1083,6 +1090,7 @@ const SetupCampaign = ({ hierarchyType }) => {
   // }
 
   function recursiveParentFind(filteredData) {
+    debugger;
     const parentChildrenMap = {};
 
     // Build the parent-children map
@@ -1382,7 +1390,8 @@ const SetupCampaign = ({ hierarchyType }) => {
     if ((currentKey === 5 || currentKey === 6) && step > 1) {
       return;
     }
-    const filteredSteps = campaignConfig[0].form.filter((item) => item.stepCount === String(step + 1));
+    debugger;
+    const filteredSteps = campaignConfig[0].form.filter((item) => item.stepCount === String(step + 1));    //!FIltering take place here
 
     const key = parseInt(filteredSteps[0].key);
     const name = filteredSteps[0].name;
@@ -1532,6 +1541,7 @@ const SetupCampaign = ({ hierarchyType }) => {
   }
 
   function onActionSelect(action) {
+    debugger;
     setDisplayMenu(false);
     switch (action) {
       case "UPDATE_DATES":
@@ -1598,7 +1608,7 @@ const SetupCampaign = ({ hierarchyType }) => {
             // "CONFIGURE_APP"
           ]}
            t={t} onSelect={onActionSelect} /> : null}
-          <SubmitBar label={t("ES_COMMON_TAKE_ACTION")} onSubmit={() => setDisplayMenu(!displayMenu)} />
+          <SubmitBar label={t("ES_COMMON_TAKE_ACTION11")} onSubmit={() => setDisplayMenu(!displayMenu)} />
         </ActionBar>
       )}
       {showToast && (

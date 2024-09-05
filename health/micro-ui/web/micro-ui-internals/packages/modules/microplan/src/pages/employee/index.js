@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Switch } from "react-router-dom";
 import SetupMicroplan from "./SetupMicroplan";
 import { useMyContext } from "../../utils/context";
+import MicroplanSearch from "./MicroplanSearch";
 
 const bredCrumbStyle={ maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
@@ -59,6 +60,13 @@ const App = ({ path, stateCode, userType, tenants }) => {
           <ProjectBreadCrumb location={location} />
         </React.Fragment>
          <PrivateRoute path={`${path}/setup-microplan`} component={() => <SetupMicroplan />} />
+         <PrivateRoute path={`${path}/data-search`} component={() => <DataSearch></DataSearch>} /> 
+         <PrivateRoute path={`${path}/sample`} component={() => <Checklist></Checklist>} /> 
+         <PrivateRoute path={`${path}/microplan-search`} component={() => <MicroplanSearch></MicroplanSearch>} /> 
+         
+
+
+         
       </AppContainer>
     </Switch>
   );
