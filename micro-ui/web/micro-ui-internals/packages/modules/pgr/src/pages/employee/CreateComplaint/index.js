@@ -9,12 +9,18 @@ import { FormComposer } from "../../../components/FormComposer";
 import { createComplaint } from "../../../redux/actions/index";
 
 export const CreateComplaint = ({ parentUrl }) => {
-  const cities = Digit.Hooks.pgr.useTenants();
+  const cities = window.globalPath === "sandbox-ui" ? Digit.Hooks.pgr.useTenants() : null;
+
   const { t } = useTranslation();
 
   const getCities = () => cities?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
 
-  const requestCriteria = {
+ // Define the requestCriteria
+let requestCriteria = null;
+
+// Check the value of window.globalPath
+if (window.globalPath === 'sandbox-ui') {
+  requestCriteria = {
     url: "/tenant-management/tenant/_search",
     params: {
       code: Digit.ULBService.getCurrentTenantId(),
@@ -33,8 +39,15 @@ export const CreateComplaint = ({ parentUrl }) => {
       },
     },
   };
+}
 
-  const { data: subTenants, refetch,isLoading:isLoadingSubTenants } = Digit.Hooks.useCustomAPIHook(requestCriteria);
+// Use the requestCriteria only if it's not null
+const { data: subTenants, refetch, isLoading: isLoadingSubTenants } = requestCriteria
+  ? Digit.Hooks.useCustomAPIHook(requestCriteria)
+  : { data: null, refetch: () => {}, isLoading: false };
+
+// Now you can use subTenants, refetch, and isLoadingSubTenants
+
   const getSubTenants = () => subTenants?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
 
   const [complaintType, setComplaintType] = useState({});
@@ -51,7 +64,7 @@ export const CreateComplaint = ({ parentUrl }) => {
 
   const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
   cityData[0]?.code,
-  "REVENUE",
+  window.globalPath === "sandbox-ui" ? "REVENUE" : "admin",
   {
     enabled: !!cityData[0],
   },
@@ -94,8 +107,8 @@ export const CreateComplaint = ({ parentUrl }) => {
     setLocalities(fetchedLocalities);
   }, [fetchedLocalities]);
 
-  if(window.globalPath !== "sandbox-ui"){
   useEffect(() => {
+    if(window.globalPath !== "sandbox-ui"){
     const city = cities.find((obj) => obj.pincode?.find((item) => item == pincode));
     if (city?.code&&city?.code === getCities()[0]?.code) {
       setPincodeNotValid(false);
@@ -110,8 +123,9 @@ export const CreateComplaint = ({ parentUrl }) => {
     } else {
       setPincodeNotValid(true);
     }
+  }
   }, [pincode]);
-}
+
 
   async function selectedType(value) {
     if (value.key !== complaintType.key) {
