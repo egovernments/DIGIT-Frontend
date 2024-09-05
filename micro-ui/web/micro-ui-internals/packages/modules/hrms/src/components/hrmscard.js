@@ -6,7 +6,7 @@ const HRMSCard = () => {
   const ADMIN = Digit.Utils.hrmsAccess();
   if (!ADMIN) {
     return null;
-  }
+  } 
     const { t } = useTranslation();
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const { isLoading, isError, error, data, ...rest } = Digit.Hooks.hrms.useHRMSCount(tenantId);
