@@ -70,7 +70,6 @@ const defaultSearchValues = {
               show: true,
             },
             searchResult: {
-              tenantId: Digit.ULBService.getCurrentTenantId(),
               uiConfig: {
                 columns: [
                   {

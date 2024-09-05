@@ -6,7 +6,6 @@ import { TabSearchconfig } from '../../configs/MicroplanSearchConfig'
 
 
 const defaultSearchValues = {
-  individualName: "",
 
 };
 
@@ -19,12 +18,11 @@ const MicroplanSearch = () => {
   ); // setting number of tab component and making first index enable as default
   useEffect(() => {
     // Set default values when component mounts
-    console.log("hihihiijjiji");
     setDefaultValues(defaultSearchValues);
   }, []);
 
   const onTabChange = (n) => {
-    debugger
+    
     setTabData((prev) => prev.map((i, c) => ({ ...i, active: c === n ? true : false }))); //setting tab enable which is being clicked
     // setConfig(TabSearchconfig?.TabSearchconfig?.[n]);// as per tab number filtering the config
     const url = new URL(window.location.href);

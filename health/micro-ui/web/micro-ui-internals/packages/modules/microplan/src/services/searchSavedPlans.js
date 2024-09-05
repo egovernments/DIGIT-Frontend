@@ -43,7 +43,7 @@ function mergeArrays(array1, key1, array2, key2) {
         ids: executionPlanIds,
       };
   
-      debugger;
+      
   
       const responseCampaign = await Digit.CustomService.getResponse({
         url: "/project-factory/v1/project-type/search",
@@ -58,7 +58,7 @@ function mergeArrays(array1, key1, array2, key2) {
       const finalResult = {
         PlanConfiguration: mergeArrays(responsePlan?.PlanConfiguration, "executionPlanId", responseCampaign?.CampaignDetails, "id"),
       };
-      debugger;
+      
       return finalResult;
     } catch (error) {
       if (error?.response?.data?.Errors) {
