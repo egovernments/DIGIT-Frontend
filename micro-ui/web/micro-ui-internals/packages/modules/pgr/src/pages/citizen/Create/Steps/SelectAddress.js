@@ -1,9 +1,43 @@
 import React, { useEffect, useState, useRef } from "react";
 import { CardLabel, Dropdown, FormStep, RadioButtons } from "@egovernments/digit-ui-react-components";
+import { subtract } from "lodash";
 
 const SelectAddress = ({ t, config, onSelect, value }) => {
-  const allCities = Digit.Hooks.pgr.useTenants();
+  const allCities = window.globalPath === "sandbox-ui"  ? Digit.Hooks.pgr.useTenants(): null;
   const cities = value?.pincode ? allCities.filter((city) => city?.pincode?.some((pin) => pin == value["pincode"])) : allCities;
+  // Define the requestCriteria
+let requestCriteria = null;
+
+// Check the value of window.globalPath
+if (window.globalPath === 'sandbox-ui') {
+  requestCriteria = {
+    url: "/tenant-management/tenant/_search",
+    params: {
+      code: Digit.ULBService.getCurrentTenantId(),
+      includeSubTenants: true
+    },
+    body: {
+      "inbox": {
+        "limit": 10,
+        "offset": 0
+      },
+      apiOperation: "SEARCH",
+    },
+    config: {
+      select: (data) => {
+        return data?.Tenants;
+      },
+    },
+  };
+}
+
+// Use the requestCriteria only if it's not null
+const { data: subTenants, refetch, isLoading: isLoadingSubTenants } = requestCriteria
+  ? Digit.Hooks.useCustomAPIHook(requestCriteria)
+  : { data: null, refetch: () => {}, isLoading: false };
+
+// Now you can use subTenants, refetch, and isLoadingSubTenants
+
 
   const [selectedCity, setSelectedCity] = useState(() => {
     const { city_complaint } = value;
@@ -11,7 +45,7 @@ const SelectAddress = ({ t, config, onSelect, value }) => {
   });
   const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
     selectedCity?.code,
-    "admin",
+    window.globalPath === "sandbox-ui" ? "REVENUE" : "admin",
     {
       enabled: !!selectedCity,
     },
@@ -51,10 +85,14 @@ const SelectAddress = ({ t, config, onSelect, value }) => {
     <FormStep config={config} onSelect={onSubmit} t={t} isDisabled={selectedLocality ? false : true}>
       <div>
         <CardLabel>{t("MYCITY_CODE_LABEL")}</CardLabel>
-        {cities?.length < 5 ? (
-          <RadioButtons selectedOption={selectedCity} options={cities} optionsKey="i18nKey" onSelect={selectCity} />
+        {(window.globalPath === "sandbox-ui" ? subTenants?.length : cities?.length) < 5 ? (
+          <RadioButtons selectedOption={selectedCity} options={
+            window.globalPath === "sandbox-ui" ? subTenants : cities
+          } optionsKey={window.globalPath === "sandbox-ui" ? "name" : "i18nKey"} onSelect={selectCity} />
         ) : (
-          <Dropdown isMandatory selected={selectedCity} option={cities} select={selectCity} optionKey="i18nKey" t={t} />
+          <Dropdown isMandatory selected={selectedCity} option={
+            window.globalPath === "sandbox-ui" ? subTenants : cities
+          } select={selectCity} optionKey={window.globalPath === "sandbox-ui" ? "name" : "i18nKey"} t={t} />
         )}
         {selectedCity && localities && <CardLabel>{t("CS_CREATECOMPLAINT_MOHALLA")}</CardLabel>}
         {selectedCity && localities && (

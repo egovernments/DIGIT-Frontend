@@ -1,4 +1,4 @@
-import { BackButton, CitizenHomeCard, CitizenInfoLabel } from "@egovernments/digit-ui-components";
+import { BackLink, CitizenHomeCard, CitizenInfoLabel } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
@@ -51,7 +51,7 @@ const Home = ({
     [
       {
         name: "actions-test",
-        filter: `[?(@.url == '${window.contextPath}-card')]`,
+        filter: `[?(@.url == '${window.globalPath === "sandbox-ui" ? window.globalPath : window.contextPath}-card')]`,
       },
     ],
     {
@@ -66,7 +66,6 @@ const Home = ({
       },
     }
   );
-
   const classname = Digit.Hooks.useRouteSubscription(pathname);
   const { t } = useTranslation();
   const { path } = useRouteMatch();
@@ -99,7 +98,7 @@ const Home = ({
         <Route key={index} path={`${path}/${code.toLowerCase()}-home`}>
           <div className="moduleLinkHomePage">
             <img src={bannerImage || stateInfo?.bannerUrl} alt="noimagefound" />
-            <BackButton className="moduleLinkHomePageBackButton" />
+            <BackLink className="moduleLinkHomePageBackButton" />
             <h1>{t("MODULE_" + code.toUpperCase())}</h1>
             <div className="moduleLinkHomePageModuleLinks">
               {mdmsDataObj && (
