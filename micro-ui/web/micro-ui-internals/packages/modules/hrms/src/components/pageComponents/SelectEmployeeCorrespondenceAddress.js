@@ -9,10 +9,12 @@ const SelectEmployeeCorrespondenceAddress = ({ t, config, onSelect, formData = {
       label: "HR_CORRESPONDENCE_ADDRESS_LABEL",
       type: "text",
       name: "correspondenceAddress",
-      validation: {
-        pattern: Digit.Utils.getPattern('Address'),
-        isRequired: true,
-        title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
+      populators:{
+        validation: {
+          pattern: Digit.Utils.getPattern('Address'),
+          isRequired: true,
+          title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
+        }
       },
       isMandatory: true,
     },
@@ -40,7 +42,7 @@ const SelectEmployeeCorrespondenceAddress = ({ t, config, onSelect, formData = {
                 onChange={(e) => setValue(e.target.value, input.name)}
                 disable={false}
                 defaultValue={undefined}
-                {...input.validation}
+                {...input.populators.validation}
               />
                {currentValue&&currentValue.length>0&&!currentValue.match(Digit.Utils.getPattern('Address'))&&<CardLabelError style={{ width: "100%", marginTop: '-15px', fontSize: '16px', marginBottom: '12px'}}>{t("CORE_COMMON_APPLICANT_ADDRESS_INVALID")}</CardLabelError>}
             </div>

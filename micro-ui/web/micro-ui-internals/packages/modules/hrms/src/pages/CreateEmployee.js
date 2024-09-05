@@ -203,20 +203,24 @@ const CreateEmployee = () => {
   if (isLoading) {
     return <Loader />;
   }
-  const config =mdmsData?.config?mdmsData.config: newConfig;
+  const hrmsconfig =mdmsData?.config?mdmsData.config: newConfig;
   return (
     <div>
       <div style={isMobile ? {marginLeft: "-12px", fontFamily: "calibri", color: "#FF0000"} :{ marginLeft: "15px", fontFamily: "calibri", color: "#FF0000" }}>
         <Header>{t("HR_COMMON_CREATE_EMPLOYEE_HEADER")}</Header>
       </div>
       <FormComposer
-        // defaultValues={defaultValues}
-        defaultValues = {sessionFormData}
-        heading={t("")}
-        config={config}
+         defaultValues={defaultValues}
+        //defaultValues = {sessionFormData}
+        
+        config={hrmsconfig.map((config) => {
+          return {
+            ...config,
+          };
+        })}
         onSubmit={onSubmit}
         onFormValueChange={onFormValueChange}
-        isDisabled={!canSubmit}
+        isDisabled={canSubmit}
         label={t("HR_COMMON_BUTTON_SUBMIT")}
       />
       {showToast && (

@@ -2,6 +2,7 @@ import { PrivateRoute } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, Switch, useLocation } from "react-router-dom";
+import CreateEmployee from "./CreateEmployee";
 
 const EmployeeApp = ({ path, url, userType }) => {
   const { t } = useTranslation();
@@ -17,7 +18,7 @@ const EmployeeApp = ({ path, url, userType }) => {
   const HRMSResponse = Digit?.ComponentRegistryService?.getComponent("HRMSResponse");
   const HRMSDetails = Digit?.ComponentRegistryService?.getComponent("HRMSDetails");
   const Inbox = Digit?.ComponentRegistryService?.getComponent("HRInbox");
-  const CreateEmployee = Digit?.ComponentRegistryService?.getComponent("HRCreateEmployee");
+  //const CreateEmployee = Digit?.ComponentRegistryService?.getComponent("HRCreateEmployee");
   const EditEmpolyee = Digit?.ComponentRegistryService?.getComponent("HREditEmpolyee");
 
   const employeeCreateSession = Digit.Hooks.useSessionStorage("NEW_EMPLOYEE_CREATE", {});
@@ -32,7 +33,6 @@ const EmployeeApp = ({ path, url, userType }) => {
 
   return (
     <Switch>
-      <React.Fragment>
         <div className="ground-container">
           <p className="breadcrumb" style={{ marginLeft: mobileView ? "1vw" : "0px" }}>
             <Link to={`/${window?.contextPath}/employee`} style={{ cursor: "pointer", color: "#666" }}>
@@ -51,7 +51,6 @@ const EmployeeApp = ({ path, url, userType }) => {
           <PrivateRoute path={`${path}/details/:tenantId/:id`} component={() => <HRMSDetails />} />
           <PrivateRoute path={`${path}/edit/:tenantId/:id`} component={() => <EditEmpolyee />} />
         </div>
-      </React.Fragment>
     </Switch>
   );
 };

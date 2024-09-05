@@ -9,10 +9,12 @@ const SelectEmployeeName = ({ t, config, onSelect, formData = {}, userType, regi
       label: "HR_EMP_NAME_LABEL",
       type: "text",
       name: "employeeName",
-      validation: {
-        isRequired: true,
-        pattern: Digit.Utils.getPattern('Name'),
-        title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
+      populators:{
+        validation: {
+          isRequired: true,
+          pattern: Digit.Utils.getPattern('Name'),
+          title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
+        }
       },
       isMandatory: true,
     },
@@ -40,7 +42,7 @@ const SelectEmployeeName = ({ t, config, onSelect, formData = {}, userType, regi
                 onChange={(e) => setValue(e.target.value, input.name)}
                 disable={false}
                 defaultValue={undefined}
-                {...input.validation}
+                {...input.populators.validation}
               />
             {currentValue&&currentValue.length>0&&!currentValue.match(Digit.Utils.getPattern('Name'))&&<CardLabelError style={{ width: "100%", marginTop: '-15px', fontSize: '16px', marginBottom: '12px'}}>{t("CORE_COMMON_APPLICANT_NAME_INVALID")}</CardLabelError>}
             </div>

@@ -22,8 +22,10 @@ const SelectEmployeeType = ({ t, config, onSelect, formData = {}, userType }) =>
       label: "HR_EMPLOYMENT_TYPE_LABEL",
       type: "text",
       name: "EmployeeType",
-      validation: {
-        isRequired: true,
+      populators:{
+        validation: {
+          isRequired: true,
+        }
       },
       isMandatory: true,
     },

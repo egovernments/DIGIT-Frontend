@@ -10,8 +10,10 @@ const SelectEmployeeId = ({ t, config, onSelect, formData = {}, userType, regist
       label: "HR_EMP_ID_LABEL",
       type: "text",
       name: "code",
-      validation: {
-        title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
+      populators:{
+        validation: {
+          title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
+        }
       },
     },
   ];
@@ -37,7 +39,7 @@ const SelectEmployeeId = ({ t, config, onSelect, formData = {}, userType, regist
                 onChange={(e) => setValue(e.target.value, input.name)}
                 disable={isEdit}
                 defaultValue={undefined}
-                {...input.validation}
+                {...input.populators.validation}
               />
             </div>
           </LabelFieldPair>

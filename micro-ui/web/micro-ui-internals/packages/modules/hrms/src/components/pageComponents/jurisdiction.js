@@ -1,7 +1,6 @@
 import { CardLabel, Dropdown, LabelFieldPair, Loader, RemoveableTag ,MultiSelectDropdown} from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
 import cleanup from "../Utils/cleanup";
-// import MultiSelectDropdown from "./Multiselect";
 
 const makeDefaultValues = (sessionFormData) => {
   return sessionFormData?.Jurisdictions?.map((ele,index)=>{
@@ -46,7 +45,8 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
         hierarchy: jurisdiction?.hierarchy?.code,
         boundaryType: jurisdiction?.boundaryType?.label,
         boundary: jurisdiction?.boundary?.code,
-        tenantId: jurisdiction?.boundary?.code,
+        //tenantId: jurisdiction?.boundary?.code,
+        tenantId: tenantId,
         auditDetails: jurisdiction?.auditDetails,
       };
       res = cleanup(res);
@@ -88,7 +88,7 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
         hierarchy: unit?.hierarchy?.code,
         boundaryType: unit?.boundaryType?.label,
         boundary: unit?.boundary?.code,
-        tenantId: unit?.boundary?.code,
+        tenantId: tenantId,
         auditDetails: unit?.auditDetails,
         isdeleted: true,
         isActive: false,
@@ -112,9 +112,10 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
   let boundaryTypeoption = [];
   const [focusIndex, setFocusIndex] = useState(-1);
 
-  function gethierarchylistdata() {
-    return data?.MdmsRes?.["egov-location"]["TenantBoundary"].map((ele) => ele.hierarchyType);
-  }
+  // function gethierarchylistdata() {
+  //   return data?.MdmsRes?.["egov-location"]["TenantBoundary"]?.map((ele) => ele.hierarchyType) || [];
+  // }
+  
 
   function getboundarydata() {
     return [];
@@ -127,6 +128,7 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
   if (isLoading) {
     return <Loader />;
   }
+
   return (
     <div>
       {jurisdictions?.map((jurisdiction, index) => (
@@ -142,7 +144,7 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
           index={index}
           focusIndex={focusIndex}
           setFocusIndex={setFocusIndex}
-          gethierarchylistdata={gethierarchylistdata}
+          // gethierarchylistdata={gethierarchylistdata}
           hierarchylist={hierarchylist}
           boundaryTypeoption={boundaryTypeoption}
           getboundarydata={getboundarydata}
@@ -156,62 +158,74 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
     </div>
   );
 };
+
 function Jurisdiction({
   t,
   data,
   jurisdiction,
   jurisdictions,
   setjurisdictions,
-  gethierarchylistdata,
+  // gethierarchylistdata,
   handleRemoveUnit,
-  hierarchylist,
+  // hierarchylist,
   getroledata,
   roleoption,
   index,
 }) {
-  const [BoundaryType, selectBoundaryType] = useState([]);
-  const [Boundary, selectboundary] = useState([]);
-  useEffect(() => {
-    selectBoundaryType(
-      data?.MdmsRes?.["egov-location"]["TenantBoundary"]
-        .filter((ele) => {
-          return ele?.hierarchyType?.code == jurisdiction?.hierarchy?.code;
-        })
-        .map((item) => { return { ...item.boundary, i18text: Digit.Utils.locale.convertToLocale(item.boundary.label, 'EGOV_LOCATION_BOUNDARYTYPE') } })
-    );
-  }, [jurisdiction?.hierarchy, data?.MdmsRes]);
+  // const [BoundaryType, selectBoundaryType] = useState([]);
+  // const [Boundary, selectboundary] = useState([]);
+  // useEffect(() => {
+  //   if (Array.isArray(data?.MdmsRes?.["egov-location"]["TenantBoundary"])) {
+  //     selectBoundaryType(
+  //       data.MdmsRes["egov-location"]["TenantBoundary"]
+  //         .filter((ele) => ele?.hierarchyType?.code === jurisdiction?.hierarchy?.code)
+  //         .map((item) => ({
+  //           ...item.boundary,
+  //           i18text: Digit.Utils.locale.convertToLocale(item.boundary.label, 'EGOV_LOCATION_BOUNDARYTYPE'),
+  //         }))
+  //     );
+  //   } else {
+  //     selectBoundaryType([]);
+  //   }
+  // }, [jurisdiction?.hierarchy, data?.MdmsRes]);
+  
   const tenant = Digit.ULBService.getCurrentTenantId();
-  useEffect(() => {
-    selectboundary(data?.MdmsRes?.tenant?.tenants.filter(city => city.code != Digit.ULBService.getStateId()).map(city => { return { ...city, i18text: Digit.Utils.locale.getCityLocale(city.code) } }));
-  }, [jurisdiction?.boundaryType, data?.MdmsRes]);
+  // useEffect(() => {
+  //   if (Array.isArray(data?.MdmsRes?.tenant?.tenants)) {
+  //     selectboundary(
+  //       data.MdmsRes.tenant.tenants
+  //         .filter((city) => city.code !== Digit.ULBService.getStateId())
+  //         .map((city) => ({
+  //           ...city,
+  //           i18text: Digit.Utils.locale.getCityLocale(city.code),
+  //         }))
+  //     );
+  //   } else {
+  //     selectboundary([]);
+  //   }
+  // }, [jurisdiction?.boundaryType, data?.MdmsRes]);
+  
 
-  useEffect(() => {
-    if (Boundary?.length > 0) {
-      selectedboundary(Boundary?.filter((ele) => ele.code == jurisdiction?.boundary?.code)[0]);
-    }
-  }, [Boundary]);
+  // useEffect(() => {
+  //   if (Boundary.length > 0) {
+  //     selectedboundary(Boundary.find((ele) => ele.code === jurisdiction?.boundary?.code));
+  //   }
+  // }, [Boundary]);
+  
 
-  const selectHierarchy = (value) => {
-    setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, hierarchy: value } : item)));
-  };
+  // const selectHierarchy = (value) => {
+  //   setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, hierarchy: "court-district-hierarchy" } : item)));
+  // };
 
-  const selectboundaryType = (value) => {
-    setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, boundaryType: value } : item)));
-  };
+  // const selectboundaryType = (value) => {
+  //   setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, boundaryType: "state" } : item)));
+  // };
 
-  const selectedboundary = (value) => {
-    setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, boundary: value } : item)));
-  };
+  // const selectedboundary = (value) => {
+  //   setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, boundary: "pg" } : item)));
+  // };
 
   const selectrole = (e, data) => {
-    // const index = jurisdiction?.roles.filter((ele) => ele.code == data.code);
-    // let res = null;
-    // if (index.length) {
-    //   jurisdiction?.roles.splice(jurisdiction?.roles.indexOf(index[0]), 1);
-    //   res = jurisdiction.roles;
-    // } else {
-    //   res = [{ ...data }, ...jurisdiction?.roles];
-    // }
     let res = [];
     e && e?.map((ob) => {
       res.push(ob?.[1]);
@@ -222,14 +236,13 @@ function Jurisdiction({
     setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, roles: res } : item)));
   };
 
-
   const onRemove = (index, key) => {
     let afterRemove = jurisdiction?.roles.filter((value, i) => {
       return i !== index;
     });
     setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, roles: afterRemove } : item)));
-
   };
+
   return (
     <div key={jurisdiction?.keys} style={{ marginBottom: "16px" }}>
       <div style={{ border: "1px solid #E3E3E3", padding: "16px", marginTop: "8px" }}>
@@ -248,14 +261,14 @@ function Jurisdiction({
             </div>
           ) : null}
         </LabelFieldPair>
-        <LabelFieldPair>
+        {/* <LabelFieldPair>
           <CardLabel isMandatory={true} className="card-label-smaller">{`${t("HR_HIERARCHY_LABEL")} * `}</CardLabel>
           <Dropdown
             className="form-field"
             selected={jurisdiction?.hierarchy}
             disable={false}
             isMandatory={true}
-            option={gethierarchylistdata(hierarchylist) || []}
+            option={ []}
             select={selectHierarchy}
             optionKey="code"
             t={t}
@@ -268,7 +281,7 @@ function Jurisdiction({
             isMandatory={true}
             selected={jurisdiction?.boundaryType}
             disable={BoundaryType?.length === 0}
-            option={BoundaryType}
+            option={[]}
             select={selectboundaryType}
             optionKey="i18text"
             t={t}
@@ -281,13 +294,12 @@ function Jurisdiction({
             isMandatory={true}
             selected={jurisdiction?.boundary}
             disable={Boundary?.length === 0}
-            option={Boundary}
+            option={[]}
             select={selectedboundary}
             optionKey="i18text"
             t={t}
           />
-        </LabelFieldPair>
-
+        </LabelFieldPair> */}
         <LabelFieldPair>
           <CardLabel className="card-label-smaller">{t("HR_COMMON_TABLE_COL_ROLE")} *</CardLabel>
           <div className="form-field">

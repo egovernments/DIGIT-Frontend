@@ -10,9 +10,11 @@ const SelectDateofBirthEmployment = ({ t, config, onSelect, formData = {}, userT
       label: "HR_BIRTH_DATE_LABEL",
       type: "date",
       name: "dob",
-      validation: {
-        isRequired: true,
-        title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
+      populators:{
+        validation: {
+          isRequired: true,
+          title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
+        }
       },
       isMandatory: true,
     },

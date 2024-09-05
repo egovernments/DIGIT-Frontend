@@ -10,8 +10,10 @@ const SelectEmployeeEmailId = ({ t, config, onSelect, formData = {}, userType, r
       label: "HR_EMAIL_LABEL",
       type: "email",
       name: "emailId",
-      validation: {
-        title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
+      populators:{
+        validation: {
+          title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
+        }
       },
     },
   ];
@@ -39,7 +41,7 @@ const SelectEmployeeEmailId = ({ t, config, onSelect, formData = {}, userType, r
                 onChange={(e) => setValue(e.target.value, input.name)}
                 disable={false}
                 defaultValue={undefined}
-                {...input.validation}
+                {...input.populators.validation}
               />
               {currentValue&&currentValue.length>0&&!currentValue.match(Digit.Utils.getPattern('Email'))&&<CardLabelError style={{ width: "100%", marginTop: '-15px', fontSize: '16px', marginBottom: '12px'}}>{t("CS_PROFILE_EMAIL_ERRORMSG")}</CardLabelError>}
             </div>

@@ -16,7 +16,7 @@ import SelectEmployeeId from "./components/pageComponents/SelectEmployeeId";
 import SelectEmployeeName from "./components/pageComponents/SelectEmployeeName";
 import SelectEmployeeType from "./components/pageComponents/SelectEmployeeType";
 import EmployeeApp from "./pages";
-import CreateEmployee from "./pages/createEmployee";
+import CreateEmployee from "./pages/CreateEmployee";
 import EditEmployee from "./pages/EditEmployee/index";
 import Details from "./pages/EmployeeDetails";
 import Inbox from "./pages/Inbox";
@@ -29,9 +29,9 @@ export const HRMSModule = ({ stateCode, userType, tenants }) => {
 
   Digit.SessionStorage.set("HRMS_TENANTS", tenants);
   const { path, url } = useRouteMatch();
-  if (!Digit.Utils.hrmsAccess()) {
+  /*if (!Digit.Utils.hrmsAccess()) {
     return null;
-  }
+  } */
   if (userType === "employee") {
     return <EmployeeApp path={path} url={url} />;
   } else return null;
@@ -57,6 +57,7 @@ const componentsToRegister = {
   HRMSResponse: Response,
   HREditEmpolyee: EditEmployee,
   HRCreateEmployee: CreateEmployee,
+  CreateEmployee,
   HRInbox: Inbox,
   HRMS_INBOX_FILTER: (props) => <InboxFilter {...props} />,
 };

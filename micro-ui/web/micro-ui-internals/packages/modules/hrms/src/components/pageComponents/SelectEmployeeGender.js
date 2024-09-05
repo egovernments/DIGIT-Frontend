@@ -10,9 +10,11 @@ const SelectEmployeeGender = ({ t, config, onSelect, formData = {}, userType, re
       label: "HR_GENDER_LABEL",
       type: "text",
       name: "gender",
-      validation: {
-        isRequired: true,
-        title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
+      populators:{
+        validation: {
+          isRequired: true,
+          title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
+        }
       },
       isMandatory: true,
     },
@@ -69,7 +71,7 @@ const SelectEmployeeGender = ({ t, config, onSelect, formData = {}, userType, re
                 disable={false}
                 defaultValue={undefined}
                 t={t}
-                {...input.validation}
+                {...input.populators.validation}
               />
             </div>
           </LabelFieldPair>

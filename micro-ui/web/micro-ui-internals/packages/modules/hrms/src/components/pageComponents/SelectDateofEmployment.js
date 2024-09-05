@@ -10,9 +10,11 @@ const SelectDateofEmployment = ({ t, config, onSelect, formData = {}, userType, 
       label: "HR_APPOINTMENT_DATE_LABEL",
       type: "date",
       name: "dateOfAppointment",
-      validation: {
-        isRequired: true,
-        title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
+      populators:{
+        validation: {
+          isRequired: true,
+          title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
+        }
       },
       isMandatory: true,
     },
@@ -40,7 +42,7 @@ const SelectDateofEmployment = ({ t, config, onSelect, formData = {}, userType, 
                 date={formData && formData[config.key] ? formData[config.key][input.name] : undefined}
                 onChange={(e) => setValue(e, input.name)}
                 disable={false}
-                {...input.validation}
+                {...input.populators.validation}
                 defaultValue={undefined}
               />
             </div>
