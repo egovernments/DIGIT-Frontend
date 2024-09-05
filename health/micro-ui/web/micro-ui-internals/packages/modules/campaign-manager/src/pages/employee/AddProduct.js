@@ -92,6 +92,16 @@ function AddProduct() {
               productId: i?.id,
               variation: target?.variant,
               sku: `${target?.name} - ${target?.variant}`,
+              additionalFields: {
+                "schema": "ProductVariant",
+                "version": 1,
+                fields: [
+                    {
+                        value: state?.projectType,
+                        key: "projectType"
+                    }
+                ]
+            }
             };
           }
           return;

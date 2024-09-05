@@ -2,7 +2,7 @@ import React, { useReducer, Fragment, useEffect, useState } from "react";
 import { CardText, LabelFieldPair, Card, CardLabel, CardSubHeader, Paragraph, Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { TextInput, InfoCard } from "@egovernments/digit-ui-components";
-// import { deliveryConfig } from "../../configs/deliveryConfig";
+import { deliveryConfig } from "../../configs/deliveryConfig";
 
 const initialState = (saved, filteredDeliveryConfig, refetch) => {
   const data = {
@@ -19,6 +19,12 @@ const initialState = (saved, filteredDeliveryConfig, refetch) => {
           : filteredDeliveryConfig?.cycleConfig
           ? filteredDeliveryConfig?.cycleConfig?.deliveries
           : 1,
+      isDisable: 
+      saved?.cycleConfgureDate?.IsDisable && !refetch
+      ? saved?.cycleConfgureDate?.IsDisable
+      : filteredDeliveryConfig?.cycleConfig
+      ? filteredDeliveryConfig?.cycleConfig?.IsDisable
+      : false,
     },
     cycleData: saved?.cycleData ? [...saved?.cycleData] : [],
   };
@@ -158,22 +164,25 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
           name: "infocard",
         }}
         variant="default"
-        style={{ marginBottom : "1.5rem", marginLeft : "0rem", maxWidth: "100%" }}
+        style={{ marginBottom: "1.5rem", marginLeft: "0rem", maxWidth: "100%" }}
         additionalElements={[
-          <img className="whoLogo"
+          <img
+            className="whoLogo"
             // style="display: block;-webkit-user-select: none;margin: auto;cursor: zoom-in;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;"
             src="https://cdn.worldvectorlogo.com/logos/world-health-organization-logo-1.svg"
             alt="WHO Logo"
             width="164"
             height="90"
           ></img>,
-          <span style={{ color: "#505A5F" }}>{t(
-            `CAMPAIGN_CYCLE_INFO_${
-              tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code
-                ? tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code?.toUpperCase()
-                : tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.toUpperCase()
-            }`
-          )}</span>,
+          <span style={{ color: "#505A5F" }}>
+            {t(
+              `CAMPAIGN_CYCLE_INFO_${
+                tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code
+                  ? tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code?.toUpperCase()
+                  : tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.toUpperCase()
+              }`
+            )}
+          </span>,
         ]}
         label={"Info"}
         headerClassName={"headerClassName"}
@@ -193,7 +202,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
             {t(`CAMPAIGN_NO_OF_CYCLE`)}
             <span className="mandatory-span">*</span>
           </CardLabel>
-          <TextInput type="numeric" value={cycleConfgureDate?.cycle} onChange={(d) => updateCycle(d)} />
+          <TextInput type="numeric" value={cycleConfgureDate?.cycle} onChange={(d) => updateCycle(d)} disabled={cycleConfgureDate?.isDisable} />
           {/* <PlusMinusInput defaultValues={cycleConfgureDate?.cycle} onSelect={(d) => updateCycle(d)} /> */}
         </LabelFieldPair>
         <LabelFieldPair>
@@ -201,7 +210,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
             {t(`CAMPAIGN_NO_OF_DELIVERY`)}
             <span className="mandatory-span">*</span>
           </CardLabel>
-          <TextInput type="numeric" value={cycleConfgureDate?.deliveries} onChange={(d) => updateDelivery(d)} />
+          <TextInput type="numeric" value={cycleConfgureDate?.deliveries} onChange={(d) => updateDelivery(d)} disabled={cycleConfgureDate?.isDisable} />
           {/* <PlusMinusInput defaultValues={cycleConfgureDate?.deliveries} onSelect={(d) => updateDelivery(d)} /> */}
         </LabelFieldPair>
       </Card>

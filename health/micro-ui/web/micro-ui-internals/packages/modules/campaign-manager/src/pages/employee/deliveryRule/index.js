@@ -85,6 +85,29 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
                       : [],
                   };
                 })
+              : filteredDeliveryConfig?.projectType === "IRS-mz"
+              ? filteredDeliveryConfig?.deliveryConfig?.map((item, index) => {
+                  return {
+                    ruleKey: index + 1,
+                    delivery: {},
+                    attributes: item?.attributeConfig
+                      ? item?.attributeConfig?.map((i, c) => {
+                          return {
+                            key: c + 1,
+                            attribute: { code: i?.attrValue },
+                            operator: { code: i?.operatorValue },
+                            value: i?.value,
+                          };
+                        })
+                      : [{ key: 1, attribute: null, operator: null, value: "" }],
+                    // products: [],
+                    products: item?.productConfig
+                      ? item?.productConfig?.map((i, c) => ({
+                          ...i,
+                        }))
+                      : [],
+                  };
+                })
               : filteredDeliveryConfig && filteredDeliveryConfig?.deliveryConfig?.[subTabIndex]
               ? filteredDeliveryConfig?.deliveryConfig?.[subTabIndex]?.conditionConfig?.map((item, index) => {
                   if (item) {
@@ -133,8 +156,8 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
                     ruleKey: 1,
                     delivery: {},
                     attributes:
-                      filteredDeliveryConfig && filteredDeliveryConfig?.attributeConfig
-                        ? filteredDeliveryConfig?.attributeConfig?.map((i, c) => ({
+                      filteredDeliveryConfig && filteredDeliveryConfig?.deliveryConfig?.[0]?.attributeConfig
+                        ? filteredDeliveryConfig?.deliveryConfig?.[0]?.attributeConfig?.map((i, c) => ({
                             key: c + 1,
                             attribute: { code: i?.attrValue },
                             operator: { code: i?.operatorValue },
@@ -393,15 +416,16 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
         });
         return tempSub;
       case "ADD_DELIVERY_RULE":
-        const updatedDeliveryRules = [
-          ...action.payload.currentDeliveryRules,
-          {
-            ruleKey: action.payload.currentDeliveryRules.length + 1,
-            delivery: {},
-            attributes: [{ key: 1, attribute: null, operator: null, value: "" }],
-            products: [],
-          },
-        ];
+        const updatedDeliveryRules = 
+          [
+              ...action.payload.currentDeliveryRules,
+              {
+                ruleKey: action.payload.currentDeliveryRules.length + 1,
+                delivery: {},
+                attributes: [{ key: 1, attribute: null, operator: null, value: "" }],
+                products: [],
+              },
+            ];
         const updatedData = state.map((i) => {
           if (i.active) {
             const activeDelivery = i.deliveries.find((j) => j.active);

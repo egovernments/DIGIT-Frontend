@@ -12,7 +12,10 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               key: "campaignDetails",
               type: "component",
               skipAPICall: false,
-              component: "EstimateComponent",
+
+              resourceToUpdate:"CAMPAIGN",//which api to call enum ["CAMPAIGN","PLAN"]
+              component: "CampaignDetails",
+
               withoutLabel: true,
               disable: false,
               customProps: {
@@ -36,6 +39,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               key: "microplanDetails",
               type: "component",
               skipAPICall: false,
+              resourceToUpdate:"PLAN",
               component: "MicroplanDetails",
               withoutLabel: true,
               disable: false,

@@ -552,6 +552,8 @@ const SetupCampaign = ({ hierarchyType }) => {
                 value:
                   attribute?.attribute?.code === "Gender" && attribute?.value?.length > 0
                     ? attribute?.value
+                    : attribute?.attribute?.code === "TYPE_OF_STRUCTURE"
+                    ? attribute?.value 
                     : attribute?.value
                     ? Number(attribute?.value)
                     : null,
@@ -916,7 +918,7 @@ const SetupCampaign = ({ hierarchyType }) => {
       cycle.deliveries.forEach((delivery) => {
         delivery.deliveryRules.forEach((rule) => {
           // Validate attributes and products length
-          if (projectType !== "LLIN-MZ" && !rule?.deliveryType) {
+          if (projectType === "MR-DN" && !rule?.deliveryType) {
             isValid = false;
             deliveryRulesError?.push({
               name: `CYCLE_${cycle?.cycleIndex}`,

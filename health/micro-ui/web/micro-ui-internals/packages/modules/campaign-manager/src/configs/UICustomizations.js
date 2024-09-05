@@ -208,10 +208,7 @@ export const UICustomizations = {
                   onOverlayClick={() => setTimeline(false)}
                   onClose={() => setTimeline(false)}
                 >
-                  <TimelineComponent
-                    campaignId={row?.id}
-                    resourceId={resourceIdArr}
-                  />
+                  <TimelineComponent campaignId={row?.id} resourceId={resourceIdArr} />
                 </PopUp>
               )}
             </>
@@ -447,6 +444,7 @@ export const UICustomizations = {
                 name: row?.campaignName,
                 data: row,
                 projectId: row?.projectId,
+                campaignId: row?.id,
               },
               "",
               `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${row?.id}`

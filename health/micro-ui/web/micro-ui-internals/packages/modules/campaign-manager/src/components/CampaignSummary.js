@@ -5,6 +5,7 @@ import { Button, EditIcon, Header, Loader, ViewComposer } from "@egovernments/di
 import { InfoBannerIcon, Toast } from "@egovernments/digit-ui-components";
 import { DownloadIcon } from "@egovernments/digit-ui-react-components";
 import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
+import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 
 function mergeObjects(item) {
   const arr = item;
@@ -133,7 +134,32 @@ const fetchResourceFile = async (tenantId, resourceIdArr) => {
   });
   return res?.ResourceDetails;
 };
-
+const fetchcd = async (tenantId, projectId) => { 
+  const url = getProjectServiceUrl();
+  const reqCriteriaResource = {
+    url: `${url}/v1/_search`,
+    params: {
+      tenantId: tenantId,
+      limit: 10,
+      offset: 0,
+    },
+    body: {
+      Projects: [
+        {
+          tenantId: tenantId,
+          id: projectId
+        }
+      ]
+    }
+  };
+try{
+  const res = await Digit.CustomService.getResponse(reqCriteriaResource);
+  return res?.Project?.[0];
+}
+catch(e) {
+  console.log("error", e);
+}
+};
 const CampaignSummary = (props) => {
   const { t } = useTranslation();
   const history = useHistory();
@@ -149,6 +175,11 @@ const CampaignSummary = (props) => {
   const [userErrors, setUserErrors] = useState(null);
   const [cycleDatesError, setCycleDatesError] = useState(null);
   const [summaryErrors, setSummaryErrors] = useState(null);
+  const [projectId, setprojectId] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [cycles, setCycles] = useState([]);
+  const [cards, setCards] = useState([]);
   const isPreview = searchParams.get("preview");
   const handleRedirect = (step, activeCycle) => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -196,6 +227,21 @@ const CampaignSummary = (props) => {
     // }
   }, [props?.props?.summaryErrors]);
 
+  useEffect(() => {
+        const fun = async () => {
+          let temp = await fetchcd(tenantId, projectId);
+          if (temp) {
+            await new Promise((resolve) => {
+              setStartDate(temp?.startDate);
+              setEndDate(temp?.endDate);
+              setCycles(temp?.additionalDetails?.projectType?.cycles);
+              resolve();
+            });
+          }
+        };
+        fun();
+  }, [projectId]);
+
   const { isLoading, data, error, refetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
@@ -209,7 +255,11 @@ const CampaignSummary = (props) => {
             resourceIdArr.push(i?.createResourceId);
           }
         });
+        setStartDate(data?.[0]?.startDate);
+        setEndDate(data?.[0]?.endDate);
         let processid;
+        setprojectId(data?.[0]?.projectId);
+        setCards(data?.cards);
 
         const ss = async () => {
           let temp = await fetchResourceFile(tenantId, resourceIdArr);
@@ -260,11 +310,13 @@ const CampaignSummary = (props) => {
                     },
                     {
                       key: "CAMPAIGN_START_DATE",
-                      value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
+                      // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
+                      value: Digit.Utils.date.convertEpochToDate(startDate) || t("CAMPAIGN_SUMMARY_NA")
                     },
                     {
                       key: "CAMPAIGN_END_DATE",
-                      value: Digit.Utils.date.convertEpochToDate(data?.[0]?.endDate) || t("CAMPAIGN_SUMMARY_NA"),
+                      // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.endDate) || t("CAMPAIGN_SUMMARY_NA"),
+                      value: Digit.Utils.date.convertEpochToDate(endDate) || t("CAMPAIGN_SUMMARY_NA")
                     },
                   ],
                 },
@@ -470,6 +522,38 @@ const CampaignSummary = (props) => {
       fetchUser();
     }
   }, [data]);
+
+const updatedObject= { ...data };
+
+useEffect(()=> {
+  // Update startDate and endDate in the `data` object
+    updatedObject.data.startDate = startDate;
+    updatedObject.data.endDate = endDate;
+    updatedObject.cards[1].sections[0].values[2].value=Digit.Utils.date.convertEpochToDate(startDate);
+    updatedObject.cards[1].sections[0].values[3].value=Digit.Utils.date.convertEpochToDate(endDate);
+}, [startDate, endDate]);
+
+if(updatedObject?.cards?.[1]?.sections?.[0]?.values?.[0]?.value==t("MR-DN"))
+{  
+  updatedObject.cards.forEach((card) => {
+    if (card.name && card.name.startsWith("CYCLE_")) {
+        const cycleId = card.name.split("_")[1];
+        const cycleData = cycles.find((cycle) => cycle.id === cycleId);
+        
+        if (cycleData) {
+            card.sections.forEach((section) => {
+                if (section.props && section.props.data) {
+                    section.props.data.startDate = new Date(cycleData.startDate).toLocaleDateString('en-GB');
+                    // section.props.data.startDate = Digit.Utils.date.convertEpochToDate(cycleData.startDate) || t("CAMPAIGN_SUMMARY_NA");
+                    section.props.data.endDate = new Date(cycleData.endDate).toLocaleDateString('en-GB');
+                    // section.props.data.startDate = Digit.Utils.date.convertEpochToDate(cycleData.endDate) || t("CAMPAIGN_SUMMARY_NA");
+                }
+            });
+        }
+    }
+  });
+}
+
   return (
     <>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -486,7 +570,7 @@ const CampaignSummary = (props) => {
         )} */}
       </div>
       <div className="campaign-summary-container">
-        <ViewComposer data={data} cardErrors={summaryErrors} />
+        <ViewComposer data={updatedObject} cardErrors={summaryErrors} />
         {showToast && (
           <Toast
             type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : "success"}
@@ -497,6 +581,6 @@ const CampaignSummary = (props) => {
       </div>
     </>
   );
-};
+}
 
 export default CampaignSummary;
