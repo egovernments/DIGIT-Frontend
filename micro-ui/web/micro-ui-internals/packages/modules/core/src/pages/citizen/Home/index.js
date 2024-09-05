@@ -58,7 +58,7 @@ const Home = () => {
     history.push(`/${window?.contextPath}/citizen/${redirectURL}`);
   }
   /* fix for sanitation ui */
-  if (window?.location?.href?.includes?.("sanitation-ui")) {
+  if (window?.location?.href?.includes?.("sanitation-ui")|| window?.location?.href?.includes?.("sandbox-ui")) {
     history.push(`/${window?.contextPath}/citizen/all-services`);
   }
 

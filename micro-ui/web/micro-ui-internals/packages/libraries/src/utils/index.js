@@ -187,7 +187,9 @@ const pgrAccess = () => {
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
   const pgrRoles = ["PGR_LME", "PGR-ADMIN", "CSR", "CEMP", "FEMP", "DGRO", "ULB Operator", "GRO", "GO", "RO", "GA"];
-
+  if (window.globalPath === "sandbox-ui") {
+    pgrRoles.push("SUPERUSER");
+  }
   const PGR_ACCESS = userRoles?.filter((role) => pgrRoles.includes(role));
 
   return PGR_ACCESS?.length > 0;
@@ -303,7 +305,7 @@ const receiptsAccess = () => {
   const RECEIPTS_ACCESS = userRoles?.filter((role) => receiptsRoles?.includes(role));
   return RECEIPTS_ACCESS?.length > 0;
 };
-const hrmsRoles = ["HRMS_ADMIN"];
+const hrmsRoles = ["HRMS_ADMIN","SUPERUSER"];
 const hrmsAccess = () => {
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
