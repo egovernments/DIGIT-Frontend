@@ -1,5 +1,5 @@
-import React from "react";
-import { BackLink, Button, Card, CardHeader, CardText, FieldV1, SVG } from "@egovernments/digit-ui-components";
+import React, { useRef } from "react";
+import { BackLink, Button, Card, CardHeader, CardLabel, CardText, FieldV1, SVG, TextInput } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useRouteMatch, useHistory, useLocation } from "react-router-dom";
 import Background from "../../../components/Background";
@@ -10,6 +10,7 @@ const ViewUrl = () => {
   const location = useLocation();
   const { tenant } = location.state || {};
   const history = useHistory();
+  const ref = useRef(null);
 
   const onButtonClick = () => {
     window.location.href = `/${window?.globalPath}/${tenant}/employee`;
@@ -17,6 +18,11 @@ const ViewUrl = () => {
     // pathname: `/${window?.globalPath}/${tenant}/employee`,
     // });
   };
+
+  const handleCopyUrl = () => {
+    navigator.clipboard.writeText(ref.current.value);
+  };
+
   return (
     <Background>
       <div className="employeeBackbuttonAlign">
@@ -31,7 +37,7 @@ const ViewUrl = () => {
           {t("SANDBOX_HEADER")}
         </CardHeader>
         <CardText className="cardText-sandbox">{t("SAMDBOX_URL_SUB")}</CardText>
-        <FieldV1
+        {/* <FieldV1
           className="field-sandbox"
           withoutLabel={false}
           label={t("SANDBOX_URL")}
@@ -40,7 +46,18 @@ const ViewUrl = () => {
           value={`${window.location.host}/${window?.globalPath}/${tenant}`}
           placeholder={t("SANDBOX_URL_PLACEHOLDER")}
           populators={{}}
-        />
+        /> */}
+        <CardLabel> {t("SANDBOX_URL")} </CardLabel>
+        <div className="sandbox-url-wrapper">
+          <TextInput
+            inputRef={ref}
+            className={"urlInputText"}
+            onChange={() => {}}
+            nonEditable={true}
+            value={`${window.location.host}/${window?.globalPath}/${tenant}`}
+          />
+          <Button className="copyButton" variation={"secondary"} onClick={() => handleCopyUrl()} label={t("COPY_URL")}></Button>
+        </div>
         <div className="sandbox-url-footer">{t("SANDBOX_URL_FOOT")}</div>
         <Button onClick={onButtonClick} label={t("SIGN_IN")}></Button>
       </Card>

@@ -120,7 +120,7 @@ const componentsToRegister = {
   ChangeCity,
   ChangeLanguage,
   PrivacyComponent,
-  OtpComponent
+  OtpComponent,
 };
 
 export const initCoreComponents = () => {

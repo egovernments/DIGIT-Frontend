@@ -24,6 +24,19 @@ const MDMSSearchv2 = () => {
   const history = useHistory();
   
   let {masterName:modulee,moduleName:master,tenantId} = Digit.Hooks.useQueryParams()
+  let {from, screen, action} = Digit.Hooks.useQueryParams()
+
+  const additionalParams = {
+    from: from,
+    screen: screen,
+    action: action
+  }
+  
+  Object.keys(additionalParams).forEach(key => {
+    if (additionalParams[key] === undefined || additionalParams[key] === null) {
+      delete additionalParams[key];
+    }
+  });
   
   const [availableSchemas, setAvailableSchemas] = useState([]);
   const [currentSchema, setCurrentSchema] = useState(null);
@@ -157,15 +170,17 @@ const MDMSSearchv2 = () => {
 
   const handleAddMasterData = () => {
     let actionLink=updatedConfig?.actionLink
+    const additionalParamString = new URLSearchParams(additionalParams).toString();
     if(modulee&&master){
-      actionLink= `workbench/mdms-add-v2?moduleName=${master}&masterName=${modulee}`
+      actionLink= `workbench/mdms-add-v2?moduleName=${master}&masterName=${modulee}${additionalParamString ? "&"+additionalParamString : ""}`
     }
-    history.push(`/${window?.contextPath}/employee/${actionLink}`);
+    history.push(`/${window?.contextPath}/employee/${actionLink}${additionalParamString ? "&"+additionalParamString : ""}`);
   }
 
   const onClickRow = ({original:row}) => {
     const [moduleName,masterName] = row.schemaCode.split(".")
-    history.push(`/${window.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${row.uniqueIdentifier}`)
+    const additionalParamString = new URLSearchParams(additionalParams).toString();
+    history.push(`/${window.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${row.uniqueIdentifier}${additionalParamString ? "&"+additionalParamString : ""}`)
   }
 
   if (isLoading) return <Loader />;
