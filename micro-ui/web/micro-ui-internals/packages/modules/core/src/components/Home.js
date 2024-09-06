@@ -1,10 +1,10 @@
 import {
-  BackLink,
   CitizenHomeCard,
   CitizenInfoLabel,
   Loader,
-} from "@egovernments/digit-ui-components";
-import { CustomSVG } from "@egovernments/digit-ui-components";
+} from "@egovernments/digit-ui-react-components";
+
+import { BackLink, CustomSVG } from "@egovernments/digit-ui-components";
 
 import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
@@ -97,7 +97,7 @@ const CitizenHome = ({
       <div className="citizen-all-services-wrapper">
         {location.pathname.includes(
           "sanitation-ui/citizen/all-services"
-        ) ? null : (
+        ) || (location.pathname.includes("sandbox-ui") && location.pathname.includes("all-services")) ? null : (
           <BackLink />
         )}
         <div className="citizenAllServiceGrid">

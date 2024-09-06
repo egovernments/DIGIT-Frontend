@@ -1,4 +1,5 @@
-import { BackLink, CardHeader, CardLabelError, PageBasedInput, SearchOnRadioButtons } from "@egovernments/digit-ui-components";
+import { BackLink } from "@egovernments/digit-ui-components";
+import { CardHeader, CardLabelError, PageBasedInput, SearchOnRadioButtons } from "@egovernments/digit-ui-react-components";
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router-dom";
@@ -83,6 +84,7 @@ const { data: subTenants, refetch, isLoading: isLoadingSubTenants } = requestCri
       const redirectBackTo = location.state?.redirectBackTo;
       if(window?.globalPath === "sandbox-ui"){
         history.push(`/${window?.contextPath}/citizen/all-services`);
+        return;
       }
       if (redirectBackTo) {
         history.replace(redirectBackTo);
