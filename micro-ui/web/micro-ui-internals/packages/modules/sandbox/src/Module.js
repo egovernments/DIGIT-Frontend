@@ -10,6 +10,7 @@ export const SandboxModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const moduleCode = ["sandbox"];
+  const MDMSmoduleCode = [`rainmaker-mdms`, `rainmaker-workbench`, `rainmaker-schema`];
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
@@ -18,7 +19,12 @@ export const SandboxModule = ({ stateCode, userType, tenants }) => {
     modulePrefix: "digit",
   });
 
-  if (isLoading) {
+  const { isLoading: isMDMSLoading, data: MDMSstore } = Digit.Services.useStore({
+    stateCode,
+    MDMSmoduleCode,
+    language,
+  });
+  if (isLoading && isMDMSLoading) {
     return <Loader />;
   }
   return <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} />;

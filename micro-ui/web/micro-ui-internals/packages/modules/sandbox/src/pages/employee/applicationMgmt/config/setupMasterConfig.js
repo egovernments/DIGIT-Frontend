@@ -7,38 +7,35 @@ export const setupMasterConfig = {
       module: "PGR",
       active: true,
       description: "COMPLAINT_MANAGEMENT_DESCRIPTION",
+      masterDescription: "COMPLAINT_MANAGEMENT_SETUP_MASTER_DESCRIPTION",
       actionText: "SETUP_NOW",
       features: [
         {
           id: 1,
-          name: "COMPLAINT_MANAGEMENT_REGISTRATION",
+          name: "COMPLAINT_MANAGEMENT_REGISTRATION_LOGIN_CREATION",
         },
         {
           id: 2,
-          name: "COMPLAINT_MANAGEMENT_FEATURE_LOGIN_CREATION",
-        },
-        {
-          id: 3,
           name: "COMPLAINT_MANAGEMENT_LODGING_FILE",
         },
         {
-          id: 4,
+          id: 3,
           name: "COMPLAINT_MANAGEMENT_ASSIGNING_COMPLAINT",
         },
         {
-          id: 5,
+          id: 4,
           name: "COMPLAINT_MANAGEMENT_RESOLVING_COMPLAINT",
         },
         {
-          id: 6,
+          id: 5,
           name: "COMPLAINT_MANAGEMENT_MANAGE_COMPLAINTS",
         },
         {
-          id: 7,
+          id: 6,
           name: "COMPLAINT_MANAGEMENT_TRACK_COMPLAINTS",
         },
         {
-          id: 8,
+          id: 7,
           name: "COMPLAINT_MANAGEMENT_DASHBOARD_REPORTS",
         },
       ],
@@ -48,6 +45,7 @@ export const setupMasterConfig = {
       module: "HCM",
       active: true,
       description: "HCM_DESCRIPTION",
+      masterDescription: "HCM_SETUP_MASTER_DESCRIPTION",
       actionText: "SETUP_NOW",
       features: [
         {
@@ -61,15 +59,20 @@ export const setupMasterConfig = {
       module: "HRMS",
       active: true,
       description: "HRMS_DESCRIPTION",
+      masterDescription: "HRMS_SETUP_MASTER_DESCRIPTION",
       actionText: "SETUP_NOW",
       features: [
         {
           id: 1,
-          name: "HRMS_REGISTRATION",
+          name: "HRMS_REGISTRATION_LOGIN_CREATION",
         },
         {
           id: 2,
-          name: "HRMS_LOGIN_CREATION",
+          name: "HRMS_MODIFY_EMPLOYEE",
+        },
+        {
+          id: 3,
+          name: "HRMS_VIEW_EMPLOYEE",
         },
       ],
     },

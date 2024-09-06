@@ -18,7 +18,7 @@
     "react-router-dom": "5.3.0"
   },
   "dependencies": {
-    "@egovernments/digit-ui-react-components": "1.8.2-beta.12",
+    "@egovernments/digit-ui-react-components": "1.8.2-beta.13",
     "@egovernments/digit-ui-module-utilities":"1.0.1-beta.39",
     "jsonpath": "^1.1.1",
     "react": "17.0.2",

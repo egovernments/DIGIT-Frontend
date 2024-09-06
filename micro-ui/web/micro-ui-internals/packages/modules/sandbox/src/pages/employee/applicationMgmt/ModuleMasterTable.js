@@ -41,11 +41,11 @@ const ModuleMasterTable = () => {
         onError: (error, variables) => {
           console.log(error);
           setShowPopUp(false);
-          setShowToast({ key: "error", label: error, isError: true });
+          setShowToast({ key: "error", label: check ? "MANNUAL_MASTER_SETUP_ERROR" : "DEFAULT_MASTER_SETUP_ERROR", isError: true });
         },
         onSuccess: async (data) => {
           setShowPopUp(false);
-          setShowToast({ key: "success", label: "SUCCESS" });
+          setShowToast({ key: "success", label: check ? "MANNUAL_MASTER_SETUP_SUCCESS" : "DEFAULT_MASTER_SETUP_SUCCESS" });
         },
       }
     );
@@ -68,8 +68,8 @@ const ModuleMasterTable = () => {
           type={"default"}
           className={"masterHandlerPopup"}
           footerclassName={"masterHandlerPopUpFooter"}
-          heading={t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_HEADER")}
-          children={[<div>{t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_TEXT")}</div>]}
+          heading={t("SANDBOX_SETUP_MASTER_MODAL_HEADER")}
+          children={[<div>{t("SANDBOX_SETUP_MASTER_MODAL_TEXT")}</div>]}
           onOverlayClick={() => {}}
           footerChildren={[
             <Button
