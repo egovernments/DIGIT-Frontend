@@ -183,7 +183,7 @@ function Jurisdiction({
         .map((item) => { return { ...item.boundary, i18text: Digit.Utils.locale.convertToLocale(item.boundary.label, 'EGOV_LOCATION_BOUNDARYTYPE') } })
     );
   }, [jurisdiction?.hierarchy, data?.MdmsRes]);
-
+  const tenant = Digit.ULBService.getCurrentTenantId();
   let requestCriteria = null;
 
   requestCriteria = {
@@ -325,8 +325,7 @@ function Jurisdiction({
             disable={Boundary?.length === 0}
             option={Boundary}
             select={selectedboundary}
-            //Digit.Utils.getMultiRootTenant()
-            optionKey={true ? "code" : "i18text"}
+            optionKey={Digit.Utils.getMultiRootTenant() ? "code" : "i18text"}
             t={t}
           />
         </LabelFieldPair>
