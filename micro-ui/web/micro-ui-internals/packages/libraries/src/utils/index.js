@@ -305,7 +305,7 @@ const receiptsAccess = () => {
   const RECEIPTS_ACCESS = userRoles?.filter((role) => receiptsRoles?.includes(role));
   return RECEIPTS_ACCESS?.length > 0;
 };
-const hrmsRoles = ["HRMS_ADMIN", "SUPERUSER"];
+const hrmsRoles = ["HRMS_ADMIN","SUPERUSER"];
 const hrmsAccess = () => {
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
