@@ -24,7 +24,8 @@ const TopBar = ({
   const [profilePic, setProfilePic] = React.useState(null);
 
   React.useEffect(async () => {
-    const tenant = Digit.ULBService.getCurrentTenantId();
+
+    const tenant = Digit.Utils.getMultiRootTenant() ? Digit.ULBService.getStateId(): Digit.ULBService.getCurrentTenantId();
     const uuid = userDetails?.info?.uuid;
     if (uuid) {
       const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
