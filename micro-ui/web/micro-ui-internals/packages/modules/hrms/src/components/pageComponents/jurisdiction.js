@@ -174,8 +174,6 @@ function Jurisdiction({
   const [BoundaryType, selectBoundaryType] = useState([]);
   const [Boundary, selectboundary] = useState([]);
   const cities = window.globalPath === "sandbox-ui" ? Digit.Hooks.pgr.useTenants() : null;
-  console.log("data?.MdmsRes", data?.MdmsRes?.["egov-location"]["TenantBoundary"])
-  console.log("JJAJ", data?.MdmsRes)
   useEffect(() => {
     selectBoundaryType(
       data?.MdmsRes?.["egov-location"]["TenantBoundary"]
@@ -216,11 +214,9 @@ function Jurisdiction({
   // Now you can use subTenants, refetch, and isLoadingSubTenants
 
   const getSubTenants = () => subTenants?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
-  console.log("checking sub tenant list", getSubTenants());
   const subTenantList = getSubTenants();
 
   useEffect(() => {
-    console.log("what is this", data?.MdmsRes?.tenant?.tenants.filter(city => city.code != Digit.ULBService.getStateId()).map(city => { return { ...city, i18text: Digit.Utils.locale.getCityLocale(city.code) } }));
     if (window.globalPath === 'sandbox-ui') {
       selectboundary(subTenantList);
     }
