@@ -31,14 +31,6 @@ export const ULBService = {
     // TODO: change when setter is done.
 
     const user = UserService.getUser();
-    const isMultiRootTenant = window?.globalConfigs?.getConfig("MULTI_ROOT_TENANT") || false;
-    const pathname = window.location.pathname;
-    const context = window?.globalConfigs?.getConfig("CONTEXT_PATH");
-    const start = pathname.indexOf(context) + context.length + 1;
-    const employeeIndex = pathname.indexOf("employee");
-    const citizenIndex = pathname.indexOf("citizen");
-    const end = (employeeIndex !== -1) ? employeeIndex : (citizenIndex !== -1) ? citizenIndex : -1;
-    const tenant = end > start ? pathname.substring(start, end).replace(/\/$/, "") : "";
     if (user?.extraRoleInfo) {
       const isDsoRoute = Digit.Utils.detectDsoRoute(window.location.pathname);
       if (isDsoRoute) {
@@ -47,8 +39,7 @@ export const ULBService = {
     }
 
     //TODO: fix tenant id from userinfo
-    const tenantId = user?.info?.type !== "EMPLOYEE" && isMultiRootTenant && tenant ? tenant :
-      user?.info?.type === "EMPLOYEE" && user?.info?.tenantId ? user?.info?.tenantId : window?.globalConfigs.getConfig("STATE_LEVEL_TENANT_ID");
+    const tenantId =  user?.info?.type === "EMPLOYEE" && user?.info?.tenantId ? user?.info?.tenantId : window?.globalConfigs.getConfig("STATE_LEVEL_TENANT_ID");
     return tenantId;
   },
   /**
