@@ -9,7 +9,7 @@ import {
   PTIcon,
   Loader,
   WhatsNewCard,
-} from "@egovernments/digit-ui-components";
+} from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -57,8 +57,8 @@ const Home = () => {
   if (redirectURL) {
     history.push(`/${window?.contextPath}/citizen/${redirectURL}`);
   }
-  /* fix for sanitation ui */
-  if (window?.location?.href?.includes?.("sanitation-ui")|| window?.location?.href?.includes?.("sandbox-ui")) {
+  /* fix for sanitation ui & sandbox*/
+  if (window?.location?.href?.includes?.("sanitation-ui") || window?.location?.href?.includes?.("sandbox-ui")) {
     history.push(`/${window?.contextPath}/citizen/all-services`);
   }
 

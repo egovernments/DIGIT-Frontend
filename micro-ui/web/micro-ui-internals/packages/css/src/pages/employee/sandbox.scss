@@ -315,3 +315,21 @@
     justify-content: center;
   }
 }
+.main.center-container.citizen-home-container {
+  z-index: 100;
+  justify-content: flex-start;
+}
+.SideBarStatic {
+  z-index: 10;
+  height: 100vh;
+}
+.citizen-home-footer {
+  position: absolute;
+  bottom: 0;
+}
+.citizen-form-wrapper {
+  justify-content: flex-start;
+  .citizen-card-input.citizen-card-input--front {
+    margin-bottom: 0;
+  }
+}
