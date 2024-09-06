@@ -16,7 +16,7 @@ export const processLinkData = (newData, code, t) => {
   const obj = newData?.[`${code}`];
   if (obj) {
     obj.map((link) => {
-      if (window.globalPath === "sandbox-ui") {
+      if (Digit.Utils.getMultiRootTenant()) {
         link["navigationURL"] = link["navigationURL"].replace("/sandbox-ui/citizen", `/sandbox-ui/${Digit.ULBService.getStateId()}/citizen`);
       }
       link.link = link["navigationURL"];
