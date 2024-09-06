@@ -30,10 +30,6 @@ if (window?.globalPath === 'sandbox-ui') {
       includeSubTenants: true
     },
     body: {
-      "inbox": {
-        "limit": 10,
-        "offset": 0
-      },
       apiOperation: "SEARCH",
     },
     config: {

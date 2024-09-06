@@ -27,10 +27,6 @@ if (window.globalPath === 'sandbox-ui') {
       includeSubTenants: true
     },
     body: {
-      "inbox": {
-        "limit": 10,
-        "offset": 0
-      },
       apiOperation: "SEARCH",
     },
     config: {
@@ -62,23 +58,30 @@ const { data: subTenants, refetch, isLoading: isLoadingSubTenants } = requestCri
 
   const cityData = window.globalPath === "sandbox-ui" ? getSubTenants() : getCities();
 
+  const { isLoading: hierarchyLOading, data:hierarchyType } = Digit.Hooks.useCustomMDMS(
+    Digit.ULBService.getStateId(),
+     "sandbox-ui",
+      [
+        { name: "ModuleMasterConfig",filter:'[?(@.module == "PGR")].master[?(@.type == "boundary")]' 
+
+        }
+      ],
+      {
+        select: (data) => {
+          const formattedData = data?.["sandbox-ui"]?.["ModuleMasterConfig"]
+          return formattedData?.[0]?.code;
+        },
+      }
+    );
+
   const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
   cityData[0]?.code,
-  window.globalPath === "sandbox-ui" ? "REVENUE" : "admin",
+  hierarchyType,
   {
     enabled: !!cityData[0],
   },
   t
 );
-
-  // const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
-  //   getCities()[0]?.code,
-  //   "admin",
-  //   {
-  //     enabled: !!getCities()[0],
-  //   },
-  //   t
-  // );
 
   const [localities, setLocalities] = useState(fetchedLocalities);
   const [selectedLocality, setSelectedLocality] = useState(null);
