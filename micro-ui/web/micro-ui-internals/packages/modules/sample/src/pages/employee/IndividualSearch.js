@@ -5,7 +5,7 @@ import {
   import React, { useState, useEffect } from "react";
   import { useTranslation } from "react-i18next";
   import { searchconfig } from "../../configs/IndividualSearchCOnfig";
-  
+ 
   const defaultSearchValues = {
     individualName: "",
     mobileNumber: "",

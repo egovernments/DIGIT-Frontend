@@ -15,6 +15,9 @@ import SampleComponents from "./SampleComponents";
 import PanelCardResponse from "./PanelCardResponse";
 import TabIndividualSearch from "./TabIndividualSearch";
 import IndividualViewDetails from "./IndividualViewDetails";
+import SorCreate from "./SorCreate";
+import SorSearch from "./SorSearch";
+import SorView from "./SorView";
 
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
@@ -53,6 +56,9 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/sample-success`} component={() => <PanelCardResponse />} />
         <PrivateRoute path={`${path}/tab-search-individual`} component={() => <TabIndividualSearch />} />
         <PrivateRoute path={`${path}/individual-details-view`} component={() => <IndividualViewDetails />} />
+        <PrivateRoute path={`${path}/create-sor`} component={()=> <SorCreate/>}/>
+        <PrivateRoute path={`${path}/search-sor`} component={()=> <SorSearch/> }     />
+        <PrivateRoute path={`${path}/view-sor`} component={()=>  <SorView/>}   />
       </AppContainer>
     </Switch>
   );

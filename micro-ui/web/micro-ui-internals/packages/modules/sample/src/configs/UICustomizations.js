@@ -7,8 +7,29 @@ import React from "react";
 // these functions will act as middlewares
 // var Digit = window.Digit || {};
 
-const businessServiceMap = {};
+// const businessServiceMap = {};
 
-const inboxModuleNameMap = {};
+// const inboxModuleNameMap = {};
 
-export const UICustomizations = {};
+// export const UICustomizations = {};
+
+//preProcess function for handling data transformations or customizations before a search request is made.
+export const UICustomizations = {
+    SorSearchConfig:{
+        preProcess:(data)=>{
+            const tenantId=Digit.ULBService.getCurrentTenantId();
+            data.body.MdmsCriteria.tenantId = tenantId
+
+            const filters={}
+            const custom = data.body.MdmsCriteria.customs
+            const {field, value}   =  custom || {}
+            if(field && value && field.name){
+                filters[field.name] = value
+            }
+
+            data.body.MdmsCriteria.filters = filters
+            delete data.body.customs
+            return data;
+        }
+    }
+}
