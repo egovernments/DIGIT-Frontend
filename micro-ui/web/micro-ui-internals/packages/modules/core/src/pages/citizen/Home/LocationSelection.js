@@ -26,14 +26,10 @@ if (window?.globalPath === 'sandbox-ui') {
   requestCriteria = {
     url: "/tenant-management/tenant/_search",
     params: {
-      code: Digit.ULBService.getCurrentTenantId(),
+      code: Digit.ULBService.getStateId(),
       includeSubTenants: true
     },
     body: {
-      "inbox": {
-        "limit": 10,
-        "offset": 0
-      },
       apiOperation: "SEARCH",
     },
     config: {

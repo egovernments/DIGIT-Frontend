@@ -106,13 +106,13 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
   const [focusIndex, setFocusIndex] = useState(-1);
 
   function getdepartmentdata() {
-    return data?.MdmsRes?.["common-masters"]?.Department.map((ele) => {
+    return data?.MdmsRes?.["common-masters"]?.Department?.map((ele) => {
       ele["i18key"] = t("COMMON_MASTERS_DEPARTMENT_" + ele.code);
       return ele;
     });
   }
   function getdesignationdata() {
-    return data?.MdmsRes?.["common-masters"]?.Designation.map((ele) => {
+    return data?.MdmsRes?.["common-masters"]?.Designation?.map((ele) => {
       ele["i18key"] = t("COMMON_MASTERS_DESIGNATION_" + ele.code);
       return ele;
     });

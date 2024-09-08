@@ -27,7 +27,7 @@ export const ULBService = {
    *
    * @returns {String}
    */
-  getCurrentTenantId: () => {
+  s: () => {
     // TODO: change when setter is done.
 
     const user = UserService.getUser();

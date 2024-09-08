@@ -13,14 +13,10 @@ if (window.globalPath === 'sandbox-ui') {
   requestCriteria = {
     url: "/tenant-management/tenant/_search",
     params: {
-      code: Digit.ULBService.getCurrentTenantId(),
+      code: Digit.ULBService.getStateId(),
       includeSubTenants: true
     },
     body: {
-      "inbox": {
-        "limit": 10,
-        "offset": 0
-      },
       apiOperation: "SEARCH",
     },
     config: {
@@ -43,9 +39,26 @@ const { data: subTenants, refetch, isLoading: isLoadingSubTenants } = requestCri
     const { city_complaint } = value;
     return city_complaint ? city_complaint : null;
   });
+
+  const { isLoading: hierarchyLOading, data:hierarchyType } = Digit.Hooks.useCustomMDMS(
+    Digit.ULBService.getStateId(),
+     "sandbox-ui",
+      [
+        { name: "ModuleMasterConfig",filter:'[?(@.module == "PGR")].master[?(@.type == "boundary")]' 
+
+        }
+      ],
+      {
+        select: (data) => {
+          const formattedData = data?.["sandbox-ui"]?.["ModuleMasterConfig"]
+          return formattedData?.[0]?.code;
+        },
+      }
+    );
+
   const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
     selectedCity?.code,
-    window.globalPath === "sandbox-ui" ? "REVENUE" : "admin",
+    hierarchyType,
     {
       enabled: !!selectedCity,
     },
