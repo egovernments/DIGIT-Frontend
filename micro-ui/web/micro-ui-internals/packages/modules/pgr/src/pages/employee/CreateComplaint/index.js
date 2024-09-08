@@ -9,7 +9,7 @@ import { FormComposer } from "../../../components/FormComposer";
 import { createComplaint } from "../../../redux/actions/index";
 
 export const CreateComplaint = ({ parentUrl }) => {
-  const cities = window.globalPath === "sandbox-ui" ? Digit.Hooks.pgr.useTenants() : null;
+  const cities = Digit.Hooks.pgr.useTenants();
 
   const { t } = useTranslation();
 
@@ -19,7 +19,7 @@ export const CreateComplaint = ({ parentUrl }) => {
 let requestCriteria = null;
 
 // Check the value of window.globalPath
-if (window.globalPath === 'sandbox-ui') {
+if (Digit.Utils.getMultiRootTenant()) {
   requestCriteria = {
     url: "/tenant-management/tenant/_search",
     params: {
@@ -55,12 +55,12 @@ const { data: subTenants, refetch, isLoading: isLoadingSubTenants } = requestCri
   const [subType, setSubType] = useState({});
   const [pincode, setPincode] = useState("");
   const [selectedCity, setSelectedCity] = useState(
-    window.globalPath === "sandbox-ui"
+    Digit.Utils.getMultiRootTenant()
       ? getSubTenants()[0] || null
       : getCities()[0] || null
   );
 
-  const cityData = window.globalPath === "sandbox-ui" ? getSubTenants() : getCities();
+  const cityData = Digit.Utils.getMultiRootTenant() ? getSubTenants() : getCities();
 
   const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
   cityData[0]?.code,
@@ -165,15 +165,15 @@ const { data: subTenants, refetch, isLoading: isLoadingSubTenants } = requestCri
   const onSubmit = async (data) => {
     if (!canSubmit) return;
     const cityCode = selectedCity.code;
-    const city = window.globalPath === "sandbox-ui"
+    const city = Digit.Utils.getMultiRootTenant()
     ? selectedCity.name
     : selectedCity.city.name;
   
-  const district = window.globalPath === "sandbox-ui"
+  const district = Digit.Utils.getMultiRootTenant()
     ? selectedCity.name
     : selectedCity.city.name;
   
-  const region = window.globalPath === "sandbox-ui"
+  const region = Digit.Utils.getMultiRootTenant()
     ? selectedCity.name
     : selectedCity.city.name;
     const localityCode = selectedLocality.code;
@@ -273,11 +273,11 @@ const { data: subTenants, refetch, isLoading: isLoadingSubTenants } = requestCri
               selected={selectedCity}
               freeze={true}
               option={
-                window.globalPath === "sandbox-ui" ? getSubTenants() : getCities()
+                Digit.Utils.getMultiRootTenant() ? getSubTenants() : getCities()
               }
               id="city"
               select={selectCity}
-              optionKey={window.globalPath === "sandbox-ui" ? "name" : "i18nKey"}
+              optionKey={Digit.Utils.getMultiRootTenant() ? "name" : "i18nKey"}
               t={t}
             />
           ),

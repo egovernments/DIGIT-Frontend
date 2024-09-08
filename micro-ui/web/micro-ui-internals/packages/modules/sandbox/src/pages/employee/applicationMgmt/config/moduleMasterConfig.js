@@ -85,11 +85,11 @@ export const moduleMasterConfig = (module) => ({
         searchResult: {
           uiConfig: {
             columns: [
-              {
-                label: "SANDBOX_MODULE_NAME",
-                jsonPath: "code",
-                additionalCustomization: true,
-              },
+              // {
+              //   label: "SANDBOX_MODULE_NAME",
+              //   jsonPath: "code",
+              //   additionalCustomization: true,
+              // },
               {
                 label: "SANDBOX_MASTER_NAME",
                 jsonPath: "master",

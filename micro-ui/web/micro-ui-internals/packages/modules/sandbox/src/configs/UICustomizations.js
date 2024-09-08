@@ -224,24 +224,20 @@ export const UICustomizations = {
                   value?.split(".")?.[1]
                 }`}
               >
-                {value?.split(".")?.[0]}
+                {t(`SANDBOX_${value?.split(".")?.[0]}`)}
               </Link>
             </span>
           );
         case "SANDBOX_MASTER_NAME":
-          return row?.code?.split(".")?.[1] ? row?.code?.split(".")?.[1] : row?.code?.split(".")?.[0];
+          return row?.code?.split(".")?.[1] ? t(`SANDBOX_${row?.code?.split(".")?.[1]}`) : t(`SANDBOX_${row?.code?.split(".")?.[0]}`);
 
         case "SANDBOX_MASTER_TYPE":
-          return value;
+          return t(`SANDBOX_${value}`);
 
         case "SANDBOX_ACTIONS":
           const handleRedirect = (value, type) => {
             if (type === "boundary") {
-              window.history.pushState(
-                null,
-                "",
-                `/${window.contextPath}/employee/workbench/upload-boundary?hierarchyType=${value}&from=sandbox`
-              );
+              window.history.pushState(null, "", `/${window.contextPath}/employee/workbench/upload-boundary?hierarchyType=${value}&from=sandbox`);
               const navEvent = new PopStateEvent("popstate");
               window.dispatchEvent(navEvent);
             } else {

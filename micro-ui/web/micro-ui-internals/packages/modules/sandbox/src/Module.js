@@ -24,6 +24,9 @@ export const SandboxModule = ({ stateCode, userType, tenants }) => {
     MDMSmoduleCode,
     language,
   });
+  if (!Digit.Utils.sandboxAccess()) {
+    return null;
+  }
   if (isLoading && isMDMSLoading) {
     return <Loader />;
   }
