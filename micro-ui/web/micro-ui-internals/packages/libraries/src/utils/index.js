@@ -123,6 +123,18 @@ const getStaticMapUrl = (latitude, longitude) => {
 const getLocaleRegion = () => {
   return window?.globalConfigs?.getConfig("LOCALE_REGION") || "IN";
 };
+
+const getMultiRootTenant = () => {
+  return window?.globalConfigs?.getConfig("MULTI_ROOT_TENANT") || false;
+};
+
+const getGlobalContext = () => {
+  return window?.globalConfigs?.getConfig("CONTEXT_PATH") || null;
+};
+
+const getOTPBasedLogin = () => {
+  return window?.globalConfigs?.getConfig("OTP_BASED_LOGIN") || false;
+};
 /**
  * Custom util to get the default locale
  *
@@ -313,6 +325,14 @@ const hrmsAccess = () => {
   return HRMS_ACCESS?.length > 0;
 };
 
+const sandboxAccess = () => {
+  const sandboxRoles = ["SUPERUSER"];
+  const userInfo = Digit.UserService.getUser();
+  const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
+  const SANDBOX_ACCESS = userRoles?.filter((role) => sandboxRoles?.includes(role));
+  return SANDBOX_ACCESS?.length > 0;
+};
+
 const wsAccess = () => {
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
@@ -380,5 +400,9 @@ export default {
   ...privacy,
   getDefaultLanguage,
   getLocaleDefault,
-  getLocaleRegion
+  getLocaleRegion,
+  getMultiRootTenant,
+  getGlobalContext,
+  getOTPBasedLogin,
+  sandboxAccess
 };

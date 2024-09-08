@@ -3,7 +3,7 @@ import { CardLabel, Dropdown, FormStep, RadioButtons } from "@egovernments/digit
 import { subtract } from "lodash";
 
 const SelectAddress = ({ t, config, onSelect, value }) => {
-  const allCities = window.globalPath === "sandbox-ui"  ? Digit.Hooks.pgr.useTenants(): null;
+  const allCities = Digit.Hooks.pgr.useTenants();
   const cities = value?.pincode ? allCities.filter((city) => city?.pincode?.some((pin) => pin == value["pincode"])) : allCities;
   // Define the requestCriteria
 let requestCriteria = null;
@@ -98,14 +98,14 @@ const { data: subTenants, refetch, isLoading: isLoadingSubTenants } = requestCri
     <FormStep config={config} onSelect={onSubmit} t={t} isDisabled={selectedLocality ? false : true}>
       <div>
         <CardLabel>{t("MYCITY_CODE_LABEL")}</CardLabel>
-        {(window.globalPath === "sandbox-ui" ? subTenants?.length : cities?.length) < 5 ? (
+        {(Digit.Utils.getMultiRootTenant() ? subTenants?.length : cities?.length) < 5 ? (
           <RadioButtons selectedOption={selectedCity} options={
-            window.globalPath === "sandbox-ui" ? subTenants : cities
-          } optionsKey={window.globalPath === "sandbox-ui" ? "name" : "i18nKey"} onSelect={selectCity} />
+            Digit.Utils.getMultiRootTenant() ? subTenants : cities
+          } optionsKey={Digit.Utils.getMultiRootTenant() ? "name" : "i18nKey"} onSelect={selectCity} />
         ) : (
           <Dropdown isMandatory selected={selectedCity} option={
-            window.globalPath === "sandbox-ui" ? subTenants : cities
-          } select={selectCity} optionKey={window.globalPath === "sandbox-ui" ? "name" : "i18nKey"} t={t} />
+            Digit.Utils.getMultiRootTenant() ? subTenants : cities
+          } select={selectCity} optionKey={Digit.Utils.getMultiRootTenant() ? "name" : "i18nKey"} t={t} />
         )}
         {selectedCity && localities && <CardLabel>{t("CS_CREATECOMPLAINT_MOHALLA")}</CardLabel>}
         {selectedCity && localities && (

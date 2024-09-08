@@ -1,9 +1,8 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { CardSubHeader, Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
+import { Header, Table } from "@egovernments/digit-ui-react-components";
 import { useHistory, useLocation } from "react-router-dom";
-import { moduleMasterConfig } from "./config/moduleMasterConfig";
-import { Button, Card, CardHeader, CardText, SVG } from "@egovernments/digit-ui-components";
+import { Button, Card, CardHeader, CardText, Loader, SVG } from "@egovernments/digit-ui-components";
 import { setupMasterConfig } from "./config/setupMasterConfig";
 
 const renderHierarchy = (categories) => {
@@ -51,48 +50,55 @@ const SetupMaster = () => {
     [{ name: "ModuleMasterConfig" }],
     {
       select: (data) => {
-        // return data?.["sandbox-ui"]?.ModuleMasterConfig?.filter((item) => item?.module === module);
-        function categorizeData(data) {
-          const result = {};
+        let xx = data?.["sandbox-ui"]?.ModuleMasterConfig?.filter((item) => item?.module === module)?.[0]?.master;
+        let respData = xx.map((i) => ({
+          masterName: t(i.code),
+          type: t(i.type),
+          description: t(`SANDBOX_MASTER_SETUP_DESC_${i.code}`),
+        }));
+        return respData;
+        // console.log("FFSFAFS", data)
+        // function categorizeData(data) {
+        //   const result = {};
 
-          data.forEach((item) => {
-            const masterItems = item.master;
-            masterItems.forEach((entry) => {
-              const { code, type } = entry;
+        //   data.forEach((item) => {
+        //     const masterItems = item.master;
+        //     masterItems.forEach((entry) => {
+        //       const { code, type } = entry;
 
-              // Initialize type category
-              if (!result[type]) {
-                result[type] = [];
-              }
+        //       // Initialize type category
+        //       if (!result[type]) {
+        //         result[type] = [];
+        //       }
 
-              // Extract code before and after the dot
-              const [beforeDot, afterDot] = code.split(".");
+        //       // Extract code before and after the dot
+        //       const [beforeDot, afterDot] = code.split(".");
 
-              // Find or create the category before the dot
-              let category = result[type].find((cat) => cat.master === beforeDot);
-              if (!category) {
-                category = { master: beforeDot, child: [] };
-                result[type].push(category);
-              }
+        //       // Find or create the category before the dot
+        //       let category = result[type].find((cat) => cat.master === beforeDot);
+        //       if (!category) {
+        //         category = { master: beforeDot, child: [] };
+        //         result[type].push(category);
+        //       }
 
-              // If there is an afterDot, add it as a child
-              if (afterDot) {
-                category.child.push({ master: afterDot });
-              } else {
-                // If there is no dot, just add the item to the child array of its own category
-                if (code !== beforeDot) {
-                  // Avoid adding items without dots
-                  category.child.push({ master: code });
-                }
-              }
-            });
-          });
+        //       // If there is an afterDot, add it as a child
+        //       if (afterDot) {
+        //         category.child.push({ master: afterDot });
+        //       } else {
+        //         // If there is no dot, just add the item to the child array of its own category
+        //         if (code !== beforeDot) {
+        //           // Avoid adding items without dots
+        //           category.child.push({ master: code });
+        //         }
+        //       }
+        //     });
+        //   });
 
-          return result;
-        }
+        //   return result;
+        // }
 
         // Transform the data
-        return categorizeData(data?.["sandbox-ui"]?.ModuleMasterConfig?.filter((item) => item?.module === module));
+        // return categorizeData(data?.["sandbox-ui"]?.ModuleMasterConfig?.filter((item) => item?.module === module));
       },
       enabled: true,
     },
@@ -108,6 +114,9 @@ const SetupMaster = () => {
     );
   };
 
+  if (moduleMasterLoading) {
+    return <Loader />;
+  }
   return (
     <Card className={"sandboxSetupMasterInfo"}>
       {!showMaster && (
@@ -167,14 +176,77 @@ const SetupMaster = () => {
                   ))}
               </li>
             ))} */}
-          <div>
+          {/* <div>
             {Object.entries(moduleMasterData).map(([type, categories], index) => (
               <div key={index}>
                 <CardHeader className="setupMaster-subheading">{type.charAt(0).toUpperCase() + type.slice(1)}</CardHeader>
                 {renderHierarchy(categories)}
               </div>
             ))}
-          </div>
+          </div> */}
+          <Table
+            pageSizeLimit={50}
+            className={"table"}
+            t={t}
+            customTableWrapperClassName={"dss-table-wrapper"}
+            disableSort={true}
+            autoSort={false}
+            data={moduleMasterData}
+            totalRecords={5}
+            columns={[
+              {
+                Header: "Master",
+                accessor: "masterName",
+                id: "masterName",
+              },
+              {
+                Header: "Type",
+                accessor: "type",
+                id: "type",
+              },
+              {
+                Header: "Description",
+                accessor: "description",
+                id: "description",
+              },
+            ]}
+            isPaginationRequired={false}
+            manualPagination={false}
+            getCellProps={(cellInfo) => {
+              return {
+                style: {
+                  padding: "20px 18px",
+                  fontSize: "16px",
+                  whiteSpace: "normal",
+                },
+              };
+            }}
+          />
+          {/* <Table
+            columns={[
+              {
+                Header: t("HR_EMP_ID_LABEL"),
+                disableSortBy: true,
+                Cell: ({ row }) => {
+                  return <span className="link">Hello</span>;
+                },
+              },
+              {
+                Header: t("HR_EMP_NAME_LABEL"),
+                disableSortBy: true,
+                Cell: ({ row }) => {
+                  // return GetCell(`${row.original?.user?.name}`);
+                  return <span className="link">Hello</span>;
+                },
+              },
+            ]}
+            data={[{ label: "HR_EMP_NAME_LABEL" }, { label: "HELLO" }]}
+            getCellProps={(cellInfo) => {
+              return {
+                style: {},
+              };
+            }}
+          /> */}
           <div className="setupMasterSetupActionBar">
             <Button
               className="actionButton"
