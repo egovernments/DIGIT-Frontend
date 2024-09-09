@@ -5,7 +5,11 @@ import { initLibraries } from "@egovernments/digit-ui-libraries";
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initSandboxComponents } from "@egovernments/digit-ui-module-sandbox";
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
-import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
+import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";import {
+  initPGRComponents,
+  PGRReducers,
+} from "@egovernments/digit-ui-module-pgr";
+import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
 
@@ -15,11 +19,13 @@ const enabledModules = [
   "Utilities",
   "Engagement",
   "Workbench",
-  "Sandbox"
+  "Sandbox",
+  "HRMS",
+  "PGR"
 ];
 
 const moduleReducers = (initData) => ({
-  initData,
+  initData, pgr: PGRReducers(initData),
 });
 
 const initDigitUI = () => {
@@ -28,7 +34,9 @@ const initDigitUI = () => {
     PGR: {},
     commonUiConfig: UICustomizations,
   };
+  initPGRComponents();
   initCoreComponents();
+  initHRMSComponents();
   initUtilitiesComponents();
   initWorkbenchComponents();
   initSandboxComponents();

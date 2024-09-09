@@ -7,7 +7,9 @@
     "packages/react-components",
     "packages/modules/core",
     "packages/modules/workbench",
-    "packages/modules/sandbox"
+    "packages/modules/sandbox",
+    "packages/modules/pgr",
+    "packages/modules/hrms"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
@@ -30,6 +32,7 @@
     "dev:hrms": "cd packages/modules/hrms && yarn start",
     "dev:common": "cd packages/modules/common && yarn start",
     "dev:utilities": "cd packages/modules/utilities && yarn start",
+    "dev:pgr": "cd packages/modules/pgr && yarn start",
     "dev:sandbox": "cd packages/modules/sandbox && yarn start",
     "dev:engagement": "cd packages/modules/engagement && yarn start",
     "dev:workbench": "cd packages/modules/workbench && yarn start",
@@ -38,11 +41,12 @@
     "build:components": "cd packages/react-components && yarn build",
     "buildD:dss": "cd packages/modules/dss && yarn build",
     "build:core": "cd packages/modules/core && yarn build",
-    "buildD:hrms": "cd packages/modules/hrms && yarn build",
+    "build:hrms": "cd packages/modules/hrms && yarn build",
     "buildD:common": "cd packages/modules/common && yarn build",
     "buildD:utilities": "cd packages/modules/utilities && yarn build",
     "buildD:engagement": "cd packages/modules/engagement && yarn build",
     "build:sandbox": "cd packages/modules/sandbox && yarn build",
+    "build:pgr": "cd packages/modules/pgr && yarn build",
     "build:workbench": "cd packages/modules/workbench && yarn build",
     "deploy:jenkins": "./scripts/jenkins.sh",
     "clean": "rm -rf node_modules"
