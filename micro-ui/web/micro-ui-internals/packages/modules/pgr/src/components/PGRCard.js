@@ -23,7 +23,7 @@ const PGRCard = () => {
 
   let role = ["CSR"];
 
-if (window.globalPath === "sandbox-ui") {
+if (Digit.Utils.getMultiRootTenant()) {
   role.push("SUPERUSER");
 }
 

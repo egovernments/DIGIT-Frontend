@@ -51,7 +51,7 @@ const Home = ({
     [
       {
         name: "actions-test",
-        filter: `[?(@.url == '${window.globalPath === "sandbox-ui" ? window.globalPath : window.contextPath}-card')]`,
+        filter: `[?(@.url == '${Digit.Utils.getMultiRootTenant() ? window.globalPath : window.contextPath}-card')]`,
       },
     ],
     {

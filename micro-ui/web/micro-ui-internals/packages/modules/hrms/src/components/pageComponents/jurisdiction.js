@@ -173,7 +173,7 @@ function Jurisdiction({
 
   const [BoundaryType, selectBoundaryType] = useState([]);
   const [Boundary, selectboundary] = useState([]);
-  const cities = window.globalPath === "sandbox-ui" ? Digit.Hooks.pgr.useTenants() : null;
+  const cities = Digit.Utils.getMultiRootTenant() ? Digit.Hooks.pgr.useTenants() : null;
   useEffect(() => {
     selectBoundaryType(
       data?.MdmsRes?.["egov-location"]["TenantBoundary"]
