@@ -31,11 +31,11 @@ let propsForCSR = [
   {
     label: t("ES_PGR_NEW_COMPLAINT"),
     link: `/${window?.contextPath}/employee/pgr/complaint/create`,
-    role: role
+    roles: role
   }
 ];
 
-  propsForCSR = propsForCSR.filter(link => link.role && Digit.Utils.didEmployeeHasRole(link.role) );
+  propsForCSR = propsForCSR.filter(link => link.roles && Digit.Utils.didEmployeeHasRole(link.roles) );
 
   const propsForModuleCard = {
     Icon: <Icon />,
