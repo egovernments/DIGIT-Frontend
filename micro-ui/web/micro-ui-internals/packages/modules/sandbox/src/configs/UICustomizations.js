@@ -180,7 +180,7 @@ export const UICustomizations = {
     preProcess: (data, additionalDetails) => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
       data.params = {
-        tenantId: tenantId
+        tenantId: tenantId,
       };
       data.body = { RequestInfo: data.body.RequestInfo };
       data.body.MdmsCriteria = {
@@ -200,7 +200,7 @@ export const UICustomizations = {
         const temp = data?.MdmsRes?.["sandbox-ui"]?.ModuleMasterConfig?.find((item) => item?.module === additionalDetails?.moduleName);
         return {
           module: temp?.module,
-          master: temp?.master?.filter((item) => item.type === "module" || item.type === "common"),
+          master: temp?.master?.filter((item) => item.type === "module" || item.type === "common" || item.type === "boundary"),
         };
       };
 
@@ -224,30 +224,35 @@ export const UICustomizations = {
                   value?.split(".")?.[1]
                 }`}
               >
-                {value?.split(".")?.[0]}
+                {t(`SANDBOX_${value?.split(".")?.[0]}`)}
               </Link>
             </span>
           );
         case "SANDBOX_MASTER_NAME":
-          return row?.code?.split(".")?.[1] ? row?.code?.split(".")?.[1] : row?.code?.split(".")?.[0];
+          return row?.code?.split(".")?.[1] ? t(`SANDBOX_${row?.code?.split(".")?.[1]}`) : t(`SANDBOX_${row?.code?.split(".")?.[0]}`);
 
         case "SANDBOX_MASTER_TYPE":
-          return value;
+          return t(`SANDBOX_${value}`);
 
         case "SANDBOX_ACTIONS":
-          const handleRedirect = (value) => {
-            window.history.pushState(
-              null,
-              "",
-              `/${window.contextPath}/employee/workbench/mdms-search-v2?moduleName=${value?.split(".")?.[0]}&masterName=${value?.split(".")?.[1]}`
-            );
-            const navEvent = new PopStateEvent("popstate");
-            window.dispatchEvent(navEvent);
+          const handleRedirect = (value, type) => {
+            if (type === "boundary") {
+              window.history.pushState(null, "", `/${window.contextPath}/employee/workbench/upload-boundary?hierarchyType=${value}&from=sandbox`);
+              const navEvent = new PopStateEvent("popstate");
+              window.dispatchEvent(navEvent);
+            } else {
+              window.history.pushState(
+                null,
+                "",
+                `/${window.contextPath}/employee/workbench/mdms-search-v2?moduleName=${value?.split(".")?.[0]}&masterName=${value?.split(".")?.[1]}`
+              );
+              const navEvent = new PopStateEvent("popstate");
+              window.dispatchEvent(navEvent);
+            }
           };
-
           return (
             <div>
-              <SVG.Edit style={{ cursor: "pointer" }} onClick={() => handleRedirect(row?.code)} />
+              <SVG.Edit style={{ cursor: "pointer" }} onClick={() => handleRedirect(row?.code, row?.type)} />
             </div>
           );
         default:

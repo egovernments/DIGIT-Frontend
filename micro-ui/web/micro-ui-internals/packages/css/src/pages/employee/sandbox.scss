@@ -92,7 +92,7 @@
   align-self: flex-start;
   margin-bottom: 3rem;
   font-size: 14px;
-  margin-top: -2.5rem;
+  margin-top: -0.5rem;
   color: #505a5f;
   font-family: "Roboto";
 }
@@ -240,7 +240,7 @@
     margin-top: 0.5rem;
   }
   .sandbox-url-footer {
-    margin-top: -1.5rem;
+    margin-top: 0.5rem;
   }
   .digit-button-primary {
     width: 100%;
@@ -252,5 +252,88 @@
 .digit-employee-card.card-sandbox {
   .digit-card-header.cardHeader-sandbox {
     color: #00703c !important;
+  }
+}
+.sandbox-url-wrapper {
+  display: flex;
+  width: 100%;
+  .digit-text-input-field.urlInputText {
+  }
+  .digit-button-secondary.large.copyButton {
+    width: 30%;
+    padding: 0;
+  }
+}
+
+.setupMasterSetupActionBar {
+  margin-top: 2.5rem;
+  margin-bottom: -1rem;
+  margin-left: -1rem;
+  margin-right: -1rem;
+  z-index: 1000;
+  box-shadow: 0 -0.063rem 0.125rem 0 rgba(0, 0, 0, 0.14902);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: row-reverse;
+}
+.digit-employee-card.sandboxSetupMasterInfo {
+  .h1.headerFlex {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  .digit-card-header.subHeader {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: unset !important;
+  }
+}
+.digit-card-header.setupMaster-subheading {
+  font-size: 1.5rem;
+  color: unset !important;
+  margin-left: 1.5rem;
+}
+.digit-popup-wrapper.masterHandlerPopup {
+  .digit-popup-header {
+    .header-close-container {
+      .digit-popup-close {
+        display: none !important;
+      }
+    }
+  }
+}
+.digit-topbar-ulb {
+  .state {
+    width: 80px;
+    height: 19px;
+  }
+}
+.digit-popup-footer.masterHandlerPopUpFooter {
+  .digit-popup-footer-buttons {
+    margin-left: unset;
+    width: 100%;
+    justify-content: center;
+  }
+}
+.main.center-container.citizen-home-container {
+  z-index: 100;
+  justify-content: flex-start;
+}
+.SideBarStatic {
+  z-index: 10;
+  height: 100vh;
+}
+
+.citizen-form-wrapper {
+  justify-content: flex-start;
+  .citizen-card-input.citizen-card-input--front {
+    margin-bottom: 0;
+  }
+}
+.action-bar-wrap{
+  .menu-wrap{
+    p{
+      margin: 0 !important;
+    }
   }
 }

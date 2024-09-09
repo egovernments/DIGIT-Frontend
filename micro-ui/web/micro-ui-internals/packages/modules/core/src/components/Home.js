@@ -1,12 +1,10 @@
 import {
-  BackButton,
   CitizenHomeCard,
   CitizenInfoLabel,
   Loader,
-  FSMIcon,
-  MCollectIcon,
-  BillsIcon
-} from "@egovernments/digit-ui-components";
+} from "@egovernments/digit-ui-react-components";
+
+import { BackLink, CustomSVG } from "@egovernments/digit-ui-components";
 
 import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
@@ -18,7 +16,12 @@ export const processLinkData = (newData, code, t) => {
   const obj = newData?.[`${code}`];
   if (obj) {
     obj.map((link) => {
-      (link.link = link["navigationURL"]), (link.i18nKey = t(link["name"]));
+      if (Digit.Utils.getMultiRootTenant()) {
+        link["navigationURL"] = link["navigationURL"].replace("/sandbox-ui/citizen", `/sandbox-ui/${Digit.ULBService.getStateId()}/citizen`);
+      }
+      link.link = link["navigationURL"];
+      link.i18nKey = t(link["name"]);
+     
     });
   }
   const newObj = {
@@ -56,23 +59,23 @@ export const processLinkData = (newData, code, t) => {
 const iconSelector = (code) => {
   switch (code) {
     case "PT":
-      return <PTIcon className="fill-path-primary-main" />;
+      return <CustomSVG.PTIcon className="fill-path-primary-main" />;
     case "WS":
-      return <WSICon className="fill-path-primary-main" />;
+      return <CustomSVG.WSICon className="fill-path-primary-main" />;
     case "FSM":
-      return <FSMIcon className="fill-path-primary-main" />;
+      return <CustomSVG.FSMIcon className="fill-path-primary-main" />;
     case "MCollect":
-      return <MCollectIcon className="fill-path-primary-main" />;
+      return <CustomSVG.MCollectIcon className="fill-path-primary-main" />;
     case "PGR":
-      return <PGRIcon className="fill-path-primary-main" />;
+      return <CustomSVG.PGRIcon className="fill-path-primary-main" />;
     case "TL":
-      return <TLIcon className="fill-path-primary-main" />;
+      return <CustomSVG.TLIcon className="fill-path-primary-main" />;
     case "OBPS":
-      return <OBPSIcon className="fill-path-primary-main" />;
+      return <CustomSVG.OBPSIcon className="fill-path-primary-main" />;
     case "Bills":
-      return <BillsIcon className="fill-path-primary-main" />;
+      return <CustomSVG.BillsIcon className="fill-path-primary-main" />;
     default:
-      return <PTIcon className="fill-path-primary-main" />;
+      return <CustomSVG.PTIcon className="fill-path-primary-main" />;
   }
 };
 const CitizenHome = ({
@@ -88,14 +91,14 @@ const CitizenHome = ({
   if (isLoading) {
     return <Loader />;
   }
-
+ 
   return (
     <React.Fragment>
       <div className="citizen-all-services-wrapper">
         {location.pathname.includes(
           "sanitation-ui/citizen/all-services"
-        ) ? null : (
-          <BackButton />
+        ) || (location.pathname.includes("sandbox-ui") && location.pathname.includes("all-services")) ? null : (
+          <BackLink />
         )}
         <div className="citizenAllServiceGrid">
           {moduleArray

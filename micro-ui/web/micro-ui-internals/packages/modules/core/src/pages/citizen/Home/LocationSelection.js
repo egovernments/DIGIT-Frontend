@@ -1,4 +1,5 @@
-import { BackButton, CardHeader, CardLabelError, PageBasedInput, SearchOnRadioButtons } from "@egovernments/digit-ui-components";
+import { BackLink } from "@egovernments/digit-ui-components";
+import { CardHeader, CardLabelError, PageBasedInput, SearchOnRadioButtons } from "@egovernments/digit-ui-react-components";
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router-dom";
@@ -7,7 +8,25 @@ const LocationSelection = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const location = useLocation();
-  const { data: cities, isLoading } = Digit.Hooks.useTenants();
+  let hookResult = { data: null, isLoading: false };
+
+// Check the value of window.globalPath
+if (Digit.Utils.getMultiRootTenant()) {
+  // Call the useTenants hook only if the condition is met
+  hookResult = Digit.Hooks.useTenants();
+}
+
+// Destructure the result
+const { data: cities, isLoading } = hookResult;
+
+// Use the requestCriteria only if it's not null
+const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit.Hooks.useTenantManagementSearch({
+  stateId: Digit.ULBService.getStateId(),
+  includeSubTenants: true,
+  config : {
+    enabled: Digit.Utils.getMultiRootTenant()
+  }
+});
 
   const [selectedCity, setSelectedCity] = useState(() => ({ code: Digit.ULBService.getCitizenCurrentTenant(true) }));
   const [showError, setShowError] = useState(false);
@@ -27,13 +46,13 @@ const LocationSelection = () => {
 
   const RadioButtonProps = useMemo(() => {
     return {
-      options: cities,
-      optionsKey: "i18nKey",
+      options: Digit.Utils.getMultiRootTenant() ? TenantMngmtSearch : cities,
+      optionsKey: Digit.Utils.getMultiRootTenant() ? "name" :"i18nKey",
       additionalWrapperClass: "digit-reverse-radio-selection-wrapper",
       onSelect: selectCity,
       selectedOption: selectedCity,
     };
-  }, [cities, t, selectedCity]);
+  }, [TenantMngmtSearch,cities, t, selectedCity]);
 
   function onSubmit() {
     if (selectedCity) {
@@ -51,7 +70,7 @@ const LocationSelection = () => {
     <loader />
   ) : (
     <div className="selection-card-wrapper">
-      <BackButton />
+      <BackLink />
       <PageBasedInput texts={texts} onSubmit={onSubmit} className="location-selection-container">
         <CardHeader>{t("CS_COMMON_CHOOSE_LOCATION")}</CardHeader>
         <SearchOnRadioButtons {...RadioButtonProps} placeholder={t("COMMON_TABLE_SEARCH")} />

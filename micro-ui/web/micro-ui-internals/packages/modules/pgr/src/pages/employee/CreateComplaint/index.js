@@ -10,24 +10,62 @@ import { createComplaint } from "../../../redux/actions/index";
 
 export const CreateComplaint = ({ parentUrl }) => {
   const cities = Digit.Hooks.pgr.useTenants();
+  const stateId = Digit.ULBService.getStateId();
+
   const { t } = useTranslation();
 
   const getCities = () => cities?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
+
+
+// Use the requestCriteria only if it's not null
+const { data: subTenants, refetch, isLoading: isLoadingSubTenants } = { data: null, refetch: () => {}, isLoading: false };
+
+const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit.Hooks.useTenantManagementSearch({
+  stateId: stateId,
+  includeSubTenants: true,
+  config : {
+    enabled: Digit.Utils.getMultiRootTenant()
+  }
+});
+
+  const getSubTenants = () => Digit.Utils.getMultiRootTenant() ? TenantMngmtSearch?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) : subTenants?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId());
 
   const [complaintType, setComplaintType] = useState({});
   const [subTypeMenu, setSubTypeMenu] = useState([]);
   const [subType, setSubType] = useState({});
   const [pincode, setPincode] = useState("");
-  const [selectedCity, setSelectedCity] = useState(getCities()[0] ? getCities()[0] : null);
+  const [selectedCity, setSelectedCity] = useState(
+    Digit.Utils.getMultiRootTenant()
+      ? getSubTenants()?.[0] || null
+      : getCities()?.[0] || null
+  );
+
+  const cityData = Digit.Utils.getMultiRootTenant() ? getSubTenants() : getCities();
+
+  const { isLoading: hierarchyLOading, data: hierarchyType } = Digit.Hooks.useCustomMDMS(
+    Digit.ULBService.getStateId(),
+     "sandbox-ui",
+      [
+        { name: "ModuleMasterConfig",filter:'[?(@.module == "PGR")].master[?(@.type == "boundary")]' 
+
+        }
+      ],
+      {
+        select: (data) => {
+          const formattedData = data?.["sandbox-ui"]?.["ModuleMasterConfig"]
+          return formattedData?.[0]?.code;
+        },
+      }
+    );
 
   const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
-    getCities()[0]?.code,
-    "admin",
-    {
-      enabled: !!getCities()[0],
-    },
-    t
-  );
+  cityData?.[0]?.code,
+  hierarchyType,
+  {
+    enabled: !!cityData?.[0],
+  },
+  t
+);
 
   const [localities, setLocalities] = useState(fetchedLocalities);
   const [selectedLocality, setSelectedLocality] = useState(null);
@@ -57,8 +95,9 @@ export const CreateComplaint = ({ parentUrl }) => {
   }, [fetchedLocalities]);
 
   useEffect(() => {
+    if(!Digit.Utils.getMultiRootTenant()){
     const city = cities.find((obj) => obj.pincode?.find((item) => item == pincode));
-    if (city?.code&&city?.code === getCities()[0]?.code) {
+    if (city?.code&&city?.code === getCities()?.[0]?.code) {
       setPincodeNotValid(false);
       setSelectedCity(city);
       setSelectedLocality(null);
@@ -71,7 +110,9 @@ export const CreateComplaint = ({ parentUrl }) => {
     } else {
       setPincodeNotValid(true);
     }
+  }
   }, [pincode]);
+
 
   async function selectedType(value) {
     if (value.key !== complaintType.key) {
@@ -111,9 +152,17 @@ export const CreateComplaint = ({ parentUrl }) => {
   const onSubmit = async (data) => {
     if (!canSubmit) return;
     const cityCode = selectedCity.code;
-    const city = selectedCity.city.name;
-    const district = selectedCity.city.name;
-    const region = selectedCity.city.name;
+    const city = Digit.Utils.getMultiRootTenant()
+    ? selectedCity.name
+    : selectedCity.city.name;
+  
+  const district = Digit.Utils.getMultiRootTenant()
+    ? selectedCity.name
+    : selectedCity.city.name;
+  
+  const region = Digit.Utils.getMultiRootTenant()
+    ? selectedCity.name
+    : selectedCity.city.name;
     const localityCode = selectedLocality.code;
     const localityName = selectedLocality.name;
     const landmark = data.landmark;
@@ -210,10 +259,12 @@ export const CreateComplaint = ({ parentUrl }) => {
               isMandatory
               selected={selectedCity}
               freeze={true}
-              option={getCities()}
+              option={
+                Digit.Utils.getMultiRootTenant() ? getSubTenants() : getCities()
+              }
               id="city"
               select={selectCity}
-              optionKey="i18nKey"
+              optionKey={Digit.Utils.getMultiRootTenant() ? "name" : "i18nKey"}
               t={t}
             />
           ),

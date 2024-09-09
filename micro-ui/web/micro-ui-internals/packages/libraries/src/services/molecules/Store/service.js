@@ -2,6 +2,7 @@ import { LocalizationService } from "../../elements/Localization/service";
 import { MdmsService } from "../../elements/MDMS";
 import { Storage } from "../../atoms/Utils/Storage";
 import { ApiCacheService } from "../../atoms/ApiCacheService";
+import { TenantConfigSearch } from "../../elements/TenantConfigService";
 
 const getImgUrl = (url, fallbackUrl) => {
   if (!url && fallbackUrl) {
@@ -30,7 +31,7 @@ const addLogo = (id, url, fallbackUrl = "") => {
 
 const renderTenantLogos = (stateInfo, tenants) => {
   addLogo(stateInfo.code, stateInfo.logoUrl);
-  tenants.forEach((tenant) => {
+  tenants?.forEach((tenant) => {
     addLogo(tenant.code, tenant.logoId, stateInfo.logoUrl);
   });
 };
@@ -54,17 +55,38 @@ export const StoreService = {
     });
     return await Promise.all(allBoundries);
   },
-  digitInitData: async (stateCode, enabledModules , modulePrefix) => {
+  digitInitData: async (stateCode, enabledModules, modulePrefix) => {
     const { MdmsRes } = await MdmsService.init(stateCode);
-    const stateInfo = MdmsRes["common-masters"]?.StateInfo?.[0]||{};
-    const uiHomePage = MdmsRes["common-masters"]?.uiHomePage?.[0]||{};
+    const stateInfo = MdmsRes["common-masters"]?.StateInfo?.[0] || {};
+    const uiHomePage = MdmsRes["common-masters"]?.uiHomePage?.[0] || {};
+    const tenantConfigFetch = Digit.Utils.getMultiRootTenant();
     const localities = {};
     const revenue_localities = {};
-    const initData = {
+    const fetchTenantConfig = async () => {
+      const tenantConfigs = await TenantConfigSearch.tenant(stateCode);
+      const tenantConfigSearch = tenantConfigs?.tenantConfigs ? tenantConfigs?.tenantConfigs : null;
+      return {
+        languages: stateInfo.hasLocalisation ? stateInfo.languages : [{ label: "ENGLISH", value: Digit.Utils.getDefaultLanguage() }],
+        stateInfo: {
+          code: tenantConfigFetch ? tenantConfigSearch?.[0]?.code : stateInfo.code,
+          name: tenantConfigFetch ? tenantConfigSearch?.[0]?.name : stateInfo.name,
+          logoUrl: tenantConfigFetch ? tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "logoUrl")?.url : stateInfo.logoUrl,
+          statelogo: tenantConfigFetch ? tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "statelogo")?.url : stateInfo.statelogo,
+          logoUrlWhite: tenantConfigFetch
+            ? tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "logoUrlWhite")?.url
+            : stateInfo.logoUrlWhite,
+          bannerUrl: tenantConfigFetch ? tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "bannerUrl")?.url : stateInfo.bannerUrl,
+        },
+        localizationModules: stateInfo.localizationModules,
+        modules: MdmsRes?.tenant?.citymodule?.filter((module) => module?.active)?.filter((module) => enabledModules?.includes(module?.code))?.sort((x,y)=>x?.order-y?.order)|| [],
+        uiHomePage: uiHomePage
+      };
+    };
+    const initData = tenantConfigFetch ? await fetchTenantConfig() : {
       languages: stateInfo.hasLocalisation ? stateInfo.languages : [{ label: "ENGLISH", value: Digit.Utils.getDefaultLanguage() }],
       stateInfo: {
         code: stateInfo.code,
-        name: stateInfo.name,
+        name:  stateInfo.name,
         logoUrl: stateInfo.logoUrl,
         statelogo: stateInfo.statelogo,
         logoUrlWhite: stateInfo.logoUrlWhite,
@@ -74,8 +96,6 @@ export const StoreService = {
       modules: MdmsRes?.tenant?.citymodule?.filter((module) => module?.active)?.filter((module) => enabledModules?.includes(module?.code))?.sort((x,y)=>x?.order-y?.order)|| [],
       uiHomePage: uiHomePage
     };
-
-  
     initData.selectedLanguage = Digit.SessionStorage.get("locale") || initData.languages[0].value;
 
     ApiCacheService.saveSetting(MdmsRes["DIGIT-UI"]?.ApiCachingSettings);

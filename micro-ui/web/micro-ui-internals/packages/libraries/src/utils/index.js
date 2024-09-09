@@ -123,6 +123,18 @@ const getStaticMapUrl = (latitude, longitude) => {
 const getLocaleRegion = () => {
   return window?.globalConfigs?.getConfig("LOCALE_REGION") || "IN";
 };
+
+const getMultiRootTenant = () => {
+  return window?.globalConfigs?.getConfig("MULTI_ROOT_TENANT") || false;
+};
+
+const getGlobalContext = () => {
+  return window?.globalConfigs?.getConfig("CONTEXT_PATH") || null;
+};
+
+const getOTPBasedLogin = () => {
+  return window?.globalConfigs?.getConfig("OTP_BASED_LOGIN") || false;
+};
 /**
  * Custom util to get the default locale
  *
@@ -187,7 +199,9 @@ const pgrAccess = () => {
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
   const pgrRoles = ["PGR_LME", "PGR-ADMIN", "CSR", "CEMP", "FEMP", "DGRO", "ULB Operator", "GRO", "GO", "RO", "GA"];
-
+  if (Digit.Utils.getMultiRootTenant()) {
+    pgrRoles.push("SUPERUSER");
+  }
   const PGR_ACCESS = userRoles?.filter((role) => pgrRoles.includes(role));
 
   return PGR_ACCESS?.length > 0;
@@ -303,12 +317,20 @@ const receiptsAccess = () => {
   const RECEIPTS_ACCESS = userRoles?.filter((role) => receiptsRoles?.includes(role));
   return RECEIPTS_ACCESS?.length > 0;
 };
-const hrmsRoles = ["HRMS_ADMIN"];
+const hrmsRoles = ["HRMS_ADMIN","SUPERUSER"];
 const hrmsAccess = () => {
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
   const HRMS_ACCESS = userRoles?.filter((role) => hrmsRoles?.includes(role));
   return HRMS_ACCESS?.length > 0;
+};
+
+const sandboxAccess = () => {
+  const sandboxRoles = ["SUPERUSER"];
+  const userInfo = Digit.UserService.getUser();
+  const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
+  const SANDBOX_ACCESS = userRoles?.filter((role) => sandboxRoles?.includes(role));
+  return SANDBOX_ACCESS?.length > 0;
 };
 
 const wsAccess = () => {
@@ -378,5 +400,9 @@ export default {
   ...privacy,
   getDefaultLanguage,
   getLocaleDefault,
-  getLocaleRegion
+  getLocaleRegion,
+  getMultiRootTenant,
+  getGlobalContext,
+  getOTPBasedLogin,
+  sandboxAccess
 };

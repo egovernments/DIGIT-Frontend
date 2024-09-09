@@ -177,7 +177,7 @@ const UploadFile = (props) => {
   };
 
   const handleEmpty = () => {
-    if(inpRef.current.files.length <= 0 && prevSate !== null)
+    if(inpRef?.current?.files?.length <= 0 && prevSate !== null)
     { inpRef.current.value = "";
       props.onDelete();
     }
@@ -212,9 +212,9 @@ const UploadFile = (props) => {
                 <RemoveableTag extraStyles={extraStyles} key={index} text={file[0]} onClick={(e) => props?.removeTargetedFile(fileDetailsData, e)} />
               </div>
             })}
-            {props?.uploadedFiles.length === 0 && <h2 className="file-upload-status">{props?.message}</h2>}
+            {props?.uploadedFiles?.length === 0 && <h2 className="file-upload-status">{props?.message}</h2>}
           {!hasFile || props.error ? (
-            <h2 className="file-upload-status">{props.message}</h2>
+            <h2 className="file-upload-status">{props?.message}</h2>
           ) : (
             <div className="tag-container" style={extraStyles ? extraStyles?.tagContainerStyles : null}>
               <div className="tag" style={extraStyles ? extraStyles?.tagStyles : null}>

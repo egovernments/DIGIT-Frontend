@@ -1,17 +1,17 @@
-import { CardLabel, Dropdown, LabelFieldPair, Loader, RemoveableTag ,MultiSelectDropdown} from "@egovernments/digit-ui-react-components";
+import { CardLabel, Dropdown, LabelFieldPair, Loader, RemoveableTag, MultiSelectDropdown } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
 import cleanup from "../Utils/cleanup";
 // import MultiSelectDropdown from "./Multiselect";
 
 const makeDefaultValues = (sessionFormData) => {
-  return sessionFormData?.Jurisdictions?.map((ele,index)=>{
+  return sessionFormData?.Jurisdictions?.map((ele, index) => {
     return {
       key: index,
       hierarchy: {
         code: ele?.hierarchy,
         name: ele?.hierarchy,
       },
-      boundaryType: { label: ele?.boundaryType, i18text:ele.boundaryType ?`EGOV_LOCATION_BOUNDARYTYPE_${ele.boundaryType?.toUpperCase()}`:null },
+      boundaryType: { label: ele?.boundaryType, i18text: ele.boundaryType ? `EGOV_LOCATION_BOUNDARYTYPE_${ele.boundaryType?.toUpperCase()}` : null },
       boundary: { code: ele?.boundary },
       roles: ele?.roles,
     }
@@ -24,10 +24,10 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
   const { data: data = {}, isLoading } = Digit.Hooks.hrms.useHrmsMDMS(tenantId, "egov-hrms", "HRMSRolesandDesignation") || {};
 
   const employeeCreateSession = Digit.Hooks.useSessionStorage("NEW_EMPLOYEE_CREATE", {});
-  const [sessionFormData,setSessionFormData, clearSessionFormData] = employeeCreateSession;
+  const [sessionFormData, setSessionFormData, clearSessionFormData] = employeeCreateSession;
   const isEdit = window.location.href.includes("hrms/edit")
   const [jurisdictions, setjurisdictions] = useState(
-    !isEdit && sessionFormData?.Jurisdictions?.length>0 ? makeDefaultValues(sessionFormData) : ( formData?.Jurisdictions ||  [
+    !isEdit && sessionFormData?.Jurisdictions?.length > 0 ? makeDefaultValues(sessionFormData) : (formData?.Jurisdictions || [
       {
         id: undefined,
         key: 1,
@@ -51,7 +51,7 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
       };
       res = cleanup(res);
       if (jurisdiction?.roles) {
-        res["roles"] = jurisdiction?.roles.map((ele) => {
+        res["roles"] = jurisdiction?.roles?.map((ele) => {
           delete ele.description;
           return ele;
         });
@@ -113,7 +113,7 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
   const [focusIndex, setFocusIndex] = useState(-1);
 
   function gethierarchylistdata() {
-    return data?.MdmsRes?.["egov-location"]["TenantBoundary"].map((ele) => ele.hierarchyType);
+    return data?.MdmsRes?.["egov-location"]["TenantBoundary"]?.map((ele) => ele.hierarchyType);
   }
 
   function getboundarydata() {
@@ -121,7 +121,7 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
   }
 
   function getroledata() {
-    return data?.MdmsRes?.["ACCESSCONTROL-ROLES"].roles.map(role => { return { code: role.code, name: role?.name ? role?.name : " " , labelKey: 'ACCESSCONTROL_ROLES_ROLES_' + role.code } });
+    return data?.MdmsRes?.["ACCESSCONTROL-ROLES"]?.roles?.map(role => { return { code: role.code, name: role?.name ? role?.name : " ", labelKey: 'ACCESSCONTROL_ROLES_ROLES_' + role.code } });
   }
 
   if (isLoading) {
@@ -169,8 +169,11 @@ function Jurisdiction({
   roleoption,
   index,
 }) {
+
+
   const [BoundaryType, selectBoundaryType] = useState([]);
   const [Boundary, selectboundary] = useState([]);
+  const cities = Digit.Utils.getMultiRootTenant() ? Digit.Hooks.pgr.useTenants() : null;
   useEffect(() => {
     selectBoundaryType(
       data?.MdmsRes?.["egov-location"]["TenantBoundary"]
@@ -181,9 +184,27 @@ function Jurisdiction({
     );
   }, [jurisdiction?.hierarchy, data?.MdmsRes]);
   const tenant = Digit.ULBService.getCurrentTenantId();
+
+  const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit.Hooks.useTenantManagementSearch({
+    stateId: Digit.ULBService.getStateId(),
+    includeSubTenants: true,
+    config : {
+      enabled: Digit.Utils.getMultiRootTenant()
+    }
+  });
+  const getSubTenants = () => TenantMngmtSearch?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
+  const subTenantList = getSubTenants();
+
   useEffect(() => {
-    selectboundary(data?.MdmsRes?.tenant?.tenants.filter(city => city.code != Digit.ULBService.getStateId()).map(city => { return { ...city, i18text: Digit.Utils.locale.getCityLocale(city.code) } }));
+    if (Digit.Utils.getMultiRootTenant()) {
+      selectboundary(subTenantList);
+    }
+    else {
+      selectboundary(data?.MdmsRes?.tenant?.tenants.filter(city => city.code != Digit.ULBService.getStateId()).map(city => { return { ...city, i18text: Digit.Utils.locale.getCityLocale(city.code) } }));
+    }
   }, [jurisdiction?.boundaryType, data?.MdmsRes]);
+
+
 
   useEffect(() => {
     if (Boundary?.length > 0) {
@@ -217,7 +238,7 @@ function Jurisdiction({
       res.push(ob?.[1]);
     });
 
-    res?.forEach(resData => {resData.labelKey = 'ACCESSCONTROL_ROLES_ROLES_' + resData.code})
+    res?.forEach(resData => { resData.labelKey = 'ACCESSCONTROL_ROLES_ROLES_' + resData.code })
 
     setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, roles: res } : item)));
   };
@@ -283,7 +304,7 @@ function Jurisdiction({
             disable={Boundary?.length === 0}
             option={Boundary}
             select={selectedboundary}
-            optionKey="i18text"
+            optionKey={Digit.Utils.getMultiRootTenant() ? "code" : "i18text"}
             t={t}
           />
         </LabelFieldPair>

@@ -18,7 +18,6 @@ export const tenantSearchConfig = () =>
         tableFormJsonPath: "requestBody.inbox",
         filterFormJsonPath: "requestBody.tenant",
         searchFormJsonPath: "requestBody.tenant",
-
       },
       sections: {
         search: {

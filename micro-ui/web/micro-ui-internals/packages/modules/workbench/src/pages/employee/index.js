@@ -21,8 +21,8 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
   const search = useLocation().search;
   const fromScreen = new URLSearchParams(search).get("from") || null;
-  const pathVar = location.pathname.replace(defaultPath + '/', "").split("?")?.[0];
-  const { masterName, moduleName, uniqueIdentifier } = Digit.Hooks.useQueryParams()
+  const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
+  const { masterName, moduleName, uniqueIdentifier, from, screen, action } = Digit.Hooks.useQueryParams();
 
   const crumbs = [
     {
@@ -33,36 +33,39 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
     {
       path: `/${window.contextPath}/employee/workbench/manage-master-data`,
       content: t(`WBH_MANAGE_MASTER_DATA`),
-      show: pathVar.includes("mdms-") ? true : false,
+      show: from ? false : pathVar.includes("mdms-") ? true : false,
       // query:`moduleName=${moduleName}&masterName=${masterName}`
     },
     {
       path: `/${window.contextPath}/employee/workbench/localisation-search`,
       content: t(`LOCALISATION_SEARCH`),
-      show: pathVar.includes("localisation-") ? true : false,
-      isBack: pathVar.includes("localisation-search") ? true : false
+      show: from ? false : pathVar.includes("localisation-") ? true : false,
+      isBack: pathVar.includes("localisation-search") ? true : false,
       // query:`moduleName=${moduleName}&masterName=${masterName}`
     },
 
     {
-      path: `/${window.contextPath}/employee/workbench/mdms-search-v2`,
-      query: `moduleName=${moduleName}&masterName=${masterName}`,
+      path: pathVar !== "mdms-search-v2" ? `/${window.contextPath}/employee/workbench/mdms-search-v2` : null,
+      query: from
+        ? `moduleName=${moduleName}&masterName=${masterName}&from=${from}&screen=${screen}&action=${action}`
+        : `moduleName=${moduleName}&masterName=${masterName}`,
       content: t(`${Digit.Utils.workbench.getMDMSLabel(pathVar, masterName, moduleName)}`),
-      show: (masterName && moduleName) ? true : false,
-      isBack: pathVar.includes("mdms-search-v2") ? true : false
+      show: masterName && moduleName ? true : false,
+      isBack: pathVar.includes("mdms-search-v2") ? true : false,
     },
     {
       path: `/${window.contextPath}/employee/workbench/mdms-view`,
       content: t(`MDMS_VIEW`),
       show: pathVar.includes("mdms-edit") ? true : false,
-      query: `moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}`
+      query: from
+        ? `moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}&from=${from}&screen=${screen}&action=${action}`
+        : `moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}`,
     },
     {
       path: `/${window.contextPath}/employee/masters/response`,
       content: t(`${Digit.Utils.workbench.getMDMSLabel(pathVar, "", "")}`),
       show: Digit.Utils.workbench.getMDMSLabel(pathVar, "", "", ["mdms-search-v2", "localisation-search"]) ? true : false,
     },
-
   ];
   return <BreadCrumb className="workbench-bredcrumb" crumbs={crumbs} spanStyle={{ maxWidth: "min-content" }} />;
 };
@@ -88,13 +91,13 @@ const App = ({ path }) => {
     };
     const currentUrl = window.location.href;
     if (!currentUrl.includes("mdms-add-v2") && !currentUrl.includes("mdms-add-v4") && !currentUrl.includes("mdms-view")) {
-      clearSessionStorageWithPrefix('MDMS_add');
+      clearSessionStorageWithPrefix("MDMS_add");
     }
     if (!currentUrl.includes("mdms-view")) {
-      clearSessionStorageWithPrefix('MDMS_view');
+      clearSessionStorageWithPrefix("MDMS_view");
     }
     if (!currentUrl.includes("mdms-edit")) {
-      clearSessionStorageWithPrefix('MDMS_edit');
+      clearSessionStorageWithPrefix("MDMS_edit");
     }
   }, [window.location.href]);
 
@@ -109,12 +112,10 @@ const App = ({ path }) => {
 
   return (
     <React.Fragment>
-        <div className="wbh-header-container">
-          <WorkbenchBreadCrumb location={location} defaultPath={path} />
-          {!isBoundaryPath && (
-            <WorkbenchHeader />
-          )}
-        </div>
+      <div className="wbh-header-container">
+        <WorkbenchBreadCrumb location={location} defaultPath={path} />
+        {!isBoundaryPath && <WorkbenchHeader />}
+      </div>
 
       <Switch>
         <AppContainer className="workbench">

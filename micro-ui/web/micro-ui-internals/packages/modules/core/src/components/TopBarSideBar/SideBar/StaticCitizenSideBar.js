@@ -18,7 +18,7 @@ import {
   DeathIcon,
   FirenocIcon,
   Loader
-} from "@egovernments/digit-ui-components";
+} from "@egovernments/digit-ui-react-components";
 import { Link, useLocation } from "react-router-dom";
 import SideBarMenu from "../../../config/sidebar-menu";
 import { useTranslation } from "react-i18next";
@@ -183,24 +183,24 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
           <React.Fragment>
             {t("CS_COMMON_HELPLINE")}
             <div className="telephone" style={{ marginTop: "-10%" }}>
-              {storeData?.tenants.map((i) => {
+              {storeData?.tenants?.map((i) => {
                 i.code === tenantId ? (
                   <div className="link">
-                    <a href={`tel:${storeData?.tenants[i].contactNumber}`}>
-                      {storeData?.tenants[i].contactNumber}
+                    <a href={`tel:${storeData?.tenants?.[i].contactNumber}`}>
+                      {storeData?.tenants?.[i].contactNumber}
                     </a>
                   </div>
                 ) : (
                   <div className="link">
-                    <a href={`tel:${storeData?.tenants[0].contactNumber}`}>
-                      {storeData?.tenants[0].contactNumber}
+                    <a href={`tel:${storeData?.tenants?.[0].contactNumber}`}>
+                      {storeData?.tenants?.[0].contactNumber}
                     </a>
                   </div>
                 );
               })}
               <div className="link">
-                <a href={`tel:${storeData?.tenants[0].contactNumber}`}>
-                  {storeData?.tenants[0].contactNumber}
+                <a href={`tel:${storeData?.tenants?.[0].contactNumber}`}>
+                  {storeData?.tenants?.[0].contactNumber}
                 </a>
               </div>
             </div>
