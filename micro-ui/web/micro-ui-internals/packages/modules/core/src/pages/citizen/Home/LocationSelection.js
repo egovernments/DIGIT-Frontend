@@ -11,7 +11,7 @@ const LocationSelection = () => {
   let hookResult = { data: null, isLoading: false };
 
 // Check the value of window.globalPath
-if (window?.globalPath === 'sandbox-ui') {
+if (Digit.Utils.getMultiRootTenant()) {
   // Call the useTenants hook only if the condition is met
   hookResult = Digit.Hooks.useTenants();
 }

@@ -95,7 +95,7 @@ const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit
   }, [fetchedLocalities]);
 
   useEffect(() => {
-    if(Digit.Utils.getMultiRootTenant()){
+    if(!Digit.Utils.getMultiRootTenant()){
     const city = cities.find((obj) => obj.pincode?.find((item) => item == pincode));
     if (city?.code&&city?.code === getCities()?.[0]?.code) {
       setPincodeNotValid(false);
