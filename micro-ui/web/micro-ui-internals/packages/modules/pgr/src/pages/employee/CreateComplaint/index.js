@@ -36,8 +36,8 @@ const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit
   const [pincode, setPincode] = useState("");
   const [selectedCity, setSelectedCity] = useState(
     Digit.Utils.getMultiRootTenant()
-      ? getSubTenants()[0] || null
-      : getCities()[0] || null
+      ? getSubTenants()?.[0] || null
+      : getCities()?.[0] || null
   );
 
   const cityData = Digit.Utils.getMultiRootTenant() ? getSubTenants() : getCities();
@@ -59,10 +59,10 @@ const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit
     );
 
   const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
-  cityData[0]?.code,
+  cityData?.[0]?.code,
   hierarchyType,
   {
-    enabled: !!cityData[0],
+    enabled: !!cityData?.[0],
   },
   t
 );
@@ -95,9 +95,9 @@ const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit
   }, [fetchedLocalities]);
 
   useEffect(() => {
-    if(window.globalPath !== "sandbox-ui"){
+    if(Digit.Utils.getMultiRootTenant()){
     const city = cities.find((obj) => obj.pincode?.find((item) => item == pincode));
-    if (city?.code&&city?.code === getCities()[0]?.code) {
+    if (city?.code&&city?.code === getCities()?.[0]?.code) {
       setPincodeNotValid(false);
       setSelectedCity(city);
       setSelectedLocality(null);
