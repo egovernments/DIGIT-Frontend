@@ -35,7 +35,7 @@ let propsForCSR = [
   }
 ];
 
-  propsForCSR = propsForCSR.filter(link => link.roles && Digit.Utils.didEmployeeHasRole(link.roles) );
+  propsForCSR = propsForCSR.filter(link => link?.roles ? Digit.Utils.didEmployeeHasAtleastOneRole(link.roles) : true );
 
   const propsForModuleCard = {
     Icon: <Icon />,
