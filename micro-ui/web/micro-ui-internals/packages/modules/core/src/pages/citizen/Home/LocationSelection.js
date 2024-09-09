@@ -58,10 +58,6 @@ const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit
     if (selectedCity) {
       Digit.SessionStorage.set("CITIZEN.COMMON.HOME.CITY", selectedCity);
       const redirectBackTo = location.state?.redirectBackTo;
-      if(Digit.Utils.getMultiRootTenant()){
-        history.push(`/${window?.contextPath}/citizen/all-services`);
-        return;
-      }
       if (redirectBackTo) {
         history.replace(redirectBackTo);
       } else history.push(`/${window?.contextPath}/citizen`);
