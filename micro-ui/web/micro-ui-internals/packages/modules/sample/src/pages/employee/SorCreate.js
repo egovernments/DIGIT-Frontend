@@ -32,20 +32,23 @@ const SorCreate = ()=>{
             {
                 url:`/mdms-v2/v2/_create/digitAssignment.estimate`,
                 params:{tenantId},
-                body:transformCreateEstimateData(data),
+                body:data, 
                 config: {
                     enable: true,
                   },
             },
             {
                 onSuccess:()=>{
+          
                     setToast({show:true, error:false, label:t("Estimate is Created Successfully")})
                 },
                 onError:()=>{
+          
                     setToast({show:true, error:true, label:t("Create Estimate Failed")})
                 }
             }
         )
+
     }
 
     

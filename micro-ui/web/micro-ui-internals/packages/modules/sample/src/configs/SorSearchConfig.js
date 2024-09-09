@@ -18,7 +18,8 @@ export const sorSearchConfig = ()=>{
                 apiOperation:"SEARCH",
                 MdmsCriteria: {
                     "tenantId": Digit.ULBService.getCurrentTenantId(),
-                     "customs":{}
+                    "customs":{}
+                    //  "customs":{}
                     //  customs: {
                     //     field: { name: "field-name" },
                     //     value: "some-value"
@@ -48,7 +49,7 @@ export const sorSearchConfig = ()=>{
                        flexDirection:"column-reverse",
                        marginTop:"2rem",
                        alignItems:"center",
-                       justifyContent:"end",
+                       
                        gridColumn:"4"
                     },
                     fields:[
@@ -59,24 +60,24 @@ export const sorSearchConfig = ()=>{
                             type:"dropdown",
                             disable: false,
                             populators:{
-                                name:"typeOfFilter",
+                                name:"typeOfFilterr",
                                 error:"Required",
                                 options:[
                                     {
-                                      label:"Name",
-                                      name:"name"
+                                      label:"Id",
+                                      name:"Id"
                                     },
                                     {
-                                        label:"Description",
-                                        name:"description"
+                                        label:"Campaign Type",
+                                        name:"campaignType"
                                     },
                                     {
-                                        label:"Executing Department",
-                                        name:"executingDEpartment"
+                                        label:"Distribution Process",
+                                        name:"distributionProcess"
                                     },
                                     {
-                                        label:"Workflow Status",
-                                        name:"wfStatus"
+                                        label:"Registration Process",
+                                        name:"registration"
                                     }
                                 ],
                                 optionsKey:"label",
@@ -107,27 +108,27 @@ export const sorSearchConfig = ()=>{
                 uiConfig:{
                     columns:[
                         {
-                            label:"Name",
-                            jsonPath:"data.name"
+                            label:"Id",
+                            jsonPath:"data.schemaCode"
                         },
                         {
-                            label:"Description",
-                            jsonPath:"data.description"
+                            label:"Campaign Type",
+                            jsonPath:"data.campaignType"
                         },
                         {
-                            label:"Executing Department",
-                            jsonPath:"data.executingDepartment"
+                            label:"Distribution Process",
+                            jsonPath:"data.DistributionProcess"
                         },
                         {
-                             label:"Workflow Status",
-                            jsonPath:"data.wfStatus"
+                             label:"Registration Process",
+                            jsonPath:"data.RegistrationProcess"
                         }
                     ],
                     enableColumnSort: true,
-                    enabelGlobalSearch:false,
+                    enableGlobalSearch:true,
                     resultsJsonPath:"mdms"
                 },
-                show:true
+                show:true   
             }     
 
 

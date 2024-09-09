@@ -22,9 +22,9 @@ export const UICustomizations = {
 
             const filters={}
             const custom = data.body.MdmsCriteria.customs
-            const {field, value}   =  custom || {}
-            if(field && value && field.name){
-                filters[field.name] = value
+            const {  typeOfFilter,   fieldValue}   =  custom || {}
+            if(typeOfFilter && fieldValue && typeOfFilter.name){
+                filters[typeOfFilter.name] = fieldValue
             }
 
             data.body.MdmsCriteria.filters = filters

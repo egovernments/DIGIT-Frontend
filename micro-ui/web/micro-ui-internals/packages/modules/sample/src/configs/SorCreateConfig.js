@@ -5,7 +5,7 @@ export const SorConfig = [
             {
                 inline:true,
                 label:"Proposal date",
-                isMandatory:true,
+                isMandatory:false,
                 key:"proposalDate",
                 type:"date",
                 disable:false,
@@ -15,7 +15,7 @@ export const SorConfig = [
             {
                 inline:true,
                 label:"Status",
-                isMandatory:true,
+                isMandatory:false,
                 key:"status",
                 type:"text",
                 disable:false,
@@ -24,7 +24,7 @@ export const SorConfig = [
             {
                 inline:true,
                 label:"Workflow Status",
-                isMandatory:true,
+                isMandatory:false,
                 key:"wfStatus",
                 type:"text",
                 disable:false,
@@ -33,7 +33,7 @@ export const SorConfig = [
             {
                 inline:true,
                 label:"Name",
-                isMandatory:true,
+                isMandatory:false,
                 key:"name",
                 type:"text",
                 disable:false,
@@ -42,7 +42,7 @@ export const SorConfig = [
             {
                 inline:true,
                 label:"Description",
-                isMandatory:true,
+                isMandatory:false,
                 key:"description",
                 type:"text",
                 disable:false,
@@ -51,7 +51,7 @@ export const SorConfig = [
             {
                 inline:true,
                 label:"Executing Department",
-                isMandatory:true,
+                isMandatory:false,
                 key:"executingDepartment",
                 type:"dropdown",
                 disable:false,
