@@ -27,11 +27,11 @@ const SandboxCard = () => {
         link: `/${window?.contextPath}/employee/sandbox/tenant-management/search`,
         roles: ROLES.SUPERUSER,
       },
-      {
-        label: t("SANDBOX_APPLICATION_MANAGEMENT_HOMECARD_LABEL"),
-        link: `/${window?.contextPath}/employee/sandbox/application-management/home`,
-        roles: ROLES.SUPERUSER,
-      },
+      // {
+      //   label: t("SANDBOX_APPLICATION_MANAGEMENT_HOMECARD_LABEL"),
+      //   link: `/${window?.contextPath}/employee/sandbox/application-management/home`,
+      //   roles: ROLES.SUPERUSER,
+      // },
     ],
   };
 

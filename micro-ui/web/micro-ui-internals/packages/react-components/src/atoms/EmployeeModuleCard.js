@@ -22,17 +22,32 @@ const EmployeeModuleCard = ({ Icon, moduleName, kpis = [], links = [], isCitizen
                     <span>{count || "-"}</span>
                   </div>
                   <div>
-                 
-                {link ? <span className="link" onClick={()=> history.push(`${link}`,{count})}>{label}</span> : null}
+                    {link ? (
+                      <span className="link" onClick={() => history.push(`${link}`, { count })}>
+                        {label}
+                      </span>
+                    ) : null}
                   </div>
                 </div>
               ))}
             </div>
           )}
           <div className="links-wrapper" style={{ width: "80%" }}>
-            {links.map(({ count, label, link }, index) => (
+            {links.map(({ count, label, link, isOutsideModule }, index) => (
               <span className="link" key={index}>
-                {link ? (link?.includes(`${window?.contextPath}/`)?<Link to={{ pathname:link, state: {count} }}>{label}</Link>:<a href={link}>{label}</a>) : null}
+                {link ? (
+                  link?.includes(`${window?.contextPath}/`) ? (
+                    isOutsideModule ? (
+                      <span className={"link"} onClick={() => history.push(`${link}`)}>
+                        {label}
+                      </span>
+                    ) : (
+                      <Link to={{ pathname: link, state: { count } }}>{label}</Link>
+                    )
+                  ) : (
+                    <a href={link}>{label}</a>
+                  )
+                ) : null}
                 {count ? (
                   <>
                     <span className={"inbox-total"} onClick={()=>history.push(`${link}`)}>{count || "-"}</span>
@@ -50,7 +65,7 @@ const EmployeeModuleCard = ({ Icon, moduleName, kpis = [], links = [], isCitizen
   );
 };
 
-const ModuleCardFullWidth = ({ moduleName,  links = [], isCitizen = false, className, styles, headerStyle, subHeader, subHeaderLink }) => {
+const ModuleCardFullWidth = ({ moduleName, links = [], isCitizen = false, className, styles, headerStyle, subHeader, subHeaderLink }) => {
   return (
     <div className={className ? className : "employeeCard card-home customEmployeeCard home-action-cards"} style={styles ? styles : {}}>
       <div className="complaint-links-container" style={{ padding: "10px" }}>
@@ -58,7 +73,11 @@ const ModuleCardFullWidth = ({ moduleName,  links = [], isCitizen = false, class
           <span className="text removeHeight">{moduleName}</span>
           <span className="link">
             <a href={subHeaderLink}>
-              <span className={"inbox-total"} style={{ display: "flex", alignItems: "center", color: "#F47738", fontWeight: "bold" }} onClick={()=>history.push(`${link}`)}>
+              <span
+                className={"inbox-total"}
+                style={{ display: "flex", alignItems: "center", color: "#F47738", fontWeight: "bold" }}
+                onClick={() => history.push(`${link}`)}
+              >
                 {subHeader || "-"}
                 <span style={{ marginLeft: "10px" }}>
                   {" "}
@@ -72,7 +91,7 @@ const ModuleCardFullWidth = ({ moduleName,  links = [], isCitizen = false, class
           <div className="links-wrapper" style={{ width: "100%", display: "flex", flexWrap: "wrap" }}>
             {links.map(({ count, label, link }, index) => (
               <span className="link full-employee-card-link" key={index}>
-                {link ? (link?.includes(`${window?.contextPath}/`)?<Link to={link}>{label}</Link>:<a href={link}>{label}</a>) : null}
+                {link ? link?.includes(`${window?.contextPath}/`) ? <Link to={link}>{label}</Link> : <a href={link}>{label}</a> : null}
               </span>
             ))}
           </div>

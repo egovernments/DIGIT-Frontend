@@ -35,8 +35,18 @@ let propsForCSR = [
   }
 ];
 
-  propsForCSR = propsForCSR.filter(link => link?.roles ? Digit.Utils.didEmployeeHasAtleastOneRole(link.roles) : true );
 
+let propsForSandbox = [
+  {
+    label: t("CONFIGURE_MASTER"),
+    link: `/${window?.contextPath}/employee/sandbox/application-management/setup-master?module=PGR`,
+    isOutsideModule : true,
+    roles: role
+  }
+];
+
+  propsForCSR = propsForCSR.filter(link => link?.roles ? Digit.Utils.didEmployeeHasAtleastOneRole(link.roles) : true );
+  propsForSandbox = propsForSandbox.filter(link => link?.roles ? Digit.Utils.didEmployeeHasAtleastOneRole(link.roles) : true );
   const propsForModuleCard = {
     Icon: <Icon />,
     moduleName: t("ES_PGR_HEADER_COMPLAINT"),
@@ -55,7 +65,8 @@ let propsForCSR = [
         label: t("ES_PGR_INBOX"),
         link: `/${window?.contextPath}/employee/pgr/inbox`
     },
-    ...propsForCSR
+    ...propsForCSR,
+    ...propsForSandbox
     ]
 }
 
