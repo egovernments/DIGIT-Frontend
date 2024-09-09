@@ -50,7 +50,9 @@ const SetupMaster = () => {
     [{ name: "ModuleMasterConfig" }],
     {
       select: (data) => {
-        let xx = data?.["sandbox-ui"]?.ModuleMasterConfig?.filter((item) => item?.module === module)?.[0]?.master;
+        let xx = data?.["sandbox-ui"]?.ModuleMasterConfig?.filter((item) => item?.module === module)?.[0]?.master?.filter(
+          (item) => item.type === "module" || item.type === "common" || item.type === "boundary"
+        );
         let respData = xx.map((i) => ({
           masterName: t(i.code),
           type: t(i.type),
