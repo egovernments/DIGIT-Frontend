@@ -53,8 +53,6 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
     },
   });
 
-  console.log("pppp", BOUNDARY_HIERARCHY_TYPE);
-
   const reqCriteria = {
     url: `/boundary-service/boundary-relationships/_search`,
     changeQueryName: `${BOUNDARY_HIERARCHY_TYPE}`,
@@ -70,8 +68,6 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
   };
 
   const { data: hierarchyData } = Digit.Hooks.useCustomAPIHook(reqCriteria);
-
-  console.log("hierarchy" , hierarchyData);
 
   const moduleCode = ["campaignmanager", "workbench", "mdms", "schema", "hcm-admin-schemas", `boundary-${BOUNDARY_HIERARCHY_TYPE}`];
   const { path, url } = useRouteMatch();
