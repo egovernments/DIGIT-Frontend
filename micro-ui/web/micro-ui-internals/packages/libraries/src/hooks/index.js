@@ -89,6 +89,7 @@ import useGetFAQsJSON from "./useGetFAQsJSON";
 import useGetHowItWorksJSON from "./useHowItWorksJSON";
 import { usePrivacyContext } from "./usePrivacyContext";
 import useStaticData from "./useStaticData";
+import { useTenantManagementSearch } from "./useTenantManagementSearch";
 
 
 
@@ -210,7 +211,8 @@ const Hooks = {
   useStaticData,
   useDynamicData,
   useBulkPdfDetails,
-  useLocation
+  useLocation,
+  useTenantManagementSearch
 };
 
 export default Hooks;

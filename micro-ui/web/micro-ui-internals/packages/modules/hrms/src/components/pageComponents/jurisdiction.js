@@ -184,36 +184,15 @@ function Jurisdiction({
     );
   }, [jurisdiction?.hierarchy, data?.MdmsRes]);
   const tenant = Digit.ULBService.getCurrentTenantId();
-  let requestCriteria = null;
 
-  requestCriteria = {
-    url: "/tenant-management/tenant/_search",
-    params: {
-      code: Digit.ULBService.getCurrentTenantId(),
-      includeSubTenants: true
-    },
-    body: {
-      "inbox": {
-        "limit": 10,
-        "offset": 0
-      },
-      apiOperation: "SEARCH",
-    },
-    config: {
-      select: (data) => {
-        return data?.Tenants;
-      },
-    },
-  };
-
-  // Use the requestCriteria only if it's not null
-  const { data: subTenants, refetch, isLoading: isLoadingSubTenants } = requestCriteria
-    ? Digit.Hooks.useCustomAPIHook(requestCriteria)
-    : { data: null, refetch: () => { }, isLoading: false };
-
-  // Now you can use subTenants, refetch, and isLoadingSubTenants
-
-  const getSubTenants = () => subTenants?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
+  const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit.Hooks.useTenantManagementSearch({
+    stateId: Digit.ULBService.getStateId(),
+    includeSubTenants: true,
+    config : {
+      enabled: Digit.Utils.getMultiRootTenant()
+    }
+  });
+  const getSubTenants = () => TenantMngmtSearch?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
   const subTenantList = getSubTenants();
 
   useEffect(() => {

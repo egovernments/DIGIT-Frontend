@@ -9,31 +9,14 @@ const SelectAddress = ({ t, config, onSelect, value }) => {
 let requestCriteria = null;
 
 // Check the value of window.globalPath
-if (window.globalPath === 'sandbox-ui') {
-  requestCriteria = {
-    url: "/tenant-management/tenant/_search",
-    params: {
-      code: Digit.ULBService.getStateId(),
-      includeSubTenants: true
-    },
-    body: {
-      apiOperation: "SEARCH",
-    },
-    config: {
-      select: (data) => {
-        return data?.Tenants;
-      },
-    },
-  };
-}
 
-// Use the requestCriteria only if it's not null
-const { data: subTenants, refetch, isLoading: isLoadingSubTenants } = requestCriteria
-  ? Digit.Hooks.useCustomAPIHook(requestCriteria)
-  : { data: null, refetch: () => {}, isLoading: false };
-
-// Now you can use subTenants, refetch, and isLoadingSubTenants
-
+const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit.Hooks.useTenantManagementSearch({
+  stateId: Digit.ULBService.getStateId(),
+  includeSubTenants: true,
+  config : {
+    enabled: Digit.Utils.getMultiRootTenant()
+  }
+});
 
   const [selectedCity, setSelectedCity] = useState(() => {
     const { city_complaint } = value;
@@ -98,13 +81,13 @@ const { data: subTenants, refetch, isLoading: isLoadingSubTenants } = requestCri
     <FormStep config={config} onSelect={onSubmit} t={t} isDisabled={selectedLocality ? false : true}>
       <div>
         <CardLabel>{t("MYCITY_CODE_LABEL")}</CardLabel>
-        {(Digit.Utils.getMultiRootTenant() ? subTenants?.length : cities?.length) < 5 ? (
+        {(Digit.Utils.getMultiRootTenant() ? TenantMngmtSearch?.length : cities?.length) < 5 ? (
           <RadioButtons selectedOption={selectedCity} options={
-            Digit.Utils.getMultiRootTenant() ? subTenants : cities
+            Digit.Utils.getMultiRootTenant() ? TenantMngmtSearch : cities
           } optionsKey={Digit.Utils.getMultiRootTenant() ? "name" : "i18nKey"} onSelect={selectCity} />
         ) : (
           <Dropdown isMandatory selected={selectedCity} option={
-            Digit.Utils.getMultiRootTenant() ? subTenants : cities
+            Digit.Utils.getMultiRootTenant() ? TenantMngmtSearch : cities
           } select={selectCity} optionKey={Digit.Utils.getMultiRootTenant() ? "name" : "i18nKey"} t={t} />
         )}
         {selectedCity && localities && <CardLabel>{t("CS_CREATECOMPLAINT_MOHALLA")}</CardLabel>}

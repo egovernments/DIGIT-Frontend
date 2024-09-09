@@ -10,41 +10,25 @@ import { createComplaint } from "../../../redux/actions/index";
 
 export const CreateComplaint = ({ parentUrl }) => {
   const cities = Digit.Hooks.pgr.useTenants();
+  const stateId = Digit.ULBService.getStateId();
 
   const { t } = useTranslation();
 
   const getCities = () => cities?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
 
- // Define the requestCriteria
-let requestCriteria = null;
-
-// Check the value of window.globalPath
-if (Digit.Utils.getMultiRootTenant()) {
-  requestCriteria = {
-    url: "/tenant-management/tenant/_search",
-    params: {
-      code: Digit.ULBService.getCurrentTenantId(),
-      includeSubTenants: true
-    },
-    body: {
-      apiOperation: "SEARCH",
-    },
-    config: {
-      select: (data) => {
-        return data?.Tenants;
-      },
-    },
-  };
-}
 
 // Use the requestCriteria only if it's not null
-const { data: subTenants, refetch, isLoading: isLoadingSubTenants } = requestCriteria
-  ? Digit.Hooks.useCustomAPIHook(requestCriteria)
-  : { data: null, refetch: () => {}, isLoading: false };
+const { data: subTenants, refetch, isLoading: isLoadingSubTenants } = { data: null, refetch: () => {}, isLoading: false };
 
-// Now you can use subTenants, refetch, and isLoadingSubTenants
+const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit.Hooks.useTenantManagementSearch({
+  stateId: stateId,
+  includeSubTenants: true,
+  config : {
+    enabled: Digit.Utils.getMultiRootTenant()
+  }
+});
 
-  const getSubTenants = () => subTenants?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
+  const getSubTenants = () => Digit.Utils.getMultiRootTenant() ? TenantMngmtSearch?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) : subTenants?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId());
 
   const [complaintType, setComplaintType] = useState({});
   const [subTypeMenu, setSubTypeMenu] = useState([]);
@@ -58,7 +42,7 @@ const { data: subTenants, refetch, isLoading: isLoadingSubTenants } = requestCri
 
   const cityData = Digit.Utils.getMultiRootTenant() ? getSubTenants() : getCities();
 
-  const { isLoading: hierarchyLOading, data:hierarchyType } = Digit.Hooks.useCustomMDMS(
+  const { isLoading: hierarchyLOading, data: hierarchyType } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getStateId(),
      "sandbox-ui",
       [
