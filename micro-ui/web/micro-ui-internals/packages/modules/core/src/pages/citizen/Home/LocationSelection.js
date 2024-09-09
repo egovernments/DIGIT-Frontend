@@ -15,6 +15,12 @@ if (Digit.Utils.getMultiRootTenant()) {
   // Call the useTenants hook only if the condition is met
   hookResult = Digit.Hooks.useTenants();
 }
+const {
+  data: { stateInfo, uiHomePage } = {},
+  isLoading: initisLoading,
+} = Digit.Hooks.useStore.getInitData();
+
+const redirectURL = uiHomePage?.redirectURL;
 
 // Destructure the result
 const { data: cities, isLoading } = hookResult;
@@ -58,9 +64,14 @@ const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit
     if (selectedCity) {
       Digit.SessionStorage.set("CITIZEN.COMMON.HOME.CITY", selectedCity);
       const redirectBackTo = location.state?.redirectBackTo;
+      if(redirectURL){
+        history.push(`/${window?.contextPath}/citizen/${redirectURL}`);
+      }
+      else{
       if (redirectBackTo) {
         history.replace(redirectBackTo);
       } else history.push(`/${window?.contextPath}/citizen`);
+    }
     } else {
       setShowError(true);
     }
