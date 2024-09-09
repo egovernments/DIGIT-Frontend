@@ -196,7 +196,7 @@ function Jurisdiction({
   const subTenantList = getSubTenants();
 
   useEffect(() => {
-    if (window.globalPath === 'sandbox-ui') {
+    if (Digit.Utils.getMultiRootTenant()) {
       selectboundary(subTenantList);
     }
     else {
