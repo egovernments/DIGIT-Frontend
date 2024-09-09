@@ -8,6 +8,7 @@ export const deliveryConfig = [
     cycleConfig: {
       cycle: 1,
       deliveries: 1,
+      IsDisable: true
     },
     deliveryConfig: [
       {

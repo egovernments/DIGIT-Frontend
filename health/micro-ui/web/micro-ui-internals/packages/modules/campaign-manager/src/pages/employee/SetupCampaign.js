@@ -233,14 +233,14 @@ function updateUrlParams(params) {
   window.history.replaceState({}, "", url);
 }
 
-const SetupCampaign = ({ hierarchyType }) => {
+const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const history = useHistory();
   const [currentStep, setCurrentStep] = useState(0);
   const [totalFormData, setTotalFormData] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [campaignConfig, setCampaignConfig] = useState(CampaignConfig(totalFormData, null, isSubmitting));
+  const [campaignConfig, setCampaignConfig] = useState(CampaignConfig(totalFormData, null, isSubmitting ));
   const [shouldUpdate, setShouldUpdate] = useState(false);
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_FORM_DATA", {});
   const [dataParams, setDataParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", {});
@@ -487,8 +487,8 @@ const SetupCampaign = ({ hierarchyType }) => {
     }
   }, [hierarchyDefinition?.BoundaryHierarchy?.[0], draftData]);
   useEffect(() => {
-    setCampaignConfig(CampaignConfig(totalFormData, dataParams, isSubmitting, summaryErrors));
-  }, [totalFormData, dataParams, isSubmitting, summaryErrors]);
+    setCampaignConfig(CampaignConfig(totalFormData, dataParams, isSubmitting, summaryErrors , hierarchyData));
+  }, [totalFormData, dataParams, isSubmitting, summaryErrors , hierarchyData]);
 
   useEffect(() => {
     setIsSubmitting(false);
@@ -1104,6 +1104,7 @@ const SetupCampaign = ({ hierarchyType }) => {
 
   // validating the screen data on clicking next button
   const handleValidate = (formData) => {
+    console.log("formData" , formData);
     const key = Object.keys(formData)?.[0];
     switch (key) {
       case "campaignName":

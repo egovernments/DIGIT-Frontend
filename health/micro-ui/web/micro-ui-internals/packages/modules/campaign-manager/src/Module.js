@@ -33,6 +33,11 @@ import UpdateDatesWithBoundaries from "./pages/employee/UpdateDatesWithBoundarie
 import DateWithBoundary from "./components/DateWithBoundary";
 import BoundaryWithDate from "./components/BoundaryWithDate";
 import DateAndCycleUpdate from "./pages/employee/DateAndCycleUpdate";
+import UpdateBoundary from "./pages/employee/UpdateBoundary";
+import UpdateBoundaryWrapper from "./components/UpdateBoundaryWrapper";
+// import SelectingBoundaryComponent from "./components/SelectingBoundaryComponent";
+import { Wrapper } from "./components/SelectingBoundaryComponent";
+import SelectingBoundariesDuplicate from "./components/SelectingBoundariesDuplicate";
 
 /**
  * The CampaignModule function fetches store data based on state code, module code, and language, and
@@ -47,6 +52,26 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
       return data?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)?.hierarchy;
     },
   });
+
+  console.log("pppp", BOUNDARY_HIERARCHY_TYPE);
+
+  const reqCriteria = {
+    url: `/boundary-service/boundary-relationships/_search`,
+    changeQueryName: `${BOUNDARY_HIERARCHY_TYPE}`,
+    params: {
+      tenantId: tenantId,
+      hierarchyType: BOUNDARY_HIERARCHY_TYPE,
+      includeChildren: true
+    },
+    body: {},
+    config: {
+      cacheTime: 1000000,
+    },
+  };
+
+  const { data: hierarchyData } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+
+  console.log("hierarchy" , hierarchyData);
 
   const moduleCode = ["campaignmanager", "workbench", "mdms", "schema", "hcm-admin-schemas", `boundary-${BOUNDARY_HIERARCHY_TYPE}`];
   const { path, url } = useRouteMatch();
@@ -64,7 +89,7 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
   return (
     <ErrorBoundary moduleName="CAMPAIGN">
       <TourProvider>
-        <EmployeeApp BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE} path={path} stateCode={stateCode} url={url} userType={userType} />
+        <EmployeeApp BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE} path={path} stateCode={stateCode} url={url} userType={userType} hierarchyData={hierarchyData?.TenantBoundary?.[0]?.boundary} />
       </TourProvider>
     </ErrorBoundary>
   );
@@ -99,7 +124,12 @@ const componentsToRegister = {
   DateWithBoundary,
   BoundaryWithDate,
   DateAndCycleUpdate,
-  TimelineComponent
+  TimelineComponent,
+  Wrapper,
+  UpdateBoundary,
+  UpdateBoundaryWrapper,
+  SelectingBoundariesDuplicate,
+  // SelectingBoundaryComponent
 };
 
 const overrideHooks = () => {
