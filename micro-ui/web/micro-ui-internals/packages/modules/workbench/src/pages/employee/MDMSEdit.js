@@ -98,7 +98,12 @@ const MDMSEdit = ({...props}) => {
 
   const handleUpdate = async (formData) => {
     const schemaCodeToValidate = `${moduleName}.${masterName}`;
-    const transformedData = schemaCodeToValidate === "WORKS-SOR.Rates" || schemaCodeToValidate === "WORKS-SOR.Composition" ? {...formData,validFrom:String(convertDateToEpoch(formData?.validFrom))} : formData
+    const transformedData =
+      schemaCodeToValidate === "WORKS-SOR.Rates"
+        ? { ...formData, validFrom: String(convertDateToEpoch(formData?.validFrom)) }
+        : schemaCodeToValidate === "WORKS-SOR.Composition"
+        ? { ...formData, effectiveFrom: String(convertDateToEpoch(formData?.effectiveFrom)) }
+        : formData;
     const validation = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.validateForm(transformedData, { tenantId: stateId });
 
     if (validation && !validation?.isValid) {
