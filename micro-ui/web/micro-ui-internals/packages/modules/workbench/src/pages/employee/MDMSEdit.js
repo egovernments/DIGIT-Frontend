@@ -83,8 +83,8 @@ const MDMSEdit = ({...props}) => {
 
   const handleUpdate = async (formData) => {
     const schemaCodeToValidate = `${moduleName}.${masterName}`;
-
-    const validation = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.validateForm(formData, { tenantId: stateId });
+    const transformedData = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.getTrasformedData(formData) || formData;
+    const validation = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.validateForm(transformedData, { tenantId: stateId });
 
     if (validation && !validation?.isValid) {
       setShowToast({
@@ -121,7 +121,7 @@ const MDMSEdit = ({...props}) => {
         body: {
           Mdms:{
             ...data,
-            data:formData
+            data:transformedData
           },
         },
       },
@@ -158,7 +158,9 @@ const MDMSEdit = ({...props}) => {
   
   return (
     <React.Fragment>
-      <MDMSAdd defaultFormData = {(`${moduleName}.${masterName}` === "WORKS-SOR.Rates" || `${moduleName}.${masterName}` === "WORKS-SOR.Composition") ? formattedData : data?.data} screenType={"edit"} onSubmitEditAction={handleUpdate} updatesToUISchema ={schemaData?.updatesToUiSchema} />
+      <MDMSAdd 
+      defaultFormData = {(`${moduleName}.${masterName}` === "WORKS-SOR.Rates" || `${moduleName}.${masterName}` === "WORKS-SOR.Composition") ? formattedData : data?.data} 
+      screenType={"edit"} onSubmitEditAction={handleUpdate} updatesToUISchema ={schemaData?.updatesToUiSchema} />
       {showToast && <Toast label={t(showToast.label)} error={showToast?.isError} onClose={()=>setShowToast(null)} ></Toast>}
     </React.Fragment>
   )

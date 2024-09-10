@@ -17,6 +17,21 @@ const inboxModuleNameMap = {
   "muster-roll-approval": "muster-roll-service",
 };
 
+const convertDateToEpoch = (dateString) => {
+  if (!dateString) {
+    return "NA";
+  }
+
+  // Split the date string into day, month, and year
+  const [day, month, year] = dateString.split('/');
+
+  // Create a new Date object with the parsed values in UTC
+  const dateObject = new Date(Date.UTC(year, month - 1, day, 0, 0, 0));
+
+  // Return the epoch time in milliseconds
+  return dateObject.getTime();
+};
+
 const convertEpochToDate = (dateEpoch) => {
   if (dateEpoch == null || dateEpoch == undefined || dateEpoch == "") {
     return "NA";
@@ -874,6 +889,9 @@ export const UICustomizations = {
   },
   AddMdmsConfig: {
     "WORKS-SOR.Rates": {
+      getTrasformedData: async (formData) =>{
+        return { ...formData, validFrom: String(convertDateToEpoch(formData?.validFrom)) }
+      },
       validateForm: async (data, props) => {
         try {
           const response = await axios.post("/mdms-v2/v2/_search", {
@@ -901,6 +919,11 @@ export const UICustomizations = {
         }
       },
     },
+    "WORKS-SOR.Composition":{
+      getTrasformedData: async (formData) =>{
+        return { ...formData, effectiveFrom: String(convertDateToEpoch(formData?.effectiveFrom)) }
+      },
+    }
   },
   SearchMDMSv2Config: {
     "WORKS-SOR.Rates": {
