@@ -57,13 +57,12 @@ const background = Colors.lightTheme.paper.secondary;
 
 const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, onSelect, popUpOption }) => {
   const [dummySelected, setDummySelected] = useState(alreadyQueuedSelectedState);
-  const boundaryType = alreadyQueuedSelectedState.find((item) => item.propsData[1] !== null)?.propsData[1]?.boundaryType;
+  const boundaryType = alreadyQueuedSelectedState.find((item) => item.propsData[1] !== null)?.propsData[1]?.type;
   const { t } = useTranslation();
   function removeFromDummySelected(...props) {
     const updatedDummySelectedData = dummySelected.filter((item) => item.code !== props?.[1]?.code);
     setDummySelected(updatedDummySelectedData);
   }
-
   function handleSelected(value) {
     let res = [];
     value &&
@@ -82,7 +81,7 @@ const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, on
             {
               code: item.code,
               name: item.name,
-              boundaryType: item.boundaryType,
+              type: item.type,
               parent: item.parent,
             },
           ],
@@ -98,7 +97,7 @@ const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, on
   };
   return (
     <PopUp
-      // className={"boundaries-pop-module"}
+      className={"selecting-boundaries-pop"}
       type={"default"}
       heading={`${t(boundaryType)} ${t("DIGIT_SELECT")}`}
       children={[]}
@@ -150,9 +149,9 @@ const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, on
                 name: item?.split(".")?.[0],
                 options: [
                   {
-                    code: `${item?.split(".")?.[0]}.${subkey}`,
+                    code: subkey,
                     name: subkey,
-                    boundaryType: boundaryType,
+                    type: boundaryType,
                     parent: `${item?.split(".")?.[0]}`,
                   },
                 ],
@@ -235,8 +234,6 @@ const MultiSelectDropdown = ({
   onSelect,
   defaultLabel = "",
   defaultUnit = "",
-  BlockNumber = 1,
-  isOBPSMultiple = false,
   props,
   isPropsNeeded = false,
   ServerStyle = {},
@@ -689,8 +686,6 @@ const MultiSelectDropdown = ({
             if (!isFrozen) {
               isPropsNeeded
                 ? onSelectToAddToQueue(e, option, props)
-                : isOBPSMultiple
-                ? onSelectToAddToQueue(e, option, BlockNumber)
                 : onSelectToAddToQueue(e, option);
             }
           }}
@@ -821,29 +816,6 @@ const MultiSelectDropdown = ({
       </div>
       {config?.isDropdownWithChip ? (
         <div className="digit-tag-container">
-          {/* {alreadyQueuedSelectedState.length > 0 &&
-            alreadyQueuedSelectedState.map((value, index) => {
-              if (!value.propsData[1]?.options) {
-                console.log("NumberOfChips", config?.numberOfChips);
-                const translatedText = t(config?.chipKey ? value[config?.chipKey] : value.code);
-                const replacedText = replaceDotWithColon(translatedText);
-                return (
-                  <Chip
-                    key={index}
-                    text={replacedText?.length > 64 ? `${replacedText.slice(0, 64)}...` : replacedText}
-                    onClick={
-                      variant === "treemultiselect"
-                        ? () => onSelectToAddToQueue([value])
-                        : isPropsNeeded
-                        ? (e) => onSelectToAddToQueue(e, value, props)
-                        : (e) => onSelectToAddToQueue(e, value)
-                    }
-                    className="multiselectdropdown-tag"
-                  />
-                );
-              }
-              return null;
-            })} */}
           {alreadyQueuedSelectedState.length > 0 &&
             alreadyQueuedSelectedState
               .filter((value) => !value.propsData[1]?.options)
@@ -922,8 +894,6 @@ MultiSelectDropdown.propTypes = {
   onSelect: PropTypes.func.isRequired,
   defaultLabel: PropTypes.string,
   defaultUnit: PropTypes.string,
-  BlockNumber: PropTypes.number,
-  isOBPSMultiple: PropTypes.bool,
   props: PropTypes.object,
   isPropsNeeded: PropTypes.bool,
   ServerStyle: PropTypes.object,

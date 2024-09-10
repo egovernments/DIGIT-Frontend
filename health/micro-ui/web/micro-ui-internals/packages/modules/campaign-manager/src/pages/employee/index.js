@@ -104,7 +104,6 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
           <PrivateRoute path={`${path}/add-product`} component={() => <AddProduct />} />
           <PrivateRoute path={`${path}/configure-app`} component={() => <ConfigureApp />} />
           <PrivateRoute path={`${path}/update-dates-boundary`} component={() => <UpdateDatesWithBoundaries />} />
-          <PrivateRoute path={`${path}/selecting`} component={() => <Wrapper />} />
           <PrivateRoute path={`${path}/update-boundary`} component={() => <UpdateBoundary hierarchyType={BOUNDARY_HIERARCHY_TYPE}/>} />
         </AppContainer>
       </Switch>

@@ -27,11 +27,11 @@ function updateUrlParams(params) {
 }
 
 const UpdateBoundary = ({ hierarchyType }) => {
-    console.log("hierarchyType" , hierarchyType)
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const history = useHistory();
   const [totalFormData, setTotalFormData] = useState({});
+  const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_FORM_DATA_UPDATE", {});
   const [campaignConfig, setCampaignConfig] = useState(UpdateBoundaryConfig(totalFormData,hierarchyType));
   const [showToast, setShowToast] = useState(null);
   const searchParams = new URLSearchParams(location.search);

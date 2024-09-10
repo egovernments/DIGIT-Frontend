@@ -13,30 +13,6 @@ const businessServiceMap = {};
 
 const inboxModuleNameMap = {};
 
-// const onActionSelect = (value, row) => {
-//   console.log("value")
-//   switch (value?.code) {
-//     case "ACTION_LABEL_UPDATE_DATES":
-//       window.history.pushState(
-//         {
-//           name: row?.campaignName,
-//           data: row,
-//           projectId: row?.projectId,
-//         },
-//         "",
-//         `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${row?.id}`
-//       );
-//       window.location.href = `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${row?.id}`;
-
-//       break;
-//     case "ACTION_LABEL_VIEW_TIMELINE":
-//       setTimeline(true);
-//       break;
-//     default:
-//       console.log(value);
-//       break;
-//   }
-// };
 
 export const UICustomizations = {
   MyCampaignConfigOngoing: {

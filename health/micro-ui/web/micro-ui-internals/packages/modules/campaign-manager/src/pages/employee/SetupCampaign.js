@@ -416,54 +416,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
     setParams({ ...restructureFormData });
   }, [params, draftData, isLoading, projectType]);
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setEnabled(fetchUpload || (fetchBoundary && currentKey > 3));
-  //     setFacilityEnabled(refetchGenerate || (!dataParams?.boundaryId && (fetchUpload || (fetchBoundary && currentKey > 3))));
-  //     setTargetEnabled(refetchGenerate || (!dataParams?.facilityId && (fetchUpload || (fetchBoundary && currentKey > 3))));
-  //     setUserEnabled(refetchGenerate || (!dataParams?.userId && (fetchUpload || (fetchBoundary && currentKey > 3))));
-  //   }, 3000);
-  //   if (refetchGenerate === true) {
-  //     setRefetchGenerate(false);
-  //   }
-  // }, [fetchUpload, fetchBoundary, currentKey, dataParams, refetchGenerate]);
-
-  // const { data: facilityId, isLoading: isFacilityLoading, refetch: refetchFacility } = Digit.Hooks.campaign.useGenerateIdCampaign({
-  //   type: "facilityWithBoundary",
-  //   hierarchyType: hierarchyType,
-  //   campaignId: id,
-  //   // config: {
-  //   //   enabled: setTimeout(fetchUpload || (fetchBoundary && currentKey > 6)),
-  //   // },
-  //   config: {
-  //     enabled: facilityEnabled,
-  //   },
-  // });
-
-  // const { data: boundaryId, isLoading: isBoundaryLoading, refetch: refetchBoundary } = Digit.Hooks.campaign.useGenerateIdCampaign({
-  //   type: "boundary",
-  //   hierarchyType: hierarchyType,
-  //   campaignId: id,
-  //   // config: {
-  //   //   enabled: fetchUpload || (fetchBoundary && currentKey > 6),
-  //   // },
-  //   config: {
-  //     enabled: targetEnabled,
-  //   },
-  // });
-
-  // const { data: userId, isLoading: isUserLoading, refetch: refetchUser } = Digit.Hooks.campaign.useGenerateIdCampaign({
-  //   type: "userWithBoundary",
-  //   hierarchyType: hierarchyType,
-  //   campaignId: id,
-  //   // config: {
-  //   //   enabled: fetchUpload || (fetchBoundary && currentKey > 6),
-  //   // },
-  //   config: {
-  //     enabled: userEnabled,
-  //   },
-  // });
-
   useEffect(() => {
     if (draftData?.additionalDetails?.facilityId && draftData?.additionalDetails?.targetId && draftData?.additionalDetails?.userId) {
       setDataParams({
@@ -1104,7 +1056,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
 
   // validating the screen data on clicking next button
   const handleValidate = (formData) => {
-    console.log("formData" , formData);
     const key = Object.keys(formData)?.[0];
     switch (key) {
       case "campaignName":

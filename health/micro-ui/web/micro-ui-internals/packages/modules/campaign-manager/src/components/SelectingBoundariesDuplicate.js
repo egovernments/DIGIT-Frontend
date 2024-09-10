@@ -16,7 +16,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   }, [hierarchyConfig]);
   const [selectedData, setSelectedData] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData || []);
   const [boundaryOptions, setBoundaryOptions] = useState(
-    props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryOptions || { Country: { HEALTH_MO: "mz" } }
+    props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData || {}
   );
   const [executionCount, setExecutionCount] = useState(0);
   const [showPopUp, setShowPopUp] = useState(null);
@@ -25,7 +25,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
 
 
   useEffect(() => {
-    onSelect("boundaryType", { selectedData: selectedData, boundaryOptions: boundaryOptions });
+    onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions });
   }, [selectedData, boundaryOptions]);
 
 
@@ -36,15 +36,15 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
         : []
     );
     setBoundaryOptions(
-      props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryOptions
-        ? props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryOptions
-        : { Country: { HEALTH_MO: "mz" } }
+      props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData
+        ? props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData
+        : {}
     );
   }, [props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType]);
 
   useEffect(() => {
     if (executionCount < 5) {
-      onSelect("boundaryType", { selectedData: selectedData, boundaryOptions: boundaryOptions });
+      onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions });
       setExecutionCount((prevCount) => prevCount + 1);
     }
   });
@@ -62,14 +62,6 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const handleBoundaryChange =(value) =>{
     setBoundaryOptions(value?.boundaryOptions);
     setSelectedData(value?.selectedData);
-
-    const updatedSelected = value?.selectedData.map(item => {
-        const { boundaryType, ...rest } = item; // Destructure to remove boundaryType
-        return {
-            ...rest,
-            type: boundaryType,  // Convert boundaryType to type
-        };
-    });
   }
 
 
@@ -85,6 +77,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
           boundaryOptions={boundaryOptions}
           updateBoundary ={updateBoundary}
           hierarchyData = {props?.props?.hierarchyData}
+          isMultiSelect ={"true"}
         //   onSelect={(value) => {
         //     setSelectedData(value?.selectedData);
         //     setBoundaryOptions(value?.boundaryOptions);

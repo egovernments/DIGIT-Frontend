@@ -53,21 +53,7 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
     },
   });
 
-  const reqCriteria = {
-    url: `/boundary-service/boundary-relationships/_search`,
-    changeQueryName: `${BOUNDARY_HIERARCHY_TYPE}`,
-    params: {
-      tenantId: tenantId,
-      hierarchyType: BOUNDARY_HIERARCHY_TYPE,
-      includeChildren: true
-    },
-    body: {},
-    config: {
-      cacheTime: 1000000,
-    },
-  };
-
-  const { data: hierarchyData } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({BOUNDARY_HIERARCHY_TYPE,tenantId});
 
   const moduleCode = ["campaignmanager", "workbench", "mdms", "schema", "hcm-admin-schemas", `boundary-${BOUNDARY_HIERARCHY_TYPE}`];
   const { path, url } = useRouteMatch();
@@ -85,7 +71,7 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
   return (
     <ErrorBoundary moduleName="CAMPAIGN">
       <TourProvider>
-        <EmployeeApp BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE} path={path} stateCode={stateCode} url={url} userType={userType} hierarchyData={hierarchyData?.TenantBoundary?.[0]?.boundary} />
+        <EmployeeApp BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE} path={path} stateCode={stateCode} url={url} userType={userType} hierarchyData={hierarchyData} />
       </TourProvider>
     </ErrorBoundary>
   );

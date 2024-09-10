@@ -14,6 +14,8 @@ const UpdateBoundaryWrapper = ({ ...props }) => {
   const lowestHierarchy = useMemo(() => {
     return hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)?.lowestHierarchy;
   }, [hierarchyConfig]);
+  const [boundaryOptions, setBoundaryOptions] = useState( );
+  const [selectedData, setSelectedData] = useState([]);
 
   const reqCriteriaCampaign = {
     url: `/project-factory/v1/project-type/search`,
@@ -27,6 +29,17 @@ const UpdateBoundaryWrapper = ({ ...props }) => {
 
   const { data: CampaignData } = Digit.Hooks.useCustomAPIHook(reqCriteriaCampaign);
 
+  const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({hierarchyType,tenantId});
+
+  const handleBoundaryChange =(value) =>{
+    setBoundaryOptions(value?.boundaryOptions);
+    setSelectedData(value?.selectedData);
+  }
+
+  useEffect (() => {
+    setSelectedData(CampaignData?.CampaignDetails?.[0]?.boundaries);
+  },[CampaignData])
+
   return (
     <React.Fragment>
       <Header>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</Header>
@@ -34,8 +47,14 @@ const UpdateBoundaryWrapper = ({ ...props }) => {
       <Wrapper 
       hierarchyType={hierarchyType} 
       lowest={lowestHierarchy} 
-      frozenData = { CampaignData?.CampaignDetails?.[0]?.boundaries} 
-      frozenType = {"filter"}
+      // frozenData = { CampaignData?.CampaignDetails?.[0]?.boundaries} 
+      // frozenType = {"filter"}
+      hierarchyData = { hierarchyData}
+      onSelect={(value) => {
+        handleBoundaryChange(value);
+      }}
+      boundaryOptions={boundaryOptions}
+      selectedData={selectedData}
       ></Wrapper>
     </React.Fragment>
   );
