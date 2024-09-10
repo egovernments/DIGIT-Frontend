@@ -81,10 +81,25 @@ const MDMSEdit = ({...props}) => {
   };
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaUpdate);
 
+  const convertDateToEpoch = (dateString) => {
+    if (!dateString) {
+      return "NA";
+    }
+
+    // Split the date string into day, month, and year
+    const [day, month, year] = dateString.split('/');
+  
+    // Create a new Date object with the parsed values in UTC
+    const dateObject = new Date(Date.UTC(year, month - 1, day, 0, 0, 0));
+  
+    // Return the epoch time in milliseconds
+    return dateObject.getTime();
+  };
+
   const handleUpdate = async (formData) => {
     const schemaCodeToValidate = `${moduleName}.${masterName}`;
-
-    const validation = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.validateForm(formData, { tenantId: stateId });
+    const transformedData = schemaCodeToValidate === "WORKS-SOR.Rates" || schemaCodeToValidate === "WORKS-SOR.Composition" ? {...formData,validFrom:String(convertDateToEpoch(formData?.validFrom))} : formData
+    const validation = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.validateForm(transformedData, { tenantId: stateId });
 
     if (validation && !validation?.isValid) {
       setShowToast({
@@ -121,7 +136,7 @@ const MDMSEdit = ({...props}) => {
         body: {
           Mdms:{
             ...data,
-            data:formData
+            data:transformedData
           },
         },
       },
@@ -158,7 +173,9 @@ const MDMSEdit = ({...props}) => {
   
   return (
     <React.Fragment>
-      <MDMSAdd defaultFormData = {(`${moduleName}.${masterName}` === "WORKS-SOR.Rates" || `${moduleName}.${masterName}` === "WORKS-SOR.Composition") ? formattedData : data?.data} screenType={"edit"} onSubmitEditAction={handleUpdate} updatesToUISchema ={schemaData?.updatesToUiSchema} />
+      <MDMSAdd 
+      defaultFormData = {(`${moduleName}.${masterName}` === "WORKS-SOR.Rates" || `${moduleName}.${masterName}` === "WORKS-SOR.Composition") ? formattedData : data?.data} 
+      screenType={"edit"} onSubmitEditAction={handleUpdate} updatesToUISchema ={schemaData?.updatesToUiSchema} />
       {showToast && <Toast label={t(showToast.label)} error={showToast?.isError} onClose={()=>setShowToast(null)} ></Toast>}
     </React.Fragment>
   )

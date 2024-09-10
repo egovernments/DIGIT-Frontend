@@ -188,7 +188,7 @@ const updateTitleToLocalisationCodeForObject = (definition, schemaCode) => {
   });
   return definition;
 };
-const formatDates = (value, type) => {
+const formatDates = (value, type,key) => {
   if (type != "EPOC" && (!value || Number.isNaN(value))) {
     value = new Date();
   }
@@ -198,7 +198,11 @@ const formatDates = (value, type) => {
     case "datetime":
       return new Date(value).toISOString();
     case "EPOC":
-      return String(new Date(value)?.getTime());
+      const date = new Date(value);
+      if(key==="validTo" || key==="effectiveTo") {
+        date.setHours(23, 59, 59, 999);
+      }
+      return String(date?.getTime());
   }
 };
 
@@ -218,10 +222,10 @@ const generateId = async (format, tenantId = Digit.ULBService.getCurrentTenantId
   return response?.idResponses?.[0]?.id;
 };
 
-const formatData = (value, type, schema) => {
+const formatData = (value, type, schema,key) => {
   switch (type) {
     case "EPOC":
-      return formatDates(value, type);
+      return formatDates(value, type,key);
     case "REVERT-EPOC":
       return formatDates(typeof value == "string" && value?.endsWith?.("Z") ? value : parseInt(value), schema?.["ui:widget"]);
     case "REVERT-EPOC":
@@ -242,7 +246,7 @@ const preProcessData = async (data = {}, schema = {}) => {
         autoGenerateFormat = schema?.[key]?.autogenerate;
         fieldKey = key;
       } else {
-        data[key] = formatData(data?.[key], schema?.[key]?.formatType, schema?.[key]);
+        data[key] = formatData(data?.[key], schema?.[key]?.formatType, schema?.[key],key);
       }
     }
   });
@@ -262,7 +266,7 @@ const postProcessData = (data = {}, schema = {}) => {
       schema?.[key]?.formatType &&
       data[key]
     ) {
-      data[key] = formatData(data?.[key], `REVERT-${schema?.[key]?.formatType}`, schema?.[key]);
+      data[key] = formatData(data?.[key], `REVERT-${schema?.[key]?.formatType}`, schema?.[key],key);
     }
   });
   return { ...data };
