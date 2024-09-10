@@ -15,11 +15,10 @@ const tenantManagementSearchService = async ({ stateId, includeSubTenants = true
 
   const tenants = response?.Tenants || [];
   const modifiedTenants = tenants.map(tenant => {
-    const tenantName = tenant?.code || '';
-    const formattedName = tenantName.replace(/\./g, '_').toUpperCase();
+    const tenantName = tenant?.code || ' ';
     return {
       ...tenant,
-      i18nKey: `TENANT_TENANTS_${formattedName}`,
+      i18nKey: Digit.Utils.locale.getTransformedLocale(`TENANT_TENANTS_${tenantName}`),
     };
   });
 
