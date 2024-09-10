@@ -81,29 +81,9 @@ const MDMSEdit = ({...props}) => {
   };
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaUpdate);
 
-  const convertDateToEpoch = (dateString) => {
-    if (!dateString) {
-      return "NA";
-    }
-
-    // Split the date string into day, month, and year
-    const [day, month, year] = dateString.split('/');
-  
-    // Create a new Date object with the parsed values in UTC
-    const dateObject = new Date(Date.UTC(year, month - 1, day, 0, 0, 0));
-  
-    // Return the epoch time in milliseconds
-    return dateObject.getTime();
-  };
-
   const handleUpdate = async (formData) => {
     const schemaCodeToValidate = `${moduleName}.${masterName}`;
-    const transformedData =
-      schemaCodeToValidate === "WORKS-SOR.Rates"
-        ? { ...formData, validFrom: String(convertDateToEpoch(formData?.validFrom)) }
-        : schemaCodeToValidate === "WORKS-SOR.Composition"
-        ? { ...formData, effectiveFrom: String(convertDateToEpoch(formData?.effectiveFrom)) }
-        : formData;
+    const transformedData = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.getTrasformedData(formData) || formData;
     const validation = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.validateForm(transformedData, { tenantId: stateId });
 
     if (validation && !validation?.isValid) {
