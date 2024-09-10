@@ -67,16 +67,16 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   const body = api?.requestBody
     ? { ...api?.requestBody }
     : {
-        Mdms: {
-          tenantId: tenantId,
-          schemaCode: `${moduleName}.${masterName}`,
-          uniqueIdentifier: null,
-          data: {},
-          isActive: true,
-        },
-      };
+      Mdms: {
+        tenantId: tenantId,
+        schemaCode: `${moduleName}.${masterName}`,
+        uniqueIdentifier: null,
+        data: {},
+        isActive: true,
+      },
+    };
   const reqCriteriaAdd = {
-    url: api ? api?.url : Digit.Utils.workbench.getMDMSActionURL(moduleName,masterName,"create"),
+    url: api ? api?.url : Digit.Utils.workbench.getMDMSActionURL(moduleName, masterName, "create"),
     params: {},
     body: { ...body },
     config: {
@@ -195,7 +195,33 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   if (isLoading || !formSchema || Object.keys(formSchema) == 0) {
     return <Loader />;
   }
+
   const uiJSONSchema = formSchema?.["definition"]?.["x-ui-schema"];
+
+
+
+  if (!formSchema?.definition?.properties || !formSchema?.definition?.properties?.slabs.items['x-ui-schema'] || !formSchema?.definition?.properties?.slabs.items['x-ui-schema']['ui:order']) {
+    // No Changes are made to schema
+  }
+  else {
+    // Changes are made to schema
+    const orderedProperties = formSchema?.definition?.properties?.slabs.items['x-ui-schema']['ui:order'];
+    const currorderedProperties = formSchema?.definition.properties.slabs.items.properties;
+
+    const newProperties = {};
+    orderedProperties.forEach(key => {
+      newProperties[key] = currorderedProperties[key];
+    });
+
+    Object.keys(currorderedProperties).forEach(key => {
+      if (!orderedProperties.includes(key)) {
+        newProperties[key] = currorderedProperties[key];
+      }
+    });
+
+    formSchema.definition.properties.slabs.items.properties = newProperties;
+  }
+
 
   return (
     <React.Fragment>
