@@ -5,10 +5,6 @@ import { subtract } from "lodash";
 const SelectAddress = ({ t, config, onSelect, value }) => {
   const allCities = Digit.Hooks.pgr.useTenants();
   const cities = value?.pincode ? allCities.filter((city) => city?.pincode?.some((pin) => pin == value["pincode"])) : allCities;
-  // Define the requestCriteria
-let requestCriteria = null;
-
-// Check the value of window.globalPath
 
 const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit.Hooks.useTenantManagementSearch({
   stateId: Digit.ULBService.getStateId(),
@@ -43,7 +39,7 @@ const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit
     selectedCity?.code,
     hierarchyType,
     {
-      enabled: !!selectedCity,
+      enabled: !!selectedCity && !!hierarchyType,
     },
     t
   );
@@ -84,11 +80,11 @@ const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit
         {(Digit.Utils.getMultiRootTenant() ? TenantMngmtSearch?.length : cities?.length) < 5 ? (
           <RadioButtons selectedOption={selectedCity} options={
             Digit.Utils.getMultiRootTenant() ? TenantMngmtSearch : cities
-          } optionsKey={Digit.Utils.getMultiRootTenant() ? "name" : "i18nKey"} onSelect={selectCity} />
+          } optionsKey={"i18nKey"} onSelect={selectCity} />
         ) : (
           <Dropdown isMandatory selected={selectedCity} option={
             Digit.Utils.getMultiRootTenant() ? TenantMngmtSearch : cities
-          } select={selectCity} optionKey={Digit.Utils.getMultiRootTenant() ? "name" : "i18nKey"} t={t} />
+          } select={selectCity} optionKey={"i18nKey"} t={t} />
         )}
         {selectedCity && localities && <CardLabel>{t("CS_CREATECOMPLAINT_MOHALLA")}</CardLabel>}
         {selectedCity && localities && (

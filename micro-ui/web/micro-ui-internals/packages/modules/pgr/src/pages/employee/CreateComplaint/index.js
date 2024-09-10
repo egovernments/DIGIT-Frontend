@@ -17,7 +17,6 @@ export const CreateComplaint = ({ parentUrl }) => {
   const getCities = () => cities?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
 
 
-// Use the requestCriteria only if it's not null
 const { data: subTenants, refetch, isLoading: isLoadingSubTenants } = { data: null, refetch: () => {}, isLoading: false };
 
 const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit.Hooks.useTenantManagementSearch({
@@ -62,7 +61,7 @@ const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit
   cityData?.[0]?.code,
   hierarchyType,
   {
-    enabled: !!cityData?.[0],
+    enabled: !!cityData?.[0] && !!hierarchyType,
   },
   t
 );
@@ -264,7 +263,7 @@ const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit
               }
               id="city"
               select={selectCity}
-              optionKey={Digit.Utils.getMultiRootTenant() ? "name" : "i18nKey"}
+              optionKey={"i18nKey"}
               t={t}
             />
           ),
