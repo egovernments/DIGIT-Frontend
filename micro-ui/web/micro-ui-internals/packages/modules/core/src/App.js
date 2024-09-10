@@ -98,15 +98,22 @@ export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, initD
       }
     >
       <Switch>
-        <Route exact path={`/${window?.globalPath}/user/sign-up`}>
-          <SignUp stateCode={stateCode} />
-        </Route>
-        <Route exact path={`/${window?.globalPath}/user/otp`}>
-          <Otp />
-        </Route>
-        <Route exact path={`/${window?.globalPath}/user/url`}>
-          <ViewUrl />
-        </Route>
+        {Digit.Utils.getMultiRootTenant() && (
+          <Route path={`/${window?.globalPath}`}>
+            <Route exact path={`/${window?.globalPath}/user/sign-up`}>
+              <SignUp stateCode={stateCode} />
+            </Route>
+            <Route exact path={`/${window?.globalPath}/user/otp`}>
+              <Otp />
+            </Route>
+            <Route exact path={`/${window?.globalPath}/user/url`}>
+              <ViewUrl />
+            </Route>
+            <Route>
+              <Redirect to={Digit.Utils.getMultiRootTenant() ? `/${window?.globalPath}/user/sign-up` : `/${window?.contextPath}/${defaultLanding}`} />
+            </Route>
+          </Route>
+        )}
         {window?.globalPath !== window?.contextPath && (
           <Route path={`/${window?.contextPath}`}>
             <DigitApp
