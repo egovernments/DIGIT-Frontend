@@ -61,7 +61,7 @@ const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit
   cityData?.[0]?.code,
   hierarchyType,
   {
-    enabled: !!cityData?.[0] && !!hierarchyType,
+    enabled: Digit.Utils.getMultiRootTenant() ? !!cityData?.[0] && !!hierarchyType : !!cityData?.[0],
   },
   t
 );
