@@ -68,7 +68,10 @@ const SampleMultiComponent = ({ onSelect, ...props }) => {
           option={type}
           optionKey={"code"}
           selected={type?.find((i) => i.code === selectedType?.code)}
-          select={(value) => setSelectedType(value)}
+          select={(value) => {
+            setSelectedType(value)
+            console.log(value)
+          }}
         />
       </LabelFieldPair>
       <LabelFieldPair>
@@ -94,8 +97,11 @@ const SampleMultiComponent = ({ onSelect, ...props }) => {
             t={t}
             option={category}
             optionKey={"code"}
-            selected={category?.find((i) => i.code === selectedCategory)}
-            select={(value) => setSelectedCategory(value)}
+            selected={category?.find((i) => i.code === selectedCategory?.code)}
+            select={(value) => {
+              setSelectedCategory(value)
+              console.log(value)
+            }}
           />
         </LabelFieldPair>
       )}
@@ -109,7 +115,7 @@ const SampleMultiComponent = ({ onSelect, ...props }) => {
             t={t}
             option={role}
             optionKey={"code"}
-            selected={role?.find((i) => i.code === selectedRole)}
+            selected={role?.find((i) => i.code === selectedRole?.code)}
             select={(value) => setSelectedRole(value)}
           />
         </LabelFieldPair>

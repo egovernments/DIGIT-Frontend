@@ -52,6 +52,14 @@ const SampleCard = () => {
         label: t("Individual View Details"),
         link: `/${window?.contextPath}/employee/sample/individual-details-view`,
       },
+      {
+        label: t("SOR Create"),
+        link: `/${window?.contextPath}/employee/sample/create-sor`
+      },
+      {
+        label: t("SOR Search"),
+        link: `/${window?.contextPath}/employee/sample/search-sor`
+      }
       
     ],
   };
