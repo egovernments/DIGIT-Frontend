@@ -37,7 +37,7 @@ const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit
 
   const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
     selectedCity?.code,
-    hierarchyType,
+     Digit.Utils.getMultiRootTenant() ? hierarchyType : "admin",
     {
       enabled: !!selectedCity && !!hierarchyType,
     },
