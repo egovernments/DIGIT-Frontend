@@ -10,6 +10,7 @@ const mobileView = innerWidth <= 640;
 
 const CustomPieChart = ({ dataKey = "value", data, setChartDenomination,variant=undefined }) => {
   const { id } = data;
+
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
@@ -53,7 +54,6 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination,variant=
 
 
   const renderLegend = (val,entry) => {
-
     if(variant==="pieChartv2" && entry){
       return (
         <div style={{ display:"inline-flex",justifyContent:"space-between",fontSize: "16px",width:"95%",color:"black",height:"5px",alignItems:"center" }}>
@@ -63,7 +63,7 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination,variant=
       );
     }
 
-    return  <span style={{ fontSize: "14px", color: "#505A5F" }}>{t(`COMMON_MASTERS_${value && Digit.Utils.locale.getTransformedLocale(value)}`)}</span>
+    return  <span style={{ fontSize: "14px", color: "#505A5F" }}>{t(`COMMON_MASTERS_${val && Digit.Utils.locale.getTransformedLocale(val)}`)}</span>
   }
 
   const renderCustomLabel = (args) => {
