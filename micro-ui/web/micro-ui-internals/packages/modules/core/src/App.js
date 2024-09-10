@@ -120,7 +120,7 @@ export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, initD
           </Route>
         )}
         <Route>
-          <Redirect to={`/${window?.globalPath}/user/sign-up`} />
+          <Redirect to={Digit.Utils.getMultiRootTenant() ? `/${window?.globalPath}/user/sign-up` : `/${window?.contextPath}/${defaultLanding}`} />
         </Route>
       </Switch>
     </div>
