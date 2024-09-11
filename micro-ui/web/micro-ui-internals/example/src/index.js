@@ -1,16 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { PGRReducers } from "@egovernments/digit-ui-module-pgr";
+// import { PGRReducers } from "@egovernments/digit-ui-module-pgr";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 // import { paymentConfigs, PaymentLinks, PaymentModule } from "@egovernments/digit-ui-module-common";
 import { DigitUI, initCoreComponents } from "@egovernments/digit-ui-module-core";
-import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
-import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
-import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
-import { initUtilitiesComponents } from  "@egovernments/digit-ui-module-utilities";
-import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench";
-import {initPGRComponents} from "@egovernments/digit-ui-module-pgr";
-import {initOpenPaymentComponents} from "@egovernments/digit-ui-module-open-payment";
+// import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
+// import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
+// import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
+// import { initUtilitiesComponents } from  "@egovernments/digit-ui-module-utilities";
+// import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench";
+// import {initPGRComponents} from "@egovernments/digit-ui-module-pgr";
+// import {initOpenPaymentComponents} from "@egovernments/digit-ui-module-open-payment";
 
 import "@egovernments/digit-ui-css/example/index.css";
 
@@ -68,16 +68,16 @@ const initDigitUI = () => {
     // PaymentLinks,
   });
   initCoreComponents();
-  initDSSComponents();
-  initHRMSComponents();
-  initEngagementComponents();
-  initUtilitiesComponents();
-  initWorkbenchComponents();
-  initPGRComponents();
-  initOpenPaymentComponents();
+  // initDSSComponents();
+  // initHRMSComponents();
+  // initEngagementComponents();
+  // initUtilitiesComponents();
+  // initWorkbenchComponents();
+  // initPGRComponents();
+  // initOpenPaymentComponents();
 
   const moduleReducers = (initData) =>  ({
-    pgr: PGRReducers(initData),
+    // pgr: PGRReducers(initData),
   });
 
   
