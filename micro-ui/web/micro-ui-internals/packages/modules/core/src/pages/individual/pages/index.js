@@ -5,6 +5,7 @@ import { AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-component
 import { Route } from "react-router-dom";
 import Programs from "./Programs";
 import Program from "./Program";
+import Enroll from "./Enroll";
 
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
@@ -54,6 +55,7 @@ const App = ({ path }) => {
         <AppContainer className="programs-module">
           <Route path={`${path}/programs`} component={() => <Programs />} />
           <Route path={`${path}/program/:id`} component={() => <Program />} />
+          <Route path={`${path}/enroll/:id`} component={() => <Enroll />} />
           {/* <Route>
           <Redirect to={`${path}/programs`} />
           </Route> */}

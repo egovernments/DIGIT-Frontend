@@ -853,5 +853,9 @@ input[type="number"] {
   .program-list{
     width: 90%;
   }
+  .program-apply-wrapper{
+    display: flex;
+    justify-content: flex-end;
+  }
 }
 }

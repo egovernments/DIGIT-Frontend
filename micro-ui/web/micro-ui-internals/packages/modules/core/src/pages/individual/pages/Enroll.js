@@ -5,7 +5,7 @@ import { Card, TextBlock, Button } from "@egovernments/digit-ui-components";
 import { SCHEME } from "../configs/schemeConfigs";
 import { useParams, useHistory } from "react-router-dom";
 
-const Program = ({}) => {
+const Enroll = ({}) => {
   // const Program=[]
   const history = useHistory();
 
@@ -91,4 +91,4 @@ const Program = ({}) => {
   );
 };
 
-export default Program;
+export default Enroll;
