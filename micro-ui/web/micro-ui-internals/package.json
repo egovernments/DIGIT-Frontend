@@ -3,10 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "workspaces": [
-    "packages/libraries",
     "example",
-    "packages/css",
-    "packages/react-components",
+    "packages/css", 
     "packages/modules/core"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
@@ -22,13 +20,9 @@
     "start:script": "./scripts/create.sh",
     "dev:css": "cd packages/css && yarn start",
     "publish:css": "cd packages/css && yarn publish --access public",
-    "dev:libraries": "cd packages/libraries && yarn start",
-    "dev:components": "cd packages/react-components && yarn start",
     "dev:example": "cd example && yarn start",
     "dev:core": "cd packages/modules/core && yarn start",
     "build": "run-p build:**",
-    "build:libraries": "cd packages/libraries && yarn build",
-    "build:components": "cd packages/react-components && yarn build",
     "build:core": "cd packages/modules/core && yarn build",
     "deploy:jenkins": "./scripts/jenkins.sh",
     "clean": "rm -rf node_modules"
