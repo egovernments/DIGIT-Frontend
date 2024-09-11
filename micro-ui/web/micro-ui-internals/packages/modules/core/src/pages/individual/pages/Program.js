@@ -3,9 +3,13 @@ import { useTranslation } from "react-i18next";
 import { Loader } from "@egovernments/digit-ui-react-components";
 import { Card, TextBlock } from "@egovernments/digit-ui-components";
 import { SCHEME } from "../configs/schemeConfigs";
+import { useParams, useHistory } from "react-router-dom";
 
 const Program = ({}) => {
   // const Program=[]
+  const history = useHistory();
+
+  const { id } = useParams();
 
   const reqCriteria = {
     url: "/mdms-v2/v2/_search",
@@ -14,6 +18,9 @@ const Program = ({}) => {
       MdmsCriteria: {
         tenantId: Digit.ULBService.getStateId(),
         schemaCode: SCHEME.SCHEMES_SCHEMA_CODE,
+        uniqueIdentifiers
+: 
+[id]
       },
     },
     config: {
@@ -34,11 +41,11 @@ const Program = ({}) => {
         <TextBlock
           caption=""
           captionClassName=""
-          header="Schemes"
+          header="Scheme"
           headerClasName=""
-          subHeader=""
+          subHeader={data?.[0]?.id}
           subHeaderClasName=""
-          body="find all the schemes avallible here"
+          body=""
           bodyClasName=""
         ></TextBlock>
 
@@ -62,6 +69,7 @@ const Program = ({}) => {
                   body={prog?.schemeContent?.benefits?.[0]?.children?.[0]?.text}
                   bodyClasName=""
                 ></TextBlock>
+                <>{JSON.stringify(prog)}</>
               </Card>
             </div>
           );
