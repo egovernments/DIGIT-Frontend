@@ -3,9 +3,6 @@ import {
   CitizenHomeCard,
   CitizenInfoLabel,
   Loader,
-  FSMIcon,
-  MCollectIcon,
-  BillsIcon
 } from "@egovernments/digit-ui-components";
 
 import React, { Fragment } from "react";
@@ -54,26 +51,7 @@ export const processLinkData = (newData, code, t) => {
   return newObj;
 };
 const iconSelector = (code) => {
-  switch (code) {
-    case "PT":
-      return <PTIcon className="fill-path-primary-main" />;
-    case "WS":
-      return <WSICon className="fill-path-primary-main" />;
-    case "FSM":
-      return <FSMIcon className="fill-path-primary-main" />;
-    case "MCollect":
-      return <MCollectIcon className="fill-path-primary-main" />;
-    case "PGR":
-      return <PGRIcon className="fill-path-primary-main" />;
-    case "TL":
-      return <TLIcon className="fill-path-primary-main" />;
-    case "OBPS":
-      return <OBPSIcon className="fill-path-primary-main" />;
-    case "Bills":
-      return <BillsIcon className="fill-path-primary-main" />;
-    default:
-      return <PTIcon className="fill-path-primary-main" />;
-  }
+  <div>No Icon Found</div>
 };
 const CitizenHome = ({
   modules,
