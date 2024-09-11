@@ -1,94 +1,61 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Loader } from "@egovernments/digit-ui-react-components";
-import { Card, TextBlock, Button } from "@egovernments/digit-ui-components";
-import { SCHEME } from "../configs/schemeConfigs";
-import { useParams, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import { FormComposerV2, Header } from "@egovernments/digit-ui-components";
+import { newConfig } from "../configs/IndividualCreateConfig";
+import { transformCreateData } from "../utils/createUtils";
 
-const Enroll = ({}) => {
-  // const Program=[]
+
+
+
+const IndividualCreate = () => {
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const { t } = useTranslation();
   const history = useHistory();
-
-  const { id } = useParams();
-
-  const reqCriteria = {
-    url: "/mdms-v2/v2/_search",
+  const reqCreate = {
+    url: `/individual/v1/_create`,
     params: {},
-    body: {
-      MdmsCriteria: {
-        tenantId: Digit.ULBService.getStateId(),
-        schemaCode: SCHEME.SCHEMES_SCHEMA_CODE,
-        uniqueIdentifiers: [id],
-      },
-    },
+    body: {},
     config: {
-      select: (data) => {
-        return data?.mdms?.map((obj) => ({ ...obj?.data?.en, id: obj?.data?.id }));
-      },
+      enable: false,
     },
   };
-  const { isLoading, data } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-  if (isLoading) {
-    return <Loader />;
-  }
+  const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
+  const onSubmit = async(data) => {
+    console.log(data, "data");
+    await mutation.mutate(
+      {
+        url: `/individual/v1/_create`,
+        params: { tenantId },
+        body: transformCreateData(data),
+        config: {
+          enable: true,
+        },
+      },
+    );
+  };
   return (
-    <div className="programs-all">
-      <Card type={"primary"} className="program-card-primary">
-        <TextBlock
-          caption=""
-          captionClassName=""
-          header="Scheme"
-          headerClasName=""
-          subHeader={data?.[0]?.id}
-          subHeaderClasName=""
-          body=""
-          bodyClasName=""
-        ></TextBlock>
-
-        {data?.map((prog) => {
-          return (
-            <div className="program-list" key={prog?.id}>
-              <Card type={"secondary"}>
-                <TextBlock
-                  caption={prog?.id}
-                  captionClassName=""
-                  header={prog?.schemeContent?.briefDescription}
-                  headerClasName=""
-                  subHeader={prog?.schemeContent?.detailedDescription?.[0]?.children?.[0]?.children?.[0]?.text}
-                  subHeaderClasName=""
-                  body={prog?.schemeContent?.benefits?.[0]?.children?.[0]?.text}
-                  bodyClasName=""
-                ></TextBlock>
-                <div>{JSON.stringify(prog)}</div>
-
-                <div
-                className="program-apply-wrapper"
-                >
-                  <Button
-                    className="custom-class"
-                    icon="ArrowForward"
-                    iconFill=""
-                    isSuffix
-                    label="Apply"
-                    onClick={() => {
-                      history.push(`/${window?.contextPath}/individual/enroll/${id}`);
-                    }}
-                    options={[]}
-                    optionsKey=""
-                    size=""
-                    style={{}}
-                    title=""
-                  />
-                </div>
-              </Card>
-            </div>
-          );
+    <div>
+      <Header> {t("CREATE_INDIVIDUAL")}</Header>
+      <FormComposerV2
+        label={t("SUBMIT_BUTTON")}
+        config={newConfig.map((config) => {
+          return {
+            ...config,
+          };
         })}
-      </Card>
+        defaultValues={{}}
+        onFormValueChange ={ (setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
+          console.log(formData, "formData");
+        }}
+        onSubmit={(data,) => onSubmit(data, )}
+        fieldStyle={{ marginRight: 0 }}
+      />
+       
     </div>
   );
-};
+}
 
-export default Enroll;
+export default IndividualCreate;

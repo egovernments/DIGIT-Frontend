@@ -1,13 +1,8 @@
-
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
+import { Route, Switch, useHistory, Redirect,useRouteMatch } from "react-router-dom";
 import ErrorBoundary from "../../components/ErrorBoundaries";
 import ErrorComponent from "../../components/ErrorComponent";
-import Login from "../citizen/Login";
-import UserProfile from "../citizen/Home/UserProfile";
-import LocationSelection from "../citizen/Home/LocationSelection";
-import LanguageSelection from "../citizen/Home/LanguageSelection";
 import Program from "./pages";
 
 // import CitizenHome from "./Home";
@@ -15,7 +10,6 @@ import Program from "./pages";
 // import LocationSelection from "./Home/LocationSelection";
 // import UserProfile from "./Home/UserProfile";
 // import Login from "./Login";
-
 
 const IndividualApp = ({
   stateInfo,
@@ -33,39 +27,24 @@ const IndividualApp = ({
   pathname,
   initData,
 }) => {
-
   const classname = Digit.Hooks.useRouteSubscription(pathname);
   const { t } = useTranslation();
   const { path } = useRouteMatch();
   const history = useHistory();
 
-
   return (
     <div className={"employee"}>
-   
-
       <ErrorBoundary initData={initData}>
-
         <Switch>
-          <Route  path={path}>
-          <div
-            className={"loginContainer"}
-            style={
-              {"--banner-url": `url(${window?.globalConfigs?.getConfig?.("HOME_BACKGROUND")})`, padding: "0px" }
-            }
-          >
-            <div className="banner banner-container">
-            <Program path={path}></Program>
+          <Route path={path}>
+            <div
+              className={"loginContainer"}
+              style={{ "--banner-url": `url(${window?.globalConfigs?.getConfig?.("HOME_BACKGROUND")})`, padding: "0px" }}
+            >
+              <div className="banner banner-container">
+                <Program path={path}></Program>
+              </div>
             </div>
-            </div>
-          </Route>
-
-          <Route exact path={`${path}/select-language`}>
-            <LanguageSelection />
-          </Route>
-
-          <Route exact path={`${path}/select-location`}>
-            <LocationSelection />
           </Route>
           <Route path={`${path}/error`}>
             <ErrorComponent
@@ -75,28 +54,10 @@ const IndividualApp = ({
               }}
             />
           </Route>
-          
-
-          <Route path={`${path}/login`}>
-            <Login stateCode={stateCode} />
-          </Route>
-
-          <Route path={`${path}/register`}>
-            <Login stateCode={stateCode} isUserRegistered={false} />
-          </Route>
-
-          <Route path={`${path}/user/profile`}>
-            <UserProfile stateCode={stateCode} userType={"citizen"} cityDetails={cityDetails} />
-          </Route>
-
-   
-          
-            
-            
         </Switch>
-        </ErrorBoundary>
+      </ErrorBoundary>
 
-        <div className="employee-login-home-footer" style={{ backgroundColor: "unset" }}>
+      <div className="employee-login-home-footer" style={{ backgroundColor: "unset" }}>
         <img
           alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}

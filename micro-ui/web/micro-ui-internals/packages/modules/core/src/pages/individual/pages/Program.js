@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Loader } from "@egovernments/digit-ui-react-components";
-import { Card, TextBlock, Button } from "@egovernments/digit-ui-components";
+import { Card, TextBlock, Button, ViewCardFieldPair } from "@egovernments/digit-ui-components";
 import { SCHEME } from "../configs/schemeConfigs";
 import { useParams, useHistory } from "react-router-dom";
 
@@ -61,11 +61,22 @@ const Program = ({}) => {
                   body={prog?.schemeContent?.benefits?.[0]?.children?.[0]?.text}
                   bodyClasName=""
                 ></TextBlock>
-                <div>{JSON.stringify(prog)}</div>
+                {prog?.applicationProcess?.map((applicationProcess) => (
+                  <ViewCardFieldPair
+                    className=""
+                    label={`Mode : ${applicationProcess?.mode}`}
+                    style={{}}
+                    value={`${applicationProcess?.process?.[0]?.children?.[0]?.children?.[0]?.text}`}
+                  />
+                ))}
+                <ViewCardFieldPair
+                  className=""
+                  label={`${prog?.basicDetails?.schemeName}`}
+                  style={{}}
+                  value={`${prog?.basicDetails?.schemeShortTitle}`}
+                />
 
-                <div
-                className="program-apply-wrapper"
-                >
+                <div className="program-apply-wrapper">
                   <Button
                     className="custom-class"
                     icon="ArrowForward"

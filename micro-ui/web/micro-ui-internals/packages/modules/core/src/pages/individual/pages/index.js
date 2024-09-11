@@ -56,9 +56,9 @@ const App = ({ path }) => {
           <Route path={`${path}/programs`} component={() => <Programs />} />
           <Route path={`${path}/program/:id`} component={() => <Program />} />
           <Route path={`${path}/enroll/:id`} component={() => <Enroll />} />
-          {/* <Route>
+          <Route>
           <Redirect to={`${path}/programs`} />
-          </Route> */}
+          </Route>
         </AppContainer>
       </Switch>
     </React.Fragment>
