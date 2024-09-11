@@ -1,3 +1,4 @@
+
 import { useQuery } from "react-query";
 
 const tenantManagementSearchService = async ({ stateId, includeSubTenants = true, filter, pagination }) => {
@@ -11,7 +12,17 @@ const tenantManagementSearchService = async ({ stateId, includeSubTenants = true
       includeSubTenants: includeSubTenants,
     },
   });
-  return response?.Tenants;
+
+  const tenants = response?.Tenants || [];
+  const modifiedTenants = tenants.map(tenant => {
+    const tenantName = tenant?.code || ' ';
+    return {
+      ...tenant,
+      i18nKey: Digit.Utils.locale.getTransformedLocale(`TENANT_TENANTS_${tenantName}`),
+    };
+  });
+
+  return modifiedTenants;
 };
 
 export const useTenantManagementSearch = ({ stateId, includeSubTenants = true, filter, pagination, config = {} }) => {
@@ -21,3 +32,4 @@ export const useTenantManagementSearch = ({ stateId, includeSubTenants = true, f
     config
   );
 };
+

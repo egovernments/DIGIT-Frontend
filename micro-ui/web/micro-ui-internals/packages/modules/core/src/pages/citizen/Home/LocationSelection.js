@@ -8,13 +8,6 @@ const LocationSelection = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const location = useLocation();
-  let hookResult = { data: null, isLoading: false };
-
-// Check the value of window.globalPath
-if (Digit.Utils.getMultiRootTenant()) {
-  // Call the useTenants hook only if the condition is met
-  hookResult = Digit.Hooks.useTenants();
-}
 const {
   data: { stateInfo, uiHomePage } = {},
   isLoading: initisLoading,
@@ -22,10 +15,9 @@ const {
 
 const redirectURL = uiHomePage?.redirectURL;
 
-// Destructure the result
-const { data: cities, isLoading } = hookResult;
+const { data: cities, isLoading } = Digit.Hooks.useTenants();
 
-// Use the requestCriteria only if it's not null
+
 const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit.Hooks.useTenantManagementSearch({
   stateId: Digit.ULBService.getStateId(),
   includeSubTenants: true,
@@ -53,7 +45,7 @@ const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit
   const RadioButtonProps = useMemo(() => {
     return {
       options: Digit.Utils.getMultiRootTenant() ? TenantMngmtSearch : cities,
-      optionsKey: Digit.Utils.getMultiRootTenant() ? "name" :"i18nKey",
+      optionsKey:"i18nKey",
       additionalWrapperClass: "digit-reverse-radio-selection-wrapper",
       onSelect: selectCity,
       selectedOption: selectedCity,
