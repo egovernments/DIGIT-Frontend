@@ -841,3 +841,17 @@ input[type="number"] {
 .employeeCard.kibana-card.chart-item {
   width: 100%;
 }
+
+
+
+
+.programs-module{
+  width: 80%;
+  .program-card-primary{
+    display: flex;
+    align-items: center;
+  .program-list{
+    width: 90%;
+  }
+}
+}

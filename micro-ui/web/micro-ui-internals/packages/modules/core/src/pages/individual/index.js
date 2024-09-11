@@ -8,6 +8,7 @@ import Login from "../citizen/Login";
 import UserProfile from "../citizen/Home/UserProfile";
 import LocationSelection from "../citizen/Home/LocationSelection";
 import LanguageSelection from "../citizen/Home/LanguageSelection";
+import Program from "./pages";
 
 // import CitizenHome from "./Home";
 // import LanguageSelection from "./Home/LanguageSelection";
@@ -40,16 +41,22 @@ const IndividualApp = ({
 
 
   return (
-    <div className={classname}>
+    <div className={"employee"}>
    
 
-      <div className={`main center-container citizen-home-container mb-25`}>
       <ErrorBoundary initData={initData}>
 
         <Switch>
-          <Route exact path={path}>
-            <div>
-                landing
+          <Route  path={path}>
+          <div
+            className={"loginContainer"}
+            style={
+              {"--banner-url": `url(${window?.globalConfigs?.getConfig?.("HOME_BACKGROUND")})`, padding: "0px" }
+            }
+          >
+            <div className="banner banner-container">
+            <Program path={path}></Program>
+            </div>
             </div>
           </Route>
 
@@ -89,12 +96,11 @@ const IndividualApp = ({
         </Switch>
         </ErrorBoundary>
 
-      </div>
-      <div className="citizen-home-footer" style={window.location.href.includes("citizen/obps") ? { zIndex: "-1" } : {}}>
+        <div className="employee-login-home-footer" style={{ backgroundColor: "unset" }}>
         <img
           alt="Powered by DIGIT"
-          src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER")}
-          style={{ height: "1.2em", cursor: "pointer" }}
+          src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
+          style={{ cursor: "pointer" }}
           onClick={() => {
             window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
           }}
