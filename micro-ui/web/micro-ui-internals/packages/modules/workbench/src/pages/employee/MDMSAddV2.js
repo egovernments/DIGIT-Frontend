@@ -233,13 +233,6 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
     return schema;
   }
 
-
-  // let updatedSchema = updateAllPropertiesBasedOnUIOrder(formSchema);
-  // console.log(updatedSchema,"formSchema");
-  // console.log(formSchema,"formSchema2");
-
-
-
   return (
     <React.Fragment>
       {spinner && <DigitLoader />}
