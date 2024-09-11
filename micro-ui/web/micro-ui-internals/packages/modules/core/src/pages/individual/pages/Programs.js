@@ -2,17 +2,19 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Loader } from "@egovernments/digit-ui-react-components";
 import { Card, TextBlock } from "@egovernments/digit-ui-components";
+import { SCHEME } from "../configs/schemeConfigs";
+import { useHistory } from "react-router-dom";
 
 const Programs = ({}) => {
   // const Program=[]
-
+  const history = useHistory();
   const reqCriteria = {
     url: "/mdms-v2/v2/_search",
     params: {},
     body: {
       MdmsCriteria: {
-        tenantId: "pg",
-        schemaCode: "selco.scheme1",
+        tenantId:Digit.ULBService.getStateId(),
+        schemaCode: SCHEME.SCHEMES_SCHEMA_CODE,
       },
     },
     config: {
@@ -47,7 +49,7 @@ const Programs = ({}) => {
               className="program-list"
               key={prog?.id}
               onClick={() => {
-                console.log(prog, "prog");
+                history.push(`/${window?.contextPath}/individual/program/${prog?.id}`);
               }}
             >
               <Card type={"secondary"}>

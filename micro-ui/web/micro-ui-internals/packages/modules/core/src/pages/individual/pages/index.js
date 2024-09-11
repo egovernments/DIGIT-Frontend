@@ -3,7 +3,7 @@ import { Switch, useLocation, Redirect } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
 import { Route } from "react-router-dom";
-import Programs from "./programs";
+import Programs from "./Programs";
 import Program from "./Program";
 
 /**
@@ -54,8 +54,9 @@ const App = ({ path }) => {
         <AppContainer className="programs-module">
           <Route path={`${path}/programs`} component={() => <Programs />} />
           <Route path={`${path}/program/:id`} component={() => <Program />} />
-
+          {/* <Route>
           <Redirect to={`${path}/programs`} />
+          </Route> */}
         </AppContainer>
       </Switch>
     </React.Fragment>
