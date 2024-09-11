@@ -198,29 +198,46 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
 
   const uiJSONSchema = formSchema?.["definition"]?.["x-ui-schema"];
 
+  function updateAllPropertiesBasedOnUIOrder(schema) {
+    // Iterate through all properties in schema.definition.properties
+    for (let propertyName in schema.definition.properties) {
+      let targetProperty = schema.definition.properties[propertyName];
 
+      // Check if the property has items and the x-ui-schema with a ui:order field
+      if (targetProperty.items && targetProperty.items["x-ui-schema"] && targetProperty.items["x-ui-schema"]["ui:order"]) {
+        const orderArray = targetProperty.items["x-ui-schema"]["ui:order"];
+        let properties = targetProperty.items.properties;
 
-  if (!formSchema?.definition?.properties || !formSchema?.definition?.properties?.slabs.items['x-ui-schema'] || !formSchema?.definition?.properties?.slabs.items['x-ui-schema']['ui:order']) {
-    // No Changes are made to schema
-  }
-  else {
-    // Changes are made to schema
-    const orderedProperties = formSchema?.definition?.properties?.slabs.items['x-ui-schema']['ui:order'];
-    const currorderedProperties = formSchema?.definition.properties.slabs.items.properties;
+        // Create a new properties object sorted by ui:order
+        let sortedProperties = {};
 
-    const newProperties = {};
-    orderedProperties.forEach(key => {
-      newProperties[key] = currorderedProperties[key];
-    });
+        // Sort properties according to the orderArray
+        orderArray.forEach((key) => {
+          if (properties.hasOwnProperty(key)) {
+            sortedProperties[key] = properties[key];
+          }
+        });
 
-    Object.keys(currorderedProperties).forEach(key => {
-      if (!orderedProperties.includes(key)) {
-        newProperties[key] = currorderedProperties[key];
+        // Add remaining properties that were not in the orderArray
+        for (let key in properties) {
+          if (!sortedProperties.hasOwnProperty(key)) {
+            sortedProperties[key] = properties[key];
+          }
+        }
+
+        // Re-assign the sorted properties back to the schema
+        targetProperty.items.properties = sortedProperties;
       }
-    });
+    }
 
-    formSchema.definition.properties.slabs.items.properties = newProperties;
+    return schema;
   }
+
+
+  // let updatedSchema = updateAllPropertiesBasedOnUIOrder(formSchema);
+  // console.log(updatedSchema,"formSchema");
+  // console.log(formSchema,"formSchema2");
+
 
 
   return (
@@ -228,7 +245,9 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
       {spinner && <DigitLoader />}
       {formSchema && (
         <DigitJSONForm
-          schema={formSchema}
+          schema={
+            updateAllPropertiesBasedOnUIOrder(formSchema)
+          }
           onFormChange={onFormValueChange}
           onFormError={onFormError}
           formData={session}
