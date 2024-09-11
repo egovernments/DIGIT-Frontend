@@ -6,13 +6,9 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
 import { DigitApp } from "./App";
-import SelectOtp from "./pages/citizen/Login/SelectOtp";
-import ChangeCity from "./components/ChangeCity";
-import ChangeLanguage from "./components/ChangeLanguage";
 import { useState } from "react";
 import ErrorBoundary from "./components/ErrorBoundaries";
 import getStore from "./redux/store";
-import PrivacyComponent from "./components/PrivacyComponent";
 
 const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLanding }) => {
   const { isLoading, data: initData={} } = Digit.Hooks.useInitStore(stateCode, enabledModules);
@@ -22,9 +18,7 @@ const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLand
   const data=getStore(initData, moduleReducers(initData)) || {};
 
   const i18n = getI18n();
-  if(!Digit.ComponentRegistryService.getComponent("PrivacyComponent")){
-    Digit.ComponentRegistryService.setComponent("PrivacyComponent", PrivacyComponent);
-  }
+
   return (
     <Provider store={data}>
       <Router>
@@ -114,15 +108,3 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, d
   );
 };
 
-const componentsToRegister = {
-  SelectOtp,
-  ChangeCity,
-  ChangeLanguage,
-  PrivacyComponent
-};
-
-export const initCoreComponents = () => {
-  Object.entries(componentsToRegister).forEach(([key, value]) => {
-    Digit.ComponentRegistryService.setComponent(key, value);
-  });
-};

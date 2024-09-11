@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
-import SelectOtp from "../../citizen/Login/SelectOtp";
+// import SelectOtp from "../../citizen/Login/SelectOtp";
 
 const ChangePasswordComponent = ({ config: propsConfig, t }) => {
   const [user, setUser] = useState(null);
@@ -128,7 +128,7 @@ const ChangePasswordComponent = ({ config: propsConfig, t }) => {
             {`${t(`+ 91 - `)}`} {mobileNumber}
           </b>
         </CardText>
-        <SelectOtp t={t} userType="employee" otp={otp} onOtpChange={setOtp} error={isOtpValid} onResend={onResendOTP} />
+        {/* <SelectOtp t={t} userType="employee" otp={otp} onOtpChange={setOtp} error={isOtpValid} onResend={onResendOTP} /> */}
         {/* <div>
           <CardLabel style={{ marginBottom: "8px" }}>{t("CORE_OTP_SENT_MESSAGE")}</CardLabel>
           <CardLabelDesc style={{ marginBottom: "0px" }}> {mobileNumber} </CardLabelDesc>

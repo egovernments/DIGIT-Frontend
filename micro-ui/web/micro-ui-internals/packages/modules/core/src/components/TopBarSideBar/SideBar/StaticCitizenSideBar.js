@@ -20,7 +20,7 @@ import {
   Loader
 } from "@egovernments/digit-ui-components";
 import { Link, useLocation } from "react-router-dom";
-import SideBarMenu from "../../../config/sidebar-menu";
+// import SideBarMenu from "../../../config/sidebar-menu";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import LogoutDialog from "../../Dialog/LogoutDialog";
@@ -115,7 +115,7 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
   };
 
   let menuItems = [
-    ...SideBarMenu(t, showProfilePage, redirectToLoginPage, isEmployee),
+    // ...SideBarMenu(t, showProfilePage, redirectToLoginPage, isEmployee),
   ];
 
   menuItems = menuItems.filter((item) => item.element !== "LANGUAGE");

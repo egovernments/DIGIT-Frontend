@@ -3,7 +3,7 @@ import { Loader } from "@egovernments/digit-ui-components";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import SideBarMenu from "../../../config/sidebar-menu";
+// import SideBarMenu from "../../../config/sidebar-menu";
 import ChangeCity from "../../ChangeCity";
 import { defaultImage } from "../../utils";
 import StaticCitizenSideBar from "./StaticCitizenSideBar";
@@ -119,7 +119,7 @@ export const CitizenSideBar = ({
   }
 
   let menuItems = [
-    ...SideBarMenu(t, closeSidebar, redirectToLoginPage, isEmployee),
+    // ...SideBarMenu(t, closeSidebar, redirectToLoginPage, isEmployee),
   ];
   let profileItem;
   if (isFetched && user && user.access_token) {

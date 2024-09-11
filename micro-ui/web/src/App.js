@@ -1,7 +1,7 @@
 import React from "react";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 
-import { DigitUI,initCoreComponents } from "@egovernments/digit-ui-module-core";
+import { DigitUI } from "@egovernments/digit-ui-module-core";
 
 
 
@@ -29,7 +29,7 @@ const initDigitUI = () => {
    
   });
 
-  initCoreComponents();
+  // initCoreComponents();
  
 
   window.Digit.Customizations = {

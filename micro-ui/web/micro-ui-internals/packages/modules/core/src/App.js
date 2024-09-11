@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Redirect, Route, Switch, useHistory, useLocation } from "react-router-dom";
-import CitizenApp from "./pages/citizen";
 import EmployeeApp from "./pages/employee";
 import IndividualApp from "./pages/individual";
 
@@ -69,9 +68,6 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, initData ,de
     <Switch>
       <Route path={`/${window?.contextPath}/employee`}>
         <EmployeeApp {...commonProps} />
-      </Route>
-      <Route path={`/${window?.contextPath}/citizen`}>
-        <CitizenApp {...commonProps} />
       </Route>
       <Route path={`/${window?.contextPath}/individual`}>
         <IndividualApp {...commonProps} />
