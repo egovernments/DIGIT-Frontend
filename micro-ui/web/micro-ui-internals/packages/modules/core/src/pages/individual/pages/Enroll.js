@@ -38,9 +38,9 @@ const IndividualCreate = () => {
   };
   return (
     <div className="enroll">
-      <Header> {t("CREATE_INDIVIDUAL")}</Header>
+      <Header> {t("Apply")}</Header>
       <FormComposerV2
-        label={t("SUBMIT_BUTTON")}
+        label={t("Apply")}
         config={newConfig.map((config) => {
           return {
             ...config,
