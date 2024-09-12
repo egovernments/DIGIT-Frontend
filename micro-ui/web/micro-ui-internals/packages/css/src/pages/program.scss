@@ -23,6 +23,15 @@
       gap: 0px;
       grid-gap: 0px;
     }
+    .digit-text-block-wrap {
+      display: flex;
+      align-items: center;
+      .digit-text-block-header-content {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+      }
+    }
 
     .digit-action-bar-wrap {
       position: relative !important;
