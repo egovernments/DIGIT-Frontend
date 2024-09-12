@@ -1,0 +1,14 @@
+.programs-module {
+    width: 80%;
+}
+.programs-module .program-card-primary {
+    display: flex;
+    align-items: center;
+}
+.programs-module .program-card-primary .program-list {
+    width: 90%;
+}
+.programs-module .program-card-primary .program-apply-wrapper {
+    display: flex;
+    justify-content: flex-end;
+}
