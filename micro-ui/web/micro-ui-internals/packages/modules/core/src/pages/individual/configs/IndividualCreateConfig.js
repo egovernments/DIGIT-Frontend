@@ -13,7 +13,7 @@ export const newConfig = [
         },
         {
           inline: true,
-          label: "date of birth",
+          label: "Date of Birth",
           isMandatory: false,
           key: "dob",
           type: "date",

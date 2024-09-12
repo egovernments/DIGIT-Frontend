@@ -7,7 +7,7 @@ import { transformCreateData } from "../utils/createUtils";
 
 const IndividualCreate = () => {
   const { id } = useParams();
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit.ULBService.getStateId();
   const { t } = useTranslation();
   const history = useHistory();
   const reqCreate = {
@@ -18,6 +18,8 @@ const IndividualCreate = () => {
       enable: false,
     },
   };
+
+  // user-otp/v1/_send?tenantId=pg
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
   const onError = (resp) => {

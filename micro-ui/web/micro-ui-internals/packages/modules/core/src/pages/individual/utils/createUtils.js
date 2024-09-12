@@ -1,57 +1,55 @@
-export const transformCreateData = (data)=>{
-    return {
-        Individual: {
-          tenantId: "pg.citya",
-          name: {
-            givenName: data.applicantname,
-          },
-          dateOfBirth: null,
-          gender: data?.genders?.code,
-          mobileNumber: data.phno,
-          address: [
-            {
-              tenantId: "pg.citya",
-              pincode: data.pincode,
-              city: data.city,
-              street: data.street,
-              doorNo: data.doorno,
-              "locality":
-              {
-                "code" : data?.locality?.code||"SUN01",
-              },
-              landmark: data.landmark,
-              "type": "PERMANENT"
-            },
-          ],
-          identifiers: null,
-          skills: [
-              {
-                  "type": "DRIVING",
-                  "level": "UNSKILLED"
-              }
-          ],
-          "photograph": null,
-          additionalFields: {
-              "fields": [
-                  {
-                      "key": "EMPLOYER",
-                      "value": "ULB"
-                  }
-              ]
-          },
-          isSystemUser: null,
-          userDetails: {
-              "username": "8821243212",
-              "tenantId": "pg.citya",
-              "roles": [
-                  {
-                      "code": "SANITATION_WORKER",
-                      "tenantId": "pg.citya"
-                  }
-              ],
-              "type": "CITIZEN"
-          },
+export const transformCreateData = (data) => {
+  return {
+    Individual: {
+      tenantId: Digit.ULBService.getStateId(),
+      name: {
+        givenName: data.applicantname,
       },
-    }
-
-}
+      dateOfBirth: null,
+      gender: data?.genders?.code,
+      mobileNumber: data.phno,
+      address: [
+        {
+          tenantId: Digit.ULBService.getStateId(),
+          pincode: data.pincode,
+          city: data.city,
+          street: data.street,
+          doorNo: data.doorno,
+          locality: {
+            code: data?.locality?.code || "SUN01",
+          },
+          landmark: data.landmark,
+          type: "PERMANENT",
+        },
+      ],
+      identifiers: null,
+      skills: [
+        {
+          type: "DRIVING",
+          level: "UNSKILLED",
+        },
+      ],
+      photograph: null,
+      additionalFields: {
+        fields: [
+          {
+            key: "EMPLOYER",
+            value: "ULB",
+          },
+        ],
+      },
+      isSystemUser: null,
+      userDetails: {
+        username: data.phno,
+        tenantId: Digit.ULBService.getStateId(),
+        roles: [
+          {
+            code: "SANITATION_WORKER",
+            tenantId: Digit.ULBService.getStateId(),
+          },
+        ],
+        type: "CITIZEN",
+      },
+    },
+  };
+};
