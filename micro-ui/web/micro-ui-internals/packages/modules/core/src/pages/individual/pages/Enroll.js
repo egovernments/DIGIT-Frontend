@@ -4,6 +4,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { FormComposerV2, TextBlock } from "@egovernments/digit-ui-components";
 import { newConfig } from "../configs/IndividualCreateConfig";
 import { transformCreateData } from "../utils/createUtils";
+import ValidateOTP from "./ValidateOTP";
 
 const IndividualCreate = () => {
   const { id } = useParams();
@@ -18,6 +19,8 @@ const IndividualCreate = () => {
       enable: false,
     },
   };
+  const [showPopup,setShowPopUp]=React.useState(false);
+  const [formData,setFormData]=React.useState({})
 
   // user-otp/v1/_send?tenantId=pg
 
@@ -33,12 +36,11 @@ const IndividualCreate = () => {
       label: "SUBMISSION_ID",
     });
   };
-  const onSubmit = async (data) => {
-    console.log(data, "data");
-    await mutation.mutate({
+  const createIndividual=async()=>{
+     await mutation.mutate({
       url: `/individual/v1/_create`,
       params: { tenantId },
-      body: transformCreateData(data),
+      body: transformCreateData(formData),
       config: {
         enable: true,
       },
@@ -46,6 +48,11 @@ const IndividualCreate = () => {
       onSuccess,
       onError,
     });
+  }
+  const onSubmit = async (data) => {
+    console.log(data, "data");
+    setFormData(data);
+    setShowPopUp(true);
   };
   return (
     <div className="enroll">
@@ -73,6 +80,10 @@ const IndividualCreate = () => {
         onSubmit={(data) => onSubmit(data)}
         fieldStyle={{ marginRight: 0 }}
       />
+      {showPopup&&<ValidateOTP formData={formData} onSuccess={()=>{
+        setShowPopUp(false);
+        createIndividual();
+      }}></ValidateOTP>}
     </div>
   );
 };
