@@ -22,7 +22,7 @@ const Response = () => {
   const navigate = (page) => {
     switch (page) {
       case "home": {
-        history.push(`/${window.contextPath}/individual`);
+        history.push(`/${window.contextPath}/individual/programs`);
       }
     }
   };
