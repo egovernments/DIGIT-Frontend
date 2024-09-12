@@ -194,8 +194,7 @@ function Jurisdiction({
   });
   const getSubTenants = () => TenantMngmtSearch?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
   const subTenantList = getSubTenants();
-
-  useEffect(() => {
+    useEffect(() => {
     if (Digit.Utils.getMultiRootTenant()) {
       selectboundary(subTenantList);
     }
@@ -278,7 +277,7 @@ function Jurisdiction({
             isMandatory={true}
             option={gethierarchylistdata(hierarchylist) || []}
             select={selectHierarchy}
-            optionKey="code"
+            optionKey={Digit.Utils.getMultiRootTenant() ? "code" : "i18nKey"}
             t={t}
           />
         </LabelFieldPair>

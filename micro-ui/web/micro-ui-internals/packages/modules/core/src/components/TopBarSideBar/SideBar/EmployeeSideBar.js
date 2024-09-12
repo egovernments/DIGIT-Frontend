@@ -7,8 +7,10 @@ const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui", "health-ui", 
 
 const EmployeeSideBar = () => {
   const { isLoading, data } = Digit.Hooks.useAccessControl();
+  const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
   const { t } = useTranslation();
   const history = useHistory();
+  const tenantId = Digit.ULBService.getStateId();
 
   function extractLeftIcon(data = {}) {
     for (const key in data) {
@@ -83,14 +85,21 @@ const EmployeeSideBar = () => {
   const navigateToRespectiveURL = (history = {}, url = "") => {
     if (url == "/") {
       return;
-    }
+    } 
     if (url?.indexOf(`/${window?.contextPath}`) === -1) {
       const hostUrl = window.location.origin;
-      const updatedURL = DIGIT_UI_CONTEXTS?.every((e) => url?.indexOf(`/${e}`) === -1) ? hostUrl + "/employee/" + url : hostUrl + url;
-      window.location.href = updatedURL;
+      let updatedUrl=null;
+      if(isMultiRootTenant){
+        url=url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`);
+        updatedUrl = hostUrl + url;
+      }
+      else{
+        updatedUrl = DIGIT_UI_CONTEXTS?.every((e) => url?.indexOf(`/${e}`) === -1) ? hostUrl + "/employee/" + url : hostUrl + url;
+      }
+      history.push(updatedUrl);
     } else {
       history.push(url);
-    }
+    } 
   };
 
   const onItemSelect = ({ item, index, parentIndex }) => {
@@ -98,7 +107,7 @@ const EmployeeSideBar = () => {
       navigateToRespectiveURL(history, item?.navigationUrl);
     } else {
       return;
-    }
+    } 
   };
 
   function transformData(data) {

@@ -37,16 +37,6 @@ const ViewUrl = () => {
           {t("SANDBOX_HEADER")}
         </CardHeader>
         <CardText className="cardText-sandbox">{t("SAMDBOX_URL_SUB")}</CardText>
-        {/* <FieldV1
-          className="field-sandbox"
-          withoutLabel={false}
-          label={t("SANDBOX_URL")}
-          type="text"
-          nonEditable={false}
-          value={`${window.location.host}/${window?.globalPath}/${tenant}`}
-          placeholder={t("SANDBOX_URL_PLACEHOLDER")}
-          populators={{}}
-        /> */}
         <CardLabel> {t("SANDBOX_URL")} </CardLabel>
         <div className="sandbox-url-wrapper">
           <TextInput
@@ -54,7 +44,7 @@ const ViewUrl = () => {
             className={"urlInputText"}
             onChange={() => {}}
             nonEditable={true}
-            value={`${window.location.host}/${window?.globalPath}/${tenant}`}
+            value={`${window.location.host}/${window?.globalPath}/${tenant}/employee`}
           />
           <Button className="copyButton" variation={"secondary"} onClick={() => handleCopyUrl()} label={t("COPY_URL")}></Button>
         </div>

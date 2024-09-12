@@ -30,14 +30,25 @@ const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLand
     <Provider store={data}>
       <Router>
         <BodyContainer>
-          <DigitAppWrapper
-            initData={initData}
-            stateCode={stateCode}
-            modules={initData?.modules}
-            appTenants={initData.tenants}
-            logoUrl={initData?.stateInfo?.logoUrl}
-            defaultLanding={defaultLanding}
-          />
+          {Digit.Utils.getMultiRootTenant() ? (
+            <DigitAppWrapper
+              initData={initData}
+              stateCode={stateCode}
+              modules={initData?.modules}
+              appTenants={initData.tenants}
+              logoUrl={initData?.stateInfo?.logoUrl}
+              defaultLanding={defaultLanding}
+            />
+          ) : (
+            <DigitApp
+              initData={initData}
+              stateCode={stateCode}
+              modules={initData?.modules}
+              appTenants={initData.tenants}
+              logoUrl={initData?.stateInfo?.logoUrl}
+              defaultLanding={defaultLanding}
+            />
+          )}
         </BodyContainer>
       </Router>
     </Provider>
