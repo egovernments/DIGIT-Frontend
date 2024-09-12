@@ -13,30 +13,6 @@ const businessServiceMap = {};
 
 const inboxModuleNameMap = {};
 
-// const onActionSelect = (value, row) => {
-//   console.log("value")
-//   switch (value?.code) {
-//     case "ACTION_LABEL_UPDATE_DATES":
-//       window.history.pushState(
-//         {
-//           name: row?.campaignName,
-//           data: row,
-//           projectId: row?.projectId,
-//         },
-//         "",
-//         `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${row?.id}`
-//       );
-//       window.location.href = `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${row?.id}`;
-
-//       break;
-//     case "ACTION_LABEL_VIEW_TIMELINE":
-//       setTimeline(true);
-//       break;
-//     default:
-//       console.log(value);
-//       break;
-//   }
-// };
 
 export const UICustomizations = {
   MyCampaignConfigOngoing: {
@@ -130,6 +106,18 @@ export const UICustomizations = {
           case "ACTION_LABEL_VIEW_TIMELINE":
             setTimeline(true);
             break;
+          case "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS":
+            window.history.pushState(
+              {
+                name: row?.campaignName,
+                data: row,
+              },
+              "",
+              `/${window.contextPath}/employee/campaign/update-boundary?key=1&id=${row?.id}`
+            );
+            const nav = new PopStateEvent("popstate");
+            window.dispatchEvent(nav);
+            break;
           default:
             console.log(value);
             break;
@@ -166,6 +154,9 @@ export const UICustomizations = {
                   ...(row?.status === "created" ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") }] : []),
                   // { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
                   { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
+                  ...(row?.status === "created"
+                    ? [{ key: 1, code: "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS", i18nKey: t("ACTION_LABEL_UPDATE_BOUNDARY_DETAILS") }]
+                    : []),
                 ]}
                 optionsKey="i18nKey"
                 showBottom={true}
@@ -313,10 +304,7 @@ export const UICustomizations = {
                   onOverlayClick={() => setTimeline(false)}
                   onClose={() => setTimeline(false)}
                 >
-                  <TimelineComponent
-                    campaignId={row?.id}
-                    resourceId={resourceIdArr}
-                  />
+                  <TimelineComponent campaignId={row?.id} resourceId={resourceIdArr} />
                 </PopUp>
               )}
             </>
@@ -475,10 +463,7 @@ export const UICustomizations = {
                   onOverlayClick={() => setTimeline(false)}
                   onClose={() => setTimeline(false)}
                 >
-                  <TimelineComponent
-                    campaignId={row?.id}
-                    resourceId={resourceIdArr}
-                  />
+                  <TimelineComponent campaignId={row?.id} resourceId={resourceIdArr} />
                 </PopUp>
               )}
             </>
@@ -702,10 +687,7 @@ export const UICustomizations = {
                   onOverlayClick={() => setTimeline(false)}
                   onClose={() => setTimeline(false)}
                 >
-                  <TimelineComponent
-                    campaignId={row?.id}
-                    resourceId={resourceIdArr}
-                  />
+                  <TimelineComponent campaignId={row?.id} resourceId={resourceIdArr} />
                 </PopUp>
               )}
             </>

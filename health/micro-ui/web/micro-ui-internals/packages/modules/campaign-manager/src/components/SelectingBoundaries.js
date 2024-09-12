@@ -1,8 +1,9 @@
 import React, { useEffect, useState, Fragment, useMemo } from "react";
 import { CardText, LabelFieldPair, Card, Header, CardLabel, LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { InfoCard, MultiSelectDropdown, PopUp, Button, Toast } from "@egovernments/digit-ui-components";
+import { InfoCard, PopUp, Button, Toast } from "@egovernments/digit-ui-components";
 import { mailConfig } from "../configs/mailConfig";
+import MultiSelectDropdown from "./MultiSelectDropdown";
 /**
  * The function `SelectingBoundaries` in JavaScript handles the selection of boundaries based on
  * hierarchy data and allows users to choose specific boundaries within the hierarchy.

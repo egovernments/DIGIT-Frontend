@@ -33,6 +33,11 @@ import UpdateDatesWithBoundaries from "./pages/employee/UpdateDatesWithBoundarie
 import DateWithBoundary from "./components/DateWithBoundary";
 import BoundaryWithDate from "./components/BoundaryWithDate";
 import DateAndCycleUpdate from "./pages/employee/DateAndCycleUpdate";
+import UpdateBoundary from "./pages/employee/UpdateBoundary";
+import UpdateBoundaryWrapper from "./components/UpdateBoundaryWrapper";
+// import SelectingBoundaryComponent from "./components/SelectingBoundaryComponent";
+import { Wrapper } from "./components/SelectingBoundaryComponent";
+import SelectingBoundariesDuplicate from "./components/SelectingBoundariesDuplicate";
 
 /**
  * The CampaignModule function fetches store data based on state code, module code, and language, and
@@ -47,6 +52,8 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
       return data?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)?.hierarchy;
     },
   });
+
+  const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({BOUNDARY_HIERARCHY_TYPE,tenantId});
 
   const moduleCode = ["campaignmanager", "workbench", "mdms", "schema", "hcm-admin-schemas", `boundary-${BOUNDARY_HIERARCHY_TYPE}`];
   const { path, url } = useRouteMatch();
@@ -64,7 +71,7 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
   return (
     <ErrorBoundary moduleName="CAMPAIGN">
       <TourProvider>
-        <EmployeeApp BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE} path={path} stateCode={stateCode} url={url} userType={userType} />
+        <EmployeeApp BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE} path={path} stateCode={stateCode} url={url} userType={userType} hierarchyData={hierarchyData} />
       </TourProvider>
     </ErrorBoundary>
   );
@@ -99,7 +106,12 @@ const componentsToRegister = {
   DateWithBoundary,
   BoundaryWithDate,
   DateAndCycleUpdate,
-  TimelineComponent
+  TimelineComponent,
+  Wrapper,
+  UpdateBoundary,
+  UpdateBoundaryWrapper,
+  SelectingBoundariesDuplicate,
+  // SelectingBoundaryComponent
 };
 
 const overrideHooks = () => {
