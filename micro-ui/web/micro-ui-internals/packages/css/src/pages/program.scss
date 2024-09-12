@@ -1,14 +1,27 @@
-.programs-module{
-    width: 80%;
-    .program-card-primary{
-      display: flex;
-      align-items: center;
-    .program-list{
+.programs-module {
+  width: 80% !important;
+
+  .program-card-primary {
+    display: flex;
+    align-items: center;
+
+    .program-list {
       width: 90%;
     }
-    .program-apply-wrapper{
+
+    .program-apply-wrapper {
       display: flex;
       justify-content: flex-end;
     }
   }
+
+
+  .enroll {
+    .digit-card-component {
+      padding-top: 0px;
+      padding-bottom: 0px;
+      gap: 0px;
+      grid-gap: 0px;
+    }
   }
+}

@@ -37,7 +37,7 @@ const IndividualCreate = () => {
     );
   };
   return (
-    <div>
+    <div className="enroll">
       <Header> {t("CREATE_INDIVIDUAL")}</Header>
       <FormComposerV2
         label={t("SUBMIT_BUTTON")}
