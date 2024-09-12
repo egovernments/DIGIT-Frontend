@@ -10,7 +10,7 @@ const EmployeeSideBar = () => {
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
   const { t } = useTranslation();
   const history = useHistory();
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit.ULBService.getStateId();
 
   function extractLeftIcon(data = {}) {
     for (const key in data) {
@@ -96,7 +96,7 @@ const EmployeeSideBar = () => {
       else{
         updatedUrl = DIGIT_UI_CONTEXTS?.every((e) => url?.indexOf(`/${e}`) === -1) ? hostUrl + "/employee/" + url : hostUrl + url;
       }
-      window.location.href = updatedUrl;
+      history.push(updatedUrl);
     } else {
       history.push(url);
     } 
