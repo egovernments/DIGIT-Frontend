@@ -1,14 +1,12 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
-import { FormComposerV2, Header } from "@egovernments/digit-ui-components";
+import { useParams, useHistory } from "react-router-dom";
+import { FormComposerV2, TextBlock } from "@egovernments/digit-ui-components";
 import { newConfig } from "../configs/IndividualCreateConfig";
 import { transformCreateData } from "../utils/createUtils";
 
-
-
-
 const IndividualCreate = () => {
+  const { id } = useParams();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const history = useHistory();
@@ -22,23 +20,43 @@ const IndividualCreate = () => {
   };
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
+  const onError = (resp) => {
+    history.push(`/${window.contextPath}/individual/enroll/response?isSuccess=${false}`, { message: "SUBMISSION_CREATION_FAILED" });
+  };
 
-  const onSubmit = async(data) => {
+  const onSuccess = (resp) => {
+    history.push(`/${window.contextPath}/individual/enroll/response?appNo=${"NEW-NO-1"}&isSuccess=${true}`, {
+      message:  "SUBMISSION_CREATION_SUCCESS",
+      showID: true,
+      label: "SUBMISSION_ID",
+    });
+  };
+  const onSubmit = async (data) => {
     console.log(data, "data");
-    await mutation.mutate(
-      {
-        url: `/individual/v1/_create`,
-        params: { tenantId },
-        body: transformCreateData(data),
-        config: {
-          enable: true,
-        },
+    await mutation.mutate({
+      url: `/individual/v1/_create`,
+      params: { tenantId },
+      body: transformCreateData(data),
+      config: {
+        enable: true,
       },
-    );
+    },{
+      onSuccess,
+      onError,
+    });
   };
   return (
     <div className="enroll">
-      <Header> {t("Apply")}</Header>
+      <TextBlock
+        caption=""
+        captionClassName=""
+        header="Apply"
+        headerClasName=""
+        subHeader={`Fill all the details to Apply for the scheme ${id}`}
+        subHeaderClasName=""
+        body=""
+        bodyClasName=""
+      ></TextBlock>
       <FormComposerV2
         label={t("Apply")}
         config={newConfig.map((config) => {
@@ -47,15 +65,14 @@ const IndividualCreate = () => {
           };
         })}
         defaultValues={{}}
-        onFormValueChange ={ (setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
+        onFormValueChange={(setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
           console.log(formData, "formData");
         }}
-        onSubmit={(data,) => onSubmit(data, )}
+        onSubmit={(data) => onSubmit(data)}
         fieldStyle={{ marginRight: 0 }}
       />
-       
     </div>
   );
-}
+};
 
 export default IndividualCreate;

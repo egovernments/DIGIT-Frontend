@@ -1,6 +1,6 @@
 export const newConfig = [
     {
-      head: "Create Individual",
+      head: "Applicant Details",
       body: [
         {
           inline: true,

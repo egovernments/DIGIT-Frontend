@@ -6,6 +6,7 @@ import { Route } from "react-router-dom";
 import Programs from "./Programs";
 import Program from "./Program";
 import Enroll from "./Enroll";
+import Response from "./Response";
 
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
@@ -56,6 +57,8 @@ const App = ({ path }) => {
           <Route path={`${path}/programs`} component={() => <Programs />} />
           <Route path={`${path}/program/:id`} component={() => <Program />} />
           <Route path={`${path}/enroll/:id`} component={() => <Enroll />} />
+          <Route path={`${path}/enroll/response`} component={() => <Response/>} />
+
           <Route>
           <Redirect to={`${path}/programs`} />
           </Route>
