@@ -23,5 +23,15 @@
       gap: 0px;
       grid-gap: 0px;
     }
+
+    .digit-action-bar-wrap {
+      position: relative !important;
+      justify-content: flex-end !important;
+
+      .digit-submit-bar {
+        width: 30% !important;
+
+      }
+    }
   }
 }
