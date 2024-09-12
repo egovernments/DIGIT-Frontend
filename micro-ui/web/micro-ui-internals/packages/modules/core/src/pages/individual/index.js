@@ -5,6 +5,7 @@ import ErrorBoundary from "../../components/ErrorBoundaries";
 import ErrorComponent from "../../components/ErrorComponent";
 import Program from "./pages";
 import { Dropdown, TopBar } from "@egovernments/digit-ui-components";
+import GoogleTranslateComponent from "./components/GoogleTranslateComponent";
 
 // import CitizenHome from "./Home";
 // import LanguageSelection from "./Home/LanguageSelection";
@@ -32,7 +33,7 @@ const IndividualApp = ({
   const { t } = useTranslation();
   const { path } = useRouteMatch();
   const history = useHistory();
-  const options=stateInfo?.hasLocalisation && stateInfo?.languages? stateInfo?.languages : [{ label: "ENGLISH", value: Digit.Utils.getDefaultLanguage() }];
+  const [formData, setFormData] = React.useState("en");
   return (
     <div className={"employee"}>
       <ErrorBoundary initData={initData}>
@@ -46,15 +47,16 @@ const IndividualApp = ({
                 <TopBar
                   className=""
                   img=""
-                  language="English"
+                  language={formData}
                   logo=""
                   actionFields={[
                     <Dropdown
                       customSelector="Language"
-                      option={options?.map(obj=>({name:obj?.label,code:obj?.value}))}
+                      option={[{name:"English",code:"en"},{name:"हिन्दी",code:"hi"},{name:"Français",code:"fr"},{name:"Español",code:"es"}]}
                       optionKey="name"
-                      select={function noRefCheck() {}}
+                      select={(updated)=>setFormData(updated?.code)}
                       theme="light"
+                      value={formData}
                     />,
                   ]}
                   props={{}}
@@ -77,7 +79,7 @@ const IndividualApp = ({
           </Route>
         </Switch>
       </ErrorBoundary>
-
+     <GoogleTranslateComponent pageLanguage= {formData}></GoogleTranslateComponent>
       <div className="employee-login-home-footer" style={{ backgroundColor: "unset" }}>
         <img
           alt="Powered by DIGIT"
