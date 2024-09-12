@@ -21,11 +21,11 @@ const IndividualCreate = () => {
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
   const onError = (resp) => {
-    history.push(`/${window.contextPath}/individual/enroll/response?isSuccess=${false}`, { message: "SUBMISSION_CREATION_FAILED" });
+    history.push(`/${window.contextPath}/individual/enroll-response?isSuccess=${false}`, { message: "SUBMISSION_CREATION_FAILED" });
   };
 
   const onSuccess = (resp) => {
-    history.push(`/${window.contextPath}/individual/enroll/response?appNo=${"NEW-NO-1"}&isSuccess=${true}`, {
+    history.push(`/${window.contextPath}/individual/enroll-response?appNo=${"NEW-NO-1"}&isSuccess=${true}`, {
       message:  "SUBMISSION_CREATION_SUCCESS",
       showID: true,
       label: "SUBMISSION_ID",

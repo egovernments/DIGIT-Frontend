@@ -57,7 +57,7 @@ const App = ({ path }) => {
           <Route path={`${path}/programs`} component={() => <Programs />} />
           <Route path={`${path}/program/:id`} component={() => <Program />} />
           <Route path={`${path}/enroll/:id`} component={() => <Enroll />} />
-          <Route path={`${path}/enroll/response`} component={() => <Response/>} />
+          <Route path={`${path}/enroll-response`} component={() => <Response/>} />
 
           <Route>
           <Redirect to={`${path}/programs`} />
