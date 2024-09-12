@@ -22,7 +22,7 @@ const Response = () => {
   const navigate = (page) => {
     switch (page) {
       case "home": {
-        history.push(`/${window.contextPath}/employee`);
+        history.push(`/${window.contextPath}/individual`);
       }
     }
   };
@@ -45,11 +45,11 @@ const Response = () => {
         footerChildren={[]}
         children={children}
       />
-      <ActionBar>
+      {/* <ActionBar>
         <Link to={`/${window.contextPath}/employee`}>
           <SubmitBar label={t("CORE_COMMON_GO_TO_HOME")} />
         </Link>
-      </ActionBar>
+      </ActionBar> */}
     </>
   );
 };
