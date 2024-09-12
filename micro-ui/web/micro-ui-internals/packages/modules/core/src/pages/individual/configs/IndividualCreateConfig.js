@@ -258,43 +258,43 @@ export const newConfig = [
         },
       ],
     },
-    {
-      head: "Sample Details",
-      key: "sampleDetails",
-      body: [
-        {
-          isMandatory: false,
-          key: "sampleDetails",
-          type: "component", // for custom component
-          component: "SampleMultiComponent", // name of the component as per component registry
-          withoutLabel: true,
-          disable: false,
-          customProps: {},
-          populators: {
-            name: "sampleDetails",
-            required: true,
-          },
-        },
-      ],
-    },
-    {
-      head: "Additional Details",
-      key: "additionalDetails",
-      body: [
-        {
-          isMandatory: false,
-          key: "additionalDetails",
-          type: "component", // for custom component
-          component: "SampleAdditionalComponent", // name of the component as per component registry
-          withoutLabel: true,
-          disable: false,
-          customProps: {},
-          populators: {
-            name: "additionalDetails",
-            required: true,
-          },
-        },
-      ],
-    },
+    // {
+    //   head: "Sample Details",
+    //   key: "sampleDetails",
+    //   body: [
+    //     {
+    //       isMandatory: false,
+    //       key: "sampleDetails",
+    //       type: "component", // for custom component
+    //       component: "SampleMultiComponent", // name of the component as per component registry
+    //       withoutLabel: true,
+    //       disable: false,
+    //       customProps: {},
+    //       populators: {
+    //         name: "sampleDetails",
+    //         required: true,
+    //       },
+    //     },
+    //   ],
+    // },
+    // {
+    //   head: "Additional Details",
+    //   key: "additionalDetails",
+    //   body: [
+    //     {
+    //       isMandatory: false,
+    //       key: "additionalDetails",
+    //       type: "component", // for custom component
+    //       component: "SampleAdditionalComponent", // name of the component as per component registry
+    //       withoutLabel: true,
+    //       disable: false,
+    //       customProps: {},
+    //       populators: {
+    //         name: "additionalDetails",
+    //         required: true,
+    //       },
+    //     },
+    //   ],
+    // },
   ];
   

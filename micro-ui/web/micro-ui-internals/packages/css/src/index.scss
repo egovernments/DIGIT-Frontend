@@ -111,6 +111,7 @@
 @import "./components/inboxv2/index.scss";
 @import "./components//sidebar.scss";
 @import "./components/loaderWithGap.scss";
+@import "./pages/program.scss";
 
 .wbh-header-container {
   display: flex !important;
@@ -844,18 +845,3 @@ input[type="number"] {
 
 
 
-
-.programs-module{
-  width: 80%;
-  .program-card-primary{
-    display: flex;
-    align-items: center;
-  .program-list{
-    width: 90%;
-  }
-  .program-apply-wrapper{
-    display: flex;
-    justify-content: flex-end;
-  }
-}
-}
