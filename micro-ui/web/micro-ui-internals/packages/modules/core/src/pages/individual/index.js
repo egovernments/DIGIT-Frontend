@@ -1,9 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Route, Switch, useHistory, Redirect,useRouteMatch } from "react-router-dom";
+import { Route, Switch, useHistory, Redirect, useRouteMatch } from "react-router-dom";
 import ErrorBoundary from "../../components/ErrorBoundaries";
 import ErrorComponent from "../../components/ErrorComponent";
 import Program from "./pages";
+import { Dropdown, TopBar } from "@egovernments/digit-ui-components";
 
 // import CitizenHome from "./Home";
 // import LanguageSelection from "./Home/LanguageSelection";
@@ -42,6 +43,30 @@ const IndividualApp = ({
               style={{ "--banner-url": `url(${window?.globalConfigs?.getConfig?.("HOME_BACKGROUND")})`, padding: "0px" }}
             >
               <div className="banner banner-container">
+                <TopBar
+                  className=""
+                  img=""
+                  language="English"
+                  logo=""
+                  actionFields={[
+                    <Dropdown
+                      customSelector="Language"
+                      option={[
+                        { code: "en_IN", icon: "", name: "English" },
+                        { code: "b", icon: "", name: "French" },
+                        { code: "c", icon: "MyLocation", name: "Portuguese" },
+                      ]}
+                      optionKey="name"
+                      select={function noRefCheck() {}}
+                      theme="light"
+                    />,
+                  ]}
+                  props={{}}
+                  showDeafultImg
+                  style={{}}
+                  theme="light"
+                  ulb="My Scheme"
+                />
                 <Program path={path}></Program>
               </div>
             </div>
