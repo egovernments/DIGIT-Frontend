@@ -18,7 +18,7 @@ const MicroplanCard = () => {
     };
   };
 
-  let links = [generateLink("SETUP_MICROLAN","setup-microplan")];
+  let links = [generateLink("SETUP_MICROCLAN","setup-microplan"),generateLink("SEARCH_MICROPLANS","microplan-search")];
 
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));
 

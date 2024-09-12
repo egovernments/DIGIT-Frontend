@@ -6,7 +6,7 @@ import MicroplanCard from "./components/MicroplanCard";
 import { overrideHooks, updateCustomConfigs } from "./utils";
 import MicroplanDetails from "./components/MicroplanDetails";
 import CampaignDetails from "./components/CampaignDetails";
-
+import { ProviderContext } from "./utils/context";
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -26,14 +26,18 @@ export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   if (isLoading) {
     return <Loader />;
   }
-  return <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} />;
+  return (
+    <ProviderContext>
+      <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} />
+    </ProviderContext>
+  );
 };
 
 const componentsToRegister = {
   MicroplanModule,
   MicroplanCard,
   CampaignDetails,
-  MicroplanDetails
+  MicroplanDetails,
 };
 
 export const initMicroplanComponents = () => {
