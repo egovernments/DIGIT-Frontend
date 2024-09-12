@@ -5,7 +5,7 @@ export const newConfig = [
         {
           inline: true,
           label: "Applicant Name",
-          isMandatory: false,
+          isMandatory: true,
           key: "applicantname",
           type: "text",
           disable: false,
@@ -21,7 +21,7 @@ export const newConfig = [
           populators: { name: "dob", error: "Required" },
         },
         {
-          isMandatory: true,
+          isMandatory: false,
           key: "genders",
           type: "dropdown",
           label: "Enter Gender",
