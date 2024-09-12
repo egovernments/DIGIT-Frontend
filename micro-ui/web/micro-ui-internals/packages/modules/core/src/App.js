@@ -5,7 +5,6 @@ import EmployeeApp from "./pages/employee";
 import SignUp from "./pages/employee/SignUp";
 import Otp from "./pages/employee/Otp";
 import ViewUrl from "./pages/employee/ViewUrl";
-
 export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, initData, defaultLanding = "citizen" }) => {
   const history = useHistory();
   const { pathname } = useLocation();
@@ -14,12 +13,9 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, initData, de
   const userDetails = Digit.UserService.getUser();
   const { data: storeData } = Digit.Hooks.useStore.getInitData();
   const { stateInfo } = storeData || {};
-
   const DSO = Digit.UserService.hasAccess(["FSM_DSO"]);
   let CITIZEN = userDetails?.info?.type === "CITIZEN" || !window.location.pathname.split("/").includes("employee") ? true : false;
-
   if (window.location.pathname.split("/").includes("employee")) CITIZEN = false;
-
   useEffect(() => {
     if (!pathname?.includes("application-details")) {
       if (!pathname?.includes("inbox")) {
@@ -40,15 +36,12 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, initData, de
       Digit.SessionStorage.del("WS_DISCONNECTION");
     }
   }, [pathname]);
-
   history.listen(() => {
     window?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   });
-
   const handleUserDropdownSelection = (option) => {
     option.func();
   };
-
   const mobileView = innerWidth <= 640;
   let sourceUrl = `${window.location.origin}/citizen`;
   const commonProps = {
@@ -67,7 +60,6 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, initData, de
     pathname,
     initData,
   };
-
   return (
     <Switch>
       <Route path={`/${window?.contextPath}/employee`}>
@@ -82,14 +74,12 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, initData, de
     </Switch>
   );
 };
-
 export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, initData, defaultLanding = "citizen" }) => {
   // const globalPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
   const { data: storeData } = Digit.Hooks.useStore.getInitData();
   const { stateInfo } = storeData || {};
   const userScreensExempted = ["user/profile", "user/error"];
   const isUserProfile = userScreensExempted.some((url) => location?.pathname?.includes(url));
-
   return (
     <div
       className={isUserProfile ? "grounded-container" : "loginContainer"}
@@ -98,22 +88,15 @@ export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, initD
       }
     >
       <Switch>
-        {Digit.Utils.getMultiRootTenant() && (
-          <Route path={`/${window?.globalPath}`}>
-            <Route exact path={`/${window?.globalPath}/user/sign-up`}>
-              <SignUp stateCode={stateCode} />
-            </Route>
-            <Route exact path={`/${window?.globalPath}/user/otp`}>
-              <Otp />
-            </Route>
-            <Route exact path={`/${window?.globalPath}/user/url`}>
-              <ViewUrl />
-            </Route>
-            <Route>
-              <Redirect to={Digit.Utils.getMultiRootTenant() ? `/${window?.globalPath}/user/sign-up` : `/${window?.contextPath}/${defaultLanding}`} />
-            </Route>
-          </Route>
-        )}
+      <Route exact path={`/${window?.globalPath}/user/sign-up`}>
+          <SignUp stateCode={stateCode} />
+        </Route>
+        <Route exact path={`/${window?.globalPath}/user/otp`}>
+          <Otp />
+        </Route>
+        <Route exact path={`/${window?.globalPath}/user/url`}>
+          <ViewUrl />
+        </Route>
         {window?.globalPath !== window?.contextPath && (
           <Route path={`/${window?.contextPath}`}>
             <DigitApp
@@ -127,7 +110,8 @@ export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, initD
           </Route>
         )}
         <Route>
-          <Redirect to={Digit.Utils.getMultiRootTenant() ? `/${window?.globalPath}/user/sign-up` : `/${window?.contextPath}/${defaultLanding}`} />
+        <Redirect to={`/${window?.globalPath}/user/sign-up`} />
+          {/* <Redirect to={Digit.Utils.getMultiRootTenant() ? `/${window?.globalPath}/user/sign-up` : `/${window?.contextPath}/${defaultLanding}`} /> */}
         </Route>
       </Switch>
     </div>

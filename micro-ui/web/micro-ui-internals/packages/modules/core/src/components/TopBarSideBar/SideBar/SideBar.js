@@ -29,6 +29,7 @@ const DIGIT_UI_CONTEXTS = [
   "sanitation-ui",
   "core-ui",
   "mgramseva-web",
+  "sandbox-ui"
 ];
 
 // Function to recursively get the key of a nested object based on a parent key
