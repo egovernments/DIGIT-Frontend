@@ -224,7 +224,7 @@ export const UICustomizations = {
                   value?.split(".")?.[1]
                 }`}
               >
-                {t(Digit.Utils.workbench.getMDMSLabel(`SCHEMA_` + value?.split(".")?.[0]))}
+                {t(Digit.Utils.workbench.getMDMSLabel(`SCHEMA_` + value))}
                 {/* {t(`SANDBOX_${value?.split(".")?.[0]}`)} */}
               </Link>
             </span>
