@@ -53,8 +53,9 @@ const IndividualApp = ({
                       customSelector="Language"
                       option={[
                         { code: "en_IN", icon: "", name: "English" },
-                        { code: "b", icon: "", name: "French" },
-                        { code: "c", icon: "MyLocation", name: "Portuguese" },
+                        { code: "hi_IN", icon: "", name: "Hindi" },
+                        { code: "fr_IN", icon: "", name: "French" },
+                        { code: "pt_IN", icon: "", name: "Portuguese" },
                       ]}
                       optionKey="name"
                       select={function noRefCheck() {}}
