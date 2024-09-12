@@ -32,7 +32,7 @@ const IndividualApp = ({
   const { t } = useTranslation();
   const { path } = useRouteMatch();
   const history = useHistory();
-
+  const options=stateInfo?.hasLocalisation && stateInfo?.languages? stateInfo?.languages : [{ label: "ENGLISH", value: Digit.Utils.getDefaultLanguage() }];
   return (
     <div className={"employee"}>
       <ErrorBoundary initData={initData}>
@@ -51,12 +51,7 @@ const IndividualApp = ({
                   actionFields={[
                     <Dropdown
                       customSelector="Language"
-                      option={[
-                        { code: "en_IN", icon: "", name: "English" },
-                        { code: "hi_IN", icon: "", name: "Hindi" },
-                        { code: "fr_IN", icon: "", name: "French" },
-                        { code: "pt_IN", icon: "", name: "Portuguese" },
-                      ]}
+                      option={options?.map(obj=>({name:obj?.label,code:obj?.value}))}
                       optionKey="name"
                       select={function noRefCheck() {}}
                       theme="light"
