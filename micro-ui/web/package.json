@@ -16,7 +16,7 @@
   "dependencies": {
     "@egovernments/digit-ui-libraries": "1.8.2-beta.6",
     "@egovernments/digit-ui-module-core": "1.8.2-beta.12",
-    "@egovernments/digit-ui-components": "0.0.2-beta.31",
+    "@egovernments/digit-ui-components": "0.0.2-beta.38",
     "@egovernments/digit-ui-react-components": "1.8.2-beta.12",
     "babel-loader": "8.1.0",
     "react": "17.0.2",
