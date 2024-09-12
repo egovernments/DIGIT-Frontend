@@ -1,39 +1,9 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Header, Table } from "@egovernments/digit-ui-react-components";
+import { Button, Card, CardHeader, CardText, Loader, PopUp, SVG } from "@egovernments/digit-ui-components";
 import { useHistory, useLocation } from "react-router-dom";
-import { Button, Card, CardHeader, CardText, Loader, SVG } from "@egovernments/digit-ui-components";
 import { setupMasterConfig } from "./config/setupMasterConfig";
-
-const renderHierarchy = (categories) => {
-  return (
-    <ul>
-      {categories.map((category, index) => (
-        <li key={index}>
-          <CardText className="setupMaster-subChild">{index + 1 + ") " + category.master}</CardText>
-          {category.child && category.child.length > 0 && (
-            <ul>
-              {category.child.map((subCategory, subIndex) => (
-                <li key={subIndex}>
-                  <CardText>{String.fromCharCode(97 + subIndex) + ") " + subCategory.master}</CardText>
-                  {subCategory.child && subCategory.child.length > 0 && (
-                    <ul>
-                      {subCategory.child.map((grandChild, grandIndex) => (
-                        <li key={grandIndex}>
-                          <CardText>{String.fromCharCode(97 + grandIndex) + ") " + grandChild.master}</CardText>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </li>
-              ))}
-            </ul>
-          )}
-        </li>
-      ))}
-    </ul>
-  );
-};
 
 const SetupMaster = () => {
   const { t } = useTranslation();
@@ -42,8 +12,12 @@ const SetupMaster = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const module = searchParams.get("module");
-  const config = setupMasterConfig?.SetupMaster?.filter((item) => item.module === module)?.[0];
-  const [showMaster, setShowMaster] = useState(false);
+  const key = searchParams.get("key");
+  const [showPopUp, setShowPopUp] = useState(null);
+  const config = useMemo(() => {
+    return setupMasterConfig?.SetupMaster?.filter((item) => item.module === module)?.[0];
+  }, [module]);
+
   const { isLoading: moduleMasterLoading, data: moduleMasterData } = Digit.Hooks.useCustomMDMS(
     tenantId,
     "sandbox-ui",
@@ -59,60 +33,50 @@ const SetupMaster = () => {
           description: t(`SANDBOX_MASTER_SETUP_DESC_${i.code}`),
         }));
         return respData;
-        // console.log("FFSFAFS", data)
-        // function categorizeData(data) {
-        //   const result = {};
-
-        //   data.forEach((item) => {
-        //     const masterItems = item.master;
-        //     masterItems.forEach((entry) => {
-        //       const { code, type } = entry;
-
-        //       // Initialize type category
-        //       if (!result[type]) {
-        //         result[type] = [];
-        //       }
-
-        //       // Extract code before and after the dot
-        //       const [beforeDot, afterDot] = code.split(".");
-
-        //       // Find or create the category before the dot
-        //       let category = result[type].find((cat) => cat.master === beforeDot);
-        //       if (!category) {
-        //         category = { master: beforeDot, child: [] };
-        //         result[type].push(category);
-        //       }
-
-        //       // If there is an afterDot, add it as a child
-        //       if (afterDot) {
-        //         category.child.push({ master: afterDot });
-        //       } else {
-        //         // If there is no dot, just add the item to the child array of its own category
-        //         if (code !== beforeDot) {
-        //           // Avoid adding items without dots
-        //           category.child.push({ master: code });
-        //         }
-        //       }
-        //     });
-        //   });
-
-        //   return result;
-        // }
-
-        // Transform the data
-        // return categorizeData(data?.["sandbox-ui"]?.ModuleMasterConfig?.filter((item) => item?.module === module));
       },
       enabled: true,
-    },
-    true
+    }
+    // true
   );
 
-  const onClickRow = ({ original: row }) => {
-    const value = row?.code;
-    history.push(
-      `/${window.contextPath}/employee/workbench/mdms-search-v2?moduleName=${value?.split(".")?.[0]}&masterName=${
-        value?.split(".")?.[1]
-      }&from=sandbox&screen=applicationManagement&action=view`
+  const { mutate: useDefaultMasterHandler } = Digit.Hooks.sandbox.useDefaultMasterHandler(tenantId);
+
+  const handleSetupMaster = async () => {
+    await useDefaultMasterHandler(
+      {
+        module: module,
+        onlySchemas: false,
+      },
+      {
+        onError: (error, variables) => {
+          console.log(error);
+          setShowPopUp({
+            key: "error",
+            alertHeading: "DEFAULT_MASTER_SETUP_ERROR",
+            description: "DEFAULT_MASTER_SETUP_ERROR_DESC",
+            subHeading: "DEFAULT_MASTER_SETUP_ERROR_SUBH",
+            heading: "DEFAULT_MASTER_SETUP_ERROR_HEAD",
+            secondaryText: "DEFAULT_MASTER_SETUP_ERROR_TEXT",
+            iconFill: "red",
+            customIcon: "",
+            buttonLabel: "DEFAULT_MASTER_SETUP_ERROR_BUTTON_LABEL",
+          });
+        },
+        onSuccess: async (data) => {
+          setShowPopUp({
+            key: "success",
+            // label: "DEFAULT_MASTER_SETUP_SUCCESS", message: "DEFAULT_MASTER_SETUP_SUCCESS_MESSAGE",
+            alertHeading: "DEFAULT_MASTER_SETUP_SUCCESS_ALERT",
+            description: "DEFAULT_MASTER_SETUP_SUCCESS_DESC",
+            subHeading: "DEFAULT_MASTER_SETUP_SUCCESS_SUBH",
+            heading: "DEFAULT_MASTER_SETUP_SUCCESS_HEAD",
+            secondaryText: "DEFAULT_MASTER_SETUP_SUCCESS_TEXT",
+            iconFill: "green",
+            customIcon: "CheckCircle",
+            buttonLabel: "DEFAULT_MASTER_SUCCESS_BUTTON_LABEL",
+          });
+        },
+      }
     );
   };
 
@@ -121,7 +85,7 @@ const SetupMaster = () => {
   }
   return (
     <Card className={"sandboxSetupMasterInfo"}>
-      {!showMaster && (
+      {key === "about" && (
         <>
           <Header className="headerFlex" styles={{ fontSize: "32px" }}>
             <SVG.Announcement height={40} width={40} />
@@ -145,47 +109,19 @@ const SetupMaster = () => {
               isSuffix={true}
               onClick={(e) => {
                 e.preventDefault();
-                setShowMaster(true);
+                history.push(`/${window?.contextPath}/employee/sandbox/application-management/setup-master?module=${module}&key=masterDetail`);
               }}
             ></Button>
           </div>
         </>
       )}
-      {showMaster && (
+      {key === "masterDetail" && (
         <>
           <Header className="headerFlex" styles={{ fontSize: "32px" }}>
             <SVG.Announcement height={40} width={40} />
             {t(config?.header || "N/A")}
           </Header>
           <CardText>{t(config?.description)}</CardText>
-          {/* {Object.keys(moduleMasterData)?.length > 0 &&
-            Object.keys(moduleMasterData)?.map((item, index) => (
-              <li key={index} style={{ display: "flex", alignItems: "center" }}>
-                <span style={{ marginRight: "0.5rem" }}>{t(item)}</span>
-                {moduleMasterData?.[item]?.length > 0 &&
-                  moduleMasterData?.[item]?.map((subItem, subIndex) => (
-                    <li key={subIndex} style={{ display: "flex", alignItems: "center" }}>
-                      <span style={{ marginRight: "0.5rem" }}>{subIndex + 1}. </span>
-                      <span style={{ marginRight: "0.5rem" }}>{t(subItem)}</span>
-                      {subItem?.child?.length > 0 &&
-                        subItem.child.map((grandChild, grandIndex) => (
-                          <li key={grandIndex} style={{ display: "flex", alignItems: "center" }}>
-                            <span style={{ marginRight: "0.5rem" }}>{String.fromCharCode(97 + grandIndex)} . </span>
-                            <span style={{ marginRight: "0.5rem" }}>{t(grandChild)}</span>
-                          </li>
-                        ))}
-                    </li>
-                  ))}
-              </li>
-            ))} */}
-          {/* <div>
-            {Object.entries(moduleMasterData).map(([type, categories], index) => (
-              <div key={index}>
-                <CardHeader className="setupMaster-subheading">{type.charAt(0).toUpperCase() + type.slice(1)}</CardHeader>
-                {renderHierarchy(categories)}
-              </div>
-            ))}
-          </div> */}
           <Table
             pageSizeLimit={50}
             className={"table"}
@@ -224,31 +160,32 @@ const SetupMaster = () => {
               };
             }}
           />
-          {/* <Table
-            columns={[
-              {
-                Header: t("HR_EMP_ID_LABEL"),
-                disableSortBy: true,
-                Cell: ({ row }) => {
-                  return <span className="link">Hello</span>;
-                },
-              },
-              {
-                Header: t("HR_EMP_NAME_LABEL"),
-                disableSortBy: true,
-                Cell: ({ row }) => {
-                  // return GetCell(`${row.original?.user?.name}`);
-                  return <span className="link">Hello</span>;
-                },
-              },
-            ]}
-            data={[{ label: "HR_EMP_NAME_LABEL" }, { label: "HELLO" }]}
-            getCellProps={(cellInfo) => {
-              return {
-                style: {},
-              };
-            }}
-          /> */}
+          {showPopUp && (
+            <PopUp
+              className="setupMasterPopUp"
+              type={"alert"}
+              showIcon={t(showPopUp?.showIcon)}
+              heading={t(showPopUp?.heading)}
+              subHeading={t(showPopUp?.subHeading)}
+              description={t(showPopUp?.description)}
+              alertHeading={t(showPopUp?.alertHeading)}
+              children={[<div> {t(showPopUp?.secondaryText)} </div>]}
+              iconFill={showPopUp?.iconFill}
+              customIcon={showPopUp?.customIcon}
+              onOverlayClick={() => {}}
+              alertMessage={" "}
+              footerChildren={[
+                <Button
+                  type={"button"}
+                  size={"large"}
+                  variation={"secondary"}
+                  label={t(showPopUp?.buttonLabel)}
+                  onClick={() => history.push(`/${window?.contextPath}/employee/sandbox/application-management/module?module=${module}`)}
+                />,
+              ]}
+              equalWidthButtons={true}
+            />
+          )}
           <div className="setupMasterSetupActionBar">
             <Button
               className="actionButton"
@@ -258,7 +195,8 @@ const SetupMaster = () => {
               isSuffix={true}
               onClick={(e) => {
                 e.preventDefault();
-                history.push(`/${window?.contextPath}/employee/sandbox/application-management/module?module=${module}`);
+                handleSetupMaster();
+                // history.push(`/${window?.contextPath}/employee/sandbox/application-management/module?module=${module}`);
               }}
             ></Button>
           </div>

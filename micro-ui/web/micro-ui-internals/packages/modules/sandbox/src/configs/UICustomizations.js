@@ -224,15 +224,17 @@ export const UICustomizations = {
                   value?.split(".")?.[1]
                 }`}
               >
-                {t(`SANDBOX_${value?.split(".")?.[0]}`)}
+                {t(Digit.Utils.workbench.getMDMSLabel(`SCHEMA_` + value?.split(".")?.[0]))}
+                {/* {t(`SANDBOX_${value?.split(".")?.[0]}`)} */}
               </Link>
             </span>
           );
         case "SANDBOX_MASTER_NAME":
-          return row?.code?.split(".")?.[1] ? t(`SANDBOX_${row?.code?.split(".")?.[1]}`) : t(`SANDBOX_${row?.code?.split(".")?.[0]}`);
+          // return row?.code?.split(".")?.[1] ? t(`SANDBOX_${row?.code?.split(".")?.[1]}`) : t(`SANDBOX_${row?.code?.split(".")?.[0]}`);
+          return t(Digit.Utils.workbench.getMDMSLabel(`SCHEMA_` + row?.code));
 
         case "SANDBOX_MASTER_TYPE":
-          return t(`SANDBOX_${value}`);
+          return t(Digit.Utils.locale.getTransformedLocale(`SANDBOX_MASTERTYPE_${value}`));
 
         case "SANDBOX_ACTIONS":
           const handleRedirect = (value, type) => {
