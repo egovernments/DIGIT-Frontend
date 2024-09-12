@@ -13,7 +13,7 @@ const Programs = ({}) => {
     params: {},
     body: {
       MdmsCriteria: {
-        tenantId:Digit.ULBService.getStateId(),
+        tenantId: Digit.ULBService.getStateId(),
         schemaCode: SCHEME.SCHEMES_SCHEMA_CODE,
       },
     },

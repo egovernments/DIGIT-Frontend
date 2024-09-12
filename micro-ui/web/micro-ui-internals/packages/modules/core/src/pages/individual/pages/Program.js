@@ -89,22 +89,17 @@ const Program = ({}) => {
                   style={{}}
                   value={`${prog?.basicDetails?.offeringEntity?.department?.label}`}
                 />
-                 <ViewCardFieldPair
-                  className=""
-                  label={`Related to`}
-                  style={{}}
-                  value={``}
-                />
-                <div style={{
-                  display: "flex",
-                  columnGap: "inherit"
-                }}>
-                  
-                {prog?.basicDetails?.tags?.map((tagname) => {
-                  return <Tag icon="" label={tagname} labelStyle={{}} showIcon={false} style={{}} type="success" />;
-                })}
-
-</div>
+                <ViewCardFieldPair className="" label={`Related to`} style={{}} value={``} />
+                <div
+                  style={{
+                    display: "flex",
+                    columnGap: "inherit",
+                  }}
+                >
+                  {prog?.basicDetails?.tags?.map((tagname) => {
+                    return <Tag icon="" label={tagname} labelStyle={{}} showIcon={false} style={{}} type="success" />;
+                  })}
+                </div>
 
                 <div className="program-apply-wrapper">
                   <Button

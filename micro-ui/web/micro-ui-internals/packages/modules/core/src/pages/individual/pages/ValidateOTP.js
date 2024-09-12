@@ -1,11 +1,12 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams, useHistory } from "react-router-dom";
-import { Button, CardText, FormComposerV2, PopUp, TextBlock } from "@egovernments/digit-ui-components";
-import { newConfig } from "../configs/IndividualCreateConfig";
+import { Button, CardText, PopUp, TextBlock } from "@egovernments/digit-ui-components";
+import { OTPInput } from "@egovernments/digit-ui-react-components";
 import { transformCreateData } from "../utils/createUtils";
+import { SCHEME } from "../configs/schemeConfigs";
 
-const ValidateOTP = ({formData,onSuccess}) => {
+const ValidateOTP = ({ formData, onSuccess }) => {
   const { id } = useParams();
   const tenantId = Digit.ULBService.getStateId();
   const { t } = useTranslation();
@@ -18,7 +19,9 @@ const ValidateOTP = ({formData,onSuccess}) => {
       enable: false,
     },
   };
-console.log(formData,'formData');
+  const [value, setValue] = React.useState("");
+
+  console.log(formData, "formData");
 
   // user-otp/v1/_send?tenantId=pg
 
@@ -58,7 +61,15 @@ console.log(formData,'formData');
         description="A SMS to validate the user mobile number has been sent"
         children={[
           <div>
-            <CardText style={{ margin: 0 }}>{t("SMS Sent to ") + formData?.mobileNumber}</CardText>
+            <CardText style={{ margin: 0, marginBottom: "1rem" }}>{t("SMS Sent to ") + formData?.mobileNumber}</CardText>
+            <OTPInput
+              className={"sandbox-otp-input"}
+              length={SCHEME.OTP_LENGTH}
+              onChange={(e) => {
+                setValue(e);
+              }}
+              value={value}
+            />
           </div>,
         ]}
         footerChildren={[
@@ -69,7 +80,7 @@ console.log(formData,'formData');
             variation={"secondary"}
             label={t("Cancel")}
             onClick={() => {
-                onSuccess(false);
+              onSuccess(false);
               // setShowPopUp(false);
               // setCanUpdate(true);
             }}
@@ -78,10 +89,11 @@ console.log(formData,'formData');
             className={"campaign-type-alert-button"}
             type={"button"}
             size={"medium"}
+            isDisabled={SCHEME.OTP_LENGTH != value?.length}
             variation={"primary"}
             label={t("Submit")}
             onClick={() => {
-                onSuccess();
+              onSuccess();
               // setShowPopUp(false);
               // setCanUpdate(false);
             }}

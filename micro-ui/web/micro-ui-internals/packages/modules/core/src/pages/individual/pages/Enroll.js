@@ -19,8 +19,8 @@ const IndividualCreate = () => {
       enable: false,
     },
   };
-  const [showPopup,setShowPopUp]=React.useState(false);
-  const [formData,setFormData]=React.useState({})
+  const [showPopup, setShowPopUp] = React.useState(false);
+  const [formData, setFormData] = React.useState({});
 
   // user-otp/v1/_send?tenantId=pg
 
@@ -31,24 +31,27 @@ const IndividualCreate = () => {
 
   const onSuccess = (resp) => {
     history.push(`/${window.contextPath}/individual/enroll-response?appNo=${"NEW-NO-1"}&isSuccess=${true}`, {
-      message:  "SUBMISSION_CREATION_SUCCESS",
+      message: "SUBMISSION_CREATION_SUCCESS",
       showID: true,
       label: "SUBMISSION_ID",
     });
   };
-  const createIndividual=async()=>{
-     await mutation.mutate({
-      url: `/individual/v1/_create`,
-      params: { tenantId },
-      body: transformCreateData(formData),
-      config: {
-        enable: true,
+  const createIndividual = async () => {
+    await mutation.mutate(
+      {
+        url: `/individual/v1/_create`,
+        params: { tenantId },
+        body: transformCreateData(formData),
+        config: {
+          enable: true,
+        },
       },
-    },{
-      onSuccess,
-      onError,
-    });
-  }
+      {
+        onSuccess,
+        onError,
+      }
+    );
+  };
   const onSubmit = async (data) => {
     console.log(data, "data");
     setFormData(data);
@@ -80,10 +83,15 @@ const IndividualCreate = () => {
         onSubmit={(data) => onSubmit(data)}
         fieldStyle={{ marginRight: 0 }}
       />
-      {showPopup&&<ValidateOTP formData={formData} onSuccess={(succeded=true)=>{
-        setShowPopUp(false);
-        succeded&&createIndividual();
-      }}></ValidateOTP>}
+      {showPopup && (
+        <ValidateOTP
+          formData={formData}
+          onSuccess={(succeded = true) => {
+            setShowPopUp(false);
+            succeded && createIndividual();
+          }}
+        ></ValidateOTP>
+      )}
     </div>
   );
 };
