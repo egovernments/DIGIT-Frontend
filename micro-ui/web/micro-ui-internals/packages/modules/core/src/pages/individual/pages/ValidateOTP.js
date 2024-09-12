@@ -58,7 +58,7 @@ console.log(formData,'formData');
         description="A SMS to validate the user mobile number has been sent"
         children={[
           <div>
-            <CardText style={{ margin: 0 }}>{t("SMS Sent to ") + " "}</CardText>
+            <CardText style={{ margin: 0 }}>{t("SMS Sent to ") + formData?.mobileNumber}</CardText>
           </div>,
         ]}
         footerChildren={[
@@ -69,6 +69,7 @@ console.log(formData,'formData');
             variation={"secondary"}
             label={t("Cancel")}
             onClick={() => {
+                onSuccess(false);
               // setShowPopUp(false);
               // setCanUpdate(true);
             }}

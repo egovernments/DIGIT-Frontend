@@ -80,9 +80,9 @@ const IndividualCreate = () => {
         onSubmit={(data) => onSubmit(data)}
         fieldStyle={{ marginRight: 0 }}
       />
-      {showPopup&&<ValidateOTP formData={formData} onSuccess={()=>{
+      {showPopup&&<ValidateOTP formData={formData} onSuccess={(succeded=true)=>{
         setShowPopUp(false);
-        createIndividual();
+        succeded&&createIndividual();
       }}></ValidateOTP>}
     </div>
   );

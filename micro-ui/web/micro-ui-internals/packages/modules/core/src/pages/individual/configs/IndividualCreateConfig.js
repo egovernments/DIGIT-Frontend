@@ -41,10 +41,10 @@ export const newConfig = [
         {
           label: "Phone number",
           isMandatory: true,
-          key: "phno",
+          key: "mobileNumber",
           type: "number",
           disable: false,
-          populators: { name: "phno", error: "Required", validation: { min: 0, max: 9999999999 } },
+          populators: { name: "mobileNumber", error: "Required", validation: { min: 0, max: 9999999999 } },
         },
       ],
     },

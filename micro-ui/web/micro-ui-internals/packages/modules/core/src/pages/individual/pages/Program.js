@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Loader } from "@egovernments/digit-ui-react-components";
-import { Card, TextBlock, Button, ViewCardFieldPair } from "@egovernments/digit-ui-components";
+import { Card, TextBlock, Button, ViewCardFieldPair, Tag } from "@egovernments/digit-ui-components";
 import { SCHEME } from "../configs/schemeConfigs";
 import { useParams, useHistory } from "react-router-dom";
 
@@ -75,6 +75,36 @@ const Program = ({}) => {
                   style={{}}
                   value={`${prog?.basicDetails?.schemeShortTitle}`}
                 />
+                <ViewCardFieldPair className="" label={`${prog?.eligibilityCriteria?.eligibilityDescription_md}`} style={{}} value={""} />
+                {prog?.eligibilityCriteria?.eligibilityDescription?.map((eligibilityDescription) => {
+                  return eligibilityDescription?.children?.map((eligibilityDescriptionChildren) => {
+                    return eligibilityDescriptionChildren?.children?.map((obj) => {
+                      return <li>{obj?.text}</li>;
+                    });
+                  });
+                })}
+                <ViewCardFieldPair
+                  className=""
+                  label={`${prog?.basicDetails?.offeringEntity?.name}`}
+                  style={{}}
+                  value={`${prog?.basicDetails?.offeringEntity?.department?.label}`}
+                />
+                 <ViewCardFieldPair
+                  className=""
+                  label={`Related to`}
+                  style={{}}
+                  value={``}
+                />
+                <div style={{
+                  display: "flex",
+                  columnGap: "inherit"
+                }}>
+                  
+                {prog?.basicDetails?.tags?.map((tagname) => {
+                  return <Tag icon="" label={tagname} labelStyle={{}} showIcon={false} style={{}} type="success" />;
+                })}
+
+</div>
 
                 <div className="program-apply-wrapper">
                   <Button

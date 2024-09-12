@@ -7,7 +7,7 @@ export const transformCreateData = (data) => {
       },
       dateOfBirth: null,
       gender: data?.genders?.code,
-      mobileNumber: data.phno,
+      mobileNumber: data.mobileNumber,
       address: [
         {
           tenantId: Digit.ULBService.getStateId(),
@@ -40,7 +40,7 @@ export const transformCreateData = (data) => {
       },
       isSystemUser: null,
       userDetails: {
-        username: data.phno,
+        username: data.mobileNumber,
         tenantId: Digit.ULBService.getStateId(),
         roles: [
           {
