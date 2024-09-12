@@ -190,7 +190,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
         cardClassName="loginCardClassName"
         buttonClassName="buttonClassName"
       >
-        <Header />
+        {stateInfo?.code ? <Header /> : <Header showTenant={false} /> }
       </FormComposerV2>
       {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
       <div className="employee-login-home-footer" style={{ backgroundColor: "unset" }}>
