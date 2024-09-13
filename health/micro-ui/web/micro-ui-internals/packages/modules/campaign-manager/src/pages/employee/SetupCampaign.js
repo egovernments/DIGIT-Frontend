@@ -486,7 +486,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
                 attribute: attribute?.attribute?.code
                   ? attribute?.attribute?.code
                   : typeof attribute?.attribute === "string"
-                  ? attribute?.attribute
+                  ? attribute?.attribute   
                   : null,
                 operator: "GREATER_THAN_EQUAL_TO",
                 value: attribute.toValue ? Number(attribute.toValue) : null,

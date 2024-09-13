@@ -96,7 +96,7 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
           <div>{t(`CAMPAIGN_TYPE_${beneficiaryType}`)}</div>
         </LabelFieldPair>
       )}
-      {showPopUp && (
+      {showPopUp && ( 
         <PopUp
           className={"boundaries-pop-module"}
           type={"default"}

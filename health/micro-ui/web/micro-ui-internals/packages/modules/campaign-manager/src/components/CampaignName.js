@@ -18,9 +18,10 @@ const CampaignName = ({ onSelect, formData, control, formState, ...props }) => {
     if (props?.props?.isSubmitting && !name) {
       setError({ message: "CAMPAIGN_FIELD_ERROR_MANDATORY" });
     } else {
-      setError(null);
+      setError(null);  
     }
   }, [props?.props?.isSubmitting]);
+
   useEffect(() => {
     if (startValidation && !name) {
       setError({ message: "CAMPAIGN_NAME_FIELD_ERROR" });

@@ -553,16 +553,12 @@ tbody {
 .digit-card-component.bannerCard.removeBottomMargin.languageSelection{
   width: unset !important;
 }
-.parent-group{
-  border-width: 0.063rem;
-    background: theme(digitv2.lightTheme.paper-secondary);
-    border-color: #D4D5D6;
-    border-radius: 0.5rem;
-    padding: 1rem;
+
+.label-field-pairr {
+  display: none !important;
+  align-items: center;
+  justify-content: space-around;
+  margin-bottom: 1rem;
+  
 }
-.parent{
-  color: theme(digitv2.lightTheme.header-sidenav);
-    font-weight: 700;
-    font-family: theme(digitv2.fontFamily.sans);
-    padding-bottom: 1rem;
-}
+

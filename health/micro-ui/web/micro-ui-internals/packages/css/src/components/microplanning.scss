@@ -1313,7 +1313,7 @@ $border-color: rgba(214, 213, 212, 1);
       .equal-to-icon {
         margin: 0 3%;
         font-family: Roboto Condensed;
-        font-size: 2.5rem;
+        font-size: 5rem;
         font-weight: 700;
       }
 
@@ -2507,3 +2507,63 @@ $border-color: rgba(214, 213, 212, 1);
   max-height: 23rem;
   overflow: auto;
 }
+
+
+
+
+/* MP_HYPOTHESIS_CSS */
+
+.mp-description{
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.label-field{
+  display: flex;
+  gap:12rem;
+  margin: 1.7rem 0rem;  
+  
+}
+
+
+
+
+/* Label styling */
+.label-field > span {
+  width: 20rem;
+  font-size: 1.2rem;
+  margin-right: 2rem;
+  font-weight: bold;
+  
+}
+
+
+
+
+/* Delete button styling */
+.delete-button {
+  display: flex;
+  cursor: pointer;
+  margin-left: 1rem;
+  font-size: 1.2rem;
+  
+}
+
+/* TextInput and delete button styling  */
+.input-container{
+  display: flex;
+  justify-content: center;
+
+}
+
+.equals-icon{
+   font-size: 5rem;
+   font-family: Roboto Condensed;
+  /* margin: 0 3%;*/
+   /*font-weight: 700;*/
+}
+
+
+
+
+
