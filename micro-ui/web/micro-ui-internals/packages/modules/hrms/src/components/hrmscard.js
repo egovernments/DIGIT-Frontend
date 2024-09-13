@@ -16,7 +16,7 @@ const HRMSCard = () => {
   let propsForSandbox = [
     {
       label: t("CONFIGURE_MASTER"),
-      link: `/${window?.contextPath}/employee/sandbox/application-management/setup-master?module=HRMS`,
+      link: `/${window?.contextPath}/employee/sandbox/application-management/setup-master?module=HRMS&key=about`,
       isOutsideModule: true,
       roles: role,
     },

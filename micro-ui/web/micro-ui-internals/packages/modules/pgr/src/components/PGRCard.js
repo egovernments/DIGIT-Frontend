@@ -39,7 +39,7 @@ let propsForCSR = [
 let propsForSandbox = [
   {
     label: t("CONFIGURE_MASTER"),
-    link: `/${window?.contextPath}/employee/sandbox/application-management/setup-master?module=PGR`,
+    link: `/${window?.contextPath}/employee/sandbox/application-management/setup-master?module=PGR&key=about`,
     isOutsideModule : true,
     roles: role
   }
