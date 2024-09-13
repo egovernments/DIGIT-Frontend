@@ -86,7 +86,9 @@ const MDMSEdit = ({...props}) => {
     const schemaCodeToValidate = `${moduleName}.${masterName}`;
     console.log(schemaCodeToValidate,"schemaCodeToValidate");
     console.log(await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.getTrasformedData(formData),"ui cutomization call");
-    const transformedData = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.getTrasformedData(formData) || formData;
+    let transformedData = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.getTrasformedData(formData) || formData;
+    console.log(typeof transformedData);
+    transformedData = transformedData && transformedData !== undefined && transformedData !== "undefined" ? transformedData : formData;
     console.log(transformedData,"transformedData")
     const validation = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.validateForm(transformedData, { tenantId: stateId });
     console.log(validation,"validation");
