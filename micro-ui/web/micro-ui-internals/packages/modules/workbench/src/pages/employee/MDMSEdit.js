@@ -82,9 +82,14 @@ const MDMSEdit = ({...props}) => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaUpdate);
 
   const handleUpdate = async (formData) => {
+    console.log(formData,"formData");
     const schemaCodeToValidate = `${moduleName}.${masterName}`;
+    console.log(schemaCodeToValidate,"schemaCodeToValidate");
+    console.log(await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.getTrasformedData(formData),"ui cutomization call");
     const transformedData = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.getTrasformedData(formData) || formData;
+    console.log(transformedData,"transformedData")
     const validation = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.validateForm(transformedData, { tenantId: stateId });
+    console.log(validation,"validation");
 
     if (validation && !validation?.isValid) {
       setShowToast({
@@ -113,7 +118,7 @@ const MDMSEdit = ({...props}) => {
       closeToast()
     };
 
-
+    console.log(formData, "before Final");
     mutation.mutate(
       {
         url:reqCriteriaUpdate?.url,
