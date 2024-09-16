@@ -34,7 +34,7 @@ const ApplicationHome = () => {
             className="sandbox-module-card"
             label={t(`SANDBOX_APPLICATION_MODULE_${item?.module}`)}
             buttonLabel={t(`SANDBOX_VIEW`)}
-            onButtonClick={() => history.push(`/${window?.contextPath}/employee/sandbox/application-management/setup-master?module=${item?.module}`)}
+            onButtonClick={() => history.push(`/${window?.contextPath}/employee/sandbox/application-management/setup-master?module=${item?.module}&key=about`)}
             // onButtonClick={() => history.push(`/${window?.contextPath}/employee/sandbox/application-management/module?module=${item?.module}`)}
           />
         ))}

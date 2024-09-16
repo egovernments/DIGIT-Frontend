@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
-import { Button, PopUp, Toast } from "@egovernments/digit-ui-components";
+import { Button, Toast } from "@egovernments/digit-ui-components";
 import { useHistory, useLocation } from "react-router-dom";
 import { moduleMasterConfig } from "./config/moduleMasterConfig";
 
@@ -63,38 +63,6 @@ const ModuleMasterTable = () => {
           }}
         ></InboxSearchComposer>
       </div>
-      {showPopUp && (
-        <PopUp
-          type={"default"}
-          className={"masterHandlerPopup"}
-          footerclassName={"masterHandlerPopUpFooter"}
-          heading={t("SANDBOX_SETUP_MASTER_MODAL_HEADER")}
-          children={[<div>{t("SANDBOX_SETUP_MASTER_MODAL_TEXT")}</div>]}
-          onOverlayClick={() => {}}
-          footerChildren={[
-            <Button
-              type={"button"}
-              size={"large"}
-              variation={"secondary"}
-              label={t("SANDBOX_MANNUAL_MASTER_LOAD")}
-              onClick={() => {
-                handleMasterData(true);
-              }}
-            />,
-            <Button
-              type={"button"}
-              size={"large"}
-              variation={"primary"}
-              label={t("SANDBOX_DEFAULT_MASTER_LOAD")}
-              onClick={() => {
-                handleMasterData(false);
-              }}
-            />,
-          ]}
-          sortFooterChildren={true}
-          onClose={() => {}}
-        ></PopUp>
-      )}
       {showToast && (
         <Toast
           type={showToast?.isError ? "error" : "success"}

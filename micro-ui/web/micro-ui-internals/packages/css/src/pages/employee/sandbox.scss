@@ -330,10 +330,17 @@
     margin-bottom: 0;
   }
 }
-.action-bar-wrap{
-  .menu-wrap{
-    p{
+.action-bar-wrap {
+  .menu-wrap {
+    p {
       margin: 0 !important;
+    }
+  }
+}
+.digit-popup-wrapper.setupMasterPopUp.alert {
+  .digit-popup-alert-content{
+    .digit-popup-alert-heading {
+      color: #00703c;
     }
   }
 }

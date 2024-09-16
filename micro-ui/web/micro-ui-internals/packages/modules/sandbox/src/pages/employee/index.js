@@ -17,13 +17,9 @@ const bredCrumbStyle = { maxWidth: "min-content" };
 
 const ProjectBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
+  const searchParams = new URLSearchParams(location.search);
+  const module = searchParams.get("module")
   const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
-  const module = location.href.includes("module=")
-    ? location.href
-        .replace(defaultPath + "/", "")
-        .split("?")?.[1]
-        ?.split("=")?.[1]
-    : null;
 
   const crumbs = [
     {
@@ -34,7 +30,7 @@ const ProjectBreadCrumb = ({ location, defaultPath }) => {
     {
       path: pathVar === "application-management/home" ? "" : `/${window?.contextPath}/employee/sandbox/application-management/home`,
       content: t("APPLICATION_MANAGEMENT_CRUMB"),
-      show: pathVar.includes("application-management") ? true : false,
+      show: false,
     },
     {
       path: module ? "" : `/${window?.contextPath}/employee/sandbox/application-management/home`,
