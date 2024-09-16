@@ -759,7 +759,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                     name="email"
                     value={email}
                     onChange={(e) => setUserEmailAddress(e.target.value)}
-                    disabled={Digit.Utils.getMultiRootTenant()?true : editScreen}
+                    disabled={Digit.Utils.getMultiRootTenant()? true : editScreen}
                   />
                   {errors?.emailAddress && (
                     <ErrorMessage
