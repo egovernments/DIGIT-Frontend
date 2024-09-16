@@ -76,5 +76,56 @@ export const setupMasterConfig = {
         },
       ],
     },
+    {
+      header: "TENANT_MANAGEMENT_INFO",
+      subHeader:"new subheader",
+      module: "TENANT_MANAGEMENT_INFO",
+      active: true,
+      description: "TENANT_MANAGEMENT_DESCRIPTION",
+      masterDescription: "TENANT_MANAGEMENT_DESCRIPTION",
+      actionText: "SETUP_NOW",
+      add_organization: [
+        {
+          id: 1,
+          name: "TENANT_CLICK_ORGANIZATION_CREATE",
+        },
+        {
+          id: 2,
+          name: "TENANT_ENTER_DETAILS",
+        },
+        {
+          id: 3,
+          name: "TENANT_SUBMIT_DETAILS",
+        },
+      ],
+      view_organization: [
+        {
+          id: 1,
+          name: "TENANT_CLICK_ORGANIZATION_SEARCH",
+        },
+        {
+          id: 2,
+          name: "TENANT_ORGANIZAZATION_LIST",
+        },
+        {
+          id: 3,
+          name: "TENANT_ORGANIZATION_ROW_VIEW",
+        },
+      ],
+      edit_organization: [
+        {
+          id: 1,
+          name: "TENANT_CLICK_ORGANIZATION_SEARCH",
+        },
+        {
+          id: 2,
+          name: "TENANT_LIST_DISPLAYED",
+        },
+        {
+          id: 3,
+          name: "TENANT_CHANGE_STATUS",
+        },
+      ],
+    },
   ],
 };
