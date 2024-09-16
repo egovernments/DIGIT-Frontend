@@ -776,7 +776,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
               <LabelFieldPair>
                 <div style={{ width: "100%" }}>
-                  {changepassword == false && !Digit.Utils.getMultiRootTenant()? (
+                  {changepassword == false && !Digit.Utils.getOTPBasedLogin()? (
                     <Button
                       label={t("CORE_COMMON_CHANGE_PASSWORD")}
                       variation={"teritiary"}
