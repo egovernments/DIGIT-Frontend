@@ -6,6 +6,8 @@ import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-r
 import SetupCampaign from "./SetupCampaign";
 import SelectingBoundaries from "../../components/SelectingBoundaries";
 import ConfigureApp from "./ConfigureApp";
+import {temp_data, CreateChecklist} from "./CreateChecklist";
+import SearchChecklist from "./SearchChecklist";
 
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
@@ -102,6 +104,8 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE }) => {
           <PrivateRoute path={`${path}/add-product`} component={() => <AddProduct />} />
           <PrivateRoute path={`${path}/configure-app`} component={() => <ConfigureApp />} />
           <PrivateRoute path={`${path}/update-dates-boundary`} component={() => <UpdateDatesWithBoundaries />} />
+          <PrivateRoute path={`${path}/checklist/create`} component={() => <CreateChecklist />} />
+          <PrivateRoute path={`${path}/checklist/search`} component={() => <SearchChecklist />} />
         </AppContainer>
       </Switch>
     </React.Fragment>

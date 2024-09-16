@@ -1,17 +1,17 @@
 import { Link } from "react-router-dom";
 import _ from "lodash";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useHistory } from 'react-router-dom';
 import { Fragment } from "react";
-import { Button, PopUp } from "@egovernments/digit-ui-components";
+import { Button, PopUp, Switch } from "@egovernments/digit-ui-components";
 import TimelineComponent from "../components/TimelineComponent";
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
 // var Digit = window.Digit || {};
-
-const businessServiceMap = {};
-
+// import { campaign_name1 } from "../pages/employee/SearchChecklist";
 const inboxModuleNameMap = {};
+// const history=useHistory();
 
 // const onActionSelect = (value, row) => {
 //   console.log("value")
@@ -39,6 +39,67 @@ const inboxModuleNameMap = {};
 // };
 
 export const UICustomizations = {
+  MyChecklistSearchConfig: {
+    preProcess: (data, additionalDetails) => {
+
+      console.log("data is hehehehe", data);
+
+    //   if (!data.ServiceDefinitionCriteria.code) {
+    //     data.ServiceDefinitionCriteria.code = [];
+    // }
+      console.log("history is as folloes", window.history.state);
+      data.body.ServiceDefinitionCriteria.code.length=0;
+      console.log("abe yrr", data);
+      console.log("bha role is", data?.state?.searchForm?.Role?.code);
+      // console.log("campaign name bc is", campaign_name1);
+      let pay = window.history.state.name + '.' + data?.state?.searchForm?.Type?.list + '.' + data?.state?.searchForm?.Role?.code;
+      console.log("payload bc is", pay);
+
+      data.body.ServiceDefinitionCriteria.code.push(pay);
+      console.log("updated one is",data);
+      return data;
+    },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      console.log("additonal row is:", row);
+      console.log("additonal column is:", column);
+      console.log("key is:", key );
+      console.log("value is:", value);
+      console.log("search result is:", searchResult);
+      // const [switchText, setSwitchText] = useState("Active");
+      const [isActive, setIsActive] = useState(row?.isActive);
+        switch (key) {
+          case "Checklist Role":
+            console.log("this row", row);
+            return row?.additionalDetails?.role;
+            break;
+          case "Checklist Type":
+            console.log("the type of checklist is", row?.additionalDetails?.type)
+            return row?.additionalDetails?.type;
+            break;
+          case "Checklist Name":
+            console.log("the name of checklist is", row?.additionalDetails?.name)
+            return row?.additionalDetails?.name;
+            break;
+          case "Status":
+            const toggle = () => {
+              console.log("initial state is:", isActive);
+              setIsActive(!isActive);
+              console.log("new state is", isActive);
+            };
+            const switchText = isActive ? "Active" : "Inactive";
+            return(
+              <>
+                <Switch
+                  isCheckedInitially={isActive?true:false}
+                  label={switchText}
+                  onToggle={toggle} // Passing the function reference here
+                />
+              </>
+            )
+        }
+
+    },
+  },
   MyCampaignConfigOngoing: {
     preProcess: (data, additionalDetails) => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -130,6 +191,20 @@ export const UICustomizations = {
           case "ACTION_LABEL_VIEW_TIMELINE":
             setTimeline(true);
             break;
+          case "ACTION_LABEL_CONFIGURE_APP":
+            window.history.pushState(
+              {
+                name: row?.campaignName,
+                data: row,
+                projectId: row?.projectId,
+              },
+              "",
+              `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}`
+            );
+            const navEvent1 = new PopStateEvent("popstate");
+            window.dispatchEvent(navEvent1);
+            break;
+
           default:
             console.log(value);
             break;
@@ -164,7 +239,7 @@ export const UICustomizations = {
                 // ]}
                 options={[
                   ...(row?.status === "created" ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") }] : []),
-                  // { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
+                  { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
                   { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
                 ]}
                 optionsKey="i18nKey"
@@ -426,6 +501,21 @@ export const UICustomizations = {
           case "ACTION_LABEL_VIEW_TIMELINE":
             setTimeline(true);
             break;
+
+            case "ACTION_LABEL_CONFIGURE_APP":
+              window.history.pushState(
+                {
+                  name: row?.campaignName,
+                  data: row,
+                  projectId: row?.projectId,
+                },
+                "",
+                `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}`
+              );
+              const navEvent1 = new PopStateEvent("popstate");
+              window.dispatchEvent(navEvent1);
+              break;
+  
           default:
             console.log(value);
             break;
@@ -460,7 +550,7 @@ export const UICustomizations = {
                 // ]}
                 options={[
                   ...(row?.status === "created" ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") }] : []),
-                  // { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
+                  { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
                   { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
                 ]}
                 optionsKey="i18nKey"

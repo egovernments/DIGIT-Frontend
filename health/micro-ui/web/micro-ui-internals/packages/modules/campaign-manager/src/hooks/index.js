@@ -10,6 +10,9 @@ import useCreateProduct from "./useCreateProduct";
 import useParallelSearch from "./useParallelSearch";
 import useProjectSearchWithBoundary from "./useProjectSearchWithBoundary";
 import useProjectUpdateWithBoundary from "./useProjectUpdateWithBoundary";
+import useCreateChecklist from "./useCreateChecklist";
+import useUpsertLocalisation from "./useUpsertLocalisation";
+import useTypeOfChecklist from "./useTypeOfChecklist";
 
 const UserService = {};
 
@@ -29,6 +32,10 @@ const campaign = {
   useParallelSearch,
   useProjectSearchWithBoundary,
   useProjectUpdateWithBoundary,
+  useCreateChecklist,
+  useUpsertLocalisation,
+  useTypeOfChecklist
+
 };
 
 const Hooks = {
