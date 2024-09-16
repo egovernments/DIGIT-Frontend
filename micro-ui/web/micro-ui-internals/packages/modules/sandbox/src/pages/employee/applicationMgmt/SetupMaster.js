@@ -1,9 +1,10 @@
-import React, { Fragment, useMemo, useState } from "react";
+import React, { Fragment, useMemo, useState ,useEffect} from "react";
 import { useTranslation } from "react-i18next";
 import { Header, Table } from "@egovernments/digit-ui-react-components";
 import { Button, Card, CardHeader, CardText, Loader, PopUp, SVG } from "@egovernments/digit-ui-components";
 import { useHistory, useLocation } from "react-router-dom";
 import { setupMasterConfig } from "./config/setupMasterConfig";
+
 
 const SetupMaster = () => {
   const { t } = useTranslation();
@@ -39,45 +40,55 @@ const SetupMaster = () => {
     // true
   );
 
-  const { mutate: useDefaultMasterHandler } = Digit.Hooks.sandbox.useDefaultMasterHandler(tenantId);
 
+  const { mutate: useDefaultMasterHandler } = Digit.Hooks.sandbox.useDefaultMasterHandler(tenantId);
+  const { data, refetch: refetchMasterComplete } = Digit.Hooks.useCheckMasterComplete({
+    tenantId: tenantId,
+    module: module,
+  });
   const handleSetupMaster = async () => {
-    await useDefaultMasterHandler(
-      {
-        module: module,
-        onlySchemas: false,
-      },
-      {
-        onError: (error, variables) => {
-          console.log(error);
-          setShowPopUp({
-            key: "error",
-            alertHeading: "DEFAULT_MASTER_SETUP_ERROR",
-            description: "DEFAULT_MASTER_SETUP_ERROR_DESC",
-            subHeading: "DEFAULT_MASTER_SETUP_ERROR_SUBH",
-            heading: "DEFAULT_MASTER_SETUP_ERROR_HEAD",
-            secondaryText: "DEFAULT_MASTER_SETUP_ERROR_TEXT",
-            iconFill: "red",
-            customIcon: "",
-            buttonLabel: "DEFAULT_MASTER_SETUP_ERROR_BUTTON_LABEL",
-          });
+    if(data){
+      history.push(`/${window?.contextPath}/employee/sandbox/application-management/module?module=${module}`);
+    }
+    else{
+      await useDefaultMasterHandler(
+        {
+          module: module,
+          onlySchemas: false,
         },
-        onSuccess: async (data) => {
-          setShowPopUp({
-            key: "success",
-            // label: "DEFAULT_MASTER_SETUP_SUCCESS", message: "DEFAULT_MASTER_SETUP_SUCCESS_MESSAGE",
-            alertHeading: "DEFAULT_MASTER_SETUP_SUCCESS_ALERT",
-            description: "DEFAULT_MASTER_SETUP_SUCCESS_DESC",
-            subHeading: "DEFAULT_MASTER_SETUP_SUCCESS_SUBH",
-            heading: "DEFAULT_MASTER_SETUP_SUCCESS_HEAD",
-            secondaryText: "DEFAULT_MASTER_SETUP_SUCCESS_TEXT",
-            iconFill: "green",
-            customIcon: "CheckCircle",
-            buttonLabel: "DEFAULT_MASTER_SUCCESS_BUTTON_LABEL",
-          });
-        },
-      }
-    );
+        {
+          onError: (error, variables) => {
+            console.log(error);
+            setShowPopUp({
+              key: "error",
+              alertHeading: "DEFAULT_MASTER_SETUP_ERROR",
+              description: "DEFAULT_MASTER_SETUP_ERROR_DESC",
+              subHeading: "DEFAULT_MASTER_SETUP_ERROR_SUBH",
+              heading: "DEFAULT_MASTER_SETUP_ERROR_HEAD",
+              secondaryText: "DEFAULT_MASTER_SETUP_ERROR_TEXT",
+              iconFill: "red",
+              customIcon: "",
+              buttonLabel: "DEFAULT_MASTER_SETUP_ERROR_BUTTON_LABEL",
+            });
+          },
+          onSuccess: async (data) => {
+            setShowPopUp({
+              key: "success",
+              // label: "DEFAULT_MASTER_SETUP_SUCCESS", message: "DEFAULT_MASTER_SETUP_SUCCESS_MESSAGE",
+              alertHeading: "DEFAULT_MASTER_SETUP_SUCCESS_ALERT",
+              description: "DEFAULT_MASTER_SETUP_SUCCESS_DESC",
+              subHeading: "DEFAULT_MASTER_SETUP_SUCCESS_SUBH",
+              heading: "DEFAULT_MASTER_SETUP_SUCCESS_HEAD",
+              secondaryText: "DEFAULT_MASTER_SETUP_SUCCESS_TEXT",
+              iconFill: "green",
+              customIcon: "CheckCircle",
+              buttonLabel: "DEFAULT_MASTER_SUCCESS_BUTTON_LABEL",
+            });
+            await refetchMasterComplete();
+          },
+        }
+      );
+    }
   };
 
   if (moduleMasterLoading) {
@@ -108,8 +119,8 @@ const SetupMaster = () => {
               icon="ArrowForward"
               isSuffix={true}
               onClick={(e) => {
-                e.preventDefault();
-                history.push(`/${window?.contextPath}/employee/sandbox/application-management/setup-master?module=${module}&key=masterDetail`);
+                  e.preventDefault();
+                  history.push(`/${window?.contextPath}/employee/sandbox/application-management/setup-master?module=${module}&key=masterDetail`);
               }}
             ></Button>
           </div>
