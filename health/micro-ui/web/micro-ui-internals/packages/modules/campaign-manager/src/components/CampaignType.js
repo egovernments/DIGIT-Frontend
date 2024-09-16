@@ -133,6 +133,9 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
               }}
             />,
           ]}
+          onClose={() => {
+            setShowPopUp(false);
+          }}
           sortFooterChildren={true}
         ></PopUp>
       )}
