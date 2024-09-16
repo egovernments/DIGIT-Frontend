@@ -724,7 +724,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                     name="mobileNumber"
                     placeholder="Enter a valid Mobile No."
                     onChange={(value) => setUserMobileNumber(value)}
-                    disable={true}
+                    disable={Digit.Utils.getMultiRootTenant()?false : true}
                     {...{
                       required: true,
                       pattern: "[6-9]{1}[0-9]{9}",
@@ -759,7 +759,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                     name="email"
                     value={email}
                     onChange={(e) => setUserEmailAddress(e.target.value)}
-                    disabled={editScreen}
+                    disabled={Digit.Utils.getMultiRootTenant()?true : editScreen}
                   />
                   {errors?.emailAddress && (
                     <ErrorMessage
@@ -776,7 +776,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
               <LabelFieldPair>
                 <div style={{ width: "100%" }}>
-                  {changepassword == false ? (
+                  {changepassword == false && !Digit.Utils.getMultiRootTenant()? (
                     <Button
                       label={t("CORE_COMMON_CHANGE_PASSWORD")}
                       variation={"teritiary"}
