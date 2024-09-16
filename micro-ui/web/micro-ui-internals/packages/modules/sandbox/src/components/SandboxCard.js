@@ -13,16 +13,6 @@ const SandboxCard = () => {
   if (!Digit.Utils.sandboxAccess()) {
     return null;
   }
-
-  let propsForSandbox = [
-    {
-      label: t("TENANT_MANAGEMENT_INFO"),
-      link: `/${window?.contextPath}/employee/sandbox/tenant-management/info?module=TENANT_MANAGEMENT_INFO`,
-      isOutsideModule: true,
-      roles: ROLES.SUPERUSER,
-    },
-  ];
-  propsForSandbox = propsForSandbox.filter((link) => (link?.roles ? Digit.Utils.didEmployeeHasAtleastOneRole(link.roles) : true));
   
   const propsForModuleCard = {
     Icon: <PropertyHouse />,
@@ -39,12 +29,16 @@ const SandboxCard = () => {
         link: `/${window?.contextPath}/employee/sandbox/tenant-management/search`,
         roles: ROLES.SUPERUSER,
       },
+      {
+      label: t("TENANT_MANAGEMENT_INFO"),
+      link: `/${window?.contextPath}/employee/sandbox/tenant-management/info?module=TENANT_MANAGEMENT_INFO`,
+      roles: ROLES.SUPERUSER,
+      }
       // {
       //   label: t("SANDBOX_APPLICATION_MANAGEMENT_HOMECARD_LABEL"),
       //   link: `/${window?.contextPath}/employee/sandbox/application-management/home`,
       //   roles: ROLES.SUPERUSER,
       // },
-      ...propsForSandbox,
     ],
   };
 
