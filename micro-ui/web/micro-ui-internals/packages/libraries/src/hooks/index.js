@@ -90,6 +90,7 @@ import useGetHowItWorksJSON from "./useHowItWorksJSON";
 import { usePrivacyContext } from "./usePrivacyContext";
 import useStaticData from "./useStaticData";
 import { useTenantManagementSearch } from "./useTenantManagementSearch";
+import { useCheckMasterComplete } from "./useCheckMasterComplete";
 
 
 
@@ -212,7 +213,8 @@ const Hooks = {
   useDynamicData,
   useBulkPdfDetails,
   useLocation,
-  useTenantManagementSearch
+  useTenantManagementSearch,
+  useCheckMasterComplete
 };
 
 export default Hooks;
