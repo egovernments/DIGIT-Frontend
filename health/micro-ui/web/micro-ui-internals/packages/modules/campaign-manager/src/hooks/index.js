@@ -13,6 +13,7 @@ import useProjectUpdateWithBoundary from "./useProjectUpdateWithBoundary";
 import useCreateChecklist from "./useCreateChecklist";
 import useUpsertLocalisation from "./useUpsertLocalisation";
 import useTypeOfChecklist from "./useTypeOfChecklist";
+import { useBoundaryRelationshipSearch } from "./useBoundaryRelationshipSearch";
 
 const UserService = {};
 
@@ -35,7 +36,7 @@ const campaign = {
   useCreateChecklist,
   useUpsertLocalisation,
   useTypeOfChecklist
-
+  useBoundaryRelationshipSearch
 };
 
 const Hooks = {
