@@ -49,6 +49,8 @@ const CustomSelectWidget = (props) => {
   /*
   logic added to fetch data of schemas in each component itself
   */
+
+  const limit = schemaCode === "WORKS-SOR.Rates" || schemaCode === "WORKS-SOR.SOR" ? 1000 : 100;
   const reqCriteriaForData = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
     params: {},
@@ -56,7 +58,7 @@ const CustomSelectWidget = (props) => {
       MdmsCriteria: {
         tenantId: tenantId,
         schemaCode: schemaCode,
-        limit: 100,
+        limit: limit,
         offset: 0,
       },
     },

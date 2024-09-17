@@ -177,22 +177,40 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
     }
   }, [schema]);
 
-
-  if(screenType === "edit"){
+  if (screenType === "edit" && screenType !== "add") {
     if (schema?.definition?.["x-ref-schema"]?.length > 0) {
       schema?.definition?.["x-ref-schema"]?.map((dependent) => {
         if (dependent?.fieldPath) {
           let updatedPath = Digit.Utils.workbench.getUpdatedPath(dependent?.fieldPath);
           const property = _.get(schema?.definition?.properties, updatedPath);
           if (property) {
-            const existingEnum = property.enum || [];
-            const newValue = _.get(defaultFormData, updatedPath); 
-            if(newValue && !existingEnum?.includes(newValue)){
-              const updatedEnum = [...existingEnum,newValue];
-              _.set(schema?.definition?.properties, updatedPath, {
-                ...property,
-                enum: updatedEnum
-              });
+            if (updatedPath?.includes("items")) {
+              const pathnew = updatedPath?.split(".")[0];
+              const findMainValue = updatedPath?.split(".")?.pop();
+              const newValues = defaultFormData?.[pathnew];
+              const existingEnum = property?.enum || [];
+              if (newValues && newValues.length > 0) {
+                newValues.forEach((item) => {
+                  const newValue = item?.[findMainValue];
+                  if (newValue && !existingEnum.includes(newValue)) {
+                    const updatedEnum = [...existingEnum, newValue];
+                    _.set(schema?.definition?.properties, updatedPath, {
+                      ..._.get(schema?.definition?.properties, updatedPath, {}),
+                      enum: updatedEnum,
+                    });
+                  }
+                });
+              }
+            } else {
+              const existingEnum = property?.enum || [];
+              const newValue = _.get(defaultFormData, updatedPath);
+              if (newValue && !existingEnum?.includes(newValue)) {
+                const updatedEnum = [...existingEnum, newValue];
+                _.set(schema?.definition?.properties, updatedPath, {
+                  ...property,
+                  enum: updatedEnum,
+                });
+              }
             }
           }
         }
