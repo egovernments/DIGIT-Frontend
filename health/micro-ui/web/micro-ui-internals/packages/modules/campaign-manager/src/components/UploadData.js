@@ -213,7 +213,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
       const filterByUpdateFlag = (schemaProperties) => {
         return Object.keys(schemaProperties).filter(
-          (key) => schemaProperties[key].isUpdate !== true // Keep properties where isUpdate is true or undefined
+          (key) => schemaProperties[key].isUpdate !== true 
         );
       };
       // const headers = {
