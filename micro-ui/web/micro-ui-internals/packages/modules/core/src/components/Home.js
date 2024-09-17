@@ -8,6 +8,7 @@ import { BackLink, CustomSVG } from "@egovernments/digit-ui-components";
 
 import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
+import { RoleBasedEmployeeHome } from "./RoleBasedEmployeeHome";
 
 /* 
 Feature :: Citizen All service screen cards
@@ -190,7 +191,9 @@ export const AppHome = ({
       />
     );
   }
-  return (
+  return Digit.Utils.getRoleBasedHomeCard() ? (
+    <RoleBasedEmployeeHome modules={modules} additionalComponent={additionalComponent} />
+  ) : (
     <EmployeeHome modules={modules} additionalComponent={additionalComponent} />
   );
 };
