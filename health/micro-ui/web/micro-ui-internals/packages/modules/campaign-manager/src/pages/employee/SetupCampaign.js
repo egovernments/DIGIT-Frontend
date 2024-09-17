@@ -617,6 +617,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
             : null;
           payloadData.tenantId = tenantId;
           payloadData.action = "create";
+          payloadData.parentId = null;
           payloadData.campaignName = totalFormData?.HCM_CAMPAIGN_NAME?.campaignName;
           if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
             payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
@@ -695,6 +696,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
           }
           payloadData.tenantId = tenantId;
           payloadData.action = "draft";
+          payloadData.parentId = null;
           payloadData.campaignName = totalFormData?.HCM_CAMPAIGN_NAME?.campaignName;
           if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
             payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
@@ -752,6 +754,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
           }
           payloadData.tenantId = tenantId;
           payloadData.action = "draft";
+          payloadData.parentId = null;
           payloadData.campaignName = totalFormData?.HCM_CAMPAIGN_NAME?.campaignName;
           if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
             payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;

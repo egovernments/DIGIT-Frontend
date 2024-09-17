@@ -210,10 +210,22 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       const newFacilitySchema = await translateSchema(convertedSchema?.facilityWithBoundary);
       const newBoundarySchema = await translateSchema(convertedSchema?.boundary);
       const newUserSchema = await translateSchema(convertedSchema?.userWithBoundary);
+
+      const filterByUpdateFlag = (schemaProperties) => {
+        return Object.keys(schemaProperties).filter(
+          (key) => schemaProperties[key].isUpdate !== true 
+        );
+      };
+      // const headers = {
+      //   boundary: Object?.keys(newBoundarySchema?.properties),
+      //   facilityWithBoundary: Object?.keys(newFacilitySchema?.properties),
+      //   userWithBoundary: Object?.keys(newUserSchema?.properties),
+      // };
+
       const headers = {
-        boundary: Object?.keys(newBoundarySchema?.properties),
-        facilityWithBoundary: Object?.keys(newFacilitySchema?.properties),
-        userWithBoundary: Object?.keys(newUserSchema?.properties),
+        boundary: filterByUpdateFlag(newBoundarySchema?.properties),
+        facilityWithBoundary: filterByUpdateFlag(newFacilitySchema?.properties),
+        userWithBoundary: filterByUpdateFlag(newUserSchema?.properties),
       };
 
       const schema = {
