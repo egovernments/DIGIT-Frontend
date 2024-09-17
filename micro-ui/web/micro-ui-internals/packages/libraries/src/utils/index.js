@@ -10,6 +10,7 @@ import getFileTypeFromFileStoreURL from "./fileType";
 import preProcessMDMSConfig from "./preProcessMDMSConfig";
 import preProcessMDMSConfigInboxSearch from "./preProcessMDMSConfigInboxSearch";
 import * as parsingUtils from "../services/atoms/Utils/ParsingUtils"
+import { iconRender } from "./iconRender";
 const GetParamFromUrl = (key, fallback, search) => {
   if (typeof window !== "undefined") {
     search = search || window.location.search;
@@ -126,6 +127,10 @@ const getLocaleRegion = () => {
 
 const getMultiRootTenant = () => {
   return window?.globalConfigs?.getConfig("MULTI_ROOT_TENANT") || false;
+};
+
+const getRoleBasedHomeCard = () => {
+  return window?.globalConfigs?.getConfig("ROLE_BASED_HOMECARD") || false;
 };
 
 const getGlobalContext = () => {
@@ -404,5 +409,7 @@ export default {
   getMultiRootTenant,
   getGlobalContext,
   getOTPBasedLogin,
-  sandboxAccess
+  getRoleBasedHomeCard,
+  sandboxAccess,
+  iconRender
 };
