@@ -7,11 +7,10 @@ const useTypeOfChecklist = (tenantId) => {
     let ret = createTypeOfChecklist(reqData, tenantId);
     let val;
     ret.then(result => {
-        console.log("type pf checklist", result);
         val=result;
     })
     return val;
-    return createTypeOfChecklist(reqData, tenantId);
+    // return createTypeOfChecklist(reqData, tenantId);
   });
 };
 

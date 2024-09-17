@@ -6,9 +6,8 @@ const useCreateChecklist = (tenantId) => {
     let val = createChecklistService(reqData, tenantId);
     val.then(result => {
     })
-    console.log("cehcklist returned value is", val);
     return val;
-    return createChecklistService(reqData, tenantId);
+    // return createChecklistService(reqData, tenantId);
   });
 };
 

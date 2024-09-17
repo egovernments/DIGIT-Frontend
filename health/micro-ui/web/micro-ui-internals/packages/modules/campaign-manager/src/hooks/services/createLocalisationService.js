@@ -9,7 +9,6 @@ const createLocalisationService = async (req, tenantId, module, locale) => {
         locale: locale
       },
     });
-    console.log("the response of localisation is", response);
     return response;
   } catch (error) {
     if (!error?.response?.data?.Errors[0].description) {

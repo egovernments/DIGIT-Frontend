@@ -42,49 +42,31 @@ export const UICustomizations = {
   MyChecklistSearchConfig: {
     preProcess: (data, additionalDetails) => {
 
-      console.log("data is hehehehe", data);
-
     //   if (!data.ServiceDefinitionCriteria.code) {
     //     data.ServiceDefinitionCriteria.code = [];
     // }
-      console.log("history is as folloes", window.history.state);
       data.body.ServiceDefinitionCriteria.code.length=0;
-      console.log("abe yrr", data);
-      console.log("bha role is", data?.state?.searchForm?.Role?.code);
-      // console.log("campaign name bc is", campaign_name1);
       let pay = window.history.state.name + '.' + data?.state?.searchForm?.Type?.list + '.' + data?.state?.searchForm?.Role?.code;
-      console.log("payload bc is", pay);
 
       data.body.ServiceDefinitionCriteria.code.push(pay);
-      console.log("updated one is",data);
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      console.log("additonal row is:", row);
-      console.log("additonal column is:", column);
-      console.log("key is:", key );
-      console.log("value is:", value);
-      console.log("search result is:", searchResult);
       // const [switchText, setSwitchText] = useState("Active");
       const [isActive, setIsActive] = useState(row?.isActive);
         switch (key) {
           case "Checklist Role":
-            console.log("this row", row);
             return row?.additionalDetails?.role;
             break;
           case "Checklist Type":
-            console.log("the type of checklist is", row?.additionalDetails?.type)
             return row?.additionalDetails?.type;
             break;
           case "Checklist Name":
-            console.log("the name of checklist is", row?.additionalDetails?.name)
             return row?.additionalDetails?.name;
             break;
           case "Status":
             const toggle = () => {
-              console.log("initial state is:", isActive);
               setIsActive(!isActive);
-              console.log("new state is", isActive);
             };
             const switchText = isActive ? "Active" : "Inactive";
             return(
@@ -197,6 +179,7 @@ export const UICustomizations = {
                 name: row?.campaignName,
                 data: row,
                 projectId: row?.projectId,
+                campaignType: row?.projectType
               },
               "",
               `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}`
@@ -508,6 +491,7 @@ export const UICustomizations = {
                   name: row?.campaignName,
                   data: row,
                   projectId: row?.projectId,
+                  campaignType: row?.projectType
                 },
                 "",
                 `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}`

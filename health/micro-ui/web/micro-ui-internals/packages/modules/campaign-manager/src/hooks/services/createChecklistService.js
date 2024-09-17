@@ -6,7 +6,6 @@ const createChecklistService = async (req, tenantId) => {
         ServiceDefinition: req,
       },
     });
-    console.log("the response here is", response);
     return response;
   } catch (error) {
     if (!error?.response?.data?.Errors[0].description) {

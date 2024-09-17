@@ -20,11 +20,12 @@ const CreateChecklist = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const [showToast, setShowToast] = useState(null);
-  const checklistType = searchParams.get("type");
-  const projectName = searchParams.get("name");
+  const checklistType = searchParams.get("checklistType");
+  const projectName = searchParams.get("campaignName");
+  const campagnType = searchParams.get("campaignType");
   const flow = searchParams.get("flow");
   const role = searchParams.get("role");
-  const campaignName = searchParams.get("name");
+  const campaignName = searchParams.get("campaignName");
   let module = searchParams.get("module");
   const [showPopUp, setShowPopUp] = useState(false);
   const [tempFormData, setTempFormData] = useState([]);
@@ -33,133 +34,153 @@ const CreateChecklist = () => {
   const [previewData, setPreviewData] = useState([]);
   let locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
   const { mutate } = Digit.Hooks.campaign.useCreateChecklist(tenantId);
-  const data = [
-    {
-        "id": "1e6e6c1f-1f2f-4a8a-9672-43396c6c9a1c",
-        "parentId": null,
-        "level": 1,
-        "key": 1,
-        "title": "q111",
-        "type": {
-            "code": "SingleValueList"
-        },
-        "value": null,
-        "isRequired": false,
-        "options": [
-            {
-                "id": "7e241cbf-03a2-4453-bf0e-200cdda5f390",
-                "key": 1,
-                "parentQuestionId": "1e6e6c1f-1f2f-4a8a-9672-43396c6c9a1c",
-                "label": "OPTION a",
-                "optionDependency": false,
-                "optionComment": false
-            },
-            {
-                "id": "dec73afa-7c0d-48b1-9d53-8601c6264b90",
-                "key": 2,
-                "parentQuestionId": "1e6e6c1f-1f2f-4a8a-9672-43396c6c9a1c",
-                "label": "OPTION aa",
-                "optionDependency": false
-            }
-        ]
-    },
-    {
-        "id": "0cff9846-fc98-4e71-a783-27dbb922c99f",
-        "level": 1,
-        "parentId": null,
-        "key": 2,
-        "title": "q2",
-        "type": {
-            "code": "SingleValueList"
-        },
-        "value": null,
-        "isRequired": false,
-        "options": [
-            {
-                "id": "b2768f1e-e0b5-428f-9d11-12fc5b10b1ac1",
-                "key": 1,
-                "parentQuestionId": "0cff9846-fc98-4e71-a783-27dbb922c99f",
-                "label": "OPTION test",
-                "optionDependency": false,
-                "optionComment": false
+//   let data = [
+//     {
+//         "id": "1e6e6c1f-1f2f-4a8a-9672-43396c6c9a1c",
+//         "parentId": null,
+//         "level": 1,
+//         "key": 1,
+//         "title": "q111",
+//         "type": {
+//             "code": "SingleValueList"
+//         },
+//         "value": null,
+//         "isRequired": false,
+//         "options": [
+//             {
+//                 "id": "7e241cbf-03a2-4453-bf0e-200cdda5f390",
+//                 "key": 1,
+//                 "parentQuestionId": "1e6e6c1f-1f2f-4a8a-9672-43396c6c9a1c",
+//                 "label": "OPTION a",
+//                 "optionDependency": false,
+//                 "optionComment": false
+//             },
+//             {
+//                 "id": "dec73afa-7c0d-48b1-9d53-8601c6264b90",
+//                 "key": 2,
+//                 "parentQuestionId": "1e6e6c1f-1f2f-4a8a-9672-43396c6c9a1c",
+//                 "label": "OPTION aa",
+//                 "optionDependency": false
+//             }
+//         ]
+//     },
+//     {
+//         "id": "0cff9846-fc98-4e71-a783-27dbb922c99f",
+//         "level": 1,
+//         "parentId": null,
+//         "key": 2,
+//         "title": "q2",
+//         "type": {
+//             "code": "SingleValueList"
+//         },
+//         "value": null,
+//         "isRequired": false,
+//         "options": [
+//             {
+//                 "id": "b2768f1e-e0b5-428f-9d11-12fc5b10b1ac1",
+//                 "key": 1,
+//                 "parentQuestionId": "0cff9846-fc98-4e71-a783-27dbb922c99f",
+//                 "label": "OPTION test",
+//                 "optionDependency": false,
+//                 "optionComment": false
 
-            },
-            {
-                "id": "b2768f1e-e0b5-428f-9d11-12fc5b10b1ac",
-                "key": 2,
-                "parentQuestionId": "0cff9846-fc98-4e71-a783-27dbb922c99f",
-                "label": "OPTION b",
-                "optionDependency": true,
-                "optionComment": false
-            },
-            {
-                "id": "26dd50f9-db87-469b-8be4-22012cc22284",
-                "key": 3,
-                "parentQuestionId": "0cff9846-fc98-4e71-a783-27dbb922c99f",
-                "label": "OPTION bb",
-                "optionDependency": false
-            }
-        ]
-    },
-    {
-        "id": "33de07ec-038e-42df-a557-bb5fcd374dd5",
-        "level": 1,
-        "parentId": null,
-        "key": 3,
-        "title": "q3",
-        "type": {
-            "code": "SingleValueList"
-        },
-        "value": null,
-        "isRequired": false,
-        "options": [
-            {
-                "id": "f1d6782f-7e0a-49ba-a1fc-bbf4ed1f1e4f",
-                "key": 1,
-                "parentQuestionId": "33de07ec-038e-42df-a557-bb5fcd374dd5",
-                "label": "OPTION c",
-                "optionDependency": false,
-                "optionComment": false
-            },
-            {
-                "id": "f2514582-d13f-4340-ae5e-fe7f8aca4212",
-                "key": 2,
-                "parentQuestionId": "33de07ec-038e-42df-a557-bb5fcd374dd5",
-                "label": "OPTION cc",
-                "optionDependency": false
-            }
-        ]
-    },
-    {
-        "id": "f85d589e-7cc0-4993-a8fe-37e854d2b189",
-        "level": 2,
-        "parentId": "b2768f1e-e0b5-428f-9d11-12fc5b10b1ac",
-        "key": 4,
-        "title": "q2.q",
-        "type": {
-            "code": "SingleValueList"
-        },
-        "value": null,
-        "isRequired": false,
-        "options": [
-            {
-                "id": "80677c1c-59e4-4bf0-81b3-ee244cafd128",
-                "key": 1,
-                "parentQuestionId": "f85d589e-7cc0-4993-a8fe-37e854d2b189",
-                "label": "OPTION adfasdfasd",
-                "optionDependency": false,
-                "optionComment": false
-            },
-            {
-                "id": "cecf0f88-60da-4c51-8501-cf4a4f473a66",
-                "key": 2,
-                "parentQuestionId": "f85d589e-7cc0-4993-a8fe-37e854d2b189",
-                "label": "OPTION asdfasf",
-                "optionDependency": false
-            }
-        ]
+//             },
+//             {
+//                 "id": "b2768f1e-e0b5-428f-9d11-12fc5b10b1ac",
+//                 "key": 2,
+//                 "parentQuestionId": "0cff9846-fc98-4e71-a783-27dbb922c99f",
+//                 "label": "OPTION b",
+//                 "optionDependency": true,
+//                 "optionComment": false
+//             },
+//             {
+//                 "id": "26dd50f9-db87-469b-8be4-22012cc22284",
+//                 "key": 3,
+//                 "parentQuestionId": "0cff9846-fc98-4e71-a783-27dbb922c99f",
+//                 "label": "OPTION bb",
+//                 "optionDependency": false
+//             }
+//         ]
+//     },
+//     {
+//         "id": "33de07ec-038e-42df-a557-bb5fcd374dd5",
+//         "level": 1,
+//         "parentId": null,
+//         "key": 3,
+//         "title": "q3",
+//         "type": {
+//             "code": "SingleValueList"
+//         },
+//         "value": null,
+//         "isRequired": false,
+//         "options": [
+//             {
+//                 "id": "f1d6782f-7e0a-49ba-a1fc-bbf4ed1f1e4f",
+//                 "key": 1,
+//                 "parentQuestionId": "33de07ec-038e-42df-a557-bb5fcd374dd5",
+//                 "label": "OPTION c",
+//                 "optionDependency": false,
+//                 "optionComment": false
+//             },
+//             {
+//                 "id": "f2514582-d13f-4340-ae5e-fe7f8aca4212",
+//                 "key": 2,
+//                 "parentQuestionId": "33de07ec-038e-42df-a557-bb5fcd374dd5",
+//                 "label": "OPTION cc",
+//                 "optionDependency": false
+//             }
+//         ]
+//     },
+//     {
+//         "id": "f85d589e-7cc0-4993-a8fe-37e854d2b189",
+//         "level": 2,
+//         "parentId": "b2768f1e-e0b5-428f-9d11-12fc5b10b1ac",
+//         "key": 4,
+//         "title": "q2.q",
+//         "type": {
+//             "code": "SingleValueList"
+//         },
+//         "value": null,
+//         "isRequired": false,
+//         "options": [
+//             {
+//                 "id": "80677c1c-59e4-4bf0-81b3-ee244cafd128",
+//                 "key": 1,
+//                 "parentQuestionId": "f85d589e-7cc0-4993-a8fe-37e854d2b189",
+//                 "label": "OPTION adfasdfasd",
+//                 "optionDependency": false,
+//                 "optionComment": false
+//             },
+//             {
+//                 "id": "cecf0f88-60da-4c51-8501-cf4a4f473a66",
+//                 "key": 2,
+//                 "parentQuestionId": "f85d589e-7cc0-4993-a8fe-37e854d2b189",
+//                 "label": "OPTION asdfasf",
+//                 "optionDependency": false
+//             }
+//         ]
+//     }
+// ];
+  let data=[]
+const reqCriteriaResource = {
+  url: `/mdms-v2/v2/_search`,
+  body: {
+    MdmsCriteria: {
+      tenantId: tenantId,
+      schemaCode: "Hcmadminconsole.checklisttemplates"
     }
-];
+  },
+  config: {
+    enabled: true,
+    select: (data) => {
+      return data?.mdms;
+    },
+  },
+};
+const { isLoading, data: mdms, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
+useEffect(()=>{
+  data = mdms?.[0]?.data?.data;
+}, [mdms])
 
   module = "HCM";
   const { mutate: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, locale);
@@ -385,7 +406,6 @@ const CreateChecklist = () => {
 
   const payloadData = (data) => {
 
-    console.log("what i have to work on data is:", data);
     processedData = organizeQuestions(data);
     let { codes, local } = generateCodes(processedData);
     // let codes = generateCodes(processedData);
@@ -394,13 +414,7 @@ const CreateChecklist = () => {
       index === self.findIndex((t) => JSON.stringify(t) === JSON.stringify(value))
     );
 
-    console.log("localization data us", uniqueLocal);
-    console.log("processed data is:", processedData);
-    console.log("codes are:", codes);
-    console.log("final payload is:", final_payload);
-    console.log("localization codes are:", uniqueLocal);
-    let code_of_checklist = `${projectName}.${checklistType}.${role}`;
-    console.log("code of the checklist is:", code_of_checklist);
+    let code_of_checklist = `${campaignName}.${checklistType}.${role}`;
     return {
       tenantId: tenantId,
       // code: role,
@@ -417,7 +431,6 @@ const CreateChecklist = () => {
   };
 
   const onSubmit = async (formData, flag = 0, preview = null) => {
-    console.log("formData", formData);
     let payload;
     if (flag === 1) payload = payloadData(preview);
     else payload = payloadData(formData?.createQuestion?.questionData);
@@ -427,10 +440,7 @@ const CreateChecklist = () => {
       },
       onSuccess: async (data) => {
         // module="HCM";
-        console.log("modeule is", module);
         if (true) {
-          console.log("hehebcbcbc", uniqueLocal);
-
           // const localisations = addLocal(formData?.createQuestion?.questionData);
           const localisations = uniqueLocal;
           await localisationMutate(localisations, {

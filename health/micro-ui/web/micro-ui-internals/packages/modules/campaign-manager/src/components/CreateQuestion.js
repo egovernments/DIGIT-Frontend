@@ -20,7 +20,6 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
   subQinitialQuestionData,
 }) => {
 
-  console.log("int the bc", field);
   const [options, setOptions] = useState(() => {
     if (field.options) {
       return field.options;
@@ -85,10 +84,8 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
 
   const handleAddComment = (param) => {
     setOptions((prev) => {
-      console.log("param is", param);
       return prev.map((item) => {
         if (item.key == param.id) {
-          console.log("para.value is", param.value);
           return {
             ...item,
             comment: param.value,
@@ -148,10 +145,8 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
 
 
 
-  console.log("type of code is", type?.code);
   switch (type?.code) {
     case "SingleValueList":
-      console.log("in the awitch field", field);
       return (
         <MultipleChoice
           maxLength={60}
@@ -198,7 +193,6 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
       );
       break;
     case "Dropdown":
-      console.log("dd");
       return (
         <Dropdowns
           maxLength={60}
@@ -279,8 +273,6 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
 
   const addMoreField = () => {
     if (optionId) {
-      console.log("par", parent);
-      console.log("optionID", optionId);
       dispatchQuestionData({
         type: "ADD_SUB_QUESTION",
         payload: {
@@ -304,8 +296,6 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
   };
 
   const deleteField = (index, initialQuestionData, id, field) => {
-    console.log("bhai yrr test", field);
-    console.log("bhai yrr test id is", id)
     dispatchQuestionData({
       type: "DELETE_QUESTION",
       payload: {
@@ -317,7 +307,6 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
   };
 
   const handleUpdateField = (data, target, index, id) => {
-    console.log("the data going is", data);
     dispatchQuestionData({
       type: "UPDATE_QUESTION",
       payload: {
@@ -340,8 +329,6 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
       {initialQuestionData
         ?.filter((i) => i.level === level)
         ?.map((field, index) => {
-          console.log("intial:", initialQuestionData);
-          console.log("current:", field);
           return (
             <Card type={"primary"} variant={"form"} className={`question-card-container ${className}`}>
               <LabelFieldPair className="question-label-field" style={{ display: "block" }}>
@@ -403,33 +390,6 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                         }}
                         placeholder="Type"
                       />
-                      {/* <FieldV1
-                        type="dropdown"
-                        
-                        populators={
-                          {
-                            defaultValue: 'SingleValueList',
-                            options:dataType,
-                            optionsKey:'code'
-                          }
-                        }
-                        onChange={(value) => {
-                          handleUpdateField(value, "type", field.key, field.id);
-                        }}
-                      /> */}
-                      {/* {parent?.dependency && (
-                        <Dropdown
-                          style={{ width: "20%" }}
-                          t={t}
-                          option={parent?.options}
-                          optionKey={"label"}
-                          selected={field?.dependencyAns || ""}
-                          select={(value) => {
-                            handleUpdateField(value, "dependencyAns", field.key, field.id);
-                          }}
-                          placeholder="dependencyAns"
-                        />
-                      )} */}
                     </div>
                     {field?.isRegex && (
                       <Dropdown
@@ -444,7 +404,6 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                         placeholder="Choose Regex"
                       />
                     )}
-                    {console.log("in the main loop", field)}
                     {(field?.type?.code === "SingleValueList" || field?.type?.code === "MultiValueList" || field?.type?.code === "Dropdown") && (
                       <FieldSelector
                         t={t}

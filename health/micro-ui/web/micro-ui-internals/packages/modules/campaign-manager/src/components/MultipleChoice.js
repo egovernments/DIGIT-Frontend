@@ -30,13 +30,10 @@ const MultipleChoice = ({
   addComment,
   handleOptionComment,
 }) => {
-  console.log("the options are inside button file", options);
   return (
     <div>
       {options.map((item, index) => (
         <>
-         {console.log("this is index", index)}
-         {console.log("this is value", item)}
          <RadioButtonOption
             key={item.key}
             index={item.key}
@@ -150,7 +147,6 @@ export const RadioButtonOption = ({
         <div style={{display:"flex", gap:"1rem"}}>
           {
             <>
-             {/* {console.log("add comment run")} */}
               <CheckBox
               key={field.key}
               mainClassName={"checkboxOptionVariant"}
@@ -167,7 +163,6 @@ export const RadioButtonOption = ({
           }
           {
             <>
-             {/* {console.log("linked nested run")} */}
               <CheckBox
               key={field.key}
               mainClassName={"checkboxOptionVariant"}

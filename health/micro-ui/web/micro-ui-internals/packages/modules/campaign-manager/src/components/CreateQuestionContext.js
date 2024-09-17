@@ -33,7 +33,6 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
         });
         break;
       case "UPDATE_QUESTION_DATA":
-        console.log("gpt ", action.payload);
         return [...action.payload];
       case "ADD_QUESTION":
         return [
@@ -66,9 +65,7 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
         ];
         break; 
       case "DELETE_QUESTION":
-        console.log("cur cur cur", state);
         let id = action?.payload?.id;
-        console.log("id id id", id);
         const deleteQuestionAndSubquestions = (state, questionId)=> {
           // Recursive function to find and delete subquestions based on option ids
           const findRelatedSubquestions = (questions, optionIds) => {
@@ -95,7 +92,6 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
           const questionToDelete = state.find(q => q.id === questionId);
         
           if (!questionToDelete) {
-            console.log("Question not found");
             return state;
           }
         
@@ -125,7 +121,6 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
         break;
       case "UPDATE_QUESTION":
         let dependencyParent = null;
-        console.log("state initial is", state);
         let tempState = state.map((i) => {
           if (i.id === action?.payload?.id) {
             if (action?.payload?.target === "dependency") {
@@ -145,7 +140,6 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
             ...i,
           };
         });
-        console.log("intial tempstate is", tempState);
 
         if (action?.payload?.target === "dependency" && action?.payload?.data?.target?.checked === true) {
           return [
@@ -164,7 +158,6 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
         } else if (action?.payload?.target === "dependency" && action?.payload?.data?.target?.checked !== true) {
           return tempState.filter((i) => i.parentId !== dependencyParent);
         } else {
-          console.log("new returned is", tempState);
           return tempState;
         }
         break;
@@ -177,16 +170,12 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
   const [initialState, setInitialState] = useState( [{ id: crypto.randomUUID(), parentId: null, level: 1, key: 1, title: null, type: {"code": "SingleValueList"}, value: null, isRequired: false }])
   useEffect(()=>{
     setInitialState(props?.props?.data);
-    console.log("data changed");
-    console.log("data changed props are:", props?.props?.data);
 
   },[props]);
 
   useEffect(()=>{
-    console.log("the template data is setting", initialState);
     if(initialState.length!=0)
     {
-      console.log("updated data bc", initialState);
       dispatchQuestionData({
         type: "UPDATE_QUESTION_DATA",
         payload: props?.props?.data,
