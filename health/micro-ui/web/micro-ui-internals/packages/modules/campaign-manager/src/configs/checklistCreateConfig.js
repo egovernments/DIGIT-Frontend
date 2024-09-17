@@ -1,4 +1,4 @@
-export const checklistCreateConfig = (data) => [
+export const checklistCreateConfig = (data, time) => [
   {
     head: "",
     body: [
@@ -16,7 +16,8 @@ export const checklistCreateConfig = (data) => [
         },
         customProps: {
           module: "Campaign",
-          data: data
+          data: data, 
+          time: time
         },
       },
     ],

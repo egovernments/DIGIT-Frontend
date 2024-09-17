@@ -112,7 +112,7 @@ const componentsToRegister = {
   TimelineComponent,
   CreateChecklist,
   CreateQuestion : CreateQuestionContext,
-  SearchChecklist
+  SearchChecklist,
   Wrapper,
   UpdateBoundary,
   UpdateBoundaryWrapper,

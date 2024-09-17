@@ -31,7 +31,6 @@ const Dropdowns = ({
   addComment,
   handleOptionComment,
 }) => {
-  console.log("dropdown called");
   return (
     <div className="options_checkboxes">
       {options.map((item, index) => (

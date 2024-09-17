@@ -15,7 +15,7 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
   const flow = searchParams.get("flow");
   const role = searchParams.get("role");
   const locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
-  
+
   const { defaultData, setDefaultData } = data_hook();
 
   // Reducer function
@@ -43,7 +43,7 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
             parentId: action?.payload?.parent?.id ? action?.payload?.parent?.id : null,
             key: state?.length + 1,
             title: null,
-            type: {"code": "SingleValueList"},
+            type: { "code": "SingleValueList" },
             value: null,
             isRequired: false,
           },
@@ -58,15 +58,15 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
             parentId: action?.payload?.optionId,
             key: state?.length + 1,
             title: null,
-            type: {"code": "SingleValueList"},
+            type: { "code": "SingleValueList" },
             value: null,
             isRequired: false,
           },
         ];
-        break; 
+        break;
       case "DELETE_QUESTION":
         let id = action?.payload?.id;
-        const deleteQuestionAndSubquestions = (state, questionId)=> {
+        const deleteQuestionAndSubquestions = (state, questionId) => {
           // Recursive function to find and delete subquestions based on option ids
           const findRelatedSubquestions = (questions, optionIds) => {
             return questions.reduce((acc, question) => {
@@ -74,49 +74,49 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
               if (optionIds.includes(question.parentId)) {
                 // Add the current question's id to the list of ids to delete
                 let relatedIds = [question.id];
-        
+
                 // Check if the current question has options
                 if (question.options && question.options.length > 0) {
                   const newOptionIds = question.options.map(option => option.id);
                   // Recursively find and delete subquestions related to the current question's options
                   relatedIds = relatedIds.concat(findRelatedSubquestions(questions, newOptionIds));
                 }
-        
+
                 return [...acc, ...relatedIds];
               }
               return acc;
             }, []);
           };
-        
+
           // Get the question to be deleted
           const questionToDelete = state.find(q => q.id === questionId);
-        
+
           if (!questionToDelete) {
             return state;
           }
-        
+
           // Start by collecting IDs of the question's options (if any)
           let idsToDelete = [questionId]; // Start with the main question's ID
-        
+
           if (questionToDelete.options && questionToDelete.options.length > 0) {
             const optionIds = questionToDelete.options.map(option => option.id);
             // Find and delete subquestions related to the options' ids
             idsToDelete = idsToDelete.concat(findRelatedSubquestions(state, optionIds));
           }
-        
+
           // Filter out the questions whose ids are in idsToDelete
           const newState = state.filter(question => !idsToDelete.includes(question.id));
-        
+
           // Print the updated state for verification
           // console.log("Updated state:", JSON.stringify(newState, null, 2));
-        
+
           return newState;
         }
         const newState = deleteQuestionAndSubquestions(state, id);
         state = newState;
         return state
 
-        
+
         // return state.filter((i) => i.key !== action?.payload?.index).map((i, n) => ({ ...i, key: n + 1 }));
         break;
       case "UPDATE_QUESTION":
@@ -165,31 +165,63 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
         return state;
     }
   };
+  const [initialState, setInitialState] = useState([{ id: crypto.randomUUID(), parentId: null, level: 1, key: 1, title: null, type: { "code": "SingleValueList" }, value: null, isRequired: false }])
 
+  const [questionData, dispatchQuestionData] = useReducer(questionDataReducer, initialState);
+
+  // useEffect(() => {
+  //   console.log("initial state", initialState);
+  //   if (initialState.length !== 0) {
+  //     dispatchQuestionData({
+  //       type: "UPDATE_QUESTION_DATA",
+  //       payload: props?.props?.data,
+  //     });
+  //   }
+  // }, [initialState]);
+
+  // useEffect(()=>{
+  //   console.log("hehe changed", props);
+  //   dispatchQuestionData({
+  //     type: "UPDATE_QUESTION_DATA",
+  //     payload: props?.props?.data,
+  //   });
+
+  // }, [props])
+
+  // useEffect(() => {
+  //   console.log("props are changin", props);
+  //   console.log("before setting", initialState);
+  //   // debugger;
+  //   dispatchQuestionData({
+  //     type: "UPDATE_QUESTION_DATA",
+  //     payload: props?.props?.data,
+  //   });
+  //   console.log("after setting", initialState);
+  // }, [props?.props?.data]);
+
+  // console.log("out initial", initialState);
+
+  useEffect(() => {
+    // Avoid dispatch if props haven't changed
+    console.log("bc anda to jaa");
+    if (props?.props?.data !== 0) {
   
-  const [initialState, setInitialState] = useState( [{ id: crypto.randomUUID(), parentId: null, level: 1, key: 1, title: null, type: {"code": "SingleValueList"}, value: null, isRequired: false }])
-  useEffect(()=>{
-    setInitialState(props?.props?.data);
-
-  },[props]);
-
-  useEffect(()=>{
-    if(initialState.length!=0)
-    {
+      // Dispatch only if the data is different
       dispatchQuestionData({
         type: "UPDATE_QUESTION_DATA",
         payload: props?.props?.data,
       });
+  
     }
-  }, [initialState]);
-
-  const [questionData, dispatchQuestionData] = useReducer(questionDataReducer, initialState);
+  }, [props?.props?.time]); // Ensure that the initialState is included in the dependency array
+  
 
   useEffect(() => {
     onSelect("createQuestion", {
       questionData,
     });
   }, [questionData]);
+
 
   return (
     <QuestionContext.Provider value={{ questionData, dispatchQuestionData }}>

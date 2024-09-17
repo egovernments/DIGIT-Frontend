@@ -6,12 +6,13 @@ import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
 import { useTranslation } from "react-i18next";
 import CreateQuestion from "../../components/CreateQuestion";
 import PreviewComponent from "../../components/PreviewComponent";
-import { set } from "lodash";
+import { set, template } from "lodash";
 import { value } from "jsonpath";
 import data_hook from "../../hooks/data_hook";
 import def from "ajv/dist/vocabularies/discriminator";
 import { QuestionContext } from "../../components/CreateQuestionContext";
 // import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
+import _ from 'lodash';
 
 let temp_data=[]
 
@@ -34,26 +35,36 @@ const CreateChecklist = () => {
   const [previewData, setPreviewData] = useState([]);
   let locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
   const { mutate } = Digit.Hooks.campaign.useCreateChecklist(tenantId);
-  let data=[]
+  let data_mdms=[]
+  let template_data=[]
 const reqCriteriaResource = {
   url: `/mdms-v2/v2/_search`,
   body: {
     MdmsCriteria: {
       tenantId: tenantId,
-      schemaCode: "Hcmadminconsole.checklisttemplates"
+      schemaCode: "HCMadminconsole.checklisttemplates"
     }
   },
   config: {
     enabled: true,
     select: (data) => {
-      return data?.mdms;
+      return data?.mdms?.[0]?.data?.data;
     },
   },
 };
 const { isLoading, data: mdms, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
 useEffect(()=>{
-  data = mdms?.[0]?.data?.data;
+  // console.log("from api data is", mdms?.[0]?.data?.data);
+  // data_mdms = mdms?.[0]?.data?.data;
+  if(data_mdms && data_mdms.length!=0) template_data=data_mdms;
 }, [mdms])
+
+// useEffect(()=>{
+//   console.log("bhai yrr", data_mdms);
+// },[data_mdms]);
+useEffect(()=>{
+  console.log("bhai yrr", mdms);
+},[mdms]);
 
   module = "HCM";
   const { mutate: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, locale);
@@ -66,7 +77,6 @@ useEffect(()=>{
 
   const [checklistName, setChecklistName] = useState("");
   const addChecklistName = (data) => {
-    console.log("the checklist name is", data);
     setChecklistName(data);
   }
 
@@ -81,18 +91,27 @@ useEffect(()=>{
   }, [showToast]);
 
   const popShow = () => {
-    setPreviewData(organizeQuestions(tempFormData));
-    console.log("data going in preview is", previewData);
+    console.log("tempporary form data", tempFormData);
+    // console.log("hy", organizeQuestions(tempFormData));
+    const pr = organizeQuestions(tempFormData);
+    // setPreviewData(organizeQuestions(tempFormData));
+    setPreviewData(pr);
     setShowPopUp(!showPopUp);
-    console.log(showPopUp);
   };
+  // const popShow = () => {
+  //   setPreviewData(organizeQuestions(tempFormData));
+  //   console.log("data going in preview is", previewData);
+  //   setShowPopUp(!showPopUp);
+  //   console.log(showPopUp);
+
+  // };
 
   const { defaultData, setDefaultData } = data_hook();
 
   const useTemplateData = () => {
-    console.log("button clicked");
-    setConfig(checklistCreateConfig(data));
-    console.log("in first component data is", defaultData);
+    console.log("button clicked", mdms);
+    const currentTime = new Date();
+    setConfig(checklistCreateConfig(mdms, currentTime));
   }
 
   useEffect(()=>{
@@ -100,24 +119,72 @@ useEffect(()=>{
   }, config);
 
   const onFormValueChange = (ll, formData) => {
-    // console.log("changing form data is:", formData);
+    console.log("changin form data is",formData?.createQuestion?.questionData);
     setTempFormData(formData?.createQuestion?.questionData);
     // setTempFormData1(formData);
   };
+  
+
+  // function organizeQuestions(questions) {
+  //   // Create a map to store each question and option by its ID for quick lookup
+  //   const questionMap = new Map();
+  //   const optionMap = new Map();
+
+  //   // Initialize a list to hold the top-level questions (those without a parent)
+  //   const organizedQuestions = [];
+
+  //   // First pass: Populate the maps with questions and options
+  //   questions?.forEach((question) => {
+  //     question.subQuestions = []; // Initialize an array to hold sub-questions
+  //     questionMap.set(question.id, question);
+
+  //     if (question?.options) {
+  //       question.options.forEach((option) => {
+  //         option.subQuestions = []; // Initialize an array to hold sub-questions for options
+  //         optionMap.set(option.id, option);
+  //       });
+  //     }
+  //   });
+
+  //   // Second pass: Link each question to its parent, whether it's a question or an option
+  //   questions?.forEach((question) => {
+  //     if (question.parentId) {
+  //       // Try to find the parent in questionMap or optionMap
+  //       const parentQuestion = questionMap.get(question.parentId);
+  //       const parentOption = optionMap.get(question.parentId);
+
+  //       if (parentQuestion) {
+  //         // Parent is a question, add current question to its subQuestions
+  //         parentQuestion.subQuestions.push(question);
+  //       } else if (parentOption) {
+  //         // Parent is an option, add current question to its subQuestions
+  //         parentOption.subQuestions.push(question);
+  //       }
+  //     } else {
+  //       // If the question has no parentId, it is a top-level question
+  //       organizedQuestions.push(question);
+  //     }
+  //   });
+
+  //   console.log("organized data is", organizedQuestions);
+
+  //   return organizedQuestions;
+  // }
 
   function organizeQuestions(questions) {
-    // Create a map to store each question and option by its ID for quick lookup
+    // Deep clone the questions to avoid mutating the original tempFormData
+    console.log("inside the fun", questions);
+    const clonedQuestions = JSON.parse(JSON.stringify(questions));
+  
     const questionMap = new Map();
     const optionMap = new Map();
-
-    // Initialize a list to hold the top-level questions (those without a parent)
     const organizedQuestions = [];
-
+  
     // First pass: Populate the maps with questions and options
-    questions?.forEach((question) => {
+    clonedQuestions.forEach((question) => {
       question.subQuestions = []; // Initialize an array to hold sub-questions
       questionMap.set(question.id, question);
-
+  
       if (question?.options) {
         question.options.forEach((option) => {
           option.subQuestions = []; // Initialize an array to hold sub-questions for options
@@ -125,29 +192,29 @@ useEffect(()=>{
         });
       }
     });
-
+  
     // Second pass: Link each question to its parent, whether it's a question or an option
-    questions?.forEach((question) => {
+    clonedQuestions.forEach((question) => {
       if (question.parentId) {
-        // Try to find the parent in questionMap or optionMap
         const parentQuestion = questionMap.get(question.parentId);
         const parentOption = optionMap.get(question.parentId);
-
+  
         if (parentQuestion) {
-          // Parent is a question, add current question to its subQuestions
           parentQuestion.subQuestions.push(question);
         } else if (parentOption) {
-          // Parent is an option, add current question to its subQuestions
           parentOption.subQuestions.push(question);
         }
       } else {
-        // If the question has no parentId, it is a top-level question
         organizedQuestions.push(question);
       }
     });
-
+  
+    console.log("organized data is", organizedQuestions);
+  
     return organizedQuestions;
   }
+  
+  
 
   const generateCodes = (questions) => {
     const codes = {}; // Store codes for each question

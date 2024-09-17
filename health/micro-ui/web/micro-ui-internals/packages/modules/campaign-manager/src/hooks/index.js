@@ -35,7 +35,7 @@ const campaign = {
   useProjectUpdateWithBoundary,
   useCreateChecklist,
   useUpsertLocalisation,
-  useTypeOfChecklist
+  useTypeOfChecklist,
   useBoundaryRelationshipSearch
 };
 
