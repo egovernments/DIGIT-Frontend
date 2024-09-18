@@ -33,7 +33,7 @@ const EmployeeModuleCard = ({ Icon, moduleName, kpis = [], links = [], isCitizen
             </div>
           )}
           <div className="links-wrapper" style={{ width: "80%" }}>
-            {links.map(({ count, label, link, isOutsideModule }, index) => (
+            {links.map(({ count, label, link, isOutsideModule, queryParams }, index) => (
               <span className="link" key={index}>
                 {link ? (
                   link?.includes(`${window?.contextPath}/`) ? (
@@ -42,7 +42,7 @@ const EmployeeModuleCard = ({ Icon, moduleName, kpis = [], links = [], isCitizen
                         {label}
                       </span>
                     ) : (
-                      <Link to={{ pathname: link, state: { count } }}>{label}</Link>
+                      <Link to={{ pathname: link, state: { count }, search: queryParams }}>{label}</Link>
                     )
                   ) : (
                     <a href={link}>{label}</a>

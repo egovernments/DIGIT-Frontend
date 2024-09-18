@@ -44,9 +44,13 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
           links: [],
         };
       }
+      const linkUrl = transformURL(item.navigationURL);
+      const queryParamIndex = linkUrl.indexOf("?");
       acc[module].links.push({
-        link: transformURL(item.navigationURL),
-        label: Digit.Utils.locale.getTransformedLocale(`${module}_LINK_${item.displayName}`),
+        // link: linkUrl,
+        link: queryParamIndex === -1 ? linkUrl : linkUrl.substring(0, queryParamIndex),
+        queryParams: queryParamIndex === -1 ? null : linkUrl.substring(queryParamIndex),
+        label: t(Digit.Utils.locale.getTransformedLocale(`${module}_LINK_${item.displayName}`)),
       });
       return acc;
     }, {});
