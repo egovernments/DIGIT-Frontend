@@ -194,6 +194,11 @@
   text-align: center;
 }
 
+.sandbox-signup-form .digit-field .digit-error-message {
+  font-size: 0.8rem;
+}
+
+
 .sandbox-signup-form {
   .digit-employee-card.signupCardClassName {
     display: flex;
@@ -341,6 +346,28 @@
   .digit-popup-alert-content{
     .digit-popup-alert-heading {
       color: #00703c;
+    }
+  }
+}
+.pgr-citizen-wrapper{
+  .applications-list-container{
+    .card{
+      .date-wrap{
+        align-items: center;
+        justify-content: flex-start;
+      }
+    }
+  }
+}
+
+.pgr-citizen-wrapper{
+  .applications-list-container{
+    .card{
+      .status-highlight{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
   }
 }
