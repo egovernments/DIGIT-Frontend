@@ -25,6 +25,12 @@ config:
         dockerfile: micro-ui/web/workbench/Dockerfile
         image-name: workbench-ui
 
+  - name: builds/Digit-Frontend/karnataka-ui
+    build:
+      - work-dir: micro-ui/
+        dockerfile: micro-ui/web/docker/Dockerfile
+        image-name: karnataka-ui 
+
   - name: builds/Digit-Frontend/workbench-ui
     build:
       - work-dir: health/micro-ui/
