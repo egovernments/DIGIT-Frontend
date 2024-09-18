@@ -1,4 +1,4 @@
-export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryErrors) => {
+export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryErrors , hierarchyData) => {
   return [
     {
       form: [
@@ -115,7 +115,8 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
               isMandatory: false,
               key: "boundaryType",
               type: "component",
-              component: "SelectingBoundaries",
+              component : "SelectingBoundariesDuplicate",
+              // component: "SelectingBoundaries",
               withoutLabelFieldPair: true,
               withoutLabel: true,
               disable: false,
@@ -123,6 +124,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
                 module: "HCM",
                 sessionData: totalFormData,
                 dataParams: dataParams,
+                hierarchyData: hierarchyData
               },
               populators: {
                 name: "boundaryType",

@@ -234,11 +234,13 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       //   facilityWithBoundary: Object?.keys(newFacilitySchema?.properties),
       //   userWithBoundary: Object?.keys(newUserSchema?.properties),
       // };
+
       const filterByUpdateFlag = (schemaProperties) => {
         return Object.keys(schemaProperties).filter(
           (key) => schemaProperties[key].isUpdate !== true 
         );
       };
+
 
       const headers = {
         boundary: filterByUpdateFlag(newBoundarySchema?.properties),

@@ -10,6 +10,7 @@ import useCreateProduct from "./useCreateProduct";
 import useParallelSearch from "./useParallelSearch";
 import useProjectSearchWithBoundary from "./useProjectSearchWithBoundary";
 import useProjectUpdateWithBoundary from "./useProjectUpdateWithBoundary";
+import { useBoundaryRelationshipSearch } from "./useBoundaryRelationshipSearch";
 
 const UserService = {};
 
@@ -29,6 +30,7 @@ const campaign = {
   useParallelSearch,
   useProjectSearchWithBoundary,
   useProjectUpdateWithBoundary,
+  useBoundaryRelationshipSearch
 };
 
 const Hooks = {

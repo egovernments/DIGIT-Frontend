@@ -6,7 +6,9 @@ import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-r
 import SetupCampaign from "./SetupCampaign";
 import SelectingBoundaries from "../../components/SelectingBoundaries";
 import ConfigureApp from "./ConfigureApp";
-
+import UpdateBoundary from "./UpdateBoundary";
+// import SelectingBoundaryComponent from "../../components/SelectingBoundaryComponent";
+import { Wrapper } from "../../components/SelectingBoundaryComponent";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -53,7 +55,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
  * the `Switch` component, there are several `PrivateRoute` components with different paths and
  * corresponding components such as `UploadBoundaryData`, `CycleConfiguration`, `DeliveryRule`, `
  */
-const App = ({ path, BOUNDARY_HIERARCHY_TYPE }) => {
+const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
   const location = useLocation();
   const UploadBoundaryData = Digit?.ComponentRegistryService?.getComponent("UploadBoundaryData");
   const CycleConfiguration = Digit?.ComponentRegistryService?.getComponent("CycleConfiguration");
@@ -95,7 +97,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE }) => {
           <PrivateRoute path={`${path}/create-campaign/upload-boundary-data`} component={() => <UploadBoundaryData />} />
           <PrivateRoute path={`${path}/create-campaign/cycle-configure`} component={() => <CycleConfiguration />} />
           <PrivateRoute path={`${path}/create-campaign/delivery-details`} component={() => <DeliveryRule />} />
-          <PrivateRoute path={`${path}/setup-campaign`} component={() => <SetupCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} />} />
+          <PrivateRoute path={`${path}/setup-campaign`} component={() => <SetupCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData}/>} />
           <PrivateRoute path={`${path}/my-campaign`} component={() => <MyCampaign />} />
           <PrivateRoute path={`${path}/preview`} component={() => <CampaignSummary />} />
           <PrivateRoute path={`${path}/response`} component={() => <Response />} />
@@ -103,6 +105,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE }) => {
           <PrivateRoute path={`${path}/add-product`} component={() => <AddProduct />} />
           <PrivateRoute path={`${path}/configure-app`} component={() => <ConfigureApp />} />
           <PrivateRoute path={`${path}/update-dates-boundary`} component={() => <UpdateDatesWithBoundaries />} />
+          <PrivateRoute path={`${path}/update-boundary`} component={() => <UpdateBoundary hierarchyType={BOUNDARY_HIERARCHY_TYPE}/>} />
         </AppContainer>
       </Switch>
     </React.Fragment>
