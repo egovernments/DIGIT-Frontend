@@ -87,7 +87,7 @@ const Checkboxes = ({
         className="custom-class"
         icon="MyLocation"
         iconFill=""
-        label="Add Options"
+        label={t("ADD_OPTIONS")}
         onClick={() => addOption()}
         size="medium"
         title=""
@@ -163,7 +163,7 @@ const CheckBoxOption = ({
               key={field.key}
               mainClassName={"checkboxOptionVariant"}          
               disabled={optionDependency ? true: false}
-              label="Add Comment"
+              label={t("ADD_COMMENT")}
               checked={optionComment}
               onChange={(event) => handleOptionComment(optionId)}
               // isLabelFirst={true}

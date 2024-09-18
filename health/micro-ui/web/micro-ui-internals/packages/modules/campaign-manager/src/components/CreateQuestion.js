@@ -333,7 +333,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
             <Card type={"primary"} variant={"form"} className={`question-card-container ${className}`}>
               <LabelFieldPair className="question-label-field" style={{ display: "block" }}>
                 <div className="question-label" style={{ height: "1.5rem", display: "flex", justifyContent: "space-between", width: "100%" }}>
-                  <span>{`${t("Question")} ${index + 1}`}</span>
+                  <span>{`${t("QUESTION")} ${index + 1}`}</span>
                   {/* <span className="mandatory-span">*</span> */}
                   {initialQuestionData?.length > 1 && (
                     <>
@@ -461,7 +461,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Button
           variation="secondary"
-          label={t(`ADD_QUESTION`)}
+          label={t("ADD_QUESTION")}
           className={"hover"}
           // icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
           icon="Add"

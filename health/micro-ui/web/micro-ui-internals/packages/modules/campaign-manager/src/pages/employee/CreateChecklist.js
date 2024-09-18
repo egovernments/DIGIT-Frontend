@@ -59,14 +59,7 @@ useEffect(()=>{
   if(data_mdms && data_mdms.length!=0) template_data=data_mdms;
 }, [mdms])
 
-// useEffect(()=>{
-//   console.log("bhai yrr", data_mdms);
-// },[data_mdms]);
-useEffect(()=>{
-  console.log("bhai yrr", mdms);
-},[mdms]);
-
-  module = "HCM";
+module = "HCM";
   const { mutate: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, locale);
 
   let processedData = [];
@@ -91,89 +84,31 @@ useEffect(()=>{
   }, [showToast]);
 
   const popShow = () => {
-    console.log("tempporary form data", tempFormData);
-    // console.log("hy", organizeQuestions(tempFormData));
     const pr = organizeQuestions(tempFormData);
     // setPreviewData(organizeQuestions(tempFormData));
     setPreviewData(pr);
     setShowPopUp(!showPopUp);
   };
-  // const popShow = () => {
-  //   setPreviewData(organizeQuestions(tempFormData));
-  //   console.log("data going in preview is", previewData);
-  //   setShowPopUp(!showPopUp);
-  //   console.log(showPopUp);
-
-  // };
 
   const { defaultData, setDefaultData } = data_hook();
 
   const useTemplateData = () => {
-    console.log("button clicked", mdms);
     const currentTime = new Date();
     setConfig(checklistCreateConfig(mdms, currentTime));
   }
 
-  useEffect(()=>{
-    console.log("config changed", config);
-  }, config);
+  // useEffect(()=>{
+  //   console.log("config changed", config);
+  // }, config);
 
   const onFormValueChange = (ll, formData) => {
-    console.log("changin form data is",formData?.createQuestion?.questionData);
+    // console.log("changin form data is",formData?.createQuestion?.questionData);
     setTempFormData(formData?.createQuestion?.questionData);
     // setTempFormData1(formData);
   };
-  
-
-  // function organizeQuestions(questions) {
-  //   // Create a map to store each question and option by its ID for quick lookup
-  //   const questionMap = new Map();
-  //   const optionMap = new Map();
-
-  //   // Initialize a list to hold the top-level questions (those without a parent)
-  //   const organizedQuestions = [];
-
-  //   // First pass: Populate the maps with questions and options
-  //   questions?.forEach((question) => {
-  //     question.subQuestions = []; // Initialize an array to hold sub-questions
-  //     questionMap.set(question.id, question);
-
-  //     if (question?.options) {
-  //       question.options.forEach((option) => {
-  //         option.subQuestions = []; // Initialize an array to hold sub-questions for options
-  //         optionMap.set(option.id, option);
-  //       });
-  //     }
-  //   });
-
-  //   // Second pass: Link each question to its parent, whether it's a question or an option
-  //   questions?.forEach((question) => {
-  //     if (question.parentId) {
-  //       // Try to find the parent in questionMap or optionMap
-  //       const parentQuestion = questionMap.get(question.parentId);
-  //       const parentOption = optionMap.get(question.parentId);
-
-  //       if (parentQuestion) {
-  //         // Parent is a question, add current question to its subQuestions
-  //         parentQuestion.subQuestions.push(question);
-  //       } else if (parentOption) {
-  //         // Parent is an option, add current question to its subQuestions
-  //         parentOption.subQuestions.push(question);
-  //       }
-  //     } else {
-  //       // If the question has no parentId, it is a top-level question
-  //       organizedQuestions.push(question);
-  //     }
-  //   });
-
-  //   console.log("organized data is", organizedQuestions);
-
-  //   return organizedQuestions;
-  // }
 
   function organizeQuestions(questions) {
     // Deep clone the questions to avoid mutating the original tempFormData
-    console.log("inside the fun", questions);
     const clonedQuestions = JSON.parse(JSON.stringify(questions));
   
     const questionMap = new Map();
@@ -209,7 +144,7 @@ useEffect(()=>{
       }
     });
   
-    console.log("organized data is", organizedQuestions);
+    // console.log("organized data is", organizedQuestions);
   
     return organizedQuestions;
   }
@@ -408,13 +343,13 @@ useEffect(()=>{
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div>
           <h2 style={{ fontSize: "36px" }}>
-            Create New Checklist
+            {t("CREATE_NEW_CHECKLIST")}
           </h2>
         </div>
         <div style={{ display: "flex", gap: "1rem" }}>
           <Button
             variation="secondary"
-            label="Use Template"
+            label={t("USE_TEMPLATE")}
             className={"hover"}
             style={{ marginTop: "2rem", marginBottom: "2rem" }}
             // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
@@ -422,7 +357,7 @@ useEffect(()=>{
           />
           <Button
             variation="secondary"
-            label="Preview Checklist"
+            label={t("PREVIEW_CHECKLIST")}
             className={"hover"}
             style={{ marginTop: "2rem", marginBottom: "2rem" }}
             // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
@@ -434,7 +369,7 @@ useEffect(()=>{
         <PopUp
           className={"boundaries-pop-module"}
           type={"default"}
-          heading={"checklist preview"}
+          heading={t("CHECKLIST_PREVIEW")}
           children={[
             // <div>
             //   <CardText style={{ margin: 0 }}>{"testing" + " "}</CardText>
@@ -492,7 +427,7 @@ useEffect(()=>{
             populators={{
               resizeSmart: false
             }}
-            name="Name of Checklist"
+            name={t("NAME_OF_CHECKLIST")}
             value={checklistName || ""}
             onChange={(event) => addChecklistName(event.target.value)}
             placeholder={""}

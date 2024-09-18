@@ -1,9 +1,9 @@
 import {
     Header,
     InboxSearchComposer,
-    Dropdown
+    
   } from "@egovernments/digit-ui-react-components";
-  import { ViewCardFieldPair,Toast, Card, TextBlock, Button, PopUp, CardText} from "@egovernments/digit-ui-components";
+  import { Dropdown, ViewCardFieldPair,Toast, Card, TextBlock, Button, PopUp, CardText} from "@egovernments/digit-ui-components";
   import React, { useState, useEffect } from "react";
   import { useTranslation } from "react-i18next";
   import { useHistory } from 'react-router-dom';
@@ -129,7 +129,7 @@ const defaultSearchValues = {
             <Header styles={{ fontSize: "32px", marginBottom:"2rem", marginTop:"2rem"}}>{"Manage Checklist for your campaign"}</Header> 
             <Button
               variation="secondary"
-              label="Add New Checklist"
+              label={t("ADD_NEW_CHECKLIST")}
               className={"hover"}
               style={{marginTop:"2rem", marginBottom:"2rem"}}
               // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
@@ -139,7 +139,7 @@ const defaultSearchValues = {
               <PopUp
                 className={"boundaries-pop-module"}
                 type={"default"}
-                heading={"create checklist"}
+                heading={t("CREATE_CHECKLIST")}
                 children={[
                 // <div>
                 //   <CardText style={{ margin: 0 }}>{"testing" + " "}</CardText>
@@ -189,7 +189,7 @@ const defaultSearchValues = {
                   />
                 </div>  
                 <div style={{display:"flex", justifyContent:"space-between"}}>
-                  <span>{"Select Checklist Type"}</span>
+                  <span>{t("SELECT_CHECKLIST_TYPE")}</span>
                   <Dropdown
                     style={{ width: "50%" }}
                     option={listsopt}

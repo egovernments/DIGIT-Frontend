@@ -87,7 +87,7 @@ const MultipleChoice = ({
         className="custom-class"
         icon="MyLocation"
         iconFill=""
-        label="Add Options"
+        label={t("ADD_OPTIONS")}
         onClick={() => addOption()}
         size="medium"
         title=""
@@ -153,7 +153,7 @@ export const RadioButtonOption = ({
               disabled={optionDependency ? true: false}
               // styles={{ margin: "0px 0px 0px", maxWidth: "70%",  }}
               // className={"digit-checkbox-containe  r"}
-              label="Add Comment (or)"
+              label={t("ADD_COMMENT_(OR)")}
               checked={optionComment}
               onChange={(event) => handleOptionComment(optionId)}
               // isLabelFirst={true}
@@ -169,7 +169,7 @@ export const RadioButtonOption = ({
               disabled={optionComment ? true: false}
               // styles={{ margin: "0px 0px 0px", maxWidth: "70%",  }}
               // className={"digit-checkbox-containe  r"}
-              label="Link Nested Checklist"
+              label={t("LINK_NESTED_CHECKLIST")}
               checked={optionDependency}
               onChange={(event) => handleOptionDependency(optionId)}
               // isLabelFirst={true}

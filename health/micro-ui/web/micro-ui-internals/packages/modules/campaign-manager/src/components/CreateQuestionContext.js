@@ -203,7 +203,6 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
 
   useEffect(() => {
     // Avoid dispatch if props haven't changed
-    console.log("bc anda to jaa");
     if (props?.props?.data !== 0) {
   
       // Dispatch only if the data is different
