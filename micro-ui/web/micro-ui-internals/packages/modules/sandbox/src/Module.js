@@ -9,25 +9,20 @@ import ModuleCard from "./components/ModuleCard";
 export const SandboxModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const moduleCode = ["sandbox"];
-  const MDMSmoduleCode = [`rainmaker-mdms`, `rainmaker-workbench`, `rainmaker-schema`];
+  const moduleCode = ["digit-sandbox", `rainmaker-mdms`, `rainmaker-workbench`, `rainmaker-schema`];
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
     moduleCode,
     language,
-    modulePrefix: "digit",
+    modulePrefix: null,
   });
 
-  const { isLoading: isMDMSLoading, data: MDMSstore } = Digit.Services.useStore({
-    stateCode,
-    MDMSmoduleCode,
-    language,
-  });
+
   if (!Digit.Utils.sandboxAccess()) {
     return null;
   }
-  if (isLoading && isMDMSLoading) {
+  if (isLoading) {
     return <Loader />;
   }
   return <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} />;
