@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Sidebar, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -9,65 +9,10 @@ const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui", "health-ui", 
 
 const EmployeeSideBar = () => {
   const { isLoading, data } = Digit.Hooks.useAccessControl();
-  // Create a shallow copy of data and sort the actions
-  const sortedData = data ? { ...data, actions: [...(data.actions || [])].sort((a, b) => a.orderNumber - b.orderNumber) } : null;
-
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
   const { t } = useTranslation();
   const history = useHistory();
   const tenantId = Digit.ULBService.getStateId();
-
-  // Create an object to store the hierarchical structure
-  const configEmployeeSideBar = {};
-
-  // Function to build the hierarchical structure as an object
-  const buildHierarchy = (item) => {
-    const keys = item.path?.split(".") || [];
-    let currentLevel = configEmployeeSideBar;
-
-    keys.forEach((key, idx) => {
-      if (idx === keys.length - 1) {
-        // Last key in the path, store the item itself
-        currentLevel[key] = { item };
-      } else {
-        // If key doesn't exist, initialize it as an empty object
-        currentLevel[key] = currentLevel[key] || {};
-        currentLevel = currentLevel[key];
-      }
-    });
-  };
-
-  // Build hierarchy based on sorted actions
-  sortedData?.actions
-    .filter((e) => e.url === "url")
-    .forEach(buildHierarchy);
-
-  const navigateToRespectiveURL = (history = {}, url = "") => {
-    if (url == "/") {
-      return;
-    }
-    if (url?.indexOf(`/${window?.contextPath}`) === -1) {
-      const hostUrl = window.location.origin;
-      let updatedUrl = null;
-      if (isMultiRootTenant) {
-        url = url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`);
-        updatedUrl = url;
-      } else {
-        updatedUrl = DIGIT_UI_CONTEXTS?.every((e) => url?.indexOf(`/${e}`) === -1) ? hostUrl + "/employee/" + url : hostUrl + url;
-      }
-      history.push(updatedUrl);
-    } else {
-      history.push(url);
-    }
-  };
-
-  const onItemSelect = ({ item, index, parentIndex }) => {
-    if (item?.navigationUrl) {
-      navigateToRespectiveURL(history, item?.navigationUrl);
-    } else {
-      return;
-    }
-  };
 
   function extractLeftIcon(data = {}) {
     for (const key in data) {
@@ -85,60 +30,158 @@ const EmployeeSideBar = () => {
     return null;
   }
 
-  // Modified transformData to respect the order in configEmployeeSideBar
-  function transformData(data) {
-    // Sort items by their orderNumber
-    return Object.keys(data)
-      .map((key) => {
-        const value = data[key];
-        if (value.item) {
-          return {
-            label: value.item.displayName,
-            icon: { icon: value.item.leftIcon, width: "1.5rem", height: "1.5rem" },
-            navigationUrl: value.item.navigationURL,
-            orderNumber: value.item.orderNumber, // Adding orderNumber for sorting
-          };
+  function mergeObjects(obj1, obj2) {
+    for (const key in obj2) {
+      if (obj2.hasOwnProperty(key)) {
+        if (typeof obj2[key] === "object" && !Array.isArray(obj2[key])) {
+          if (!obj1[key]) {
+            obj1[key] = {};
+          }
+          mergeObjects(obj1[key], obj2[key]);
+        } else {
+          if (!obj1[key]) {
+            obj1[key] = obj2[key];
+          }
         }
-        const children = transformData(value); // Recursively transform children
-        const iconKey = extractLeftIcon(value);
-        return {
-          label: key,
-          icon: { icon: iconKey, width: "1.5rem", height: "1.5rem" },
-          children: children,
-          orderNumber: children.length > 0 ? Math.min(...children.map((child) => child.orderNumber)) : Infinity,
-        };
-      })
-      .sort((a, b) => a.orderNumber - b.orderNumber); // Sort based on orderNumber
+      }
+    }
   }
 
-  const transformedData = transformData(configEmployeeSideBar);
+  const configEmployeeSideBar = {};
+  data?.actions
+    .filter((e) => e.url === "url")
+    .forEach((item) => {
+      let index = item?.path?.split(".")?.[0] || "";
+      if (item?.path !== "") {
+        const keys = item?.path?.split(".");
+        let hierarchicalMap = {};
+
+        keys.reduce((acc, key, index) => {
+          if (index === keys.length - 1) {
+            acc[key] = { item };
+          } else {
+            acc[key] = {};
+            return acc[key];
+          }
+        }, hierarchicalMap);
+        mergeObjects(configEmployeeSideBar, hierarchicalMap);
+      }
+    });
+
+  const splitKeyValue = (configEmployeeSideBar) => {
+    const objectArray = Object.entries(configEmployeeSideBar);
+    objectArray.sort((a, b) => {
+      if (a[0] < b[0]) {
+        return -1;
+      }
+      if (a[0] > b[0]) {
+        return 1;
+      }
+      return 0;
+    });
+    const sortedObject = Object.fromEntries(objectArray);
+    configEmployeeSideBar = sortedObject;
+    return configEmployeeSideBar;
+  };
+
+  const navigateToRespectiveURL = (history = {}, url = "") => {
+    if (url == "/") {
+      return;
+    } 
+    if (url?.indexOf(`/${window?.contextPath}`) === -1) {
+      const hostUrl = window.location.origin;
+      let updatedUrl=null;
+      if(isMultiRootTenant){
+        url=url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`);
+        updatedUrl = url;
+      }
+      else{
+        updatedUrl = DIGIT_UI_CONTEXTS?.every((e) => url?.indexOf(`/${e}`) === -1) ? hostUrl + "/employee/" + url : hostUrl + url;
+      }
+      history.push(updatedUrl);
+    } else {
+      history.push(url);
+    } 
+  };
+
+  const onItemSelect = ({ item, index, parentIndex }) => {
+    if (item?.navigationUrl) {
+      navigateToRespectiveURL(history, item?.navigationUrl);
+    } else {
+      return;
+    } 
+  };
+
+  function transformData(data) {
+    const transformItem = (key, value) => {
+      if (value.item) {
+        return {
+          label: value.item.displayName,
+          icon: { icon: value.item.leftIcon, width: "1.5rem", height: "1.5rem" },
+          navigationUrl: value.item.navigationURL,
+          orderNumber:value.item.orderNumber,
+        };
+      }
+      const children = Object.keys(value).map((childKey) => transformItem(childKey, value[childKey]));
+      const iconKey = extractLeftIcon(value);
+      return {
+        label: key,
+        icon: { icon: iconKey, width: "1.5rem", height: "1.5rem" },
+        children: children,
+      };
+    };
+    return Object.keys(data).map((key) => transformItem(key, data[key]));
+  }
+
+  const sortDataByOrderNumber = (data) => {
+    // Sort the current level of data by orderNumber
+    data.sort((a, b) => {
+      return a.orderNumber - b.orderNumber;
+    });
+  
+    // Recursively sort the children if they exist
+    data.forEach((item) => {
+      if (item.children && item.children.length > 0) {
+        sortDataByOrderNumber(item.children);
+      }
+    });
+  
+    return data;
+  };
+
+  const transformedData = transformData(splitKeyValue(configEmployeeSideBar));
+  const sortedTransformedData= sortDataByOrderNumber(transformedData);
 
   if (isLoading) {
     return <Loader />;
   }
 
-  if (!Object.keys(configEmployeeSideBar).length) {
+  if (!configEmployeeSideBar) {
     return "";
   }
 
-
   return (
     <MediaQuery minWidth={768}>
-    <Sidebar
-      items={transformedData}
-      hideAccessbilityTools={true}
-      onSelect={({ item, index, parentIndex }) => onItemSelect({ item, index, parentIndex })}
-      theme={"dark"}
-      variant={"primary"}
-      transitionDuration={""}
-      className=""
-      styles={{}}
-      expandedWidth=""
-      collapsedWidth=""
-      onBottomItemClick={() => {}}
-    />
+      <Sidebar
+        items={sortedTransformedData}
+        hideAccessbilityTools={true}
+        onSelect={({ item, index, parentIndex }) => onItemSelect({ item, index, parentIndex })}
+        theme={"dark"}
+        variant={"primary"}
+        transitionDuration={""}
+        className=""
+        styles={{}}
+        expandedWidth=""
+        collapsedWidth=""
+        onBottomItemClick={() => { }}
+      />
     </MediaQuery>
   );
 };
 
 export default EmployeeSideBar;
+
+
+
+
+
