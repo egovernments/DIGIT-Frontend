@@ -7,9 +7,8 @@ import MediaQuery from 'react-responsive';
 
 const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui", "health-ui", "sanitation-ui", "core-ui", "mgramseva-web", "sandbox-ui"];
 
-const EmployeeSideBar = (props) => {
+const EmployeeSideBar = () => {
   const { isLoading, data } = Digit.Hooks.useAccessControl();
-  const {mobileView}= props;
   // Create a shallow copy of data and sort the actions
   const sortedData = data ? { ...data, actions: [...(data.actions || [])].sort((a, b) => a.orderNumber - b.orderNumber) } : null;
 
