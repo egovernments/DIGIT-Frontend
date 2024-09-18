@@ -5,7 +5,7 @@ import { Card, Modal, CardText } from "@egovernments/digit-ui-react-components";
 import BulkUpload from "./BulkUpload";
 import Ajv from "ajv";
 import XLSX from "xlsx";
-import { InfoCard, PopUp, Toast, Button, DownloadIcon } from "@egovernments/digit-ui-components";
+import { InfoCard, PopUp, Toast, Button, DownloadIcon, Stepper, TextBlock } from "@egovernments/digit-ui-components";
 import { schemaConfig } from "../configs/schemaConfig";
 import { headerConfig } from "../configs/headerConfig";
 import { PRIMARY_COLOR } from "../utils";
@@ -61,9 +61,28 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const [enabled, setEnabled] = useState(false);
   const [showPopUp, setShowPopUp] = useState(true);
   const currentKey = searchParams.get("key");
+  const [key, setKey] = useState(() => {
+    const keyParam = searchParams.get("key");
+    return keyParam ? parseInt(keyParam) : 1;
+  });
   const totalData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
   const [convertedSchema, setConvertedSchema] = useState({});
   const [loader, setLoader] = useState(false);
+  const [currentStep , setCurrentStep] = useState(1);
+  const baseKey = 9; 
+
+  function updateUrlParams(params) {
+    const url = new URL(window.location.href);
+    Object.entries(params).forEach(([key, value]) => {
+      url.searchParams.set(key, value);
+    });
+    window.history.replaceState({}, "", url);
+  }
+
+  useEffect(() =>{
+    setKey(currentKey);
+    setCurrentStep(currentKey - baseKey + 1);
+  }, [currentKey])
 
   useEffect(() => {
     if (type === "facilityWithBoundary") {
@@ -210,17 +229,18 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       const newFacilitySchema = await translateSchema(convertedSchema?.facilityWithBoundary);
       const newBoundarySchema = await translateSchema(convertedSchema?.boundary);
       const newUserSchema = await translateSchema(convertedSchema?.userWithBoundary);
+      // const headers = {
+      //   boundary: Object?.keys(newBoundarySchema?.properties),
+      //   facilityWithBoundary: Object?.keys(newFacilitySchema?.properties),
+      //   userWithBoundary: Object?.keys(newUserSchema?.properties),
+      // };
 
       const filterByUpdateFlag = (schemaProperties) => {
         return Object.keys(schemaProperties).filter(
           (key) => schemaProperties[key].isUpdate !== true 
         );
       };
-      // const headers = {
-      //   boundary: Object?.keys(newBoundarySchema?.properties),
-      //   facilityWithBoundary: Object?.keys(newFacilitySchema?.properties),
-      //   userWithBoundary: Object?.keys(newUserSchema?.properties),
-      // };
+
 
       const headers = {
         boundary: filterByUpdateFlag(newBoundarySchema?.properties),
@@ -329,7 +349,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           const formattedErrors = errors
             .map((error) => {
               let instancePath = error.instancePath || ""; // Assign an empty string if dataPath is not available
-              if (error.instancePath ===  "/Phone Number (Mandatory)" ) {
+              if (error.instancePath === "/Phone Number (Mandatory)") {
                 return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")}  ${t("HCM_DATA_SHOULD_BE_10_DIGIT")}`;
               }
               if (instancePath.startsWith("/")) {
@@ -487,7 +507,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       expectedHeaders = XLSX.utils.sheet_to_json(sheet, { header: 1 })[0];
     }
 
-
     // for (const header of mdmsHeaders) {
     //   if (!expectedHeaders.includes(t(header))) {
     //     const errorMessage = t("HCM_BOUNDARY_INVALID_SHEET");
@@ -549,8 +568,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       })[0];
 
       const jsonData = XLSX.utils.sheet_to_json(sheet, { blankrows: true });
-      
-      if(jsonData.length == 0) continue;
+
+      if (jsonData.length == 0) continue;
 
       const boundaryCodeIndex = headersToValidate.indexOf(t("HCM_ADMIN_CONSOLE_BOUNDARY_CODE"));
 
@@ -930,28 +949,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
 
   const downloadTemplate = async () => {
-    // if (type === "boundary" && params?.isBoundaryLoading) {
-    //   setDownloadError(true);
-    //   setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-    //   return;
-    // }
-    // if (type === "facilityWithBoundary" && params?.isFacilityLoading) {
-    //   setDownloadError(true);
-    //   setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-    //   return;
-    // }
-    // if (type === "userWithBoundary" && params?.isUserLoading) {
-    //   setDownloadError(true);
-    //   setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-    //   return;
-    // }
-    // if (!params?.boundaryId || !params?.facilityId || !params?.userId) {
-    //   setEnabled(true);
-
-    //   setDownloadError(true);
-    //   setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-    //   return;
-    // }
     await mutation.mutate(
       {
         params: {
@@ -1007,12 +1004,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       }
     );
   };
-
-  // useEffect(() => {
-  //   if (showToast) {
-  //     setTimeout(closeToast, 5000);
-  //   }
-  // }, [showToast]);
   const closeToast = () => {
     setShowToast(null);
   };
@@ -1027,140 +1018,180 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     setShowToast(null);
   }, [currentKey]);
 
+  useEffect(() => {
+    updateUrlParams({ key: key });
+    window.dispatchEvent(new Event("checking"));
+  }, [key]);
+
+  const onStepClick = (currentStep) => {
+    setCurrentStep(currentStep+1);
+    if(currentStep === 0){
+      setKey(9);
+    }
+    else if(currentStep === 1){
+      setKey(10);
+    }
+    else if(currentStep === 3){
+      setKey(12);
+    }
+    else setKey(11);
+  };
+
   return (
     <>
-      {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
-      <Card>
-        <div className="campaign-bulk-upload">
-          <Header className="digit-form-composer-sub-header">
-            {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
-          </Header>
-          <Button
-            label={t("WBH_DOWNLOAD_TEMPLATE")}
-            variation="secondary"
-            icon={"FileDownload"}
-            type="button"
-            className="campaign-download-template-btn"
-            onClick={downloadTemplate}
+      <div className="container">
+      <div className="card-container">
+        <Card className="card-header-timeline">
+        <TextBlock
+            subHeader={t("HCM_UPLOAD_DATA")}
+            subHeaderClasName={"stepper-subheader"}
+            wrapperClassName={"stepper-wrapper"}
           />
+        </Card>
+        <Card className="stepper-card">
+          <Stepper
+            customSteps={["HCM_UPLOAD_FACILITY", "HCM_UPLOAD_USER" , "HCM_UPLOAD_TARGET" , "HCM_SUMMARY"]}
+            currentStep={currentStep}
+            onStepClick={onStepClick}
+            direction={"vertical"}
+          />
+        </Card>
         </div>
-        {uploadedFile.length === 0 && (
-          <div className="info-text">
-            {type === "boundary" ? t("HCM_BOUNDARY_MESSAGE") : type === "facilityWithBoundary" ? t("HCM_FACILITY_MESSAGE") : t("HCM_USER_MESSAGE")}
+        {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
+        <div className="card-container">
+        <Card>
+          <div className="campaign-bulk-upload">
+            <Header className="digit-form-composer-sub-header">
+              {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
+            </Header>
+            <Button
+              label={t("WBH_DOWNLOAD_TEMPLATE")}
+              variation="secondary"
+              icon={"FileDownload"}
+              type="button"
+              className="campaign-download-template-btn"
+              onClick={downloadTemplate}
+            />
           </div>
-        )}
-        <BulkUpload onSubmit={onBulkUploadSubmit} fileData={uploadedFile} onFileDelete={onFileDelete} onFileDownload={onFileDownload} />
-        {showInfoCard && (
-          <InfoCard
-            populators={{
-              name: "infocard",
-            }}
-            variant="error"
-            style={{ marginLeft: "0rem", maxWidth: "100%" }}
-            label={t("HCM_ERROR")}
-            additionalElements={[
-              <React.Fragment key={type}>
-                {errorsType[type] && (
-                  <React.Fragment>
-                    {errorsType[type]
-                      .split(",")
-                      .slice(0, 50)
-                      .map((error, index) => (
-                        <React.Fragment key={index}>
-                          {index > 0 && <br />}
-                          {error.trim()}
-                        </React.Fragment>
-                      ))}
-                  </React.Fragment>
-                )}
-              </React.Fragment>,
+          {uploadedFile.length === 0 && (
+            <div className="info-text">
+              {type === "boundary" ? t("HCM_BOUNDARY_MESSAGE") : type === "facilityWithBoundary" ? t("HCM_FACILITY_MESSAGE") : t("HCM_USER_MESSAGE")}
+            </div>
+          )}
+          <BulkUpload onSubmit={onBulkUploadSubmit} fileData={uploadedFile} onFileDelete={onFileDelete} onFileDownload={onFileDownload} />
+          {showInfoCard && (
+            <InfoCard
+              populators={{
+                name: "infocard",
+              }}
+              variant="error"
+              style={{ marginLeft: "0rem", maxWidth: "100%" }}
+              label={t("HCM_ERROR")}
+              additionalElements={[
+                <React.Fragment key={type}>
+                  {errorsType[type] && (
+                    <React.Fragment>
+                      {errorsType[type]
+                        .split(",")
+                        .slice(0, 50)
+                        .map((error, index) => (
+                          <React.Fragment key={index}>
+                            {index > 0 && <br />}
+                            {error.trim()}
+                          </React.Fragment>
+                        ))}
+                    </React.Fragment>
+                  )}
+                </React.Fragment>,
+              ]}
+            />
+          )}
+        </Card>
+        <InfoCard
+          populators={{
+            name: "infocard",
+          }}
+          variant="default"
+          style={{ margin: "0rem", maxWidth: "100%" }}
+          additionalElements={readMeInfo[type]?.map((info, index) => (
+            <div key={index} style={{ display: "flex", flexDirection: "column" }}>
+              <h2>{info?.header}</h2>
+              <ul style={{ paddingLeft: 0 }}>
+                {info?.descriptions.map((desc, i) => (
+                  <li key={i} className="info-points">
+                    {desc.isBold ? <h2>{desc.text}</h2> : <p>{desc.text}</p>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+          label={"Info"}
+        />
+        </div>
+        {showPopUp && (
+          <PopUp
+            type={"default"}
+            className={"popUpClass"}
+            footerclassName={"popUpFooter"}
+            heading={
+              type === "boundary"
+                ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_HEADER")
+                : type === "facilityWithBoundary"
+                ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER")
+                : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER")
+            }
+            children={[
+              <div>
+                {type === "boundary"
+                  ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_TEXT")
+                  : type === "facilityWithBoundary"
+                  ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT")
+                  : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT ")}
+              </div>,
             ]}
+            onOverlayClick={() => {
+              setShowPopUp(false);
+            }}
+            footerChildren={[
+              <Button
+                type={"button"}
+                size={"large"}
+                variation={"secondary"}
+                label={t("HCM_CAMPAIGN_UPLOAD_CANCEL")}
+                onClick={() => {
+                  setShowPopUp(false);
+                }}
+              />,
+              <Button
+                type={"button"}
+                size={"large"}
+                variation={"primary"}
+                icon={"FileDownload"}
+                label={t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
+                title={t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
+                onClick={() => {
+                  downloadTemplate(), setShowPopUp(false);
+                }}
+              />,
+            ]}
+            sortFooterChildren={true}
+            onClose={() => {
+              setShowPopUp(false);
+            }}
+          ></PopUp>
+        )}
+        {showToast && (uploadedFile?.length > 0 || downloadError) && (
+          <Toast
+            type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
+            // error={showToast.key === "error" ? true : false}
+            // warning={showToast.key === "warning" ? true : false}
+            // info={showToast.key === "info" ? true : false}
+            label={t(showToast.label)}
+            transitionTime={showToast.transitionTime}
+            onClose={closeToast}
           />
         )}
-      </Card>
-      <InfoCard
-        populators={{
-          name: "infocard",
-        }}
-        variant="default"
-        style={{ margin: "0rem", maxWidth: "100%" }}
-        additionalElements={readMeInfo[type]?.map((info, index) => (
-          <div key={index} style={{ display: "flex", flexDirection: "column" }}>
-            <h2>{info?.header}</h2>
-            <ul style={{ paddingLeft: 0 }}>
-              {info?.descriptions.map((desc, i) => (
-                <li key={i} className="info-points">
-                  {desc.isBold ? <h2>{desc.text}</h2> : <p>{desc.text}</p>}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-        label={"Info"}
-      />
-      {showPopUp && (
-        <PopUp
-          type={"default"}
-          className={"popUpClass"}
-          footerclassName={"popUpFooter"}
-          heading={
-            type === "boundary"
-              ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_HEADER")
-              : type === "facilityWithBoundary"
-              ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER")
-              : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER")
-          }
-          children={[
-            <div>
-              {type === "boundary"
-                ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_TEXT")
-                : type === "facilityWithBoundary"
-                ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT")
-                : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT ")}
-            </div>,
-          ]}
-          onOverlayClick={() => {
-            setShowPopUp(false);
-          }}
-          footerChildren={[
-            <Button
-              type={"button"}
-              size={"large"}
-              variation={"secondary"}
-              label={t("HCM_CAMPAIGN_UPLOAD_CANCEL")}
-              onClick={() => {
-                setShowPopUp(false);
-              }}
-            />,
-            <Button
-              type={"button"}
-              size={"large"}
-              variation={"primary"}
-              icon={"FileDownload"}
-              label={t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
-              title={t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
-              onClick={() => {
-                downloadTemplate(), setShowPopUp(false);
-              }}
-            />,
-          ]}
-          sortFooterChildren={true}
-          onClose={() => {
-            setShowPopUp(false);
-          }}
-        ></PopUp>
-      )}
-      {showToast && (uploadedFile?.length > 0 || downloadError) && (
-        <Toast
-          type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
-          // error={showToast.key === "error" ? true : false}
-          // warning={showToast.key === "warning" ? true : false}
-          // info={showToast.key === "info" ? true : false}
-          label={t(showToast.label)}
-          transitionTime={showToast.transitionTime}
-          onClose={closeToast}
-        />
-      )}
+      </div>
     </>
   );
 };

@@ -173,24 +173,6 @@ function reverseDeliveryRemap(data) {
   return reversedData;
 }
 
-function groupByType(data) {
-  if (!data) return null;
-  const result = {};
-
-  data.forEach((item) => {
-    if (result[item.type]) {
-      result[item.type].push(item);
-    } else {
-      result[item.type] = [item];
-    }
-  });
-
-  return {
-    TenantBoundary: {
-      boundary: result,
-    },
-  };
-}
 
 function groupByTypeRemap(data) {
   if (!data) return null;
@@ -320,6 +302,19 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
       },
     },
   });
+  const handleStorageChange = () => {
+    const key = Number((/key=([^&]+)/.exec(location.search) || [])[1]);
+    setCurrentKey(key);
+  };
+
+  useEffect(() => {
+  
+    window.addEventListener("checking", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("checking", handleStorageChange);
+    };
+  }, []);
 
   const { isLoading, data: projectType } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }]);
 
@@ -335,7 +330,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
   useEffect(() => {
     if (isPreview === "true") {
       setIsDraftCreated(true);
-      setCurrentKey(10);
+      setCurrentKey(13);
       return;
     }
     if (isDraft === "true") {
@@ -444,11 +439,11 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
 
   useEffect(() => {
     setIsSubmitting(false);
-    if (currentKey === 10 && isSummary !== "true") {
+    if (currentKey === 13 && isSummary !== "true") {
       updateUrlParams({ key: currentKey, summary: true });
-    } else if (currentKey !== 10) {
+    } else if (currentKey !== 13) {
       updateUrlParams({ key: currentKey, summary: false });
-      setSummaryErrors(null);
+      // setSummaryErrors(null);
     }
   }, [currentKey]);
 
@@ -503,7 +498,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
                   attribute?.attribute?.code === "Gender" && attribute?.value?.length > 0
                     ? attribute?.value
                     : attribute?.attribute?.code === "TYPE_OF_STRUCTURE"
-                    ? attribute?.value 
+                    ? attribute?.value
                     : attribute?.value
                     ? Number(attribute?.value)
                     : null,
@@ -586,16 +581,16 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
               onSuccess: async (data) => {
                 updateUrlParams({ id: data?.CampaignDetails?.id });
                 draftRefetch();
-                if (currentKey == 5) {
-                  setCurrentKey(10);
+                if (currentKey == 6) {
+                  setCurrentKey(13);
                 } else {
                   setCurrentKey(currentKey + 1);
                 }
               },
             });
           } else {
-            if (currentKey == 5) {
-              setCurrentKey(10);
+            if (currentKey == 6) {
+              setCurrentKey(13);
             } else {
               setCurrentKey(currentKey + 1);
             }
@@ -640,21 +635,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
             const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
             payloadData.deliveryRules = temp;
           }
-
-          // await mutate(payloadData, {
-          //   onError: (error, variables) => {},
-          //   onSuccess: async (data) => {
-          //     draftRefetch();
-          //     history.push(
-          //       `/${window.contextPath}/employee/campaign/response?campaignId=${data?.CampaignDetails?.campaignNumber}&isSuccess=${true}`,
-          //       {
-          //         message: "ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE",
-          //         text: "ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT",
-          //       }
-          //     );
-          //     Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-          //   },
-          // });
           if (compareIdentical(draftData, payloadData) === false) {
             await updateCampaign(payloadData, {
               onError: (error, variables) => {
@@ -1184,7 +1164,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
         }
         setShowToast(null);
         return;
-      case "summary":
+        case "DeliveryDetailsSummary":
         const cycleConfigureData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE;
         const isCycleError = validateCycleData(cycleConfigureData);
         const deliveryCycleData = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA;
@@ -1193,6 +1173,17 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
           totalFormData?.["HCM_CAMPAIGN_TYPE"]?.projectType?.code?.toUpperCase(),
           cycleConfigureData
         );
+        if (isCycleError?.length > 0) {
+          setShowToast({ key: "error", label: "DELIVERY_CYCLE_MISMATCH_LENGTH_ERROR" });
+          return false;
+        }
+        if (isDeliveryError === false) {
+          setShowToast({ key: "error", label: "DELIVERY_RULES_ERROR" });
+          return false;
+        }
+        setShowToast(null);
+        return true;
+        case "DataUploadSummary":
         const isTargetError = totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.filestoreId
           ? false
           : (setSummaryErrors((prev) => {
@@ -1235,14 +1226,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
               };
             }),
             true);
-        if (isCycleError?.length > 0) {
-          setShowToast({ key: "error", label: "DELIVERY_CYCLE_MISMATCH_LENGTH_ERROR" });
-          return false;
-        }
-        if (isDeliveryError === false) {
-          setShowToast({ key: "error", label: "DELIVERY_RULES_ERROR" });
-          return false;
-        }
         if (isTargetError) {
           setShowToast({ key: "error", label: "TARGET_DETAILS_ERROR" });
           return false;
@@ -1255,6 +1238,79 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
           setShowToast({ key: "error", label: "USER_DETAILS_ERROR" });
           return false;
         }
+        setShowToast(null);
+        return true;
+      case "summary":
+        // const cycleConfigureData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE;
+        // const isCycleError = validateCycleData(cycleConfigureData);
+        // const deliveryCycleData = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA;
+        // const isDeliveryError = validateDeliveryRules(
+        //   deliveryCycleData,
+        //   totalFormData?.["HCM_CAMPAIGN_TYPE"]?.projectType?.code?.toUpperCase(),
+        //   cycleConfigureData
+        // );
+        // const isTargetError = totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.filestoreId
+        //   ? false
+        //   : (setSummaryErrors((prev) => {
+        //       return {
+        //         ...prev,
+        //         target: [
+        //           {
+        //             name: `target`,
+        //             error: t(`TARGET_FILE_MISSING`),
+        //           },
+        //         ],
+        //       };
+        //     }),
+        //     true);
+        // const isFacilityError = totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.filestoreId
+        //   ? false
+        //   : (setSummaryErrors((prev) => {
+        //       return {
+        //         ...prev,
+        //         facility: [
+        //           {
+        //             name: `facility`,
+        //             error: t(`FACILITY_FILE_MISSING`),
+        //           },
+        //         ],
+        //       };
+        //     }),
+        //     true);
+        // const isUserError = totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]?.filestoreId
+        //   ? false
+        //   : (setSummaryErrors((prev) => {
+        //       return {
+        //         ...prev,
+        //         user: [
+        //           {
+        //             name: `user`,
+        //             error: t(`USER_FILE_MISSING`),
+        //           },
+        //         ],
+        //       };
+        //     }),
+        //     true);
+        // if (isCycleError?.length > 0) {
+        //   setShowToast({ key: "error", label: "DELIVERY_CYCLE_MISMATCH_LENGTH_ERROR" });
+        //   return false;
+        // }
+        // if (isDeliveryError === false) {
+        //   setShowToast({ key: "error", label: "DELIVERY_RULES_ERROR" });
+        //   return false;
+        // }
+        // if (isTargetError) {
+        //   setShowToast({ key: "error", label: "TARGET_DETAILS_ERROR" });
+        //   return false;
+        // }
+        // if (isFacilityError) {
+        //   setShowToast({ key: "error", label: "FACILITY_DETAILS_ERROR" });
+        //   return false;
+        // }
+        // if (isUserError) {
+        //   setShowToast({ key: "error", label: "USER_DETAILS_ERROR" });
+        //   return false;
+        // }
         setShowToast(null);
         return true;
       default:
@@ -1320,8 +1376,8 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
     ) {
       setShouldUpdate(true);
     }
-    if (isChangeDates === "true" && currentKey == 5) {
-      setCurrentKey(10);
+    if (isChangeDates === "true" && currentKey == 6) {
+      setCurrentKey(13);
     }
 
     if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].mandatoryOnAPI) {
@@ -1334,24 +1390,28 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
   };
 
   const onStepClick = (step) => {
-    if ((currentKey === 5 || currentKey === 6) && step > 1) {
-      return;
-    }
+    // if ((currentKey === 5 || currentKey === 6) && step > 1) {
+    //   return;
+    // }
     const filteredSteps = campaignConfig[0].form.filter((item) => item.stepCount === String(step + 1));
+
+    const maxKeyStep = filteredSteps.reduce((max, step) => {
+      return parseInt(step.key) > parseInt(max.key) ? step : max;
+    });
 
     const key = parseInt(filteredSteps[0].key);
     const name = filteredSteps[0].name;
 
     if (step === 6 && Object.keys(totalFormData).includes("HCM_CAMPAIGN_UPLOAD_USER_DATA")) {
-      setCurrentKey(10);
-      setCurrentStep(7);
-    } else if (step === 1 && totalFormData["HCM_CAMPAIGN_NAME"] && totalFormData["HCM_CAMPAIGN_NAME"]) {
-      setCurrentKey(3);
+      setCurrentKey(13);
+      setCurrentStep(5);
+    } else if (step === 1 && totalFormData["HCM_CAMPAIGN_NAME"] && totalFormData["HCM_CAMPAIGN_TYPE"] && totalFormData["HCM_CAMPAIGN_DATE"]) {
+      setCurrentKey(5);
       setCurrentStep(1);
     } else if (!totalFormData["HCM_CAMPAIGN_NAME"] || !totalFormData["HCM_CAMPAIGN_NAME"]) {
       // Do not set stepper and key
     } else if (Object.keys(totalFormData).includes(name)) {
-      setCurrentKey(key);
+      setCurrentKey(parseInt(maxKeyStep?.key));
       setCurrentStep(step);
       // Do not set stepper and key
     }
@@ -1390,7 +1450,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
   const draftFilterStep = (totalFormData) => {
     const stepFind = (name) => {
       const step = campaignConfig?.[0]?.form.find((step) => step.name === name);
-      return step ? parseInt(step.stepCount, 10) : null;
+      return step ? parseInt(step.stepCount, 13) : null;
     };
     let v = [];
     if (totalFormData?.HCM_CAMPAIGN_NAME?.campaignName) v.push(stepFind("HCM_CAMPAIGN_NAME"));
@@ -1433,16 +1493,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
       setCurrentKey(currentKey - 1);
     }
   };
-
-  // filtering the config on the basis of the screen or key
-  // const filteredConfig = campaignConfig
-  //   .map((config) => {
-  //     return {
-  //       ...config,
-  //       form: config?.form.filter((step) => parseInt(step.key) == currentKey),
-  //     };
-  //   })
-  //   .filter((config) => config.form.length > 0);
 
   const filterCampaignConfig = (campaignConfig, currentKey) => {
     return campaignConfig
@@ -1505,15 +1555,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
     <React.Fragment>
       {noAction !== "false" && (
         <Stepper
-          customSteps={[
-            "HCM_CAMPAIGN_SETUP_DETAILS",
-            "HCM_BOUNDARY_DETAILS",
-            "HCM_DELIVERY_DETAILS",
-            "HCM_TARGETS",
-            "HCM_FACILITY_DETAILS",
-            "HCM_USER_DETAILS",
-            "HCM_REVIEW_DETAILS",
-          ]}
+          customSteps={["HCM_CAMPAIGN_SETUP_DETAILS", "HCM_BOUNDARY_DETAILS", "HCM_DELIVERY_DETAILS", "HCM_UPLOAD_DATA", "HCM_REVIEW_DETAILS"]}
           currentStep={currentStep + 1}
           onStepClick={onStepClick}
           activeSteps={active}
@@ -1528,14 +1570,15 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
         })}
         onSubmit={onSubmit}
         showSecondaryLabel={currentKey > 1 ? true : false}
-        secondaryLabel={isChangeDates === "true" && currentKey == 5 ? t("HCM_BACK") : noAction === "false" ? null : t("HCM_BACK")}
+        secondaryLabel={isChangeDates === "true" && currentKey == 6 ? t("HCM_BACK") : noAction === "false" ? null : t("HCM_BACK")}
         actionClassName={"actionBarClass"}
         className="setup-campaign"
         cardClassName="setup-campaign-card"
-        noCardStyle={currentKey === 4 || currentStep === 7 || currentStep === 0 ? false : true}
+        noCardStyle = {true}
+        // noCardStyle={currentStep === 7 ? false : true}
         onSecondayActionClick={onSecondayActionClick}
         label={
-          isChangeDates === "true" && currentKey == 10
+          isChangeDates === "true" && currentKey == 13
             ? t("HCM_UPDATE_DATE")
             : isChangeDates === "true"
             ? null
@@ -1548,11 +1591,16 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
       />
       {actionBar === "true" && (
         <ActionBar style={{ zIndex: "19" }}>
-          {displayMenu ? <Menu 
-          options={["UPDATE_DATES", 
-            // "CONFIGURE_APP"
-          ]}
-           t={t} onSelect={onActionSelect} /> : null}
+          {displayMenu ? (
+            <Menu
+              options={[
+                "UPDATE_DATES",
+                // "CONFIGURE_APP"
+              ]}
+              t={t}
+              onSelect={onActionSelect}
+            />
+          ) : null}
           <SubmitBar label={t("ES_COMMON_TAKE_ACTION")} onSubmit={() => setDisplayMenu(!displayMenu)} />
         </ActionBar>
       )}

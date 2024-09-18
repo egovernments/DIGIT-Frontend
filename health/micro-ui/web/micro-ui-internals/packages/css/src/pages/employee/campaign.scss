@@ -126,3 +126,16 @@
     color: #b1b4b6;
   }
 }
+.container{
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  align-items: stretch;
+}
+.stepper-card{
+  height: 36.5rem;
+  margin-bottom: 1.5rem !important;
+}
+.stepper-subheader{
+  color: theme(digitv2.lightTheme.header-sidenav);
+}

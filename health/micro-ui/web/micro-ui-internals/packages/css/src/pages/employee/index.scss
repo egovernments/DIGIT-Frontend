@@ -553,6 +553,23 @@ tbody {
 .digit-card-component.bannerCard.removeBottomMargin.languageSelection{
   width: unset !important;
 }
+.boundary-header{
+  @extend .typography.text-heading-m;
+  color : theme(digitv2.lightTheme.header-sidenav);
+}
+.card-header-timeline{
+  margin-bottom: 0rem !important;
+  border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+    border-bottom-left-radius: 0rem;
+    border-bottom-right-radius: 0rem;
+    border: 0.063rem solid;
+    color: theme(digitv2.lightTheme.header-sidenav);
+}
+.stepper-subheader{
+  color: theme(digitv2.lightTheme.header-sidenav) !important;
+}
+
 .parent-group{
   border-width: 0.063rem;
     background: theme(digitv2.lightTheme.paper-secondary);
@@ -560,9 +577,19 @@ tbody {
     border-radius: 0.5rem;
     padding: 1rem;
 }
+.card-container{
+  height: 50rem;
+}
+.card-container2{
+  width: -webkit-fill-available;
+  padding-bottom: 1.5rem;
+  
+}
+
 .parent{
   color: theme(digitv2.lightTheme.header-sidenav);
     font-weight: 700;
     font-family: theme(digitv2.fontFamily.sans);
     padding-bottom: 1rem;
 }
+

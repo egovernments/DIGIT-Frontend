@@ -33,6 +33,10 @@ import UpdateDatesWithBoundaries from "./pages/employee/UpdateDatesWithBoundarie
 import DateWithBoundary from "./components/DateWithBoundary";
 import BoundaryWithDate from "./components/BoundaryWithDate";
 import DateAndCycleUpdate from "./pages/employee/DateAndCycleUpdate";
+import DeliveryDetailsSummary from "./components/DeliveryDetailsSummary";
+import DataUploadSummary from "./components/DataUploadSummary";
+import CampaignDetailsSummary from "./components/CampaignDetailsSummary";
+import BoundaryDetailsSummary from "./components/BoundaryDetailsSummary";
 import UpdateBoundary from "./pages/employee/UpdateBoundary";
 import UpdateBoundaryWrapper from "./components/UpdateBoundaryWrapper";
 // import SelectingBoundaryComponent from "./components/SelectingBoundaryComponent";
@@ -107,6 +111,10 @@ const componentsToRegister = {
   BoundaryWithDate,
   DateAndCycleUpdate,
   TimelineComponent,
+  DeliveryDetailsSummary,
+  DataUploadSummary,
+  CampaignDetailsSummary,
+  BoundaryDetailsSummary,
   Wrapper,
   UpdateBoundary,
   UpdateBoundaryWrapper,
