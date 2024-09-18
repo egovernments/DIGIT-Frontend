@@ -55,7 +55,7 @@ const primaryIconColor = Colors.lightTheme.primary[1];
 const dividerColor = Colors.lightTheme.generic.divider;
 const background = Colors.lightTheme.paper.secondary;
 
-const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, onSelect, popUpOption }) => {
+const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, onSelect, popUpOption ,hierarchyType }) => {
   const [dummySelected, setDummySelected] = useState(alreadyQueuedSelectedState);
   const boundaryType = alreadyQueuedSelectedState.find((item) => item.propsData[1] !== null)?.propsData[1]?.type;
   const { t } = useTranslation();
@@ -99,7 +99,7 @@ const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, on
     <PopUp
       className={"selecting-boundaries-pop"}
       type={"default"}
-      heading={`${t(boundaryType)} ${t("DIGIT_SELECT")}`}
+      heading={`${t((hierarchyType + "_" + boundaryType).toUpperCase())} ${t("DIGIT_SELECT")}`}
       children={[]}
       onOverlayClick={() => {
         setShowPopUp(false);
@@ -135,7 +135,7 @@ const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, on
     >
       <LabelFieldPair>
         <CardLabel>
-          {t(boundaryType?.toUpperCase())}
+        {t((hierarchyType + "_" + boundaryType).toUpperCase())}
           <span className="mandatory-span">*</span>
         </CardLabel>
         <MultiSelectDropdown
@@ -248,6 +248,7 @@ const MultiSelectDropdown = ({
   frozenData = [],
   selectedNumber,
   popUpOption,
+  hierarchyType
 }) => {
   const [active, setActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState();
@@ -853,6 +854,7 @@ const MultiSelectDropdown = ({
               alreadyQueuedSelectedState={alreadyQueuedSelectedState}
               onSelect={onSelect}
               popUpOption={popUpOption}
+              hierarchyType ={hierarchyType}
             ></Wrapper>
           )}
           {alreadyQueuedSelectedState.length > 0 && (
