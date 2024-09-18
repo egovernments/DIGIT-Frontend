@@ -9,26 +9,23 @@ import TimelineComponent from "../components/TimelineComponent";
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
 // var Digit = window.Digit || {};
-// import { campaign_name1 } from "../pages/employee/SearchChecklist";
+const businessServiceMap = {};
+
 const inboxModuleNameMap = {};
 // const history=useHistory();
-
 
 export const UICustomizations = {
   MyChecklistSearchConfig: {
     preProcess: (data, additionalDetails) => {
-
-    //   if (!data.ServiceDefinitionCriteria.code) {
-    //     data.ServiceDefinitionCriteria.code = [];
-    // }
+      console.log("initiall data is", data);
       data.body.ServiceDefinitionCriteria.code.length=0;
       let pay = window.history.state.name + '.' + data?.state?.searchForm?.Type?.list + '.' + data?.state?.searchForm?.Role?.code;
-
       data.body.ServiceDefinitionCriteria.code.push(pay);
+      // console.log("the data", data);
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      // const [switchText, setSwitchText] = useState("Active");
+    
       const [isActive, setIsActive] = useState(row?.isActive);
         switch (key) {
           case "Checklist Role":

@@ -32,9 +32,12 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
         optionDependency: false,
         optionComment: false,
       };
+      // field.options=[defaultOption];
+      // handleAddOption();
       return [defaultOption];
     }
   });
+  
   useEffect(() => {
     dispatchQuestionData({
       type: "UPDATE_OPTIONS",

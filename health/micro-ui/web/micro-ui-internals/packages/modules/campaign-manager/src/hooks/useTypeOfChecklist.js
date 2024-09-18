@@ -10,7 +10,6 @@ const useTypeOfChecklist = (tenantId) => {
         val=result;
     })
     return val;
-    // return createTypeOfChecklist(reqData, tenantId);
   });
 };
 

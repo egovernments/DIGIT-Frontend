@@ -54,8 +54,6 @@ const reqCriteriaResource = {
 };
 const { isLoading, data: mdms, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
 useEffect(()=>{
-  // console.log("from api data is", mdms?.[0]?.data?.data);
-  // data_mdms = mdms?.[0]?.data?.data;
   if(data_mdms && data_mdms.length!=0) template_data=data_mdms;
 }, [mdms])
 
@@ -85,7 +83,6 @@ module = "HCM";
 
   const popShow = () => {
     const pr = organizeQuestions(tempFormData);
-    // setPreviewData(organizeQuestions(tempFormData));
     setPreviewData(pr);
     setShowPopUp(!showPopUp);
   };
@@ -97,14 +94,9 @@ module = "HCM";
     setConfig(checklistCreateConfig(mdms, currentTime));
   }
 
-  // useEffect(()=>{
-  //   console.log("config changed", config);
-  // }, config);
 
   const onFormValueChange = (ll, formData) => {
-    // console.log("changin form data is",formData?.createQuestion?.questionData);
     setTempFormData(formData?.createQuestion?.questionData);
-    // setTempFormData1(formData);
   };
 
   function organizeQuestions(questions) {
@@ -143,9 +135,7 @@ module = "HCM";
         organizedQuestions.push(question);
       }
     });
-  
-    // console.log("organized data is", organizedQuestions);
-  
+    
     return organizedQuestions;
   }
   
@@ -409,19 +399,22 @@ module = "HCM";
       )}
       <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
         {fieldPairs.map((pair, index) => (
-          <ViewCardFieldPair
-            key={index} // Provide a unique key for each item
-            className=""
-            inline
-            label={pair.label} // Dynamically set the label
-            value={pair.value} // Dynamically set the value
-          // style={{ fontSize: "16px", fontWeight: "bold" }} // Optional: customize styles
-          />
+          <div>
+            <ViewCardFieldPair
+              key={index} // Provide a unique key for each item
+              className=""
+              inline
+              label={pair.label} // Dynamically set the label
+              value={pair.value} // Dynamically set the value
+            // style={{ fontSize: "16px", fontWeight: "bold" }} // Optional: customize styles
+            />
+            <div style={{height:"1rem"}}></div>
+          </div>
         ))}
         <div style={{ height: "2rem" }}>
         </div>
         <div style={{ display: "flex" }}>
-          <div style={{ width: "27%", fontWeight: "500", marginTop: "0.7rem" }}>Name of Checklist</div>
+          <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>Name of Checklist</div>
           <FieldV1
             type={"text"}
             populators={{
@@ -463,4 +456,3 @@ module = "HCM";
 };
 
 export { temp_data, CreateChecklist };
-

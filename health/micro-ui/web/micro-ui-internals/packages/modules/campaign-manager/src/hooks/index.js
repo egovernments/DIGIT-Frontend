@@ -36,7 +36,8 @@ const campaign = {
   useCreateChecklist,
   useUpsertLocalisation,
   useTypeOfChecklist,
-  useBoundaryRelationshipSearch
+  useBoundaryRelationshipSearch,
+
 };
 
 const Hooks = {

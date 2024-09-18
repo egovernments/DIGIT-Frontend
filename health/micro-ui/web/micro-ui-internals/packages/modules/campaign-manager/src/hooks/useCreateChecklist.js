@@ -7,7 +7,6 @@ const useCreateChecklist = (tenantId) => {
     val.then(result => {
     })
     return val;
-    // return createChecklistService(reqData, tenantId);
   });
 };
 

@@ -1,5 +1,3 @@
-// import { campaign_name1 } from '../pages/employee/SearchChecklist';
-
 export const checklistSearchConfig = [
     {
       label: "Checklist Search",

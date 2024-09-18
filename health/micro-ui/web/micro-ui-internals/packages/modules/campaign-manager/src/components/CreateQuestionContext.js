@@ -108,7 +108,6 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
           const newState = state.filter(question => !idsToDelete.includes(question.id));
 
           // Print the updated state for verification
-          // console.log("Updated state:", JSON.stringify(newState, null, 2));
 
           return newState;
         }
@@ -169,42 +168,9 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
 
   const [questionData, dispatchQuestionData] = useReducer(questionDataReducer, initialState);
 
-  // useEffect(() => {
-  //   console.log("initial state", initialState);
-  //   if (initialState.length !== 0) {
-  //     dispatchQuestionData({
-  //       type: "UPDATE_QUESTION_DATA",
-  //       payload: props?.props?.data,
-  //     });
-  //   }
-  // }, [initialState]);
-
-  // useEffect(()=>{
-  //   console.log("hehe changed", props);
-  //   dispatchQuestionData({
-  //     type: "UPDATE_QUESTION_DATA",
-  //     payload: props?.props?.data,
-  //   });
-
-  // }, [props])
-
-  // useEffect(() => {
-  //   console.log("props are changin", props);
-  //   console.log("before setting", initialState);
-  //   // debugger;
-  //   dispatchQuestionData({
-  //     type: "UPDATE_QUESTION_DATA",
-  //     payload: props?.props?.data,
-  //   });
-  //   console.log("after setting", initialState);
-  // }, [props?.props?.data]);
-
-  // console.log("out initial", initialState);
-
   useEffect(() => {
     // Avoid dispatch if props haven't changed
-    if (props?.props?.data !== 0) {
-  
+    if (props?.props?.data !== 0) {  
       // Dispatch only if the data is different
       dispatchQuestionData({
         type: "UPDATE_QUESTION_DATA",

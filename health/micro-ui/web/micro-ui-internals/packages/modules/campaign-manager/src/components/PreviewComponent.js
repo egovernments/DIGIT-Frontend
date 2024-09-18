@@ -32,7 +32,6 @@ const Preview = ({ question, level = 1 }) => {
 };
 
 const PreviewComponent = ({questionsArray}) => {
-  console.log("preview data", questionsArray);
   return (
     <div className="previewChecklist-app-container">
       {questionsArray.map((question) => (
