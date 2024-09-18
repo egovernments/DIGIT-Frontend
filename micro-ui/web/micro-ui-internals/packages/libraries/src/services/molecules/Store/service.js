@@ -128,9 +128,9 @@ export const StoreService = {
   },
   defaultData: async (stateCode, moduleCode, language, modulePrefix) => {
     let moduleCodes = [];
-    if(typeof moduleCode !== "string") moduleCode.forEach(code => { moduleCodes.push(`${modulePrefix}-${code.toLowerCase()}`) });
+    if(typeof moduleCode !== "string") moduleCode.forEach(code => { moduleCodes.push(modulePrefix ? `${modulePrefix}-${code.toLowerCase()}` : `${code.toLowerCase()}`) });
     const LocalePromise = LocalizationService.getLocale({
-      modules: typeof moduleCode == "string" ? [`${modulePrefix}-${moduleCode.toLowerCase()}`] : moduleCodes,
+      modules: typeof moduleCode == "string" ? modulePrefix ? [`${modulePrefix}-${moduleCode.toLowerCase()}`] : [`${moduleCode.toLowerCase()}`] : moduleCodes,
       locale: language,
       tenantId: stateCode,
     });
