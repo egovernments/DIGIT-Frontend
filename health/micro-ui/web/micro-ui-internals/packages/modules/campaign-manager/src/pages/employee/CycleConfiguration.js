@@ -1,7 +1,7 @@
 import React, { useReducer, Fragment, useEffect, useState } from "react";
 import { CardText, LabelFieldPair, Card, CardLabel, CardSubHeader, Paragraph, Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { TextInput, InfoCard } from "@egovernments/digit-ui-components";
+import { TextInput, InfoCard , Stepper , TextBlock } from "@egovernments/digit-ui-components";
 import { deliveryConfig } from "../../configs/deliveryConfig";
 
 const initialState = (saved, filteredDeliveryConfig, refetch) => {
@@ -96,6 +96,21 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     endDate: tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate,
   });
   const [executionCount, setExecutionCount] = useState(0);
+  const searchParams = new URLSearchParams(location.search);
+  const [currentStep , setCurrentStep] = useState(1);
+  const currentKey = searchParams.get("key");
+  const [key, setKey] = useState(() => {
+    const keyParam = searchParams.get("key");
+    return keyParam ? parseInt(keyParam) : 1;
+  });
+
+  function updateUrlParams(params) {
+    const url = new URL(window.location.href);
+    Object.entries(params).forEach(([key, value]) => {
+      url.searchParams.set(key, value);
+    });
+    window.history.replaceState({}, "", url);
+  }
 
   useEffect(() => {
     if (!deliveryConfigLoading) {
@@ -140,8 +155,43 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     dispatch({ type: "SELECT_FROM_DATE", index, payload: d });
   };
 
+  useEffect(() =>{
+    setKey(currentKey);
+    setCurrentStep(currentKey);
+  }, [currentKey])
+
+  useEffect(() => {
+    updateUrlParams({ key: key });
+    window.dispatchEvent(new Event("checking"));
+  }, [key]);
+
+  const onStepClick = (currentStep) => {
+    if(currentStep === 0){
+      setKey(6);
+    }
+    else if(currentStep === 2) setKey(8);
+    else setKey(7);
+  };
+
   return (
     <>
+    <div className="container">
+        <div className="card-container">
+          <Card className="card-header-timeline">
+            <TextBlock subHeader={t("HCM_DELIVERY_DETAILS")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+          </Card>
+          <Card className="stepper-card">
+            <Stepper
+              customSteps={["HCM_CYCLES","HCM_DELIVERY_RULES" ,"HCM_SUMMARY"]}
+              currentStep={1}
+              onStepClick={onStepClick}
+              direction={"vertical"}
+            />
+          </Card>
+        </div>
+        <div className="card-container2">
+        <Card>
+    
       <Header>
         {t(
           `CAMPAIGN_PROJECT_${
@@ -158,7 +208,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
           ?.reverse()
           ?.join("/")} - ${tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate?.split("-")?.reverse()?.join("/")})`}
       />
-      <InfoCard
+      {/* <InfoCard
         className={"infoClass"}
         populators={{
           name: "infocard",
@@ -186,8 +236,8 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
         ]}
         label={"Info"}
         headerClassName={"headerClassName"}
-      />
-      <Card className="campaign-counter-container">
+      /> */}
+      {/* <Card className="campaign-counter-container"> */}
         <CardText>
           {t(
             `CAMPAIGN_CYCLE_CONFIGURE_HEADING_${
@@ -214,6 +264,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
           {/* <PlusMinusInput defaultValues={cycleConfgureDate?.deliveries} onSelect={(d) => updateDelivery(d)} /> */}
         </LabelFieldPair>
       </Card>
+      {/* </Card> */}
       <Card className="campaign-counter-container">
         <CardSubHeader>{t(`CAMPAIGN_ADD_START_END_DATE_TEXT`)}</CardSubHeader>
         {[...Array(cycleConfgureDate.cycle)].map((_, index) => (
@@ -250,6 +301,8 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
           </LabelFieldPair>
         ))}
       </Card>
+      </div>
+      </div>
     </>
   );
 }

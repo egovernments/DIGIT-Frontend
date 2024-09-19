@@ -1,4 +1,3 @@
-import utils from "../utils";
 import useCreatePlanConfig from "./useCreatePlanConfig";
 import useSearchPlanConfig from "./useSearchPlanConfig";
 import useUpdatePlanConfig from "./useUpdatePlanConfig";
@@ -7,7 +6,7 @@ import useSearchCampaign from "./useSearchCampaign";
 import { useGenerateIdCampaign } from "./useGenerateIdCampaign";
 import useCreateCampaign from "./useCreateCampaign";
 import useUpdateCampaign from "./useUpdateCampaign";
-
+import utils from "../utils/utilities"
 const microplanv1 = {
   useCreatePlanConfig,
   useSearchPlanConfig,
@@ -24,13 +23,7 @@ const Hooks = {
 };
 
 const Utils = {
-  browser: {
-    sample: () => {},
-  },
   microplanv1: {
-    sampleUtil:()=>{
-
-    },
     ...utils
   },
 };

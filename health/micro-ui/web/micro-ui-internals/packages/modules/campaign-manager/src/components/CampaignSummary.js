@@ -122,6 +122,32 @@ function reverseDeliveryRemap(data, t) {
   return reversedData;
 }
 
+function boundaryDataGrp(boundaryData) {
+  // Create an empty object to hold grouped data by type
+  const groupedData = {};
+
+  // Iterate through each boundary item in the data
+  boundaryData.forEach((item) => {
+    const { type } = item; // Extract the type
+
+    // If the type doesn't exist in the groupedData, create an array for it
+    if (!groupedData[type]) {
+      groupedData[type] = [];
+    }
+
+    // Add the current item to its corresponding type array
+    groupedData[type].push(item);
+  });
+
+  // Convert the grouped object into an array of objects
+  const result = Object.keys(groupedData).map((type) => ({
+    type, // The type of the boundary
+    boundaries: groupedData[type], // All items that belong to this type
+  }));
+
+  return result;
+}
+
 const fetchResourceFile = async (tenantId, resourceIdArr) => {
   const res = await Digit.CustomService.getResponse({
     url: `/project-factory/v1/data/_search`,
@@ -134,7 +160,7 @@ const fetchResourceFile = async (tenantId, resourceIdArr) => {
   });
   return res?.ResourceDetails;
 };
-const fetchcd = async (tenantId, projectId) => { 
+const fetchcd = async (tenantId, projectId) => {
   const url = getProjectServiceUrl();
   const reqCriteriaResource = {
     url: `${url}/v1/_search`,
@@ -147,18 +173,17 @@ const fetchcd = async (tenantId, projectId) => {
       Projects: [
         {
           tenantId: tenantId,
-          id: projectId
-        }
-      ]
-    }
+          id: projectId,
+        },
+      ],
+    },
   };
-try{
-  const res = await Digit.CustomService.getResponse(reqCriteriaResource);
-  return res?.Project?.[0];
-}
-catch(e) {
-  console.log("error", e);
-}
+  try {
+    const res = await Digit.CustomService.getResponse(reqCriteriaResource);
+    return res?.Project?.[0];
+  } catch (e) {
+    console.log("error", e);
+  }
 };
 const CampaignSummary = (props) => {
   const { t } = useTranslation();
@@ -181,6 +206,10 @@ const CampaignSummary = (props) => {
   const [cycles, setCycles] = useState([]);
   const [cards, setCards] = useState([]);
   const isPreview = searchParams.get("preview");
+  const [key, setKey] = useState(() => {
+    const keyParam = searchParams.get("key");
+    return keyParam ? parseInt(keyParam) : 1;
+  });
   const handleRedirect = (step, activeCycle) => {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
@@ -193,39 +222,54 @@ const CampaignSummary = (props) => {
     history.push(newUrl);
   };
 
+  function updateUrlParams(params) {
+    const url = new URL(window.location.href);
+    Object.entries(params).forEach(([key, value]) => {
+      url.searchParams.set(key, value);
+    });
+    window.history.replaceState({}, "", url);
+  }
+
+
   useEffect(() => {
-    if (props?.props?.summaryErrors) {
-      if (props?.props?.summaryErrors?.deliveryErrors) {
-        const temp = props?.props?.summaryErrors?.deliveryErrors?.map((i) => {
-          return {
-            ...i,
-            onClick: i?.dateError ? () => handleRedirect(5) : () => handleRedirect(6, i?.cycle),
-          };
-        });
-        setSummaryErrors({ ...props?.props?.summaryErrors, deliveryErrors: temp });
-      } else {
-        setSummaryErrors(props?.props?.summaryErrors);
-      }
-    }
-    // if (props?.props?.summaryErrors?.deliveryErrors) {
-    //   const temp = props?.props?.summaryErrors?.deliveryErrors?.map((i) => {
-    //     return {
-    //       ...i,
-    //       onClick: () => handleRedirect(6, i?.cycle),
-    //     };
-    //   });
-    //   setDeliveryErrors(temp);
-    // }
-    // if (props?.props?.summaryErrors?.targetErrors) {
-    //   setTargetErrors(props?.props?.summaryErrors?.targetErrors);
-    // }
-    // if (props?.props?.summaryErrors?.facilityErrors) {
-    //   setFacilityErrors(props?.props?.summaryErrors?.facilityErrors);
-    // }
-    // if (props?.props?.summaryErrors?.userErrors) {
-    //   setUserErrors(props?.props?.summaryErrors?.userErrors);
-    // }
-  }, [props?.props?.summaryErrors]);
+    updateUrlParams({ key: key });
+    window.dispatchEvent(new Event("checking"));
+  }, [key]);
+
+
+  // useEffect(() => {
+  //   if (props?.props?.summaryErrors) {
+  //     if (props?.props?.summaryErrors?.deliveryErrors) {
+  //       const temp = props?.props?.summaryErrors?.deliveryErrors?.map((i) => {
+  //         return {
+  //           ...i,
+  //           onClick: i?.dateError ? () => handleRedirect(5) : () => handleRedirect(6, i?.cycle),
+  //         };
+  //       });
+  //       setSummaryErrors({ ...props?.props?.summaryErrors, deliveryErrors: temp });
+  //     } else {
+  //       setSummaryErrors(props?.props?.summaryErrors);
+  //     }
+  //   }
+  //   // if (props?.props?.summaryErrors?.deliveryErrors) {
+  //   //   const temp = props?.props?.summaryErrors?.deliveryErrors?.map((i) => {
+  //   //     return {
+  //   //       ...i,
+  //   //       onClick: () => handleRedirect(6, i?.cycle),
+  //   //     };
+  //   //   });
+  //   //   setDeliveryErrors(temp);
+  //   // }
+  //   // if (props?.props?.summaryErrors?.targetErrors) {
+  //   //   setTargetErrors(props?.props?.summaryErrors?.targetErrors);
+  //   // }
+  //   // if (props?.props?.summaryErrors?.facilityErrors) {
+  //   //   setFacilityErrors(props?.props?.summaryErrors?.facilityErrors);
+  //   // }
+  //   // if (props?.props?.summaryErrors?.userErrors) {
+  //   //   setUserErrors(props?.props?.summaryErrors?.userErrors);
+  //   // }
+  // }, [props?.props?.summaryErrors]);
 
   useEffect(() => {
         const fun = async () => {
@@ -269,26 +313,220 @@ const CampaignSummary = (props) => {
         ss();
         const target = data?.[0]?.deliveryRules;
         const cycleData = reverseDeliveryRemap(target, t);
+        const boundaryData = boundaryDataGrp(data?.[0]?.boundaries);
         return {
+          // cards: [
+          //   isPreview === "true"
+          //     ? {
+          //         name: "timeline",
+          //         sections: [
+          //           {
+          //             name: "timeline",
+          //             type: "COMPONENT",
+          //             component: "TimelineComponent",
+          //             props: {
+          //               campaignId: data?.[0]?.id,
+          //               resourceId: resourceIdArr,
+          //             },
+          //             cardHeader: { value: t("HCM_TIMELINE"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+          //           },
+          //         ],
+          //       }
+          //     : {},
+          //   {
+          //     sections: [
+          //       {
+          //         type: "DATA",
+          //         cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+          //         cardSecondaryAction: noAction !== "false" && (
+          //           <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
+          //             <span>{t(`CAMPAIGN_EDIT`)}</span>
+          //             <EditIcon />
+          //           </div>
+          //         ),
+          //         values: [
+          //           {
+          //             key: "CAMPAIGN_TYPE",
+          //             value: data?.[0]?.projectType ? t(`CAMPAIGN_PROJECT_${data?.[0]?.projectType?.toUpperCase()}`) : t("CAMPAIGN_SUMMARY_NA"),
+          //           },
+          //           {
+          //             key: "CAMPAIGN_NAME",
+          //             value: data?.[0]?.campaignName || t("CAMPAIGN_SUMMARY_NA"),
+          //           },
+          //           {
+          //             key: "CAMPAIGN_START_DATE",
+          //             // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
+          //             value: Digit.Utils.date.convertEpochToDate(startDate) || t("CAMPAIGN_SUMMARY_NA")
+          //           },
+          //           {
+          //             key: "CAMPAIGN_END_DATE",
+          //             // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.endDate) || t("CAMPAIGN_SUMMARY_NA"),
+          //             value: Digit.Utils.date.convertEpochToDate(endDate) || t("CAMPAIGN_SUMMARY_NA")
+          //           },
+          //         ],
+          //       },
+          //     ],
+          //   },
+          //   // data?.[0]?.resources?.find((i) => i?.type === "boundaryWithTarget") ?
+          //   {
+          //     name: "target",
+          //     errorName: "target",
+          //     sections: [
+          //       {
+          //         name: "target",
+          //         type: "COMPONENT",
+          //         component: "CampaignDocumentsPreview",
+          //         props: {
+          //           documents: data?.[0]?.resources?.filter((i) => i?.type === "boundaryWithTarget"),
+          //         },
+          //         cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+          //         cardSecondaryAction: noAction !== "false" && (
+          //           <div className="campaign-preview-edit-container" onClick={() => handleRedirect(7)}>
+          //             <span>{t(`CAMPAIGN_EDIT`)}</span>
+          //             <EditIcon />
+          //           </div>
+          //         ),
+          //       },
+          //     ],
+          //   },
+          //   // : {}
+          //   // data?.[0]?.resources?.find((i) => i?.type === "facility") ?
+          //   {
+          //     name: "facility",
+          //     errorName: "facility",
+          //     sections: [
+          //       {
+          //         name: "facility",
+          //         type: "COMPONENT",
+          //         component: "CampaignDocumentsPreview",
+          //         props: {
+          //           documents: data?.[0]?.resources?.filter((i) => i.type === "facility"),
+          //         },
+          //         cardHeader: { value: t("FACILITY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+          //         cardSecondaryAction: noAction !== "false" && (
+          //           <div className="campaign-preview-edit-container" onClick={() => handleRedirect(8)}>
+          //             <span>{t(`CAMPAIGN_EDIT`)}</span>
+          //             <EditIcon />
+          //           </div>
+          //         ),
+          //       },
+          //     ],
+          //   },
+          //   // : {}
+          //   // data?.[0]?.resources?.find((i) => i?.type === "user") ?
+          //   {
+          //     name: "user",
+          //     errorName: "user",
+          //     sections: [
+          //       {
+          //         name: "user",
+          //         type: "COMPONENT",
+          //         component: "CampaignDocumentsPreview",
+          //         props: {
+          //           documents: data?.[0]?.resources?.filter((i) => i.type === "user"),
+          //         },
+          //         cardHeader: { value: t("USER_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+          //         cardSecondaryAction: noAction !== "false" && (
+          //           <div className="campaign-preview-edit-container" onClick={() => handleRedirect(9)}>
+          //             <span>{t(`CAMPAIGN_EDIT`)}</span>
+          //             <EditIcon />
+          //           </div>
+          //         ),
+          //       },
+          //     ],
+          //   },
+          //   // : {}
+          //   resourceIdArr?.length > 0
+          //     ? {
+          //         sections: [
+          //           {
+          //             type: "COMPONENT",
+          //             component: "CampaignResourceDocuments",
+          //             props: {
+          //               isUserGenerate: true,
+          //               // resources: processid,
+          //               resources: resourceIdArr,
+          //             },
+          //             cardHeader: { value: t("USER_GENERATE_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+          //           },
+          //         ],
+          //       }
+          //     : {},
+          //   {
+          //     sections: [
+          //       {
+          //         type: "DATA",
+          //         cardHeader: { value: t("CAMPAIGN_DELIVERY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+          //         cardSecondaryAction: noAction !== "false" && (
+          //           <div className="campaign-preview-edit-container" onClick={() => handleRedirect(5)}>
+          //             <span>{t(`CAMPAIGN_EDIT`)}</span>
+          //             <EditIcon />
+          //           </div>
+          //         ),
+          //         values: [
+          //           {
+          //             key: "CAMPAIGN_NO_OF_CYCLES",
+          //             value:
+          //               data?.[0]?.deliveryRules && data?.[0]?.deliveryRules.map((item) => item.cycleNumber)?.length > 0
+          //                 ? Math.max(...data?.[0]?.deliveryRules.map((item) => item.cycleNumber))
+          //                 : t("CAMPAIGN_SUMMARY_NA"),
+          //           },
+          //           {
+          //             key: "CAMPAIGN_NO_OF_DELIVERIES",
+          //             value:
+          //               data?.[0]?.deliveryRules && data?.[0]?.deliveryRules.map((item) => item.deliveryNumber)?.length > 0
+          //                 ? Math.max(...data?.[0]?.deliveryRules.map((item) => item.deliveryNumber))
+          //                 : t("CAMPAIGN_SUMMARY_NA"),
+          //           },
+          //         ],
+          //       },
+          //     ],
+          //   },
+          //   ...cycleData?.map((item, index) => {
+          //     return {
+          //       name: `CYCLE_${index + 1}`,
+          //       errorName: "deliveryErrors",
+          //       sections: [
+          //         {
+          //           name: `CYCLE_${index + 1}`,
+          //           type: "COMPONENT",
+          //           cardHeader: { value: `${t("CYCLE")} ${item?.cycleIndex}`, inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+          //           cardSecondaryAction: noAction !== "false" && (
+          //             <div className="campaign-preview-edit-container" onClick={() => handleRedirect(5)}>
+          //               <span>{t(`CAMPAIGN_EDIT`)}</span>
+          //               <EditIcon />
+          //             </div>
+          //           ),
+          //           component: "CycleDataPreview",
+          //           props: {
+          //             data: item,
+          //           },
+          //         },
+          //       ],
+          //     };
+          //   }),
+          // ],
           cards: [
-            isPreview === "true"
-              ? {
-                  name: "timeline",
-                  sections: [
-                    {
-                      name: "timeline",
-                      type: "COMPONENT",
-                      component: "TimelineComponent",
-                      props: {
-                        campaignId: data?.[0]?.id,
-                        resourceId: resourceIdArr,
-                      },
-                      cardHeader: { value: t("HCM_TIMELINE"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                    },
-                  ],
-                }
-              : {},
             {
+              navigationKey: "card1",
+              sections: [
+                ...(isPreview === "true"
+                  ? [
+                      {
+                        navigationKey: "card1",
+                        type: "COMPONENT",
+                        component: "TimelineComponent",
+                        props: {
+                          campaignId: data?.[0]?.id,
+                          resourceId: resourceIdArr,
+                        },
+                      },
+                    ]
+                  : []),
+              ],
+            },
+            {
+              navigationKey: "card2",
               sections: [
                 {
                   type: "DATA",
@@ -311,109 +549,49 @@ const CampaignSummary = (props) => {
                     {
                       key: "CAMPAIGN_START_DATE",
                       // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
-                      value: Digit.Utils.date.convertEpochToDate(startDate) || t("CAMPAIGN_SUMMARY_NA")
+                      value: Digit.Utils.date.convertEpochToDate(startDate) || t("CAMPAIGN_SUMMARY_NA"),
                     },
                     {
                       key: "CAMPAIGN_END_DATE",
                       // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.endDate) || t("CAMPAIGN_SUMMARY_NA"),
-                      value: Digit.Utils.date.convertEpochToDate(endDate) || t("CAMPAIGN_SUMMARY_NA")
+                      value: Digit.Utils.date.convertEpochToDate(endDate) || t("CAMPAIGN_SUMMARY_NA"),
                     },
                   ],
                 },
               ],
             },
-            // data?.[0]?.resources?.find((i) => i?.type === "boundaryWithTarget") ?
-            {
-              name: "target",
-              errorName: "target",
-              sections: [
-                {
-                  name: "target",
-                  type: "COMPONENT",
-                  component: "CampaignDocumentsPreview",
-                  props: {
-                    documents: data?.[0]?.resources?.filter((i) => i?.type === "boundaryWithTarget"),
-                  },
-                  cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                  cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(7)}>
-                      <span>{t(`CAMPAIGN_EDIT`)}</span>
-                      <EditIcon />
-                    </div>
-                  ),
-                },
-              ],
-            },
-            // : {}
-            // data?.[0]?.resources?.find((i) => i?.type === "facility") ?
-            {
-              name: "facility",
-              errorName: "facility",
-              sections: [
-                {
-                  name: "facility",
-                  type: "COMPONENT",
-                  component: "CampaignDocumentsPreview",
-                  props: {
-                    documents: data?.[0]?.resources?.filter((i) => i.type === "facility"),
-                  },
-                  cardHeader: { value: t("FACILITY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                  cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(8)}>
-                      <span>{t(`CAMPAIGN_EDIT`)}</span>
-                      <EditIcon />
-                    </div>
-                  ),
-                },
-              ],
-            },
-            // : {}
-            // data?.[0]?.resources?.find((i) => i?.type === "user") ?
-            {
-              name: "user",
-              errorName: "user",
-              sections: [
-                {
-                  name: "user",
-                  type: "COMPONENT",
-                  component: "CampaignDocumentsPreview",
-                  props: {
-                    documents: data?.[0]?.resources?.filter((i) => i.type === "user"),
-                  },
-                  cardHeader: { value: t("USER_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                  cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(9)}>
-                      <span>{t(`CAMPAIGN_EDIT`)}</span>
-                      <EditIcon />
-                    </div>
-                  ),
-                },
-              ],
-            },
-            // : {}
-            resourceIdArr?.length > 0
-              ? {
-                  sections: [
-                    {
-                      type: "COMPONENT",
-                      component: "CampaignResourceDocuments",
-                      props: {
-                        isUserGenerate: true,
-                        // resources: processid,
-                        resources: resourceIdArr,
-                      },
-                      cardHeader: { value: t("USER_GENERATE_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+            ...boundaryData?.map((item, index) => {
+              return {
+                navigationKey: "card3",
+                name: `HIERARCHY_${index + 1}`,
+                sections: [
+                  {
+                    name: `HIERARCHY_${index + 1}`,
+                    type: "COMPONENT",
+                    cardHeader: { value: `${t(item?.type)}` , inlineStyles: { color : "#0B4B66" } },
+                    // cardHeader: { value: t("item?.boundaries?.type") },
+                    component: "BoundaryDetailsSummary",
+                    cardSecondaryAction: noAction !== "false" && (
+                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(5)}>
+                        <span>{t(`CAMPAIGN_EDIT`)}</span>
+                        <EditIcon />
+                      </div>
+                    ),
+                    props: {
+                      boundaries: item,
                     },
-                  ],
-                }
-              : {},
+                  },
+                ],
+              };
+            }),
             {
+              navigationKey: "card4",
               sections: [
                 {
                   type: "DATA",
                   cardHeader: { value: t("CAMPAIGN_DELIVERY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(5)}>
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(6)}>
                       <span>{t(`CAMPAIGN_EDIT`)}</span>
                       <EditIcon />
                     </div>
@@ -440,14 +618,15 @@ const CampaignSummary = (props) => {
             ...cycleData?.map((item, index) => {
               return {
                 name: `CYCLE_${index + 1}`,
-                errorName: "deliveryErrors",
+                // errorName: "deliveryErrors",
+                navigationKey: "card4",
                 sections: [
                   {
                     name: `CYCLE_${index + 1}`,
                     type: "COMPONENT",
                     cardHeader: { value: `${t("CYCLE")} ${item?.cycleIndex}`, inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     cardSecondaryAction: noAction !== "false" && (
-                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(5)}>
+                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(7)}>
                         <span>{t(`CAMPAIGN_EDIT`)}</span>
                         <EditIcon />
                       </div>
@@ -460,7 +639,122 @@ const CampaignSummary = (props) => {
                 ],
               };
             }),
+            {
+              navigationKey: "card5",
+              sections: [
+                {
+                  name: "target",
+                  type: "COMPONENT",
+                  component: "CampaignDocumentsPreview",
+                  props: {
+                    documents: data?.[0]?.resources?.filter((i) => i?.type === "boundaryWithTarget"),
+                  },
+                  cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                  cardSecondaryAction: noAction !== "false" && (
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(11)}>
+                      <span>{t(`CAMPAIGN_EDIT`)}</span>
+                      <EditIcon />
+                    </div>
+                  ),
+                },
+              ],
+            },
+            {
+              navigationKey: "card5",
+              sections: [
+                {
+                  name: "facility",
+                  type: "COMPONENT",
+                  component: "CampaignDocumentsPreview",
+                  props: {
+                    documents: data?.[0]?.resources?.filter((i) => i.type === "facility"),
+                  },
+                  cardHeader: { value: t("FACILITY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                  cardSecondaryAction: noAction !== "false" && (
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(9)}>
+                      <span>{t(`CAMPAIGN_EDIT`)}</span>
+                      <EditIcon />
+                    </div>
+                  ),
+                },
+              ],
+            },
+            {
+              navigationKey: "card5",
+              sections: [
+                {
+                  name: "user",
+                  type: "COMPONENT",
+                  component: "CampaignDocumentsPreview",
+                  props: {
+                    documents: data?.[0]?.resources?.filter((i) => i.type === "user"),
+                  },
+                  cardHeader: { value: t("USER_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                  cardSecondaryAction: noAction !== "false" && (
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(10)}>
+                      <span>{t(`CAMPAIGN_EDIT`)}</span>
+                      <EditIcon />
+                    </div>
+                  ),
+                },
+              ],
+            },
+            resourceIdArr?.length > 0
+              ? {
+                  navigationKey: "card5",
+                  sections: [
+                    {
+                      type: "COMPONENT",
+                      component: "CampaignResourceDocuments",
+                      props: {
+                        isUserGenerate: true,
+                        // resources: processid,
+                        resources: resourceIdArr,
+                      },
+                      cardHeader: { value: t("USER_GENERATE_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                    },
+                  ],
+                }
+              : {},
           ],
+          apiResponse: {},
+          additionalDetails: {},
+          horizontalNav: {
+            showNav: true,
+            configNavItems: [
+              ...(isPreview === "true"
+                ? [
+                    {
+                      name: "card1",
+                      active: true,
+                      code: t("HCM_TIMELINE"),
+                    },
+                  ]
+                : []),
+              {
+                name: "card2",
+                active: true,
+                code: t("HCM_CAMPAIGN_SETUP_DETAILS"),
+              },
+              {
+                name: "card3",
+                active: true,
+                code: t("HCM_BOUNDARY_DETAILS"),
+              },
+              {
+                name: "card4",
+                active: true,
+                code: t("HCM_DELIVERY_DETAILS"),
+              },
+              {
+                name: "card5",
+                active: true,
+                code: t("HCM_DATA_UPLOAD"),
+              },
+            ],
+            activeByDefault: "card2",
+          },
+
           error: data?.[0]?.additionalDetails?.error,
           data: data?.[0],
           status: data?.[0]?.status,
@@ -523,36 +817,36 @@ const CampaignSummary = (props) => {
     }
   }, [data]);
 
-const updatedObject= { ...data };
+  const updatedObject = { ...data };
 
-useEffect(()=> {
-  // Update startDate and endDate in the `data` object
-    updatedObject.data.startDate = startDate;
-    updatedObject.data.endDate = endDate;
-    updatedObject.cards[1].sections[0].values[2].value=Digit.Utils.date.convertEpochToDate(startDate);
-    updatedObject.cards[1].sections[0].values[3].value=Digit.Utils.date.convertEpochToDate(endDate);
-}, [startDate, endDate]);
+  useEffect(()=> {
+    // Update startDate and endDate in the `data` object
+      updatedObject.data.startDate = startDate;
+      updatedObject.data.endDate = endDate;
+      updatedObject.cards[1].sections[0].values[2].value=Digit.Utils.date.convertEpochToDate(startDate);
+      updatedObject.cards[1].sections[0].values[3].value=Digit.Utils.date.convertEpochToDate(endDate);
+  }, [startDate, endDate]);
 
-if(updatedObject?.cards?.[1]?.sections?.[0]?.values?.[0]?.value==t("MR-DN"))
-{  
-  updatedObject.cards.forEach((card) => {
-    if (card.name && card.name.startsWith("CYCLE_")) {
-        const cycleId = card.name.split("_")[1];
-        const cycleData = cycles.find((cycle) => cycle.id === cycleId);
-        
-        if (cycleData) {
-            card.sections.forEach((section) => {
-                if (section.props && section.props.data) {
-                    section.props.data.startDate = new Date(cycleData.startDate).toLocaleDateString('en-GB');
-                    // section.props.data.startDate = Digit.Utils.date.convertEpochToDate(cycleData.startDate) || t("CAMPAIGN_SUMMARY_NA");
-                    section.props.data.endDate = new Date(cycleData.endDate).toLocaleDateString('en-GB');
-                    // section.props.data.startDate = Digit.Utils.date.convertEpochToDate(cycleData.endDate) || t("CAMPAIGN_SUMMARY_NA");
-                }
-            });
-        }
-    }
-  });
-}
+  if(updatedObject?.cards?.[1]?.sections?.[0]?.values?.[0]?.value==t("MR-DN"))
+  {
+    updatedObject.cards.forEach((card) => {
+      if (card.name && card.name.startsWith("CYCLE_")) {
+          const cycleId = card.name.split("_")[1];
+          const cycleData = cycles.find((cycle) => cycle.id === cycleId);
+
+          if (cycleData) {
+              card.sections.forEach((section) => {
+                  if (section.props && section.props.data) {
+                      section.props.data.startDate = new Date(cycleData.startDate).toLocaleDateString('en-GB');
+                      // section.props.data.startDate = Digit.Utils.date.convertEpochToDate(cycleData.startDate) || t("CAMPAIGN_SUMMARY_NA");
+                      section.props.data.endDate = new Date(cycleData.endDate).toLocaleDateString('en-GB');
+                      // section.props.data.startDate = Digit.Utils.date.convertEpochToDate(cycleData.endDate) || t("CAMPAIGN_SUMMARY_NA");
+                  }
+              });
+          }
+      }
+    });
+  }
 
   return (
     <>
@@ -581,6 +875,6 @@ if(updatedObject?.cards?.[1]?.sections?.[0]?.values?.[0]?.value==t("MR-DN"))
       </div>
     </>
   );
-}
+};
 
 export default CampaignSummary;

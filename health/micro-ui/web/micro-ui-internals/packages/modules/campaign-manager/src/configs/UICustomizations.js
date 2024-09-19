@@ -1,20 +1,60 @@
 import { Link } from "react-router-dom";
 import _ from "lodash";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useHistory } from 'react-router-dom';
 import { Fragment } from "react";
-import { Button, PopUp } from "@egovernments/digit-ui-components";
+import { Button, PopUp, Switch } from "@egovernments/digit-ui-components";
 import TimelineComponent from "../components/TimelineComponent";
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
 // var Digit = window.Digit || {};
-
 const businessServiceMap = {};
 
 const inboxModuleNameMap = {};
-
+// const history=useHistory();
 
 export const UICustomizations = {
+  MyChecklistSearchConfig: {
+    preProcess: (data, additionalDetails) => {
+      console.log("initiall data is", data);
+      data.body.ServiceDefinitionCriteria.code.length=0;
+      let pay = window.history.state.name + '.' + data?.state?.searchForm?.Type?.list + '.' + data?.state?.searchForm?.Role?.code;
+      data.body.ServiceDefinitionCriteria.code.push(pay);
+      // console.log("the data", data);
+      return data;
+    },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+    
+      const [isActive, setIsActive] = useState(row?.isActive);
+        switch (key) {
+          case "Checklist Role":
+            return row?.additionalDetails?.role;
+            break;
+          case "Checklist Type":
+            return row?.additionalDetails?.type;
+            break;
+          case "Checklist Name":
+            return row?.additionalDetails?.name;
+            break;
+          case "Status":
+            const toggle = () => {
+              setIsActive(!isActive);
+            };
+            const switchText = isActive ? "Active" : "Inactive";
+            return(
+              <>
+                <Switch
+                  isCheckedInitially={isActive?true:false}
+                  label={switchText}
+                  onToggle={toggle} // Passing the function reference here
+                />
+              </>
+            )
+        }
+
+    },
+  },
   MyCampaignConfigOngoing: {
     preProcess: (data, additionalDetails) => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -106,6 +146,20 @@ export const UICustomizations = {
           case "ACTION_LABEL_VIEW_TIMELINE":
             setTimeline(true);
             break;
+          case "ACTION_LABEL_CONFIGURE_APP":
+              window.history.pushState(
+                {
+                  name: row?.campaignName,
+                  data: row,
+                  projectId: row?.projectId,
+                },
+                "",
+                `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}`
+              );
+              const navEvent1 = new PopStateEvent("popstate");
+              window.dispatchEvent(navEvent1);
+              break;
+  
           case "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS":
             window.history.pushState(
               {
@@ -152,7 +206,7 @@ export const UICustomizations = {
                 // ]}
                 options={[
                   ...(row?.status === "created" ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") }] : []),
-                  // { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
+                  { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
                   { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
                   ...(row?.status === "created"
                     ? [{ key: 1, code: "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS", i18nKey: t("ACTION_LABEL_UPDATE_BOUNDARY_DETAILS") }]
@@ -414,6 +468,22 @@ export const UICustomizations = {
           case "ACTION_LABEL_VIEW_TIMELINE":
             setTimeline(true);
             break;
+
+            case "ACTION_LABEL_CONFIGURE_APP":
+              window.history.pushState(
+                {
+                  name: row?.campaignName,
+                  data: row,
+                  projectId: row?.projectId,
+                  campaignType: row?.projectType
+                },
+                "",
+                `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}`
+              );
+              const navEvent1 = new PopStateEvent("popstate");
+              window.dispatchEvent(navEvent1);
+              break;
+  
           default:
             console.log(value);
             break;
@@ -448,7 +518,7 @@ export const UICustomizations = {
                 // ]}
                 options={[
                   ...(row?.status === "created" ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") }] : []),
-                  // { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
+                  { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
                   { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
                 ]}
                 optionsKey="i18nKey"

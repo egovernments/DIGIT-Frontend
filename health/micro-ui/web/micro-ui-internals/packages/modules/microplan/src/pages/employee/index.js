@@ -1,7 +1,7 @@
 import { AppContainer, BreadCrumb, Loader, PrivateRoute } from "@egovernments/digit-ui-react-components";
 import React,{useEffect} from "react";
 import { useTranslation } from "react-i18next";
-import { Switch } from "react-router-dom";
+import { Switch,useLocation } from "react-router-dom";
 import SetupMicroplan from "./SetupMicroplan";
 import { useMyContext } from "../../utils/context";
 import MicroplanSearch from "./MicroplanSearch";
@@ -26,13 +26,21 @@ const ProjectBreadCrumb = ({ location }) => {
 
 const App = ({ path, stateCode, userType, tenants }) => {
   const { dispatch } = useMyContext();
+  const location = useLocation();
+  //destroying session
+  useEffect(() => {
+    const pathVar = location.pathname.replace(`${path}/`, "").split("?")?.[0];
+    Digit.Utils.microplanv1.destroySessionHelper(pathVar, ["setup-microplan"], "MICROPLAN_DATA");
+  }, [location]);
+
+
   const { isLoading: isLoadingMdmsMicroplanData, data:MicroplanMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     "hcm-microplanning",
     [
       { name: "MicroplanNamingConvention" },
       { name: "MicroplanNamingRegx" },
-      { name: "resourceDistributionStrategy"},
+      { name: "ResourceDistributionStrategy"},
       { name: "HypothesisAssumptions"}
     ],
     {

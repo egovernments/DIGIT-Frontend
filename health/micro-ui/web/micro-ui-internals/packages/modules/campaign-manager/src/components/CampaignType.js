@@ -1,8 +1,8 @@
-import React, { useState, useMemo, useRef, useEffect } from "react";
+import React, { useState, useMemo, useRef, useEffect, Fragment } from "react";
 import { UploadIcon, FileIcon, DeleteIconv2, Toast, Card, Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
-import { Button, CardText, Dropdown, ErrorMessage, PopUp } from "@egovernments/digit-ui-components";
+import { Button, CardText, Dropdown, ErrorMessage, PopUp, Stepper, TextBlock } from "@egovernments/digit-ui-components";
 
 const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
   const { t } = useTranslation();
@@ -16,6 +16,21 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
   const [startValidation, setStartValidation] = useState(null);
   const [showPopUp, setShowPopUp] = useState(null);
   const [canUpdate, setCanUpdate] = useState(null);
+  const searchParams = new URLSearchParams(location.search);
+  const [currentStep , setCurrentStep] = useState(1);
+  const currentKey = searchParams.get("key");
+  const [key, setKey] = useState(() => {
+    const keyParam = searchParams.get("key");
+    return keyParam ? parseInt(keyParam) : 1;
+  });
+
+  function updateUrlParams(params) {
+    const url = new URL(window.location.href);
+    Object.entries(params).forEach(([key, value]) => {
+      url.searchParams.set(key, value);
+    });
+    window.history.replaceState({}, "", url);
+  }
 
   useEffect(() => {
     if (props?.props?.isSubmitting && !type) {
@@ -49,97 +64,140 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
       setExecutionCount((prevCount) => prevCount + 1);
     }
   });
+
+  useEffect(() =>{
+    setKey(currentKey);
+    setCurrentStep(currentKey);
+  }, [currentKey])
+
+  useEffect(() => {
+    updateUrlParams({ key: key });
+    window.dispatchEvent(new Event("checking"));
+  }, [key]);
+
+  const onStepClick = (currentStep) => {
+    if (!props?.props?.sessionData?.HCM_CAMPAIGN_TYPE) return;
+    if(currentStep === 0){
+      setKey(1);
+    }
+    else if(currentStep === 1){
+      setKey(2);
+    }
+    else if(currentStep === 3){
+      setKey(4);
+    }
+    else setKey(3);
+  };
+
   return (
-    <React.Fragment>
-      <Header>{t(`HCM_CAMPAIGN_TYPE_HEADER`)}</Header>
-      <p className="description-type">{t(`HCM_CAMPAIGN_TYPE_DESCRIPTION`)}</p>
-      <LabelFieldPair>
-        <div className="campaign-type">
-          <span>{`${t("HCM_CAMPAIGN_TYPE")}`}</span>
-          <span className="mandatory-span">*</span>
+    <>
+      <div className="container">
+        <div className="card-container" >
+          <Card className="card-header-timeline" >
+            <TextBlock subHeader={t("HCM_CAMPAIGN_DETAILS")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+          </Card>
+          <Card className="stepper-card">
+            <Stepper
+              customSteps={["HCM_CAMPAIGN_TYPE","HCM_CAMPAIGN_NAME",  "HCM_CAMPAIGN_DATE" , "HCM_SUMMARY"]}
+              currentStep={currentStep }
+              onStepClick={onStepClick}
+              direction={"vertical"}
+            />
+          </Card>
         </div>
-        <div
-          className="campaign-type-wrapper"
-          onClick={(e) => {
-            if (props?.props?.sessionData?.HCM_CAMPAIGN_TYPE?.projectType && !canUpdate) {
-              setShowPopUp(true);
-              return;
-            }
-            return;
-          }}
-          onFocus={(e) => {
-            if (props?.props?.sessionData?.HCM_CAMPAIGN_TYPE?.projectType && !canUpdate) {
-              setShowPopUp(true);
-              return;
-            }
-            return;
-          }}
-        >
-          <Dropdown
-            style={!showBeneficiary ? { width: "40rem", paddingBottom: 0, marginBottom: 0 } : { width: "40rem", paddingBottom: "1rem" }}
-            variant={error ? "error" : ""}
-            t={t}
-            option={projectType?.["HCM-PROJECT-TYPES"]?.projectTypes}
-            optionKey={"code"}
-            selected={type}
-            select={(value) => {
-              setStartValidation(true);
-              handleChange(value);
+
+        <div className="card-container2">
+          <Card className = "setup-campaign-card">
+            <Header>{t(`HCM_CAMPAIGN_TYPE_HEADER`)}</Header>
+            <p className="description-type">{t(`HCM_CAMPAIGN_TYPE_DESCRIPTION`)}</p>
+            <LabelFieldPair>
+              <div className="campaign-type">
+                <span>{`${t("HCM_CAMPAIGN_TYPE")}`}</span>
+                <span className="mandatory-span">*</span>
+              </div>
+              <div
+                className="campaign-type-wrapper"
+                onClick={(e) => {
+                  if (props?.props?.sessionData?.HCM_CAMPAIGN_TYPE?.projectType && !canUpdate) {
+                    setShowPopUp(true);
+                    return;
+                  }
+                  return;
+                }}
+                onFocus={(e) => {
+                  if (props?.props?.sessionData?.HCM_CAMPAIGN_TYPE?.projectType && !canUpdate) {
+                    setShowPopUp(true);
+                    return;
+                  }
+                  return;
+                }}
+              >
+                <Dropdown
+                  style={!showBeneficiary ? { width: "40rem", paddingBottom: 0, marginBottom: 0 } : { width: "40rem", paddingBottom: "1rem" }}
+                  variant={error ? "error" : ""}
+                  t={t}
+                  option={projectType?.["HCM-PROJECT-TYPES"]?.projectTypes}
+                  optionKey={"code"}
+                  selected={type}
+                  select={(value) => {
+                    setStartValidation(true);
+                    handleChange(value);
+                  }}
+                />
+                {error?.message && <ErrorMessage message={t(error?.message)} showIcon={true} />}
+              </div>
+            </LabelFieldPair>
+            {showBeneficiary && (
+              <LabelFieldPair>
+                <div className="beneficiary-type">{`${t("HCM_BENEFICIARY_TYPE")}`}</div>
+                <div>{t(`CAMPAIGN_TYPE_${beneficiaryType}`)}</div>
+              </LabelFieldPair>
+            )}
+          </Card>
+        </div>
+        {showPopUp && (
+          <PopUp
+            className={"boundaries-pop-module"}
+            type={"default"}
+            heading={t("ES_CAMPAIGN_UPDATE_TYPE_MODAL_HEADER")}
+            children={[
+              <div>
+                <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_TYPE_MODAL_TEXT") + " "}</CardText>
+              </div>,
+            ]}
+            onOverlayClick={() => {
+              setShowPopUp(false);
             }}
-          />
-          {error?.message && <ErrorMessage message={t(error?.message)} showIcon={true} />}
-        </div>
-      </LabelFieldPair>
-      {showBeneficiary && (
-        <LabelFieldPair>
-          <div className="beneficiary-type">{`${t("HCM_BENEFICIARY_TYPE")}`}</div>
-          <div>{t(`CAMPAIGN_TYPE_${beneficiaryType}`)}</div>
-        </LabelFieldPair>
-      )}
-      {showPopUp && ( 
-        <PopUp
-          className={"boundaries-pop-module"}
-          type={"default"}
-          heading={t("ES_CAMPAIGN_UPDATE_TYPE_MODAL_HEADER")}
-          children={[
-            <div>
-              <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_TYPE_MODAL_TEXT") + " "}</CardText>
-            </div>,
-          ]}
-          onOverlayClick={() => {
-            setShowPopUp(false);
-          }}
-          footerChildren={[
-            <Button
-              className={"campaign-type-alert-button"}
-              type={"button"}
-              size={"large"}
-              variation={"secondary"}
-              label={t("ES_CAMPAIGN_BOUNDARY_MODAL_BACK")}
-              onClick={() => {
-                setShowPopUp(false);
-                setCanUpdate(true);
-              }}
-            />,
-            <Button
-              className={"campaign-type-alert-button"}
-              type={"button"}
-              size={"large"}
-              variation={"primary"}
-              label={t("ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT")}
-              onClick={() => {
-                setShowPopUp(false);
-                setCanUpdate(false);
-              }}
-            />,
-          ]}
-          onClose={() => {
-            setShowPopUp(false);
-          }}
-          sortFooterChildren={true}
-        ></PopUp>
-      )}
-    </React.Fragment>
+            footerChildren={[
+              <Button
+                className={"campaign-type-alert-button"}
+                type={"button"}
+                size={"large"}
+                variation={"secondary"}
+                label={t("ES_CAMPAIGN_BOUNDARY_MODAL_BACK")}
+                onClick={() => {
+                  setShowPopUp(false);
+                  setCanUpdate(true);
+                }}
+              />,
+              <Button
+                className={"campaign-type-alert-button"}
+                type={"button"}
+                size={"large"}
+                variation={"primary"}
+                label={t("ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT")}
+                onClick={() => {
+                  setShowPopUp(false);
+                  setCanUpdate(false);
+                }}
+              />,
+            ]}
+            sortFooterChildren={true}
+          ></PopUp>
+        )}
+      </div>
+    </>
+
   );
 };
 

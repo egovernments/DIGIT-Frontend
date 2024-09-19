@@ -7,6 +7,7 @@ import { overrideHooks, updateCustomConfigs } from "./utils";
 import MicroplanDetails from "./components/MicroplanDetails";
 import CampaignDetails from "./components/CampaignDetails";
 import { ProviderContext } from "./utils/context";
+import BoundarySelection from "./components/BoundarySelection";
 import HypothesisWrapper from "./components/HypothesisWrapper";
 
 
@@ -41,6 +42,7 @@ const componentsToRegister = {
   MicroplanCard,
   CampaignDetails,
   MicroplanDetails,
+  BoundarySelection
   HypothesisWrapper,
   
 };

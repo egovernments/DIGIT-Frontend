@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , Fragment } from "react";
 import { DatePicker, LabelFieldPair, Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { ErrorMessage, FieldV1, TextInput } from "@egovernments/digit-ui-components";
+import { ErrorMessage, FieldV1, TextInput ,Stepper , TextBlock , Card  } from "@egovernments/digit-ui-components";
 
 const CampaignDates = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
@@ -16,6 +16,21 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
   const [executionCount, setExecutionCount] = useState(0);
   const [error, setError] = useState(null);
   const [startValidation, setStartValidation] = useState(null);
+  const searchParams = new URLSearchParams(location.search);
+  const [currentStep , setCurrentStep] = useState(1);
+  const currentKey = searchParams.get("key");
+  const [key, setKey] = useState(() => {
+    const keyParam = searchParams.get("key");
+    return keyParam ? parseInt(keyParam) : 1;
+  });
+
+  function updateUrlParams(params) {
+    const url = new URL(window.location.href);
+    Object.entries(params).forEach(([key, value]) => {
+      url.searchParams.set(key, value);
+    });
+    window.history.replaceState({}, "", url);
+  }
 
   useEffect(() => {
     setDates({
@@ -69,8 +84,52 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
     setEndDate(date);
   }
 
+  useEffect(() =>{
+    setKey(currentKey);
+    setCurrentStep(currentKey);
+  }, [currentKey])
+
+  useEffect(() => {
+    updateUrlParams({ key: key });
+    window.dispatchEvent(new Event("checking"));
+  }, [key]);
+
+
+  const onStepClick = (currentStep) => {
+    if (!props?.props?.sessionData?.HCM_CAMPAIGN_NAME || !props?.props?.sessionData?.HCM_CAMPAIGN_TYPE) return;
+    if(currentStep === 0){
+      setKey(1);
+    }
+    else if(currentStep === 1){
+      setKey(2);
+    }
+    else if(currentStep === 3){
+      if (!props?.props?.sessionData?.HCM_CAMPAIGN_DATE) return;
+      else setKey(4);
+    }
+    else setKey(3);
+  };
+
+
   return (
-    <React.Fragment>
+    <>
+      <div className="container">
+        <div className="card-container">
+          <Card className="card-header-timeline">
+            <TextBlock subHeader={t("HCM_CAMPAIGN_DETAILS")}  subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+          </Card>
+          <Card className="stepper-card">
+            <Stepper
+              customSteps={[ "HCM_CAMPAIGN_TYPE","HCM_CAMPAIGN_NAME", "HCM_CAMPAIGN_DATE" , "HCM_SUMMARY"]}
+              currentStep={currentStep}
+              onStepClick={onStepClick}
+              direction={"vertical"}
+            />
+          </Card>
+        </div>
+      
+      <div className="card-container2">
+        <Card className = "setup-campaign-card">
       <Header>{t(`HCM_CAMPAIGN_DATES_HEADER`)}</Header>
       <p className="dates-description">{t(`HCM_CAMPAIGN_DATES_DESCRIPTION`)}</p>
       <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "13rem 2fr", alignItems: "start" }}>
@@ -115,7 +174,10 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
           />
         </div>
       </LabelFieldPair>
-    </React.Fragment>
+      </Card>
+      </div>
+      </div>
+    </>
   );
 };
 

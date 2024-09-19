@@ -36,7 +36,7 @@ const CampaignDetails = ({onSelect,props:customProps,...props}) => {
           },
         ],
         // distributionStrategies: data?.["HCM-PROJECT-TYPES"]?.projectTypes?.[0]?.distributionStrategy,
-        distributionStrategies:state?.resourceDistributionStrategy
+        distributionStrategies:state?.ResourceDistributionStrategy
       };
     },
   },
@@ -111,7 +111,7 @@ const CampaignDetails = ({onSelect,props:customProps,...props}) => {
             // variant={error ? "error" : ""}
             t={t}
             option={data?.distributionStrategies}
-            optionKey={"code"}
+            optionKey={"resourceDistributionStrategyCode"}
             selected={distributionStrat}
             select={(value) => {
               setDistributionStrat(value);
