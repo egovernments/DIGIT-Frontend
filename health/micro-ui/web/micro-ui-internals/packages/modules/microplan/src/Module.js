@@ -7,6 +7,7 @@ import { overrideHooks, updateCustomConfigs } from "./utils";
 import MicroplanDetails from "./components/MicroplanDetails";
 import CampaignDetails from "./components/CampaignDetails";
 import { ProviderContext } from "./utils/context";
+import BoundarySelection from "./components/BoundarySelection";
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -38,6 +39,7 @@ const componentsToRegister = {
   MicroplanCard,
   CampaignDetails,
   MicroplanDetails,
+  BoundarySelection
 };
 
 export const initMicroplanComponents = () => {
