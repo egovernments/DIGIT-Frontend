@@ -795,12 +795,12 @@ tbody {
 
 .inbox-search-wrapper .inbox-search-component-wrapper .sections-parent.search .search-wrapper .search-field-wrapper.search.custom-both-clear-search .search-button-wrapper .submit-bar
 {
-  background-color: #c84c0e !important;
+  background-color: theme(digitv2.lightTheme.primary); !important;
 }
 
 .inbox-search-wrapper .inbox-search-component-wrapper .sections-parent.search .search-wrapper .search-field-wrapper.search.custom-both-clear-search .search-button-wrapper .link-label
 {
-  color: #c84c0e !important;
+  color: theme(digitv2.lightTheme.primary); !important;
 }
 
 .boundary-header{
