@@ -158,7 +158,7 @@ export const StoreService = {
     // .map((tenant) => ({ i18nKey: `TENANT_TENANTS_${tenant.code.replace(".", "_").toUpperCase()}`, ...tenant }));
 
     await LocalizationService.getLocale({
-      modules: [`${modulePrefix}-common`, `digit-ui`, `${modulePrefix}-${stateCode.toLowerCase()}`],
+      modules: [`${modulePrefix}-common`, `digit-ui`, `digit-tenants`, `${modulePrefix}-${stateCode.toLowerCase()}`],
       locale: initData.selectedLanguage,
       tenantId: stateCode,
     });
