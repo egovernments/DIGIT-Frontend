@@ -1039,7 +1039,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
   return (
     <>
-      <div className="container">
+      <div className="container-full">
       <div className="card-container">
         <Card className="card-header-timeline">
         <TextBlock

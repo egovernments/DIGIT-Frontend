@@ -58,6 +58,7 @@ const BoundaryDetailsSummary = (props) => {
                         text={t(boundary.code)}
                         onClick={() => {}}
                         className="multiselectdropdown-tag"
+                        hideClose={true}
                       />
                     ))}
                   {groupedByParent[parentKey].length > 10 && (

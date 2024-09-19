@@ -828,12 +828,16 @@ tbody {
     padding: 1rem;
 }
 .card-container{
-  height: 50rem;
+  height: 100%;
 }
 .card-container2{
   width: -webkit-fill-available;
   padding-bottom: 1.5rem;
   
+}
+.card-container-delivery{
+  height: 100%;
+  width: -webkit-fill-available;
 }
 
 .parent{
