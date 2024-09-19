@@ -156,7 +156,7 @@ const CheckBoxOption = ({
             disabled={isPartiallyEnabled ? !isPartiallyEnabled : formDisabled}
           />
         </div>
-        <div style={{display:"flex", gap:"1rem"}}>
+        <div style={{display:"flex", gap:"1rem", alignItems:"center"}}>
           {
             <>
               <CheckBox
@@ -182,10 +182,21 @@ const CheckBoxOption = ({
             index={field.key}
           />} */}
           {!disableDelete && (
-            <div className="pointer" onClick={() => removeOption(index)}>
-              <DustbinIcon />
-              {t(`CAMPAIGN_DELETE_ROW_TEXT`)}
-            </div>
+            // <div className="pointer" onClick={() => removeOption(index)}>
+            //   <DustbinIcon />
+            //   {t(`CAMPAIGN_DELETE_ROW_TEXT`)}
+            // </div>
+            <Button
+              // className="custom-class"
+              icon="Delete"
+              iconFill=""
+              label={t(`CAMPAIGN_DELETE_ROW_TEXT`)}
+              onClick={removeOption(index)}
+              size=""
+              style={{}}
+              title=""
+              variation="link"
+            />
           )}
         </div>
       </div>

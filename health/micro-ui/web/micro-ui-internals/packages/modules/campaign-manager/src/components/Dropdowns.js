@@ -140,7 +140,7 @@ const DropdownOption = ({
             placeholder={"Dropdown section"}
         />
         </div>
-        <div style={{display:"flex", gap:"1rem"}}>
+        <div style={{display:"flex", gap:"1rem", alignItems:"center"}}>
           {
             <>
               <CheckBox
@@ -174,10 +174,21 @@ const DropdownOption = ({
             </>
           }
           {!disableDelete && (
-            <div className="pointer"  onClick={() => removeOption(index)}>
-              <DustbinIcon />
-              {t(`CAMPAIGN_DELETE_ROW_TEXT`)}
-            </div>
+            // <div className="pointer"  onClick={() => removeOption(index)}>
+            //   <DustbinIcon />
+            //   {t(`CAMPAIGN_DELETE_ROW_TEXT`)}
+            // </div>
+            <Button
+              // className="digit-employee-card .digit-label-field-pair h2"
+              icon="Delete"
+              iconFill=""
+              label={t(`CAMPAIGN_DELETE_ROW_TEXT`)}
+              onClick={removeOption(index)}
+              size=""
+              style={{}}
+              title=""
+              variation="link"
+            />
           )}
         </div>
       </div>

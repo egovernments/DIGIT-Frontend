@@ -144,7 +144,7 @@ export const RadioButtonOption = ({
             disabled={isPartiallyEnabled ? !isPartiallyEnabled : formDisabled}
           />
         </div>
-        <div style={{display:"flex", gap:"1rem"}}>
+        <div style={{display:"flex", gap:"1rem", alignItems:"center"}}>
           {
             <>
               <CheckBox
@@ -178,10 +178,21 @@ export const RadioButtonOption = ({
           </> 
           }
           {!disableDelete && (
-            <div className="pointer" style={{}} onClick={() => removeOption(index)}>
-              <DustbinIcon />
-              {t(`CAMPAIGN_DELETE_ROW_TEXT`)}
-            </div>
+            // <div className="pointer" style={{}} onClick={() => removeOption(index)}>
+            //   <DustbinIcon />
+            //   {t(`CAMPAIGN_DELETE_ROW_TEXT`)}
+            // </div>
+            <Button
+              // className="digit-employee-card .digit-label-field-pair h2"
+              icon="Delete"
+              iconFill=""
+              label={t(`CAMPAIGN_DELETE_ROW_TEXT`)}
+              onClick={removeOption(index)}
+              size=""
+              style={{}}
+              title=""
+              variation="link"
+            />
           )}
         </div>
       </div>

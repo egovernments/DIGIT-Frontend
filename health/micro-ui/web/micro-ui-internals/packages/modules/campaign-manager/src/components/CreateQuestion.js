@@ -467,7 +467,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
           label={t("ADD_QUESTION")}
           className={"hover"}
           // icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
-          icon="Add"
+          icon="AddIcon"
           iconFill=""
           // onButtonClick={addMoreField}
           onClick={()=>addMoreField()}
