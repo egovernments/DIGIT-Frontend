@@ -86,7 +86,7 @@ const SetupMicroplan = () => {
     // setIsSubmittting to true -> to run inline validations within the components
     setIsSubmitting(true);
     const name = filteredConfig?.[0]?.form?.[0]?.name;
-    const currentConfBody = filteredConfig?.[0]?.form?.[0]?.body
+    const currentConfBody = filteredConfig?.[0]?.form?.[0]?.body?.[0]
     // run toast level validations 
     // decide whether to call api or not based on config
     // update totalFormData
@@ -114,8 +114,19 @@ const SetupMicroplan = () => {
 
   //Calling API
   useEffect(() => {
-    if(shouldUpdate){
-      //trigger an API call here
+    // trigger an API call here
+    // we need to decide whether to call project-factory or plan-config based on config 
+    if(shouldUpdate==="CAMPAIGN"){
+      // create req body
+      
+      // validate req body
+      // call create/update
+        
+    }else if(shouldUpdate==="PLAN"){
+      // create req body
+      // validate req body
+      // call create/update
+      
     }
   }, [shouldUpdate])
   
