@@ -338,9 +338,32 @@
   }
 }
 .digit-popup-wrapper.setupMasterPopUp.alert {
-  .digit-popup-alert-content{
+  .digit-popup-alert-content {
     .digit-popup-alert-heading {
       color: #00703c;
     }
   }
+}
+.digit-popup-wrapper.setupMasterPopUp.error.alert {
+  .digit-popup-alert-content {
+    .digit-popup-alert-heading {
+      color: #b91800;
+    }
+  }
+}
+.digit-employee-card.customError {
+  width: 35rem;
+}
+.customErrorButton {
+  margin: auto;
+}
+.digit-employee-card.digit-landing-page-card {
+  display: flex;
+  flex-direction: column;
+}
+.digit-card-header.center {
+  text-align: center;
+}
+digit-card-text.center {
+  text-align: center;
 }

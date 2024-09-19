@@ -1,3 +1,3 @@
-import { useStore, useInitStore } from "../hooks/store";
+import { useStore, useInitStore, useInitTenantConfig } from "../hooks/store";
 
-export { useStore, useInitStore };
+export { useStore, useInitStore, useInitTenantConfig };

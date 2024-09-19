@@ -11,6 +11,7 @@ const SetupMaster = () => {
   const history = useHistory();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
+  const { isLoading, data, refetch } = Digit.Hooks.useAccessControl();
   const module = searchParams.get("module");
   const key = searchParams.get("key");
   const [showPopUp, setShowPopUp] = useState(null);
@@ -63,6 +64,7 @@ const SetupMaster = () => {
           });
         },
         onSuccess: async (data) => {
+          refetch();
           setShowPopUp({
             key: "success",
             // label: "DEFAULT_MASTER_SETUP_SUCCESS", message: "DEFAULT_MASTER_SETUP_SUCCESS_MESSAGE",
@@ -162,7 +164,7 @@ const SetupMaster = () => {
           />
           {showPopUp && (
             <PopUp
-              className="setupMasterPopUp"
+              className={`setupMasterPopUp ${showPopUp?.key === "error" ? "error" : ""}`}
               type={"alert"}
               showIcon={t(showPopUp?.showIcon)}
               heading={t(showPopUp?.heading)}
