@@ -6,6 +6,8 @@ import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-r
 import SetupCampaign from "./SetupCampaign";
 import SelectingBoundaries from "../../components/SelectingBoundaries";
 import ConfigureApp from "./ConfigureApp";
+import {temp_data, CreateChecklist} from "./CreateChecklist";
+import SearchChecklist from "./SearchChecklist";
 import UpdateBoundary from "./UpdateBoundary";
 // import SelectingBoundaryComponent from "../../components/SelectingBoundaryComponent";
 import { Wrapper } from "../../components/SelectingBoundaryComponent";
@@ -105,7 +107,11 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
           <PrivateRoute path={`${path}/add-product`} component={() => <AddProduct />} />
           <PrivateRoute path={`${path}/configure-app`} component={() => <ConfigureApp />} />
           <PrivateRoute path={`${path}/update-dates-boundary`} component={() => <UpdateDatesWithBoundaries />} />
+          <PrivateRoute path={`${path}/checklist/create`} component={() => <CreateChecklist />} />
+          <PrivateRoute path={`${path}/checklist/search`} component={() => <SearchChecklist />} />
           <PrivateRoute path={`${path}/update-boundary`} component={() => <UpdateBoundary hierarchyType={BOUNDARY_HIERARCHY_TYPE}/>} />
+          
+          
         </AppContainer>
       </Switch>
     </React.Fragment>
