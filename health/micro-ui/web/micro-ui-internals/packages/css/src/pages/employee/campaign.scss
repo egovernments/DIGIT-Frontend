@@ -131,6 +131,7 @@
   flex-direction: row;
   gap: 1.5rem;
   align-items: stretch;
+  height: 31.25rem;
 }
 .stepper-card{
   height: 36.5rem;
@@ -138,4 +139,11 @@
 }
 .stepper-subheader{
   color: theme(digitv2.lightTheme.header-sidenav);
+}
+.container-full{
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  align-items: stretch;
+  height: 100%;
 }

@@ -263,7 +263,7 @@ const MultiTab = ({ tabCount = 3, subTabCount = 2 }) => {
 
   return (
     <>
-    <div className="container">
+    <div className="container-full">
         <div className="card-container">
           <Card className="card-header-timeline">
             <TextBlock subHeader={t("HCM_DELIVERY_DETAILS")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
@@ -277,7 +277,7 @@ const MultiTab = ({ tabCount = 3, subTabCount = 2 }) => {
             />
           </Card>
         </div>
-        <div className="card-container2">
+        <div className="card-container-delivery">
       <Header>
         {t(
           `CAMPAIGN_PROJECT_${
