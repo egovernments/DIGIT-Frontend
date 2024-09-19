@@ -406,6 +406,7 @@ const SelectingBoundaryComponent = ({
                         }}
                         selected={selectedData?.filter((item) => item?.type === boundary?.boundaryType) || []}
                         optionsKey={"name"}
+                        hierarchyType ={hierarchyType}
                         config={{
                           isDropdownWithChip: true,
                           chipKey: "name",
@@ -468,6 +469,7 @@ const SelectingBoundaryComponent = ({
                           chipKey: "name",
                           numberOfChips: 4,
                         }}
+                        hierarchyType= {hierarchyType}
                         addCategorySelectAllCheck={true}
                         addSelectAllCheck={true}
                         variant="nestedmultiselect"
