@@ -12,6 +12,10 @@ const CampaignDetailsSummary = (props) => {
   const id = searchParams.get("id");
   const noAction = searchParams.get("action");
   const [showToast, setShowToast] = useState(null);
+  const [key, setKey] = useState(() => {
+    const keyParam = searchParams.get("key");
+    return keyParam ? parseInt(keyParam) : 1;
+  });
   const handleRedirect = (step, activeCycle) => {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
@@ -23,6 +27,20 @@ const CampaignDetailsSummary = (props) => {
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
     history.push(newUrl);
   };
+
+  function updateUrlParams(params) {
+    const url = new URL(window.location.href);
+    Object.entries(params).forEach(([key, value]) => {
+      url.searchParams.set(key, value);
+    });
+    window.history.replaceState({}, "", url);
+  }
+
+
+  useEffect(() => {
+    updateUrlParams({ key: key });
+    window.dispatchEvent(new Event("checking"));
+  }, [key]);
 
   const { isLoading, data, error, refetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
