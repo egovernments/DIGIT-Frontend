@@ -46,7 +46,6 @@ const EmployeeApp = ({
 
   const additionalComponent = initData?.modules?.filter((i) => i?.additionalComponent)?.map((i) => i?.additionalComponent);
 
-  console.log("is user profile", isUserProfile);
   return (
     <div className="employee">
       <Switch>
