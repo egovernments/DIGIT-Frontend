@@ -302,17 +302,17 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
       },
     },
   });
-  const handleStorageChange = () => {
+  const getCurrentKey = () => {
     const key = Number((/key=([^&]+)/.exec(location.search) || [])[1]);
     setCurrentKey(key);
   };
 
   useEffect(() => {
   
-    window.addEventListener("checking", handleStorageChange);
+    window.addEventListener("checking", getCurrentKey);
 
     return () => {
-      window.removeEventListener("checking", handleStorageChange);
+      window.removeEventListener("checking", getCurrentKey);
     };
   }, []);
 
