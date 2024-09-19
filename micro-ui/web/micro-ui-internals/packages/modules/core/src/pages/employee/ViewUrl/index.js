@@ -11,9 +11,11 @@ const ViewUrl = () => {
   const { tenant } = location.state || {};
   const history = useHistory();
   const ref = useRef(null);
+  const userScreensExempted = ["/user/landing","user/profile", "user/error"];
+
 
   const onButtonClick = () => {
-    window.location.href = `/${window?.globalPath}/${tenant}/employee`;
+    window.location.href = `/${window?.globalPath}/${tenant}/employee/user/landing`;
     // history.push({
     // pathname: `/${window?.globalPath}/${tenant}/employee`,
     // });
