@@ -2520,16 +2520,13 @@ $border-color: rgba(214, 213, 212, 1);
 
 .label-field{
   display: flex;
-  gap:12rem;
+  gap:10rem;
   margin: 1.7rem 0rem;  
   
 }
 
 
-
-
-/* Label styling */
-.label-field > span {
+.label-field > div > span {
   width: 20rem;
   font-size: 1.2rem;
   margin-right: 2rem;
@@ -2537,31 +2534,25 @@ $border-color: rgba(214, 213, 212, 1);
   
 }
 
-
-
-
-/* Delete button styling */
 .delete-button {
   display: flex;
-  cursor: pointer;
+  cursor: pointer;  
   margin-left: 1rem;
   font-size: 1.2rem;
   
 }
 
-/* TextInput and delete button styling  */
+
 .input-container{
   display: flex;
   justify-content: center;
+  width:30rem;
 
 }
 
-.equals-icon{
-   font-size: 5rem;
-   font-family: Roboto Condensed;
-  /* margin: 0 3%;*/
-   /*font-weight: 700;*/
-}
+
+
+
 
 
 

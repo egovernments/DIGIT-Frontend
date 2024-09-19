@@ -7,8 +7,8 @@ import { overrideHooks, updateCustomConfigs } from "./utils";
 import MicroplanDetails from "./components/MicroplanDetails";
 import CampaignDetails from "./components/CampaignDetails";
 import { ProviderContext } from "./utils/context";
-import Hypothesis from "./components/Hypothesis";
-import FormulaConfiguration from "./components/FormulaConfiguration";
+import HypothesisWrapper from "./components/HypothesisWrapper";
+
 
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -41,8 +41,8 @@ const componentsToRegister = {
   MicroplanCard,
   CampaignDetails,
   MicroplanDetails,
-  Hypothesis,
-  FormulaConfiguration
+  HypothesisWrapper,
+  
 };
 
 export const initMicroplanComponents = () => {

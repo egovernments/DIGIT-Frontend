@@ -54,7 +54,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
         },
         {
           stepCount: "3",
-          key: "3",
+          key: "6",
           name: "HYPOTHESIS",
           body: [
             {
@@ -62,7 +62,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               key: "hypothesis",
               type: "component",
               skipAPICall: false,
-              component: "Hypothesis",
+              component: "HypothesisWrapper",
               withoutLabel: true,
               disable: false,
               withoutLabelFieldPair: true,
@@ -80,32 +80,32 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
           ],
         },
 
-        {
-          stepCount: "4",
-          key: "4",
-          name: "FORMULA_CONFIGURATION",
-          body: [
-            {
-              isMandatory: true,
-              key: "formulaConfiguration",
-              type: "component",
-              skipAPICall: false,
-              component: "FormulaConfiguration",
-              withoutLabel: true,
-              withoutLabelFieldPair: true,
-              disable: false,
-              customProps: {
-                module: "HCM",
-                sessionData: totalFormData,
-                isSubmitting: isSubmitting,
-              },
-              populators: {
-                name: "formulaConfiguration",
-                required: true,
-              },
-            },
-          ],
-        },
+        // {
+        //   stepCount: "4",
+        //   key: "4",
+        //   name: "FORMULA_CONFIGURATION",
+        //   body: [
+        //     {
+        //       isMandatory: true,
+        //       key: "formulaConfiguration",
+        //       type: "component",
+        //       skipAPICall: false,
+        //       component: "FormulaConfiguration",
+        //       withoutLabel: true,
+        //       withoutLabelFieldPair: true,
+        //       disable: false,
+        //       customProps: {
+        //         module: "HCM",
+        //         sessionData: totalFormData,
+        //         isSubmitting: isSubmitting,
+        //       },
+        //       populators: {
+        //         name: "formulaConfiguration",
+        //         required: true,
+        //       },
+        //     },
+        //   ],
+        // },
         
       ]
     }

@@ -81,7 +81,8 @@ const SetupMicroplan = () => {
   }, [params]);
 
   const onSubmit = (formData) => {
-    
+    console.log(formData)
+    debugger
     //run validations
     // setIsSubmittting to true -> to run inline validations within the components
     setIsSubmitting(true);
@@ -108,8 +109,8 @@ const SetupMicroplan = () => {
     }
 
     //for now on every next click updating this later we'll remove
-    setCurrentStep(prev => prev + 1)
-    setCurrentKey(prev => prev + 1)
+    // setCurrentStep(prev => prev + 1)
+    // setCurrentKey(prev => prev + 1)
   }
 
   //Calling API

@@ -42,7 +42,7 @@ const CampaignDetails = ({onSelect,props:customProps,...props}) => {
   },
   {schemaCode:"ProjectType"}
 );
-
+  
 
   useEffect(() => {
     onSelect(customProps.name,{

@@ -1,91 +1,132 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect,Fragment} from "react";
 import { useTranslation } from "react-i18next";
-import { Card, Header, DeleteIconv2,LabelFieldPair, AddIcon,Button, CardText,} from "@egovernments/digit-ui-react-components";
+import { Card, Header, DeleteIconv2,LabelFieldPair, AddIcon,Button, CardText, } from "@egovernments/digit-ui-react-components";
 
-import { TextInput, InfoCard ,  FieldV1,PopUp} from "@egovernments/digit-ui-components";
-import { size } from "lodash";
+import {Dropdown,FieldV1,PopUp, TextInput,} from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR } from "../utils";
+import { useMyContext } from "../utils/context";
 
-const hypothesisAssumptions = [
-    "NO_OF_PEOPLE_PER_HOUSEHOLD",
-    "NO_OF_BEDNETS_PER_HOUSEHOLD",
-    "NO_OF_DISTRIBUTORS_PER_MONITOR"
-  ]
 
-const Hypothesis = ({onSelect, formData, ...props})=>{
+
+const Hypothesis = ({ category, assumptions:initialAssumptions, customProps, onSelect, })=>{
  
-    const [assumptions, setAssumptions] = useState(hypothesisAssumptions)
-     const [assumptionValues, setAssumptionValues] = useState({});
+  
+   
   
     const { t } = useTranslation();
-    const [error, setError] = useState(null);
-    const [startValidation, setStartValidation] = useState(null);
+    const [error, setError] = useState({});
+    const [startValidation, setStartValidation] = useState(false);
     const [showPopUP, setShowPopUp] = useState(false)
+    const [assumptionsPopUP, setAssumptionsPopUp] = useState(false)
     const [assumptionToDelete, setAssumptionToDelete] = useState(null)
-    console.log(assumptionValues)
+    const { state, dispatch } = useMyContext();
+    const [assumptions, setAssumptions] = useState(initialAssumptions);
+    const [assumptionValues, setAssumptionValues] = useState([]);
+    const [deletedAssumptions, setDeletedAssumptions] = useState([]);
+    const [selectedDeletedAssumption, setSelectedDeletedAssumption] = useState(null);
+
+         useEffect(()=>{
+            onSelect(customProps.name, { assumptionValues });
+          },[assumptionValues])
+
+         
+        useEffect(() => {
+          setAssumptions(initialAssumptions);
+        }, [initialAssumptions]);
+
+
+          useEffect(() => {
+            if (customProps.isSubmitting) {
+                  validateFields(); 
+            }
+        }, [customProps.isSubmitting, assumptions, assumptionValues]);
+
+          const validateFields = () => {
+            const newError = {};
+            assumptions.forEach((item) => {
+                const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
+                if (!value) {
+                    newError[item] = "This field is required"; 
+                }
+            });
+
+            setError(newError); 
+        };
+
     
-
- 
-    // useEffect(()=>{
-    //   if(props?.props?.isSubmitting && !averagePeopleInHousehold){
-    //     setError({message:"Enter average household size"})
-    //   }else{
-    //     setError(null)
-    //   }
-      
-    // }, [averagePeopleInHousehold, props?.props?.sessionData?.HYPOTHESIS?.hypothesis])
-
-    // useEffect(()=>{
-    //   if(props?.props?.isSubmitting && !numberOfBednetsPerBale){
-    //     setError({message:"Enter no. of bednets per bale"})
-    //   }else{
-    //     setError(null)
-    //   }
-       
-    // }, [numberOfBednetsPerBale, props?.props?.sessionData?.HYPOTHESIS?.hypothesis])
-
-    // useEffect(()=>{
-    //   if(props?.props?.isSubmitting && !averagePeopleInHousehold){
-    //     setError({message:"Enter average household size"})
-    //   }else{
-    //     setError(null)
-    //   }
-       
-    // }, [numberOfPeoplePerBednet, props?.props?.sessionData?.HYPOTHESIS?.hypothesis])
-
+        
+    const handleAssumptionChange = (event, item) => {
+            
+              const newValue = event.target.value;
+          
+              setAssumptionValues((prevValues) => {
+              
+                const existingIndex = prevValues.findIndex((assumption) => assumption.key === item);
+          
+                if (existingIndex >= 0) {
+                  const updatedValues = [...prevValues];
+                  updatedValues[existingIndex] = {
+                    ...updatedValues[existingIndex],
+                    value: newValue,
+                  };
+                  return updatedValues;
+                } else {
+                
+                  return [...prevValues, { category, key: item, value: newValue }];
+                }
+              });
+    };
         const handleDeleteClick = (index) => {
-          setAssumptionToDelete(index); // Set the assumption index to delete
+          setAssumptionToDelete(index); 
           setShowPopUp(true); 
         };
 
         const handleConfirmDelete = () => {
           if (assumptionToDelete !== null) {
+            const deletedAssumption = assumptions[assumptionToDelete];
             const updatedAssumptions = assumptions.filter((_, i) => i !== assumptionToDelete);
+            const updatedAssumptionValues = assumptionValues.filter(
+              (value) => value.key !== deletedAssumption
+          );
+            
+
+            setDeletedAssumptions([...deletedAssumptions, deletedAssumption]);
             setAssumptions(updatedAssumptions);
-            setAssumptionToDelete(null); // Resetting assumption index
+            setAssumptionValues(updatedAssumptionValues);
+            setAssumptionToDelete(null); 
          }
          setShowPopUp(false);
         };
         const handleCancelDelete = () => {
-          setShowPopUp(false); // Simply close the popup
+          setShowPopUp(false); 
         };
 
       
         const addNewAssumption = () => {
-              
-          setAssumptions([...assumptions, "Number of People per Bed net "]);
-      
+         
+          if (selectedDeletedAssumption) {
+            const assumptionToAdd = deletedAssumptions.find(assumption => assumption === selectedDeletedAssumption.code);
+            if (assumptionToAdd) {
+              setAssumptions([...assumptions, assumptionToAdd]);
+              setDeletedAssumptions(deletedAssumptions.filter((assumption) => assumption !== selectedDeletedAssumption.code));
+              setAssumptionValues((prevValues) => {
+                return prevValues.filter((value) => value.key !== assumptionToAdd);
+              });
+              setSelectedDeletedAssumption(null);
+              setAssumptionsPopUp(false);
         };
       
-         useEffect(()=>{
-           onSelect("hypothesis", assumptionValues)
-         }, [assumptionValues])
+      };
+
+   };   
+      
+        
          
      return (
          <>
           
               <Card>
-                <Header>{t("General Information")}</Header>
+                <Header>{t(category)}</Header>
                 <p className="mp-description">{t(`Please enter the values for each assumptions stated below for resource calculation`)}</p>
               </Card>   
                   
@@ -96,20 +137,25 @@ const Hypothesis = ({onSelect, formData, ...props})=>{
 
                         return (
                               <LabelFieldPair className="label-field" style={{marginTop:"1rem"}} key={index}>
-                                    <span>{`${t(item)}`}</span>
+                                    <div style={{display:"flex"}}>
+                                    <span>{`${t(item)}`}
+                                    <span className="mandatory-span">*</span>
+                                    </span>
+                               
+                                    </div>
+
+
                                     <div class="input-container">
-                                        <TextInput 
+                                        <FieldV1 
                                           type="number"
                                           name={item}
-                                          value={assumptionValues[item] || ""}
-                                          error={error?.message ? t(error.message) : ""}
-                                          style={{ width: "30rem", marginBottom: "0" }}
+                                          value={assumptionValues.find((assumption) => assumption.key === item)?.value || ""}
+                                          error={error[item] ? t(error[item]) : ""}
+                                          style={{marginBottom: "0" }}
                                           populators={{ name: item }}
                                           id={index}
                                           onChange={(event) => {
-                                            setStartValidation(true);
-                                            setAssumptionValues((prev)=> ({...prev,[event.target.name]:event.target.value}))
-
+                                            handleAssumptionChange(event, item);
                                           }}
                                             />
                                         <div className="delete-button">
@@ -127,13 +173,14 @@ const Hypothesis = ({onSelect, formData, ...props})=>{
                       icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem",}} fill={PRIMARY_COLOR}/>}
                       iconFill=""
                       label="Add new Assumption"
-                      onButtonClick={()=> addNewAssumption()}
+                      onButtonClick={()=> setAssumptionsPopUp(true)}
                       options={[]}
                       optionsKey=""
                       size=""
                       style={{height:"50px", fontSize:"20px"}}
                       title=""
                       variation="secondary"
+                      isDisabled={assumptions.length === 3}
                       
                     />
                     {showPopUP && <PopUp
@@ -172,6 +219,57 @@ const Hypothesis = ({onSelect, formData, ...props})=>{
                                         setShowPopUp(false);
                                       }}
                           ></PopUp> }
+
+                    {assumptionsPopUP && <PopUp
+                                    className={"popUpClass"}
+                                    type={"default"}
+                                    heading={t("Are you sure you want to add a new assumption?")}
+                                    equalWidthButtons={true}
+                                      children={[
+                                        <Dropdown
+                                        variant="select-dropdown"
+                                        t={t}
+                                        isMandatory={false}
+                                        option={deletedAssumptions?.map((item)=> ({code:item}))}
+                                        select={(value)=>{
+                                          setSelectedDeletedAssumption(value)
+                                         }}
+                                        selected={selectedDeletedAssumption}
+                                        optionKey="code"  
+                                        showToolTip={true}
+                                        placeholder={t("SELECT_OPTION")}
+                                        onChange={(e) => setSelectedDeletedAssumption(e.target.value)}
+                                        optionCardStyles={{ position: "relative" }}
+                                        />
+                                      ]}
+                                        onOverlayClick={() => {
+                                          setAssumptionsPopUp(false)
+                                        }}
+                                      footerChildren={[
+                                        <Button
+                                          type={"button"}
+                                          size={"large"}
+                                          variation={"secondary"}
+                                          label={t("Yes")}
+                                          onButtonClick={() => {
+                                            addNewAssumption()
+                                          }}
+                                        />,
+                                        <Button
+                                          type={"button"}
+                                          size={"large"}
+                                          variation={"primary"}
+                                          label={t("No")}
+                                          onButtonClick={()=> {
+                                            setAssumptionsPopUp(false)
+                                          }}
+                                        />,
+                                      ]}
+                                      sortFooterChildren={true}
+                                      onClose={() => {
+                                        setAssumptionsPopUp(false)
+                                      }}
+                          ></PopUp> }
               </Card>     
         </>
 
@@ -183,4 +281,4 @@ const Hypothesis = ({onSelect, formData, ...props})=>{
       
 }
 
-export default Hypothesis
+export default Hypothesis;

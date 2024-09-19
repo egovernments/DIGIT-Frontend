@@ -32,7 +32,8 @@ const App = ({ path, stateCode, userType, tenants }) => {
     [
       { name: "MicroplanNamingConvention" },
       { name: "MicroplanNamingRegx" },
-      { name: "resourceDistributionStrategy"}
+      { name: "resourceDistributionStrategy"},
+      { name: "HypothesisAssumptions"}
     ],
     {
       cacheTime:Infinity,
