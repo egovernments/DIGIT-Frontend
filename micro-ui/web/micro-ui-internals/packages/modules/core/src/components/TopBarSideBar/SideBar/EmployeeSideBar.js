@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useState } from "react";
 import { Sidebar, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
+import MediaQuery from 'react-responsive';
+
 
 const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui", "health-ui", "sanitation-ui", "core-ui", "mgramseva-web", "sandbox-ui"];
 
@@ -91,7 +93,7 @@ const EmployeeSideBar = () => {
       let updatedUrl=null;
       if(isMultiRootTenant){
         url=url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`);
-        updatedUrl = hostUrl + url;
+        updatedUrl = url;
       }
       else{
         updatedUrl = DIGIT_UI_CONTEXTS?.every((e) => url?.indexOf(`/${e}`) === -1) ? hostUrl + "/employee/" + url : hostUrl + url;
@@ -117,6 +119,7 @@ const EmployeeSideBar = () => {
           label: value.item.displayName,
           icon: { icon: value.item.leftIcon, width: "1.5rem", height: "1.5rem" },
           navigationUrl: value.item.navigationURL,
+          orderNumber:value.item.orderNumber,
         };
       }
       const children = Object.keys(value).map((childKey) => transformItem(childKey, value[childKey]));
@@ -130,7 +133,24 @@ const EmployeeSideBar = () => {
     return Object.keys(data).map((key) => transformItem(key, data[key]));
   }
 
+  const sortDataByOrderNumber = (data) => {
+    // Sort the current level of data by orderNumber
+    data.sort((a, b) => {
+      return a.orderNumber - b.orderNumber;
+    });
+  
+    // Recursively sort the children if they exist
+    data.forEach((item) => {
+      if (item.children && item.children.length > 0) {
+        sortDataByOrderNumber(item.children);
+      }
+    });
+  
+    return data;
+  };
+
   const transformedData = transformData(splitKeyValue(configEmployeeSideBar));
+  const sortedTransformedData= sortDataByOrderNumber(transformedData);
 
   if (isLoading) {
     return <Loader />;
@@ -141,20 +161,27 @@ const EmployeeSideBar = () => {
   }
 
   return (
-    <Sidebar
-      items={transformedData}
-      hideAccessbilityTools={true}
-      onSelect={({ item, index, parentIndex }) => onItemSelect({ item, index, parentIndex })}
-      theme={"dark"}
-      variant={"primary"}
-      transitionDuration={""}
-      className=""
-      styles={{}}
-      expandedWidth=""
-      collapsedWidth=""
-      onBottomItemClick={() => {}}
-    />
+    <MediaQuery minWidth={768}>
+      <Sidebar
+        items={sortedTransformedData}
+        hideAccessbilityTools={true}
+        onSelect={({ item, index, parentIndex }) => onItemSelect({ item, index, parentIndex })}
+        theme={"dark"}
+        variant={"primary"}
+        transitionDuration={""}
+        className=""
+        styles={{}}
+        expandedWidth=""
+        collapsedWidth=""
+        onBottomItemClick={() => { }}
+      />
+    </MediaQuery>
   );
 };
 
 export default EmployeeSideBar;
+
+
+
+
+
