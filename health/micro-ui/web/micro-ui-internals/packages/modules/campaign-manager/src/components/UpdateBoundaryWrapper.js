@@ -19,8 +19,6 @@ const UpdateBoundaryWrapper = ({ ...props }) => {
   const [selectedData, setSelectedData] = useState([]);
   const [hierarchyType , SetHierarchyType] = useState(props?.props?.hierarchyType);
 
-  console.log("props" , props);
-
   const reqCriteriaCampaign = {
     url: `/project-factory/v1/project-type/search`,
     body: {
@@ -33,11 +31,7 @@ const UpdateBoundaryWrapper = ({ ...props }) => {
 
   const { data: CampaignData } = Digit.Hooks.useCustomAPIHook(reqCriteriaCampaign);
 
-  console.log("CampaignData" , CampaignData?.CampaignDetails?.[0]?.hierarchyType );
-
   const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({BOUNDARY_HIERARCHY_TYPE: hierarchyType,tenantId});
-
-  console.log("CampaignDataaaaaaaaaaaa333333333" , CampaignData , hierarchyData);
 
   const handleBoundaryChange =(value) =>{
     setBoundaryOptions(value?.boundaryOptions);
