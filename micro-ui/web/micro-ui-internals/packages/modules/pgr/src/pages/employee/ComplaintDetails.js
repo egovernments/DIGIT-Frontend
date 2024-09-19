@@ -468,7 +468,7 @@ export const ComplaintDetails = (props) => {
         )}
       </Card>
       {fullscreen ? (
-        <PopUp >
+        <PopUp>
           <div className="popup-module">
             <HeaderBar main={<Heading label="Complaint Geolocation" />} end={<CloseBtn onClick={() => close(fullscreen)} />} />
             <div className="popup-module-main">
