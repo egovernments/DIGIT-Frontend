@@ -198,7 +198,6 @@
   font-size: 0.8rem;
 }
 
-
 .sandbox-signup-form {
   .digit-employee-card.signupCardClassName {
     display: flex;
@@ -293,6 +292,18 @@
     color: unset !important;
   }
 }
+.digit-card-component.sandboxSetupMasterInfo {
+  .h1.headerFlex {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  .digit-card-header.subHeader {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: unset !important;
+  }
+}
 .digit-card-header.setupMaster-subheading {
   font-size: 1.5rem;
   color: unset !important;
@@ -374,10 +385,10 @@ digit-card-text.center {
   text-align: center;
 }
 
-.pgr-citizen-wrapper{
-  .applications-list-container{
-    .card{
-      .date-wrap{
+.pgr-citizen-wrapper {
+  .applications-list-container {
+    .card {
+      .date-wrap {
         align-items: center;
         justify-content: flex-start;
       }
@@ -385,10 +396,10 @@ digit-card-text.center {
   }
 }
 
-.pgr-citizen-wrapper{
-  .applications-list-container{
-    .card{
-      .status-highlight{
+.pgr-citizen-wrapper {
+  .applications-list-container {
+    .card {
+      .status-highlight {
         display: flex;
         align-items: center;
         justify-content: center;
