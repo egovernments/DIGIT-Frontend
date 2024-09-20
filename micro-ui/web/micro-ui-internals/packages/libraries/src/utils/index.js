@@ -124,10 +124,7 @@ const getStaticMapUrl = (latitude, longitude) => {
 const getLocaleRegion = () => {
   return window?.globalConfigs?.getConfig("LOCALE_REGION") || "IN";
 };
-const isContextPathMissing = (url) => {
-  const contextPath = window?.contextPath || '';
-  return url?.indexOf(`/${contextPath}`) === -1;
-}
+
 const getMultiRootTenant = () => {
   return window?.globalConfigs?.getConfig("MULTI_ROOT_TENANT") || false;
 };
@@ -361,25 +358,6 @@ const swAccess = () => {
   return SW_ACCESS?.length > 0;
 };
 
-const transformURL = (url = "", tenantId) => {
-  const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui", "health-ui", "sanitation-ui", "core-ui", "mgramseva-web", "sandbox-ui"];
-  if (url == "/") {
-    return;
-  }
-  if (Digit.Utils.isContextPathMissing(url)) {
-    let updatedUrl = null;
-    if (getMultiRootTenant) {
-      url = url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`);
-      updatedUrl = url;
-    } else {
-      updatedUrl = DIGIT_UI_CONTEXTS?.every((e) => url?.indexOf(`/${e}`) === -1) ? "/employee/" + url : url;
-    }
-    return updatedUrl;
-  } else {
-    return url;
-  }
-};
-
 /* to get the MDMS config module name */
 const getConfigModuleName = () => {
   return window?.globalConfigs?.getConfig("UICONFIG_MODULENAME") || "commonUiConfig";
@@ -429,11 +407,9 @@ export default {
   getLocaleDefault,
   getLocaleRegion,
   getMultiRootTenant,
-  isContextPathMissing,
   getGlobalContext,
   getOTPBasedLogin,
   getRoleBasedHomeCard,
   sandboxAccess,
-  iconRender,
-  transformURL
+  iconRender
 };
