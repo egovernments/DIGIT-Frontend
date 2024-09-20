@@ -13,7 +13,7 @@ const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...
     if (url == "/") {
       return;
     }
-    if (url?.indexOf(`/${window?.contextPath}`) === -1) {
+    if (Digit.Utils.isContextPathMissing(url)) {
       let updatedUrl = null;
       if (isMultiRootTenant) {
         url = url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`);
