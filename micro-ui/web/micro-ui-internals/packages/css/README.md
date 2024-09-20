@@ -43,6 +43,7 @@ frontend/micro-ui/web/public/index.html
 
 1.8.2-beta.24: added css for custom error component
 1.8.2-beta.23: fixed css in pgr citizen complaint detail page
+1.8.2-beta.24  added css for the side component
 
 ### Summary for Version [1.8.2-beta.1] - 2024-06-05
 
