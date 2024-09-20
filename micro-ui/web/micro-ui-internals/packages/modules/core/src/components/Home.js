@@ -192,10 +192,11 @@ export const AppHome = ({
       />
     );
   }
+  const isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant()
   return Digit.Utils.getRoleBasedHomeCard() ? (
-    <div className={Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant() ? "homeWrapper" : ""}>
+    <div className={isSuperUserWithMultipleRootTenant ? "homeWrapper" : ""}>
       <RoleBasedEmployeeHome modules={modules} additionalComponent={additionalComponent} />
-      {Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant() && <QuickSetupConfigComponent/>}
+      {isSuperUserWithMultipleRootTenant && <QuickSetupConfigComponent />}
     </div>
   ) : (
     <EmployeeHome modules={modules} additionalComponent={additionalComponent} />
