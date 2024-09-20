@@ -1,4 +1,4 @@
-export const setupMasterConfig = {
+export const setupMasterConfig = (existingUser = false) => ({
   tenantId: "pg",
   moduleName: "commonUiConfig",
   SetupMaster: [
@@ -8,7 +8,7 @@ export const setupMasterConfig = {
       active: true,
       description: "COMPLAINT_MANAGEMENT_DESCRIPTION",
       masterDescription: "COMPLAINT_MANAGEMENT_SETUP_MASTER_DESCRIPTION",
-      actionText: "SETUP_NOW",
+      actionText: existingUser ? "EDIT_NOW" : "SETUP_NOW",
       features: [
         {
           id: 1,
@@ -46,7 +46,7 @@ export const setupMasterConfig = {
       active: true,
       description: "HCM_DESCRIPTION",
       masterDescription: "HCM_SETUP_MASTER_DESCRIPTION",
-      actionText: "SETUP_NOW",
+      actionText: existingUser ? "EDIT_NOW" : "SETUP_NOW",
       features: [
         {
           id: 1,
@@ -60,7 +60,7 @@ export const setupMasterConfig = {
       active: true,
       description: "HRMS_DESCRIPTION",
       masterDescription: "HRMS_SETUP_MASTER_DESCRIPTION",
-      actionText: "SETUP_NOW",
+      actionText: existingUser ? "EDIT_NOW" : "SETUP_NOW",
       features: [
         {
           id: 1,
@@ -77,4 +77,4 @@ export const setupMasterConfig = {
       ],
     },
   ],
-};
+});
