@@ -13,6 +13,7 @@ import def from "ajv/dist/vocabularies/discriminator";
 import { QuestionContext } from "../../components/CreateQuestionContext";
 // import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
 import _ from 'lodash';
+import MobileChecklist from "../../components/MobileChecklist";
 
 let temp_data=[]
 
@@ -332,7 +333,7 @@ module = "HCM";
     <div>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div>
-          <h2 style={{ fontSize: "36px" }}>
+          <h2 style={{ fontSize: "36px", fontWeight:"700"}}>
             {t("CREATE_NEW_CHECKLIST")}
           </h2>
         </div>
@@ -346,6 +347,7 @@ module = "HCM";
             onClick={useTemplateData}
           />
           <Button
+            icon="Preview"
             variation="secondary"
             label={t("PREVIEW_CHECKLIST")}
             className={"hover"}
@@ -357,7 +359,7 @@ module = "HCM";
       </div>
       {showPopUp && (
         <PopUp
-          className={"boundaries-pop-module"}
+          className={"custom-pop-up"}
           type={"default"}
           heading={t("CHECKLIST_PREVIEW")}
           children={[
@@ -393,8 +395,10 @@ module = "HCM";
           ]}
           sortFooterChildren={true}
         >
-          <PreviewComponent
-            questionsArray={previewData}></PreviewComponent>
+          {/* <PreviewComponent
+            questionsArray={previewData}></PreviewComponent> */}
+            
+          <MobileChecklist questions={previewData} checklistName={checklistName} typeOfChecklist={checklistType}></MobileChecklist>
         </PopUp>
       )}
       <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
@@ -411,10 +415,13 @@ module = "HCM";
             <div style={{height:"1rem"}}></div>
           </div>
         ))}
-        <div style={{ height: "2rem" }}>
+        {
+          <hr style={{ width: "100%", borderTop: "1px solid #ccc" }} />
+        }
+        <div style={{ height: "1rem" }}>
         </div>
         <div style={{ display: "flex" }}>
-          <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>Name of Checklist</div>
+          <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t("NAME_OF_CHECKLIST")}</div>
           <FieldV1
             type={"text"}
             populators={{
