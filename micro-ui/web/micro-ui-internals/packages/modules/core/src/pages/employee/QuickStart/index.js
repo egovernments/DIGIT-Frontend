@@ -11,20 +11,17 @@ const QuickSetupComponent = ({ config }) => {
       {config.map((section, sectionIndex) => (
         <React.Fragment key={sectionIndex}>
           <CardHeader>{t(section.sectionHeader)}</CardHeader>
-          
-          
           {section.sections && section.sections.map((item, itemIndex) => (
             <CardText key={itemIndex}>{t(item.label)}</CardText>
           ))}
-
           {section.links && Object.values(section.links).map((linkGroup, linkIndex) => (
             <div key={linkIndex}>
               <CardText>{t(linkGroup.description)}</CardText>
               {linkGroup.links.map((link, linkItemIndex) => (
                 <div key={linkItemIndex}>
-                  <Link to={link.link} className= "quickLink">
-                  {t(link.label)}
-              </Link>
+                  <Link to={{ pathname: link.link, search: link.queryParams }} className="quickLink">
+                    {t(link.label)}
+                  </Link>
                   <CardText>{t(link.description)}</CardText>
                 </div>
               ))}

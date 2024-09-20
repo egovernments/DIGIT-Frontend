@@ -9,23 +9,23 @@ const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
   const tenantId = Digit.ULBService.getStateId();
 
-  const transformURL = (url = "") => {
-    if (url == "/") {
-      return;
-    }
-    if (Digit.Utils.isContextPathMissing(url)) {
-      let updatedUrl = null;
-      if (isMultiRootTenant) {
-        url = url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`);
-        updatedUrl = url;
-      } else {
-        updatedUrl = DIGIT_UI_CONTEXTS?.every((e) => url?.indexOf(`/${e}`) === -1) ? "/employee/" + url : url;
-      }
-      return updatedUrl;
-    } else {
-      return url;
-    }
-  };
+  // const transformURL = (url = "") => {
+  //   if (url == "/") {
+  //     return;
+  //   }
+  //   if (Digit.Utils.isContextPathMissing(url)) {
+  //     let updatedUrl = null;
+  //     if (isMultiRootTenant) {
+  //       url = url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`);
+  //       updatedUrl = url;
+  //     } else {
+  //       updatedUrl = DIGIT_UI_CONTEXTS?.every((e) => url?.indexOf(`/${e}`) === -1) ? "/employee/" + url : url;
+  //     }
+  //     return updatedUrl;
+  //   } else {
+  //     return url;
+  //   }
+  // };
 
   const configEmployeeSideBar = data?.actions
     .filter((e) => e.url === "card" && e.parentModule)
@@ -38,11 +38,12 @@ const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...
           links: [],
         };
       }
-      const linkUrl = transformURL(item.navigationURL);
+      const linkUrl = Digit.Utils.transformURL(item.navigationURL,tenantId);
       const queryParamIndex = linkUrl.indexOf("?");
       acc[module].links.push({
         link: queryParamIndex === -1 ? linkUrl : linkUrl.substring(0, queryParamIndex),
         label: t(Digit.Utils.locale.getTransformedLocale(`${module}_LINK_${item.displayName}`)),
+        queryParams: queryParamIndex === -1 ? null : linkUrl.substring(queryParamIndex),
         description: t(Digit.Utils.locale.getTransformedLocale(`${module}_LINK_${item.displayName}_DESCRIPTION`)),
       });
       return acc;
