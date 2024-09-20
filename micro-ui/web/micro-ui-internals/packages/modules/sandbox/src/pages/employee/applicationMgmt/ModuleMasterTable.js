@@ -27,7 +27,7 @@ const ModuleMasterTable = () => {
       history.push(
         `/${window.contextPath}/employee/workbench/mdms-search-v2?moduleName=${value?.split(".")?.[0]}&masterName=${
           value?.split(".")?.[1]
-        }&from=sandbox&screen=applicationManagement&action=view`
+        }&from=sandbox&module=${module}`
       );
     }
   };
