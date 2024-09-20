@@ -22,7 +22,7 @@ import { downloadExcelWithCustomName } from "../utils";
 const UploadData = ({ formData, onSelect, ...props }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const [uploadedFile, setUploadedFile] = useState([]);
+  const [uploadedFile, setUploadedFile] = useState([]) 
   const params = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
   const [showInfoCard, setShowInfoCard] = useState(false);
   const [errorsType, setErrorsType] = useState({});
