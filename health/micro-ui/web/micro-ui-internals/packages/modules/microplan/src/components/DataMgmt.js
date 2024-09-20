@@ -8,11 +8,27 @@ import { Card } from "@egovernments/digit-ui-react-components";
 import { CardSubHeader } from "@egovernments/digit-ui-react-components";
 import { InboxSearchComposer } from "@egovernments/digit-ui-react-components";
 import { datamgmtconfig } from "../configs/datamgmtconfigs";
+import { Table } from '@egovernments/digit-ui-react-components';
+
 
 const FileComponent = ({ file, index, handleFileDelete, handleRedirect, setShowPreview }) => {
-    const { t } = useTranslation();
+    
     const datamgmtConfigs = datamgmtconfig();
     console.log(datamgmtConfigs);
+    const { t } = useTranslation();
+    const columns = [
+        { Header: 'Vehicle type', accessor: 'vehicleType' },
+        { Header: 'Manufacturer', accessor: 'manufacturer' },
+        { Header: 'Model', accessor: 'model' },
+        { Header: 'Capacity(in Bales)', accessor: 'cap' },
+
+    ];
+
+    const data = [
+        { vehicleType: 'Truck', manufacturer: "Draft", model: 'Household',cap:"70" },
+        { vehicleType: 'Motorcycle', manufacturer: "Draft", model: 'Household',cap:"2" },
+        { vehicleType: 'Motorcycle', manufacturer: "Draft", model: 'Household', cap:"2" },
+    ];
     return (
         <div>
             <Card>
@@ -121,14 +137,24 @@ const FileComponent = ({ file, index, handleFileDelete, handleRedirect, setShowP
                 <div className="view-composer-header-section">
                     <CardSubHeader style={{ marginTop: 0, fontSize: "1.5rem", color: " #0B4B66", marginBottom: "0rem" }}>Vehicles</CardSubHeader>
                 </div>
-                <InboxSearchComposer
-                    configs={datamgmtConfigs}
+                <Table
+                    columns={columns} data={data}
+                    getCellProps={(cellInfo) => {
+                        return {
+                            style: {
+                                padding: "20px 18px",
+                                fontSize: "16px",
+                                whiteSpace: "normal",
+                            },
+                        };
+                    }}
+                    t={t}
                 />
 
-                
-                
 
-                
+
+
+
 
 
             </Card>

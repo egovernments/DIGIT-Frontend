@@ -8,7 +8,7 @@ const defaultSearchValues = {
       label: "Estimate Search",
       type: "search",
       apiDetails: {
-        serviceName: "/mdms-v2/v2/_search",  //making request
+        serviceName: "",  //making request
         requestParam: {},
         requestBody: {
           apiOperation: "SEARCH",  // InbSC
