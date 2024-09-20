@@ -22,7 +22,7 @@ const QuickSetupComponent = ({ config }) => {
               <CardText>{t(linkGroup.description)}</CardText>
               {linkGroup.links.map((link, linkItemIndex) => (
                 <div key={linkItemIndex}>
-                  <Link to={link.link}>
+                  <Link to={link.link} className= "quickLink">
                   {t(link.label)}
               </Link>
                   <CardText>{t(link.description)}</CardText>

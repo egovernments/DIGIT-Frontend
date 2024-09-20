@@ -371,3 +371,47 @@
     }
   }
 }
+.homeWrapper{
+  display: flex;
+  justify-content: space-between; /* Ensure spacing between the two components */
+  align-items: flex-start;
+}
+
+.homeWrapper > :first-child {
+  flex-grow: 1; /* Makes the first child (RoleBasedEmployeeHome) take up remaining space */
+  margin-right: 1rem; /* Optional: Add some spacing between the components */
+}
+
+.homeWrapper > :last-child {
+  width: 20.688rem; /* Fixed width for QuickSetupConfigComponent */
+  flex-shrink: 0; /* Prevents it from shrinking */
+  margin-left: auto; /* Aligns the component to the right end */
+}
+
+.homeWrapper{
+  .digit-employee-card{
+    .digit-card-header{
+      color: #0b4b66 !important;
+      font-size: 1.87rem !important;
+      text-align: center;
+      font-weight: 700;
+    }
+  }
+}
+
+.homeWrapper{
+  .digit-employee-card{
+    .digit-card-text{
+      font-size: 1rem !important;
+      font-weight: 700;
+    }
+  }
+}
+.quickLink{
+  color: #c84c0e;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+
