@@ -435,7 +435,25 @@ digit-card-text.center {
     }
   }
 }
+.homeWrapper{
+  .digit-card-component{
+    .digit-card-header{
+      color: #0b4b66 !important;
+      font-size: 1.87rem !important;
+      text-align: center;
+      font-weight: 700;
+    }
+  }
+}
 
+.homeWrapper{
+  .digit-card-component{
+    .digit-card-text{
+      font-size: 1rem !important;
+      font-weight: 700;
+    }
+  }
+}
 .homeWrapper{
   .digit-employee-card{
     .digit-card-text{

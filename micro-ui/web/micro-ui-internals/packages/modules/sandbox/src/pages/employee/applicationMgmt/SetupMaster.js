@@ -66,6 +66,9 @@ const SetupMaster = () => {
     config: {
       enabled: Boolean(filters),
       select: (data) => {
+        if (_.isEmpty(data?.MdmsRes)) {
+          return false
+        }
         const resp = data?.MdmsRes;
         const checkMasterDataCompleteness = Object.values(resp).every((category) =>
           Object.values(category).every((items) => items.every((item) => parseInt(item.count) > 0))
