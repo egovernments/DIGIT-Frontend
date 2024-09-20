@@ -104,6 +104,7 @@ export const moduleMasterConfig = (module) => ({
                 label: "SANDBOX_ACTIONS",
                 jsonPath: "actions",
                 additionalCustomization: true,
+                module: module
                 // disableSortBy: true,
               },
             ],

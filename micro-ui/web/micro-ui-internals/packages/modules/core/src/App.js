@@ -5,6 +5,7 @@ import EmployeeApp from "./pages/employee";
 import SignUp from "./pages/employee/SignUp";
 import Otp from "./pages/employee/Otp";
 import ViewUrl from "./pages/employee/ViewUrl";
+import CustomErrorComponent from "./components/CustomErrorComponent";
 
 export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, initData, defaultLanding = "citizen" }) => {
   const history = useHistory();
@@ -98,6 +99,9 @@ export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, initD
       }
     >
       <Switch>
+        <Route exact path={`/${window?.globalPath}/user/invalid-url`}>
+          <CustomErrorComponent />
+        </Route>
         <Route exact path={`/${window?.globalPath}/user/sign-up`}>
           <SignUp stateCode={stateCode} />
         </Route>

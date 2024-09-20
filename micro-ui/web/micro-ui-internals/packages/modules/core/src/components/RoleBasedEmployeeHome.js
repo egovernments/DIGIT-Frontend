@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Loader } from "@egovernments/digit-ui-components";
+import { LandingPageCard, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { EmployeeModuleCard } from "@egovernments/digit-ui-react-components";
@@ -48,7 +48,17 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
       const queryParamIndex = linkUrl.indexOf("?");
       acc[module].links.push({
         // link: linkUrl,
-        link: queryParamIndex === -1 ? linkUrl : linkUrl.substring(0, queryParamIndex),
+        link: linkUrl,
+        icon: linkUrl.includes("create")
+          ? "Person"
+          : linkUrl.includes("inbox")
+          ? "AllInbox"
+          : linkUrl.includes("search")
+          ? "Search"
+          : linkUrl.includes("edit")
+          ? "Edit"
+          : "PhonelinkSetup",
+        // link: queryParamIndex === -1 ? linkUrl : linkUrl.substring(0, queryParamIndex),
         queryParams: queryParamIndex === -1 ? null : linkUrl.substring(queryParamIndex),
         label: t(Digit.Utils.locale.getTransformedLocale(`${module}_LINK_${item.displayName}`)),
       });
@@ -63,20 +73,34 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
     return "";
   }
 
+  const children = Object.keys(configEmployeeSideBar)?.map((current, index) => {
+    const moduleData = configEmployeeSideBar?.[current];
+    const propsForModuleCard = {
+      // Icon: moduleData?.icon,
+      icon: "SupervisorAccount",
+      moduleName: t(moduleData?.label),
+      metrics: [],
+      links: moduleData.links,
+    };
+    return <LandingPageCard buttonSize={"medium"} {...propsForModuleCard} />;
+  });
   return (
     <>
       <div className="employee-app-container digit-home-employee-app">
         <div className="ground-container moduleCardWrapper gridModuleWrapper digit-home-moduleCardWrapper">
-          {Object.keys(configEmployeeSideBar)?.map((current, index) => {
+          {/* {Object.keys(configEmployeeSideBar)?.map((current, index) => {
             const moduleData = configEmployeeSideBar?.[current];
             const propsForModuleCard = {
-              Icon: moduleData?.icon,
+              // Icon: moduleData?.icon,
+              icon: "SupervisorAccount",
               moduleName: t(moduleData?.label),
-              kpis: [],
+              metrics: [],
               links: moduleData.links,
             };
-            return <EmployeeModuleCard {...propsForModuleCard} />;
-          })}
+            return <LandingPageCard buttonSize={"medium"} {...propsForModuleCard} />;
+            // return <EmployeeModuleCard {...propsForModuleCard} />;
+          })} */}
+          {React.Children.map(children, (child) => React.cloneElement(child))}
         </div>
       </div>
     </>
