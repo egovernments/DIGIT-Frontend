@@ -4,7 +4,7 @@ import useUpdateEvent from "./events/useUpdateEvent";
 import {
   useBulkPdfDetails, useDemandSearch, useFetchBillsForBuissnessService, useFetchCitizenBillsForBuissnessService, useFetchPayment, useGetPaymentRulesForBusinessServices, usePaymentSearch, usePaymentUpdate, useRecieptSearch
 } from "./payment";
-import { useInitStore } from "./store";
+import { useInitStore, useInitTenantConfig } from "./store";
 import useAccessControl from "./useAccessControl";
 import { useApplicationsForBusinessServiceSearch } from "./useApplicationForBillSearch";
 import useClickOutside from "./useClickOutside";
@@ -167,6 +167,7 @@ const Hooks = {
   useGetPaymentRulesForBusinessServices,
   useWorkflowDetails,
   useInitStore,
+  useInitTenantConfig,
   useClickOutside,
   useUserSearch,
   useApplicationsForBusinessServiceSearch,

@@ -17,3 +17,15 @@ export const useInitStore = (stateCode, enabledModules,modulePrefix = "rainmaker
   );
   return { isLoading, error, isError, data };
 };
+
+export const useInitTenantConfig = (stateCode, enabledModules) => {
+  const { isLoading, error, isError, data } = useQuery(
+    ["initTenantConfig", stateCode, enabledModules],
+    () => StoreService.getTenantConfig(stateCode, enabledModules),
+    {
+      staleTime: Infinity,
+      enabled: Digit.Utils.getMultiRootTenant()
+    }
+  );
+  return { isLoading, error, isError, data };
+};
