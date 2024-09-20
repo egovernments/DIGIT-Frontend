@@ -48,10 +48,6 @@ const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...
       return acc;
     }, {});
 
-//   if (isLoading) {
-//     return <Loader />;
-//   }
-
   if (!configEmployeeSideBar) {
     return "";
   }
