@@ -41,6 +41,8 @@ const SetupMicroplan = () => {
   const { mutate:createMicroplan } = Digit.Hooks.microplanv1.useCreatePlanConfig();
   const { mutate:updateMicroplan } = Digit.Hooks.microplanv1.useUpdatePlanConfig();
 
+  console.log("initial",currentKey,currentStep)
+
   const filterMicroplanConfig = (microplanConfig, currentKey) => {
     return microplanConfig
       .map((config) => {
@@ -53,35 +55,36 @@ const SetupMicroplan = () => {
   };
 
   const [filteredConfig, setFilteredConfig] = useState(filterMicroplanConfig(microplanConfig, currentKey));
-
+  
   useEffect(() => {
     setFilteredConfig(filterMicroplanConfig(microplanConfig, currentKey));
   }, [microplanConfig, currentKey]);
-
+  
   useEffect(() => {
     setMicroplanConfig(MicroplanConfig(params, null, isSubmitting));
   }, [totalFormData, isSubmitting]);
-
-
+  
+  
   // setting the current step when the key is changed on the basis of the config
   useEffect(() => {
     setCurrentStep(Number(filteredConfig?.[0]?.form?.[0]?.stepCount - 1));
     // setShowToast(null);
   }, [currentKey, filteredConfig]);
-
+  
   useEffect(() => {
     setIsSubmitting(false);
     Digit.Utils.microplan.updateUrlParams({ key: currentKey, summary: false });
     // setSummaryErrors(null);
   }, [currentKey]);
-
+  
   //sync session with state
   useEffect(() => {
     setTotalFormData(params);
   }, [params]);
-
+  
+  console.log("curkey",currentKey);
   const onSubmit = (formData) => {
-    
+    console.log("submitting");
     //run validations
     // setIsSubmittting to true -> to run inline validations within the components
     setIsSubmitting(true);

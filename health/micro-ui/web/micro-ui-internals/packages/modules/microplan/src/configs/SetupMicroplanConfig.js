@@ -51,6 +51,31 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               },
             },
           ],
+        },
+        {
+          stepCount:"8",
+          key:"8",
+          name:"SUMMARY_SCREEN",
+          body: [
+            {
+              isMandatory: false,
+              key: "summaryscreen",
+              type: "component",
+              skipAPICall: false,
+              resourceToUpdate:"PLAN",
+              component: "SummaryScreen",
+              withoutLabel: true,
+              disable: false,
+              customProps: {
+                module: "HCM",
+                sessionData: totalFormData,
+                isSubmitting:false,
+              },
+              populators: {
+                name: "projectType",
+              },
+            },
+          ],
         }
       ]
     }
