@@ -5,6 +5,8 @@ import { default as EmployeeApp } from "./pages/employee";
 import SandboxCard from "./components/SandboxCard";
 import { overrideHooks, updateCustomConfigs } from "./utils";
 import ModuleCard from "./components/ModuleCard";
+import ConfigUploaderComponent from "./pages/employee/tenantMgmt/ConfigUploaderComponent";
+import LogoUploaderComponent from "./pages/employee/tenantMgmt/LogoUploaderComponent";
 
 export const SandboxModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -33,6 +35,8 @@ const componentsToRegister = {
   SandboxCard,
   WorkbenchCard: null,
   SandboxModuleCard: ModuleCard,
+  ConfigUploaderComponent,
+  LogoUploaderComponent
 };
 
 export const initSandboxComponents = () => {
