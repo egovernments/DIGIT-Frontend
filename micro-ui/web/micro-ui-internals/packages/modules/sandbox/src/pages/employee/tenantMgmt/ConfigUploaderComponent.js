@@ -55,13 +55,6 @@ const ConfigUploaderComponent = ({ onSelect, ...props }) => {
         // }
         />
       </LabelFieldPair>
-      {showToast && (
-        <Toast
-          error={isError}
-          label={toastMessage}
-          onClose={() => setShowToast(false)}
-        />
-      )}
     </>
   );
 };

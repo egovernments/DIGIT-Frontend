@@ -10,7 +10,7 @@ const TenantConfigUpload = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const history = useHistory();
-  const [showToast, setShowToast] = useState(false);
+  const [showToast, setShowToast] = useState(null);
   const [toastMessage, setToastMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const [uploadData, setUploadData] = useState([]); // State to store the uploaded data
@@ -160,7 +160,7 @@ const TenantConfigUpload = () => {
         label={t("SANDBOX_CONFIG_UPLOAD_DONE")}
         config={config}
         defaultValues={defaultValue}
-        onFormValueChange={(setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {}}
+        onFormValueChange={(setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => { }}
         onSubmit={(data) => onSubmit(data)}
         fieldStyle={fieldStyle}
         noBreakLine={true}
