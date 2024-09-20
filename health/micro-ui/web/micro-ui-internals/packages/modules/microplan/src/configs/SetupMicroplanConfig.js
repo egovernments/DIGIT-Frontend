@@ -77,6 +77,34 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
             },
           ],
         },
+      {
+        stepCount: "6",
+        key: "6",
+        name: "HYPOTHESIS",
+        body: [
+          {
+            isMandatory: true,
+            key: "hypothesis",
+            type: "component",
+            skipAPICall: false,
+            component: "HypothesisWrapper",
+            withoutLabel: true,
+            disable: false,
+            withoutLabelFieldPair: true,
+            customProps: {
+              module: "HCM",
+              sessionData: totalFormData,
+              isSubmitting: isSubmitting,
+
+            },
+            populators: {
+              name: "hypothesis",
+              required: true,
+            },
+          },
+        ],
+      },
+
         {
           stepCount: "4",
           key: "4",
