@@ -124,7 +124,10 @@ const getStaticMapUrl = (latitude, longitude) => {
 const getLocaleRegion = () => {
   return window?.globalConfigs?.getConfig("LOCALE_REGION") || "IN";
 };
-
+const isContextPathMissing = (url) => {
+  const contextPath = window?.contextPath || '';
+  return url?.indexOf(`/${contextPath}`) === -1;
+}
 const getMultiRootTenant = () => {
   return window?.globalConfigs?.getConfig("MULTI_ROOT_TENANT") || false;
 };
@@ -407,6 +410,7 @@ export default {
   getLocaleDefault,
   getLocaleRegion,
   getMultiRootTenant,
+  isContextPathMissing,
   getGlobalContext,
   getOTPBasedLogin,
   getRoleBasedHomeCard,
