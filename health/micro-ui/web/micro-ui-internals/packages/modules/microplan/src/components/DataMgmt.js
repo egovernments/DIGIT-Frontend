@@ -6,14 +6,19 @@ import { FileIcon } from "@egovernments/digit-ui-react-components";
 import { Button } from "@egovernments/digit-ui-react-components";
 import { Card } from "@egovernments/digit-ui-react-components";
 import { CardSubHeader } from "@egovernments/digit-ui-react-components";
+import { InboxSearchComposer } from "@egovernments/digit-ui-react-components";
+import { datamgmtconfig } from "../configs/datamgmtconfigs";
+
 const FileComponent = ({ file, index, handleFileDelete, handleRedirect, setShowPreview }) => {
     const { t } = useTranslation();
+    const datamgmtConfigs = datamgmtconfig();
+    console.log(datamgmtConfigs);
     return (
         <div>
             <Card>
                 {/* First card */}
                 <div className="view-composer-header-section">
-                    <CardSubHeader style={{ marginTop: 0, fontSize: "1.5rem",color: " #0B4B66",marginBottom:"0rem" }}>Population</CardSubHeader>
+                    <CardSubHeader style={{ marginTop: 0, fontSize: "1.5rem", color: " #0B4B66", marginBottom: "0rem" }}>Population</CardSubHeader>
 
                 </div>
                 <div className="dm-parent-container">
@@ -63,8 +68,8 @@ const FileComponent = ({ file, index, handleFileDelete, handleRedirect, setShowP
             </Card>
             {/* Second card */}
             <Card>
-            <div className="view-composer-header-section">
-                    <CardSubHeader style={{ marginTop: 0, fontSize: "1.5rem",color: " #0B4B66",marginBottom:"0rem" }}>Facilities</CardSubHeader>
+                <div className="view-composer-header-section">
+                    <CardSubHeader style={{ marginTop: 0, fontSize: "1.5rem", color: " #0B4B66", marginBottom: "0rem" }}>Facilities</CardSubHeader>
 
                 </div>
                 <div className="dm-parent-container">
@@ -111,6 +116,21 @@ const FileComponent = ({ file, index, handleFileDelete, handleRedirect, setShowP
                         />
                     </div>
                 </div>
+            </Card>
+            <Card>
+                <div className="view-composer-header-section">
+                    <CardSubHeader style={{ marginTop: 0, fontSize: "1.5rem", color: " #0B4B66", marginBottom: "0rem" }}>Vehicles</CardSubHeader>
+                </div>
+                <InboxSearchComposer
+                    configs={datamgmtConfigs}
+                />
+
+                
+                
+
+                
+
+
             </Card>
         </div>
     );
