@@ -104,7 +104,7 @@ const SetupMaster = () => {
             <Button
               className="actionButton"
               label={t(config.actionText)}
-              variation={"secondary"}
+              variation={"primary"}
               icon="ArrowForward"
               isSuffix={true}
               onClick={(e) => {
@@ -180,7 +180,7 @@ const SetupMaster = () => {
                   size={"large"}
                   variation={"secondary"}
                   label={t(showPopUp?.buttonLabel)}
-                  onClick={() => history.push(`/${window?.contextPath}/employee/sandbox/application-management/module?module=${module}`)}
+                  onClick={() => history.push(`/${window?.contextPath}/employee`)}
                 />,
               ]}
               equalWidthButtons={true}
@@ -190,8 +190,8 @@ const SetupMaster = () => {
             <Button
               className="actionButton"
               label={t("SETUP_MASTER")}
-              variation={"secondary"}
-              icon="ArrowForward"
+              variation={"primary"}
+              // icon="ArrowForward"
               isSuffix={true}
               onClick={(e) => {
                 e.preventDefault();

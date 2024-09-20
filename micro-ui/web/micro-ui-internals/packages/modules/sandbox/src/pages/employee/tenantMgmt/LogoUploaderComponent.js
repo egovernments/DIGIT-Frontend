@@ -29,7 +29,7 @@ const LogoUploaderComponent = ({ onSelect, ...props }) => {
 
   useEffect(() => {
     if (fileStoreId) {
-      onSelect("LogoUploaderComponent", { "fileStoreId":fileStoreId , "type":"Logo"})
+      onSelect("LogoUploaderComponent", { "fileStoreId": fileStoreId, "type": "Logo" })
     }
   }, [fileStoreId])
 
@@ -45,8 +45,8 @@ const LogoUploaderComponent = ({ onSelect, ...props }) => {
   }, [file])
   return (
     <>
-      <LabelFieldPair>
-        <CardLabel>{`${t("CORE_COMMON_PROFILE_NAME")}`}</CardLabel>
+      <LabelFieldPair className={"uploader-label-field"}>
+        <CardLabel>{`${t("LOGO_UPLOAD_LABEL")}`}</CardLabel>
         <Uploader
           uploadedFiles={[]}
           variant="uploadFile"

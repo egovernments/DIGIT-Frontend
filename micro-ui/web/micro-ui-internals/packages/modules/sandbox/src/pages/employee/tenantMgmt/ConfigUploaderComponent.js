@@ -45,7 +45,7 @@ const ConfigUploaderComponent = ({ onSelect, ...props }) => {
   return (
     <>
       <LabelFieldPair>
-        <CardLabel>{`${t("CORE_COMMON_PROFILE_NAME")}`}</CardLabel>
+        <CardLabel>{`${t("BANNER_UPLOAD")}`}</CardLabel>
         <Uploader
           uploadedFiles={[]}
           variant="uploadFile"
