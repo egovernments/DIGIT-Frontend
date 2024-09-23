@@ -47,6 +47,9 @@ const LocalizationStore = {
   get: (locale, modules) => {
     const storedModules = LocalizationStore.getList(locale);
     const newModules = modules.filter((module) => !storedModules.includes(module));
+    if(Digit.Utils.getMultiRootTenant()){
+      newModules.push("digit-tenants")
+    }
     const messages = [];
     storedModules.forEach((module) => {
       messages.push(...LocalizationStore.getCaheData(LOCALE_MODULE(locale, module)));
