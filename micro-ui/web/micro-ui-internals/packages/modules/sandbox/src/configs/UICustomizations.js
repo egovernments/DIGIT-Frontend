@@ -234,7 +234,7 @@ export const UICustomizations = {
           return t(Digit.Utils.workbench.getMDMSLabel(`SCHEMA_` + row?.code));
 
         case "SANDBOX_MASTER_TYPE":
-          return t(Digit.Utils.locale.getTransformedLocale(`SANDBOX_MASTERTYPE_${value}`));
+          return t(`SANDBOX_MASTER_SETUP_DESC_${row.code}`);
 
         case "SANDBOX_ACTIONS":
           const handleRedirect = (e, value, type) => {
