@@ -6,8 +6,8 @@ import BulkUpload from "./BulkUpload";
 import Ajv from "ajv";
 import XLSX from "xlsx";
 import { InfoCard, PopUp, Toast, Button, DownloadIcon, Stepper, TextBlock } from "@egovernments/digit-ui-components";
-import { schemaConfig } from "../configs/schemaConfig";
-import { headerConfig } from "../configs/headerConfig";
+// import { schemaConfig } from "../configs/schemaConfig";
+// import { headerConfig } from "../configs/headerConfig";
 import { PRIMARY_COLOR } from "../utils";
 import { downloadExcelWithCustomName } from "../utils";
 
@@ -261,6 +261,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   }, [convertedSchema]); 
 
   useEffect(async () => {
+    debugger;
     if (readMe?.["HCM-ADMIN-CONSOLE"]) {
       const newReadMeFacility = await translateReadMeInfo(
         readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts

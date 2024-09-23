@@ -118,7 +118,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               type: "component",
               skipAPICall: false,
               resourceToUpdate:"PLAN",
-              component: "UploadData",
+              component: "UploadDataCommon",
               withoutLabel: true,
               disable: false,
               customProps: {
