@@ -45,3 +45,5 @@ export const overrideHooks = () => {
     setupLibraries("Customizations", "commonUiConfig", { ...window?.Digit?.Customizations?.commonUiConfig, ...UICustomizations });
     // setupLibraries("Utils", "parsingUtils", { ...window?.Digit?.Utils?.parsingUtils, ...parsingUtils });
   };
+
+  export const PRIMARY_COLOR = "#C84C0E";

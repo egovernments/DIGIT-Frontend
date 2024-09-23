@@ -175,7 +175,6 @@ const SetupMicroplan = () => {
         actionClassName={"actionBarClass"}
         className="setup-campaign"
         cardClassName="setup-campaign-card"
-        // showMultipleCardsWithoutNavs={true}
         noCardStyle={true}
         onSecondayActionClick={onSecondayActionClick}
         label={
