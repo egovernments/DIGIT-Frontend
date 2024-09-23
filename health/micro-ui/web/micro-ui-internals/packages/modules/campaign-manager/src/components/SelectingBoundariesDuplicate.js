@@ -8,6 +8,7 @@ import { InfoCard , PopUp } from "@egovernments/digit-ui-components";
 const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getStateId();
+  const searchParams = new URLSearchParams(location.search);
   const hierarchyType = props?.props?.dataParams?.hierarchyType;
   const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
   const { data: mailConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "mailConfig" }]);
@@ -21,6 +22,10 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const [executionCount, setExecutionCount] = useState(0);
   const [showPopUp, setShowPopUp] = useState(null);
   const [updateBoundary , setUpdateBoundary] = useState(true);
+  const [key, setKey] = useState(() => {
+    const keyParam = searchParams.get("key");
+    return keyParam ? parseInt(keyParam) : 1;
+  });
 //   const [updatedSelected , setUpdatedSelected] = useState([]);
 
 
@@ -63,6 +68,21 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     setBoundaryOptions(value?.boundaryOptions);
     setSelectedData(value?.selectedData);
   }
+
+  function updateUrlParams(params) {
+    const url = new URL(window.location.href);
+    Object.entries(params).forEach(([key, value]) => {
+      url.searchParams.set(key, value);
+    });
+    window.history.replaceState({}, "", url);
+  }
+
+
+  useEffect(() => {
+    updateUrlParams({ key: key });
+    window.dispatchEvent(new Event("checking"));
+  }, [key]);
+
 
 
   return (
