@@ -15,7 +15,7 @@ function createStatusMap(data, boundaryHierarchy) {
 
   if (data.length === 0) return statusMap;
   // Iterate over each object in the array
-  data.forEach((item) => {
+  data?.forEach((item) => {
     // If the type already exists in the map, increment the count
     if (statusMap[item.type]) {
       statusMap[item.type]++;

@@ -24,7 +24,7 @@ const ProjectBreadCrumb = ({ location }) => {
   return <BreadCrumb crumbs={crumbs} spanStyle={bredCrumbStyle} />;
 };
 
-const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hierarchyData  }) => {
+const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hierarchyData ,lowestHierarchy }) => {
   const { dispatch } = useMyContext();
   const location = useLocation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -126,7 +126,8 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
           type: "MASTER_DATA",
           state: {
             boundaryHierarchy:data?.BoundaryHierarchy?.[0]?.boundaryHierarchy,
-            hierarchyType: BOUNDARY_HIERARCHY_TYPE
+            hierarchyType: BOUNDARY_HIERARCHY_TYPE,
+            lowestHierarchy
           },
         });
         return data?.BoundaryHierarchy?.[0];
