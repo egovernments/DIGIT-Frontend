@@ -9,6 +9,7 @@ import { BackLink, CustomSVG } from "@egovernments/digit-ui-components";
 import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { RoleBasedEmployeeHome } from "./RoleBasedEmployeeHome";
+import QuickSetupConfigComponent from "../pages/employee/QuickStart/Config";
 
 /* 
 Feature :: Citizen All service screen cards
@@ -22,7 +23,7 @@ export const processLinkData = (newData, code, t) => {
       }
       link.link = link["navigationURL"];
       link.i18nKey = t(link["name"]);
-     
+
     });
   }
   const newObj = {
@@ -92,7 +93,7 @@ const CitizenHome = ({
   if (isLoading) {
     return <Loader />;
   }
- 
+
   return (
     <React.Fragment>
       <div className="citizen-all-services-wrapper">
@@ -121,14 +122,14 @@ const CitizenHome = ({
                     Info={
                       code === "OBPS"
                         ? () => (
-                            <CitizenInfoLabel
-                              style={{ margin: "0px", padding: "10px" }}
-                              info={t("CS_FILE_APPLICATION_INFO_LABEL")}
-                              text={t(
-                                `BPA_CITIZEN_HOME_STAKEHOLDER_INCLUDES_INFO_LABEL`
-                              )}
-                            />
-                          )
+                          <CitizenInfoLabel
+                            style={{ margin: "0px", padding: "10px" }}
+                            info={t("CS_FILE_APPLICATION_INFO_LABEL")}
+                            text={t(
+                              `BPA_CITIZEN_HOME_STAKEHOLDER_INCLUDES_INFO_LABEL`
+                            )}
+                          />
+                        )
                         : null
                     }
                     isInfo={code === "OBPS" ? true : false}
@@ -191,8 +192,12 @@ export const AppHome = ({
       />
     );
   }
+  const isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant()
   return Digit.Utils.getRoleBasedHomeCard() ? (
-    <RoleBasedEmployeeHome modules={modules} additionalComponent={additionalComponent} />
+    <div className={isSuperUserWithMultipleRootTenant ? "homeWrapper" : ""}>
+      <RoleBasedEmployeeHome modules={modules} additionalComponent={additionalComponent} />
+      {isSuperUserWithMultipleRootTenant && <QuickSetupConfigComponent />}
+    </div>
   ) : (
     <EmployeeHome modules={modules} additionalComponent={additionalComponent} />
   );

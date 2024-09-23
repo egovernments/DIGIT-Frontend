@@ -96,7 +96,7 @@ export const moduleMasterConfig = (module) => ({
                 additionalCustomization: true,
               },
               {
-                label: "SANDBOX_MASTER_TYPE",
+                label: "SANDBOX_MASTER_DESCRIPTION",
                 jsonPath: "type",
                 additionalCustomization: true,
               },
@@ -104,6 +104,7 @@ export const moduleMasterConfig = (module) => ({
                 label: "SANDBOX_ACTIONS",
                 jsonPath: "actions",
                 additionalCustomization: true,
+                module: module
                 // disableSortBy: true,
               },
             ],

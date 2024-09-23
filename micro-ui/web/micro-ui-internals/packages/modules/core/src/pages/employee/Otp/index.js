@@ -77,7 +77,7 @@ const Otp = ({ isLogin = false }) => {
     Digit.UserService.setUser(user);
     setEmployeeDetail(user?.info, user?.access_token);
     let redirectPath = `/${window?.globalPath}/user/url`;
-    let redirectPathOtpLogin = `/${window?.contextPath}/employee`;
+    let redirectPathOtpLogin = `/${window?.contextPath}/employee/user/landing`;
 
     if (isLogin) {
       history.push(redirectPathOtpLogin);

@@ -234,19 +234,26 @@ export const UICustomizations = {
           return t(Digit.Utils.workbench.getMDMSLabel(`SCHEMA_` + row?.code));
 
         case "SANDBOX_MASTER_TYPE":
-          return t(Digit.Utils.locale.getTransformedLocale(`SANDBOX_MASTERTYPE_${value}`));
+          return t(`SANDBOX_MASTER_SETUP_DESC_${row.code}`);
 
         case "SANDBOX_ACTIONS":
-          const handleRedirect = (value, type) => {
+          const handleRedirect = (e, value, type) => {
+            e.stopPropagation();
             if (type === "boundary") {
-              window.history.pushState(null, "", `/${window.contextPath}/employee/workbench/upload-boundary?hierarchyType=${value}&from=sandbox`);
+              window.history.pushState(
+                null,
+                "",
+                `/${window.contextPath}/employee/workbench/upload-boundary?hierarchyType=${value}&from=sandbox&module=${column?.module}`
+              );
               const navEvent = new PopStateEvent("popstate");
               window.dispatchEvent(navEvent);
             } else {
               window.history.pushState(
                 null,
                 "",
-                `/${window.contextPath}/employee/workbench/mdms-search-v2?moduleName=${value?.split(".")?.[0]}&masterName=${value?.split(".")?.[1]}`
+                `/${window.contextPath}/employee/workbench/mdms-search-v2?moduleName=${value?.split(".")?.[0]}&masterName=${
+                  value?.split(".")?.[1]
+                }&from=sandbox&module=${column?.module}`
               );
               const navEvent = new PopStateEvent("popstate");
               window.dispatchEvent(navEvent);
@@ -254,7 +261,7 @@ export const UICustomizations = {
           };
           return (
             <div>
-              <SVG.Edit style={{ cursor: "pointer" }} onClick={() => handleRedirect(row?.code, row?.type)} />
+              <SVG.Edit style={{ cursor: "pointer" }} onClick={(e) => handleRedirect(e, row?.code, row?.type)} />
             </div>
           );
         default:

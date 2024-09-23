@@ -56,6 +56,39 @@ export const StoreService = {
     });
     return await Promise.all(allBoundries);
   },
+  getTenantConfig: async (stateCode, enabledModules) => {
+    const tenantConfigs = await TenantConfigSearch.tenant(stateCode);
+    const tenantConfigSearch = tenantConfigs?.tenantConfigs?.length > 0 ? tenantConfigs?.tenantConfigs : null;
+    if (!tenantConfigSearch) {
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.href = `/${window?.globalPath}/user/invalid-url`;
+      return;
+      // throw new Error("Invalid URL")
+      // return;
+    }
+    const { MdmsRes } = await MdmsService.init(stateCode);
+    const stateInfo = MdmsRes["common-masters"]?.StateInfo?.[0] || {};
+    const uiHomePage = MdmsRes["common-masters"]?.uiHomePage?.[0] || {};
+    return {
+      languages: stateInfo.hasLocalisation ? stateInfo.languages : [{ label: "ENGLISH", value: Digit.Utils.getDefaultLanguage() }],
+      stateInfo: {
+        code: tenantConfigSearch?.[0]?.code,
+        name: tenantConfigSearch?.[0]?.name,
+        logoUrl: tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "logoUrl")?.url,
+        statelogo: tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "statelogo")?.url,
+        logoUrlWhite: tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "logoUrlWhite")?.url,
+        bannerUrl: tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "bannerUrl")?.url,
+      },
+      localizationModules: stateInfo.localizationModules,
+      modules:
+        MdmsRes?.tenant?.citymodule
+          ?.filter((module) => module?.active)
+          ?.filter((module) => enabledModules?.includes(module?.code))
+          ?.sort((x, y) => x?.order - y?.order) || [],
+      uiHomePage: uiHomePage,
+    };
+  },
   digitInitData: async (stateCode, enabledModules, modulePrefix) => {
     const { MdmsRes } = await MdmsService.init(stateCode);
     const stateInfo = MdmsRes["common-masters"]?.StateInfo?.[0] || {};
@@ -63,6 +96,9 @@ export const StoreService = {
     const tenantConfigFetch = Digit.Utils.getMultiRootTenant();
     const localities = {};
     const revenue_localities = {};
+    if (tenantConfigFetch) {
+      const tenantConfig = await StoreService.getTenantConfig(stateCode, enabledModules); // Await the async call
+    }
     const fetchTenantConfig = async () => {
       const tenantConfigs = await TenantConfigSearch.tenant(stateCode);
       const tenantConfigSearch = tenantConfigs?.tenantConfigs ? tenantConfigs?.tenantConfigs : null;
@@ -95,6 +131,7 @@ export const StoreService = {
           bannerUrl: tenantConfigFetch ? bannerUrl ? bannerUrl : tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "bannerUrl")?.url : stateInfo.bannerUrl,
         },
         localizationModules: stateInfo.localizationModules,
+<<<<<<< HEAD
         modules: MdmsRes?.tenant?.citymodule?.filter((module) => module?.active)?.filter((module) => enabledModules?.includes(module?.code))?.sort((x, y) => x?.order - y?.order) || [],
         uiHomePage: uiHomePage
       };
@@ -113,6 +150,36 @@ export const StoreService = {
       modules: MdmsRes?.tenant?.citymodule?.filter((module) => module?.active)?.filter((module) => enabledModules?.includes(module?.code))?.sort((x, y) => x?.order - y?.order) || [],
       uiHomePage: uiHomePage
     };
+=======
+        modules:
+          MdmsRes?.tenant?.citymodule
+            ?.filter((module) => module?.active)
+            ?.filter((module) => enabledModules?.includes(module?.code))
+            ?.sort((x, y) => x?.order - y?.order) || [],
+        uiHomePage: uiHomePage,
+      };
+    };
+    const initData = tenantConfigFetch
+      ? await fetchTenantConfig()
+      : {
+          languages: stateInfo.hasLocalisation ? stateInfo.languages : [{ label: "ENGLISH", value: Digit.Utils.getDefaultLanguage() }],
+          stateInfo: {
+            code: stateInfo.code,
+            name: stateInfo.name,
+            logoUrl: stateInfo.logoUrl,
+            statelogo: stateInfo.statelogo,
+            logoUrlWhite: stateInfo.logoUrlWhite,
+            bannerUrl: stateInfo.bannerUrl,
+          },
+          localizationModules: stateInfo.localizationModules,
+          modules:
+            MdmsRes?.tenant?.citymodule
+              ?.filter((module) => module?.active)
+              ?.filter((module) => enabledModules?.includes(module?.code))
+              ?.sort((x, y) => x?.order - y?.order) || [],
+          uiHomePage: uiHomePage,
+        };
+>>>>>>> develop
     initData.selectedLanguage = Digit.SessionStorage.get("locale") || initData.languages[0].value;
 
     ApiCacheService.saveSetting(MdmsRes["DIGIT-UI"]?.ApiCachingSettings);
@@ -121,17 +188,20 @@ export const StoreService = {
       .map((module) => module.tenants)
       .flat()
       .reduce((unique, ele) => (unique.find((item) => item.code === ele.code) ? unique : [...unique, ele]), []);
+<<<<<<< HEAD
     initData.tenants = MdmsRes?.tenant?.tenants
       .map((tenant) => ({ i18nKey: `TENANT_TENANTS_${tenant.code.replace(".", "_").toUpperCase()}`, ...tenant }));
+=======
+    initData.tenants = MdmsRes?.tenant?.tenants.map((tenant) => ({
+      i18nKey: `TENANT_TENANTS_${tenant.code.replace(".", "_").toUpperCase()}`,
+      ...tenant,
+    }));
+>>>>>>> develop
     // .filter((item) => !!moduleTenants.find((mt) => mt.code === item.code))
     // .map((tenant) => ({ i18nKey: `TENANT_TENANTS_${tenant.code.replace(".", "_").toUpperCase()}`, ...tenant }));
 
     await LocalizationService.getLocale({
-      modules: [
-        `${modulePrefix}-common`,
-        `digit-ui`,
-        `${modulePrefix}-${stateCode.toLowerCase()}`
-      ],
+      modules: [`${modulePrefix}-common`, `digit-ui`, `digit-tenants`, `${modulePrefix}-${stateCode.toLowerCase()}`],
       locale: initData.selectedLanguage,
       tenantId: stateCode,
     });
@@ -145,9 +215,21 @@ export const StoreService = {
   },
   defaultData: async (stateCode, moduleCode, language, modulePrefix) => {
     let moduleCodes = [];
+<<<<<<< HEAD
     if (typeof moduleCode !== "string") moduleCode.forEach(code => { moduleCodes.push(modulePrefix ? `${modulePrefix}-${code.toLowerCase()}` : `${code.toLowerCase()}`) });
+=======
+    if (typeof moduleCode !== "string")
+      moduleCode.forEach((code) => {
+        moduleCodes.push(modulePrefix ? `${modulePrefix}-${code.toLowerCase()}` : `${code.toLowerCase()}`);
+      });
+>>>>>>> develop
     const LocalePromise = LocalizationService.getLocale({
-      modules: typeof moduleCode == "string" ? modulePrefix ? [`${modulePrefix}-${moduleCode.toLowerCase()}`] : [`${moduleCode.toLowerCase()}`] : moduleCodes,
+      modules:
+        typeof moduleCode == "string"
+          ? modulePrefix
+            ? [`${modulePrefix}-${moduleCode.toLowerCase()}`]
+            : [`${moduleCode.toLowerCase()}`]
+          : moduleCodes,
       locale: language,
       tenantId: stateCode,
     });

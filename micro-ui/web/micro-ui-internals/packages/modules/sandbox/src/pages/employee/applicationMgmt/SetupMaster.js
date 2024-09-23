@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo, useState } from "react";
+import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Header, Table } from "@egovernments/digit-ui-react-components";
 import { Button, Card, CardHeader, CardText, Loader, PopUp, SVG } from "@egovernments/digit-ui-components";
@@ -11,33 +11,83 @@ const SetupMaster = () => {
   const history = useHistory();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
+  const { isLoading, data, refetch } = Digit.Hooks.useAccessControl();
   const module = searchParams.get("module");
   const key = searchParams.get("key");
   const [showPopUp, setShowPopUp] = useState(null);
+  const [filters, setFilters] = useState(null);
+  const [isUserExist, setIsUserExist] = useState(null);
   const config = useMemo(() => {
-    return setupMasterConfig?.SetupMaster?.filter((item) => item.module === module)?.[0];
-  }, [module]);
+    return setupMasterConfig(isUserExist)?.SetupMaster?.filter((item) => item.module === module)?.[0];
+  }, [module, isUserExist]);
 
   const { isLoading: moduleMasterLoading, data: moduleMasterData } = Digit.Hooks.useCustomMDMS(
     tenantId,
     "sandbox-ui",
     [{ name: "ModuleMasterConfig" }],
     {
+      // cacheTime: 0,
+      // staleTime: 0,
       select: (data) => {
-        let xx = data?.["sandbox-ui"]?.ModuleMasterConfig?.filter((item) => item?.module === module)?.[0]?.master?.filter(
+        let respStructure = data?.["sandbox-ui"]?.ModuleMasterConfig?.filter((item) => item?.module === module)?.[0]?.master?.filter(
           (item) => item.type === "module" || item.type === "common" || item.type === "boundary"
         );
-        let respData = xx.map((i) => ({
+        const respData = respStructure.map((i) => ({
           masterName: t(i.code),
           type: t(i.type),
           description: t(`SANDBOX_MASTER_SETUP_DESC_${i.code}`),
         }));
-        return respData;
+        const moduleMasterPayload = respStructure
+          ?.filter((i) => i.type === "common" || i.type === "module")
+          ?.map((item) => {
+            return {
+              moduleName: item?.code?.split(".")?.[0],
+              masterDetails: [
+                {
+                  name: item?.code?.split(".")?.[1],
+                },
+              ],
+            };
+          });
+        return { respData, moduleMasterPayload };
       },
       enabled: true,
     }
     // true
   );
+
+  useEffect(() => {
+    if (!moduleMasterLoading && moduleMasterData?.moduleMasterPayload) {
+      setFilters(moduleMasterData?.moduleMasterPayload);
+    }
+  }, [moduleMasterData, moduleMasterLoading]);
+
+  const { isLoading: masterCountLoading, data: masterCount } = Digit.Hooks.sandbox.useGetMasterDataCount({
+    tenantId: tenantId,
+    filter: filters,
+    config: {
+      enabled: Boolean(filters),
+      cacheTime: 0,
+      staleTime: 0,
+      select: (data) => {
+        if (_.isEmpty(data?.MdmsRes)) {
+          return false
+        }
+        const resp = data?.MdmsRes;
+        const checkMasterDataCompleteness = Object.values(resp).every((category) =>
+          Object.values(category).every((items) => items.every((item) => parseInt(item.count) > 0))
+        );
+
+        return checkMasterDataCompleteness;
+      },
+    },
+  });
+
+  useEffect(() => {
+    if (!masterCountLoading) {
+      setIsUserExist(masterCount);
+    }
+  }, [masterCountLoading, masterCount]);
 
   const { mutate: useDefaultMasterHandler } = Digit.Hooks.sandbox.useDefaultMasterHandler(tenantId);
 
@@ -63,6 +113,7 @@ const SetupMaster = () => {
           });
         },
         onSuccess: async (data) => {
+          refetch();
           setShowPopUp({
             key: "success",
             // label: "DEFAULT_MASTER_SETUP_SUCCESS", message: "DEFAULT_MASTER_SETUP_SUCCESS_MESSAGE",
@@ -80,7 +131,7 @@ const SetupMaster = () => {
     );
   };
 
-  if (moduleMasterLoading) {
+  if (moduleMasterLoading && masterCountLoading) {
     return <Loader />;
   }
   return (
@@ -103,8 +154,8 @@ const SetupMaster = () => {
           <div className="setupMasterSetupActionBar">
             <Button
               className="actionButton"
-              label={t(config.actionText)}
-              variation={"primary"}
+              label={isUserExist ? t(`EDIT_MASTER`) : t(config.actionText)}
+              variation={"secondary"}
               icon="ArrowForward"
               isSuffix={true}
               onClick={(e) => {
@@ -129,7 +180,7 @@ const SetupMaster = () => {
             customTableWrapperClassName={"dss-table-wrapper"}
             disableSort={true}
             autoSort={false}
-            data={moduleMasterData}
+            data={moduleMasterData?.respData}
             totalRecords={5}
             columns={[
               {
@@ -162,7 +213,7 @@ const SetupMaster = () => {
           />
           {showPopUp && (
             <PopUp
-              className="setupMasterPopUp"
+              className={`setupMasterPopUp ${showPopUp?.key === "error" ? "error" : ""}`}
               type={"alert"}
               showIcon={t(showPopUp?.showIcon)}
               heading={t(showPopUp?.heading)}
@@ -189,14 +240,17 @@ const SetupMaster = () => {
           <div className="setupMasterSetupActionBar">
             <Button
               className="actionButton"
-              label={t("SETUP_MASTER")}
+              label={isUserExist ? t("EDIT_MASTER") : t("SETUP_MASTER")}
               variation={"primary"}
               // icon="ArrowForward"
               isSuffix={true}
               onClick={(e) => {
                 e.preventDefault();
-                handleSetupMaster();
-                // history.push(`/${window?.contextPath}/employee/sandbox/application-management/module?module=${module}`);
+                if (isUserExist) {
+                  history.push(`/${window?.contextPath}/employee/sandbox/application-management/module?module=${module}`);
+                } else {
+                  handleSetupMaster();
+                }
               }}
             ></Button>
           </div>
