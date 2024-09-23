@@ -242,8 +242,8 @@ const SetupMaster = () => {
             <Button
               className="actionButton"
               label={isUserExist ? t("EDIT_MASTER") : t("SETUP_MASTER")}
-              variation={"secondary"}
-              icon="ArrowForward"
+              variation={"primary"}
+              // icon="ArrowForward"
               isSuffix={true}
               onClick={(e) => {
                 e.preventDefault();
