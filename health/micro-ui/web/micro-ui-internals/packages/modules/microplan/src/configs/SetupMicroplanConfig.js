@@ -30,7 +30,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
         {
           stepCount: "2",
           key: "2",
-          name: "MP_MICROPLAN_DETAILS",
+          name: "MICROPLAN_DETAILS",
           body: [
             {
               isMandatory: false,
@@ -39,6 +39,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               skipAPICall: false,
               resourceToUpdate:"PLAN",
               component: "MicroplanDetails",
+              withoutLabelFieldPair: true,
               withoutLabel: true,
               disable: false,
               customProps: {
@@ -64,6 +65,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               skipAPICall: false,
               resourceToUpdate:"PLAN",
               component: "MicroplanDetails",
+              withoutLabelFieldPair: true,
               withoutLabel: true,
               disable: false,
               customProps: {
