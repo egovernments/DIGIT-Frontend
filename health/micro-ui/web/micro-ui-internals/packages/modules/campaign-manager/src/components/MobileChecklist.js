@@ -1,7 +1,6 @@
 import React from 'react';
 
 const MobileChecklist = ({ questions, checklistName , typeOfChecklist}) => {
-  console.log("the questions are as follows", questions, checklistName, typeOfChecklist);
   // Filter questions with parentId as null
   const topLevelQuestions = questions.filter(q => q.parentId === null);
 

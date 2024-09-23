@@ -1,12 +1,12 @@
 import React, { useEffect, useState, createContext, useContext } from "react";
 import { ViewCardFieldPair, Toast, Card, TextBlock, Button, PopUp, CardText, FieldV1 } from "@egovernments/digit-ui-components";
-import { FormComposerV2, LabelFieldPair, TextInput } from "@egovernments/digit-ui-react-components";
-
+import { FormComposerV2, LabelFieldPair, TextInput, Loader } from "@egovernments/digit-ui-react-components";
+import { useHistory, useLocation } from "react-router-dom";
 import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
 import { useTranslation } from "react-i18next";
 import CreateQuestion from "../../components/CreateQuestion";
 import PreviewComponent from "../../components/PreviewComponent";
-import { set, template } from "lodash";
+import { isError, set, template } from "lodash";
 import { value } from "jsonpath";
 import data_hook from "../../hooks/data_hook";
 import def from "ajv/dist/vocabularies/discriminator";
@@ -34,8 +34,10 @@ const CreateChecklist = () => {
   const [tempFormData1, setTempFormData1] = useState([]);
   const [config, setConfig] = useState(null);
   const [previewData, setPreviewData] = useState([]);
+  const [submitting, setSubmitting] = useState(false);
   let locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
-  const { mutate } = Digit.Hooks.campaign.useCreateChecklist(tenantId);
+  const { mutateAsync } = Digit.Hooks.campaign.useCreateChecklist(tenantId);
+  const history = useHistory();
   let data_mdms=[]
   let template_data=[]
 const reqCriteriaResource = {
@@ -59,7 +61,7 @@ useEffect(()=>{
 }, [mdms])
 
 module = "HCM";
-  const { mutate: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, locale);
+  const { mutateAsync: localisationMutateAsync } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, locale);
 
   let processedData = [];
   useEffect(()=>{
@@ -296,33 +298,49 @@ module = "HCM";
     }
   };
 
+
   const onSubmit = async (formData, flag = 0, preview = null) => {
     let payload;
-    if (flag === 1) payload = payloadData(preview);
-    else payload = payloadData(formData?.createQuestion?.questionData);
-    await mutate(payload, {
-      onError: (error, variables) => {
-        setShowToast({ label: "CHECKLIST_CREATED_FAILED" });
-      },
-      onSuccess: async (data) => {
-        // module="HCM";
-        if (true) {
-          // const localisations = addLocal(formData?.createQuestion?.questionData);
-          const localisations = uniqueLocal;
-          await localisationMutate(localisations, {
-            onError: (error, variables) => {
-              setShowToast({ label: "CHECKLIST_CREATED_LOCALISATION_ERROR" });
-            },
-            onSuccess: async (data) => {
-              setShowToast({ label: "CHECKLIST_AND_LOCALISATION_CREATED_SUCCESSFULLY" });
-            },
-          });
-        } else {
-          setShowToast({ label: "CHECKLIST_CREATED_SUCCESSFULLY" });
+    if (flag === 1) {
+      payload = payloadData(preview);
+    } else {
+      payload = payloadData(formData?.createQuestion?.questionData);
+    }
+    setSubmitting(true);
+    try {
+      const data = await mutateAsync(payload); // Use mutateAsync for await support
+      // Handle successful checklist creation  
+      // Proceed with localization if needed
+      if (data.success) { // Replace with your actual condition
+        const localisations = uniqueLocal;
+        const localisationResult = await localisationMutateAsync(localisations);
+        // Check if localization succeeded
+        if (!localisationResult.success) {
+          setShowToast({ label: "CHECKLIST_CREATED_LOCALISATION_ERROR", isError: "true" });
+          return; // Exit if localization fails
         }
-      },
-    });
+  
+        // setShowToast({ label: "CHECKLIST_AND_LOCALISATION_CREATED_SUCCESSFULLY"});
+        history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
+          message: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE",
+          preText: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE_PRE_TEXT",
+          actionLabel: "ES_CHECKLIST_RESPONSE_ACTION",
+          actionLink: `/${window.contextPath}/employee/campaign/my-campaign`,
+        });
+      } else {
+        setShowToast({ label: "CHECKLIST_CREATED_FAILED", isError: "true" });
+      }
+    } catch (error) {
+      // Handle error scenario
+      setShowToast({ label: "CHECKLIST_CREATED_FAILED", isError: "true" });
+      // console.error("Error creating checklist:", error);
+    } finally{
+      setSubmitting(false);
+    }
   };
+  
+  
+
 
   const fieldPairs = [
     { label: "Role", value: role },
@@ -331,133 +349,138 @@ module = "HCM";
   ];
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
+      {submitting &&  <Loader />}
+      {!submitting && 
         <div>
-          <h2 style={{ fontSize: "36px", fontWeight:"700"}}>
-            {t("CREATE_NEW_CHECKLIST")}
-          </h2>
-        </div>
-        <div style={{ display: "flex", gap: "1rem" }}>
-          <Button
-            variation="secondary"
-            label={t("USE_TEMPLATE")}
-            className={"hover"}
-            style={{ marginTop: "2rem", marginBottom: "2rem" }}
-            // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
-            onClick={useTemplateData}
-          />
-          <Button
-            icon="Preview"
-            variation="secondary"
-            label={t("PREVIEW_CHECKLIST")}
-            className={"hover"}
-            style={{ marginTop: "2rem", marginBottom: "2rem" }}
-            // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
-            onClick={popShow}
-          />
-        </div>
-      </div>
-      {showPopUp && (
-        <PopUp
-          className={"custom-pop-up"}
-          type={"default"}
-          heading={t("CHECKLIST_PREVIEW")}
-          children={[
-            // <div>
-            //   <CardText style={{ margin: 0 }}>{"testing" + " "}</CardText>
-            // </div>, 
-          ]}
-          onOverlayClick={() => {
-            setShowPopUp(false);
-          }}
-          onClose={() => {
-            setShowPopUp(false);
-          }}
-          footerChildren={[
-            <Button
-              type={"button"}
-              size={"large"}
-              variation={"secondary"}
-              label={t("CLOSE")}
-              onClick={() => {
-                setShowPopUp(false);
-              }}
-            />,
-            <Button
-              type={"button"}
-              size={"large"}
-              variation={"primary"}
-              label={t("CREATE_CHECKLIST")}
-              onClick={() => {
-                onSubmit(null, 1, tempFormData);
-              }}
-            />,
-          ]}
-          sortFooterChildren={true}
-        >
-          {/* <PreviewComponent
-            questionsArray={previewData}></PreviewComponent> */}
-            
-          <MobileChecklist questions={previewData} checklistName={checklistName} typeOfChecklist={checklistType}></MobileChecklist>
-        </PopUp>
-      )}
-      <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
-        {fieldPairs.map((pair, index) => (
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div>
-            <ViewCardFieldPair
-              key={index} // Provide a unique key for each item
-              className=""
-              inline
-              label={pair.label} // Dynamically set the label
-              value={pair.value} // Dynamically set the value
-            // style={{ fontSize: "16px", fontWeight: "bold" }} // Optional: customize styles
-            />
-            <div style={{height:"1rem"}}></div>
+            <h2 style={{ fontSize: "36px", fontWeight:"700"}}>
+              {t("CREATE_NEW_CHECKLIST")}
+            </h2>
           </div>
-        ))}
-        {
-          <hr style={{ width: "100%", borderTop: "1px solid #ccc" }} />
-        }
-        <div style={{ height: "1rem" }}>
+          <div style={{ display: "flex", gap: "1rem" }}>
+            <Button
+              variation="secondary"
+              label={t("USE_TEMPLATE")}
+              className={"hover"}
+              style={{ marginTop: "2rem", marginBottom: "2rem" }}
+              // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
+              onClick={useTemplateData}
+            />
+            <Button
+              icon="Preview"
+              variation="secondary"
+              label={t("PREVIEW_CHECKLIST")}
+              className={"hover"}
+              style={{ marginTop: "2rem", marginBottom: "2rem" }}
+              // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
+              onClick={popShow}
+            />
+          </div>
         </div>
-        <div style={{ display: "flex" }}>
-          <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t("NAME_OF_CHECKLIST")}</div>
-          <FieldV1
-            type={"text"}
-            populators={{
-              resizeSmart: false
+        {showPopUp && (
+          <PopUp
+            className={"custom-pop-up"}
+            type={"default"}
+            heading={t("CHECKLIST_PREVIEW")}
+            children={[
+              // <div>
+              //   <CardText style={{ margin: 0 }}>{"testing" + " "}</CardText>
+              // </div>, 
+            ]}
+            onOverlayClick={() => {
+              setShowPopUp(false);
             }}
-            name={t("NAME_OF_CHECKLIST")}
-            value={checklistName || ""}
-            onChange={(event) => addChecklistName(event.target.value)}
-            placeholder={""}
-          />
-        </div>
-      </Card>
-      <FormComposerV2
-        showMultipleCardsWithoutNavs={true}
-        label={t("CREATE_CHECKLIST")}
-        config={config}
-        onSubmit={onSubmit}
-        fieldStyle={{ marginRight: 0 }}
-        noBreakLine={true}
-        // cardClassName={"page-padding-fix"}
-        onFormValueChange={onFormValueChange}
-        actionClassName={"checklistCreate"}
-        // noCardStyle={currentKey === 4 || currentStep === 7 || currentStep === 0 ? false : true}
-        noCardStyle={true}
-        // showWrapperContainers={false}
-      />
-
-      {showToast && (
-        <Toast
-          type={showToast?.isError ? "error" : "success"}
-          // error={showToast?.isError}
-          label={t(showToast?.label)}
-          isDleteBtn={"true"}
-          onClose={() => closeToast()}
+            onClose={() => {
+              setShowPopUp(false);
+            }}
+            footerChildren={[
+              <Button
+                type={"button"}
+                size={"large"}
+                variation={"secondary"}
+                label={t("CLOSE")}
+                onClick={() => {
+                  setShowPopUp(false);
+                }}
+              />,
+              <Button
+                type={"button"}
+                size={"large"}
+                variation={"primary"}
+                label={t("CREATE_CHECKLIST")}
+                onClick={() => {
+                  onSubmit(null, 1, tempFormData);
+                }}
+              />,
+            ]}
+            sortFooterChildren={true}
+          >
+            {/* <PreviewComponent
+              questionsArray={previewData}></PreviewComponent> */}
+              
+            <MobileChecklist questions={previewData} checklistName={checklistName} typeOfChecklist={checklistType}></MobileChecklist>
+          </PopUp>
+        )}
+        <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
+          {fieldPairs.map((pair, index) => (
+            <div>
+              <ViewCardFieldPair
+                key={index} // Provide a unique key for each item
+                className=""
+                inline
+                label={pair.label} // Dynamically set the label
+                value={pair.value} // Dynamically set the value
+              // style={{ fontSize: "16px", fontWeight: "bold" }} // Optional: customize styles
+              />
+              <div style={{height:"1rem"}}></div>
+            </div>
+          ))}
+          {
+            <hr style={{ width: "100%", borderTop: "1px solid #ccc" }} />
+          }
+          <div style={{ height: "1rem" }}>
+          </div>
+          <div style={{ display: "flex" }}>
+            <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t("NAME_OF_CHECKLIST")}</div>
+            <FieldV1
+              type={"text"}
+              populators={{
+                resizeSmart: false
+              }}
+              name={t("NAME_OF_CHECKLIST")}
+              value={checklistName || ""}
+              onChange={(event) => addChecklistName(event.target.value)}
+              placeholder={""}
+            />
+          </div>
+        </Card>
+        <FormComposerV2
+          showMultipleCardsWithoutNavs={true}
+          label={t("CREATE_CHECKLIST")}
+          config={config}
+          onSubmit={onSubmit}
+          fieldStyle={{ marginRight: 0 }}
+          noBreakLine={true}
+          // cardClassName={"page-padding-fix"}
+          onFormValueChange={onFormValueChange}
+          actionClassName={"checklistCreate"}
+          // noCardStyle={currentKey === 4 || currentStep === 7 || currentStep === 0 ? false : true}
+          noCardStyle={true}
+          // showWrapperContainers={false}
         />
-      )}
+
+        {showToast && (
+          <Toast
+            type={showToast?.isError ? "error" : "success"}
+            // error={showToast?.isError}
+            label={t(showToast?.label)}
+            isDleteBtn={"true"}
+            onClose={() => closeToast()}
+          />
+        )}
+      </div>
+     }
     </div>
   );
 };
