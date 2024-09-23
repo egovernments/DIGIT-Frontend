@@ -29,7 +29,7 @@ const LogoUploaderComponent = ({ onSelect, ...props }) => {
 
   useEffect(() => {
     if (fileStoreId) {
-      onSelect("LogoUploaderComponent", { "fileStoreId": fileStoreId, "type": "Logo" })
+      onSelect("LogoUploaderComponent", { "fileStoreId": fileStoreId, "type": "LogoUrl" })
     }
   }, [fileStoreId])
 

@@ -77,6 +77,11 @@ export const StoreService = {
       const logoUrl = await Digit.UploadServices.Filefetch(logoArray, tenantConfigSearch?.[0]?.code);
       const bannerUrl = await Digit.UploadServices.Filefetch(bannerArray, tenantConfigSearch?.[0]?.code);
 
+      console.log("logo url", logoUrl);
+      console.log("banner url", bannerUrl);
+      console.log("url that is being extracted is", tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "logoUrl")?.url);
+
+
       return {
         languages: stateInfo.hasLocalisation ? stateInfo.languages : [{ label: "ENGLISH", value: Digit.Utils.getDefaultLanguage() }],
         stateInfo: {

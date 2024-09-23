@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { FormComposerV2, Header, Toast } from "@egovernments/digit-ui-react-components";
+import { TenantConfigSearch } from "../../../../../../libraries/src/services/elements/TenantConfigService";
+
 
 const fieldStyle = { marginRight: 0 };
 
@@ -14,6 +16,8 @@ const TenantConfigUpload = () => {
   const [toastMessage, setToastMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const [uploadData, setUploadData] = useState([]); // State to store the uploaded data
+  const [tenantDocument, setDocuments] = useState([]);
+  
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook({
     url: `/tenant-management/tenant/config/_update`,
@@ -61,43 +65,9 @@ const TenantConfigUpload = () => {
     },
   ];
 
-  // Transform data function
-  const transformCreateData = (documentsArray, defaultData) => {
-    return {
-      tenantConfig: {
-        code: defaultData.code || tenantId,
-        otpLength: defaultData.otpLength || "6",
-        name: defaultData.name || "PG",
-        languages: defaultData.languages || ["en_IN"],
-        defaultLoginType: defaultData.defaultLoginType || "OTP",
-        enableUserBasedLogin: defaultData.enableUserBasedLogin || true,
-        additionalAttributes: defaultData.additionalAttributes || {},
-        documents: documentsArray.map((doc) => ({
-          tenantId: tenantId,
-          type: doc.type,
-          fileStoreId: doc.fileStoreId,
-          url: "",
-          isActive: true,
-          auditDetails: {
-            createdBy: null,
-            lastModifiedBy: null,
-            createdTime: null,
-            lastModifiedTime: null,
-          },
-        })),
-        isActive: defaultData.isActive || true,
-        auditDetails: {
-          createdBy: null,
-          lastModifiedBy: null,
-          createdTime: null,
-          lastModifiedTime: null,
-        },
-      },
-    };
-  };
 
   // Handle form submission
-  const onSubmit = (data) => {
+  const onSubmit = (data) => {   
     const documents = Object.keys(data).map((key) => {
       return {
         fileStoreId: data[key]?.fileStoreId,
@@ -107,17 +77,49 @@ const TenantConfigUpload = () => {
     setUploadData(documents);
   };
 
+
   // Make API call when `uploadData` is updated
   useEffect(() => {
     if (uploadData.length > 0) {
-      triggerCreate(uploadData, defaultValue);
+      triggerCreate(uploadData,tenantDocument);
     }
+
   }, [uploadData]);
 
-  const triggerCreate = async (documentsArray, defaultData) => {
-    try {
-      const requestBody = transformCreateData(documentsArray, defaultData);
+  useEffect(()=>{
+    const fetchData =async ()=>{
+      const tenantConfigs = await TenantConfigSearch.tenant(tenantId);
+      const tenantConfigSearch = tenantConfigs?.tenantConfigs ? tenantConfigs?.tenantConfigs : null;
+      // Assuming the structure you provided, we extract the documents array
+      console.log("tenant config search is", tenantConfigSearch);
+      setDocuments(tenantConfigSearch);
+    }
+    fetchData();
+  },[])
+  
 
+
+  const  updateFileStoreIds=(inputData, requestData)  =>{
+    // Iterate over the input data to update fileStoreId in requestData
+    inputData.forEach(input => {
+        requestData[0].documents.forEach(doc => {
+            if (doc.type.toLowerCase() === input.type.toLowerCase()) {
+                doc.fileStoreId = input.fileStoreId;
+            }
+        });
+    });
+    requestData["tenantConfig"] = requestData["0"];
+    delete requestData["0"];
+    return requestData;
+}
+
+
+  const triggerCreate = async (documentsArray, tenantDocument) => {
+    try {
+      console.log("uploadData is", uploadData);
+
+      const requestBody = updateFileStoreIds(documentsArray, tenantDocument);
+      console.log("the request body is", requestBody);
       // Assuming the mutation for API call is defined elsewher
       await mutation.mutate(
         {
@@ -137,6 +139,10 @@ const TenantConfigUpload = () => {
             setToastMessage(t("SANDBOX_TENANT_CREATE_SUCCESS_TOAST"));
             setIsError(false);
             setShowToast(true);
+            setTimeout(() => {
+              closeToast();
+              history.push(`/${window?.contextPath}/employee`);
+            }, 3000);
           },
         }
       );
