@@ -1,4 +1,4 @@
-export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summaryErrors) => {
+export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summaryErrors,hierarchyData) => {
   return [
     {
       form:[
@@ -56,15 +56,15 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
         {
           stepCount: "3",
           key: "3",
-          name: "MP_MICROPLAN_DETAILS",
+          name: "BOUNDARY",
           body: [
             {
               isMandatory: false,
-              key: "microplanDetails",
+              key: "boundarySelection",
               type: "component",
               skipAPICall: false,
               resourceToUpdate:"PLAN",
-              component: "MicroplanDetails",
+              component: "BoundarySelection",
               withoutLabelFieldPair: true,
               withoutLabel: true,
               disable: false,
@@ -72,6 +72,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
                 module: "HCM",
                 sessionData: totalFormData,
                 isSubmitting: isSubmitting,
+                hierarchyData
               },
               populators: {
                 name: "projectType",
@@ -106,32 +107,6 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
           },
         ],
       },
-
-        {
-          stepCount: "4",
-          key: "4",
-          name: "MP_MICROPLAN_DETAILS",
-          body: [
-            {
-              isMandatory: false,
-              key: "microplanDetails",
-              type: "component",
-              skipAPICall: false,
-              resourceToUpdate:"PLAN",
-              component: "MicroplanDetails",
-              withoutLabel: true,
-              disable: false,
-              customProps: {
-                module: "HCM",
-                sessionData: totalFormData,
-                isSubmitting: isSubmitting,
-              },
-              populators: {
-                name: "projectType",
-              },
-            },
-          ],
-        },
         {
           stepCount: "5",
           key: "5",
