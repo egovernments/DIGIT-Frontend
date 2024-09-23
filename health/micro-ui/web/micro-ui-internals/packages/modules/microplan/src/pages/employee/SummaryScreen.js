@@ -13,7 +13,22 @@ const SummaryScreen = () => {
   const { name } = useParams();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
+  const [totalFormData,setTotalFormData] = Digit.Hooks.useSessionStorage("MICROPLAN_DATA", {});
 
+ const data3=()=>{
+  let values=[];
+  let campaignDetails=totalFormData.CAMPAIGN_DETAILS.campaignDetails;
+  for(let k in campaignDetails){
+    values.push({
+      key:String(k),
+      value:String(campaignDetails[k].code)
+    })
+  }
+  return values
+
+  
+ }
+  
   const reqCriteria = [
     {
       title: t("MICROPLAN_DETAILS"),
@@ -69,10 +84,6 @@ const SummaryScreen = () => {
 
     },
     {
-
-
-
-
 
       title: t("MICROPLAN_DETAILS1"),
 
@@ -159,21 +170,23 @@ const SummaryScreen = () => {
                   <EditIcon />
                 </div>
               ),
-              values: [
-                {
-                  key: "Campaign Disease",
-                  value: "malaria",
-                },
-                {
-                  key: "Campaign Type",
-                  value: "ITIN",
-                },
-                {
-                  key: "Resource distribution strategy",
-                  // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
-                  value: "House-House"
-                },
-              ],
+              // values: [
+              //   {
+              //     key: "Campaign Disease",
+              //     value: "malaria",
+              //   },
+              //   {
+              //     key: "Campaign Type",
+              //     value: "ITIN",
+              //   },
+              //   {
+              //     key: "Resource distribution strategy",
+              //     // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
+              //     value: "House-House"
+              //   },
+              values: data3(),
+
+              // ],
             },
 
           ]

@@ -65,6 +65,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               resourceToUpdate:"PLAN",
               component: "SummaryScreen",
               withoutLabel: true,
+              withoutLabelFieldPair:true,
               disable: false,
               customProps: {
                 module: "HCM",
