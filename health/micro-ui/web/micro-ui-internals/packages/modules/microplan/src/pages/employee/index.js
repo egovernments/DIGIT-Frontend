@@ -5,6 +5,9 @@ import { Switch,useLocation } from "react-router-dom";
 import SetupMicroplan from "./SetupMicroplan";
 import { useMyContext } from "../../utils/context";
 import MicroplanSearch from "./MicroplanSearch";
+import SummaryScreen from "./SummaryScreen";
+import Sample from "./Sample";
+
 
 const bredCrumbStyle={ maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
@@ -28,10 +31,10 @@ const App = ({ path, stateCode, userType, tenants }) => {
   const { dispatch } = useMyContext();
   const location = useLocation();
   //destroying session
-  useEffect(() => {
-    const pathVar = location.pathname.replace(`${path}/`, "").split("?")?.[0];
-    Digit.Utils.microplanv1.destroySessionHelper(pathVar, ["setup-microplan"], "MICROPLAN_DATA");
-  }, [location]);
+  // useEffect(() => {
+  //   const pathVar = location.pathname.replace(`${path}/`, "").split("?")?.[0];
+  //   Digit.Utils.microplanv1.destroySessionHelper(pathVar, ["setup-microplan"], "MICROPLAN_DATA");
+  // }, [location]);
 
 
   const { isLoading: isLoadingMdmsMicroplanData, data:MicroplanMdmsData } = Digit.Hooks.useCustomMDMS(
@@ -71,6 +74,9 @@ const App = ({ path, stateCode, userType, tenants }) => {
         </React.Fragment>
          <PrivateRoute path={`${path}/setup-microplan`} component={() => <SetupMicroplan />} />
          <PrivateRoute path={`${path}/microplan-search`} component={() => <MicroplanSearch></MicroplanSearch>} /> 
+         <PrivateRoute path={`${path}/summary-screen`} component={() => <SummaryScreen></SummaryScreen>} />
+         <PrivateRoute path={`${path}/sample`} component={() => <Sample></Sample>} />
+
       </AppContainer>
     </Switch>
   );
