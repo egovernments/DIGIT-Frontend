@@ -26,6 +26,8 @@ const SetupMaster = () => {
     "sandbox-ui",
     [{ name: "ModuleMasterConfig" }],
     {
+      cacheTime: 0,
+      staleTime: 0,
       select: (data) => {
         let respStructure = data?.["sandbox-ui"]?.ModuleMasterConfig?.filter((item) => item?.module === module)?.[0]?.master?.filter(
           (item) => item.type === "module" || item.type === "common" || item.type === "boundary"
@@ -55,6 +57,7 @@ const SetupMaster = () => {
   );
 
   useEffect(() => {
+    console.log("HELLO")
     if (!moduleMasterLoading && moduleMasterData?.moduleMasterPayload) {
       setFilters(moduleMasterData?.moduleMasterPayload);
     }
@@ -65,6 +68,8 @@ const SetupMaster = () => {
     filter: filters,
     config: {
       enabled: Boolean(filters),
+      cacheTime: 0,
+      staleTime: 0,
       select: (data) => {
         if (_.isEmpty(data?.MdmsRes)) {
           return false
@@ -227,7 +232,7 @@ const SetupMaster = () => {
                   size={"large"}
                   variation={"secondary"}
                   label={t(showPopUp?.buttonLabel)}
-                  onClick={() => history.push(`/${window?.contextPath}/employee/sandbox/application-management/module?module=${module}`)}
+                  onClick={() => history.push(`/${window?.contextPath}/employee`)}
                 />,
               ]}
               equalWidthButtons={true}
