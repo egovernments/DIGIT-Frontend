@@ -2,7 +2,7 @@ import React, { useState, useEffect,Fragment} from "react";
 import { useTranslation } from "react-i18next";
 import { Card, Header, DeleteIconv2,LabelFieldPair, AddIcon,Button, CardText, } from "@egovernments/digit-ui-react-components";
 import {Dropdown,FieldV1,PopUp,} from "@egovernments/digit-ui-components";
-import { PRIMARY_COLOR } from "../utils";
+import { PRIMARY_COLOR } from "../utils/utilities";
 import { useMyContext } from "../utils/context";
 
 

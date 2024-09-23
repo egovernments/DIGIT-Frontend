@@ -12,6 +12,8 @@ const HypothesisWrapper = ({onSelect, props:customProps}) => {
     const { state, dispatch } = useMyContext();
     const assumptionCategories = state.HypothesisAssumptions[0].assumptionCategories
 
+    console.log(state)
+
     const filteredAssumptions = assumptionCategories.find(category => category.category === selectedCategory)?.assumptions || [];
 
 

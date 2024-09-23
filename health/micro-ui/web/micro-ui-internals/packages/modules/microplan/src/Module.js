@@ -10,6 +10,7 @@ import { ProviderContext } from "./utils/context";
 import BoundarySelection from "./components/BoundarySelection";
 import HypothesisWrapper from "./components/HypothesisWrapper";
 
+
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -43,6 +44,7 @@ const componentsToRegister = {
   MicroplanDetails,
   BoundarySelection,
   HypothesisWrapper,
+  
 
 };
 

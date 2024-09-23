@@ -2546,3 +2546,26 @@ $border-color: rgba(214, 213, 212, 1);
   width:30rem;
 
 }
+
+
+/* CSS FOR FORMULA CONFIGURATION */
+.formula-label-field{
+  display: flex;
+  gap:1.5rem;
+  
+}
+
+.equals-icon{
+  font-size: 5rem;
+  font-family: Roboto Condensed;
+ /* margin: 0 3%;*/ 
+  /*font-weight: 700;*/
+}
+
+.formula-label-field > span {
+  width: 20rem;
+  font-size: 1.2rem;
+  margin-right: 2rem;
+  font-weight: bold;
+  
+}
