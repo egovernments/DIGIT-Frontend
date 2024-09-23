@@ -64,7 +64,7 @@ const CampaignDetails = ({onSelect,props:customProps,...props}) => {
   }
 
   return (
-    <React.Fragment>
+    <Card >
         <Header>{t(`HCM_CAMPAIGN_DETAILS_HEADER`)}</Header>
         <p className="description-type">{t(`HCM_CAMPAIGN_DETAILS_DESC`)}</p>
         <LabelFieldPair>
@@ -118,7 +118,7 @@ const CampaignDetails = ({onSelect,props:customProps,...props}) => {
             }}
           />
         </LabelFieldPair>
-    </React.Fragment>
+    </Card>
   );
 }
 
