@@ -26,8 +26,8 @@ const SetupMaster = () => {
     "sandbox-ui",
     [{ name: "ModuleMasterConfig" }],
     {
-      cacheTime: 0,
-      staleTime: 0,
+      // cacheTime: 0,
+      // staleTime: 0,
       select: (data) => {
         let respStructure = data?.["sandbox-ui"]?.ModuleMasterConfig?.filter((item) => item?.module === module)?.[0]?.master?.filter(
           (item) => item.type === "module" || item.type === "common" || item.type === "boundary"
@@ -57,7 +57,6 @@ const SetupMaster = () => {
   );
 
   useEffect(() => {
-    console.log("HELLO")
     if (!moduleMasterLoading && moduleMasterData?.moduleMasterPayload) {
       setFilters(moduleMasterData?.moduleMasterPayload);
     }
@@ -131,6 +130,7 @@ const SetupMaster = () => {
       }
     );
   };
+  console.log("AKAKAKAKA",moduleMasterData?.respData)
 
   if (moduleMasterLoading && masterCountLoading) {
     return <Loader />;
@@ -174,6 +174,7 @@ const SetupMaster = () => {
             {t(config?.header || "N/A")}
           </Header>
           <CardText>{t(config?.description)}</CardText>
+          {console.log("moduleMasterData?.respData", moduleMasterData?.respData)}
           <Table
             pageSizeLimit={50}
             className={"table"}
