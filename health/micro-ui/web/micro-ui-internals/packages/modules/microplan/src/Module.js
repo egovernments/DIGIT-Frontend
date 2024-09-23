@@ -15,10 +15,13 @@ export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { data: BOUNDARY_HIERARCHY_TYPE } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }], {
     select: (data) => {
-      return data?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.hierarchy;
+      return data?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)?.hierarchy;
     },
   });
-  const moduleCode = ["Microplanning", `boundary-${BOUNDARY_HIERARCHY_TYPE}`, "hcm-admin-schemas"];
+
+  const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({BOUNDARY_HIERARCHY_TYPE,tenantId});
+
+  const moduleCode = ["Microplanning","campaignmanager", "workbench", "mdms", "schema", "hcm-admin-schemas", `boundary-${BOUNDARY_HIERARCHY_TYPE}`];
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
@@ -31,7 +34,7 @@ export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   }
   return (
     <ProviderContext>
-      <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} />
+      <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} hierarchyData={hierarchyData} BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE} />
     </ProviderContext>
   );
 };
