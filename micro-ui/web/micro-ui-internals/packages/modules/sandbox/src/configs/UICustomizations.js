@@ -233,7 +233,7 @@ export const UICustomizations = {
           // return row?.code?.split(".")?.[1] ? t(`SANDBOX_${row?.code?.split(".")?.[1]}`) : t(`SANDBOX_${row?.code?.split(".")?.[0]}`);
           return t(Digit.Utils.workbench.getMDMSLabel(`SCHEMA_` + row?.code));
 
-        case "SANDBOX_MASTER_TYPE":
+        case "SANDBOX_MASTER_DESCRIPTION":
           return t(`SANDBOX_MASTER_SETUP_DESC_${row.code}`);
 
         case "SANDBOX_ACTIONS":
