@@ -130,7 +130,6 @@ const SetupMaster = () => {
       }
     );
   };
-  console.log("AKAKAKAKA",moduleMasterData?.respData)
 
   if (moduleMasterLoading && masterCountLoading) {
     return <Loader />;
@@ -174,7 +173,6 @@ const SetupMaster = () => {
             {t(config?.header || "N/A")}
           </Header>
           <CardText>{t(config?.description)}</CardText>
-          {console.log("moduleMasterData?.respData", moduleMasterData?.respData)}
           <Table
             pageSizeLimit={50}
             className={"table"}
