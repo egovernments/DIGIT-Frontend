@@ -81,7 +81,6 @@ const SetupMicroplan = () => {
   }, [params]);
 
   const onSubmit = (formData) => {
-    
     //run validations
     // setIsSubmittting to true -> to run inline validations within the components
     setIsSubmitting(true);
@@ -172,14 +171,15 @@ const SetupMicroplan = () => {
         })}
         onSubmit={onSubmit}
         showSecondaryLabel={true}
-        secondaryLabel={t("ES_COMMON_BACK")}
+        secondaryLabel={t("HCM_BACK")}
         actionClassName={"actionBarClass"}
         className="setup-campaign"
         cardClassName="setup-campaign-card"
-        // noCardStyle={currentKey === 4 || currentStep === 7 || currentStep === 0 ? false : true}
+        // showMultipleCardsWithoutNavs={true}
+        noCardStyle={true}
         onSecondayActionClick={onSecondayActionClick}
         label={
-          t("ES_COMMON_NEXT")
+          t("HCM_NEXT")
         }
       />
       {/* {actionBar === "true" && (
