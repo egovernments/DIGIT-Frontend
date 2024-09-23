@@ -131,26 +131,6 @@ export const StoreService = {
           bannerUrl: tenantConfigFetch ? bannerUrl ? bannerUrl : tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "bannerUrl")?.url : stateInfo.bannerUrl,
         },
         localizationModules: stateInfo.localizationModules,
-<<<<<<< HEAD
-        modules: MdmsRes?.tenant?.citymodule?.filter((module) => module?.active)?.filter((module) => enabledModules?.includes(module?.code))?.sort((x, y) => x?.order - y?.order) || [],
-        uiHomePage: uiHomePage
-      };
-    };
-    const initData = tenantConfigFetch ? await fetchTenantConfig() : {
-      languages: stateInfo.hasLocalisation ? stateInfo.languages : [{ label: "ENGLISH", value: Digit.Utils.getDefaultLanguage() }],
-      stateInfo: {
-        code: stateInfo.code,
-        name: stateInfo.name,
-        logoUrl: stateInfo.logoUrl,
-        statelogo: stateInfo.statelogo,
-        logoUrlWhite: stateInfo.logoUrlWhite,
-        bannerUrl: stateInfo.bannerUrl,
-      },
-      localizationModules: stateInfo.localizationModules,
-      modules: MdmsRes?.tenant?.citymodule?.filter((module) => module?.active)?.filter((module) => enabledModules?.includes(module?.code))?.sort((x, y) => x?.order - y?.order) || [],
-      uiHomePage: uiHomePage
-    };
-=======
         modules:
           MdmsRes?.tenant?.citymodule
             ?.filter((module) => module?.active)
@@ -179,7 +159,6 @@ export const StoreService = {
               ?.sort((x, y) => x?.order - y?.order) || [],
           uiHomePage: uiHomePage,
         };
->>>>>>> develop
     initData.selectedLanguage = Digit.SessionStorage.get("locale") || initData.languages[0].value;
 
     ApiCacheService.saveSetting(MdmsRes["DIGIT-UI"]?.ApiCachingSettings);
@@ -188,15 +167,10 @@ export const StoreService = {
       .map((module) => module.tenants)
       .flat()
       .reduce((unique, ele) => (unique.find((item) => item.code === ele.code) ? unique : [...unique, ele]), []);
-<<<<<<< HEAD
-    initData.tenants = MdmsRes?.tenant?.tenants
-      .map((tenant) => ({ i18nKey: `TENANT_TENANTS_${tenant.code.replace(".", "_").toUpperCase()}`, ...tenant }));
-=======
     initData.tenants = MdmsRes?.tenant?.tenants.map((tenant) => ({
       i18nKey: `TENANT_TENANTS_${tenant.code.replace(".", "_").toUpperCase()}`,
       ...tenant,
     }));
->>>>>>> develop
     // .filter((item) => !!moduleTenants.find((mt) => mt.code === item.code))
     // .map((tenant) => ({ i18nKey: `TENANT_TENANTS_${tenant.code.replace(".", "_").toUpperCase()}`, ...tenant }));
 
@@ -215,14 +189,10 @@ export const StoreService = {
   },
   defaultData: async (stateCode, moduleCode, language, modulePrefix) => {
     let moduleCodes = [];
-<<<<<<< HEAD
-    if (typeof moduleCode !== "string") moduleCode.forEach(code => { moduleCodes.push(modulePrefix ? `${modulePrefix}-${code.toLowerCase()}` : `${code.toLowerCase()}`) });
-=======
     if (typeof moduleCode !== "string")
       moduleCode.forEach((code) => {
         moduleCodes.push(modulePrefix ? `${modulePrefix}-${code.toLowerCase()}` : `${code.toLowerCase()}`);
       });
->>>>>>> develop
     const LocalePromise = LocalizationService.getLocale({
       modules:
         typeof moduleCode == "string"
