@@ -9,7 +9,8 @@ import CampaignDetails from "./components/CampaignDetails";
 import { ProviderContext } from "./utils/context";
 import BoundarySelection from "./components/BoundarySelection";
 import HypothesisWrapper from "./components/HypothesisWrapper";
-
+import DataMgmt from "./components/DataMgmt";
+import SummaryMicroplanDetails from "./components/SummaryMicroplanDetails";
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -43,6 +44,8 @@ const componentsToRegister = {
   MicroplanDetails,
   BoundarySelection,
   HypothesisWrapper,
+  DataMgmt,
+  SummaryMicroplanDetails
 
 };
 

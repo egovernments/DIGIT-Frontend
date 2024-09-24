@@ -227,17 +227,17 @@ const SummaryScreen = () => {
                               values: [
                                 {
                                   key: t("CAMPAIGN_TYPE"),
-                                  value: totalFormData.CAMPAIGN_DETAILS.campaignDetails.
-                                  campaignType.code || "NA",
+                                  value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code || "NA",
+                                 
                                 },
                                 {
                                   key: t("CMAPAIGN_DISEASE"),
-                                  value: totalFormData.CAMPAIGN_DETAILS.campaignDetails?.disease?.code || "NA",
+                                  value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.disease?.code || "NA",
                                 },
                                 {
                                   key: t("RESOURCE_DISTRIBUTION_STRATEGY"),
                                   // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
-                                  value: totalFormData.CAMPAIGN_DETAILS.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode || "NA"
+                                  value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode || "NA"
                                 },
                               ],
                             // values: data31(),
@@ -467,8 +467,8 @@ const SummaryScreen = () => {
                 {
                     sections: [
                         {
-                            cardHeader: { value: "Campaign_details", inlineStyles: {} },
-
+                            cardHeader: { value: "", inlineStyles: {} },
+                            
                             type: "COMPONENT",
                             component: "DataMgmt",
                             props: {

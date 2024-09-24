@@ -7,6 +7,7 @@ import { useMyContext } from "../../utils/context";
 import MicroplanSearch from "./MicroplanSearch";
 import SummaryScreen from "./SummaryScreen";
 import Sample from "./Sample";
+import FormulaConfigWrapper from "./formulaconfigwrapper";
 
 
 const bredCrumbStyle={ maxWidth: "min-content" };
@@ -76,6 +77,8 @@ const App = ({ path, stateCode, userType, tenants }) => {
          <PrivateRoute path={`${path}/microplan-search`} component={() => <MicroplanSearch></MicroplanSearch>} /> 
          <PrivateRoute path={`${path}/summary-screen`} component={() => <SummaryScreen></SummaryScreen>} />
          <PrivateRoute path={`${path}/sample`} component={() => <Sample></Sample>} />
+         <PrivateRoute path={`${path}/sample1`} component={() => <FormulaConfigWrapper></FormulaConfigWrapper>} />
+
 
       </AppContainer>
     </Switch>
