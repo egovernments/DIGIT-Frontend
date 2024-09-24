@@ -41,7 +41,7 @@ const TenantConfigUpload = () => {
           disable: false,
           customProps: {
             module: "Sandbox",
-            type: "bannerImage",
+            type: "bannerUrl",
           },
           populators: {
             name: "configUploader",
@@ -55,7 +55,7 @@ const TenantConfigUpload = () => {
           disable: false,
           customProps: {
             module: "Sandbox",
-            type: "logoImage",
+            type: "logoUrl",
           },
           populators: {
             name: "logoUploader",
@@ -91,7 +91,6 @@ const TenantConfigUpload = () => {
       const tenantConfigs = await TenantConfigSearch.tenant(tenantId);
       const tenantConfigSearch = tenantConfigs?.tenantConfigs ? tenantConfigs?.tenantConfigs : null;
       // Assuming the structure you provided, we extract the documents array
-      console.log("tenant config search is", tenantConfigSearch);
       setDocuments(tenantConfigSearch);
     }
     fetchData();
@@ -103,7 +102,7 @@ const TenantConfigUpload = () => {
     // Iterate over the input data to update fileStoreId in requestData
     inputData.forEach(input => {
         requestData[0].documents.forEach(doc => {
-            if (doc.type.toLowerCase() === input.type.toLowerCase()) {
+            if (doc.type === input.type) {
                 doc.fileStoreId = input.fileStoreId;
             }
         });
@@ -116,10 +115,7 @@ const TenantConfigUpload = () => {
 
   const triggerCreate = async (documentsArray, tenantDocument) => {
     try {
-      console.log("uploadData is", uploadData);
-
       const requestBody = updateFileStoreIds(documentsArray, tenantDocument);
-      console.log("the request body is", requestBody);
       // Assuming the mutation for API call is defined elsewher
       await mutation.mutate(
         {

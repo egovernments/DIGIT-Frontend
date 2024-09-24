@@ -28,7 +28,7 @@ const ConfigUploaderComponent = ({ onSelect, ...props }) => {
 
   useEffect(() => {
     if (fileStoreId) {
-      onSelect("ConfigUploaderComponent", { "fileStoreId":fileStoreId , "type":"bannerUrl"})
+      onSelect("ConfigUploaderComponent", { "fileStoreId": fileStoreId, "type": props?.config?.customProps?.type })
     }
   }, [fileStoreId])
 
@@ -44,7 +44,8 @@ const ConfigUploaderComponent = ({ onSelect, ...props }) => {
   }, [file])
   return (
     <>
-      <LabelFieldPair>
+
+      <LabelFieldPair className={"uploader-label-field"}>
         <CardLabel>{`${t("BANNER_UPLOAD")}`}</CardLabel>
         <Uploader
           uploadedFiles={[]}

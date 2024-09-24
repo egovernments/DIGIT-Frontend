@@ -519,3 +519,12 @@ digit-card-text.center {
   position: relative;
   z-index: 0;
 }
+.digit-uploader-content{
+  .digit-button-secondary.large{
+    .icon-label-container.secondary.large{
+      .digit-button-label{
+        width: fit-content !important;
+      }
+    }
+  }  
+}

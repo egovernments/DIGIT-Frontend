@@ -4,16 +4,13 @@ import { useTranslation } from "react-i18next";
 import { Fragment } from "react";
 
 const LogoUploaderComponent = ({ onSelect, ...props }) => {
+  const [file, setFile] = useState(null);
+  const [fileStoreId, setFileStoreId] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [isError, setIsError] = useState(false);
-  const [file, setFile] = useState(null);
-  const [fileStoreId, setFileStoreId] = useState(null);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
-
-
-
   const handleUploadFile = async () => {
     // Upload the file first
     try {
@@ -29,7 +26,7 @@ const LogoUploaderComponent = ({ onSelect, ...props }) => {
 
   useEffect(() => {
     if (fileStoreId) {
-      onSelect("LogoUploaderComponent", { "fileStoreId": fileStoreId, "type": "LogoUrl" })
+      onSelect("LogoUploaderComponent", { "fileStoreId": fileStoreId, "type": props?.config?.customProps?.type});
     }
   }, [fileStoreId])
 
