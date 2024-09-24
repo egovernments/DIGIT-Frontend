@@ -374,6 +374,24 @@ const SummaryScreen = () => {
                 }
             ]
         },
+        {
+            title: t("MICROPLAN_DETAILS8"),
+
+            cards: [
+                {
+                    sections: [
+                        {
+                            cardHeader: { value: "", inlineStyles: {} },
+
+                            type: "COMPONENT",
+                            component: "UserAccessManagement",
+                            props: {
+                            },
+                        },
+                    ]
+                }
+            ]
+        },
         
 
     ];

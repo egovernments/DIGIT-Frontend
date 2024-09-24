@@ -12,6 +12,7 @@ import HypothesisWrapper from "./components/HypothesisWrapper";
 import DataMgmt from "./components/DataMgmt";
 import SummaryMicroplanDetails from "./components/SummaryMicroplanDetails";
 import FormulaConfiguration from "./components/FormulaConfig";
+import UserAccessManagement from "./components/UserAccessManagement";
 
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -48,7 +49,8 @@ const componentsToRegister = {
   HypothesisWrapper,
   DataMgmt,
   SummaryMicroplanDetails,
-  FormulaConfiguration
+  FormulaConfiguration,
+  UserAccessManagement
 
 };
 
