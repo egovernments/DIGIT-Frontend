@@ -1,7 +1,7 @@
 name: Digit Admin Console Build workflow
 on:
   push:
-    branches: [ 'develop','campaign' ,'microplan','master']
+    branches: [ 'develop','campaign' ,'microplan','master', 'add']
     paths:
       - 'health/micro-ui/web/micro-ui-internals/**'
   workflow_dispatch:
