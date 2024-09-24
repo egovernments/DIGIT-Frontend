@@ -32,10 +32,10 @@ const App = ({ path, stateCode, userType, tenants }) => {
   const { dispatch } = useMyContext();
   const location = useLocation();
   //destroying session
-  // useEffect(() => {
-  //   const pathVar = location.pathname.replace(`${path}/`, "").split("?")?.[0];
-  //   Digit.Utils.microplanv1.destroySessionHelper(pathVar, ["setup-microplan"], "MICROPLAN_DATA");
-  // }, [location]);
+  useEffect(() => {
+    const pathVar = location.pathname.replace(`${path}/`, "").split("?")?.[0];
+    Digit.Utils.microplanv1.destroySessionHelper(pathVar, ["setup-microplan"], "MICROPLAN_DATA");
+  }, [location]);
 
 
   const { isLoading: isLoadingMdmsMicroplanData, data:MicroplanMdmsData } = Digit.Hooks.useCustomMDMS(
