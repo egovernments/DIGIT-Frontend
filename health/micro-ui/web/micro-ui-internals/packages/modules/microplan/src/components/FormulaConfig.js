@@ -18,7 +18,32 @@ const datas = [
         "Number of sticker rolls per boundary"
     ]
 ]
-const FormulaConfiguration = ({ onSelect, category, customProps }) => {
+const FormulaConfiguration = () => {
+    const [category, setSelectedCategory] = useState("GENERAL_ESTIMATION");
+
+const customProps = {
+    ruleConfigurations: [
+      { input: "Household Count" },
+      { input: "Bednet Count" },
+      { input: "Bale Count" }
+    ],
+    ruleConfigureOperators: [
+      { operatorName: "Multiply" },
+      { operatorName: "Divide" },
+      { operatorName: "Add" },
+      { operatorName: "Subtract" }
+    ],
+    ruleConfigurations1: [
+      { input: "Average People H/H" },
+      { input: "Average People B/B" },
+      { input: "Average People C/C" }
+    ],
+
+  };
+
+  const onSelect = (selectedValue) => {
+    console.log("Selected value:", selectedValue);
+  };
     const { t } = useTranslation();
     const [estimationData, setEstimationData] = useState(datas)
     console.log("CProps",customProps.ruleConfigureOperators);

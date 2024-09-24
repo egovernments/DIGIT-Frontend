@@ -11,6 +11,8 @@ import BoundarySelection from "./components/BoundarySelection";
 import HypothesisWrapper from "./components/HypothesisWrapper";
 import DataMgmt from "./components/DataMgmt";
 import SummaryMicroplanDetails from "./components/SummaryMicroplanDetails";
+import FormulaConfiguration from "./components/FormulaConfig";
+
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -45,7 +47,8 @@ const componentsToRegister = {
   BoundarySelection,
   HypothesisWrapper,
   DataMgmt,
-  SummaryMicroplanDetails
+  SummaryMicroplanDetails,
+  FormulaConfiguration
 
 };
 

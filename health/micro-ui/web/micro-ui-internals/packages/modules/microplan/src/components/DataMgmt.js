@@ -95,7 +95,7 @@ const FileComponent = ({ file, index, handleFileDelete, handleRedirect, setShowP
                         onClick={() => setShowPreview(true)}
                     >
                         <FileIcon className="dm-icon" />
-                        <div>"Hello"</div>
+                        <div>File1name.xlsx</div>
                     </div>
 
                     {/* Right side: Edit and Delete Buttons */}

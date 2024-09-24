@@ -55,15 +55,15 @@ const SummaryScreen = () => {
 
     //     const dic = { "microplanName": "Name of microplan"}
     //     for (let k in microplanDetails) {
-          
+
     //             values.push({
     //                 key: dic[String(k)],
     //                 value: String(microplanDetails[k]
-                        
+
     //                     ) || "NA"
     //             })
 
-            
+
     //     }
     //     return values
     // }
@@ -81,134 +81,12 @@ const SummaryScreen = () => {
     //     { "category": "CAMPAIGN_VEHICLES", "key": "key1", "value": 0 },
     //     { "category": "CAMPAIGN_VEHICLES", "key": "key2", "value": 0 }
     //   ]
-      
+
 
     const reqCriteria = [
-        {
-            title: t("MICROPLAN_DETAILS"),
-            cards: [
-                {
-                    sections: [
-                        {
-                            type: "DATA",
-                            sectionHeader: { value: "", inlineStyles: { marginTop: "1rem", marginBottom: "1rem" } },
-                            cardHeader: { value: "", inlineStyles: {} },
-                            values: [
-                                {
-                                    key: "Campaign disease0",
-                                    value: "Malaria1",
-                                },
-                                {
-                                    key: "Campaign type0",
-                                    value: "ITIN0",
-                                },
-                                {
-                                    key: "Resource distribution strategy0",
-                                    value: "House-House0",
-                                },
-                            ],
-                        },
-                    ]
-                },
-                {
-                    sections: [
-
-                        {
-                            type: "DATA",
-                            sectionHeader: { value: "Name of microplan0", inlineStyles: { marginTop: "1rem", marginBottom: "1rem" } },
-                            // cardHeader:{value:"Card 1",inlineStyles:{}},
-                            values: [
-                                {
-                                    key: "Name of microplan0",
-                                    value: "Moz-Malaria-Bednet-Campaign-June20241",
-                                },
-
-                            ],
-                        },
-
-
-
-                    ],
-                },
-
-            ],
-            apiResponse: {},
-            additionalDetails: {}
-
-
-        },
-        {
-
-            title: t("MICROPLAN_DETAILS1"),
-
-            cards: [
-                {
-                    sections: [
-                        {
-                            type: "DATA",
-                            sectionHeader: { value: "", inlineStyles: { marginTop: "1rem", marginBottom: "1rem" } },
-                            cardHeader: { value: "", inlineStyles: {} },
-                            values: [
-                                {
-                                    key: "Campaign disease1",
-                                    value: "Malaria1",
-                                },
-                                {
-                                    key: "Campaign type1",
-                                    value: "ITIN1",
-                                },
-                                {
-                                    key: "Resource distribution strategy1",
-                                    value: "House-House1",
-                                },
-                            ],
-                        },
-                    ]
-                },
-                {
-                    sections: [
-
-                        {
-                            type: "DATA",
-                            sectionHeader: { value: "Name of microplan1", inlineStyles: { marginTop: "1rem", marginBottom: "1rem" } },
-                            // cardHeader:{value:"Card 1",inlineStyles:{}},
-                            values: [
-                                {
-                                    key: "Name of microplan1",
-                                    value: "Moz-Malaria-Bednet-Campaign-June20241",
-                                },
-
-                            ],
-                        },
-
-
-
-                    ],
-                },
-            ],
-            apiResponse: {},
-            additionalDetails: {}
-
-
-        },
-        {
-            title: t("MICROPLAN_DETAILS2"),
-
-            cards: [
-                {
-                    sections: [
-                        {
-                            cardHeader: { value: "Campaign_details", inlineStyles: {} },
-
-                            type: "COMPONENT",
-                            component: "SummaryMicroplanDetails",
-                            props: {
-                            },
-                        },
-                    ]
-                }
-            ]
-        },
+        
+        
+        
         {
             title: t("MICROPLAN_DETAILS3"),
 
@@ -224,25 +102,25 @@ const SummaryScreen = () => {
                                     <EditIcon />
                                 </div>
                             ),
-                              values: [
+                            values: [
                                 {
-                                  key: t("CAMPAIGN_TYPE"),
-                                  value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code || "NA",
-                                 
+                                    key: t("CAMPAIGN_TYPE"),
+                                    value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code || "NA",
+
                                 },
                                 {
-                                  key: t("CMAPAIGN_DISEASE"),
-                                  value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.disease?.code || "NA",
+                                    key: t("CMAPAIGN_DISEASE"),
+                                    value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.disease?.code || "NA",
                                 },
                                 {
-                                  key: t("RESOURCE_DISTRIBUTION_STRATEGY"),
-                                  // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
-                                  value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode || "NA"
+                                    key: t("RESOURCE_DISTRIBUTION_STRATEGY"),
+                                    // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
+                                    value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode || "NA"
                                 },
-                              ],
+                            ],
                             // values: data31(),
 
-                            
+
                         },
 
                     ]
@@ -260,13 +138,13 @@ const SummaryScreen = () => {
                             values: [
                                 {
                                     key: t("NAME_OF_MICROPLAN"),
-                                    value: totalFormData?. MICROPLAN_DETAILS?.microplanDetails?.microplanName || "NA"
-                                    
+                                    value: totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName || "NA"
+
                                 },
-                        ],
+                            ],
                             // values:data32(),
 
-                           
+
                         },
 
                     ],
@@ -468,7 +346,7 @@ const SummaryScreen = () => {
                     sections: [
                         {
                             cardHeader: { value: "", inlineStyles: {} },
-                            
+
                             type: "COMPONENT",
                             component: "DataMgmt",
                             props: {
@@ -478,6 +356,25 @@ const SummaryScreen = () => {
                 }
             ]
         },
+        {
+            title: t("MICROPLAN_DETAILS7"),
+
+            cards: [
+                {
+                    sections: [
+                        {
+                            cardHeader: { value: "", inlineStyles: {} },
+
+                            type: "COMPONENT",
+                            component: "FormulaConfiguration",
+                            props: {
+                            },
+                        },
+                    ]
+                }
+            ]
+        },
+        
 
     ];
 
@@ -527,7 +424,9 @@ const SummaryScreen = () => {
       </div> */}
 
             <div className="campaign-summary-container">
-                <ViewComposer data={reqData} />
+                <ViewComposer
+                    noCardStyle={true}
+                    data={reqData} />
             </div>
         </>
 
