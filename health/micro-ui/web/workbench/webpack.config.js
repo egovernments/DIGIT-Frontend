@@ -39,7 +39,7 @@ module.exports = {
       automaticNameDelimiter: '-',
     },
     runtimeChunk: 'single',  // Create a single runtime bundle
-    moduleIds: 'deterministic', // Stable module IDs to prevent unnecessary cache invalidation
+    moduleIds: 'hashed', // Stable module IDs to prevent unnecessary cache invalidation
   },
   plugins: [
     new CleanWebpackPlugin(),
