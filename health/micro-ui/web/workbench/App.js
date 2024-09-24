@@ -59,7 +59,10 @@ function App() {
     console.log(process.env,"process.env.");
     console.log(process.env.REACT_APP_STATE_LEVEL_TENANT_ID,"process.env.");
     console.log(process.env.REACT_APP_TENANT,"process.env.REACT_APP_TENANT");
-
+    console.log(process.env.REACT_APP_API_URL,"process.env.REACT_APP_API_URL");
+    
+    console.log(process.env.REACT_APP_ANOTHER_VARIABLE,"process.env.REACT_APP_ANOTHER_VARIABLE");
+    
   if (!stateCode) {
     return <h1>stateCode is not defined</h1>;
   }
