@@ -9,7 +9,7 @@ import { InfoCard, PopUp, Toast, Button, DownloadIcon, Stepper, TextBlock } from
 // import { schemaConfig } from "../configs/schemaConfig";
 // import { headerConfig } from "../configs/headerConfig";
 import { PRIMARY_COLOR } from "../utils";
-import { downloadExcelWithCustomName } from "../utils";
+import { downloadExcelWithCustomName } from "../utils/downloadExcel";
 
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
@@ -19,7 +19,7 @@ import { downloadExcelWithCustomName } from "../utils";
  * BulkUpload component for handling file uploads, and an InfoCard component for displaying error
  * messages if any validation errors occur during file upload.
  */
-const UploadData = ({ formData, onSelect, ...props }) => {
+const UploadDataCustom = ({ formData, onSelect, ...props }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [uploadedFile, setUploadedFile] = useState([]);
@@ -1198,4 +1198,4 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   );
 };
 
-export default UploadData;
+export default UploadDataCustom;
