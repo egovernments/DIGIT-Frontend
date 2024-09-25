@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { CardLabel, LabelFieldPair, Uploader, Toast } from "@egovernments/digit-ui-components";
+import { CardLabel, LabelFieldPair, Uploader } from "@egovernments/digit-ui-components";
+import {Toast} from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react";
 
 const LogoUploaderComponent = ({ onSelect, ...props }) => {
   const [file, setFile] = useState(null);
   const [fileStoreId, setFileStoreId] = useState(null);
-  const [showToast, setShowToast] = useState(false);
+  const [showToast, setShowToast] = useState(null);
   const [toastMessage, setToastMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -18,9 +19,12 @@ const LogoUploaderComponent = ({ onSelect, ...props }) => {
       const fileStoreId = response?.data?.files?.[0]?.fileStoreId;
       setFileStoreId(fileStoreId)
     } catch (error) {
-      setToastMessage(error.message);
+      setToastMessage(t("LOGO_UPLOAD_FAILED"));
       setIsError(true);
       setShowToast(true);
+      setTimeout(() => {
+        closeToast();
+      }, 2000);
     }
   };
 
@@ -36,9 +40,9 @@ const LogoUploaderComponent = ({ onSelect, ...props }) => {
   }
 
   useEffect(() => {
-    // if (file?.length > 0) {
+     if (file) {
     handleUploadFile();
-    // }
+     }
   }, [file])
   return (
     <>
@@ -53,6 +57,13 @@ const LogoUploaderComponent = ({ onSelect, ...props }) => {
         // }
         />
       </LabelFieldPair>
+      {showToast && (
+        <Toast
+          error={isError}
+          label={toastMessage}
+          onClose={() => setShowToast(false)}
+        />
+      )}
     </>
   );
 };

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { CardLabel, LabelFieldPair, Uploader, Toast } from "@egovernments/digit-ui-components";
+import { CardLabel, LabelFieldPair, Uploader } from "@egovernments/digit-ui-components";
+import {Toast} from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react";
 
 const ConfigUploaderComponent = ({ onSelect, ...props }) => {
-  const [showToast, setShowToast] = useState(false);
+  const [showToast, setShowToast] = useState(null);
   const [toastMessage, setToastMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const [file, setFile] = useState(null);
@@ -20,11 +21,15 @@ const ConfigUploaderComponent = ({ onSelect, ...props }) => {
       const fileStoreId = response?.data?.files?.[0]?.fileStoreId;
       setFileStoreId(fileStoreId)
     } catch (error) {
-      setToastMessage(error.message);
+      setToastMessage(t("BANNER_UPLOAD_FAILED"));
       setIsError(true);
       setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 2000);
     }
   };
+
 
   useEffect(() => {
     if (fileStoreId) {
@@ -38,9 +43,9 @@ const ConfigUploaderComponent = ({ onSelect, ...props }) => {
   }
 
   useEffect(() => {
-    // if (file?.length > 0) {
+    if (file) {
     handleUploadFile();
-    // }
+     }
   }, [file])
   return (
     <>
@@ -56,6 +61,13 @@ const ConfigUploaderComponent = ({ onSelect, ...props }) => {
         // }
         />
       </LabelFieldPair>
+      {showToast && (
+        <Toast
+          error={isError}
+          label={toastMessage}
+          onClose={() => setShowToast(false)}
+        />
+      )}
     </>
   );
 };
