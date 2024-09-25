@@ -496,3 +496,138 @@ digit-card-text.center {
   position: relative;
   z-index: 0;
 }
+
+.drawer-container {
+  position: fixed;
+  display: flex;
+  flex-direction: row;
+  top: 0;
+  right: 0;
+  left: auto;
+  height: 100%;
+  z-index: 1001;
+}
+@media (min-width: 48rem) {
+  .digit-text-block-wrap {
+    grid-gap: 1.5rem;
+    gap: 0.8em;
+  }
+}
+.drawer {
+  position: absolute;
+  height: 100%;
+  width: 20rem;
+  top: 0;
+  right: 0;
+  transform: translateX(100%);
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  overflow: auto;
+  ::-webkit-scrollbar {
+    width: 0;
+  }
+  scrollbar-width: none;
+  margin-top: 5em;
+  transition:
+    box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+  padding-bottom: 6.3em;
+  z-index: 1001;
+}
+
+.drawer.open {
+  transform: translateX(0);
+}
+.vertical-bar {
+  background-color: #d9d9d9;
+  height: 13em;
+  width: 0.6em;
+  border-radius: 1.5em;
+}
+.iconContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.slider-card {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid #d6d5d4;
+  border-radius: 2em;
+  margin-top: 3em;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+.content-button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-grow: 1;
+  border: none;
+  box-shadow: none;
+}
+.icon {
+  flex: 0 0 11em;
+  min-height: 9em;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  width: 10em;
+}
+.card-divider {
+  width: 0.25em;
+  height: 10em;
+  background-color: #d6d5d4;
+}
+.custom-button {
+  justify-content: center;
+}
+.button {
+  box-shadow: none;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+}
+.toggle-button {
+  margin-top: 6.3em;
+  position: absolute;
+  top: 0;
+  width: 4rem;
+  right: 0;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: right 0.3s ease;
+  height: 100%;
+  border-radius: 3em 0 0 3em;
+  background-color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  transition: right 0.3s ease;
+  justify-content: center;
+  z-index: 1001;
+}
+.toggle-button.open {
+  right: 20rem;
+}
+.header {
+  text-align: center;
+  margin-top: 10px;
+  color: #0b4b66;
+}
+.digit-text-block-wrap {
+  .digit-text-block-header-content {
+    .digit-text-block-caption {
+      &.caption {
+        color: #0b4b66;
+      }
+    }
+    .digit-text-block-header {
+      &.header {
+        color: #0b4b66;
+      }
+    }
+  }
+}

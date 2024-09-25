@@ -10,6 +10,7 @@ import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { RoleBasedEmployeeHome } from "./RoleBasedEmployeeHome";
 import QuickSetupConfigComponent from "../pages/employee/QuickStart/Config";
+import Drawer from "./Drawer";
 
 /* 
 Feature :: Citizen All service screen cards
@@ -182,6 +183,57 @@ export const AppHome = ({
   isLoading,
   additionalComponent,
 }) => {
+  const mdmsData = [
+    {
+      actionId: 12,
+      order: 45,
+      buttonName: "TestButton1--Testing",
+      navigationURL: "https://www.google.com",
+      iconName: "AccountBox",
+      name: "Home",
+      module: "Module1",
+      buttonLabel: "TestButton1--Testing",
+      title: "Explore you Application",
+      label:
+        "iuhdais haifna haiojsl  ashfio a,sduhioafsn hioasjo mfhaiojfl hiajfo fsk hioafsm afsbifsahoafs  afs",
+    },
+    {
+      actionId: 12,
+      order: 45,
+      buttonName: "TestButton1--Testing",
+      navigationURL: "https://www.google.com",
+      iconName: "Atm",
+      name: "Home",
+      module: "Module1",
+      title: "Explore you Application",
+      label:
+        "iuhdais haifna haiojsl  ashfio a,sduhioafsn hioasjo mfhaiojfl hiajfo fsk hioafsm afsbifsahoafs  afs",
+    },
+    {
+      actionId: 13,
+      order: 46,
+      buttonName: "Button2",
+      navigationURL: "https://www.example.com",
+      iconName: "DSOTruck",
+      name: "Settings",
+      module: "Module2",
+      title: "Explore you Work",
+      label:
+        "iuhdais haifna haiojsl  ashfio a,sduhioafsn hioasjo mfhaiojfl hiajfo fsk hioafsm afsbifsahoafs  afs",
+    },
+    {
+      actionId: 13,
+      order: 46,
+      buttonName: "Button2",
+      navigationURL: "https://www.example.com",
+      iconName: "MyLocation",
+      name: "Settings",
+      module: "Module2",
+      title: "Explore you Application",
+      label:
+        "iuhdais haifna haiojsl  ashfio a,sduhioafsn hioasjo mfhaiojfl hiajfo fsk hioafsm afsbifsahoafs  afs",
+    },
+  ];
   if (userType === "citizen") {
     return (
       <CitizenHome
@@ -194,8 +246,11 @@ export const AppHome = ({
   }
   const isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant()
   return Digit.Utils.getRoleBasedHomeCard() ? (
-    <div className={isSuperUserWithMultipleRootTenant ? "homeWrapper" : ""}>
+    <div>
       <RoleBasedEmployeeHome modules={modules} additionalComponent={additionalComponent} />
+      {/* <div className="slider-test"> */}
+      {/* <Drawer drawerDirection="right" mdmsData={mdmsData} /> */}
+    {/* </div> */}
       {isSuperUserWithMultipleRootTenant && <QuickSetupConfigComponent />}
     </div>
   ) : (

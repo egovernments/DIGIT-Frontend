@@ -2,6 +2,7 @@ import React, { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CardText, CardLabelError, Toast, CardLabel, Card, CardHeader, LinkLabel,Loader } from "@egovernments/digit-ui-components";
 import QuickSetupComponent from ".";
+import Drawer from "../../../components/Drawer";
 
 const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...props }) => {
   const { t } = useTranslation();
@@ -73,7 +74,8 @@ const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...
     }
    ];
   return (
-   <QuickSetupComponent config={QuickSetupConfig}></QuickSetupComponent>
+  //  <QuickSetupComponent config={QuickSetupConfig}></QuickSetupComponent>
+   <Drawer config={QuickSetupConfig}></Drawer>
   );
 };
 
