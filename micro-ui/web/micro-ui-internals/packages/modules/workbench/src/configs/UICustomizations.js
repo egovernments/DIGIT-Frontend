@@ -21,27 +21,21 @@ const convertDateToEpoch = (dateString) => {
   if (!dateString) {
     return "NA";
   }
-
-  // Split the date string into day, month, and year
   const [day, month, year] = dateString.split('/');
-
-  // Create a new Date object with the parsed values in UTC
-  const dateObject = new Date(Date.UTC(year, month - 1, day, 0, 0, 0));
-
-  // Return the epoch time in milliseconds
-  return dateObject.getTime();
+  const dateObject = new Date(`${year}-${month}-${day}T00:00:00`);
+  const options = { timeZone: 'Asia/Kolkata' };
+  const istDateObject = new Date(dateObject.toLocaleString('en-US', options));
+  return istDateObject.getTime();
 };
 
 const convertEpochToDate = (dateEpoch) => {
-  if (dateEpoch == null || dateEpoch == undefined || dateEpoch == "") {
+  if (!dateEpoch || dateEpoch == null || dateEpoch == undefined || dateEpoch == "") {
     return "NA";
   }
-  const dateFromApi = new Date(dateEpoch);
-  let month = dateFromApi.getUTCMonth() + 1;
-  let day = dateFromApi.getUTCDate();
-  let year = dateFromApi.getUTCFullYear();
-  month = (month > 9 ? "" : "0") + month;
-  day = (day > 9 ? "" : "0") + day;
+  const dateObject = new Date(dateEpoch);
+  const day = String(dateObject.getDate()).padStart(2, '0');
+  const month = String(dateObject.getMonth() + 1).padStart(2, '0');
+  const year = dateObject.getFullYear();
   return `${day}/${month}/${year}`;
 };
 
@@ -889,8 +883,8 @@ export const UICustomizations = {
   },
   AddMdmsConfig: {
     "WORKS-SOR.Rates": {
-      getTrasformedData: async (formData) =>{
-        return { ...formData, validFrom: String(convertDateToEpoch(formData?.validFrom)) }
+      getTrasformedData: async (formData, data) =>{
+        return { ...formData, validFrom: data?.data?.validFrom }
       },
       validateForm: async (data, props) => {
         try {
@@ -920,8 +914,8 @@ export const UICustomizations = {
       },
     },
     "WORKS-SOR.Composition":{
-      getTrasformedData: async (formData) =>{
-        return { ...formData, effectiveFrom: String(convertDateToEpoch(formData?.effectiveFrom)) }
+      getTrasformedData: async (formData,data) =>{
+        return { ...formData, effectiveFrom: data?.data?.effectiveFrom}
       },
     }
   },
