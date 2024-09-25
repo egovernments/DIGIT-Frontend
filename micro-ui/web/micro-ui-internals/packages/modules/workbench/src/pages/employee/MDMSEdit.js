@@ -83,7 +83,7 @@ const MDMSEdit = ({...props}) => {
 
   const handleUpdate = async (formData) => {
     const schemaCodeToValidate = `${moduleName}.${masterName}`;
-    let transformedData = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.getTrasformedData(formData) ;
+    let transformedData = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.getTrasformedData(formData, data) ;
     transformedData = transformedData && transformedData !== undefined && transformedData !== "undefined" ? transformedData : formData;
     const validation = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.validateForm(transformedData, { tenantId: stateId });
 
@@ -135,18 +135,15 @@ const MDMSEdit = ({...props}) => {
   }
 
   const convertEpochToDate = (dateEpoch) => {
-    if (dateEpoch == null || dateEpoch == undefined || dateEpoch == "") {
+    if (!dateEpoch || dateEpoch == null || dateEpoch == undefined || dateEpoch == "") {
       return "NA";
     }
-    const dateFromApi = new Date(dateEpoch);
-    let month = dateFromApi.getUTCMonth() + 1;
-    let day = dateFromApi.getUTCDate();
-    let year = dateFromApi.getUTCFullYear();
-    month = (month > 9 ? "" : "0") + month;
-    day = (day > 9 ? "" : "0") + day;
+    const dateObject = new Date(dateEpoch);
+    const day = String(dateObject.getDate()).padStart(2, '0');
+    const month = String(dateObject.getMonth() + 1).padStart(2, '0');
+    const year = dateObject.getFullYear();
     return `${day}/${month}/${year}`;
   };
-
 
   const formattedData = data?.data
   ? {

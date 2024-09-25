@@ -194,13 +194,18 @@ const formatDates = (value, type,key) => {
   }
   switch (type) {
     case "date":
-      return new Date(value)?.toISOString?.()?.split?.("T")?.[0];
+      const options = { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' };
+      const indianDate = new Date(value).toLocaleDateString('en-CA', options); 
+      return indianDate;
     case "datetime":
       return new Date(value).toISOString();
     case "EPOC":
       const date = new Date(value);
       if(key==="validTo" || key==="effectiveTo") {
         date.setHours(23, 59, 59, 999);
+      }
+      else{
+        date.setHours(0, 0, 0, 0);
       }
       return String(date?.getTime());
   }
