@@ -98,7 +98,7 @@ const TenantConfigUpload = () => {
   
 
 
-  const  updateFileStoreIds=(inputData, requestData)  =>{
+  const  transformData=(inputData, requestData)  =>{
     // Iterate over the input data to update fileStoreId in requestData
     inputData.forEach(input => {
         requestData[0].documents.forEach(doc => {
@@ -115,7 +115,7 @@ const TenantConfigUpload = () => {
 
   const triggerCreate = async (documentsArray, tenantDocument) => {
     try {
-      const requestBody = updateFileStoreIds(documentsArray, tenantDocument);
+      const requestBody = transformData(documentsArray, tenantDocument);
       // Assuming the mutation for API call is defined elsewher
       await mutation.mutate(
         {
