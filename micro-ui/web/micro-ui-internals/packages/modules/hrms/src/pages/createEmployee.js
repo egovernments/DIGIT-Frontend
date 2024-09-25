@@ -203,6 +203,7 @@ const CreateEmployee = () => {
     return <Loader />;
   }
   const config =mdmsData?.config?mdmsData.config: newConfig;
+
   return (
     <div>
       <div style={isMobile ? {marginLeft: "-12px", fontFamily: "calibri", color: "#FF0000"} :{ marginLeft: "15px", fontFamily: "calibri", color: "#FF0000" }}>

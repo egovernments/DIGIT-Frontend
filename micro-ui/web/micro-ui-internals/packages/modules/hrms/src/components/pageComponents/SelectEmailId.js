@@ -8,6 +8,7 @@ const SelectEmployeeEmailId = ({ t, config, onSelect, formData = {}, userType, r
   const inputs = [
     {
       label: "HR_EMAIL_LABEL",
+      isMandatory: true,
       type: "email",
       name: "emailId",
       validation: {
@@ -18,6 +19,7 @@ const SelectEmployeeEmailId = ({ t, config, onSelect, formData = {}, userType, r
 
   function setValue(value, input) {
     onSelect(config.key, { ...formData[config.key], [input]: value });
+    onSelect("SelectEmployeeId", { code: value });
   }
 
   return (

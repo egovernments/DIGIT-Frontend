@@ -31,11 +31,12 @@ const SelectEmployeeId = ({ t, config, onSelect, formData = {}, userType, regist
               {input.isMandatory ? " * " : null}
             </CardLabel>
             <div className="field">
-              <TextInput
+            <TextInput
                 key={input.name}
-                value={formData && formData[config.key] ? formData[config.key][input.name] : undefined}
+                value={formData && formData[config.key] ? formData[config.key][input.name] : formData?.SelectEmployeeId?.code || ""}
                 onChange={(e) => setValue(e.target.value, input.name)}
-                disable={isEdit}
+                disabled={isEdit}
+                disable={true}
                 defaultValue={undefined}
                 {...input.validation}
               />
