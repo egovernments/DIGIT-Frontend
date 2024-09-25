@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.8.2-beta.28]
+- Fixed the loader style 
+
 ## [1.8.2-beta.20]
 - Updated topbar,breadcrumb,actionbar,toast,sidebar css.
 
