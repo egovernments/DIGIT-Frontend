@@ -155,7 +155,7 @@ const SummaryScreen = () => {
             title: t("MICROPLAN_DETAILS4"),
 
             cards: [
-                {
+                {   navigationKey:"card4",
                     sections: [
                         {
                             type: "DATA",
@@ -360,7 +360,7 @@ const SummaryScreen = () => {
             title: t("MICROPLAN_DETAILS7"),
 
             cards: [
-                {
+                {   navigationKey:"card5",
                     sections: [
                         {
                             cardHeader: { value: "", inlineStyles: {} },
@@ -386,6 +386,7 @@ const SummaryScreen = () => {
                             type: "COMPONENT",
                             component: "UserAccessManagement",
                             props: {
+                                title:"hullo"
                             },
                         },
                     ]

@@ -13,6 +13,11 @@ import DataMgmt from "./components/DataMgmt";
 import SummaryMicroplanDetails from "./components/SummaryMicroplanDetails";
 import FormulaConfiguration from "./components/FormulaConfig";
 import UserAccessManagement from "./components/UserAccessManagement";
+import FileComponent from "./components/FileComponent";
+import DataMgmtTable from "./components/DataMgmtTable";
+import HeaderComp from "./components/HeaderComp";
+import ThreeInputComp from "./components/ThreeInputComp";
+
 
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -50,7 +55,11 @@ const componentsToRegister = {
   DataMgmt,
   SummaryMicroplanDetails,
   FormulaConfiguration,
-  UserAccessManagement
+  UserAccessManagement,
+  FileComponent,
+  DataMgmtTable,
+  HeaderComp,
+  ThreeInputComp
 
 };
 

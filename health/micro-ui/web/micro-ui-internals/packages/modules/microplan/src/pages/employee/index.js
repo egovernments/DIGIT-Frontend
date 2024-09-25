@@ -8,6 +8,8 @@ import MicroplanSearch from "./MicroplanSearch";
 import SummaryScreen from "./SummaryScreen";
 import Sample from "./Sample";
 import FormulaConfiguration from "../../components/FormulaConfig";
+import SummaryScreen2 from "./SummaryScreen2";
+import SummaryScreen3 from "./SummaryScreen3";
 
 
 const bredCrumbStyle={ maxWidth: "min-content" };
@@ -77,6 +79,11 @@ const App = ({ path, stateCode, userType, tenants }) => {
          <PrivateRoute path={`${path}/microplan-search`} component={() => <MicroplanSearch></MicroplanSearch>} /> 
          <PrivateRoute path={`${path}/summary-screen`} component={() => <SummaryScreen></SummaryScreen>} />
          <PrivateRoute path={`${path}/sample`} component={() => <Sample></Sample>} />
+         <PrivateRoute path={`${path}/summary-screen1`} component={() => <SummaryScreen2></SummaryScreen2>} />
+         <PrivateRoute path={`${path}/summary-screen2`} component={() => <SummaryScreen3></SummaryScreen3>} />
+
+
+
 
 
       </AppContainer>
