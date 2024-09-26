@@ -833,7 +833,7 @@ export const UICustomizations = {
         });
 
       switch (true) {
-        case hostname.includes("mukta-uat") || hostname.includes("localhost"): {
+        case hostname.includes("mukta-uat") || hostname.includes("localhost") || hostname.includes("mukta.odisha"): {
           if (data?.data?.sorType?.includes("W")) {
             if (isActive && hasRoleAccess("ADD_SOR_COMPOSITION"))
               actionItems?.push({
