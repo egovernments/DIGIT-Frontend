@@ -8,7 +8,7 @@ const MDMSEdit = ({...props}) => {
 
   const { t } = useTranslation()
 
-  const { moduleName, masterName, tenantId,uniqueIdentifier } = Digit.Hooks.useQueryParams();
+  const { moduleName, masterName, tenantId,uniqueIdentifier, from } = Digit.Hooks.useQueryParams();
   const stateId = Digit.ULBService.getCurrentTenantId();
 
   const [showToast, setShowToast] = useState(false);
@@ -61,7 +61,7 @@ const MDMSEdit = ({...props}) => {
   const gotoView = () => { 
     setTimeout(() => {
       setRenderLoader(true)
-      history.push(`/${window?.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}`)
+      history.push(`/${window?.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}${from ? `&from=${from}` : ""}`)
     }, 2000);
   }
 

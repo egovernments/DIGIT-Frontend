@@ -301,6 +301,9 @@ export const CitizenSideBar = ({
   }));
 
   const city =  t(`TENANT_TENANTS_${stringReplaceAll(Digit.SessionStorage.get("Employee.tenantId"), ".", "_")?.toUpperCase()}`)
+  const goToHome= () => {
+    history.push(`/${window?.contextPath}/${Digit?.UserService?.getType?.()}`);
+  }
   const onItemSelect = ({ item, index, parentIndex }) => {
     if(item?.navigationURL){
       handleModuleClick(item?.navigationURL)
@@ -310,6 +313,10 @@ export const CitizenSideBar = ({
     }
     else if (item?.type === "custom"){
       switch(item?.key){
+        case "home":
+          goToHome();
+          toggleSidebar();
+          break;
         case "editProfile":
           userProfile();
           toggleSidebar();
@@ -358,25 +365,37 @@ export const CitizenSideBar = ({
 
   const hamburgerItems = [
     {
+      label:"HOME",
+      value:"HOME",
+      icon:"Home",
+      // children: transformedSelectedCityData?.length>0 ? transformedSelectedCityData : undefined,
+      type:"custom",
+      key:"home",
+    },
+    {
       label:city,
       value:city,
       children: transformedSelectedCityData?.length>0 ? transformedSelectedCityData : undefined,
       type:"custom",
+      icon: "LocationCity",
       key:"city"
     },
     {
       label: t("Language"),
       children: transformedLanguageData?.length>0 ? transformedLanguageData: undefined,
       type:"custom",
+      icon: "Language",
       key:"language"
     },
     {
       label:t("EDIT_PROFILE"),
       type:"custom",
+      icon: "Edit",
       key:"editProfile",
     },
     {
       label:t("Modules"),
+      icon: "DriveFileMove",
       children:transformedMenuItems
     }
   ];

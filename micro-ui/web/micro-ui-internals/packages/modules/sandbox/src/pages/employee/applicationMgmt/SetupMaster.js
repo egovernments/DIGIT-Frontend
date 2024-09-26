@@ -34,7 +34,7 @@ const SetupMaster = () => {
         );
         const respData = respStructure.map((i) => ({
           masterName: t(i.code),
-          type: t(i.type),
+          // type: t(i.type),
           description: t(`SANDBOX_MASTER_SETUP_DESC_${i.code}`),
         }));
         const moduleMasterPayload = respStructure
@@ -71,7 +71,7 @@ const SetupMaster = () => {
       staleTime: 0,
       select: (data) => {
         if (_.isEmpty(data?.MdmsRes)) {
-          return false
+          return false;
         }
         const resp = data?.MdmsRes;
         const checkMasterDataCompleteness = Object.values(resp).every((category) =>
@@ -188,11 +188,11 @@ const SetupMaster = () => {
                 accessor: "masterName",
                 id: "masterName",
               },
-              {
-                Header: "Type",
-                accessor: "type",
-                id: "type",
-              },
+              // {
+              //   Header: "Type",
+              //   accessor: "type",
+              //   id: "type",
+              // },
               {
                 Header: "Description",
                 accessor: "description",

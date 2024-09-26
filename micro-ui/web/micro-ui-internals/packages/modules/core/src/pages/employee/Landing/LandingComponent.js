@@ -14,7 +14,9 @@ const LandingComponent = ({ config }) => {
   return (
     <Card>
       {/* Main Heading */}
-      <Header className="headerFlex" styles={{ fontSize: "32px", marginBottom: "20px" }}>{t(heading)}</Header>
+      <Header className="headerFlex" styles={{ fontWeight: "700", fontSize: "32px", marginBottom: "20px" }}>
+        {t(heading)}
+      </Header>
 
       <YoutubeVideo link={url} overlay={true} />
 
@@ -22,9 +24,7 @@ const LandingComponent = ({ config }) => {
       {subsections.map((section, index) => (
         <div key={index}>
           {/* Subsection Title */}
-          <CardHeader styles={{ marginBottom: "10px", fontSize: "24px", fontWeight: "bold" }}>
-            {t(section.title)}
-          </CardHeader>
+          <CardHeader styles={{ marginBottom: "10px", fontSize: "24px", fontWeight: "bold" }}>{t(section.title)}</CardHeader>
 
           {/* Section Content */}
           {section.type === "paragraph" &&

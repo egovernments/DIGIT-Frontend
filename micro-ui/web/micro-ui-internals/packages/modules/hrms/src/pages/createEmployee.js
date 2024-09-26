@@ -1,9 +1,10 @@
-import { FormComposer, Toast ,Loader, Header} from "@egovernments/digit-ui-react-components";
+import { FormComposer, Loader, Header } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { newConfig } from "../components/config/config";
 import _ from "lodash";
+import { Toast } from "@egovernments/digit-ui-components";
 
 const CreateEmployee = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -28,11 +29,20 @@ const CreateEmployee = () => {
   const [mutationHappened, setMutationHappened, clear] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_HAPPENED", false);
   const [errorInfo, setErrorInfo, clearError] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_ERROR_DATA", false);
   const [successData, setsuccessData, clearSuccessData] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_SUCCESS_DATA", false);
-
+  const mutationCreate = Digit.Hooks.hrms.useHRMSCreate(tenantId);
+  const employeeCreateSession = Digit.Hooks.useSessionStorage("NEW_EMPLOYEE_CREATE", {});
+  const [sessionFormData, setSessionFormData, clearSessionFormData] = employeeCreateSession;
   useEffect(() => {
     setMutationHappened(false);
     clearSuccessData();
     clearError();
+    return () => {
+      if (window.location.pathname.includes("/hrms/create")) {
+        return;
+      } else {
+        clearSessionFormData();
+      }
+    };
   }, []);
 
   const checkMailNameNum = (formData) => {
@@ -48,7 +58,7 @@ const CreateEmployee = () => {
       setShowToast(null);
       Digit.HRMSService.search(tenantId, null, { phone: mobileNumber }).then((result, err) => {
         if (result.Employees.length > 0) {
-          setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_MOB" });
+          setShowToast({ key: "error", label: "ERR_HRMS_USER_EXIST_MOB" });
           setPhonecheck(false);
         } else {
           setPhonecheck(true);
@@ -73,9 +83,6 @@ const CreateEmployee = () => {
         roles: [],
       }]
   }
-
-  const employeeCreateSession = Digit.Hooks.useSessionStorage("NEW_EMPLOYEE_CREATE", {});
-  const [sessionFormData,setSessionFormData, clearSessionFormData] = employeeCreateSession;
 
   const onFormValueChange = (setValue = true, formData) => {
 
@@ -131,15 +138,17 @@ const CreateEmployee = () => {
     }
   };
 
-  const navigateToAcknowledgement = (Employees) => {
-    history.replace(`/${window?.contextPath}/employee/hrms/response`, { Employees, key: "CREATE", action: "CREATE" });
-  }
+  const navigateToAcknowledgement = ({ id, message }) => {
+    history.replace(`/${window?.contextPath}/employee/hrms/response?isSuccess=true`, { id, message, showID: true, showChildren: false });
+  };
 
-  
-
-  const onSubmit = (data) => {
-    if (data.Jurisdictions.filter(juris => juris.tenantId == tenantId).length == 0) {
-      setShowToast({ key: true, label: "ERR_BASE_TENANT_MANDATORY" });
+  const onSubmit = async (data) => {
+    if(!canSubmit){
+      setShowToast({ key: "error", label: "ERR_ALL_MANDATORY_FIELDS" });
+      return;
+    }
+    if (data.Jurisdictions.filter((juris) => juris.tenantId == tenantId).length == 0) {
+      setShowToast({ key: "error", label: "ERR_BASE_TENANT_MANDATORY" });
       return;
     }
     if (!Object.values(data.Jurisdictions.reduce((acc, sum) => {
@@ -148,7 +157,7 @@ const CreateEmployee = () => {
       }
       return acc;
     }, {})).every(s => s == 1)) {
-      setShowToast({ key: true, label: "ERR_INVALID_JURISDICTION" });
+      setShowToast({ key: "error", label: "ERR_INVALID_JURISDICTION" });
       return;
     }
     let roles = data?.Jurisdictions?.map((ele) => {
@@ -189,14 +198,47 @@ const CreateEmployee = () => {
     if (data?.SelectEmployeeId?.code && data?.SelectEmployeeId?.code?.trim().length > 0) {
       Digit.HRMSService.search(tenantId, null, { codes: data?.SelectEmployeeId?.code }).then((result, err) => {
         if (result.Employees.length > 0) {
-          setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID" });
+          setShowToast({ key: "error", label: "ERR_HRMS_USER_EXIST_ID" });
           return;
         } else {
-          navigateToAcknowledgement(Employees);
+          // navigateToAcknowledgement(Employees);
+          mutationCreate.mutate(
+            {
+              Employees: Employees,
+            },
+            {
+              onError: (error, variables) => {
+                setShowToast({
+                  key: "error",
+                  label: error?.response?.data?.Errors?.[0]?.code ? error?.response?.data?.Errors?.[0]?.code : "HRMS_CREATE_ERROR",
+                });
+              },
+              onSuccess: async (data) => {
+                navigateToAcknowledgement({ id: data?.Employees?.[0]?.code, message: "HRMS_CREATE_EMPLOYEE_RESPONSE_MESSAGE" });
+              },
+            }
+          );
         }
       });
     } else {
-      navigateToAcknowledgement(Employees);
+      // navigateToAcknowledgement(Employees);
+      mutationCreate.mutate(
+        {
+          Employees: Employees,
+        },
+        {
+          onError: (error, variables) => {
+            setShowToast({
+              key: "error",
+              label: error?.response?.data?.Errors?.[0]?.code ? error?.response?.data?.Errors?.[0]?.code : "HRMS_CREATE_ERROR",
+            });
+          },
+          onSuccess: async (data) => {
+            navigateToAcknowledgement({ id: data?.Employees?.[0]?.code, message: "HRMS_CREATE_EMPLOYEE_RESPONSE_MESSAGE" });
+            // navigateToAcknowledgement(Employees);
+          },
+        }
+      );
     }
   };
   if (isLoading) {
@@ -215,12 +257,12 @@ const CreateEmployee = () => {
         config={config}
         onSubmit={onSubmit}
         onFormValueChange={onFormValueChange}
-        isDisabled={!canSubmit}
+        // isDisabled={!canSubmit}
         label={t("HR_COMMON_BUTTON_SUBMIT")}
       />
       {showToast && (
         <Toast
-          error={showToast.key}
+          type={showToast.key}
           label={t(showToast.label)}
           onClose={() => {
             setShowToast(null);
