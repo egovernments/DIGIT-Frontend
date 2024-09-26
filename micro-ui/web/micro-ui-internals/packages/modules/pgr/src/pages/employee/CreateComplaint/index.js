@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { Dropdown } from "@egovernments/digit-ui-react-components";
+import { Dropdown, Toast } from "@egovernments/digit-ui-react-components";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useQueryClient } from "react-query";
 
@@ -11,60 +11,54 @@ import { createComplaint } from "../../../redux/actions/index";
 export const CreateComplaint = ({ parentUrl }) => {
   const cities = Digit.Hooks.pgr.useTenants();
   const stateId = Digit.ULBService.getStateId();
-
+  const [showToast, setShowToast] = useState(null);
   const { t } = useTranslation();
 
   const getCities = () => cities?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
 
+  const { data: subTenants, refetch, isLoading: isLoadingSubTenants } = { data: null, refetch: () => {}, isLoading: false };
 
-const { data: subTenants, refetch, isLoading: isLoadingSubTenants } = { data: null, refetch: () => {}, isLoading: false };
+  const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit.Hooks.useTenantManagementSearch({
+    stateId: stateId,
+    includeSubTenants: true,
+    config: {
+      enabled: Digit.Utils.getMultiRootTenant(),
+    },
+  });
 
-const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit.Hooks.useTenantManagementSearch({
-  stateId: stateId,
-  includeSubTenants: true,
-  config : {
-    enabled: Digit.Utils.getMultiRootTenant()
-  }
-});
-
-  const getSubTenants = () => Digit.Utils.getMultiRootTenant() ? TenantMngmtSearch?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) : subTenants?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId());
+  const getSubTenants = () =>
+    Digit.Utils.getMultiRootTenant()
+      ? TenantMngmtSearch?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId())
+      : subTenants?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId());
 
   const [complaintType, setComplaintType] = useState({});
   const [subTypeMenu, setSubTypeMenu] = useState([]);
   const [subType, setSubType] = useState({});
   const [pincode, setPincode] = useState("");
-  const [selectedCity, setSelectedCity] = useState(
-    Digit.Utils.getMultiRootTenant()
-      ? getSubTenants()?.[0] || null
-      : getCities()?.[0] || null
-  );
+  const [selectedCity, setSelectedCity] = useState(Digit.Utils.getMultiRootTenant() ? getSubTenants()?.[0] || null : getCities()?.[0] || null);
 
   const cityData = Digit.Utils.getMultiRootTenant() ? getSubTenants() : getCities();
 
   const { isLoading: hierarchyLOading, data: hierarchyType } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getStateId(),
-     "sandbox-ui",
-      [
-        { name: "ModuleMasterConfig",filter:'[?(@.module == "PGR")].master[?(@.type == "boundary")]' 
-
-        }
-      ],
-      {
-        select: (data) => {
-          const formattedData = data?.["sandbox-ui"]?.["ModuleMasterConfig"]
-          return formattedData?.[0]?.code;
-        },
-      }
-    );
+    "sandbox-ui",
+    [{ name: "ModuleMasterConfig", filter: '[?(@.module == "PGR")].master[?(@.type == "boundary")]' }],
+    {
+      select: (data) => {
+        const formattedData = data?.["sandbox-ui"]?.["ModuleMasterConfig"];
+        return formattedData?.[0]?.code;
+      },
+    }
+  );
 
   const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
-  cityData?.[0]?.code,
-  hierarchyType,
-  {
-    enabled: Digit.Utils.getMultiRootTenant() ? !!cityData?.[0] && !!hierarchyType : !!cityData?.[0],
-  },
-  t
-);
+    cityData?.[0]?.code,
+    hierarchyType,
+    {
+      enabled: Digit.Utils.getMultiRootTenant() ? !!cityData?.[0] && !!hierarchyType : !!cityData?.[0],
+    },
+    t
+  );
 
   const [localities, setLocalities] = useState(fetchedLocalities);
   const [selectedLocality, setSelectedLocality] = useState(null);
@@ -93,25 +87,36 @@ const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit
     setLocalities(fetchedLocalities);
   }, [fetchedLocalities]);
 
-  useEffect(() => {
-    if(!Digit.Utils.getMultiRootTenant()){
-    const city = cities.find((obj) => obj.pincode?.find((item) => item == pincode));
-    if (city?.code&&city?.code === getCities()?.[0]?.code) {
-      setPincodeNotValid(false);
-      setSelectedCity(city);
-      setSelectedLocality(null);
-      const __localityList = fetchedLocalities;
-      const __filteredLocalities = __localityList?.filter((city) => city["pincode"] == pincode);
-      setLocalities(__filteredLocalities);
-    } else if (pincode === "" || pincode === null) {
-      setPincodeNotValid(false);
-      setLocalities(fetchedLocalities);
-    } else {
-      setPincodeNotValid(true);
-    }
-  }
-  }, [pincode]);
+  const closeToast = () => {
+    setShowToast(null);
+  };
 
+  useEffect(() => {
+    if (showToast) {
+      setTimeout(() => {
+        closeToast();
+      }, 2000);
+    }
+  }, [showToast]);
+
+  useEffect(() => {
+    if (!Digit.Utils.getMultiRootTenant()) {
+      const city = cities.find((obj) => obj.pincode?.find((item) => item == pincode));
+      if (city?.code && city?.code === getCities()?.[0]?.code) {
+        setPincodeNotValid(false);
+        setSelectedCity(city);
+        setSelectedLocality(null);
+        const __localityList = fetchedLocalities;
+        const __filteredLocalities = __localityList?.filter((city) => city["pincode"] == pincode);
+        setLocalities(__filteredLocalities);
+      } else if (pincode === "" || pincode === null) {
+        setPincodeNotValid(false);
+        setLocalities(fetchedLocalities);
+      } else {
+        setPincodeNotValid(true);
+      }
+    }
+  }, [pincode]);
 
   async function selectedType(value) {
     if (value.key !== complaintType.key) {
@@ -142,6 +147,23 @@ const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit
   }
 
   const wrapperSubmit = (data) => {
+    // complaintType?.key && subType?.key && selectedCity?.code && selectedLocality?.code
+    if (!complaintType?.key) {
+      setShowToast({ key: "error", label: "TYPE_MISSING_ERROR" });
+      return;
+    }
+    if (!subType?.key) {
+      setShowToast({ key: "error", label: "TYPE_MISSING_ERROR" });
+      return;
+    }
+    if (!selectedCity?.code) {
+      setShowToast({ key: "error", label: "CITY_MISSING_ERROR" });
+      return;
+    }
+    if (!selectedLocality?.code) {
+      setShowToast({ key: "error", label: "LOCALITY_MISSING_ERROR" });
+      return;
+    }
     if (!canSubmit) return;
     setSubmitted(true);
     !submitted && onSubmit(data);
@@ -151,17 +173,11 @@ const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit
   const onSubmit = async (data) => {
     if (!canSubmit) return;
     const cityCode = selectedCity.code;
-    const city = Digit.Utils.getMultiRootTenant()
-    ? selectedCity.name
-    : selectedCity.city.name;
-  
-  const district = Digit.Utils.getMultiRootTenant()
-    ? selectedCity.name
-    : selectedCity.city.name;
-  
-  const region = Digit.Utils.getMultiRootTenant()
-    ? selectedCity.name
-    : selectedCity.city.name;
+    const city = Digit.Utils.getMultiRootTenant() ? selectedCity.name : selectedCity.city.name;
+
+    const district = Digit.Utils.getMultiRootTenant() ? selectedCity.name : selectedCity.city.name;
+
+    const region = Digit.Utils.getMultiRootTenant() ? selectedCity.name : selectedCity.city.name;
     const localityCode = selectedLocality.code;
     const localityName = selectedLocality.name;
     const landmark = data.landmark;
@@ -258,9 +274,7 @@ const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit
               isMandatory
               selected={selectedCity}
               freeze={true}
-              option={
-                Digit.Utils.getMultiRootTenant() ? getSubTenants() : getCities()
-              }
+              option={Digit.Utils.getMultiRootTenant() ? getSubTenants() : getCities()}
               id="city"
               select={selectCity}
               optionKey={"i18nKey"}
@@ -300,12 +314,16 @@ const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit
     },
   ];
   return (
-    <FormComposer
-      heading={t("ES_CREATECOMPLAINT_NEW_COMPLAINT")}
-      config={config}
-      onSubmit={wrapperSubmit}
-      isDisabled={!canSubmit && !submitted}
-      label={t("CS_ADDCOMPLAINT_ADDITIONAL_DETAILS_SUBMIT_COMPLAINT")}
-    />
+    <React.Fragment>
+      <FormComposer
+        heading={t("ES_CREATECOMPLAINT_NEW_COMPLAINT")}
+        config={config}
+        onSubmit={wrapperSubmit}
+        fieldClassName="pgr-field-pair"
+        // isDisabled={!canSubmit && !submitted}
+        label={t("CS_ADDCOMPLAINT_ADDITIONAL_DETAILS_SUBMIT_COMPLAINT")}
+      />
+      {showToast && <Toast error={showToast?.key} type={showToast?.key} label={showToast?.label} />}
+    </React.Fragment>
   );
 };
