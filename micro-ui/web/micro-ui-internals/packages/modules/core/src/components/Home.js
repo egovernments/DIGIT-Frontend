@@ -196,7 +196,7 @@ export const AppHome = ({
   return Digit.Utils.getRoleBasedHomeCard() ? (
     <div className={isSuperUserWithMultipleRootTenant ? "homeWrapper" : ""}>
       <RoleBasedEmployeeHome modules={modules} additionalComponent={additionalComponent} />
-      {isSuperUserWithMultipleRootTenant && <QuickSetupConfigComponent />}
+      {isSuperUserWithMultipleRootTenant && !window.Digit.Utils.browser.isMobile() && <QuickSetupConfigComponent />}
     </div>
   ) : (
     <EmployeeHome modules={modules} additionalComponent={additionalComponent} />
