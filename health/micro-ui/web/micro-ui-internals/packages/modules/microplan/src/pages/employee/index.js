@@ -5,6 +5,12 @@ import { Switch,useLocation } from "react-router-dom";
 import SetupMicroplan from "./SetupMicroplan";
 import { useMyContext } from "../../utils/context";
 import MicroplanSearch from "./MicroplanSearch";
+import SummaryScreen from "./SummaryScreen";
+import Sample from "./Sample";
+import FormulaConfiguration from "../../components/FormulaConfig";
+import SummaryScreen2 from "./SummaryScreen2";
+import SummaryScreen3 from "./SummaryScreen3";
+
 
 const bredCrumbStyle={ maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
@@ -149,6 +155,15 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
         </React.Fragment>
          <PrivateRoute path={`${path}/setup-microplan`} component={() => <SetupMicroplan hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />} />
          <PrivateRoute path={`${path}/microplan-search`} component={() => <MicroplanSearch></MicroplanSearch>} /> 
+         <PrivateRoute path={`${path}/summary-screen`} component={() => <SummaryScreen></SummaryScreen>} />
+         <PrivateRoute path={`${path}/sample`} component={() => <Sample></Sample>} />
+         <PrivateRoute path={`${path}/summary-screen1`} component={() => <SummaryScreen2></SummaryScreen2>} />
+         <PrivateRoute path={`${path}/summary-screen2`} component={() => <SummaryScreen3></SummaryScreen3>} />
+
+
+
+
+
       </AppContainer>
     </Switch>
   );
