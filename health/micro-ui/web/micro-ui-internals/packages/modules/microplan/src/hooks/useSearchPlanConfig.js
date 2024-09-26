@@ -1,8 +1,7 @@
-import { useMutation } from "react-query";
 import SearchPlanConfig from "./services/SearchPlanConfig";
-
+import { useQuery } from "react-query";
 const useSearchPlanConfig = (data, config = {}) => {
-  return useQuery([data?.tenantId, data?.id, data?.name, data?.campaignId, data?.userUuid, data?.offset, data?.limit], () => SearchPlanConfig(data), { ...config });
+  return useQuery(["SEARCH_PLAN",data,config.queryKey], () => SearchPlanConfig(data), { ...config });
 };
 
 export default useSearchPlanConfig;
