@@ -73,7 +73,7 @@ const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit
     <loader />
   ) : (
     <div className="selection-card-wrapper">
-      <BackLink />
+      <BackLink onClick={() => window.history.back()}/>
       <PageBasedInput texts={texts} onSubmit={onSubmit} className="location-selection-container">
         <CardHeader>{t("CS_COMMON_CHOOSE_LOCATION")}</CardHeader>
         <SearchOnRadioButtons {...RadioButtonProps} placeholder={t("COMMON_TABLE_SEARCH")} />

@@ -100,7 +100,7 @@ const CitizenHome = ({
         {location.pathname.includes(
           "sanitation-ui/citizen/all-services"
         ) || (location.pathname.includes("sandbox-ui") && location.pathname.includes("all-services")) ? null : (
-          <BackLink />
+          <BackLink onClick={() => window.history.back()}/>
         )}
         <div className="citizenAllServiceGrid">
           {moduleArray

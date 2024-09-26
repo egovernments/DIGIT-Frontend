@@ -233,7 +233,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     <div className="citizen-form-wrapper">
       <Switch>
         <AppContainer>
-          {location.pathname.includes("login") ? null : <BackLink />}
+          {location.pathname.includes("login") ? null : <BackLink onClick={() => window.history.back()}/>}
           <Route path={`${path}`} exact>
             <SelectMobileNumber
               onSelect={selectMobileNumber}

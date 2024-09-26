@@ -445,7 +445,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
     <div className="user-profile">
       <section style={{ margin: userType === "citizen" || isMobile ? "8px" : "24px" }}>
         {userType === "citizen" || isMobile ? (
-          <BackLink></BackLink>
+          <BackLink onClick={() => window.history.back()}/>
         ) : (
           <BreadCrumb
             crumbs={[
