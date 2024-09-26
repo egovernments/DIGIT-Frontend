@@ -218,7 +218,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               type: "component",
               skipAPICall: false,
               resourceToUpdate:"PLAN",
-              component: "SummaryScreen",
+              component: "SummaryScreen3",
               withoutLabel: true,
               withoutLabelFieldPair:true,
               disable: false,

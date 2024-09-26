@@ -26,9 +26,9 @@ const SummaryScreen3 = () => {
                         [
                             {
                                 type: "DATA",
-                                cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                                cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, marginBottom:"0.5rem",fontSize: "1.5rem" } },
                                 cardSecondaryAction: (
-                                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
+                                    <div className="campaign-preview-edit-container" onClick={()=>{console.log("hello edit")}}>
                                         <span>{t(`CAMPAIGN_EDIT`)}</span>
                                         <EditIcon />
                                     </div>
@@ -48,7 +48,11 @@ const SummaryScreen3 = () => {
                                         // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
                                         value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode || "NA"
                                     },
+                                    
                                 ],
+                                inlineStyles: {
+                                    marginBottom: "0rem",
+                                  },
                                 // values: data31(),
     
     
@@ -434,6 +438,11 @@ const SummaryScreen3 = () => {
                       active: true,
                       code: "MICROPLAN_DETAILS",
                     },
+                    {
+                        name: "card7",
+                        active: true,
+                        code: "DATA_MGMT",
+                      },
                   
                
               {
@@ -441,30 +450,26 @@ const SummaryScreen3 = () => {
                 active: true,
                 code: "MICROPLAN_ASSUMPTIONS",
               },
-              {
-                name: "card7",
-                active: true,
-                code: "DATA_MGMT",
-              },
               
-             ,{
-                name: "card5",
-                active: true,
-                code: "FORMULA_CONFIGURATION",
-              },
-              {
-                name: "card6",
-                active: true,
-                code: "USER_ACCESS_MGMT",
-              },
+              
+            //  ,{
+            //     name: "card5",
+            //     active: true,
+            //     code: "FORMULA_CONFIGURATION",
+            //   },
+            //   {
+            //     name: "card6",
+            //     active: true,
+            //     code: "USER_ACCESS_MGMT",
+            //   },
               {
                 name: "card8",
                 active: true,
-                code: "COMPTESTING",
+                code: "FORMULA_CONFIGURATION",
               },
               
             ],
-            activeByDefault: "card2",
+            activeByDefault: "card1",
           },
 
     }
