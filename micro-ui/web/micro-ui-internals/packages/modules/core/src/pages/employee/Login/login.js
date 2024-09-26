@@ -114,12 +114,9 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       },
       {
         onError: (error, variables) => {
-          setShowToast({
-            key: "error",
-            label: error?.response?.data?.Errors?.[0].code
-              ? `SANDBOX_RESEND_OTP${error?.response?.data?.Errors?.[0]?.code}`
-              : `SANDBOX_RESEND_OTP_ERROR`,
-          });
+          setShowToast(
+            error?.response?.data?.Errors?.[0].code ? `SANDBOX_RESEND_OTP${error?.response?.data?.Errors?.[0]?.code}` : `SANDBOX_RESEND_OTP_ERROR`
+          );
           setTimeout(closeToast, 5000);
         },
         onSuccess: async (data) => {
@@ -171,7 +168,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   ) : (
     <Background>
       <div className="employeeBackbuttonAlign">
-        <BackLink />
+      <BackLink onClick={() => window.history.back()}/>
       </div>
       <FormComposerV2
         onSubmit={loginOTPBased ? onOtpLogin : onLogin}
