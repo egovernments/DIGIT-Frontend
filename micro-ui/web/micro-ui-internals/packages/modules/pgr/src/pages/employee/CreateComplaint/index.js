@@ -92,11 +92,17 @@ export const CreateComplaint = ({ parentUrl }) => {
   };
 
   useEffect(() => {
+    let timer;
     if (showToast) {
-      setTimeout(() => {
+      timer = setTimeout(() => {
         closeToast();
       }, 2000);
     }
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
   }, [showToast]);
 
   useEffect(() => {
