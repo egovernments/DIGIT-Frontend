@@ -361,14 +361,61 @@ const SummaryScreen3 = () => {
                             {
                                 
                                 type: "COMPONENT",
-                                component: "ThreeInputComp",
+                                component: "HeaderPlusThreeInput",
+
                                 props: {
                                     
-                                    title:"VeryWell",
-                                    input1:"Non-edittable",
-                                    input2:"Whats up",
-                                    input3:"Twitter",
-                                    output:"ThisOutput"
+                                    title:"GENERAL_ESTIMATION",
+                                    threeInputArr:[["Number of households per boundary","Population of the boundary","Divided by","Average people HJ/H"],
+                                    [ "Number of bednets per boundary","Population of the boundary","Divided by","Average people HJ/H"],
+                                    [ "Number of bales per boundary","Population of the boundary","Divided by","Average people HJ/H"]
+
+                                ]
+                                    
+                                },
+                            },
+                        ]
+                       
+                
+            },{
+                navigationKey: "card8",
+                sections: 
+                    
+                        [
+                            {
+                                
+                                type: "COMPONENT",
+                                component: "HeaderPlusThreeInput",
+
+                                props: {
+                                    
+                                    title:"HOUSEHOLD_REGISTRATION_INFORMATION",
+                                    threeInputArr:[["Number of hosueholds registered","Population of the boundary","Divided by","Average people HJ/H"],
+                                    [ "Number of houdeholds registered per boundary","Population of the boundary","Divided by","Average people HJ/H"],
+                                    [ "Number of Supervisors per Boundary","Population of the boundary","Divided by","Average people HJ/H"]
+
+                                ]
+                                    
+                                },
+                            },
+                        ]
+                       
+                
+            },{
+                navigationKey: "card8",
+                sections: 
+                    
+                        [
+                            {
+                                
+                                type: "COMPONENT",
+                                component: "HeaderPlusThreeInput",
+
+                                props: {
+                                    
+                                    title:"CAMPAIGN_COMMODITIES",
+                                    threeInputArr:[["Number of sticker rolls per boundary","Population of the boundary","Divided by","Average people HJ/H"],  ]
+                                    
                                 },
                             },
                         ]

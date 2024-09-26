@@ -17,6 +17,7 @@ import FileComponent from "./components/FileComponent";
 import DataMgmtTable from "./components/DataMgmtTable";
 import HeaderComp from "./components/HeaderComp";
 import ThreeInputComp from "./components/ThreeInputComp";
+import HeaderPlusThreeInput from "./components/HeaderPlusThreeInput";
 
 
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
@@ -59,7 +60,8 @@ const componentsToRegister = {
   FileComponent,
   DataMgmtTable,
   HeaderComp,
-  ThreeInputComp
+  ThreeInputComp,
+  HeaderPlusThreeInput
 
 };
 
