@@ -5,6 +5,7 @@ import { ApiCacheService } from "../../atoms/ApiCacheService";
 import { TenantConfigSearch } from "../../elements/TenantConfigService";
 
 const getImgUrl = (url, fallbackUrl) => {
+
   if (!url && fallbackUrl) {
     return fallbackUrl;
   }
@@ -101,17 +102,26 @@ export const StoreService = {
     const fetchTenantConfig = async () => {
       const tenantConfigs = await TenantConfigSearch.tenant(stateCode);
       const tenantConfigSearch = tenantConfigs?.tenantConfigs ? tenantConfigs?.tenantConfigs : null;
+      const logoArray = tenantConfigSearch[0].documents
+        .filter(doc => doc.type === "logoUrl")
+        .map(doc => doc.fileStoreId);
+      const bannerArray = tenantConfigSearch[0].documents
+        .filter(doc => doc.type === "bannerUrl")
+        .map(doc => doc.fileStoreId);
+      const logoUrl = await Digit.UploadServices.Filefetch(logoArray, tenantConfigSearch?.[0]?.code);
+      const bannerUrl = await Digit.UploadServices.Filefetch(bannerArray, tenantConfigSearch?.[0]?.code)
+
       return {
         languages: stateInfo.hasLocalisation ? stateInfo.languages : [{ label: "ENGLISH", value: Digit.Utils.getDefaultLanguage() }],
         stateInfo: {
           code: tenantConfigFetch ? tenantConfigSearch?.[0]?.code : stateInfo.code,
           name: tenantConfigFetch ? tenantConfigSearch?.[0]?.name : stateInfo.name,
-          logoUrl: tenantConfigFetch ? tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "logoUrl")?.url : stateInfo.logoUrl,
+          logoUrl: tenantConfigFetch ? logoUrl?.data?.fileStoreIds?.[0]?.url ? logoUrl?.data?.fileStoreIds?.[0]?.url?.split(',')[0] : tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "logoUrl")?.url : stateInfo.logoUrl,
           statelogo: tenantConfigFetch ? tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "statelogo")?.url : stateInfo.statelogo,
           logoUrlWhite: tenantConfigFetch
             ? tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "logoUrlWhite")?.url
             : stateInfo.logoUrlWhite,
-          bannerUrl: tenantConfigFetch ? tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "bannerUrl")?.url : stateInfo.bannerUrl,
+          bannerUrl: tenantConfigFetch ? bannerUrl?.data?.fileStoreIds?.[0]?.url  ? bannerUrl?.data?.fileStoreIds?.[0]?.url?.split(',')[0] : tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "bannerUrl")?.url : stateInfo.bannerUrl,
         },
         localizationModules: stateInfo.localizationModules,
         modules:

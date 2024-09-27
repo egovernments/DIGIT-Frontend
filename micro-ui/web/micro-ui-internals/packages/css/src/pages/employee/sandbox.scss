@@ -109,10 +109,12 @@
       margin-top: 3rem;
       width: 100%;
     }
+
     .submit-bar {
       margin-top: 3rem;
       width: 100%;
     }
+
     .bannerHeader {
       .bannerLogo {
         margin-top: 1rem;
@@ -173,6 +175,7 @@
   margin-right: auto;
   width: fit-content;
 }
+
 .digit-card-text.sandbox-resend-otp {
   margin: 0;
   margin-top: -1rem;
@@ -213,6 +216,7 @@
     }
   }
 }
+
 .digit-card-component.signupCardClassName.sandbox-onboarding-wrapper {
   .bannerHeader {
     .bannerLogo {
@@ -221,6 +225,7 @@
     }
   }
 }
+
 .digit-card-component.card-sandbox {
   .bannerHeader {
     .bannerLogo {
@@ -237,32 +242,40 @@
       height: 2rem;
     }
   }
+
   .sandbox-success-signup {
     margin-top: unset;
   }
+
   .digit-field {
     margin-top: 0.5rem;
   }
+
   .sandbox-url-footer {
     margin-top: 0.5rem;
   }
+
   .digit-button-primary {
     width: 100%;
   }
 }
+
 .submit-bar {
   background-color: #c84c0e;
 }
+
 .digit-employee-card.card-sandbox {
   .digit-card-header.cardHeader-sandbox {
     color: #00703c !important;
   }
 }
+
 .sandbox-url-wrapper {
   display: flex;
   width: 100%;
-  .digit-text-input-field.urlInputText {
-  }
+
+  .digit-text-input-field.urlInputText {}
+
   .digit-button-secondary.large.copyButton {
     width: 30%;
     padding: 0;
@@ -280,12 +293,14 @@
   display: flex;
   flex-direction: row-reverse;
 }
+
 .digit-employee-card.sandboxSetupMasterInfo {
   .h1.headerFlex {
     display: flex;
     gap: 1rem;
     align-items: center;
   }
+
   .digit-card-header.subHeader {
     font-size: 1.5rem;
     font-weight: 700;
@@ -309,6 +324,7 @@
   color: unset !important;
   margin-left: 1.5rem;
 }
+
 .digit-popup-wrapper.masterHandlerPopup {
   .digit-popup-header {
     .header-close-container {
@@ -318,12 +334,14 @@
     }
   }
 }
+
 .digit-topbar-ulb {
   .state {
     width: 80px;
     height: 19px;
   }
 }
+
 .digit-popup-footer.masterHandlerPopUpFooter {
   .digit-popup-footer-buttons {
     margin-left: unset;
@@ -331,10 +349,12 @@
     justify-content: center;
   }
 }
+
 .main.center-container.citizen-home-container {
   z-index: 100;
   justify-content: flex-start;
 }
+
 .SideBarStatic {
   z-index: 10;
   height: 100vh;
@@ -342,10 +362,12 @@
 
 .citizen-form-wrapper {
   justify-content: flex-start;
+
   .citizen-card-input.citizen-card-input--front {
     margin-bottom: 0;
   }
 }
+
 .action-bar-wrap {
   .menu-wrap {
     p {
@@ -353,6 +375,7 @@
     }
   }
 }
+
 .digit-popup-wrapper.setupMasterPopUp.alert {
   .digit-popup-alert-content {
     .digit-popup-alert-heading {
@@ -514,4 +537,13 @@ digit-card-text.center {
 .employee-app-wrapper.sandbox-landing-wrapper {
   margin: 2rem;
   margin-top: 6rem;
+}
+.digit-uploader-content{
+  .digit-button-secondary.large{
+    .icon-label-container.secondary.large{
+      .digit-button-label{
+        width: fit-content !important;
+      }
+    }
+  }  
 }
