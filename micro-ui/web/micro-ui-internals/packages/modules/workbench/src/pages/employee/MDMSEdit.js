@@ -60,8 +60,8 @@ const MDMSEdit = ({...props}) => {
 
   const gotoView = () => { 
     setTimeout(() => {
-      setRenderLoader(true)
-      history.push(`/${window?.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}`)
+      setRenderLoader(true);
+      history.goBack();
     }, 2000);
   }
 
