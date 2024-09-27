@@ -121,6 +121,14 @@ function getCurrentMonth() {
   return monthNames[currentMonthIndex];
 }
 
+function updateUrlParams(params) {
+  const url = new URL(window.location.href);
+  Object.entries(params).forEach(([key, value]) => {
+    url.searchParams.set(key, value);
+  });
+  window.history.replaceState({}, "", url);
+}
+
 function generateCampaignString(sessionData,t) {
   
   // Extract details from sessionData
@@ -141,5 +149,6 @@ export default {
   destroySessionHelper,
   createStatusMap,
   formValidator,
-  generateCampaignString
+  generateCampaignString,
+  updateUrlParams
 };

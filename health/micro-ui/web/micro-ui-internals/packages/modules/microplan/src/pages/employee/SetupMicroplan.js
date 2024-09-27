@@ -102,7 +102,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
 
   useEffect(() => {
     setIsSubmitting(false);
-    Digit.Utils.microplan.updateUrlParams({ key: currentKey });
+    Digit.Utils.microplanv1.updateUrlParams({ key: currentKey });
     // setSummaryErrors(null);
   }, [currentKey]);
 
@@ -118,6 +118,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
       },
       onError: (error, variables) => {
         
+        setShowToast(({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") }))
       },
     });
   };
