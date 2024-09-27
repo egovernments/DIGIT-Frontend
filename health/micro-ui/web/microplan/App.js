@@ -6,6 +6,7 @@ import { DigitUI } from "@egovernments/digit-ui-module-core";
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initMicroplanningComponents } from "@egovernments/digit-ui-module-hcmmicroplanning";
 import { initMicroplanComponents } from "@egovernments/digit-ui-module-microplan";
+import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
 
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
@@ -18,7 +19,9 @@ const enabledModules = [
   "Engagement",
   "Workbench",
   "Microplanning",
-  "Microplan"
+  "Microplan",
+  "Campaign"
+
 ];
 
 const moduleReducers = (initData) => ({
@@ -30,7 +33,7 @@ const initDigitUI = () => {
     
   });
 
-
+  initCampaignComponents();
   initMicroplanningComponents()
   initMicroplanComponents();
 

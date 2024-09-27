@@ -172,7 +172,7 @@ const SavedMicroplans = () => {
         });
 
         setShowLoader(false);
-        history.push(`/${window.contextPath}/employee/microplanning/edit-saved-microplan?id=${row?.original?.executionPlanId}`);
+        history.push(`/${window.contextPath}/employee/microplanning/edit-saved-microplan?id=${row?.original?.campaignId}`);
       } catch (error) {
         console.error(`Failed to process the request: ${error.message}`);
         setShowLoader(false);

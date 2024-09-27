@@ -37,7 +37,7 @@ const SearchSavedPlans = async (body) => {
     const { PlanConfiguration } = responsePlan;
     if (!PlanConfiguration || PlanConfiguration.length === 0) return [];
 
-    const executionPlanIds = PlanConfiguration?.map((row) => row?.executionPlanId)?.filter((item) => item);
+    const executionPlanIds = PlanConfiguration?.map((row) => row?.campaignId)?.filter((item) => item);
     const CampaignDetails = {
       tenantId: Digit.ULBService.getCurrentTenantId(),
       ids: executionPlanIds,
@@ -53,7 +53,7 @@ const SearchSavedPlans = async (body) => {
       },
     });
     const finalResult = {
-      PlanConfiguration: mergeArrays(responsePlan?.PlanConfiguration, "executionPlanId", responseCampaign?.CampaignDetails, "id"),
+      PlanConfiguration: mergeArrays(responsePlan?.PlanConfiguration, "campaignId", responseCampaign?.CampaignDetails, "id"),
     };
     return finalResult;
   } catch (error) {
