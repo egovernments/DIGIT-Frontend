@@ -12,8 +12,8 @@ import HypothesisWrapper from "./components/HypothesisWrapper";
 import DataMgmtTable from "./components/DataMgmtTable";
 import FileComponent from "./components/FileComponent";
 import HeaderComp from "./components/HeaderComp";
-import HeaderPlusThreeInput from "./components/HeaderPlusThreeInput";
-import ThreeInputComp from "./components/ThreeInputComp";
+import FormulaSection from "./components/FormulaSectionCard";
+import FormulaView from "./components/FormulaView";
 import SummaryScreen from "./pages/employee/SummaryScreen";
 
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
@@ -58,8 +58,8 @@ const componentsToRegister = {
   DataMgmtTable,
   FileComponent,
   HeaderComp,
-  HeaderPlusThreeInput,
-  ThreeInputComp,
+  FormulaView,
+  FormulaSection,
   SummaryScreen
   
 
