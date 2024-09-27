@@ -9,6 +9,12 @@ import CampaignDetails from "./components/CampaignDetails";
 import { ProviderContext } from "./utils/context";
 import BoundarySelection from "./components/BoundarySelection";
 import HypothesisWrapper from "./components/HypothesisWrapper";
+import DataMgmtTable from "./components/DataMgmtTable";
+import FileComponent from "./components/FileComponent";
+import HeaderComp from "./components/HeaderComp";
+import HeaderPlusThreeInput from "./components/HeaderPlusThreeInput";
+import ThreeInputComp from "./components/ThreeInputComp";
+import SummaryScreen from "./pages/SummaryScreen";
 
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -43,6 +49,12 @@ const componentsToRegister = {
   MicroplanDetails,
   BoundarySelection,
   HypothesisWrapper,
+  DataMgmtTable,
+  FileComponent,
+  HeaderComp,
+  HeaderPlusThreeInput,
+  ThreeInputComp,
+  SummaryScreen
 
 };
 
