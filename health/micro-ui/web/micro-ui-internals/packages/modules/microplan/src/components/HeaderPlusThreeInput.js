@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 const HeaderPlusThreeInput = ({ title, threeInputArr }) => {
   const { t } = useTranslation();
-  console.log("hello", title, threeInputArr);
+  
   
   return (
     <div>
@@ -13,8 +13,7 @@ const HeaderPlusThreeInput = ({ title, threeInputArr }) => {
 
       {
         threeInputArr.map((arr) => {
-          console.log("hello1", arr);
-          console.log("hello2", arr[0], arr[1], arr[2], arr[3]);
+          
 
           return (
             <ThreeInputComp 

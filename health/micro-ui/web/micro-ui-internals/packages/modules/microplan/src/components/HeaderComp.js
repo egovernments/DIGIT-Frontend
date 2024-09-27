@@ -13,8 +13,7 @@ const HeaderComp = ({ title,styles = {} }) => {
 
     // Merge default styles with the custom styles passed as a prop
     const mergedStyles = { ...defaultStyles, ...styles };
-    console.log("headerComp",title);
-    console.log("headerComp1",typeof title);
+   
 
 
     return (

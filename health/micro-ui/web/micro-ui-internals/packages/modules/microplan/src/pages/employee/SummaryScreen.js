@@ -28,7 +28,7 @@ const SummaryScreen = () => {
                                 type: "DATA",
                                 cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, marginBottom:"0.5rem",fontSize: "1.5rem" } },
                                 cardSecondaryAction: (
-                                    <div className="campaign-preview-edit-container" onClick={()=>{console.log("hello edit")}}>
+                                    <div className="campaign-preview-edit-container" onClick={()=>{}}>
                                         <span>{t(`CAMPAIGN_EDIT`)}</span>
                                         <EditIcon />
                                     </div>
@@ -270,37 +270,40 @@ const SummaryScreen = () => {
                 ]
                        
                 
-            }, ,{
-                navigationKey: "card5",
-                sections: 
+            }, 
+            // {
+            //     navigationKey: "card5",
+            //     sections: 
                     
-                        [
-                            {
+            //             [
+            //                 {
                                 
-                                type: "COMPONENT",
-                                component: "FormulaConfiguration",
-                                props: {
-                                },
-                            },
-                        ]
+            //                     type: "COMPONENT",
+            //                     component: "FormulaConfiguration",
+            //                     props: {
+            //                     },
+            //                 },
+            //             ]
                        
                 
-            },{
-                navigationKey: "card6",
-                sections: 
+            // },
+            // {
+            //     navigationKey: "card6",
+            //     sections: 
                     
-                        [
-                            {
+            //             [
+            //                 {
                                 
-                                type: "COMPONENT",
-                                component: "UserAccessManagement",
-                                props: {
-                                },
-                            },
-                        ]
+            //                     type: "COMPONENT",
+            //                     component: "UserAccessManagement",
+            //                     props: {
+            //                     },
+            //                 },
+            //             ]
                        
                 
-            },{
+            // },
+            {
                 navigationKey: "card7",
                 sections: 
                     
@@ -473,7 +476,7 @@ const SummaryScreen = () => {
           },
 
     }
-    // console.log("data",data);
+    
     return (
         <ViewComposer data={data} />
     )

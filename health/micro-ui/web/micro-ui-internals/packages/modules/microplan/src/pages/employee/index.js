@@ -5,6 +5,7 @@ import { Switch,useLocation } from "react-router-dom";
 import SetupMicroplan from "./SetupMicroplan";
 import { useMyContext } from "../../utils/context";
 import MicroplanSearch from "./MicroplanSearch";
+import SummaryScreen from "./SummaryScreen";
 
 const bredCrumbStyle={ maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
@@ -71,6 +72,8 @@ const App = ({ path, stateCode, userType, tenants }) => {
         </React.Fragment>
          <PrivateRoute path={`${path}/setup-microplan`} component={() => <SetupMicroplan />} />
          <PrivateRoute path={`${path}/microplan-search`} component={() => <MicroplanSearch></MicroplanSearch>} /> 
+         <PrivateRoute path={`${path}/summary-screen`} component={() => <SummaryScreen></SummaryScreen>} /> 
+
       </AppContainer>
     </Switch>
   );
