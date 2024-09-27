@@ -26,7 +26,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   const [showErrorToast, setShowErrorToast] = useState(false);
   const [disableForm, setDisableForm] = useState(false);
   const [showToast, setShowToast] = useState(false);
-  const { moduleName, masterName } = Digit.Hooks.useQueryParams();
+  const { moduleName, masterName, from } = Digit.Hooks.useQueryParams();
   const FormSession = Digit.Hooks.useSessionStorage(`MDMS_${screenType}_${moduleName}_${masterName}`, {});
   const [sessionFormData, setSessionFormData, clearSessionFormData] = FormSession;
   const [formSchema, setFormSchema] = useState({});
@@ -86,6 +86,12 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
     },
   };
 
+  const gotoView = () => { 
+    setTimeout(() => {
+      history.push(`/${window?.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}${from ? `&from=${from}` : ""}`)
+    }, 2000);
+  }
+
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaAdd);
   const onSubmit = (data) => {
     toggleSpinner(true);
@@ -97,6 +103,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
       const jsonPath = api?.responseJson ? api?.responseJson : "mdms[0].id";
       setShowToast(`${t("WBH_SUCCESS_MDMS_MSG")} ${_.get(resp, jsonPath, "NA")}`);
       closeToast();
+      gotoView();
 
       //here redirect to search screen(check if it's required cos user might want  add multiple masters in one go)
     };

@@ -99,7 +99,7 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
   return (
     <Background>
       <div className="employeeBackbuttonAlign">
-        <BackLink />
+      <BackLink onClick={() => window.history.back()}/>
       </div>
       <FormComposer
         onSubmit={onForgotPassword}

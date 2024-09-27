@@ -68,7 +68,7 @@ const EmployeeApp = ({
             className={isUserProfile ? "grounded-container" : "loginContainer"}
             style={
               isUserProfile
-                ? { padding: 0, paddingTop: "80px", marginLeft: mobileView ? "" : "64px" }
+                ? { padding: 0, paddingTop: "0", marginLeft: mobileView ? "0" : "0" }
                 : { "--banner-url": `url(${stateInfo?.bannerUrl})`, padding: "0px" }
             }
           >
@@ -89,7 +89,9 @@ const EmployeeApp = ({
                 <UserProfile stateCode={stateCode} userType={"employee"} cityDetails={cityDetails} />
               </PrivateRoute>
               <PrivateRoute path={`${path}/user/landing`}>
-                <Landing />
+                <div className="employee-app-wrapper sandbox-landing-wrapper">
+                  <Landing />
+                </div>
               </PrivateRoute>
               <Route path={`${path}/user/error`}>
                 <ErrorComponent

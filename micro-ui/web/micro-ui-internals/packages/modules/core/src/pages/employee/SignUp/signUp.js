@@ -85,7 +85,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   ) : (
     <Background>
       <div className="employeeBackbuttonAlign">
-        <BackLink />
+      <BackLink onClick={() => window.history.back()}/>
       </div>
       <FormComposerV2
         onSubmit={onLogin}

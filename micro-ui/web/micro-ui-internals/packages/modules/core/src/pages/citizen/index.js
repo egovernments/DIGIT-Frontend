@@ -98,7 +98,7 @@ const Home = ({
         <Route key={index} path={`${path}/${code.toLowerCase()}-home`}>
           <div className="moduleLinkHomePage">
             <img src={bannerImage || stateInfo?.bannerUrl} alt="noimagefound" />
-            <BackLink className="moduleLinkHomePageBackButton" />
+            <BackLink className="moduleLinkHomePageBackButton" onClick={() => window.history.back()} />
             <h1>{t("MODULE_" + code.toUpperCase())}</h1>
             <div className="moduleLinkHomePageModuleLinks">
               {mdmsDataObj && (

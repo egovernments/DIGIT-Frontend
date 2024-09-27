@@ -95,7 +95,7 @@ export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, initD
     <div
       className={isUserProfile ? "grounded-container" : "loginContainer"}
       style={
-        isUserProfile ? { padding: 0, paddingTop: "80px", marginLeft: "64px" } : { "--banner-url": `url(${stateInfo?.bannerUrl})`, padding: "0px" }
+        isUserProfile ? { padding: 0, paddingTop: "80px", marginLeft: "" } : { "--banner-url": `url(${stateInfo?.bannerUrl})`, padding: "0px" }
       }
     >
       <Switch>
