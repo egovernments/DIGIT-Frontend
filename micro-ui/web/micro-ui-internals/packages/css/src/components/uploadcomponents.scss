@@ -46,6 +46,7 @@
   .upload-img-container {
     border: 1px dashed theme(colors.border);
     margin: 0 !important;
+    display: flex !important;
 
     img {
       margin-left: auto;
@@ -55,7 +56,8 @@
 
     svg {
       @apply flex;
-      margin: auto;
+      justify-content: center;
+      align-items: center;
     }
 
     svg {

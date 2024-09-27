@@ -34,6 +34,13 @@
   border-color: transparent;
   border-width: 0 1.5rem;
 
+  thead {
+    tr {
+      th {
+        background-color: #ffffff;
+      }
+    }
+  }
   tbody {
     tr:hover {
       background: rgba(#f47738, 0.12);
@@ -100,17 +107,23 @@
 .sandbox-onboarding-wrapper {
   height: 500px !important;
   width: 408px !important;
-
+  display: flex;
+  justify-content: space-between;
+  .employee-card-sub-header {
+    font-size: 1.5rem;
+  }
   .employeeCard {
     height: 500px !important;
     width: 408px !important;
 
     .submit-bar-disabled {
+      align-self: flex-end;
       margin-top: 3rem;
       width: 100%;
     }
 
     .submit-bar {
+      align-self: flex-end;
       margin-top: 3rem;
       width: 100%;
     }
@@ -122,6 +135,9 @@
         height: 2rem;
       }
     }
+  }
+  .digit-description {
+    margin-bottom: -1rem;
   }
 }
 
@@ -233,6 +249,9 @@
       height: 2rem;
     }
   }
+  .digit-button-primary {
+    width: 100%;
+  }
 }
 
 .digit-employee-card.card-sandbox {
@@ -274,7 +293,8 @@
   display: flex;
   width: 100%;
 
-  .digit-text-input-field.urlInputText {}
+  .digit-text-input-field.urlInputText {
+  }
 
   .digit-button-secondary.large.copyButton {
     width: 30%;
@@ -534,16 +554,25 @@ digit-card-text.center {
     gap: 1.5rem;
   }
 }
-.employee-app-wrapper.sandbox-landing-wrapper {
-  margin: 2rem;
-  margin-top: 6rem;
+
+.digit-home-moduleCardWrapper {
+  display: flex;
+
+  .digit-landing-page-card {
+    flex: 1;
+    min-width: 20rem;
+    max-width: fit-content;
+  }
 }
-.digit-uploader-content{
-  .digit-button-secondary.large{
-    .icon-label-container.secondary.large{
-      .digit-button-label{
+.employee-app-wrapper.sandbox-landing-wrapper {
+  margin: 6rem 2rem 2rem 5rem;
+}
+.digit-uploader-content {
+  .digit-button-secondary.large {
+    .icon-label-container.secondary.large {
+      .digit-button-label {
         width: fit-content !important;
       }
     }
-  }  
+  }
 }

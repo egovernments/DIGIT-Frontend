@@ -54,7 +54,7 @@ const LandingComponent = ({ config }) => {
         <Button
           className="actionButton"
           label={t("CONTINUE_LANDING")}
-          variation={"secondary"}
+          variation={"primary"}
           icon="ArrowForward"
           isSuffix={true}
           onClick={(e) => {
