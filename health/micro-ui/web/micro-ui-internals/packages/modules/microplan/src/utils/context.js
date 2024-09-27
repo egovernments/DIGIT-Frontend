@@ -7,7 +7,7 @@ const initialState = {
 
 const reducer = (state=initialState,action) => {
   switch (action.type) {
-    case "SETINITDATA":
+    case "MASTER_DATA":
       return {...state,...action.state}
     default:
      return state;

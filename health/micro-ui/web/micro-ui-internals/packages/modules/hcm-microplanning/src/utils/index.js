@@ -262,7 +262,7 @@ const createApiRequestBody = (status, microplanName, campaignId, files, assumpti
     status,
     tenantId: Digit.ULBService.getStateId(),
     name: microplanName,
-    executionPlanId: campaignId,
+    campaignId: campaignId,
     files,
     assumptions,
     operations,

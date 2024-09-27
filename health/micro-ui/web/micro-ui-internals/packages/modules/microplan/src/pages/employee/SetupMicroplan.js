@@ -19,7 +19,7 @@ import _ from "lodash";
 import { useMyContext } from "../../utils/context";
 
 
-const SetupMicroplan = () => {
+const SetupMicroplan = ({hierarchyType ,hierarchyData}) => {
   const { dispatch,state } = useMyContext();
   const history = useHistory()
   const {t} = useTranslation();
@@ -34,7 +34,7 @@ const SetupMicroplan = () => {
   });
 
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("MICROPLAN_DATA", {});
-  const [microplanConfig, setMicroplanConfig] = useState(MicroplanConfig(params, null, isSubmitting));
+  const [microplanConfig, setMicroplanConfig] = useState(MicroplanConfig(params, null, isSubmitting,null,hierarchyData));
 
   const { mutate:createCampaign } = Digit.Hooks.microplanv1.useCreateCampaign();
   const { mutate: updateCampaign } = Digit.Hooks.microplanv1.useUpdateCampaign();
@@ -59,7 +59,7 @@ const SetupMicroplan = () => {
   }, [microplanConfig, currentKey]);
 
   useEffect(() => {
-    setMicroplanConfig(MicroplanConfig(params, null, isSubmitting));
+    setMicroplanConfig(MicroplanConfig(params, null, isSubmitting,null,hierarchyData));
   }, [totalFormData, isSubmitting]);
 
 
