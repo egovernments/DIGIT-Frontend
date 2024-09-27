@@ -18,8 +18,10 @@ import { InfoCard, Modal, Toast } from "@egovernments/digit-ui-components";
 const MicroplanDetails = ({onSelect,props:customProps,...props}) => {
   const { t } = useTranslation();
   const { state, dispatch } = useMyContext();
-  const [microplan, setMicroplan] = useState(customProps?.sessionData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName);
+  const [microplan, setMicroplan] = useState(customProps?.sessionData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName?customProps?.sessionData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName:Digit.Utils.microplanv1.generateCampaignString(customProps.sessionData,t));
   const [executionCount, setExecutionCount] = useState(0);
+  const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
+  const [isFreezed,setIsFreezed] = useState(campaignId && microplanId ? true : false);
   const campaignData = customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails
   const campaignCard = [
     {
@@ -111,7 +113,7 @@ const MicroplanDetails = ({onSelect,props:customProps,...props}) => {
               value={microplan}
               onChange={onChangeMicroplanName}
               placeholder={t("MICROPLAN_NAME_INPUT_PLACEHOLDER")}
-              disable={false}
+              disable={isFreezed}
             />
           </div>
         </LabelFieldPair>

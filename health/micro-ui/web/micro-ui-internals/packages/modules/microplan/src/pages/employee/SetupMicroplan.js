@@ -1,10 +1,9 @@
-//http://localhost:3000/microplan-ui/employee/microplan/setup-microplan?key=2&summary=false&microplanId=cc3751e8-da9a-4743-a239-ada7facacd76&campaignId=afbffd11-57bc-4008-ad40-d26a30432f72
+//http://localhost:3000/microplan-ui/employee/microplan/setup-microplan?key=1&summary=false&microplanId=cc3751e8-da9a-4743-a239-ada7facacd76&campaignId=afbffd11-57bc-4008-ad40-d26a30432f72
 import {
   Loader,
   FormComposerV2,
   Header,
   MultiUploadWrapper,
-  Button,
   Close,
   LogoutIcon,
   Menu,
@@ -15,7 +14,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import { MicroplanConfig } from "../../configs/SetupMicroplanConfig";
-import { Stepper, Toast } from "@egovernments/digit-ui-components";
+import { Stepper, Toast, PopUp, CardText, InfoCard,Button } from "@egovernments/digit-ui-components";
 import _ from "lodash";
 import { useMyContext } from "../../utils/context";
 
@@ -28,6 +27,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const [totalFormData, setTotalFormData] = useState({});
   const [active, setActive] = useState(0);
   const [showToast, setShowToast] = useState(false);
+  const [showPopUp, setShowPopUp] = useState(false);
   const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
   const [shouldUpdate, setShouldUpdate] = useState(false);
   const [currentKey, setCurrentKey] = useState(() => {
@@ -39,33 +39,40 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const [microplanConfig, setMicroplanConfig] = useState(MicroplanConfig(params, null, isSubmitting, null, hierarchyData));
 
   //fetch existing campaign object
-  const { isLoading: isLoadingCampaignObject, data: campaignObject, error: errorCampaign, refetch: refetchCampaign } = Digit.Hooks.microplanv1.useSearchCampaign({
-    CampaignDetails:{
-      tenantId,
-      ids: [campaignId],
+  const {
+    isLoading: isLoadingCampaignObject,
+    data: campaignObject,
+    error: errorCampaign,
+    refetch: refetchCampaign,
+  } = Digit.Hooks.microplanv1.useSearchCampaign(
+    {
+      CampaignDetails: {
+        tenantId,
+        ids: [campaignId],
+      },
+    },
+    {
+      enabled: campaignId ? true : false,
+      queryKey: currentKey,
     }
-  },
-  {
-     enabled: campaignId ? true : false,
-     queryKey:currentKey
-  }
-);
+  );
 
   //fetching existing plan object
-  const { isLoading: isLoadingPlanObject, data: planObject, error: errorPlan, refetch: refetchPlan } = Digit.Hooks.microplanv1.useSearchPlanConfig({
-    PlanConfigurationSearchCriteria:{
-      tenantId,
-      id: microplanId,
+  const { isLoading: isLoadingPlanObject, data: planObject, error: errorPlan, refetch: refetchPlan } = Digit.Hooks.microplanv1.useSearchPlanConfig(
+    {
+      PlanConfigurationSearchCriteria: {
+        tenantId,
+        id: microplanId,
+      },
+    },
+    {
+      enabled: microplanId ? true : false,
+      queryKey: currentKey,
     }
-  },
-  {
-     enabled: microplanId ? true : false,
-     queryKey:currentKey
-  }
-);
+  );
 
   //Generic mutation to handle creation and updation of resources(plan/project)
-  const { mutate:updateResources, ...rest } = Digit.Hooks.microplanv1.useCreateUpdatePlanProject();
+  const { mutate: updateResources, ...rest } = Digit.Hooks.microplanv1.useCreateUpdatePlanProject();
   const filterMicroplanConfig = (microplanConfig, currentKey) => {
     return microplanConfig
       .map((config) => {
@@ -107,13 +114,13 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const handleUpdates = (propsForMutate) => {
     updateResources(propsForMutate, {
       onSuccess: (data) => {
-        debugger;
+        
       },
       onError: (error, variables) => {
-        debugger;
+        
       },
     });
-  }
+  };
 
   const onSubmit = (formData) => {
     // setIsSubmittting to true -> to run inline validations within the components
@@ -154,10 +161,15 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
       setCurrentStep,
       setShowToast,
       campaignObject,
-      planObject
+      planObject,
     };
 
-    handleUpdates(propsForMutate)
+    if (currentConfBody.showPopupOnSubmission && (!microplanId && !campaignId)) {
+      setShowPopUp(true);
+      //handle updates is called in popup's confirmation button
+      return;
+    }
+    handleUpdates(propsForMutate);
 
     //for now on every next click updating this later we'll remove
     // setCurrentStep((prev) => prev + 1);
@@ -179,8 +191,8 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     }
   };
 
-  if(isLoadingCampaignObject || isLoadingPlanObject){
-    return <Loader />
+  if (isLoadingCampaignObject || isLoadingPlanObject) {
+    return <Loader />;
   }
 
   return (
@@ -233,6 +245,95 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
           }}
         />
       )}
+
+      {/* Popup for alert but onClick of footerChildren not working */}
+      {showPopUp && (
+        <PopUp
+          alertHeading={t(`${filteredConfig?.[0]?.form?.[0]?.body?.[0]?.showPopupOnSubmission?.alertHeader}`)}
+          equalWidthButtons={true}
+          alertMessage={t(" ")}
+          footerChildren={[
+            <Button
+              className={"campaign-type-alert-button"}
+              type={"button"}
+              size={"large"}
+              variation={"secondary"}
+              label={t("SAVE_PROCEED")}
+              onClick={() => {
+                setShowPopUp(false);
+                //passing props for mutate
+                handleUpdates(
+                  {
+                    totalFormData: { ...totalFormData },
+                    state,
+                    config: filteredConfig?.[0]?.form?.[0],
+                    setCurrentKey,
+                    setCurrentStep,
+                    setShowToast,
+                    campaignObject,
+                    planObject,
+                  }
+                )
+              }}
+            />,
+            <Button
+              className={"campaign-type-alert-button"}
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("CANCEL")}
+              onClick={() => {
+                setShowPopUp(false);
+              }}
+            />,
+          ]}
+          maxFooterButtonsAllowed={5}
+          onClose={() => setShowPopUp(false)}
+          onOverlayClick={() => setShowPopUp(false)}
+          type="alert"
+        >
+          <div>{t(`${filteredConfig?.[0]?.form?.[0]?.body?.[0]?.showPopupOnSubmission?.alertMessage}`)}</div>
+        </PopUp>
+      )}
+      {/* Default popup */}
+      {/* {showPopUp && (<PopUp
+            className={"boundaries-pop-module"}
+            onClose={()=> setShowPopUp(false)}
+            type={"default"}
+            heading={t("ES_CAMPAIGN_UPDATE_TYPE_MODAL_HEADER")}
+            children={[
+              <div>
+                <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_TYPE_MODAL_TEXT") + " "}</CardText>
+              </div>,
+            ]}
+            onOverlayClick={() => {
+              setShowPopUp(false);
+            }}
+            footerChildren={[
+              <Button
+                className={"campaign-type-alert-button"}
+                type={"button"}
+                size={"large"}
+                variation={"secondary"}
+                label={t("Heloo")}
+                onClick={() => {
+                  setShowPopUp(false);
+                }}
+              />,
+              <Button
+                className={"campaign-type-alert-button"}
+                type={"button"}
+                size={"large"}
+                variation={"primary"}
+                label={t("ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT")}
+                onClick={() => {
+                  setShowPopUp(false);
+                  // setCanUpdate(false);
+                }}
+              />,
+            ]}
+            sortFooterChildren={true}
+          ></PopUp>)} */}
     </React.Fragment>
   );
 };

@@ -111,8 +111,35 @@ const formValidator = (formData, key, state) => {
   }
 };
 
+function getCurrentMonth() {
+  const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+  ];
+  
+  const currentMonthIndex = new Date().getMonth(); // Returns month index (0 for January, 11 for December)
+  return monthNames[currentMonthIndex];
+}
+
+function generateCampaignString(sessionData,t) {
+  
+  // Extract details from sessionData
+  const diseaseCode = sessionData.CAMPAIGN_DETAILS.campaignDetails.disease.code;
+  const campaignTypeCode = sessionData.CAMPAIGN_DETAILS.campaignDetails.campaignType.i18nKey;
+  const resourceDistributionStrategy = sessionData.CAMPAIGN_DETAILS.campaignDetails.distributionStrat.resourceDistributionStrategyCode;
+  
+  // Get current year and take the last two digits
+  const currentYear = new Date().getFullYear();
+  const yearLastTwoDigits = currentYear.toString().slice(-2);
+  const currentMonth = getCurrentMonth()
+  // Construct the final string
+  const result = `${t(diseaseCode)}-${t(campaignTypeCode)}-${t(resourceDistributionStrategy)}-${currentMonth} ${yearLastTwoDigits}`;
+  return result;
+}
+
 export default {
   destroySessionHelper,
   createStatusMap,
   formValidator,
+  generateCampaignString
 };

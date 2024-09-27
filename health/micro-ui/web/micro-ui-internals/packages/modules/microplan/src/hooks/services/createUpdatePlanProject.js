@@ -15,7 +15,7 @@ const createUpdatePlanProject = async (req) => {
     //now basically we need to decide from which screen this hook was triggered and take action accordingly
     
     const triggeredFrom = config.name;
-    debugger
+  
     switch (triggeredFrom) {
       case "CAMPAIGN_DETAILS":
         setCurrentKey(prev=>prev+1);
@@ -25,6 +25,12 @@ const createUpdatePlanProject = async (req) => {
         };
       
       case "MICROPLAN_DETAILS":
+        //both the screens will be freezed so don't need to do anything
+        if(microplanId && campaignId){
+          setCurrentKey(prev=>prev+1);
+          setCurrentStep(prev=>prev+1);
+          return
+        }
         // validate campaign and microplan name feasible or not -> search campaign + search plan
         // check whether camapaignObject / planobject are defined -> call update otherwise call create and update urlParams
         //here just check if microplanId and campaignId is already there then don't do anything (details will be freezed so only create will be required no update) 
@@ -35,7 +41,7 @@ const createUpdatePlanProject = async (req) => {
           triggeredFrom
         }
     }
-    debugger
+  
 
 
     //req will have{totalFormData,contextData,config,...additionalData}
@@ -76,7 +82,6 @@ const createUpdatePlanProject = async (req) => {
     //   }
     // }
   } catch (error) {
-      debugger
       console.error(error)
       if (error?.response?.data?.Errors) {
         throw new Error(error.response.data.Errors[0].message);

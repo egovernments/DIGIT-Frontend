@@ -17,6 +17,10 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               component: "CampaignDetails",
               withoutLabel: true,
               disable: false,
+              showPopupOnSubmission:{
+                alertMessage:"ALERT_MESSAGE_CAMPAIGN",
+                alertHeader:"ALERT_HEADER_CAMPAIGN"
+              },
               customProps: {
                 module: "HCM",
                 sessionData: totalFormData,
@@ -44,7 +48,10 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               withoutLabelFieldPair: true,
               withoutLabel: true,
               disable: false,
-              showPopupOnSubmission:true,
+              showPopupOnSubmission:{
+                alertMessage:"ALERT_MESSAGE_MICROPLAN",
+                alertHeader:"ALERT_HEADER_MICROPLAN"
+              },
               customProps: {
                 module: "HCM",
                 sessionData: totalFormData,
