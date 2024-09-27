@@ -4,7 +4,7 @@ import { Card, Header, LabelFieldPair, Button } from "@egovernments/digit-ui-rea
 import { Dropdown, FieldV1 } from "@egovernments/digit-ui-components";
 import { TextInput } from "@egovernments/digit-ui-components";
 
-const ThreeInputComp = ({ output, input1, input2, input3 }) => {
+const FormulaConfig = ({ output, input1, input2, input3 }) => {
 
   const { t } = useTranslation();
 
@@ -29,19 +29,19 @@ const ThreeInputComp = ({ output, input1, input2, input3 }) => {
 
             <TextInput
               type="text"
-              value={"Population of boundary"}
+              value={input1}
               nonEditable={true}
               style={{ width: "17rem" }}
             ></TextInput>
             <TextInput
               type="text"
-              value={"Divided by "}
+              value={input2}
               nonEditable={true}
               style={{ width: "rem" }}
             ></TextInput>
             <TextInput
               type="text"
-              value={"Average people H/H "}
+              value={input3}
               nonEditable={true}
               style={{ width: "14.1rem" }}
             ></TextInput>
@@ -62,4 +62,4 @@ const ThreeInputComp = ({ output, input1, input2, input3 }) => {
   );
 };
 
-export default ThreeInputComp;
+export default FormulaConfig;

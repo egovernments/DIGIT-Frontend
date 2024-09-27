@@ -74,6 +74,8 @@ const App = ({ path, stateCode, userType, tenants }) => {
          <PrivateRoute path={`${path}/microplan-search`} component={() => <MicroplanSearch></MicroplanSearch>} /> 
          <PrivateRoute path={`${path}/summary-screen`} component={() => <SummaryScreen></SummaryScreen>} /> 
 
+         
+
       </AppContainer>
     </Switch>
   );

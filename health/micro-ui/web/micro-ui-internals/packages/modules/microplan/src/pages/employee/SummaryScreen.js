@@ -8,13 +8,13 @@ import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 
 
 
-const SummaryScreen = () => {
+const SummaryScreen = ({props:customProps}) => {
     const { t } = useTranslation();
     const history = useHistory();
-    const { name } = useParams();
-    const tenantId = Digit.ULBService.getCurrentTenantId();
 
-    const [totalFormData, setTotalFormData] = Digit.Hooks.useSessionStorage("MICROPLAN_DATA", {});
+    // const [totalFormData, setTotalFormData] = Digit.Hooks.useSessionStorage("MICROPLAN_DATA", {});
+    const campaignDetails = customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails
+    
 
 
     const data = {
@@ -36,17 +36,22 @@ const SummaryScreen = () => {
                                 values: [
                                     {
                                         key: t("CAMPAIGN_TYPE"),
-                                        value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code || "NA",
+                                        // value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code || "NA",
+                                           value:campaignDetails?.campaignType?.code || "NA",
     
                                     },
                                     {
                                         key: t("CMAPAIGN_DISEASE"),
-                                        value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.disease?.code || "NA",
+                                        // value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.disease?.code || "NA",
+                                        value:campaignDetails?.disease?.code || "NA",
+
                                     },
                                     {
                                         key: t("RESOURCE_DISTRIBUTION_STRATEGY"),
                                         // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
-                                        value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode || "NA"
+                                        // value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode || "NA",
+                                        value:campaignDetails?.distributionStrat?.resourceDistributionStrategyCode || "NA",
+
                                     },
                                     
                                 ],
@@ -75,7 +80,9 @@ const SummaryScreen = () => {
                         values: [
                             {
                                 key: t("NAME_OF_MICROPLAN"),
-                                value: totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName || "NA"
+                                // value: totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName || "NA",
+                                value:campaignDetails?.microplanName || "NA",
+
 
                             },
                         ],
@@ -368,7 +375,7 @@ const SummaryScreen = () => {
                             {
                                 
                                 type: "COMPONENT",
-                                component: "HeaderPlusThreeInput",
+                                component: "FormulaSection",
 
                                 props: {
                                     
@@ -392,7 +399,7 @@ const SummaryScreen = () => {
                             {
                                 
                                 type: "COMPONENT",
-                                component: "HeaderPlusThreeInput",
+                                component: "FormulaSection",
 
                                 props: {
                                     
@@ -416,7 +423,7 @@ const SummaryScreen = () => {
                             {
                                 
                                 type: "COMPONENT",
-                                component: "HeaderPlusThreeInput",
+                                component: "FormulaSection",
 
                                 props: {
                                     

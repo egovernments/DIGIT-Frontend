@@ -1,9 +1,9 @@
 import React from 'react';
-import ThreeInputComp from './ThreeInputComp';
+import FormulaView from './FormulaView';
 import HeaderComp from './HeaderComp';
 import { useTranslation } from 'react-i18next';
 
-const HeaderPlusThreeInput = ({ title, threeInputArr }) => {
+const FormulaSection = ({ title, threeInputArr }) => {
   const { t } = useTranslation();
   
   
@@ -16,7 +16,7 @@ const HeaderPlusThreeInput = ({ title, threeInputArr }) => {
           
 
           return (
-            <ThreeInputComp 
+            <FormulaView
               output={arr[0]} 
               input1={arr[1]} 
               input2={arr[2]} 
@@ -30,4 +30,4 @@ const HeaderPlusThreeInput = ({ title, threeInputArr }) => {
   );
 };
 
-export default HeaderPlusThreeInput;
+export default FormulaSection;
