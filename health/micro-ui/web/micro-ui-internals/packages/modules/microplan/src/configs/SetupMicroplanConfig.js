@@ -2,6 +2,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
   return [
     {
       form:[
+        // TODO: Do no update this object key:1 
         {
           stepCount: "1",
           key: "1",
@@ -16,6 +17,10 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               component: "CampaignDetails",
               withoutLabel: true,
               disable: false,
+              showPopupOnSubmission:{
+                alertMessage:"ALERT_MESSAGE_CAMPAIGN",
+                alertHeader:"ALERT_HEADER_CAMPAIGN"
+              },
               customProps: {
                 module: "HCM",
                 sessionData: totalFormData,
@@ -27,6 +32,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
             },
           ],
         },
+        // TODO: Do no update this object key:2
         {
           stepCount: "2",
           key: "2",
@@ -42,17 +48,22 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               withoutLabelFieldPair: true,
               withoutLabel: true,
               disable: false,
+              showPopupOnSubmission:{
+                alertMessage:"ALERT_MESSAGE_MICROPLAN",
+                alertHeader:"ALERT_HEADER_MICROPLAN"
+              },
               customProps: {
                 module: "HCM",
                 sessionData: totalFormData,
                 isSubmitting: isSubmitting,
               },
               populators: {
-                name: "projectType",
+                name: "microplanDetails",
               },
             },
           ],
         },
+        // TODO: Do no update this object key:3
         {
           stepCount: "3",
           key: "3",
