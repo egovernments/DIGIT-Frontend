@@ -12,7 +12,7 @@ export const useGenerateIdCampaign = ({ type, hierarchyType, filters, campaignId
       forceUpdate: true,
       hierarchyType: hierarchyType,
       campaignId: campaignId,
-      source:source
+      source: source
     },
     body: type === "boundary" ? (updatedFilters === undefined ? { Filters: null } : { Filters: { boundaries: updatedFilters } }) : {},
     config: {
