@@ -101,6 +101,23 @@
   height: 500px !important;
   width: 408px !important;
 
+  .digit-card-component {
+    .bannerHeader p{
+      font-size: 2rem;
+    }
+  }
+
+  .digit-card-component{
+    .bannerHeader {
+      margin-top: -1.5rem;
+      margin-bottom: -0.5rem !important;
+    .bannerLogo {
+      width: 10rem;
+      height: 2rem;
+    }
+  }
+}
+
   .employeeCard {
     height: 500px !important;
     width: 408px !important;
@@ -112,12 +129,14 @@
     .submit-bar {
       margin-top: 3rem;
       width: 100%;
+      background-color: #c84c0e;
     }
     .bannerHeader {
       .bannerLogo {
         margin-top: 1rem;
         width: 10rem;
         height: 2rem;
+        margin-bottom: 0.5rem;
       }
     }
   }
@@ -148,7 +167,7 @@
 
 .sandbox-custom-otp-header {
   font-family: "Roboto";
-  font-weight: 400;
+  font-weight: 400 !important;
   font-size: 1rem;
   text-align: center;
 }
@@ -216,14 +235,17 @@
 .digit-card-component.signupCardClassName.sandbox-onboarding-wrapper {
   .bannerHeader {
     .bannerLogo {
+      margin-top:0.5rem;
       height: 2rem;
       width: 10rem;
+      margin-bottom: -0.5rem;
     }
   }
 }
 .digit-card-component.card-sandbox {
   .bannerHeader {
     .bannerLogo {
+      margin-top: 0.5rem;
       width: 10rem;
       height: 2rem;
     }
