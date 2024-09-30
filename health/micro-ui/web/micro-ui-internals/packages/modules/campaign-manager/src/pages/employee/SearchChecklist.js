@@ -52,7 +52,7 @@ const SearchChecklist = () => {
   }
 
   const userinfo = Digit.UserService.getUser();
-  const codesopt = userinfo?.info?.roles?.map(item => ({ code: item.code }));
+  const codesopt = userinfo?.info?.roles?.map(item => ({ code: t(`ACCESSCONTROL_ROLES_ROLES_${item.code}`)}));
   const [listsopt, setListsOpt] = useState([]);
   const reqCriteriaResource = {
     url: `/mdms-v2/v1/_search`,
@@ -79,9 +79,10 @@ const SearchChecklist = () => {
     },
   };
   const { isLoading, data: HCM, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
+  
   useEffect(()=>{
-    setListsOpt(HCM?.HCM?.CHECKLIST_TYPES?.map(item => ({list:item.code})));
-  }, HCM);
+    setListsOpt(HCM?.HCM?.CHECKLIST_TYPES?.map(item => ({list:t(`HCM_CHECKLIST_TYPE_${item.code}`)})));
+  }, [HCM]);
   
   const [code, setCode] = useState(null);
   const [list, setList] = useState(null)
@@ -95,22 +96,6 @@ const SearchChecklist = () => {
   checklistSearchConfig[0].sections.search.uiConfig.fields[0].populators.options=codesopt;
   checklistSearchConfig[0].sections.search.uiConfig.fields[1].populators.options=listsopt;
 
-  function addLabelToOptions(data) {
-    data.uiConfig.fields.forEach(field => {
-      if (field.type === 'dropdown') {          
-        if (Array.isArray(field.populators.options)) {
-            field.populators.options.forEach(option => {                  
-                if (option.list) {
-                    option.label = option.list;
-                } else if (option.code) {
-                    option.label = option.code;
-                }
-            });
-        }
-    }
-    });
-}
-addLabelToOptions(checklistSearchConfig[0].sections.search);
   if(isFetching) 
     return (<div></div>)
   else
@@ -138,7 +123,7 @@ addLabelToOptions(checklistSearchConfig[0].sections.search);
               // </div>, 
               ]}
               style={{
-                height:"20rem"
+                height:"30rem"
               }}
               onOverlayClick={() => {
                 setShowPopUp(false);

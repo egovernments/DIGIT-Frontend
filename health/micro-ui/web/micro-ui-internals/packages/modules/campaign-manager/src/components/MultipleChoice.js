@@ -68,15 +68,22 @@ const MultipleChoice = ({
             onChange={(event) => addComment({value: event.target.value, target: "value", id: item.key, parentId: field.id})}
             placeholder={""}
           />}
-          {item.optionDependency && <CreateQuestion
-            className={subQclassName}
-            level={subQlevel}
-            parent={subQparent}
-            // parentId={subQparentId}
-            parentId={item.id}
-            initialQuestionData={subQinitialQuestionData} 
-            optionId={item.id} />
-          }
+          {item.optionDependency && (
+            <>
+              {/* JavaScript logic goes here */}
+
+              
+              {/* JSX for rendering the component */}
+              <CreateQuestion
+                className={subQclassName}
+                level={subQlevel}
+                parent={item}
+                parentId={item.id}
+                initialQuestionData={subQinitialQuestionData}
+                optionId={item.id}
+              />
+            </>
+          )}
           {
             <hr style={{ width: "100%", borderTop: "1px solid #ccc" }} />
           }
@@ -85,7 +92,7 @@ const MultipleChoice = ({
       <div>
       <Button
         className="custom-class"
-        icon="MyLocation"
+        icon="AddIcon"
         iconFill=""
         label={t("ADD_OPTIONS")}
         onClick={() => addOption()}
@@ -144,7 +151,7 @@ export const RadioButtonOption = ({
             disabled={isPartiallyEnabled ? !isPartiallyEnabled : formDisabled}
           />
         </div>
-        <div style={{display:"flex", gap:"1rem"}}>
+        <div style={{display:"flex", gap:"1rem", alignItems:"center"}}>
           {
             <>
               <CheckBox
@@ -178,10 +185,21 @@ export const RadioButtonOption = ({
           </> 
           }
           {!disableDelete && (
-            <div className="pointer" style={{}} onClick={() => removeOption(index)}>
-              <DustbinIcon />
-              {t(`CAMPAIGN_DELETE_ROW_TEXT`)}
-            </div>
+            // <div className="pointer" style={{}} onClick={() => removeOption(index)}>
+            //   <DustbinIcon />
+            //   {t(`CAMPAIGN_DELETE_ROW_TEXT`)}
+            // </div>
+            <Button
+              // className="custom-class"
+              icon="Delete"
+              iconFill=""
+              label={t(`DELETE`)}
+              onClick={()=>removeOption(index)}
+              size=""
+              style={{}}
+              title=""
+              variation="link"
+            />
           )}
         </div>
       </div>

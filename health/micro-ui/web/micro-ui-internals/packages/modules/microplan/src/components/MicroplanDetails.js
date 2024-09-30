@@ -13,14 +13,20 @@ import {
 } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { useMyContext } from "../utils/context";
-import { InfoCard, Modal, Toast } from "@egovernments/digit-ui-components";
+import { InfoCard, Modal, Toast, FieldV1 } from "@egovernments/digit-ui-components";
 
-const MicroplanDetails = ({onSelect,props:customProps,...props}) => {
+const MicroplanDetails = ({ onSelect, props: customProps, ...props }) => {
   const { t } = useTranslation();
   const { state, dispatch } = useMyContext();
-  const [microplan, setMicroplan] = useState(customProps?.sessionData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName);
+  const [microplan, setMicroplan] = useState(
+    customProps?.sessionData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName
+      ? customProps?.sessionData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName
+      : Digit.Utils.microplanv1.generateCampaignString(customProps.sessionData, t)
+  );
   const [executionCount, setExecutionCount] = useState(0);
-  const campaignData = customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails
+  const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
+  const [isFreezed, setIsFreezed] = useState(campaignId && microplanId ? true : false);
+  const campaignData = customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails;
   const campaignCard = [
     {
       label: t("HCM_CAMPAIGN_DISEASE"),
@@ -28,36 +34,36 @@ const MicroplanDetails = ({onSelect,props:customProps,...props}) => {
     },
     {
       label: t(`CAMPAIGN_TYPE`),
-      value: campaignData?.campaignType ? t(Digit.Utils.locale.getTransformedLocale(`CAMPAIGN_TYPE_${campaignData?.campaignType?.code}`)) : t("ES_COMMON_NA"),
+      value: campaignData?.campaignType
+        ? t(Digit.Utils.locale.getTransformedLocale(`CAMPAIGN_TYPE_${campaignData?.campaignType?.code}`))
+        : t("ES_COMMON_NA"),
     },
     {
       label: t(`HCM_CAMPAIGN_RESOURCE_DIST_STRAT`),
       value: campaignData?.distributionStrat
-        ? t(Digit.Utils.locale.getTransformedLocale(`${campaignData?.distributionStrat?.resourceDistributionStrategyCode
-        }`))
+        ? t(Digit.Utils.locale.getTransformedLocale(`${campaignData?.distributionStrat?.resourceDistributionStrategyCode}`))
         : t("ES_COMMON_NA"),
     },
   ];
 
-  const onChangeMicroplanName = (e) =>{
+  const onChangeMicroplanName = (e) => {
     setMicroplan(e.target.value);
-  }
+  };
 
   useEffect(() => {
-    onSelect(customProps.name,{
-      microplanName: microplan
-    })
+    onSelect(customProps.name, {
+      microplanName: microplan,
+    });
   }, [microplan]);
 
   useEffect(() => {
     if (executionCount < 5) {
       onSelect(customProps.name, {
-        microplanName: microplan
+        microplanName: microplan,
       });
       setExecutionCount((prevCount) => prevCount + 1);
     }
   });
-  
 
   return (
     <>
@@ -69,7 +75,6 @@ const MicroplanDetails = ({onSelect,props:customProps,...props}) => {
         className="microplan-campaign-detials"
       >
         <CardSubHeader style={{ marginBottom: "0.5rem" }}>{t("CAMPAIGN_DETAILS")}</CardSubHeader>
-
 
         <StatusTable style={{ paddingLeft: "0" }}>
           {campaignCard?.length > 0 &&
@@ -102,7 +107,7 @@ const MicroplanDetails = ({onSelect,props:customProps,...props}) => {
             {`${t("NAME_OF_MP")}  `} <p style={{ color: "red", margin: 0, paddingLeft: "0.15rem" }}> *</p>
           </CardLabel>
           <div style={{ width: "100%", maxWidth: "960px", height: "fit-content" }}>
-            <TextInput
+            {/* <TextInput
               t={t}
               style={{ width: "100%", margin: 0 }}
               type={"text"}
@@ -111,7 +116,17 @@ const MicroplanDetails = ({onSelect,props:customProps,...props}) => {
               value={microplan}
               onChange={onChangeMicroplanName}
               placeholder={t("MICROPLAN_NAME_INPUT_PLACEHOLDER")}
-              disable={false}
+              disable={isFreezed}
+            /> */}
+            <FieldV1
+              type="text"
+              // error={error?.message ? t(error?.message) : ""}
+              // style={{ width: "40rem", marginBottom: "0" }}
+              populators={{ name: "microplanName" }}
+              placeholder={t("MICROPLAN_NAME_INPUT_PLACEHOLDER")}
+              value={microplan}
+              onChange={onChangeMicroplanName}
+              disabled={isFreezed}
             />
           </div>
         </LabelFieldPair>
@@ -136,7 +151,7 @@ const MicroplanDetails = ({onSelect,props:customProps,...props}) => {
         ]}
       />
     </>
-  )
-}
+  );
+};
 
-export default MicroplanDetails
+export default MicroplanDetails;

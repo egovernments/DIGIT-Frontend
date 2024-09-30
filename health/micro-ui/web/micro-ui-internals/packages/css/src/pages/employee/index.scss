@@ -847,3 +847,109 @@ tbody {
     padding-bottom: 1rem;
 }
 
+.digit-employee-card .digit-label-field-pair h2
+{
+  width: auto;
+  font-size: larger; 
+}
+
+/* Mobile screen simulation */
+.mobile-screen {
+  width: 25rem; /* Mobile screen width */
+  height: 40rem; /* Mobile screen height */
+  border: 0.000rem solid #ccc;
+  border-radius: 1rem;
+  overflow: hidden;
+  background-color: white;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+}
+
+/* Top blue bar */
+.mobile-top-bar {
+  background-color: theme(digitv2.lightTheme.header-sidenav);
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  color: theme(digitv2.lightTheme.paper);
+  font-size: 1.5rem;
+  font-weight: theme(digitv2.fontWeight.bold);
+  width: 100%; /* Full width */
+  box-sizing: border-box;
+}
+
+/* Main container content */
+.mobile-container {
+  padding: 1.5rem; /* Add padding around the main content */
+  height: calc(100% - 50px); /* Adjust height to fill remaining space */
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+}
+
+/* Questions section */
+.mobile-questions {
+  flex: 1; /* Allow this section to grow and fill available space */
+  padding: 0.2rem; /* Add padding to questions */
+  overflow-y: auto; /* Enable vertical scrolling */
+  border: 1px solid #ccc; /* Optional: add a border */
+  border-radius: 1rem; /* Optional: rounded corners */
+}
+
+/* Header styling */
+.mobile-header h2 {
+  color: #555;
+  font-size: 0.875rem; /* 14px */
+  margin-bottom: 0.3125rem; /* 5px */
+}
+
+.mobile-header h1 {
+  font-size: 1.25rem; /* 20px */
+  color: #222;
+}
+
+.mobile-checklist-highlight {
+  font-weight: theme(digitv2.fontWeight.bold);
+  padding: 0 0.3125rem; /* 0 to 5px */
+}
+
+.mobile-description {
+  font-size: 0.75rem; /* 12px */
+  margin-top: 0.625rem; /* 10px */
+  margin-bottom: 1.25rem; /* 20px */
+  color: #777;
+}
+
+/* Question and answer styling */
+.mobile-questions .mobile-question-item {
+  border-bottom: 0.0625rem solid #ccc; /* 1px */
+  padding: 0.625rem 0; /* 10px */
+}
+
+.mobile-question {
+  font-weight: theme(digitv2.fontWeight.bold);
+  font-size: 0.875rem; /* 14px */
+}
+
+.mobile-answer {
+  font-size: 0.875rem; /* 14px */
+  margin-left: 0.625rem; /* 10px */
+}
+
+.custom-pop-up {
+  width: fit-content !important;
+  .digit-popup-footer {
+    .digit-popup-footer-buttons {
+      width: 100% !important;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      .digit-button-secondary {
+        width: 100%;
+      }
+      .digit-button-primary {
+        width: 100%;
+      }
+    }
+  }
+}

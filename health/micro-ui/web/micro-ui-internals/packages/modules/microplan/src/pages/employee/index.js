@@ -43,7 +43,7 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
       { name: "MicroplanNamingConvention" },
       { name: "MicroplanNamingRegx" },
       { name: "ResourceDistributionStrategy"},
-      { name:  "HypothesisAssumptions"}  
+      { name:  "HypothesisAssumptions"},  
 
     ],
     {
