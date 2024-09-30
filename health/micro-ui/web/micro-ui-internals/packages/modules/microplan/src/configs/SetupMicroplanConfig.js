@@ -80,6 +80,35 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
             },
           ],
         },
+        {
+          stepCount: "4",
+          key: "4",
+          name: "UPLOADDATA",
+          body: [
+            {
+              isMandatory: true,
+              key: "uploadData",
+              type: "component",
+              skipAPICall: false,
+              component: "UploadDataCustom",
+              withoutLabel: true,
+              disable: false,
+              withoutLabelFieldPair: true,
+              customProps: {
+                module: "HCM",
+                type:"facilityWithBoundary",
+                types:["boundary","facilityWithBoundary"],
+                sessionData: totalFormData,
+                isSubmitting: isSubmitting,
+                
+              },
+              populators: {
+                name: "hypothesis",
+                required: true,
+              },
+            },
+          ],
+        },
       {
         stepCount: "6",
         key: "6",

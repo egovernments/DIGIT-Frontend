@@ -9,6 +9,7 @@ import CampaignDetails from "./components/CampaignDetails";
 import { ProviderContext } from "./utils/context";
 import BoundarySelection from "./components/BoundarySelection";
 import HypothesisWrapper from "./components/HypothesisWrapper";
+import UploadDataCustom from "./components/UploadDataCustom";
 
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -46,6 +47,7 @@ const componentsToRegister = {
   MicroplanDetails,
   BoundarySelection,
   HypothesisWrapper,
+  UploadDataCustom
 
 };
 

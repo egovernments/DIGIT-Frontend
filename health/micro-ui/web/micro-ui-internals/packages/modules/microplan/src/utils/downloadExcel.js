@@ -20,7 +20,7 @@ export const downloadExcelWithCustomName = ({ fileStoreId = null, customName = n
     link.click();
     link.remove();
     setTimeout(() => URL.revokeObjectURL(link.href), 7000);
-  };
+  }; 
 
   if (fileStoreId) {
     axios.request({

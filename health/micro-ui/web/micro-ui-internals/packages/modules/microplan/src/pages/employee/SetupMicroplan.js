@@ -62,6 +62,21 @@ const SetupMicroplan = ({hierarchyType ,hierarchyData}) => {
     setMicroplanConfig(MicroplanConfig(params, null, isSubmitting,null,hierarchyData));
   }, [totalFormData, isSubmitting]);
 
+  useEffect(() => {
+    const handleCheckingEvent = () => {
+      console.log("Checking event triggered");
+      const newKey = parseInt(new URLSearchParams(window.location.search).get("key")) || 1;
+      setCurrentKey(newKey);
+    };
+  
+    window.addEventListener("checking", handleCheckingEvent);
+  
+    return () => {
+      window.removeEventListener("checking", handleCheckingEvent);
+    };
+  }, []);
+  
+
 
   // setting the current step when the key is changed on the basis of the config
   useEffect(() => {
