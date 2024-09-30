@@ -13,6 +13,7 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const tenantId = Digit.ULBService.getStateId();
+  let sortedConfigEmployeesSidebar= null;
 
   const transformURL = (url = "") => {
     if (url == "/") {
@@ -109,7 +110,12 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
       return sortedModules
   };
 
-  const sortedConfigEmployeesSidebar= sortCardAndLink(configEmployeeSideBar);
+  if(isMultiRootTenant){
+    sortedConfigEmployeesSidebar= sortCardAndLink(configEmployeeSideBar);
+  }
+  else{
+    sortedConfigEmployeesSidebar = configEmployeeSideBar;
+  }
 
   const children = Object.keys(sortedConfigEmployeesSidebar)?.map((current, index) => {
     const moduleData = sortedConfigEmployeesSidebar?.[current];

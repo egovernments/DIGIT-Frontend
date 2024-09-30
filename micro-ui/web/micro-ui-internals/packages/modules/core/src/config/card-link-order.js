@@ -1,8 +1,8 @@
 export const orderConfig={
     "order": {
       "cardorder": {
-        "HRMS": 2,
-        "PGR": 1
+        "HRMS": 1,
+        "PGR": 2
       },
       "linkorder": {
         "HRMS": {
