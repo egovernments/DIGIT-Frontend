@@ -9,7 +9,6 @@ const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui", "health-ui", 
 
 export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
   const { isLoading, data } = Digit.Hooks.useAccessControl();
-  console.log("data recieved from actions", data);
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
   const { t } = useTranslation();
   const history = useHistory();
@@ -107,9 +106,7 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
   
         return acc;
       }, {});
-  
-    console.log("Sorted modules with links:", sortedModules);
-    return sortedModules
+      return sortedModules
   };
 
   const sortedConfigEmployeesSidebar= sortCardAndLink(configEmployeeSideBar);
