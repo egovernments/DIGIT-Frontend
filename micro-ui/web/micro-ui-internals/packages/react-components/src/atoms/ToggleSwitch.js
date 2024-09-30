@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 const ToggleSwitch = ({ value, onChange, label, name, ref, style,disabled, ...props }) => {
   return (
-    <div style={style}>
+    <div style={props?.readonly || disabled ? {pointerEvents: "none" ,...style} : {...style}}>
       <input
         checked={value}
         onChange={onChange}

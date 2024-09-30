@@ -115,7 +115,7 @@ const Otp = ({ isLogin = false }) => {
   return (
     <Background>
       <div className="employeeBackbuttonAlign">
-        <BackLink />
+      <BackLink onClick={() => window.history.back()}/>
       </div>
       <FormComposerV2
         onSubmit={onSubmit}

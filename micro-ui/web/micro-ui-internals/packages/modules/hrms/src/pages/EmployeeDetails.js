@@ -155,6 +155,8 @@ const Details = () => {
                       inset: "0px",
                       width: "auto",
                       padding: ".2rem",
+                      paddingTop: "1rem",
+                      paddingLeft: "1rem",
                       marginBottom: "2rem",
                     }}
                   >
@@ -185,6 +187,8 @@ const Details = () => {
                   inset: "0px",
                   width: "auto",
                   padding: ".2rem",
+                  paddingLeft: "1rem",
+                  paddingTop: "1rem",
                   marginBottom: "2rem",
                 }}
               >

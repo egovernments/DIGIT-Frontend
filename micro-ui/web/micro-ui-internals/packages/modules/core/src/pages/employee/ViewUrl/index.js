@@ -28,7 +28,7 @@ const ViewUrl = () => {
   return (
     <Background>
       <div className="employeeBackbuttonAlign">
-        <BackLink />
+      <BackLink onClick={() => window.history.back()}/>
       </div>
       <Card className="card-sandbox">
         <Header showTenant={false} />
