@@ -330,14 +330,16 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
   return (
     <React.Fragment>
       {initialQuestionData
-        ?.filter((i) => i.level === level)
+        ?.filter((i) => i.level === level && (i.parentId ? (i.parentId === parentId) : true))
         ?.map((field, index) => {
           return (
             <Card type={"primary"} variant={"form"} className={`question-card-container ${className}`}>
               <LabelFieldPair className="question-label-field" style={{ display: "block" }}>
                 <div className="question-label" style={{ height: "1.5rem", display: "flex", justifyContent: "space-between", width: "100%" }}>
-                  <span>{`${t("QUESTION")} ${index + 1}`}</span>
+                  <span style={{fontWeight:"700"}}>{`${t("QUESTION")} ${index + 1}`}</span>
                   {/* <span className="mandatory-span">*</span> */}
+                  <div style={{ height: "1rem" }}>
+                  </div>
                   {initialQuestionData?.length > 1 && (
                     <>
                       <div className="separator"></div>

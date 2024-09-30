@@ -6,17 +6,16 @@ import BoundaryKpi from "./BoundaryKpi";
 import { useMyContext } from "../utils/context";
 
 const BoundarySelection = ({ onSelect, props: customProps, ...props }) => {
-  const {state:{boundaryHierarchy}} = useMyContext()
+  const {state:{boundaryHierarchy,hierarchyType,lowestHierarchy}} = useMyContext()
   const { t } = useTranslation();
-  const {state} = useMyContext();
   const tenantId = Digit.ULBService.getStateId();
   const BoundaryWrapper = Digit.ComponentRegistryService.getComponent("Wrapper");
-  const [selectedData, setSelectedData] = useState(customProps?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData || []);
+  const [selectedData, setSelectedData] = useState(customProps?.sessionData?.BOUNDARY?.boundarySelection?.selectedData || []);
   const [boundaryOptions, setBoundaryOptions] = useState(
-    props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData || {}
+    props?.props?.sessionData?.BOUNDARY?.boundarySelection?.boundaryData || {}
   );
   const [statusMap, setStatusMap] = useState({});
-
+  const [executionCount, setExecutionCount] = useState(0);
   const [updateBoundary, setUpdateBoundary] = useState(true);
   const handleBoundaryChange = (value) => {
     setBoundaryOptions(value?.boundaryOptions);
@@ -31,6 +30,30 @@ const BoundarySelection = ({ onSelect, props: customProps, ...props }) => {
   }, [selectedData,boundaryHierarchy])
   
 
+  useEffect(() => {
+    onSelect(customProps.name, { selectedData: selectedData, boundaryData: boundaryOptions });
+  }, [selectedData, boundaryOptions]);
+
+  useEffect(() => {
+    if (executionCount < 5) {
+      onSelect(customProps.name, { selectedData: selectedData, boundaryData: boundaryOptions });
+      setExecutionCount((prevCount) => prevCount + 1);
+    }
+  });
+
+  useEffect(() => {
+    setSelectedData(
+      customProps?.sessionData?.BOUNDARY?.boundarySelection?.selectedData
+        ? customProps?.sessionData?.BOUNDARY?.boundarySelection?.selectedData
+        : []
+    );
+    setBoundaryOptions(
+      customProps?.sessionData?.BOUNDARY?.boundarySelection?.boundaryData
+        ? customProps?.sessionData?.BOUNDARY?.boundarySelection?.boundaryData
+        : {}
+    );
+  }, [customProps?.sessionData?.BOUNDARY?.boundarySelection]);
+
   return (
     <>
       <BoundaryKpi data={statusMap} />
@@ -38,8 +61,8 @@ const BoundarySelection = ({ onSelect, props: customProps, ...props }) => {
         <Header>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</Header>
         <p className="description-type">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
         <BoundaryWrapper
-          hierarchyType={"MICROPLAN"}
-          lowest={"Village"}
+          hierarchyType={hierarchyType}
+          lowest={lowestHierarchy}
           selectedData={selectedData}
           boundaryOptions={boundaryOptions}
           updateBoundary={updateBoundary}

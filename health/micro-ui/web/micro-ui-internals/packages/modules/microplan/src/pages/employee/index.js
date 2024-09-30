@@ -5,6 +5,7 @@ import { Switch,useLocation } from "react-router-dom";
 import SetupMicroplan from "./SetupMicroplan";
 import { useMyContext } from "../../utils/context";
 import MicroplanSearch from "./MicroplanSearch";
+import SummaryScreen from "./SummaryScreen";
 
 const bredCrumbStyle={ maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
@@ -24,7 +25,7 @@ const ProjectBreadCrumb = ({ location }) => {
   return <BreadCrumb crumbs={crumbs} spanStyle={bredCrumbStyle} />;
 };
 
-const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hierarchyData  }) => {
+const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hierarchyData ,lowestHierarchy }) => {
   const { dispatch } = useMyContext();
   const location = useLocation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -42,7 +43,7 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
       { name: "MicroplanNamingConvention" },
       { name: "MicroplanNamingRegx" },
       { name: "ResourceDistributionStrategy"},
-      { name:  "HypothesisAssumptions"}  
+      { name:  "HypothesisAssumptions"},  
 
     ],
     {
@@ -126,7 +127,8 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
           type: "MASTER_DATA",
           state: {
             boundaryHierarchy:data?.BoundaryHierarchy?.[0]?.boundaryHierarchy,
-            hierarchyType: BOUNDARY_HIERARCHY_TYPE
+            hierarchyType: BOUNDARY_HIERARCHY_TYPE,
+            lowestHierarchy
           },
         });
         return data?.BoundaryHierarchy?.[0];
