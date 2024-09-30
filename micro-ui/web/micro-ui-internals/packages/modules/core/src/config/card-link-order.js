@@ -6,14 +6,14 @@ export const orderConfig={
       },
       "linkorder": {
         "HRMS": {
-          "Create Employee": 1,
-          "Search Employee": 2,
-          "Configure Masters": 3
+          "HRMS_Create_Employee": 1,
+          "HRMSInbox": 2,
+          "Configure_master": 3
         },
         "PGR": {
-          "New Complaint": 1,
-          "Inbox": 2,
-          "Configure Masters": 3
+          "Create_Complaints": 1,
+          "ComplaintsInbox": 2,
+          "Configure_master": 3
         }
       }
     }

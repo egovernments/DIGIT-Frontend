@@ -63,6 +63,7 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
         // link: queryParamIndex === -1 ? linkUrl : linkUrl.substring(0, queryParamIndex),
         queryParams: queryParamIndex === -1 ? null : linkUrl.substring(queryParamIndex),
         label: t(Digit.Utils.locale.getTransformedLocale(`${module}_LINK_${item.displayName}`)),
+        displayName: item.displayName
       });
       return acc;
     }, {});
@@ -84,9 +85,8 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
       })
       .reduce((acc, module) => {
         const sortedLinks = configEmployeeSideBar?.[module]?.links?.sort((linkA, linkB) => {
-          const labelA = linkA?.label;
-          const labelB = linkB?.label;
-  
+          const labelA = linkA?.displayName;
+          const labelB = linkB?.displayName;
           // Add safety checks for undefined labels
           if (!labelA || !labelB) {
             console.warn(`Link labels are missing: linkA.label=${labelA}, linkB.label=${labelB}`);
@@ -111,6 +111,8 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
   };
 
   if(isMultiRootTenant){
+    console.log("module data is",configEmployeeSideBar);
+
     sortedConfigEmployeesSidebar= sortCardAndLink(configEmployeeSideBar);
   }
   else{
