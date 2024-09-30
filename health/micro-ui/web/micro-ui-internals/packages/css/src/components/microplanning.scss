@@ -2520,6 +2520,7 @@ $border-color: rgba(214, 213, 212, 1);
   gap:10rem;
   margin: 1.7rem 0rem;  
   
+  
 }
 
 
@@ -2545,6 +2546,25 @@ $border-color: rgba(214, 213, 212, 1);
   justify-content: center;
   width:30rem;
 
+}
+/* CSS FOR Campaign Form*/
+.campaignForm-label-field{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; 
+    align-items: start !important;
+    
+    
+  
+}
+.campaignForm-label-field > div > span{
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.campaignForm-card{
+  background-color:#FAFAFA;
+  border: 1px solid #D6D5D4;
 }
 
 

@@ -1,9 +1,10 @@
-import React, { useState, useEffect,Fragment} from "react";
+import React, { useState, useEffect,Fragment,useContext} from "react";
 import { useTranslation } from "react-i18next";
 import { Card, Header, DeleteIconv2,LabelFieldPair, AddIcon,Button, CardText, } from "@egovernments/digit-ui-react-components";
 import {Dropdown,FieldV1,PopUp,} from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR } from "../utils/utilities";
 import { useMyContext } from "../utils/context";
+import { useAssumptionContext } from "./HypothesisWrapper";
 
 
 
@@ -20,13 +21,23 @@ const Hypothesis = ({ category, assumptions:initialAssumptions, customProps, onS
     const [assumptionToDelete, setAssumptionToDelete] = useState(null)
     const { state, dispatch } = useMyContext();
     const [assumptions, setAssumptions] = useState(initialAssumptions);
-    const [assumptionValues, setAssumptionValues] = useState([]);
     const [deletedAssumptions, setDeletedAssumptions] = useState([]);
     const [selectedDeletedAssumption, setSelectedDeletedAssumption] = useState(null);
+    const { assumptionValues, handleAssumptionChange, setAssumptionValues } = useAssumptionContext();
+    const maxAssumptions = initialAssumptions.length;
 
-         useEffect(()=>{
-            onSelect(customProps.name, { assumptionValues });
-          },[assumptionValues])
+        //  useEffect(()=>{
+        //     onSelect(customProps.name, { assumptionValues });
+        //   },[assumptionValues])
+
+      //   useEffect(() => {
+      //     setAssumptions(initialAssumptions.filter(item => !deletedAssumptions.includes(item)));
+      // }, [initialAssumptions, deletedAssumptions]);
+      
+
+      
+
+      console.log("assumptionform values are", assumptionValues )
 
          
         useEffect(() => {
@@ -34,47 +45,27 @@ const Hypothesis = ({ category, assumptions:initialAssumptions, customProps, onS
         }, [initialAssumptions]);
 
 
-          useEffect(() => {
-            if (customProps.isSubmitting) {
-                  validateFields(); 
-            }
-        }, [customProps.isSubmitting, assumptions, assumptionValues]);
+        //   useEffect(() => {
+        //     if (customProps.isSubmitting) {
+        //           validateFields(); 
+        //     }
+        // }, [customProps.isSubmitting, assumptions, assumptionValues]);
 
-          const validateFields = () => {
-            const newError = {};
-            assumptions.forEach((item) => {
-                const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
-                if (!value) {
-                    newError[item] = "This field is required"; 
-                }
-            });
+          //   const validateFields = () => {
+          //     const newError = {};
+          //     assumptions.forEach((item) => {
+          //         const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
+          //         if (!value) {
+          //             newError[item] = "This field is required"; 
+          //         }
+          //     });
 
-            setError(newError); 
-        };
+          //     setError(newError); 
+          // };
 
     
         
-    const handleAssumptionChange = (event, item) => {
-            
-              const newValue = event.target.value;
-          
-              setAssumptionValues((prevValues) => {
-              
-                const existingIndex = prevValues.findIndex((assumption) => assumption.key === item);
-          
-                if (existingIndex >= 0) {
-                  const updatedValues = [...prevValues];
-                  updatedValues[existingIndex] = {
-                    ...updatedValues[existingIndex],
-                    value: newValue,
-                  };
-                  return updatedValues;
-                } else {
-                
-                  return [...prevValues, { category, key: item, value: newValue }];
-                }
-              });
-    };
+   
         const handleDeleteClick = (index) => {
           setAssumptionToDelete(index); 
           setShowPopUp(true); 
@@ -118,8 +109,8 @@ const Hypothesis = ({ category, assumptions:initialAssumptions, customProps, onS
       };
 
    };   
-      
-        
+      console.log(customProps)
+         
          
      return (
          <>
@@ -149,12 +140,15 @@ const Hypothesis = ({ category, assumptions:initialAssumptions, customProps, onS
                                           type="number"
                                           name={item}
                                           value={assumptionValues.find((assumption) => assumption.key === item)?.value || ""}
-                                          error={error[item] ? t(error[item]) : ""}
+                                          //error={error[item] ? t(error[item]) : ""}
+                                          error={""}
                                           style={{marginBottom: "0" }}
                                           populators={{ name: item }}
                                           id={index}
                                           onChange={(event) => {
-                                            handleAssumptionChange(event, item);
+                                            
+                                            handleAssumptionChange(category,event, item);
+                                          
                                           }}
                                             />
                                         <div className="delete-button">
@@ -181,7 +175,7 @@ const Hypothesis = ({ category, assumptions:initialAssumptions, customProps, onS
                       style={{height:"50px", fontSize:"20px"}}
                       title=""
                       variation="secondary"
-                      isDisabled={assumptions.length === 3}
+                      isDisabled={assumptions.length >= maxAssumptions || deletedAssumptions.length === 0}
                       
                     />
                     {showPopUP && <PopUp

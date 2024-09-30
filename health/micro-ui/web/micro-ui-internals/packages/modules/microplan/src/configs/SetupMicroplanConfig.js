@@ -79,6 +79,34 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
             },
           ],
         },
+        {
+          stepCount: "4",
+          key: "4",
+          name: "CAMPAIGN_FORM",
+          body: [
+            {
+              isMandatory: true,
+              key: "campaignForm",
+              type: "component",
+              skipAPICall: false,
+              component: "CampaignForm",
+              withoutLabel: true,
+              disable: false,
+              withoutLabelFieldPair: true,
+              customProps: {
+                module: "HCM",
+                sessionData: totalFormData,
+                isSubmitting: isSubmitting,
+  
+              },
+              populators: {
+                name: "campaignForm",
+                required: true,
+              },
+            },
+          ],
+        },
+  
       {
         stepCount: "6",
         key: "6",
@@ -86,7 +114,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
         body: [
           {
             isMandatory: true,
-            key: "hypothesis",
+            key: "Assumptions",
             type: "component",
             skipAPICall: false,
             component: "HypothesisWrapper",
@@ -158,31 +186,31 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
             },
           ],
         },
-        {
-          stepCount: "6",
-          key: "6",
-          name: "MP_MICROPLAN_DETAILS",
-          body: [
-            {
-              isMandatory: false,
-              key: "microplanDetails",
-              type: "component",
-              skipAPICall: false,
-              resourceToUpdate:"PLAN",
-              component: "MicroplanDetails",
-              withoutLabel: true,
-              disable: false,
-              customProps: {
-                module: "HCM",
-                sessionData: totalFormData,
-                isSubmitting: isSubmitting,
-              },
-              populators: {
-                name: "projectType",
-              },
-            },
-          ],
-        },
+        // {
+        //   stepCount: "6",
+        //   key: "6",
+        //   name: "MP_MICROPLAN_DETAILS",
+        //   body: [
+        //     {
+        //       isMandatory: false,
+        //       key: "microplanDetails",
+        //       type: "component",
+        //       skipAPICall: false,
+        //       resourceToUpdate:"PLAN",
+        //       component: "MicroplanDetails",
+        //       withoutLabel: true,
+        //       disable: false,
+        //       customProps: {
+        //         module: "HCM",
+        //         sessionData: totalFormData,
+        //         isSubmitting: isSubmitting,
+        //       },
+        //       populators: {
+        //         name: "projectType",
+        //       },
+        //     },
+        //   ],
+        // },
         {
           stepCount: "7",
           key: "7",

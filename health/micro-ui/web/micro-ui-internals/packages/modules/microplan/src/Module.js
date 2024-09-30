@@ -9,6 +9,7 @@ import CampaignDetails from "./components/CampaignDetails";
 import { ProviderContext } from "./utils/context";
 import BoundarySelection from "./components/BoundarySelection";
 import HypothesisWrapper from "./components/HypothesisWrapper";
+import CampaignForm from "./components/CampaignForm";
 
 
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
@@ -43,6 +44,7 @@ const componentsToRegister = {
   CampaignDetails,
   MicroplanDetails,
   BoundarySelection,
+  CampaignForm,
   HypothesisWrapper,
   
 

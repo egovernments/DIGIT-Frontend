@@ -23,6 +23,7 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
+  
 
   function updateUrlParams(params) {
     const url = new URL(window.location.href);

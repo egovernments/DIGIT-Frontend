@@ -45,6 +45,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
       { name: "RuleConfigureOutput" },
       { name: "AutoFilledRuleConfigurations" },
       { name: "RuleConfigureOperators" },  
+      {name:"RegistrationAndDistributionHappeningTogetherOrSeparately"}
 
     ],
     {
