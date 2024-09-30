@@ -11,6 +11,7 @@ const ConfigUploaderComponent = ({ onSelect, ...props }) => {
   const [file, setFile] = useState(null);
   const [fileStoreId, setFileStoreId] = useState(null);
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [uploadErrorMEssage, setUploadErrorMessage] = useState("");
   const { t } = useTranslation();
 
 
@@ -20,9 +21,11 @@ const ConfigUploaderComponent = ({ onSelect, ...props }) => {
       const response = await Digit.UploadServices.Filestorage("Sandbox", file, tenantId);
       const fileStoreId = response?.data?.files?.[0]?.fileStoreId;
       setFileStoreId(fileStoreId)
+      setUploadErrorMessage("");
     } catch (error) {
       setToastMessage(t("BANNER_UPLOAD_FAILED"));
       setIsError(true);
+      setUploadErrorMessage(t("LOGO_UPLOAD_FAILED"));
       setShowToast(true);
       setTimeout(() => {
         setShowToast(false);
@@ -56,6 +59,7 @@ const ConfigUploaderComponent = ({ onSelect, ...props }) => {
           uploadedFiles={[]}
           variant="uploadFile"
           onUpload={(files) => selectFile(files)}
+          iserror={uploadErrorMEssage}
         // if (files && files.length > 0) {
         //   handleUploadFile(files);
         // }
