@@ -3,11 +3,13 @@ import { LandingPageCard, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { EmployeeModuleCard } from "@egovernments/digit-ui-react-components";
+import { orderConfig } from "../config/card-link-order";
 
 const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui", "health-ui", "sanitation-ui", "core-ui", "mgramseva-web", "sandbox-ui"];
 
 export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
   const { isLoading, data } = Digit.Hooks.useAccessControl();
+  console.log("data recieved from actions", data);
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
   const { t } = useTranslation();
   const history = useHistory();
@@ -73,8 +75,47 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
     return "";
   }
 
-  const children = Object.keys(configEmployeeSideBar)?.map((current, index) => {
-    const moduleData = configEmployeeSideBar?.[current];
+  const sortCardAndLink = (configEmployeeSideBar) => {
+    const sortedModules = Object.keys(configEmployeeSideBar)
+      .sort((a, b) => {
+        const cardOrderA = (orderConfig?.order?.cardorder?.[a]) || Number.MAX_SAFE_INTEGER;
+        const cardOrderB = (orderConfig?.order?.cardorder?.[b]) || Number.MAX_SAFE_INTEGER;
+        return cardOrderA - cardOrderB;
+      })
+      .reduce((acc, module) => {
+        const sortedLinks = configEmployeeSideBar?.[module]?.links?.sort((linkA, linkB) => {
+          const labelA = linkA?.label;
+          const labelB = linkB?.label;
+  
+          // Add safety checks for undefined labels
+          if (!labelA || !labelB) {
+            console.warn(`Link labels are missing: linkA.label=${labelA}, linkB.label=${labelB}`);
+            return 0; // Keep the original order if labels are missing
+          }
+  
+          const orderA = (orderConfig?.order?.linkorder?.[module]?.[labelA]) || null;
+          const orderB = (orderConfig?.order?.linkorder?.[module]?.[labelB]) || null;
+  
+  
+          return orderA - orderB;
+        });
+  
+        acc[module] = {
+          ...configEmployeeSideBar[module],
+          links: sortedLinks,
+        };
+  
+        return acc;
+      }, {});
+  
+    console.log("Sorted modules with links:", sortedModules);
+    return sortedModules
+  };
+
+  const sortedConfigEmployeesSidebar= sortCardAndLink(configEmployeeSideBar);
+
+  const children = Object.keys(sortedConfigEmployeesSidebar)?.map((current, index) => {
+    const moduleData = sortedConfigEmployeesSidebar?.[current];
     const propsForModuleCard = {
       // Icon: moduleData?.icon,
       icon: "SupervisorAccount",
