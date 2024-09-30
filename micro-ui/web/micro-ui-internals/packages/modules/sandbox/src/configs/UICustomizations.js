@@ -200,7 +200,7 @@ export const UICustomizations = {
         const temp = data?.MdmsRes?.["sandbox-ui"]?.ModuleMasterConfig?.find((item) => item?.module === additionalDetails?.moduleName);
         return {
           module: temp?.module,
-          master: temp?.master?.filter((item) => item.type === "module" || item.type === "common" || item.type === "boundary"),
+          master: temp?.master?.filter((item) => item.type === "module" || item.type === "common"),
         };
       };
 
