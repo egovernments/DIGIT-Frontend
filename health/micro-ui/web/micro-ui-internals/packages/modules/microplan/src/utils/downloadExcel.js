@@ -15,7 +15,7 @@ export const downloadExcelWithCustomName = ({ fileStoreId = null, customName = n
   const downloadExcel = (blob, fileName) => {
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = fileName + ".xlsx";
+    link.download = `${fileName}.xlsx`;
     document.body.append(link);
     link.click();
     link.remove();
