@@ -494,6 +494,10 @@
   }
   .hambuger-back-wrapper {
     display: flex;
+    h3{
+      margin-top: 0;
+      margin-bottom: 0;
+    }
     @media (min-width: 780px) {
       .hamburger-span {
         display: none;

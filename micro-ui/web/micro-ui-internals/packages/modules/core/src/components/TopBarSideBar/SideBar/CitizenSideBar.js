@@ -302,7 +302,11 @@ export const CitizenSideBar = ({
 
   const city =  t(`TENANT_TENANTS_${stringReplaceAll(Digit.SessionStorage.get("Employee.tenantId"), ".", "_")?.toUpperCase()}`)
   const goToHome= () => {
-    history.push(`/${window?.contextPath}/${Digit?.UserService?.getType?.()}`);
+    if(isEmployee){
+      history.push(`/${window?.contextPath}/employee`);
+    }else{
+      history.push(`/${window?.contextPath}/citizen`);
+    }
   }
   const onItemSelect = ({ item, index, parentIndex }) => {
     if(item?.navigationURL){
