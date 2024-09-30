@@ -13,6 +13,7 @@ const SideBar = ({ t, CITIZEN, isSidebarOpen, toggleSidebar, handleLogout, mobil
         linkData={linkData}
         islinkDataLoading={islinkDataLoading}
         userProfile={userProfile}
+        isEmployee={false}
       />
     );
     else {

@@ -146,7 +146,7 @@ const Home = ({
         mobileView={mobileView}
         handleUserDropdownSelection={handleUserDropdownSelection}
         logoUrl={logoUrl}
-        showSidebar={false}
+        showSidebar={CITIZEN ? true : false}
         linkData={linkData}
         islinkDataLoading={islinkDataLoading}
       />

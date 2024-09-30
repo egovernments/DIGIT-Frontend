@@ -90,12 +90,16 @@ export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, initD
   const { stateInfo } = storeData || {};
   const userScreensExempted = ["user/profile", "user/error"];
   const isUserProfile = userScreensExempted.some((url) => location?.pathname?.includes(url));
+  const userDetails = Digit.UserService.getUser();
+  let CITIZEN = userDetails?.info?.type === "CITIZEN" || !window.location.pathname.split("/").includes("employee") ? true : false;
+  const innerWidth = window.innerWidth;
+  const mobileView = innerWidth <= 640;
 
   return (
     <div
       className={isUserProfile ? "grounded-container" : "loginContainer"}
       style={
-        isUserProfile ? { padding: 0, paddingTop: "80px", marginLeft: "" } : { "--banner-url": `url(${stateInfo?.bannerUrl})`, padding: "0px" }
+        isUserProfile ? { padding: 0, paddingTop: CITIZEN ? "0" : mobileView && !CITIZEN ? "3rem" : "80px", marginLeft: CITIZEN || mobileView ? "0" : "40px" } : { "--banner-url": `url(${stateInfo?.bannerUrl})`, padding: "0px" }
       }
     >
       <Switch>
