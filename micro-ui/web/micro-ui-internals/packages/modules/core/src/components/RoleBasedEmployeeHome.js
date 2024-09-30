@@ -111,8 +111,6 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
   };
 
   if(isMultiRootTenant){
-    console.log("module data is",configEmployeeSideBar);
-
     sortedConfigEmployeesSidebar= sortCardAndLink(configEmployeeSideBar);
   }
   else{
