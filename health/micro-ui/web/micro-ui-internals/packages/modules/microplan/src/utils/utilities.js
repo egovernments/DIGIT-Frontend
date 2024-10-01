@@ -9,3 +9,4 @@ const destroySessionHelper = (currentPath, pathList, sessionName) => {
 export default {
   destroySessionHelper
 };
+export const PRIMARY_COLOR = "#C84C0E";

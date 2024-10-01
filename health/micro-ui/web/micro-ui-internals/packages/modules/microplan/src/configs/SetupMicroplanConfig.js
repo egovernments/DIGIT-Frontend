@@ -103,6 +103,34 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
           ],
         },
         {
+          stepCount: "4",
+          key: "4",
+          name: "CAMPAIGN_FORM",
+          body: [
+            {
+              isMandatory: false,
+              key: "campaignForm",
+              type: "component",
+              skipAPICall: false,
+              component: "CampaignForm",
+              withoutLabel: true,
+              disable: false,
+              withoutLabelFieldPair: true,
+              customProps: {
+                module: "HCM",
+                sessionData: totalFormData,
+                isSubmitting: isSubmitting,
+  
+              },
+              populators: {
+                name: "campaignForm",
+                required: true,
+              },
+            },
+          ],
+        },
+  
+        {
           stepCount: "5",
           key: "5",
           name: "MP_MICROPLAN_DETAILS",
@@ -123,6 +151,34 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               },
               populators: {
                 name: "projectType",
+              },
+            },
+          ],
+        },
+
+        {
+          stepCount: "6",
+          key: "6",
+          name: "HYPOTHESIS",
+          body: [
+            {
+              isMandatory: true,
+              key: "Assumptions",
+              type: "component",
+              skipAPICall: false,
+              component: "HypothesisWrapper",
+              withoutLabel: true,
+              disable: false,
+              withoutLabelFieldPair: true,
+              customProps: {
+                module: "HCM",
+                sessionData: totalFormData,
+                isSubmitting: isSubmitting,
+  
+              },
+              populators: {
+                name: "hypothesis",
+                required: true,
               },
             },
           ],

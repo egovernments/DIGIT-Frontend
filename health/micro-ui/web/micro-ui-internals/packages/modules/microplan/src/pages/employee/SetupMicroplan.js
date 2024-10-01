@@ -177,6 +177,7 @@ const SetupMicroplan = () => {
         className="setup-campaign"
         cardClassName="setup-campaign-card"
         // noCardStyle={currentKey === 4 || currentStep === 7 || currentStep === 0 ? false : true}
+        noCardStyle={true}
         onSecondayActionClick={onSecondayActionClick}
         label={
           t("ES_COMMON_NEXT")
