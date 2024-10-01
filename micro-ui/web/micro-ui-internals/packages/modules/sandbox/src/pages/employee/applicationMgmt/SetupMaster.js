@@ -30,7 +30,7 @@ const SetupMaster = () => {
       // staleTime: 0,
       select: (data) => {
         let respStructure = data?.["sandbox-ui"]?.ModuleMasterConfig?.filter((item) => item?.module === module)?.[0]?.master?.filter(
-          (item) => item.type === "module" || item.type === "common" || item.type === "boundary"
+          (item) => item.type === "module" || item.type === "common"
         );
         const respData = respStructure.map((i) => ({
           masterName: t(i.code),
