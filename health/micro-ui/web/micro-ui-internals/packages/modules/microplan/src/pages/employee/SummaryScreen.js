@@ -95,6 +95,25 @@ const SummaryScreen = ({props:customProps}) => {
                        
                 
             },
+
+            {
+            navigationKey: "card9",
+            sections: 
+                
+                    [
+                        {
+                            
+                            type: "COMPONENT",
+                            component: "CampaignBoundary",
+                            props: {
+                                
+
+                            },
+                        },
+                    ]
+                   
+            
+        },
             
             
             {
@@ -448,6 +467,11 @@ const SummaryScreen = ({props:customProps}) => {
                       active: true,
                       code: "MICROPLAN_DETAILS",
                     },
+                    {
+                        name: "card9",
+                        active: true,
+                        code: "CAMPAIGN_BOUNDARY",
+                      },
                     {
                         name: "card7",
                         active: true,
