@@ -1,11 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useMyContext } from "../utils/context";
 import SubBoundaryView from "./subBoundaryView";
+import HeaderComp from "./HeaderComp";
+import { Card } from "@egovernments/digit-ui-components";
+import BoundaryKpi from "./BoundaryKpi";
+import { unstable_batchedUpdates } from "react-dom";
 
 const CampaignBoundary = () => {
     const { dispatch, state } = useMyContext();
     const { t } = useTranslation();
+
+    const handleViewMore = (ind) => {
+        // Create a copy of the boundaryStatus array
+        const updatedBoundaryStatus = [...boundaryStatus];
+        // Update the ind + 1 position to false
+        if (boundaryStatus[ind]) {
+            updatedBoundaryStatus[ind] = false;
+        } else {
+            updatedBoundaryStatus[ind] = true;
+
+        }
+        // Set the updated array in the state
+        setBoundaryStatus(updatedBoundaryStatus);
+        // Set showAllItems to true to show all items
+    };
 
     const selectedData = [
         {
@@ -40,6 +59,14 @@ const CampaignBoundary = () => {
             "includeAllChildren": false
         },
         {
+            "code": "MICROPLAN_MO_05_07_03_15_POKPAKEN_TOWN_K1889",
+            "name": "MICROPLAN_MO_05_07_03_15_POKPAKEN_TOWN_K1889",
+            "type": "Village",
+            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
+            "isRoot": false,
+            "includeAllChildren": true
+        },
+        {
             "code": "MICROPLAN_MO_05_07_03_14_POKPAKEN_TOWN_P1888",
             "name": "MICROPLAN_MO_05_07_03_14_POKPAKEN_TOWN_P1888",
             "type": "Village",
@@ -48,132 +75,446 @@ const CampaignBoundary = () => {
             "includeAllChildren": true
         },
         {
+            "code": "MICROPLAN_MO_05_07_03_13_BEATUOKEN_DWEHN1887",
+            "name": "MICROPLAN_MO_05_07_03_13_BEATUOKEN_DWEHN1887",
+            "type": "Village",
+            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
+            "isRoot": false,
+            "includeAllChildren": true
+        },
+        {
+            "code": "MICROPLAN_MO_05_07_03_12_BEATUOKEN_CHATT1886",
+            "name": "MICROPLAN_MO_05_07_03_12_BEATUOKEN_CHATT1886",
+            "type": "Village",
+            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
+            "isRoot": false,
+            "includeAllChildren": true
+        },
+        {
+            "code": "MICROPLAN_MO_05_07_03_11_BEATUOKEN_BEATU1885",
+            "name": "MICROPLAN_MO_05_07_03_11_BEATUOKEN_BEATU1885",
+            "type": "Village",
+            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
+            "isRoot": false,
+            "includeAllChildren": true
+        },
+        {
+            "code": "MICROPLAN_MO_05_07_03_10_BEATUOKEN",
+            "name": "MICROPLAN_MO_05_07_03_10_BEATUOKEN",
+            "type": "Village",
+            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
+            "isRoot": false,
+            "includeAllChildren": true
+        },
+        {
+            "code": "MICROPLAN_MO_05_07_03_09_POKPAKEN_TOWN_K1883",
+            "name": "MICROPLAN_MO_05_07_03_09_POKPAKEN_TOWN_K1883",
+            "type": "Village",
+            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
+            "isRoot": false,
+            "includeAllChildren": true
+        },
+        {
+            "code": "MICROPLAN_MO_05_07_03_08_POKPAKEN_TOWN_P1882",
+            "name": "MICROPLAN_MO_05_07_03_08_POKPAKEN_TOWN_P1882",
+            "type": "Village",
+            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
+            "isRoot": false,
+            "includeAllChildren": true
+        },
+        {
+            "code": "MICROPLAN_MO_05_07_03_07_POKPAKEN_TOWN_S1881",
+            "name": "MICROPLAN_MO_05_07_03_07_POKPAKEN_TOWN_S1881",
+            "type": "Village",
+            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
+            "isRoot": false,
+            "includeAllChildren": true
+        },
+        {
+            "code": "MICROPLAN_MO_05_07_03_06_POKPAKEN_TOWN",
+            "name": "MICROPLAN_MO_05_07_03_06_POKPAKEN_TOWN",
+            "type": "Village",
+            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
+            "isRoot": false,
+            "includeAllChildren": true
+        },
+        {
+            "code": "MICROPLAN_MO_05_07_03_05_JOKOKEN_ROBERT_1879",
+            "name": "MICROPLAN_MO_05_07_03_05_JOKOKEN_ROBERT_1879",
+            "type": "Village",
+            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
+            "isRoot": false,
+            "includeAllChildren": true
+        },
+        {
+            "code": "MICROPLAN_MO_05_07_03_04_JOKOKEN_SLAH_VI1878",
+            "name": "MICROPLAN_MO_05_07_03_04_JOKOKEN_SLAH_VI1878",
+            "type": "Village",
+            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
+            "isRoot": false,
+            "includeAllChildren": true
+        },
+        {
+            "code": "MICROPLAN_MO_05_07_03_03_JOKOKEN_JOKOKEN",
+            "name": "MICROPLAN_MO_05_07_03_03_JOKOKEN_JOKOKEN",
+            "type": "Village",
+            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
+            "isRoot": false,
+            "includeAllChildren": true
+        },
+        {
+            "code": "MICROPLAN_MO_05_07_03_02_JOKOKEN",
+            "name": "MICROPLAN_MO_05_07_03_02_JOKOKEN",
+            "type": "Village",
+            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
+            "isRoot": false,
+            "includeAllChildren": true
+        },
+        {
+            "code": "MICROPLAN_MO_05_07_03_01__124",
+            "name": "MICROPLAN_MO_05_07_03_01__124",
+            "type": "Village",
+            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
+            "isRoot": false,
+            "includeAllChildren": true
+        },
+        {
+            "code": "MICROPLAN_MO_05_07_02_DUCORFREE_CLINIC",
+            "name": "MICROPLAN_MO_05_07_02_DUCORFREE_CLINIC",
+            "type": "Locality",
+            "parent": "MICROPLAN_MO_05_07_JEDEPO",
+            "isRoot": false,
+            "includeAllChildren": false
+        },
+        {
+            "code": "MICROPLAN_MO_05_07_01_DOODWICKEN_CLINIC",
+            "name": "MICROPLAN_MO_05_07_01_DOODWICKEN_CLINIC",
+            "type": "Locality",
+            "parent": "MICROPLAN_MO_05_07_JEDEPO",
+            "isRoot": false,
+            "includeAllChildren": false
+        },
+        {
             "code": "MICROPLAN_MO_05_06_JEADE",
             "name": "MICROPLAN_MO_05_06_JEADE",
             "type": "District",
             "parent": "MICROPLAN_MO_05_SINOE",
             "isRoot": false,
             "includeAllChildren": false
+        },
+        {
+            "code": "MICROPLAN_MO_05_05_GREENVILLE",
+            "name": "MICROPLAN_MO_05_05_GREENVILLE",
+            "type": "District",
+            "parent": "MICROPLAN_MO_05_SINOE",
+            "isRoot": false,
+            "includeAllChildren": false
+        },
+        {
+            "code": "MICROPLAN_MO_05_04_GBLONEE",
+            "name": "MICROPLAN_MO_05_04_GBLONEE",
+            "type": "District",
+            "parent": "MICROPLAN_MO_05_SINOE",
+            "isRoot": false,
+            "includeAllChildren": false
+        },
+        {
+            "code": "MICROPLAN_MO_05_03_DUGBE_RIVER",
+            "name": "MICROPLAN_MO_05_03_DUGBE_RIVER",
+            "type": "District",
+            "parent": "MICROPLAN_MO_05_SINOE",
+            "isRoot": false,
+            "includeAllChildren": false
+        },
+        {
+            "code": "MICROPLAN_MO_05_02_BUTAW",
+            "name": "MICROPLAN_MO_05_02_BUTAW",
+            "type": "District",
+            "parent": "MICROPLAN_MO_05_SINOE",
+            "isRoot": false,
+            "includeAllChildren": false
+        },
+        {
+            "code": "MICROPLAN_MO_05_01__101",
+            "name": "MICROPLAN_MO_05_01__101",
+            "type": "District",
+            "parent": "MICROPLAN_MO_05_SINOE",
+            "isRoot": false,
+            "includeAllChildren": false
+        },
+        {
+            "code": "MICROPLAN_MO_04_GBARPOLU",
+            "name": "MICROPLAN_MO_04_GBARPOLU",
+            "type": "Province",
+            "parent": "MICROPLAN_MO",
+            "isRoot": false,
+            "includeAllChildren": false
+        },
+        {
+            "code": "MICROPLAN_MO_03_GRAND_GEDEH",
+            "name": "MICROPLAN_MO_03_GRAND_GEDEH",
+            "type": "Province",
+            "parent": "MICROPLAN_MO",
+            "isRoot": false,
+            "includeAllChildren": false
+        },
+        {
+            "code": "MICROPLAN_MO_02_GRAND_KRU",
+            "name": "MICROPLAN_MO_02_GRAND_KRU",
+            "type": "Province",
+            "parent": "MICROPLAN_MO",
+            "isRoot": false,
+            "includeAllChildren": false
+        },
+        {
+            "code": "MICROPLAN_MO_01_MARYLAND",
+            "name": "MICROPLAN_MO_01_MARYLAND",
+            "type": "Province",
+            "parent": "MICROPLAN_MO",
+            "isRoot": false,
+            "includeAllChildren": false
+        },
+        {
+            "code": "MICROPLAN_MO_06_SINOE",
+            "name": "MICROPLAN_MO_06_SINOE",
+            "type": "Province",
+            "parent": "MICROPLAN_MO",
+            "isRoot": false,
+            "includeAllChildren": false
+        },
+        {
+            "code": "MICROPLAN_MO_05_GBARPOLU",
+            "name": "MICROPLAN_MO_05_GBARPOLU",
+            "type": "Province",
+            "parent": "MICROPLAN_MO",
+            "isRoot": false,
+            "includeAllChildren": false
+        },
+        {
+            "code": "MICROPLAN_MO_04_GRAND_GEDEH",
+            "name": "MICROPLAN_MO_04_GRAND_GEDEH",
+            "type": "Province",
+            "parent": "MICROPLAN_MO",
+            "isRoot": false,
+            "includeAllChildren": false
+        },
+        {
+            "code": "MICROPLAN_MO_03_GRAND_KRU",
+            "name": "MICROPLAN_MO_03_GRAND_KRU",
+            "type": "Province",
+            "parent": "MICROPLAN_MO",
+            "isRoot": false,
+            "includeAllChildren": false
+        },
+        {
+            "code": "MICROPLAN_MO_02_MARYLAND",
+            "name": "MICROPLAN_MO_02_MARYLAND",
+            "type": "Province",
+            "parent": "MICROPLAN_MO",
+            "isRoot": false,
+            "includeAllChildren": false
+        },
+        {
+            "code": "MICROPLAN_MO_01_",
+            "name": "MICROPLAN_MO_01_",
+            "type": "Province",
+            "parent": "MICROPLAN_MO",
+            "isRoot": false,
+            "includeAllChildren": false
         }
-    ];
+    ] // Memoized to prevent recomputation on every render
 
-    let parents = {};
-    let parent_group = {};
-    let dic1 = {};
+    // Memoizing parents and parent_group to only compute once when selectedData changes
+    const { parents, parent_group } = useMemo(() => {
+        let parents = {};
+        let parent_group = {};
 
-    // Populate parents and parent_group
-    for (const ob of selectedData) {
-        if (!(ob['parent'] in parents) ) {
-            if(ob['parent']){
-            parents[ob['parent']] = [ob['code']];
+        for (const ob of selectedData) {
+            if (ob['parent']) {
+                if (!(ob['parent'] in parents)) {
+                    parents[ob['parent']] = [ob['code']];
+                } else {
+                    parents[ob['parent']].push(ob['code']);
+                }
             }
-        } else {
-            parents[ob['parent']].push(ob['code']);
         }
-    }
 
-    for (const ob of selectedData) {
-        const parentCodes = parents[ob['parent']]; // Get the array of codes for the parent
-        if (!(ob['type'] in parent_group)) {
-            parent_group[ob['type']] = [parentCodes]; // Initialize with the first unique array
-        } else {
-            // Check if the array is already present by comparing stringified versions
-            const existingArrays = parent_group[ob['type']];
-            if (!existingArrays.some(arr => JSON.stringify(arr) === JSON.stringify(parentCodes))) {
-                parent_group[ob['type']].push(parentCodes); // Add only if it's unique
+        for (const ob of selectedData) {
+            const parentCodes = parents[ob['parent']]; // Get the array of codes for the parent
+            if (!(ob['type'] in parent_group)) {
+                parent_group[ob['type']] = [parentCodes]; // Initialize with the first unique array
+            } else {
+                const existingArrays = parent_group[ob['type']];
+                if (!existingArrays.some(arr => JSON.stringify(arr) === JSON.stringify(parentCodes))) {
+                    parent_group[ob['type']].push(parentCodes); // Add only if it's unique
+                }
             }
         }
-    }
 
-    console.log("parents", parents);
-    console.log("parent_group", parent_group);
+        return { parents, parent_group };
+    }, [selectedData]);
 
     // Initialize boundaryHierarchy and bHierarchy as state
     const [boundaryHierarchy, setData] = useState(state["boundaryHierarchy"]);
+    const [boundaryStatus, setBoundaryStatus] = useState(
+        new Array(boundaryHierarchy.length).fill(true) // Creates an array filled with "True"
+    );
+    // const boundaryStatus=[false,false,false,false,true];
+
+
+
+
+
     const [bHierarchy, setbHierarchy] = useState([]);
 
+    const [statusMap, setStatusMap] = useState({});
     useEffect(() => {
-        if (!boundaryHierarchy || boundaryHierarchy.length === 0) return; // Make sure boundaryHierarchy is not empty
+        if (selectedData && selectedData.length >= 0) {
+            setStatusMap(() => Digit.Utils.microplanv1.createStatusMap(selectedData, boundaryHierarchy))
+        }
+    }, [boundaryHierarchy])
+
+    // Prevent unnecessary useEffect calls
+    useEffect(() => {
+        if (!boundaryHierarchy || boundaryHierarchy.length === 0) return;
 
         let bH = [];
         let top = null;
         let dic = {};
 
-        // Build parent-child hierarchy
         for (const ob of boundaryHierarchy) {
             let bType = ob["boundaryType"];
             let parent = ob["parentBoundaryType"];
 
             if (parent === null) {
-                bH.splice(0, 0, bType);
+                bH.unshift(bType); // Push top element to the start
                 top = bType;
             }
             dic[parent] = bType;
         }
 
-        // Traverse the hierarchy
         let prev = top;
         while (prev in dic) {
             bH.push(dic[prev]);
             prev = dic[prev];
         }
 
-        setbHierarchy(bH); // Set the hierarchy in state
+        setbHierarchy(bH);
 
-        // Populate dic1 for selectedData
-        for (const ob of selectedData) {
-            if (!(ob["type"] in dic1)) {
-                dic1[ob["type"]] = [ob["code"]];
+        for (const ind in bHierarchy) {
+            if (parent_group[bHierarchy[ind]] && parent_group[bHierarchy[ind]].length > 2) {
+                boundaryStatus[ind] = true
+
             } else {
-                dic1[ob["type"]].push(ob["code"]);
+                boundaryStatus[ind] = false
+
             }
         }
 
-    }, [boundaryHierarchy, selectedData]); // Dependencies include boundaryHierarchy and selectedData
 
-    console.log("bHierarchy", bHierarchy);
 
-    // Only render if bHierarchy has data
+
+
+    }, [boundaryHierarchy]); // Only re-run when boundaryHierarchy changes
+    console.log("parent", parents)
+    console.log("parents_group", parent_group)
+    console.log("bHierarchy", bHierarchy[1])
     return (
         <div>
-            {bHierarchy.length > 0 ? (
-                // Safely filter and map over bHierarchy
-                bHierarchy.filter((_, index) => index !== 0 && index!=bHierarchy.length-1).map((item, ind) => {
-                    if (parent_group[item] && parent_group[item].length >= 1) {
-                        console.log("item", item); // 'country','province'
-                        
-                        // Use optional chaining and default empty array for safety
-                        return parent_group[item]?.map((item1, idx) => {
-                            console.log("item1", item1); //province:'[sinoe]',locality:[jedepo,jeda]
 
-                            return (Array.isArray(item1) ? item1 : []).map((item2) => {
-                                console.log("item2", item2);  //sinoe:[jedepo,jada]
+            <BoundaryKpi data={statusMap} />
+            {
+                bHierarchy.length > 1 ?
+                    (<Card>
 
-                                return (
+
+                        <SubBoundaryView
+                            title={bHierarchy[1]}
+                            arr={parent_group[bHierarchy[1]]}
+                        />
+
+                    </Card>) : (null)
+            }
+
+
+
+            {bHierarchy.length > 1 && bHierarchy.slice(1, -1).map((item, ind) => {
+                //item-Country,Province,Locality,District,Village
+                if (parent_group[item] && Array.isArray(parent_group[item])) {
+                    return parent_group[item].map((item1, idx) => {
+                        //item1-Province-[Sinoe],District-[Jedepo,Jeade]
+
+
+                        console.log("status", ind + 2, boundaryStatus[ind + 2])
+
+                        return Array.isArray(item1) && (!boundaryStatus[ind + 2]) ? (
+                            //make a super-comp that contains SubBoundary View
+                            <Card>
+                                <HeaderComp title={bHierarchy[ind + 2]} />
+                                {item1.map((item2) => (
+                                    //item2-parents name eg, sino etc
                                     <SubBoundaryView
-                                        key={`${item2}_${idx}`} // Unique key for each item
-                                        title={item}           // Assuming item2 is the correct value
-                                        arr={parents[item2]}    // Use parents[item2] for arr
+                                        key={`${item2}_${idx}`}
+                                        title={item2}
+                                        arr={parents[item2]}
                                     />
-                                );
-                            });
-                        }) || null;  // Return null if parent_group[item] is undefined
-                    }
-                    return null;
-                })
-            ) : (
-                <p>Loading hierarchy...</p>
-            )}
-            {/* {bHierarchy.length > 1 && (
-                <SubBoundaryView 
-                    title={bHierarchy[1]} 
-                    arr={["bjjkn", "ghkjm", "jkjoil"]} 
-                />
-            )} */}
+                                ))
+                                }
+                                <div
+                                    onClick={() => handleViewMore(ind + 2)}
+                                    style={{
+                                        textDecoration: 'underline',
+                                        cursor: 'pointer',
+                                        color: 'orange',
+                                        marginTop: '0.2rem'
+                                    }}
+                                >
+                                    View Less
+                                </div>
+                            </Card>
+                        ) : (Array.isArray(item1) && (boundaryStatus[ind + 2])) ? (
+                            <div>
+                                <Card>
+                                    <HeaderComp title={bHierarchy[ind + 2]} />
+                                    {item1.filter(() => (idx == 0 || idx == 1)).map((item2) => (
+                                        //item2-parents name eg, sino etc
+                                        <SubBoundaryView
+                                            key={`${item2}_${idx}`}
+                                            title={item2}
+                                            arr={parents[item2]}
+                                        />
+                                    ))
+                                    }
+                                    <div
+                                        onClick={() => handleViewMore(ind + 2)}
+                                        style={{
+                                            textDecoration: 'underline',
+                                            cursor: 'pointer',
+                                            color: 'orange',
+                                            marginTop: '0.2rem'
+                                        }}
+                                    >
+                                        View More
+                                    </div>
+                                </Card>
+
+
+
+
+                            </div>
+
+
+
+                        ) : (null)
+
+
+
+                    });
+                }
+                return null;
+            })}
         </div>
     );
-    
-    
 };
 
 export default CampaignBoundary;
