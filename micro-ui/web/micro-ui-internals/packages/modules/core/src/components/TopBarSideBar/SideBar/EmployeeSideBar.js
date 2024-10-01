@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import MediaQuery from 'react-responsive';
 
 
-const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui", "health-ui", "sanitation-ui", "core-ui", "mgramseva-web", "sandbox-ui"];
+const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui", "health-ui", "sanitation-ui", "core-ui", "mgramseva-web", "sandbox-ui","kibana-v8"];
 
 const EmployeeSideBar = () => {
   const { isLoading, data } = Digit.Hooks.useAccessControl();
