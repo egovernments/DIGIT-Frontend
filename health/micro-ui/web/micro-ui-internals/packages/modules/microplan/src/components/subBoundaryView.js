@@ -4,9 +4,11 @@ import { Card } from '@egovernments/digit-ui-components';
 import { Chip } from '@egovernments/digit-ui-components';
 
 const SubBoundaryView = ({ title, arr }) => {
-    // console.log("hi","subBoundaryView",title,arr);
+    console.log("hi", "subBoundaryView", title, arr);
     return (
         <div>
+            {
+            arr && arr.length>0 ?(
             <Card>
                 <HeaderComp title={title} />
                 {/* Flex container for the chips */}
@@ -21,8 +23,8 @@ const SubBoundaryView = ({ title, arr }) => {
                                         color: 'red',
                                         display: "inline-block", // Ensures Chip behaves inline within its container
                                     }}
-                                    onClick={() => {}}
-                                    onTagClick={() => {}}
+                                    onClick={() => { }}
+                                    onTagClick={() => { }}
                                     text={el} // Text from arr
                                 />
                             </div>
@@ -30,9 +32,15 @@ const SubBoundaryView = ({ title, arr }) => {
                     })}
                 </div>
             </Card>
+            ): (
+                null
+            )
+        }
+
         </div>
+
     );
-    
+
 }
 
 export default SubBoundaryView

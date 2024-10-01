@@ -63,18 +63,25 @@ const CampaignBoundary = () => {
 
     // Populate parents and parent_group
     for (const ob of selectedData) {
-        if (!(ob['parent'] in parents)) {
+        if (!(ob['parent'] in parents) ) {
+            if(ob['parent']){
             parents[ob['parent']] = [ob['code']];
+            }
         } else {
             parents[ob['parent']].push(ob['code']);
         }
     }
 
-    for (const ob of parents) {
+    for (const ob of selectedData) {
+        const parentCodes = parents[ob['parent']]; // Get the array of codes for the parent
         if (!(ob['type'] in parent_group)) {
-            parent_group[ob['type']] = [parents[ob['parent']]];
+            parent_group[ob['type']] = [parentCodes]; // Initialize with the first unique array
         } else {
-            parent_group[ob['type']].push(parents[ob['parent']]);
+            // Check if the array is already present by comparing stringified versions
+            const existingArrays = parent_group[ob['type']];
+            if (!existingArrays.some(arr => JSON.stringify(arr) === JSON.stringify(parentCodes))) {
+                parent_group[ob['type']].push(parentCodes); // Add only if it's unique
+            }
         }
     }
 
@@ -130,36 +137,42 @@ const CampaignBoundary = () => {
     return (
         <div>
             {bHierarchy.length > 0 ? (
-                bHierarchy.filter((_, index) => index !== 0).map((item, ind) => {
-                    if (parent_group[item]) {
-                        console.log("item", item);
-                        return parent_group[item].map((item1, idx) => {
-                            console.log("item1", item1);
-                            return item1.map((item2) => {
-                                console.log("item2", item2);
+                // Safely filter and map over bHierarchy
+                bHierarchy.filter((_, index) => index !== 0 && index!=bHierarchy.length-1).map((item, ind) => {
+                    if (parent_group[item] && parent_group[item].length >= 1) {
+                        console.log("item", item); // 'country','province'
+                        
+                        // Use optional chaining and default empty array for safety
+                        return parent_group[item]?.map((item1, idx) => {
+                            console.log("item1", item1); //province:'[sinoe]',locality:[jedepo,jeda]
+
+                            return (Array.isArray(item1) ? item1 : []).map((item2) => {
+                                console.log("item2", item2);  //sinoe:[jedepo,jada]
+
                                 return (
-                                    <SubBoundaryView 
-                                        key={`${item2}_${idx}`} // Adding a unique key for each item2
-                                        title={item2} // Assuming item2 is the correct value
-                                        arr={parents[item2]} // Use parents[item2] for arr
+                                    <SubBoundaryView
+                                        key={`${item2}_${idx}`} // Unique key for each item
+                                        title={item}           // Assuming item2 is the correct value
+                                        arr={parents[item2]}    // Use parents[item2] for arr
                                     />
                                 );
                             });
-                        });
+                        }) || null;  // Return null if parent_group[item] is undefined
                     }
                     return null;
                 })
             ) : (
                 <p>Loading hierarchy...</p>
             )}
-            {bHierarchy.length > 1 && (
+            {/* {bHierarchy.length > 1 && (
                 <SubBoundaryView 
                     title={bHierarchy[1]} 
                     arr={["bjjkn", "ghkjm", "jkjoil"]} 
                 />
-            )}
+            )} */}
         </div>
     );
+    
     
 };
 
