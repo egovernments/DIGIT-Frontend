@@ -2508,6 +2508,74 @@ $border-color: rgba(214, 213, 212, 1);
   overflow: auto;
 }
 
+/* MP_HYPOTHESIS_CSS */
+
+.mp-description{
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.assumptions-label-field{
+  display: flex;
+  gap:10rem;
+  margin: 1.7rem 0rem;  
+  
+}
+
+
+.assumptions-label-field > div > span {
+  width: 20rem;
+  font-size: 1.2rem;
+  margin-right: 2rem;
+  font-weight: bold;
+  
+}
+
+.delete-button {
+  display: flex;
+  cursor: pointer;  
+  margin-left: 1rem;
+  font-size: 1.2rem;
+  
+}
+
+
+.input-container{
+  display: flex;
+  justify-content: center;
+  width:30rem;
+
+}
+
+
+.kpi-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, var(--bg-opacity));
+  margin-bottom: 2rem;
+}
+
+.kpi-card {
+  text-align: center;
+  padding: 15px;
+  width: 120px;
+}
+
+.kpi-card h2 {
+  margin: 0;
+  color: #0a4a6d; /* Custom color */
+  font-size: 2em;
+}
+
+.kpi-card p {
+  margin: 0;
+  color: #666;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
 
 
 

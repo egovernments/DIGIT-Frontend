@@ -1,5 +1,5 @@
 import { Loader } from "@egovernments/digit-ui-react-components";
-import React from "react";
+import React,{useState} from "react";
 import { useRouteMatch } from "react-router-dom";
 import { default as EmployeeApp } from "./pages/employee";
 import MicroplanCard from "./components/MicroplanCard";
@@ -8,17 +8,31 @@ import MicroplanDetails from "./components/MicroplanDetails";
 import CampaignDetails from "./components/CampaignDetails";
 import { ProviderContext } from "./utils/context";
 import BoundarySelection from "./components/BoundarySelection";
-import CampaignForm from "./components/AssumptionsForm";
 import HypothesisWrapper from "./components/HypothesisWrapper";
+import DataMgmtTable from "./components/DataMgmtTable";
+import FileComponent from "./components/FileComponent";
+import HeaderComp from "./components/HeaderComp";
+import FormulaSection from "./components/FormulaSectionCard";
+import FormulaView from "./components/FormulaView";
+import SummaryScreen from "./pages/employee/SummaryScreen";
+
+import CampaignForm from "./components/AssumptionsForm";
+
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [lowestHierarchy,setLowestHierarchy] = useState("") 
   const { data: BOUNDARY_HIERARCHY_TYPE } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }], {
     select: (data) => {
-      return data?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.hierarchy;
-    },
+       const item = data?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)
+       setLowestHierarchy(item.lowestHierarchy)
+        return item?.hierarchy
+      },
   });
-  const moduleCode = ["Microplanning", `boundary-${BOUNDARY_HIERARCHY_TYPE}`, "hcm-admin-schemas"];
+
+  const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({BOUNDARY_HIERARCHY_TYPE,tenantId});
+
+  const moduleCode = ["Microplanning","campaignmanager", "workbench", "mdms", "schema", "hcm-admin-schemas", `boundary-${BOUNDARY_HIERARCHY_TYPE}`];
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
@@ -31,7 +45,7 @@ export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   }
   return (
     <ProviderContext>
-      <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} />
+      <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} hierarchyData={hierarchyData} BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE} lowestHierarchy={lowestHierarchy}/>
     </ProviderContext>
   );
 };
@@ -43,7 +57,15 @@ const componentsToRegister = {
   MicroplanDetails,
   BoundarySelection,
   CampaignForm,
-  HypothesisWrapper
+  HypothesisWrapper,
+  DataMgmtTable,
+  FileComponent,
+  HeaderComp,
+  FormulaView,
+  FormulaSection,
+  SummaryScreen
+  
+
 };
 
 export const initMicroplanComponents = () => {

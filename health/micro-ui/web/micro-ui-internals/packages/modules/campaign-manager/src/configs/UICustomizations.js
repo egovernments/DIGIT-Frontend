@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { Fragment } from "react";
 import { Button, PopUp, Switch } from "@egovernments/digit-ui-components";
 import TimelineComponent from "../components/TimelineComponent";
+import getMDMSUrl from "../utils/getMDMSUrl";
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
@@ -88,9 +89,9 @@ export const UICustomizations = {
     },
     populateCampaignTypeReqCriteria: () => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-
+      const url = getMDMSUrl();
       return {
-        url: "/egov-mdms-service/v1/_search",
+        url: `${url}/v1/_search`,
         params: { tenantId },
         body: {
           MdmsCriteria: {
@@ -274,9 +275,9 @@ export const UICustomizations = {
     },
     populateCampaignTypeReqCriteria: () => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-
+      const url = getMDMSUrl();
       return {
-        url: "/egov-mdms-service/v1/_search",
+        url: `${url}/v1/_search`,
         params: { tenantId },
         body: {
           MdmsCriteria: {
@@ -409,9 +410,9 @@ export const UICustomizations = {
     },
     populateCampaignTypeReqCriteria: () => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-
+      const url = getMDMSUrl();
       return {
-        url: "/egov-mdms-service/v1/_search",
+        url: `${url}/v1/_search`,
         params: { tenantId },
         body: {
           MdmsCriteria: {
@@ -583,9 +584,9 @@ export const UICustomizations = {
     },
     populateCampaignTypeReqCriteria: () => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-
+      const url = getMDMSUrl();
       return {
-        url: "/egov-mdms-service/v1/_search",
+        url: `${url}/v1/_search`,
         params: { tenantId },
         body: {
           MdmsCriteria: {
@@ -673,9 +674,9 @@ export const UICustomizations = {
     },
     populateCampaignTypeReqCriteria: () => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-
+      const url = getMDMSUrl();
       return {
-        url: "/egov-mdms-service/v1/_search",
+        url: `${url}/v1/_search`,
         params: { tenantId },
         body: {
           MdmsCriteria: {

@@ -7,7 +7,7 @@ const SearchPlanConfig = async (body) => {
       userService: true,
       body,
     });
-    return response;
+    return response?.PlanConfiguration?.[0];
   } catch (error) {
     if (error?.response?.data?.Errors) {
       throw new Error(error.response.data.Errors[0].message);

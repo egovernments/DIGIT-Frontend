@@ -6,6 +6,7 @@ import useSearchCampaign from "./useSearchCampaign";
 import { useGenerateIdCampaign } from "./useGenerateIdCampaign";
 import useCreateCampaign from "./useCreateCampaign";
 import useUpdateCampaign from "./useUpdateCampaign";
+import useCreateUpdatePlanProject from "./useCreateUpdatePlanProject";
 import utils from "../utils/utilities"
 const microplanv1 = {
   useCreatePlanConfig,
@@ -15,7 +16,8 @@ const microplanv1 = {
   useSearchCampaign,
   useGenerateIdCampaign,
   useCreateCampaign,
-  useUpdateCampaign
+  useUpdateCampaign,
+  useCreateUpdatePlanProject
 };
 
 const Hooks = {

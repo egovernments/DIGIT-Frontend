@@ -6,13 +6,11 @@ const createChecklistService = async (req, tenantId) => {
         ServiceDefinition: req,
       },
     });
-    return response;
+    return { success: true, data: response }; // Indicate success
   } catch (error) {
-    if (!error?.response?.data?.Errors[0].description) {
-      throw new Error(error?.response?.data?.Errors[0].code);
-    } else {
-      throw new Error(error?.response?.data?.Errors[0].description);
-    }
+    const errorCode = error?.response?.data?.Errors[0]?.code || "Unknown error";
+    const errorDescription = error?.response?.data?.Errors[0]?.description || "An error occurred";
+    return { success: false, error: { code: errorCode, description: errorDescription } }; // Indicate failure
   }
 };
 
