@@ -127,12 +127,12 @@ const TenantConfigUpload = () => {
         },
         {
           onError: (error) => {
-            setToastMessage(error.message || t("ERROR_MESSAGE"));
+            setToastMessage(error.message || t("CONFIG_UPLOAD_ERROR_MESSAGE"));
             setIsError(true);
             setShowToast(true);
           },
           onSuccess: () => {
-            setToastMessage(t("SANDBOX_TENANT_CREATE_SUCCESS_TOAST"));
+            setToastMessage(t("CONFIG_UPLOAD_SUCCESSFUL_TOAST_MESSAGE"));
             setIsError(false);
             setShowToast(true);
             setTimeout(() => {
