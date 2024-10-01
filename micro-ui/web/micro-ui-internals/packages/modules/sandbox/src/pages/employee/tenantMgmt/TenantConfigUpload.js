@@ -17,6 +17,8 @@ const TenantConfigUpload = () => {
   const [isError, setIsError] = useState(false);
   const [uploadData, setUploadData] = useState([]); // State to store the uploaded data
   const [tenantDocument, setDocuments] = useState([]);
+  const [canSubmit, setCanSubmit] = useState(false);
+
   
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook({
@@ -74,6 +76,17 @@ const TenantConfigUpload = () => {
         type: data[key]?.type,
       };
     });
+
+    const isBannerUndefined = documents.find(doc => doc.type === "bannerUrl")?.fileStoreId === undefined;
+    const isLogoUndefined = documents.find(doc => doc.type === "logoUrl")?.fileStoreId === undefined;
+  
+    if (isBannerUndefined && isLogoUndefined) {
+      setToastMessage(t("BOTH_FILESTOREIDS_ARE_UNDEFINED"));
+      setIsError(true);
+      setShowToast(true);
+      return; 
+    }
+
     setUploadData(documents);
   };
 
