@@ -33,6 +33,8 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         // Update other state logic as necessary...
     };
 
+    console.log("customProps",customProps)
+
 
 
 

@@ -41,6 +41,11 @@ const App = ({ path, stateCode, userType, tenants }) => {
       { name: "MicroplanNamingConvention" },
       { name: "MicroplanNamingRegx" },
       { name: "ResourceDistributionStrategy"},
+      { name:  "HypothesisAssumptions"},
+      { name: "RuleConfigureOutput" },
+      { name: "AutoFilledRuleConfigurations" },
+      { name: "RuleConfigureOperators" },  
+      {name:"RegistrationAndDistributionHappeningTogetherOrSeparately"}
 
     ],
     {
