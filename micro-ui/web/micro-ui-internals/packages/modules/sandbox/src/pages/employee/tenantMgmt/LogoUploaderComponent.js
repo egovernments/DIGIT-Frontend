@@ -5,15 +5,15 @@ import { useTranslation } from "react-i18next";
 import { Fragment } from "react";
 
 const LogoUploaderComponent = ({ onSelect, ...props }) => {
-  const [file, setFile] = useState(null);
-  const [fileStoreId, setFileStoreId] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [toastMessage, setToastMessage] = useState("");
   const [isError, setIsError] = useState(false);
-  const [uploadErrorMEssage, setUploadErrorMessage] = useState("");
-
+  const [file, setFile] = useState(null);
+  const [fileStoreId, setFileStoreId] = useState(null);
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [uploadErrorMEssage, setUploadErrorMessage] = useState("");
   const { t } = useTranslation();
+  
   const handleUploadFile = async () => {
     // Upload the file first
     try {
@@ -23,8 +23,8 @@ const LogoUploaderComponent = ({ onSelect, ...props }) => {
       setUploadErrorMessage("");
     } catch (error) {
       setToastMessage(t("LOGO_UPLOAD_FAILED"));
-      setUploadErrorMessage(t("LOGO_UPLOAD_FAILED"));
       setIsError(true);
+      setUploadErrorMessage(t("LOGO_UPLOAD_FAILED"));
       setShowToast(true);
       setTimeout(() => {
         setShowToast(false);
@@ -40,7 +40,6 @@ const LogoUploaderComponent = ({ onSelect, ...props }) => {
 
 
   const selectFile = (file) => {
-    console.log("file uploaded is ", file);
     setFile(file?.[0])
   }
 

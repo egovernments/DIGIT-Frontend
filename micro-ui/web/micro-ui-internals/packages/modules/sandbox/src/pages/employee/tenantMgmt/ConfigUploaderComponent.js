@@ -25,7 +25,7 @@ const ConfigUploaderComponent = ({ onSelect, ...props }) => {
     } catch (error) {
       setToastMessage(t("BANNER_UPLOAD_FAILED"));
       setIsError(true);
-      setUploadErrorMessage(t("LOGO_UPLOAD_FAILED"));
+      setUploadErrorMessage(t("BANNER_UPLOAD_FAILED"));
       setShowToast(true);
       setTimeout(() => {
         setShowToast(false);
