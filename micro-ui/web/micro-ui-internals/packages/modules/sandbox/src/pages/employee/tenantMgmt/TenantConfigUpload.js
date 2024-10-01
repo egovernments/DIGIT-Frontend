@@ -84,6 +84,9 @@ const TenantConfigUpload = () => {
       setToastMessage(t("BOTH_FILESTOREIDS_ARE_UNDEFINED"));
       setIsError(true);
       setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 2000);
       return; 
     }
 
@@ -159,6 +162,9 @@ const TenantConfigUpload = () => {
       setToastMessage(error.message);
       setIsError(true);
       setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 2000);
     }
   };
 
