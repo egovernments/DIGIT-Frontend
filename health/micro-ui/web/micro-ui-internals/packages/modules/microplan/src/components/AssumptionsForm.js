@@ -9,9 +9,9 @@ const CampaignForm = ({ onSelect, ...props }) => {
     const { t } = useTranslation();
     const optionsForProcesses = state.ResourceDistributionStrategy;
     const optionsForRegistrationDistributionMode = state.RegistrationAndDistributionHappeningTogetherOrSeparately;
-    const [selectedRegistrationProcess, setSelectedRegistrationProcess] = useState(props.props.sessionData.CAMPAIGN_FORM?.campaignForm?.selectedRegistrationProcess || []);
-    const [selectedDistributionProcess, setSelectedDistributionProcess] = useState(props.props.sessionData.CAMPAIGN_FORM?.campaignForm.selectedDistributionProcess || []);
-    const [selectedRegistrationDistributionMode, setSelectedRegistrationDistributionMode] = useState(props.props.sessionData.CAMPAIGN_FORM?.campaignForm?.selectedRegistrationDistributionMode || []);
+    const [selectedRegistrationProcess, setSelectedRegistrationProcess] = useState(props.props.sessionData.CAMPAIGN_FORM?.campaignForm?.selectedRegistrationProcess || false);
+    const [selectedDistributionProcess, setSelectedDistributionProcess] = useState(props.props.sessionData.CAMPAIGN_FORM?.campaignForm.selectedDistributionProcess || false);
+    const [selectedRegistrationDistributionMode, setSelectedRegistrationDistributionMode] = useState(props.props.sessionData.CAMPAIGN_FORM?.campaignForm?.selectedRegistrationDistributionMode || false);
     const [executionCount, setExecutionCount] = useState(0);
     const resourceDistributionStrategyCode = props.props.sessionData?.CAMPAIGN_DETAILS?.campaignDetails.distributionStrat?.resourceDistributionStrategyCode;
 
@@ -25,15 +25,17 @@ const CampaignForm = ({ onSelect, ...props }) => {
     
 
       useEffect(()=>{
-        console.log(selectedDistributionProcess)
+        console.log(resourceDistributionStrategyCode,"code iss")
         if(resourceDistributionStrategyCode === "MIXED"){
+            console.log("its getting entered")
             onSelect(props.props.name, {selectedRegistrationProcess,selectedDistributionProcess,selectedRegistrationDistributionMode})
-            return
+            return;
         }
      
         onSelect(props.props.name,{selectedRegistrationDistributionMode} )
         
-      },[selectedDistributionProcess, selectedRegistrationDistributionMode, selectedRegistrationProcess])
+      },[selectedDistributionProcess, selectedRegistrationDistributionMode, selectedRegistrationProcess, resourceDistributionStrategyCode])
+
     const updateSelectedValues = (key, value) => {
         
         // setAssumptionsFormValues(prevValues => {

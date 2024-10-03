@@ -112,6 +112,7 @@ const formValidator = (formData, key, state) => {
   
   // filters out the falsy values
   const campaignFormValidator = (formData) => {
+    formData.selectedDistributionProcess
 
     const requiredFields = [
       formData?.selectedRegistrationProcess,
@@ -119,7 +120,7 @@ const formValidator = (formData, key, state) => {
       formData?.selectedRegistrationDistributionMode,
     ].filter(Boolean);
     
-    
+    console.log('required firwls', requiredFields)
     if (!areFieldsValid(requiredFields)) {
       return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; // Customize as needed
     }
