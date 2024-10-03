@@ -4,6 +4,7 @@ import { initLibraries } from "@egovernments/digit-ui-libraries";
 // import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initSandboxComponents } from "@egovernments/digit-ui-module-sandbox";
+import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";import {
   initPGRComponents,
@@ -40,6 +41,7 @@ const initDigitUI = () => {
   initUtilitiesComponents();
   initWorkbenchComponents();
   initSandboxComponents();
+  initDSSComponents();
 };
 
 initLibraries().then(() => {
