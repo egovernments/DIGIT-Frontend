@@ -32,6 +32,8 @@ const formValidator = (formData, key, state) => {
   function getValueFromPath(obj, path) {
     return path.split(".").reduce((acc, part) => acc && acc[part], obj);
   }
+   
+   
 
   // Validator function
   function validateFormData(jsonPaths) {
@@ -97,6 +99,47 @@ const formValidator = (formData, key, state) => {
     return null;
   };
 
+  const areFieldsValid = (fields) => {
+    const hasInvalidField = fields?.some(field => {
+      const isValid = field && field.value; 
+      return !isValid;
+    });
+  
+    return !hasInvalidField; // Returns true if all fields are valid
+  };
+    
+ 
+  
+  // filters out the falsy values
+  const campaignFormValidator = (formData) => {
+
+    const requiredFields = [
+      formData?.selectedRegistrationProcess,
+      formData?.selectedDistributionProcess,
+      formData?.selectedRegistrationDistributionMode,
+    ].filter(Boolean);
+    
+    
+    if (!areFieldsValid(requiredFields)) {
+      return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; // Customize as needed
+    }
+  
+    return null; // Return null if all validations pass
+  };
+
+
+  const microplanAssumptionsValidator = (formData)=>{
+       
+        if(!areFieldsValid(formData.assumptionValues)){
+           return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; 
+        }
+        window.dispatchEvent(new Event("isLastStep"))
+
+      return null
+  }
+  
+  
+
   //here we'll validate formData based on the config
   switch (key) {
     case "campaignDetails":
@@ -105,6 +148,10 @@ const formValidator = (formData, key, state) => {
       return microplanDetailsValidator();
     case "boundarySelection":
       return boundarySelectionValidator();
+     case "campaignForm":  
+       return campaignFormValidator(formData);
+    case "Assumptions":
+        return microplanAssumptionsValidator(formData);  
 
     default:
       return null;

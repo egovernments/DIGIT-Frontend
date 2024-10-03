@@ -1,122 +1,104 @@
-import React, { useState, useEffect,Fragment,useContext} from "react";
+import React, { useState, useEffect,Fragment,useContext, useRef} from "react";
 import { useTranslation } from "react-i18next";
 import { Card, Header, DeleteIconv2,LabelFieldPair, AddIcon,Button, CardText, } from "@egovernments/digit-ui-react-components";
 import {Dropdown,FieldV1,PopUp,} from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR } from "../utils/utilities"; 
-
-
 import { useMyContext } from "../utils/context";
 import { useAssumptionContext } from "./HypothesisWrapper";
 
 
 
-const Hypothesis = ({ category, assumptions:initialAssumptions, customProps, onSelect, })=>{
+const Hypothesis = ({ category, assumptions:initialAssumptions, customProps, })=>{
  
-  
+  const { t } = useTranslation();
+  const [error, setError] = useState({});
+  const [showPopUP, setShowPopUp] = useState(false)
+  const [assumptionsPopUP, setAssumptionsPopUp] = useState(false)
+  const [assumptionToDelete, setAssumptionToDelete] = useState(null)
+  const [assumptions, setAssumptions] = useState(initialAssumptions);
+  const [selectedDeletedAssumption, setSelectedDeletedAssumption] = useState(null);
+  const { assumptionValues, handleAssumptionChange, setAssumptionValues,setDeletedAssumptions, deletedAssumptions } = useAssumptionContext();
+  const deletedAssumptionCategories = useRef({});
+  const isAddNewDisabled = !deletedAssumptionCategories.current[category] || 
+  deletedAssumptionCategories.current[category].length === 0 || 
+  deletedAssumptionCategories.current[category].every(item => !deletedAssumptions.includes(item));
    
-  
-    const { t } = useTranslation();
-    const [error, setError] = useState({});
-    const [startValidation, setStartValidation] = useState(false);
-    const [showPopUP, setShowPopUp] = useState(false)
-    const [assumptionsPopUP, setAssumptionsPopUp] = useState(false)
-    const [assumptionToDelete, setAssumptionToDelete] = useState(null)
-    const { state, dispatch } = useMyContext();
-    const [assumptions, setAssumptions] = useState(initialAssumptions);
-    const [deletedAssumptions, setDeletedAssumptions] = useState([]);
-    const [selectedDeletedAssumption, setSelectedDeletedAssumption] = useState(null);
-    const { assumptionValues, handleAssumptionChange, setAssumptionValues,handleDeleteAssumption, deletedAssumptionss } = useAssumptionContext();
-    const maxAssumptions = initialAssumptions.length;
 
-        //  useEffect(()=>{
-        //     onSelect(customProps.name, { assumptionValues });
-        //   },[assumptionValues])
-
-      //   useEffect(() => {
-      //     setAssumptions(initialAssumptions.filter(item => !deletedAssumptions.includes(item)));
-      // }, [initialAssumptions, deletedAssumptions]);
-      
-
-      
-
-      console.log("assumptionform values are", assumptionValues )
-
-         
-        useEffect(() => {
-          setAssumptions(initialAssumptions);
-        }, [initialAssumptions]);
-
-
-        //   useEffect(() => {
-        //     if (customProps.isSubmitting) {
-        //           validateFields(); 
-        //     }
-        // }, [customProps.isSubmitting, assumptions, assumptionValues]);
-
-          //   const validateFields = () => {
-          //     const newError = {};
-          //     assumptions.forEach((item) => {
-          //         const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
-          //         if (!value) {
-          //             newError[item] = "This field is required"; 
-          //         }
-          //     });
-
-          //     setError(newError); 
-          // };
-
+  const availableDeletedAssumptions = Array.from(new Set(
+    (deletedAssumptionCategories.current[category] || []).filter(item =>
+        deletedAssumptions.includes(item)
+    )
+));
     
+     
+    const handleDeleteClick = (index) => {
+      setAssumptionToDelete(index); 
+      setShowPopUp(true); 
+    };
+
+    const handleCancelDelete = () => {
+      setShowPopUp(false); 
+    };
+    
+
+    const handleConfirmDelete = () => {
+      if (assumptionToDelete !== null) {
+        const deletedAssumption = assumptions[assumptionToDelete];
+        const updatedAssumptions = assumptions.filter((_, i) => i !== assumptionToDelete);
+        const updatedAssumptionValues = assumptionValues.filter(
+          (value) => value.key !== deletedAssumption
+      );
+    
+
+        if (!deletedAssumptionCategories.current[category]) {
+          deletedAssumptionCategories.current[category] = [];
+          }
+        deletedAssumptionCategories.current[category].push(deletedAssumption);
         
-   
-        const handleDeleteClick = (index) => {
-          setAssumptionToDelete(index); 
-          setShowPopUp(true); 
-        };
 
-        const handleConfirmDelete = () => {
-          if (assumptionToDelete !== null) {
-            const deletedAssumption = assumptions[assumptionToDelete];
-
-            handleDeleteAssumption(deletedAssumption);
+        setDeletedAssumptions([...deletedAssumptions, deletedAssumption]);
+        setAssumptions(updatedAssumptions);
+        setAssumptionValues(updatedAssumptionValues);
+        setAssumptionToDelete(null); 
+     }
+     setShowPopUp(false);
+    };
 
 
-            const updatedAssumptions = assumptions.filter((_, i) => i !== assumptionToDelete);
-            const updatedAssumptionValues = assumptionValues.filter(
-              (value) => value.key !== deletedAssumption
-          );
-            
-
-            setDeletedAssumptions([...deletedAssumptions, deletedAssumption]);
-            setAssumptions(updatedAssumptions);
-            setAssumptionValues(updatedAssumptionValues);
-            setAssumptionToDelete(null); 
-         }
-         setShowPopUp(false);
-        };
-        const handleCancelDelete = () => {
-          setShowPopUp(false); 
-        };
-
+const addNewAssumption = () => {
+  if (selectedDeletedAssumption) {
+      const assumptionToAdd = deletedAssumptions.find(assumption => assumption === selectedDeletedAssumption.code);
       
-        const addNewAssumption = () => {
-         
-          if (selectedDeletedAssumption) {
-            const assumptionToAdd = deletedAssumptions.find(assumption => assumption === selectedDeletedAssumption.code);
-            if (assumptionToAdd) {
-              setAssumptions([...assumptions, assumptionToAdd]);
-              setDeletedAssumptions(deletedAssumptions.filter((assumption) => assumption !== selectedDeletedAssumption.code));
-              setAssumptionValues((prevValues) => {
-                return prevValues.filter((value) => value.key !== assumptionToAdd);
-              });
-              setSelectedDeletedAssumption(null);
-              setAssumptionsPopUp(false);
-        };
-      
-      };
+      // **Check if it already exists**
+      if (assumptionToAdd && !assumptions.includes(assumptionToAdd)) { 
+          setAssumptions([...assumptions, assumptionToAdd]);
+          setDeletedAssumptions(deletedAssumptions.filter((assumption) => assumption !== selectedDeletedAssumption.code));
 
-   };   
-      console.log(customProps)
+          if (deletedAssumptionCategories.current[category]) {
+              deletedAssumptionCategories.current[category] = deletedAssumptionCategories.current[category].filter(
+                  (item) => item !== assumptionToAdd
+              );
+          }
+
+          // **Conditionally Add to assumptionValues if not already present**
+          if (!assumptionValues.some(assumption => assumption.key === assumptionToAdd)) {
+              setAssumptionValues(prevValues => [
+                  ...prevValues,
+                  { key: assumptionToAdd, value: null } // or an initial value
+              ]);
+          }
+
+          setSelectedDeletedAssumption(null);
+          setAssumptionsPopUp(false);
+      }
+  }
+};
+        
+    
          
+    useEffect(() => {
+      setAssumptions(initialAssumptions);
+    }, [initialAssumptions]);
          
      return (
          <>
@@ -141,7 +123,7 @@ const Hypothesis = ({ category, assumptions:initialAssumptions, customProps, onS
                                     </div>
 
 
-                                    <div class="input-container">
+                                    <div class="fieldv1-container">
                                         <FieldV1 
                                           type="number"
                                           name={item}
@@ -181,7 +163,7 @@ const Hypothesis = ({ category, assumptions:initialAssumptions, customProps, onS
                       style={{height:"50px", fontSize:"20px"}}
                       title=""
                       variation="secondary"
-                      isDisabled={assumptions.length >= maxAssumptions || deletedAssumptions.length === 0}
+                      isDisabled={isAddNewDisabled}
                       
                     />
                     {showPopUP && <PopUp
@@ -231,7 +213,8 @@ const Hypothesis = ({ category, assumptions:initialAssumptions, customProps, onS
                                         variant="select-dropdown"
                                         t={t}
                                         isMandatory={false}
-                                        option={deletedAssumptions?.map((item)=> ({code:item}))}
+                                        //option={deletedAssumptions?.map((item)=> ({code:item}))}
+                                        option={availableDeletedAssumptions.map(item => ({ code: item }))}
                                         select={(value)=>{
                                           setSelectedDeletedAssumption(value)
                                          }}

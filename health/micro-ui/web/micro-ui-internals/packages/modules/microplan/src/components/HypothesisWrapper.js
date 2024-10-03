@@ -16,7 +16,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     const { t } = useTranslation();
     const [currentStep, setCurrentStep] = useState(1);
     const { state } = useMyContext();
-    const [assumptionValues, setAssumptionValues] = useState(customProps?.sessionData?.HYPOTHESIS?.hypothesis?.Assumptions ||[]);
+    const [assumptionValues, setAssumptionValues] = useState(customProps?.sessionData?.HYPOTHESIS?.Assumptions?.assumptionValues ||[]);
     const assumptionsFormValues = customProps?.sessionData?.CAMPAIGN_FORM?.campaignForm //array with key and value 
     const campaignType =  customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code
     const resourceDistributionStrategyCode= customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode
@@ -26,153 +26,26 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         return keyParam ? parseInt(keyParam) : 1;
     });
     const [showToast, setShowToast] = useState(null);
-    const [deletedAssumptionss, setDeletedAssumptions] = useState([]);
+    const [deletedAssumptions, setDeletedAssumptions] = useState([]);
 
-    const handleDeleteAssumption = (assumption) => {
-        setDeletedAssumptions((prev) => [...prev, assumption]);
-        // Update other state logic as necessary...
-    };
-
-    console.log("customProps",customProps)
-
-
-
-
-    const filteredData = state.HypothesisAssumptions.filter((item) => {
-        // const assumptionsMap = new Map(assumptionsFormValues.map(a => [a.key, a.value]));
-        const isHouseToHouseOrFixedPost =  resourceDistributionStrategyCode === "HOUSE_TO_HOUSE" || 
-                                            resourceDistributionStrategyCode === "FIXED_POST";
-                                                
-
-        
-        
-        //  console.log("1", campaignType === item.campaignType )
-        //  console.log("2",   resourceDistributionStrategyCode === item.resourceDistributionStrategyCode)
-        //  console.log("3",  assumptionsFormValues?.selectedRegistrationProcess?.code===item?.RegistrationProcess)
-        //  console.log("4",   assumptionsFormValues?.selectedDistributionProcess?.code=== item.DistributionProcess)
-        //  console.log("5",  assumptionsFormValues?.selectedRegistrationDistributionMode?.code === item.isRegistrationAndDistributionHappeningTogetherOrSeparately)
-       
-         if(isHouseToHouseOrFixedPost){
-
-             return (
-                campaignType === item.campaignType &&
-                resourceDistributionStrategyCode === item.resourceDistributionStrategyCode &&
-                assumptionsFormValues?.selectedRegistrationDistributionMode?.code === item.isRegistrationAndDistributionHappeningTogetherOrSeparately
-
-             ) 
-         }
-
-        return (
-
-                 campaignType === item.campaignType &&
-                 resourceDistributionStrategyCode === item.resourceDistributionStrategyCode &&
-                 assumptionsFormValues?.selectedRegistrationProcess?.code===item?.RegistrationProcess && 
-                 assumptionsFormValues?.selectedDistributionProcess?.code=== item.DistributionProcess &&
-                 assumptionsFormValues?.selectedRegistrationDistributionMode?.code === item.isRegistrationAndDistributionHappeningTogetherOrSeparately
-             )
-         });     
-    const assumptionCategories = filteredData.length > 0 ? filteredData[0].assumptionCategories : [];
-    const filteredAssumptions = assumptionCategories[currentStep - 1]?.assumptions || [];
-    console.log(state, "state")
-
-    useEffect(() => {
-        console.log('calling onsEelect')
-        console.log(customProps.name)
-        onSelect(customProps.name, { assumptionValues });
-    }, [assumptionValues]);
-
-
-
-
-    const updateUrlParams = (params) => {
+    const moveToPreviousStep = () => {
+        if(currentStep >1){
+            setCurrentStep((prevStep) => prevStep -1);
+            setInternalKey((prevKey) => prevKey - 1); 
+        }  
+      };
+     const isLastStep = () => {
+        Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: false }); 
+        Digit.Utils.microplanv1.updateUrlParams({ internalKey:1 }); 
+     }  
+    
+     const updateUrlParams = (params) => {
         const url = new URL(window.location.href);
         Object.entries(params).forEach(([key, value]) => {
             url.searchParams.set(key, value);
         });
         window.history.replaceState({}, "", url);
     };
-
-    useEffect(() => {
-        updateUrlParams({ internalKey,});
-    }, [internalKey]);
-  
-
-
-    console.log("assumptionValues",assumptionValues )
-    console.log(customProps,"configoo")
-
-         
-
-        
-
-            console.log(filteredData, "filter") 
-  //this need to be changed bcoz of index filtereddata{0}
-    
-    console.log(assumptionCategories,"kolop")
-
-    const handleNext = () => {
-        const currentAssumptions = assumptionCategories[currentStep - 1]?.assumptions || [];
-        const existingAssumptionKeys = assumptionValues.map(assumption => assumption.key);
-    
-
-        // Filter current assumptions to only those that exist in assumptionValues
-        const visibleAssumptions = currentAssumptions.filter(item => 
-            existingAssumptionKeys.includes(item)
-        );
-        
-    
-        // Validate: Check if any value is empty for existing assumptions
-        const hasEmptyFields = visibleAssumptions.some(item => {
-            const value = assumptionValues.find(assumption => assumption.key === item)?.value;
-            return !value; // Check if any value is empty
-        });
-    
-
-    
-        if (hasEmptyFields) {
-            setShowToast({
-                key: "error",
-                label: "ERR_MANDATORY_FIELD",
-                transitionTime: 3000,
-            });
-            return; // Prevent moving to the next step
-        }
-        if (currentStep < assumptionCategories.length) {
-            setCurrentStep((prevStep) => prevStep + 1);
-            setInternalKey((prevKey) => prevKey + 1); // Update key in URL
-        }
-        // // Hide action bar on the last step
-        // if (currentStep === assumptionCategories.length - 1) {
-        //     setInternalKey(assumptionCategories.length);
-        //     setCurrentStep(assumptionCategories.length);
-        // }
-    };
-    
-
-    const handleBack = () => {
-        if (currentStep >=0) {
-            setCurrentStep((prevStep) => prevStep - 1);
-            setInternalKey((prevKey) => prevKey - 1); // Update key in URL
-        }
-    };
-    const handleStepClick = (step) => {
-        console.log(step,"step")
-        setCurrentStep(step + 1); // step is zero-based, so we add 1
-        setInternalKey(step + 1); // Update key in URL
-    };
-
-
-    useEffect(() => {
-        // Initialize assumptionValues with all assumptions set to null
-        const initialAssumptions = filteredAssumptions.map(item => ({
-            category:null, 
-            key: item, 
-            value: null // Initialize with null
-        }));
-    
-        setAssumptionValues(initialAssumptions);
-    }, [currentStep]);
-
     const handleAssumptionChange = (category, event, item) => {
         const newValue = event.target.value;
     
@@ -191,41 +64,160 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         });
     };
 
+    const handleNext = () => {
+        const currentAssumptions = assumptionCategories[currentStep - 1]?.assumptions || [];
+        const existingAssumptionKeys = assumptionValues.map(assumption => assumption.key);
+        
+        // Filter current assumptions to only those that exist in assumptionValues and are not deleted
+        const visibleAssumptions = currentAssumptions.filter(item => 
+            existingAssumptionKeys.includes(item) && !deletedAssumptions?.includes(item)
+        );
+        
+        // Validate: Check if any value is empty for existing assumptions
+        const hasEmptyFields = visibleAssumptions.some(item => {
+            const value = assumptionValues.find(assumption => assumption.key === item)?.value;
+            return !value; // Check if any value is empty
+        });
 
-    console.log("assumption values are", assumptionValues)
     
+        if (hasEmptyFields) {
+            setShowToast({
+                key: "error",
+                label: "ERR_MANDATORY_FIELD",
+                transitionTime: 3000,
+            });
+            return; // Prevent moving to the next step
+        }
+        if (currentStep < assumptionCategories.length) {
+            setCurrentStep((prevStep) => prevStep + 1);
+            setInternalKey((prevKey) => prevKey + 1); // Update key in URL
+        }
+    };
+
+    const filteredData = state.HypothesisAssumptions.filter((item) => {
+        // const assumptionsMap = new Map(assumptionsFormValues.map(a => [a.key, a.value]));
+        const isHouseToHouseOrFixedPost =  resourceDistributionStrategyCode === "HOUSE_TO_HOUSE" || 
+                                            resourceDistributionStrategyCode === "FIXED_POST";
+       
+         if(isHouseToHouseOrFixedPost){
+             return (
+                campaignType === item.campaignType &&
+                resourceDistributionStrategyCode === item.resourceDistributionStrategyCode &&
+                assumptionsFormValues?.selectedRegistrationDistributionMode?.code === item.isRegistrationAndDistributionHappeningTogetherOrSeparately
+
+             ) 
+         }
+
+        return (
+                 campaignType === item.campaignType &&
+                 resourceDistributionStrategyCode === item.resourceDistributionStrategyCode &&
+                 assumptionsFormValues?.selectedRegistrationProcess?.code===item?.RegistrationProcess && 
+                 assumptionsFormValues?.selectedDistributionProcess?.code=== item.DistributionProcess &&
+                 assumptionsFormValues?.selectedRegistrationDistributionMode?.code === item.isRegistrationAndDistributionHappeningTogetherOrSeparately
+             )
+         });     
+    const assumptionCategories = filteredData.length > 0 ? filteredData[0].assumptionCategories : [];
+    const filteredAssumptions = assumptionCategories[currentStep - 1]?.assumptions || [];
+
+    
+
+    const handleBack = () => {
+        if (currentStep >1) {
+            setCurrentStep((prevStep) => prevStep - 1);
+            setInternalKey((prevKey) => prevKey - 1); // Update key in URL
+        }else{
+            window.dispatchEvent(new Event("moveToPrevious"))
+        }
+    };
+    const handleStepClick = (step) => {
+        if (step < currentStep) {
+            setCurrentStep(step + 1); // Adjust for zero-based index
+            setInternalKey(step + 1);  // Update key in URL
+            return;
+        }
+        const currentAssumptions = assumptionCategories[currentStep - 1]?.assumptions || [];
+        const existingAssumptionKeys = assumptionValues.map(assumption => assumption.key);
+        const visibleAssumptions = currentAssumptions.filter(item => 
+            existingAssumptionKeys.includes(item) && !deletedAssumptions?.includes(item) 
+        );
+        const hasEmptyFields = visibleAssumptions.some(item => {
+            const value = assumptionValues.find(assumption => assumption.key === item)?.value;
+            return !value; // Check if any value is empty
+        });
+        if(hasEmptyFields) return;
+        setCurrentStep(step + 1); // step is zero-based, so we add 1
+        setInternalKey(step + 1); // Update key in URL
+    };  
+
+
 
    
 
-    console.log('filteredAssumptions', filteredAssumptions)
-    console.log('assumptionsCatwegroies', assumptionCategories)
-    // const handleAssumptionChange = (category, event, item) => {
-    //     const newValue = event.target.value;
+    useEffect(() => {
+        window.addEventListener("verticalStepper", moveToPreviousStep);
+        return () => {
+          window.removeEventListener("verticalStepper", moveToPreviousStep);
+        };
+      }, [internalKey]);
 
-    //     setAssumptionValues((prevValues) => {
-    //         const existingIndex = prevValues.findIndex((assumption) => assumption.key === item);
+      useEffect(() => {
+        window.addEventListener("isLastStep", isLastStep);
+        return () => {
+          window.removeEventListener("isLastStep", isLastStep);
+        };
+      }, [internalKey]);
 
-    //         if (existingIndex >= 0) {
-    //             const updatedValues = [...prevValues];
-    //             updatedValues[existingIndex] = {
-    //                 ...updatedValues[existingIndex],
-    //                 value: newValue,
-    //             };
-    //             return updatedValues;
-    //         } else {
-    //             return [...prevValues, { category, key: item, value: newValue }];
-    //         }
-    //     });
-    // };
+    useEffect(() => {
+        onSelect(customProps.name, { assumptionValues });
+    }, [assumptionValues, currentStep]);
+
+
+    useEffect(() => {
+        updateUrlParams({ internalKey,});
+    }, [internalKey]);
+
+
+    useEffect(() => {
+        // Initialize assumptionValues with all assumptions set to null
+        const initialAssumptions = filteredAssumptions.map(item => ({
+            category: null,
+            key: item,
+            value: null
+        }));
+    
+        // Create a set of existing keys for quick lookup
+        const existingKeys = new Set(assumptionValues.map(assumption => assumption.key));
+    
+        // Filter out initialAssumptions to avoid duplicates
+        const newAssumptions = initialAssumptions.filter(assumption => !existingKeys.has(assumption.key));
+    
+        // Update state only with non-duplicate assumptions
+        setAssumptionValues(prev => [...prev, ...newAssumptions]);
+    }, [filteredAssumptions]);
+
+   
+
+
+
+    useEffect(() => {
+        if (currentStep === assumptionCategories.length) {
+            Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: true });
+        }else{ // Assuming 1 is the first step
+            const {  isLastVerticalStep } = Digit.Hooks.useQueryParams();
+            Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: false });
+        }
+    }, [currentStep]);
+    
+    
 
     return (
         <Fragment>
-                <AssumptionContext.Provider value={{ assumptionValues, handleAssumptionChange, setAssumptionValues, deletedAssumptionss,handleDeleteAssumption }}>
+                <AssumptionContext.Provider value={{ assumptionValues, handleAssumptionChange, setAssumptionValues, deletedAssumptions,setDeletedAssumptions }}>
                   
                     <div style={{ display: "flex",gap:"2rem" }}>
                         <div className="card-container">
                             <Card className="card-header-timeline">
-                                <TextBlock subHeader={t("HCM_CAMPAIGN_DETAILS")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+                                <TextBlock subHeader={t("ESTIMATION_ASSUMPTIONS")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
                             </Card>
                             <Card className="stepper-card">
                                 <Stepper
@@ -241,11 +233,8 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
                         }}>
                             <Hypothesis
                                 category={assumptionCategories[currentStep - 1]?.category}
-                               // assumptions={filteredAssumptions}
-                               assumptions={filteredAssumptions.filter(item => !deletedAssumptions.includes(item))}
-                                onSelect={(key, value) => {
-                                    onSelect(key, value);
-                                }}
+                                 assumptions={filteredAssumptions.filter(item => !deletedAssumptions.includes(item))}
+                                onSelect={onSelect}
                                 customProps={customProps}
                             />
                         </div>
@@ -279,6 +268,8 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
 };
 
 export default HypothesisWrapper;
+
+
 
 
 

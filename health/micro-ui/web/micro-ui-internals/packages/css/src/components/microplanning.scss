@@ -2612,11 +2612,11 @@ $border-color: rgba(214, 213, 212, 1);
 }
 
 
-.input-container{
+.fieldv1-container{
   display: flex;
   justify-content: center;
   width:30rem;
-
+  align-items: center;
 }
 /* CSS FOR Campaign Form*/
 .campaignForm-label-field{

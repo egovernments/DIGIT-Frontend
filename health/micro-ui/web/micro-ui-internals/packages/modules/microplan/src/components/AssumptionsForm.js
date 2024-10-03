@@ -6,29 +6,33 @@ import { useMyContext } from "../utils/context";
 
 const CampaignForm = ({ onSelect, ...props }) => {
     const { state } = useMyContext();
-    const optionsForProcesses = state.ResourceDistributionStrategy;
- 
-    const optionsForRegistrationDistributionMode = state.RegistrationAndDistributionHappeningTogetherOrSeparately;
-
     const { t } = useTranslation();
-    const initialAssumptions = props.props.sessionData.CAMPAIGN_FORM?.campaignForm || [];
-
-
-    const [selectedRegistrationProcess, setSelectedRegistrationProcess] = useState(initialAssumptions?.selectedRegistrationProcess || null);
-    const [selectedDistributionProcess, setSelectedDistributionProcess] = useState(initialAssumptions?.selectedDistributionProcess || null);
-    const [selectedRegistrationDistributionMode, setSelectedRegistrationDistributionMode] = useState(initialAssumptions?.selectedRegistrationDistributionMode || null);
-  
-
+    const optionsForProcesses = state.ResourceDistributionStrategy;
+    const optionsForRegistrationDistributionMode = state.RegistrationAndDistributionHappeningTogetherOrSeparately;
+    const [selectedRegistrationProcess, setSelectedRegistrationProcess] = useState(props.props.sessionData.CAMPAIGN_FORM?.campaignForm?.selectedRegistrationProcess || []);
+    const [selectedDistributionProcess, setSelectedDistributionProcess] = useState(props.props.sessionData.CAMPAIGN_FORM?.campaignForm.selectedDistributionProcess || []);
+    const [selectedRegistrationDistributionMode, setSelectedRegistrationDistributionMode] = useState(props.props.sessionData.CAMPAIGN_FORM?.campaignForm?.selectedRegistrationDistributionMode || []);
     const [executionCount, setExecutionCount] = useState(0);
-    const [assumptionsFormValues, setAssumptionsFormValues] = useState([])
-
     const resourceDistributionStrategyCode = props.props.sessionData?.CAMPAIGN_DETAILS?.campaignDetails.distributionStrat?.resourceDistributionStrategyCode;
 
-  
+    useEffect(() => {
+        if (executionCount < 5) {
+            onSelect(props.props.name, {selectedRegistrationProcess,selectedDistributionProcess,selectedRegistrationDistributionMode})
+          
+          setExecutionCount((prevCount) => prevCount + 1);
+        }
+      });
+    
 
       useEffect(()=>{
+        console.log(selectedDistributionProcess)
+        if(resourceDistributionStrategyCode === "MIXED"){
+            onSelect(props.props.name, {selectedRegistrationProcess,selectedDistributionProcess,selectedRegistrationDistributionMode})
+            return
+        }
      
-            onSelect(props.props.name, {selectedDistributionProcess, selectedRegistrationProcess, selectedRegistrationDistributionMode})
+        onSelect(props.props.name,{selectedRegistrationDistributionMode} )
+        
       },[selectedDistributionProcess, selectedRegistrationDistributionMode, selectedRegistrationProcess])
     const updateSelectedValues = (key, value) => {
         
