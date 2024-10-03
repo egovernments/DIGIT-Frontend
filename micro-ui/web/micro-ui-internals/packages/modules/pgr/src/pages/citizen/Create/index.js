@@ -92,6 +92,7 @@ export const CreateComplaint = () => {
 
       await dispatch(createComplaint(data));
       await client.refetchQueries(["complaintsList"]);
+      clearParams();
       history.push(`${match.path}/response`);
     }
   };
