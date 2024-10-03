@@ -65,6 +65,8 @@ const CampaignDetails = ({onSelect,props:customProps,...props}) => {
     return <Loader />
   }
 
+
+
   return (
     <Card >
         <Header>{t(`HCM_CAMPAIGN_DETAILS_HEADER`)}</Header>

@@ -15,6 +15,7 @@ import HeaderComp from "./components/HeaderComp";
 import FormulaSection from "./components/FormulaSectionCard";
 import FormulaView from "./components/FormulaView";
 import SummaryScreen from "./pages/employee/SummaryScreen";
+import CampaignBoundary from "./components/CampaignBoundary";
 
 import CampaignForm from "./components/AssumptionsForm";
 
@@ -63,7 +64,8 @@ const componentsToRegister = {
   HeaderComp,
   FormulaView,
   FormulaSection,
-  SummaryScreen
+  SummaryScreen,
+  CampaignBoundary
   
 
 };

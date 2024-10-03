@@ -96,4 +96,17 @@
     background-color: #fbe9e6;
     border-color: #dc5a32;
   }
+
+  .subBoundarycomp-container{
+    display:inline-flex;
+    flex-wrap:wrap;
+    gap:0.125rem;
+  }
+
+.view-more{
+  text-decoration: underline;
+  cursor:pointer;
+  color:orange;
+  margin-top: 0.2rem;
+}
   

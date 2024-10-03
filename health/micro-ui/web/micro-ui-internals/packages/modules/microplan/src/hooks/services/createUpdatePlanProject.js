@@ -51,6 +51,7 @@ const isValidResourceName = async (name) => {
 //generating campaign and microplan
 //this will only be called on first time create so it doesn't have to be generic
 const CreateResource = async (req) => {
+  
   //creating a microplan and campaign instance here
   const { totalFormData, state, setShowToast, setCurrentKey, setCurrentStep, config, campaignObject, planObject } = req;
   try {
@@ -93,10 +94,11 @@ const CreateResource = async (req) => {
         },
       },
     });
-    if (camapaignRes?.CampaignDetails?.id && planRes?.PlanConfiguration?.id) {
+    
+    if (campaignRes?.CampaignDetails?.id && planRes?.PlanConfiguration?.[0]?.id) {
       Digit.Utils.microplanv1.updateUrlParams({
-        microplanId: camapaignRes?.CampaignDetails?.id,
-        campaignId: planRes?.PlanConfiguration?.id,
+        microplanId: planRes?.PlanConfiguration?.[0]?.id,
+        campaignId: campaignRes?.CampaignDetails?.id,
       });
       return true;
     }
@@ -155,11 +157,14 @@ const createUpdatePlanProject = async (req) => {
           setShowToast({ key: "error", label: "ERROR_MICROPLAN_NAME_ALREADY_EXISTS" });
           return;
         }
+        
         const isResourceCreated = await CreateResource(req);
         if (!isResourceCreated) {
           setShowToast({ key: "error", label: "ERROR_CREATING_MICROPLAN" });
           return;
         }
+        setCurrentKey((prev) => prev + 1);
+        setCurrentStep((prev) => prev + 1);
 
         return {
           triggeredFrom,
@@ -171,6 +176,8 @@ const createUpdatePlanProject = async (req) => {
         const updatedCampaignObject = {
           ...campaignObject,
           boundaries: totalFormData?.BOUNDARY?.boundarySelection?.selectedData,
+          startDate:Math.floor(new Date(new Date().setDate(new Date().getDate() + 100)).getTime())
+          //hardcoding this rn to update campaign. Check with admin console team
         };
         const planRes = await updatePlan(updatedCampaignObject);
         if (planRes?.CampaignDetails?.id) {
