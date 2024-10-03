@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState , useEffect} from "react";
 import { LandingPageCard, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -12,6 +12,29 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const tenantId = Digit.ULBService.getStateId();
+  let sortedConfigEmployeesSidebar= null;
+  const [mdmsOrderData, setMdmsOrderData]= useState([{}]);
+
+
+  const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    "HomeScreenOrder",
+    [
+      {
+        name: "CardsAndLinksOrder",
+      },
+    ],
+    {
+      select: (data) => {
+        return data?.["HomeScreenOrder"]?.["CardsAndLinksOrder"];
+      },
+    }
+  );
+
+
+  useEffect(() => {
+      setMdmsOrderData(MdmsRes);
+  }, [MdmsRes]);
 
   const transformURL = (url = "") => {
     if (url == "/") {
@@ -61,6 +84,7 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
         // link: queryParamIndex === -1 ? linkUrl : linkUrl.substring(0, queryParamIndex),
         queryParams: queryParamIndex === -1 ? null : linkUrl.substring(queryParamIndex),
         label: t(Digit.Utils.locale.getTransformedLocale(`${module}_LINK_${item.displayName}`)),
+        displayName: item.displayName
       });
       return acc;
     }, {});
@@ -73,8 +97,48 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
     return "";
   }
 
-  const children = Object.keys(configEmployeeSideBar)?.map((current, index) => {
-    const moduleData = configEmployeeSideBar?.[current];
+  const sortCardAndLink = (configEmployeeSideBar) => {
+    // Sort card modules based on the order in MdmsRes
+    const sortedModules = Object.keys(configEmployeeSideBar)
+      .sort((a, b) => {
+        // Find the card order in mdmsOrderData based on module names (HRMS, PGR, etc.)
+        const cardOrderA = mdmsOrderData?.find(item => item.moduleType === "card" && item.name === a)?.order || null;
+        const cardOrderB = mdmsOrderData?.find(item => item.moduleType === "card" && item.name === b)?.order || null;
+        return cardOrderA - cardOrderB;
+      })
+      .reduce((acc, module) => {
+        // Sort links based on the order in MdmsRes
+        const sortedLinks = configEmployeeSideBar?.[module]?.links?.sort((linkA, linkB) => {
+          const labelA = linkA?.displayName;
+          const labelB = linkB?.displayName;
+  
+          // Find the order for links inside the module
+          const orderA = mdmsOrderData?.find(item => item.moduleType === "link" && item.name === `${module}.${labelA.replace(/\s+/g, '_')}`)?.order || null;
+          const orderB = mdmsOrderData?.find(item => item.moduleType === "link" && item.name === `${module}.${labelB.replace(/\s+/g, '_')}`)?.order || null;
+  
+          return orderA - orderB;
+        });
+  
+        acc[module] = {
+          ...configEmployeeSideBar[module],
+          links: sortedLinks,
+        };
+  
+        return acc;
+      }, {});
+  
+    return sortedModules;
+  };
+
+  if(isMultiRootTenant){
+    sortedConfigEmployeesSidebar= sortCardAndLink(configEmployeeSideBar);
+  }
+  else{
+    sortedConfigEmployeesSidebar = configEmployeeSideBar;
+  }
+
+  const children = Object.keys(sortedConfigEmployeesSidebar)?.map((current, index) => {
+    const moduleData = sortedConfigEmployeesSidebar?.[current];
     const propsForModuleCard = {
       // Icon: moduleData?.icon,
       icon: "SupervisorAccount",
