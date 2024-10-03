@@ -27,7 +27,7 @@
     "dev:components": "cd packages/react-components && yarn start",
     "dev:example": "cd example && yarn start",
     "dev:core": "cd packages/modules/core && yarn start",
-    "devD:dss": "cd packages/modules/dss && yarn start",
+    "dev:dss": "cd packages/modules/dss && yarn start",
     "dev:hrms": "cd packages/modules/hrms && yarn start",
     "devD:common": "cd packages/modules/common && yarn start",
     "devD:utilities": "cd packages/modules/utilities && yarn start",
