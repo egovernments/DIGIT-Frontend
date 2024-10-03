@@ -11,7 +11,7 @@ const ConfigUploaderComponent = ({ onSelect, ...props }) => {
   const [file, setFile] = useState(null);
   const [fileStoreId, setFileStoreId] = useState(null);
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const [uploadErrorMEssage, setUploadErrorMessage] = useState("");
+  const [uploadErrorMessage, setUploadErrorMessage] = useState("");
   const { t } = useTranslation();
 
 
@@ -59,7 +59,7 @@ const ConfigUploaderComponent = ({ onSelect, ...props }) => {
           uploadedFiles={[]}
           variant="uploadFile"
           onUpload={(files) => selectFile(files)}
-          iserror={uploadErrorMEssage}
+          iserror={uploadErrorMessage}
           accept="image/*, .jpg, .png, .jpeg"
         // if (files && files.length > 0) {
         //   handleUploadFile(files);
