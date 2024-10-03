@@ -65,7 +65,7 @@ const CampaignDetails = ({onSelect,props:customProps,...props}) => {
     return <Loader />
   }
 
-  console.log("state",state);
+
 
   return (
     <Card >

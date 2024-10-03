@@ -5,7 +5,7 @@ import SubBoundaryView from "./subBoundaryView";
 import HeaderComp from "./HeaderComp";
 import { Card } from "@egovernments/digit-ui-components";
 import BoundaryKpi from "./BoundaryKpi";
-import { unstable_batchedUpdates } from "react-dom";
+
 
 const CampaignBoundary = ({customProps}) => {
     const { dispatch, state } = useMyContext();
