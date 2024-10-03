@@ -31,7 +31,8 @@ export const ImageUploadHandler = (props) => {
         }
       })();
     } else {
-      setIsDeleting(false);
+      setIsDeleting(false)
+      props.onPhotoChange(uploadedImagesIds);
     }
   }, [uploadedImagesIds]);
 

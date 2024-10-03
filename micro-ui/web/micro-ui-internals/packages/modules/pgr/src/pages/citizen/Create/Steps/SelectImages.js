@@ -16,7 +16,7 @@ const SelectImages = ({ t, config, onSelect, onSkip, value }) => {
 
   // const onSkip = () => onSelect();
   const handleSubmit = () => {
-    if (!uploadedImages || uploadedImages.length === 0) return onSkip();
+    // if (!uploadedImages || uploadedImages.length === 0) return onSkip();
     // const _uploadImages = uploadedImages.map((url) => ({
     //   documentType: "PHOTO",
     //   fileStore: url,
