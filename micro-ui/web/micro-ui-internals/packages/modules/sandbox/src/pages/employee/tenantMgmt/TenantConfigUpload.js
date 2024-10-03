@@ -17,7 +17,6 @@ const TenantConfigUpload = () => {
   const [isError, setIsError] = useState(false);
   const [uploadData, setUploadData] = useState([]); // State to store the uploaded data
   const [tenantDocument, setDocuments] = useState([]);
-  const [canSubmit, setCanSubmit] = useState(false);
 
   
 
