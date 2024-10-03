@@ -379,11 +379,17 @@
 
 .digit-topbar-ulb {
   .state {
-    width: 80px;
+    width: 5rem;
     height: 19px;
   }
 }
 
+.digit-topbar .digit-header-img-ulb-wrapper-mobileview .digit-topbar-ulb-mobileview {
+  .state {
+    width: 5rem;
+    height: 19px;
+  }
+}
 .digit-popup-footer.masterHandlerPopUpFooter {
   .digit-popup-footer-buttons {
     margin-left: unset;

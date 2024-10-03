@@ -5,25 +5,29 @@ import { useTranslation } from "react-i18next";
 import { Fragment } from "react";
 
 const LogoUploaderComponent = ({ onSelect, ...props }) => {
-  const [file, setFile] = useState(null);
-  const [fileStoreId, setFileStoreId] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [toastMessage, setToastMessage] = useState("");
   const [isError, setIsError] = useState(false);
+  const [file, setFile] = useState(null);
+  const [fileStoreId, setFileStoreId] = useState(null);
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [uploadErrorMessage, setUploadErrorMessage] = useState("");
   const { t } = useTranslation();
+  
   const handleUploadFile = async () => {
     // Upload the file first
     try {
       const response = await Digit.UploadServices.Filestorage("Sandbox", file, tenantId);
       const fileStoreId = response?.data?.files?.[0]?.fileStoreId;
       setFileStoreId(fileStoreId)
+      setUploadErrorMessage("");
     } catch (error) {
       setToastMessage(t("LOGO_UPLOAD_FAILED"));
       setIsError(true);
+      setUploadErrorMessage(t("LOGO_UPLOAD_FAILED"));
       setShowToast(true);
       setTimeout(() => {
-        closeToast();
+        setShowToast(false);
       }, 2000);
     }
   };
@@ -52,6 +56,7 @@ const LogoUploaderComponent = ({ onSelect, ...props }) => {
           uploadedFiles={[]}
           variant="uploadFile"
           onUpload={(files) => selectFile(files)}
+          iserror={uploadErrorMessage}
           accept="image/*, .jpg, .png, .jpeg"
         // if (files && files.length > 0) {
         //   handleUploadFile(files);

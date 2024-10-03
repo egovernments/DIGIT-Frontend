@@ -17,6 +17,7 @@ const TenantConfigUpload = () => {
   const [isError, setIsError] = useState(false);
   const [uploadData, setUploadData] = useState([]); // State to store the uploaded data
   const [tenantDocument, setDocuments] = useState([]);
+
   
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook({
@@ -74,6 +75,20 @@ const TenantConfigUpload = () => {
         type: data[key]?.type,
       };
     });
+
+    const isBannerUndefined = documents.find(doc => doc.type === "bannerUrl")?.fileStoreId === undefined;
+    const isLogoUndefined = documents.find(doc => doc.type === "logoUrl")?.fileStoreId === undefined;
+  
+    if (isBannerUndefined && isLogoUndefined) {
+      setToastMessage(t("BOTH_FILESTOREIDS_ARE_UNDEFINED"));
+      setIsError(true);
+      setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 2000);
+      return; 
+    }
+
     setUploadData(documents);
   };
 
@@ -127,12 +142,12 @@ const TenantConfigUpload = () => {
         },
         {
           onError: (error) => {
-            setToastMessage(error.message || t("ERROR_MESSAGE"));
+            setToastMessage(error.message || t("CONFIG_UPLOAD_ERROR_MESSAGE"));
             setIsError(true);
             setShowToast(true);
           },
           onSuccess: () => {
-            setToastMessage(t("SANDBOX_TENANT_CREATE_SUCCESS_TOAST"));
+            setToastMessage(t("CONFIG_UPLOAD_SUCCESSFUL_TOAST_MESSAGE"));
             setIsError(false);
             setShowToast(true);
             setTimeout(() => {
@@ -146,6 +161,9 @@ const TenantConfigUpload = () => {
       setToastMessage(error.message);
       setIsError(true);
       setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 2000);
     }
   };
 
