@@ -4,7 +4,6 @@ import { Card } from '@egovernments/digit-ui-components';
 import { Chip } from '@egovernments/digit-ui-components';
 
 const SubBoundaryView = ({ title, arr }) => {
-    // console.log("hi", "subBoundaryView", title, arr);
     return (
         <div>
             {
@@ -12,7 +11,7 @@ const SubBoundaryView = ({ title, arr }) => {
             <Card>
                 <HeaderComp title={title} />
                 {/* Flex container for the chips */}
-                <div style={{ display: "inline-flex", flexWrap: "wrap", gap: "2px" }}>
+                <div className="subBoundarycomp-container">
                     {arr.map((el, ind) => {
                         return (
                             <div key={ind} className="digit-tag-container" style={{ minWidth: "1rem" }} >

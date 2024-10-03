@@ -7,7 +7,7 @@ import { Card } from "@egovernments/digit-ui-components";
 import BoundaryKpi from "./BoundaryKpi";
 import { unstable_batchedUpdates } from "react-dom";
 
-const CampaignBoundary = () => {
+const CampaignBoundary = ({customProps}) => {
     const { dispatch, state } = useMyContext();
     const { t } = useTranslation();
 
@@ -26,305 +26,10 @@ const CampaignBoundary = () => {
         // Set showAllItems to true to show all items
     };
 
-    const selectedData = [
-        {
-            "code": "MICROPLAN_MO",
-            "name": "MICROPLAN_MO",
-            "type": "Country",
-            "isRoot": true,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_05_SINOE",
-            "name": "MICROPLAN_MO_05_SINOE",
-            "type": "Province",
-            "parent": "MICROPLAN_MO",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_05_07_JEDEPO",
-            "name": "MICROPLAN_MO_05_07_JEDEPO",
-            "type": "District",
-            "parent": "MICROPLAN_MO_05_SINOE",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
-            "name": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
-            "type": "Locality",
-            "parent": "MICROPLAN_MO_05_07_JEDEPO",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_05_07_03_15_POKPAKEN_TOWN_K1889",
-            "name": "MICROPLAN_MO_05_07_03_15_POKPAKEN_TOWN_K1889",
-            "type": "Village",
-            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
-            "isRoot": false,
-            "includeAllChildren": true
-        },
-        {
-            "code": "MICROPLAN_MO_05_07_03_14_POKPAKEN_TOWN_P1888",
-            "name": "MICROPLAN_MO_05_07_03_14_POKPAKEN_TOWN_P1888",
-            "type": "Village",
-            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
-            "isRoot": false,
-            "includeAllChildren": true
-        },
-        {
-            "code": "MICROPLAN_MO_05_07_03_13_BEATUOKEN_DWEHN1887",
-            "name": "MICROPLAN_MO_05_07_03_13_BEATUOKEN_DWEHN1887",
-            "type": "Village",
-            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
-            "isRoot": false,
-            "includeAllChildren": true
-        },
-        {
-            "code": "MICROPLAN_MO_05_07_03_12_BEATUOKEN_CHATT1886",
-            "name": "MICROPLAN_MO_05_07_03_12_BEATUOKEN_CHATT1886",
-            "type": "Village",
-            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
-            "isRoot": false,
-            "includeAllChildren": true
-        },
-        {
-            "code": "MICROPLAN_MO_05_07_03_11_BEATUOKEN_BEATU1885",
-            "name": "MICROPLAN_MO_05_07_03_11_BEATUOKEN_BEATU1885",
-            "type": "Village",
-            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
-            "isRoot": false,
-            "includeAllChildren": true
-        },
-        {
-            "code": "MICROPLAN_MO_05_07_03_10_BEATUOKEN",
-            "name": "MICROPLAN_MO_05_07_03_10_BEATUOKEN",
-            "type": "Village",
-            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
-            "isRoot": false,
-            "includeAllChildren": true
-        },
-        {
-            "code": "MICROPLAN_MO_05_07_03_09_POKPAKEN_TOWN_K1883",
-            "name": "MICROPLAN_MO_05_07_03_09_POKPAKEN_TOWN_K1883",
-            "type": "Village",
-            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
-            "isRoot": false,
-            "includeAllChildren": true
-        },
-        {
-            "code": "MICROPLAN_MO_05_07_03_08_POKPAKEN_TOWN_P1882",
-            "name": "MICROPLAN_MO_05_07_03_08_POKPAKEN_TOWN_P1882",
-            "type": "Village",
-            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
-            "isRoot": false,
-            "includeAllChildren": true
-        },
-        {
-            "code": "MICROPLAN_MO_05_07_03_07_POKPAKEN_TOWN_S1881",
-            "name": "MICROPLAN_MO_05_07_03_07_POKPAKEN_TOWN_S1881",
-            "type": "Village",
-            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
-            "isRoot": false,
-            "includeAllChildren": true
-        },
-        {
-            "code": "MICROPLAN_MO_05_07_03_06_POKPAKEN_TOWN",
-            "name": "MICROPLAN_MO_05_07_03_06_POKPAKEN_TOWN",
-            "type": "Village",
-            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
-            "isRoot": false,
-            "includeAllChildren": true
-        },
-        {
-            "code": "MICROPLAN_MO_05_07_03_05_JOKOKEN_ROBERT_1879",
-            "name": "MICROPLAN_MO_05_07_03_05_JOKOKEN_ROBERT_1879",
-            "type": "Village",
-            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
-            "isRoot": false,
-            "includeAllChildren": true
-        },
-        {
-            "code": "MICROPLAN_MO_05_07_03_04_JOKOKEN_SLAH_VI1878",
-            "name": "MICROPLAN_MO_05_07_03_04_JOKOKEN_SLAH_VI1878",
-            "type": "Village",
-            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
-            "isRoot": false,
-            "includeAllChildren": true
-        },
-        {
-            "code": "MICROPLAN_MO_05_07_03_03_JOKOKEN_JOKOKEN",
-            "name": "MICROPLAN_MO_05_07_03_03_JOKOKEN_JOKOKEN",
-            "type": "Village",
-            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
-            "isRoot": false,
-            "includeAllChildren": true
-        },
-        {
-            "code": "MICROPLAN_MO_05_07_03_02_JOKOKEN",
-            "name": "MICROPLAN_MO_05_07_03_02_JOKOKEN",
-            "type": "Village",
-            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
-            "isRoot": false,
-            "includeAllChildren": true
-        },
-        {
-            "code": "MICROPLAN_MO_05_07_03_01__124",
-            "name": "MICROPLAN_MO_05_07_03_01__124",
-            "type": "Village",
-            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
-            "isRoot": false,
-            "includeAllChildren": true
-        },
-        {
-            "code": "MICROPLAN_MO_05_07_02_DUCORFREE_CLINIC",
-            "name": "MICROPLAN_MO_05_07_02_DUCORFREE_CLINIC",
-            "type": "Locality",
-            "parent": "MICROPLAN_MO_05_07_JEDEPO",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_05_07_01_DOODWICKEN_CLINIC",
-            "name": "MICROPLAN_MO_05_07_01_DOODWICKEN_CLINIC",
-            "type": "Locality",
-            "parent": "MICROPLAN_MO_05_07_JEDEPO",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_05_06_JEADE",
-            "name": "MICROPLAN_MO_05_06_JEADE",
-            "type": "District",
-            "parent": "MICROPLAN_MO_05_SINOE",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_05_05_GREENVILLE",
-            "name": "MICROPLAN_MO_05_05_GREENVILLE",
-            "type": "District",
-            "parent": "MICROPLAN_MO_05_SINOE",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_05_04_GBLONEE",
-            "name": "MICROPLAN_MO_05_04_GBLONEE",
-            "type": "District",
-            "parent": "MICROPLAN_MO_05_SINOE",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_05_03_DUGBE_RIVER",
-            "name": "MICROPLAN_MO_05_03_DUGBE_RIVER",
-            "type": "District",
-            "parent": "MICROPLAN_MO_05_SINOE",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_05_02_BUTAW",
-            "name": "MICROPLAN_MO_05_02_BUTAW",
-            "type": "District",
-            "parent": "MICROPLAN_MO_05_SINOE",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_05_01__101",
-            "name": "MICROPLAN_MO_05_01__101",
-            "type": "District",
-            "parent": "MICROPLAN_MO_05_SINOE",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_04_GBARPOLU",
-            "name": "MICROPLAN_MO_04_GBARPOLU",
-            "type": "Province",
-            "parent": "MICROPLAN_MO",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_03_GRAND_GEDEH",
-            "name": "MICROPLAN_MO_03_GRAND_GEDEH",
-            "type": "Province",
-            "parent": "MICROPLAN_MO",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_02_GRAND_KRU",
-            "name": "MICROPLAN_MO_02_GRAND_KRU",
-            "type": "Province",
-            "parent": "MICROPLAN_MO",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_01_MARYLAND",
-            "name": "MICROPLAN_MO_01_MARYLAND",
-            "type": "Province",
-            "parent": "MICROPLAN_MO",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_06_SINOE",
-            "name": "MICROPLAN_MO_06_SINOE",
-            "type": "Province",
-            "parent": "MICROPLAN_MO",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_05_GBARPOLU",
-            "name": "MICROPLAN_MO_05_GBARPOLU",
-            "type": "Province",
-            "parent": "MICROPLAN_MO",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_04_GRAND_GEDEH",
-            "name": "MICROPLAN_MO_04_GRAND_GEDEH",
-            "type": "Province",
-            "parent": "MICROPLAN_MO",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_03_GRAND_KRU",
-            "name": "MICROPLAN_MO_03_GRAND_KRU",
-            "type": "Province",
-            "parent": "MICROPLAN_MO",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_02_MARYLAND",
-            "name": "MICROPLAN_MO_02_MARYLAND",
-            "type": "Province",
-            "parent": "MICROPLAN_MO",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_01_",
-            "name": "MICROPLAN_MO_01_",
-            "type": "Province",
-            "parent": "MICROPLAN_MO",
-            "isRoot": false,
-            "includeAllChildren": false
-        }
-    ] // Memoized to prevent recomputation on every render
-
+    const selectedData = customProps?.sessionData?.BOUNDARY?.boundarySelection?.selectedData;
+    
     // Memoizing parents and parent_group to only compute once when selectedData changes
+    
     const { parents, parent_group } = useMemo(() => {
         let parents = {};
         let parent_group = {};
@@ -401,24 +106,24 @@ const CampaignBoundary = () => {
 
         setbHierarchy(bH);
 
+        const updatedBoundaryStatus = [...boundaryStatus]; // Create a copy of boundaryStatus
+
         for (const ind in bHierarchy) {
             if (parent_group[bHierarchy[ind]] && parent_group[bHierarchy[ind]].length > 2) {
-                boundaryStatus[ind] = true
-
+                updatedBoundaryStatus[ind] = true; 
             } else {
-                boundaryStatus[ind] = false
-
+                updatedBoundaryStatus[ind] = false; 
             }
         }
+        
+        setBoundaryStatus(updatedBoundaryStatus);
 
 
 
 
 
     }, [boundaryHierarchy]); // Only re-run when boundaryHierarchy changes
-    console.log("parent", parents)
-    console.log("parents_group", parent_group)
-    console.log("bHierarchy", bHierarchy[1])
+    
     return (
         <div>
 
@@ -443,13 +148,9 @@ const CampaignBoundary = () => {
                 if (parent_group[item] && Array.isArray(parent_group[item])) {
                     return parent_group[item].map((item1, idx) => {
                         //item1-Province-[Sinoe],District-[Jedepo,Jeade]
-
-
-                        console.log("status", ind + 2, boundaryStatus[ind + 2])
-
                         return Array.isArray(item1) && (!boundaryStatus[ind + 2]) ? (
                             //make a super-comp that contains SubBoundary View
-                            <Card>
+                            <Card key={`card_${ind}_${idx}`}>
                                 <HeaderComp title={bHierarchy[ind + 2]} />
                                 {item1.map((item2) => (
                                     //item2-parents name eg, sino etc
@@ -462,18 +163,13 @@ const CampaignBoundary = () => {
                                 }
                                 <div
                                     onClick={() => handleViewMore(ind + 2)}
-                                    style={{
-                                        textDecoration: 'underline',
-                                        cursor: 'pointer',
-                                        color: 'orange',
-                                        marginTop: '0.2rem'
-                                    }}
+                                    className="view-more"
                                 >
                                     View Less
                                 </div>
                             </Card>
                         ) : (Array.isArray(item1) && (boundaryStatus[ind + 2])) ? (
-                            <div>
+                            <div key={`div_${ind}_${idx}`}>
                                 <Card>
                                     <HeaderComp title={bHierarchy[ind + 2]} />
                                     {item1.filter(() => (idx == 0 || idx == 1)).map((item2) => (
@@ -487,12 +183,7 @@ const CampaignBoundary = () => {
                                     }
                                     <div
                                         onClick={() => handleViewMore(ind + 2)}
-                                        style={{
-                                            textDecoration: 'underline',
-                                            cursor: 'pointer',
-                                            color: 'orange',
-                                            marginTop: '0.2rem'
-                                        }}
+                                        className="view-more"
                                     >
                                         View More
                                     </div>

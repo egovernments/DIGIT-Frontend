@@ -106,7 +106,7 @@ const SummaryScreen = ({props:customProps}) => {
                             type: "COMPONENT",
                             component: "CampaignBoundary",
                             props: {
-                                
+                                customProps:customProps
 
                             },
                         },
