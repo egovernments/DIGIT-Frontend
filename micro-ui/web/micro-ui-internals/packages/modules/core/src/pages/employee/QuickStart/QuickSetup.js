@@ -11,13 +11,13 @@ const CardC = ({ type, title, content, actions, style }) => {
     <div>
       {/* <div style={{ border: "1px solid #ccc", borderRadius: "8px", padding: "16px", margin: "16px", ...style }}> */}
       <CardSectionHeader>{title}</CardSectionHeader>
-      <CardSectionSubText>{content}</CardSectionSubText>
-      <div>
+      <CardSectionSubText style={{ marginTop: "1rem" }}>{content}</CardSectionSubText>
+      <div style={{ marginTop: "1rem" }}>
         {actions && (
           <ListTag>
             {actions.map((action, index) => (
               <li key={index} style={{ listStyleType: ListTag === "ul" ? "disc" : "auto", margin: "8px 0" }}>
-                <strong>{action.label}:</strong> {action.description}
+                {action?.label ? <strong>{action?.label}:</strong> : null} {action.description}
               </li>
             ))}
           </ListTag>
@@ -29,9 +29,9 @@ const CardC = ({ type, title, content, actions, style }) => {
 
 const FAQ = ({ key, title, content, faqs }) => {
   return (
-    <div>
+    <div style={{ width: "100%" }}>
       <CardSectionHeader>{title}</CardSectionHeader>
-      <CardSectionSubText>{content}</CardSectionSubText>
+      <CardSectionSubText style={{ marginTop: "1rem" }}>{content}</CardSectionSubText>
       <div style={{ width: "100%" }}>
         {faqs.map((faq, i) => (
           <FaqComponent key={"faq_" + i} question={faq.question} answer={faq.answer} lastIndex={i === faqs?.length - 1} />
@@ -79,7 +79,7 @@ const QuickSetup = ({ cardConfig }) => {
                 actions={config.actions}
                 style={config.style}
               />
-              {index !== cardConfig?.length - 1 && <BreakLine style={{ width: "100%" }} />}
+              {index !== cardConfig?.length - 1 && <BreakLine style={{ width: "100%", border: "1px solid #d6d5d4" }} />}
             </React.Fragment>
           );
         })}

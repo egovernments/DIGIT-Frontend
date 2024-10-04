@@ -78,19 +78,31 @@ const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...
     {
       id: 1,
       title: "SANDBOX_GUIDE_1",
-      content: "SANDBOX_CONTENT_1",
+      content: null,
       actions: [
         {
-          label: "SANDBOX_GUIDE_1_LABEL_1",
+          label: null,
           description: "SANDBOX_GUIDE_1_DESC_1",
         },
         {
-          label: "SANDBOX_GUIDE_1_LABEL_2",
+          label: null,
           description: "SANDBOX_GUIDE_1_DESC_2",
         },
         {
-          label: "SANDBOX_GUIDE_1_LABEL_3",
+          label: null,
           description: "SANDBOX_GUIDE_1_DESC_3",
+        },
+        {
+          label: null,
+          description: "SANDBOX_GUIDE_1_DESC_4",
+        },
+        {
+          label: null,
+          description: "SANDBOX_GUIDE_1_DESC_5",
+        },
+        {
+          label: null,
+          description: "SANDBOX_GUIDE_1_DESC_6",
         },
       ],
     },
@@ -123,11 +135,11 @@ const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...
           label: "SANDBOX_GUIDE_2_LABEL_6",
           description: "SANDBOX_GUIDE_2_DESC_6",
         },
+        {
+          label: "SANDBOX_GUIDE_2_LABEL_7",
+          description: "SANDBOX_GUIDE_2_DESC_7",
+        },
       ],
-      style: {
-        backgroundColor: "#fce4ec",
-        color: "#880e4f",
-      },
     },
     {
       id: 3,
@@ -147,10 +159,6 @@ const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...
           description: "SANDBOX_GUIDE_3_DESC_3",
         },
       ],
-      style: {
-        backgroundColor: "#fff9c4",
-        color: "#f57f17",
-      },
     },
     {
       id: 4,
