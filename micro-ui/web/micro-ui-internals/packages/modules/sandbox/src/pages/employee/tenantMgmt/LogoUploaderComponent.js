@@ -57,7 +57,7 @@ const LogoUploaderComponent = ({ onSelect, ...props }) => {
           variant="uploadFile"
           onUpload={(files) => selectFile(files)}
           iserror={uploadErrorMessage}
-          accept="image/*, .jpg, .png, .jpeg"
+          accept=".jpg, .png, .jpeg"
         // if (files && files.length > 0) {
         //   handleUploadFile(files);
         // }
