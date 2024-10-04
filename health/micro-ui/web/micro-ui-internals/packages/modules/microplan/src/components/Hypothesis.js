@@ -122,7 +122,7 @@ const addNewAssumption = () => {
                                     </div>
 
 
-                                    <div class="fieldv1-container">
+                                    <div className="fieldv1-container">
                                         <FieldV1 
                                           type="number"
                                           name={item}
