@@ -37,7 +37,7 @@
   thead {
     tr {
       th {
-        background-color: #ffffff;
+        background-color: #ffffff !important;
       }
     }
   }
@@ -617,5 +617,29 @@ digit-card-text.center {
 .sidebar-list {
   a {
     text-decoration: none;
+  }
+}
+.profileDropdown{
+  input{
+    font-size: 1rem !important;
+  }
+}
+
+.digit-card-component {
+  &.sandbox-guide {
+    &::-webkit-scrollbar {
+      width: 0.3rem;
+      background-color: #fff;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: #fff;
+      border-radius: 0.3rem;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #d6d5d4;
+      border-radius: 0.3rem;
+    }
   }
 }
