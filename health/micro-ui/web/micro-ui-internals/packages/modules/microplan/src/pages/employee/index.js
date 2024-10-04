@@ -151,6 +151,9 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
         </React.Fragment>
          <PrivateRoute path={`${path}/setup-microplan`} component={() => <SetupMicroplan hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />} />
          <PrivateRoute path={`${path}/microplan-search`} component={() => <MicroplanSearch></MicroplanSearch>} /> 
+         <PrivateRoute path={`${path}/cb`} component={() => <CampaignBoundary></CampaignBoundary>} /> 
+
+
          
 
       </AppContainer>

@@ -4,6 +4,7 @@ import { Card } from '@egovernments/digit-ui-components';
 import { Chip } from '@egovernments/digit-ui-components';
 
 const SubBoundaryView = ({ title, arr }) => {
+    console.log("subBoundaryView",title,arr);
     return (
         <div>
             {
