@@ -190,23 +190,22 @@ const createUpdatePlanProject = async (req) => {
           setShowToast({ key: "error", label: "ERR_BOUNDARY_UPDATE" });
         }
 
-      case "CAMPAIGN_FORM":
+      case "ASSUMPTIONS_FORM":
         setCurrentKey((prev) => prev + 1);
         setCurrentStep((prev) => prev + 1);
         return {
           triggeredFrom,
         };
 
-        case "HYPOTHESIS":
+      case "HYPOTHESIS":
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
           return {
             triggeredFrom,
           }; 
+   
 
-          
-
-      default:
+     default:
         setShowToast({ key: "error", label: "ERROR_UNHANDLED_NEXT_OPERATION" });
         return {
           triggeredFrom,

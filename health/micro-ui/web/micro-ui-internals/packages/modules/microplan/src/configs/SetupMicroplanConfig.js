@@ -95,14 +95,14 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
         {
           stepCount: "4",
           key: "4",
-          name: "CAMPAIGN_FORM",
+          name: "ASSUMPTIONS_FORM",
           body: [
             {
               isMandatory: false,
-              key: "campaignForm",
+              key: "assumptionsForm",
               type: "component",
               skipAPICall: false,
-              component: "CampaignForm",
+              component: "AssumptionsForm",
               withoutLabel: true,
               disable: false,
               withoutLabelFieldPair: true,
@@ -113,7 +113,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
   
               },
               populators: {
-                name: "campaignForm",
+                name: "assumptionsForm",
                 required: true,
               },
             },

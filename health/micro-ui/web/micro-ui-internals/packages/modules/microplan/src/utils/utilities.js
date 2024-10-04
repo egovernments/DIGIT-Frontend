@@ -111,7 +111,7 @@ const formValidator = (formData, key, state) => {
  
   
   // filters out the falsy values
-  const campaignFormValidator = (formData) => {
+  const assumptionsFormValidator = (formData) => {
     formData.selectedDistributionProcess
 
     const requiredFields = [
@@ -120,7 +120,7 @@ const formValidator = (formData, key, state) => {
       formData?.selectedRegistrationDistributionMode,
     ].filter(Boolean);
     
-    console.log('required firwls', requiredFields)
+    
     if (!areFieldsValid(requiredFields)) {
       return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; // Customize as needed
     }
@@ -149,8 +149,8 @@ const formValidator = (formData, key, state) => {
       return microplanDetailsValidator();
     case "boundarySelection":
       return boundarySelectionValidator();
-     case "campaignForm":  
-       return campaignFormValidator(formData);
+     case "assumptionsForm":  
+       return assumptionsFormValidator(formData);
     case "Assumptions":
         return microplanAssumptionsValidator(formData);  
 

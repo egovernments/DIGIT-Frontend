@@ -265,4 +265,4 @@ const addNewAssumption = () => {
       
 }
 
-export default Hypothesis
+export default Hypothesis;

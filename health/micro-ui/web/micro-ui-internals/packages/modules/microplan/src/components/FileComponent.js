@@ -1,4 +1,4 @@
- import React from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { EditIcon } from "@egovernments/digit-ui-react-components";
 import { DeleteIconv2 } from "@egovernments/digit-ui-react-components";

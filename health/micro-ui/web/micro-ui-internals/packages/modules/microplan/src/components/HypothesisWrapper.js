@@ -17,7 +17,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     const [currentStep, setCurrentStep] = useState(1);
     const { state } = useMyContext();
     const [assumptionValues, setAssumptionValues] = useState(customProps?.sessionData?.HYPOTHESIS?.Assumptions?.assumptionValues ||[]);
-    const assumptionsFormValues = customProps?.sessionData?.CAMPAIGN_FORM?.campaignForm //array with key and value 
+    const assumptionsFormValues = customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm //array with key and value 
     const campaignType =  customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code
     const resourceDistributionStrategyCode= customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode
     const searchParams = new URLSearchParams(window.location.search);
@@ -95,7 +95,6 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     };
 
     const filteredData = state.HypothesisAssumptions.filter((item) => {
-        // const assumptionsMap = new Map(assumptionsFormValues.map(a => [a.key, a.value]));
         const isHouseToHouseOrFixedPost =  resourceDistributionStrategyCode === "HOUSE_TO_HOUSE" || 
                                             resourceDistributionStrategyCode === "FIXED_POST";
        
@@ -290,139 +289,3 @@ export default HypothesisWrapper;
 
 
 
-
-
-
-
-
-
-
-// import React, { useState, useEffect, Fragment } from 'react';
-// import Hypothesis from './Hypothesis';
-// import { Stepper, TextBlock, ActionBar,SubmitBar, LinkButton } from '@egovernments/digit-ui-components';
-// import { Button, Card } from '@egovernments/digit-ui-react-components';
-// import { useTranslation } from "react-i18next";
-
-
-// import { useMyContext } from "../utils/context";
-
-
-
-
-// const HypothesisWrapper = ({ onSelect, props: customProps }) => {
-
-//     const [selectedCategory, setSelectedCategory] = useState('GENERAL_INFORMATION');
-//     const { state, dispatch } = useMyContext();
-//     const assumptionCategories = state.HypothesisAssumptions[0].assumptionCategories
-//     const { t } = useTranslation();
-
-//     const searchParams = new URLSearchParams(location.search);
-//     const [currentStep, setCurrentStep] = useState(6);
-//     const currentKey = searchParams.get("key");
-//     const [key, setKey] = useState(() => {
-//         const keyParam = searchParams.get("key");
-//         return keyParam ? parseInt(keyParam) : 6;
-//     });
-//     const [internalKey, setInternalKey] = useState()
-//     console.log(state,"state")
-//     console.log(customProps,"custompropy")
-
-//     const assumptionsFormValues = customProps?.sessionData?.CAMPAIGN_FORM?.campaignForm //array with key and value 
-//              const campaignType =  customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code
-//      const resourceDistributionStrategyCode= customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode
-//       // console.log(assumptionsFormValues, campaignType, resourceDistributionStrategy)
-                                   
-//       const filteredData = state.HypothesisAssumptions.filter((item) => {
-//        // const assumptionsMap = new Map(assumptionsFormValues.map(a => [a.key, a.value]));
-//           console.log(  resourceDistributionStrategyCode === item.resourceDistributionStrategyCode)
-//          return (
-//             campaignType === item.campaignType &&
-//             resourceDistributionStrategyCode === item.resourceDistributionStrategyCode && assumptionsFormValues?.selectedDistributionProcess?.code=== item.DistributionProcess &&
-//             assumptionsFormValues?.selectedRegistrationDistributionMode?.code === item.isRegistrationAndDistributionHappeningTogetherOrSeparately
-//         )
-//     });     
- 
-//     console.log(filteredData,"filterr")
-
-
-
-
-
-
-//     function updateUrlParams(params) {
-//         const url = new URL(window.location.href);
-//         Object.entries(params).forEach(([key, value]) => {
-//           url.searchParams.set(key, value);
-//         });
-//         window.history.replaceState({}, "", url);
-//       }
-    
-//     useEffect(() => {
-//         setKey(currentKey);
-//         setCurrentStep(currentKey);
-//     }, [currentKey])
-//     useEffect(() => {
-//         updateUrlParams({ key: key });
-//         window.dispatchEvent(new Event("checking"));
-//       }, [key]);
-
-//     const onStepClick = (currentStep) => {
-    
-//         if (currentStep === 0) {
-//             setKey(1);
-//         }
-//         else if (currentStep === 1) {
-//             setKey(2);
-//         }
-//         else if (currentStep === 3) {
-//             setKey(4);
-//         }
-//         else setKey(3);
-//     };
-
-//     const filteredAssumptions = assumptionCategories.find(category => category.category === selectedCategory)?.assumptions || [];
-
-
-//     return <>
-//         <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center" }}>
-//             <div className="card-container" >
-//                 <Card className="card-header-timeline" >
-//                     <TextBlock subHeader={t("HCM_CAMPAIGN_DETAILS")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
-//                 </Card>
-//                 <Card className="stepper-card">
-//                     <Stepper
-//                         customSteps={["HCM_CAMPAIGN_TYPE", "HCM_CAMPAIGN_NAME", "HCM_CAMPAIGN_DATE", "HCM_SUMMARY"]}
-//                         currentStep={currentStep - 1}
-//                         onStepClick={onStepClick}
-//                         direction={"vertical"}
-//                     />
-//                 </Card>
-//             </div>
-
-//             <div>
-//                 <Hypothesis
-//                     category={selectedCategory}
-//                     assumptions={filteredAssumptions}
-//                     onSelect={onSelect}
-//                     customProps={customProps}
-
-//                 />
-//             </div>
-         
-//             <ActionBar >
-          
-                
-                
-//                     <Button className="previous-button"  variation="secondary" label={t("BACK")} onButtonClick={()=>{} } />
-//                      <Button className="previous-button"  variation="primary" label={t('Save And Proceed')} onButtonClick={()=> {}} />
-                
-//         {/* <LinkButton style={customProps?.skipStyle} label={customProps?.skiplabel || t(`CS_SKIP_CONTINUE`)} onClick={customProps.onSkip} /> */}
-//             </ActionBar>
-//         </div>
-
-
-//     </>
-
-// }
-
-// export default HypothesisWrapper;
