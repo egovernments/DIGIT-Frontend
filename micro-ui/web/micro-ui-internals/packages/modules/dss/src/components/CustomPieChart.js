@@ -53,27 +53,25 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination,variant=
 
 
   const renderLegend = (val, entry) => {
-    // Ensure val is a valid string before applying trim
     const labelValue = val && typeof val === 'string' ? val.trim() : '';
-  
-    if (labelValue === '') {
-      return null;
-    }
-  
+    if (!labelValue) return null;
+
+    const localizedLabel = t(`COMMON_MASTERS_${Digit.Utils.locale.getTransformedLocale(labelValue)}`, labelValue);
+
     if (variant === "pieChartv2" && entry) {
       return (
-        <div style={{ display:"inline-flex", justifyContent:"space-between", fontSize: "16px", width:"95%", color:"black", height:"5px", alignItems:"center" }}>
-          <p style={{ display:"inline-block", maxWidth:"20rem", alignItems:"flex-start", paddingLeft:"0.5rem", whiteSpace:"nowrap", textOverflow:"ellipsis", height:"fit-content", overflow:"hidden" }}>
-            {t(`COMMON_MASTERS_${Digit.Utils.locale.getTransformedLocale(labelValue)}`)}
+        <div style={{ display: "inline-flex", justifyContent: "space-between", fontSize: "16px", width: "95%", color: "black", height: "5px", alignItems: "center" }}>
+          <p style={{ display: "inline-block", maxWidth: "20rem", paddingLeft: "0.5rem", whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}>
+            {localizedLabel}
           </p>
-          <p style={{ display:"inline-block", alignItems:"flex-end", fontWeight:"bold", fontSize:"20px" }}>
+          <p style={{ display: "inline-block", fontWeight: "bold", fontSize: "20px" }}>
             {Digit.Utils.dss.formatter(entry?.payload?.value, entry?.payload?.symbol, value?.denomination, true, t)}
           </p>
         </div>
       );
     }
-  
-    return <span style={{ fontSize: "14px", color: "#505A5F" }}>{t(`COMMON_MASTERS_${Digit.Utils.locale.getTransformedLocale(labelValue)}`)}</span>;
+
+    return <span style={{ fontSize: "14px", color: "#505A5F" }}>{localizedLabel}</span>;
   };
 
   const renderCustomLabel = (args) => {
