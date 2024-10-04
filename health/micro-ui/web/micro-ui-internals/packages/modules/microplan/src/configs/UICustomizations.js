@@ -49,7 +49,7 @@ export const UICustomizations = {
       // delete data.body.PlanConfigurationSearchCriteria.pagination
       data.body.PlanConfigurationSearchCriteria.status = status?.status;
       cleanObject(data.body.PlanConfigurationSearchCriteria);
-    
+
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
@@ -97,5 +97,26 @@ export const UICustomizations = {
 
     },
   },
+
+  UserManagementConfig: {
+    preProcess: (data) => {
+
+      // console.log(data,"dat");
+      const { phone, name } = data?.state?.searchForm || {}
+      const { sortOrder } = data?.state?.filterForm || {}
+      const { limit } = data?.body?.inbox
+      const {offset}=data?.moduleSearchCriteria
+      const {roles} = data?.state?.filterForm || {}
+      debugger
+      // data.param.phone=phone;
+      // data.param.roles=roles;
+      // data.param.codes=codes;
+      // data.body.inbox.limit = limit;
+      // data.body.inbox.offset = offset;
+
+      return data
+    }
+    
+  }
 
 };
