@@ -2576,41 +2576,24 @@ $border-color: rgba(214, 213, 212, 1);
   font-size: 1.2em;
 }
 
-
-
-
-/* MP_HYPOTHESIS_CSS */
-
 .mp-description{
   margin-top: 2rem;
   margin-bottom: 1rem;
 }
 
-.assumptions-label-field{
-  display: flex;
-  gap:10rem;
-  margin: 1.7rem 0rem;  
-  
-  
-}
-
-
 .assumptions-label-field > div > span {
   width: 20rem;
   font-size: 1.2rem;
   margin-right: 2rem;
-  font-weight: bold;
-  
+  font-weight: bold; 
 }
 
 .delete-button {
   display: flex;
   cursor: pointer;  
   margin-left: 1rem;
-  font-size: 1.2rem;
-  
+  font-size: 1.2rem; 
 }
-
 
 .fieldv1-container{
   display: flex;
@@ -2618,15 +2601,12 @@ $border-color: rgba(214, 213, 212, 1);
   width:30rem;
   align-items: center;
 }
-/* CSS FOR Assumptions Form*/
+
 .assumptionsForm-label-field{
     display: flex;
     flex-direction: column;
     gap: 1.5rem; 
     align-items: start !important;
-    
-    
-  
 }
 .assumptionsForm-label-field > div > span{
   font-size: 1.5rem;

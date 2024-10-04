@@ -200,6 +200,7 @@ const createUpdatePlanProject = async (req) => {
       case "HYPOTHESIS":
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
+         window.dispatchEvent(new Event("isLastStep"))
           return {
             triggeredFrom,
           }; 

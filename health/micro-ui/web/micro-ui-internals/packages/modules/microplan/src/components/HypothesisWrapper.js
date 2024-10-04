@@ -202,7 +202,6 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         if (currentStep === assumptionCategories.length) {
             Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: true });
         }else{ // Assuming 1 is the first step
-            const {  isLastVerticalStep } = Digit.Hooks.useQueryParams();
             Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: false });
         }
     }, [currentStep]);

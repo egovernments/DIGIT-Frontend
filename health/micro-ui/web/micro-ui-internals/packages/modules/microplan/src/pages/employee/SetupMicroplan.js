@@ -124,7 +124,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   };
 
   const onSubmit = (formData) => {
-    debugger;
+  
     // setIsSubmittting to true -> to run inline validations within the components
 
     setIsSubmitting(true);

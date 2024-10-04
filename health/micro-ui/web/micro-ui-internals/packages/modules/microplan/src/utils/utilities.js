@@ -134,7 +134,6 @@ const formValidator = (formData, key, state) => {
         if(!areFieldsValid(formData.assumptionValues)){
            return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; 
         }
-        window.dispatchEvent(new Event("isLastStep"))
 
       return null
   }
