@@ -53,11 +53,19 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination,variant=
 
 
   const renderLegend = (val, entry) => {
+    // Ensure val is a string before applying trim
     const labelValue = val && typeof val === 'string' ? val.trim() : '';
+  
+    // If labelValue is empty, return null to prevent rendering
     if (!labelValue) return null;
+  
+    // Ensure Digit.Utils.locale.getTransformedLocale returns a string
+    const transformedLocale = Digit.Utils.locale.getTransformedLocale(labelValue);
+    const validTransformedLocale = transformedLocale && typeof transformedLocale === 'string' ? transformedLocale.trim() : '';
 
-    const localizedLabel = t(`COMMON_MASTERS_${Digit.Utils.locale.getTransformedLocale(labelValue)}`, labelValue);
-
+    // Get localized label, with a fallback to labelValue if localization is missing
+    const localizedLabel = t(`COMMON_MASTERS_${validTransformedLocale}`, validTransformedLocale || 'Default Label');
+  
     if (variant === "pieChartv2" && entry) {
       return (
         <div style={{ display: "inline-flex", justifyContent: "space-between", fontSize: "16px", width: "95%", color: "black", height: "5px", alignItems: "center" }}>
@@ -70,7 +78,7 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination,variant=
         </div>
       );
     }
-
+  
     return <span style={{ fontSize: "14px", color: "#505A5F" }}>{localizedLabel}</span>;
   };
 
