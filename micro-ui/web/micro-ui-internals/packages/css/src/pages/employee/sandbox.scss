@@ -114,21 +114,21 @@
   }
 
   .digit-card-component {
-    .bannerHeader p{
+    .bannerHeader p {
       font-size: 2rem;
     }
   }
 
-  .digit-card-component{
+  .digit-card-component {
     .bannerHeader {
       margin-top: -1.5rem;
       margin-bottom: -0.5rem !important;
-    .bannerLogo {
-      width: 10rem;
-      height: 2rem;
+      .bannerLogo {
+        width: 10rem;
+        height: 2rem;
+      }
     }
   }
-}
   .employeeCard {
     height: 500px !important;
     width: 408px !important;
@@ -255,7 +255,7 @@
 .digit-card-component.signupCardClassName.sandbox-onboarding-wrapper {
   .bannerHeader {
     .bannerLogo {
-      margin-top:0.5rem;
+      margin-top: 0.5rem;
       height: 2rem;
       width: 10rem;
       margin-bottom: -0.5rem;
@@ -619,8 +619,8 @@ digit-card-text.center {
     text-decoration: none;
   }
 }
-.profileDropdown{
-  input{
+.profileDropdown {
+  input {
     font-size: 1rem !important;
   }
 }
@@ -642,4 +642,7 @@ digit-card-text.center {
       border-radius: 0.3rem;
     }
   }
+}
+.infotext {
+  width: 20rem !important;
 }
