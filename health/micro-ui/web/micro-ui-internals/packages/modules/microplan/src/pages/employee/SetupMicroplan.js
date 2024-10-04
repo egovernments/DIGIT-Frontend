@@ -124,14 +124,19 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   };
 
   const onSubmit = (formData) => {
+  
     // setIsSubmittting to true -> to run inline validations within the components
+
     setIsSubmitting(true);
+  
 
     //config
     const name = filteredConfig?.[0]?.form?.[0]?.name;
     const currentConfBody = filteredConfig?.[0]?.form?.[0]?.body?.[0];
 
     //Run sync validations on formData based on the screen(key)
+
+    
     const toastObject = Digit.Utils.microplanv1.formValidator(formData?.[currentConfBody?.key], currentConfBody?.key, state);
     if (toastObject) {
       setShowToast(toastObject);
@@ -181,16 +186,47 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     // setCurrentStep(prev => prev + 1)
   };
 
-  const onSecondayActionClick = () => {
-    //if step is 1 then redirect to home page
-    //otherwise go to prev step
+  // const onSecondayActionClick = () => {
+  //  
+  //   setCurrentKey((prev) => prev - 1);
+  //   if (currentStep === 0) {
+  //     history.push(`/${window.contextPath}/employee`);
+  //   } else {
+  //     setCurrentStep((prev) => prev - 1);
+  //   }
+  // };
+  const moveToPreviousStep = ()=>{
+    setCurrentStep((prev) => prev - 1);
     setCurrentKey((prev) => prev - 1);
-    if (currentStep === 0) {
-      history.push(`/${window.contextPath}/employee`);
-    } else {
+  }
+  useEffect(() => {
+  
+    window.addEventListener("moveToPrevious", moveToPreviousStep);
+
+    return () => {
+      window.removeEventListener("moveToPrevious", moveToPreviousStep );
+    };
+  }, []);
+  const onSecondayActionClick = () => {
+       if (currentStep === 0) {
+         history.push(`/${window.contextPath}/employee`);
+       } else {
+         setCurrentStep((prev) => prev - 1);
+       }
+    const {  isLastVerticalStep } = Digit.Hooks.useQueryParams(); 
+  
+    if (isLastVerticalStep === 'true') {
+        window.dispatchEvent(new Event("verticalStepper"))
+      return;
+    
+    } 
+    
       setCurrentStep((prev) => prev - 1);
-    }
-  };
+      setCurrentKey((prev) => prev - 1);
+    
+
+
+};
 
   if (isLoadingCampaignObject || isLoadingPlanObject) {
     return <Loader />;
@@ -203,9 +239,8 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
           "HCM_CAMPAIGN_SETUP_DETAILS",
           "MICROPLAN_DETAILS",
           "MP_BOUNDARY_SELECTION",
-          "UPLOAD_DATA",
+          "MICROPLAN_ASSUMPTIONS",
           "MP_USER_CREATION",
-          "HYPOTHESIS",
           "FORMULA_CONFIGURATION",
           "SUMMARY",
         ]}

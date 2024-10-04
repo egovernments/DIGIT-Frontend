@@ -91,83 +91,63 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
             },
           ],
         },
-      {
-        stepCount: "6",
-        key: "6",
-        name: "HYPOTHESIS",
-        body: [
-          {
-            isMandatory: true,
-            key: "hypothesis",
-            type: "component",
-            skipAPICall: false,
-            component: "HypothesisWrapper",
-            withoutLabel: true,
-            disable: false,
-            withoutLabelFieldPair: true,
-            customProps: {
-              module: "HCM",
-              sessionData: totalFormData,
-              isSubmitting: isSubmitting,
 
-            },
-            populators: {
-              name: "hypothesis",
-              required: true,
-            },
-          },
-        ],
-      },
         {
-          stepCount: "5",
+          stepCount: "4",
+          key: "4",
+          name: "ASSUMPTIONS_FORM",
+          body: [
+            {
+              isMandatory: false,
+              key: "assumptionsForm",
+              type: "component",
+              skipAPICall: false,
+              component: "AssumptionsForm",
+              withoutLabel: true,
+              disable: false,
+              withoutLabelFieldPair: true,
+              customProps: {
+                module: "HCM",
+                sessionData: totalFormData,
+                isSubmitting: isSubmitting,
+  
+              },
+              populators: {
+                name: "assumptionsForm",
+                required: true,
+              },
+            },
+          ],
+        },
+
+        {
+          stepCount: "4",
           key: "5",
-          name: "MP_MICROPLAN_DETAILS",
+          name: "HYPOTHESIS",
           body: [
             {
-              isMandatory: false,
-              key: "microplanDetails",
+              isMandatory: true,
+              key: "Assumptions",
               type: "component",
               skipAPICall: false,
-              resourceToUpdate:"PLAN",
-              component: "MicroplanDetails",
+              component: "HypothesisWrapper",
               withoutLabel: true,
               disable: false,
+              withoutLabelFieldPair: true,
               customProps: {
                 module: "HCM",
                 sessionData: totalFormData,
                 isSubmitting: isSubmitting,
+  
               },
               populators: {
-                name: "projectType",
+                name: "hypothesis",
+                required: true,
               },
             },
           ],
         },
-        {
-          stepCount: "6",
-          key: "6",
-          name: "MP_MICROPLAN_DETAILS",
-          body: [
-            {
-              isMandatory: false,
-              key: "microplanDetails",
-              type: "component",
-              skipAPICall: false,
-              resourceToUpdate:"PLAN",
-              component: "MicroplanDetails",
-              withoutLabel: true,
-              disable: false,
-              customProps: {
-                module: "HCM",
-                sessionData: totalFormData,
-                isSubmitting: isSubmitting,
-              },
-              populators: {
-                name: "projectType",
-              },
-            },
-          ],
-        },
+       
         {
           stepCount: "7",
           key: "7",
