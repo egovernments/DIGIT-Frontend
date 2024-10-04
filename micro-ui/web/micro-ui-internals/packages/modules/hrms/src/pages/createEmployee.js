@@ -143,6 +143,12 @@ const CreateEmployee = () => {
   };
 
   const onSubmit = async (data) => {
+    const hasCurrentAssignment = data?.Assignments?.some(assignment => assignment?.isCurrentAssignment === true);
+    // If no current assignment, throw an error
+    if (!hasCurrentAssignment) {
+      setShowToast({ key: "error", label: "ERR_NO_CURRENT_ASSIGNMENT" });
+      return;
+    }
     if(!canSubmit){
       setShowToast({ key: "error", label: "ERR_ALL_MANDATORY_FIELDS" });
       return;
