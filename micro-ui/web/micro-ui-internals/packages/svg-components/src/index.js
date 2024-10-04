@@ -804,6 +804,9 @@ import { MapLayerIcon } from "./svg/MapLayerIcon"
 import { Church } from "./svg/Church"
 import { HealthFacility } from "./svg/HealthFacility"
 import { SchoolBuilding } from "./svg/SchoolBuilding"
+import { ContractIcon } from "./svg/ContractIcon";
+import { MeasurementMuktaIcon } from "./svg/MeasurementMuktaIcon";
+import { HRIcon } from "./svg/HRIcon";
 
 export {
   Add,
@@ -1611,5 +1614,8 @@ export {
   Church,
   HealthFacility,
   SchoolBuilding,
-  Warehouse
+  Warehouse,
+  ContractIcon,
+  HRIcon,
+  MeasurementMuktaIcon
 };
