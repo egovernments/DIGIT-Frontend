@@ -110,10 +110,8 @@ const formValidator = (formData, key, state) => {
     
  
   
-  // filters out the falsy values
+  
   const assumptionsFormValidator = (formData) => {
-    formData.selectedDistributionProcess
-
     const requiredFields = [
       formData?.selectedRegistrationProcess,
       formData?.selectedDistributionProcess,

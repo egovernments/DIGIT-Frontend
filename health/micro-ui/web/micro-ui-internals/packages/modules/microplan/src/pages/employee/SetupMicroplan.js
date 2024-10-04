@@ -239,7 +239,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
           "HCM_CAMPAIGN_SETUP_DETAILS",
           "MICROPLAN_DETAILS",
           "MP_BOUNDARY_SELECTION",
-          "Microplan Assumptions",
+          "MICROPLAN_ASSUMPTIONS",
           "MP_USER_CREATION",
           "FORMULA_CONFIGURATION",
           "SUMMARY",

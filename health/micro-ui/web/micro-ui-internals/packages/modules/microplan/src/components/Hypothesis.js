@@ -11,7 +11,6 @@ import { useAssumptionContext } from "./HypothesisWrapper";
 const Hypothesis = ({ category, assumptions:initialAssumptions })=>{
  
   const { t } = useTranslation();
-  const [error, setError] = useState({});
   const [showPopUP, setShowPopUp] = useState(false)
   const [assumptionsPopUP, setAssumptionsPopUp] = useState(false)
   const [assumptionToDelete, setAssumptionToDelete] = useState(null)

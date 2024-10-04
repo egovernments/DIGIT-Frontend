@@ -116,7 +116,8 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
              )
          });     
     const assumptionCategories = filteredData.length > 0 ? filteredData[0].assumptionCategories : [];
-    const filteredAssumptions = assumptionCategories[currentStep - 1]?.assumptions || [];
+    const filteredAssumptions = assumptionCategories.length > 0 ? (assumptionCategories[currentStep - 1]?.assumptions || []) : [];
+  
 
     
 
