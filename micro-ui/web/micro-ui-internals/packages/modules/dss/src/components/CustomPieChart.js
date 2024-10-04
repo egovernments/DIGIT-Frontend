@@ -52,35 +52,19 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination,variant=
   const totalCount = Digit.Utils.dss.formatter(chartData?.reduce((acc,item)=> acc + item?.value, 0), chartData ? chartData[0]?.symbol : "number", value?.denomination, true, t)
 
 
-  const renderLegend = (val, entry) => {
-    // Ensure val is a string before applying trim
-    const labelValue = val && typeof val === 'string' ? val.trim() : '';
-  
-    // If labelValue is empty, return null to prevent rendering
-    if (!labelValue) return null;
-  
-    // Ensure Digit.Utils.locale.getTransformedLocale returns a string
-    const transformedLocale = Digit.Utils.locale.getTransformedLocale(labelValue);
-    const validTransformedLocale = transformedLocale && typeof transformedLocale === 'string' ? transformedLocale.trim() : '';
+  const renderLegend = (val,entry) => {
 
-    // Get localized label, with a fallback to labelValue if localization is missing
-    const localizedLabel = t(`COMMON_MASTERS_${validTransformedLocale}`, validTransformedLocale || 'Default Label');
-  
-    if (variant === "pieChartv2" && entry) {
+    if(variant==="pieChartv2" && entry){
       return (
-        <div style={{ display: "inline-flex", justifyContent: "space-between", fontSize: "16px", width: "95%", color: "black", height: "5px", alignItems: "center" }}>
-          <p style={{ display: "inline-block", maxWidth: "20rem", paddingLeft: "0.5rem", whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}>
-            {localizedLabel}
-          </p>
-          <p style={{ display: "inline-block", fontWeight: "bold", fontSize: "20px" }}>
-            {Digit.Utils.dss.formatter(entry?.payload?.value, entry?.payload?.symbol, value?.denomination, true, t)}
-          </p>
+        <div style={{ display:"inline-flex",justifyContent:"space-between",fontSize: "16px",width:"95%",color:"black",height:"5px",alignItems:"center" }}>
+          <p style={{display:"inline-block",maxWidth:"20rem",alignItems:"flex-start",paddingLeft:"0.5rem",whiteSpace:"nowrap",textOverflow:"ellipsis",height:"fit-content",overflow:"hidden"}}>{t(`COMMON_MASTERS_${val && Digit.Utils.locale.getTransformedLocale(val)}`)}</p>
+          <p style={{ display:"inline-block",alignItems:"flex-end",fontWeight:"bold",fontSize:"20px" }}>{Digit.Utils.dss.formatter(entry?.payload?.value, entry?.payload?.symbol, value?.denomination, true, t)}</p>
         </div>
       );
     }
-  
-    return <span style={{ fontSize: "14px", color: "#505A5F" }}>{localizedLabel}</span>;
-  };
+
+    return  <span style={{ fontSize: "14px", color: "#505A5F" }}>{t(`COMMON_MASTERS_${value && Digit.Utils.locale.getTransformedLocale(value)}`)}</span>
+  }
 
   const renderCustomLabel = (args) => {
     const { value, endAngle, startAngle, x, cx, y, cy, percent, name } = args;
