@@ -783,6 +783,9 @@ import {
     ZoomIn,
     ZoomOut,
     ZoomOutMap,
+    ContractIcon,
+    HRIcon,
+    MeasurementMuktaIcon
   } from "@egovernments/digit-ui-svg-components";
 
 
@@ -1572,4 +1575,7 @@ import {
     ZoomIn,
     ZoomOut,
     ZoomOutMap,
+    ContractIcon,
+    HRIcon,
+    MeasurementMuktaIcon
   }
