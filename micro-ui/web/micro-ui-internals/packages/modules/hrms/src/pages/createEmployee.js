@@ -128,11 +128,15 @@ const CreateEmployee = () => {
       formData?.SelectEmployeeType?.code &&
       formData?.SelectEmployeePhoneNumber?.mobileNumber &&
       checkfield &&
-      setassigncheck &&
       phonecheck &&
       checkMailNameNum(formData)
     ) {
-      setSubmitValve(true);
+      if(setassigncheck){
+        setSubmitValve(true);
+      }
+      else{
+        setSubmitValve(null);
+      }
     } else {
       setSubmitValve(false);
     }
@@ -145,14 +149,16 @@ const CreateEmployee = () => {
   const onSubmit = async (data) => {
     const hasCurrentAssignment = data?.Assignments?.some(assignment => assignment?.isCurrentAssignment === true);
     // If no current assignment, throw an error
+    if (canSubmit===null) {
+      setShowToast({ key: "error", label: "ERR_NO_CURRENT_ASSIGNMENT" });
+      return;
+    }
+
     if(!canSubmit){
       setShowToast({ key: "error", label: "ERR_ALL_MANDATORY_FIELDS" });
       return;
     }
-    if (!hasCurrentAssignment) {
-      setShowToast({ key: "error", label: "ERR_NO_CURRENT_ASSIGNMENT" });
-      return;
-    }
+
     if (data.Jurisdictions.filter((juris) => juris.tenantId == tenantId).length == 0) {
       setShowToast({ key: "error", label: "ERR_BASE_TENANT_MANDATORY" });
       return;
