@@ -44,8 +44,8 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
 
     return (
         <Card>
-            <Header>{t("Provide the following details")}</Header>
-            <p className="mp-description">{t("Please answer the following questions with appropriate answers for us to provide an ideal estimate assumption form for you")}</p>
+            <Header>{t("PROVIDE_DETAILS")}</Header>
+            <p className="mp-description">{t("ANSWER_TO_PROVIDE_ESTIMATE")}</p>
 
             {/* Show dropdowns only if the code is MIXED */}
             {resourceDistributionStrategyCode === "MIXED" && (
@@ -54,7 +54,7 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
                     <Card className="assumptionsForm-card">
                         <LabelFieldPair className="assumptionsForm-label-field">
                             <div style={{ width: "100%" }}>
-                                <span>{t("How is the campaign registration process happening?")} </span>
+                                <span>{t("REGISTRATION_PROCESS")} </span>
                                 <span className="mandatory-span" style={{ marginLeft: "0rem" }}>*</span>
                             </div>
                             <Dropdown
@@ -80,7 +80,7 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
                     <Card className="assumptionsForm-card">
                         <LabelFieldPair className="assumptionsForm-label-field">
                             <div style={{ width: "100%" }}>
-                                <span>{t("How is the campaign distribution process happening?")} </span>
+                                <span>{t("DISTRIBUTION_PROCESS")} </span>
                                 <span className="mandatory-span" style={{ marginLeft: "0rem" }}>*</span>
                             </div>
                             <Dropdown
@@ -109,7 +109,7 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
                 <Card className="assumptionsForm-card">
                     <LabelFieldPair className="assumptionsForm-label-field">
                         <div style={{ width: "100%" }}>
-                            <span>{t("Is the registration and distribution process happening together or separately?")} </span>
+                            <span>{t("REGISTRATION_AND_DISTRIBUTION")} </span>
                             <span className="mandatory-span" style={{ marginLeft: "0rem" }}>*</span>
                         </div>
                         <RadioButtons

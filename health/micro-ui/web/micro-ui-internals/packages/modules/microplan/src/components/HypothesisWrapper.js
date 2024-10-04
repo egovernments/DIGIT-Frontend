@@ -66,7 +66,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
 
     const handleNext = () => {
         const currentAssumptions = assumptionCategories[currentStep - 1]?.assumptions || [];
-        const existingAssumptionKeys = assumptionValues.map(assumption => assumption.key);
+        const existingAssumptionKeys = assumptionValues?.map(assumption => assumption.key);
         
         // Filter current assumptions to only those that exist in assumptionValues and are not deleted
         const visibleAssumptions = currentAssumptions.filter(item => 
@@ -83,7 +83,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         if (hasEmptyFields) {
             setShowToast({
                 key: "error",
-                label: "ERR_MANDATORY_FIELD",
+                label: t("ERR_MANDATORY_FIELD"),
                 transitionTime: 3000,
             });
             return; // Prevent moving to the next step

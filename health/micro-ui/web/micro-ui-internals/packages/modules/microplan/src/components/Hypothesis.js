@@ -8,7 +8,7 @@ import { useAssumptionContext } from "./HypothesisWrapper";
 
 
 
-const Hypothesis = ({ category, assumptions:initialAssumptions, customProps, })=>{
+const Hypothesis = ({ category, assumptions:initialAssumptions })=>{
  
   const { t } = useTranslation();
   const [error, setError] = useState({});
@@ -105,7 +105,7 @@ const addNewAssumption = () => {
           
               <Card>
                 <Header>{t(category)}</Header>
-                <p className="mp-description">{t(`Please enter the values for each assumptions stated below for resource calculation`)}</p>
+                <p className="mp-description">{t(`RESOURCE_CALCULATION`)}</p>
               </Card>   
                   
              
@@ -116,10 +116,9 @@ const addNewAssumption = () => {
                         return (
                               <LabelFieldPair className="assumptions-label-field" style={{marginTop:"1rem"}} key={index}>
                                     <div style={{display:"flex"}}>
-                                    <span>{`${t(item)}`}
-                                    <span className="mandatory-span">*</span>
-                                    </span>
-                               
+                                      <span>{`${t(item)}`}
+                                      <span className="mandatory-span">*</span>
+                                      </span>
                                     </div>
 
 
@@ -128,7 +127,6 @@ const addNewAssumption = () => {
                                           type="number"
                                           name={item}
                                           value={assumptionValues.find((assumption) => assumption.key === item)?.value || ""}
-                                          //error={error[item] ? t(error[item]) : ""}
                                           error={""}
                                           style={{marginBottom: "0" }}
                                           populators={{ name: item }}
@@ -141,7 +139,7 @@ const addNewAssumption = () => {
                                             />
                                         <div className="delete-button">
                                           <DeleteIconv2 />
-                                          <span  style={{color:"red",textDecoration:"Underline" }} onClick={()=> handleDeleteClick(index)}>Delete</span>
+                                          <span  style={{color:"red",textDecoration:"Underline" }} onClick={()=> handleDeleteClick(index)}>{t("DELETE")}</span>
                                         </div>
                                         
                                     </div>
@@ -155,7 +153,7 @@ const addNewAssumption = () => {
                       className="custom-class"
                       icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem",}} fill={PRIMARY_COLOR}/>}
                       iconFill=""
-                      label="Add new Assumption"
+                      label={t("ADD_ASSUMPTION")}
                       onButtonClick={()=> setAssumptionsPopUp(true)}
                       options={[]}
                       optionsKey=""
@@ -169,11 +167,11 @@ const addNewAssumption = () => {
                     {showPopUP && <PopUp
                                     className={"popUpClass"}
                                     type={"default"}
-                                    heading={t("Are you sure you want to Delete?")}
+                                    heading={t("CONFIRM_TO_DELETE")}
                                     equalWidthButtons={true}
                                       children={[
                                         <div>
-                                          <CardText style={{ margin: 0 }}>{t("Deleting a line item will permanently delete the assumption. You will not be able to retrieve it")}</CardText>
+                                          <CardText style={{ margin: 0 }}>{t("PERMANENT_DELETE")}</CardText>
                                         </div>,
                                       ]}
                                         onOverlayClick={() => {
@@ -184,7 +182,7 @@ const addNewAssumption = () => {
                                           type={"button"}
                                           size={"large"}
                                           variation={"secondary"}
-                                          label={t("Yes")}
+                                          label={t("YES")}
                                           onButtonClick={() => {
                                             handleConfirmDelete()
                                           }}
@@ -193,7 +191,7 @@ const addNewAssumption = () => {
                                           type={"button"}
                                           size={"large"}
                                           variation={"primary"}
-                                          label={t("No")}
+                                          label={t("NO")}
                                           onButtonClick={handleCancelDelete}
                                         />,
                                       ]}
@@ -206,14 +204,13 @@ const addNewAssumption = () => {
                     {assumptionsPopUP && <PopUp
                                     className={"popUpClass"}
                                     type={"default"}
-                                    heading={t("Are you sure you want to add a new assumption?")}
+                                    heading={t("CONFIRM_NEW_ASSUMPTION")}
                                     equalWidthButtons={true}
                                       children={[
                                         <Dropdown
                                         variant="select-dropdown"
                                         t={t}
                                         isMandatory={false}
-                                        //option={deletedAssumptions?.map((item)=> ({code:item}))}
                                         option={availableDeletedAssumptions.map(item => ({ code: item }))}
                                         select={(value)=>{
                                           setSelectedDeletedAssumption(value)
@@ -234,7 +231,7 @@ const addNewAssumption = () => {
                                           type={"button"}
                                           size={"large"}
                                           variation={"secondary"}
-                                          label={t("Yes")}
+                                          label={t("YES")}
                                           onButtonClick={() => {
                                             addNewAssumption()
                                           }}
@@ -243,7 +240,7 @@ const addNewAssumption = () => {
                                           type={"button"}
                                           size={"large"}
                                           variation={"primary"}
-                                          label={t("No")}
+                                          label={t("NO")}
                                           onButtonClick={()=> {
                                             setAssumptionsPopUp(false)
                                           }}
