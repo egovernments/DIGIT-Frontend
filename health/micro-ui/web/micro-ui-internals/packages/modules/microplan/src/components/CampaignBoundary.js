@@ -722,17 +722,17 @@ const CampaignBoundary = ({ customProps }) => {
             {console.log("bHierarchy",bHierarchy)};
 
             {
-            Array.isArray(bHierarchy) && bHierarchy.length > 1 && bHierarchy.filter((_, index) => ![0  , bHierarchy.length - 1].includes(index)).map((item, ind) => {
+            Array.isArray(bHierarchy) && bHierarchy.length > 1 && bHierarchy.filter((_, index) => ![0 , bHierarchy.length - 1].includes(index)).map((item, ind) => {
                 //item-Country,Province,Locality,District,Village
                 console.log("item", item);
                 if (parent_group[item] && Array.isArray(parent_group[item])) {
                     return parent_group[item].map((item1, idx) => {
                         //item1-Province-[Sinoe],District-[Jedepo,Jeade]
                         console.log("item1", item1);
-                        return Array.isArray(item1)  ? (  //changed
+                        return Array.isArray(item1) && (!boundaryStatus[ind])  ? (  //changed
                             //make a super-comp that contains SubBoundary View
                             <Card key={`card_${ind}_${idx}`}>
-                                <HeaderComp title={bHierarchy[ind + 2]} />
+                                <HeaderComp title={bHierarchy[ind + 1]} />
                                 {item1.map((item2) => {
                                     //item2-parents name eg, sino etc
                                     console.log("item2",item2);
@@ -745,17 +745,17 @@ const CampaignBoundary = ({ customProps }) => {
                                 })
                                 }
                                 <div
-                                    onClick={() => handleViewMore(ind + 1)}
+                                    onClick={() => handleViewMore(ind)}
                                     className="view-more"
                                 >
                                     View Less
                                 </div>
                             </Card>
-                        ) : (Array.isArray(item1) && (boundaryStatus[ind + 2])) ? (
+                        ) : (Array.isArray(item1) && (boundaryStatus[ind])) ? (
                             <div key={`div_${ind}_${idx}`}>
                                 <Card>
-                                    <HeaderComp title={bHierarchy[ind + 2]} />
-                                    {item1.filter(() => (idx == 0 || idx == 1)).map((item2) => (
+                                    <HeaderComp title={bHierarchy[ind+1]} />
+                                    {item1.filter((_,idexer) => (idexer == 0 || idexer == 1)).map((item2) => (
                                         //item2-parents name eg, sino etc
                                         <SubBoundaryView
                                             key={`${item2}_${idx}`}
@@ -765,7 +765,7 @@ const CampaignBoundary = ({ customProps }) => {
                                     ))
                                     }
                                     <div
-                                        onClick={() => handleViewMore(ind + 2)}
+                                        onClick={() => handleViewMore(ind)}
                                         className="view-more"
                                     >
                                         View More
