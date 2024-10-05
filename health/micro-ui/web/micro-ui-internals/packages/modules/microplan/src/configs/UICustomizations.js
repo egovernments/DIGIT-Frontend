@@ -104,18 +104,44 @@ export const UICustomizations = {
       // console.log(data,"dat");
       const { phone, name } = data?.state?.searchForm || {}
       const { sortOrder } = data?.state?.filterForm || {}
-      const { limit } = data?.body?.inbox
-      const {offset}=data?.moduleSearchCriteria
       const {roles} = data?.state?.filterForm || {}
       debugger
-      // data.param.phone=phone;
-      // data.param.roles=roles;
-      // data.param.codes=codes;
-      // data.body.inbox.limit = limit;
-      // data.body.inbox.offset = offset;
+      data.param.phone=phone;
+      data.param.roles=roles;
 
       return data
-    }
+    },
+
+    mdmsRetrieveData: () => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const url = getMDMSUrl();
+      return {
+        url: `${url}/v1/_search`, //change
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-PROJECT-TYPES",
+                masterDetails: [
+                  {
+                    name: "projectTypes",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        changeQueryName: "setWorkflowStatus",
+        config: {
+          enabled: true,
+          select: (data) => {
+            return data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes;
+          },
+        },
+      };
+    },
     
   }
 

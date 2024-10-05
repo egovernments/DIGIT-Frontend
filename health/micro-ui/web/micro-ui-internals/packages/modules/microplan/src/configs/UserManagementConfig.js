@@ -15,9 +15,9 @@ export const tqmInboxConfig = {
         "minParametersForFilterForm": 0,
         "masterName": "commonUiConfig",
         "moduleName": "UserManagementConfig",
-        "tableFormJsonPath": "requestBody.inbox",
-        "filterFormJsonPath": "requestBody.custom",
-        "searchFormJsonPath": "requestBody.custom"
+        "tableFormJsonPath": "requestBody",
+        "filterFormJsonPath": "requestBody",
+        "searchFormJsonPath": "requestBody"
       },
       "sections": {
         "search": {
@@ -221,8 +221,8 @@ export const tqmInboxConfig = {
                   optionsKey: "code",
                   allowMultiSelect: false,
                   masterName: "commonUiConfig",
-                  moduleName: "MyCampaignConfigOngoing",
-                  customfn: "populateCampaignTypeReqCriteria",
+                  moduleName: "UserManagementConfig",
+                  customfn: "mdmsRetrieveData",
                 },
               },
               // {
