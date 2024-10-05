@@ -580,8 +580,8 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
               <LabelFieldPair>
                 <CardLabel className="user-profile" style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("CORE_COMMON_PROFILE_GENDER")}`}</CardLabel>
                 <Dropdown
-                  style={{ width: "40rem" }}
-                  className="form-field"
+                  style={{ width: "40rem", fontSize: "1rem" }}
+                  className="form-field profileDropdown"
                   selected={gender?.length === 1 ? gender[0] : gender}
                   disable={gender?.length === 1 || editScreen}
                   option={menu}
@@ -678,6 +678,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                 )}`}</CardLabel>
                 <div style={{ width: "100%" }}>
                   <Dropdown
+                    className="profileDropdown"
                     selected={gender?.length === 1 ? gender[0] : gender}
                     disable={gender?.length === 1 || editScreen}
                     option={menu}
