@@ -21,7 +21,8 @@
 }
 
 .chart-metric-wrapper{
-  display: flex;
+    display: flex;
+    align-items: baseline;
     flex-wrap: wrap;
     margin-top: 15px;
     justify-content: space-evenly;
