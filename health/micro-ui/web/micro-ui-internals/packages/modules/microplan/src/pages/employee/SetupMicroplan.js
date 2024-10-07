@@ -14,7 +14,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import { MicroplanConfig } from "../../configs/SetupMicroplanConfig";
-import { Stepper, Toast, PopUp, CardText, InfoCard,Button } from "@egovernments/digit-ui-components";
+import { Stepper, Toast, PopUp, CardText, InfoCard, Button } from "@egovernments/digit-ui-components";
 import _ from "lodash";
 import { useMyContext } from "../../utils/context";
 
@@ -100,14 +100,14 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
       const newKey = parseInt(new URLSearchParams(window.location.search).get("key")) || 1;
       setCurrentKey(newKey);
     };
-  
+
     window.addEventListener("checking", handleCheckingEvent);
-  
+
     return () => {
       window.removeEventListener("checking", handleCheckingEvent);
     };
   }, []);
-  
+
 
 
   // setting the current step when the key is changed on the basis of the config
@@ -130,10 +130,10 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const handleUpdates = (propsForMutate) => {
     updateResources(propsForMutate, {
       onSuccess: (data) => {
-        
+
       },
       onError: (error, variables) => {
-        
+
         setShowToast(({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") }))
       },
     });

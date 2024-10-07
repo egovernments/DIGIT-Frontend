@@ -1,8 +1,8 @@
 import { Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
-import React, { useRef, useState, useEffect, Fragment,useMemo } from "react";
+import React, { useRef, useState, useEffect, Fragment, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, Modal, CardText } from "@egovernments/digit-ui-react-components";
-import BulkUpload from "./BulkUpload";
+import BulkUpload from "./../../../campaign-manager/src/components/BulkUpload";
 import Ajv from "ajv";
 import XLSX from "xlsx";
 import { InfoCard, PopUp, Toast, Button, DownloadIcon, Stepper, TextBlock } from "@egovernments/digit-ui-components";
@@ -26,8 +26,12 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const [errorsType, setErrorsType] = useState({});
   const [schema, setSchema] = useState(null);
   const [showToast, setShowToast] = useState(null);
-  const [key, setKey] = useState(0);
-  const type = props?.props?.types?.[key];
+  const searchParams = new URLSearchParams(location.search);
+  const [key, setKey] = useState(() => {
+    const keyParam = searchParams.get("key");
+    return keyParam ? parseInt(keyParam) : 1;
+  });
+  const type = props?.props?.type;
   const [executionCount, setExecutionCount] = useState(0);
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -36,13 +40,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const [fileName, setFileName] = useState(null);
   const [downloadError, setDownloadError] = useState(false);
   const [resourceId, setResourceId] = useState(null);
-  const searchParams = new URLSearchParams(location.search);
-  const id = searchParams.get("campaignId") || "486e51e1-77ab-40fc-bfdf-11cd701ba8de";
-  // const { isLoading, data: Schemas } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [
-  //   { name: "facilitySchema" },
-  //   { name: "userSchema" },
-  //   { name: "Boundary" },
-  // ]);
+  const id = searchParams.get("campaignId") || "4bd96853-05f9-4c5d-b321-1f10d63502bd";
 
   const { data: Schemas, isLoading: isThisLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -51,6 +49,8 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
     {},
     { schemaCode: "HCM-ADMIN-CONSOLE.adminSchema" }
   );
+
+  console.log(Schemas, " ssssssssssssssssssssssssssssss")
 
   const { data: readMe } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "ReadMeConfig" }]);
   const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "baseTimeout" }]);
@@ -63,11 +63,19 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const boundaryHierarchy = useMemo(() => {
     return hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)?.hierarchy;
   }, [hierarchyConfig]);
-  const totalData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+  const totalData = Digit.SessionStorage.get("MICROPLAN_DATA");
+  const campaignType = totalData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code
   const [convertedSchema, setConvertedSchema] = useState({});
   const [loader, setLoader] = useState(false);
-//   const [currentStep , setCurrentStep] = useState(1);
-  const baseKey = 4; 
+  //   const [currentStep , setCurrentStep] = useState(1);
+  const baseKey = 4;
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const keyParam = searchParams.get("key");
+    setKey(keyParam ? parseInt(keyParam) : 1);
+  }, [location.search]);
+
 
 
   function updateUrlParams(params) {
@@ -77,11 +85,6 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
     });
     window.history.replaceState({}, "", url);
   }
-
-//   useEffect(() =>{
-//     setKey(currentKey);
-//     setCurrentStep(currentKey - baseKey + 1);
-//   }, [currentKey])
 
   useEffect(() => {
     if (type === "facilityWithBoundary") {
@@ -106,20 +109,29 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   var translateSchema = (schema) => {
     var newSchema = { ...schema };
     var newProp = {};
-
-    // Object.keys(schema?.properties)
-    //   .map((e) => ({ key: e, value: t(e) }))
-    //   .map((e) => {
-    //     newProp[e.value] = schema?.properties[e.key];
-    //   });
-
-    // Translate properties keys and their 'name' fields
     Object.keys(schema?.properties).forEach((key) => {
+      if (key == "HCM_ADMIN_CONSOLE_FACILITY_CAPACITY_MICROPLAN") {
+        const temp = { ...schema.properties[key] }
+        delete schema.properties[key];
+        key = `${"HCM_ADMIN_CONSOLE_FACILITY_CAPACITY_MICROPLAN"}_${campaignType}`
+        schema.properties[key] = temp;
+      }
+      console.log(key, ' kkkkkk')
       const translatedKey = t(key);
       const translatedProperty = { ...schema.properties[key], name: t(schema.properties[key].name) };
       newProp[translatedKey] = translatedProperty;
     });
-    const newRequired = schema?.required.map((e) => t(e));
+    const newRequired = schema?.required.map((e) => {
+      let modifiedKey = e;
+
+      // Check for the key in `required` array and modify it as needed
+      if (e === "HCM_ADMIN_CONSOLE_FACILITY_CAPACITY_MICROPLAN") {
+        modifiedKey = `${"HCM_ADMIN_CONSOLE_FACILITY_CAPACITY_MICROPLAN"}_${campaignType}`;
+      }
+
+      // Translate the modified key
+      return t(modifiedKey);
+    });
 
     newSchema.properties = newProp;
     newSchema.required = newRequired;
@@ -203,11 +215,11 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   useEffect(async () => {
     if (Schemas?.MdmsRes?.["HCM-ADMIN-CONSOLE"]?.adminSchema) {
       const facility = await convertIntoSchema(
-        Schemas?.MdmsRes?.["HCM-ADMIN-CONSOLE"]?.adminSchema?.filter((item) => item.title === "facility" && item.campaignType === "all")?.[0]
+        Schemas?.MdmsRes?.["HCM-ADMIN-CONSOLE"]?.adminSchema?.filter((item) => item.title === "facility" && item.campaignType === "MP-FACILITY-FIXED_POST")?.[0]
       );
       const boundary = await convertIntoSchema(
         Schemas?.MdmsRes?.["HCM-ADMIN-CONSOLE"]?.adminSchema?.filter(
-          (item) => item.title === "boundaryWithTarget" && item.campaignType === totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code
+          (item) => item.title === "boundary" && item.campaignType === `MP-${totalData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code}`
         )?.[0]
       );
       const user = await convertIntoSchema(
@@ -228,15 +240,10 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       const newFacilitySchema = await translateSchema(convertedSchema?.facilityWithBoundary);
       const newBoundarySchema = await translateSchema(convertedSchema?.boundary);
       const newUserSchema = await translateSchema(convertedSchema?.userWithBoundary);
-      // const headers = {
-      //   boundary: Object?.keys(newBoundarySchema?.properties),
-      //   facilityWithBoundary: Object?.keys(newFacilitySchema?.properties),
-      //   userWithBoundary: Object?.keys(newUserSchema?.properties),
-      // };
 
       const filterByUpdateFlag = (schemaProperties) => {
         return Object.keys(schemaProperties).filter(
-          (key) => schemaProperties[key].isUpdate !== true 
+          (key) => schemaProperties[key].isUpdate !== true
         );
       };
 
@@ -301,7 +308,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
     config: {} // Optional config, if you want to override default config
   });
 
-  
+
 
   useEffect(() => {
     switch (type) {
@@ -343,45 +350,55 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
     }
   }, [type, errorsType]);
 
+
   const validateData = (data) => {
-    const ajv = new Ajv({ strict: false }); // Initialize Ajv
+    const ajv = new Ajv({ strict: false, allErrors: true }); // Enable allErrors option
     let validate = ajv.compile(translatedSchema[type]);
     const errors = []; // Array to hold validation errors
 
-    data.forEach((item, index) => {
+    data.forEach((item) => {
       if (!validate(item)) {
-        errors.push({ index: (item?.["!row#number!"] || item?.["__rowNum__"]) + 1, errors: validate.errors });
+        const rowNumber = (item?.["!row#number!"] || item?.["__rowNum__"]) + 1;
+
+        const itemErrors = validate.errors.map((error) => {
+          let instancePath = error.instancePath || ""; // Assign an empty string if instancePath is not available
+
+          if (instancePath === "/Phone Number (Mandatory)") {
+            return `${t("HCM_DATA_AT_ROW")} ${rowNumber} ${t("HCM_IN_COLUMN")} ${t("HCM_DATA_SHOULD_BE_10_DIGIT")}`;
+          }
+
+          if (instancePath.startsWith("/")) {
+            instancePath = instancePath.slice(1); // Remove leading slash from the instancePath
+          }
+
+          if (error.keyword === "required") {
+            const missingProperty = error.params?.missingProperty || "";
+            return `${t("HCM_DATA_AT_ROW")} ${rowNumber} ${t("HCM_IN_COLUMN")} '${missingProperty}' ${t("HCM_DATA_SHOULD_NOT_BE_EMPTY")}`;
+          }
+
+          if (error.keyword === "type" && error.message === "must be string") {
+            return `${t("HCM_DATA_AT_ROW")} ${rowNumber} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_INVALID")}`;
+          }
+
+          let formattedError = `${t("HCM_IN_COLUMN")} '${instancePath}' ${error.message}`;
+
+          if (error.keyword === "enum" && error.params?.allowedValues) {
+            formattedError += ` ${t("HCM_DATA_ALLOWED_VALUES_ARE")} ${error.params.allowedValues.join("/ ")}`;
+          }
+
+          return `${t("HCM_DATA_AT_ROW")} ${rowNumber} ${formattedError}`;
+        });
+
+        errors.push({
+          index: rowNumber,
+          errors: itemErrors, // Push all errors for this item
+        });
       }
     });
 
     if (errors.length > 0) {
       const errorMessage = errors
-        .map(({ index, errors }) => {
-          const formattedErrors = errors
-            .map((error) => {
-              let instancePath = error.instancePath || ""; // Assign an empty string if dataPath is not available
-              if (error.instancePath === "/Phone Number (Mandatory)") {
-                return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")}  ${t("HCM_DATA_SHOULD_BE_10_DIGIT")}`;
-              }
-              if (instancePath.startsWith("/")) {
-                instancePath = instancePath.slice(1);
-              }
-              if (error.keyword === "required") {
-                const missingProperty = error.params?.missingProperty || "";
-                return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} '${missingProperty}' ${t("HCM_DATA_SHOULD_NOT_BE_EMPTY")}`;
-              }
-              if (error.keyword === "type" && error.message === "must be string") {
-                return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_INVALID")}`;
-              }
-              let formattedError = `${t("HCM_IN_COLUMN")} '${instancePath}' ${error.message}`;
-              if (error.keyword === "enum" && error.params && error.params.allowedValues) {
-                formattedError += `${t("HCM_DATA_ALLOWED_VALUES_ARE")} ${error.params.allowedValues.join("/ ")}`;
-              }
-              return `${t("HCM_DATA_AT_ROW")} ${index} ${formattedError}`;
-            })
-            .join(", ");
-          return formattedErrors;
-        })
+        .map(({ index, errors }) => errors.join(", "))
         .join(", ");
 
       setErrorsType((prevErrors) => ({
@@ -400,17 +417,19 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
     }
   };
 
+
+
+
   const validateTarget = (jsonData, headersToValidate) => {
     const boundaryCodeIndex = headersToValidate.indexOf(t("HCM_ADMIN_CONSOLE_BOUNDARY_CODE"));
     const headersBeforeBoundaryCode = headersToValidate.slice(0, boundaryCodeIndex);
-
     const filteredData = jsonData
-      .filter((e) => {
-        if (e[headersBeforeBoundaryCode[headersBeforeBoundaryCode.length - 1]]) {
-          return true;
-        }
-      })
-      .filter((e) => e[t("HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL")]);
+    // .filter((e) => {
+    //   if (e[headersBeforeBoundaryCode[headersBeforeBoundaryCode.length - 1]]) {
+    //     return true;
+    //   }
+    // })
+    // .filter((e) => e[t("HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL")]);
 
     if (filteredData.length == 0) {
       const errorMessage = t("HCM_MISSING_TARGET");
@@ -440,7 +459,6 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
     const ajv = new Ajv({ strict: false }); // Initialize Ajv
     let validate = ajv.compile(translatedSchema[type]);
     const errors = []; // Array to hold validation errors
-
     data.forEach((item, index) => {
       if (!validate(item)) {
         errors.push({ index: (item?.["!row#number!"] || item?.["__rowNum__"]) + 1, errors: validate.errors });
@@ -477,7 +495,6 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           return formattedErrors;
         })
         .join(", ");
-
       setIsError(true);
       targetError.push(errorMessage);
       return false;
@@ -485,22 +502,9 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       return true;
     }
   };
-  // Function to compare arrays for equality
-  const arraysEqual = (arr1, arr2) => {
-    if (arr1.length !== arr2.length) return false;
-    for (let i = 0; i < arr1.length; i++) {
-      if (arr1[i] !== arr2[i]) return false;
-    }
-    return true;
-  };
 
   const validateMultipleTargets = (workbook) => {
     let isValid = true;
-    // const sheet = workbook.Sheets[workbook.SheetNames[2]];
-    const mdmsHeaders = sheetHeaders[type];
-    // const expectedHeaders = XLSX.utils.sheet_to_json(sheet, {
-    //   header: 1,
-    // })[0];
     const excludedSheetNames = [t("HCM_README_SHEETNAME"), t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")];
     let nextSheetName = null;
     let expectedHeaders = [];
@@ -517,19 +521,6 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       const sheet = workbook.Sheets[nextSheetName];
       expectedHeaders = XLSX.utils.sheet_to_json(sheet, { header: 1 })[0];
     }
-
-    // for (const header of mdmsHeaders) {
-    //   if (!expectedHeaders.includes(t(header))) {
-    //     const errorMessage = t("HCM_BOUNDARY_INVALID_SHEET");
-    //     setErrorsType((prevErrors) => ({
-    //       ...prevErrors,
-    //       [type]: errorMessage,
-    //     }));
-    //     setIsError(true);
-    //     isValid = false;
-    //     break;
-    //   }
-    // }
 
     if (!isValid) return isValid;
 
@@ -570,41 +561,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
 
       if (jsonData.length == 0) continue;
 
-      const boundaryCodeIndex = headersToValidate.indexOf(t("HCM_ADMIN_CONSOLE_BOUNDARY_CODE"));
-
-      for (const row of jsonData) {
-        for (let j = boundaryCodeIndex + 1; j < headersToValidate.length; j++) {
-          const value = row[headersToValidate[j]];
-          if (value === undefined || value === null) {
-            targetError.push(
-              `${t("HCM_DATA_AT_ROW")} ${jsonData.indexOf(row) + 2} ${t("HCM_IN_COLUMN")} "${headersToValidate[j]}" ${t(
-                "HCM_DATA_SHOULD_NOT_BE_EMPTY"
-              )} at ${sheetName}`
-            );
-          } else if (value >= 100000000) {
-            targetError.push(
-              `${t("HCM_DATA_AT_ROW")} ${jsonData.indexOf(row) + 2} ${t("HCM_IN_COLUMN")} "${headersToValidate[j]}" ${t(
-                "HCM_DATA_SHOULD_BE_LESS_THAN_MAXIMUM"
-              )} at ${sheetName}`
-            );
-          } else if (value < 0) {
-            targetError.push(
-              `${t("HCM_DATA_AT_ROW")} ${jsonData.indexOf(row) + 2} ${t("HCM_IN_COLUMN")} "${headersToValidate[j]}" ${t(
-                "HCM_DATA_SHOULD_BE_GREATER_THAN_ZERO"
-              )} at ${sheetName}`
-            );
-          } else if (typeof value !== "number") {
-            targetError.push(
-              `${t("HCM_DATA_AT_ROW")} ${jsonData.indexOf(row) + 2} ${t("HCM_IN_COLUMN")} "${headersToValidate[j]}" ${t(
-                "HCM_DATA_SHOULD_BE_NUMBER"
-              )} at ${sheetName}`
-            );
-          }
-        }
-      }
-
-      // if (!validateTargetData(jsonData, sheetName, targetError)) {
-      // }
+      validateTargetData(jsonData, sheetName, targetError);
     }
     if (targetError.length > 0) {
       const errorMessage = targetError.join(", ");
@@ -653,6 +610,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           const expectedHeaders = sheetHeaders[type];
 
           const SheetNames = sheetTypeMap[type];
+          console.log(SheetNames, " shhhhhhhhhhhhhhh")
 
           const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[SheetNames], { blankrows: true });
           var jsonData = sheetData.map((row, index) => {
@@ -667,17 +625,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           });
 
           jsonData = jsonData.filter((element) => element !== undefined);
-          // if (type === "boundary") {
-          //   if (workbook?.SheetNames.filter(sheetName => sheetName !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")).length == 0) {
-          //     const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
-          //     setErrorsType((prevErrors) => ({
-          //       ...prevErrors,
-          //       [type]: errorMessage,
-          //     }));
-          //     setIsError(true);
-          //     return;
-          //   }
-          // } else
+
           if (type === "facilityWithBoundary") {
             if (workbook?.SheetNames.filter((sheetName) => sheetName == t("HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES")).length == 0) {
               const errorMessage = t("HCM_INVALID_FACILITY_SHEET");
@@ -692,7 +640,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
               const activeColumnName = t("HCM_ADMIN_CONSOLE_FACILITY_USAGE");
               const uniqueIdentifierColumnName = t("HCM_ADMIN_CONSOLE_FACILITY_CODE");
               if (activeColumnName && uniqueIdentifierColumnName) {
-                jsonData = jsonData.filter((item) => item[activeColumnName] !== "Inactive" || !item[uniqueIdentifierColumnName]);
+                jsonData = jsonData.filter((item) => item[activeColumnName] == "Active" || !item[uniqueIdentifierColumnName]);
               }
               if (jsonData.length == 0) {
                 const errorMessage = t("HCM_FACILITY_USAGE_VALIDATION");
@@ -715,7 +663,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
               return;
             }
           }
-          if (type === "boundary" && workbook?.SheetNames?.length >= 3) {
+          if (type === "boundary" && workbook?.SheetNames?.length >= 1) {
             if (!validateMultipleTargets(workbook)) {
               return;
             }
@@ -738,8 +686,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
               return;
             }
           }
-
-          if (jsonData.length == 0) {
+          if (jsonData.length == 0 && type !== "boundary") {
             const errorMessage = t("HCM_EMPTY_SHEET");
             setErrorsType((prevErrors) => ({
               ...prevErrors,
@@ -830,6 +777,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             id,
             baseTimeOut?.["HCM-ADMIN-CONSOLE"]
           );
+          console.log(temp, " tttttttttttttttttttttt")
           if (temp?.isError) {
             setLoader(false);
             setIsValidation(false);
@@ -872,10 +820,10 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
                       type === "facilityWithBoundary"
                         ? "facility"
                         : type === "userWithBoundary"
-                        ? "user"
-                        : type === "boundary"
-                        ? "boundaryWithTarget"
-                        : type;
+                          ? "user"
+                          : type === "boundary"
+                            ? "boundaryWithTarget"
+                            : type;
                     return {
                       ...i,
                       filestoreId: id,
@@ -911,10 +859,10 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
                     type === "facilityWithBoundary"
                       ? "facility"
                       : type === "userWithBoundary"
-                      ? "user"
-                      : type === "boundary"
-                      ? "boundaryWithTarget"
-                      : type;
+                        ? "user"
+                        : type === "boundary"
+                          ? "boundaryWithTarget"
+                          : type;
                   return {
                     ...i,
                     filestoreId: id,
@@ -929,7 +877,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
               setIsError(true);
             }
           }
-        } catch (error) {}
+        } catch (error) { }
       }
     };
 
@@ -1012,110 +960,110 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
     }
   }, [showToast]);
 
-//   useEffect(() => {
-//     setShowToast(null);
-//   }, [currentKey]);
+  //   useEffect(() => {
+  //     setShowToast(null);
+  //   }, [currentKey]);
 
-  // useEffect(() => {
-  //   updateUrlParams({ key: key });
-  //   window.dispatchEvent(new Event("checking"));
-  // }, [key]);
+  useEffect(() => {
+    updateUrlParams({ key: key });
+    window.dispatchEvent(new Event("checking"));
+  }, [key]);
 
   const onStepClick = (currentStepForKey) => {
     // setCurrentStep(currentStepForKey+1);
-    setKey(currentStepForKey);
+    setKey(currentStepForKey + baseKey);
   };
 
   return (
     <>
       <div className="container-full">
-      <div className="card-container">
-        <Card className="card-header-timeline">
-        <TextBlock
-            subHeader={t("HCM_UPLOAD_DATA")}
-            subHeaderClasName={"stepper-subheader"}
-            wrapperClassName={"stepper-wrapper"}
-          />
-        </Card>
-        <Card className="stepper-card">
-          <Stepper
-            customSteps={["HCM_UPLOAD_BOUNDARY_MICROPLAN","HCM_UPLOAD_FACILITY_MICROPLAN"]}
-            currentStep={key+1}
-            onStepClick={onStepClick}
-            direction={"vertical"}
-          />
-        </Card>
+        <div className="card-container">
+          <Card className="card-header-timeline">
+            <TextBlock
+              subHeader={t("HCM_UPLOAD_DATA")}
+              subHeaderClasName={"stepper-subheader"}
+              wrapperClassName={"stepper-wrapper"}
+            />
+          </Card>
+          <Card className="stepper-card">
+            <Stepper
+              customSteps={["HCM_UPLOAD_BOUNDARY_MICROPLAN", "HCM_UPLOAD_FACILITY_MICROPLAN"]}
+              currentStep={key - baseKey + 1}
+              onStepClick={onStepClick}
+              direction={"vertical"}
+            />
+          </Card>
         </div>
         {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
-        <div className="card-container"  style={{ width: "100%" }}>
-        <Card>
-          <div className="campaign-bulk-upload">
-            <Header className="digit-form-composer-sub-header">
-              {type === "boundary" ? t("WBH_UPLOAD_TARGET_MICROPLAN") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY_MICROPLAN") : t("WBH_UPLOAD_UNKNOWN")}
-            </Header>
-            <Button
-              label={t("WBH_DOWNLOAD_TEMPLATE")}
-              variation="secondary"
-              icon={"FileDownload"}
-              type="button"
-              className="campaign-download-template-btn"
-              onClick={downloadTemplate}
-            />
-          </div>
-          {uploadedFile.length === 0 && (
-            <div className="info-text">
-              {type === "boundary" ? t("HCM_BOUNDARY_MESSAGE") : type === "facilityWithBoundary" ? t("HCM_FACILITY_MESSAGE") : t("HCM_USER_MESSAGE")}
+        <div className="card-container" style={{ width: "100%" }}>
+          <Card>
+            <div className="campaign-bulk-upload">
+              <Header className="digit-form-composer-sub-header">
+                {type === "boundary" ? t("WBH_UPLOAD_TARGET_MICROPLAN") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY_MICROPLAN") : t("WBH_UPLOAD_UNKNOWN")}
+              </Header>
+              <Button
+                label={t("WBH_DOWNLOAD_TEMPLATE")}
+                variation="secondary"
+                icon={"FileDownload"}
+                type="button"
+                className="campaign-download-template-btn"
+                onClick={downloadTemplate}
+              />
             </div>
-          )}
-          <BulkUpload onSubmit={onBulkUploadSubmit} fileData={uploadedFile} onFileDelete={onFileDelete} onFileDownload={onFileDownload} />
-          {showInfoCard && (
-            <InfoCard
-              populators={{
-                name: "infocard",
-              }}
-              variant="error"
-              style={{ marginLeft: "0rem", maxWidth: "100%" }}
-              label={t("HCM_ERROR")}
-              additionalElements={[
-                <React.Fragment key={type}>
-                  {errorsType[type] && (
-                    <React.Fragment>
-                      {errorsType[type]
-                        .split(",")
-                        .slice(0, 50)
-                        .map((error, index) => (
-                          <React.Fragment key={index}>
-                            {index > 0 && <br />}
-                            {error.trim()}
-                          </React.Fragment>
-                        ))}
-                    </React.Fragment>
-                  )}
-                </React.Fragment>,
-              ]}
-            />
-          )}
-        </Card>
-        <InfoCard
-          populators={{
-            name: "infocard",
-          }}
-          variant="default"
-          style={{ margin: "0rem", maxWidth: "100%" }}
-          additionalElements={readMeInfo[type]?.map((info, index) => (
-            <div key={index} style={{ display: "flex", flexDirection: "column" }}>
-              <h2>{info?.header}</h2>
-              <ul style={{ paddingLeft: 0 }}>
-                {info?.descriptions.map((desc, i) => (
-                  <li key={i} className="info-points">
-                    {desc.isBold ? <h2>{desc.text}</h2> : <p>{desc.text}</p>}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-          label={"Info"}
-        />
+            {uploadedFile.length === 0 && (
+              <div className="info-text">
+                {type === "boundary" ? t("HCM_BOUNDARY_MESSAGE") : type === "facilityWithBoundary" ? t("HCM_FACILITY_MESSAGE") : t("HCM_USER_MESSAGE")}
+              </div>
+            )}
+            <BulkUpload onSubmit={onBulkUploadSubmit} fileData={uploadedFile} onFileDelete={onFileDelete} onFileDownload={onFileDownload} />
+            {showInfoCard && (
+              <InfoCard
+                populators={{
+                  name: "infocard",
+                }}
+                variant="error"
+                style={{ marginLeft: "0rem", maxWidth: "100%" }}
+                label={t("HCM_ERROR")}
+                additionalElements={[
+                  <React.Fragment key={type}>
+                    {errorsType[type] && (
+                      <React.Fragment>
+                        {errorsType[type]
+                          .split(",")
+                          .slice(0, 50)
+                          .map((error, index) => (
+                            <React.Fragment key={index}>
+                              {index > 0 && <br />}
+                              {error.trim()}
+                            </React.Fragment>
+                          ))}
+                      </React.Fragment>
+                    )}
+                  </React.Fragment>,
+                ]}
+              />
+            )}
+          </Card>
+          <InfoCard
+            populators={{
+              name: "infocard",
+            }}
+            variant="default"
+            style={{ margin: "0rem", maxWidth: "100%" }}
+            additionalElements={readMeInfo[type]?.map((info, index) => (
+              <div key={index} style={{ display: "flex", flexDirection: "column" }}>
+                <h2>{info?.header}</h2>
+                <ul style={{ paddingLeft: 0 }}>
+                  {info?.descriptions.map((desc, i) => (
+                    <li key={i} className="info-points">
+                      {desc.isBold ? <h2>{desc.text}</h2> : <p>{desc.text}</p>}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+            label={"Info"}
+          />
         </div>
         {showPopUp && (
           <PopUp
@@ -1126,16 +1074,16 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
               type === "boundary"
                 ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_HEADER")
                 : type === "facilityWithBoundary"
-                ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER")
-                : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER")
+                  ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER")
+                  : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER")
             }
             children={[
               <div>
                 {type === "boundary"
                   ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_TEXT")
                   : type === "facilityWithBoundary"
-                  ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT")
-                  : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT ")}
+                    ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT")
+                    : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT ")}
               </div>,
             ]}
             onOverlayClick={() => {
@@ -1172,9 +1120,6 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
         {showToast && (uploadedFile?.length > 0 || downloadError) && (
           <Toast
             type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
-            // error={showToast.key === "error" ? true : false}
-            // warning={showToast.key === "warning" ? true : false}
-            // info={showToast.key === "info" ? true : false}
             label={t(showToast.label)}
             transitionTime={showToast.transitionTime}
             onClose={closeToast}
