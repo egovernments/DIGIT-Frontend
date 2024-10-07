@@ -6,18 +6,19 @@ import { Link } from "react-router-dom";
 import FaqComponent from "../../citizen/FAQs/FaqComponent";
 
 const CardC = ({ type, title, content, actions, style }) => {
+  const { t } = useTranslation();
   const ListTag = type === "number" ? "ol" : "ul";
   return (
     <div>
       {/* <div style={{ border: "1px solid #ccc", borderRadius: "8px", padding: "16px", margin: "16px", ...style }}> */}
-      <CardSectionHeader>{title}</CardSectionHeader>
-      <CardSectionSubText style={{ marginTop: "1rem" }}>{content}</CardSectionSubText>
+      <CardSectionHeader>{t(title)}</CardSectionHeader>
+      <CardSectionSubText style={{ marginTop: "1rem" }}>{t(content)}</CardSectionSubText>
       <div style={{ marginTop: "1rem" }}>
         {actions && (
           <ListTag>
             {actions.map((action, index) => (
               <li key={index} style={{ listStyleType: ListTag === "ul" ? "disc" : "auto", margin: "8px 0" }}>
-                {action?.label ? <strong>{action?.label}:</strong> : null} {action.description}
+                {action?.label ? <strong>{t(action?.label)}:</strong> : null} {t(action?.description)}
               </li>
             ))}
           </ListTag>
@@ -28,10 +29,11 @@ const CardC = ({ type, title, content, actions, style }) => {
 };
 
 const FAQ = ({ key, title, content, faqs }) => {
+  const { t } = useTranslation();
   return (
     <div style={{ width: "100%" }}>
-      <CardSectionHeader>{title}</CardSectionHeader>
-      <CardSectionSubText style={{ marginTop: "1rem" }}>{content}</CardSectionSubText>
+      <CardSectionHeader>{t(title)}</CardSectionHeader>
+      <CardSectionSubText style={{ marginTop: "1rem" }}>{t(content)}</CardSectionSubText>
       <div style={{ width: "100%" }}>
         {faqs.map((faq, i) => (
           <FaqComponent key={"faq_" + i} question={faq.question} answer={faq.answer} lastIndex={i === faqs?.length - 1} />
@@ -64,7 +66,7 @@ const QuickSetup = ({ cardConfig }) => {
   return (
     <Card className={"sandbox-guide"} style={{ width: "25rem", height: "47rem", overflowY: "scroll" }}>
       {/* <Card style={{ height: "47rem", overflowY: "scroll" }}> */}
-      <CardHeader>Guide To Sandbox</CardHeader>
+      <CardHeader>{t("GUIDE_TO_SETUP")}</CardHeader>
       <div style={{ display: "flex", flexWrap: "wrap" }}>
         {cardConfig.map((config, index) => {
           return config?.type === "faqs" ? (
