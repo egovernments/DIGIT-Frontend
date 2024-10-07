@@ -101,46 +101,43 @@ export const UICustomizations = {
   UserManagementConfig: {
     preProcess: (data) => {
 
-      // console.log(data,"dat");
       const { phone, name } = data?.state?.searchForm || {}
       const { sortOrder } = data?.state?.filterForm || {}
       const {roles} = data?.state?.filterForm || {}
-      debugger
-      data.param.phone=phone;
-      data.param.roles=roles;
+      console.log("data",data);
+      
+      data.params.name=name;
+      data.params.phone=phone;
+      
+      console.log(data,"dat");
+      // data.param.roles=roles;
 
       return data
     },
 
-    mdmsRetrieveData: () => {
+    populatePlantUsersReqCriteria:(props) => {
+      const userInfo = Digit.UserService.getUser();
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      const url = getMDMSUrl();
+
       return {
-        url: `${url}/v1/_search`, //change
-        params: { tenantId },
-        body: {
-          MdmsCriteria: {
-            tenantId: tenantId,
-            moduleDetails: [
-              {
-                moduleName: "HCM-PROJECT-TYPES",
-                masterDetails: [
-                  {
-                    name: "projectTypes",
-                  },
-                ],
-              },
-            ],
+        params:{},
+        url:'/egov-hrms/employees/_search',
+        body:{
+          "plantUserSearchCriteria": {
+            tenantId,
+            // "plantCodes": [],
+            "plantUserUuids": userInfo?.info?.uuid ?  [userInfo?.info?.uuid]: [],
+            "additionalDetails": {}
           },
+          "pagination": {}
         },
-        changeQueryName: "setWorkflowStatus",
         config: {
-          enabled: true,
-          select: (data) => {
-            return data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes;
-          },
+          select:(data)=> {
+            return Digit.SessionStorage.get("user_plants");
+          }
         },
-      };
+        changeQueryName:"setPlantUsersInboxDropdown"
+      }
     },
     
   }

@@ -208,23 +208,49 @@ export const tqmInboxConfig = {
               "status": []
             },
             "fields": [
+
               {
-                label: "CAMPAIGN_SEARCH_TYPE",
-                type: "apidropdown",
-                isMandatory: false,
-                disable: false,
-                populators: {
-                  optionsCustomStyle: {
-                    top: "2.3rem",
+                "label": "TQM_PLANT_NAME",
+                "type": "apidropdown",
+                "isMandatory": false,
+                "disable": false,
+                "populators": {
+                  "optionsCustomStyle": {
+                    "top": "2.3rem"
                   },
-                  name: "campaignType",
-                  optionsKey: "code",
-                  allowMultiSelect: false,
-                  masterName: "commonUiConfig",
-                  moduleName: "UserManagementConfig",
-                  customfn: "mdmsRetrieveData",
+                  "name": "plantCodes",
+                  "optionsKey": "i18nKey",
+                  "allowMultiSelect": false,
+                  "masterName": "commonUiConfig",
+                  "moduleName": "UserManagementConfig",
+                  "customfn": "populatePlantUsersReqCriteria"
                 },
+                "removableTagConf":{
+                  "name":"plantCodes",
+                  "label":"TQM_RT_PLANT",
+                  "valueJsonPath":"i18nKey",
+                  "type":"multi", // single, multi, date(single), dateRange(single),...etc,
+                  "sessionJsonPath":"searchForm.plantCodes",
+                  "deleteRef":"id"
+                }
               },
+              // {
+              //   label: "CAMPAIGN_SEARCH_TYPE",
+              //   type: "apidropdown",
+              //   isMandatory: false,
+              //   disable: false,
+              //   populators: {
+              //     optionsCustomStyle: {
+              //       top: "2.3rem",
+              //     },
+              //     name: "campaignType",
+              //     optionsKey: "code",
+              //     allowMultiSelect: false,
+              //     masterName: "commonUiConfig",
+              //     moduleName: "UserManagementConfig",
+              //     customfn: "mdmsRetrieveData",
+              //   },
+              // },
               // {
               //   "label": "TQM_TREATMENT_PROCESS",
               //   "type": "apidropdown",
