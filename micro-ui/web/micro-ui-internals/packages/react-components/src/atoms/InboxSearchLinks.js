@@ -11,6 +11,7 @@ const InboxSearchLinks = ({headerText, links, businessService, customClass="", l
   
     const { t } = useTranslation();
     const { roles: userRoles } = Digit.UserService.getUser().info;
+    console.log(userRoles, "hhh");
     const [linksToShow, setLinksToShow] = useState([]);
     const IconComponent=getIconComponent(logoIcon?.component);
     useEffect(() => {
@@ -27,6 +28,7 @@ const InboxSearchLinks = ({headerText, links, businessService, customClass="", l
         <div className={`inbox-search-links-container ${customClass}`}>
             {renderHeader()}
             <div className="contents">
+                {console.log(linksToshow, "hehe")}
                 {linksToShow.map(({ url, text, hyperlink = false}, index) => {
                     return (
                     <span className="link" key={index}>
