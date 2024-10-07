@@ -15,7 +15,7 @@
 
     a {
       @apply block pb-sm;
-      color: #c84c0e !important;
+      color: theme(colors.primary.main) !important;
       text-decoration: none !important;
     }
   }
@@ -52,7 +52,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         min-width: 0;
-        color: #c84c0e !important;
+        color: theme(colors.primary.main) !important;
         text-decoration: none !important;  
       }
     }
