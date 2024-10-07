@@ -140,11 +140,11 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   };
 
   const onSubmit = (formData) => {
-  
+
     // setIsSubmittting to true -> to run inline validations within the components
 
     setIsSubmitting(true);
-  
+
 
     //config
     const name = filteredConfig?.[0]?.form?.[0]?.name;
@@ -152,7 +152,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
 
     //Run sync validations on formData based on the screen(key)
 
-    
+
     const toastObject = Digit.Utils.microplanv1.formValidator(formData?.[currentConfBody?.key], currentConfBody?.key, state);
     if (toastObject) {
       setShowToast(toastObject);
@@ -211,38 +211,38 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   //     setCurrentStep((prev) => prev - 1);
   //   }
   // };
-  const moveToPreviousStep = ()=>{
+  const moveToPreviousStep = () => {
     setCurrentStep((prev) => prev - 1);
     setCurrentKey((prev) => prev - 1);
   }
   useEffect(() => {
-  
+
     window.addEventListener("moveToPrevious", moveToPreviousStep);
 
     return () => {
-      window.removeEventListener("moveToPrevious", moveToPreviousStep );
+      window.removeEventListener("moveToPrevious", moveToPreviousStep);
     };
   }, []);
   const onSecondayActionClick = () => {
-       if (currentStep === 0) {
-         history.push(`/${window.contextPath}/employee`);
-       } else {
-         setCurrentStep((prev) => prev - 1);
-       }
-    const {  isLastVerticalStep } = Digit.Hooks.useQueryParams(); 
-  
-    if (isLastVerticalStep === 'true') {
-        window.dispatchEvent(new Event("verticalStepper"))
-      return;
-    
-    } 
-    
+    if (currentStep === 0) {
+      history.push(`/${window.contextPath}/employee`);
+    } else {
       setCurrentStep((prev) => prev - 1);
-      setCurrentKey((prev) => prev - 1);
-    
+    }
+    const { isLastVerticalStep } = Digit.Hooks.useQueryParams();
+
+    if (isLastVerticalStep === 'true') {
+      window.dispatchEvent(new Event("verticalStepper"))
+      return;
+
+    }
+
+    setCurrentStep((prev) => prev - 1);
+    setCurrentKey((prev) => prev - 1);
 
 
-};
+
+  };
 
   if (isLoadingCampaignObject || isLoadingPlanObject) {
     return <Loader />;
