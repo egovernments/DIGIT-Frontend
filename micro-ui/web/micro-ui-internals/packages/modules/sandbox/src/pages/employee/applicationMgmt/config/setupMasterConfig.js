@@ -74,6 +74,14 @@ export const setupMasterConfig = (existingUser = false) => ({
           id: 3,
           name: "HRMS_VIEW_EMPLOYEE",
         },
+        {
+          id: 4,
+          name: "HRMS_EDIT_EMPLOYEE",
+        },
+        {
+          id: 5,
+          name: "HRMS_DELETE_EMPLOYEE",
+        },
       ],
     },
   ],
