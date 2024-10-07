@@ -131,47 +131,96 @@ function cycleDataRemap(data) {
 //   return reversedData;
 // }
 
-function reverseDeliveryRemap(data) {
-  if (!data) return null;
-  const reversedData = [];
-  let currentCycleIndex = null;
-  let currentCycle = null;
+// function reverseDeliveryRemap(data) {
+//   if (!data) return null;
+//   const reversedData = [];
+//   let currentCycleIndex = null;
+//   let currentCycle = null;
 
-  data.forEach((item, index) => {
-    if (currentCycleIndex !== item.cycleNumber) {
-      currentCycleIndex = item.cycleNumber;
-      currentCycle = {
-        cycleIndex: currentCycleIndex.toString(),
-        active: index === 0, // Initialize active to false
-        deliveries: [],
-      };
-      reversedData.push(currentCycle);
-    }
+//   data.forEach((item, index) => {
+//     if (currentCycleIndex !== item.cycleNumber) {
+//       currentCycleIndex = item.cycleNumber;
+//       currentCycle = {
+//         cycleIndex: currentCycleIndex.toString(),
+//         active: index === 0, // Initialize active to false
+//         deliveries: [],
+//       };
+//       reversedData.push(currentCycle);
+//     }
 
-    const deliveryIndex = item.deliveryNumber.toString();
+//     const deliveryIndex = item.deliveryNumber.toString();
 
-    let delivery = currentCycle.deliveries.find((delivery) => delivery.deliveryIndex === deliveryIndex);
+//     let delivery = currentCycle.deliveries.find((delivery) => delivery.deliveryIndex === deliveryIndex);
 
-    if (!delivery) {
-      delivery = {
-        deliveryIndex: deliveryIndex,
-        active: item.deliveryNumber === 1, // Set active to true only for the first delivery
-        deliveryRules: [],
-      };
-      currentCycle.deliveries.push(delivery);
-    }
+//     if (!delivery) {
+//       delivery = {
+//         deliveryIndex: deliveryIndex,
+//         active: item.deliveryNumber === 1, // Set active to true only for the first delivery
+//         deliveryRules: [],
+//       };
+//       currentCycle.deliveries.push(delivery);
+//     }
 
-    delivery.deliveryRules.push({
-      ruleKey: item.deliveryRuleNumber,
-      delivery: {},
-      deliveryType: item?.deliveryType,
-      attributes: loopAndReturn(item.conditions),
-      products: [...item.products],
-    });
-  });
+//     delivery.deliveryRules.push({
+//       ruleKey: item.deliveryRuleNumber,
+//       delivery: {},
+//       deliveryType: item?.deliveryType,
+//       attributes: loopAndReturn(item.conditions),
+//       products: [...item.products],
+//     });
+//   });
 
-  return reversedData;
-}
+//   return reversedData;
+// }
+
+
+// function restructureData(data) {
+//   return data.map(cycle => ({
+//       mandatoryWaitSinceLastCycleInDays: null,
+//       id: parseInt(cycle.cycleIndex),
+//       deliveries: cycle.deliveries.map(delivery => ({
+//           id: parseInt(delivery.deliveryIndex),
+//           mandatoryWaitSinceLastDeliveryInDays: null,
+//           doseCriteria: delivery.deliveryRules.map(rule => ({
+//               condition: parseCondition(rule.attributes),
+//               ProductVariants: rule.products.map(product => ({
+//                   productVariantId: product.value,
+//                   name: product.name
+//               }))
+//           }))
+//       }))
+//   }));
+// }
+
+// function parseCondition(attributes) {
+//   const conditions = attributes.map(attr => {
+//       const attributeCode = attr.attribute.code;
+//       const operator = attr.operator.code;
+//       if (operator === "IN_BETWEEN") {
+//           const fromValue = attr.fromValue; 
+//           const toValue = attr.toValue;
+//           return `${fromValue} <= ${attributeCode} < ${toValue}`;
+//       }
+
+//       const value = attr.value;
+//       return `${attributeCode}${convertOperator(operator)}${value}`;
+//   });
+
+//   // Join conditions into a single string
+//   return conditions.join(' and ');
+// }
+
+// function convertOperator(operatorCode) {
+//   const operators = {
+//       "LESS_THAN_EQUAL_TO": "<=",
+//       "GREATER_THAN_EQUAL_TO": ">=",
+//       "LESS_THAN": "<",
+//       "GREATER_THAN": ">",
+//       "EQUAL_TO": "=",
+//   };
+//   return operators[operatorCode] || "="; 
+// }
+
 
 
 function groupByTypeRemap(data) {
@@ -381,7 +430,8 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
         },
       },
       HCM_CAMPAIGN_DELIVERY_DATA: {
-        deliveryRule: reverseDeliveryRemap(delivery),
+        // deliveryRule: reverseDeliveryRemap(delivery),
+        deliveryRule: delivery
       },
       HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA: {
         boundaryType: {
@@ -447,91 +497,91 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
     }
   }, [currentKey]);
 
-  function restructureData(data) {
-    const dateData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleData;
-    const restructuredData = [];
+  // function restructureData(data) {
+  //   const dateData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleData;
+  //   const restructuredData = [];
 
-    data.forEach((cycle) => {
-      cycle.deliveries.forEach((delivery, index) => {
-        delivery.deliveryRules.forEach((rule) => {
-          const restructuredRule = {
-            startDate: Digit.Utils.pt.convertDateToEpoch(dateData?.find((i) => i.key == cycle.cycleIndex)?.fromDate, "daystart"), // Hardcoded for now
-            endDate: Digit.Utils.pt.convertDateToEpoch(dateData?.find((i) => i?.key == cycle?.cycleIndex)?.toDate), // Hardcoded for now
-            cycleNumber: parseInt(cycle.cycleIndex),
-            deliveryNumber: parseInt(delivery.deliveryIndex),
-            deliveryType: rule?.deliveryType,
-            deliveryRuleNumber: parseInt(rule.ruleKey), // New key added
-            products: [],
-            conditions: [],
-          };
+  //   data.forEach((cycle) => {
+  //     cycle.deliveries.forEach((delivery, index) => {
+  //       delivery.deliveryRules.forEach((rule) => {
+  //         const restructuredRule = {
+  //           startDate: Digit.Utils.pt.convertDateToEpoch(dateData?.find((i) => i.key == cycle.cycleIndex)?.fromDate, "daystart"), // Hardcoded for now
+  //           endDate: Digit.Utils.pt.convertDateToEpoch(dateData?.find((i) => i?.key == cycle?.cycleIndex)?.toDate), // Hardcoded for now
+  //           cycleNumber: parseInt(cycle.cycleIndex),
+  //           deliveryNumber: parseInt(delivery.deliveryIndex),
+  //           deliveryType: rule?.deliveryType,
+  //           deliveryRuleNumber: parseInt(rule.ruleKey), // New key added
+  //           products: [],
+  //           conditions: [],
+  //         };
 
-          rule.attributes.forEach((attribute) => {
-            if (attribute?.operator?.code === "IN_BETWEEN") {
-              restructuredRule.conditions.push({
-                attribute: attribute?.attribute?.code
-                  ? attribute?.attribute?.code
-                  : typeof attribute?.attribute === "string"
-                  ? attribute?.attribute
-                  : null,
-                operator: "LESS_THAN_EQUAL_TO",
-                value: attribute.fromValue ? Number(attribute.fromValue) : null,
-              });
+  //         rule.attributes.forEach((attribute) => {
+  //           if (attribute?.operator?.code === "IN_BETWEEN") {
+  //             restructuredRule.conditions.push({
+  //               attribute: attribute?.attribute?.code
+  //                 ? attribute?.attribute?.code
+  //                 : typeof attribute?.attribute === "string"
+  //                 ? attribute?.attribute
+  //                 : null,
+  //               operator: "LESS_THAN_EQUAL_TO",
+  //               value: attribute.fromValue ? Number(attribute.fromValue) : null,
+  //             });
 
-              restructuredRule.conditions.push({
-                attribute: attribute?.attribute?.code
-                  ? attribute?.attribute?.code
-                  : typeof attribute?.attribute === "string"
-                  ? attribute?.attribute
-                  : null,
-                operator: "GREATER_THAN_EQUAL_TO",
-                value: attribute.toValue ? Number(attribute.toValue) : null,
-              });
-            } else {
-              restructuredRule.conditions.push({
-                attribute: attribute?.attribute?.code
-                  ? attribute?.attribute?.code
-                  : typeof attribute?.attribute === "string"
-                  ? attribute?.attribute
-                  : null,
-                operator: attribute.operator ? attribute.operator.code : null,
-                value:
-                  attribute?.attribute?.code === "Gender" && attribute?.value?.length > 0
-                    ? attribute?.value
-                    : attribute?.attribute?.code === "TYPE_OF_STRUCTURE"
-                    ? attribute?.value
-                    : attribute?.value
-                    ? Number(attribute?.value)
-                    : null,
-              });
-            }
-          });
+  //             restructuredRule.conditions.push({
+  //               attribute: attribute?.attribute?.code
+  //                 ? attribute?.attribute?.code
+  //                 : typeof attribute?.attribute === "string"
+  //                 ? attribute?.attribute
+  //                 : null,
+  //               operator: "GREATER_THAN_EQUAL_TO",
+  //               value: attribute.toValue ? Number(attribute.toValue) : null,
+  //             });
+  //           } else {
+  //             restructuredRule.conditions.push({
+  //               attribute: attribute?.attribute?.code
+  //                 ? attribute?.attribute?.code
+  //                 : typeof attribute?.attribute === "string"
+  //                 ? attribute?.attribute
+  //                 : null,
+  //               operator: attribute.operator ? attribute.operator.code : null,
+  //               value:
+  //                 attribute?.attribute?.code === "Gender" && attribute?.value?.length > 0
+  //                   ? attribute?.value
+  //                   : attribute?.attribute?.code === "TYPE_OF_STRUCTURE"
+  //                   ? attribute?.value
+  //                   : attribute?.value
+  //                   ? Number(attribute?.value)
+  //                   : null,
+  //             });
+  //           }
+  //         });
 
-          rule.products.forEach((prod) => {
-            restructuredRule.products.push({
-              value: prod?.value,
-              name: prod?.name,
-              count: prod?.count,
-            });
-          });
+  //         rule.products.forEach((prod) => {
+  //           restructuredRule.products.push({
+  //             value: prod?.value,
+  //             name: prod?.name,
+  //             count: prod?.count,
+  //           });
+  //         });
 
-          restructuredData.push(restructuredRule);
-        });
-      });
-    });
+  //         restructuredData.push(restructuredRule);
+  //       });
+  //     });
+  //   });
 
-    return restructuredData;
-  }
+  //   return restructuredData;
+  // }
 
   function resourceData(facilityData, boundaryData, userData) {
     const resources = [facilityData, boundaryData, userData].filter((data) => data !== null && data !== undefined);
     return resources;
   }
 
-  useEffect(async () => {
-    if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-      const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
-    }
-  }, [shouldUpdate]);
+  // useEffect(async () => {
+  //   if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
+  //     const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
+  //   }
+  // }, [shouldUpdate]);
 
   const compareIdentical = (draftData, payload) => {
     return _.isEqual(draftData, payload);
@@ -561,8 +611,9 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
             payloadData.additionalDetails.cycleData = {};
           }
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
-            payloadData.deliveryRules = temp;
+            // const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
+            // payloadData.deliveryRules = temp;
+            payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
           } else {
             payloadData.deliveryRules = [];
           }
@@ -632,8 +683,9 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
             userId: dataParams?.userId,
           };
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
-            payloadData.deliveryRules = temp;
+            // const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
+            // payloadData.deliveryRules = temp;
+            payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
           }
           if (compareIdentical(draftData, payloadData) === false) {
             await updateCampaign(payloadData, {
@@ -696,8 +748,9 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
             userId: dataParams?.userId,
           };
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
-            payloadData.deliveryRules = temp;
+            // const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
+            // payloadData.deliveryRules = temp;
+            payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
           }
 
           await mutate(payloadData, {
@@ -759,8 +812,9 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
             payloadData.additionalDetails.cycleData = {};
           }
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
-            payloadData.deliveryRules = temp;
+            // const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
+            // payloadData.deliveryRules = temp;
+            payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
           } else {
             payloadData.deliveryRules = [];
           }

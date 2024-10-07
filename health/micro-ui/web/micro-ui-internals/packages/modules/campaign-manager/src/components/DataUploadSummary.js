@@ -38,89 +38,89 @@ function mergeObjects(item) {
   return mergedArr;
 }
 
-function loopAndReturn(dataa, t) {
-  let newArray = [];
-  const data = dataa?.map((i) => ({ ...i, operator: i?.operator, attribute: i?.attribute }));
+// function loopAndReturn(dataa, t) {
+//   let newArray = [];
+//   const data = dataa?.map((i) => ({ ...i, operator: i?.operator, attribute: i?.attribute }));
 
-  data.forEach((item) => {
-    // Check if an object with the same attribute already exists in the newArray
-    const existingIndex = newArray.findIndex((element) => element.attribute === item.attribute);
-    if (existingIndex !== -1) {
-      // If an existing item is found, replace it with the new object
-      const existingItem = newArray[existingIndex];
-      newArray[existingIndex] = {
-        attribute: existingItem.attribute,
-        operator: "IN_BETWEEN",
-        toValue: existingItem.value && item.value ? Math.min(existingItem.value, item.value) : null,
-        fromValue: existingItem.value && item.value ? Math.max(existingItem.value, item.value) : null,
-      };
-    } else if (item?.operator === "EQUAL_TO") {
-      newArray.push({
-        ...item,
-        value: item?.value ? t(item?.value) : null,
-      });
-    } else {
-      newArray.push(item);
-    }
-  });
+//   data.forEach((item) => {
+//     // Check if an object with the same attribute already exists in the newArray
+//     const existingIndex = newArray.findIndex((element) => element.attribute === item.attribute);
+//     if (existingIndex !== -1) {
+//       // If an existing item is found, replace it with the new object
+//       const existingItem = newArray[existingIndex];
+//       newArray[existingIndex] = {
+//         attribute: existingItem.attribute,
+//         operator: "IN_BETWEEN",
+//         toValue: existingItem.value && item.value ? Math.min(existingItem.value, item.value) : null,
+//         fromValue: existingItem.value && item.value ? Math.max(existingItem.value, item.value) : null,
+//       };
+//     } else if (item?.operator === "EQUAL_TO") {
+//       newArray.push({
+//         ...item,
+//         value: item?.value ? t(item?.value) : null,
+//       });
+//     } else {
+//       newArray.push(item);
+//     }
+//   });
 
-  const withKey = newArray.map((i, c) => ({ key: c + 1, ...i }));
-  const format = withKey.map((i) => {
-    if (i.operator === "IN_BETWEEN") {
-      return {
-        ...i,
-        value: `${i?.toValue ? i?.toValue : "N/A"}  to ${i?.fromValue ? i?.fromValue : "N/A"}`,
-      };
-    }
-    return {
-      ...i,
-    };
-  });
-  return format;
-}
+//   const withKey = newArray.map((i, c) => ({ key: c + 1, ...i }));
+//   const format = withKey.map((i) => {
+//     if (i.operator === "IN_BETWEEN") {
+//       return {
+//         ...i,
+//         value: `${i?.toValue ? i?.toValue : "N/A"}  to ${i?.fromValue ? i?.fromValue : "N/A"}`,
+//       };
+//     }
+//     return {
+//       ...i,
+//     };
+//   });
+//   return format;
+// }
 
-function reverseDeliveryRemap(data, t) {
-  if (!data) return null;
-  const reversedData = [];
-  let currentCycleIndex = null;
-  let currentCycle = null;
+// function reverseDeliveryRemap(data, t) {
+//   if (!data) return null;
+//   const reversedData = [];
+//   let currentCycleIndex = null;
+//   let currentCycle = null;
 
-  data.forEach((item, index) => {
-    if (currentCycleIndex !== item.cycleNumber) {
-      currentCycleIndex = item.cycleNumber;
-      currentCycle = {
-        cycleIndex: currentCycleIndex.toString(),
-        startDate: item?.startDate ? Digit.Utils.date.convertEpochToDate(item?.startDate) : null,
-        endDate: item?.endDate ? Digit.Utils.date.convertEpochToDate(item?.endDate) : null,
-        active: index === 0, // Initialize active to false
-        deliveries: [],
-      };
-      reversedData.push(currentCycle);
-    }
+//   data.forEach((item, index) => {
+//     if (currentCycleIndex !== item.cycleNumber) {
+//       currentCycleIndex = item.cycleNumber;
+//       currentCycle = {
+//         cycleIndex: currentCycleIndex.toString(),
+//         startDate: item?.startDate ? Digit.Utils.date.convertEpochToDate(item?.startDate) : null,
+//         endDate: item?.endDate ? Digit.Utils.date.convertEpochToDate(item?.endDate) : null,
+//         active: index === 0, // Initialize active to false
+//         deliveries: [],
+//       };
+//       reversedData.push(currentCycle);
+//     }
 
-    const deliveryIndex = item.deliveryNumber.toString();
+//     const deliveryIndex = item.deliveryNumber.toString();
 
-    let delivery = currentCycle.deliveries.find((delivery) => delivery.deliveryIndex === deliveryIndex);
+//     let delivery = currentCycle.deliveries.find((delivery) => delivery.deliveryIndex === deliveryIndex);
 
-    if (!delivery) {
-      delivery = {
-        deliveryIndex: deliveryIndex,
-        active: item.deliveryNumber === 1, // Set active to true only for the first delivery
-        deliveryRules: [],
-      };
-      currentCycle.deliveries.push(delivery);
-    }
+//     if (!delivery) {
+//       delivery = {
+//         deliveryIndex: deliveryIndex,
+//         active: item.deliveryNumber === 1, // Set active to true only for the first delivery
+//         deliveryRules: [],
+//       };
+//       currentCycle.deliveries.push(delivery);
+//     }
 
-    delivery.deliveryRules.push({
-      ruleKey: item.deliveryRuleNumber,
-      delivery: {},
-      attributes: loopAndReturn(item.conditions, t),
-      products: [...item.products],
-    });
-  });
+//     delivery.deliveryRules.push({
+//       ruleKey: item.deliveryRuleNumber,
+//       delivery: {},
+//       attributes: loopAndReturn(item.conditions, t),
+//       products: [...item.products],
+//     });
+//   });
 
-  return reversedData;
-}
+//   return reversedData;
+// }
 
 const fetchResourceFile = async (tenantId, resourceIdArr) => {
   const res = await Digit.CustomService.getResponse({
@@ -172,13 +172,8 @@ const DataUploadSummary = (props) => {
   const [targetErrors, setTargetErrors] = useState(null);
   const [facilityErrors, setFacilityErrors] = useState(null);
   const [userErrors, setUserErrors] = useState(null);
-  const [cycleDatesError, setCycleDatesError] = useState(null);
   const [summaryErrors, setSummaryErrors] = useState(null);
   const [projectId, setprojectId] = useState(null);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [cycles, setCycles] = useState([]);
-  const [cards, setCards] = useState([]);
   const isPreview = searchParams.get("preview");
   const [key, setKey] = useState(() => {
     const keyParam = searchParams.get("key");
@@ -227,21 +222,6 @@ const DataUploadSummary = (props) => {
     }
   }, [props?.props?.summaryErrors]);
 
-//   useEffect(() => {
-//     const fun = async () => {
-//       let temp = await fetchcd(tenantId, projectId);
-//       if (temp) {
-//         await new Promise((resolve) => {
-//           setStartDate(temp?.startDate);
-//           setEndDate(temp?.endDate);
-//           setCycles(temp?.additionalDetails?.projectType?.cycles);
-//           resolve();
-//         });
-//       }
-//     };
-//     fun();
-//   }, [projectId]);
-
   const { isLoading, data, error, refetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
@@ -255,11 +235,8 @@ const DataUploadSummary = (props) => {
             resourceIdArr.push(i?.createResourceId);
           }
         });
-        setStartDate(data?.[0]?.startDate);
-        setEndDate(data?.[0]?.endDate);
         let processid;
         setprojectId(data?.[0]?.projectId);
-        setCards(data?.cards);
 
         const ss = async () => {
           let temp = await fetchResourceFile(tenantId, resourceIdArr);
@@ -268,7 +245,6 @@ const DataUploadSummary = (props) => {
         };
         ss();
         const target = data?.[0]?.deliveryRules;
-        const cycleData = reverseDeliveryRemap(target, t);
         return {
           cards: [
             {
