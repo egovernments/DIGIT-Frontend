@@ -172,7 +172,7 @@ const SetupMaster = () => {
             <SVG.Announcement height={40} width={40} />
             {t(config?.header || "N/A")}
           </Header>
-          <CardText>{t(config?.description)}</CardText>
+          <CardText>{t(config?.masterDescription)}</CardText>
           <Table
             pageSizeLimit={50}
             className={"table"}
