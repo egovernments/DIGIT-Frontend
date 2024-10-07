@@ -93,32 +93,38 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   const onForgotPassword = () => {
     history.push(`/${window?.contextPath}/employee/user/forgot-password`);
   };
+  const defaultTenant = Digit.ULBService.getStateId();
   const defaultValue = {
-    code: Digit.ULBService.getStateId(),
-    name: Digit.Utils.locale.getTransformedLocale(`TENANT_TENANTS_${Digit.ULBService.getStateId()}`),
+    code: defaultTenant,
+    name: Digit.Utils.locale.getTransformedLocale(`TENANT_TENANTS_${defaultTenant}`),
   };
 
   let config = [{ body: propsConfig?.inputs }];
 
   const { mode } = Digit.Hooks.useQueryParams();
-  if (mode === "admin" && config?.[0]?.body?.[2]?.disable == false && config?.[0]?.body?.[2]?.populators?.defaultValue == undefined) {
+  if (
+    mode === "admin" && config?.[0]?.body?.[2]?.disable == false && config?.[0]?.body?.[2]?.populators?.defaultValue == undefined ) {
     config[0].body[2].disable = true;
     config[0].body[2].isMandatory = false;
     config[0].body[2].populators.defaultValue = defaultValue;
   }
-
+  const defaultValues = config[0].body.reduce((acc, curr) => {
+    if (curr?.populators?.defaultValue) {
+      acc = { ...acc, [curr?.populators?.name]: curr?.populators?.defaultValue };
+    }
+    return acc;
+  }, {});
   const onFormValueChange = (setValue, formData, formState) => {
-
     // Extract keys from the config
-  const keys = config[0].body.map(field => field.key);
+    const keys = config[0].body.map((field) => field.key);
 
-  const hasEmptyFields = keys.some(key => {
-    const value = formData[key];
-    return value == null || value === '' || (key === 'check' && value === false) || (key === 'captcha' && value === false);
-  });
+    const hasEmptyFields = keys.some((key) => {
+      const value = formData[key];
+      return value == null || value === "" || (key === "check" && value === false) || (key === "captcha" && value === false);
+    });
 
-  // Set disable based on the check
-  setDisable(hasEmptyFields);
+    // Set disable based on the check
+    setDisable(hasEmptyFields);
   };
 
   return isLoading || isStoreLoading ? (
@@ -144,6 +150,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
         cardSubHeaderClassName="loginCardSubHeaderClassName"
         cardClassName="loginCardClassName"
         buttonClassName="buttonClassName"
+        defaultValues={defaultValues}
       >
         <Header />
       </FormComposerV2>
