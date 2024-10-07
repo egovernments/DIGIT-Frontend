@@ -140,9 +140,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   };
 
   const onSubmit = (formData) => {
-
     // setIsSubmittting to true -> to run inline validations within the components
-
     setIsSubmitting(true);
 
 
@@ -248,6 +246,14 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     return <Loader />;
   }
 
+  var aa = filteredConfig?.[0]?.form.map((config) => {
+    return {
+      ...config,
+      body: config?.body.filter((a) => !a.hideInEmployee),
+    };
+  });
+
+
   return (
     <React.Fragment>
       <Stepper
@@ -256,7 +262,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
           "MICROPLAN_DETAILS",
           "MP_BOUNDARY_SELECTION",
           "MICROPLAN_ASSUMPTIONS",
-          "MP_USER_CREATION",
+          "MP_MANAGING_DATA",
           "FORMULA_CONFIGURATION",
           "SUMMARY",
         ]}

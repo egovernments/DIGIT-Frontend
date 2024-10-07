@@ -40,7 +40,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const [fileName, setFileName] = useState(null);
   const [downloadError, setDownloadError] = useState(false);
   const [resourceId, setResourceId] = useState(null);
-  const id = searchParams.get("campaignId") || "4bd96853-05f9-4c5d-b321-1f10d63502bd";
+  const id = searchParams.get("campaignId") || null;
 
   const { data: Schemas, isLoading: isThisLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -49,8 +49,6 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
     {},
     { schemaCode: "HCM-ADMIN-CONSOLE.adminSchema" }
   );
-
-  console.log(Schemas, " ssssssssssssssssssssssssssssss")
 
   const { data: readMe } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "ReadMeConfig" }]);
   const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "baseTimeout" }]);
@@ -67,8 +65,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const campaignType = totalData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code
   const [convertedSchema, setConvertedSchema] = useState({});
   const [loader, setLoader] = useState(false);
-  //   const [currentStep , setCurrentStep] = useState(1);
-  const baseKey = 4;
+  const baseKey = 6;
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -116,7 +113,6 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
         key = `${"HCM_ADMIN_CONSOLE_FACILITY_CAPACITY_MICROPLAN"}_${campaignType}`
         schema.properties[key] = temp;
       }
-      console.log(key, ' kkkkkk')
       const translatedKey = t(key);
       const translatedProperty = { ...schema.properties[key], name: t(schema.properties[key].name) };
       newProp[translatedKey] = translatedProperty;
@@ -173,8 +169,6 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
     // Update data with new properties and required fields
     data.properties = properties;
     data.required = required;
-    // delete data.campaignType;
-    // data.columns = sortedPropertyNames;
   }
 
   function convertIntoSchema(data) {
@@ -610,7 +604,6 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           const expectedHeaders = sheetHeaders[type];
 
           const SheetNames = sheetTypeMap[type];
-          console.log(SheetNames, " shhhhhhhhhhhhhhh")
 
           const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[SheetNames], { blankrows: true });
           var jsonData = sheetData.map((row, index) => {
@@ -777,7 +770,6 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             id,
             baseTimeOut?.["HCM-ADMIN-CONSOLE"]
           );
-          console.log(temp, " tttttttttttttttttttttt")
           if (temp?.isError) {
             setLoader(false);
             setIsValidation(false);
