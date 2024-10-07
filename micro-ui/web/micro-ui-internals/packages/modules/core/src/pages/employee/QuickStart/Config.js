@@ -78,7 +78,7 @@ const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...
     {
       id: 1,
       title: "SANDBOX_GUIDE_1",
-      content: null,
+      content: "SANDBOX_CONTENT_1",
       actions: [
         {
           label: null,
@@ -103,6 +103,10 @@ const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...
         {
           label: null,
           description: "SANDBOX_GUIDE_1_DESC_6",
+        },
+        {
+          label: null,
+          description: "SANDBOX_GUIDE_1_DESC_7",
         },
       ],
     },
@@ -147,15 +151,15 @@ const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...
       content: "SANDBOX_CONTENT_3",
       actions: [
         {
-          label: "SANDBOX_GUIDE_3_LABEL_1",
+          label: null,
           description: "SANDBOX_GUIDE_3_DESC_1",
         },
         {
-          label: "SANDBOX_GUIDE_3_LABEL_2",
+          label: null,
           description: "SANDBOX_GUIDE_3_DESC_2",
         },
         {
-          label: "SANDBOX_GUIDE_3_LABEL_3",
+          label: null,
           description: "SANDBOX_GUIDE_3_DESC_3",
         },
       ],
@@ -166,22 +170,18 @@ const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...
       content: "SANDBOX_CONTENT_4",
       actions: [
         {
-          label: "SANDBOX_GUIDE_4_LABEL_1",
+          label: null,
           description: "SANDBOX_GUIDE_4_DESC_1",
         },
         {
-          label: "SANDBOX_GUIDE_4_LABEL_2",
+          label: null,
           description: "SANDBOX_GUIDE_4_DESC_2",
         },
         {
-          label: "SANDBOX_GUIDE_4_LABEL_3",
+          label: null,
           description: "SANDBOX_GUIDE_4_DESC_3",
         },
       ],
-      style: {
-        backgroundColor: "#fff9c4",
-        color: "#f57f17",
-      },
     },
     {
       id: 5,
@@ -196,13 +196,38 @@ const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...
           label: "SANDBOX_GUIDE_5_LABEL_2",
           description: "SANDBOX_GUIDE_5_DESC_2",
         },
+        {
+          label: "SANDBOX_GUIDE_5_LABEL_3",
+          description: "SANDBOX_GUIDE_5_DESC_3",
+        },
       ],
     },
     {
       id: 6,
       title: "SANDBOX_GUIDE_6",
       content: "SANDBOX_CONTENT_6",
-      actions: [],
+      actions: [
+        {
+          label: "SANDBOX_GUIDE_6_LABEL_1",
+          description: "SANDBOX_GUIDE_6_DESC_1",
+        },
+        {
+          label: "SANDBOX_GUIDE_6_LABEL_2",
+          description: "SANDBOX_GUIDE_6_DESC_2",
+        },
+        {
+          label: "SANDBOX_GUIDE_6_LABEL_3",
+          description: "SANDBOX_GUIDE_6_DESC_3",
+        },
+        {
+          label: "SANDBOX_GUIDE_6_LABEL_4",
+          description: "SANDBOX_GUIDE_6_DESC_4",
+        },
+        {
+          label: "SANDBOX_GUIDE_6_LABEL_5",
+          description: "SANDBOX_GUIDE_6_DESC_5",
+        }
+      ],
     },
     {
       id: 7,
@@ -225,7 +250,7 @@ const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...
       content: "SANDBOX_CONTENT_8",
       actions: [
         {
-          label: "SANDBOX_GUIDE_8_LABEL_1",
+          label: null,
           description: "SANDBOX_GUIDE_8_DESC_1",
         },
       ],
