@@ -696,7 +696,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             }
           }
         } catch (error) {
-          console.log(error);
+          console.error("Error during Excel validation:", error);
           reject("HCM_FILE_UNAVAILABLE");
         }
       };
