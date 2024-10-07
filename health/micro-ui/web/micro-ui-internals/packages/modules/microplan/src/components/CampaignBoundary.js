@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { Fragment, useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useMyContext } from "../utils/context";
 import SubBoundaryView from "./subBoundaryView";
@@ -617,20 +617,33 @@ const CampaignBoundary = ({ customProps }) => {
         }
         // console.log("parentcodes",parent[])
         for (const ob of selectedData) {
-            const parentCodes = parents[ob['parent']]; // Get the array of codes for the parent
+            // const parentCodes = parents[ob['code']]; // Get the array of codes for the parent
+            // if(!parentCodes){
+            //     continue;
+            // }
             if (!(ob['type'] in parent_group)) {
-                parent_group[ob['type']] = [parentCodes]; // Initialize with the first unique array
+                // console.log("hey",ob["type"],parent_group[ob['type']])
+                parent_group[ob['type']] = [ob["parent"]];     // Initialize with the first unique array
             } else {
-                const existingElements = parent_group[ob['type']]; // Get the existing elements
+                // const existingElements = parent_group[ob['type']]; // Get the existing elements
 
-                // Iterate over each element in parentCodes
-                for (const code of parentCodes) {
-                    if (!existingElements.includes(code)) {
-                        // Push the element only if it's unique
-                        parent_group[ob['type']].push(code);
-                    }
+                // // Iterate over each element in parentCodes
+                // for (const code of parentCodes) {
+                //     if (!existingElements.includes(code)) {
+                //         // Push the element only if it's unique
+                //         parent_group[ob['type']].push(code);
+                //     }
+                // }
+                if (!parent_group[ob['type']].includes(ob["parent"])) {
+                    parent_group[ob['type']].push(ob["parent"]);
+
                 }
+
             }
+
+
+
+
         }
         return { parents, parent_group };
     }, [selectedData]);
@@ -706,93 +719,93 @@ const CampaignBoundary = ({ customProps }) => {
 
     return (
         <div>
-
+            {/* Render BoundaryKpi component */}
             <BoundaryKpi data={statusMap} />
-            {
-
-
-                bHierarchy.length > 1 ?
-                    (<Card>
-
-
-                        <SubBoundaryView
-                            title={bHierarchy[1]}
-                            arr={parent_group[bHierarchy[1]][0]}
-                        />
-
-                    </Card>) : (null)
-            }
-
-            {console.log("bHierarchy", bHierarchy)};
-
-            {
-                Array.isArray(bHierarchy) && bHierarchy.length > 1 && bHierarchy.filter((_, index) => ![0, bHierarchy.length - 1].includes(index)).map((item, ind) => {
-                    //item-Country,Province,Locality,District,Village
-                    console.log("item", item);
-                    if (parent_group[item] && Array.isArray(parent_group[item])) {
-                        return parent_group[item].map((item1, idx) => {
-                            //item1-Province-[Sinoe],District-[Jedepo,Jeade]
-                            console.log("item1", item1);
-                            return Array.isArray(item1) && (!boundaryStatus[ind]) ? (  //changed
-                                //make a super-comp that contains SubBoundary View
-                                <Card key={`card_${ind}_${idx}`}>
-                                    <HeaderComp title={bHierarchy[ind + 2]} />
-                                    {item1.map((item2) => {
-                                        //item2-parents name eg, sino etc
-                                        console.log("item2", item2);
-                                        return (
-                                            <SubBoundaryView
-                                                key={`${item2}_${idx}`}
-                                                title={item2}
-                                                arr={parents[item2]}
-                                            />);
-                                    })
-                                    }
-                                    <div
-                                        onClick={() => handleViewMore(ind)}
-                                        className="view-more"
-                                    >
-                                        View Less
-                                    </div>
-                                </Card>
-                            ) : (Array.isArray(item1) && (boundaryStatus[ind])) ? (
-                                <div key={`div_${ind}_${idx}`}>
-                                    <Card>
-                                        <HeaderComp title={bHierarchy[ind + 2]} />
-                                        {item1.filter((_, idexer) => (idexer == 0 || idexer == 1)).map((item2) => (
-                                            //item2-parents name eg, sino etc
-                                            <SubBoundaryView
-                                                key={`${item2}_${idx}`}
-                                                title={item2}
-                                                arr={parents[item2]}
-                                            />
-                                        ))
-                                        }
-                                        <div
-                                            onClick={() => handleViewMore(ind)}
-                                            className="view-more"
-                                        >
-                                            View More
-                                        </div>
+    
+            {/* Conditionally render a Card if bHierarchy has more than one element */}
+            {bHierarchy.length > 1 ? (
+                <Card>
+                    <SubBoundaryView
+                        title={bHierarchy[1]}
+                        arr={parents[parent_group[bHierarchy[1]][0]]}
+                    />
+                </Card>
+            ) : null}
+    
+            {/* Console log for debugging */}
+            {console.log("bHierarchy", bHierarchy)}
+    
+            {/* Map through bHierarchy and render components */}
+            {Array.isArray(bHierarchy) &&
+                bHierarchy.length > 1 &&
+                bHierarchy
+                    .filter((_, index) => ![0, 1].includes(index))
+                    .map((item, ind) => {
+                        console.log("item", item);
+    
+                        if (parent_group[item] && Array.isArray(parent_group[item])) {
+                            return parent_group[item].map((item1, idx) => {
+                                console.log("item1", item1);
+    
+                                // Return the Card component properly
+                                return (
+                                    <Card key={`card_${ind}_${idx}`}>
+                                        {Array.isArray(parents[item1]) ? (
+                                            <>
+                                                {/* Render HeaderComp and SubBoundaryView */}
+                                                <HeaderComp title={bHierarchy[ind + 2]} />
+                                                <SubBoundaryView
+                                                    key={`${item1}_${idx}`}
+                                                    title={item1}
+                                                    arr={parents[item1]}
+                                                />
+                                                {/* View Less button */}
+                                                <div
+                                                    onClick={() => handleViewMore(ind)}
+                                                    className="view-more"
+                                                >
+                                                    View Less
+                                                </div>
+                                            </>
+                                        ) : Array.isArray(item1) && boundaryStatus[ind] ? (
+                                            <div key={`div_${ind}_${idx}`}>
+                                                <Card>
+                                                    {/* Render HeaderComp and filtered SubBoundaryView */}
+                                                    <HeaderComp title={bHierarchy[ind + 2]} />
+                                                    {item1
+                                                        .filter(
+                                                            (_, idexer) =>
+                                                                idexer === 0 || idexer === 1
+                                                        )
+                                                        .map((item2) => (
+                                                            <SubBoundaryView
+                                                                key={`${item2}_${idx}`}
+                                                                title={item2}
+                                                                arr={parents[item2]}
+                                                            />
+                                                        ))}
+                                                    {/* View More button */}
+                                                    <div
+                                                        onClick={() => handleViewMore(ind)}
+                                                        className="view-more"
+                                                    >
+                                                        View More
+                                                    </div>
+                                                </Card>
+                                            </div>
+                                        ) : null}
                                     </Card>
-
-
-
-
-                                </div>
-
-
-
-                            ) : (null)
-
-
-
-                        });
-                    }
-                    return null;
-                })}
+                                );
+                            });
+                        }
+                        return null;
+                    })}
         </div>
     );
-};
+    
+
+
+}
+
 
 export default CampaignBoundary;
