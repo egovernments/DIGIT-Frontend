@@ -3,6 +3,7 @@ import { UploadIcon, FileIcon, DeleteIconv2, Button, DownloadIcon, PopUp, SVG } 
 import { FileUploader } from "react-drag-drop-files";
 import { useTranslation } from "react-i18next";
 import XLSX from "xlsx";
+import XlsPreview from "./XlsPreview";
 import { PRIMARY_COLOR } from "../utils";
 import { Toast } from "@egovernments/digit-ui-components";
 
@@ -24,7 +25,6 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
   const [fileUrl, setFileUrl] = useState(fileData?.[0]);
   const [fileName, setFileName] = useState(null);
   const [showToast, setShowToast] = useState(false);
-  const XlsPreview = Digit?.ComponentRegistryService?.getComponent("XlsPreview");
 
   useEffect(() => {
     const fetch = async () => {
@@ -136,9 +136,9 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
         <div
           className="uploaded-file-container-sub"
           style={{ cursor: "pointer" }}
-        // onClick={() => {
-        //   setShowPreview(true);
-        // }}
+          // onClick={() => {
+          //   setShowPreview(true);
+          // }}
         >
           <FileIcon className="icon" />
           <div style={{ marginLeft: "0.5rem", color: "#505A5F", fontWeight: "700" }}>{file.filename}</div>
