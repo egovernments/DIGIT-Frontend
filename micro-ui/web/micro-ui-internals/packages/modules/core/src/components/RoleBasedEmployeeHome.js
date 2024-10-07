@@ -146,7 +146,7 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
       metrics: [],
       links: moduleData.links,
       centreChildren:[
-        <div>{Digit.Utils.locale.getTransformedLocale(`MODULE_CARD_DESC_${current}`)}</div>
+        <div>{t(Digit.Utils.locale.getTransformedLocale(`MODULE_CARD_DESC_${current}`))}</div>
       ]    
     };
     return <LandingPageCard buttonSize={"medium"} {...propsForModuleCard} />;
