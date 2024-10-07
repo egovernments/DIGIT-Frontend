@@ -23,25 +23,19 @@ export const downloadExcelWithCustomName = ({ fileStoreId = null, customName = n
   };
 
   if (fileStoreId) {
-    axios.request({
-      method: 'get',
-      url: "/filestore/v1/files/id",
-      responseType: "arraybuffer",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "auth-token": Digit.UserService.getUser()?.["access_token"],
-      },
-      params: {
-        tenantId: Digit.ULBService.getCurrentTenantId(),
-        fileStoreId: fileStoreId,
-      },
-      data: {  // Use 'data' to send the body
-        RequestInfo: {
-          authToken: Digit.UserService.getUser()?.access_token || null,
-        }
-      }
-    })
+    axios
+      .get("/filestore/v1/files/id", {
+        responseType: "arraybuffer",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "auth-token": Digit.UserService.getUser()?.["access_token"],
+        },
+        params: {
+          tenantId: Digit.ULBService.getCurrentTenantId(),
+          fileStoreId: fileStoreId,
+        },
+      })
       .then(async (res) => {
         downloadExcel(
           new Blob([res.data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),
