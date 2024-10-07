@@ -64,12 +64,12 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
     //   return;
     // }
     setDisable(true);
-
     const requestData = {
       ...data,
+      ...defaultValues,
       userType: "EMPLOYEE",
     };
-    requestData.tenantId = data?.city?.code || Digit.ULBService.getStateId();
+    requestData.tenantId = requestData?.city?.code || Digit.ULBService.getStateId();
     delete requestData.city;
     try {
       const { UserRequest: info, ...tokens } = await Digit.UserService.authenticate(requestData);
@@ -113,16 +113,15 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
       acc = { ...acc, [curr?.populators?.name]: curr?.populators?.defaultValue };
     }
     return acc;
-  }, {});
+  }, {});  
   const onFormValueChange = (setValue, formData, formState) => {
     // Extract keys from the config
-    const keys = config[0].body.map((field) => field.key);
+    const keys = config[0].body.filter(field=>field?.isMandatory).map((field) => field.key);
 
     const hasEmptyFields = keys.some((key) => {
       const value = formData[key];
       return value == null || value === "" || (key === "check" && value === false) || (key === "captcha" && value === false);
     });
-
     // Set disable based on the check
     setDisable(hasEmptyFields);
   };
