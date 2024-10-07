@@ -96,7 +96,6 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
 
   useEffect(() => {
     const handleCheckingEvent = () => {
-      console.log("Checking event triggered");
       const newKey = parseInt(new URLSearchParams(window.location.search).get("key")) || 1;
       setCurrentKey(newKey);
     };
