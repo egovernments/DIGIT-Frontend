@@ -1,4 +1,4 @@
-const requestBodyGenerator = () => {};
+const requestBodyGenerator = () => { };
 
 //checking for duplicates
 const isValidResourceName = async (name) => {
@@ -51,7 +51,7 @@ const isValidResourceName = async (name) => {
 //generating campaign and microplan
 //this will only be called on first time create so it doesn't have to be generic
 const CreateResource = async (req) => {
-  
+
   //creating a microplan and campaign instance here
   const { totalFormData, state, setShowToast, setCurrentKey, setCurrentStep, config, campaignObject, planObject } = req;
   try {
@@ -94,7 +94,7 @@ const CreateResource = async (req) => {
         },
       },
     });
-    
+
     if (campaignRes?.CampaignDetails?.id && planRes?.PlanConfiguration?.[0]?.id) {
       Digit.Utils.microplanv1.updateUrlParams({
         microplanId: planRes?.PlanConfiguration?.[0]?.id,
@@ -157,7 +157,7 @@ const createUpdatePlanProject = async (req) => {
           setShowToast({ key: "error", label: "ERROR_MICROPLAN_NAME_ALREADY_EXISTS" });
           return;
         }
-        
+
         const isResourceCreated = await CreateResource(req);
         if (!isResourceCreated) {
           setShowToast({ key: "error", label: "ERROR_CREATING_MICROPLAN" });
@@ -176,7 +176,7 @@ const createUpdatePlanProject = async (req) => {
         const updatedCampaignObject = {
           ...campaignObject,
           boundaries: totalFormData?.BOUNDARY?.boundarySelection?.selectedData,
-          startDate:Math.floor(new Date(new Date().setDate(new Date().getDate() + 100)).getTime())
+          startDate: Math.floor(new Date(new Date().setDate(new Date().getDate() + 100)).getTime())
           //hardcoding this rn to update campaign. Check with admin console team
         };
         const planRes = await updatePlan(updatedCampaignObject);
@@ -197,16 +197,23 @@ const createUpdatePlanProject = async (req) => {
           triggeredFrom,
         };
 
-      case "HYPOTHESIS":
-          setCurrentKey((prev) => prev + 1);
-          setCurrentStep((prev) => prev + 1);
-         window.dispatchEvent(new Event("isLastStep"))
-          return {
-            triggeredFrom,
-          }; 
-   
+      case "UPLOADDATA":
+        setCurrentKey((prev) => prev + 1);
+        setCurrentStep((prev) => prev + 1);
+        return {
+          triggeredFrom,
+        };
 
-     default:
+      case "HYPOTHESIS":
+        setCurrentKey((prev) => prev + 1);
+        setCurrentStep((prev) => prev + 1);
+        window.dispatchEvent(new Event("isLastStep"))
+        return {
+          triggeredFrom,
+        };
+
+
+      default:
         setShowToast({ key: "error", label: "ERROR_UNHANDLED_NEXT_OPERATION" });
         return {
           triggeredFrom,

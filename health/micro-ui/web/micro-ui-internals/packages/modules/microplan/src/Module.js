@@ -10,6 +10,7 @@ import { ProviderContext } from "./utils/context";
 import BoundarySelection from "./components/BoundarySelection";
 import AssumptionsForm from "./components/AssumptionsForm";
 import HypothesisWrapper from "./components/HypothesisWrapper";
+import UploadDataCustom from "./components/UploadDataCustom";
 import DataMgmtTable from "./components/DataMgmtTable";
 import FileComponent from "./components/FileComponent";
 import HeaderComp from "./components/HeaderComp";
@@ -59,6 +60,7 @@ const componentsToRegister = {
   BoundarySelection,
   AssumptionsForm,
   HypothesisWrapper,
+  UploadDataCustom,
   DataMgmtTable,
   FileComponent,
   HeaderComp,
