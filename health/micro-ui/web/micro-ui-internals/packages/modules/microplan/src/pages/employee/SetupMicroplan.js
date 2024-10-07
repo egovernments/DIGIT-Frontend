@@ -246,13 +246,6 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     return <Loader />;
   }
 
-  var aa = filteredConfig?.[0]?.form.map((config) => {
-    return {
-      ...config,
-      body: config?.body.filter((a) => !a.hideInEmployee),
-    };
-  });
-
 
   return (
     <React.Fragment>
@@ -261,8 +254,8 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
           "HCM_CAMPAIGN_SETUP_DETAILS",
           "MICROPLAN_DETAILS",
           "MP_BOUNDARY_SELECTION",
-          "MICROPLAN_ASSUMPTIONS",
           "MP_MANAGING_DATA",
+          "MICROPLAN_ASSUMPTIONS",
           "FORMULA_CONFIGURATION",
           "SUMMARY",
         ]}

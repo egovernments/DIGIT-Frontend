@@ -91,65 +91,9 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
             },
           ],
         },
-
         {
           stepCount: "4",
           key: "4",
-          name: "ASSUMPTIONS_FORM",
-          body: [
-            {
-              isMandatory: false,
-              key: "assumptionsForm",
-              type: "component",
-              skipAPICall: false,
-              component: "AssumptionsForm",
-              withoutLabel: true,
-              disable: false,
-              withoutLabelFieldPair: true,
-              customProps: {
-                module: "HCM",
-                sessionData: totalFormData,
-                isSubmitting: isSubmitting,
-
-              },
-              populators: {
-                name: "assumptionsForm",
-                required: true,
-              },
-            },
-          ],
-        },
-
-        {
-          stepCount: "4",
-          key: "5",
-          name: "HYPOTHESIS",
-          body: [
-            {
-              isMandatory: true,
-              key: "Assumptions",
-              type: "component",
-              skipAPICall: false,
-              component: "HypothesisWrapper",
-              withoutLabel: true,
-              disable: false,
-              withoutLabelFieldPair: true,
-              customProps: {
-                module: "HCM",
-                sessionData: totalFormData,
-                isSubmitting: isSubmitting,
-
-              },
-              populators: {
-                name: "hypothesis",
-                required: true,
-              },
-            },
-          ],
-        },
-        {
-          stepCount: "5",
-          key: "6",
           name: "UPLOADDATA",
           body: [
             {
@@ -176,8 +120,8 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
           ],
         },
         {
-          stepCount: "5",
-          key: "7",
+          stepCount: "4",
+          key: "5",
           name: "UPLOADDATA",
           body: [
             {
@@ -197,6 +141,60 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               },
               populators: {
                 name: "uploadData"
+              },
+            },
+          ],
+        },
+        {
+          stepCount: "5",
+          key: "6",
+          name: "ASSUMPTIONS_FORM",
+          body: [
+            {
+              isMandatory: false,
+              key: "assumptionsForm",
+              type: "component",
+              skipAPICall: false,
+              component: "AssumptionsForm",
+              withoutLabel: true,
+              disable: false,
+              withoutLabelFieldPair: true,
+              customProps: {
+                module: "HCM",
+                sessionData: totalFormData,
+                isSubmitting: isSubmitting,
+
+              },
+              populators: {
+                name: "assumptionsForm",
+                required: true,
+              },
+            },
+          ],
+        },
+        {
+          stepCount: "5",
+          key: "7",
+          name: "HYPOTHESIS",
+          body: [
+            {
+              isMandatory: true,
+              key: "Assumptions",
+              type: "component",
+              skipAPICall: false,
+              component: "HypothesisWrapper",
+              withoutLabel: true,
+              disable: false,
+              withoutLabelFieldPair: true,
+              customProps: {
+                module: "HCM",
+                sessionData: totalFormData,
+                isSubmitting: isSubmitting,
+
+              },
+              populators: {
+                name: "hypothesis",
+                required: true,
               },
             },
           ],

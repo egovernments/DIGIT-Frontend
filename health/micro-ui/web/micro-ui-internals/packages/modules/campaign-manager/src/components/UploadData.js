@@ -68,8 +68,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const totalData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
   const [convertedSchema, setConvertedSchema] = useState({});
   const [loader, setLoader] = useState(false);
-  const [currentStep , setCurrentStep] = useState(1);
-  const baseKey = 9; 
+  const [currentStep, setCurrentStep] = useState(1);
+  const baseKey = 9;
 
   function updateUrlParams(params) {
     const url = new URL(window.location.href);
@@ -79,7 +79,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     window.history.replaceState({}, "", url);
   }
 
-  useEffect(() =>{
+  useEffect(() => {
     setKey(currentKey);
     setCurrentStep(currentKey - baseKey + 1);
   }, [currentKey])
@@ -237,7 +237,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
       const filterByUpdateFlag = (schemaProperties) => {
         return Object.keys(schemaProperties).filter(
-          (key) => schemaProperties[key].isUpdate !== true 
+          (key) => schemaProperties[key].isUpdate !== true
         );
       };
 
@@ -873,10 +873,10 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                       type === "facilityWithBoundary"
                         ? "facility"
                         : type === "userWithBoundary"
-                        ? "user"
-                        : type === "boundary"
-                        ? "boundaryWithTarget"
-                        : type;
+                          ? "user"
+                          : type === "boundary"
+                            ? "boundaryWithTarget"
+                            : type;
                     return {
                       ...i,
                       filestoreId: id,
@@ -912,10 +912,10 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                     type === "facilityWithBoundary"
                       ? "facility"
                       : type === "userWithBoundary"
-                      ? "user"
-                      : type === "boundary"
-                      ? "boundaryWithTarget"
-                      : type;
+                        ? "user"
+                        : type === "boundary"
+                          ? "boundaryWithTarget"
+                          : type;
                   return {
                     ...i,
                     filestoreId: id,
@@ -930,7 +930,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               setIsError(true);
             }
           }
-        } catch (error) {}
+        } catch (error) { }
       }
     };
 
@@ -1024,14 +1024,14 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   }, [key]);
 
   const onStepClick = (currentStep) => {
-    setCurrentStep(currentStep+1);
-    if(currentStep === 0){
+    setCurrentStep(currentStep + 1);
+    if (currentStep === 0) {
       setKey(9);
     }
-    else if(currentStep === 1){
+    else if (currentStep === 1) {
       setKey(10);
     }
-    else if(currentStep === 3){
+    else if (currentStep === 3) {
       setKey(12);
     }
     else setKey(11);
@@ -1040,93 +1040,93 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   return (
     <>
       <div className="container-full">
-      <div className="card-container">
-        <Card className="card-header-timeline">
-        <TextBlock
-            subHeader={t("HCM_UPLOAD_DATA")}
-            subHeaderClasName={"stepper-subheader"}
-            wrapperClassName={"stepper-wrapper"}
-          />
-        </Card>
-        <Card className="stepper-card">
-          <Stepper
-            customSteps={["HCM_UPLOAD_FACILITY", "HCM_UPLOAD_USER" , "HCM_UPLOAD_TARGET" , "HCM_SUMMARY"]}
-            currentStep={currentStep}
-            onStepClick={onStepClick}
-            direction={"vertical"}
-          />
-        </Card>
+        <div className="card-container">
+          <Card className="card-header-timeline">
+            <TextBlock
+              subHeader={t("HCM_UPLOAD_DATA")}
+              subHeaderClasName={"stepper-subheader"}
+              wrapperClassName={"stepper-wrapper"}
+            />
+          </Card>
+          <Card className="stepper-card">
+            <Stepper
+              customSteps={["HCM_UPLOAD_FACILITY", "HCM_UPLOAD_USER", "HCM_UPLOAD_TARGET", "HCM_SUMMARY"]}
+              currentStep={currentStep}
+              onStepClick={onStepClick}
+              direction={"vertical"}
+            />
+          </Card>
         </div>
         {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
         <div className="card-container">
-        <Card>
-          <div className="campaign-bulk-upload">
-            <Header className="digit-form-composer-sub-header">
-              {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
-            </Header>
-            <Button
-              label={t("WBH_DOWNLOAD_TEMPLATE")}
-              variation="secondary"
-              icon={"FileDownload"}
-              type="button"
-              className="campaign-download-template-btn"
-              onClick={downloadTemplate}
-            />
-          </div>
-          {uploadedFile.length === 0 && (
-            <div className="info-text">
-              {type === "boundary" ? t("HCM_BOUNDARY_MESSAGE") : type === "facilityWithBoundary" ? t("HCM_FACILITY_MESSAGE") : t("HCM_USER_MESSAGE")}
+          <Card>
+            <div className="campaign-bulk-upload">
+              <Header className="digit-form-composer-sub-header">
+                {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
+              </Header>
+              <Button
+                label={t("WBH_DOWNLOAD_TEMPLATE")}
+                variation="secondary"
+                icon={"FileDownload"}
+                type="button"
+                className="campaign-download-template-btn"
+                onClick={downloadTemplate}
+              />
             </div>
-          )}
-          <BulkUpload onSubmit={onBulkUploadSubmit} fileData={uploadedFile} onFileDelete={onFileDelete} onFileDownload={onFileDownload} />
-          {showInfoCard && (
-            <InfoCard
-              populators={{
-                name: "infocard",
-              }}
-              variant="error"
-              style={{ marginLeft: "0rem", maxWidth: "100%" }}
-              label={t("HCM_ERROR")}
-              additionalElements={[
-                <React.Fragment key={type}>
-                  {errorsType[type] && (
-                    <React.Fragment>
-                      {errorsType[type]
-                        .split(",")
-                        .slice(0, 50)
-                        .map((error, index) => (
-                          <React.Fragment key={index}>
-                            {index > 0 && <br />}
-                            {error.trim()}
-                          </React.Fragment>
-                        ))}
-                    </React.Fragment>
-                  )}
-                </React.Fragment>,
-              ]}
-            />
-          )}
-        </Card>
-        <InfoCard
-          populators={{
-            name: "infocard",
-          }}
-          variant="default"
-          style={{ margin: "0rem", maxWidth: "100%" }}
-          additionalElements={readMeInfo[type]?.map((info, index) => (
-            <div key={index} style={{ display: "flex", flexDirection: "column" }}>
-              <h2>{info?.header}</h2>
-              <ul style={{ paddingLeft: 0 }}>
-                {info?.descriptions.map((desc, i) => (
-                  <li key={i} className="info-points">
-                    {desc.isBold ? <h2>{desc.text}</h2> : <p>{desc.text}</p>}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-          label={"Info"}
-        />
+            {uploadedFile.length === 0 && (
+              <div className="info-text">
+                {type === "boundary" ? t("HCM_BOUNDARY_MESSAGE") : type === "facilityWithBoundary" ? t("HCM_FACILITY_MESSAGE") : t("HCM_USER_MESSAGE")}
+              </div>
+            )}
+            <BulkUpload onSubmit={onBulkUploadSubmit} fileData={uploadedFile} onFileDelete={onFileDelete} onFileDownload={onFileDownload} />
+            {showInfoCard && (
+              <InfoCard
+                populators={{
+                  name: "infocard",
+                }}
+                variant="error"
+                style={{ marginLeft: "0rem", maxWidth: "100%" }}
+                label={t("HCM_ERROR")}
+                additionalElements={[
+                  <React.Fragment key={type}>
+                    {errorsType[type] && (
+                      <React.Fragment>
+                        {errorsType[type]
+                          .split(",")
+                          .slice(0, 50)
+                          .map((error, index) => (
+                            <React.Fragment key={index}>
+                              {index > 0 && <br />}
+                              {error.trim()}
+                            </React.Fragment>
+                          ))}
+                      </React.Fragment>
+                    )}
+                  </React.Fragment>,
+                ]}
+              />
+            )}
+          </Card>
+          <InfoCard
+            populators={{
+              name: "infocard",
+            }}
+            variant="default"
+            style={{ margin: "0rem", maxWidth: "100%" }}
+            additionalElements={readMeInfo[type]?.map((info, index) => (
+              <div key={index} style={{ display: "flex", flexDirection: "column" }}>
+                <h2>{info?.header}</h2>
+                <ul style={{ paddingLeft: 0 }}>
+                  {info?.descriptions.map((desc, i) => (
+                    <li key={i} className="info-points">
+                      {desc.isBold ? <h2>{desc.text}</h2> : <p>{desc.text}</p>}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+            label={"Info"}
+          />
         </div>
         {showPopUp && (
           <PopUp
@@ -1137,16 +1137,16 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               type === "boundary"
                 ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_HEADER")
                 : type === "facilityWithBoundary"
-                ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER")
-                : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER")
+                  ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER")
+                  : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER")
             }
             children={[
               <div>
                 {type === "boundary"
                   ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_TEXT")
                   : type === "facilityWithBoundary"
-                  ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT")
-                  : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT ")}
+                    ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT")
+                    : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT ")}
               </div>,
             ]}
             onOverlayClick={() => {

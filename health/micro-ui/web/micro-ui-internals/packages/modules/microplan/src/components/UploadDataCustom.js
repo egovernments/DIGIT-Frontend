@@ -6,8 +6,6 @@ import BulkUpload from "./../../../campaign-manager/src/components/BulkUpload";
 import Ajv from "ajv";
 import XLSX from "xlsx";
 import { InfoCard, PopUp, Toast, Button, DownloadIcon, Stepper, TextBlock } from "@egovernments/digit-ui-components";
-import { downloadExcelWithCustomName } from "../utils/downloadExcel";
-import { useMyContext } from "../utils/context";
 
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
@@ -65,7 +63,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const campaignType = totalData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code
   const [convertedSchema, setConvertedSchema] = useState({});
   const [loader, setLoader] = useState(false);
-  const baseKey = 6;
+  const baseKey = 4;
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -745,12 +743,11 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
     setErrorsType({});
     setShowToast(null);
   };
-
   const onFileDownload = (file) => {
     if (file && file?.url) {
       // Splitting filename before .xlsx or .xls
       const fileNameWithoutExtension = file?.filename.split(/\.(xlsx|xls)/)[0];
-      downloadExcelWithCustomName({ fileStoreId: file?.filestoreId, customName: fileNameWithoutExtension });
+      Digit.Utils.campaign.downloadExcelWithCustomName({ fileStoreId: file?.filestoreId, customName: fileNameWithoutExtension });
     }
   };
   useEffect(() => {
