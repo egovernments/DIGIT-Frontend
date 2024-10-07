@@ -1,7 +1,7 @@
-export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summaryErrors,hierarchyData) => {
+export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summaryErrors, hierarchyData) => {
   return [
     {
-      form:[
+      form: [
         // TODO: Do no update this object key:1 
         {
           stepCount: "1",
@@ -13,13 +13,13 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               key: "campaignDetails",
               type: "component",
               skipAPICall: false,
-              resourceToUpdate:"CAMPAIGN",//which api to call enum ["CAMPAIGN","PLAN"]
+              resourceToUpdate: "CAMPAIGN",//which api to call enum ["CAMPAIGN","PLAN"]
               component: "CampaignDetails",
               withoutLabel: true,
               disable: false,
-              showPopupOnSubmission:{
-                alertMessage:"ALERT_MESSAGE_CAMPAIGN",
-                alertHeader:"ALERT_HEADER_CAMPAIGN"
+              showPopupOnSubmission: {
+                alertMessage: "ALERT_MESSAGE_CAMPAIGN",
+                alertHeader: "ALERT_HEADER_CAMPAIGN"
               },
               customProps: {
                 module: "HCM",
@@ -43,14 +43,14 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               key: "microplanDetails",
               type: "component",
               skipAPICall: false,
-              resourceToUpdate:"PLAN",
+              resourceToUpdate: "PLAN",
               component: "MicroplanDetails",
               withoutLabelFieldPair: true,
               withoutLabel: true,
               disable: false,
-              showPopupOnSubmission:{
-                alertMessage:"ALERT_MESSAGE_MICROPLAN",
-                alertHeader:"ALERT_HEADER_MICROPLAN"
+              showPopupOnSubmission: {
+                alertMessage: "ALERT_MESSAGE_MICROPLAN",
+                alertHeader: "ALERT_HEADER_MICROPLAN"
               },
               customProps: {
                 module: "HCM",
@@ -74,7 +74,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               key: "boundarySelection",
               type: "component",
               skipAPICall: false,
-              resourceToUpdate:"PLAN",
+              resourceToUpdate: "PLAN",
               component: "BoundarySelection",
               withoutLabelFieldPair: true,
               withoutLabel: true,
@@ -107,10 +107,10 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               withoutLabelFieldPair: true,
               customProps: {
                 module: "HCM",
-                type:"boundary",
+                type: "boundary",
                 sessionData: totalFormData,
                 isSubmitting: isSubmitting,
-                
+
               },
               populators: {
                 name: "hypothesis",
@@ -135,7 +135,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               withoutLabelFieldPair: true,
               customProps: {
                 module: "HCM",
-                type:"facilityWithBoundary",
+                type: "facilityWithBoundary",
                 sessionData: totalFormData,
                 isSubmitting: isSubmitting,
               },
@@ -146,33 +146,6 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
             },
           ],
         },
-      {
-        stepCount: "6",
-        key: "7",
-        name: "HYPOTHESIS",
-        body: [
-          {
-            isMandatory: true,
-            key: "hypothesis",
-            type: "component",
-            skipAPICall: false,
-            component: "HypothesisWrapper",
-            withoutLabel: true,
-            disable: false,
-            withoutLabelFieldPair: true,
-            customProps: {
-              module: "HCM",
-              sessionData: totalFormData,
-              isSubmitting: isSubmitting,
-
-            },
-            populators: {
-              name: "hypothesis",
-              required: true,
-            },
-          },
-        ],
-      },
         {
           stepCount: "5",
           key: "6",
@@ -183,45 +156,61 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               key: "microplanDetails",
               type: "component",
               skipAPICall: false,
-              resourceToUpdate:"PLAN",
+              resourceToUpdate: "PLAN",
               component: "MicroplanDetails",
               withoutLabel: true,
               disable: false,
-              customProps: {
-                module: "HCM",
-                sessionData: totalFormData,
-                isSubmitting: isSubmitting,
-              },
-              populators: {
-                name: "projectType",
-              },
-            },
-          ],
+              stepCount: "4",
+              key: "4",
+              name: "ASSUMPTIONS_FORM",
+              body: [
+                {
+                  isMandatory: false,
+                  key: "assumptionsForm",
+                  type: "component",
+                  skipAPICall: false,
+                  component: "AssumptionsForm",
+                  withoutLabel: true,
+                  disable: false,
+                  withoutLabelFieldPair: true,
+                  customProps: {
+                    module: "HCM",
+                    sessionData: totalFormData,
+                    isSubmitting: isSubmitting,
+                  },
+                  populators: {
+                    name: "projectType",
+
+                  },
+                  populators: {
+                    name: "assumptionsForm",
+                    required: true,
+                  },
+                },
+              ],
+            }]
         },
         {
           stepCount: "6",
           key: "7",
-          name: "MP_MICROPLAN_DETAILS",
+          name: "HYPOTHESIS",
           body: [
             {
-              isMandatory: false,
-              key: "microplanDetails",
+              isMandatory: true,
+              key: "hypothesis",
               type: "component",
               skipAPICall: false,
-              resourceToUpdate:"PLAN",
-              component: "MicroplanDetails",
+              component: "HypothesisWrapper",
               withoutLabel: true,
               disable: false,
+              withoutLabelFieldPair: true,
               customProps: {
                 module: "HCM",
                 sessionData: totalFormData,
                 isSubmitting: isSubmitting,
-              },
-              populators: {
-                name: "projectType",
-              },
-            },
-          ],
+              }
+            }
+          ]
         },
         {
           stepCount: "7",
@@ -233,7 +222,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               key: "microplanDetails",
               type: "component",
               skipAPICall: false,
-              resourceToUpdate:"PLAN",
+              resourceToUpdate: "PLAN",
               component: "MicroplanDetails",
               withoutLabel: true,
               disable: false,
@@ -249,24 +238,24 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
           ],
         },
         {
-          stepCount:"8",
-          key:"9",
-          name:"SUMMARY_SCREEN",
+          stepCount: "8",
+          key: "9",
+          name: "SUMMARY_SCREEN",
           body: [
             {
               isMandatory: false,
               key: "summaryscreen",
               type: "component",
               skipAPICall: false,
-              resourceToUpdate:"PLAN",
+              resourceToUpdate: "PLAN",
               component: "SummaryScreen",
               withoutLabel: true,
-              withoutLabelFieldPair:true,
+              withoutLabelFieldPair: true,
               disable: false,
               customProps: {
                 module: "HCM",
                 sessionData: totalFormData,
-                isSubmitting:false,
+                isSubmitting: false,
               },
               populators: {
                 name: "projectType",
@@ -274,7 +263,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
             },
           ],
         }
-        
+
       ]
     }
   ]
