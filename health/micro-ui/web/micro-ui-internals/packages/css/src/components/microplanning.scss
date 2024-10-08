@@ -2515,18 +2515,10 @@ $border-color: rgba(214, 213, 212, 1);
   margin-bottom: 1rem;
 }
 
-.assumptions-label-field{
-  display: flex;
-  gap:10rem;
-  margin: 1.7rem 0rem;  
-  
-}
 
 
 .assumptions-label-field > div > span {
-  width: 20rem;
-  font-size: 1.2rem;
-  margin-right: 2rem;
+  
   font-weight: bold;
   
 }
@@ -2540,11 +2532,11 @@ $border-color: rgba(214, 213, 212, 1);
 }
 
 
-.input-container{
+.fieldv1-container{
   display: flex;
   justify-content: center;
   width:30rem;
-
+  align-items: center;
 }
 
 
@@ -2576,20 +2568,6 @@ $border-color: rgba(214, 213, 212, 1);
   font-size: 1.2em;
 }
 
-.assumptions-label-field > div > span {
-  width: 20rem;
-  font-size: 1.2rem;
-  margin-right: 2rem;
-  font-weight: bold; 
-}
-
-
-.fieldv1-container{
-  display: flex;
-  justify-content: center;
-  width:30rem;
-  align-items: center;
-}
 
 .assumptionsForm-label-field{
     display: flex;
