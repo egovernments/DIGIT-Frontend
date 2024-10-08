@@ -112,7 +112,7 @@ const CreateResource = async (req) => {
   }
 };
 
-const updatePlan = async (req) => {
+const updateProject = async (req) => {
   const planRes = await Digit.CustomService.getResponse({
     url: "/project-factory/v1/project-type/update",
     body: {
@@ -120,6 +120,16 @@ const updatePlan = async (req) => {
     },
   });
 
+  return planRes;
+};
+
+const updatePlan = async (req) => {
+  const planRes = await Digit.CustomService.getResponse({
+    url: "/plan-service/config/_update",
+    body: {
+      PlanConfiguration: req,
+    },
+  });
   return planRes;
 };
 
@@ -133,7 +143,6 @@ const createUpdatePlanProject = async (req) => {
     //now basically we need to decide from which screen this hook was triggered and take action accordingly
 
     const triggeredFrom = config.name;
-
     switch (triggeredFrom) {
       case "CAMPAIGN_DETAILS":
         setCurrentKey((prev) => prev + 1);
@@ -179,8 +188,8 @@ const createUpdatePlanProject = async (req) => {
           startDate: Math.floor(new Date(new Date().setDate(new Date().getDate() + 100)).getTime())
           //hardcoding this rn to update campaign. Check with admin console team
         };
-        const planRes = await updatePlan(updatedCampaignObject);
-        if (planRes?.CampaignDetails?.id) {
+        const campaignResBoundary = await updateProject(updatedCampaignObject);
+        if (campaignResBoundary?.CampaignDetails?.id) {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
           return {
@@ -191,11 +200,55 @@ const createUpdatePlanProject = async (req) => {
         }
 
       case "ASSUMPTIONS_FORM":
-        setCurrentKey((prev) => prev + 1);
-        setCurrentStep((prev) => prev + 1);
-        return {
-          triggeredFrom,
-        };
+        const updatedPlanObjAssumptionsForm = {
+          ...planObject,
+          additionalDetails:{
+            ...planObject?.additionalDetails,
+            assumptionsForm:totalFormData.ASSUMPTIONS_FORM.assumptionsForm
+          }
+        }
+        const planResAssumptionsForm = await updatePlan(updatedPlanObjAssumptionsForm);
+        if(planResAssumptionsForm?.PlanConfiguration?.[0]?.id){
+          setCurrentKey((prev) => prev + 1);
+          setCurrentStep((prev) => prev + 1);
+          return {
+            triggeredFrom,
+          };
+        }else {
+          setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
+        }
+
+      case "HYPOTHESIS":
+        //here we can always invalidate prev assumptions
+        const prevAssumptions = planObject?.assumptions?.map(row => {
+          const updatedRow = {
+            ...row,
+            active:false
+          }
+          return updatedRow
+        })
+        const assumptionsToUpdate = totalFormData?.HYPOTHESIS?.Assumptions?.assumptionValues?.filter(row => {
+          return row.category && row.key && row.value
+        })
+        const upatedPlanObjHypothesis = {
+          ...planObject,
+          assumptions:[
+            ...prevAssumptions,
+            ...assumptionsToUpdate
+          ]
+        }
+
+        const planResHypothesis = await updatePlan(upatedPlanObjHypothesis);
+        if(planResHypothesis?.PlanConfiguration?.[0]?.id){
+          setCurrentKey((prev) => prev + 1);
+          setCurrentStep((prev) => prev + 1);
+          window.dispatchEvent(new Event("isLastStep"))
+          return {
+            triggeredFrom,
+          };
+        }else {
+          setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
+        }
 
       case "UPLOADDATA":
         setCurrentKey((prev) => prev + 1);
@@ -203,15 +256,6 @@ const createUpdatePlanProject = async (req) => {
         return {
           triggeredFrom,
         };
-
-      case "HYPOTHESIS":
-        setCurrentKey((prev) => prev + 1);
-        setCurrentStep((prev) => prev + 1);
-        window.dispatchEvent(new Event("isLastStep"))
-        return {
-          triggeredFrom,
-        };
-
 
       default:
         setShowToast({ key: "error", label: "ERROR_UNHANDLED_NEXT_OPERATION" });
