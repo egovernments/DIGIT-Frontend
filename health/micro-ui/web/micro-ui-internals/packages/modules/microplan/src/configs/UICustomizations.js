@@ -103,43 +103,59 @@ export const UICustomizations = {
 
       const { phone, name } = data?.state?.searchForm || {}
       const { sortOrder } = data?.state?.filterForm || {}
-      const {roles} = data?.state?.filterForm || {}
-      console.log("data",data);
-      
-      data.params.name=name;
-      data.params.phone=phone;
-      
-      console.log(data,"dat");
+      const { roles } = data?.state?.filterForm || {}
+      console.log("data", data);
+
+      data.params.names = name;
+      data.params.phone = phone;
+      data.params.roles=roles;
+
+      // console.log(data,"dat");
       // data.param.roles=roles;
 
       return data
     },
 
-    populatePlantUsersReqCriteria:(props) => {
+    rolesForFilter: (props) => {
       const userInfo = Digit.UserService.getUser();
       const tenantId = Digit.ULBService.getCurrentTenantId();
-
+      // debugger
       return {
-        params:{},
-        url:'/egov-hrms/employees/_search',
-        body:{
-          "plantUserSearchCriteria": {
-            tenantId,
-            // "plantCodes": [],
-            "plantUserUuids": userInfo?.info?.uuid ?  [userInfo?.info?.uuid]: [],
-            "additionalDetails": {}
-          },
-          "pagination": {}
+        params: {},
+        url: '/mdms-v2/v2/_search', //mdms fetch from
+
+        body: {
+          MdmsCriteria: {
+            tenantId: "mz",
+            filters: {},
+            schemaCode: "hcm-microplanning.rolesForMicroplan",
+            limit: 10,
+            offset: 0
+          }
+
         },
         config: {
-          select:(data)=> {
-            return Digit.SessionStorage.get("user_plants");
-          }
+          enabled: true,
+          select: (data) => {
+            // console.log("dates")
+            const roles = data?.mdms.map(item => {
+              return (
+                {
+                  roleCode: item.data.roleCode,
+                  orderNumber: item.data.orderNumber
+                  
+                  // roleCode:{labelKey:item.data.roleCode}
+                
+                }
+              )
+            })
+            return roles
+          },
         },
-        changeQueryName:"setPlantUsersInboxDropdown"
+        // changeQueryName:"setPlantUsersInboxDropdown"
       }
     },
-    
+
   }
 
 };

@@ -15,9 +15,9 @@ export const tqmInboxConfig = {
         "minParametersForFilterForm": 0,
         "masterName": "commonUiConfig",
         "moduleName": "UserManagementConfig",
-        "tableFormJsonPath": "requestBody",
-        "filterFormJsonPath": "requestBody",
-        "searchFormJsonPath": "requestBody"
+        "tableFormJsonPath": "requestParam",
+        "filterFormJsonPath": "requestParam",
+        "searchFormJsonPath": "requestParam"
       },
       "sections": {
         "search": {
@@ -37,8 +37,6 @@ export const tqmInboxConfig = {
             "secondaryLabel": "ES_COMMON_CLEAR_SEARCH",
             "minReqFields": 0,
             "defaultValues": {
-              "id": "",
-              "plantCodes": ""
             },
             "fields": [
               {
@@ -219,11 +217,11 @@ export const tqmInboxConfig = {
                     "top": "2.3rem"
                   },
                   "name": "plantCodes",
-                  "optionsKey": "i18nKey",
+                  "optionsKey": "roleCode",
                   "allowMultiSelect": false,
                   "masterName": "commonUiConfig",
                   "moduleName": "UserManagementConfig",
-                  "customfn": "populatePlantUsersReqCriteria"
+                  "customfn": "rolesForFilter"
                 },
                 "removableTagConf":{
                   "name":"plantCodes",
