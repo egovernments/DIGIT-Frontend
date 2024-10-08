@@ -598,12 +598,12 @@
 
     .browse-text {
       text-decoration: none;
-      color: #c84c0e;
+      color: theme(colors.primary.main);
       transition: color 0.3s;
     }
 
     .browse-text:hover {
-      color: #c84c0e;
+      color: theme(colors.primary.main);
       text-decoration: underline;
       cursor: pointer;
     }
@@ -779,7 +779,7 @@ button:hover {
   width: 100%;
   height: 2.5rem;
   --border-opacity: 1;
-  border: 1px solid #c84c0e;
+  border: 1px solid theme(colors.primary.main);
   border-color: rgba(244, 119, 56, var(--border-opacity));
 }
 
@@ -802,7 +802,7 @@ button:hover {
 
     .add-new {
       position: relative;
-      color: #c84c0e;
+      color: theme(colors.primary.main);
       cursor: pointer;
       margin-right: 1em;
       font-weight: bolder;
@@ -849,7 +849,7 @@ button:hover {
 
   .view-all-link {
     background-color: #bdc5d1;
-    color: #c84c0e;
+    color: theme(colors.primary.main);
     font-size: 16px;
     text-decoration: underline;
     cursor: pointer;

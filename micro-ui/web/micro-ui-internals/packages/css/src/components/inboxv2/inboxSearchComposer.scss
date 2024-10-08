@@ -32,10 +32,10 @@
                         @extend .light-text-color-primary;
                     }
                     .inbox-links-icon{
-                        color:#c84c0e;
-                        fill:#c84c0e;
+                        color:theme(colors.primary.main);
+                        fill:theme(colors.primary.main);
                         path{
-                            fill:#c84c0e;
+                            fill:theme(colors.primary.main);
                         }
                     }
                 }
@@ -88,7 +88,7 @@
                 }
                 &.links {
                     height: 100%;
-                    color : #c84c0e;
+                    color : theme(colors.primary.main);
                     .inbox-search-links-component {
                         height: 100% !important;
                         width: 100%;
