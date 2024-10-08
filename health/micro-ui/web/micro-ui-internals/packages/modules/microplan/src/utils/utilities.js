@@ -100,6 +100,9 @@ const formValidator = (formData, key, state) => {
   };
 
   const areFieldsValid = (fields) => {
+    if (fields.length === 0) {
+      return false;
+  }
     const hasInvalidField = fields?.some(field => {
       const isValid = field && field.value; 
       return !isValid;
@@ -112,19 +115,38 @@ const formValidator = (formData, key, state) => {
   
   
   const assumptionsFormValidator = (formData) => {
-    const requiredFields = [
-      formData?.selectedRegistrationProcess,
-      formData?.selectedDistributionProcess,
-      formData?.selectedRegistrationDistributionMode,
-    ].filter(Boolean);
-    
+
+      let requiredFields = []
+       if(formData?.selectedRegistrationProcess && formData?.selectedDistributionProcess){
+        requiredFields = [
+          formData?.selectedRegistrationProcess,
+          formData?.selectedDistributionProcess,
+        ]
+          if (!areFieldsValid(requiredFields)) {
+            return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; 
+          }
+       }else if(formData?.selectedRegistrationDistributionMode){
+        requiredFields = [
+          formData?.selectedRegistrationDistributionMode,
+        ]
+        if (!areFieldsValid(requiredFields)) {
+          return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; 
+        }
+       }
+
+    const processesAreValid = formData?.selectedRegistrationProcess?.code && formData?.selectedDistributionProcess?.code;
+    if (processesAreValid && (formData?.selectedRegistrationProcess.code === formData?.selectedDistributionProcess.code)) {
+        return { key: "error", label: "ERROR_REGISTRATION_AND_DISTRIBUTION_ARE_SAME" }; // Customize as needed
+    }
     
     if (!areFieldsValid(requiredFields)) {
-      return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; // Customize as needed
+      return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; 
     }
   
     return null; // Return null if all validations pass
   };
+
+
 
 
   const microplanAssumptionsValidator = (formData)=>{

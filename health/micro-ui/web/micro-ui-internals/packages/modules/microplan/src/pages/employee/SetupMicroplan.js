@@ -199,15 +199,6 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     // setCurrentStep(prev => prev + 1)
   };
 
-  // const onSecondayActionClick = () => {
-  //  
-  //   setCurrentKey((prev) => prev - 1);
-  //   if (currentStep === 0) {
-  //     history.push(`/${window.contextPath}/employee`);
-  //   } else {
-  //     setCurrentStep((prev) => prev - 1);
-  //   }
-  // };
   const moveToPreviousStep = () => {
     setCurrentStep((prev) => prev - 1);
     setCurrentKey((prev) => prev - 1);
@@ -223,15 +214,12 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const onSecondayActionClick = () => {
     if (currentStep === 0) {
       history.push(`/${window.contextPath}/employee`);
-    } else {
-      setCurrentStep((prev) => prev - 1);
     }
     const { isLastVerticalStep } = Digit.Hooks.useQueryParams();
 
     if (isLastVerticalStep === 'true') {
       window.dispatchEvent(new Event("verticalStepper"))
       return;
-
     }
 
     setCurrentStep((prev) => prev - 1);

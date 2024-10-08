@@ -200,55 +200,66 @@ const createUpdatePlanProject = async (req) => {
         }
 
       case "ASSUMPTIONS_FORM":
-        const updatedPlanObjAssumptionsForm = {
-          ...planObject,
-          additionalDetails:{
-            ...planObject?.additionalDetails,
-            assumptionsForm:totalFormData.ASSUMPTIONS_FORM.assumptionsForm
-          }
-        }
-        const planResAssumptionsForm = await updatePlan(updatedPlanObjAssumptionsForm);
-        if(planResAssumptionsForm?.PlanConfiguration?.[0]?.id){
-          setCurrentKey((prev) => prev + 1);
-          setCurrentStep((prev) => prev + 1);
-          return {
-            triggeredFrom,
-          };
-        }else {
-          setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
-        }
+        // const updatedPlanObjAssumptionsForm = {
+        //   ...planObject,
+        //   additionalDetails:{
+        //     ...planObject?.additionalDetails,
+        //     assumptionsForm:totalFormData.ASSUMPTIONS_FORM.assumptionsForm
+        //   }
+        // }
+        // const planResAssumptionsForm = await updatePlan(updatedPlanObjAssumptionsForm);
+        // if(planResAssumptionsForm?.PlanConfiguration?.[0]?.id){
+        //   setCurrentKey((prev) => prev + 1);
+        //   setCurrentStep((prev) => prev + 1);
+        //   return {
+        //     triggeredFrom,
+        //   };
+        // }else {
+        //   setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
+        // }
+        setCurrentKey((prev) => prev + 1);
+        setCurrentStep((prev) => prev + 1);
+        return {
+          triggeredFrom,
+        };
+
 
       case "HYPOTHESIS":
         //here we can always invalidate prev assumptions
-        const prevAssumptions = planObject?.assumptions?.map(row => {
-          const updatedRow = {
-            ...row,
-            active:false
-          }
-          return updatedRow
-        })
-        const assumptionsToUpdate = totalFormData?.HYPOTHESIS?.Assumptions?.assumptionValues?.filter(row => {
-          return row.category && row.key && row.value
-        })
-        const upatedPlanObjHypothesis = {
-          ...planObject,
-          assumptions:[
-            ...prevAssumptions,
-            ...assumptionsToUpdate
-          ]
-        }
+        // const prevAssumptions = planObject?.assumptions?.map(row => {
+        //   const updatedRow = {
+        //     ...row,
+        //     active:false
+        //   }
+        //   return updatedRow
+        // })
+        // const assumptionsToUpdate = totalFormData?.HYPOTHESIS?.Assumptions?.assumptionValues?.filter(row => {
+        //   return row.category && row.key && row.value
+        // })
+        // const upatedPlanObjHypothesis = {
+        //   ...planObject,
+        //   assumptions:[
+        //     ...prevAssumptions,
+        //     ...assumptionsToUpdate
+        //   ]
+        // }
 
-        const planResHypothesis = await updatePlan(upatedPlanObjHypothesis);
-        if(planResHypothesis?.PlanConfiguration?.[0]?.id){
-          setCurrentKey((prev) => prev + 1);
-          setCurrentStep((prev) => prev + 1);
-          window.dispatchEvent(new Event("isLastStep"))
-          return {
-            triggeredFrom,
-          };
-        }else {
-          setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
-        }
+        // const planResHypothesis = await updatePlan(upatedPlanObjHypothesis);
+        // if(planResHypothesis?.PlanConfiguration?.[0]?.id){
+        //   setCurrentKey((prev) => prev + 1);
+        //   setCurrentStep((prev) => prev + 1);
+        //   window.dispatchEvent(new Event("isLastStep"))
+        //   return {
+        //     triggeredFrom,
+        //   };
+        // }else {
+        //   setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
+        // }
+        setCurrentKey((prev) => prev + 1);
+        setCurrentStep((prev) => prev + 1);
+        return {
+          triggeredFrom,
+        };
 
       case "UPLOADDATA":
         setCurrentKey((prev) => prev + 1);
