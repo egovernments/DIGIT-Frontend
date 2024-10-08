@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Loader, InfoBannerIcon, Button, Close } from "@egovernments/digit-ui-react-components";
 import MDMSSearchv2Popup from "../pages/employee/MDMSSearchv2Popup";
+import { COLOR_FILL } from "../utils/contants";
 
 const customStyles = {
   control: (provided, state) => ({
@@ -198,7 +199,7 @@ const CustomSelectWidget = (props) => {
         >
           {(selectedDetails && selectedDetails.length > 0 && data) && (
             <span >
-              <InfoBannerIcon fill={"#c84c0e"} />
+              <InfoBannerIcon fill={COLOR_FILL} />
             </span>
           )}
 

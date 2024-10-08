@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, Button, TextInput, SVG, LabelFieldPair, Close, Toast, CardLabel, DeleteIconv2 , AddFilled } from "@egovernments/digit-ui-react-components";
+import { COLOR_FILL } from "../utils/contants";
 
 const LevelCards = ({ onSelect, formData, props }) => {
   const { t } = useTranslation();
@@ -69,7 +70,7 @@ const LevelCards = ({ onSelect, formData, props }) => {
               label={`${t("DELETE_LEVEL")}`}
               type="button"
               className="CloseLevelButton"
-              icon={<DeleteIconv2 styles={{ height: "1.5rem", width: "1.5rem" }} fill="#c84c0e" />}
+              icon={<DeleteIconv2 styles={{ height: "1.5rem", width: "1.5rem" }} fill={COLOR_FILL} />}
               onButtonClick={() => handleDeleteRowDetails(index)} 
               style={{ fontSize: "1rem" }}
             />
@@ -84,7 +85,7 @@ const LevelCards = ({ onSelect, formData, props }) => {
           label={`${t("WBH_ADD_LEVEL")}`}
           type="button"
           className="workbench-add-row-detail-btn"
-          icon={<AddFilled style={{ height: "1.8rem", width: "1.8rem"}} fill="#c84c0e" />}
+          icon={<AddFilled style={{ height: "1.8rem", width: "1.8rem"}} fill={COLOR_FILL} />}
           onButtonClick={handleCreateNewLevelDetails}
           style={{ fontSize: "1rem" }}
         />
