@@ -6,7 +6,7 @@ let theme = {
   // primaryColor: '#ad7bff',
   // arrowColor: '#000',
   // textColor: '#fff',
-  primaryColor: '#F47738',
+  primaryColor: '#c84c0e',
   arrowColor: '#FFFFFF',
   textColor: '#505A5F',
   zIndex:9999

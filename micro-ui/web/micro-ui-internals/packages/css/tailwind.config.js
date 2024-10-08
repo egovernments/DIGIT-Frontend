@@ -93,7 +93,7 @@ module.exports = {
     },
     boxShadow: {
       card: "0 1px 2px 0 rgba(0, 0, 0, 0.16)",
-      radiobtn: "0 0 0 5px #F47738",
+      radiobtn: "0 0 0 5px #c84c0e",
     },
     inset: {
       0: 0,

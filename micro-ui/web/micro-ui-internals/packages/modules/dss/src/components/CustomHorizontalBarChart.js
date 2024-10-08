@@ -7,7 +7,7 @@ import FilterContext from "./FilterContext";
 import NoData from "./NoData";
 
 const barColors = ["#048BD0", "#FBC02D", "#8E29BF", "#EA8A3B", "#0BABDE" , "#6E8459", "#D4351C","#0CF7E4","#F80BF4","#22F80B"]
-const barColorsv2 = ["#048BD0","#5AD8A6","#F47738","#FBC02D","#2DD6FB"]
+const barColorsv2 = ["#048BD0","#5AD8A6","#c84c0e","#FBC02D","#2DD6FB"]
 
 const renderPlot = (plot,key,denomination) => {
   const plotValue = key?plot?.[key]:plot?.value || 0;

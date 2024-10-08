@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import { ArrowRightInbox } from "./svgindex";
 import { useHistory, useLocation, Link } from "react-router-dom";
+import { COLOR_FILL } from "./contants";
 
 
 const EmployeeModuleCard = ({ Icon, moduleName, kpis = [], links = [], isCitizen = false, className, styles, longModuleName=false }) => {
@@ -75,7 +76,7 @@ const ModuleCardFullWidth = ({ moduleName, links = [], isCitizen = false, classN
             <a href={subHeaderLink}>
               <span
                 className={"inbox-total"}
-                style={{ display: "flex", alignItems: "center", color: "#F47738", fontWeight: "bold" }}
+                style={{ display: "flex", alignItems: "center", color: COLOR_FILL, fontWeight: "bold" }}
                 onClick={() => history.push(`${link}`)}
               >
                 {subHeader || "-"}
