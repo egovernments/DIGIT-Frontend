@@ -3,6 +3,7 @@ import { CardText, LabelFieldPair, Card, CardLabel, CardSubHeader, Paragraph, He
 import { useTranslation } from "react-i18next";
 import { TextInput, InfoCard , Stepper , TextBlock } from "@egovernments/digit-ui-components";
 import { deliveryConfig } from "../../configs/deliveryConfig";
+import getDeliveryConfig from "../../utils/getDeliveryConfig";
 
 const initialState = (saved, filteredDeliveryConfig, refetch) => {
   const data = {
@@ -74,13 +75,12 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   const selectedProjectType = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_TYPE?.projectType?.code;
   const { isLoading: deliveryConfigLoading, data: filteredDeliveryConfig } = Digit.Hooks.useCustomMDMS(
     tenantId,
-    "HCM-ADMIN-CONSOLE",
-    [{ name: "deliveryConfig" }],
+    "HCM-PROJECT-TYPES",
+    [{ name: "projectTypes" }],
     {
       select: (data) => {
-        const temp = data?.["HCM-ADMIN-CONSOLE"]?.deliveryConfig;
-        return temp?.find((i) => i?.projectType === selectedProjectType);
-        // return deliveryConfig?.find((i) => i?.projectType === selectedProjectType);
+        const temp= getDeliveryConfig({data: data?.["HCM-PROJECT-TYPES"], projectType:selectedProjectType});
+        return temp;
       },
     }
   );

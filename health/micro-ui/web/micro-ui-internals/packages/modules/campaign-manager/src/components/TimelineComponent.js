@@ -79,6 +79,7 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
     url: `/project-factory/v1/project-type/getProcessTrack`,
     params: {
       campaignId: campaignId,
+      tenantId: tenantId
     },
   };
   // use refetch interval in this

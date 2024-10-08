@@ -74,7 +74,7 @@ function loopAndReturn(dataa, t) {
     }
     return {
       ...i,
-    };
+    };  
   });
   return format;
 }
@@ -85,41 +85,45 @@ function reverseDeliveryRemap(data, t) {
   let currentCycleIndex = null;
   let currentCycle = null;
 
-  data.forEach((item, index) => {
-    if (currentCycleIndex !== item.cycleNumber) {
-      currentCycleIndex = item.cycleNumber;
-      currentCycle = {
-        cycleIndex: currentCycleIndex.toString(),
-        startDate: item?.startDate ? Digit.Utils.date.convertEpochToDate(item?.startDate) : null,
-        endDate: item?.endDate ? Digit.Utils.date.convertEpochToDate(item?.endDate) : null,
-        active: index === 0, // Initialize active to false
-        deliveries: [],
-      };
-      reversedData.push(currentCycle);
-    }
+  // data.forEach((item, index) => {
+  //   if (currentCycleIndex !== item.cycleNumber) {
+  //     currentCycleIndex = item.cycleNumber;
+  //     currentCycle = {
+  //       // cycleIndex: currentCycleIndex.toString(),
+  //       cycleIndex: item?.cycleIndex,
+  //       startDate: item?.startDate ? Digit.Utils.date.convertEpochToDate(item?.startDate) : null,
+  //       endDate: item?.endDate ? Digit.Utils.date.convertEpochToDate(item?.endDate) : null,
+  //       active: index === 0, // Initialize active to false
+  //       deliveries: [],
+  //     };
+  //     reversedData.push(currentCycle);
+  //   }
 
-    const deliveryIndex = item.deliveryNumber.toString();
+  //   // const deliveryIndex = item.deliveryNumber.toString();
+  //   const deliveryIndex = item?.deliveryIndex;
 
-    let delivery = currentCycle.deliveries.find((delivery) => delivery.deliveryIndex === deliveryIndex);
+  //   let delivery = currentCycle.deliveries.find((delivery) => delivery.deliveryIndex === deliveryIndex);
 
-    if (!delivery) {
-      delivery = {
-        deliveryIndex: deliveryIndex,
-        active: item.deliveryNumber === 1, // Set active to true only for the first delivery
-        deliveryRules: [],
-      };
-      currentCycle.deliveries.push(delivery);
-    }
+  //   if (!delivery) {
+  //     delivery = {
+  //       deliveryIndex: deliveryIndex,
+  //       active: item.deliveryNumber === 1, // Set active to true only for the first delivery
+  //       deliveryRules: [],
+  //     };
+  //     currentCycle.deliveries.push(delivery);
+  //   }
 
-    delivery.deliveryRules.push({
-      ruleKey: item.deliveryRuleNumber,
-      delivery: {},
-      attributes: loopAndReturn(item.conditions, t),
-      products: [...item.products],
-    });
-  });
+  //   delivery.deliveryRules.push({
+  //     ruleKey: item.deliveryRuleNumber,
+  //     delivery: {},
+  //     attributes: loopAndReturn(item.conditions, t),
+  //     products: [...item.products],
+  //   });
+  // });
 
-  return reversedData;
+  // return reversedData;
+
+  return data;
 }
 
 const fetchResourceFile = async (tenantId, resourceIdArr) => {
@@ -260,6 +264,7 @@ const DeliveryDetailsSummary = (props) => {
         ss();
         const target = data?.[0]?.deliveryRules;
         const cycleData = reverseDeliveryRemap(target, t);
+        
         return {
           cards: [
             {
@@ -277,15 +282,16 @@ const DeliveryDetailsSummary = (props) => {
                     {
                       key: "CAMPAIGN_NO_OF_CYCLES",
                       value:
-                        data?.[0]?.deliveryRules && data?.[0]?.deliveryRules.map((item) => item.cycleNumber)?.length > 0
-                          ? Math.max(...data?.[0]?.deliveryRules.map((item) => item.cycleNumber))
+                        data?.[0]?.deliveryRules && data?.[0]?.deliveryRules.map((item) => item.cycleIndex)?.length > 0
+                          ? Math.max(...data?.[0]?.deliveryRules.map((item) => item.cycleIndex))
                           : t("CAMPAIGN_SUMMARY_NA"),
                     },
                     {
                       key: "CAMPAIGN_NO_OF_DELIVERIES",
                       value:
-                        data?.[0]?.deliveryRules && data?.[0]?.deliveryRules.map((item) => item.deliveryNumber)?.length > 0
-                          ? Math.max(...data?.[0]?.deliveryRules.map((item) => item.deliveryNumber))
+                        data?.[0]?.deliveryRules && data?.[0]?.deliveryRules?.flatMap((rule) => rule?.deliveries.map((delivery) => delivery?.deliveryIndex))?.length > 0
+
+                          ? Math.max(...data?.[0]?.deliveryRules?.flatMap((rule) => rule?.deliveries.map((delivery) => delivery?.deliveryIndex)))
                           : t("CAMPAIGN_SUMMARY_NA"),
                     },
                   ],
