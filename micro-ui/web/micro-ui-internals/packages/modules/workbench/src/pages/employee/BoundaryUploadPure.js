@@ -7,6 +7,7 @@ import { Button } from "@egovernments/digit-ui-react-components";
 import GenerateXlsx from "../../components/GenerateXlsx";
 import { useHistory } from "react-router-dom";
 import { Toast } from "@egovernments/digit-ui-components";
+import { COLOR_FILL } from "../../utils/contants";
 
 const UploadBoundaryPure = () => {
   const { t } = useTranslation();
@@ -350,7 +351,7 @@ const UploadBoundaryPure = () => {
           <Button
             label={t("WBH_CREATE_HIERARCHY")}
             variation="secondary"
-            icon={<DownloadIcon styles={{ height: ".692rem", width: ".692rem" }} fill="#F47738" />}
+            icon={<DownloadIcon styles={{ height: ".692rem", width: ".692rem" }} fill={COLOR_FILL} />}
             type="button"
             className="workbench-download-template-btn"
             onButtonClick={handleCreateNewHierarchyType}
@@ -364,7 +365,7 @@ const UploadBoundaryPure = () => {
           <Button
             label={t("WBH_DOWNLOAD_TEMPLATE")}
             variation="secondary"
-            icon={<DownloadIcon styles={{ height: "1.25rem", width: "1.25rem" }} fill="#F47738" />}
+            icon={<DownloadIcon styles={{ height: "1.25rem", width: "1.25rem" }} fill={COLOR_FILL} />}
             type="button"
             className="workbench-download-template-btn"
             isDisabled={!selectedValue}

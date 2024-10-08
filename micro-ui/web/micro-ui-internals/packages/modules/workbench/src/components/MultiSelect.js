@@ -4,19 +4,20 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Loader, InfoBannerIcon, Button, Close } from "@egovernments/digit-ui-react-components";
 import MDMSSearchv2Popup from "../pages/employee/MDMSSearchv2Popup";
+import { COLOR_FILL } from "../utils/contants";
 
 const customStyles = {
   control: (provided, state) => ({
     ...provided,
-    borderColor: state.isFocused ? "#f47738" : "#505a5f",
+    borderColor: state.isFocused ? "#c84c0e" : "#505a5f",
     borderRadius: "unset",
     "&:hover": {
-      borderColor: "#f47738",
+      borderColor: "#c84c0e",
     },
   }),
   option: (provided, state) => ({
     ...provided,
-    backgroundColor: state.isSelected ? "#f47738" : "white", // Background color for selected options
+    backgroundColor: state.isSelected ? "#c84c0e" : "white", // Background color for selected options
     color: state.isSelected ? "white" : "black", // Text color for selected options
     "&:hover": {
       backgroundColor: "#ffe6cc", // Very light orange background color on hover
@@ -163,7 +164,7 @@ const CustomSelectWidget = (props) => {
             style={{ cursor: "pointer" }}
             onClick={handleInfoBannerClick} // Add the click event handler
           >
-            <InfoBannerIcon fill={"#f47738"} style={{ marginLeft: "10px" }} />
+            <InfoBannerIcon fill={"#c84c0e"} style={{ marginLeft: "10px" }} />
           </span> */}
         </div>
       </components.Option>
@@ -198,7 +199,7 @@ const CustomSelectWidget = (props) => {
         >
           {(selectedDetails && selectedDetails.length > 0 && data) && (
             <span >
-              <InfoBannerIcon fill={"#f47738"} />
+              <InfoBannerIcon fill={COLOR_FILL} />
             </span>
           )}
 

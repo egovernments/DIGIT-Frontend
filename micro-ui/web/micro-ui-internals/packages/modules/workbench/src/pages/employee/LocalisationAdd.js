@@ -24,6 +24,7 @@ import { useTranslation } from "react-i18next";
 import reducer, { intialState } from "../../utils/LocAddReducer";
 // import sampleFile from "../../utils/file.xlsx"
 import GenerateXlsx from "../../components/GenerateXlsx";
+import { COLOR_FILL } from "../../utils/contants";
 
 const langDropdownConfig = {
   label: "WBH_LOC_LANG",
@@ -305,7 +306,7 @@ const LocalisationAdd = () => {
         Cell: ({ value, col, row, ...rest }) => {
           return (
             <span onClick={() => handleDeleteRow({ row, value, col })} className="icon-wrapper">
-              <DeleteIconv2 fill={"#F47738"} />
+              <DeleteIconv2 fill={COLOR_FILL} />
             </span>
           );
         },
