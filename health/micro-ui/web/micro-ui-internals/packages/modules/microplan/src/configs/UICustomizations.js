@@ -100,15 +100,19 @@ export const UICustomizations = {
 
   UserManagementConfig: {
     preProcess: (data) => {
-
+      
       const { phone, name } = data?.state?.searchForm || {}
       const { sortOrder } = data?.state?.filterForm || {}
-      const { roles } = data?.state?.filterForm || {}
+      let { roles } = data?.state?.filterForm || {}
+      // const rolesString = Object.keys(roles).filter(role => roles[role] === true).join(', ');
+      
       console.log("data", data);
 
       data.params.names = name;
+      delete data.params.name;
       data.params.phone = phone;
       data.params.roles=roles;
+      data.params.tenantId=Digit.ULBService.getCurrentTenantId();
 
       // console.log(data,"dat");
       // data.param.roles=roles;
@@ -137,18 +141,20 @@ export const UICustomizations = {
         config: {
           enabled: true,
           select: (data) => {
-            // console.log("dates")
+            console.log("dates", data)
             const roles = data?.mdms.map(item => {
               return (
                 {
                   roleCode: item.data.roleCode,
-                  orderNumber: item.data.orderNumber
+                  i18nKey:Digit.Utils.locale.getTransformedLocale(`MP_ROLE_${item.data.roleCode}`)
+                  // orderNumber: item.data.orderNumber
                   
                   // roleCode:{labelKey:item.data.roleCode}
                 
                 }
               )
             })
+            // debugger
             return roles
           },
         },

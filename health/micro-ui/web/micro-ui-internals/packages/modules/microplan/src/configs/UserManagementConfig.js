@@ -6,7 +6,7 @@ export const tqmInboxConfig = {
       "label": "ACTION_TEST_TQM_INBOX",
       "type": "inbox",
       "apiDetails": {
-        "serviceName": "/egov-hrms/employees/_search",
+        "serviceName": "/health-hrms/employees/_search",
         "requestParam": {},
         "requestBody": {
           
@@ -118,24 +118,24 @@ export const tqmInboxConfig = {
             "columns": [
               {
                 label: "Name",
-                jsonPath: "data.name",
+                jsonPath: "user.name",
               },
               {
                 label: "Email",
-                jsonPath: "data.email",
+                jsonPath: "user.emailId",
               },
               {
-                label: "Executing Department",
-                jsonPath: "data.contact",
+                label: "Contact Number",
+                jsonPath: "user.mobileNumber",
               },
               {
-                label:"Workflow status",
-                jsonPath:"data.role"
+                label:"Role",
+                jsonPath:"user.type"
               }
             ],
             "enableGlobalSearch": false,
             "enableColumnSort": true,
-            "resultsJsonPath": "items",
+            "resultsJsonPath": "Employees",
             "tableClassName":"table pqm-table"
           },
           "children": {},
@@ -209,15 +209,16 @@ export const tqmInboxConfig = {
 
               {
                 "label": "TQM_PLANT_NAME",
-                "type": "apidropdown",
+                "type": "apicheckboxes",
                 "isMandatory": false,
                 "disable": false,
                 "populators": {
                   "optionsCustomStyle": {
                     "top": "2.3rem"
                   },
-                  "name": "plantCodes",
+                  "name": "roleschosen",
                   "optionsKey": "roleCode",
+                  "labelKey":"i18nKey",
                   "allowMultiSelect": false,
                   "masterName": "commonUiConfig",
                   "moduleName": "UserManagementConfig",
