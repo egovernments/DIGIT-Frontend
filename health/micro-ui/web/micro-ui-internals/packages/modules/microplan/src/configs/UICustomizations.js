@@ -103,17 +103,21 @@ export const UICustomizations = {
       
       const { phone, name } = data?.state?.searchForm || {}
       const { sortOrder } = data?.state?.filterForm || {}
-      let { roles } = data?.state?.filterForm || {}
-      // const rolesString = Object.keys(roles).filter(role => roles[role] === true).join(', ');
-      
+      let { roleschosen } = data?.state?.filterForm || {}
+      // debugger;
+      let rolesString='';
+      if(roleschosen){
+        rolesString = Object.keys(roleschosen).filter(role => roleschosen[role] === true).join(',');
+      }
       console.log("data", data);
 
       data.params.names = name;
       delete data.params.name;
       data.params.phone = phone;
-      data.params.roles=roles;
+      // debugger
+      data.params.roles=rolesString;
       data.params.tenantId=Digit.ULBService.getCurrentTenantId();
-
+      delete data.params.roleschosen;
       // console.log(data,"dat");
       // data.param.roles=roles;
 
