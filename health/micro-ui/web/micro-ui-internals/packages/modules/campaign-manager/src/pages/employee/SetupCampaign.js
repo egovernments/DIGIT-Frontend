@@ -45,28 +45,8 @@ function loopAndReturn(dataa) {
         fromValue: existingItem.value && item.value ? Math.max(existingItem.value, item.value) : null,
       };
     }
-    // else if (item?.operator?.code === "EQUAL_TO" && item?.attribute?.code === "Gender") {
-    // newArray.push({
-    // ...item,
-    // value: item?.value
-    // ? {
-    // code: item?.value,
-    // }
-    // : null,
-    // });
-    // }
     else {
-      // If no existing item with the same attribute is found, push the current item
-      // if (item?.operator?.code === "EQUAL_TO" && item?.attribute?.code === "Gender") {
-      //   newArray.push({
-      //     ...item,
-      //     value: {
-      //       code: item?.value,
-      //     },
-      //   });
-      // } else {
       newArray.push(item);
-      // }
     }
   });
 
@@ -90,46 +70,6 @@ function cycleDataRemap(data) {
     };
   });
 }
-
-// function reverseDeliveryRemap(data) {
-//   if (!data) return null;
-//   const reversedData = [];
-//   let currentCycleIndex = null;
-//   let currentDeliveryIndex = null;
-//   let currentCycle = null;
-//   let currentDelivery = null;
-
-//   data.forEach((item, index) => {
-//     if (currentCycleIndex !== item.cycleNumber) {
-//       currentCycleIndex = item.cycleNumber;
-//       currentCycle = {
-//         cycleIndex: currentCycleIndex.toString(),
-//         active: index === 0, // Set active to true only for the first index
-//         deliveries: [],
-//       };
-//       reversedData.push(currentCycle);
-//     }
-
-//     if (currentDeliveryIndex !== item.deliveryNumber) {
-//       currentDeliveryIndex = item.deliveryNumber;
-//       currentDelivery = {
-//         deliveryIndex: currentDeliveryIndex.toString(),
-//         active: item?.deliveryNumber === 1, // Set active to true only for the first index
-//         deliveryRules: [],
-//       };
-//       currentCycle.deliveries.push(currentDelivery);
-//     }
-
-//     currentDelivery.deliveryRules.push({
-//       ruleKey: currentDelivery.deliveryRules.length + 1,
-//       delivery: {},
-//       attributes: loopAndReturn(item.conditions),
-//       products: [...item.products],
-//     });
-//   });
-
-//   return reversedData;
-// }
 
 // function reverseDeliveryRemap(data) {
 //   if (!data) return null;
@@ -292,13 +232,11 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
   const [isDraftCreated, setIsDraftCreated] = useState(false);
   const filteredBoundaryData = params?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
   const client = useQueryClient();
-  // const hierarchyType2 = params?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.hierarchy?.hierarchyType
   const [currentKey, setCurrentKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
   const [displayMenu, setDisplayMenu] = useState(null);
-  // const [lowest, setLowest] = useState(null);
   const [fetchBoundary, setFetchBoundary] = useState(() => Boolean(searchParams.get("fetchBoundary")));
   const [fetchUpload, setFetchUpload] = useState(false);
   const [enabled, setEnabled] = useState(false);
@@ -307,10 +245,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
   const [userEnabled, setUserEnabled] = useState(false);
   const [active, setActive] = useState(0);
   const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
-  // const [refetchGenerate, setRefetchGenerate] = useState(null);
-  // const hierarchyType = hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.hierarchy;
-
-  // const lowestHierarchy = hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.lowestHierarchy;
   const lowestHierarchy = useMemo(() => {
     return hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)?.lowestHierarchy;
   }, [hierarchyConfig]);
@@ -330,15 +264,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
 
   const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-  // useEffect(() => {
-  //   if (hierarchyDefinition) {
-  //     setLowest(
-  //       hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.filter(
-  //         (e) => !hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.find((e1) => e1?.parentBoundaryType == e?.boundaryType)
-  //       )
-  //     );
-  //   }
-  // }, [hierarchyDefinition]);
   const { isLoading: draftLoading, data: draftData, error: draftError, refetch: draftRefetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
@@ -853,10 +778,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
     const { cycle, deliveries } = data?.cycleConfigure?.cycleConfgureDate;
     const cycleData = data.cycleConfigure.cycleData;
     let dateError = [];
-    // Validate cycle and deliveries
-    // if (cycle <= 0 || deliveries <= 0) {
-    //   return { error: true, message: "DELIVERY_CYCLE_EMPTY_ERROR" };
-    // }
 
     [...Array(cycle)].forEach((item, index) => {
       const check = cycleData?.find((i) => i?.key === index + 1);
@@ -871,23 +792,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
         });
       }
     });
-    // setSummaryErrors((prev) => {
-    //   return {
-    //     ...prev,
-    //     deliveryErrors: prev?.deliveryErrors ? [...prev.deliveryErrors, ...dateError] : [...dateError],
-    //   };
-    // });
-    // Validate cycleData length
-    // if (cycleData.length !== cycle) {
-    // return { error: true, message: "DELIVERY_CYCLE_MISMATCH_LENGTH_ERROR" };
-    // }
-
-    // Validate fromDate and startDate in cycleData
-    // for (const item of cycleData) {
-    // if (!item.fromDate || !item.toDate) {
-    // return { error: true, message: "DELIVERY_CYCLE_DATE_ERROR" };
-    // }
-    // }
 
     return dateError;
   }
@@ -907,7 +811,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
             deliveryRulesError?.push({
               name: `CYCLE_${cycle?.cycleIndex}`,
               cycle: cycle?.cycleIndex,
-              // error: `Delivery Type missing in delivery condition ${rule?.ruleKey} delivery ${delivery?.deliveryIndex}`,
               error: t(`CAMPAIGN_SUMMARY_DELIVERY_TYPE_MISSING_ERROR`, {
                 CONDITION_NO: rule?.ruleKey,
                 DELIVERY_NO: delivery?.deliveryIndex,
@@ -915,14 +818,12 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
               }),
               button: t(`CAMPAIGN_SUMMARY_ADD_DELIVERY_TYPE_ACTION`),
             });
-            // return;
           }
           if (rule.attributes.length === 0) {
             isValid = false;
             deliveryRulesError?.push({
               name: `CYCLE_${cycle?.cycleIndex}`,
               cycle: cycle?.cycleIndex,
-              // error: `Values missing in delivery condition ${rule?.ruleKey} delivery ${delivery?.deliveryIndex}`,
               error: t(`CAMPAIGN_SUMMARY_VALUES_MISSING_ERROR`, {
                 CONDITION_NO: rule?.ruleKey,
                 DELIVERY_NO: delivery?.deliveryIndex,
@@ -930,14 +831,12 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
               }),
               button: t(`CAMPAIGN_SUMMARY_ADD_VALUES_ACTION`),
             });
-            // return;
           }
           if (rule.products.length === 0) {
             isValid = false;
             deliveryRulesError?.push({
               name: `CYCLE_${cycle?.cycleIndex}`,
               cycle: cycle?.cycleIndex,
-              // error: `Product missing in delivery condition ${rule?.ruleKey} delivery ${delivery?.deliveryIndex}`,
               error: t(`CAMPAIGN_SUMMARY_PRODUCT_MISSING_ERROR`, {
                 CONDITION_NO: rule?.ruleKey,
                 DELIVERY_NO: delivery?.deliveryIndex,
@@ -945,7 +844,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
               }),
               button: t(`CAMPAIGN_SUMMARY_ADD_PRODUCT_ACTION`),
             });
-            // return;
           }
 
           rule.attributes.forEach((attribute) => {
@@ -1019,19 +917,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
     return false;
   }
 
-  // function validateBoundaryLevel(data) {
-  //   // Extracting boundary types from hierarchy response
-  //   const boundaryTypes = new Set(hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy.map((item) => item?.boundaryType));
-
-  //   // Extracting unique boundary types from data
-  //   const uniqueDataBoundaryTypes = new Set(data?.map((item) => item.type));
-
-  //   // Checking if all unique boundary types from hierarchy response are present in data
-  //   const allBoundaryTypesPresent = [...boundaryTypes].every((type) => uniqueDataBoundaryTypes.has(type));
-
-  //   return allBoundaryTypesPresent;
-  // }
-
   function validateBoundaryLevel(data) {
     // Extracting boundary hierarchy from hierarchy definition
     const boundaryHierarchy = hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
@@ -1051,25 +936,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
     return allBoundaryTypesPresent;
   }
 
-  // function recursiveParentFind(filteredData) {
-  //   const parentChildrenMap = {};
-
-  //   // Build the parent-children map
-  //   filteredData?.forEach((item) => {
-  //     if (item?.parent) {
-  //       if (!parentChildrenMap[item?.parent]) {
-  //         parentChildrenMap[item?.parent] = [];
-  //       }
-  //       parentChildrenMap[item?.parent].push(item.code);
-  //     }
-  //   });
-
-  //   // Check for missing children
-  //   const missingParents = filteredData?.filter((item) => item?.parent && !parentChildrenMap[item.code]);
-  //   const extraParent = missingParents?.filter((i) => i?.type !== lowest?.[0]?.boundaryType);
-
-  //   return extraParent;
-  // }
 
   function recursiveParentFind(filteredData) {
     const parentChildrenMap = {};
