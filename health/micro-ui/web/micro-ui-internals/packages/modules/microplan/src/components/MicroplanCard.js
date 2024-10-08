@@ -18,13 +18,13 @@ const MicroplanCard = () => {
     };
   };
 
-  let links = [generateLink("SETUP_MICROCLAN","setup-microplan"),generateLink("SEARCH_MICROPLANS","microplan-search")];
+  let links = [generateLink("SETUP_MICROPLAN","setup-microplan"),generateLink("SEARCH_MICROPLANS","microplan-search")];
 
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));
 
   const propsForModuleCard = {
     Icon: <WorksMgmtIcon />,
-    moduleName: t("Microplan"),
+    moduleName: t("MICROPLAN_MODULE_SETUP"),
     kpis: [],
     links: links,
   };

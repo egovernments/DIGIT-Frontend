@@ -33,7 +33,7 @@ import UpdateDatesWithBoundaries from "./pages/employee/UpdateDatesWithBoundarie
 import DateWithBoundary from "./components/DateWithBoundary";
 import BoundaryWithDate from "./components/BoundaryWithDate";
 import DateAndCycleUpdate from "./pages/employee/DateAndCycleUpdate";
-import { CreateChecklist} from "./pages/employee/CreateChecklist";
+import { CreateChecklist } from "./pages/employee/CreateChecklist";
 import CreateQuestionContext from "./components/CreateQuestionContext";
 import SearchChecklist from "./pages/employee/SearchChecklist";
 import DeliveryDetailsSummary from "./components/DeliveryDetailsSummary";
@@ -45,6 +45,7 @@ import UpdateBoundaryWrapper from "./components/UpdateBoundaryWrapper";
 // import SelectingBoundaryComponent from "./components/SelectingBoundaryComponent";
 import { Wrapper } from "./components/SelectingBoundaryComponent";
 import SelectingBoundariesDuplicate from "./components/SelectingBoundariesDuplicate";
+import XlsPreview from "./components/XlsPreview";
 
 /**
  * The CampaignModule function fetches store data based on state code, module code, and language, and
@@ -63,7 +64,8 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
   const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({BOUNDARY_HIERARCHY_TYPE,tenantId});
   const modulePrefix = "hcm";
 
-  const moduleCode = ["campaignmanager", "workbench", "mdms", "schema", "admin-schemas", `boundary-${BOUNDARY_HIERARCHY_TYPE}`];
+  const moduleCode = ["hr", "campaignmanager", "workbench", "mdms", "schema", "admin-schemas", `boundary-${BOUNDARY_HIERARCHY_TYPE}`];
+
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
@@ -117,7 +119,7 @@ const componentsToRegister = {
   DateAndCycleUpdate,
   TimelineComponent,
   CreateChecklist,
-  CreateQuestion : CreateQuestionContext,
+  CreateQuestion: CreateQuestionContext,
   SearchChecklist,
   DeliveryDetailsSummary,
   DataUploadSummary,
@@ -127,6 +129,7 @@ const componentsToRegister = {
   UpdateBoundary,
   UpdateBoundaryWrapper,
   SelectingBoundariesDuplicate,
+  XlsPreview
   // SelectingBoundaryComponent
 };
 
