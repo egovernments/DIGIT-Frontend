@@ -169,7 +169,6 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
                 selected={tenantId}
                 select={settenantId}
                 optionKey={"i18text"}
-                disable={true}
                 t={t}
               />
             </div>  
