@@ -1,4 +1,4 @@
-export const useGenerateIdCampaign = ({ type, hierarchyType, filters, campaignId, config = {} }) => {
+export const useGenerateIdCampaign = ({ type, hierarchyType, filters, campaignId,source=null, config = {} }) => {
   const updatedFilters = filters?.map(({ type, ...rest }) => ({
     ...rest,
     boundaryType: type,
@@ -12,6 +12,7 @@ export const useGenerateIdCampaign = ({ type, hierarchyType, filters, campaignId
       forceUpdate: true,
       hierarchyType: hierarchyType,
       campaignId: campaignId,
+      source: source
     },
     body: type === "boundary" ? (updatedFilters === undefined ? { Filters: null } : { Filters: { boundaries: updatedFilters } }) : {},
     config: {
