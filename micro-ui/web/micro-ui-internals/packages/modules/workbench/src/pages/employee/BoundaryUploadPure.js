@@ -350,7 +350,7 @@ const UploadBoundaryPure = () => {
           <Button
             label={t("WBH_CREATE_HIERARCHY")}
             variation="secondary"
-            icon={<DownloadIcon styles={{ height: ".692rem", width: ".692rem" }} fill="#F47738" />}
+            icon={<DownloadIcon styles={{ height: ".692rem", width: ".692rem" }} fill="#c84c0e" />}
             type="button"
             className="workbench-download-template-btn"
             onButtonClick={handleCreateNewHierarchyType}
@@ -364,7 +364,7 @@ const UploadBoundaryPure = () => {
           <Button
             label={t("WBH_DOWNLOAD_TEMPLATE")}
             variation="secondary"
-            icon={<DownloadIcon styles={{ height: "1.25rem", width: "1.25rem" }} fill="#F47738" />}
+            icon={<DownloadIcon styles={{ height: "1.25rem", width: "1.25rem" }} fill="#c84c0e" />}
             type="button"
             className="workbench-download-template-btn"
             isDisabled={!selectedValue}

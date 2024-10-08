@@ -92,7 +92,7 @@ const MultiSelectDropdown = ({ options, optionsKey, selected = [], onSelect, def
         disabled={option.isDisabled || false}
       />
       <div className="custom-checkbox">
-        <CheckSvg style={{innerWidth: "24px", width: "24px"}} fill={option.isDisabled ? "#505050" : "#F47738"} />
+        <CheckSvg style={{innerWidth: "24px", width: "24px"}} fill={option.isDisabled ? "#505050" : "#c84c0e"} />
       </div>
       <p className="label" style={index === optionIndex ? {
                     opacity: 1,

@@ -30,7 +30,7 @@ const Response = () => {
   const children = (
     <div style={buttonStyle?.wrapper}>
       <LinkLabel style={buttonStyle?.linkLabel} onClick={() => navigate("home")}>
-        <ArrowLeftWhite fill="#F47738" style={buttonStyle?.arrow} />
+        <ArrowLeftWhite fill="#c84c0e" style={buttonStyle?.arrow} />
         {t("CORE_COMMON_GO_TO_HOME")}
       </LinkLabel>
     </div>

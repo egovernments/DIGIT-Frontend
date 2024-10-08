@@ -5,7 +5,7 @@ import RoundedLabel from "../atoms/RoundedLabel";
 const FilterAction = ({ text, handleActionClick, ...props }) => (
   <div className="searchAction" onClick={handleActionClick}>
     <RoundedLabel count={props.filterCount}></RoundedLabel>
-    <SortSvg fill={"#f47738"}/> <span className="searchText">{text}</span>
+    <SortSvg fill={"#c84c0e"}/> <span className="searchText">{text}</span>
   </div>
 );
 

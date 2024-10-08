@@ -60,7 +60,7 @@ const DetailsCard = ({ data, serviceRequestIdKey, linkPrefix, handleSelect, sele
             key={itemIndex}
             style={{
               border: selectedItems?.includes(object[keyForSelected])
-                ? '2px solid #f47738'
+                ? '2px solid #c84c0e'
                 : '2px solid #fff',
             }}
             className="details-container"

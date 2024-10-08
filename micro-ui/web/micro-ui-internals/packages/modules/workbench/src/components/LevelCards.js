@@ -69,7 +69,7 @@ const LevelCards = ({ onSelect, formData, props }) => {
               label={`${t("DELETE_LEVEL")}`}
               type="button"
               className="CloseLevelButton"
-              icon={<DeleteIconv2 styles={{ height: "1.5rem", width: "1.5rem" }} fill="#F47738" />}
+              icon={<DeleteIconv2 styles={{ height: "1.5rem", width: "1.5rem" }} fill="#c84c0e" />}
               onButtonClick={() => handleDeleteRowDetails(index)} 
               style={{ fontSize: "1rem" }}
             />
@@ -84,7 +84,7 @@ const LevelCards = ({ onSelect, formData, props }) => {
           label={`${t("WBH_ADD_LEVEL")}`}
           type="button"
           className="workbench-add-row-detail-btn"
-          icon={<AddFilled style={{ height: "1.8rem", width: "1.8rem"}} fill="#F47738" />}
+          icon={<AddFilled style={{ height: "1.8rem", width: "1.8rem"}} fill="#c84c0e" />}
           onButtonClick={handleCreateNewLevelDetails}
           style={{ fontSize: "1rem" }}
         />

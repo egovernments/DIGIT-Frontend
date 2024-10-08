@@ -88,7 +88,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
 
   const gotoView = () => { 
     setTimeout(() => {
-      history.push(`/${window?.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}${from ? `&from=${from}` : ""}`)
+      history.push(`/${window?.contextPath}/employee/workbench/mdms-search-v2?moduleName=${moduleName}&masterName=${masterName}${from ? `&from=${from}` : ""}`)
     }, 2000);
   }
 

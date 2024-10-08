@@ -27,7 +27,7 @@ export const RenderDataSection = ({ section }) => {
                 row?.isLink ? (
                   <div>
                     <Link to={row?.to}>
-                      <span className="link" style={{ color: "#F47738" }}>
+                      <span className="link" style={{ color: "#c84c0e" }}>
                         {row?.value}
                       </span>
                     </Link>

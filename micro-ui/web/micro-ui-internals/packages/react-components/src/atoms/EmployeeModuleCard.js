@@ -75,7 +75,7 @@ const ModuleCardFullWidth = ({ moduleName, links = [], isCitizen = false, classN
             <a href={subHeaderLink}>
               <span
                 className={"inbox-total"}
-                style={{ display: "flex", alignItems: "center", color: "#F47738", fontWeight: "bold" }}
+                style={{ display: "flex", alignItems: "center", color: "#c84c0e", fontWeight: "bold" }}
                 onClick={() => history.push(`${link}`)}
               >
                 {subHeader || "-"}
