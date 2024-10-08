@@ -61,16 +61,16 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
   });
 
   const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({BOUNDARY_HIERARCHY_TYPE,tenantId});
-  // const modulePrefix = "hcm";
+  const modulePrefix = "hcm";
 
-  const moduleCode = ["campaignmanager", "workbench", "mdms", "schema", "hcm-admin-schemas", `boundary-${BOUNDARY_HIERARCHY_TYPE}`];
+  const moduleCode = ["campaignmanager", "workbench", "mdms", "schema", "admin-schemas", `boundary-${BOUNDARY_HIERARCHY_TYPE}`];
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
     moduleCode,
     language,
-    // modulePrefix,
+    modulePrefix,
   });
 
   if (isLoading) {
