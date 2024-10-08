@@ -7,6 +7,7 @@ import { PDFSvg } from "../../atoms/svgindex";
 import WorkflowTimeline from "../../atoms/WorkflowTimeline";
 import WorkflowActions from "../../atoms/WorkflowActions";
 import { Link } from "react-router-dom";
+import { COLOR_FILL } from "../../atoms/contants";
 
 export const RenderDataSection = ({ section }) => {
   const { t } = useTranslation();
@@ -27,7 +28,7 @@ export const RenderDataSection = ({ section }) => {
                 row?.isLink ? (
                   <div>
                     <Link to={row?.to}>
-                      <span className="link" style={{ color: "#c84c0e" }}>
+                      <span className="link" style={{ color: COLOR_FILL }}>
                         {row?.value}
                       </span>
                     </Link>

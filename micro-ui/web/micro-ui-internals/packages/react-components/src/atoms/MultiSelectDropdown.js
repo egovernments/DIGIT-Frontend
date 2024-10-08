@@ -1,6 +1,7 @@
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import { ArrowDown, CheckSvg } from "./svgindex";
 import { useTranslation } from "react-i18next";
+import { COLOR_FILL } from "./contants";
 
 const MultiSelectDropdown = ({ options, optionsKey, selected = [], onSelect, defaultLabel = "", defaultUnit = "",BlockNumber=1,isOBPSMultiple=false,props={},isPropsNeeded=false,ServerStyle={}, isSurvey=false,placeholder, disable=false,config}) => {
   const [active, setActive] = useState(false);
@@ -92,7 +93,7 @@ const MultiSelectDropdown = ({ options, optionsKey, selected = [], onSelect, def
         disabled={option.isDisabled || false}
       />
       <div className="custom-checkbox">
-        <CheckSvg style={{innerWidth: "24px", width: "24px"}} fill={option.isDisabled ? "#505050" : "#c84c0e"} />
+        <CheckSvg style={{innerWidth: "24px", width: "24px"}} fill={option.isDisabled ? "#505050" : COLOR_FILL} />
       </div>
       <p className="label" style={index === optionIndex ? {
                     opacity: 1,
