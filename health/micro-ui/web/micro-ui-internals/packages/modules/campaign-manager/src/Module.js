@@ -47,6 +47,7 @@ import { Wrapper } from "./components/SelectingBoundaryComponent";
 import SelectingBoundariesDuplicate from "./components/SelectingBoundariesDuplicate";
 import XlsPreview from "./components/XlsPreview";
 
+import MultiSelectDropdown from "./components/MultiSelectDropdown";
 /**
  * The CampaignModule function fetches store data based on state code, module code, and language, and
  * renders the EmployeeApp component within a TourProvider component if the data is not loading.
@@ -126,7 +127,8 @@ const componentsToRegister = {
   UpdateBoundary,
   UpdateBoundaryWrapper,
   SelectingBoundariesDuplicate,
-  XlsPreview
+  XlsPreview,
+  MultiSelectDropdownBoundary:MultiSelectDropdown
   // SelectingBoundaryComponent
 };
 
