@@ -29,7 +29,7 @@ const Boundary = () => {
       };
     const { isLoading, data,  isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
     useEffect(()=>{
-        console.log("received data is", data);
+        //console.log("received data is", data);
         if(data?.BoundaryHierarchy && data?.BoundaryHierarchy.length > 0) setGeoPodeData(true);
     }, [data])
 
@@ -51,23 +51,20 @@ const Boundary = () => {
                         },
                     },
                 });
-                console.log("res of hierarchy ", res);
+                //console.log("res of hierarchy ", res);
                 if(res?.BoundaryHierarchy && res?.BoundaryHierarchy.length > 0)
                     {
                         setDirect(true);
                         setDirectView(true);
                     }
 
-                // Do something with res (e.g., set state)
             } catch (error) {
                 console.error("Error fetching boundary data:", error);
             }
         };
     
         fetchData();
-    }, []); // Add tenantId and hierarchyType to dependency array if they are state/props
-    
-    
+    }, []);
 
     const callGeoPode = (val)=>{
 
@@ -170,13 +167,13 @@ const Boundary = () => {
                             label={t("CREATE_NEW_BOUNDARY_DATA")}
                             onClick={() => {
                                 if(direct && geoPodeData) {
-                                    console.log("getting called");
+                                    // console.log("getting called");
                                     callDirectView();
                                 }
                                 else 
                                 {
-                                    console.log("direct", direct);
-                                    console.log("def", geoPodeData);
+                                    // console.log("direct", direct);
+                                    // console.log("def", geoPodeData);
                                     setShowPopUp(true);
                                 }
                             }}

@@ -35,9 +35,9 @@ const GeoPode = () => {
     const [enableCreate, setEnableCreate] = useState(false);
     // const { hierarchyType } = useParams();
     const state = window.history.state;
-    console.log("received state data is", state);
-    console.log("boundary data is bkc", state?.data?.BoundaryHierarchy?.[0]?.boundaryHierarchy);
-    console.log("new hierarchy", newHierarchy);
+    // console.log("received state data is", state);
+    // console.log("boundary data is bkc", state?.data?.BoundaryHierarchy?.[0]?.boundaryHierarchy);
+    // console.log("new hierarchy", newHierarchy);
     // let boundaryData;
     let receivedData = state?.data?.BoundaryHierarchy?.[0]?.boundaryHierarchy;
     const [boundaryData, setBoundaryData]=useState((receivedData === undefined ? [] : receivedData));
@@ -148,7 +148,7 @@ const GeoPode = () => {
         
         try{
             const res = await callCreate();
-            console.log("resut is", res);
+            // console.log("resut is", res);
             window.history.pushState(
                 {
                     // data: dataCreate
@@ -164,7 +164,7 @@ const GeoPode = () => {
         }
         
         // setEnableCreate(true);
-        console.log("created");
+        // console.log("created");
     }
     // useEffect(()=>{
         // window.history.pushState(
@@ -263,7 +263,7 @@ const GeoPode = () => {
     const handleFileChange = async (event) => {
         const file = [event.target.files[0]]; // Get the first selected file
         if (file) {
-          console.log("the file is", file);
+        //   console.log("the file is", file);
           try {
             // Call function to upload the selected file to an API
             await uploadFileToAPI(file);
@@ -275,8 +275,8 @@ const GeoPode = () => {
     };
 
     const uploadFileToAPI = async (files) => {
-            console.log("coming to upload", files);
-            console.log("file which is ciming isnde is", files);
+            // console.log("coming to upload", files);
+            // console.log("file which is ciming isnde is", files);
            
             // const formData = new FormData();
             // formData.append("file", file); // Attach the first file
@@ -290,11 +290,11 @@ const GeoPode = () => {
             fileDataTemp.fileName = file?.name
             
             const response = await Digit.UploadServices.Filestorage(module, file, tenantId);
-            console.log("respose from file storage is", response);
+            // console.log("respose from file storage is", response);
             fileDataTemp.fileStoreId = response?.data?.[0]?.fileStoreId;
             let fileStoreId = response?.data?.files?.[0]?.fileStoreId;
             const { data: { fileStoreIds: fileUrlTemp } = {} } = await Digit.UploadServices.Filefetch([fileStoreId], tenantId);
-            console.log("the fetched url is", fileUrlTemp);
+            // console.log("the fetched url is", fileUrlTemp);
             fileDataTemp.url = fileUrlTemp?.[0]?.url;
             setFileUrl(fileDataTemp?.url);
             setFileData(fileDataTemp);
@@ -333,11 +333,11 @@ const GeoPode = () => {
             //   }
             // );
 
-        console.log("api to be called");
+        // console.log("api to be called");
       };
 
     useEffect(()=>{
-        console.log("new boundary data is", newBoundaryData);
+        // console.log("new boundary data is", newBoundaryData);
     }, [newBoundaryData])
 
 
@@ -388,7 +388,7 @@ const GeoPode = () => {
                         sortFooterChildren={true}
                     >
                         <div>
-                            {console.log("bhau", boundaryData)}
+                            {/* {console.log("bhau", boundaryData)} */}
                             {!newHierarchy && 
                                 boundaryData.map((item, index)=>(
                                     <div>
@@ -411,7 +411,7 @@ const GeoPode = () => {
                                     </div>
                                 ))
                             }
-                            {console.log("bhau new", newBoundaryData)}
+                            {/* {console.log("bhau new", newBoundaryData)} */}
 
                             {
                                 newBoundaryData.map((item, index)=>(
@@ -494,7 +494,7 @@ const GeoPode = () => {
                                 </div>
                             </div>
                             <div>
-                                {console.log("running again and again")}
+                                {/* {console.log("running again and again")} */}
                                 {
                                 newBoundaryData.map((item, index)=>(
                                     <div>
@@ -600,7 +600,7 @@ const GeoPode = () => {
                         <Button 
                             icon="ArrowBack" 
                             style={{marginLeft:"3.5rem"}} 
-                            label={t("Back")} 
+                            label={t("BACK")} 
                             onClick={goBackToBoundary} 
                             type="button" 
                             variation="secondary"  
@@ -610,7 +610,7 @@ const GeoPode = () => {
                             icon="ArrowForward" 
                             style={{marginLeft:"auto"}} 
                             isSuffix 
-                            label={t("Next")} 
+                            label={t("NEXT")} 
                             // onClick={goToPreview} 
                             onClick={()=>{setShowFinalPopup(true)}}
                             type="button" 
@@ -637,15 +637,15 @@ const GeoPode = () => {
                     <div>
                         <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
                             <div style={{display:"flex", justifyContent:"space-between"}}>
-                                <div style={{fontSize:"2.5rem", fontWeight:700}}>{t("CREATE_A_BOUNDARY_HIERARCHY")}</div>
+                                <div style={{fontSize:"2.5rem", fontWeight:700}}>{t("CREATE_BOUNDARY_HIERARCHY")}</div>
                             </div>
                             <div style={{height:"1.5rem"}}></div>
                             <div>
-                                {t("Add your boundary hierarchy levels by clicking on rhe “Add New Boundary Hierarchy Level” button. If you want to remove a level, click on the delete icon next to level you want to delete.")}
+                                {t("MSG")}
                             </div>
                             <div style={{height:"2rem"}}></div>
                             <div>
-                                {console.log("bhau new", newBoundaryData)}
+                                {/* {console.log("bhau new", newBoundaryData)} */}
                                 {
                                     newBoundaryData.map((item, index)=>(
                                         <div>

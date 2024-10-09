@@ -56,17 +56,17 @@ const ViewHierarchy = () => {
     const fetchData = async()=>{
         try{
             const res = await callSearch(defaultHierarchyType);
-            console.log("ress is", res);
-            console.log("default", defaultHierarchyType);
+            // console.log("ress is", res);
+            // console.log("default", defaultHierarchyType);
             if(res?.BoundaryHierarchy?.[0]?.boundaryHierarchy) setDefData(res?.BoundaryHierarchy?.[0]?.boundaryHierarchy)
             // defData = res?.BoundaryHierarchy?.[0]?.boundaryHierarchy;
-            console.log("defData", defData);
-            console.log("new hierarchy type", hierarchyType);
+            // console.log("defData", defData);
+            // console.log("new hierarchy type", hierarchyType);
             const res1 = await callSearch(hierarchyType);
-            console.log("res1 is", res1);
+            // console.log("res1 is", res1);
             if(res1?.BoundaryHierarchy?.[0]?.boundaryHierarchy) setHierData(res1?.BoundaryHierarchy?.[0]?.boundaryHierarchy);
             // hierData = res1?.BoundaryHierarchy?.[0]?.boundaryHierarchy;
-            console.log("hierData", hierData);
+            // console.log("hierData", hierData);
             setViewState(true);
         }
         catch(error) {
@@ -97,7 +97,7 @@ const ViewHierarchy = () => {
     const handleFileChange = async (event) => {
         const file = [event.target.files[0]]; // Get the first selected file
         if (file) {
-          console.log("the file is", file);
+        //   console.log("the file is", file);
           try {
             // Call function to upload the selected file to an API
             await uploadFileToAPI(file);
@@ -110,8 +110,8 @@ const ViewHierarchy = () => {
     };
 
     const uploadFileToAPI = async (files) => {
-            console.log("coming to upload", files);
-            console.log("file which is ciming isnde is", files);
+            // console.log("coming to upload", files);
+            // console.log("file which is ciming isnde is", files);
            
             // const formData = new FormData();
             // formData.append("file", file); // Attach the first file
@@ -125,12 +125,12 @@ const ViewHierarchy = () => {
             fileDataTemp.fileName = file?.name
             
             const response = await Digit.UploadServices.Filestorage(module, file, tenantId);
-            console.log("respose from file storage is", response);
+            // console.log("respose from file storage is", response);
             fileDataTemp.fileStoreId = response?.data?.[0]?.fileStoreId;
             let fileStoreIdTemp = response?.data?.files?.[0]?.fileStoreId;
             setFileStoreId(response?.data?.files?.[0]?.fileStoreId);
             const { data: { fileStoreIds: fileUrlTemp } = {} } = await Digit.UploadServices.Filefetch([fileStoreIdTemp], tenantId);
-            console.log("the fetched url is", fileUrlTemp);
+            // console.log("the fetched url is", fileUrlTemp);
             fileDataTemp.url = fileUrlTemp?.[0]?.url;
 
             setFileUrl(fileDataTemp?.url);
@@ -173,7 +173,7 @@ const ViewHierarchy = () => {
             //   }
             // );
 
-        console.log("api to be called");
+        // console.log("api to be called");
       };
 
     const callCreateDataApi = async()=>{
@@ -200,7 +200,7 @@ const ViewHierarchy = () => {
             return res;
         }
         catch(resp){
-            console.log("error raised", resp);
+            // console.log("error raised", resp);
             let label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
             resp?.response?.data?.Errors?.map((err, idx) => {
             if (idx === resp?.response?.data?.Errors?.length - 1) {
@@ -217,7 +217,7 @@ const ViewHierarchy = () => {
     const createData = async()=> {
         try{
             const res = await callCreateDataApi();
-            console.log("data create res", res);
+            // console.log("data create res", res);
         }
         catch (error){
             console.log("error in data create", error);
@@ -243,18 +243,18 @@ const ViewHierarchy = () => {
                         <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
                             <div style={{ fontSize: "2.5rem", fontWeight: 700 }}>{t(`HIERARCHY`)} {hierarchyType}</div>
                             <div style={{ height: "2rem" }}></div>
-                            {console.log("hier data", hierData)}
-                            {console.log("def data is", defData)}
+                            {/* {console.log("hier data", hierData)}
+                            {console.log("def data is", defData)} */}
             
                             {hierData.map((hierItem, index) => {
-                                console.log("Processing hierItem:", hierItem);
+                                // console.log("Processing hierItem:", hierItem);
             
                                 // Check if the index is less than defData length
                                 const isLessThanDefData = index < defData.length;
             
                                 if (isLessThanDefData) {
                                     if (hierItem?.boundaryType === defData[index]?.boundaryType) {
-                                        console.log("hehe"); // This will log when the condition is met
+                                        // console.log("hehe"); // This will log when the condition is met
                                         return (
                                             <div>
                                                 <div style={{ fontWeight: 400 }} key={index}>
@@ -397,7 +397,7 @@ const ViewHierarchy = () => {
                     </div>
                 }
                 {showToast && <Toast label={showToast.label} error={showToast.isError} onClose={() => setShowToast(null)} />}
-                {dataCreateToast && <Toast label={t("DATA_CREATE_IN_PROGRESS")} type={"info"} transitionTime={600000000} />}
+                {dataCreateToast && <Toast label={t("DATA_CREATION_IN_PROGRESS")} type={"info"} transitionTime={600000000} />}
                 {previewPage && (
                     <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
                         <div style={{fontSize:"2.5rem", fontWeight:700}}>{t("CONFIRM_BOUNDARY_DATA")}</div>
