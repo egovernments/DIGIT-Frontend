@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useReducer, useState } fro
 import MultiTab from "./MultiTabcontext";
 import { Loader } from "@egovernments/digit-ui-react-components";
 // import { deliveryConfig } from "../../../configs/deliveryConfig";
+import getDeliveryConfig from "../../../utils/getDeliveryConfig";
 
 const CycleContext = createContext();
 
@@ -22,24 +23,15 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
   const activeCycle = searchParams.get("activeCycle");
   const { isLoading: deliveryConfigLoading, data: filteredDeliveryConfig } = Digit.Hooks.useCustomMDMS(
     tenantId,
-    "HCM-ADMIN-CONSOLE",
-    [{ name: "deliveryConfig" }],
+    "HCM-PROJECT-TYPES",
+    [{ name: "projectTypes" }],
     {
       select: (data) => {
-        const temp = data?.["HCM-ADMIN-CONSOLE"]?.deliveryConfig;
-        return temp?.find((i) => i?.projectType === selectedProjectType);
-        // return deliveryConfig?.find((i) => i?.projectType === selectedProjectType);
+        const temp= getDeliveryConfig({data: data?.["HCM-PROJECT-TYPES"], projectType:selectedProjectType});
+        return temp;
       },
     }
   );
-  // const [filteredDeliveryConfig, setFilteredDeliveryConfig] = useState(deliveryConfig?.find((i) => i?.projectType === selectedProjectType));
-  // useEffect(() => {
-  // if (!deliveryConfigLoading) {
-  // const temp = deliveryConfig?.find((i) => i?.projectType === selectedProjectType);
-  // setFilteredDeliveryConfig(temp);
-  // }
-  // }, [deliveryConfigLoading, filteredDeliveryConfig]);
-  // const filteredDeliveryConfig = deliveryConfig.find((i) => i.projectType === selectedProjectType);
   useEffect(() => {
     setCycleData(config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure);
   }, [config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure]);

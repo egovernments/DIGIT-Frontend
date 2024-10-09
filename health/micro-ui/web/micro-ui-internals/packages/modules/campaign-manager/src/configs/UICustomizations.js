@@ -18,11 +18,9 @@ const inboxModuleNameMap = {};
 export const UICustomizations = {
   MyChecklistSearchConfig: {
     preProcess: (data, additionalDetails) => {
-      console.log("initiall data is", data);
       data.body.ServiceDefinitionCriteria.code.length=0;
       let pay = window.history.state.name + '.' + data?.state?.searchForm?.Type?.list + '.' + data?.state?.searchForm?.Role?.code;
       data.body.ServiceDefinitionCriteria.code.push(pay);
-      // console.log("the data", data);
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
@@ -155,7 +153,7 @@ export const UICustomizations = {
                   projectId: row?.projectId,
                 },
                 "",
-                `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}`
+                `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}&campaignId=${row?.id}`
               );
               const navEvent1 = new PopStateEvent("popstate");
               window.dispatchEvent(navEvent1);
@@ -479,7 +477,7 @@ export const UICustomizations = {
                   campaignType: row?.projectType
                 },
                 "",
-                `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}`
+                `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}&campaignId=${row?.id}`
               );
               const navEvent1 = new PopStateEvent("popstate");
               window.dispatchEvent(navEvent1);

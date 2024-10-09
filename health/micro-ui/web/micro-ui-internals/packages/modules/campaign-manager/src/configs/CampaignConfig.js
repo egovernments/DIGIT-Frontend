@@ -136,8 +136,34 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
           ],
         },
         {
-          stepCount: "3",
+          stepCount: "1",
           key: "6",
+          body: [
+            {
+              isMandatory: false,
+              key: "BoundarySummary",
+              type: "component",
+              component: "BoundarySummary",
+              withoutLabel: true,
+              withoutLabelFieldPair: true,
+              disable: false,
+              customProps: {
+                module: "HCM",
+                sessionData: totalFormData,
+                summaryErrors: summaryErrors
+              },
+              populators: {
+                name: "BoundarySummary",
+                // optionsKey: "code",
+                // error: "ES__REQUIRED",
+                required: true,
+              },
+            },
+          ],
+        },
+        {
+          stepCount: "3",
+          key: "7",
           name: "HCM_CAMPAIGN_CYCLE_CONFIGURE",
           body: [
             {
@@ -163,7 +189,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
         },
         {
           stepCount: "3",
-          key: "7",
+          key: "8",
           name: "HCM_CAMPAIGN_DELIVERY_DATA",
           body: [
             {
@@ -189,7 +215,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
         },
         {
           stepCount: "3",
-          key: "8",
+          key: "9",
           body: [
             {
               isMandatory: false,
@@ -215,7 +241,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
         },
         {
           stepCount: "4",
-          key: "9",
+          key: "10",
           name: "HCM_CAMPAIGN_UPLOAD_FACILITY_DATA",
           body: [
             {
@@ -240,7 +266,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
         },
         {
           stepCount: "4",
-          key: "10",
+          key: "11",
           name: "HCM_CAMPAIGN_UPLOAD_USER_DATA",
           body: [
             {
@@ -265,7 +291,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
         },
         {
           stepCount: "4",
-          key: "11",
+          key: "12",
           name: "HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA",
           body: [
             {
@@ -292,7 +318,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
         },
         {
           stepCount: "4",
-          key: "12",
+          key: "13",
           body: [
             {
               isMandatory: false,
@@ -318,7 +344,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
         },
         {
           stepCount: "5",
-          key: "13",
+          key: "14",
           isLast: true,
           body: [
             {

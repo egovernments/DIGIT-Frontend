@@ -16,7 +16,6 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
 
     const { mutate: updateResources, ...rest } = Digit.Hooks.microplanv1.useCreateUpdatePlanProject();
     const { t } = useTranslation();
-    const [currentStep, setCurrentStep] = useState(1);
     const { state } = useMyContext();
     const [assumptionValues, setAssumptionValues] = useState(customProps?.sessionData?.HYPOTHESIS?.Assumptions?.assumptionValues ||[]);
     const assumptionsFormValues = customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm //array with key and value 
@@ -31,14 +30,13 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     const [deletedAssumptions, setDeletedAssumptions] = useState([]);
 
     const moveToPreviousStep = () => {
-        if(currentStep >1){
-            setCurrentStep((prevStep) => prevStep -1);
+        if(internalKey >1){
             setInternalKey((prevKey) => prevKey - 1); 
         }  
       };
      const isLastStep = () => {
-        Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: false }); 
-        Digit.Utils.microplanv1.updateUrlParams({ internalKey:1 }); 
+        Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep:false }); 
+        Digit.Utils.microplanv1.updateUrlParams({ internalKey:internalKey }); 
      }  
     
      const updateUrlParams = (params) => {
@@ -67,7 +65,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     };
 
     const handleNext = () => {
-        const currentAssumptions = assumptionCategories[currentStep - 1]?.assumptions || [];
+        const currentAssumptions = assumptionCategories[internalKey - 1]?.assumptions || [];
         const existingAssumptionKeys = assumptionValues?.map(assumption => assumption.key);
         // Filter current assumptions to only those that exist in assumptionValues and are not deleted
         const visibleAssumptions = currentAssumptions.filter(item => 
@@ -89,8 +87,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
             });
             return; // Prevent moving to the next step
         }
-        if (currentStep < assumptionCategories.length) {
-            setCurrentStep((prevStep) => prevStep + 1);
+        if (internalKey < assumptionCategories.length) {
             setInternalKey((prevKey) => prevKey + 1); // Update key in URL
         }
 
@@ -126,31 +123,28 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
                  campaignType === item.campaignType &&
                  resourceDistributionStrategyCode === item.resourceDistributionStrategyCode &&
                  assumptionsFormValues?.selectedRegistrationProcess?.code===item?.RegistrationProcess && 
-                 assumptionsFormValues?.selectedDistributionProcess?.code=== item.DistributionProcess &&
-                 assumptionsFormValues?.selectedRegistrationDistributionMode?.code === item.isRegistrationAndDistributionHappeningTogetherOrSeparately
+                 assumptionsFormValues?.selectedDistributionProcess?.code=== item.DistributionProcess 
              )
          });     
     const assumptionCategories = filteredData.length > 0 ? filteredData[0].assumptionCategories : [];
-    const filteredAssumptions = assumptionCategories.length > 0 ? (assumptionCategories[currentStep - 1]?.assumptions || []) : [];
+    const filteredAssumptions = assumptionCategories.length > 0 ? (assumptionCategories[internalKey - 1]?.assumptions || []) : [];
   
 
     
 
     const handleBack = () => {
-        if (currentStep >1) {
-            setCurrentStep((prevStep) => prevStep - 1);
+        if (internalKey >1) {;
             setInternalKey((prevKey) => prevKey - 1); // Update key in URL
         }else{
             window.dispatchEvent(new Event("moveToPrevious"))
         }
     };
     const handleStepClick = (step) => {
-        if (step < currentStep) {
-            setCurrentStep(step + 1); // Adjust for zero-based index
-            setInternalKey(step + 1);  // Update key in URL
+        if (step < internalKey) {
+            setInternalKey(step + 1);  //Adjust for zero-based index and Update key in URL
             return;
         }
-        const currentAssumptions = assumptionCategories[currentStep - 1]?.assumptions || [];
+        const currentAssumptions = assumptionCategories[internalKey - 1]?.assumptions || [];
         const existingAssumptionKeys = assumptionValues.map(assumption => assumption.key);
         const visibleAssumptions = currentAssumptions.filter(item => 
             existingAssumptionKeys.includes(item) && !deletedAssumptions?.includes(item) 
@@ -159,9 +153,8 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
             const value = assumptionValues.find(assumption => assumption.key === item)?.value;
             return !value; // Check if any value is empty
         });
-        if(hasEmptyFields) return;
-        setCurrentStep(step + 1); // step is zero-based, so we add 1
-        setInternalKey(step + 1); // Update key in URL
+        if(hasEmptyFields) return; 
+        setInternalKey(step + 1); // step is zero-based, so we add 1 and Update key in URL
     };  
 
 
@@ -184,7 +177,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
 
     useEffect(() => {
         onSelect(customProps.name, { assumptionValues });
-    }, [assumptionValues, currentStep]);
+    }, [assumptionValues, internalKey]);
 
 
     useEffect(() => {
@@ -215,12 +208,12 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
 
 
     useEffect(() => {
-        if (currentStep === assumptionCategories.length) {
+        if (internalKey === assumptionCategories.length) {
             Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: true });
         }else{ // Assuming 1 is the first step
             Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: false });
         }
-    }, [currentStep]);
+    }, [internalKey]);
     
     
 
@@ -236,7 +229,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
                             <Card className="stepper-card">
                                 <Stepper
                                     customSteps={assumptionCategories.map(category => category.category)}
-                                    currentStep={currentStep}
+                                    currentStep={internalKey}
                                     onStepClick={handleStepClick}
                                     direction={"vertical"}
                                 />
@@ -246,7 +239,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
                         <div style={{width: '100%'                    
                         }}>
                             <Hypothesis
-                                category={assumptionCategories[currentStep - 1]?.category}
+                                category={assumptionCategories[internalKey - 1]?.category}
                                  assumptions={filteredAssumptions.filter(item => !deletedAssumptions.includes(item))}
                                 onSelect={onSelect}
                                 customProps={customProps}
@@ -254,7 +247,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
                         </div>
                     </div>
 
-                    { (currentStep > 0 && currentStep < assumptionCategories.length ) && (
+                    { (internalKey > 0 && internalKey < assumptionCategories.length ) && (
                         <ActionBar>
                             <Button className="previous-button" variation="secondary" label={t("BACK")} onClick={handleBack} />
                             <Button className="previous-button" variation="primary" label={t("NEXT")} onClick={handleNext} />
