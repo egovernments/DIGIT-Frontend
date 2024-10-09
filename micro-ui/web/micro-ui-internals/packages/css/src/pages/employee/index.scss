@@ -383,6 +383,21 @@
       }
     }
   }
+  .digit-dropdown-employee-select-wrap.language-dropdown{
+    .header-dropdown-label{
+      .cp{
+        color: #fff
+      }
+      .header-dropdown-arrow{
+        path{
+          fill: #fff;
+        }
+      }
+    }
+    .header-dropdown-menu{
+      right: 1rem;
+    }
+  }
   .select-wrap {
     margin-bottom: unset;
     svg {

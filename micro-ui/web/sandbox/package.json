@@ -14,6 +14,7 @@
     "micro-ui-internals/packages/modules/workbench",
     "micro-ui-internals/packages/modules/sandbox",
     "micro-ui-internals/packages/modules/pgr",
+    "micro-ui-internals/packages/modules/dss",
     "micro-ui-internals/packages/modules/hrms"
   ],
   "homepage": "/sandbox-ui",
@@ -25,7 +26,6 @@
     "@egovernments/digit-ui-module-dss": "1.8.1",
     "@egovernments/digit-ui-module-core": "1.8.2-beta.20",
     "@egovernments/digit-ui-module-hrms": "1.8.1-beta.1",
-    "@egovernments/digit-ui-module-dss": "1.8.1",
     "@egovernments/digit-ui-module-pgr": "1.8.1-beta.1",
     "@egovernments/digit-ui-module-utilities": "1.0.1-beta.39",
     "@egovernments/digit-ui-react-components": "1.8.2-beta.13",

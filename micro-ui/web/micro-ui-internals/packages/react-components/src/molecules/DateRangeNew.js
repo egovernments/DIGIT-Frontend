@@ -5,6 +5,7 @@ import { ArrowDown, Calender } from "../atoms/svgindex";
 import Modal from "../hoc/Modal";
 import { DateRange, createStaticRanges } from "react-date-range";
 import { format, addMonths, addHours, startOfToday, endOfToday, endOfYesterday, addMinutes, addSeconds, isEqual, subYears, startOfYesterday, startOfWeek, endOfWeek, startOfYear, endOfYear, startOfMonth, endOfMonth, startOfQuarter, endOfQuarter } from "date-fns";
+import { COLOR_FILL } from "../atoms/contants";
 
 function isEndDateFocused(focusNumber) {
     return focusNumber === 1;
@@ -148,7 +149,7 @@ const DateRangeNew = ({populators, values, onFilterChange, t, labelClass, label,
                             className="pickerShadow"
                             focusedRange={focusedRange}
                             ranges={[selectionRange]}
-                            rangeColors={["#F47738"]}
+                            rangeColors={[COLOR_FILL]}
                             onChange={handleSelect}
                             onRangeFocusChange={setFocusedRange}
                             retainEndDateOnFirstSelection={true}

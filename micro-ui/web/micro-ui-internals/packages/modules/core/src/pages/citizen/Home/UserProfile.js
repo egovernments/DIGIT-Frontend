@@ -624,7 +624,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                 onClick={updateProfile}
                 style={{
                   marginTop: "24px",
-                  backgroundColor: "#F47738",
+                  backgroundColor: "#c84c0e",
                   width: "100%",
                   height: "40px",
                   color: "white",
@@ -881,7 +881,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                   onClick={updateProfile}
                   style={{
                     marginTop: "24px",
-                    backgroundColor: "#F47738",
+                    backgroundColor: "#c84c0e",
                     width: "100%",
                     height: "40px",
                     color: "white",

@@ -9,6 +9,8 @@
     "packages/modules/workbench",
     "packages/modules/sandbox",
     "packages/modules/pgr",
+    "packages/modules/dss",
+
     "packages/modules/hrms"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
@@ -39,7 +41,7 @@
     "build": "run-p build:**",
     "build:libraries": "cd packages/libraries && yarn build",
     "build:components": "cd packages/react-components && yarn build",
-    "buildD:dss": "cd packages/modules/dss && yarn build",
+    "build:dss": "cd packages/modules/dss && yarn build",
     "build:core": "cd packages/modules/core && yarn build",
     "build:hrms": "cd packages/modules/hrms && yarn build",
     "buildD:common": "cd packages/modules/common && yarn build",
