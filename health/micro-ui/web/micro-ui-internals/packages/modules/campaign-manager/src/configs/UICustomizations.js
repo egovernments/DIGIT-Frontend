@@ -153,7 +153,7 @@ export const UICustomizations = {
                   projectId: row?.projectId,
                 },
                 "",
-                `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}`
+                `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}&campaignId=${row?.id}`
               );
               const navEvent1 = new PopStateEvent("popstate");
               window.dispatchEvent(navEvent1);
@@ -477,7 +477,7 @@ export const UICustomizations = {
                   campaignType: row?.projectType
                 },
                 "",
-                `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}`
+                `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}&campaignId=${row?.id}`
               );
               const navEvent1 = new PopStateEvent("popstate");
               window.dispatchEvent(navEvent1);
