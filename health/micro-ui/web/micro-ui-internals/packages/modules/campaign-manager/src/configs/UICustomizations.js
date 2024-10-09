@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import _ from "lodash";
 import React, { useState, useEffect } from "react";
-import { useHistory } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 import { Fragment } from "react";
 import { Button, PopUp, Switch } from "@egovernments/digit-ui-components";
 import TimelineComponent from "../components/TimelineComponent";
@@ -17,42 +17,38 @@ const inboxModuleNameMap = {};
 export const UICustomizations = {
   MyChecklistSearchConfig: {
     preProcess: (data, additionalDetails) => {
-      console.log("initiall data is", data);
-      data.body.ServiceDefinitionCriteria.code.length=0;
-      let pay = window.history.state.name + '.' + data?.state?.searchForm?.Type?.list + '.' + data?.state?.searchForm?.Role?.code;
+      data.body.ServiceDefinitionCriteria.code.length = 0;
+      let pay = window.history.state.name + "." + data?.state?.searchForm?.Type?.list + "." + data?.state?.searchForm?.Role?.code;
       data.body.ServiceDefinitionCriteria.code.push(pay);
-      // console.log("the data", data);
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-    
       const [isActive, setIsActive] = useState(row?.isActive);
-        switch (key) {
-          case "Checklist Role":
-            return row?.additionalDetails?.role;
-            break;
-          case "Checklist Type":
-            return row?.additionalDetails?.type;
-            break;
-          case "Checklist Name":
-            return row?.additionalDetails?.name;
-            break;
-          case "Status":
-            const toggle = () => {
-              setIsActive(!isActive);
-            };
-            const switchText = isActive ? "Active" : "Inactive";
-            return(
-              <>
-                <Switch
-                  isCheckedInitially={isActive?true:false}
-                  label={switchText}
-                  onToggle={toggle} // Passing the function reference here
-                />
-              </>
-            )
-        }
-
+      switch (key) {
+        case "Checklist Role":
+          return row?.additionalDetails?.role;
+          break;
+        case "Checklist Type":
+          return row?.additionalDetails?.type;
+          break;
+        case "Checklist Name":
+          return row?.additionalDetails?.name;
+          break;
+        case "Status":
+          const toggle = () => {
+            setIsActive(!isActive);
+          };
+          const switchText = isActive ? "Active" : "Inactive";
+          return (
+            <>
+              <Switch
+                isCheckedInitially={isActive ? true : false}
+                label={switchText}
+                onToggle={toggle} // Passing the function reference here
+              />
+            </>
+          );
+      }
     },
   },
   MyCampaignConfigOngoing: {
@@ -147,19 +143,19 @@ export const UICustomizations = {
             setTimeline(true);
             break;
           case "ACTION_LABEL_CONFIGURE_APP":
-              window.history.pushState(
-                {
-                  name: row?.campaignName,
-                  data: row,
-                  projectId: row?.projectId,
-                },
-                "",
-                `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}`
-              );
-              const navEvent1 = new PopStateEvent("popstate");
-              window.dispatchEvent(navEvent1);
-              break;
-  
+            window.history.pushState(
+              {
+                name: row?.campaignName,
+                data: row,
+                projectId: row?.projectId,
+              },
+              "",
+              `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}`
+            );
+            const navEvent1 = new PopStateEvent("popstate");
+            window.dispatchEvent(navEvent1);
+            break;
+
           case "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS":
             window.history.pushState(
               {
@@ -167,7 +163,7 @@ export const UICustomizations = {
                 data: row,
               },
               "",
-              `/${window.contextPath}/employee/campaign/update-boundary?key=1&id=${row?.id}`
+              `/${window.contextPath}/employee/campaign/update-boundary?key=1&parentId=${row?.id}`
             );
             const nav = new PopStateEvent("popstate");
             window.dispatchEvent(nav);
@@ -199,11 +195,6 @@ export const UICustomizations = {
                 type="actionButton"
                 variation="secondary"
                 label={"Action"}
-                // options={[
-                //   { key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") },
-                //   { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
-                //   { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
-                // ]}
                 options={[
                   ...(row?.status === "created" ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") }] : []),
                   { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
@@ -469,21 +460,33 @@ export const UICustomizations = {
             setTimeline(true);
             break;
 
-            case "ACTION_LABEL_CONFIGURE_APP":
-              window.history.pushState(
-                {
-                  name: row?.campaignName,
-                  data: row,
-                  projectId: row?.projectId,
-                  campaignType: row?.projectType
-                },
-                "",
-                `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}`
-              );
-              const navEvent1 = new PopStateEvent("popstate");
-              window.dispatchEvent(navEvent1);
-              break;
-  
+          case "ACTION_LABEL_CONFIGURE_APP":
+            window.history.pushState(
+              {
+                name: row?.campaignName,
+                data: row,
+                projectId: row?.projectId,
+                campaignType: row?.projectType,
+              },
+              "",
+              `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}`
+            );
+            const navEvent1 = new PopStateEvent("popstate");
+            window.dispatchEvent(navEvent1);
+            break;
+          case "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS":
+            window.history.pushState(
+              {
+                name: row?.campaignName,
+                data: row,
+              },
+              "",
+              `/${window.contextPath}/employee/campaign/update-boundary?key=1&parentId=${row?.id}`
+            );
+            const nav = new PopStateEvent("popstate");
+            window.dispatchEvent(nav);
+            break;
+
           default:
             console.log(value);
             break;
@@ -511,15 +514,13 @@ export const UICustomizations = {
                 type="actionButton"
                 variation="secondary"
                 label={"Action"}
-                // options={[
-                //   { key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") },
-                //   { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
-                //   { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
-                // ]}
                 options={[
                   ...(row?.status === "created" ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") }] : []),
                   { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
                   { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
+                  ...(row?.status === "created"
+                    ? [{ key: 1, code: "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS", i18nKey: t("ACTION_LABEL_UPDATE_BOUNDARY_DETAILS") }]
+                    : []),
                 ]}
                 optionsKey="i18nKey"
                 showBottom={true}

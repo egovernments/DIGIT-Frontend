@@ -45,6 +45,7 @@ import UpdateBoundaryWrapper from "./components/UpdateBoundaryWrapper";
 // import SelectingBoundaryComponent from "./components/SelectingBoundaryComponent";
 import { Wrapper } from "./components/SelectingBoundaryComponent";
 import SelectingBoundariesDuplicate from "./components/SelectingBoundariesDuplicate";
+import CampaignUpdateSummary from "./components/CampaignUpdateSummary";
 
 /**
  * The CampaignModule function fetches store data based on state code, module code, and language, and
@@ -125,6 +126,7 @@ const componentsToRegister = {
   UpdateBoundary,
   UpdateBoundaryWrapper,
   SelectingBoundariesDuplicate,
+  CampaignUpdateSummary
   // SelectingBoundaryComponent
 };
 

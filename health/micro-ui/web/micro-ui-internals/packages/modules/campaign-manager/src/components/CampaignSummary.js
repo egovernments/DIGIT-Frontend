@@ -206,6 +206,7 @@ const CampaignSummary = (props) => {
   const [cycles, setCycles] = useState([]);
   const [cards, setCards] = useState([]);
   const isPreview = searchParams.get("preview");
+  const parentId = searchParams.get("parentId");
   const [key, setKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
@@ -230,12 +231,10 @@ const CampaignSummary = (props) => {
     window.history.replaceState({}, "", url);
   }
 
-
   useEffect(() => {
     updateUrlParams({ key: key });
     window.dispatchEvent(new Event("checking"));
   }, [key]);
-
 
   // useEffect(() => {
   //   if (props?.props?.summaryErrors) {
@@ -568,7 +567,7 @@ const CampaignSummary = (props) => {
                   {
                     name: `HIERARCHY_${index + 1}`,
                     type: "COMPONENT",
-                    cardHeader: { value: `${t(item?.type)}` , inlineStyles: { color : "#0B4B66" } },
+                    cardHeader: { value: `${t(item?.type)}`, inlineStyles: { color: "#0B4B66" } },
                     // cardHeader: { value: t("item?.boundaries?.type") },
                     component: "BoundaryDetailsSummary",
                     cardSecondaryAction: noAction !== "false" && (
