@@ -39,11 +39,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const [resourceId, setResourceId] = useState(null);
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
-  // const { isLoading, data: Schemas } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [
-  //   { name: "facilitySchema" },
-  //   { name: "userSchema" },
-  //   { name: "Boundary" },
-  // ]);
+  const parentId = searchParams.get("parentId");
 
   const { data: Schemas, isLoading: isThisLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -69,7 +65,10 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const [convertedSchema, setConvertedSchema] = useState({});
   const [loader, setLoader] = useState(false);
   const [currentStep , setCurrentStep] = useState(1);
+  const [projectType , setprojectType] = useState(props?.props?.projectType)
   const baseKey = 10; 
+  // const projectType = props?.props?.projectType;
+
 
   function updateUrlParams(params) {
     const url = new URL(window.location.href);
@@ -83,6 +82,11 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     setKey(currentKey);
     setCurrentStep(currentKey - baseKey + 1);
   }, [currentKey])
+
+  useEffect(() =>{
+    setprojectType(props?.props?.projectType);
+  }, [props?.props?.projectType])
+
 
   useEffect(() => {
     if (type === "facilityWithBoundary") {
@@ -171,7 +175,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     var properties = {};
     var required = [];
     var columns = [];
-
     for (const propType of ["enumProperties", "numberProperties", "stringProperties"]) {
       if (convertData?.properties[propType] && Array.isArray(convertData?.properties[propType]) && convertData?.properties[propType]?.length > 0) {
         for (const property of convertData?.properties[propType]) {
@@ -202,13 +205,14 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   }, [uploadedFile]);
 
   useEffect(async () => {
-    if (Schemas?.MdmsRes?.["HCM-ADMIN-CONSOLE"]?.adminSchema) {
+    if (Schemas?.MdmsRes?.["HCM-ADMIN-CONSOLE"]?.adminSchema && (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)) {
       const facility = await convertIntoSchema(
         Schemas?.MdmsRes?.["HCM-ADMIN-CONSOLE"]?.adminSchema?.filter((item) => item.title === "facility" && item.campaignType === "all")?.[0]
       );
       const boundary = await convertIntoSchema(
         Schemas?.MdmsRes?.["HCM-ADMIN-CONSOLE"]?.adminSchema?.filter(
-          (item) => item.title === "boundaryWithTarget" && item.campaignType === totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code
+          (item) => item.title === "boundaryWithTarget" &&
+           item.campaignType === (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)
         )?.[0]
       );
       const user = await convertIntoSchema(
@@ -229,18 +233,17 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       const newFacilitySchema = await translateSchema(convertedSchema?.facilityWithBoundary);
       const newBoundarySchema = await translateSchema(convertedSchema?.boundary);
       const newUserSchema = await translateSchema(convertedSchema?.userWithBoundary);
-      // const headers = {
-      //   boundary: Object?.keys(newBoundarySchema?.properties),
-      //   facilityWithBoundary: Object?.keys(newFacilitySchema?.properties),
-      //   userWithBoundary: Object?.keys(newUserSchema?.properties),
-      // };
 
       const filterByUpdateFlag = (schemaProperties) => {
         return Object.keys(schemaProperties).filter(
-          (key) => schemaProperties[key].isUpdate !== true 
+          (key) => {
+            // if (parentId) {
+            //   return schemaProperties[key].isUpdate === true;
+            // }
+            return schemaProperties[key].isUpdate !== true;
+          }
         );
-      };
-
+    };
 
       const headers = {
         boundary: filterByUpdateFlag(newBoundarySchema?.properties),
@@ -1040,6 +1043,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   return (
     <>
       <div className="container-full">
+        {!parentId && (
       <div className="card-container">
         <Card className="card-header-timeline">
         <TextBlock
@@ -1057,8 +1061,11 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           />
         </Card>
         </div>
+        )}
         {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
-        <div className="card-container-delivery">
+
+        <div className={parentId ? "card-container2" : "card-container1"}>
+
         <Card>
           <div className="campaign-bulk-upload">
             <Header className="digit-form-composer-sub-header">

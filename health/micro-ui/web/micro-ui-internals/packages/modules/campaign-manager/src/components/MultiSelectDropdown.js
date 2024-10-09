@@ -55,7 +55,7 @@ const primaryIconColor = Colors.lightTheme.primary[1];
 const dividerColor = Colors.lightTheme.generic.divider;
 const background = Colors.lightTheme.paper.secondary;
 
-const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, onSelect, popUpOption ,hierarchyType }) => {
+const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, onSelect, popUpOption ,hierarchyType ,frozenData , frozenType }) => {
   const [dummySelected, setDummySelected] = useState(alreadyQueuedSelectedState);
   const boundaryType = alreadyQueuedSelectedState.find((item) => item.propsData[1] !== null)?.propsData[1]?.type;
   const { t } = useTranslation();
@@ -144,7 +144,20 @@ const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, on
           options={Object.entries(popUpOption)
             .filter(([key]) => key.startsWith(boundaryType))
             .flatMap(([key, value]) =>
-              Object.entries(value || {}).map(([subkey, item]) => ({
+              Object.entries(value || {})
+            .filter(([subkey, item]) => {
+              const itemCode = item?.split(".")?.[0];
+              if (frozenData?.length > 0) {
+                const isFrozen = frozenData.some((frozenOption) => {
+                  return (
+                    frozenOption.code === subkey && frozenOption.type === boundaryType
+                  );
+                });
+                return frozenType === "filter" ? !isFrozen : true; // Filter or include based on frozenType
+              }
+              return true;
+            })
+            .map(([subkey, item]) => ({
                 code: item?.split(".")?.[0],
                 name: item?.split(".")?.[0],
                 options: [
@@ -161,11 +174,12 @@ const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, on
             handleSelected(value);
           }}
           selected={dummySelected}
-          optionsKey={"name"}
+          optionsKey={"code"}
           addCategorySelectAllCheck={true}
           addSelectAllCheck={true}
           selectedNumber={dummySelected?.length}
           variant="nestedmultiselect"
+          frozenData={frozenData}
         />
       </LabelFieldPair>
 
@@ -181,17 +195,20 @@ const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, on
           <div className="parent">{t(parent)}</div> 
           <div className="digit-tag-container">
             {items.map((value, index) => {
-              const translatedText = t(value.name);
+              const translatedText = t(value.code);
+              const isClose = frozenData.some((frozenOption) => frozenOption.code === value.code);
               return (
                 <Chip
                   key={index}
                   text={translatedText?.length > 64 ? `${translatedText.slice(0, 64)}...` : translatedText}
                   onClick={(e) => removeFromDummySelected(e, value)}
                   className="multiselectdropdown-tag"
+                  hideClose={isClose}
                 />
               );
             })}
           </div>
+          {frozenData.length === 0 && (
           <Button
             label={t("Clear All")}
             onClick={() => {
@@ -221,6 +238,7 @@ const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, on
               color: primaryIconColor,
             }}
           />
+        )}
         </div>
       ))}
     </PopUp>
@@ -248,7 +266,8 @@ const MultiSelectDropdown = ({
   frozenData = [],
   selectedNumber,
   popUpOption,
-  hierarchyType
+  hierarchyType,
+  frozenType
 }) => {
   const [active, setActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState();
@@ -824,6 +843,7 @@ const MultiSelectDropdown = ({
               .map((value, index) => {
                 const translatedText = t(config?.chipKey ? value[config?.chipKey] : value.code);
                 const replacedText = replaceDotWithColon(translatedText);
+                const isClose = frozenData.some((frozenOption) => frozenOption.code === value.code);
                 return (
                   <Chip
                     key={index}
@@ -835,6 +855,7 @@ const MultiSelectDropdown = ({
                         ? (e) => onSelectToAddToQueue(e, value, props)
                         : (e) => onSelectToAddToQueue(e, value)
                     }
+                    hideClose={isClose}
                     className="multiselectdropdown-tag"
                   />
                 );
@@ -855,9 +876,11 @@ const MultiSelectDropdown = ({
               onSelect={onSelect}
               popUpOption={popUpOption}
               hierarchyType ={hierarchyType}
+              frozenData = {frozenData}
+              frozenType ={ frozenType}
             ></Wrapper>
           )}
-          {alreadyQueuedSelectedState.length > 0 && (
+          {alreadyQueuedSelectedState.length > 0 && frozenData.length == 0 && (
             <Button
               label={t(config?.clearLabel ? config?.clearLabel : "Clear All")}
               onClick={handleClearAll}
