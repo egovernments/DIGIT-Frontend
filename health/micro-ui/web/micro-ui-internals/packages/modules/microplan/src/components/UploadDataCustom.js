@@ -1,11 +1,12 @@
-import { Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
+import { Header, LoaderWithGap} from "@egovernments/digit-ui-react-components";
 import React, { useRef, useState, useEffect, Fragment, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, Modal, CardText } from "@egovernments/digit-ui-react-components";
-import BulkUpload from "./../../../campaign-manager/src/components/BulkUpload";
 import Ajv from "ajv";
 import XLSX from "xlsx";
 import { InfoCard, PopUp, Toast, Button, DownloadIcon, Stepper, TextBlock } from "@egovernments/digit-ui-components";
+// import XlsPreview from "../../../campaign-manager/src/components/XlsPreview";
+// import BulkUpload from "../../../campaign-manager/src/components/BulkUpload";
 
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
@@ -19,11 +20,14 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [uploadedFile, setUploadedFile] = useState([]);
+  const [processedFile, setProcessedFile] = useState([]);
   const params = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
   const [showInfoCard, setShowInfoCard] = useState(false);
   const [errorsType, setErrorsType] = useState({});
   const [schema, setSchema] = useState(null);
   const [showToast, setShowToast] = useState(null);
+  const [sheetErrors, setSheetErrors] = useState(0);
+  // TODO : Use Digit for query params
   const searchParams = new URLSearchParams(location.search);
   const [key, setKey] = useState(() => {
     const keyParam = searchParams.get("key");
@@ -38,8 +42,9 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const [fileName, setFileName] = useState(null);
   const [downloadError, setDownloadError] = useState(false);
   const [resourceId, setResourceId] = useState(null);
-  const id = searchParams.get("campaignId") || null;
-
+  const [showPreview, setShowPreview] = useState(false);
+  // TODO : Remove hard coded id
+  const id = searchParams.get("campaignId") || "274f60e0-f6d8-4bf9-b4da-a714a9046e93";
   const { data: Schemas, isLoading: isThisLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
     "HCM-ADMIN-CONSOLE",
@@ -63,6 +68,8 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const campaignType = totalData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code
   const [convertedSchema, setConvertedSchema] = useState({});
   const [loader, setLoader] = useState(false);
+  const XlsPreview = Digit.ComponentRegistryService.getComponent("XlsPreview");
+  const BulkUpload = Digit.ComponentRegistryService.getComponent("BulkUpload");
   const baseKey = 4;
 
   useEffect(() => {
@@ -310,6 +317,8 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
         setIsValidation(false);
         setDownloadError(false);
         setIsError(false);
+        setSheetErrors(0);
+        setShowPreview(false);
         setIsSuccess(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.isSuccess || null);
         setShowPopUp(!props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile.length);
         break;
@@ -319,6 +328,8 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
         setIsValidation(false);
         setDownloadError(false);
         setIsError(false);
+        setSheetErrors(0);
+        setShowPreview(false);
         setIsSuccess(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.isSuccess || null);
         setShowPopUp(!props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile.length);
         break;
@@ -328,6 +339,8 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
         setIsValidation(false);
         setDownloadError(false);
         setIsError(false);
+        setSheetErrors(0);
+        setShowPreview(false);
         setIsSuccess(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.isSuccess || null);
         setShowPopUp(!props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile.length);
         break;
@@ -446,6 +459,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
     }
     return true;
   };
+
 
   const validateTargetData = (data, sheetName, targetError) => {
     const ajv = new Ajv({ strict: false }); // Initialize Ajv
@@ -737,6 +751,9 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const onFileDelete = (file, index) => {
     setUploadedFile((prev) => prev.filter((i) => i.id !== file.id));
     setIsError(false);
+    setProcessedFile([]);
+    setSheetErrors(0);
+    setShowPreview(false);
     setIsSuccess(false);
     setIsValidation(false);
     setApiError(null);
@@ -755,7 +772,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       if (!errorsType[type] && uploadedFile?.length > 0 && !isSuccess) {
         // setShowToast({ key: "info", label: t("HCM_VALIDATION_IN_PROGRESS") });
         setIsValidation(true);
-        setIsError(true);
+        // setIsError(true);
         setLoader(true);
 
         try {
@@ -832,6 +849,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             setLoader(false);
             setIsValidation(false);
             // setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
+            setSheetErrors(temp?.additionalDetails?.sheetErrors?.length || 0);
             const processedFileStore = temp?.processedFilestoreId;
             if (!processedFileStore) {
               setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
@@ -855,18 +873,22 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
                   return {
                     ...i,
                     filestoreId: id,
-                    filename: fileName,
+                    filename: t("HCM_MICROPLAN_PROCESSED_FILE"),
                     type: fileType,
                   };
                 })
                 .map(({ id, ...rest }) => rest);
               // onFileDelete(uploadedFile);
-              setUploadedFile(fileData);
-              setShowToast({ key: "warning", label: t("HCM_CHECK_FILE_AGAIN"), transitionTime: 5000000 });
+              // setUploadedFile(fileData);
+              setProcessedFile(fileData);
+              setReadMeInfo(readMeInfoNew);
+              // setShowToast({ key: "warning", label: t("HCM_CHECK_FILE_AGAIN"), transitionTime: 5000000 });
               setIsError(true);
             }
           }
-        } catch (error) { }
+        } catch (error) { 
+          console.log(error);
+        }
       }
     };
 
@@ -925,7 +947,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           if (fileData && fileData?.[0]?.url) {
             setDownloadError(false);
             if (fileData?.[0]?.id) {
-              downloadExcelWithCustomName({ fileStoreId: fileData?.[0]?.id, customName: fileData?.[0]?.filename });
+              Digit.Utils.campaign.downloadExcelWithCustomName({ fileStoreId: fileData?.[0]?.id, customName: fileData?.[0]?.filename });
             }
           } else {
             setDownloadError(true);
@@ -1037,21 +1059,47 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             populators={{
               name: "infocard",
             }}
-            variant="default"
+            variant= {sheetErrors ? "error" : "default"}
             style={{ margin: "0rem", maxWidth: "100%" }}
-            additionalElements={readMeInfo[type]?.map((info, index) => (
-              <div key={index} style={{ display: "flex", flexDirection: "column" }}>
-                <h2>{info?.header}</h2>
-                <ul style={{ paddingLeft: 0 }}>
-                  {info?.descriptions.map((desc, i) => (
-                    <li key={i} className="info-points">
-                      {desc.isBold ? <h2>{desc.text}</h2> : <p>{desc.text}</p>}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-            label={"Info"}
+            additionalElements={
+              sheetErrors ? (
+                  [<Button
+                    type="button"
+                    size="large"
+                    variation="default"
+                    label={t("HCM_VIEW_ERROR")}
+                    onClick={() => setShowPreview(true)}
+                    style={{
+                      marginTop: "1rem",
+                      backgroundColor: "#B91900"
+                    }}
+                    textStyles={{
+                      color: "#FFFFFF"
+                    }}
+                  />]
+              ) : (
+                readMeInfo[type]?.map((info, index) => (
+                  <div key={index} style={{ display: "flex", flexDirection: "column" }}>
+                    <ul style={{ paddingLeft: 0 }}>
+                      {info?.descriptions.map((desc, i) => (
+                        <li key={i} className="info-points">
+                          {desc.isBold ? (
+                            <h2>{`Step ${i + 1}: ${desc.text}`}</h2>
+                          ) : (
+                            <p>{`Step ${i + 1}: ${desc.text}`}</p>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))
+              )
+            }
+            label={
+              sheetErrors 
+                ? `${sheetErrors} ${sheetErrors === 1 ? t("HCM_MICROPLAN_SINGLE_ERROR") : t("HCM_MICROPLAN_PLURAL_ERRORS")} ${t("HCM_MICROPLAN_ERRORS_FOUND")}`
+                : t("HCM_MICROPLAN_DATA_UPLOAD_GUIDELINES")
+            }
           />
         </div>
         {showPopUp && (
@@ -1114,6 +1162,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             onClose={closeToast}
           />
         )}
+        {showPreview && <XlsPreview file={processedFile?.[0]} onDownload={() => onFileDownload(processedFile?.[0])} onBack={() => setShowPreview(false)} />}
       </div>
     </>
   );
