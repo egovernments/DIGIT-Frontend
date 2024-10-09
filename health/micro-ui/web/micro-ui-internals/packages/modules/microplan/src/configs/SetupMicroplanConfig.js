@@ -199,9 +199,37 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
             },
           ],
         },
+
+
+      {
+        stepCount: "6",
+        key: "8",
+        name: "FORMULA_CONFIGURATION",
+        body: [
+          {
+            isMandatory: false,
+            key: "formulaConfiguration",
+            type: "component",
+            skipAPICall: false,
+            component: "FormulaConfigWrapper",
+            withoutLabel: true,
+            withoutLabelFieldPair: true,
+            disable: false,
+            customProps: {
+              module: "HCM",
+              sessionData: totalFormData,
+              isSubmitting: isSubmitting,
+            },
+            populators: {
+              name: "formulaConfiguration",
+              required: true,
+            },
+          },
+        ],
+      },
         {
           stepCount: "6",
-          key: "8",
+          key: "9",
           name: "SUMMARY_SCREEN",
           body: [
             {
