@@ -58,7 +58,7 @@ export const tqmInboxConfig = {
               },
               {
                 "label": "CONTACT_NUMBER",
-                "type": "number",
+                "type": "mobileNumber",
                 "isMandatory": false,
                 "disable": false,
                 "populators": {
@@ -125,7 +125,9 @@ export const tqmInboxConfig = {
             "enableGlobalSearch": false,
             "enableColumnSort": true,
             "resultsJsonPath": "Employees",
-            "tableClassName":"table pqm-table"
+            "tableClassName":"table pqm-table",
+            "rowClassName":"table-row-mdms table-row-mdms-hover",
+
           },
           "children": {},
           "show": true

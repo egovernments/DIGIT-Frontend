@@ -109,13 +109,13 @@ export const UICustomizations = {
       if(!roleschosen){
         roleschosen={}
       }
-      if(Object.keys(roleschosen).length === 0){
-        for(const obj of additionalDetails["microplanData"]){
+      // if(Object.keys(roleschosen).length === 0){
+      //   for(const obj of additionalDetails["microplanData"]){
           
-          roleschosen[obj["roleCode"]]=true;
+      //     roleschosen[obj["roleCode"]]=true;
           
-        }
-      }
+      //   }
+      // }
       
       let rolesString='';
       if(roleschosen){
@@ -132,6 +132,8 @@ export const UICustomizations = {
       data.params.roles=rolesString;
       data.params.tenantId=Digit.ULBService.getCurrentTenantId();
       cleanObject(data.params);
+      delete data.params.roleschosen;
+      delete data.params.name;
       // console.log(data,"dat");
       // data.param.roles=roles;
 
