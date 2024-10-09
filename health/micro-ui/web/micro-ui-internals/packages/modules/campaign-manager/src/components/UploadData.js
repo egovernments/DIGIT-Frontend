@@ -69,7 +69,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const [convertedSchema, setConvertedSchema] = useState({});
   const [loader, setLoader] = useState(false);
   const [currentStep , setCurrentStep] = useState(1);
-  const baseKey = 9; 
+  const baseKey = 10; 
 
   function updateUrlParams(params) {
     const url = new URL(window.location.href);
@@ -1026,15 +1026,15 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const onStepClick = (currentStep) => {
     setCurrentStep(currentStep+1);
     if(currentStep === 0){
-      setKey(9);
-    }
-    else if(currentStep === 1){
       setKey(10);
     }
-    else if(currentStep === 3){
-      setKey(12);
+    else if(currentStep === 1){
+      setKey(11);
     }
-    else setKey(11);
+    else if(currentStep === 3){
+      setKey(13);
+    }
+    else setKey(12);
   };
 
   return (
@@ -1058,7 +1058,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         </Card>
         </div>
         {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
-        <div className="card-container">
+        <div className="card-container-delivery">
         <Card>
           <div className="campaign-bulk-upload">
             <Header className="digit-form-composer-sub-header">

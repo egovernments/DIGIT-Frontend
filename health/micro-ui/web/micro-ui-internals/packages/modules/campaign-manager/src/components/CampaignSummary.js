@@ -305,14 +305,7 @@ const CampaignSummary = (props) => {
         setprojectId(data?.[0]?.projectId);
         setCards(data?.cards);
 
-        const ss = async () => {
-          let temp = await fetchResourceFile(tenantId, resourceIdArr);
-          processid = temp;
-          return;
-        };
-        ss();
         const target = data?.[0]?.deliveryRules;
-        const cycleData = reverseDeliveryRemap(target, t);
         const boundaryData = boundaryDataGrp(data?.[0]?.boundaries);
         return {
           cards: [
@@ -400,7 +393,7 @@ const CampaignSummary = (props) => {
                   type: "DATA",
                   cardHeader: { value: t("CAMPAIGN_DELIVERY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(6)}>
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(7)}>
                       <span>{t(`CAMPAIGN_EDIT`)}</span>
                       <EditIcon />
                     </div>
@@ -435,7 +428,7 @@ const CampaignSummary = (props) => {
                     type: "COMPONENT",
                     cardHeader: { value: `${t("CYCLE")} ${item?.cycleIndex}`, inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     cardSecondaryAction: noAction !== "false" && (
-                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(7)}>
+                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(8)}>
                         <span>{t(`CAMPAIGN_EDIT`)}</span>
                         <EditIcon />
                       </div>
@@ -460,7 +453,7 @@ const CampaignSummary = (props) => {
                   },
                   cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(11)}>
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(12)}>
                       <span>{t(`CAMPAIGN_EDIT`)}</span>
                       <EditIcon />
                     </div>
@@ -480,7 +473,7 @@ const CampaignSummary = (props) => {
                   },
                   cardHeader: { value: t("FACILITY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(9)}>
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(10)}>
                       <span>{t(`CAMPAIGN_EDIT`)}</span>
                       <EditIcon />
                     </div>
@@ -500,7 +493,7 @@ const CampaignSummary = (props) => {
                   },
                   cardHeader: { value: t("USER_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(10)}>
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(11)}>
                       <span>{t(`CAMPAIGN_EDIT`)}</span>
                       <EditIcon />
                     </div>
