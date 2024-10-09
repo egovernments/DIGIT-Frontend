@@ -29,6 +29,7 @@ import { SVG } from "./SVG";
 
 
 import PropTypes from 'prop-types';
+import { COLOR_FILL } from "./contants";
 
 function XlsPreview({ file, ...props }) {
   const { t } = useTranslation();
@@ -57,14 +58,14 @@ function XlsPreview({ file, ...props }) {
         <Button
           label={t("CS_COMMON_BACK")}
           variation="secondary"
-          icon={<SVG.ArrowBackIos styles={{ height: "1.25rem", width: "1.25rem" }} fill="#F47738" />}
+          icon={<SVG.ArrowBackIos styles={{ height: "1.25rem", width: "1.25rem" }} fill={COLOR_FILL} />}
           type="button"
           onButtonClick={() => props?.onBack()}
         />
         <Button
           label={t("CS_COMMON_DOWNLOAD")}
           variation="secondary"
-          icon={<DownloadIcon styles={{ height: "1.25rem", width: "1.25rem" }} fill="#F47738" />}
+          icon={<DownloadIcon styles={{ height: "1.25rem", width: "1.25rem" }} fill={COLOR_FILL} />}
           type="button"
           onButtonClick={() => props?.onDownload()}
         />
@@ -73,7 +74,7 @@ function XlsPreview({ file, ...props }) {
         <DocViewer
           style={{ height: "80vh", overflowY: "hidden" }}
           theme={{
-            primary: "#F47738",
+            primary: "#c84c0e",
             secondary: "#feefe7",
             tertiary: "#feefe7",
             textPrimary: "#0B0C0C",

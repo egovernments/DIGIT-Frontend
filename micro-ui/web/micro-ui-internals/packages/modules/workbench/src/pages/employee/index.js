@@ -47,7 +47,7 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
     {
       path: pathVar !== "mdms-search-v2" ? `/${window.contextPath}/employee/workbench/mdms-search-v2` : null,
       query: from
-        ? `moduleName=${moduleName}&masterName=${masterName}&from=${from}&screen=${screen}&action=${action}`
+        ? `moduleName=${moduleName}&masterName=${masterName}&from=${from}`
         : `moduleName=${moduleName}&masterName=${masterName}`,
       content: t(`${Digit.Utils.workbench.getMDMSLabel(pathVar, masterName, moduleName)}`),
       show: masterName && moduleName ? true : false,
@@ -58,7 +58,7 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
       content: t(`MDMS_VIEW`),
       show: pathVar.includes("mdms-edit") ? true : false,
       query: from
-        ? `moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}&from=${from}&screen=${screen}&action=${action}`
+        ? `moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}&from=${from}`
         : `moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}`,
     },
     {

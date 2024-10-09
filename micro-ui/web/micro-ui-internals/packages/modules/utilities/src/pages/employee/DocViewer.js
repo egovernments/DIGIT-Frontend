@@ -55,7 +55,7 @@ const DocViewerWrapper = (props) => {
           <Label>Uploaded File</Label>
           <DocViewer
             theme={{
-              primary: "#F47738",
+              primary: "#c84c0e",
               secondary: "#feefe7",
               tertiary: "#feefe7",
               textPrimary: "#0B0C0C",
