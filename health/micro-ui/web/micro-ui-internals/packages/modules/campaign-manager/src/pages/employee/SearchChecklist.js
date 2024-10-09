@@ -52,7 +52,14 @@ const SearchChecklist = () => {
   }
 
   const userinfo = Digit.UserService.getUser();
-  const codesopt = userinfo?.info?.roles?.map(item => ({ code: t(`ACCESSCONTROL_ROLES_ROLES_${item.code}`)}));
+  const [codesopt, setCodesOpt] = useState([]);
+  const { data: dataBT } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "rolesForChecklist" }]);
+  useEffect(()=>{
+    if(dataBT) setCodesOpt(dataBT["HCM-ADMIN-CONSOLE"]?.rolesForChecklist?.map(item => ({ code: t(`ACCESSCONTROL_ROLES_ROLES_${item.code}`)})));
+  }, [dataBT]);
+
+  // const codesopt = userinfo?.info?.roles?.map(item => ({ code: t(`ACCESSCONTROL_ROLES_ROLES_${item.code}`)}));
+  // const codesopt = dataBT?.HCM-ADMIN-CONSOLE?.rolesForChecklist?.map(item => ({ code: t(`ACCESSCONTROL_ROLES_ROLES_${item.code}`)}));
   const [listsopt, setListsOpt] = useState([]);
   const reqCriteriaResource = {
     url: `/mdms-v2/v1/_search`,

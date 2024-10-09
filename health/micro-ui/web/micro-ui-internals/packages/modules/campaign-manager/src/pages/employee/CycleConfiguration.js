@@ -167,10 +167,10 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
 
   const onStepClick = (currentStep) => {
     if(currentStep === 0){
-      setKey(6);
+      setKey(7);
     }
-    else if(currentStep === 2) setKey(8);
-    else setKey(7);
+    else if(currentStep === 2) setKey(9);
+    else setKey(8);
   };
 
   return (

@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Button, EditIcon, Header, Loader, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { InfoBannerIcon, Toast } from "@egovernments/digit-ui-components";
+import { InfoBannerIcon, Toast , Card , Stepper , TextBlock } from "@egovernments/digit-ui-components";
 import { DownloadIcon } from "@egovernments/digit-ui-react-components";
 import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
@@ -178,6 +178,8 @@ const DeliveryDetailsSummary = (props) => {
   const [cycles, setCycles] = useState([]);
   const [cards, setCards] = useState([]);
   const isPreview = searchParams.get("preview");
+  const [currentStep , setCurrentStep] = useState(1);
+  const currentKey = searchParams.get("key");
   const [key, setKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
@@ -273,7 +275,7 @@ const DeliveryDetailsSummary = (props) => {
                   type: "DATA",
                   cardHeader: { value: t("CAMPAIGN_DELIVERY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(5)}>
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(7)}>
                       <span>{t(`CAMPAIGN_EDIT`)}</span>
                       <EditIcon />
                     </div>
@@ -308,7 +310,7 @@ const DeliveryDetailsSummary = (props) => {
                     type: "COMPONENT",
                     cardHeader: { value: `${t("CYCLE")} ${item?.cycleIndex}`, inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     cardSecondaryAction: noAction !== "false" && (
-                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(7)}>
+                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(8)}>
                         <span>{t(`CAMPAIGN_EDIT`)}</span>
                         <EditIcon />
                       </div>
@@ -359,8 +361,31 @@ const DeliveryDetailsSummary = (props) => {
 
   const updatedObject = { ...data };
 
+  const onStepClick = (currentStep) => {
+    if(currentStep === 0){
+      setKey(7);
+    }
+    else if(currentStep === 2) setKey(9);
+    else setKey(8);
+  };
+
   return (
     <>
+     <div className="container-full">
+        <div className="card-container">
+          <Card className="card-header-timeline">
+            <TextBlock subHeader={t("HCM_DELIVERY_DETAILS")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+          </Card>
+          <Card className="stepper-card">
+            <Stepper
+              customSteps={["HCM_CYCLES","HCM_DELIVERY_RULES" ,"HCM_SUMMARY"]}
+              currentStep={3}
+              onStepClick={onStepClick}
+              direction={"vertical"}
+            />
+          </Card>
+        </div>
+        <div className="card-container-delivery">
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Header className="summary-header">{t("HCM_DELIVERY_DETAILS_SUMMARY")}</Header>
       </div>
@@ -373,6 +398,8 @@ const DeliveryDetailsSummary = (props) => {
             onClose={closeToast}
           />
         )}
+      </div>
+      </div>
       </div>
     </>
   );

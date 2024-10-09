@@ -46,6 +46,7 @@ import UpdateBoundaryWrapper from "./components/UpdateBoundaryWrapper";
 import { Wrapper } from "./components/SelectingBoundaryComponent";
 import SelectingBoundariesDuplicate from "./components/SelectingBoundariesDuplicate";
 import XlsPreview from "./components/XlsPreview";
+import BoundarySummary from "./components/BoundarySummary";
 
 /**
  * The CampaignModule function fetches store data based on state code, module code, and language, and
@@ -129,8 +130,8 @@ const componentsToRegister = {
   UpdateBoundary,
   UpdateBoundaryWrapper,
   SelectingBoundariesDuplicate,
-  XlsPreview
-  // SelectingBoundaryComponent
+  XlsPreview,
+  BoundarySummary
 };
 
 const overrideHooks = () => {
