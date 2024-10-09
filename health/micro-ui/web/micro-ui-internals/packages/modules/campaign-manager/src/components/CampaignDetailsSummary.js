@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Button, EditIcon, Header, Loader, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Toast } from "@egovernments/digit-ui-components";
+import { Toast , Stepper , TextBlock ,Card } from "@egovernments/digit-ui-components";
 
 const CampaignDetailsSummary = (props) => {
   const { t } = useTranslation();
@@ -12,6 +12,8 @@ const CampaignDetailsSummary = (props) => {
   const id = searchParams.get("id");
   const noAction = searchParams.get("action");
   const [showToast, setShowToast] = useState(null);
+  const [currentStep, setCurrentStep] = useState(2);
+  const currentKey = searchParams.get("key");
   const [key, setKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
@@ -35,6 +37,11 @@ const CampaignDetailsSummary = (props) => {
     });
     window.history.replaceState({}, "", url);
   }
+
+  useEffect(() => {
+    setKey(currentKey);
+    setCurrentStep(currentKey);
+  }, [currentKey]);
 
 
   useEffect(() => {
@@ -121,8 +128,35 @@ const CampaignDetailsSummary = (props) => {
 
   const updatedObject = { ...data };
 
+  const onStepClick = (currentStep) => {
+    if (!props?.props?.sessionData?.HCM_CAMPAIGN_NAME || !props?.props?.sessionData?.HCM_CAMPAIGN_TYPE) return;
+    if(currentStep === 0){
+      setKey(1);
+    }
+    else if(currentStep === 1){
+      setKey(2);
+    }
+    else if(currentStep === 3){
+      if (!props?.props?.sessionData?.HCM_CAMPAIGN_DATE) return;
+      else setKey(4);
+    }
+    else setKey(3);
+  };
+
+
   return (
     <>
+    <div className="container-full">
+        <div className="card-container">
+          <Card className="card-header-timeline">
+            <TextBlock subHeader={t("HCM_CAMPAIGN_DETAILS")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+          </Card>
+          <Card className="stepper-card">
+            <Stepper customSteps={["HCM_CAMPAIGN_TYPE","HCM_CAMPAIGN_NAME", "HCM_CAMPAIGN_DATE" , "HCM_SUMMARY"]} currentStep={4} onStepClick={onStepClick} direction={"vertical"} />
+          </Card>
+        </div>
+
+        <div className="card-container-delivery">
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Header className="summary-header">{t("HCM_CAMPAIGN_DETAILS_SUMMARY")}</Header>
       </div>
@@ -135,6 +169,8 @@ const CampaignDetailsSummary = (props) => {
             onClose={closeToast}
           />
         )}
+      </div>
+      </div>
       </div>
     </>
   );

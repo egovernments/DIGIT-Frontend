@@ -2507,3 +2507,72 @@ $border-color: rgba(214, 213, 212, 1);
   max-height: 23rem;
   overflow: auto;
 }
+
+/* MP_HYPOTHESIS_CSS */
+
+.mp-description{
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+.mp-hypothesis-label-field{
+  display: flex;
+  align-items: baseline;
+  margin: 1rem 0rem 0.5rem 0rem;
+}
+.mp-hypothesis-label-field > div > span {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.fieldv1-deleteIcon-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.kpi-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, var(--bg-opacity));
+  margin-bottom: 2rem;
+}
+
+.kpi-card {
+  text-align: center;
+  padding: 15px;
+  width: 120px;
+}
+
+.kpi-card h2 {
+  margin: 0;
+  color: #0a4a6d; /* Custom color */
+  font-size: 2em;
+}
+
+.kpi-card p {
+  margin: 0;
+  color: #666;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+
+.assumptionsForm-label-field{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; 
+    align-items: start !important;
+}
+.assumptionsForm-label-field > div > span{
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.assumptionsForm-card{
+  background-color:#FAFAFA;
+  border: 1px solid #D6D5D4;
+}
+

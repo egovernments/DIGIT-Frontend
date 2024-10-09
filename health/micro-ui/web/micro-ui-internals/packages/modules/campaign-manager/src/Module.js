@@ -33,7 +33,7 @@ import UpdateDatesWithBoundaries from "./pages/employee/UpdateDatesWithBoundarie
 import DateWithBoundary from "./components/DateWithBoundary";
 import BoundaryWithDate from "./components/BoundaryWithDate";
 import DateAndCycleUpdate from "./pages/employee/DateAndCycleUpdate";
-import { CreateChecklist} from "./pages/employee/CreateChecklist";
+import { CreateChecklist } from "./pages/employee/CreateChecklist";
 import CreateQuestionContext from "./components/CreateQuestionContext";
 import SearchChecklist from "./pages/employee/SearchChecklist";
 import DeliveryDetailsSummary from "./components/DeliveryDetailsSummary";
@@ -46,7 +46,10 @@ import UpdateBoundaryWrapper from "./components/UpdateBoundaryWrapper";
 import { Wrapper } from "./components/SelectingBoundaryComponent";
 import SelectingBoundariesDuplicate from "./components/SelectingBoundariesDuplicate";
 import CampaignUpdateSummary from "./components/CampaignUpdateSummary";
+import XlsPreview from "./components/XlsPreview";
+import BoundarySummary from "./components/BoundarySummary";
 
+import MultiSelectDropdown from "./components/MultiSelectDropdown";
 /**
  * The CampaignModule function fetches store data based on state code, module code, and language, and
  * renders the EmployeeApp component within a TourProvider component if the data is not loading.
@@ -62,14 +65,17 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
   });
 
   const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({BOUNDARY_HIERARCHY_TYPE,tenantId});
+  const modulePrefix = "hcm";
 
-  const moduleCode = ["campaignmanager", "workbench", "mdms", "schema", "hcm-admin-schemas", `boundary-${BOUNDARY_HIERARCHY_TYPE}`];
+  const moduleCode = ["hr", "campaignmanager", "workbench", "mdms", "schema", "admin-schemas", `boundary-${BOUNDARY_HIERARCHY_TYPE}`];
+
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
     moduleCode,
     language,
+    modulePrefix,
   });
 
   if (isLoading) {
@@ -116,7 +122,7 @@ const componentsToRegister = {
   DateAndCycleUpdate,
   TimelineComponent,
   CreateChecklist,
-  CreateQuestion : CreateQuestionContext,
+  CreateQuestion: CreateQuestionContext,
   SearchChecklist,
   DeliveryDetailsSummary,
   DataUploadSummary,
@@ -126,8 +132,11 @@ const componentsToRegister = {
   UpdateBoundary,
   UpdateBoundaryWrapper,
   SelectingBoundariesDuplicate,
-  CampaignUpdateSummary
+  CampaignUpdateSummary,
+  XlsPreview,
+  MultiSelectDropdownBoundary:MultiSelectDropdown,
   // SelectingBoundaryComponent
+  BoundarySummary
 };
 
 const overrideHooks = () => {

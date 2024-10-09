@@ -32,18 +32,23 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     {
       path: pathVar === "my-campaign" ? "" : `/${window?.contextPath}/employee/campaign/my-campaign`,
       content: t("MY_CAMPAIGN"),
-      show: pathVar === "my-campaign" ? true : false,
+      show: pathVar === "my-campaign" || pathVar === "checklist/search" ? true : false,
     },
     {
       path: pathVar === "setup-campaign" ? "" : `/${window?.contextPath}/employee/campaign/setup-campaign`,
       content: t("CREATE_NEW_CAMPAIGN"),
-      show: pathVar === "setup-campaign" ? true : false,
+      show: pathVar === "setup-campaign"  ? true : false,
     },
     {
       path: pathVar === "update-dates-boundary" ? "" : `/${window?.contextPath}/employee/campaign/my-campaign`,
       content: t("UPDATE_DATE_CHANGE"),
       show: pathVar === "update-dates-boundary" ? true: false,
     },
+    {
+      path: "",
+      content: t("ACTION_LABEL_CONFIGURE_APP"),
+      show:pathVar === "checklist/search" ? true : false,
+    }
   ];
 
   return <BreadCrumb className="campaign-breadcrumb" crumbs={crumbs} spanStyle={{ maxWidth: "min-content" }} />;

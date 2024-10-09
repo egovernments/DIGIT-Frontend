@@ -19,6 +19,8 @@ const CampaignDetails = ({onSelect,props:customProps,...props}) => {
         }
   );
   const [distributionStrat, setDistributionStrat] = useState(distributionStratSession);
+  const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
+  const [isFreezed,setIsFreezed] = useState(campaignId && microplanId ? true : false);
   const { isLoading, data } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }], {
     select: (data) => {
       let projectOptions = data?.["HCM-PROJECT-TYPES"]?.projectTypes;
@@ -42,7 +44,7 @@ const CampaignDetails = ({onSelect,props:customProps,...props}) => {
   },
   {schemaCode:"ProjectType"}
 );
-
+  
 
   useEffect(() => {
     onSelect(customProps.name,{
@@ -63,8 +65,10 @@ const CampaignDetails = ({onSelect,props:customProps,...props}) => {
     return <Loader />
   }
 
+
+
   return (
-    <React.Fragment>
+    <Card >
         <Header>{t(`HCM_CAMPAIGN_DETAILS_HEADER`)}</Header>
         <p className="description-type">{t(`HCM_CAMPAIGN_DETAILS_DESC`)}</p>
         <LabelFieldPair>
@@ -82,6 +86,7 @@ const CampaignDetails = ({onSelect,props:customProps,...props}) => {
             select={(value) => {
               setDisease(value);
             }}
+            disabled={isFreezed}
           />
         </LabelFieldPair>
         <LabelFieldPair>
@@ -99,6 +104,7 @@ const CampaignDetails = ({onSelect,props:customProps,...props}) => {
             select={(value) => {
               setCampaignType(value);
             }}
+            disabled={isFreezed}
           />
         </LabelFieldPair>
         <LabelFieldPair>
@@ -116,9 +122,10 @@ const CampaignDetails = ({onSelect,props:customProps,...props}) => {
             select={(value) => {
               setDistributionStrat(value);
             }}
+            disabled={isFreezed}
           />
         </LabelFieldPair>
-    </React.Fragment>
+    </Card>
   );
 }
 

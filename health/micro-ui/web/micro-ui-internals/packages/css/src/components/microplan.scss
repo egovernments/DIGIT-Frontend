@@ -1,0 +1,112 @@
+.search-tabs-container {
+    display: flex;
+    justify-content: space-between;
+    background-color: #eee;
+  
+    .search-tab-head {
+      padding: 10px 35px;
+      font-weight: 700;
+      font-size: 1rem;
+      border: 1px solid #d6d5d4;
+      border-radius: 0.5rem 0.5rem 0 0;
+    }
+  
+    .search-tab-head-selected {
+      padding: 10px 35px;
+      color: rgb(244, 119, 56);
+      background-color: #fff;
+      border: 1px solid #f47738;
+      border-radius: 0.5rem 0.5rem 0 0;
+      border-bottom: 4px solid rgb(244, 119, 56);
+      font-weight: 700;
+      font-size: 1.125rem;
+      margin-bottom: -1rem;
+    }
+  
+    .search-tab-head-selected:focus {
+      outline: 0;
+    }
+  }
+
+/* Parent container */
+.dm-parent-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background-color: #fff;
+    margin: 0.5rem 0;
+  }
+  
+  /* Uploaded file container (left side) */
+  .dm-uploaded-file-container-sub {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .dm-icon {
+    margin-right: 0.5rem; /* Space between icon and filename */
+  }
+  
+  .dm-file-name {
+    color: #505a5f;
+    font-weight: 700;
+    font-size: 0.875rem; /* Smaller text size */
+  }
+  
+  /* Actions container (right side) */
+  .dm-actions-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem; /* Space between edit and delete buttons */
+  }
+  
+  /* Edit container */
+  .dm-campaign-preview-edit-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .dm-campaign-preview-edit-container span {
+    /*margin-right: 0.25rem;*/
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #dc5a32; /* Orange color for the text */
+  }
+  
+  /* Button styles */
+  .dm-workbench-download-template-btn {
+    border: 1px solid #dc5a32; /* Orange border */
+    background-color: transparent;
+    color: #dc5a32; /* Orange text */
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.875rem; /* Small font size */
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Hover effect for the button */
+  .dm-hover:hover {
+    background-color: #fbe9e6;
+    border-color: #dc5a32;
+  }
+
+  .subBoundarycomp-container{
+    display:inline-flex;
+    flex-wrap:wrap;
+    gap:0.125rem;
+  }
+
+.view-more{
+  text-decoration: underline;
+  cursor:pointer;
+  color:orange;
+  margin-top: 0.2rem;
+}
+  

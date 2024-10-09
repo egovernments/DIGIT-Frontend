@@ -5,6 +5,7 @@ import { useHistory } from "react-router-dom";
 import { Fragment } from "react";
 import { Button, PopUp, Switch } from "@egovernments/digit-ui-components";
 import TimelineComponent from "../components/TimelineComponent";
+import getMDMSUrl from "../utils/getMDMSUrl";
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
@@ -17,8 +18,10 @@ const inboxModuleNameMap = {};
 export const UICustomizations = {
   MyChecklistSearchConfig: {
     preProcess: (data, additionalDetails) => {
-      data.body.ServiceDefinitionCriteria.code.length = 0;
-      let pay = window.history.state.name + "." + data?.state?.searchForm?.Type?.list + "." + data?.state?.searchForm?.Role?.code;
+
+      data.body.ServiceDefinitionCriteria.code.length=0;
+      let pay = window.history.state.name + '.' + data?.state?.searchForm?.Type?.list + '.' + data?.state?.searchForm?.Role?.code;
+
       data.body.ServiceDefinitionCriteria.code.push(pay);
       return data;
     },
@@ -84,9 +87,9 @@ export const UICustomizations = {
     },
     populateCampaignTypeReqCriteria: () => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-
+      const url = getMDMSUrl();
       return {
-        url: "/egov-mdms-service/v1/_search",
+        url: `${url}/v1/_search`,
         params: { tenantId },
         body: {
           MdmsCriteria: {
@@ -143,18 +146,19 @@ export const UICustomizations = {
             setTimeline(true);
             break;
           case "ACTION_LABEL_CONFIGURE_APP":
-            window.history.pushState(
-              {
-                name: row?.campaignName,
-                data: row,
-                projectId: row?.projectId,
-              },
-              "",
-              `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}`
-            );
-            const navEvent1 = new PopStateEvent("popstate");
-            window.dispatchEvent(navEvent1);
-            break;
+
+              window.history.pushState(
+                {
+                  name: row?.campaignName,
+                  data: row,
+                  projectId: row?.projectId,
+                },
+                "",
+                `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}&campaignId=${row?.id}`
+              );
+              const navEvent1 = new PopStateEvent("popstate");
+              window.dispatchEvent(navEvent1);
+              break;
 
           case "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS":
             window.history.pushState(
@@ -265,9 +269,9 @@ export const UICustomizations = {
     },
     populateCampaignTypeReqCriteria: () => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-
+      const url = getMDMSUrl();
       return {
-        url: "/egov-mdms-service/v1/_search",
+        url: `${url}/v1/_search`,
         params: { tenantId },
         body: {
           MdmsCriteria: {
@@ -400,9 +404,9 @@ export const UICustomizations = {
     },
     populateCampaignTypeReqCriteria: () => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-
+      const url = getMDMSUrl();
       return {
-        url: "/egov-mdms-service/v1/_search",
+        url: `${url}/v1/_search`,
         params: { tenantId },
         body: {
           MdmsCriteria: {
@@ -460,20 +464,7 @@ export const UICustomizations = {
             setTimeline(true);
             break;
 
-          case "ACTION_LABEL_CONFIGURE_APP":
-            window.history.pushState(
-              {
-                name: row?.campaignName,
-                data: row,
-                projectId: row?.projectId,
-                campaignType: row?.projectType,
-              },
-              "",
-              `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}`
-            );
-            const navEvent1 = new PopStateEvent("popstate");
-            window.dispatchEvent(navEvent1);
-            break;
+         
           case "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS":
             window.history.pushState(
               {
@@ -487,6 +478,21 @@ export const UICustomizations = {
             window.dispatchEvent(nav);
             break;
 
+            case "ACTION_LABEL_CONFIGURE_APP":
+              window.history.pushState(
+                {
+                  name: row?.campaignName,
+                  data: row,
+                  projectId: row?.projectId,
+                  campaignType: row?.projectType
+                },
+                "",
+                `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}&campaignId=${row?.id}`
+              );
+              const navEvent1 = new PopStateEvent("popstate");
+              window.dispatchEvent(navEvent1);
+              break;
+  
           default:
             console.log(value);
             break;
@@ -584,9 +590,9 @@ export const UICustomizations = {
     },
     populateCampaignTypeReqCriteria: () => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-
+      const url = getMDMSUrl();
       return {
-        url: "/egov-mdms-service/v1/_search",
+        url: `${url}/v1/_search`,
         params: { tenantId },
         body: {
           MdmsCriteria: {
@@ -674,9 +680,9 @@ export const UICustomizations = {
     },
     populateCampaignTypeReqCriteria: () => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-
+      const url = getMDMSUrl();
       return {
-        url: "/egov-mdms-service/v1/_search",
+        url: `${url}/v1/_search`,
         params: { tenantId },
         body: {
           MdmsCriteria: {

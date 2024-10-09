@@ -46,11 +46,14 @@ const Hooks = {
 
 const Utils = {
   browser: {
-    sample: () => {},
+    sample: () => { },
   },
   workbench: {
     ...utils,
   },
+  campaign: {
+    ...utils
+  }
 };
 
 export const CustomisedHooks = {
