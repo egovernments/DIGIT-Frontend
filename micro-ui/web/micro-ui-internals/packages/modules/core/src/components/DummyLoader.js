@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { CheckCircle } from "@egovernments/digit-ui-svg-components";
 import { useHistory, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const DummyLoaderScreen = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const history = useHistory();
   const location = useLocation();
+  const { t } = useTranslation();
   const { tenant } = location.state || {};
   const steps = [
     "SANDBOX_GUIDE_SETUP_ACCOUNT",
@@ -48,7 +50,7 @@ const DummyLoaderScreen = () => {
       <ul className="sandbox-installation-steps">
         {steps.map((step, index) => (
           <li key={index} className={`sandbox-step ${index < currentStep ? "sandbox-visible" : ""}`}>
-            <span className="sandbox-step-text">{step}</span>
+            <span className="sandbox-step-text">{t(step)}</span>
             {index < currentStep && <CheckCircle fill="#00703C" />}
           </li>
         ))}
