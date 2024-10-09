@@ -218,6 +218,8 @@ const createUpdatePlanProject = async (req) => {
           setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
         }
 
+
+
       case "HYPOTHESIS":
         //here we can always invalidate prev assumptions
         const prevAssumptions = planObject?.assumptions?.map(row => {
@@ -249,6 +251,7 @@ const createUpdatePlanProject = async (req) => {
         }else {
           setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
         }
+       
 
       case "UPLOADDATA":
         setCurrentKey((prev) => prev + 1);

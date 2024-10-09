@@ -17,7 +17,12 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
 
     useEffect(() => {
         if (executionCount < 5) {
-            onSelect(props.props.name, {selectedRegistrationProcess,selectedDistributionProcess,selectedRegistrationDistributionMode})
+            if(resourceDistributionStrategyCode === "MIXED"){
+                onSelect(props.props.name, {selectedRegistrationProcess,selectedDistributionProcess})
+                return;
+            }
+         
+            onSelect(props.props.name,{selectedRegistrationDistributionMode} )
             setExecutionCount((prevCount) => prevCount + 1);
         }
       });
@@ -26,7 +31,7 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
       useEffect(()=>{
     
         if(resourceDistributionStrategyCode === "MIXED"){
-            onSelect(props.props.name, {selectedRegistrationProcess,selectedDistributionProcess,selectedRegistrationDistributionMode})
+            onSelect(props.props.name, {selectedRegistrationProcess,selectedDistributionProcess})
             return;
         }
      
@@ -105,7 +110,7 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
             )}
 
             {/* Show radio buttons only if the code is HOUSE_TO_HOUSE or FIXED_POST */}
-            {["HOUSE_TO_HOUSE", "FIXED_POST", "MIXED"].includes(resourceDistributionStrategyCode) && (
+            {["HOUSE_TO_HOUSE", "FIXED_POST"].includes(resourceDistributionStrategyCode) && (
                 <Card className="assumptionsForm-card">
                     <LabelFieldPair className="assumptionsForm-label-field">
                         <div style={{ width: "100%" }}>
