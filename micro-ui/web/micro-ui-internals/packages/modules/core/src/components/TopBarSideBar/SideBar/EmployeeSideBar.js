@@ -134,9 +134,11 @@ const EmployeeSideBar = () => {
   }
 
   const sortDataByOrderNumber = (data) => {
-    // Sort the current level of data by orderNumber
+    // Sort the current level of data by orderNumber, handling cases where orderNumber might be missing
     data.sort((a, b) => {
-      return a.orderNumber - b.orderNumber;
+      const aOrder = a.orderNumber !== undefined ? a.orderNumber : Infinity; // Use Infinity if orderNumber is missing
+      const bOrder = b.orderNumber !== undefined ? b.orderNumber : Infinity; // Use Infinity if orderNumber is missing
+      return aOrder - bOrder;
     });
   
     // Recursively sort the children if they exist
@@ -151,7 +153,6 @@ const EmployeeSideBar = () => {
 
   const transformedData = transformData(splitKeyValue(configEmployeeSideBar));
   const sortedTransformedData= sortDataByOrderNumber(transformedData);
-
   if (isLoading) {
     return <Loader />;
   }
