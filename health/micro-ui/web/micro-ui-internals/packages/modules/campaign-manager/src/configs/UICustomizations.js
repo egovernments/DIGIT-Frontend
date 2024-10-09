@@ -55,6 +55,52 @@ export const UICustomizations = {
 
     },
   },
+  MyBoundarySearchConfig: {
+    preProcess: (data, additionalDetails) => {
+      console.log("initiall data is", data);
+      data.body.BoundaryTypeHierarchySearchCriteria.hierarchyType = data?.state?.searchForm?.Name;
+      console.log("final data is", data);
+      return data;
+    },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      console.log("the row is", row);
+      const [isActive, setIsActive] = useState(row?.isActive);
+        switch (key) {
+          case "Hierarchy Name":
+            console.log("hoerarchy name", row?.hierarchyType);
+            return row?.hierarchyType;
+            break;
+          case "Levels":
+            console.log("hoerarchy levels", row?.boundaryHierarchy?.[0]);
+            return row?.boundaryHierarchy?.length;
+            break;
+          case "Creation Date":
+            console.log("created time",row?.auditDetails?.createdTime);
+            let epoch = row?.auditDetails?.createdTime;
+            return Digit.DateUtils.ConvertEpochToDate(epoch);
+            // return row?.auditDetails?.createdTime;
+            break;
+          case "Action":
+            console.log("download button")
+            return(
+              <>
+                <Button
+                  type={"button"}
+                  size={"medium"}
+                  icon={"Add"}
+                  variation={"secondary"}
+                  label={t("DOWNLOAD")}
+                  onClick={()=>{
+                      //setShowPopUp(true);
+                  }}
+                />
+              </>
+            )
+        }
+
+    },
+
+  },
   MyCampaignConfigOngoing: {
     preProcess: (data, additionalDetails) => {
       const tenantId = Digit.ULBService.getCurrentTenantId();

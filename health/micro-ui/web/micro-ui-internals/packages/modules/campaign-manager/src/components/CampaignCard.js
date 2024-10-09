@@ -43,6 +43,8 @@ const CampaignCard = () => {
   // const { isLoading, data } = Digit.Hooks.useCustomAPIHook(
   //   reqCriteria
   // );
+  console.log("the url is", `/${window?.contextPath}/employee/campaign/boundary-management`,
+  )
   let links = [
 
     {
@@ -66,6 +68,12 @@ const CampaignCard = () => {
       label: t("NDSS_DASHBOARD"),
       link: "/digit-ui/employee/dss/landing/national-health-dashboard",
       roles: ROLES.NATIONAL_SUPERVISOR,
+      // count: isLoading?"-":data
+    },
+    {
+      label: t("BOUNDARY_MANAGEMENT"),
+      link: `/${window?.contextPath}/employee/campaign/boundary-management?defaultHierarchyType=HIERARCHYTEST&hierarchyType=DEMOTEST6`,
+      roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
     }
   ];

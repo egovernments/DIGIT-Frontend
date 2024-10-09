@@ -45,6 +45,10 @@ import UpdateBoundaryWrapper from "./components/UpdateBoundaryWrapper";
 // import SelectingBoundaryComponent from "./components/SelectingBoundaryComponent";
 import { Wrapper } from "./components/SelectingBoundaryComponent";
 import SelectingBoundariesDuplicate from "./components/SelectingBoundariesDuplicate";
+import Boundary from "./pages/employee/Boundary";
+import GeoPode from "./pages/employee/GeoPode";
+import ViewBoundary from "./pages/employee/ViewBoundary";
+import ViewHierarchy from "./pages/employee/ViewHierarchy";
 
 /**
  * The CampaignModule function fetches store data based on state code, module code, and language, and
@@ -125,6 +129,10 @@ const componentsToRegister = {
   UpdateBoundary,
   UpdateBoundaryWrapper,
   SelectingBoundariesDuplicate,
+  Boundary,
+  GeoPode,
+  ViewBoundary,
+  ViewHierarchy
   // SelectingBoundaryComponent
 };
 
