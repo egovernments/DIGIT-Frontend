@@ -518,7 +518,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       })),
     };
 
-    return result;
+    return [result];
   }
 
 
