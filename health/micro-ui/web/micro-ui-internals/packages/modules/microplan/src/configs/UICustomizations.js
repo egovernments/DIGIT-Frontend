@@ -99,25 +99,39 @@ export const UICustomizations = {
   },
 
   UserManagementConfig: {
-    preProcess: (data) => {
+    preProcess: (data,additionalDetails) => {
       
       const { phone, name } = data?.state?.searchForm || {}
       const { sortOrder } = data?.state?.filterForm || {}
-      let { roleschosen } = data?.state?.filterForm || {}
+      let { roleschosen } = data?.state?.filterForm || []
+      // console.log(additionalDetails["microplanData"])
       // debugger;
+      if(!roleschosen){
+        roleschosen={}
+      }
+      if(Object.keys(roleschosen).length === 0){
+        for(const obj of additionalDetails["microplanData"]){
+          
+          roleschosen[obj["roleCode"]]=true;
+          
+        }
+      }
+      
       let rolesString='';
       if(roleschosen){
         rolesString = Object.keys(roleschosen).filter(role => roleschosen[role] === true).join(',');
       }
+      // debugger;
       console.log("data", data);
+      console.log("additionalDetails",additionalDetails);
 
       data.params.names = name;
-      delete data.params.name;
+      
       data.params.phone = phone;
       // debugger
       data.params.roles=rolesString;
       data.params.tenantId=Digit.ULBService.getCurrentTenantId();
-      delete data.params.roleschosen;
+      cleanObject(data.params);
       // console.log(data,"dat");
       // data.param.roles=roles;
 

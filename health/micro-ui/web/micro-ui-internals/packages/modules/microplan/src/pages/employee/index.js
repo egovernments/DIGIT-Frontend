@@ -7,8 +7,9 @@ import { useMyContext } from "../../utils/context";
 import MicroplanSearch from "./MicroplanSearch";
 import SummaryScreen from "./SummaryScreen";
 import CampaignBoundary from "../../components/CampaignBoundary";
-import TqmInbox from "./UserManagement";
+import UserManagement from "./UserManagement";
 import IndividualSearch from "./User";
+
 
 const bredCrumbStyle={ maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
@@ -46,7 +47,9 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
       { name: "MicroplanNamingConvention" },
       { name: "MicroplanNamingRegx" },
       { name: "ResourceDistributionStrategy"},
-      { name:  "HypothesisAssumptions"},  
+      { name:  "HypothesisAssumptions"},
+      {name: "rolesForMicroplan"}
+      //make change here and import as state
 
     ],
     {
@@ -153,7 +156,7 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
         </React.Fragment>
          <PrivateRoute path={`${path}/setup-microplan`} component={() => <SetupMicroplan hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />} />
          <PrivateRoute path={`${path}/microplan-search`} component={() => <MicroplanSearch></MicroplanSearch>} /> 
-         <PrivateRoute path={`${path}/um`} component={() => <TqmInbox></TqmInbox>} /> 
+         <PrivateRoute path={`${path}/um`} component={() => <UserManagement></UserManagement>} /> 
          <PrivateRoute path={`${path}/us`} component={() => <IndividualSearch></IndividualSearch>} /> 
 
          

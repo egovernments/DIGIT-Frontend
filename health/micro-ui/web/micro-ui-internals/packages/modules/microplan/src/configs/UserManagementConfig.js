@@ -3,7 +3,7 @@ export const tqmInboxConfig = {
   "moduleName": "UserManagementConfig",
   "tqmInboxConfig": [
     {
-      "label": "ACTION_TEST_TQM_INBOX",
+      "label": "USER_MANAGEMENT",
       "type": "inbox",
       "apiDetails": {
         "serviceName": "/health-hrms/employees/_search",
@@ -37,6 +37,9 @@ export const tqmInboxConfig = {
             "secondaryLabel": "ES_COMMON_CLEAR_SEARCH",
             "minReqFields": 0,
             "defaultValues": {
+              name:"",
+              phone:""
+
             },
             "fields": [
               {
@@ -51,14 +54,7 @@ export const tqmInboxConfig = {
                     "marginBottom":"0px"
                   }
                 },
-                "removableTagConf":{
-                  "name":"name",
-                  "label":"TQM_RT_ID",
-                  "valueJsonPath":"id",
-                  "type":"single", // single, multi, date(single), dateRange(single),...etc,
-                  "sessionJsonPath":"searchForm.id",
-                  // "deleteRef":"code"
-                }
+                
               },
               {
                 "label": "CONTACT_NUMBER",
@@ -72,14 +68,7 @@ export const tqmInboxConfig = {
                     "marginBottom":"0px"
                   }
                 },
-                "removableTagConf":{
-                  "name":"phone",
-                  "label":"TQM_RT_ID",
-                  "valueJsonPath":"id",
-                  "type":"single", // single, multi, date(single), dateRange(single),...etc,
-                  "sessionJsonPath":"searchForm.id",
-                  // "deleteRef":"code"
-                }
+                
               },
               // {
               //   "label": "TQM_PLANT_NAME",
@@ -180,7 +169,7 @@ export const tqmInboxConfig = {
                 ]
               }
             ],
-            "label": "TQM_QUALITY_TESTING",
+            "label": "USER_MANAGEMENT",
             "logoIcon": {
               "component": "TqmInboxIcon",
               "customClass": "inbox-links-icon"
