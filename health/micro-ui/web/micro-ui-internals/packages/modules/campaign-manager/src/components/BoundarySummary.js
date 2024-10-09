@@ -2,9 +2,39 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Button, EditIcon, Header, Loader, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Toast , Stepper , TextBlock ,Card } from "@egovernments/digit-ui-components";
+import { Toast , Stepper , TextBlock ,Card  } from "@egovernments/digit-ui-components";
 
-const CampaignDetailsSummary = (props) => {
+import { downloadExcelWithCustomName } from "../utils";
+
+
+
+function boundaryDataGrp(boundaryData) {
+  // Create an empty object to hold grouped data by type
+  const groupedData = {};
+
+  // Iterate through each boundary item in the data
+  boundaryData.forEach((item) => {
+    const { type } = item; // Extract the type
+
+    // If the type doesn't exist in the groupedData, create an array for it
+    if (!groupedData[type]) {
+      groupedData[type] = [];
+    }
+
+    // Add the current item to its corresponding type array
+    groupedData[type].push(item);
+  });
+
+  // Convert the grouped object into an array of objects
+  const result = Object.keys(groupedData).map((type) => ({
+    type, // The type of the boundary
+    boundaries: groupedData[type], // All items that belong to this type
+  }));
+
+  return result;
+}
+
+const BoundarySummary = (props) => {
   const { t } = useTranslation();
   const history = useHistory();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -12,6 +42,7 @@ const CampaignDetailsSummary = (props) => {
   const id = searchParams.get("id");
   const noAction = searchParams.get("action");
   const [showToast, setShowToast] = useState(null);
+  const isPreview = searchParams.get("preview");
   const [currentStep, setCurrentStep] = useState(2);
   const currentKey = searchParams.get("key");
   const [key, setKey] = useState(() => {
@@ -38,11 +69,6 @@ const CampaignDetailsSummary = (props) => {
     window.history.replaceState({}, "", url);
   }
 
-  useEffect(() => {
-    setKey(currentKey);
-    setCurrentStep(currentKey);
-  }, [currentKey]);
-
 
   useEffect(() => {
     updateUrlParams({ key: key });
@@ -56,42 +82,36 @@ const CampaignDetailsSummary = (props) => {
     },
     config: {
       select: (data) => {
+        const boundaryData = boundaryDataGrp(data?.[0]?.boundaries);
         return {
           cards: [
-            {
+            ...boundaryData?.map((item, index) => {
+              return {
+                name: `HIERARCHY_${index + 1}`,
                 sections: [
                   {
-                    type: "DATA",
-                    cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                    cardSecondaryAction: noAction !== "false" && (
-                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                        <span>{t(`CAMPAIGN_EDIT`)}</span>
-                        <EditIcon />
-                      </div>
-                    ),
-                    values: [
-                      {
-                        key: "CAMPAIGN_TYPE",
-                        value: data?.[0]?.projectType ? t(`CAMPAIGN_PROJECT_${data?.[0]?.projectType?.toUpperCase()}`) : t("CAMPAIGN_SUMMARY_NA"),
-                      },
-                      {
-                        key: "CAMPAIGN_NAME",
-                        value: data?.[0]?.campaignName || t("CAMPAIGN_SUMMARY_NA"),
-                      },
-                      {
-                        key: "CAMPAIGN_START_DATE",
-                        value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
-                      },
-                      {
-                        key: "CAMPAIGN_END_DATE",
-                        value: Digit.Utils.date.convertEpochToDate(data?.[0]?.endDate) || t("CAMPAIGN_SUMMARY_NA"),
-                      },
-                    ],
+                    name: `HIERARCHY_${index + 1}`,
+                    type: "COMPONENT",
+                    cardHeader: { value: `${t(item?.type)}` , inlineStyles: { color : "#0B4B66" } },
+                    // cardHeader: { value: t("item?.boundaries?.type") },
+                    component: "BoundaryDetailsSummary",
+                    // cardSecondaryAction: noAction !== "false" && (
+                    //   <div className="campaign-preview-edit-container" onClick={() => handleRedirect(5)}>
+                    //     <span>{t(`CAMPAIGN_EDIT`)}</span>
+                    //     <EditIcon />
+                    //   </div>
+                    // ),
+                    props: {
+                      boundaries: item,
+                    },
                   },
                 ],
-              },
+              };
+            }),
           ],
-          
+          apiResponse: {},
+          additionalDetails: {},
+
           error: data?.[0]?.additionalDetails?.error,
           data: data?.[0],
           status: data?.[0]?.status,
@@ -114,54 +134,43 @@ const CampaignDetailsSummary = (props) => {
       setTimeout(closeToast, 5000);
     }
   }, [showToast]);
-  useEffect(() => {
-    if (data?.status === "failed" && data?.error) {
-      setShowToast({ label: data?.error, key: "error" });
-    }
-    if (data?.status === "creating") {
-      setShowToast({ label: "CAMPAIGN_STATUS_CREATING_MESSAGE", key: "info" });
-    }
-    if (data?.status === "created" && data?.userGenerationSuccess?.length > 0) {
-      setShowToast({ label: "CAMPAIGN_USER_GENERATION_SUCCESS", key: "success" });
-    }
-  }, [data]);
+  const downloadUserCred = async () => {
+    downloadExcelWithCustomName(userCredential);
+  };
 
-  const updatedObject = { ...data };
+  useEffect(() => {
+    setKey(currentKey);
+    setCurrentStep(currentKey);
+  }, [currentKey]);
 
   const onStepClick = (currentStep) => {
-    if (!props?.props?.sessionData?.HCM_CAMPAIGN_NAME || !props?.props?.sessionData?.HCM_CAMPAIGN_TYPE) return;
-    if(currentStep === 0){
-      setKey(1);
-    }
-    else if(currentStep === 1){
-      setKey(2);
-    }
-    else if(currentStep === 3){
-      if (!props?.props?.sessionData?.HCM_CAMPAIGN_DATE) return;
-      else setKey(4);
-    }
-    else setKey(3);
+    if (!props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA) return;
+    if (currentStep === 0) {
+      setKey(5);
+    } else setKey(6);
   };
 
 
+  const updatedObject = { ...data };
+
   return (
     <>
-    <div className="container-full">
+     <div className="container-full">
         <div className="card-container">
           <Card className="card-header-timeline">
-            <TextBlock subHeader={t("HCM_CAMPAIGN_DETAILS")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+            <TextBlock subHeader={t("HCM_BOUNDARY_DETAILS")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
           <Card className="stepper-card">
-            <Stepper customSteps={["HCM_CAMPAIGN_TYPE","HCM_CAMPAIGN_NAME", "HCM_CAMPAIGN_DATE" , "HCM_SUMMARY"]} currentStep={4} onStepClick={onStepClick} direction={"vertical"} />
+            <Stepper customSteps={["HCM_BOUNDARY_DETAILS", "HCM_SUMMARY"]} currentStep={2} onStepClick={onStepClick} direction={"vertical"} />
           </Card>
         </div>
 
         <div className="card-container-delivery">
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Header className="summary-header">{t("HCM_CAMPAIGN_DETAILS_SUMMARY")}</Header>
+        <Header className="summary-header">{t("ES_BOUNDARY_SUMMARY_HEADING")}</Header>
       </div>
       <div className="campaign-summary-container">
-        <ViewComposer data={updatedObject}  />
+        <ViewComposer data={updatedObject} />
         {showToast && (
           <Toast
             type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : "success"}
@@ -176,4 +185,4 @@ const CampaignDetailsSummary = (props) => {
   );
 };
 
-export default CampaignDetailsSummary;
+export default BoundarySummary;
