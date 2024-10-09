@@ -308,6 +308,7 @@ const CampaignSummary = (props) => {
 
         const target = data?.[0]?.deliveryRules;
         const boundaryData = boundaryDataGrp(data?.[0]?.boundaries);
+        const cycleData = reverseDeliveryRemap(target, t);
         return {
           cards: [
             {
