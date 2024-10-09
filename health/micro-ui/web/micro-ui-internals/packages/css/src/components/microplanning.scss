@@ -2514,28 +2514,19 @@ $border-color: rgba(214, 213, 212, 1);
   margin-top: 2rem;
   margin-bottom: 1rem;
 }
-
-
-
-.assumptions-label-field >  span {
-  
-  font-weight: bold;
-  
-}
-
-.delete-button {
+.mp-hypothesis-label-field{
   display: flex;
-  cursor: pointer;  
-  margin-left: 1rem;
+  align-items: baseline;
+  margin: 1rem 0rem 0.5rem 0rem;
+}
+.mp-hypothesis-label-field > div > span {
+  font-weight: bold;
   font-size: 1.2rem;
-  
 }
 
-
-.fieldv1-container{
+.fieldv1-deleteIcon-container{
   display: flex;
   justify-content: center;
-  width:30rem;
   align-items: center;
 }
 

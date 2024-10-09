@@ -113,7 +113,7 @@ const addNewAssumption = () => {
                     {assumptions.map((item, index)=>{
 
                         return (
-                              <LabelFieldPair className="assumptions-label-field" style={{ alignItems: "baseline" , display: "flex" , margin: "1rem 0rem 0.5rem 0rem"}} key={index}>
+                              <LabelFieldPair className="mp-hypothesis-label-field" key={index}>
                                     <div  className="name-container"  style={{width:"20rem"}}>
                                       <span>{`${t(item)}`}
                                       <span className="mandatory-span">*</span>
@@ -121,7 +121,7 @@ const addNewAssumption = () => {
                                     </div>
 
 
-                                    <div className="fieldv1-container">
+                                    <div className="fieldv1-deleteIcon-container">
                                         <FieldV1 
                                           type="number"
                                           name={item}
@@ -147,9 +147,9 @@ const addNewAssumption = () => {
                           )
                     })}
 
-                <div style={{background:"#eee", height:"0.2rem", marginBottom:"1.5rem", marginTop:"1rem"}}></div>
+                <div style={{background:"#eee", height:"0.2rem",margin:"1.5rem 1.0rem"}}></div>
                     <Button
-                      className="custom-class"
+                      className="custom-class"  
                       icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem",}} fill={PRIMARY_COLOR}/>}
                       iconFill=""
                       label={t("ADD_ASSUMPTION")}

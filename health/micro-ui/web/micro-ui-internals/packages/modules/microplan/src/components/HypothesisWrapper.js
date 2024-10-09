@@ -33,7 +33,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         }  
       };
      const isLastStep = () => {
-        Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: false }); 
+        Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep:false }); 
         Digit.Utils.microplanv1.updateUrlParams({ internalKey:internalKey }); 
      }  
     
