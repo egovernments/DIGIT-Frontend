@@ -112,6 +112,18 @@ const CreateResource = async (req) => {
   }
 };
 
+const searchPlanConfig = async (body) => {
+  //assuming it will be success
+  const response = await Digit.CustomService.getResponse({
+    url: "/plan-service/config/_search",
+    useCache: false,
+    method: "POST",
+    userService: true,
+    body,
+  });
+  return response?.PlanConfiguration?.[0];
+};
+
 const updateProject = async (req) => {
   const planRes = await Digit.CustomService.getResponse({
     url: "/project-factory/v1/project-type/update",
@@ -136,10 +148,10 @@ const updatePlan = async (req) => {
 const createUpdatePlanProject = async (req) => {
   try {
     //later this object must have an invalidation config which can be used to invalidate data such as files uploaded,assumptions,formulas etc...
+
     const { totalFormData, state, setShowToast, setCurrentKey, setCurrentStep, config, campaignObject, planObject } = req;
     const { microplanId, campaignId } = Digit.Hooks.useQueryParams();
-    const tenantId = Digit.ULBService.getCurrentTenantId();
-
+    const tenantId = Digit.ULBService.getCurrentTenantId()
     //now basically we need to decide from which screen this hook was triggered and take action accordingly
 
     const triggeredFrom = config.name;
@@ -221,8 +233,15 @@ const createUpdatePlanProject = async (req) => {
 
 
       case "HYPOTHESIS":
+        //fetch current plan
+        const fetchedPlanForHypothesis = await searchPlanConfig({
+          PlanConfigurationSearchCriteria: {
+            tenantId,
+            id: microplanId,
+          },
+        })
         //here we can always invalidate prev assumptions
-        const prevAssumptions = planObject?.assumptions?.map(row => {
+        const prevAssumptions = fetchedPlanForHypothesis?.assumptions?.map(row => {
           const updatedRow = {
             ...row,
             active:false
@@ -233,7 +252,7 @@ const createUpdatePlanProject = async (req) => {
           return row.category && row.key && row.value
         })
         const upatedPlanObjHypothesis = {
-          ...planObject,
+          ...fetchedPlanForHypothesis,
           assumptions:[
             ...prevAssumptions,
             ...assumptionsToUpdate
@@ -251,8 +270,33 @@ const createUpdatePlanProject = async (req) => {
         }else {
           setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
         }
-       
+      case "SUB_HYPOTHESIS":
+        //first fetch current plan object
+        const fetchedPlanForSubHypothesis = await searchPlanConfig({
+          PlanConfigurationSearchCriteria: {
+            tenantId,
+            id: microplanId,
+          },
+        })
+        const prevAssumptionsForSubHypothesis = fetchedPlanForSubHypothesis?.assumptions?.map(row => {
+          const updatedRow = {
+            ...row,
+            active:false
+          }
+          return updatedRow
+        })
+        //get the list of assumptions from UI
+        const assumptionsToUpdateFromUI = req?.assumptionsToUpdate
+        //mix the current + api res
+        const upatedPlanObjSubHypothesis = {
+          ...fetchedPlanForSubHypothesis,
+          assumptions:[
+            ...prevAssumptionsForSubHypothesis,
+            ...assumptionsToUpdateFromUI
+          ]
+        }
 
+        await updatePlan(upatedPlanObjSubHypothesis);
       case "UPLOADDATA":
         setCurrentKey((prev) => prev + 1);
         setCurrentStep((prev) => prev + 1);
