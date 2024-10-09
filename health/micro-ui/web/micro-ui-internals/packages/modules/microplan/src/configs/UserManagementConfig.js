@@ -66,7 +66,8 @@ export const tqmInboxConfig = {
                   "error": "TQM_ERR_VALID_TEST_ID",
                   "style":{
                     "marginBottom":"0px"
-                  }
+                  },
+        
                 },
                 
               },
@@ -108,6 +109,7 @@ export const tqmInboxConfig = {
               {
                 label: "Name",
                 jsonPath: "user.name",
+                additionalCustomization:true
               },
               {
                 label: "Email",
@@ -199,7 +201,7 @@ export const tqmInboxConfig = {
             "fields": [
 
               {
-                "label": "TQM_PLANT_NAME",
+                "label": "ROLES",
                 "type": "apicheckboxes",
                 "isMandatory": false,
                 "disable": false,
@@ -215,14 +217,6 @@ export const tqmInboxConfig = {
                   "moduleName": "UserManagementConfig",
                   "customfn": "rolesForFilter"
                 },
-                "removableTagConf":{
-                  "name":"plantCodes",
-                  "label":"TQM_RT_PLANT",
-                  "valueJsonPath":"i18nKey",
-                  "type":"multi", // single, multi, date(single), dateRange(single),...etc,
-                  "sessionJsonPath":"searchForm.plantCodes",
-                  "deleteRef":"id"
-                }
               },
               // {
               //   label: "CAMPAIGN_SEARCH_TYPE",

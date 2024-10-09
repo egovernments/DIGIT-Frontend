@@ -109,4 +109,22 @@
   color:orange;
   margin-top: 0.2rem;
 }
+
+.microplan-container {
+  max-width: 15rem; /* Set the desired maximum width */
+  word-wrap: break-word; /* Allows breaking within words */
+  white-space: normal; /* Ensures text wraps normally */
+  overflow-wrap: break-word; /* Break long words at the edge */
+}
+
+.microplan-link {
+  cursor: pointer;
+  color: blue;
+  text-decoration: underline;
+}
+
+.microplan-link:hover {
+  color: darkblue;
+}
+
   
