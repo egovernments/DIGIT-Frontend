@@ -19,7 +19,13 @@ export const UICustomizations = {
   MyChecklistSearchConfig: {
     preProcess: (data, additionalDetails) => {
       data.body.ServiceDefinitionCriteria.code.length=0;
-      let pay = window.history.state.name + '.' + data?.state?.searchForm?.Type?.list + '.' + data?.state?.searchForm?.Role?.code;
+      let listTemp = data?.state?.searchForm?.Type?.list;
+      let codeTemp = data?.state?.searchForm?.Role?.code;
+      let listt = "";
+      let codee = "";
+      if(listTemp) listt = listTemp.toUpperCase().replace(/ /g, "_");
+      if(codeTemp) codee = codeTemp.toUpperCase().replace(/ /g, "_");
+      let pay = window.history.state.name + '.' + listt + '.' + codee;
       data.body.ServiceDefinitionCriteria.code.push(pay);
       return data;
     },
