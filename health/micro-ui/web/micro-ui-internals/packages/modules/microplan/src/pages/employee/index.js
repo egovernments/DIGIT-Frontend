@@ -42,7 +42,7 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
     "hcm-microplanning",
     [
       { name: "MicroplanNamingConvention" },
-      { name: "MicroplanNamingRegx" },
+      { name: "MicroplanNamingRegex" },
       { name: "ResourceDistributionStrategy"},
       { name: "HypothesisAssumptions"},
       { name: "RuleConfigureOutput" },
