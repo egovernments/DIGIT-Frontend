@@ -65,6 +65,30 @@ export const data = (project) => {
         ],
       },
       {
+        navigationKey: "card5",
+        sections: [
+          {
+            navigationKey: "card5",
+
+            type: "COMPONENT",
+            component: "TargetComponent",
+            props: { targets: project?.Project?.[0]?.targets, project: project?.Project?.[0] },
+          },
+        ],
+      },
+      {
+        navigationKey: "card3",
+        sections: [
+          {
+            navigationKey: "card3",
+
+            type: "COMPONENT",
+            component: "ProjectChildrenComponent",
+            props: { projectId: project?.Project?.[0]?.id, ...project },
+          },
+        ],
+      },
+      {
         navigationKey: "card2",
         sections: [
           {
@@ -87,18 +111,7 @@ export const data = (project) => {
           },
         ],
       },
-      {
-        navigationKey: "card3",
-        sections: [
-          {
-            navigationKey: "card3",
-
-            type: "COMPONENT",
-            component: "ProjectChildrenComponent",
-            props: { projectId: project?.Project?.[0]?.id, ...project },
-          },
-        ],
-      },
+    
       {
         navigationKey: "card4",
         sections: [
@@ -111,24 +124,23 @@ export const data = (project) => {
           },
         ],
       },
-      {
-        navigationKey: "card5",
-        sections: [
-          {
-            navigationKey: "card5",
-
-            type: "COMPONENT",
-            component: "TargetComponent",
-            props: { targets: project?.Project?.[0]?.targets, project: project?.Project?.[0] },
-          },
-        ],
-      },
+    
     ],
     apiResponse: {},
     additionalDetails: {},
     horizontalNav: {
       showNav: true,
       configNavItems: [
+        {
+          name: "card5",
+          active: true,
+          code: "Targets",
+        },
+        {
+          name: "card3",
+          active: true,
+          code: "Children",
+        },
         {
           name: "card2",
           active: true,
@@ -139,21 +151,13 @@ export const data = (project) => {
           active: true,
           code: "Project Staff",
         },
-        {
-          name: "card3",
-          active: true,
-          code: "Children",
-        },
+     
         {
           name: "card4",
           active: true,
           code: "Facility",
         },
-        {
-          name: "card5",
-          active: true,
-          code: "Targets",
-        },
+       
       ],
       activeByDefault: "card1",
     },
