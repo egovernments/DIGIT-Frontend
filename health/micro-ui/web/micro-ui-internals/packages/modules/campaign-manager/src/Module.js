@@ -133,7 +133,6 @@ const componentsToRegister = {
   UpdateBoundary,
   UpdateBoundaryWrapper,
   SelectingBoundariesDuplicate,
-  XlsPreview,
   BulkUpload,
   CampaignUpdateSummary,
   XlsPreview,

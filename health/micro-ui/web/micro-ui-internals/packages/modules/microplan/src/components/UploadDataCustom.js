@@ -5,8 +5,6 @@ import { Card, Modal, CardText } from "@egovernments/digit-ui-react-components";
 import Ajv from "ajv";
 import XLSX from "xlsx";
 import { InfoCard, PopUp, Toast, Button, DownloadIcon, Stepper, TextBlock } from "@egovernments/digit-ui-components";
-// import XlsPreview from "../../../campaign-manager/src/components/XlsPreview";
-// import BulkUpload from "../../../campaign-manager/src/components/BulkUpload";
 
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
