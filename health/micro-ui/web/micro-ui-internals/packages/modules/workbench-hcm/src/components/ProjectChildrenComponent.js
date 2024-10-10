@@ -3,11 +3,14 @@ import { useTranslation } from "react-i18next";
 import { Card, Header, Button, Loader } from "@egovernments/digit-ui-react-components";
 import { Link } from "react-router-dom";
 import { data } from "../configs/ViewProjectConfig"; 
+import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 
 const ProjectChildrenComponent = (props) => {
     const { t } = useTranslation();
+
+    const url = getProjectServiceUrl();
     const requestCriteria = {
-        url: "/project/v1/_search",
+        url: `${url}/v1/_search`,
         changeQueryName: props.projectId,
         params: {
             tenantId: "mz",

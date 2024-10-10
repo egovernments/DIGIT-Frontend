@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import { data } from "../configs/ViewProjectConfig";
 import ProjectStaffModal from "./ProjectStaffModal";
 import ConfirmationDialog from "./ConfirmationDialog";
+import getProjectServiceUrl from "../utils/getProjectServiceUrl";
+const healthProjecturl = getProjectServiceUrl();
 
 const ProjectStaffComponent = (props) => {
     const { t } = useTranslation();
@@ -24,9 +26,8 @@ const ProjectStaffComponent = (props) => {
     const [showPopup, setShowPopup] = useState(false);
 
     const { tenantId, projectId } = Digit.Hooks.useQueryParams();
-
     const requestCriteria = {
-        url: "/project/staff/v1/_search",
+        url: `${healthProjecturl}/staff/v1/_search`,
         changeQueryName: props.projectId,
         params: {
             tenantId: "mz",
@@ -148,15 +149,14 @@ const ProjectStaffComponent = (props) => {
   const handleInputChange = (event) => {
     setUserName(event.target.value);
   };
-
   const reqCriteria = {
-    url: "/project/staff/v1/_create",
+     url: `${healthProjecturl}/staff/v1/_create`,
 
     config: false,
   };
 
   const reqDeleteCriteria = {
-    url: "/project/staff/v1/_delete",
+    url: `${healthProjecturl}/staff/v1/_delete`,
 
     config: false,
   };

@@ -4,9 +4,6 @@ import { useTranslation } from "react-i18next";
 import { EmployeeModuleCard } from "@egovernments/digit-ui-react-components";
 
 const ROLES = {
-  LOCALISATION: ["EMPLOYEE", "SUPERUSER", "EMPLOYEE_COMMON", "LOC_ADMIN", "SYSTEM_ADMINISTRATOR"],
-  MDMS: ["MDMS_ADMIN", "EMPLOYEE", "SUPERUSER", "SYSTEM_ADMINISTRATOR"],
-  DSS: ["STADMIN", "SYSTEM_ADMINISTRATOR"],
   HCM:["SYSTEM_ADMINISTRATOR","CAMPAIGN_ADMIN"]
 };
 

@@ -3,13 +3,14 @@ import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 import { Card, Header, Button, Loader } from "@egovernments/digit-ui-react-components";
 import { data } from "../configs/ViewProjectConfig";
+import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 
 const ProjectBeneficiaryComponent = (props) => {
     const { t } = useTranslation();
     const [productIds, setProductIds] = useState([]);
-
+    const url = getProjectServiceUrl();
     const requestCriteria = {
-        url: "/project/resource/v1/_search",
+        url: `${url}/resource/v1/_search`,
         changeQueryName: props.projectId,
         params: {
             tenantId: "mz",

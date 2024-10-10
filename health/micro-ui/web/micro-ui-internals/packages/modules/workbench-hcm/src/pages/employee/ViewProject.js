@@ -5,6 +5,8 @@ import { Header, Card, Loader, ViewComposer, ActionBar, SubmitBar, Toast, Menu }
 import { data } from "../../configs/ViewProjectConfig";
 import AssignCampaign from "../../components/AssignCampaign";
 import AssignTarget from "../../components/AssignTarget";
+import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
+const projectUrl = getProjectServiceUrl();
 
 const ViewProject = () => {
   const { t } = useTranslation();
@@ -57,8 +59,9 @@ const ViewProject = () => {
       }
     }
   };
+  
   const requestCriteria = {
-    url: "/project/v1/_search",
+      url: `${projectUrl}/v1/_search`,
     changeQueryName: projectId || projectNumber,
     params: {
       tenantId,
@@ -93,7 +96,7 @@ const ViewProject = () => {
   let config = null;
 
   const reqProjectCreate = {
-    url: "/project/v1/_create",
+    url: `${projectUrl}/v1/_create`,
     params: {},
     body: {},
     config: {
@@ -147,9 +150,9 @@ const ViewProject = () => {
     setShowEditDateModal(false);
     setShowTargetModal(false);
   };
-
+  
   const reqCriteria = {
-    url: "/project/v1/_update",
+    url: `${projectUrl}/v1/_update`,
     config: false,
   };
 

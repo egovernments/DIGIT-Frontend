@@ -5,9 +5,9 @@ import { data } from "../configs/ViewProjectConfig";
 
 const FacilityComponent = (props) => {
     const { t } = useTranslation();
-
+    const url = getProjectServiceUrl();
     const requestCriteria = {
-        url: "/project/facility/v1/_search",
+        url: `${url}/facility/v1/_search`,
         changeQueryName: props.projectId,
         params: {
             tenantId: "mz",

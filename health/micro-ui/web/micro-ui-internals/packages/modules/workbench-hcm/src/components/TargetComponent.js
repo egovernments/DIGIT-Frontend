@@ -54,9 +54,9 @@ const TargetComponent = (props) => {
   // };
   
 
-
+  const url = getProjectServiceUrl();
   const reqCriteria = {
-    url: "/project/v1/_update",
+   url: `${url}/v1/_update`,
     config: false
   };
 
