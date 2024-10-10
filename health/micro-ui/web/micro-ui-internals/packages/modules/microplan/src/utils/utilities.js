@@ -157,6 +157,11 @@ const formValidator = (formData, key, state) => {
 
       return null
   }
+
+  const uploadDataValidator = (formData)=>{
+    if(formData?.isSuccess) return null;
+    return { key: "error", label: "ERROR_VALID_MANDATORY_FILES" }; 
+  }
   
   
 
@@ -172,6 +177,8 @@ const formValidator = (formData, key, state) => {
        return assumptionsFormValidator(formData);
     case "Assumptions":
         return microplanAssumptionsValidator(formData);  
+    case "uploadData":
+        return uploadDataValidator(formData);
 
     default:
       return null;
