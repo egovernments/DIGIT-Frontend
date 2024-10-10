@@ -2,6 +2,7 @@ import { Button, Header, SVG, Toast } from "@egovernments/digit-ui-react-compone
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import AssignTarget from "./AssignTarget";
+import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 
 const TargetComponent = (props) => {
   const { t } = useTranslation();
