@@ -23,10 +23,12 @@ const UserManagement = () => {
     const history=useHistory();
 
     const onClickRow = (data) => {
-        
-        const row=data.cells[0].value;
-        history.push(`/digit-ui/employee/hrms/details/mz/${row}`);
-    
+        if (Array.isArray(data.cells) && data.cells.length > 0) {
+          const row = data.cells[0].value;
+          history.push(`/digit-ui/employee/hrms/details/mz/${row}`);
+        } else {
+          console.error("Invalid data format: cells array is missing or empty.");
+        }
       }
 
     

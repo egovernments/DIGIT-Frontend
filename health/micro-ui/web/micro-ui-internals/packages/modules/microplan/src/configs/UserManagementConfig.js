@@ -138,7 +138,7 @@ export const UserManagementConfig = {
         },
         "filter": {
           "uiConfig": {
-            "headerLabel": "ROLESS",
+            "headerLabel": "ROLES",
             "secondaryLabel": "ES_COMMON_CLEAR_SEARCH",
             "formClassName": "filter",
             "type": "filter",
