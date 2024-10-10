@@ -7,7 +7,7 @@ import Otp from "./pages/employee/Otp";
 import ViewUrl from "./pages/employee/ViewUrl";
 import CustomErrorComponent from "./components/CustomErrorComponent";
 
-export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, initData, defaultLanding = "citizen" }) => {
+export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen" }) => {
   const history = useHistory();
   const { pathname } = useLocation();
   const innerWidth = window.innerWidth;
@@ -60,6 +60,7 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, initData, de
     mobileView,
     handleUserDropdownSelection,
     logoUrl,
+    logoUrlWhite,
     DSO,
     stateCode,
     modules,
@@ -84,7 +85,7 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, initData, de
   );
 };
 
-export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, initData, defaultLanding = "citizen" }) => {
+export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen" }) => {
   // const globalPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
   const { data: storeData } = Digit.Hooks.useStore.getInitData();
   const { stateInfo } = storeData || {};
@@ -122,6 +123,7 @@ export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, initD
               modules={modules}
               appTenants={appTenants}
               logoUrl={logoUrl}
+              logoUrlWhite={logoUrlWhite}
               initData={initData}
               defaultLanding={defaultLanding}
             />

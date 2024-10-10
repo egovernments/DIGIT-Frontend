@@ -19,6 +19,7 @@ const TopBar = ({
   userOptions,
   handleUserDropdownSelection,
   logoUrl,
+  logoUrlWhite,
   showLanguageChange = true,
 }) => {
   const [profilePic, setProfilePic] = React.useState(null);
@@ -155,7 +156,7 @@ const TopBar = ({
               {t(`ULBGRADE_${cityDetails?.city?.ulbGrade.toUpperCase().replace(" ", "_").replace(".", "_")}`).toUpperCase()}
             </>
           ) : (
-            <img className="state" src={logoUrl} alt="State Logo" />
+            <img className="state" src={logoUrlWhite} alt="State Logo" />
           )
         ) : (
           <>

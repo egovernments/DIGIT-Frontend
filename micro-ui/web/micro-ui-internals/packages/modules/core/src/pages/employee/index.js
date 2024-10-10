@@ -26,6 +26,7 @@ const EmployeeApp = ({
   mobileView,
   handleUserDropdownSelection,
   logoUrl,
+  logoUrlWhite,
   DSO,
   stateCode,
   modules,
@@ -60,6 +61,7 @@ const EmployeeApp = ({
               mobileView={mobileView}
               handleUserDropdownSelection={handleUserDropdownSelection}
               logoUrl={logoUrl}
+              logoUrlWhite={logoUrlWhite}
               showSidebar={isUserProfile ? true : false}
               showLanguageChange={!showLanguageChange}
             />
@@ -120,6 +122,7 @@ const EmployeeApp = ({
             mobileView={mobileView}
             handleUserDropdownSelection={handleUserDropdownSelection}
             logoUrl={logoUrl}
+            logoUrlWhite={logoUrlWhite}
             modules={modules}
           />
           <div className={`main ${DSO ? "m-auto" : ""} digit-home-main`}>
