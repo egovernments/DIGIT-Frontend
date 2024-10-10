@@ -58,8 +58,8 @@ const formValidator = (formData, key, state) => {
 
   const microplanDetailsValidator = () => {
     function validateName(name) {
-      const microplanNamingRegxString = state?.MicroplanNamingRegx?.[0]?.data;
-      const namePattern = new RegExp(microplanNamingRegxString);
+      const microplanNamingRegexString = state?.MicroplanNamingRegex?.[0]?.data;
+      const namePattern = new RegExp(microplanNamingRegexString);
       return namePattern.test(name);
     }
 
