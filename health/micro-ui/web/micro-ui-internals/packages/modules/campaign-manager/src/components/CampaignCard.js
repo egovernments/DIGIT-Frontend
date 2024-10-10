@@ -43,8 +43,6 @@ const CampaignCard = () => {
   // const { isLoading, data } = Digit.Hooks.useCustomAPIHook(
   //   reqCriteria
   // );
-  console.log("the url is", `/${window?.contextPath}/employee/campaign/boundary-management`,
-  )
   let links = [
 
     {
