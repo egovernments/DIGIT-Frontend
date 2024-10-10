@@ -68,7 +68,7 @@ export const useResourceData = async (data, hierarchyType, type, tenantId, id , 
         Error.isError = true;
         return Error;
       } else {
-        Error = errorMessage;
+        Error = {error:String(error.message)};
         Error.isError = true;
         return Error;
       }

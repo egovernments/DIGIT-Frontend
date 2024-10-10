@@ -47,6 +47,7 @@ import { Wrapper } from "./components/SelectingBoundaryComponent";
 import SelectingBoundariesDuplicate from "./components/SelectingBoundariesDuplicate";
 import CampaignUpdateSummary from "./components/CampaignUpdateSummary";
 import XlsPreview from "./components/XlsPreview";
+import BulkUpload from "./components/BulkUpload";
 import BoundarySummary from "./components/BoundarySummary";
 
 import MultiSelectDropdown from "./components/MultiSelectDropdown";
@@ -132,6 +133,7 @@ const componentsToRegister = {
   UpdateBoundary,
   UpdateBoundaryWrapper,
   SelectingBoundariesDuplicate,
+  BulkUpload,
   CampaignUpdateSummary,
   XlsPreview,
   MultiSelectDropdownBoundary:MultiSelectDropdown,
