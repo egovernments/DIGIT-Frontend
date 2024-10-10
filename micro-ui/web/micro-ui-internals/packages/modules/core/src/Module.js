@@ -21,7 +21,6 @@ const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLand
     return <Loader page={true} />;
   }
   const data=getStore(initData, moduleReducers(initData)) || {};
-
   const i18n = getI18n();
   if(!Digit.ComponentRegistryService.getComponent("PrivacyComponent")){
     Digit.ComponentRegistryService.setComponent("PrivacyComponent", PrivacyComponent);
@@ -37,6 +36,7 @@ const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLand
               modules={initData?.modules}
               appTenants={initData.tenants}
               logoUrl={initData?.stateInfo?.logoUrl}
+              logoUrlWhite={initData?.stateInfo?.logoUrlWhite}
               defaultLanding={defaultLanding}
             />
           ) : (

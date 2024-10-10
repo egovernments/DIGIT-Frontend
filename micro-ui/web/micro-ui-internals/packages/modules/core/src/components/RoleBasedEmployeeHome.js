@@ -77,6 +77,8 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
           ? "Search"
           : linkUrl.includes("edit")
           ? "Edit"
+          : linkUrl.includes("dss")
+          ? "Dashboard"
           : "PhonelinkSetup",
         // link: queryParamIndex === -1 ? linkUrl : linkUrl.substring(0, queryParamIndex),
         queryParams: queryParamIndex === -1 ? null : linkUrl.substring(queryParamIndex),

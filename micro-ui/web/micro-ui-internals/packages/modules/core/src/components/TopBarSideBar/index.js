@@ -12,6 +12,7 @@ const TopBarSideBar = ({
   mobileView,
   handleUserDropdownSelection,
   logoUrl,
+  logoUrlWhite,
   showSidebar = true,
   showLanguageChange,
   linkData,
@@ -58,6 +59,7 @@ const TopBarSideBar = ({
         userOptions={userOptions}
         handleUserDropdownSelection={handleUserDropdownSelection}
         logoUrl={logoUrl}
+        logoUrlWhite={logoUrlWhite}
         showLanguageChange={showLanguageChange}
       />
       {showDialog && <LogoutDialog onSelect={handleOnSubmit} onCancel={handleOnCancel} onDismiss={handleOnCancel}></LogoutDialog>}
