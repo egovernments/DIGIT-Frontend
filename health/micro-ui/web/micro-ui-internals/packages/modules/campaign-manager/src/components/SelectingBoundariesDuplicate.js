@@ -3,7 +3,7 @@ import { CardText, Card, Header } from "@egovernments/digit-ui-react-components"
 import { useTranslation } from "react-i18next";
 import { useLocation, useHistory } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
-import { InfoCard , PopUp } from "@egovernments/digit-ui-components";
+import { InfoCard, PopUp, Stepper, TextBlock } from "@egovernments/digit-ui-components";
 
 const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
@@ -21,18 +21,30 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   );
   const [executionCount, setExecutionCount] = useState(0);
   const [showPopUp, setShowPopUp] = useState(null);
-  const [updateBoundary , setUpdateBoundary] = useState(true);
+  const [updateBoundary, setUpdateBoundary] = useState(true);
+  const [currentStep, setCurrentStep] = useState(2);
+  const currentKey = searchParams.get("key");
   const [key, setKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
-//   const [updatedSelected , setUpdatedSelected] = useState([]);
+  //   const [updatedSelected , setUpdatedSelected] = useState([]);
 
+  useEffect(() => {
+    setKey(currentKey);
+    setCurrentStep(currentKey);
+  }, [currentKey]);
+
+  const onStepClick = (currentStep) => {
+    if (!props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA) return;
+    if (currentStep === 0) {
+      setKey(5);
+    } else setKey(6);
+  };
 
   useEffect(() => {
     onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions });
   }, [selectedData, boundaryOptions]);
-
 
   useEffect(() => {
     setSelectedData(
@@ -55,19 +67,19 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   });
 
   useEffect(() => {
-      if (
-        props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length > 0 ||
-        props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length > 0 ||
-        props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.length > 0
-      ) {
-        setUpdateBoundary(true);
+    if (
+      props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length > 0 ||
+      props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length > 0 ||
+      props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.length > 0
+    ) {
+      setUpdateBoundary(true);
     }
   }, [props?.props?.sessionData, updateBoundary]);
 
-  const handleBoundaryChange =(value) =>{
+  const handleBoundaryChange = (value) => {
     setBoundaryOptions(value?.boundaryOptions);
     setSelectedData(value?.selectedData);
-  }
+  };
 
   function updateUrlParams(params) {
     const url = new URL(window.location.href);
@@ -77,52 +89,62 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     window.history.replaceState({}, "", url);
   }
 
-
   useEffect(() => {
     updateUrlParams({ key: key });
     window.dispatchEvent(new Event("checking"));
   }, [key]);
 
-
-
   return (
     <>
-      <Card>
-        <Header>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</Header>
-        <p className="description-type">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
-        <Wrapper
-          hierarchyType={hierarchyType}
-          lowest={lowestHierarchy}
-          selectedData={selectedData}
-          boundaryOptions={boundaryOptions}
-          updateBoundary ={updateBoundary}
-          hierarchyData = {props?.props?.hierarchyData}
-          isMultiSelect ={"true"}
-        //   onSelect={(value) => {
-        //     setSelectedData(value?.selectedData);
-        //     setBoundaryOptions(value?.boundaryOptions);
-        //   }}
-        onSelect={(value) => {
-            handleBoundaryChange(value);
-          }}
-        ></Wrapper>
-      </Card>
-      <InfoCard
-        populators={{
-          name: "infocard",
-        }}
-        variant="default"
-        style={{ margin: "0rem", maxWidth: "100%" }}
-        additionalElements={[
-          <span style={{ color: "#505A5F" }}>
-            {t("HCM_BOUNDARY_INFO ")}
-            <a href={`mailto:${mailConfig?.["HCM-ADMIN-CONSOLE"]?.mailConfig?.[0]?.mailId}`} style={{ color: "black" }}>
-              {mailConfig?.["HCM-ADMIN-CONSOLE"]?.mailConfig?.[0]?.mailId}
-            </a>
-          </span>,
-        ]}
-        label={"Info"}
-      />
+      <div className="container-full">
+        <div className="card-container">
+          <Card className="card-header-timeline">
+            <TextBlock subHeader={t("HCM_BOUNDARY_DETAILS")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+          </Card>
+          <Card className="stepper-card">
+            <Stepper customSteps={["HCM_BOUNDARY_DETAILS", "HCM_SUMMARY"]} currentStep={1} onStepClick={onStepClick} direction={"vertical"} />
+          </Card>
+        </div>
+
+        <div className="card-container-delivery">
+          <Card>
+            <Header>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</Header>
+            <p className="description-type">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
+            <Wrapper
+              hierarchyType={hierarchyType}
+              lowest={lowestHierarchy}
+              selectedData={selectedData}
+              boundaryOptions={boundaryOptions}
+              updateBoundary={updateBoundary}
+              hierarchyData={props?.props?.hierarchyData}
+              isMultiSelect={"true"}
+              //   onSelect={(value) => {
+              //     setSelectedData(value?.selectedData);
+              //     setBoundaryOptions(value?.boundaryOptions);
+              //   }}
+              onSelect={(value) => {
+                handleBoundaryChange(value);
+              }}
+            ></Wrapper>
+          </Card>
+          <InfoCard
+            populators={{
+              name: "infocard",
+            }}
+            variant="default"
+            style={{ margin: "0rem", maxWidth: "100%" }}
+            additionalElements={[
+              <span style={{ color: "#505A5F" }}>
+                {t("HCM_BOUNDARY_INFO ")}
+                <a href={`mailto:${mailConfig?.["HCM-ADMIN-CONSOLE"]?.mailConfig?.[0]?.mailId}`} style={{ color: "black" }}>
+                  {mailConfig?.["HCM-ADMIN-CONSOLE"]?.mailConfig?.[0]?.mailId}
+                </a>
+              </span>,
+            ]}
+            label={"Info"}
+          />
+        </div>
+      </div>
       {showPopUp && (
         <PopUp
           className={"boundaries-pop-module"}

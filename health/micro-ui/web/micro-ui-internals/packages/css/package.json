@@ -1,6 +1,10 @@
 {
   "name": "@egovernments/digit-ui-css",
+<<<<<<< HEAD
   "version": "1.0.77-campaign",
+=======
+  "version": "1.0.76-campaign",
+>>>>>>> b82b6fca842c00a521565c50226468398f79ce9e
   "license": "MIT",
   "main": "dist/index.css",
   "author": "Jagankumar <jagan.kumar@egov.org.in>",
