@@ -45,8 +45,12 @@ import UpdateBoundaryWrapper from "./components/UpdateBoundaryWrapper";
 // import SelectingBoundaryComponent from "./components/SelectingBoundaryComponent";
 import { Wrapper } from "./components/SelectingBoundaryComponent";
 import SelectingBoundariesDuplicate from "./components/SelectingBoundariesDuplicate";
+import CampaignUpdateSummary from "./components/CampaignUpdateSummary";
 import XlsPreview from "./components/XlsPreview";
+import BulkUpload from "./components/BulkUpload";
+import BoundarySummary from "./components/BoundarySummary";
 
+import MultiSelectDropdown from "./components/MultiSelectDropdown";
 /**
  * The CampaignModule function fetches store data based on state code, module code, and language, and
  * renders the EmployeeApp component within a TourProvider component if the data is not loading.
@@ -129,8 +133,12 @@ const componentsToRegister = {
   UpdateBoundary,
   UpdateBoundaryWrapper,
   SelectingBoundariesDuplicate,
-  XlsPreview
+  BulkUpload,
+  CampaignUpdateSummary,
+  XlsPreview,
+  MultiSelectDropdownBoundary:MultiSelectDropdown,
   // SelectingBoundaryComponent
+  BoundarySummary
 };
 
 const overrideHooks = () => {

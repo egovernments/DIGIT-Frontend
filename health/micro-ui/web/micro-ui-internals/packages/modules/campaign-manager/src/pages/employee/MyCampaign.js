@@ -74,11 +74,22 @@ const MyCampaign = () => {
           `/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}&actionBar=${true}`
         );
         break;
-      case "CAMPAIGN_DRAFTS":
+        case "CAMPAIGN_DRAFTS":
+      if (row?.parentId) {
+        history.push(
+          `/${window.contextPath}/employee/campaign/update-boundary?parentId=${row.parentId}&id=${row.id}&draft=${true}`
+        );
+      } else {
         history.push(
           `/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&draft=${true}&fetchBoundary=${true}&draftBoundary=${true}`
         );
-        break;
+      }
+      break;
+      // case "CAMPAIGN_DRAFTS":
+      //   history.push(
+      //     `/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&draft=${true}&fetchBoundary=${true}&draftBoundary=${true}`
+      //   );
+      //   break;
       case "CAMPAIGN_FAILED":
         history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}`);
         break;

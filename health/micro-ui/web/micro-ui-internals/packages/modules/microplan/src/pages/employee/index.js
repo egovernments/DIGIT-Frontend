@@ -7,6 +7,9 @@ import { useMyContext } from "../../utils/context";
 import MicroplanSearch from "./MicroplanSearch";
 import SummaryScreen from "./SummaryScreen";
 import CampaignBoundary from "../../components/CampaignBoundary";
+import UserManagement from "./UserManagement";
+
+
 
 const bredCrumbStyle={ maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
@@ -42,13 +45,15 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
     "hcm-microplanning",
     [
       { name: "MicroplanNamingConvention" },
-      { name: "MicroplanNamingRegx" },
+      { name: "MicroplanNamingRegex" },
       { name: "ResourceDistributionStrategy"},
+      {name: "rolesForMicroplan"},
       { name: "HypothesisAssumptions"},
       { name: "RuleConfigureOutput" },
       { name: "AutoFilledRuleConfigurations" },
       { name: "RuleConfigureOperators" },  
       { name: "RegistrationAndDistributionHappeningTogetherOrSeparately"}
+
 
     ],
     {
@@ -155,8 +160,7 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
         </React.Fragment>
          <PrivateRoute path={`${path}/setup-microplan`} component={() => <SetupMicroplan hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />} />
          <PrivateRoute path={`${path}/microplan-search`} component={() => <MicroplanSearch></MicroplanSearch>} /> 
-         
-
+         <PrivateRoute path={`${path}/user-management`} component={() => <UserManagement></UserManagement>} /> 
       </AppContainer>
     </Switch>
   );

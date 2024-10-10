@@ -58,8 +58,8 @@ const formValidator = (formData, key, state) => {
 
   const microplanDetailsValidator = () => {
     function validateName(name) {
-      const microplanNamingRegxString = state?.MicroplanNamingRegx?.[0]?.data;
-      const namePattern = new RegExp(microplanNamingRegxString);
+      const microplanNamingRegexString = state?.MicroplanNamingRegex?.[0]?.data;
+      const namePattern = new RegExp(microplanNamingRegexString);
       return namePattern.test(name);
     }
 
@@ -211,6 +211,26 @@ function generateCampaignString(sessionData,t) {
   // Construct the final string
   const result = `${t(diseaseCode)}-${t(campaignTypeCode)}-${t(resourceDistributionStrategy)}-${currentMonth} ${yearLastTwoDigits}`;
   return result;
+}
+
+//fn that merges api res and ui inputs for assumptions
+//unique code is assumptions key
+//last vertical step
+const mergeAssumptions = (currentAssumptions,assumptionsToMerge) => {
+  // init an empty array result
+  // assumptionsToMerge will have all the assumptions selected in UI
+  // for each assumption in assumptionsToMerge check if it exists in currentAssumptions
+    // first map the CA and check whether they are in ATM(if not mark active to false) -> push to result
+    // if yes then update the existing one and push to result
+    // if 
+}
+
+//per vertical step
+const mergeAssumptionsCategory = (currentAssumptions,assumptionsToMerge,category) => {
+  // init an empty array
+  // filter out currentAssumptions(don't include category)
+  // push this filtered + assumptionsToMerge into this and return
+  
 }
 
 export default {

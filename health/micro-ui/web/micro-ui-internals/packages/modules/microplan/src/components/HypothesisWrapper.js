@@ -13,6 +13,8 @@ export const useAssumptionContext = () => {
 };
 
 const HypothesisWrapper = ({ onSelect, props: customProps }) => {
+
+    const { mutate: updateResources, ...rest } = Digit.Hooks.microplanv1.useCreateUpdatePlanProject();
     const { t } = useTranslation();
     const { state } = useMyContext();
     const [assumptionValues, setAssumptionValues] = useState(customProps?.sessionData?.HYPOTHESIS?.Assumptions?.assumptionValues ||[]);
@@ -70,7 +72,6 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     const handleNext = () => {
         const currentAssumptions = assumptionCategories[internalKey - 1]?.assumptions || [];
         const existingAssumptionKeys = assumptionValues?.map(assumption => assumption.key);
-        
         // Filter current assumptions to only those that exist in assumptionValues and are not deleted
         const visibleAssumptions = currentAssumptions.filter(item => 
             existingAssumptionKeys.includes(item) && !deletedAssumptions.includes(item)
@@ -96,6 +97,20 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         if (internalKey < assumptionCategories.length) {
             setInternalKey((prevKey) => prevKey + 1); // Update key in URL
         }
+
+        //after everything is done make an api call and assume it will be successfull(let user go to next screen)
+        // API CALL
+        const assumptionsToUpdate = assumptionValues?.filter?.(row => {
+            return row.key && row.value && row.category
+        })
+        updateResources({
+            config:{
+                name:"SUB_HYPOTHESIS"
+            },
+            assumptionsToUpdate
+        })
+
+
     };
 
     const filteredData = state.HypothesisAssumptions.filter((item) => {

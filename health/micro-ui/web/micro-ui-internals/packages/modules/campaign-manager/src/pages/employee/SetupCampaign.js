@@ -44,8 +44,7 @@ function loopAndReturn(dataa) {
         toValue: existingItem.value && item.value ? Math.min(existingItem.value, item.value) : null,
         fromValue: existingItem.value && item.value ? Math.max(existingItem.value, item.value) : null,
       };
-    }
-    else {
+    } else {
       newArray.push(item);
     }
   });
@@ -113,7 +112,6 @@ function cycleDataRemap(data) {
 //   return reversedData;
 // }
 
-
 // function restructureData(data) {
 //   return data.map(cycle => ({
 //       mandatoryWaitSinceLastCycleInDays: null,
@@ -137,7 +135,7 @@ function cycleDataRemap(data) {
 //       const attributeCode = attr.attribute.code;
 //       const operator = attr.operator.code;
 //       if (operator === "IN_BETWEEN") {
-//           const fromValue = attr.fromValue; 
+//           const fromValue = attr.fromValue;
 //           const toValue = attr.toValue;
 //           return `${fromValue} <= ${attributeCode} < ${toValue}`;
 //       }
@@ -158,10 +156,8 @@ function cycleDataRemap(data) {
 //       "GREATER_THAN": ">",
 //       "EQUAL_TO": "=",
 //   };
-//   return operators[operatorCode] || "="; 
+//   return operators[operatorCode] || "=";
 // }
-
-
 
 function groupByTypeRemap(data) {
   if (!data) return null;
@@ -204,14 +200,14 @@ function updateUrlParams(params) {
   window.history.replaceState({}, "", url);
 }
 
-const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
+const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const history = useHistory();
   const [currentStep, setCurrentStep] = useState(0);
   const [totalFormData, setTotalFormData] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [campaignConfig, setCampaignConfig] = useState(CampaignConfig(totalFormData, null, isSubmitting ));
+  const [campaignConfig, setCampaignConfig] = useState(CampaignConfig(totalFormData, null, isSubmitting));
   const [shouldUpdate, setShouldUpdate] = useState(false);
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_FORM_DATA", {});
   const [dataParams, setDataParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", {});
@@ -282,7 +278,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
   };
 
   useEffect(() => {
-  
     window.addEventListener("checking", getCurrentKey);
 
     return () => {
@@ -304,7 +299,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
   useEffect(() => {
     if (isPreview === "true") {
       setIsDraftCreated(true);
-      setCurrentKey(13);
+      setCurrentKey(14);
       return;
     }
     if (isDraft === "true") {
@@ -356,7 +351,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
       },
       HCM_CAMPAIGN_DELIVERY_DATA: {
         // deliveryRule: reverseDeliveryRemap(delivery),
-        deliveryRule: delivery
+        deliveryRule: delivery,
       },
       HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA: {
         boundaryType: {
@@ -409,14 +404,14 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
     }
   }, [hierarchyDefinition?.BoundaryHierarchy?.[0], draftData]);
   useEffect(() => {
-    setCampaignConfig(CampaignConfig(totalFormData, dataParams, isSubmitting, summaryErrors , hierarchyData));
-  }, [totalFormData, dataParams, isSubmitting, summaryErrors , hierarchyData]);
+    setCampaignConfig(CampaignConfig(totalFormData, dataParams, isSubmitting, summaryErrors, hierarchyData));
+  }, [totalFormData, dataParams, isSubmitting, summaryErrors, hierarchyData]);
 
   useEffect(() => {
     setIsSubmitting(false);
-    if (currentKey === 13 && isSummary !== "true") {
+    if (currentKey === 14 && isSummary !== "true") {
       updateUrlParams({ key: currentKey, summary: true });
-    } else if (currentKey !== 13) {
+    } else if (currentKey !== 14) {
       updateUrlParams({ key: currentKey, summary: false });
       // setSummaryErrors(null);
     }
@@ -497,6 +492,36 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
   //   return restructuredData;
   // }
 
+  function restructureData(inputData) {
+    const result = {
+      cycleIndex: inputData?.cycleIndex,
+      active: inputData?.active,
+      deliveries: inputData?.deliveries?.map((delivery) => ({
+        deliveryIndex: delivery.deliveryIndex,
+        active: delivery.active,
+        deliveryRules: delivery.deliveryRules.map((rule) => ({
+          ruleKey: rule.ruleKey,
+          delivery: rule.delivery,
+          attributes: rule.attributes.map((attr) => ({
+            key: attr.key,
+            attribute: attr.attribute.code, // Directly using code from attribute
+            operator: attr.operator.code, // Directly using code from operator
+            value: attr.value,
+          })),
+          products: rule?.products.map((product) => ({
+            key: product.key,
+            value: product.value,
+            count: product.count,
+            name: product.name,
+          })),
+        })),
+      })),
+    };
+
+    return [result];
+  }
+
+
   function resourceData(facilityData, boundaryData, userData) {
     const resources = [facilityData, boundaryData, userData].filter((data) => data !== null && data !== undefined);
     return resources;
@@ -536,9 +561,9 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
             payloadData.additionalDetails.cycleData = {};
           }
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-            // const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
-            // payloadData.deliveryRules = temp;
-            payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
+            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule?.[0]);
+            payloadData.deliveryRules = temp;
+            // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
           } else {
             payloadData.deliveryRules = [];
           }
@@ -558,7 +583,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
                 updateUrlParams({ id: data?.CampaignDetails?.id });
                 draftRefetch();
                 if (currentKey == 6) {
-                  setCurrentKey(13);
+                  setCurrentKey(14);
                 } else {
                   setCurrentKey(currentKey + 1);
                 }
@@ -566,7 +591,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
             });
           } else {
             if (currentKey == 6) {
-              setCurrentKey(13);
+              setCurrentKey(14);
             } else {
               setCurrentKey(currentKey + 1);
             }
@@ -608,9 +633,9 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
             userId: dataParams?.userId,
           };
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-            // const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
-            // payloadData.deliveryRules = temp;
-            payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
+            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule?.[0]);
+            payloadData.deliveryRules = temp;
+            // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
           }
           if (compareIdentical(draftData, payloadData) === false) {
             await updateCampaign(payloadData, {
@@ -673,9 +698,9 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
             userId: dataParams?.userId,
           };
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-            // const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
-            // payloadData.deliveryRules = temp;
-            payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
+            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule?.[0]);
+            payloadData.deliveryRules = temp;
+            // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
           }
 
           await mutate(payloadData, {
@@ -737,9 +762,9 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
             payloadData.additionalDetails.cycleData = {};
           }
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-            // const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
-            // payloadData.deliveryRules = temp;
-            payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
+            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule?.[0]);
+            payloadData.deliveryRules = temp;
+            // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
           } else {
             payloadData.deliveryRules = [];
           }
@@ -936,7 +961,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
     return allBoundaryTypesPresent;
   }
 
-
   function recursiveParentFind(filteredData) {
     const parentChildrenMap = {};
 
@@ -1084,7 +1108,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
         }
         setShowToast(null);
         return;
-        case "DeliveryDetailsSummary":
+      case "DeliveryDetailsSummary":
         const cycleConfigureData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE;
         const isCycleError = validateCycleData(cycleConfigureData);
         const deliveryCycleData = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA;
@@ -1103,7 +1127,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
         }
         setShowToast(null);
         return true;
-        case "DataUploadSummary":
+      case "DataUploadSummary":
         const isTargetError = totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.filestoreId
           ? false
           : (setSummaryErrors((prev) => {
@@ -1297,7 +1321,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
       setShouldUpdate(true);
     }
     if (isChangeDates === "true" && currentKey == 6) {
-      setCurrentKey(13);
+      setCurrentKey(14);
     }
 
     if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].mandatoryOnAPI) {
@@ -1323,7 +1347,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
     const name = filteredSteps[0].name;
 
     if (step === 6 && Object.keys(totalFormData).includes("HCM_CAMPAIGN_UPLOAD_USER_DATA")) {
-      setCurrentKey(13);
+      setCurrentKey(14);
       setCurrentStep(5);
     } else if (step === 1 && totalFormData["HCM_CAMPAIGN_NAME"] && totalFormData["HCM_CAMPAIGN_TYPE"] && totalFormData["HCM_CAMPAIGN_DATE"]) {
       setCurrentKey(5);
@@ -1370,7 +1394,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
   const draftFilterStep = (totalFormData) => {
     const stepFind = (name) => {
       const step = campaignConfig?.[0]?.form.find((step) => step.name === name);
-      return step ? parseInt(step.stepCount, 13) : null;
+      return step ? parseInt(step.stepCount, 14) : null;
     };
     let v = [];
     if (totalFormData?.HCM_CAMPAIGN_NAME?.campaignName) v.push(stepFind("HCM_CAMPAIGN_NAME"));
@@ -1494,11 +1518,11 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
         actionClassName={"actionBarClass"}
         className="setup-campaign"
         cardClassName="setup-campaign-card"
-        noCardStyle = {true}
+        noCardStyle={true}
         // noCardStyle={currentStep === 7 ? false : true}
         onSecondayActionClick={onSecondayActionClick}
         label={
-          isChangeDates === "true" && currentKey == 13
+          isChangeDates === "true" && currentKey == 14
             ? t("HCM_UPDATE_DATE")
             : isChangeDates === "true"
             ? null
