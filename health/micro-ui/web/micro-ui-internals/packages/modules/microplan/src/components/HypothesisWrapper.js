@@ -26,6 +26,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     });
     const [showToast, setShowToast] = useState(null);
     const [deletedAssumptions, setDeletedAssumptions] = useState([]);
+    const [executionCount, setExecutionCount] = useState(0);
     
 
   
@@ -195,11 +196,21 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         return () => {
           window.removeEventListener("isLastStep", isLastStep);
         };
-      }, [internalKey]);
+      }, [internalKey]);t
+
+     
 
     useEffect(() => {
         onSelect(customProps.name, { assumptionValues });
     }, [assumptionValues, internalKey]);
+    useEffect(() => {
+        if (executionCount < 5) {
+            
+           
+            onSelect(customProps.name, {assumptionValues})
+            setExecutionCount((prevCount) => prevCount + 1);
+        }
+      }); 
 
 
 
@@ -211,6 +222,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     useEffect(() => {
         // Initialize assumptionValues with all assumptions set to null
         const initialAssumptions = filteredAssumptions.map(item => ({
+            source:"MDMS",
             category: null,
             key: item,
             value: null
