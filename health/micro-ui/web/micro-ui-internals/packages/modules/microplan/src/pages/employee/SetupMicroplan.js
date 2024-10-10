@@ -14,7 +14,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import { MicroplanConfig } from "../../configs/SetupMicroplanConfig";
-import { Stepper, Toast, PopUp, CardText, InfoCard,Button } from "@egovernments/digit-ui-components";
+import { Stepper, Toast, PopUp, CardText, InfoCard, Button } from "@egovernments/digit-ui-components";
 import _ from "lodash";
 import { useMyContext } from "../../utils/context";
 
@@ -94,6 +94,21 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     setMicroplanConfig(MicroplanConfig(params, null, isSubmitting, null, hierarchyData));
   }, [totalFormData, isSubmitting]);
 
+  useEffect(() => {
+    const handleCheckingEvent = () => {
+      const newKey = parseInt(new URLSearchParams(window.location.search).get("key")) || 1;
+      setCurrentKey(newKey);
+    };
+
+    window.addEventListener("checking", handleCheckingEvent);
+
+    return () => {
+      window.removeEventListener("checking", handleCheckingEvent);
+    };
+  }, []);
+
+
+
   // setting the current step when the key is changed on the basis of the config
   useEffect(() => {
     setCurrentStep(Number(filteredConfig?.[0]?.form?.[0]?.stepCount - 1));
@@ -114,10 +129,10 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const handleUpdates = (propsForMutate) => {
     updateResources(propsForMutate, {
       onSuccess: (data) => {
-        
+
       },
       onError: (error, variables) => {
-        
+
         setShowToast(({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") }))
       },
     });
@@ -127,11 +142,14 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     // setIsSubmittting to true -> to run inline validations within the components
     setIsSubmitting(true);
 
+
     //config
     const name = filteredConfig?.[0]?.form?.[0]?.name;
     const currentConfBody = filteredConfig?.[0]?.form?.[0]?.body?.[0];
 
     //Run sync validations on formData based on the screen(key)
+
+
     const toastObject = Digit.Utils.microplanv1.formValidator(formData?.[currentConfBody?.key], currentConfBody?.key, state);
     if (toastObject) {
       setShowToast(toastObject);
@@ -181,20 +199,40 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     // setCurrentStep(prev => prev + 1)
   };
 
-  const onSecondayActionClick = () => {
-    //if step is 1 then redirect to home page
-    //otherwise go to prev step
+  const moveToPreviousStep = () => {
+    setCurrentStep((prev) => prev - 1);
     setCurrentKey((prev) => prev - 1);
+  }
+  useEffect(() => {
+
+    window.addEventListener("moveToPrevious", moveToPreviousStep);
+
+    return () => {
+      window.removeEventListener("moveToPrevious", moveToPreviousStep);
+    };
+  }, []);
+  const onSecondayActionClick = () => {
     if (currentStep === 0) {
       history.push(`/${window.contextPath}/employee`);
-    } else {
-      setCurrentStep((prev) => prev - 1);
     }
+    const { isLastVerticalStep } = Digit.Hooks.useQueryParams();
+
+    if (isLastVerticalStep === 'true') {
+      window.dispatchEvent(new Event("verticalStepper"))
+      return;
+    }
+
+    setCurrentStep((prev) => prev - 1);
+    setCurrentKey((prev) => prev - 1);
+
+
+
   };
 
   if (isLoadingCampaignObject || isLoadingPlanObject) {
     return <Loader />;
   }
+
 
   return (
     <React.Fragment>
@@ -203,9 +241,8 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
           "HCM_CAMPAIGN_SETUP_DETAILS",
           "MICROPLAN_DETAILS",
           "MP_BOUNDARY_SELECTION",
-          "UPLOAD_DATA",
-          "MP_USER_CREATION",
-          "HYPOTHESIS",
+          "MP_MANAGING_DATA",
+          "MICROPLAN_ASSUMPTIONS",
           "FORMULA_CONFIGURATION",
           "SUMMARY",
         ]}

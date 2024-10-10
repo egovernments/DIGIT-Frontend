@@ -32,6 +32,8 @@ const formValidator = (formData, key, state) => {
   function getValueFromPath(obj, path) {
     return path.split(".").reduce((acc, part) => acc && acc[part], obj);
   }
+   
+   
 
   // Validator function
   function validateFormData(jsonPaths) {
@@ -97,6 +99,67 @@ const formValidator = (formData, key, state) => {
     return null;
   };
 
+  const areFieldsValid = (fields) => {
+    if (fields.length === 0) {
+      return false;
+  }
+    const hasInvalidField = fields?.some(field => {
+      const isValid = field && field.value; 
+      return !isValid;
+    });
+  
+    return !hasInvalidField; // Returns true if all fields are valid
+  };
+    
+ 
+  
+  
+  const assumptionsFormValidator = (formData) => {
+
+      let requiredFields = []
+       if(formData?.selectedRegistrationProcess && formData?.selectedDistributionProcess){
+        requiredFields = [
+          formData?.selectedRegistrationProcess,
+          formData?.selectedDistributionProcess,
+        ]
+          if (!areFieldsValid(requiredFields)) {
+            return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; 
+          }
+       }else if(formData?.selectedRegistrationDistributionMode){
+        requiredFields = [
+          formData?.selectedRegistrationDistributionMode,
+        ]
+        if (!areFieldsValid(requiredFields)) {
+          return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; 
+        }
+       }
+
+    const processesAreValid = formData?.selectedRegistrationProcess?.code && formData?.selectedDistributionProcess?.code;
+    if (processesAreValid && (formData?.selectedRegistrationProcess.code === formData?.selectedDistributionProcess.code)) {
+        return { key: "error", label: "ERROR_REGISTRATION_AND_DISTRIBUTION_ARE_SAME" }; // Customize as needed
+    }
+    
+    if (!areFieldsValid(requiredFields)) {
+      return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; 
+    }
+  
+    return null; // Return null if all validations pass
+  };
+
+
+
+
+  const microplanAssumptionsValidator = (formData)=>{
+       
+        if(!areFieldsValid(formData.assumptionValues)){
+           return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; 
+        }
+
+      return null
+  }
+  
+  
+
   //here we'll validate formData based on the config
   switch (key) {
     case "campaignDetails":
@@ -105,6 +168,10 @@ const formValidator = (formData, key, state) => {
       return microplanDetailsValidator();
     case "boundarySelection":
       return boundarySelectionValidator();
+     case "assumptionsForm":  
+       return assumptionsFormValidator(formData);
+    case "Assumptions":
+        return microplanAssumptionsValidator(formData);  
 
     default:
       return null;
@@ -145,6 +212,26 @@ function generateCampaignString(sessionData,t) {
   return result;
 }
 
+//fn that merges api res and ui inputs for assumptions
+//unique code is assumptions key
+//last vertical step
+const mergeAssumptions = (currentAssumptions,assumptionsToMerge) => {
+  // init an empty array result
+  // assumptionsToMerge will have all the assumptions selected in UI
+  // for each assumption in assumptionsToMerge check if it exists in currentAssumptions
+    // first map the CA and check whether they are in ATM(if not mark active to false) -> push to result
+    // if yes then update the existing one and push to result
+    // if 
+}
+
+//per vertical step
+const mergeAssumptionsCategory = (currentAssumptions,assumptionsToMerge,category) => {
+  // init an empty array
+  // filter out currentAssumptions(don't include category)
+  // push this filtered + assumptionsToMerge into this and return
+  
+}
+
 export default {
   destroySessionHelper,
   createStatusMap,
@@ -152,3 +239,4 @@ export default {
   generateCampaignString,
   updateUrlParams
 };
+export const PRIMARY_COLOR = "#C84C0E";
