@@ -8,7 +8,7 @@ import { useAssumptionContext } from "./HypothesisWrapper";
 
 
 
-const Hypothesis = ({ category, assumptions:initialAssumptions })=>{
+const Hypothesis = ({ category, assumptions:initialAssumptions , customProps})=>{
  
   const { t } = useTranslation();
   const [showPopUP, setShowPopUp] = useState(false)
@@ -21,15 +21,19 @@ const Hypothesis = ({ category, assumptions:initialAssumptions })=>{
   const isAddNewDisabled = !deletedAssumptionCategories.current[category] || 
   deletedAssumptionCategories.current[category].length === 0 || 
   deletedAssumptionCategories.current[category].every(item => !deletedAssumptions.includes(item));
-   
-
+ 
   const availableDeletedAssumptions = Array.from(new Set(
     (deletedAssumptionCategories.current[category] || []).filter(item =>
         deletedAssumptions.includes(item)
     )
 ));
-    
-     
+
+  useEffect(()=>{
+      setAssumptions(initialAssumptions)
+  }, [initialAssumptions])
+
+
+
     const handleDeleteClick = (index) => {
       setAssumptionToDelete(index); 
       setShowPopUp(true); 
@@ -44,22 +48,20 @@ const Hypothesis = ({ category, assumptions:initialAssumptions })=>{
       if (assumptionToDelete !== null) {
         const deletedAssumption = assumptions[assumptionToDelete];
         const updatedAssumptions = assumptions.filter((_, i) => i !== assumptionToDelete);
-        const updatedAssumptionValues = assumptionValues.filter(
-          (value) => value.key !== deletedAssumption
-      );
     
-
         if (!deletedAssumptionCategories.current[category]) {
           deletedAssumptionCategories.current[category] = [];
           }
         deletedAssumptionCategories.current[category].push(deletedAssumption);
         
-
-        setDeletedAssumptions([...deletedAssumptions, deletedAssumption]);
+        setDeletedAssumptions(prev => [...prev, deletedAssumption]);
         setAssumptions(updatedAssumptions);
-        setAssumptionValues(updatedAssumptionValues);
+        setAssumptionValues((prevValues) => 
+          prevValues.filter((value) => value.key !== deletedAssumption)
+         );
         setAssumptionToDelete(null); 
      }
+
      setShowPopUp(false);
     };
 
@@ -92,13 +94,10 @@ const addNewAssumption = () => {
       }
   }
 };
-        
+ 
+
     
-         
-    useEffect(() => {
-      setAssumptions(initialAssumptions);
-    }, [initialAssumptions]);
-         
+   
      return (
          <>
           
@@ -127,7 +126,7 @@ const addNewAssumption = () => {
                                           name={item}
                                           value={assumptionValues.find((assumption) => assumption.key === item)?.value || ""}
                                           error={""}
-                                          style={{marginBottom: "0" }}
+                                          style={{marginBottom: "0", }}
                                           populators={{ name: item }}
                                           id={index}
                                           onChange={(event) => {
@@ -136,7 +135,7 @@ const addNewAssumption = () => {
                                           
                                           }}
                                             />
-                                        <div className="delete-button">
+                                        <div className="hypothesis-delete-button">
                                           <DeleteIconv2 />
                                           <span  style={{color:"red",textDecoration:"Underline" }} onClick={()=> handleDeleteClick(index)}>{t("DELETE")}</span>
                                         </div>

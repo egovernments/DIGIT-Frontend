@@ -228,7 +228,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
         ],
       },
         {
-          stepCount: "6",
+          stepCount: "7",
           key: "9",
           name: "SUMMARY_SCREEN",
           body: [
