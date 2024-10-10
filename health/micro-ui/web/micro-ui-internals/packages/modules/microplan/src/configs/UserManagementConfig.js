@@ -58,7 +58,7 @@ export const tqmInboxConfig = {
               },
               {
                 "label": "CONTACT_NUMBER",
-                "type": "mobileNumber",
+                "type": "number",
                 "isMandatory": false,
                 "disable": false,
                 "populators": {
@@ -71,31 +71,6 @@ export const tqmInboxConfig = {
                 },
                 
               },
-              // {
-              //   "label": "TQM_PLANT_NAME",
-              //   "type": "apidropdown",
-              //   "isMandatory": false,
-              //   "disable": false,
-              //   "populators": {
-              //     "optionsCustomStyle": {
-              //       "top": "2.3rem"
-              //     },
-              //     "name": "plantCodes",
-              //     "optionsKey": "i18nKey",
-              //     "allowMultiSelect": false,
-              //     "masterName": "commonUiConfig",
-              //     "moduleName": "TqmInboxConfigUlbAdmin",
-              //     "customfn": "populatePlantUsersReqCriteria"
-              //   },
-              //   "removableTagConf":{
-              //     "name":"plantCodes",
-              //     "label":"TQM_RT_PLANT",
-              //     "valueJsonPath":"i18nKey",
-              //     "type":"multi", // single, multi, date(single), dateRange(single),...etc,
-              //     "sessionJsonPath":"searchForm.plantCodes",
-              //     "deleteRef":"id"
-              //   }
-              // }
             ]
           },
           "label": "",
@@ -109,7 +84,6 @@ export const tqmInboxConfig = {
               {
                 label: "Name",
                 jsonPath: "user.name",
-                additionalCustomization:true
               },
               {
                 label: "Email",
@@ -121,7 +95,8 @@ export const tqmInboxConfig = {
               },
               {
                 label:"Role",
-                jsonPath:"user.type"
+                jsonPath:"user.roles",
+                additionalCustomization:true
               }
             ],
             "enableGlobalSearch": false,
@@ -137,27 +112,6 @@ export const tqmInboxConfig = {
         "links": {
           "uiConfig": {
             "links": [
-              // {
-              //   "text": "TQM_VIEW_PAST_RESULTS",
-              //   "url": "/employee",
-              //   "roles": [
-              //     ""
-              //   ]
-              // },
-              // {
-              //   "text": "TQM_VIEW_IOT_RESULTS",
-              //   "url": "/employee/tqm/search-test-results?from=TQM_BREAD_INBOX",
-              //   "roles": [
-              //     "PQM_ADMIN"
-              //   ]
-              // },
-              // {
-              //   "text": "TQM_SENSOR_MON",
-              //   "url": "/employee/tqm/search-devices?from=TQM_BREAD_INBOX",
-              //   "roles": [
-              //     "PQM_ADMIN"
-              //   ]
-              // },
               {
                 "text": "Bulk Upload Users",
                 "url": "/employee",
@@ -193,10 +147,7 @@ export const tqmInboxConfig = {
             "primaryLabel": "Filter",
             "minReqFields": 0,
             "defaultValues": {
-              "processCodes": [],
-              "stage": [],
-              "materialCodes": [],
-              "status": []
+              "roleschosen": [],
             },
             "fields": [
 
@@ -218,117 +169,6 @@ export const tqmInboxConfig = {
                   "customfn": "rolesForFilter"
                 },
               },
-              // {
-              //   label: "CAMPAIGN_SEARCH_TYPE",
-              //   type: "apidropdown",
-              //   isMandatory: false,
-              //   disable: false,
-              //   populators: {
-              //     optionsCustomStyle: {
-              //       top: "2.3rem",
-              //     },
-              //     name: "campaignType",
-              //     optionsKey: "code",
-              //     allowMultiSelect: false,
-              //     masterName: "commonUiConfig",
-              //     moduleName: "UserManagementConfig",
-              //     customfn: "mdmsRetrieveData",
-              //   },
-              // },
-              // {
-              //   "label": "TQM_TREATMENT_PROCESS",
-              //   "type": "apidropdown",
-              //   "isMandatory": false,
-              //   "disable": false,
-              //   "populators": {
-              //     "allowMultiSelect": true,
-              //     "name": "processCodes",
-              //     "optionsKey": "i18nKey",
-              //     "labelKey": "i18nKey",
-              //     "masterName": "commonUiConfig",
-              //     "moduleName": "TqmInboxConfigUlbAdmin",
-              //     "customfn": "populateMdmsv2SearchReqCriteria",
-              //     "mdmsv2": {
-              //       "schemaCode": "PQM.Process"
-              //     },
-              //   },
-              //   "removableTagConf":{
-              //     "name":"processCodes",
-              //     "label":"TQM_RT_PROCESS",
-              //     "valueJsonPath":"i18nKey",
-              //     "type":"multi", // single, multi, date(single), dateRange(single),...etc,
-              //     "sessionJsonPath":"filterForm.processCodes",
-              //     "deleteRef":"code"
-              //   }
-              // },
-              // {
-              //   "label": "TQM_PROCESS_STAGE",
-              //   "type": "dropdown",
-              //   "isMandatory": false,
-              //   "disable": false,
-              //   "populators": {
-              //     "name": "stage",
-              //     "optionsKey": "i18nKey",
-              //     "allowMultiSelect": true,
-              //     "mdmsv2": {
-              //       "schemaCode": "PQM.Stage"
-              //     }
-              //   },
-              //   "removableTagConf":{
-              //     "name":"stage",
-              //     "label":"TQM_RT_STAGE",
-              //     "valueJsonPath":"i18nKey",
-              //     "type":"multi", // single, multi, date(single), dateRange(single),...etc,
-              //     "sessionJsonPath":"filterForm.stage",
-              //     "deleteRef":"code"
-              //   }
-              // },
-              // {
-              //   "label": "TQM_OUTPUT_TYPE",
-              //   "type": "dropdown",
-              //   "isMandatory": false,
-              //   "disable": false,
-              //   "populators": {
-              //     "allowMultiSelect": true,
-              //     "name": "materialCodes",
-              //     "optionsKey": "i18nKey",
-              //     "masterName": "commonUiConfig",
-              //     "moduleName": "TqmInboxConfigUlbAdmin",
-              //     "customfn": "populateMdmsv2SearchReqCriteria",
-              //     "labelKey": "i18nKey",
-              //     "mdmsv2": {
-              //       "schemaCode": "PQM.Material"
-              //     }
-              //   },
-              //   "removableTagConf":{
-              //     "name":"materialCodes",
-              //     "label":"TQM_RT_OUTPUT",
-              //     "valueJsonPath":"i18nKey",
-              //     "type":"multi", // single, multi, date(single), dateRange(single),...etc,
-              //     "sessionJsonPath":"filterForm.materialCodes",
-              //     "deleteRef":"code"
-              //   }
-              // },
-              // {
-              //   "type": "workflowstatesfilter",
-              //   "isMandatory": false,
-              //   "disable": false,
-              //   "populators": {
-              //     "componentLabel": "TQM_WF_STATUS",
-              //     "name": "status",
-              //     "labelPrefix": "WF_STATUS_",
-              //     "businessService": "PQM"
-              //   },
-              //   "removableTagConf":{
-              //     "name":"status",
-              //     "label":"Status",
-              //     // "valueJsonPath":"i18nKey",
-              //     "type":"workflowStatusFilter", // single, multi, date(single), dateRange(single),...etc,
-              //     "sessionJsonPath":"filterForm.status",
-              //     // "deleteRef":"id",
-              //     "valuePrefix": "WF_STATUS_PQM_",
-              //   }
-              // }
             ]
           },
           "label": "Filter",

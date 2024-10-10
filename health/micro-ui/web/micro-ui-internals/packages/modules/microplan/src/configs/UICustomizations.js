@@ -104,14 +104,20 @@ export const UICustomizations = {
   UserManagementConfig: {
 
     customValidationCheck: (data) => {
-      //checking both to and from date are present
-      const { mobileNumber } = data;
+      const { phone } = data;
       const mobileRegex = /^[0-9]{10}$/;
-      if (!mobileRegex.test(mobileNumber)) {
+      debugger
+      // Allow empty mobile number
+      if (!phone || phone.trim() === "") {
+        return false; // Return true for empty input
+      }
+    
+      // Check if phone matches the regex
+      if (!mobileRegex.test(phone)) {
         return { error: true, label: "INVALID_MOBILE_NUMBER" }; // Return an error message if invalid
       }
-
-      return true;
+    
+      return false; // Return true if the mobile number is valid
     },
     preProcess: (data, additionalDetails) => {
 
@@ -135,21 +141,20 @@ export const UICustomizations = {
       if (roleschosen) {
         rolesString = Object.keys(roleschosen).filter(role => roleschosen[role] === true).join(',');
       }
-      // debugger;
+      
       console.log("data", data);
       console.log("additionalDetails", additionalDetails);
 
       data.params.names = name;
 
       data.params.phone = phone;
-      // debugger
+      
       data.params.roles = rolesString;
       data.params.tenantId = Digit.ULBService.getCurrentTenantId();
       cleanObject(data.params);
       delete data.params.roleschosen;
       delete data.params.name;
-      // console.log(data,"dat");
-      // data.param.roles=roles;
+      
 
       return data
     },
@@ -157,7 +162,7 @@ export const UICustomizations = {
     rolesForFilter: (props) => {
       const userInfo = Digit.UserService.getUser();
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      // debugger
+      
       return {
         params: {},
         url: '/mdms-v2/v2/_search', //mdms fetch from
@@ -181,14 +186,11 @@ export const UICustomizations = {
                 {
                   roleCode: item.data.roleCode,
                   i18nKey: Digit.Utils.locale.getTransformedLocale(`MP_ROLE_${item.data.roleCode}`)
-                  // orderNumber: item.data.orderNumber
-
-                  // roleCode:{labelKey:item.data.roleCode}
 
                 }
               )
             })
-            // debugger
+            
             return roles
           },
         },
@@ -201,23 +203,27 @@ export const UICustomizations = {
 
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       debugger
-
-      if (key === "Name") {
+      
+      if (key === "Role") {
+        
         if (value && value !== "NA") {
 
           return (
-            <span className="link">
-              <Link to={`/digit-ui/employee/hrms/details/mz/${value}`}>{value}</Link>
-            </span>
-          )
-        } else {
-          return (
             <div>
-              <p>NA</p>
+              {value.map((item, index) => (
+                <span key={index} className="dm-code">
+                  {Digit.Utils.locale.getTransformedLocale(`MP_ROLE_${item.code}`)}
+                  {index < value.length - 1 && ", "}
+                </span>
+              ))}
             </div>
-          )
-        }
+          );
+        } 
 
+      }else{
+        return(
+          <div>NA</div>
+        )
       }
 
     },

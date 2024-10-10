@@ -8,7 +8,7 @@ import MicroplanSearch from "./MicroplanSearch";
 import SummaryScreen from "./SummaryScreen";
 import CampaignBoundary from "../../components/CampaignBoundary";
 import UserManagement from "./UserManagement";
-import IndividualSearch from "./User";
+
 
 
 const bredCrumbStyle={ maxWidth: "min-content" };
@@ -156,13 +156,7 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
         </React.Fragment>
          <PrivateRoute path={`${path}/setup-microplan`} component={() => <SetupMicroplan hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />} />
          <PrivateRoute path={`${path}/microplan-search`} component={() => <MicroplanSearch></MicroplanSearch>} /> 
-         <PrivateRoute path={`${path}/um`} component={() => <UserManagement></UserManagement>} /> 
-         <PrivateRoute path={`${path}/us`} component={() => <IndividualSearch></IndividualSearch>} /> 
-
-         
-
-         
-
+         <PrivateRoute path={`${path}/user-management`} component={() => <UserManagement></UserManagement>} /> 
       </AppContainer>
     </Switch>
   );
