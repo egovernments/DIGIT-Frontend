@@ -33,7 +33,7 @@ const ViewUrl = () => {
       <Card className="card-sandbox">
         <Header showTenant={false} />
         <div className="sandbox-success-signup">
-          <SVG.TickMark fill={"#fff"} height={40} width={60} />
+          <SVG.TickMark fill={"#fff"} height={30} width={70} />
         </div>
         <CardHeader className="cardHeader-sandbox" styles={{ color: "#00703c" }}>
           {t("SANDBOX_HEADER")}
