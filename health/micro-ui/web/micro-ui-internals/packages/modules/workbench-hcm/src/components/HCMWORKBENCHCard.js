@@ -17,36 +17,36 @@ const HCMWORKBENCHCard = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
   let links = [
-    {
-      label: t("WORKBENCH_HELP_SCREEN_BASIC_SETUP"),
-      link: `/${window?.contextPath}/employee/hcmworkbench/help-screen/basic-setup`,
-      roles: ROLES.HCM,
-    },
+    // {
+    //   label: t("WORKBENCH_HELP_SCREEN_BASIC_SETUP"),
+    //   link: `/${window?.contextPath}/employee/hcmworkbench/help-screen/basic-setup`,
+    //   roles: ROLES.HCM,
+    // },
     {
       label: t("WORKBENCH_MASTER"),
       link: `/${window?.contextPath}/employee/hcmworkbench/master/master-landing-screen`,
       roles: ROLES.HCM,
     },
-    {
-      label: t("ACTION_TEST_LOCALISATION"),
-      link: `/${window?.contextPath}/employee/workbench/localisation-search`,
-      roles: ROLES.HCM,
-    },
-    {
-      label: t("WORKBENCH_USER"),
-      link: `/${window?.contextPath}/employee/hcmworkbench/master/user-landing-screen`,
-      roles: ROLES.HCM,
-    },
-    {
-      label: t("WORKBENCH_HELP_SCREEN_CHECKLIST"),
-      link: `/${window?.contextPath}/employee/hcmworkbench/help-screen/check-list`,
-      roles: ROLES.HCM,
-    },
-    {
-      label: t("WORKBENCH_INBOX"),
-      link: `/${window?.contextPath}/employee/hcmworkbench/inbox`,
-      roles: ROLES.HCM,
-    },
+    // {
+    //   label: t("ACTION_TEST_LOCALISATION"),
+    //   link: `/${window?.contextPath}/employee/workbench/localisation-search`,
+    //   roles: ROLES.HCM,
+    // },
+    // {
+    //   label: t("WORKBENCH_USER"),
+    //   link: `/${window?.contextPath}/employee/hcmworkbench/master/user-landing-screen`,
+    //   roles: ROLES.HCM,
+    // },
+    // {
+    //   label: t("WORKBENCH_HELP_SCREEN_CHECKLIST"),
+    //   link: `/${window?.contextPath}/employee/hcmworkbench/help-screen/check-list`,
+    //   roles: ROLES.HCM,
+    // },
+    // {
+    //   label: t("WORKBENCH_INBOX"),
+    //   link: `/${window?.contextPath}/employee/hcmworkbench/inbox`,
+    //   roles: ROLES.HCM,
+    // },
    
   //   {
   //     label: t("WORKBENCH_CREATE_CAMPAIGN"),

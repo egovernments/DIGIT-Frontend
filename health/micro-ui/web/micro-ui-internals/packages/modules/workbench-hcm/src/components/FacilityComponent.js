@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Card, Header, Button, Loader } from "@egovernments/digit-ui-react-components";
 import { data } from "../configs/ViewProjectConfig";
+import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 
 const FacilityComponent = (props) => {
     const { t } = useTranslation();
