@@ -106,7 +106,8 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
         } else {
           try {
             // TODO: change module in file storage
-            const response = await Digit.UploadServices.Filestorage("property-upload", file, cityDetails.code);
+            const stateId = Digit.Utils.getMultiRootTenant() ? Digit.ULBService.getStateId() : cityDetails.code ;
+            const response = await Digit.UploadServices.Filestorage("property-upload", file, stateId);
             if (response?.data?.files?.length > 0) {
               setUploadedFile(response?.data?.files[0]?.fileStoreId);
             } else {
