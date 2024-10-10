@@ -113,14 +113,14 @@ export const UserManagementConfig = {
           "uiConfig": {
             "links": [
               {
-                "text": "Bulk Upload Users",
+                "text": "BULK_UPLOAD_USERS",
                 "url": "/employee",
                 "roles": [
                   "MICROPLAN_ADMIN"
                 ]
               },
               {
-                "text": "Download User Data",
+                "text": "DOWNLOAD_USER_DATA",
                 "url": "/employee",
                 "roles": [
                   "MICROPLAN_ADMIN"
