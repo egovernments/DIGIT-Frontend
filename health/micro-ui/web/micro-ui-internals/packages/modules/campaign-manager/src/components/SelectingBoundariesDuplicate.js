@@ -28,7 +28,8 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
-  //   const [updatedSelected , setUpdatedSelected] = useState([]);
+  const [updatedSelected, setUpdatedSelected] = useState(null);
+  const [restrictSelection, setRestrictSelection] = useState(null);
 
   useEffect(() => {
     setKey(currentKey);
@@ -43,7 +44,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   };
 
   useEffect(() => {
-    onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions });
+    onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions , updateBoundary: updateBoundary});
   }, [selectedData, boundaryOptions]);
 
   useEffect(() => {
@@ -61,19 +62,34 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
 
   useEffect(() => {
     if (executionCount < 5) {
-      onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions });
+      onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions , updateBoundary: updateBoundary});
       setExecutionCount((prevCount) => prevCount + 1);
     }
   });
 
-  useEffect(() => {
-    if (
-      props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length > 0 ||
-      props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length > 0 ||
-      props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.length > 0
-    ) {
+  const checkDataPresent = ({ action }) => {
+    if (action === false) {
+      setShowPopUp(false);
       setUpdateBoundary(true);
+      setRestrictSelection(false);
+      return;
     }
+    if (action === true) {
+      setShowPopUp(false);
+      setUpdateBoundary(false);
+      return;
+    }
+  };
+
+
+  useEffect(() => {
+      if (
+        props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length > 0 ||
+        props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length > 0 ||
+        props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.length > 0
+      ) {
+        setRestrictSelection(true);
+      }
   }, [props?.props?.sessionData, updateBoundary]);
 
   const handleBoundaryChange = (value) => {
@@ -118,10 +134,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
               updateBoundary={updateBoundary}
               hierarchyData={props?.props?.hierarchyData}
               isMultiSelect={"true"}
-              //   onSelect={(value) => {
-              //     setSelectedData(value?.selectedData);
-              //     setBoundaryOptions(value?.boundaryOptions);
-              //   }}
+              restrictSelection = {restrictSelection}
               onSelect={(value) => {
                 handleBoundaryChange(value);
               }}
@@ -145,42 +158,6 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
           />
         </div>
       </div>
-      {showPopUp && (
-        <PopUp
-          className={"boundaries-pop-module"}
-          type={"default"}
-          heading={t("ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_HEADER")}
-          children={[
-            <div>
-              <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_TEXT") + " "}</CardText>
-            </div>,
-          ]}
-          onOverlayClick={() => {
-            setShowPopUp(false);
-          }}
-          footerChildren={[
-            <Button
-              type={"button"}
-              size={"large"}
-              variation={"secondary"}
-              label={t("ES_CAMPAIGN_BOUNDARY_MODAL_BACK")}
-              onClick={() => {
-                checkDataPresent({ action: false });
-              }}
-            />,
-            <Button
-              type={"button"}
-              size={"large"}
-              variation={"primary"}
-              label={t("ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT")}
-              onClick={() => {
-                checkDataPresent({ action: true });
-              }}
-            />,
-          ]}
-          sortFooterChildren={true}
-        ></PopUp>
-      )}
     </>
   );
 };
