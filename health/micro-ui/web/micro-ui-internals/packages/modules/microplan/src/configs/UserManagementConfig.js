@@ -49,7 +49,7 @@ export const tqmInboxConfig = {
                 "disable": false,
                 "populators": {
                   "name": "name",
-                  "error": "TQM_ERR_VALID_TEST_ID",
+                  "error": "ERR_INVALID_NAME",
                   "style":{
                     "marginBottom":"0px"
                   }
@@ -63,7 +63,7 @@ export const tqmInboxConfig = {
                 "disable": false,
                 "populators": {
                   "name": "phone",
-                  "error": "TQM_ERR_VALID_TEST_ID",
+                  "error": "ERR_INVALID_PHONE_NUMBER",
                   "style":{
                     "marginBottom":"0px"
                   },
@@ -82,21 +82,21 @@ export const tqmInboxConfig = {
           "uiConfig": {
             "columns": [
               {
-                label: "Name",
-                jsonPath: "user.name",
+                "label": "Name",
+                "jsonPath": "user.name",
               },
               {
-                label: "Email",
-                jsonPath: "user.emailId",
+                "label": "Email",
+                "jsonPath": "user.emailId",
               },
               {
-                label: "Contact Number",
-                jsonPath: "user.mobileNumber",
+                "label": "Contact Number",
+                "jsonPath": "user.mobileNumber",
               },
               {
-                label:"Role",
-                jsonPath:"user.roles",
-                additionalCustomization:true
+                "label":"Role",
+                "jsonPath":"user.roles",
+                "additionalCustomization":true
               }
             ],
             "enableGlobalSearch": false,
@@ -120,7 +120,7 @@ export const tqmInboxConfig = {
                 ]
               },
               {
-                "text": "Dowload User Data",
+                "text": "Download User Data",
                 "url": "/employee",
                 "roles": [
                   "MICROPLAN_ADMIN"

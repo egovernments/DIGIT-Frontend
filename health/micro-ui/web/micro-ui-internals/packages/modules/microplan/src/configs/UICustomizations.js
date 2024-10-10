@@ -106,10 +106,10 @@ export const UICustomizations = {
     customValidationCheck: (data) => {
       const { phone } = data;
       const mobileRegex = /^[0-9]{10}$/;
-      debugger
+      
       // Allow empty mobile number
       if (!phone || phone.trim() === "") {
-        return false; // Return true for empty input
+        return false; 
       }
     
       // Check if phone matches the regex
@@ -117,15 +117,14 @@ export const UICustomizations = {
         return { error: true, label: "INVALID_MOBILE_NUMBER" }; // Return an error message if invalid
       }
     
-      return false; // Return true if the mobile number is valid
+      return false;
     },
     preProcess: (data, additionalDetails) => {
 
       const { phone, name } = data?.state?.searchForm || {}
       const { sortOrder } = data?.state?.filterForm || {}
       let { roleschosen } = data?.state?.filterForm || []
-      // console.log(additionalDetails["microplanData"])
-      // debugger;
+      
       if (!roleschosen) {
         roleschosen = {}
       }
@@ -142,8 +141,7 @@ export const UICustomizations = {
         rolesString = Object.keys(roleschosen).filter(role => roleschosen[role] === true).join(',');
       }
       
-      console.log("data", data);
-      console.log("additionalDetails", additionalDetails);
+      
 
       data.params.names = name;
 
@@ -180,7 +178,6 @@ export const UICustomizations = {
         config: {
           enabled: true,
           select: (data) => {
-            console.log("dates", data)
             const roles = data?.mdms.map(item => {
               return (
                 {
@@ -202,7 +199,7 @@ export const UICustomizations = {
 
 
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      debugger
+      
       
       if (key === "Role") {
         
