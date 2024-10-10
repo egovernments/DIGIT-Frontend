@@ -24,7 +24,7 @@ const MicroplanCard = () => {
 
   const propsForModuleCard = {
     Icon: <WorksMgmtIcon />,
-    moduleName: t("Microplan"),
+    moduleName: t("MICROPLAN_MODULE_SETUP"),
     kpis: [],
     links: links,
   };

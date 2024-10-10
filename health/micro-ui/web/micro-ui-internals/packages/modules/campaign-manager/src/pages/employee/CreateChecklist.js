@@ -158,8 +158,14 @@ module = "HCM";
         code = `${prefix}.SN${index + 1}`; // Nested questions
       }
       codes[question.id] = code;
+
+      let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
+      let roleTemp = role.toUpperCase().replace(/ /g, "_");
+      let formattedString = `${campaignName}.${checklistTypeTemp}.${roleTemp}.${code}`;
+      
+
       const obj = {
-        "code": String(code),
+        "code": formattedString,
         "message": String(question.title),
         "module": module,
         "locale": locale
@@ -175,8 +181,9 @@ module = "HCM";
           const upperCaseString = optionval.toUpperCase();
           const transformedString = upperCaseString.replace(/ /g, '_');
           option.label = transformedString;
+          let formattedStringTemp = `${campaignName}.${checklistTypeTemp}.${roleTemp}.${option.label}`;
           const obj = {
-            "code": String(option.label),
+            "code": formattedStringTemp,
             "message": String(optionval),
             "module": module, // to be dynamic
             "locale": locale //to be dynamic
@@ -281,8 +288,9 @@ module = "HCM";
     uniqueLocal = local.filter((value, index, self) =>
       index === self.findIndex((t) => JSON.stringify(t) === JSON.stringify(value))
     );
-
-    let code_of_checklist = `${campaignName}.${checklistType}.${role}`;
+    let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
+    let roleTemp = role.toUpperCase().replace(/ /g, "_");
+    let code_of_checklist = `${campaignName}.${checklistTypeTemp}.${roleTemp}`;
     return {
       tenantId: tenantId,
       // code: role,

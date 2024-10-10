@@ -48,8 +48,13 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
       { name: "MicroplanNamingRegx" },
       { name: "ResourceDistributionStrategy"},
       { name:  "HypothesisAssumptions"},
-      {name: "rolesForMicroplan"}
+      {name: "rolesForMicroplan"},
       //make change here and import as state
+      { name: "HypothesisAssumptions"},
+      { name: "RuleConfigureOutput" },
+      { name: "AutoFilledRuleConfigurations" },
+      { name: "RuleConfigureOperators" },  
+      { name: "RegistrationAndDistributionHappeningTogetherOrSeparately"}
 
     ],
     {

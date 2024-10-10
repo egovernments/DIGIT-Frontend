@@ -44,29 +44,8 @@ function loopAndReturn(dataa) {
         toValue: existingItem.value && item.value ? Math.min(existingItem.value, item.value) : null,
         fromValue: existingItem.value && item.value ? Math.max(existingItem.value, item.value) : null,
       };
-    }
-    // else if (item?.operator?.code === "EQUAL_TO" && item?.attribute?.code === "Gender") {
-    // newArray.push({
-    // ...item,
-    // value: item?.value
-    // ? {
-    // code: item?.value,
-    // }
-    // : null,
-    // });
-    // }
-    else {
-      // If no existing item with the same attribute is found, push the current item
-      // if (item?.operator?.code === "EQUAL_TO" && item?.attribute?.code === "Gender") {
-      //   newArray.push({
-      //     ...item,
-      //     value: {
-      //       code: item?.value,
-      //     },
-      //   });
-      // } else {
+    } else {
       newArray.push(item);
-      // }
     }
   });
 
@@ -95,34 +74,36 @@ function cycleDataRemap(data) {
 //   if (!data) return null;
 //   const reversedData = [];
 //   let currentCycleIndex = null;
-//   let currentDeliveryIndex = null;
 //   let currentCycle = null;
-//   let currentDelivery = null;
 
 //   data.forEach((item, index) => {
 //     if (currentCycleIndex !== item.cycleNumber) {
 //       currentCycleIndex = item.cycleNumber;
 //       currentCycle = {
 //         cycleIndex: currentCycleIndex.toString(),
-//         active: index === 0, // Set active to true only for the first index
+//         active: index === 0, // Initialize active to false
 //         deliveries: [],
 //       };
 //       reversedData.push(currentCycle);
 //     }
 
-//     if (currentDeliveryIndex !== item.deliveryNumber) {
-//       currentDeliveryIndex = item.deliveryNumber;
-//       currentDelivery = {
-//         deliveryIndex: currentDeliveryIndex.toString(),
-//         active: item?.deliveryNumber === 1, // Set active to true only for the first index
+//     const deliveryIndex = item.deliveryNumber.toString();
+
+//     let delivery = currentCycle.deliveries.find((delivery) => delivery.deliveryIndex === deliveryIndex);
+
+//     if (!delivery) {
+//       delivery = {
+//         deliveryIndex: deliveryIndex,
+//         active: item.deliveryNumber === 1, // Set active to true only for the first delivery
 //         deliveryRules: [],
 //       };
-//       currentCycle.deliveries.push(currentDelivery);
+//       currentCycle.deliveries.push(delivery);
 //     }
 
-//     currentDelivery.deliveryRules.push({
-//       ruleKey: currentDelivery.deliveryRules.length + 1,
+//     delivery.deliveryRules.push({
+//       ruleKey: item.deliveryRuleNumber,
 //       delivery: {},
+//       deliveryType: item?.deliveryType,
 //       attributes: loopAndReturn(item.conditions),
 //       products: [...item.products],
 //     });
@@ -131,48 +112,52 @@ function cycleDataRemap(data) {
 //   return reversedData;
 // }
 
-function reverseDeliveryRemap(data) {
-  if (!data) return null;
-  const reversedData = [];
-  let currentCycleIndex = null;
-  let currentCycle = null;
+// function restructureData(data) {
+//   return data.map(cycle => ({
+//       mandatoryWaitSinceLastCycleInDays: null,
+//       id: parseInt(cycle.cycleIndex),
+//       deliveries: cycle.deliveries.map(delivery => ({
+//           id: parseInt(delivery.deliveryIndex),
+//           mandatoryWaitSinceLastDeliveryInDays: null,
+//           doseCriteria: delivery.deliveryRules.map(rule => ({
+//               condition: parseCondition(rule.attributes),
+//               ProductVariants: rule.products.map(product => ({
+//                   productVariantId: product.value,
+//                   name: product.name
+//               }))
+//           }))
+//       }))
+//   }));
+// }
 
-  data.forEach((item, index) => {
-    if (currentCycleIndex !== item.cycleNumber) {
-      currentCycleIndex = item.cycleNumber;
-      currentCycle = {
-        cycleIndex: currentCycleIndex.toString(),
-        active: index === 0, // Initialize active to false
-        deliveries: [],
-      };
-      reversedData.push(currentCycle);
-    }
+// function parseCondition(attributes) {
+//   const conditions = attributes.map(attr => {
+//       const attributeCode = attr.attribute.code;
+//       const operator = attr.operator.code;
+//       if (operator === "IN_BETWEEN") {
+//           const fromValue = attr.fromValue;
+//           const toValue = attr.toValue;
+//           return `${fromValue} <= ${attributeCode} < ${toValue}`;
+//       }
 
-    const deliveryIndex = item.deliveryNumber.toString();
+//       const value = attr.value;
+//       return `${attributeCode}${convertOperator(operator)}${value}`;
+//   });
 
-    let delivery = currentCycle.deliveries.find((delivery) => delivery.deliveryIndex === deliveryIndex);
+//   // Join conditions into a single string
+//   return conditions.join(' and ');
+// }
 
-    if (!delivery) {
-      delivery = {
-        deliveryIndex: deliveryIndex,
-        active: item.deliveryNumber === 1, // Set active to true only for the first delivery
-        deliveryRules: [],
-      };
-      currentCycle.deliveries.push(delivery);
-    }
-
-    delivery.deliveryRules.push({
-      ruleKey: item.deliveryRuleNumber,
-      delivery: {},
-      deliveryType: item?.deliveryType,
-      attributes: loopAndReturn(item.conditions),
-      products: [...item.products],
-    });
-  });
-
-  return reversedData;
-}
-
+// function convertOperator(operatorCode) {
+//   const operators = {
+//       "LESS_THAN_EQUAL_TO": "<=",
+//       "GREATER_THAN_EQUAL_TO": ">=",
+//       "LESS_THAN": "<",
+//       "GREATER_THAN": ">",
+//       "EQUAL_TO": "=",
+//   };
+//   return operators[operatorCode] || "=";
+// }
 
 function groupByTypeRemap(data) {
   if (!data) return null;
@@ -215,14 +200,14 @@ function updateUrlParams(params) {
   window.history.replaceState({}, "", url);
 }
 
-const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
+const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const history = useHistory();
   const [currentStep, setCurrentStep] = useState(0);
   const [totalFormData, setTotalFormData] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [campaignConfig, setCampaignConfig] = useState(CampaignConfig(totalFormData, null, isSubmitting ));
+  const [campaignConfig, setCampaignConfig] = useState(CampaignConfig(totalFormData, null, isSubmitting));
   const [shouldUpdate, setShouldUpdate] = useState(false);
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_FORM_DATA", {});
   const [dataParams, setDataParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", {});
@@ -243,13 +228,11 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
   const [isDraftCreated, setIsDraftCreated] = useState(false);
   const filteredBoundaryData = params?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
   const client = useQueryClient();
-  // const hierarchyType2 = params?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.hierarchy?.hierarchyType
   const [currentKey, setCurrentKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
   const [displayMenu, setDisplayMenu] = useState(null);
-  // const [lowest, setLowest] = useState(null);
   const [fetchBoundary, setFetchBoundary] = useState(() => Boolean(searchParams.get("fetchBoundary")));
   const [fetchUpload, setFetchUpload] = useState(false);
   const [enabled, setEnabled] = useState(false);
@@ -258,10 +241,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
   const [userEnabled, setUserEnabled] = useState(false);
   const [active, setActive] = useState(0);
   const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
-  // const [refetchGenerate, setRefetchGenerate] = useState(null);
-  // const hierarchyType = hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.hierarchy;
-
-  // const lowestHierarchy = hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.lowestHierarchy;
   const lowestHierarchy = useMemo(() => {
     return hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)?.lowestHierarchy;
   }, [hierarchyConfig]);
@@ -281,15 +260,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
 
   const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-  // useEffect(() => {
-  //   if (hierarchyDefinition) {
-  //     setLowest(
-  //       hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.filter(
-  //         (e) => !hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.find((e1) => e1?.parentBoundaryType == e?.boundaryType)
-  //       )
-  //     );
-  //   }
-  // }, [hierarchyDefinition]);
   const { isLoading: draftLoading, data: draftData, error: draftError, refetch: draftRefetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
@@ -308,7 +278,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
   };
 
   useEffect(() => {
-  
     window.addEventListener("checking", getCurrentKey);
 
     return () => {
@@ -330,7 +299,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
   useEffect(() => {
     if (isPreview === "true") {
       setIsDraftCreated(true);
-      setCurrentKey(13);
+      setCurrentKey(14);
       return;
     }
     if (isDraft === "true") {
@@ -381,7 +350,8 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
         },
       },
       HCM_CAMPAIGN_DELIVERY_DATA: {
-        deliveryRule: reverseDeliveryRemap(delivery),
+        // deliveryRule: reverseDeliveryRemap(delivery),
+        deliveryRule: delivery,
       },
       HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA: {
         boundaryType: {
@@ -434,104 +404,134 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
     }
   }, [hierarchyDefinition?.BoundaryHierarchy?.[0], draftData]);
   useEffect(() => {
-    setCampaignConfig(CampaignConfig(totalFormData, dataParams, isSubmitting, summaryErrors , hierarchyData));
-  }, [totalFormData, dataParams, isSubmitting, summaryErrors , hierarchyData]);
+    setCampaignConfig(CampaignConfig(totalFormData, dataParams, isSubmitting, summaryErrors, hierarchyData));
+  }, [totalFormData, dataParams, isSubmitting, summaryErrors, hierarchyData]);
 
   useEffect(() => {
     setIsSubmitting(false);
-    if (currentKey === 13 && isSummary !== "true") {
+    if (currentKey === 14 && isSummary !== "true") {
       updateUrlParams({ key: currentKey, summary: true });
-    } else if (currentKey !== 13) {
+    } else if (currentKey !== 14) {
       updateUrlParams({ key: currentKey, summary: false });
       // setSummaryErrors(null);
     }
   }, [currentKey]);
 
-  function restructureData(data) {
-    const dateData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleData;
-    const restructuredData = [];
+  // function restructureData(data) {
+  //   const dateData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleData;
+  //   const restructuredData = [];
 
-    data.forEach((cycle) => {
-      cycle.deliveries.forEach((delivery, index) => {
-        delivery.deliveryRules.forEach((rule) => {
-          const restructuredRule = {
-            startDate: Digit.Utils.pt.convertDateToEpoch(dateData?.find((i) => i.key == cycle.cycleIndex)?.fromDate, "daystart"), // Hardcoded for now
-            endDate: Digit.Utils.pt.convertDateToEpoch(dateData?.find((i) => i?.key == cycle?.cycleIndex)?.toDate), // Hardcoded for now
-            cycleNumber: parseInt(cycle.cycleIndex),
-            deliveryNumber: parseInt(delivery.deliveryIndex),
-            deliveryType: rule?.deliveryType,
-            deliveryRuleNumber: parseInt(rule.ruleKey), // New key added
-            products: [],
-            conditions: [],
-          };
+  //   data.forEach((cycle) => {
+  //     cycle.deliveries.forEach((delivery, index) => {
+  //       delivery.deliveryRules.forEach((rule) => {
+  //         const restructuredRule = {
+  //           startDate: Digit.Utils.pt.convertDateToEpoch(dateData?.find((i) => i.key == cycle.cycleIndex)?.fromDate, "daystart"), // Hardcoded for now
+  //           endDate: Digit.Utils.pt.convertDateToEpoch(dateData?.find((i) => i?.key == cycle?.cycleIndex)?.toDate), // Hardcoded for now
+  //           cycleNumber: parseInt(cycle.cycleIndex),
+  //           deliveryNumber: parseInt(delivery.deliveryIndex),
+  //           deliveryType: rule?.deliveryType,
+  //           deliveryRuleNumber: parseInt(rule.ruleKey), // New key added
+  //           products: [],
+  //           conditions: [],
+  //         };
 
-          rule.attributes.forEach((attribute) => {
-            if (attribute?.operator?.code === "IN_BETWEEN") {
-              restructuredRule.conditions.push({
-                attribute: attribute?.attribute?.code
-                  ? attribute?.attribute?.code
-                  : typeof attribute?.attribute === "string"
-                  ? attribute?.attribute
-                  : null,
-                operator: "LESS_THAN_EQUAL_TO",
-                value: attribute.fromValue ? Number(attribute.fromValue) : null,
-              });
+  //         rule.attributes.forEach((attribute) => {
+  //           if (attribute?.operator?.code === "IN_BETWEEN") {
+  //             restructuredRule.conditions.push({
+  //               attribute: attribute?.attribute?.code
+  //                 ? attribute?.attribute?.code
+  //                 : typeof attribute?.attribute === "string"
+  //                 ? attribute?.attribute
+  //                 : null,
+  //               operator: "LESS_THAN_EQUAL_TO",
+  //               value: attribute.fromValue ? Number(attribute.fromValue) : null,
+  //             });
 
-              restructuredRule.conditions.push({
-                attribute: attribute?.attribute?.code
-                  ? attribute?.attribute?.code
-                  : typeof attribute?.attribute === "string"
-                  ? attribute?.attribute
-                  : null,
-                operator: "GREATER_THAN_EQUAL_TO",
-                value: attribute.toValue ? Number(attribute.toValue) : null,
-              });
-            } else {
-              restructuredRule.conditions.push({
-                attribute: attribute?.attribute?.code
-                  ? attribute?.attribute?.code
-                  : typeof attribute?.attribute === "string"
-                  ? attribute?.attribute
-                  : null,
-                operator: attribute.operator ? attribute.operator.code : null,
-                value:
-                  attribute?.attribute?.code === "Gender" && attribute?.value?.length > 0
-                    ? attribute?.value
-                    : attribute?.attribute?.code === "TYPE_OF_STRUCTURE"
-                    ? attribute?.value
-                    : attribute?.value
-                    ? Number(attribute?.value)
-                    : null,
-              });
-            }
-          });
+  //             restructuredRule.conditions.push({
+  //               attribute: attribute?.attribute?.code
+  //                 ? attribute?.attribute?.code
+  //                 : typeof attribute?.attribute === "string"
+  //                 ? attribute?.attribute
+  //                 : null,
+  //               operator: "GREATER_THAN_EQUAL_TO",
+  //               value: attribute.toValue ? Number(attribute.toValue) : null,
+  //             });
+  //           } else {
+  //             restructuredRule.conditions.push({
+  //               attribute: attribute?.attribute?.code
+  //                 ? attribute?.attribute?.code
+  //                 : typeof attribute?.attribute === "string"
+  //                 ? attribute?.attribute
+  //                 : null,
+  //               operator: attribute.operator ? attribute.operator.code : null,
+  //               value:
+  //                 attribute?.attribute?.code === "Gender" && attribute?.value?.length > 0
+  //                   ? attribute?.value
+  //                   : attribute?.attribute?.code === "TYPE_OF_STRUCTURE"
+  //                   ? attribute?.value
+  //                   : attribute?.value
+  //                   ? Number(attribute?.value)
+  //                   : null,
+  //             });
+  //           }
+  //         });
 
-          rule.products.forEach((prod) => {
-            restructuredRule.products.push({
-              value: prod?.value,
-              name: prod?.name,
-              count: prod?.count,
-            });
-          });
+  //         rule.products.forEach((prod) => {
+  //           restructuredRule.products.push({
+  //             value: prod?.value,
+  //             name: prod?.name,
+  //             count: prod?.count,
+  //           });
+  //         });
 
-          restructuredData.push(restructuredRule);
-        });
-      });
-    });
+  //         restructuredData.push(restructuredRule);
+  //       });
+  //     });
+  //   });
 
-    return restructuredData;
+  //   return restructuredData;
+  // }
+
+  function restructureData(inputData) {
+    const result = {
+      cycleIndex: inputData?.cycleIndex,
+      active: inputData?.active,
+      deliveries: inputData?.deliveries?.map((delivery) => ({
+        deliveryIndex: delivery.deliveryIndex,
+        active: delivery.active,
+        deliveryRules: delivery.deliveryRules.map((rule) => ({
+          ruleKey: rule.ruleKey,
+          delivery: rule.delivery,
+          attributes: rule.attributes.map((attr) => ({
+            key: attr.key,
+            attribute: attr.attribute.code, // Directly using code from attribute
+            operator: attr.operator.code, // Directly using code from operator
+            value: attr.value,
+          })),
+          products: rule?.products.map((product) => ({
+            key: product.key,
+            value: product.value,
+            count: product.count,
+            name: product.name,
+          })),
+        })),
+      })),
+    };
+
+    return [result];
   }
+
 
   function resourceData(facilityData, boundaryData, userData) {
     const resources = [facilityData, boundaryData, userData].filter((data) => data !== null && data !== undefined);
     return resources;
   }
 
-  useEffect(async () => {
-    if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-      const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
-    }
-  }, [shouldUpdate]);
+  // useEffect(async () => {
+  //   if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
+  //     const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
+  //   }
+  // }, [shouldUpdate]);
 
   const compareIdentical = (draftData, payload) => {
     return _.isEqual(draftData, payload);
@@ -561,8 +561,9 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
             payloadData.additionalDetails.cycleData = {};
           }
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
+            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule?.[0]);
             payloadData.deliveryRules = temp;
+            // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
           } else {
             payloadData.deliveryRules = [];
           }
@@ -582,7 +583,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
                 updateUrlParams({ id: data?.CampaignDetails?.id });
                 draftRefetch();
                 if (currentKey == 6) {
-                  setCurrentKey(13);
+                  setCurrentKey(14);
                 } else {
                   setCurrentKey(currentKey + 1);
                 }
@@ -590,7 +591,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
             });
           } else {
             if (currentKey == 6) {
-              setCurrentKey(13);
+              setCurrentKey(14);
             } else {
               setCurrentKey(currentKey + 1);
             }
@@ -632,8 +633,9 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
             userId: dataParams?.userId,
           };
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
+            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule?.[0]);
             payloadData.deliveryRules = temp;
+            // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
           }
           if (compareIdentical(draftData, payloadData) === false) {
             await updateCampaign(payloadData, {
@@ -696,8 +698,9 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
             userId: dataParams?.userId,
           };
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
+            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule?.[0]);
             payloadData.deliveryRules = temp;
+            // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
           }
 
           await mutate(payloadData, {
@@ -759,8 +762,9 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
             payloadData.additionalDetails.cycleData = {};
           }
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
+            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule?.[0]);
             payloadData.deliveryRules = temp;
+            // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
           } else {
             payloadData.deliveryRules = [];
           }
@@ -799,10 +803,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
     const { cycle, deliveries } = data?.cycleConfigure?.cycleConfgureDate;
     const cycleData = data.cycleConfigure.cycleData;
     let dateError = [];
-    // Validate cycle and deliveries
-    // if (cycle <= 0 || deliveries <= 0) {
-    //   return { error: true, message: "DELIVERY_CYCLE_EMPTY_ERROR" };
-    // }
 
     [...Array(cycle)].forEach((item, index) => {
       const check = cycleData?.find((i) => i?.key === index + 1);
@@ -817,23 +817,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
         });
       }
     });
-    // setSummaryErrors((prev) => {
-    //   return {
-    //     ...prev,
-    //     deliveryErrors: prev?.deliveryErrors ? [...prev.deliveryErrors, ...dateError] : [...dateError],
-    //   };
-    // });
-    // Validate cycleData length
-    // if (cycleData.length !== cycle) {
-    // return { error: true, message: "DELIVERY_CYCLE_MISMATCH_LENGTH_ERROR" };
-    // }
-
-    // Validate fromDate and startDate in cycleData
-    // for (const item of cycleData) {
-    // if (!item.fromDate || !item.toDate) {
-    // return { error: true, message: "DELIVERY_CYCLE_DATE_ERROR" };
-    // }
-    // }
 
     return dateError;
   }
@@ -853,7 +836,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
             deliveryRulesError?.push({
               name: `CYCLE_${cycle?.cycleIndex}`,
               cycle: cycle?.cycleIndex,
-              // error: `Delivery Type missing in delivery condition ${rule?.ruleKey} delivery ${delivery?.deliveryIndex}`,
               error: t(`CAMPAIGN_SUMMARY_DELIVERY_TYPE_MISSING_ERROR`, {
                 CONDITION_NO: rule?.ruleKey,
                 DELIVERY_NO: delivery?.deliveryIndex,
@@ -861,14 +843,12 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
               }),
               button: t(`CAMPAIGN_SUMMARY_ADD_DELIVERY_TYPE_ACTION`),
             });
-            // return;
           }
           if (rule.attributes.length === 0) {
             isValid = false;
             deliveryRulesError?.push({
               name: `CYCLE_${cycle?.cycleIndex}`,
               cycle: cycle?.cycleIndex,
-              // error: `Values missing in delivery condition ${rule?.ruleKey} delivery ${delivery?.deliveryIndex}`,
               error: t(`CAMPAIGN_SUMMARY_VALUES_MISSING_ERROR`, {
                 CONDITION_NO: rule?.ruleKey,
                 DELIVERY_NO: delivery?.deliveryIndex,
@@ -876,14 +856,12 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
               }),
               button: t(`CAMPAIGN_SUMMARY_ADD_VALUES_ACTION`),
             });
-            // return;
           }
           if (rule.products.length === 0) {
             isValid = false;
             deliveryRulesError?.push({
               name: `CYCLE_${cycle?.cycleIndex}`,
               cycle: cycle?.cycleIndex,
-              // error: `Product missing in delivery condition ${rule?.ruleKey} delivery ${delivery?.deliveryIndex}`,
               error: t(`CAMPAIGN_SUMMARY_PRODUCT_MISSING_ERROR`, {
                 CONDITION_NO: rule?.ruleKey,
                 DELIVERY_NO: delivery?.deliveryIndex,
@@ -891,7 +869,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
               }),
               button: t(`CAMPAIGN_SUMMARY_ADD_PRODUCT_ACTION`),
             });
-            // return;
           }
 
           rule.attributes.forEach((attribute) => {
@@ -965,19 +942,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
     return false;
   }
 
-  // function validateBoundaryLevel(data) {
-  //   // Extracting boundary types from hierarchy response
-  //   const boundaryTypes = new Set(hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy.map((item) => item?.boundaryType));
-
-  //   // Extracting unique boundary types from data
-  //   const uniqueDataBoundaryTypes = new Set(data?.map((item) => item.type));
-
-  //   // Checking if all unique boundary types from hierarchy response are present in data
-  //   const allBoundaryTypesPresent = [...boundaryTypes].every((type) => uniqueDataBoundaryTypes.has(type));
-
-  //   return allBoundaryTypesPresent;
-  // }
-
   function validateBoundaryLevel(data) {
     // Extracting boundary hierarchy from hierarchy definition
     const boundaryHierarchy = hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
@@ -996,26 +960,6 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
 
     return allBoundaryTypesPresent;
   }
-
-  // function recursiveParentFind(filteredData) {
-  //   const parentChildrenMap = {};
-
-  //   // Build the parent-children map
-  //   filteredData?.forEach((item) => {
-  //     if (item?.parent) {
-  //       if (!parentChildrenMap[item?.parent]) {
-  //         parentChildrenMap[item?.parent] = [];
-  //       }
-  //       parentChildrenMap[item?.parent].push(item.code);
-  //     }
-  //   });
-
-  //   // Check for missing children
-  //   const missingParents = filteredData?.filter((item) => item?.parent && !parentChildrenMap[item.code]);
-  //   const extraParent = missingParents?.filter((i) => i?.type !== lowest?.[0]?.boundaryType);
-
-  //   return extraParent;
-  // }
 
   function recursiveParentFind(filteredData) {
     const parentChildrenMap = {};
@@ -1164,7 +1108,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
         }
         setShowToast(null);
         return;
-        case "DeliveryDetailsSummary":
+      case "DeliveryDetailsSummary":
         const cycleConfigureData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE;
         const isCycleError = validateCycleData(cycleConfigureData);
         const deliveryCycleData = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA;
@@ -1183,7 +1127,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
         }
         setShowToast(null);
         return true;
-        case "DataUploadSummary":
+      case "DataUploadSummary":
         const isTargetError = totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.filestoreId
           ? false
           : (setSummaryErrors((prev) => {
@@ -1377,7 +1321,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
       setShouldUpdate(true);
     }
     if (isChangeDates === "true" && currentKey == 6) {
-      setCurrentKey(13);
+      setCurrentKey(14);
     }
 
     if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].mandatoryOnAPI) {
@@ -1403,7 +1347,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
     const name = filteredSteps[0].name;
 
     if (step === 6 && Object.keys(totalFormData).includes("HCM_CAMPAIGN_UPLOAD_USER_DATA")) {
-      setCurrentKey(13);
+      setCurrentKey(14);
       setCurrentStep(5);
     } else if (step === 1 && totalFormData["HCM_CAMPAIGN_NAME"] && totalFormData["HCM_CAMPAIGN_TYPE"] && totalFormData["HCM_CAMPAIGN_DATE"]) {
       setCurrentKey(5);
@@ -1450,7 +1394,7 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
   const draftFilterStep = (totalFormData) => {
     const stepFind = (name) => {
       const step = campaignConfig?.[0]?.form.find((step) => step.name === name);
-      return step ? parseInt(step.stepCount, 13) : null;
+      return step ? parseInt(step.stepCount, 14) : null;
     };
     let v = [];
     if (totalFormData?.HCM_CAMPAIGN_NAME?.campaignName) v.push(stepFind("HCM_CAMPAIGN_NAME"));
@@ -1574,11 +1518,11 @@ const SetupCampaign = ({ hierarchyType ,hierarchyData }) => {
         actionClassName={"actionBarClass"}
         className="setup-campaign"
         cardClassName="setup-campaign-card"
-        noCardStyle = {true}
+        noCardStyle={true}
         // noCardStyle={currentStep === 7 ? false : true}
         onSecondayActionClick={onSecondayActionClick}
         label={
-          isChangeDates === "true" && currentKey == 13
+          isChangeDates === "true" && currentKey == 14
             ? t("HCM_UPDATE_DATE")
             : isChangeDates === "true"
             ? null
