@@ -168,6 +168,9 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
             onOverlayClick={() => {
               setShowPopUp(false);
             }}
+            onClose={() => {
+              setShowPopUp(false);
+            }}
             footerChildren={[
               <Button
                 className={"campaign-type-alert-button"}
