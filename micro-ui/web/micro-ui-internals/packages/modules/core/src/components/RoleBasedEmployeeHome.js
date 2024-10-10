@@ -1,8 +1,7 @@
-import React, { Fragment, useState , useEffect} from "react";
-import { LandingPageCard, Loader } from "@egovernments/digit-ui-components";
+import React, { Fragment, useState, useEffect } from "react";
+import { Button, LandingPageCard, LandingPageWrapper, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { EmployeeModuleCard } from "@egovernments/digit-ui-react-components";
 
 const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui", "health-ui", "sanitation-ui", "core-ui", "mgramseva-web", "sandbox-ui"];
 
@@ -12,9 +11,8 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const tenantId = Digit.ULBService.getStateId();
-  let sortedConfigEmployeesSidebar= null;
-  const [mdmsOrderData, setMdmsOrderData]= useState([{}]);
-
+  let sortedConfigEmployeesSidebar = null;
+  const [mdmsOrderData, setMdmsOrderData] = useState([{}]);
 
   const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -31,9 +29,8 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
     }
   );
 
-
   useEffect(() => {
-      setMdmsOrderData(MdmsRes);
+    setMdmsOrderData(MdmsRes);
   }, [MdmsRes]);
 
   const transformURL = (url = "") => {
@@ -84,7 +81,7 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
         // link: queryParamIndex === -1 ? linkUrl : linkUrl.substring(0, queryParamIndex),
         queryParams: queryParamIndex === -1 ? null : linkUrl.substring(queryParamIndex),
         label: t(Digit.Utils.locale.getTransformedLocale(`${module}_LINK_${item.displayName}`)),
-        displayName: item.displayName
+        displayName: item.displayName,
       });
       return acc;
     }, {});
@@ -102,8 +99,8 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
     const sortedModules = Object.keys(configEmployeeSideBar)
       .sort((a, b) => {
         // Find the card order in mdmsOrderData based on module names (HRMS, PGR, etc.)
-        const cardOrderA = mdmsOrderData?.find(item => item.moduleType === "card" && item.name === a)?.order || null;
-        const cardOrderB = mdmsOrderData?.find(item => item.moduleType === "card" && item.name === b)?.order || null;
+        const cardOrderA = mdmsOrderData?.find((item) => item.moduleType === "card" && item.name === a)?.order || null;
+        const cardOrderB = mdmsOrderData?.find((item) => item.moduleType === "card" && item.name === b)?.order || null;
         return cardOrderA - cardOrderB;
       })
       .reduce((acc, module) => {
@@ -111,65 +108,61 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
         const sortedLinks = configEmployeeSideBar?.[module]?.links?.sort((linkA, linkB) => {
           const labelA = linkA?.displayName;
           const labelB = linkB?.displayName;
-  
+
           // Find the order for links inside the module
-          const orderA = mdmsOrderData?.find(item => item.moduleType === "link" && item.name === `${module}.${labelA.replace(/\s+/g, '_')}`)?.order || null;
-          const orderB = mdmsOrderData?.find(item => item.moduleType === "link" && item.name === `${module}.${labelB.replace(/\s+/g, '_')}`)?.order || null;
-  
+          const orderA =
+            mdmsOrderData?.find((item) => item.moduleType === "link" && item.name === `${module}.${labelA.replace(/\s+/g, "_")}`)?.order || null;
+          const orderB =
+            mdmsOrderData?.find((item) => item.moduleType === "link" && item.name === `${module}.${labelB.replace(/\s+/g, "_")}`)?.order || null;
+
           return orderA - orderB;
         });
-  
+
         acc[module] = {
           ...configEmployeeSideBar[module],
           links: sortedLinks,
         };
-  
+
         return acc;
       }, {});
-  
+
     return sortedModules;
   };
 
-  if(isMultiRootTenant){
-    sortedConfigEmployeesSidebar= sortCardAndLink(configEmployeeSideBar);
-  }
-  else{
+  if (isMultiRootTenant) {
+    sortedConfigEmployeesSidebar = sortCardAndLink(configEmployeeSideBar);
+  } else {
     sortedConfigEmployeesSidebar = configEmployeeSideBar;
   }
 
   const children = Object.keys(sortedConfigEmployeesSidebar)?.map((current, index) => {
     const moduleData = sortedConfigEmployeesSidebar?.[current];
+    const configureData = moduleData?.links?.find((item) => item?.label === "Configure");
     const propsForModuleCard = {
-      // Icon: moduleData?.icon,
       icon: "SupervisorAccount",
       moduleName: t(moduleData?.label),
       metrics: [],
-      links: moduleData.links,
-      centreChildren:[
-        <div>{t(Digit.Utils.locale.getTransformedLocale(`MODULE_CARD_DESC_${current}`))}</div>
-      ]    
+      links: Digit.Utils.getMultiRootTenant() ? moduleData.links?.filter((item) => item.label !== "Configure") : moduleData.links,
+      centreChildren: [<div>{t(Digit.Utils.locale.getTransformedLocale(`MODULE_CARD_DESC_${current}`))}</div>],
+      endChildren: Digit.Utils.getMultiRootTenant()
+        ? [
+            <Button
+              variation="teritiary"
+              label={configureData?.label}
+              icon={configureData?.icon}
+              type="button"
+              size={"medium"}
+              onClick={() => history?.push(configureData?.link)}
+              style={{ padding: "0px" }}
+            />,
+          ]
+        : null,
     };
     return <LandingPageCard buttonSize={"medium"} {...propsForModuleCard} />;
   });
   return (
     <>
-      <div className="employee-app-container digit-home-employee-app">
-        <div className="ground-container moduleCardWrapper gridModuleWrapper digit-home-moduleCardWrapper">
-          {/* {Object.keys(configEmployeeSideBar)?.map((current, index) => {
-            const moduleData = configEmployeeSideBar?.[current];
-            const propsForModuleCard = {
-              // Icon: moduleData?.icon,
-              icon: "SupervisorAccount",
-              moduleName: t(moduleData?.label),
-              metrics: [],
-              links: moduleData.links,
-            };
-            return <LandingPageCard buttonSize={"medium"} {...propsForModuleCard} />;
-            // return <EmployeeModuleCard {...propsForModuleCard} />;
-          })} */}
-          {React.Children.map(children, (child) => React.cloneElement(child))}
-        </div>
-      </div>
+      <LandingPageWrapper>{React.Children.map(children, (child) => React.cloneElement(child))}</LandingPageWrapper>
     </>
   );
 };

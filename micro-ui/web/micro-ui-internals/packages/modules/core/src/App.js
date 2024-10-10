@@ -6,6 +6,7 @@ import SignUp from "./pages/employee/SignUp";
 import Otp from "./pages/employee/Otp";
 import ViewUrl from "./pages/employee/ViewUrl";
 import CustomErrorComponent from "./components/CustomErrorComponent";
+import DummyLoaderScreen from "./components/DummyLoader";
 
 export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen" }) => {
   const history = useHistory();
@@ -112,6 +113,9 @@ export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, logoU
         </Route>
         <Route exact path={`/${window?.globalPath}/user/otp`}>
           <Otp />
+        </Route>
+        <Route exact path={`/${window?.globalPath}/user/setup`}>
+          <DummyLoaderScreen />
         </Route>
         <Route exact path={`/${window?.globalPath}/user/url`}>
           <ViewUrl />

@@ -107,7 +107,7 @@ export const CitizenSideBar = ({
     let unique = teantsArray.filter((item, i, ar) => ar.indexOf(item) === i);
     unique?.forEach((uniCode) => {
       filteredArray.push({
-        label: `TENANT_TENANTS_${stringReplaceAll(uniCode, ".", "_")?.toUpperCase()}`,
+        label: t(`TENANT_TENANTS_${stringReplaceAll(uniCode, ".", "_")?.toUpperCase()}`),
         value: uniCode,
       });
     });
@@ -364,7 +364,8 @@ export const CitizenSideBar = ({
   const transformedLanguageData = languages?.map((language) => ({
     ...language,
     type: "custom",
-    key:"language"
+    key:"language",
+    icon:"Language"
   }));
 
   const hamburgerItems = [
