@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-hcmworkbench",
-  "version": "0.0.40",
+  "version": "0.0.41",
   "description": "Workbench-HCM",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
