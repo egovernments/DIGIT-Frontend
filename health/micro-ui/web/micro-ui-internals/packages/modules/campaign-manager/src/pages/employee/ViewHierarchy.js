@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useParams,useHistory } from "react-router-dom";
 import downloadTemplate from "../../utils/downloadTemplate";
 import XlsPreviewNew from "../../components/XlsPreviewNew";
-import { ShpFileIcon } from "../../components/icons/ShapeFileIcon";
+import { Svgicon } from "../../utils/Svgicon";
+import { Loader } from "@egovernments/digit-ui-components";
 
 const ViewHierarchy = () => {
     const { t } = useTranslation();
@@ -21,9 +22,6 @@ const ViewHierarchy = () => {
     const [defData, setDefData] = useState([]);
     const [hierData, setHierData] = useState([]);
 
-    // let defData=[];
-    // let hierData=[];
-
     const hierarchies = [defaultHierarchyType, hierarchyType];
     const [previewPage, setPreviewPage] = useState(false);
     const [firstPage, setFirstPage] = useState(true);
@@ -34,6 +32,7 @@ const ViewHierarchy = () => {
     const [dataCreateToast, setDataCreateToast] = useState(false);
     const [disable, setDisable] = useState(false);
     const [disableFile, setDisableFile] = useState(false);
+    const [dataCreationGoing, setDataCreationGoing] = useState(false);
 
     const callSearch = async(hierarchy) =>{
         const res = await Digit.CustomService.getResponse({
@@ -56,21 +55,12 @@ const ViewHierarchy = () => {
     const fetchData = async()=>{
         try{
             const res = await callSearch(defaultHierarchyType);
-            // console.log("ress is", res);
-            // console.log("default", defaultHierarchyType);
-            if(res?.BoundaryHierarchy?.[0]?.boundaryHierarchy) setDefData(res?.BoundaryHierarchy?.[0]?.boundaryHierarchy)
-            // defData = res?.BoundaryHierarchy?.[0]?.boundaryHierarchy;
-            // console.log("defData", defData);
-            // console.log("new hierarchy type", hierarchyType);
+            if(res?.BoundaryHierarchy?.[0]?.boundaryHierarchy) setDefData(res?.BoundaryHierarchy?.[0]?.boundaryHierarchy);
             const res1 = await callSearch(hierarchyType);
-            // console.log("res1 is", res1);
             if(res1?.BoundaryHierarchy?.[0]?.boundaryHierarchy) setHierData(res1?.BoundaryHierarchy?.[0]?.boundaryHierarchy);
-            // hierData = res1?.BoundaryHierarchy?.[0]?.boundaryHierarchy;
-            // console.log("hierData", hierData);
             setViewState(true);
         }
         catch(error) {
-            console.log("error", error);
         }
     }
 
@@ -79,16 +69,6 @@ const ViewHierarchy = () => {
     }, []);
 
     const { downloadExcelTemplate, loading, error } = downloadTemplate(defData, defaultHierarchyType);
-
-    const requestCriteriaBulkUpload = {
-        url: "/project-factory/v1/data/_create",
-        params: {},
-        body: {
-          ResourceDetails: {},
-        },
-      };
-    
-    const mutation = Digit.Hooks.useCustomAPIMutationHook(requestCriteriaBulkUpload);
     
     const handleUpload = () => {
         inputRef.current.click();
@@ -97,83 +77,32 @@ const ViewHierarchy = () => {
     const handleFileChange = async (event) => {
         const file = [event.target.files[0]]; // Get the first selected file
         if (file) {
-        //   console.log("the file is", file);
           try {
             // Call function to upload the selected file to an API
             await uploadFileToAPI(file);
             setDisableFile(true);
-            setShowToast({ label: "File uploaded successfully!", isError: false });
+            setShowToast({ label: t("FILE_UPLOADED_SUCCESSFULLY"), isError:"success"});
           } catch (error) {
-            setShowToast({ label: "File upload failed. Please try again.", isError: true });
+            setShowToast({ label: error?.response?.data?.Errors?.[0]?.message ? error?.response?.data?.Errors?.[0]?.message : t("FILE_UPLOAD_FAILED") , isError:"error" });
           }
         }
     };
 
     const uploadFileToAPI = async (files) => {
-            // console.log("coming to upload", files);
-            // console.log("file which is ciming isnde is", files);
-           
-            // const formData = new FormData();
-            // formData.append("file", file); // Attach the first file
-            // console.log("form data", formData);
-        // try {
-
             const module = "HCM";
-            // if(key == 2) file = file[0];
             let file = files[0];
             let fileDataTemp = {};
             fileDataTemp.fileName = file?.name
             
             const response = await Digit.UploadServices.Filestorage(module, file, tenantId);
-            // console.log("respose from file storage is", response);
             fileDataTemp.fileStoreId = response?.data?.[0]?.fileStoreId;
             let fileStoreIdTemp = response?.data?.files?.[0]?.fileStoreId;
             setFileStoreId(response?.data?.files?.[0]?.fileStoreId);
             const { data: { fileStoreIds: fileUrlTemp } = {} } = await Digit.UploadServices.Filefetch([fileStoreIdTemp], tenantId);
-            // console.log("the fetched url is", fileUrlTemp);
             fileDataTemp.url = fileUrlTemp?.[0]?.url;
 
             setFileUrl(fileDataTemp?.url);
             setFileData(fileDataTemp);
-
-            // await mutation.mutate(
-            //   {
-            //     params: {},
-            //     body: {
-            //       ResourceDetails: {
-            //         tenantId: tenantId,
-            //         type: "boundary",
-            //         fileStoreId: fileStoreId,
-            //         action: "create",
-            //         hierarchyType: defaultHierarchyType,
-            //         additionalDetails: {},
-            //       },
-            //     },
-            //   },
-            //   {
-            //     onSuccess: () => {
-            //       setShowToast({ label: `${t("WBH_HIERARCHY_CREATED")}` });
-            //     //   closeToast();
-            //     },
-            //     onError: (resp) => {
-                //   console.log("error raised", resp);
-                //   let label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
-                //   resp?.response?.data?.Errors?.map((err, idx) => {
-                //     if (idx === resp?.response?.data?.Errors?.length - 1) {
-                //       label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ".";
-                //     } else {
-                //       label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ", ";
-                //     }
-                //   });
-                //   setShowToast({ label, isError: true });
-            //     //   closeToast();
-                  
-
-            //     },
-            //   }
-            // );
-
-        // console.log("api to be called");
       };
 
     const callCreateDataApi = async()=>{
@@ -196,11 +125,10 @@ const ViewHierarchy = () => {
 
             });
             setDataCreateToast(false);
-            setShowToast({ label: `${t("WBH_HIERARCHY_CREATED")}` });
+            setShowToast({ label: `${t("WBH_HIERARCHY_CREATED")}`, isErro:"success" });
             return res;
         }
         catch(resp){
-            // console.log("error raised", resp);
             let label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
             resp?.response?.data?.Errors?.map((err, idx) => {
             if (idx === resp?.response?.data?.Errors?.length - 1) {
@@ -216,11 +144,11 @@ const ViewHierarchy = () => {
     
     const createData = async()=> {
         try{
+            setDataCreationGoing(true)
             const res = await callCreateDataApi();
-            // console.log("data create res", res);
         }
         catch (error){
-            console.log("error in data create", error);
+            setDataCreationGoing(false);
         }
 
     }
@@ -229,9 +157,7 @@ const ViewHierarchy = () => {
     if(!viewState)
     {
         return (
-            <div>
-              FETCHIING
-            </div>
+            <Loader />
         )
     }
     else
@@ -243,27 +169,26 @@ const ViewHierarchy = () => {
                         <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
                             <div style={{ fontSize: "2.5rem", fontWeight: 700 }}>{t(`HIERARCHY`)} {hierarchyType}</div>
                             <div style={{ height: "2rem" }}></div>
-                            {/* {console.log("hier data", hierData)}
-                            {console.log("def data is", defData)} */}
-            
                             {hierData.map((hierItem, index) => {
-                                // console.log("Processing hierItem:", hierItem);
-            
                                 // Check if the index is less than defData length
                                 const isLessThanDefData = index < defData.length;
             
                                 if (isLessThanDefData) {
                                     if (hierItem?.boundaryType === defData[index]?.boundaryType) {
-                                        // console.log("hehe"); // This will log when the condition is met
                                         return (
                                             <div>
-                                                <div style={{ fontWeight: 400 }} key={index}>
+                                                <div style={{fontWeight:"600", fontSize:"1.2rem"}}>
                                                     {hierItem?.boundaryType}
                                                 </div>
-                                                <div  onClick={() => {}}>
-                                                    <ShpFileIcon />
-                                                </div>
-                                                {/* <div style={{height:"2rem"}}></div> */}
+                                                <div style={{height:"1rem"}}></div>
+                                                <Card type={"primary"} variant={"form"} className={"question-card-container"} >
+                                                    <div style={{display:"flex", gap:"2rem"}}>
+                                                    <Svgicon />
+                                                    <div style={{display:"flex", alignItems:"center", fontWeight:"600"}}>
+                                                        {hierItem?.boundaryType}{".shp"}
+                                                    </div>
+                                                    </div>
+                                                </Card>
                                                 <hr style={{borderTop:"1px solid #ccc", margin:"1rem 0"}}/>
                                             </div>
                                         );
@@ -279,6 +204,7 @@ const ViewHierarchy = () => {
                                                         showAsTags
                                                         uploadedFiles={[]}
                                                         variant="uploadFile"
+                                                        style={{width:"50rem"}}
                                                     />
                                                 </div>
                                                 <div style={{height:"2rem"}}></div>
@@ -298,6 +224,7 @@ const ViewHierarchy = () => {
                                                         showAsTags
                                                         uploadedFiles={[]}
                                                         variant="uploadFile"
+                                                        style={{width:"50rem"}}
                                                     />
                                                 </div>
                                                 <div style={{height:"2rem"}}></div>
@@ -327,22 +254,6 @@ const ViewHierarchy = () => {
                             <div>
                                 <div style={{display:"flex", justifyContent:"space-between"}}>
                                     <div style={{fontWeight:"600", fontSize:"1.2rem"}}>{t("UPLOAD_EXCEL_FOR_ALL_BOUNDARIES")}</div>
-                                    {/* <Uploader
-                                        // multiple
-                                        onUpload={(e)=>{console.log(e)}}
-                                        showAsTags
-                                        uploadedFiles={[]}
-                                        variant="uploadFile"
-                                    /> */}
-                                    {/* <FileUploader
-                                        // multiple={multiple}
-                                        // handleChange={(file)=>{uploadFileToAPI(file)}}
-                                        // handleChange = {handleUpload}
-                                        name="file"
-                                        // types={fileTypes}
-                                        // children={dragDropJSX}
-                                        // onTypeError={fileTypeError}
-                                    /> */}
                                     <input
                                         ref={inputRef}
                                         type="file"
@@ -357,7 +268,7 @@ const ViewHierarchy = () => {
                                         onClick={handleUpload}
                                         options={[]}
                                         optionsKey=""
-                                        size="small"
+                                        size="large"
                                         style={{}}
                                         title=""
                                         variation="secondary"
@@ -379,7 +290,7 @@ const ViewHierarchy = () => {
                                 />,
                                 <Button 
                                     icon="ArrowForward" 
-                                    isDisabled={!disableFile}
+                                    isDisabled={!disableFile }
                                     style={{marginLeft:"auto"}} 
                                     isSuffix 
                                     label={t("Next")} 
@@ -396,7 +307,7 @@ const ViewHierarchy = () => {
                         />
                     </div>
                 }
-                {showToast && <Toast label={showToast.label} error={showToast.isError} onClose={() => setShowToast(null)} />}
+                {showToast && <Toast label={showToast.label} type={showToast.isError} onClose={() => setShowToast(null)} />}
                 {dataCreateToast && <Toast label={t("DATA_CREATION_IN_PROGRESS")} type={"info"} transitionTime={600000000} />}
                 {previewPage && (
                     <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
@@ -417,6 +328,7 @@ const ViewHierarchy = () => {
                                 />,
                                 <Button 
                                     icon="ArrowForward" 
+                                    isDisabled={dataCreationGoing}
                                     style={{marginLeft:"auto"}} 
                                     isSuffix 
                                     label={t("Next")} 

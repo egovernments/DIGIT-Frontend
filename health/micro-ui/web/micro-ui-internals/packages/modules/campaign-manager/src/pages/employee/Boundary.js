@@ -1,4 +1,4 @@
-import { Card } from "@egovernments/digit-ui-components";
+import { Card, Loader } from "@egovernments/digit-ui-components";
 import { Button, PopUp } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -29,7 +29,6 @@ const Boundary = () => {
       };
     const { isLoading, data,  isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
     useEffect(()=>{
-        //console.log("received data is", data);
         if(data?.BoundaryHierarchy && data?.BoundaryHierarchy.length > 0) setGeoPodeData(true);
     }, [data])
 
@@ -51,7 +50,6 @@ const Boundary = () => {
                         },
                     },
                 });
-                //console.log("res of hierarchy ", res);
                 if(res?.BoundaryHierarchy && res?.BoundaryHierarchy.length > 0)
                     {
                         setDirect(true);
@@ -59,7 +57,6 @@ const Boundary = () => {
                     }
 
             } catch (error) {
-                console.error("Error fetching boundary data:", error);
             }
         };
     
@@ -105,9 +102,7 @@ const Boundary = () => {
     if(isFetching)
     {
         return (
-            <div>
-
-            </div>
+            <Loader />
         )
     }
     else
@@ -125,14 +120,14 @@ const Boundary = () => {
                             setShowPopUp(false);
                         }}
                         style={{
-                            // height:"11rem"
-                            width: "50rem"
+                            height:"11rem",
+                            width: "48rem"
                         }}
                         footerChildren={[
                         ]}
                         sortFooterChildren={true}
                     >
-                    <div style={{display:"flex", gap:"1rem"}}>
+                    <div style={{display:"flex", gap:"1rem", justifyContent:"space-around"}}>
                         <Button
                             type={"button"}
                             size={"large"}
@@ -142,6 +137,7 @@ const Boundary = () => {
                             onClick={() => {
                                 callGeoPode(false);
                             }}
+                            style={{height:"4rem"}}
                         />
                         <Button
                             type={"button"}
@@ -151,13 +147,14 @@ const Boundary = () => {
                             onClick={() => {
                                 callGeoPode(true);
                             }}
+                            style={{height:"4rem"}}
                         />
                     </div>
                     </PopUp>
 
                 )}
                 <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
-                    <div style={{fontWeight:700}}>Boundary Data Management</div>
+                    <div style={{fontWeight:700, fontSize:"2.5rem"}}>{t("BOUNDARY_DATA_MANAGEMENT")}</div>
                     <div style={{height:"2rem"}}></div>
                     <div style={{display:"flex", justifyContent:"space-between", width:"100%"}}>
                         <Button
@@ -167,16 +164,15 @@ const Boundary = () => {
                             label={t("CREATE_NEW_BOUNDARY_DATA")}
                             onClick={() => {
                                 if(direct && geoPodeData) {
-                                    // console.log("getting called");
                                     callDirectView();
                                 }
                                 else 
                                 {
-                                    // console.log("direct", direct);
-                                    // console.log("def", geoPodeData);
                                     setShowPopUp(true);
                                 }
                             }}
+                            style={{width:"38rem", height:"5rem"}}
+                            textStyles={{fontSize:"1.5rem"}}
                         />
                         <Button
                             type={"button"}
@@ -188,6 +184,8 @@ const Boundary = () => {
                                 // setShowPopUp(false);
                                 callDirectView();
                             }}
+                            style={{width:"38rem", height:"5rem"}}
+                            textStyles={{fontSize:"1.5rem"}}
                         />
                         <Button
                             type={"button"}
@@ -198,6 +196,8 @@ const Boundary = () => {
                                 // setShowPopUp(false);
                                 callViewBoundary();
                             }}
+                            style={{width:"38rem", height:"5rem"}}
+                            textStyles={{fontSize:"1.5rem"}}
                         />
 
                     </div>
