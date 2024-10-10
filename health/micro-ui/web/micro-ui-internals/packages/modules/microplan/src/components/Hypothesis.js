@@ -8,7 +8,7 @@ import { useAssumptionContext } from "./HypothesisWrapper";
 
 
 
-const Hypothesis = ({ category, assumptions:initialAssumptions , customProps})=>{
+const Hypothesis = ({ category, assumptions:initialAssumptions })=>{
  
   const { t } = useTranslation();
   const [showPopUP, setShowPopUp] = useState(false)

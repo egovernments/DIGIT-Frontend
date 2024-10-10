@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, createContext, useContext } from 'react';onselect
+import React, { useState, useEffect, Fragment, createContext, useContext } from 'react';
 import Hypothesis from './Hypothesis';
 import { Stepper, TextBlock, ActionBar, Button, Card, Toast } from '@egovernments/digit-ui-components';
 import { useTranslation } from "react-i18next";
@@ -74,7 +74,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         const existingAssumptionKeys = assumptionValues?.map(assumption => assumption.key);
         // Filter current assumptions to only those that exist in assumptionValues and are not deleted
         const visibleAssumptions = currentAssumptions.filter(item => 
-            existingAssumptionKeys.includes(item) && !deletedAssumptions.includes(item)
+            existingAssumptionKeys?.includes(item) && !deletedAssumptions?.includes(item)
         );
     
         // Validate: Check if any value is empty for visible assumptions
@@ -159,7 +159,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         const currentAssumptions = assumptionCategories[currentStepIndex]?.assumptions || [];
         const existingAssumptionKeys = assumptionValues.map(assumption => assumption.key);
         const visibleAssumptions = currentAssumptions.filter(item => 
-            existingAssumptionKeys.includes(item) && !deletedAssumptions?.includes(item)
+            existingAssumptionKeys?.includes(item) && !deletedAssumptions?.includes(item)
         );
 
         // Check for empty fields in visible assumptions
@@ -211,7 +211,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         return () => {
           window.removeEventListener("isLastStep", isLastStep);
         };
-      }, [internalKey]);t
+      }, [internalKey]);
 
      
 
@@ -290,7 +290,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
                         }}>
                             <Hypothesis
                                 category={assumptionCategories[internalKey - 1]?.category}
-                                 assumptions={filteredAssumptions.filter(item => !deletedAssumptions.includes(item))}
+                                 assumptions={filteredAssumptions.filter(item => !deletedAssumptions?.includes(item))}
                                 onSelect={onSelect}
                                 customProps={customProps}
                             />
