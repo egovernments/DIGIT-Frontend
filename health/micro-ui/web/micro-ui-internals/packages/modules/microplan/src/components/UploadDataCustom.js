@@ -94,6 +94,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
     } else {
       onSelect("uploadUser", { uploadedFile, isError, isValidation, apiError, isSuccess });
     }
+    onSelect(props.props.name, { uploadedFile, isError, isValidation, apiError, isSuccess })
   }, [uploadedFile, isError, isValidation, apiError, isSuccess]);
 
   useEffect(() => {
@@ -291,6 +292,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
         uploadType = "uploadFacility";
       }
       onSelect(uploadType, { uploadedFile, isError, isValidation: false, apiError: false, isSuccess: uploadedFile?.length > 0 });
+      onSelect(props.props.name,{ uploadedFile, isError, isValidation, apiError, isSuccess })
       setExecutionCount((prevCount) => prevCount + 1);
     }
   });
@@ -592,128 +594,128 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
     userWithBoundary: t("HCM_ADMIN_CONSOLE_USER_LIST"),
   };
 
-  const validateExcel = (selectedFile) => {
-    return new Promise((resolve, reject) => {
-      // Check if a file is selected
-      if (!selectedFile) {
-        reject(t("HCM_FILE_UPLOAD_ERROR"));
-        return;
-      }
+  // const validateExcel = (selectedFile) => {
+  //   return new Promise((resolve, reject) => {
+  //     // Check if a file is selected
+  //     if (!selectedFile) {
+  //       reject(t("HCM_FILE_UPLOAD_ERROR"));
+  //       return;
+  //     }
 
-      // Read the Excel file
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const data = new Uint8Array(e.target.result);
-          const workbook = XLSX.read(data, { type: "array" });
-          const sheet = workbook.Sheets[sheetTypeMap[type]];
-          const headersToValidate = XLSX.utils.sheet_to_json(sheet, {
-            header: 1,
-          })[0];
+  //     // Read the Excel file
+  //     const reader = new FileReader();
+  //     reader.onload = (e) => {
+  //       try {
+  //         const data = new Uint8Array(e.target.result);
+  //         const workbook = XLSX.read(data, { type: "array" });
+  //         const sheet = workbook.Sheets[sheetTypeMap[type]];
+  //         const headersToValidate = XLSX.utils.sheet_to_json(sheet, {
+  //           header: 1,
+  //         })[0];
 
-          const expectedHeaders = sheetHeaders[type];
+  //         const expectedHeaders = sheetHeaders[type];
 
-          const SheetNames = sheetTypeMap[type];
+  //         const SheetNames = sheetTypeMap[type];
 
-          const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[SheetNames], { blankrows: true });
-          var jsonData = sheetData.map((row, index) => {
-            const rowData = {};
-            if (Object.keys(row).length > 0) {
-              Object.keys(row).forEach((key) => {
-                rowData[key] = row[key] === undefined || row[key] === "" ? "" : row[key];
-              });
-              rowData["!row#number!"] = index + 1; // Adding row number
-              return rowData;
-            }
-          });
+  //         const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[SheetNames], { blankrows: true });
+  //         var jsonData = sheetData.map((row, index) => {
+  //           const rowData = {};
+  //           if (Object.keys(row).length > 0) {
+  //             Object.keys(row).forEach((key) => {
+  //               rowData[key] = row[key] === undefined || row[key] === "" ? "" : row[key];
+  //             });
+  //             rowData["!row#number!"] = index + 1; // Adding row number
+  //             return rowData;
+  //           }
+  //         });
 
-          jsonData = jsonData.filter((element) => element !== undefined);
+  //         jsonData = jsonData.filter((element) => element !== undefined);
 
-          if (type === "facilityWithBoundary") {
-            if (workbook?.SheetNames.filter((sheetName) => sheetName == t("HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES")).length == 0) {
-              const errorMessage = t("HCM_INVALID_FACILITY_SHEET");
-              setErrorsType((prevErrors) => ({
-                ...prevErrors,
-                [type]: errorMessage,
-              }));
-              setIsError(true);
-              return;
-            }
-            if (type === "facilityWithBoundary") {
-              const activeColumnName = t("HCM_ADMIN_CONSOLE_FACILITY_USAGE");
-              const uniqueIdentifierColumnName = t("HCM_ADMIN_CONSOLE_FACILITY_CODE");
-              if (activeColumnName && uniqueIdentifierColumnName) {
-                jsonData = jsonData.filter((item) => item[activeColumnName] == "Active" || !item[uniqueIdentifierColumnName]);
-              }
-              if (jsonData.length == 0) {
-                const errorMessage = t("HCM_FACILITY_USAGE_VALIDATION");
-                setErrorsType((prevErrors) => ({
-                  ...prevErrors,
-                  [type]: errorMessage,
-                }));
-                setIsError(true);
-                return;
-              }
-            }
-          } else if (type === "userWithBoundary") {
-            if (workbook?.SheetNames.filter((sheetName) => sheetName == t("HCM_ADMIN_CONSOLE_USER_LIST")).length == 0) {
-              const errorMessage = t("HCM_INVALID_USER_SHEET");
-              setErrorsType((prevErrors) => ({
-                ...prevErrors,
-                [type]: errorMessage,
-              }));
-              setIsError(true);
-              return;
-            }
-          }
-          if (type === "boundary" && workbook?.SheetNames?.length >= 1) {
-            if (!validateMultipleTargets(workbook)) {
-              return;
-            }
-          } else if (type !== "boundary") {
-            for (const header of expectedHeaders) {
-              if (!headersToValidate.includes(header)) {
-                const errorMessage = t("HCM_MISSING_HEADERS");
-                setErrorsType((prevErrors) => ({
-                  ...prevErrors,
-                  [type]: errorMessage,
-                }));
-                setIsError(true);
-                return;
-              }
-            }
-          }
+  //         if (type === "facilityWithBoundary") {
+  //           if (workbook?.SheetNames.filter((sheetName) => sheetName == t("HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES")).length == 0) {
+  //             const errorMessage = t("HCM_INVALID_FACILITY_SHEET");
+  //             setErrorsType((prevErrors) => ({
+  //               ...prevErrors,
+  //               [type]: errorMessage,
+  //             }));
+  //             setIsError(true);
+  //             return;
+  //           }
+  //           if (type === "facilityWithBoundary") {
+  //             const activeColumnName = t("HCM_ADMIN_CONSOLE_FACILITY_USAGE");
+  //             const uniqueIdentifierColumnName = t("HCM_ADMIN_CONSOLE_FACILITY_CODE");
+  //             if (activeColumnName && uniqueIdentifierColumnName) {
+  //               jsonData = jsonData.filter((item) => item[activeColumnName] == "Active" || !item[uniqueIdentifierColumnName]);
+  //             }
+  //             if (jsonData.length == 0) {
+  //               const errorMessage = t("HCM_FACILITY_USAGE_VALIDATION");
+  //               setErrorsType((prevErrors) => ({
+  //                 ...prevErrors,
+  //                 [type]: errorMessage,
+  //               }));
+  //               setIsError(true);
+  //               return;
+  //             }
+  //           }
+  //         } else if (type === "userWithBoundary") {
+  //           if (workbook?.SheetNames.filter((sheetName) => sheetName == t("HCM_ADMIN_CONSOLE_USER_LIST")).length == 0) {
+  //             const errorMessage = t("HCM_INVALID_USER_SHEET");
+  //             setErrorsType((prevErrors) => ({
+  //               ...prevErrors,
+  //               [type]: errorMessage,
+  //             }));
+  //             setIsError(true);
+  //             return;
+  //           }
+  //         }
+  //         if (type === "boundary" && workbook?.SheetNames?.length >= 1) {}
+  //           // if (!validateMultipleTargets(workbook)) {
+  //             // return;
+  //           // }
+  //         // } else if (type !== "boundary") {
+  //         //   for (const header of expectedHeaders) {
+  //         //     if (!headersToValidate.includes(header)) {
+  //         //       const errorMessage = t("HCM_MISSING_HEADERS");
+  //         //       setErrorsType((prevErrors) => ({
+  //         //         ...prevErrors,
+  //         //         [type]: errorMessage,
+  //         //       }));
+  //         //       setIsError(true);
+  //         //       return;
+  //         //     }
+  //         //   }
+  //         // }
 
-          if (type === "boundary" && workbook?.SheetNames.length == 1) {
-            if (!validateTarget(jsonData, headersToValidate)) {
-              return;
-            }
-          }
-          if (jsonData.length == 0 && type !== "boundary") {
-            const errorMessage = t("HCM_EMPTY_SHEET");
-            setErrorsType((prevErrors) => ({
-              ...prevErrors,
-              [type]: errorMessage,
-            }));
-            setIsError(true);
-            return;
-          }
-          if (type !== "boundary") {
-            if (validateData(jsonData, SheetNames)) {
-              resolve(true);
-            } else {
-              setShowInfoCard(true);
-            }
-          }
-        } catch (error) {
-          console.error("Error during Excel validation:", error);
-          reject("HCM_FILE_UNAVAILABLE");
-        }
-      };
+  //         if (type === "boundary" && workbook?.SheetNames.length == 1) {
+  //           if (!validateTarget(jsonData, headersToValidate)) {
+  //             return;
+  //           }
+  //         }
+  //         if (jsonData.length == 0 && type !== "boundary") {
+  //           const errorMessage = t("HCM_EMPTY_SHEET");
+  //           setErrorsType((prevErrors) => ({
+  //             ...prevErrors,
+  //             [type]: errorMessage,
+  //           }));
+  //           setIsError(true);
+  //           return;
+  //         }
+  //         if (type !== "boundary") {
+  //           if (validateData(jsonData, SheetNames)) {
+  //             resolve(true);
+  //           } else {
+  //             setShowInfoCard(true);
+  //           }
+  //         }
+  //       } catch (error) {
+  //         console.error("Error during Excel validation:", error);
+  //         reject("HCM_FILE_UNAVAILABLE");
+  //       }
+  //     };
 
-      reader.readAsArrayBuffer(selectedFile);
-    });
-  };
+  //     reader.readAsArrayBuffer(selectedFile);
+  //   });
+  // };
 
   const onBulkUploadSubmit = async (file) => {
     if (file.length > 1) {
@@ -743,7 +745,12 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       })
       .map(({ id, ...rest }) => rest);
     setUploadedFile(fileData);
-    const validate = await validateExcel(file[0]);
+    setErrorsType((prevErrors) => ({
+      ...prevErrors,
+      [type]: "", // Clear the error message
+    }));
+    setShowInfoCard(false);
+    // const validate = await validateExcel(file[0]);
   };
 
   const onFileDelete = (file, index) => {
