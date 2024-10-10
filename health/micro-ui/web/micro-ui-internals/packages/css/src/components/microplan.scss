@@ -109,4 +109,13 @@
   color:orange;
   margin-top: 0.2rem;
 }
+
+.dm-code {
+  max-width: var(--dm-code-max-width, 10rem);
+  display: inline-block; /* Keep elements inline but respect width constraints */
+  white-space: nowrap; /* Prevent wrapping */
+  overflow: hidden; /* Hide overflow text */
+  text-overflow: ellipsis; /* Add ellipsis to overflowing text */
+}
+
   
