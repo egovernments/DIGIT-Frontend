@@ -167,7 +167,7 @@ export const UICustomizations = {
 
         body: {
           MdmsCriteria: {
-            tenantId: "mz",
+            tenantId:  Digit.ULBService.getCurrentTenantId(),
             filters: {},
             schemaCode: "hcm-microplanning.rolesForMicroplan",
             limit: 10,

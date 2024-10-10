@@ -1,7 +1,7 @@
-export const tqmInboxConfig = {
-  "tenantId": "pb",
+export const UserManagementConfig = {
+  "tenantId": "mz",
   "moduleName": "UserManagementConfig",
-  "tqmInboxConfig": [
+  "userManagementConfig": [
     {
       "label": "USER_MANAGEMENT",
       "type": "inbox",
@@ -138,7 +138,7 @@ export const tqmInboxConfig = {
         },
         "filter": {
           "uiConfig": {
-            "headerLabel": "TQM_INBOX_FILTER",
+            "headerLabel": "ROLESS",
             "secondaryLabel": "ES_COMMON_CLEAR_SEARCH",
             "formClassName": "filter",
             "type": "filter",

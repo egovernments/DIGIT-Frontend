@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Header, InboxSearchComposer, Loader } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
-import { tqmInboxConfig } from "../../configs/UserManagementConfig";
+import { UserManagementConfig } from "../../configs/UserManagementConfig";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { useContext } from "react";
 import { useMyContext } from "../../utils/context";
@@ -15,7 +15,7 @@ const UserManagement = () => {
     
 
     
-    const config = tqmInboxConfig?.tqmInboxConfig?.[0];
+    const config = UserManagementConfig?.UserManagementConfig?.[0];
 
     const tqmInboxSession = Digit.Hooks.useSessionStorage("TQM_INBOX_SESSION", {});
 
