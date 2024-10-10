@@ -1,7 +1,7 @@
 export const UserManagementConfig = {
   "tenantId": "mz",
   "moduleName": "UserManagementConfig",
-  "userManagementConfig": [
+  "UserManagementConfig": [
     {
       "label": "USER_MANAGEMENT",
       "type": "inbox",

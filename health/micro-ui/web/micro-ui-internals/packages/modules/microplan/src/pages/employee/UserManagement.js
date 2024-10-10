@@ -16,6 +16,7 @@ const UserManagement = () => {
 
     
     const config = UserManagementConfig?.UserManagementConfig?.[0];
+    debugger
 
     const tqmInboxSession = Digit.Hooks.useSessionStorage("TQM_INBOX_SESSION", {});
 
