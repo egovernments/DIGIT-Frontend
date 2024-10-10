@@ -161,10 +161,29 @@ const EmployeeSideBar = () => {
     return "";
   }
 
+
+  const localizeLabels = (data) => {
+    return data.map((item) => {
+      const localizedItem = {
+        ...item,
+        label: t(item.label), // Localize the label using t function
+      };
+
+      // If there are children, localize them recursively
+      if (item.children && item.children.length > 0) {
+        localizedItem.children = localizeLabels(item.children);
+      }
+
+      return localizedItem;
+    });
+  };
+
+  const localizedData = localizeLabels(sortedTransformedData); 
+
   return (
     <MediaQuery minWidth={768}>
       <Sidebar
-        items={sortedTransformedData}
+        items={localizedData}
         hideAccessbilityTools={true}
         onSelect={({ item, index, parentIndex }) => onItemSelect({ item, index, parentIndex })}
         theme={"dark"}
