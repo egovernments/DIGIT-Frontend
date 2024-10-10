@@ -116,7 +116,7 @@ const EmployeeSideBar = () => {
     const transformItem = (key, value) => {
       if (value.item) {
         return {
-          label: value.item.displayName,
+          label: t(value.item.displayName),
           icon: { icon: value.item.leftIcon, width: "1.5rem", height: "1.5rem" },
           navigationUrl: value.item.navigationURL,
           orderNumber:value.item.orderNumber,
@@ -160,7 +160,7 @@ const EmployeeSideBar = () => {
   if (!configEmployeeSideBar) {
     return "";
   }
-
+  
   return (
     <MediaQuery minWidth={768}>
       <Sidebar
