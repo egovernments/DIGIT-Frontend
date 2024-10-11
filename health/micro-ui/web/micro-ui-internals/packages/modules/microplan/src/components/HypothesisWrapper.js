@@ -50,9 +50,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
       console.log("refectch", refetchPlan)
     
 
-  
      
-
     const moveToPreviousStep = () => {
         if(internalKey >1){
             setInternalKey((prevKey) => prevKey - 1); 
@@ -114,9 +112,9 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         }
     
         // Move to the next step if validation passes
-        if (internalKey < assumptionCategories.length) {
-            setInternalKey((prevKey) => prevKey + 1); // Update key in URL
-        }
+        // if (internalKey < assumptionCategories.length) {
+        //     setInternalKey((prevKey) => prevKey + 1); // Update key in URL
+        // }
 
         //after everything is done make an api call and assume it will be successfull(let user go to next screen)
         // API CALL
@@ -128,8 +126,12 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
                 name:"SUB_HYPOTHESIS"
             },
             assumptionsToUpdate
+<<<<<<< HEAD
         },
         {
+=======
+        },{
+>>>>>>> 8b0f9d2f1628559fe50dedc525aca0c1ebb3b497
             onSuccess: (data) => {
                 if (internalKey < assumptionCategories.length) {
                     setInternalKey((prevKey) => prevKey + 1); // Update key in URL
@@ -138,10 +140,17 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
             },
             onError: (error, variables) => {
                 console.error(error)
+<<<<<<< HEAD
 
             //   setShowToast(({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") }))
             },
          })
+=======
+                
+            //   setShowToast(({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") }))
+            },
+        })
+>>>>>>> 8b0f9d2f1628559fe50dedc525aca0c1ebb3b497
 
 
     };
@@ -298,6 +307,10 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     }
     
     
+
+    if(isLoadingPlanObject){
+        return <Loader />
+    }
 
     return (
         <Fragment>
