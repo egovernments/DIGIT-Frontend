@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, Header, LabelFieldPair } from "@egovernments/digit-ui-react-components";
-import { Dropdown, RadioButtons } from "@egovernments/digit-ui-components";
+import { Dropdown, PopUp, RadioButtons,CardText,Button } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../utils/context";
 
 const AssumptionsForm = ({ onSelect, ...props }) => {
@@ -14,6 +14,17 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
     const [selectedRegistrationDistributionMode, setSelectedRegistrationDistributionMode] = useState(props?.props?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm?.selectedRegistrationDistributionMode || false);
     const [executionCount, setExecutionCount] = useState(0);
     const resourceDistributionStrategyCode = props?.props?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode;
+
+    const [showPopup,setShowPopup] = useState(false)
+
+    //to show alert
+    useEffect(() => {
+      //if there are any assumptions filled show this popup by default
+      if(props.props.sessionData?.HYPOTHESIS?.Assumptions?.assumptionValues.length > 0){
+        setShowPopup(true)
+      }
+    }, [])
+    
 
     useEffect(() => {
         if (executionCount < 5) {
@@ -135,6 +146,39 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
                     </LabelFieldPair>
                 </Card>
             )}
+
+            {showPopup &&  <PopUp
+            className={"boundaries-pop-module"}
+            type={"alert"}
+            alertHeading={t("MP_WARNING_ASSUMPTIONS_FORM")}
+            alertMessage={t("MP_ASSUMPTIONS_INVALIDATION_MESSAGE")}
+            // heading={t("MP_ASSUMTI")}
+            // children={[
+            //   <div>
+            //     <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_TYPE_MODAL_TEXT") + " "}</CardText>
+            //   </div>,
+            // ]}
+            onOverlayClick={() => {
+              setShowPopup(false);
+            }}
+            onClose={() => {
+              setShowPopup(false);
+            }}
+            footerChildren={[
+              <Button
+                className={"campaign-type-alert-button"}
+                type={"button"}
+                size={"large"}
+                variation={"secondary"}
+                label={t("MP_ACK")}
+                onClick={() => {
+                  setShowPopup(false);
+                //   setCanUpdate(true);
+                }}
+              />
+            ]}
+            // sortFooterChildren={true}
+          ></PopUp>}
         </Card>
     );
 };

@@ -47,14 +47,13 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
       { name: "MicroplanNamingConvention" },
       { name: "MicroplanNamingRegex" },
       { name: "ResourceDistributionStrategy"},
-      {name: "rolesForMicroplan"},
+      { name: "rolesForMicroplan"},
       { name: "HypothesisAssumptions"},
       { name: "RuleConfigureOutput" },
       { name: "AutoFilledRuleConfigurations" },
       { name: "RuleConfigureOperators" },  
-      { name: "RegistrationAndDistributionHappeningTogetherOrSeparately"}
-
-
+      { name: "RegistrationAndDistributionHappeningTogetherOrSeparately"},
+      { name: "hierarchyConfig"}
     ],
     {
       cacheTime:Infinity,
@@ -80,39 +79,39 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
     {
       cacheTime:Infinity,
       select:(data) => {
-        dispatch({
-          type: "MASTER_DATA",
-          state: {
-              hierarchyConfig:[
-              {
-                "hierarchy": "Workbench",
-                "lowestHierarchy": "Post Administrative",
-                "splitBoundariesOn" : "District",
-                "isActive": false
-              },
-                {
-                "hierarchy": "ADMIN",
-                "lowestHierarchy": "Post Administrative",
-                "splitBoundariesOn" : "District",
-                "isActive": false
-              },
-              {
-                "hierarchy": "Health",
-                "lowestHierarchy": "Post Administrative",
-                "splitBoundariesOn" : "District",
-                "isActive": false
-              },
-              {
-                "hierarchy": "MICROPLAN",
-                "lowestHierarchy": "Village",
-                "splitBoundariesOn" : "District",
-                "isActive": true
-              }
-            ],
-            ...data?.["HCM-ADMIN-CONSOLE"],
-          },
+        // dispatch({
+        //   type: "MASTER_DATA",
+        //   state: {
+        //       hierarchyConfig:[
+        //       {
+        //         "hierarchy": "Workbench",
+        //         "lowestHierarchy": "Post Administrative",
+        //         "splitBoundariesOn" : "District",
+        //         "isActive": false
+        //       },
+        //         {
+        //         "hierarchy": "ADMIN",
+        //         "lowestHierarchy": "Post Administrative",
+        //         "splitBoundariesOn" : "District",
+        //         "isActive": false
+        //       },
+        //       {
+        //         "hierarchy": "Health",
+        //         "lowestHierarchy": "Post Administrative",
+        //         "splitBoundariesOn" : "District",
+        //         "isActive": false
+        //       },
+        //       {
+        //         "hierarchy": "MICROPLAN",
+        //         "lowestHierarchy": "Village",
+        //         "splitBoundariesOn" : "District",
+        //         "isActive": true
+        //       }
+        //     ],
+        //     ...data?.["HCM-ADMIN-CONSOLE"],
+        //   },
           
-        });
+        // });
       }
     },
     {schemaCode:"ADDITIONAL_MASTER_DATA"} //mdmsv2
