@@ -2537,6 +2537,12 @@ $border-color: rgba(214, 213, 212, 1);
   align-items: center;
   width: 30rem !important;
 }
+.assumption-label{
+ display: flex;
+ flex-wrap: wrap;
+ align-items: center;
+ width: 30rem;
+}
 
 
 .kpi-container {

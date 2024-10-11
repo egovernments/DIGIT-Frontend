@@ -158,8 +158,11 @@ const formValidator = (formData, key, state) => {
 
       return null
   }
-  
-  
+
+  const uploadDataValidator = (formData)=>{
+    if(formData?.isSuccess) return null;
+    return { key: "error", label: "ERROR_VALID_MANDATORY_FILES" }; 
+  }
 
   //here we'll validate formData based on the config
   switch (key) {
@@ -173,6 +176,10 @@ const formValidator = (formData, key, state) => {
        return assumptionsFormValidator(formData);
     case "Assumptions":
         return microplanAssumptionsValidator(formData);  
+    case "boundary":
+        return uploadDataValidator(formData);
+    case "facilityWithBoundary":
+        return uploadDataValidator(formData);
 
     default:
       return null;
