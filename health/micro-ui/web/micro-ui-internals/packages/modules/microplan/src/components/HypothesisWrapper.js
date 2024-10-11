@@ -139,8 +139,6 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
    
   
 
-    
-
     const handleBack = () => {
         if (internalKey >1) {
             setInternalKey((prevKey) => prevKey - 1); // Update key in URL
@@ -148,10 +146,10 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
             window.dispatchEvent(new Event("moveToPrevious"))
         }
     };
-   // const [stepFilledStatus, setStepFilledStatus] = useState(Array(assumptionCategories.length).fill(false));
+
   const handleStepClick = (step)=>{
        
-                 // Step is zero-based, so we adjust by adding 1
+    // Step is zero-based, so we adjust by adding 1
     const currentStepIndex = internalKey - 1; // Current step index (zero-based)
     
     // // Check if the clicked step is the next step
@@ -169,14 +167,14 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
             return !value; // Check if any value is empty
         });
 
-        // If there are empty fields, show an error and do not allow moving to the next step
+      
         if (hasEmptyFields) {
             setShowToast({
                 key: "error",
                 label: t("ERR_MANDATORY_FIELD"),
                 transitionTime: 3000,
             });
-            return; // Prevent moving to the next step
+            return; 
         }
 
         // Move to the next step if validation passes
@@ -221,8 +219,6 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     }, [assumptionValues, internalKey]);
     useEffect(() => {
         if (executionCount < 5) {
-            
-           
             onSelect(customProps.name, {assumptionValues})
             setExecutionCount((prevCount) => prevCount + 1);
         }
@@ -254,29 +250,8 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         // Update state only with non-duplicate assumptions
         setAssumptionValues(prev => [...prev, ...newAssumptions]);
     }, [filteredAssumptions]);
-    //original one
-    // useEffect(() => {
-    //     // Initialize assumptionValues with all assumptions set to null
-    //     const initialAssumptions = filteredAssumptions.map(item => ({
-    //         source:"MDMS",
-    //         category: null,
-    //         key: item,
-    //         value: null
-    //     }));
-    
-    //     // Create a set of existing keys for quick lookup
-    //     const existingKeys = new Set(assumptionValues.map(assumption => assumption.key));
-    
-    //     // Filter out initialAssumptions to avoid duplicates
-    //     const newAssumptions = initialAssumptions.filter(assumption => !existingKeys.has(assumption.key));
-    
-    //     // Update state only with non-duplicate assumptions
-    //     setAssumptionValues(prev => [...prev, ...newAssumptions]);
-    // }, [filteredAssumptions]);
-
    
-
-
+   
 
     useEffect(() => {
         if (internalKey === assumptionCategories.length) {

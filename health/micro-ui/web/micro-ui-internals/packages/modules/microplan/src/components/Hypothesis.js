@@ -99,7 +99,6 @@ const addNewAssumption = () => {
 };
  
 
-    
    
      return (
          <>
@@ -116,7 +115,7 @@ const addNewAssumption = () => {
 
                         return (
                               <LabelFieldPair className="mp-hypothesis-label-field" key={index}>
-                                    <div  className="name-container"  style={{width:"20rem"}}>
+                                    <div className="assumption-label">
                                       <span>{`${t(item)}`}
                                       <span className="mandatory-span">*</span>
                                       </span>

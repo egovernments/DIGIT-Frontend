@@ -232,44 +232,47 @@ const createUpdatePlanProject = async (req) => {
        
 
       case "HYPOTHESIS":
-        //fetch current plan
-        const fetchedPlanForHypothesis = await searchPlanConfig({
-          PlanConfigurationSearchCriteria: {
-            tenantId,
-            id: microplanId,
-          },
-        })
-        //here we can always invalidate prev assumptions
-        const prevAssumptions = fetchedPlanForHypothesis?.assumptions?.map(row => {
-          const updatedRow = {
-            ...row,
-            active:false
-          }
-          return updatedRow
-        })
-        const assumptionsToUpdate = totalFormData?.HYPOTHESIS?.Assumptions?.assumptionValues?.filter(row => {
-          return row.category && row.key && row.value
-        })
-        const upatedPlanObjHypothesis = {
-          ...fetchedPlanForHypothesis,
-          assumptions:[
-            ...prevAssumptions,
-            ...assumptionsToUpdate
-          ]
-        }
+        // //fetch current plan
+        // const fetchedPlanForHypothesis = await searchPlanConfig({
+        //   PlanConfigurationSearchCriteria: {
+        //     tenantId,
+        //     id: microplanId,
+        //   },
+        // })
+        // //here we can always invalidate prev assumptions
+        // const prevAssumptions = fetchedPlanForHypothesis?.assumptions?.map(row => {
+        //   const updatedRow = {
+        //     ...row,
+        //     active:false
+        //   }
+        //   return updatedRow
+        // })
+        // const assumptionsToUpdate = totalFormData?.HYPOTHESIS?.Assumptions?.assumptionValues?.filter(row => {
+        //   return row.category && row.key && row.value
+        // })
+        // const upatedPlanObjHypothesis = {
+        //   ...fetchedPlanForHypothesis,
+        //   assumptions:[
+        //     ...prevAssumptions,
+        //     ...assumptionsToUpdate
+        //   ]
+        // }
 
-        const planResHypothesis = await updatePlan(upatedPlanObjHypothesis);
-        if(planResHypothesis?.PlanConfiguration?.[0]?.id){
+        // const planResHypothesis = await updatePlan(upatedPlanObjHypothesis);
+        // if(planResHypothesis?.PlanConfiguration?.[0]?.id){
+        //   setCurrentKey((prev) => prev + 1);
+        //   setCurrentStep((prev) => prev + 1);
+        //   window.dispatchEvent(new Event("isLastStep"))
+        //   return {
+        //     triggeredFrom,
+        //   };
+        // }else {
+        //   setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
+        // }
+        window.dispatchEvent(new Event("isLastStep"))
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
-          window.dispatchEvent(new Event("isLastStep"))
-          return {
-            triggeredFrom,
-          };
-        }else {
-          setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
-        }
-
+      
       case "SUB_HYPOTHESIS":
         //first fetch current plan object
         const fetchedPlanForSubHypothesis = await searchPlanConfig({
