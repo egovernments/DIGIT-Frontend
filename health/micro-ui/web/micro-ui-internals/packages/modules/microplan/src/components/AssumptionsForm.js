@@ -19,6 +19,7 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
         if (executionCount < 5) {
             if(resourceDistributionStrategyCode === "MIXED"){
                 onSelect(props.props.name, {selectedRegistrationProcess,selectedDistributionProcess})
+                setExecutionCount((prevCount) => prevCount + 1);
                 return;
             }
          
