@@ -72,12 +72,13 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     const handleNext = () => {
         const currentAssumptions = assumptionCategories[internalKey - 1]?.assumptions || [];
         const existingAssumptionKeys = assumptionValues?.map(assumption => assumption.key);
-        // Filter current assumptions to only those that exist in assumptionValues and are not deleted
+
+        //Filter current assumptions to only those that exist in assumptionValues and are not deleted
         const visibleAssumptions = currentAssumptions.filter(item => 
             existingAssumptionKeys?.includes(item) && !deletedAssumptions?.includes(item)
         );
     
-        // Validate: Check if any value is empty for visible assumptions
+        //Validate: Check if any value is empty for visible assumptions
         const hasEmptyFields = visibleAssumptions.some(item => {
             const value = assumptionValues.find(assumption => assumption.key === item)?.value;
             return !value; // Check if any value is empty
@@ -233,11 +234,9 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         updateUrlParams({ internalKey,});
     }, [internalKey]);
 
-
     useEffect(() => {
-        // Initialize assumptionValues with all assumptions set to null
         const initialAssumptions = filteredAssumptions.map(item => ({
-            source:"MDMS",
+            source: "MDMS",
             category: null,
             key: item,
             value: null
@@ -246,12 +245,34 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         // Create a set of existing keys for quick lookup
         const existingKeys = new Set(assumptionValues.map(assumption => assumption.key));
     
-        // Filter out initialAssumptions to avoid duplicates
-        const newAssumptions = initialAssumptions.filter(assumption => !existingKeys.has(assumption.key));
+        // Filter out initialAssumptions to avoid duplicates and deleted assumptions
+        const newAssumptions = initialAssumptions.filter(assumption => 
+            !existingKeys.has(assumption.key) &&
+            !deletedAssumptions.includes(assumption.key)
+        );
     
         // Update state only with non-duplicate assumptions
         setAssumptionValues(prev => [...prev, ...newAssumptions]);
     }, [filteredAssumptions]);
+    //original one
+    // useEffect(() => {
+    //     // Initialize assumptionValues with all assumptions set to null
+    //     const initialAssumptions = filteredAssumptions.map(item => ({
+    //         source:"MDMS",
+    //         category: null,
+    //         key: item,
+    //         value: null
+    //     }));
+    
+    //     // Create a set of existing keys for quick lookup
+    //     const existingKeys = new Set(assumptionValues.map(assumption => assumption.key));
+    
+    //     // Filter out initialAssumptions to avoid duplicates
+    //     const newAssumptions = initialAssumptions.filter(assumption => !existingKeys.has(assumption.key));
+    
+    //     // Update state only with non-duplicate assumptions
+    //     setAssumptionValues(prev => [...prev, ...newAssumptions]);
+    // }, [filteredAssumptions]);
 
    
 

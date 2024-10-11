@@ -231,9 +231,6 @@ const createUpdatePlanProject = async (req) => {
         }
        
 
-
-
-
       case "HYPOTHESIS":
         //fetch current plan
         const fetchedPlanForHypothesis = await searchPlanConfig({
@@ -272,6 +269,7 @@ const createUpdatePlanProject = async (req) => {
         }else {
           setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
         }
+
       case "SUB_HYPOTHESIS":
         //first fetch current plan object
         const fetchedPlanForSubHypothesis = await searchPlanConfig({
