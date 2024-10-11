@@ -7,7 +7,7 @@ const FormulaConfigWrapper = ({onSelect, props:customProps})=>{
     
     const [selectedCategory, setSelectedCategory] = useState("GENERAL_ESTIMATION"); 
     const { state, dispatch } = useMyContext();
-    console.log("formula stateis",state)
+   
     
 
  customProps.ruleConfigurations = state.AutoFilledRuleConfigurations?.[0]?.ruleConfigurationCategories?.[0]?.ruleConfigurations
