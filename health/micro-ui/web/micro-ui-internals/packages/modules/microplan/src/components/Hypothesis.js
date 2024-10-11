@@ -55,10 +55,13 @@ const Hypothesis = ({ category, assumptions:initialAssumptions })=>{
         deletedAssumptionCategories.current[category].push(deletedAssumption);
         
         setDeletedAssumptions(prev => [...prev, deletedAssumption]);
-        setAssumptions(updatedAssumptions);
         setAssumptionValues((prevValues) => 
           prevValues.filter((value) => value.key !== deletedAssumption)
          );
+
+       
+        setAssumptions(updatedAssumptions);
+       
         setAssumptionToDelete(null); 
      }
 
@@ -85,7 +88,7 @@ const addNewAssumption = () => {
           if (!assumptionValues.some(assumption => assumption.key === assumptionToAdd)) {
               setAssumptionValues(prevValues => [
                   ...prevValues,
-                  { key: assumptionToAdd, value: null } // or an initial value
+                  { source:"MDMS",key: assumptionToAdd, value: null, } // or an initial value
               ]);
           }
 
@@ -96,7 +99,6 @@ const addNewAssumption = () => {
 };
  
 
-    
    
      return (
          <>
@@ -113,7 +115,7 @@ const addNewAssumption = () => {
 
                         return (
                               <LabelFieldPair className="mp-hypothesis-label-field" key={index}>
-                                    <div  className="name-container"  style={{width:"20rem"}}>
+                                    <div className="assumption-label">
                                       <span>{`${t(item)}`}
                                       <span className="mandatory-span">*</span>
                                       </span>
