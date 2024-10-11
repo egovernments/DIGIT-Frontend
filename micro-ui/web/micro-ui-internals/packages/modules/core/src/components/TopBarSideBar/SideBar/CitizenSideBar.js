@@ -3,11 +3,12 @@ import { Loader } from "@egovernments/digit-ui-components";
 import React, { useState, Fragment,useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import SideBarMenu from "../../../config/sidebar-menu";
 import ChangeCity from "../../ChangeCity";
 import { defaultImage } from "../../utils";
 import StaticCitizenSideBar from "./StaticCitizenSideBar";
 import { MobileSidebar } from "@egovernments/digit-ui-components";
+import { LanguageIcon, LogoutIcon, AddressBookIcon, LocationIcon } from "@egovernments/digit-ui-react-components";
+
 
 const Profile = ({ info, stateName, t }) => {
   const [profilePic, setProfilePic] = React.useState(null);
@@ -163,14 +164,25 @@ export const CitizenSideBar = ({
   };
 
   const handleModuleClick = (url) => { 
-    url[0]==="/" ? 
+    
+    if(Digit.Utils.getMultiRootTenant()){
+      url=isEmployee?url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`): url.replace("/sandbox-ui/citizen", `/sandbox-ui/${tenantId}/citizen`)
+      history.push(url);
+      toggleSidebar();
+    }
+    else{
+      url[0]==="/" ? 
       history.push(`/${window?.contextPath}/${isEmployee ? "employee" : "citizen"}${url}`) :
       history.push(`/${window?.contextPath}/${isEmployee ? "employee" : "citizen"}/${url}`);
-    toggleSidebar();
+      toggleSidebar();
+    }
+
+
+    
   }
 
   const redirectToLoginPage = () => {
-    history.push(`/${window?.contextPath}/citizen/login`);
+    history.push(`/${window?.contextPath}/employee/user/language-selection`);
     closeSidebar();
   };
 
@@ -179,8 +191,18 @@ export const CitizenSideBar = ({
   }
 
   let menuItems = [
-    ...SideBarMenu(t, closeSidebar, redirectToLoginPage, isEmployee),
+    {
+      id: "login-btn",
+      element: "LOGIN",
+      text: t("CORE_COMMON_LOGIN"),
+      icon: <LogoutIcon className="icon" />,
+      populators: {
+        onClick: redirectToLoginPage,
+      },
+    },
   ];
+
+
   let profileItem;
   if (isFetched && user && user.access_token) {
     profileItem = (
