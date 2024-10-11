@@ -164,10 +164,10 @@ export const CitizenSideBar = ({
   };
 
   const handleModuleClick = (url) => { 
-    
+    let updatedUrl=null;
     if(Digit.Utils.getMultiRootTenant()){
-      url=isEmployee?url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`): url.replace("/sandbox-ui/citizen", `/sandbox-ui/${tenantId}/citizen`)
-      history.push(url);
+      updatedUrl=isEmployee?url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`): url.replace("/sandbox-ui/citizen", `/sandbox-ui/${tenantId}/citizen`);
+      history.push(updatedUrl);
       toggleSidebar();
     }
     else{
