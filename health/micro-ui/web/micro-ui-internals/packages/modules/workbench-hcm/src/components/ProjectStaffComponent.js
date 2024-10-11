@@ -39,7 +39,7 @@ const ProjectStaffComponent = (props) => {
         },
         body: {
             ProjectStaff: {
-                projectId: props.projectId,
+                projectId: [props.projectId],
             },
         },
     };
