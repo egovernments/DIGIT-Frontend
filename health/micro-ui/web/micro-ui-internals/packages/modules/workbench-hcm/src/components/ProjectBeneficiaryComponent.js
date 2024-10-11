@@ -20,7 +20,7 @@ const ProjectBeneficiaryComponent = (props) => {
 
         body: {
             ProjectResource: {
-                projectId: props.projectId
+                projectId: [props.projectId]
             },
             // apiOperation: "SEARCH"
         },
