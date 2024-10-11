@@ -98,7 +98,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
           body: [
             {
               isMandatory: false,
-              key: "uploadData",
+              key: "boundary",
               type: "component",
               skipAPICall: false,
               component: "UploadDataCustom",
@@ -114,7 +114,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
 
               },
               populators: {
-                name: "uploadData"
+                name: "boundary"
               },
             },
           ],
@@ -126,7 +126,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
           body: [
             {
               isMandatory: false,
-              key: "uploadData",
+              key: "facilityWithBoundary",
               type: "component",
               skipAPICall: false,
               component: "UploadDataCustom",
@@ -140,7 +140,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
                 isSubmitting: isSubmitting
               },
               populators: {
-                name: "uploadData"
+                name: "facilityWithBoundary"
               },
             },
           ],
