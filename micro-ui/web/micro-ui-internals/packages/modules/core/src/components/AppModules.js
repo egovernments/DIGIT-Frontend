@@ -17,7 +17,9 @@ export const AppModules = ({ stateCode, userType, modules, appTenants, additiona
 
   const user = Digit.UserService.getUser();
 
+  console.log("NABEEL", user)
   if (!user || !user?.access_token || !user?.info) {
+    console.log("NABEEL 1")
     return <Redirect to={{ pathname: `/${window?.contextPath}/employee/user/login`, state: { from: location.pathname + location.search } }} />;
   }
 

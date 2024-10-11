@@ -414,8 +414,28 @@
   .citizen-card-input.citizen-card-input--front {
     margin-bottom: 0;
   }
+  .digit-app-container {
+    .digit-back-link {
+      margin-bottom: 1rem !important;
+    }
+    .digit-card-component {
+      .digit-card-header {
+        font-size: 2rem !important;
+        font-weight: 700 !important;
+      }
+    }
+  }
 }
-
+.selection-card-wrapper {
+  .digit-page-based-input-wrapper {
+    .digit-card-component {
+      .digit-card-header {
+        font-size: 2rem;
+        font-weight: 700;
+      }
+    }
+  }
+}
 .action-bar-wrap {
   .menu-wrap {
     p {
@@ -741,4 +761,43 @@ digit-card-text.center {
 
 .sandbox-step.sandbox-visible svg {
   opacity: 1;
+}
+.digit-card-component.digit-landing-page-card {
+  max-width: 30rem !important;
+}
+.digit-msb-sidebar-children.expanded {
+  margin-left: 1.5rem !important;
+  border-left: 0.031rem solid #c5c5c5 !important;
+}
+@media (max-width: 768px) {
+  .homeWrapper > :last-child {
+    margin-left: 1rem !important;
+  }
+  .digit-landing-page-wrapper {
+    margin-left: 1rem !important;
+  }
+}
+
+.RightMostTopBarOptions {
+  .digit-dropdown-employee-select-wrap.language-dropdown {
+    .header-dropdown-label {
+      .cp {
+        color: #fff !important;
+      }
+      .header-dropdown-arrow {
+        path {
+          fill: #fff !important;
+        }
+      }
+    }
+    .header-dropdown-menu {
+      right: 1rem !important;
+    }
+  }
+  .select-wrap {
+    margin-bottom: unset !important;
+    svg {
+      fill: theme(colors.white) !important;
+    }
+  }
 }
