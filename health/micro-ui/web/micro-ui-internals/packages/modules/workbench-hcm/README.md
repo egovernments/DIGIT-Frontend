@@ -62,7 +62,8 @@ const initDigitUI = () => {
 ### Contributors
 
 - [jagankumar-egov](https://github.com/jagankumar-egov) 
-- [nabeelmd-egov](https://github.com/nabeelmd-egov)
+- [Bhavya-egov](https://github.com/Bhavya-egov)
+- [himanshukeshari-eGov](https://github.com/himanshukeshari-eGov)
 
 
 ## License
