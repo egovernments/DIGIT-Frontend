@@ -6,7 +6,7 @@ import { LabelFieldPair, CardLabel } from "@egovernments/digit-ui-components";
 import MultiSelectDropdown from "./MultiSelectDropdown";
 import { value } from "jsonpath";
 import { Dropdown } from "@egovernments/digit-ui-components";
-import { Loader } from "@egovernments/digit-ui-components";
+import { Loader , PopUp, Button } from "@egovernments/digit-ui-components";
 import { merge } from "lodash";
 
 // const frozenData = [
@@ -89,6 +89,7 @@ const Wrapper = ({
   updateBoundary,
   hierarchyData,
   isMultiSelect,
+  restrictSelection
 }) => {
   return (
     <SelectingBoundaryComponent
@@ -102,6 +103,7 @@ const Wrapper = ({
       updateBoundary={updateBoundary}
       data={hierarchyData}
       isMultiSelect={isMultiSelect}
+      restrictSelectionPage = {restrictSelection}
     ></SelectingBoundaryComponent>
   );
 };
@@ -117,6 +119,7 @@ const SelectingBoundaryComponent = ({
   updateBoundary,
   data,
   isMultiSelect,
+  restrictSelectionPage
 }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -125,13 +128,18 @@ const SelectingBoundaryComponent = ({
   const [selectedData, setSelectedData] = useState(selectedData1);
   const [showPopUp, setShowPopUp] = useState(false);
   const timerRef = useRef(null);
-  const [restrictSelection, setRestrictSelection] = useState(updateBoundary);
   const [parentRoot, setParentRoot] = useState(selectedData?.find((item) => item?.isRoot === true)?.type || {});
   //   const [updateBoundarySelected, setUpdateBoundary] = useState(updateBoundary);
+  const [restrictSelection , setRestrictSelection] = useState(restrictSelectionPage);
+
 
   useEffect(() => {
     setBoundaryOptions(boundaryOptionsPage);
   }, [boundaryOptionsPage]);
+
+  useEffect(() => {
+    setRestrictSelection(restrictSelectionPage);
+  }, [restrictSelectionPage]);
 
   const reqCriteria = {
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
@@ -266,6 +274,12 @@ const SelectingBoundaryComponent = ({
   }, [boundaryData, boundaryOptions, parentRoot]);
 
   function handleBoundaryChange(data, boundary) {
+    if (
+      restrictSelection 
+    ) {
+      setShowPopUp(true);
+      return;
+    }
     if (!data || data.length === 0) {
       const structure = createHierarchyStructure(hierarchy);
       const check = structure?.[boundary.boundaryType];
@@ -422,6 +436,7 @@ const SelectingBoundaryComponent = ({
     }
     if (action === true) {
       setShowPopUp(false);
+      setRestrictSelection(true);
       //   setUpdateBoundary(false);
       return;
     }
@@ -535,6 +550,7 @@ const SelectingBoundaryComponent = ({
                         selected={selectedData?.filter((item) => item?.type === boundary?.boundaryType) || []}
                         optionsKey={"code"}
                         disabled={isDisabled}
+                        restrictSelection={restrictSelection}
                         config={{
                           isDropdownWithChip: true,
                           chipKey: "code",
@@ -584,6 +600,7 @@ const SelectingBoundaryComponent = ({
                     }}
                     selected={selectedData?.filter((item) => item?.type === boundary?.boundaryType)?.[0] || {}}
                     optionKey={"code"}
+                    restrictSelection={restrictSelection}
                   />
                 </LabelFieldPair>
               ))}
@@ -599,6 +616,9 @@ const SelectingBoundaryComponent = ({
             </div>,
           ]}
           onOverlayClick={() => {
+            setShowPopUp(false);
+          }}
+          onClose={() => {
             setShowPopUp(false);
           }}
           footerChildren={[

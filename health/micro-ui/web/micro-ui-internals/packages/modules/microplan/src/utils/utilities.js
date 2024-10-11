@@ -100,9 +100,10 @@ const formValidator = (formData, key, state) => {
   };
 
   const areFieldsValid = (fields) => {
-    if (fields.length === 0) {
-      return false;
-  }
+    if(fields.length === 0){
+      return false
+    }
+   
     const hasInvalidField = fields?.some(field => {
       const isValid = field && field.value; 
       return !isValid;
@@ -150,7 +151,7 @@ const formValidator = (formData, key, state) => {
 
 
   const microplanAssumptionsValidator = (formData)=>{
-       
+      
         if(!areFieldsValid(formData.assumptionValues)){
            return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; 
         }
