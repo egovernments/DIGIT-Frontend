@@ -58,8 +58,8 @@ const formValidator = (formData, key, state) => {
 
   const microplanDetailsValidator = () => {
     function validateName(name) {
-      const microplanNamingRegxString = state?.MicroplanNamingRegx?.[0]?.data;
-      const namePattern = new RegExp(microplanNamingRegxString);
+      const microplanNamingRegexString = state?.MicroplanNamingRegex?.[0]?.data;
+      const namePattern = new RegExp(microplanNamingRegexString);
       return namePattern.test(name);
     }
 
@@ -100,9 +100,10 @@ const formValidator = (formData, key, state) => {
   };
 
   const areFieldsValid = (fields) => {
-    if (fields.length === 0) {
-      return false;
-  }
+    if(fields.length === 0){
+      return false
+    }
+   
     const hasInvalidField = fields?.some(field => {
       const isValid = field && field.value; 
       return !isValid;
@@ -150,7 +151,7 @@ const formValidator = (formData, key, state) => {
 
 
   const microplanAssumptionsValidator = (formData)=>{
-       
+      
         if(!areFieldsValid(formData.assumptionValues)){
            return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; 
         }
