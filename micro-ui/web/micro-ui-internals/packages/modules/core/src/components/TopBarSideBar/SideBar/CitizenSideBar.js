@@ -7,7 +7,7 @@ import ChangeCity from "../../ChangeCity";
 import { defaultImage } from "../../utils";
 import StaticCitizenSideBar from "./StaticCitizenSideBar";
 import { MobileSidebar } from "@egovernments/digit-ui-components";
-import { LanguageIcon, LogoutIcon, AddressBookIcon, LocationIcon } from "@egovernments/digit-ui-react-components";
+import { LogoutIcon } from "@egovernments/digit-ui-react-components";
 
 
 const Profile = ({ info, stateName, t }) => {
