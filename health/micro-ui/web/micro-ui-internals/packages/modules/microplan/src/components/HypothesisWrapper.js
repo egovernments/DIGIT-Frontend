@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment, createContext, useContext } from 'react';
 import Hypothesis from './Hypothesis';
-import { Stepper, TextBlock, ActionBar, Button, Card, Toast } from '@egovernments/digit-ui-components';
+import { Stepper, TextBlock, ActionBar, Button, Card, Toast, Loader } from '@egovernments/digit-ui-components';
 import { useTranslation } from "react-i18next";
 import { useMyContext } from "../utils/context";
 import { concat } from 'lodash';
@@ -29,6 +29,25 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     const [showToast, setShowToast] = useState(null);
     const [deletedAssumptions, setDeletedAssumptions] = useState([]);
     const [executionCount, setExecutionCount] = useState(0);
+
+    const tenantId = Digit.ULBService.getCurrentTenantId();
+
+    const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
+    const { isLoading: isLoadingPlanObject, data: planObject, error: errorPlan, refetch: refetchPlan } = Digit.Hooks.microplanv1.useSearchPlanConfig(
+        {
+          PlanConfigurationSearchCriteria: {
+            tenantId,
+            id: microplanId,
+          },
+        },
+        {
+          enabled: microplanId ? true : false,
+        //   queryKey: currentKey,
+        }
+      );
+
+      console.log("plan object is", planObject)
+      console.log("refectch", refetchPlan)
     
 
   
@@ -109,7 +128,20 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
                 name:"SUB_HYPOTHESIS"
             },
             assumptionsToUpdate
-        })
+        },
+        {
+            onSuccess: (data) => {
+                if (internalKey < assumptionCategories.length) {
+                    setInternalKey((prevKey) => prevKey + 1); // Update key in URL
+                }
+                refetchPlan();
+            },
+            onError: (error, variables) => {
+                console.error(error)
+
+            //   setShowToast(({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") }))
+            },
+         })
 
 
     };
@@ -260,6 +292,10 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
             Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: false });
         }
     }, [internalKey]);
+
+    if(isLoadingPlanObject){
+        return <Loader />
+    }
     
     
 

@@ -49,6 +49,7 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
       { name: "ResourceDistributionStrategy"},
       {name: "rolesForMicroplan"},
       { name: "HypothesisAssumptions"},
+      { name: "RuleConfigureInputs" },
       { name: "RuleConfigureOutput" },
       { name: "AutoFilledRuleConfigurations" },
       { name: "RuleConfigureOperators" },  

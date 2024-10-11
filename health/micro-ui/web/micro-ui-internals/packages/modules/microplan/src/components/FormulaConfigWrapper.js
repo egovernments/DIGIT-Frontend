@@ -9,7 +9,7 @@ const FormulaConfigWrapper = ({onSelect, props:customProps})=>{
     const { state, dispatch } = useMyContext();
    
     
-
+console.log("state is", state)
  customProps.ruleConfigurations = state.AutoFilledRuleConfigurations?.[0]?.ruleConfigurationCategories?.[0]?.ruleConfigurations
  customProps.ruleConfigureOperators  = state.RuleConfigureOperators
  customProps.ruleConfigureOutput    = state.RuleConfigureOutput[0].outputCategories[0].outputs

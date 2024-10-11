@@ -2,7 +2,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Card,  Header, LabelFieldPair, DeleteIconv2, Button, } from "@egovernments/digit-ui-react-components";
-import { Dropdown, CheckBox } from "@egovernments/digit-ui-components";
+import { Dropdown, CheckBox, } from "@egovernments/digit-ui-components";
 
 const data = [
     "Number of households per boundary",
@@ -41,6 +41,7 @@ const FormulaConfiguration = ({onSelect,  category,  customProps})=>{
                                 optionKey="code"
                                 showToolTip={true}
                                 style={{width:"30rem"}}
+                                placeholder={"hell"}
                             />
 
                                 
@@ -97,6 +98,21 @@ const FormulaConfiguration = ({onSelect,  category,  customProps})=>{
               
               />
                         <div style={{background:"#eee", height:"0.2rem", marginBottom:"1rem"}}></div>
+                        <Button
+                      className="custom-class"  
+                      icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem",}} fill={PRIMARY_COLOR}/>}
+                      iconFill=""
+                      label={t("ADD_NEW_FORMULA")}
+                      onButtonClick={()=> {}}
+                      options={[]}
+                      optionsKey=""
+                      size=""
+                      style={{height:"50px", fontSize:"20px"}}
+                      title=""
+                      variation="secondary"
+                      isDisabled={()=>{}}
+                      
+                    />
                       </>
             })}
          </Card>
