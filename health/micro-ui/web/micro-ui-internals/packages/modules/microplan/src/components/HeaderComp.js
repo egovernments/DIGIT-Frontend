@@ -10,9 +10,11 @@ const HeaderComp = ({ title,styles = {} }) => {
         fontSize: "1.5rem",
         color: "#0B4B66",
     };
-
+    
     // Merge default styles with the custom styles passed as a prop
     const mergedStyles = { ...defaultStyles, ...styles };
+    
+    console.log("styles",mergedStyles)
    
 
 
