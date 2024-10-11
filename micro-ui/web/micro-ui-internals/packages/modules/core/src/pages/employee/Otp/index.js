@@ -9,6 +9,9 @@ import { useEffect } from "react";
 
 /* set employee details to enable backward compatiable */
 const setEmployeeDetail = (userObject, token) => {
+  if (Digit.Utils.getMultiRootTenant()) {
+    return;
+  }
   let locale = JSON.parse(sessionStorage.getItem("Digit.locale"))?.value || Digit.Utils.getDefaultLanguage();
   localStorage.setItem("Employee.tenant-id", userObject?.tenantId);
   localStorage.setItem("tenant-id", userObject?.tenantId);
@@ -115,7 +118,7 @@ const Otp = ({ isLogin = false }) => {
   return (
     <Background>
       <div className="employeeBackbuttonAlign">
-      <BackLink onClick={() => window.history.back()}/>
+        <BackLink onClick={() => window.history.back()} />
       </div>
       <FormComposerV2
         onSubmit={onSubmit}
