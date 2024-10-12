@@ -227,13 +227,13 @@ const createUpdatePlanProject = async (req) => {
           };
         }
         //otherwise update with invalidating assumptions and formula(operations)
-        const invalidatedAssumptions = planObject.assumptions.length>0 ? planObject.assumptions.map(row =>{
+        const invalidatedAssumptions = planObject?.assumptions.length>0 ? planObject?.assumptions.map(row =>{
           return {
             ...row,
             active:false
           }
         }) : []
-        const invalidatedOperations = planObject.operations.length>0 ? planObject.assumptions.map(row =>{
+        const invalidatedOperations = planObject?.operations.length>0 ? planObject?.assumptions.map(row =>{
           return {
             ...row,
             active:false
@@ -311,14 +311,10 @@ const createUpdatePlanProject = async (req) => {
         }else {
           setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
         }
-<<<<<<< HEAD
        
        
        
       
-=======
-        
->>>>>>> 8b0f9d2f1628559fe50dedc525aca0c1ebb3b497
       case "SUB_HYPOTHESIS":
         //first fetch current plan object
         const fetchedPlanForSubHypothesis = await searchPlanConfig({

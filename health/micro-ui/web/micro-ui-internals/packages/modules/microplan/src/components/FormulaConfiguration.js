@@ -1,8 +1,9 @@
 
 import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { Card,  Header, LabelFieldPair, DeleteIconv2, Button, } from "@egovernments/digit-ui-react-components";
+import { Card,  Header, LabelFieldPair, DeleteIconv2, Button, AddIcon} from "@egovernments/digit-ui-react-components";
 import { Dropdown, CheckBox, } from "@egovernments/digit-ui-components";
+import { PRIMARY_COLOR } from "../utils/utilities";
 
 const data = [
     "Number of households per boundary",
@@ -98,7 +99,10 @@ const FormulaConfiguration = ({onSelect,  category,  customProps})=>{
               
               />
                         <div style={{background:"#eee", height:"0.2rem", marginBottom:"1rem"}}></div>
-                        <Button
+                      
+                      </>
+            })}
+              <Button
                       className="custom-class"  
                       icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem",}} fill={PRIMARY_COLOR}/>}
                       iconFill=""
@@ -113,8 +117,6 @@ const FormulaConfiguration = ({onSelect,  category,  customProps})=>{
                       isDisabled={()=>{}}
                       
                     />
-                      </>
-            })}
          </Card>
       </>
   )

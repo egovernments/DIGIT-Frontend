@@ -126,12 +126,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
                 name:"SUB_HYPOTHESIS"
             },
             assumptionsToUpdate
-<<<<<<< HEAD
-        },
-        {
-=======
         },{
->>>>>>> 8b0f9d2f1628559fe50dedc525aca0c1ebb3b497
             onSuccess: (data) => {
                 if (internalKey < assumptionCategories.length) {
                     setInternalKey((prevKey) => prevKey + 1); // Update key in URL
@@ -139,18 +134,11 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
                 refetchPlan();
             },
             onError: (error, variables) => {
-                console.error(error)
-<<<<<<< HEAD
-
-            //   setShowToast(({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") }))
-            },
-         })
-=======
+                console.error(error, "error rorrrrr")
                 
             //   setShowToast(({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") }))
             },
         })
->>>>>>> 8b0f9d2f1628559fe50dedc525aca0c1ebb3b497
 
 
     };
@@ -176,7 +164,15 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
              )
          });     
     const assumptionCategories = filteredData.length > 0 ? filteredData[0].assumptionCategories : [];
-   const filteredAssumptions = assumptionCategories.length > 0 ? (assumptionCategories[internalKey - 1]?.assumptions || []) : [];
+   
+    const filteredAssumptions = assumptionCategories.length > 0 ? (assumptionCategories[internalKey - 1]?.assumptions || []) : [];
+    const currentCategory = assumptionCategories[internalKey - 1]?.category;
+    const apiAssumptions = Array.isArray(planObject?.assumptions) && planObject?.assumptions.length > 0 
+    ? planObject?.assumptions
+        .filter(item => item.category === currentCategory) // Filter by current category
+        .map(item => item.key) 
+    : [];
+    const assumptionsToPass = apiAssumptions.length > 0 ? apiAssumptions : filteredAssumptions;
    
   
 
@@ -308,10 +304,6 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     
     
 
-    if(isLoadingPlanObject){
-        return <Loader />
-    }
-
     return (
         <Fragment>
                 <AssumptionContext.Provider value={{ assumptionValues, handleAssumptionChange, setAssumptionValues, deletedAssumptions,setDeletedAssumptions }}>
@@ -335,7 +327,8 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
                         }}>
                             <Hypothesis
                                 category={assumptionCategories[internalKey - 1]?.category}
-                                 assumptions={filteredAssumptions.filter(item => !deletedAssumptions?.includes(item))}
+                                 //assumptions={filteredAssumptions.filter(item => !deletedAssumptions?.includes(item))}
+                                 assumptions={assumptionsToPass.filter(item => !deletedAssumptions?.includes(item))} // Pass correctly
                                 onSelect={onSelect}
                                 customProps={customProps}
                             />
