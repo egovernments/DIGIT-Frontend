@@ -16,6 +16,9 @@ const SummaryScreen = ({props:customProps}) => {
     const campaignDetails = customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails
     const microplanDetails = customProps?.sessionData?.MICROPLAN_DETAILS?.microplanDetails
     const assumptionsForm=customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm
+    const hypothesisValues=customProps?.sessionData?.HYPOTHESIS?.Assumptions?.assumptionValues
+    
+
 
     
 
@@ -165,7 +168,7 @@ const SummaryScreen = ({props:customProps}) => {
                         values: [
                             {
                                 key: "Average people in a household",
-                                value: "4",
+                                value: hypothesisValues[2]?.value || "NA",
                             },
                             {
                                 key: "Number of bednets per bale",
@@ -198,19 +201,21 @@ const SummaryScreen = ({props:customProps}) => {
                             },
                             {
                                 key: "Number of beneficiaries to be registered by a registration team per day",
-                                value: "50"
+                                value: hypothesisValues[3]?.value || "NA"
                             },
                             {
                                 key: "Number of members per household registration team ",
-                                value: "4"
+                                value: hypothesisValues[4]?.value || "NA"
                             },
                             {
                                 key: "Number of registration teams per monitor",
-                                value: "4"
+                                value: hypothesisValues[5]?.value || "NA"
+                                
                             },
                             {
                                 key: "Number of monitors per supervisor for household registration",
-                                value: "4"
+                                value: hypothesisValues[6]?.value || "NA"
+                                
                             },
                         ],
                     },
