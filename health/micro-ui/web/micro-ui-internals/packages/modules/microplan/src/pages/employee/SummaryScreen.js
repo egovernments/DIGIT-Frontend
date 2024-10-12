@@ -167,7 +167,7 @@ const SummaryScreen = ({props:customProps}) => {
                         ),
                         values: [
                             {
-                                key: "Average people in a household",
+                                key: t("AVERAGE_PEOPLE_IN_A_HOUSEHOLD"),
                                 value: hypothesisValues[2]?.value || "NA",
                             },
                             {
@@ -196,24 +196,24 @@ const SummaryScreen = ({props:customProps}) => {
                         ),
                         values: [
                             {
-                                key: "No of days for household registration",
+                                key: t("NO_OF_DAYS_FOR_HOUSEHOLD_REGISTRATION"),
                                 value: "4",
                             },
                             {
-                                key: "Number of beneficiaries to be registered by a registration team per day",
+                                key: t("NUMBER_OF_BENEFICIARIES_PER_TEAM_PER_DAY"),
                                 value: hypothesisValues[3]?.value || "NA"
                             },
                             {
-                                key: "Number of members per household registration team ",
+                                key: t("NUMBER_OF_MEMBERS_PER_REGISTRATION_TEAM"),
                                 value: hypothesisValues[4]?.value || "NA"
                             },
                             {
-                                key: "Number of registration teams per monitor",
+                                key: t("NUMBER_OF_REGISTRATION_TEAMS_PER_MONITOR"),
                                 value: hypothesisValues[5]?.value || "NA"
                                 
                             },
                             {
-                                key: "Number of monitors per supervisor for household registration",
+                                key: t("NUMBER_OF_MONITORS_PER_SUPERVISOR_FOR_REGISTRATION"),
                                 value: hypothesisValues[6]?.value || "NA"
                                 
                             },
@@ -235,7 +235,7 @@ const SummaryScreen = ({props:customProps}) => {
                         ),
                         values: [
                             {
-                                key: "Number of households per sticker roll",
+                                key: t("NUMBER_OF_HOUSEHOLDS_PER_STICKER_ROLL"),
                                 value: "20",
                             },
 
@@ -257,11 +257,11 @@ const SummaryScreen = ({props:customProps}) => {
                         ),
                         values: [
                             {
-                                key: "Capacity of vehicle 1(bales)",
+                                key: t("CAPACITY_OF_VEHICLE_1_BALES"),
                                 value: "20",
                             },
                             {
-                                key: "Capacity of vehicle 2(bales)",
+                                key: t("CAPACITY_OF_VEHICLE_2_BALES"),
                                 value: "20",
                             },
 
