@@ -14,6 +14,9 @@ const SummaryScreen = ({props:customProps}) => {
 
     // const [totalFormData, setTotalFormData] = Digit.Hooks.useSessionStorage("MICROPLAN_DATA", {});
     const campaignDetails = customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails
+    const microplanDetails = customProps?.sessionData?.MICROPLAN_DETAILS?.microplanDetails
+    const assumptionsForm=customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm
+
     
 
 
@@ -81,7 +84,7 @@ const SummaryScreen = ({props:customProps}) => {
                             {
                                 key: t("NAME_OF_MICROPLAN"),
                                 // value: totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName || "NA",
-                                value:campaignDetails?.microplanName || "NA",
+                                value:microplanDetails?.microplanName  || "NA",
 
 
                             },
@@ -130,17 +133,17 @@ const SummaryScreen = ({props:customProps}) => {
                         ),
                         values: [
                             {
-                                key: "Campaign Registration Process",
-                                value: "House to House",
+                                key: t("CAMPAIGN_REGISTRATION_PROCESS"),
+                                value: assumptionsForm?.selectedRegistrationProcess?.code  || "NA",
                             },
                             {
-                                key: "Campaign Distribution Process",
-                                value: "House to House",
+                                key: t("CAMPAIGN_DISTRIBUTION_PROCESS"),
+                                value: assumptionsForm?.selectedDistributionProcess?.code || "NA",
                             },
                             {
-                                key: "Registration & Distribution",
+                                key: t("REGISTRATION_AND_DISTRIBUTION"),
                                 // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
-                                value: "Together"
+                                value: assumptionsForm?.selectedRegistrationDistributionMode?.code || "NA"
                             },
                         ],
                     },
