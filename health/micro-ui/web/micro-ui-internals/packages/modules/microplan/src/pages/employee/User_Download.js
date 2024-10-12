@@ -29,6 +29,7 @@ const User_Download = () => {
         data,
 
     } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
+    
 
 
     // Use useEffect to update Files only when data changes
@@ -40,7 +41,6 @@ const User_Download = () => {
         }
     }, [data]); // Only run this effect when `data` changes
 
-    console.log("files", Files); // This will show the updated files after state is set
 
 
     console.log("data", data);
