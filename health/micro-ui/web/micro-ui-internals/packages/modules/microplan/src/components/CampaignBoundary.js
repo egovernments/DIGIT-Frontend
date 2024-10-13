@@ -24,160 +24,160 @@ const CampaignBoundary = ({ customProps }) => {
         setBoundaryStatus(updatedBoundaryStatus);
         // Set showAllItems to true to show all items
     };
-    const selectedData = [
-        {
-            "code": "MICROPLAN_MO",
-            "name": "MICROPLAN_MO",
-            "type": "Country",
-            "isRoot": true,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_05_SINOE",
-            "name": "MICROPLAN_MO_05_SINOE",
-            "type": "Province",
-            "parent": "MICROPLAN_MO",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_05_07_JEDEPO",
-            "name": "MICROPLAN_MO_05_07_JEDEPO",
-            "type": "District",
-            "parent": "MICROPLAN_MO_05_SINOE",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
-            "name": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
-            "type": "Locality",
-            "parent": "MICROPLAN_MO_05_07_JEDEPO",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_05_07_03_15_POKPAKEN_TOWN_K1889",
-            "name": "MICROPLAN_MO_05_07_03_15_POKPAKEN_TOWN_K1889",
-            "type": "Village",
-            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
-            "isRoot": false,
-            "includeAllChildren": true
-        },
-        {
-            "code": "MICROPLAN_MO_05_07_03_14_POKPAKEN_TOWN_P1888",
-            "name": "MICROPLAN_MO_05_07_03_14_POKPAKEN_TOWN_P1888",
-            "type": "Village",
-            "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
-            "isRoot": false,
-            "includeAllChildren": true
-        },
-        {
-            "code": "MICROPLAN_MO_05_06_JEADE",
-            "name": "MICROPLAN_MO_05_06_JEADE",
-            "type": "District",
-            "parent": "MICROPLAN_MO_05_SINOE",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_05_06_03_DIYANKPO",
-            "name": "MICROPLAN_MO_05_06_03_DIYANKPO",
-            "type": "Locality",
-            "parent": "MICROPLAN_MO_05_06_JEADE",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_05_06_03_09_DIYANKPO_MELINP1836",
-            "name": "MICROPLAN_MO_05_06_03_09_DIYANKPO_MELINP1836",
-            "type": "Village",
-            "parent": "MICROPLAN_MO_05_06_03_DIYANKPO",
-            "isRoot": false,
-            "includeAllChildren": true
-        },
-        {
-            "code": "MICROPLAN_MO_05_05_GREENVILLE",
-            "name": "MICROPLAN_MO_05_05_GREENVILLE",
-            "type": "District",
-            "parent": "MICROPLAN_MO_05_SINOE",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_05_05_04_F_J_GRANTE_HOSPITAL",
-            "name": "MICROPLAN_MO_05_05_04_F_J_GRANTE_HOSPITAL",
-            "type": "Locality",
-            "parent": "MICROPLAN_MO_05_05_GREENVILLE",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_05_05_04_16_SEEBEH_NYENNUE",
-            "name": "MICROPLAN_MO_05_05_04_16_SEEBEH_NYENNUE",
-            "type": "Village",
-            "parent": "MICROPLAN_MO_05_05_04_F_J_GRANTE_HOSPITAL",
-            "isRoot": false,
-            "includeAllChildren": true
-        },
-        {
-            "code": "MICROPLAN_MO_04_GBARPOLU",
-            "name": "MICROPLAN_MO_04_GBARPOLU",
-            "type": "Province",
-            "parent": "MICROPLAN_MO",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_04_06_KUNGBOR",
-            "name": "MICROPLAN_MO_04_06_KUNGBOR",
-            "type": "District",
-            "parent": "MICROPLAN_MO_04_GBARPOLU",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_04_06_02_KUNGBOR_CLINIC",
-            "name": "MICROPLAN_MO_04_06_02_KUNGBOR_CLINIC",
-            "type": "Locality",
-            "parent": "MICROPLAN_MO_04_06_KUNGBOR",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_04_06_02_70_CAMP_ALPHA_TOWN1629",
-            "name": "MICROPLAN_MO_04_06_02_70_CAMP_ALPHA_TOWN1629",
-            "type": "Village",
-            "parent": "MICROPLAN_MO_04_06_02_KUNGBOR_CLINIC",
-            "isRoot": false,
-            "includeAllChildren": true
-        },
-        {
-            "code": "MICROPLAN_MO_04_05_GBARMA",
-            "name": "MICROPLAN_MO_04_05_GBARMA",
-            "type": "District",
-            "parent": "MICROPLAN_MO_04_GBARPOLU",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_04_05_05_YANGARYAH_CLINIC",
-            "name": "MICROPLAN_MO_04_05_05_YANGARYAH_CLINIC",
-            "type": "Locality",
-            "parent": "MICROPLAN_MO_04_05_GBARMA",
-            "isRoot": false,
-            "includeAllChildren": false
-        },
-        {
-            "code": "MICROPLAN_MO_04_05_05_20_YANGARYAH_TOWN_1558",
-            "name": "MICROPLAN_MO_04_05_05_20_YANGARYAH_TOWN_1558",
-            "type": "Village",
-            "parent": "MICROPLAN_MO_04_05_05_YANGARYAH_CLINIC",
-            "isRoot": false,
-            "includeAllChildren": true
-        }
-    ]
-    const selectedData1 = customProps?.sessionData?.BOUNDARY?.boundarySelection?.selectedData;
+    // const selectedData = [
+    //     {
+    //         "code": "MICROPLAN_MO",
+    //         "name": "MICROPLAN_MO",
+    //         "type": "Country",
+    //         "isRoot": true,
+    //         "includeAllChildren": false
+    //     },
+    //     {
+    //         "code": "MICROPLAN_MO_05_SINOE",
+    //         "name": "MICROPLAN_MO_05_SINOE",
+    //         "type": "Province",
+    //         "parent": "MICROPLAN_MO",
+    //         "isRoot": false,
+    //         "includeAllChildren": false
+    //     },
+    //     {
+    //         "code": "MICROPLAN_MO_05_07_JEDEPO",
+    //         "name": "MICROPLAN_MO_05_07_JEDEPO",
+    //         "type": "District",
+    //         "parent": "MICROPLAN_MO_05_SINOE",
+    //         "isRoot": false,
+    //         "includeAllChildren": false
+    //     },
+    //     {
+    //         "code": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
+    //         "name": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
+    //         "type": "Locality",
+    //         "parent": "MICROPLAN_MO_05_07_JEDEPO",
+    //         "isRoot": false,
+    //         "includeAllChildren": false
+    //     },
+    //     {
+    //         "code": "MICROPLAN_MO_05_07_03_15_POKPAKEN_TOWN_K1889",
+    //         "name": "MICROPLAN_MO_05_07_03_15_POKPAKEN_TOWN_K1889",
+    //         "type": "Village",
+    //         "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
+    //         "isRoot": false,
+    //         "includeAllChildren": true
+    //     },
+    //     {
+    //         "code": "MICROPLAN_MO_05_07_03_14_POKPAKEN_TOWN_P1888",
+    //         "name": "MICROPLAN_MO_05_07_03_14_POKPAKEN_TOWN_P1888",
+    //         "type": "Village",
+    //         "parent": "MICROPLAN_MO_05_07_03_JOKOKEN_CLINIC",
+    //         "isRoot": false,
+    //         "includeAllChildren": true
+    //     },
+    //     {
+    //         "code": "MICROPLAN_MO_05_06_JEADE",
+    //         "name": "MICROPLAN_MO_05_06_JEADE",
+    //         "type": "District",
+    //         "parent": "MICROPLAN_MO_05_SINOE",
+    //         "isRoot": false,
+    //         "includeAllChildren": false
+    //     },
+    //     {
+    //         "code": "MICROPLAN_MO_05_06_03_DIYANKPO",
+    //         "name": "MICROPLAN_MO_05_06_03_DIYANKPO",
+    //         "type": "Locality",
+    //         "parent": "MICROPLAN_MO_05_06_JEADE",
+    //         "isRoot": false,
+    //         "includeAllChildren": false
+    //     },
+    //     {
+    //         "code": "MICROPLAN_MO_05_06_03_09_DIYANKPO_MELINP1836",
+    //         "name": "MICROPLAN_MO_05_06_03_09_DIYANKPO_MELINP1836",
+    //         "type": "Village",
+    //         "parent": "MICROPLAN_MO_05_06_03_DIYANKPO",
+    //         "isRoot": false,
+    //         "includeAllChildren": true
+    //     },
+    //     {
+    //         "code": "MICROPLAN_MO_05_05_GREENVILLE",
+    //         "name": "MICROPLAN_MO_05_05_GREENVILLE",
+    //         "type": "District",
+    //         "parent": "MICROPLAN_MO_05_SINOE",
+    //         "isRoot": false,
+    //         "includeAllChildren": false
+    //     },
+    //     {
+    //         "code": "MICROPLAN_MO_05_05_04_F_J_GRANTE_HOSPITAL",
+    //         "name": "MICROPLAN_MO_05_05_04_F_J_GRANTE_HOSPITAL",
+    //         "type": "Locality",
+    //         "parent": "MICROPLAN_MO_05_05_GREENVILLE",
+    //         "isRoot": false,
+    //         "includeAllChildren": false
+    //     },
+    //     {
+    //         "code": "MICROPLAN_MO_05_05_04_16_SEEBEH_NYENNUE",
+    //         "name": "MICROPLAN_MO_05_05_04_16_SEEBEH_NYENNUE",
+    //         "type": "Village",
+    //         "parent": "MICROPLAN_MO_05_05_04_F_J_GRANTE_HOSPITAL",
+    //         "isRoot": false,
+    //         "includeAllChildren": true
+    //     },
+    //     {
+    //         "code": "MICROPLAN_MO_04_GBARPOLU",
+    //         "name": "MICROPLAN_MO_04_GBARPOLU",
+    //         "type": "Province",
+    //         "parent": "MICROPLAN_MO",
+    //         "isRoot": false,
+    //         "includeAllChildren": false
+    //     },
+    //     {
+    //         "code": "MICROPLAN_MO_04_06_KUNGBOR",
+    //         "name": "MICROPLAN_MO_04_06_KUNGBOR",
+    //         "type": "District",
+    //         "parent": "MICROPLAN_MO_04_GBARPOLU",
+    //         "isRoot": false,
+    //         "includeAllChildren": false
+    //     },
+    //     {
+    //         "code": "MICROPLAN_MO_04_06_02_KUNGBOR_CLINIC",
+    //         "name": "MICROPLAN_MO_04_06_02_KUNGBOR_CLINIC",
+    //         "type": "Locality",
+    //         "parent": "MICROPLAN_MO_04_06_KUNGBOR",
+    //         "isRoot": false,
+    //         "includeAllChildren": false
+    //     },
+    //     {
+    //         "code": "MICROPLAN_MO_04_06_02_70_CAMP_ALPHA_TOWN1629",
+    //         "name": "MICROPLAN_MO_04_06_02_70_CAMP_ALPHA_TOWN1629",
+    //         "type": "Village",
+    //         "parent": "MICROPLAN_MO_04_06_02_KUNGBOR_CLINIC",
+    //         "isRoot": false,
+    //         "includeAllChildren": true
+    //     },
+    //     {
+    //         "code": "MICROPLAN_MO_04_05_GBARMA",
+    //         "name": "MICROPLAN_MO_04_05_GBARMA",
+    //         "type": "District",
+    //         "parent": "MICROPLAN_MO_04_GBARPOLU",
+    //         "isRoot": false,
+    //         "includeAllChildren": false
+    //     },
+    //     {
+    //         "code": "MICROPLAN_MO_04_05_05_YANGARYAH_CLINIC",
+    //         "name": "MICROPLAN_MO_04_05_05_YANGARYAH_CLINIC",
+    //         "type": "Locality",
+    //         "parent": "MICROPLAN_MO_04_05_GBARMA",
+    //         "isRoot": false,
+    //         "includeAllChildren": false
+    //     },
+    //     {
+    //         "code": "MICROPLAN_MO_04_05_05_20_YANGARYAH_TOWN_1558",
+    //         "name": "MICROPLAN_MO_04_05_05_20_YANGARYAH_TOWN_1558",
+    //         "type": "Village",
+    //         "parent": "MICROPLAN_MO_04_05_05_YANGARYAH_CLINIC",
+    //         "isRoot": false,
+    //         "includeAllChildren": true
+    //     }
+    // ]
+    const selectedData = customProps?.sessionData?.BOUNDARY?.boundarySelection?.selectedData;
 
 
 
@@ -219,8 +219,7 @@ const CampaignBoundary = ({ customProps }) => {
             }
         }
 
-        console.log("parents", parents);
-        console.log("parents_group", parent_group);
+
         return { parents, parent_group };
     }, [selectedData]);
 
@@ -320,12 +319,7 @@ const CampaignBoundary = ({ customProps }) => {
                                         title={item1}
                                         arr={parents?.[item1]}
                                     />
-                                    {/* <div
-                                        onClick={() => handleViewMore(ind + 2)}
-                                        className="view-more"
-                                    >
-                                        View More
-                                    </div> */}
+
                                 </>
                             ) : Array.isArray(parents?.[item1]) && !boundaryStatus?.[ind + 2] ? (
                                 <>
@@ -334,12 +328,7 @@ const CampaignBoundary = ({ customProps }) => {
                                         title={item1}
                                         arr={parents?.[item1]}
                                     />
-                                    {/* <div
-                                        onClick={() => handleViewMore(ind + 2)}
-                                        className="view-more"
-                                    >
-                                        Less
-                                    </div> */}
+
                                 </>
                             ) : null
                         )) || null
@@ -358,7 +347,7 @@ const CampaignBoundary = ({ customProps }) => {
                                     onClick={() => handleViewMore(ind + 2)}
                                     className="view-more"
                                 >
-                                   View Less
+                                    View Less
                                 </div>
 
                             ) : null
