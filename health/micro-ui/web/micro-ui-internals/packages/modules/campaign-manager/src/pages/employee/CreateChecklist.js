@@ -1,6 +1,6 @@
 import React, { useEffect, useState, createContext, useContext } from "react";
-import { ViewCardFieldPair, Toast, Card, TextBlock, Button, PopUp, CardText, FieldV1 } from "@egovernments/digit-ui-components";
-import { FormComposerV2, LabelFieldPair, TextInput, Loader } from "@egovernments/digit-ui-react-components";
+import { ViewCardFieldPair, Toast, Card, TextBlock, Button, PopUp, CardText, TextInput, BreadCrumb, Loader } from "@egovernments/digit-ui-components";
+import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useHistory, useLocation } from "react-router-dom";
 import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
 import { useTranslation } from "react-i18next";
@@ -451,15 +451,14 @@ module = "HCM";
           </div>
           <div style={{ display: "flex" }}>
             <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t("NAME_OF_CHECKLIST")}</div>
-            <FieldV1
+            <TextInput
+              isRequired={true}
+              className="tetxinput-example"
               type={"text"}
-              populators={{
-                resizeSmart: false
-              }}
               name={t("NAME_OF_CHECKLIST")}
               value={checklistName || ""}
               onChange={(event) => addChecklistName(event.target.value)}
-              placeholder={""}
+              placeholder={"Checklist Name"}
             />
           </div>
         </Card>
