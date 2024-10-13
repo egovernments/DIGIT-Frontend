@@ -309,69 +309,46 @@ const CampaignBoundary = ({ customProps }) => {
 
 
 
-            {bHierarchy.length > 1 && bHierarchy.slice(1, -1).map((item, ind) => {
-                //item-Country,Province,Locality,District,Village
-                if (parent_group[item] && Array.isArray(parent_group[item])) {
-                    console.log("item", item)
-                    return parent_group[item].map((item1, idx) => {
-                        //item1-Province-[Sinoe],District-[Jedepo,Jeade]
-                        console.log("item1", item1)
-                        debugger;
-                        return Array.isArray(parents[item1]) ? (
-                            //make a super-comp that contains SubBoundary View
-                            
-                            <Card key={`card_${ind}_${idx}`}>
-                                <HeaderComp title={bHierarchy[ind + 2]} />
-                                {
-                                    <SubBoundaryView
-                                        key={`${item1}_${idx}`}
-                                        title={item1}
-                                        arr={parents[item1]}
-                                    />
-                                }
-                                <div
-                                    onClick={() => handleViewMore(ind + 2)}
-                                    className="view-more"
-                                >
-                                    View Less
-                                </div>
-                            </Card>
-                        ) : (Array.isArray(item1) && (boundaryStatus[ind + 2])) ? (
-                            <div key={`div_${ind}_${idx}`}>
-                                <Card>
-                                    <HeaderComp title={bHierarchy[ind + 2]} />
-                                    {item1.filter(() => (idx == 0 || idx == 1)).map((item2) => (
-                                        //item2-parents name eg, sino etc
+            {bHierarchy.length > 1 && bHierarchy.slice(1, -1).map((item, ind) => (
+                <Card key={`card_${ind}`}>
+                    <HeaderComp title={bHierarchy[ind + 2]} /> {/* Wrap each bHierarchy item with Card */}
+                    {
+                        parent_group?.[item]?.map((item1, idx) => (
+                            Array.isArray(parents?.[item1]) ? (
+                                <SubBoundaryView
+                                    key={`${item1}_${idx}`}
+                                    title={item1}
+                                    arr={parents?.[item1]}
+                                />
+                            ) : (Array.isArray(item1) && boundaryStatus?.[ind + 2]) ? (
+                                <div key={`div_${ind}_${idx}`}>
+                                    {item1?.slice(0, 2).map((item2) => (
                                         <SubBoundaryView
                                             key={`${item2}_${idx}`}
                                             title={item2}
-                                            arr={parents[item2]}
+                                            arr={parents?.[item2]}
                                         />
-                                    ))
-                                    }
+                                    ))}
                                     <div
                                         onClick={() => handleViewMore(ind + 2)}
                                         className="view-more"
                                     >
                                         View More
                                     </div>
-                                </Card>
+                                </div>
+                            ) : null
+                        )) || null
+                    }
+                    <div
+                        onClick={() => handleViewMore(ind + 2)}
+                        className="view-more"
+                    >
+                        View Less
+                    </div>
+                </Card>
+            ))}
 
 
-
-
-                            </div>
-
-
-
-                        ) : (null)
-
-
-
-                    });
-                }
-                return null;
-            })}
         </div>
     );
 };
