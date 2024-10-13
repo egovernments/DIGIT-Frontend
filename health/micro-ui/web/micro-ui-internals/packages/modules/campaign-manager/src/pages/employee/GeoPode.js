@@ -6,11 +6,18 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { DustbinIcon } from "../../components/icons/DustbinIcon";
 import { Svgicon } from "../../utils/Svgicon";
+import { useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import FinalPopup from "../../components/FinalPopup";
+
+
 
 // import { TextInput } from "@egovernments/digit-ui-react-components";
 
 const GeoPode = () => {
     const { t } = useTranslation();
+    const location = useLocation();
+    const history = useHistory();
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const searchParams = new URLSearchParams(location.search);
     const hierarchyType = searchParams.get("hierarchyType");
@@ -20,7 +27,9 @@ const GeoPode = () => {
     const [additionalData, setAdditionalData] = useState(false);
     const [showFinalPopup, setShowFinalPopup] = useState(false);
     const [enableCreate, setEnableCreate] = useState(false);
-    const state = window.history.state;
+
+    // const state = window.history.state;
+    const state = location.state;
     let receivedData = state?.data?.BoundaryHierarchy?.[0]?.boundaryHierarchy;
     const [boundaryData, setBoundaryData]=useState((receivedData === undefined ? [] : receivedData));
     const [newBoundaryData, setNewBoundaryData] = useState([]);
@@ -80,14 +89,11 @@ const GeoPode = () => {
             const res = await callCreate();
             setShowToast({ label: t("HIERARCHY_CREATED_SUCCESSFULLY"), isError: "success" });
             await sleep(2000);
-            window.history.pushState(
-                {
-                },
-                "",
-                `/${window.contextPath}/employee/campaign/view-hierarchy?defaultHierarchyType=${defaultHierarchyType}&hierarchyType=${hierarchyType}`
+
+            history.push(
+                `/${window.contextPath}/employee/campaign/view-hierarchy?defaultHierarchyType=${defaultHierarchyType}&hierarchyType=${hierarchyType}`,
+                {  }
             );
-            const navEvent = new PopStateEvent("popstate");
-            window.dispatchEvent(navEvent);
 
         }catch (error) {
             setShowToast({ label: error?.response?.data?.Errors?.[0]?.message ? error?.response?.data?.Errors?.[0]?.message : t("HIERARCHY_CREATION_FAILED") , isError:"error"});
@@ -95,15 +101,10 @@ const GeoPode = () => {
     }
 
     const goBackToBoundary = ()=> {
-        window.history.pushState(
-            {
-                data:data
-            },
-            "",
-            `/${window.contextPath}/employee/campaign/boundary-management?defaultHierarchyType=${defaultHierarchyType}&hierarchyType=${hierarchyType}`
+        history.push(
+            `/${window.contextPath}/employee/campaign/boundary-management?defaultHierarchyType=${defaultHierarchyType}&hierarchyType=${hierarchyType}`,
+            { data: state }
         );
-        const navEvent = new PopStateEvent("popstate");
-        window.dispatchEvent(navEvent);
 
     }
 
@@ -128,14 +129,6 @@ const GeoPode = () => {
         });
 
     }
-
-    const requestCriteriaBulkUpload = {
-        url: "/project-factory/v1/data/_create",
-        params: {},
-        body: {
-          ResourceDetails: {},
-        },
-      };
 
     if(newHierarchy == false)
     {
@@ -228,52 +221,7 @@ const GeoPode = () => {
                     </div>
                 )
                 }
-                {showFinalPopup  &&
-                    <PopUp 
-                        className={"custom-popup"}
-                        type={"default"}
-                        heading={t("CREATE_BOUNDARY_HIERARCHY")}
-                        children={[
-                        ]}
-                        onClose={()=>{
-                            setShowFinalPopup(false);
-                        }}
-                        onOverlayClick={()=>{
-                            setShowFinalPopup(false);
-                        }}
-                        style={{
-                            // height:"11rem"
-                            width: "50rem"
-                        }}
-                        footerChildren={[
-                            <Button
-                                type={"button"}
-                                size={"large"}
-                                variation={"secondary"}
-                                label={t("CANCEL")}
-                                onClick={() => {
-                                    setShowFinalPopup(false);
-                                }}
-                            />,
-                            <Button
-                                type={"button"}
-                                size={"large"}
-                                variation={"primary"}
-                                label={t("CREATE")}
-                                onClick={() => {
-                                    addParents();
-                                    createNewHierarchy();
-                                    setShowFinalPopup(false);
-                                }}
-                            />
-                        ]}
-                        sortFooterChildren={true}
-                        >
-                        <div>
-                            {<div>{t("YOU_WON'T_BE_ABLE_TO_UNDO_THIS_STEP_OF_CREATING_HIERARCHY")}</div>}
-                        </div>
-                    </PopUp>
-                }
+                <FinalPopup showFinalPopUp={showFinalPopup} setShowFinalPopup={setShowFinalPopup} addParents={addParents} createNewHierarchy={createNewHierarchy} />
                 <ActionBar
                     actionFields={[
                         <Button 
@@ -364,52 +312,7 @@ const GeoPode = () => {
                         </Card>
                     </div>
                 )}
-                {showFinalPopup  &&
-                    <PopUp 
-                        className={"custom-popup"}
-                        type={"default"}
-                        heading={t("CREATE_BOUNDARY_HIERARCHY")}
-                        children={[
-                        ]}
-                        onClose={()=>{
-                            setShowFinalPopup(false);
-                        }}
-                        onOverlayClick={()=>{
-                            setShowFinalPopup(false);
-                        }}
-                        style={{
-                            // height:"11rem"
-                            width: "50rem"
-                        }}
-                        footerChildren={[
-                            <Button
-                                type={"button"}
-                                size={"large"}
-                                variation={"secondary"}
-                                label={t("CANCEL")}
-                                onClick={() => {
-                                    setShowFinalPopup(false);
-                                }}
-                            />,
-                            <Button
-                                type={"button"}
-                                size={"large"}
-                                variation={"primary"}
-                                label={t("CREATE")}
-                                onClick={() => {
-                                    addParents();
-                                    createNewHierarchy();
-                                    setShowFinalPopup(false);
-                                }}
-                            />
-                        ]}
-                        sortFooterChildren={true}
-                        >
-                        <div>
-                            {<div>{t("YOU_WON'T_BE_ABLE_TO_UNDO_THIS_STEP_OF_CREATING_HIERARCHY")}</div>}
-                        </div>
-                    </PopUp>
-                }
+                <FinalPopup showFinalPopUp={showFinalPopup} setShowFinalPopup={setShowFinalPopup} addParents={addParents} createNewHierarchy={createNewHierarchy} />
                 <ActionBar
                     actionFields={[
                         <Button 

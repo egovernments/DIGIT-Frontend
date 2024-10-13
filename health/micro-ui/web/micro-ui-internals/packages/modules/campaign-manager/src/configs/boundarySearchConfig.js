@@ -1,3 +1,4 @@
+const tenantId = Digit.ULBService.getCurrentTenantId();
 export const boundarySearchConfig = [
     {
       // label: "Search",
@@ -10,7 +11,7 @@ export const boundarySearchConfig = [
         },
         requestBody: {
           BoundaryTypeHierarchySearchCriteria: {
-            "tenantId": "mz",
+            "tenantId": tenantId,
             "hierarchyType": ""
           },
           "offset": 0,
@@ -37,7 +38,7 @@ export const boundarySearchConfig = [
             minReqFields: 0,
             fields: [
               {
-                  label: "Hierarchy Name",
+                  label: "HIERARCHY_NAME",
                   isMandatory: "false",
                   key: "Name",
                   type: "text",
@@ -68,22 +69,22 @@ export const boundarySearchConfig = [
           uiConfig: {
             columns: [
               {
-                label: "Hierarchy Name",
+                label: "HIERARCHY_NAME",
                 jsonpath: "hierarchyType",
                 additionalCustomization: true
               },
               {
-                label: "Levels",
+                label: "LEVELS",
                 jsonpath: "auditDetails.createdBy",
                 additionalCustomization: true
               },
               {
-                label: "Creation Date",
+                label: "CREATION_DATE",
                 jsonpath: "auditDetails.createdTime",
                 additionalCustomization: true
               },
               {
-                label: "Action",
+                label: "ACTION",
                 jsonPath:"isActive",
                 additionalCustomization: true
               }

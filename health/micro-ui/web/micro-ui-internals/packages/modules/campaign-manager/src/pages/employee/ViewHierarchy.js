@@ -1,20 +1,25 @@
 import { Card, Uploader, Button, PopUp, ActionBar, Toast } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState, useRef} from "react";
 import { useTranslation } from "react-i18next";
-import { useParams,useHistory } from "react-router-dom";
+// import { useParams,useHistory } from "react-router-dom";
 import downloadTemplate from "../../utils/downloadTemplate";
 import XlsPreviewNew from "../../components/XlsPreviewNew";
 import { Svgicon } from "../../utils/Svgicon";
 import { Loader } from "@egovernments/digit-ui-components";
+import { useHistory } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const ViewHierarchy = () => {
     const { t } = useTranslation();
+    const location = useLocation();
+    const history = useHistory();
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const searchParams = new URLSearchParams(location.search);
     const defaultHierarchyType = searchParams.get("defaultHierarchyType");
     const hierarchyType = searchParams.get("hierarchyType");
     const [showPopUp, setShowPopUp] = useState(false);
-    const stateData = window.history.state;
+    // const stateData = window.history.state;
+    const stateData = location.state;
     const [geoPodeData, setGeoPodeData] = useState(false);
     const inputRef = useRef(null); // Ref to trigger file input
 
@@ -68,8 +73,50 @@ const ViewHierarchy = () => {
         fetchData();
     }, []);
 
-    const { downloadExcelTemplate, loading, error } = downloadTemplate(defData, defaultHierarchyType);
+    // const { downloadExcelTemplate, loading, error } = downloadTemplate(defData, defaultHierarchyType);
     
+    const generateFile = async()=>{
+        const res = await Digit.CustomService.getResponse({
+            url: `/project-factory/v1/data/_generate`,
+            body: {
+            },
+            params: {
+                tenantId: tenantId,
+                type: "boundaryManagement",
+                forceUpdate: true,
+                hierarchyType: hierarchyType,
+                campaignId: "default"
+            }
+        });
+        return res;
+    }
+    const generateTemplate = async() => {
+        const res = await Digit.CustomService.getResponse({
+            url: `/project-factory/v1/data/_download`,
+            body: {
+            },
+            params: {
+                tenantId: tenantId,
+                type: "boundaryManagement",
+                hierarchyType: hierarchyType,
+                campaignId: "default"
+            }
+        });
+        return res;
+
+    }
+    const downloadExcelTemplate = async() => {
+        const res = await generateFile()
+        const resFile = await generateTemplate();
+        if (resFile && resFile?.GeneratedResource?.[0]?.fileStoreid) {
+            // Splitting filename before .xlsx or .xls
+            const fileNameWithoutExtension = hierarchyType ;
+            
+            Digit.Utils.campaign.downloadExcelWithCustomName({ fileStoreId: resFile?.GeneratedResource?.[0]?.fileStoreid, customName: fileNameWithoutExtension });
+        }
+
+    }
+
     const handleUpload = () => {
         inputRef.current.click();
     };
@@ -107,6 +154,7 @@ const ViewHierarchy = () => {
 
     const callCreateDataApi = async()=>{
         setDisable(true);
+        setDataCreationGoing(true);
         try{
             setDataCreateToast(true);
             const res = await Digit.CustomService.getResponse({
@@ -115,11 +163,13 @@ const ViewHierarchy = () => {
                 body: {
                     ResourceDetails: {
                         tenantId: tenantId,
-                        type: "boundary",
+                        type: "boundaryManagement",
                         fileStoreId: fileStoreId,
                         action: "create",
-                        hierarchyType: defaultHierarchyType,
-                        additionalDetails: {},
+                        hierarchyType: hierarchyType,
+                        additionalDetails: {
+                            source: "boundary"
+                        },
                     },
                 },
 
@@ -129,6 +179,7 @@ const ViewHierarchy = () => {
             return res;
         }
         catch(resp){
+            setDisable(false);
             let label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
             resp?.response?.data?.Errors?.map((err, idx) => {
             if (idx === resp?.response?.data?.Errors?.length - 1) {
@@ -137,19 +188,14 @@ const ViewHierarchy = () => {
                 label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ", ";
             }
             });
-            setShowToast({ label, isError: true });
+            setShowToast({ label, isError: "error" });
+            setDataCreationGoing(false);
             return {};
         }
     }
     
     const createData = async()=> {
-        try{
-            setDataCreationGoing(true)
-            const res = await callCreateDataApi();
-        }
-        catch (error){
-            setDataCreationGoing(false);
-        }
+        const res = await callCreateDataApi();
 
     }
 
@@ -160,6 +206,7 @@ const ViewHierarchy = () => {
             <Loader />
         )
     }
+
     else
     {
         return (

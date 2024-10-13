@@ -2,9 +2,13 @@ import { Card, Loader } from "@egovernments/digit-ui-components";
 import { Button, PopUp } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+// import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { useParams } from "react-router-dom";
 import { setAllDocuments } from "@cyntler/react-doc-viewer/dist/esm/store/actions";
+// import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import BoundaryPopup from "../../components/BoundaryPopup";
+
 
 const Boundary = () => {
     const { t } = useTranslation();
@@ -15,6 +19,10 @@ const Boundary = () => {
     const [showPopUp, setShowPopUp] = useState(false);
     const stateData = window.history.state;
     const [geoPodeData, setGeoPodeData] = useState(false);
+    // const navigate = useNavigate();
+    const history = useHistory();
+
+
     // const { hierarchyType } = useParams();
     const reqCriteriaResource = {
         url: `/boundary-service/boundary-hierarchy-definition/_search`,
@@ -64,39 +72,23 @@ const Boundary = () => {
     }, []);
 
     const callGeoPode = (val)=>{
-
-        window.history.pushState(
-            {
-                data:data
-            },
-            "",
-            `/${window.contextPath}/employee/campaign/geopode?defaultHierarchyType=${defaultHierarchyType}&hierarchyType=${hierarchyType}&newHierarchy=${val}`
+        history.push(
+            `/${window.contextPath}/employee/campaign/geopode?defaultHierarchyType=${defaultHierarchyType}&hierarchyType=${hierarchyType}&newHierarchy=${val}`,
+            { data: data }
         );
-        const navEvent = new PopStateEvent("popstate");
-        window.dispatchEvent(navEvent);
     }
     const callViewBoundary = ()=> {
-        window.history.pushState(
-            {
-                data:data
-            },
-            "",
-            `/${window.contextPath}/employee/campaign/view-boundary`
+        history.push(
+            `/${window.contextPath}/employee/campaign/view-boundary`,
+            { data: data }
         );
-        const navEvent = new PopStateEvent("popstate");
-        window.dispatchEvent(navEvent);
 
     };
     const callDirectView = ()=>{
-        window.history.pushState(
-            {
-                // data:data
-            },
-            "",
-            `/${window.contextPath}/employee/campaign/view-hierarchy?defaultHierarchyType=${defaultHierarchyType}&hierarchyType=${hierarchyType}`
+        history.push(
+            `/${window.contextPath}/employee/campaign/view-hierarchy?defaultHierarchyType=${defaultHierarchyType}&hierarchyType=${hierarchyType}`,
+            { data: data }
         );
-        const navEvent = new PopStateEvent("popstate");
-        window.dispatchEvent(navEvent);
 
     }
     if(isFetching)
@@ -109,50 +101,8 @@ const Boundary = () => {
     {
         return (
             <React.Fragment>
-                {showPopUp &&  (
-                    <PopUp 
-                        className={"custom-popup-boundary"}
-                        type={"default"}
-                        heading={t("CHOOSE_MEANS_TO_CREATE_BOUNDARY")}
-                        children={[
-                        ]}
-                        onClose={()=>{
-                            setShowPopUp(false);
-                        }}
-                        style={{
-                            height:"11rem",
-                            width: "48rem"
-                        }}
-                        footerChildren={[
-                        ]}
-                        sortFooterChildren={true}
-                    >
-                    <div style={{display:"flex", gap:"1rem", justifyContent:"space-around"}}>
-                        <Button
-                            type={"button"}
-                            size={"large"}
-                            isDisabled={!geoPodeData}
-                            variation={"secondary"}
-                            label={t("GET_BOUNDARY_DATA_FROM_GEOPODE")}
-                            onClick={() => {
-                                callGeoPode(false);
-                            }}
-                            style={{height:"4rem"}}
-                        />
-                        <Button
-                            type={"button"}
-                            size={"large"}
-                            variation={"secondary"}
-                            label={t("CREATE_MY_OWN_BOUNDARY_DATA")}
-                            onClick={() => {
-                                callGeoPode(true);
-                            }}
-                            style={{height:"4rem"}}
-                        />
-                    </div>
-                    </PopUp>
+                <BoundaryPopup showPopUp={showPopUp} setShowPopUp={setShowPopUp} callGeoPode={callGeoPode} geoPodeData={geoPodeData} />
 
-                )}
                 <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
                     <div style={{fontWeight:700, fontSize:"2.5rem"}}>{t("BOUNDARY_DATA_MANAGEMENT")}</div>
                     <div style={{height:"2rem"}}></div>
