@@ -33,7 +33,9 @@ const EditForm = ({ tenantId, data }) => {
   }, []);
 
   useEffect(() => {
-    if (mobileNumber && mobileNumber.length == 10 && mobileNumber.match(Digit.Utils.getPattern('MobileNo'))) {
+        // {/* Custom for Ethopia changes to be removed */}
+  //mobileNumber.match(Digit.Utils.getPattern('MobileNo') 
+    if (mobileNumber && (mobileNumber.length == 10||mobileNumber.length == 9 )) {
       setShowToast(null);
       if (data.user.mobileNumber == mobileNumber) {
         setPhonecheck(true);

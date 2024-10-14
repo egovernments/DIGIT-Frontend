@@ -6,7 +6,8 @@ import { HRMSConstants } from "../../pages/HRMSConstants";
 const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userType, register, errors, mobileNumber }) => {
   const { pathname: url } = useLocation();
   const [isError, setError] = useState(false);
-  const [selectedCountryCode, setSelectedCountryCode] = useState(HRMSConstants.INDIA.countryCode);
+    {/* Custom for Ethopia changes to be removed */}
+  const [selectedCountryCode, setSelectedCountryCode] = useState(HRMSConstants.ET.countryCode);
 
   // useEffect(() => {
   //   // Reset error when country code changes
