@@ -12,7 +12,7 @@ const Filter = (props) => {
   const { searchParams } = props;
   const { t } = useTranslation();
   const isAssignedToMe = searchParams?.filters?.wfFilters?.assignee && searchParams?.filters?.wfFilters?.assignee[0]?.code ? true : false;
-
+  const PMGRO=Digit.UserService.getUser()?.info?.roles?.some(role=>role.code=="PMGRO")
   const assignedToOptions = useMemo(
     () => [
       { code: "ASSIGNED_TO_ME", name: t("ASSIGNED_TO_ME") },
@@ -104,6 +104,12 @@ const Filter = (props) => {
       setPgrFilters({ ...pgrfilters, locality: [...pgrfilters.locality, value] });
     }
   }
+  /* Custom for Ethopia changes to be removed */
+  useEffect(()=>{
+    if(PMGRO&&selectAssigned?.code=="ASSIGNED_TO_ME"){
+      onRadioChange({ code: "ASSIGNED_TO_ALL", name: t("ASSIGNED_TO_ALL") });
+    }
+  },[])
 
   useEffect(() => {
     if (pgrfilters.serviceCode.length > 1) {
@@ -193,7 +199,8 @@ const Filter = (props) => {
             )}
           </div>
           <div>
-            <RadioButtons onSelect={onRadioChange} selectedOption={selectAssigned} optionsKey="name" options={assignedToOptions} />
+          {/* Custom for Ethopia changes to be removed */}
+            {!PMGRO&&<RadioButtons onSelect={onRadioChange} selectedOption={selectAssigned} optionsKey="name" options={assignedToOptions} />}
             <div>
               {GetSelectOptions(
                 t("CS_COMPLAINT_DETAILS_COMPLAINT_SUBTYPE"),
