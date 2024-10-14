@@ -27,6 +27,7 @@ const SearchChecklist = () => {
   };
 
   const createNewChecklist = () => {
+    localStorage.removeItem("questions");
     history.push(
       `/${window.contextPath}/employee/campaign/checklist/create?checklistType=${list?.list}&campaignName=${stateData?.name}&role=${code?.code}&campaignType=${stateData?.campaignType}`
     );
