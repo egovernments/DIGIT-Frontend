@@ -22,7 +22,6 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
   const search = useLocation().search;
   const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
-
   const crumbs = [
     {
       path: `/${window?.contextPath}/employee`,
@@ -32,18 +31,28 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     {
       path: pathVar === "my-campaign" ? "" : `/${window?.contextPath}/employee/campaign/my-campaign`,
       content: t("MY_CAMPAIGN"),
-      show: pathVar === "my-campaign" ? true : false,
+      show: pathVar === "my-campaign" || pathVar === "checklist/search" || pathVar === "checklist/create" ? true : false,
     },
     {
       path: pathVar === "setup-campaign" ? "" : `/${window?.contextPath}/employee/campaign/setup-campaign`,
       content: t("CREATE_NEW_CAMPAIGN"),
-      show: pathVar === "setup-campaign" ? true : false,
+      show: pathVar === "setup-campaign"  ? true : false,
     },
     {
       path: pathVar === "update-dates-boundary" ? "" : `/${window?.contextPath}/employee/campaign/my-campaign`,
       content: t("UPDATE_DATE_CHANGE"),
       show: pathVar === "update-dates-boundary" ? true: false,
     },
+    {
+      path: "",
+      content: t("ACTION_LABEL_CONFIGURE_APP"),
+      show:pathVar === "checklist/search" ? true : false,
+    },
+    {
+      path: "",
+      content: t("ACTION_CREATE_CHECKLIST"),
+      show: pathVar === "checklist/create" ? true : false,
+    }
   ];
 
   return <BreadCrumb className="campaign-breadcrumb" crumbs={crumbs} spanStyle={{ maxWidth: "min-content" }} />;
@@ -109,7 +118,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
           <PrivateRoute path={`${path}/update-dates-boundary`} component={() => <UpdateDatesWithBoundaries />} />
           <PrivateRoute path={`${path}/checklist/create`} component={() => <CreateChecklist />} />
           <PrivateRoute path={`${path}/checklist/search`} component={() => <SearchChecklist />} />
-          <PrivateRoute path={`${path}/update-boundary`} component={() => <UpdateBoundary hierarchyType={BOUNDARY_HIERARCHY_TYPE}/>} />
+          <PrivateRoute path={`${path}/update-boundary`} component={() => <UpdateBoundary />} />
           
           
         </AppContainer>

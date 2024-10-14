@@ -18,6 +18,7 @@ import FormulaSection from "./components/FormulaSectionCard";
 import FormulaView from "./components/FormulaView";
 import SummaryScreen from "./pages/employee/SummaryScreen";
 import CampaignBoundary from "./components/CampaignBoundary";
+import FormulaConfigWrapper from "./components/FormulaConfigWrapper";
 
 
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
@@ -60,6 +61,7 @@ const componentsToRegister = {
   BoundarySelection,
   AssumptionsForm,
   HypothesisWrapper,
+  FormulaConfigWrapper,
   UploadDataCustom,
   DataMgmtTable,
   FileComponent,

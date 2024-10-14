@@ -1,8 +1,7 @@
-import { Link, useHistory } from "react-router-dom";
 import _ from "lodash";
+import { useLocation, useHistory,Link,useParams } from "react-router-dom";
 import React from "react";
 import { Dropdown } from "@egovernments/digit-ui-components";
-
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
@@ -11,6 +10,8 @@ import { Dropdown } from "@egovernments/digit-ui-components";
 const businessServiceMap = {};
 
 const inboxModuleNameMap = {};
+
+
 
 function cleanObject(obj) {
   for (const key in obj) {
@@ -49,7 +50,7 @@ export const UICustomizations = {
       // delete data.body.PlanConfigurationSearchCriteria.pagination
       data.body.PlanConfigurationSearchCriteria.status = status?.status;
       cleanObject(data.body.PlanConfigurationSearchCriteria);
-    
+
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
@@ -97,5 +98,131 @@ export const UICustomizations = {
 
     },
   },
+
+  UserManagementConfig: {
+
+    customValidationCheck: (data) => {
+      const { phone } = data;
+      const mobileRegex = /^[0-9]{10}$/;
+      
+      // Allow empty mobile number
+      if (!phone || phone.trim() === "") {
+        return false; 
+      }
+    
+      // Check if phone matches the regex
+      if (!mobileRegex.test(phone)) {
+        return { error: true, label: "INVALID_MOBILE_NUMBER" }; // Return an error message if invalid
+      }
+    
+      return false;
+    },
+    preProcess: (data, additionalDetails) => {
+
+      const { phone, name } = data?.state?.searchForm || {}
+      const { sortOrder } = data?.state?.filterForm || {}
+      let { roleschosen } = data?.state?.filterForm || []
+      
+      if (!roleschosen) {
+        roleschosen = {}
+      }
+      // if(Object.keys(roleschosen).length === 0){
+      //   for(const obj of additionalDetails["microplanData"]){
+
+      //     roleschosen[obj["roleCode"]]=true;
+
+      //   }
+      // }
+
+      let rolesString = '';
+      if (roleschosen) {
+        rolesString = Object.keys(roleschosen).filter(role => roleschosen[role] === true).join(',');
+      }
+      
+      
+
+      data.params.names = name;
+
+      data.params.phone = phone;
+      
+      data.params.roles = rolesString;
+      data.params.tenantId = Digit.ULBService.getCurrentTenantId();
+      cleanObject(data.params);
+      delete data.params.roleschosen;
+      delete data.params.name;
+      
+
+      return data
+    },
+
+    rolesForFilter: (props) => {
+      const userInfo = Digit.UserService.getUser();
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      
+      return {
+        params: {},
+        url: '/mdms-v2/v2/_search', //mdms fetch from
+
+        body: {
+          MdmsCriteria: {
+            tenantId:  Digit.ULBService.getCurrentTenantId(),
+            filters: {},
+            schemaCode: "hcm-microplanning.rolesForMicroplan",
+            limit: 10,
+            offset: 0
+          }
+
+        },
+        config: {
+          enabled: true,
+          select: (data) => {
+            const roles = data?.mdms.map(item => {
+              return (
+                {
+                  roleCode: item.data.roleCode,
+                  i18nKey: Digit.Utils.locale.getTransformedLocale(`MP_ROLE_${item.data.roleCode}`)
+
+                }
+              )
+            })
+            
+            return roles
+          },
+        },
+        // changeQueryName:"setPlantUsersInboxDropdown"
+      }
+    },
+
+
+
+
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      
+      
+      if (key === "Role") {
+        
+        if (value && value !== "NA") {
+
+          return (
+            <div>
+              {value.map((item, index) => (
+                <span key={index} className="dm-code">
+                  {Digit.Utils.locale.getTransformedLocale(`MP_ROLE_${item.code}`)}
+                  {index < value.length - 1 && ", "}
+                </span>
+              ))}
+            </div>
+          );
+        } 
+
+      }else{
+        return(
+          <div>NA</div>
+        )
+      }
+
+    },
+
+  }
 
 };

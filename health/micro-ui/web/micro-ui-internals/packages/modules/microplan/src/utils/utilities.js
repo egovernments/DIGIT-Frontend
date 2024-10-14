@@ -58,8 +58,8 @@ const formValidator = (formData, key, state) => {
 
   const microplanDetailsValidator = () => {
     function validateName(name) {
-      const microplanNamingRegxString = state?.MicroplanNamingRegx?.[0]?.data;
-      const namePattern = new RegExp(microplanNamingRegxString);
+      const microplanNamingRegexString = state?.MicroplanNamingRegex?.[0]?.data;
+      const namePattern = new RegExp(microplanNamingRegexString);
       return namePattern.test(name);
     }
 
@@ -100,6 +100,10 @@ const formValidator = (formData, key, state) => {
   };
 
   const areFieldsValid = (fields) => {
+    if(fields.length === 0){
+      return false
+    }
+   
     const hasInvalidField = fields?.some(field => {
       const isValid = field && field.value; 
       return !isValid;
@@ -112,31 +116,53 @@ const formValidator = (formData, key, state) => {
   
   
   const assumptionsFormValidator = (formData) => {
-    const requiredFields = [
-      formData?.selectedRegistrationProcess,
-      formData?.selectedDistributionProcess,
-      formData?.selectedRegistrationDistributionMode,
-    ].filter(Boolean);
-    
+
+      let requiredFields = []
+       if(formData?.selectedRegistrationProcess && formData?.selectedDistributionProcess){
+        requiredFields = [
+          formData?.selectedRegistrationProcess,
+          formData?.selectedDistributionProcess,
+        ]
+          if (!areFieldsValid(requiredFields)) {
+            return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; 
+          }
+       }else if(formData?.selectedRegistrationDistributionMode){
+        requiredFields = [
+          formData?.selectedRegistrationDistributionMode,
+        ]
+        if (!areFieldsValid(requiredFields)) {
+          return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; 
+        }
+       }
+
+    const processesAreValid = formData?.selectedRegistrationProcess?.code && formData?.selectedDistributionProcess?.code;
+    if (processesAreValid && (formData?.selectedRegistrationProcess.code === formData?.selectedDistributionProcess.code)) {
+        return { key: "error", label: "ERROR_REGISTRATION_AND_DISTRIBUTION_ARE_SAME" }; // Customize as needed
+    }
     
     if (!areFieldsValid(requiredFields)) {
-      return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; // Customize as needed
+      return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; 
     }
   
     return null; // Return null if all validations pass
   };
 
 
+
+
   const microplanAssumptionsValidator = (formData)=>{
-       
+      
         if(!areFieldsValid(formData.assumptionValues)){
            return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; 
         }
 
       return null
   }
-  
-  
+
+  const uploadDataValidator = (formData)=>{
+    if(formData?.isSuccess) return null;
+    return { key: "error", label: "ERROR_VALID_MANDATORY_FILES" }; 
+  }
 
   //here we'll validate formData based on the config
   switch (key) {
@@ -150,6 +176,10 @@ const formValidator = (formData, key, state) => {
        return assumptionsFormValidator(formData);
     case "Assumptions":
         return microplanAssumptionsValidator(formData);  
+    case "boundary":
+        return uploadDataValidator(formData);
+    case "facilityWithBoundary":
+        return uploadDataValidator(formData);
 
     default:
       return null;
@@ -188,6 +218,26 @@ function generateCampaignString(sessionData,t) {
   // Construct the final string
   const result = `${t(diseaseCode)}-${t(campaignTypeCode)}-${t(resourceDistributionStrategy)}-${currentMonth} ${yearLastTwoDigits}`;
   return result;
+}
+
+//fn that merges api res and ui inputs for assumptions
+//unique code is assumptions key
+//last vertical step
+const mergeAssumptions = (currentAssumptions,assumptionsToMerge) => {
+  // init an empty array result
+  // assumptionsToMerge will have all the assumptions selected in UI
+  // for each assumption in assumptionsToMerge check if it exists in currentAssumptions
+    // first map the CA and check whether they are in ATM(if not mark active to false) -> push to result
+    // if yes then update the existing one and push to result
+    // if 
+}
+
+//per vertical step
+const mergeAssumptionsCategory = (currentAssumptions,assumptionsToMerge,category) => {
+  // init an empty array
+  // filter out currentAssumptions(don't include category)
+  // push this filtered + assumptionsToMerge into this and return
+  
 }
 
 export default {

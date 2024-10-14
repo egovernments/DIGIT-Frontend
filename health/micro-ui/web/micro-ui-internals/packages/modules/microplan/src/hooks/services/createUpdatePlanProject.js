@@ -1,3 +1,4 @@
+import _ from "lodash"
 const requestBodyGenerator = () => { };
 
 //checking for duplicates
@@ -51,7 +52,6 @@ const isValidResourceName = async (name) => {
 //generating campaign and microplan
 //this will only be called on first time create so it doesn't have to be generic
 const CreateResource = async (req) => {
-
   //creating a microplan and campaign instance here
   const { totalFormData, state, setShowToast, setCurrentKey, setCurrentStep, config, campaignObject, planObject } = req;
   try {
@@ -64,6 +64,7 @@ const CreateResource = async (req) => {
       resources: [],
       projectType: totalFormData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code,
       additionalDetails: {
+        resourceDistributionStrategy: totalFormData?.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode,
         source: "microplan",
       },
     };
@@ -148,7 +149,8 @@ const updatePlan = async (req) => {
 const createUpdatePlanProject = async (req) => {
   try {
     //later this object must have an invalidation config which can be used to invalidate data such as files uploaded,assumptions,formulas etc...
-    const { totalFormData, state, setShowToast, setCurrentKey, setCurrentStep, config, campaignObject, planObject } = req;
+
+    const { totalFormData, state, setShowToast, setCurrentKey, setCurrentStep, config, campaignObject, planObject,invalidateConfig } = req;
     const { microplanId, campaignId } = Digit.Hooks.useQueryParams();
     const tenantId = Digit.ULBService.getCurrentTenantId()
     //now basically we need to decide from which screen this hook was triggered and take action accordingly
@@ -211,11 +213,49 @@ const createUpdatePlanProject = async (req) => {
         }
 
       case "ASSUMPTIONS_FORM":
+        // here we have to invalidate the existing assumptions in update call if there is a change in assumptionsForm
+        // check whether the currentAssumptionsForm is equal to prev assumptionsForm (if so then skip this update call)
+
+        
+        if(_.isEqual(planObject?.additionalDetails?.assumptionsForm,totalFormData?.ASSUMPTIONS_FORM?.
+          assumptionsForm
+          )){
+            setCurrentKey((prev) => prev + 1);
+          setCurrentStep((prev) => prev + 1);
+          return {
+            triggeredFrom,
+          };
+        }
+        //otherwise update with invalidating assumptions and formula(operations)
+        const invalidatedAssumptions = planObject.assumptions.length>0 ? planObject.assumptions.map(row =>{
+          return {
+            ...row,
+            active:false
+          }
+        }) : []
+        const invalidatedOperations = planObject.operations.length>0 ? planObject.assumptions.map(row =>{
+          return {
+            ...row,
+            active:false
+          }
+        }) : []
         const updatedPlanObjAssumptionsForm = {
           ...planObject,
+          assumptions:invalidatedAssumptions,
+          operations:invalidatedOperations,
           additionalDetails:{
             ...planObject?.additionalDetails,
-            assumptionsForm:totalFormData.ASSUMPTIONS_FORM.assumptionsForm
+            assumptionsForm:totalFormData.ASSUMPTIONS_FORM.assumptionsForm,
+            campaignType: totalFormData.CAMPAIGN_DETAILS.campaignDetails.campaignType.code,
+
+            DistributionProcess:totalFormData.ASSUMPTIONS_FORM.assumptionsForm.selectedDistributionProcess ? totalFormData.ASSUMPTIONS_FORM.assumptionsForm.selectedDistributionProcess.code :  totalFormData.CAMPAIGN_DETAILS.campaignDetails.distributionStrat.resourceDistributionStrategyCode,
+
+            RegistrationProcess:totalFormData.ASSUMPTIONS_FORM.assumptionsForm.selectedRegistrationProcess?totalFormData.ASSUMPTIONS_FORM.assumptionsForm.selectedRegistrationProcess.code :totalFormData.CAMPAIGN_DETAILS.campaignDetails.distributionStrat.resourceDistributionStrategyCode,
+
+            resourceDistributionStrategyCode: totalFormData.CAMPAIGN_DETAILS.campaignDetails.distributionStrat.resourceDistributionStrategyCode,
+
+            isRegistrationAndDistributionHappeningTogetherOrSeparately: totalFormData.CAMPAIGN_DETAILS.campaignDetails.distributionStrat.resourceDistributionStrategyCode==="MIXED" ?"SEPARATELY": totalFormData.ASSUMPTIONS_FORM.assumptionsForm.selectedRegistrationDistributionMode?.code,
+
           }
         }
         const planResAssumptionsForm = await updatePlan(updatedPlanObjAssumptionsForm);
@@ -228,10 +268,21 @@ const createUpdatePlanProject = async (req) => {
         }else {
           setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
         }
+       
+
+
+
 
       case "HYPOTHESIS":
+        //fetch current plan
+        const fetchedPlanForHypothesis = await searchPlanConfig({
+          PlanConfigurationSearchCriteria: {
+            tenantId,
+            id: microplanId,
+          },
+        })
         //here we can always invalidate prev assumptions
-        const prevAssumptions = planObject?.assumptions?.map(row => {
+        const prevAssumptions = fetchedPlanForHypothesis?.assumptions?.map(row => {
           const updatedRow = {
             ...row,
             active:false
@@ -242,7 +293,7 @@ const createUpdatePlanProject = async (req) => {
           return row.category && row.key && row.value
         })
         const upatedPlanObjHypothesis = {
-          ...planObject,
+          ...fetchedPlanForHypothesis,
           assumptions:[
             ...prevAssumptions,
             ...assumptionsToUpdate
@@ -260,6 +311,7 @@ const createUpdatePlanProject = async (req) => {
         }else {
           setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
         }
+        
       case "SUB_HYPOTHESIS":
         //first fetch current plan object
         const fetchedPlanForSubHypothesis = await searchPlanConfig({
@@ -268,11 +320,26 @@ const createUpdatePlanProject = async (req) => {
             id: microplanId,
           },
         })
+        const prevAssumptionsForSubHypothesis = fetchedPlanForSubHypothesis?.assumptions?.map(row => {
+          const updatedRow = {
+            ...row,
+            active:false
+          }
+          return updatedRow
+        })
         //get the list of assumptions from UI
+        const assumptionsToUpdateFromUI = req?.assumptionsToUpdate
         //mix the current + api res
-        //make update call to plan
-        //don't throw any error, assume update will always be successfull
+        const upatedPlanObjSubHypothesis = {
+          ...fetchedPlanForSubHypothesis,
+          assumptions:[
+            ...prevAssumptionsForSubHypothesis,
+            ...assumptionsToUpdateFromUI
+          ]
+        }
 
+        await updatePlan(upatedPlanObjSubHypothesis);
+        return;
       case "UPLOADDATA":
         setCurrentKey((prev) => prev + 1);
         setCurrentStep((prev) => prev + 1);

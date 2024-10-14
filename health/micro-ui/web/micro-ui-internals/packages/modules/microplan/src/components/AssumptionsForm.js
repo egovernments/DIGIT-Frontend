@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, Header, LabelFieldPair } from "@egovernments/digit-ui-react-components";
-import { Dropdown, RadioButtons } from "@egovernments/digit-ui-components";
+import { Dropdown, PopUp, RadioButtons,CardText,Button } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../utils/context";
 
 const AssumptionsForm = ({ onSelect, ...props }) => {
@@ -15,9 +15,26 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
     const [executionCount, setExecutionCount] = useState(0);
     const resourceDistributionStrategyCode = props?.props?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode;
 
+    const [showPopup,setShowPopup] = useState(false)
+
+    //to show alert
+    useEffect(() => {
+      //if there are any assumptions filled show this popup by default
+      if(props.props.sessionData?.HYPOTHESIS?.Assumptions?.assumptionValues.length > 0){
+        setShowPopup(true)
+      }
+    }, [])
+    
+
     useEffect(() => {
         if (executionCount < 5) {
-            onSelect(props.props.name, {selectedRegistrationProcess,selectedDistributionProcess,selectedRegistrationDistributionMode})
+            if(resourceDistributionStrategyCode === "MIXED"){
+                onSelect(props.props.name, {selectedRegistrationProcess,selectedDistributionProcess})
+                setExecutionCount((prevCount) => prevCount + 1);
+                return;
+            }
+         
+            onSelect(props.props.name,{selectedRegistrationDistributionMode} )
             setExecutionCount((prevCount) => prevCount + 1);
         }
       });
@@ -26,7 +43,7 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
       useEffect(()=>{
     
         if(resourceDistributionStrategyCode === "MIXED"){
-            onSelect(props.props.name, {selectedRegistrationProcess,selectedDistributionProcess,selectedRegistrationDistributionMode})
+            onSelect(props.props.name, {selectedRegistrationProcess,selectedDistributionProcess})
             return;
         }
      
@@ -105,7 +122,7 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
             )}
 
             {/* Show radio buttons only if the code is HOUSE_TO_HOUSE or FIXED_POST */}
-            {["HOUSE_TO_HOUSE", "FIXED_POST", "MIXED"].includes(resourceDistributionStrategyCode) && (
+            {["HOUSE_TO_HOUSE", "FIXED_POST"].includes(resourceDistributionStrategyCode) && (
                 <Card className="assumptionsForm-card">
                     <LabelFieldPair className="assumptionsForm-label-field">
                         <div style={{ width: "100%" }}>
@@ -130,6 +147,39 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
                     </LabelFieldPair>
                 </Card>
             )}
+
+            {showPopup &&  <PopUp
+            className={"boundaries-pop-module"}
+            type={"alert"}
+            alertHeading={t("MP_WARNING_ASSUMPTIONS_FORM")}
+            alertMessage={t("MP_ASSUMPTIONS_INVALIDATION_MESSAGE")}
+            // heading={t("MP_ASSUMTI")}
+            // children={[
+            //   <div>
+            //     <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_TYPE_MODAL_TEXT") + " "}</CardText>
+            //   </div>,
+            // ]}
+            onOverlayClick={() => {
+              setShowPopup(false);
+            }}
+            onClose={() => {
+              setShowPopup(false);
+            }}
+            footerChildren={[
+              <Button
+                className={"campaign-type-alert-button"}
+                type={"button"}
+                size={"large"}
+                variation={"secondary"}
+                label={t("MP_ACK")}
+                onClick={() => {
+                  setShowPopup(false);
+                //   setCanUpdate(true);
+                }}
+              />
+            ]}
+            // sortFooterChildren={true}
+          ></PopUp>}
         </Card>
     );
 };

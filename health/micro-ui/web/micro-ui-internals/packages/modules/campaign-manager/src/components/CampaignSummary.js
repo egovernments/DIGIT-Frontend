@@ -85,39 +85,40 @@ function reverseDeliveryRemap(data, t) {
   let currentCycleIndex = null;
   let currentCycle = null;
 
-  data.forEach((item, index) => {
-    if (currentCycleIndex !== item.cycleNumber) {
-      currentCycleIndex = item.cycleNumber;
-      currentCycle = {
-        cycleIndex: currentCycleIndex.toString(),
-        startDate: item?.startDate ? Digit.Utils.date.convertEpochToDate(item?.startDate) : null,
-        endDate: item?.endDate ? Digit.Utils.date.convertEpochToDate(item?.endDate) : null,
-        active: index === 0, // Initialize active to false
-        deliveries: [],
-      };
-      reversedData.push(currentCycle);
-    }
+  // data.forEach((item, index) => {
+  //   if (currentCycleIndex !== item.cycleNumber) {
+  //     currentCycleIndex = item.cycleNumber;
+  //     currentCycle = {
+  //       cycleIndex: currentCycleIndex.toString(),
+  //       startDate: item?.startDate ? Digit.Utils.date.convertEpochToDate(item?.startDate) : null,
+  //       endDate: item?.endDate ? Digit.Utils.date.convertEpochToDate(item?.endDate) : null,
+  //       active: index === 0, // Initialize active to false
+  //       deliveries: [],
+  //     };
+  //     reversedData.push(currentCycle);
+  //   }
 
-    const deliveryIndex = item.deliveryNumber.toString();
+  //   const deliveryIndex = item.deliveryNumber.toString();
 
-    let delivery = currentCycle.deliveries.find((delivery) => delivery.deliveryIndex === deliveryIndex);
+  //   let delivery = currentCycle.deliveries.find((delivery) => delivery.deliveryIndex === deliveryIndex);
 
-    if (!delivery) {
-      delivery = {
-        deliveryIndex: deliveryIndex,
-        active: item.deliveryNumber === 1, // Set active to true only for the first delivery
-        deliveryRules: [],
-      };
-      currentCycle.deliveries.push(delivery);
-    }
+  //   if (!delivery) {
+  //     delivery = {
+  //       deliveryIndex: deliveryIndex,
+  //       active: item.deliveryNumber === 1, // Set active to true only for the first delivery
+  //       deliveryRules: [],
+  //     };
+  //     currentCycle.deliveries.push(delivery);
+  //   }
 
-    delivery.deliveryRules.push({
-      ruleKey: item.deliveryRuleNumber,
-      delivery: {},
-      attributes: loopAndReturn(item.conditions, t),
-      products: [...item.products],
-    });
-  });
+  //   delivery.deliveryRules.push({
+  //     ruleKey: item.deliveryRuleNumber,
+  //     delivery: {},
+  //     attributes: loopAndReturn(item.conditions, t),
+  //     products: [...item.products],
+  //   });
+  // });
+  return data;
 
   return reversedData;
 }
@@ -206,6 +207,7 @@ const CampaignSummary = (props) => {
   const [cycles, setCycles] = useState([]);
   const [cards, setCards] = useState([]);
   const isPreview = searchParams.get("preview");
+  const parentId = searchParams.get("parentId");
   const [key, setKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
@@ -230,12 +232,10 @@ const CampaignSummary = (props) => {
     window.history.replaceState({}, "", url);
   }
 
-
   useEffect(() => {
     updateUrlParams({ key: key });
     window.dispatchEvent(new Event("checking"));
   }, [key]);
-
 
   // useEffect(() => {
   //   if (props?.props?.summaryErrors) {
@@ -305,207 +305,11 @@ const CampaignSummary = (props) => {
         setprojectId(data?.[0]?.projectId);
         setCards(data?.cards);
 
-        const ss = async () => {
-          let temp = await fetchResourceFile(tenantId, resourceIdArr);
-          processid = temp;
-          return;
-        };
-        ss();
         const target = data?.[0]?.deliveryRules;
-        const cycleData = reverseDeliveryRemap(target, t);
         const boundaryData = boundaryDataGrp(data?.[0]?.boundaries);
+        const cycleData = reverseDeliveryRemap(target, t);
+        const hierarchyType= data?.[0]?.hierarchyType;
         return {
-          // cards: [
-          //   isPreview === "true"
-          //     ? {
-          //         name: "timeline",
-          //         sections: [
-          //           {
-          //             name: "timeline",
-          //             type: "COMPONENT",
-          //             component: "TimelineComponent",
-          //             props: {
-          //               campaignId: data?.[0]?.id,
-          //               resourceId: resourceIdArr,
-          //             },
-          //             cardHeader: { value: t("HCM_TIMELINE"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-          //           },
-          //         ],
-          //       }
-          //     : {},
-          //   {
-          //     sections: [
-          //       {
-          //         type: "DATA",
-          //         cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-          //         cardSecondaryAction: noAction !== "false" && (
-          //           <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-          //             <span>{t(`CAMPAIGN_EDIT`)}</span>
-          //             <EditIcon />
-          //           </div>
-          //         ),
-          //         values: [
-          //           {
-          //             key: "CAMPAIGN_TYPE",
-          //             value: data?.[0]?.projectType ? t(`CAMPAIGN_PROJECT_${data?.[0]?.projectType?.toUpperCase()}`) : t("CAMPAIGN_SUMMARY_NA"),
-          //           },
-          //           {
-          //             key: "CAMPAIGN_NAME",
-          //             value: data?.[0]?.campaignName || t("CAMPAIGN_SUMMARY_NA"),
-          //           },
-          //           {
-          //             key: "CAMPAIGN_START_DATE",
-          //             // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
-          //             value: Digit.Utils.date.convertEpochToDate(startDate) || t("CAMPAIGN_SUMMARY_NA")
-          //           },
-          //           {
-          //             key: "CAMPAIGN_END_DATE",
-          //             // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.endDate) || t("CAMPAIGN_SUMMARY_NA"),
-          //             value: Digit.Utils.date.convertEpochToDate(endDate) || t("CAMPAIGN_SUMMARY_NA")
-          //           },
-          //         ],
-          //       },
-          //     ],
-          //   },
-          //   // data?.[0]?.resources?.find((i) => i?.type === "boundaryWithTarget") ?
-          //   {
-          //     name: "target",
-          //     errorName: "target",
-          //     sections: [
-          //       {
-          //         name: "target",
-          //         type: "COMPONENT",
-          //         component: "CampaignDocumentsPreview",
-          //         props: {
-          //           documents: data?.[0]?.resources?.filter((i) => i?.type === "boundaryWithTarget"),
-          //         },
-          //         cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-          //         cardSecondaryAction: noAction !== "false" && (
-          //           <div className="campaign-preview-edit-container" onClick={() => handleRedirect(7)}>
-          //             <span>{t(`CAMPAIGN_EDIT`)}</span>
-          //             <EditIcon />
-          //           </div>
-          //         ),
-          //       },
-          //     ],
-          //   },
-          //   // : {}
-          //   // data?.[0]?.resources?.find((i) => i?.type === "facility") ?
-          //   {
-          //     name: "facility",
-          //     errorName: "facility",
-          //     sections: [
-          //       {
-          //         name: "facility",
-          //         type: "COMPONENT",
-          //         component: "CampaignDocumentsPreview",
-          //         props: {
-          //           documents: data?.[0]?.resources?.filter((i) => i.type === "facility"),
-          //         },
-          //         cardHeader: { value: t("FACILITY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-          //         cardSecondaryAction: noAction !== "false" && (
-          //           <div className="campaign-preview-edit-container" onClick={() => handleRedirect(8)}>
-          //             <span>{t(`CAMPAIGN_EDIT`)}</span>
-          //             <EditIcon />
-          //           </div>
-          //         ),
-          //       },
-          //     ],
-          //   },
-          //   // : {}
-          //   // data?.[0]?.resources?.find((i) => i?.type === "user") ?
-          //   {
-          //     name: "user",
-          //     errorName: "user",
-          //     sections: [
-          //       {
-          //         name: "user",
-          //         type: "COMPONENT",
-          //         component: "CampaignDocumentsPreview",
-          //         props: {
-          //           documents: data?.[0]?.resources?.filter((i) => i.type === "user"),
-          //         },
-          //         cardHeader: { value: t("USER_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-          //         cardSecondaryAction: noAction !== "false" && (
-          //           <div className="campaign-preview-edit-container" onClick={() => handleRedirect(9)}>
-          //             <span>{t(`CAMPAIGN_EDIT`)}</span>
-          //             <EditIcon />
-          //           </div>
-          //         ),
-          //       },
-          //     ],
-          //   },
-          //   // : {}
-          //   resourceIdArr?.length > 0
-          //     ? {
-          //         sections: [
-          //           {
-          //             type: "COMPONENT",
-          //             component: "CampaignResourceDocuments",
-          //             props: {
-          //               isUserGenerate: true,
-          //               // resources: processid,
-          //               resources: resourceIdArr,
-          //             },
-          //             cardHeader: { value: t("USER_GENERATE_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-          //           },
-          //         ],
-          //       }
-          //     : {},
-          //   {
-          //     sections: [
-          //       {
-          //         type: "DATA",
-          //         cardHeader: { value: t("CAMPAIGN_DELIVERY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-          //         cardSecondaryAction: noAction !== "false" && (
-          //           <div className="campaign-preview-edit-container" onClick={() => handleRedirect(5)}>
-          //             <span>{t(`CAMPAIGN_EDIT`)}</span>
-          //             <EditIcon />
-          //           </div>
-          //         ),
-          //         values: [
-          //           {
-          //             key: "CAMPAIGN_NO_OF_CYCLES",
-          //             value:
-          //               data?.[0]?.deliveryRules && data?.[0]?.deliveryRules.map((item) => item.cycleNumber)?.length > 0
-          //                 ? Math.max(...data?.[0]?.deliveryRules.map((item) => item.cycleNumber))
-          //                 : t("CAMPAIGN_SUMMARY_NA"),
-          //           },
-          //           {
-          //             key: "CAMPAIGN_NO_OF_DELIVERIES",
-          //             value:
-          //               data?.[0]?.deliveryRules && data?.[0]?.deliveryRules.map((item) => item.deliveryNumber)?.length > 0
-          //                 ? Math.max(...data?.[0]?.deliveryRules.map((item) => item.deliveryNumber))
-          //                 : t("CAMPAIGN_SUMMARY_NA"),
-          //           },
-          //         ],
-          //       },
-          //     ],
-          //   },
-          //   ...cycleData?.map((item, index) => {
-          //     return {
-          //       name: `CYCLE_${index + 1}`,
-          //       errorName: "deliveryErrors",
-          //       sections: [
-          //         {
-          //           name: `CYCLE_${index + 1}`,
-          //           type: "COMPONENT",
-          //           cardHeader: { value: `${t("CYCLE")} ${item?.cycleIndex}`, inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-          //           cardSecondaryAction: noAction !== "false" && (
-          //             <div className="campaign-preview-edit-container" onClick={() => handleRedirect(5)}>
-          //               <span>{t(`CAMPAIGN_EDIT`)}</span>
-          //               <EditIcon />
-          //             </div>
-          //           ),
-          //           component: "CycleDataPreview",
-          //           props: {
-          //             data: item,
-          //           },
-          //         },
-          //       ],
-          //     };
-          //   }),
-          // ],
           cards: [
             {
               navigationKey: "card1",
@@ -568,7 +372,9 @@ const CampaignSummary = (props) => {
                   {
                     name: `HIERARCHY_${index + 1}`,
                     type: "COMPONENT",
-                    cardHeader: { value: `${t(item?.type)}` , inlineStyles: { color : "#0B4B66" } },
+                    
+                    cardHeader: { value: `${t(( hierarchyType + "_" + item?.type).toUpperCase())}` , inlineStyles: { color : "#0B4B66" } },
+
                     // cardHeader: { value: t("item?.boundaries?.type") },
                     component: "BoundaryDetailsSummary",
                     cardSecondaryAction: noAction !== "false" && (
@@ -591,7 +397,7 @@ const CampaignSummary = (props) => {
                   type: "DATA",
                   cardHeader: { value: t("CAMPAIGN_DELIVERY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(6)}>
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(7)}>
                       <span>{t(`CAMPAIGN_EDIT`)}</span>
                       <EditIcon />
                     </div>
@@ -600,16 +406,16 @@ const CampaignSummary = (props) => {
                     {
                       key: "CAMPAIGN_NO_OF_CYCLES",
                       value:
-                        data?.[0]?.deliveryRules && data?.[0]?.deliveryRules.map((item) => item.cycleNumber)?.length > 0
-                          ? Math.max(...data?.[0]?.deliveryRules.map((item) => item.cycleNumber))
+                        data?.[0]?.deliveryRules && data?.[0]?.deliveryRules.map((item) => item.cycleIndex)?.length > 0
+                          ? Math.max(...data?.[0]?.deliveryRules.map((item) => item.cycleIndex))
                           : t("CAMPAIGN_SUMMARY_NA"),
                     },
                     {
                       key: "CAMPAIGN_NO_OF_DELIVERIES",
                       value:
-                        data?.[0]?.deliveryRules && data?.[0]?.deliveryRules.map((item) => item.deliveryNumber)?.length > 0
-                          ? Math.max(...data?.[0]?.deliveryRules.map((item) => item.deliveryNumber))
-                          : t("CAMPAIGN_SUMMARY_NA"),
+                      data?.[0]?.deliveryRules && data?.[0]?.deliveryRules?.flatMap((rule) => rule?.deliveries.map((delivery) => delivery?.deliveryIndex))?.length > 0
+                      ? Math.max(...data?.[0]?.deliveryRules?.flatMap((rule) => rule?.deliveries.map((delivery) => delivery?.deliveryIndex)))
+                      : t("CAMPAIGN_SUMMARY_NA"),
                     },
                   ],
                 },
@@ -626,7 +432,7 @@ const CampaignSummary = (props) => {
                     type: "COMPONENT",
                     cardHeader: { value: `${t("CYCLE")} ${item?.cycleIndex}`, inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     cardSecondaryAction: noAction !== "false" && (
-                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(7)}>
+                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(8)}>
                         <span>{t(`CAMPAIGN_EDIT`)}</span>
                         <EditIcon />
                       </div>
@@ -651,7 +457,7 @@ const CampaignSummary = (props) => {
                   },
                   cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(11)}>
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(12)}>
                       <span>{t(`CAMPAIGN_EDIT`)}</span>
                       <EditIcon />
                     </div>
@@ -671,7 +477,7 @@ const CampaignSummary = (props) => {
                   },
                   cardHeader: { value: t("FACILITY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(9)}>
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(10)}>
                       <span>{t(`CAMPAIGN_EDIT`)}</span>
                       <EditIcon />
                     </div>
@@ -691,7 +497,7 @@ const CampaignSummary = (props) => {
                   },
                   cardHeader: { value: t("USER_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(10)}>
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(11)}>
                       <span>{t(`CAMPAIGN_EDIT`)}</span>
                       <EditIcon />
                     </div>

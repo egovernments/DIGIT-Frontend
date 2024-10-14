@@ -199,15 +199,6 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     // setCurrentStep(prev => prev + 1)
   };
 
-  // const onSecondayActionClick = () => {
-  //  
-  //   setCurrentKey((prev) => prev - 1);
-  //   if (currentStep === 0) {
-  //     history.push(`/${window.contextPath}/employee`);
-  //   } else {
-  //     setCurrentStep((prev) => prev - 1);
-  //   }
-  // };
   const moveToPreviousStep = () => {
     setCurrentStep((prev) => prev - 1);
     setCurrentKey((prev) => prev - 1);
@@ -223,15 +214,12 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const onSecondayActionClick = () => {
     if (currentStep === 0) {
       history.push(`/${window.contextPath}/employee`);
-    } else {
-      setCurrentStep((prev) => prev - 1);
     }
     const { isLastVerticalStep } = Digit.Hooks.useQueryParams();
 
     if (isLastVerticalStep === 'true') {
       window.dispatchEvent(new Event("verticalStepper"))
       return;
-
     }
 
     setCurrentStep((prev) => prev - 1);
@@ -250,7 +238,6 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     <React.Fragment>
       <Stepper
         customSteps={[
-          "HCM_CAMPAIGN_SETUP_DETAILS",
           "MICROPLAN_DETAILS",
           "MP_BOUNDARY_SELECTION",
           "MP_MANAGING_DATA",
@@ -271,13 +258,13 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
         })}
         onSubmit={onSubmit}
         showSecondaryLabel={true}
-        secondaryLabel={t("HCM_BACK")}
+        secondaryLabel={t("MP_BACK")}
         actionClassName={"actionBarClass"}
         className="setup-campaign"
         cardClassName="setup-campaign-card"
         noCardStyle={true}
         onSecondayActionClick={onSecondayActionClick}
-        label={t("HCM_NEXT")}
+        label={t("MP_NEXT")}
       />
       {/* {actionBar === "true" && (
         <ActionBar style={{ zIndex: "19" }}>

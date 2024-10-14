@@ -2,18 +2,35 @@ import React, { Fragment } from "react";
 import { useTable } from "react-table";
 import { useTranslation } from "react-i18next";
 import { CardLabel, CardSubHeader } from "@egovernments/digit-ui-react-components";
+import { operators } from "ajv/dist/compile/codegen";
 
 const DetailsTable = ({ className = "", columnsData, rowsData, summaryRows, cardHeader }) => {
+
   const { t } = useTranslation();
 
   const columns = React.useMemo(() => columnsData, [t]);
 
   const data = React.useMemo(() => {
-    const temp = rowsData.map((i) => ({
+    const temp = rowsData.map((i) => {
+      if (i?.operator?.code === "IN_BETWEEN") {
+        return {
+          ...i,
+          value: `${i?.toValue ? i?.toValue : "N/A"}  to ${i?.fromValue ? i?.fromValue : "N/A"}`,
+          operator: t(i?.operator?.code) || t(i?.operator),
+      attribute: i?.attribute?.code ||  i?.attribute ? t(`CAMPAIGN_ATTRIBUTE_${i?.attribute?.code?.toUpperCase()}`) : "",
+        };
+      }
+      else{
+      return{
       ...i,
-      operator: t(i?.operator),
-      attribute: i?.attribute ? t(`CAMPAIGN_ATTRIBUTE_${i?.attribute?.toUpperCase()}`) : "",
-    }));
+      operator: t(i?.operator?.code) || t(i?.operator),
+      attribute: i?.attribute?.code 
+    ? t(`CAMPAIGN_ATTRIBUTE_${i.attribute.code.toUpperCase()}`) 
+    : i?.attribute 
+        ? t(`CAMPAIGN_ATTRIBUTE_${i.attribute}`) 
+        : "",
+      }
+    }});
     return temp;
   }, [rowsData]);
 
