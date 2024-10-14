@@ -807,6 +807,7 @@ import { SchoolBuilding } from "./svg/SchoolBuilding"
 import { ContractIcon } from "./svg/ContractIcon";
 import { MeasurementMuktaIcon } from "./svg/MeasurementMuktaIcon";
 import { HRIcon } from "./svg/HRIcon";
+import { ShpIcon } from "./svg/ShpIcon";
 
 export {
   Add,
@@ -1442,6 +1443,7 @@ export {
   ShoppingBasket,
   ShoppingCart,
   ShopAlt,
+  ShpIcon,
   Sick,
   SingleBed,
   SmartButton,
