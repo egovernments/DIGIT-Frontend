@@ -237,7 +237,164 @@ const mergeAssumptionsCategory = (currentAssumptions,assumptionsToMerge,category
   // init an empty array
   // filter out currentAssumptions(don't include category)
   // push this filtered + assumptionsToMerge into this and return
+}
   
+//this will give data for dependent dropdowns of hierarchy(from selectedData)
+function filterSelectedDataByBoundaryCodes(selectedBoundaries, boundaryCodes=[]) {
+  if(boundaryCodes.length===0){
+    return []
+  }
+  // Create an array to store the result
+  const result = [];
+
+  // Iterate over the selected data
+  selectedBoundaries.forEach(boundary => {
+      // Check if the boundary's parent exists in the boundaryCodes list
+      if (boundaryCodes.includes(boundary.parent)) {
+          result.push(boundary);
+      }
+  });
+
+  return result;
+}
+
+function getFilteredHierarchy(hierarchy, jurisdiction,hierarchyType) {
+  // Find the index of the starting boundary type (jurisdiction)
+  const filteredHierarchy = [];
+  
+  // Helper function to recursively add children boundaries
+  function addChildren(parentType) {
+      hierarchy.forEach(item => {
+          if (item.parentBoundaryType === parentType) {
+              filteredHierarchy.push(item);
+              // Recursively find children of the current boundary
+              addChildren(item.boundaryType);
+          }
+      });
+  }
+
+  // Find the starting boundary type (the provided jurisdiction)
+  const startingBoundary = hierarchy.find(item => item.boundaryType === jurisdiction);
+
+  if (startingBoundary) {
+      // Add the starting boundary to the result
+      filteredHierarchy.push(startingBoundary);
+      // Recursively add its children
+      addChildren(jurisdiction);
+  }
+
+
+  return filteredHierarchy?.map(row => {
+    return {
+      ...row,
+      i18nKey:Digit.Utils.locale.getTransformedLocale(`${hierarchyType}_${row?.
+      boundaryType}`)
+    }
+  });
+}
+
+function filterBoundariesByJurisdiction(boundaries, jurisdictions) {
+  const filteredBoundaries = [];
+
+  // Helper function to recursively collect all boundaries under a specific boundary code
+  function collectBoundaries(code) {
+      // Find the boundary with the provided code
+      const boundary = boundaries.find(b => b.code === code);
+
+      if (boundary) {
+          // Add the boundary itself
+          filteredBoundaries.push(boundary);
+
+          // Find all child boundaries with the current boundary as parent and recursively collect them
+          boundaries.forEach(b => {
+              if (b.parent === code) {
+                  collectBoundaries(b.code);
+              }
+          });
+      }
+  }
+
+  // For each jurisdiction, collect the boundary and all its children
+  jurisdictions.forEach(jurisdictionCode => {
+      collectBoundaries(jurisdictionCode);
+  });
+
+  return filteredBoundaries;
+}
+
+function fetchBoundaryOptions(boundaries=[],selectedBoundaries=[],boundaryType) {
+  //basically loop over and check parent and return an array
+}
+
+function createBoundaryDataByHierarchy(boundaryData) {
+  const hierarchy = {};
+
+  // Helper function to build the reversed materialized path
+  function buildMaterializedPath(boundary, boundaryMap) {
+      let path = [];
+      let currentBoundary = boundary;
+
+      // Build the path from the boundary's parent up to the root
+      while (currentBoundary && currentBoundary.parent) {
+          currentBoundary = boundaryMap[currentBoundary.parent];
+          if (currentBoundary) {
+              path.push(currentBoundary.code);
+          }
+      }
+
+      // Join the reversed path into a single string
+      return path.reverse().join('.');
+  }
+
+  // First, create a map for easy access to boundaries by code
+  const boundaryMap = boundaryData.reduce((map, boundary) => {
+      map[boundary.code] = boundary;
+      return map;
+  }, {});
+
+  // Iterate over all boundaries
+  boundaryData.forEach(boundary => {
+      const { type, code } = boundary;
+
+      // Initialize type if not already in the hierarchy
+      if (!hierarchy[type]) {
+          hierarchy[type] = {};
+      }
+
+      // Build the reversed materialized path for this boundary
+      const materializedPath = buildMaterializedPath(boundary, boundaryMap);
+
+      // Assign the materialized path to the boundary in the hierarchy
+      hierarchy[type][code] = materializedPath;
+  });
+
+  return hierarchy;
+}
+
+
+function groupByParent(data) {
+  // Create a map to hold the grouped structure
+  const grouped = {};
+
+  // Iterate through the data array
+  data.forEach(item => {
+    const parentKey = item.parent;
+
+    // If the parent doesn't exist in the grouped object, create an entry
+    if (!grouped[parentKey]) {
+      grouped[parentKey] = {
+        name: parentKey,
+        code: parentKey,
+        options: []
+      };
+    }
+
+    // Push the entire object into the correct parent group as an option
+    grouped[parentKey].options.push(item);
+  });
+
+  // Convert the grouped object into an array
+  return Object.values(grouped);
 }
 
 export default {
@@ -245,6 +402,12 @@ export default {
   createStatusMap,
   formValidator,
   generateCampaignString,
-  updateUrlParams
+  updateUrlParams,
+  filterSelectedDataByBoundaryCodes,
+  getFilteredHierarchy,
+  filterBoundariesByJurisdiction,
+  createBoundaryDataByHierarchy,
+  groupByParent
+  // constructBoundaryOptions
 };
 export const PRIMARY_COLOR = "#C84C0E";

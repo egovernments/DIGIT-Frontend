@@ -8,9 +8,9 @@ import MicroplanSearch from "./MicroplanSearch";
 import SummaryScreen from "./SummaryScreen";
 import CampaignBoundary from "../../components/CampaignBoundary";
 import UserManagement from "./UserManagement";
-
-
-
+import SearchUnderJurisdiction from "../../components/SearchUnderJurisdiction";
+import TableNew from "./TablePage";
+import PopInbox from "./PopInbox";
 const bredCrumbStyle={ maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
@@ -50,6 +50,7 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
       { name: "rolesForMicroplan"},
       { name: "HypothesisAssumptions"},
       { name: "RuleConfigureOutput" },
+      { name: "RuleConfigureInputs" },
       { name: "AutoFilledRuleConfigurations" },
       { name: "RuleConfigureOperators" },  
       { name: "RegistrationAndDistributionHappeningTogetherOrSeparately"},
@@ -161,7 +162,9 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
          <PrivateRoute path={`${path}/microplan-search`} component={() => <MicroplanSearch></MicroplanSearch>} /> 
          <PrivateRoute path={`${path}/user-management`} component={() => <UserManagement></UserManagement>} /> 
          <PrivateRoute path={`${path}/campaign-boundary`} component={() => <CampaignBoundary/>} /> 
-
+         <PrivateRoute path={`${path}/test`} component={() => <SearchUnderJurisdiction></SearchUnderJurisdiction>} /> 
+         <PrivateRoute path={`${path}/table`} component={() => <TableNew />} />
+         <PrivateRoute path={`${path}/pop-inbox`} component={() => <PopInbox />} />
       </AppContainer>
     </Switch>
   );
