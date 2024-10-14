@@ -25,9 +25,9 @@ export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [lowestHierarchy,setLowestHierarchy] = useState("") 
-  const { data: BOUNDARY_HIERARCHY_TYPE } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }], {
+  const { data: BOUNDARY_HIERARCHY_TYPE } = Digit.Hooks.useCustomMDMS(tenantId, "hcm-microplanning", [{ name: "hierarchyConfig" }], {
     select: (data) => {
-       const item = data?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)
+       const item = data?.["hcm-microplanning"]?.hierarchyConfig?.find((item) => item.isActive)
        setLowestHierarchy(item.lowestHierarchy)
         return item?.hierarchy
       },
