@@ -376,6 +376,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                         className={"example"}
                       /> */}
                       <TextInput
+                          isRequired={true}
                           className="tetxinput-example"
                           type={"text"}
                           // props={{ fieldStyle: example }}

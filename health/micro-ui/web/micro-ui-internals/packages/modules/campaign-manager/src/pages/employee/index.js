@@ -22,7 +22,6 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
   const search = useLocation().search;
   const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
-
   const crumbs = [
     {
       path: `/${window?.contextPath}/employee`,
@@ -32,7 +31,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     {
       path: pathVar === "my-campaign" ? "" : `/${window?.contextPath}/employee/campaign/my-campaign`,
       content: t("MY_CAMPAIGN"),
-      show: pathVar === "my-campaign" || pathVar === "checklist/search" ? true : false,
+      show: pathVar === "my-campaign" || pathVar === "checklist/search" || pathVar === "checklist/create" ? true : false,
     },
     {
       path: pathVar === "setup-campaign" ? "" : `/${window?.contextPath}/employee/campaign/setup-campaign`,
@@ -48,6 +47,11 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       path: "",
       content: t("ACTION_LABEL_CONFIGURE_APP"),
       show:pathVar === "checklist/search" ? true : false,
+    },
+    {
+      path: "",
+      content: t("ACTION_CREATE_CHECKLIST"),
+      show: pathVar === "checklist/create" ? true : false,
     }
   ];
 

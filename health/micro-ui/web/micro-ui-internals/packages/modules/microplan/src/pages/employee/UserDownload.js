@@ -4,7 +4,7 @@ import { Card } from '@egovernments/digit-ui-components';
 import HeaderComp from '../../components/HeaderComp';
 import { TextBlock } from '@egovernments/digit-ui-components';
 
-const User_Download = () => {
+const UserDownload = () => {
     const [Files, setFile] = useState(""); // Initialize as an empty string
     const reqCriteriaResource = {
         url: "/project-factory/v1/data/_search",
@@ -24,12 +24,33 @@ const User_Download = () => {
         }
     };
 
-    const {
+    // const {
 
-        data,
+    //     data,
 
-    } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
+    // } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
+
+    const { data, isFetching, isLoading } = Digit.Hooks.microplanv1.useFileDownload({
+        "SearchCriteria": {
+            "tenantId": Digit.ULBService.getCurrentTenantId(),
+            "source": "microplan",
+            "status": "completed"
+        }
+    },
+        {
+            enabled: true,
+            select: data => {
+                debugger;
+                return data;
+            }
+        }
+
+    )
+
     
+
+    console.log("fileDownloadData",data);
+
 
 
     // Use useEffect to update Files only when data changes
@@ -79,4 +100,4 @@ const User_Download = () => {
     );
 }
 
-export default User_Download;
+export default UserDownload;

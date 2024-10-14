@@ -1,9 +1,10 @@
 import { useQuery } from "react-query";
-import SearchFileIds from "./services/SearchCampaignConfig";
+import SearchFileIds from "./services/SearchFileIds";
 
-const useSearchCampaign = (data, config = {}) => {
+const useFileDownload = (data, config = {}) => {
+  debugger;
   return useQuery(["SEARCH_FILES",data,config?.queryKey], () => SearchFileIds(data), { ...config });
 };
 
-export default useSearchCampaign;
+export default useFileDownload;
 
