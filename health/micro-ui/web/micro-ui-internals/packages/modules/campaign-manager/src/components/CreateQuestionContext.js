@@ -33,7 +33,8 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
         });
         break;
       case "UPDATE_QUESTION_DATA":
-        return [...action.payload];
+        if(action?.payload && action?.payload.length>0) return [...action.payload];
+        else return state;
       case "ADD_QUESTION":
         return [
           ...state,
@@ -164,13 +165,18 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
         return state;
     }
   };
-  const [initialState, setInitialState] = useState([{ id: crypto.randomUUID(), parentId: null, level: 1, key: 1, title: null, type: { "code": "SingleValueList" }, value: null, isRequired: false }])
+  // const [initialState, setInitialState] = useState([{ id: crypto.randomUUID(), parentId: null, level: 1, key: 1, title: null, type: { "code": "SingleValueList" }, value: null, isRequired: false }])
+  
+  const [initialState, setInitialState] = useState(()=>{
+    const savedQuestions = localStorage.getItem("questions");
+    return savedQuestions ?  JSON.parse(savedQuestions) : [{ id: crypto.randomUUID(), parentId: null, level: 1, key: 1, title: null, type: { "code": "SingleValueList" }, value: null, isRequired: false }]
+  })
 
   const [questionData, dispatchQuestionData] = useReducer(questionDataReducer, initialState);
 
   useEffect(() => {
     // Avoid dispatch if props haven't changed
-    if (props?.props?.data !== 0) {  
+    if (props?.props?.data !== 0 && props?.props?.data?.[0]?.title !== null) {  
       // Dispatch only if the data is different
       dispatchQuestionData({
         type: "UPDATE_QUESTION_DATA",
@@ -185,6 +191,12 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
     onSelect("createQuestion", {
       questionData,
     });
+    if(!(questionData.length === 1 && questionData?.[0].title===null))
+    {
+      localStorage.setItem("questions", JSON.stringify(questionData));
+
+    } 
+    // setInitialState(localStorage.getItem("questions"))
   }, [questionData]);
 
 

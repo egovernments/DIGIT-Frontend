@@ -14,6 +14,12 @@ const SummaryScreen = ({props:customProps}) => {
 
     // const [totalFormData, setTotalFormData] = Digit.Hooks.useSessionStorage("MICROPLAN_DATA", {});
     const campaignDetails = customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails
+    const microplanDetails = customProps?.sessionData?.MICROPLAN_DETAILS?.microplanDetails
+    const assumptionsForm=customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm
+    const hypothesisValues=customProps?.sessionData?.HYPOTHESIS?.Assumptions?.assumptionValues
+    
+
+
     
 
 
@@ -81,7 +87,7 @@ const SummaryScreen = ({props:customProps}) => {
                             {
                                 key: t("NAME_OF_MICROPLAN"),
                                 // value: totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName || "NA",
-                                value:campaignDetails?.microplanName || "NA",
+                                value:microplanDetails?.microplanName  || "NA",
 
 
                             },
@@ -130,17 +136,17 @@ const SummaryScreen = ({props:customProps}) => {
                         ),
                         values: [
                             {
-                                key: "Campaign Registration Process",
-                                value: "House to House",
+                                key: t("CAMPAIGN_REGISTRATION_PROCESS"),
+                                value: assumptionsForm?.selectedRegistrationProcess?.code  || "NA",
                             },
                             {
-                                key: "Campaign Distribution Process",
-                                value: "House to House",
+                                key: t("CAMPAIGN_DISTRIBUTION_PROCESS"),
+                                value: assumptionsForm?.selectedDistributionProcess?.code || "NA",
                             },
                             {
-                                key: "Registration & Distribution",
+                                key: t("REGISTRATION_AND_DISTRIBUTION"),
                                 // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
-                                value: "Together"
+                                value: assumptionsForm?.selectedRegistrationDistributionMode?.code || "NA"
                             },
                         ],
                     },
@@ -161,8 +167,8 @@ const SummaryScreen = ({props:customProps}) => {
                         ),
                         values: [
                             {
-                                key: "Average people in a household",
-                                value: "4",
+                                key: t("AVERAGE_PEOPLE_IN_A_HOUSEHOLD"),
+                                value: hypothesisValues[2]?.value || "NA",
                             },
                             {
                                 key: "Number of bednets per bale",
@@ -190,24 +196,26 @@ const SummaryScreen = ({props:customProps}) => {
                         ),
                         values: [
                             {
-                                key: "No of days for household registration",
+                                key: t("NO_OF_DAYS_FOR_HOUSEHOLD_REGISTRATION"),
                                 value: "4",
                             },
                             {
-                                key: "Number of beneficiaries to be registered by a registration team per day",
-                                value: "50"
+                                key: t("NUMBER_OF_BENEFICIARIES_PER_TEAM_PER_DAY"),
+                                value: hypothesisValues[3]?.value || "NA"
                             },
                             {
-                                key: "Number of members per household registration team ",
-                                value: "4"
+                                key: t("NUMBER_OF_MEMBERS_PER_REGISTRATION_TEAM"),
+                                value: hypothesisValues[4]?.value || "NA"
                             },
                             {
-                                key: "Number of registration teams per monitor",
-                                value: "4"
+                                key: t("NUMBER_OF_REGISTRATION_TEAMS_PER_MONITOR"),
+                                value: hypothesisValues[5]?.value || "NA"
+                                
                             },
                             {
-                                key: "Number of monitors per supervisor for household registration",
-                                value: "4"
+                                key: t("NUMBER_OF_MONITORS_PER_SUPERVISOR_FOR_REGISTRATION"),
+                                value: hypothesisValues[6]?.value || "NA"
+                                
                             },
                         ],
                     },
@@ -227,7 +235,7 @@ const SummaryScreen = ({props:customProps}) => {
                         ),
                         values: [
                             {
-                                key: "Number of households per sticker roll",
+                                key: t("NUMBER_OF_HOUSEHOLDS_PER_STICKER_ROLL"),
                                 value: "20",
                             },
 
@@ -249,11 +257,11 @@ const SummaryScreen = ({props:customProps}) => {
                         ),
                         values: [
                             {
-                                key: "Capacity of vehicle 1(bales)",
+                                key: t("CAPACITY_OF_VEHICLE_1_BALES"),
                                 value: "20",
                             },
                             {
-                                key: "Capacity of vehicle 2(bales)",
+                                key: t("CAPACITY_OF_VEHICLE_2_BALES"),
                                 value: "20",
                             },
 
