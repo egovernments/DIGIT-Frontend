@@ -2,6 +2,7 @@ import { Header, LoaderWithGap} from "@egovernments/digit-ui-react-components";
 import React, {  useState, useEffect, Fragment, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { InfoCard, PopUp, Toast, Button, Stepper, TextBlock , Card} from "@egovernments/digit-ui-components";
+import axios from "axios";
 
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
@@ -102,15 +103,55 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   };
 
   useEffect(() => {
-    setUploadedFile(props?.props?.sessionData?.UPLOADDATA?.[type]?.uploadedFile || []);
-    setFileName(props?.props?.sessionData?.UPLOADDATA?.[type]?.uploadedFile?.[0]?.fileName || null);
-    setApiError(null);
-    setIsValidation(false);
-    setDownloadError(false);
-    setIsError(false);
-    setIsSuccess(props?.props?.sessionData?.UPLOADDATA?.[type]?.isSuccess || null);
-    setShowPopUp(!props?.props?.sessionData?.UPLOADDATA?.[type]?.uploadedFile?.length || 0);
+    if(type=='boundary'){
+      setUploadedFile(props?.props?.sessionData?.UPLOADBOUNDARYDATA?.[type]?.uploadedFile || []);
+      setFileName(props?.props?.sessionData?.UPLOADBOUNDARYDATA?.[type]?.uploadedFile?.[0]?.fileName || null);
+      setApiError(null);
+      setIsValidation(false);
+      setDownloadError(false);
+      setIsError(false);
+      setIsSuccess(props?.props?.sessionData?.UPLOADBOUNDARYDATA?.[type]?.isSuccess || null);
+      setShowPopUp(!props?.props?.sessionData?.UPLOADBOUNDARYDATA?.[type]?.uploadedFile?.length || 0);
+    }
+    else if(type=='facilityWithBoundary'){
+      setUploadedFile(props?.props?.sessionData?.UPLOADFACILITYDATA?.[type]?.uploadedFile || []);
+      setFileName(props?.props?.sessionData?.UPLOADFACILITYDATA?.[type]?.uploadedFile?.[0]?.fileName || null);
+      setApiError(null);
+      setIsValidation(false);
+      setDownloadError(false);
+      setIsError(false);
+      setIsSuccess(props?.props?.sessionData?.UPLOADFACILITYDATA?.[type]?.isSuccess || null);
+      setShowPopUp(!props?.props?.sessionData?.UPLOADFACILITYDATA?.[type]?.uploadedFile?.length || 0);
+    }
   }, [type, props?.props?.sessionData]);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const reqCriteria = {
+        url: `/project-factory/v1/data/_generate`,
+        params: {
+          tenantId: Digit.ULBService.getCurrentTenantId(),
+          type: type,
+          forceUpdate: true,
+          hierarchyType: boundaryHierarchy,
+          campaignId: id,
+          source: "microplan",
+        }
+      };
+  
+      try {
+        await axios.post(reqCriteria.url, reqCriteria.body, {
+          params: reqCriteria.params,
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    fetchData();
+  }, [type]);
+  
 
   useEffect(() => {
     enrichFileDetails(uploadedFile);
@@ -245,12 +286,13 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   useEffect(async () => {
     if (readMe?.["HCM-ADMIN-CONSOLE"]) {
       const newReadMeFacility = await translateReadMeInfo(
-        readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === `${type-'MP'}`)?.[0]?.texts
+        readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === `${type}-MP`)?.[0]?.texts
       );
       const newReadMeUser = await translateReadMeInfo(readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === `${type-'MP'}`)?.[0]?.texts);
       const newReadMeboundary = await translateReadMeInfo(
-        readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === `${type-'MP'}`)?.[0]?.texts
+        readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === `${type}-MP`)?.[0]?.texts
       );
+
 
       const readMeText = {
         boundary: newReadMeboundary,
@@ -275,16 +317,6 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       onSelect(props.props.name, { uploadedFile, isError, isValidation, apiError, isSuccess })
       setExecutionCount((prevCount) => prevCount + 1);
     }
-  });
-
-
-  Digit.Hooks.microplanv1.useGenerateIdCampaign({
-    type: type, // or another type
-    hierarchyType: boundaryHierarchy,
-    filters: null,  // Passing null if no filters are required
-    campaignId: id,
-    source: "microplan",
-    config: {} // Optional config, if you want to override default config
   });
 
   useEffect(() => {
@@ -354,8 +386,8 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       setShowInfoCard(false);
   
     } catch (error) {
-      // Catch any error and set the toast with the error message
-      setShowToast({ key: "error", label: error.message || t("HCM_ERROR_DEFAULT_MESSAGE") });
+      // const message = error?.message || t("HCM_ERROR_DEFAULT_MESSAGE");
+      setShowToast({ key: "error", label: t("HCM_ERROR_FILE_UPLOAD_FAILED") });
     }
   };
   
@@ -394,7 +426,8 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             type,
             tenantId,
             id,
-            baseTimeOut?.["HCM-ADMIN-CONSOLE"]
+            baseTimeOut?.["HCM-ADMIN-CONSOLE"],
+            { source : "microplan" }
           );
           if (temp?.isError) {
             setLoader(false);
@@ -594,7 +627,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
 
   const onStepClick = (currentStepForKey) => {
     const stepKey= currentStepForKey + baseKey;
-    if(stepKey > key) {
+    if(stepKey > key  && !totalData?.UPLOADBOUNDARYDATA?.boundary?.isSuccess) {
       return;
     }
     setShowToast(null);
@@ -676,7 +709,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
               name: "infocard",
             }}
             variant= {sheetErrors ? "error" : "default"}
-            style={{ margin: "0rem", maxWidth: "100%" }}
+            style={{ margin: "0rem", maxWidth: "100%", marginTop: "1rem" }}
             additionalElements={
               sheetErrors ? (
                   [<Button
