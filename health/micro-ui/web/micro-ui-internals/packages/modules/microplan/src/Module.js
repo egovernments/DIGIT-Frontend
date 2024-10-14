@@ -31,7 +31,7 @@ export const MicroplanModule = ({ stateCode, userType, tenants }) => {
        setLowestHierarchy(item.lowestHierarchy)
         return item?.hierarchy
       },
-  });
+  },{schemaCode:"BASE_MASTER_DATA_INITIAL"});
 
   const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({BOUNDARY_HIERARCHY_TYPE,tenantId});
 
