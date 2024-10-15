@@ -23,7 +23,6 @@ const downloadTemplate = (hierarchyTemp, defaultHierarchyType ) => {
    
     const [localizationResponse, setLocalizationResponse] = useState(null);
     useEffect(()=>{
-        console.log("setting localization", lo);
         setLocalizationResponse(lo);
     }, [lo])
     
@@ -39,7 +38,6 @@ const downloadTemplate = (hierarchyTemp, defaultHierarchyType ) => {
     
     const [allBoundaries1, setAllBoundaries1] = useState([]);
     useEffect(()=>{
-        console.log("the heirarchy defautl defintion", data?.TenantBoundary?.[0]?.boundary);
         // allBoundaries1 = data?.TenantBoundary?.[0]?.boundary
         setAllBoundaries1(data?.TenantBoundary?.[0]?.boundary)
     }, [data]);
@@ -54,7 +52,6 @@ const downloadTemplate = (hierarchyTemp, defaultHierarchyType ) => {
         }
     };
     const getAllDatas = (allBoundaries) => {
-        console.log("in the function", allBoundaries);
         let allDatas = [];
         for (const data of allBoundaries) {
             generatePaths(data, [], allDatas);
@@ -126,7 +123,6 @@ const downloadTemplate = (hierarchyTemp, defaultHierarchyType ) => {
     };
 
     function finalizeSheet(sheet, frozeCells, frozeWholeSheet) {
-        console.log("Step 3", sheet);
         if (frozeCells) {
           performUnfreezeCells(sheet);
         }
@@ -134,9 +130,7 @@ const downloadTemplate = (hierarchyTemp, defaultHierarchyType ) => {
           performFreezeWholeSheet(sheet);
         }
 
-        console.log("step 4", sheet);
         updateFontNameToRoboto(sheet);
-        console.log("step 5", sheet);
         sheet.views = [{ state: 'frozen', ySplit: 1, zoomScale: 110 }];
     };
 
@@ -192,7 +186,6 @@ const downloadTemplate = (hierarchyTemp, defaultHierarchyType ) => {
       
 
     function addDataToSheet(sheet, sheetData, firstRowColor = '93C47D', columnWidth = 40, frozeCells = false, frozeWholeSheet = false) {
-        console.log("step 1", sheet);
         sheetData?.forEach((row, index) => {
           const worksheetRow = sheet.addRow(row);
       
@@ -203,7 +196,6 @@ const downloadTemplate = (hierarchyTemp, defaultHierarchyType ) => {
           }
         });
 
-        console.log("step 2", sheet);
       
         finalizeSheet(sheet, frozeCells, frozeWholeSheet);
 
@@ -247,7 +239,6 @@ const downloadTemplate = (hierarchyTemp, defaultHierarchyType ) => {
             }
           }
         }
-        console.log("bhai yrr", hierarchyList);
         return hierarchyList; // Return the hierarchy list
       }
       
@@ -261,7 +252,6 @@ const downloadTemplate = (hierarchyTemp, defaultHierarchyType ) => {
         setNewBoundaryData((prevItems) => {
             // Loop through the array starting from the second element
             return prevItems.map((item, idx) => {
-                // console.log("last", boundaryData?.[boundaryData.length-1].boundaryType);
                 if(idx===0) 
                 {
                     if(boundaryData.length===0) item.parentBoundaryType=null;
@@ -288,7 +278,6 @@ const downloadTemplate = (hierarchyTemp, defaultHierarchyType ) => {
     const mutation = Digit.Hooks.useCustomAPIMutationHook(requestCriteriaBulkUpload);
 
     const downloadExcelTemplate = async ()=> {
-        console.log("coming inside download");
         //code of generate boundary template service call
         let request
         // const locale = getLocaleFromRequest(request);
@@ -299,7 +288,7 @@ const downloadTemplate = (hierarchyTemp, defaultHierarchyType ) => {
         // locale = msgId.split("|")?.[1] || "en_MZ";
         locale = "en_MZ";
         
-        console.log("res", localizationResponse);
+      
         let messages = localizationResponse?.messages;
 
         const localizationMap = {};
@@ -317,10 +306,8 @@ const downloadTemplate = (hierarchyTemp, defaultHierarchyType ) => {
             localizationMap ? localizationMap[header] || header : header
         );
         
-        console.log("all boundaries 1", allBoundaries1);
         const allDatas = getAllDatas(allBoundaries1);
 
-        console.log("all datas", allDatas);
 
         const newLocaisationMap = localizationMap;
 
@@ -332,12 +319,10 @@ const downloadTemplate = (hierarchyTemp, defaultHierarchyType ) => {
 
         let localisedData = localisedArray;
 
-        console.log("localised data", localisedData);
 
         formatBoundaryData(allDatas, localisedData, localizedHeaders);
         const allBoundaries = [localizedHeaders, ...localisedData];
 
-        console.log("all boundaries", allBoundaries);
 
         const workbook = new ExcelJS.Workbook();
         let localizedBoundaryTab;
@@ -349,11 +334,9 @@ const downloadTemplate = (hierarchyTemp, defaultHierarchyType ) => {
         else{
             localizedBoundaryTab = localizationMap[expectedName];
         }
-        console.log("sheet before", workbook);
         const boundarySheet = workbook.addWorksheet(localizedBoundaryTab);
         addDataToSheet(boundarySheet, allBoundaries, undefined, undefined, true, true);
         
-        console.log("sheet after", boundarySheet);
         const buffer = await workbook.xlsx.writeBuffer();
         const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 
