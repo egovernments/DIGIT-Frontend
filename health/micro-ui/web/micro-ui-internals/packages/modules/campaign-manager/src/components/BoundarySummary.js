@@ -104,6 +104,7 @@ const BoundarySummary = (props) => {
                     // ),
                     props: {
                       boundaries: item,
+                      hierarchyType: hierarchyType
                     },
                   },
                 ],
