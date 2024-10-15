@@ -340,7 +340,14 @@ const createUpdatePlanProject = async (req) => {
 
         await updatePlan(upatedPlanObjSubHypothesis);
         return;
-      case "UPLOADDATA":
+      case "UPLOADBOUNDARYDATA":
+        setCurrentKey((prev) => prev + 1);
+        setCurrentStep((prev) => prev + 1);
+        return {
+          triggeredFrom,
+        };
+
+      case "UPLOADFACILITYDATA":
         setCurrentKey((prev) => prev + 1);
         setCurrentStep((prev) => prev + 1);
         return {
