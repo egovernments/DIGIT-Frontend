@@ -158,7 +158,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
     if(boundaryHierarchy){
       fetchData();
     }
-  }, [type]);
+  }, [type, boundaryHierarchy]);
   
 
   useEffect(() => {
