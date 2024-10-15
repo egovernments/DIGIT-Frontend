@@ -199,10 +199,6 @@ export const UICustomizations = {
         <div>
           {value.map((item, index) => (
             <span key={index} className="dm-code">
-<<<<<<< HEAD
-=======
-              {/* {item.code} */}
->>>>>>> a1be003f1926841fe1b8941377d447cc020cf161
               {t(`MP_ROLE_${item.code}`)}
               {index < value.length - 1 && ", "}
             </span>
