@@ -8,7 +8,7 @@ const SearchFileIds = async (body) => {
       useCache: false,
       method: "POST",
       userService: false,
-      body,
+      body:body,
     });
     // debugger;
     if (response?.ResourceDetails?.length === 0) {
@@ -44,16 +44,18 @@ const SearchFileIds = async (body) => {
       throw new Error("No users found with the given uuid");
     }
     // let userNames = {}
-    console.log("resUser", response1.user);
-    // for (const ob of response1.user) {
-    //   userNames[ob?.uuid] = ob?.userName;
-    // }
+    console.log("res1", response);
+    console.log("res2", response1);
+
+    // response?.ResourceDetails.map((arr)=>{
+    //   return ()
+    // })
 
 
-    // return userNames;
-    // console.log("ji3", userNames);
 
-    // debugger;
+    
+
+
     let res = {...response,...response1}
 
     // console.log("res", res);
