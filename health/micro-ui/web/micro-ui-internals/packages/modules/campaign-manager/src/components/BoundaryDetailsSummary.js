@@ -42,8 +42,6 @@ const BoundaryDetailsSummary = (props) => {
     return acc;
   }, {});
 
-  console.log("pdsds", groupedByParent);
-
   // return (
   //   <div>
   //     <div>
@@ -82,43 +80,6 @@ const BoundaryDetailsSummary = (props) => {
   //         <Button label={showAll ? t("HCM_SHOW_LESS_ALL") : t("HCM_SHOW_MORE_ALL")} onClick={handleShowAllToggle} variation="link" />
   //       )}
   //     </div>
-  //     {showPopUp && (
-  //         <PopUp
-  //           className={"boundaries-pop-module"}
-  //           type={"default"}
-  //           heading={t("ES_CAMPAIGN_UPDATE_TYPE_MODAL_HEADER")}
-  //           children={[]}
-  //           onOverlayClick={() => {
-  //             setShowPopUp(false);
-  //           }}
-  //           onClose={() => {
-  //             setShowPopUp(false);
-  //           }}
-  //           footerChildren={[
-  //             <Button
-  //               className={"campaign-type-alert-button"}
-  //               type={"button"}
-  //               size={"large"}
-  //               variation={"secondary"}
-  //               label={t("ES_CAMPAIGN_BOUNDARY_MODAL_BACK")}
-  //               onClick={() => {
-  //                 setShowPopUp(false);
-  //               }}
-  //             />,
-  //             <Button
-  //               className={"campaign-type-alert-button"}
-  //               type={"button"}
-  //               size={"large"}
-  //               variation={"primary"}
-  //               label={t("ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT")}
-  //               onClick={() => {
-  //                 setShowPopUp(false);
-  //               }}
-  //             />,
-  //           ]}
-  //           sortFooterChildren={true}
-  //         ></PopUp>
-  //       )}
   //   </div>
   // );
 
