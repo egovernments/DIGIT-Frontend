@@ -52,6 +52,7 @@ const isValidResourceName = async (name) => {
 //generating campaign and microplan
 //this will only be called on first time create so it doesn't have to be generic
 const CreateResource = async (req) => {
+
   //creating a microplan and campaign instance here
   const { totalFormData, state, setShowToast, setCurrentKey, setCurrentStep, config, campaignObject, planObject } = req;
   try {
@@ -64,7 +65,6 @@ const CreateResource = async (req) => {
       resources: [],
       projectType: totalFormData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code,
       additionalDetails: {
-        resourceDistributionStrategy: totalFormData?.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode,
         source: "microplan",
       },
     };
@@ -350,11 +350,22 @@ const createUpdatePlanProject = async (req) => {
           triggeredFrom,
         };
 
+      case "FORMULA_CONFIGURATION":
+        window.dispatchEvent(new Event("isFormulaLastStep"))
+        setCurrentKey((prev) => prev + 1);
+        setCurrentStep((prev) => prev + 1);
+        return {
+          triggeredFrom,
+        }; 
+
       default:
         setShowToast({ key: "error", label: "ERROR_UNHANDLED_NEXT_OPERATION" });
         return {
           triggeredFrom,
         };
+
+       
+  
     }
 
     //req will have{totalFormData,contextData,config,...additionalData}
