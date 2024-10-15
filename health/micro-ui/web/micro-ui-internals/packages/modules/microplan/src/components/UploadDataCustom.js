@@ -155,10 +155,10 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
         console.error("Error fetching data:", error);
       }
     };
-    if(boundaryHierarchy){
+    if(boundaryHierarchy && downloadError){
       fetchData();
     }
-  }, [type, boundaryHierarchy]);
+  }, [type, boundaryHierarchy, downloadError]);
   
 
   useEffect(() => {
@@ -505,7 +505,19 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             setSheetErrors(temp?.additionalDetails?.sheetErrors?.length || 0);
             const processedFileStore = temp?.processedFilestoreId;
             if (!processedFileStore) {
-              setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
+              if(temp?.status=="failed" && temp?.additionalDetails?.error){
+                try {
+                  const parsedError = JSON.parse(temp.additionalDetails.error);
+                  const errorMessage = parsedError?.description || parsedError?.message || t("HCM_VALIDATION_FAILED");
+                  setShowToast({ key: "error", label: errorMessage, transitionTime: 5000000 });
+                } catch (e) {
+                  console.error("Error parsing JSON:", e);
+                  setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
+                }
+              }
+              else{
+                setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
+              }
               return;
             } else {
               setIsError(true);
