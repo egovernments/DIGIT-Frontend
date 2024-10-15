@@ -1,4 +1,4 @@
-import { Link, useHistory } from "react-router-dom";
+import { Link,useLocation, useHistory,Link,useParams } from "react-router-dom";
 import _ from "lodash";
 import React from "react";
 import { Dropdown } from "@egovernments/digit-ui-components";
@@ -102,12 +102,11 @@ export const UICustomizations = {
 
     customValidationCheck: (data) => {
       const { phone } = data;
-      debugger
       const mobileRegex = /^[0-9]{10}$/;
 
       // Allow empty mobile number
       if (!phone || phone.trim() === "") {
-        return false; // Return true for empty input
+        return false; 
       }
 
       // Check if phone matches the regex
@@ -115,7 +114,7 @@ export const UICustomizations = {
         return { error: true, label: "INVALID_MOBILE_NUMBER" }; // Return an error message if invalid
       }
 
-      return false; // Return true if the mobile number is valid
+      return false; 
     },
 
 
@@ -123,8 +122,7 @@ export const UICustomizations = {
       const { phone, name } = data?.state?.searchForm || {}
       const { sortOrder } = data?.state?.filterForm || {}
       let { roleschosen } = data?.state?.filterForm || []
-      // console.log(additionalDetails["microplanData"])
-      // debugger;
+      
       if (!roleschosen) {
         roleschosen = {}
       }
@@ -140,21 +138,17 @@ export const UICustomizations = {
       if (roleschosen) {
         rolesString = Object.keys(roleschosen).filter(role => roleschosen[role] === true).join(',');
       }
-      // debugger;
-      console.log("data", data);
-      console.log("additionalDetails", additionalDetails);
+      
 
       data.params.names = name;
 
       data.params.phone = phone;
-      // debugger;
+      
       data.params.roles = rolesString;
       data.params.tenantId = Digit.ULBService.getCurrentTenantId();
       cleanObject(data.params);
       delete data.params.roleschosen;
       delete data.params.name;
-      // console.log(data,"dat");
-      // data.param.roles=roles;
 
       return data
     },
@@ -162,14 +156,13 @@ export const UICustomizations = {
     rolesForFilter: (props) => {
       const userInfo = Digit.UserService.getUser();
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      // debugger
       return {
         params: {},
         url: '/mdms-v2/v2/_search', //mdms fetch from
 
         body: {
           MdmsCriteria: {
-            tenantId: "mz",
+            tenantId:  Digit.ULBService.getCurrentTenantId(),
             filters: {},
             schemaCode: "hcm-microplanning.rolesForMicroplan",
             limit: 10,
@@ -180,7 +173,6 @@ export const UICustomizations = {
         config: {
           enabled: true,
           select: (data) => {
-            console.log("dates", data)
             const roles = data?.mdms.map(item => {
               return (
                 {
@@ -193,7 +185,7 @@ export const UICustomizations = {
                 }
               )
             })
-            // debugger
+            
             return roles
           },
         },
@@ -203,7 +195,6 @@ export const UICustomizations = {
 
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       if (key === "Role") {
-        debugger;
         return(
         <div>
           {value.map((item, index) => (
