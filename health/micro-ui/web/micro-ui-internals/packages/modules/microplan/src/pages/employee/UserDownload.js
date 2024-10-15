@@ -40,16 +40,16 @@ const UserDownload = () => {
         {
             enabled: true,
             select: data => {
-                debugger;
+                // debugger;
                 return data;
             }
         }
 
     )
 
-    
 
-    console.log("fileDownloadData",data);
+
+    console.log("fileDownloadData", data);
 
 
 
@@ -64,13 +64,13 @@ const UserDownload = () => {
 
 
 
-    console.log("data", data);
+    // console.log("data", data);
 
 
 
 
 
-    console.log("fileurl", Files);
+    // console.log("fileurl", Files);
 
 
 
@@ -83,16 +83,23 @@ const UserDownload = () => {
             <Card>
                 <HeaderComp title="DOWNLOAD_USER_DATA" styles={{ color: "black" }} />
                 <TextBlock body="DOWNLOAD_DESC" />
-                {Files &&
-                    Files.map((item, index) => (
-
+                {data?.ResourceDetails &&
+                    data?.ResourceDetails.map((item, index) => {
+                        {console.log("item.userName",item,item?.auditDetails?.lastmodtime)}
+                        return (
                         <FileComponent
                             title=""
-                            fileName={String(index)}
-                            downloadHandler={() => { Digit.Utils.campaign.downloadExcelWithCustomName({ fileStoreId: item, customName: String(index) }); }} // Passing the download function
+                            fileName={`FileNo${item?.fileStoreId.slice(0, 4)}`}
+                            downloadHandler={() => {
+                                Digit.Utils.campaign.downloadExcelWithCustomName({
+                                    fileStoreId: item?.fileStoreId, customName: `FileNo${item?.fileStoreId.slice(0, 4)}`
+                                });
+                            }} // Passing the download function
+                            auditDetails={{userName:item?.username,lastmodTime:item?.auditDetails?.lastmodtime}}
                         />
+                        )
 
-                    ))
+})
 
                 }
             </Card>

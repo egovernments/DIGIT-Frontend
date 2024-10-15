@@ -1,24 +1,21 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { EditIcon } from "@egovernments/digit-ui-react-components";
-import { DeleteIconv2, DownloadIcon } from "@egovernments/digit-ui-react-components";
-import { FileIcon } from "@egovernments/digit-ui-react-components";
-import { Button } from "@egovernments/digit-ui-react-components";
-import { Card } from "@egovernments/digit-ui-react-components";
-import { CardSubHeader } from "@egovernments/digit-ui-react-components";
-import { InboxSearchComposer } from "@egovernments/digit-ui-react-components";
-import { Table } from '@egovernments/digit-ui-react-components';
+import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader } from "@egovernments/digit-ui-react-components";
 
-const FileComponent = ({ title, fileName, editHandler, deleteHandler, downloadHandler }) => {
+const FileComponent = ({ title, fileName, auditDetails, editHandler, deleteHandler, downloadHandler }) => {
     const { t } = useTranslation();
+    const { userName, lastmodTime } = auditDetails; // Destructuring the audit details for easy access
+    console.log("auditdetails",auditDetails)
+
     return (
         <div>
 
             {/* First card */}
             <div className="view-composer-header-section">
                 <CardSubHeader style={{ marginTop: 0, fontSize: "1.5rem", color: " #0B4B66", marginBottom: "0rem" }}>{title}</CardSubHeader>
-
             </div>
+
             <Card>
                 <div className="dm-parent-container">
                     {/* Left side: File Icon */}
@@ -30,11 +27,18 @@ const FileComponent = ({ title, fileName, editHandler, deleteHandler, downloadHa
                         <div>{fileName}</div>
                     </div>
 
-                    {/* Right side: Edit and Delete Buttons */}
+                    {/* Right side: Edit, Delete, and Audit details */}
                     <div className="dm-actions-container">
+                        
+                        {/* Display audit details (Uploaded by user and last modified time) */}
+                        <div className="dm-audit-info" >
+                            {/* Displaying the audit information */}
+                            {userName && <span>{t("Uploaded by")} {userName} | </span>}
+                            {lastmodTime && <span>{t(lastmodTime)}</span>}
+                        </div>
+
                         {/* Edit Icon and Button */}
                         <div className="dm-campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                            {/* <span>{t("CAMPAIGN_EDIT")}</span> */}
                             {editHandler &&
                                 <Button
                                     label={t("WBH_EDIT")}
@@ -62,7 +66,6 @@ const FileComponent = ({ title, fileName, editHandler, deleteHandler, downloadHa
                                 }}
                             />
                         }
-
 
                         {/* Download Button */}
                         {downloadHandler &&

@@ -1,4 +1,5 @@
 import { UploadFileComposer } from "@egovernments/digit-ui-components";
+import formatTimestamp from "../../utils/formatTimeStamp";
 
 //returns [[FileId,auditDetails]]
 const SearchFileIds = async (body) => {
@@ -23,7 +24,7 @@ const SearchFileIds = async (body) => {
 
     uuids = [...uuids];
     // console.log("ji", response?.ResourceDetails);
-    // console.log("ji1", uuids);
+    console.log("ji1", uuids);
 
     // debugger;
 
@@ -43,31 +44,23 @@ const SearchFileIds = async (body) => {
     if (response1?.user?.length === 0) {
       throw new Error("No users found with the given uuid");
     }
+    let uuidName={};
+    for (const ob of response1?.user){
+      uuidName[ob.uuid]=ob.userName;
+    }
     // let userNames = {}
     console.log("res1", response);
     console.log("res2", response1);
+    response?.ResourceDetails.forEach((ob) => {
+      ob["username"] = uuidName[ob?.auditDetails?.lastModifiedBy];  // Set the username
+      ob.auditDetails.lastmodtime = formatTimestamp(ob?.auditDetails?.lastModifiedTime);  // Format and set the last modified time
+    });
 
-    // response?.ResourceDetails.map((arr)=>{
-    //   return ()
-    // })
+    console.log("response process1",response)
 
-
-
-    
-
-
-    let res = {...response,...response1}
+    let res = {...response}
 
     // console.log("res", res);
-
-
-
-
-
-
-
-
-
     return res
   } catch (error) {
     if (error?.response?.data?.Errors) {

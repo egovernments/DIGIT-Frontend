@@ -121,7 +121,7 @@ export const UserManagementConfig = {
               },
               {
                 "text": "DOWNLOAD_USER_DATA",
-                "url": "/employee",
+                "url": "/employee/microplan/user-download",
                 "roles": [
                   "MICROPLAN_ADMIN"
                 ]
