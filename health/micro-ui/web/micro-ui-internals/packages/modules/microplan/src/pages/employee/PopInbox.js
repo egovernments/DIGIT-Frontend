@@ -15,9 +15,12 @@ const jurisdiction = {
 const PopInbox = () => {
 
   
+  const onSearch = (selectedBoundaries) => {
+    console.log(selectedBoundaries);
+  }
   return (
     <>
-      <SearchJurisdiction boundaries={boundaries()} jurisdiction={jurisdiction} />
+      <SearchJurisdiction boundaries={boundaries()} jurisdiction={jurisdiction} onSubmit={onSearch} />
     </>
   )
 }
