@@ -24,6 +24,7 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
         setShowPopup(true)
       }
     }, [])
+  
     
 
     useEffect(() => {

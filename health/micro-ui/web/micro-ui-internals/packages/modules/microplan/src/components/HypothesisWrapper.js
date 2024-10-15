@@ -48,7 +48,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
 
       console.log("plan object is", planObject)
       console.log("refectch", refetchPlan)
-    
+      console.log("state is", state)
 
      
     const moveToPreviousStep = () => {
