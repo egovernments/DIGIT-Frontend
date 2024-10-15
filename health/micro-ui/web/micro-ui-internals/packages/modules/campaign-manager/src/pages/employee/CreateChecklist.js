@@ -9,7 +9,6 @@ import PreviewComponent from "../../components/PreviewComponent";
 import { isError, set, template } from "lodash";
 import { value } from "jsonpath";
 import data_hook from "../../hooks/data_hook";
-import def from "ajv/dist/vocabularies/discriminator";
 import { QuestionContext } from "../../components/CreateQuestionContext";
 // import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
 import _ from 'lodash';
@@ -42,12 +41,15 @@ const CreateChecklist = () => {
   const history = useHistory();
   let data_mdms=[]
   let template_data=[]
+  const urlMd = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH");
   const reqCriteriaResource = {
-    url: `/mdms-v2/v2/_search`,
+    // url: `/mdms-v2/v2/_search`,
+    url: `/${urlMd}/v2/_search`,
     body: {
       MdmsCriteria: {
         tenantId: tenantId,
-        schemaCode: "HCMadminconsole.checklisttemplates"
+        // schemaCode: "HCMadminconsole.checklisttemplates"
+        schemaCode: "HCM-ADMIN-CONSOLE.ChecklistTemplates"
       }
     },
     config: {
@@ -73,21 +75,16 @@ const CreateChecklist = () => {
   }
   const { isLoading1, data: localization, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqCriteria);
   useEffect(()=>{
-    console.log("the achieved localization is", localization);
     if (localization?.messages?.length > 0) {
       let matchedItem = localization.messages.find(item => item.message === checklistType);
       // If a match is found, assign the 'code' to 'checklistcode'
       if (matchedItem) {
-        console.log("matched", matchedItem);
         let code = matchedItem.code;
         let res = code.replace("HCM_CHECKLIST_TYPE_", "");
-        console.log("the res", res);
         setChecklistTypeCode(res);
       } else {
-        console.log('No matching checklist type found.');
       }
     } else {
-      console.log('Localization or messages array is not available.');
     }
 
   }, [localization])
@@ -361,8 +358,6 @@ useEffect(()=>{
       const data = await mutateAsync(payload); // Use mutateAsync for await support
       // Handle successful checklist creation  
       // Proceed with localization if needed
-      console.log("data success", data);
-      console.log("ul", uniqueLocal);
       let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
       if(checklistTypeCode) checklistTypeTemp=checklistTypeCode;
       let roleTemp = role.toUpperCase().replace(/ /g, "_");
@@ -372,7 +367,6 @@ useEffect(()=>{
                         module: "hcm-checklist" });
       if (data.success) { // Replace with your actual condition
         const localisations = uniqueLocal;
-        console.log("unique local", uniqueLocal);
         const localisationResult = await localisationMutateAsync(localisations);
         // Check if localization succeeded
         if (!localisationResult.success) {
