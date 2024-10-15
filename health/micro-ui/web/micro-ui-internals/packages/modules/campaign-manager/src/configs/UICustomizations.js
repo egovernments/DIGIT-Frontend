@@ -39,7 +39,6 @@ export const UICustomizations = {
       }
       const { isLoading1, data: localization, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqCriteria);
       useEffect(()=>{
-        console.log("checklsit typ eis", checklistType);
         if (localization?.messages?.length > 0) {
           let matchedItem = localization.messages.find(item => item.message === checklistType);
           // If a match is found, assign the 'code' to 'checklistcode'
