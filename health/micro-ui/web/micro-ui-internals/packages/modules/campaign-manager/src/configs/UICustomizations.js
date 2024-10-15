@@ -15,9 +15,44 @@ const businessServiceMap = {};
 const inboxModuleNameMap = {};
 // const history=useHistory();
 
+
+
 export const UICustomizations = {
   MyChecklistSearchConfig: {
+
+    
     preProcess: (data, additionalDetails) => {
+
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const [checklistTypeCode, setChecklistTypeCode] = useState(null);
+      let checklistType = data?.state?.searchForm?.Type?.list;
+      const reqCriteria = {
+        url: `/localization/messages/v1/_search`,
+        body:{
+          tenantId: tenantId
+        },
+        params: {
+          locale: "en_MZ",
+          tenantId: tenantId,
+          module: "hcm-campaignmanager"
+        },
+      }
+      const { isLoading1, data: localization, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+      useEffect(()=>{
+        console.log("checklsit typ eis", checklistType);
+        if (localization?.messages?.length > 0) {
+          let matchedItem = localization.messages.find(item => item.message === checklistType);
+          // If a match is found, assign the 'code' to 'checklistcode'
+          if (matchedItem) {
+            let code = matchedItem.code;
+            let res = code.replace("HCM_CHECKLIST_TYPE_", "");
+            setChecklistTypeCode(res);
+          } else {
+          }
+        } else {
+        }
+    
+      }, [localization, data])
 
       data.body.ServiceDefinitionCriteria.code.length=0;
 
@@ -25,8 +60,10 @@ export const UICustomizations = {
       let codeTemp = data?.state?.searchForm?.Role?.code;
       let listt = "";
       let codee = "";
+
       if(listTemp) listt = listTemp.toUpperCase().replace(/ /g, "_");
       if(codeTemp) codee = codeTemp.toUpperCase().replace(/ /g, "_");
+      if(checklistTypeCode) listt = checklistTypeCode;
       let pay = window.history.state.name + '.' + listt + '.' + codee;
 
       data.body.ServiceDefinitionCriteria.code.push(pay);
