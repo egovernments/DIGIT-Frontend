@@ -98,7 +98,7 @@ const EmployeeSideBar = () => {
       else{
         updatedUrl = DIGIT_UI_CONTEXTS?.every((e) => url?.indexOf(`/${e}`) === -1) ? hostUrl + "/employee/" + url : hostUrl + url;
       }
-      history.push(updatedUrl);
+      window.location.href = updatedUrl;
     } else {
       history.push(url);
     } 
