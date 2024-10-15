@@ -17,10 +17,10 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               component: "CampaignDetails",
               withoutLabel: true,
               disable: false,
-              showPopupOnSubmission: {
-                alertMessage: "ALERT_MESSAGE_CAMPAIGN",
-                alertHeader: "ALERT_HEADER_CAMPAIGN"
-              },
+              // showPopupOnSubmission: {
+              //   alertMessage: "ALERT_MESSAGE_CAMPAIGN",
+              //   alertHeader: "ALERT_HEADER_CAMPAIGN"
+              // },
               customProps: {
                 module: "HCM",
                 sessionData: totalFormData,
@@ -34,7 +34,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
         },
         // TODO: Do no update this object key:2
         {
-          stepCount: "2",
+          stepCount: "1",
           key: "2",
           name: "MICROPLAN_DETAILS",
           body: [
@@ -65,7 +65,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
         },
         // TODO: Do no update this object key:3
         {
-          stepCount: "3",
+          stepCount: "2",
           key: "3",
           name: "BOUNDARY",
           body: [
@@ -92,13 +92,13 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
           ],
         },
         {
-          stepCount: "4",
+          stepCount: "3",
           key: "4",
-          name: "UPLOADDATA",
+          name: "UPLOADBOUNDARYDATA",
           body: [
             {
               isMandatory: false,
-              key: "uploadData",
+              key: "boundary",
               type: "component",
               skipAPICall: false,
               component: "UploadDataCustom",
@@ -114,19 +114,19 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
 
               },
               populators: {
-                name: "uploadData"
+                name: "boundary"
               },
             },
           ],
         },
         {
-          stepCount: "4",
+          stepCount: "3",
           key: "5",
-          name: "UPLOADDATA",
+          name: "UPLOADFACILITYDATA",
           body: [
             {
               isMandatory: false,
-              key: "uploadData",
+              key: "facilityWithBoundary",
               type: "component",
               skipAPICall: false,
               component: "UploadDataCustom",
@@ -140,13 +140,13 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
                 isSubmitting: isSubmitting
               },
               populators: {
-                name: "uploadData"
+                name: "facilityWithBoundary"
               },
             },
           ],
         },
         {
-          stepCount: "5",
+          stepCount: "4",
           key: "6",
           name: "ASSUMPTIONS_FORM",
           body: [
@@ -173,7 +173,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
           ],
         },
         {
-          stepCount: "5",
+          stepCount: "4",
           key: "7",
           name: "HYPOTHESIS",
           body: [
@@ -202,7 +202,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
 
 
       {
-        stepCount: "6",
+        stepCount: "5",
         key: "8",
         name: "FORMULA_CONFIGURATION",
         body: [

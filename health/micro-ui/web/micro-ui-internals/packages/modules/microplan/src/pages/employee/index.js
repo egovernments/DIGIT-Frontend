@@ -7,6 +7,9 @@ import { useMyContext } from "../../utils/context";
 import MicroplanSearch from "./MicroplanSearch";
 import SummaryScreen from "./SummaryScreen";
 import CampaignBoundary from "../../components/CampaignBoundary";
+import UserManagement from "./UserManagement";
+
+
 
 const bredCrumbStyle={ maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
@@ -42,14 +45,15 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
     "hcm-microplanning",
     [
       { name: "MicroplanNamingConvention" },
-      { name: "MicroplanNamingRegx" },
+      { name: "MicroplanNamingRegex" },
       { name: "ResourceDistributionStrategy"},
+      { name: "rolesForMicroplan"},
       { name: "HypothesisAssumptions"},
       { name: "RuleConfigureOutput" },
       { name: "AutoFilledRuleConfigurations" },
       { name: "RuleConfigureOperators" },  
-      { name: "RegistrationAndDistributionHappeningTogetherOrSeparately"}
-
+      { name: "RegistrationAndDistributionHappeningTogetherOrSeparately"},
+      { name: "hierarchyConfig"}
     ],
     {
       cacheTime:Infinity,
@@ -75,39 +79,39 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
     {
       cacheTime:Infinity,
       select:(data) => {
-        dispatch({
-          type: "MASTER_DATA",
-          state: {
-              hierarchyConfig:[
-              {
-                "hierarchy": "Workbench",
-                "lowestHierarchy": "Post Administrative",
-                "splitBoundariesOn" : "District",
-                "isActive": false
-              },
-                {
-                "hierarchy": "ADMIN",
-                "lowestHierarchy": "Post Administrative",
-                "splitBoundariesOn" : "District",
-                "isActive": false
-              },
-              {
-                "hierarchy": "Health",
-                "lowestHierarchy": "Post Administrative",
-                "splitBoundariesOn" : "District",
-                "isActive": false
-              },
-              {
-                "hierarchy": "MICROPLAN",
-                "lowestHierarchy": "Village",
-                "splitBoundariesOn" : "District",
-                "isActive": true
-              }
-            ],
-            ...data?.["HCM-ADMIN-CONSOLE"],
-          },
+        // dispatch({
+        //   type: "MASTER_DATA",
+        //   state: {
+        //       hierarchyConfig:[
+        //       {
+        //         "hierarchy": "Workbench",
+        //         "lowestHierarchy": "Post Administrative",
+        //         "splitBoundariesOn" : "District",
+        //         "isActive": false
+        //       },
+        //         {
+        //         "hierarchy": "ADMIN",
+        //         "lowestHierarchy": "Post Administrative",
+        //         "splitBoundariesOn" : "District",
+        //         "isActive": false
+        //       },
+        //       {
+        //         "hierarchy": "Health",
+        //         "lowestHierarchy": "Post Administrative",
+        //         "splitBoundariesOn" : "District",
+        //         "isActive": false
+        //       },
+        //       {
+        //         "hierarchy": "MICROPLAN",
+        //         "lowestHierarchy": "Village",
+        //         "splitBoundariesOn" : "District",
+        //         "isActive": true
+        //       }
+        //     ],
+        //     ...data?.["HCM-ADMIN-CONSOLE"],
+        //   },
           
-        });
+        // });
       }
     },
     {schemaCode:"ADDITIONAL_MASTER_DATA"} //mdmsv2
@@ -155,7 +159,8 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
         </React.Fragment>
          <PrivateRoute path={`${path}/setup-microplan`} component={() => <SetupMicroplan hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />} />
          <PrivateRoute path={`${path}/microplan-search`} component={() => <MicroplanSearch></MicroplanSearch>} /> 
-         
+         <PrivateRoute path={`${path}/user-management`} component={() => <UserManagement></UserManagement>} /> 
+         <PrivateRoute path={`${path}/campaign-boundary`} component={() => <CampaignBoundary/>} /> 
 
       </AppContainer>
     </Switch>

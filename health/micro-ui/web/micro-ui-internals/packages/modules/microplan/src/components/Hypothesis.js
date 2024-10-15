@@ -21,15 +21,19 @@ const Hypothesis = ({ category, assumptions:initialAssumptions })=>{
   const isAddNewDisabled = !deletedAssumptionCategories.current[category] || 
   deletedAssumptionCategories.current[category].length === 0 || 
   deletedAssumptionCategories.current[category].every(item => !deletedAssumptions.includes(item));
-   
-
+ 
   const availableDeletedAssumptions = Array.from(new Set(
     (deletedAssumptionCategories.current[category] || []).filter(item =>
         deletedAssumptions.includes(item)
     )
 ));
-    
-     
+
+  useEffect(()=>{
+      setAssumptions(initialAssumptions)
+  }, [initialAssumptions])
+
+
+
     const handleDeleteClick = (index) => {
       setAssumptionToDelete(index); 
       setShowPopUp(true); 
@@ -44,22 +48,23 @@ const Hypothesis = ({ category, assumptions:initialAssumptions })=>{
       if (assumptionToDelete !== null) {
         const deletedAssumption = assumptions[assumptionToDelete];
         const updatedAssumptions = assumptions.filter((_, i) => i !== assumptionToDelete);
-        const updatedAssumptionValues = assumptionValues.filter(
-          (value) => value.key !== deletedAssumption
-      );
     
-
         if (!deletedAssumptionCategories.current[category]) {
           deletedAssumptionCategories.current[category] = [];
           }
         deletedAssumptionCategories.current[category].push(deletedAssumption);
         
+        setDeletedAssumptions(prev => [...prev, deletedAssumption]);
+        setAssumptionValues((prevValues) => 
+          prevValues.filter((value) => value.key !== deletedAssumption)
+         );
 
-        setDeletedAssumptions([...deletedAssumptions, deletedAssumption]);
+       
         setAssumptions(updatedAssumptions);
-        setAssumptionValues(updatedAssumptionValues);
+       
         setAssumptionToDelete(null); 
      }
+
      setShowPopUp(false);
     };
 
@@ -83,7 +88,7 @@ const addNewAssumption = () => {
           if (!assumptionValues.some(assumption => assumption.key === assumptionToAdd)) {
               setAssumptionValues(prevValues => [
                   ...prevValues,
-                  { key: assumptionToAdd, value: null } // or an initial value
+                  { source:"MDMS",key: assumptionToAdd, value: null, } // or an initial value
               ]);
           }
 
@@ -92,13 +97,9 @@ const addNewAssumption = () => {
       }
   }
 };
-        
-    
-         
-    useEffect(() => {
-      setAssumptions(initialAssumptions);
-    }, [initialAssumptions]);
-         
+ 
+
+   
      return (
          <>
           
@@ -114,7 +115,7 @@ const addNewAssumption = () => {
 
                         return (
                               <LabelFieldPair className="mp-hypothesis-label-field" key={index}>
-                                    <div  className="name-container"  style={{width:"20rem"}}>
+                                    <div className="assumption-label">
                                       <span>{`${t(item)}`}
                                       <span className="mandatory-span">*</span>
                                       </span>
@@ -127,7 +128,7 @@ const addNewAssumption = () => {
                                           name={item}
                                           value={assumptionValues.find((assumption) => assumption.key === item)?.value || ""}
                                           error={""}
-                                          style={{marginBottom: "0" }}
+                                          style={{marginBottom: "0", }}
                                           populators={{ name: item }}
                                           id={index}
                                           onChange={(event) => {
@@ -136,7 +137,7 @@ const addNewAssumption = () => {
                                           
                                           }}
                                             />
-                                        <div className="delete-button">
+                                        <div className="hypothesis-delete-button">
                                           <DeleteIconv2 />
                                           <span  style={{color:"red",textDecoration:"Underline" }} onClick={()=> handleDeleteClick(index)}>{t("DELETE")}</span>
                                         </div>

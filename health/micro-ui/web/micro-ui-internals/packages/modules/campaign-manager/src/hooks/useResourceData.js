@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as XLSX from 'xlsx';
 import { baseTimeOut } from '../configs/baseTimeOut';
-export const useResourceData = async (data, hierarchyType, type, tenantId, id , baseTimeOut) => {
+export const useResourceData = async (data, hierarchyType, type, tenantId, id , baseTimeOut, additionalDetails ={}) => {
 
 
   let Type;
@@ -52,7 +52,7 @@ export const useResourceData = async (data, hierarchyType, type, tenantId, id , 
           fileStoreId: data?.[0]?.filestoreId,
           action: "validate",
           campaignId: id,
-          additionalDetails: {},
+          additionalDetails: additionalDetails,
         },
       },
     });
@@ -68,7 +68,7 @@ export const useResourceData = async (data, hierarchyType, type, tenantId, id , 
         Error.isError = true;
         return Error;
       } else {
-        Error = errorMessage;
+        Error = {error:String(error.message)};
         Error.isError = true;
         return Error;
       }

@@ -45,7 +45,9 @@ import UpdateBoundaryWrapper from "./components/UpdateBoundaryWrapper";
 // import SelectingBoundaryComponent from "./components/SelectingBoundaryComponent";
 import { Wrapper } from "./components/SelectingBoundaryComponent";
 import SelectingBoundariesDuplicate from "./components/SelectingBoundariesDuplicate";
+import CampaignUpdateSummary from "./components/CampaignUpdateSummary";
 import XlsPreview from "./components/XlsPreview";
+import BulkUpload from "./components/BulkUpload";
 import BoundarySummary from "./components/BoundarySummary";
 import Boundary from "./pages/employee/Boundary";
 import GeoPode from "./pages/employee/GeoPode";
@@ -135,6 +137,8 @@ const componentsToRegister = {
   UpdateBoundary,
   UpdateBoundaryWrapper,
   SelectingBoundariesDuplicate,
+  BulkUpload,
+  CampaignUpdateSummary,
   XlsPreview,
   MultiSelectDropdownBoundary:MultiSelectDropdown,
   Boundary,

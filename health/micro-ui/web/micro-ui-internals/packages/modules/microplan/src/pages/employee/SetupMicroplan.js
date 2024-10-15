@@ -238,7 +238,6 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     <React.Fragment>
       <Stepper
         customSteps={[
-          "HCM_CAMPAIGN_SETUP_DETAILS",
           "MICROPLAN_DETAILS",
           "MP_BOUNDARY_SELECTION",
           "MP_MANAGING_DATA",
@@ -259,13 +258,13 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
         })}
         onSubmit={onSubmit}
         showSecondaryLabel={true}
-        secondaryLabel={t("HCM_BACK")}
+        secondaryLabel={t("MP_BACK")}
         actionClassName={"actionBarClass"}
         className="setup-campaign"
         cardClassName="setup-campaign-card"
         noCardStyle={true}
         onSecondayActionClick={onSecondayActionClick}
-        label={t("HCM_NEXT")}
+        label={t("MP_NEXT")}
       />
       {/* {actionBar === "true" && (
         <ActionBar style={{ zIndex: "19" }}>

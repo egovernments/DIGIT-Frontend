@@ -207,6 +207,7 @@ const CampaignSummary = (props) => {
   const [cycles, setCycles] = useState([]);
   const [cards, setCards] = useState([]);
   const isPreview = searchParams.get("preview");
+  const parentId = searchParams.get("parentId");
   const [key, setKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
@@ -231,12 +232,10 @@ const CampaignSummary = (props) => {
     window.history.replaceState({}, "", url);
   }
 
-
   useEffect(() => {
     updateUrlParams({ key: key });
     window.dispatchEvent(new Event("checking"));
   }, [key]);
-
 
   // useEffect(() => {
   //   if (props?.props?.summaryErrors) {
@@ -309,6 +308,7 @@ const CampaignSummary = (props) => {
         const target = data?.[0]?.deliveryRules;
         const boundaryData = boundaryDataGrp(data?.[0]?.boundaries);
         const cycleData = reverseDeliveryRemap(target, t);
+        const hierarchyType= data?.[0]?.hierarchyType;
         return {
           cards: [
             {
@@ -372,7 +372,9 @@ const CampaignSummary = (props) => {
                   {
                     name: `HIERARCHY_${index + 1}`,
                     type: "COMPONENT",
-                    cardHeader: { value: `${t(item?.type)}` , inlineStyles: { color : "#0B4B66" } },
+                    
+                    cardHeader: { value: `${t(( hierarchyType + "_" + item?.type).toUpperCase())}` , inlineStyles: { color : "#0B4B66" } },
+
                     // cardHeader: { value: t("item?.boundaries?.type") },
                     component: "BoundaryDetailsSummary",
                     cardSecondaryAction: noAction !== "false" && (
@@ -411,8 +413,8 @@ const CampaignSummary = (props) => {
                     {
                       key: "CAMPAIGN_NO_OF_DELIVERIES",
                       value:
-                      data?.[0]?.deliveryRules && data?.[0]?.deliveryRules?.flatMap((rule) => rule?.deliveries.map((delivery) => delivery?.deliveryIndex))?.length > 0
-                      ? Math.max(...data?.[0]?.deliveryRules?.flatMap((rule) => rule?.deliveries.map((delivery) => delivery?.deliveryIndex)))
+                      data?.[0]?.deliveryRules && data?.[0]?.deliveryRules?.flatMap((rule) => rule?.deliveries?.map((delivery) => delivery?.deliveryIndex))?.length > 0
+                      ? Math.max(...data?.[0]?.deliveryRules?.flatMap((rule) => rule?.deliveries?.map((delivery) => delivery?.deliveryIndex)))
                       : t("CAMPAIGN_SUMMARY_NA"),
                     },
                   ],
