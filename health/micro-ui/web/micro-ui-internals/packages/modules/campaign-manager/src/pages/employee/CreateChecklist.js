@@ -9,7 +9,6 @@ import PreviewComponent from "../../components/PreviewComponent";
 import { isError, set, template } from "lodash";
 import { value } from "jsonpath";
 import data_hook from "../../hooks/data_hook";
-import def from "ajv/dist/vocabularies/discriminator";
 import { QuestionContext } from "../../components/CreateQuestionContext";
 // import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
 import _ from 'lodash';
@@ -25,6 +24,8 @@ const CreateChecklist = () => {
   const checklistType = searchParams.get("checklistType");
   const projectName = searchParams.get("campaignName");
   const campagnType = searchParams.get("campaignType");
+  const [checklistTypeCode, setChecklistTypeCode] = useState(null);
+  const [roleCode, setRoleCode] = useState(null);
   const flow = searchParams.get("flow");
   const role = searchParams.get("role");
   const campaignName = searchParams.get("campaignName");
@@ -40,27 +41,60 @@ const CreateChecklist = () => {
   const history = useHistory();
   let data_mdms=[]
   let template_data=[]
-const reqCriteriaResource = {
-  url: `/mdms-v2/v2/_search`,
-  body: {
-    MdmsCriteria: {
-      tenantId: tenantId,
-      schemaCode: "HCMadminconsole.checklisttemplates"
-    }
-  },
-  config: {
-    enabled: true,
-    select: (data) => {
-      return data?.mdms?.[0]?.data?.data;
+  const urlMd = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH");
+  const reqCriteriaResource = {
+    // url: `/mdms-v2/v2/_search`,
+    url: `/${urlMd}/v2/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId: tenantId,
+        // schemaCode: "HCMadminconsole.checklisttemplates"
+        schemaCode: "HCM-ADMIN-CONSOLE.ChecklistTemplates"
+      }
     },
-  },
-};
-const { isLoading, data: mdms, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
+    config: {
+      enabled: true,
+      select: (data) => {
+        return data?.mdms?.[0]?.data?.data;
+      },
+    },
+    // changeQueryName:"checklsit template "
+  };
+  const { isLoading, data: mdms, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
+  const reqCriteria = {
+
+    url: `/localization/messages/v1/_search`,
+    body:{
+      tenantId: tenantId
+    },
+    params: {
+      locale: "en_MZ",
+      tenantId: tenantId,
+      module: "hcm-campaignmanager"
+    },
+  }
+  const { isLoading1, data: localization, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  useEffect(()=>{
+    if (localization?.messages?.length > 0) {
+      let matchedItem = localization.messages.find(item => item.message === checklistType);
+      // If a match is found, assign the 'code' to 'checklistcode'
+      if (matchedItem) {
+        let code = matchedItem.code;
+        let res = code.replace("HCM_CHECKLIST_TYPE_", "");
+        setChecklistTypeCode(res);
+      } else {
+      }
+    } else {
+    }
+
+  }, [localization])
+
+
 useEffect(()=>{
   if(data_mdms && data_mdms.length!=0) template_data=data_mdms;
 }, [mdms])
 
-module = "HCM";
+  module = "hcm-checklist";
   const { mutateAsync: localisationMutateAsync } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, locale);
 
   let processedData = [];
@@ -69,10 +103,10 @@ module = "HCM";
   },[])
 
 
-  const [checklistName, setChecklistName] = useState("");
-  const addChecklistName = (data) => {
-    setChecklistName(data);
-  }
+  const [checklistName, setChecklistName] = useState(`${checklistType} ${role}`);
+  // const addChecklistName = (data) => {
+  //   setChecklistName(data);
+  // }
 
   const closeToast = () => {
     setShowToast(null);
@@ -159,15 +193,18 @@ module = "HCM";
       }
       codes[question.id] = code;
 
+      let moduleChecklist = "hcm-checklist";
+
       let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
       let roleTemp = role.toUpperCase().replace(/ /g, "_");
+      if(checklistTypeCode) checklistTypeTemp=checklistTypeCode;
       let formattedString = `${campaignName}.${checklistTypeTemp}.${roleTemp}.${code}`;
       
 
       const obj = {
         "code": formattedString,
         "message": String(question.title),
-        "module": module,
+        "module": moduleChecklist,
         "locale": locale
       }
       local.push(obj);
@@ -180,12 +217,13 @@ module = "HCM";
           const optionval = option.label;
           const upperCaseString = optionval.toUpperCase();
           const transformedString = upperCaseString.replace(/ /g, '_');
+          if(checklistTypeCode) checklistTypeTemp=checklistTypeCode;
           option.label = transformedString;
           let formattedStringTemp = `${campaignName}.${checklistTypeTemp}.${roleTemp}.${option.label}`;
           const obj = {
             "code": formattedStringTemp,
             "message": String(optionval),
-            "module": module, // to be dynamic
+            "module": moduleChecklist, // to be dynamic
             "locale": locale //to be dynamic
           }
           local.push(obj);
@@ -290,6 +328,7 @@ module = "HCM";
     );
     let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
     let roleTemp = role.toUpperCase().replace(/ /g, "_");
+    if(checklistTypeCode) checklistTypeTemp=checklistTypeCode;
     let code_of_checklist = `${campaignName}.${checklistTypeTemp}.${roleTemp}`;
     return {
       tenantId: tenantId,
@@ -319,6 +358,13 @@ module = "HCM";
       const data = await mutateAsync(payload); // Use mutateAsync for await support
       // Handle successful checklist creation  
       // Proceed with localization if needed
+      let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
+      if(checklistTypeCode) checklistTypeTemp=checklistTypeCode;
+      let roleTemp = role.toUpperCase().replace(/ /g, "_");
+      uniqueLocal.push({code: `${campaignName}_${checklistTypeTemp}_${roleTemp}`,
+                        locale: locale,
+                        message: `${checklistType} ${role}`,
+                        module: "hcm-checklist" });
       if (data.success) { // Replace with your actual condition
         const localisations = uniqueLocal;
         const localisationResult = await localisationMutateAsync(localisations);
@@ -452,12 +498,12 @@ module = "HCM";
           <div style={{ display: "flex" }}>
             <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t("NAME_OF_CHECKLIST")}</div>
             <TextInput
-              isRequired={true}
+              disabled={true}
               className="tetxinput-example"
               type={"text"}
               name={t("NAME_OF_CHECKLIST")}
-              value={checklistName || ""}
-              onChange={(event) => addChecklistName(event.target.value)}
+              value={`${checklistType} ${role}`}
+              // onChange={(event) => addChecklistName(event.target.value)}
               placeholder={"Checklist Name"}
             />
           </div>
