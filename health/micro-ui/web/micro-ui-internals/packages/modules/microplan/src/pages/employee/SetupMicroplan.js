@@ -255,7 +255,6 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     <React.Fragment>
       <Stepper
         customSteps={[
-          "MP_CAMPAIGN_SETUP_DETAILS",
           "MICROPLAN_DETAILS",
           "MP_BOUNDARY_SELECTION",
           "MP_MANAGING_DATA",

@@ -11,6 +11,10 @@ import SearchChecklist from "./SearchChecklist";
 import UpdateBoundary from "./UpdateBoundary";
 // import SelectingBoundaryComponent from "../../components/SelectingBoundaryComponent";
 import { Wrapper } from "../../components/SelectingBoundaryComponent";
+import Boundary from "./Boundary";
+import GeoPode from "./GeoPode";
+import ViewBoundary from "./ViewBoundary";
+import ViewHierarchy from "./ViewHierarchy";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -22,7 +26,6 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
   const search = useLocation().search;
   const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
-
   const crumbs = [
     {
       path: `/${window?.contextPath}/employee`,
@@ -32,7 +35,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     {
       path: pathVar === "my-campaign" ? "" : `/${window?.contextPath}/employee/campaign/my-campaign`,
       content: t("MY_CAMPAIGN"),
-      show: pathVar === "my-campaign" || pathVar === "checklist/search" ? true : false,
+      show: pathVar === "my-campaign" || pathVar === "checklist/search" || pathVar === "checklist/create" ? true : false,
     },
     {
       path: pathVar === "setup-campaign" ? "" : `/${window?.contextPath}/employee/campaign/setup-campaign`,
@@ -48,6 +51,11 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       path: "",
       content: t("ACTION_LABEL_CONFIGURE_APP"),
       show:pathVar === "checklist/search" ? true : false,
+    },
+    {
+      path: "",
+      content: t("ACTION_CREATE_CHECKLIST"),
+      show: pathVar === "checklist/create" ? true : false,
     }
   ];
 
@@ -114,9 +122,12 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
           <PrivateRoute path={`${path}/update-dates-boundary`} component={() => <UpdateDatesWithBoundaries />} />
           <PrivateRoute path={`${path}/checklist/create`} component={() => <CreateChecklist />} />
           <PrivateRoute path={`${path}/checklist/search`} component={() => <SearchChecklist />} />
+          <PrivateRoute path={`${path}/boundary-management`} component={()=> <Boundary />} />
+          <PrivateRoute path={`${path}/geopode`} component={()=> <GeoPode />} />
+          <PrivateRoute path={`${path}/view-boundary`} component={()=> <ViewBoundary />} />
+          <PrivateRoute path={`${path}/view-hierarchy`} component={()=> <ViewHierarchy />} />
           <PrivateRoute path={`${path}/update-boundary`} component={() => <UpdateBoundary />} />
-          
-          
+
         </AppContainer>
       </Switch>
     </React.Fragment>

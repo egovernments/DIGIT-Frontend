@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import _ from "lodash";
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 import { Fragment } from "react";
-import { Button, PopUp, Switch } from "@egovernments/digit-ui-components";
+import { Button, PopUp, Switch, Tooltip, TooltipWrapper } from "@egovernments/digit-ui-components";
 import TimelineComponent from "../components/TimelineComponent";
 import getMDMSUrl from "../utils/getMDMSUrl";
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
@@ -15,9 +15,43 @@ const businessServiceMap = {};
 const inboxModuleNameMap = {};
 // const history=useHistory();
 
+
+
 export const UICustomizations = {
   MyChecklistSearchConfig: {
+
+    
     preProcess: (data, additionalDetails) => {
+
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const [checklistTypeCode, setChecklistTypeCode] = useState(null);
+      let checklistType = data?.state?.searchForm?.Type?.list;
+      const reqCriteria = {
+        url: `/localization/messages/v1/_search`,
+        body:{
+          tenantId: tenantId
+        },
+        params: {
+          locale: "en_MZ",
+          tenantId: tenantId,
+          module: "hcm-campaignmanager"
+        },
+      }
+      const { isLoading1, data: localization, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+      useEffect(()=>{
+        if (localization?.messages?.length > 0) {
+          let matchedItem = localization.messages.find(item => item.message === checklistType);
+          // If a match is found, assign the 'code' to 'checklistcode'
+          if (matchedItem) {
+            let code = matchedItem.code;
+            let res = code.replace("HCM_CHECKLIST_TYPE_", "");
+            setChecklistTypeCode(res);
+          } else {
+          }
+        } else {
+        }
+    
+      }, [localization, data])
 
       data.body.ServiceDefinitionCriteria.code.length=0;
 
@@ -25,8 +59,10 @@ export const UICustomizations = {
       let codeTemp = data?.state?.searchForm?.Role?.code;
       let listt = "";
       let codee = "";
+
       if(listTemp) listt = listTemp.toUpperCase().replace(/ /g, "_");
       if(codeTemp) codee = codeTemp.toUpperCase().replace(/ /g, "_");
+      if(checklistTypeCode) listt = checklistTypeCode;
       let pay = window.history.state.name + '.' + listt + '.' + codee;
 
       data.body.ServiceDefinitionCriteria.code.push(pay);
@@ -60,6 +96,132 @@ export const UICustomizations = {
           );
       }
     },
+  },
+  MyBoundarySearchConfig: {
+    preProcess: (data, additionalDetails) => {
+      data.body.BoundaryTypeHierarchySearchCriteria.hierarchyType = data?.state?.searchForm?.Name;
+      return data;
+    },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      const [isActive, setIsActive] = useState(row?.isActive);
+        const tenantId = Digit.ULBService.getCurrentTenantId();
+        let res;
+        const callSearch = async () => {
+          const res = await Digit.CustomService.getResponse({
+            url: `/boundary-service/boundary-hierarchy-definition/_search`,
+                body: {
+                    BoundaryTypeHierarchySearchCriteria: {
+                        tenantId: tenantId,
+                        limit: 2,
+                        offset: 0,
+                        hierarchyType: row?.hierarchyType
+                  }
+                }
+          });
+          return res;
+
+        }
+        const fun = async ()=>{
+          res = await callSearch();
+        }
+        // fun();
+        switch (key) {
+          case "HIERARCHY_NAME":
+            return row?.hierarchyType;
+            break;
+          case "LEVELS":
+            return row?.boundaryHierarchy?.length
+            
+            return (
+            (
+              <>
+                {/* <span data-tip data-for="dynamicTooltip">{row?.boundaryHierarchy?.length}</span>
+                <ReactTooltip id="dynamicTooltip" getContent={() => tooltipContent} /> */}
+                <TooltipWrapper
+                  arrow={false}
+                  content={res}
+                  enterDelay={100}
+                  leaveDelay={0}
+                  placement="bottom"
+                  style={{}}
+                >
+                  {row?.boundaryHierarchy?.length}
+                </TooltipWrapper>
+                {/* <Tooltip
+                  className=""
+                  content="Tooltipkbjkjnjknk"
+                  description=""
+                  header=""
+                  style={{}}
+                /> */}
+              </>
+            )
+            )
+            break;
+          case "CREATION_DATE":
+            let epoch = row?.auditDetails?.createdTime;
+            return Digit.DateUtils.ConvertEpochToDate(epoch);
+            // return row?.auditDetails?.createdTime;
+            break;
+          case "ACTION":
+            const tenantId = Digit.ULBService.getCurrentTenantId();
+            const generateFile = async()=>{
+              const res = await Digit.CustomService.getResponse({
+                  url: `/project-factory/v1/data/_generate`,
+                  body: {
+                  },
+                  params: {
+                      tenantId: tenantId,
+                      type: "boundaryManagement",
+                      forceUpdate: true,
+                      hierarchyType: row?.hierarchyType,
+                      campaignId: "default"
+                  }
+              });
+              return res;
+          }
+            const generateTemplate = async() => {
+              const res = await Digit.CustomService.getResponse({
+                  url: `/project-factory/v1/data/_download`,
+                  body: {
+                  },
+                  params: {
+                      tenantId: tenantId ,
+                      type: "boundaryManagement",
+                      hierarchyType: row?.hierarchyType,
+                      campaignId: "default"
+                  }
+              });
+              return res;
+            }
+            const downloadExcelTemplate = async() => {
+              const res = await generateFile();
+              const resFile = await generateTemplate();
+              if (resFile && resFile?.GeneratedResource?.[0]?.fileStoreid) {
+                  // Splitting filename before .xlsx or .xls
+                  const fileNameWithoutExtension = row?.hierarchyType ;
+                  
+                  Digit.Utils.campaign.downloadExcelWithCustomName({ fileStoreId: resFile?.GeneratedResource?.[0]?.fileStoreid, customName: fileNameWithoutExtension });
+              }
+            }
+            return(
+              <>
+                <Button
+                  type={"button"}
+                  size={"medium"}
+                  icon={"Add"}
+                  variation={"secondary"}
+                  label={t("DOWNLOAD")}
+                  onClick={()=>{
+                    downloadExcelTemplate();
+                  }}
+                />
+              </>
+            )
+        }
+
+    },
+
   },
   MyCampaignConfigOngoing: {
     preProcess: (data, additionalDetails) => {
