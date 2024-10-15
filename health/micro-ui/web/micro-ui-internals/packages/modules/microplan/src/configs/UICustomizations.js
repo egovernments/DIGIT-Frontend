@@ -1,7 +1,8 @@
+import { Link, useLocation, useHistory, useParams } from "react-router-dom";
 import _ from "lodash";
-import { useLocation, useHistory,Link,useParams } from "react-router-dom";
 import React from "react";
 import { Dropdown } from "@egovernments/digit-ui-components";
+
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
@@ -10,8 +11,6 @@ import { Dropdown } from "@egovernments/digit-ui-components";
 const businessServiceMap = {};
 
 const inboxModuleNameMap = {};
-
-
 
 function cleanObject(obj) {
   for (const key in obj) {
@@ -104,21 +103,22 @@ export const UICustomizations = {
     customValidationCheck: (data) => {
       const { phone } = data;
       const mobileRegex = /^[0-9]{10}$/;
-      
+
       // Allow empty mobile number
       if (!phone || phone.trim() === "") {
         return false; 
       }
-    
+
       // Check if phone matches the regex
       if (!mobileRegex.test(phone)) {
         return { error: true, label: "INVALID_MOBILE_NUMBER" }; // Return an error message if invalid
       }
-    
-      return false;
-    },
-    preProcess: (data, additionalDetails) => {
 
+      return false; 
+    },
+
+
+    preProcess: (data, additionalDetails) => {
       const { phone, name } = data?.state?.searchForm || {}
       const { sortOrder } = data?.state?.filterForm || {}
       let { roleschosen } = data?.state?.filterForm || []
@@ -139,7 +139,6 @@ export const UICustomizations = {
         rolesString = Object.keys(roleschosen).filter(role => roleschosen[role] === true).join(',');
       }
       
-      
 
       data.params.names = name;
 
@@ -150,7 +149,6 @@ export const UICustomizations = {
       cleanObject(data.params);
       delete data.params.roleschosen;
       delete data.params.name;
-      
 
       return data
     },
@@ -158,7 +156,6 @@ export const UICustomizations = {
     rolesForFilter: (props) => {
       const userInfo = Digit.UserService.getUser();
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      
       return {
         params: {},
         url: '/mdms-v2/v2/_search', //mdms fetch from
@@ -181,6 +178,9 @@ export const UICustomizations = {
                 {
                   roleCode: item.data.roleCode,
                   i18nKey: Digit.Utils.locale.getTransformedLocale(`MP_ROLE_${item.data.roleCode}`)
+                  // orderNumber: item.data.orderNumber
+
+                  // roleCode:{labelKey:item.data.roleCode}
 
                 }
               )
@@ -193,33 +193,26 @@ export const UICustomizations = {
       }
     },
 
-
-
-
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      
-      
       if (key === "Role") {
-        
-        if (value && value !== "NA") {
-
-          return (
-            <div>
-              {value.map((item, index) => (
-                <span key={index} className="dm-code">
-                  {Digit.Utils.locale.getTransformedLocale(`MP_ROLE_${item.code}`)}
-                  {index < value.length - 1 && ", "}
-                </span>
-              ))}
-            </div>
-          );
-        } 
-
-      }else{
         return(
-          <div>NA</div>
-        )
+        <div>
+          {value.map((item, index) => (
+            <span key={index} className="dm-code">
+              {/* {item.code} */}
+              {t(`MP_ROLE_${item.code}`)}
+              {index < value.length - 1 && ", "}
+            </span>
+          ))}
+        </div>
+        );
+
+
       }
+
+
+
+
 
     },
 

@@ -128,6 +128,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      const ts = new Date().getTime();
       const reqCriteria = {
         url: `/project-factory/v1/data/_generate`,
         params: {
@@ -137,6 +138,12 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           hierarchyType: boundaryHierarchy,
           campaignId: id,
           source: "microplan",
+        },
+        body: {
+          RequestInfo : {
+            authToken: Digit.UserService.getUser().access_token,
+            msgId: `${ts}|${Digit.StoreData.getCurrentLanguage()}`
+          }
         }
       };
   
@@ -148,8 +155,9 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
         console.error("Error fetching data:", error);
       }
     };
-  
-    fetchData();
+    if(boundaryHierarchy){
+      fetchData();
+    }
   }, [type]);
   
 
