@@ -225,7 +225,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     };
   }, []);
   const onSecondayActionClick = () => {
-    if (currentStep === 0) {
+    if (currentKey === 1) {
       history.push(`/${window.contextPath}/employee`);
     }
     const { isLastVerticalStep,isFormulaLastVerticalStep } = Digit.Hooks.useQueryParams();
