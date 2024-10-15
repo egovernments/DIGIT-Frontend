@@ -2,7 +2,6 @@ import { Card, Uploader, Button, PopUp, ActionBar, Toast } from "@egovernments/d
 import React, { useEffect, useState, useRef} from "react";
 import { useTranslation } from "react-i18next";
 // import { useParams,useHistory } from "react-router-dom";
-import downloadTemplate from "../../utils/downloadTemplate";
 import XlsPreviewNew from "../../components/XlsPreviewNew";
 import { Svgicon } from "../../utils/Svgicon";
 import { Loader } from "@egovernments/digit-ui-components";

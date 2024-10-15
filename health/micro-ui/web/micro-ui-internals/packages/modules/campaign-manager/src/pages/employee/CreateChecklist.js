@@ -41,15 +41,15 @@ const CreateChecklist = () => {
   const history = useHistory();
   let data_mdms=[]
   let template_data=[]
-  const urlMd = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH");
+  // const urlMd = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH");
   const reqCriteriaResource = {
-    // url: `/mdms-v2/v2/_search`,
-    url: `/${urlMd}/v2/_search`,
+    url: `/mdms-v2/v2/_search`,
+    // url: `/${urlMd}/v2/_search`,
     body: {
       MdmsCriteria: {
         tenantId: tenantId,
-        // schemaCode: "HCMadminconsole.checklisttemplates"
-        schemaCode: "HCM-ADMIN-CONSOLE.ChecklistTemplates"
+        schemaCode: "HCMadminconsole.checklisttemplates"
+        // schemaCode: "HCM-ADMIN-CONSOLE.ChecklistTemplates"
       }
     },
     config: {
