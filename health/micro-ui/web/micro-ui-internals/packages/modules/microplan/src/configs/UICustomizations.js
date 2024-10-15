@@ -1,4 +1,4 @@
-import { Link,useLocation, useHistory,Link,useParams } from "react-router-dom";
+import { Link,useLocation, useHistory,useParams } from "react-router-dom";
 import _ from "lodash";
 import React from "react";
 import { Dropdown } from "@egovernments/digit-ui-components";
