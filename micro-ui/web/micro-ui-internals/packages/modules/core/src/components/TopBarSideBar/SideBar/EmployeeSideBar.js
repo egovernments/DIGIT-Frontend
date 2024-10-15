@@ -94,11 +94,12 @@ const EmployeeSideBar = () => {
       if(isMultiRootTenant){
         url=url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`);
         updatedUrl = url;
+        history.push(updatedUrl);
       }
       else{
         updatedUrl = DIGIT_UI_CONTEXTS?.every((e) => url?.indexOf(`/${e}`) === -1) ? hostUrl + "/employee/" + url : hostUrl + url;
+        window.location.href = updatedUrl;
       }
-      window.location.href = updatedUrl;
     } else {
       history.push(url);
     } 
