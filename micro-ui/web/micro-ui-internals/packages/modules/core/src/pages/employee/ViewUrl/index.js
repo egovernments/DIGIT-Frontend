@@ -12,7 +12,6 @@ const ViewUrl = () => {
   const history = useHistory();
   const ref = useRef(null);
   const getUserRoles = Digit.SessionStorage.get("User")?.info?.roles;
-  const [mdmsOrderData, setMdmsOrderData] = useState([{}]);
   const [buttonDisabled, setButtonDisabled]= useState(true);
   const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(
     tenant,
@@ -33,17 +32,14 @@ const ViewUrl = () => {
   );
 
   useEffect(() => {
-    setMdmsOrderData(MdmsRes);
-  }, [MdmsRes]);
-
-  useEffect(()=>{
-    if(mdmsOrderData?.[0].url){
+    if(MdmsRes?.[0].url){
       setButtonDisabled(false);
     }
-  },[mdmsOrderData])
-  const RoleLandingUrl= mdmsOrderData?.[0].url;
+  }, [MdmsRes]);
+
+  const RoleLandingUrl= MdmsRes?.[0].url;
   const onButtonClick = () => {
-    if(getUserRoles?.[0].code === "SUPERUSER" && mdmsOrderData.some(page => page.rolesForLandingPage.includes("SUPERUSER"))){
+    if(getUserRoles?.[0].code === "SUPERUSER" && MdmsRes.some(page => page.rolesForLandingPage.includes("SUPERUSER"))){
       window.location.href = `/${window?.globalPath}/${tenant}${RoleLandingUrl}`;
     }
     else{

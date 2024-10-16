@@ -17,7 +17,7 @@ const LandingComponent = ({ config }) => {
       <Header className="headerFlex" styles={{ fontWeight: "700", fontSize: "32px", marginBottom: "20px" }}>
         {t(heading)}
       </Header>
-
+      
       <YoutubeVideo link={url} overlay={true} />
 
       {/* Subsections */}
