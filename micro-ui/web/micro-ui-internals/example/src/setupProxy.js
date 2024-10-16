@@ -25,6 +25,7 @@ module.exports = function (app) {
     "/mdms-v2",
     "/egov-idgen",
     "/egov-location",
+    "/boundary-service",
     "/localization",
     "/egov-workflow-v2",
     "/pgr-services",

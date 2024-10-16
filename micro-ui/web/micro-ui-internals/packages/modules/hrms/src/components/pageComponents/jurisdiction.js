@@ -112,8 +112,22 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
   let boundaryTypeoption = [];
   const [focusIndex, setFocusIndex] = useState(-1);
 
+  const { isBoundaryServiceLoading, data: hierarchyOptions } = Digit.Hooks.useLocation(
+    tenantId,
+    "Ward",
+    {
+      select: (data) => {
+        return data;
+      },
+    },
+    true
+  );
+
   function gethierarchylistdata() {
-    return data?.MdmsRes?.["egov-location"]["TenantBoundary"].map((ele) => ele.hierarchyType);
+    return hierarchyOptions?.TenantBoundary?.map((ele) => ({
+      code: ele.hierarchyType,
+      name: ele.hierarchyType
+    }));
   }
 
   function getboundarydata() {
@@ -124,7 +138,7 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
     return data?.MdmsRes?.["ACCESSCONTROL-ROLES"].roles.map(role => { return { code: role.code, name: role?.name ? role?.name : " " , labelKey: 'ACCESSCONTROL_ROLES_ROLES_' + role.code } });
   }
 
-  if (isLoading) {
+  if (isLoading || isBoundaryServiceLoading) {
     return <Loader />;
   }
   return (
@@ -148,6 +162,7 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
           getboundarydata={getboundarydata}
           getroledata={getroledata}
           handleRemoveUnit={handleRemoveUnit}
+          hierarchyOptions={hierarchyOptions}
         />
       ))}
       <label onClick={handleAddUnit} className="link-label" style={{ width: "12rem" }}>
@@ -168,6 +183,7 @@ function Jurisdiction({
   getroledata,
   roleoption,
   index,
+  hierarchyOptions
 }) {
   const [BoundaryType, selectBoundaryType] = useState([]);
   const [Boundary, selectboundary] = useState([]);
