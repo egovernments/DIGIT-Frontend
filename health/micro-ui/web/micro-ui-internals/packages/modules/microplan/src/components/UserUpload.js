@@ -37,21 +37,22 @@ const UserUpload = React.memo(() => {
   const [showInfoCard, setShowInfoCard] = useState(false);
   const [readMeInfo, setReadMeInfo] = useState({});
   const [loader, setLoader] = useState(false);
+  const [downloadTemplateLoader, setDownloadTemplateLoader] = useState(false);
   const [processedFile, setProcessedFile] = useState([]);
   const params = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
   const searchParams = new URLSearchParams(location.search);
-  const type="userWithBoundary"
+  const type = "userWithBoundary"
   const id = searchParams.get("campaignId") || "null";
   const { data: boundaryHierarchy } = Digit.Hooks.useCustomMDMS(tenantId, "hcm-microplanning", [{ name: "hierarchyConfig" }], {
     select: (data) => {
-       const item = data?.["hcm-microplanning"]?.hierarchyConfig?.find((item) => item.isActive)
-       return item?.hierarchy
-      },
-  },{schemaCode:"BASE_MASTER_DATA_INITIAL"});
+      const item = data?.["hcm-microplanning"]?.hierarchyConfig?.find((item) => item.isActive)
+      return item?.hierarchy
+    },
+  }, { schemaCode: "BASE_MASTER_DATA_INITIAL" });
   const XlsPreview = Digit.ComponentRegistryService.getComponent("XlsPreview");
   const BulkUpload = Digit.ComponentRegistryService.getComponent("BulkUpload");
   const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "baseTimeout" }]);
-  
+
   const onFileDelete = (file, index) => {
     setUploadedFile((prev) => prev.filter((i) => i.id !== file.id));
     setIsError(false);
@@ -81,9 +82,8 @@ const UserUpload = React.memo(() => {
             tenantId,
             id,
             baseTimeOut?.["HCM-ADMIN-CONSOLE"],
-            { source : "microplan" }
+            { source: "microplan" }
           );
-          console.log(temp," teemmpppppppppppppppppppppppppp")
           if (temp?.isError) {
             setLoader(false);
             setIsValidation(false);
@@ -122,7 +122,7 @@ const UserUpload = React.memo(() => {
                     const urlParts = i?.url?.split("/");
                     const id = fileUrl?.[0]?.id;
                     // const fileName = fileName;
-                    const fileType ="user";
+                    const fileType = "user";
                     return {
                       ...i,
                       filestoreId: id,
@@ -145,7 +145,7 @@ const UserUpload = React.memo(() => {
             setSheetErrors(temp?.additionalDetails?.sheetErrors?.length || 0);
             const processedFileStore = temp?.processedFilestoreId;
             if (!processedFileStore) {
-              if(temp?.status=="failed" && temp?.additionalDetails?.error){
+              if (temp?.status == "failed" && temp?.additionalDetails?.error) {
                 try {
                   const parsedError = JSON.parse(temp.additionalDetails.error);
                   const errorMessage = parsedError?.description || parsedError?.message || t("HCM_VALIDATION_FAILED");
@@ -155,7 +155,7 @@ const UserUpload = React.memo(() => {
                   setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
                 }
               }
-              else{
+              else {
                 setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
               }
               return;
@@ -167,7 +167,7 @@ const UserUpload = React.memo(() => {
                   const urlParts = i?.url?.split("/");
                   const id = fileUrl?.[0]?.id;
                   // const fileName = file?.[0]?.name;
-                  const fileType ="user"
+                  const fileType = "user"
                   return {
                     ...i,
                     filestoreId: id,
@@ -179,12 +179,11 @@ const UserUpload = React.memo(() => {
               // onFileDelete(uploadedFile);
               // setUploadedFile(fileData);
               setProcessedFile(fileData);
-              setReadMeInfo(readMeInfoNew);
               // setShowToast({ key: "warning", label: t("HCM_CHECK_FILE_AGAIN"), transitionTime: 5000000 });
               setIsError(true);
             }
           }
-        } catch (error) { 
+        } catch (error) {
           console.log(error);
         }
       }
@@ -270,6 +269,7 @@ const UserUpload = React.memo(() => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
 
   const downloadTemplate = async () => {
+    setDownloadTemplateLoader(true);
     await mutation.mutate(
       {
         params: {
@@ -281,6 +281,7 @@ const UserUpload = React.memo(() => {
       },
       {
         onSuccess: async (result) => {
+          setDownloadTemplateLoader(false);
           if (result?.GeneratedResource?.[0]?.status === "failed") {
             setDownloadError(true);
             generateData();
@@ -321,6 +322,7 @@ const UserUpload = React.memo(() => {
           }
         },
         onError: (result) => {
+          setDownloadTemplateLoader(false);
           setDownloadError(true);
           generateData();
           setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
@@ -336,7 +338,7 @@ const UserUpload = React.memo(() => {
         url: `/project-factory/v1/data/_generate`,
         params: {
           tenantId: Digit.ULBService.getCurrentTenantId(),
-          type:type,
+          type: type,
           forceUpdate: true,
           hierarchyType: boundaryHierarchy,
           campaignId: null,
@@ -368,6 +370,8 @@ const UserUpload = React.memo(() => {
   return (
     <>
       <div className="container-full">
+        {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
+        {downloadTemplateLoader && <LoaderWithGap />}
         <div className="card-container" style={{ width: "100%" }}>
           <Card>
             <div className="campaign-bulk-upload">
@@ -417,7 +421,7 @@ const UserUpload = React.memo(() => {
               />
             )}
           </Card>
-          <InfoCard
+          {(sheetErrors > 0) && <InfoCard
             populators={{
               name: "infocard",
             }}
@@ -443,12 +447,8 @@ const UserUpload = React.memo(() => {
                 null
               )
             }
-            label={
-              sheetErrors
-                ? `${sheetErrors} ${sheetErrors === 1 ? t("HCM_MICROPLAN_SINGLE_ERROR") : t("HCM_MICROPLAN_PLURAL_ERRORS")} ${t("HCM_MICROPLAN_ERRORS_FOUND")}`
-                : t("HCM_MICROPLAN_DATA_UPLOAD_GUIDELINES")
-            }
-          />
+            label={`${sheetErrors} ${sheetErrors === 1 ? t("HCM_MICROPLAN_SINGLE_ERROR") : t("HCM_MICROPLAN_PLURAL_ERRORS")} ${t("HCM_MICROPLAN_ERRORS_FOUND")}`}
+          />}
         </div>
         {showToast && (
           <Toast

@@ -3,6 +3,7 @@ import React, {  useState, useEffect, Fragment, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { InfoCard, PopUp, Toast, Button, Stepper, TextBlock , Card} from "@egovernments/digit-ui-components";
 import axios from "axios";
+import { set } from "lodash";
 
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
@@ -64,6 +65,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const totalData = Digit.SessionStorage.get("MICROPLAN_DATA");
   const campaignType = totalData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code
   const [loader, setLoader] = useState(false);
+  const [ downloadTemplateLoader,setDownloadTemplateLoader] = useState(false);
   const XlsPreview = Digit.ComponentRegistryService.getComponent("XlsPreview");
   const BulkUpload = Digit.ComponentRegistryService.getComponent("BulkUpload");
   const baseKey = 4;
@@ -574,6 +576,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
 
   const downloadTemplate = async () => {
+    setDownloadTemplateLoader(true);
     await mutation.mutate(
       {
         params: {
@@ -585,6 +588,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       },
       {
         onSuccess: async (result) => {
+          setDownloadTemplateLoader(false);
           if (result?.GeneratedResource?.[0]?.status === "failed") {
             setDownloadError(true);
             generateData();
@@ -625,6 +629,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           }
         },
         onError: (result) => {
+          setDownloadTemplateLoader(false);
           setDownloadError(true);
           generateData();
           setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
@@ -681,6 +686,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           </Card>
         </div>
         {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
+        {downloadTemplateLoader && <LoaderWithGap/>}
         <div className="card-container" style={{ width: "100%" }}>
           <Card>
             <div className="campaign-bulk-upload">
@@ -759,9 +765,9 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
                       {info?.descriptions.map((desc, i) => (
                         <li key={i} className="info-points">
                           {desc.isBold ? (
-                            <h2>{`Step ${i + 1}: ${desc.text}`}</h2>
+                            <h2>{`${i + 1}. ${desc.text}`}</h2>
                           ) : (
-                            <p>{`Step ${i + 1}: ${desc.text}`}</p>
+                            <p>{`${i + 1}. ${desc.text}`}</p>
                           )}
                         </li>
                       ))}
