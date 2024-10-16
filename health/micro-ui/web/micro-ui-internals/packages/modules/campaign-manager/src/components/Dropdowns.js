@@ -30,7 +30,9 @@ const Dropdowns = ({
   subQinitialQuestionData,
   addComment,
   handleOptionComment,
+  typeOfCall
 }) => {
+  let dis = typeOfCall==="view"?true:false;
   return (
     <div className="options_checkboxes">
       {options.map((item, index) => (
@@ -56,9 +58,11 @@ const Dropdowns = ({
             addComment={addComment}
             handleOptionComment={handleOptionComment}
             t={t}
+            typeOfCall={typeOfCall}
           />
           {item.optionComment && <FieldV1
                         // className="example"
+                        disabled={dis}
                         type={"textarea"}
                         populators={{
                           resizeSmart:true
@@ -83,7 +87,7 @@ const Dropdowns = ({
           }
         </>
       ))}
-      <div>
+      {!dis && <div>
       <Button
         className="custom-class"
         icon="AddIcon"
@@ -96,7 +100,7 @@ const Dropdowns = ({
         textStyles={{width:'unset'}}
 
       />
-      </div>
+      </div>}
     </div>
   );
 };
@@ -123,9 +127,11 @@ const DropdownOption = ({
   optionComment,
   addComment,
   handleOptionComment,
-  t
+  t,
+  typeOfCall
 }) => {
   const [isFocused, setIsFocused] = useState(false);
+  let dis = typeOfCall==="view"?true:false;
 
   return (
     <div>
@@ -133,6 +139,7 @@ const DropdownOption = ({
         <div style={{display:"flex"}}>
         <TextInput
             // style={{ maxWidth: "40rem" }}
+            disabled={dis}
             name="title"
             // value={field?.title || ""}
             value={title}
@@ -141,7 +148,7 @@ const DropdownOption = ({
         />
         </div>
         <div style={{display:"flex", gap:"1rem", alignItems:"center"}}>
-          {
+          {!dis && 
             <>
               <CheckBox
               key={field.key}
@@ -157,7 +164,7 @@ const DropdownOption = ({
              />
             </>
           }
-          {
+          {!dis &&
             <>
               <CheckBox
               key={field.key}
@@ -173,7 +180,7 @@ const DropdownOption = ({
              />
             </>
           }
-          {!disableDelete && (
+          {!dis && !disableDelete && (
             // <div className="pointer"  onClick={() => removeOption(index)}>
             //   <DustbinIcon />
             //   {t(`CAMPAIGN_DELETE_ROW_TEXT`)}
