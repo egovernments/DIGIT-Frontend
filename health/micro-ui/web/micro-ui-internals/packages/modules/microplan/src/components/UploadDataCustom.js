@@ -39,7 +39,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const [resourceId, setResourceId] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
   // TODO : Remove hard coded id
-  const id = searchParams.get("campaignId") || "274f60e0-f6d8-4bf9-b4da-a714a9046e93";
+  const id = searchParams.get("campaignId") || null;
   const { data: Schemas, isLoading: isThisLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
     "HCM-ADMIN-CONSOLE",
@@ -125,9 +125,8 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
     }
   }, [type, props?.props?.sessionData]);
 
-
-  useEffect(() => {
-    const fetchData = async () => {
+  const generateData = async () => {
+    if(boundaryHierarchy && type && id) {
       const ts = new Date().getTime();
       const reqCriteria = {
         url: `/project-factory/v1/data/_generate`,
@@ -154,11 +153,13 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       } catch (error) {
         console.error("Error fetching data:", error);
       }
-    };
-    if(boundaryHierarchy && downloadError){
-      fetchData();
     }
-  }, [type, boundaryHierarchy, downloadError]);
+  };
+
+
+  useEffect(() => {
+      generateData();
+  }, [type, boundaryHierarchy, id]);
   
 
   useEffect(() => {
@@ -584,6 +585,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
         onSuccess: async (result) => {
           if (result?.GeneratedResource?.[0]?.status === "failed") {
             setDownloadError(true);
+            generateData();
             setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
             return;
           }
@@ -594,7 +596,8 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           }
           if (!result?.GeneratedResource?.[0]?.fileStoreid || result?.GeneratedResource?.length == 0) {
             setDownloadError(true);
-            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+            generateData();
+            setShowToast({ key: "info", label: t("ERROR_WHILE_DOWNLOADING") });
             return;
           }
           const filesArray = [result?.GeneratedResource?.[0]?.fileStoreid];
@@ -616,11 +619,12 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             }
           } else {
             setDownloadError(true);
-            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT") });
+            setShowToast({ key: "info", label: t("ERROR_WHILE_DOWNLOADING_FROM_FILESTORE") });
           }
         },
         onError: (result) => {
           setDownloadError(true);
+          generateData();
           setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
         },
       }

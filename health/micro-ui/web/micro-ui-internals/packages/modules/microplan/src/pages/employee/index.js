@@ -8,6 +8,7 @@ import MicroplanSearch from "./MicroplanSearch";
 import SummaryScreen from "./SummaryScreen";
 import CampaignBoundary from "../../components/CampaignBoundary";
 import UserManagement from "./UserManagement";
+import UserDownload from "./UserDownload";
 
 
 
@@ -159,7 +160,9 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
         </React.Fragment>
          <PrivateRoute path={`${path}/setup-microplan`} component={() => <SetupMicroplan hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />} />
          <PrivateRoute path={`${path}/microplan-search`} component={() => <MicroplanSearch></MicroplanSearch>} /> 
-         <PrivateRoute path={`${path}/user-management`} component={() => <UserManagement></UserManagement>} /> 
+         <PrivateRoute path={`${path}/user-management`} component={() => <UserManagement></UserManagement>} />
+         <PrivateRoute path={`${path}/user-download`} component={() => <UserDownload/>} />
+
          <PrivateRoute path={`${path}/campaign-boundary`} component={() => <CampaignBoundary/>} /> 
 
       </AppContainer>
