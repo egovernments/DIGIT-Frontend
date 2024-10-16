@@ -3,7 +3,6 @@ import React, {  useState, useEffect, Fragment, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { InfoCard, PopUp, Toast, Button, Stepper, TextBlock , Card} from "@egovernments/digit-ui-components";
 import axios from "axios";
-import { set } from "lodash";
 
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
