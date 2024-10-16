@@ -117,7 +117,8 @@ const defaultSearchValues = {
         {label: "DRAFTED_SETUP"},
         {label: "EXECUTION_TO_BE_DONE",},
         {label:"EXECUTION_IN_PROGRESS"},
-        {label:"MICROPLAN_EXECUTED"}
+        {label:"MICROPLAN_EXECUTED"},
+        
   
       ],
     };

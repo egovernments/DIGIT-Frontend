@@ -1,25 +1,21 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { EditIcon } from "@egovernments/digit-ui-react-components";
-import { DeleteIconv2 } from "@egovernments/digit-ui-react-components";
-import { FileIcon } from "@egovernments/digit-ui-react-components";
-import { Button } from "@egovernments/digit-ui-react-components";
-import { Card } from "@egovernments/digit-ui-react-components";
-import { CardSubHeader } from "@egovernments/digit-ui-react-components";
-import { InboxSearchComposer } from "@egovernments/digit-ui-react-components";
-import { Table } from '@egovernments/digit-ui-react-components';
+import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader } from "@egovernments/digit-ui-react-components";
 
-const FileComponent = ({ title,fileName,editHandler,deleteHandler}) => {
-    const {t}=useTranslation();
+const FileComponent = ({ title, fileName, auditDetails, editHandler, deleteHandler, downloadHandler }) => {
+    const { t } = useTranslation();
+    const { userName, lastmodTime } = auditDetails; // Destructuring the audit details for easy access
+
     return (
         <div>
-            
-                {/* First card */}
-                <div className="view-composer-header-section">
-                    <CardSubHeader style={{ marginTop: 0, fontSize: "1.5rem", color: " #0B4B66", marginBottom: "0rem" }}>{title}</CardSubHeader>
 
-                </div>
-                <Card>
+            {/* First card */}
+            <div className="view-composer-header-section">
+                <CardSubHeader style={{ marginTop: 0, fontSize: "1.5rem", color: " #0B4B66", marginBottom: "0rem" }}>{title}</CardSubHeader>
+            </div>
+
+            <Card>
                 <div className="dm-parent-container">
                     {/* Left side: File Icon */}
                     <div
@@ -30,41 +26,65 @@ const FileComponent = ({ title,fileName,editHandler,deleteHandler}) => {
                         <div>{fileName}</div>
                     </div>
 
-                    {/* Right side: Edit and Delete Buttons */}
+                    {/* Right side: Edit, Delete, and Audit details */}
                     <div className="dm-actions-container">
+                        
+                        {/* Display audit details (Uploaded by user and last modified time) */}
+                        <div className="dm-audit-info11">
+                            {/* Displaying the audit information */}
+                            {userName && <span style={{color:"#C84C0E"}}>{"Uploaded by"} {userName} | </span>}
+                            {lastmodTime && <span style={{color:"#C84C0E"}}>{lastmodTime}</span>}
+                        </div>
+
                         {/* Edit Icon and Button */}
                         <div className="dm-campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                            {/* <span>{t("CAMPAIGN_EDIT")}</span> */}
-                            <Button
-                                label={t("WBH_EDIT")}
-                                variation="secondary"
-                                icon={<EditIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
-                                type="button"
-                                className="dm-workbench-download-template-btn dm-hover"
-                                onButtonClick={(e) => {
-                                    editHandler();
-                                }}
-                            />
+                            {editHandler &&
+                                <Button
+                                    label={t("WBH_EDIT")}
+                                    variation="secondary"
+                                    icon={<EditIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
+                                    type="button"
+                                    className="dm-workbench-download-template-btn dm-hover"
+                                    onButtonClick={(e) => {
+                                        editHandler();
+                                    }}
+                                />
+                            }
                         </div>
 
                         {/* Delete Button */}
-                        <Button
-                            label={t("WBH_DELETE")}
-                            variation="secondary"
-                            icon={<DeleteIconv2 styles={{ height: "1.25rem", width: "2.5rem" }} />}
-                            type="button"
-                            className="dm-workbench-download-template-btn dm-hover"
-                            onButtonClick={(e) => {
-                                deleteHandler();
-                            }}
-                        />
+                        {deleteHandler &&
+                            <Button
+                                label={t("WBH_DELETE")}
+                                variation="secondary"
+                                icon={<DeleteIconv2 styles={{ height: "1.25rem", width: "2.5rem" }} />}
+                                type="button"
+                                className="dm-workbench-download-template-btn dm-hover"
+                                onButtonClick={(e) => {
+                                    deleteHandler();
+                                }}
+                            />
+                        }
+
+                        {/* Download Button */}
+                        {downloadHandler &&
+                            <Button
+                                label={t("WBH_DOWNLOAD")}
+                                variation="secondary"
+                                icon={<DownloadIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
+                                type="button"
+                                className="dm-workbench-download-template-btn dm-hover"
+                                onButtonClick={(e) => {
+                                    downloadHandler();
+                                }}
+                            />
+                        }
                     </div>
                 </div>
-                </Card>
-            
-            </div>
+            </Card>
+
+        </div>
     );
 };
 
 export default FileComponent;
-            

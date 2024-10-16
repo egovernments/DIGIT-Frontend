@@ -118,4 +118,15 @@
   text-overflow: ellipsis; /* Add ellipsis to overflowing text */
 }
 
+.dm-audit-info11 {
+  max-width: 70%; /* Ensure this section doesn't take too much space */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Handle long text with ellipsis */
+  white-space: nowrap; /* Prevent wrapping */
+  color: #C84C0E;
+  margin-bottom: "1rem";
+  font-size: "0.875rem"
+}
+
+
   
