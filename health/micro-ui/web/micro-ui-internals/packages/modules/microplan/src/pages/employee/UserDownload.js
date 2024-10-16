@@ -18,17 +18,12 @@ const UserDownload = () => {
         config: {
             enabled: true,
             select: data => {
-                // debugger;
                 return data;
             }
         }
     };
 
-    // const {
-
-    //     data,
-
-    // } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
+   
 
     const { data, isFetching, isLoading } = Digit.Hooks.microplanv1.useFileDownload({
         "SearchCriteria": {
@@ -40,7 +35,6 @@ const UserDownload = () => {
         {
             enabled: true,
             select: data => {
-                // debugger;
                 return data;
             }
         }
@@ -49,7 +43,6 @@ const UserDownload = () => {
 
 
 
-    console.log("fileDownloadData", data);
 
 
 
@@ -64,13 +57,11 @@ const UserDownload = () => {
 
 
 
-    // console.log("data", data);
 
 
 
 
 
-    // console.log("fileurl", Files);
 
 
 
@@ -85,7 +76,6 @@ const UserDownload = () => {
                 <TextBlock body="DOWNLOAD_DESC" />
                 {data?.ResourceDetails &&
                     data?.ResourceDetails.map((item, index) => {
-                        {console.log("item.userName",item,item?.auditDetails?.lastmodtime)}
                         return (
                         <FileComponent
                             title=""

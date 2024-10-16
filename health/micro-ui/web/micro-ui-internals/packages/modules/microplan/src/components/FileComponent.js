@@ -6,7 +6,6 @@ import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader } fro
 const FileComponent = ({ title, fileName, auditDetails, editHandler, deleteHandler, downloadHandler }) => {
     const { t } = useTranslation();
     const { userName, lastmodTime } = auditDetails; // Destructuring the audit details for easy access
-    console.log("auditdetails",auditDetails)
 
     return (
         <div>
@@ -31,10 +30,10 @@ const FileComponent = ({ title, fileName, auditDetails, editHandler, deleteHandl
                     <div className="dm-actions-container">
                         
                         {/* Display audit details (Uploaded by user and last modified time) */}
-                        <div className="dm-audit-info" >
+                        <div className="dm-audit-info11">
                             {/* Displaying the audit information */}
-                            {userName && <span>{t("Uploaded by")} {userName} | </span>}
-                            {lastmodTime && <span>{t(lastmodTime)}</span>}
+                            {userName && <span style={{color:"#C84C0E"}}>{"Uploaded by"} {userName} | </span>}
+                            {lastmodTime && <span style={{color:"#C84C0E"}}>{lastmodTime}</span>}
                         </div>
 
                         {/* Edit Icon and Button */}
