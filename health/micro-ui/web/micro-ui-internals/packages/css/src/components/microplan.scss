@@ -128,4 +128,36 @@
 }
 
 
+.table-like1 {
+  display: table;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 1rem;     /* 1rem space between rows */
+}
+
+.table-row1 {
+  display: table-row;
+  
+}
+
+.table-cell1 {
+  display: table-cell;
+  padding: 10px;
+  vertical-align: top;
+}
+
+.key-cell1 {
+  font-weight: bold;
+  width: 40%; /* Adjust column width for keys */
+  background-color: #f8f8f8; /* Optional: light background for key column */
+  margin-right: 5rem;
+}
+
+.value-cell1 {
+  width: 60%; /* Adjust column width for values */
+  position: absolute;
+  left: 36rem;
+}
+
+
   

@@ -381,7 +381,7 @@ const SummaryScreen = ({props:customProps}) => {
               },
               
             ],
-            activeByDefault: "card1",
+            activeByDefault: "card2",
           },
 
     }
