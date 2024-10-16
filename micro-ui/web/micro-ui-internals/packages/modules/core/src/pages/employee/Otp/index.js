@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import { BackLink, CardLabel, Loader, Toast } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { Route, Switch, useRouteMatch, useHistory, useLocation } from "react-router-dom";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
-import { useEffect } from "react";
 
 /* set employee details to enable backward compatiable */
 const setEmployeeDetail = (userObject, token) => {
@@ -33,8 +32,34 @@ const Otp = ({ isLogin = false }) => {
   const [isOtpValid, setIsOtpValid] = useState(false);
   const [user, setUser] = useState(null);
   const [params, setParams] = useState(location?.state?.data || {});
+  const [ifSuperUserExists, setIfSuperUserExist]= useState(false);
   const { email, tenant } = location.state || {};
 
+  const [mdmsOrderData, setMdmsOrderData] = useState([{}]);
+  const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(
+    tenant,
+    "SandBoxLanding",
+    [
+      {
+        name: "LandingPageRoles",
+      },
+    ],
+    {
+      enabled: true,
+      staleTime:0,
+      cacheTime:0,
+      select: (data) => {
+        return data?.["SandBoxLanding"]?.["LandingPageRoles"];
+      },
+    }
+  );
+
+  useEffect(() => {
+    setMdmsOrderData(MdmsRes);
+  }, [MdmsRes]);
+
+  const RoleLandingUrl= mdmsOrderData?.[0].url;
+  
   const config = [
     {
       body: [
@@ -80,7 +105,23 @@ const Otp = ({ isLogin = false }) => {
     Digit.UserService.setUser(user);
     setEmployeeDetail(user?.info, user?.access_token);
     let redirectPath = `/${window?.globalPath}/user/setup`;
-    let redirectPathOtpLogin = `/${window?.contextPath}/employee/user/landing`;
+    // let redirectPathOtpLogin=null;
+    
+    // if(location.pathname==="/sandbox-ui/user/otp" && user?.info?.roles?.[0].code==="SUPERUSER"){
+    //     redirectPathOtpLogin = `/${window?.contextPath}/employee/user/landing`;
+    // }
+    //  else if(user?.info?.roles?.[0].code==="SUPERUSER" && mdmsOrderData?.[0]?.rolesForLandingPage?.includes("SUPERUSER")){
+    //     redirectPathOtpLogin = `/${window?.contextPath}${RoleLandingUrl}`;
+    //  }
+    // else{
+    //   redirectPathOtpLogin = `/${window?.contextPath}/employee`;
+    // }
+    const redirectPathOtpLogin = 
+    location.pathname === "/sandbox-ui/user/otp" && user?.info?.roles?.[0].code === "SUPERUSER"
+    ? `/${window?.contextPath}/employee/user/landing`
+    : user?.info?.roles?.[0].code === "SUPERUSER" && mdmsOrderData?.[0]?.rolesForLandingPage?.includes("SUPERUSER")
+    ? `/${window?.contextPath}${RoleLandingUrl}`
+    : `/${window?.contextPath}/employee`;
 
     if (isLogin) {
       history.push(redirectPathOtpLogin);

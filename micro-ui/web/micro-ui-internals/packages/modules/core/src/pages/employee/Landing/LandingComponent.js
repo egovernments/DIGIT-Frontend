@@ -8,7 +8,7 @@ import YoutubeVideo from "./YoutubeVideo";
 const LandingComponent = ({ config }) => {
   const { t } = useTranslation(); // To handle translations (if needed)
   const { heading, subsections, url } = config;
-  let redirectPathOtpLogin = `/${window?.contextPath}/employee`;
+  let redirectPathOtpLogin = `/${window?.contextPath}/employee/user/landing/select-role`;
   const history = useHistory();
 
   return (

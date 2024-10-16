@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Redirect, Route, Switch, useLocation, useRouteMatch, useHistory } from "react-router-dom";
 import { AppModules } from "../../components/AppModules";
@@ -15,6 +15,7 @@ import ViewUrl from "./ViewUrl";
 import UserProfile from "../citizen/Home/UserProfile";
 import ErrorComponent from "../../components/ErrorComponent";
 import { PrivateRoute } from "@egovernments/digit-ui-components";
+import RoleLanding from "./RoleLanding";
 
 const userScreensExempted = ["user/landing", "user/profile", "user/error"];
 
@@ -90,11 +91,17 @@ const EmployeeApp = ({
               <PrivateRoute path={`${path}/user/profile`}>
                 <UserProfile stateCode={stateCode} userType={"employee"} cityDetails={cityDetails} />
               </PrivateRoute>
+              <PrivateRoute path={`${path}/user/landing/select-role`}>
+                <div className="employee-app-wrapper sandbox-landing-wrapper">
+                  <RoleLanding />
+                </div>
+              </PrivateRoute>
               <PrivateRoute path={`${path}/user/landing`}>
                 <div className="employee-app-wrapper sandbox-landing-wrapper">
                   <Landing />
                 </div>
               </PrivateRoute>
+
               <Route path={`${path}/user/error`}>
                 <ErrorComponent
                   initData={initData}

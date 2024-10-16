@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef ,useState, useEffect} from "react";
 import { BackLink, Button, Card, CardHeader, CardLabel, CardText, FieldV1, SVG, TextInput } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useRouteMatch, useHistory, useLocation } from "react-router-dom";
@@ -11,14 +11,45 @@ const ViewUrl = () => {
   const { tenant } = location.state || {};
   const history = useHistory();
   const ref = useRef(null);
-  const userScreensExempted = ["/user/landing","user/profile", "user/error"];
+  const getUserRoles = Digit.SessionStorage.get("User")?.info?.roles;
+  const [mdmsOrderData, setMdmsOrderData] = useState([{}]);
+  const [buttonDisabled, setButtonDisabled]= useState(true);
+  const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(
+    tenant,
+    "SandBoxLanding",
+    [
+      {
+        name: "LandingPageRoles",
+      },
+    ],
+    {
+      enabled: true,
+      staleTime:0,
+      cacheTime:0,
+      select: (data) => {
+        return data?.["SandBoxLanding"]?.["LandingPageRoles"];
+      },
+    }
+  );
 
+  useEffect(() => {
+    setMdmsOrderData(MdmsRes);
+  }, [MdmsRes]);
 
+  useEffect(()=>{
+    if(mdmsOrderData?.[0].url){
+      setButtonDisabled(false);
+    }
+  },[mdmsOrderData])
+  const RoleLandingUrl= mdmsOrderData?.[0].url;
   const onButtonClick = () => {
-    window.location.href = `/${window?.globalPath}/${tenant}/employee/user/landing`;
-    // history.push({
-    // pathname: `/${window?.globalPath}/${tenant}/employee`,
-    // });
+    if(getUserRoles?.[0].code === "SUPERUSER" && mdmsOrderData.some(page => page.rolesForLandingPage.includes("SUPERUSER"))){
+      window.location.href = `/${window?.globalPath}/${tenant}${RoleLandingUrl}`;
+    }
+    else{
+      window.location.href = `/${window?.globalPath}/${tenant}/employee`;
+    }
+  
   };
 
   const handleCopyUrl = () => {
@@ -51,7 +82,7 @@ const ViewUrl = () => {
           <Button className="copyButton" variation={"secondary"} onClick={() => handleCopyUrl()} label={t("COPY_URL")}></Button>
         </div>
         <div className="sandbox-url-footer">{t("SANDBOX_URL_FOOT")}</div>
-        <Button onClick={onButtonClick} label={t("SIGN_IN")}></Button>
+        <Button isDisabled={buttonDisabled} onClick={onButtonClick} label={t("SIGN_IN")}></Button>
       </Card>
       <div className="EmployeeLoginFooter">
         <img
