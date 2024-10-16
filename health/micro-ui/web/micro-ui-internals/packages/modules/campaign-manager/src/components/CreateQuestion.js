@@ -18,6 +18,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
   subQparent,
   subQparentId,
   subQinitialQuestionData,
+  typeOfCall
 }) => {
 
   const [options, setOptions] = useState(() => {
@@ -169,6 +170,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
           subQparent={subQparent}
           subQparentId={subQparentId}
           subQinitialQuestionData={subQinitialQuestionData}
+          typeOfCall={typeOfCall}
         />
       );
       break;
@@ -192,6 +194,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
           subQparent={subQparent}
           subQparentId={subQparentId}
           subQinitialQuestionData={subQinitialQuestionData}
+          typeOfCall={typeOfCall}
         />
       );
       break;
@@ -215,6 +218,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
           subQparent={subQparent}
           subQparentId={subQparentId}
           subQinitialQuestionData={subQinitialQuestionData}
+          typeOfCall={typeOfCall}
         />
       );
       break;
@@ -224,7 +228,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
   }
 };
 
-const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, parent = null, parentId = null, optionId }) => {
+const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, parent = null, parentId = null, optionId, typeOfCall=null }) => {
   const { t } = useTranslation();
   const state = Digit.ULBService.getStateId();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -326,7 +330,10 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
   const example = {
     maxWidth: "100rem"
   }
-
+  
+  let dis = typeOfCall === "view" ? true : false;
+  console.log("type fof call", typeOfCall);
+  console.log("dis", dis);
   return (
     <React.Fragment>
       {initialQuestionData
@@ -340,7 +347,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                   {/* <span className="mandatory-span">*</span> */}
                   <div style={{ height: "1rem" }}>
                   </div>
-                  {initialQuestionData?.length > 1 && (
+                  {!dis && initialQuestionData?.length > 1 && (
                     <>
                       <div className="separator"></div>
                       <div
@@ -376,6 +383,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                         className={"example"}
                       /> */}
                       <TextInput
+                          disabled={dis}
                           isRequired={true}
                           className="tetxinput-example"
                           type={"text"}
@@ -385,7 +393,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                           onChange={(event) => handleUpdateField(event.target.value, "title", field.key, field.id)}
                           placeholder={"Type your question here"}
                         />
-                      <Dropdown
+                      {!dis && <Dropdown
                         style={{ width: "20%" }}
                         t={t}
                         option={dataType}
@@ -395,7 +403,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                           handleUpdateField(value, "type", field.key, field.id);
                         }}
                         placeholder="Type"
-                      />
+                      />}
                     </div>
                     {field?.isRegex && (
                       <Dropdown
@@ -425,11 +433,13 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                         subQparent={field}
                         subQparentId={field.id}
                         subQinitialQuestionData={initialQuestionData}
+                        typeOfCall={typeOfCall}
                       />
                     )}
                     {
                       (field?.type?.code === "Short Answer") && (
                         <FieldV1
+                          disabled="true"
                           className="example"
                           type={"textarea"}
                           populators={{
@@ -442,10 +452,8 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                           placeholder={""}
                         />
                       )
-
-
                     }
-                    {field.dependency && (
+                    {!dis && field.dependency && (
                       <CreateQuestion
                         onSelect={onSelect}
                         className="subSection"
@@ -464,7 +472,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
             </Card>
           );
         })}
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      {!dis && <div style={{ display: "flex", justifyContent: "center" }}>
         <Button
           variation="secondary"
           label={t("ADD_QUESTION")}
@@ -476,7 +484,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
           onClick={()=>addMoreField()}
           textStyles={{width:'unset'}}
         />
-      </div>
+      </div>}
     </React.Fragment>
   );
 };
