@@ -597,7 +597,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           if (!result?.GeneratedResource?.[0]?.fileStoreid || result?.GeneratedResource?.length == 0) {
             setDownloadError(true);
             generateData();
-            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+            setShowToast({ key: "info", label: t("ERROR_WHILE_DOWNLOADING") });
             return;
           }
           const filesArray = [result?.GeneratedResource?.[0]?.fileStoreid];
@@ -619,11 +619,12 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             }
           } else {
             setDownloadError(true);
-            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT") });
+            setShowToast({ key: "info", label: t("ERROR_WHILE_DOWNLOADING_FROM_FILESTORE") });
           }
         },
         onError: (result) => {
           setDownloadError(true);
+          generateData();
           setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
         },
       }
