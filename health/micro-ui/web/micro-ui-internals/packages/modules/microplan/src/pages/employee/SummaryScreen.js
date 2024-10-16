@@ -264,7 +264,21 @@ const SummaryScreen = ({props:customProps}) => {
                         ]
                        
                 
-            },{
+            },
+            // type: "COMPONENT",
+            //                     component: "FormulaSection",
+
+            //                     props: {
+                                    
+            //                         title:"GENERAL_ESTIMATION",
+            //                         threeInputArr:[["Number of households per boundary","Population of the boundary","Divided by","Average people HJ/H"],
+            //                         [ "Number of bednets per boundary","Population of the boundary","Divided by","Average people HJ/H"],
+            //                         [ "Number of bales per boundary","Population of the boundary","Divided by","Average people HJ/H"]
+
+            //                     ]
+                                    
+            //                     },
+            {
                 navigationKey: "card8",
                 sections: 
                     
@@ -272,60 +286,13 @@ const SummaryScreen = ({props:customProps}) => {
                             {
                                 
                                 type: "COMPONENT",
-                                component: "FormulaSection",
+                                component: "FormulaConfigScreen",
 
                                 props: {
                                     
-                                    title:"GENERAL_ESTIMATION",
-                                    threeInputArr:[["Number of households per boundary","Population of the boundary","Divided by","Average people HJ/H"],
-                                    [ "Number of bednets per boundary","Population of the boundary","Divided by","Average people HJ/H"],
-                                    [ "Number of bales per boundary","Population of the boundary","Divided by","Average people HJ/H"]
+                                    customProps:customProps
 
-                                ]
-                                    
-                                },
-                            },
-                        ]
-                       
-                
-            },{
-                navigationKey: "card8",
-                sections: 
-                    
-                        [
-                            {
                                 
-                                type: "COMPONENT",
-                                component: "FormulaSection",
-
-                                props: {
-                                    
-                                    title:"HOUSEHOLD_REGISTRATION_INFORMATION",
-                                    threeInputArr:[["Number of hosueholds registered","Population of the boundary","Divided by","Average people HJ/H"],
-                                    [ "Number of houdeholds registered per boundary","Population of the boundary","Divided by","Average people HJ/H"],
-                                    [ "Number of Supervisors per Boundary","Population of the boundary","Divided by","Average people HJ/H"]
-
-                                ]
-                                    
-                                },
-                            },
-                        ]
-                       
-                
-            },{
-                navigationKey: "card8",
-                sections: 
-                    
-                        [
-                            {
-                                
-                                type: "COMPONENT",
-                                component: "FormulaSection",
-
-                                props: {
-                                    
-                                    title:"CAMPAIGN_COMMODITIES",
-                                    threeInputArr:[["Number of sticker rolls per boundary","Population of the boundary","Divided by","Average people HJ/H"],  ]
                                     
                                 },
                             },
@@ -381,7 +348,7 @@ const SummaryScreen = ({props:customProps}) => {
               },
               
             ],
-            activeByDefault: "card2",
+            activeByDefault: "card8",
           },
 
     }
