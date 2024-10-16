@@ -11,7 +11,7 @@ const SearchFileIds = async (body) => {
       userService: false,
       body:body,
     });
-    // debugger;
+    
     if (response?.ResourceDetails?.length === 0) {
       throw new Error("File not found for given microplan");
     }
@@ -23,10 +23,11 @@ const SearchFileIds = async (body) => {
     }
 
     uuids = [...uuids];
-    // console.log("ji", response?.ResourceDetails);
-    console.log("ji1", uuids);
 
-    // debugger;
+    if (uuids.length === 0) {
+      throw new Error("No UUIDs found to search for users");
+    }
+    
 
     const response1 = await Digit.CustomService.getResponse({
       url: "/user/_search",
@@ -40,7 +41,7 @@ const SearchFileIds = async (body) => {
       },
     });
 
-    // debugger;
+    
     if (response1?.user?.length === 0) {
       throw new Error("No users found with the given uuid");
     }
@@ -49,18 +50,15 @@ const SearchFileIds = async (body) => {
       uuidName[ob.uuid]=ob.userName;
     }
     // let userNames = {}
-    console.log("res1", response);
-    console.log("res2", response1);
+    
     response?.ResourceDetails.forEach((ob) => {
       ob["username"] = uuidName[ob?.auditDetails?.lastModifiedBy];  // Set the username
       ob.auditDetails.lastmodtime = formatTimestamp(ob?.auditDetails?.lastModifiedTime);  // Format and set the last modified time
     });
 
-    console.log("response process1",response)
 
     let res = {...response}
 
-    // console.log("res", res);
     return res
   } catch (error) {
     if (error?.response?.data?.Errors) {
