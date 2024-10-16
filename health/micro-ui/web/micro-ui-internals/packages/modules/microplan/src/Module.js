@@ -19,6 +19,7 @@ import FormulaView from "./components/FormulaView";
 import SummaryScreen from "./pages/employee/SummaryScreen";
 import CampaignBoundary from "./components/CampaignBoundary";
 import FormulaConfigWrapper from "./components/FormulaConfigWrapper";
+import AssumptionsList from "./components/AssumptionsList";
 
 
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
@@ -69,7 +70,8 @@ const componentsToRegister = {
   FormulaView,
   FormulaSection,
   SummaryScreen,
-  CampaignBoundary
+  CampaignBoundary,
+  AssumptionsList
   
 
 };
