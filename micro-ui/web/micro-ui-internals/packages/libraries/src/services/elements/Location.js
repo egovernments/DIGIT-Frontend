@@ -19,11 +19,11 @@ export const LocationService = {
     });
     return response;
   },
-  getWards: (tenantId,includeChildren) => {
+  getWards: (tenantId,includeChildren,includeParents) => {
     return ServiceRequest({
       serviceName: "getWards",
       url: Urls.location.wards,
-      params: { tenantId: tenantId,includeChildren: includeChildren },
+      params: { tenantId: tenantId,includeChildren: includeChildren, includeParents},
       useCache: true,
     });
   }

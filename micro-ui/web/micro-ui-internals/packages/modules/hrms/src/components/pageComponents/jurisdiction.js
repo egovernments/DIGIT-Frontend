@@ -188,14 +188,14 @@ function Jurisdiction({
   const [BoundaryType, selectBoundaryType] = useState([]);
   const [Boundary, selectboundary] = useState([]);
   useEffect(() => {
-    selectBoundaryType(
-      data?.MdmsRes?.["egov-location"]["TenantBoundary"]
-        .filter((ele) => {
-          return ele?.hierarchyType?.code == jurisdiction?.hierarchy?.code;
-        })
-        .map((item) => { return { ...item.boundary, i18text: Digit.Utils.locale.convertToLocale(item.boundary.label, 'EGOV_LOCATION_BOUNDARYTYPE') } })
+    const filteredBoundaryTypes = hierarchyOptions?.TenantBoundary?.filter((ele) => ele.hierarchyType === jurisdiction?.hierarchy?.code).map(
+      (item) => ({
+        ...item.boundary[0],
+        i18text: Digit.Utils.locale.convertToLocale(item.boundary[0].boundaryType, "EGOV_LOCATION_BOUNDARYTYPE"),
+      })
     );
-  }, [jurisdiction?.hierarchy, data?.MdmsRes]);
+    selectBoundaryType(filteredBoundaryTypes);
+  }, [jurisdiction?.hierarchy, hierarchyOptions]);
   const tenant = Digit.ULBService.getCurrentTenantId();
   useEffect(() => {
     selectboundary(data?.MdmsRes?.tenant?.tenants.filter(city => city.code != Digit.ULBService.getStateId()).map(city => { return { ...city, i18text: Digit.Utils.locale.getCityLocale(city.code) } }));

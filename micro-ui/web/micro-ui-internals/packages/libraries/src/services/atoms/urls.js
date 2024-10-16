@@ -11,7 +11,7 @@ const Urls = {
   localization: `/localization/messages/v1/_search`,
   location: {
     localities: `/${boundarySearchPath}includeChildren=true&${hierarchyType}&boundaryType=locality`,
-    wards: `/${boundarySearchPath}includeChildren=true&${hierarchyType}&boundaryType=Ward`,
+    wards: `/${boundarySearchPath}includeChildren=true&${hierarchyType}&boundaryType=Ward&includeParents=true`,
     revenue_localities: `/boundary-service/boundary-relationships/_search?hierarchyType=REVENUE&boundaryType=locality`,
   },
 
