@@ -39,12 +39,6 @@
   border-left: none;
 }
 
-.employeeForgotPassword {
-  .digit-dropdown-select {
-    margin-bottom: 1.5rem;
-  }
-}
-
 .employeeForgotPassword .field-container {
   margin: 10px 0;
 }
@@ -337,4 +331,21 @@
   align-items: "center";
   margin-bottom: "0.5rem";
   padding-left: "1rem";
+}
+
+
+.loginCardClassName{
+  .digit-dropdown-employee-select-wrap {
+    .digit-dropdown-options-card{
+      max-height: 10vmax;
+    }
+  }
+}
+
+.employeeForgotPassword{
+  .digit-dropdown-employee-select-wrap {
+    .digit-dropdown-options-card{
+      max-height: 10vmax;
+    }
+  }
 }
