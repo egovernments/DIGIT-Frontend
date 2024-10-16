@@ -159,7 +159,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
 
   useEffect(() => {
       generateData();
-  }, [type, boundaryHierarchy]);
+  }, [type, boundaryHierarchy, id]);
   
 
   useEffect(() => {
