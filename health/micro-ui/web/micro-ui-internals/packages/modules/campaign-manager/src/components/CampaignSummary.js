@@ -385,6 +385,7 @@ const CampaignSummary = (props) => {
                     ),
                     props: {
                       boundaries: item,
+                      hierarchyType: hierarchyType
                     },
                   },
                 ],
