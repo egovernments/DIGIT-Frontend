@@ -39,7 +39,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const [resourceId, setResourceId] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
   // TODO : Remove hard coded id
-  const id = searchParams.get("campaignId") || "274f60e0-f6d8-4bf9-b4da-a714a9046e93";
+  const id = searchParams.get("campaignId") || null;
   const { data: Schemas, isLoading: isThisLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
     "HCM-ADMIN-CONSOLE",
@@ -55,10 +55,12 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const [readMeInfo, setReadMeInfo] = useState({});
   const [showPopUp, setShowPopUp] = useState(true);
 
-  const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
-  const boundaryHierarchy = useMemo(() => {
-    return hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)?.hierarchy;
-  }, [hierarchyConfig]);
+  const { data: boundaryHierarchy } = Digit.Hooks.useCustomMDMS(tenantId, "hcm-microplanning", [{ name: "hierarchyConfig" }], {
+    select: (data) => {
+       const item = data?.["hcm-microplanning"]?.hierarchyConfig?.find((item) => item.isActive)
+       return item?.hierarchy
+      },
+  },{schemaCode:"BASE_MASTER_DATA_INITIAL"});
   const totalData = Digit.SessionStorage.get("MICROPLAN_DATA");
   const campaignType = totalData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code
   const [loader, setLoader] = useState(false);
@@ -125,9 +127,8 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
     }
   }, [type, props?.props?.sessionData]);
 
-
-  useEffect(() => {
-    const fetchData = async () => {
+  const generateData = async () => {
+    if(boundaryHierarchy && type && id) {
       const ts = new Date().getTime();
       const reqCriteria = {
         url: `/project-factory/v1/data/_generate`,
@@ -154,11 +155,13 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       } catch (error) {
         console.error("Error fetching data:", error);
       }
-    };
-    if(boundaryHierarchy){
-      fetchData();
     }
-  }, [type]);
+  };
+
+
+  useEffect(() => {
+      generateData();
+  }, [type, boundaryHierarchy, id]);
   
 
   useEffect(() => {
@@ -505,7 +508,19 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             setSheetErrors(temp?.additionalDetails?.sheetErrors?.length || 0);
             const processedFileStore = temp?.processedFilestoreId;
             if (!processedFileStore) {
-              setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
+              if(temp?.status=="failed" && temp?.additionalDetails?.error){
+                try {
+                  const parsedError = JSON.parse(temp.additionalDetails.error);
+                  const errorMessage = parsedError?.description || parsedError?.message || t("HCM_VALIDATION_FAILED");
+                  setShowToast({ key: "error", label: errorMessage, transitionTime: 5000000 });
+                } catch (e) {
+                  console.error("Error parsing JSON:", e);
+                  setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
+                }
+              }
+              else{
+                setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
+              }
               return;
             } else {
               setIsError(true);
@@ -572,6 +587,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
         onSuccess: async (result) => {
           if (result?.GeneratedResource?.[0]?.status === "failed") {
             setDownloadError(true);
+            generateData();
             setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
             return;
           }
@@ -582,7 +598,8 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           }
           if (!result?.GeneratedResource?.[0]?.fileStoreid || result?.GeneratedResource?.length == 0) {
             setDownloadError(true);
-            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+            generateData();
+            setShowToast({ key: "info", label: t("ERROR_WHILE_DOWNLOADING") });
             return;
           }
           const filesArray = [result?.GeneratedResource?.[0]?.fileStoreid];
@@ -604,11 +621,12 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             }
           } else {
             setDownloadError(true);
-            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT") });
+            setShowToast({ key: "info", label: t("ERROR_WHILE_DOWNLOADING_FROM_FILESTORE") });
           }
         },
         onError: (result) => {
           setDownloadError(true);
+          generateData();
           setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
         },
       }
