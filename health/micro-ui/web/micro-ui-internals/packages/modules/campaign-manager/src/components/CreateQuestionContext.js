@@ -171,13 +171,17 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
     const savedQuestions = localStorage.getItem("questions");
     return savedQuestions ?  JSON.parse(savedQuestions) : [{ id: crypto.randomUUID(), parentId: null, level: 1, key: 1, title: null, type: { "code": "SingleValueList" }, value: null, isRequired: false }]
   })
-
+  
+  const [typeOfCall, setTypeOfCall] = useState(null);
   const [questionData, dispatchQuestionData] = useReducer(questionDataReducer, initialState);
 
   useEffect(() => {
     // Avoid dispatch if props haven't changed
+    console.log("the preops are", props);
     if (props?.props?.data !== 0 && props?.props?.data?.[0]?.title !== null) {  
       // Dispatch only if the data is different
+      console.log("the data is", props?.prop?.data);
+      setTypeOfCall(props?.props?.typeOfCall);
       dispatchQuestionData({
         type: "UPDATE_QUESTION_DATA",
         payload: props?.props?.data,
@@ -186,6 +190,9 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
     }
   }, [props?.props?.time]); // Ensure that the initialState is included in the dependency array
   
+  // useEffect(()=>{
+  //   console.log("call", typeOfCall);
+  // },[typeOfCall]);
 
   useEffect(() => {
     onSelect("createQuestion", {
@@ -202,7 +209,7 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
 
   return (
     <QuestionContext.Provider value={{ questionData, dispatchQuestionData }}>
-      <CreateQuestion initialQuestionData={questionData} level={1} onSelect={onSelect} />
+      <CreateQuestion initialQuestionData={questionData} level={1} onSelect={onSelect} typeOfCall={typeOfCall} />
     </QuestionContext.Provider>
   );
 };
