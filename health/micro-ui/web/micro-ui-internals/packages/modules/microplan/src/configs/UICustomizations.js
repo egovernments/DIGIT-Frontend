@@ -185,7 +185,7 @@ export const UICustomizations = {
                 }
               )
             })
-            
+          
             return roles
           },
         },
@@ -199,7 +199,6 @@ export const UICustomizations = {
         <div>
           {value.map((item, index) => (
             <span key={index} className="dm-code">
-              {/* {item.code} */}
               {t(`MP_ROLE_${item.code}`)}
               {index < value.length - 1 && ", "}
             </span>
