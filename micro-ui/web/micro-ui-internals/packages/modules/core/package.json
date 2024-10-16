@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-core",
-  "version": "1.8.2-beta.21",
+  "version": "1.8.2-beta.22",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
@@ -14,7 +14,7 @@
     "prepublish": "yarn build"
   },
   "dependencies": {
-    "@egovernments/digit-ui-components": "0.0.2-beta.44",
+    "@egovernments/digit-ui-components": "0.0.2-beta.48",
     "@egovernments/digit-ui-react-components": "1.8.2-beta.13",
     "react": "17.0.2",
     "react-dom": "17.0.2",
