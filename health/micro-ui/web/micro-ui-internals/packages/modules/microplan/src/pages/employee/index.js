@@ -8,6 +8,7 @@ import MicroplanSearch from "./MicroplanSearch";
 import SummaryScreen from "./SummaryScreen";
 import CampaignBoundary from "../../components/CampaignBoundary";
 import UserManagement from "./UserManagement";
+import UserUpload from "../../components/UserUpload";
 import UserDownload from "./UserDownload";
 
 
@@ -164,6 +165,7 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
          <PrivateRoute path={`${path}/user-download`} component={() => <UserDownload/>} />
 
          <PrivateRoute path={`${path}/campaign-boundary`} component={() => <CampaignBoundary/>} /> 
+         <PrivateRoute path={`${path}/upload-user`} component={() => <UserUpload/>} /> 
 
       </AppContainer>
     </Switch>
