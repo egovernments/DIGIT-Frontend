@@ -1,5 +1,5 @@
-import { FormComposer } from "@egovernments/digit-ui-react-components";
-import { BackLink, Dropdown, Loader,Toast } from "@egovernments/digit-ui-components";
+// import { FormComposer } from "@egovernments/digit-ui-react-components";
+import { BackLink, Dropdown, Loader,Toast,FormComposerV2 } from "@egovernments/digit-ui-components";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -63,7 +63,6 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
           type: userId.type,
           populators: {
             name: userId.name,
-            componentInFront: "+91",
           },
           isMandatory: true,
         },
@@ -72,19 +71,9 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
           type: city.type,
           populators: {
             name: city.name,
-            customProps: {},
-            component: (props, customProps) => (
-              <Dropdown
-                option={cities}
-                optionKey="name"
-                id={city.name}
-                className="login-city-dd"
-                select={(d) => {
-                  props.onChange(d);
-                }}
-                {...customProps}
-              />
-            ),
+            optionsKey: "name",
+            required: true,
+            options: cities,
           },
           isMandatory: true,
         },
@@ -101,7 +90,7 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
       <div className="employeeBackbuttonAlign">
       <BackLink onClick={() => window.history.back()}/>
       </div>
-      <FormComposer
+      <FormComposerV2
         onSubmit={onForgotPassword}
         noBoxShadow
         inline
@@ -112,12 +101,13 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
         onSecondayActionClick={navigateToLogin}
         heading={propsConfig.texts.header}
         description={propsConfig.texts.description}
-        headingStyle={{ textAlign: "center" }}
+        headingStyle={{ textAlign: "center",fontWeight:"bold",color:"#363636" }}
+        descriptionStyles={{color:"#787878",textAlign: "center"}}
         cardStyle={{ maxWidth: "408px", margin: "auto" }}
         className="employeeForgotPassword"
       >
         <Header />
-      </FormComposer>
+      </FormComposerV2>
       {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
       <div className="EmployeeLoginFooter">
         <img
