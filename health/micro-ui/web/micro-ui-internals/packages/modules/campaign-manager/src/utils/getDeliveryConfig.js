@@ -130,7 +130,8 @@ const getDeliveryConfig = ({ data, projectType }) => {
                   key: `${conditionIndex + 1}-${varIndex + 1}`,
                   count: variant.quantity,
                   value: variant.productVariantId,
-                  name: "Product Name"
+                  name: variant.name
+
                 };
               });
             })

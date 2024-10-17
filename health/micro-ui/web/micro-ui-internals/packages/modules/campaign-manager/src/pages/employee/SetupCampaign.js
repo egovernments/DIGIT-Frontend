@@ -145,6 +145,7 @@ function getOperatorSymbol(operator) {
 //     tt.resources = resources;
 //   }
 
+
 //   console.log("ttoo" , tt);
 //   return [tt];
 // }
@@ -180,6 +181,103 @@ function restructureData(data, cycleData, DeliveryConfig, projectType) {
     deliveryConfig.validMinAge = ageInfo.minAge === Infinity ? null : ageInfo.minAge; 
   }
   return [deliveryConfig];
+}
+
+function reverseDeliveryRemap(data, t) {
+  if (!data) return null;
+  const reversedData = [];
+  let currentCycleIndex = null;
+  let currentCycle = null;
+
+  const operatorMapping = {
+    "<=": "LESS_THAN_EQUAL_TO",
+    ">=": "GREATER_THAN_EQUAL_TO",
+    "<": "LESS_THAN",
+    ">": "GREATER_THAN",
+    "==": "EQUAL_TO",
+    "!=": "NOT_EQUAL_TO",
+    IN_BETWEEN: "IN_BETWEEN",
+  };
+
+  const cycles = data?.[0]?.cycles || [];
+  const mapProductVariants = (productVariants) => {
+    return productVariants.map((variant, key) => ({
+      key: key + 1,
+      count: 1,
+      value: variant.productVariantId,
+      name: variant.name,
+    }));
+  };
+
+  const parseConditionAndCreateRules = (condition, ruleKey, products) => {
+    const conditionParts = condition.split("and").map((part) => part.trim());
+    let rules = [];
+
+    conditionParts.forEach((part) => {
+      const parts = part.split(" ").filter(Boolean);
+      let attributes = [];
+
+      // Handle "IN_BETWEEN" operator
+      if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
+        const toValue = parts[0];
+        const fromValue = parts[4];
+        attributes.push({
+          key: 1,
+          operator: { code: operatorMapping["IN_BETWEEN"] },
+          attribute: { code: parts[2] },
+          fromValue,
+          toValue,
+        });
+      } else {
+     
+        const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
+        if (match) {
+          const attributeCode = match[1].trim();
+          const operatorSymbol = match[2].trim();
+          const value = match[3].trim();
+          attributes.push({
+            key: attributes.length + 1,
+            value,
+            operator: { code: operatorMapping[operatorSymbol] },
+            attribute: { code: attributeCode },
+          });
+        }
+      }
+      rules.push({
+        ruleKey: ruleKey + 1,
+        delivery: {},
+        products,
+        attributes,
+      });
+    });
+
+    return rules;
+  };
+  const mapDoseCriteriaToDeliveryRules = (doseCriteria) => {
+    return doseCriteria?.flatMap((criteria, ruleKey) => {
+      const products = mapProductVariants(criteria.ProductVariants);
+      return parseConditionAndCreateRules(criteria.condition, ruleKey, products);
+    });
+  };
+
+  const mapDeliveries = (deliveries) => {
+    return deliveries?.map((delivery, deliveryIndex) => ({
+      active: true,
+      deliveryIndex: String(deliveryIndex + 1),
+      deliveryRules: mapDoseCriteriaToDeliveryRules(delivery.doseCriteria),
+    }));
+  };
+
+  const transformedCycles = cycles.map((cycle) => ({
+    active: true,
+    cycleIndex: String(cycle.id),
+    deliveries: mapDeliveries(cycle.deliveries),
+  }));
+
+
+
+  return transformedCycles;
+
 }
 
 function processDelivery(delivery, resourcesMap, ageInfo) {
@@ -439,8 +537,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         },
       },
       HCM_CAMPAIGN_DELIVERY_DATA: {
-        // deliveryRule: reverseDeliveryRemap(delivery),
-        deliveryRule: delivery,
+        deliveryRule: reverseDeliveryRemap(delivery),
+        // deliveryRule: delivery,
       },
       HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA: {
         boundaryType: {
