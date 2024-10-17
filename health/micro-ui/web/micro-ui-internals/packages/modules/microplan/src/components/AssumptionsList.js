@@ -1,9 +1,10 @@
 import React from 'react'
 import { Card } from '@egovernments/digit-ui-components';
 import HeaderComp from './HeaderComp';
+import { useTranslation } from 'react-i18next';
 
 const AssumptionsList = ({ customProps }) => {
-
+    const {t}=useTranslation();
     const assumptionValues= customProps?.sessionData?.HYPOTHESIS.Assumptions?.assumptionValues
 
     let dic = {};
@@ -37,10 +38,10 @@ const AssumptionsList = ({ customProps }) => {
                                     return (
                                         <div key={`pair_${index}`} className="table-row1">
                                             <span className="table-cell key-cell1">
-                                                <strong>{key}</strong> {/* Display key as label */}
+                                                <strong>{t(key)}</strong> {/* Display key as label */}
                                             </span>
                                             <span className="table-cell value-cell1">
-                                                {value} {/* Display value */}
+                                                {t(value)} {/* Display value */}
                                             </span>
                                         </div>
                                     );
