@@ -367,7 +367,7 @@ const createUpdatePlanProject = async (req) => {
             templateIdentifier: "Population"
           });
         }
-        const upatedPlanObjForBoundary = {
+        const updatedPlanObjForBoundary = {
           ...fetchedPlanForBoundary,
           files
         }
