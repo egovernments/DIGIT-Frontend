@@ -13,6 +13,8 @@ const data = [
 const FormulaConfiguration = ({onSelect,  category,  customProps})=>{
 
     const { t } = useTranslation();
+
+    const operations= customProps?.sessionData?.PLANCONFIGURATION?.operations
     const [estimationData, setEstimationData] = useState(data)
     
   return (

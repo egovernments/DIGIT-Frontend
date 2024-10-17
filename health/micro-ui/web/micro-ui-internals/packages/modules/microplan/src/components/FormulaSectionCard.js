@@ -3,7 +3,7 @@ import FormulaView from './FormulaView';
 import HeaderComp from './HeaderComp';
 import { useTranslation } from 'react-i18next';
 
-const FormulaSection = ({ title, threeInputArr }) => {
+const FormulaSectionCard = ({ title, threeInputArr }) => {
   const { t } = useTranslation();
   
   
@@ -30,4 +30,4 @@ const FormulaSection = ({ title, threeInputArr }) => {
   );
 };
 
-export default FormulaSection;
+export default FormulaSectionCard;

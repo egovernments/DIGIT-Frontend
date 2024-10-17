@@ -5,7 +5,7 @@ import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader } fro
 
 const FileComponent = ({ title, fileName, auditDetails, editHandler, deleteHandler, downloadHandler }) => {
     const { t } = useTranslation();
-    const { userName, lastmodTime } = auditDetails; // Destructuring the audit details for easy access
+    const { userName, lastmodTime } = auditDetails || {}; // Destructuring the audit details for easy access
 
     return (
         <div>
