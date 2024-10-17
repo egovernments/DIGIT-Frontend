@@ -152,6 +152,9 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
     return <Loader />
   }
 
+  //TODO: Hardcode jurisdiction in state for now, need a microplan with complete setup done with all selected boundaries(in campaign), need superviser users with jurisdiction and tagging
+  
+
   return (
     <Switch>
       <AppContainer className="ground-container">
