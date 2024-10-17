@@ -8,6 +8,11 @@ import MicroplanSearch from "./MicroplanSearch";
 import SummaryScreen from "./SummaryScreen";
 import CampaignBoundary from "../../components/CampaignBoundary";
 import UserManagement from "./UserManagement";
+import SearchUnderJurisdiction from "../../components/SearchUnderJurisdiction";
+import TableNew from "./TablePage";
+import PopInbox from "./PopInbox";
+import UserUpload from "../../components/UserUpload";
+import UserDownload from "./UserDownload";
 
 
 
@@ -50,6 +55,7 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
       { name: "rolesForMicroplan"},
       { name: "HypothesisAssumptions"},
       { name: "RuleConfigureOutput" },
+      { name: "RuleConfigureInputs" },
       { name: "AutoFilledRuleConfigurations" },
       { name: "RuleConfigureOperators" },  
       { name: "RegistrationAndDistributionHappeningTogetherOrSeparately"},
@@ -151,6 +157,9 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
     return <Loader />
   }
 
+  //TODO: Hardcode jurisdiction in state for now, need a microplan with complete setup done with all selected boundaries(in campaign), need superviser users with jurisdiction and tagging
+  
+
   return (
     <Switch>
       <AppContainer className="ground-container">
@@ -159,8 +168,14 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
         </React.Fragment>
          <PrivateRoute path={`${path}/setup-microplan`} component={() => <SetupMicroplan hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />} />
          <PrivateRoute path={`${path}/microplan-search`} component={() => <MicroplanSearch></MicroplanSearch>} /> 
-         <PrivateRoute path={`${path}/user-management`} component={() => <UserManagement></UserManagement>} /> 
+         <PrivateRoute path={`${path}/user-management`} component={() => <UserManagement></UserManagement>} />
+         <PrivateRoute path={`${path}/user-download`} component={() => <UserDownload/>} />
+
          <PrivateRoute path={`${path}/campaign-boundary`} component={() => <CampaignBoundary/>} /> 
+         <PrivateRoute path={`${path}/test`} component={() => <SearchUnderJurisdiction></SearchUnderJurisdiction>} /> 
+         <PrivateRoute path={`${path}/table`} component={() => <TableNew />} />
+         <PrivateRoute path={`${path}/pop-inbox`} component={() => <PopInbox />} />
+         <PrivateRoute path={`${path}/upload-user`} component={() => <UserUpload/>} /> 
 
       </AppContainer>
     </Switch>

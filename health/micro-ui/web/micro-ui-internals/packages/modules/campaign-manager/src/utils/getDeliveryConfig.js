@@ -131,6 +131,7 @@ const getDeliveryConfig = ({ data, projectType }) => {
                   count: variant.quantity,
                   value: variant.productVariantId,
                   name: variant.name
+
                 };
               });
             })

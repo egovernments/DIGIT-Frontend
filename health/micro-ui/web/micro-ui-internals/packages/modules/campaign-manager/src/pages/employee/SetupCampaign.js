@@ -145,6 +145,7 @@ function getOperatorSymbol(operator) {
 //     tt.resources = resources;
 //   }
 
+
 //   console.log("ttoo" , tt);
 //   return [tt];
 // }
