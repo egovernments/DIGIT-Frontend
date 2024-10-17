@@ -116,7 +116,7 @@ const BoundaryDetailsSummary = (props) => {
         <PopUp
           // className={"boundaries-pop-module"}
           type={"default"}
-          // heading={t("ES_CAMPAIGN_UPDATE_TYPE_MODAL_HEADER")}
+          heading= {t(( props?.hierarchyType + "_" + props?.boundaries?.type).toUpperCase())} 
           children={[]}
           onOverlayClick={() => {
             setShowPopUp(false);

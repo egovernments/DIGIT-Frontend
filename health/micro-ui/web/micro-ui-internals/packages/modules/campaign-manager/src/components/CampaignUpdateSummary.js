@@ -186,7 +186,7 @@ const CampaignUpdateSummary = (props) => {
                   {
                     name: `HIERARCHY_${index + 1}`,
                     type: "COMPONENT",
-                    cardHeader: { value: `${t(item?.type)}`, inlineStyles: { color: "#0B4B66" } },
+                    cardHeader:  { value: `${t(( hierarchyType + "_" + item?.type).toUpperCase())}`, inlineStyles: { color: "#0B4B66" } },
                     // cardHeader: { value: t("item?.boundaries?.type") },
                     component: "BoundaryDetailsSummary",
                     cardSecondaryAction: noAction !== "false" && (
@@ -197,6 +197,7 @@ const CampaignUpdateSummary = (props) => {
                     ),
                     props: {
                       boundaries: item,
+                      hierarchyType: hierarchyType
                     },
                   },
                 ],

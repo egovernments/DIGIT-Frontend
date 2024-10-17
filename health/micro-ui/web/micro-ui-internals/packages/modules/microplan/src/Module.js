@@ -19,7 +19,8 @@ import FormulaView from "./components/FormulaView";
 import SummaryScreen from "./pages/employee/SummaryScreen";
 import CampaignBoundary from "./components/CampaignBoundary";
 import FormulaConfigWrapper from "./components/FormulaConfigWrapper";
-
+import AssumptionsList from "./components/AssumptionsList";
+import FormulaConfigScreen from "./components/FormulaConfigScreen";
 
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -69,7 +70,9 @@ const componentsToRegister = {
   FormulaView,
   FormulaSection,
   SummaryScreen,
-  CampaignBoundary
+  CampaignBoundary,
+  AssumptionsList,
+  FormulaConfigScreen
   
 
 };
