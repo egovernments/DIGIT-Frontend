@@ -5,9 +5,6 @@ import { Card, CardHeader } from "@egovernments/digit-ui-react-components";
 
 const ActivityHomeCard = (props) => {
   const { t } = useTranslation();
-  const state = Digit.ULBService.getStateId();
-  const tenantId = Digit.ULBService.getCurrentTenantId();
-  const stateId = Digit.ULBService.getStateId();
   const history = useHistory();
 
   return (
