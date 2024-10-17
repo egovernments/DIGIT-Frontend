@@ -395,7 +395,7 @@ const createUpdatePlanProject = async (req) => {
         let filesForFacility = fetchedPlanForFacility?.files || [];
         const facilityFileStoreId = totalFormData?.UPLOADFACILITYDATA?.facilityWithBoundary?.uploadedFile?.[0]?.filestoreId;
         
-        const facilityFileIndex = filesForFacility.findIndex(file => file.templateIdentifier === "Facility");
+        const facilityFileIndex = filesForFacility.findIndex(file => file.templateIdentifier === "Facilities");
         
         // If a file with "Facility" exists, update its filestoreId
         if (facilityFileIndex !== -1) {
