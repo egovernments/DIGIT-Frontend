@@ -80,24 +80,31 @@ export const useResourceData = async (data, hierarchyType, type, tenantId, id , 
   const baseDelay = baseTimeOut?.baseTimeout?.[0]?.baseTimeOut;
   const maxTime = baseTimeOut?.baseTimeout?.[0]?.maxTime;
   let retryInterval = Math.min(baseDelay * jsonDataLength , maxTime);
+  if(typeof retryInterval == "number"){
+    retryInterval = 1000;
+  }
 
   await new Promise((resolve) => setTimeout(resolve, retryInterval));
 
   // Retry until a response is received
   while (status !== "failed" && status !== "invalid" && status !== "completed") {
-    searchResponse = await Digit.CustomService.getResponse({
-      url: "/project-factory/v1/data/_search",
-      body: {
-        SearchCriteria: {
-          id: [response?.ResourceDetails?.id],
-          tenantId: tenantId,
-          type: Type,
+    try {
+      searchResponse = await Digit.CustomService.getResponse({
+        url: "/project-factory/v1/data/_search",
+        body: {
+          SearchCriteria: {
+            id: [response?.ResourceDetails?.id],
+            tenantId: tenantId,
+            type: Type,
+          },
         },
-      },
-    });
-    status = searchResponse?.ResourceDetails?.[0]?.status;
-    if (status !== "failed" && status !== "invalid" && status !== "completed") {
-      await new Promise((resolve) => setTimeout(resolve, retryInterval));
+      });
+      status = searchResponse?.ResourceDetails?.[0]?.status;
+      if (status !== "failed" && status !== "invalid" && status !== "completed") {
+        await new Promise((resolve) => setTimeout(resolve, retryInterval));
+      }
+    } catch (error) {
+      console.error("Error while fetching data:", error);
     }
   }
   if (Error.isError) {
