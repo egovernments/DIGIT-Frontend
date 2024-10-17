@@ -2,9 +2,8 @@ import { Link, useLocation, useHistory, useParams } from "react-router-dom";
 import _ from "lodash";
 import React from "react";
 import { Dropdown } from "@egovernments/digit-ui-components";
-import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader } from "@egovernments/digit-ui-react-components";
-import { EditIcon } from "@egovernments/digit-ui-react-components";
-import { ArrowForward } from "@egovernments/digit-ui-react-components";
+import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader,EditIcon,ArrowForward } from "@egovernments/digit-ui-react-components";
+
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
@@ -55,7 +54,7 @@ export const UICustomizations = {
       const dic = { '0': null, '1': ["DRAFT"], '2': ["EXECUTION_TO_BE_DONE"], '3': ["CENSUS_DATA_APPROVAL_IN_PROGRESS", "CENSUS_DATA_APPROVED", "RESOURCE_ESTIMATION_IN_PROGRESS"], "4": ["RESOURCE_ESTIMATIONS_APPROVED"] }
       const url = Digit.Hooks.useQueryParams();
 
-      const tabId = url.tabId ?? '0'; // Default to '0' if tabId is undefined
+      const tabId = url.tabId || '0'; // Default to '0' if tabId is undefined
       data.body.PlanConfigurationSearchCriteria.status = dic[String(tabId)];
       cleanObject(data.body.PlanConfigurationSearchCriteria)
       return data;
@@ -133,7 +132,7 @@ export const UICustomizations = {
       const dic = { '0': null, '1': ["DRAFT"], '2': ["EXECUTION_TO_BE_DONE"], '3': ["CENSUS_DATA_APPROVAL_IN_PROGRESS", "CENSUS_DATA_APPROVED", "RESOURCE_ESTIMATION_IN_PROGRESS"], "4": ["RESOURCE_ESTIMATIONS_APPROVED"] }
       const url = Digit.Hooks.useQueryParams();
 
-      const tabId = url.tabId ?? '0'; // Default to '0' if tabId is undefined
+      const tabId = url.tabId || '0'; // Default to '0' if tabId is undefined
       data.body.PlanConfigurationSearchCriteria.status = dic[String(tabId)];
       cleanObject(data.body.PlanConfigurationSearchCriteria)
       return data;
