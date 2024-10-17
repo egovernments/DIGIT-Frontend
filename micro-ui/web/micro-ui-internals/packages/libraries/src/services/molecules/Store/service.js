@@ -110,9 +110,12 @@ export const StoreService = {
         .map(doc => doc.fileStoreId);
       const logoUrl = await Digit.UploadServices.Filefetch(logoArray, tenantConfigSearch?.[0]?.code);
       const bannerUrl = await Digit.UploadServices.Filefetch(bannerArray, tenantConfigSearch?.[0]?.code)
-
+      const formattedLanguages = tenantConfigSearch?.[0]?.languages?.map(lang => ({
+        label: lang,
+        value: lang
+      })) || [];
       return {
-        languages: stateInfo.hasLocalisation ? stateInfo.languages : [{ label: "ENGLISH", value: Digit.Utils.getDefaultLanguage() }],
+        languages: tenantConfigSearch?.[0]?.languages? formattedLanguages : [{ label: "ENGLISH", value: Digit.Utils.getDefaultLanguage() }],
         stateInfo: {
           code: tenantConfigFetch ? tenantConfigSearch?.[0]?.code : stateInfo.code,
           name: tenantConfigFetch ? tenantConfigSearch?.[0]?.name : stateInfo.name,
