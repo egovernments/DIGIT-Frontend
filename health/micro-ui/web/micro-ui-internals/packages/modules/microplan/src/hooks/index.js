@@ -7,7 +7,9 @@ import { useGenerateIdCampaign } from "./useGenerateIdCampaign";
 import useCreateCampaign from "./useCreateCampaign";
 import useUpdateCampaign from "./useUpdateCampaign";
 import useCreateUpdatePlanProject from "./useCreateUpdatePlanProject";
-import utils from "../utils/utilities"
+import utils from "../utils/utilities";
+import useSearchHRMSEmployee from "./useSearchHRMSEmployee";
+
 const microplanv1 = {
   useCreatePlanConfig,
   useSearchPlanConfig,
@@ -17,7 +19,8 @@ const microplanv1 = {
   useGenerateIdCampaign,
   useCreateCampaign,
   useUpdateCampaign,
-  useCreateUpdatePlanProject
+  useCreateUpdatePlanProject,
+  useSearchHRMSEmployee,
 };
 
 const Hooks = {
@@ -26,7 +29,7 @@ const Hooks = {
 
 const Utils = {
   microplanv1: {
-    ...utils
+    ...utils,
   },
 };
 

@@ -2590,3 +2590,27 @@ $border-color: rgba(214, 213, 212, 1);
   border: 1px solid #D6D5D4;
 }
 
+.digit-popup-wrapper.roleComposer{
+  max-width: max-content;
+  min-width: 70rem;
+}
+
+.search-field-wrapper.roleComposer{
+  .text-input{
+    input{
+      margin-bottom: 0;
+    }
+  }
+  display: grid;
+  align-items: end;
+  grid-template-columns: 1fr 1fr 2fr;
+  gap: 2rem;
+}
+
+.search-button-wrapper.roleComposer{
+  display: flex;
+  flex-direction: row-reverse !important;
+  gap: 1.5rem;
+  align-items: center;
+  line-height: 4 !important;
+}
