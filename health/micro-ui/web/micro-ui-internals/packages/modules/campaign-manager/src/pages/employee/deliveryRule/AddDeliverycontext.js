@@ -616,7 +616,7 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
   };
 
   const selectedStructureCodes = campaignData.flatMap((cycle) =>
-    cycle.deliveries.flatMap((delivery) => delivery.deliveryRules.flatMap((rule) => rule.attributes.map((attribute) => attribute.value)))
+    cycle?.deliveries?.flatMap((delivery) => delivery?.deliveryRules?.flatMap((rule) => rule?.attributes?.map((attribute) => attribute?.value)))
   );
 
   const filteredStructureConfig = structureConfig?.filter((structure) => !selectedStructureCodes.includes(structure?.code));

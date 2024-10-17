@@ -85,43 +85,91 @@ function reverseDeliveryRemap(data, t) {
   let currentCycleIndex = null;
   let currentCycle = null;
 
-  // data.forEach((item, index) => {
-  //   if (currentCycleIndex !== item.cycleNumber) {
-  //     currentCycleIndex = item.cycleNumber;
-  //     currentCycle = {
-  //       cycleIndex: currentCycleIndex.toString(),
-  //       startDate: item?.startDate ? Digit.Utils.date.convertEpochToDate(item?.startDate) : null,
-  //       endDate: item?.endDate ? Digit.Utils.date.convertEpochToDate(item?.endDate) : null,
-  //       active: index === 0, // Initialize active to false
-  //       deliveries: [],
-  //     };
-  //     reversedData.push(currentCycle);
-  //   }
+  const operatorMapping = {
+    "<=": "LESS_THAN_EQUAL_TO",
+    ">=": "GREATER_THAN_EQUAL_TO",
+    "<": "LESS_THAN",
+    ">": "GREATER_THAN",
+    "==": "EQUAL_TO",
+    "!=": "NOT_EQUAL_TO",
+     "IN_BETWEEN": "IN_BETWEEN"
+  };
 
-  //   const deliveryIndex = item.deliveryNumber.toString();
+  const cycles = data?.[0]?.cycles || [];
+  const transformedCycles = cycles.map((cycle) => {
+    const deliveries = cycle.deliveries?.map((delivery, deliveryIndex) => {
+        const doseCriteria = delivery.doseCriteria?.flatMap((criteria, ruleKey) => {
+            const products = criteria.ProductVariants.map((variant, key) => ({
+                key: key + 1,
+                count: 1,
+                value: variant.productVariantId,
+                name: variant.name
+            }));
 
-  //   let delivery = currentCycle.deliveries.find((delivery) => delivery.deliveryIndex === deliveryIndex);
+            const condition = criteria.condition;
+            let conditionParts = condition.split("and").map(part => part.trim()); 
+            let rules = [];
+            conditionParts.forEach((part) => {
+                const parts = part.split(' ').filter(Boolean);
 
-  //   if (!delivery) {
-  //     delivery = {
-  //       deliveryIndex: deliveryIndex,
-  //       active: item.deliveryNumber === 1, // Set active to true only for the first delivery
-  //       deliveryRules: [],
-  //     };
-  //     currentCycle.deliveries.push(delivery);
-  //   }
+                let attributes = [];
+                if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
+                    const toValue = parts[0];
+                    const fromValue = parts[4];
+                    attributes.push({
+                        key: 1, // Incrementing key for each attribute
+                        operator: { code: operatorMapping["IN_BETWEEN"] },
+                        attribute: { code: parts[2] },
+                        fromValue,
+                        toValue
+                    });
+                } else {
+                    // Parse single conditions using regex
+                    const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
+                    if (match) {
+                        const attributeCode = match[1].trim();
+                        const operatorSymbol = match[2].trim();
+                        const value = match[3].trim();
+                        attributes.push({
+                            key: attributes.length + 1, // Incrementing key for each attribute
+                            value,
+                            operator: { code: operatorMapping[operatorSymbol] },
+                            attribute: { code: attributeCode }
+                        });
+                    }
+                }
 
-  //   delivery.deliveryRules.push({
-  //     ruleKey: item.deliveryRuleNumber,
-  //     delivery: {},
-  //     attributes: loopAndReturn(item.conditions, t),
-  //     products: [...item.products],
-  //   });
-  // });
-  return data;
+                // Add each part as a new delivery rule
+                rules.push({
+                    ruleKey: ruleKey + 1, 
+                    delivery: {},
+                    products,
+                    attributes
+                });
+            });
 
-  return reversedData;
+            return rules; 
+        });
+
+        return {
+            active: true,
+            deliveryIndex: String(deliveryIndex + 1), 
+            deliveryRules: doseCriteria 
+        };
+    });
+
+    return {
+        active: true,
+        cycleIndex: String(cycle.id), 
+        deliveries: deliveries
+    };
+});
+
+return transformedCycles;
+
+
 }
+
 
 function boundaryDataGrp(boundaryData) {
   // Create an empty object to hold grouped data by type
@@ -406,16 +454,16 @@ const CampaignSummary = (props) => {
                     {
                       key: "CAMPAIGN_NO_OF_CYCLES",
                       value:
-                        data?.[0]?.deliveryRules && data?.[0]?.deliveryRules.map((item) => item.cycleIndex)?.length > 0
-                          ? Math.max(...data?.[0]?.deliveryRules.map((item) => item.cycleIndex))
+                        data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle ? 
+                        data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle
                           : t("CAMPAIGN_SUMMARY_NA"),
                     },
                     {
                       key: "CAMPAIGN_NO_OF_DELIVERIES",
                       value:
-                      data?.[0]?.deliveryRules && data?.[0]?.deliveryRules?.flatMap((rule) => rule?.deliveries?.map((delivery) => delivery?.deliveryIndex))?.length > 0
-                      ? Math.max(...data?.[0]?.deliveryRules?.flatMap((rule) => rule?.deliveries?.map((delivery) => delivery?.deliveryIndex)))
-                      : t("CAMPAIGN_SUMMARY_NA"),
+                        data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries ? 
+                        data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries
+                          : t("CAMPAIGN_SUMMARY_NA"),
                     },
                   ],
                 },
