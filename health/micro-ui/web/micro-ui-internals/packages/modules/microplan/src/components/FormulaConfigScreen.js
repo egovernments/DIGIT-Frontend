@@ -43,7 +43,6 @@ const FormulaConfigScreen = ({ customProps }) => {
     ];
 
     // You can log or manipulate the array as needed
-    console.log(planConfigurations);
 
     let dic = {};
     for (const ob of planConfigurations) {
@@ -53,7 +52,6 @@ const FormulaConfigScreen = ({ customProps }) => {
             dic[String(ob.category)].push({ ...ob })
         }
     }
-    console.log("dic1", dic);
 
 
 
@@ -63,7 +61,6 @@ const FormulaConfigScreen = ({ customProps }) => {
     return (
 
         Object.keys(dic) && Object.keys(dic).map((item) => {
-            debugger;
             return (
                 <>
                     <HeaderComp title={t(item)} />
