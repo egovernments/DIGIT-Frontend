@@ -117,7 +117,7 @@
   overflow: visible; /* Ensure text isn't cut off */
 }
 
-.dm-audit-info11 {
+.dm-audit-info{
   max-width: 70%; /* Ensure this section doesn't take too much space */
   overflow: hidden;
   text-overflow: ellipsis; /* Handle long text with ellipsis */
@@ -125,6 +125,38 @@
   color: #C84C0E;
   margin-bottom: "1rem";
   font-size: "0.875rem"
+}
+
+
+.as-table-like{
+  display: table;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 1rem;     /* 1rem space between rows */
+}
+
+.as-table-row{
+  display: table-row;
+  
+}
+
+.as-table-cell{
+  display: table-cell;
+  padding: 10px;
+  vertical-align: top;
+}
+
+.as-key-cell{
+  font-weight: bold;
+  width: 40%; /* Adjust column width for keys */
+  background-color: #f8f8f8; /* Optional: light background for key column */
+  margin-right: 5rem;
+}
+
+.as-value-cell {
+  width: 60%; /* Adjust column width for values */
+  position: absolute;
+  left: 36rem;
 }
 
 

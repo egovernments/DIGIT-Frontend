@@ -334,7 +334,7 @@ const CampaignBoundary = ({ customProps }) => {
                         )) || null
                     }
                     {
-                        boundaryStatus?.[ind + 2] ? (
+                        boundaryStatus?.[ind + 2] && parent_group[item].length > 2? (
                             <div
                                 onClick={() => handleViewMore(ind + 2)}
                                 className="view-more"

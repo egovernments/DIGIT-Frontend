@@ -100,6 +100,23 @@ const SummaryScreen = ({props:customProps}) => {
                 ],
                        
                 
+            },{
+                navigationKey: "card2",
+                sections: 
+                    
+                        [
+                            {
+                                
+                                type: "COMPONENT",
+                                component: "AssumptionsList",
+                                props: {
+                                    customProps:customProps
+    
+                                },
+                            },
+                        ]
+                       
+                
             },
 
             {
@@ -122,155 +139,8 @@ const SummaryScreen = ({props:customProps}) => {
         },
             
             
+            
             {
-                navigationKey: "card2",
-                sections: [
-                    {
-                        type: "DATA",
-                        cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                        cardSecondaryAction: (
-                            <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                                <span>{t(`CAMPAIGN_EDIT`)}</span>
-                                <EditIcon />
-                            </div>
-                        ),
-                        values: [
-                            {
-                                key: t("CAMPAIGN_REGISTRATION_PROCESS"),
-                                value: assumptionsForm?.selectedRegistrationProcess?.code  || "NA",
-                            },
-                            {
-                                key: t("CAMPAIGN_DISTRIBUTION_PROCESS"),
-                                value: assumptionsForm?.selectedDistributionProcess?.code || "NA",
-                            },
-                            {
-                                key: t("REGISTRATION_AND_DISTRIBUTION"),
-                                // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
-                                value: assumptionsForm?.selectedRegistrationDistributionMode?.code || "NA"
-                            },
-                        ],
-                    },
-
-                ]
-            },
-            {
-                navigationKey: "card2",
-                sections: [
-                    {
-                        type: "DATA",
-                        cardHeader: { value: t("General Estimation"), inlineStyles: { marginTop: 0, fontSize: "1.5rem", color: " #0B4B66" } },
-                        cardSecondaryAction: (
-                            <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                                <span>{t(`CAMPAIGN_EDIT`)}</span>
-                                <EditIcon />
-                            </div>
-                        ),
-                        values: [
-                            {
-                                key: t("AVERAGE_PEOPLE_IN_A_HOUSEHOLD"),
-                                value: hypothesisValues[2]?.value || "NA",
-                            },
-                            {
-                                key: "Number of bednets per bale",
-                                value: "50"
-                            },
-                            {
-                                key: "Number of people per bednet ",
-                                value: "50"
-                            },
-                        ],
-                    },
-
-                ]
-            },{
-                navigationKey: "card2",
-                sections: [
-                    {
-                        type: "DATA",
-                        cardHeader: { value: t("Household Registration information"), inlineStyles: { marginTop: 0, fontSize: "1.5rem", color: " #0B4B66" } },
-                        cardSecondaryAction: (
-                            <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                                <span>{t(`CAMPAIGN_EDIT`)}</span>
-                                <EditIcon />
-                            </div>
-                        ),
-                        values: [
-                            {
-                                key: t("NO_OF_DAYS_FOR_HOUSEHOLD_REGISTRATION"),
-                                value: "4",
-                            },
-                            {
-                                key: t("NUMBER_OF_BENEFICIARIES_PER_TEAM_PER_DAY"),
-                                value: hypothesisValues[3]?.value || "NA"
-                            },
-                            {
-                                key: t("NUMBER_OF_MEMBERS_PER_REGISTRATION_TEAM"),
-                                value: hypothesisValues[4]?.value || "NA"
-                            },
-                            {
-                                key: t("NUMBER_OF_REGISTRATION_TEAMS_PER_MONITOR"),
-                                value: hypothesisValues[5]?.value || "NA"
-                                
-                            },
-                            {
-                                key: t("NUMBER_OF_MONITORS_PER_SUPERVISOR_FOR_REGISTRATION"),
-                                value: hypothesisValues[6]?.value || "NA"
-                                
-                            },
-                        ],
-                    },
-
-                ],
-            },{
-                navigationKey: "card2",
-                sections: [
-                    {
-                        type: "DATA",
-                        cardHeader: { value: t("Campaign commodities"), inlineStyles: { marginTop: 0, fontSize: "1.5rem", color: " #0B4B66" } },
-                        cardSecondaryAction: (
-                            <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                                <span>{t(`CAMPAIGN_EDIT`)}</span>
-                                <EditIcon />
-                            </div>
-                        ),
-                        values: [
-                            {
-                                key: t("NUMBER_OF_HOUSEHOLDS_PER_STICKER_ROLL"),
-                                value: "20",
-                            },
-
-                        ],
-                    },
-
-                ]
-            },{
-                navigationKey: "card2",
-                sections: [
-                    {
-                        type: "DATA",
-                        cardHeader: { value: t("Campaign vehicles"), inlineStyles: { marginTop: 0, fontSize: "1.5rem", color: " #0B4B66" } },
-                        cardSecondaryAction: (
-                            <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                                <span>{t(`CAMPAIGN_EDIT`)}</span>
-                                <EditIcon />
-                            </div>
-                        ),
-                        values: [
-                            {
-                                key: t("CAPACITY_OF_VEHICLE_1_BALES"),
-                                value: "20",
-                            },
-                            {
-                                key: t("CAPACITY_OF_VEHICLE_2_BALES"),
-                                value: "20",
-                            },
-
-
-                        ],
-                    },
-
-                ]
-            },{
                 navigationKey: "card3",
                 sections: [
                     {
@@ -394,7 +264,21 @@ const SummaryScreen = ({props:customProps}) => {
                         ]
                        
                 
-            },{
+            },
+            // type: "COMPONENT",
+            //                     component: "FormulaSection",
+
+            //                     props: {
+                                    
+            //                         title:"GENERAL_ESTIMATION",
+            //                         threeInputArr:[["Number of households per boundary","Population of the boundary","Divided by","Average people HJ/H"],
+            //                         [ "Number of bednets per boundary","Population of the boundary","Divided by","Average people HJ/H"],
+            //                         [ "Number of bales per boundary","Population of the boundary","Divided by","Average people HJ/H"]
+
+            //                     ]
+                                    
+            //                     },
+            {
                 navigationKey: "card8",
                 sections: 
                     
@@ -402,60 +286,13 @@ const SummaryScreen = ({props:customProps}) => {
                             {
                                 
                                 type: "COMPONENT",
-                                component: "FormulaSection",
+                                component: "FormulaConfigScreen",
 
                                 props: {
                                     
-                                    title:"GENERAL_ESTIMATION",
-                                    threeInputArr:[["Number of households per boundary","Population of the boundary","Divided by","Average people HJ/H"],
-                                    [ "Number of bednets per boundary","Population of the boundary","Divided by","Average people HJ/H"],
-                                    [ "Number of bales per boundary","Population of the boundary","Divided by","Average people HJ/H"]
+                                    customProps:customProps
 
-                                ]
-                                    
-                                },
-                            },
-                        ]
-                       
-                
-            },{
-                navigationKey: "card8",
-                sections: 
-                    
-                        [
-                            {
                                 
-                                type: "COMPONENT",
-                                component: "FormulaSection",
-
-                                props: {
-                                    
-                                    title:"HOUSEHOLD_REGISTRATION_INFORMATION",
-                                    threeInputArr:[["Number of hosueholds registered","Population of the boundary","Divided by","Average people HJ/H"],
-                                    [ "Number of houdeholds registered per boundary","Population of the boundary","Divided by","Average people HJ/H"],
-                                    [ "Number of Supervisors per Boundary","Population of the boundary","Divided by","Average people HJ/H"]
-
-                                ]
-                                    
-                                },
-                            },
-                        ]
-                       
-                
-            },{
-                navigationKey: "card8",
-                sections: 
-                    
-                        [
-                            {
-                                
-                                type: "COMPONENT",
-                                component: "FormulaSection",
-
-                                props: {
-                                    
-                                    title:"CAMPAIGN_COMMODITIES",
-                                    threeInputArr:[["Number of sticker rolls per boundary","Population of the boundary","Divided by","Average people HJ/H"],  ]
                                     
                                 },
                             },
@@ -511,7 +348,7 @@ const SummaryScreen = ({props:customProps}) => {
               },
               
             ],
-            activeByDefault: "card1",
+            activeByDefault: "card8",
           },
 
     }
