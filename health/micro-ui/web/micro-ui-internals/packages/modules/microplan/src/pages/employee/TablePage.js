@@ -103,7 +103,7 @@ const TableNew = () => {
 	};
 
   const handleRowSelect = (arg) => {
-    debugger
+    
   }
 
 	const handlePerRowsChange = async (newPerPage, page) => {
