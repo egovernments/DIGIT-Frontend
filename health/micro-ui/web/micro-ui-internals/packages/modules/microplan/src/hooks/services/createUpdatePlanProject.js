@@ -66,6 +66,7 @@ const CreateResource = async (req) => {
       additionalDetails: {
         resourceDistributionStrategy: totalFormData?.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode,
         source: "microplan",
+        disease:totalFormData?.CAMPAIGN_DETAILS?.campaignDetails?.disease?.code
       },
     };
     const campaignRes = await Digit.CustomService.getResponse({

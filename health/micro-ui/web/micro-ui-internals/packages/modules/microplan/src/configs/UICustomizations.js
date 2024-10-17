@@ -3,6 +3,7 @@ import _ from "lodash";
 import React from "react";
 import { Dropdown } from "@egovernments/digit-ui-components";
 
+
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
@@ -49,22 +50,39 @@ export const UICustomizations = {
       // delete data.body.PlanConfigurationSearchCriteria.pagination
       data.body.PlanConfigurationSearchCriteria.status = status?.status;
       cleanObject(data.body.PlanConfigurationSearchCriteria);
-
+     
+      const dic={'0':null,'1':["DRAFT"],'2':["EXECUTION_TO_BE_DONE"],'3':["CENSUS_DATA_APPROVAL_IN_PROGRESS","CENSUS_DATA_APPROVED","RESOURCE_ESTIMATION_IN_PROGRESS"],"4":["RESOURCE_ESTIMATIONS_APPROVED"]}
+      const url= Digit.Hooks.useQueryParams();
+      
+      data.body.PlanConfigurationSearchCriteria.status=dic[String(url.tabId)];
+      cleanObject(data.body.PlanConfigurationSearchCriteria)
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       if (key === "Actions") {
+        // `/${window.contextPath}/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}`
+        console.log("roww",row)
         return (
           <Dropdown
-            option={[
-              { code: "1", name: "Edit Setup" },
-              { code: "2", name: "Duplicate Setup" },
-              { code: "3", name: "View Summary" },
-            ]}
-            select={(e) => { console.log(e, "event") }}
-            optionKey={"name"}
-            selected={{ code: "1", name: "Actions" }}
-          ></Dropdown>
+          option={[
+            { code: "1", name: "Edit Setup" },
+            { code: "2", name: "View Summary" },
+          ]}
+          select={(e) => {
+            console.log(e, "event"); // e contains the selected option
+            if (e.code === "1") {
+              // Use window.location.href to navigate
+              window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${1}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${row.CampaignDetails.id}`;
+              // console.log("row data",row);
+            }
+            if (e.code === "2") {
+              // Use window.location.href to navigate
+              window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${row.CampaignDetails.id}`;
+            }
+          }}
+          optionKey={"name"}
+          selected={{ code: "1", name: "Actions" }}
+        />
           // <p>$${value}</p>
 
         );
