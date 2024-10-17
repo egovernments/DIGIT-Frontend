@@ -13,7 +13,7 @@ function boundaryDataGrp(boundaryData) {
   const groupedData = {};
 
   // Iterate through each boundary item in the data
-  boundaryData.forEach((item) => {
+  boundaryData?.forEach((item) => {
     const { type } = item; // Extract the type
 
     // If the type doesn't exist in the groupedData, create an array for it
