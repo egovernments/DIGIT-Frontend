@@ -342,18 +342,97 @@ const createUpdatePlanProject = async (req) => {
         await updatePlan(upatedPlanObjSubHypothesis);
         return;
       case "UPLOADBOUNDARYDATA":
-        setCurrentKey((prev) => prev + 1);
-        setCurrentStep((prev) => prev + 1);
-        return {
-          triggeredFrom,
-        };
+        const fetchedPlanForBoundary = await searchPlanConfig({
+          PlanConfigurationSearchCriteria: {
+            tenantId,
+            id: microplanId,
+          },
+        })
+        let files = fetchedPlanForBoundary?.files || [];
+        const boundaryFileStoreId = totalFormData?.UPLOADBOUNDARYDATA?.boundary?.uploadedFile?.[0]?.filestoreId
+
+        const populationFileIndex = files.findIndex(file => file.templateIdentifier === "Population");
+
+        // If a file with "Population" exists, update its filestoreId
+        if (populationFileIndex !== -1) {
+          files = files.map(file => 
+            file.templateIdentifier === "Population" 
+              ? { ...file, filestoreId: boundaryFileStoreId } 
+              : file
+          );
+        } else {
+          // If no such file exists, add a new element to the files array
+          files.push({
+            filestoreId : boundaryFileStoreId,
+            inputFileType: "Excel", 
+            templateIdentifier: "Population"
+          });
+        }
+        const updatedPlanObjForBoundary = {
+          ...fetchedPlanForBoundary,
+          files
+        }
+
+        const planResBoundary = await updatePlan(upatedPlanObjForBoundary);
+        if(planResBoundary?.PlanConfiguration?.[0]?.id){
+          setCurrentKey((prev) => prev + 1);
+          setCurrentStep((prev) => prev + 1);
+          return {
+            triggeredFrom,
+          };
+        }
+        else {
+          setShowToast({ key: "error", label: "ERR_BOUNDARY_FORM_UPDATE" });
+        }
 
       case "UPLOADFACILITYDATA":
-        setCurrentKey((prev) => prev + 1);
-        setCurrentStep((prev) => prev + 1);
-        return {
-          triggeredFrom,
+        const fetchedPlanForFacility = await searchPlanConfig({
+          PlanConfigurationSearchCriteria: {
+            tenantId,
+            id: microplanId,
+          },
+        });
+        
+        let filesForFacility = fetchedPlanForFacility?.files || [];
+        const facilityFileStoreId = totalFormData?.UPLOADFACILITYDATA?.facilityWithBoundary?.uploadedFile?.[0]?.filestoreId;
+        
+        const facilityFileIndex = filesForFacility.findIndex(file => file.templateIdentifier === "Facilities");
+        
+        // If a file with "Facility" exists, update its filestoreId
+        if (facilityFileIndex !== -1) {
+          filesForFacility = filesForFacility.map(file => 
+            file.templateIdentifier === "Facilities" 
+              ? { ...file, filestoreId: facilityFileStoreId } 
+              : file
+          );
+        } else {
+          // If no such file exists, add a new element to the filesForFacility array
+          filesForFacility.push({
+            filestoreId: facilityFileStoreId,
+            inputFileType: "Excel", 
+            templateIdentifier: "Facilities",
+          });
+        }
+        const workflow =  {
+            action: "INITIATE"
+        }
+        const updatedPlanObjForFacility = {
+          ...fetchedPlanForFacility,
+          files: filesForFacility,
+          workflow
         };
+        
+        const planResFacility = await updatePlan(updatedPlanObjForFacility);
+        
+        if (planResFacility?.PlanConfiguration?.[0]?.id) {
+          setCurrentKey((prev) => prev + 1);
+          setCurrentStep((prev) => prev + 1);
+          return {
+            triggeredFrom,
+          };
+        } else {
+          setShowToast({ key: "error", label: "ERR_FACILITY_FORM_UPDATE" });
+        }        
 
       default:
         setShowToast({ key: "error", label: "ERROR_UNHANDLED_NEXT_OPERATION" });
