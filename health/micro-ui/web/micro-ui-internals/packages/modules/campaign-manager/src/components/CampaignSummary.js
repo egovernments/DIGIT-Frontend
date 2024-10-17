@@ -385,6 +385,7 @@ const CampaignSummary = (props) => {
                     ),
                     props: {
                       boundaries: item,
+                      hierarchyType: hierarchyType
                     },
                   },
                 ],
@@ -413,8 +414,8 @@ const CampaignSummary = (props) => {
                     {
                       key: "CAMPAIGN_NO_OF_DELIVERIES",
                       value:
-                      data?.[0]?.deliveryRules && data?.[0]?.deliveryRules?.flatMap((rule) => rule?.deliveries.map((delivery) => delivery?.deliveryIndex))?.length > 0
-                      ? Math.max(...data?.[0]?.deliveryRules?.flatMap((rule) => rule?.deliveries.map((delivery) => delivery?.deliveryIndex)))
+                      data?.[0]?.deliveryRules && data?.[0]?.deliveryRules?.flatMap((rule) => rule?.deliveries?.map((delivery) => delivery?.deliveryIndex))?.length > 0
+                      ? Math.max(...data?.[0]?.deliveryRules?.flatMap((rule) => rule?.deliveries?.map((delivery) => delivery?.deliveryIndex)))
                       : t("CAMPAIGN_SUMMARY_NA"),
                     },
                   ],

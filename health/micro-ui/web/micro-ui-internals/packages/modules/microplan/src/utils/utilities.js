@@ -75,6 +75,26 @@ const formValidator = (formData, key, state) => {
   };
 
   const boundarySelectionValidator = () => {
+  
+    function recursiveParentFind(filteredData) {
+      const parentChildrenMap = {};
+  
+      // Build the parent-children map
+      filteredData?.forEach((item) => {
+        if (item?.parent) {
+          if (!parentChildrenMap[item?.parent]) {
+            parentChildrenMap[item?.parent] = [];
+          }
+          parentChildrenMap[item?.parent].push(item.code);
+        }
+      });
+  
+      // Check for missing children
+      const missingParents = filteredData?.filter((item) => item?.parent && !parentChildrenMap[item.code]);
+      const extraParent = missingParents?.filter((i) => i?.type !== state?.lowestHierarchy);
+      return extraParent;
+    }
+
     function validateBoundaryData(data, requiredTypes) {
       // Create a Set to keep track of found types
       const foundTypes = new Set();
@@ -95,6 +115,15 @@ const formValidator = (formData, key, state) => {
     );
     if (!isSelectedBoundariesValid) {
       return { key: "error", label: "ERROR_BOUNDARY_SELECTION" };
+    }
+    const missedType = recursiveParentFind(formData?.selectedData);
+      if (missedType.length > 0) {
+        return {
+          key: "error",
+          label: `${(`HCM_CAMPAIGN_FOR`)} ${(`${state?.hierarchyType}_${missedType?.[0]?.type}`?.toUpperCase())} ${(missedType?.[0]?.code)} ${(
+            `HCM_CAMPAIGN_CHILD_NOT_PRESENT`
+          )}`,
+      }
     }
     return null;
   };

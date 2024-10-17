@@ -111,11 +111,21 @@
 }
 
 .dm-code {
-  max-width: var(--dm-code-max-width, 10rem);
-  display: inline-block; /* Keep elements inline but respect width constraints */
-  white-space: nowrap; /* Prevent wrapping */
-  overflow: hidden; /* Hide overflow text */
-  text-overflow: ellipsis; /* Add ellipsis to overflowing text */
+  max-width: 100%; /* Remove width constraint to avoid overflow */
+  display: block; /* Ensure each item appears on a new line */
+  white-space: normal; /* Allow text to wrap */
+  overflow: visible; /* Ensure text isn't cut off */
 }
+
+.dm-audit-info11 {
+  max-width: 70%; /* Ensure this section doesn't take too much space */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Handle long text with ellipsis */
+  white-space: nowrap; /* Prevent wrapping */
+  color: #C84C0E;
+  margin-bottom: "1rem";
+  font-size: "0.875rem"
+}
+
 
   

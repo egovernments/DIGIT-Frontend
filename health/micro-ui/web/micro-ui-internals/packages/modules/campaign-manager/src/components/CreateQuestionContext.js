@@ -166,7 +166,7 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
     }
   };
   // const [initialState, setInitialState] = useState([{ id: crypto.randomUUID(), parentId: null, level: 1, key: 1, title: null, type: { "code": "SingleValueList" }, value: null, isRequired: false }])
-  
+
   const [initialState, setInitialState] = useState(()=>{
     const savedQuestions = localStorage.getItem("questions");
     return savedQuestions ?  JSON.parse(savedQuestions) : [{ id: crypto.randomUUID(), parentId: null, level: 1, key: 1, title: null, type: { "code": "SingleValueList" }, value: null, isRequired: false }]

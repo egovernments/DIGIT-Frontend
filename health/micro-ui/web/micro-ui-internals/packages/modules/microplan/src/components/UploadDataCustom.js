@@ -2,6 +2,7 @@ import { Header, LoaderWithGap} from "@egovernments/digit-ui-react-components";
 import React, {  useState, useEffect, Fragment, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { InfoCard, PopUp, Toast, Button, Stepper, TextBlock , Card} from "@egovernments/digit-ui-components";
+import axios from "axios";
 
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
@@ -38,7 +39,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const [resourceId, setResourceId] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
   // TODO : Remove hard coded id
-  const id = searchParams.get("campaignId") || "274f60e0-f6d8-4bf9-b4da-a714a9046e93";
+  const id = searchParams.get("campaignId") || null;
   const { data: Schemas, isLoading: isThisLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
     "HCM-ADMIN-CONSOLE",
@@ -54,13 +55,16 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const [readMeInfo, setReadMeInfo] = useState({});
   const [showPopUp, setShowPopUp] = useState(true);
 
-  const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
-  const boundaryHierarchy = useMemo(() => {
-    return hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)?.hierarchy;
-  }, [hierarchyConfig]);
+  const { data: boundaryHierarchy } = Digit.Hooks.useCustomMDMS(tenantId, "hcm-microplanning", [{ name: "hierarchyConfig" }], {
+    select: (data) => {
+       const item = data?.["hcm-microplanning"]?.hierarchyConfig?.find((item) => item.isActive)
+       return item?.hierarchy
+      },
+  },{schemaCode:"BASE_MASTER_DATA_INITIAL"});
   const totalData = Digit.SessionStorage.get("MICROPLAN_DATA");
   const campaignType = totalData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code
   const [loader, setLoader] = useState(false);
+  const [ downloadTemplateLoader,setDownloadTemplateLoader] = useState(false);
   const XlsPreview = Digit.ComponentRegistryService.getComponent("XlsPreview");
   const BulkUpload = Digit.ComponentRegistryService.getComponent("BulkUpload");
   const baseKey = 4;
@@ -102,15 +106,64 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   };
 
   useEffect(() => {
-    setUploadedFile(props?.props?.sessionData?.UPLOADDATA?.[type]?.uploadedFile || []);
-    setFileName(props?.props?.sessionData?.UPLOADDATA?.[type]?.uploadedFile?.[0]?.fileName || null);
-    setApiError(null);
-    setIsValidation(false);
-    setDownloadError(false);
-    setIsError(false);
-    setIsSuccess(props?.props?.sessionData?.UPLOADDATA?.[type]?.isSuccess || null);
-    setShowPopUp(!props?.props?.sessionData?.UPLOADDATA?.[type]?.uploadedFile?.length || 0);
+    if(type=='boundary'){
+      setUploadedFile(props?.props?.sessionData?.UPLOADBOUNDARYDATA?.[type]?.uploadedFile || []);
+      setFileName(props?.props?.sessionData?.UPLOADBOUNDARYDATA?.[type]?.uploadedFile?.[0]?.fileName || null);
+      setApiError(null);
+      setIsValidation(false);
+      setDownloadError(false);
+      setIsError(false);
+      setIsSuccess(props?.props?.sessionData?.UPLOADBOUNDARYDATA?.[type]?.isSuccess || null);
+      setShowPopUp(!props?.props?.sessionData?.UPLOADBOUNDARYDATA?.[type]?.uploadedFile?.length || 0);
+    }
+    else if(type=='facilityWithBoundary'){
+      setUploadedFile(props?.props?.sessionData?.UPLOADFACILITYDATA?.[type]?.uploadedFile || []);
+      setFileName(props?.props?.sessionData?.UPLOADFACILITYDATA?.[type]?.uploadedFile?.[0]?.fileName || null);
+      setApiError(null);
+      setIsValidation(false);
+      setDownloadError(false);
+      setIsError(false);
+      setIsSuccess(props?.props?.sessionData?.UPLOADFACILITYDATA?.[type]?.isSuccess || null);
+      setShowPopUp(!props?.props?.sessionData?.UPLOADFACILITYDATA?.[type]?.uploadedFile?.length || 0);
+    }
   }, [type, props?.props?.sessionData]);
+
+  const generateData = async () => {
+    if(boundaryHierarchy && type && id) {
+      const ts = new Date().getTime();
+      const reqCriteria = {
+        url: `/project-factory/v1/data/_generate`,
+        params: {
+          tenantId: Digit.ULBService.getCurrentTenantId(),
+          type: type,
+          forceUpdate: true,
+          hierarchyType: boundaryHierarchy,
+          campaignId: id,
+          source: "microplan",
+        },
+        body: {
+          RequestInfo : {
+            authToken: Digit.UserService.getUser().access_token,
+            msgId: `${ts}|${Digit.StoreData.getCurrentLanguage()}`
+          }
+        }
+      };
+  
+      try {
+        await axios.post(reqCriteria.url, reqCriteria.body, {
+          params: reqCriteria.params,
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+  };
+
+
+  useEffect(() => {
+      generateData();
+  }, [type, boundaryHierarchy, id]);
+  
 
   useEffect(() => {
     enrichFileDetails(uploadedFile);
@@ -245,12 +298,13 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   useEffect(async () => {
     if (readMe?.["HCM-ADMIN-CONSOLE"]) {
       const newReadMeFacility = await translateReadMeInfo(
-        readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === `${type-'MP'}`)?.[0]?.texts
+        readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === `${type}-MP`)?.[0]?.texts
       );
       const newReadMeUser = await translateReadMeInfo(readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === `${type-'MP'}`)?.[0]?.texts);
       const newReadMeboundary = await translateReadMeInfo(
-        readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === `${type-'MP'}`)?.[0]?.texts
+        readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === `${type}-MP`)?.[0]?.texts
       );
+
 
       const readMeText = {
         boundary: newReadMeboundary,
@@ -275,16 +329,6 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       onSelect(props.props.name, { uploadedFile, isError, isValidation, apiError, isSuccess })
       setExecutionCount((prevCount) => prevCount + 1);
     }
-  });
-
-
-  Digit.Hooks.microplanv1.useGenerateIdCampaign({
-    type: type, // or another type
-    hierarchyType: boundaryHierarchy,
-    filters: null,  // Passing null if no filters are required
-    campaignId: id,
-    source: "microplan",
-    config: {} // Optional config, if you want to override default config
   });
 
   useEffect(() => {
@@ -354,8 +398,8 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       setShowInfoCard(false);
   
     } catch (error) {
-      // Catch any error and set the toast with the error message
-      setShowToast({ key: "error", label: error.message || t("HCM_ERROR_DEFAULT_MESSAGE") });
+      // const message = error?.message || t("HCM_ERROR_DEFAULT_MESSAGE");
+      setShowToast({ key: "error", label: t("HCM_ERROR_FILE_UPLOAD_FAILED") });
     }
   };
   
@@ -394,7 +438,8 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             type,
             tenantId,
             id,
-            baseTimeOut?.["HCM-ADMIN-CONSOLE"]
+            baseTimeOut?.["HCM-ADMIN-CONSOLE"],
+            { source : "microplan" }
           );
           if (temp?.isError) {
             setLoader(false);
@@ -464,7 +509,19 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             setSheetErrors(temp?.additionalDetails?.sheetErrors?.length || 0);
             const processedFileStore = temp?.processedFilestoreId;
             if (!processedFileStore) {
-              setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
+              if(temp?.status=="failed" && temp?.additionalDetails?.error){
+                try {
+                  const parsedError = JSON.parse(temp.additionalDetails.error);
+                  const errorMessage = parsedError?.description || parsedError?.message || t("HCM_VALIDATION_FAILED");
+                  setShowToast({ key: "error", label: errorMessage, transitionTime: 5000000 });
+                } catch (e) {
+                  console.error("Error parsing JSON:", e);
+                  setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
+                }
+              }
+              else{
+                setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
+              }
               return;
             } else {
               setIsError(true);
@@ -518,6 +575,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
 
   const downloadTemplate = async () => {
+    setDownloadTemplateLoader(true);
     await mutation.mutate(
       {
         params: {
@@ -529,8 +587,10 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       },
       {
         onSuccess: async (result) => {
+          setDownloadTemplateLoader(false);
           if (result?.GeneratedResource?.[0]?.status === "failed") {
             setDownloadError(true);
+            generateData();
             setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
             return;
           }
@@ -541,7 +601,8 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           }
           if (!result?.GeneratedResource?.[0]?.fileStoreid || result?.GeneratedResource?.length == 0) {
             setDownloadError(true);
-            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+            generateData();
+            setShowToast({ key: "info", label: t("ERROR_WHILE_DOWNLOADING") });
             return;
           }
           const filesArray = [result?.GeneratedResource?.[0]?.fileStoreid];
@@ -563,11 +624,13 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             }
           } else {
             setDownloadError(true);
-            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT") });
+            setShowToast({ key: "info", label: t("ERROR_WHILE_DOWNLOADING_FROM_FILESTORE") });
           }
         },
         onError: (result) => {
+          setDownloadTemplateLoader(false);
           setDownloadError(true);
+          generateData();
           setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
         },
       }
@@ -594,7 +657,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
 
   const onStepClick = (currentStepForKey) => {
     const stepKey= currentStepForKey + baseKey;
-    if(stepKey > key) {
+    if(stepKey > key  && !totalData?.UPLOADBOUNDARYDATA?.boundary?.isSuccess) {
       return;
     }
     setShowToast(null);
@@ -622,6 +685,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           </Card>
         </div>
         {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
+        {downloadTemplateLoader && <LoaderWithGap/>}
         <div className="card-container" style={{ width: "100%" }}>
           <Card>
             <div className="campaign-bulk-upload">
@@ -676,7 +740,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
               name: "infocard",
             }}
             variant= {sheetErrors ? "error" : "default"}
-            style={{ margin: "0rem", maxWidth: "100%" }}
+            style={{ margin: "0rem", maxWidth: "100%", marginTop: "1rem" }}
             additionalElements={
               sheetErrors ? (
                   [<Button
@@ -700,9 +764,9 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
                       {info?.descriptions.map((desc, i) => (
                         <li key={i} className="info-points">
                           {desc.isBold ? (
-                            <h2>{`Step ${i + 1}: ${desc.text}`}</h2>
+                            <h2>{`${i + 1}. ${desc.text}`}</h2>
                           ) : (
-                            <p>{`Step ${i + 1}: ${desc.text}`}</p>
+                            <p>{`${i + 1}. ${desc.text}`}</p>
                           )}
                         </li>
                       ))}
