@@ -13,11 +13,8 @@ import TableNew from "./TablePage";
 import PopInbox from "./PopInbox";
 import UserUpload from "../../components/UserUpload";
 import UserDownload from "./UserDownload";
-<<<<<<< HEAD
 import MyMicroplans from "./MyMicroplans";
-=======
 import ChooseActivity from "./ChooseActivity";
->>>>>>> f77408738da2b1dc648974c603929535cb58f7ab
 
 
 
