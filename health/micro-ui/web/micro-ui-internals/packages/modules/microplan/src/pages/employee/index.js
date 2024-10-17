@@ -14,6 +14,7 @@ import PopInbox from "./PopInbox";
 import UserUpload from "../../components/UserUpload";
 import UserDownload from "./UserDownload";
 import VillageView from "./viewVillage";
+import MyMicroplans from "./MyMicroplans";
 import ChooseActivity from "./ChooseActivity";
 
 
@@ -183,6 +184,8 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
         <PrivateRoute path={`${path}/pop-inbox`} component={() => <PopInbox />} />
         <PrivateRoute path={`${path}/upload-user`} component={() => <UserUpload />} />
         <PrivateRoute path={`${path}/village-view`} component={() => <VillageView />} />
+        <PrivateRoute path={`${path}/my-microplans`} component={() => <MyMicroplans/>} /> 
+
 
       </AppContainer>
     </Switch>
