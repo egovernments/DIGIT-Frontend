@@ -2,9 +2,23 @@ import { EmployeeModuleCard, WorksMgmtIcon } from "@egovernments/digit-ui-react-
 import React from "react";
 import { useTranslation } from "react-i18next";
 
+
 const ROLES = {
   MICROPLAN: ["MICROPLAN_ADMIN"],
 };
+
+const OTHERS={
+  OTHERS:[
+    "PLAN_ESTIMATION_APPROVER",
+    "ROOT_PLAN_ESTIMATION_APPROVER",
+    "POPULATION_DATA_APPROVER",
+    "ROOT_POPULATION_DATA_APPROVER",
+    "FACILITY_CATCHMENT_MAPPER",
+    "ROOT_FACILITY_CATCHMENT_MAPPER",
+    "MICROPLAN_VIEWER"
+  ]
+
+}
 
 const MicroplanCard = () => {
   const { t } = useTranslation();
@@ -18,7 +32,20 @@ const MicroplanCard = () => {
     };
   };
 
-  let links = [generateLink("SETUP_MICROPLAN","setup-microplan"),generateLink("SEARCH_MICROPLANS","microplan-search"),generateLink("USER_MANAGEMENT","user-management")];
+  const generateOtherLink = (labelKey, pathSuffix) => {
+    return {
+      label: t(labelKey),
+      link: `/${window?.contextPath}/employee/microplan/${pathSuffix}`,
+      roles: ROLES.MICROPLAN,
+    };
+  };
+
+  let links = [
+    generateLink("SETUP_MICROPLAN","setup-microplan"),
+    generateLink("SEARCH_MICROPLANS","microplan-search"),
+    generateLink("USER_MANAGEMENT","user-management"),
+    generateOtherLink("MY_MICROPLANS","my-microplans")
+  ];
 
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));
 

@@ -2,8 +2,9 @@ import { Link, useLocation, useHistory, useParams } from "react-router-dom";
 import _ from "lodash";
 import React from "react";
 import { Dropdown } from "@egovernments/digit-ui-components";
-
-
+import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader } from "@egovernments/digit-ui-react-components";
+import { EditIcon } from "@egovernments/digit-ui-react-components";
+import { ArrowForward } from "@egovernments/digit-ui-react-components";
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
@@ -61,7 +62,6 @@ export const UICustomizations = {
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       if (key === "Actions") {
         // `/${window.contextPath}/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}`
-        console.log("roww",row)
         return (
           <Dropdown
           option={[
@@ -84,6 +84,98 @@ export const UICustomizations = {
           selected={{ code: "1", name: "Actions" }}
         />
           // <p>$${value}</p>
+
+        );
+      }
+
+      if (key === "Name of the Microplan") {
+        if (value && value !== "NA") {
+
+          return (
+            <div
+              style={{
+                maxWidth: '15rem', // Set the desired maximum width
+                wordWrap: 'break-word', // Allows breaking within words
+                whiteSpace: 'normal', // Ensures text wraps normally
+                overflowWrap: 'break-word' // Break long words at the edge
+              }}
+            >
+              <p>{value}</p>
+            </div>
+          )
+        } else {
+          return (
+            <div>
+              <p>NA</p>
+            </div>
+          )
+        }
+
+      }
+
+    },
+  },
+  MyMicroplanSearchConfig: {
+    preProcess: (data, additionalDetails) => {
+      const { name, status } = data?.state?.searchForm || {};
+
+      data.body.PlanConfigurationSearchCriteria = {};
+      data.body.PlanConfigurationSearchCriteria.limit = data?.state?.tableForm?.limit;
+      // data.body.PlanConfigurationSearchCriteria.limit = 10
+      data.body.PlanConfigurationSearchCriteria.offset = data?.state?.tableForm?.offset;
+      data.body.PlanConfigurationSearchCriteria.name = name;
+      data.body.PlanConfigurationSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
+      data.body.PlanConfigurationSearchCriteria.userUuid = Digit.UserService.getUser().info.uuid;
+      // delete data.body.PlanConfigurationSearchCriteria.pagination
+      data.body.PlanConfigurationSearchCriteria.status = status?.status;
+      cleanObject(data.body.PlanConfigurationSearchCriteria);
+     
+      const dic={'0':null,'1':["DRAFT"],'2':["EXECUTION_TO_BE_DONE"],'3':["CENSUS_DATA_APPROVAL_IN_PROGRESS","CENSUS_DATA_APPROVED","RESOURCE_ESTIMATION_IN_PROGRESS"],"4":["RESOURCE_ESTIMATIONS_APPROVED"]}
+      const url= Digit.Hooks.useQueryParams();
+      
+      data.body.PlanConfigurationSearchCriteria.status=dic[String(url.tabId)];
+      cleanObject(data.body.PlanConfigurationSearchCriteria)
+      return data;
+    },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      console.log("Bye",row);
+      if (key === "Actions") {
+        // `/${window.contextPath}/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}`
+        return (
+          
+            row.status==="DRAFT"?( <Button
+              label={t("WBH_EDIT")}
+              variation="secondary"
+              icon={<EditIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
+              type="button"
+              className="dm-workbench-download-template-btn dm-hover"
+              onButtonClick={(e) => {
+                  deleteHandler();
+              }}
+          />):(row.status==="EXECUTION_TO_BE_DONE")?(
+            <Button
+                                    label={t("START")}
+                                    variation="secondary"
+                                    icon={<ArrowForward styles={{ height: "1.25rem", width: "2.5rem" }} />}
+                                    type="button"
+                                    className="dm-workbench-download-template-btn dm-hover"
+                                    onButtonClick={(e) => {
+                                        editHandler();
+                                    }}
+                                />
+          ):(row.status==="RESOURCE_ESTIMATIONS_APPROVED")?(
+            <Button
+                                label={t("WBH_DOWNLOAD")}
+                                variation="secondary"
+                                icon={<DownloadIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
+                                type="button"
+                                className="dm-workbench-download-template-btn dm-hover"
+                                onButtonClick={(e) => {
+                                    downloadHandler();
+                                }}
+                            />
+          ):null
+          
 
         );
       }
