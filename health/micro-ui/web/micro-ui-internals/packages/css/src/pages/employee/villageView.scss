@@ -1,0 +1,59 @@
+@import url("../../index.scss");
+
+/* VillageView.css */
+
+.village-header {
+    @extend .typography.heading-xl;
+    color: theme(digitv2.lightTheme.text-primary);
+    margin-bottom: 2rem;
+}
+
+
+.card-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-heading-title {
+    @extend .typography.heading-m;
+    color: theme(digitv2.lightTheme.primary-2);
+}
+
+.label-pair {
+    display: flex;
+    justify-content: space-between;
+}
+
+.label-heading {
+    @extend .typography.heading-s;
+    color: theme(digitv2.lightTheme.text-primary);
+    width: 20%;
+}
+
+.label-text {
+    @extend .typography.body-l;
+    color: theme(digitv2.lightTheme.text-primary);
+    width: 80%;
+}
+
+.edit-label-field-pair {
+    display: flex;
+    justify-content: space-between;
+}
+
+.edit-label {
+    @extend .typography.heading-s;
+    color: theme(digitv2.lightTheme.text-primary);
+    width: 50%;
+    text-align: left;
+}
+
+.edit-value {
+    width: 50%;
+    text-align: start;
+}
+
+.middle-child {
+    margin-top: 1rem;
+}
