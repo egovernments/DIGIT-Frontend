@@ -13,6 +13,7 @@ import TableNew from "./TablePage";
 import PopInbox from "./PopInbox";
 import UserUpload from "../../components/UserUpload";
 import UserDownload from "./UserDownload";
+import MyMicroplans from "./MyMicroplans";
 import ChooseActivity from "./ChooseActivity";
 
 
@@ -177,6 +178,10 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
          <PrivateRoute path={`${path}/table`} component={() => <TableNew />} />
          <PrivateRoute path={`${path}/pop-inbox`} component={() => <PopInbox />} />
          <PrivateRoute path={`${path}/upload-user`} component={() => <UserUpload/>} /> 
+         <PrivateRoute path={`${path}/my-microplans`} component={() => <MyMicroplans/>} /> 
+
+         {/* my-microplans */}
+
       </AppContainer>
     </Switch>
   );
