@@ -70,94 +70,270 @@ function cycleDataRemap(data) {
   });
 }
 
-// function reverseDeliveryRemap(data) {
-//   if (!data) return null;
-//   const reversedData = [];
-//   let currentCycleIndex = null;
-//   let currentCycle = null;
+function getOperatorSymbol(operator) {
+  const operatorMapping = {
+    "LESS_THAN": "<",
+    "LESS_THAN_EQUAL_TO": "<=",
+    "GREATER_THAN": ">",
+    "GREATER_THAN_EQUAL_TO": ">=",
+    "EQUAL_TO": "==",
+    "NOT_EQUAL_TO": "!=",
+    "IN_BETWEEN": "IN" // Map IN_BETWEEN to a keyword if needed
+  };
+  return operatorMapping[operator] || ""; // Default to empty if not found
+}
 
-//   data.forEach((item, index) => {
-//     if (currentCycleIndex !== item.cycleNumber) {
-//       currentCycleIndex = item.cycleNumber;
-//       currentCycle = {
-//         cycleIndex: currentCycleIndex.toString(),
-//         active: index === 0, // Initialize active to false
-//         deliveries: [],
-//       };
-//       reversedData.push(currentCycle);
-//     }
+// function restructureData(data, cycleData, DeliveryConfig, projectType) {
+//   const tt = DeliveryConfig?.find((e) => e.code === String(projectType));
 
-//     const deliveryIndex = item.deliveryNumber.toString();
+//   console.log("tt" , data , cycleData , tt);
 
-//     let delivery = currentCycle.deliveries.find((delivery) => delivery.deliveryIndex === deliveryIndex);
+//   if (tt) {
+//     delete tt.cycles;   // Remove old cycles
+//     delete tt.resources;  // Remove old resources
+//   }
 
-//     if (!delivery) {
-//       delivery = {
-//         deliveryIndex: deliveryIndex,
-//         active: item.deliveryNumber === 1, // Set active to true only for the first delivery
-//         deliveryRules: [],
-//       };
-//       currentCycle.deliveries.push(delivery);
-//     }
+//   const resourcesMap = new Map();
 
-//     delivery.deliveryRules.push({
-//       ruleKey: item.deliveryRuleNumber,
-//       delivery: {},
-//       deliveryType: item?.deliveryType,
-//       attributes: loopAndReturn(item.conditions),
-//       products: [...item.products],
-//     });
-//   });
+//   const cycles = data.map(cycle => ({
+//     mandatoryWaitSinceLastCycleInDays: null,
+//     startDate: Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[0]?.fromDate),
+//     endDate: Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[0]?.toDate),
+//     id: parseInt(cycle.cycleIndex, 10),
+//     deliveries: cycle?.deliveries?.map(delivery => ({
+//       id: parseInt(delivery.deliveryIndex, 10),
+//       deliveryStrategy: delivery.deliveryStrategy || "DIRECT",
+//       mandatoryWaitSinceLastDeliveryInDays: null,
+//       doseCriteria: delivery.deliveryRules.map(rule => {
+//         // Consolidate product variants for the resources array
+//         rule.products.forEach(product => {
+//           if (resourcesMap.has(product.value)) {
+//             resourcesMap.get(product.value).count += product.count;
+//           } else {
+//             resourcesMap.set(product.value, {
+//               productVariantId: product.value,
+//               isBaseUnitVariant: false,
+//               name: product.name
+//             });
+//           }
+//         });
 
-//   return reversedData;
-// }
+//         // Build the condition string, handling IN_BETWEEN separately
+//         const conditions = rule.attributes.map(attr => {
+//           if (attr?.operator?.code === "IN_BETWEEN") {
+//             return `${attr.toValue} <= ${attr.attribute.code} < ${attr.fromValue}`;
+//           } else {
+//             return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${attr?.value}`;
+//           }
+//         });
 
-// function restructureData(data) {
-//   return data.map(cycle => ({
-//       mandatoryWaitSinceLastCycleInDays: null,
-//       id: parseInt(cycle.cycleIndex),
-//       deliveries: cycle.deliveries.map(delivery => ({
-//           id: parseInt(delivery.deliveryIndex),
-//           mandatoryWaitSinceLastDeliveryInDays: null,
-//           doseCriteria: delivery.deliveryRules.map(rule => ({
-//               condition: parseCondition(rule.attributes),
-//               ProductVariants: rule.products.map(product => ({
-//                   productVariantId: product.value,
-//                   name: product.name
-//               }))
+//         return {
+//           condition: conditions.join(" and "),
+//           ProductVariants: rule.products.map(product => ({
+//             productVariantId: product.value,
+//             name: product.name
 //           }))
-//       }))
+//         };
+//       })
+//     }))
 //   }));
+
+//   const resources = Array.from(resourcesMap.values());
+
+//   if (tt) {
+//     tt.cycles = cycles;
+//     tt.resources = resources;
+//   }
+
+
+//   console.log("ttoo" , tt);
+//   return [tt];
 // }
 
-// function parseCondition(attributes) {
-//   const conditions = attributes.map(attr => {
-//       const attributeCode = attr.attribute.code;
-//       const operator = attr.operator.code;
-//       if (operator === "IN_BETWEEN") {
-//           const fromValue = attr.fromValue;
-//           const toValue = attr.toValue;
-//           return `${fromValue} <= ${attributeCode} < ${toValue}`;
-//       }
+function restructureData(data, cycleData, DeliveryConfig, projectType) {
+  const deliveryConfig = DeliveryConfig?.find((e) => e.code === String(projectType));
+  if (deliveryConfig) {
+    delete deliveryConfig.cycles;   
+    delete deliveryConfig.resources;  
+  }
 
-//       const value = attr.value;
-//       return `${attributeCode}${convertOperator(operator)}${value}`;
-//   });
+  const resourcesMap = new Map();
+  const ageInfo = { maxAge: -Infinity, minAge: Infinity };  
 
-//   // Join conditions into a single string
-//   return conditions.join(' and ');
-// }
+  const cycles = data.map(cycle => {
+    const cycleStartDate = Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[0]?.fromDate);
+    const cycleEndDate = Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[0]?.toDate);
 
-// function convertOperator(operatorCode) {
-//   const operators = {
-//       "LESS_THAN_EQUAL_TO": "<=",
-//       "GREATER_THAN_EQUAL_TO": ">=",
-//       "LESS_THAN": "<",
-//       "GREATER_THAN": ">",
-//       "EQUAL_TO": "=",
-//   };
-//   return operators[operatorCode] || "=";
-// }
+    return {
+      mandatoryWaitSinceLastCycleInDays: null,
+      startDate: cycleStartDate,
+      endDate: cycleEndDate,
+      id: parseInt(cycle.cycleIndex, 10),
+      deliveries: cycle?.deliveries?.map(delivery => processDelivery(delivery, resourcesMap, ageInfo))
+    };
+  });
+
+  const resources = Array.from(resourcesMap.values());
+  if (deliveryConfig) {
+    deliveryConfig.cycles = cycles;
+    deliveryConfig.resources = resources;
+    deliveryConfig.validMaxAge = ageInfo.maxAge === -Infinity ? null : ageInfo.maxAge; 
+    deliveryConfig.validMinAge = ageInfo.minAge === Infinity ? null : ageInfo.minAge; 
+  }
+  return [deliveryConfig];
+}
+
+function reverseDeliveryRemap(data, t) {
+  if (!data) return null;
+  const reversedData = [];
+  let currentCycleIndex = null;
+  let currentCycle = null;
+
+  const operatorMapping = {
+    "<=": "LESS_THAN_EQUAL_TO",
+    ">=": "GREATER_THAN_EQUAL_TO",
+    "<": "LESS_THAN",
+    ">": "GREATER_THAN",
+    "==": "EQUAL_TO",
+    "!=": "NOT_EQUAL_TO",
+    IN_BETWEEN: "IN_BETWEEN",
+  };
+
+  const cycles = data?.[0]?.cycles || [];
+  const mapProductVariants = (productVariants) => {
+    return productVariants.map((variant, key) => ({
+      key: key + 1,
+      count: 1,
+      value: variant.productVariantId,
+      name: variant.name,
+    }));
+  };
+
+  const parseConditionAndCreateRules = (condition, ruleKey, products) => {
+    const conditionParts = condition.split("and").map((part) => part.trim());
+    let rules = [];
+
+    conditionParts.forEach((part) => {
+      const parts = part.split(" ").filter(Boolean);
+      let attributes = [];
+
+      // Handle "IN_BETWEEN" operator
+      if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
+        const toValue = parts[0];
+        const fromValue = parts[4];
+        attributes.push({
+          key: 1,
+          operator: { code: operatorMapping["IN_BETWEEN"] },
+          attribute: { code: parts[2] },
+          fromValue,
+          toValue,
+        });
+      } else {
+     
+        const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
+        if (match) {
+          const attributeCode = match[1].trim();
+          const operatorSymbol = match[2].trim();
+          const value = match[3].trim();
+          attributes.push({
+            key: attributes.length + 1,
+            value,
+            operator: { code: operatorMapping[operatorSymbol] },
+            attribute: { code: attributeCode },
+          });
+        }
+      }
+      rules.push({
+        ruleKey: ruleKey + 1,
+        delivery: {},
+        products,
+        attributes,
+      });
+    });
+
+    return rules;
+  };
+  const mapDoseCriteriaToDeliveryRules = (doseCriteria) => {
+    return doseCriteria?.flatMap((criteria, ruleKey) => {
+      const products = mapProductVariants(criteria.ProductVariants);
+      return parseConditionAndCreateRules(criteria.condition, ruleKey, products);
+    });
+  };
+
+  const mapDeliveries = (deliveries) => {
+    return deliveries?.map((delivery, deliveryIndex) => ({
+      active: true,
+      deliveryIndex: String(deliveryIndex + 1),
+      deliveryRules: mapDoseCriteriaToDeliveryRules(delivery.doseCriteria),
+    }));
+  };
+
+  const transformedCycles = cycles.map((cycle) => ({
+    active: true,
+    cycleIndex: String(cycle.id),
+    deliveries: mapDeliveries(cycle.deliveries),
+  }));
+
+
+
+  return transformedCycles;
+
+}
+
+function processDelivery(delivery, resourcesMap, ageInfo) {
+
+  return {
+    id: parseInt(delivery.deliveryIndex, 10),
+    deliveryStrategy: delivery.deliveryStrategy || "DIRECT",
+    mandatoryWaitSinceLastDeliveryInDays: null,
+    doseCriteria: delivery.deliveryRules.map(rule => {
+      const doseCriteriaResult = processDoseCriteria(rule, resourcesMap);
+      const ages = extractAgesFromConditions(doseCriteriaResult.condition);
+      if (ages.length > 0) { 
+        ageInfo.maxAge = Math.max(ageInfo.maxAge, ...ages);
+        ageInfo.minAge = Math.min(ageInfo.minAge, ...ages);
+      }
+      return doseCriteriaResult;
+    })
+  };
+}
+function processDoseCriteria(rule, resourcesMap) {
+  rule.products.forEach(product => {
+    if (resourcesMap.has(product.value)) {
+      resourcesMap.get(product.value).count += product.count;
+    } else {
+      resourcesMap.set(product.value, {
+        productVariantId: product.value,
+        isBaseUnitVariant: false,
+        name: product.name,
+        count: product.count
+      });
+    }
+  });
+
+  const conditions = rule.attributes.map(attr => {
+    if (attr?.operator?.code === "IN_BETWEEN") {
+      return `${attr.toValue} <= ${attr.attribute.code} < ${attr.fromValue}`;
+    } else {
+      return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${attr?.value}`;
+    }
+  });
+
+  return {
+    condition: conditions.join(" and "),
+    ProductVariants: rule.products.map(product => ({
+      productVariantId: product.value,
+      name: product.name
+    }))
+  };
+}
+
+function extractAgesFromConditions(condition) {
+  const agePattern = /\b(\d+)\b/g;
+  const matches = condition.match(agePattern);
+  return matches ? matches.map(Number) : []; 
+}
+
 
 function groupByTypeRemap(data) {
   if (!data) return null;
@@ -244,6 +420,17 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const lowestHierarchy = useMemo(() => {
     return hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)?.lowestHierarchy;
   }, [hierarchyConfig]);
+
+  const { data: DeliveryConfig } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    "HCM-PROJECT-TYPES",
+    [{ name: "projectTypes" }],
+    {
+      select: (data) => {
+        return data?.["HCM-PROJECT-TYPES"]?.projectTypes;
+      },
+    }
+  );
 
   const reqCriteria = {
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
@@ -350,8 +537,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         },
       },
       HCM_CAMPAIGN_DELIVERY_DATA: {
-        // deliveryRule: reverseDeliveryRemap(delivery),
-        deliveryRule: delivery,
+        deliveryRule: reverseDeliveryRemap(delivery),
+        // deliveryRule: delivery,
       },
       HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA: {
         boundaryType: {
@@ -417,110 +604,6 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     }
   }, [currentKey]);
 
-  // function restructureData(data) {
-  //   const dateData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleData;
-  //   const restructuredData = [];
-
-  //   data.forEach((cycle) => {
-  //     cycle.deliveries.forEach((delivery, index) => {
-  //       delivery.deliveryRules.forEach((rule) => {
-  //         const restructuredRule = {
-  //           startDate: Digit.Utils.pt.convertDateToEpoch(dateData?.find((i) => i.key == cycle.cycleIndex)?.fromDate, "daystart"), // Hardcoded for now
-  //           endDate: Digit.Utils.pt.convertDateToEpoch(dateData?.find((i) => i?.key == cycle?.cycleIndex)?.toDate), // Hardcoded for now
-  //           cycleNumber: parseInt(cycle.cycleIndex),
-  //           deliveryNumber: parseInt(delivery.deliveryIndex),
-  //           deliveryType: rule?.deliveryType,
-  //           deliveryRuleNumber: parseInt(rule.ruleKey), // New key added
-  //           products: [],
-  //           conditions: [],
-  //         };
-
-  //         rule.attributes.forEach((attribute) => {
-  //           if (attribute?.operator?.code === "IN_BETWEEN") {
-  //             restructuredRule.conditions.push({
-  //               attribute: attribute?.attribute?.code
-  //                 ? attribute?.attribute?.code
-  //                 : typeof attribute?.attribute === "string"
-  //                 ? attribute?.attribute
-  //                 : null,
-  //               operator: "LESS_THAN_EQUAL_TO",
-  //               value: attribute.fromValue ? Number(attribute.fromValue) : null,
-  //             });
-
-  //             restructuredRule.conditions.push({
-  //               attribute: attribute?.attribute?.code
-  //                 ? attribute?.attribute?.code
-  //                 : typeof attribute?.attribute === "string"
-  //                 ? attribute?.attribute
-  //                 : null,
-  //               operator: "GREATER_THAN_EQUAL_TO",
-  //               value: attribute.toValue ? Number(attribute.toValue) : null,
-  //             });
-  //           } else {
-  //             restructuredRule.conditions.push({
-  //               attribute: attribute?.attribute?.code
-  //                 ? attribute?.attribute?.code
-  //                 : typeof attribute?.attribute === "string"
-  //                 ? attribute?.attribute
-  //                 : null,
-  //               operator: attribute.operator ? attribute.operator.code : null,
-  //               value:
-  //                 attribute?.attribute?.code === "Gender" && attribute?.value?.length > 0
-  //                   ? attribute?.value
-  //                   : attribute?.attribute?.code === "TYPE_OF_STRUCTURE"
-  //                   ? attribute?.value
-  //                   : attribute?.value
-  //                   ? Number(attribute?.value)
-  //                   : null,
-  //             });
-  //           }
-  //         });
-
-  //         rule.products.forEach((prod) => {
-  //           restructuredRule.products.push({
-  //             value: prod?.value,
-  //             name: prod?.name,
-  //             count: prod?.count,
-  //           });
-  //         });
-
-  //         restructuredData.push(restructuredRule);
-  //       });
-  //     });
-  //   });
-
-  //   return restructuredData;
-  // }
-
-  function restructureData(inputData) {
-    const result = {
-      cycleIndex: inputData?.cycleIndex,
-      active: inputData?.active,
-      deliveries: inputData?.deliveries?.map((delivery) => ({
-        deliveryIndex: delivery.deliveryIndex,
-        active: delivery.active,
-        deliveryRules: delivery.deliveryRules.map((rule) => ({
-          ruleKey: rule.ruleKey,
-          delivery: rule.delivery,
-          attributes: rule.attributes.map((attr) => ({
-            key: attr.key,
-            attribute: attr.attribute.code, // Directly using code from attribute
-            operator: attr.operator.code, // Directly using code from operator
-            value: attr.value,
-          })),
-          products: rule?.products.map((product) => ({
-            key: product.key,
-            value: product.value,
-            count: product.count,
-            name: product.name,
-          })),
-        })),
-      })),
-    };
-
-    return [result];
-  }
-
 
   function resourceData(facilityData, boundaryData, userData) {
     const resources = [facilityData, boundaryData, userData].filter((data) => data !== null && data !== undefined);
@@ -561,8 +644,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             payloadData.additionalDetails.cycleData = {};
           }
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule?.[0]);
-            payloadData.deliveryRules = temp;
+            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule , totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure , DeliveryConfig);
+            payloadData.deliveryRules =  [temp?.[0]];
             // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
           } else {
             payloadData.deliveryRules = [];
@@ -633,8 +716,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             userId: dataParams?.userId,
           };
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule?.[0]);
-            payloadData.deliveryRules = temp;
+            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule, totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure , DeliveryConfig , totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code);
+            payloadData.deliveryRules =  [temp?.[0]];
             // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
           }
           if (compareIdentical(draftData, payloadData) === false) {
@@ -698,8 +781,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             userId: dataParams?.userId,
           };
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule?.[0]);
-            payloadData.deliveryRules = temp;
+            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule ,  totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure ,DeliveryConfig ,totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code);
+            payloadData.deliveryRules = temp?.[0];
             // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
           }
 
@@ -762,8 +845,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             payloadData.additionalDetails.cycleData = {};
           }
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule?.[0]);
-            payloadData.deliveryRules = temp;
+            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule , totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure , DeliveryConfig ,totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code);
+            payloadData.deliveryRules = [temp?.[0]];
             // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
           } else {
             payloadData.deliveryRules = [];
@@ -1551,8 +1634,6 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       {showToast && (
         <Toast
           type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
-          // info={showToast?.key === "info" ? true : false}
-          // error={showToast?.key === "error" ? true : false}
           label={t(showToast?.label)}
           transitionTime={showToast.transitionTime}
           onClose={closeToast}

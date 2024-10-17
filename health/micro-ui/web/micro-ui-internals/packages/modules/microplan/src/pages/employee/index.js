@@ -13,7 +13,11 @@ import TableNew from "./TablePage";
 import PopInbox from "./PopInbox";
 import UserUpload from "../../components/UserUpload";
 import UserDownload from "./UserDownload";
+<<<<<<< HEAD
 import MyMicroplans from "./MyMicroplans";
+=======
+import ChooseActivity from "./ChooseActivity";
+>>>>>>> f77408738da2b1dc648974c603929535cb58f7ab
 
 
 
@@ -171,7 +175,7 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
          <PrivateRoute path={`${path}/microplan-search`} component={() => <MicroplanSearch></MicroplanSearch>} /> 
          <PrivateRoute path={`${path}/user-management`} component={() => <UserManagement></UserManagement>} />
          <PrivateRoute path={`${path}/user-download`} component={() => <UserDownload/>} />
-
+         <PrivateRoute path={`${path}/select-activity`} component={() => <ChooseActivity/>} />
          <PrivateRoute path={`${path}/campaign-boundary`} component={() => <CampaignBoundary/>} /> 
          <PrivateRoute path={`${path}/test`} component={() => <SearchUnderJurisdiction></SearchUnderJurisdiction>} /> 
          <PrivateRoute path={`${path}/table`} component={() => <TableNew />} />
