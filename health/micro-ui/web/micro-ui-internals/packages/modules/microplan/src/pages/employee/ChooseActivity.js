@@ -73,11 +73,6 @@ const ChooseActivity = () => {
             disable: disableCardBasedOnRole()
         }
       ];
-      
-    // // Filter activityCardData based on userRoles
-    // const filteredActivityCardData = activityCardData.filter((activity) =>
-    //   activity.roles.some(role => !userRoles.includes(role) && activity.roles.length > 0)
-    // );
 
     return (
         <React.Fragment>
