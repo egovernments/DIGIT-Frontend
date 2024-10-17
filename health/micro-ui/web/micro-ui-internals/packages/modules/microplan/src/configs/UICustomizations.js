@@ -51,11 +51,11 @@ export const UICustomizations = {
       // delete data.body.PlanConfigurationSearchCriteria.pagination
       data.body.PlanConfigurationSearchCriteria.status = status?.status;
       cleanObject(data.body.PlanConfigurationSearchCriteria);
-     
-      const dic={'0':null,'1':["DRAFT"],'2':["EXECUTION_TO_BE_DONE"],'3':["CENSUS_DATA_APPROVAL_IN_PROGRESS","CENSUS_DATA_APPROVED","RESOURCE_ESTIMATION_IN_PROGRESS"],"4":["RESOURCE_ESTIMATIONS_APPROVED"]}
-      const url= Digit.Hooks.useQueryParams();
-      
-      data.body.PlanConfigurationSearchCriteria.status=dic[String(url.tabId)];
+
+      const dic = { '0': null, '1': ["DRAFT"], '2': ["EXECUTION_TO_BE_DONE"], '3': ["CENSUS_DATA_APPROVAL_IN_PROGRESS", "CENSUS_DATA_APPROVED", "RESOURCE_ESTIMATION_IN_PROGRESS"], "4": ["RESOURCE_ESTIMATIONS_APPROVED"] }
+      const url = Digit.Hooks.useQueryParams();
+
+      data.body.PlanConfigurationSearchCriteria.status = dic[String(url.tabId)];
       cleanObject(data.body.PlanConfigurationSearchCriteria)
       return data;
     },
@@ -64,25 +64,24 @@ export const UICustomizations = {
         // `/${window.contextPath}/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}`
         return (
           <Dropdown
-          option={[
-            { code: "1", name: "Edit Setup" },
-            { code: "2", name: "View Summary" },
-          ]}
-          select={(e) => {
-            console.log(e, "event"); // e contains the selected option
-            if (e.code === "1") {
-              // Use window.location.href to navigate
-              window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${1}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${row.CampaignDetails.id}`;
-              // console.log("row data",row);
-            }
-            if (e.code === "2") {
-              // Use window.location.href to navigate
-              window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${row.CampaignDetails.id}`;
-            }
-          }}
-          optionKey={"name"}
-          selected={{ code: "1", name: "Actions" }}
-        />
+            option={[
+              { code: "1", name: "Edit Setup" },
+              { code: "2", name: "View Summary" },
+            ]}
+            select={(e) => {
+              console.log(e, "event"); // e contains the selected option
+              if (e.code === "1") {
+                // Use window.location.href to navigate
+                window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${1}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${row.CampaignDetails.id}`;
+              }
+              if (e.code === "2") {
+                // Use window.location.href to navigate
+                window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${row.CampaignDetails.id}`;
+              }
+            }}
+            optionKey={"name"}
+            selected={{ code: "1", name: "Actions" }}
+          />
           // <p>$${value}</p>
 
         );
@@ -129,53 +128,52 @@ export const UICustomizations = {
       // delete data.body.PlanConfigurationSearchCriteria.pagination
       data.body.PlanConfigurationSearchCriteria.status = status?.status;
       cleanObject(data.body.PlanConfigurationSearchCriteria);
-     
-      const dic={'0':null,'1':["DRAFT"],'2':["EXECUTION_TO_BE_DONE"],'3':["CENSUS_DATA_APPROVAL_IN_PROGRESS","CENSUS_DATA_APPROVED","RESOURCE_ESTIMATION_IN_PROGRESS"],"4":["RESOURCE_ESTIMATIONS_APPROVED"]}
-      const url= Digit.Hooks.useQueryParams();
-      
-      data.body.PlanConfigurationSearchCriteria.status=dic[String(url.tabId)];
+
+      const dic = { '0': null, '1': ["DRAFT"], '2': ["EXECUTION_TO_BE_DONE"], '3': ["CENSUS_DATA_APPROVAL_IN_PROGRESS", "CENSUS_DATA_APPROVED", "RESOURCE_ESTIMATION_IN_PROGRESS"], "4": ["RESOURCE_ESTIMATIONS_APPROVED"] }
+      const url = Digit.Hooks.useQueryParams();
+
+      data.body.PlanConfigurationSearchCriteria.status = dic[String(url.tabId)];
       cleanObject(data.body.PlanConfigurationSearchCriteria)
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      console.log("Bye",row);
       if (key === "Actions") {
         // `/${window.contextPath}/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}`
         return (
-          
-            row.status==="DRAFT"?( <Button
-              label={t("WBH_EDIT")}
+
+          row.status === "DRAFT" ? (<Button
+            label={t("WBH_EDIT")}
+            variation="secondary"
+            icon={<EditIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
+            type="button"
+            className="dm-workbench-download-template-btn dm-hover"
+            onButtonClick={(e) => {
+              deleteHandler();
+            }}
+          />) : (row.status === "EXECUTION_TO_BE_DONE") ? (
+            <Button
+              label={t("START")}
               variation="secondary"
-              icon={<EditIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
+              icon={<ArrowForward styles={{ height: "1.25rem", width: "2.5rem" }} />}
               type="button"
               className="dm-workbench-download-template-btn dm-hover"
               onButtonClick={(e) => {
-                  deleteHandler();
+                editHandler();
               }}
-          />):(row.status==="EXECUTION_TO_BE_DONE")?(
+            />
+          ) : (row.status === "RESOURCE_ESTIMATIONS_APPROVED") ? (
             <Button
-                                    label={t("START")}
-                                    variation="secondary"
-                                    icon={<ArrowForward styles={{ height: "1.25rem", width: "2.5rem" }} />}
-                                    type="button"
-                                    className="dm-workbench-download-template-btn dm-hover"
-                                    onButtonClick={(e) => {
-                                        editHandler();
-                                    }}
-                                />
-          ):(row.status==="RESOURCE_ESTIMATIONS_APPROVED")?(
-            <Button
-                                label={t("WBH_DOWNLOAD")}
-                                variation="secondary"
-                                icon={<DownloadIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
-                                type="button"
-                                className="dm-workbench-download-template-btn dm-hover"
-                                onButtonClick={(e) => {
-                                    downloadHandler();
-                                }}
-                            />
-          ):null
-          
+              label={t("WBH_DOWNLOAD")}
+              variation="secondary"
+              icon={<DownloadIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
+              type="button"
+              className="dm-workbench-download-template-btn dm-hover"
+              onButtonClick={(e) => {
+                downloadHandler();
+              }}
+            />
+          ) : null
+
 
         );
       }
@@ -216,7 +214,7 @@ export const UICustomizations = {
 
       // Allow empty mobile number
       if (!phone || phone.trim() === "") {
-        return false; 
+        return false;
       }
 
       // Check if phone matches the regex
@@ -224,7 +222,7 @@ export const UICustomizations = {
         return { error: true, label: "INVALID_MOBILE_NUMBER" }; // Return an error message if invalid
       }
 
-      return false; 
+      return false;
     },
 
 
@@ -232,7 +230,7 @@ export const UICustomizations = {
       const { phone, name } = data?.state?.searchForm || {}
       const { sortOrder } = data?.state?.filterForm || {}
       let { roleschosen } = data?.state?.filterForm || []
-      
+
       if (!roleschosen) {
         roleschosen = {}
       }
@@ -248,12 +246,12 @@ export const UICustomizations = {
       if (roleschosen) {
         rolesString = Object.keys(roleschosen).filter(role => roleschosen[role] === true).join(',');
       }
-      
+
 
       data.params.names = name;
 
       data.params.phone = phone;
-      
+
       data.params.roles = rolesString;
       data.params.tenantId = Digit.ULBService.getCurrentTenantId();
       cleanObject(data.params);
@@ -272,7 +270,7 @@ export const UICustomizations = {
 
         body: {
           MdmsCriteria: {
-            tenantId:  Digit.ULBService.getCurrentTenantId(),
+            tenantId: Digit.ULBService.getCurrentTenantId(),
             filters: {},
             schemaCode: "hcm-microplanning.rolesForMicroplan",
             limit: 10,
@@ -295,7 +293,7 @@ export const UICustomizations = {
                 }
               )
             })
-          
+
             return roles
           },
         },
@@ -305,15 +303,15 @@ export const UICustomizations = {
 
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       if (key === "Role") {
-        return(
-        <div>
-          {value.map((item, index) => (
-            <span key={index} className="dm-code">
-              {t(`MP_ROLE_${item.code}`)}
-              {index < value.length - 1 && ", "}
-            </span>
-          ))}
-        </div>
+        return (
+          <div>
+            {value.map((item, index) => (
+              <span key={index} className="dm-code">
+                {t(`MP_ROLE_${item.code}`)}
+                {index < value.length - 1 && ", "}
+              </span>
+            ))}
+          </div>
         );
 
 

@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 const BoundaryKpi = ({ data }) => {
   const { state: { boundaryHierarchy } } = useMyContext()
   const { t } = useTranslation();
-  console.log("datatat",data);
   return (
     <Card className="kpi-container">
       {Object.keys(data).map((key) => {
