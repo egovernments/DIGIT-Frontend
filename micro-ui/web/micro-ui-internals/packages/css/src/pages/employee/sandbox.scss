@@ -840,9 +840,13 @@ digit-card-text.center {
   min-width: 18.75rem; 
 }
 
-.role-button {
-  margin-top: 0.625rem; 
-  width: 100%;
+.role-action-container{
+  .role-card{
+    .digit-button-primary .large .role-button {
+      width: 100%;
+      margin-bottom: 0.625rem; 
+  }
+  }
 }
 
 @media (max-width: 768px) {
@@ -851,10 +855,15 @@ digit-card-text.center {
       align-items: center;
   }
 
-  .role-card {
-      width: 100%;
-      margin-bottom: 0.625rem; 
+  .role-action-container{
+    .role-card{
+      .digit-button-primary .large .role-button {
+        width: 100%;
+        margin-bottom: 0.625rem; 
+    }
+    }
   }
+
 }
 
 
@@ -863,3 +872,4 @@ digit-card-text.center {
     margin-left: 0.5rem;
   }
 }
+
