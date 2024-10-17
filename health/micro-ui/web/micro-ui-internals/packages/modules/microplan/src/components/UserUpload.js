@@ -387,7 +387,8 @@ const UserUpload = React.memo(() => {
             action: "create",
             campaignId: id,
             additionalDetails: {
-              source: "microplan"
+              source: "microplan",
+              fileName: fileName
             }
           }
         }
