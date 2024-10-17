@@ -55,7 +55,8 @@ export const UICustomizations = {
       const dic = { '0': null, '1': ["DRAFT"], '2': ["EXECUTION_TO_BE_DONE"], '3': ["CENSUS_DATA_APPROVAL_IN_PROGRESS", "CENSUS_DATA_APPROVED", "RESOURCE_ESTIMATION_IN_PROGRESS"], "4": ["RESOURCE_ESTIMATIONS_APPROVED"] }
       const url = Digit.Hooks.useQueryParams();
 
-      data.body.PlanConfigurationSearchCriteria.status = dic[String(url.tabId)];
+      const tabId = url.tabId ?? '0'; // Default to '0' if tabId is undefined
+      data.body.PlanConfigurationSearchCriteria.status = dic[String(tabId)];
       cleanObject(data.body.PlanConfigurationSearchCriteria)
       return data;
     },
@@ -132,7 +133,8 @@ export const UICustomizations = {
       const dic = { '0': null, '1': ["DRAFT"], '2': ["EXECUTION_TO_BE_DONE"], '3': ["CENSUS_DATA_APPROVAL_IN_PROGRESS", "CENSUS_DATA_APPROVED", "RESOURCE_ESTIMATION_IN_PROGRESS"], "4": ["RESOURCE_ESTIMATIONS_APPROVED"] }
       const url = Digit.Hooks.useQueryParams();
 
-      data.body.PlanConfigurationSearchCriteria.status = dic[String(url.tabId)];
+      const tabId = url.tabId ?? '0'; // Default to '0' if tabId is undefined
+      data.body.PlanConfigurationSearchCriteria.status = dic[String(tabId)];
       cleanObject(data.body.PlanConfigurationSearchCriteria)
       return data;
     },
@@ -148,7 +150,7 @@ export const UICustomizations = {
             type="button"
             className="dm-workbench-download-template-btn dm-hover"
             onButtonClick={(e) => {
-              deleteHandler();
+              
             }}
           />) : (row.status === "EXECUTION_TO_BE_DONE") ? (
             <Button
@@ -158,7 +160,7 @@ export const UICustomizations = {
               type="button"
               className="dm-workbench-download-template-btn dm-hover"
               onButtonClick={(e) => {
-                editHandler();
+                
               }}
             />
           ) : (row.status === "RESOURCE_ESTIMATIONS_APPROVED") ? (
@@ -169,7 +171,7 @@ export const UICustomizations = {
               type="button"
               className="dm-workbench-download-template-btn dm-hover"
               onButtonClick={(e) => {
-                downloadHandler();
+                
               }}
             />
           ) : null

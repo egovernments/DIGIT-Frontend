@@ -36,7 +36,7 @@ const MicroplanCard = () => {
     return {
       label: t(labelKey),
       link: `/${window?.contextPath}/employee/microplan/${pathSuffix}`,
-      roles: ROLES.MICROPLAN,
+      roles: ROLES.OTHERS,
     };
   };
 
