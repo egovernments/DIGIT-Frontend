@@ -83,67 +83,159 @@ function getOperatorSymbol(operator) {
   return operatorMapping[operator] || ""; // Default to empty if not found
 }
 
-function restructureData(data, cycle, DeliveryConfig, projectType) {
-  const tt = DeliveryConfig?.find((e) => e.code === String(projectType));
+// function restructureData(data, cycleData, DeliveryConfig, projectType) {
+//   const tt = DeliveryConfig?.find((e) => e.code === String(projectType));
 
-  if (tt) {
-    delete tt.cycles;   // Remove old cycles
-    delete tt.resources;  // Remove old resources
+//   console.log("tt" , data , cycleData , tt);
+
+//   if (tt) {
+//     delete tt.cycles;   // Remove old cycles
+//     delete tt.resources;  // Remove old resources
+//   }
+
+//   const resourcesMap = new Map();
+
+//   const cycles = data.map(cycle => ({
+//     mandatoryWaitSinceLastCycleInDays: null,
+//     startDate: Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[0]?.fromDate),
+//     endDate: Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[0]?.toDate),
+//     id: parseInt(cycle.cycleIndex, 10),
+//     deliveries: cycle?.deliveries?.map(delivery => ({
+//       id: parseInt(delivery.deliveryIndex, 10),
+//       deliveryStrategy: delivery.deliveryStrategy || "DIRECT",
+//       mandatoryWaitSinceLastDeliveryInDays: null,
+//       doseCriteria: delivery.deliveryRules.map(rule => {
+//         // Consolidate product variants for the resources array
+//         rule.products.forEach(product => {
+//           if (resourcesMap.has(product.value)) {
+//             resourcesMap.get(product.value).count += product.count;
+//           } else {
+//             resourcesMap.set(product.value, {
+//               productVariantId: product.value,
+//               isBaseUnitVariant: false,
+//               name: product.name
+//             });
+//           }
+//         });
+
+//         // Build the condition string, handling IN_BETWEEN separately
+//         const conditions = rule.attributes.map(attr => {
+//           if (attr?.operator?.code === "IN_BETWEEN") {
+//             return `${attr.toValue} <= ${attr.attribute.code} < ${attr.fromValue}`;
+//           } else {
+//             return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${attr?.value}`;
+//           }
+//         });
+
+//         return {
+//           condition: conditions.join(" and "),
+//           ProductVariants: rule.products.map(product => ({
+//             productVariantId: product.value,
+//             name: product.name
+//           }))
+//         };
+//       })
+//     }))
+//   }));
+
+//   const resources = Array.from(resourcesMap.values());
+
+//   if (tt) {
+//     tt.cycles = cycles;
+//     tt.resources = resources;
+//   }
+
+//   console.log("ttoo" , tt);
+//   return [tt];
+// }
+
+function restructureData(data, cycleData, DeliveryConfig, projectType) {
+  const deliveryConfig = DeliveryConfig?.find((e) => e.code === String(projectType));
+  if (deliveryConfig) {
+    delete deliveryConfig.cycles;   
+    delete deliveryConfig.resources;  
   }
 
   const resourcesMap = new Map();
+  const ageInfo = { maxAge: -Infinity, minAge: Infinity };  
 
-  const cycles = data.map(cycle => ({
-    mandatoryWaitSinceLastCycleInDays: null,
-    startDate: Digit.Utils.pt.convertDateToEpoch(cycle?.cycleData?.[0]?.fromDate),
-    endDate: Digit.Utils.pt.convertDateToEpoch(cycle?.cycleData?.[0]?.toDate),
-    id: parseInt(cycle.cycleIndex, 10),
-    deliveries: cycle.deliveries.map(delivery => ({
-      id: parseInt(delivery.deliveryIndex, 10),
-      deliveryStrategy: delivery.deliveryStrategy || "DIRECT",
-      mandatoryWaitSinceLastDeliveryInDays: null,
-      doseCriteria: delivery.deliveryRules.map(rule => {
-        // Consolidate product variants for the resources array
-        rule.products.forEach(product => {
-          if (resourcesMap.has(product.value)) {
-            resourcesMap.get(product.value).count += product.count;
-          } else {
-            resourcesMap.set(product.value, {
-              productVariantId: product.value,
-              isBaseUnitVariant: false,
-              name: product.name
-            });
-          }
-        });
+  const cycles = data.map(cycle => {
+    const cycleStartDate = Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[0]?.fromDate);
+    const cycleEndDate = Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[0]?.toDate);
 
-        // Build the condition string, handling IN_BETWEEN separately
-        const conditions = rule.attributes.map(attr => {
-          if (attr?.operator?.code === "IN_BETWEEN") {
-            return `${attr.toValue} <= ${attr.attribute.code} < ${attr.fromValue}`;
-          } else {
-            return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${attr?.value}`;
-          }
-        });
-
-        return {
-          condition: conditions.join(" and "),
-          ProductVariants: rule.products.map(product => ({
-            productVariantId: product.value,
-            name: product.name
-          }))
-        };
-      })
-    }))
-  }));
+    return {
+      mandatoryWaitSinceLastCycleInDays: null,
+      startDate: cycleStartDate,
+      endDate: cycleEndDate,
+      id: parseInt(cycle.cycleIndex, 10),
+      deliveries: cycle?.deliveries?.map(delivery => processDelivery(delivery, resourcesMap, ageInfo))
+    };
+  });
 
   const resources = Array.from(resourcesMap.values());
-
-  if (tt) {
-    tt.cycles = cycles;
-    tt.resources = resources;
+  if (deliveryConfig) {
+    deliveryConfig.cycles = cycles;
+    deliveryConfig.resources = resources;
+    deliveryConfig.validMaxAge = ageInfo.maxAge === -Infinity ? null : ageInfo.maxAge; 
+    deliveryConfig.validMinAge = ageInfo.minAge === Infinity ? null : ageInfo.minAge; 
   }
-  return [tt];
+  return [deliveryConfig];
 }
+
+function processDelivery(delivery, resourcesMap, ageInfo) {
+
+  return {
+    id: parseInt(delivery.deliveryIndex, 10),
+    deliveryStrategy: delivery.deliveryStrategy || "DIRECT",
+    mandatoryWaitSinceLastDeliveryInDays: null,
+    doseCriteria: delivery.deliveryRules.map(rule => {
+      const doseCriteriaResult = processDoseCriteria(rule, resourcesMap);
+      const ages = extractAgesFromConditions(doseCriteriaResult.condition);
+      if (ages.length > 0) { 
+        ageInfo.maxAge = Math.max(ageInfo.maxAge, ...ages);
+        ageInfo.minAge = Math.min(ageInfo.minAge, ...ages);
+      }
+      return doseCriteriaResult;
+    })
+  };
+}
+function processDoseCriteria(rule, resourcesMap) {
+  rule.products.forEach(product => {
+    if (resourcesMap.has(product.value)) {
+      resourcesMap.get(product.value).count += product.count;
+    } else {
+      resourcesMap.set(product.value, {
+        productVariantId: product.value,
+        isBaseUnitVariant: false,
+        name: product.name,
+        count: product.count
+      });
+    }
+  });
+
+  const conditions = rule.attributes.map(attr => {
+    if (attr?.operator?.code === "IN_BETWEEN") {
+      return `${attr.toValue} <= ${attr.attribute.code} < ${attr.fromValue}`;
+    } else {
+      return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${attr?.value}`;
+    }
+  });
+
+  return {
+    condition: conditions.join(" and "),
+    ProductVariants: rule.products.map(product => ({
+      productVariantId: product.value,
+      name: product.name
+    }))
+  };
+}
+
+function extractAgesFromConditions(condition) {
+  const agePattern = /\b(\d+)\b/g;
+  const matches = condition.match(agePattern);
+  return matches ? matches.map(Number) : []; 
+}
+
 
 function groupByTypeRemap(data) {
   if (!data) return null;
@@ -455,7 +547,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
           }
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
             const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule , totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure , DeliveryConfig);
-            payloadData.deliveryRules = temp?.[0];
+            payloadData.deliveryRules =  [temp?.[0]];
             // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
           } else {
             payloadData.deliveryRules = [];
@@ -527,7 +619,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
           };
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
             const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule, totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure , DeliveryConfig , totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code);
-            payloadData.deliveryRules = temp;
+            payloadData.deliveryRules =  [temp?.[0]];
             // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
           }
           if (compareIdentical(draftData, payloadData) === false) {

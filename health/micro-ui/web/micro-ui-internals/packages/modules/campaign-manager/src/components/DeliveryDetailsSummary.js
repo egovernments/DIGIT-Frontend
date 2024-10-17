@@ -93,88 +93,86 @@ function reverseDeliveryRemap(data, t) {
     ">": "GREATER_THAN",
     "==": "EQUAL_TO",
     "!=": "NOT_EQUAL_TO",
-     "IN_BETWEEN": "IN_BETWEEN"
+    IN_BETWEEN: "IN_BETWEEN",
   };
 
   const cycles = data?.[0]?.cycles || [];
-  const transformedCycles = cycles.map((cycle) => {
-    const deliveries = cycle.deliveries?.map((delivery, deliveryIndex) => {
-        const doseCriteria = delivery.doseCriteria?.flatMap((criteria, ruleKey) => {
-            const products = criteria.ProductVariants.map((variant, key) => ({
-                key: key + 1,
-                count: 1,
-                value: variant.productVariantId,
-                name: variant.name
-            }));
+  const mapProductVariants = (productVariants) => {
+    return productVariants.map((variant, key) => ({
+      key: key + 1,
+      count: 1,
+      value: variant.productVariantId,
+      name: variant.name,
+    }));
+  };
 
-            const condition = criteria.condition;
-            let conditionParts = condition.split("and").map(part => part.trim()); // Split by 'and' and trim spaces
-            let rules = [];
+  const parseConditionAndCreateRules = (condition, ruleKey, products) => {
+    const conditionParts = condition.split("and").map((part) => part.trim());
+    let rules = [];
 
-            // Iterate over each part of the condition if split by 'and'
-            conditionParts.forEach((part) => {
-                const parts = part.split(' ').filter(Boolean); // Split by space and remove empty strings
+    conditionParts.forEach((part) => {
+      const parts = part.split(" ").filter(Boolean);
+      let attributes = [];
 
-                let attributes = [];
-                if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
-                    // Handle IN_BETWEEN case
-                    const toValue = parts[0];
-                    const fromValue = parts[4];
-                    attributes.push({
-                        key: 1, // Incrementing key for each attribute
-                        operator: { code: operatorMapping["IN_BETWEEN"] },
-                        attribute: { code: parts[2] },
-                        fromValue,
-                        toValue
-                    });
-                } else {
-                    // Parse single conditions using regex
-                    const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
-                    if (match) {
-                        const attributeCode = match[1].trim();
-                        const operatorSymbol = match[2].trim();
-                        const value = match[3].trim();
-                        attributes.push({
-                            key: attributes.length + 1, // Incrementing key for each attribute
-                            value,
-                            operator: { code: operatorMapping[operatorSymbol] },
-                            attribute: { code: attributeCode }
-                        });
-                    }
-                }
-
-                // Add each part as a new delivery rule
-                rules.push({
-                    ruleKey: ruleKey + 1, 
-                    delivery: {},
-                    products,
-                    attributes
-                });
-            });
-
-            return rules; 
+      // Handle "IN_BETWEEN" operator
+      if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
+        const toValue = parts[0];
+        const fromValue = parts[4];
+        attributes.push({
+          key: 1,
+          operator: { code: operatorMapping["IN_BETWEEN"] },
+          attribute: { code: parts[2] },
+          fromValue,
+          toValue,
         });
-
-        return {
-            active: true,
-            deliveryIndex: String(deliveryIndex + 1), 
-            deliveryRules: doseCriteria 
-        };
+      } else {
+     
+        const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
+        if (match) {
+          const attributeCode = match[1].trim();
+          const operatorSymbol = match[2].trim();
+          const value = match[3].trim();
+          attributes.push({
+            key: attributes.length + 1,
+            value,
+            operator: { code: operatorMapping[operatorSymbol] },
+            attribute: { code: attributeCode },
+          });
+        }
+      }
+      rules.push({
+        ruleKey: ruleKey + 1,
+        delivery: {},
+        products,
+        attributes,
+      });
     });
 
-    return {
-        active: true,
-        cycleIndex: String(cycle.id), // Include cycleIndex as string
-        deliveries: deliveries
-    };
-});
+    return rules;
+  };
+  const mapDoseCriteriaToDeliveryRules = (doseCriteria) => {
+    return doseCriteria?.flatMap((criteria, ruleKey) => {
+      const products = mapProductVariants(criteria.ProductVariants);
+      return parseConditionAndCreateRules(criteria.condition, ruleKey, products);
+    });
+  };
 
-// Return the transformed cycles data
-return transformedCycles;
+  const mapDeliveries = (deliveries) => {
+    return deliveries?.map((delivery, deliveryIndex) => ({
+      active: true,
+      deliveryIndex: String(deliveryIndex + 1),
+      deliveryRules: mapDoseCriteriaToDeliveryRules(delivery.doseCriteria),
+    }));
+  };
 
+  const transformedCycles = cycles.map((cycle) => ({
+    active: true,
+    cycleIndex: String(cycle.id),
+    deliveries: mapDeliveries(cycle.deliveries),
+  }));
 
+  return transformedCycles;
 }
-
 const fetchResourceFile = async (tenantId, resourceIdArr) => {
   const res = await Digit.CustomService.getResponse({
     url: `/project-factory/v1/data/_search`,
