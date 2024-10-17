@@ -177,7 +177,6 @@ const App = ({ path, stateCode, userType, tenants,BOUNDARY_HIERARCHY_TYPE, hiera
          <PrivateRoute path={`${path}/table`} component={() => <TableNew />} />
          <PrivateRoute path={`${path}/pop-inbox`} component={() => <PopInbox />} />
          <PrivateRoute path={`${path}/upload-user`} component={() => <UserUpload/>} /> 
-
       </AppContainer>
     </Switch>
   );
