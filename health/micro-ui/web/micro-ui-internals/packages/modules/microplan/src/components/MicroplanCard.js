@@ -5,10 +5,7 @@ import { useTranslation } from "react-i18next";
 
 const ROLES = {
   MICROPLAN: ["MICROPLAN_ADMIN"],
-};
-
-const OTHERS={
-  OTHERS:[
+  SUPERVISOR:[
     "PLAN_ESTIMATION_APPROVER",
     "ROOT_PLAN_ESTIMATION_APPROVER",
     "POPULATION_DATA_APPROVER",
@@ -17,8 +14,9 @@ const OTHERS={
     "ROOT_FACILITY_CATCHMENT_MAPPER",
     "MICROPLAN_VIEWER"
   ]
+};
 
-}
+
 
 const MicroplanCard = () => {
   const { t } = useTranslation();
@@ -36,7 +34,7 @@ const MicroplanCard = () => {
     return {
       label: t(labelKey),
       link: `/${window?.contextPath}/employee/microplan/${pathSuffix}`,
-      roles: ROLES.OTHERS,
+      roles: ROLES.SUPERVISOR,
     };
   };
 
