@@ -47,59 +47,6 @@ const getDeliveryConfig = ({ data, projectType }) => {
     return { operatorValue, value };
   }
 
-  const generateMRDNConfig = (deliveries, projectType) => {
-    return deliveries?.map((delivery) => {
-      return {
-        delivery: delivery.id,
-        conditionConfig: delivery.doseCriteria.map((criteria, index) => {
-          const conditions = criteria.condition.split("and");
-  
-          const attributeConfig = conditions.map((conditionStr, conditionIndex) => {
-            const { operatorValue, value } = parseCondition(conditionStr);
-  
-            let fromValue = null;
-            let toValue = null;
-            if (operatorValue === "IN_BETWEEN") {
-              fromValue = Number(value.minValue);
-              toValue = Number(value.maxValue);
-            } else {
-              fromValue = Number(value.comparisonValue);
-              toValue = null;
-            }
-  
-            return {
-              key: index + conditionIndex + 1,
-              label: "Custom",
-              attrType: criteria.attrType || "dropdown",
-              attrValue: value?.variable,
-              operatorValue: operatorValue,
-              fromValue: fromValue,
-              toValue: toValue ? toValue - 1 : null,
-            };
-          });
-          const productConfig = criteria.ProductVariants.map(async (variant, i) => {
-            const productName = await useProductVariantSearch({ variantId: variant.productVariantId, tenantId: "mz" });
-  
-            return {
-              key: i + 1,
-              count: variant.quantity,
-              value: variant.productVariantId,
-              name: productName || "Product Name",
-            };
-          });
-  
-          return {
-            disableDeliveryType: delivery.deliveryStrategy === "DIRECT",
-            deliveryType: delivery.deliveryStrategy,
-            attributeConfig: attributeConfig, 
-            productConfig: productConfig,
-          };
-        }),
-      };
-    });
-  };
-  
-
   const generateBednetConfig = (deliveries, projectType) => {
     return deliveries?.map((delivery) => {
       const productSet = new Set();
@@ -150,10 +97,54 @@ const getDeliveryConfig = ({ data, projectType }) => {
     });
   };
   
+
+  const generateMRDNConfig = (deliveries) => {
+    const deliveryConfig = deliveries.map((delivery, deliveryIndex) => {
+      return {
+        delivery: delivery.id, 
+        conditionConfig: delivery.deliveries.map((deliveryItem, conditionIndex) => {
+          return {
+            disableDeliveryType: deliveryItem.deliveryStrategy === "DIRECT",
+            deliveryType: deliveryItem.deliveryStrategy,
+            attributeConfig: deliveryItem.doseCriteria.map((criteria, attrIndex) => {
+              const { operatorValue, value } = parseCondition(criteria.condition);
+  
+              return {
+                key: `${conditionIndex + 1}-${attrIndex + 1}`, 
+                label: "Custom",
+                attrType: criteria.attrType || "dropdown",
+                attrValue: value.variable, 
+                operatorValue,
+                fromValue: Number(value.minValue),
+                toValue: Number(value.maxValue) - 1
+              };
+            }),
+            productConfig: deliveryItem.doseCriteria.flatMap((criteria, prodIndex) => {
+              return criteria.ProductVariants.map((variant, varIndex) => {
+                // if(variant?.productVariantId){
+                //   productName = useProductVariantSearch({ variantId: variant.productVariantId, tenantId: "mz" });
+                // }
+                // const productName = useProductVariantSearch({ variantId: variant.productVariantId, tenantId: "mz" });
+  
+                return {
+                  key: `${conditionIndex + 1}-${varIndex + 1}`,
+                  count: variant.quantity,
+                  value: variant.productVariantId,
+                  name: "Product Name"
+                };
+              });
+            })
+          };
+        })
+      };
+    });
+    return deliveryConfig;
+  };
+  
   const deliveryConfig = ({ data, projectType }) => {
     switch (projectType) {
       case "MR-DN":
-        return generateMRDNConfig(data?.cycles?.[0]?.deliveries, projectType);
+        return generateMRDNConfig(data?.cycles, projectType);
       case "LLIN-mz":
       case "IRS-mz":
         return generateBednetConfig(data?.cycles?.[0]?.deliveries, projectType);
@@ -164,11 +155,17 @@ const getDeliveryConfig = ({ data, projectType }) => {
 
   function convertToConfig(data) {
     return {
+      beneficiaryType: data?.beneficiaryType, 
+      code: data?.code,
       projectType: data?.code,
       attrAddDisable: data?.attrAddDisable || false,
       deliveryAddDisable: data?.deliveryAddDisable || false,
       customAttribute: data?.customAttribute || true,
       productCountHide: data?.productCountHide || false,
+      eligibilityCriteria: data?.eligibilityCriteria,
+      dashboardUrls: data?.dashboardUrls,
+      taskProcedure: data?.taskProcedure,
+      resources: data?.resources,
       cycleConfig: {
         cycle: data?.cycles?.length || 1,
         deliveries: data?.cycles?.[0]?.deliveries?.length || 1,
