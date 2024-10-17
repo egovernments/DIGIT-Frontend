@@ -80,7 +80,7 @@ export const useResourceData = async (data, hierarchyType, type, tenantId, id , 
   const baseDelay = baseTimeOut?.baseTimeout?.[0]?.baseTimeOut;
   const maxTime = baseTimeOut?.baseTimeout?.[0]?.maxTime;
   let retryInterval = Math.min(baseDelay * jsonDataLength , maxTime);
-  if(typeof retryInterval == "number"){
+  if(typeof retryInterval !== "number"){
     retryInterval = 1000;
   }
 
