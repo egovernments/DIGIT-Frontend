@@ -1,10 +1,12 @@
 import { Button, Dropdown } from "@egovernments/digit-ui-components";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const ChangeLanguage = (prop) => {
   const isDropdown = prop.dropdown || false;
   const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
   const { languages, stateInfo } = storeData || {};
+  const { t } = useTranslation();
   const selectedLanguage = Digit.StoreData.getCurrentLanguage();
   const [selected, setselected] = useState(selectedLanguage);
   const handleChangeLanguage = (language) => {
@@ -24,7 +26,7 @@ const ChangeLanguage = (prop) => {
           optionKey={"label"}
           select={handleChangeLanguage}
           freeze={true}
-          customSelector={<label className="cp">{languages?.find((language) => language?.value === selected)?.label}</label>}
+          customSelector={<label className="cp">{t(languages?.find((language) => language?.value === selected)?.label)}</label>}
         />
       </div>
     );
