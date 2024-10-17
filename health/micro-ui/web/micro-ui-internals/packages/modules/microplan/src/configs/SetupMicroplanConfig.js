@@ -94,7 +94,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
         {
           stepCount: "3",
           key: "4",
-          name: "UPLOADDATA",
+          name: "UPLOADBOUNDARYDATA",
           body: [
             {
               isMandatory: false,
@@ -122,7 +122,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
         {
           stepCount: "3",
           key: "5",
-          name: "UPLOADDATA",
+          name: "UPLOADFACILITYDATA",
           body: [
             {
               isMandatory: false,

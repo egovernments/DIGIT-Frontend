@@ -8,6 +8,7 @@ import useCreateCampaign from "./useCreateCampaign";
 import useUpdateCampaign from "./useUpdateCampaign";
 import useCreateUpdatePlanProject from "./useCreateUpdatePlanProject";
 import utils from "../utils/utilities";
+import useFileDownload from "./useFileDownload";
 import useSearchHRMSEmployee from "./useSearchHRMSEmployee";
 
 const microplanv1 = {
@@ -21,6 +22,7 @@ const microplanv1 = {
   useUpdateCampaign,
   useCreateUpdatePlanProject,
   useSearchHRMSEmployee,
+  useFileDownload,
 };
 
 const Hooks = {

@@ -314,7 +314,7 @@ const UpdateBoundary = ({hierarchyData }) => {
           let payloadData = { ...draftData };
           payloadData.hierarchyType = hierarchyType;
           payloadData.endDate = CampaignData?.CampaignDetails?.[0]?.endDate;
-          payloadData.startDate = CampaignData?.CampaignDetails?.[0]?.startDate;;
+          payloadData.startDate = CampaignData?.CampaignDetails?.[0]?.startDate;
           payloadData.tenantId = tenantId;
           payloadData.action = "create";
           payloadData.parentId = parentId;
@@ -600,45 +600,8 @@ const UpdateBoundary = ({hierarchyData }) => {
           setShowToast(null);
           return true;
         }
-
-      case "cycleConfigure":
-        const cycleNumber = formData?.cycleConfigure?.cycleConfgureDate?.cycle;
-        const deliveryNumber = formData?.cycleConfigure?.cycleConfgureDate?.deliveries;
-        if (cycleNumber === "" || cycleNumber === 0 || deliveryNumber === "" || deliveryNumber === 0) {
-          setShowToast({ key: "error", label: "DELIVERY_CYCLE_ERROR" });
-          return false;
-        } else {
-          setShowToast(null);
-          return true;
-        }
-      case "deliveryRule":
-        const isAttributeValid = checkAttributeValidity(formData);
-        if (isAttributeValid) {
-          setShowToast({ key: "error", label: isAttributeValid });
-          return false;
-        }
-        setShowToast(null);
-        return;
-        case "DeliveryDetailsSummary":
-        const cycleConfigureData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE;
-        const isCycleError = validateCycleData(cycleConfigureData);
-        const deliveryCycleData = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA;
-        const isDeliveryError = validateDeliveryRules(
-          deliveryCycleData,
-          totalFormData?.["HCM_CAMPAIGN_TYPE"]?.projectType?.code?.toUpperCase(),
-          cycleConfigureData
-        );
-        if (isCycleError?.length > 0) {
-          setShowToast({ key: "error", label: "DELIVERY_CYCLE_MISMATCH_LENGTH_ERROR" });
-          return false;
-        }
-        if (isDeliveryError === false) {
-          setShowToast({ key: "error", label: "DELIVERY_RULES_ERROR" });
-          return false;
-        }
-        setShowToast(null);
-        return true;
-        case "DataUploadSummary":
+      case "summary":
+        const updateBoundary = restructureBoundaryData(totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData);
         const isTargetError = totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.filestoreId
           ? false
           : (setSummaryErrors((prev) => {
@@ -681,6 +644,10 @@ const UpdateBoundary = ({hierarchyData }) => {
               };
             }),
             true);
+        if (updateBoundary.length === 0 && isTargetError && isFacilityError && isUserError) {
+          setShowToast({ key: "error", label: "AT_LEAST_ONE_FILE_REQUIRED_ERROR" });
+          return false;
+        }
         if (isTargetError) {
           setShowToast({ key: "error", label: "TARGET_DETAILS_ERROR" });
           return false;
@@ -693,79 +660,6 @@ const UpdateBoundary = ({hierarchyData }) => {
           setShowToast({ key: "error", label: "USER_DETAILS_ERROR" });
           return false;
         }
-        setShowToast(null);
-        return true;
-      case "summary":
-        // const cycleConfigureData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE;
-        // const isCycleError = validateCycleData(cycleConfigureData);
-        // const deliveryCycleData = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA;
-        // const isDeliveryError = validateDeliveryRules(
-        //   deliveryCycleData,
-        //   totalFormData?.["HCM_CAMPAIGN_TYPE"]?.projectType?.code?.toUpperCase(),
-        //   cycleConfigureData
-        // );
-        // const isTargetError = totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.filestoreId
-        //   ? false
-        //   : (setSummaryErrors((prev) => {
-        //       return {
-        //         ...prev,
-        //         target: [
-        //           {
-        //             name: `target`,
-        //             error: t(`TARGET_FILE_MISSING`),
-        //           },
-        //         ],
-        //       };
-        //     }),
-        //     true);
-        // const isFacilityError = totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.filestoreId
-        //   ? false
-        //   : (setSummaryErrors((prev) => {
-        //       return {
-        //         ...prev,
-        //         facility: [
-        //           {
-        //             name: `facility`,
-        //             error: t(`FACILITY_FILE_MISSING`),
-        //           },
-        //         ],
-        //       };
-        //     }),
-        //     true);
-        // const isUserError = totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]?.filestoreId
-        //   ? false
-        //   : (setSummaryErrors((prev) => {
-        //       return {
-        //         ...prev,
-        //         user: [
-        //           {
-        //             name: `user`,
-        //             error: t(`USER_FILE_MISSING`),
-        //           },
-        //         ],
-        //       };
-        //     }),
-        //     true);
-        // if (isCycleError?.length > 0) {
-        //   setShowToast({ key: "error", label: "DELIVERY_CYCLE_MISMATCH_LENGTH_ERROR" });
-        //   return false;
-        // }
-        // if (isDeliveryError === false) {
-        //   setShowToast({ key: "error", label: "DELIVERY_RULES_ERROR" });
-        //   return false;
-        // }
-        // if (isTargetError) {
-        //   setShowToast({ key: "error", label: "TARGET_DETAILS_ERROR" });
-        //   return false;
-        // }
-        // if (isFacilityError) {
-        //   setShowToast({ key: "error", label: "FACILITY_DETAILS_ERROR" });
-        //   return false;
-        // }
-        // if (isUserError) {
-        //   setShowToast({ key: "error", label: "USER_DETAILS_ERROR" });
-        //   return false;
-        // }
         setShowToast(null);
         return true;
       default:
