@@ -99,12 +99,28 @@ const Otp = ({ isLogin = false }) => {
     Digit.UserService.setUser(user);
     setEmployeeDetail(user?.info, user?.access_token);
     let redirectPath = `/${window?.globalPath}/user/setup`;
-    const redirectPathOtpLogin = 
-    location.pathname === "/sandbox-ui/user/otp" && user?.info?.roles?.[0].code === "SUPERUSER"
-    ? `/${window?.contextPath}/employee/user/landing`
-    : user?.info?.roles?.[0].code === "SUPERUSER" && MdmsRes?.[0]?.rolesForLandingPage?.includes("SUPERUSER")
-    ? `/${window?.contextPath}${RoleLandingUrl}`
-    : `/${window?.contextPath}/employee`;
+
+
+    const getRedirectPathOtpLogin = (locationPathname, user, MdmsRes, RoleLandingUrl) => {
+      const userRole = user?.info?.roles?.[0]?.code;
+      const isSuperUser = userRole === "SUPERUSER";
+      const contextPath = window?.contextPath;
+  
+      switch (true) {
+          case locationPathname === "/sandbox-ui/user/otp" && isSuperUser:
+              return `/${contextPath}/employee/user/landing`;
+  
+          case isSuperUser && MdmsRes?.[0]?.rolesForLandingPage?.includes("SUPERUSER"):
+              return `/${contextPath}${RoleLandingUrl}`;
+  
+          default:
+              return `/${contextPath}/employee`;
+      }
+  };
+  
+  // Usage
+  const redirectPathOtpLogin = getRedirectPathOtpLogin(location.pathname, user, MdmsRes, RoleLandingUrl);
+
 
     if (isLogin) {
       history.push(redirectPathOtpLogin);

@@ -38,8 +38,14 @@ const ViewUrl = () => {
   }, [MdmsRes]);
 
   const RoleLandingUrl= MdmsRes?.[0].url;
+
+  const roleForLandingPage = (getUserRoles, MdmsRes) => {
+    const userRole = getUserRoles?.[0]?.code;
+    return userRole === "SUPERUSER" && MdmsRes.some(page => page.rolesForLandingPage.includes("SUPERUSER"));
+};
+
   const onButtonClick = () => {
-    if(getUserRoles?.[0].code === "SUPERUSER" && MdmsRes.some(page => page.rolesForLandingPage.includes("SUPERUSER"))){
+    if(roleForLandingPage(getUserRoles, MdmsRes)){
       window.location.href = `/${window?.globalPath}/${tenant}${RoleLandingUrl}`;
     }
     else{
