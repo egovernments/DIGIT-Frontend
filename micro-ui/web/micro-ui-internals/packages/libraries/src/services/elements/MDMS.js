@@ -728,6 +728,7 @@ const getHrmsEmployeeRolesandDesignations = () => ({
       masterDetails: [
         { name: "Department", filter: "[?(@.active == true)]" },
         { name: "Designation", filter: "[?(@.active == true)]" },
+        { name : "hierarchyType"}
       ],
     },
     {
@@ -738,7 +739,7 @@ const getHrmsEmployeeRolesandDesignations = () => ({
       moduleName: "ACCESSCONTROL-ROLES",
       masterDetails: [{ name: "roles", filter: "$.[?(@.code!='CITIZEN')]" }],
     },
-    { moduleName: "egov-location", masterDetails: [{ name: "TenantBoundary" }] },
+    // { moduleName: "egov-location", masterDetails: [{ name: "TenantBoundary" }] },
   ],
 });
 const getFSTPPlantCriteria = (tenantId, moduleCode, type) => ({
@@ -1474,7 +1475,7 @@ export const MdmsService = {
   init: (stateCode) =>
     ServiceRequest({
       serviceName: "mdmsInit",
-      url: Urls.MDMS,
+      url: Urls.MDMS_V2,
       data: initRequestBody(stateCode),
       useCache: true,
       params: { tenantId: stateCode },
@@ -1484,7 +1485,7 @@ export const MdmsService = {
       debouncedCall(
         {
           serviceName: "mdmsCall",
-          url: Urls.MDMS,
+          url: Urls.MDMS_V2,
           data: getCriteria(tenantId, details),
           useCache: true,
           params: { tenantId },

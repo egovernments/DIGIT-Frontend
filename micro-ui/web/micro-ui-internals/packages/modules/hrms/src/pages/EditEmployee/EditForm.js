@@ -35,7 +35,7 @@ const EditForm = ({ tenantId, data }) => {
   useEffect(() => {
     if (mobileNumber && mobileNumber.length == 10 && mobileNumber.match(Digit.Utils.getPattern('MobileNo'))) {
       setShowToast(null);
-      if (data.user.mobileNumber == mobileNumber) {
+      if (data?.user?.mobileNumber == mobileNumber) {
         setPhonecheck(true);
       } else {
         Digit.HRMSService.search(tenantId, null, { phone: mobileNumber }).then((result, err) => {
