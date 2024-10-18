@@ -32,8 +32,8 @@ const formValidator = (formData, key, state) => {
   function getValueFromPath(obj, path) {
     return path.split(".").reduce((acc, part) => acc && acc[part], obj);
   }
-   
-   
+
+
 
   // Validator function
   function validateFormData(jsonPaths) {
@@ -75,10 +75,10 @@ const formValidator = (formData, key, state) => {
   };
 
   const boundarySelectionValidator = () => {
-  
+
     function recursiveParentFind(filteredData) {
       const parentChildrenMap = {};
-  
+
       // Build the parent-children map
       filteredData?.forEach((item) => {
         if (item?.parent) {
@@ -88,7 +88,7 @@ const formValidator = (formData, key, state) => {
           parentChildrenMap[item?.parent].push(item.code);
         }
       });
-  
+
       // Check for missing children
       const missingParents = filteredData?.filter((item) => item?.parent && !parentChildrenMap[item.code]);
       const extraParent = missingParents?.filter((i) => i?.type !== state?.lowestHierarchy);
@@ -117,80 +117,80 @@ const formValidator = (formData, key, state) => {
       return { key: "error", label: "ERROR_BOUNDARY_SELECTION" };
     }
     const missedType = recursiveParentFind(formData?.selectedData);
-      if (missedType.length > 0) {
-        return {
-          key: "error",
-          label: `${(`HCM_CAMPAIGN_FOR`)} ${(`${state?.hierarchyType}_${missedType?.[0]?.type}`?.toUpperCase())} ${(missedType?.[0]?.code)} ${(
-            `HCM_CAMPAIGN_CHILD_NOT_PRESENT`
-          )}`,
+    if (missedType.length > 0) {
+      return {
+        key: "error",
+        label: `${(`HCM_CAMPAIGN_FOR`)} ${(`${state?.hierarchyType}_${missedType?.[0]?.type}`?.toUpperCase())} ${(missedType?.[0]?.code)} ${(
+          `HCM_CAMPAIGN_CHILD_NOT_PRESENT`
+        )}`,
       }
     }
     return null;
   };
 
   const areFieldsValid = (fields) => {
-    if(fields.length === 0){
+    if (fields.length === 0) {
       return false
     }
-   
+
     const hasInvalidField = fields?.some(field => {
-      const isValid = field && field.value; 
+      const isValid = field && field.value;
       return !isValid;
     });
-  
+
     return !hasInvalidField; // Returns true if all fields are valid
   };
-    
- 
-  
-  
+
+
+
+
   const assumptionsFormValidator = (formData) => {
 
-      let requiredFields = []
-       if(formData?.selectedRegistrationProcess && formData?.selectedDistributionProcess){
-        requiredFields = [
-          formData?.selectedRegistrationProcess,
-          formData?.selectedDistributionProcess,
-        ]
-          if (!areFieldsValid(requiredFields)) {
-            return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; 
-          }
-       }else if(formData?.selectedRegistrationDistributionMode){
-        requiredFields = [
-          formData?.selectedRegistrationDistributionMode,
-        ]
-        if (!areFieldsValid(requiredFields)) {
-          return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; 
-        }
-       }
+    let requiredFields = []
+    if (formData?.selectedRegistrationProcess && formData?.selectedDistributionProcess) {
+      requiredFields = [
+        formData?.selectedRegistrationProcess,
+        formData?.selectedDistributionProcess,
+      ]
+      if (!areFieldsValid(requiredFields)) {
+        return { key: "error", label: "ERROR_MANDATORY_FIELDS" };
+      }
+    } else if (formData?.selectedRegistrationDistributionMode) {
+      requiredFields = [
+        formData?.selectedRegistrationDistributionMode,
+      ]
+      if (!areFieldsValid(requiredFields)) {
+        return { key: "error", label: "ERROR_MANDATORY_FIELDS" };
+      }
+    }
 
     const processesAreValid = formData?.selectedRegistrationProcess?.code && formData?.selectedDistributionProcess?.code;
     if (processesAreValid && (formData?.selectedRegistrationProcess.code === formData?.selectedDistributionProcess.code)) {
-        return { key: "error", label: "ERROR_REGISTRATION_AND_DISTRIBUTION_ARE_SAME" }; // Customize as needed
+      return { key: "error", label: "ERROR_REGISTRATION_AND_DISTRIBUTION_ARE_SAME" }; // Customize as needed
     }
-    
+
     if (!areFieldsValid(requiredFields)) {
-      return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; 
+      return { key: "error", label: "ERROR_MANDATORY_FIELDS" };
     }
-  
+
     return null; // Return null if all validations pass
   };
 
 
 
 
-  const microplanAssumptionsValidator = (formData)=>{
-      
-        if(!areFieldsValid(formData.assumptionValues)){
-           return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; 
-        }
+  const microplanAssumptionsValidator = (formData) => {
 
-      return null
+    if (!areFieldsValid(formData.assumptionValues)) {
+      return { key: "error", label: "ERROR_MANDATORY_FIELDS" };
+    }
+
+    return null
   }
 
-  const uploadDataValidator = (formData)=>{
-    if(formData?.isSuccess) return null;
-    return { key: "error", label: "ERROR_VALID_MANDATORY_FILES" }; 
+  const uploadDataValidator = (formData) => {
+    if (formData?.isSuccess) return null;
+    return { key: "error", label: "ERROR_VALID_MANDATORY_FILES" };
   }
 
   //here we'll validate formData based on the config
@@ -201,14 +201,14 @@ const formValidator = (formData, key, state) => {
       return microplanDetailsValidator();
     case "boundarySelection":
       return boundarySelectionValidator();
-     case "assumptionsForm":  
-       return assumptionsFormValidator(formData);
+    case "assumptionsForm":
+      return assumptionsFormValidator(formData);
     case "Assumptions":
-        return microplanAssumptionsValidator(formData);  
+      return microplanAssumptionsValidator(formData);
     case "boundary":
-        return uploadDataValidator(formData);
+      return uploadDataValidator(formData);
     case "facilityWithBoundary":
-        return uploadDataValidator(formData);
+      return uploadDataValidator(formData);
 
     default:
       return null;
@@ -217,10 +217,10 @@ const formValidator = (formData, key, state) => {
 
 function getCurrentMonth() {
   const monthNames = [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
   ];
-  
+
   const currentMonthIndex = new Date().getMonth(); // Returns month index (0 for January, 11 for December)
   return monthNames[currentMonthIndex];
 }
@@ -233,13 +233,13 @@ function updateUrlParams(params) {
   window.history.replaceState({}, "", url);
 }
 
-function generateCampaignString(sessionData,t) {
-  
+function generateCampaignString(sessionData, t) {
+
   // Extract details from sessionData
   const diseaseCode = sessionData.CAMPAIGN_DETAILS.campaignDetails.disease.code;
   const campaignTypeCode = sessionData.CAMPAIGN_DETAILS.campaignDetails.campaignType.i18nKey;
   const resourceDistributionStrategy = sessionData.CAMPAIGN_DETAILS.campaignDetails.distributionStrat.resourceDistributionStrategyCode;
-  
+
   // Get current year and take the last two digits
   const currentYear = new Date().getFullYear();
   const yearLastTwoDigits = currentYear.toString().slice(-2);
@@ -252,25 +252,25 @@ function generateCampaignString(sessionData,t) {
 //fn that merges api res and ui inputs for assumptions
 //unique code is assumptions key
 //last vertical step
-const mergeAssumptions = (currentAssumptions,assumptionsToMerge) => {
+const mergeAssumptions = (currentAssumptions, assumptionsToMerge) => {
   // init an empty array result
   // assumptionsToMerge will have all the assumptions selected in UI
   // for each assumption in assumptionsToMerge check if it exists in currentAssumptions
-    // first map the CA and check whether they are in ATM(if not mark active to false) -> push to result
-    // if yes then update the existing one and push to result
-    // if 
+  // first map the CA and check whether they are in ATM(if not mark active to false) -> push to result
+  // if yes then update the existing one and push to result
+  // if 
 }
 
 //per vertical step
-const mergeAssumptionsCategory = (currentAssumptions,assumptionsToMerge,category) => {
+const mergeAssumptionsCategory = (currentAssumptions, assumptionsToMerge, category) => {
   // init an empty array
   // filter out currentAssumptions(don't include category)
   // push this filtered + assumptionsToMerge into this and return
 }
-  
+
 //this will give data for dependent dropdowns of hierarchy(from selectedData)
-function filterSelectedDataByBoundaryCodes(selectedBoundaries, boundaryCodes=[]) {
-  if(boundaryCodes.length===0){
+function filterSelectedDataByBoundaryCodes(selectedBoundaries, boundaryCodes = []) {
+  if (boundaryCodes.length === 0) {
     return []
   }
   // Create an array to store the result
@@ -278,46 +278,46 @@ function filterSelectedDataByBoundaryCodes(selectedBoundaries, boundaryCodes=[])
 
   // Iterate over the selected data
   selectedBoundaries.forEach(boundary => {
-      // Check if the boundary's parent exists in the boundaryCodes list
-      if (boundaryCodes.includes(boundary.parent)) {
-          result.push(boundary);
-      }
+    // Check if the boundary's parent exists in the boundaryCodes list
+    if (boundaryCodes.includes(boundary.parent)) {
+      result.push(boundary);
+    }
   });
 
   return result;
 }
 
-function getFilteredHierarchy(hierarchy, jurisdiction,hierarchyType) {
+function getFilteredHierarchy(hierarchy, jurisdiction, hierarchyType) {
   // Find the index of the starting boundary type (jurisdiction)
   const filteredHierarchy = [];
-  
+
   // Helper function to recursively add children boundaries
   function addChildren(parentType) {
-      hierarchy.forEach(item => {
-          if (item.parentBoundaryType === parentType) {
-              filteredHierarchy.push(item);
-              // Recursively find children of the current boundary
-              addChildren(item.boundaryType);
-          }
-      });
+    hierarchy.forEach(item => {
+      if (item.parentBoundaryType === parentType) {
+        filteredHierarchy.push(item);
+        // Recursively find children of the current boundary
+        addChildren(item.boundaryType);
+      }
+    });
   }
 
   // Find the starting boundary type (the provided jurisdiction)
   const startingBoundary = hierarchy.find(item => item.boundaryType === jurisdiction);
 
   if (startingBoundary) {
-      // Add the starting boundary to the result
-      filteredHierarchy.push(startingBoundary);
-      // Recursively add its children
-      addChildren(jurisdiction);
+    // Add the starting boundary to the result
+    filteredHierarchy.push(startingBoundary);
+    // Recursively add its children
+    addChildren(jurisdiction);
   }
 
 
   return filteredHierarchy?.map(row => {
     return {
       ...row,
-      i18nKey:Digit.Utils.locale.getTransformedLocale(`${hierarchyType}_${row?.
-      boundaryType}`)
+      i18nKey: Digit.Utils.locale.getTransformedLocale(`${hierarchyType}_${row?.
+        boundaryType}`)
     }
   });
 }
@@ -327,31 +327,31 @@ function filterBoundariesByJurisdiction(boundaries, jurisdictions) {
 
   // Helper function to recursively collect all boundaries under a specific boundary code
   function collectBoundaries(code) {
-      // Find the boundary with the provided code
-      const boundary = boundaries.find(b => b.code === code);
+    // Find the boundary with the provided code
+    const boundary = boundaries.find(b => b.code === code);
 
-      if (boundary) {
-          // Add the boundary itself
-          filteredBoundaries.push(boundary);
+    if (boundary) {
+      // Add the boundary itself
+      filteredBoundaries.push(boundary);
 
-          // Find all child boundaries with the current boundary as parent and recursively collect them
-          boundaries.forEach(b => {
-              if (b.parent === code) {
-                  collectBoundaries(b.code);
-              }
-          });
-      }
+      // Find all child boundaries with the current boundary as parent and recursively collect them
+      boundaries.forEach(b => {
+        if (b.parent === code) {
+          collectBoundaries(b.code);
+        }
+      });
+    }
   }
 
   // For each jurisdiction, collect the boundary and all its children
   jurisdictions.forEach(jurisdictionCode => {
-      collectBoundaries(jurisdictionCode);
+    collectBoundaries(jurisdictionCode);
   });
 
   return filteredBoundaries;
 }
 
-function fetchBoundaryOptions(boundaries=[],selectedBoundaries=[],boundaryType) {
+function fetchBoundaryOptions(boundaries = [], selectedBoundaries = [], boundaryType) {
   //basically loop over and check parent and return an array
 }
 
@@ -360,41 +360,41 @@ function createBoundaryDataByHierarchy(boundaryData) {
 
   // Helper function to build the reversed materialized path
   function buildMaterializedPath(boundary, boundaryMap) {
-      let path = [];
-      let currentBoundary = boundary;
+    let path = [];
+    let currentBoundary = boundary;
 
-      // Build the path from the boundary's parent up to the root
-      while (currentBoundary && currentBoundary.parent) {
-          currentBoundary = boundaryMap[currentBoundary.parent];
-          if (currentBoundary) {
-              path.push(currentBoundary.code);
-          }
+    // Build the path from the boundary's parent up to the root
+    while (currentBoundary && currentBoundary.parent) {
+      currentBoundary = boundaryMap[currentBoundary.parent];
+      if (currentBoundary) {
+        path.push(currentBoundary.code);
       }
+    }
 
-      // Join the reversed path into a single string
-      return path.reverse().join('.');
+    // Join the reversed path into a single string
+    return path.reverse().join('.');
   }
 
   // First, create a map for easy access to boundaries by code
   const boundaryMap = boundaryData.reduce((map, boundary) => {
-      map[boundary.code] = boundary;
-      return map;
+    map[boundary.code] = boundary;
+    return map;
   }, {});
 
   // Iterate over all boundaries
   boundaryData.forEach(boundary => {
-      const { type, code } = boundary;
+    const { type, code } = boundary;
 
-      // Initialize type if not already in the hierarchy
-      if (!hierarchy[type]) {
-          hierarchy[type] = {};
-      }
+    // Initialize type if not already in the hierarchy
+    if (!hierarchy[type]) {
+      hierarchy[type] = {};
+    }
 
-      // Build the reversed materialized path for this boundary
-      const materializedPath = buildMaterializedPath(boundary, boundaryMap);
+    // Build the reversed materialized path for this boundary
+    const materializedPath = buildMaterializedPath(boundary, boundaryMap);
 
-      // Assign the materialized path to the boundary in the hierarchy
-      hierarchy[type][code] = materializedPath;
+    // Assign the materialized path to the boundary in the hierarchy
+    hierarchy[type][code] = materializedPath;
   });
 
   return hierarchy;
@@ -426,6 +426,33 @@ function groupByParent(data) {
   return Object.values(grouped);
 }
 
+
+function epochToDateTime(epoch) {
+  // Create a new Date object using the epoch time
+  const date = new Date(epoch);
+  // Extract the date components
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based, so add 1
+  const day = String(date.getDate()).padStart(2, "0");
+
+  // Extract the time components
+  let hours = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
+
+  // Determine AM/PM and convert to 12-hour format
+  const ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  const formattedHours = String(hours).padStart(2, "0");
+
+  // Format the date and time
+  const formattedDate = `${day}/${month}/${year}`;
+  const formattedTime = `${formattedHours}:${minutes}:${seconds} ${ampm}`;
+
+  // Return the formatted date and time
+  return `${formattedDate} ${formattedTime}`;
+
 function filterUniqueByKey(arr, key) {
   const uniqueValues = new Set();
   const result = [];
@@ -439,6 +466,7 @@ function filterUniqueByKey(arr, key) {
   });
 
   return result;
+
 }
 
 export default {
@@ -452,6 +480,7 @@ export default {
   filterBoundariesByJurisdiction,
   createBoundaryDataByHierarchy,
   groupByParent,
+  epochToDateTime
   filterUniqueByKey
   // constructBoundaryOptions
 };
