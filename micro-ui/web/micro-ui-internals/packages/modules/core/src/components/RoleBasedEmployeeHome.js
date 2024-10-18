@@ -79,6 +79,10 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
           ? "Edit"
           : linkUrl.includes("dss")
           ? "Dashboard"
+          : linkUrl.includes("user-manual")
+          ? "SpeakerNotes"
+          : linkUrl.includes("functional-specifications")
+          ? "Book"
           : "PhonelinkSetup",
         // link: queryParamIndex === -1 ? linkUrl : linkUrl.substring(0, queryParamIndex),
         queryParams: queryParamIndex === -1 ? null : linkUrl.substring(queryParamIndex),
@@ -140,12 +144,24 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
   const children = Object.keys(sortedConfigEmployeesSidebar)?.map((current, index) => {
     const moduleData = sortedConfigEmployeesSidebar?.[current];
     const configureData = moduleData?.links?.find((item) => item?.label === "Configure");
+    const howItWorks = moduleData?.links?.find((item) => item?.label === "How it works");
+    const userManual = moduleData?.links?.find((item) => item?.label === "Read User Manual");
     const propsForModuleCard = {
       icon: "SupervisorAccount",
       moduleName: t(moduleData?.label),
       metrics: [],
-      links: Digit.Utils.getMultiRootTenant() ? moduleData.links?.filter((item) => item.label !== "Configure") : moduleData.links,
-      centreChildren: [<div>{t(Digit.Utils.locale.getTransformedLocale(`MODULE_CARD_DESC_${current}`))}</div>],
+      links: Digit.Utils.getMultiRootTenant() ? moduleData.links?.filter((item) => item.label !== "Configure" && item.label !== "How it Works" && item.label !== "Read User Manual") : moduleData.links,
+      centreChildren: [<div>{t(Digit.Utils.locale.getTransformedLocale(`MODULE_CARD_DESC_${current}`))}</div>,
+        <Button
+        variation="teritiary"
+        label={userManual?.label}
+        icon={userManual?.icon}
+        type="button"
+        size={"medium"}
+        onClick={() => window.open(userManual?.link, "_blank")}
+        style={{ padding: "0px" }}
+      />,
+      ],
       endChildren: Digit.Utils.getMultiRootTenant()
         ? [
             <Button
@@ -157,6 +173,15 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
               onClick={() => history?.push(configureData?.link)}
               style={{ padding: "0px" }}
             />,
+            <Button
+            variation="teritiary"
+            label={howItWorks?.label}
+            icon={howItWorks?.icon}
+            type="button"
+            size={"medium"}
+            onClick={() => window.open(howItWorks?.link, "_blank")}
+            style={{ padding: "0px" }}
+          />,
           ]
         : null,
     };
