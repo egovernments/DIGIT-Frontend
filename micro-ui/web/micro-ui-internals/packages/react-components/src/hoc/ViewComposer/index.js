@@ -164,20 +164,24 @@ const ViewComposer = ({ isLoading = false, data, cardErrors, ...props }) => {
       {cards
         ?.filter((card) => !card?.navigationKey && card?.sections)
         ?.map((card, cardIdx) => {
-          const { sections } = card;
+          const { sections, noCardStyle } = card;
           const hasErrors = cardErrors?.[card?.errorName]?.filter((i) => i?.name === card?.name)?.length > 0;
           return (
-            <Card
-              style={activeNav && card.navigationKey ? (activeNav !== card.navigationKey ? { display: "none" } : {}) : {}}
-              className={`employeeCard-override ${card?.cardStyle ? card?.cardStyle : ""} ${hasErrors ? "card-error" : ""}`}
-              ReactRef={hasErrors ? (el) => (cardRefs.current[cardIdx] = el) : null}
-
->
-              {hasErrors && scrollToCard(cardIdx)}
-              {sections?.map((section, sectionIdx) => {
-                return renderCardSectionJSX(section, cardErrors?.[card?.errorName ? card?.errorName : card?.name]);
-              })}
-            </Card>
+            noCardStyle ?
+              <div>
+                {sections?.map((section, sectionIdx) => {
+                  return renderCardSectionJSX(section, cardErrors?.[card?.errorName ? card?.errorName : card?.name]);
+                })}
+              </div> :
+              <Card
+                style={activeNav && card.navigationKey ? (activeNav !== card.navigationKey ? { display: "none" } : {}) : {}}
+                className={`employeeCard-override ${card?.cardStyle ? card?.cardStyle : ""} ${hasErrors ? "card-error" : ""}`}
+                ReactRef={hasErrors ? (el) => (cardRefs.current[cardIdx] = el) : null}>
+                {hasErrors && scrollToCard(cardIdx)}
+                {sections?.map((section, sectionIdx) => {
+                  return renderCardSectionJSX(section, cardErrors?.[card?.errorName ? card?.errorName : card?.name]);
+                })}
+              </Card>
           );
         })}
       {/* This second section is for rendering cards that are part of the navBar) */}
