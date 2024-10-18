@@ -2,9 +2,8 @@ import { Link, useLocation, useHistory, useParams } from "react-router-dom";
 import _ from "lodash";
 import React from "react";
 import { Dropdown } from "@egovernments/digit-ui-components";
-import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader } from "@egovernments/digit-ui-react-components";
-import { EditIcon } from "@egovernments/digit-ui-react-components";
-import { ArrowForward } from "@egovernments/digit-ui-react-components";
+import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader,EditIcon,ArrowForward } from "@egovernments/digit-ui-react-components";
+
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
