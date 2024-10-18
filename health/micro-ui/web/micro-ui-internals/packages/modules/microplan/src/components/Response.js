@@ -3,7 +3,6 @@ import { Link, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ActionBar, SubmitBar, Button,ArrowLeft, ArrowForward } from "@egovernments/digit-ui-react-components";
 import { PanelCard } from "@egovernments/digit-ui-components";
-// console.log(state," ssssssssssssssssssssssssss")
 const Response = () => {
 
     const { t } = useTranslation();
@@ -14,7 +13,6 @@ const Response = () => {
         queryStrings?.isSuccess === "true" ? true : queryStrings?.isSuccess === "false" ? false : true
     );
     const { state } = useLocation();
-    console.log(state, " ssssssssssssssssssssssssss")
 
     const isMobile = window.Digit.Utils.browser.isMobile();
 
