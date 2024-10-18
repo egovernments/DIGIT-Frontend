@@ -238,13 +238,13 @@ export const UICustomizations = {
       if (!roleschosen) {
         roleschosen = {};
       }
-      // if(Object.keys(roleschosen).length === 0){
-      //   for(const obj of additionalDetails["microplanData"]){
+      if(Object.keys(roleschosen).length === 0){
+        for(const obj of additionalDetails["microplanData"]){
 
-      //     roleschosen[obj["roleCode"]]=true;
+          roleschosen[obj["roleCode"]]=true;
 
-      //   }
-      // }
+        }
+      }
 
       let rolesString = "";
       if (roleschosen) {

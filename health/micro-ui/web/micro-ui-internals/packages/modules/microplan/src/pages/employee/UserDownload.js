@@ -5,24 +5,8 @@ import HeaderComp from '../../components/HeaderComp';
 import { TextBlock } from '@egovernments/digit-ui-components';
 
 const UserDownload = () => {
+    
     const [Files, setFile] = useState(""); // Initialize as an empty string
-    const reqCriteriaResource = {
-        url: "/project-factory/v1/data/_search",
-        body: {
-            "SearchCriteria": {
-                "tenantId": Digit.ULBService.getCurrentTenantId(),
-                "source": "microplan",
-                "status": "completed"
-            }
-        },
-        config: {
-            enabled: true,
-            select: data => {
-                return data;
-            }
-        }
-    };
-
    
 
     const { data, isFetching, isLoading } = Digit.Hooks.microplanv1.useFileDownload({
@@ -55,7 +39,7 @@ const UserDownload = () => {
         }
     }, [data]); // Only run this effect when `data` changes
 
-
+    
 
 
 
@@ -74,24 +58,26 @@ const UserDownload = () => {
             <Card>
                 <HeaderComp title="DOWNLOAD_USER_DATA" styles={{ color: "black" }} />
                 <TextBlock body="DOWNLOAD_DESC" />
-                {data?.ResourceDetails &&
-                    data?.ResourceDetails.map((item, index) => {
-                        return (
-                        <FileComponent
-                            title=""
-                            fileName={`FileNo${item?.fileStoreId.slice(0, 4)}`}
-                            downloadHandler={() => {
-                                Digit.Utils.campaign.downloadExcelWithCustomName({
-                                    fileStoreId: item?.fileStoreId, customName: `FileNo${item?.fileStoreId.slice(0, 4)}`
-                                });
-                            }} // Passing the download function
-                            auditDetails={{userName:item?.username,lastmodTime:item?.auditDetails?.lastmodtime}}
-                        />
-                        )
+                    {data?.ResourceDetails &&
+                        [...data?.ResourceDetails].reverse().map((item, index) => {
+                            let fileName = item?.additionalDetails?.fileName || `FileNo${item?.processedFilestoreId?.slice(0, 4) || ''}`;
+                            
+                            return (
+                            <FileComponent
+                                title=""
+                                fileName={`FileNo${item?.fileStoreId.slice(0, 4)}`}
+                                downloadHandler={() => {
+                                    Digit.Utils.campaign.downloadExcelWithCustomName({
+                                        fileStoreId: fileName
+                                    });
+                                }} // Passing the download function
+                                auditDetails={{userName:item?.username,lastmodTime:item?.auditDetails?.lastmodtime}}
+                            />
+                            )
 
-})
+    })
 
-                }
+                    }
             </Card>
         </div>
     );
