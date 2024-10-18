@@ -60,11 +60,7 @@ const UserDownload = () => {
                 <TextBlock body="DOWNLOAD_DESC" />
                     {data?.ResourceDetails &&
                         [...data?.ResourceDetails].reverse().map((item, index) => {
-                            let fileName=`FileNo${item?.processedFilestoreId.slice(0, 4)}`
-                            if ((data?.ResourceDetails?.additionalDetails?.fileName)){
-                                fileName=data?.ResourceDetails?.additionalDetails?.fileName;
-
-                            }
+                            let fileName = item?.additionalDetails?.fileName || `FileNo${item?.processedFilestoreId?.slice(0, 4) || ''}`;
                             
                             return (
                             <FileComponent
