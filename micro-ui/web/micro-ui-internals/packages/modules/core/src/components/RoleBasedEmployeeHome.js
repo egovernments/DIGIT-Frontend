@@ -69,21 +69,7 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
       acc[module].links.push({
         // link: linkUrl,
         link: linkUrl,
-        icon: linkUrl.includes("create")
-          ? "Person"
-          : linkUrl.includes("inbox")
-          ? "AllInbox"
-          : linkUrl.includes("search")
-          ? "Search"
-          : linkUrl.includes("edit")
-          ? "Edit"
-          : linkUrl.includes("dss")
-          ? "Dashboard"
-          : linkUrl.includes("user-manual")
-          ? "SpeakerNotes"
-          : linkUrl.includes("functional-specifications")
-          ? "Book"
-          : "PhonelinkSetup",
+        icon: item.leftIcon,
         // link: queryParamIndex === -1 ? linkUrl : linkUrl.substring(0, queryParamIndex),
         queryParams: queryParamIndex === -1 ? null : linkUrl.substring(queryParamIndex),
         label: t(Digit.Utils.locale.getTransformedLocale(`${module}_LINK_${item.displayName}`)),
@@ -141,16 +127,61 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
     sortedConfigEmployeesSidebar = configEmployeeSideBar;
   }
 
+  const getHowItWorksLink = (moduleData) => {
+    return moduleData?.links?.find((item) => {
+      if (moduleData.module === "PGR") {
+        return item?.displayName === "HOW_IT_WORKS_PGR";
+      } else if (moduleData.module === "HRMS") {
+        return item?.displayName === "HOW_IT_WORKS_HRMS";
+      } else {
+        return false;
+      }
+    });
+  };
+
+  const getUserManualLink = (moduleData) => {
+    return moduleData?.links?.find((item) => {
+      if (moduleData.module === "PGR") {
+        return item?.displayName === "PGR_INFO_LINK";
+      } else if (moduleData.module === "HRMS") {
+        return item?.displayName === "HRMS_INFO_LINK";
+      } else {
+        return false; // No match for other modules
+      }
+    });
+  };
+
+  const getFilteredLinks = (moduleData) => {
+    return moduleData.links?.filter((item) => {
+      const displayName = item.displayName;
+      const isPGR = moduleData.module === "PGR";
+      const isHRMS = moduleData.module === "HRMS";
+      const isNotConfigureMaster = displayName !== "Configure_master";
+      const isNotHowItWorksPGR = !(isPGR && displayName === "HOW_IT_WORKS_PGR");
+      const isNotHRMSInfoLink = !(isHRMS && displayName === "HRMS_INFO_LINK");
+      const isNotHowItWorksHRMS = !(isHRMS && displayName === "HOW_IT_WORKS_HRMS");
+      const isNotPGRInfoLink = !(isPGR && displayName === "PGR_INFO_LINK");
+  
+      return (
+        isNotConfigureMaster &&
+        isNotHowItWorksPGR &&
+        isNotHRMSInfoLink &&
+        isNotHowItWorksHRMS &&
+        isNotPGRInfoLink
+      );
+    });
+  };
+
   const children = Object.keys(sortedConfigEmployeesSidebar)?.map((current, index) => {
     const moduleData = sortedConfigEmployeesSidebar?.[current];
-    const configureData = moduleData?.links?.find((item) => item?.label === "Configure");
-    const howItWorks = moduleData?.links?.find((item) => item?.label === "How it works");
-    const userManual = moduleData?.links?.find((item) => item?.label === "Read User Manual");
+    const configureData = moduleData?.links?.find((item) => item?.displayName === "Configure_master");
+    const howItWorks = getHowItWorksLink(moduleData);
+    const userManual = getUserManualLink(moduleData);
     const propsForModuleCard = {
       icon: "SupervisorAccount",
       moduleName: t(moduleData?.label),
       metrics: [],
-      links: Digit.Utils.getMultiRootTenant() ? moduleData.links?.filter((item) => item.label !== "Configure" && item.label !== "How it works" && item.label !== "Read User Manual") : moduleData.links,
+      links: Digit.Utils.getMultiRootTenant()? getFilteredLinks(moduleData): moduleData.links,    
       centreChildren: [<div>{t(Digit.Utils.locale.getTransformedLocale(`MODULE_CARD_DESC_${current}`))}</div>,
         <Button
         variation="teritiary"
