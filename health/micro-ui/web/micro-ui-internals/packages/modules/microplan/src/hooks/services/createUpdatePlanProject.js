@@ -373,7 +373,7 @@ const createUpdatePlanProject = async (req) => {
           files
         }
 
-        const planResBoundary = await updatePlan(upatedPlanObjForBoundary);
+        const planResBoundary = await updatePlan(updatedPlanObjForBoundary);
         if(planResBoundary?.PlanConfiguration?.[0]?.id){
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
