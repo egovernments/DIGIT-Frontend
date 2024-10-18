@@ -1,15 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { PopUp, Button, Dropdown, LabelFieldPair, Card } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../utils/context"; // Ensure that the translation function `t` is handled here
 
-const AccessibilityPopUp = ({ onClose }) => {
+
+const AccessibilityPopUp = ({ onClose, census }) => {
   const { state } = useMyContext(); // Extract state from context
   const { t } = useTranslation();
 
+  // Initialize dropdown values with the existing accessibility details from additionalDetails if available
   const [dropdown1Value, setDropdown1Value] = useState(null);
   const [dropdown2Value, setDropdown2Value] = useState(null);
   const [dropdown3Value, setDropdown3Value] = useState(null);
+
+  useEffect(() => {
+    if (census?.additionalDetails?.accessibilityDetails) {
+      setDropdown1Value(census.additionalDetails.accessibilityDetails.roadCondition);
+      setDropdown2Value(census.additionalDetails.accessibilityDetails.terrain);
+      setDropdown3Value(census.additionalDetails.accessibilityDetails.transportationMode);
+    }
+  }, [census]);
 
   const handleDropdownChange = (value, key) => {
     switch (key) {
@@ -27,16 +37,39 @@ const AccessibilityPopUp = ({ onClose }) => {
     }
   };
 
-  const handleSave = () => {
-    // Handle save logic here
-    console.log(`Dropdown 1: ${dropdown1Value?.label}, Dropdown 2: ${dropdown2Value?.label}, Dropdown 3: ${dropdown3Value?.label}`);
-    onClose(); // Close the popup after saving
+  // Prepare the request payload for the mutation
+  const reqPayload = {
+    Census: {
+      ...census,
+      additionalDetails: {
+        ...census.additionalDetails,
+        accessibilityDetails: {
+          roadCondition: dropdown1Value,
+          terrain: dropdown2Value,
+          transportationMode: dropdown3Value,
+        },
+      },
+    },
   };
 
-  const optionsList3 = [
-    { name: "OTHER", code: "OTHER" },
+  // Define the mutation configuration
+  const mutation = Digit.Hooks.useCustomAPIMutationHook({
+    url: "/census-service/_update",
+  });
 
-  ];
+  const handleSave = async () => {
+    await mutation.mutate(
+      {
+        body: reqPayload,
+
+      });
+  };
+
+  useEffect(() => {
+    if (!mutation.isLoading && mutation.data) {
+      onClose(); // Close popup after saving
+    }
+  }, [mutation.data, mutation.isLoading, onClose]);
 
   return (
     <PopUp
@@ -69,7 +102,7 @@ const AccessibilityPopUp = ({ onClose }) => {
           <LabelFieldPair>
             <div className="edit-label">{t(`HCM_MICROPLAN_VILLAGE_TRANSPORTATION_MODE_LABEL`)}</div>
             <Dropdown
-              option={optionsList3}
+              option={[{ name: "OTHER", code: "OTHER" }]} // Your options list
               optionKey="name"
               selected={dropdown3Value}
               select={(value) => handleDropdownChange(value, "dropdown3")}
@@ -94,7 +127,8 @@ const AccessibilityPopUp = ({ onClose }) => {
           size={"large"}
           variation={"primary"}
           label={t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_SAVE_LABEL`)}
-          onClick={handleSave}
+          onClick={handleSave} // Calls save function on click
+          isLoading={mutation.isLoading} // Disable button during API call
         />,
       ]}
     />
