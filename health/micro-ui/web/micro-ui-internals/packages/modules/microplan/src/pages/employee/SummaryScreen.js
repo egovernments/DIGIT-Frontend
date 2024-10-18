@@ -5,6 +5,7 @@ import { Button, EditIcon, Header, Loader, ViewComposer } from "@egovernments/di
 import { InfoBannerIcon, Toast } from "@egovernments/digit-ui-components";
 import { DownloadIcon } from "@egovernments/digit-ui-react-components";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { noConflict } from "lodash";
 
 
 
@@ -125,6 +126,7 @@ const SummaryScreen = ({ props: customProps }) => {
 
                             type: "COMPONENT",
                             component: "CampaignBoundary",
+                            noCardStyle:true,
                             props: {
                                 customProps: customProps
 
@@ -213,6 +215,7 @@ const SummaryScreen = ({ props: customProps }) => {
 
                             type: "COMPONENT",
                             component: "FileComponent",
+                            noCardStyle:true,
                             props: {
                                 title: "Population",
                                 fileName: "file.xlsx",
@@ -232,6 +235,7 @@ const SummaryScreen = ({ props: customProps }) => {
                         {
 
                             type: "COMPONENT",
+                            noCardStyle:true,
                             component: "FileComponent",
                             props: {
                                 title: "Facilities",
@@ -252,6 +256,7 @@ const SummaryScreen = ({ props: customProps }) => {
                         {
 
                             type: "COMPONENT",
+                            noCardStyle:true,
                             component: "DataMgmtTable",
                             props: {
 
@@ -283,6 +288,7 @@ const SummaryScreen = ({ props: customProps }) => {
                         {
 
                             type: "COMPONENT",
+                            noCardStyle:true,
                             component: "FormulaConfigScreen",
 
                             props: {
