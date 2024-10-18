@@ -341,7 +341,7 @@ const UserUpload = React.memo(() => {
           type: type,
           forceUpdate: true,
           hierarchyType: boundaryHierarchy,
-          campaignId: null,
+          campaignId: "null",
           source: "microplan",
         },
         body: {
@@ -411,7 +411,7 @@ const UserUpload = React.memo(() => {
         setDownloadTemplateLoader(false);
         return;
       }
-      history.push(`/${window.contextPath}/employee/microplan/upload-user-success`);
+      history.push(`/${window.contextPath}/employee/microplan/upload-user-success`, { fileName: fileName,message:"USER_DATA_UPLOAD_SUCCESSFUL" });
     }
     else {
       setShowToast({ key: "error", label: t("ERROR_MANDATORY_FIELDS_FOR_SUBMIT") });

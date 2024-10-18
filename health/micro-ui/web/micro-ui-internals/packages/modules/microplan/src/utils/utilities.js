@@ -426,6 +426,7 @@ function groupByParent(data) {
   return Object.values(grouped);
 }
 
+
 function epochToDateTime(epoch) {
   // Create a new Date object using the epoch time
   const date = new Date(epoch);
@@ -451,6 +452,21 @@ function epochToDateTime(epoch) {
 
   // Return the formatted date and time
   return `${formattedDate} ${formattedTime}`;
+
+function filterUniqueByKey(arr, key) {
+  const uniqueValues = new Set();
+  const result = [];
+
+  arr.forEach((obj) => {
+    const value = obj[key];
+    if (!uniqueValues.has(value)) {
+      uniqueValues.add(value);
+      result.push(obj);
+    }
+  });
+
+  return result;
+
 }
 
 export default {
@@ -465,6 +481,7 @@ export default {
   createBoundaryDataByHierarchy,
   groupByParent,
   epochToDateTime
+  filterUniqueByKey
   // constructBoundaryOptions
 };
 export const PRIMARY_COLOR = "#C84C0E";
