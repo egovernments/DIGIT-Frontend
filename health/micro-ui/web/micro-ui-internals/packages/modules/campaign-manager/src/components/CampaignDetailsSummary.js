@@ -149,7 +149,7 @@ const CampaignDetailsSummary = (props) => {
     <div className="container-full">
         <div className="card-container">
           <Card className="card-header-timeline">
-            <TextBlock subHeader={t("HCM_CAMPAIGN_DETAILS")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+            <TextBlock subHeader={t("HCM_CAMPAIGN_DETAILS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
           <Card className="stepper-card">
             <Stepper customSteps={["HCM_CAMPAIGN_TYPE","HCM_CAMPAIGN_NAME", "HCM_CAMPAIGN_DATE" , "HCM_SUMMARY"]} currentStep={4} onStepClick={onStepClick} direction={"vertical"} />

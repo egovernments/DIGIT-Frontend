@@ -82,74 +82,6 @@ function getOperatorSymbol(operator) {
   };
   return operatorMapping[operator] || ""; // Default to empty if not found
 }
-
-// function restructureData(data, cycleData, DeliveryConfig, projectType) {
-//   const tt = DeliveryConfig?.find((e) => e.code === String(projectType));
-
-//   console.log("tt" , data , cycleData , tt);
-
-//   if (tt) {
-//     delete tt.cycles;   // Remove old cycles
-//     delete tt.resources;  // Remove old resources
-//   }
-
-//   const resourcesMap = new Map();
-
-//   const cycles = data.map(cycle => ({
-//     mandatoryWaitSinceLastCycleInDays: null,
-//     startDate: Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[0]?.fromDate),
-//     endDate: Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[0]?.toDate),
-//     id: parseInt(cycle.cycleIndex, 10),
-//     deliveries: cycle?.deliveries?.map(delivery => ({
-//       id: parseInt(delivery.deliveryIndex, 10),
-//       deliveryStrategy: delivery.deliveryStrategy || "DIRECT",
-//       mandatoryWaitSinceLastDeliveryInDays: null,
-//       doseCriteria: delivery.deliveryRules.map(rule => {
-//         // Consolidate product variants for the resources array
-//         rule.products.forEach(product => {
-//           if (resourcesMap.has(product.value)) {
-//             resourcesMap.get(product.value).count += product.count;
-//           } else {
-//             resourcesMap.set(product.value, {
-//               productVariantId: product.value,
-//               isBaseUnitVariant: false,
-//               name: product.name
-//             });
-//           }
-//         });
-
-//         // Build the condition string, handling IN_BETWEEN separately
-//         const conditions = rule.attributes.map(attr => {
-//           if (attr?.operator?.code === "IN_BETWEEN") {
-//             return `${attr.toValue} <= ${attr.attribute.code} < ${attr.fromValue}`;
-//           } else {
-//             return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${attr?.value}`;
-//           }
-//         });
-
-//         return {
-//           condition: conditions.join(" and "),
-//           ProductVariants: rule.products.map(product => ({
-//             productVariantId: product.value,
-//             name: product.name
-//           }))
-//         };
-//       })
-//     }))
-//   }));
-
-//   const resources = Array.from(resourcesMap.values());
-
-//   if (tt) {
-//     tt.cycles = cycles;
-//     tt.resources = resources;
-//   }
-
-
-//   console.log("ttoo" , tt);
-//   return [tt];
-// }
-
 function restructureData(data, cycleData, DeliveryConfig, projectType) {
   const deliveryConfig = DeliveryConfig?.find((e) => e.code === String(projectType));
   if (deliveryConfig) {
@@ -1428,7 +1360,6 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
 
     const key = parseInt(filteredSteps[0].key);
     const name = filteredSteps[0].name;
-
     if (step === 6 && Object.keys(totalFormData).includes("HCM_CAMPAIGN_UPLOAD_USER_DATA")) {
       setCurrentKey(14);
       setCurrentStep(5);
