@@ -341,7 +341,7 @@ const UserUpload = React.memo(() => {
           type: type,
           forceUpdate: true,
           hierarchyType: boundaryHierarchy,
-          campaignId: null,
+          campaignId: "null",
           source: "microplan",
         },
         body: {

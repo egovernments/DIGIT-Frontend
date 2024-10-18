@@ -18,6 +18,7 @@ import MyMicroplans from "./MyMicroplans";
 import ChooseActivity from "./ChooseActivity";
 import Response from "../../components/Response";
 
+import FacilityCatchmentMapping from "./FacilityCatchmentMapping";
 
 
 
@@ -67,7 +68,9 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
       { name: "hierarchyConfig" },
       { name: "villageRoadCondition" },
       { name: "villageTerrain" },
-      { name: "securityQuestions" }
+      { name: "securityQuestions" },
+      { name: "facilityType"},
+      { name: "facilityStatus"}
     ],
     {
       cacheTime: Infinity,
@@ -188,6 +191,7 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
         <PrivateRoute path={`${path}/my-microplans`} component={() => <MyMicroplans/>} /> 
         <PrivateRoute path={`${path}/upload-user-success`} component={() => <Response/>} /> 
 
+         <PrivateRoute path={`${path}/assign-facilities-to-villages`} component={() => <FacilityCatchmentMapping/>} />
 
 
       </AppContainer>
