@@ -5,6 +5,8 @@ import { FilterCard, LabelFieldPair, RadioButtons } from "@egovernments/digit-ui
 const InboxFilterWrapper = (props) => {
   const { t } = useTranslation();
   
+  // defaultValue structure: {"key": value}
+  // defaultSelectedOption structure: { code: string, name: string }
     const defaultSelectedOption = props.defaultValue 
         ? { code: Object.keys(props.defaultValue)[0], name: `${t(Object.keys(props.defaultValue)[0])} (${Object.values(props.defaultValue)[0]})` } 
         : null;
@@ -13,6 +15,10 @@ const InboxFilterWrapper = (props) => {
     const [selectedValue, setSelectedValue] = useState(defaultSelectedOption);
 
     const createArrayFromObject = (obj, t) => {
+      if (!obj || typeof obj !== 'object' || typeof t !== 'function') {
+        console.error('Invalid input to createArrayFromObject');
+        return [];
+      }
       return Object.entries(obj).map(([key, value]) => ({
         code: key,
         name: `${t(key)} (${value})`
