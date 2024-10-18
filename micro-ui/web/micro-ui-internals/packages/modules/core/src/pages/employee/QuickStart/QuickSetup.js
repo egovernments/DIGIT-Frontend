@@ -6,9 +6,10 @@ import { ArrowForward } from "@egovernments/digit-ui-svg-components";
 import { CardSubHeader, CardSectionHeader, BreakLine, CardSectionSubText } from "@egovernments/digit-ui-react-components";
 
 const FaqComponent = (props) => {
-  const { question, answer,type,actions,content, lastIndex } = props;
+  const { question,isLabelLink, answer,type,actions,content, lastIndex } = props;
   const [isOpen, toggleOpen] = useState(false);
   const { t } = useTranslation();
+  const tenantId = Digit.ULBService.getStateId();
   const ListTag = type === "number" ? "ol" : "ul";
   return (
     <div className="faqs border-none" onClick={() => toggleOpen(!isOpen)}>
@@ -23,12 +24,21 @@ const FaqComponent = (props) => {
         <div style={{ marginTop: "1rem" }}>
         {actions && (
           <ListTag>
-            {actions.map((action, index) => (
-              <li key={index} style={{ listStyleType: ListTag === "ul" ? "disc" : "auto", margin: "8px 0" }}>
-                {action?.label ? <strong>{t(action?.label)}:</strong> : null} {t(action?.description)}
-              </li>
-            ))}
-          </ListTag>
+          {actions.map((action, index) => (
+            <li key={index} style={{ listStyleType: ListTag === "ul" ? "disc" : "auto", margin: "8px 0" }}>
+              {isLabelLink ? (
+                action?.label ? (
+                  <a className="quickLink" href={`${window.location.host}/${window?.globalPath}/${tenantId}/${action?.link}`} target="_blank" rel="noopener noreferrer">
+                    {t(action?.label)}:
+                  </a>
+                ) : null
+              ) : (
+                action?.label ? <strong>{t(action?.label)}:</strong> : null
+              )} 
+              {t(action?.description)}
+            </li>
+          ))}
+        </ListTag>
         )}
       </div>
       </div>
@@ -66,7 +76,7 @@ const FAQ = ({ key, title, content, faqs ,type}) => {
     <div style={{ width: "100%" }}>
       <div style={{ width: "100%" }}>
         {faqs.map((faq, i) => (
-          <FaqComponent key={"faq_" + i} question={faq.question} answer={faq.answer} type ={type} actions={faq.answer} content ={faq.content}lastIndex={i === faqs?.length - 1} />
+          <FaqComponent key={"faq_" + i} question={faq.question} answer={faq.answer} isLabelLink={faq.isLabelLink} type ={type} actions={faq.answer} content ={faq.content}lastIndex={i === faqs?.length - 1} />
         ))}
       </div>
     </div>
