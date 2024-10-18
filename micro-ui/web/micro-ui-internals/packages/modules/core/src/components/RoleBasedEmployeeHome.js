@@ -150,7 +150,7 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
       icon: "SupervisorAccount",
       moduleName: t(moduleData?.label),
       metrics: [],
-      links: Digit.Utils.getMultiRootTenant() ? moduleData.links?.filter((item) => item.label !== "Configure" && item.label !== "How it Works" && item.label !== "Read User Manual") : moduleData.links,
+      links: Digit.Utils.getMultiRootTenant() ? moduleData.links?.filter((item) => item.label !== "Configure" && item.label !== "How it works" && item.label !== "Read User Manual") : moduleData.links,
       centreChildren: [<div>{t(Digit.Utils.locale.getTransformedLocale(`MODULE_CARD_DESC_${current}`))}</div>,
         <Button
         variation="teritiary"
