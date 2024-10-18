@@ -32,14 +32,14 @@ const InboxFilterWrapper = (props) => {
         onClose={props?.onClose}
         onPrimaryPressed={handleApplyFilters}  // Trigger filter apply on primary action
         onSecondaryPressed={clearFilters}  // Clear filters on secondary action
-        primaryActionLabel={props?.primaryActionLabel || t("ES_COMMON_APPLY_FILTERS")}
-        secondaryActionLabel={props?.secondaryActionLabel || t("ES_COMMON_CLEAR_SEARCH")}
-        title={props?.title || t("FILTERS")}
+        primaryActionLabel={t(props?.primaryActionLabel)}
+        secondaryActionLabel={t(props?.secondaryActionLabel)}
+        title={t(props?.title)}
       >
         <LabelFieldPair>
           <RadioButtons
             options={props.options}
-            optionsKey={props?.optionsKey || "name"}  // Use "name" key by default
+            optionsKey={props?.optionsKey}  // Use "name" key by default
             selectedOption={selectedValue}  // Pass the current selected option
             style={{
               display: "flex",
@@ -51,6 +51,13 @@ const InboxFilterWrapper = (props) => {
         </LabelFieldPair>
        </FilterCard>
     );
+  };
+
+  InboxFilterWrapper.defaultProps = {
+    primaryActionLabel: "ES_COMMON_APPLY_FILTERS",
+    secondaryActionLabel: "ES_COMMON_CLEAR_SEARCH",
+    title: "FILTERS",
+    optionsKey: "name"
   };
 
 export default InboxFilterWrapper;
