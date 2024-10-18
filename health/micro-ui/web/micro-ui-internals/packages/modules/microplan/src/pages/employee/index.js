@@ -16,6 +16,7 @@ import UserDownload from "./UserDownload";
 import VillageView from "./viewVillage";
 import MyMicroplans from "./MyMicroplans";
 import ChooseActivity from "./ChooseActivity";
+import Response from "../../components/Response";
 
 
 
@@ -185,6 +186,8 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
         <PrivateRoute path={`${path}/upload-user`} component={() => <UserUpload />} />
         <PrivateRoute path={`${path}/village-view`} component={() => <VillageView />} />
         <PrivateRoute path={`${path}/my-microplans`} component={() => <MyMicroplans/>} /> 
+        <PrivateRoute path={`${path}/upload-user-success`} component={() => <Response/>} /> 
+
 
 
       </AppContainer>

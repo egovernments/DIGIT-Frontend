@@ -411,7 +411,7 @@ const UserUpload = React.memo(() => {
         setDownloadTemplateLoader(false);
         return;
       }
-      history.push(`/${window.contextPath}/employee/microplan/upload-user-success`);
+      history.push(`/${window.contextPath}/employee/microplan/upload-user-success`, { fileName: fileName,message:"User data upload successful" });
     }
     else {
       setShowToast({ key: "error", label: t("ERROR_MANDATORY_FIELDS_FOR_SUBMIT") });
