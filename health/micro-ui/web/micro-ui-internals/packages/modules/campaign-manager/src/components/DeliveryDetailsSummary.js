@@ -1,12 +1,9 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Button, EditIcon, Header, Loader, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { InfoBannerIcon, Toast, Card, Stepper, TextBlock } from "@egovernments/digit-ui-components";
-import { DownloadIcon } from "@egovernments/digit-ui-react-components";
-import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
-import getProjectServiceUrl from "../utils/getProjectServiceUrl";
-import getDeliveryConfig from "../utils/getDeliveryConfig";
+import {  EditIcon, Header, Loader, ViewComposer } from "@egovernments/digit-ui-react-components";
+import {  Toast, Card, Stepper, TextBlock } from "@egovernments/digit-ui-components";
+
 
 function mergeObjects(item) {
   const arr = item;
@@ -105,28 +102,25 @@ function reverseDeliveryRemap(data, t) {
       name: variant.name,
     }));
   };
-
   const parseConditionAndCreateRules = (condition, ruleKey, products) => {
     const conditionParts = condition.split("and").map((part) => part.trim());
-    let rules = [];
-
+    let attributes = [];
+  
     conditionParts.forEach((part) => {
       const parts = part.split(" ").filter(Boolean);
-      let attributes = [];
-
+  
       // Handle "IN_BETWEEN" operator
       if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
         const toValue = parts[0];
         const fromValue = parts[4];
         attributes.push({
-          key: 1,
+          key: attributes.length + 1,
           operator: { code: operatorMapping["IN_BETWEEN"] },
           attribute: { code: parts[2] },
           fromValue,
           toValue,
         });
       } else {
-     
         const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
         if (match) {
           const attributeCode = match[1].trim();
@@ -140,16 +134,15 @@ function reverseDeliveryRemap(data, t) {
           });
         }
       }
-      rules.push({
-        ruleKey: ruleKey + 1,
-        delivery: {},
-        products,
-        attributes,
-      });
     });
-
-    return rules;
+    return [{
+      ruleKey: ruleKey + 1,
+      delivery: {},
+      products,
+      attributes,
+    }];
   };
+  
   const mapDoseCriteriaToDeliveryRules = (doseCriteria) => {
     return doseCriteria?.flatMap((criteria, ruleKey) => {
       const products = mapProductVariants(criteria.ProductVariants);
@@ -173,43 +166,6 @@ function reverseDeliveryRemap(data, t) {
 
   return transformedCycles;
 }
-const fetchResourceFile = async (tenantId, resourceIdArr) => {
-  const res = await Digit.CustomService.getResponse({
-    url: `/project-factory/v1/data/_search`,
-    body: {
-      SearchCriteria: {
-        tenantId: tenantId,
-        id: resourceIdArr,
-      },
-    },
-  });
-  return res?.ResourceDetails;
-};
-const fetchcd = async (tenantId, projectId) => {
-  const url = getProjectServiceUrl();
-  const reqCriteriaResource = {
-    url: `${url}/v1/_search`,
-    params: {
-      tenantId: tenantId,
-      limit: 10,
-      offset: 0,
-    },
-    body: {
-      Projects: [
-        {
-          tenantId: tenantId,
-          id: projectId,
-        },
-      ],
-    },
-  };
-  try {
-    const res = await Digit.CustomService.getResponse(reqCriteriaResource);
-    return res?.Project?.[0];
-  } catch (e) {
-    console.log("error", e);
-  }
-};
 const DeliveryDetailsSummary = (props) => {
   const { t } = useTranslation();
   const history = useHistory();
@@ -219,11 +175,6 @@ const DeliveryDetailsSummary = (props) => {
   const noAction = searchParams.get("action");
   const [showToast, setShowToast] = useState(null);
   const [summaryErrors, setSummaryErrors] = useState(null);
-  const [projectId, setprojectId] = useState(null);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [cycles, setCycles] = useState([]);
-  const [cards, setCards] = useState([]);
   const isPreview = searchParams.get("preview");
   const [currentStep, setCurrentStep] = useState(1);
   const currentKey = searchParams.get("key");
@@ -262,7 +213,7 @@ const DeliveryDetailsSummary = (props) => {
         const temp = props?.props?.summaryErrors?.deliveryErrors?.map((i) => {
           return {
             ...i,
-            onClick: i?.dateError ? () => handleRedirect(6) : () => handleRedirect(7, i?.cycle),
+            onClick: i?.dateError ? () => handleRedirect(7) : () => handleRedirect(8, i?.cycle),
           };
         });
         setSummaryErrors({ ...props?.props?.summaryErrors, deliveryErrors: temp });
@@ -272,21 +223,6 @@ const DeliveryDetailsSummary = (props) => {
     }
   }, [props?.props?.summaryErrors]);
 
-  useEffect(() => {
-    const fun = async () => {
-      let temp = await fetchcd(tenantId, projectId);
-      if (temp) {
-        await new Promise((resolve) => {
-          setStartDate(temp?.startDate);
-          setEndDate(temp?.endDate);
-          setCycles(temp?.additionalDetails?.projectType?.cycles);
-          resolve();
-        });
-      }
-    };
-    fun();
-  }, [projectId]);
-
   const { isLoading, data, error, refetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
@@ -294,22 +230,6 @@ const DeliveryDetailsSummary = (props) => {
     },
     config: {
       select: (data) => {
-        const resourceIdArr = [];
-        data?.[0]?.resources?.map((i) => {
-          if (i?.createResourceId && i?.type === "user") {
-            resourceIdArr.push(i?.createResourceId);
-          }
-        });
-        let processid;
-        setprojectId(data?.[0]?.projectId);
-        setCards(data?.cards);
-
-        const ss = async () => {
-          let temp = await fetchResourceFile(tenantId, resourceIdArr);
-          processid = temp;
-          return;
-        };
-        ss();
         const target = data?.[0]?.deliveryRules;
         const cycleData = reverseDeliveryRemap(target, t);
 
@@ -372,7 +292,6 @@ const DeliveryDetailsSummary = (props) => {
           error: data?.[0]?.additionalDetails?.error,
           data: data?.[0],
           status: data?.[0]?.status,
-          userGenerationSuccess: resourceIdArr,
         };
       },
       enabled: id ? true : false,
@@ -418,7 +337,7 @@ const DeliveryDetailsSummary = (props) => {
       <div className="container-full">
         <div className="card-container">
           <Card className="card-header-timeline">
-            <TextBlock subHeader={t("HCM_DELIVERY_DETAILS")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+            <TextBlock subHeader={t("HCM_DELIVERY_DETAILS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
           <Card className="stepper-card">
             <Stepper
