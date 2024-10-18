@@ -1,8 +1,8 @@
 import _ from "lodash";
-import { useLocation, useHistory,Link,useParams } from "react-router-dom";
+import { useLocation, useHistory, Link, useParams } from "react-router-dom";
 import React from "react";
 import { Dropdown } from "@egovernments/digit-ui-components";
-import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader,EditIcon,ArrowForward } from "@egovernments/digit-ui-react-components";
+import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader, EditIcon, ArrowForward } from "@egovernments/digit-ui-react-components";
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
@@ -302,9 +302,8 @@ export const UICustomizations = {
         return (
           <span className="link">
             <Link
-              to={`/${
-                window.contextPath
-              }/employee/attendencemgmt/view-attendance?tenantId=${Digit.ULBService.getCurrentTenantId()}&musterRollNumber=${value}`}
+              to={`/${window.contextPath
+                }/employee/attendencemgmt/view-attendance?tenantId=${Digit.ULBService.getCurrentTenantId()}&musterRollNumber=${value}`}
             >
               {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
             </Link>
@@ -806,19 +805,15 @@ export const UICustomizations = {
               console.log(e, "event"); // e contains the selected option
               if (e.code === "1") {
                 // Use window.location.href to navigate
-                window.location.href = `/${
-                  window.contextPath
-                }/employee/microplan/setup-microplan?key=${1}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${
-                  row.CampaignDetails.id
-                }`;
+                window.location.href = `/${window.contextPath
+                  }/employee/microplan/setup-microplan?key=${1}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${row.CampaignDetails.id
+                  }`;
               }
               if (e.code === "2") {
                 // Use window.location.href to navigate
-                window.location.href = `/${
-                  window.contextPath
-                }/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${
-                  row.CampaignDetails.id
-                }`;
+                window.location.href = `/${window.contextPath
+                  }/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${row.CampaignDetails.id
+                  }`;
               }
             }}
             optionKey={"name"}
@@ -891,7 +886,7 @@ export const UICustomizations = {
             icon={<EditIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
             type="button"
             className="dm-workbench-download-template-btn dm-hover"
-            onButtonClick={(e) => {}}
+            onButtonClick={(e) => { }}
           />
         ) : row.status === "EXECUTION_TO_BE_DONE" ? (
           <Button
@@ -900,7 +895,7 @@ export const UICustomizations = {
             icon={<ArrowForward styles={{ height: "1.25rem", width: "2.5rem" }} />}
             type="button"
             className="dm-workbench-download-template-btn dm-hover"
-            onButtonClick={(e) => {}}
+            onButtonClick={(e) => { }}
           />
         ) : row.status === "RESOURCE_ESTIMATIONS_APPROVED" ? (
           <Button
@@ -909,7 +904,7 @@ export const UICustomizations = {
             icon={<DownloadIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
             type="button"
             className="dm-workbench-download-template-btn dm-hover"
-            onButtonClick={(e) => {}}
+            onButtonClick={(e) => { }}
           />
         ) : null;
       }
@@ -965,10 +960,10 @@ export const UICustomizations = {
       if (!roleschosen) {
         roleschosen = {};
       }
-      if(Object.keys(roleschosen).length === 0){
-        for(const obj of additionalDetails["microplanData"]){
+      if (Object.keys(roleschosen).length === 0) {
+        for (const obj of additionalDetails["microplanData"]) {
 
-          roleschosen[obj["roleCode"]]=true;
+          roleschosen[obj["roleCode"]] = true;
 
         }
       }
@@ -1078,7 +1073,7 @@ export const UICustomizations = {
                 isSuffix
                 label={t("MICROPLAN_ASSIGN")}
                 onClick={
-                  ()=>setShowPopup(true)
+                  () => setShowPopup(true)
                 }
                 options={[]}
                 optionsKey=""
@@ -1087,7 +1082,7 @@ export const UICustomizations = {
                 title=""
                 variation="secondary"
               />
-              {showPopup && <FacilityPopUp details={row} onClose={()=>{setShowPopup(false)}}/>}
+              {showPopup && <FacilityPopUp details={row} onClose={() => { setShowPopup(false) }} />}
             </>
           );
         default:
