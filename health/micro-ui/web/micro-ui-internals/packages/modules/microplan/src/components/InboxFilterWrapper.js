@@ -4,8 +4,23 @@ import { FilterCard, LabelFieldPair, RadioButtons } from "@egovernments/digit-ui
 
 const InboxFilterWrapper = (props) => {
   const { t } = useTranslation();
-    // State to store the selected radio button value
-    const [selectedValue, setSelectedValue] = useState(props?.defaultValue || null);
+  
+    const defaultSelectedOption = props.defaultValue 
+        ? { code: Object.keys(props.defaultValue)[0], name: `${t(Object.keys(props.defaultValue)[0])} (${Object.values(props.defaultValue)[0]})` } 
+        : null;
+
+    // Initialize state with the default selected option
+    const [selectedValue, setSelectedValue] = useState(defaultSelectedOption);
+
+    const createArrayFromObject = (obj, t) => {
+      return Object.entries(obj).map(([key, value]) => ({
+        code: key,
+        name: `${t(key)} (${value})`
+      }));
+    };
+    
+    // Usage of the function
+    const resultArray = createArrayFromObject(props?.options, t); 
   
     // Function to handle selection from the radio buttons
     const handleSelect = (option) => {
@@ -38,8 +53,8 @@ const InboxFilterWrapper = (props) => {
       >
         <LabelFieldPair>
           <RadioButtons
-            options={props.options}
-            optionsKey={props?.optionsKey}  // Use "name" key by default
+            options={resultArray}
+            optionsKey={"name"}  // Use "name" key by default
             selectedOption={selectedValue}  // Pass the current selected option
             style={{
               display: "flex",
