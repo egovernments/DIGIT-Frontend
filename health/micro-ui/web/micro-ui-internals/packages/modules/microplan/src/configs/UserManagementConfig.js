@@ -147,7 +147,7 @@ export const UserManagementConfig = {
             "primaryLabel": "Filter",
             "minReqFields": 0,
             "defaultValues": {
-              "roleschosen": [],
+              "roleschosen": '',
             },
             "fields": [
 
