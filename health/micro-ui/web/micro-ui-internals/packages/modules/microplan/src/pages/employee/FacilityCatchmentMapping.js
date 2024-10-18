@@ -1,9 +1,9 @@
 import { Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import facilityMappingConfig from "../../configs/FacilityMappingConfig";
 
-const FacilityCatchmentMapping = ({}) => {
+const FacilityCatchmentMapping = () => {
     const { t } = useTranslation();
     const config = facilityMappingConfig();
 

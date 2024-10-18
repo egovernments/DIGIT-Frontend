@@ -74,9 +74,7 @@ const componentsToRegister = {
   CampaignBoundary,
   AssumptionsList,
   FormulaConfigScreen,
-  FacilityPopup
-  
-
+  FacilityPopup,
 };
 
 export const initMicroplanComponents = () => {

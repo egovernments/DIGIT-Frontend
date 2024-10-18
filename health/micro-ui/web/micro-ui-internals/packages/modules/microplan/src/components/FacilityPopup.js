@@ -2,7 +2,6 @@ import React, { useState, useMemo, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { PopUp, Button, Card } from "@egovernments/digit-ui-components";
 import { InboxSearchComposer } from "@egovernments/digit-ui-react-components";
-import { useMyContext } from "../utils/context";
 import facilityMappingConfig from "../configs/FacilityMappingConfig";
 
 const FacilityPopUp = ({ details, onClose }) => {
@@ -12,7 +11,6 @@ const FacilityPopUp = ({ details, onClose }) => {
 
   return (
     <>
-      <Card type="secondary" />
       <PopUp
         onClose={onClose}
         heading={`${t(`MICROPLAN_ASSIGNMENT_FACILITY`)} ${details?.additionalDetails?.name}`}

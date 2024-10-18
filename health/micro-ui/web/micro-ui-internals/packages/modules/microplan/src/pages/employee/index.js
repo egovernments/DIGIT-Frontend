@@ -16,7 +16,7 @@ import UserDownload from "./UserDownload";
 import VillageView from "./viewVillage";
 import MyMicroplans from "./MyMicroplans";
 import ChooseActivity from "./ChooseActivity";
-import FacilityCatchmentMapping from "./FacilityCatchmentMappnig";
+import FacilityCatchmentMapping from "./FacilityCatchmentMapping";
 
 
 
