@@ -68,7 +68,7 @@ const UserDownload = () => {
                                 fileName={`FileNo${item?.fileStoreId.slice(0, 4)}`}
                                 downloadHandler={() => {
                                     Digit.Utils.campaign.downloadExcelWithCustomName({
-                                        fileStoreId: fileName
+                                        fileStoreId: data?.processedFilestoreId
                                     });
                                 }} // Passing the download function
                                 auditDetails={{userName:item?.username,lastmodTime:item?.auditDetails?.lastmodtime}}
