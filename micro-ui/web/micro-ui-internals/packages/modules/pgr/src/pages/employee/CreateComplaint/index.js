@@ -9,35 +9,20 @@ import { FormComposer } from "../../../components/FormComposer";
 import { createComplaint } from "../../../redux/actions/index";
 
 export const CreateComplaint = ({ parentUrl }) => {
-  const cities = Digit.Hooks.pgr.useTenants();
+  const { data: cities, isLoading } = Digit.Utils.getMultiRootTenant()? Digit.Hooks.useTenants() :Digit.Hooks.pgr.useTenants();
   const stateId = Digit.ULBService.getStateId();
   const [showToast, setShowToast] = useState(null);
   const { t } = useTranslation();
 
-  const getCities = () => cities?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
-
-  const { data: subTenants, refetch, isLoading: isLoadingSubTenants } = { data: null, refetch: () => {}, isLoading: false };
-
-  const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit.Hooks.useTenantManagementSearch({
-    stateId: stateId,
-    includeSubTenants: true,
-    config: {
-      enabled: Digit.Utils.getMultiRootTenant(),
-    },
-  });
-
-  const getSubTenants = () =>
-    Digit.Utils.getMultiRootTenant()
-      ? TenantMngmtSearch?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId())
-      : subTenants?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId());
+  const getCities = () => Digit.Utils.getMultiRootTenant() ?cities :cities?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [] ;
 
   const [complaintType, setComplaintType] = useState({});
   const [subTypeMenu, setSubTypeMenu] = useState([]);
   const [subType, setSubType] = useState({});
   const [pincode, setPincode] = useState("");
-  const [selectedCity, setSelectedCity] = useState(Digit.Utils.getMultiRootTenant() ? getSubTenants()?.[0] || null : getCities()?.[0] || null);
+  const [selectedCity, setSelectedCity] = useState( getCities()?.[0] || null);
 
-  const cityData = Digit.Utils.getMultiRootTenant() ? getSubTenants() : getCities();
+  const cityData =  getCities();
 
   const { isLoading: hierarchyLOading, data: hierarchyType } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getStateId(),
@@ -50,12 +35,12 @@ export const CreateComplaint = ({ parentUrl }) => {
       },
     }
   );
-
+  const stateIdForLocality = Digit.Utils.getMultiRootTenant() ? Digit.ULBService.getStateId() : cityData?.[0]?.code;
   const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
-    cityData?.[0]?.code,
+    stateIdForLocality,
     hierarchyType,
     {
-      enabled: Digit.Utils.getMultiRootTenant() ? !!cityData?.[0] && !!hierarchyType : !!cityData?.[0],
+      enabled: Digit.Utils.getMultiRootTenant() ? !!hierarchyType : !!cityData?.[0],
     },
     t
   );
@@ -178,7 +163,7 @@ export const CreateComplaint = ({ parentUrl }) => {
   //On SUbmit
   const onSubmit = async (data) => {
     if (!canSubmit) return;
-    const cityCode = selectedCity.code;
+    const cityCode= Digit.Utils.getMultiRootTenant() ? Digit.ULBService.getStateId() : cityCode;
     const city = Digit.Utils.getMultiRootTenant() ? selectedCity.name : selectedCity.city.name;
 
     const district = Digit.Utils.getMultiRootTenant() ? selectedCity.name : selectedCity.city.name;
@@ -280,7 +265,7 @@ export const CreateComplaint = ({ parentUrl }) => {
               isMandatory
               selected={selectedCity}
               freeze={true}
-              option={Digit.Utils.getMultiRootTenant() ? getSubTenants() : getCities()}
+              option={getCities()}
               id="city"
               select={selectCity}
               optionKey={"i18nKey"}

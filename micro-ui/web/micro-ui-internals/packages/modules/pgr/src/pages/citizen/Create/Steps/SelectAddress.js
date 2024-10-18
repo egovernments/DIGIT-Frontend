@@ -3,16 +3,8 @@ import { CardLabel, Dropdown, FormStep, RadioButtons } from "@egovernments/digit
 import { subtract } from "lodash";
 
 const SelectAddress = ({ t, config, onSelect, value }) => {
-  const allCities = Digit.Hooks.pgr.useTenants();
+  const { data: allCities, isLoading } = Digit.Utils.getMultiRootTenant()? Digit.Hooks.useTenants() :Digit.Hooks.pgr.useTenants();
   const cities = value?.pincode ? allCities.filter((city) => city?.pincode?.some((pin) => pin == value["pincode"])) : allCities;
-
-const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit.Hooks.useTenantManagementSearch({
-  stateId: Digit.ULBService.getStateId(),
-  includeSubTenants: true,
-  config : {
-    enabled: Digit.Utils.getMultiRootTenant()
-  }
-});
 
   const [selectedCity, setSelectedCity] = useState(() => {
     const { city_complaint } = value;
@@ -35,8 +27,9 @@ const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit
       }
     );
 
+   const stateId = Digit.Utils.getMultiRootTenant() ? Digit.ULBService.getStateId() :  selectedCity?.code;
   const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
-    selectedCity?.code,
+    stateId,
      Digit.Utils.getMultiRootTenant() ? hierarchyType : "admin",
     {
       enabled: Digit.Utils.getMultiRootTenant() ? !!selectedCity && !!hierarchyType :  !!selectedCity,
@@ -77,13 +70,13 @@ const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit
     <FormStep config={config} onSelect={onSubmit} t={t} isDisabled={selectedLocality ? false : true}>
       <div>
         <CardLabel>{t("MYCITY_CODE_LABEL")}</CardLabel>
-        {(Digit.Utils.getMultiRootTenant() ? TenantMngmtSearch?.length : cities?.length) < 5 ? (
+        {cities?.length < 5 ? (
           <RadioButtons selectedOption={selectedCity} options={
-            Digit.Utils.getMultiRootTenant() ? TenantMngmtSearch : cities
+             cities
           } optionsKey={"i18nKey"} onSelect={selectCity} />
         ) : (
           <Dropdown isMandatory selected={selectedCity} option={
-            Digit.Utils.getMultiRootTenant() ? TenantMngmtSearch : cities
+             cities
           } select={selectCity} optionKey={"i18nKey"} t={t} />
         )}
         {selectedCity && localities && <CardLabel>{t("CS_CREATECOMPLAINT_MOHALLA")}</CardLabel>}
