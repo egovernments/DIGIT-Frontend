@@ -426,6 +426,21 @@ function groupByParent(data) {
   return Object.values(grouped);
 }
 
+function filterUniqueByKey(arr, key) {
+  const uniqueValues = new Set();
+  const result = [];
+
+  arr.forEach((obj) => {
+    const value = obj[key];
+    if (!uniqueValues.has(value)) {
+      uniqueValues.add(value);
+      result.push(obj);
+    }
+  });
+
+  return result;
+}
+
 export default {
   destroySessionHelper,
   createStatusMap,
@@ -436,7 +451,8 @@ export default {
   getFilteredHierarchy,
   filterBoundariesByJurisdiction,
   createBoundaryDataByHierarchy,
-  groupByParent
+  groupByParent,
+  filterUniqueByKey
   // constructBoundaryOptions
 };
 export const PRIMARY_COLOR = "#C84C0E";
