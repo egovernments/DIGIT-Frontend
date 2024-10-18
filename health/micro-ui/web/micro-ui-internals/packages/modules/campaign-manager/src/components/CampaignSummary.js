@@ -107,25 +107,23 @@ function reverseDeliveryRemap(data, t) {
 
   const parseConditionAndCreateRules = (condition, ruleKey, products) => {
     const conditionParts = condition.split("and").map((part) => part.trim());
-    let rules = [];
-
+    let attributes = [];
+  
     conditionParts.forEach((part) => {
       const parts = part.split(" ").filter(Boolean);
-      let attributes = [];
-
+  
       // Handle "IN_BETWEEN" operator
       if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
         const toValue = parts[0];
         const fromValue = parts[4];
         attributes.push({
-          key: 1,
+          key: attributes.length + 1,
           operator: { code: operatorMapping["IN_BETWEEN"] },
           attribute: { code: parts[2] },
           fromValue,
           toValue,
         });
       } else {
-     
         const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
         if (match) {
           const attributeCode = match[1].trim();
@@ -139,15 +137,13 @@ function reverseDeliveryRemap(data, t) {
           });
         }
       }
-      rules.push({
-        ruleKey: ruleKey + 1,
-        delivery: {},
-        products,
-        attributes,
-      });
     });
-
-    return rules;
+    return [{
+      ruleKey: ruleKey + 1,
+      delivery: {},
+      products,
+      attributes,
+    }];
   };
   const mapDoseCriteriaToDeliveryRules = (doseCriteria) => {
     return doseCriteria?.flatMap((criteria, ruleKey) => {
