@@ -54,7 +54,7 @@ const initRequestBody = (tenantId) => ({
       },
       {
         moduleName: "tenant",
-        masterDetails: [{ name: "tenants" }, { name: "citymodule" }],
+        masterDetails: [{ name: "tenants" }, { name: "citymodule" },{name:"cities"}],
       },
       {
         moduleName: "DIGIT-UI",
