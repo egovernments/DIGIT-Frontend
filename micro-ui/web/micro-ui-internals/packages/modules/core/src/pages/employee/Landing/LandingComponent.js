@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Header, Card, CardText, CardHeader, Button } from "@egovernments/digit-ui-components"; // Importing the required DIGIT UI components
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -12,58 +12,87 @@ const LandingComponent = ({ config }) => {
   const history = useHistory();
 
   return (
-    <Card>
-      {/* Main Heading */}
-      <Header className="headerFlex" styles={{ fontWeight: "700", fontSize: "32px", marginBottom: "20px" }}>
-        {t(heading)}
-      </Header>
-      
-      <YoutubeVideo link={url} overlay={true} />
+    <div className="custom-landing-container">
+      <Card className="custom-landing-card">
+        {/* Main Heading */}
+        <Header className="custom-landing-header">
+          {t(heading)}
+        </Header>
 
-      {/* Subsections */}
-      {subsections.map((section, index) => (
-        <div key={index}>
-          {/* Subsection Title */}
-          <CardHeader styles={{ marginBottom: "10px", fontSize: "24px", fontWeight: "bold" }}>{t(section.title)}</CardHeader>
-
-          {/* Section Content */}
-          {section.type === "paragraph" &&
-            section.content.map((paragraph, paraIndex) => (
-              <CardText key={paraIndex}>
-                <p style={{ lineHeight: "1.6" }}>{t(paragraph.text)}</p>
-              </CardText>
-            ))}
-
-          {/* Numbered Steps based on the `id` field */}
-          {section.type === "steps" && (
-            <ul style={{ paddingLeft: "0px" }}>
-              {section.content.map((step, stepIndex) => (
-                <CardText key={step.id}>
-                  <li style={{ listStyleType: "none" }}>
-                    {step.id}. {t(step.text)}
-                  </li>
-                </CardText>
-              ))}
-            </ul>
-          )}
+        {/* Video Section */}
+        <div className="custom-video-section">
+          <YoutubeVideo link={url} overlay={true} />
         </div>
-      ))}
 
-      {/* Continue Button */}
-      <div className="setupMasterSetupActionBar" style={{ textAlign: "right", marginTop: "2rem" }}>
-        <Button
-          className="actionButton"
-          label={t("CONTINUE_LANDING")}
-          variation={"primary"}
-          icon="ArrowForward"
-          isSuffix={true}
-          onClick={(e) => {
-            e.preventDefault();
-            history.push(redirectPathOtpLogin);
-          }}
-        />
-      </div>
-    </Card>
+        {/* Subsections */}
+        {subsections.map((section, index) => (
+          <div key={index} className="custom-section-container">
+            {/* Subsection Title */}
+            <CardHeader className="custom-section-header">{t(section.title)}</CardHeader>
+
+            {/* Render Content for "paragraph" type */}
+            {section.type === "paragraph" && section.content && (
+              <Fragment>
+                {section.content.map((paragraph, paraIndex) => (
+                  <CardText className="custom-section-paragraph" key={paraIndex}>
+                    <p>{t(paragraph.text)}</p>
+                  </CardText>
+                ))}
+              </Fragment>
+            )}
+
+            {/* Render Content for "steps" type */}
+            {section.type === "steps" && section.content && (
+              <ul className="custom-steps-list">  {/* Updated list with bullets */}
+                {section.content.map((step, stepIndex) => (
+                  <li key={stepIndex} className="custom-step-item">  {/* Only bullets, no step.id */}
+                    {t(step.text)}
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {/* Render Content for "both" type */}
+            {section.type === "both" && section.content && (
+              <Fragment>
+                {section.content.map((item, itemIndex) => {
+                  if (item.type === "paragraph") {
+                    return (
+                      <CardText className="custom-section-paragraph" key={itemIndex}>
+                        <p>{t(item.text)}</p>
+                      </CardText>
+                    );
+                  } else if (item.type === "step") {
+                    return (
+                      <li key={itemIndex} className="custom-step-item">  {/* Only bullets, no step.id */}
+                        {t(item.text)}
+                      </li>
+                    );
+                  } else {
+                    return null;
+                  }
+                })}
+              </Fragment>
+            )}
+          </div>
+        ))}
+
+        {/* Continue Button */}
+        <div className="custom-continue-button-container">
+          <Button
+            className="custom-continue-button"
+            label={t("CONTINUE_LANDING")}
+            variation={"primary"}
+            icon="ArrowForward"
+            isSuffix={true}
+            onClick={(e) => {
+              e.preventDefault();
+              history.push(redirectPathOtpLogin);
+            }}
+          />
+        </div>
+      </Card>
+    </div>
   );
 };
 
