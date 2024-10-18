@@ -1,7 +1,6 @@
 import React, { Fragment, useState, } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
-import { FilterCard, LabelFieldPair, TextBlock, RadioButtons } from "@egovernments/digit-ui-components";
+import { FilterCard, LabelFieldPair, RadioButtons } from "@egovernments/digit-ui-components";
 
 const InboxFilterWrapper = (props) => {
   const { t } = useTranslation();
@@ -22,7 +21,9 @@ const InboxFilterWrapper = (props) => {
 
     const clearFilters = () => {
       setSelectedValue(null);
-      props.onApplyFilters(null)
+      if (props.onApplyFilters) {
+        props.onApplyFilters(null);
+      }
     }
   
     return (
