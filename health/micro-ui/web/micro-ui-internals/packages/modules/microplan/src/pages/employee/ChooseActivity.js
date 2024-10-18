@@ -2,6 +2,7 @@ import React, { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { SVG } from "@egovernments/digit-ui-react-components";
 import ActivityHomeCard from "../../components/ActivityCard";
+import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 
 
 const ChooseActivity = () => {
@@ -52,6 +53,16 @@ const ChooseActivity = () => {
     return (
         <React.Fragment>
             <ActivityHomeCard title={t("SELECT_AN_ACTIVITY_TO_CONTINUE")} module={activityCardData}/>
+            <InboxFilterWrapper
+             options={[
+                { code: "M", name: "Male" },
+                { code: "F", name: "Female" },
+                { code: "O", name: "Others" }
+              ]}
+             onApplyFilters={(filterData) => console.log("Applied Filters:", filterData)}
+             optionsKey={"name"}
+             defaultValue={{ code: "M", name: "Male" }}
+            ></InboxFilterWrapper>
         </React.Fragment>
     )
 }
