@@ -2,7 +2,6 @@ import React, { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { SVG } from "@egovernments/digit-ui-react-components";
 import ActivityHomeCard from "../../components/ActivityCard";
-import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 
 
 const ChooseActivity = () => {
