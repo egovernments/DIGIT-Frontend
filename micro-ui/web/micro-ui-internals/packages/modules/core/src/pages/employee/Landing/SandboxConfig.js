@@ -1,54 +1,83 @@
 export const sandboxConfig = {
-  heading: "SANDBOX_HEADING", // Localization key for the main heading
+  heading: "SANDBOX_HEADING",
   url: "https://www.youtube.com/watch?v=1ZLdetJwfeY",
   subsections: [
     {
-      title: "SANDBOX_INTRODUCTION_TITLE", // Localization key for "Introduction"
+      title: "SANDBOX_INTRODUCTION_TITLE",
       type: "paragraph",
       content: [
         {
-          text: "SANDBOX_INTRODUCTION_TEXT", // Localization key for the introduction text
+          text: "SANDBOX_INTRODUCTION_TEXT",
         },
       ],
     },
     {
-      title: "SANDBOX_PRODUCTS_TITLE", // Localization key for "Products"
-      type: "paragraph",
+      title: "SANDBOX_PRODUCTS_TITLE",
+      type: "both",
       content: [
         {
-          text: "SANDBOX_PRODUCTS_TEXT", // Localization key for the first line in "Products"
+          type: "paragraph",
+          text: "SANDBOX_PRODUCTS_DESCRIPTION",
         },
         {
-          text: "SANDBOX_COMPLAINTS_DESCRIPTION", // Localization key for "Complaints" description
-        },
-        {
-          text: "SANDBOX_CAMPAIGNS_DESCRIPTION", // Localization key for "Campaigns" description
-        },
-      ],
-    },
-    {
-      title: "SANDBOX_USER_CAPABILITIES_TITLE", // Localization key for "User Capabilities"
-      type: "steps",
-      content: [
-        {
+          type: "step",
           id: 1,
-          text: "USER_CAPABILITIES_STEP_1", // Localization key for the first user capability step
+          text: "SANDBOX_PRODUCTS_STEP_1",
         },
         {
+          type: "step",
           id: 2,
-          text: "USER_CAPABILITIES_STEP_2", // Localization key for the second user capability step
+          text: "SANDBOX_PRODUCTS_STEP_2",
         },
         {
+          type: "step",
           id: 3,
-          text: "USER_CAPABILITIES_STEP_3", // Localization key for the third user capability step
+          text: "SANDBOX_PRODUCTS_STEP_3",
         },
         {
+          type: "step",
           id: 4,
-          text: "USER_CAPABILITIES_STEP_4", // Localization key for the fourth user capability step
+          text: "SANDBOX_PRODUCTS_STEP_4",
+        },
+      ],
+    },
+    {
+      title: "SANDBOX_USER_CAPABILITIES_TITLE",
+      type: "both",
+      content: [
+        {
+          type: "step",
+          id: 1,
+          text: "SANDBOX_USER_CAPABILITIES_STEP_1",
         },
         {
+          type: "step",
+          id: 2,
+          text: "SANDBOX_USER_CAPABILITIES_STEP_2",
+        },
+        {
+          type: "step",
+          id: 3,
+          text: "SANDBOX_USER_CAPABILITIES_STEP_3",
+        },
+        {
+          type: "step",
+          id: 4,
+          text: "SANDBOX_USER_CAPABILITIES_STEP_4",
+        },
+        {
+          type: "step",
           id: 5,
-          text: "USER_CAPABILITIES_STEP_5", // Localization key for the fifth user capability step
+          text: "SANDBOX_USER_CAPABILITIES_STEP_5",
+        },
+        {
+          type: "step",
+          id: 6,
+          text: "SANDBOX_USER_CAPABILITIES_STEP_6",
+        },
+        {
+          type: "paragraph",
+          text: "SANDBOX_CLICK_CONTINUE",
         },
       ],
     },
