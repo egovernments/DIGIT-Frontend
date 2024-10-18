@@ -1,7 +1,7 @@
 import React, { useState, Fragment } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ActionBar, SubmitBar, Button,ArrowLeft, ArrowForward } from "@egovernments/digit-ui-react-components";
+import { ActionBar, SubmitBar, Button, ArrowLeft, ArrowForward } from "@egovernments/digit-ui-react-components";
 import { PanelCard } from "@egovernments/digit-ui-components";
 const Response = () => {
 
@@ -32,7 +32,7 @@ const Response = () => {
                 iconFill=""
                 info=""
                 maxFooterButtonsAllowed={5}
-                message={state?.message}
+                message={t(state?.message)}
                 multipleResponses={[]}
                 props={{}}
                 response={state?.fileName}
@@ -43,16 +43,13 @@ const Response = () => {
 
             </PanelCard>
             <ActionBar className="mc_back">
-                <Link to={`/${window.contextPath}/employee/microplan/upload-user`}>
+                <Link to={`/${window.contextPath}/employee/microplan/user-management`}>
                     <Button
-                        label={t("GO_BACK_TO_USER_MANAGEMENT")}
+                        style={{ margin: "0.5rem", minWidth: "12rem", marginLeft: "6rem" }}
+                        className="previous-button"
                         variation="secondary"
-                        icon={<ArrowLeft styles={{ height: "1.25rem", width: "2.5rem" }} />}
-                        type="button"
-                        className="dm-workbench-download-template-btn dm-hover"
-                        onButtonClick={(e) => {
-
-                        }}
+                        label={t("BACK")}
+                        icon={"ArrowBack"}
                     />
                 </Link>
             </ActionBar>

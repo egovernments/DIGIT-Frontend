@@ -1048,7 +1048,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         <Card className="card-header-timeline">
         <TextBlock
             subHeader={t("HCM_UPLOAD_DATA")}
-            subHeaderClasName={"stepper-subheader"}
+            subHeaderClassName={"stepper-subheader"}
             wrapperClassName={"stepper-wrapper"}
           />
         </Card>
