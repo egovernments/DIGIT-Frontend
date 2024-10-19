@@ -199,7 +199,11 @@ const ViewComposer = ({ isLoading = false, data, cardErrors, ...props }) => {
             const { sections, noCardStyle } = card;
             return (
               noCardStyle ?
+<<<<<<< HEAD
                 <div style={activeNav && card.navigationKey ? (activeNav !== card.navigationKey ? { display: "none" } : {}) : {}}>
+=======
+                <div>
+>>>>>>> develop
                   {sections?.map((section, sectionIdx) => {
                     return renderCardSectionJSX(section);
                   })}

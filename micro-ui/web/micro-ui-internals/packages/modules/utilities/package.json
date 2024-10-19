@@ -20,7 +20,11 @@
   "dependencies": {
     "@cyntler/react-doc-viewer": "1.10.3",
     "@egovernments/digit-ui-components": "0.0.2-beta.48",
+<<<<<<< HEAD
     "@egovernments/digit-ui-react-components": "1.8.2-beta.16",
+=======
+    "@egovernments/digit-ui-react-components": "1.8.2-beta.15",
+>>>>>>> develop
     "axios": "^1.7.2",
     "react": "17.0.2",
     "react-date-range": "^1.4.0",
