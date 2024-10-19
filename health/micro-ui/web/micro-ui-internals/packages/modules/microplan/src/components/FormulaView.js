@@ -4,7 +4,7 @@ import { Card, Header, LabelFieldPair, Button } from "@egovernments/digit-ui-rea
 import { Dropdown, FieldV1 } from "@egovernments/digit-ui-components";
 import { TextInput } from "@egovernments/digit-ui-components";
 
-const FormulaConfig = ({ output, input1, input2, input3 }) => {
+const FormulaView = ({ output, input1, input2, input3 }) => {
 
   const { t } = useTranslation();
 
@@ -62,4 +62,4 @@ const FormulaConfig = ({ output, input1, input2, input3 }) => {
   );
 };
 
-export default FormulaConfig;
+export default FormulaView;

@@ -91,7 +91,7 @@ const GeoPode = () => {
             await sleep(2000);
 
             history.push(
-                `/${window.contextPath}/employee/campaign/view-hierarchy?defaultHierarchyType=${defaultHierarchyType}&hierarchyType=${hierarchyType}`,
+                `/${window.contextPath}/employee/campaign/boundary/view-hierarchy?defaultHierarchyType=${defaultHierarchyType}&hierarchyType=${hierarchyType}`,
                 {  }
             );
 
@@ -102,7 +102,7 @@ const GeoPode = () => {
 
     const goBackToBoundary = ()=> {
         history.push(
-            `/${window.contextPath}/employee/campaign/boundary-management?defaultHierarchyType=${defaultHierarchyType}&hierarchyType=${hierarchyType}`,
+            `/${window.contextPath}/employee/campaign/boundary/home?defaultHierarchyType=${defaultHierarchyType}&hierarchyType=${hierarchyType}`,
             { data: state }
         );
 

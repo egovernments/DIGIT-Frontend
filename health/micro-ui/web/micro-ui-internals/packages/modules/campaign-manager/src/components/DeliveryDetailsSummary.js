@@ -1,11 +1,9 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Button, EditIcon, Header, Loader, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { InfoBannerIcon, Toast , Card , Stepper , TextBlock } from "@egovernments/digit-ui-components";
-import { DownloadIcon } from "@egovernments/digit-ui-react-components";
-import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
-import getProjectServiceUrl from "../utils/getProjectServiceUrl";
+import {  EditIcon, Header, Loader, ViewComposer } from "@egovernments/digit-ui-react-components";
+import {  Toast, Card, Stepper, TextBlock } from "@egovernments/digit-ui-components";
+
 
 function mergeObjects(item) {
   const arr = item;
@@ -74,7 +72,7 @@ function loopAndReturn(dataa, t) {
     }
     return {
       ...i,
-    };  
+    };
   });
   return format;
 }
@@ -85,84 +83,89 @@ function reverseDeliveryRemap(data, t) {
   let currentCycleIndex = null;
   let currentCycle = null;
 
-  // data.forEach((item, index) => {
-  //   if (currentCycleIndex !== item.cycleNumber) {
-  //     currentCycleIndex = item.cycleNumber;
-  //     currentCycle = {
-  //       // cycleIndex: currentCycleIndex.toString(),
-  //       cycleIndex: item?.cycleIndex,
-  //       startDate: item?.startDate ? Digit.Utils.date.convertEpochToDate(item?.startDate) : null,
-  //       endDate: item?.endDate ? Digit.Utils.date.convertEpochToDate(item?.endDate) : null,
-  //       active: index === 0, // Initialize active to false
-  //       deliveries: [],
-  //     };
-  //     reversedData.push(currentCycle);
-  //   }
-
-  //   // const deliveryIndex = item.deliveryNumber.toString();
-  //   const deliveryIndex = item?.deliveryIndex;
-
-  //   let delivery = currentCycle.deliveries.find((delivery) => delivery.deliveryIndex === deliveryIndex);
-
-  //   if (!delivery) {
-  //     delivery = {
-  //       deliveryIndex: deliveryIndex,
-  //       active: item.deliveryNumber === 1, // Set active to true only for the first delivery
-  //       deliveryRules: [],
-  //     };
-  //     currentCycle.deliveries.push(delivery);
-  //   }
-
-  //   delivery.deliveryRules.push({
-  //     ruleKey: item.deliveryRuleNumber,
-  //     delivery: {},
-  //     attributes: loopAndReturn(item.conditions, t),
-  //     products: [...item.products],
-  //   });
-  // });
-
-  // return reversedData;
-
-  return data;
-}
-
-const fetchResourceFile = async (tenantId, resourceIdArr) => {
-  const res = await Digit.CustomService.getResponse({
-    url: `/project-factory/v1/data/_search`,
-    body: {
-      SearchCriteria: {
-        tenantId: tenantId,
-        id: resourceIdArr,
-      },
-    },
-  });
-  return res?.ResourceDetails;
-};
-const fetchcd = async (tenantId, projectId) => {
-  const url = getProjectServiceUrl();
-  const reqCriteriaResource = {
-    url: `${url}/v1/_search`,
-    params: {
-      tenantId: tenantId,
-      limit: 10,
-      offset: 0,
-    },
-    body: {
-      Projects: [
-        {
-          tenantId: tenantId,
-          id: projectId,
-        },
-      ],
-    },
+  const operatorMapping = {
+    "<=": "LESS_THAN_EQUAL_TO",
+    ">=": "GREATER_THAN_EQUAL_TO",
+    "<": "LESS_THAN",
+    ">": "GREATER_THAN",
+    "==": "EQUAL_TO",
+    "!=": "NOT_EQUAL_TO",
+    IN_BETWEEN: "IN_BETWEEN",
   };
-  try {
-    const res = await Digit.CustomService.getResponse(reqCriteriaResource);
-    return res?.Project?.[0];
-  } catch (e) {
-    console.log("error", e);
-  }
-};
+
+  const cycles = data?.[0]?.cycles || [];
+  const mapProductVariants = (productVariants) => {
+    return productVariants.map((variant, key) => ({
+      key: key + 1,
+      count: 1,
+      value: variant.productVariantId,
+      name: variant.name,
+    }));
+  };
+  const parseConditionAndCreateRules = (condition, ruleKey, products) => {
+    const conditionParts = condition.split("and").map((part) => part.trim());
+    let attributes = [];
+  
+    conditionParts.forEach((part) => {
+      const parts = part.split(" ").filter(Boolean);
+  
+      // Handle "IN_BETWEEN" operator
+      if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
+        const toValue = parts[0];
+        const fromValue = parts[4];
+        attributes.push({
+          key: attributes.length + 1,
+          operator: { code: operatorMapping["IN_BETWEEN"] },
+          attribute: { code: parts[2] },
+          fromValue,
+          toValue,
+        });
+      } else {
+        const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
+        if (match) {
+          const attributeCode = match[1].trim();
+          const operatorSymbol = match[2].trim();
+          const value = match[3].trim();
+          attributes.push({
+            key: attributes.length + 1,
+            value,
+            operator: { code: operatorMapping[operatorSymbol] },
+            attribute: { code: attributeCode },
+          });
+        }
+      }
+    });
+    return [{
+      ruleKey: ruleKey + 1,
+      delivery: {},
+      products,
+      attributes,
+    }];
+  };
+  
+  const mapDoseCriteriaToDeliveryRules = (doseCriteria) => {
+    return doseCriteria?.flatMap((criteria, ruleKey) => {
+      const products = mapProductVariants(criteria.ProductVariants);
+      return parseConditionAndCreateRules(criteria.condition, ruleKey, products);
+    });
+  };
+
+  const mapDeliveries = (deliveries) => {
+    return deliveries?.map((delivery, deliveryIndex) => ({
+      active: true,
+      deliveryIndex: String(deliveryIndex + 1),
+      deliveryRules: mapDoseCriteriaToDeliveryRules(delivery.doseCriteria),
+    }));
+  };
+
+  const transformedCycles = cycles.map((cycle) => ({
+    active: true,
+    cycleIndex: String(cycle.id),
+    deliveries: mapDeliveries(cycle.deliveries),
+  }));
+
+  return transformedCycles;
+}
 const DeliveryDetailsSummary = (props) => {
   const { t } = useTranslation();
   const history = useHistory();
@@ -172,13 +175,8 @@ const DeliveryDetailsSummary = (props) => {
   const noAction = searchParams.get("action");
   const [showToast, setShowToast] = useState(null);
   const [summaryErrors, setSummaryErrors] = useState(null);
-  const [projectId, setprojectId] = useState(null);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [cycles, setCycles] = useState([]);
-  const [cards, setCards] = useState([]);
   const isPreview = searchParams.get("preview");
-  const [currentStep , setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(1);
   const currentKey = searchParams.get("key");
   const [key, setKey] = useState(() => {
     const keyParam = searchParams.get("key");
@@ -204,7 +202,6 @@ const DeliveryDetailsSummary = (props) => {
     window.history.replaceState({}, "", url);
   }
 
-
   useEffect(() => {
     updateUrlParams({ key: key });
     window.dispatchEvent(new Event("checking"));
@@ -216,7 +213,7 @@ const DeliveryDetailsSummary = (props) => {
         const temp = props?.props?.summaryErrors?.deliveryErrors?.map((i) => {
           return {
             ...i,
-            onClick: i?.dateError ? () => handleRedirect(6) : () => handleRedirect(7, i?.cycle),
+            onClick: i?.dateError ? () => handleRedirect(7) : () => handleRedirect(8, i?.cycle),
           };
         });
         setSummaryErrors({ ...props?.props?.summaryErrors, deliveryErrors: temp });
@@ -226,21 +223,6 @@ const DeliveryDetailsSummary = (props) => {
     }
   }, [props?.props?.summaryErrors]);
 
-  useEffect(() => {
-    const fun = async () => {
-      let temp = await fetchcd(tenantId, projectId);
-      if (temp) {
-        await new Promise((resolve) => {
-          setStartDate(temp?.startDate);
-          setEndDate(temp?.endDate);
-          setCycles(temp?.additionalDetails?.projectType?.cycles);
-          resolve();
-        });
-      }
-    };
-    fun();
-  }, [projectId]);
-
   const { isLoading, data, error, refetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
@@ -248,25 +230,9 @@ const DeliveryDetailsSummary = (props) => {
     },
     config: {
       select: (data) => {
-        const resourceIdArr = [];
-        data?.[0]?.resources?.map((i) => {
-          if (i?.createResourceId && i?.type === "user") {
-            resourceIdArr.push(i?.createResourceId);
-          }
-        });
-        let processid;
-        setprojectId(data?.[0]?.projectId);
-        setCards(data?.cards);
-
-        const ss = async () => {
-          let temp = await fetchResourceFile(tenantId, resourceIdArr);
-          processid = temp;
-          return;
-        };
-        ss();
         const target = data?.[0]?.deliveryRules;
         const cycleData = reverseDeliveryRemap(target, t);
-        
+
         return {
           cards: [
             {
@@ -284,15 +250,15 @@ const DeliveryDetailsSummary = (props) => {
                     {
                       key: "CAMPAIGN_NO_OF_CYCLES",
                       value:
-                        data?.[0]?.deliveryRules && data?.[0]?.deliveryRules.map((item) => item.cycleIndex)?.length > 0
-                          ? Math.max(...data?.[0]?.deliveryRules.map((item) => item.cycleIndex))
+                        data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle ? 
+                        data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle
                           : t("CAMPAIGN_SUMMARY_NA"),
                     },
                     {
                       key: "CAMPAIGN_NO_OF_DELIVERIES",
                       value:
-                        data?.[0]?.deliveryRules && data?.[0]?.deliveryRules?.flatMap((rule) => rule?.deliveries.map((delivery) => delivery?.deliveryIndex))?.length > 0
-                          ? Math.max(...data?.[0]?.deliveryRules?.flatMap((rule) => rule?.deliveries.map((delivery) => delivery?.deliveryIndex)))
+                        data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries ? 
+                        data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries
                           : t("CAMPAIGN_SUMMARY_NA"),
                     },
                   ],
@@ -326,7 +292,6 @@ const DeliveryDetailsSummary = (props) => {
           error: data?.[0]?.additionalDetails?.error,
           data: data?.[0],
           status: data?.[0]?.status,
-          userGenerationSuccess: resourceIdArr,
         };
       },
       enabled: id ? true : false,
@@ -361,23 +326,22 @@ const DeliveryDetailsSummary = (props) => {
   const updatedObject = { ...data };
 
   const onStepClick = (currentStep) => {
-    if(currentStep === 0){
+    if (currentStep === 0) {
       setKey(7);
-    }
-    else if(currentStep === 2) setKey(9);
+    } else if (currentStep === 2) setKey(9);
     else setKey(8);
   };
 
   return (
     <>
-     <div className="container-full">
+      <div className="container-full">
         <div className="card-container">
           <Card className="card-header-timeline">
-            <TextBlock subHeader={t("HCM_DELIVERY_DETAILS")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+            <TextBlock subHeader={t("HCM_DELIVERY_DETAILS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
           <Card className="stepper-card">
             <Stepper
-              customSteps={["HCM_CYCLES","HCM_DELIVERY_RULES" ,"HCM_SUMMARY"]}
+              customSteps={["HCM_CYCLES", "HCM_DELIVERY_RULES", "HCM_SUMMARY"]}
               currentStep={3}
               onStepClick={onStepClick}
               direction={"vertical"}
@@ -385,20 +349,20 @@ const DeliveryDetailsSummary = (props) => {
           </Card>
         </div>
         <div className="card-container-delivery">
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Header className="summary-header">{t("HCM_DELIVERY_DETAILS_SUMMARY")}</Header>
-      </div>
-      <div className="campaign-summary-container">
-        <ViewComposer data={updatedObject} cardErrors={summaryErrors} />
-        {showToast && (
-          <Toast
-            type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : "success"}
-            label={t(showToast?.label)}
-            onClose={closeToast}
-          />
-        )}
-      </div>
-      </div>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <Header className="summary-header">{t("HCM_DELIVERY_DETAILS_SUMMARY")}</Header>
+          </div>
+          <div className="campaign-summary-container">
+            <ViewComposer data={updatedObject} cardErrors={summaryErrors} />
+            {showToast && (
+              <Toast
+                type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : "success"}
+                label={t(showToast?.label)}
+                onClose={closeToast}
+              />
+            )}
+          </div>
+        </div>
       </div>
     </>
   );

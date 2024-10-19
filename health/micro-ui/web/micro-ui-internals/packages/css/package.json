@@ -1,6 +1,6 @@
 {
-  "name": "@egovernments/digit-ui-css",
-  "version": "1.0.79-campaign",
+  "name": "@egovernments/digit-ui-health-css",
+  "version": "0.1.2",
   "license": "MIT",
   "main": "dist/index.css",
   "author": "Jagankumar <jagan.kumar@egov.org.in>",
@@ -59,6 +59,10 @@
     "digit",
     "egov",
     "dpg",
+    "hcm",
+    "health",
+    "console",
+    "microplan",
     "digit-ui",
     "css"
   ]

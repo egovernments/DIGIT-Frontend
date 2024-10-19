@@ -55,13 +55,16 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const [readMeInfo, setReadMeInfo] = useState({});
   const [showPopUp, setShowPopUp] = useState(true);
 
-  const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
-  const boundaryHierarchy = useMemo(() => {
-    return hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)?.hierarchy;
-  }, [hierarchyConfig]);
+  const { data: boundaryHierarchy } = Digit.Hooks.useCustomMDMS(tenantId, "hcm-microplanning", [{ name: "hierarchyConfig" }], {
+    select: (data) => {
+       const item = data?.["hcm-microplanning"]?.hierarchyConfig?.find((item) => item.isActive)
+       return item?.hierarchy
+      },
+  },{schemaCode:"BASE_MASTER_DATA_INITIAL"});
   const totalData = Digit.SessionStorage.get("MICROPLAN_DATA");
   const campaignType = totalData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code
   const [loader, setLoader] = useState(false);
+  const [ downloadTemplateLoader,setDownloadTemplateLoader] = useState(false);
   const XlsPreview = Digit.ComponentRegistryService.getComponent("XlsPreview");
   const BulkUpload = Digit.ComponentRegistryService.getComponent("BulkUpload");
   const baseKey = 4;
@@ -572,6 +575,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
 
   const downloadTemplate = async () => {
+    setDownloadTemplateLoader(true);
     await mutation.mutate(
       {
         params: {
@@ -583,6 +587,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       },
       {
         onSuccess: async (result) => {
+          setDownloadTemplateLoader(false);
           if (result?.GeneratedResource?.[0]?.status === "failed") {
             setDownloadError(true);
             generateData();
@@ -605,7 +610,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           const fileData = fileUrl?.map((i) => {
             const urlParts = i?.url?.split("/");
             // const fileName = urlParts[urlParts?.length - 1]?.split("?")?.[0];
-            const fileName = type === "boundary" ? "Target Template" : type === "facilityWithBoundary" ? "Facility Template" : "User Template";
+            const fileName = type === "boundary" ? "Population Template" : type === "facilityWithBoundary" ? "Facility Template" : "User Template";
             return {
               ...i,
               filename: fileName,
@@ -623,6 +628,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           }
         },
         onError: (result) => {
+          setDownloadTemplateLoader(false);
           setDownloadError(true);
           generateData();
           setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
@@ -665,7 +671,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           <Card className="card-header-timeline">
             <TextBlock
               subHeader={t("HCM_UPLOAD_DATA")}
-              subHeaderClasName={"stepper-subheader"}
+              subHeaderClassName={"stepper-subheader"}
               wrapperClassName={"stepper-wrapper"}
             />
           </Card>
@@ -679,6 +685,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           </Card>
         </div>
         {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
+        {downloadTemplateLoader && <LoaderWithGap/>}
         <div className="card-container" style={{ width: "100%" }}>
           <Card>
             <div className="campaign-bulk-upload">
@@ -757,9 +764,9 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
                       {info?.descriptions.map((desc, i) => (
                         <li key={i} className="info-points">
                           {desc.isBold ? (
-                            <h2>{`Step ${i + 1}: ${desc.text}`}</h2>
+                            <h2>{`${i + 1}. ${desc.text}`}</h2>
                           ) : (
-                            <p>{`Step ${i + 1}: ${desc.text}`}</p>
+                            <p>{`${i + 1}. ${desc.text}`}</p>
                           )}
                         </li>
                       ))}
@@ -782,18 +789,18 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             footerclassName={"popUpFooter"}
             heading={
               type === "boundary"
-                ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_HEADER")
+                ? t("MP_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_HEADER")
                 : type === "facilityWithBoundary"
-                  ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER")
-                  : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER")
+                  ? t("MP_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER")
+                  : t("MP_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER")
             }
             children={[
               <div>
                 {type === "boundary"
-                  ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_TEXT")
+                  ? t("MP_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_TEXT")
                   : type === "facilityWithBoundary"
-                    ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT")
-                    : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT ")}
+                    ? t("MP_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT")
+                    : t("MP_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT ")}
               </div>,
             ]}
             onOverlayClick={() => {
@@ -804,7 +811,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
                 type={"button"}
                 size={"large"}
                 variation={"secondary"}
-                label={t("HCM_CAMPAIGN_UPLOAD_CANCEL")}
+                label={t("MP_CAMPAIGN_UPLOAD_SKIP")}
                 onClick={() => {
                   setShowPopUp(false);
                 }}

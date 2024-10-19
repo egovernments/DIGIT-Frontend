@@ -615,8 +615,9 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
     setDeliveryRules(newData);
   };
 
-  const selectedStructureCodes = campaignData.flatMap((cycle) =>
-    cycle.deliveries.flatMap((delivery) => delivery.deliveryRules.flatMap((rule) => rule.attributes.map((attribute) => attribute.value)))
+
+  const selectedStructureCodes = campaignData?.flatMap((cycle) =>
+    cycle?.deliveries?.flatMap((delivery) => delivery?.deliveryRules?.flatMap((rule) => rule?.attributes?.map((attribute) => attribute?.value)))
   );
 
   const filteredStructureConfig = structureConfig?.filter((structure) => !selectedStructureCodes.includes(structure?.code));
@@ -919,8 +920,8 @@ const AddDeliveryRuleWrapper = ({}) => {
     });
   };
 
-  const selectedStructureCodes = campaignData.flatMap((cycle) =>
-    cycle?.deliveries.flatMap((delivery) => delivery?.deliveryRules.flatMap((rule) => rule?.attributes.map((attribute) => attribute?.value)))
+  const selectedStructureCodes = campaignData?.flatMap((cycle) =>
+    cycle?.deliveries?.flatMap((delivery) => delivery?.deliveryRules?.flatMap((rule) => rule?.attributes.map((attribute) => attribute?.value)))
   );
 
   const isIRSDelivery = filteredDeliveryConfig?.projectType === "IRS-mz" && selectedStructureCodes?.length < 4;

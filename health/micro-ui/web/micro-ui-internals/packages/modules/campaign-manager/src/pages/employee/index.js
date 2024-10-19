@@ -2,15 +2,12 @@ import React, { useEffect } from "react";
 import { Switch, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
-// import CampaignHeader from "../../components/CampaignHeader";
 import SetupCampaign from "./SetupCampaign";
 import SelectingBoundaries from "../../components/SelectingBoundaries";
 import ConfigureApp from "./ConfigureApp";
-import {temp_data, CreateChecklist} from "./CreateChecklist";
+import { CreateChecklist} from "./CreateChecklist";
 import SearchChecklist from "./SearchChecklist";
 import UpdateBoundary from "./UpdateBoundary";
-// import SelectingBoundaryComponent from "../../components/SelectingBoundaryComponent";
-import { Wrapper } from "../../components/SelectingBoundaryComponent";
 import Boundary from "./Boundary";
 import GeoPode from "./GeoPode";
 import ViewBoundary from "./ViewBoundary";
@@ -26,6 +23,7 @@ import UpdateChecklist from "./UpdateChecklist";
  */
 const CampaignBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
+  
   const search = useLocation().search;
   const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
   const crumbs = [
@@ -68,6 +66,9 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       path: "",
       content: t("ACTION_UPDATE_CHECKLIST"),
       show: pathVar === "checklist/update" ? true : false,
+      path: pathVar === "boundary/home" ? "" : `/${window?.contextPath}/employee/campaign/boundary/home`,
+      content: t("BOUNDARY_DATA_MANAGEMENT"),
+      show: pathVar.match("boundary/") ? true : false,
     }
   ];
 
@@ -92,7 +93,6 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
   const Response = Digit?.ComponentRegistryService?.getComponent("Response");
   const AddProduct = Digit?.ComponentRegistryService?.getComponent("AddProduct");
   const UpdateDatesWithBoundaries = Digit?.ComponentRegistryService?.getComponent("UpdateDatesWithBoundaries");
-  const DeliveryDetailsSummary = Digit?.ComponentRegistryService?.getComponent("DeliveryDetailsSummary");
 
   useEffect(() => {
     if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
@@ -141,6 +141,11 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
           <PrivateRoute path={`${path}/update-boundary`} component={() => <UpdateBoundary />} />
           <PrivateRoute path={`${path}/checklist/view`} component={() => <ViewChecklist />} />
           <PrivateRoute path={`${path}/checklist/update`} component={() => <UpdateChecklist />} />
+          <PrivateRoute path={`${path}/boundary/home`} component={()=> <Boundary />} />
+          <PrivateRoute path={`${path}/boundary/geopode`} component={()=> <GeoPode />} />
+          <PrivateRoute path={`${path}/boundary/view-all-hierarchy`} component={()=> <ViewBoundary />} />
+          <PrivateRoute path={`${path}/boundary/view-hierarchy`} component={()=> <ViewHierarchy />} />
+          <PrivateRoute path={`${path}/boundary/update-boundary`} component={() => <UpdateBoundary />} />
         </AppContainer>
       </Switch>
     </React.Fragment>

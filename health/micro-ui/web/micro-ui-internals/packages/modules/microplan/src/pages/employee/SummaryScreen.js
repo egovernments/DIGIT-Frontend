@@ -5,73 +5,72 @@ import { Button, EditIcon, Header, Loader, ViewComposer } from "@egovernments/di
 import { InfoBannerIcon, Toast } from "@egovernments/digit-ui-components";
 import { DownloadIcon } from "@egovernments/digit-ui-react-components";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { noConflict } from "lodash";
 
 
 
-const SummaryScreen = ({props:customProps}) => {
+const SummaryScreen = ({ props: customProps }) => {
     const { t } = useTranslation();
     const history = useHistory();
 
     // const [totalFormData, setTotalFormData] = Digit.Hooks.useSessionStorage("MICROPLAN_DATA", {});
     const campaignDetails = customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails
     const microplanDetails = customProps?.sessionData?.MICROPLAN_DETAILS?.microplanDetails
-    const assumptionsForm=customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm
-    const hypothesisValues=customProps?.sessionData?.HYPOTHESIS?.Assumptions?.assumptionValues
-    
+    const assumptionsForm = customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm
+    const hypothesisValues = customProps?.sessionData?.HYPOTHESIS?.Assumptions?.assumptionValues
 
 
-    
+
+
 
 
     const data = {
         cards: [
             {
                 navigationKey: "card1",
-                sections: 
-                    
-                        [
-                            {
-                                type: "DATA",
-                                cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, marginBottom:"0.5rem",fontSize: "1.5rem" } },
-                                cardSecondaryAction: (
-                                    <div className="campaign-preview-edit-container" onClick={()=>{}}>
-                                        <span>{t(`CAMPAIGN_EDIT`)}</span>
-                                        <EditIcon />
-                                    </div>
-                                ),
-                                values: [
-                                    {
-                                        key: t("CAMPAIGN_TYPE"),
-                                        // value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code || "NA",
-                                           value:campaignDetails?.campaignType?.code || "NA",
-    
-                                    },
-                                    {
-                                        key: t("CMAPAIGN_DISEASE"),
-                                        // value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.disease?.code || "NA",
-                                        value:campaignDetails?.disease?.code || "NA",
+                sections:
+                    [
+                        {
+                            type: "DATA",
+                            cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, marginBottom: "0.5rem", fontSize: "1.5rem" } },
+                            cardSecondaryAction: (
+                                <div className="campaign-preview-edit-container" onClick={() => { }}>
+                                    <span>{t(`CAMPAIGN_EDIT`)}</span>
+                                    <EditIcon />
+                                </div>
+                            ),
+                            values: [
+                                {
+                                    key: t("CAMPAIGN_TYPE"),
+                                    // value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code || "NA",
+                                    value: campaignDetails?.campaignType?.code || "NA",
 
-                                    },
-                                    {
-                                        key: t("RESOURCE_DISTRIBUTION_STRATEGY"),
-                                        // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
-                                        // value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode || "NA",
-                                        value:campaignDetails?.distributionStrat?.resourceDistributionStrategyCode || "NA",
+                                },
+                                {
+                                    key: t("CMAPAIGN_DISEASE"),
+                                    // value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.disease?.code || "NA",
+                                    value: campaignDetails?.disease?.code || "NA",
 
-                                    },
-                                    
-                                ],
-                                inlineStyles: {
-                                    marginBottom: "0rem",
-                                  },
-                                // values: data31(),
-    
-    
+                                },
+                                {
+                                    key: t("RESOURCE_DISTRIBUTION_STRATEGY"),
+                                    // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
+                                    // value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode || "NA",
+                                    value: campaignDetails?.distributionStrat?.resourceDistributionStrategyCode || "NA",
+
+                                },
+
+                            ],
+                            inlineStyles: {
+                                marginBottom: "0rem",
                             },
-                        ]
-                       
-                
-            },{
+                            // values: data31(),
+
+
+                        },
+                    ]
+            },
+            {
                 navigationKey: "card1",
                 sections: [
                     {
@@ -87,7 +86,7 @@ const SummaryScreen = ({props:customProps}) => {
                             {
                                 key: t("NAME_OF_MICROPLAN"),
                                 // value: totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName || "NA",
-                                value:microplanDetails?.microplanName  || "NA",
+                                value: microplanDetails?.microplanName || "NA",
 
 
                             },
@@ -98,179 +97,50 @@ const SummaryScreen = ({props:customProps}) => {
                     },
 
                 ],
-                       
-                
+
+
+            },
+            {
+                navigationKey: "card2",
+                sections:
+                    [
+                        {
+
+                            type: "COMPONENT",
+                            component: "AssumptionsList",
+                            props: {
+                                customProps: customProps
+                            },
+                        },
+                    ]
+
+
             },
 
             {
-            navigationKey: "card9",
-            sections: 
-                
+                navigationKey: "card9",
+                noCardStyle:"true",
+                sections:
+
                     [
                         {
-                            
+
                             type: "COMPONENT",
                             component: "CampaignBoundary",
+                            noCardStyle:true,
                             props: {
-                                customProps:customProps
+                                customProps: customProps
 
                             },
                         },
                     ]
-                   
-            
-        },
-            
-            
-            {
-                navigationKey: "card2",
-                sections: [
-                    {
-                        type: "DATA",
-                        cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                        cardSecondaryAction: (
-                            <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                                <span>{t(`CAMPAIGN_EDIT`)}</span>
-                                <EditIcon />
-                            </div>
-                        ),
-                        values: [
-                            {
-                                key: t("CAMPAIGN_REGISTRATION_PROCESS"),
-                                value: assumptionsForm?.selectedRegistrationProcess?.code  || "NA",
-                            },
-                            {
-                                key: t("CAMPAIGN_DISTRIBUTION_PROCESS"),
-                                value: assumptionsForm?.selectedDistributionProcess?.code || "NA",
-                            },
-                            {
-                                key: t("REGISTRATION_AND_DISTRIBUTION"),
-                                // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
-                                value: assumptionsForm?.selectedRegistrationDistributionMode?.code || "NA"
-                            },
-                        ],
-                    },
 
-                ]
+
             },
+
+
+
             {
-                navigationKey: "card2",
-                sections: [
-                    {
-                        type: "DATA",
-                        cardHeader: { value: t("General Estimation"), inlineStyles: { marginTop: 0, fontSize: "1.5rem", color: " #0B4B66" } },
-                        cardSecondaryAction: (
-                            <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                                <span>{t(`CAMPAIGN_EDIT`)}</span>
-                                <EditIcon />
-                            </div>
-                        ),
-                        values: [
-                            {
-                                key: t("AVERAGE_PEOPLE_IN_A_HOUSEHOLD"),
-                                value: hypothesisValues[2]?.value || "NA",
-                            },
-                            {
-                                key: "Number of bednets per bale",
-                                value: "50"
-                            },
-                            {
-                                key: "Number of people per bednet ",
-                                value: "50"
-                            },
-                        ],
-                    },
-
-                ]
-            },{
-                navigationKey: "card2",
-                sections: [
-                    {
-                        type: "DATA",
-                        cardHeader: { value: t("Household Registration information"), inlineStyles: { marginTop: 0, fontSize: "1.5rem", color: " #0B4B66" } },
-                        cardSecondaryAction: (
-                            <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                                <span>{t(`CAMPAIGN_EDIT`)}</span>
-                                <EditIcon />
-                            </div>
-                        ),
-                        values: [
-                            {
-                                key: t("NO_OF_DAYS_FOR_HOUSEHOLD_REGISTRATION"),
-                                value: "4",
-                            },
-                            {
-                                key: t("NUMBER_OF_BENEFICIARIES_PER_TEAM_PER_DAY"),
-                                value: hypothesisValues[3]?.value || "NA"
-                            },
-                            {
-                                key: t("NUMBER_OF_MEMBERS_PER_REGISTRATION_TEAM"),
-                                value: hypothesisValues[4]?.value || "NA"
-                            },
-                            {
-                                key: t("NUMBER_OF_REGISTRATION_TEAMS_PER_MONITOR"),
-                                value: hypothesisValues[5]?.value || "NA"
-                                
-                            },
-                            {
-                                key: t("NUMBER_OF_MONITORS_PER_SUPERVISOR_FOR_REGISTRATION"),
-                                value: hypothesisValues[6]?.value || "NA"
-                                
-                            },
-                        ],
-                    },
-
-                ],
-            },{
-                navigationKey: "card2",
-                sections: [
-                    {
-                        type: "DATA",
-                        cardHeader: { value: t("Campaign commodities"), inlineStyles: { marginTop: 0, fontSize: "1.5rem", color: " #0B4B66" } },
-                        cardSecondaryAction: (
-                            <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                                <span>{t(`CAMPAIGN_EDIT`)}</span>
-                                <EditIcon />
-                            </div>
-                        ),
-                        values: [
-                            {
-                                key: t("NUMBER_OF_HOUSEHOLDS_PER_STICKER_ROLL"),
-                                value: "20",
-                            },
-
-                        ],
-                    },
-
-                ]
-            },{
-                navigationKey: "card2",
-                sections: [
-                    {
-                        type: "DATA",
-                        cardHeader: { value: t("Campaign vehicles"), inlineStyles: { marginTop: 0, fontSize: "1.5rem", color: " #0B4B66" } },
-                        cardSecondaryAction: (
-                            <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                                <span>{t(`CAMPAIGN_EDIT`)}</span>
-                                <EditIcon />
-                            </div>
-                        ),
-                        values: [
-                            {
-                                key: t("CAPACITY_OF_VEHICLE_1_BALES"),
-                                value: "20",
-                            },
-                            {
-                                key: t("CAPACITY_OF_VEHICLE_2_BALES"),
-                                value: "20",
-                            },
-
-
-                        ],
-                    },
-
-                ]
-            },{
                 navigationKey: "card3",
                 sections: [
                     {
@@ -302,220 +172,192 @@ const SummaryScreen = ({props:customProps}) => {
                     },
 
                 ]
-                       
-                
-            }, 
+
+
+            },
             // {
             //     navigationKey: "card5",
             //     sections: 
-                    
+
             //             [
             //                 {
-                                
+
             //                     type: "COMPONENT",
             //                     component: "FormulaConfiguration",
             //                     props: {
             //                     },
             //                 },
             //             ]
-                       
-                
+
+
             // },
             // {
             //     navigationKey: "card6",
             //     sections: 
-                    
+
             //             [
             //                 {
-                                
+
             //                     type: "COMPONENT",
             //                     component: "UserAccessManagement",
             //                     props: {
             //                     },
             //                 },
             //             ]
-                       
-                
+
+
             // },
             {
                 navigationKey: "card7",
-                sections: 
-                    
-                        [
-                            {
-                                
-                                type: "COMPONENT",
-                                component: "FileComponent",
-                                props: {
-                                    title:"Population",
-                                    fileName:"file.xlsx",
-                                    editHandler:()=>{},
-                                    deleteHandler:()=>{},
+                sections:
 
-                                },
+                    [
+                        {
+
+                            type: "COMPONENT",
+                            component: "FileComponent",
+                            noCardStyle:true,
+                            props: {
+                                title: "Population",
+                                fileName: "file.xlsx",
+                                editHandler: () => { },
+                                deleteHandler: () => { },
+
                             },
-                        ]
-                       
-                
-            },{
+                        },
+                    ]
+
+
+            }, {
                 navigationKey: "card7",
-                sections: 
-                    
-                        [
-                            {
-                                
-                                type: "COMPONENT",
-                                component: "FileComponent",
-                                props: {
-                                    title:"Facilities",
-                                    fileName:"file.xlsx",
-                                    editHandler:()=>{},
-                                    deleteHandler:()=>{},
+                sections:
 
-                                },
+                    [
+                        {
+
+                            type: "COMPONENT",
+                            noCardStyle:true,
+                            component: "FileComponent",
+                            props: {
+                                title: "Facilities",
+                                fileName: "file.xlsx",
+                                editHandler: () => { },
+                                deleteHandler: () => { },
+
                             },
-                        ]
-                       
-                
-            },{
+                        },
+                    ]
+
+
+            }, {
                 navigationKey: "card7",
-                sections: 
-                    
-                        [
-                            {
-                                
-                                type: "COMPONENT",
-                                component: "DataMgmtTable",
-                                props: {
-                                    
+                sections:
 
-                                },
+                    [
+                        {
+
+                            type: "COMPONENT",
+                            noCardStyle:true,
+                            component: "DataMgmtTable",
+                            props: {
+
+
                             },
-                        ]
-                       
-                
-            },{
-                navigationKey: "card8",
-                sections: 
-                    
-                        [
-                            {
-                                
-                                type: "COMPONENT",
-                                component: "FormulaSection",
+                        },
+                    ]
 
-                                props: {
-                                    
-                                    title:"GENERAL_ESTIMATION",
-                                    threeInputArr:[["Number of households per boundary","Population of the boundary","Divided by","Average people HJ/H"],
-                                    [ "Number of bednets per boundary","Population of the boundary","Divided by","Average people HJ/H"],
-                                    [ "Number of bales per boundary","Population of the boundary","Divided by","Average people HJ/H"]
 
-                                ]
-                                    
-                                },
-                            },
-                        ]
-                       
-                
-            },{
-                navigationKey: "card8",
-                sections: 
-                    
-                        [
-                            {
-                                
-                                type: "COMPONENT",
-                                component: "FormulaSection",
-
-                                props: {
-                                    
-                                    title:"HOUSEHOLD_REGISTRATION_INFORMATION",
-                                    threeInputArr:[["Number of hosueholds registered","Population of the boundary","Divided by","Average people HJ/H"],
-                                    [ "Number of houdeholds registered per boundary","Population of the boundary","Divided by","Average people HJ/H"],
-                                    [ "Number of Supervisors per Boundary","Population of the boundary","Divided by","Average people HJ/H"]
-
-                                ]
-                                    
-                                },
-                            },
-                        ]
-                       
-                
-            },{
-                navigationKey: "card8",
-                sections: 
-                    
-                        [
-                            {
-                                
-                                type: "COMPONENT",
-                                component: "FormulaSection",
-
-                                props: {
-                                    
-                                    title:"CAMPAIGN_COMMODITIES",
-                                    threeInputArr:[["Number of sticker rolls per boundary","Population of the boundary","Divided by","Average people HJ/H"],  ]
-                                    
-                                },
-                            },
-                        ]
-                       
-                
             },
-           
+            // type: "COMPONENT",
+            //                     component: "FormulaSection",
+
+            //                     props: {
+
+            //                         title:"GENERAL_ESTIMATION",
+            //                         threeInputArr:[["Number of households per boundary","Population of the boundary","Divided by","Average people HJ/H"],
+            //                         [ "Number of bednets per boundary","Population of the boundary","Divided by","Average people HJ/H"],
+            //                         [ "Number of bales per boundary","Population of the boundary","Divided by","Average people HJ/H"]
+
+            //                     ]
+
+            //                     },
+            {
+                navigationKey: "card8",
+                noCardStyle:true,
+                sections:
+
+                    [
+                        {
+
+                            type: "COMPONENT",
+                            noCardStyle:true,
+                            component: "FormulaConfigScreen",
+
+                            props: {
+
+                                customProps: customProps
+
+
+
+                            },
+                        },
+                    ]
+
+
+            },
+
         ],
         horizontalNav: {
             showNav: true,
             configNavItems: [
-             
-                 
-                    {
-                      name: "card1",
-                      active: true,
-                      code: "MICROPLAN_DETAILS",
-                    },
-                    {
-                        name: "card9",
-                        active: true,
-                        code: "CAMPAIGN_BOUNDARY",
-                      },
-                    {
-                        name: "card7",
-                        active: true,
-                        code: "DATA_MGMT",
-                      },
-                  
-               
-              {
-                name: "card2",
-                active: true,
-                code: "MICROPLAN_ASSUMPTIONS",
-              },
-              
-              
-            //  ,{
-            //     name: "card5",
-            //     active: true,
-            //     code: "FORMULA_CONFIGURATION",
-            //   },
-            //   {
-            //     name: "card6",
-            //     active: true,
-            //     code: "USER_ACCESS_MGMT",
-            //   },
-              {
-                name: "card8",
-                active: true,
-                code: "FORMULA_CONFIGURATION",
-              },
-              
+
+
+                {
+                    name: "card1",
+                    active: true,
+                    code: "MICROPLAN_DETAILS",
+                },
+                {
+                    name: "card9",
+                    active: true,
+                    code: "CAMPAIGN_BOUNDARY",
+                },
+                {
+                    name: "card7",
+                    active: true,
+                    code: "DATA_MGMT",
+                },
+
+
+                {
+                    name: "card2",
+                    active: true,
+                    code: "MICROPLAN_ASSUMPTIONS",
+                },
+
+
+                //  ,{
+                //     name: "card5",
+                //     active: true,
+                //     code: "FORMULA_CONFIGURATION",
+                //   },
+                //   {
+                //     name: "card6",
+                //     active: true,
+                //     code: "USER_ACCESS_MGMT",
+                //   },
+                {
+                    name: "card8",
+                    active: true,
+                    code: "FORMULA_CONFIGURATION",
+                },
+
             ],
-            activeByDefault: "card1",
-          },
+            activeByDefault: "card8",
+        },
 
     }
-    
+
     return (
         <ViewComposer data={data} />
     )

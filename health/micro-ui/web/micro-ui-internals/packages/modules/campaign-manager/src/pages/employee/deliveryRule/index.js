@@ -301,13 +301,13 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
 
     saved.forEach((cycle) => {
       // Remove deliveries if there are more deliveries than the specified number
-      if (cycle.deliveries.length > subTabs) {
-        cycle.deliveries.splice(subTabs);
+      if (cycle?.deliveries?.length > subTabs) {
+        cycle?.deliveries.splice(subTabs);
       }
 
       // Add deliveries if there are fewer deliveries than the specified number
-      if (subTabs > cycle.deliveries.length) {
-        for (let i = cycle.deliveries.length + 1; i <= subTabs; i++) {
+      if (subTabs > cycle?.deliveries?.length) {
+        for (let i = cycle?.deliveries.length + 1; i <= subTabs; i++) {
           const newIndex = i.toString();
           cycle.deliveries.push({
             deliveryIndex: newIndex,

@@ -13,7 +13,7 @@ function boundaryDataGrp(boundaryData) {
   const groupedData = {};
 
   // Iterate through each boundary item in the data
-  boundaryData.forEach((item) => {
+  boundaryData?.forEach((item) => {
     const { type } = item; // Extract the type
 
     // If the type doesn't exist in the groupedData, create an array for it
@@ -160,7 +160,7 @@ const BoundarySummary = (props) => {
      <div className="container-full">
         <div className="card-container">
           <Card className="card-header-timeline">
-            <TextBlock subHeader={t("HCM_BOUNDARY_DETAILS")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+            <TextBlock subHeader={t("HCM_BOUNDARY_DETAILS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
           <Card className="stepper-card">
             <Stepper customSteps={["HCM_BOUNDARY_DETAILS", "HCM_SUMMARY"]} currentStep={2} onStepClick={onStepClick} direction={"vertical"} />

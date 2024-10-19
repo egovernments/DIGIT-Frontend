@@ -1,0 +1,441 @@
+import { Button, Card, Dropdown, Loader, MultiSelectDropdown, TableMolecule, Toast } from "@egovernments/digit-ui-components";
+import React, { Fragment, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import DataTable from "react-data-table-component";
+import { CardLabel, LabelFieldPair, LinkLabel, SubmitBar, TextInput } from "@egovernments/digit-ui-react-components";
+import { useUserAccessContext } from "./UserAccessWrapper";
+import { useMyContext } from "../utils/context";
+import { useQueryClient } from "react-query";
+
+function RoleTableComposer() {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const totalFormData = Digit.SessionStorage.get("MICROPLAN_DATA");
+  const selectedData = totalFormData?.BOUNDARY?.boundarySelection?.selectedData ? totalFormData?.BOUNDARY?.boundarySelection?.selectedData : [];
+  const { hierarchyData, category } = useUserAccessContext();
+  const { state } = useMyContext();
+  const [rowData, setRowData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage] = useState(5);
+  const [totalRows, setTotalRows] = useState(0);
+  const [filters, setFilters] = useState({});
+  const [name, setName] = useState("");
+  const [number, setNumber] = useState("");
+  const [showToast, setShowToast] = useState(null);
+  const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
+  const { mutate: planEmployeeCreate } = Digit.Hooks.microplanv1.usePlanEmployeeCreate();
+  const { mutate: planEmployeeUpdate } = Digit.Hooks.microplanv1.usePlanEmployeeUpdate();
+
+  const { isLoading: isHrmsLoading, data: HrmsData, error: hrmsError, refetch: refetchHrms } = Digit.Hooks.microplanv1.useSearchHRMSEmployee({
+    tenantId: tenantId,
+    microplanId: microplanId,
+    body: {},
+    limit: rowsPerPage,
+    offset: (currentPage - 1) * 5,
+    roles: category,
+    filters: filters,
+    config: {
+      enabled: false,
+      select: (data) => {
+        const resp = data?.Employees?.map((item, index) => {
+          return {
+            rowIndex: index + 1,
+            name: item?.user?.name,
+            email: item?.user?.emailId,
+            number: item?.user?.mobileNumber,
+            employeeId: item?.user?.userServiceUuid,
+            user: item?.user,
+            selectedHierarchy: state?.boundaryHierarchy?.find(
+              (j) => j.boundaryType === data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.hierarchyLevel
+            ),
+            selectedBoundaries: data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.jurisdiction,
+            userServiceUuid: item?.user?.userServiceUuid,
+            planData: data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid),
+          };
+        });
+        return {
+          planSearchData: data?.planData,
+          data: resp,
+          totalCount: data?.totalCount,
+        };
+      },
+    },
+  });
+
+  useEffect(() => {
+    if (HrmsData && HrmsData?.data) {
+      // Initialize rowData from the HrmsData
+      const initializedRowData = HrmsData.data.map((employee, index) => {
+        const filteredBoundary = selectedData?.filter((item) => item?.type === employee?.selectedHierarchy?.boundaryType);
+        const boundaryOptions = Digit.Utils.microplanv1.groupByParent(filteredBoundary);
+        return {
+          rowIndex: index + 1,
+          name: employee?.name,
+          email: employee?.email,
+          number: employee?.number,
+          employeeId: employee?.employeeId,
+          userServiceUuid: employee?.userServiceUuid,
+          selectedHierarchy: employee?.selectedHierarchy || null,
+          boundaryOptions: boundaryOptions || [],
+          selectedBoundaries: filteredBoundary.filter((item) => employee?.selectedBoundaries.includes(item.code)) || [],
+        };
+      });
+
+      setRowData(initializedRowData); // Set the initialized data in the state
+    }
+  }, [HrmsData]);
+
+  useEffect(() => {
+    refetchHrms();
+  }, [totalRows, currentPage, rowsPerPage]);
+  useEffect(() => {
+    setTotalRows(HrmsData?.totalCount);
+  }, [HrmsData]);
+  // const handleHierarchyChange = (value, row) => {
+  //   setRowData((prev) => {
+  //     const newRowData = [...prev];
+  //     const filteredBoundary = selectedData?.filter((item) => item?.type === value?.boundaryType);
+  //     const boundaryOptions = Digit.Utils.microplanv1.groupByParent(filteredBoundary);
+  //     newRowData[row.rowIndex] = {
+  //       rowIndex: row?.rowIndex,
+  //       selectedHierarchy: value,
+  //       boundaryOptions,
+  //       selectedBoundaries: newRowData[row.rowIndex]?.selectedBoundaries || [], // Keep existing selected boundaries
+  //     };
+  //     return newRowData;
+  //   });
+  // };
+  const handleHierarchyChange = (value, row) => {
+    setRowData((prev) => {
+      // Find the existing row by rowIndex
+      const existingRow = prev.find((i) => i.rowIndex === row.rowIndex);
+
+      const filteredBoundary = selectedData?.filter((item) => item?.type === value?.boundaryType);
+      const boundaryOptions = Digit.Utils.microplanv1.groupByParent(filteredBoundary);
+
+      if (existingRow) {
+        // If the row exists, update it
+        return prev.map((i) =>
+          i.rowIndex === row.rowIndex
+            ? {
+                ...i,
+                selectedHierarchy: value,
+                boundaryOptions,
+                selectedBoundaries: i.selectedBoundaries || [], // Keep existing selected boundaries
+              }
+            : i
+        );
+      } else {
+        // If the row does not exist, create a new one
+        return [
+          ...prev,
+          {
+            rowIndex: row?.rowIndex,
+            selectedHierarchy: value,
+            boundaryOptions,
+            selectedBoundaries: [], // Default empty selected boundaries for new rows
+          },
+        ];
+      }
+    });
+  };
+  // const handleBoundaryChange = (value, row) => {
+  //   if (!value) return;
+
+  //   if (value.length === 0) {
+  //     setRowData((prev) => {
+  //       const newRowData = [...prev];
+  //       newRowData[row?.rowIndex] = { ...newRowData[row?.rowIndex], selectedBoundaries: [] }; // Update selected boundaries for the row
+  //       return newRowData;
+  //     });
+  //     return;
+  //   }
+
+  //   //otherwise your event object would look like this [[a,b],[a,b]] bs' are the boundaries that we need
+  //   const boundariesInEvent = value?.map((event) => {
+  //     return event?.[1];
+  //   });
+
+  //   setRowData((prev) => {
+  //     const newRowData = [...prev];
+  //     newRowData[row?.rowIndex] = { ...newRowData[row?.rowIndex], selectedBoundaries: boundariesInEvent }; // Update selected boundaries for the row
+  //     return newRowData;
+  //   });
+  // };
+
+  const handleBoundaryChange = (value, row) => {
+    if (!value) return;
+
+    if (value.length === 0) {
+      setRowData((prev) => {
+        // Find the existing row by rowIndex
+        const existingRow = prev.find((i) => i.rowIndex === row.rowIndex);
+
+        if (existingRow) {
+          // If the row exists, update selectedBoundaries to an empty array
+          return prev.map((i) =>
+            i.rowIndex === row.rowIndex
+              ? {
+                  ...i,
+                  selectedBoundaries: [], // Clear selected boundaries
+                }
+              : i
+          );
+        } else {
+          // If the row doesn't exist, add a new entry
+          return [
+            ...prev,
+            {
+              rowIndex: row?.rowIndex,
+              selectedBoundaries: [], // Initialize with an empty array
+            },
+          ];
+        }
+      });
+      return;
+    }
+
+    // Otherwise, extract the boundaries from the event
+    const boundariesInEvent = value?.map((event) => event?.[1]);
+
+    setRowData((prev) => {
+      // Find the existing row by rowIndex
+      const existingRow = prev.find((i) => i.rowIndex === row.rowIndex);
+
+      if (existingRow) {
+        // If the row exists, update selectedBoundaries with new boundaries
+        return prev.map((i) =>
+          i.rowIndex === row.rowIndex
+            ? {
+                ...i,
+                selectedBoundaries: boundariesInEvent, // Update boundaries
+              }
+            : i
+        );
+      } else {
+        // If the row doesn't exist, add a new entry
+        return [
+          ...prev,
+          {
+            rowIndex: row?.rowIndex,
+            selectedBoundaries: boundariesInEvent, // Set new boundaries
+          },
+        ];
+      }
+    });
+  };
+
+  const handleAssignEmployee = (row) => {
+    const payload = {
+      PlanEmployeeAssignment: {
+        tenantId: tenantId,
+        planConfigurationId: microplanId,
+        employeeId: row?.userServiceUuid,
+        role: category,
+        hierarchyLevel: rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedHierarchy?.boundaryType,
+        jurisdiction: rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedBoundaries?.map((item) => item?.code),
+        active: true,
+      },
+    };
+    planEmployeeCreate(payload, {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries("PLAN_SEARCH_EMPLOYEE_WITH_TAGGING");
+        refetchHrms();
+        setShowToast({ key: "success", label: t("ASSIGNED_SUCCESSFULLY") });
+      },
+      onError: (error, variables) => {
+        setShowToast({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") });
+      },
+    });
+  };
+
+  const handleUpdateAssignEmployee = (row) => {
+    const payload = {
+      PlanEmployeeAssignment: {
+        ...row?.planData,
+        active: !row?.planData?.active,
+      },
+    };
+    planEmployeeUpdate(payload, {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries("PLAN_SEARCH_EMPLOYEE_WITH_TAGGING");
+        refetchHrms();
+        setShowToast({ key: "success", label: t("ASSIGNED_SUCCESSFULLY") });
+      },
+      onError: (error, variables) => {
+        setShowToast({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") });
+      },
+    });
+  };
+
+  const columns = [
+    {
+      name: "Name",
+      selector: (row) => {
+        return row.name;
+      },
+      sortable: true,
+    },
+    {
+      name: "Email",
+      selector: (row) => row.email,
+      sortable: true,
+    },
+    {
+      name: "Contact Number",
+      selector: (row) => {
+        return row.number;
+      },
+      sortable: true,
+    },
+    {
+      name: "Hierarchy",
+      cell: (row) => {
+        return (
+          <Dropdown
+            className="roleTableCell"
+            selected={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedHierarchy || null}
+            disable={false}
+            isMandatory={true}
+            option={state?.boundaryHierarchy}
+            select={(value) => {
+              row.selectedHeirarchy = value;
+              handleHierarchyChange(value, row);
+            }}
+            optionKey="boundaryType"
+            t={t}
+          />
+        );
+      },
+    },
+    {
+      name: "Selected Boundary",
+      cell: (row) => (
+        <MultiSelectDropdown
+          props={{ className: "roleTableCell" }}
+          t={t}
+          options={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.boundaryOptions || []}
+          optionsKey={"code"}
+          selected={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedBoundaries || []}
+          onSelect={(value) => handleBoundaryChange(value, row)}
+          addCategorySelectAllCheck={true}
+          addSelectAllCheck={true}
+          variant="nestedmultiselect"
+        />
+      ),
+    },
+    {
+      name: "Action",
+      cell: (row) => {
+        const isUserAlreadyAssigned = HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.length > 0 ? true : false;
+        const isUserAlreadyAssignedActive =
+          HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.length > 0 &&
+          HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
+            ? true
+            : false;
+        return (
+          <Button
+            className={"roleTableCell"}
+            variation={isUserAlreadyAssignedActive ? "secondary" : "primary"}
+            label={isUserAlreadyAssignedActive ? t(`UNASSIGN`) : t(`ASSIGN`)}
+            icon={isUserAlreadyAssignedActive ? "Close" : "DoubleArrow"}
+            isSuffix={isUserAlreadyAssignedActive ? false : true}
+            onClick={(value) => (isUserAlreadyAssignedActive ? handleUpdateAssignEmployee(row) : handleAssignEmployee(row))}
+          />
+        );
+      },
+    },
+  ];
+
+  const handlePaginationChange = (page) => {
+    setCurrentPage(page);
+    refetchHrms();
+  };
+  const handleSearchSubmit = (e) => {
+    setFilters({
+      name: name,
+      number: number,
+    });
+  };
+  const handleClearSearch = () => {
+    setName("");
+    setNumber("");
+    setFilters({});
+  };
+  useEffect(() => {
+    if (showToast) {
+      setTimeout(closeToast, 1000);
+    }
+  }, [showToast]);
+  const closeToast = () => {
+    setShowToast(null);
+  };
+  if (isHrmsLoading) return <Loader />;
+  return (
+    <>
+      <Card>
+        <div>
+          <div className={`search-field-wrapper roleComposer`}>
+            <LabelFieldPair key={1}>
+              <CardLabel style={{ marginBottom: "0.4rem" }}>{t("Name")}</CardLabel>
+              <TextInput
+                value={name}
+                type={"text"}
+                name={"name"}
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
+                //   inputRef={ref}
+                errorStyle={""}
+                min={1}
+                minlength={1}
+              />
+            </LabelFieldPair>
+            <LabelFieldPair key={2}>
+              <CardLabel style={{ marginBottom: "0.4rem" }}>{t("Number")}</CardLabel>
+              <TextInput
+                value={number}
+                type={"number"}
+                name={"number"}
+                onChange={(e) => {
+                  setNumber(e.target.value);
+                }}
+                //   inputRef={ref}
+                errorStyle={""}
+                min={10}
+                minlength={10}
+              />
+            </LabelFieldPair>
+            <div className={`search-button-wrapper roleComposer`}>
+              <LinkLabel style={{ marginBottom: 0, whiteSpace: "nowrap" }} onClick={handleClearSearch}>
+                {t("Clear Search")}
+              </LinkLabel>
+              <SubmitBar onSubmit={handleSearchSubmit} label={t("Search")} disabled={false} />
+            </div>
+          </div>
+        </div>
+      </Card>
+      <DataTable
+        columns={columns}
+        data={HrmsData?.data}
+        pagination
+        paginationServer
+        paginationTotalRows={totalRows}
+        onChangePage={handlePaginationChange}
+        paginationPerPage={rowsPerPage}
+        paginationRowsPerPageOptions={[5, 10, 15, 20]}
+      />
+      {showToast && (
+        <Toast
+          type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
+          label={t(showToast?.label)}
+          transitionTime={showToast.transitionTime}
+          onClose={closeToast}
+        />
+      )}
+    </>
+  );
+}
+
+export default RoleTableComposer;

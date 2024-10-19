@@ -70,7 +70,7 @@ const CampaignCard = () => {
     },
     {
       label: t("BOUNDARY_MANAGEMENT"),
-      link: `/${window?.contextPath}/employee/campaign/boundary-management?defaultHierarchyType=DEFAULTBOUNDARY&hierarchyType=DEMOONCONSOLE`,
+      link: `/${window?.contextPath}/employee/campaign/boundary/home`,
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
     },
