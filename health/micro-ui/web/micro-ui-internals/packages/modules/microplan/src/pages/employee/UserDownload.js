@@ -39,7 +39,7 @@ const UserDownload = () => {
         }
     }, [data]); // Only run this effect when `data` changes
 
-    
+    debugger;
 
 
 
@@ -55,20 +55,24 @@ const UserDownload = () => {
         <div>
 
 
-            <Card>
+            <Card type="secondary" >
                 <HeaderComp title="DOWNLOAD_USER_DATA" styles={{ color: "black" }} />
                 <TextBlock body="DOWNLOAD_DESC" />
                     {data?.ResourceDetails &&
                         [...data?.ResourceDetails].reverse().map((item, index) => {
                             let fileName = item?.additionalDetails?.fileName || `FileNo${item?.processedFilestoreId?.slice(0, 4) || ''}`;
-                            
+                            console.log(typeof String(fileName))
+                            debugger;
+
                             return (
                             <FileComponent
                                 title=""
-                                fileName={`FileNo${item?.fileStoreId.slice(0, 4)}`}
+                                fileName={fileName}
                                 downloadHandler={() => {
                                     Digit.Utils.campaign.downloadExcelWithCustomName({
-                                        fileStoreId: data?.processedFilestoreId
+                                        fileStoreId: item?.processedFilestoreId,
+                                        customName: String(fileName)
+
                                     });
                                 }} // Passing the download function
                                 auditDetails={{userName:item?.username,lastmodTime:item?.auditDetails?.lastmodtime}}
