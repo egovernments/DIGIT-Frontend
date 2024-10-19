@@ -74,13 +74,6 @@ const CampaignCard = () => {
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
     },
-    {
-      label: t("VIEW_CHECKLIST"),
-      link: `/${window?.contextPath}/employee/campaign/checklist/view?campaignName=paradigms&role=Distributor&checklistType=Health facility Referral: Drug side effect from previous cycle`,
-      roles: ROLES.CAMPAIGN_MANAGER,
-      // count: isLoading?"-":data
-
-    }
   ];
 
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));
