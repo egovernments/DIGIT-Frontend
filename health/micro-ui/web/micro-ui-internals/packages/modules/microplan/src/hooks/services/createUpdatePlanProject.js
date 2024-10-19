@@ -302,9 +302,10 @@ const createUpdatePlanProject = async (req) => {
 
         const planResHypothesis = await updatePlan(upatedPlanObjHypothesis);
         if(planResHypothesis?.PlanConfiguration?.[0]?.id){
+          window.dispatchEvent(new Event("isLastStep"))
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
-          window.dispatchEvent(new Event("isLastStep"))
+        
           return {
             triggeredFrom,
           };

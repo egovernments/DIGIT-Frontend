@@ -151,7 +151,7 @@ const formValidator = (formData, key, state) => {
 
 
   const microplanAssumptionsValidator = (formData)=>{
-      
+        
         if(!areFieldsValid(formData.assumptionValues)){
            return { key: "error", label: "ERROR_MANDATORY_FIELDS" }; 
         }
@@ -171,7 +171,7 @@ const formValidator = (formData, key, state) => {
     case "microplanDetails":
       return microplanDetailsValidator();
     case "boundarySelection":
-      return boundarySelectionValidator();
+      return boundarySelectionValidator();  
      case "assumptionsForm":  
        return assumptionsFormValidator(formData);
     case "Assumptions":

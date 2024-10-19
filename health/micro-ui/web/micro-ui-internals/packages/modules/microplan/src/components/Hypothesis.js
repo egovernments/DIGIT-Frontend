@@ -1,18 +1,19 @@
 import React, { useState, useEffect,Fragment,useContext, useRef} from "react";
 import { useTranslation } from "react-i18next";
 import { Card, Header, DeleteIconv2,LabelFieldPair, AddIcon,Button, CardText, } from "@egovernments/digit-ui-react-components";
-import {Dropdown,FieldV1,PopUp,} from "@egovernments/digit-ui-components";
+import {Dropdown,FieldV1,PopUp,Toast} from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR } from "../utils/utilities"; 
 import { useMyContext } from "../utils/context";
 import { useAssumptionContext } from "./HypothesisWrapper";
 
 
 
-const Hypothesis = ({ category, assumptions:initialAssumptions })=>{
+const Hypothesis = ({ category, assumptions:initialAssumptions, onSelect, customProps })=>{
  
   const { t } = useTranslation();
   const [showPopUP, setShowPopUp] = useState(false)
   const [assumptionsPopUP, setAssumptionsPopUp] = useState(false)
+  const [showToast, setShowToast] = useState(null);
   const [assumptionToDelete, setAssumptionToDelete] = useState(null)
   const [assumptions, setAssumptions] = useState(initialAssumptions);
   const [selectedDeletedAssumption, setSelectedDeletedAssumption] = useState(null);
@@ -28,7 +29,12 @@ const Hypothesis = ({ category, assumptions:initialAssumptions })=>{
     )
 ));
 
+
+
+console.log("deletedAssumptionCategories", deletedAssumptionCategories)
+
   useEffect(()=>{
+    debugger;
       setAssumptions(initialAssumptions)
   }, [initialAssumptions])
 
@@ -48,6 +54,18 @@ const Hypothesis = ({ category, assumptions:initialAssumptions })=>{
       if (assumptionToDelete !== null) {
         const deletedAssumption = assumptions[assumptionToDelete];
         const updatedAssumptions = assumptions.filter((_, i) => i !== assumptionToDelete);
+
+         // Check if the updated assumptions array will be empty
+         if (updatedAssumptions.length === 0) {
+          // Show a message indicating at least one assumption is required
+          setShowPopUp(false);
+          setShowToast({
+              key: "error",
+              label: t("AT_LEAST_ONE_ASSUMPTION_REQUIRED"),
+              transitionTime: 3000,
+          });
+          return; // Prevent deletion
+      }
     
         if (!deletedAssumptionCategories.current[category]) {
           deletedAssumptionCategories.current[category] = [];
@@ -59,7 +77,7 @@ const Hypothesis = ({ category, assumptions:initialAssumptions })=>{
           prevValues.filter((value) => value.key !== deletedAssumption)
          );
 
-       
+        onSelect(customProps.name, {assumptionValues})
         setAssumptions(updatedAssumptions);
        
         setAssumptionToDelete(null); 
@@ -113,7 +131,7 @@ const addNewAssumption = () => {
              
               <Card>
 
-                    {assumptions.map((item, index)=>{
+                    {assumptions?.map((item, index)=>{
 
                         return (
                               <LabelFieldPair className="mp-hypothesis-label-field" key={index}>
@@ -213,7 +231,7 @@ const addNewAssumption = () => {
                                         variant="select-dropdown"
                                         t={t}
                                         isMandatory={false}
-                                        option={availableDeletedAssumptions.map(item => ({ code: item }))}
+                                        option={availableDeletedAssumptions?.map(item => ({ code: item }))}
                                         select={(value)=>{
                                           setSelectedDeletedAssumption(value)
                                          }}
@@ -253,6 +271,18 @@ const addNewAssumption = () => {
                                         setAssumptionsPopUp(false)
                                       }}
                           ></PopUp> }
+
+                        {showToast && (
+                            <Toast
+                                type={showToast.key === "error" ? "error" : "success"}
+                                label={t(showToast.label)}
+                                transitionTime={showToast.transitionTime}
+                                onClose={() => {
+                                    setShowToast(null);
+                                }}
+                                isDleteBtn={true}
+                            />
+                        )}
               </Card>     
         </>
 

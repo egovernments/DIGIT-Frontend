@@ -17,7 +17,9 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     const { mutate: updateResources, ...rest } = Digit.Hooks.microplanv1.useCreateUpdatePlanProject();
     const { t } = useTranslation();
     const { state } = useMyContext();
-    const [assumptionValues, setAssumptionValues] = useState([]);
+    const [assumptionValues, setAssumptionValues] = useState(customProps?.sessionData?.HYPOTHESIS?.Assumptions?.assumptionValues || []);
+    console.log("filteredAssumptionssession assumptions", JSON.stringify(assumptionValues[assumptionValues.length - 1]));
+
     const assumptionsFormValues = customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm //array with key and value 
     const campaignType =  customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code
     const resourceDistributionStrategyCode= customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode
@@ -42,13 +44,14 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         },
         {
           enabled: microplanId ? true : false,
-        //   queryKey: currentKey,
+          cahcheTime:0,
+         queryKey: internalKey,
         }
       );
 
-      console.log("plan object is", planObject)
-      console.log("refectch", refetchPlan)
-      console.log("state is", state)
+
+  
+      
 
      
     const moveToPreviousStep = () => {
@@ -68,23 +71,45 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         });
         window.history.replaceState({}, "", url);
     };
+
     const handleAssumptionChange = (category, event, key) => {
         const newValue = event.target.value;
-        setAssumptionValues(prevValues =>
-            prevValues.map(value =>
-                value.key === key ? { ...value, value: newValue } : value
+       console.log('setAssumptionValues called 1')
+        setAssumptionValues(prevValues =>{
+            console.log("hereeeeeeee", prevValues)
+            return prevValues?.map(value =>
+                value.key === key ? { ...value, value: newValue, category } : value
             )
+        }
         );
+        
+        
+      
     };
 
+    useEffect(()=>{
+     refetchPlan()
+    },[ internalKey])
+
     const handleNext = () => {
+        // debugger;
+        let newAssumptions = assumptionValues.filter((assumption) => assumption.value != null)
+        console.log('setAssumptionValues called 2')
+        setAssumptionValues(newAssumptions)
+        const apiAssumptions = Array.isArray(planObject?.assumptions) && planObject?.assumptions.length > 0 
+    ? planObject?.assumptions
+        ?.filter(item => item.category === currentCategory) // Filter by current category
+        ?.map(item => item.key) 
+    : [];
         const currentAssumptions = assumptionCategories[internalKey - 1]?.assumptions || [];
+       const assumptionsToValidate = apiAssumptions.length > 0 ? apiAssumptions : currentAssumptions;
         const existingAssumptionKeys = assumptionValues?.map(assumption => assumption.key);
 
         //Filter current assumptions to only those that exist in assumptionValues and are not deleted
-        const visibleAssumptions = currentAssumptions.filter(item => 
+        const visibleAssumptions = assumptionsToValidate.filter(item => 
             existingAssumptionKeys?.includes(item) && !deletedAssumptions?.includes(item)
         );
+        console.log("visible assumptions", visibleAssumptions)
     
         //Validate: Check if any value is empty for visible assumptions
         const hasEmptyFields = visibleAssumptions.some(item => {
@@ -109,29 +134,36 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
 
         //after everything is done make an api call and assume it will be successfull(let user go to next screen)
         // API CALL
+        
         const assumptionsToUpdate = assumptionValues?.filter?.(row => {
-            return row.key && row.value && row.category
+
+            return row.key && row.value && row.category 
         })
-        updateResources({
-            config:{
-                name:"SUB_HYPOTHESIS"
-            },
-            assumptionsToUpdate
-        },{
-            onSuccess: (data) => {
-                if (internalKey < assumptionCategories.length) {
-                    setInternalKey((prevKey) => prevKey + 1); // Update key in URL
-                }
-                refetchPlan();
-            },
-            onError: (error, variables) => {
-                console.error(error.message, "error rorrrrr")
-                setShowToast({key:"error", 
-                    label: error?.message ? error.message :  t("FAILED_TO_UPDATE_RESOURCE")  })
+
+        if (internalKey < assumptionCategories.length) {
+            setInternalKey((prevKey) => prevKey + 1); // Update key in URL
+        }
+
+        // updateResources({
+        //     config:{
+        //         name:"SUB_HYPOTHESIS"
+        //     },
+        //     assumptionsToUpdate
+        // },{
+        //     onSuccess: (data) => {
+        //         if (internalKey < assumptionCategories.length) {
+        //             setInternalKey((prevKey) => prevKey + 1); // Update key in URL
+        //         }
+        //         refetchPlan();
+        //     },
+        //     onError: (error, variables) => {
+        //         console.error(error.message, "error rorrrrr")
+        //         setShowToast({key:"error", 
+        //             label: error?.message ? error.message :  t("FAILED_TO_UPDATE_RESOURCE")  })
                 
-            // setShowToast(({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") }))
-            },
-        })
+        //     // setShowToast(({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") }))
+        //     },
+        // })
 
 
     };
@@ -166,8 +198,17 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         .filter(item => item.category === currentCategory) // Filter by current category
         .map(item => item.key) 
     : [];
-    const assumptionsToPass = apiAssumptions.length > 0 ? apiAssumptions : filteredAssumptions;
+    const assumptionsToPass = (apiAssumptions.length > 0 && !isLoadingPlanObject) ? apiAssumptions :  filteredAssumptions;
     
+    // console.log("isLoadingplanObject", isLoadingPlanObject)
+    // console.log("api assumptions", apiAssumptions)
+    
+    // let assumptionsToPass;
+
+    // else{
+    //     assumptionsToPass = (apiAssumptions.length > 0 && !isLoadingPlanObject) ? apiAssumptions :  filteredAssumptions;
+    // }
+   
     const handleBack = () => {
         if (internalKey >1) {
             setInternalKey((prevKey) => prevKey - 1); // Update key in URL
@@ -175,6 +216,9 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
             window.dispatchEvent(new Event("moveToPrevious"))
         }
     };
+
+
+  
 
   const handleStepClick = (step)=>{
        
@@ -184,9 +228,16 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     // // Check if the clicked step is the next step
     if (step === currentStepIndex + 1) {
         // Validate current step
+
+            const apiAssumptions = Array.isArray(planObject?.assumptions) && planObject?.assumptions.length > 0 
+        ? planObject?.assumptions
+            ?.filter(item => item.category === currentCategory) // Filter by current category
+            ?.map(item => item.key) 
+        : [];
         const currentAssumptions = assumptionCategories[currentStepIndex]?.assumptions || [];
-        const existingAssumptionKeys = assumptionValues.map(assumption => assumption.key);
-        const visibleAssumptions = currentAssumptions.filter(item => 
+        const assumptionsToValidate = apiAssumptions.length > 0 ? apiAssumptions : currentAssumptions;
+        const existingAssumptionKeys = assumptionValues?.map(assumption => assumption.key);
+        const visibleAssumptions = assumptionsToValidate?.filter(item => 
             existingAssumptionKeys?.includes(item) && !deletedAssumptions?.includes(item)
         );
 
@@ -256,59 +307,79 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
 
 
     useEffect(() => {
+
         updateUrlParams({ internalKey,});
     }, [internalKey]);
 
-  
-// useEffect(() => {
-//     console.log("Loading planObject:", isLoadingPlanObject);
-//     console.log("Plan Object Data:", planObject);
+  console.log("assumption valueii", assumptionValues)
 
-//     if (!isLoadingPlanObject && Array.isArray(planObject?.assumptions)) {
-//         const updatedAssumptionValues = assumptionValues.map(value => {
-//             const matchingApiAssumption = planObject.assumptions.find(apiAssumption => apiAssumption.key === value.key);
-//             if (matchingApiAssumption) {
-//                 console.log("Matching assumption:", matchingApiAssumption);
-//                 return {
-//                     category: matchingApiAssumption.category,
-//                     source: matchingApiAssumption.source,
-//                     key: matchingApiAssumption.key,
-//                     value: matchingApiAssumption.value,
-//                 };
-//             }
-//             return value; // Preserve user input
-//         });
 
-//         console.log("Updated assumption values:", updatedAssumptionValues);
-//         console.log("Current assumption values:", assumptionValues);
-
-//         // Update state if there’s a change
-//         if (JSON.stringify(updatedAssumptionValues) !== JSON.stringify(assumptionValues)) {
-//             console.log('Updating assumption values:', updatedAssumptionValues);
-//             setAssumptionValues(updatedAssumptionValues);
-//         }
-//     }
-// }, [planObject?.assumptions, isLoadingPlanObject]);
 
 useEffect(() => {
-    const initialAssumptions = filteredAssumptions.map(item => ({
+    const initialAssumptions = filteredAssumptions?.map(item => ({
         source: "MDMS",
-        category: null,
+        category: currentCategory,
         key: item,
         value: null,
     }));
-
-    const existingKeys = new Set(assumptionValues.map(assumption => assumption.key));
-    const newAssumptions = initialAssumptions.filter(assumption => 
+    debugger;
+    const existingKeys = new Set(assumptionValues?.map(assumption => assumption.key));
+    const newAssumptions = initialAssumptions?.filter(assumption => 
         !existingKeys.has(assumption.key) &&
-        !deletedAssumptions.includes(assumption.key)
+        !deletedAssumptions.includes(assumption.key) 
+      
     );
-
-    console.log("New assumptions to add:", newAssumptions);
-    setAssumptionValues(prev => [...prev, ...newAssumptions]);
-}, [filteredAssumptions]);
     
-   
+    //console.log("New assumptions to add:", newAssumptions);
+    setAssumptionValues(prev => [...prev, ...newAssumptions]);
+    //console.log("assumption values intially", assumptionValues)
+}, [filteredAssumptions]);
+
+
+
+
+
+useEffect(() => {
+    if (planObject?.assumptions.length>0) {
+        debugger;
+        
+        console.log("filtered assums before filtering ", assumptionValues)
+        console.log("non deleted", planObject.assumptions)
+        // Create an array of valid assumptions based on key and category
+        const filteredAssumptions = assumptionValues.filter(item =>
+            planObject.assumptions.some(planItem =>
+                planItem.key === item.key && planItem.category === item.category
+            )
+        );
+
+        // Update assumptionValues to only include filtered assumptionsbbhbghutinjyu
+        
+       console.log("filtered assums after filtering in planobject", filteredAssumptions)
+        //setAssumptionValues(filteredAssumptions);
+        console.log('setAssumptionValues called 4')
+        setAssumptionValues(prevValues => [
+            ...filteredAssumptions,
+            // ...prevValues.filter(item => !filteredAssumptions.some(f => f.key === item.key))
+          ]);
+        
+          
+     
+    
+
+    }
+}, [planObject?.assumptions]);
+
+const { isLastVerticalStep } = Digit.Hooks.useQueryParams();
+// useEffect(()=>{
+//        if(isLastVerticalStep){
+//            let ass = assumptionValues.filter((assumption)=> assumption.value!==null)
+//            setAssumptionValues(ass)
+//        }
+// }, [isLastVerticalStep])
+
+
+
+
 
     useEffect(() => {
         if (internalKey === assumptionCategories.length) {
@@ -317,12 +388,27 @@ useEffect(() => {
             Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: false });
         }
     }, [internalKey]);
+    
+   
+    // useEffect(()=>{
 
+    //     console.log("internalKey---",internalKey);
+    //     console.log(filteredData[0].assumptionCategories)
+    //     if( filteredData.length > 0 && internalKey >=(filteredData.length > 0 ? filteredData[0].assumptionCategories : []).length){
+    //         console.log(assumptionValues);
+    // //  let newAssumptions = assumptionValues.filter((asssumption)=> asssumption.value!==null)
+
+    // //  setAssumptionValues(newAssumptions);
+    //     }   
+
+
+    // },[internalKey  ])
+
+    //console.log("assumptionsToPass", assumptionsToPass)
+    
     if(isLoadingPlanObject){
-        return <Loader />
-    }
-    
-    
+        return <Loader/>
+    }   
 
     return (
         <Fragment>
@@ -335,7 +421,7 @@ useEffect(() => {
                             </Card>
                             <Card className="stepper-card">
                                 <Stepper
-                                    customSteps={assumptionCategories.map(category => category.category)}
+                                    customSteps={assumptionCategories?.map(category => category.category)}
                                     currentStep={internalKey}
                                     onStepClick={handleStepClick}
                                     direction={"vertical"}
@@ -347,8 +433,9 @@ useEffect(() => {
                         }}>
                             <Hypothesis
                                 category={assumptionCategories[internalKey - 1]?.category}
-                                // assumptions={filteredAssumptions.filter(item => !deletedAssumptions?.includes(item))}
-                                 assumptions={assumptionsToPass.filter(item => !deletedAssumptions?.includes(item))} // Pass correctly
+                                planObject={planObject}
+                                //assumptions={filteredAssumptions.filter(item => !deletedAssumptions?.includes(item))}
+                                assumptions={assumptionsToPass?.filter(item => !deletedAssumptions?.includes(item))} // Pass correctly
                                 onSelect={onSelect}
                                 customProps={customProps}
                             />
