@@ -49,7 +49,7 @@ frontend/micro-ui/web/public/index.html
 [jagankumar-egov] [nipunarora-eGov]  [nabeelmd-eGov] [Bhavya-eGov] 
 
 ### Published from DIGIT Frontend 
-DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/develop)
+DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/console)
 
 ## License
 
