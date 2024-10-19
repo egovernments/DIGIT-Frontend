@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment, useContext } from "react";
-import {  } from "@egovernments/digit-ui-react-components";
+import { } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { DustbinIcon } from "./icons/DustbinIcon";
 import { PRIMARY_COLOR } from "../utils";
@@ -38,7 +38,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
       return [defaultOption];
     }
   });
-  
+
   useEffect(() => {
     dispatchQuestionData({
       type: "UPDATE_OPTIONS",
@@ -228,7 +228,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
   }
 };
 
-const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, parent = null, parentId = null, optionId, typeOfCall=null }) => {
+const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, parent = null, parentId = null, optionId, typeOfCall = null }) => {
   const { t } = useTranslation();
   const state = Digit.ULBService.getStateId();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -327,26 +327,50 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
     });
   };
 
+  const handleRequiredField = (id) => {
+    dispatchQuestionData({
+      type: "UPDATE_REQUIRED",
+      payload: {
+        id: id
+      }
+    })
+  }
+
   const example = {
     maxWidth: "100rem"
   }
-  
+
   let dis = typeOfCall === "view" ? true : false;
-  console.log("type fof call", typeOfCall);
-  console.log("dis", dis);
   return (
     <React.Fragment>
       {initialQuestionData
-        ?.filter((i) => i.level === level && (i.parentId ? (i.parentId === parentId) : true))
+        ?.filter((i) => i.level === level && (i.parentId ? (i.parentId === parentId) : true)  && (i.level <= 3) && (i.isActive === true))
         ?.map((field, index) => {
           return (
             <Card type={"primary"} variant={"form"} className={`question-card-container ${className}`}>
               <LabelFieldPair className="question-label-field" style={{ display: "block" }}>
-                <div className="question-label" style={{ height: "1.5rem", display: "flex", justifyContent: "space-between", width: "100%" }}>
-                  <span style={{fontWeight:"700"}}>{`${t("QUESTION")} ${index + 1}`}</span>
-                  {/* <span className="mandatory-span">*</span> */}
-                  <div style={{ height: "1rem" }}>
+                <div className="question-label" style={{ height: "3rem", display: "flex", justifyContent: "space-between", width: "100%" }}>
+                  <div style={{ display: "flex", gap: "1rem" }}>
+                    <span style={{ fontWeight: "700", marginTop: "1rem" }}>{`${t("QUESTION")} ${index + 1}`}</span>
+                    <div style={{ alignItems: "center" }}>
+                      <CheckBox
+                        disabled={dis}
+                        // style={{height:"1rem", alignItems:"center", paddingBottom:"0.5rem"}}
+                        key={field.key}
+                        mainClassName={"checkboxOptionVariant"}
+                        // disabled={optionDependency ? true : false}
+                        label={t("REQUIRED")}
+                        checked={field?.isRequired}
+                        // onChange={handleRequiredField(field.id)}
+                        onChange={() => handleRequiredField(field.id)}
+                        // isLabelFirst={true}
+                        index={field.key}
+                      />
+                    </div>
                   </div>
+                  {/* <span className="mandatory-span">*</span> */}
+                  {/* <div style={{ height: "0.5rem" }}> */}
+                  {/* </div> */}
                   {!dis && initialQuestionData?.length > 1 && (
                     <>
                       <div className="separator"></div>
@@ -366,7 +390,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                         }}
                       >
                         <DustbinIcon />
-                        {t(`CAMPAIGN_DELETE_ROW_TEXT`)}
+                        {t(`CAMPAIGN_DELETE_QUESTION`)}
                       </div>
                     </>
                   )}
@@ -383,16 +407,16 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                         className={"example"}
                       /> */}
                       <TextInput
-                          disabled={dis}
-                          isRequired={true}
-                          className="tetxinput-example"
-                          type={"text"}
-                          // props={{ fieldStyle: example }}
-                          name="title"
-                          value={field?.title || ""}
-                          onChange={(event) => handleUpdateField(event.target.value, "title", field.key, field.id)}
-                          placeholder={"Type your question here"}
-                        />
+                        disabled={dis}
+                        isRequired={true}
+                        className="tetxinput-example"
+                        type={"text"}
+                        // props={{ fieldStyle: example }}
+                        name="title"
+                        value={field?.title || ""}
+                        onChange={(event) => handleUpdateField(event.target.value, "title", field.key, field.id)}
+                        placeholder={"Type your question here"}
+                      />
                       {!dis && <Dropdown
                         style={{ width: "20%" }}
                         t={t}
@@ -472,19 +496,20 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
             </Card>
           );
         })}
-      {!dis && <div style={{ display: "flex", justifyContent: "center" }}>
-        <Button
-          variation="secondary"
-          label={t("ADD_QUESTION")}
-          className={"hover"}
-          // icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
-          icon="Add"
-          iconFill=""
-          // onButtonClick={addMoreField}
-          onClick={()=>addMoreField()}
-          textStyles={{width:'unset'}}
-        />
-      </div>}
+        {!dis && <div style={{ display: "flex", justifyContent: "center" }}>
+          <Button
+            variation="secondary"
+            label={t("ADD_QUESTION")}
+            className={"hover"}
+            // icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
+            icon="Add"
+            iconFill=""
+            // onButtonClick={addMoreField}
+            onClick={() => addMoreField()}
+            textStyles={{ width: 'unset' }}
+          />
+          </div>
+      }
     </React.Fragment>
   );
 };

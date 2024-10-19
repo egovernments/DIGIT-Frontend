@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import _ from "lodash";
-import React, { useState, useEffect } from "react";
-import { useHistory } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from "react";
+import { useHistory, useLocation } from 'react-router-dom';
 import { Fragment } from "react";
 import { Button, PopUp, Switch, Tooltip, TooltipWrapper } from "@egovernments/digit-ui-components";
 import TimelineComponent from "../components/TimelineComponent";
 import getMDMSUrl from "../utils/getMDMSUrl";
+import { useTranslation } from "react-i18next";
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
@@ -15,85 +16,193 @@ const businessServiceMap = {};
 const inboxModuleNameMap = {};
 // const history=useHistory();
 
+// const 
+// const [campaignName, setCampaignName] = useState(null);
+const apiCache = {};
+const rowDataCache = {};
 
 
 export const UICustomizations = {
   MyChecklistSearchConfig: {
 
-    
     preProcess: (data, additionalDetails) => {
-
-      const tenantId = Digit.ULBService.getCurrentTenantId();
-      const [checklistTypeCode, setChecklistTypeCode] = useState(null);
-      let checklistType = data?.state?.searchForm?.Type?.list;
-      const reqCriteria = {
-        url: `/localization/messages/v1/_search`,
-        body:{
-          tenantId: tenantId
-        },
-        params: {
-          locale: "en_MZ",
-          tenantId: tenantId,
-          module: "hcm-campaignmanager"
-        },
+      if (data?.state?.searchForm?.Role?.code) {
+        let ro = data.state.searchForm.Role.code;
+        ro = ro.replace("ACCESSCONTROL_ROLES_ROLES_", "");
+        data.body.MdmsCriteria.filters.role = ro;
       }
-      const { isLoading1, data: localization, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqCriteria);
-      useEffect(()=>{
-        if (localization?.messages?.length > 0) {
-          let matchedItem = localization.messages.find(item => item.message === checklistType);
-          // If a match is found, assign the 'code' to 'checklistcode'
-          if (matchedItem) {
-            let code = matchedItem.code;
-            let res = code.replace("HCM_CHECKLIST_TYPE_", "");
-            setChecklistTypeCode(res);
-          } else {
-          }
-        } else {
-        }
-    
-      }, [localization, data])
+      if (data?.state?.searchForm?.Type?.list) {
+        let ty = data.state.searchForm.Type.list;
+        ty = ty.replace("HCM_CHECKLIST_TYPE_", "");
+        data.body.MdmsCriteria.filters.checklistType = ty;
+      }
+      if (data?.state?.searchForm && Object.keys(data.state.searchForm).length === 0) {
+        data.body.MdmsCriteria.filters = {};
+      }
+      data.params.limit = 5;
+      data.params.offset = 0;
 
-      data.body.ServiceDefinitionCriteria.code.length=0;
-
-      let listTemp = data?.state?.searchForm?.Type?.list;
-      let codeTemp = data?.state?.searchForm?.Role?.code;
-      let listt = "";
-      let codee = "";
-
-      if(listTemp) listt = listTemp.toUpperCase().replace(/ /g, "_");
-      if(codeTemp) codee = codeTemp.toUpperCase().replace(/ /g, "_");
-      if(checklistTypeCode) listt = checklistTypeCode;
-      let pay = window.history.state.name + '.' + listt + '.' + codee;
-
-      data.body.ServiceDefinitionCriteria.code.push(pay);
+      // if (additionalDetails?.campaignName) setCampaignName(additionalDetails?.campaignName);
       return data;
     },
-    additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      const [isActive, setIsActive] = useState(row?.isActive);
+
+
+    additionalCustomizations: (row, key, column, value, searchResult) => {
+      const { t } = useTranslation();
+      const history = useHistory();
+      const location = useLocation();
+      const searchParams = new URLSearchParams(location.search);
+      const campaignName = searchParams.get("name");
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+  
+      const cl_code = row?.data?.checklistType.replace("HCM_CHECKLIST_TYPE_", "");
+      const role_code = row?.data?.role.replace("ACCESSCONTROL_ROLES_ROLES_", "");
+      const serviceCode = `${campaignName}.${cl_code}.${role_code}`;
+  
+      // Check if we've already processed this row
+      if (!rowDataCache[serviceCode]) {
+        rowDataCache[serviceCode] = {
+          isLoading: true,
+          isActive: false,
+          attributes: null,
+          fetchPromise: null
+        };
+  
+        const fetchData = async () => {
+          if (apiCache[serviceCode]) {
+            return apiCache[serviceCode];
+          }
+  
+          try {
+            const res = await Digit.CustomService.getResponse({
+              url: "/service-request/service/definition/v1/_search",
+              params: {},
+              body: {
+                ServiceDefinitionCriteria: {
+                  "tenantId": tenantId,
+                  "code": [serviceCode]
+                },
+                includeDeleted: true
+              },
+            });
+            apiCache[serviceCode] = res;
+            return res;
+          } catch (error) {
+            // console.error("Error fetching data:", error);
+            return null;
+          }
+        };
+  
+        // Start the fetch if it hasn't been started yet
+        if (!rowDataCache[serviceCode].fetchPromise) {
+          rowDataCache[serviceCode].fetchPromise = fetchData().then(res => {
+            if (res?.ServiceDefinitions?.[0]) {
+              rowDataCache[serviceCode].attributes = res.ServiceDefinitions[0].attributes;
+              rowDataCache[serviceCode].isActive = res.ServiceDefinitions[0].isActive;
+            }
+            rowDataCache[serviceCode].isLoading = false;
+          });
+        }
+      }
+  
+      // If data is still loading, return a loading indicator
+      if (rowDataCache[serviceCode].isLoading) {
+        return <div>Loading...</div>;
+      }
+  
+      // Ensure the fetch has completed
+      rowDataCache[serviceCode].fetchPromise?.then(() => {
+        // This will trigger a re-render once the data is available
+      });
+  
+      const updateServiceDefinition = async (newStatus) => {
+        try {
+          const res = await Digit.CustomService.getResponse({
+            url: "/service-request/service/definition/v1/_update",
+            body: {
+              ServiceDefinition: {
+                "tenantId": tenantId,
+                "code": serviceCode,
+                "isActive": newStatus
+              },
+            },
+          });
+          if (res) {
+            rowDataCache[serviceCode].isActive = newStatus;
+            if (apiCache[serviceCode]) {
+              apiCache[serviceCode].ServiceDefinitions[0].isActive = newStatus;
+            }
+          }
+          return res;
+        } catch (error) {
+          // console.error("Error updating service definition:", error);
+          return null;
+        }
+      };
+  
       switch (key) {
-        case "Checklist Role":
-          return row?.additionalDetails?.role;
-          break;
-        case "Checklist Type":
-          return row?.additionalDetails?.type;
-          break;
-        case "Checklist Name":
-          return row?.additionalDetails?.name;
-          break;
-        case "Status":
-          const toggle = () => {
-            setIsActive(!isActive);
-          };
-          const switchText = isActive ? "Active" : "Inactive";
-          return (
-            <>
+        case "CHECKLIST_ROLE":
+          let str = row?.data?.role;
+          if (!str.startsWith("ACCESSCONTROL_ROLES_ROLES_")) {
+            str = "ACCESSCONTROL_ROLES_ROLES_" + str;
+          }
+          return t(str);
+        case "CHECKLIST_TYPE":
+          let str1 = row?.data?.checklistType;
+          if (!str1.startsWith("HCM_CHECKLIST_TYPE_")) {
+            str1 = "HCM_CHECKLIST_TYPE_" + str1;
+          }
+          return t(str1);
+          case "STATUS":
+            const [localIsActive, setLocalIsActive] = useState(rowDataCache[serviceCode].isActive);
+            
+            const toggle = async () => {
+              const newStatus = !localIsActive;
+              const res = await updateServiceDefinition(newStatus);
+              if (res) {
+                rowDataCache[serviceCode].isActive = newStatus;
+                setLocalIsActive(newStatus);
+              }
+            };
+            
+            const switchText = localIsActive ? "Active" : "Inactive";
+            return (
               <Switch
-                isCheckedInitially={isActive ? true : false}
+                isCheckedInitially={localIsActive}
                 label={switchText}
-                onToggle={toggle} // Passing the function reference here
+                onToggle={toggle}
               />
-            </>
-          );
+            );
+        case "ACTION":
+          if (rowDataCache[serviceCode].attributes) {
+            return (
+              <Button
+                type="button"
+                size="medium"
+                icon="View"
+                variation="secondary"
+                label={t("VIEW")}
+                onClick={() => {
+                  history.push(`/${window.contextPath}/employee/campaign/checklist/view?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}`)
+                }}
+              />
+            );
+          } else {
+            return (
+              <Button
+                type="button"
+                size="medium"
+                icon="View"
+                variation="secondary"
+                label={t("CREATE")}
+                onClick={() => {
+                  history.push(`/${window.contextPath}/employee/campaign/checklist/create?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}`)
+                }}
+              />
+            );
+          }
+        default:
+          return value;
       }
     },
   },
@@ -104,35 +213,35 @@ export const UICustomizations = {
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       const [isActive, setIsActive] = useState(row?.isActive);
-        const tenantId = Digit.ULBService.getCurrentTenantId();
-        let res;
-        const callSearch = async () => {
-          const res = await Digit.CustomService.getResponse({
-            url: `/boundary-service/boundary-hierarchy-definition/_search`,
-                body: {
-                    BoundaryTypeHierarchySearchCriteria: {
-                        tenantId: tenantId,
-                        limit: 2,
-                        offset: 0,
-                        hierarchyType: row?.hierarchyType
-                  }
-                }
-          });
-          return res;
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      let res;
+      const callSearch = async () => {
+        const res = await Digit.CustomService.getResponse({
+          url: `/boundary-service/boundary-hierarchy-definition/_search`,
+          body: {
+            BoundaryTypeHierarchySearchCriteria: {
+              tenantId: tenantId,
+              limit: 2,
+              offset: 0,
+              hierarchyType: row?.hierarchyType
+            }
+          }
+        });
+        return res;
 
-        }
-        const fun = async ()=>{
-          res = await callSearch();
-        }
-        // fun();
-        switch (key) {
-          case "HIERARCHY_NAME":
-            return row?.hierarchyType;
-            break;
-          case "LEVELS":
-            return row?.boundaryHierarchy?.length
-            
-            return (
+      }
+      const fun = async () => {
+        res = await callSearch();
+      }
+      // fun();
+      switch (key) {
+        case "HIERARCHY_NAME":
+          return row?.hierarchyType;
+          break;
+        case "LEVELS":
+          return row?.boundaryHierarchy?.length
+
+          return (
             (
               <>
                 {/* <span data-tip data-for="dynamicTooltip">{row?.boundaryHierarchy?.length}</span>
@@ -156,69 +265,69 @@ export const UICustomizations = {
                 /> */}
               </>
             )
-            )
-            break;
-          case "CREATION_DATE":
-            let epoch = row?.auditDetails?.createdTime;
-            return Digit.DateUtils.ConvertEpochToDate(epoch);
-            // return row?.auditDetails?.createdTime;
-            break;
-          case "ACTION":
-            const tenantId = Digit.ULBService.getCurrentTenantId();
-            const generateFile = async()=>{
-              const res = await Digit.CustomService.getResponse({
-                  url: `/project-factory/v1/data/_generate`,
-                  body: {
-                  },
-                  params: {
-                      tenantId: tenantId,
-                      type: "boundaryManagement",
-                      forceUpdate: true,
-                      hierarchyType: row?.hierarchyType,
-                      campaignId: "default"
-                  }
-              });
-              return res;
-          }
-            const generateTemplate = async() => {
-              const res = await Digit.CustomService.getResponse({
-                  url: `/project-factory/v1/data/_download`,
-                  body: {
-                  },
-                  params: {
-                      tenantId: tenantId ,
-                      type: "boundaryManagement",
-                      hierarchyType: row?.hierarchyType,
-                      campaignId: "default"
-                  }
-              });
-              return res;
-            }
-            const downloadExcelTemplate = async() => {
-              const res = await generateFile();
-              const resFile = await generateTemplate();
-              if (resFile && resFile?.GeneratedResource?.[0]?.fileStoreid) {
-                  // Splitting filename before .xlsx or .xls
-                  const fileNameWithoutExtension = row?.hierarchyType ;
-                  
-                  Digit.Utils.campaign.downloadExcelWithCustomName({ fileStoreId: resFile?.GeneratedResource?.[0]?.fileStoreid, customName: fileNameWithoutExtension });
+          )
+          break;
+        case "CREATION_DATE":
+          let epoch = row?.auditDetails?.createdTime;
+          return Digit.DateUtils.ConvertEpochToDate(epoch);
+          // return row?.auditDetails?.createdTime;
+          break;
+        case "ACTION":
+          const tenantId = Digit.ULBService.getCurrentTenantId();
+          const generateFile = async () => {
+            const res = await Digit.CustomService.getResponse({
+              url: `/project-factory/v1/data/_generate`,
+              body: {
+              },
+              params: {
+                tenantId: tenantId,
+                type: "boundaryManagement",
+                forceUpdate: true,
+                hierarchyType: row?.hierarchyType,
+                campaignId: "default"
               }
+            });
+            return res;
+          }
+          const generateTemplate = async () => {
+            const res = await Digit.CustomService.getResponse({
+              url: `/project-factory/v1/data/_download`,
+              body: {
+              },
+              params: {
+                tenantId: tenantId,
+                type: "boundaryManagement",
+                hierarchyType: row?.hierarchyType,
+                campaignId: "default"
+              }
+            });
+            return res;
+          }
+          const downloadExcelTemplate = async () => {
+            const res = await generateFile();
+            const resFile = await generateTemplate();
+            if (resFile && resFile?.GeneratedResource?.[0]?.fileStoreid) {
+              // Splitting filename before .xlsx or .xls
+              const fileNameWithoutExtension = row?.hierarchyType;
+
+              Digit.Utils.campaign.downloadExcelWithCustomName({ fileStoreId: resFile?.GeneratedResource?.[0]?.fileStoreid, customName: fileNameWithoutExtension });
             }
-            return(
-              <>
-                <Button
-                  type={"button"}
-                  size={"medium"}
-                  icon={"Add"}
-                  variation={"secondary"}
-                  label={t("DOWNLOAD")}
-                  onClick={()=>{
-                    downloadExcelTemplate();
-                  }}
-                />
-              </>
-            )
-        }
+          }
+          return (
+            <>
+              <Button
+                type={"button"}
+                size={"medium"}
+                icon={"Add"}
+                variation={"secondary"}
+                label={t("DOWNLOAD")}
+                onClick={() => {
+                  downloadExcelTemplate();
+                }}
+              />
+            </>
+          )
+      }
 
     },
 
@@ -316,18 +425,18 @@ export const UICustomizations = {
             break;
           case "ACTION_LABEL_CONFIGURE_APP":
 
-              window.history.pushState(
-                {
-                  name: row?.campaignName,
-                  data: row,
-                  projectId: row?.projectId,
-                },
-                "",
-                `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}&campaignId=${row?.id}`
-              );
-              const navEvent1 = new PopStateEvent("popstate");
-              window.dispatchEvent(navEvent1);
-              break;
+            window.history.pushState(
+              {
+                name: row?.campaignName,
+                data: row,
+                projectId: row?.projectId,
+              },
+              "",
+              `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}&campaignId=${row?.id}`
+            );
+            const navEvent1 = new PopStateEvent("popstate");
+            window.dispatchEvent(navEvent1);
+            break;
 
           case "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS":
             window.history.pushState(
@@ -633,7 +742,7 @@ export const UICustomizations = {
             setTimeline(true);
             break;
 
-         
+
           case "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS":
             window.history.pushState(
               {
@@ -647,21 +756,21 @@ export const UICustomizations = {
             window.dispatchEvent(nav);
             break;
 
-            case "ACTION_LABEL_CONFIGURE_APP":
-              window.history.pushState(
-                {
-                  name: row?.campaignName,
-                  data: row,
-                  projectId: row?.projectId,
-                  campaignType: row?.projectType
-                },
-                "",
-                `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}&campaignId=${row?.id}`
-              );
-              const navEvent1 = new PopStateEvent("popstate");
-              window.dispatchEvent(navEvent1);
-              break;
-  
+          case "ACTION_LABEL_CONFIGURE_APP":
+            window.history.pushState(
+              {
+                name: row?.campaignName,
+                data: row,
+                projectId: row?.projectId,
+                campaignType: row?.projectType
+              },
+              "",
+              `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}&campaignId=${row?.id}`
+            );
+            const navEvent1 = new PopStateEvent("popstate");
+            window.dispatchEvent(navEvent1);
+            break;
+
           default:
             console.log(value);
             break;

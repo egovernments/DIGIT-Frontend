@@ -33,9 +33,13 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
         });
         break;
       case "UPDATE_QUESTION_DATA":
-        if(action?.payload && action?.payload.length>0) return [...action.payload];
+        if(action?.payload && action?.payload.length>0) 
+          {
+            return [...action.payload];
+          }
         else return state;
       case "ADD_QUESTION":
+        if(action?.payload?.level>3) return state;
         return [
           ...state,
           {
@@ -46,11 +50,13 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
             title: null,
             type: { "code": "SingleValueList" },
             value: null,
-            isRequired: false,
+            isRequired: true,
+            isActive: true
           },
         ];
         break;
       case "ADD_SUB_QUESTION":
+        if(action?.payload?.level>3) return state
         return [
           ...state,
           {
@@ -61,64 +67,87 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
             title: null,
             type: { "code": "SingleValueList" },
             value: null,
-            isRequired: false,
+            isRequired: true,
+            isActive: true
           },
         ];
         break;
       case "DELETE_QUESTION":
-        let id = action?.payload?.id;
-        const deleteQuestionAndSubquestions = (state, questionId) => {
-          // Recursive function to find and delete subquestions based on option ids
-          const findRelatedSubquestions = (questions, optionIds) => {
-            return questions.reduce((acc, question) => {
-              // If the current question's parentId matches any of the optionIds
-              if (optionIds.includes(question.parentId)) {
-                // Add the current question's id to the list of ids to delete
-                let relatedIds = [question.id];
-
-                // Check if the current question has options
-                if (question.options && question.options.length > 0) {
-                  const newOptionIds = question.options.map(option => option.id);
-                  // Recursively find and delete subquestions related to the current question's options
-                  relatedIds = relatedIds.concat(findRelatedSubquestions(questions, newOptionIds));
-                }
-
-                return [...acc, ...relatedIds];
-              }
-              return acc;
-            }, []);
-          };
-
-          // Get the question to be deleted
-          const questionToDelete = state.find(q => q.id === questionId);
-
-          if (!questionToDelete) {
-            return state;
+        return state.map((i) => {
+          if (i.id === action?.payload?.id) {
+            // Return a new object with isActive set to false
+            return { ...i, isActive: false };
           }
+          // Return the original object if the id doesn't match
+          return i;
+        });
+        
 
-          // Start by collecting IDs of the question's options (if any)
-          let idsToDelete = [questionId]; // Start with the main question's ID
 
-          if (questionToDelete.options && questionToDelete.options.length > 0) {
-            const optionIds = questionToDelete.options.map(option => option.id);
-            // Find and delete subquestions related to the options' ids
-            idsToDelete = idsToDelete.concat(findRelatedSubquestions(state, optionIds));
-          }
+           
+        // let id = action?.payload?.id;
+        // const deleteQuestionAndSubquestions = (state, questionId) => {
+        //   // Recursive function to find and delete subquestions based on option ids
+        //   const findRelatedSubquestions = (questions, optionIds) => {
+        //     return questions.reduce((acc, question) => {
+        //       // If the current question's parentId matches any of the optionIds
+        //       if (optionIds.includes(question.parentId)) {
+        //         // Add the current question's id to the list of ids to delete
+        //         let relatedIds = [question.id];
 
-          // Filter out the questions whose ids are in idsToDelete
-          const newState = state.filter(question => !idsToDelete.includes(question.id));
+        //         // Check if the current question has options
+        //         if (question.options && question.options.length > 0) {
+        //           const newOptionIds = question.options.map(option => option.id);
+        //           // Recursively find and delete subquestions related to the current question's options
+        //           relatedIds = relatedIds.concat(findRelatedSubquestions(questions, newOptionIds));
+        //         }
 
-          // Print the updated state for verification
+        //         return [...acc, ...relatedIds];
+        //       }
+        //       return acc;
+        //     }, []);
+        //   };
 
-          return newState;
-        }
-        const newState = deleteQuestionAndSubquestions(state, id);
-        state = newState;
-        return state
+        //   // Get the question to be deleted
+        //   const questionToDelete = state.find(q => q.id === questionId);
+
+        //   if (!questionToDelete) {
+        //     return state;
+        //   }
+
+        //   // Start by collecting IDs of the question's options (if any)
+        //   let idsToDelete = [questionId]; // Start with the main question's ID
+
+        //   if (questionToDelete.options && questionToDelete.options.length > 0) {
+        //     const optionIds = questionToDelete.options.map(option => option.id);
+        //     // Find and delete subquestions related to the options' ids
+        //     idsToDelete = idsToDelete.concat(findRelatedSubquestions(state, optionIds));
+        //   }
+
+        //   // Filter out the questions whose ids are in idsToDelete
+        //   const newState = state.filter(question => !idsToDelete.includes(question.id));
+
+        //   // Print the updated state for verification
+
+        //   return newState;
+        // }
+        // const newState = deleteQuestionAndSubquestions(state, id);
+        // state = newState;
+        // return state
 
 
         // return state.filter((i) => i.key !== action?.payload?.index).map((i, n) => ({ ...i, key: n + 1 }));
         break;
+      case "UPDATE_REQUIRED":
+        return state.map((i) => {
+          if (i.id === action?.payload?.id) {
+            // Return a new object with the updated isRequired property
+            return { ...i, isRequired: !i.isRequired };
+          }
+          // Return the original object if the id doesn't match
+          return i;
+        });
+
       case "UPDATE_QUESTION":
         let dependencyParent = null;
         let tempState = state.map((i) => {
@@ -152,7 +181,7 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
               title: null,
               type: null,
               value: null,
-              isRequired: false,
+              isRequired: true,
             },
           ];
         } else if (action?.payload?.target === "dependency" && action?.payload?.data?.target?.checked !== true) {
@@ -169,7 +198,7 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
 
   const [initialState, setInitialState] = useState(()=>{
     const savedQuestions = localStorage.getItem("questions");
-    return savedQuestions ?  JSON.parse(savedQuestions) : [{ id: crypto.randomUUID(), parentId: null, level: 1, key: 1, title: null, type: { "code": "SingleValueList" }, value: null, isRequired: false }]
+    return savedQuestions ?  JSON.parse(savedQuestions) : [{ id: crypto.randomUUID(), parentId: null, level: 1, key: 1, title: null, type: { "code": "SingleValueList" }, value: null, isRequired: false, isActive: true }]
   })
   
   const [typeOfCall, setTypeOfCall] = useState(null);
@@ -177,10 +206,8 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
 
   useEffect(() => {
     // Avoid dispatch if props haven't changed
-    console.log("the preops are", props);
-    if (props?.props?.data !== 0 && props?.props?.data?.[0]?.title !== null) {  
+    if (props?.props?.data !== 0) {  
       // Dispatch only if the data is different
-      console.log("the data is", props?.prop?.data);
       setTypeOfCall(props?.props?.typeOfCall);
       dispatchQuestionData({
         type: "UPDATE_QUESTION_DATA",
@@ -188,12 +215,8 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
       });
   
     }
-  }, [props?.props?.time]); // Ensure that the initialState is included in the dependency array
+  }, [props?.props?.data]); // Ensure that the initialState is included in the dependency array
   
-  // useEffect(()=>{
-  //   console.log("call", typeOfCall);
-  // },[typeOfCall]);
-
   useEffect(() => {
     onSelect("createQuestion", {
       questionData,
