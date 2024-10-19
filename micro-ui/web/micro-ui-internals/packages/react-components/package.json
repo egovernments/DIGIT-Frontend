@@ -1,10 +1,6 @@
 {
   "name": "@egovernments/digit-ui-react-components",
-<<<<<<< HEAD
   "version": "1.8.2-beta.16",
-=======
-  "version": "1.8.2-beta.15",
->>>>>>> develop
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",

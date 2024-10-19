@@ -15,11 +15,7 @@
     "prepublish": "yarn build"
   },
   "dependencies": {
-<<<<<<< HEAD
     "@egovernments/digit-ui-react-components": "1.8.2-beta.16",
-=======
-    "@egovernments/digit-ui-react-components": "1.8.2-beta.15",
->>>>>>> develop
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-hook-form": "6.15.8",
