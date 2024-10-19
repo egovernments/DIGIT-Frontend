@@ -25,14 +25,10 @@ const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, on
       setBoundaryOptions([]);
       return;
     }
-
-    console.log(boundaries, 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
     //fetching user's boundaries (under their jurisdiction)
     const userBoundaries = Digit.Utils.microplanv1.filterBoundariesByJurisdiction(boundaries, jurisdiction.boundaryCodes);
     const filteredBoundaries = userBoundaries.filter((row) => row.type === selectedHierarchy.boundaryType);
     const filteredBoundariesGroupedByParent = Digit.Utils.microplanv1.groupByParent(filteredBoundaries);
-    console.log(userBoundaries, 'uuuuuuuuuuuuuuuuuuuuuuuuuuubbbbbbbb');
-    console.log(selectedHierarchy, 'hhhhhhhhhhhhhhhh');
     setBoundaryOptions(filteredBoundariesGroupedByParent);
     //reset selected
     setSelectedBoundaries([])
