@@ -452,6 +452,7 @@ function epochToDateTime(epoch) {
 
   // Return the formatted date and time
   return `${formattedDate} ${formattedTime}`;
+}
 
 function filterUniqueByKey(arr, key) {
   const uniqueValues = new Set();
@@ -469,6 +470,7 @@ function filterUniqueByKey(arr, key) {
 
 }
 
+
 export default {
   destroySessionHelper,
   createStatusMap,
@@ -480,7 +482,7 @@ export default {
   filterBoundariesByJurisdiction,
   createBoundaryDataByHierarchy,
   groupByParent,
-  epochToDateTime
+  epochToDateTime,
   filterUniqueByKey
   // constructBoundaryOptions
 };
