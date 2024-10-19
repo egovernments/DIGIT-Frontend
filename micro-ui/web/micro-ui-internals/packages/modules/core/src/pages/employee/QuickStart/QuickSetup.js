@@ -11,6 +11,12 @@ const FaqComponent = (props) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getStateId();
   const ListTag = type === "number" ? "ol" : "ul";
+  const handleClick = (e, link) => {
+    e.stopPropagation(); // Stop the event from bubbling up to the parent div
+    if (link) {
+      window.open(link, '_blank', 'noopener noreferrer');
+    }
+  };
   return (
     <div className="faqs border-none" onClick={() => toggleOpen(!isOpen)}>
       <div className="faq-question" style={{ justifyContent: "space-between", display: "flex" }}>
@@ -28,9 +34,13 @@ const FaqComponent = (props) => {
             <li key={index} style={{ listStyleType: ListTag === "ul" ? "disc" : "auto", margin: "8px 0" }}>
               {isLabelLink ? (
                 action?.label ? (
-                  <a className="quickLink" href={`${window.location.host}/${window?.globalPath}/${tenantId}/${action?.link}`} target="_blank" rel="noopener noreferrer">
-                    {t(action?.label)}:
-                  </a>
+                  <a
+                  className="quickLink"
+                  href="#"
+                  onClick={(e) => handleClick(e, `${window.location.host}/${window?.globalPath}/${tenantId}/${action?.link}`)}
+                >
+                  {t(action?.label)}:
+                </a>
                 ) : null
               ) : (
                 action?.label ? <strong>{t(action?.label)}:</strong> : null
