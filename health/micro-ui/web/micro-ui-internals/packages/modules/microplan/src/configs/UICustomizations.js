@@ -37,6 +37,24 @@ function cleanObject(obj) {
 }
 
 export const UICustomizations = {
+  MyMicroplanSearchConfigPlan:{
+    test:"yes"
+  },
+  FacilityMappingConfigPlan:{
+    test:"yes"
+  },
+  UserManagementConfigPlan:{
+    test:"yes"
+  },
+  MyMicroplanSearchConfigOverridePlan:{
+    test:"yes"
+  },
+  MyMicroplanSearchConfigOverridePlan:{
+    test:"yes"
+  },
+  MyMicroplanSearchConfigOverridePlan:{
+    test:"yes"
+  },
   MicroplanSearchConfig: {
     preProcess: (data, additionalDetails) => {
       const { name, status } = data?.state?.searchForm || {};

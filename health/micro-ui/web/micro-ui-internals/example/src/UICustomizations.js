@@ -1098,4 +1098,22 @@ export const UICustomizations = {
       }
     },
   },
+  MyMicroplanSearchConfigExample:{
+    test:"yes"
+  },
+  FacilityMappingConfigExample:{
+    test:"yes"
+  },
+  UserManagementConfigExample:{
+    test:"yes"
+  },
+  MyMicroplanSearchConfigPlan:{
+    test:"no"
+  },
+  FacilityMappingConfigPlan:{
+    test:"no"
+  },
+  UserManagementConfigPlan:{
+    test:"no"
+  },
 };
