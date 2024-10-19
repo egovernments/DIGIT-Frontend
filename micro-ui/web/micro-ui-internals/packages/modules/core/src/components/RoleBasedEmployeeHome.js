@@ -5,6 +5,19 @@ import { useHistory } from "react-router-dom";
 
 const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui", "health-ui", "sanitation-ui", "core-ui", "mgramseva-web", "sandbox-ui"];
 
+
+const MODULE_CONFIG = {
+  PGR: {
+    howItWorksLink: "HOW_IT_WORKS_PGR",
+    userManualLink: "PGR_INFO_LINK",
+  },
+  HRMS: {
+    howItWorksLink: "HOW_IT_WORKS_HRMS",
+    userManualLink: "HRMS_INFO_LINK",
+  },
+  // Add more modules as needed here
+};
+
 export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
   const { isLoading, data } = Digit.Hooks.useAccessControl();
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
