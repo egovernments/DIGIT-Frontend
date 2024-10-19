@@ -227,9 +227,36 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
           },
         ],
       },
+      {
+        stepCount: "6",
+        key: "9",
+        name: "ROLE_ACCESS_CONFIGURATION",
+        body: [
+          {
+            isMandatory: false,
+            key: "roleAccessConfiguration",
+            type: "component",
+            skipAPICall: false,
+            component: "UserAccessWrapper",
+            withoutLabel: true,
+            withoutLabelFieldPair: true,
+            disable: false,
+            customProps: {
+              module: "HCM",
+              sessionData: totalFormData,
+              isSubmitting: isSubmitting,
+              hierarchyData
+            },
+            populators: {
+              name: "roleAccessConfiguration",
+              required: true,
+            },
+          },
+        ],
+      },
         {
-          stepCount: "6",
-          key: "9",
+          stepCount: "7",
+          key: "10",
           name: "SUMMARY_SCREEN",
           body: [
             {
