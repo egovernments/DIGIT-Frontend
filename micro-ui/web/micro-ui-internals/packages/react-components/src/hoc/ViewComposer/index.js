@@ -196,13 +196,19 @@ const ViewComposer = ({ isLoading = false, data, cardErrors, ...props }) => {
         {cards
           ?.filter((card) => card?.navigationKey)
           ?.map((card, cardIdx) => {
-            const { sections } = card;
+            const { sections, noCardStyle } = card;
             return (
-              <Card style={activeNav && card.navigationKey ? (activeNav !== card.navigationKey ? { display: "none" } : {}) : {}} className={`employeeCard-override ${card?.cardStyle ? card?.cardStyle : ""}`}>
-                {sections?.map((section, sectionIdx) => {
-                  return renderCardSectionJSX(section);
-                })}
-              </Card>
+              noCardStyle ?
+                <div>
+                  {sections?.map((section, sectionIdx) => {
+                    return renderCardSectionJSX(section);
+                  })}
+                </div> :
+                <Card style={activeNav && card.navigationKey ? (activeNav !== card.navigationKey ? { display: "none" } : {}) : {}} className={`employeeCard-override ${card?.cardStyle ? card?.cardStyle : ""}`}>
+                  {sections?.map((section, sectionIdx) => {
+                    return renderCardSectionJSX(section);
+                  })}
+                </Card>
             );
           })}
       </HorizontalNav>
