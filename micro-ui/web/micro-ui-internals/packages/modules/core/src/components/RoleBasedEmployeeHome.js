@@ -69,19 +69,18 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
     }
   };
 
-  // Function to get links by type from the module configuration
   const getLinkByType = (moduleData, type) => {
-    const moduleConfig = moduleConfigData.find((config) => config.moduleName === moduleData.module);
-    if (!moduleConfig) return null;
-
-    const linkKey = moduleConfig[type];
-    return moduleData?.links?.find((item) => item?.displayName === linkKey);
+    if (!moduleData || !type) return null;
+      const moduleConfig = moduleConfigData?.find((config) => config.moduleName === moduleData.module);
+    const linkKey = moduleConfig?.[type];
+        const links = moduleData?.links;
+    return links?.find((item) => item?.displayName === linkKey) || null;
   };
 
   // Function to filter links dynamically based on module config
   const getFilteredLinks = (moduleData) => {
-    const moduleConfig = moduleConfigData.find((config) => config.moduleName === moduleData.module);
-    return moduleData.links?.filter((item) => {
+    const moduleConfig = moduleConfigData?.find((config) => config.moduleName === moduleData.module);
+    return moduleData?.links?.filter((item) => {
       const displayName = item.displayName;
       const isNotConfigureMaster = displayName !== "Configure_master";
       const isNotHowItWorks = displayName !== moduleConfig?.howItWorksLink;
@@ -170,7 +169,7 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
       icon: "SupervisorAccount",
       moduleName: t(moduleData?.label),
       metrics: [],
-      links: Digit.Utils.getMultiRootTenant() ? getFilteredLinks(moduleData) : moduleData.links,
+      links: Digit.Utils.getMultiRootTenant() ? getFilteredLinks(moduleData) : moduleData?.links,
       centreChildren: [
         <div>{t(Digit.Utils.locale.getTransformedLocale(`MODULE_CARD_DESC_${current}`))}</div>,
         userManual && (
