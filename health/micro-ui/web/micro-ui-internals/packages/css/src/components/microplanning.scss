@@ -616,9 +616,9 @@ $border-color: rgba(214, 213, 212, 1);
 
     @include select-dropdown;
 
-    .table{
-      border-left-width:0 !important;
-      border-right-width:0 !important;
+    .table {
+      border-left-width: 0 !important;
+      border-right-width: 0 !important;
     }
 
     table {
@@ -2510,11 +2510,11 @@ $border-color: rgba(214, 213, 212, 1);
 
 /* MP_HYPOTHESIS_CSS */
 
-.mp-description{
+.mp-description {
   margin-top: 2rem;
   margin-bottom: 1rem;
 }
-.mp-hypothesis-label-field{
+.mp-hypothesis-label-field {
   display: flex;
   align-items: baseline;
   margin: 1rem 0rem 0.5rem 0rem;
@@ -2524,26 +2524,25 @@ $border-color: rgba(214, 213, 212, 1);
   font-size: 1.2rem;
 }
 
-.hypothesis-delete-button{
+.hypothesis-delete-button {
   display: flex;
-  cursor: pointer;  
+  cursor: pointer;
   margin-left: 1rem;
   font-size: 1.2rem;
 }
 
-.fieldv1-deleteIcon-container{
+.fieldv1-deleteIcon-container {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 30rem !important;
 }
-.assumption-label{
- display: flex;
- flex-wrap: wrap;
- align-items: center;
- width: 30rem;
+.assumption-label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 30rem;
 }
-
 
 .kpi-container {
   display: flex;
@@ -2573,20 +2572,65 @@ $border-color: rgba(214, 213, 212, 1);
   font-size: 1.2em;
 }
 
-
-.assumptionsForm-label-field{
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem; 
-    align-items: start !important;
+.assumptionsForm-label-field {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: start !important;
 }
-.assumptionsForm-label-field > div > span{
+.assumptionsForm-label-field > div > span {
   font-size: 1.5rem;
   font-weight: bold;
 }
 
-.assumptionsForm-card{
-  background-color:#FAFAFA;
-  border: 1px solid #D6D5D4;
+.assumptionsForm-card {
+  background-color: #fafafa;
+  border: 1px solid #d6d5d4;
 }
 
+.digit-popup-wrapper.roleComposer {
+  max-width: max-content;
+  min-width: 100rem;
+}
+
+.search-field-wrapper.roleComposer {
+  .text-input {
+    input {
+      margin-bottom: 0;
+    }
+  }
+  display: grid;
+  align-items: end;
+  grid-template-columns: 1fr 1fr 2fr;
+  gap: 2rem;
+}
+
+.search-button-wrapper.roleComposer {
+  display: flex;
+  flex-direction: row-reverse !important;
+  gap: 1.5rem;
+  align-items: center;
+  line-height: 4 !important;
+}
+
+.digit-dropdown-employee-select-wrap.roleTableCell {
+  .digit-dropdown-options-card {
+    position: fixed;
+    max-width: 14rem;
+  }
+}
+
+.digit-multiselectdropdown-wrap.roleTableCell.nestedmultiselect {
+  margin: 0;
+  width: 15rem;
+  .digit-multiselectdropdown-server {
+    top: unset !important;
+    position: fixed !important;
+    max-width: 15rem !important;
+    max-height: 15rem !important;
+  }
+}
+
+.digit-tag-container.userAccessCell {
+  margin: unset !important;
+}

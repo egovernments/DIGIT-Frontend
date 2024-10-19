@@ -37,6 +37,24 @@ function cleanObject(obj) {
 }
 
 export const UICustomizations = {
+  MyMicroplanSearchConfigPlan:{
+    test:"yes"
+  },
+  FacilityMappingConfigPlan:{
+    test:"yes"
+  },
+  UserManagementConfigPlan:{
+    test:"yes"
+  },
+  MyMicroplanSearchConfigOverridePlan:{
+    test:"yes"
+  },
+  MyMicroplanSearchConfigOverridePlan:{
+    test:"yes"
+  },
+  MyMicroplanSearchConfigOverridePlan:{
+    test:"yes"
+  },
   MicroplanSearchConfig: {
     preProcess: (data, additionalDetails) => {
       const { name, status } = data?.state?.searchForm || {};
@@ -74,6 +92,8 @@ export const UICustomizations = {
             option={[
               { code: "1", name: "Edit Setup" },
               { code: "2", name: "View Summary" },
+              { code: "3", name: "ACTIVITY" },
+
             ]}
             select={(e) => {
               console.log(e, "event"); // e contains the selected option
@@ -92,6 +112,12 @@ export const UICustomizations = {
                 }/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${
                   row.CampaignDetails.id
                 }`;
+              }
+              if (e.code === "3") {
+                // Use window.location.href to navigate
+                window.location.href = `/${window.contextPath
+                  }/employee/microplan/select-activity?microplanId=${row.id}&campaignId=${row.CampaignDetails.id
+                  }`;
               }
             }}
             optionKey={"name"}
