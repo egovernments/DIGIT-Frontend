@@ -14,6 +14,7 @@ export const useUserAccessContext = () => {
 const UserAccessWrapper = ({ onSelect, props: customProps }) => {
   const { t } = useTranslation();
   const { state } = useMyContext();
+  const [data,setData]=useState(null);
   // vertical stepper array role code fetch and sorted based on orderNumber
   const rolesArray = state?.rolesForMicroplan?.sort((a, b) => a.orderNumber - b.orderNumber).map((item) => item.roleCode);
   const hierarchyData = customProps?.hierarchyData;
@@ -27,6 +28,8 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
   });
 
   const [showToast, setShowToast] = useState(null);
+  const [showErrorToast, setShowErrorToast] = useState(null);
+
 
   const [executionCount, setExecutionCount] = useState(0);
 
@@ -54,7 +57,15 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
   };
 
   const handleNext = () => {
-    setInternalKey((prevKey) => prevKey + 1);
+    if(!(data===null)){
+      setInternalKey((prevKey) => prevKey + 1);
+      console.log("hi1");
+    }else{
+      setShowErrorToast(true);
+      // console.log("hi1");
+
+    }
+   
   };
 
   const handleBack = () => {
@@ -120,7 +131,10 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
           </div>
 
           <div style={{ width: "100%" }}>
-            <UserAccess category={rolesArray?.[internalKey - 1]} />
+            <UserAccess 
+            category={rolesArray?.[internalKey - 1] }
+            setData={setData}
+            />
           </div>
         </div>
 
@@ -139,6 +153,16 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
           transitionTime={showToast.transitionTime}
           onClose={() => {
             setShowToast(false);
+          }}
+          isDleteBtn={true}
+        />
+      )}
+      {showErrorToast && (
+        <Toast
+          type={"error"} // Adjust based on your needs
+          label={"EMPLOYESS_NOT_FOUND"}
+          onClose={() => {
+            setShowErrorToast(false);
           }}
           isDleteBtn={true}
         />

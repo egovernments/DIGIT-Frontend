@@ -27,6 +27,8 @@ function RoleTableComposer() {
   const { mutate: planEmployeeCreate } = Digit.Hooks.microplanv1.usePlanEmployeeCreate();
   const { mutate: planEmployeeUpdate } = Digit.Hooks.microplanv1.usePlanEmployeeUpdate();
 
+  console.log("state",state);
+
   const { isLoading: isHrmsLoading, data: HrmsData, error: hrmsError, refetch: refetchHrms } = Digit.Hooks.microplanv1.useSearchHRMSEmployee({
     tenantId: tenantId,
     microplanId: microplanId,
@@ -39,6 +41,12 @@ function RoleTableComposer() {
       enabled: false,
       select: (data) => {
         const resp = data?.Employees?.map((item, index) => {
+          let selectedHierarchy=state?.boundaryHierarchy?.find(
+            (j) => j.boundaryType === data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.hierarchyLevel
+          )
+          if(category.startswith("ROOT")){
+
+          }
           return {
             rowIndex: index + 1,
             name: item?.user?.name,
@@ -46,7 +54,8 @@ function RoleTableComposer() {
             number: item?.user?.mobileNumber,
             employeeId: item?.user?.userServiceUuid,
             user: item?.user,
-            selectedHierarchy: state?.boundaryHierarchy?.find(
+            selectedHierarchy: 
+            state?.boundaryHierarchy?.find(
               (j) => j.boundaryType === data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.hierarchyLevel
             ),
             selectedBoundaries: data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.jurisdiction,

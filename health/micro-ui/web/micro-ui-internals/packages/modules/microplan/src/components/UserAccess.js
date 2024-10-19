@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import RoleTableComposer from "./RoleTableComposer";
 import DataTable from "react-data-table-component";
 
-function UserAccess({ category }) {
+function UserAccess({ category,setData }) {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
@@ -33,6 +33,8 @@ function UserAccess({ category }) {
     config: {
       enabled: true,
       select: (data) => {
+        // debugger;
+        setData(data);
         const rowData = data?.data?.map((item, index) => {
           return {
             id: index + 1,
@@ -84,7 +86,11 @@ function UserAccess({ category }) {
     {
       name: "Adminitrative Heirarchy",
       selector: (row) => {
-        return row?.hierarchyLevel;
+        if (category?.startsWith("ROOT")) {
+          return "COUNTRY"; // Set to "Country" if true
+        } else {
+          return row?.hierarchyLevel; // Otherwise, return the existing hierarchy level
+        }
       },
       sortable: true,
     },
@@ -95,6 +101,7 @@ function UserAccess({ category }) {
           <>
             {row?.jurisdiction?.map((item) => (
               <div className="digit-tag-container userAccessCell">
+
                 <Chip
                   className=""
                   error=""
@@ -113,6 +120,7 @@ function UserAccess({ category }) {
       sortable: true,
     },
   ];
+  // debugger;
 
   return (
     <>
