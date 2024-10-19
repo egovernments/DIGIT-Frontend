@@ -468,6 +468,7 @@ function filterUniqueByKey(arr, key) {
   return result;
 
 }
+export const PRIMARY_COLOR = "#C84C0E";
 
 export default {
   destroySessionHelper,
@@ -480,8 +481,7 @@ export default {
   filterBoundariesByJurisdiction,
   createBoundaryDataByHierarchy,
   groupByParent,
-  epochToDateTime
+  epochToDateTime,
   filterUniqueByKey
   // constructBoundaryOptions
-};
-export const PRIMARY_COLOR = "#C84C0E";
+}
