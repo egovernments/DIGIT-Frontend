@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { ViewCardFieldPair, Toast, Card, TextBlock, Button, PopUp, CardText, TextInput, BreadCrumb, Loader, ActionBar } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useHistory, useLocation } from "react-router-dom";
+import MobileChecklist from "../../components/MobileChecklist";
 
 const ViewChecklist = () => {
     const { t } = useTranslation();
@@ -11,90 +12,111 @@ const ViewChecklist = () => {
     const searchParams = new URLSearchParams(location.search);
     const campaignName = searchParams.get("campaignName");
     const role = searchParams.get("role");
+    const rlt = searchParams.get("role");
+    const roleLocal = (!rlt.startsWith("ACCESSCONTROL_ROLES_ROLES_")) ? "ACCESSCONTROL_ROLES_ROLES_" + rlt : rlt;
     const checklistType = searchParams.get("checklistType");
+    let clt = searchParams.get("checklistType");
+    const checklistTypeLocal = (!clt.startsWith("HCM_CHECKLIST_TYPE_")) ? "HCM_CHECKLIST_TYPE_" + clt : clt;
+    const history = useHistory(); // Get history object for navigation
+    let checklistName = `${checklistType} ${role}`;
     const [config, setConfig] = useState(null);
     const [checklistTypeCode, setChecklistTypeCode] = useState(null);
     const [roleCode, setRoleCode] = useState(null);
     const [serviceCode, setServiceCode] = useState(null);
     const [searching, setSearching] = useState(true);
-    const [viewData, setViewData] = useState(
-        //     [
-        //     { 
-        //         id: crypto.randomUUID(), 
-        //         parentId: null, 
-        //         level: 1, 
-        //         key: 1, 
-        //         title: null, 
-        //         type: { code: "SingleValueList" }, 
-        //         value: null, 
-        //         isRequired: false 
-        //     }
-        // ]
-        null
-    );
+    const [showPopUp, setShowPopUp] = useState(false);
+    const [previewData, setPreviewData] = useState([]);
+
+    const [viewData, setViewData] = useState(null);
 
 
 
-    const reqCriteriaResourceMDMS = {
-        url: `/mdms-v2/v2/_search`,
-        // url: `/${urlMd}/v2/_search`,
-        body: {
-            MdmsCriteria: {
-                tenantId: tenantId,
-                schemaCode: "HCMadminconsole.checklisttemplates"
-                // schemaCode: "HCM-ADMIN-CONSOLE.ChecklistTemplates"
+    // const reqCriteriaResourceMDMS = {
+    //     url: `/mdms-v2/v2/_search`,
+    //     // url: `/${urlMd}/v2/_search`,
+    //     body: {
+    //         MdmsCriteria: {
+    //             tenantId: tenantId,
+    //             schemaCode: "HCMadminconsole.checklisttemplates"
+    //             // schemaCode: "HCM-ADMIN-CONSOLE.ChecklistTemplates"
+    //         }
+    //     },
+    //     config: {
+    //         enabled: true,
+    //         select: (data) => {
+    //             return data?.mdms?.[0]?.data?.data;
+    //         },
+    //     },
+    //     // changeQueryName:"checklsit template "
+    // };
+    // const { isLoading1, data: mdms, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteriaResourceMDMS);
+
+    // const reqCriteria = {
+
+    //     url: `/localization/messages/v1/_search`,
+    //     body: {
+    //         tenantId: tenantId
+    //     },
+    //     params: {
+    //         locale: "en_MZ",
+    //         tenantId: tenantId,
+    //         module: "hcm-campaignmanager"
+    //     },
+    // }
+    // const { isLoading2, data: localization, isFetching2 } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+
+
+    function organizeQuestions(questions) {
+        // Deep clone the questions to avoid mutating the original tempFormData
+        const clonedQuestions = JSON.parse(JSON.stringify(questions));
+
+        const questionMap = new Map();
+        const optionMap = new Map();
+        const organizedQuestions = [];
+
+        // First pass: Populate the maps with questions and options
+        clonedQuestions.forEach((question) => {
+            question.subQuestions = []; // Initialize an array to hold sub-questions
+            questionMap.set(question.id, question);
+
+            if (question?.options) {
+                question.options.forEach((option) => {
+                    option.subQuestions = []; // Initialize an array to hold sub-questions for options
+                    optionMap.set(option.id, option);
+                });
             }
-        },
-        config: {
-            enabled: true,
-            select: (data) => {
-                return data?.mdms?.[0]?.data?.data;
-            },
-        },
-        // changeQueryName:"checklsit template "
-    };
-    const { isLoading1, data: mdms, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteriaResourceMDMS);
+        });
 
-    const reqCriteria = {
+        // Second pass: Link each question to its parent, whether it's a question or an option
+        clonedQuestions.forEach((question) => {
+            if (question.parentId) {
+                const parentQuestion = questionMap.get(question.parentId);
+                const parentOption = optionMap.get(question.parentId);
 
-        url: `/localization/messages/v1/_search`,
-        body: {
-            tenantId: tenantId
-        },
-        params: {
-            locale: "en_MZ",
-            tenantId: tenantId,
-            module: "hcm-campaignmanager"
-        },
-    }
-    const { isLoading2, data: localization, isFetching2 } = Digit.Hooks.useCustomAPIHook(reqCriteria);
-
-    useEffect(() => {
-        if (localization?.messages?.length > 0) {
-            let matchedItem = localization.messages.find(item => item.message === checklistType);
-            console.log("matched item", matchedItem);
-            // If a match is found, assign the 'code' to 'checklistcode'
-            if (matchedItem) {
-                let code = matchedItem.code;
-                let res = code.replace("HCM_CHECKLIST_TYPE_", "");
-                setChecklistTypeCode(res);
-                setRoleCode(role.toUpperCase().replace(/ /g, "_"));
-                console.log("type", checklistTypeCode);
-                console.log("role", roleCode);
+                if (parentQuestion) {
+                    parentQuestion.subQuestions.push(question);
+                } else if (parentOption) {
+                    parentOption.subQuestions.push(question);
+                }
             } else {
+                organizedQuestions.push(question);
             }
-        } else {
-        }
+        });
 
-    }, [localization])
+        return organizedQuestions;
+    }
+
+    const popShow = () => {
+        const pr = organizeQuestions(viewData);
+        setPreviewData(pr);
+        setShowPopUp(!showPopUp);
+    };
 
     useEffect(() => {
-        setServiceCode(`${campaignName}.${checklistTypeCode}.${roleCode}`);
-    }, [checklistTypeCode, roleCode]
-    )
+        setServiceCode(`${campaignName}.${checklistType}.${role}`)
+    }, [])
 
     useEffect(() => {
-        console.log("service code", serviceCode);
 
         const callSearch = async () => {
             const res = await Digit.CustomService.getResponse({
@@ -104,6 +126,7 @@ const ViewChecklist = () => {
                         "tenantId": tenantId,
                         "code": [serviceCode]
                     },
+                    includeDeleted: true
                 },
             });
             return res;
@@ -111,14 +134,15 @@ const ViewChecklist = () => {
         const fetchData = async () => {
             try {
                 const res = await callSearch();
-                console.log("the res is", res);
 
                 if (res?.ServiceDefinitions?.[0]?.attributes) {
                     setSearching(false);
                     let temp_data = res?.ServiceDefinitions?.[0]?.attributes
                     let formatted_data = temp_data.map((item) => item.additionalDetails);
-                    setViewData(formatted_data);
-                    console.log("formatted data", formatted_data);
+                    let nvd = formatted_data.filter((value, index, self) =>
+                        index === self.findIndex((t) => t.id === value.id)
+                    );
+                    setViewData(nvd);
 
                 }
             }
@@ -129,28 +153,10 @@ const ViewChecklist = () => {
     }, [serviceCode])
 
     useEffect(() => {
-        // setConfig(checklistCreateConfig(data=[{ id: crypto.randomUUID(), parentId: null, level: 1, key: 1, title: null, type: {"code": "SingleValueList"}, value: null, isRequired: false }], typeOfCall="view"));
-        // const initialData = [
-        //     { 
-        //         id: crypto.randomUUID(), 
-        //         parentId: null, 
-        //         level: 1, 
-        //         key: 1, 
-        //         title: null, 
-        //         type: { code: "SingleValueList" }, 
-        //         value: null, 
-        //         isRequired: false 
-        //     }
-        // ];
-        console.log("achieved data is", viewData);
+
         const currentTime = new Date();
         if (viewData !== null) {
             setConfig(checklistCreateConfig(viewData, currentTime, "view"));
-            // setConfig(checklistCreateConfig({
-            //     data: viewData,
-            //     time: currentTime,
-            //     typeOfCall: "view"
-            // }));
         }
 
     }, [viewData])
@@ -160,16 +166,84 @@ const ViewChecklist = () => {
 
 
     const fieldPairs = [
-        { label: "ROLE", value: role },
-        { label: "TYPE_OF_CHECKLIST", value: checklistType },
+        { label: "ROLE", value: roleLocal },
+        { label: "TYPE_OF_CHECKLIST", value: checklistTypeLocal },
         { label: "CAMPAIGN_NAME", value: campaignName },
-        { label: "CHECKLIST_NAME", value: `${checklistType} ${role}` }
+        // { label: "CHECKLIST_NAME", value: `${checklistTypeLocal} ${roleLocal}` }
     ];
     return (
         <div>
-            <h2 style={{ fontSize: "36px", fontWeight: "700" }}>
-                {t("VIEW_CHECKLIST")}
-            </h2>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <div>
+                    <h2 style={{ fontSize: "36px", fontWeight: "700" }}>
+                        {t("VIEW_CHECKLIST")}
+                    </h2>
+                </div>
+                <div style={{ display: "flex", gap: "1rem" }}>
+                    {/* <Button
+                                variation="secondary"
+                                label={t("USE_TEMPLATE")}
+                                className={"hover"}
+                                style={{ marginTop: "2rem", marginBottom: "2rem" }}
+                                // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
+                                onClick={useTemplateData}
+                                /> */}
+                    <Button
+                        icon="Preview"
+                        variation="secondary"
+                        label={t("PREVIEW_CHECKLIST")}
+                        className={"hover"}
+                        style={{ marginTop: "2rem", marginBottom: "2rem" }}
+                        // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
+                        onClick={popShow}
+                    />
+                </div>
+            </div>
+            {showPopUp && (
+                <PopUp
+                    className={"custom-pop-up"}
+                    type={"default"}
+                    heading={t("CHECKLIST_PREVIEW")}
+                    children={[
+                        // <div>
+                        //   <CardText style={{ margin: 0 }}>{"testing" + " "}</CardText>
+                        // </div>, 
+                    ]}
+                    onOverlayClick={() => {
+                        setShowPopUp(false);
+                    }}
+                    onClose={() => {
+                        setShowPopUp(false);
+                    }}
+                    footerChildren={[
+                        <Button
+                            type={"button"}
+                            size={"large"}
+                            variation={"secondary"}
+                            label={t("CLOSE")}
+                            onClick={() => {
+                                setShowPopUp(false);
+                            }}
+                        />,
+                        <Button
+                            type={"button"}
+                            size={"large"}
+                            variation={"primary"}
+                            label={t("UPDATE_CHECKLIST")}
+                            onClick={() => {
+                                history.push(`/${window.contextPath}/employee/campaign/checklist/update?campaignName=${campaignName}&role=${role}&checklistType=${checklistType}`)
+                            }}
+                        />,
+                    ]}
+                    sortFooterChildren={true}
+                >
+                    {/* <PreviewComponent
+              questionsArray={previewData}></PreviewComponent> */}
+
+                    <MobileChecklist questions={previewData} checklistRole={t(`${roleLocal}`)} typeOfChecklist={t(`${checklistTypeLocal}`)}></MobileChecklist>
+                </PopUp>
+            )}
+
             <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
                 {fieldPairs.map((pair, index) => (
                     <div>
@@ -177,8 +251,8 @@ const ViewChecklist = () => {
                             key={index} // Provide a unique key for each item
                             className=""
                             inline
-                            label={pair.label} // Dynamically set the label
-                            value={pair.value} // Dynamically set the value
+                            label={t(pair.label)} // Dynamically set the label
+                            value={t(pair.value)} // Dynamically set the value
                         // style={{ fontSize: "16px", fontWeight: "bold" }} // Optional: customize styles
                         />
                         {index !== fieldPairs.length - 1 && <div style={{ height: "1rem" }}></div>}
@@ -217,8 +291,10 @@ const ViewChecklist = () => {
                         // isDisabled={!disableFile}
                         style={{ marginLeft: "auto" }}
                         isSuffix
-                        label={t("Next")}
-                        onClick={() => { const currentTime = new Date(); setConfig(checklistCreateConfig(viewData, currentTime, "update")) }}
+                        label={t("UPDATE")}
+                        onClick={() => {
+                            history.push(`/${window.contextPath}/employee/campaign/checklist/update?campaignName=${campaignName}&role=${role}&checklistType=${checklistType}`)
+                        }}
                         type="button"
                         textStyles={{ width: 'unset' }}
                     />
