@@ -241,7 +241,7 @@ function RoleTableComposer() {
     planEmployeeCreate(payload, {
       onSuccess: (data) => {
         queryClient.invalidateQueries("PLAN_SEARCH_EMPLOYEE_WITH_TAGGING");
-        queryClient.invalidateQueries("SEARCH_EMPLOYEE_HRMS_WITH_PLANTAG");
+        refetchHrms();
         setShowToast({ key: "success", label: t("ASSIGNED_SUCCESSFULLY") });
       },
       onError: (error, variables) => {
@@ -260,7 +260,7 @@ function RoleTableComposer() {
     planEmployeeUpdate(payload, {
       onSuccess: (data) => {
         queryClient.invalidateQueries("PLAN_SEARCH_EMPLOYEE_WITH_TAGGING");
-        queryClient.invalidateQueries("SEARCH_EMPLOYEE_HRMS_WITH_PLANTAG");
+        refetchHrms();
         setShowToast({ key: "success", label: t("ASSIGNED_SUCCESSFULLY") });
       },
       onError: (error, variables) => {
