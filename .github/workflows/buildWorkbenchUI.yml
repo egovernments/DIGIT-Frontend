@@ -1,7 +1,7 @@
 name: Digit Admin Console Build workflow
 on:
   push:
-    branches: [ 'develop','campaign' ,'microplan','master']
+    branches: [ 'develop','console','master']
     paths:
       - 'health/micro-ui/web/micro-ui-internals/**'
   workflow_dispatch:
@@ -51,10 +51,32 @@ jobs:
           # Authenticate with Docker Hub
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
-      - name: Build and Push Docker image for digit-ui
+
+      - name: Build and Push Docker images for digit-ui
         if: ${{ steps.check_files.outputs.run_job_digit_ui == 'true' }}
         run: |
-          docker build -t workbench-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }} -f web/workbench/Dockerfile .
-          docker tag workbench-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }} egovio/workbench-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
-          docker push egovio/workbench-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
+          # workbench ui Docker build
+          IMAGE_NAME_1=workbench-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
+          docker build -t $IMAGE_NAME_1 -f web/workbench/Dockerfile .
+          docker tag $IMAGE_NAME_1 egovio/$IMAGE_NAME_1
+          docker push egovio/$IMAGE_NAME_1
+          
+          # Print success message for the first image
+          echo "Docker image 1 built and pushed successfully: egovio/$IMAGE_NAME_1"
+          
+          # microplan ui Docker build
+          IMAGE_NAME_2=microplan-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
+          docker build -t $IMAGE_NAME_2 -f web/microplan/Dockerfile .
+          docker tag $IMAGE_NAME_2 egovio/$IMAGE_NAME_2
+          docker push egovio/$IMAGE_NAME_2
+      
+          # Print success message for the second image
+          echo "Docker image 2 built and pushed successfully: egovio/$IMAGE_NAME_2"
         working-directory: health/micro-ui
+
+
+
+
+
+
+
