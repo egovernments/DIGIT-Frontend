@@ -64,88 +64,89 @@ const getDeliveryConfig = ({ data, projectType }) => {
           }
         });
       });
-      const attributeConfig = delivery.doseCriteria.map((criteria, index) => {
-        const conditions = criteria.condition.split("and");
-        return conditions.map((conditionPart, subIndex) => {
-          const { operatorValue, value } = parseCondition(conditionPart.trim()); 
-  
-          let fromValue = null;
-          let toValue = null;
-          if (operatorValue === "IN_BETWEEN") {
-            fromValue = Number(value.minValue);
-            toValue = Number(value.maxValue);
-          } else {
-            fromValue = Number(value.comparisonValue);
-            toValue = null;
-          }
-  
-          return {
-            key: index + 1 + subIndex,
-            label: "Custom",
-            attrType: criteria.attrType,
-            attrValue: value?.variable,
-            operatorValue: operatorValue,
-            value: value?.comparisonValue,
-          };
-        });
-      }).flat(); 
-  
+      const attributeConfig = delivery.doseCriteria
+        .map((criteria, index) => {
+          const conditions = criteria.condition.split("and");
+          return conditions.map((conditionPart, subIndex) => {
+            const { operatorValue, value } = parseCondition(conditionPart.trim());
+
+            let fromValue = null;
+            let toValue = null;
+            if (operatorValue === "IN_BETWEEN") {
+              fromValue = Number(value.minValue);
+              toValue = Number(value.maxValue);
+            } else {
+              fromValue = Number(value.comparisonValue);
+              toValue = null;
+            }
+
+            return {
+              key: index + 1 + subIndex,
+              label: "Custom",
+              attrType: criteria.attrType,
+              attrValue: value?.variable,
+              operatorValue: operatorValue,
+              value: value?.comparisonValue,
+            };
+          });
+        })
+        .flat();
+
       return {
         attributeConfig: attributeConfig,
         productConfig: productConfig,
       };
     });
   };
-  
 
-  const generateMRDNConfig = (deliveries) => {
-    const deliveryConfig = deliveries.map((delivery, deliveryIndex) => {
+const generateMRDNConfig = (data) => {
+  
+  return data.deliveries.map(delivery => {
+    const conditionConfig = delivery.doseCriteria.map(dose => {
+      const productConfig = dose.ProductVariants.map(variant => ({
+        key: 1,
+        name: variant.name,
+        count: variant.quantity,
+        value: variant.productVariantId
+      }));
+      
+      // Split the condition by 'and' to handle multiple conditions
+      const conditions = dose.condition.split('and');
+      
+      const attributeConfigs = conditions.map(condition => {
+        // Use the parseCondition function to extract operatorValue and value
+        const { operatorValue, value } = parseCondition(condition);
+
+        return {
+          key: 1, 
+          label: "Custom",
+          attrType: "dropdown",
+          attrValue: value.variable, 
+          fromValue: value.minValue || value.comparisonValue,
+          toValue: value.maxValue || null, 
+          operatorValue: operatorValue 
+        };
+      });
+
       return {
-        delivery: delivery.id, 
-        conditionConfig: delivery.deliveries.map((deliveryItem, conditionIndex) => {
-          return {
-            disableDeliveryType: deliveryItem.deliveryStrategy === "DIRECT",
-            deliveryType: deliveryItem.deliveryStrategy,
-            attributeConfig: deliveryItem.doseCriteria.map((criteria, attrIndex) => {
-              const { operatorValue, value } = parseCondition(criteria.condition);
-  
-              return {
-                key: `${conditionIndex + 1}-${attrIndex + 1}`, 
-                label: "Custom",
-                attrType: criteria.attrType || "dropdown",
-                attrValue: value.variable, 
-                operatorValue,
-                fromValue: Number(value.minValue),
-                toValue: Number(value.maxValue) - 1
-              };
-            }),
-            productConfig: deliveryItem.doseCriteria.flatMap((criteria, prodIndex) => {
-              return criteria.ProductVariants.map((variant, varIndex) => {
-                // if(variant?.productVariantId){
-                //   productName = useProductVariantSearch({ variantId: variant.productVariantId, tenantId: "mz" });
-                // }
-                // const productName = useProductVariantSearch({ variantId: variant.productVariantId, tenantId: "mz" });
-  
-                return {
-                  key: `${conditionIndex + 1}-${varIndex + 1}`,
-                  count: variant.quantity,
-                  value: variant.productVariantId,
-                  name: variant.name
-
-                };
-              });
-            })
-          };
-        })
+        deliveryType: delivery.deliveryStrategy,
+        productConfig,
+        attributeConfig: attributeConfigs, // Use the array of attributeConfigs
+        disableDeliveryType: true
       };
     });
-    return deliveryConfig;
-  };
-  
+
+    return {
+      delivery: delivery.id,
+      conditionConfig
+    };
+  });
+};
+
   const deliveryConfig = ({ data, projectType }) => {
     switch (projectType) {
       case "MR-DN":
-        return generateMRDNConfig(data?.cycles, projectType);
+        return generateMRDNConfig(data?.cycles?.[0], projectType);
       case "LLIN-mz":
       case "IRS-mz":
         return generateBednetConfig(data?.cycles?.[0]?.deliveries, projectType);
@@ -156,7 +157,7 @@ const getDeliveryConfig = ({ data, projectType }) => {
 
   function convertToConfig(data) {
     return {
-      beneficiaryType: data?.beneficiaryType, 
+      beneficiaryType: data?.beneficiaryType,
       code: data?.code,
       projectType: data?.code,
       attrAddDisable: data?.attrAddDisable || false,

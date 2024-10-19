@@ -307,53 +307,47 @@ const CampaignBoundary = ({ customProps }) => {
 
 
 
-            {bHierarchy.length > 1 && bHierarchy.slice(1, -1).map((item, ind) => (
-                <Card key={`card_${ind}`}>
-                    <HeaderComp title={bHierarchy[ind + 2]} /> {/* Wrap each bHierarchy item with Card */}
-                    {
-                        parent_group?.[item]?.map((item1, idx) => (
-                            Array.isArray(parents?.[item1]) && boundaryStatus?.[ind + 2] && (idx == 0 || idx == 1) ? (
-                                <>
-                                    <SubBoundaryView
-                                        key={`${item1}_${idx}`}
-                                        title={item1}
-                                        arr={parents?.[item1]}
-                                    />
+{bHierarchy.length > 1 && bHierarchy.slice(1, -1).map((item, ind) => (
+    <div key={`header_${ind}`}>
+        <HeaderComp title={bHierarchy[ind + 2]} /> {/* Wrap each bHierarchy item with Card */}
 
-                                </>
-                            ) : Array.isArray(parents?.[item1]) && !boundaryStatus?.[ind + 2] ? (
-                                <>
-                                    <SubBoundaryView
-                                        key={`${item1}_${idx}`}
-                                        title={item1}
-                                        arr={parents?.[item1]}
-                                    />
+        {
+            parent_group?.[item]?.map((item1, idx) => (
+                Array.isArray(parents?.[item1]) && boundaryStatus?.[ind + 2] && (idx === 0 || idx === 1) ? (
+                    <SubBoundaryView
+                        key={`${item1}_${idx}`}
+                        title={item1}
+                        arr={parents?.[item1]}
+                    />
+                ) : Array.isArray(parents?.[item1]) && !boundaryStatus?.[ind + 2] ? (
+                    <SubBoundaryView
+                        key={`${item1}_${idx}`}
+                        title={item1}
+                        arr={parents?.[item1]}
+                    />
+                ) : null
+            )) || null
+        }
 
-                                </>
-                            ) : null
-                        )) || null
-                    }
-                    {
-                        boundaryStatus?.[ind + 2] && parent_group[item].length > 2? (
-                            <div
-                                onClick={() => handleViewMore(ind + 2)}
-                                className="view-more"
-                            >
-                                View More
-                            </div>
-                        ) : (!boundaryStatus?.[ind + 2]) ?
-                            (
-                                <div
-                                    onClick={() => handleViewMore(ind + 2)}
-                                    className="view-more"
-                                >
-                                    View Less
-                                </div>
-
-                            ) : null
-                    }
-                </Card>
-            ))}
+        {
+            boundaryStatus?.[ind + 2] && parent_group[item]?.length > 2 ? (
+                <div
+                    onClick={() => handleViewMore(ind + 2)}
+                    className="view-more"
+                >
+                    View More
+                </div>
+            ) : (!boundaryStatus?.[ind + 2]) ? (
+                <div
+                    onClick={() => handleViewMore(ind + 2)}
+                    className="view-more"
+                >
+                    View Less
+                </div>
+            ) : null
+        }
+    </div>
+))}
 
 
         </div>

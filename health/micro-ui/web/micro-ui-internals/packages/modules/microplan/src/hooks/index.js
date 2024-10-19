@@ -7,11 +7,17 @@ import { useGenerateIdCampaign } from "./useGenerateIdCampaign";
 import useCreateCampaign from "./useCreateCampaign";
 import useUpdateCampaign from "./useUpdateCampaign";
 import useCreateUpdatePlanProject from "./useCreateUpdatePlanProject";
+import utils from "../utils/utilities";
 import useFileDownload from "./useFileDownload";
 import utils from "../utils/utilities"
 import usePlanSearchEmployee from "./usePlanSearchEmployee";
 import useCensusSearch from "./useCensusSearch";
 
+import useSearchHRMSEmployee from "./useSearchHRMSEmployee";
+import usePlanEmployeeCreate from "./usePlanEmployeeCreate";
+import usePlanEmployeeUpdate from "./usePlanEmployeeUpdate";
+import usePlanSearchEmployee from "./usePlanSearchEmployee";
+import usePlanSearchEmployeeWithTagging from "./usePlanSearchEmployeeWithTagging";
 
 const microplanv1 = {
   useCreatePlanConfig,
@@ -23,9 +29,13 @@ const microplanv1 = {
   useCreateCampaign,
   useUpdateCampaign,
   useCreateUpdatePlanProject,
+  useSearchHRMSEmployee,
   useFileDownload,
+  useCensusSearch,
+  usePlanEmployeeCreate,
+  usePlanEmployeeUpdate,
   usePlanSearchEmployee,
-  useCensusSearch
+  usePlanSearchEmployeeWithTagging,
 };
 
 const Hooks = {
@@ -34,7 +44,7 @@ const Hooks = {
 
 const Utils = {
   microplanv1: {
-    ...utils
+    ...utils,
   },
 };
 
