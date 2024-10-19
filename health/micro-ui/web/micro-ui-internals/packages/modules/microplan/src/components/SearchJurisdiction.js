@@ -5,6 +5,7 @@ import { useMyContext } from "../utils/context";
 import { Dropdown, MultiSelectDropdown } from "@egovernments/digit-ui-components";
 
 const SearchJurisdiction = ({ boundaries, jurisdiction,onSubmit=()=>{} }) => {
+  console.log(boundaries, jurisdiction, " bbbbbbbbbbbbbbbbbbbbbbb and jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
   const { t } = useTranslation();
   const {
     state: { hierarchyType, boundaryHierarchy },
