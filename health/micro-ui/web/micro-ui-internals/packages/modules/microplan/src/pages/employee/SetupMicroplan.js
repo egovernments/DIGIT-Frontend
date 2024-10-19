@@ -129,7 +129,9 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const handleUpdates = (propsForMutate) => {
     updateResources(propsForMutate, {
       onSuccess: (data) => {
-
+        if(data?.redirectTo){
+          history.push(data?.redirectTo)
+        }
       },
       onError: (error, variables) => {
 
@@ -233,6 +235,13 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     return <Loader />;
   }
 
+  const getNextActionLabel = () => {
+    if(filteredConfig?.[0]?.form?.[0]?.body?.[0]?.isLast){
+      return t("MP_COMPLETE_SETUP")
+    }
+    return t("MP_SAVE_PROCEED")
+
+  }
 
   return (
     <React.Fragment>
@@ -265,7 +274,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
         cardClassName="setup-campaign-card"
         noCardStyle={true}
         onSecondayActionClick={onSecondayActionClick}
-        label={t("MP_NEXT")}
+        label={getNextActionLabel()}
       />
       {/* {actionBar === "true" && (
         <ActionBar style={{ zIndex: "19" }}>

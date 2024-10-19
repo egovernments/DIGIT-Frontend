@@ -793,7 +793,7 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      if (key === "Actions") {
+      if (key === "ACTIONS") {
         // `/${window.contextPath}/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}`
         return (
           <Dropdown
@@ -807,15 +807,19 @@ export const UICustomizations = {
               console.log(e, "event"); // e contains the selected option
               if (e.code === "1") {
                 // Use window.location.href to navigate
-                window.location.href = `/${window.contextPath
-                  }/employee/microplan/setup-microplan?key=${1}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${row.CampaignDetails.id
-                  }`;
+                window.location.href = `/${
+                  window.contextPath
+                }/employee/microplan/setup-microplan?key=${1}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${
+                  row.CampaignDetails.id
+                }`;
               }
               if (e.code === "2") {
                 // Use window.location.href to navigate
-                window.location.href = `/${window.contextPath
-                  }/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${row.CampaignDetails.id
-                  }`;
+                window.location.href = `/${
+                  window.contextPath
+                }/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${
+                  row.CampaignDetails.id
+                }`;
               }
               if (e.code === "3") {
                 // Use window.location.href to navigate
@@ -831,7 +835,7 @@ export const UICustomizations = {
         );
       }
 
-      if (key === "Name of the Microplan") {
+      if (key === "NAME_OF_MICROPLAN") {
         if (value && value !== "NA") {
           return (
             <div
@@ -885,7 +889,7 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      if (key === "Actions") {
+      if (key === "ACTIONS") {
         // `/${window.contextPath}/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}`
         return row.status === "DRAFT" ? (
           <Button
@@ -894,7 +898,7 @@ export const UICustomizations = {
             icon={<EditIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
             type="button"
             className="dm-workbench-download-template-btn dm-hover"
-            onButtonClick={(e) => { }}
+            onButtonClick={(e) => {}}
           />
         ) : row.status === "EXECUTION_TO_BE_DONE" ? (
           <Button
@@ -903,7 +907,7 @@ export const UICustomizations = {
             icon={<ArrowForward styles={{ height: "1.25rem", width: "2.5rem" }} />}
             type="button"
             className="dm-workbench-download-template-btn dm-hover"
-            onButtonClick={(e) => { }}
+            onButtonClick={(e) => {}}
           />
         ) : row.status === "RESOURCE_ESTIMATIONS_APPROVED" ? (
           <Button
@@ -912,12 +916,12 @@ export const UICustomizations = {
             icon={<DownloadIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
             type="button"
             className="dm-workbench-download-template-btn dm-hover"
-            onButtonClick={(e) => { }}
+            onButtonClick={(e) => {}}
           />
         ) : null;
       }
 
-      if (key === "Name of the Microplan") {
+      if (key === "NAME_OF_MICROPLAN") {
         if (value && value !== "NA") {
           return (
             <div
@@ -1097,5 +1101,23 @@ export const UICustomizations = {
           return null;
       }
     },
+  },
+  MyMicroplanSearchConfigExample:{
+    test:"yes"
+  },
+  FacilityMappingConfigExample:{
+    test:"yes"
+  },
+  UserManagementConfigExample:{
+    test:"yes"
+  },
+  MyMicroplanSearchConfigPlan:{
+    test:"no"
+  },
+  FacilityMappingConfigPlan:{
+    test:"no"
+  },
+  UserManagementConfigPlan:{
+    test:"no"
   },
 };

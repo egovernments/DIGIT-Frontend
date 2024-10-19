@@ -249,8 +249,6 @@ const PopInboxTable = ({ ...props }) => {
     const handlePerRowsChange = async (newPerPage, page) => { };
 
 
-
-
     //wrapper to the table card
     //show multiple tabs
     return (

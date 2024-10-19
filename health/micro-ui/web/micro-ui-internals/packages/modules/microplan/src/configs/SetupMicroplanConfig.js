@@ -269,6 +269,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               withoutLabel: true,
               withoutLabelFieldPair: true,
               disable: false,
+              isLast:true,
               customProps: {
                 module: "HCM",
                 sessionData: totalFormData,

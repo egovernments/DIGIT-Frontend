@@ -37,6 +37,24 @@ function cleanObject(obj) {
 }
 
 export const UICustomizations = {
+  MyMicroplanSearchConfigPlan:{
+    test:"yes"
+  },
+  FacilityMappingConfigPlan:{
+    test:"yes"
+  },
+  UserManagementConfigPlan:{
+    test:"yes"
+  },
+  MyMicroplanSearchConfigOverridePlan:{
+    test:"yes"
+  },
+  MyMicroplanSearchConfigOverridePlan:{
+    test:"yes"
+  },
+  MyMicroplanSearchConfigOverridePlan:{
+    test:"yes"
+  },
   MicroplanSearchConfig: {
     preProcess: (data, additionalDetails) => {
       const { name, status } = data?.state?.searchForm || {};
@@ -67,7 +85,7 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      if (key === "Actions") {
+      if (key === "ACTIONS") {
         // `/${window.contextPath}/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}`
         return (
           <Dropdown
@@ -109,7 +127,7 @@ export const UICustomizations = {
         );
       }
 
-      if (key === "Name of the Microplan") {
+      if (key === "NAME_OF_MICROPLAN") {
         if (value && value !== "NA") {
           return (
             <div
@@ -163,7 +181,7 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      if (key === "Actions") {
+      if (key === "ACTIONS") {
         // `/${window.contextPath}/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}`
         return row.status === "DRAFT" ? (
           <Button
@@ -195,7 +213,7 @@ export const UICustomizations = {
         ) : null;
       }
 
-      if (key === "Name of the Microplan") {
+      if (key === "NAME_OF_MICROPLAN") {
         if (value && value !== "NA") {
           return (
             <div
