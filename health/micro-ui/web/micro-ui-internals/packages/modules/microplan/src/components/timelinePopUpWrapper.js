@@ -759,7 +759,7 @@ const TimelinePopUpWrapper = ({ onClose, businessId, heading }) => {
             heading={t(heading)}
             onOverlayClick={onClose}
             children={[
-                <TimelineMolecule key="timeline" initialVisibleCount={4}>
+                <TimelineMolecule key="timeline" initialVisibleCount={4} viewLessLabelForPast={t(`HIDE_PAST_COMMENTS`)} viewMoreLabelForPast={t(`VIEW_PAST_COMMENTS`)}>
                     {timelineSteps.map((step, index) => (
                         <Timeline
                             key={index}
