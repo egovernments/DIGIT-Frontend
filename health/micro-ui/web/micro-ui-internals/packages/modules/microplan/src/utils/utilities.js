@@ -452,6 +452,7 @@ function epochToDateTime(epoch) {
 
   // Return the formatted date and time
   return `${formattedDate} ${formattedTime}`;
+}
 
 function filterUniqueByKey(arr, key) {
   const uniqueValues = new Set();
@@ -469,6 +470,7 @@ function filterUniqueByKey(arr, key) {
 
 }
 export const PRIMARY_COLOR = "#C84C0E";
+
 
 export default {
   destroySessionHelper,
