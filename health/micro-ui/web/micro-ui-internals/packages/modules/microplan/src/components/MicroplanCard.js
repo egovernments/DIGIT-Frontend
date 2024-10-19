@@ -31,12 +31,11 @@ const MicroplanCard = () => {
     generateLink("SEARCH_MICROPLANS","microplan-search"),
     generateLink("USER_MANAGEMENT","user-management"),
     generateLink("MY_MICROPLANS","my-microplans",ROLES.SUPERVISOR),
-    generateLink("TESTING FLOWS","select-activity")
   ];
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));
 
   const propsForModuleCard = {
-    Icon: <SVG.UpdateExpense />,
+    Icon: <SVG.UpdateExpense fill="white"  height="50" width="50" />,
     moduleName: t("MICROPLAN_MODULE_SETUP"),
     kpis: [],
     links: links,

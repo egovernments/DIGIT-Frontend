@@ -800,6 +800,8 @@ export const UICustomizations = {
             option={[
               { code: "1", name: "Edit Setup" },
               { code: "2", name: "View Summary" },
+              { code: "3", name: "ACTIVITY" },
+
             ]}
             select={(e) => {
               console.log(e, "event"); // e contains the selected option
@@ -813,6 +815,12 @@ export const UICustomizations = {
                 // Use window.location.href to navigate
                 window.location.href = `/${window.contextPath
                   }/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${row.CampaignDetails.id
+                  }`;
+              }
+              if (e.code === "3") {
+                // Use window.location.href to navigate
+                window.location.href = `/${window.contextPath
+                  }/employee/microplan/select-activity?microplanId=${row.id}&campaignId=${row.CampaignDetails.id
                   }`;
               }
             }}

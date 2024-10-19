@@ -10,7 +10,8 @@ const ChooseActivity = () => {
     const disableCardBasedOnRole = (validRoles = []) => {
         const userInfo = Digit.UserService.getUser();
         const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
-      
+      //to see different flows should be removed later
+        return false;
         const enabled = userRoles?.filter((role) => validRoles?.includes(role));
       
         return !(validRoles?.length > 0 && enabled?.length > 0);
