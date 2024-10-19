@@ -40,7 +40,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
 
   //fetch existing campaign object
   const {
-    isLoading: isLoadingCampaignObject,   
+    isLoading: isLoadingCampaignObject,
     data: campaignObject,
     error: errorCampaign,
     refetch: refetchCampaign,
