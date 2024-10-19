@@ -793,7 +793,7 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      if (key === "Actions") {
+      if (key === "ACTIONS") {
         // `/${window.contextPath}/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}`
         return (
           <Dropdown
@@ -807,15 +807,19 @@ export const UICustomizations = {
               console.log(e, "event"); // e contains the selected option
               if (e.code === "1") {
                 // Use window.location.href to navigate
-                window.location.href = `/${window.contextPath
-                  }/employee/microplan/setup-microplan?key=${1}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${row.CampaignDetails.id
-                  }`;
+                window.location.href = `/${
+                  window.contextPath
+                }/employee/microplan/setup-microplan?key=${1}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${
+                  row.CampaignDetails.id
+                }`;
               }
               if (e.code === "2") {
                 // Use window.location.href to navigate
-                window.location.href = `/${window.contextPath
-                  }/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${row.CampaignDetails.id
-                  }`;
+                window.location.href = `/${
+                  window.contextPath
+                }/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${
+                  row.CampaignDetails.id
+                }`;
               }
               if (e.code === "3") {
                 // Use window.location.href to navigate
@@ -831,7 +835,7 @@ export const UICustomizations = {
         );
       }
 
-      if (key === "Name of the Microplan") {
+      if (key === "NAME_OF_MICROPLAN") {
         if (value && value !== "NA") {
           return (
             <div
@@ -952,7 +956,7 @@ export const UICustomizations = {
         );
       }
 
-      if (key === "Name of the Microplan") {
+      if (key === "NAME_OF_MICROPLAN") {
         if (value && value !== "NA") {
           return (
             <div
