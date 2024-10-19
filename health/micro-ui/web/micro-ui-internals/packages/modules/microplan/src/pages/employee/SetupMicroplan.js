@@ -243,6 +243,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
           "MP_MANAGING_DATA",
           "MICROPLAN_ASSUMPTIONS",
           "FORMULA_CONFIGURATION",
+          "ROLE_ACCESS_CONFIGURATION",
           "SUMMARY",
         ]}
         currentStep={currentStep + 1}
