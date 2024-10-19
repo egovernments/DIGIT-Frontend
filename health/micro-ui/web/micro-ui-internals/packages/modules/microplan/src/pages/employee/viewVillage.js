@@ -11,10 +11,7 @@ import TimelinePopUpWrapper from '../../components/timelinePopUpWrapper';
 const VillageView = () => {
     const location = useLocation();
     const { t } = useTranslation();
-    const queryParams = new URLSearchParams(location.search);
-
-    const microplanId = queryParams.get('microplanId');
-    const boundaryCode = queryParams.get('boundaryCode');
+    const { campaignId, microplanId,boundaryCode  } = Digit.Hooks.useQueryParams();
     const tenantId = Digit.ULBService.getCurrentTenantId();
 
     // Custom hook to fetch census data based on microplanId and boundaryCode
@@ -94,17 +91,17 @@ const VillageView = () => {
 
                     <div className="label-pair">
                         <span className="label-heading">{t(`HCM_MICROPLAN_DISCRICT_LABEL`)}</span>
-                        <span className="label-text">{data.boundaryCode}</span>
+                        <span className="label-text">{data?.boundaryCode}</span>
                     </div>
 
                     <div className="label-pair">
                         <span className="label-heading">{t(`HCM_MICROPLAN_ADMIN_POST_LABEL`)}</span>
-                        <span className="label-text">{data.boundaryCode}</span>
+                        <span className="label-text">{data?.boundaryCode}</span>
                     </div>
 
                     <div className="label-pair">
                         <span className="label-heading">{t(`HCM_MICROPLAN_LOCALITY_LABEL`)}</span>
-                        <span className="label-text">{data.boundaryCode}</span>
+                        <span className="label-text">{data?.boundaryCode}</span>
                     </div>
                 </Card>
 
@@ -182,27 +179,27 @@ const VillageView = () => {
                     {/* Five Label-Text Pairs */}
                     <div className="label-pair">
                         <span className="label-heading">{t(`HCM_MICROPLAN_UPLOADED_TARGET_POPULATION_LABEL`)}</span>
-                        <span className="label-text">{data.additionalDetails.targetPopulation}</span>
+                        <span className="label-text">{data?.additionalDetails?.targetPopulation}</span>
                     </div>
                     <Divider className="" variant="small" />
                     <div className="label-pair">
                         <span className="label-heading">{t(`HCM_MICROPLAN_UPLOADED_TOTAL_POPULATION_LABEL`)}</span>
-                        <span className="label-text">{data.totalPopulation}</span>
+                        <span className="label-text">{data?.totalPopulation}</span>
                     </div>
                     <Divider className="" variant="small" />
                     <div className="label-pair ">
                         <span className="label-heading">{t(`HCM_MICROPLAN_CONFIRM_TARGET_POPULATION_LABEL`)}</span>
-                        <span className="label-text">{data.additionalDetails.confirmedTargetPopulation}</span>
+                        <span className="label-text">{data?.additionalDetails?.confirmedTargetPopulation}</span>
                     </div>
                     <Divider className="" variant="small" />
                     <div className="label-pair">
                         <span className="label-heading">{t(`HCM_MICROPLAN_CONFIRM_TOTAL_POPULATION_LABEL`)}</span>
-                        <span className="label-text">{data.additionalDetails.confirmedTotalPopulation}</span>
+                        <span className="label-text">{data?.additionalDetails?.confirmedTotalPopulation}</span>
                     </div>
                     <Divider className="" variant="small" />
                     <div className="label-pair">
                         <span className="label-heading">{t(`HCM_MICROPLAN_ASSIGNED_DATA_APPROVER_LABEL`)}</span>
-                        <span className="label-text">{data.assignee}</span>
+                        <span className="label-text">{data?.assignee}</span>
                     </div>
                 </Card>
 
@@ -230,7 +227,7 @@ const VillageView = () => {
                 </Card>
 
                 {showCommentLogPopup && (
-                    <TimelinePopUpWrapper onClose={onCommentLogClose} businessId={data.id} heading="HCM_MICROPLAN_STATUS_LOG_LABEL" />
+                    <TimelinePopUpWrapper onClose={onCommentLogClose} businessId={data?.id} heading="HCM_MICROPLAN_STATUS_LOG_LABEL" />
                 )}
 
             </div>

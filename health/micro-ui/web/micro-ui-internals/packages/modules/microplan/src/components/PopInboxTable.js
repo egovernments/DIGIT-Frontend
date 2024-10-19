@@ -3,6 +3,7 @@ import axios from 'axios';
 import DataTable from 'react-data-table-component';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@egovernments/digit-ui-components';
+import { useHistory } from "react-router-dom";
 
 const censusResponse = {
   "Census": [
@@ -189,7 +190,9 @@ const PopInboxTable = ({...props}) => {
 	const [loading, setLoading] = useState(false);
 	const [totalRows, setTotalRows] = useState(0);
 	const [perPage, setPerPage] = useState(10);
+    const history = useHistory();
 
+    const { campaignId, microplanId,  } = Digit.Hooks.useQueryParams();
 
   const columns = useMemo(() => {
     return [
@@ -197,7 +200,7 @@ const PopInboxTable = ({...props}) => {
         name: t(`INBOX_VILLAGE`),
         cell: (row, index, column, id) => <Button
         label={t(`${row.boundaryCode}`)}
-        onClick={()=>console.log(row)}
+        onClick={()=>history.push(`village-view?campaignId=${campaignId}&microplanId=${microplanId}&boundaryCode=${row?.boundaryCode}`)}
         title={t(`${row.boundaryCode}`)}
         variation="link"
         style={{maxWidth:"1rem"}}
