@@ -39,7 +39,7 @@ const UserDownload = () => {
         }
     }, [data]); // Only run this effect when `data` changes
 
-    debugger;
+    
 
 
 
@@ -61,8 +61,7 @@ const UserDownload = () => {
                     {data?.ResourceDetails &&
                         [...data?.ResourceDetails].reverse().map((item, index) => {
                             let fileName = item?.additionalDetails?.fileName || `FileNo${item?.processedFilestoreId?.slice(0, 4) || ''}`;
-                            console.log(typeof String(fileName))
-                            debugger;
+                            
 
                             return (
                             <FileComponent
