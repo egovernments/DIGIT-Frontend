@@ -185,7 +185,7 @@ const SearchChecklist = () => {
         <div className="container">
           <div className="card-container">
             <Card className="card-header-timeline">
-              <TextBlock subHeader={t("ACTION_LABEL_CONFIGURE_APP")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+              <TextBlock subHeader={t("ACTION_LABEL_CONFIGURE_APP")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
             </Card>
             <Card className="stepper-card">
               <Stepper customSteps={["HCM_MANAGE_CHECKLIST"]} currentStep={1} onStepClick={() => {}} direction={"vertical"} />

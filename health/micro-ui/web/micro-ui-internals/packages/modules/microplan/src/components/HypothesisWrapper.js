@@ -299,7 +299,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
                     <div style={{ display: "flex",gap:"2rem" }}>
                         <div className="card-container">
                             <Card className="card-header-timeline">
-                                <TextBlock subHeader={t("ESTIMATION_ASSUMPTIONS")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+                                <TextBlock subHeader={t("ESTIMATION_ASSUMPTIONS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
                             </Card>
                             <Card className="stepper-card">
                                 <Stepper

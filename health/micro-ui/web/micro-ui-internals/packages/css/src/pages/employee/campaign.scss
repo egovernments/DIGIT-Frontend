@@ -48,13 +48,10 @@
   margin-bottom: 2rem;
 }
 .name-description {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin: 0rem;
 }
 .dates-description {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  padding-bottom: 1.2rem;
+  margin: 0rem;
 }
 .selecting-boundary-div {
   padding-top: 0.5rem;
@@ -146,4 +143,9 @@
   gap: 1.5rem;
   align-items: stretch;
   height: 100%;
+}
+.name-container-label{
+  .label-field-wrapper{
+    width: -webkit-fill-available;
+  }
 }

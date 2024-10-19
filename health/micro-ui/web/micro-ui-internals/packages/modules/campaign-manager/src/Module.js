@@ -63,16 +63,19 @@ import MultiSelectDropdown from "./components/MultiSelectDropdown";
  */
 const CampaignModule = ({ stateCode, userType, tenants }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const { data: BOUNDARY_HIERARCHY_TYPE } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }], {
+  const { data: BOUNDARY_HIERARCHY_TYPE , isLoading: hierarchyLoading } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }], {
     select: (data) => {
       return data?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)?.hierarchy;
     },
   });
 
+
   const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({BOUNDARY_HIERARCHY_TYPE,tenantId});
   const modulePrefix = "hcm";
 
-  const moduleCode = ["hr", "campaignmanager", "workbench", "mdms", "schema", "admin-schemas", `boundary-${BOUNDARY_HIERARCHY_TYPE}`];
+  const moduleCode = BOUNDARY_HIERARCHY_TYPE 
+  ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`] 
+  : [ "campaignmanager", "schema", "admin-schemas"]; 
 
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();

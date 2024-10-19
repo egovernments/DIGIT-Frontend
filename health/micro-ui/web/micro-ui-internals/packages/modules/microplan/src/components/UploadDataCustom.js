@@ -610,7 +610,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           const fileData = fileUrl?.map((i) => {
             const urlParts = i?.url?.split("/");
             // const fileName = urlParts[urlParts?.length - 1]?.split("?")?.[0];
-            const fileName = type === "boundary" ? "Target Template" : type === "facilityWithBoundary" ? "Facility Template" : "User Template";
+            const fileName = type === "boundary" ? "Population Template" : type === "facilityWithBoundary" ? "Facility Template" : "User Template";
             return {
               ...i,
               filename: fileName,
@@ -671,7 +671,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           <Card className="card-header-timeline">
             <TextBlock
               subHeader={t("HCM_UPLOAD_DATA")}
-              subHeaderClasName={"stepper-subheader"}
+              subHeaderClassName={"stepper-subheader"}
               wrapperClassName={"stepper-wrapper"}
             />
           </Card>
@@ -789,18 +789,18 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             footerclassName={"popUpFooter"}
             heading={
               type === "boundary"
-                ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_HEADER")
+                ? t("MP_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_HEADER")
                 : type === "facilityWithBoundary"
-                  ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER")
-                  : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER")
+                  ? t("MP_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER")
+                  : t("MP_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER")
             }
             children={[
               <div>
                 {type === "boundary"
-                  ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_TEXT")
+                  ? t("MP_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_TEXT")
                   : type === "facilityWithBoundary"
-                    ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT")
-                    : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT ")}
+                    ? t("MP_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT")
+                    : t("MP_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT ")}
               </div>,
             ]}
             onOverlayClick={() => {
@@ -811,7 +811,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
                 type={"button"}
                 size={"large"}
                 variation={"secondary"}
-                label={t("HCM_CAMPAIGN_UPLOAD_CANCEL")}
+                label={t("MP_CAMPAIGN_UPLOAD_SKIP")}
                 onClick={() => {
                   setShowPopUp(false);
                 }}

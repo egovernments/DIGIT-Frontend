@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { InfoCard, PopUp, Toast, Button, Stepper, TextBlock, Card } from "@egovernments/digit-ui-components";
 import { ActionBar, SubmitBar } from "@egovernments/digit-ui-react-components";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { ArrowBack } from "@egovernments/digit-ui-svg-components";
 
 
@@ -21,6 +21,7 @@ const UserUpload = React.memo(() => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [uploadedFile, setUploadedFile] = useState([]);
+  const history = useHistory();
   const [errorsType, setErrorsType] = useState({});
   const [showToast, setShowToast] = useState(null);
   const [sheetErrors, setSheetErrors] = useState(0);
@@ -66,14 +67,13 @@ const UserUpload = React.memo(() => {
     setShowToast(null);
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     const fetchData = async () => {
       if (!errorsType[type] && uploadedFile?.length > 0 && !isSuccess) {
         // setShowToast({ key: "info", label: t("HCM_VALIDATION_IN_PROGRESS") });
         setIsValidation(true);
         // setIsError(true);
         setLoader(true);
-
         try {
           const temp = await Digit.Hooks.campaign.useResourceData(
             uploadedFile,
@@ -189,7 +189,7 @@ const UserUpload = React.memo(() => {
       }
     };
 
-    fetchData();
+    await fetchData();
   }, [errorsType]);
 
   const onBulkUploadSubmit = async (file) => {
@@ -341,7 +341,7 @@ const UserUpload = React.memo(() => {
           type: type,
           forceUpdate: true,
           hierarchyType: boundaryHierarchy,
-          campaignId: null,
+          campaignId: "null",
           source: "microplan",
         },
         body: {
@@ -366,6 +366,58 @@ const UserUpload = React.memo(() => {
     generateData();
   }, [id, boundaryHierarchy]);
 
+  const onSubmit = async () => {
+    setDownloadTemplateLoader(true);
+    if (isSuccess && uploadedFile?.length > 0 && uploadedFile?.[0]?.filestoreId) {
+      const fileId = uploadedFile?.[0]?.filestoreId;
+      const ts = new Date().getTime();
+      const reqCriteria = {
+        url: `/project-factory/v1/data/_create`,
+        body: {
+          RequestInfo: {
+            authToken: Digit.UserService.getUser().access_token,
+            msgId: `${ts}|${Digit.StoreData.getCurrentLanguage()}`
+          },
+          ResourceDetails: {
+            tenantId: Digit.ULBService.getCurrentTenantId(),
+            type: "user",
+            fileStoreId: fileId,
+            hierarchyType: boundaryHierarchy,
+            campaignId: id,
+            action: "create",
+            campaignId: id,
+            additionalDetails: {
+              source: "microplan",
+              fileName: fileName
+            }
+          }
+        }
+      }
+      try {
+        await axios.post(reqCriteria.url, reqCriteria.body);
+      } catch (error) {
+        var errorLabel;
+        if (error?.response && error?.response?.data) {
+          const errorMessage = error?.response?.data?.Errors?.[0]?.message;
+          const errorDescription = error?.response?.data?.Errors?.[0]?.description;
+          if (errorDescription) {
+            errorLabel = `${errorMessage} : ${errorDescription}`;
+          } else {
+            errorLabel = String(error?.message);
+          }
+        }
+        console.error("Error fetching data:", error);
+        setShowToast({ key: "error", label: errorLabel });
+        setDownloadTemplateLoader(false);
+        return;
+      }
+      history.push(`/${window.contextPath}/employee/microplan/upload-user-success`, { fileName: fileName,message:"USER_DATA_UPLOAD_SUCCESSFUL" });
+    }
+    else {
+      setShowToast({ key: "error", label: t("ERROR_MANDATORY_FIELDS_FOR_SUBMIT") });
+    }
+    setDownloadTemplateLoader(false);
+  }
 
   return (
     <>
@@ -376,7 +428,7 @@ const UserUpload = React.memo(() => {
           <Card>
             <div className="campaign-bulk-upload">
               <Header className="digit-form-composer-sub-header">
-                {t("WBH_UPLOAD_USER")}
+                {t("MP_UPLOAD_USER")}
               </Header>
               <Button
                 label={t("WBH_DOWNLOAD_TEMPLATE")}
@@ -389,7 +441,7 @@ const UserUpload = React.memo(() => {
             </div>
             {uploadedFile.length === 0 && (
               <div className="info-text">
-                {t("HCM_USER_MESSAGE")}
+                {t("MP_USER_MESSAGE")}
               </div>
             )}
             <BulkUpload onSubmit={onBulkUploadSubmit} fileData={uploadedFile} onFileDelete={onFileDelete} onFileDownload={onFileDownload} />
@@ -460,29 +512,26 @@ const UserUpload = React.memo(() => {
         )}
         {showPreview && <XlsPreview file={processedFile?.[0]} onDownload={() => onFileDownload(processedFile?.[0])} onBack={() => setShowPreview(false)} />}
       </div>
-      <ActionBar className={"custom-action-bar-success-screen"}>
-        {/* Back button */}
-        <Button
-          type="button"
-          className="custom-button custom-button-left-icon"
-          label={t("GO_BACK_HOME")}
-          // onButtonClick={clickGoHome}
-          isSuffix={false}
-          variation={"secondary"}
-          icon={<ArrowBack className={"icon"} width={"1.5rem"} height={"1.5rem"} />}
-        />
-        {/* Next/Submit button */}
-        <a style={{ textDecoration: "none" }} href={"/workbench-ui/employee/"}>
+      <ActionBar style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", zIndex: "1" }}>
+        <Link to="/microplan-ui/employee/microplan/user-management" style={{ textDecoration: "none" }}>
           <Button
-            type="button"
-            className="custom-button"
-            label={t("GO_TO_HCM")}
-            isSuffix={true}
-            variation={"primary"}
-            textStyles={{ padding: 0, margin: 0 }}
+            style={{ margin: "0.5rem", minWidth: "12rem", marginLeft: "6rem" }}
+            className="previous-button"
+            variation="secondary"
+            label={t("BACK")}
+            icon={"ArrowBack"}
           />
-        </a>
+        </Link>
+        <Button
+          style={{ margin: "0.5rem", minWidth: "12rem" }}
+          className="next-button"
+          variation="primary"
+          label={t("SUBMIT")}
+          onClick={onSubmit}
+        />
       </ActionBar>
+
+
     </>
   );
 });

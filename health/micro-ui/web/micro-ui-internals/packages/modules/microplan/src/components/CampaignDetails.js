@@ -24,7 +24,7 @@ const CampaignDetails = ({onSelect,props:customProps,...props}) => {
   const { isLoading, data } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }], {
     select: (data) => {
       let projectOptions = data?.["HCM-PROJECT-TYPES"]?.projectTypes;
-      projectOptions = Digit.Utils.microplan.filterUniqueByKey(projectOptions, "code").map((row) => {
+      projectOptions = Digit.Utils.microplanv1.filterUniqueByKey(projectOptions, "code").map((row) => {
         return {
           ...row,
           i18nKey: Digit.Utils.locale.getTransformedLocale(`CAMPAIGN_TYPE_${row.code}`),

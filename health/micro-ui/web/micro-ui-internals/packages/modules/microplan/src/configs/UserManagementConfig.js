@@ -114,7 +114,7 @@ export const UserManagementConfig = {
             "links": [
               {
                 "text": "BULK_UPLOAD_USERS",
-                "url": "/employee",
+                "url": "/employee/microplan/upload-user",
                 "roles": [
                   "MICROPLAN_ADMIN"
                 ]
@@ -147,7 +147,7 @@ export const UserManagementConfig = {
             "primaryLabel": "Filter",
             "minReqFields": 0,
             "defaultValues": {
-              "roleschosen": [],
+              "roleschosen": '',
             },
             "fields": [
 

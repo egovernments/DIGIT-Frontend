@@ -85,42 +85,88 @@ function reverseDeliveryRemap(data, t) {
   let currentCycleIndex = null;
   let currentCycle = null;
 
-  // data.forEach((item, index) => {
-  //   if (currentCycleIndex !== item.cycleNumber) {
-  //     currentCycleIndex = item.cycleNumber;
-  //     currentCycle = {
-  //       cycleIndex: currentCycleIndex.toString(),
-  //       startDate: item?.startDate ? Digit.Utils.date.convertEpochToDate(item?.startDate) : null,
-  //       endDate: item?.endDate ? Digit.Utils.date.convertEpochToDate(item?.endDate) : null,
-  //       active: index === 0, // Initialize active to false
-  //       deliveries: [],
-  //     };
-  //     reversedData.push(currentCycle);
-  //   }
+  const operatorMapping = {
+    "<=": "LESS_THAN_EQUAL_TO",
+    ">=": "GREATER_THAN_EQUAL_TO",
+    "<": "LESS_THAN",
+    ">": "GREATER_THAN",
+    "==": "EQUAL_TO",
+    "!=": "NOT_EQUAL_TO",
+    IN_BETWEEN: "IN_BETWEEN",
+  };
 
-  //   const deliveryIndex = item.deliveryNumber.toString();
+  const cycles = data?.[0]?.cycles || [];
+  const mapProductVariants = (productVariants) => {
+    return productVariants.map((variant, key) => ({
+      key: key + 1,
+      count: 1,
+      value: variant.productVariantId,
+      name: variant.name,
+    }));
+  };
 
-  //   let delivery = currentCycle.deliveries.find((delivery) => delivery.deliveryIndex === deliveryIndex);
+  const parseConditionAndCreateRules = (condition, ruleKey, products) => {
+    const conditionParts = condition.split("and").map((part) => part.trim());
+    let attributes = [];
+  
+    conditionParts.forEach((part) => {
+      const parts = part.split(" ").filter(Boolean);
+  
+      // Handle "IN_BETWEEN" operator
+      if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
+        const toValue = parts[0];
+        const fromValue = parts[4];
+        attributes.push({
+          key: attributes.length + 1,
+          operator: { code: operatorMapping["IN_BETWEEN"] },
+          attribute: { code: parts[2] },
+          fromValue,
+          toValue,
+        });
+      } else {
+        const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
+        if (match) {
+          const attributeCode = match[1].trim();
+          const operatorSymbol = match[2].trim();
+          const value = match[3].trim();
+          attributes.push({
+            key: attributes.length + 1,
+            value,
+            operator: { code: operatorMapping[operatorSymbol] },
+            attribute: { code: attributeCode },
+          });
+        }
+      }
+    });
+    return [{
+      ruleKey: ruleKey + 1,
+      delivery: {},
+      products,
+      attributes,
+    }];
+  };
+  const mapDoseCriteriaToDeliveryRules = (doseCriteria) => {
+    return doseCriteria?.flatMap((criteria, ruleKey) => {
+      const products = mapProductVariants(criteria.ProductVariants);
+      return parseConditionAndCreateRules(criteria.condition, ruleKey, products);
+    });
+  };
 
-  //   if (!delivery) {
-  //     delivery = {
-  //       deliveryIndex: deliveryIndex,
-  //       active: item.deliveryNumber === 1, // Set active to true only for the first delivery
-  //       deliveryRules: [],
-  //     };
-  //     currentCycle.deliveries.push(delivery);
-  //   }
+  const mapDeliveries = (deliveries) => {
+    return deliveries?.map((delivery, deliveryIndex) => ({
+      active: true,
+      deliveryIndex: String(deliveryIndex + 1),
+      deliveryRules: mapDoseCriteriaToDeliveryRules(delivery.doseCriteria),
+    }));
+  };
 
-  //   delivery.deliveryRules.push({
-  //     ruleKey: item.deliveryRuleNumber,
-  //     delivery: {},
-  //     attributes: loopAndReturn(item.conditions, t),
-  //     products: [...item.products],
-  //   });
-  // });
-  return data;
+  const transformedCycles = cycles.map((cycle) => ({
+    active: true,
+    cycleIndex: String(cycle.id),
+    deliveries: mapDeliveries(cycle.deliveries),
+  }));
 
-  return reversedData;
+  return transformedCycles;
 }
 
 function boundaryDataGrp(boundaryData) {
@@ -272,18 +318,18 @@ const CampaignSummary = (props) => {
   // }, [props?.props?.summaryErrors]);
 
   useEffect(() => {
-        const fun = async () => {
-          let temp = await fetchcd(tenantId, projectId);
-          if (temp) {
-            await new Promise((resolve) => {
-              setStartDate(temp?.startDate);
-              setEndDate(temp?.endDate);
-              setCycles(temp?.additionalDetails?.projectType?.cycles);
-              resolve();
-            });
-          }
-        };
-        fun();
+    const fun = async () => {
+      let temp = await fetchcd(tenantId, projectId);
+      if (temp) {
+        await new Promise((resolve) => {
+          setStartDate(temp?.startDate);
+          setEndDate(temp?.endDate);
+          setCycles(temp?.additionalDetails?.projectType?.cycles);
+          resolve();
+        });
+      }
+    };
+    fun();
   }, [projectId]);
 
   const { isLoading, data, error, refetch } = Digit.Hooks.campaign.useSearchCampaign({
@@ -308,7 +354,7 @@ const CampaignSummary = (props) => {
         const target = data?.[0]?.deliveryRules;
         const boundaryData = boundaryDataGrp(data?.[0]?.boundaries);
         const cycleData = reverseDeliveryRemap(target, t);
-        const hierarchyType= data?.[0]?.hierarchyType;
+        const hierarchyType = data?.[0]?.hierarchyType;
         return {
           cards: [
             {
@@ -372,8 +418,8 @@ const CampaignSummary = (props) => {
                   {
                     name: `HIERARCHY_${index + 1}`,
                     type: "COMPONENT",
-                    
-                    cardHeader: { value: `${t(( hierarchyType + "_" + item?.type).toUpperCase())}` , inlineStyles: { color : "#0B4B66" } },
+
+                    cardHeader: { value: `${t((hierarchyType + "_" + item?.type).toUpperCase())}`, inlineStyles: { color: "#0B4B66" } },
 
                     // cardHeader: { value: t("item?.boundaries?.type") },
                     component: "BoundaryDetailsSummary",
@@ -406,17 +452,15 @@ const CampaignSummary = (props) => {
                   values: [
                     {
                       key: "CAMPAIGN_NO_OF_CYCLES",
-                      value:
-                        data?.[0]?.deliveryRules && data?.[0]?.deliveryRules.map((item) => item.cycleIndex)?.length > 0
-                          ? Math.max(...data?.[0]?.deliveryRules.map((item) => item.cycleIndex))
-                          : t("CAMPAIGN_SUMMARY_NA"),
+                      value: data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle
+                        ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle
+                        : t("CAMPAIGN_SUMMARY_NA"),
                     },
                     {
                       key: "CAMPAIGN_NO_OF_DELIVERIES",
-                      value:
-                      data?.[0]?.deliveryRules && data?.[0]?.deliveryRules?.flatMap((rule) => rule?.deliveries?.map((delivery) => delivery?.deliveryIndex))?.length > 0
-                      ? Math.max(...data?.[0]?.deliveryRules?.flatMap((rule) => rule?.deliveries?.map((delivery) => delivery?.deliveryIndex)))
-                      : t("CAMPAIGN_SUMMARY_NA"),
+                      value: data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries
+                        ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries
+                        : t("CAMPAIGN_SUMMARY_NA"),
                     },
                   ],
                 },
@@ -626,31 +670,30 @@ const CampaignSummary = (props) => {
 
   const updatedObject = { ...data };
 
-  useEffect(()=> {
+  useEffect(() => {
     // Update startDate and endDate in the `data` object
-      updatedObject.data.startDate = startDate;
-      updatedObject.data.endDate = endDate;
-      updatedObject.cards[1].sections[0].values[2].value=Digit.Utils.date.convertEpochToDate(startDate);
-      updatedObject.cards[1].sections[0].values[3].value=Digit.Utils.date.convertEpochToDate(endDate);
+    updatedObject.data.startDate = startDate;
+    updatedObject.data.endDate = endDate;
+    updatedObject.cards[1].sections[0].values[2].value = Digit.Utils.date.convertEpochToDate(startDate);
+    updatedObject.cards[1].sections[0].values[3].value = Digit.Utils.date.convertEpochToDate(endDate);
   }, [startDate, endDate]);
 
-  if(updatedObject?.cards?.[1]?.sections?.[0]?.values?.[0]?.value==t("MR-DN"))
-  {
+  if (updatedObject?.cards?.[1]?.sections?.[0]?.values?.[0]?.value == t("MR-DN")) {
     updatedObject.cards.forEach((card) => {
       if (card.name && card.name.startsWith("CYCLE_")) {
-          const cycleId = card.name.split("_")[1];
-          const cycleData = cycles.find((cycle) => cycle.id === cycleId);
+        const cycleId = card.name.split("_")[1];
+        const cycleData = cycles.find((cycle) => cycle.id === cycleId);
 
-          if (cycleData) {
-              card.sections.forEach((section) => {
-                  if (section.props && section.props.data) {
-                      section.props.data.startDate = new Date(cycleData.startDate).toLocaleDateString('en-GB');
-                      // section.props.data.startDate = Digit.Utils.date.convertEpochToDate(cycleData.startDate) || t("CAMPAIGN_SUMMARY_NA");
-                      section.props.data.endDate = new Date(cycleData.endDate).toLocaleDateString('en-GB');
-                      // section.props.data.startDate = Digit.Utils.date.convertEpochToDate(cycleData.endDate) || t("CAMPAIGN_SUMMARY_NA");
-                  }
-              });
-          }
+        if (cycleData) {
+          card.sections.forEach((section) => {
+            if (section.props && section.props.data) {
+              section.props.data.startDate = new Date(cycleData.startDate).toLocaleDateString("en-GB");
+              // section.props.data.startDate = Digit.Utils.date.convertEpochToDate(cycleData.startDate) || t("CAMPAIGN_SUMMARY_NA");
+              section.props.data.endDate = new Date(cycleData.endDate).toLocaleDateString("en-GB");
+              // section.props.data.startDate = Digit.Utils.date.convertEpochToDate(cycleData.endDate) || t("CAMPAIGN_SUMMARY_NA");
+            }
+          });
+        }
       }
     });
   }

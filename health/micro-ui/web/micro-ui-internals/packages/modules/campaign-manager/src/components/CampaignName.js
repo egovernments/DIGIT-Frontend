@@ -87,7 +87,7 @@ const CampaignName = ({ onSelect, formData, control, formState, ...props }) => {
       <div className="container">
         <div className="card-container">
           <Card className="card-header-timeline">
-            <TextBlock subHeader={t("HCM_CAMPAIGN_DETAILS")}  subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+            <TextBlock subHeader={t("HCM_CAMPAIGN_DETAILS")}  subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
           <Card className="stepper-card">
             <Stepper
@@ -101,9 +101,9 @@ const CampaignName = ({ onSelect, formData, control, formState, ...props }) => {
       
       <div className="card-container2">
         <Card className = "setup-campaign-card">
-      <Header>{t(`HCM_CAMPAIGN_NAME_HEADER`)}</Header>
+      <Header styles={{ margin: '0px' }}>{t(`HCM_CAMPAIGN_NAME_HEADER`)}</Header>
       <p className="name-description">{t(`HCM_CAMPAIGN_NAME_DESCRIPTION`)}</p>
-      <LabelFieldPair style={{ alignItems: "baseline" , display: "flex" }}>
+      <LabelFieldPair className="name-container-label" style={{ alignItems: "center" , display: "flex" }}>
         <div className="name-container">
           <span>{`${t("HCM_CAMPAIGN_NAME")}`}</span>
           <span className="mandatory-span">*</span>
@@ -111,7 +111,7 @@ const CampaignName = ({ onSelect, formData, control, formState, ...props }) => {
         <FieldV1
           type="text"
           error={error?.message ? t(error?.message) : ""}
-          style={{ width: "40rem", marginBottom: "0" }}
+          style={{ width: "-webkit-fill-available", marginBottom: "0" }}
           populators={{ name: "campaignName" }}
           placeholder={t("HCM_CAMPAIGN_NAME_EXAMPLE")}
           value={name}
