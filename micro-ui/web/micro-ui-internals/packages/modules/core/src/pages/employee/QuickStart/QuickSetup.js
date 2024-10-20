@@ -33,7 +33,10 @@ const FaqComponent = (props) => {
                   label={t(action?.label)}                  
                   type="button"
                   size={"medium"}
-                  onClick={() => window.open(`${window.location.host}/${window?.globalPath}/${tenantId}/${action?.link}`, "_blank")}
+                  onClick={() => {
+                    const baseURL = `https://${window.location.hostname}/${window?.globalPath}/${tenantId}`;
+                    window.open(`${baseURL}/${action?.link}`, "_blank");
+                  }}
                   style={{ padding: "0px" }}
                 />
                 ) : null
