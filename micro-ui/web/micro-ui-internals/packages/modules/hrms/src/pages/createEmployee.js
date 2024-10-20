@@ -142,8 +142,18 @@ const CreateEmployee = () => {
     history.replace(`/${window?.contextPath}/employee/hrms/response?isSuccess=true`, { id, message, showID: true, showChildren: false });
   };
 
+
+
   const onSubmit = async (data) => {
-    const hasCurrentAssignment = data?.Assignments?.some(assignment => assignment?.isCurrentAssignment === true);
+    const hasCurrentAssignment = data?.Assignments?.some(assignment => assignment?.isCurrentAssignment === true); 
+    
+    data.Jurisdictions = data.Jurisdictions.map((juris) => {
+      return {
+        ...juris,
+        boundary: tenantId,
+        tenantId: tenantId,
+      };
+    });
     // If no current assignment, throw an error
     if(!canSubmit){
       setShowToast({ key: "error", label: "ERR_ALL_MANDATORY_FIELDS" });
