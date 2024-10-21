@@ -17,6 +17,8 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
   const [data,setData]=useState(null);
   // vertical stepper array role code fetch and sorted based on orderNumber
   const rolesArray = state?.rolesForMicroplan?.sort((a, b) => a.orderNumber - b.orderNumber).map((item) => item.roleCode);
+  // console.log("rolesArray",rolesArray);
+  const nationalRoles=["ROOT_PLAN_ESTIMATION_APPROVER","ROOT_POPULATION_DATA_APPROVER","ROOT_FACILITY_CATCHMENT_MAPPER"]
   const hierarchyData = customProps?.hierarchyData;
   const campaignType = customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code;
 
@@ -57,11 +59,11 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
   };
 
   const handleNext = () => {
-    if(!(data===null)){
-      setInternalKey((prevKey) => prevKey + 1);
-      console.log("hi1");
-    }else{
+    if((data===null && (internalKey in [0,1,2]))){
       setShowErrorToast(true);
+      // console.log("hi1");
+    }else{
+      setInternalKey((prevKey) => prevKey + 1);
       // console.log("hi1");
 
     }
@@ -134,6 +136,7 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
             <UserAccess 
             category={rolesArray?.[internalKey - 1] }
             setData={setData}
+            nationalRoles={nationalRoles}
             />
           </div>
         </div>

@@ -7,7 +7,7 @@ import { useUserAccessContext } from "./UserAccessWrapper";
 import { useMyContext } from "../utils/context";
 import { useQueryClient } from "react-query";
 
-function RoleTableComposer() {
+function RoleTableComposer({nationalRoles}) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -27,7 +27,11 @@ function RoleTableComposer() {
   const { mutate: planEmployeeCreate } = Digit.Hooks.microplanv1.usePlanEmployeeCreate();
   const { mutate: planEmployeeUpdate } = Digit.Hooks.microplanv1.usePlanEmployeeUpdate();
 
-  console.log("state",state);
+
+  console.log("state", state);
+  const topBoundary = state?.boundaryHierarchy.find(boundary => boundary.parentBoundaryType === null);
+  console.log("Top Boundary:", topBoundary);
+  console.log("category", category, category.startsWith("PLAN"));
 
   const { isLoading: isHrmsLoading, data: HrmsData, error: hrmsError, refetch: refetchHrms } = Digit.Hooks.microplanv1.useSearchHRMSEmployee({
     tenantId: tenantId,
@@ -41,12 +45,12 @@ function RoleTableComposer() {
       enabled: false,
       select: (data) => {
         const resp = data?.Employees?.map((item, index) => {
-          let selectedHierarchy=state?.boundaryHierarchy?.find(
+          let selectedHierarchy = state?.boundaryHierarchy?.find(
             (j) => j.boundaryType === data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.hierarchyLevel
           )
-          if(category.startswith("ROOT")){
-
-          }
+          // if(category.startswith("ROOT")){
+          // 
+          // }
           return {
             rowIndex: index + 1,
             name: item?.user?.name,
@@ -54,10 +58,10 @@ function RoleTableComposer() {
             number: item?.user?.mobileNumber,
             employeeId: item?.user?.userServiceUuid,
             user: item?.user,
-            selectedHierarchy: 
-            state?.boundaryHierarchy?.find(
-              (j) => j.boundaryType === data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.hierarchyLevel
-            ),
+            selectedHierarchy:
+              state?.boundaryHierarchy?.find(
+                (j) => j.boundaryType === data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.hierarchyLevel
+              ),
             selectedBoundaries: data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.jurisdiction,
             userServiceUuid: item?.user?.userServiceUuid,
             planData: data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid),
@@ -128,11 +132,11 @@ function RoleTableComposer() {
         return prev.map((i) =>
           i.rowIndex === row.rowIndex
             ? {
-                ...i,
-                selectedHierarchy: value,
-                boundaryOptions,
-                selectedBoundaries: i.selectedBoundaries || [], // Keep existing selected boundaries
-              }
+              ...i,
+              selectedHierarchy: value,
+              boundaryOptions,
+              selectedBoundaries: i.selectedBoundaries || [], // Keep existing selected boundaries
+            }
             : i
         );
       } else {
@@ -186,9 +190,9 @@ function RoleTableComposer() {
           return prev.map((i) =>
             i.rowIndex === row.rowIndex
               ? {
-                  ...i,
-                  selectedBoundaries: [], // Clear selected boundaries
-                }
+                ...i,
+                selectedBoundaries: [], // Clear selected boundaries
+              }
               : i
           );
         } else {
@@ -217,9 +221,9 @@ function RoleTableComposer() {
         return prev.map((i) =>
           i.rowIndex === row.rowIndex
             ? {
-                ...i,
-                selectedBoundaries: boundariesInEvent, // Update boundaries
-              }
+              ...i,
+              selectedBoundaries: boundariesInEvent, // Update boundaries
+            }
             : i
         );
       } else {
@@ -301,7 +305,18 @@ function RoleTableComposer() {
     {
       name: "Hierarchy",
       cell: (row) => {
-        return (
+        return (category in nationalRoles) ? (
+          <Dropdown
+            className="form-field"
+            selected={{ code: topBoundary?.boundaryType }}
+            disable={true}
+            isMandatory={true}
+            option={[{ key: 1, code: topBoundary?.boundaryType }]}
+            select={{ code:topBoundary?.boundaryType  }}
+            optionKey="code"
+            t={t}
+          />
+        ) : (
           <Dropdown
             className="roleTableCell"
             selected={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedHierarchy || null}
@@ -316,8 +331,9 @@ function RoleTableComposer() {
             t={t}
           />
         );
-      },
+      }
     },
+
     {
       name: "Selected Boundary",
       cell: (row) => (
@@ -340,7 +356,7 @@ function RoleTableComposer() {
         const isUserAlreadyAssigned = HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.length > 0 ? true : false;
         const isUserAlreadyAssignedActive =
           HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.length > 0 &&
-          HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
+            HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
             ? true
             : false;
         return (
@@ -380,7 +396,10 @@ function RoleTableComposer() {
   const closeToast = () => {
     setShowToast(null);
   };
-  if (isHrmsLoading) return <Loader />;
+  if (isHrmsLoading) {
+    console.log("hrmsloading");
+    return <Loader />
+  };
   return (
     <>
       <Card>

@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import RoleTableComposer from "./RoleTableComposer";
 import DataTable from "react-data-table-component";
 
-function UserAccess({ category,setData }) {
+function UserAccess({ category,setData,nationalRoles }) {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
@@ -86,11 +86,12 @@ function UserAccess({ category,setData }) {
     {
       name: "Adminitrative Heirarchy",
       selector: (row) => {
-        if (category?.startsWith("ROOT")) {
-          return "COUNTRY"; // Set to "Country" if true
-        } else {
-          return row?.hierarchyLevel; // Otherwise, return the existing hierarchy level
-        }
+        // if (category?.startsWith("ROOT")) {
+        //   return "COUNTRY"; // Set to "Country" if true
+        // } else {
+        //   return row?.hierarchyLevel; // Otherwise, return the existing hierarchy level
+        // }
+        return  row?.hierarchyLevel;
       },
       sortable: true,
     },
@@ -135,7 +136,7 @@ function UserAccess({ category,setData }) {
             <Button variation="secondary" label={t(`ASSIGN`)} icon={"AddIcon"} onClick={() => setShowPopUp(true)} />
           </div>
           <DataTable
-            columns={columns}
+            category={category}
             data={planEmployee?.data}
             pagination
             paginationServer
@@ -157,7 +158,7 @@ function UserAccess({ category,setData }) {
           className={"roleComposer"}
           type={"default"}
           heading={t(`${category}`)}
-          children={[<RoleTableComposer />]}
+          children={[<RoleTableComposer category={category} nationalRoles={nationalRoles} />]}
           onOverlayClick={() => {}}
           footerChildren={[<Button type={"button"} size={"large"} variation={"secondary"} label={t("CLOSE")} onClick={() => setShowPopUp(false)} />]}
           sortFooterChildren={true}
