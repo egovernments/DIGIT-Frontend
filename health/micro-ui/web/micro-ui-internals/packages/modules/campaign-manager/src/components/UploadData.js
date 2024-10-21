@@ -1072,7 +1072,9 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
             </Header>
             <Button
-              label={t("WBH_DOWNLOAD_TEMPLATE")}
+              label={parentId ? type === "boundary" ? t("WBH_DOWNLOAD_CURRENT_TARGET") 
+                : type === "facilityWithBoundary" ? t("WBH_DOWNLOAD_CURRENT_FACILITY") 
+                : t("WBH_DOWNLOAD_CURRENT_USER"): t("WBH_DOWNLOAD_TEMPLATE")}
               variation="secondary"
               icon={"FileDownload"}
               type="button"
