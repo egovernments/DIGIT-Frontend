@@ -66,6 +66,8 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       path: "",
       content: t("ACTION_UPDATE_CHECKLIST"),
       show: pathVar === "checklist/update" ? true : false,
+    },
+    {
       path: pathVar === "boundary/home" ? "" : `/${window?.contextPath}/employee/campaign/boundary/home`,
       content: t("BOUNDARY_DATA_MANAGEMENT"),
       show: pathVar.match("boundary/") ? true : false,
