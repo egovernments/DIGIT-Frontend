@@ -28,7 +28,6 @@ function RoleTableComposer({ nationalRoles }) {
   const { mutate: planEmployeeUpdate } = Digit.Hooks.microplanv1.usePlanEmployeeUpdate();
 
   const topBoundary = state?.boundaryHierarchy.find(boundary => boundary.parentBoundaryType === null);
-  console.log(rowData, 'CHECKING', topBoundary, state?.boundaryHierarchy)
   const { isLoading: isHrmsLoading, data: HrmsData, error: hrmsError, refetch: refetchHrms } = Digit.Hooks.microplanv1.useSearchHRMSEmployee({
     tenantId: tenantId,
     microplanId: microplanId,
@@ -110,7 +109,6 @@ function RoleTableComposer({ nationalRoles }) {
   //   });
   // };
   const handleHierarchyChange = (value, row) => {
-    console.log("before row change", value, row);
     setRowData((prev) => {
       // Find the existing row by rowIndex
       const existingRow = prev.find((i) => i.rowIndex === row.rowIndex);
