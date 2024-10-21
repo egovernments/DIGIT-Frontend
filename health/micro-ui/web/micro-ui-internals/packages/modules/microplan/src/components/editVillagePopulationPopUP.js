@@ -4,6 +4,8 @@ import { PopUp, Button, Card, Divider, TextInput } from '@egovernments/digit-ui-
 
 const EditVillagePopulationPopUp = ({ onClose, census }) => {
   const { t } = useTranslation();
+  const userInfo = Digit.UserService.getUser();
+  const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
 
   // State to manage confirmed population and target population
   const [confirmedTotalPopulation, setConfirmedTotalPopulation] = useState("");
@@ -17,23 +19,49 @@ const EditVillagePopulationPopUp = ({ onClose, census }) => {
     }
   }, [census]);
 
-  const handleSave = () => {
-    // Prepare the updated census data with new population values
-    const updatedCensus = {
-      ...census,
-      additionalDetails: {
-        ...census.additionalDetails,
-        confirmedTotalPopulation,
-        confirmedTargetPopulation,
-      },
-    };
 
-    // Log the updated data or trigger a save function with it
-    console.log("Updated Census Data: ", updatedCensus);
+  // Define the mutation configuration
+  const mutation = Digit.Hooks.useCustomAPIMutationHook({
+    url: "/census-service/_update", // Replace with the appropriate API endpoint
+  });
 
-    // Close the popup after saving
-    onClose();
+  const handleSave = async () => {
+    // Determine workflow action based on user roles
+    let workflowAction = ""; // Default action
+
+    // Check user roles and set workflow action accordingly
+    if (userRoles && userRoles.includes('POPULATION_DATA_APPROVER')) {
+      workflowAction = "EDIT_AND_SEND_FOR_APPROVAL";
+    } else if (userRoles && userRoles.includes('ROOT_POPULATION_DATA_APPROVER')) {
+      workflowAction = "EDIT_AND_VALIDATE";
+    }
+
+    await mutation.mutate(
+      {
+        body: {
+          Census: {
+            ...census,
+            additionalDetails: {
+              ...census.additionalDetails,
+              confirmedTotalPopulation,
+              confirmedTargetPopulation,
+            },
+            workflow: {
+              action: workflowAction,
+            },
+          },
+        }
+
+      }
+    );
   };
+
+  // Close the popup when the mutation is successful
+  useEffect(() => {
+    if (!mutation.isLoading && mutation.data) {
+      onClose(); // Close popup after saving
+    }
+  }, [mutation.data, mutation.isLoading, onClose]);
 
   return (
     <PopUp

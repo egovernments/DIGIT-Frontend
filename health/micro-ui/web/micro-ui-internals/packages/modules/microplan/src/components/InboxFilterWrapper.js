@@ -1,84 +1,97 @@
-import React, { Fragment, useState, } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { FilterCard, LabelFieldPair, RadioButtons } from "@egovernments/digit-ui-components";
 
 const InboxFilterWrapper = (props) => {
   const { t } = useTranslation();
-  
-  // defaultValue structure: {"key": value}
-  // defaultSelectedOption structure: { code: string, name: string }
-    const defaultSelectedOption = props.defaultValue 
-        ? { code: Object.keys(props.defaultValue)[0], name: `${t(Object.keys(props.defaultValue)[0])} (${Object.values(props.defaultValue)[0]})` } 
-        : null;
 
-    // Initialize state with the default selected option
-    const [selectedValue, setSelectedValue] = useState(defaultSelectedOption);
+  // Default selected option
+  const defaultSelectedOption = props.defaultValue
+    ? { code: Object.keys(props.defaultValue)[0], name: `${t(Object.keys(props.defaultValue)[0])} (${Object.values(props.defaultValue)[0]})` }
+    : null;
 
-    const createArrayFromObject = (obj, t) => {
-      if (!obj || typeof obj !== 'object' || typeof t !== 'function') {
-        console.error('Invalid input to createArrayFromObject');
-        return [];
-      }
-      return Object.entries(obj).map(([key, value]) => ({
-        code: key,
-        name: `${t(key)} (${value})`
-      }));
-    };
-    
-    // Usage of the function
-    const resultArray = createArrayFromObject(props?.options, t); 
-  
-    // Function to handle selection from the radio buttons
-    const handleSelect = (option) => {
-      setSelectedValue(option); // Update state with the selected option
-    };
-  
-    // Function to handle applying the filters
-    const handleApplyFilters = () => {
-      if (props.onApplyFilters) {
-        props.onApplyFilters(selectedValue);  // Pass the filter data to the parent function
-      }
-    };
+  // Initialize state with the default selected option
+  const [selectedValue, setSelectedValue] = useState(defaultSelectedOption);
 
-    const clearFilters = () => {
-      setSelectedValue(null);
-      if (props.onApplyFilters) {
-        props.onApplyFilters(null);
-      }
+  // Only update selectedValue when defaultValue from props changes, but not when it's null or undefined
+  useEffect(() => {
+    if (props.defaultValue && Object.keys(props.defaultValue).length > 0) {
+      const newDefault = {
+        code: Object.keys(props.defaultValue)[0],
+        name: `${t(Object.keys(props.defaultValue)[0])} (${Object.values(props.defaultValue)[0]})`,
+      };
+      setSelectedValue(newDefault);
     }
-  
-    return (
-      <FilterCard
-        layoutType={"vertical"}
-        onClose={props?.onClose}
-        onPrimaryPressed={handleApplyFilters}  // Trigger filter apply on primary action
-        onSecondaryPressed={clearFilters}  // Clear filters on secondary action
-        primaryActionLabel={t(props?.primaryActionLabel)}
-        secondaryActionLabel={t(props?.secondaryActionLabel)}
-        title={t(props?.title)}
-      >
+  }, [props.defaultValue, t]);
+
+  const createArrayFromObject = (obj, t) => {
+    if (!obj || typeof obj !== "object" || Object.keys(obj).length === 0 || typeof t !== "function") {
+      return []; // Return an empty array if options object is empty or null
+    }
+    return Object.entries(obj).map(([key, value]) => ({
+      code: key,
+      name: `${t(key)} (${value})`,
+    }));
+  };
+
+  // Generate options from props.options
+  const resultArray = createArrayFromObject(props?.options, t);
+
+  // Handle selection of radio button
+  const handleSelect = (option) => {
+    setSelectedValue(option); // Update selected value
+  };
+
+  // Apply filters when the user presses the primary action button
+  const handleApplyFilters = () => {
+    if (props.onApplyFilters) {
+      props.onApplyFilters(selectedValue); // Call the parent function with selected value
+    }
+  };
+
+  // Clear filters when the user presses the secondary action button
+  const clearFilters = () => {
+    setSelectedValue(selectedValue); // Clear the selection
+    if (props.clearFilters) {
+      props.clearFilters();
+    }
+  };
+
+  return (
+    <FilterCard
+      layoutType={"vertical"}
+      onClose={props?.onClose}
+      onPrimaryPressed={handleApplyFilters} // Apply filters
+      onSecondaryPressed={clearFilters} // Clear filters
+      primaryActionLabel={resultArray.length > 0 && t(props?.primaryActionLabel)}
+      secondaryActionLabel={resultArray.length > 0 && t(props?.secondaryActionLabel)}
+      title={t(props?.title)}
+    >
+      {/* Only render LabelFieldPair if resultArray has items */}
+      {resultArray.length > 0 && (
         <LabelFieldPair>
           <RadioButtons
             options={resultArray}
-            optionsKey={"name"}  // Use "name" key by default
-            selectedOption={selectedValue}  // Pass the current selected option
+            optionsKey={"name"} // Use "name" key for display
+            selectedOption={selectedValue?.code} // Pass current selected option's code for comparison
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "1rem",  // Adds space between options
+              gap: "1rem", // Adds space between options
             }}
-            onSelect={handleSelect}  // Function to handle selection
+            onSelect={handleSelect} // Function to handle selection
           />
         </LabelFieldPair>
-       </FilterCard>
-    );
-  };
+      )}
+    </FilterCard>
+  );
+};
 
-  InboxFilterWrapper.defaultProps = {
-    primaryActionLabel: "ES_COMMON_APPLY_FILTERS",
-    secondaryActionLabel: "ES_COMMON_CLEAR_SEARCH",
-    title: "FILTERS",
-    optionsKey: "name"
-  };
+InboxFilterWrapper.defaultProps = {
+  primaryActionLabel: "ES_COMMON_APPLY_FILTERS",
+  secondaryActionLabel: "ES_COMMON_CLEAR_SEARCH",
+  title: "FILTERS",
+  optionsKey: "name",
+};
 
 export default InboxFilterWrapper;

@@ -1,8 +1,9 @@
 import React, { useState, Fragment } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ActionBar, SubmitBar, Button, ArrowLeft, ArrowForward } from "@egovernments/digit-ui-react-components";
+import { ActionBar, SubmitBar, ArrowLeft, ArrowForward } from "@egovernments/digit-ui-react-components";
 import { PanelCard } from "@egovernments/digit-ui-components";
+import { Button } from "@egovernments/digit-ui-react-components";
 const Response = () => {
 
     const { t } = useTranslation();
@@ -49,7 +50,7 @@ const Response = () => {
                         className="previous-button"
                         variation="secondary"
                         label={t("BACK")}
-                        icon={"ArrowBack"}
+                        icon="ArrowBack"
                     />
                 </Link>
             </ActionBar>

@@ -6,7 +6,7 @@ import { Card, Tab, Button, SVG, Loader } from "@egovernments/digit-ui-component
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 
-const PopInbox = () => {
+const PlanInbox = () => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
@@ -61,7 +61,7 @@ const PopInbox = () => {
     }
   }, [campaignObject]);
 
-
+  console.log("user", user);
   const {
     isLoading: isPlanEmpSearchLoading,
     data: planEmployee,
@@ -117,10 +117,6 @@ const PopInbox = () => {
 
   const actionsMain = workflowData?.actions;
 
-  // actionsToHide array by checking for "EDIT" in the actionMap
-  const actionsToHide = actionsMain?.filter(action => action.action.includes("EDIT"))?.map(action => action.action);
-
-
   // Custom hook to fetch census data based on microplanId and boundaryCode
   const reqCriteriaResource = {
     url: `/census-service/_search`,
@@ -147,7 +143,6 @@ const PopInbox = () => {
       if ((selectedFilter === null || selectedFilter === undefined) && selectedFilter !== "") {
         setSelectedFilter(Object.entries(data?.StatusCount)?.[0]?.[0]);
       }
-      setVillagesSelected(0);
     }
   }, [data, selectedFilter]);
 
@@ -157,15 +152,14 @@ const PopInbox = () => {
     }
   }, [selectedFilter, activeLink, jurisdiction]);
 
-  useEffect(() => { }, [selectedFilter]);
+  useEffect(() => {}, [selectedFilter]);
 
   const onFilter = (selectedStatus) => {
     setSelectedFilter(selectedStatus?.code);
   };
 
   const clearFilters = () => {
-    if (selectedFilter !== Object.entries(data?.StatusCount)?.[0]?.[0])
-      setSelectedFilter(Object.entries(data?.StatusCount)?.[0]?.[0]);
+    setSelectedFilter("");
   };
 
   const handleActionClick = (action) => {
@@ -199,7 +193,7 @@ const PopInbox = () => {
           onApplyFilters={onFilter}
           clearFilters={clearFilters}
           defaultValue={
-            selectedFilter === Object.entries(activeFilter)?.[0]?.[0] ? { [Object.entries(activeFilter)?.[0]?.[0]]: Object.entries(activeFilter)?.[0]?.[1] } : null
+            selectedFilter !== "" && activeFilter ? { [Object.entries(activeFilter)?.[0]?.[0]]: Object.entries(activeFilter)?.[0]?.[1] } : null
           }
         ></InboxFilterWrapper>
 
@@ -237,7 +231,7 @@ const PopInbox = () => {
                 </div>
 
                 <div className={`table-actions-wrapper`}>
-                  {actionsMain?.filter(action => !actionsToHide.includes(action.action))?.map((action, index) => (
+                  {actionsMain?.map((action, index) => (
                     <Button
                       key={index}
                       variation="secondary"
@@ -250,7 +244,7 @@ const PopInbox = () => {
                 </div>
               </div>
             )}
-            {isFetching ? <Loader /> : <PopInboxTable onRowSelect={onRowSelect} censusData={censusData} />}
+            <PopInboxTable onRowSelect={onRowSelect} censusData={censusData} />
           </Card>
         </div>
       </div>
@@ -258,4 +252,4 @@ const PopInbox = () => {
   );
 };
 
-export default PopInbox;
+export default PlanInbox;
