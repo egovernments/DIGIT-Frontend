@@ -190,8 +190,12 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
         <PrivateRoute path={`${path}/village-view`} component={() => <VillageView />} />
         <PrivateRoute path={`${path}/my-microplans`} component={() => <MyMicroplans/>} /> 
         <PrivateRoute path={`${path}/upload-user-success`} component={() => <Response/>} /> 
+        <PrivateRoute path={`${path}/setup-completed-response`} component={() => <Response/>} /> 
+
 
          <PrivateRoute path={`${path}/assign-facilities-to-villages`} component={() => <FacilityCatchmentMapping/>} />
+         
+        
 
 
       </AppContainer>
