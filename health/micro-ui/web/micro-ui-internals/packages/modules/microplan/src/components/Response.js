@@ -26,7 +26,7 @@ const Response = () => {
                 cardStyles={{}}
                 className=""
                 customIcon=""
-                description={state.description}
+                description={t(state.description)}
                 // footerChildren={[
                 //     <Button label="OK" onClick={function noRefCheck() { }} type="button" />
                 // ]}
@@ -37,7 +37,7 @@ const Response = () => {
                 message={t(state?.message)}
                 multipleResponses={[]}
                 props={{}}
-                response={state?.fileName}
+                response={t(state?.fileName)}
                 sortFooterButtons
                 style={{}}
                 type="success"
