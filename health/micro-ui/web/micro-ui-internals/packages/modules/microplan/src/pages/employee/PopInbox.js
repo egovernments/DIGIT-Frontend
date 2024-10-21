@@ -61,7 +61,7 @@ const PopInbox = () => {
     }
   }, [campaignObject]);
 
-  console.log("user", user);
+
   const {
     isLoading: isPlanEmpSearchLoading,
     data: planEmployee,
@@ -117,6 +117,7 @@ const PopInbox = () => {
 
   const actionsMain = workflowData?.actions;
 
+
   // Custom hook to fetch census data based on microplanId and boundaryCode
   const reqCriteriaResource = {
     url: `/census-service/_search`,
@@ -143,6 +144,7 @@ const PopInbox = () => {
       if ((selectedFilter === null || selectedFilter === undefined) && selectedFilter !== "") {
         setSelectedFilter(Object.entries(data?.StatusCount)?.[0]?.[0]);
       }
+      setVillagesSelected(0);
     }
   }, [data, selectedFilter]);
 
@@ -152,14 +154,15 @@ const PopInbox = () => {
     }
   }, [selectedFilter, activeLink, jurisdiction]);
 
-  useEffect(() => {}, [selectedFilter]);
+  useEffect(() => { }, [selectedFilter]);
 
   const onFilter = (selectedStatus) => {
     setSelectedFilter(selectedStatus?.code);
   };
 
   const clearFilters = () => {
-    setSelectedFilter("");
+    if (selectedFilter !== Object.entries(data?.StatusCount)?.[0]?.[0])
+      setSelectedFilter(Object.entries(data?.StatusCount)?.[0]?.[0]);
   };
 
   const handleActionClick = (action) => {
@@ -193,7 +196,7 @@ const PopInbox = () => {
           onApplyFilters={onFilter}
           clearFilters={clearFilters}
           defaultValue={
-            selectedFilter !== "" && activeFilter ? { [Object.entries(activeFilter)?.[0]?.[0]]: Object.entries(activeFilter)?.[0]?.[1] } : null
+            selectedFilter === Object.entries(activeFilter)?.[0]?.[0] ? { [Object.entries(activeFilter)?.[0]?.[0]]: Object.entries(activeFilter)?.[0]?.[1] } : null
           }
         ></InboxFilterWrapper>
 
@@ -231,7 +234,7 @@ const PopInbox = () => {
                 </div>
 
                 <div className={`table-actions-wrapper`}>
-                  {actionsMain?.map((action, index) => (
+                  {actionsMain?.filter(action => !action.action.includes("EDIT"))?.map((action, index) => (
                     <Button
                       key={index}
                       variation="secondary"
@@ -244,7 +247,7 @@ const PopInbox = () => {
                 </div>
               </div>
             )}
-            <PopInboxTable onRowSelect={onRowSelect} censusData={censusData} />
+            {isFetching ? <Loader /> : <PopInboxTable onRowSelect={onRowSelect} censusData={censusData} />}
           </Card>
         </div>
       </div>
