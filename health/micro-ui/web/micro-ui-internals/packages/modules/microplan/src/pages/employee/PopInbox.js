@@ -117,6 +117,9 @@ const PopInbox = () => {
 
   const actionsMain = workflowData?.actions;
 
+  // actionsToHide array by checking for "EDIT" in the actionMap
+  const actionsToHide = actionsMain?.filter(action => action.action.includes("EDIT"))?.map(action => action.action);
+
 
   // Custom hook to fetch census data based on microplanId and boundaryCode
   const reqCriteriaResource = {
@@ -234,7 +237,7 @@ const PopInbox = () => {
                 </div>
 
                 <div className={`table-actions-wrapper`}>
-                  {actionsMain?.filter(action => !action.action.includes("EDIT"))?.map((action, index) => (
+                  {actionsMain?.filter(action => !actionsToHide.includes(action.action))?.map((action, index) => (
                     <Button
                       key={index}
                       variation="secondary"
