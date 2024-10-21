@@ -86,7 +86,7 @@ const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...
           answer: [
             {
               label: "SANDBOX_FAQ_ANS_1_LABEL_1",
-              link:"citizen/all-services",
+              link:"citizen/login",
               description: "SANDBOX_FAQ_ANS_1_DESCRIPTION_1",
             },
             {

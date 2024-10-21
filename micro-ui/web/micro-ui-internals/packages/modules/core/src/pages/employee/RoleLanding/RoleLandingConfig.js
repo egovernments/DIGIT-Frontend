@@ -49,7 +49,7 @@ export const externalConfig = [
     heading: "ROLE_LANDING_CITIZEN", // localization key for "Citizen"
     description: "ROLE_LANDING_CITIZEN_DESCRIPTION", // localization key for the description
     buttonName: "ROLE_LANDING_CITIZEN_BUTTON", // localization key for the button label
-    action: "/citizen"
+    action: "/citizen/login"
   },
   {
     type: "card",
