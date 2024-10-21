@@ -16,6 +16,7 @@ import useSearchHRMSEmployee from "./useSearchHRMSEmployee";
 import usePlanEmployeeCreate from "./usePlanEmployeeCreate";
 import usePlanEmployeeUpdate from "./usePlanEmployeeUpdate";
 import usePlanSearchEmployeeWithTagging from "./usePlanSearchEmployeeWithTagging";
+import useSavedMicroplansWithCampaign from "./useSavedMicroplansWithCampaign";
 
 const microplanv1 = {
   useCreatePlanConfig,
@@ -34,6 +35,7 @@ const microplanv1 = {
   usePlanEmployeeUpdate,
   usePlanSearchEmployee,
   usePlanSearchEmployeeWithTagging,
+  useSavedMicroplansWithCampaign,
 };
 
 const Hooks = {
