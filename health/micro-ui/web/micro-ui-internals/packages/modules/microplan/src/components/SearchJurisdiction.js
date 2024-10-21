@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useMyContext } from "../utils/context";
 import { Dropdown, MultiSelectDropdown } from "@egovernments/digit-ui-components";
 
-const SearchJurisdiction = ({ boundaries, jurisdiction,onSubmit=()=>{} }) => {
+const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, onClear = () => { } }) => {
   const { t } = useTranslation();
   const {
     state: { hierarchyType, boundaryHierarchy },
@@ -36,15 +36,15 @@ const SearchJurisdiction = ({ boundaries, jurisdiction,onSubmit=()=>{} }) => {
   }, [selectedHierarchy]);
 
   const handleBoundarySelect = (selectBoundariesEvent) => {
-    if(!selectBoundariesEvent)
+    if (!selectBoundariesEvent)
       return
-    if(selectBoundariesEvent.length===0){
+    if (selectBoundariesEvent.length === 0) {
       setSelectedBoundaries([])
       return
     }
 
     //otherwise your event object would look like this [[a,b],[a,b]] bs' are the boundaries that we need
-    const boundariesInEvent =  selectBoundariesEvent?.map(event => {
+    const boundariesInEvent = selectBoundariesEvent?.map(event => {
       return event?.[1]
     })
     setSelectedBoundaries(boundariesInEvent)
@@ -89,11 +89,12 @@ const SearchJurisdiction = ({ boundaries, jurisdiction,onSubmit=()=>{} }) => {
             onClick={() => {
               setSelectedBoundaries([]);
               setSelectedHierarchy(null);
+              onClear();
             }}
           >
             {t("CLEAR")}
           </LinkLabel>
-          <SubmitBar label={t("SEARCH")} onSubmit={()=>onSubmit(selectedBoundaries)} />
+          <SubmitBar label={t("SEARCH")} onSubmit={() => onSubmit(selectedBoundaries)} />
         </div>
       </div>
     </div>

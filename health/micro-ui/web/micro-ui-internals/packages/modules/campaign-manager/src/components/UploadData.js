@@ -1040,6 +1040,20 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     else setKey(12);
   };
 
+  const getDownloadLabel = () => {
+    if (parentId) {
+      if (type === "boundary") {
+        return t("WBH_DOWNLOAD_CURRENT_TARGET");
+      } else if (type === "facilityWithBoundary") {
+        return t("WBH_DOWNLOAD_CURRENT_FACILITY");
+      } else {
+        return t("WBH_DOWNLOAD_CURRENT_USER");
+      }
+    } else {
+      return t("WBH_DOWNLOAD_TEMPLATE");
+    }
+  };
+
   return (
     <>
       <div className="container-full">
@@ -1072,7 +1086,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
             </Header>
             <Button
-              label={t("WBH_DOWNLOAD_TEMPLATE")}
+              label={getDownloadLabel()}
               variation="secondary"
               icon={"FileDownload"}
               type="button"

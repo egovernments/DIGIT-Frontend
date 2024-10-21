@@ -445,7 +445,7 @@ export const UICustomizations = {
                 data: row,
               },
               "",
-              `/${window.contextPath}/employee/campaign/boundary/update-boundary?key=1&parentId=${row?.id}`
+              `/${window.contextPath}/employee/campaign/update-campaign?key=1&parentId=${row?.id}`
             );
             const nav = new PopStateEvent("popstate");
             window.dispatchEvent(nav);
@@ -750,7 +750,7 @@ export const UICustomizations = {
                 data: row,
               },
               "",
-              `/${window.contextPath}/employee/campaign/boundary/update-boundary?key=1&parentId=${row?.id}`
+              `/${window.contextPath}/employee/campaign/update-campaign?key=1&parentId=${row?.id}`
             );
             const nav = new PopStateEvent("popstate");
             window.dispatchEvent(nav);
