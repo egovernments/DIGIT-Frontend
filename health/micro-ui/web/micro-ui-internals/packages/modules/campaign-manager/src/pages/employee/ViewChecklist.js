@@ -116,41 +116,80 @@ const ViewChecklist = () => {
         setServiceCode(`${campaignName}.${checklistType}.${role}`)
     }, [])
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        const callSearch = async () => {
-            const res = await Digit.CustomService.getResponse({
-                url: `/service-request/service/definition/v1/_search`,
-                body: {
-                    ServiceDefinitionCriteria: {
-                        "tenantId": tenantId,
-                        "code": [serviceCode]
-                    },
-                    includeDeleted: true
-                },
-            });
-            return res;
+    //     const callSearch = async () => {
+    //         const res = await Digit.CustomService.getResponse({
+    //             url: `/service-request/service/definition/v1/_search`,
+    //             body: {
+    //                 ServiceDefinitionCriteria: {
+    //                     "tenantId": tenantId,
+    //                     "code": [serviceCode]
+    //                 },
+    //                 includeDeleted: true
+    //             },
+    //         });
+    //         return res;
+    //     }
+    //     const fetchData = async () => {
+    //         try {
+    //             const res = await callSearch();
+
+    //             if (res?.ServiceDefinitions?.[0]?.attributes) {
+    //                 setSearching(false);
+    //                 let temp_data = res?.ServiceDefinitions?.[0]?.attributes
+    //                 let formatted_data = temp_data.map((item) => item.additionalDetails);
+    //                 let nvd = formatted_data.filter((value, index, self) =>
+    //                     index === self.findIndex((t) => t.id === value.id)
+    //                 );
+    //                 setViewData(nvd);
+
+    //             }
+    //         }
+    //         catch (error) {
+    //         }
+    //     }
+    //     fetchData();
+    // }, [serviceCode])
+
+    const rq = {
+        url: `/service-request/service/definition/v1/_search`,
+        body: {
+          ServiceDefinitionCriteria: {
+            tenantId: tenantId,
+            code: [serviceCode],
+          },
+          includeDeleted: true,
+        },
+        changeQueryName: `${serviceCode}`,
+        config: {
+            enabled: serviceCode? true: false,
+            cacheTime: 5000,
+          },
+      };
+    
+      // Call the hook directly inside the component
+      const { data: res } = Digit.Hooks.useCustomAPIHook(rq);
+    
+      useEffect(() => {
+        if (res?.ServiceDefinitions?.[0]?.attributes) {
+          setSearching(false);
+    
+          // Extract and format the data
+          const temp_data = res?.ServiceDefinitions?.[0]?.attributes;
+          const formatted_data = temp_data.map((item) => item.additionalDetails);
+    
+          // Filter out duplicates
+          const nvd = formatted_data.filter(
+            (value, index, self) => index === self.findIndex((t) => t.id === value.id)
+          );
+    
+          setViewData(nvd);
         }
-        const fetchData = async () => {
-            try {
-                const res = await callSearch();
+      }, [res]);
 
-                if (res?.ServiceDefinitions?.[0]?.attributes) {
-                    setSearching(false);
-                    let temp_data = res?.ServiceDefinitions?.[0]?.attributes
-                    let formatted_data = temp_data.map((item) => item.additionalDetails);
-                    let nvd = formatted_data.filter((value, index, self) =>
-                        index === self.findIndex((t) => t.id === value.id)
-                    );
-                    setViewData(nvd);
 
-                }
-            }
-            catch (error) {
-            }
-        }
-        fetchData();
-    }, [serviceCode])
+
 
     useEffect(() => {
 
