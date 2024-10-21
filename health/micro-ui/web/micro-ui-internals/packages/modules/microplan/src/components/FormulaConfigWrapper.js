@@ -226,11 +226,12 @@ const handleStepClick = (step)=>{
  }, [formulaInternalKey]);
 
  useEffect(() => {
-   window.addEventListener("isFormulaLastStep", isFormulaLastStep);
-   return () => {
-     window.removeEventListener("isFormulaLastStep", isFormulaLastStep);
-   };
- }, [formulaInternalKey]);
+   useEffect(() => {
+     window.addEventListener("isFormulaLastStep", isFormulaLastStep);
+     return () => {
+       window.removeEventListener("isFormulaLastStep", isFormulaLastStep);
+     };
+   }, []);
 
 
 
