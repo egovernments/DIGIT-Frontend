@@ -203,6 +203,13 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     setCurrentStep((prev) => prev - 1);
     setCurrentKey((prev) => prev - 1);
   }
+
+
+const goToPreviousScreenFromFormula = () => {
+  setCurrentStep((prev) => prev - 1);
+  setCurrentKey((prev) => prev - 1);
+}
+
   useEffect(() => {
 
     window.addEventListener("moveToPrevious", moveToPreviousStep);
@@ -211,16 +218,27 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
       window.removeEventListener("moveToPrevious", moveToPreviousStep);
     };
   }, []);
+
+
+useEffect(() => { 
+
+  window.addEventListener("revertToPreviousScreenFromFormula", goToPreviousScreenFromFormula);
+
+  return () => {
+    window.removeEventListener("revertToPreviousScreenFromFormula", goToPreviousScreenFromFormula);
+  };
+}, []);
   const onSecondayActionClick = () => {
     if (currentKey === 1) {
       history.push(`/${window.contextPath}/employee`);
     }
-    const { isLastVerticalStep } = Digit.Hooks.useQueryParams();
+    const { isLastVerticalStep,  isFormulaLastVerticalStep } = Digit.Hooks.useQueryParams();
 
-    if (isLastVerticalStep === 'true') {
+    if (isLastVerticalStep === 'true' || isFormulaLastVerticalStep === 'true') {
       window.dispatchEvent(new Event("verticalStepper"))
       return;
     }
+
 
     setCurrentStep((prev) => prev - 1);
     setCurrentKey((prev) => prev - 1);
