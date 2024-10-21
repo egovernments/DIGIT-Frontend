@@ -38,7 +38,7 @@ const LanguageSelection = () => {
                 <div className="language-button-container" key={index}>
                   <CustomButton
                     selected={language.value === selected}
-                    text={language.label}
+                    text={t(language.label)}
                     onClick={() => handleChangeLanguage(language)}
                   ></CustomButton>
                 </div>
