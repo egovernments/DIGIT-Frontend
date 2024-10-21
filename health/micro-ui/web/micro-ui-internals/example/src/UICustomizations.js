@@ -793,7 +793,7 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      if (key === "Actions") {
+      if (key === "ACTIONS") {
         // `/${window.contextPath}/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}`
         return (
           <Dropdown
@@ -807,15 +807,19 @@ export const UICustomizations = {
               console.log(e, "event"); // e contains the selected option
               if (e.code === "1") {
                 // Use window.location.href to navigate
-                window.location.href = `/${window.contextPath
-                  }/employee/microplan/setup-microplan?key=${1}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${row.CampaignDetails.id
-                  }`;
+                window.location.href = `/${
+                  window.contextPath
+                }/employee/microplan/setup-microplan?key=${1}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${
+                  row.CampaignDetails.id
+                }`;
               }
               if (e.code === "2") {
                 // Use window.location.href to navigate
-                window.location.href = `/${window.contextPath
-                  }/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${row.CampaignDetails.id
-                  }`;
+                window.location.href = `/${
+                  window.contextPath
+                }/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${
+                  row.CampaignDetails.id
+                }`;
               }
               if (e.code === "3") {
                 // Use window.location.href to navigate
@@ -831,7 +835,7 @@ export const UICustomizations = {
         );
       }
 
-      if (key === "Name of the Microplan") {
+      if (key === "NAME_OF_MICROPLAN") {
         if (value && value !== "NA") {
           return (
             <div
@@ -871,39 +875,65 @@ export const UICustomizations = {
       cleanObject(data.body.PlanConfigurationSearchCriteria);
 
       const dic = {
-        0: null,
-        1: ["DRAFT"],
-        2: ["EXECUTION_TO_BE_DONE"],
-        3: ["CENSUS_DATA_APPROVAL_IN_PROGRESS", "CENSUS_DATA_APPROVED", "RESOURCE_ESTIMATION_IN_PROGRESS"],
-        4: ["RESOURCE_ESTIMATIONS_APPROVED"],
+        0: [
+          "EXECUTION_TO_BE_DONE",
+          "CENSUS_DATA_APPROVAL_IN_PROGRESS",
+          "CENSUS_DATA_APPROVED",
+          "RESOURCE_ESTIMATION_IN_PROGRESS",
+          "RESOURCE_ESTIMATIONS_APPROVED",
+        ],
+        1: ["EXECUTION_TO_BE_DONE"],
+        2: ["CENSUS_DATA_APPROVAL_IN_PROGRESS", "CENSUS_DATA_APPROVED", "RESOURCE_ESTIMATION_IN_PROGRESS"],
+        3: ["RESOURCE_ESTIMATIONS_APPROVED"],
       };
       const url = Digit.Hooks.useQueryParams();
 
       const tabId = url.tabId || "0"; // Default to '0' if tabId is undefined
       data.body.PlanConfigurationSearchCriteria.status = dic[String(tabId)];
-      cleanObject(data.body.PlanConfigurationSearchCriteria);
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       if (key === "Actions") {
+        const onActionSelect = (key, row) => {
+          switch (key) {
+            case "START":
+              window.history.pushState(
+                {
+                  microplanId: row?.id,
+                  campaignId: row?.campaignId,
+                },
+                "",
+                `/${window.contextPath}/employee/microplan/select-activity?microplanId=${row?.id}&campaignId=${row?.campaignId}`
+              );
+              const navEvent = new PopStateEvent("popstate");
+              window.dispatchEvent(navEvent);
+              break;
+            case "EDIT":
+              window.history.pushState(
+                {
+                  microplanId: row?.id,
+                  campaignId: row?.campaignId,
+                },
+                "",
+                `/${window.contextPath}/employee/microplan/select-activity?microplanId=${row?.id}&campaignId=${row?.campaignId}`
+              );
+              const navEvent2 = new PopStateEvent("popstate");
+              window.dispatchEvent(navEvent2);
+              break;
+            default:
+              console.log(value);
+              break;
+          }
+        };
         // `/${window.contextPath}/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}`
-        return row.status === "DRAFT" ? (
-          <Button
-            label={t("WBH_EDIT")}
-            variation="secondary"
-            icon={<EditIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
-            type="button"
-            className="dm-workbench-download-template-btn dm-hover"
-            onButtonClick={(e) => { }}
-          />
-        ) : row.status === "EXECUTION_TO_BE_DONE" ? (
+        return row.status === "EXECUTION_TO_BE_DONE" ? (
           <Button
             label={t("START")}
             variation="secondary"
             icon={<ArrowForward styles={{ height: "1.25rem", width: "2.5rem" }} />}
             type="button"
             className="dm-workbench-download-template-btn dm-hover"
-            onButtonClick={(e) => { }}
+            onButtonClick={(e) => onActionSelect("START", row)}
           />
         ) : row.status === "RESOURCE_ESTIMATIONS_APPROVED" ? (
           <Button
@@ -912,12 +942,21 @@ export const UICustomizations = {
             icon={<DownloadIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
             type="button"
             className="dm-workbench-download-template-btn dm-hover"
-            onButtonClick={(e) => { }}
+            onButtonClick={(e) => onActionSelect("DOWNLOAD", row)}
           />
-        ) : null;
+        ) : (
+          <Button
+            label={t("WBH_EDIT")}
+            variation="secondary"
+            icon={<EditIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
+            type="button"
+            className="dm-workbench-download-template-btn dm-hover"
+            onButtonClick={(e) => onActionSelect("EDIT", row)}
+          />
+        );
       }
 
-      if (key === "Name of the Microplan") {
+      if (key === "NAME_OF_MICROPLAN") {
         if (value && value !== "NA") {
           return (
             <div

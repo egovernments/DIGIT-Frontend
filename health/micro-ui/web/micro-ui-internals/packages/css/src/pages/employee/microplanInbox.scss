@@ -1,5 +1,30 @@
 .pop-inbox-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
+}
+
+.pop-inbox-wrapper-filter-table-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 100%;
+
+  .filter-card-vertical {
+    max-width: 400px;
+  }
+
+  .pop-inbox-table-wrapper {
+    width: 100% !important;
+    max-width: 100%;
+  }
+}
+
+.table-actions-wrapper {
+  display: flex;
+  gap: 0.5rem;
+  align-items: "center";
+  flex-wrap: "wrap";
+  margin-left: auto;
 }

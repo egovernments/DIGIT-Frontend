@@ -73,29 +73,29 @@ const defaultSearchValues = {
               uiConfig: {
                 columns: [
                   {
-                    label: "Name of the Microplan",
+                    label: "NAME_OF_MICROPLAN",
                     jsonPath: "name",
                     additionalCustomization:true
                   },
     
                   {
-                    label: "Microplan Status",
+                    label: "MICROPLAN_STATUS",
                     jsonPath: "status",
                   },
                   {
-                    label: "Campaign Disease",
+                    label: "CAMPAIGN_DISEASE",
                     jsonPath:  "additionalDetails.disease",
                   },
                   {
-                    label:"Camapaign Type",
+                    label:"CAMPAIGN_TYPE",
                     jsonPath:"additionalDetails.campaignType"
                   },
                   {
-                    label:"Distribution Strategy",
+                    label:"DISTIRBUTION_STRATEGY",
                     jsonPath:"additionalDetails.resourceDistributionStrategyCode"
                   },
                   {
-                    label:"Actions",
+                    label:"ACTIONS",
                     jsonPath:"",
                     additionalCustomization:true
                   }
@@ -110,13 +110,11 @@ const defaultSearchValues = {
            // customHookName: "microplanv1.useSavedMicroplans",  //! Note
             
           },
-          customHookName:"microplanv1.useSavedMicroplans"
+          customHookName:"microplanv1.useSavedMicroplansWithCampaign"
         },
         {label: "EXECUTION_TO_BE_DONE",},
         {label:"EXECUTION_IN_PROGRESS"},
-        {label:"MICROPLAN_EXECUTED"},
-        
-  
+        {label:"MICROPLAN_EXECUTED"},       
       ],
     };
     
