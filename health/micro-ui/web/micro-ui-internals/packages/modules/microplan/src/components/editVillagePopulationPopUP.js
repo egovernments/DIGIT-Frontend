@@ -7,6 +7,8 @@ import { Body } from '@egovernments/digit-ui-react-components';
 const EditVillagePopulationPopUp = ({ onClose, census }) => {
   const { t } = useTranslation();
   const { state } = useMyContext(); // Extract state from context
+  const userInfo = Digit.UserService.getUser();
+  const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
 
   // State to manage confirmed population and target population
   const [confirmedTotalPopulation, setConfirmedTotalPopulation] = useState("");
@@ -20,12 +22,24 @@ const EditVillagePopulationPopUp = ({ onClose, census }) => {
     }
   }, [census]);
 
+  console.log(userRoles, 'roles');
+
   // Define the mutation configuration
   const mutation = Digit.Hooks.useCustomAPIMutationHook({
     url: "/census-service/_update", // Replace with the appropriate API endpoint
   });
 
   const handleSave = async () => {
+    // Determine workflow action based on user roles
+    let workflowAction = ""; // Default action
+
+    // Check user roles and set workflow action accordingly
+    if (userRoles && userRoles.includes('POPULATION_DATA_APPROVER')) {
+      workflowAction = "EDIT_AND_SEND_FOR_APPROVAL";
+    } else if (userRoles && userRoles.includes('ROOT_POPULATION_DATA_APPROVER')) {
+      workflowAction = "EDIT_AND_VALIDATE";
+    }
+
     await mutation.mutate(
       {
         body: {
@@ -37,7 +51,7 @@ const EditVillagePopulationPopUp = ({ onClose, census }) => {
               confirmedTargetPopulation,
             },
             workflow: {
-              action: "SEND_BACK_FOR_CORRECTION",
+              action: workflowAction,
             },
           },
         }

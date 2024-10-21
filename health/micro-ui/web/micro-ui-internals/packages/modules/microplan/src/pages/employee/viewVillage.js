@@ -78,8 +78,6 @@ const VillageView = () => {
         refetch();
     };
 
-    console.log(userRoles, 'userRoles');
-
     if (isLoading) {
         return <Loader />;
     }
