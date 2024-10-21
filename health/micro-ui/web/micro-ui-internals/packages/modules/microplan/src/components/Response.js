@@ -1,10 +1,12 @@
 import React, { useState, Fragment } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ActionBar, SubmitBar, Button, ArrowLeft, ArrowForward } from "@egovernments/digit-ui-react-components";
+import { ActionBar, SubmitBar, ArrowLeft, ArrowForward } from "@egovernments/digit-ui-react-components";
+import { Button } from "@egovernments/digit-ui-components";
 import { PanelCard } from "@egovernments/digit-ui-components";
 const Response = () => {
 
+    console.log("ooooooooooooooo")
     const { t } = useTranslation();
     const history = useHistory();
     const queryStrings = Digit.Hooks.useQueryParams();
@@ -13,6 +15,8 @@ const Response = () => {
         queryStrings?.isSuccess === "true" ? true : queryStrings?.isSuccess === "false" ? false : true
     );
     const { state } = useLocation();
+    const back=(state?.back)?state?.back:"BACK";
+    const backlink=(state?.backlink)?(state.back):"employee";
     return (
         <>
             <PanelCard
@@ -24,7 +28,7 @@ const Response = () => {
                 cardStyles={{}}
                 className=""
                 customIcon=""
-                description="The user data uploaded will be available in your microplan user assignment section"
+                description={state.description}
                 // footerChildren={[
                 //     <Button label="OK" onClick={function noRefCheck() { }} type="button" />
                 // ]}
@@ -43,12 +47,12 @@ const Response = () => {
 
             </PanelCard>
             <ActionBar className="mc_back">
-                <Link to={`/${window.contextPath}/employee/microplan/user-management`}>
+                <Link to={`/${window.contextPath}${backlink}`}>
                     <Button
-                        style={{ margin: "0.5rem", minWidth: "12rem", marginLeft: "6rem" }}
+                        style={{ margin: "0.5rem", minWidth: "10rem", marginLeft: "6rem" }}
                         className="previous-button"
                         variation="secondary"
-                        label={t("BACK")}
+                        label={t(back)}
                         icon={"ArrowBack"}
                     />
                 </Link>

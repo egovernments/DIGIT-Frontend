@@ -411,7 +411,8 @@ const UserUpload = React.memo(() => {
         setDownloadTemplateLoader(false);
         return;
       }
-      history.push(`/${window.contextPath}/employee/microplan/upload-user-success`, { fileName: fileName,message:"USER_DATA_UPLOAD_SUCCESSFUL" });
+      console.log("history",`/${window.contextPath}/employee/microplan/upload-user-success`)
+      history.push(`/${window.contextPath}/employee/microplan/upload-user-success`, { fileName: fileName,message:"USER_DATA_UPLOAD_SUCCESSFUL",description:"The user data uploaded will be available in your microplan user assignment",back:"GO_BACK_TO_USER_MANAGEMENT",backlink:"/employee/microplan/user-management" });
     }
     else {
       setShowToast({ key: "error", label: t("ERROR_MANDATORY_FIELDS_FOR_SUBMIT") });

@@ -59,16 +59,16 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
   };
 
   const handleNext = () => {
-    if((data===null && (internalKey in [0,1,2]))){
-      setShowErrorToast(true);
-      // console.log("hi1");
-    }else{
-      setInternalKey((prevKey) => prevKey + 1);
-      // console.log("hi1");
-
-    }
-   
+    
+      if (data === null && (category in nationalRoles)) {
+        setShowErrorToast(true);
+        return prevKey; 
+      } else {
+        return prevKey + 1;
+      }
+    
   };
+  
 
   const handleBack = () => {
     if (internalKey > 1) {
