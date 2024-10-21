@@ -79,7 +79,7 @@ export const CreateComplaint = () => {
       const data = {
         ...values,
         complaintType: subType.key,
-        cityCode,
+        cityCode:Digit.Utils.getMultiRootTenant() ? Digit.ULBService.getStateId() : cityCode,
         city,
         description: details,
         district: city,

@@ -414,8 +414,28 @@
   .citizen-card-input.citizen-card-input--front {
     margin-bottom: 0;
   }
+  .digit-app-container {
+    .digit-back-link {
+      margin-bottom: 1rem !important;
+    }
+    .digit-card-component {
+      .digit-card-header {
+        font-size: 2rem !important;
+        font-weight: 700 !important;
+      }
+    }
+  }
 }
-
+.selection-card-wrapper {
+  .digit-page-based-input-wrapper {
+    .digit-card-component {
+      .digit-card-header {
+        font-size: 2rem;
+        font-weight: 700;
+      }
+    }
+  }
+}
 .action-bar-wrap {
   .menu-wrap {
     p {
@@ -536,8 +556,8 @@ digit-card-text.center {
 .quickLink {
   color: theme(colors.primary.main);
   text-decoration: none;
-  font-weight: 700;
-  font-size: 1.5rem;
+  font-weight: 500;
+  font-size: 1rem;
 }
 
 .overlay {
@@ -741,4 +761,270 @@ digit-card-text.center {
 
 .sandbox-step.sandbox-visible svg {
   opacity: 1;
+}
+.digit-card-component.digit-landing-page-card {
+  max-width: 30rem !important;
+}
+.digit-msb-sidebar-children.expanded {
+  margin-left: 1.5rem !important;
+  border-left: 0.031rem solid #c5c5c5 !important;
+}
+@media (max-width: 768px) {
+  .homeWrapper > :last-child {
+    margin-left: 1rem !important;
+  }
+  .digit-landing-page-wrapper {
+    margin-left: 1rem !important;
+  }
+}
+
+.RightMostTopBarOptions {
+  .digit-dropdown-employee-select-wrap.language-dropdown {
+    .header-dropdown-label {
+      .cp {
+        color: #fff !important;
+      }
+      .header-dropdown-arrow {
+        path {
+          fill: #fff !important;
+        }
+      }
+    }
+    .header-dropdown-menu {
+      right: 1rem !important;
+    }
+  }
+  .select-wrap {
+    margin-bottom: unset !important;
+    svg {
+      fill: theme(colors.white) !important;
+    }
+  }
+}
+
+
+@media (max-width: 768px) {
+  .role-action-container {
+      flex-direction: column;
+      align-items: center;
+  }
+
+  .role-card {
+      width: 100%;
+      margin-bottom: 0.625rem; 
+  }
+}
+
+
+.faq-answer{
+  .card-section-sub-text{
+    margin-left: 0.5rem;
+  }
+}
+
+
+.role-landing-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.role-landing-card {
+  max-width: 60rem;
+  width: 100%;
+  background-color: #fff;
+  padding: 2rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); /* 4px 8px to rem */
+  border-radius: 0.5rem; /* 8px to rem */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.header-video-section {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.role-header {
+  font-weight: 700 !important;
+  font-size: 2rem !important;
+  margin-bottom: 1.5rem;
+  color: #0b4b66 !important;
+}
+
+.role-video {
+  max-width: 100%;
+  margin-bottom: 2rem;
+}
+
+.config-section {
+  margin-bottom: 1.5rem;
+}
+
+.role-section-header {
+  font-size: 1.75rem !important;
+  font-weight: bold !important;
+  color: #0b4b66 !important;
+  margin-bottom: 1rem;
+}
+
+.role-paragraph {
+  font-size: 1rem !important;
+  color: #363636 !important;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.role-list {
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.role-list-item {
+  font-size: 1rem;
+  color: #363636;
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+
+.role-action-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+.role-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  min-width: 0;
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+  border-radius: 0.5rem; /* 8px to rem */
+  text-align: center;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); /* 4px 8px to rem */
+}
+
+.icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.role-button {
+  width: 20rem !important;
+  margin-top: 1rem !important;
+  align-self: center !important;
+}
+
+.role-list {
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+  list-style-type: disc;
+}
+
+.role-list-item {
+  font-size: 1rem;
+  color: #363636;
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+
+/* Custom container for the entire landing component */
+.custom-landing-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+/* Custom card styling for the landing page */
+.custom-landing-card {
+  max-width: 60rem; /* 800px to rem */
+  width: 100%;
+  background-color: #fff;
+  padding: 2rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); /* 4px 8px to rem */
+  border-radius: 0.5rem; /* 8px to rem */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Custom header styling */
+.custom-landing-header {
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 1.25rem;
+  color: #0b4b66;
+  text-align: center;
+}
+
+/* Custom video section */
+.custom-video-section {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 1rem 0;
+}
+
+/* Custom section container */
+.custom-section-container {
+  margin-bottom: 1.5rem;
+}
+
+/* Custom section header */
+.custom-section-header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #0b4b66;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+/* Custom paragraph styling */
+.custom-section-paragraph {
+  font-size: 1rem;
+  color: #363636;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  text-align: justify;
+}
+
+/* Custom list styling for steps */
+.custom-steps-list {
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+  list-style-type: disc;
+}
+
+/* Custom button container */
+.custom-continue-button-container {
+  display: flex;
+  justify-content: flex-end; /* Align the button to the right */
+  margin-top: 2rem;
+}
+
+/* Custom button styling */
+.custom-continue-button {
+  margin-top: 1rem;
+  align-self: flex-end; /* Ensure the button aligns to the right */
+}
+
+.custom-steps-list {
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+  list-style-type: disc;
+}
+
+/* Styling for each step item */
+.custom-step-item {
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  color: #363636;
+  line-height: 1.6;
 }

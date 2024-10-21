@@ -110,9 +110,12 @@ export const StoreService = {
         .map(doc => doc.fileStoreId);
       const logoUrl = await Digit.UploadServices.Filefetch(logoArray, tenantConfigSearch?.[0]?.code);
       const bannerUrl = await Digit.UploadServices.Filefetch(bannerArray, tenantConfigSearch?.[0]?.code)
-
+      const formattedLanguages = tenantConfigSearch?.[0]?.languages?.map(lang => ({
+        label: lang,
+        value: lang
+      })) || [];
       return {
-        languages: stateInfo.hasLocalisation ? stateInfo.languages : [{ label: "ENGLISH", value: Digit.Utils.getDefaultLanguage() }],
+        languages: tenantConfigSearch?.[0]?.languages? formattedLanguages : [{ label: "ENGLISH", value: Digit.Utils.getDefaultLanguage() }],
         stateInfo: {
           code: tenantConfigFetch ? tenantConfigSearch?.[0]?.code : stateInfo.code,
           name: tenantConfigFetch ? tenantConfigSearch?.[0]?.name : stateInfo.name,
@@ -160,10 +163,17 @@ export const StoreService = {
       .map((module) => module.tenants)
       .flat()
       .reduce((unique, ele) => (unique.find((item) => item.code === ele.code) ? unique : [...unique, ele]), []);
-    initData.tenants = MdmsRes?.tenant?.tenants.map((tenant) => ({
-      i18nKey: `TENANT_TENANTS_${tenant.code.replace(".", "_").toUpperCase()}`,
-      ...tenant,
-    }));
+      if (Digit.Utils.getMultiRootTenant()) {
+        initData.tenants = MdmsRes?.tenant?.cities.map((tenant) => ({
+            i18nKey: `TENANT_TENANTS_${tenant.code.replace(".", "_").toUpperCase()}`,
+            ...tenant,
+        }));
+      } else {
+        initData.tenants = MdmsRes?.tenant?.tenants.map((tenant) => ({
+            i18nKey: `TENANT_TENANTS_${tenant.code.replace(".", "_").toUpperCase()}`,
+            ...tenant,
+        }));
+    }
     // .filter((item) => !!moduleTenants.find((mt) => mt.code === item.code))
     // .map((tenant) => ({ i18nKey: `TENANT_TENANTS_${tenant.code.replace(".", "_").toUpperCase()}`, ...tenant }));
 

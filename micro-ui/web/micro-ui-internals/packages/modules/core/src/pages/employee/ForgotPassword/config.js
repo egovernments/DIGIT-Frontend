@@ -8,13 +8,13 @@ export const loginConfig = [
     inputs: [
       {
         label: "CORE_COMMON_MOBILE_NUMBER",
-        type: "text",
+        type: "mobileNumber",
         name: "mobileNumber",
         error: "ERR_HRMS_INVALID_MOBILE_NUMBER",
       },
       {
         label: "CORE_COMMON_CITY",
-        type: "custom",
+        type: "dropdown",
         name: "city",
         error: "ERR_HRMS_INVALID_CITY",
       },

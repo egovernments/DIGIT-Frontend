@@ -18,14 +18,6 @@ const redirectURL = uiHomePage?.redirectURL;
 const { data: cities, isLoading } = Digit.Hooks.useTenants();
 
 
-const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit.Hooks.useTenantManagementSearch({
-  stateId: Digit.ULBService.getStateId(),
-  includeSubTenants: true,
-  config : {
-    enabled: Digit.Utils.getMultiRootTenant()
-  }
-});
-
   const [selectedCity, setSelectedCity] = useState(() => ({ code: Digit.ULBService.getCitizenCurrentTenant(true) }));
   const [showError, setShowError] = useState(false);
 
@@ -44,13 +36,13 @@ const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit
 
   const RadioButtonProps = useMemo(() => {
     return {
-      options: Digit.Utils.getMultiRootTenant() ? TenantMngmtSearch : cities,
+      options:  cities,
       optionsKey:"i18nKey",
       additionalWrapperClass: "digit-reverse-radio-selection-wrapper",
       onSelect: selectCity,
       selectedOption: selectedCity,
     };
-  }, [TenantMngmtSearch,cities, t, selectedCity]);
+  }, [cities, t, selectedCity]);
 
   function onSubmit() {
     if (selectedCity) {

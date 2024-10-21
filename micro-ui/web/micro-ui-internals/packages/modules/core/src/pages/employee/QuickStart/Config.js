@@ -77,206 +77,197 @@ const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...
   const cardConfig = [
     {
       id: 1,
-      title: "SANDBOX_GUIDE_1",
-      content: "SANDBOX_CONTENT_1",
-      actions: [
-        {
-          label: null,
-          description: "SANDBOX_GUIDE_1_DESC_1",
-        },
-        {
-          label: null,
-          description: "SANDBOX_GUIDE_1_DESC_2",
-        },
-        {
-          label: null,
-          description: "SANDBOX_GUIDE_1_DESC_3",
-        },
-        {
-          label: null,
-          description: "SANDBOX_GUIDE_1_DESC_4",
-        },
-        {
-          label: null,
-          description: "SANDBOX_GUIDE_1_DESC_5",
-        },
-        {
-          label: null,
-          description: "SANDBOX_GUIDE_1_DESC_6",
-        },
-        {
-          label: null,
-          description: "SANDBOX_GUIDE_1_DESC_7",
-        },
-      ],
-    },
-    {
-      id: 2,
-      title: "SANDBOX_GUIDE_2",
-      content: "SANDBOX_CONTENT_2",
-      actions: [
-        {
-          label: "SANDBOX_GUIDE_2_LABEL_1",
-          description: "SANDBOX_GUIDE_2_DESC_1",
-        },
-        {
-          label: "SANDBOX_GUIDE_2_LABEL_2",
-          description: "SANDBOX_GUIDE_2_DESC_2",
-        },
-        {
-          label: "SANDBOX_GUIDE_2_LABEL_3",
-          description: "SANDBOX_GUIDE_2_DESC_3",
-        },
-        {
-          label: "SANDBOX_GUIDE_2_LABEL_4",
-          description: "SANDBOX_GUIDE_2_DESC_4",
-        },
-        {
-          label: "SANDBOX_GUIDE_2_LABEL_5",
-          description: "SANDBOX_GUIDE_2_DESC_5",
-        },
-        {
-          label: "SANDBOX_GUIDE_2_LABEL_6",
-          description: "SANDBOX_GUIDE_2_DESC_6",
-        },
-        {
-          label: "SANDBOX_GUIDE_2_LABEL_7",
-          description: "SANDBOX_GUIDE_2_DESC_7",
-        },
-      ],
-    },
-    {
-      id: 3,
-      title: "SANDBOX_GUIDE_3",
-      content: "SANDBOX_CONTENT_3",
-      actions: [
-        {
-          label: null,
-          description: "SANDBOX_GUIDE_3_DESC_1",
-        },
-        {
-          label: null,
-          description: "SANDBOX_GUIDE_3_DESC_2",
-        },
-        {
-          label: null,
-          description: "SANDBOX_GUIDE_3_DESC_3",
-        },
-      ],
-    },
-    {
-      id: 4,
-      title: "SANDBOX_GUIDE_4",
-      content: "SANDBOX_CONTENT_4",
-      actions: [
-        {
-          label: null,
-          description: "SANDBOX_GUIDE_4_DESC_1",
-        },
-        {
-          label: null,
-          description: "SANDBOX_GUIDE_4_DESC_2",
-        },
-        {
-          label: null,
-          description: "SANDBOX_GUIDE_4_DESC_3",
-        },
-      ],
-    },
-    {
-      id: 5,
-      title: "SANDBOX_GUIDE_5",
-      content: "SANDBOX_CONTENT_5",
-      actions: [
-        {
-          label: "SANDBOX_GUIDE_5_LABEL_1",
-          description: "SANDBOX_GUIDE_5_DESC_1",
-        },
-        {
-          label: "SANDBOX_GUIDE_5_LABEL_2",
-          description: "SANDBOX_GUIDE_5_DESC_2",
-        },
-        {
-          label: "SANDBOX_GUIDE_5_LABEL_3",
-          description: "SANDBOX_GUIDE_5_DESC_3",
-        },
-      ],
-    },
-    {
-      id: 6,
-      title: "SANDBOX_GUIDE_6",
-      content: "SANDBOX_CONTENT_6",
-      actions: [
-        {
-          label: "SANDBOX_GUIDE_6_LABEL_1",
-          description: "SANDBOX_GUIDE_6_DESC_1",
-        },
-        {
-          label: "SANDBOX_GUIDE_6_LABEL_2",
-          description: "SANDBOX_GUIDE_6_DESC_2",
-        },
-        {
-          label: "SANDBOX_GUIDE_6_LABEL_3",
-          description: "SANDBOX_GUIDE_6_DESC_3",
-        },
-        {
-          label: "SANDBOX_GUIDE_6_LABEL_4",
-          description: "SANDBOX_GUIDE_6_DESC_4",
-        },
-        {
-          label: "SANDBOX_GUIDE_6_LABEL_5",
-          description: "SANDBOX_GUIDE_6_DESC_5",
-        }
-      ],
-    },
-    {
-      id: 7,
-      title: "SANDBOX_GUIDE_7",
-      content: "SANDBOX_CONTENT_7",
-      actions: [
-        {
-          label: "SANDBOX_GUIDE_7_LABEL_1",
-          description: "SANDBOX_GUIDE_7_DESC_1",
-        },
-        {
-          label: "SANDBOX_GUIDE_7_LABEL_2",
-          description: "SANDBOX_GUIDE_7_DESC_2",
-        },
-      ],
-    },
-    {
-      id: 8,
-      title: "SANDBOX_GUIDE_8",
-      content: "SANDBOX_CONTENT_8",
-      actions: [
-        {
-          label: null,
-          description: "SANDBOX_GUIDE_8_DESC_1",
-        },
-      ],
-    },
-    {
-      id: 9,
-      title: "SANDBOX_GUIDE_9",
       type: "faqs",
-      content: null,
       actions: [
         {
-          question: "SANDBOX_FAQ_QUES_ONE",
-          answer: "SANDBOX_FAQ_ANS_ONE",
+          question: "SANDBOX_FAQ_QUES_1",
+          content: "SANDBOX_FAQ_CONTENT_1",
+          isLabelLink: true,
+          answer: [
+            {
+              label: "SANDBOX_FAQ_ANS_1_LABEL_1",
+              link:"citizen/all-services",
+              description: "SANDBOX_FAQ_ANS_1_DESCRIPTION_1",
+            },
+            {
+              label: "SANDBOX_FAQ_ANS_1_LABEL_2",
+              link: "employee/user/login",
+              description: "SANDBOX_FAQ_ANS_1_DESCRIPTION_2",
+            }
+          ]
         },
         {
-          question: "SANDBOX_FAQ_QUES_TWO",
-          answer: "SANDBOX_FAQ_ANS_TWO",
+          question: "SANDBOX_FAQ_QUES_2",
+          content: "SANDBOX_FAQ_CONTENT_2",
+          answer: [
+            {
+              label: null,
+              description: "SANDBOX_FAQ_ANS_2_DESCRIPTION_1",
+            },
+            {
+              label: null,
+              description: "SANDBOX_FAQ_ANS_2_DESCRIPTION_2",
+            },
+            {
+              label: null,
+              description: "SANDBOX_FAQ_ANS_2_DESCRIPTION_3",
+            },
+            {
+              label: null,
+              description: "SANDBOX_FAQ_ANS_2_DESCRIPTION_4",
+            }
+          ]
         },
         {
-          question: "SANDBOX_FAQ_QUES_THREE",
-          answer: "SANDBOX_FAQ_ANS_THREE",
+          question: "SANDBOX_FAQ_QUES_3",
+          content: "SANDBOX_FAQ_CONTENT_3",
+          answer: [
+            {
+              label: null,
+              description: "SANDBOX_FAQ_ANS_3_DESCRIPTION_1",
+            },
+            {
+              label: null,
+              description: "SANDBOX_FAQ_ANS_3_DESCRIPTION_2",
+            },
+            {
+              label: null,
+              description: "SANDBOX_FAQ_ANS_3_DESCRIPTION_3",
+            },
+            {
+              label: null,
+              description: "SANDBOX_FAQ_ANS_3_DESCRIPTION_4",
+            }
+          ]
         },
         {
-          question: "SANDBOX_FAQ_QUES_FOUR",
-          answer: "SANDBOX_FAQ_ANS_FOUR",
+          question: "SANDBOX_FAQ_QUES_4",
+          content: "SANDBOX_FAQ_CONTENT_4",
+          answer: [
+            {
+              label: null,
+              description: "SANDBOX_FAQ_ANS_4_DESCRIPTION_1",
+            },
+            {
+              label: null,
+              description: "SANDBOX_FAQ_ANS_4_DESCRIPTION_2",
+            }
+          ]
         },
+        {
+          question: "SANDBOX_FAQ_QUES_5",
+          content: "SANDBOX_FAQ_CONTENT_5",
+          answer: [
+            {
+              label: "SANDBOX_FAQ_ANS_5_LABEL_1",
+              description: "SANDBOX_FAQ_ANS_5_DESCRIPTION_1",
+            },
+            {
+              label: "SANDBOX_FAQ_ANS_5_LABEL_2",
+              description: "SANDBOX_FAQ_ANS_5_DESCRIPTION_2",
+            },
+            {
+              label: "SANDBOX_FAQ_ANS_5_LABEL_3",
+              description: "SANDBOX_FAQ_ANS_5_DESCRIPTION_3",
+            },
+            {
+              label: "SANDBOX_FAQ_ANS_5_LABEL_4",
+              description: "SANDBOX_FAQ_ANS_5_DESCRIPTION_4",
+            },
+            {
+              label: "SANDBOX_FAQ_ANS_5_LABEL_5",
+              description: "SANDBOX_FAQ_ANS_5_DESCRIPTION_5",
+            }
+          ]
+        },
+        {
+          question: "SANDBOX_FAQ_QUES_6",
+          content: "SANDBOX_FAQ_CONTENT_6",
+        },
+        {
+          question: "SANDBOX_FAQ_QUES_7",
+          content: "SANDBOX_FAQ_CONTENT_7",
+          answer: [
+            {
+              label: null,
+              description: "SANDBOX_FAQ_ANS_7_DESCRIPTION_1",
+            },
+            {
+              label: null,
+              description: "SANDBOX_FAQ_ANS_7_DESCRIPTION_2",
+            }
+          ]
+        },
+        {
+          question: "SANDBOX_FAQ_QUES_8",
+          content: "SANDBOX_FAQ_CONTENT_8",
+          answer: [
+            {
+              label: null,
+              description: "SANDBOX_FAQ_ANS_8_DESCRIPTION_1",
+            },
+            {
+              label: null,
+              description: "SANDBOX_FAQ_ANS_8_DESCRIPTION_2",
+            },
+            {
+              label: null,
+              description: "SANDBOX_FAQ_ANS_8_DESCRIPTION_3",
+            },
+            {
+              label: null,
+              description: "SANDBOX_FAQ_ANS_8_DESCRIPTION_4",
+            },
+          ]
+        },
+        {
+          question: "SANDBOX_FAQ_QUES_9",
+          content: "SANDBOX_FAQ_CONTENT_9",
+          answer: [
+            {
+              label: "SANDBOX_FAQ_ANS_9_LABEL_1",
+              description: "SANDBOX_FAQ_ANS_9_DESCRIPTION_1",
+            },
+            {
+              label: "SANDBOX_FAQ_ANS_9_LABEL_2",
+              description: "SANDBOX_FAQ_ANS_9_DESCRIPTION_2",
+            }
+          ]
+        },
+        {
+          question: "SANDBOX_FAQ_QUES_10",
+          content: "SANDBOX_FAQ_CONTENT_10",
+          answer: [
+            {
+              label: "SANDBOX_FAQ_ANS_10_LABEL_1",
+              description: "SANDBOX_FAQ_ANS_10_DESCRIPTION_1",
+            },
+            {
+              label: "SANDBOX_FAQ_ANS_10_LABEL_2",
+              description: "SANDBOX_FAQ_ANS_10_DESCRIPTION_2",
+            },
+            {
+              label: "SANDBOX_FAQ_ANS_10_LABEL_3",
+              description: "SANDBOX_FAQ_ANS_10_DESCRIPTION_3",
+            },
+            {
+              label: "SANDBOX_FAQ_ANS_10_LABEL_4",
+              description: "SANDBOX_FAQ_ANS_10_DESCRIPTION_4",
+            }
+          ]
+        },
+        {
+          question: "SANDBOX_FAQ_QUES_11",
+          content: "SANDBOX_FAQ_CONTENT_11",
+        },
+        {
+          question: "SANDBOX_FAQ_QUES_12",
+          content: "SANDBOX_FAQ_CONTENT_12",
+        },
+        {
+          question: "SANDBOX_FAQ_QUES_13",
+          content: "SANDBOX_FAQ_CONTENT_13",
+        }     
       ],
     },
   ];
