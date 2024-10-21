@@ -58,7 +58,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     {
       path: pathVar === "boundary/home" ? "" : `/${window?.contextPath}/employee/campaign/boundary/home`,
       content: t("BOUNDARY_DATA_MANAGEMENT"),
-      show: pathVar.match("boundary/home") ? true : false,
+      show: pathVar.match("boundary/") ? true : false,
     },
     {
       path: pathVar === "update-campaign" ? "" : `/${window?.contextPath}/employee/campaign/update-campaign`,
