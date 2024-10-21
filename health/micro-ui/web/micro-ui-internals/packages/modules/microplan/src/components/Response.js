@@ -14,7 +14,7 @@ const Response = () => {
     );
     const { state } = useLocation();
     const back=(state?.back)?state?.back:"BACK";
-    const backlink=(state?.backlink)?(state.back):"employee";
+    const backlink=(state?.backlink)?(state.backlink):"employee";
     return (
         <>
             <PanelCard
