@@ -7,12 +7,12 @@ import { useUserAccessContext } from "./UserAccessWrapper";
 import { useMyContext } from "../utils/context";
 import { useQueryClient } from "react-query";
 
-function RoleTableComposer({nationalRoles}) {
+function RoleTableComposer({ nationalRoles }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const totalFormData = Digit.SessionStorage.get("MICROPLAN_DATA");
-  const selectedData = totalFormData?.BOUNDARY?.boundarySelection?.selectedData ? totalFormData?.BOUNDARY?.boundarySelection?.selectedData : [];
+  const selectedData = totalFormData?.BOUNDARY?.boundarySelection?.selectedData || [];
   const { hierarchyData, category } = useUserAccessContext();
   const { state } = useMyContext();
   const [rowData, setRowData] = useState([]);
@@ -27,8 +27,8 @@ function RoleTableComposer({nationalRoles}) {
   const { mutate: planEmployeeCreate } = Digit.Hooks.microplanv1.usePlanEmployeeCreate();
   const { mutate: planEmployeeUpdate } = Digit.Hooks.microplanv1.usePlanEmployeeUpdate();
 
-
   const topBoundary = state?.boundaryHierarchy.find(boundary => boundary.parentBoundaryType === null);
+  console.log(rowData, 'CHECKING', topBoundary, state?.boundaryHierarchy)
   const { isLoading: isHrmsLoading, data: HrmsData, error: hrmsError, refetch: refetchHrms } = Digit.Hooks.microplanv1.useSearchHRMSEmployee({
     tenantId: tenantId,
     microplanId: microplanId,
@@ -41,12 +41,6 @@ function RoleTableComposer({nationalRoles}) {
       enabled: false,
       select: (data) => {
         const resp = data?.Employees?.map((item, index) => {
-          let selectedHierarchy = state?.boundaryHierarchy?.find(
-            (j) => j.boundaryType === data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.hierarchyLevel
-          )
-          // if(category.startswith("ROOT")){
-          // 
-          // }
           return {
             rowIndex: index + 1,
             name: item?.user?.name,
@@ -54,7 +48,7 @@ function RoleTableComposer({nationalRoles}) {
             number: item?.user?.mobileNumber,
             employeeId: item?.user?.userServiceUuid,
             user: item?.user,
-            selectedHierarchy:
+            selectedHierarchy: nationalRoles?.includes(category) ? topBoundary :
               state?.boundaryHierarchy?.find(
                 (j) => j.boundaryType === data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.hierarchyLevel
               ),
@@ -87,7 +81,7 @@ function RoleTableComposer({nationalRoles}) {
           userServiceUuid: employee?.userServiceUuid,
           selectedHierarchy: employee?.selectedHierarchy || null,
           boundaryOptions: boundaryOptions || [],
-          selectedBoundaries: filteredBoundary.filter((item) => employee?.selectedBoundaries.includes(item.code)) || [],
+          selectedBoundaries: filteredBoundary.filter((item) => employee?.selectedBoundaries?.includes(item?.code)) || [],
         };
       });
 
@@ -116,6 +110,7 @@ function RoleTableComposer({nationalRoles}) {
   //   });
   // };
   const handleHierarchyChange = (value, row) => {
+    console.log("before row change", value, row);
     setRowData((prev) => {
       // Find the existing row by rowIndex
       const existingRow = prev.find((i) => i.rowIndex === row.rowIndex);
@@ -301,32 +296,19 @@ function RoleTableComposer({nationalRoles}) {
     {
       name: "Hierarchy",
       cell: (row) => {
-        return (category in nationalRoles) ? (
-          <Dropdown
-            className="form-field"
-            selected={{ code: topBoundary?.boundaryType }}
-            disable={true}
-            isMandatory={true}
-            option={[{ key: 1, code: topBoundary?.boundaryType }]}
-            select={{ code:topBoundary?.boundaryType  }}
-            optionKey="code"
-            t={t}
-          />
-        ) : (
-          <Dropdown
-            className="roleTableCell"
-            selected={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedHierarchy || null}
-            disable={false}
-            isMandatory={true}
-            option={state?.boundaryHierarchy}
-            select={(value) => {
-              row.selectedHeirarchy = value;
-              handleHierarchyChange(value, row);
-            }}
-            optionKey="boundaryType"
-            t={t}
-          />
-        );
+        return <Dropdown
+          className="roleTableCell"
+          selected={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedHierarchy || null}
+          disabled={nationalRoles?.includes(category) ? true : false}
+          isMandatory={true}
+          option={state?.boundaryHierarchy}
+          select={(value) => {
+            row.selectedHeirarchy = value;
+            handleHierarchyChange(value, row);
+          }}
+          optionKey="boundaryType"
+          t={t}
+        />;
       }
     },
 
