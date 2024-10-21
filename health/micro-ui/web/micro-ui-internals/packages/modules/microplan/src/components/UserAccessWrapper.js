@@ -17,6 +17,10 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
   const [data,setData]=useState(null);
   // vertical stepper array role code fetch and sorted based on orderNumber
   const rolesArray = state?.rolesForMicroplan?.sort((a, b) => a.orderNumber - b.orderNumber).map((item) => item.roleCode);
+  let mpRolesArray=rolesArray.map((item)=>t(`MP_ROLE_${item}`));
+  console.log("rolesArray",rolesArray);
+  console.log("microplanViwer",t("MP_MICROPLAN_VIEWER"));
+
   const nationalRoles=["ROOT_PLAN_ESTIMATION_APPROVER","ROOT_POPULATION_DATA_APPROVER","ROOT_FACILITY_CATCHMENT_MAPPER"]
   const hierarchyData = customProps?.hierarchyData;
   const campaignType = customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code;
@@ -60,6 +64,7 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
   const handleNext = () => {
     setInternalKey((prevKey) => {
       // Check the latest value of internalKey by using prevKey
+      console.log("next",nationalRoles,rolesArray?.[prevKey - 1]);
       if (data === null && nationalRoles.includes(String(rolesArray?.[prevKey - 1]))) {
         setShowErrorToast(true);
         return prevKey; // Keep the same value if condition is true
@@ -125,10 +130,10 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
         <div style={{ display: "flex", gap: "2rem" }}>
           <div className="card-container">
             <Card className="card-header-timeline">
-              <TextBlock subHeader={t("USER_ACCESS_MANAGMNT")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+              <TextBlock subHeader={t("USER_ACCESS_MANAGEMENT")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
             </Card>
             <Card className="stepper-card">
-              <Stepper customSteps={[...rolesArray]} currentStep={internalKey} onStepClick={handleStepClick} direction={"vertical"} />
+              <Stepper customSteps={[...mpRolesArray]} currentStep={internalKey} onStepClick={handleStepClick} direction={"vertical"} />
             </Card>
           </div>
 

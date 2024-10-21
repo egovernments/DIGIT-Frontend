@@ -275,26 +275,26 @@ function RoleTableComposer({ nationalRoles }) {
 
   const columns = [
     {
-      name: "Name",
+      name: t("NAME"),
       selector: (row) => {
         return row.name;
       },
       sortable: true,
     },
     {
-      name: "Email",
+      name: t("EMAIL"),
       selector: (row) => row.email,
       sortable: true,
     },
     {
-      name: "Contact Number",
+      name:t("CONTACT-NUMBER"),
       selector: (row) => {
         return row.number;
       },
       sortable: true,
     },
     {
-      name: "Hierarchy",
+      name: t("HIERARCHY"),
       cell: (row) => {
         return <Dropdown
           className="roleTableCell"
@@ -313,7 +313,7 @@ function RoleTableComposer({ nationalRoles }) {
     },
 
     {
-      name: "Selected Boundary",
+      name: t("SELECTED-BOUNDARY"),
       cell: (row) => (
         <MultiSelectDropdown
           props={{ className: "roleTableCell" }}
@@ -329,7 +329,7 @@ function RoleTableComposer({ nationalRoles }) {
       ),
     },
     {
-      name: "Action",
+      name: t("ACTION"),
       cell: (row) => {
         const isUserAlreadyAssigned = HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.length > 0 ? true : false;
         const isUserAlreadyAssignedActive =

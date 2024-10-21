@@ -64,26 +64,26 @@ function UserAccess({ category,setData,nationalRoles }) {
   };
   const columns = [
     {
-      name: "Name",
+      name: t("NAME"),
       selector: (row) => {
         return row.name;
       },
       sortable: true,
     },
     {
-      name: "Email",
+      name: t("EMAIL"),
       selector: (row) => row.email,
       sortable: true,
     },
     {
-      name: "Contact Number",
+      name: t("CONTACT_NUMBER"),
       selector: (row) => {
         return row.number;
       },
       sortable: true,
     },
     {
-      name: "Adminitrative Heirarchy",
+      name: t("ADMINISTRATIVE-HIERARCHY"),
       selector: (row) => {
         // if (category?.startsWith("ROOT")) {
         //   return "COUNTRY"; // Set to "Country" if true
@@ -95,7 +95,7 @@ function UserAccess({ category,setData,nationalRoles }) {
       sortable: true,
     },
     {
-      name: "Adminitrative Boundary",
+      name: t("ADMINISTRATIVE-BOUNDARY"),
       selector: (row) => {
         return (
           <>
@@ -125,7 +125,7 @@ function UserAccess({ category,setData,nationalRoles }) {
     <>
       <Card style={{ marginBottom: "1rem" }}>
         <Header>{t(category)}</Header>
-        <p className="mp-description">{t(`${category}_DESCRIPTION`)}</p>
+        <p className="mp-description">{t(`DESCRIPTION`)}</p>
       </Card>
 
       {planEmployee?.data?.length > 0 ? (
