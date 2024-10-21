@@ -58,7 +58,7 @@ const MyCampaign = () => {
         break;
       case "CAMPAIGN_DRAFTS":
         if (row?.parentId) {
-          history.push(`/${window.contextPath}/employee/campaign/boundary/update-campaign?parentId=${row.parentId}&id=${row.id}&draft=${true}`);
+          history.push(`/${window.contextPath}/employee/campaign/update-campaign?parentId=${row.parentId}&id=${row.id}&draft=${true}`);
         } else {
           history.push(
             `/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&draft=${true}&fetchBoundary=${true}&draftBoundary=${true}`
