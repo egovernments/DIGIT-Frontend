@@ -10,19 +10,19 @@ const InboxFilterWrapper = (props) => {
     ? { code: Object.keys(props.defaultValue)[0], name: `${t(Object.keys(props.defaultValue)[0])} (${Object.values(props.defaultValue)[0]})` }
     : null;
 
-
   // Initialize state with the default selected option
   const [selectedValue, setSelectedValue] = useState(defaultSelectedOption);
 
-
-  // Update selected value when defaultValue changes
+  // Only update selectedValue when defaultValue from props changes, but not when it's null or undefined
   useEffect(() => {
-    setSelectedValue(defaultSelectedOption);
-  }, [props.defaultValue]);
-
-
-
-
+    if (props.defaultValue && Object.keys(props.defaultValue).length > 0) {
+      const newDefault = {
+        code: Object.keys(props.defaultValue)[0],
+        name: `${t(Object.keys(props.defaultValue)[0])} (${Object.values(props.defaultValue)[0]})`,
+      };
+      setSelectedValue(newDefault);
+    }
+  }, [props.defaultValue, t]);
 
   const createArrayFromObject = (obj, t) => {
     if (!obj || typeof obj !== "object" || Object.keys(obj).length === 0 || typeof t !== "function") {
@@ -51,7 +51,7 @@ const InboxFilterWrapper = (props) => {
 
   // Clear filters when the user presses the secondary action button
   const clearFilters = () => {
-    setSelectedValue(null);
+    setSelectedValue(selectedValue); // Clear the selection
     if (props.clearFilters) {
       props.clearFilters();
     }
@@ -73,7 +73,7 @@ const InboxFilterWrapper = (props) => {
           <RadioButtons
             options={resultArray}
             optionsKey={"name"} // Use "name" key for display
-            selectedOption={selectedValue} // Pass current selected option
+            selectedOption={selectedValue?.code} // Pass current selected option's code for comparison
             style={{
               display: "flex",
               flexDirection: "column",
