@@ -50,7 +50,7 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
     Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: false });
     Digit.Utils.microplanv1.updateUrlParams({ internalKey: internalKey });
   };
-
+  
   const updateUrlParams = (params) => {
     const url = new URL(window.location.href);
     Object.entries(params).forEach(([key, value]) => {
@@ -165,7 +165,7 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
       {showErrorToast && (
         <Toast
           type={"error"} // Adjust based on your needs
-          label={"EMPLOYESS_NOT_FOUND"}
+          label={t("EMPLOYESS_NOT_FOUND")}
           onClose={() => {
             setShowErrorToast(false);
           }}

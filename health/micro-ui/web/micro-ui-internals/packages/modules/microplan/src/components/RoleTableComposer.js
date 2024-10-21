@@ -285,7 +285,7 @@ function RoleTableComposer({ nationalRoles }) {
       sortable: true,
     },
     {
-      name:t("CONTACT-NUMBER"),
+      name:t("CONTACT_NUMBER"),
       selector: (row) => {
         return row.number;
       },
@@ -311,7 +311,7 @@ function RoleTableComposer({ nationalRoles }) {
     },
 
     {
-      name: t("SELECTED-BOUNDARY"),
+      name: t("SELECTED_BOUNDARY"),
       cell: (row) => (
         <MultiSelectDropdown
           props={{ className: "roleTableCell" }}

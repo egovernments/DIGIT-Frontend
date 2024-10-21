@@ -83,7 +83,7 @@ function UserAccess({ category,setData,nationalRoles }) {
       sortable: true,
     },
     {
-      name: t("ADMINISTRATIVE-HIERARCHY"),
+      name: t("ADMINISTRATIVE_HIERARCHY"),
       selector: (row) => {
         // if (category?.startsWith("ROOT")) {
         //   return "COUNTRY"; // Set to "Country" if true
@@ -95,7 +95,7 @@ function UserAccess({ category,setData,nationalRoles }) {
       sortable: true,
     },
     {
-      name: t("ADMINISTRATIVE-BOUNDARY"),
+      name: t("ADMINISTRATIVE_BOUNDARY"),
       selector: (row) => {
         return (
           <>
@@ -125,7 +125,7 @@ function UserAccess({ category,setData,nationalRoles }) {
     <>
       <Card style={{ marginBottom: "1rem" }}>
         <Header>{t(category)}</Header>
-        <p className="mp-description">{t(`DESCRIPTION`)}</p>
+        <p className="mp-description">{t(`${category}_DESCRIPTION`)}</p>
       </Card>
 
       {planEmployee?.data?.length > 0 ? (
