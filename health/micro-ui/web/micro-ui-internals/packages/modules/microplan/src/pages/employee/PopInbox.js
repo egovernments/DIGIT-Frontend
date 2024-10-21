@@ -159,6 +159,7 @@ const PopInbox = () => {
       if ((selectedFilter === null || selectedFilter === undefined) && selectedFilter !== '') {
         setSelectedFilter(Object.entries(data?.StatusCount)?.[0]?.[0])
       }
+      setVillagesSelected(0);
     }
   }, [data, selectedFilter]);
 
