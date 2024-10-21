@@ -58,17 +58,12 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
   };
 
   const handleNext = () => {
-    console.log("this is next")
     setInternalKey((prevKey) => {
       // Check the latest value of internalKey by using prevKey
       if (data === null && nationalRoles.includes(String(rolesArray?.[prevKey - 1]))) {
         setShowErrorToast(true);
-        console.log("datatatat",data,rolesArray?.[prevKey - 1]);
         return prevKey; // Keep the same value if condition is true
       } else {
-        console.log("passed",data,rolesArray?.[prevKey - 1] in nationalRoles,data === null,String(rolesArray?.[prevKey - 1]),nationalRoles);
-        console.log(String(rolesArray?.[prevKey - 1]))
-        console.log (nationalRoles);
         return prevKey + 1; // Increment internalKey if condition is false
       }
     });
