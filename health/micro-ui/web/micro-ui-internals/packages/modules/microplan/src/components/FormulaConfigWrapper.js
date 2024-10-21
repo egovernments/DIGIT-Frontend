@@ -225,7 +225,6 @@ const handleStepClick = (step)=>{
    };
  }, [formulaInternalKey]);
 
- useEffect(() => {
    useEffect(() => {
      window.addEventListener("isFormulaLastStep", isFormulaLastStep);
      return () => {
@@ -435,7 +434,7 @@ return (
 
 
 
-
+  
 }
 
 

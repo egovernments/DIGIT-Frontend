@@ -490,6 +490,10 @@ const createUpdatePlanProject = async (req) => {
             // "verificationDocuments": null,
             // "rating": null
           },
+          additionalDetails:{
+            ...fetchedPlanForSummary.additionalDetails,
+            setupCompleted:true,//we can put this in url when we come from microplan search screen to disable routing to other screens -> Only summary screen should show, or only allowed screens should show
+          }
         };
       const planResForCompleteSetup = await updatePlan(updatedReqForCompleteSetup);
       //here do cleanup activity and go to next screen
