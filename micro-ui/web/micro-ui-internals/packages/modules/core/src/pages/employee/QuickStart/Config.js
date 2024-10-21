@@ -80,13 +80,24 @@ const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...
       type: "faqs",
       actions: [
         {
+          question: "SANDBOX_FAQ_QUES_14",
+          isLabelLink: true,
+          answer: [
+            {
+              label: "SANDBOX_FAQ_ANS_14_LABEL_1",
+              fulllink:true,
+              link:"https://egov-digit.gitbook.io/digit-sandbox/specifications/user-manual/walkthrough-videos",
+            }
+          ]
+        },
+        {
           question: "SANDBOX_FAQ_QUES_1",
           content: "SANDBOX_FAQ_CONTENT_1",
           isLabelLink: true,
           answer: [
             {
               label: "SANDBOX_FAQ_ANS_1_LABEL_1",
-              link:"citizen/all-services",
+              link:"citizen/login",
               description: "SANDBOX_FAQ_ANS_1_DESCRIPTION_1",
             },
             {
@@ -173,6 +184,10 @@ const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...
             {
               label: "SANDBOX_FAQ_ANS_5_LABEL_4",
               description: "SANDBOX_FAQ_ANS_5_DESCRIPTION_4",
+            },
+            {
+              label: "SANDBOX_FAQ_ANS_5_LABEL_5",
+              description: "SANDBOX_FAQ_ANS_5_DESCRIPTION_5",
             }
           ]
         },

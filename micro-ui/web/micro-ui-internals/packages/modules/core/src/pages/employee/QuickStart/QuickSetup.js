@@ -1,7 +1,7 @@
 import React from "react";
 import{ useState } from "react";
 import { useTranslation } from "react-i18next";
-import { CardText, CardHeader, LinkLabel, Card } from "@egovernments/digit-ui-components";
+import { CardText, CardHeader, LinkLabel, Card, Button } from "@egovernments/digit-ui-components";
 import { ArrowForward } from "@egovernments/digit-ui-svg-components";
 import { CardSubHeader, CardSectionHeader, BreakLine, CardSectionSubText } from "@egovernments/digit-ui-react-components";
 
@@ -11,12 +11,6 @@ const FaqComponent = (props) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getStateId();
   const ListTag = type === "number" ? "ol" : "ul";
-  const handleClick = (e, link) => {
-    e.stopPropagation(); // Stop the event from bubbling up to the parent div
-    if (link) {
-      window.open(link, '_blank', 'noopener noreferrer');
-    }
-  };
   return (
     <div className="faqs border-none" onClick={() => toggleOpen(!isOpen)}>
       <div className="faq-question" style={{ justifyContent: "space-between", display: "flex" }}>
@@ -34,13 +28,21 @@ const FaqComponent = (props) => {
             <li key={index} style={{ listStyleType: ListTag === "ul" ? "disc" : "auto", margin: "8px 0" }}>
               {isLabelLink ? (
                 action?.label ? (
-                  <a
-                  className="quickLink"
-                  href="#"
-                  onClick={(e) => handleClick(e, `${window.location.host}/${window?.globalPath}/${tenantId}/${action?.link}`)}
-                >
-                  {t(action?.label)}:
-                </a>
+                  <Button
+                  variation="teritiary"
+                  label={t(action?.label)}                  
+                  type="button"
+                  size={"medium"}
+                  onClick={() => {
+                    if (action?.fulllink) {
+                      window.open(action?.link, "_blank");
+                    } else {
+                      const baseURL = `https://${window.location.hostname}/${window?.globalPath}/${tenantId}`;
+                      window.open(`${baseURL}/${action?.link}`, "_blank");
+                    }
+                  }}
+                  style={{ padding: "0px" }}
+                />
                 ) : null
               ) : (
                 action?.label ? <strong>{t(action?.label)}:</strong> : null
