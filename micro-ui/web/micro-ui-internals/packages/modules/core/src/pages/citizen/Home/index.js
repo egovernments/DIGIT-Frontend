@@ -17,7 +17,7 @@ import { useHistory } from "react-router-dom";
 const Home = () => {
   const { t } = useTranslation();
   const history = useHistory();
-  const tenantId = Digit.ULBService.getCitizenCurrentTenant(true);
+  const tenantId = Digit.Utils.getMultiRootTenant()? Digit.ULBService.getStateId() : Digit.ULBService.getCitizenCurrentTenant(true);
   const {
     data: { stateInfo, uiHomePage } = {},
     isLoading,
