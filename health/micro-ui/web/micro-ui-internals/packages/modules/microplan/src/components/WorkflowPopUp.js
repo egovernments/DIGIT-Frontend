@@ -5,13 +5,13 @@ import { useMyContext } from "../utils/context"; // Ensure that the translation 
 
 
 {/* use this component for comment like this
-    <ApprovePopUp
+    <WorkflowPopUp
     onClose={() => setShowPopup(false)}
     onSubmit={(comment) => console.log("Submitted comment:", comment)}
     census={censusData}
 /> */}
 
-const ApprovePopUp = ({ onClose, onSubmit, census }) => {
+const WorkflowPopUp = ({ onClose, onSubmit, heading }) => {
     const { state } = useMyContext(); // Extract state from context
     const { t } = useTranslation();
 
@@ -52,7 +52,7 @@ const ApprovePopUp = ({ onClose, onSubmit, census }) => {
     return (
         <PopUp
             onClose={onClose}
-            heading={t(`HCM_MICROPLAN_SEND_FOR_APPROVAL_LABEL`)}
+            heading={t(heading)}
             children={[
                 <div>
                     <div key="comment-section" className="comment-label">
@@ -101,4 +101,4 @@ const ApprovePopUp = ({ onClose, onSubmit, census }) => {
     );
 };
 
-export default ApprovePopUp;
+export default WorkflowPopUp;
