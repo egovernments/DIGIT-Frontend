@@ -76,6 +76,7 @@ export const CitizenSideBar = ({
   islinkDataLoading,
   userProfile,
 }) => {
+  const isMultiRootTenant=Digit.Utils.getMultiRootTenant()
   const { data: storeData, isFetched } = Digit.Hooks.useStore.getInitData();
   const selectedLanguage = Digit.StoreData.getCurrentLanguage();
   const [profilePic, setProfilePic] = useState(null);
@@ -182,7 +183,13 @@ export const CitizenSideBar = ({
   }
 
   const redirectToLoginPage = () => {
-    history.push(`/${window?.contextPath}/employee/user/language-selection`);
+    if(isEmployee){
+      history.push(`/${window?.contextPath}/employee/user/language-selection`);
+    }
+    else{
+      history.push(`/${window?.contextPath}/citizen/login`);
+
+    }
     closeSidebar();
   };
 
@@ -322,7 +329,13 @@ export const CitizenSideBar = ({
     icon: item?.icon ? item?.icon : undefined
   }));
 
-  const city =  t(`TENANT_TENANTS_${stringReplaceAll(Digit.SessionStorage.get("Employee.tenantId"), ".", "_")?.toUpperCase()}`)
+  let city="";
+  if(Digit.Utils.getMultiRootTenant()){
+    city =  t(`TENANT_TENANTS_${tenantId}`)
+  }
+  else{
+    city =  t(`TENANT_TENANTS_${stringReplaceAll(Digit.SessionStorage.get("Employee.tenantId"), ".", "_")?.toUpperCase()}`)
+  }
   const goToHome= () => {
     if(isEmployee){
       history.push(`/${window?.contextPath}/employee`);
