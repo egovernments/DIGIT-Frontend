@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import _ from "lodash";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback} from "react";
 import { useHistory, useLocation } from 'react-router-dom';
 import { Fragment } from "react";
 import { Button, PopUp, Switch, Tooltip, TooltipWrapper } from "@egovernments/digit-ui-components";
@@ -18,8 +18,29 @@ const inboxModuleNameMap = {};
 
 // const 
 // const [campaignName, setCampaignName] = useState(null);
-const apiCache = {};
 const rowDataCache = {};
+const apiCache = {};
+
+// // Batch API request function
+// const batchFetchServiceDefinitions = async (serviceCodes, tenantId) => {
+//   try {
+//     const res = await Digit.CustomService.getResponse({
+//       url: "/service-request/service/definition/v1/_search",
+//       params: {},
+//       body: {
+//         ServiceDefinitionCriteria: {
+//           "tenantId": tenantId,
+//           "code": serviceCodes
+//         },
+//         includeDeleted: true
+//       },
+//     });
+//     return res;
+//   } catch (error) {
+//     console.error("Error fetching batch data:", error);
+//     return null;
+//   }
+// };
 
 
 export const UICustomizations = {
@@ -48,6 +69,7 @@ export const UICustomizations = {
 
 
     additionalCustomizations: (row, key, column, value, searchResult) => {
+      console.log("the row is", row);
       const { t } = useTranslation();
       const history = useHistory();
       const location = useLocation();
@@ -205,6 +227,173 @@ export const UICustomizations = {
           return value;
       }
     },
+
+    // additionalCustomizations: (row, key, column, value, searchResult) => {
+    //   const { t } = useTranslation();
+    //   const history = useHistory();
+    //   const location = useLocation();
+    //   const searchParams = new URLSearchParams(location.search);
+    //   const campaignName = searchParams.get("name");
+    //   const tenantId = Digit.ULBService.getCurrentTenantId();
+
+    //   const cl_code = row?.data?.checklistType.replace("HCM_CHECKLIST_TYPE_", "");
+    //   const role_code = row?.data?.role.replace("ACCESSCONTROL_ROLES_ROLES_", "");
+    //   const serviceCode = `${campaignName}.${cl_code}.${role_code}`;
+
+    //   const [serviceData, setServiceData] = useState(() => 
+    //     apiCache[serviceCode] || { isLoading: true, isActive: false, attributes: null }
+    //   );
+
+    //   const fetchServiceDefinition = useCallback(async () => {
+    //     if (apiCache[serviceCode] && !apiCache[serviceCode].isLoading) {
+    //       return apiCache[serviceCode];
+    //     }
+
+    //     try {
+    //       const res = await Digit.CustomService.getResponse({
+    //         url: "/service-request/service/definition/v1/_search",
+    //         params: {},
+    //         body: {
+    //           ServiceDefinitionCriteria: {
+    //             "tenantId": tenantId,
+    //             "code": [serviceCode]
+    //           },
+    //           includeDeleted: true
+    //         },
+    //       });
+
+    //       const newData = res?.ServiceDefinitions?.[0] 
+    //         ? { 
+    //             isLoading: false, 
+    //             isActive: res.ServiceDefinitions[0].isActive, 
+    //             attributes: res.ServiceDefinitions[0].attributes 
+    //           }
+    //         : { isLoading: false, isActive: false, attributes: null };
+
+    //       apiCache[serviceCode] = newData;
+    //       return newData;
+    //     } catch (error) {
+    //       console.error("Error fetching service definition:", error);
+    //       apiCache[serviceCode] = { isLoading: false, isActive: false, attributes: null, error: true };
+    //       return apiCache[serviceCode];
+    //     }
+    //   }, [serviceCode, tenantId]);
+
+    //   useEffect(() => {
+    //     if (serviceData.isLoading) {
+    //       fetchServiceDefinition().then(setServiceData);
+    //     }
+    //   }, [fetchServiceDefinition, serviceData.isLoading]);
+
+    //   const updateServiceDefinition = async (newStatus) => {
+    //     try {
+    //       const res = await Digit.CustomService.getResponse({
+    //         url: "/service-request/service/definition/v1/_update",
+    //         body: {
+    //           ServiceDefinition: {
+    //             "tenantId": tenantId,
+    //             "code": serviceCode,
+    //             "isActive": newStatus
+    //           },
+    //         },
+    //       });
+    //       if (res) {
+    //         const updatedData = { ...apiCache[serviceCode], isActive: newStatus };
+    //         apiCache[serviceCode] = updatedData;
+    //         setServiceData(updatedData);
+    //       }
+    //       return res;
+    //     } catch (error) {
+    //       console.error("Error updating service definition:", error);
+    //       return null;
+    //     }
+    //   };
+
+    //   if (serviceData.isLoading) {
+    //     return <div>Loading...</div>;
+    //   }
+
+    //   if (serviceData.error) {
+    //     return <div>Error loading data</div>;
+    //   }
+
+    //   switch (key) {
+    //     case "CHECKLIST_ROLE":
+    //       let str = row?.data?.role;
+    //       if (!str.startsWith("ACCESSCONTROL_ROLES_ROLES_")) {
+    //         str = "ACCESSCONTROL_ROLES_ROLES_" + str;
+    //       }
+    //       return t(str);
+    //     case "CHECKLIST_TYPE":
+    //       let str1 = row?.data?.checklistType;
+    //       if (!str1.startsWith("HCM_CHECKLIST_TYPE_")) {
+    //         str1 = "HCM_CHECKLIST_TYPE_" + str1;
+    //       }
+    //       return t(str1);
+    //     case "STATUS":
+    //       return (
+    //         <Switch
+    //           isCheckedInitially={serviceData.isActive}
+    //           label={serviceData.isActive ? "Active" : "Inactive"}
+    //           onToggle={() => updateServiceDefinition(!serviceData.isActive)}
+    //         />
+    //       );
+    //     case "ACTION":
+    //       return (
+    //         <Button
+    //           type="button"
+    //           size="medium"
+    //           icon="View"
+    //           variation="secondary"
+    //           label={t(serviceData.attributes ? "VIEW" : "CREATE")}
+    //           onClick={() => {
+    //             const path = serviceData.attributes ? 'view' : 'create';
+    //             history.push(`/${window.contextPath}/employee/campaign/checklist/${path}?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}`);
+    //           }}
+    //         />
+    //       );
+    //     default:
+    //       return value;
+    //   }
+    // },
+    // additionalCustomizations: (row, key, column, value, searchResult) => {
+    //   const serviceData = row.serviceDefinition;
+  
+    //   switch (key) {
+    //     case "CHECKLIST_ROLE":
+    //       return t(row.role);
+    //     case "CHECKLIST_TYPE":
+    //       return t(row.checklistType);
+    //     case "STATUS":
+    //       return (
+    //         <Switch
+    //           isCheckedInitially={serviceData.isActive}
+    //           label={serviceData.isActive ? "Active" : "Inactive"}
+    //           onToggle={() => updateServiceDefinition(row.serviceCode, !serviceData.isActive)}
+    //         />
+    //       );
+    //     case "ACTION":
+    //       return (
+    //         <Button
+    //           type="button"
+    //           size="medium"
+    //           icon="View"
+    //           variation="secondary"
+    //           label={t(serviceData.attributes ? "VIEW" : "CREATE")}
+    //           onClick={() => {
+    //             const path = serviceData.attributes ? 'view' : 'create';
+    //             history.push(`/${window.contextPath}/employee/campaign/checklist/${path}?campaignName=${campaignName}&role=${row.role}&checklistType=${row.checklistType}`);
+    //           }}
+    //         />
+    //       );
+    //     default:
+    //       return value;
+    //   }
+    // }
+  
+    // if (isLoading) return <div>Loading...</div>;
+    // if (error) return <div>Error loading data</div>;
+    
   },
   MyBoundarySearchConfig: {
     preProcess: (data, additionalDetails) => {

@@ -55,57 +55,57 @@ const CreateChecklist = () => {
   let data_mdms = []
   let template_data = []
   // const urlMd = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH");
-  const reqCriteriaResource = {
-    url: `/mdms-v2/v2/_search`,
-    // url: `/${urlMd}/v2/_search`,
-    body: {
-      MdmsCriteria: {
-        tenantId: tenantId,
-        // schemaCode: "HCMadminconsole.checklisttemplates"
-        schemaCode: "HCM-ADMIN-CONSOLE.ChecklistTemplates_DEMO2"
-      }
-    },
-    config: {
-      enabled: true,
-      select: (data) => {
-        return data?.mdms?.[0]?.data?.data;
-      },
-    },
-    // changeQueryName:"checklsit template "
-  };
-  const { isLoading, data: mdms, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
-  const reqCriteria = {
+  // const reqCriteriaResource = {
+  //   url: `/mdms-v2/v2/_search`,
+  //   // url: `/${urlMd}/v2/_search`,
+  //   body: {
+  //     MdmsCriteria: {
+  //       tenantId: tenantId,
+  //       // schemaCode: "HCMadminconsole.checklisttemplates"
+  //       schemaCode: "HCM-ADMIN-CONSOLE.ChecklistTemplates_DEMO2"
+  //     }
+  //   },
+  //   config: {
+  //     enabled: true,
+  //     select: (data) => {
+  //       return data?.mdms?.[0]?.data?.data;
+  //     },
+  //   },
+  //   // changeQueryName:"checklsit template "
+  // };
+  // const { isLoading, data: mdms, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
+  // const reqCriteria = {
 
-    url: `/localization/messages/v1/_search`,
-    body: {
-      tenantId: tenantId
-    },
-    params: {
-      locale: "en_MZ",
-      tenantId: tenantId,
-      module: "hcm-campaignmanager"
-    },
-  }
-  const { isLoading1, data: localization, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqCriteria);
-  useEffect(() => {
-    if (localization?.messages?.length > 0) {
-      let matchedItem = localization.messages.find(item => item.message === checklistType);
-      // If a match is found, assign the 'code' to 'checklistcode'
-      if (matchedItem) {
-        let code = matchedItem.code;
-        let res = code.replace("HCM_CHECKLIST_TYPE_", "");
-        setChecklistTypeCode(res);
-      } else {
-      }
-    } else {
-    }
+  //   url: `/localization/messages/v1/_search`,
+  //   body: {
+  //     tenantId: tenantId
+  //   },
+  //   params: {
+  //     locale: "en_MZ",
+  //     tenantId: tenantId,
+  //     module: "hcm-campaignmanager"
+  //   },
+  // }
+  // const { isLoading1, data: localization, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  // useEffect(() => {
+  //   if (localization?.messages?.length > 0) {
+  //     let matchedItem = localization.messages.find(item => item.message === checklistType);
+  //     // If a match is found, assign the 'code' to 'checklistcode'
+  //     if (matchedItem) {
+  //       let code = matchedItem.code;
+  //       let res = code.replace("HCM_CHECKLIST_TYPE_", "");
+  //       setChecklistTypeCode(res);
+  //     } else {
+  //     }
+  //   } else {
+  //   }
 
-  }, [localization])
+  // }, [localization])
 
 
-  useEffect(() => {
-    if (data_mdms && data_mdms.length != 0) template_data = data_mdms;
-  }, [mdms])
+  // useEffect(() => {
+  //   if (data_mdms && data_mdms.length != 0) template_data = data_mdms;
+  // }, [mdms])
 
   module = "hcm-checklist";
   const { mutateAsync: localisationMutateAsync } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, locale);
@@ -128,7 +128,7 @@ const CreateChecklist = () => {
           MdmsCriteria: {
             tenantId: tenantId,
             // schemaCode: "HCMadminconsole.checklisttemplates"
-            schemaCode: "HCM-ADMIN-CONSOLE.ChecklistTemplates_DEMO2",
+            schemaCode: "HCM-ADMIN-CONSOLE.Checklist-Templates",
             filters: {
               role: role,
               checklistType: checklistType
@@ -199,46 +199,7 @@ const CreateChecklist = () => {
     setPreviewData(pr);
     setShowPopUp(!showPopUp);
   };
-
-
-  // const [clearTrigger, setClearTrigger] = useState(false);
-  // const [idd, setIdd] = useState(crypto.randomUUID());
-
-  // const clearData = useCallback(() => {
-  //   const newId = crypto.randomUUID();
-  //   setIdd(newId);
-  //   const cleared_data = [{
-  //     id: newId,
-  //     parentId: null,
-  //     level: 1,
-  //     key: 1,
-  //     title: null,
-  //     type: { "code": "SingleValueList" },
-  //     value: null,
-  //     isRequired: false,
-  //     options: [{
-  //       id: crypto.randomUUID(),
-  //       key: 1,
-  //       parentQuestionId: newId,
-  //       label: "OPTION",
-  //       optionDependency: false,
-  //       optionComment: false,
-  //     }]
-  //   }];
-  //   localStorage.removeItem("questions");
-  //   setConfig(checklistCreateConfig(cleared_data, new Date()));
-  //   setTempFormData([]);
-  //   setTempFormData1([]);
-  //   setPreviewData([]);
-  //   setClearTrigger(true);
-  // }, []);
-
-  // useEffect(() => {
-  //   if (clearTrigger) {
-  //     // Reset the trigger after the effect has run
-  //     setClearTrigger(false);
-  //   }
-  // }, [clearTrigger]);
+  
 
   const clearData = () => {
     const currentTime = new Date();
@@ -266,7 +227,7 @@ const CreateChecklist = () => {
     setConfig(checklistCreateConfig(cleared_data, currentTime));
   }
 
-  const { defaultData, setDefaultData } = data_hook();
+  // const { defaultData, setDefaultData } = data_hook();
 
   const useTemplateData = () => {
     const currentTime = new Date();
