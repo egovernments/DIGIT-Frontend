@@ -1,8 +1,8 @@
 import React, { useState, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { PopUp, Button, Tab, CheckBox, Card } from "@egovernments/digit-ui-components";
+import { PopUp, Button, Tab, CheckBox, Card, Toast } from "@egovernments/digit-ui-components";
 import SearchJurisdiction from "./SearchJurisdiction";
-import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
+import { LoaderWithGap, Loader } from "@egovernments/digit-ui-react-components";
 import DataTable from "react-data-table-component";
 
 
@@ -14,7 +14,8 @@ const FacilityPopUp = ({ details, onClose }) => {
   const currentUserUuid = Digit.UserService.getUser().info.uuid;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [facilityAssignedStatus, setFacilityAssignedStatus] = useState(false);
-  const { planConfigurationId, campaignId } = Digit.Hooks.useQueryParams();
+  const { microplanId, campaignId } = Digit.Hooks.useQueryParams();
+  const [tableLoader, setTableLoader] = useState(false);
   const [jurisdiction, setJurisdiction] = useState({});
   const [boundaries, setBoundaries] = useState({});
   const [searchKey, setSearchKey] = useState(0); // Key for forcing re-render of SearchJurisdiction
@@ -22,6 +23,7 @@ const FacilityPopUp = ({ details, onClose }) => {
   const [selectedRows, setSelectedRows] = useState([]); // State for selected rows
   const [isAllSelected, setIsAllSelected] = useState(false);
   const [censusData, setCensusData] = useState([]);
+  const [showToast, setShowToast] = useState(null);
 
   const [activeLink, setActiveLink] = useState({
     code: microplanUnassignedMessage,
@@ -45,12 +47,14 @@ const FacilityPopUp = ({ details, onClose }) => {
   };
 
 
+
+
   const { data: planEmployeeDetailsData, isLoading: isLoadingPlanEmployee } = Digit.Hooks.microplanv1.usePlanSearchEmployee({
     tenantId: tenantId,
     body: {
       PlanEmployeeAssignmentSearchCriteria: {
         tenantId: tenantId,
-        planConfigurationId: planConfigurationId,
+        planConfigurationId: microplanId,
         employeeId: [currentUserUuid],
       },
     },
@@ -77,22 +81,16 @@ const FacilityPopUp = ({ details, onClose }) => {
   }, [campaignData]);
 
   useEffect(() => {
-    censusSearch([]);
-  }, [planConfigurationId, facilityAssignedStatus]);
+    var jurisdictionArray = [];
+    const jurisdictionObject = {
+      boundaryType: planEmployeeDetailsData?.PlanEmployeeAssignment?.[0]?.hierarchyLevel,
+      boundaryCodes: planEmployeeDetailsData?.PlanEmployeeAssignment?.[0]?.jurisdiction,
+    };
+    setJurisdiction(jurisdictionObject);
+    jurisdictionArray = planEmployeeDetailsData?.PlanEmployeeAssignment?.[0]?.jurisdiction?.map((item) => { return { code: item } });
+    censusSearch(jurisdictionArray);
+  }, [microplanId, facilityAssignedStatus, details, planEmployeeDetailsData]);
 
-  // Update jurisdiction when planEmployeeDetailsResponse is available
-  useEffect(() => {
-    const planEmployeeAssignment = planEmployeeDetailsData?.PlanEmployeeAssignment?.[0];
-    if (planEmployeeAssignment) {
-      const jurisdictionObject = {
-        boundaryType: planEmployeeAssignment?.hierarchyLevel,
-        boundaryCodes: planEmployeeAssignment?.jurisdiction,
-      };
-      setJurisdiction(jurisdictionObject);
-    }
-  }, [planEmployeeDetailsData]);
-
-  // Trigger re-render of SearchJurisdiction whenever boundaries or jurisdiction changes
   useEffect(() => {
     if (boundaries || jurisdiction) {
       setSearchKey((prevKey) => prevKey + 1); // Increment key to force re-render
@@ -104,7 +102,7 @@ const FacilityPopUp = ({ details, onClose }) => {
     body: {
       CensusSearchCriteria: {
         tenantId: tenantId,
-        source: planConfigurationId,
+        source: microplanId,
         facilityAssigned: facilityAssignedStatus,
         jurisdiction: null
       }
@@ -115,14 +113,16 @@ const FacilityPopUp = ({ details, onClose }) => {
 
 
   const censusSearch = async (data) => {
-    const codeArray = data.map((item) => item.code);
-    // setSearchJurisdictionArray(codeArray);
+    setTableLoader(true);
+    const codeArray = data?.length === 0
+      ? planEmployeeDetailsData?.PlanEmployeeAssignment?.[0]?.jurisdiction?.map((item) => item) || []
+      : data?.map((item) => item?.code);
     await mutationForCensusSearch.mutate(
       {
         body: {
           CensusSearchCriteria: {
             tenantId: tenantId,
-            source: planConfigurationId,
+            source: microplanId,
             facilityAssigned: facilityAssignedStatus,
             jurisdiction: codeArray
           }
@@ -140,13 +140,15 @@ const FacilityPopUp = ({ details, onClose }) => {
         },
         onError: (result) => {
           // setDownloadError(true);
-          // setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+          setShowToast({ key: "error", label: t("ERROR_WHILE_CENSUSSEARCH"), transitionTime: 5000 });
         },
       }
     );
     setSelectedRows([]);
     setIsAllSelected(false);
-  };
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    setTableLoader(false);
+  }
 
   useEffect(() => {
     if (isLoadingPlanEmployee || isLoadingCampaign) {
@@ -202,6 +204,36 @@ const FacilityPopUp = ({ details, onClose }) => {
       sortable: false,
     },
     {
+      name: t("MP_VILLAGE_ACCESSIBILITY_LEVEL"), // Change to your column type
+      cell: (row) => (
+        <span>
+          <a 
+            href="#" 
+            style={{ color: "#f47738", textDecoration: "underline" }}
+            onClick={() => handleViewDetails(row)} // Same function for handling details
+          >
+            {t("VIEW_DETAILS")}
+          </a>
+        </span>
+      ), // Replace with the appropriate field from your data
+      sortable: false,
+    },
+    {
+      name: t("MP_VILLAGE_SECURITY_LEVEL"), // Change to your column type
+      cell: (row) => (
+        <span>
+          <a 
+            href="#" 
+            style={{ color: "#f47738", textDecoration: "underline" }}
+            onClick={() => handleViewDetails(row)} // Same function for handling details
+          >
+            {t("VIEW_DETAILS")}
+          </a>
+        </span>
+      ), // Replace with the appropriate field from your data
+      sortable: false,
+    },
+    {
       name: t("MP_FACILITY_TOTALPOPULATION"), // Change to your column type
       selector: (row) => row.totalPopulation, // Replace with the appropriate field from your data
       sortable: false,
@@ -218,31 +250,46 @@ const FacilityPopUp = ({ details, onClose }) => {
 
   const mutationForPlanFacilityUpdate = Digit.Hooks.useCustomAPIMutationHook(planFacilityUpdateMutaionConfig);
 
-  const handleAssignUnassign = () => {
+  const handleAssignUnassign = async () => {
     // Fetching the full data of selected rows
+    setLoader(true);
     const selectedRowData = censusData.filter(row => selectedRows.includes(row.id));
+    var newDetails = JSON.parse(JSON.stringify(details));
     if (facilityAssignedStatus) {
       const boundarySet = new Set(selectedRowData.map((row) => {
         return row.boundaryCode
       }))
-      const filteredBoundaries = details?.serviceBoundaries?.filter((boundary) => {
+      const filteredBoundaries = newDetails?.serviceBoundaries?.filter((boundary) => {
         return !boundarySet.has(boundary)
       })
-      details.serviceBoundaries = filteredBoundaries
+      // TODO : remove this logic
+      filteredBoundaries.forEach((boundary) => {
+        if (boundary[0] === " ") {
+          boundary = boundary.slice(1);
+        }
+      })
+      newDetails.serviceBoundaries = filteredBoundaries
+      // TODO : remove this logic
+      newDetails.serviceBoundaries = Array.from(new Set(newDetails.serviceBoundaries.map(boundary => boundary[0] === " " ? boundary.slice(1) : boundary)));
+
+
     }
     else {
       const boundarySet = new Set(selectedRowData.map((row) => {
         return row.boundaryCode;
       }));
       const filteredBoundaries = [...boundarySet].filter(boundary =>
-        !details.serviceBoundaries.includes(boundary)
+        !newDetails.serviceBoundaries.includes(boundary)
       );
-      details.serviceBoundaries = details?.serviceBoundaries?.concat(filteredBoundaries);
+      newDetails.serviceBoundaries = newDetails?.serviceBoundaries?.concat(filteredBoundaries);
+      // TODO : remove this logic
+      newDetails.serviceBoundaries = Array.from(new Set(newDetails.serviceBoundaries.map(boundary => boundary[0] === " " ? boundary.slice(1) : boundary)));
+
     }
-    mutationForPlanFacilityUpdate.mutate(
+    await mutationForPlanFacilityUpdate.mutate(
       {
         body: {
-          PlanFacility: details
+          PlanFacility: newDetails
         },
       },
       {
@@ -252,12 +299,13 @@ const FacilityPopUp = ({ details, onClose }) => {
         },
         onError: (result) => {
           // setDownloadError(true);
-          // setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+          setShowToast({ key: "error", label: t("ERROR_WHILE_UPDATING_PLANFACILITY"), transitionTime: 5000 });
         },
       }
     );
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    setLoader(false);
   };
-
 
   return (
     <>
@@ -298,6 +346,7 @@ const FacilityPopUp = ({ details, onClose }) => {
                   jurisdiction={jurisdiction}
                   onSubmit={censusSearch}
                   style={{ border: "1px solid black", padding: "10px" }}
+                  onClear={() => censusSearch([])}
                 />
               </div>
               <div className="card-container" style={{ border: "1px solid #D6D5D4", borderRadius: "3px" }}>
@@ -317,7 +366,7 @@ const FacilityPopUp = ({ details, onClose }) => {
                     />
                   </div>
                 )}
-                {censusData && (
+                {tableLoader ? <Loader /> : censusData && (
                   <DataTable
                     columns={columns}
                     data={censusData}
@@ -331,6 +380,14 @@ const FacilityPopUp = ({ details, onClose }) => {
                   />
                 )}
               </div>
+              {showToast && (
+                <Toast
+                  type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
+                  label={t(showToast.label)}
+                  transitionTime={showToast.transitionTime}
+                  onClose={() => setShowToast(null)}
+                />
+              )}
             </div>,
           ]}
           onOverlayClick={onClose}
