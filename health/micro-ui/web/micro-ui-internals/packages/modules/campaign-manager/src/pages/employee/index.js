@@ -59,6 +59,11 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       path: pathVar === "boundary/home" ? "" : `/${window?.contextPath}/employee/campaign/boundary/home`,
       content: t("BOUNDARY_DATA_MANAGEMENT"),
       show: pathVar.match("boundary/") ? true : false,
+    },
+    {
+      path: pathVar === "update-campaign" ? "" : `/${window?.contextPath}/employee/campaign/update-campaign`,
+      content: t("UPDATE_CAMPAIGN"),
+      show: pathVar.match("update-campaign") ? true : false,
     }
   ];
 
@@ -128,7 +133,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
           <PrivateRoute path={`${path}/boundary/geopode`} component={()=> <GeoPode />} />
           <PrivateRoute path={`${path}/boundary/view-all-hierarchy`} component={()=> <ViewBoundary />} />
           <PrivateRoute path={`${path}/boundary/view-hierarchy`} component={()=> <ViewHierarchy />} />
-          <PrivateRoute path={`${path}/boundary/update-boundary`} component={() => <UpdateBoundary />} />
+          <PrivateRoute path={`${path}/update-campaign`} component={() => <UpdateBoundary />} />
         </AppContainer>
       </Switch>
     </React.Fragment>

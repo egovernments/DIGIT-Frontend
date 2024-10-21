@@ -11,8 +11,11 @@ import TimelinePopUpWrapper from '../../components/timelinePopUpWrapper';
 const VillageView = () => {
     const location = useLocation();
     const { t } = useTranslation();
-    const { campaignId, microplanId,boundaryCode  } = Digit.Hooks.useQueryParams();
+    const { campaignId, microplanId, boundaryCode } = Digit.Hooks.useQueryParams();
     const tenantId = Digit.ULBService.getCurrentTenantId();
+
+    const userInfo = Digit.UserService.getUser();
+    const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
 
     // Custom hook to fetch census data based on microplanId and boundaryCode
     const reqCriteriaResource = {
@@ -78,6 +81,8 @@ const VillageView = () => {
     if (isLoading) {
         return <Loader />;
     }
+
+
 
     return (
 
@@ -232,16 +237,16 @@ const VillageView = () => {
 
             </div>
             {/* commenting becuase some css is not working inside the component*/}
-            {/* <ActionBar
+            <ActionBar
                 actionFields={[
-                    <Button icon="ArrowBack" label="Back" onClick={function noRefCheck() { }} type="button" variation="secondary" />,
+                    <Button icon="ArrowBack" label={t(`HCM_MICROPLAN_VIEW_VILLAGE_BACK`)} onClick={function noRefCheck() { }} type="button" variation="secondary" />,
                 ]}
                 className=""
                 maxActionFieldsAllowed={5}
-                setactionFieldsToRight={true}
+                setactionFieldsToRight
                 sortActionFields
                 style={{}}
-            /> */}
+            />
 
         </React.Fragment>
 

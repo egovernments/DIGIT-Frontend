@@ -1,6 +1,5 @@
-import _ from "lodash"
-const requestBodyGenerator = () => { };
-
+import _ from "lodash";
+const requestBodyGenerator = () => {};
 //checking for duplicates
 const isValidResourceName = async (name) => {
   try {
@@ -66,7 +65,7 @@ const CreateResource = async (req) => {
       additionalDetails: {
         resourceDistributionStrategy: totalFormData?.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode,
         source: "microplan",
-        disease:totalFormData?.CAMPAIGN_DETAILS?.campaignDetails?.disease?.code
+        disease: totalFormData?.CAMPAIGN_DETAILS?.campaignDetails?.disease?.code,
       },
     };
     const campaignRes = await Digit.CustomService.getResponse({
@@ -151,9 +150,9 @@ const createUpdatePlanProject = async (req) => {
   try {
     //later this object must have an invalidation config which can be used to invalidate data such as files uploaded,assumptions,formulas etc...
 
-    const { totalFormData, state, setShowToast, setCurrentKey, setCurrentStep, config, campaignObject, planObject,invalidateConfig } = req;
+    const { totalFormData, state, setShowToast, setCurrentKey, setCurrentStep, config, campaignObject, planObject, invalidateConfig } = req;
     const { microplanId, campaignId } = Digit.Hooks.useQueryParams();
-    const tenantId = Digit.ULBService.getCurrentTenantId()
+    const tenantId = Digit.ULBService.getCurrentTenantId();
     //now basically we need to decide from which screen this hook was triggered and take action accordingly
 
     const triggeredFrom = config.name;
@@ -199,7 +198,7 @@ const createUpdatePlanProject = async (req) => {
         const updatedCampaignObject = {
           ...campaignObject,
           boundaries: totalFormData?.BOUNDARY?.boundarySelection?.selectedData,
-          startDate: Math.floor(new Date(new Date().setDate(new Date().getDate() + 100)).getTime())
+          startDate: Math.floor(new Date(new Date().setDate(new Date().getDate() + 100)).getTime()),
           //hardcoding this rn to update campaign. Check with admin console team
         };
         const campaignResBoundary = await updateProject(updatedCampaignObject);
@@ -217,62 +216,67 @@ const createUpdatePlanProject = async (req) => {
         // here we have to invalidate the existing assumptions in update call if there is a change in assumptionsForm
         // check whether the currentAssumptionsForm is equal to prev assumptionsForm (if so then skip this update call)
 
-        
-        if(_.isEqual(planObject?.additionalDetails?.assumptionsForm,totalFormData?.ASSUMPTIONS_FORM?.
-          assumptionsForm
-          )){
-            setCurrentKey((prev) => prev + 1);
+        if (_.isEqual(planObject?.additionalDetails?.assumptionsForm, totalFormData?.ASSUMPTIONS_FORM?.assumptionsForm)) {
+          setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
           return {
             triggeredFrom,
           };
         }
         //otherwise update with invalidating assumptions and formula(operations)
-        const invalidatedAssumptions = planObject.assumptions.length>0 ? planObject.assumptions.map(row =>{
-          return {
-            ...row,
-            active:false
-          }
-        }) : []
-        const invalidatedOperations = planObject.operations.length>0 ? planObject.assumptions.map(row =>{
-          return {
-            ...row,
-            active:false
-          }
-        }) : []
+        const invalidatedAssumptions =
+          planObject.assumptions.length > 0
+            ? planObject.assumptions.map((row) => {
+                return {
+                  ...row,
+                  active: false,
+                };
+              })
+            : [];
+        const invalidatedOperations =
+          planObject.operations.length > 0
+            ? planObject.assumptions.map((row) => {
+                return {
+                  ...row,
+                  active: false,
+                };
+              })
+            : [];
         const updatedPlanObjAssumptionsForm = {
           ...planObject,
-          assumptions:invalidatedAssumptions,
-          operations:invalidatedOperations,
-          additionalDetails:{
+          assumptions: invalidatedAssumptions,
+          operations: invalidatedOperations,
+          additionalDetails: {
             ...planObject?.additionalDetails,
-            assumptionsForm:totalFormData.ASSUMPTIONS_FORM.assumptionsForm,
+            assumptionsForm: totalFormData.ASSUMPTIONS_FORM.assumptionsForm,
             campaignType: totalFormData.CAMPAIGN_DETAILS.campaignDetails.campaignType.code,
 
-            DistributionProcess:totalFormData.ASSUMPTIONS_FORM.assumptionsForm.selectedDistributionProcess ? totalFormData.ASSUMPTIONS_FORM.assumptionsForm.selectedDistributionProcess.code :  totalFormData.CAMPAIGN_DETAILS.campaignDetails.distributionStrat.resourceDistributionStrategyCode,
+            DistributionProcess: totalFormData.ASSUMPTIONS_FORM.assumptionsForm.selectedDistributionProcess
+              ? totalFormData.ASSUMPTIONS_FORM.assumptionsForm.selectedDistributionProcess.code
+              : totalFormData.CAMPAIGN_DETAILS.campaignDetails.distributionStrat.resourceDistributionStrategyCode,
 
-            RegistrationProcess:totalFormData.ASSUMPTIONS_FORM.assumptionsForm.selectedRegistrationProcess?totalFormData.ASSUMPTIONS_FORM.assumptionsForm.selectedRegistrationProcess.code :totalFormData.CAMPAIGN_DETAILS.campaignDetails.distributionStrat.resourceDistributionStrategyCode,
+            RegistrationProcess: totalFormData.ASSUMPTIONS_FORM.assumptionsForm.selectedRegistrationProcess
+              ? totalFormData.ASSUMPTIONS_FORM.assumptionsForm.selectedRegistrationProcess.code
+              : totalFormData.CAMPAIGN_DETAILS.campaignDetails.distributionStrat.resourceDistributionStrategyCode,
 
             resourceDistributionStrategyCode: totalFormData.CAMPAIGN_DETAILS.campaignDetails.distributionStrat.resourceDistributionStrategyCode,
 
-            isRegistrationAndDistributionHappeningTogetherOrSeparately: totalFormData.CAMPAIGN_DETAILS.campaignDetails.distributionStrat.resourceDistributionStrategyCode==="MIXED" ?"SEPARATELY": totalFormData.ASSUMPTIONS_FORM.assumptionsForm.selectedRegistrationDistributionMode?.code,
-
-          }
-        }
+            isRegistrationAndDistributionHappeningTogetherOrSeparately:
+              totalFormData.CAMPAIGN_DETAILS.campaignDetails.distributionStrat.resourceDistributionStrategyCode === "MIXED"
+                ? "SEPARATELY"
+                : totalFormData.ASSUMPTIONS_FORM.assumptionsForm.selectedRegistrationDistributionMode?.code,
+          },
+        };
         const planResAssumptionsForm = await updatePlan(updatedPlanObjAssumptionsForm);
-        if(planResAssumptionsForm?.PlanConfiguration?.[0]?.id){
+        if (planResAssumptionsForm?.PlanConfiguration?.[0]?.id) {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
           return {
             triggeredFrom,
           };
-        }else {
+        } else {
           setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
         }
-       
-
-
-
 
       case "HYPOTHESIS":
         //fetch current plan
@@ -281,38 +285,35 @@ const createUpdatePlanProject = async (req) => {
             tenantId,
             id: microplanId,
           },
-        })
+        });
         //here we can always invalidate prev assumptions
-        const prevAssumptions = fetchedPlanForHypothesis?.assumptions?.map(row => {
+        const prevAssumptions = fetchedPlanForHypothesis?.assumptions?.map((row) => {
           const updatedRow = {
             ...row,
-            active:false
-          }
-          return updatedRow
-        })
-        const assumptionsToUpdate = totalFormData?.HYPOTHESIS?.Assumptions?.assumptionValues?.filter(row => {
-          return row.category && row.key && row.value
-        })
+            active: false,
+          };
+          return updatedRow;
+        });
+        const assumptionsToUpdate = totalFormData?.HYPOTHESIS?.Assumptions?.assumptionValues?.filter((row) => {
+          return row.category && row.key && row.value;
+        });
         const upatedPlanObjHypothesis = {
           ...fetchedPlanForHypothesis,
-          assumptions:[
-            ...prevAssumptions,
-            ...assumptionsToUpdate
-          ]
-        }
+          assumptions: [...prevAssumptions, ...assumptionsToUpdate],
+        };
 
         const planResHypothesis = await updatePlan(upatedPlanObjHypothesis);
-        if(planResHypothesis?.PlanConfiguration?.[0]?.id){
+        if (planResHypothesis?.PlanConfiguration?.[0]?.id) {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
-          window.dispatchEvent(new Event("isLastStep"))
+          window.dispatchEvent(new Event("isLastStep"));
           return {
             triggeredFrom,
           };
-        }else {
+        } else {
           setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
         }
-        
+
       case "SUB_HYPOTHESIS":
         //first fetch current plan object
         const fetchedPlanForSubHypothesis = await searchPlanConfig({
@@ -320,24 +321,21 @@ const createUpdatePlanProject = async (req) => {
             tenantId,
             id: microplanId,
           },
-        })
-        const prevAssumptionsForSubHypothesis = fetchedPlanForSubHypothesis?.assumptions?.map(row => {
+        });
+        const prevAssumptionsForSubHypothesis = fetchedPlanForSubHypothesis?.assumptions?.map((row) => {
           const updatedRow = {
             ...row,
-            active:false
-          }
-          return updatedRow
-        })
+            active: false,
+          };
+          return updatedRow;
+        });
         //get the list of assumptions from UI
-        const assumptionsToUpdateFromUI = req?.assumptionsToUpdate
+        const assumptionsToUpdateFromUI = req?.assumptionsToUpdate;
         //mix the current + api res
         const upatedPlanObjSubHypothesis = {
           ...fetchedPlanForSubHypothesis,
-          assumptions:[
-            ...prevAssumptionsForSubHypothesis,
-            ...assumptionsToUpdateFromUI
-          ]
-        }
+          assumptions: [...prevAssumptionsForSubHypothesis, ...assumptionsToUpdateFromUI],
+        };
 
         await updatePlan(upatedPlanObjSubHypothesis);
         return;
@@ -393,41 +391,36 @@ const createUpdatePlanProject = async (req) => {
             tenantId,
             id: microplanId,
           },
-        })
+        });
         let files = fetchedPlanForBoundary?.files || [];
-        const boundaryFileStoreId = totalFormData?.UPLOADBOUNDARYDATA?.boundary?.uploadedFile?.[0]?.filestoreId
+        const boundaryFileStoreId = totalFormData?.UPLOADBOUNDARYDATA?.boundary?.uploadedFile?.[0]?.filestoreId;
 
-        const populationFileIndex = files.findIndex(file => file.templateIdentifier === "Population");
+        const populationFileIndex = files.findIndex((file) => file.templateIdentifier === "Population");
 
         // If a file with "Population" exists, update its filestoreId
         if (populationFileIndex !== -1) {
-          files = files.map(file => 
-            file.templateIdentifier === "Population" 
-              ? { ...file, filestoreId: boundaryFileStoreId } 
-              : file
-          );
+          files = files.map((file) => (file.templateIdentifier === "Population" ? { ...file, filestoreId: boundaryFileStoreId } : file));
         } else {
           // If no such file exists, add a new element to the files array
           files.push({
-            filestoreId : boundaryFileStoreId,
-            inputFileType: "Excel", 
-            templateIdentifier: "Population"
+            filestoreId: boundaryFileStoreId,
+            inputFileType: "Excel",
+            templateIdentifier: "Population",
           });
         }
         const updatedPlanObjForBoundary = {
           ...fetchedPlanForBoundary,
-          files
-        }
+          files,
+        };
 
         const planResBoundary = await updatePlan(updatedPlanObjForBoundary);
-        if(planResBoundary?.PlanConfiguration?.[0]?.id){
+        if (planResBoundary?.PlanConfiguration?.[0]?.id) {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
           return {
             triggeredFrom,
           };
-        }
-        else {
+        } else {
           setShowToast({ key: "error", label: "ERR_BOUNDARY_FORM_UPDATE" });
         }
 
@@ -438,38 +431,36 @@ const createUpdatePlanProject = async (req) => {
             id: microplanId,
           },
         });
-        
+
         let filesForFacility = fetchedPlanForFacility?.files || [];
         const facilityFileStoreId = totalFormData?.UPLOADFACILITYDATA?.facilityWithBoundary?.uploadedFile?.[0]?.filestoreId;
-        
-        const facilityFileIndex = filesForFacility.findIndex(file => file.templateIdentifier === "Facilities");
-        
+
+        const facilityFileIndex = filesForFacility.findIndex((file) => file.templateIdentifier === "Facilities");
+
         // If a file with "Facility" exists, update its filestoreId
         if (facilityFileIndex !== -1) {
-          filesForFacility = filesForFacility.map(file => 
-            file.templateIdentifier === "Facilities" 
-              ? { ...file, filestoreId: facilityFileStoreId } 
-              : file
+          filesForFacility = filesForFacility.map((file) =>
+            file.templateIdentifier === "Facilities" ? { ...file, filestoreId: facilityFileStoreId } : file
           );
         } else {
           // If no such file exists, add a new element to the filesForFacility array
           filesForFacility.push({
             filestoreId: facilityFileStoreId,
-            inputFileType: "Excel", 
+            inputFileType: "Excel",
             templateIdentifier: "Facilities",
           });
         }
-        const workflow =  {
-            action: "INITIATE"
-        }
+        const workflow = {
+          action: "INITIATE",
+        };
         const updatedPlanObjForFacility = {
           ...fetchedPlanForFacility,
           files: filesForFacility,
-          workflow
+          workflow,
         };
-        
+
         const planResFacility = await updatePlan(updatedPlanObjForFacility);
-        
+
         if (planResFacility?.PlanConfiguration?.[0]?.id) {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
@@ -478,8 +469,41 @@ const createUpdatePlanProject = async (req) => {
           };
         } else {
           setShowToast({ key: "error", label: "ERR_FACILITY_FORM_UPDATE" });
-        }        
+        }
 
+      case "SUMMARY_SCREEN":
+        //here we need to take complete setup action
+        //update plan-config with workflow action
+        const fetchedPlanForSummary = await searchPlanConfig({
+          PlanConfigurationSearchCriteria: {
+            tenantId,
+            id: microplanId,
+          },
+        });
+
+        const updatedReqForCompleteSetup = {
+          ...fetchedPlanForSummary,
+          workflow: {
+            action: "INITIATE",
+            // "assignes": null,
+            // "comments": null,
+            // "verificationDocuments": null,
+            // "rating": null
+          },
+        };
+      const planResForCompleteSetup = await updatePlan(updatedReqForCompleteSetup);
+      //here do cleanup activity and go to next screen
+
+      if (planResForCompleteSetup?.PlanConfiguration?.[0]?.id) {
+        // setCurrentKey((prev) => prev + 1);
+        // setCurrentStep((prev) => prev + 1);
+        return {
+          triggeredFrom,
+          redirectTo:`/${window.contextPath}/employee/microplan/setup-completed-response`
+        };
+      } else {
+        setShowToast({ key: "error", label: "ERR_FAILED_TO_COMPLETE_SETUP" });
+      }
       default:
         setShowToast({ key: "error", label: "ERROR_UNHANDLED_NEXT_OPERATION" });
         return {
