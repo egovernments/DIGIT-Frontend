@@ -32,7 +32,7 @@ const ChooseActivity = () => {
         },
         { 
             name: t("VALIDATE_N_APPROVE_MICROPLAN_ESTIMATIONS"), 
-            link: `pop-inbox?campaignId=${campaignId}&microplanId=${microplanId}`, 
+            link: `plan-inbox?campaignId=${campaignId}&microplanId=${microplanId}`, 
             icon: <SVG.FactCheck/>,
             disable: disableCardBasedOnRole(["PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"]),
         },
