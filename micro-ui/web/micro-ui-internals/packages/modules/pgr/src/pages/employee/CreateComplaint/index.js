@@ -24,6 +24,7 @@ export const CreateComplaint = ({ parentUrl }) => {
 
   const cityData =  getCities();
 
+
   const { isLoading: hierarchyLOading, data: hierarchyType } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getStateId(),
     "sandbox-ui",

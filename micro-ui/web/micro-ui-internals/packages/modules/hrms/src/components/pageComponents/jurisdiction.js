@@ -22,7 +22,6 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [inactiveJurisdictions, setInactiveJurisdictions] = useState([]);
   const { data: data = {}, isLoading } = Digit.Hooks.hrms.useHrmsMDMS(tenantId, "egov-hrms", "HRMSRolesandDesignation") || {};
-
   const employeeCreateSession = Digit.Hooks.useSessionStorage("NEW_EMPLOYEE_CREATE", {});
   const [sessionFormData, setSessionFormData, clearSessionFormData] = employeeCreateSession;
   const isEdit = window.location.href.includes("hrms/edit")
@@ -173,7 +172,7 @@ function Jurisdiction({
 
   const [BoundaryType, selectBoundaryType] = useState([]);
   const [Boundary, selectboundary] = useState([]);
-  const cities = Digit.Utils.getMultiRootTenant() ? Digit.Hooks.pgr.useTenants() : null;
+  const { data: cities, isCityLoading } = Digit.Hooks.useTenants();
   useEffect(() => {
     selectBoundaryType(
       data?.MdmsRes?.["egov-location"]["TenantBoundary"]
@@ -192,16 +191,17 @@ function Jurisdiction({
       enabled: Digit.Utils.getMultiRootTenant()
     }
   });
-  const getSubTenants = () => TenantMngmtSearch?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
-  const subTenantList = getSubTenants();
+  //  const getSubTenants = () => TenantMngmtSearch?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
+  //  const subTenantList = getSubTenants();
+
     useEffect(() => {
     if (Digit.Utils.getMultiRootTenant()) {
-      selectboundary(subTenantList);
+      selectboundary(cities);
     }
     else {
       selectboundary(data?.MdmsRes?.tenant?.tenants.filter(city => city.code != Digit.ULBService.getStateId()).map(city => { return { ...city, i18text: Digit.Utils.locale.getCityLocale(city.code) } }));
     }
-  }, [jurisdiction?.boundaryType, data?.MdmsRes]);
+  }, [jurisdiction?.boundaryType, data?.MdmsRes, cities]);
 
 
 
@@ -303,7 +303,7 @@ function Jurisdiction({
             disable={Boundary?.length === 0}
             option={Boundary}
             select={selectedboundary}
-            optionKey={Digit.Utils.getMultiRootTenant() ? "code" : "i18text"}
+            optionKey={Digit.Utils.getMultiRootTenant() ? "code" : "i18nkey"}
             t={t}
           />
         </LabelFieldPair>
