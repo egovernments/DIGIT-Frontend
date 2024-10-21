@@ -148,6 +148,13 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
           <PrivateRoute path={`${path}/boundary/view-all-hierarchy`} component={()=> <ViewBoundary />} />
           <PrivateRoute path={`${path}/boundary/view-hierarchy`} component={()=> <ViewHierarchy />} />
           <PrivateRoute path={`${path}/update-campaign`} component={() => <UpdateBoundary />} />
+          <PrivateRoute path={`${path}/boundary-management`} component={()=> <Boundary />} />
+          <PrivateRoute path={`${path}/geopode`} component={()=> <GeoPode />} />
+          <PrivateRoute path={`${path}/view-boundary`} component={()=> <ViewBoundary />} />
+          <PrivateRoute path={`${path}/view-hierarchy`} component={()=> <ViewHierarchy />} />
+          <PrivateRoute path={`${path}/update-boundary`} component={() => <UpdateBoundary />} />
+          <PrivateRoute path={`${path}/checklist/view`} component={() => <ViewChecklist />} />
+          <PrivateRoute path={`${path}/checklist/update`} component={() => <UpdateChecklist />} />
         </AppContainer>
       </Switch>
     </React.Fragment>
