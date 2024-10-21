@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from "react-i18next";
 import { PopUp, Button, Card, Divider, TextInput } from '@egovernments/digit-ui-components';
-import { useMyContext } from "../utils/context"; // Assuming a similar context is used for fetching necessary data
-import { Body } from '@egovernments/digit-ui-react-components';
 
 const EditVillagePopulationPopUp = ({ onClose, census }) => {
   const { t } = useTranslation();
-  const { state } = useMyContext(); // Extract state from context
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
 
@@ -22,7 +19,6 @@ const EditVillagePopulationPopUp = ({ onClose, census }) => {
     }
   }, [census]);
 
-  console.log(userRoles, 'roles');
 
   // Define the mutation configuration
   const mutation = Digit.Hooks.useCustomAPIMutationHook({
