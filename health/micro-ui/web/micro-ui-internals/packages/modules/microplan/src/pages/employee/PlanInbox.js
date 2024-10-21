@@ -6,7 +6,7 @@ import { Card, Tab, Button, SVG, Loader } from "@egovernments/digit-ui-component
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 
-const PopInbox = () => {
+const PlanInbox = () => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
@@ -252,4 +252,4 @@ const PopInbox = () => {
   );
 };
 
-export default PopInbox;
+export default PlanInbox;
