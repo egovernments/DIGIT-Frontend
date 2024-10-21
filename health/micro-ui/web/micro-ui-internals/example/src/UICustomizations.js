@@ -302,8 +302,9 @@ export const UICustomizations = {
         return (
           <span className="link">
             <Link
-              to={`/${window.contextPath
-                }/employee/attendencemgmt/view-attendance?tenantId=${Digit.ULBService.getCurrentTenantId()}&musterRollNumber=${value}`}
+              to={`/${
+                window.contextPath
+              }/employee/attendencemgmt/view-attendance?tenantId=${Digit.ULBService.getCurrentTenantId()}&musterRollNumber=${value}`}
             >
               {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
             </Link>
@@ -801,7 +802,6 @@ export const UICustomizations = {
               { code: "1", name: "Edit Setup" },
               { code: "2", name: "View Summary" },
               { code: "3", name: "ACTIVITY" },
-
             ]}
             select={(e) => {
               console.log(e, "event"); // e contains the selected option
@@ -823,9 +823,7 @@ export const UICustomizations = {
               }
               if (e.code === "3") {
                 // Use window.location.href to navigate
-                window.location.href = `/${window.contextPath
-                  }/employee/microplan/select-activity?microplanId=${row.id}&campaignId=${row.CampaignDetails.id
-                  }`;
+                window.location.href = `/${window.contextPath}/employee/microplan/select-activity?microplanId=${row.id}&campaignId=${row.CampaignDetails.id}`;
               }
             }}
             optionKey={"name"}
@@ -893,90 +891,90 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      if (key === "Actions") {
-        const onActionSelect = (key, row) => {
-          switch (key) {
-            case "START":
-              window.history.pushState(
-                {
-                  microplanId: row?.id,
-                  campaignId: row?.campaignId,
-                },
-                "",
-                `/${window.contextPath}/employee/microplan/select-activity?microplanId=${row?.id}&campaignId=${row?.campaignId}`
-              );
-              const navEvent = new PopStateEvent("popstate");
-              window.dispatchEvent(navEvent);
-              break;
-            case "EDIT":
-              window.history.pushState(
-                {
-                  microplanId: row?.id,
-                  campaignId: row?.campaignId,
-                },
-                "",
-                `/${window.contextPath}/employee/microplan/select-activity?microplanId=${row?.id}&campaignId=${row?.campaignId}`
-              );
-              const navEvent2 = new PopStateEvent("popstate");
-              window.dispatchEvent(navEvent2);
-              break;
-            default:
-              console.log(value);
-              break;
+      switch (key) {
+        case "ACTIONS":
+          const onActionSelect = (key, row) => {
+            switch (key) {
+              case "START":
+                window.history.pushState(
+                  {
+                    microplanId: row?.id,
+                    campaignId: row?.campaignId,
+                  },
+                  "",
+                  `/${window.contextPath}/employee/microplan/select-activity?microplanId=${row?.id}&campaignId=${row?.campaignId}`
+                );
+                const navEvent = new PopStateEvent("popstate");
+                window.dispatchEvent(navEvent);
+                break;
+              case "EDIT":
+                window.history.pushState(
+                  {
+                    microplanId: row?.id,
+                    campaignId: row?.campaignId,
+                  },
+                  "",
+                  `/${window.contextPath}/employee/microplan/select-activity?microplanId=${row?.id}&campaignId=${row?.campaignId}`
+                );
+                const navEvent2 = new PopStateEvent("popstate");
+                window.dispatchEvent(navEvent2);
+                break;
+              default:
+                console.log(value);
+                break;
+            }
+          };
+          return row.status === "EXECUTION_TO_BE_DONE" ? (
+            <Button
+              label={t("START")}
+              variation="secondary"
+              icon={<ArrowForward styles={{ height: "1.25rem", width: "2.5rem" }} />}
+              type="button"
+              className="dm-workbench-download-template-btn dm-hover"
+              onButtonClick={(e) => onActionSelect("START", row)}
+            />
+          ) : row.status === "RESOURCE_ESTIMATIONS_APPROVED" ? (
+            <Button
+              label={t("WBH_DOWNLOAD")}
+              variation="secondary"
+              icon={<DownloadIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
+              type="button"
+              className="dm-workbench-download-template-btn dm-hover"
+              onButtonClick={(e) => onActionSelect("DOWNLOAD", row)}
+            />
+          ) : (
+            <Button
+              label={t("WBH_EDIT")}
+              variation="secondary"
+              icon={<EditIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
+              type="button"
+              className="dm-workbench-download-template-btn dm-hover"
+              onButtonClick={(e) => onActionSelect("EDIT", row)}
+            />
+          );
+        case "NAME_OF_MICROPLAN":
+          if (value && value !== "NA") {
+            return (
+              <div
+                style={{
+                  maxWidth: "15rem", // Set the desired maximum width
+                  wordWrap: "break-word", // Allows breaking within words
+                  whiteSpace: "normal", // Ensures text wraps normally
+                  overflowWrap: "break-word", // Break long words at the edge
+                }}
+              >
+                <p>{value}</p>
+              </div>
+            );
+          } else {
+            return (
+              <div>
+                <p>NA</p>
+              </div>
+            );
           }
-        };
-        // `/${window.contextPath}/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}`
-        return row.status === "EXECUTION_TO_BE_DONE" ? (
-          <Button
-            label={t("START")}
-            variation="secondary"
-            icon={<ArrowForward styles={{ height: "1.25rem", width: "2.5rem" }} />}
-            type="button"
-            className="dm-workbench-download-template-btn dm-hover"
-            onButtonClick={(e) => onActionSelect("START", row)}
-          />
-        ) : row.status === "RESOURCE_ESTIMATIONS_APPROVED" ? (
-          <Button
-            label={t("WBH_DOWNLOAD")}
-            variation="secondary"
-            icon={<DownloadIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
-            type="button"
-            className="dm-workbench-download-template-btn dm-hover"
-            onButtonClick={(e) => onActionSelect("DOWNLOAD", row)}
-          />
-        ) : (
-          <Button
-            label={t("WBH_EDIT")}
-            variation="secondary"
-            icon={<EditIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
-            type="button"
-            className="dm-workbench-download-template-btn dm-hover"
-            onButtonClick={(e) => onActionSelect("EDIT", row)}
-          />
-        );
-      }
-
-      if (key === "NAME_OF_MICROPLAN") {
-        if (value && value !== "NA") {
-          return (
-            <div
-              style={{
-                maxWidth: "15rem", // Set the desired maximum width
-                wordWrap: "break-word", // Allows breaking within words
-                whiteSpace: "normal", // Ensures text wraps normally
-                overflowWrap: "break-word", // Break long words at the edge
-              }}
-            >
-              <p>{value}</p>
-            </div>
-          );
-        } else {
-          return (
-            <div>
-              <p>NA</p>
-            </div>
-          );
-        }
+        default:
+          return t("ES_COMMON_NA");
       }
     },
   },
@@ -1009,9 +1007,7 @@ export const UICustomizations = {
       }
       if (Object.keys(roleschosen).length === 0) {
         for (const obj of additionalDetails["microplanData"]) {
-
           roleschosen[obj["roleCode"]] = true;
-
         }
       }
 
@@ -1119,9 +1115,7 @@ export const UICustomizations = {
                 iconFill=""
                 isSuffix
                 label={t("MICROPLAN_ASSIGN")}
-                onClick={
-                  () => setShowPopup(true)
-                }
+                onClick={() => setShowPopup(true)}
                 options={[]}
                 optionsKey=""
                 size="medium"
@@ -1129,7 +1123,14 @@ export const UICustomizations = {
                 title=""
                 variation="secondary"
               />
-              {showPopup && <FacilityPopUp details={row} onClose={() => { setShowPopup(false) }} />}
+              {showPopup && (
+                <FacilityPopUp
+                  details={row}
+                  onClose={() => {
+                    setShowPopup(false);
+                  }}
+                />
+              )}
             </>
           );
         default:
@@ -1137,22 +1138,22 @@ export const UICustomizations = {
       }
     },
   },
-  MyMicroplanSearchConfigExample:{
-    test:"yes"
+  MyMicroplanSearchConfigExample: {
+    test: "yes",
   },
-  FacilityMappingConfigExample:{
-    test:"yes"
+  FacilityMappingConfigExample: {
+    test: "yes",
   },
-  UserManagementConfigExample:{
-    test:"yes"
+  UserManagementConfigExample: {
+    test: "yes",
   },
-  MyMicroplanSearchConfigPlan:{
-    test:"no"
+  MyMicroplanSearchConfigPlan: {
+    test: "no",
   },
-  FacilityMappingConfigPlan:{
-    test:"no"
+  FacilityMappingConfigPlan: {
+    test: "no",
   },
-  UserManagementConfigPlan:{
-    test:"no"
+  UserManagementConfigPlan: {
+    test: "no",
   },
 };
