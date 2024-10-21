@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment, useContext } from "react";
-import {  } from "@egovernments/digit-ui-react-components";
+import { } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { DustbinIcon } from "./icons/DustbinIcon";
 import { PRIMARY_COLOR } from "../utils";
@@ -18,6 +18,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
   subQparent,
   subQparentId,
   subQinitialQuestionData,
+  typeOfCall
 }) => {
 
   const [options, setOptions] = useState(() => {
@@ -37,7 +38,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
       return [defaultOption];
     }
   });
-  
+
   useEffect(() => {
     dispatchQuestionData({
       type: "UPDATE_OPTIONS",
@@ -169,6 +170,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
           subQparent={subQparent}
           subQparentId={subQparentId}
           subQinitialQuestionData={subQinitialQuestionData}
+          typeOfCall={typeOfCall}
         />
       );
       break;
@@ -192,6 +194,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
           subQparent={subQparent}
           subQparentId={subQparentId}
           subQinitialQuestionData={subQinitialQuestionData}
+          typeOfCall={typeOfCall}
         />
       );
       break;
@@ -215,6 +218,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
           subQparent={subQparent}
           subQparentId={subQparentId}
           subQinitialQuestionData={subQinitialQuestionData}
+          typeOfCall={typeOfCall}
         />
       );
       break;
@@ -224,7 +228,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
   }
 };
 
-const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, parent = null, parentId = null, optionId }) => {
+const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, parent = null, parentId = null, optionId, typeOfCall = null }) => {
   const { t } = useTranslation();
   const state = Digit.ULBService.getStateId();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -323,24 +327,51 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
     });
   };
 
+  const handleRequiredField = (id) => {
+    dispatchQuestionData({
+      type: "UPDATE_REQUIRED",
+      payload: {
+        id: id
+      }
+    })
+  }
+
   const example = {
     maxWidth: "100rem"
   }
 
+  let dis = typeOfCall === "view" ? true : false;
   return (
     <React.Fragment>
       {initialQuestionData
-        ?.filter((i) => i.level === level && (i.parentId ? (i.parentId === parentId) : true))
+        ?.filter((i) => i.level === level && (i.parentId ? (i.parentId === parentId) : true)  && (i.level <= 3) && (i.isActive === true))
         ?.map((field, index) => {
           return (
             <Card type={"primary"} variant={"form"} className={`question-card-container ${className}`}>
               <LabelFieldPair className="question-label-field" style={{ display: "block" }}>
-                <div className="question-label" style={{ height: "1.5rem", display: "flex", justifyContent: "space-between", width: "100%" }}>
-                  <span style={{fontWeight:"700"}}>{`${t("QUESTION")} ${index + 1}`}</span>
-                  {/* <span className="mandatory-span">*</span> */}
-                  <div style={{ height: "1rem" }}>
+                <div className="question-label" style={{ height: "3rem", display: "flex", justifyContent: "space-between", width: "100%" }}>
+                  <div style={{ display: "flex", gap: "1rem" }}>
+                    <span style={{ fontWeight: "700", marginTop: "1rem" }}>{`${t("QUESTION")} ${index + 1}`}</span>
+                    <div style={{ alignItems: "center" }}>
+                      <CheckBox
+                        disabled={dis}
+                        // style={{height:"1rem", alignItems:"center", paddingBottom:"0.5rem"}}
+                        key={field.key}
+                        mainClassName={"checkboxOptionVariant"}
+                        // disabled={optionDependency ? true : false}
+                        label={t("REQUIRED")}
+                        checked={field?.isRequired}
+                        // onChange={handleRequiredField(field.id)}
+                        onChange={() => handleRequiredField(field.id)}
+                        // isLabelFirst={true}
+                        index={field.key}
+                      />
+                    </div>
                   </div>
-                  {initialQuestionData?.length > 1 && (
+                  {/* <span className="mandatory-span">*</span> */}
+                  {/* <div style={{ height: "0.5rem" }}> */}
+                  {/* </div> */}
+                  {!dis && initialQuestionData?.length > 1 && (
                     <>
                       <div className="separator"></div>
                       <div
@@ -359,7 +390,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                         }}
                       >
                         <DustbinIcon />
-                        {t(`CAMPAIGN_DELETE_ROW_TEXT`)}
+                        {t(`CAMPAIGN_DELETE_QUESTION`)}
                       </div>
                     </>
                   )}
@@ -376,16 +407,17 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                         className={"example"}
                       /> */}
                       <TextInput
-                          isRequired={true}
-                          className="tetxinput-example"
-                          type={"text"}
-                          // props={{ fieldStyle: example }}
-                          name="title"
-                          value={field?.title || ""}
-                          onChange={(event) => handleUpdateField(event.target.value, "title", field.key, field.id)}
-                          placeholder={"Type your question here"}
-                        />
-                      <Dropdown
+                        disabled={dis}
+                        isRequired={true}
+                        className="tetxinput-example"
+                        type={"text"}
+                        // props={{ fieldStyle: example }}
+                        name="title"
+                        value={field?.title || ""}
+                        onChange={(event) => handleUpdateField(event.target.value, "title", field.key, field.id)}
+                        placeholder={"Type your question here"}
+                      />
+                      {!dis && <Dropdown
                         style={{ width: "20%" }}
                         t={t}
                         option={dataType}
@@ -395,7 +427,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                           handleUpdateField(value, "type", field.key, field.id);
                         }}
                         placeholder="Type"
-                      />
+                      />}
                     </div>
                     {field?.isRegex && (
                       <Dropdown
@@ -425,11 +457,13 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                         subQparent={field}
                         subQparentId={field.id}
                         subQinitialQuestionData={initialQuestionData}
+                        typeOfCall={typeOfCall}
                       />
                     )}
                     {
                       (field?.type?.code === "Short Answer") && (
                         <FieldV1
+                          disabled="true"
                           className="example"
                           type={"textarea"}
                           populators={{
@@ -442,10 +476,8 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                           placeholder={""}
                         />
                       )
-
-
                     }
-                    {field.dependency && (
+                    {!dis && field.dependency && (
                       <CreateQuestion
                         onSelect={onSelect}
                         className="subSection"
@@ -464,19 +496,20 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
             </Card>
           );
         })}
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <Button
-          variation="secondary"
-          label={t("ADD_QUESTION")}
-          className={"hover"}
-          // icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
-          icon="Add"
-          iconFill=""
-          // onButtonClick={addMoreField}
-          onClick={()=>addMoreField()}
-          textStyles={{width:'unset'}}
-        />
-      </div>
+        {!dis && <div style={{ display: "flex", justifyContent: "center" }}>
+          <Button
+            variation="secondary"
+            label={t("ADD_QUESTION")}
+            className={"hover"}
+            // icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
+            icon="Add"
+            iconFill=""
+            // onButtonClick={addMoreField}
+            onClick={() => addMoreField()}
+            textStyles={{ width: 'unset' }}
+          />
+          </div>
+      }
     </React.Fragment>
   );
 };

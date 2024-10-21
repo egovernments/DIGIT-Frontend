@@ -29,7 +29,9 @@ const Checkboxes = ({
   subQinitialQuestionData,
   addComment,
   handleOptionComment,
+  typeOfCall
 }) => {
+  let dis = typeOfCall==="view"?true:false;
   return (
     <div >
       {options.map((item, index) => (
@@ -55,9 +57,11 @@ const Checkboxes = ({
             t={t}
             addComment={addComment}
             handleOptionComment={handleOptionComment}
+            typeOfCall={typeOfCall}
           />
           {item.optionComment && <FieldV1
                         // className="example"
+                        disabled={dis}
                         type={"textarea"}
                         populators={{
                           resizeSmart:true
@@ -82,7 +86,7 @@ const Checkboxes = ({
           }
         </>
       ))}
-      <div>
+      {!dis && <div>
       <Button
         // className="custom-class"
         icon="AddIcon"
@@ -94,15 +98,7 @@ const Checkboxes = ({
         variation="teritiary"
         textStyles={{width:'unset'}}
       />
-        {/* <button
-          className="unstyled-button link"
-          type="button"
-          disabled={(!createNewSurvey && formDisabled) || (isPartiallyEnabled ? !isPartiallyEnabled : formDisabled)}
-          onClick={() => addOption()}
-        >
-          {t("CS_COMMON_ADD_OPTION")}
-        </button> */}
-      </div>
+      </div>}
     </div>
   );
 };
@@ -129,9 +125,11 @@ const CheckBoxOption = ({
   t,
   optionComment,
   addComment,
-  handleOptionComment
+  handleOptionComment,
+  typeOfCall
 }) => {
   const [isFocused, setIsFocused] = useState(false);
+  let dis = typeOfCall==="view"?true:false;
 
   // useEffect(() => {
   //   updateOption({ value: optionTitle, id: index });
@@ -141,8 +139,9 @@ const CheckBoxOption = ({
     <div> 
       <div className="optioncheckboxwrapper" style={{justifyContent:"space-between", height:"3rem"}}>
         <div style={{display:"flex"}}>
-          <CheckBox mainClassName="checkboxOptionVariant" label="" disable={isInputDisabled} />
+          <CheckBox mainClassName="checkboxOptionVariant" label="" disable={dis} />
           <input
+            disabled={dis}
             ref={inputRef}
             type="text"
             value={title}
@@ -150,14 +149,14 @@ const CheckBoxOption = ({
             onBlur={() => setIsFocused(false)}
             onFocus={() => setIsFocused(true)}
             className={isFocused ? "simple_editable-input" : "simple_readonly-input"}
-            maxLength={maxLength}
+            // maxLength={maxLength}
             title={titleHover}
             style={{ ...labelstyle }}
-            disabled={isPartiallyEnabled ? !isPartiallyEnabled : formDisabled}
+            // disabled={isPartiallyEnabled ? !isPartiallyEnabled : formDisabled}
           />
         </div>
         <div style={{display:"flex", gap:"1rem", alignItems:"center"}}>
-          {
+          {!dis && 
             <>
               <CheckBox
               key={field.key}
@@ -181,7 +180,7 @@ const CheckBoxOption = ({
             // isLabelFirst={true}
             index={field.key}
           />} */}
-          {!disableDelete && (
+          {!dis && !disableDelete && (
             // <div className="pointer" onClick={() => removeOption(index)}>
             //   <DustbinIcon />
             //   {t(`CAMPAIGN_DELETE_ROW_TEXT`)}

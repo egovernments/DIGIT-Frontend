@@ -73,7 +73,7 @@ const CampaignCard = () => {
       link: `/${window?.contextPath}/employee/campaign/boundary/home`,
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
-    }
+    },
   ];
 
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));

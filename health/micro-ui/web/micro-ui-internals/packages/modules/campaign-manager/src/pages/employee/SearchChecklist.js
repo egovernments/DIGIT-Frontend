@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { checklistSearchConfig } from "../../configs/checklistSearchConfig";
-
+import { UICustomizations } from "../../configs/UICustomizations";
 
 const SearchChecklist = () => {
   const { t } = useTranslation();
@@ -13,9 +13,14 @@ const SearchChecklist = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("campaignId");
+  const [campaignName, setCampaignName] = useState(searchParams.get("name"));
 
   const { mutate, data } = Digit.Hooks.campaign.useTypeOfChecklist(tenantId);
   const stateData = window.history.state;
+
+  useEffect(()=>{
+    setCampaignName(campaignName);
+  }, campaignName);
 
   //   TODO.. CHANGE WHAT HAPPENS ON CLICING SEARCH RESULT ROW
   const onClickRow = (row) => {
@@ -38,7 +43,7 @@ const SearchChecklist = () => {
   const [codesopt, setCodesOpt] = useState([]);
   const { data: dataBT } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "rolesForChecklist" }]);
   useEffect(() => {
-    if (dataBT) setCodesOpt(dataBT["HCM-ADMIN-CONSOLE"]?.rolesForChecklist?.map((item) => ({ code: t(`ACCESSCONTROL_ROLES_ROLES_${item.code}`) })));
+    if (dataBT) setCodesOpt(dataBT["HCM-ADMIN-CONSOLE"]?.rolesForChecklist?.map((item) => ({ code: `ACCESSCONTROL_ROLES_ROLES_${item.code}` })));
   }, [dataBT]);
 
   const [listsopt, setListsOpt] = useState([]);
@@ -71,7 +76,7 @@ const SearchChecklist = () => {
     history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=13&summary=true`);
   };
   useEffect(() => {
-    setListsOpt(HCM?.HCM?.CHECKLIST_TYPES?.map((item) => ({ list: t(`HCM_CHECKLIST_TYPE_${item.code}`) })));
+    setListsOpt(HCM?.HCM?.CHECKLIST_TYPES?.map((item) => ({ list: `HCM_CHECKLIST_TYPE_${item.code}` })));
   }, [HCM]);
 
   const [code, setCode] = useState(null);
@@ -85,6 +90,7 @@ const SearchChecklist = () => {
 
   checklistSearchConfig[0].sections.search.uiConfig.fields[0].populators.options = codesopt;
   checklistSearchConfig[0].sections.search.uiConfig.fields[1].populators.options = listsopt;
+  checklistSearchConfig[0].additionalDetails = {campaignName};
 
   if (isFetching) return <div></div>;
   else {
@@ -105,13 +111,13 @@ const SearchChecklist = () => {
         />
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <Header styles={{ fontSize: "32px", marginBottom: "2rem", marginTop: "2rem" }}>{t("ACTION_LABEL_CONFIGURE_APP")}</Header>
-          <Button
+          {/* <Button
             variation="secondary"
             label={t("ADD_NEW_CHECKLIST")}
             className={"hover"}
             style={{ marginTop: "2rem", marginBottom: "2rem" }}
             onClick={makeNewChecklist}
-          />
+          /> */}
           {showPopUp && (
             <PopUp
               className={"boundaries-pop-module"}
@@ -156,6 +162,7 @@ const SearchChecklist = () => {
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span>{t("HCM_CHECKLIST_ROLE")}</span>
                   <Dropdown
+                    t={t}
                     style={{ width: "50%" }}
                     option={codesopt}
                     optionKey={"code"}
@@ -169,6 +176,7 @@ const SearchChecklist = () => {
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span>{t("SELECT_CHECKLIST_TYPE")}</span>
                   <Dropdown
+                    t={t}
                     style={{ width: "50%" }}
                     option={listsopt}
                     optionKey={"list"}
