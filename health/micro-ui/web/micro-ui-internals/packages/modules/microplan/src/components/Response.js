@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { ActionBar, SubmitBar, ArrowLeft, ArrowForward } from "@egovernments/digit-ui-react-components";
 import { Button } from "@egovernments/digit-ui-components";
 import { PanelCard } from "@egovernments/digit-ui-components";
-import { Button } from "@egovernments/digit-ui-react-components";
 const Response = () => {
     const { t } = useTranslation();
     const history = useHistory();

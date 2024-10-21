@@ -135,6 +135,7 @@ function UserAccess({ category,setData,nationalRoles }) {
           </div>
           <DataTable
             category={category}
+            columns={columns}
             data={planEmployee?.data}
             pagination
             paginationServer
