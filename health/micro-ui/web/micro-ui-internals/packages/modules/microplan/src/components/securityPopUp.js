@@ -69,12 +69,12 @@ const SecurityPopUp = ({ onClose, census }) => {
                 key={q.id}
                 style={{
                   marginBottom: index !== questions.length - 1 ? "1rem" : "0", // No margin after the last question
-                  marginTop: "1rem"
+                  //marginTop: "1rem"
                 }}
               >
-                <label style={{ marginBottom: "1rem", display: "block" }}>
-                  {q.question} {q.required && "*"}
-                </label>
+                <div class="security-question-label">
+                  {q.question}
+                </div>
                 <div> {/* Add margin for space between label and options */}
                   <RadioButtons
                     isMandatory={q.required}

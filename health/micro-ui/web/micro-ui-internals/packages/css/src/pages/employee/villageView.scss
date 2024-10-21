@@ -57,3 +57,19 @@
 .middle-child {
     margin-bottom: 1.5rem;
 }
+
+.comment-label {
+    margin-bottom: .25rem;
+    @extend .typography.label;
+    color: theme(digitv2.lightTheme.text-primary);
+}
+
+.comment-label .required {
+    color: theme(digitv2.alert.error);
+}
+
+.security-question-label {
+    margin-bottom: 1rem;
+    @extend .typography.heading-m;
+    color: theme(digitv2.lightTheme.text-primary);
+}
