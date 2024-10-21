@@ -110,13 +110,11 @@ const defaultSearchValues = {
            // customHookName: "microplanv1.useSavedMicroplans",  //! Note
             
           },
-          customHookName:"microplanv1.useSavedMicroplans"
+          customHookName:"microplanv1.useSavedMicroplansWithCampaign"
         },
         {label: "EXECUTION_TO_BE_DONE",},
         {label:"EXECUTION_IN_PROGRESS"},
-        {label:"MICROPLAN_EXECUTED"},
-        
-  
+        {label:"MICROPLAN_EXECUTED"},       
       ],
     };
     
