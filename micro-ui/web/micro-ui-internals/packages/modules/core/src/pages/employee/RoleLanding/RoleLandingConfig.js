@@ -3,7 +3,7 @@ import { People } from "@egovernments/digit-ui-svg-components";
 export const externalConfig = [
     {
         type:"link",
-        url:"https://www.youtube.com/watch?v=1ZLdetJwfeY"
+        url:"https://www.youtube.com/watch?v=IBJDxxP3rDc"
     },
   {
     type: "text",
