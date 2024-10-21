@@ -499,7 +499,14 @@ const createUpdatePlanProject = async (req) => {
         // setCurrentStep((prev) => prev + 1);
         return {
           triggeredFrom,
-          redirectTo:`/${window.contextPath}/employee/microplan/setup-completed-response`
+          redirectTo:`/${window.contextPath}/employee/microplan/setup-completed-response`,
+          isState:true,
+          state:{
+            message:"SETUP_COMPLETED",
+            back:"BACK_TO_HOME",
+            backlink:`${window.contextPath}/employee`,
+            description:"SETUP_MICROPLAN_SUCCESS_RESPONSE_DESC"
+          }
         };
       } else {
         setShowToast({ key: "error", label: "ERR_FAILED_TO_COMPLETE_SETUP" });

@@ -14,8 +14,12 @@ export const useUserAccessContext = () => {
 const UserAccessWrapper = ({ onSelect, props: customProps }) => {
   const { t } = useTranslation();
   const { state } = useMyContext();
+  const [data,setData]=useState(null);
   // vertical stepper array role code fetch and sorted based on orderNumber
   const rolesArray = state?.rolesForMicroplan?.sort((a, b) => a.orderNumber - b.orderNumber).map((item) => item.roleCode);
+  let mpRolesArray=rolesArray.map((item)=>t(`MP_ROLE_${item}`));
+
+  const nationalRoles=["ROOT_PLAN_ESTIMATION_APPROVER","ROOT_POPULATION_DATA_APPROVER","ROOT_FACILITY_CATCHMENT_MAPPER"]
   const hierarchyData = customProps?.hierarchyData;
   const campaignType = customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code;
 
@@ -27,6 +31,8 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
   });
 
   const [showToast, setShowToast] = useState(null);
+  const [showErrorToast, setShowErrorToast] = useState(null);
+
 
   const [executionCount, setExecutionCount] = useState(0);
 
@@ -44,7 +50,7 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
     Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: false });
     Digit.Utils.microplanv1.updateUrlParams({ internalKey: internalKey });
   };
-
+  
   const updateUrlParams = (params) => {
     const url = new URL(window.location.href);
     Object.entries(params).forEach(([key, value]) => {
@@ -54,8 +60,17 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
   };
 
   const handleNext = () => {
-    setInternalKey((prevKey) => prevKey + 1);
+    setInternalKey((prevKey) => {
+      // Check the latest value of internalKey by using prevKey
+      if (data === null && nationalRoles.includes(String(rolesArray?.[prevKey - 1]))) {
+        setShowErrorToast(true);
+        return prevKey; // Keep the same value if condition is true
+      } else {
+        return prevKey + 1; // Increment internalKey if condition is false
+      }
+    });
   };
+  
 
   const handleBack = () => {
     if (internalKey > 1) {
@@ -112,15 +127,19 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
         <div style={{ display: "flex", gap: "2rem" }}>
           <div className="card-container">
             <Card className="card-header-timeline">
-              <TextBlock subHeader={t("USER_ACCESS_MANAGMNT")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+              <TextBlock subHeader={t("USER_ACCESS_MANAGEMENT")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
             </Card>
             <Card className="stepper-card">
-              <Stepper customSteps={[...rolesArray]} currentStep={internalKey} onStepClick={handleStepClick} direction={"vertical"} />
+              <Stepper customSteps={[...mpRolesArray]} currentStep={internalKey} onStepClick={handleStepClick} direction={"vertical"} />
             </Card>
           </div>
 
           <div style={{ width: "100%" }}>
-            <UserAccess category={rolesArray?.[internalKey - 1]} />
+            <UserAccess 
+            category={rolesArray?.[internalKey - 1] }
+            setData={setData}
+            nationalRoles={nationalRoles}
+            />
           </div>
         </div>
 
@@ -139,6 +158,16 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
           transitionTime={showToast.transitionTime}
           onClose={() => {
             setShowToast(false);
+          }}
+          isDleteBtn={true}
+        />
+      )}
+      {showErrorToast && (
+        <Toast
+          type={"error"} // Adjust based on your needs
+          label={t("EMPLOYESS_NOT_FOUND")}
+          onClose={() => {
+            setShowErrorToast(false);
           }}
           isDleteBtn={true}
         />

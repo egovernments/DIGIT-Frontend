@@ -17,6 +17,7 @@ import { MicroplanConfig } from "../../configs/SetupMicroplanConfig";
 import { Stepper, Toast, PopUp, CardText, InfoCard, Button } from "@egovernments/digit-ui-components";
 import _ from "lodash";
 import { useMyContext } from "../../utils/context";
+import { useLocation } from "react-router-dom/cjs/react-router-dom";
 
 const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const { dispatch, state } = useMyContext();
@@ -129,12 +130,13 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const handleUpdates = (propsForMutate) => {
     updateResources(propsForMutate, {
       onSuccess: (data) => {
-        if(data?.redirectTo){
+        if (data?.isState) {
+          history.push(data?.redirectTo, data?.state)
+        } else {
           history.push(data?.redirectTo)
         }
       },
       onError: (error, variables) => {
-
         setShowToast(({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") }))
       },
     });
@@ -254,7 +256,7 @@ useEffect(() => {
   }
 
   const getNextActionLabel = () => {
-    if(filteredConfig?.[0]?.form?.[0]?.body?.[0]?.isLast){
+    if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.isLast) {
       return t("MP_COMPLETE_SETUP")
     }
     return t("MP_SAVE_PROCEED")
