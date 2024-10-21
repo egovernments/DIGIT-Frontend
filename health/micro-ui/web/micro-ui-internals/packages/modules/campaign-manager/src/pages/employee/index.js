@@ -134,11 +134,6 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
           <PrivateRoute path={`${path}/update-dates-boundary`} component={() => <UpdateDatesWithBoundaries />} />
           <PrivateRoute path={`${path}/checklist/create`} component={() => <CreateChecklist />} />
           <PrivateRoute path={`${path}/checklist/search`} component={() => <SearchChecklist />} />
-          <PrivateRoute path={`${path}/boundary-management`} component={()=> <Boundary />} />
-          <PrivateRoute path={`${path}/geopode`} component={()=> <GeoPode />} />
-          <PrivateRoute path={`${path}/view-boundary`} component={()=> <ViewBoundary />} />
-          <PrivateRoute path={`${path}/view-hierarchy`} component={()=> <ViewHierarchy />} />
-          <PrivateRoute path={`${path}/update-boundary`} component={() => <UpdateBoundary />} />
           <PrivateRoute path={`${path}/checklist/view`} component={() => <ViewChecklist />} />
           <PrivateRoute path={`${path}/checklist/update`} component={() => <UpdateChecklist />} />
           <PrivateRoute path={`${path}/boundary/home`} component={()=> <Boundary />} />
