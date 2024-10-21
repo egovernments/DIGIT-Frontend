@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from "react-i18next";
 import { PopUp, Button, Card, Divider, TextInput } from '@egovernments/digit-ui-components';
+import { useMyContext } from "../utils/context"; // Assuming a similar context is used for fetching necessary data
+import { Body } from '@egovernments/digit-ui-react-components';
 
 const EditVillagePopulationPopUp = ({ onClose, census }) => {
   const { t } = useTranslation();
+  const { state } = useMyContext(); // Extract state from context
 
   // State to manage confirmed population and target population
   const [confirmedTotalPopulation, setConfirmedTotalPopulation] = useState("");
@@ -17,23 +20,38 @@ const EditVillagePopulationPopUp = ({ onClose, census }) => {
     }
   }, [census]);
 
-  const handleSave = () => {
-    // Prepare the updated census data with new population values
-    const updatedCensus = {
-      ...census,
-      additionalDetails: {
-        ...census.additionalDetails,
-        confirmedTotalPopulation,
-        confirmedTargetPopulation,
-      },
-    };
+  // Define the mutation configuration
+  const mutation = Digit.Hooks.useCustomAPIMutationHook({
+    url: "/census-service/_update", // Replace with the appropriate API endpoint
+  });
 
-    // Log the updated data or trigger a save function with it
-    console.log("Updated Census Data: ", updatedCensus);
+  const handleSave = async () => {
+    await mutation.mutate(
+      {
+        body: {
+          Census: {
+            ...census,
+            additionalDetails: {
+              ...census.additionalDetails,
+              confirmedTotalPopulation,
+              confirmedTargetPopulation,
+            },
+            workflow: {
+              action: "SEND_BACK_FOR_CORRECTION",
+            },
+          },
+        }
 
-    // Close the popup after saving
-    onClose();
+      }
+    );
   };
+
+  // Close the popup when the mutation is successful
+  useEffect(() => {
+    if (!mutation.isLoading && mutation.data) {
+      onClose(); // Close popup after saving
+    }
+  }, [mutation.data, mutation.isLoading, onClose]);
 
   return (
     <PopUp
