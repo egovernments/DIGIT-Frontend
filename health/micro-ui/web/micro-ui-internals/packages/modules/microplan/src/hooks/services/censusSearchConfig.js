@@ -1,5 +1,4 @@
 const censusSearchConfig = async (body) => {
-    console.log(body, "dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     try {
       const response = await Digit.CustomService.getResponse({
         url: "/census-service/_search",
