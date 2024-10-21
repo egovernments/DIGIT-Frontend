@@ -146,12 +146,12 @@ const CreateEmployee = () => {
 
   const onSubmit = async (data) => {
     const hasCurrentAssignment = data?.Assignments?.some(assignment => assignment?.isCurrentAssignment === true); 
-    
-    data.Jurisdictions = data.Jurisdictions.map((juris) => {
+    let selectedCity= data?.Jurisdictions?.boundary;
+    data.Jurisdictions = data?.Jurisdictions?.map((juris) => {
       return {
         ...juris,
         boundary: tenantId,
-        tenantId: tenantId,
+        tenantId: `${tenantId}.${selectedCity}`,
       };
     });
     // If no current assignment, throw an error
