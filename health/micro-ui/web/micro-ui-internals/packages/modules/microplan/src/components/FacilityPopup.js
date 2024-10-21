@@ -4,13 +4,13 @@ import { PopUp, Button, Tab, CheckBox, Card, Toast } from "@egovernments/digit-u
 import SearchJurisdiction from "./SearchJurisdiction";
 import { LoaderWithGap, Loader } from "@egovernments/digit-ui-react-components";
 import DataTable from "react-data-table-component";
+import AccessibilityPopUp from "./accessbilityPopUP";
+import SecurityPopUp from "./securityPopUp";
 
 
 
 const FacilityPopUp = ({ details, onClose }) => {
   const { t } = useTranslation();
-  const microplanUnassignedMessage = t(`MICROPLAN_UNASSIGNED_FACILITIES`);
-  const microplanAssignedMessage = t(`MICROPLAN_ASSIGNED_FACILITIES`);
   const currentUserUuid = Digit.UserService.getUser().info.uuid;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [facilityAssignedStatus, setFacilityAssignedStatus] = useState(false);
@@ -24,11 +24,25 @@ const FacilityPopUp = ({ details, onClose }) => {
   const [isAllSelected, setIsAllSelected] = useState(false);
   const [censusData, setCensusData] = useState([]);
   const [showToast, setShowToast] = useState(null);
+  const [accessibilityData, setAccessibilityData] = useState(null);
+  const [securityData, setSecurityData] = useState(null);
+  const [viewDetails, setViewDetails] = useState(false)
+  const [totalCensusCount, setTotalCensusCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const configNavItem = [
+    {
+      code: t(`MICROPLAN_UNASSIGNED_FACILITIES`),
+      name: "Unassigned Facilities",
+    },
+    {
+      code: t(`MICROPLAN_ASSIGNED_FACILITIES`),
+      name: "Assigned Facilities",
+    }
+  ]
 
-  const [activeLink, setActiveLink] = useState({
-    code: microplanUnassignedMessage,
-    name: "Unassigned Facilities",
-  });
+  const firstNavItem = configNavItem[0];
+  const [activeLink, setActiveLink] = useState(firstNavItem);
 
   const handleTabClick = (e) => {
     setActiveLink(e);
@@ -89,7 +103,7 @@ const FacilityPopUp = ({ details, onClose }) => {
     setJurisdiction(jurisdictionObject);
     jurisdictionArray = planEmployeeDetailsData?.PlanEmployeeAssignment?.[0]?.jurisdiction?.map((item) => { return { code: item } });
     censusSearch(jurisdictionArray);
-  }, [microplanId, facilityAssignedStatus, details, planEmployeeDetailsData]);
+  }, [microplanId, facilityAssignedStatus, details, planEmployeeDetailsData, currentPage, rowsPerPage]);
 
   useEffect(() => {
     if (boundaries || jurisdiction) {
@@ -124,7 +138,11 @@ const FacilityPopUp = ({ details, onClose }) => {
             tenantId: tenantId,
             source: microplanId,
             facilityAssigned: facilityAssignedStatus,
-            jurisdiction: codeArray
+            jurisdiction: codeArray,
+            pagination: {
+              limit: rowsPerPage,
+              offset: (currentPage - 1) * rowsPerPage,
+            }
           }
         },
       },
@@ -132,10 +150,12 @@ const FacilityPopUp = ({ details, onClose }) => {
         onSuccess: async (result) => {
           if (result?.Census) {
             setCensusData(result?.Census);
+            setTotalCensusCount(result?.TotalCount)
             return;
           }
           else {
             setCensusData([]);
+            setTotalCensusCount(0)
           }
         },
         onError: (result) => {
@@ -178,6 +198,18 @@ const FacilityPopUp = ({ details, onClose }) => {
     setIsAllSelected(!isAllSelected);
   };
 
+  const handleViewDetailsForAccessibility = (row) => {
+    setViewDetails(true);
+    setAccessibilityData(row);
+    setSecurityData(null);
+  };
+
+  const handleViewDetailsForSecurity = (row) => {
+    setViewDetails(true);
+    setSecurityData(row);
+    setAccessibilityData(null);
+  };
+
   const columns = [
     {
       name: (
@@ -206,14 +238,11 @@ const FacilityPopUp = ({ details, onClose }) => {
     {
       name: t("MP_VILLAGE_ACCESSIBILITY_LEVEL"), // Change to your column type
       cell: (row) => (
-        <span>
-          <a 
-            href="#" 
-            style={{ color: "#f47738", textDecoration: "underline" }}
-            onClick={() => handleViewDetails(row)} // Same function for handling details
-          >
-            {t("VIEW_DETAILS")}
-          </a>
+        <span
+          style={{ color: "#f47738", textDecoration: "underline", cursor: "pointer" }}
+          onClick={() => handleViewDetailsForAccessibility(row)}
+        >
+          {t("VIEW_DETAILS")}
         </span>
       ), // Replace with the appropriate field from your data
       sortable: false,
@@ -221,14 +250,11 @@ const FacilityPopUp = ({ details, onClose }) => {
     {
       name: t("MP_VILLAGE_SECURITY_LEVEL"), // Change to your column type
       cell: (row) => (
-        <span>
-          <a 
-            href="#" 
-            style={{ color: "#f47738", textDecoration: "underline" }}
-            onClick={() => handleViewDetails(row)} // Same function for handling details
-          >
-            {t("VIEW_DETAILS")}
-          </a>
+        <span
+          style={{ color: "#f47738", textDecoration: "underline", cursor: "pointer" }}
+          onClick={() => handleViewDetailsForSecurity(row)}
+        >
+          {t("VIEW_DETAILS")}
         </span>
       ), // Replace with the appropriate field from your data
       sortable: false,
@@ -262,15 +288,9 @@ const FacilityPopUp = ({ details, onClose }) => {
       const filteredBoundaries = newDetails?.serviceBoundaries?.filter((boundary) => {
         return !boundarySet.has(boundary)
       })
-      // TODO : remove this logic
-      filteredBoundaries.forEach((boundary) => {
-        if (boundary[0] === " ") {
-          boundary = boundary.slice(1);
-        }
-      })
       newDetails.serviceBoundaries = filteredBoundaries
       // TODO : remove this logic
-      newDetails.serviceBoundaries = Array.from(new Set(newDetails.serviceBoundaries.map(boundary => boundary[0] === " " ? boundary.slice(1) : boundary)));
+      // newDetails.serviceBoundaries = Array.from(new Set(newDetails.serviceBoundaries.map(boundary => boundary[0] === " " ? boundary.slice(1) : boundary)));
 
 
     }
@@ -283,7 +303,7 @@ const FacilityPopUp = ({ details, onClose }) => {
       );
       newDetails.serviceBoundaries = newDetails?.serviceBoundaries?.concat(filteredBoundaries);
       // TODO : remove this logic
-      newDetails.serviceBoundaries = Array.from(new Set(newDetails.serviceBoundaries.map(boundary => boundary[0] === " " ? boundary.slice(1) : boundary)));
+      // newDetails.serviceBoundaries = Array.from(new Set(newDetails.serviceBoundaries.map(boundary => boundary[0] === " " ? boundary.slice(1) : boundary)));
 
     }
     await mutationForPlanFacilityUpdate.mutate(
@@ -307,6 +327,22 @@ const FacilityPopUp = ({ details, onClose }) => {
     setLoader(false);
   };
 
+  const closeViewDetails = () => {
+    setAccessibilityData(null);
+    setSecurityData(null);
+    setViewDetails(false);
+  }
+
+  // Handle page change
+  const handlePageChange = page => {
+    setCurrentPage(page);
+  };
+
+  const handleRowsPerPageChange = newPerPage => {
+    setRowsPerPage(newPerPage);
+    setCurrentPage(1); // Reset to first page when changing rows per page
+  };
+
   return (
     <>
       {loader ? (
@@ -321,16 +357,7 @@ const FacilityPopUp = ({ details, onClose }) => {
                 <Tab
                   activeLink={activeLink.code}
                   configItemKey="code"
-                  configNavItems={[
-                    {
-                      code: microplanUnassignedMessage,
-                      name: "Unassigned Facilities",
-                    },
-                    {
-                      code: microplanAssignedMessage,
-                      name: "Assigned Facilities",
-                    },
-                  ]}
+                  configNavItems={configNavItem}
                   onTabClick={handleTabClick} // Handle tab click
                   setActiveLink={setActiveLink}
                   showNav
@@ -339,6 +366,7 @@ const FacilityPopUp = ({ details, onClose }) => {
                     whiteSpace: "nowrap", // Prevent text from breaking
                     padding: "10px 15px", // Add padding for spacing
                   }}
+                  itemStyle={{ width: "unset !important" }}
                 />
                 <SearchJurisdiction
                   key={searchKey} // Use key to force re-render
@@ -371,13 +399,24 @@ const FacilityPopUp = ({ details, onClose }) => {
                     columns={columns}
                     data={censusData}
                     pagination
-                    paginationPerPage={10}
-                    paginationTotalRows={censusData.length}
+                    paginationServer
+                    paginationDefaultPage={currentPage}
+                    paginationRowsPerPage={rowsPerPage}
+                    onChangePage={handlePageChange}
+                    onChangeRowsPerPage={handleRowsPerPageChange}
+                    paginationRowsPerPageOptions={[10, 20, 30, 40, 50]}
+                    paginationTotalRows={totalCensusCount}
                     highlightOnHover
                     pointerOnHover
                     striped
                     style={{ marginTop: "20px", border: "1px solid #D6D5D4", borderRadius: "3px" }} // Add some space between the header and DataTable
                   />
+                )}
+                {viewDetails && accessibilityData && (
+                  <AccessibilityPopUp onClose={() => closeViewDetails()} census={accessibilityData} />
+                )}
+                {viewDetails && securityData && (
+                  <SecurityPopUp onClose={() => closeViewDetails()} census={securityData} />
                 )}
               </div>
               {showToast && (
