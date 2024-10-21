@@ -151,7 +151,7 @@ const CreateEmployee = () => {
       return {
         ...juris,
         boundary: tenantId,
-        tenantId: `${tenantId}.${selectedCity}`,
+        tenantId: tenantId,
       };
     });
     // If no current assignment, throw an error

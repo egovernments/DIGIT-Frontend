@@ -172,14 +172,14 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
       links: Digit.Utils.getMultiRootTenant() ? getFilteredLinks(moduleData) : moduleData?.links,
       centreChildren: [
         <div>{t(Digit.Utils.locale.getTransformedLocale(`MODULE_CARD_DESC_${current}`))}</div>,
-        userManual && (
+        howItWorks && (
           <Button
             variation="teritiary"
-            label={userManual?.label}
-            icon={userManual?.icon}
+            label={howItWorks?.label}
+            icon={howItWorks?.icon}
             type="button"
             size={"medium"}
-            onClick={() => window.open(userManual?.link, "_blank")}
+            onClick={() => window.open(howItWorks?.link, "_blank")}
             style={{ padding: "0px" }}
           />
         ),
@@ -197,14 +197,14 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
                 style={{ padding: "0px" }}
               />
             ),
-            howItWorks && (
+            userManual && (
               <Button
                 variation="teritiary"
-                label={howItWorks?.label}
-                icon={howItWorks?.icon}
+                label={userManual?.label}
+                icon={userManual?.icon}
                 type="button"
                 size={"medium"}
-                onClick={() => window.open(howItWorks?.link, "_blank")}
+                onClick={() => window.open(userManual?.link, "_blank")}
                 style={{ padding: "0px" }}
               />
             ),

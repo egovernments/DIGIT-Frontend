@@ -80,7 +80,7 @@ const EditForm = ({ tenantId, data }) => {
           name: ele.hierarchy,
         },
         boundaryType: { label: ele.boundaryType, i18text: `EGOV_LOCATION_BOUNDARYTYPE_${ele.boundaryType.toUpperCase()}` },
-        boundary: { code: ele.boundary },
+        boundary: Digit.Utils.getMultiRootTenant()?{ code: tenantId }:{ code: ele.boundary },
         roles: data?.user?.roles.filter((item) => item.tenantId == ele.boundary),
       });
     }),
@@ -164,10 +164,18 @@ const EditForm = ({ tenantId, data }) => {
   };
 
   const onSubmit = (input) => {
-    if (input.Jurisdictions.filter((juris) => juris.tenantId == tenantId && juris.isActive !== false).length == 0) {
-      setShowToast({ key: true, label: "ERR_BASE_TENANT_MANDATORY" });
-      return;
-    }
+    // if (input.Jurisdictions.filter((juris) => juris.tenantId == tenantId && juris.isActive !== false).length == 0) {
+    //   setShowToast({ key: true, label: "ERR_BASE_TENANT_MANDATORY" });
+    //   return;
+    // }
+    input.Jurisdictions = input?.Jurisdictions?.map((juris) => {
+      return {
+        ...juris,
+        boundary: tenantId,
+        tenantId: tenantId,
+      };
+    });
+
     if (
       !Object.values(
         input.Jurisdictions.reduce((acc, sum) => {
