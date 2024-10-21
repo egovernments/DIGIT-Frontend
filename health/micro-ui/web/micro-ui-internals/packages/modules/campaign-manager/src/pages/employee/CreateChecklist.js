@@ -1,5 +1,7 @@
 import React, { useEffect, useState, createContext, useContext, useCallback } from "react";
 import { ViewCardFieldPair, Toast, Card, TextBlock, Button, PopUp, CardText, TextInput, BreadCrumb, Loader, ActionBar } from "@egovernments/digit-ui-components";
+import React, { useEffect, useState, createContext, useContext, useCallback } from "react";
+import { ViewCardFieldPair, Toast, Card, TextBlock, Button, PopUp, CardText, TextInput, BreadCrumb, Loader, ActionBar } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useHistory, useLocation } from "react-router-dom";
 import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
@@ -14,7 +16,9 @@ import { QuestionContext } from "../../components/CreateQuestionContext";
 import _ from 'lodash';
 import MobileChecklist from "../../components/MobileChecklist";
 // import { QuestionContext } from "../../components/CreateQuestionContext";
+// import { QuestionContext } from "../../components/CreateQuestionContext";
 
+let temp_data = []
 let temp_data = []
 
 const CreateChecklist = () => {
@@ -23,6 +27,9 @@ const CreateChecklist = () => {
   const searchParams = new URLSearchParams(location.search);
   const [showToast, setShowToast] = useState(null);
   const checklistType = searchParams.get("checklistType");
+  let clt = searchParams.get("checklistType");
+  const checklistTypeLocal = (!clt.startsWith("HCM_CHECKLIST_TYPE_")) ? "HCM_CHECKLIST_TYPE_" + clt : clt;
+  const clTranslated = t(`${checklistTypeLocal}`);
   let clt = searchParams.get("checklistType");
   const checklistTypeLocal = (!clt.startsWith("HCM_CHECKLIST_TYPE_")) ? "HCM_CHECKLIST_TYPE_" + clt : clt;
   const clTranslated = t(`${checklistTypeLocal}`);
@@ -35,6 +42,9 @@ const CreateChecklist = () => {
   const rlt = searchParams.get("role");
   const roleLocal = (!rlt.startsWith("ACCESSCONTROL_ROLES_ROLES_")) ? "ACCESSCONTROL_ROLES_ROLES_" + rlt : rlt;
   const rlTranslated = t(`${roleLocal}`);
+  const rlt = searchParams.get("role");
+  const roleLocal = (!rlt.startsWith("ACCESSCONTROL_ROLES_ROLES_")) ? "ACCESSCONTROL_ROLES_ROLES_" + rlt : rlt;
+  const rlTranslated = t(`${roleLocal}`);
   const campaignName = searchParams.get("campaignName");
   let module = searchParams.get("module");
   const [showPopUp, setShowPopUp] = useState(false);
@@ -44,9 +54,17 @@ const CreateChecklist = () => {
   const [previewData, setPreviewData] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [loading_new, setLoading_New] = useState(true);
+  const [loading_new, setLoading_New] = useState(true);
   let locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
   const { mutateAsync } = Digit.Hooks.campaign.useCreateChecklist(tenantId);
   const history = useHistory();
+  const [serviceCode, setServiceCode] = useState(null);
+  const [def_data, setDef_Data] = useState(null);
+
+  // const { questionData1, dispatchQuestionData } = useContext(QuestionContext);
+
+  let data_mdms = []
+  let template_data = []
   const [serviceCode, setServiceCode] = useState(null);
   const [def_data, setDef_Data] = useState(null);
 
@@ -243,14 +261,17 @@ const CreateChecklist = () => {
     // Deep clone the questions to avoid mutating the original tempFormData
     const clonedQuestions = JSON.parse(JSON.stringify(questions));
 
+
     const questionMap = new Map();
     const optionMap = new Map();
     const organizedQuestions = [];
+
 
     // First pass: Populate the maps with questions and options
     clonedQuestions.forEach((question) => {
       question.subQuestions = []; // Initialize an array to hold sub-questions
       questionMap.set(question.id, question);
+
 
       if (question?.options) {
         question.options.forEach((option) => {
@@ -260,11 +281,13 @@ const CreateChecklist = () => {
       }
     });
 
+
     // Second pass: Link each question to its parent, whether it's a question or an option
     clonedQuestions.forEach((question) => {
       if (question.parentId) {
         const parentQuestion = questionMap.get(question.parentId);
         const parentOption = optionMap.get(question.parentId);
+
 
         if (parentQuestion) {
           parentQuestion.subQuestions.push(question);
@@ -276,8 +299,11 @@ const CreateChecklist = () => {
       }
     });
 
+
     return organizedQuestions;
   }
+
+
 
 
 
@@ -301,7 +327,9 @@ const CreateChecklist = () => {
       let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
       let roleTemp = role.toUpperCase().replace(/ /g, "_");
       if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
+      if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
       let formattedString = `${campaignName}.${checklistTypeTemp}.${roleTemp}.${code}`;
+
 
 
       const obj = {
@@ -320,6 +348,7 @@ const CreateChecklist = () => {
           const optionval = option.label;
           const upperCaseString = optionval.toUpperCase();
           const transformedString = upperCaseString.replace(/ /g, '_');
+          if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
           if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
           option.label = transformedString;
           let formattedStringTemp = `${campaignName}.${checklistTypeTemp}.${roleTemp}.${option.label}`;
@@ -432,8 +461,12 @@ const CreateChecklist = () => {
     let fp = final_payload.filter((value, index, self) =>
       index === self.findIndex((t) => JSON.stringify(t) === JSON.stringify(value))
     );
+    let fp = final_payload.filter((value, index, self) =>
+      index === self.findIndex((t) => JSON.stringify(t) === JSON.stringify(value))
+    );
     let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
     let roleTemp = role.toUpperCase().replace(/ /g, "_");
+    if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
     if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
     let code_of_checklist = `${campaignName}.${checklistTypeTemp}.${roleTemp}`;
     return {
@@ -441,6 +474,7 @@ const CreateChecklist = () => {
       // code: role,
       code: code_of_checklist,
       isActive: true,
+      attributes: fp,
       attributes: fp,
       additionalDetails: {
         name: checklistName,
@@ -466,7 +500,14 @@ const CreateChecklist = () => {
       // Proceed with localization if needed
       let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
       if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
+      if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
       let roleTemp = role.toUpperCase().replace(/ /g, "_");
+      uniqueLocal.push({
+        code: `${campaignName}_${checklistTypeTemp}_${roleTemp}`,
+        locale: locale,
+        message: `${checklistType} ${role}`,
+        module: "hcm-checklist"
+      });
       uniqueLocal.push({
         code: `${campaignName}_${checklistTypeTemp}_${roleTemp}`,
         locale: locale,
@@ -481,6 +522,7 @@ const CreateChecklist = () => {
           setShowToast({ label: "CHECKLIST_CREATED_LOCALISATION_ERROR", isError: "true" });
           return; // Exit if localization fails
         }
+
 
         // setShowToast({ label: "CHECKLIST_AND_LOCALISATION_CREATED_SUCCESSFULLY"});
         history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
@@ -497,6 +539,7 @@ const CreateChecklist = () => {
       setShowToast({ label: "CHECKLIST_CREATED_FAILED", isError: "true" });
       // console.error("Error creating checklist:", error);
     } finally {
+    } finally {
       setSubmitting(false);
     }
   };
@@ -504,7 +547,12 @@ const CreateChecklist = () => {
 
 
 
+
+
   const fieldPairs = [
+    { label: "ROLE", value: roleLocal },
+    { label: "TYPE_OF_CHECKLIST", value: checklistTypeLocal },
+    { label: "CAMPAIGN_NAME", value: campaignName }
     { label: "ROLE", value: roleLocal },
     { label: "TYPE_OF_CHECKLIST", value: checklistTypeLocal },
     { label: "CAMPAIGN_NAME", value: campaignName }
@@ -514,7 +562,76 @@ const CreateChecklist = () => {
       {loading_new && <Loader />}
       {!loading_new && submitting && <Loader />}
       {!submitting && !loading_new &&
+      {loading_new && <Loader />}
+      {!loading_new && submitting && <Loader />}
+      {!submitting && !loading_new &&
         <div>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div>
+              <h2 style={{ fontSize: "36px", fontWeight: "700" }}>
+                {t("CREATE_NEW_CHECKLIST")}
+              </h2>
+            </div>
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <Button
+                variation="secondary"
+                label={t("CLEAR")}
+                className={"hover"}
+                style={{ marginTop: "2rem", marginBottom: "2rem" }}
+                // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
+                onClick={clearData}
+              // onClick={useTemplateData}
+              />
+              <Button
+                icon="Preview"
+                variation="secondary"
+                label={t("PREVIEW_CHECKLIST")}
+                className={"hover"}
+                style={{ marginTop: "2rem", marginBottom: "2rem" }}
+                // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
+                onClick={popShow}
+              />
+            </div>
+          </div>
+          {showPopUp && (
+            <PopUp
+              className={"custom-pop-up"}
+              type={"default"}
+              heading={t("CHECKLIST_PREVIEW")}
+              children={[
+                // <div>
+                //   <CardText style={{ margin: 0 }}>{"testing" + " "}</CardText>
+                // </div>, 
+              ]}
+              onOverlayClick={() => {
+                setShowPopUp(false);
+              }}
+              onClose={() => {
+                setShowPopUp(false);
+              }}
+              footerChildren={[
+                <Button
+                  type={"button"}
+                  size={"large"}
+                  variation={"secondary"}
+                  label={t("CLOSE")}
+                  onClick={() => {
+                    setShowPopUp(false);
+                  }}
+                />,
+                <Button
+                  type={"button"}
+                  size={"large"}
+                  variation={"primary"}
+                  label={t("CREATE_CHECKLIST")}
+                  onClick={() => {
+                    onSubmit(null, 1, tempFormData);
+                  }}
+                />,
+              ]}
+              sortFooterChildren={true}
+            >
+              {/* <PreviewComponent
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
               <h2 style={{ fontSize: "36px", fontWeight: "700" }}>
@@ -631,9 +748,70 @@ const CreateChecklist = () => {
             actionClassName={"checklistCreate"}
             // noCardStyle={currentKey === 4 || currentStep === 7 || currentStep === 0 ? false : true}
             noCardStyle={true}
+
+              <MobileChecklist questions={previewData} checklistRole={t(`${roleLocal}`)} typeOfChecklist={t(`${checklistTypeLocal}`)}></MobileChecklist>
+            </PopUp>
+          )}
+          <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
+            {fieldPairs.map((pair, index) => (
+              <div>
+                <ViewCardFieldPair
+                  key={index} // Provide a unique key for each item
+                  className=""
+                  inline
+                  label={t(pair.label)} // Dynamically set the label
+                  value={t(pair.value)} // Dynamically set the value
+                // style={{ fontSize: "16px", fontWeight: "bold" }} // Optional: customize styles
+                />
+                <div style={{ height: "1rem" }}></div>
+              </div>
+            ))}
+            {
+              <hr style={{ width: "100%", borderTop: "1px solid #ccc" }} />
+            }
+            <div style={{ height: "1rem" }}>
+            </div>
+            <div style={{ display: "flex" }}>
+              <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t("NAME_OF_CHECKLIST")}</div>
+              <TextInput
+                disabled={true}
+                className="tetxinput-example"
+                type={"text"}
+                name={t("NAME_OF_CHECKLIST")}
+                // value={`${checklistTypeLocal} ${roleLocal}`}
+                value={`${clTranslated} ${rlTranslated}`}
+                // onChange={(event) => addChecklistName(event.target.value)}
+                placeholder={"Checklist Name"}
+              />
+            </div>
+          </Card>
+          <FormComposerV2
+            showMultipleCardsWithoutNavs={true}
+            label={t("CREATE_CHECKLIST")}
+            config={config}
+            onSubmit={onSubmit}
+            fieldStyle={{ marginRight: 0 }}
+            noBreakLine={true}
+            // cardClassName={"page-padding-fix"}
+            onFormValueChange={onFormValueChange}
+            actionClassName={"checklistCreate"}
+            // noCardStyle={currentKey === 4 || currentStep === 7 || currentStep === 0 ? false : true}
+            noCardStyle={true}
           // showWrapperContainers={false}
           />
+          />
 
+          {showToast && (
+            <Toast
+              type={showToast?.isError ? "error" : "success"}
+              // error={showToast?.isError}
+              label={t(showToast?.label)}
+              isDleteBtn={"true"}
+              onClose={() => closeToast()}
+            />
+          )}
+        </div>
+      }
           {showToast && (
             <Toast
               type={showToast?.isError ? "error" : "success"}
