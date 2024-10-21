@@ -17,7 +17,6 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
   const [data,setData]=useState(null);
   // vertical stepper array role code fetch and sorted based on orderNumber
   const rolesArray = state?.rolesForMicroplan?.sort((a, b) => a.orderNumber - b.orderNumber).map((item) => item.roleCode);
-  // console.log("rolesArray",rolesArray);
   const nationalRoles=["ROOT_PLAN_ESTIMATION_APPROVER","ROOT_POPULATION_DATA_APPROVER","ROOT_FACILITY_CATCHMENT_MAPPER"]
   const hierarchyData = customProps?.hierarchyData;
   const campaignType = customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code;

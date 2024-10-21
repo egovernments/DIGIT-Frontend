@@ -28,11 +28,7 @@ function RoleTableComposer({nationalRoles}) {
   const { mutate: planEmployeeUpdate } = Digit.Hooks.microplanv1.usePlanEmployeeUpdate();
 
 
-  console.log("state", state);
   const topBoundary = state?.boundaryHierarchy.find(boundary => boundary.parentBoundaryType === null);
-  console.log("Top Boundary:", topBoundary);
-  console.log("category", category, category.startsWith("PLAN"));
-
   const { isLoading: isHrmsLoading, data: HrmsData, error: hrmsError, refetch: refetchHrms } = Digit.Hooks.microplanv1.useSearchHRMSEmployee({
     tenantId: tenantId,
     microplanId: microplanId,
@@ -397,7 +393,6 @@ function RoleTableComposer({nationalRoles}) {
     setShowToast(null);
   };
   if (isHrmsLoading) {
-    console.log("hrmsloading");
     return <Loader />
   };
   return (

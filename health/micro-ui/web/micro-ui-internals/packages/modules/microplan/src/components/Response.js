@@ -6,8 +6,6 @@ import { Button } from "@egovernments/digit-ui-components";
 import { PanelCard } from "@egovernments/digit-ui-components";
 import { Button } from "@egovernments/digit-ui-react-components";
 const Response = () => {
-
-    console.log("ooooooooooooooo")
     const { t } = useTranslation();
     const history = useHistory();
     const queryStrings = Digit.Hooks.useQueryParams();

@@ -33,7 +33,6 @@ function UserAccess({ category,setData,nationalRoles }) {
     config: {
       enabled: true,
       select: (data) => {
-        // debugger;
         setData(data);
         const rowData = data?.data?.map((item, index) => {
           return {
@@ -121,7 +120,6 @@ function UserAccess({ category,setData,nationalRoles }) {
       sortable: true,
     },
   ];
-  // debugger;
 
   return (
     <>
