@@ -173,6 +173,10 @@ const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...
             {
               label: "SANDBOX_FAQ_ANS_5_LABEL_4",
               description: "SANDBOX_FAQ_ANS_5_DESCRIPTION_4",
+            },
+            {
+              label: "SANDBOX_FAQ_ANS_5_LABEL_5",
+              description: "SANDBOX_FAQ_ANS_5_DESCRIPTION_5",
             }
           ]
         },
