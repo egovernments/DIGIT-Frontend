@@ -34,8 +34,12 @@ const FaqComponent = (props) => {
                   type="button"
                   size={"medium"}
                   onClick={() => {
-                    const baseURL = `https://${window.location.hostname}/${window?.globalPath}/${tenantId}`;
-                    window.open(`${baseURL}/${action?.link}`, "_blank");
+                    if (action?.fulllink) {
+                      window.open(action?.link, "_blank");
+                    } else {
+                      const baseURL = `https://${window.location.hostname}/${window?.globalPath}/${tenantId}`;
+                      window.open(`${baseURL}/${action?.link}`, "_blank");
+                    }
                   }}
                   style={{ padding: "0px" }}
                 />

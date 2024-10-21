@@ -80,13 +80,24 @@ const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...
       type: "faqs",
       actions: [
         {
+          question: "SANDBOX_FAQ_QUES_14",
+          isLabelLink: true,
+          answer: [
+            {
+              label: "SANDBOX_FAQ_ANS_14_LABEL_1",
+              fulllink:true,
+              link:"https://egov-digit.gitbook.io/digit-sandbox/specifications/user-manual/walkthrough-videos",
+            }
+          ]
+        },
+        {
           question: "SANDBOX_FAQ_QUES_1",
           content: "SANDBOX_FAQ_CONTENT_1",
           isLabelLink: true,
           answer: [
             {
               label: "SANDBOX_FAQ_ANS_1_LABEL_1",
-              link:"citizen/all-services",
+              link:"citizen/login",
               description: "SANDBOX_FAQ_ANS_1_DESCRIPTION_1",
             },
             {
