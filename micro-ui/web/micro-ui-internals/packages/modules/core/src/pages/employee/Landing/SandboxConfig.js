@@ -1,6 +1,6 @@
 export const sandboxConfig = {
   heading: "SANDBOX_HEADING",
-  url: "https://www.youtube.com/watch?v=1ZLdetJwfeY",
+  url: "https://www.youtube.com/watch?v=0wcuD67MVt8",
   subsections: [
     {
       title: "SANDBOX_INTRODUCTION_TITLE",
