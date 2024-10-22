@@ -182,14 +182,14 @@ const PopInbox = () => {
   };
 
   const onRowSelect = (event) => {
-    setSelectedRows([event?.selectedRows]);
+    setSelectedRows(event?.selectedRows);
     setVillagesSelected(event?.selectedCount);
   };
 
 
   // This function will update the workflow action for every selected row
   const updateWorkflowForSelectedRows = () => {
-    const updatedRows = selectedRows?.[0].map((census) => ({
+    const updatedRows = selectedRows?.map((census) => ({
       ...census,
       workflow: {
         ...census.workflow,  // Keep existing workflow properties if any
@@ -277,8 +277,8 @@ const PopInbox = () => {
                 {workFlowPopUp !== '' && (
                   <WorkflowCommentPopUp
                     onClose={closePopUp}
-                    heading={'heading'}
-                    submitLabel={'submit label'}
+                    heading={t(`SEND_FOR_${workFlowPopUp}`)}
+                    submitLabel={t(`SEND_FOR_${workFlowPopUp}`)}
                     url="/census-service/bulk/_update"
                     requestPayload={{ Census: updateWorkflowForSelectedRows() }}
                     commentPath="workflow.comment"

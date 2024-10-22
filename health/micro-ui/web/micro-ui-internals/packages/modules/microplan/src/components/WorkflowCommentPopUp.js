@@ -1,10 +1,9 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { PopUp, Button, TextArea, ErrorMessage, Toast } from "@egovernments/digit-ui-components";
-import { useMyContext } from "../utils/context";
 
 const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPayload, commentPath, onSuccess, onError }) => {
-    const { state } = useMyContext();
+
     const { t } = useTranslation();
 
     const [comment, setComment] = useState("");
@@ -44,12 +43,9 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
         const keys = path.split(".");
 
         // Access the array inside the payloadObject
-        const censusList = payloadObject.Census;
+        const key = Object.keys(payloadObject)?.[0];
 
-        // Ensure the censusList is an array
-        if (!Array.isArray(censusList)) {
-            throw new Error("Census is not an array");
-        }
+        const censusList = payloadObject[key];
 
         // Map through each item in the censusList
         return {
