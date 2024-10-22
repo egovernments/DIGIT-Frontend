@@ -78,7 +78,7 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
   const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
 
 
-  const { isLoading: isLoading, data: planAssignmentData, refetch: refetchPlanSearch} = Digit.Hooks.microplanv1.usePlanSearchEmployeeWithTagging({
+  const { isLoading, data: planAssignmentData, refetch: refetchPlanSearch} = Digit.Hooks.microplanv1.usePlanSearchEmployeeWithTagging({
     tenantId: tenantId,
     body: {
         "PlanEmployeeAssignmentSearchCriteria": {
@@ -110,7 +110,7 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
     setTotalRows(planAssignmentData?.totalCount);
   }, [planAssignmentData]);
 
-  const openPopUp = (alreadyQueuedSelectedState) => {
+  const openPopUp = () => {
     setShowPopUp(true);
   };
  
@@ -168,7 +168,7 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
           {row.planData.jurisdiction?.length > (2) && (
             <Button
               label={`+${row.planData.jurisdiction.length - (2)} ${t("ES_MORE")}`}
-              onClick={() => openPopUp(row.planData.jurisdiction)}
+              onClick={() => openPopUp()}
               variation="link"
               style={{
                 height: "2rem",
@@ -192,7 +192,7 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
             <Wrapper
               setShowPopUp={setShowPopUp}
               alreadyQueuedSelectedState={row.planData.jurisdiction}
-            ></Wrapper>
+            />
           )}
                 </div>
             );
@@ -203,7 +203,6 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
 
   const handlePaginationChange = (page) => {
     setCurrentPage(page);
-    refetchPlanSearch();
   };
 
   if (isLoading) return <Loader />;
