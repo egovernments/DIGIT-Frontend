@@ -5,6 +5,7 @@ import PopInboxTable from "../../components/PopInboxTable";
 import { Card, Tab, Button, SVG, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
+import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
 
 const PopInbox = () => {
   const { t } = useTranslation();
@@ -19,8 +20,14 @@ const PopInbox = () => {
   const [hierarchyLevel, setHierarchyLevel] = useState("");
   const [censusData, setCensusData] = useState([]);
   const [boundaries, setBoundaries] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [workFlowPopUp, setworkFlowPopUp] = useState('');
   const [selectedFilter, setSelectedFilter] = useState(null);
   const [activeFilter, setActiveFilter] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [totalRows, setTotalRows] = useState(0);
+  const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   const [activeLink, setActiveLink] = useState({
     code: "ASSIGNED_TO_ME",
     name: "ASSIGNED_TO_ME",
@@ -61,7 +68,7 @@ const PopInbox = () => {
     }
   }, [campaignObject]);
 
-  console.log("user", user);
+
   const {
     isLoading: isPlanEmpSearchLoading,
     data: planEmployee,
@@ -71,16 +78,10 @@ const PopInbox = () => {
     tenantId: tenantId,
     body: {
       PlanEmployeeAssignmentSearchCriteria: {
-        // tenantId: tenantId,
-        // planConfigurationId: url?.microplanId,
-        // active: true,
-        // employeeId: [user?.info?.uuid],
-        // role: ["POPULATION_DATA_APPROVER", "ROOT_POPULATION_DATA_APPROVER"],
-
-        tenantId: "mz",
+        tenantId: tenantId,
         active: true,
         planConfigurationId: url?.microplanId,
-        role: ["POPULATION_DATA_APPROVER"],
+        role: ["POPULATION_DATA_APPROVER", "ROOT_POPULATION_DATA_APPROVER"],
         employeeId: [user?.info?.uuid],
       },
     },
@@ -88,6 +89,10 @@ const PopInbox = () => {
       enabled: true,
     },
   });
+
+  const closePopUp = () => {
+    setworkFlowPopUp('');
+  };
 
   useEffect(() => {
     if (planEmployee?.planData) {
@@ -117,6 +122,10 @@ const PopInbox = () => {
 
   const actionsMain = workflowData?.actions;
 
+  // actionsToHide array by checking for "EDIT" in the actionMap
+  const actionsToHide = actionsMain?.filter(action => action.action.includes("EDIT"))?.map(action => action.action);
+
+
   // Custom hook to fetch census data based on microplanId and boundaryCode
   const reqCriteriaResource = {
     url: `/census-service/_search`,
@@ -127,6 +136,8 @@ const PopInbox = () => {
         status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
         assignee: activeLink.code === "ASSIGNED_TO_ME" ? user?.info?.uuid : "",
         jurisdiction: jurisdiction,
+        limit: limitAndOffset?.limit,
+        offset: limitAndOffset?.offset
       },
     },
     config: {
@@ -139,10 +150,13 @@ const PopInbox = () => {
   useEffect(() => {
     if (data) {
       setCensusData(data?.Census);
+      setTotalRows(data?.TotalCount)
       setActiveFilter(data?.StatusCount);
       if ((selectedFilter === null || selectedFilter === undefined) && selectedFilter !== "") {
         setSelectedFilter(Object.entries(data?.StatusCount)?.[0]?.[0]);
       }
+      setVillagesSelected(0);
+      setSelectedRows([]);
     }
   }, [data, selectedFilter]);
 
@@ -150,30 +164,68 @@ const PopInbox = () => {
     if (jurisdiction.length > 0) {
       refetch(); // Trigger the API call again after activeFilter changes
     }
-  }, [selectedFilter, activeLink, jurisdiction]);
+  }, [selectedFilter, activeLink, jurisdiction,limitAndOffset]);
 
-  useEffect(() => {}, [selectedFilter]);
+  useEffect(() => {
+    if (selectedFilter === "PENDING_FOR_VERIFICATION") {
+      setActiveLink({ code: "", name: "" });
+      setShowTab(false);
+    }
+  }, [selectedFilter]);
+
+  useEffect(() => {
+  }, [showTab]);
+
 
   const onFilter = (selectedStatus) => {
     setSelectedFilter(selectedStatus?.code);
   };
 
+  const handlePageChange = (page,totalRows) =>{
+    setCurrentPage(page);
+    setLimitAndOffset({...limitAndOffset,offset: (page - 1) * 5})
+  }
+
+  const handlePerRowsChange = (currentRowsPerPage, currentPage) =>{
+    setRowsPerPage(currentRowsPerPage);
+    setCurrentPage(currentPage);
+    setLimitAndOffset({limit:currentRowsPerPage,offset: (currentPage - 1) * currentRowsPerPage})
+  }
+
   const clearFilters = () => {
-    setSelectedFilter("");
+    if (selectedFilter !== Object.entries(data?.StatusCount)?.[0]?.[0])
+      setSelectedFilter(Object.entries(data?.StatusCount)?.[0]?.[0]);
   };
 
   const handleActionClick = (action) => {
-    console.log("clicked action");
+
+    setworkFlowPopUp(action);
   };
 
   const onRowSelect = (event) => {
-    console.log(event, "clicked action");
+    setSelectedRows(event?.selectedRows);
     setVillagesSelected(event?.selectedCount);
   };
+
+
+  // This function will update the workflow action for every selected row
+  const updateWorkflowForSelectedRows = () => {
+    const updatedRows = selectedRows?.map((census) => ({
+      ...census,
+      workflow: {
+        ...census.workflow,  // Keep existing workflow properties if any
+        action: workFlowPopUp,
+      },
+    }));
+
+    return updatedRows;
+  };
+
 
   if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading) {
     return <Loader />;
   }
+
 
   return (
     <div className="pop-inbox-wrapper">
@@ -193,7 +245,7 @@ const PopInbox = () => {
           onApplyFilters={onFilter}
           clearFilters={clearFilters}
           defaultValue={
-            selectedFilter !== "" && activeFilter ? { [Object.entries(activeFilter)?.[0]?.[0]]: Object.entries(activeFilter)?.[0]?.[1] } : null
+            selectedFilter === Object.entries(activeFilter)?.[0]?.[0] ? { [Object.entries(activeFilter)?.[0]?.[0]]: Object.entries(activeFilter)?.[0]?.[1] } : null
           }
         ></InboxFilterWrapper>
 
@@ -218,7 +270,7 @@ const PopInbox = () => {
                 setActiveLink(e);
               }}
               setActiveLink={setActiveLink}
-              showNav
+              showNav={showTab}
               style={{}}
             />
           )}
@@ -231,20 +283,31 @@ const PopInbox = () => {
                 </div>
 
                 <div className={`table-actions-wrapper`}>
-                  {actionsMain?.map((action, index) => (
+                  {actionsMain?.filter(action => !actionsToHide.includes(action.action))?.map((action, index) => (
                     <Button
                       key={index}
                       variation="secondary"
                       label={t(action.action)}
                       type="button"
-                      onClick={(action) => handleActionClick(action)}
+                      onClick={(action) => handleActionClick(action?.target?.textContent)}
                       size={"large"}
                     />
                   ))}
                 </div>
+
+                {workFlowPopUp !== '' && (
+                  <WorkflowCommentPopUp
+                    onClose={closePopUp}
+                    heading={t(`SEND_FOR_${workFlowPopUp}`)}
+                    submitLabel={t(`SEND_FOR_${workFlowPopUp}`)}
+                    url="/census-service/bulk/_update"
+                    requestPayload={{ Census: updateWorkflowForSelectedRows() }}
+                    commentPath="workflow.comment"
+                  />
+                )}
               </div>
             )}
-            <PopInboxTable onRowSelect={onRowSelect} censusData={censusData} />
+            {isFetching ? <Loader /> : <PopInboxTable currentPage={currentPage}  rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} />}
           </Card>
         </div>
       </div>
