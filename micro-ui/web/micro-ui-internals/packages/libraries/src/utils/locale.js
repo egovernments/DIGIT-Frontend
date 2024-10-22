@@ -10,8 +10,21 @@
  */
 
 export const getLocalityCode = (locality, tenantId) => {
-  if (typeof locality === "string") return locality.includes("_") ? locality : `${tenantId.replace(".", "_").toUpperCase()}_ADMIN_${locality}`;
-  else if (locality.code) return locality.code.includes("_") ? locality : `${tenantId.replace(".", "_").toUpperCase()}_ADMIN_${locality.code}`;
+  const isMultiRootTenant = Digit.Utils.getMultiRootTenant(); // Replace with your actual condition
+
+  if (typeof locality === "string") {
+    return locality.includes("_")
+      ? locality
+      : isMultiRootTenant
+      ?  `ADMIN_${locality}`
+      :`${tenantId.replace(".", "_").toUpperCase()}_ADMIN_${locality}`;
+  } else if (locality.code) {
+    return locality.code.includes("_")
+      ? locality.code
+      : isMultiRootTenant
+      ? `ADMIN_${locality.code}`
+      :`${tenantId.replace(".", "_").toUpperCase()}_ADMIN_${locality.code}`;
+  }
 };
 
 export const getRevenueLocalityCode = (locality, tenantId) => {
