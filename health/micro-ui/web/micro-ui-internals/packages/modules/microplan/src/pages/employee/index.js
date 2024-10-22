@@ -70,8 +70,8 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
       { name: "villageRoadCondition" },
       { name: "villageTerrain" },
       { name: "securityQuestions" },
-      { name: "facilityType"},
-      { name: "facilityStatus"}
+      { name: "facilityType" },
+      { name: "facilityStatus" }
     ],
     {
       cacheTime: Infinity,
@@ -182,7 +182,7 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
         <PrivateRoute path={`${path}/microplan-search`} component={() => <MicroplanSearch></MicroplanSearch>} />
         <PrivateRoute path={`${path}/user-management`} component={() => <UserManagement></UserManagement>} />
         <PrivateRoute path={`${path}/user-download`} component={() => <UserDownload />} />
-        <PrivateRoute path={`${path}/select-activity`} component={() => <ChooseActivity/>} />
+        <PrivateRoute path={`${path}/select-activity`} component={() => <ChooseActivity />} />
         <PrivateRoute path={`${path}/campaign-boundary`} component={() => <CampaignBoundary />} />
         <PrivateRoute path={`${path}/test`} component={() => <SearchUnderJurisdiction></SearchUnderJurisdiction>} />
         <PrivateRoute path={`${path}/table`} component={() => <TableNew />} />
@@ -190,14 +190,13 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
         <PrivateRoute path={`${path}/plan-inbox`} component={() => <PlanInbox />} />
         <PrivateRoute path={`${path}/upload-user`} component={() => <UserUpload />} />
         <PrivateRoute path={`${path}/village-view`} component={() => <VillageView />} />
-        <PrivateRoute path={`${path}/my-microplans`} component={() => <MyMicroplans/>} /> 
-        <PrivateRoute path={`${path}/upload-user-success`} component={() => <Response/>} /> 
-        <PrivateRoute path={`${path}/setup-completed-response`} component={() => <Response/>} /> 
+        <PrivateRoute path={`${path}/my-microplans`} component={() => <MyMicroplans />} />
+        <PrivateRoute path={`${path}/upload-user-success`} component={() => <Response />} />
+        <PrivateRoute path={`${path}/setup-completed-response`} component={() => <Response />} />
+        <PrivateRoute path={`${path}/population-finalise-success`} component={() => <Response />} />
+        <PrivateRoute path={`${path}/assign-facilities-to-villages`} component={() => <FacilityCatchmentMapping />} />
 
 
-         <PrivateRoute path={`${path}/assign-facilities-to-villages`} component={() => <FacilityCatchmentMapping/>} />
-         
-        
 
 
       </AppContainer>
