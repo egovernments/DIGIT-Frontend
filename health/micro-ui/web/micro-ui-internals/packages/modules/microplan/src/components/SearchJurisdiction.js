@@ -68,7 +68,7 @@ const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, on
         </LabelFieldPair>
         <LabelFieldPair style={{ flexDirection: "column", gap: "0rem" }}>
           <CardLabel>{t("SELECT_BOUNDARIES")}</CardLabel>
-          <div style={{ width: "100%" }}>
+          <div style={{width: "100%" }}>
           <MultiSelectDropdown
             variant={"nestedmultiselect"}
             selected={selectedBoundaries}
