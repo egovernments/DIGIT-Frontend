@@ -130,11 +130,9 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const handleUpdates = (propsForMutate) => {
     updateResources(propsForMutate, {
       onSuccess: (data) => {
-        if (data?.isState) {
+        if (data?.redirectTo) {
           history.push(data?.redirectTo, data?.state)
-        } else {
-          history.push(data?.redirectTo)
-        }
+        } 
       },
       onError: (error, variables) => {
         setShowToast(({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") }))
@@ -225,13 +223,13 @@ const goToPreviousScreenFromFormula = () => {
 
 
 useEffect(() => { 
-
   window.addEventListener("revertToPreviousScreenFromFormula", goToPreviousScreenFromFormula);
-
   return () => {
     window.removeEventListener("revertToPreviousScreenFromFormula", goToPreviousScreenFromFormula);
   };
 }, []);
+
+
   const onSecondayActionClick = () => {
     if (currentKey === 1) {
       history.push(`/${window.contextPath}/employee`);
