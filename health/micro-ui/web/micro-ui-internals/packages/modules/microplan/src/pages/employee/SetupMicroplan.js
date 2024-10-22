@@ -229,13 +229,13 @@ const goToPreviousScreenFromFormula = () => {
 
 
 useEffect(() => { 
-
   window.addEventListener("revertToPreviousScreenFromFormula", goToPreviousScreenFromFormula);
-
   return () => {
     window.removeEventListener("revertToPreviousScreenFromFormula", goToPreviousScreenFromFormula);
   };
 }, []);
+
+
   const onSecondayActionClick = () => {
     if (currentKey === 1) {
       history.push(`/${window.contextPath}/employee`);
