@@ -14,8 +14,8 @@ function RoleTableComposer({ nationalRoles }) {
   const totalFormData = Digit.SessionStorage.get("MICROPLAN_DATA");
   const selectedData = totalFormData?.BOUNDARY?.boundarySelection?.selectedData || [];
   const topBoundaryValue = totalFormData?.BOUNDARY?.boundarySelection?.boundaryData?.Country
-  ? Object.values(totalFormData.BOUNDARY.boundarySelection.boundaryData.Country)[0]
-  : undefined;
+    ? Object.values(totalFormData.BOUNDARY.boundarySelection.boundaryData.Country)[0]
+    : undefined;
   const { hierarchyData, category } = useUserAccessContext();
   const { state } = useMyContext();
   const [rowData, setRowData] = useState([]);
@@ -54,8 +54,8 @@ function RoleTableComposer({ nationalRoles }) {
               state?.boundaryHierarchy?.find(
                 (j) => j.boundaryType === data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.hierarchyLevel
               ),
-            selectedBoundaries:nationalRoles?.includes(category) ? topBoundaryValue :
-             data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.jurisdiction,
+            selectedBoundaries: nationalRoles?.includes(category) ? topBoundaryValue :
+              data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.jurisdiction,
             userServiceUuid: item?.user?.userServiceUuid,
             planData: data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid),
           };
@@ -68,7 +68,7 @@ function RoleTableComposer({ nationalRoles }) {
       },
     },
   });
-  
+
   useEffect(() => {
     if (HrmsData && HrmsData?.data) {
       // Initialize rowData from the HrmsData
@@ -85,7 +85,7 @@ function RoleTableComposer({ nationalRoles }) {
           selectedHierarchy: employee?.selectedHierarchy || null,
           boundaryOptions: boundaryOptions || [],
           selectedBoundaries: nationalRoles?.includes(category) ? filteredBoundary.filter((item) => employee?.selectedBoundaries?.includes(topBoundaryValue)) :
-          filteredBoundary.filter((item) => employee?.selectedBoundaries?.includes(item?.code)) || [],
+            filteredBoundary.filter((item) => employee?.selectedBoundaries?.includes(item?.code)) || [],
         };
       });
 
@@ -290,7 +290,7 @@ function RoleTableComposer({ nationalRoles }) {
       sortable: true,
     },
     {
-      name:t("CONTACT_NUMBER"),
+      name: t("CONTACT_NUMBER"),
       selector: (row) => {
         return row.number;
       },
@@ -425,16 +425,19 @@ function RoleTableComposer({ nationalRoles }) {
           </div>
         </div>
       </Card>
-      <DataTable
-        columns={columns}
-        data={HrmsData?.data}
-        pagination
-        paginationServer
-        paginationTotalRows={totalRows}
-        onChangePage={handlePaginationChange}
-        paginationPerPage={rowsPerPage}
-        paginationRowsPerPageOptions={[5, 10, 15, 20]}
-      />
+      <div style={{ overflow: 'scroll'}}> 
+        <DataTable
+          columns={columns}
+          data={HrmsData?.data}
+          pagination
+          paginationServer
+          paginationTotalRows={totalRows}
+          onChangePage={handlePaginationChange}
+          paginationPerPage={rowsPerPage}
+          paginationRowsPerPageOptions={[5, 10, 15, 20]}
+        />
+      </div>
+
       {showToast && (
         <Toast
           type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
