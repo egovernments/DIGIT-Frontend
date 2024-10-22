@@ -26,7 +26,10 @@ const DesktopInbox = ({
   const GetSlaCell = (value) => {
     return value < 0 ? <span className="sla-cell-error">{value || ""}</span> : <span className="sla-cell-success">{value || ""}</span>;
   };
-
+  const getLocalityCodeForMultiTenant = (locality) => {
+    if (typeof locality === "string") return locality.includes("_") ? locality : `ADMIN_${locality}`;
+    else if (locality.code) return locality.code.includes("_") ? locality : `ADMIN_${locality.code}`;
+  };
   const columns = React.useMemo(
     () => [
       {
@@ -47,7 +50,10 @@ const DesktopInbox = ({
       {
         Header: t("WF_INBOX_HEADER_LOCALITY"),
         Cell: ({ row }) => {
-          return GetCell(t(Digit.Utils.locale.getLocalityCode(row.original["locality"], row.original["tenantId"])));
+          const localityCode = Digit.Utils.getMultiRootTenant()  ? getLocalityCodeForMultiTenant(row.original["locality"])
+         : Digit.Utils.locale.getLocalityCode(row.original["locality"], row.original["tenantId"]);
+    
+          return GetCell(t(localityCode));
         },
       },
       {
