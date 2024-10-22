@@ -171,6 +171,7 @@ function RoleTableComposer({ nationalRoles }) {
   //     return newRowData;
   //   });
   // };
+  console.log("satae BH",state?.boundaryHierarchy);
 
   const handleBoundaryChange = (value, row) => {
     if (!value) return;
@@ -305,7 +306,7 @@ function RoleTableComposer({ nationalRoles }) {
           selected={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedHierarchy || null}
           disabled={nationalRoles?.includes(category) ? true : false}
           isMandatory={true}
-          option={state?.boundaryHierarchy}
+          option={state?.boundaryHierarchy.filter((item)=>!(item.boundaryType==="Village"))}
           select={(value) => {
             row.selectedHeirarchy = value;
             handleHierarchyChange(value, row);
