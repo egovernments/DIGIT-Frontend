@@ -1,11 +1,16 @@
-const searchPlanEmployeeWithTaggingConfig = async ({ tenantId, body, limit, offset, roles = "" }) => {
+const searchPlanEmployeeWithTaggingConfig = async ({ tenantId, body, limit, offset, sortOrder = "ASC" }) => {
   try {
     const response = await Digit.CustomService.getResponse({
       url: "/plan-service/employee/_search",
       useCache: false,
       method: "POST",
       userService: false,
-      params: {},
+      params: {
+        tenantId: tenantId,
+        limit: limit,
+        offset: offset,
+        sortOrder: sortOrder,
+      },
       body: body,
     });
     if (!response) {
@@ -22,7 +27,9 @@ const searchPlanEmployeeWithTaggingConfig = async ({ tenantId, body, limit, offs
       userService: false,
       params: {
         tenantId: tenantId,
-        sortOrder: "ASC",
+        limit: limit,
+        offset: offset,
+        sortOrder: sortOrder,
         userServiceUuids: uuids.join(","),
       },
     });
