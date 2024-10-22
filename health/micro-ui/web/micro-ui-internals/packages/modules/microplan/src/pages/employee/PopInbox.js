@@ -24,7 +24,7 @@ const PopInbox = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [totalRows, setTotalRows] = useState(0);
-  const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * 5 });
+  const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   const [activeLink, setActiveLink] = useState({
     code: "ASSIGNED_TO_ME",
     name: "ASSIGNED_TO_ME",
@@ -160,7 +160,7 @@ const PopInbox = () => {
 
   useEffect(() => {
     if (selectedFilter === "PENDING_FOR_VERIFICATION") {
-      setActiveLink("");
+      setActiveLink({ code: "", name: "" });
       setShowTab(false);
     }
   }, [selectedFilter]);
@@ -181,7 +181,7 @@ const PopInbox = () => {
   const handlePerRowsChange = (currentRowsPerPage, currentPage) =>{
     setRowsPerPage(currentRowsPerPage);
     setCurrentPage(currentPage);
-    setLimitAndOffset({limit:currentRowsPerPage,offset: (currentPage - 1) * 5})
+    setLimitAndOffset({limit:currentRowsPerPage,offset: (currentPage - 1) * currentRowsPerPage})
   }
 
   const clearFilters = () => {

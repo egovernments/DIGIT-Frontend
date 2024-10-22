@@ -319,7 +319,6 @@ const PopInboxTable = ({ ...props }) => {
   }, []);
 
   const handlePageChange = (page,totalRows) => {
-    console.log(page,"page")
     props?.handlePageChange(page,totalRows);
   };
 
@@ -331,7 +330,6 @@ const PopInboxTable = ({ ...props }) => {
   };
 
   const handlePerRowsChange = async (currentRowsPerPage, currentPage) => {
-    console.log(currentRowsPerPage,"currentRowsPerPage")
     props?.handlePerRowsChange(currentRowsPerPage, currentPage);
   };
 
