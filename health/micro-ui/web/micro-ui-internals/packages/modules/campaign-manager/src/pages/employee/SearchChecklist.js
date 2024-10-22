@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { checklistSearchConfig } from "../../configs/checklistSearchConfig";
-import { UICustomizations } from "../../configs/UICustomizations";
 
 const SearchChecklist = () => {
   const { t } = useTranslation();
@@ -15,7 +14,6 @@ const SearchChecklist = () => {
   const id = searchParams.get("campaignId");
   const [campaignName, setCampaignName] = useState(searchParams.get("name"));
 
-  const { mutate, data } = Digit.Hooks.campaign.useTypeOfChecklist(tenantId);
   const stateData = window.history.state;
 
   useEffect(()=>{

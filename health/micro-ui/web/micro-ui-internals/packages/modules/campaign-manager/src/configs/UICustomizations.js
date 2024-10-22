@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import _ from "lodash";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback} from "react";
 import { useHistory, useLocation } from 'react-router-dom';
 import { Fragment } from "react";
 import { Button, PopUp, Switch, Tooltip, TooltipWrapper } from "@egovernments/digit-ui-components";
@@ -18,10 +18,54 @@ const inboxModuleNameMap = {};
 
 // const 
 // const [campaignName, setCampaignName] = useState(null);
-const apiCache = {};
 const rowDataCache = {};
+const apiCache = {};
 
+// // Batch API request function
+// const batchFetchServiceDefinitions = async (serviceCodes, tenantId) => {
+//   try {
+//     const res = await Digit.CustomService.getResponse({
+//       url: "/service-request/service/definition/v1/_search",
+//       params: {},
+//       body: {
+//         ServiceDefinitionCriteria: {
+//           "tenantId": tenantId,
+//           "code": serviceCodes
+//         },
+//         includeDeleted: true
+//       },
+//     });
+//     return res;
+//   } catch (error) {
+//     console.error("Error fetching batch data:", error);
+//     return null;
+//   }
+// };
 
+const updateServiceDefinition = async (newStatus) => {
+  try {
+    const res = await Digit.CustomService.getResponse({
+      url: "/service-request/service/definition/v1/_update",
+      body: {
+        ServiceDefinition: {
+          "tenantId": tenantId,
+          "code": serviceCode,
+          "isActive": newStatus
+        },
+      },
+    });
+    if (res) {
+      rowDataCache[serviceCode].isActive = newStatus;
+      if (apiCache[serviceCode]) {
+        apiCache[serviceCode].ServiceDefinitions[0].isActive = newStatus;
+      }
+    }
+    return res;
+  } catch (error) {
+    // console.error("Error updating service definition:", error);
+    return null;
+  }
+};
 export const UICustomizations = {
   MyChecklistSearchConfig: {
 
@@ -53,142 +97,46 @@ export const UICustomizations = {
       const location = useLocation();
       const searchParams = new URLSearchParams(location.search);
       const campaignName = searchParams.get("name");
-      const tenantId = Digit.ULBService.getCurrentTenantId();
-  
-      const cl_code = row?.data?.checklistType.replace("HCM_CHECKLIST_TYPE_", "");
-      const role_code = row?.data?.role.replace("ACCESSCONTROL_ROLES_ROLES_", "");
-      const serviceCode = `${campaignName}.${cl_code}.${role_code}`;
-  
-      // Check if we've already processed this row
-      if (!rowDataCache[serviceCode]) {
-        rowDataCache[serviceCode] = {
-          isLoading: true,
-          isActive: false,
-          attributes: null,
-          fetchPromise: null
-        };
-  
-        const fetchData = async () => {
-          if (apiCache[serviceCode]) {
-            return apiCache[serviceCode];
-          }
-  
-          try {
-            const res = await Digit.CustomService.getResponse({
-              url: "/service-request/service/definition/v1/_search",
-              params: {},
-              body: {
-                ServiceDefinitionCriteria: {
-                  "tenantId": tenantId,
-                  "code": [serviceCode]
-                },
-                includeDeleted: true
-              },
-            });
-            apiCache[serviceCode] = res;
-            return res;
-          } catch (error) {
-            // console.error("Error fetching data:", error);
-            return null;
-          }
-        };
-  
-        // Start the fetch if it hasn't been started yet
-        if (!rowDataCache[serviceCode].fetchPromise) {
-          rowDataCache[serviceCode].fetchPromise = fetchData().then(res => {
-            if (res?.ServiceDefinitions?.[0]) {
-              rowDataCache[serviceCode].attributes = res.ServiceDefinitions[0].attributes;
-              rowDataCache[serviceCode].isActive = res.ServiceDefinitions[0].isActive;
-            }
-            rowDataCache[serviceCode].isLoading = false;
-          });
-        }
-      }
-  
-      // If data is still loading, return a loading indicator
-      if (rowDataCache[serviceCode].isLoading) {
-        return <div>Loading...</div>;
-      }
-  
-      // Ensure the fetch has completed
-      rowDataCache[serviceCode].fetchPromise?.then(() => {
-        // This will trigger a re-render once the data is available
-      });
-  
-      const updateServiceDefinition = async (newStatus) => {
-        try {
-          const res = await Digit.CustomService.getResponse({
-            url: "/service-request/service/definition/v1/_update",
-            body: {
-              ServiceDefinition: {
-                "tenantId": tenantId,
-                "code": serviceCode,
-                "isActive": newStatus
-              },
-            },
-          });
-          if (res) {
-            rowDataCache[serviceCode].isActive = newStatus;
-            if (apiCache[serviceCode]) {
-              apiCache[serviceCode].ServiceDefinitions[0].isActive = newStatus;
-            }
-          }
-          return res;
-        } catch (error) {
-          // console.error("Error updating service definition:", error);
-          return null;
-        }
-      };
-  
       switch (key) {
-        case "CHECKLIST_ROLE":
-          let str = row?.data?.role;
-          if (!str.startsWith("ACCESSCONTROL_ROLES_ROLES_")) {
-            str = "ACCESSCONTROL_ROLES_ROLES_" + str;
-          }
-          return t(str);
-        case "CHECKLIST_TYPE":
-          let str1 = row?.data?.checklistType;
-          if (!str1.startsWith("HCM_CHECKLIST_TYPE_")) {
-            str1 = "HCM_CHECKLIST_TYPE_" + str1;
-          }
-          return t(str1);
+       
           case "STATUS":
-            const [localIsActive, setLocalIsActive] = useState(rowDataCache[serviceCode].isActive);
+            // const [localIsActive, setLocalIsActive] = useState(rowDataCache[serviceCode].isActive);
             
-            const toggle = async () => {
-              const newStatus = !localIsActive;
-              const res = await updateServiceDefinition(newStatus);
-              if (res) {
-                rowDataCache[serviceCode].isActive = newStatus;
-                setLocalIsActive(newStatus);
-              }
-            };
+            // const toggle = async () => {
+            //   const newStatus = !localIsActive;
+            //   const res = await updateServiceDefinition(newStatus);
+            //   if (res) {
+            //     rowDataCache[serviceCode].isActive = newStatus;
+            //     setLocalIsActive(newStatus);
+            //   }
+            // };
+            console.log(row,key,'row,key');
             
-            const switchText = localIsActive ? "Active" : "Inactive";
+            
+            // const switchText = localIsActive ? "Active" : "Inactive";
             return (
               <Switch
-                isCheckedInitially={localIsActive}
-                label={switchText}
-                onToggle={toggle}
+                isCheckedInitially={""}
+                label={""}
+                onToggle={()=>{}}
               />
             );
         case "ACTION":
-          if (rowDataCache[serviceCode].attributes) {
-            return (
-              <Button
-                type="button"
-                size="medium"
-                icon="View"
-                variation="secondary"
-                label={t("VIEW")}
-                onClick={() => {
-                  history.push(`/${window.contextPath}/employee/campaign/checklist/view?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}`)
-                }}
-              />
-            );
-          } else {
-            return (
+          // if (rowDataCache[serviceCode].attributes) {
+          //   return (
+          //     <Button
+          //       type="button"
+          //       size="medium"
+          //       icon="View"
+          //       variation="secondary"
+          //       label={t("VIEW")}
+          //       onClick={() => {
+          //         history.push(`/${window.contextPath}/employee/campaign/checklist/view?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}`)
+          //       }}
+          //     />
+          //   );
+          // } else {
+             return (
               <Button
                 type="button"
                 size="medium"
@@ -199,8 +147,8 @@ export const UICustomizations = {
                   history.push(`/${window.contextPath}/employee/campaign/checklist/create?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}`)
                 }}
               />
-            );
-          }
+             );
+          // }
         default:
           return value;
       }
@@ -432,7 +380,7 @@ export const UICustomizations = {
                 projectId: row?.projectId,
               },
               "",
-              `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}&campaignId=${row?.id}`
+              `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}&campaignId=${row?.id}&projectType=${row?.projectType}`
             );
             const navEvent1 = new PopStateEvent("popstate");
             window.dispatchEvent(navEvent1);
@@ -765,7 +713,7 @@ export const UICustomizations = {
                 campaignType: row?.projectType
               },
               "",
-              `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}&campaignId=${row?.id}`
+              `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}&campaignId=${row?.id}&projectType=${row?.projectType}`
             );
             const navEvent1 = new PopStateEvent("popstate");
             window.dispatchEvent(navEvent1);
