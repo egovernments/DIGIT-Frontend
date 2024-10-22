@@ -1,0 +1,400 @@
+import React, { Fragment, useState, useEffect, useMemo } from "react";
+import SearchJurisdiction from "../../components/SearchJurisdiction";
+import { boundaries } from "../../components/boundaries";
+import PopInboxTable from "../../components/PopInboxTable";
+import { Card, Tab, Button, SVG, Loader } from "@egovernments/digit-ui-components";
+import { useTranslation } from "react-i18next";
+import InboxFilterWrapper from "../../components/InboxFilterWrapper";
+import DataTable from "react-data-table-component";
+import { CheckBox } from "@egovernments/digit-ui-components";
+import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
+
+const PlanWithCensusInbox = () => {
+  const { t } = useTranslation();
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+
+  const url = Digit.Hooks.useQueryParams();
+  const microplanId = url?.microplanId;
+  const campaignId = url?.campaignId;
+  const [villagesSlected, setVillagesSelected] = useState(0);
+  const [showTab, setShowTab] = useState(true);
+  const user = Digit.UserService.getUser();
+  const [jurisdiction, setjurisdiction] = useState([]);
+  const [hierarchyLevel, setHierarchyLevel] = useState("");
+  const [censusData, setCensusData] = useState([]);
+  const [boundaries, setBoundaries] = useState([]);
+  const [selectedFilter, setSelectedFilter] = useState(null);
+  const [activeFilter, setActiveFilter] = useState({});
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [workFlowPopUp, setworkFlowPopUp] = useState("");
+  const [activeLink, setActiveLink] = useState({
+    code: "ASSIGNED_TO_ME",
+    name: "ASSIGNED_TO_ME",
+  });
+
+  const selectProps = {
+    hideLabel: true,
+    // isIntermediate: isIntermediate,
+    mainClassName: "data-table-select-checkbox",
+  };
+
+  const [totalRows, setTotalRows] = useState(0);
+  const [perPage, setPerPage] = useState(10);
+
+  const handlePageChange = (page) => {};
+
+  const handleRowSelect = (event) => {
+    setSelectedRows(event?.selectedRows);
+    setVillagesSelected(event?.selectedCount);
+  };
+
+  const handlePerRowsChange = async (newPerPage, page) => {};
+  const {
+    isLoading: isPlanWithCensusLoading,
+    data: planWithCensus,
+    error: planWithCensusError,
+    refetch: refetchPlanWithCensus,
+  } = Digit.Hooks.microplanv1.usePlanSearchWithCensus({
+    tenantId: tenantId,
+    microplanId: microplanId,
+    body: {
+      PlanSearchCriteria: {
+        tenantId: tenantId,
+        active: true,
+        jurisdiction: jurisdiction,
+        status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
+        assignee: activeLink.code === "ASSIGNED_TO_ME" ? user?.info?.uuid : "",
+        executionPlanId: microplanId, //list of plan ids
+      },
+    },
+    config: {
+      enabled: jurisdiction.length > 0 ? true : false,
+      select: (data) => {
+        const tableData = data?.planData?.map((item, index) => {
+          const filteredCensus = data?.censusData?.find((d) => d?.boundaryCode === item?.locality);
+          const dynamicSecurityData = Object.keys(filteredCensus?.additionalDetails?.securityDetails || {}).reduce((acc, key) => {
+            acc[`securityDetail_${key}`] = filteredCensus?.additionalDetails?.securityDetails[key]?.code; // Correctly referencing securityDetails
+            return acc;
+          }, {});
+
+          return {
+            original: item,
+            village: filteredCensus?.boundaryCode,
+            villageRoadCondition: filteredCensus?.additionalDetails?.accessibilityDetails?.roadCondition?.code,
+            villageTerrain: filteredCensus?.additionalDetails?.accessibilityDetails?.terrain?.code,
+            villageTransportMode: filteredCensus?.additionalDetails?.accessibilityDetails?.transportationMode?.code,
+            totalPop: filteredCensus?.additionalDetails?.totalPopulation,
+            targetPop: filteredCensus?.additionalDetails?.targetPopulation,
+            ...dynamicSecurityData,
+          };
+        });
+        return {
+          planData: data?.planData,
+          censusData: data?.censusData,
+          StatusCount: data?.StatusCount,
+          tableData,
+        };
+      },
+    },
+  });
+
+  const onSearch = (selectedBoundaries) => {
+    // Extract the list of codes from the selectedBoundaries array
+    const boundaryCodes = selectedBoundaries.map((boundary) => boundary.code);
+
+    // Set jurisdiction with the list of boundary codes
+    setjurisdiction(boundaryCodes);
+  };
+
+  // need to add table and filter card
+
+  const {
+    isLoading: isLoadingCampaignObject,
+    data: campaignObject,
+    error: errorCampaign,
+    refetch: refetchCampaign,
+  } = Digit.Hooks.microplanv1.useSearchCampaign(
+    {
+      CampaignDetails: {
+        tenantId,
+        ids: [campaignId],
+      },
+    },
+    {
+      enabled: url?.campaignId ? true : false,
+      // queryKey: currentKey,
+    }
+  );
+
+  // Effect to update boundary based on campaign data
+  useEffect(() => {
+    if (campaignObject?.boundaries) {
+      setBoundaries(campaignObject?.boundaries);
+    }
+  }, [campaignObject]);
+
+  const {
+    isLoading: isPlanEmpSearchLoading,
+    data: planEmployee,
+    error: planEmployeeError,
+    refetch: refetchPlanEmployee,
+  } = Digit.Hooks.microplanv1.usePlanSearchEmployeeWithTagging({
+    tenantId: tenantId,
+    body: {
+      PlanEmployeeAssignmentSearchCriteria: {
+        tenantId: "mz",
+        active: true,
+        planConfigurationId: url?.microplanId,
+        role: ["POPULATION_DATA_APPROVER"],
+        employeeId: [user?.info?.uuid],
+      },
+    },
+    config: {
+      enabled: true,
+    },
+  });
+
+  useEffect(() => {
+    if (planEmployee?.planData) {
+      setjurisdiction(planEmployee?.planData?.[0]?.jurisdiction);
+      setHierarchyLevel(planEmployee?.planData?.[0]?.hierarchyLevel);
+    }
+  }, [planEmployee]);
+
+  const onClear = () => {
+    setjurisdiction(planEmployee?.planData?.[0]?.jurisdiction);
+  };
+
+  const { isLoading: isUserLoading, data: workflowData, revalidate } = Digit.Hooks.useCustomAPIHook({
+    url: "/egov-workflow-v2/egov-wf/businessservice/_search",
+    params: {
+      tenantId: tenantId,
+      businessServices: "PLAN_ESTIMATION",
+    },
+    config: {
+      select: (data) => {
+        const service = data.BusinessServices?.[0];
+        const matchingState = service?.states.find((state) => state.applicationStatus === "PENDING_FOR_VALIDATION");
+        return matchingState || null;
+      },
+    },
+  });
+
+  const actionsMain = workflowData?.actions;
+
+  // actionsToHide array by checking for "EDIT" in the actionMap
+  const actionsToHide = actionsMain?.filter((action) => action.action.includes("EDIT"))?.map((action) => action.action);
+
+  useEffect(() => {
+    if (planWithCensus) {
+      setCensusData(planWithCensus?.censusData);
+      setActiveFilter(planWithCensus?.StatusCount);
+      if ((selectedFilter === null || selectedFilter === undefined) && selectedFilter !== "") {
+        setSelectedFilter(Object.entries(planWithCensus?.StatusCount)?.[0]?.[0]);
+      }
+      setVillagesSelected(0);
+    }
+  }, [planWithCensus, selectedFilter]);
+
+  useEffect(() => {
+    if (jurisdiction.length > 0) {
+      refetchPlanEmployee(); // Trigger the API call again after activeFilter changes
+    }
+  }, [selectedFilter, activeLink, jurisdiction]);
+
+  useEffect(() => {}, [selectedFilter]);
+
+  const onFilter = (selectedStatus) => {
+    setSelectedFilter(selectedStatus?.code);
+  };
+
+  const clearFilters = () => {
+    if (selectedFilter !== Object.entries(planWithCensus?.StatusCount)?.[0]?.[0])
+      setSelectedFilter(Object.entries(planWithCensus?.StatusCount)?.[0]?.[0]);
+  };
+
+  const handleActionClick = (action) => {
+    setworkFlowPopUp(action);
+  };
+
+  if (!planWithCensus || isPlanWithCensusLoading || isPlanEmpSearchLoading || isLoadingCampaignObject) {
+    return <Loader />;
+  }
+  const resources = planWithCensus?.planData?.[0]?.resources || []; // Resources array
+  const resourceColumns = resources.map((resource) => ({
+    name: t(`RESOURCE_TYPE_${resource.resourceType}`), // Dynamic column name for each resourceType
+    cell: (row) => {
+      return resource.estimatedNumber; // Return estimatedNumber if exists
+    },
+    sortable: true,
+  }));
+
+  const columns = [
+    {
+      name: t(`INBOX_VILLAGE`),
+      cell: (row) => row?.village,
+      sortable: true,
+    },
+    {
+      name: t(`VILLAGE_ROAD_CONDITION`),
+      cell: (row) => row?.villageRoadCondition,
+      sortable: true,
+    },
+    {
+      name: t(`VILLAGE_TERRAIN`),
+      cell: (row) => row?.villageTerrain,
+      sortable: true,
+    },
+    {
+      name: t(`VILLAGE_TARNSPORTATION_MODE`),
+      cell: (row) => row?.villageTransportMode,
+      sortable: true,
+    },
+    {
+      name: t(`TOTAL_POPULATION`),
+      cell: (row) => row?.totalPop,
+      sortable: true,
+    },
+    {
+      name: t(`TARGET_POPULATION`),
+      cell: (row) => row?.targetPop,
+      sortable: true,
+    },
+    ...resourceColumns,
+  ];
+
+  // // Always return an array for `securityColumns`, even if it's empty
+  // const sampleSecurityData = planWithCensus?.censusData?.[0]?.additionalDetails?.securityDetails || {};
+  // const securityColumns = Object.keys(sampleSecurityData).map((key) => ({
+  //   name: t(`SECURITY_DETAIL_${key}`),
+  //   cell: (row) => row[`securityDetail_${key}`],
+  //   sortable: true,
+  // }));
+
+  // Combine base columns and security columns
+  // This function will update the workflow action for every selected row
+  const updateWorkflowForSelectedRows = () => {
+    const updatedRows = selectedRows?.map(({ original }) => ({
+      ...original,
+      workflow: {
+        ...original.workflow, // Keep existing workflow properties if any
+        action: workFlowPopUp,
+      },
+    }));
+
+    return updatedRows;
+  };
+
+  const closePopUp = () => {
+    setworkFlowPopUp("");
+  };
+
+  return (
+    <div className="pop-inbox-wrapper">
+      <SearchJurisdiction
+        boundaries={boundaries}
+        jurisdiction={{
+          boundaryType: hierarchyLevel,
+          boundaryCodes: jurisdiction,
+        }}
+        onSubmit={onSearch}
+        onClear={onClear}
+      />
+
+      <div className="pop-inbox-wrapper-filter-table-wrapper">
+        <InboxFilterWrapper
+          options={activeFilter}
+          onApplyFilters={onFilter}
+          clearFilters={clearFilters}
+          defaultValue={
+            selectedFilter === Object.entries(activeFilter)?.[0]?.[0]
+              ? { [Object.entries(activeFilter)?.[0]?.[0]]: Object.entries(activeFilter)?.[0]?.[1] }
+              : null
+          }
+        ></InboxFilterWrapper>
+
+        <div className={"pop-inbox-table-wrapper"}>
+          {showTab && (
+            <Tab
+              activeLink={activeLink?.code}
+              configItemKey="code"
+              itemStyle={{ width: "unset !important" }}
+              configNavItems={[
+                {
+                  code: "ASSIGNED_TO_ME",
+                  name: "ASSIGNED_TO_ME",
+                },
+                {
+                  code: "ASSIGNED_TO_ALL",
+                  name: "ASSIGNED_TO_ALL",
+                },
+              ]}
+              navStyles={{}}
+              onTabClick={(e) => {
+                setActiveLink(e);
+              }}
+              setActiveLink={setActiveLink}
+              showNav
+              style={{}}
+            />
+          )}
+          <Card className="microPlanBulkTable" type={"primary"}>
+            {villagesSlected !== 0 && (
+              <div className="selection-state-wrapper">
+                <div className="svg-state-wrapper">
+                  <SVG.DoneAll width={"1.5rem"} height={"1.5rem"} fill={"#C84C0E"}></SVG.DoneAll>
+                  <div className={"selected-state"}>{`${villagesSlected} ${t("MICROPLAN_VILLAGES_SELECTED")}`}</div>
+                </div>
+
+                <div className={`table-actions-wrapper`}>
+                  {actionsMain
+                    ?.filter((action) => !actionsToHide.includes(action.action))
+                    ?.map((action, index) => (
+                      <Button
+                        key={index}
+                        variation="secondary"
+                        label={t(action.action)}
+                        type="button"
+                        onClick={(action) => handleActionClick(action?.target?.textContent)}
+                        size={"large"}
+                      />
+                    ))}
+                </div>
+
+                {workFlowPopUp !== "" && (
+                  <WorkflowCommentPopUp
+                    onClose={closePopUp}
+                    heading={t(`SEND_FOR_${workFlowPopUp}`)}
+                    submitLabel={t(`SEND_FOR_${workFlowPopUp}`)}
+                    url="/plan-service/plan/bulk/_update'"
+                    requestPayload={{ Plan: updateWorkflowForSelectedRows() }}
+                    commentPath="workflow.comment"
+                  />
+                )}
+              </div>
+            )}
+            <DataTable
+              columns={columns}
+              data={planWithCensus.tableData}
+              pagination
+              paginationServer
+              paginationTotalRows={5}
+              selectableRows
+              selectableRowsHighlight
+              onChangeRowsPerPage={handlePerRowsChange}
+              onChangePage={handlePageChange}
+              noContextMenu
+              onSelectedRowsChange={handleRowSelect}
+              selectableRowsComponentProps={selectProps}
+              selectableRowsComponent={CheckBox}
+              // customStyles={customStyles}
+              // selectableRowsComponent={SimpleCheckbox}
+            />
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default PlanWithCensusInbox;
