@@ -148,7 +148,6 @@ const CreateEmployee = () => {
   const onSubmit = async (data) => {
     const hasCurrentAssignment = data?.Assignments?.some(assignment => assignment?.isCurrentAssignment === true); 
     let selectedCity= data?.Jurisdictions?.[0]?.boundary;
-    console.log("what si the sleected city", selectedCity);
     data.Jurisdictions = data?.Jurisdictions?.map((juris) => {
       return {
         ...juris,
