@@ -431,6 +431,7 @@ function RoleTableComposer({ nationalRoles }) {
           </div>
         </div>
       </Card>
+      <div style={{overflowY:"scroll"}}>
       <DataTable
         columns={columns}
         data={HrmsData?.data}
@@ -442,6 +443,7 @@ function RoleTableComposer({ nationalRoles }) {
         paginationPerPage={rowsPerPage}
         paginationRowsPerPageOptions={[5, 10, 15, 20]}
       />
+      </div>
       {showToast && (
         <Toast
           type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
