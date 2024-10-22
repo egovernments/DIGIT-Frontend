@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import RoleTableComposer from "./RoleTableComposer";
 import DataTable from "react-data-table-component";
 
-function UserAccess({ category }) {
+function UserAccess({ category,setData,nationalRoles }) {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
@@ -33,6 +33,7 @@ function UserAccess({ category }) {
     config: {
       enabled: true,
       select: (data) => {
+        setData(data);
         const rowData = data?.data?.map((item, index) => {
           return {
             id: index + 1,
@@ -63,38 +64,44 @@ function UserAccess({ category }) {
   };
   const columns = [
     {
-      name: "Name",
+      name: t("NAME"),
       selector: (row) => {
         return row.name;
       },
       sortable: true,
     },
     {
-      name: "Email",
+      name: t("EMAIL"),
       selector: (row) => row.email,
       sortable: true,
     },
     {
-      name: "Contact Number",
+      name: t("CONTACT_NUMBER"),
       selector: (row) => {
         return row.number;
       },
       sortable: true,
     },
     {
-      name: "Adminitrative Heirarchy",
+      name: t("ADMINISTRATIVE_HIERARCHY"),
       selector: (row) => {
-        return row?.hierarchyLevel;
+        // if (category?.startsWith("ROOT")) {
+        //   return "COUNTRY"; // Set to "Country" if true
+        // } else {
+        //   return row?.hierarchyLevel; // Otherwise, return the existing hierarchy level
+        // }
+        return  row?.hierarchyLevel;
       },
       sortable: true,
     },
     {
-      name: "Adminitrative Boundary",
+      name: t("ADMINISTRATIVE_BOUNDARY"),
       selector: (row) => {
         return (
           <>
             {row?.jurisdiction?.map((item) => (
               <div className="digit-tag-container userAccessCell">
+
                 <Chip
                   className=""
                   error=""
@@ -127,6 +134,7 @@ function UserAccess({ category }) {
             <Button variation="secondary" label={t(`ASSIGN`)} icon={"AddIcon"} onClick={() => setShowPopUp(true)} />
           </div>
           <DataTable
+            category={category}
             columns={columns}
             data={planEmployee?.data}
             pagination
@@ -149,7 +157,7 @@ function UserAccess({ category }) {
           className={"roleComposer"}
           type={"default"}
           heading={t(`${category}`)}
-          children={[<RoleTableComposer />]}
+          children={[<RoleTableComposer category={category} nationalRoles={nationalRoles} />]}
           onOverlayClick={() => {}}
           footerChildren={[<Button type={"button"} size={"large"} variation={"secondary"} label={t("CLOSE")} onClick={() => setShowPopUp(false)} />]}
           sortFooterChildren={true}
