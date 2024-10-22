@@ -16,6 +16,7 @@ const CreateEmployee = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const isMobile = window.Digit.Utils.browser.isMobile();
+  const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
 
  const { data: mdmsData,isLoading } = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["CommonFieldsConfig"], {
     select: (data) => {
@@ -146,12 +147,12 @@ const CreateEmployee = () => {
 
   const onSubmit = async (data) => {
     const hasCurrentAssignment = data?.Assignments?.some(assignment => assignment?.isCurrentAssignment === true); 
-    let selectedCity= data?.Jurisdictions?.boundary;
+    const selectedCity= data?.Jurisdictions?.[0]?.boundary;
     data.Jurisdictions = data?.Jurisdictions?.map((juris) => {
       return {
         ...juris,
-        boundary: tenantId,
-        tenantId: tenantId,
+        boundary: selectedCity,
+        tenantId: tenantId
       };
     });
     // If no current assignment, throw an error
@@ -178,7 +179,12 @@ const CreateEmployee = () => {
     }
     let roles = data?.Jurisdictions?.map((ele) => {
       return ele.roles?.map((item) => {
-        item["tenantId"] = ele.boundary;
+        if(isMultiRootTenant){
+          item["tenantId"] = tenantId;
+        }
+        else{
+          item["tenantId"] = ele.boundary;
+        }
         return item;
       });
     });
