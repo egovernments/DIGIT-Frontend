@@ -42,6 +42,9 @@ const SearchSavedPlansWithCampaign = async (body) => {
     });
 
     const listOfPlans = planEmployeeSearch?.PlanEmployeeAssignment?.map((i) => i.planConfigurationId);
+    if(listOfPlans.length===0){
+      return []
+    }
 
     //here get response from both apis and process data and return
     const responsePlan = await Digit.CustomService.getResponse({
@@ -55,7 +58,7 @@ const SearchSavedPlansWithCampaign = async (body) => {
           status: body?.PlanConfigurationSearchCriteria?.status,
           limit: body?.PlanConfigurationSearchCriteria?.limit,
           offset: body?.PlanConfigurationSearchCriteria?.offset,
-          id: listOfPlans?.[0],
+          ids: listOfPlans,
         },
       },
     });
