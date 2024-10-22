@@ -356,6 +356,7 @@ function RoleTableComposer({ nationalRoles }) {
   ];
 
   const handlePaginationChange = (page) => {
+    console.log("page",page);
     setCurrentPage(page);
     refetchHrms();
   };
@@ -430,7 +431,7 @@ function RoleTableComposer({ nationalRoles }) {
           </div>
         </div>
       </Card>
-      <div style={{ overflow: 'scroll'}}> 
+      {/* <div style={{ overflow: 'auto', maxHeight: '400px' }}>  */}
         <DataTable
           columns={columns}
           data={HrmsData?.data}
@@ -440,8 +441,9 @@ function RoleTableComposer({ nationalRoles }) {
           onChangePage={handlePaginationChange}
           paginationPerPage={rowsPerPage}
           paginationRowsPerPageOptions={[5, 10, 15, 20]}
+          style={{ minWidth: '600px',overflow:"scroll" }}  
         />
-      </div>
+      {/* </div> */}
 
       {showToast && (
         <Toast
