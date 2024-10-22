@@ -5,6 +5,7 @@ import PopInboxTable from "../../components/PopInboxTable";
 import { Card, Tab, Button, SVG, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
+import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
 
 const PopInbox = () => {
   const { t } = useTranslation();
@@ -19,6 +20,8 @@ const PopInbox = () => {
   const [hierarchyLevel, setHierarchyLevel] = useState("");
   const [censusData, setCensusData] = useState([]);
   const [boundaries, setBoundaries] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [workFlowPopUp, setworkFlowPopUp] = useState('');
   const [selectedFilter, setSelectedFilter] = useState(null);
   const [activeFilter, setActiveFilter] = useState({});
   const [activeLink, setActiveLink] = useState({
@@ -89,6 +92,10 @@ const PopInbox = () => {
     },
   });
 
+  const closePopUp = () => {
+    setworkFlowPopUp('');
+  };
+
   useEffect(() => {
     if (planEmployee?.planData) {
       setjurisdiction(planEmployee?.planData?.[0]?.jurisdiction);
@@ -148,6 +155,7 @@ const PopInbox = () => {
         setSelectedFilter(Object.entries(data?.StatusCount)?.[0]?.[0]);
       }
       setVillagesSelected(0);
+      setSelectedRows([]);
     }
   }, [data, selectedFilter]);
 
@@ -169,17 +177,34 @@ const PopInbox = () => {
   };
 
   const handleActionClick = (action) => {
-    console.log("clicked action");
+
+    setworkFlowPopUp(action);
   };
 
   const onRowSelect = (event) => {
-    console.log(event, "clicked action");
+    setSelectedRows(event?.selectedRows);
     setVillagesSelected(event?.selectedCount);
   };
+
+
+  // This function will update the workflow action for every selected row
+  const updateWorkflowForSelectedRows = () => {
+    const updatedRows = selectedRows?.map((census) => ({
+      ...census,
+      workflow: {
+        ...census.workflow,  // Keep existing workflow properties if any
+        action: workFlowPopUp,
+      },
+    }));
+
+    return updatedRows;
+  };
+
 
   if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading) {
     return <Loader />;
   }
+
 
   return (
     <div className="pop-inbox-wrapper">
@@ -243,11 +268,22 @@ const PopInbox = () => {
                       variation="secondary"
                       label={t(action.action)}
                       type="button"
-                      onClick={(action) => handleActionClick(action)}
+                      onClick={(action) => handleActionClick(action?.target?.textContent)}
                       size={"large"}
                     />
                   ))}
                 </div>
+
+                {workFlowPopUp !== '' && (
+                  <WorkflowCommentPopUp
+                    onClose={closePopUp}
+                    heading={t(`SEND_FOR_${workFlowPopUp}`)}
+                    submitLabel={t(`SEND_FOR_${workFlowPopUp}`)}
+                    url="/census-service/bulk/_update"
+                    requestPayload={{ Census: updateWorkflowForSelectedRows() }}
+                    commentPath="workflow.comment"
+                  />
+                )}
               </div>
             )}
             {isFetching ? <Loader /> : <PopInboxTable onRowSelect={onRowSelect} censusData={censusData} />}
