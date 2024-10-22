@@ -30,7 +30,7 @@ const WorkbenchBreadCrumb = ({ location, defaultPath,initialContextPath }) => {
     {
       path: getHomePath(),
       content: t("WORKBENCH_HOME"),
-      show: window.location.href.includes("mukta")? false : true,
+      show: true,
     },
     {
       path: `/${window.contextPath}/employee/workbench/manage-master-data`,

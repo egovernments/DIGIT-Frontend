@@ -19,6 +19,10 @@ const GetParamFromUrl = (key, fallback, search) => {
   return fallback;
 };
 
+const getMultiRootTenant = () => {
+  return window?.globalConfigs?.getConfig("MULTI_ROOT_TENANT") || false;
+};
+
 const getPattern = (type) => {
   switch (type) {
     case "Name":
@@ -338,6 +342,10 @@ const swAccess = () => {
   return SW_ACCESS?.length > 0;
 };
 
+const getRoleBasedHomeCard = () => {
+  return window?.globalConfigs?.getConfig("ROLE_BASED_HOMECARD") || false;
+};
+
 /* to get the MDMS config module name */
 const getConfigModuleName = () => {
   return window?.globalConfigs?.getConfig("UICONFIG_MODULENAME") || "commonUiConfig";
@@ -386,5 +394,7 @@ export default {
   ...privacy,
   getDefaultLanguage,
   getLocaleDefault,
-  getLocaleRegion
+  getLocaleRegion,
+  getMultiRootTenant,
+  getRoleBasedHomeCard
 };
