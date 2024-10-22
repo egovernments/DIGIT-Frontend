@@ -5,7 +5,7 @@ import { useMyContext } from "../utils/context";
 import UserAccessMgmtTableWrapper from "./UserAccessMgmtTableWrapper";
 
 
-const UserAccessMgmtTable = ({ file, index, handleFileDelete, handleRedirect, setShowPreview }) => {
+const UserAccessMgmt = ({}) => {
     const { state } = useMyContext();
     const rolesArray = state?.rolesForMicroplan?.sort((a, b) => a.orderNumber - b.orderNumber).map((item) => item.roleCode) || [];
     
@@ -33,4 +33,4 @@ const UserAccessMgmtTable = ({ file, index, handleFileDelete, handleRedirect, se
         )
 };
 
-export default UserAccessMgmtTable;
+export default UserAccessMgmt;
