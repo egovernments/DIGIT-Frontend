@@ -9,10 +9,12 @@ import useUpdateCampaign from "./useUpdateCampaign";
 import useCreateUpdatePlanProject from "./useCreateUpdatePlanProject";
 import utils from "../utils/utilities";
 import useFileDownload from "./useFileDownload";
+import usePlanSearchEmployee from "./usePlanSearchEmployee";
+import useCensusSearch from "./useCensusSearch";
+
 import useSearchHRMSEmployee from "./useSearchHRMSEmployee";
 import usePlanEmployeeCreate from "./usePlanEmployeeCreate";
 import usePlanEmployeeUpdate from "./usePlanEmployeeUpdate";
-import usePlanSearchEmployee from "./usePlanSearchEmployee";
 import usePlanSearchEmployeeWithTagging from "./usePlanSearchEmployeeWithTagging";
 import useSavedMicroplansWithCampaign from "./useSavedMicroplansWithCampaign";
 import usePlanSearchWithCensus from "./usePlanSearchWithCensus";
@@ -29,6 +31,7 @@ const microplanv1 = {
   useCreateUpdatePlanProject,
   useSearchHRMSEmployee,
   useFileDownload,
+  useCensusSearch,
   usePlanEmployeeCreate,
   usePlanEmployeeUpdate,
   usePlanSearchEmployee,

@@ -2,10 +2,9 @@ import React, { useState, Fragment } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ActionBar, SubmitBar, ArrowLeft, ArrowForward } from "@egovernments/digit-ui-react-components";
+import { Button } from "@egovernments/digit-ui-components";
 import { PanelCard } from "@egovernments/digit-ui-components";
-import { Button } from "@egovernments/digit-ui-react-components";
 const Response = () => {
-
     const { t } = useTranslation();
     const history = useHistory();
     const queryStrings = Digit.Hooks.useQueryParams();
@@ -14,6 +13,8 @@ const Response = () => {
         queryStrings?.isSuccess === "true" ? true : queryStrings?.isSuccess === "false" ? false : true
     );
     const { state } = useLocation();
+    const back=(state?.back)?state?.back:"BACK";
+    const backlink=(state?.backlink)?(state.backlink):"employee";
     return (
         <>
             <PanelCard
@@ -25,7 +26,7 @@ const Response = () => {
                 cardStyles={{}}
                 className=""
                 customIcon=""
-                description="The user data uploaded will be available in your microplan user assignment section"
+                description={t(state.description)}
                 // footerChildren={[
                 //     <Button label="OK" onClick={function noRefCheck() { }} type="button" />
                 // ]}
@@ -36,7 +37,7 @@ const Response = () => {
                 message={t(state?.message)}
                 multipleResponses={[]}
                 props={{}}
-                response={state?.fileName}
+                response={t(state?.fileName)}
                 sortFooterButtons
                 style={{}}
                 type="success"
@@ -44,13 +45,13 @@ const Response = () => {
 
             </PanelCard>
             <ActionBar className="mc_back">
-                <Link to={`/${window.contextPath}/employee/microplan/user-management`}>
+                <Link to={`/${window.contextPath}${backlink}`}>
                     <Button
-                        style={{ margin: "0.5rem", minWidth: "12rem", marginLeft: "6rem" }}
+                        style={{ margin: "0.5rem", minWidth: "10rem", marginLeft: "6rem" }}
                         className="previous-button"
                         variation="secondary"
-                        label={t("BACK")}
-                        icon="ArrowBack"
+                        label={t(back)}
+                        icon={"ArrowBack"}
                     />
                 </Link>
             </ActionBar>

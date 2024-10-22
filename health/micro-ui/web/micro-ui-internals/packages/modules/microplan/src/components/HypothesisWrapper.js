@@ -46,6 +46,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     //   queryKey: currentKey,
     }
   );
+
      
     const moveToPreviousStep = () => {
         if(internalKey >1){
