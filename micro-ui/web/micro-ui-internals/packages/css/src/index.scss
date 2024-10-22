@@ -167,10 +167,6 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-.dark {
-  @apply text-text-primary;
-}
-
 .mrlg {
   @apply mr-lg;
 }
@@ -759,4 +755,8 @@ input[type="number"] {
   margin-right: -27%;
   max-height: 120px;
   margin-top: 90px;
+}
+
+.digit-sidebar {
+  top: 4.5rem;
 }
