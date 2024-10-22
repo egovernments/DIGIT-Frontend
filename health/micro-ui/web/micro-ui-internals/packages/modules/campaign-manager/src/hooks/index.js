@@ -14,6 +14,8 @@ import useCreateChecklist from "./useCreateChecklist";
 import useUpsertLocalisation from "./useUpsertLocalisation";
 import useTypeOfChecklist from "./useTypeOfChecklist";
 import { useBoundaryRelationshipSearch } from "./useBoundaryRelationshipSearch";
+import useUpdateChecklist from "./useUpdateChecklist";
+import useMDMSServiceSearch from "./useMDMSServiceSearch";
 
 const UserService = {};
 
@@ -37,6 +39,8 @@ const campaign = {
   useUpsertLocalisation,
   useTypeOfChecklist,
   useBoundaryRelationshipSearch,
+  useUpdateChecklist,
+  useMDMSServiceSearch
 
 };
 
