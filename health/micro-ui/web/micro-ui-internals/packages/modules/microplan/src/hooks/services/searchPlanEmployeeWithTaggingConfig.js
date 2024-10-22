@@ -5,7 +5,12 @@ const searchPlanEmployeeWithTaggingConfig = async ({ tenantId, body, limit, offs
       useCache: false,
       method: "POST",
       userService: false,
-      params: {},
+      params: {
+        tenantId: tenantId,
+        limit: limit,
+        offset: offset,
+        sortOrder: "ASC",
+      },
       body: body,
     });
     if (!response) {
@@ -22,6 +27,8 @@ const searchPlanEmployeeWithTaggingConfig = async ({ tenantId, body, limit, offs
       userService: false,
       params: {
         tenantId: tenantId,
+        limit: limit,
+        offset: offset,
         sortOrder: "ASC",
         userServiceUuids: uuids.join(","),
       },

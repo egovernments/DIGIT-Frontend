@@ -7,12 +7,35 @@ import { useUserAccessContext } from "./UserAccessWrapper";
 import { useMyContext } from "../utils/context";
 import { useQueryClient } from "react-query";
 
+function groupEmployeesByPlan(data, planData) {
+    const groupedEmployees = planData.reduce((acc, plan) => {
+      // Find matching user from data array by comparing userServiceUuid with employeeId
+      const matchedEmployee = data.find(employee => employee.user?.userServiceUuid === plan.employeeId);
+  
+      // If matched employee is found
+      if (matchedEmployee) {
+        // Group by employeeId
+        if (!acc[plan.employeeId]) {
+          acc[plan.employeeId] = {
+            employeeId: plan.employeeId,
+            role: plan.role,
+            userName: matchedEmployee.user?.userName,
+            employeeName: matchedEmployee.user?.name,
+            data: matchedEmployee,
+            planData: plan,
+          };
+        }
+      }
+      return acc;
+    }, {});
+  
+    // Convert grouped object to an array of values for easier use
+    return Object.values(groupedEmployees);
+  }
+
 const UserAccessMgmtTableWrapper = ({ role,}) => {
   const { t } = useTranslation();
-  const queryClient = useQueryClient();
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const { state } = useMyContext();
-  const [rowData, setRowData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(5);
   const [totalRows, setTotalRows] = useState(0);
@@ -30,13 +53,25 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
     },
     limit: rowsPerPage,
     offset: (currentPage - 1) * 5,
-  })
+    config: {
+        select: (data) => {
+            return  {
+                data: groupEmployeesByPlan(data.data, data.planData),
+                role: data.planData[0]?.role,
+                totalCount: data?.totalCount,
+            };
+        } 
+    }
+  },
+)
 
 
   useEffect(() => {
     refetchPlanSearch();
   }, [totalRows, currentPage, rowsPerPage]);
+
   useEffect(() => {
+    console.log("setTotalRows");
     setTotalRows(planAssignmentData?.totalCount);
   }, [planAssignmentData]);
 
@@ -68,35 +103,9 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
     refetchPlanSearch();
   };
 
-  function groupEmployeesByPlan(data, planData) {
-      const groupedEmployees = planData.reduce((acc, plan) => {
-        // Find matching user from data array by comparing userServiceUuid with employeeId
-        const matchedEmployee = data.find(employee => employee.user?.userServiceUuid === plan.employeeId);
-    
-        // If matched employee is found
-        if (matchedEmployee) {
-          // Group by employeeId
-          if (!acc[plan.employeeId]) {
-            acc[plan.employeeId] = {
-              employeeId: plan.employeeId,
-              role: plan.role,
-              userName: matchedEmployee.user?.userName,
-              employeeName: matchedEmployee.user?.name,
-              data: matchedEmployee,
-              planData: plan,
-            };
-          }
-        }
-        return acc;
-      }, {});
-    
-      // Convert grouped object to an array of values for easier use
-      return Object.values(groupedEmployees);
-    }
-
   if (isLoading) return <Loader />;
   else {
-    const result = groupEmployeesByPlan(planAssignmentData.data, planAssignmentData.planData);
+    // const result = groupEmployeesByPlan(planAssignmentData.data, planAssignmentData.planData);
 
   return(
     <div>
@@ -105,11 +114,11 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
         
         
             <div className="view-composer-header-section">
-                <CardSubHeader style={{ marginTop: 0, fontSize: "1.5rem", color: " #0B4B66", marginBottom: "0rem" }}>{t(result[0]?.role)}</CardSubHeader>
+                <CardSubHeader style={{ marginTop: 0, fontSize: "1.5rem", color: " #0B4B66", marginBottom: "0rem" }}>{t(planAssignmentData?.role)}</CardSubHeader>
             </div>
             <DataTable
     columns={columns}
-    data={result}
+    data={planAssignmentData?.data}
     pagination
     paginationServer
     paginationTotalRows={totalRows}
