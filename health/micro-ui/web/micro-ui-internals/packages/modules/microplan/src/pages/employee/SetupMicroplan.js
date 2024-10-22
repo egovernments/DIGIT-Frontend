@@ -17,6 +17,7 @@ import { MicroplanConfig } from "../../configs/SetupMicroplanConfig";
 import { Stepper, Toast, PopUp, CardText, InfoCard, Button } from "@egovernments/digit-ui-components";
 import _ from "lodash";
 import { useMyContext } from "../../utils/context";
+import { useLocation } from "react-router-dom/cjs/react-router-dom";
 
 const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const { dispatch, state } = useMyContext();
@@ -129,16 +130,21 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const handleUpdates = (propsForMutate) => {
     updateResources(propsForMutate, {
       onSuccess: (data) => {
-        if(data?.redirectTo){
-          history.push(data?.redirectTo)
+        // Check if there is a redirectTo property in the response
+        if (data?.redirectTo) {
+          history.push(data?.redirectTo, data?.state); // Navigate to the specified route
         }
       },
       onError: (error, variables) => {
-
-        setShowToast(({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") }))
+        // Display error toast if update fails
+        setShowToast({
+          key: "error",
+          label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE"),
+        });
       },
     });
   };
+  
 
   const onSubmit = (formData) => {
     // setIsSubmittting to true -> to run inline validations within the components
@@ -205,6 +211,13 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     setCurrentStep((prev) => prev - 1);
     setCurrentKey((prev) => prev - 1);
   }
+
+
+const goToPreviousScreenFromFormula = () => {
+  setCurrentStep((prev) => prev - 1);
+  setCurrentKey((prev) => prev - 1);
+}
+
   useEffect(() => {
 
     window.addEventListener("moveToPrevious", moveToPreviousStep);
@@ -213,16 +226,27 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
       window.removeEventListener("moveToPrevious", moveToPreviousStep);
     };
   }, []);
+
+
+useEffect(() => { 
+  window.addEventListener("revertToPreviousScreenFromFormula", goToPreviousScreenFromFormula);
+  return () => {
+    window.removeEventListener("revertToPreviousScreenFromFormula", goToPreviousScreenFromFormula);
+  };
+}, []);
+
+
   const onSecondayActionClick = () => {
     if (currentKey === 1) {
       history.push(`/${window.contextPath}/employee`);
     }
-    const { isLastVerticalStep } = Digit.Hooks.useQueryParams();
+    const { isLastVerticalStep,  isFormulaLastVerticalStep } = Digit.Hooks.useQueryParams();
 
-    if (isLastVerticalStep === 'true') {
+    if (isLastVerticalStep === 'true' || isFormulaLastVerticalStep === 'true') {
       window.dispatchEvent(new Event("verticalStepper"))
       return;
     }
+
 
     setCurrentStep((prev) => prev - 1);
     setCurrentKey((prev) => prev - 1);
@@ -236,7 +260,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   }
 
   const getNextActionLabel = () => {
-    if(filteredConfig?.[0]?.form?.[0]?.body?.[0]?.isLast){
+    if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.isLast) {
       return t("MP_COMPLETE_SETUP")
     }
     return t("MP_SAVE_PROCEED")

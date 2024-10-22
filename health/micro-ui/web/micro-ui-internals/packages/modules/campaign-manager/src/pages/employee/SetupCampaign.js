@@ -1497,13 +1497,27 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   function onActionSelect(action) {
     setDisplayMenu(false);
     switch (action) {
-      case "UPDATE_DATES":
+      case "HCM_UPDATE_DATES":
         history.push(`/${window.contextPath}/employee/campaign/update-dates-boundary?id=${id}`, {
           name: draftData?.campaignName,
           projectId: draftData?.projectId,
           data: draftData,
         });
         break;
+        case "HCM_CONFIGURE_APP":
+          history.push(`/${window.contextPath}/employee/campaign/checklist/search?name=${draftData?.campaignName}&campaignId=${draftData?.id}`, {
+            name: draftData?.campaignName,
+            projectId: draftData?.projectId,
+            data: draftData,
+          });
+          break;
+          case "HCM_UPDATE_CAMPAIGN":
+            history.push( `/${window.contextPath}/employee/campaign/update-campaign?key=1&parentId=${draftData?.id}`, {
+              name: draftData?.campaignName,
+              projectId: draftData?.projectId,
+              data: draftData,
+            });
+            break;
       default:
         break;
     }
@@ -1552,8 +1566,9 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
           {displayMenu ? (
             <Menu
               options={[
-                "UPDATE_DATES",
-                // "CONFIGURE_APP"
+                "HCM_UPDATE_DATES",
+                "HCM_CONFIGURE_APP",
+                "HCM_UPDATE_CAMPAIGN",
               ]}
               t={t}
               onSelect={onActionSelect}
