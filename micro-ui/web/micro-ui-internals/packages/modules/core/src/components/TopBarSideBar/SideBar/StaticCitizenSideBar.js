@@ -157,7 +157,7 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
   };
   let profileItem;
 
-  if (isFetched && user && user.access_token) {
+  if (isFetched && user && user.access_token && user?.info?.type==="CITIZEN") {
     profileItem = (
       <Profile info={user?.info} stateName={stateInfo?.name} t={t} />
     );

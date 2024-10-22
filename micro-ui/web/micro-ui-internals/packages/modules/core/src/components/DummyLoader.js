@@ -25,7 +25,7 @@ const DummyLoaderScreen = () => {
       if (currentStep < steps.length) {
         setCurrentStep((prev) => prev + 1);
       }
-    }, 1000); // 1 second delay for each step
+    }, 2000); // 1 second delay for each step
 
     if (currentStep === steps.length) {
       clearInterval(stepInterval); // Clear the interval to stop further updates
