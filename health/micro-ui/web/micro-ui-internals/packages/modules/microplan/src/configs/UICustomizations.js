@@ -387,7 +387,7 @@ export const UICustomizations = {
       const url = Digit.Hooks.useQueryParams();
       data.body.PlanFacilitySearchCriteria = {
         ...data.body.PlanFacilitySearchCriteria,
-        planConfigurationId: url?.planConfigurationId,
+        planConfigurationId: url?.microplanId,
       };
       cleanObject(data.body.PlanFacilitySearchCriteria);
       return data;

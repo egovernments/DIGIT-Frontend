@@ -339,6 +339,52 @@ const createUpdatePlanProject = async (req) => {
 
         await updatePlan(upatedPlanObjSubHypothesis);
         return;
+
+      case "FORMULA_CONFIGURATION":
+            
+        //fetch current plan
+        const fetchedPlanForFormula = await searchPlanConfig({
+          PlanConfigurationSearchCriteria: {
+            tenantId,
+            id: microplanId,
+          },
+        })
+        
+        //here we can always invalidate prev assumptions
+        const prevFormulas = fetchedPlanForFormula?.operations?.map(row => {
+          const updatedRow = {
+            ...row,
+            active:false
+          }
+          return updatedRow
+        })
+        const formulasToUpdate = totalFormData?.FORMULA_CONFIGURATION?.formulaConfiguration?.formulaConfigValues?.filter(row => {
+          return (row.category && row.output && row.input && row.operatorName && row.assumptionValue) 
+        })
+        const updatedPlanObjFormula = {
+          ...fetchedPlanForFormula,
+          operations:[
+            ...prevFormulas,
+            ...formulasToUpdate
+          ]
+        }
+
+        const planResFormula = await updatePlan(updatedPlanObjFormula);
+        if(planResFormula?.PlanConfiguration?.[0]?.id){
+        
+          setCurrentKey((prev) => prev + 1);
+          setCurrentStep((prev) => prev + 1);
+          window.dispatchEvent(new Event("isFormulaLastStep"))
+          
+          return {
+            triggeredFrom,
+          };
+        }else {
+          setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
+        }
+        
+        
+       
       case "UPLOADBOUNDARYDATA":
         const fetchedPlanForBoundary = await searchPlanConfig({
           PlanConfigurationSearchCriteria: {
@@ -444,6 +490,10 @@ const createUpdatePlanProject = async (req) => {
             // "verificationDocuments": null,
             // "rating": null
           },
+          additionalDetails:{
+            ...fetchedPlanForSummary.additionalDetails,
+            setupCompleted:true,//we can put this in url when we come from microplan search screen to disable routing to other screens -> Only summary screen should show, or only allowed screens should show
+          }
         };
       const planResForCompleteSetup = await updatePlan(updatedReqForCompleteSetup);
       //here do cleanup activity and go to next screen
