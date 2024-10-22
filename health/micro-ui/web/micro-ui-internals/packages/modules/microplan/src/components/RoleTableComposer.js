@@ -17,7 +17,7 @@ function RoleTableComposer({ nationalRoles }) {
   const { state } = useMyContext();
   const [rowData, setRowData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [totalRows, setTotalRows] = useState(0);
   const [filters, setFilters] = useState({});
   const [name, setName] = useState("");
@@ -353,6 +353,11 @@ function RoleTableComposer({ nationalRoles }) {
     setCurrentPage(page);
     refetchHrms();
   };
+  const handleRowsPerPageChange = (newPerPage, page) => {
+    setRowsPerPage(newPerPage); // Update the rows per page state
+    setCurrentPage(page); // Optionally reset the current page or maintain it
+    refetchHrms(); // Fetch the updated data with the new rows per page
+  };
   const handleSearchSubmit = (e) => {
     setFilters({
       name: name,
@@ -426,6 +431,7 @@ function RoleTableComposer({ nationalRoles }) {
         paginationServer
         paginationTotalRows={totalRows}
         onChangePage={handlePaginationChange}
+        onChangeRowsPerPage={handleRowsPerPageChange}
         paginationPerPage={rowsPerPage}
         paginationRowsPerPageOptions={[5, 10, 15, 20]}
       />
