@@ -70,7 +70,6 @@ function RoleTableComposer({ nationalRoles }) {
       // Initialize rowData from the HrmsData
       const initializedRowData = HrmsData.data.map((employee, index) => {
         const filteredBoundary = selectedData?.filter((item) => item?.type === employee?.selectedHierarchy?.boundaryType);
-        console.log("filteredBoundary", filteredBoundary)
         const boundaryOptions = Digit.Utils.microplanv1.groupByParent(filteredBoundary);
         return {
           rowIndex: index + 1,
