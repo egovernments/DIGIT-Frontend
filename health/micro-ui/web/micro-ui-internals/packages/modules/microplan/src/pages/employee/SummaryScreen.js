@@ -363,7 +363,7 @@ const SummaryScreen = ({ props: customProps }) => {
                     code: "USER_ACCESS_MGMT",
                   },
             ],
-            activeByDefault: "card8",
+            activeByDefault: "card1",
         },
 
     }
