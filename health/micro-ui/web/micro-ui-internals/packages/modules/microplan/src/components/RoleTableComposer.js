@@ -13,6 +13,9 @@ function RoleTableComposer({ nationalRoles }) {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const totalFormData = Digit.SessionStorage.get("MICROPLAN_DATA");
   const selectedData = totalFormData?.BOUNDARY?.boundarySelection?.selectedData || [];
+  const topBoundaryValue = totalFormData?.BOUNDARY?.boundarySelection?.boundaryData?.Country
+  ? Object.values(totalFormData.BOUNDARY.boundarySelection.boundaryData.Country)[0]
+  : undefined;
   const { hierarchyData, category } = useUserAccessContext();
   const { state } = useMyContext();
   const [rowData, setRowData] = useState([]);
@@ -51,7 +54,8 @@ function RoleTableComposer({ nationalRoles }) {
               state?.boundaryHierarchy?.find(
                 (j) => j.boundaryType === data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.hierarchyLevel
               ),
-            selectedBoundaries: data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.jurisdiction,
+            selectedBoundaries:nationalRoles?.includes(category) ? topBoundaryValue :
+             data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.jurisdiction,
             userServiceUuid: item?.user?.userServiceUuid,
             planData: data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid),
           };
@@ -64,7 +68,7 @@ function RoleTableComposer({ nationalRoles }) {
       },
     },
   });
-
+  
   useEffect(() => {
     if (HrmsData && HrmsData?.data) {
       // Initialize rowData from the HrmsData
@@ -80,7 +84,8 @@ function RoleTableComposer({ nationalRoles }) {
           userServiceUuid: employee?.userServiceUuid,
           selectedHierarchy: employee?.selectedHierarchy || null,
           boundaryOptions: boundaryOptions || [],
-          selectedBoundaries: filteredBoundary.filter((item) => employee?.selectedBoundaries?.includes(item?.code)) || [],
+          selectedBoundaries: nationalRoles?.includes(category) ? filteredBoundary.filter((item) => employee?.selectedBoundaries?.includes(topBoundaryValue)) :
+          filteredBoundary.filter((item) => employee?.selectedBoundaries?.includes(item?.code)) || [],
         };
       });
 
@@ -314,6 +319,7 @@ function RoleTableComposer({ nationalRoles }) {
       name: t("SELECTED_BOUNDARY"),
       cell: (row) => (
         <MultiSelectDropdown
+          disabled={nationalRoles?.includes(category) ? true : false}
           props={{ className: "roleTableCell" }}
           t={t}
           options={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.boundaryOptions || []}

@@ -112,7 +112,7 @@ const filteredFormulaOutputs = filteredFormulas.map(formula => formula.output);
   return (
       <>
          <Card>
-                <Header>{t(category)}</Header>
+                <Header>{t(category)}</Header>  
                 <p className="mp-description">{t(`Please configure the formula with respect to the assumptions considered for resource estimation`)}</p>
          </Card>   
          <Card>
