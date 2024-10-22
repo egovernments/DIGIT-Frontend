@@ -170,10 +170,10 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
       ...menuItems,
       {
         type: "link",
+        icon: "HomeIcon",
         element: "HOME",
         text: t("COMMON_BOTTOM_NAVIGATION_HOME"),
         link: isEmployee ? `/${window?.contextPath}/employee` : `/${window?.contextPath}/citizen`,
-        icon: "HomeIcon",
         populators: {
           onClick: closeSidebar,
         },
