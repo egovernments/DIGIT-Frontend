@@ -171,7 +171,6 @@ function RoleTableComposer({ nationalRoles }) {
   //     return newRowData;
   //   });
   // };
-  console.log("satae BH",state?.boundaryHierarchy);
 
   const handleBoundaryChange = (value, row) => {
     if (!value) return;
