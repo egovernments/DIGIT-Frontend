@@ -114,6 +114,10 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
     history.push(`/${window?.contextPath}/citizen/user/profile`);
   };
 
+  const closeSidebar = () => {
+    history.push(`/${window?.contextPath}/citizen/all-services`);
+  };
+
   let menuItems = [
     ...SideBarMenu(t, showProfilePage, redirectToLoginPage, isEmployee),
   ];
@@ -164,6 +168,16 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
     menuItems = menuItems.filter((item) => item?.id !== "login-btn");
     menuItems = [
       ...menuItems,
+      {
+        type: "link",
+        element: "HOME",
+        text: t("COMMON_BOTTOM_NAVIGATION_HOME"),
+        link: isEmployee ? `/${window?.contextPath}/employee` : `/${window?.contextPath}/citizen`,
+        icon: "HomeIcon",
+        populators: {
+          onClick: closeSidebar,
+        },
+      },
       {
         text: t("EDIT_PROFILE"),
         element: "PROFILE",
