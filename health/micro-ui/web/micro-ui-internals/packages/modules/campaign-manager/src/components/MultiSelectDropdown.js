@@ -138,49 +138,49 @@ const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, on
         {t((hierarchyType + "_" + boundaryType).toUpperCase())}
           <span className="mandatory-span">*</span>
         </CardLabel>
-        <MultiSelectDropdown
-          t={t}
-          props={{ className: "selecting-boundaries-dropdown" }}
-          options={Object.entries(popUpOption)
-            .filter(([key]) => key.startsWith(boundaryType))
-            .flatMap(([key, value]) =>
-              Object.entries(value || {})
-            .filter(([subkey, item]) => {
-              const itemCode = item?.split(".")?.[0];
-              if (frozenData?.length > 0) {
-                const isFrozen = frozenData.some((frozenOption) => {
-                  return (
-                    frozenOption.code === subkey && frozenOption.type === boundaryType
-                  );
-                });
-                return frozenType === "filter" ? !isFrozen : true; // Filter or include based on frozenType
-              }
-              return true;
-            })
-            .map(([subkey, item]) => ({
-                code: item?.split(".")?.[0],
-                name: item?.split(".")?.[0],
-                options: [
-                  {
-                    code: subkey,
-                    name: subkey,
-                    type: boundaryType,
-                    parent: `${item?.split(".")?.[0]}`,
-                  },
-                ],
-              }))
-            )}
-          onSelect={(value) => {
-            handleSelected(value);
-          }}
-          selected={dummySelected}
-          optionsKey={"code"}
-          addCategorySelectAllCheck={true}
-          addSelectAllCheck={true}
-          selectedNumber={dummySelected?.length}
-          variant="nestedmultiselect"
-          frozenData={frozenData}
-        />
+        <div style={{ width: "100%" }}>
+          <MultiSelectDropdown
+            t={t}
+            props={{ className: "selecting-boundaries-dropdown" }}
+            options={Object.entries(popUpOption)
+              .filter(([key]) => key.startsWith(boundaryType))
+              .flatMap(([key, value]) =>
+                Object.entries(value || {})
+                  .filter(([subkey, item]) => {
+                    const itemCode = item?.split(".")?.[0];
+                    if (frozenData?.length > 0) {
+                      const isFrozen = frozenData.some((frozenOption) => {
+                        return frozenOption.code === subkey && frozenOption.type === boundaryType;
+                      });
+                      return frozenType === "filter" ? !isFrozen : true; // Filter or include based on frozenType
+                    }
+                    return true;
+                  })
+                  .map(([subkey, item]) => ({
+                    code: item?.split(".")?.[0],
+                    name: item?.split(".")?.[0],
+                    options: [
+                      {
+                        code: subkey,
+                        name: subkey,
+                        type: boundaryType,
+                        parent: `${item?.split(".")?.[0]}`,
+                      },
+                    ],
+                  }))
+              )}
+            onSelect={(value) => {
+              handleSelected(value);
+            }}
+            selected={dummySelected}
+            optionsKey={"code"}
+            addCategorySelectAllCheck={true}
+            addSelectAllCheck={true}
+            selectedNumber={dummySelected?.length}
+            variant="nestedmultiselect"
+            frozenData={frozenData}
+          />
+        </div>
       </LabelFieldPair>
 
       {Object.entries(
@@ -209,36 +209,36 @@ const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, on
             })}
           </div>
           {frozenData.length === 0 && (
-          <Button
-            label={t("Clear All")}
-            onClick={() => {
-              const updatedDummySelected = dummySelected.filter((item) => item?.propsData?.[1]?.parent !== parent);
-              setDummySelected(updatedDummySelected);
-            }}
-            // onClick={handleClearAll}
-            variation=""
-            style={{
-              height: "2rem",
-              minWidth: "4.188rem",
-              minHeight: "2rem",
-              padding: "0.5rem",
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: "0.25rem",
-              border: "1px solid #C84C0E",
-              background: background,
-              marginTop: "1rem",
-            }}
-            textStyles={{
-              height: "auto",
-              fontSize: "0.875rem",
-              fontWeight: "400",
-              width: "100%",
-              lineHeight: "16px",
-              color: primaryIconColor,
-            }}
-          />
-        )}
+            <Button
+              label={t("HCM_CLEAR_ALL")}
+              onClick={() => {
+                const updatedDummySelected = dummySelected.filter((item) => item?.propsData?.[1]?.parent !== parent);
+                setDummySelected(updatedDummySelected);
+              }}
+              // onClick={handleClearAll}
+              variation=""
+              style={{
+                height: "2rem",
+                minWidth: "4.188rem",
+                minHeight: "2rem",
+                padding: "0.5rem",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "0.25rem",
+                border: "1px solid #C84C0E",
+                background: background,
+                marginTop: "1rem",
+              }}
+              textStyles={{
+                height: "auto",
+                fontSize: "0.875rem",
+                fontWeight: "400",
+                width: "100%",
+                lineHeight: "16px",
+                color: primaryIconColor,
+              }}
+            />
+          )}
         </div>
       ))}
     </PopUp>

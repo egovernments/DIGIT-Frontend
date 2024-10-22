@@ -376,18 +376,39 @@ export const UICustomizations = {
   FacilityMappingConfig: {
     preProcess: (data) => {
       const { facilityName, facilityType, residingVillage, status } = data?.state?.searchForm || {};
+      const user = Digit.UserService.getUser();
+      const url = Digit.Hooks.useQueryParams();
+      const {
+        isLoading: isPlanEmpSearchLoading,
+        data: planEmployee,
+        error: planEmployeeError,
+        refetch: refetchPlanEmployee,
+      } = Digit.Hooks.microplanv1.usePlanSearchEmployeeWithTagging({
+        tenantId: Digit.ULBService.getCurrentTenantId(),
+        body: {
+          PlanEmployeeAssignmentSearchCriteria: {
+            tenantId: Digit.ULBService.getCurrentTenantId(),
+            planConfigurationId: url?.microplanId,
+            active: true,
+            employeeId: [user?.info?.uuid],
+          },
+        },
+        config: {
+          enabled: true,
+        },
+      });
       data.body.PlanFacilitySearchCriteria = {};
       data.body.PlanFacilitySearchCriteria.limit = data?.state?.tableForm?.limit;
       data.body.PlanFacilitySearchCriteria.offset = data?.state?.tableForm?.offset;
       data.body.PlanFacilitySearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
       data.body.PlanFacilitySearchCriteria.facilityName = facilityName;
-      data.body.PlanFacilitySearchCriteria.facilityType = facilityType?.code;
-      data.body.PlanFacilitySearchCriteria.status = status?.code;
+      data.body.PlanFacilitySearchCriteria.facilityType = facilityType?.name;
+      data.body.PlanFacilitySearchCriteria.facilityStatus = status?.name;
       data.body.PlanFacilitySearchCriteria.residingVillage = residingVillage;
-      const url = Digit.Hooks.useQueryParams();
       data.body.PlanFacilitySearchCriteria = {
         ...data.body.PlanFacilitySearchCriteria,
         planConfigurationId: url?.microplanId,
+        jurisdiction:planEmployee?.planData?.[0]?.jurisdiction
       };
       cleanObject(data.body.PlanFacilitySearchCriteria);
       return data;
@@ -396,6 +417,9 @@ export const UICustomizations = {
       const [showPopup, setShowPopup] = useState(false);
 
       switch (key) {
+        case "MICROPLAN_FACILITY_ASSIGNED_VILLAGES":
+          const assignedVillages = row?.additionalDetails?.assignedVillages; 
+          return assignedVillages ? assignedVillages.length : null;
         case "MICROPLAN_FACILITY_ACTION":
           return (
             <>
