@@ -130,15 +130,21 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const handleUpdates = (propsForMutate) => {
     updateResources(propsForMutate, {
       onSuccess: (data) => {
+        // Check if there is a redirectTo property in the response
         if (data?.redirectTo) {
-          history.push(data?.redirectTo, data?.state)
-        } 
+          history.push(data?.redirectTo, data?.state); // Navigate to the specified route
+        }
       },
       onError: (error, variables) => {
-        setShowToast(({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") }))
+        // Display error toast if update fails
+        setShowToast({
+          key: "error",
+          label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE"),
+        });
       },
     });
   };
+  
 
   const onSubmit = (formData) => {
     // setIsSubmittting to true -> to run inline validations within the components
