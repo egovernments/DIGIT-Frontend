@@ -1,18 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { EditIcon } from "@egovernments/digit-ui-react-components";
-import { DeleteIconv2 } from "@egovernments/digit-ui-react-components";
-import { FileIcon } from "@egovernments/digit-ui-react-components";
-import { Button } from "@egovernments/digit-ui-react-components";
-import { Card } from "@egovernments/digit-ui-react-components";
-import { CardSubHeader, Loader } from "@egovernments/digit-ui-react-components";
-import DataTable from "react-data-table-component";
+import { Card, Header } from "@egovernments/digit-ui-react-components";
 import { useMyContext } from "../utils/context";
-
-
-
-import { Table } from '@egovernments/digit-ui-react-components';
-import searchPlanEmployeeWithTaggingConfig from "../hooks/services/searchPlanEmployeeWithTaggingConfig";
 import UserAccessMgmtTableWrapper from "./UserAccessMgmtTableWrapper";
 
 
@@ -30,7 +19,12 @@ const UserAccessMgmtTable = ({ file, index, handleFileDelete, handleRedirect, se
     
     const { t } = useTranslation();
 
-    return rolesArray.map((role) => {
+    return (
+        <div>
+        <Card>
+        <Header styles={{ fontSize: "32px" }}>{t("USER_ACCESS_MGMT")}</Header>
+        </Card>
+        {rolesArray.map((role) => {
             // Step 2: Call the function with the provided data
 
             return(
@@ -39,6 +33,9 @@ const UserAccessMgmtTable = ({ file, index, handleFileDelete, handleRedirect, se
               />
                 );
         })
+        }
+        </div>
+        )
 };
 
 export default UserAccessMgmtTable;
