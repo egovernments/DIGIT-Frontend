@@ -29,7 +29,9 @@ const MultipleChoice = ({
   subQinitialQuestionData,
   addComment,
   handleOptionComment,
+  typeOfCall
 }) => {
+  let dis = typeOfCall==="view"?true:false;
   return (
     <div>
       {options.map((item, index) => (
@@ -55,9 +57,11 @@ const MultipleChoice = ({
             t={t}
             addComment={addComment}
             handleOptionComment={handleOptionComment}
+            typeOfCall={typeOfCall}
           ></RadioButtonOption>
           {item.optionComment && <FieldV1
             // className="example"
+            disabled={dis}
             type={"textarea"}
             populators={{
               resizeSmart:true
@@ -81,6 +85,7 @@ const MultipleChoice = ({
                 parentId={item.id}
                 initialQuestionData={subQinitialQuestionData}
                 optionId={item.id}
+                typeOfCall={typeOfCall}
               />
             </>
           )}
@@ -89,8 +94,9 @@ const MultipleChoice = ({
           }
         </>
       ))}
-      <div>
+      {!dis && <div>
       <Button
+        // disabled={"true"}
         className="custom-class"
         icon="AddIcon"
         iconFill=""
@@ -101,7 +107,7 @@ const MultipleChoice = ({
         variation="teritiary"
         textStyles={{width:'unset'}}
       />
-      </div>
+      </div>}
     </div>
   );
 };      
@@ -128,17 +134,20 @@ export const RadioButtonOption = ({
   optionComment,
   t,
   addComment,
-  handleOptionComment
+  handleOptionComment,
+  typeOfCall
 }) => {
   // const [optionTitle, setOptionTitle] = useState(title);
   const [isFocused, setIsFocused] = useState(false);
+  let dis = typeOfCall==="view"?true:false;
 
   return (
     <div>
       <div key={index} className="optionradiobtnwrapper" style={{justifyContent:"space-between", height:"3rem"}}>
         <div style={{display:"flex"}}>
-          <input type="radio" className="customradiobutton" disabled={isInputDisabled} style={{marginTop:"0.7rem"}}/>
+          <input type="radio" className="customradiobutton" disabled={dis} style={{marginTop:"0.7rem"}}/>
           <input
+            disabled={dis}
             type="text"
             ref={inputRef}
             value={title}
@@ -146,15 +155,16 @@ export const RadioButtonOption = ({
             onBlur={() => setIsFocused(false)}
             onFocus={() => setIsFocused(true)}
             className={isFocused ? "simple_editable-input" : "simple_readonly-input"}
-            maxLength={maxLength}
+            // maxLength={maxLength}
             title={titleHover}
-            disabled={isPartiallyEnabled ? !isPartiallyEnabled : formDisabled}
+            // disabled={isPartiallyEnabled ? !isPartiallyEnabled : formDisabled}
           />
         </div>
         <div style={{display:"flex", gap:"1rem", alignItems:"center"}}>
-          {
+          {!dis &&
             <>
               <CheckBox
+              
               key={field.key}
               mainClassName={"checkboxOptionVariant"}
               disabled={optionDependency ? true: false}
@@ -168,7 +178,7 @@ export const RadioButtonOption = ({
             />
           </>
           }
-          {
+          {!dis &&
             <>
               <CheckBox
               key={field.key}
@@ -184,7 +194,7 @@ export const RadioButtonOption = ({
             />
           </> 
           }
-          {!disableDelete && (
+          {!dis && !disableDelete && (
             // <div className="pointer" style={{}} onClick={() => removeOption(index)}>
             //   <DustbinIcon />
             //   {t(`CAMPAIGN_DELETE_ROW_TEXT`)}
