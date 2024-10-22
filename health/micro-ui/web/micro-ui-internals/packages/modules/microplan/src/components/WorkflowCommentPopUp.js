@@ -45,12 +45,12 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
         // Access the array inside the payloadObject
         const key = Object.keys(payloadObject)?.[0];
 
-        const censusList = payloadObject[key];
+        const list = payloadObject[key];
 
         // Map through each item in the censusList
         return {
             ...payloadObject,
-            Census: censusList.map(item => {
+            [key]: list.map(item => {
                 // Create a shallow copy of the current item
                 let updatedItem = { ...item };
 
