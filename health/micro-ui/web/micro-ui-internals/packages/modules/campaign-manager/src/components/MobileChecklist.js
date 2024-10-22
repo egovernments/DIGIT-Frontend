@@ -1,8 +1,8 @@
 import React from 'react';
 
-const MobileChecklist = ({ questions, checklistName , typeOfChecklist}) => {
+const MobileChecklist = ({ questions, checklistRole , typeOfChecklist}) => {
   // Filter questions with parentId as null
-  const topLevelQuestions = questions.filter(q => q.parentId === null);
+  const topLevelQuestions = questions.filter(q => q.parentId === null && (q.isActive === true));
 
   return (
     <div className="mobile-screen">
@@ -13,7 +13,7 @@ const MobileChecklist = ({ questions, checklistName , typeOfChecklist}) => {
       <div className="mobile-container">
         <div className="mobile-header">
           <h2 className='mobile-checklist-highlight'>{typeOfChecklist}</h2>
-          <h1 className="mobile-checklist-highlight">{checklistName}</h1>
+          <h1 className="mobile-checklist-highlight">{checklistRole}</h1>
           <p className="mobile-description">
           </p>
         </div>

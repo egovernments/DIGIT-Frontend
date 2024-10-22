@@ -116,7 +116,6 @@ const SummaryScreen = ({ props: customProps }) => {
 
 
             },
-
             {
                 navigationKey: "card9",
                 noCardStyle:"true",
@@ -137,9 +136,6 @@ const SummaryScreen = ({ props: customProps }) => {
 
 
             },
-
-
-
             {
                 navigationKey: "card3",
                 sections: [
@@ -228,7 +224,8 @@ const SummaryScreen = ({ props: customProps }) => {
                     ]
 
 
-            }, {
+            }, 
+            {
                 navigationKey: "card7",
                 sections:
 
@@ -249,7 +246,8 @@ const SummaryScreen = ({ props: customProps }) => {
                     ]
 
 
-            }, {
+            }, 
+            {
                 navigationKey: "card7",
                 sections:
 
@@ -281,6 +279,26 @@ const SummaryScreen = ({ props: customProps }) => {
             //                     ]
 
             //                     },
+            {
+                navigationKey: "card6",
+                noCardStyle:true,
+                sections:
+
+                    [
+                        {
+
+                            type: "COMPONENT",
+                            noCardStyle:true,
+                            component: "UserAccessMgmtTable",
+                            props: {
+
+
+                            },
+                        },
+                    ]
+
+
+            },
             {
                 navigationKey: "card8",
                 noCardStyle:true,
@@ -334,26 +352,18 @@ const SummaryScreen = ({ props: customProps }) => {
                     active: true,
                     code: "MICROPLAN_ASSUMPTIONS",
                 },
-
-
-                //  ,{
-                //     name: "card5",
-                //     active: true,
-                //     code: "FORMULA_CONFIGURATION",
-                //   },
-                //   {
-                //     name: "card6",
-                //     active: true,
-                //     code: "USER_ACCESS_MGMT",
-                //   },
                 {
-                    name: "card8",
+                    name: "card5",
                     active: true,
                     code: "FORMULA_CONFIGURATION",
-                },
-
+                  },
+                  {
+                    name: "card6",
+                    active: true,
+                    code: "USER_ACCESS_MGMT",
+                  },
             ],
-            activeByDefault: "card8",
+            activeByDefault: "card1",
         },
 
     }
