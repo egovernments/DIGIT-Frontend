@@ -89,7 +89,7 @@ export const UICustomizations = {
             // const switchText = localIsActive ? "Active" : "Inactive";
             return (
               <Switch
-                isCheckedInitially={""}
+                isCheckedInitially={row?.ServiceRequest?.[0]?.isActive}
                 label={""}
                 onToggle={()=>{}}
               />

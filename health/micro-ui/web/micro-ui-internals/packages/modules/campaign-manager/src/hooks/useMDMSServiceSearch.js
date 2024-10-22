@@ -38,7 +38,9 @@ const useMDMSServiceSearch = ({ url, params, body, config = {}, plainAccessReque
   const searchParams = new URLSearchParams(location.search);
   const campaignType = searchParams.get("projectType");
   const updatedMdmsCriteria = body?.MdmsCriteria;
-  updatedMdmsCriteria.filters = { ...body?.MdmsCriteria?.filters, campaignType };
+  updatedMdmsCriteria.filters = { ...body?.MdmsCriteria?.filters, 
+    campaignType
+ };
   const fetchMDMSData = async () => {
     try {
       // First API Call: Fetch MDMS Data
