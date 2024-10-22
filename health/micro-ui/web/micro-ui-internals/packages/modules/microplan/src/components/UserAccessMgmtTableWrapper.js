@@ -104,7 +104,7 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
 
   useEffect(() => {
     refetchPlanSearch();
-  }, [totalRows, currentPage, rowsPerPage]);
+  }, [currentPage, rowsPerPage]);
 
   useEffect(() => {
     setTotalRows(planAssignmentData?.totalCount);
@@ -118,19 +118,19 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
     {
       name: t("CORE_COMMON_NAME"),
       selector: (row) => {
-        return row.data?.user?.name;
+        return row?.data?.user?.name;
       },
       sortable: true,
     },
     {
       name: t("CORE_COMMON_EMAIL_ID"),
-      selector: (row) => row.data?.user?.emailId || "NA",
+      selector: (row) => row?.data?.user?.emailId || "NA",
       sortable: true,
     },
     {
       name: t("CONTACT_NUMBER"),
       selector: (row) => {
-        return row.data.user?.mobileNumber || "NA";
+        return row?.data?.user?.mobileNumber || "NA";
       },
       sortable: true,
     },

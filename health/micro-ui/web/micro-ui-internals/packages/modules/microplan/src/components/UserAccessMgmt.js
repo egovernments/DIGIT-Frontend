@@ -7,18 +7,20 @@ import UserAccessMgmtTableWrapper from "./UserAccessMgmtTableWrapper";
 
 const UserAccessMgmtTable = ({ file, index, handleFileDelete, handleRedirect, setShowPreview }) => {
     const { state } = useMyContext();
-    const rolesArray = state?.rolesForMicroplan?.sort((a, b) => a.orderNumber - b.orderNumber).map((item) => item.roleCode);
+    const rolesArray = state?.rolesForMicroplan?.sort((a, b) => a.orderNumber - b.orderNumber).map((item) => item.roleCode) || [];
     
     const { t } = useTranslation();
+
+    if(rolesArray?.length === 0){
+        <Card/>
+    }
 
     return (
         <div>
         <Card>
         <Header styles={{ fontSize: "32px" }}>{t("USER_ACCESS_MGMT")}</Header>
         </Card>
-        {rolesArray.map((role, index) => {
-            // Step 2: Call the function with the provided data
-
+        {rolesArray?.map((role, index) => {
             return(
               <UserAccessMgmtTableWrapper
               key={index}
