@@ -14,33 +14,7 @@ import { useTranslation } from "react-i18next";
 const businessServiceMap = {};
 
 const inboxModuleNameMap = {};
-// const history=useHistory();
 
-// const 
-// const [campaignName, setCampaignName] = useState(null);
-const rowDataCache = {};
-const apiCache = {};
-
-// // Batch API request function
-// const batchFetchServiceDefinitions = async (serviceCodes, tenantId) => {
-//   try {
-//     const res = await Digit.CustomService.getResponse({
-//       url: "/service-request/service/definition/v1/_search",
-//       params: {},
-//       body: {
-//         ServiceDefinitionCriteria: {
-//           "tenantId": tenantId,
-//           "code": serviceCodes
-//         },
-//         includeDeleted: true
-//       },
-//     });
-//     return res;
-//   } catch (error) {
-//     console.error("Error fetching batch data:", error);
-//     return null;
-//   }
-// };
 
 const updateServiceDefinition = async (newStatus) => {
   try {
@@ -110,7 +84,6 @@ export const UICustomizations = {
             //     setLocalIsActive(newStatus);
             //   }
             // };
-            console.log(row,key,'row,key');
             
             
             // const switchText = localIsActive ? "Active" : "Inactive";

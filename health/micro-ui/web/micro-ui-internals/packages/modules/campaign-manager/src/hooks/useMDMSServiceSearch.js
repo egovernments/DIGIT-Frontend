@@ -47,18 +47,15 @@ const useMDMSServiceSearch = ({ url, params, body, config = {}, plainAccessReque
         body: { MdmsCriteria: updatedMdmsCriteria },
         params: params,
       });
-      console.log("MDMS Response:", mdmsResponse);
 
       // Second API Call: Merge MDMS Data with Service Definition
       const final = mergeData(mdmsResponse?.mdms);
       const serviceData = await fetchServiceDefinition(final, tenantId);
 
-      console.log("final", final);
 
       // Return a promise that resolves after both API calls are complete
       return new Promise((resolve) => {
         // Once the second call (`mergeData`) is done, resolve the final data
-        console.log("Service Data:", serviceData);
 
         // Merge the MDMS data with the service data
         const mergedData = mdmsResponse?.mdms.map((alldata) => ({
@@ -66,7 +63,6 @@ const useMDMSServiceSearch = ({ url, params, body, config = {}, plainAccessReque
           ServiceRequest: serviceData?.filter((e) => e?.code?.includes(alldata?.data?.checklistType) && e?.code?.includes(alldata?.data?.role)),
         }));
 
-        console.log("mergedData Data:", mergedData);
         resolve(mergedData);
       });
     } catch (error) {
