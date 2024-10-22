@@ -10,7 +10,7 @@
  */
 
 export const getLocalityCode = (locality, tenantId) => {
-  const isMultiRootTenant = Digit.Utils.getMultiRootTenant(); // Replace with your actual condition
+  const isMultiRootTenant = Digit.Utils.getMultiRootTenant(); 
 
   if (typeof locality === "string") {
     return locality.includes("_")
