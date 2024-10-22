@@ -109,7 +109,7 @@ const facilityMappingConfig = () => {
           columns: [
             {
               label: "MICROPLAN_FACILITY_NAME",
-              jsonPath: "additionalDetails.name",
+              jsonPath: "additionalDetails.facilityName",
             },
             {
               label: "MICROPLAN_FACILITY_TYPE",
@@ -117,7 +117,7 @@ const facilityMappingConfig = () => {
             },
             {
               label: "MICROPLAN_FACILITY_STATUS",
-              jsonPath: "additionalDetails.status",
+              jsonPath: "additionalDetails.facilityStatus",
             },
             {
               label: "MICROPLAN_FACILITY_CAPACITY",
@@ -126,6 +126,7 @@ const facilityMappingConfig = () => {
             {
               label: "MICROPLAN_FACILITY_ASSIGNED_VILLAGES",
               jsonPath: "additionalDetails.assignedVillage",
+              additionalCustomization: true,
             },
             {
               label: "MICROPLAN_FACILITY_SERVINGPOPULATION",

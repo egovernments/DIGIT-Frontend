@@ -402,8 +402,8 @@ export const UICustomizations = {
       data.body.PlanFacilitySearchCriteria.offset = data?.state?.tableForm?.offset;
       data.body.PlanFacilitySearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
       data.body.PlanFacilitySearchCriteria.facilityName = facilityName;
-      data.body.PlanFacilitySearchCriteria.facilityType = facilityType?.code;
-      data.body.PlanFacilitySearchCriteria.facilityStatus = status?.code;
+      data.body.PlanFacilitySearchCriteria.facilityType = facilityType?.name;
+      data.body.PlanFacilitySearchCriteria.facilityStatus = status?.name;
       data.body.PlanFacilitySearchCriteria.residingVillage = residingVillage;
       data.body.PlanFacilitySearchCriteria = {
         ...data.body.PlanFacilitySearchCriteria,
@@ -417,6 +417,9 @@ export const UICustomizations = {
       const [showPopup, setShowPopup] = useState(false);
 
       switch (key) {
+        case "MICROPLAN_FACILITY_ASSIGNED_VILLAGES":
+          const assignedVillages = row?.additionalDetails?.assignedVillages; 
+          return assignedVillages ? assignedVillages.length : null;
         case "MICROPLAN_FACILITY_ACTION":
           return (
             <>

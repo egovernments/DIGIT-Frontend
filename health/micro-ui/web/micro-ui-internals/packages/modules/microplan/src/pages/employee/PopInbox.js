@@ -21,6 +21,10 @@ const PopInbox = () => {
   const [boundaries, setBoundaries] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState(null);
   const [activeFilter, setActiveFilter] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [totalRows, setTotalRows] = useState(0);
+  const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * 5 });
   const [activeLink, setActiveLink] = useState({
     code: "ASSIGNED_TO_ME",
     name: "ASSIGNED_TO_ME",
@@ -71,16 +75,10 @@ const PopInbox = () => {
     tenantId: tenantId,
     body: {
       PlanEmployeeAssignmentSearchCriteria: {
-        // tenantId: tenantId,
-        // planConfigurationId: url?.microplanId,
-        // active: true,
-        // employeeId: [user?.info?.uuid],
-        // role: ["POPULATION_DATA_APPROVER", "ROOT_POPULATION_DATA_APPROVER"],
-
-        tenantId: "mz",
+        tenantId: tenantId,
         active: true,
         planConfigurationId: url?.microplanId,
-        role: ["POPULATION_DATA_APPROVER"],
+        role: ["POPULATION_DATA_APPROVER", "ROOT_POPULATION_DATA_APPROVER"],
         employeeId: [user?.info?.uuid],
       },
     },
@@ -131,6 +129,8 @@ const PopInbox = () => {
         status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
         assignee: activeLink.code === "ASSIGNED_TO_ME" ? user?.info?.uuid : "",
         jurisdiction: jurisdiction,
+        limit: limitAndOffset?.limit,
+        offset: limitAndOffset?.offset
       },
     },
     config: {
@@ -143,6 +143,7 @@ const PopInbox = () => {
   useEffect(() => {
     if (data) {
       setCensusData(data?.Census);
+      setTotalRows(data?.TotalCount)
       setActiveFilter(data?.StatusCount);
       if ((selectedFilter === null || selectedFilter === undefined) && selectedFilter !== "") {
         setSelectedFilter(Object.entries(data?.StatusCount)?.[0]?.[0]);
@@ -155,13 +156,33 @@ const PopInbox = () => {
     if (jurisdiction.length > 0) {
       refetch(); // Trigger the API call again after activeFilter changes
     }
-  }, [selectedFilter, activeLink, jurisdiction]);
+  }, [selectedFilter, activeLink, jurisdiction,limitAndOffset]);
 
-  useEffect(() => { }, [selectedFilter]);
+  useEffect(() => {
+    if (selectedFilter === "PENDING_FOR_VERIFICATION") {
+      setActiveLink("");
+      setShowTab(false);
+    }
+  }, [selectedFilter]);
+
+  useEffect(() => {
+  }, [showTab]);
+
 
   const onFilter = (selectedStatus) => {
     setSelectedFilter(selectedStatus?.code);
   };
+
+  const handlePageChange = (page,totalRows) =>{
+    setCurrentPage(page);
+    setLimitAndOffset({...limitAndOffset,offset: (page - 1) * 5})
+  }
+
+  const handlePerRowsChange = (currentRowsPerPage, currentPage) =>{
+    setRowsPerPage(currentRowsPerPage);
+    setCurrentPage(currentPage);
+    setLimitAndOffset({limit:currentRowsPerPage,offset: (currentPage - 1) * 5})
+  }
 
   const clearFilters = () => {
     if (selectedFilter !== Object.entries(data?.StatusCount)?.[0]?.[0])
@@ -173,7 +194,6 @@ const PopInbox = () => {
   };
 
   const onRowSelect = (event) => {
-    console.log(event, "clicked action");
     setVillagesSelected(event?.selectedCount);
   };
 
@@ -224,7 +244,7 @@ const PopInbox = () => {
                 setActiveLink(e);
               }}
               setActiveLink={setActiveLink}
-              showNav
+              showNav={showTab}
               style={{}}
             />
           )}
@@ -250,7 +270,7 @@ const PopInbox = () => {
                 </div>
               </div>
             )}
-            {isFetching ? <Loader /> : <PopInboxTable onRowSelect={onRowSelect} censusData={censusData} />}
+            {isFetching ? <Loader /> : <PopInboxTable currentPage={currentPage}  rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} />}
           </Card>
         </div>
       </div>

@@ -158,6 +158,9 @@ const customStyles = {
   rows: {
     style: {
       backgroundColor: "#FFFFFF",
+      '&:hover': {
+				backgroundColor: "#FBEEE8",
+			},
     },
   },
   headRow: {
@@ -211,7 +214,17 @@ const customStyles = {
       lineHeight: "1.37rem",
       textAlign: "left",
       fontSize: "16px",
+      padding: "16px",
     },
+    pagination:{
+      style:{
+        marginTop:"-16px",
+        borderStyle: "solid",
+        borderWidth: "1px",
+        borderColor: "#D6D5D4",
+        borderTopWidth: "0px",
+      }
+    }
   },
 };
 
@@ -219,8 +232,6 @@ const PopInboxTable = ({ ...props }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [loading, setLoading] = useState(false);
-  const [totalRows, setTotalRows] = useState(0);
-  const [perPage, setPerPage] = useState(10);
   const [showTimelinePopup, setShowTimelinePopup] = useState(false);
   const [showEditVillagePopup, setShowEditVillagePopup] = useState(false);
   const [selectedBusinessId, setSelectedBusinessId] = useState(null);
@@ -307,7 +318,10 @@ const PopInboxTable = ({ ...props }) => {
     ];
   }, []);
 
-  const handlePageChange = (page) => {};
+  const handlePageChange = (page,totalRows) => {
+    console.log(page,"page")
+    props?.handlePageChange(page,totalRows);
+  };
 
   const handleRowSelect = (event) => {
     // if(!event?.allSelected && event?.selectedCount >0){
@@ -316,7 +330,10 @@ const PopInboxTable = ({ ...props }) => {
     props?.onRowSelect(event);
   };
 
-  const handlePerRowsChange = async (newPerPage, page) => {};
+  const handlePerRowsChange = async (currentRowsPerPage, currentPage) => {
+    console.log(currentRowsPerPage,"currentRowsPerPage")
+    props?.handlePerRowsChange(currentRowsPerPage, currentPage);
+  };
 
   const selectProps = {
     hideLabel: true,
@@ -354,12 +371,8 @@ const PopInboxTable = ({ ...props }) => {
     <DataTable
       columns={columns}
       data={props.censusData}
-      pagination
-      paginationTotalRows={5}
       selectableRows
       selectableRowsHighlight
-      onChangeRowsPerPage={handlePerRowsChange}
-      onChangePage={handlePageChange}
       noContextMenu
       onSelectedRowsChange={handleRowSelect}
       customStyles={customStyles}
@@ -367,10 +380,17 @@ const PopInboxTable = ({ ...props }) => {
       sortIcon={<CustomSVG.SortUp />}
       defaultSortFieldId={1}
       selectableRowsComponentProps={selectProps}
-      // selectableRowsComponent={MicroplanCheckbox}
-      // paginationServer
       // progressPending={loading}
       // title="Users"
+      // paginationDefaultPage={currentPage}
+      // paginationDefaultRowsPerPage={rowsPerPage}
+      pagination
+      paginationServer
+      onChangePage={handlePageChange}
+      onChangeRowsPerPage={handlePerRowsChange}
+      paginationTotalRows={props?.totalRows}
+      paginationPerPage={props?.rowsPerPage}
+      paginationRowsPerPageOptions={[5, 10, 15, 20,25]}
     />
   );
 };
