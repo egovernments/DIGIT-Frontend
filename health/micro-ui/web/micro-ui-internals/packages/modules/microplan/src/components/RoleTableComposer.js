@@ -431,7 +431,7 @@ function RoleTableComposer({ nationalRoles }) {
           </div>
         </div>
       </Card>
-      <div style={{overflowY:"scroll"}}>
+      <div style={{overflowY:"auto"}}>
       <DataTable
         columns={columns}
         data={HrmsData?.data}
