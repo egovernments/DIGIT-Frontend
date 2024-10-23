@@ -32,6 +32,13 @@ const PlanInbox = () => {
     name: "ASSIGNED_TO_ME",
   });
 
+  useEffect(() => {
+    if (selectedFilter === "PENDING_FOR_VALIDATION") {
+      setActiveLink({ code: "", name: "" });
+      setShowTab(false);
+    }
+  }, [selectedFilter]);
+
   const selectProps = {
     hideLabel: true,
     // isIntermediate: isIntermediate,
