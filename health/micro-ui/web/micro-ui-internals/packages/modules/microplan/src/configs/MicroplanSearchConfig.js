@@ -42,9 +42,7 @@ const defaultSearchValues = {
                   key: "microplanName",
                   type: "text",
                   populators: {
-                    name: "microplanName",
-                    error: "Required",
-                    validation: { pattern: /^[A-Za-z]+$/i },
+                    name: "microplanName"
                   },
                 },
                 // {
