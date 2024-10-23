@@ -3,7 +3,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import RoleTableComposer from "./RoleTableComposer";
 import DataTable from "react-data-table-component";
-import { tableCustomStyle } from "../../../campaign-manager/src/components/tableCustomStyle";
+import { tableCustomStyle } from "./tableCustomStyle";
 
 function UserAccess({ category, setData, nationalRoles }) {
   const { t } = useTranslation();

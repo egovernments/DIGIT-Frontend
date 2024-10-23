@@ -8,6 +8,7 @@ import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import DataTable from "react-data-table-component";
 import { CheckBox } from "@egovernments/digit-ui-components";
 import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
+import { tableCustomStyle } from "../../components/tableCustomStyle";
 
 const PlanInbox = () => {
   const { t } = useTranslation();

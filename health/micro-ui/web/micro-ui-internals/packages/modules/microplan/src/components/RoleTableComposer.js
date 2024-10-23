@@ -6,7 +6,7 @@ import { CardLabel, LabelFieldPair, LinkLabel, SubmitBar, TextInput } from "@ego
 import { useUserAccessContext } from "./UserAccessWrapper";
 import { useMyContext } from "../utils/context";
 import { useQueryClient } from "react-query";
-import { tableCustomStyle } from "../../../campaign-manager/src/components/tableCustomStyle";
+import { tableCustomStyle } from "./tableCustomStyle";
 
 function LoaderOverlay() {
   return (
