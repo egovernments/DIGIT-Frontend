@@ -159,8 +159,8 @@ const customStyles = {
     style: {
       backgroundColor: "#FFFFFF",
       '&:hover': {
-				backgroundColor: "#FBEEE8",
-			},
+        backgroundColor: "#FBEEE8",
+      },
     },
   },
   headRow: {
@@ -216,9 +216,9 @@ const customStyles = {
       fontSize: "16px",
       padding: "16px",
     },
-    pagination:{
-      style:{
-        marginTop:"-16px",
+    pagination: {
+      style: {
+        marginTop: "-16px",
         borderStyle: "solid",
         borderWidth: "1px",
         borderColor: "#D6D5D4",
@@ -233,7 +233,7 @@ const PopInboxTable = ({ ...props }) => {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [showTimelinePopup, setShowTimelinePopup] = useState(false);
-  const [showEditVillagePopup, setShowEditVillagePopup] = useState(false);
+  const [showEditVillagePopup, setShowEditVillagePopup] = useState({});
   const [selectedBusinessId, setSelectedBusinessId] = useState(null);
   const url = Digit.Hooks.useQueryParams();
   const [isIntermediate, setIsIntermediate] = useState(false);
@@ -296,7 +296,7 @@ const PopInboxTable = ({ ...props }) => {
           <Button
             label={t(`EDIT_POPULATION`)}
             onClick={() => {
-              setShowEditVillagePopup(true);
+              setShowEditVillagePopup(row);
             }}
             variation="link"
             style={{}}
@@ -318,8 +318,8 @@ const PopInboxTable = ({ ...props }) => {
     ];
   }, []);
 
-  const handlePageChange = (page,totalRows) => {
-    props?.handlePageChange(page,totalRows);
+  const handlePageChange = (page, totalRows) => {
+    props?.handlePageChange(page, totalRows);
   };
 
   const handleRowSelect = (event) => {
@@ -352,13 +352,13 @@ const PopInboxTable = ({ ...props }) => {
     );
   }
 
-  if (showEditVillagePopup) {
+  if (Object.keys(showEditVillagePopup).length > 0) {
     return (
       <EditVillagePopulationPopUp
         onClose={() => {
-          setShowEditVillagePopup(false);
+          setShowEditVillagePopup({});
         }}
-        census={props.censusData}
+        census={showEditVillagePopup}
       />
     );
   }
@@ -388,7 +388,7 @@ const PopInboxTable = ({ ...props }) => {
       onChangeRowsPerPage={handlePerRowsChange}
       paginationTotalRows={props?.totalRows}
       paginationPerPage={props?.rowsPerPage}
-      paginationRowsPerPageOptions={[5, 10, 15, 20,25]}
+      paginationRowsPerPageOptions={[5, 10, 15, 20, 25]}
     />
   );
 };

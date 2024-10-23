@@ -41,35 +41,49 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
 
     const setCommentInPayloadForList = (payloadObject, path, comment) => {
         const keys = path.split(".");
+        const key = Object.keys(payloadObject)?.[0]; // Get the first key in the payloadObject
+        const value = payloadObject[key]; // Get the value associated with that key
 
-        // Access the array inside the payloadObject
-        const key = Object.keys(payloadObject)?.[0];
+        // Check if the value is an array or a single object
+        if (Array.isArray(value)) {
+            // It's an array, so map through each item as before
+            return {
+                ...payloadObject,
+                [key]: value.map(item => {
+                    let updatedItem = { ...item };
+                    let nestedObject = updatedItem;
 
-        const list = payloadObject[key];
+                    for (let i = 0; i < keys.length - 1; i++) {
+                        nestedObject[keys[i]] = nestedObject[keys[i]] || {};
+                        nestedObject = nestedObject[keys[i]];
+                    }
 
-        // Map through each item in the censusList
-        return {
-            ...payloadObject,
-            [key]: list.map(item => {
-                // Create a shallow copy of the current item
-                let updatedItem = { ...item };
+                    nestedObject[keys[keys.length - 1]] = comment;
 
-                // Create a reference to the part of the object we are going to modify
-                let nestedObject = updatedItem;
+                    return updatedItem;
+                })
+            };
+        } else if (typeof value === 'object' && value !== null) {
+            // It's a single object, so update it directly
+            let updatedObject = { ...value };
+            let nestedObject = updatedObject;
 
-                // Iterate through all keys except the last one to maintain the reference
-                for (let i = 0; i < keys.length - 1; i++) {
-                    // Ensure we are referencing existing nested objects, and not creating new ones
-                    nestedObject[keys[i]] = nestedObject[keys[i]] || {};  // Retain existing object structure
-                    nestedObject = nestedObject[keys[i]];
-                }
+            for (let i = 0; i < keys.length - 1; i++) {
+                nestedObject[keys[i]] = nestedObject[keys[i]] || {};
+                nestedObject = nestedObject[keys[i]];
+            }
 
-                // Modify the final key (e.g., comment) within the nested structure
-                nestedObject[keys[keys.length - 1]] = comment;
+            nestedObject[keys[keys.length - 1]] = comment;
 
-                return updatedItem;
-            })
-        };
+            return {
+                ...payloadObject,
+                [key]: updatedObject
+            };
+        } else {
+            // Handle the case where the structure is unexpected
+            console.warn("Unexpected payload structure: expected an array or an object.");
+            return payloadObject; // or handle error as needed
+        }
     };
 
     const handleSave = async () => {
