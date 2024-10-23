@@ -5,11 +5,38 @@ import RoleTableComposer from "./RoleTableComposer";
 import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./tableCustomStyle";
 
+const Wrapper = ({ setShowPopUp, alreadyQueuedSelectedState }) => {
+  const { t } = useTranslation();
+  return (
+    <PopUp
+      className={""}
+      style={{
+        maxWidth: "40%",
+      }}
+      type={"default"}
+      heading={t("MICROPLAN_ADMINISTRATIVE_AREA")}
+      children={[]}
+      onOverlayClick={() => {
+        setShowPopUp(false);
+      }}
+      onClose={() => {
+        setShowPopUp(false);
+      }}
+    >
+      <div className="digit-tag-container userAccessCell">
+        {alreadyQueuedSelectedState?.map((item, index) => (
+          <Chip key={index} text={t(item)} className="" error="" extraStyles={{}} iconReq="" hideClose={true} />
+        ))}
+      </div>
+    </PopUp>
+  );
+};
 function UserAccess({ category, setData, nationalRoles }) {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
   const [showPopUp, setShowPopUp] = useState(null);
+  const [chipPopUp, setChipPopUp] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -105,20 +132,41 @@ function UserAccess({ category, setData, nationalRoles }) {
       selector: (row) => {
         return (
           <>
-            {row?.jurisdiction?.map((item) => (
-              <div className="digit-tag-container userAccessCell">
-                <Chip
-                  className=""
-                  error=""
-                  extraStyles={{}}
-                  iconReq=""
-                  hideClose={true}
-                  // onClick={function noRefCheck() {}}
-                  // onTagClick={function noRefCheck() {}}
-                  text={t(item)}
-                />
-              </div>
-            ))}
+            {row?.jurisdiction?.length > 0 && (
+              <>
+                {row.jurisdiction.slice(0, 2).map((item, index) => (
+                  <div className="digit-tag-container userAccessCell" key={index}>
+                    <Chip className="" error="" extraStyles={{}} iconReq="" hideClose={true} text={t(item)} />
+                  </div>
+                ))}
+
+                {row.jurisdiction.length > 2 && (
+                  <Button
+                    label={`+${row.jurisdiction.length - 2} ${t("ES_MORE")}`}
+                    onClick={() => setChipPopUp(true)}
+                    variation="link"
+                    style={{
+                      height: "2rem",
+                      minWidth: "4.188rem",
+                      minHeight: "2rem",
+                      padding: "0.5rem",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                    textStyles={{
+                      height: "auto",
+                      fontSize: "0.875rem",
+                      fontWeight: "400",
+                      width: "100%",
+                      lineHeight: "16px",
+                      color: "#C84C0E",
+                    }}
+                  />
+                )}
+
+                {chipPopUp && <Wrapper setShowPopUp={setChipPopUp} alreadyQueuedSelectedState={row.jurisdiction} />}
+              </>
+            )}
           </>
         );
       },
