@@ -1,13 +1,7 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Button, EditIcon, Header, Loader, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { InfoBannerIcon, Toast } from "@egovernments/digit-ui-components";
-import { DownloadIcon } from "@egovernments/digit-ui-react-components";
-import { useParams } from "react-router-dom/cjs/react-router-dom.min";
-import { noConflict } from "lodash";
-
-
+import { EditIcon, ViewComposer } from "@egovernments/digit-ui-react-components";
 
 const SummaryScreen = ({ props: customProps }) => {
     const { t } = useTranslation();
@@ -118,7 +112,7 @@ const SummaryScreen = ({ props: customProps }) => {
             },
             {
                 navigationKey: "card9",
-                noCardStyle:"true",
+                noCardStyle: "true",
                 sections:
 
                     [
@@ -126,7 +120,7 @@ const SummaryScreen = ({ props: customProps }) => {
 
                             type: "COMPONENT",
                             component: "CampaignBoundary",
-                            noCardStyle:true,
+                            noCardStyle: true,
                             props: {
                                 customProps: customProps
 
@@ -171,22 +165,22 @@ const SummaryScreen = ({ props: customProps }) => {
 
 
             },
-            // {
-            //     navigationKey: "card5",
-            //     sections: 
+            {
+                navigationKey: "card5",
+                sections: 
 
-            //             [
-            //                 {
+                        [
+                            {
 
-            //                     type: "COMPONENT",
-            //                     component: "FormulaConfiguration",
-            //                     props: {
-            //                     },
-            //                 },
-            //             ]
+                                type: "COMPONENT",
+                                component: "FormulaConfigScreen",
+                                props: {
+                                },
+                            },
+                        ]
 
 
-            // },
+            },
             // {
             //     navigationKey: "card6",
             //     sections: 
@@ -205,59 +199,17 @@ const SummaryScreen = ({ props: customProps }) => {
             // },
             {
                 navigationKey: "card7",
+                noCardStyle:true,
                 sections:
 
                     [
                         {
 
                             type: "COMPONENT",
-                            component: "FileComponent",
-                            noCardStyle:true,
+                            component: "DataMgmtComponent",
+                            noCardStyle: true,
                             props: {
-                                title: "Population",
-                                fileName: "file.xlsx",
-                                editHandler: () => { },
-                                deleteHandler: () => { },
-
-                            },
-                        },
-                    ]
-
-
-            }, 
-            {
-                navigationKey: "card7",
-                sections:
-
-                    [
-                        {
-
-                            type: "COMPONENT",
-                            noCardStyle:true,
-                            component: "FileComponent",
-                            props: {
-                                title: "Facilities",
-                                fileName: "file.xlsx",
-                                editHandler: () => { },
-                                deleteHandler: () => { },
-
-                            },
-                        },
-                    ]
-
-
-            }, 
-            {
-                navigationKey: "card7",
-                sections:
-
-                    [
-                        {
-
-                            type: "COMPONENT",
-                            noCardStyle:true,
-                            component: "DataMgmtTable",
-                            props: {
+                                customProps: customProps
 
 
                             },
@@ -266,6 +218,7 @@ const SummaryScreen = ({ props: customProps }) => {
 
 
             },
+           
             // type: "COMPONENT",
             //                     component: "FormulaSection",
 
@@ -281,17 +234,17 @@ const SummaryScreen = ({ props: customProps }) => {
             //                     },
             {
                 navigationKey: "card6",
-                noCardStyle:true,
+                noCardStyle: true,
                 sections:
 
                     [
                         {
 
                             type: "COMPONENT",
-                            noCardStyle:true,
-                            component: "UserAccessMgmtTable",
+                            noCardStyle: true,
+                            component: "UserAccessMgmt",
                             props: {
-
+                                customProps: customProps
 
                             },
                         },
@@ -301,14 +254,14 @@ const SummaryScreen = ({ props: customProps }) => {
             },
             {
                 navigationKey: "card8",
-                noCardStyle:true,
+                noCardStyle: true,
                 sections:
 
                     [
                         {
 
                             type: "COMPONENT",
-                            noCardStyle:true,
+                            noCardStyle: true,
                             component: "FormulaConfigScreen",
 
                             props: {
@@ -355,15 +308,15 @@ const SummaryScreen = ({ props: customProps }) => {
                 {
                     name: "card5",
                     active: true,
-                    code: "FORMULA_CONFIGURATION",
-                  },
-                  {
+                    code: "FormulaConfigScreen",
+                },
+                {
                     name: "card6",
                     active: true,
                     code: "USER_ACCESS_MGMT",
-                  },
+                },
             ],
-            activeByDefault: "card1",
+            activeByDefault: "card7",
         },
 
     }

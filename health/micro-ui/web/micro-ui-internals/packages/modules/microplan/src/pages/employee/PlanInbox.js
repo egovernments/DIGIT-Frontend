@@ -31,6 +31,11 @@ const PlanInbox = () => {
   const [actionBarPopUp, setactionBarPopUp] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [workFlowPopUp, setworkFlowPopUp] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [totalRows, setTotalRows] = useState(0);
+  const [perPage, setPerPage] = useState(10);
+  const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   const [activeLink, setActiveLink] = useState({
     code: "ASSIGNED_TO_ME",
     name: "ASSIGNED_TO_ME",
@@ -69,17 +74,22 @@ const PlanInbox = () => {
     mainClassName: "data-table-select-checkbox",
   };
 
-  const [totalRows, setTotalRows] = useState(0);
-  const [perPage, setPerPage] = useState(10);
-
-  const handlePageChange = (page) => { };
+  const handlePageChange = (page, totalRows) => {
+    setCurrentPage(page);
+    setLimitAndOffset({ ...limitAndOffset, offset: (page - 1) * 5 });
+  };
 
   const handleRowSelect = (event) => {
     setSelectedRows(event?.selectedRows);
     setVillagesSelected(event?.selectedCount);
   };
 
-  const handlePerRowsChange = async (newPerPage, page) => { };
+  const handlePerRowsChange = (currentRowsPerPage, currentPage) => {
+    setRowsPerPage(currentRowsPerPage);
+    setCurrentPage(currentPage);
+    setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * currentRowsPerPage });
+  };
+
   const {
     isLoading: isPlanWithCensusLoading,
     data: planWithCensus,
@@ -96,6 +106,8 @@ const PlanInbox = () => {
         status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
         assignee: activeLink.code === "ASSIGNED_TO_ME" ? user?.info?.uuid : "",
         executionPlanId: microplanId, //list of plan ids
+        limit: limitAndOffset?.limit,
+        offset: limitAndOffset?.offset,
       },
     },
     config: {
@@ -104,18 +116,18 @@ const PlanInbox = () => {
         const tableData = data?.planData?.map((item, index) => {
           const filteredCensus = data?.censusData?.find((d) => d?.boundaryCode === item?.locality);
           const dynamicSecurityData = Object.keys(filteredCensus?.additionalDetails?.securityDetails || {}).reduce((acc, key) => {
-            acc[`securityDetail_${key}`] = filteredCensus?.additionalDetails?.securityDetails[key]?.code; // Correctly referencing securityDetails
+            acc[`securityDetail_${key}`] = filteredCensus?.additionalDetails?.securityDetails[key]?.code || "NA"; // Correctly referencing securityDetails
             return acc;
           }, {});
 
           return {
             original: item,
-            village: filteredCensus?.boundaryCode,
-            villageRoadCondition: filteredCensus?.additionalDetails?.accessibilityDetails?.roadCondition?.code,
-            villageTerrain: filteredCensus?.additionalDetails?.accessibilityDetails?.terrain?.code,
-            villageTransportMode: filteredCensus?.additionalDetails?.accessibilityDetails?.transportationMode?.code,
-            totalPop: filteredCensus?.additionalDetails?.totalPopulation,
-            targetPop: filteredCensus?.additionalDetails?.targetPopulation,
+            village: filteredCensus?.boundaryCode || "NA",
+            villageRoadCondition: filteredCensus?.additionalDetails?.accessibilityDetails?.roadCondition?.code || "NA",
+            villageTerrain: filteredCensus?.additionalDetails?.accessibilityDetails?.terrain?.code || "NA",
+            villageTransportMode: filteredCensus?.additionalDetails?.accessibilityDetails?.transportationMode?.code || "NA",
+            totalPop: filteredCensus?.additionalDetails?.totalPopulation || "NA",
+            targetPop: filteredCensus?.additionalDetails?.targetPopulation || "NA",
             ...dynamicSecurityData,
           };
         });
@@ -123,6 +135,7 @@ const PlanInbox = () => {
           planData: data?.planData,
           censusData: data?.censusData,
           StatusCount: data?.StatusCount,
+          TotalCount: data?.TotalCount,
           tableData,
         };
       },
@@ -173,7 +186,7 @@ const PlanInbox = () => {
     tenantId: tenantId,
     body: {
       PlanEmployeeAssignmentSearchCriteria: {
-        tenantId: "mz",
+        tenantId: tenantId,
         active: true,
         planConfigurationId: url?.microplanId,
         role: ["PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"],
@@ -219,6 +232,8 @@ const PlanInbox = () => {
   useEffect(() => {
     if (planWithCensus) {
       setCensusData(planWithCensus?.censusData);
+      setTotalRows(planWithCensus?.TotalCount);
+      setActiveFilter(planWithCensus?.StatusCount);
       setActiveFilter(planWithCensus?.StatusCount);
       if ((selectedFilter === null || selectedFilter === undefined) && selectedFilter !== "") {
         setSelectedFilter(Object.entries(planWithCensus?.StatusCount)?.[0]?.[0]);
@@ -248,14 +263,14 @@ const PlanInbox = () => {
     setworkFlowPopUp(action);
   };
 
-  if (!planWithCensus || isPlanWithCensusLoading || isPlanEmpSearchLoading || isLoadingCampaignObject) {
+  if (isPlanWithCensusLoading || isPlanEmpSearchLoading || isLoadingCampaignObject) {
     return <Loader />;
   }
   const resources = planWithCensus?.planData?.[0]?.resources || []; // Resources array
   const resourceColumns = resources.map((resource) => ({
     name: t(`RESOURCE_TYPE_${resource.resourceType}`), // Dynamic column name for each resourceType
     cell: (row) => {
-      return resource.estimatedNumber; // Return estimatedNumber if exists
+      return resource.estimatedNumber ? resource.estimatedNumber : "NA"; // Return estimatedNumber if exists
     },
     sortable: true,
   }));
@@ -263,32 +278,32 @@ const PlanInbox = () => {
   const columns = [
     {
       name: t(`INBOX_VILLAGE`),
-      cell: (row) => row?.village,
+      cell: (row) => row?.village || "NA",
       sortable: true,
     },
     {
       name: t(`VILLAGE_ROAD_CONDITION`),
-      cell: (row) => row?.villageRoadCondition,
+      cell: (row) => row?.villageRoadCondition || "NA",
       sortable: true,
     },
     {
       name: t(`VILLAGE_TERRAIN`),
-      cell: (row) => row?.villageTerrain,
+      cell: (row) => row?.villageTerrain || "NA",
       sortable: true,
     },
     {
       name: t(`VILLAGE_TARNSPORTATION_MODE`),
-      cell: (row) => row?.villageTransportMode,
+      cell: (row) => row?.villageTransportMode || "NA",
       sortable: true,
     },
     {
       name: t(`TOTAL_POPULATION`),
-      cell: (row) => row?.totalPop,
+      cell: (row) => row?.totalPop || "NA",
       sortable: true,
     },
     {
       name: t(`TARGET_POPULATION`),
-      cell: (row) => row?.targetPop,
+      cell: (row) => row?.targetPop || "NA",
       sortable: true,
     },
     ...resourceColumns,
@@ -440,10 +455,9 @@ const PlanInbox = () => {
             )}
             <DataTable
               columns={columns}
-              data={planWithCensus.tableData}
+              data={planWithCensus?.tableData}
               pagination
               paginationServer
-              paginationTotalRows={5}
               selectableRows
               selectableRowsHighlight
               onChangeRowsPerPage={handlePerRowsChange}
@@ -453,6 +467,10 @@ const PlanInbox = () => {
               selectableRowsComponentProps={selectProps}
               selectableRowsComponent={CheckBox}
               customStyles={tableCustomStyle}
+              paginationTotalRows={totalRows}
+              paginationPerPage={rowsPerPage}
+              paginationRowsPerPageOptions={[5, 10, 15, 20, 25]}
+            // selectableRowsComponent={SimpleCheckbox}
             // selectableRowsComponent={SimpleCheckbox}
             />
           </Card>
