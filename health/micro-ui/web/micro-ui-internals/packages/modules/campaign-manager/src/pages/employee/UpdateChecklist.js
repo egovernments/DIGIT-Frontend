@@ -21,7 +21,7 @@ const UpdateChecklist = () => {
     const [config, setConfig] = useState(null);
     const [checklistTypeCode, setChecklistTypeCode] = useState(null);
     const [roleCode, setRoleCode] = useState(null);
-    const [serviceCode, setServiceCode] = useState(null);
+    const serviceCode = `${campaignName}.${checklistType}.${role}`
     const [searching, setSearching] = useState(true);
     const [viewData, setViewData] = useState(null);
     let locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
@@ -57,47 +57,35 @@ const UpdateChecklist = () => {
         }
     }, [showToast]);
 
-    useEffect(() => {
-        setServiceCode(`${campaignName}.${checklistType}.${role}`)
-    }, [])
-
-    useEffect(() => {
-
-        const callSearch = async () => {
-            const res = await Digit.CustomService.getResponse({
-                url: `/service-request/service/definition/v1/_search`,
-                body: {
-                    ServiceDefinitionCriteria: {
-                        "tenantId": tenantId,
-                        "code": [serviceCode]
-                    },
-                    includeDeleted: true,
-
-                },
-            });
-            return res;
-        }
-        const fetchData = async () => {
-            try {
-                const res = await callSearch();
-
+    const res = {
+        url: `/service-request/service/definition/v1/_search`,
+        body: {
+            ServiceDefinitionCriteria: {
+                "tenantId": tenantId,
+                "code": [serviceCode]
+            },
+            includeDeleted: true
+        },
+        config: {
+            select: (res) => {
                 if (res?.ServiceDefinitions?.[0]?.attributes) {
-                    setSearching(false);
                     let temp_data = res?.ServiceDefinitions?.[0]?.attributes
                     let formatted_data = temp_data.map((item) => item.additionalDetails);
                     let nvd = formatted_data.filter((value, index, self) =>
                         index === self.findIndex((t) => t.id === value.id)
-                      );
-                    setViewData(nvd);
-                    // setViewData(formatted_data);
-
+                    );
+                    return nvd;
                 }
             }
-            catch (error) {
-            }
         }
-        fetchData();
-    }, [serviceCode])
+    }
+    const { isLoading, data, isFetching } = Digit.Hooks.useCustomAPIHook(res);
+  
+    useEffect(() => {
+        if (data) {
+            setViewData(data);
+        }
+    }, [data])
 
     useEffect(() => {
         const currentTime = new Date();
@@ -384,9 +372,13 @@ const UpdateChecklist = () => {
         { label: "CAMPAIGN_NAME", value: campaignName },
         // { label: "CHECKLIST_NAME", value: name}            
     ];
+
+    if(isLoading) {
+        return <Loader />;
+    }
     return (
         <div>
-            {submitting && <Loader />}
+            {/* {submitting && <Loader />} */}
             {!submitting &&
                 <div>
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -396,14 +388,6 @@ const UpdateChecklist = () => {
                             </h2>
                         </div>
                         <div style={{ display: "flex", gap: "1rem" }}>
-                            {/* <Button
-                                variation="secondary"
-                                label={t("USE_TEMPLATE")}
-                                className={"hover"}
-                                style={{ marginTop: "2rem", marginBottom: "2rem" }}
-                                // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
-                                onClick={useTemplateData}
-                                /> */}
                             <Button
                                 icon="Preview"
                                 variation="secondary"
@@ -473,7 +457,7 @@ const UpdateChecklist = () => {
                         ))}
                     </Card>
                     <div style={{height:"1rem"}}></div>
-                    {!searching && <FormComposerV2
+                    {!isLoading && <FormComposerV2
                         showMultipleCardsWithoutNavs={true}
                         label={t("UPDATE_CHECKLIST")}
                         config={config}
@@ -487,7 +471,6 @@ const UpdateChecklist = () => {
                         noCardStyle={true}
                     // showWrapperContainers={false}
                     />}
-                    {searching && <Loader />}
                     {showToast && (
                         <Toast
                             type={showToast?.isError ? "error" : "success"}

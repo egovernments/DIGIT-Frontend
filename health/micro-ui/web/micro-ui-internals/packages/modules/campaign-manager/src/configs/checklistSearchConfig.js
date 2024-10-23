@@ -1,11 +1,12 @@
   
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
   export const checklistSearchConfig = [
     {
       label: "Checklist Search",
       type: "search",
       apiDetails: {
-        serviceName: "/mdms-v2/v2/_search",
+        serviceName: `/${mdms_context_path}/v2/_search`,
         requestParam: {
             "tenantId":tenantId,
         },

@@ -37,12 +37,13 @@ const SearchChecklist = () => {
     const navEvent1 = new PopStateEvent("popstate");
     window.dispatchEvent(navEvent1);
   };
+  const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
   const [codesopt, setCodesOpt] = useState([]);
 
   const [listsopt, setListsOpt] = useState([]);
   const reqCriteria = {
-    url: `/mdms-v2/v2/_search`,
+    url: `/${mdms_context_path}/v2/_search`,
     body: {
       MdmsCriteria: {
         tenantId: tenantId,
@@ -61,37 +62,35 @@ const SearchChecklist = () => {
       setCodesOpt(newCodesOpt)
     }
   }, [dataBT]);
-  const reqCriteriaResource = {
-    url: `/mdms-v2/v1/_search`,
+
+  const reqCriteria1 = {
+    url: `/${mdms_context_path}/v2/_search`,
     body: {
       MdmsCriteria: {
         tenantId: tenantId,
-        moduleDetails: [
-          {
-            moduleName: "HCM",
-            masterDetails: [
-              {
-                name: "CHECKLIST_TYPES",
-              },
-            ],
-          },
-        ],
-      },
+        schemaCode: "HCM.CHECKLIST_TYPES"
+      }
     },
-    config: {
-      enabled: true,
-      select: (data) => {
-        return data?.MdmsRes;
-      },
-    },
+    changeQueryName: "HCM"
   };
-  const { isLoading, data: HCM, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
+  const { isLoading, data: HCM, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria1);
+  useEffect(() => {
+    let data = HCM?.mdms;
+    if(data)
+    {
+      const newListsOpt = data.map((item) => ({
+        list: `HCM_CHECKLIST_TYPE_${item?.data?.code}`
+      }));
+      setListsOpt(newListsOpt)
+    }
+  }, [HCM]);
+
   const onStepClick = (step) => {
     history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=13&summary=true`);
   };
-  useEffect(() => {
-    setListsOpt(HCM?.HCM?.CHECKLIST_TYPES?.map((item) => ({ list: `HCM_CHECKLIST_TYPE_${item.code}` })));
-  }, [HCM]);
+  // useEffect(() => {
+  //   setListsOpt(HCM?.HCM?.CHECKLIST_TYPES?.map((item) => ({ list: `HCM_CHECKLIST_TYPE_${item.code}` })));
+  // }, [HCM]);
 
   const [code, setCode] = useState(null);
   const [list, setList] = useState(null);
