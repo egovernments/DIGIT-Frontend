@@ -94,8 +94,16 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
     setShowDialog(true);
   };
   const handleOnSubmit = () => {
-    Digit.UserService.logout();
-    setShowDialog(false);
+    if (Digit.Utils.getMultiRootTenant()) {
+      Digit.UserService.logout();
+      setShowDialog(false);
+      window.location.href=`/${window?.contextPath}/citizen/login`;
+    }
+    else{
+      Digit.UserService.logout();
+      setShowDialog(false);
+    }
+
   };
   const handleOnCancel = () => {
     setShowDialog(false);
