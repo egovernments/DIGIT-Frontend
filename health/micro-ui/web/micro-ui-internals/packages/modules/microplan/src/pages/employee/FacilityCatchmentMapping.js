@@ -68,7 +68,7 @@ const FacilityCatchmentMapping = () => {
       },
     },
     {
-      enabled: isRootApprover && data?.TotalCount < 1,
+      enabled: isRootApprover && data?.TotalCount ===0,
     }
   );
 
@@ -106,7 +106,7 @@ const FacilityCatchmentMapping = () => {
         ></InboxSearchComposer>
       </div>
 
-      {isRootApprover && data?.TotalCount < 1 &&
+      {isRootApprover && data?.TotalCount ===0 &&
         <ActionBar
           actionFields={[
             <Button icon="CheckCircle" label={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT`)} onClick={handleActionBarClick} type="button" variation="primary" />,
