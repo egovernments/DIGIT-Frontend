@@ -453,8 +453,6 @@ const UpdateChecklist = () => {
                             ]}
                             sortFooterChildren={true}
                         >
-                            {/* <PreviewComponent
-              questionsArray={previewData}></PreviewComponent> */}
 
                             <MobileChecklist questions={previewData} checklistRole={t(`${roleLocal}`)} typeOfChecklist={t(`${checklistTypeLocal}`)}></MobileChecklist>
                         </PopUp>
@@ -474,6 +472,7 @@ const UpdateChecklist = () => {
                             </div>
                         ))}
                     </Card>
+                    <div style={{height:"1rem"}}></div>
                     {!searching && <FormComposerV2
                         showMultipleCardsWithoutNavs={true}
                         label={t("UPDATE_CHECKLIST")}

@@ -16,7 +16,7 @@ const SearchChecklist = () => {
 
   const stateData = window.history.state;
 
-  useEffect(()=>{
+  useEffect(() => {
     setCampaignName(campaignName);
   }, campaignName);
 
@@ -39,12 +39,28 @@ const SearchChecklist = () => {
   };
 
   const [codesopt, setCodesOpt] = useState([]);
-  const { data: dataBT } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "rolesForChecklist" }]);
-  useEffect(() => {
-    if (dataBT) setCodesOpt(dataBT["HCM-ADMIN-CONSOLE"]?.rolesForChecklist?.map((item) => ({ code: `ACCESSCONTROL_ROLES_ROLES_${item.code}` })));
-  }, [dataBT]);
 
   const [listsopt, setListsOpt] = useState([]);
+  const reqCriteria = {
+    url: `/mdms-v2/v2/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId: tenantId,
+        schemaCode: "HCM-ADMIN-CONSOLE.rolesForChecklist"
+      }
+    }
+  };
+  const { isLoading1, data: dataBT, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  useEffect(() => {
+    let data = dataBT?.mdms;
+    if(data)
+    {
+      const newCodesOpt = data.map((item) => ({
+        code: `ACCESSCONTROL_ROLES_ROLES_${item?.data?.code}`
+      }));
+      setCodesOpt(newCodesOpt)
+    }
+  }, [dataBT]);
   const reqCriteriaResource = {
     url: `/mdms-v2/v1/_search`,
     body: {
@@ -88,7 +104,7 @@ const SearchChecklist = () => {
 
   checklistSearchConfig[0].sections.search.uiConfig.fields[0].populators.options = codesopt;
   checklistSearchConfig[0].sections.search.uiConfig.fields[1].populators.options = listsopt;
-  checklistSearchConfig[0].additionalDetails = {campaignName};
+  checklistSearchConfig[0].additionalDetails = { campaignName };
 
   if (isFetching) return <div></div>;
   else {
@@ -194,7 +210,7 @@ const SearchChecklist = () => {
               <TextBlock subHeader={t("ACTION_LABEL_CONFIGURE_APP")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
             </Card>
             <Card className="stepper-card">
-              <Stepper customSteps={["HCM_MANAGE_CHECKLIST"]} currentStep={1} onStepClick={() => {}} direction={"vertical"} />
+              <Stepper customSteps={["HCM_MANAGE_CHECKLIST"]} currentStep={1} onStepClick={() => { }} direction={"vertical"} />
             </Card>
           </div>
           <div className="inbox-search-wrapper" style={{ width: "100%" }}>
