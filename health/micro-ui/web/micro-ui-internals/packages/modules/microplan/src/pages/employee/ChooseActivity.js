@@ -43,7 +43,7 @@ const ChooseActivity = () => {
       }
       else{
       // Merged function to disable a card based on user roles and available actions in the current state
-      const isCardDisabled = (validRoles = [], currentState) => {
+      const isCardDisabled = (validRoles = [], currentState, validStatuses = [],) => {
       const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code) || [];
 
       // Check if user has any valid roles
@@ -54,8 +54,10 @@ const ChooseActivity = () => {
         action?.roles.some(role => userRoles?.includes(role))
       );
 
+      const hasValidCurrentStatus = validStatuses?.includes(planObject?.status);
+
       // Disable if either hasValidRole or hasValidNextAction is false
-      return !(hasValidRole && hasValidNextAction);
+      return !(hasValidRole && hasValidCurrentStatus /*hasValidNextAction*/ );
 };
 
 // Usage in activityCardData
@@ -64,19 +66,19 @@ const ChooseActivity = () => {
         name: t("VALIDATE_N_APPROVE_POPULATION_DATA"),
         link: `pop-inbox?campaignId=${campaignId}&microplanId=${microplanId}`,
         icon: <SVG.Population height="36" width="36" />,
-        disable: isCardDisabled(["POPULATION_DATA_APPROVER", "ROOT_POPULATION_DATA_APPROVER"], workflowData)
+        disable: isCardDisabled(["POPULATION_DATA_APPROVER", "ROOT_POPULATION_DATA_APPROVER"], workflowData, ["EXECUTION_TO_BE_DONE","CENSUS_DATA_APPROVAL_IN_PROGRESS"])
       },
       {
         name: t("ASSIGN_FACILITIES_TO_VILLAGE"),
         link: `assign-facilities-to-villages?campaignId=${campaignId}&microplanId=${microplanId}`,
         icon: <SVG.AssignmentTurnedIn height="36" width="36" />,
-        disable: isCardDisabled(["FACILITY_CATCHMENT_MAPPER", "ROOT_FACILITY_CATCHMENT_MAPPER"], workflowData)
+        disable: isCardDisabled(["FACILITY_CATCHMENT_MAPPER", "ROOT_FACILITY_CATCHMENT_MAPPER"], workflowData, ["CENSUS_DATA_APPROVED"])
       },
       {
         name: t("VALIDATE_N_APPROVE_MICROPLAN_ESTIMATIONS"),
         link: `plan-inbox?campaignId=${campaignId}&microplanId=${microplanId}`,
         icon: <SVG.FactCheck height="36" width="36" />,
-        disable: isCardDisabled(["PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"], workflowData)
+        disable: isCardDisabled(["PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"], workflowData, ["RESOURCE_ESTIMATION_IN_PROGRESS"])
       },
       {
         name: t("GEOSPATIAL_MAP_VIEW"),
