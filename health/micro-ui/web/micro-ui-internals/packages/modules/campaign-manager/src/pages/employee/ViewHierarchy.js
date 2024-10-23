@@ -1,10 +1,9 @@
-import { Card, Uploader, Button, PopUp, ActionBar, Toast } from "@egovernments/digit-ui-components";
+import { Card, Uploader, Button, PopUp, ActionBar, Toast, Loader } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState, useRef} from "react";
 import { useTranslation } from "react-i18next";
 // import { useParams,useHistory } from "react-router-dom";
 import XlsPreviewNew from "../../components/XlsPreviewNew";
 import { Svgicon } from "../../utils/Svgicon";
-import { Loader } from "@egovernments/digit-ui-components";
 import { useHistory } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
@@ -105,7 +104,7 @@ const ViewHierarchy = () => {
 
     }
     const downloadExcelTemplate = async() => {
-        const res = await generateFile()
+        // const res = await generateFile()
         const resFile = await generateTemplate();
         if (resFile && resFile?.GeneratedResource?.[0]?.fileStoreid) {
             // Splitting filename before .xlsx or .xls
@@ -150,48 +149,127 @@ const ViewHierarchy = () => {
             setFileUrl(fileDataTemp?.url);
             setFileData(fileDataTemp);
       };
-
-    const callCreateDataApi = async()=>{
+      
+    const callCreateDataApi = async () => {
         setDisable(true);
         setDataCreationGoing(true);
-        try{
-            setDataCreateToast(true);
-            const res = await Digit.CustomService.getResponse({
-                url: "/project-factory/v1/data/_create",
+        try {
+          setDataCreateToast(true);
+      
+          const createResponse = await Digit.CustomService.getResponse({
+            url: "/project-factory/v1/data/_create",
+            params: {},
+            body: {
+              ResourceDetails: {
+                tenantId: tenantId,
+                type: "boundaryManagement",
+                fileStoreId: fileStoreId,
+                action: "create",
+                hierarchyType: hierarchyType,
+                additionalDetails: {
+                  source: "boundary",
+                },
+                campaignId: "default"
+              },
+            },
+          });
+      
+          const id = createResponse?.ResourceDetails?.id;
+          const typeOfData = createResponse?.ResourceDetails?.type;
+      
+          if (id) {
+            try {
+              await pollForStatusCompletion(id, typeOfData);
+              setDataCreateToast(false);
+              setShowToast({ label: `${t("WBH_HIERARCHY_CREATED")}`, isError: "success" });
+            } catch (pollError) {
+              throw pollError; // Propagate polling errors to the outer catch block
+            }
+          }
+      
+          return createResponse;
+        } catch (error) {
+          setDisable(false);
+          let label;
+          
+          if (error.message === "Polling timeout" || error.message === "Max retries reached") {
+            label = `${t("WBH_BOUNDARY_CREATION_TIMEOUT")}: ${t("WBH_OPERATION_INCOMPLETE")}`;
+          } else {
+            label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
+            error?.response?.data?.Errors?.forEach((err, idx) => {
+              if (idx === error?.response?.data?.Errors?.length - 1) {
+                label += t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ".";
+              } else {
+                label += t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ", ";
+              }
+            });
+          }
+          
+          setShowToast({ label, isError: "error" });
+          setDataCreationGoing(false);
+          return {};
+        }
+      };
+      
+      const pollForStatusCompletion = async (id, typeOfData) => {
+        const pollInterval = 1000; // Poll every 1 second
+        const maxRetries = 10; // Maximum number of retries
+        let retries = 0;
+      
+        return new Promise((resolve, reject) => {
+          const poll = async () => {
+            try {
+              
+              if (retries >= maxRetries) {
+                setDataCreationGoing(false);
+                reject(new Error("Max retries reached"));
+                return;
+              }
+      
+              const searchResponse = await Digit.CustomService.getResponse({
+                url: "/project-factory/v1/data/_search",
                 params: {},
                 body: {
-                    ResourceDetails: {
-                        tenantId: tenantId,
-                        type: "boundaryManagement",
-                        fileStoreId: fileStoreId,
-                        action: "create",
-                        hierarchyType: hierarchyType,
-                        additionalDetails: {
-                            source: "boundary"
-                        },
-                    },
+                  SearchCriteria: {
+                    id: [id],
+                    tenantId: tenantId,
+                    type: typeOfData
+                  }
                 },
-
-            });
-            setDataCreateToast(false);
-            setShowToast({ label: `${t("WBH_HIERARCHY_CREATED")}`, isErro:"success" });
-            return res;
-        }
-        catch(resp){
-            setDisable(false);
-            let label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
-            resp?.response?.data?.Errors?.map((err, idx) => {
-            if (idx === resp?.response?.data?.Errors?.length - 1) {
-                label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ".";
-            } else {
-                label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ", ";
+              });
+      
+              
+              const status = searchResponse?.ResourceDetails?.status;
+      
+              if (status === "completed") {
+                setShowToast({ label: `${t("WBH_HIERARCHY_STATUS_COMPLETED")}`, isError: "success" });
+                setDataCreationGoing(false);
+                resolve(true);
+              } else if (status === "failed") {
+                reject(new Error("Operation failed"));
+              } else {
+                retries++;
+                setTimeout(poll, pollInterval);
+              }
+            } catch (error) {
+              setDataCreationGoing(false);
+              reject(error);
             }
-            });
-            setShowToast({ label, isError: "error" });
-            setDataCreationGoing(false);
-            return {};
-        }
-    }
+          };
+      
+          // Start the polling
+          poll().catch(reject);
+      
+          // Set a timeout for the entire polling operation
+          const timeoutDuration = (maxRetries + 1) * pollInterval;
+          setTimeout(() => {
+            if (retries < maxRetries) {  // Only reject if not already resolved
+              setDataCreationGoing(false);
+              reject(new Error("Polling timeout"));
+            }
+          }, timeoutDuration);
+        });
+      };
     
     const createData = async()=> {
         const res = await callCreateDataApi();
@@ -354,12 +432,12 @@ const ViewHierarchy = () => {
                     </div>
                 }
                 {showToast && <Toast label={showToast.label} type={showToast.isError} onClose={() => setShowToast(null)} />}
-                {dataCreateToast && <Toast label={t("DATA_CREATION_IN_PROGRESS")} type={"info"} transitionTime={600000000} />}
                 {previewPage && (
                     <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
                         <div style={{fontSize:"2.5rem", fontWeight:700}}>{t("CONFIRM_BOUNDARY_DATA")}</div>
                         <div style={{height:"1.5rem"}}></div>
-                        <XlsPreviewNew file={fileData} onDownload={() => {}} onBack={() => {setShowPreview(false); setUploadPage(true)}} />
+                        {!dataCreationGoing && <XlsPreviewNew file={fileData} onDownload={() => {}} onBack={() => {setShowPreview(false); setUploadPage(true)}} />}
+                        {dataCreationGoing && <Loader />}
                         <ActionBar
                             actionFields={[
                                 <Button 

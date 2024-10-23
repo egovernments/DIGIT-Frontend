@@ -212,6 +212,7 @@ export const UICustomizations = {
             });
             return res;
           }
+          const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
           const generateTemplate = async () => {
             const res = await Digit.CustomService.getResponse({
               url: `/project-factory/v1/data/_download`,
@@ -228,6 +229,7 @@ export const UICustomizations = {
           }
           const downloadExcelTemplate = async () => {
             const res = await generateFile();
+            await delay(2000);
             const resFile = await generateTemplate();
             if (resFile && resFile?.GeneratedResource?.[0]?.fileStoreid) {
               // Splitting filename before .xlsx or .xls
