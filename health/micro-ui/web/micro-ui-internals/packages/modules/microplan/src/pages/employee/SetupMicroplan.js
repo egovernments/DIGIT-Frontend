@@ -119,9 +119,10 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
 
   useEffect(() => {
     console.log(planObject, campaignObject, " pppppccccccccccccccccccccccccccccccccccc");
+    console.log(state?.roleConfigureOperators, " sssssssssssaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
     const fetchDataAndSetParams = () => {
       console.log(params, " ppp11111111111111111111111111111111")
-
+      var draftFormData = {}
       const campaignDetails = {
         campaignDetails: {
           distributionStrat: {
@@ -136,18 +137,29 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
           },
         },
       };
+      if (campaignObject?.additionalDetails?.resourceDistributionStrategy && campaignObject?.additionalDetails?.disease && campaignObject?.projectType) {
+        draftFormData.CAMPAIGN_DETAILS = campaignDetails;
+      }
 
       const microplanDetails = {
         microplanDetails: {
           microplanName: planObject?.name,
         },
       };
+      if (planObject?.name) {
+        draftFormData.MICROPLAN_DETAILS = microplanDetails;
+      }
+
       const boundaryData = createBoundaryDataByHierarchy(campaignObject?.boundaries);
       const boundarySelection = {
         boundarySelection: {
           boundaryData: boundaryData,
           selectedData: campaignObject?.boundaries,
         },
+      }
+
+      if (campaignObject?.boundaries) {
+        draftFormData.BOUNDARY = boundarySelection;
       }
 
       const uploadBoundaryData = {
@@ -202,18 +214,67 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
         });
         uploadFacilityData.facilityWithBoundary.isSuccess = true;
       }
+      if (boundaryFile) {
+        draftFormData.UPLOADBOUNDARYDATA = uploadBoundaryData;
+      }
+      if (facilityFile) {
+        draftFormData.UPLOADFACILITYDATA = uploadFacilityData;
+      }
 
-      
+      const strategies = state?.ResourceDistributionStrategy;
+      const togetherOrSeparately = state.RegistrationAndDistributionHappeningTogetherOrSeparately;
+      const assumptionsForm = {
+        assumptionsForm: {
+          selectedRegistrationDistributionMode:{
+            code : planObject?.additionalDetails?.isRegistrationAndDistributionHappeningTogetherOrSeparately,
+            value : togetherOrSeparately?.find((mode) => mode.registrationAndDistributionHappeningTogetherOrSeparatelyCode === planObject?.additionalDetails?.isRegistrationAndDistributionHappeningTogetherOrSeparately)?.registrationAndDistributionHappeningTogetherOrSeparatelyName || null
+          },
+          selectedRegistrationProcess: {
+            code: planObject?.additionalDetails?.RegistrationProcess,
+            value: strategies?.find(
+              (strategy) =>
+                strategy.resourceDistributionStrategyCode ===
+                planObject?.additionalDetails?.RegistrationProcess
+            )?.resourceDistributionStrategyName || null,
+          },
+          selectedDistributionProcess: {
+            code: planObject?.additionalDetails?.DistributionProcess,
+            value: strategies?.find(
+              (strategy) =>
+                strategy.resourceDistributionStrategyCode ===
+                planObject?.additionalDetails?.DistributionProcess
+            )?.resourceDistributionStrategyName || null,
+          },
+        },
+      };
 
+      if (
+        strategies && togetherOrSeparately && 
+        (planObject?.additionalDetails?.RegistrationProcess ||
+          planObject?.additionalDetails?.DistributionProcess || planObject?.additionalDetails?.isRegistrationAndDistributionHappeningTogetherOrSeparately)
+      ) {
+        draftFormData.ASSUMPTIONS_FORM = assumptionsForm;
+      }
 
-      // Set the params
-      setParams({ CAMPAIGN_DETAILS: campaignDetails, MICROPLAN_DETAILS: microplanDetails, BOUNDARY: boundarySelection, UPLOADBOUNDARYDATA: boundaryFile ? uploadBoundaryData : null, UPLOADFACILITYDATA: facilityFile ? uploadFacilityData : null });
+      const assumptionValues = [];
+      if(planObject?.assumptions?.length > 0){
+        for(const assumption of planObject?.assumptions){
+          assumptionValues.push({
+             source: assumption?.source,
+             key: assumption?.key,
+             value: assumption?.value,
+             category: assumption?.category
+          });
+        }
+        draftFormData.HYPOTHESIS = { Assumptions : {assumptionValues :  assumptionValues} };
+      }
+      setParams(draftFormData);
     };
     if (Object.keys(params).length > 0) {
       return;
     }
     else if (!isLoadingPlanObject && !isLoadingCampaignObject && campaignObject && planObject) {
-      fetchDataAndSetParams(); // Call the async function
+      fetchDataAndSetParams();
     }
   }, [params, isLoadingPlanObject, isLoadingCampaignObject, campaignObject, planObject]);
 
@@ -294,6 +355,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
 
   const onSubmit = (formData) => {
     // setIsSubmittting to true -> to run inline validations within the components
+    console.log(formData," ffffffffffffddddddddddddddddddddddddddddddddddddd")
     setIsSubmitting(true);
 
 
