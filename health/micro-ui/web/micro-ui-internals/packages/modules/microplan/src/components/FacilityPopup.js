@@ -7,8 +7,6 @@ import DataTable from "react-data-table-component";
 import AccessibilityPopUp from "./accessbilityPopUP";
 import SecurityPopUp from "./securityPopUp";
 
-
-
 const FacilityPopUp = ({ details, onClose }) => {
   const { t } = useTranslation();
   const currentUserUuid = Digit.UserService.getUser().info.uuid;
@@ -30,6 +28,7 @@ const FacilityPopUp = ({ details, onClose }) => {
   const [totalCensusCount, setTotalCensusCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [boundaryData, setBoundaryData] = useState([]);
   const configNavItem = [
     {
       code: t(`MICROPLAN_UNASSIGNED_FACILITIES`),
@@ -101,15 +100,14 @@ const FacilityPopUp = ({ details, onClose }) => {
       boundaryCodes: planEmployeeDetailsData?.PlanEmployeeAssignment?.[0]?.jurisdiction,
     };
     setJurisdiction(jurisdictionObject);
-    jurisdictionArray = planEmployeeDetailsData?.PlanEmployeeAssignment?.[0]?.jurisdiction?.map((item) => { return { code: item } });
+    if(boundaryData?.length > 0){
+      jurisdictionArray = boundaryData;
+    }
+    else{
+      jurisdictionArray = planEmployeeDetailsData?.PlanEmployeeAssignment?.[0]?.jurisdiction?.map((item) => { return { code: item } });
+    }
     censusSearch(jurisdictionArray);
   }, [microplanId, facilityAssignedStatus, details, planEmployeeDetailsData, currentPage, rowsPerPage]);
-
-  useEffect(() => {
-    if (boundaries || jurisdiction) {
-      setSearchKey((prevKey) => prevKey + 1); // Increment key to force re-render
-    }
-  }, [boundaries, jurisdiction]);
 
   const censusSearchMutaionConfig = {
     url: "/census-service/_search",
@@ -127,6 +125,7 @@ const FacilityPopUp = ({ details, onClose }) => {
 
 
   const censusSearch = async (data) => {
+    setBoundaryData(data);
     setTableLoader(true);
     const codeArray = data?.length === 0
       ? planEmployeeDetailsData?.PlanEmployeeAssignment?.[0]?.jurisdiction?.map((item) => item) || []
@@ -158,7 +157,7 @@ const FacilityPopUp = ({ details, onClose }) => {
             setTotalCensusCount(0)
           }
         },
-        onError: (result) => {
+        onError: async (result) => {
           // setDownloadError(true);
           setShowToast({ key: "error", label: t("ERROR_WHILE_CENSUSSEARCH"), transitionTime: 5000 });
         },
@@ -317,7 +316,7 @@ const FacilityPopUp = ({ details, onClose }) => {
           setSelectedRows([]);
           setIsAllSelected(false);
         },
-        onError: (result) => {
+        onError: async (result) => {
           // setDownloadError(true);
           setShowToast({ key: "error", label: t("ERROR_WHILE_UPDATING_PLANFACILITY"), transitionTime: 5000 });
         },
@@ -401,7 +400,7 @@ const FacilityPopUp = ({ details, onClose }) => {
                     pagination
                     paginationServer
                     paginationDefaultPage={currentPage}
-                    paginationRowsPerPage={rowsPerPage}
+                    paginationPerPage={rowsPerPage}
                     onChangePage={handlePageChange}
                     onChangeRowsPerPage={handleRowsPerPageChange}
                     paginationRowsPerPageOptions={[10, 20, 30, 40, 50]}
@@ -409,7 +408,7 @@ const FacilityPopUp = ({ details, onClose }) => {
                     highlightOnHover
                     pointerOnHover
                     striped
-                    style={{ marginTop: "20px", border: "1px solid #D6D5D4", borderRadius: "3px" }} // Add some space between the header and DataTable
+                    style={{ marginTop: "20px", border: "1px solid #D6D5D4", borderRadius: "3px" }}
                   />
                 )}
                 {viewDetails && accessibilityData && (

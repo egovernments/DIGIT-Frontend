@@ -456,7 +456,7 @@ const createUpdatePlanProject = async (req) => {
         const updatedPlanObjForFacility = {
           ...fetchedPlanForFacility,
           files: filesForFacility,
-          workflow,
+          workflow : fetchedPlanForFacility?.status == "DRAFT" ? workflow : null,
         };
 
         const planResFacility = await updatePlan(updatedPlanObjForFacility);
