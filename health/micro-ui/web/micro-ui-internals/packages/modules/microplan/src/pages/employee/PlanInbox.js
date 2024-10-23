@@ -366,7 +366,7 @@ const PlanInbox = () => {
                     onClose={closePopUp}
                     heading={t(`SEND_FOR_${workFlowPopUp}`)}
                     submitLabel={t(`SEND_FOR_${workFlowPopUp}`)}
-                    url="/plan-service/plan/bulk/_update'"
+                    url="/plan-service/plan/bulk/_update"
                     requestPayload={{ Plan: updateWorkflowForSelectedRows() }}
                     commentPath="workflow.comment"
                   />
