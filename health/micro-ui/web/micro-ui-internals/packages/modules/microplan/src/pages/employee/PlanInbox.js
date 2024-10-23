@@ -394,7 +394,7 @@ const PlanInbox = () => {
               onSelectedRowsChange={handleRowSelect}
               selectableRowsComponentProps={selectProps}
               selectableRowsComponent={CheckBox}
-              // customStyles={customStyles}
+              customStyles={tableCustomStyle}
               // selectableRowsComponent={SimpleCheckbox}
             />
           </Card>
