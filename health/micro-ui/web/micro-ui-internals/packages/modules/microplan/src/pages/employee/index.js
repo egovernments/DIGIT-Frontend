@@ -209,6 +209,7 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
         <PrivateRoute path={`${path}/setup-completed-response`} component={() => <Response />} />
         <PrivateRoute path={`${path}/population-finalise-success`} component={() => <Response />} />
         <PrivateRoute path={`${path}/assign-facilities-to-villages`} component={() => <FacilityCatchmentMapping />} />
+        <PrivateRoute path={`${path}/village-finalise-success`} component={() => <Response />} />
 
 
 
