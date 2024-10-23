@@ -97,7 +97,7 @@ export const UICustomizations = {
             option={options}
             select={(e) => {
               console.log(e, "event"); // e contains the selected option
-              if (e.code === "1") {
+              if (e.name == "Edit Setup") {
                 // Use window.location.href to navigate
                 window.location.href = `/${
                   window.contextPath
@@ -105,17 +105,13 @@ export const UICustomizations = {
                   row.CampaignDetails.id
                 }`;
               }
-              if (e.code === "2") {
+              if (e.name == "View Summary") {
                 // Use window.location.href to navigate
                 window.location.href = `/${
                   window.contextPath
                 }/employee/microplan/setup-microplan?key=${10}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${
                   row.CampaignDetails.id
                 }`;
-              }
-              if (e.code === "3") {
-                // Use window.location.href to navigate
-                window.location.href = `/${window.contextPath}/employee/microplan/select-activity?microplanId=${row.id}&campaignId=${row.CampaignDetails.id}`;
               }
             }}
             optionKey={"name"}
