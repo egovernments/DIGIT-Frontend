@@ -18,6 +18,7 @@ import { Stepper, Toast, PopUp, CardText, InfoCard, Button } from "@egovernments
 import _ from "lodash";
 import { useMyContext } from "../../utils/context";
 import { useLocation } from "react-router-dom/cjs/react-router-dom";
+import { fetchDataAndSetParams } from "../../utils/fetchDataAndSetParams";
 
 const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const { dispatch, state } = useMyContext();
@@ -71,6 +72,16 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
       queryKey: currentKey,
     }
   );
+
+  useEffect(() => {
+    if (Object.keys(params).length > 0) {
+      return;
+    }
+    else if (!isLoadingPlanObject && !isLoadingCampaignObject && campaignObject && planObject) {
+      fetchDataAndSetParams(  state, setParams, campaignObject, planObject);
+    }
+  }, [params, isLoadingPlanObject, isLoadingCampaignObject, campaignObject, planObject]);
+
 
   //Generic mutation to handle creation and updation of resources(plan/project)
   const { mutate: updateResources, ...rest } = Digit.Hooks.microplanv1.useCreateUpdatePlanProject();

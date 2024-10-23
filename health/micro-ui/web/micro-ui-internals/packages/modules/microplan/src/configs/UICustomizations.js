@@ -49,12 +49,6 @@ export const UICustomizations = {
   MyMicroplanSearchConfigOverridePlan: {
     test: "yes",
   },
-  MyMicroplanSearchConfigOverridePlan: {
-    test: "yes",
-  },
-  MyMicroplanSearchConfigOverridePlan: {
-    test: "yes",
-  },
   MicroplanSearchConfig: {
     preProcess: (data, additionalDetails) => {
       const { name, status } = data?.state?.searchForm || {};
@@ -85,18 +79,25 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      var options = []
+      if(row?.status=="DRAFT"){
+        options = [
+          { code: "1", name: "Edit Setup" }
+        ]
+      }
+      else{
+        options = [
+            { code: "1", name: "View Summary" }
+        ]
+      }
       if (key === "ACTIONS") {
         // `/${window.contextPath}/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}`
         return (
           <Dropdown
-            option={[
-              { code: "1", name: "Edit Setup" },
-              { code: "2", name: "View Summary" },
-              { code: "3", name: "ACTIVITY" },
-            ]}
+            option={options}
             select={(e) => {
               console.log(e, "event"); // e contains the selected option
-              if (e.code === "1") {
+              if (e.name == "Edit Setup") {
                 // Use window.location.href to navigate
                 window.location.href = `/${
                   window.contextPath
@@ -104,17 +105,13 @@ export const UICustomizations = {
                   row.CampaignDetails.id
                 }`;
               }
-              if (e.code === "2") {
+              if (e.name == "View Summary") {
                 // Use window.location.href to navigate
                 window.location.href = `/${
                   window.contextPath
                 }/employee/microplan/setup-microplan?key=${10}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${
                   row.CampaignDetails.id
                 }`;
-              }
-              if (e.code === "3") {
-                // Use window.location.href to navigate
-                window.location.href = `/${window.contextPath}/employee/microplan/select-activity?microplanId=${row.id}&campaignId=${row.CampaignDetails.id}`;
               }
             }}
             optionKey={"name"}
