@@ -335,7 +335,7 @@ const PopInbox = () => {
               style={{}}
             />
           )}
-          <Card type={"primary"}>
+          <Card className="microPlanBulkTable" type={"primary"}>
             {villagesSlected !== 0 && (
               <div className="selection-state-wrapper">
                 <div className="svg-state-wrapper">
