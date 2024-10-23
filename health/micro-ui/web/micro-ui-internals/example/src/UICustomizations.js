@@ -797,14 +797,12 @@ export const UICustomizations = {
       var options = []
       if(row?.status=="DRAFT"){
         options = [
-          { code: "1", name: "Edit Setup" },
-          { code: "2", name: "ACTIVITY" },
+          { code: "1", name: "Edit Setup" }
         ]
       }
       else{
         options = [
-            { code: "1", name: "View Summary" },
-            { code: "2", name: "ACTIVITY" },
+            { code: "1", name: "View Summary" }
         ]
       }
       if (key === "ACTIONS") {
