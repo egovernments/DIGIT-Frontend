@@ -767,7 +767,6 @@ export const UICustomizations = {
   MicroplanSearchConfig: {
     preProcess: (data, additionalDetails) => {
       const { name, status } = data?.state?.searchForm || {};
-
       data.body.PlanConfigurationSearchCriteria = {};
       data.body.PlanConfigurationSearchCriteria.limit = data?.state?.tableForm?.limit;
       // data.body.PlanConfigurationSearchCriteria.limit = 10

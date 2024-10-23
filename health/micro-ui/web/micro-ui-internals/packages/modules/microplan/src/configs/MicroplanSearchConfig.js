@@ -44,7 +44,7 @@ const defaultSearchValues = {
                   populators: {
                     name: "microplanName",
                     error: "Required",
-                    validation: { pattern: /^[A-Za-z]+$/i },
+                    // validation: { pattern: /^[A-Za-z]+$/i },
                   },
                 },
                 // {
