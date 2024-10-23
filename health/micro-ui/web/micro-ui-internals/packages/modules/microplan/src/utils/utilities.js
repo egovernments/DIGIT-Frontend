@@ -225,13 +225,25 @@ function getCurrentMonth() {
   return monthNames[currentMonthIndex];
 }
 
-function updateUrlParams(params) {
+// function updateUrlParams(params) {
+//   const url = new URL(window.location.href);
+//   Object.entries(params).forEach(([key, value]) => {
+//     url.searchParams.set(key, value);
+//   });
+//   window.history.replaceState({}, "", url);
+// }
+
+const updateUrlParams = (params) => {
   const url = new URL(window.location.href);
   Object.entries(params).forEach(([key, value]) => {
-    url.searchParams.set(key, value);
+      if (value === null || value === undefined) {
+          url.searchParams.delete(key);
+      } else {
+          url.searchParams.set(key, value);
+      }
   });
   window.history.replaceState({}, "", url);
-}
+};
 
 function generateCampaignString(sessionData, t) {
 

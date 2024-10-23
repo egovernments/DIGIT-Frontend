@@ -62,6 +62,15 @@
     "build:webpack": "yarn build:libraries &&cd .. && ls && cd ./web && ls && yarn build:prod",
     "clean": "rm -rf node_modules"
   },
+  "resolutions":  {
+    "**/babel-loader": "8.2.2",
+    "**/@babel/core": "7.14.0",
+    "**/@babel/preset-env": "7.14.0",
+    "**/styled-components": "5.0.0",
+    "**/@babel/plugin-transform-modules-commonjs": "7.14.0",
+    "**/polished":"4.2.2",
+    "fast-uri":"2.1.0"
+  },
   "eslintConfig": {
     "extends": [
       "react-app"

@@ -35,7 +35,6 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
       case "UPDATE_QUESTION_DATA":
         if(action?.payload && action?.payload.length>0) 
           {
-            console.log("data incoming", action.payload);
             return [...action.payload];
           }
         else return state;
@@ -163,13 +162,11 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
 
   useEffect(() => {
     // Avoid dispatch if props haven't changed
-    console.log("the data", props?.props?.data);
     if (props?.props?.data !== 0) {  
       // Dispatch only if the data is different
       setTypeOfCall(props?.props?.typeOfCall);
       if(props?.props?.typeOfCall === "clear")
       {
-        console.log("huehuehue");
         dispatchQuestionData({
           type: "CLEAR_DATA",
           payload: props?.props?.data
