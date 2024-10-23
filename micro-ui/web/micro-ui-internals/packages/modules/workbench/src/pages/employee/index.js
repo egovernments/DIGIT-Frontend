@@ -20,7 +20,10 @@ const WorkbenchBreadCrumb = ({ location, defaultPath,initialContextPath }) => {
   const { masterName, moduleName, uniqueIdentifier } = Digit.Hooks.useQueryParams()
 
   const getHomePath = () => {
+    console.log(window.location.href);
+    console.log(window.location.href.includes("mukta"))
     if (window.location.href.includes("mukta")) {
+      console.log("coming here")
       return '/works-ui/employee';
     }
     return `/${window.contextPath}/employee`;
