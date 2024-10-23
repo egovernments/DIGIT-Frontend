@@ -20,8 +20,8 @@ jobs:
       - name: Validate branch name
         run: |
           branch_name=$(echo "${GITHUB_REF#refs/heads/}")
-          pattern="^(FEATURE|BUGFIX|RELEASE)\/(HCMPRE|DPG|SN)-[0-9]{1,5}$"
+          pattern="^(feature|bugfix|RELEASE)\/(hcmpre|dpg|sn)-[0-9]{1,5}$"
           if [[ ! "$branch_name" =~ $pattern ]]; then
-            echo "Branch name '$branch_name' does not follow the correct pattern: FEATURE/HCMPRE-<TICKET_NO>, FEATURE/DPG-<TICKET_NO>, FEATURE/SN-<TICKET_NO>, BUGFIX/SN-<TICKET_NO>,  BUGFIX/HCMPRE-<TICKET_NO>, or BUGFIX/DPG-<TICKET_NO> where x is a number between 0 and 99999"
+            echo "Branch name '$branch_name' does not follow the correct pattern: feature/hcmpre-<TICKET_NO>, feature/dpg-<TICKET_NO>, feature/sn-<TICKET_NO>, bugfix/sn-<TICKET_NO>,  bugfix/hcmpre-<TICKET_NO>, or bugfix/dpg-<TICKET_NO> where x is a number between 0 and 99999"
             exit 1
           fi
