@@ -4,14 +4,14 @@ import { useTranslation } from "react-i18next";
 import RoleTableComposer from "./RoleTableComposer";
 import DataTable from "react-data-table-component";
 
-function UserAccess({ category,setData,nationalRoles }) {
+function UserAccess({ category, setData, nationalRoles }) {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
   const [showPopUp, setShowPopUp] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [totalRows, setTotalRows] = useState(0);
   const {
     isLoading: isPlanEmpSearchLoading,
@@ -62,6 +62,11 @@ function UserAccess({ category,setData,nationalRoles }) {
     setCurrentPage(page);
     refetchPlanEmployee();
   };
+  const handleRowsPerPageChange = (newPerPage, page) => {
+    setRowsPerPage(newPerPage); // Update the rows per page state
+    setCurrentPage(page); // Optionally reset the current page or maintain it
+    refetchPlanEmployee();
+  };
   const columns = [
     {
       name: t("NAME"),
@@ -90,7 +95,7 @@ function UserAccess({ category,setData,nationalRoles }) {
         // } else {
         //   return row?.hierarchyLevel; // Otherwise, return the existing hierarchy level
         // }
-        return  row?.hierarchyLevel;
+        return row?.hierarchyLevel;
       },
       sortable: true,
     },
@@ -101,7 +106,6 @@ function UserAccess({ category,setData,nationalRoles }) {
           <>
             {row?.jurisdiction?.map((item) => (
               <div className="digit-tag-container userAccessCell">
-
                 <Chip
                   className=""
                   error=""
@@ -141,6 +145,7 @@ function UserAccess({ category,setData,nationalRoles }) {
             paginationServer
             paginationTotalRows={totalRows}
             onChangePage={handlePaginationChange}
+            onChangeRowsPerPage={handleRowsPerPageChange}
             paginationPerPage={rowsPerPage}
             paginationRowsPerPageOptions={[5, 10, 15, 20]}
           />

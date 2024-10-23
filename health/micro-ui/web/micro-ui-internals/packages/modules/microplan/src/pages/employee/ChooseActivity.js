@@ -21,31 +21,31 @@ const ChooseActivity = () => {
         { 
             name: t("VALIDATE_N_APPROVE_POPULATION_DATA"), 
             link: `pop-inbox?campaignId=${campaignId}&microplanId=${microplanId}`, 
-            icon: <SVG.Population/>,
+            icon: <SVG.Population height="36" width="36"/>,
             disable: disableCardBasedOnRole(["POPULATION_DATA_APPROVER", "ROOT_POPULATION_DATA_APPROVER"])
         },
         { 
             name: t("ASSIGN_FACILITIES_TO_VILLAGE"), 
             link: `assign-facilities-to-villages?campaignId=${campaignId}&microplanId=${microplanId}`, 
-            icon: <SVG.AssignmentTurnedIn/>,
+            icon: <SVG.AssignmentTurnedIn height="36" width="36"/>,
             disable: disableCardBasedOnRole(["FACILITY_CATCHMENT_MAPPER", "ROOT_FACILITY_CATCHMENT_MAPPER"])
         },
         { 
             name: t("VALIDATE_N_APPROVE_MICROPLAN_ESTIMATIONS"), 
             link: `plan-inbox?campaignId=${campaignId}&microplanId=${microplanId}`, 
-            icon: <SVG.FactCheck/>,
+            icon: <SVG.FactCheck height="36" width="36"/>,
             disable: disableCardBasedOnRole(["PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"]),
         },
         { 
             name: t("GEOSPATIAL_MAP_VIEW"), 
             link: null, 
-            icon: <SVG.LocationOn/>,
+            icon: <SVG.LocationOn height="36" width="36"/>,
             disable: disableCardBasedOnRole()
         },
         { 
             name: t("VIEW_MICROPLAN_ESTIMATIONS"), 
             link: `pop-inbox?campaignId=${campaignId}&microplanId=${microplanId}`, 
-            icon: <SVG.Visibility/>,
+            icon: <SVG.Visibility height="36" width="36"/>,
             disable: disableCardBasedOnRole()
         }
       ];

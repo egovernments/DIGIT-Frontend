@@ -12,6 +12,8 @@ import Boundary from "./Boundary";
 import GeoPode from "./GeoPode";
 import ViewBoundary from "./ViewBoundary";
 import ViewHierarchy from "./ViewHierarchy";
+import ViewChecklist from "./ViewChecklist";
+import UpdateChecklist from "./UpdateChecklist";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -33,7 +35,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     {
       path: pathVar === "my-campaign" ? "" : `/${window?.contextPath}/employee/campaign/my-campaign`,
       content: t("MY_CAMPAIGN"),
-      show: pathVar === "my-campaign" || pathVar === "checklist/search" || pathVar === "checklist/create" ? true : false,
+      show: pathVar === "my-campaign" || pathVar === "checklist/search" || pathVar === "checklist/create" || pathVar === "checklist/view" || pathVar === "checklist/update" ? true : false,
     },
     {
       path: pathVar === "setup-campaign" ? "" : `/${window?.contextPath}/employee/campaign/setup-campaign`,
@@ -54,6 +56,16 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       path: "",
       content: t("ACTION_CREATE_CHECKLIST"),
       show: pathVar === "checklist/create" ? true : false,
+    },
+    {
+      path: "",
+      content: t("ACTION_VIEW_CHECKLIST"),
+      show: pathVar === "checklist/view" ? true : false,
+    },
+    {
+      path: "",
+      content: t("ACTION_UPDATE_CHECKLIST"),
+      show: pathVar === "checklist/update" ? true : false,
     },
     {
       path: pathVar === "boundary/home" ? "" : `/${window?.contextPath}/employee/campaign/boundary/home`,
@@ -129,6 +141,8 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
           <PrivateRoute path={`${path}/update-dates-boundary`} component={() => <UpdateDatesWithBoundaries />} />
           <PrivateRoute path={`${path}/checklist/create`} component={() => <CreateChecklist />} />
           <PrivateRoute path={`${path}/checklist/search`} component={() => <SearchChecklist />} />
+          <PrivateRoute path={`${path}/checklist/view`} component={() => <ViewChecklist />} />
+          <PrivateRoute path={`${path}/checklist/update`} component={() => <UpdateChecklist />} />
           <PrivateRoute path={`${path}/boundary/home`} component={()=> <Boundary />} />
           <PrivateRoute path={`${path}/boundary/geopode`} component={()=> <GeoPode />} />
           <PrivateRoute path={`${path}/boundary/view-all-hierarchy`} component={()=> <ViewBoundary />} />

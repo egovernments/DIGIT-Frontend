@@ -17,7 +17,7 @@ function RoleTableComposer({ nationalRoles }) {
   const { state } = useMyContext();
   const [rowData, setRowData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [totalRows, setTotalRows] = useState(0);
   const [filters, setFilters] = useState({});
   const [name, setName] = useState("");
@@ -28,6 +28,9 @@ function RoleTableComposer({ nationalRoles }) {
   const { mutate: planEmployeeUpdate } = Digit.Hooks.microplanv1.usePlanEmployeeUpdate();
 
   const topBoundary = state?.boundaryHierarchy.find(boundary => boundary.parentBoundaryType === null);
+  const topBoundaryValue = totalFormData?.BOUNDARY?.boundarySelection?.boundaryData?.Country
+  ? Object.values(totalFormData.BOUNDARY.boundarySelection.boundaryData.Country)[0]
+  : undefined;
   const { isLoading: isHrmsLoading, data: HrmsData, error: hrmsError, refetch: refetchHrms } = Digit.Hooks.microplanv1.useSearchHRMSEmployee({
     tenantId: tenantId,
     microplanId: microplanId,
@@ -51,7 +54,8 @@ function RoleTableComposer({ nationalRoles }) {
               state?.boundaryHierarchy?.find(
                 (j) => j.boundaryType === data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.hierarchyLevel
               ),
-            selectedBoundaries: data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.jurisdiction,
+              selectedBoundaries: nationalRoles?.includes(category) ? topBoundaryValue :
+              data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.jurisdiction,
             userServiceUuid: item?.user?.userServiceUuid,
             planData: data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid),
           };
@@ -80,13 +84,15 @@ function RoleTableComposer({ nationalRoles }) {
           userServiceUuid: employee?.userServiceUuid,
           selectedHierarchy: employee?.selectedHierarchy || null,
           boundaryOptions: boundaryOptions || [],
-          selectedBoundaries: filteredBoundary.filter((item) => employee?.selectedBoundaries?.includes(item?.code)) || [],
-        };
+          selectedBoundaries: nationalRoles?.includes(category)
+            ? filteredBoundary.filter((item) => employee?.selectedBoundaries?.includes(topBoundaryValue))
+            : filteredBoundary.filter((item) => employee?.selectedBoundaries?.includes(item?.code)) || [],
+        }; // Closing brace for the returned object
       });
-
+  
       setRowData(initializedRowData); // Set the initialized data in the state
     }
-  }, [HrmsData]);
+  }, [HrmsData]);  
 
   useEffect(() => {
     refetchHrms();
@@ -299,7 +305,7 @@ function RoleTableComposer({ nationalRoles }) {
           selected={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedHierarchy || null}
           disabled={nationalRoles?.includes(category) ? true : false}
           isMandatory={true}
-          option={state?.boundaryHierarchy}
+          option={state?.boundaryHierarchy.filter((item)=>!(item.boundaryType==="Village"))}
           select={(value) => {
             row.selectedHeirarchy = value;
             handleHierarchyChange(value, row);
@@ -314,6 +320,7 @@ function RoleTableComposer({ nationalRoles }) {
       name: t("SELECTED_BOUNDARY"),
       cell: (row) => (
         <MultiSelectDropdown
+          disabled={nationalRoles?.includes(category) ? true : false}
           props={{ className: "roleTableCell" }}
           t={t}
           options={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.boundaryOptions || []}
@@ -352,6 +359,11 @@ function RoleTableComposer({ nationalRoles }) {
   const handlePaginationChange = (page) => {
     setCurrentPage(page);
     refetchHrms();
+  };
+  const handleRowsPerPageChange = (newPerPage, page) => {
+    setRowsPerPage(newPerPage); // Update the rows per page state
+    setCurrentPage(page); // Optionally reset the current page or maintain it
+    refetchHrms(); // Fetch the updated data with the new rows per page
   };
   const handleSearchSubmit = (e) => {
     setFilters({
@@ -419,6 +431,7 @@ function RoleTableComposer({ nationalRoles }) {
           </div>
         </div>
       </Card>
+      <div style={{overflowY:"auto"}}>
       <DataTable
         columns={columns}
         data={HrmsData?.data}
@@ -426,9 +439,11 @@ function RoleTableComposer({ nationalRoles }) {
         paginationServer
         paginationTotalRows={totalRows}
         onChangePage={handlePaginationChange}
+        onChangeRowsPerPage={handleRowsPerPageChange}
         paginationPerPage={rowsPerPage}
         paginationRowsPerPageOptions={[5, 10, 15, 20]}
       />
+      </div>
       {showToast && (
         <Toast
           type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
