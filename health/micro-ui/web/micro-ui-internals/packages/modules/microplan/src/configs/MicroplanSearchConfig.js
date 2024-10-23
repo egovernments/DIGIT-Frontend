@@ -16,7 +16,7 @@ const defaultSearchValues = {
         label: "MY_MICROPLANS",
         type: "search",
         apiDetails: {
-          serviceName: "/plan-service/config/_search", //! Note
+          serviceName: "/plan-service/config/_search", 
           requestParam: {},
           requestBody: {},
          masterName: "commonUiConfig",
