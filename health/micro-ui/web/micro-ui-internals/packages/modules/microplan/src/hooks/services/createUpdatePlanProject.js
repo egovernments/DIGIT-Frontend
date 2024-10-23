@@ -307,6 +307,8 @@ const createUpdatePlanProject = async (req) => {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
           window.dispatchEvent(new Event("isLastStep"));
+          Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep:null }); 
+          Digit.Utils.microplanv1.updateUrlParams({ internalKey:null }); 
           return {
             triggeredFrom,
           };
@@ -379,11 +381,11 @@ const createUpdatePlanProject = async (req) => {
 
         const planResFormula = await updatePlan(updatedPlanObjFormula);
         if(planResFormula?.PlanConfiguration?.[0]?.id){
-        
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
           window.dispatchEvent(new Event("isFormulaLastStep"))
-          
+          Digit.Utils.microplanv1.updateUrlParams({ isFormulaLastVerticalStep:null }); 
+          Digit.Utils.microplanv1.updateUrlParams({ formulaInternalKey:null }); 
           return {
             triggeredFrom,
           };
@@ -498,6 +500,22 @@ const createUpdatePlanProject = async (req) => {
           }
         };
       const planResForCompleteSetup = await updatePlan(updatedReqForCompleteSetup);
+      // const updatedReqForCompleteSetupNextAction = {
+      //   ...fetchedPlanForSummary,
+      //   workflow: {
+      //     action: "START_DATA_APPROVAL",
+      //     // "assignes": null,
+      //     // "comments": null,
+      //     // "verificationDocuments": null,
+      //     // "rating": null
+      //   },
+      //   additionalDetails:{
+      //     ...fetchedPlanForSummary.additionalDetails,
+      //     setupCompleted:true,//we can put this in url when we come from microplan search screen to disable routing to other screens -> Only summary screen should show, or only allowed screens should show
+      //   }
+      // };
+      // const planResForCompleteSetupNextAction = await updatePlan(updatedReqForCompleteSetupNextAction);
+      
       //here do cleanup activity and go to next screen
 
       if (planResForCompleteSetup?.PlanConfiguration?.[0]?.id) {
@@ -523,6 +541,8 @@ const createUpdatePlanProject = async (req) => {
         setCurrentKey((prev) => prev + 1);
         setCurrentStep((prev) => prev + 1);
         window.dispatchEvent(new Event("isLastStep"));
+        Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep:null }); 
+        Digit.Utils.microplanv1.updateUrlParams({ internalKey:null }); 
         return {
           triggeredFrom,
         };

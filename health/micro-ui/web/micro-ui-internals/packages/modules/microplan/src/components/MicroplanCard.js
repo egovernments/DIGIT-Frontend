@@ -17,7 +17,10 @@ const ROLES = {
 
 const MicroplanCard = () => {
   const { t } = useTranslation();
-
+  const userInfo = Digit.UserService.getUser();
+  const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
+  // Check if at least one role of supervisor is there
+  const isSupervisorLoggedIn = userRoles.some(role => ROLES.SUPERVISOR.includes(role));
   const generateLink = (labelKey, pathSuffix,roles=ROLES.MICROPLAN) => {
     return {
       label: t(labelKey),
@@ -36,7 +39,7 @@ const MicroplanCard = () => {
 
   const propsForModuleCard = {
     Icon: <SVG.UpdateExpense fill="white"  height="50" width="50" />,
-    moduleName: t("MICROPLAN_MODULE_SETUP"),
+    moduleName: isSupervisorLoggedIn ? t("MICROPLAN_MODULE_PROCESS") :t("MICROPLAN_MODULE_SETUP"),
     kpis: [],
     links: links,
   };
