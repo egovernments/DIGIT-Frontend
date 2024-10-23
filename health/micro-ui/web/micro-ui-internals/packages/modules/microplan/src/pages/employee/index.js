@@ -19,8 +19,7 @@ import ChooseActivity from "./ChooseActivity";
 import Response from "../../components/Response";
 
 import FacilityCatchmentMapping from "./FacilityCatchmentMapping";
-// import PlanInbox from "./PlanInbox";
-import PlanWithCensusInbox from "./PlanWithCensusInbox";
+import PlanInbox from "./PlanInbox";
 
 
 
@@ -188,8 +187,7 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
         <PrivateRoute path={`${path}/test`} component={() => <SearchUnderJurisdiction></SearchUnderJurisdiction>} />
         <PrivateRoute path={`${path}/table`} component={() => <TableNew />} />
         <PrivateRoute path={`${path}/pop-inbox`} component={() => <PopInbox />} />
-        {/* <PrivateRoute path={`${path}/plan-inbox`} component={() => <PlanInbox />} /> */}
-        <PrivateRoute path={`${path}/plan-inbox`} component={() => <PlanWithCensusInbox />} />
+        <PrivateRoute path={`${path}/plan-inbox`} component={() => <PlanInbox />} />
         <PrivateRoute path={`${path}/upload-user`} component={() => <UserUpload />} />
         <PrivateRoute path={`${path}/village-view`} component={() => <VillageView />} />
         <PrivateRoute path={`${path}/my-microplans`} component={() => <MyMicroplans/>} /> 
