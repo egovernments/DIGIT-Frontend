@@ -37,9 +37,9 @@ const ViewChecklist = () => {
         config: {
             select: (res) => {
                 if (res?.ServiceDefinitions?.[0]?.attributes) {
-                    let temp_data = res?.ServiceDefinitions?.[0]?.attributes
-                    let formatted_data = temp_data.map((item) => item.additionalDetails);
-                    let nvd = formatted_data.filter((value, index, self) =>
+                    const temp_data = res?.ServiceDefinitions?.[0]?.attributes
+                    const formatted_data = temp_data.map((item) => item.additionalDetails);
+                    const nvd = formatted_data.filter((value, index, self) =>
                         index === self.findIndex((t) => t.id === value.id)
                     );
                     return nvd;
