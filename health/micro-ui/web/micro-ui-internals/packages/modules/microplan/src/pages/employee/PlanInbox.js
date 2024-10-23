@@ -28,6 +28,11 @@ const PlanInbox = () => {
   const [activeFilter, setActiveFilter] = useState({});
   const [selectedRows, setSelectedRows] = useState([]);
   const [workFlowPopUp, setworkFlowPopUp] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [totalRows, setTotalRows] = useState(0);
+  const [perPage, setPerPage] = useState(10);
+  const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   const [activeLink, setActiveLink] = useState({
     code: "ASSIGNED_TO_ME",
     name: "ASSIGNED_TO_ME",
@@ -46,17 +51,22 @@ const PlanInbox = () => {
     mainClassName: "data-table-select-checkbox",
   };
 
-  const [totalRows, setTotalRows] = useState(0);
-  const [perPage, setPerPage] = useState(10);
-
-  const handlePageChange = (page) => {};
+  const handlePageChange = (page, totalRows) => {
+    setCurrentPage(page);
+    setLimitAndOffset({ ...limitAndOffset, offset: (page - 1) * 5 });
+  };
 
   const handleRowSelect = (event) => {
     setSelectedRows(event?.selectedRows);
     setVillagesSelected(event?.selectedCount);
   };
 
-  const handlePerRowsChange = async (newPerPage, page) => {};
+  const handlePerRowsChange = (currentRowsPerPage, currentPage) => {
+    setRowsPerPage(currentRowsPerPage);
+    setCurrentPage(currentPage);
+    setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * currentRowsPerPage });
+  };
+
   const {
     isLoading: isPlanWithCensusLoading,
     data: planWithCensus,
@@ -73,6 +83,8 @@ const PlanInbox = () => {
         status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
         assignee: activeLink.code === "ASSIGNED_TO_ME" ? user?.info?.uuid : "",
         executionPlanId: microplanId, //list of plan ids
+        limit: limitAndOffset?.limit,
+        offset: limitAndOffset?.offset,
       },
     },
     config: {
@@ -100,6 +112,7 @@ const PlanInbox = () => {
           planData: data?.planData,
           censusData: data?.censusData,
           StatusCount: data?.StatusCount,
+          TotalCount: data?.TotalCount,
           tableData,
         };
       },
@@ -196,6 +209,8 @@ const PlanInbox = () => {
   useEffect(() => {
     if (planWithCensus) {
       setCensusData(planWithCensus?.censusData);
+      setTotalRows(planWithCensus?.TotalCount)
+      setActiveFilter(planWithCensus?.StatusCount);
       setActiveFilter(planWithCensus?.StatusCount);
       if ((selectedFilter === null || selectedFilter === undefined) && selectedFilter !== "") {
         setSelectedFilter(Object.entries(planWithCensus?.StatusCount)?.[0]?.[0]);
@@ -386,7 +401,6 @@ const PlanInbox = () => {
               data={planWithCensus.tableData}
               pagination
               paginationServer
-              paginationTotalRows={5}
               selectableRows
               selectableRowsHighlight
               onChangeRowsPerPage={handlePerRowsChange}
@@ -396,6 +410,9 @@ const PlanInbox = () => {
               selectableRowsComponentProps={selectProps}
               selectableRowsComponent={CheckBox}
               customStyles={tableCustomStyle}
+              paginationTotalRows={totalRows}
+              paginationPerPage={rowsPerPage}
+              paginationRowsPerPageOptions={[5, 10, 15, 20, 25]}
               // selectableRowsComponent={SimpleCheckbox}
             />
           </Card>
