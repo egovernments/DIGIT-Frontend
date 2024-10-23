@@ -47,11 +47,11 @@ const ChooseActivity = () => {
       const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code) || [];
 
       // Check if user has any valid roles
-      const hasValidRole = validRoles.length > 0 && validRoles.some(role => userRoles.includes(role));
+      const hasValidRole = validRoles?.length > 0 && validRoles?.some(role => userRoles.includes(role));
 
       // Check if there are valid actions in the current state that match user roles
       const hasValidNextAction = currentState?.actions?.some(action =>
-        action.roles.some(role => userRoles.includes(role))
+        action?.roles.some(role => userRoles?.includes(role))
       );
 
       // Disable if either hasValidRole or hasValidNextAction is false
