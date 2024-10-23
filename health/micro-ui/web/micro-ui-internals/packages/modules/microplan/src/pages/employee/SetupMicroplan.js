@@ -238,6 +238,7 @@ useEffect(() => {
 
   const onSecondayActionClick = () => {
     if (currentKey === 1) {
+      Digit.SessionStorage.del("MICROPLAN_DATA");
       history.push(`/${window.contextPath}/employee`);
     }
     const { isLastVerticalStep,  isFormulaLastVerticalStep } = Digit.Hooks.useQueryParams();

@@ -456,13 +456,9 @@ const createUpdatePlanProject = async (req) => {
             templateIdentifier: "Facilities",
           });
         }
-        const workflow = {
-          action: "INITIATE",
-        };
         const updatedPlanObjForFacility = {
           ...fetchedPlanForFacility,
           files: filesForFacility,
-          workflow,
         };
 
         const planResFacility = await updatePlan(updatedPlanObjForFacility);
