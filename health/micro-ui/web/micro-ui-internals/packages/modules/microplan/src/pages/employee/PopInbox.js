@@ -172,7 +172,7 @@ const PopInbox = () => {
       },
     },
     config: {
-      enabled: jurisdiction.length > 0 ? true : false,
+      enabled: jurisdiction?.length > 0 ? true : false,
     },
   };
 
@@ -198,7 +198,7 @@ const PopInbox = () => {
   }, [data, selectedFilter, activeFilter]);
 
   useEffect(() => {
-    if (jurisdiction.length > 0) {
+    if (jurisdiction?.length > 0) {
       refetch(); // Trigger the API call again after activeFilter changes
     }
   }, [selectedFilter, activeLink, jurisdiction, limitAndOffset]);

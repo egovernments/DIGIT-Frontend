@@ -109,7 +109,7 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
                     onClose();  // Close popup after success
                 },
                 onError: (error) => {
-                    setShowToast({ key: "error", label: t("ERROR_WHILE_UPDATING_WORKFLOW") });
+                    setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
                     onError && onError(error); // Call the onError callback if provided
                 }
             }
