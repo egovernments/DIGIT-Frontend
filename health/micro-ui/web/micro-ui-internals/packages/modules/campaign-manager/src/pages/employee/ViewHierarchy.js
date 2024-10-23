@@ -105,7 +105,7 @@ const ViewHierarchy = () => {
 
     }
     const downloadExcelTemplate = async() => {
-        const res = await generateFile()
+        // const res = await generateFile()
         const resFile = await generateTemplate();
         if (resFile && resFile?.GeneratedResource?.[0]?.fileStoreid) {
             // Splitting filename before .xlsx or .xls
@@ -151,47 +151,98 @@ const ViewHierarchy = () => {
             setFileData(fileDataTemp);
       };
 
-    const callCreateDataApi = async()=>{
+    const callCreateDataApi = async () => {
         setDisable(true);
         setDataCreationGoing(true);
-        try{
-            setDataCreateToast(true);
-            const res = await Digit.CustomService.getResponse({
-                url: "/project-factory/v1/data/_create",
-                params: {},
-                body: {
-                    ResourceDetails: {
-                        tenantId: tenantId,
-                        type: "boundaryManagement",
-                        fileStoreId: fileStoreId,
-                        action: "create",
-                        hierarchyType: hierarchyType,
-                        additionalDetails: {
-                            source: "boundary"
-                        },
-                    },
+        try {
+          setDataCreateToast(true);
+      
+          // Call the create API
+          const createResponse = await Digit.CustomService.getResponse({
+            url: "/project-factory/v1/data/_create",
+            params: {},
+            body: {
+              ResourceDetails: {
+                tenantId: tenantId,
+                type: "boundaryManagement",
+                fileStoreId: fileStoreId,
+                action: "create",
+                hierarchyType: hierarchyType,
+                additionalDetails: {
+                  source: "boundary",
                 },
-
-            });
-            setDataCreateToast(false);
-            setShowToast({ label: `${t("WBH_HIERARCHY_CREATED")}`, isErro:"success" });
-            return res;
-        }
-        catch(resp){
-            setDisable(false);
-            let label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
-            resp?.response?.data?.Errors?.map((err, idx) => {
+                campaignId: "default"
+              },
+            },
+          });
+      
+          // Extract the id from the response
+          const id = createResponse?.ResourceDetails?.id;
+          const typeOfData = createResponse?.ResourceDetails?.type;
+      
+          if (id) {
+            // Start polling the search API
+            await pollForStatusCompletion(id, typeOfData);
+          }
+      
+          setDataCreateToast(false);
+          setShowToast({ label: `${t("WBH_HIERARCHY_CREATED")}`, isError: "success" });
+          return createResponse;
+        } catch (resp) {
+          setDisable(false);
+          let label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
+          resp?.response?.data?.Errors?.map((err, idx) => {
             if (idx === resp?.response?.data?.Errors?.length - 1) {
-                label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ".";
+              label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ".";
             } else {
-                label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ", ";
+              label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ", ";
             }
-            });
-            setShowToast({ label, isError: "error" });
-            setDataCreationGoing(false);
-            return {};
+          });
+          setShowToast({ label, isError: "error" });
+          setDataCreationGoing(false);
+          return {};
         }
-    }
+      };
+      
+      // Function to poll the search API until status is "completed"
+      const pollForStatusCompletion = async (id, typeOfData) => {
+        const pollInterval = 1000; // Poll every 1 seconds
+        const maxRetries = 10; // Limit the number of retries to avoid infinite loop
+        let retries = 0;
+      
+        const poll = async () => {
+          if (retries >= maxRetries) {
+            throw new Error("Max retries reached");
+          }
+      
+          const searchResponse = await Digit.CustomService.getResponse({
+            url: "/project-factory/v1/data/_search",
+            params: {},
+            body: {
+              SearchCriteria:{
+                id: [id],
+                tenantId: tenantId,
+                type: typeOfData
+              } 
+              
+            },
+          });
+      
+          const status = searchResponse?.ResourceDetails?.status;
+      
+          if (status === "completed") {
+            setShowToast({ label: `${t("WBH_HIERARCHY_STATUS_COMPLETED")}`, isError: "success" });
+            setDataCreationGoing(false);
+            return true; // Stop polling once status is "completed"
+          } else {
+            retries++;
+            setTimeout(poll, pollInterval); // Retry after the interval
+          }
+        };
+      
+        await poll();
+      };
+      
     
     const createData = async()=> {
         const res = await callCreateDataApi();
