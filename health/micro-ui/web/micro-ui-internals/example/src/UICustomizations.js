@@ -776,6 +776,7 @@ export const UICustomizations = {
       data.body.PlanConfigurationSearchCriteria.userUuid = Digit.UserService.getUser().info.uuid;
       // delete data.body.PlanConfigurationSearchCriteria.pagination
       data.body.PlanConfigurationSearchCriteria.status = status?.status;
+      data.body.PlanConfigurationSearchCriteria.name=data?.state?.searchForm?.microplanName;
       cleanObject(data.body.PlanConfigurationSearchCriteria);
 
       const dic = {
