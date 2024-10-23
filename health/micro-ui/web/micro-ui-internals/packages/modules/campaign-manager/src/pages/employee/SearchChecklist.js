@@ -53,7 +53,7 @@ const SearchChecklist = () => {
   };
   const { isLoading1, data: dataBT, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqCriteria);
   useEffect(() => {
-    let data = dataBT?.mdms;
+    const data = dataBT?.mdms;
     if(data)
     {
       const newCodesOpt = data.map((item) => ({
