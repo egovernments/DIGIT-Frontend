@@ -340,65 +340,67 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
     maxWidth: "100rem"
   }
 
+
   let dis = typeOfCall === "view" ? true : false;
   return (
     <React.Fragment>
       {initialQuestionData
-        ?.filter((i) => i.level === level && (i.parentId ? (i.parentId === parentId) : true)  && (i.level <= 3) && (i.isActive === true))
+        ?.filter((i) => i.level === level && (i.parentId ? (i.parentId === parentId) : true) && (i.level <= 3) && (i.isActive === true))
         ?.map((field, index) => {
           return (
-            <Card type={"primary"} variant={"form"} className={`question-card-container ${className}`}>
-              <LabelFieldPair className="question-label-field" style={{ display: "block" }}>
-                <div className="question-label" style={{ height: "3rem", display: "flex", justifyContent: "space-between", width: "100%" }}>
-                  <div style={{ display: "flex", gap: "1rem" }}>
-                    <span style={{ fontWeight: "700", marginTop: "1rem" }}>{`${t("QUESTION")} ${index + 1}`}</span>
-                    <div style={{ alignItems: "center" }}>
-                      <CheckBox
-                        disabled={dis}
-                        // style={{height:"1rem", alignItems:"center", paddingBottom:"0.5rem"}}
-                        key={field.key}
-                        mainClassName={"checkboxOptionVariant"}
-                        // disabled={optionDependency ? true : false}
-                        label={t("REQUIRED")}
-                        checked={field?.isRequired}
-                        // onChange={handleRequiredField(field.id)}
-                        onChange={() => handleRequiredField(field.id)}
-                        // isLabelFirst={true}
-                        index={field.key}
-                      />
-                    </div>
-                  </div>
-                  {/* <span className="mandatory-span">*</span> */}
-                  {/* <div style={{ height: "0.5rem" }}> */}
-                  {/* </div> */}
-                  {!dis && initialQuestionData?.length > 1 && (
-                    <>
-                      <div className="separator"></div>
-                      <div
-                        onClick={() => deleteField(field.key, initialQuestionData, field.id, field)}
-                        style={{
-                          cursor: "pointer",
-                          fontWeight: "600",
-                          // marginLeft: "1rem",
-                          fontSize: "1rem",
-                          color: PRIMARY_COLOR,
-                          display: "flex",
-                          flexDirection: "row-reverse",
-                          gap: "0.5rem",
-                          alignItems: "center",
-                          // marginTop: "1rem",
-                        }}
-                      >
-                        <DustbinIcon />
-                        {t(`CAMPAIGN_DELETE_QUESTION`)}
+            <div>
+              <Card type={"primary"} variant={"form"} className={`question-card-container ${className}`}>
+                <LabelFieldPair className="question-label-field" style={{ display: "block" }}>
+                  <div className="question-label" style={{ height: "3rem", display: "flex", justifyContent: "space-between", width: "100%" }}>
+                    <div style={{ display: "flex", gap: "1rem" }}>
+                      <span style={{ fontWeight: "700", marginTop: "1rem" }}>{`${t("QUESTION")} ${index + 1}`}</span>
+                      <div style={{ alignItems: "center" }}>
+                        <CheckBox
+                          disabled={dis}
+                          // style={{height:"1rem", alignItems:"center", paddingBottom:"0.5rem"}}
+                          key={field.key}
+                          mainClassName={"checkboxOptionVariant"}
+                          // disabled={optionDependency ? true : false}
+                          label={t("REQUIRED")}
+                          checked={field?.isRequired}
+                          // onChange={handleRequiredField(field.id)}
+                          onChange={() => handleRequiredField(field.id)}
+                          // isLabelFirst={true}
+                          index={field.key}
+                        />
                       </div>
-                    </>
-                  )}
-                </div>
-                <div>
-                  <div className="question-field-container">
-                    <div className="question-field" style={{ display: "flex", height: "3.5rem", gap: "1.5rem" }}>
-                      {/* <TextInput
+                    </div>
+                    {/* <span className="mandatory-span">*</span> */}
+                    {/* <div style={{ height: "0.5rem" }}> */}
+                    {/* </div> */}
+                    {!dis && initialQuestionData?.length > 1 && (
+                      <>
+                        <div className="separator"></div>
+                        <div
+                          onClick={() => deleteField(field.key, initialQuestionData, field.id, field)}
+                          style={{
+                            cursor: "pointer",
+                            fontWeight: "600",
+                            // marginLeft: "1rem",
+                            fontSize: "1rem",
+                            color: PRIMARY_COLOR,
+                            display: "flex",
+                            flexDirection: "row-reverse",
+                            gap: "0.5rem",
+                            alignItems: "center",
+                            // marginTop: "1rem",
+                          }}
+                        >
+                          <DustbinIcon />
+                          {t(`CAMPAIGN_DELETE_QUESTION`)}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                  <div>
+                    <div className="question-field-container">
+                      <div className="question-field" style={{ display: "flex", height: "3.5rem", gap: "1.5rem" }}>
+                        {/* <TextInput
                         // style={{ maxWidth: "40rem" }}
                         name="title"
                         value={field?.title || ""}
@@ -406,109 +408,112 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                         placeholder={"Type your questions here"}
                         className={"example"}
                       /> */}
-                      <TextInput
-                        disabled={dis}
-                        isRequired={true}
-                        className="tetxinput-example"
-                        type={"text"}
-                        // props={{ fieldStyle: example }}
-                        name="title"
-                        value={field?.title || ""}
-                        onChange={(event) => handleUpdateField(event.target.value, "title", field.key, field.id)}
-                        placeholder={"Type your question here"}
-                      />
-                      {!dis && <Dropdown
-                        style={{ width: "20%" }}
-                        t={t}
-                        option={dataType}
-                        optionKey={"code"}
-                        selected={field?.type || ""}
-                        select={(value) => {
-                          handleUpdateField(value, "type", field.key, field.id);
-                        }}
-                        placeholder="Type"
-                      />}
-                    </div>
-                    {field?.isRegex && (
-                      <Dropdown
-                        style={{ width: "70%" }}
-                        t={t}
-                        option={regexOption}
-                        optionKey={"code"}
-                        selected={field?.regex || ""}
-                        select={(value) => {
-                          handleUpdateField(value, "regex", field.key, field.id);
-                        }}
-                        placeholder="Choose Regex"
-                      />
-                    )}
-                    {(field?.type?.code === "SingleValueList" || field?.type?.code === "MultiValueList" || field?.type?.code === "Dropdown") && (
-                      <FieldSelector
-                        t={t}
-                        type={field?.type}
-                        name={"value"}
-                        value={field?.value || ""}
-                        onChange={(event) => handleUpdateField(event.target.value, "value", field?.key, field.id)}
-                        placeholder={"Answer"}
-                        dispatchQuestionData={dispatchQuestionData}
-                        field={field}
-                        subQclassName="subSection"
-                        subQlevel={level + 1}
-                        subQparent={field}
-                        subQparentId={field.id}
-                        subQinitialQuestionData={initialQuestionData}
-                        typeOfCall={typeOfCall}
-                      />
-                    )}
-                    {
-                      (field?.type?.code === "Short Answer") && (
-                        <FieldV1
-                          disabled="true"
-                          className="example"
-                          type={"textarea"}
-                          populators={{
-                            resizeSmart: true
-                          }}
-                          props={{ fieldStyle: example }}
-                          name="Short Answer"
-                          value={field.value || ""}
-                          onChange={(event) => handleUpdateField(event.target.value, "value", field.key, field.id)}
-                          placeholder={""}
+                        <TextInput
+                          disabled={dis}
+                          isRequired={true}
+                          className="tetxinput-example"
+                          type={"text"}
+                          // props={{ fieldStyle: example }}
+                          name="title"
+                          value={field?.title || ""}
+                          onChange={(event) => handleUpdateField(event.target.value, "title", field.key, field.id)}
+                          placeholder={"Type your question here"}
                         />
-                      )
-                    }
-                    {!dis && field.dependency && (
-                      <CreateQuestion
-                        onSelect={onSelect}
-                        className="subSection"
-                        level={level + 1}
-                        parent={field}
-                        parentId={field.id}
-                        initialQuestionData={initialQuestionData} // Pass sub-questions data to nested component
-                      >
-                      </CreateQuestion>
-                    )}
+                        {!dis && <Dropdown
+                          style={{ width: "20%" }}
+                          t={t}
+                          option={dataType}
+                          optionKey={"code"}
+                          selected={field?.type || ""}
+                          select={(value) => {
+                            handleUpdateField(value, "type", field.key, field.id);
+                          }}
+                          placeholder="Type"
+                        />}
+                      </div>
+                      {field?.isRegex && (
+                        <Dropdown
+                          style={{ width: "70%" }}
+                          t={t}
+                          option={regexOption}
+                          optionKey={"code"}
+                          selected={field?.regex || ""}
+                          select={(value) => {
+                            handleUpdateField(value, "regex", field.key, field.id);
+                          }}
+                          placeholder="Choose Regex"
+                        />
+                      )}
+                      {(field?.type?.code === "SingleValueList" || field?.type?.code === "MultiValueList" || field?.type?.code === "Dropdown") && (
+                        <FieldSelector
+                          t={t}
+                          type={field?.type}
+                          name={"value"}
+                          value={field?.value || ""}
+                          onChange={(event) => handleUpdateField(event.target.value, "value", field?.key, field.id)}
+                          placeholder={"Answer"}
+                          dispatchQuestionData={dispatchQuestionData}
+                          field={field}
+                          subQclassName="subSection"
+                          subQlevel={level + 1}
+                          subQparent={field}
+                          subQparentId={field.id}
+                          subQinitialQuestionData={initialQuestionData}
+                          typeOfCall={typeOfCall}
+                        />
+                      )}
+                      {
+                        (field?.type?.code === "Short Answer") && (
+                          <FieldV1
+                            disabled="true"
+                            className="example"
+                            type={"textarea"}
+                            populators={{
+                              resizeSmart: true
+                            }}
+                            props={{ fieldStyle: example }}
+                            name="Short Answer"
+                            value={field.value || ""}
+                            onChange={(event) => handleUpdateField(event.target.value, "value", field.key, field.id)}
+                            placeholder={""}
+                          />
+                        )
+                      }
+                      {!dis && field.dependency && (
+                        <CreateQuestion
+                          onSelect={onSelect}
+                          className="subSection"
+                          level={level + 1}
+                          parent={field}
+                          parentId={field.id}
+                          initialQuestionData={initialQuestionData} // Pass sub-questions data to nested component
+                        >
+                        </CreateQuestion>
+                      )}
+                    </div>
                   </div>
+                </LabelFieldPair>
+                <div className="heading-bar">
                 </div>
-              </LabelFieldPair>
-              <div className="heading-bar">
-              </div>
-            </Card>
+              </Card>
+              <div style={{ height: "1rem" }}></div>
+            </div>
           );
         })}
-        {!dis && <div style={{ display: "flex", justifyContent: "center" }}>
-          <Button
-            variation="secondary"
-            label={t("ADD_QUESTION")}
-            className={"hover"}
-            // icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
-            icon="Add"
-            iconFill=""
-            // onButtonClick={addMoreField}
-            onClick={() => addMoreField()}
-            textStyles={{ width: 'unset' }}
-          />
-          </div>
+      <div style={{ height: "1rem" }}></div>
+      {!dis && <div style={{ display: "flex", justifyContent: "center" }}>
+        <Button
+          variation="secondary"
+          label={t("ADD_QUESTION")}
+          className={"hover"}
+          // icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
+          icon="Add"
+          iconFill=""
+          // onButtonClick={addMoreField}
+          onClick={() => addMoreField()}
+          textStyles={{ width: 'unset' }}
+        />
+      </div>
       }
     </React.Fragment>
   );
