@@ -126,7 +126,7 @@ const EmployeeSideBar = () => {
       const children = Object.keys(value).map((childKey) => transformItem(childKey, value[childKey]));
       const iconKey = extractLeftIcon(value);
       return {
-        label: key,
+        label: t(key),
         icon: { icon: iconKey, width: "1.5rem", height: "1.5rem" },
         children: children,
       };
