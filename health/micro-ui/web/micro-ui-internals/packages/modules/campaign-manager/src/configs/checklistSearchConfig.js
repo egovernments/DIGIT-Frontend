@@ -1,25 +1,29 @@
-export const checklistSearchConfig = [
+  
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  export const checklistSearchConfig = [
     {
       label: "Checklist Search",
       type: "search",
       apiDetails: {
-        serviceName: "/service-request/service/definition/v1/_search",
+        serviceName: "/mdms-v2/v2/_search",
         requestParam: {
-            "tenantId":"mz",
+            "tenantId":tenantId,
         },
         requestBody: {
-          ServiceDefinitionCriteria:{
-            "tenantId": "mz",
-             "code":[]
-          },
+          MdmsCriteria: {
+            tenantId: tenantId,
+            // schemaCode: "HCMadminconsole.checklisttemplates"
+            schemaCode: "HCM-ADMIN-CONSOLE.ChecklistTemplates_DEMO",
+            filters : {}
+          }
         },
           Pagination:{
             "offset": 0,
-            "limit": 100
+            "limit": 5
           },
         masterName: "commonUiConfig",
         moduleName: "MyChecklistSearchConfig",
-        minParametersForSearchForm: 2,
+        minParametersForSearchForm: 0,
         tableFormJsonPath: "requestParam",
         filterFormJsonPath: "requestBody",
         searchFormJsonPath: "requestBody",
@@ -33,24 +37,28 @@ export const checklistSearchConfig = [
             minReqFields: 0,
             fields: [
               {
-                  label: "Role",
+                  label: "ROLE",
                   isMandatory: "false",
                   key: "Role",
                   type: "dropdown",
                   populators: {
                     name: "Role",
                     optionsKey: "code",
+                    error: "ES_REQUIRED"
+                                        
                     // options:[]
                   }
+
               },
               {
-                label: "Checklist Type",
+                label: "CHECKLIST_TYPE",
                 isMandatory: "false",
                 key: "Type",
                 type: "dropdown",
                 populators: {
                   name: "Type",
                   optionsKey: "list",
+                  error: "ES_REQUIRED"
                   // options:[]
                 }
               },
@@ -63,34 +71,48 @@ export const checklistSearchConfig = [
           // tenantId: Digit.ULBService.getCurrentTenantId(),
           uiConfig: {
             columns: [
+              // {
+              //   label: "UNIQUE_IDENTIFIER",
+              //   jsonpath: "uniqueIdentifier",
+              //   additionalCustomization: true
+              // },
               {
-                label: "Checklist Name",
-                jsonpath: "additionalDetails.name",
-                additionalCustomization: true
+                label: "CHECKLIST_ROLE",
+                prefix:"ACCESSCONTROL_ROLES_ROLES_",
+                jsonPath: "data.role",
+                translate:true
+                // additionalCustomization: true
+              },  
+              {
+                label: "CHECKLIST_TYPE",
+                prefix:"HCM_CHECKLIST_TYPE_",
+
+                jsonPath: "data.checklistType",
+                translate:true
+                // additionalCustomization: true
               },
               {
-                label: "Checklist Role",
-                jsonpath: "additionalDetails.role",
-                additionalCustomization: true
-              },
-              {
-                label: "Checklist Type",
-                jsonPath: "additionalDetails.type",
-                additionalCustomization: true
-              },
-              {
-                label: "Status",
+                label: "STATUS",
                 jsonPath:"isActive",
+                additionalCustomization: true
+              },
+              {
+                label: "ACTION",
+                jsonpath: "",
                 additionalCustomization: true
               }
             ],
   
             enableColumnSort: true,
-            resultsJsonPath: "ServiceDefinitions"
+            resultsJsonPath: "mdmsData"
           },
           show: true,
         },
       },
+      additionalDetails: {
+      },
+      customHookName:"campaign.useMDMSServiceSearch"
     },
   ];
+
   

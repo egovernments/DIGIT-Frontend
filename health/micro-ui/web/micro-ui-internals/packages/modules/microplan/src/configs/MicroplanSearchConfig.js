@@ -16,7 +16,7 @@ const defaultSearchValues = {
         label: "MY_MICROPLANS",
         type: "search",
         apiDetails: {
-          serviceName: "/plan-service/config/_search", //! Note
+          serviceName: "/plan-service/config/_search", 
           requestParam: {},
           requestBody: {},
          masterName: "commonUiConfig",
@@ -42,9 +42,7 @@ const defaultSearchValues = {
                   key: "microplanName",
                   type: "text",
                   populators: {
-                    name: "microplanName",
-                    error: "Required",
-                    validation: { pattern: /^[A-Za-z]+$/i },
+                    name: "microplanName"
                   },
                 },
                 // {
