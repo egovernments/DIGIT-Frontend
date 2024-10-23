@@ -58,7 +58,7 @@ export const UICustomizations = {
   MicroplanSearchConfig: {
     preProcess: (data, additionalDetails) => {
       const { name, status } = data?.state?.searchForm || {};
-      console.log("data",data);
+      console.log("data1",data);
       data.body.PlanConfigurationSearchCriteria = {};
       data.body.PlanConfigurationSearchCriteria.limit = data?.state?.tableForm?.limit;
       // data.body.PlanConfigurationSearchCriteria.limit = 10
@@ -68,7 +68,8 @@ export const UICustomizations = {
       data.body.PlanConfigurationSearchCriteria.userUuid = Digit.UserService.getUser().info.uuid;
       // delete data.body.PlanConfigurationSearchCriteria.pagination
       data.body.PlanConfigurationSearchCriteria.status = status?.status;
-      data.
+      data.body.PlanConfigurationSearchCriteria.name=data?.state?.searchForm?.microplanName;
+      console.log("data",data);
       cleanObject(data.body.PlanConfigurationSearchCriteria);
 
       const dic = {
