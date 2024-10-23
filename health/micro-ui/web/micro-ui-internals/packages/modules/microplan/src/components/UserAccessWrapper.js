@@ -47,8 +47,9 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
   };
 
   const isLastStep = () => {
-    Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: false });
-    Digit.Utils.microplanv1.updateUrlParams({ internalKey: internalKey });
+    //deleting these params on last step
+    Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
+    Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
   };
   
   const updateUrlParams = (params) => {

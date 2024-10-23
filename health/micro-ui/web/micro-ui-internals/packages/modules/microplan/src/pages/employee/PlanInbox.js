@@ -8,6 +8,7 @@ import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import DataTable from "react-data-table-component";
 import { CheckBox } from "@egovernments/digit-ui-components";
 import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
+import { tableCustomStyle } from "../../components/tableCustomStyle";
 
 const PlanInbox = () => {
   const { t } = useTranslation();
@@ -31,6 +32,13 @@ const PlanInbox = () => {
     code: "ASSIGNED_TO_ME",
     name: "ASSIGNED_TO_ME",
   });
+
+  useEffect(() => {
+    if (selectedFilter === "PENDING_FOR_VALIDATION") {
+      setActiveLink({ code: "", name: "" });
+      setShowTab(false);
+    }
+  }, [selectedFilter]);
 
   const selectProps = {
     hideLabel: true,
@@ -387,7 +395,7 @@ const PlanInbox = () => {
               onSelectedRowsChange={handleRowSelect}
               selectableRowsComponentProps={selectProps}
               selectableRowsComponent={CheckBox}
-              // customStyles={customStyles}
+              customStyles={tableCustomStyle}
               // selectableRowsComponent={SimpleCheckbox}
             />
           </Card>

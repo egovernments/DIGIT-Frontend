@@ -456,13 +456,9 @@ const createUpdatePlanProject = async (req) => {
             templateIdentifier: "Facilities",
           });
         }
-        const workflow = {
-          action: "INITIATE",
-        };
         const updatedPlanObjForFacility = {
           ...fetchedPlanForFacility,
           files: filesForFacility,
-          workflow : fetchedPlanForFacility?.status == "DRAFT" ? workflow : null,
         };
 
         const planResFacility = await updatePlan(updatedPlanObjForFacility);
@@ -526,6 +522,7 @@ const createUpdatePlanProject = async (req) => {
         //run any api validations if any/
         setCurrentKey((prev) => prev + 1);
         setCurrentStep((prev) => prev + 1);
+        window.dispatchEvent(new Event("isLastStep"));
         return {
           triggeredFrom,
         };

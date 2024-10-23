@@ -54,8 +54,9 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         }  
       };
      const isLastStep = () => {
-        Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep:false }); 
-        Digit.Utils.microplanv1.updateUrlParams({ internalKey:internalKey }); 
+        //here we should just delete these params instead of updating
+        Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep:null }); 
+        Digit.Utils.microplanv1.updateUrlParams({ internalKey:null }); 
      }  
     
      const updateUrlParams = (params) => {
