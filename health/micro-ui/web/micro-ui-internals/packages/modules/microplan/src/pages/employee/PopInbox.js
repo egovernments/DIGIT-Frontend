@@ -140,7 +140,7 @@ const PopInbox = () => {
     url: "/egov-workflow-v2/egov-wf/businessservice/_search",
     params: {
       tenantId: tenantId,
-      businessServices: "PLAN_ESTIMATION",
+      businessServices: "CENSUS",
     },
     config: {
       select: (data) => {
@@ -409,7 +409,7 @@ const PopInbox = () => {
               fileName: 'filename', // need to update when api is success
               message: "POPULATION_FINALISED_SUCCESSFUL",
               back: "GO_BACK_TO_HOME",
-              backlink: "/employee/microplan"
+              backlink: "/employee"
             });
           }}
         />

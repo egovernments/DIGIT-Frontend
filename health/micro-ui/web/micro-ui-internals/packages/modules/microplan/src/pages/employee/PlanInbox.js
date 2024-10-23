@@ -2,7 +2,8 @@ import React, { Fragment, useState, useEffect, useMemo } from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { boundaries } from "../../components/boundaries";
 import PopInboxTable from "../../components/PopInboxTable";
-import { Card, Tab, Button, SVG, Loader } from "@egovernments/digit-ui-components";
+import { useHistory } from "react-router-dom";
+import { Card, Tab, Button, SVG, Loader, ActionBar } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import DataTable from "react-data-table-component";
@@ -17,6 +18,7 @@ const PlanInbox = () => {
   const url = Digit.Hooks.useQueryParams();
   const microplanId = url?.microplanId;
   const campaignId = url?.campaignId;
+  const history = useHistory();
   const [villagesSlected, setVillagesSelected] = useState(0);
   const [showTab, setShowTab] = useState(true);
   const user = Digit.UserService.getUser();
@@ -26,12 +28,33 @@ const PlanInbox = () => {
   const [boundaries, setBoundaries] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState(null);
   const [activeFilter, setActiveFilter] = useState({});
+  const [actionBarPopUp, setactionBarPopUp] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [workFlowPopUp, setworkFlowPopUp] = useState("");
   const [activeLink, setActiveLink] = useState({
     code: "ASSIGNED_TO_ME",
     name: "ASSIGNED_TO_ME",
   });
+
+
+  const userRoles = user?.info?.roles?.map((roleData) => roleData?.code);
+
+
+  // Check if the user has the 'rootapprover' role
+  const isRootApprover = userRoles?.includes("ROOT_PLAN_ESTIMATION_APPROVER");
+
+  const { isLoading: isLoadingPlanObject, data: planObject, error: errorPlan, refetch: refetchPlan } = Digit.Hooks.microplanv1.useSearchPlanConfig(
+    {
+      PlanConfigurationSearchCriteria: {
+        tenantId,
+        id: microplanId,
+      },
+    },
+    {
+      enabled: isRootApprover ? true : false,
+      //   queryKey: currentKey,
+    }
+  );
 
   useEffect(() => {
     if (selectedFilter === "PENDING_FOR_VALIDATION") {
@@ -49,14 +72,14 @@ const PlanInbox = () => {
   const [totalRows, setTotalRows] = useState(0);
   const [perPage, setPerPage] = useState(10);
 
-  const handlePageChange = (page) => {};
+  const handlePageChange = (page) => { };
 
   const handleRowSelect = (event) => {
     setSelectedRows(event?.selectedRows);
     setVillagesSelected(event?.selectedCount);
   };
 
-  const handlePerRowsChange = async (newPerPage, page) => {};
+  const handlePerRowsChange = async (newPerPage, page) => { };
   const {
     isLoading: isPlanWithCensusLoading,
     data: planWithCensus,
@@ -153,7 +176,7 @@ const PlanInbox = () => {
         tenantId: "mz",
         active: true,
         planConfigurationId: url?.microplanId,
-        role: ["POPULATION_DATA_APPROVER"],
+        role: ["PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"],
         employeeId: [user?.info?.uuid],
       },
     },
@@ -210,7 +233,7 @@ const PlanInbox = () => {
     }
   }, [selectedFilter, activeLink, jurisdiction]);
 
-  useEffect(() => {}, [selectedFilter]);
+  useEffect(() => { }, [selectedFilter]);
 
   const onFilter = (selectedStatus) => {
     setSelectedFilter(selectedStatus?.code);
@@ -271,6 +294,8 @@ const PlanInbox = () => {
     ...resourceColumns,
   ];
 
+
+
   // // Always return an array for `securityColumns`, even if it's empty
   // const sampleSecurityData = planWithCensus?.censusData?.[0]?.additionalDetails?.securityDetails || {};
   // const securityColumns = Object.keys(sampleSecurityData).map((key) => ({
@@ -293,9 +318,41 @@ const PlanInbox = () => {
     return updatedRows;
   };
 
+  // Function to check the status count condition
+  const isStatusConditionMet = (statusCount) => {
+    // Extract all keys and values from statusCount object
+    const statusValues = Object.keys(statusCount).map((key) => statusCount[key]);
+
+    // Check if all statuses except "VALIDATED" are 0, and "VALIDATED" is more than 0
+    return Object.keys(statusCount).every(
+      (key) => (key === "VALIDATED" ? statusCount[key] > 0 : statusCount[key] === 0)
+    );
+  };
+
+  const updateWorkflowForFooterAction = () => {
+    const updatedPlanConfig = {
+      ...planObject,
+      workflow: {
+        ...planObject?.workflow,  // Keep existing workflow properties if any
+        action: "APPROVE_ESTIMATIONS",
+      },
+    };
+
+    return updatedPlanConfig;
+  };
+
   const closePopUp = () => {
     setworkFlowPopUp("");
   };
+
+  const handleActionBarClick = () => {
+    setactionBarPopUp(true);
+  };
+
+  const closeActionBarPopUp = () => {
+    setactionBarPopUp(false);
+  };
+
 
   return (
     <div className="pop-inbox-wrapper">
@@ -396,11 +453,42 @@ const PlanInbox = () => {
               selectableRowsComponentProps={selectProps}
               selectableRowsComponent={CheckBox}
               customStyles={tableCustomStyle}
-              // selectableRowsComponent={SimpleCheckbox}
+            // selectableRowsComponent={SimpleCheckbox}
             />
           </Card>
         </div>
       </div>
+
+      {isRootApprover && isStatusConditionMet(activeFilter) &&
+        <ActionBar
+          actionFields={[
+            <Button icon="CheckCircle" label={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN`)} onClick={handleActionBarClick} type="button" variation="primary" />,
+          ]}
+          className=""
+          maxActionFieldsAllowed={5}
+          setactionFieldsToRight
+          sortActionFields
+          style={{}}
+        />}
+
+      {actionBarPopUp && (
+        <WorkflowCommentPopUp
+          onClose={closeActionBarPopUp}
+          heading={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN`)}
+          submitLabel={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN`)}
+          url="/plan-service/config/_update"
+          requestPayload={{ PlanConfiguration: updateWorkflowForFooterAction() }}
+          commentPath="workflow.comment"
+          onSuccess={(data) => {
+            history.push(`/${window.contextPath}/employee/microplan/microplan-success`, {
+              fileName: 'filename', // need to update when api is success
+              message: "FINALISE_MICROPLAN_SUCCESSFUL",
+              back: "GO_BACK_TO_HOME",
+              backlink: "/employee"
+            });
+          }}
+        />)}
+
     </div>
   );
 };
