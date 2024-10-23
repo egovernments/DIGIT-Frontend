@@ -578,7 +578,11 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
       for (const row of jsonData) {
         for (let j = boundaryCodeIndex + 1; j < headersToValidate.length; j++) {
+          if(headersToValidate[j] === t("HCM_ADMIN_CONSOLE_BOUNDARY_CODE_OLD")){
+            continue;
+          }
           const value = row[headersToValidate[j]];
+          
           if (value === undefined || value === null) {
             targetError.push(
               `${t("HCM_DATA_AT_ROW")} ${jsonData.indexOf(row) + 2} ${t("HCM_IN_COLUMN")} "${headersToValidate[j]}" ${t(

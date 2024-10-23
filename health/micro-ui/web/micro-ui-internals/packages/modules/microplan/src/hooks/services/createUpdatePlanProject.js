@@ -360,7 +360,15 @@ const createUpdatePlanProject = async (req) => {
         })
         const formulasToUpdate = totalFormData?.FORMULA_CONFIGURATION?.formulaConfiguration?.formulaConfigValues?.filter(row => {
           return (row.category && row.output && row.input && row.operatorName && row.assumptionValue) 
+        })?.map((row)=>{
+          const updatedRow = {...row}
+          const operatorName = row?.operatorName
+          delete updatedRow?.operatorName
+          updatedRow.operator = state?.RuleConfigureOperators?.find(operation => operation.
+            operatorName === operatorName)?.operatorCode
+          return updatedRow;
         })
+        
         const updatedPlanObjFormula = {
           ...fetchedPlanForFormula,
           operations:[
@@ -382,9 +390,7 @@ const createUpdatePlanProject = async (req) => {
         }else {
           setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
         }
-        
-        
-       
+               
       case "UPLOADBOUNDARYDATA":
         const fetchedPlanForBoundary = await searchPlanConfig({
           PlanConfigurationSearchCriteria: {
@@ -450,13 +456,9 @@ const createUpdatePlanProject = async (req) => {
             templateIdentifier: "Facilities",
           });
         }
-        const workflow = {
-          action: "INITIATE",
-        };
         const updatedPlanObjForFacility = {
           ...fetchedPlanForFacility,
           files: filesForFacility,
-          workflow,
         };
 
         const planResFacility = await updatePlan(updatedPlanObjForFacility);
@@ -515,6 +517,15 @@ const createUpdatePlanProject = async (req) => {
       } else {
         setShowToast({ key: "error", label: "ERR_FAILED_TO_COMPLETE_SETUP" });
       }
+
+      case "ROLE_ACCESS_CONFIGURATION":
+        //run any api validations if any/
+        setCurrentKey((prev) => prev + 1);
+        setCurrentStep((prev) => prev + 1);
+        window.dispatchEvent(new Event("isLastStep"));
+        return {
+          triggeredFrom,
+        };
       default:
         setShowToast({ key: "error", label: "ERROR_UNHANDLED_NEXT_OPERATION" });
         return {

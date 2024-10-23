@@ -54,17 +54,31 @@ const FormulaConfigWrapper = ({onSelect, props:customProps})=>{
       }  
    };
    const isFormulaLastStep = () => {
-      Digit.Utils.microplanv1.updateUrlParams({ isFormulaLastVerticalStep:false }); 
-      Digit.Utils.microplanv1.updateUrlParams({ formulaInternalKey:formulaInternalKey }); 
+    //deleting these params at last step
+      Digit.Utils.microplanv1.updateUrlParams({ isFormulaLastVerticalStep:null }); 
+      Digit.Utils.microplanv1.updateUrlParams({ formulaInternalKey:null }); 
    }  
 
-   const updateUrlParams = (params) => {
-      const url = new URL(window.location.href);
-      Object.entries(params).forEach(([key, value]) => {
-          url.searchParams.set(key, value);
-      });
-      window.history.replaceState({}, "", url);
-  };
+  //  const updateUrlParams = (params) => {
+  //     const url = new URL(window.location.href);
+  //     Object.entries(params).forEach(([key, value]) => {
+  //         url.searchParams.set(key, value);
+  //     });
+  //     window.history.replaceState({}, "", url);
+  // };
+
+  //updating url params
+  const updateUrlParams = (params) => {
+    const url = new URL(window.location.href);
+    Object.entries(params).forEach(([key, value]) => {
+        if (value === null || value === undefined) {
+            url.searchParams.delete(key);
+        } else {
+            url.searchParams.set(key, value);
+        }
+    });
+    window.history.replaceState({}, "", url);
+};
 
   const handleFormulaChange = (output, type, value, category) => {
    //const newValue = event.target.value;

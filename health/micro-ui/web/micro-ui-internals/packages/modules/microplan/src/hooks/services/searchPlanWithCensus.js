@@ -37,6 +37,7 @@ const searchPlanWithCensus = async ({ tenantId, microplanId, body, limit, offset
     return {
       planData: response?.Plan,
       censusData: fetchCensusData?.Census,
+      StatusCount: response?.StatusCount,
     };
   } catch (error) {
     if (error?.response?.data?.Errors) {
