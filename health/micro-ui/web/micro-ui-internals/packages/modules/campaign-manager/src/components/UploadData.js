@@ -1192,7 +1192,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                 size={"large"}
                 variation={"primary"}
                 icon={"FileDownload"}
-                label={t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
+                label={getDownloadLabel()}
                 title={t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
                 onClick={() => {
                   downloadTemplate(), setShowPopUp(false);

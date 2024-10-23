@@ -16,23 +16,19 @@ const businessServiceMap = {};
 const inboxModuleNameMap = {};
 
 
-const updateServiceDefinition = async (newStatus) => {
+const updateServiceDefinition = async (tenantId, newStatus, sdcode) => {
   try {
     const res = await Digit.CustomService.getResponse({
       url: "/service-request/service/definition/v1/_update",
       body: {
         ServiceDefinition: {
           "tenantId": tenantId,
-          "code": serviceCode,
+          "code": sdcode,
           "isActive": newStatus
         },
       },
     });
     if (res) {
-      rowDataCache[serviceCode].isActive = newStatus;
-      if (apiCache[serviceCode]) {
-        apiCache[serviceCode].ServiceDefinitions[0].isActive = newStatus;
-      }
     }
     return res;
   } catch (error) {
@@ -67,6 +63,7 @@ export const UICustomizations = {
 
     additionalCustomizations: (row, key, column, value, searchResult) => {
       const { t } = useTranslation();
+      const tenantId = Digit.ULBService.getCurrentTenantId();
       const history = useHistory();
       const location = useLocation();
       const searchParams = new URLSearchParams(location.search);
@@ -74,54 +71,59 @@ export const UICustomizations = {
       switch (key) {
        
           case "STATUS":
+            
             // const [localIsActive, setLocalIsActive] = useState(rowDataCache[serviceCode].isActive);
-            
-            // const toggle = async () => {
-            //   const newStatus = !localIsActive;
-            //   const res = await updateServiceDefinition(newStatus);
-            //   if (res) {
-            //     rowDataCache[serviceCode].isActive = newStatus;
-            //     setLocalIsActive(newStatus);
-            //   }
-            // };
-            
-            
+            const toggle = async () => {
+              const prev = row?.ServiceRequest?.[0]?.isActive;
+              const sdcode = row?.ServiceRequest?.[0]?.code;
+              const res = await updateServiceDefinition(tenantId, !prev, sdcode);
+              if(res)
+              {
+
+              }
+            };
+
             // const switchText = localIsActive ? "Active" : "Inactive";
             return (
               <Switch
                 isCheckedInitially={row?.ServiceRequest?.[0]?.isActive}
                 label={""}
-                onToggle={()=>{}}
+                onToggle={toggle}
               />
             );
         case "ACTION":
-          // if (rowDataCache[serviceCode].attributes) {
-          //   return (
-          //     <Button
-          //       type="button"
-          //       size="medium"
-          //       icon="View"
-          //       variation="secondary"
-          //       label={t("VIEW")}
-          //       onClick={() => {
-          //         history.push(`/${window.contextPath}/employee/campaign/checklist/view?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}`)
-          //       }}
-          //     />
-          //   );
-          // } else {
-             return (
+          const role_code = row?.data?.role;
+          const cl_code = row?.data?.checklistType;
+             const sd = row?.ServiceRequest?.[0];
+             if(sd)
+             {
+              return (
               <Button
                 type="button"
                 size="medium"
-                icon="View"
+                // icon="View"
+                variation="secondary"
+                label={t("VIEW")}
+                onClick={() => {
+                  history.push(`/${window.contextPath}/employee/campaign/checklist/view?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}`)
+                }}
+              />
+              )
+             }
+             else{
+              return (
+                <Button
+                type="button"
+                size="medium"
+                // icon="View"
                 variation="secondary"
                 label={t("CREATE")}
                 onClick={() => {
                   history.push(`/${window.contextPath}/employee/campaign/checklist/create?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}`)
                 }}
               />
-             );
-          // }
+              )
+             }
         default:
           return value;
       }

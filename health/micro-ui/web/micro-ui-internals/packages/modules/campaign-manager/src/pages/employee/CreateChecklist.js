@@ -50,62 +50,6 @@ const CreateChecklist = () => {
   const [serviceCode, setServiceCode] = useState(null);
   const [def_data, setDef_Data] = useState(null);
 
-  // const { questionData1, dispatchQuestionData } = useContext(QuestionContext);
-
-  let data_mdms = []
-  let template_data = []
-  // const urlMd = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH");
-  const reqCriteriaResource = {
-    url: `/mdms-v2/v2/_search`,
-    // url: `/${urlMd}/v2/_search`,
-    body: {
-      MdmsCriteria: {
-        tenantId: tenantId,
-        // schemaCode: "HCMadminconsole.checklisttemplates"
-        schemaCode: "HCM-ADMIN-CONSOLE.ChecklistTemplates_DEMO2"
-      }
-    },
-    config: {
-      enabled: true,
-      select: (data) => {
-        return data?.mdms?.[0]?.data?.data;
-      },
-    },
-    // changeQueryName:"checklsit template "
-  };
-  const { isLoading, data: mdms, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
-  const reqCriteria = {
-
-    url: `/localization/messages/v1/_search`,
-    body: {
-      tenantId: tenantId
-    },
-    params: {
-      locale: "en_MZ",
-      tenantId: tenantId,
-      module: "hcm-campaignmanager"
-    },
-  }
-  const { isLoading1, data: localization, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqCriteria);
-  useEffect(() => {
-    if (localization?.messages?.length > 0) {
-      let matchedItem = localization.messages.find(item => item.message === checklistType);
-      // If a match is found, assign the 'code' to 'checklistcode'
-      if (matchedItem) {
-        let code = matchedItem.code;
-        let res = code.replace("HCM_CHECKLIST_TYPE_", "");
-        setChecklistTypeCode(res);
-      } else {
-      }
-    } else {
-    }
-
-  }, [localization])
-
-
-  useEffect(() => {
-    if (data_mdms && data_mdms.length != 0) template_data = data_mdms;
-  }, [mdms])
 
   module = "hcm-checklist";
   const { mutateAsync: localisationMutateAsync } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, locale);
@@ -116,19 +60,21 @@ const CreateChecklist = () => {
     setServiceCode(`${campaignName}.${checklistType}.${role}`)
   }, [])
 
+  const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
+
+
   useEffect(() => {
 
     const callSearch = async () => {
       const res = await Digit.CustomService.getResponse({
-        url: `/mdms-v2/v2/_search`,
+        url: `/${mdms_context_path}/v2/_search`,
         params: {
           tenantId: tenantId
         },
         body: {
           MdmsCriteria: {
             tenantId: tenantId,
-            // schemaCode: "HCMadminconsole.checklisttemplates"
-            schemaCode: "HCM-ADMIN-CONSOLE.ChecklistTemplates_DEMO2",
+            schemaCode: "HCM-ADMIN-CONSOLE.Checklist_Templates",
             filters: {
               role: role,
               checklistType: checklistType
@@ -161,28 +107,11 @@ const CreateChecklist = () => {
     const currentTime = new Date();
     if (def_data !== null) {
       setConfig(checklistCreateConfig(def_data, currentTime, "create"));
-      // setConfig(checklistCreateConfig({
-      //     data: viewData,
-      //     time: currentTime,
-      //     typeOfCall: "view"
-      // }));
     }
 
   }, [def_data])
 
-
-
-
-  // useEffect(()=>{
-
-  //   setConfig(checklistCreateConfig([{ id: crypto.randomUUID(), parentId: null, level: 1, key: 1, title: null, type: {"code": "SingleValueList"}, value: null, isRequired: false }]));
-  // },[])
-
-
   const [checklistName, setChecklistName] = useState(`${checklistType} ${role}`);
-  // const addChecklistName = (data) => {
-  //   setChecklistName(data);
-  // }
 
   const closeToast = () => {
     setShowToast(null);
@@ -200,46 +129,6 @@ const CreateChecklist = () => {
     setShowPopUp(!showPopUp);
   };
 
-
-  // const [clearTrigger, setClearTrigger] = useState(false);
-  // const [idd, setIdd] = useState(crypto.randomUUID());
-
-  // const clearData = useCallback(() => {
-  //   const newId = crypto.randomUUID();
-  //   setIdd(newId);
-  //   const cleared_data = [{
-  //     id: newId,
-  //     parentId: null,
-  //     level: 1,
-  //     key: 1,
-  //     title: null,
-  //     type: { "code": "SingleValueList" },
-  //     value: null,
-  //     isRequired: false,
-  //     options: [{
-  //       id: crypto.randomUUID(),
-  //       key: 1,
-  //       parentQuestionId: newId,
-  //       label: "OPTION",
-  //       optionDependency: false,
-  //       optionComment: false,
-  //     }]
-  //   }];
-  //   localStorage.removeItem("questions");
-  //   setConfig(checklistCreateConfig(cleared_data, new Date()));
-  //   setTempFormData([]);
-  //   setTempFormData1([]);
-  //   setPreviewData([]);
-  //   setClearTrigger(true);
-  // }, []);
-
-  // useEffect(() => {
-  //   if (clearTrigger) {
-  //     // Reset the trigger after the effect has run
-  //     setClearTrigger(false);
-  //   }
-  // }, [clearTrigger]);
-
   const clearData = () => {
     const currentTime = new Date();
     const newId = crypto.randomUUID();
@@ -253,6 +142,7 @@ const CreateChecklist = () => {
       type: { "code": "SingleValueList" },
       value: null,
       isRequired: true,
+      isActive: true,
       options: [{
         id: crypto.randomUUID(),
         key: 1,
@@ -263,7 +153,7 @@ const CreateChecklist = () => {
       }]
     }];
     // const cleared_data = [{ id: crypto.randomUUID(), parentId: null, level: 1, key: 1, title: null, type: { "code": "SingleValueList" }, value: null, isRequired: false }];
-    setConfig(checklistCreateConfig(cleared_data, currentTime));
+    setConfig(checklistCreateConfig(cleared_data, currentTime, "clear"));
   }
 
   const { defaultData, setDefaultData } = data_hook();
@@ -587,9 +477,6 @@ const CreateChecklist = () => {
               type={"default"}
               heading={t("CHECKLIST_PREVIEW")}
               children={[
-                // <div>
-                //   <CardText style={{ margin: 0 }}>{"testing" + " "}</CardText>
-                // </div>, 
               ]}
               onOverlayClick={() => {
                 setShowPopUp(false);
@@ -619,9 +506,6 @@ const CreateChecklist = () => {
               ]}
               sortFooterChildren={true}
             >
-              {/* <PreviewComponent
-              questionsArray={previewData}></PreviewComponent> */}
-
               <MobileChecklist questions={previewData} checklistRole={t(`${roleLocal}`)} typeOfChecklist={t(`${checklistTypeLocal}`)}></MobileChecklist>
             </PopUp>
           )}
@@ -636,14 +520,12 @@ const CreateChecklist = () => {
                   value={t(pair.value)} // Dynamically set the value
                 // style={{ fontSize: "16px", fontWeight: "bold" }} // Optional: customize styles
                 />
-                <div style={{ height: "1rem" }}></div>
+                {(index !== (fieldPairs.length - 1)) && <div style={{ height: "1rem" }}></div>}
               </div>
             ))}
             {
               <hr style={{ width: "100%", borderTop: "1px solid #ccc" }} />
             }
-            <div style={{ height: "1rem" }}>
-            </div>
             <div style={{ display: "flex" }}>
               <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t("NAME_OF_CHECKLIST")}</div>
               <TextInput
@@ -658,6 +540,7 @@ const CreateChecklist = () => {
               />
             </div>
           </Card>
+          <div style={{ height: "1rem" }}></div>
           <FormComposerV2
             showMultipleCardsWithoutNavs={true}
             label={t("CREATE_CHECKLIST")}

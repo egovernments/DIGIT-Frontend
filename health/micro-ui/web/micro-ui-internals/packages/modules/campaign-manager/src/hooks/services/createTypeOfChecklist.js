@@ -1,7 +1,9 @@
 const createTypeOfChecklist = async (req, tenantId) => {
+    const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
+
     try {
       const response = await Digit.CustomService.getResponse({
-        url: "/mdms-v2/v1/_search",
+        url: `/${mdms_context_path}/v1/_search`,
         body: {
           MdmsCriteria: req,
         },
