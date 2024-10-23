@@ -96,7 +96,7 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
   const handleOnSubmit = () => {
     Digit.UserService.logout();
     setShowDialog(false);
-  };
+    window.location.href = `/${window?.contextPath}/citizen/login`;  };
   const handleOnCancel = () => {
     setShowDialog(false);
   };
