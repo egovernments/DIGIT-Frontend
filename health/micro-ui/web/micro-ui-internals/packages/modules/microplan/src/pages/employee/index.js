@@ -51,6 +51,20 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
     Digit.Utils.microplanv1.destroySessionHelper(pathVar, ["setup-microplan"], "MICROPLAN_DATA");
   }, [location]);
 
+  useEffect(() => {
+    if (window.location.pathname !== "/microplan-ui/employee/microplan/setup-microplan") {
+      window.Digit.SessionStorage.del("MICROPLAN_DATA");
+    }
+    if (window.location.pathname === "/microplan-ui/employee/microplan/response") {
+      window.Digit.SessionStorage.del("MICROPLAN_DATA");
+    }
+    return () => {
+      if (window.location.pathname !== "/microplan-ui/employee/microplan/setup-microplan") {
+        window.Digit.SessionStorage.del("MICROPLAN_DATA");
+      }
+    };
+  }, []);
+
 
   const { isLoading: isLoadingMdmsMicroplanData, data: MicroplanMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
