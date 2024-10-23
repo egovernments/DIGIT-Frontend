@@ -209,7 +209,7 @@ const ViewChecklist = () => {
                     </div>
                 ))}
             </Card>
-            <div style={{ height: "1rem" }}></div>
+            <div style={{ height: "1rem" }} />
 
             {!isLoading && <FormComposerV2
                 showMultipleCardsWithoutNavs={true}
