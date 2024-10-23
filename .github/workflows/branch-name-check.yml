@@ -1,0 +1,27 @@
+name: Branch Name Validation
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
+      - develop
+
+jobs:
+  validate-branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Validate branch name
+        run: |
+          branch_name=$(echo "${GITHUB_REF#refs/heads/}")
+          pattern="^(FEATURE|BUGFIX|RELEASE)\/(HCMPRE|DPG|SN)-[0-9]{1,5}$"
+          if [[ ! "$branch_name" =~ $pattern ]]; then
+            echo "Branch name '$branch_name' does not follow the correct pattern: FEATURE/HCMPRE-<TICKET_NO>, FEATURE/DPG-<TICKET_NO>, FEATURE/SN-<TICKET_NO>, BUGFIX/SN-<TICKET_NO>,  BUGFIX/HCMPRE-<TICKET_NO>, or BUGFIX/DPG-<TICKET_NO> where x is a number between 0 and 99999"
+            exit 1
+          fi
