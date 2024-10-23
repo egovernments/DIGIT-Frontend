@@ -6,7 +6,7 @@ import { CardSubHeader, Card } from "@egovernments/digit-ui-react-components";
 
 
 function groupEmployeesByPlan(data, planData) {
-    const groupedEmployees = planData.reduce((acc, plan) => {
+    const groupedEmployees = planData?.reduce((acc, plan) => {
       // Find matching user from data array by comparing userServiceUuid with employeeId
       const matchedEmployee = data.find(employee => employee.user?.userServiceUuid === plan.employeeId);
   
@@ -26,9 +26,8 @@ function groupEmployeesByPlan(data, planData) {
       }
       return acc;
     }, {});
-  
     // Convert grouped object to an array of values for easier use
-    return Object.values(groupedEmployees);
+    return groupedEmployees ? Object.values(groupedEmployees) : [];
   }
 
   const Wrapper = ({ setShowPopUp, alreadyQueuedSelectedState }) => {
@@ -92,8 +91,8 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
     config: {
         select: (data) => {
             return  {
-                data: groupEmployeesByPlan(data.data, data.planData),
-                role: data.planData[0]?.role,
+                data: groupEmployeesByPlan(data?.data, data?.planData),
+                role: data?.planData[0]?.role,
                 totalCount: data?.totalCount,
             };
         } 
@@ -138,7 +137,7 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
     {
         name: t("MICROPLAN_ADMINISTRATIVE_HIERARCHY"),
         selector: (row) => {
-          return t(`MICROPLAN_${row.planData.hierarchyLevel?.toUpperCase()}`) ;
+          return t(`MICROPLAN_${row?.planData?.hierarchyLevel?.toUpperCase()}`) ;
         },
         sortable: true,
     },
@@ -147,7 +146,7 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
         cell: (row) => {
             return (
                 <div className="digit-tag-container userAccessCell">
-                    {row.planData.jurisdiction?.length > 0 &&
+                    {row?.planData?.jurisdiction?.length > 0 &&
             row.planData?.jurisdiction
               ?.slice(0, 2)
               ?.map((value, index) => {
@@ -167,7 +166,7 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
 
           {row.planData.jurisdiction?.length > (2) && (
             <Button
-              label={`+${row.planData.jurisdiction.length - (2)} ${t("ES_MORE")}`}
+              label={`+${row?.planData?.jurisdiction?.length - (2)} ${t("ES_MORE")}`}
               onClick={() => openPopUp()}
               variation="link"
               style={{
@@ -191,7 +190,7 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
            {showPopUp && (
             <Wrapper
               setShowPopUp={setShowPopUp}
-              alreadyQueuedSelectedState={row.planData.jurisdiction}
+              alreadyQueuedSelectedState={row?.planData?.jurisdiction}
             />
           )}
                 </div>

@@ -68,7 +68,7 @@ const FacilityCatchmentMapping = () => {
       },
     },
     {
-      enabled: isRootApprover && data?.TotalCount ===0,
+      enabled: isRootApprover && data?.TotalCount === 0,
     }
   );
 
@@ -106,7 +106,7 @@ const FacilityCatchmentMapping = () => {
         ></InboxSearchComposer>
       </div>
 
-      {isRootApprover && data?.TotalCount ===0 &&
+      {isRootApprover && data?.TotalCount === 0 &&
         <ActionBar
           actionFields={[
             <Button icon="CheckCircle" label={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT`)} onClick={handleActionBarClick} type="button" variation="primary" />,
@@ -131,7 +131,7 @@ const FacilityCatchmentMapping = () => {
               fileName: 'filename', // need to update when api is success
               message: "VILLAGE_ASSIGNED_TO_FACILITIES_SUCCESSFUL",
               back: "GO_BACK_TO_HOME",
-              backlink: "/employee/microplan"
+              backlink: "/employee"
             });
           }}
         />

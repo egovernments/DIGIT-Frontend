@@ -6,7 +6,7 @@ import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader } fro
 const FileComponent = ({ title, fileName, auditDetails, editHandler, deleteHandler, downloadHandler }) => {
     const { t } = useTranslation();
     const { userName, lastmodTime } = auditDetails || {}; // Destructuring the audit details for easy access
-
+    console.log("filestore", fileName);
     return (
         <div>
 
@@ -28,14 +28,15 @@ const FileComponent = ({ title, fileName, auditDetails, editHandler, deleteHandl
 
                     {/* Right side: Edit, Delete, and Audit details */}
                     <div className="dm-actions-container">
-                        
-                        {/* Display audit details (Uploaded by user and last modified time) */}
-                        <div className="dm-audit-info11">
-                            {/* Displaying the audit information */}
-                            {userName && <span style={{color:"#C84C0E"}}>{"Uploaded by"} {userName} | </span>}
-                            {lastmodTime && <span style={{color:"#C84C0E"}}>{lastmodTime}</span>}
-                        </div>
 
+                        {/* Display audit details (Uploaded by user and last modified time) */}
+                        {(userName && lastmodTime) ?(
+                            <div className="dm-audit-info11">
+                                {/* Displaying the audit information */}
+                                {userName && <span style={{ color: "#C84C0E" }}>{"Uploaded by"} {userName} | </span>}
+                                {lastmodTime && <span style={{ color: "#C84C0E" }}>{lastmodTime}</span>}
+                            </div>):null
+                        }
                         {/* Edit Icon and Button */}
                         <div className="dm-campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
                             {editHandler &&

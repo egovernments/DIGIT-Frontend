@@ -2,7 +2,8 @@ import React, { Fragment, useState, useEffect, useMemo } from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { boundaries } from "../../components/boundaries";
 import PopInboxTable from "../../components/PopInboxTable";
-import { Card, Tab, Button, SVG, Loader } from "@egovernments/digit-ui-components";
+import { useHistory } from "react-router-dom";
+import { Card, Tab, Button, SVG, Loader, ActionBar } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import DataTable from "react-data-table-component";
@@ -17,6 +18,7 @@ const PlanInbox = () => {
   const url = Digit.Hooks.useQueryParams();
   const microplanId = url?.microplanId;
   const campaignId = url?.campaignId;
+  const history = useHistory();
   const [villagesSlected, setVillagesSelected] = useState(0);
   const [showTab, setShowTab] = useState(true);
   const user = Digit.UserService.getUser();
@@ -26,12 +28,38 @@ const PlanInbox = () => {
   const [boundaries, setBoundaries] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState(null);
   const [activeFilter, setActiveFilter] = useState({});
+  const [actionBarPopUp, setactionBarPopUp] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [workFlowPopUp, setworkFlowPopUp] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [totalRows, setTotalRows] = useState(0);
+  const [perPage, setPerPage] = useState(10);
+  const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   const [activeLink, setActiveLink] = useState({
     code: "ASSIGNED_TO_ME",
     name: "ASSIGNED_TO_ME",
   });
+
+
+  const userRoles = user?.info?.roles?.map((roleData) => roleData?.code);
+
+
+  // Check if the user has the 'rootapprover' role
+  const isRootApprover = userRoles?.includes("ROOT_PLAN_ESTIMATION_APPROVER");
+
+  const { isLoading: isLoadingPlanObject, data: planObject, error: errorPlan, refetch: refetchPlan } = Digit.Hooks.microplanv1.useSearchPlanConfig(
+    {
+      PlanConfigurationSearchCriteria: {
+        tenantId,
+        id: microplanId,
+      },
+    },
+    {
+      enabled: isRootApprover ? true : false,
+      //   queryKey: currentKey,
+    }
+  );
 
   useEffect(() => {
     if (selectedFilter === "PENDING_FOR_VALIDATION") {
@@ -46,17 +74,22 @@ const PlanInbox = () => {
     mainClassName: "data-table-select-checkbox",
   };
 
-  const [totalRows, setTotalRows] = useState(0);
-  const [perPage, setPerPage] = useState(10);
-
-  const handlePageChange = (page) => {};
+  const handlePageChange = (page, totalRows) => {
+    setCurrentPage(page);
+    setLimitAndOffset({ ...limitAndOffset, offset: (page - 1) * 5 });
+  };
 
   const handleRowSelect = (event) => {
     setSelectedRows(event?.selectedRows);
     setVillagesSelected(event?.selectedCount);
   };
 
-  const handlePerRowsChange = async (newPerPage, page) => {};
+  const handlePerRowsChange = (currentRowsPerPage, currentPage) => {
+    setRowsPerPage(currentRowsPerPage);
+    setCurrentPage(currentPage);
+    setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * currentRowsPerPage });
+  };
+
   const {
     isLoading: isPlanWithCensusLoading,
     data: planWithCensus,
@@ -73,6 +106,8 @@ const PlanInbox = () => {
         status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
         assignee: activeLink.code === "ASSIGNED_TO_ME" ? user?.info?.uuid : "",
         executionPlanId: microplanId, //list of plan ids
+        limit: limitAndOffset?.limit,
+        offset: limitAndOffset?.offset,
       },
     },
     config: {
@@ -81,18 +116,18 @@ const PlanInbox = () => {
         const tableData = data?.planData?.map((item, index) => {
           const filteredCensus = data?.censusData?.find((d) => d?.boundaryCode === item?.locality);
           const dynamicSecurityData = Object.keys(filteredCensus?.additionalDetails?.securityDetails || {}).reduce((acc, key) => {
-            acc[`securityDetail_${key}`] = filteredCensus?.additionalDetails?.securityDetails[key]?.code; // Correctly referencing securityDetails
+            acc[`securityDetail_${key}`] = filteredCensus?.additionalDetails?.securityDetails[key]?.code || "NA"; // Correctly referencing securityDetails
             return acc;
           }, {});
 
           return {
             original: item,
-            village: filteredCensus?.boundaryCode,
-            villageRoadCondition: filteredCensus?.additionalDetails?.accessibilityDetails?.roadCondition?.code,
-            villageTerrain: filteredCensus?.additionalDetails?.accessibilityDetails?.terrain?.code,
-            villageTransportMode: filteredCensus?.additionalDetails?.accessibilityDetails?.transportationMode?.code,
-            totalPop: filteredCensus?.additionalDetails?.totalPopulation,
-            targetPop: filteredCensus?.additionalDetails?.targetPopulation,
+            village: filteredCensus?.boundaryCode || "NA",
+            villageRoadCondition: filteredCensus?.additionalDetails?.accessibilityDetails?.roadCondition?.code || "NA",
+            villageTerrain: filteredCensus?.additionalDetails?.accessibilityDetails?.terrain?.code || "NA",
+            villageTransportMode: filteredCensus?.additionalDetails?.accessibilityDetails?.transportationMode?.code || "NA",
+            totalPop: filteredCensus?.additionalDetails?.totalPopulation || "NA",
+            targetPop: filteredCensus?.additionalDetails?.targetPopulation || "NA",
             ...dynamicSecurityData,
           };
         });
@@ -100,6 +135,7 @@ const PlanInbox = () => {
           planData: data?.planData,
           censusData: data?.censusData,
           StatusCount: data?.StatusCount,
+          TotalCount: data?.TotalCount,
           tableData,
         };
       },
@@ -150,10 +186,10 @@ const PlanInbox = () => {
     tenantId: tenantId,
     body: {
       PlanEmployeeAssignmentSearchCriteria: {
-        tenantId: "mz",
+        tenantId: tenantId,
         active: true,
         planConfigurationId: url?.microplanId,
-        role: ["POPULATION_DATA_APPROVER"],
+        role: ["PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"],
         employeeId: [user?.info?.uuid],
       },
     },
@@ -196,6 +232,8 @@ const PlanInbox = () => {
   useEffect(() => {
     if (planWithCensus) {
       setCensusData(planWithCensus?.censusData);
+      setTotalRows(planWithCensus?.TotalCount);
+      setActiveFilter(planWithCensus?.StatusCount);
       setActiveFilter(planWithCensus?.StatusCount);
       if ((selectedFilter === null || selectedFilter === undefined) && selectedFilter !== "") {
         setSelectedFilter(Object.entries(planWithCensus?.StatusCount)?.[0]?.[0]);
@@ -210,7 +248,7 @@ const PlanInbox = () => {
     }
   }, [selectedFilter, activeLink, jurisdiction]);
 
-  useEffect(() => {}, [selectedFilter]);
+  useEffect(() => { }, [selectedFilter]);
 
   const onFilter = (selectedStatus) => {
     setSelectedFilter(selectedStatus?.code);
@@ -225,14 +263,14 @@ const PlanInbox = () => {
     setworkFlowPopUp(action);
   };
 
-  if (!planWithCensus || isPlanWithCensusLoading || isPlanEmpSearchLoading || isLoadingCampaignObject) {
+  if (isPlanWithCensusLoading || isPlanEmpSearchLoading || isLoadingCampaignObject) {
     return <Loader />;
   }
   const resources = planWithCensus?.planData?.[0]?.resources || []; // Resources array
   const resourceColumns = resources.map((resource) => ({
     name: t(`RESOURCE_TYPE_${resource.resourceType}`), // Dynamic column name for each resourceType
     cell: (row) => {
-      return resource.estimatedNumber; // Return estimatedNumber if exists
+      return resource.estimatedNumber ? resource.estimatedNumber : "NA"; // Return estimatedNumber if exists
     },
     sortable: true,
   }));
@@ -240,36 +278,38 @@ const PlanInbox = () => {
   const columns = [
     {
       name: t(`INBOX_VILLAGE`),
-      cell: (row) => row?.village,
+      cell: (row) => row?.village || "NA",
       sortable: true,
     },
     {
       name: t(`VILLAGE_ROAD_CONDITION`),
-      cell: (row) => row?.villageRoadCondition,
+      cell: (row) => row?.villageRoadCondition || "NA",
       sortable: true,
     },
     {
       name: t(`VILLAGE_TERRAIN`),
-      cell: (row) => row?.villageTerrain,
+      cell: (row) => row?.villageTerrain || "NA",
       sortable: true,
     },
     {
       name: t(`VILLAGE_TARNSPORTATION_MODE`),
-      cell: (row) => row?.villageTransportMode,
+      cell: (row) => row?.villageTransportMode || "NA",
       sortable: true,
     },
     {
       name: t(`TOTAL_POPULATION`),
-      cell: (row) => row?.totalPop,
+      cell: (row) => row?.totalPop || "NA",
       sortable: true,
     },
     {
       name: t(`TARGET_POPULATION`),
-      cell: (row) => row?.targetPop,
+      cell: (row) => row?.targetPop || "NA",
       sortable: true,
     },
     ...resourceColumns,
   ];
+
+
 
   // // Always return an array for `securityColumns`, even if it's empty
   // const sampleSecurityData = planWithCensus?.censusData?.[0]?.additionalDetails?.securityDetails || {};
@@ -293,9 +333,41 @@ const PlanInbox = () => {
     return updatedRows;
   };
 
+  // Function to check the status count condition
+  const isStatusConditionMet = (statusCount) => {
+    // Extract all keys and values from statusCount object
+    const statusValues = Object.keys(statusCount).map((key) => statusCount[key]);
+
+    // Check if all statuses except "VALIDATED" are 0, and "VALIDATED" is more than 0
+    return Object.keys(statusCount).every(
+      (key) => (key === "VALIDATED" ? statusCount[key] > 0 : statusCount[key] === 0)
+    );
+  };
+
+  const updateWorkflowForFooterAction = () => {
+    const updatedPlanConfig = {
+      ...planObject,
+      workflow: {
+        ...planObject?.workflow,  // Keep existing workflow properties if any
+        action: "APPROVE_ESTIMATIONS",
+      },
+    };
+
+    return updatedPlanConfig;
+  };
+
   const closePopUp = () => {
     setworkFlowPopUp("");
   };
+
+  const handleActionBarClick = () => {
+    setactionBarPopUp(true);
+  };
+
+  const closeActionBarPopUp = () => {
+    setactionBarPopUp(false);
+  };
+
 
   return (
     <div className="pop-inbox-wrapper">
@@ -383,10 +455,9 @@ const PlanInbox = () => {
             )}
             <DataTable
               columns={columns}
-              data={planWithCensus.tableData}
+              data={planWithCensus?.tableData}
               pagination
               paginationServer
-              paginationTotalRows={5}
               selectableRows
               selectableRowsHighlight
               onChangeRowsPerPage={handlePerRowsChange}
@@ -396,11 +467,46 @@ const PlanInbox = () => {
               selectableRowsComponentProps={selectProps}
               selectableRowsComponent={CheckBox}
               customStyles={tableCustomStyle}
-              // selectableRowsComponent={SimpleCheckbox}
+              paginationTotalRows={totalRows}
+              paginationPerPage={rowsPerPage}
+              paginationRowsPerPageOptions={[5, 10, 15, 20, 25]}
+            // selectableRowsComponent={SimpleCheckbox}
+            // selectableRowsComponent={SimpleCheckbox}
             />
           </Card>
         </div>
       </div>
+
+      {isRootApprover && isStatusConditionMet(activeFilter) &&
+        <ActionBar
+          actionFields={[
+            <Button icon="CheckCircle" label={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN`)} onClick={handleActionBarClick} type="button" variation="primary" />,
+          ]}
+          className=""
+          maxActionFieldsAllowed={5}
+          setactionFieldsToRight
+          sortActionFields
+          style={{}}
+        />}
+
+      {actionBarPopUp && (
+        <WorkflowCommentPopUp
+          onClose={closeActionBarPopUp}
+          heading={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN`)}
+          submitLabel={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN`)}
+          url="/plan-service/config/_update"
+          requestPayload={{ PlanConfiguration: updateWorkflowForFooterAction() }}
+          commentPath="workflow.comment"
+          onSuccess={(data) => {
+            history.push(`/${window.contextPath}/employee/microplan/microplan-success`, {
+              fileName: 'filename', // need to update when api is success
+              message: "FINALISE_MICROPLAN_SUCCESSFUL",
+              back: "GO_BACK_TO_HOME",
+              backlink: "/employee"
+            });
+          }}
+        />)}
+
     </div>
   );
 };
