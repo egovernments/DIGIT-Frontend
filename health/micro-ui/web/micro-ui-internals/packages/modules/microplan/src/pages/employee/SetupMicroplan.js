@@ -18,6 +18,7 @@ import { Stepper, Toast, PopUp, CardText, InfoCard, Button } from "@egovernments
 import _ from "lodash";
 import { useMyContext } from "../../utils/context";
 import { useLocation } from "react-router-dom/cjs/react-router-dom";
+import { fetchDataAndSetParams } from "../../utils/fetchDataAndSetParams";
 
 const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const { dispatch, state } = useMyContext();
@@ -72,209 +73,12 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     }
   );
 
-  function createBoundaryDataByHierarchy(boundaryData) {
-    const hierarchy = {};
-  
-    // Helper function to build the reversed materialized path
-    function buildMaterializedPath(boundary, boundaryMap) {
-      let path = [];
-      let currentBoundary = boundary;
-  
-      // Build the path from the boundary's parent up to the root
-      while (currentBoundary && currentBoundary.parent) {
-        currentBoundary = boundaryMap[currentBoundary.parent];
-        if (currentBoundary) {
-          path.push(currentBoundary.code);
-        }
-      }
-  
-      // Join the reversed path into a single string
-      return path.reverse().join('.');
-    }
-  
-    // First, create a map for easy access to boundaries by code
-    const boundaryMap = boundaryData.reduce((map, boundary) => {
-      map[boundary.code] = boundary;
-      return map;
-    }, {});
-  
-    // Iterate over all boundaries
-    boundaryData.forEach(boundary => {
-      const { type, code } = boundary;
-  
-      // Initialize type if not already in the hierarchy
-      if (!hierarchy[type]) {
-        hierarchy[type] = {};
-      }
-  
-      // Build the reversed materialized path for this boundary
-      const materializedPath = buildMaterializedPath(boundary, boundaryMap);
-  
-      // Assign the materialized path to the boundary in the hierarchy
-      hierarchy[type][code] = materializedPath;
-    });
-  
-    return hierarchy;
-  }
-
   useEffect(() => {
-    console.log(planObject, campaignObject, " pppppccccccccccccccccccccccccccccccccccc");
-    console.log(state?.roleConfigureOperators, " sssssssssssaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-    const fetchDataAndSetParams = () => {
-      console.log(params, " ppp11111111111111111111111111111111")
-      var draftFormData = {}
-      const campaignDetails = {
-        campaignDetails: {
-          distributionStrat: {
-            resourceDistributionStrategyCode: campaignObject?.additionalDetails?.resourceDistributionStrategy,
-          },
-          disease: {
-            code: campaignObject?.additionalDetails?.disease,
-          },
-          campaignType: {
-            code: campaignObject?.projectType,
-            i18nKey: `CAMPAIGN_TYPE_${campaignObject?.projectType}`,
-          },
-        },
-      };
-      if (campaignObject?.additionalDetails?.resourceDistributionStrategy && campaignObject?.additionalDetails?.disease && campaignObject?.projectType) {
-        draftFormData.CAMPAIGN_DETAILS = campaignDetails;
-      }
-
-      const microplanDetails = {
-        microplanDetails: {
-          microplanName: planObject?.name,
-        },
-      };
-      if (planObject?.name) {
-        draftFormData.MICROPLAN_DETAILS = microplanDetails;
-      }
-
-      const boundaryData = createBoundaryDataByHierarchy(campaignObject?.boundaries);
-      const boundarySelection = {
-        boundarySelection: {
-          boundaryData: boundaryData,
-          selectedData: campaignObject?.boundaries,
-        },
-      }
-
-      if (campaignObject?.boundaries) {
-        draftFormData.BOUNDARY = boundarySelection;
-      }
-
-      const uploadBoundaryData = {
-        boundary: {
-          uploadedFile: [],
-          "isError": false,
-          "isValidation": false,
-          "apiError": null,
-          "isSuccess": false
-        },
-      };
-
-      const uploadFacilityData = {
-        facilityWithBoundary: {
-          uploadedFile: [],
-          "isError": false,
-          "isValidation": false,
-          "apiError": null,
-          "isSuccess": false
-        },
-      };
-
-      // Assuming planObject.files contains the files array
-      const files = planObject?.files || []; // Replace with actual source of files
-
-      // Find the file for boundary (templateIdentifier: "Population")
-      const boundaryFile = files.find(file => file.templateIdentifier === "Population");
-
-      // Find the file for facility (templateIdentifier: "Facilities")
-      const facilityFile = files.find(file => file.templateIdentifier === "Facilities");
-
-      // Enrich uploadBoundaryData if the boundary file exists
-      if (boundaryFile) {
-        uploadBoundaryData.boundary.uploadedFile.push({
-          filestoreId: boundaryFile.filestoreId,
-          inputFileType: "xlsx",
-          templateIdentifier: "Population",
-          type: "boundaryWithTarget",
-          filename: "Population Template.xlsx",
-        });
-        uploadBoundaryData.boundary.isSuccess = true;
-      }
-
-      // Enrich uploadFacilityData if the facility file exists
-      if (facilityFile) {
-        uploadFacilityData.facilityWithBoundary.uploadedFile.push({
-          filestoreId: facilityFile.filestoreId,
-          inputFileType: "xlsx",
-          templateIdentifier: "Facilities",
-          type: "facilityWithBoundary",
-          filename: "Facility Template.xlsx",
-        });
-        uploadFacilityData.facilityWithBoundary.isSuccess = true;
-      }
-      if (boundaryFile) {
-        draftFormData.UPLOADBOUNDARYDATA = uploadBoundaryData;
-      }
-      if (facilityFile) {
-        draftFormData.UPLOADFACILITYDATA = uploadFacilityData;
-      }
-
-      const strategies = state?.ResourceDistributionStrategy;
-      const togetherOrSeparately = state.RegistrationAndDistributionHappeningTogetherOrSeparately;
-      const assumptionsForm = {
-        assumptionsForm: {
-          selectedRegistrationDistributionMode:{
-            code : planObject?.additionalDetails?.isRegistrationAndDistributionHappeningTogetherOrSeparately,
-            value : togetherOrSeparately?.find((mode) => mode.registrationAndDistributionHappeningTogetherOrSeparatelyCode === planObject?.additionalDetails?.isRegistrationAndDistributionHappeningTogetherOrSeparately)?.registrationAndDistributionHappeningTogetherOrSeparatelyName || null
-          },
-          selectedRegistrationProcess: {
-            code: planObject?.additionalDetails?.RegistrationProcess,
-            value: strategies?.find(
-              (strategy) =>
-                strategy.resourceDistributionStrategyCode ===
-                planObject?.additionalDetails?.RegistrationProcess
-            )?.resourceDistributionStrategyName || null,
-          },
-          selectedDistributionProcess: {
-            code: planObject?.additionalDetails?.DistributionProcess,
-            value: strategies?.find(
-              (strategy) =>
-                strategy.resourceDistributionStrategyCode ===
-                planObject?.additionalDetails?.DistributionProcess
-            )?.resourceDistributionStrategyName || null,
-          },
-        },
-      };
-
-      if (
-        strategies && togetherOrSeparately && 
-        (planObject?.additionalDetails?.RegistrationProcess ||
-          planObject?.additionalDetails?.DistributionProcess || planObject?.additionalDetails?.isRegistrationAndDistributionHappeningTogetherOrSeparately)
-      ) {
-        draftFormData.ASSUMPTIONS_FORM = assumptionsForm;
-      }
-
-      const assumptionValues = [];
-      if(planObject?.assumptions?.length > 0){
-        for(const assumption of planObject?.assumptions){
-          assumptionValues.push({
-             source: assumption?.source,
-             key: assumption?.key,
-             value: assumption?.value,
-             category: assumption?.category
-          });
-        }
-        draftFormData.HYPOTHESIS = { Assumptions : {assumptionValues :  assumptionValues} };
-      }
-      setParams(draftFormData);
-    };
     if (Object.keys(params).length > 0) {
       return;
     }
     else if (!isLoadingPlanObject && !isLoadingCampaignObject && campaignObject && planObject) {
-      fetchDataAndSetParams();
+      fetchDataAndSetParams(  state, setParams, campaignObject, planObject);
     }
   }, [params, isLoadingPlanObject, isLoadingCampaignObject, campaignObject, planObject]);
 
@@ -355,7 +159,6 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
 
   const onSubmit = (formData) => {
     // setIsSubmittting to true -> to run inline validations within the components
-    console.log(formData," ffffffffffffddddddddddddddddddddddddddddddddddddd")
     setIsSubmitting(true);
 
 

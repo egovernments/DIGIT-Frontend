@@ -69,6 +69,10 @@ const FacilityPopUp = ({ details, onClose }) => {
         tenantId: tenantId,
         planConfigurationId: microplanId,
         employeeId: [currentUserUuid],
+        role: [
+            "ROOT_FACILITY_CATCHMENT_MAPPER",
+            "FACILITY_CATCHMENT_MAPPER"
+        ]
       },
     },
     config: {
@@ -100,10 +104,10 @@ const FacilityPopUp = ({ details, onClose }) => {
       boundaryCodes: planEmployeeDetailsData?.PlanEmployeeAssignment?.[0]?.jurisdiction,
     };
     setJurisdiction(jurisdictionObject);
-    if(boundaryData?.length > 0){
+    if (boundaryData?.length > 0) {
       jurisdictionArray = boundaryData;
     }
-    else{
+    else {
       jurisdictionArray = planEmployeeDetailsData?.PlanEmployeeAssignment?.[0]?.jurisdiction?.map((item) => { return { code: item } });
     }
     censusSearch(jurisdictionArray);
@@ -130,19 +134,23 @@ const FacilityPopUp = ({ details, onClose }) => {
     const codeArray = data?.length === 0
       ? planEmployeeDetailsData?.PlanEmployeeAssignment?.[0]?.jurisdiction?.map((item) => item) || []
       : data?.map((item) => item?.code);
+    const censusSearchCriteria = {
+      tenantId: tenantId,
+      source: microplanId,
+      facilityAssigned: facilityAssignedStatus,
+      jurisdiction: codeArray,
+      pagination: {
+        limit: rowsPerPage,
+        offset: (currentPage - 1) * rowsPerPage,
+      }
+    }
+    if(facilityAssignedStatus){
+      censusSearchCriteria.areaCodes = details?.serviceBoundaries || null
+    }
     await mutationForCensusSearch.mutate(
       {
         body: {
-          CensusSearchCriteria: {
-            tenantId: tenantId,
-            source: microplanId,
-            facilityAssigned: facilityAssignedStatus,
-            jurisdiction: codeArray,
-            pagination: {
-              limit: rowsPerPage,
-              offset: (currentPage - 1) * rowsPerPage,
-            }
-          }
+          CensusSearchCriteria: censusSearchCriteria
         },
       },
       {
@@ -322,7 +330,8 @@ const FacilityPopUp = ({ details, onClose }) => {
         },
       }
     );
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await censusSearch([]);
     setLoader(false);
   };
 
@@ -341,7 +350,7 @@ const FacilityPopUp = ({ details, onClose }) => {
     setRowsPerPage(newPerPage);
     setCurrentPage(1); // Reset to first page when changing rows per page
   };
-
+  
   return (
     <>
       {loader ? (
@@ -349,7 +358,7 @@ const FacilityPopUp = ({ details, onClose }) => {
       ) : (
         <PopUp
           onClose={onClose}
-          heading={`${t(`MICROPLAN_ASSIGNMENT_FACILITY`)} ${details?.additionalDetails?.name}`}
+          heading={`${t(`MICROPLAN_ASSIGNMENT_FACILITY`)} ${details?.additionalDetails?.facilityName}`}
           children={[
             <div>
               <div className="card-container" style={{ border: "1px solid #D6D5D4", borderRadius: "3px" }}>
@@ -387,7 +396,7 @@ const FacilityPopUp = ({ details, onClose }) => {
                       type={"button"}
                       size={"large"}
                       variation={"secondary"}
-                      label={facilityAssignedStatus ? `${t("MICROPLAN_UNASSIGN_FACILITY")} ${details?.additionalDetails?.name}` : `${t("MICROPLAN_ASSIGN_FACILITY")} ${details?.additionalDetails?.name}`}
+                      label={facilityAssignedStatus ? `${t("MICROPLAN_UNASSIGN_FACILITY")} ${details?.additionalDetails?.facilityName}` : `${t("MICROPLAN_ASSIGN_FACILITY")} ${details?.additionalDetails?.facilityName}`}
                       onClick={handleAssignUnassign}
                       icon={"AddIcon"}
                     />

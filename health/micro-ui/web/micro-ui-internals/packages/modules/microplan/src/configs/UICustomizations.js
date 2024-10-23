@@ -49,12 +49,6 @@ export const UICustomizations = {
   MyMicroplanSearchConfigOverridePlan: {
     test: "yes",
   },
-  MyMicroplanSearchConfigOverridePlan: {
-    test: "yes",
-  },
-  MyMicroplanSearchConfigOverridePlan: {
-    test: "yes",
-  },
   MicroplanSearchConfig: {
     preProcess: (data, additionalDetails) => {
       const { name, status } = data?.state?.searchForm || {};
@@ -85,15 +79,24 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      var options = []
+      if(row?.status=="DRAFT"){
+        options = [
+          { code: "1", name: "Edit Setup" },
+          { code: "2", name: "ACTIVITY" },
+        ]
+      }
+      else{
+        options = [
+            { code: "1", name: "View Summary" },
+            { code: "2", name: "ACTIVITY" },
+        ]
+      }
       if (key === "ACTIONS") {
         // `/${window.contextPath}/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}`
         return (
           <Dropdown
-            option={[
-              { code: "1", name: "Edit Setup" },
-              { code: "2", name: "View Summary" },
-              { code: "3", name: "ACTIVITY" },
-            ]}
+            option={options}
             select={(e) => {
               console.log(e, "event"); // e contains the selected option
               if (e.code === "1") {
