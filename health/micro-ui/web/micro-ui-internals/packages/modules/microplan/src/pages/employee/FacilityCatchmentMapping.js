@@ -29,7 +29,7 @@ const FacilityCatchmentMapping = () => {
     tenantId: tenantId,
     body: {
       PlanEmployeeAssignmentSearchCriteria: {
-        tenantId: "mz",
+        tenantId: tenantId,
         active: true,
         planConfigurationId: url?.microplanId,
         employeeId: [user?.info?.uuid],
