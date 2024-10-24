@@ -22,6 +22,7 @@ import { fetchDataAndSetParams } from "../../utils/fetchDataAndSetParams";
 
 const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const { dispatch, state } = useMyContext();
+  const [loader,setLoader] = useState(false)
   const history = useHistory();
   const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(0);
@@ -139,14 +140,17 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   }, [params]);
 
   const handleUpdates = (propsForMutate) => {
+    setLoader(true)
     updateResources(propsForMutate, {
       onSuccess: (data) => {
+        setLoader(false)
         // Check if there is a redirectTo property in the response
         if (data?.redirectTo) {
           history.push(data?.redirectTo, data?.state); // Navigate to the specified route
         }
       },
       onError: (error, variables) => {
+        setLoader(false)
         // Display error toast if update fails
         setShowToast({
           key: "error",
@@ -277,6 +281,10 @@ useEffect(() => {
     }
     return t("MP_SAVE_PROCEED")
 
+  }
+
+  if(loader){
+    return <Loader />
   }
 
   return (
