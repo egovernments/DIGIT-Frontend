@@ -151,11 +151,10 @@ const CreateEmployee = () => {
     data.Jurisdictions = data?.Jurisdictions?.map((juris) => {
       return {
         ...juris,
-        boundary: selectedCity,
         tenantId: tenantId
       };
     });
-    // If no current assignment, throw an error
+
     if(!canSubmit){
       setShowToast({ key: "error", label: "ERR_ALL_MANDATORY_FIELDS" });
       return;

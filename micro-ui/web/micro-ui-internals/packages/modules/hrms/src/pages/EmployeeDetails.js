@@ -21,6 +21,7 @@ const Details = () => {
   const [mutationHappened, setMutationHappened, clear] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_HAPPENED", false);
   const [successData, setsuccessData, clearSuccessData] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_SUCCESS_DATA", false);
   const isMobile = window.Digit.Utils.browser.isMobile();
+  const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
 
   useEffect(() => {
     setMutationHappened(false);
@@ -61,6 +62,7 @@ const Details = () => {
   if (isLoading) {
     return <Loader />;
   }
+
 
   return (
     <React.Fragment>
@@ -169,7 +171,8 @@ const Details = () => {
                     <Row label={t("HR_BOUNDARY_LABEL")} text={t(element?.boundary)} />
                     <Row
                       label={t("HR_ROLE_LABEL")}
-                      text={data?.Employees?.[0]?.user.roles.filter((ele) => ele.tenantId == element?.boundary).map((ele) => t(`ACCESSCONTROL_ROLES_ROLES_` + ele?.code))}
+                      text={
+                          isMultiRootTenant? data?.Employees?.[0]?.user.roles.map((ele) => t(`ACCESSCONTROL_ROLES_ROLES_` + ele?.code)):(data?.Employees?.[0]?.user.roles.filter((ele) => ele.tenantId == element?.boundary).map((ele) => t(`ACCESSCONTROL_ROLES_ROLES_` + ele?.code)))}
                     />
                   </StatusTable>
                 );
