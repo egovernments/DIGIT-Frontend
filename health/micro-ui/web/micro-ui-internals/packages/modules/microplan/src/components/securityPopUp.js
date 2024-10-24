@@ -12,11 +12,15 @@ const SecurityPopUp = ({ onClose, census, onSuccess }) => {
 
   // Initialize answers with the existing security details from additionalDetails if available
   const [answers, setAnswers] = useState({});
+  const [initialAnswers, setInitialAnswers] = useState({});
   const [showToast, setShowToast] = useState(null);
 
   useEffect(() => {
     if (census?.additionalDetails?.securityDetails) {
       setAnswers(census.additionalDetails.securityDetails);
+
+      // Store initial answers to compare later
+      setInitialAnswers(census.additionalDetails.securityDetails);
     }
   }, [census]);
 
@@ -35,7 +39,6 @@ const SecurityPopUp = ({ onClose, census, onSuccess }) => {
     }
   }, [showToast]);
 
-
   // Prepare the updated census data when saving
   const updatedCensus = {
     ...census,
@@ -43,6 +46,13 @@ const SecurityPopUp = ({ onClose, census, onSuccess }) => {
       ...census?.additionalDetails,
       securityDetails: answers, // Update the security details
     },
+  };
+
+  // Check if the answers have changed from the initial values
+  const isChanged = () => {
+    return Object.keys(answers).some(
+      (key) => answers[key] !== initialAnswers[key]
+    );
   };
 
   // Use the custom mutation hook
@@ -69,7 +79,6 @@ const SecurityPopUp = ({ onClose, census, onSuccess }) => {
     );
   };
 
-
   return (
     <>
       <PopUp
@@ -85,10 +94,9 @@ const SecurityPopUp = ({ onClose, census, onSuccess }) => {
                   key={q.id}
                   style={{
                     marginBottom: index !== questions.length - 1 ? "1rem" : "0", // No margin after the last question
-                    //marginTop: "1rem"
                   }}
                 >
-                  <div class="security-question-label">
+                  <div className="security-question-label">
                     {q.question}
                   </div>
                   <div> {/* Add margin for space between label and options */}
@@ -131,7 +139,7 @@ const SecurityPopUp = ({ onClose, census, onSuccess }) => {
             variation={"primary"}
             label={t(`HCM_MICROPLAN_VILLAGE_SECURITY_SAVE_LABEL`)}
             onClick={handleSave} // Calls save function on click
-            isDisabled={mutation.isLoading} // Disable button during API call
+            isDisabled={!isChanged() || mutation.isLoading} // Disable if no changes are made or during API call
           />,
         ]}
       />

@@ -12,13 +12,22 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
   const [dropdown1Value, setDropdown1Value] = useState(null);
   const [dropdown2Value, setDropdown2Value] = useState(null);
   const [dropdown3Value, setDropdown3Value] = useState(null);
+  const [initialValues, setInitialValues] = useState({});
   const [showToast, setShowToast] = useState(null);
 
   useEffect(() => {
     if (census?.additionalDetails?.accessibilityDetails) {
-      setDropdown1Value(census.additionalDetails.accessibilityDetails.roadCondition);
-      setDropdown2Value(census.additionalDetails.accessibilityDetails.terrain);
-      setDropdown3Value(census.additionalDetails.accessibilityDetails.transportationMode);
+      const { roadCondition, terrain, transportationMode } = census.additionalDetails.accessibilityDetails;
+      setDropdown1Value(roadCondition);
+      setDropdown2Value(terrain);
+      setDropdown3Value(transportationMode);
+
+      // Store initial values to compare later
+      setInitialValues({
+        roadCondition,
+        terrain,
+        transportationMode,
+      });
     }
   }, [census]);
 
@@ -60,6 +69,15 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
     },
   };
 
+  // Check if dropdown values have changed from the initial values
+  const isChanged = () => {
+    return (
+      dropdown1Value !== initialValues.roadCondition ||
+      dropdown2Value !== initialValues.terrain ||
+      dropdown3Value !== initialValues.transportationMode
+    );
+  };
+
   // Define the mutation configuration
   const mutation = Digit.Hooks.useCustomAPIMutationHook({
     url: "/census-service/_update",
@@ -69,7 +87,6 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
     await mutation.mutate(
       {
         body: reqPayload,
-
       },
       {
         onSuccess: (data) => {
@@ -141,7 +158,7 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
             variation={"primary"}
             label={t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_SAVE_LABEL`)}
             onClick={handleSave} // Calls save function on click
-            isLoading={mutation.isLoading} // Disable button during API call
+            isDisabled={!isChanged() || mutation.isLoading} // Disable if no changes are made or during API call
           />,
         ]}
       />
