@@ -28,6 +28,7 @@ const PopInbox = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [totalRows, setTotalRows] = useState(0);
+  const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   const [activeLink, setActiveLink] = useState({
     code: "ASSIGNED_TO_ME",
@@ -136,25 +137,48 @@ const PopInbox = () => {
     setjurisdiction(planEmployee?.planData?.[0]?.jurisdiction);
   };
 
-  const { isLoading: isUserLoading, data: workflowData, revalidate } = Digit.Hooks.useCustomAPIHook({
+  const { isLoading: isWorkflowLoading, data: workflowData, revalidate, refetch: refetchBussinessService } = Digit.Hooks.useCustomAPIHook({
     url: "/egov-workflow-v2/egov-wf/businessservice/_search",
     params: {
       tenantId: tenantId,
       businessServices: "CENSUS",
     },
     config: {
+      enabled: selectedFilter ? true : false,
       select: (data) => {
-        const service = data.BusinessServices?.[0];
-        const matchingState = service?.states.find((state) => state.applicationStatus === "PENDING_FOR_VALIDATION");
-        return matchingState || null;
+        return data.BusinessServices?.[0];
       },
     },
   });
 
-  const actionsMain = workflowData?.actions;
+  useEffect(() => {
+    if (workflowData) {
+
+      // Assume selectedFilter maps to applicationStatus or state
+      const selectedState = workflowData?.states?.find(
+        (state) => state.state === selectedFilter
+      );
+
+      // Filter actions based on the selected state
+      const availableActions = selectedState?.actions?.filter((action) =>
+        action.roles.some((role) => userRoles.includes(role))
+      );
+
+      // Update the available actions state
+      setAvailableActionsForUser(availableActions || []);
+
+    }
+  }, [workflowData, selectedFilter]);
+
+
+  // if availableActionsForUser is defined and is an array
+  const actionsMain = availableActionsForUser?.length > 0
+    ? availableActionsForUser
+    : [];
+
 
   // actionsToHide array by checking for "EDIT" in the actionMap
-  const actionsToHide = actionsMain?.filter(action => action.action.includes("EDIT"))?.map(action => action.action);
+  const actionsToHide = actionsMain?.filter(action => action?.action?.includes("EDIT"))?.map(action => action?.action);
 
 
   // Custom hook to fetch census data based on microplanId and boundaryCode
@@ -191,6 +215,7 @@ const PopInbox = () => {
         !activeFilterKeys.includes(selectedFilter)
       ) {
         setSelectedFilter(activeFilterKeys[0]);
+        refetchBussinessService();
       }
       setVillagesSelected(0);
       setSelectedRows([]);
@@ -216,6 +241,7 @@ const PopInbox = () => {
 
   const onFilter = (selectedStatus) => {
     setSelectedFilter(selectedStatus?.code);
+    refetchBussinessService();
   };
 
   const handlePageChange = (page, totalRows) => {
@@ -230,8 +256,10 @@ const PopInbox = () => {
   }
 
   const clearFilters = () => {
-    if (selectedFilter !== Object.entries(data?.StatusCount)?.[0]?.[0])
+    if (selectedFilter !== Object.entries(data?.StatusCount)?.[0]?.[0]) {
       setSelectedFilter(Object.entries(data?.StatusCount)?.[0]?.[0]);
+      refetchBussinessService();
+    }
   };
 
   const handleActionClick = (action) => {
@@ -283,7 +311,7 @@ const PopInbox = () => {
   };
 
 
-  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading) {
+  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading || isWorkflowLoading) {
     return <Loader />;
   }
 

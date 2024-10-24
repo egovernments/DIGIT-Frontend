@@ -35,6 +35,7 @@ const PlanInbox = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [totalRows, setTotalRows] = useState(0);
   const [perPage, setPerPage] = useState(10);
+  const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   const [activeLink, setActiveLink] = useState({
     code: "ASSIGNED_TO_ME",
@@ -111,7 +112,7 @@ const PlanInbox = () => {
       },
     },
     config: {
-      enabled: jurisdiction.length > 0 ? true : false,
+      enabled: jurisdiction?.length > 0 ? true : false,
       select: (data) => {
         const tableData = data?.planData?.map((item, index) => {
           const filteredCensus = data?.censusData?.find((d) => d?.boundaryCode === item?.locality);
@@ -209,25 +210,47 @@ const PlanInbox = () => {
     setjurisdiction(planEmployee?.planData?.[0]?.jurisdiction);
   };
 
-  const { isLoading: isUserLoading, data: workflowData, revalidate } = Digit.Hooks.useCustomAPIHook({
+  const { isLoading: isWorkflowLoading, data: workflowData, revalidate, refetch: refetchBussinessService } = Digit.Hooks.useCustomAPIHook({
     url: "/egov-workflow-v2/egov-wf/businessservice/_search",
     params: {
       tenantId: tenantId,
       businessServices: "PLAN_ESTIMATION",
     },
     config: {
+      enabled: selectedFilter ? true : false,
       select: (data) => {
-        const service = data.BusinessServices?.[0];
-        const matchingState = service?.states.find((state) => state.applicationStatus === "PENDING_FOR_VALIDATION");
-        return matchingState || null;
+        return data.BusinessServices?.[0];
       },
     },
   });
 
-  const actionsMain = workflowData?.actions;
+  useEffect(() => {
+    if (workflowData) {
+
+      // Assume selectedFilter maps to applicationStatus or state
+      const selectedState = workflowData?.states?.find(
+        (state) => state.state === selectedFilter
+      );
+
+      // Filter actions based on the selected state
+      const availableActions = selectedState?.actions?.filter((action) =>
+        action.roles.some((role) => userRoles.includes(role))
+      );
+
+      // Update the available actions state
+      setAvailableActionsForUser(availableActions || []);
+
+    }
+  }, [workflowData, selectedFilter]);
+
+
+  // if availableActionsForUser is defined and is an array
+  const actionsMain = availableActionsForUser?.length > 0
+    ? availableActionsForUser
+    : [];
 
   // actionsToHide array by checking for "EDIT" in the actionMap
-  const actionsToHide = actionsMain?.filter((action) => action.action.includes("EDIT"))?.map((action) => action.action);
+  const actionsToHide = actionsMain?.filter((action) => action?.action?.includes("EDIT"))?.map((action) => action?.action);
 
   useEffect(() => {
     if (planWithCensus) {
@@ -237,13 +260,14 @@ const PlanInbox = () => {
       setActiveFilter(planWithCensus?.StatusCount);
       if ((selectedFilter === null || selectedFilter === undefined) && selectedFilter !== "") {
         setSelectedFilter(Object.entries(planWithCensus?.StatusCount)?.[0]?.[0]);
+        refetchBussinessService();
       }
       setVillagesSelected(0);
     }
   }, [planWithCensus, selectedFilter]);
 
   useEffect(() => {
-    if (jurisdiction.length > 0) {
+    if (jurisdiction?.length > 0) {
       refetchPlanEmployee(); // Trigger the API call again after activeFilter changes
     }
   }, [selectedFilter, activeLink, jurisdiction]);
@@ -252,18 +276,22 @@ const PlanInbox = () => {
 
   const onFilter = (selectedStatus) => {
     setSelectedFilter(selectedStatus?.code);
+    refetchBussinessService();
   };
 
   const clearFilters = () => {
-    if (selectedFilter !== Object.entries(planWithCensus?.StatusCount)?.[0]?.[0])
+    if (selectedFilter !== Object.entries(planWithCensus?.StatusCount)?.[0]?.[0]) {
       setSelectedFilter(Object.entries(planWithCensus?.StatusCount)?.[0]?.[0]);
+      refetchBussinessService();
+    }
+
   };
 
   const handleActionClick = (action) => {
     setworkFlowPopUp(action);
   };
 
-  if (isPlanWithCensusLoading || isPlanEmpSearchLoading || isLoadingCampaignObject) {
+  if (isPlanWithCensusLoading || isPlanEmpSearchLoading || isLoadingCampaignObject || isWorkflowLoading) {
     return <Loader />;
   }
   const resources = planWithCensus?.planData?.[0]?.resources || []; // Resources array
