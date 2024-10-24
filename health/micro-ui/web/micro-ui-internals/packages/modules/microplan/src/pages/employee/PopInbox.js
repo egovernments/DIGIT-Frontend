@@ -26,7 +26,7 @@ const PopInbox = () => {
   const [actionBarPopUp, setactionBarPopUp] = useState(false);
   const [activeFilter, setActiveFilter] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(50);
   const [totalRows, setTotalRows] = useState(0);
   const [showToast, setShowToast] = useState(null);
   const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
@@ -242,13 +242,13 @@ const PopInbox = () => {
 
   const handlePageChange = (page, totalRows) => {
     setCurrentPage(page);
-    setLimitAndOffset({ ...limitAndOffset, offset: (page - 1) * 5 })
+    setLimitAndOffset({ ...limitAndOffset, offset: (page - 1) * rowsPerPage })
   }
 
   const handlePerRowsChange = (currentRowsPerPage, currentPage) => {
     setRowsPerPage(currentRowsPerPage);
-    setCurrentPage(currentPage);
-    setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * currentRowsPerPage })
+    setCurrentPage(1);
+    setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * rowsPerPage })
   }
 
   const clearFilters = () => {
