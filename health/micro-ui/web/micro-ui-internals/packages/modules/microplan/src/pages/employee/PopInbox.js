@@ -215,7 +215,6 @@ const PopInbox = () => {
         !activeFilterKeys.includes(selectedFilter)
       ) {
         setSelectedFilter(activeFilterKeys[0]);
-        refetchBussinessService();
       }
       setVillagesSelected(0);
       setSelectedRows([]);
@@ -241,7 +240,6 @@ const PopInbox = () => {
 
   const onFilter = (selectedStatus) => {
     setSelectedFilter(selectedStatus?.code);
-    refetchBussinessService();
   };
 
   const handlePageChange = (page, totalRows) => {
@@ -258,7 +256,6 @@ const PopInbox = () => {
   const clearFilters = () => {
     if (selectedFilter !== Object.entries(data?.StatusCount)?.[0]?.[0]) {
       setSelectedFilter(Object.entries(data?.StatusCount)?.[0]?.[0]);
-      refetchBussinessService();
     }
   };
 

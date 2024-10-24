@@ -260,7 +260,6 @@ const PlanInbox = () => {
       setActiveFilter(planWithCensus?.StatusCount);
       if ((selectedFilter === null || selectedFilter === undefined) && selectedFilter !== "") {
         setSelectedFilter(Object.entries(planWithCensus?.StatusCount)?.[0]?.[0]);
-        refetchBussinessService();
       }
       setVillagesSelected(0);
     }
@@ -276,13 +275,11 @@ const PlanInbox = () => {
 
   const onFilter = (selectedStatus) => {
     setSelectedFilter(selectedStatus?.code);
-    refetchBussinessService();
   };
 
   const clearFilters = () => {
     if (selectedFilter !== Object.entries(planWithCensus?.StatusCount)?.[0]?.[0]) {
       setSelectedFilter(Object.entries(planWithCensus?.StatusCount)?.[0]?.[0]);
-      refetchBussinessService();
     }
 
   };
