@@ -5,10 +5,8 @@ import { PopUp, Button, TextArea, ErrorMessage, Toast } from "@egovernments/digi
 const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPayload, commentPath, onSuccess, onError }) => {
 
     const { t } = useTranslation();
-
     const [comment, setComment] = useState("");
     const [error, setError] = useState(false);
-    const [showToast, setShowToast] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Mutation hook for updating via a dynamic URL
@@ -17,13 +15,6 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
         body: requestPayload,
         params: {}
     });
-
-    // Close the toast after 5 seconds
-    useEffect(() => {
-        if (showToast) {
-            setTimeout(() => setShowToast(null), 5000);
-        }
-    }, [showToast]);
 
 
     const handleTextAreaChange = (e) => {
@@ -104,12 +95,9 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
             },
             {
                 onSuccess: (data) => {
-                    setShowToast({ key: "success", label: t("WORKFLOW_UPDATE_SUCCESS") });
                     onSuccess && onSuccess(data); // Call the onSuccess callback if provided
-                    onClose();  // Close popup after success
                 },
                 onError: (error) => {
-                    setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
                     onError && onError(error); // Call the onError callback if provided
                 }
             }
@@ -119,65 +107,55 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
     };
 
     return (
-        <>
-            <PopUp
-                onClose={onClose}
-                heading={t(heading)}
-                children={[
-                    <div key="comment-section">
-                        <div className="comment-label">
-                            {t(`HCM_MICROPLAN_ADD_COMMENT_LABEL`)} <span className="required">*</span>
-                        </div>
-                        <TextArea
-                            style={{ maxWidth: "100%" }}
-                            value={comment}
-                            onChange={handleTextAreaChange}
-                            onKeyPress={handleKeyPress}
-                            error={error}
-                        />
-                        {error && (
-                            <ErrorMessage
-                                message={t('HCM_MICROPLAN_ADD_COMMENT_REQUIRED')}
-                                truncateMessage={true}
-                                maxLength={256}
-                                showIcon={true}
-                            />
-                        )}
+        <PopUp
+            onClose={onClose}
+            heading={t(heading)}
+            children={[
+                <div key="comment-section">
+                    <div className="comment-label">
+                        {t(`HCM_MICROPLAN_ADD_COMMENT_LABEL`)} <span className="required">*</span>
                     </div>
-                ]}
-                onOverlayClick={onClose}
-                footerChildren={[
-                    <Button
-                        key="close-button"
-                        className="campaign-type-alert-button"
-                        type="button"
-                        size="large"
-                        variation="secondary"
-                        label={t(`HCM_MICROPLAN_EDIT_POPULATION_CLOSE`)}
-                        onClick={onClose}
-                    />,
-                    <Button
-                        key="submit-button"
-                        className="campaign-type-alert-button"
-                        type="button"
-                        size="large"
-                        variation="primary"
-                        label={t(submitLabel)}
-                        onClick={handleSave}
-                        isDisabled={isSubmitting}  // Disable button during submission
-                    />,
-                ]}
-            />
-
-            {showToast && (
-                <Toast style={{ zIndex: 10001 }}
-                    label={showToast.label}
-                    type={showToast.key}
-                    error={showToast.key === "error"}
-                    onClose={() => setShowToast(null)}
-                />
-            )}
-        </>
+                    <TextArea
+                        style={{ maxWidth: "100%" }}
+                        value={comment}
+                        onChange={handleTextAreaChange}
+                        onKeyPress={handleKeyPress}
+                        error={error}
+                    />
+                    {error && (
+                        <ErrorMessage
+                            message={t('HCM_MICROPLAN_ADD_COMMENT_REQUIRED')}
+                            truncateMessage={true}
+                            maxLength={256}
+                            showIcon={true}
+                        />
+                    )}
+                </div>
+            ]}
+            onOverlayClick={onClose}
+            footerChildren={[
+                <Button
+                    key="close-button"
+                    className="campaign-type-alert-button"
+                    type="button"
+                    size="large"
+                    variation="secondary"
+                    label={t(`HCM_MICROPLAN_EDIT_POPULATION_CLOSE`)}
+                    onClick={onClose}
+                    isDisabled={isSubmitting}  // Disable button during submission
+                />,
+                <Button
+                    key="submit-button"
+                    className="campaign-type-alert-button"
+                    type="button"
+                    size="large"
+                    variation="primary"
+                    label={t(submitLabel)}
+                    onClick={handleSave}
+                    isDisabled={isSubmitting}  // Disable button during submission
+                />,
+            ]}
+        />
     );
 };
 
