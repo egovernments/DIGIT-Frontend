@@ -393,7 +393,7 @@ const PopInbox = () => {
                 )}
               </div>
             )}
-            {isFetching ? <Loader /> : <PopInboxTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} />}
+            {isFetching ? <Loader /> : <PopInboxTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} />}
           </Card>
         </div>
       </div>
