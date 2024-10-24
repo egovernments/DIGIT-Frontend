@@ -184,7 +184,7 @@ const PopInboxTable = ({ ...props }) => {
       //   cell: row => <a onClick={()=>{console.log(row)}} href="#">View Logs</a>,
       // },
     ];
-  }, []);
+  }, [props.showEditColumn]);
 
   const handlePageChange = (page, totalRows) => {
     props?.handlePageChange(page, totalRows);
