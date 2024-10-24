@@ -111,7 +111,7 @@ const PlanInbox = () => {
       },
     },
     config: {
-      enabled: jurisdiction.length > 0 ? true : false,
+      enabled: jurisdiction?.length > 0 ? true : false,
       select: (data) => {
         const tableData = data?.planData?.map((item, index) => {
           const filteredCensus = data?.censusData?.find((d) => d?.boundaryCode === item?.locality);
@@ -243,7 +243,7 @@ const PlanInbox = () => {
   }, [planWithCensus, selectedFilter]);
 
   useEffect(() => {
-    if (jurisdiction.length > 0) {
+    if (jurisdiction?.length > 0) {
       refetchPlanEmployee(); // Trigger the API call again after activeFilter changes
     }
   }, [selectedFilter, activeLink, jurisdiction]);
@@ -263,9 +263,6 @@ const PlanInbox = () => {
     setworkFlowPopUp(action);
   };
 
-  if (isPlanWithCensusLoading || isPlanEmpSearchLoading || isLoadingCampaignObject) {
-    return <Loader />;
-  }
   const resources = planWithCensus?.planData?.[0]?.resources || []; // Resources array
   const resourceColumns = resources.map((resource) => ({
     name: t(`RESOURCE_TYPE_${resource.resourceType}`), // Dynamic column name for each resourceType
@@ -453,6 +450,7 @@ const PlanInbox = () => {
                 )}
               </div>
             )}
+            {(isPlanWithCensusLoading || isPlanEmpSearchLoading || isLoadingCampaignObject) ? <Loader /> : null }
             <DataTable
               columns={columns}
               data={planWithCensus?.tableData}

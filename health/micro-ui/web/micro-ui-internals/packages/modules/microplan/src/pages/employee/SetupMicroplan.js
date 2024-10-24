@@ -38,7 +38,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("MICROPLAN_DATA", {});
-  const [microplanConfig, setMicroplanConfig] = useState(MicroplanConfig(params, null, isSubmitting, null, hierarchyData));
+  const [microplanConfig, setMicroplanConfig] = useState(MicroplanConfig(totalFormData, null, isSubmitting, null, hierarchyData));
 
   //fetch existing campaign object
   const {
@@ -103,7 +103,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   }, [microplanConfig, currentKey]);
 
   useEffect(() => {
-    setMicroplanConfig(MicroplanConfig(params, null, isSubmitting, null, hierarchyData));
+    setMicroplanConfig(MicroplanConfig(totalFormData, null, isSubmitting, null, hierarchyData));
   }, [totalFormData, isSubmitting]);
 
   useEffect(() => {
