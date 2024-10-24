@@ -14,6 +14,8 @@ const EditForm = ({ tenantId, data }) => {
   const [phonecheck, setPhonecheck] = useState(false);
   const [checkfield, setcheck] = useState(false);
   const mutationUpdate = Digit.Hooks.hrms.useHRMSUpdate(tenantId);
+  const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
+
   const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["CommonFieldsConfig"], {
     select: (data) => {
       return {
@@ -80,8 +82,8 @@ const EditForm = ({ tenantId, data }) => {
           name: ele.hierarchy,
         },
         boundaryType: { label: ele.boundaryType, i18text: `EGOV_LOCATION_BOUNDARYTYPE_${ele.boundaryType.toUpperCase()}` },
-        boundary: Digit.Utils.getMultiRootTenant()?{ code: tenantId }:{ code: ele.boundary },
-        roles: data?.user?.roles.filter((item) => item.tenantId == ele.boundary),
+        boundary: { code: ele.boundary },
+        roles: isMultiRootTenant?data?.user?.roles:data?.user?.roles.filter((item) => item.tenantId == ele.boundary),
       });
     }),
     Assignments: data?.assignments.map((ele, index) => {
@@ -171,11 +173,9 @@ const EditForm = ({ tenantId, data }) => {
     input.Jurisdictions = input?.Jurisdictions?.map((juris) => {
       return {
         ...juris,
-        boundary: tenantId,
         tenantId: tenantId,
       };
     });
-
     if (
       !Object.values(
         input.Jurisdictions.reduce((acc, sum) => {
@@ -191,7 +191,12 @@ const EditForm = ({ tenantId, data }) => {
     }
     let roles = input?.Jurisdictions?.map((ele) => {
       return ele.roles?.map((item) => {
-        item["tenantId"] = ele.boundary;
+        if(isMultiRootTenant){
+          item["tenantId"] = tenantId;
+        }
+        else{
+          item["tenantId"] = ele.boundary;
+        }
         return item;
       });
     });
