@@ -288,9 +288,6 @@ const PlanInbox = () => {
     setworkFlowPopUp(action);
   };
 
-  if (isPlanWithCensusLoading || isPlanEmpSearchLoading || isLoadingCampaignObject || isWorkflowLoading) {
-    return <Loader />;
-  }
   const resources = planWithCensus?.planData?.[0]?.resources || []; // Resources array
   const resourceColumns = resources.map((resource) => ({
     name: t(`RESOURCE_TYPE_${resource.resourceType}`), // Dynamic column name for each resourceType
@@ -478,6 +475,7 @@ const PlanInbox = () => {
                 )}
               </div>
             )}
+            {(isPlanWithCensusLoading || isPlanEmpSearchLoading || isLoadingCampaignObject) ? <Loader /> : null }
             <DataTable
               columns={columns}
               data={planWithCensus?.tableData}
