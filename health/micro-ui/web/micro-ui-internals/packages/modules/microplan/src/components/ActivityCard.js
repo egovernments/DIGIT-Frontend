@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Card, CardHeader } from "@egovernments/digit-ui-react-components";
 
-const ActivityHomeCard = (props) => {
+const ActivityHomeCard = ({onClickCard=()=>{},...props}) => {
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -24,6 +24,7 @@ const ActivityHomeCard = (props) => {
               }} // Adding margin to each card
             onClick={() => {
                 if (!i.disable) { // Check if disabled
+                  onClickCard(i)
                   i.link ? history.push(i.link) : location.assign(i.locate);
                 }
               }}

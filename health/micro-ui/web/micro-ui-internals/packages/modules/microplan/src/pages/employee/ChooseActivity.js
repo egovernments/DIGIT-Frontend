@@ -66,38 +66,69 @@ const ChooseActivity = () => {
         name: t("VALIDATE_N_APPROVE_POPULATION_DATA"),
         link: `pop-inbox?campaignId=${campaignId}&microplanId=${microplanId}`,
         icon: <SVG.Population height="36" width="36" />,
-        disable: isCardDisabled(["POPULATION_DATA_APPROVER", "ROOT_POPULATION_DATA_APPROVER"], workflowData, ["EXECUTION_TO_BE_DONE","CENSUS_DATA_APPROVAL_IN_PROGRESS"])
+        disable: isCardDisabled(["POPULATION_DATA_APPROVER", "ROOT_POPULATION_DATA_APPROVER"], workflowData, ["EXECUTION_TO_BE_DONE","CENSUS_DATA_APPROVAL_IN_PROGRESS"]),
+        optionKey: "VALIDATE_N_APPROVE_POPULATION_DATA"
       },
       {
         name: t("ASSIGN_FACILITIES_TO_VILLAGE"),
         link: `assign-facilities-to-villages?campaignId=${campaignId}&microplanId=${microplanId}`,
         icon: <SVG.AssignmentTurnedIn height="36" width="36" />,
-        disable: isCardDisabled(["FACILITY_CATCHMENT_MAPPER", "ROOT_FACILITY_CATCHMENT_MAPPER"], workflowData, ["CENSUS_DATA_APPROVED"])
+        disable: isCardDisabled(["FACILITY_CATCHMENT_MAPPER", "ROOT_FACILITY_CATCHMENT_MAPPER"], workflowData, ["CENSUS_DATA_APPROVED"]),
+        optionKey: "ASSIGN_FACILITIES_TO_VILLAGE"
       },
       {
         name: t("VALIDATE_N_APPROVE_MICROPLAN_ESTIMATIONS"),
         link: `plan-inbox?campaignId=${campaignId}&microplanId=${microplanId}`,
         icon: <SVG.FactCheck height="36" width="36" />,
-        disable: isCardDisabled(["PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"], workflowData, ["RESOURCE_ESTIMATION_IN_PROGRESS"])
+        disable: isCardDisabled(["PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"], workflowData, ["RESOURCE_ESTIMATION_IN_PROGRESS"]),
+        optionKey: "VALIDATE_N_APPROVE_MICROPLAN_ESTIMATIONS"
       },
       {
         name: t("GEOSPATIAL_MAP_VIEW"),
         link: null,
         icon: <SVG.LocationOn height="36" width="36" />,
-        disable: isCardDisabled([], workflowData)
+        disable: isCardDisabled([], workflowData),
+        optionKey: "GEOSPATIAL_MAP_VIEW"
       },
       {
         name: t("VIEW_MICROPLAN_ESTIMATIONS"),
         link: `pop-inbox?campaignId=${campaignId}&microplanId=${microplanId}`,
         icon: <SVG.Visibility height="36" width="36" />,
-        disable: isCardDisabled(["MICROPLAN_VIEWER"], workflowData)
+        disable: isCardDisabled(["MICROPLAN_VIEWER"], workflowData),
+        optionKey: "VIEW_MICROPLAN_ESTIMATIONS"
       }
     ];
 
+    const updatePlan = async (req) => {
+      const planRes = await Digit.CustomService.getResponse({
+        url: "/plan-service/config/_update",
+        body: {
+          PlanConfiguration: req,
+        },
+      });
+      return planRes;
+    };
+
+    const onClickCard = async (card) => {
+      try {
+        if(card.optionKey==="VALIDATE_N_APPROVE_POPULATION_DATA" && planObject.status==="EXECUTION_TO_BE_DONE"){
+          // here update plan config
+          await updatePlan({
+            ...planObject,
+            workflow:{
+              action:"START_DATA_APPROVAL"
+            }
+          });
+        }  
+      } catch (error) {
+        console.error("ERROR_OCCURED_WHILE_UPDATING_PLAN");
+        console.error(error);
+      }
+    }
 
     return (
         <React.Fragment>
-            <ActivityHomeCard title={t("SELECT_AN_ACTIVITY_TO_CONTINUE")} module={activityCardData}/>
+            <ActivityHomeCard title={t("SELECT_AN_ACTIVITY_TO_CONTINUE")} module={activityCardData} onClickCard={onClickCard}/>
         </React.Fragment>
     );
 }
