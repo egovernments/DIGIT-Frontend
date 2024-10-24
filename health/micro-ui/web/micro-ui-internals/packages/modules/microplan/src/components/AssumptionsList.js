@@ -35,7 +35,7 @@ const AssumptionsList = ({ customProps }) => {
                             const [key, value] = Object.entries(item1)[0] || ['NA', 'NA'];
 
                             return (
-                                <div key={`pair_${index}`} className="as-table-row">
+                                <div key={`pair_${index}`} className="as-table-row" style={{ borderBottom: '1px solid #e0e0e0' }} >
                                     <span className="as-table-cell as-key-cell">
                                         <strong>{t(key)}</strong> {/* Display key as label */}
                                     </span>

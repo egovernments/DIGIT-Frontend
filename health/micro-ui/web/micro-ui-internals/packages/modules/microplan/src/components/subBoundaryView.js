@@ -8,7 +8,7 @@ const SubBoundaryView = ({ title, arr }) => {
         <div>
             {
                 arr && arr.length > 0 ? (
-                    <Card>
+                    <Card type={"secondary"}>
                         <HeaderComp title={title} />
                         {/* Flex container for the chips */}
                         <div className="subBoundarycomp-container">

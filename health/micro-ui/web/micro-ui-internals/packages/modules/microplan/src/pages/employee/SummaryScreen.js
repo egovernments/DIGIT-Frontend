@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { EditIcon, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { noConflict } from "lodash";
 
 const SummaryScreen = ({ props: customProps }) => {
     const { t } = useTranslation();
@@ -96,6 +97,7 @@ const SummaryScreen = ({ props: customProps }) => {
             },
             {
                 navigationKey: "card2",
+                noCardStyle:true,
                 sections:
                     [
                         {

@@ -17,7 +17,7 @@ const FormulaView = ({ output, input1, input2, input3 }) => {
       {/* Header component */}
 
       {/* Card Component */}
-      <Card style={{ background: "#FAFAFA" }}>
+      <Card className="card-color">
         {/* Loop through some data to render LabelFieldPair */}
 
         <div >
