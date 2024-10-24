@@ -252,11 +252,12 @@ const PopInboxTable = ({ ...props }) => {
       // paginationDefaultRowsPerPage={rowsPerPage}
       pagination
       paginationServer
+      paginationDefaultPage={props?.currentPage}
       onChangePage={handlePageChange}
       onChangeRowsPerPage={handlePerRowsChange}
       paginationTotalRows={props?.totalRows}
       paginationPerPage={props?.rowsPerPage}
-      paginationRowsPerPageOptions={[5, 10, 15, 20, 25]}
+      paginationRowsPerPageOptions={[10, 20, 50, 100]}
     />
   );
 };
