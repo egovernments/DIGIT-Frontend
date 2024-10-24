@@ -26,7 +26,7 @@ export const config = {
         cardText: "CS_COMPLAINT_SUBTYPE_TEXT",
         submitBarLabel: "CS_COMMON_NEXT",
       },
-      nextStep: "map",
+      nextStep: "address",
     },
     map: {
       component: SelectGeolocation,

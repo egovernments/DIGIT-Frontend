@@ -3,7 +3,9 @@ import { CardLabel, Dropdown, FormStep, RadioButtons } from "@egovernments/digit
 
 const SelectAddress = ({ t, config, onSelect, value }) => {
   const allCities = Digit.Hooks.pgr.useTenants();
-  const cities = value?.pincode ? allCities.filter((city) => city?.pincode?.some((pin) => pin == value["pincode"])) : allCities;
+  
+  // const cities = value?.pincode ? allCities.filter((city) => city?.pincode?.some((pin) => pin == value["pincode"])) : allCities;
+  const cities= allCities.filter((city) => city?.code=="pg.amhara");
 
   const [selectedCity, setSelectedCity] = useState(() => {
     const { city_complaint } = value;
