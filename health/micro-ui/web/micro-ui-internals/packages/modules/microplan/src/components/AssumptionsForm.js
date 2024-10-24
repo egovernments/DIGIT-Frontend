@@ -1,12 +1,13 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, Header, LabelFieldPair } from "@egovernments/digit-ui-react-components";
-import { Dropdown, PopUp, RadioButtons,CardText,Button } from "@egovernments/digit-ui-components";
+import { Dropdown, PopUp, RadioButtons,CardText,Button, Loader } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../utils/context";
 
 const AssumptionsForm = ({ onSelect, ...props }) => {
     const { state } = useMyContext();
     const { t } = useTranslation();
+    const tenantId = Digit.ULBService.getStateId();
     const optionsForProcesses = state.ResourceDistributionStrategy;
     const optionsForRegistrationDistributionMode = state.RegistrationAndDistributionHappeningTogetherOrSeparately;
     const [selectedRegistrationProcess, setSelectedRegistrationProcess] = useState(props?.props?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm?.selectedRegistrationProcess || false);
@@ -17,13 +18,28 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
 
     const [showPopup,setShowPopup] = useState(false)
 
+    const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
+    const { isLoading: isLoadingPlanObject, data: planObject, error: errorPlan, refetch: refetchPlan } = Digit.Hooks.microplanv1.useSearchPlanConfig(
+        {
+          PlanConfigurationSearchCriteria: {
+            tenantId,
+            id: microplanId,
+          },
+        },
+        {
+          enabled: microplanId ? true : false,
+          cacheTime:0
+        //   queryKey: currentKey,
+        }
+      );
+
     //to show alert
     useEffect(() => {
       //if there are any assumptions filled show this popup by default
-      if(props.props.sessionData?.HYPOTHESIS?.Assumptions?.assumptionValues.length > 0){
+      if(planObject?.assumptions?.length>0){
         setShowPopup(true)
       }
-    }, [])
+    }, [planObject,isLoadingPlanObject])
     
 
     useEffect(() => {
@@ -58,6 +74,10 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
     ? optionsForProcesses.filter(option => option.resourceDistributionStrategyName !== "Fixed post & House-to-House")
         : optionsForProcesses;
    
+    if(isLoadingPlanObject){
+        return <Loader/>
+    }
+
 
     return (
         <Card>
