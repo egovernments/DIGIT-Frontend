@@ -34,6 +34,7 @@ const WorkbenchBreadCrumb = ({ location, defaultPath,initialContextPath }) => {
       path: getHomePath(),
       content: t("WORKBENCH_HOME"),
       show: true,
+      externalPath: true
     },
     {
       path: `/${window.contextPath}/employee/workbench/manage-master-data`,
