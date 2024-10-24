@@ -49,11 +49,12 @@ const SecurityPopUp = ({ onClose, census, onSuccess }) => {
   };
 
   // Check if the answers have changed from the initial values
-  const isChanged = () => {
+  const isChanged = React.useMemo(() => {
+    if (!answers || !initialAnswers) return false;
     return Object.keys(answers).some(
       (key) => answers[key] !== initialAnswers[key]
     );
-  };
+  }, [answers, initialAnswers]);
 
   // Use the custom mutation hook
   const mutation = Digit.Hooks.useCustomAPIMutationHook({
@@ -139,7 +140,7 @@ const SecurityPopUp = ({ onClose, census, onSuccess }) => {
             variation={"primary"}
             label={t(`HCM_MICROPLAN_VILLAGE_SECURITY_SAVE_LABEL`)}
             onClick={handleSave} // Calls save function on click
-            isDisabled={!isChanged() || mutation.isLoading} // Disable if no changes are made or during API call
+            isDisabled={!isChanged || mutation.isLoading} // Disable if no changes are made or during API call
           />,
         ]}
       />

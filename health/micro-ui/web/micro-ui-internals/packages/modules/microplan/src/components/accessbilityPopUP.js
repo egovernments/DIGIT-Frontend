@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { PopUp, Button, Dropdown, LabelFieldPair, Card, Toast } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../utils/context"; // Ensure that the translation function `t` is handled here
@@ -17,7 +17,7 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
 
   useEffect(() => {
     if (census?.additionalDetails?.accessibilityDetails) {
-      const { roadCondition, terrain, transportationMode } = census.additionalDetails.accessibilityDetails;
+      const { roadCondition, terrain, transportationMode } = census?.additionalDetails?.accessibilityDetails || {};
       setDropdown1Value(roadCondition);
       setDropdown2Value(terrain);
       setDropdown3Value(transportationMode);
@@ -70,13 +70,13 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
   };
 
   // Check if dropdown values have changed from the initial values
-  const isChanged = () => {
+  const isChanged = React.useCallback(() => {
     return (
       dropdown1Value !== initialValues.roadCondition ||
       dropdown2Value !== initialValues.terrain ||
       dropdown3Value !== initialValues.transportationMode
     );
-  };
+  }, [dropdown1Value, dropdown2Value, dropdown3Value, initialValues]);
 
   // Define the mutation configuration
   const mutation = Digit.Hooks.useCustomAPIMutationHook({
