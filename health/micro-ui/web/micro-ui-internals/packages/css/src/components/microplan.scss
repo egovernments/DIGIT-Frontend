@@ -128,15 +128,29 @@
 }
 
 
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.edit-button {
+  background-color: transparent;
+  border: none;
+  color: #f58220; /* Orange color for the Edit button */
+  cursor: pointer;
+}
+
 .as-table-like {
   display: table;
   width: 100%;
-  border-collapse: collapse; /* Ensure borders touch */
+  border-collapse: collapse;
 }
 
 .as-table-row {
   display: table-row;
-  border-bottom: 1px solid #161515; /* Adds line between each row */
+  border-bottom: 1px solid #161515;
 }
 
 .as-table-cell {
@@ -147,11 +161,12 @@
 
 .as-key-cell {
   font-weight: bold;
-  width: 40%; /* Adjusted width for the key column */
+  width: 50%;
+  background-color: #fff;
 }
 
 .as-value-cell {
-  width: 60%; /* Adjusted width for the value column */
+  width: 50%;
 }
 
 .mc_back {
@@ -166,4 +181,8 @@
 
 .card-color {
   background-color: #FAFAFA !important;
+}
+
+.marginBottom{
+  margin-bottom: 1rem;
 }

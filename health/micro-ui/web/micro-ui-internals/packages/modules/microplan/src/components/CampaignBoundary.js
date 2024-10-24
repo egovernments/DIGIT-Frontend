@@ -294,21 +294,23 @@ const CampaignBoundary = ({ customProps }) => {
             <BoundaryKpi data={statusMap} />
             {
                 bHierarchy.length > 1 ?
-                    (<Card>
+                    (
 
 
                         <SubBoundaryView
+                            style={{background:"#fff"}}
                             title={bHierarchy[1]}
                             arr={parent_group[bHierarchy[1]]}
                         />
 
-                    </Card>) : (null)
+                        ) : (null)
             }
 
 
 
 {bHierarchy.length > 1 && bHierarchy.slice(1, -1).map((item, ind) => (
     <div key={`header_${ind}`}>
+        <Card className="marginBottom">
         <HeaderComp title={bHierarchy[ind + 2]} /> {/* Wrap each bHierarchy item with Card */}
 
         {
@@ -346,6 +348,7 @@ const CampaignBoundary = ({ customProps }) => {
                 </div>
             ) : null
         }
+        </Card>
     </div>
 ))}
 
