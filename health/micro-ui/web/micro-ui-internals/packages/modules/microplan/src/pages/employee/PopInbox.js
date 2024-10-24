@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { useHistory } from "react-router-dom";
 import PopInboxTable from "../../components/PopInboxTable";
-import { Card, Tab, Button, SVG, Loader, ActionBar } from "@egovernments/digit-ui-components";
+import { Card, Tab, Button, SVG, Loader, ActionBar, Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
@@ -28,6 +28,7 @@ const PopInbox = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [totalRows, setTotalRows] = useState(0);
+  const [showToast, setShowToast] = useState(null);
   const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   const [activeLink, setActiveLink] = useState({
@@ -189,7 +190,7 @@ const PopInbox = () => {
         tenantId: tenantId,
         source: microplanId,
         status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
-        assignee: activeLink.code === "ASSIGNED_TO_ME" ? user?.info?.uuid : "",
+        assignee: activeLink.code === "ASSIGNED_TO_ME" && selectedFilter !== "PENDING_FOR_VALIDATION" ? user?.info?.uuid : "",
         jurisdiction: jurisdiction,
         limit: limitAndOffset?.limit,
         offset: limitAndOffset?.offset
@@ -219,23 +220,20 @@ const PopInbox = () => {
       setVillagesSelected(0);
       setSelectedRows([]);
     }
-  }, [data, selectedFilter, activeFilter]);
+  }, [data, selectedFilter, activeFilter, activeLink]);
 
   useEffect(() => {
     if (jurisdiction?.length > 0) {
       refetch(); // Trigger the API call again after activeFilter changes
     }
-  }, [selectedFilter, activeLink, jurisdiction, limitAndOffset]);
+  }, [selectedFilter, jurisdiction, limitAndOffset]);
 
   useEffect(() => {
-    if (selectedFilter === "PENDING_FOR_VERIFICATION") {
+    if (selectedFilter === "PENDING_FOR_VALIDATION") {
       setActiveLink({ code: "", name: "" });
       setShowTab(false);
     }
   }, [selectedFilter]);
-
-  useEffect(() => {
-  }, [showTab]);
 
 
   const onFilter = (selectedStatus) => {
@@ -388,7 +386,15 @@ const PopInbox = () => {
                     submitLabel={t(`SEND_FOR_${workFlowPopUp}`)}
                     url="/census-service/bulk/_update"
                     requestPayload={{ Census: updateWorkflowForSelectedRows() }}
-                    commentPath="workflow.comment"
+                    commentPath="workflow.comments"
+                    onSuccess={(data) => {
+                      closePopUp
+                      setShowToast({ key: "success", label: t("WORKFLOW_UPDATE_SUCCESS"), transitionTime: 5000 });
+                      refetch();
+                    }}
+                    onError={(data) => {
+                      setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+                    }}
                   />
                 )}
               </div>
@@ -428,7 +434,7 @@ const PopInbox = () => {
           submitLabel={t(`HCM_MICROPLAN_FINALIZE_POPULATION_DATA`)}
           url="/plan-service/config/_update"
           requestPayload={{ PlanConfiguration: updateWorkflowForFooterAction() }}
-          commentPath="workflow.comment"
+          commentPath="workflow.comments"
           onSuccess={(data) => {
             history.push(`/${window.contextPath}/employee/microplan/population-finalise-success`, {
               fileName: 'filename', // need to update when api is success
@@ -437,6 +443,19 @@ const PopInbox = () => {
               backlink: "/employee"
             });
           }}
+          onError={(data) => {
+            setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+          }}
+        />
+      )}
+
+      {showToast && (
+        <Toast style={{ zIndex: 10001 }}
+          label={showToast.label}
+          type={showToast.key}
+          // error={showToast.key === "error"}
+          transitionTime={showToast.transitionTime}
+          onClose={() => setShowToast(null)}
         />
       )}
 
