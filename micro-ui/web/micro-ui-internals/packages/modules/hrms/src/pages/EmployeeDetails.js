@@ -63,8 +63,6 @@ const Details = () => {
     return <Loader />;
   }
 
-  console.log(":data of the employee", data);
-  console.log("role data is", data?.Employees?.[0]?.user.roles.map((ele) => t(`ACCESSCONTROL_ROLES_ROLES_` + ele?.code)));
 
   return (
     <React.Fragment>
