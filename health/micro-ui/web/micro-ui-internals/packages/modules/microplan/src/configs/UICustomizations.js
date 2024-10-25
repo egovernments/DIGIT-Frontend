@@ -101,7 +101,7 @@ export const UICustomizations = {
                 // Use window.location.href to navigate
                 window.location.href = `/${
                   window.contextPath
-                }/employee/microplan/setup-microplan?key=${1}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${
+                }/employee/microplan/setup-microplan?key=${1}&microplanId=${row.id}&campaignId=${
                   row.CampaignDetails.id
                 }`;
               }
@@ -109,7 +109,7 @@ export const UICustomizations = {
                 // Use window.location.href to navigate
                 window.location.href = `/${
                   window.contextPath
-                }/employee/microplan/setup-microplan?key=${10}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${
+                }/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${
                   row.CampaignDetails.id
                 }`;
               }
@@ -138,12 +138,56 @@ export const UICustomizations = {
         } else {
           return (
             <div>
-              <p>NA</p>
+              <p>{t("NA")}</p>
             </div>
           );
         }
       }
-    },
+      if(key==="MICROPLAN_STATUS"){
+        if(value &&value!="NA"){
+        return t(value)
+        }
+      else {
+        return (
+          <div>
+            <p>{t("NA")}</p>
+          </div>
+        );
+      }
+    }
+      if(key==="CAMPAIGN_DISEASE"){
+        if(value &&value!="NA"){
+        return t(value)
+        }else {
+        return (
+          <div>
+            <p>{t("NA")}</p>
+          </div>
+        );
+      }}
+      if(key==="CAMPAIGN_TYPE"){
+        if(value &&value!="NA"){
+        return t(value)
+        }else {
+        return (
+          <div>
+            <p>{t("NA")}</p>
+          </div>
+        );
+      }
+    }
+    if(key==="DISTIRBUTION_STRATEGY"){
+      if(value &&value!="NA"){
+      return t(value)
+      }else {
+      return (
+        <div>
+          <p>{t("NA")}</p>
+        </div>
+      );
+    }
+  }
+  },
   },
   MyMicroplanSearchConfig: {
     preProcess: (data, additionalDetails) => {
@@ -264,6 +308,7 @@ export const UICustomizations = {
         default:
           return t("ES_COMMON_NA");
       }
+      
     },
   },
 

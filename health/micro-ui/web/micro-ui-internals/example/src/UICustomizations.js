@@ -1,8 +1,10 @@
 import _ from "lodash";
 import { useLocation, useHistory, Link, useParams } from "react-router-dom";
-import React from "react";
+import React, { useState, Fragment } from "react";
 import { Dropdown } from "@egovernments/digit-ui-components";
 import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader, EditIcon, ArrowForward } from "@egovernments/digit-ui-react-components";
+import { Button as ButtonNew } from "@egovernments/digit-ui-components";
+
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
@@ -816,7 +818,7 @@ export const UICustomizations = {
                 // Use window.location.href to navigate
                 window.location.href = `/${
                   window.contextPath
-                }/employee/microplan/setup-microplan?key=${1}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${
+                }/employee/microplan/setup-microplan?key=${1}&microplanId=${row.id}&campaignId=${
                   row.CampaignDetails.id
                 }`;
               }
@@ -824,7 +826,7 @@ export const UICustomizations = {
                 // Use window.location.href to navigate
                 window.location.href = `/${
                   window.contextPath
-                }/employee/microplan/setup-microplan?key=${10}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${
+                }/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${
                   row.CampaignDetails.id
                 }`;
               }
@@ -853,12 +855,56 @@ export const UICustomizations = {
         } else {
           return (
             <div>
-              <p>NA</p>
+              <p>{t("NA")}</p>
             </div>
           );
         }
       }
-    },
+      if(key==="MICROPLAN_STATUS"){
+        if(value &&value!="NA"){
+        return t(value)
+        }
+      else {
+        return (
+          <div>
+            <p>{t("NA")}</p>
+          </div>
+        );
+      }
+    }
+      if(key==="CAMPAIGN_DISEASE"){
+        if(value &&value!="NA"){
+        return t(value)
+        }else {
+        return (
+          <div>
+            <p>{t("NA")}</p>
+          </div>
+        );
+      }}
+      if(key==="CAMPAIGN_TYPE"){
+        if(value &&value!="NA"){
+        return t(value)
+        }else {
+        return (
+          <div>
+            <p>{t("NA")}</p>
+          </div>
+        );
+      }
+    }
+    if(key==="DISTIRBUTION_STRATEGY"){
+      if(value &&value!="NA"){
+      return t(value)
+      }else {
+      return (
+        <div>
+          <p>{t("NA")}</p>
+        </div>
+      );
+    }
+  }
+  },
   },
   MyMicroplanSearchConfig: {
     preProcess: (data, additionalDetails) => {
@@ -1022,10 +1068,10 @@ export const UICustomizations = {
       }
 
       data.params.names = name;
-
-      data.params.phone = phone;
       data.params.sortOrder = "DESC";
       data.params.sortBy = "lastModifiedTime";
+
+      data.params.phone = phone;
 
       data.params.roles = rolesString;
       data.params.tenantId = Digit.ULBService.getCurrentTenantId();
@@ -1087,15 +1133,13 @@ export const UICustomizations = {
       }
     },
   },
-  MyMicroplanSearchConfigOverridePlan: {
-    test: "yes",
-  },
   FacilityMappingConfig: {
     preProcess: (data) => {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       const [showPopup, setShowPopup] = useState(false);
+      const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
 
       switch (key) {
         case "MICROPLAN_FACILITY_ASSIGNED_VILLAGES":

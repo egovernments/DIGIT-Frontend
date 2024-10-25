@@ -211,7 +211,7 @@ function UserAccess({ category, setData, nationalRoles }) {
         <PopUp
           className={"roleComposer"}
           type={"default"}
-          heading={t(`${category}`)}
+          heading={t(`${category}_POPUP_HEADING`)}
           children={[<RoleTableComposer category={category} nationalRoles={nationalRoles} />]}
           onOverlayClick={() => {}}
           footerChildren={[<Button type={"button"} size={"large"} variation={"secondary"} label={t("CLOSE")} onClick={() => setShowPopUp(false)} />]}

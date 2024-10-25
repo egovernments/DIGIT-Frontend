@@ -79,6 +79,7 @@ const SummaryScreen = ({ props: customProps }) => {
       },
       {
         navigationKey: "card2",
+        noCardStyle: "true",
         sections: [
           {
             type: "COMPONENT",
@@ -141,7 +142,9 @@ const SummaryScreen = ({ props: customProps }) => {
           {
             type: "COMPONENT",
             component: "FormulaConfigScreen",
-            props: {},
+            props: {
+              customProps,
+            },
           },
         ],
       },
@@ -253,7 +256,7 @@ const SummaryScreen = ({ props: customProps }) => {
           code: "USER_ACCESS_MGMT",
         },
       ],
-      activeByDefault: "card7",
+      activeByDefault: "card1",
     },
   };
 

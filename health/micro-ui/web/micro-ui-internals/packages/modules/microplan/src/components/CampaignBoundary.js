@@ -288,31 +288,33 @@ const CampaignBoundary = ({ customProps }) => {
     <div>
       <BoundaryKpi data={statusMap} />
       {bHierarchy.length > 1 ? (
-        <Card>
-          <SubBoundaryView title={bHierarchy?.[1]} arr={parent_group?.[bHierarchy?.[1]]} />
-        </Card>
+        <div className="marginBottom">
+          <SubBoundaryView style={{ background: "#fff" }} title={bHierarchy?.[1]} arr={parent_group?.[bHierarchy?.[1]]} />
+        </div>
       ) : null}
 
       {bHierarchy.length > 1 &&
         bHierarchy.slice(1, -1).map((item, ind) => (
           <div key={`header_${ind}`}>
-            <HeaderComp title={bHierarchy[ind + 2]} /> {/* Wrap each bHierarchy item with Card */}
-            {parent_group?.[item]?.map((item1, idx) =>
-              Array.isArray(parents?.[item1]) && boundaryStatus?.[ind + 2] && (idx === 0 || idx === 1) ? (
-                <SubBoundaryView key={`${item1}_${idx}`} title={item1} arr={parents?.[item1]} />
-              ) : Array.isArray(parents?.[item1]) && !boundaryStatus?.[ind + 2] ? (
-                <SubBoundaryView key={`${item1}_${idx}`} title={item1} arr={parents?.[item1]} />
-              ) : null
-            ) || null}
-            {boundaryStatus?.[ind + 2] && parent_group[item]?.length > 2 ? (
-              <div onClick={() => handleViewMore(ind + 2)} className="view-more">
-                View More
-              </div>
-            ) : !boundaryStatus?.[ind + 2] ? (
-              <div onClick={() => handleViewMore(ind + 2)} className="view-more">
-                View Less
-              </div>
-            ) : null}
+            <Card className="marginBottom">
+              <HeaderComp title={bHierarchy[ind + 2]} /> {/* Wrap each bHierarchy item with Card */}
+              {parent_group?.[item]?.map((item1, idx) =>
+                Array.isArray(parents?.[item1]) && boundaryStatus?.[ind + 2] && (idx === 0 || idx === 1) ? (
+                  <SubBoundaryView key={`${item1}_${idx}`} title={item1} arr={parents?.[item1]} />
+                ) : Array.isArray(parents?.[item1]) && !boundaryStatus?.[ind + 2] ? (
+                  <SubBoundaryView key={`${item1}_${idx}`} title={item1} arr={parents?.[item1]} />
+                ) : null
+              ) || null}
+              {boundaryStatus?.[ind + 2] && parent_group[item]?.length > 2 ? (
+                <div onClick={() => handleViewMore(ind + 2)} className="view-more">
+                  {t("VIEW_MORE")}
+                </div>
+              ) : !boundaryStatus?.[ind + 2] ? (
+                <div onClick={() => handleViewMore(ind + 2)} className="view-more">
+                  {t("VIEW_LESS")}
+                </div>
+              ) : null}
+            </Card>
           </div>
         ))}
     </div>
