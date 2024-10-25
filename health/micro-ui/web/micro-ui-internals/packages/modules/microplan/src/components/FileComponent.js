@@ -1,12 +1,12 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { EditIcon } from "@egovernments/digit-ui-react-components";
-import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader } from "@egovernments/digit-ui-react-components";
+import { DeleteIconv2, DownloadIcon, FileIcon, Card, CardSubHeader } from "@egovernments/digit-ui-react-components";
+import { Button } from "@egovernments/digit-ui-components";
 
 const FileComponent = ({ title, fileName, auditDetails, editHandler, deleteHandler, downloadHandler }) => {
     const { t } = useTranslation();
     const { userName, lastmodTime } = auditDetails || {}; // Destructuring the audit details for easy access
-    console.log("filestore", fileName);
     return (
         <div>
 
@@ -15,7 +15,7 @@ const FileComponent = ({ title, fileName, auditDetails, editHandler, deleteHandl
                 <CardSubHeader style={{ marginTop: 0, fontSize: "1.5rem", color: " #0B4B66", marginBottom: "0rem" }}>{title}</CardSubHeader>
             </div>
 
-            <Card>
+            <Card type={"secondary"} className="card-color">
                 <div className="dm-parent-container">
                     {/* Left side: File Icon */}
                     <div
@@ -72,10 +72,10 @@ const FileComponent = ({ title, fileName, auditDetails, editHandler, deleteHandl
                             <Button
                                 label={t("WBH_DOWNLOAD")}
                                 variation="secondary"
-                                icon={<DownloadIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
+                                icon={"FileDownload"}
                                 type="button"
                                 className="dm-workbench-download-template-btn dm-hover"
-                                onButtonClick={(e) => {
+                                onClick={(e) => {
                                     downloadHandler();
                                 }}
                             />

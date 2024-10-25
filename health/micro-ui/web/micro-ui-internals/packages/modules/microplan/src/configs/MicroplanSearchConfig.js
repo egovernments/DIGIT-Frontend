@@ -79,18 +79,22 @@ const defaultSearchValues = {
                 {
                   label: "MICROPLAN_STATUS",
                   jsonPath: "status",
+                  additionalCustomization:true
                 },
                 {
                   label: "CAMPAIGN_DISEASE",
                   jsonPath:  "additionalDetails.disease",
+                  additionalCustomization:true
                 },
                 {
                   label:"CAMPAIGN_TYPE",
-                  jsonPath:"additionalDetails.campaignType"
+                  jsonPath:"additionalDetails.campaignType",
+                  additionalCustomization:true
                 },
                 {
                   label:"DISTIRBUTION_STRATEGY",
-                  jsonPath:"additionalDetails.resourceDistributionStrategyCode"
+                  jsonPath:"additionalDetails.resourceDistributionStrategyCode",
+                  additionalCustomization:true
                 },
                 {
                   label:"ACTIONS",
@@ -105,7 +109,7 @@ const defaultSearchValues = {
             },
             show: true,
           },
-         // customHookName: "microplanv1.useSavedMicroplans",  //! Note
+         // customHookName: "microplanv1.useSavedMicroplans", 
           
         },
         customHookName:"microplanv1.useSavedMicroplans"

@@ -4,7 +4,7 @@ import { Card, Button, PopUp, Chip, Loader } from '@egovernments/digit-ui-compon
 import { ShowMoreWrapper } from './ShowMoreWrapper';
 import { useTranslation } from 'react-i18next';
 
-const SubBoundaryView = ({ title, arr }) => {
+const SubBoundaryView = ({ title, arr,style }) => {
     const [showPopUp, setShowPopUp] = useState(false);
     const { t } = useTranslation();
 
@@ -16,7 +16,7 @@ const SubBoundaryView = ({ title, arr }) => {
         <div>
             {
                 arr && arr.length > 0 ? (
-                    <Card>
+                    <Card type={"secondary"} style={style}>
                         <HeaderComp title={title} />
                         {/* Flex container for the chips */}
                         <div className="digit-tag-container userAccessCell">
