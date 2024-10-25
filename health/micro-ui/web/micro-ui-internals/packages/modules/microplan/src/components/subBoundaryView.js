@@ -3,12 +3,12 @@ import HeaderComp from './HeaderComp';
 import { Card } from '@egovernments/digit-ui-components';
 import { Chip } from '@egovernments/digit-ui-components';
 
-const SubBoundaryView = ({ title, arr }) => {
+const SubBoundaryView = ({ title, arr,style }) => {
     return (
         <div>
             {
                 arr && arr.length > 0 ? (
-                    <Card type={"secondary"}>
+                    <Card type={"secondary"} style={style}>
                         <HeaderComp title={title} />
                         {/* Flex container for the chips */}
                         <div className="subBoundarycomp-container">

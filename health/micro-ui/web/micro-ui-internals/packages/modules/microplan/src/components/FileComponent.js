@@ -75,7 +75,7 @@ const FileComponent = ({ title, fileName, auditDetails, editHandler, deleteHandl
                                 icon={"FileDownload"}
                                 type="button"
                                 className="dm-workbench-download-template-btn dm-hover"
-                                onButtonClick={(e) => {
+                                onClick={(e) => {
                                     downloadHandler();
                                 }}
                             />

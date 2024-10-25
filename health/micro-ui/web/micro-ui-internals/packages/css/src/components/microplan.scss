@@ -146,6 +146,7 @@
   display: table;
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
 }
 
 .as-table-row {
@@ -157,16 +158,23 @@
   display: table-cell;
   padding: 10px;
   vertical-align: top;
+  box-sizing: border-box; 
 }
 
 .as-key-cell {
   font-weight: bold;
-  width: 50%;
+  min-width: 20rem;  /* Reduced width to allocate more space for value */
   background-color: #fff;
+  overflow: hidden;  /* Ensure content doesn't overflow */
+  text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+  white-space: nowrap; /* Prevent text from wrapping */
 }
 
 .as-value-cell {
-  width: 50%;
+  width: 70%; /* More width allocated to value */
+  overflow: hidden;  /* Ensure long text doesn’t overflow */
+  text-overflow: ellipsis; /* Show ellipsis for overflowed content */
+  white-space: nowrap; /* Prevent text from wrapping */
 }
 
 .mc_back {
@@ -185,4 +193,13 @@
 
 .marginBottom{
   margin-bottom: 1rem;
+}
+
+.as-label-field { 
+  display: grid;               /* Enable grid layout */
+  grid-template-columns: 1fr 2fr; /* Define two columns with different widths */
+  gap: 0rem;                  /* Space between items (adjust as needed) */
+  overflow: auto;             /* Allow overflow if content is larger */
+  align-items: center;
+  border-bottom: '1px solid #e0e0e0'        /* Align items vertically in the center */
 }
