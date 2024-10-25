@@ -4,7 +4,6 @@ import React, { useState, Fragment } from "react";
 import { Dropdown } from "@egovernments/digit-ui-components";
 import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader, EditIcon, ArrowForward } from "@egovernments/digit-ui-react-components";
 import { Button as ButtonNew } from "@egovernments/digit-ui-components";
-import FacilityPopUp from "../components/FacilityPopup";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
@@ -18,6 +17,8 @@ const businessServiceMap = {
 const inboxModuleNameMap = {
   "muster-roll-approval": "muster-roll-service",
 };
+
+const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
 
 function filterUniqueByKey(arr, key) {
   const uniqueValues = new Set();
