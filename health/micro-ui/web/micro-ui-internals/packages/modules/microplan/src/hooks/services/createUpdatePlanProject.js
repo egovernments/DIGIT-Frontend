@@ -583,7 +583,7 @@ const createUpdatePlanProject = async (req) => {
           state:{
             message:"SETUP_COMPLETED",
             back:"BACK_TO_HOME",
-            backlink:`${window.contextPath}/employee`,
+            backlink:`/${window.contextPath}/employee`,
             description:"SETUP_MICROPLAN_SUCCESS_RESPONSE_DESC"
           }
         };
