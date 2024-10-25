@@ -138,7 +138,7 @@ export const UICustomizations = {
         } else {
           return (
             <div>
-              <p>NA</p>
+              <p>{t(NA)}</p>
             </div>
           );
         }
@@ -150,7 +150,7 @@ export const UICustomizations = {
       else {
         return (
           <div>
-            <p>NA</p>
+            <p>{t(NA)}</p>
           </div>
         );
       }
@@ -161,7 +161,7 @@ export const UICustomizations = {
         }else {
         return (
           <div>
-            <p>NA</p>
+            <p>{t(NA)}</p>
           </div>
         );
       }}
@@ -171,7 +171,7 @@ export const UICustomizations = {
         }else {
         return (
           <div>
-            <p>NA</p>
+            <p>{t(NA)}</p>
           </div>
         );
       }
@@ -182,7 +182,7 @@ export const UICustomizations = {
       }else {
       return (
         <div>
-          <p>NA</p>
+          <p>{t(NA)}</p>
         </div>
       );
     }
@@ -308,6 +308,7 @@ export const UICustomizations = {
         default:
           return t("ES_COMMON_NA");
       }
+      
     },
   },
 
