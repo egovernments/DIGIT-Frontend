@@ -299,8 +299,8 @@ useEffect(() => {
           "ROLE_ACCESS_CONFIGURATION",
           "SUMMARY",
         ]}
+        onStepClick={() => null}
         currentStep={currentStep + 1}
-        onStepClick={onStepClick}
         activeSteps={active}
       />
       <FormComposerV2

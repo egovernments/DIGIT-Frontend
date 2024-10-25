@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import DataTable from 'react-data-table-component';
+import { tableCustomStyle } from '../../components/tableCustomStyle';
 // import React, { useState } from 'react';
 
 const SimpleCheckbox = () => {
@@ -49,38 +50,6 @@ const columns = [
     cell: row => <a onClick={()=>{console.log(row)}} href="#">View Logs</a>,
   },
 ];
-const customStyles = {
-	header: {
-		style: {
-			minHeight: '56px',
-		},
-	},
-	headRow: {
-		style: {
-			borderTopStyle: 'solid',
-			borderTopWidth: '1px',
-			borderTopColor: "#D6D5D4"
-		},
-	},
-	headCells: {
-		style: {
-			'&:not(:last-of-type)': {
-				borderRightStyle: 'solid',
-				borderRightWidth: '1px',
-				borderRightColor: "#D6D5D4",
-			},
-		},
-	},
-	cells: {
-		style: {
-			'&:not(:last-of-type)': {
-				borderRightStyle: 'solid',
-				borderRightWidth: '1px',
-				borderRightColor: "#D6D5D4",
-			},
-		},
-	},
-};
 
 const TableNew = () => {
 	const [data, setData] = useState([]);
@@ -136,7 +105,7 @@ const TableNew = () => {
 			onChangePage={handlePageChange}
       noContextMenu
       onSelectedRowsChange={handleRowSelect}
-      customStyles={customStyles}
+	  customStyles={tableCustomStyle}
       // selectableRowsComponent={SimpleCheckbox}
 		/>
 	);

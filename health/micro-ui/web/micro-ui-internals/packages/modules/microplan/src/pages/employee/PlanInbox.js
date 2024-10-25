@@ -502,8 +502,6 @@ const PlanInbox = () => {
               paginationTotalRows={totalRows}
               paginationPerPage={rowsPerPage}
               paginationRowsPerPageOptions={[10, 20, 50, 100]}
-              // selectableRowsComponent={SimpleCheckbox}
-              // selectableRowsComponent={SimpleCheckbox}
             />
           </Card>
         </div>

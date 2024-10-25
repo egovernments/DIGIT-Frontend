@@ -224,6 +224,9 @@ const fetchcd = async (tenantId, projectId) => {
         },
       ],
     },
+    config:{
+      enabled: projectId ? true: false
+    }
   };
   try {
     const res = await Digit.CustomService.getResponse(reqCriteriaResource);
@@ -318,7 +321,7 @@ const CampaignSummary = (props) => {
   // }, [props?.props?.summaryErrors]);
 
   useEffect(() => {
-    const fun = async () => {
+    const fetchData = async () => {
       let temp = await fetchcd(tenantId, projectId);
       if (temp) {
         await new Promise((resolve) => {
@@ -329,8 +332,12 @@ const CampaignSummary = (props) => {
         });
       }
     };
-    fun();
+
+    if (projectId) {
+      fetchData();
+    }
   }, [projectId]);
+
 
   const { isLoading, data, error, refetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,

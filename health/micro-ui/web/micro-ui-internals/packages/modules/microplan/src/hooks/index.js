@@ -19,6 +19,8 @@ import usePlanSearchEmployeeWithTagging from "./usePlanSearchEmployeeWithTagging
 import useSavedMicroplansWithCampaign from "./useSavedMicroplansWithCampaign";
 import usePlanSearchWithCensus from "./usePlanSearchWithCensus";
 
+import useFcilityCatchmentMapping from "./useFacilityCatchmentMapping";
+
 const microplanv1 = {
   useCreatePlanConfig,
   useSearchPlanConfig,
@@ -37,7 +39,8 @@ const microplanv1 = {
   usePlanSearchEmployee,
   usePlanSearchEmployeeWithTagging,
   useSavedMicroplansWithCampaign,
-  usePlanSearchWithCensus
+  usePlanSearchWithCensus,
+  useFcilityCatchmentMapping
 };
 
 const Hooks = {
