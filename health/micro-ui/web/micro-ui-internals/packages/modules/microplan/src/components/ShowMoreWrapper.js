@@ -1,5 +1,5 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { Button, PopUp, Chip, Loader,} from "@egovernments/digit-ui-components";
+import React from "react";
+import { PopUp, Chip,} from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 
 
@@ -23,7 +23,7 @@ export const ShowMoreWrapper = ({ setShowPopUp, alreadyQueuedSelectedState, head
        }}
        >
        <div className="digit-tag-container userAccessCell">
-      {alreadyQueuedSelectedState?.map((item, index) => (
+      {Array.isArray(alreadyQueuedSelectedState) && alreadyQueuedSelectedState?.map((item, index) => (
                <Chip 
                 key={index} 
                 text={t(item)} 

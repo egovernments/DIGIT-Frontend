@@ -58,12 +58,12 @@ const UserDownload = () => {
                 <HeaderComp title="DOWNLOAD_USER_DATA" styles={{ color: "black" }} />
                 <TextBlock body={t("DOWNLOAD_DESC")} />
                     {data?.ResourceDetails &&
-                        [...data?.ResourceDetails].reverse().map((item, index) => {
-                            let fileName = item?.additionalDetails?.fileName || `FileNo${item?.processedFilestoreId?.slice(0, 4) || ''}`;
-                            
+                        (data?.ResourceDetails || []).slice().reverse().map((item, index) => {
+                            let fileName = item?.additionalDetails?.fileName || `${t("FILE_NO")}${item?.processedFilestoreId?.slice(0, 4) || ''}`;
 
                             return (
                             <FileComponent
+                                key={index}
                                 title=""
                                 fileName={fileName}
                                 downloadHandler={() => {
