@@ -106,7 +106,7 @@ const PlanInbox = () => {
         jurisdiction: jurisdiction,
         status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
         assignee: activeLink.code === "ASSIGNED_TO_ME" ? user?.info?.uuid : "",
-        executionPlanId: microplanId, //list of plan ids
+        planConfigurationId: microplanId, //list of plan ids
         limit: limitAndOffset?.limit,
         offset: limitAndOffset?.offset,
       },
@@ -288,9 +288,6 @@ const PlanInbox = () => {
     setworkFlowPopUp(action);
   };
 
-  if (isPlanWithCensusLoading || isPlanEmpSearchLoading || isLoadingCampaignObject || isWorkflowLoading) {
-    return <Loader />;
-  }
   const resources = planWithCensus?.planData?.[0]?.resources || []; // Resources array
   const resourceColumns = resources.map((resource) => ({
     name: t(`RESOURCE_TYPE_${resource.resourceType}`), // Dynamic column name for each resourceType
@@ -472,12 +469,13 @@ const PlanInbox = () => {
                     heading={t(`SEND_FOR_${workFlowPopUp}`)}
                     submitLabel={t(`SEND_FOR_${workFlowPopUp}`)}
                     url="/plan-service/plan/bulk/_update"
-                    requestPayload={{ Plan: updateWorkflowForSelectedRows() }}
+                    requestPayload={{ Plans: updateWorkflowForSelectedRows() }}
                     commentPath="workflow.comment"
                   />
                 )}
               </div>
             )}
+            {(isPlanWithCensusLoading || isPlanEmpSearchLoading || isLoadingCampaignObject) ? <Loader /> : null }
             <DataTable
               columns={columns}
               data={planWithCensus?.tableData}
