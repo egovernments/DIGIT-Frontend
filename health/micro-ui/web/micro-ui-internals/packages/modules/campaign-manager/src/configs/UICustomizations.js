@@ -85,11 +85,11 @@ export const UICustomizations = {
 
             // const switchText = localIsActive ? "Active" : "Inactive";
             return (
-              <Switch
+              row?.ServiceRequest?.[0]?(<Switch
                 isCheckedInitially={row?.ServiceRequest?.[0]?.isActive}
                 label={""}
                 onToggle={toggle}
-              />
+              />):(<>{t("CHECKLIST_TOBE_CONFIGURED")}</>)
             );
         case "ACTION":
           const role_code = row?.data?.role;
