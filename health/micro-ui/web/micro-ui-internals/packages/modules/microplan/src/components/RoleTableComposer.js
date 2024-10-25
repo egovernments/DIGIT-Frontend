@@ -7,15 +7,37 @@ import { useUserAccessContext } from "./UserAccessWrapper";
 import { useMyContext } from "../utils/context";
 import { useQueryClient } from "react-query";
 import { tableCustomStyle } from "./tableCustomStyle";
+import styled, { keyframes } from "styled-components";
 
-function LoaderOverlay() {
+const rotate360 = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+`;
+const Spinner = styled.div`
+  margin: 16px;
+  animation: ${rotate360} 1s linear infinite;
+  transform: translateZ(0);
+  border-top: 2px solid grey;
+  border-right: 2px solid grey;
+  border-bottom: 2px solid grey;
+  border-left: 4px solid black;
+  background: transparent;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+`;
+function CustomLoader() {
   return (
-    <div className="loader-overlay">
-      <div className="loader-spinner"></div>
+    <div style={{ padding: "24px" }}>
+      <Spinner />
     </div>
   );
 }
-
 function RoleTableComposer({ nationalRoles }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -141,7 +163,7 @@ function RoleTableComposer({ nationalRoles }) {
                 ...i,
                 selectedHierarchy: value,
                 boundaryOptions,
-                selectedBoundaries: i.selectedBoundaries || [], // Keep existing selected boundaries
+                selectedBoundaries: [], // Keep existing selected boundaries
               }
             : i
         );
@@ -385,6 +407,9 @@ function RoleTableComposer({ nationalRoles }) {
     refetchHrms(); // Fetch the updated data with the new rows per page
   };
   const handleSearchSubmit = (e) => {
+    if (number?.length > 0 && number?.length <= 10) {
+      setShowToast({ key: "error", label: t("INVALID_MOBILE_NUMBER_LENGTH") });
+    }
     setFilters({
       name: name,
       number: number,
@@ -403,59 +428,73 @@ function RoleTableComposer({ nationalRoles }) {
   const closeToast = () => {
     setShowToast(null);
   };
-  if (isHrmsLoading) {
-    return <Loader />;
-  }
+
   return (
     <>
       <Card style={{ border: "1px solid #e6e5e4" }}>
-        <div>
-          <div className={`search-field-wrapper roleComposer`}>
-            <LabelFieldPair key={1}>
-              <CardLabel style={{ marginBottom: "0.4rem" }}>{t("Name")}</CardLabel>
-              <TextInput
-                value={name}
-                type={"text"}
-                name={"name"}
-                onChange={(e) => {
-                  setName(e.target.value);
-                }}
-                //   inputRef={ref}
-                errorStyle={""}
-                min={1}
-                minlength={1}
-              />
-            </LabelFieldPair>
-            <LabelFieldPair key={2}>
-              <CardLabel style={{ marginBottom: "0.4rem" }}>{t("Number")}</CardLabel>
-              <TextInput
-                value={number}
-                type={"number"}
-                name={"number"}
-                onChange={(e) => {
-                  setNumber(e.target.value);
-                }}
-                //   inputRef={ref}
-                errorStyle={""}
-                min={10}
-                minlength={10}
-              />
-            </LabelFieldPair>
-            <div className={`search-button-wrapper roleComposer`}>
-              <LinkLabel style={{ marginBottom: 0, whiteSpace: "nowrap" }} onClick={handleClearSearch}>
-                {t("Clear Search")}
-              </LinkLabel>
-              <SubmitBar onSubmit={handleSearchSubmit} label={t("Search")} disabled={false} />
+        <form
+          onSubmit={(e) => {
+            e.preventDefault(); // Prevent default submission
+            e.stopPropagation(); // Stop the event from reaching the parent form
+            handleSearchSubmit();
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.stopPropagation();
+              handleSearchSubmit();
+            }
+          }}
+        >
+          <div>
+            <div className={`search-field-wrapper roleComposer`}>
+              <LabelFieldPair key={1}>
+                <CardLabel style={{ marginBottom: "0.4rem" }}>{t("Name")}</CardLabel>
+                <TextInput
+                  value={name}
+                  type={"text"}
+                  name={"name"}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                  }}
+                  //   inputRef={ref}
+                  errorStyle={""}
+                  min={1}
+                  minlength={1}
+                />
+              </LabelFieldPair>
+              <LabelFieldPair key={2}>
+                <CardLabel style={{ marginBottom: "0.4rem" }}>{t("Number")}</CardLabel>
+                <TextInput
+                  value={number}
+                  type={"number"}
+                  name={"number"}
+                  onChange={(e) => {
+                    setNumber(e.target.value);
+                  }}
+                  //   inputRef={ref}
+                  errorStyle={""}
+                  min={10}
+                  minlength={10}
+                />
+              </LabelFieldPair>
+              <div className={`search-button-wrapper roleComposer`}>
+                <LinkLabel style={{ marginBottom: 0, whiteSpace: "nowrap" }} onClick={handleClearSearch}>
+                  {t("Clear Search")}
+                </LinkLabel>
+                <SubmitBar onSubmit={handleSearchSubmit} label={t("Search")} disabled={false} />
+              </div>
             </div>
           </div>
-        </div>
+        </form>
       </Card>
       <div style={{ overflowY: "auto" }}>
-        {isLoading && <LoaderOverlay />}
+        {/* {isLoading || isHrmsLoading ? <LoaderOverlay /> : null} */}
         <DataTable
           columns={columns}
           data={HrmsData?.data}
           pagination
+          progressPending={isLoading || isHrmsLoading}
+          progressComponent={<CustomLoader />}
           paginationServer
           paginationTotalRows={totalRows}
           customStyles={tableCustomStyle}
