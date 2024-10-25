@@ -26,6 +26,7 @@ import FacilityPopup from "./components/FacilityPopup";
 import UserAccessMgmt from "./components/UserAccessMgmt";
 import UserAccessMgmtTableWrapper from "./components/UserAccessMgmtTableWrapper";
 import { DataMgmtComponent } from "./components/DataMgmtComponent";
+import { ShowMoreWrapper } from "./components/ShowMoreWrapper";
 
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -82,7 +83,8 @@ const componentsToRegister = {
   FacilityPopup,
   UserAccessMgmt,
   UserAccessMgmtTableWrapper,
-  DataMgmtComponent
+  DataMgmtComponent,
+  ShowMoreWrapper,
 };
 
 export const initMicroplanComponents = () => {
