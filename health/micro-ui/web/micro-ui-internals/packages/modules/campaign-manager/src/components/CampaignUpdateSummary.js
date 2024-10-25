@@ -176,6 +176,7 @@ const CampaignUpdateSummary = (props) => {
         ss();
         const target = data?.[0]?.deliveryRules;
         const boundaryData = boundaryDataGrp(data?.[0]?.boundaries);
+        const hierarchyType = data?.[0]?.hierarchyType;
         return {
           cards: [
             ...boundaryData?.map((item, index) => {
@@ -186,8 +187,14 @@ const CampaignUpdateSummary = (props) => {
                   {
                     name: `HIERARCHY_${index + 1}`,
                     type: "COMPONENT",
-                    cardHeader:  { value: `${t(( hierarchyType + "_" + item?.type).toUpperCase())}`, inlineStyles: { color: "#0B4B66" } },
-                    // cardHeader: { value: t("item?.boundaries?.type") },
+                    // cardHeader:  { value: `${t(( hierarchyType + "_" + item?.type).toUpperCase())}`, inlineStyles: { color: "#0B4B66" } },
+                    cardHeader: { 
+                      value: hierarchyType 
+                          ? `${t((hierarchyType + "_" + item?.type).toUpperCase())}` 
+                          : t("To Be Updated"), 
+                      inlineStyles: { color: "#0B4B66" } 
+                  },
+                  
                     component: "BoundaryDetailsSummary",
                     cardSecondaryAction: noAction !== "false" && (
                       <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
