@@ -121,7 +121,7 @@ const UpdateBoundary = ({hierarchyData }) => {
   const [fetchUpload, setFetchUpload] = useState(false);
   const [active, setActive] = useState(0);
   const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
-  const [hierarchyType, setHierarchyType] = useState({});
+  const [hierarchyType, setHierarchyType] = useState();
   const lowestHierarchy = useMemo(() => {
     return hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
   }, [hierarchyConfig, hierarchyType]);
@@ -647,6 +647,9 @@ const UpdateBoundary = ({hierarchyData }) => {
         if (updateBoundary.length === 0 && isTargetError && isFacilityError && isUserError) {
           setShowToast({ key: "error", label: "AT_LEAST_ONE_FILE_REQUIRED_ERROR" });
           return false;
+        }
+        if (updateBoundary.length === 0 && (!isTargetError || !isFacilityError || !isUserError)) {
+          return true;
         }
         if (isTargetError) {
           setShowToast({ key: "error", label: "TARGET_DETAILS_ERROR" });

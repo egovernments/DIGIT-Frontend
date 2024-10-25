@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import FileComponent from '../../components/FileComponent';
-import { Card } from '@egovernments/digit-ui-components';
 import HeaderComp from '../../components/HeaderComp';
-import { TextBlock } from '@egovernments/digit-ui-components';
+import { TextBlock, Card } from '@egovernments/digit-ui-components';
+import {LoaderWithGap} from "@egovernments/digit-ui-react-components";
+import { useTranslation } from 'react-i18next';
+
 
 const UserDownload = () => {
-    
+    const { t } = useTranslation();
     const [Files, setFile] = useState(""); // Initialize as an empty string
-   
-
     const { data, isFetching, isLoading } = Digit.Hooks.microplanv1.useFileDownload({
         "SearchCriteria": {
             "tenantId": Digit.ULBService.getCurrentTenantId(),
@@ -53,11 +53,10 @@ const UserDownload = () => {
 
     return (
         <div>
-
-
+            {isLoading && <LoaderWithGap text={t("CS_LOADING")} />}
             <Card type="secondary" >
                 <HeaderComp title="DOWNLOAD_USER_DATA" styles={{ color: "black" }} />
-                <TextBlock body="DOWNLOAD_DESC" />
+                <TextBlock body={t("DOWNLOAD_DESC")} />
                     {data?.ResourceDetails &&
                         [...data?.ResourceDetails].reverse().map((item, index) => {
                             let fileName = item?.additionalDetails?.fileName || `FileNo${item?.processedFilestoreId?.slice(0, 4) || ''}`;
