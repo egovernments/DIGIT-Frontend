@@ -106,7 +106,7 @@ const PlanInbox = () => {
         jurisdiction: jurisdiction,
         status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
         assignee: activeLink.code === "ASSIGNED_TO_ME" ? user?.info?.uuid : "",
-        executionPlanId: microplanId, //list of plan ids
+        planConfigurationId: microplanId, //list of plan ids
         limit: limitAndOffset?.limit,
         offset: limitAndOffset?.offset,
       },
