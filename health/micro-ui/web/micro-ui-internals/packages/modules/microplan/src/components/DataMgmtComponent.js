@@ -18,7 +18,7 @@ export const DataMgmtComponent = ({ customProps }) => {
     // }
     return (
         <>
-            <Card>
+            <Card style={{marginBottom:"1rem"}}>
                 <HeaderComp title="POPULATION" styles={{ color: "black" }} />
 
                 {
@@ -45,7 +45,7 @@ export const DataMgmtComponent = ({ customProps }) => {
                     })
                 }
             </Card>
-            <Card>
+            <Card> 
 
                 <HeaderComp title="FACILITIES" styles={{ color: "black" }} />
                 {

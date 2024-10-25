@@ -853,12 +853,56 @@ export const UICustomizations = {
         } else {
           return (
             <div>
-              <p>NA</p>
+              <p>{t("NA")}</p>
             </div>
           );
         }
       }
-    },
+      if(key==="MICROPLAN_STATUS"){
+        if(value &&value!="NA"){
+        return t(value)
+        }
+      else {
+        return (
+          <div>
+            <p>{t("NA")}</p>
+          </div>
+        );
+      }
+    }
+      if(key==="CAMPAIGN_DISEASE"){
+        if(value &&value!="NA"){
+        return t(value)
+        }else {
+        return (
+          <div>
+            <p>{t("NA")}</p>
+          </div>
+        );
+      }}
+      if(key==="CAMPAIGN_TYPE"){
+        if(value &&value!="NA"){
+        return t(value)
+        }else {
+        return (
+          <div>
+            <p>{t("NA")}</p>
+          </div>
+        );
+      }
+    }
+    if(key==="DISTIRBUTION_STRATEGY"){
+      if(value &&value!="NA"){
+      return t(value)
+      }else {
+      return (
+        <div>
+          <p>{t("NA")}</p>
+        </div>
+      );
+    }
+  }
+  },
   },
   MyMicroplanSearchConfig: {
     preProcess: (data, additionalDetails) => {
