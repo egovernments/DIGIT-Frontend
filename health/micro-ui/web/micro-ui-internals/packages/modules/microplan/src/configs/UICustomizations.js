@@ -101,7 +101,7 @@ export const UICustomizations = {
                 // Use window.location.href to navigate
                 window.location.href = `/${
                   window.contextPath
-                }/employee/microplan/setup-microplan?key=${1}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${
+                }/employee/microplan/setup-microplan?key=${1}&microplanId=${row.id}&campaignId=${
                   row.CampaignDetails.id
                 }`;
               }
@@ -109,7 +109,7 @@ export const UICustomizations = {
                 // Use window.location.href to navigate
                 window.location.href = `/${
                   window.contextPath
-                }/employee/microplan/setup-microplan?key=${10}&preview=${true}&action=${false}&microplanId=${row.id}&campaignId=${
+                }/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${
                   row.CampaignDetails.id
                 }`;
               }
