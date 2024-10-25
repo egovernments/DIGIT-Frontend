@@ -241,7 +241,6 @@ const PopInbox = () => {
   }, [selectedFilter, jurisdiction, limitAndOffset, activeLink]);
 
   useEffect(() => {
-    console.log(selectedFilter, "ssssssssssssssssssssssss");
     if (selectedFilter === "PENDING_FOR_VALIDATION") {
       setActiveLink({ code: "", name: "" });
       setShowTab(false);
@@ -255,9 +254,6 @@ const PopInbox = () => {
       }
     }
   }, [selectedFilter]);
-
-  // useEffect(() => {
-  // }, [showTab]);
 
 
 
