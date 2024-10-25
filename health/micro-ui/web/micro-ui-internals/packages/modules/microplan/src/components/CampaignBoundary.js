@@ -339,14 +339,14 @@ const CampaignBoundary = ({ customProps }) => {
                                     onClick={() => handleViewMore(ind + 2)}
                                     className="view-more"
                                 >
-                                    View More
+                                    {t("VIEW_MORE")}
                                 </div>
                             ) : (!boundaryStatus?.[ind + 2]) ? (
                                 <div
                                     onClick={() => handleViewMore(ind + 2)}
                                     className="view-more"
                                 >
-                                    View Less
+                                    {t("VIEW_LESS")}
                                 </div>
                             ) : null
                         }
