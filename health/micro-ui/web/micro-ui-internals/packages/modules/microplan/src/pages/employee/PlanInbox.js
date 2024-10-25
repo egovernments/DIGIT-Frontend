@@ -469,7 +469,7 @@ const PlanInbox = () => {
                     heading={t(`SEND_FOR_${workFlowPopUp}`)}
                     submitLabel={t(`SEND_FOR_${workFlowPopUp}`)}
                     url="/plan-service/plan/bulk/_update"
-                    requestPayload={{ Plan: updateWorkflowForSelectedRows() }}
+                    requestPayload={{ Plans: updateWorkflowForSelectedRows() }}
                     commentPath="workflow.comment"
                   />
                 )}
