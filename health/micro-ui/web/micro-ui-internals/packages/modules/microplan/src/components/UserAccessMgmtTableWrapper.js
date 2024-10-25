@@ -3,6 +3,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DataTable from "react-data-table-component";
 import { CardSubHeader, Card } from "@egovernments/digit-ui-react-components";
+import { tableCustomStyle } from "./tableCustomStyle";
 
 
 function groupEmployeesByPlan(data, planData) {
@@ -214,6 +215,7 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
             <DataTable
                 columns={columns}
                 data={planAssignmentData?.data}
+                customStyles={tableCustomStyle}
                 pagination
                 paginationServer
                 paginationTotalRows={totalRows}
