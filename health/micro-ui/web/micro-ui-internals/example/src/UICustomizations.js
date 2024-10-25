@@ -1022,10 +1022,10 @@ export const UICustomizations = {
       }
 
       data.params.names = name;
-
-      data.params.phone = phone;
       data.params.sortOrder = "DESC";
       data.params.sortBy = "lastModifiedTime";
+
+      data.params.phone = phone;
 
       data.params.roles = rolesString;
       data.params.tenantId = Digit.ULBService.getCurrentTenantId();
@@ -1086,9 +1086,6 @@ export const UICustomizations = {
         );
       }
     },
-  },
-  MyMicroplanSearchConfigOverridePlan: {
-    test: "yes",
   },
   FacilityMappingConfig: {
     preProcess: (data) => {
