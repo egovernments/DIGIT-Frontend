@@ -679,8 +679,8 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             <Stepper
               customSteps={["HCM_UPLOAD_BOUNDARY_MICROPLAN", "HCM_UPLOAD_FACILITY_MICROPLAN"]}
               currentStep={key - baseKey + 1}
-              onStepClick={onStepClick}
               direction={"vertical"}
+              onStepClick={() => null}
             />
           </Card>
         </div>

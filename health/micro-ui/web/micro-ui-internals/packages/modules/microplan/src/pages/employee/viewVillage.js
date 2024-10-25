@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import { Loader, Header } from '@egovernments/digit-ui-react-components';
 import { Divider, Button, PopUp, Card, ActionBar, Link } from '@egovernments/digit-ui-components';
@@ -11,11 +11,76 @@ import TimelinePopUpWrapper from '../../components/timelinePopUpWrapper';
 const VillageView = () => {
     const location = useLocation();
     const { t } = useTranslation();
-    const { campaignId, microplanId, boundaryCode } = Digit.Hooks.useQueryParams();
+    const history = useHistory();
+    const [hierarchy, setHierarchy] = useState([]);
+    const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
+    const { microplanId, boundaryCode, campaignId } = Digit.Hooks.useQueryParams();
     const tenantId = Digit.ULBService.getCurrentTenantId();
-
     const userInfo = Digit.UserService.getUser();
     const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
+    const [showAccessbilityPopup, setShowAccessbilityPopup] = useState(false);
+    const [showSecurityPopup, setShowSecurityPopup] = useState(false);
+    const [showEditVillagePopulationPopup, setShowEditVillagePopulationPopup] = useState(false);
+    const [showCommentLogPopup, setShowCommentLogPopup] = useState(false);
+
+    const findHierarchyPath = (boundaryCode, data, maxHierarchyLevel) => {
+        const hierarchy = [];
+
+        let currentNode = data.find(item => item.code === boundaryCode);
+
+        while (currentNode) {
+            hierarchy.unshift({ name: currentNode.name, type: currentNode.type }); // Store name and type in the hierarchy
+            if (currentNode.type === maxHierarchyLevel) break; // Stop if type matches maxHierarchyLevel
+            currentNode = data.find(item => item.code === currentNode.parent); // Move up to the parent
+        }
+
+        return hierarchy;
+    };
+
+
+    const { data: planEmployeeDetailsData, isLoading: isLoadingPlanEmployee } = Digit.Hooks.microplanv1.usePlanSearchEmployee({
+        tenantId: tenantId,
+        body: {
+            PlanEmployeeAssignmentSearchCriteria: {
+                tenantId: tenantId,
+                planConfigurationId: microplanId,
+                employeeId: [userInfo.info.uuid],
+                role: ["POPULATION_DATA_APPROVER", "ROOT_POPULATION_DATA_APPROVER"]
+            },
+        },
+        config: {
+            enabled: true,
+            select: (data) => {
+                return data?.PlanEmployeeAssignment?.[0];
+            },
+        },
+    });
+
+
+    const {
+        isLoading: isLoadingCampaignObject,
+        data: campaignObject,
+        error: errorCampaign,
+        refetch: refetchCampaign,
+    } = Digit.Hooks.microplanv1.useSearchCampaign(
+        {
+            CampaignDetails: {
+                tenantId,
+                ids: [campaignId],
+            },
+        },
+        {
+            enabled: planEmployeeDetailsData ? true : false,
+        }
+    );
+
+
+    useEffect(() => {
+        if (campaignObject?.boundaries) {
+            const parentHierarchy = findHierarchyPath(boundaryCode, campaignObject?.boundaries, planEmployeeDetailsData?.hierarchyLevel);
+            setHierarchy(parentHierarchy);
+        }
+    }, [campaignObject]);
 
     // Custom hook to fetch census data based on microplanId and boundaryCode
     const reqCriteriaResource = {
@@ -40,10 +105,43 @@ const VillageView = () => {
     const { isLoading, data, isFetching, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
 
 
-    const [showAccessbilityPopup, setShowAccessbilityPopup] = useState(false);
-    const [showSecurityPopup, setShowSecurityPopup] = useState(false);
-    const [showEditVillagePopulationPopup, setShowEditVillagePopulationPopup] = useState(false);
-    const [showCommentLogPopup, setShowCommentLogPopup] = useState(false);
+    const { isLoading: isWorkflowLoading, data: workflowData, revalidate, refetch: refetchBussinessService } = Digit.Hooks.useCustomAPIHook({
+        url: "/egov-workflow-v2/egov-wf/businessservice/_search",
+        params: {
+            tenantId: tenantId,
+            businessServices: "CENSUS",
+        },
+        config: {
+            enabled: data ? true : false,
+            select: (data) => {
+                return data.BusinessServices?.[0];
+            },
+        },
+    });
+
+
+    useEffect(() => {
+        if (workflowData) {
+
+            // Assume selectedFilter maps to applicationStatus or state
+            const selectedState = workflowData?.states?.find(
+                (state) => state.state === data?.status
+            );
+
+            // Filter actions based on the selected state
+            const availableActions = selectedState?.actions?.filter((action) =>
+                action.roles.some((role) => userRoles.includes(role))
+            );
+
+            // Update the available actions state
+            setAvailableActionsForUser(availableActions || []);
+
+        }
+    }, [workflowData, data]);
+
+
+    // actionsToHide array by checking for "EDIT" in the actionMap
+    const availableEditAction = availableActionsForUser?.filter(action => action?.action?.includes("EDIT"))?.map(action => action?.action);
 
     const handleEditPopulationClick = () => {
         setShowEditVillagePopulationPopup(true);
@@ -57,7 +155,6 @@ const VillageView = () => {
 
     const onAccibilityClose = () => {
         setShowAccessbilityPopup(false);
-        refetch();
     };
 
     const handleCommentLogClick = () => {
@@ -66,19 +163,16 @@ const VillageView = () => {
 
     const onCommentLogClose = () => {
         setShowCommentLogPopup(false);
-        refetch();
     };
 
     const onSecurityClose = () => {
         setShowSecurityPopup(false);
-        refetch();
     };
     const onEditPopulationClose = () => {
         setShowEditVillagePopulationPopup(false);
-        refetch();
     };
 
-    if (isLoading) {
+    if (isLoading || isLoadingCampaignObject || isLoadingPlanEmployee || isWorkflowLoading) {
         return <Loader />;
     }
 
@@ -92,22 +186,15 @@ const VillageView = () => {
                 <div className="village-header" >
                     {'Village 1'}
                 </div>
-                <Card type="primary" className="middle-child" >
-
-                    <div className="label-pair">
-                        <span className="label-heading">{t(`HCM_MICROPLAN_DISCRICT_LABEL`)}</span>
-                        <span className="label-text">{data?.boundaryCode}</span>
-                    </div>
-
-                    <div className="label-pair">
-                        <span className="label-heading">{t(`HCM_MICROPLAN_ADMIN_POST_LABEL`)}</span>
-                        <span className="label-text">{data?.boundaryCode}</span>
-                    </div>
-
-                    <div className="label-pair">
-                        <span className="label-heading">{t(`HCM_MICROPLAN_LOCALITY_LABEL`)}</span>
-                        <span className="label-text">{data?.boundaryCode}</span>
-                    </div>
+                <Card type="primary" className="middle-child">
+                    {hierarchy.map((node, index) => (
+                        <div key={index} className="label-pair">
+                            <span className="label-heading">
+                                {t(`HCM_MICROPLAN_${node.type.toUpperCase()}_LABEL`)}
+                            </span>
+                            <span className="label-text">{node.name}</span>
+                        </div>
+                    ))}
                 </Card>
 
                 <Card type="primary" className="middle-child">
@@ -157,17 +244,17 @@ const VillageView = () => {
                     </div>
                 </Card>
                 {showAccessbilityPopup && (
-                    <AccessibilityPopUP onClose={onAccibilityClose} census={data} />
+                    <AccessibilityPopUP onClose={onAccibilityClose} census={data} onSuccess={(data) => { refetch(); }} />
                 )}
 
                 {showSecurityPopup && (
-                    <SecurityPopUp onClose={onSecurityClose} census={data} />
+                    <SecurityPopUp onClose={onSecurityClose} census={data} onSuccess={(data) => { refetch(); }} />
                 )}
 
                 <Card type="primary" className="info-card middle-child">
                     <div className="card-heading">
                         <h2 className="card-heading-title">{t(`HCM_MICROPLAN_POPULATION_DATA_HEADING`)}</h2>
-                        <Button
+                        {availableEditAction.length > 0 && <Button
                             className="custom-class"
                             icon="Edit"
                             iconFill=""
@@ -179,7 +266,7 @@ const VillageView = () => {
                             style={{}}
                             title=""
                             variation="secondary"
-                        />
+                        />}
                     </div>
                     {/* Five Label-Text Pairs */}
                     <div className="label-pair">
@@ -209,7 +296,7 @@ const VillageView = () => {
                 </Card>
 
                 {showEditVillagePopulationPopup && (
-                    <EditVillagePopulationPopUp onClose={onEditPopulationClose} census={data} />
+                    <EditVillagePopulationPopUp onClose={onEditPopulationClose} census={data} onSuccess={(data) => { refetch(); }} />
                 )}
 
                 <Card type="primary" className="info-card">
@@ -239,7 +326,7 @@ const VillageView = () => {
             {/* commenting becuase some css is not working inside the component*/}
             <ActionBar
                 actionFields={[
-                    <Button icon="ArrowBack" label={t(`HCM_MICROPLAN_VIEW_VILLAGE_BACK`)} onClick={function noRefCheck() { }} type="button" variation="secondary" />,
+                    <Button icon="ArrowBack" label={t(`HCM_MICROPLAN_VIEW_VILLAGE_BACK`)} onClick={() => { history.push(`/${window.contextPath}/employee/microplan/pop-inbox?microplanId=${microplanId}&campaignId=${campaignId}`); }} type="button" variation="secondary" />,
                 ]}
                 className=""
                 maxActionFieldsAllowed={5}

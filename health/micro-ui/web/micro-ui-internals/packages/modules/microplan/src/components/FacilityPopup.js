@@ -70,8 +70,8 @@ const FacilityPopUp = ({ details, onClose }) => {
         planConfigurationId: microplanId,
         employeeId: [currentUserUuid],
         role: [
-            "ROOT_FACILITY_CATCHMENT_MAPPER",
-            "FACILITY_CATCHMENT_MAPPER"
+          "ROOT_FACILITY_CATCHMENT_MAPPER",
+          "FACILITY_CATCHMENT_MAPPER"
         ]
       },
     },
@@ -139,12 +139,10 @@ const FacilityPopUp = ({ details, onClose }) => {
       source: microplanId,
       facilityAssigned: facilityAssignedStatus,
       jurisdiction: codeArray,
-      pagination: {
-        limit: rowsPerPage,
-        offset: (currentPage - 1) * rowsPerPage,
-      }
+      limit: rowsPerPage,
+      offset: (currentPage - 1) * rowsPerPage,
     }
-    if(facilityAssignedStatus){
+    if (facilityAssignedStatus) {
       censusSearchCriteria.areaCodes = details?.serviceBoundaries || null
     }
     await mutationForCensusSearch.mutate(
@@ -350,7 +348,7 @@ const FacilityPopUp = ({ details, onClose }) => {
     setRowsPerPage(newPerPage);
     setCurrentPage(1); // Reset to first page when changing rows per page
   };
-  
+
   return (
     <>
       {loader ? (
@@ -412,7 +410,7 @@ const FacilityPopUp = ({ details, onClose }) => {
                     paginationPerPage={rowsPerPage}
                     onChangePage={handlePageChange}
                     onChangeRowsPerPage={handleRowsPerPageChange}
-                    paginationRowsPerPageOptions={[10, 20, 30, 40, 50]}
+                    paginationRowsPerPageOptions={[10, 20, 50, 100]}
                     paginationTotalRows={totalCensusCount}
                     highlightOnHover
                     pointerOnHover

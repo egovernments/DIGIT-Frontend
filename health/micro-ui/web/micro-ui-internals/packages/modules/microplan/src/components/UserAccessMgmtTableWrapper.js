@@ -3,6 +3,8 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DataTable from "react-data-table-component";
 import { CardSubHeader, Card } from "@egovernments/digit-ui-react-components";
+import { tableCustomStyle } from "./tableCustomStyle";
+import { ShowMoreWrapper } from "./ShowMoreWrapper";
 
 
 function groupEmployeesByPlan(data, planData) {
@@ -29,43 +31,6 @@ function groupEmployeesByPlan(data, planData) {
     // Convert grouped object to an array of values for easier use
     return groupedEmployees ? Object.values(groupedEmployees) : [];
   }
-
-  const Wrapper = ({ setShowPopUp, alreadyQueuedSelectedState }) => {
-   
-    const { t } = useTranslation();
-     return (
-        <PopUp
-        className={""}
-        style={{
-            maxWidth: '40%'
-        }}
-        type={"default"}
-        heading={t("MICROPLAN_ADMINISTRATIVE_AREA")}
-        children={[]}
-        onOverlayClick={() => {
-            setShowPopUp(false);
-        }}
-        onClose={() => {
-            setShowPopUp(false);
-        }}
-        >
-        <div className="digit-tag-container userAccessCell">
-       {alreadyQueuedSelectedState?.map((item, index) => (
-                <Chip 
-                 key={index} 
-                 text={t(item)} 
-                 className=""
-                 error=""
-                 extraStyles={{}}
-                 iconReq=""
-                 hideClose={true}
-                />
-          ))}  
-          </div>
-        </PopUp>
-     );
-
-  };
 
 const UserAccessMgmtTableWrapper = ({ role,}) => {
   const { t } = useTranslation();
@@ -188,10 +153,11 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
             />
           )}
            {showPopUp && (
-            <Wrapper
-              setShowPopUp={setShowPopUp}
-              alreadyQueuedSelectedState={row?.planData?.jurisdiction}
-            />
+            <ShowMoreWrapper
+            setShowPopUp={setShowPopUp}
+            alreadyQueuedSelectedState={row?.planData?.jurisdiction}
+            heading={"MICROPLAN_ADMINISTRATIVE_AREA"}
+          />
           )}
                 </div>
             );
@@ -205,6 +171,9 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
   };
 
   if (isLoading) return <Loader />;
+  else if(planAssignmentData?.data?.length === 0){
+    return null;
+  }
   else {
   return(
     <Card>
@@ -214,6 +183,7 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
             <DataTable
                 columns={columns}
                 data={planAssignmentData?.data}
+                customStyles={tableCustomStyle}
                 pagination
                 paginationServer
                 paginationTotalRows={totalRows}

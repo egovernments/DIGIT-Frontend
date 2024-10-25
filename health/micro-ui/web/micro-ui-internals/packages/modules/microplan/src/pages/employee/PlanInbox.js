@@ -1,9 +1,7 @@
 import React, { Fragment, useState, useEffect, useMemo } from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
-import { boundaries } from "../../components/boundaries";
-import PopInboxTable from "../../components/PopInboxTable";
 import { useHistory } from "react-router-dom";
-import { Card, Tab, Button, SVG, Loader, ActionBar } from "@egovernments/digit-ui-components";
+import { Card, Tab, Button, SVG, Loader, ActionBar, Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import DataTable from "react-data-table-component";
@@ -32,18 +30,18 @@ const PlanInbox = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [workFlowPopUp, setworkFlowPopUp] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(50);
   const [totalRows, setTotalRows] = useState(0);
   const [perPage, setPerPage] = useState(10);
+  const [showToast, setShowToast] = useState(null);
+  const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   const [activeLink, setActiveLink] = useState({
     code: "ASSIGNED_TO_ME",
     name: "ASSIGNED_TO_ME",
   });
 
-
   const userRoles = user?.info?.roles?.map((roleData) => roleData?.code);
-
 
   // Check if the user has the 'rootapprover' role
   const isRootApprover = userRoles?.includes("ROOT_PLAN_ESTIMATION_APPROVER");
@@ -76,7 +74,7 @@ const PlanInbox = () => {
 
   const handlePageChange = (page, totalRows) => {
     setCurrentPage(page);
-    setLimitAndOffset({ ...limitAndOffset, offset: (page - 1) * 5 });
+    setLimitAndOffset({ ...limitAndOffset, offset: (page - 1) * rowsPerPage });
   };
 
   const handleRowSelect = (event) => {
@@ -86,7 +84,7 @@ const PlanInbox = () => {
 
   const handlePerRowsChange = (currentRowsPerPage, currentPage) => {
     setRowsPerPage(currentRowsPerPage);
-    setCurrentPage(currentPage);
+    setCurrentPage(1);
     setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * currentRowsPerPage });
   };
 
@@ -104,14 +102,15 @@ const PlanInbox = () => {
         active: true,
         jurisdiction: jurisdiction,
         status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
-        assignee: activeLink.code === "ASSIGNED_TO_ME" ? user?.info?.uuid : "",
-        executionPlanId: microplanId, //list of plan ids
+        assignee: activeLink.code === "ASSIGNED_TO_ME" && selectedFilter !== "PENDING_FOR_VALIDATION" ? user?.info?.uuid : "",
+        // assignee: activeLink.code === "ASSIGNED_TO_ME" ? user?.info?.uuid : "",
+        planConfigurationId: microplanId, //list of plan ids
         limit: limitAndOffset?.limit,
         offset: limitAndOffset?.offset,
       },
     },
     config: {
-      enabled: jurisdiction.length > 0 ? true : false,
+      enabled: jurisdiction?.length > 0 ? true : false,
       select: (data) => {
         const tableData = data?.planData?.map((item, index) => {
           const filteredCensus = data?.censusData?.find((d) => d?.boundaryCode === item?.locality);
@@ -209,63 +208,87 @@ const PlanInbox = () => {
     setjurisdiction(planEmployee?.planData?.[0]?.jurisdiction);
   };
 
-  const { isLoading: isUserLoading, data: workflowData, revalidate } = Digit.Hooks.useCustomAPIHook({
+  const { isLoading: isWorkflowLoading, data: workflowData, revalidate, refetch: refetchBussinessService } = Digit.Hooks.useCustomAPIHook({
     url: "/egov-workflow-v2/egov-wf/businessservice/_search",
     params: {
       tenantId: tenantId,
       businessServices: "PLAN_ESTIMATION",
     },
     config: {
+      enabled: selectedFilter ? true : false,
       select: (data) => {
-        const service = data.BusinessServices?.[0];
-        const matchingState = service?.states.find((state) => state.applicationStatus === "PENDING_FOR_VALIDATION");
-        return matchingState || null;
+        return data.BusinessServices?.[0];
       },
     },
   });
 
-  const actionsMain = workflowData?.actions;
+  useEffect(() => {
+    if (workflowData) {
+      // Assume selectedFilter maps to applicationStatus or state
+      const selectedState = workflowData?.states?.find((state) => state.state === selectedFilter);
+
+      // Filter actions based on the selected state
+      const availableActions = selectedState?.actions?.filter((action) => action.roles.some((role) => userRoles.includes(role)));
+
+      // Update the available actions state
+      setAvailableActionsForUser(availableActions || []);
+    }
+  }, [workflowData, selectedFilter]);
+
+  // if availableActionsForUser is defined and is an array
+  const actionsMain = availableActionsForUser?.length > 0 ? availableActionsForUser : [];
 
   // actionsToHide array by checking for "EDIT" in the actionMap
-  const actionsToHide = actionsMain?.filter((action) => action.action.includes("EDIT"))?.map((action) => action.action);
+  const actionsToHide = actionsMain?.filter((action) => action?.action?.includes("EDIT"))?.map((action) => action?.action);
 
   useEffect(() => {
     if (planWithCensus) {
       setCensusData(planWithCensus?.censusData);
       setTotalRows(planWithCensus?.TotalCount);
-      setActiveFilter(planWithCensus?.StatusCount);
-      setActiveFilter(planWithCensus?.StatusCount);
-      if ((selectedFilter === null || selectedFilter === undefined) && selectedFilter !== "") {
-        setSelectedFilter(Object.entries(planWithCensus?.StatusCount)?.[0]?.[0]);
+      const reorderedStatusCount = Object.fromEntries(
+        Object.entries(planWithCensus?.StatusCount || {}).sort(([keyA], [keyB]) => {
+          if (keyA === "PENDING_FOR_VALIDATION") return -1;
+          if (keyB === "PENDING_FOR_VALIDATION") return 1;
+          return 0;
+        })
+      );
+      setActiveFilter(reorderedStatusCount);
+      const activeFilterKeys = Object.keys(reorderedStatusCount || {});
+      if (selectedFilter === null || selectedFilter === undefined || selectedFilter === "" || !activeFilterKeys.includes(selectedFilter)) {
+        setSelectedFilter(activeFilterKeys[0]);
       }
       setVillagesSelected(0);
+      setSelectedRows([]);
     }
-  }, [planWithCensus, selectedFilter]);
+  }, [planWithCensus, selectedFilter, activeLink]);
 
   useEffect(() => {
-    if (jurisdiction.length > 0) {
+    if (jurisdiction?.length > 0) {
       refetchPlanEmployee(); // Trigger the API call again after activeFilter changes
     }
-  }, [selectedFilter, activeLink, jurisdiction]);
+  }, [selectedFilter, activeLink, jurisdiction, limitAndOffset]);
 
-  useEffect(() => { }, [selectedFilter]);
+  useEffect(() => {
+    if (selectedFilter === "PENDING_FOR_VALIDATION") {
+      setActiveLink({ code: "", name: "" });
+      setShowTab(false);
+    }
+  }, [selectedFilter]);
 
   const onFilter = (selectedStatus) => {
     setSelectedFilter(selectedStatus?.code);
   };
 
   const clearFilters = () => {
-    if (selectedFilter !== Object.entries(planWithCensus?.StatusCount)?.[0]?.[0])
+    if (selectedFilter !== Object.entries(planWithCensus?.StatusCount)?.[0]?.[0]) {
       setSelectedFilter(Object.entries(planWithCensus?.StatusCount)?.[0]?.[0]);
+    }
   };
 
   const handleActionClick = (action) => {
     setworkFlowPopUp(action);
   };
 
-  if (isPlanWithCensusLoading || isPlanEmpSearchLoading || isLoadingCampaignObject) {
-    return <Loader />;
-  }
   const resources = planWithCensus?.planData?.[0]?.resources || []; // Resources array
   const resourceColumns = resources.map((resource) => ({
     name: t(`RESOURCE_TYPE_${resource.resourceType}`), // Dynamic column name for each resourceType
@@ -309,8 +332,6 @@ const PlanInbox = () => {
     ...resourceColumns,
   ];
 
-
-
   // // Always return an array for `securityColumns`, even if it's empty
   // const sampleSecurityData = planWithCensus?.censusData?.[0]?.additionalDetails?.securityDetails || {};
   // const securityColumns = Object.keys(sampleSecurityData).map((key) => ({
@@ -339,16 +360,14 @@ const PlanInbox = () => {
     const statusValues = Object.keys(statusCount).map((key) => statusCount[key]);
 
     // Check if all statuses except "VALIDATED" are 0, and "VALIDATED" is more than 0
-    return Object.keys(statusCount).every(
-      (key) => (key === "VALIDATED" ? statusCount[key] > 0 : statusCount[key] === 0)
-    );
+    return Object.keys(statusCount).every((key) => (key === "VALIDATED" ? statusCount[key] > 0 : statusCount[key] === 0));
   };
 
   const updateWorkflowForFooterAction = () => {
     const updatedPlanConfig = {
       ...planObject,
       workflow: {
-        ...planObject?.workflow,  // Keep existing workflow properties if any
+        ...planObject?.workflow, // Keep existing workflow properties if any
         action: "APPROVE_ESTIMATIONS",
       },
     };
@@ -368,6 +387,9 @@ const PlanInbox = () => {
     setactionBarPopUp(false);
   };
 
+  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isWorkflowLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className="pop-inbox-wrapper">
@@ -447,12 +469,22 @@ const PlanInbox = () => {
                     heading={t(`SEND_FOR_${workFlowPopUp}`)}
                     submitLabel={t(`SEND_FOR_${workFlowPopUp}`)}
                     url="/plan-service/plan/bulk/_update"
-                    requestPayload={{ Plan: updateWorkflowForSelectedRows() }}
-                    commentPath="workflow.comment"
+                    requestPayload={{ Plans: updateWorkflowForSelectedRows() }}
+                    commentPath="workflow.comments"
+                    onSuccess={(data) => {
+                      closePopUp();
+                      setShowToast({ key: "success", label: t("WORKFLOW_UPDATE_SUCCESS"), transitionTime: 5000 });
+                      refetchPlanWithCensus();
+                    }}
+                    onError={(data) => {
+                      closePopUp();
+                      setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+                    }}
                   />
                 )}
               </div>
             )}
+            {isPlanWithCensusLoading ? <Loader /> : null}
             <DataTable
               columns={columns}
               data={planWithCensus?.tableData}
@@ -469,25 +501,30 @@ const PlanInbox = () => {
               customStyles={tableCustomStyle}
               paginationTotalRows={totalRows}
               paginationPerPage={rowsPerPage}
-              paginationRowsPerPageOptions={[5, 10, 15, 20, 25]}
-            // selectableRowsComponent={SimpleCheckbox}
-            // selectableRowsComponent={SimpleCheckbox}
+              paginationRowsPerPageOptions={[10, 20, 50, 100]}
             />
           </Card>
         </div>
       </div>
 
-      {isRootApprover && isStatusConditionMet(activeFilter) &&
+      {isRootApprover && isStatusConditionMet(activeFilter) && (
         <ActionBar
           actionFields={[
-            <Button icon="CheckCircle" label={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN`)} onClick={handleActionBarClick} type="button" variation="primary" />,
+            <Button
+              icon="CheckCircle"
+              label={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN`)}
+              onClick={handleActionBarClick}
+              type="button"
+              variation="primary"
+            />,
           ]}
           className=""
           maxActionFieldsAllowed={5}
           setactionFieldsToRight
           sortActionFields
           style={{}}
-        />}
+        />
+      )}
 
       {actionBarPopUp && (
         <WorkflowCommentPopUp
@@ -496,17 +533,30 @@ const PlanInbox = () => {
           submitLabel={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN`)}
           url="/plan-service/config/_update"
           requestPayload={{ PlanConfiguration: updateWorkflowForFooterAction() }}
-          commentPath="workflow.comment"
+          commentPath="workflow.comments"
           onSuccess={(data) => {
             history.push(`/${window.contextPath}/employee/microplan/microplan-success`, {
-              fileName: 'filename', // need to update when api is success
+              fileName: "filename", // need to update when api is success
               message: "FINALISE_MICROPLAN_SUCCESSFUL",
               back: "GO_BACK_TO_HOME",
-              backlink: "/employee"
+              backlink: "/employee",
             });
           }}
-        />)}
-
+          onError={(data) => {
+            setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+          }}
+        />
+      )}
+      {showToast && (
+        <Toast
+          style={{ zIndex: 10001 }}
+          label={showToast.label}
+          type={showToast.key}
+          // error={showToast.key === "error"}
+          transitionTime={showToast.transitionTime}
+          onClose={() => setShowToast(null)}
+        />
+      )}
     </div>
   );
 };

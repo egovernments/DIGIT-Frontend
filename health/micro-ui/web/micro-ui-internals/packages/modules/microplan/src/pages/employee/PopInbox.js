@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { useHistory } from "react-router-dom";
 import PopInboxTable from "../../components/PopInboxTable";
-import { Card, Tab, Button, SVG, Loader, ActionBar } from "@egovernments/digit-ui-components";
+import { Card, Tab, Button, SVG, Loader, ActionBar, Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
@@ -26,8 +26,10 @@ const PopInbox = () => {
   const [actionBarPopUp, setactionBarPopUp] = useState(false);
   const [activeFilter, setActiveFilter] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(50);
   const [totalRows, setTotalRows] = useState(0);
+  const [showToast, setShowToast] = useState(null);
+  const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   const [activeLink, setActiveLink] = useState({
     code: "ASSIGNED_TO_ME",
@@ -136,25 +138,48 @@ const PopInbox = () => {
     setjurisdiction(planEmployee?.planData?.[0]?.jurisdiction);
   };
 
-  const { isLoading: isUserLoading, data: workflowData, revalidate } = Digit.Hooks.useCustomAPIHook({
+  const { isLoading: isWorkflowLoading, data: workflowData, revalidate, refetch: refetchBussinessService } = Digit.Hooks.useCustomAPIHook({
     url: "/egov-workflow-v2/egov-wf/businessservice/_search",
     params: {
       tenantId: tenantId,
       businessServices: "CENSUS",
     },
     config: {
+      enabled: selectedFilter ? true : false,
       select: (data) => {
-        const service = data.BusinessServices?.[0];
-        const matchingState = service?.states.find((state) => state.applicationStatus === "PENDING_FOR_VALIDATION");
-        return matchingState || null;
+        return data.BusinessServices?.[0];
       },
     },
   });
 
-  const actionsMain = workflowData?.actions;
+  useEffect(() => {
+    if (workflowData) {
+
+      // Assume selectedFilter maps to applicationStatus or state
+      const selectedState = workflowData?.states?.find(
+        (state) => state.state === selectedFilter
+      );
+
+      // Filter actions based on the selected state
+      const availableActions = selectedState?.actions?.filter((action) =>
+        action.roles.some((role) => userRoles.includes(role))
+      );
+
+      // Update the available actions state
+      setAvailableActionsForUser(availableActions || []);
+
+    }
+  }, [workflowData, selectedFilter]);
+
+
+  // if availableActionsForUser is defined and is an array
+  const actionsMain = availableActionsForUser?.length > 0
+    ? availableActionsForUser
+    : [];
+
 
   // actionsToHide array by checking for "EDIT" in the actionMap
-  const actionsToHide = actionsMain?.filter(action => action.action.includes("EDIT"))?.map(action => action.action);
+  const actionsToHide = actionsMain?.filter(action => action?.action?.includes("EDIT"))?.map(action => action?.action);
 
 
   // Custom hook to fetch census data based on microplanId and boundaryCode
@@ -165,7 +190,7 @@ const PopInbox = () => {
         tenantId: tenantId,
         source: microplanId,
         status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
-        assignee: activeLink.code === "ASSIGNED_TO_ME" ? user?.info?.uuid : "",
+        assignee: activeLink.code === "ASSIGNED_TO_ME" && selectedFilter !== "PENDING_FOR_VALIDATION" ? user?.info?.uuid : "",
         jurisdiction: jurisdiction,
         limit: limitAndOffset?.limit,
         offset: limitAndOffset?.offset
@@ -182,9 +207,21 @@ const PopInbox = () => {
     if (data) {
       setCensusData(data?.Census);
       setTotalRows(data?.TotalCount)
-      setActiveFilter(data?.StatusCount);
+      // reorder the status count to show pending for validation on top
+      const reorderedStatusCount = Object.fromEntries(
+        Object.entries(data?.StatusCount || {}).sort(([keyA], [keyB]) => {
+          if (keyA === "PENDING_FOR_VALIDATION") return -1;
+          if (keyB === "PENDING_FOR_VALIDATION") return 1;
+          return 0;
+        })
+      );
 
-      const activeFilterKeys = Object.keys(data?.StatusCount || {});
+      // Set reordered data to active filter
+      setActiveFilter(reorderedStatusCount);
+
+
+
+      const activeFilterKeys = Object.keys(reorderedStatusCount || {});
 
       if (
         (selectedFilter === null || selectedFilter === undefined || selectedFilter === "") ||
@@ -195,23 +232,20 @@ const PopInbox = () => {
       setVillagesSelected(0);
       setSelectedRows([]);
     }
-  }, [data, selectedFilter, activeFilter]);
+  }, [data, selectedFilter, activeLink]);
 
   useEffect(() => {
     if (jurisdiction?.length > 0) {
       refetch(); // Trigger the API call again after activeFilter changes
     }
-  }, [selectedFilter, activeLink, jurisdiction, limitAndOffset]);
+  }, [selectedFilter, jurisdiction, limitAndOffset, activeLink]);
 
   useEffect(() => {
-    if (selectedFilter === "PENDING_FOR_VERIFICATION") {
+    if (selectedFilter === "PENDING_FOR_VALIDATION") {
       setActiveLink({ code: "", name: "" });
       setShowTab(false);
     }
   }, [selectedFilter]);
-
-  useEffect(() => {
-  }, [showTab]);
 
 
   const onFilter = (selectedStatus) => {
@@ -220,18 +254,19 @@ const PopInbox = () => {
 
   const handlePageChange = (page, totalRows) => {
     setCurrentPage(page);
-    setLimitAndOffset({ ...limitAndOffset, offset: (page - 1) * 5 })
+    setLimitAndOffset({ ...limitAndOffset, offset: (page - 1) * rowsPerPage })
   }
 
   const handlePerRowsChange = (currentRowsPerPage, currentPage) => {
     setRowsPerPage(currentRowsPerPage);
-    setCurrentPage(currentPage);
-    setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * currentRowsPerPage })
+    setCurrentPage(1);
+    setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * rowsPerPage })
   }
 
   const clearFilters = () => {
-    if (selectedFilter !== Object.entries(data?.StatusCount)?.[0]?.[0])
+    if (selectedFilter !== Object.entries(data?.StatusCount)?.[0]?.[0]) {
       setSelectedFilter(Object.entries(data?.StatusCount)?.[0]?.[0]);
+    }
   };
 
   const handleActionClick = (action) => {
@@ -283,7 +318,7 @@ const PopInbox = () => {
   };
 
 
-  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading) {
+  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading || isWorkflowLoading) {
     return <Loader />;
   }
 
@@ -363,12 +398,20 @@ const PopInbox = () => {
                     submitLabel={t(`SEND_FOR_${workFlowPopUp}`)}
                     url="/census-service/bulk/_update"
                     requestPayload={{ Census: updateWorkflowForSelectedRows() }}
-                    commentPath="workflow.comment"
+                    commentPath="workflow.comments"
+                    onSuccess={(data) => {
+                      closePopUp
+                      setShowToast({ key: "success", label: t("WORKFLOW_UPDATE_SUCCESS"), transitionTime: 5000 });
+                      refetch();
+                    }}
+                    onError={(data) => {
+                      setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+                    }}
                   />
                 )}
               </div>
             )}
-            {isFetching ? <Loader /> : <PopInboxTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} />}
+            {isFetching ? <Loader /> : <PopInboxTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} />}
           </Card>
         </div>
       </div>
@@ -403,7 +446,7 @@ const PopInbox = () => {
           submitLabel={t(`HCM_MICROPLAN_FINALIZE_POPULATION_DATA`)}
           url="/plan-service/config/_update"
           requestPayload={{ PlanConfiguration: updateWorkflowForFooterAction() }}
-          commentPath="workflow.comment"
+          commentPath="workflow.comments"
           onSuccess={(data) => {
             history.push(`/${window.contextPath}/employee/microplan/population-finalise-success`, {
               fileName: 'filename', // need to update when api is success
@@ -412,6 +455,19 @@ const PopInbox = () => {
               backlink: "/employee"
             });
           }}
+          onError={(data) => {
+            setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+          }}
+        />
+      )}
+
+      {showToast && (
+        <Toast style={{ zIndex: 10001 }}
+          label={showToast.label}
+          type={showToast.key}
+          // error={showToast.key === "error"}
+          transitionTime={showToast.transitionTime}
+          onClose={() => setShowToast(null)}
         />
       )}
 

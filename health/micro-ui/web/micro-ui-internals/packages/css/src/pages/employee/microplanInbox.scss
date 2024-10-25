@@ -18,6 +18,7 @@
   .pop-inbox-table-wrapper {
     width: 100% !important;
     max-width: 100%;
+    overflow: auto;
   }
 }
 
@@ -37,4 +38,19 @@
   margin-top: -1rem;
   border: 1px solid #d6d5d4;
   border-top: 0px;
+}
+
+.sc-fzXfPc::-webkit-scrollbar {
+  height: 0.5rem;
+  background-color: #d6d5d4;
+}
+
+.sc-fzXfPc::-webkit-scrollbar-track {
+  background-color: #d6d5d4;
+  border-radius: 0.563rem;
+}
+
+.sc-fzXfPc::-webkit-scrollbar-thumb {
+  background-color: #d6d5d4;
+  border-radius: 0.563rem;
 }

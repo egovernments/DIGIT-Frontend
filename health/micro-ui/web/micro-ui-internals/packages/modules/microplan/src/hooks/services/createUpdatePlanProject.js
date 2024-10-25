@@ -125,6 +125,18 @@ const searchPlanConfig = async (body) => {
   return response?.PlanConfiguration?.[0];
 };
 
+const searchCampaignConfig = async (body) => {
+  const response = await Digit.CustomService.getResponse({
+    url: "/project-factory/v1/project-type/search",
+    useCache: false,
+    method: "POST",
+    userService: false,
+    body,
+  });
+
+  return response?.CampaignDetails?.[0];
+}
+
 const updateProject = async (req) => {
   const planRes = await Digit.CustomService.getResponse({
     url: "/project-factory/v1/project-type/update",
@@ -195,14 +207,57 @@ const createUpdatePlanProject = async (req) => {
       case "BOUNDARY":
         // call an update to plan
         // also write logic to invalidate
+        
+        //fetch fresh campaignObject
+        const campaignObjectForBoundary = await searchCampaignConfig({
+          CampaignDetails:{
+            tenantId: tenantId,
+            ids: [
+                campaignId
+            ]
+          }
+        })
+        
+        const prevSelectedBoundaries = campaignObjectForBoundary?.boundaries
+        //if both are equal then we don't even have to make any update call and we don't have to invalidate
+        if(_.isEqual(prevSelectedBoundaries,totalFormData?.BOUNDARY?.boundarySelection?.selectedData)){
+          setCurrentKey((prev) => prev + 1);
+          setCurrentStep((prev) => prev + 1);
+          return {
+            triggeredFrom,
+          };
+        }
+        
+
         const updatedCampaignObject = {
-          ...campaignObject,
+          ...campaignObjectForBoundary,
           boundaries: totalFormData?.BOUNDARY?.boundarySelection?.selectedData,
           startDate: Math.floor(new Date(new Date().setDate(new Date().getDate() + 100)).getTime()),
           //hardcoding this rn to update campaign. Check with admin console team
         };
         const campaignResBoundary = await updateProject(updatedCampaignObject);
-        if (campaignResBoundary?.CampaignDetails?.id) {
+        //after updating campaign we need to update plan object as well to invalidate files since boundaries got changed
+        
+        //fetch fresh plan object 
+        const fetchedPlanForBoundaryInvalidate = await searchPlanConfig({
+          PlanConfigurationSearchCriteria: {
+            tenantId,
+            id: microplanId,
+          },
+        });
+        //invalidate files 
+        const updatedPlanObjectForBoundaryInvalidate = {
+          ...fetchedPlanForBoundaryInvalidate,
+          files:fetchedPlanForBoundaryInvalidate?.files?.length>0 ? fetchedPlanForBoundaryInvalidate?.files?.map(file => {
+            return {
+              ...file,
+              active:false
+            }
+          }) : []
+        }
+        // update plan object 
+        const planUpdateForBoundaryInvalidation = await updatePlan(updatedPlanObjectForBoundaryInvalidate)
+        if (planUpdateForBoundaryInvalidation) {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
           return {

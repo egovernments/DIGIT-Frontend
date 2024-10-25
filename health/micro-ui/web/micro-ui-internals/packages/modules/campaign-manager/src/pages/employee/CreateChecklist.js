@@ -1,19 +1,11 @@
-import React, { useEffect, useState, createContext, useContext, useCallback } from "react";
-import { ViewCardFieldPair, Toast, Card, TextBlock, Button, PopUp, CardText, TextInput, BreadCrumb, Loader, ActionBar } from "@egovernments/digit-ui-components";
+import React, { useEffect, useState } from "react";
+import { ViewCardFieldPair, Toast, Card, Button, PopUp, TextInput, Loader } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
 import { useTranslation } from "react-i18next";
-import CreateQuestion from "../../components/CreateQuestion";
-import PreviewComponent from "../../components/PreviewComponent";
-import { isError, set, template } from "lodash";
-import { value } from "jsonpath";
 import data_hook from "../../hooks/data_hook";
-import { QuestionContext } from "../../components/CreateQuestionContext";
-// import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
-import _ from 'lodash';
 import MobileChecklist from "../../components/MobileChecklist";
-// import { QuestionContext } from "../../components/CreateQuestionContext";
 
 let temp_data = []
 
@@ -74,7 +66,7 @@ const CreateChecklist = () => {
         body: {
           MdmsCriteria: {
             tenantId: tenantId,
-            schemaCode: "HCM-ADMIN-CONSOLE.Checklist_Templates",
+            schemaCode: "HCM-ADMIN-CONSOLE.ChecklistTemplates",
             filters: {
               role: role,
               checklistType: checklistType
@@ -348,6 +340,7 @@ const CreateChecklist = () => {
     return result;
   }
   let uniqueLocal;
+console.log(def_data,'def_data');
 
   const payloadData = (data) => {
 
