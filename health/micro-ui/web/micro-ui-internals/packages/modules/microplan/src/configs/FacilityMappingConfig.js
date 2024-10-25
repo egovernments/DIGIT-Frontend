@@ -12,7 +12,7 @@ const facilityMappingConfig = () => {
         PlanFacilitySearchCriteria: {
         },
       },
-      minParametersForSearchForm: 1,
+      minParametersForSearchForm: 0,
       masterName: "commonUiConfig",
       moduleName: "FacilityMappingConfig",
       tableFormJsonPath: "requestBody.PlanFacilitySearchCriteria",
@@ -154,6 +154,7 @@ const facilityMappingConfig = () => {
         show: true,
       },
     },
+    customHookName:"microplanv1.useFcilityCatchmentMapping",
     additionalSections: {},
   };
 };
