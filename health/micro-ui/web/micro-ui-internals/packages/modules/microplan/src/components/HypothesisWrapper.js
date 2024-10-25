@@ -307,7 +307,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
                                 <Stepper
                                     customSteps={assumptionCategories.map(category => category.category)}
                                     currentStep={internalKey}
-                                    onStepClick={handleStepClick}
+                                    onStepClick={() => null}
                                     direction={"vertical"}
                                 />
                             </Card>
