@@ -207,9 +207,21 @@ const PopInbox = () => {
     if (data) {
       setCensusData(data?.Census);
       setTotalRows(data?.TotalCount)
-      setActiveFilter(data?.StatusCount);
+      // reorder the status count to show pending for validation on top
+      const reorderedStatusCount = Object.fromEntries(
+        Object.entries(data?.StatusCount || {}).sort(([keyA], [keyB]) => {
+          if (keyA === "PENDING_FOR_VALIDATION") return -1;
+          if (keyB === "PENDING_FOR_VALIDATION") return 1;
+          return 0;
+        })
+      );
 
-      const activeFilterKeys = Object.keys(data?.StatusCount || {});
+      // Set reordered data to active filter
+      setActiveFilter(reorderedStatusCount);
+
+
+
+      const activeFilterKeys = Object.keys(reorderedStatusCount || {});
 
       if (
         (selectedFilter === null || selectedFilter === undefined || selectedFilter === "") ||
@@ -220,13 +232,13 @@ const PopInbox = () => {
       setVillagesSelected(0);
       setSelectedRows([]);
     }
-  }, [data, selectedFilter, activeFilter, activeLink]);
+  }, [data, selectedFilter, activeLink]);
 
   useEffect(() => {
     if (jurisdiction?.length > 0) {
       refetch(); // Trigger the API call again after activeFilter changes
     }
-  }, [selectedFilter, jurisdiction, limitAndOffset]);
+  }, [selectedFilter, jurisdiction, limitAndOffset, activeLink]);
 
   useEffect(() => {
     if (selectedFilter === "PENDING_FOR_VALIDATION") {
@@ -436,6 +448,8 @@ const PopInbox = () => {
           requestPayload={{ PlanConfiguration: updateWorkflowForFooterAction() }}
           commentPath="workflow.comments"
           onSuccess={(data) => {
+
+            console.log(data, 'dddddddddddddddddddddddddddddddddddddddddd');
             history.push(`/${window.contextPath}/employee/microplan/population-finalise-success`, {
               fileName: 'filename', // need to update when api is success
               message: "POPULATION_FINALISED_SUCCESSFUL",
