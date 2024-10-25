@@ -18,8 +18,6 @@ const inboxModuleNameMap = {
   "muster-roll-approval": "muster-roll-service",
 };
 
-const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
-
 function filterUniqueByKey(arr, key) {
   const uniqueValues = new Set();
   const result = [];
@@ -1141,6 +1139,7 @@ export const UICustomizations = {
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       const [showPopup, setShowPopup] = useState(false);
+      const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
 
       switch (key) {
         case "MICROPLAN_FACILITY_ASSIGNED_VILLAGES":
