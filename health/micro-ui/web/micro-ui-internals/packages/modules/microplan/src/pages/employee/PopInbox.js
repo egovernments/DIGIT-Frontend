@@ -448,8 +448,6 @@ const PopInbox = () => {
           requestPayload={{ PlanConfiguration: updateWorkflowForFooterAction() }}
           commentPath="workflow.comments"
           onSuccess={(data) => {
-
-            console.log(data, 'dddddddddddddddddddddddddddddddddddddddddd');
             history.push(`/${window.contextPath}/employee/microplan/population-finalise-success`, {
               fileName: 'filename', // need to update when api is success
               message: "POPULATION_FINALISED_SUCCESSFUL",
