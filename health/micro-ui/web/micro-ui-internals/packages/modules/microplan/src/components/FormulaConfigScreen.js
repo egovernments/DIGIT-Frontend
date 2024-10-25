@@ -1,90 +1,60 @@
-import React, { Fragment } from 'react'
+import React, { useState, useEffect, Fragment } from 'react';
 import FormulaSectionCard from './FormulaSectionCard';
 import HeaderComp from './HeaderComp';
 import { useTranslation } from 'react-i18next';
 import FormulaView from './FormulaView';
+import { Loader, Button, Card  } from '@egovernments/digit-ui-components';
 
 const FormulaConfigScreen = ({ customProps }) => {
+   
     const { t } = useTranslation();
-    const planConfigurations1 = customProps?.sessionData?.PLANCONFIGURATION?.operations
-    const planConfigurations = [
-        {
-            input: "input1",
-            operator: "+",
-            assumptionValue: "assumption1",
-            output: "output1",
-            showOnEstimationDashboard: true,
-            category: "CATEGORY_1"
-        },
-        {
-            input: "input2",
-            operator: "+",
-            assumptionValue: "assumption2",
-            output: "output2",
-            showOnEstimationDashboard: true,
-            category: "CATEGORY_1"
-        },
-        {
-            input: "input3",
-            operator: "+",
-            assumptionValue: "assumption3",
-            output: "output3",
-            showOnEstimationDashboard: true,
-            category: "CATEGORY_2"
-        },
-        {
-            input: "input4",
-            operator: "+",
-            assumptionValue: "assumption4",
-            output: "output4",
-            showOnEstimationDashboard: true,
-            category: "CATEGORY_2"
-        }
-    ];
+    const [planConfigurations, setPlanConfigurations] = useState(customProps?.sessionData?.FORMULA_CONFIGURATION?.formulaConfiguration?.formulaConfigValues);
+    const [dictionary, setDictionary] = useState({});
 
-    // You can log or manipulate the array as needed
 
-    let dic = {};
-    for (const ob of planConfigurations) {
-        if (!(ob.category in dic)) {
-            dic[String(ob.category)] = [{ ...ob }]
-        } else {
-            dic[String(ob.category)].push({ ...ob })
+    // Effect to populate `dic` based on `planConfigurations`
+    useEffect(() => {
+        if (planConfigurations && planConfigurations.length > 0) {
+            const tempDic = {};
+            planConfigurations.forEach((ob) => {
+                if (!tempDic[ob.category]) {
+                    tempDic[ob.category] = [{ ...ob }];
+                } else {
+                    tempDic[ob.category].push({ ...ob });
+                }
+            });
+            setDictionary(tempDic); // Update `dic` with organized data
         }
+    }, [planConfigurations, customProps]);
+
+    // Loader condition based on `dic`
+    if (Object.keys(dictionary).length < 1) {
+        return <Loader />;
     }
 
 
-
-
-
-
     return (
-
-        Object.keys(dic) && Object.keys(dic).map((item) => {
-            return (
-                <>
-                    <HeaderComp title={t(item)} />
-
-                    {dic[item].map((ob => {
-
-                        return (
-                            <>
-
+        <>
+            {Object.keys(dictionary).length > 0 && (
+                Object.keys(dictionary).map((category) => (
+                    <Fragment key={category}>
+                        <HeaderComp title={t(String(category))} />
+                        {dictionary[category].map((ob, index) => (
+                            <Fragment key={index}>
                                 <FormulaView
                                     output={ob.output}
                                     input1={ob.input}
-                                    input2={ob.operator}
+                                    input2={ob.operatorName}
                                     input3={ob.assumptionValue}
                                 />
-                            </>
+                            </Fragment>
+                        ))}
+                    </Fragment>
+                ))
+            )}
+            
+        </>
+    );
+};
 
-                        )
-                    }))}
-                </>
-            )
-        })
-
-    )
-}
-
-export default FormulaConfigScreen
+export default FormulaConfigScreen;

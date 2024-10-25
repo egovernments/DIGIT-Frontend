@@ -33,8 +33,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: #FAFAFA;
     padding: 0.5rem 1rem;
-    background-color: #fff;
     margin: 0.5rem 0;
   }
   
@@ -128,42 +128,71 @@
 }
 
 
-.as-table-like{
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.as-table-like {
   display: table;
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 1rem;     /* 1rem space between rows */
+  border-collapse: collapse;
+  table-layout: fixed;
 }
 
-.as-table-row{
+.as-table-row {
   display: table-row;
-  
+  border-bottom: 1px solid #D6D5D4;
 }
 
-.as-table-cell{
+.as-table-cell {
   display: table-cell;
   padding: 10px;
   vertical-align: top;
+  box-sizing: border-box; 
 }
 
-.as-key-cell{
+.as-key-cell {
   font-weight: bold;
-  width: 40%; /* Adjust column width for keys */
-  background-color: #f8f8f8; /* Optional: light background for key column */
-  margin-right: 5rem;
+  min-width: 20rem;  /* Reduced width to allocate more space for value */
+  background-color: #fff;
+  overflow: hidden;  /* Ensure content doesn't overflow */
+  text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+  white-space: nowrap; /* Prevent text from wrapping */
 }
 
 .as-value-cell {
-  width: 60%; /* Adjust column width for values */
-  position: absolute;
-  left: 36rem;
+  width: 70%; /* More width allocated to value */
+  overflow: hidden;  /* Ensure long text doesn’t overflow */
+  text-overflow: ellipsis; /* Show ellipsis for overflowed content */
+  white-space: nowrap; /* Prevent text from wrapping */
 }
 
-.mc_back{
-  display:flex;
+.mc_back {
+  display: flex;
   justify-content: right;
   align-items: center;
 }
-.digit-multiselectdropdown-wrap.nestedmultiselect{
+
+.digit-multiselectdropdown-wrap.nestedmultiselect {
   width: 100%;
+}
+
+.card-color {
+  background-color: #FAFAFA !important;
+}
+
+.marginBottom{
+  margin-bottom: 1rem;
+}
+
+.as-label-field { 
+  display: grid;               /* Enable grid layout */
+  grid-template-columns: 1fr 2fr; /* Define two columns with different widths */
+  gap: 0rem;                  /* Space between items (adjust as needed) */
+  overflow: auto;             /* Allow overflow if content is larger */
+  align-items: center;
+  border-bottom: '1px solid #e0e0e0'        /* Align items vertically in the center */
 }
