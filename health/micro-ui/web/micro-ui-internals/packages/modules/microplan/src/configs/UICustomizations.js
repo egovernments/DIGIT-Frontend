@@ -223,6 +223,9 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
+     
+      const roles=Digit.Hooks.useSessionStorage("User", {}).value.info.roles;
+      console.log("roles",roles);
       switch (key) {
         case "ACTIONS":
           const onActionSelect = (key, row) => {
@@ -260,7 +263,8 @@ export const UICustomizations = {
             <Button
               label={t("START")}
               variation="secondary"
-              icon={<ArrowForward styles={{ height: "1.25rem", width: "2.5rem" }} />}
+              icon={"Arrowforward"}
+              disabled={}
               type="button"
               className="dm-workbench-download-template-btn dm-hover"
               onButtonClick={(e) => onActionSelect("START", row)}
@@ -269,7 +273,7 @@ export const UICustomizations = {
             <Button
               label={t("WBH_DOWNLOAD")}
               variation="secondary"
-              icon={<DownloadIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
+              icon={"FileDownload"}
               type="button"
               className="dm-workbench-download-template-btn dm-hover"
               onButtonClick={(e) => onActionSelect("DOWNLOAD", row)}
@@ -278,7 +282,7 @@ export const UICustomizations = {
             <Button
               label={t("WBH_EDIT")}
               variation="secondary"
-              icon={<EditIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
+              icon={"EditIcon"}
               type="button"
               className="dm-workbench-download-template-btn dm-hover"
               onButtonClick={(e) => onActionSelect("EDIT", row)}
