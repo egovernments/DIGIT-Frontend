@@ -51,7 +51,6 @@ export const DataMgmtComponent = ({ customProps }) => {
                 {
                     uploadedFacilities?.map((item) => {
                         const fileName = item?.filename ? (item?.filename) : (`FileNo${item?.filestoreId}`)
-                        console.log("item",item)
                         return (
                             <FileComponent
                                 title=""
