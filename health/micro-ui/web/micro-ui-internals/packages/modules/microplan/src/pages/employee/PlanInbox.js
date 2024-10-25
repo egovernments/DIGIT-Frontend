@@ -494,7 +494,7 @@ const PlanInbox = () => {
               customStyles={tableCustomStyle}
               paginationTotalRows={totalRows}
               paginationPerPage={rowsPerPage}
-              paginationRowsPerPageOptions={[5, 10, 15, 20, 25]}
+              paginationRowsPerPageOptions={[10, 20, 50, 100]}
             // selectableRowsComponent={SimpleCheckbox}
             // selectableRowsComponent={SimpleCheckbox}
             />

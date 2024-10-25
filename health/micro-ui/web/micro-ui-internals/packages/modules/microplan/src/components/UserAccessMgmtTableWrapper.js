@@ -204,7 +204,11 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
     setCurrentPage(page);
   };
 
+  console.log(planAssignmentData)
   if (isLoading) return <Loader />;
+  else if(planAssignmentData?.data?.length === 0){
+    return null;
+  }
   else {
   return(
     <Card>
