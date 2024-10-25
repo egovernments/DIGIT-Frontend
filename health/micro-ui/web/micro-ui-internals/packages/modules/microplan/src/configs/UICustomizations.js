@@ -143,7 +143,51 @@ export const UICustomizations = {
           );
         }
       }
-    },
+      if(key==="MICROPLAN_STATUS"){
+        if(value &&value!="NA"){
+        return t(value)
+        }
+      else {
+        return (
+          <div>
+            <p>NA</p>
+          </div>
+        );
+      }
+    }
+      if(key==="CAMPAIGN_DISEASE"){
+        if(value &&value!="NA"){
+        return t(value)
+        }else {
+        return (
+          <div>
+            <p>NA</p>
+          </div>
+        );
+      }}
+      if(key==="CAMPAIGN_TYPE"){
+        if(value &&value!="NA"){
+        return t(value)
+        }else {
+        return (
+          <div>
+            <p>NA</p>
+          </div>
+        );
+      }
+    }
+    if(key==="DISTIRBUTION_STRATEGY"){
+      if(value &&value!="NA"){
+      return t(value)
+      }else {
+      return (
+        <div>
+          <p>NA</p>
+        </div>
+      );
+    }
+  }
+  },
   },
   MyMicroplanSearchConfig: {
     preProcess: (data, additionalDetails) => {
