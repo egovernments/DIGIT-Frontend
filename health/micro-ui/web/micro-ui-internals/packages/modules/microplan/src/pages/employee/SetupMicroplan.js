@@ -22,6 +22,7 @@ import { fetchDataAndSetParams } from "../../utils/fetchDataAndSetParams";
 
 const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const { dispatch, state } = useMyContext();
+  const [loader,setLoader] = useState(false)
   const history = useHistory();
   const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(0);
@@ -38,7 +39,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("MICROPLAN_DATA", {});
-  const [microplanConfig, setMicroplanConfig] = useState(MicroplanConfig(params, null, isSubmitting, null, hierarchyData));
+  const [microplanConfig, setMicroplanConfig] = useState(MicroplanConfig(totalFormData, null, isSubmitting, null, hierarchyData));
 
   //fetch existing campaign object
   const {
@@ -103,7 +104,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   }, [microplanConfig, currentKey]);
 
   useEffect(() => {
-    setMicroplanConfig(MicroplanConfig(params, null, isSubmitting, null, hierarchyData));
+    setMicroplanConfig(MicroplanConfig(totalFormData, null, isSubmitting, null, hierarchyData));
   }, [totalFormData, isSubmitting]);
 
   useEffect(() => {
@@ -139,14 +140,17 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   }, [params]);
 
   const handleUpdates = (propsForMutate) => {
+    setLoader(true)
     updateResources(propsForMutate, {
       onSuccess: (data) => {
+        setLoader(false)
         // Check if there is a redirectTo property in the response
         if (data?.redirectTo) {
           history.push(data?.redirectTo, data?.state); // Navigate to the specified route
         }
       },
       onError: (error, variables) => {
+        setLoader(false)
         // Display error toast if update fails
         setShowToast({
           key: "error",
@@ -279,6 +283,10 @@ useEffect(() => {
 
   }
 
+  if(loader){
+    return <Loader />
+  }
+
   return (
     <React.Fragment>
       <Stepper
@@ -291,8 +299,8 @@ useEffect(() => {
           "ROLE_ACCESS_CONFIGURATION",
           "SUMMARY",
         ]}
+        onStepClick={() => null}
         currentStep={currentStep + 1}
-        onStepClick={onStepClick}
         activeSteps={active}
       />
       <FormComposerV2

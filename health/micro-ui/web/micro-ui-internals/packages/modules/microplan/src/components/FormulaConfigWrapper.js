@@ -403,7 +403,7 @@ return (
                      <Stepper
                         customSteps={ruleConfigurationCategories.map(category => category.category)}
                         currentStep={formulaInternalKey}
-                        onStepClick={handleStepClick}
+                        onStepClick={() => null}
                         direction={"vertical"}
                      />
                   </Card>

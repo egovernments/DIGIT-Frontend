@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import { Loader, Header } from '@egovernments/digit-ui-react-components';
 import { Divider, Button, PopUp, Card, ActionBar, Link } from '@egovernments/digit-ui-components';
@@ -10,8 +10,10 @@ import TimelinePopUpWrapper from '../../components/timelinePopUpWrapper';
 
 const VillageView = () => {
     const location = useLocation();
+    const campaignId = location.campaignId;
     const { t } = useTranslation();
-    const { campaignId, microplanId, boundaryCode } = Digit.Hooks.useQueryParams();
+    const history = useHistory();
+    const { microplanId, boundaryCode } = Digit.Hooks.useQueryParams();
     const tenantId = Digit.ULBService.getCurrentTenantId();
 
     const userInfo = Digit.UserService.getUser();
@@ -57,7 +59,6 @@ const VillageView = () => {
 
     const onAccibilityClose = () => {
         setShowAccessbilityPopup(false);
-        refetch();
     };
 
     const handleCommentLogClick = () => {
@@ -66,16 +67,13 @@ const VillageView = () => {
 
     const onCommentLogClose = () => {
         setShowCommentLogPopup(false);
-        refetch();
     };
 
     const onSecurityClose = () => {
         setShowSecurityPopup(false);
-        refetch();
     };
     const onEditPopulationClose = () => {
         setShowEditVillagePopulationPopup(false);
-        refetch();
     };
 
     if (isLoading) {
@@ -157,11 +155,11 @@ const VillageView = () => {
                     </div>
                 </Card>
                 {showAccessbilityPopup && (
-                    <AccessibilityPopUP onClose={onAccibilityClose} census={data} />
+                    <AccessibilityPopUP onClose={onAccibilityClose} census={data} onSuccess={(data) => { refetch(); }} />
                 )}
 
                 {showSecurityPopup && (
-                    <SecurityPopUp onClose={onSecurityClose} census={data} />
+                    <SecurityPopUp onClose={onSecurityClose} census={data} onSuccess={(data) => { refetch(); }} />
                 )}
 
                 <Card type="primary" className="info-card middle-child">
@@ -209,7 +207,7 @@ const VillageView = () => {
                 </Card>
 
                 {showEditVillagePopulationPopup && (
-                    <EditVillagePopulationPopUp onClose={onEditPopulationClose} census={data} />
+                    <EditVillagePopulationPopUp onClose={onEditPopulationClose} census={data} onSuccess={(data) => { refetch(); }} />
                 )}
 
                 <Card type="primary" className="info-card">
@@ -239,7 +237,7 @@ const VillageView = () => {
             {/* commenting becuase some css is not working inside the component*/}
             <ActionBar
                 actionFields={[
-                    <Button icon="ArrowBack" label={t(`HCM_MICROPLAN_VIEW_VILLAGE_BACK`)} onClick={function noRefCheck() { }} type="button" variation="secondary" />,
+                    <Button icon="ArrowBack" label={t(`HCM_MICROPLAN_VIEW_VILLAGE_BACK`)} onClick={() => { history.push(`/${window.contextPath}/employee/microplan/pop-inbox?microplanId=${microplanId}&campaignId=${campaignId}`); }} type="button" variation="secondary" />,
                 ]}
                 className=""
                 maxActionFieldsAllowed={5}

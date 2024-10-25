@@ -307,6 +307,8 @@ export const UICustomizations = {
       }
 
       data.params.names = name;
+      data.params.sortOrder = "DESC";
+      data.params.sortBy = "lastModifiedTime";
 
       data.params.phone = phone;
 

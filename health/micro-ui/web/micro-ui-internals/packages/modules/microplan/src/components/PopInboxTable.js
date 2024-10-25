@@ -10,6 +10,7 @@ import { CheckBox } from "@egovernments/digit-ui-components";
 import EditVillagePopulationPopUp from "./editVillagePopulationPopUP";
 import { tableCustomStyle } from "./tableCustomStyle";
 
+
 const censusResponse = {
   Census: [
     {
@@ -168,7 +169,11 @@ const PopInboxTable = ({ ...props }) => {
           <Button
             label={t(`${row.boundaryCode}`)}
             onClick={() =>
-              history.push(`/${window.contextPath}/employee/microplan/village-view?microplanId=${url?.microplanId}&boundaryCode=${row.boundaryCode}`)
+              history.push({
+                pathname: `/${window.contextPath}/employee/microplan/village-view`,
+                search: `?microplanId=${url?.microplanId}&boundaryCode=${row.boundaryCode}`,
+                campaignId: url?.campaignId,
+              })
             }
             title={t(`${row.boundaryCode}`)}
             variation="link"
@@ -212,22 +217,26 @@ const PopInboxTable = ({ ...props }) => {
         selector: (row, index) => row?.assignee,
         sortable: true,
       },
-      {
-        name: t("INBOX_EDITPOPULATION"),
-        cell: (row, index, column, id) => (
-          <Button
-            label={t(`EDIT_POPULATION`)}
-            onClick={() => {
-              setShowEditVillagePopup(row);
-            }}
-            variation="link"
-            style={{}}
-            size={"medium"}
-            icon={"Edit"}
-          />
-        ),
-        sortable: false,
-      },
+      ...(props.showEditColumn
+        ? [
+          {
+            name: t("INBOX_EDITPOPULATION"),
+            cell: (row, index, column, id) => (
+              <Button
+                label={t(`EDIT_POPULATION`)}
+                onClick={() => {
+                  setShowEditVillagePopup(row);
+                }}
+                variation="link"
+                style={{}}
+                size={"medium"}
+                icon={"Edit"}
+              />
+            ),
+            sortable: false,
+          },
+        ]
+        : []),
       // {
       //   name: t(`INBOX_VILLAGE`),
       //   cell: (row, index, column, id) => <a onClick={()=>{console.log(row)}} href="">View Logs</a>,
@@ -238,7 +247,7 @@ const PopInboxTable = ({ ...props }) => {
       //   cell: row => <a onClick={()=>{console.log(row)}} href="#">View Logs</a>,
       // },
     ];
-  }, []);
+  }, [props.showEditColumn]);
 
   const handlePageChange = (page, totalRows) => {
     props?.handlePageChange(page, totalRows);
@@ -306,11 +315,12 @@ const PopInboxTable = ({ ...props }) => {
       // paginationDefaultRowsPerPage={rowsPerPage}
       pagination
       paginationServer
+      paginationDefaultPage={props?.currentPage}
       onChangePage={handlePageChange}
       onChangeRowsPerPage={handlePerRowsChange}
       paginationTotalRows={props?.totalRows}
       paginationPerPage={props?.rowsPerPage}
-      paginationRowsPerPageOptions={[5, 10, 15, 20, 25]}
+      paginationRowsPerPageOptions={[10, 20, 50, 100]}
     />
   );
 };

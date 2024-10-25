@@ -1,7 +1,7 @@
 import React, { useState, useMemo, Fragment, useEffect } from "react";
 import { CardText, Card, Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { InfoCard, PopUp } from "@egovernments/digit-ui-components";
+import { InfoCard, Loader, PopUp,Button } from "@egovernments/digit-ui-components";
 import BoundaryKpi from "./BoundaryKpi";
 import { useMyContext } from "../utils/context";
 
@@ -22,6 +22,39 @@ const BoundarySelection = ({ onSelect, props: customProps, ...props }) => {
     setSelectedData(value?.selectedData);
   };
 
+  const [showPopup,setShowPopup] = useState(false)
+
+
+  const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
+
+  const {
+    isLoading: isLoadingCampaignObject,
+    data: campaignObject,
+    error: errorCampaign,
+    refetch: refetchCampaign,
+  } = Digit.Hooks.microplanv1.useSearchCampaign(
+    {
+      CampaignDetails: {
+        tenantId,
+        ids: [campaignId],
+      },
+    },
+    {
+      enabled: campaignId ? true : false,
+      cacheTime:0
+      // queryKey: currentKey,
+    }
+  );
+
+
+   //to show alert
+   useEffect(() => {
+    //if there are any assumptions filled show this popup by default
+    if(campaignObject?.boundaries?.length>0){
+      setShowPopup(true)
+    }
+  }, [campaignObject,isLoadingCampaignObject])
+  
 
   useEffect(() => {
     if(selectedData && selectedData.length>=0){
@@ -54,6 +87,10 @@ const BoundarySelection = ({ onSelect, props: customProps, ...props }) => {
     );
   }, [customProps?.sessionData?.BOUNDARY?.boundarySelection]);
 
+  if(isLoadingCampaignObject){
+    return <Loader />
+  }
+
   return (
     <>
       <BoundaryKpi data={statusMap} />
@@ -73,6 +110,38 @@ const BoundarySelection = ({ onSelect, props: customProps, ...props }) => {
           }}
         ></BoundaryWrapper>
       </Card>
+      {showPopup &&  <PopUp
+            className={"boundaries-pop-module"}
+            type={"alert"}
+            alertHeading={t("MP_WARNING_BOUNDARIES_FORM")}
+            alertMessage={t("MP_FILES_INVALIDATION_MESSAGE")}
+            // heading={t("MP_ASSUMTI")}
+            // children={[
+            //   <div>
+            //     <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_TYPE_MODAL_TEXT") + " "}</CardText>
+            //   </div>,
+            // ]}
+            onOverlayClick={() => {
+              setShowPopup(false);
+            }}
+            onClose={() => {
+              setShowPopup(false);
+            }}
+            footerChildren={[
+              <Button
+                className={"campaign-type-alert-button"}
+                type={"button"}
+                size={"large"}
+                variation={"secondary"}
+                label={t("MP_ACK")}
+                onClick={() => {
+                  setShowPopup(false);
+                //   setCanUpdate(true);
+                }}
+              />
+            ]}
+            // sortFooterChildren={true}
+          ></PopUp>}
     </>
   );
 };

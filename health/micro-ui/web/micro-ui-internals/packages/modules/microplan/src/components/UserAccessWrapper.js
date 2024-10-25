@@ -131,7 +131,7 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
               <TextBlock subHeader={t("USER_ACCESS_MANAGEMENT")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
             </Card>
             <Card className="stepper-card">
-              <Stepper customSteps={[...mpRolesArray]} currentStep={internalKey} onStepClick={handleStepClick} direction={"vertical"} />
+              <Stepper customSteps={[...mpRolesArray]} currentStep={internalKey} onStepClick={() => null} direction={"vertical"} />
             </Card>
           </div>
 
