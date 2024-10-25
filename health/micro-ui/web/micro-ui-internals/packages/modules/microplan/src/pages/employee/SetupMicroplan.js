@@ -22,7 +22,7 @@ import { fetchDataAndSetParams } from "../../utils/fetchDataAndSetParams";
 
 const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const { dispatch, state } = useMyContext();
-  const [loader,setLoader] = useState(false)
+  const [loader, setLoader] = useState(false);
   const history = useHistory();
   const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(0);
@@ -56,7 +56,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     },
     {
       enabled: campaignId ? true : false,
-      queryKey: currentKey,
+      // queryKey: currentKey,
     }
   );
 
@@ -70,19 +70,26 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     },
     {
       enabled: microplanId ? true : false,
-      queryKey: currentKey,
+      // queryKey: currentKey,
     }
   );
 
-  useEffect(() => {
-    if (Object.keys(params).length > 0) {
-      return;
-    }
-    else if (!isLoadingPlanObject && !isLoadingCampaignObject && campaignObject && planObject) {
-      fetchDataAndSetParams(  state, setParams, campaignObject, planObject);
-    }
-  }, [params, isLoadingPlanObject, isLoadingCampaignObject, campaignObject, planObject]);
+  // useEffect(() => {
+  //   if (Object.keys(params).length > 0) {
+  //     return;
+  //   }
+  //   else if (!isLoadingPlanObject && !isLoadingCampaignObject && campaignObject && planObject) {
+  //     fetchDataAndSetParams(  state, setParams, campaignObject, planObject);
+  //   }
+  // }, [params, isLoadingPlanObject, isLoadingCampaignObject, campaignObject, planObject]);
 
+
+  useEffect(() => {
+    if (isLoadingPlanObject || isLoadingCampaignObject) return;
+    if (Object.keys(params)?.length !== 0) return;
+    if (!campaignObject || !planObject) return;
+    fetchDataAndSetParams(state, setParams, campaignObject, planObject);
+  }, [params, isLoadingPlanObject, isLoadingCampaignObject, campaignObject, planObject]);
 
   //Generic mutation to handle creation and updation of resources(plan/project)
   const { mutate: updateResources, ...rest } = Digit.Hooks.microplanv1.useCreateUpdatePlanProject();
@@ -120,8 +127,6 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     };
   }, []);
 
-
-
   // setting the current step when the key is changed on the basis of the config
   useEffect(() => {
     setCurrentStep(Number(filteredConfig?.[0]?.form?.[0]?.stepCount - 1));
@@ -140,17 +145,17 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   }, [params]);
 
   const handleUpdates = (propsForMutate) => {
-    setLoader(true)
+    setLoader(true);
     updateResources(propsForMutate, {
       onSuccess: (data) => {
-        setLoader(false)
+        setLoader(false);
         // Check if there is a redirectTo property in the response
         if (data?.redirectTo) {
           history.push(data?.redirectTo, data?.state); // Navigate to the specified route
         }
       },
       onError: (error, variables) => {
-        setLoader(false)
+        setLoader(false);
         // Display error toast if update fails
         setShowToast({
           key: "error",
@@ -160,18 +165,19 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     });
   };
   
+  
+
+
 
   const onSubmit = (formData) => {
     // setIsSubmittting to true -> to run inline validations within the components
     setIsSubmitting(true);
-
 
     //config
     const name = filteredConfig?.[0]?.form?.[0]?.name;
     const currentConfBody = filteredConfig?.[0]?.form?.[0]?.body?.[0];
 
     //Run sync validations on formData based on the screen(key)
-
 
     const toastObject = Digit.Utils.microplanv1.formValidator(formData?.[currentConfBody?.key], currentConfBody?.key, state);
     if (toastObject) {
@@ -206,7 +212,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
       planObject,
     };
 
-    if (currentConfBody.showPopupOnSubmission && (!microplanId && !campaignId)) {
+    if (currentConfBody.showPopupOnSubmission && !microplanId && !campaignId) {
       setShowPopUp(true);
       //handle updates is called in popup's confirmation button
       return;
@@ -225,16 +231,14 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const moveToPreviousStep = () => {
     setCurrentStep((prev) => prev - 1);
     setCurrentKey((prev) => prev - 1);
-  }
+  };
 
-
-const goToPreviousScreenFromFormula = () => {
-  setCurrentStep((prev) => prev - 1);
-  setCurrentKey((prev) => prev - 1);
-}
+  const goToPreviousScreenFromFormula = () => {
+    setCurrentStep((prev) => prev - 1);
+    setCurrentKey((prev) => prev - 1);
+  };
 
   useEffect(() => {
-
     window.addEventListener("moveToPrevious", moveToPreviousStep);
 
     return () => {
@@ -242,33 +246,27 @@ const goToPreviousScreenFromFormula = () => {
     };
   }, []);
 
-
-useEffect(() => { 
-  window.addEventListener("revertToPreviousScreenFromFormula", goToPreviousScreenFromFormula);
-  return () => {
-    window.removeEventListener("revertToPreviousScreenFromFormula", goToPreviousScreenFromFormula);
-  };
-}, []);
-
+  useEffect(() => {
+    window.addEventListener("revertToPreviousScreenFromFormula", goToPreviousScreenFromFormula);
+    return () => {
+      window.removeEventListener("revertToPreviousScreenFromFormula", goToPreviousScreenFromFormula);
+    };
+  }, []);
 
   const onSecondayActionClick = () => {
     if (currentKey === 1) {
       Digit.SessionStorage.del("MICROPLAN_DATA");
       history.push(`/${window.contextPath}/employee`);
     }
-    const { isLastVerticalStep,  isFormulaLastVerticalStep } = Digit.Hooks.useQueryParams();
+    const { isLastVerticalStep, isFormulaLastVerticalStep } = Digit.Hooks.useQueryParams();
 
-    if (isLastVerticalStep === 'true' || isFormulaLastVerticalStep === 'true') {
-      window.dispatchEvent(new Event("verticalStepper"))
+    if (isLastVerticalStep === "true" || isFormulaLastVerticalStep === "true") {
+      window.dispatchEvent(new Event("verticalStepper"));
       return;
     }
 
-
     setCurrentStep((prev) => prev - 1);
     setCurrentKey((prev) => prev - 1);
-
-
-
   };
 
   if (isLoadingCampaignObject || isLoadingPlanObject) {
@@ -277,14 +275,13 @@ useEffect(() => {
 
   const getNextActionLabel = () => {
     if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.isLast) {
-      return t("MP_COMPLETE_SETUP")
+      return t("MP_COMPLETE_SETUP");
     }
-    return t("MP_SAVE_PROCEED")
+    return t("MP_SAVE_PROCEED");
+  };
 
-  }
-
-  if(loader){
-    return <Loader />
+  if (loader) {
+    return <Loader />;
   }
 
   return (
@@ -353,18 +350,16 @@ useEffect(() => {
               onClick={() => {
                 setShowPopUp(false);
                 //passing props for mutate
-                handleUpdates(
-                  {
-                    totalFormData: { ...totalFormData },
-                    state,
-                    config: filteredConfig?.[0]?.form?.[0],
-                    setCurrentKey,
-                    setCurrentStep,
-                    setShowToast,
-                    campaignObject,
-                    planObject,
-                  }
-                )
+                handleUpdates({
+                  totalFormData: { ...totalFormData },
+                  state,
+                  config: filteredConfig?.[0]?.form?.[0],
+                  setCurrentKey,
+                  setCurrentStep,
+                  setShowToast,
+                  campaignObject,
+                  planObject,
+                });
               }}
             />,
             <Button
