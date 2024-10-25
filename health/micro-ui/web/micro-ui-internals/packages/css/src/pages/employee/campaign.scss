@@ -149,3 +149,31 @@
     width: -webkit-fill-available;
   }
 }
+.label-field-grid {
+  display: grid;
+  grid-template-columns: 20rem 20rem 20rem;
+  gap: 2rem;
+
+  .update-date-labelField {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: start;
+
+    .update-label {
+      display: flex;
+
+      p {
+        margin: 0;
+        margin-bottom: 0.25rem;
+      }
+
+      .mandatory-date {
+        margin-top: -0.25rem;
+      }
+    }
+  }
+
+  .digit-button-primary {
+    align-self: flex-end;
+  }
+}

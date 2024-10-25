@@ -1,9 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import HeaderComp from './HeaderComp';
-import { Card } from '@egovernments/digit-ui-components';
-import { Chip } from '@egovernments/digit-ui-components';
+import { Card, Button, PopUp, Chip, Loader } from '@egovernments/digit-ui-components';
+import { ShowMoreWrapper } from './ShowMoreWrapper';
+import { useTranslation } from 'react-i18next';
 
 const SubBoundaryView = ({ title, arr }) => {
+    const [showPopUp, setShowPopUp] = useState(false);
+    const { t } = useTranslation();
+
+    const openPopUp = () => {
+        setShowPopUp(true);
+      };
+
     return (
         <div>
             {
@@ -11,22 +19,53 @@ const SubBoundaryView = ({ title, arr }) => {
                     <Card>
                         <HeaderComp title={title} />
                         {/* Flex container for the chips */}
-                        <div className="subBoundarycomp-container">
-                            {arr.map((el, ind) => {
+                        <div className="digit-tag-container userAccessCell">
+                            {arr?.slice(0, 10)?.map((el, ind) => {
                                 return (
-                                    <div className="digit-tag-container">
                                         <Chip
+                                            key={ind}
                                             className=""
                                             error=""
                                             extraStyles={{}}
                                             iconReq=""
-                                            onClick={function noRefCheck() { }}
-                                            onTagClick={function noRefCheck() { }}
-                                            text={el}
+                                            hideClose={true}
+                                            text={t(el)}
                                         />
-                                    </div>
                                 );
-                            })}
+                            }
+                            
+                            
+                            )}
+                            {arr?.length > (10) && (
+                                <Button
+                                  label={`+${arr?.length - (10)} ${t("ES_MORE")}`}
+                                  onClick={() => openPopUp()}
+                                  variation="link"
+                                  style={{
+                                    height: "2rem",
+                                    minWidth: "4.188rem",
+                                    minHeight: "2rem",
+                                    padding: "0.5rem",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                  }}
+                                  textStyles={{
+                                    height: "auto",
+                                    fontSize: "0.875rem",
+                                    fontWeight: "400",
+                                    width: "100%",
+                                    lineHeight: "16px",
+                                    color: "#C84C0E",
+                                  }}
+                                />
+                              )}
+                               {showPopUp && (
+                                <ShowMoreWrapper
+                                  setShowPopUp={setShowPopUp}
+                                  alreadyQueuedSelectedState={arr}
+                                  heading={title}
+                                />
+                              )}
                         </div>
                     </Card>
                 ) : (
