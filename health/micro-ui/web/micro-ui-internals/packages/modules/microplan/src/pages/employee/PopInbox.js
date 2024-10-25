@@ -244,8 +244,17 @@ const PopInbox = () => {
     if (selectedFilter === "PENDING_FOR_VALIDATION") {
       setActiveLink({ code: "", name: "" });
       setShowTab(false);
+    } else {
+      if (!showTab) {
+        setShowTab(true);
+        setActiveLink({
+          code: "ASSIGNED_TO_ME",
+          name: "ASSIGNED_TO_ME"
+        });
+      }
     }
   }, [selectedFilter]);
+
 
 
   const onFilter = (selectedStatus) => {
