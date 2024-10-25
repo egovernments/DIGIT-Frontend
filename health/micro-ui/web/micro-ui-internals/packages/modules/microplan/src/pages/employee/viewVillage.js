@@ -10,14 +10,77 @@ import TimelinePopUpWrapper from '../../components/timelinePopUpWrapper';
 
 const VillageView = () => {
     const location = useLocation();
-    const campaignId = location.campaignId;
     const { t } = useTranslation();
     const history = useHistory();
-    const { microplanId, boundaryCode } = Digit.Hooks.useQueryParams();
+    const [hierarchy, setHierarchy] = useState([]);
+    const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
+    const { microplanId, boundaryCode, campaignId } = Digit.Hooks.useQueryParams();
     const tenantId = Digit.ULBService.getCurrentTenantId();
-
     const userInfo = Digit.UserService.getUser();
     const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
+    const [showAccessbilityPopup, setShowAccessbilityPopup] = useState(false);
+    const [showSecurityPopup, setShowSecurityPopup] = useState(false);
+    const [showEditVillagePopulationPopup, setShowEditVillagePopulationPopup] = useState(false);
+    const [showCommentLogPopup, setShowCommentLogPopup] = useState(false);
+
+    const findHierarchyPath = (boundaryCode, data, maxHierarchyLevel) => {
+        const hierarchy = [];
+
+        let currentNode = data.find(item => item.code === boundaryCode);
+
+        while (currentNode) {
+            hierarchy.unshift({ name: currentNode.name, type: currentNode.type }); // Store name and type in the hierarchy
+            if (currentNode.type === maxHierarchyLevel) break; // Stop if type matches maxHierarchyLevel
+            currentNode = data.find(item => item.code === currentNode.parent); // Move up to the parent
+        }
+
+        return hierarchy;
+    };
+
+
+    const { data: planEmployeeDetailsData, isLoading: isLoadingPlanEmployee } = Digit.Hooks.microplanv1.usePlanSearchEmployee({
+        tenantId: tenantId,
+        body: {
+            PlanEmployeeAssignmentSearchCriteria: {
+                tenantId: tenantId,
+                planConfigurationId: microplanId,
+                employeeId: [userInfo.info.uuid],
+                role: ["POPULATION_DATA_APPROVER", "ROOT_POPULATION_DATA_APPROVER"]
+            },
+        },
+        config: {
+            enabled: true,
+            select: (data) => {
+                return data?.PlanEmployeeAssignment?.[0];
+            },
+        },
+    });
+
+
+    const {
+        isLoading: isLoadingCampaignObject,
+        data: campaignObject,
+        error: errorCampaign,
+        refetch: refetchCampaign,
+    } = Digit.Hooks.microplanv1.useSearchCampaign(
+        {
+            CampaignDetails: {
+                tenantId,
+                ids: ["16424396-f83b-4a7a-9ab4-c015ffe5113c"],
+            },
+        },
+        {
+            enabled: planEmployeeDetailsData ? true : false,
+        }
+    );
+
+
+    useEffect(() => {
+        if (campaignObject?.boundaries) {
+            const parentHierarchy = findHierarchyPath(boundaryCode, campaignObject?.boundaries, planEmployeeDetailsData?.hierarchyLevel);
+            setHierarchy(parentHierarchy);
+        }
+    }, [campaignObject]);
 
     // Custom hook to fetch census data based on microplanId and boundaryCode
     const reqCriteriaResource = {
@@ -42,10 +105,43 @@ const VillageView = () => {
     const { isLoading, data, isFetching, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
 
 
-    const [showAccessbilityPopup, setShowAccessbilityPopup] = useState(false);
-    const [showSecurityPopup, setShowSecurityPopup] = useState(false);
-    const [showEditVillagePopulationPopup, setShowEditVillagePopulationPopup] = useState(false);
-    const [showCommentLogPopup, setShowCommentLogPopup] = useState(false);
+    const { isLoading: isWorkflowLoading, data: workflowData, revalidate, refetch: refetchBussinessService } = Digit.Hooks.useCustomAPIHook({
+        url: "/egov-workflow-v2/egov-wf/businessservice/_search",
+        params: {
+            tenantId: tenantId,
+            businessServices: "CENSUS",
+        },
+        config: {
+            enabled: data ? true : false,
+            select: (data) => {
+                return data.BusinessServices?.[0];
+            },
+        },
+    });
+
+
+    useEffect(() => {
+        if (workflowData) {
+
+            // Assume selectedFilter maps to applicationStatus or state
+            const selectedState = workflowData?.states?.find(
+                (state) => state.state === data?.status
+            );
+
+            // Filter actions based on the selected state
+            const availableActions = selectedState?.actions?.filter((action) =>
+                action.roles.some((role) => userRoles.includes(role))
+            );
+
+            // Update the available actions state
+            setAvailableActionsForUser(availableActions || []);
+
+        }
+    }, [workflowData, data]);
+
+
+    // actionsToHide array by checking for "EDIT" in the actionMap
+    const availableEditAction = availableActionsForUser?.filter(action => action?.action?.includes("EDIT"))?.map(action => action?.action);
 
     const handleEditPopulationClick = () => {
         setShowEditVillagePopulationPopup(true);
@@ -76,7 +172,7 @@ const VillageView = () => {
         setShowEditVillagePopulationPopup(false);
     };
 
-    if (isLoading) {
+    if (isLoading || isLoadingCampaignObject || isLoadingPlanEmployee || isWorkflowLoading) {
         return <Loader />;
     }
 
@@ -90,22 +186,15 @@ const VillageView = () => {
                 <div className="village-header" >
                     {'Village 1'}
                 </div>
-                <Card type="primary" className="middle-child" >
-
-                    <div className="label-pair">
-                        <span className="label-heading">{t(`HCM_MICROPLAN_DISCRICT_LABEL`)}</span>
-                        <span className="label-text">{data?.boundaryCode}</span>
-                    </div>
-
-                    <div className="label-pair">
-                        <span className="label-heading">{t(`HCM_MICROPLAN_ADMIN_POST_LABEL`)}</span>
-                        <span className="label-text">{data?.boundaryCode}</span>
-                    </div>
-
-                    <div className="label-pair">
-                        <span className="label-heading">{t(`HCM_MICROPLAN_LOCALITY_LABEL`)}</span>
-                        <span className="label-text">{data?.boundaryCode}</span>
-                    </div>
+                <Card type="primary" className="middle-child">
+                    {hierarchy.map((node, index) => (
+                        <div key={index} className="label-pair">
+                            <span className="label-heading">
+                                {t(`HCM_MICROPLAN_${node.type.toUpperCase()}_LABEL`)}
+                            </span>
+                            <span className="label-text">{node.name}</span>
+                        </div>
+                    ))}
                 </Card>
 
                 <Card type="primary" className="middle-child">
@@ -165,7 +254,7 @@ const VillageView = () => {
                 <Card type="primary" className="info-card middle-child">
                     <div className="card-heading">
                         <h2 className="card-heading-title">{t(`HCM_MICROPLAN_POPULATION_DATA_HEADING`)}</h2>
-                        <Button
+                        {availableEditAction.length > 0 && <Button
                             className="custom-class"
                             icon="Edit"
                             iconFill=""
@@ -177,7 +266,7 @@ const VillageView = () => {
                             style={{}}
                             title=""
                             variation="secondary"
-                        />
+                        />}
                     </div>
                     {/* Five Label-Text Pairs */}
                     <div className="label-pair">

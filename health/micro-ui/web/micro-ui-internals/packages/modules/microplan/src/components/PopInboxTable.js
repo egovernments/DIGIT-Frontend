@@ -106,11 +106,7 @@ const PopInboxTable = ({ ...props }) => {
           <Button
             label={t(`${row.boundaryCode}`)}
             onClick={() =>
-              history.push({
-                pathname: `/${window.contextPath}/employee/microplan/village-view`,
-                search: `?microplanId=${url?.microplanId}&boundaryCode=${row.boundaryCode}`,
-                campaignId: url?.campaignId,
-              })
+              history.push(`/${window.contextPath}/employee/microplan/village-view?microplanId=${url?.microplanId}&boundaryCode=${row.boundaryCode}&campaignId=${url?.campaignId}`)
             }
             title={t(`${row.boundaryCode}`)}
             variation="link"
