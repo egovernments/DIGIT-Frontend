@@ -66,7 +66,7 @@ const VillageView = () => {
         {
             CampaignDetails: {
                 tenantId,
-                ids: ["16424396-f83b-4a7a-9ab4-c015ffe5113c"],
+                ids: [campaignId],
             },
         },
         {
