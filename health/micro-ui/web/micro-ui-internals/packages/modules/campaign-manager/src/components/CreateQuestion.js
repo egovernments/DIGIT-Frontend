@@ -1,5 +1,4 @@
 import React, { useState, useEffect, Fragment, useContext } from "react";
-import { } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { DustbinIcon } from "./icons/DustbinIcon";
 import { PRIMARY_COLOR } from "../utils";
@@ -8,8 +7,7 @@ import MultipleChoice from "./MultipleChoice";
 import Checkboxes from "./Checkboxes";
 import Dropdowns from "./Dropdowns";
 import { QuestionContext } from "./CreateQuestionContext";
-import { set } from "lodash";
-import { temp_data, CreateChecklist } from "../pages/employee/CreateChecklist"
+
 
 // field selector for multiselect and signle select component.
 const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field, dispatchQuestionData,
@@ -400,20 +398,11 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                   <div>
                     <div className="question-field-container">
                       <div className="question-field" style={{ display: "flex", height: "3.5rem", gap: "1.5rem" }}>
-                        {/* <TextInput
-                        // style={{ maxWidth: "40rem" }}
-                        name="title"
-                        value={field?.title || ""}
-                        onChange={(event) => handleUpdateField(event.target.value, "title", field.key, field.id)}
-                        placeholder={"Type your questions here"}
-                        className={"example"}
-                      /> */}
                         <TextInput
                           disabled={dis}
                           isRequired={true}
                           className="tetxinput-example"
                           type={"text"}
-                          // props={{ fieldStyle: example }}
                           name="title"
                           value={field?.title || ""}
                           onChange={(event) => handleUpdateField(event.target.value, "title", field.key, field.id)}
@@ -506,10 +495,8 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
           variation="secondary"
           label={t("ADD_QUESTION")}
           className={"hover"}
-          // icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
           icon="Add"
           iconFill=""
-          // onButtonClick={addMoreField}
           onClick={() => addMoreField()}
           textStyles={{ width: 'unset' }}
         />
