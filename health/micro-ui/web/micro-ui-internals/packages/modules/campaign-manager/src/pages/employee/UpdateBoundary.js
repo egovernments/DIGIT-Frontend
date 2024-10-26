@@ -125,6 +125,8 @@ const UpdateBoundary = ({hierarchyData }) => {
   const lowestHierarchy = useMemo(() => {
     return hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
   }, [hierarchyConfig, hierarchyType]);
+  const { isLoading, data: projectType } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }]);
+  
 
   const reqCriteriaCampaign = {
     url: `/project-factory/v1/project-type/search`,
@@ -177,7 +179,6 @@ const UpdateBoundary = ({hierarchyData }) => {
     },
   });
 
-  const { isLoading, data: projectType } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }]);
 
   useEffect(() => {
     if (fetchUpload) {
@@ -331,7 +332,7 @@ const UpdateBoundary = ({hierarchyData }) => {
           payloadData.resources = temp;
           payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
           payloadData.additionalDetails = {
-            beneficiaryType: totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.beneficiaryType,
+            beneficiaryType:projectType?.["HCM-PROJECT-TYPES"]?.projectTypes.find(projectType => projectType.code === CampaignData?.CampaignDetails?.[0]?.projectType)?.beneficiaryType || null,
             key: currentKey,
             targetId: dataParams?.boundaryId,
             facilityId: dataParams?.facilityId,
@@ -389,7 +390,7 @@ const UpdateBoundary = ({hierarchyData }) => {
           payloadData.resources = temp;
           payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
           payloadData.additionalDetails = {
-            beneficiaryType: totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.beneficiaryType,
+            beneficiaryType:projectType?.["HCM-PROJECT-TYPES"]?.projectTypes.find(projectType => projectType.code === CampaignData?.CampaignDetails?.[0]?.projectType)?.beneficiaryType || null,
             key: currentKey,
             targetId: dataParams?.boundaryId,
             facilityId: dataParams?.facilityId,
@@ -441,7 +442,7 @@ const UpdateBoundary = ({hierarchyData }) => {
           payloadData.resources = temp;
           payloadData.projectType =  CampaignData?.CampaignDetails?.[0]?.projectType;
           payloadData.additionalDetails = {
-            beneficiaryType: totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.beneficiaryType,
+            beneficiaryType:projectType?.["HCM-PROJECT-TYPES"]?.projectTypes.find(projectType => projectType.code === CampaignData?.CampaignDetails?.[0]?.projectType)?.beneficiaryType || null,
             key: currentKey,
             targetId: dataParams?.boundaryId,
             facilityId: dataParams?.facilityId,
