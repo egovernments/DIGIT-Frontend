@@ -307,7 +307,7 @@ function RoleTableComposer({ nationalRoles }) {
         queryClient.invalidateQueries("PLAN_SEARCH_EMPLOYEE_WITH_TAGGING");
         refetchHrms();
         setIsLoading(false);
-        setShowToast({ key: "success", label: t("ASSIGNED_SUCCESSFULLY") });
+        setShowToast({ key: "success", label: t("UNASSIGNED_SUCCESSFULLY") });
       },
       onError: (error, variables) => {
         setIsLoading(false);
