@@ -647,6 +647,11 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             facilityId: dataParams?.facilityId,
             userId: dataParams?.userId,
           };
+          if (totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure) {
+            payloadData.additionalDetails.cycleData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
+          } else {
+            payloadData.additionalDetails.cycleData = {};
+          }
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
             const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule, totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure , DeliveryConfig , totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code);
             payloadData.deliveryRules =  [temp?.[0]];
@@ -712,6 +717,11 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             facilityId: dataParams?.facilityId,
             userId: dataParams?.userId,
           };
+          if (totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure) {
+            payloadData.additionalDetails.cycleData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
+          } else {
+            payloadData.additionalDetails.cycleData = {};
+          }
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
             const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule ,  totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure ,DeliveryConfig ,totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code);
             payloadData.deliveryRules = temp?.[0];
