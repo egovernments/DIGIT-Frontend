@@ -917,6 +917,7 @@ export const UICustomizations = {
       data.body.PlanConfigurationSearchCriteria.userUuid = Digit.UserService.getUser().info.uuid;
       // delete data.body.PlanConfigurationSearchCriteria.pagination
       data.body.PlanConfigurationSearchCriteria.status = status?.status;
+      data.body.PlanConfigurationSearchCriteria.name=data?.state?.searchForm?.microplanName;
       cleanObject(data.body.PlanConfigurationSearchCriteria);
 
       const dic = {
@@ -938,6 +939,11 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      const rolesCodes=Digit.Hooks.useSessionStorage("User", {})[0]?.info?.roles;
+      const roles=rolesCodes.map((item)=> item.code);
+      const hasRequiredRole = roles.some(
+        (role) => role === "ROOT_POPULATION_DATA_APPROVER" || role === "ROOT_POPULATION_APPROVER"
+      );
       switch (key) {
         case "ACTIONS":
           const onActionSelect = (key, row) => {
@@ -972,31 +978,32 @@ export const UICustomizations = {
             }
           };
           return row.status === "EXECUTION_TO_BE_DONE" ? (
-            <Button
+            <ButtonNew
               label={t("START")}
               variation="secondary"
-              icon={<ArrowForward styles={{ height: "1.25rem", width: "2.5rem" }} />}
+              icon={"ArrowForward"}
               type="button"
+              disabled={!hasRequiredRole}
               className="dm-workbench-download-template-btn dm-hover"
-              onButtonClick={(e) => onActionSelect("START", row)}
+              onClick={(e) => onActionSelect("START", row)}
             />
           ) : row.status === "RESOURCE_ESTIMATIONS_APPROVED" ? (
-            <Button
+            <ButtonNew
               label={t("WBH_DOWNLOAD")}
               variation="secondary"
-              icon={<DownloadIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
+              icon={"FileDownload"}
               type="button"
               className="dm-workbench-download-template-btn dm-hover"
-              onButtonClick={(e) => onActionSelect("DOWNLOAD", row)}
+              onClick={(e) => onActionSelect("DOWNLOAD", row)}
             />
           ) : (
-            <Button
+            <ButtonNew
               label={t("WBH_EDIT")}
               variation="secondary"
-              icon={<EditIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
+              icon={"EditIcon"}
               type="button"
               className="dm-workbench-download-template-btn dm-hover"
-              onButtonClick={(e) => onActionSelect("EDIT", row)}
+              onClick={(e) => onActionSelect("EDIT", row)}
             />
           );
         case "NAME_OF_MICROPLAN":
@@ -1010,19 +1017,83 @@ export const UICustomizations = {
                   overflowWrap: "break-word", // Break long words at the edge
                 }}
               >
-                <p>{value}</p>
+                <p>{t(value)}</p>
               </div>
             );
           } else {
             return (
               <div>
-                <p>NA</p>
+                <p>{t("ES_COMMON_NA")}</p>
               </div>
             );
           }
+          case "CAMPAIGN_DISEASE":
+          if (value && value !== "NA") {
+            return (
+              <div
+                style={{
+                  maxWidth: "15rem", // Set the desired maximum width
+                  wordWrap: "break-word", // Allows breaking within words
+                  whiteSpace: "normal", // Ensures text wraps normally
+                  overflowWrap: "break-word", // Break long words at the edge
+                }}
+              >
+                <p>{t(value)}</p>
+              </div>
+            );
+          } else {
+            return (
+              <div>
+                <p>{t("ES_COMMON_NA")}</p>
+              </div>
+            );
+          }
+          case "CAMPAIGN_TYPE":
+          if (value && value !== "NA") {
+            return (
+              <div
+                style={{
+                  maxWidth: "15rem", // Set the desired maximum width
+                  wordWrap: "break-word", // Allows breaking within words
+                  whiteSpace: "normal", // Ensures text wraps normally
+                  overflowWrap: "break-word", // Break long words at the edge
+                }}
+              >
+                <p>{t(value)}</p>
+              </div>
+            );
+          } else {
+            return (
+              <div>
+                <p>{t("ES_COMMON_NA")}</p>
+              </div>
+            );
+          }
+          case "DISTIRBUTION_STRATEGY":
+            if (value && value !== "NA") {
+              return (
+                <div
+                  style={{
+                    maxWidth: "15rem", // Set the desired maximum width
+                    wordWrap: "break-word", // Allows breaking within words
+                    whiteSpace: "normal", // Ensures text wraps normally
+                    overflowWrap: "break-word", // Break long words at the edge
+                  }}
+                >
+                  <p>{t(value)}</p>
+                </div>
+              );
+            } else {
+              return (
+                <div>
+                  <p>{t("ES_COMMON_NA")}</p>
+                </div>
+              );
+            }
         default:
           return t("ES_COMMON_NA");
       }
+      
     },
   },
 
