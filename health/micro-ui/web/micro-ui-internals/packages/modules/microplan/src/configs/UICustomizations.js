@@ -4,7 +4,7 @@ import React, { useState, Fragment } from "react";
 import { Button as ButtonNew } from "@egovernments/digit-ui-components";
 import { Dropdown } from "@egovernments/digit-ui-components";
 import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader, EditIcon, ArrowForward } from "@egovernments/digit-ui-react-components";
-import FacilityPopUp from "../components/FacilityPopup";
+
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
@@ -493,7 +493,7 @@ export const UICustomizations = {
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       const [showPopup, setShowPopup] = useState(false);
-
+      const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
       switch (key) {
         case "MICROPLAN_FACILITY_ASSIGNED_VILLAGES":
           const assignedVillages = row?.additionalDetails?.assignedVillages; 

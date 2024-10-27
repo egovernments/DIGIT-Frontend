@@ -135,7 +135,7 @@ const searchCampaignConfig = async (body) => {
   });
 
   return response?.CampaignDetails?.[0];
-}
+};
 
 const updateProject = async (req) => {
   const planRes = await Digit.CustomService.getResponse({
@@ -162,10 +162,28 @@ const createUpdatePlanProject = async (req) => {
   try {
     //later this object must have an invalidation config which can be used to invalidate data such as files uploaded,assumptions,formulas etc...
 
-    const { totalFormData, state, setShowToast, setCurrentKey, setCurrentStep, config, campaignObject, planObject, invalidateConfig } = req;
+    const { totalFormData, state, setShowToast, setCurrentKey, setCurrentStep, config, invalidateConfig } = req;
     const { microplanId, campaignId } = Digit.Hooks.useQueryParams();
     const tenantId = Digit.ULBService.getCurrentTenantId();
     //now basically we need to decide from which screen this hook was triggered and take action accordingly
+    let planObject = {};
+    let campaignObject = {};
+    if (microplanId) {
+      planObject = await searchPlanConfig({
+        PlanConfigurationSearchCriteria: {
+          tenantId,
+          id: microplanId,
+        },
+      });
+    }
+    if (campaignId) {
+      campaignObject = await searchCampaignConfig({
+        CampaignDetails: {
+          tenantId: tenantId,
+          ids: [campaignId],
+        },
+      });
+    }
 
     const triggeredFrom = config.name;
     switch (triggeredFrom) {
@@ -207,27 +225,24 @@ const createUpdatePlanProject = async (req) => {
       case "BOUNDARY":
         // call an update to plan
         // also write logic to invalidate
-        
+
         //fetch fresh campaignObject
         const campaignObjectForBoundary = await searchCampaignConfig({
-          CampaignDetails:{
+          CampaignDetails: {
             tenantId: tenantId,
-            ids: [
-                campaignId
-            ]
-          }
-        })
-        
-        const prevSelectedBoundaries = campaignObjectForBoundary?.boundaries
+            ids: [campaignId],
+          },
+        });
+
+        const prevSelectedBoundaries = campaignObjectForBoundary?.boundaries;
         //if both are equal then we don't even have to make any update call and we don't have to invalidate
-        if(_.isEqual(prevSelectedBoundaries,totalFormData?.BOUNDARY?.boundarySelection?.selectedData)){
+        if (_.isEqual(prevSelectedBoundaries, totalFormData?.BOUNDARY?.boundarySelection?.selectedData)) {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
           return {
             triggeredFrom,
           };
         }
-        
 
         const updatedCampaignObject = {
           ...campaignObjectForBoundary,
@@ -237,26 +252,29 @@ const createUpdatePlanProject = async (req) => {
         };
         const campaignResBoundary = await updateProject(updatedCampaignObject);
         //after updating campaign we need to update plan object as well to invalidate files since boundaries got changed
-        
-        //fetch fresh plan object 
+
+        //fetch fresh plan object
         const fetchedPlanForBoundaryInvalidate = await searchPlanConfig({
           PlanConfigurationSearchCriteria: {
             tenantId,
             id: microplanId,
           },
         });
-        //invalidate files 
+        //invalidate files
         const updatedPlanObjectForBoundaryInvalidate = {
           ...fetchedPlanForBoundaryInvalidate,
-          files:fetchedPlanForBoundaryInvalidate?.files?.length>0 ? fetchedPlanForBoundaryInvalidate?.files?.map(file => {
-            return {
-              ...file,
-              active:false
-            }
-          }) : []
-        }
-        // update plan object 
-        const planUpdateForBoundaryInvalidation = await updatePlan(updatedPlanObjectForBoundaryInvalidate)
+          files:
+            fetchedPlanForBoundaryInvalidate?.files?.length > 0
+              ? fetchedPlanForBoundaryInvalidate?.files?.map((file) => {
+                  return {
+                    ...file,
+                    active: false,
+                  };
+                })
+              : [],
+        };
+        // update plan object
+        const planUpdateForBoundaryInvalidation = await updatePlan(updatedPlanObjectForBoundaryInvalidate);
         if (planUpdateForBoundaryInvalidation) {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
@@ -290,7 +308,7 @@ const createUpdatePlanProject = async (req) => {
             : [];
         const invalidatedOperations =
           planObject.operations.length > 0
-            ? planObject.assumptions.map((row) => {
+            ? planObject.operations.map((row) => {
                 return {
                   ...row,
                   active: false,
@@ -362,8 +380,8 @@ const createUpdatePlanProject = async (req) => {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
           window.dispatchEvent(new Event("isLastStep"));
-          Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep:null }); 
-          Digit.Utils.microplanv1.updateUrlParams({ internalKey:null }); 
+          Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
+          Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
           return {
             triggeredFrom,
           };
@@ -379,13 +397,17 @@ const createUpdatePlanProject = async (req) => {
             id: microplanId,
           },
         });
-        const prevAssumptionsForSubHypothesis = fetchedPlanForSubHypothesis?.assumptions?.map((row) => {
-          const updatedRow = {
-            ...row,
-            active: false,
-          };
-          return updatedRow;
-        });
+        const prevAssumptionsForSubHypothesis =
+          fetchedPlanForSubHypothesis?.assumptions.length > 0
+            ? fetchedPlanForSubHypothesis?.assumptions?.map((row) => {
+                const updatedRow = {
+                  ...row,
+                  active: false,
+                };
+                return updatedRow;
+              })
+            : [];
+
         //get the list of assumptions from UI
         const assumptionsToUpdateFromUI = req?.assumptionsToUpdate;
         //mix the current + api res
@@ -398,56 +420,61 @@ const createUpdatePlanProject = async (req) => {
         return;
 
       case "FORMULA_CONFIGURATION":
-            
+        if (
+          !totalFormData?.FORMULA_CONFIGURATION?.formulaConfiguration?.formulaConfigValues.every(
+            (row) => row.category && row.output && row.input && row.operatorName && row.assumptionValue
+          )
+        ) {
+          setShowToast({ key: "error", label: "ERR_FORMULA_MANDATORY" });
+          return;
+        }
         //fetch current plan
         const fetchedPlanForFormula = await searchPlanConfig({
           PlanConfigurationSearchCriteria: {
             tenantId,
             id: microplanId,
           },
-        })
-        
+        });
+
         //here we can always invalidate prev assumptions
-        const prevFormulas = fetchedPlanForFormula?.operations?.map(row => {
+        const prevFormulas = fetchedPlanForFormula?.operations?.map((row) => {
           const updatedRow = {
             ...row,
-            active:false
-          }
-          return updatedRow
-        })
-        const formulasToUpdate = totalFormData?.FORMULA_CONFIGURATION?.formulaConfiguration?.formulaConfigValues?.filter(row => {
-          return (row.category && row.output && row.input && row.operatorName && row.assumptionValue) 
-        })?.map((row)=>{
-          const updatedRow = {...row}
-          const operatorName = row?.operatorName
-          delete updatedRow?.operatorName
-          updatedRow.operator = state?.RuleConfigureOperators?.find(operation => operation.
-            operatorName === operatorName)?.operatorCode
+            active: false,
+          };
           return updatedRow;
-        })
-        
+        });
+        const formulasToUpdate = totalFormData?.FORMULA_CONFIGURATION?.formulaConfiguration?.formulaConfigValues
+          ?.filter((row) => {
+            return row.category && row.output && row.input && row.operatorName && row.assumptionValue;
+          })
+          ?.map((row) => {
+            const updatedRow = { ...row };
+            const operatorName = row?.operatorName;
+            delete updatedRow?.operatorName;
+            updatedRow.operator = state?.RuleConfigureOperators?.find((operation) => operation.operatorName === operatorName)?.operatorCode;
+            return updatedRow;
+          });
+
         const updatedPlanObjFormula = {
           ...fetchedPlanForFormula,
-          operations:[
-            ...prevFormulas,
-            ...formulasToUpdate
-          ]
-        }
+          operations: [...prevFormulas, ...formulasToUpdate],
+        };
 
         const planResFormula = await updatePlan(updatedPlanObjFormula);
-        if(planResFormula?.PlanConfiguration?.[0]?.id){
+        if (planResFormula?.PlanConfiguration?.[0]?.id) {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
-          window.dispatchEvent(new Event("isFormulaLastStep"))
-          Digit.Utils.microplanv1.updateUrlParams({ isFormulaLastVerticalStep:null }); 
-          Digit.Utils.microplanv1.updateUrlParams({ formulaInternalKey:null }); 
+          window.dispatchEvent(new Event("isFormulaLastStep"));
+          Digit.Utils.microplanv1.updateUrlParams({ isFormulaLastVerticalStep: null });
+          Digit.Utils.microplanv1.updateUrlParams({ formulaInternalKey: null });
           return {
             triggeredFrom,
           };
-        }else {
+        } else {
           setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
         }
-               
+
       case "UPLOADBOUNDARYDATA":
         const fetchedPlanForBoundary = await searchPlanConfig({
           PlanConfigurationSearchCriteria: {
@@ -549,55 +576,55 @@ const createUpdatePlanProject = async (req) => {
             // "verificationDocuments": null,
             // "rating": null
           },
-          additionalDetails:{
+          additionalDetails: {
             ...fetchedPlanForSummary.additionalDetails,
-            setupCompleted:true,//we can put this in url when we come from microplan search screen to disable routing to other screens -> Only summary screen should show, or only allowed screens should show
-          }
+            setupCompleted: true, //we can put this in url when we come from microplan search screen to disable routing to other screens -> Only summary screen should show, or only allowed screens should show
+          },
         };
-      const planResForCompleteSetup = await updatePlan(updatedReqForCompleteSetup);
-      // const updatedReqForCompleteSetupNextAction = {
-      //   ...fetchedPlanForSummary,
-      //   workflow: {
-      //     action: "START_DATA_APPROVAL",
-      //     // "assignes": null,
-      //     // "comments": null,
-      //     // "verificationDocuments": null,
-      //     // "rating": null
-      //   },
-      //   additionalDetails:{
-      //     ...fetchedPlanForSummary.additionalDetails,
-      //     setupCompleted:true,//we can put this in url when we come from microplan search screen to disable routing to other screens -> Only summary screen should show, or only allowed screens should show
-      //   }
-      // };
-      // const planResForCompleteSetupNextAction = await updatePlan(updatedReqForCompleteSetupNextAction);
-      
-      //here do cleanup activity and go to next screen
+        const planResForCompleteSetup = await updatePlan(updatedReqForCompleteSetup);
+        // const updatedReqForCompleteSetupNextAction = {
+        //   ...fetchedPlanForSummary,
+        //   workflow: {
+        //     action: "START_DATA_APPROVAL",
+        //     // "assignes": null,
+        //     // "comments": null,
+        //     // "verificationDocuments": null,
+        //     // "rating": null
+        //   },
+        //   additionalDetails:{
+        //     ...fetchedPlanForSummary.additionalDetails,
+        //     setupCompleted:true,//we can put this in url when we come from microplan search screen to disable routing to other screens -> Only summary screen should show, or only allowed screens should show
+        //   }
+        // };
+        // const planResForCompleteSetupNextAction = await updatePlan(updatedReqForCompleteSetupNextAction);
 
-      if (planResForCompleteSetup?.PlanConfiguration?.[0]?.id) {
-        // setCurrentKey((prev) => prev + 1);
-        // setCurrentStep((prev) => prev + 1);
-        return {
-          triggeredFrom,
-          redirectTo:`/${window.contextPath}/employee/microplan/setup-completed-response`,
-          isState:true,
-          state:{
-            message:"SETUP_COMPLETED",
-            back:"BACK_TO_HOME",
-            backlink:`/${window.contextPath}/employee`,
-            description:"SETUP_MICROPLAN_SUCCESS_RESPONSE_DESC"
-          }
-        };
-      } else {
-        setShowToast({ key: "error", label: "ERR_FAILED_TO_COMPLETE_SETUP" });
-      }
+        //here do cleanup activity and go to next screen
+
+        if (planResForCompleteSetup?.PlanConfiguration?.[0]?.id) {
+          // setCurrentKey((prev) => prev + 1);
+          // setCurrentStep((prev) => prev + 1);
+          return {
+            triggeredFrom,
+            redirectTo: `/${window.contextPath}/employee/microplan/setup-completed-response`,
+            isState: true,
+            state: {
+              message: "SETUP_COMPLETED",
+              back: "BACK_TO_HOME",
+              backlink: `/${window.contextPath}/employee`,
+              description: "SETUP_MICROPLAN_SUCCESS_RESPONSE_DESC",
+            },
+          };
+        } else {
+          setShowToast({ key: "error", label: "ERR_FAILED_TO_COMPLETE_SETUP" });
+        }
 
       case "ROLE_ACCESS_CONFIGURATION":
         //run any api validations if any/
         setCurrentKey((prev) => prev + 1);
         setCurrentStep((prev) => prev + 1);
         window.dispatchEvent(new Event("isLastStep"));
-        Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep:null }); 
-        Digit.Utils.microplanv1.updateUrlParams({ internalKey:null }); 
+        Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
+        Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
         return {
           triggeredFrom,
         };
