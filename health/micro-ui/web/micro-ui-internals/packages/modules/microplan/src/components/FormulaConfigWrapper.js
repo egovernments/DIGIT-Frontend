@@ -17,7 +17,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
   const [formulaConfigValues, setFormulaConfigValues] = useState(
     Digit.SessionStorage.get("MICROPLAN_DATA")?.FORMULA_CONFIGURATION?.formulaConfiguration?.formulaConfigValues || []
   );
-  // console.log(Digit.SessionStorage.get("MICROPLAN_DATA"));
+  
   const assumptionsFormValues = customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm; //array with key value pair
   const campaignType = customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code;
   const resourceDistributionStrategyCode =
@@ -254,7 +254,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
     // calculate this based on prevOutputs also
     const legalValuesForAssumptions = assumptionsInPlan?.map(assumption => assumption.key)
     const prevOutputs = []
-    console.log(filteredAutoFilledRuleConfigurations);
+  
     const initialFormulas = filteredFormulas.map((item) => {
       const updatedObj =  {
       source: "MDMS",
