@@ -345,7 +345,7 @@ function RoleTableComposer({ nationalRoles }) {
             selected={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedHierarchy || null}
             disabled={nationalRoles?.includes(category) ? true : false}
             isMandatory={true}
-            option={state?.boundaryHierarchy.filter((item) => !(item.boundaryType === "Village"))}
+            option={state?.boundaryHierarchy.filter((item) => !(item.boundaryType === "Village" || item.boundaryType==="Country"))}
             select={(value) => {
               row.selectedHeirarchy = value;
               handleHierarchyChange(value, row);

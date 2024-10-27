@@ -35,7 +35,7 @@ const SearchSavedPlansWithCampaign = async (body) => {
       body: {
         PlanEmployeeAssignmentSearchCriteria: {
           tenantId: tenantId,
-          employeeId: [uuid],
+          // employeeId: [uuid],
           filterUniqueByPlanConfig: true
         },
       },
@@ -58,6 +58,7 @@ const SearchSavedPlansWithCampaign = async (body) => {
           status: body?.PlanConfigurationSearchCriteria?.status,
           limit: body?.PlanConfigurationSearchCriteria?.limit,
           offset: body?.PlanConfigurationSearchCriteria?.offset,
+          name:body.PlanConfigurationSearchCriteria.name,
           ids: listOfPlans,
         },
       },
