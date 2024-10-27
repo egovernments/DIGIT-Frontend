@@ -35,7 +35,7 @@ const SearchSavedPlansWithCampaign = async (body) => {
       body: {
         PlanEmployeeAssignmentSearchCriteria: {
           tenantId: tenantId,
-          // employeeId: [uuid],
+          employeeId: [uuid],
           filterUniqueByPlanConfig: true
         },
       },
