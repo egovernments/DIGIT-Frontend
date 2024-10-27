@@ -17,7 +17,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     const { mutate: updateResources, ...rest } = Digit.Hooks.microplanv1.useCreateUpdatePlanProject();
     const { t } = useTranslation();
     const { state } = useMyContext();
-    const [assumptionValues, setAssumptionValues] = useState(customProps?.sessionData?.HYPOTHESIS?.Assumptions?.assumptionValues ||[]);
+    const [assumptionValues, setAssumptionValues] = useState( Digit.SessionStorage.get("MICROPLAN_DATA")?.HYPOTHESIS?.Assumptions?.assumptionValues ||[]);
     const assumptionsFormValues = customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm //array with key and value 
     const campaignType =  customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code
     const resourceDistributionStrategyCode= customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode

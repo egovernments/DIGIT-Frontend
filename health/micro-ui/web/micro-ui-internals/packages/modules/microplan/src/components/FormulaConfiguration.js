@@ -4,6 +4,7 @@ import { Card, Header, DeleteIconv2, LabelFieldPair, AddIcon, Button, CardText }
 import { Dropdown, CheckBox, PopUp } from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR } from "../utils/utilities";
 import { useFormulaContext } from "./FormulaConfigWrapper";
+import _ from "lodash";
 
 const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initialFormulas }) => {
   const { t } = useTranslation();
@@ -12,7 +13,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
   const [formulaToDelete, setFormulaToDelete] = useState(null);
   const [formulas, setFormulas] = useState(initialFormulas);
   const [selectedDeletedFormula, setSelectedDeletedFormula] = useState(null);
-  const { formulaConfigValues, handleFormulaChange, setFormulaConfigValues, deletedFormulas, setDeletedFormulas, planObject } = useFormulaContext();
+  const { formulaConfigValues, handleFormulaChange, setFormulaConfigValues, deletedFormulas, setDeletedFormulas, assumptionsInPlan } = useFormulaContext();
   const deletedFormulaCategories = useRef({});
   const isAddNewDisabled =
     !deletedFormulaCategories.current[category] ||
@@ -27,8 +28,8 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
     setFormulas(initialFormulas);
   }, [initialFormulas]);
 
-  const handleDeleteClick = (index) => {
-    setFormulaToDelete(index);
+  const handleDeleteClick = (index,formula) => {
+    setFormulaToDelete(formula);
     setShowPopUp(true);
   };
 
@@ -38,8 +39,15 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
 
   const handleConfirmDelete = () => {
     if (formulaToDelete !== null) {
-      const deletedFormula = formulas[formulaToDelete];
-      const updatedFormulas = formulas.filter((_, i) => i !== formulaToDelete);
+      const deletedFormula = formulas.find(operation => operation.output === formulaToDelete.output)
+
+      //matching output for deleting a formula
+      const updatedFormulas = formulas.filter(operation => {
+        if(operation.output === formulaToDelete.output){
+          return false
+        }
+        return true
+      })
 
       if (!deletedFormulaCategories.current[category]) {
         deletedFormulaCategories.current[category] = [];
@@ -53,6 +61,41 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
       setFormulas(updatedFormulas);
 
       setFormulaToDelete(null);
+
+      //cascade effect
+      //at the end of this function we need to handle cascading effect of formula deletion
+      //if this particular output is getting used in the below formulas then we need to clear that i.e., clearing this output from any list of inputs
+      setFormulaConfigValues((prevValues) => {
+        const deletedFormulaOutput = deletedFormula?.output;
+        //now basically check whether this is getting used in any of the input or assumptionValue
+        //if yes clear that
+        const updatedFormulaValues = prevValues?.map(formula => {
+          if(formula.input === deletedFormulaOutput && formula.assumptionValue === deletedFormulaOutput){
+            const updatedFormulaObj = {
+              ...formula,
+              input:"",
+              assumptionValue:""
+            }
+            return updatedFormulaObj
+          }
+          else if(formula.input === deletedFormulaOutput  ){
+            const updatedFormulaObj = {
+              ...formula,
+              input:""
+            }
+            return updatedFormulaObj
+          }else if(formula.assumptionValue === deletedFormulaOutput){
+            const updatedFormulaObj = {
+              ...formula,
+              assumptionValue:""
+            }
+            return updatedFormulaObj
+          } else{
+            return formula
+          }
+        })
+        return updatedFormulaValues
+      })
     }
 
     setShowPopUp(false);
@@ -108,6 +151,14 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
             ...filteredInputs.map((input) => ({ code: input, label: input })),
             ...previousOutputs.map((output) => ({ code: output, label: output })),
           ];
+
+          const assumptionOptions = [
+            ...assumptions.map((assumptionValue) => ({
+              code: assumptionValue,
+              label: assumptionValue,
+            })),
+            ...previousOutputs.map((output) => ({ code: output, label: output })),
+          ]
           return (
             <>
               <Card style={{ margin: "0", padding: "0 1rem", background: "#eee", border: "0.1rem solid #ddd" }}>
@@ -137,7 +188,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                       label: operator.operatorName,
                     }))}
                     select={(value) => {
-                      handleFormulaChange(formula.output, "operatorName", value, category);
+                      handleFormulaChange(formula.output, "operatorName", {code:value.label}, category);
                     }}
                     selected={() => ({ label: formula.operatorName })}
                     optionKey="label"
@@ -148,10 +199,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                     variant="select-dropdown"
                     t={t}
                     isMandatory={false}
-                    option={assumptions.map((assumptionValue) => ({
-                      code: assumptionValue,
-                      label: assumptionValue,
-                    }))}
+                    option={assumptionOptions}
                     select={(value) => {
                       handleFormulaChange(formula.output, "assumptionValue", value, category);
                     }}
@@ -169,7 +217,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                     style={{ height: "50px", fontSize: "20px" }}
                     title=""
                     variation="secondary"
-                    onButtonClick={() => handleDeleteClick(index)}
+                    onButtonClick={() => handleDeleteClick(index,formula)}
                   />
                 </LabelFieldPair>
               </Card>

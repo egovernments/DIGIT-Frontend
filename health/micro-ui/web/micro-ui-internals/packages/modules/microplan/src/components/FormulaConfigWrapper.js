@@ -15,8 +15,9 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
   const { t } = useTranslation();
   const { state } = useMyContext();
   const [formulaConfigValues, setFormulaConfigValues] = useState(
-    customProps?.sessionData?.FORMULA_CONFIGURATION?.formulaConfiguration?.formulaConfigValues || []
+    Digit.SessionStorage.get("MICROPLAN_DATA")?.FORMULA_CONFIGURATION?.formulaConfiguration?.formulaConfigValues || []
   );
+  // console.log(Digit.SessionStorage.get("MICROPLAN_DATA"));
   const assumptionsFormValues = customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm; //array with key value pair
   const campaignType = customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code;
   const resourceDistributionStrategyCode =
@@ -33,18 +34,19 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
   const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
-  const { isLoading: isLoadingPlanObject, data: planObject, error: errorPlan, refetch: refetchPlan } = Digit.Hooks.microplanv1.useSearchPlanConfig(
-    {
-      PlanConfigurationSearchCriteria: {
-        tenantId,
-        id: microplanId,
-      },
-    },
-    {
-      enabled: microplanId ? true : false,
-      //   queryKey: currentKey,
-    }
-  );
+  const assumptionsInPlan = Digit.SessionStorage.get("MICROPLAN_DATA")?.HYPOTHESIS.Assumptions.assumptionValues
+  // const { isLoading: isLoadingPlanObject, data: planObject, error: errorPlan, refetch: refetchPlan } = Digit.Hooks.microplanv1.useSearchPlanConfig(
+  //   {
+  //     PlanConfigurationSearchCriteria: {
+  //       tenantId,
+  //       id: microplanId,
+  //     },
+  //   },
+  //   {
+  //     enabled: microplanId ? true : false,
+  //     //   queryKey: currentKey,
+  //   }
+  // );
 
   const navigateBack = () => {
     if (formulaInternalKey > 1) {
@@ -128,6 +130,24 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
   }, [currentCategoryRuleConfigurations]);
 
   const handleNext = () => {
+    //here just check formulConfigValues
+    if(formulaConfigValues.filter(row => row.category === currentCategory).every(row=>{
+      return row.assumptionValue && row.input && row.output && row.operatorName
+    })){
+      if (formulaInternalKey < ruleConfigurationCategories?.length) {
+        setFormulaInternalKey((prevKey) => prevKey + 1); // Update key in URL
+      }
+    }else{
+      setShowToast({
+        key: "error",
+        label: t("ERR_MANDATORY_FIELD"),
+        transitionTime: 3000,
+      });
+    }
+    // TODO:
+    //simply returning from here, rest of the code is not required for now maybe required later
+    return;
+    
     //array of objects each with input, output, operatorName, assumptionValue
     const currentRuleConfigurations = ruleConfigurationCategories[formulaInternalKey - 1]?.ruleConfigurations || [];
     const existingFormulaOutputs = formulaConfigValues?.map((formula) => formula.output);
@@ -230,17 +250,27 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
   }, [formulaInternalKey]);
 
   useEffect(() => {
-    const initialFormulas = filteredFormulas.map((item) => ({
+    //TODO:
+    // calculate this based on prevOutputs also
+    const legalValuesForAssumptions = assumptionsInPlan?.map(assumption => assumption.key)
+    const prevOutputs = []
+    console.log(filteredAutoFilledRuleConfigurations);
+    const initialFormulas = filteredFormulas.map((item) => {
+      const updatedObj =  {
       source: "MDMS",
       category: currentCategory,
       input: item.input,
       output: item.output,
       operatorName: item.operatorName,
-      assumptionValue: item.assumptionValue,//check this assumption is there in plan object or not
+      //check this assumption is there in plan object or not
+      assumptionValue:legalValuesForAssumptions?.includes(item.assumptionValue) || prevOutputs?.includes(item.assumptionValue) ? item.assumptionValue : "",
+      // assumptionValue:item.assumptionValue,
       showOnEstimationDashboard: true,
-    }));
-    console.log(filteredFormulas);
-    console.log(planObject);
+    }
+
+    prevOutputs.push(item.output)
+    return updatedObj;
+  });
     const existingOutputs = new Set(formulaConfigValues.map((formula) => formula.output));
     const newFormulas = initialFormulas?.filter((formula) => !existingOutputs.has(formula.output) && !deletedFormulas.includes(formula.output));
 
@@ -251,14 +281,14 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
 
   useEffect(() => {
     // Step 1: Filter assumptions based on current category
-    if (planObject?.assumptions?.length > 0 && !isLoadingPlanObject) {
-      const filteredAssumptions = planObject?.assumptions.filter((assumption) => assumption.category === currentCategory);
+    if (assumptionsInPlan?.length > 0 ) {
+      const filteredAssumptions = assumptionsInPlan?.filter((assumption) => assumption.category === currentCategory);
 
       // Step 2: Extract keys from filtered assumptions
       const keys = filteredAssumptions?.map((assumption) => assumption.key);
       setAssumptions(keys);
     }
-  }, [currentCategory, planObject?.assumptions, formulaConfigValues, setFormulaConfigValues]);
+  }, [currentCategory, formulaConfigValues, setFormulaConfigValues]);
 
   useEffect(() => {
     if (formulaInternalKey === ruleConfigurationCategories?.length) {
@@ -322,14 +352,11 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
   customProps.operators = operators;
   customProps.assumptions = assumptions;
 
-  if (isLoadingPlanObject) {
-    return <Loader />;
-  }
 
   return (
     <Fragment>
       <FormulaContext.Provider
-        value={{ formulaConfigValues, handleFormulaChange, setFormulaConfigValues, deletedFormulas, setDeletedFormulas, planObject }}
+        value={{ formulaConfigValues, handleFormulaChange, setFormulaConfigValues, deletedFormulas, setDeletedFormulas, assumptionsInPlan }}
       >
         <div style={{ display: "flex", gap: "2rem" }}>
           <div className="card-container">
