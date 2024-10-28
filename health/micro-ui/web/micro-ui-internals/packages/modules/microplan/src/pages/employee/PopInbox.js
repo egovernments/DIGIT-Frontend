@@ -458,10 +458,10 @@ const PopInbox = () => {
           commentPath="workflow.comments"
           onSuccess={(data) => {
             history.push(`/${window.contextPath}/employee/microplan/population-finalise-success`, {
-              fileName: 'filename', // need to update when api is success
+              // fileName: 'filename', // need to update when api is success
               message: "POPULATION_FINALISED_SUCCESSFUL",
               back: "GO_BACK_TO_HOME",
-              backlink: "/employee"
+              backlink: `/${window.contextPath}/employee`
             });
           }}
           onError={(data) => {

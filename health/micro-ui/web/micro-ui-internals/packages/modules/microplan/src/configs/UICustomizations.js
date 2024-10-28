@@ -100,7 +100,7 @@ export const UICustomizations = {
                   // Use window.location.href to navigate
                   window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${
                     row.CampaignDetails.id
-                  }`;
+                  }&setup-completed=${true}`;
                 }
               }}
               optionKey={"name"}

@@ -31,7 +31,7 @@ const Spinner = styled.div`
   height: 80px;
   border-radius: 50%;
 `;
-function CustomLoader() {
+export function CustomLoader() {
   return (
     <div style={{ padding: "24px" }}>
       <Spinner />

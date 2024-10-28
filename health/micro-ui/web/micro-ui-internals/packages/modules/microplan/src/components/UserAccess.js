@@ -1,7 +1,7 @@
-import { Button, Card, Chip, Header, NoResultsFound, PopUp, Toast } from "@egovernments/digit-ui-components";
+import { Button, Card, Chip, Header, Loader, NoResultsFound, PopUp, Toast } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import RoleTableComposer from "./RoleTableComposer";
+import RoleTableComposer, { CustomLoader } from "./RoleTableComposer";
 import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./tableCustomStyle";
 
@@ -181,15 +181,22 @@ function UserAccess({ category, setData, nationalRoles }) {
         <p className="mp-description">{t(`${category}_DESCRIPTION`)}</p>
       </Card>
 
-      {planEmployee?.data?.length > 0 ? (
-        <Card>
-          <div style={{ display: "flex", flexDirection: "row-reverse" }}>
-            <Button variation="secondary" label={t(`ASSIGN`)} icon={"AddIcon"} onClick={() => setShowPopUp(true)} />
-          </div>
+      <Card>
+        <div style={{ display: "flex", flexDirection: "row-reverse" }}>
+          <Button variation="secondary" label={t(`ASSIGN`)} icon={"AddIcon"} onClick={() => setShowPopUp(true)} />
+        </div>
+        {!isPlanEmpSearchLoading && (!planEmployee?.data || planEmployee?.data?.length === 0) ? (
+          <Card>
+            <NoResultsFound />
+            <Button variation="secondary" label={t(`ASSIGN`)} style={{ margin: "auto" }} icon={"AddIcon"} onClick={() => setShowPopUp(true)} />
+          </Card>
+        ) : (
           <DataTable
             category={category}
             columns={columns}
             data={planEmployee?.data}
+            progressPending={isPlanEmpSearchLoading}
+            progressComponent={<CustomLoader />}
             pagination
             paginationServer
             customStyles={tableCustomStyle}
@@ -199,13 +206,8 @@ function UserAccess({ category, setData, nationalRoles }) {
             paginationPerPage={rowsPerPage}
             paginationRowsPerPageOptions={[5, 10, 15, 20]}
           />
-        </Card>
-      ) : (
-        <Card>
-          <NoResultsFound />
-          <Button variation="secondary" label={t(`ASSIGN`)} style={{ margin: "auto" }} icon={"AddIcon"} onClick={() => setShowPopUp(true)} />
-        </Card>
-      )}
+        )}
+      </Card>
 
       {showPopUp && (
         <PopUp

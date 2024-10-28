@@ -544,10 +544,10 @@ const PlanInbox = () => {
           commentPath="workflow.comments"
           onSuccess={(data) => {
             history.push(`/${window.contextPath}/employee/microplan/microplan-success`, {
-              fileName: "filename", // need to update when api is success
+              // fileName: "filename", // need to update when api is success
               message: "FINALISE_MICROPLAN_SUCCESSFUL",
               back: "GO_BACK_TO_HOME",
-              backlink: "/employee",
+              backlink: `/${window.contextPath}/employee`
             });
           }}
           onError={(data) => {

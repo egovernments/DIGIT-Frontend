@@ -32,6 +32,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const [showToast, setShowToast] = useState(false);
   const [showPopUp, setShowPopUp] = useState(false);
   const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
+  const setupCompleted = queryParams?.["setup-completed"];
   const [shouldUpdate, setShouldUpdate] = useState(false);
   const [currentKey, setCurrentKey] = useState(() => {
     return key ? parseInt(key) : 1;
@@ -82,7 +83,6 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   //     fetchDataAndSetParams(  state, setParams, campaignObject, planObject);
   //   }
   // }, [params, isLoadingPlanObject, isLoadingCampaignObject, campaignObject, planObject]);
-
 
   useEffect(() => {
     if (isLoadingPlanObject || isLoadingCampaignObject) return;
@@ -164,10 +164,6 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
       },
     });
   };
-  
-  
-
-
 
   const onSubmit = (formData) => {
     // setIsSubmittting to true -> to run inline validations within the components
@@ -317,12 +313,11 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
         onSecondayActionClick={onSecondayActionClick}
         label={getNextActionLabel()}
       />
-      {/* {actionBar === "true" && (
+      {setupCompleted ? (
         <ActionBar style={{ zIndex: "19" }}>
-          {displayMenu ? <Menu options={["UPDATE_DATES", "CONFIGURE_APP"]} t={t} onSelect={onActionSelect} /> : null}
-          <SubmitBar label={t("ES_COMMON_TAKE_ACTION")} onSubmit={() => setDisplayMenu(!displayMenu)} />
+          <SubmitBar label={t("GO_BACK_TO_MY_MICROPLAN")} onSubmit={() => history.goBack()} />
         </ActionBar>
-      )} */}
+      ) : null}
       {showToast && (
         <Toast
           type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
