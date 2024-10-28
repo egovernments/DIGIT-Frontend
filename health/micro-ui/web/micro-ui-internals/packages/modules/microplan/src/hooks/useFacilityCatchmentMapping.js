@@ -44,7 +44,7 @@ const useFcilityCatchmentMapping = (props) => {
       enabled: !!planEmployee,
       select: (data) => data,
     },
-    changeQueryName: `${facilityName}${facilityType}${residingVillage}${status}${props?.state?.tableForm?.limit}${props?.state?.tableForm?.offset}`,
+    changeQueryName: `${facilityName}${facilityType?.name}${residingVillage}${status?.name}${props?.state?.tableForm?.limit}${props?.state?.tableForm?.offset}`,
   };
   const { isLoading, data, isFetching, refetch, revalidate } = Digit.Hooks.useCustomAPIHook(reqCriteria);
   return {
