@@ -12,13 +12,18 @@ const UserDownload = () => {
     const { data, isFetching, isLoading } = Digit.Hooks.microplanv1.useFileDownload({
         "SearchCriteria": {
             "tenantId": Digit.ULBService.getCurrentTenantId(),
-            "source": "microplan",
+            "type": "user",
             "status": "completed"
+            // "action": "create"
         }
     },
         {
             enabled: true,
-            select: data => {   
+            select: data => { 
+                const currentUserUuid = Digit.UserService.getUser().info.uuid;
+                const ResourceDetails = data?.ResourceDetails || [];
+                const filteredData = ResourceDetails.filter(item => item?.auditDetails?.createdBy == currentUserUuid && item?.action == "create");
+                data.ResourceDetails = filteredData
                 return data;
             }
         }
