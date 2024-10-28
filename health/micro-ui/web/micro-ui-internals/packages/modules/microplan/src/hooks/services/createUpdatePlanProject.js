@@ -251,6 +251,7 @@ const createUpdatePlanProject = async (req) => {
           //hardcoding this rn to update campaign. Check with admin console team
         };
         const campaignResBoundary = await updateProject(updatedCampaignObject);
+        await new Promise((resolve) => setTimeout(resolve, 5000));
         //after updating campaign we need to update plan object as well to invalidate files since boundaries got changed
 
         //fetch fresh plan object

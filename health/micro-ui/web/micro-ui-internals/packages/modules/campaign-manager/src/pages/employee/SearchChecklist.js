@@ -203,7 +203,7 @@ const SearchChecklist = () => {
             </PopUp>
           )}
         </div>
-        <div className="container">
+          <div className="container-full">
           <div className="card-container">
             <Card className="card-header-timeline">
               <TextBlock subHeader={t("ACTION_LABEL_CONFIGURE_APP")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
@@ -212,9 +212,9 @@ const SearchChecklist = () => {
               <Stepper customSteps={["HCM_MANAGE_CHECKLIST"]} currentStep={1} onStepClick={() => { }} direction={"vertical"} />
             </Card>
           </div>
-          <div className="inbox-search-wrapper" style={{ width: "100%" }}>
-            {/* Pass defaultValues as props to InboxSearchComposer */}
-            <InboxSearchComposer
+          <div className="inbox-search-wrapper card-container1" style={{ width: "100%" }}>
+            {/* Pass defaultValues as props to InboxSearchComposer */} 
+           <InboxSearchComposer
               configs={checklistSearchConfig?.[0]}
               // defaultValues={defaultValues}
               additionalConfig={{
