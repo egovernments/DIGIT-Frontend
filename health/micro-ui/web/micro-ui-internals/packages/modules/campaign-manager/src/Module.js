@@ -49,7 +49,6 @@ import CampaignUpdateSummary from "./components/CampaignUpdateSummary";
 import XlsPreview from "./components/XlsPreview";
 import BulkUpload from "./components/BulkUpload";
 import BoundarySummary from "./components/BoundarySummary";
-import Boundary from "./pages/employee/Boundary";
 import GeoPode from "./pages/employee/GeoPode";
 import ViewBoundary from "./pages/employee/ViewBoundary";
 import ViewHierarchy from "./pages/employee/ViewHierarchy";
@@ -75,7 +74,7 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
 
   const moduleCode = BOUNDARY_HIERARCHY_TYPE 
   ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`] 
-  : [ "campaignmanager", "schema", "admin-schemas"]; 
+  : [ "campaignmanager", "schema", "admin-schemas","checklist"]; 
 
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
@@ -144,11 +143,9 @@ const componentsToRegister = {
   CampaignUpdateSummary,
   XlsPreview,
   MultiSelectDropdownBoundary:MultiSelectDropdown,
-  Boundary,
   GeoPode,
   ViewBoundary,
   ViewHierarchy,
-  // SelectingBoundaryComponent
   BoundarySummary
 };
 

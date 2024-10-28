@@ -1,7 +1,6 @@
-import { Card, Uploader, Button, PopUp, ActionBar, Toast, Loader } from "@egovernments/digit-ui-components";
+import { Card, Uploader, Button,  ActionBar, Toast, Loader } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState, useRef} from "react";
 import { useTranslation } from "react-i18next";
-// import { useParams,useHistory } from "react-router-dom";
 import XlsPreviewNew from "../../components/XlsPreviewNew";
 import { Svgicon } from "../../utils/Svgicon";
 import { useHistory } from "react-router-dom";
@@ -15,17 +14,12 @@ const ViewHierarchy = () => {
     const searchParams = new URLSearchParams(location.search);
     const defaultHierarchyType = searchParams.get("defaultHierarchyType");
     const hierarchyType = searchParams.get("hierarchyType");
-    const [showPopUp, setShowPopUp] = useState(false);
-    // const stateData = window.history.state;
-    const stateData = location.state;
-    const [geoPodeData, setGeoPodeData] = useState(false);
+    
     const inputRef = useRef(null); // Ref to trigger file input
-
 
     const [defData, setDefData] = useState([]);
     const [hierData, setHierData] = useState([]);
 
-    const hierarchies = [defaultHierarchyType, hierarchyType];
     const [previewPage, setPreviewPage] = useState(false);
     const [firstPage, setFirstPage] = useState(true);
     const [fileUrl, setFileUrl] = useState("");
@@ -71,23 +65,6 @@ const ViewHierarchy = () => {
         fetchData();
     }, []);
 
-    // const { downloadExcelTemplate, loading, error } = downloadTemplate(defData, defaultHierarchyType);
-    
-    const generateFile = async()=>{
-        const res = await Digit.CustomService.getResponse({
-            url: `/project-factory/v1/data/_generate`,
-            body: {
-            },
-            params: {
-                tenantId: tenantId,
-                type: "boundaryManagement",
-                forceUpdate: true,
-                hierarchyType: hierarchyType,
-                campaignId: "default"
-            }
-        });
-        return res;
-    }
     const generateTemplate = async() => {
         const res = await Digit.CustomService.getResponse({
             url: `/project-factory/v1/data/_download`,
@@ -109,7 +86,6 @@ const ViewHierarchy = () => {
         if (resFile && resFile?.GeneratedResource?.[0]?.fileStoreid) {
             // Splitting filename before .xlsx or .xls
             const fileNameWithoutExtension = hierarchyType ;
-            
             Digit.Utils.campaign.downloadExcelWithCustomName({ fileStoreId: resFile?.GeneratedResource?.[0]?.fileStoreid, customName: fileNameWithoutExtension });
         }
 

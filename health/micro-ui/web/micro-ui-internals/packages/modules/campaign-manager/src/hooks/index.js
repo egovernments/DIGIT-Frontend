@@ -16,6 +16,7 @@ import useTypeOfChecklist from "./useTypeOfChecklist";
 import { useBoundaryRelationshipSearch } from "./useBoundaryRelationshipSearch";
 import useUpdateChecklist from "./useUpdateChecklist";
 import useMDMSServiceSearch from "./useMDMSServiceSearch";
+import useBoundaryHome from "./useBoundaryHome";
 
 const UserService = {};
 
@@ -40,8 +41,8 @@ const campaign = {
   useTypeOfChecklist,
   useBoundaryRelationshipSearch,
   useUpdateChecklist,
-  useMDMSServiceSearch
-
+  useMDMSServiceSearch,
+  useBoundaryHome
 };
 
 const Hooks = {
