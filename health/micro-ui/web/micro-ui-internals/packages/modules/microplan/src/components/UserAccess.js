@@ -205,7 +205,6 @@ function UserAccess({ category, setData, nationalRoles }) {
     {
       name: t("ACTION"),
       cell: (row) => {
-        console.log("ROWS: ", row);
         return (
           <Button
             className={"roleTableCell"}
