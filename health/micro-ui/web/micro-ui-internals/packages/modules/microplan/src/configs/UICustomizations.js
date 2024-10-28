@@ -5,7 +5,6 @@ import { Button as ButtonNew } from "@egovernments/digit-ui-components";
 import { Dropdown } from "@egovernments/digit-ui-components";
 import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader, EditIcon, ArrowForward } from "@egovernments/digit-ui-react-components";
 
-
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
@@ -61,7 +60,7 @@ export const UICustomizations = {
       data.body.PlanConfigurationSearchCriteria.userUuid = Digit.UserService.getUser().info.uuid;
       // delete data.body.PlanConfigurationSearchCriteria.pagination
       data.body.PlanConfigurationSearchCriteria.status = status?.status;
-      data.body.PlanConfigurationSearchCriteria.name=data?.state?.searchForm?.microplanName;
+      data.body.PlanConfigurationSearchCriteria.name = data?.state?.searchForm?.microplanName;
       cleanObject(data.body.PlanConfigurationSearchCriteria);
 
       const dic = {
@@ -79,115 +78,106 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      var options = []
-      if(row?.status=="DRAFT"){
-        options = [
-          { code: "1", name: "Edit Setup" }
-        ]
-      }
-      else{
-        options = [
-            { code: "1", name: "View Summary" }
-        ]
-      }
-      if (key === "ACTIONS") {
-        // `/${window.contextPath}/employee/microplan/setup-microplan?key=${9}&preview=${true}&action=${false}`
-        return (
-          <Dropdown
-            option={options}
-            select={(e) => {
-              console.log(e, "event"); // e contains the selected option
-              if (e.name == "Edit Setup") {
-                // Use window.location.href to navigate
-                window.location.href = `/${
-                  window.contextPath
-                }/employee/microplan/setup-microplan?key=${1}&microplanId=${row.id}&campaignId=${
-                  row.CampaignDetails.id
-                }`;
-              }
-              if (e.name == "View Summary") {
-                // Use window.location.href to navigate
-                window.location.href = `/${
-                  window.contextPath
-                }/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${
-                  row.CampaignDetails.id
-                }`;
-              }
-            }}
-            optionKey={"name"}
-            selected={{ code: "1", name: "Actions" }}
-          />
-          // <p>$${value}</p>
-        );
-      }
-
-      if (key === "NAME_OF_MICROPLAN") {
-        if (value && value !== "NA") {
+      switch (key) {
+        case "ACTIONS":
+          let options = [];
+          if (row?.status == "DRAFT") {
+            options = [{ code: "1", name: "Edit Setup" }];
+          } else {
+            options = [{ code: "1", name: "View Summary" }];
+          }
           return (
-            <div
-              style={{
-                maxWidth: "15rem", // Set the desired maximum width
-                wordWrap: "break-word", // Allows breaking within words
-                whiteSpace: "normal", // Ensures text wraps normally
-                overflowWrap: "break-word", // Break long words at the edge
+            <Dropdown
+              option={options}
+              select={(e) => {
+                if (e.name == "Edit Setup") {
+                  // Use window.location.href to navigate
+                  window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${1}&microplanId=${row.id}&campaignId=${
+                    row.CampaignDetails.id
+                  }`;
+                }
+                if (e.name == "View Summary") {
+                  // Use window.location.href to navigate
+                  window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${
+                    row.CampaignDetails.id
+                  }`;
+                }
               }}
-            >
-              <p>{t(value)}</p>
-            </div>
+              optionKey={"name"}
+              selected={{ code: "1", name: "Actions" }}
+            />
           );
-        } else {
-          return (
-            <div>
-              <p>{t("NA")}</p>
-            </div>
-          );
-        }
+
+        case "NAME_OF_MICROPLAN":
+          if (value && value !== "NA") {
+            return (
+              <div
+                style={{
+                  maxWidth: "15rem", // Set the desired maximum width
+                  wordWrap: "break-word", // Allows breaking within words
+                  whiteSpace: "normal", // Ensures text wraps normally
+                  overflowWrap: "break-word", // Break long words at the edge
+                }}
+              >
+                <p>{t(value)}</p>
+              </div>
+            );
+          } else {
+            return (
+              <div>
+                <p>{t("NA")}</p>
+              </div>
+            );
+          }
+
+        case "MICROPLAN_STATUS":
+          if (value && value != "NA") {
+            return t(value);
+          } else {
+            return (
+              <div>
+                <p>{t("NA")}</p>
+              </div>
+            );
+          }
+
+        case "CAMPAIGN_DISEASE":
+          if (value && value != "NA") {
+            return t(value);
+          } else {
+            return (
+              <div>
+                <p>{t("NA")}</p>
+              </div>
+            );
+          }
+
+        case "CAMPAIGN_TYPE":
+          if (value && value != "NA") {
+            return t(value);
+          } else {
+            return (
+              <div>
+                <p>{t("NA")}</p>
+              </div>
+            );
+          }
+
+        case "DISTIRBUTION_STRATEGY":
+          if (value && value != "NA") {
+            return t(value);
+          } else {
+            return (
+              <div>
+                <p>{t("NA")}</p>
+              </div>
+            );
+          }
+
+        default:
+          return null; // Handle any unexpected keys here if needed
       }
-      if(key==="MICROPLAN_STATUS"){
-        if(value &&value!="NA"){
-        return t(value)
-        }
-      else {
-        return (
-          <div>
-            <p>{t("NA")}</p>
-          </div>
-        );
-      }
-    }
-      if(key==="CAMPAIGN_DISEASE"){
-        if(value &&value!="NA"){
-        return t(value)
-        }else {
-        return (
-          <div>
-            <p>{t("NA")}</p>
-          </div>
-        );
-      }}
-      if(key==="CAMPAIGN_TYPE"){
-        if(value &&value!="NA"){
-        return t(value)
-        }else {
-        return (
-          <div>
-            <p>{t("NA")}</p>
-          </div>
-        );
-      }
-    }
-    if(key==="DISTIRBUTION_STRATEGY"){
-      if(value &&value!="NA"){
-      return t(value)
-      }else {
-      return (
-        <div>
-          <p>{t("NA")}</p>
-        </div>
-      );
-    }
-  }
-  },
+    },
   },
   MyMicroplanSearchConfig: {
     preProcess: (data, additionalDetails) => {
@@ -202,7 +192,7 @@ export const UICustomizations = {
       data.body.PlanConfigurationSearchCriteria.userUuid = Digit.UserService.getUser().info.uuid;
       // delete data.body.PlanConfigurationSearchCriteria.pagination
       data.body.PlanConfigurationSearchCriteria.status = status?.status;
-      data.body.PlanConfigurationSearchCriteria.name=data?.state?.searchForm?.microplanName;
+      data.body.PlanConfigurationSearchCriteria.name = data?.state?.searchForm?.microplanName;
       cleanObject(data.body.PlanConfigurationSearchCriteria);
 
       const dic = {
@@ -224,11 +214,9 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      const rolesCodes=Digit.Hooks.useSessionStorage("User", {})[0]?.info?.roles;
-      const roles=rolesCodes.map((item)=> item.code);
-      const hasRequiredRole = roles.some(
-        (role) => role === "ROOT_POPULATION_DATA_APPROVER" || role === "ROOT_POPULATION_APPROVER"
-      );
+      const rolesCodes = Digit.Hooks.useSessionStorage("User", {})[0]?.info?.roles;
+      const roles = rolesCodes.map((item) => item.code);
+      const hasRequiredRole = roles.some((role) => role === "ROOT_POPULATION_DATA_APPROVER" || role === "ROOT_POPULATION_APPROVER");
       switch (key) {
         case "ACTIONS":
           const onActionSelect = (key, row) => {
@@ -312,7 +300,7 @@ export const UICustomizations = {
               </div>
             );
           }
-          case "CAMPAIGN_DISEASE":
+        case "CAMPAIGN_DISEASE":
           if (value && value !== "NA") {
             return (
               <div
@@ -333,7 +321,7 @@ export const UICustomizations = {
               </div>
             );
           }
-          case "CAMPAIGN_TYPE":
+        case "CAMPAIGN_TYPE":
           if (value && value !== "NA") {
             return (
               <div
@@ -354,31 +342,40 @@ export const UICustomizations = {
               </div>
             );
           }
-          case "DISTIRBUTION_STRATEGY":
-            if (value && value !== "NA") {
-              return (
-                <div
-                  style={{
-                    maxWidth: "15rem", // Set the desired maximum width
-                    wordWrap: "break-word", // Allows breaking within words
-                    whiteSpace: "normal", // Ensures text wraps normally
-                    overflowWrap: "break-word", // Break long words at the edge
-                  }}
-                >
-                  <p>{t(value)}</p>
-                </div>
-              );
-            } else {
-              return (
-                <div>
-                  <p>{t("ES_COMMON_NA")}</p>
-                </div>
-              );
-            }
+        case "DISTIRBUTION_STRATEGY":
+          if (value && value !== "NA") {
+            return (
+              <div
+                style={{
+                  maxWidth: "15rem", // Set the desired maximum width
+                  wordWrap: "break-word", // Allows breaking within words
+                  whiteSpace: "normal", // Ensures text wraps normally
+                  overflowWrap: "break-word", // Break long words at the edge
+                }}
+              >
+                <p>{t(value)}</p>
+              </div>
+            );
+          } else {
+            return (
+              <div>
+                <p>{t("ES_COMMON_NA")}</p>
+              </div>
+            );
+          }
+        case "MICROPLAN_STATUS":
+          if (value && value != "NA") {
+            return t(value);
+          } else {
+            return (
+              <div>
+                <p>{t("NA")}</p>
+              </div>
+            );
+          }
         default:
           return t("ES_COMMON_NA");
       }
-      
     },
   },
 
@@ -496,7 +493,7 @@ export const UICustomizations = {
       const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
       switch (key) {
         case "MICROPLAN_FACILITY_ASSIGNED_VILLAGES":
-          const assignedVillages = row?.additionalDetails?.assignedVillages; 
+          const assignedVillages = row?.additionalDetails?.assignedVillages;
           return assignedVillages ? assignedVillages.length : null;
         case "MICROPLAN_FACILITY_ACTION":
           return (

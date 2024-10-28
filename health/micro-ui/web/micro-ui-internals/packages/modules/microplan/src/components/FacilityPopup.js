@@ -1,11 +1,12 @@
 import React, { useState, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { PopUp, Button, Tab, CheckBox, Card, Toast } from "@egovernments/digit-ui-components";
+import { PopUp, Button, Tab, CheckBox, Card, Toast,SVG } from "@egovernments/digit-ui-components";
 import SearchJurisdiction from "./SearchJurisdiction";
 import { LoaderWithGap, Loader } from "@egovernments/digit-ui-react-components";
 import DataTable from "react-data-table-component";
 import AccessibilityPopUp from "./accessbilityPopUP";
 import SecurityPopUp from "./securityPopUp";
+import { tableCustomStyle } from "./tableCustomStyle";
 
 const FacilityPopUp = ({ details, onClose }) => {
   const { t } = useTranslation();
@@ -183,24 +184,12 @@ const FacilityPopUp = ({ details, onClose }) => {
     }
   }, [isLoadingPlanEmployee, isLoadingCampaign]);
 
-  const handleRowSelect = (row) => {
-    const isSelected = selectedRows.includes(row.id);
-    const newSelectedRows = isSelected
-      ? selectedRows.filter((id) => id !== row.id)
-      : [...selectedRows, row.id];
-
+  const handleRowSelect = (event) => {
+    // Extract the IDs of all selected rows
+    const newSelectedRows = event.selectedRows.map(row => row.id);
+    // Update the state with the list of selected IDs
     setSelectedRows(newSelectedRows);
-    setIsAllSelected(newSelectedRows.length === censusData.length);
-  };
-
-  const handleSelectAll = () => {
-    if (isAllSelected) {
-      setSelectedRows([]);
-    } else {
-      const allRowIds = censusData.map((row) => row.id);
-      setSelectedRows(allRowIds);
-    }
-    setIsAllSelected(!isAllSelected);
+    setIsAllSelected(event.allSelected);
   };
 
   const handleViewDetailsForAccessibility = (row) => {
@@ -217,25 +206,6 @@ const FacilityPopUp = ({ details, onClose }) => {
 
   const columns = [
     {
-      name: (
-        <CheckBox
-          onChange={handleSelectAll}
-          checked={isAllSelected}
-          label=""
-        />
-      ),
-      cell: (row) => (
-        <CheckBox
-          onChange={() => handleRowSelect(row)}
-          checked={selectedRows.includes(row.id)}
-          label=""
-        />
-      ),
-      sortable: false,
-      allowOverflow: true,
-      width: "6rem"
-    },
-    {
       name: t("MP_FACILITY_VILLAGE"), // Change to your column name
       selector: (row) => row.boundaryCode, // Replace with the appropriate field from your data
       sortable: false,
@@ -243,24 +213,14 @@ const FacilityPopUp = ({ details, onClose }) => {
     {
       name: t("MP_VILLAGE_ACCESSIBILITY_LEVEL"), // Change to your column type
       cell: (row) => (
-        <span
-          style={{ color: "#f47738", textDecoration: "underline", cursor: "pointer" }}
-          onClick={() => handleViewDetailsForAccessibility(row)}
-        >
-          {t("VIEW_DETAILS")}
-        </span>
+        <Button label={t("VIEW_DETAILS")} onClick={() => handleViewDetailsForAccessibility(row)} variation="link" size={"medium"} style={{}} />
       ), // Replace with the appropriate field from your data
       sortable: false,
     },
     {
       name: t("MP_VILLAGE_SECURITY_LEVEL"), // Change to your column type
       cell: (row) => (
-        <span
-          style={{ color: "#f47738", textDecoration: "underline", cursor: "pointer" }}
-          onClick={() => handleViewDetailsForSecurity(row)}
-        >
-          {t("VIEW_DETAILS")}
-        </span>
+        <Button label={t("VIEW_DETAILS")} onClick={() => handleViewDetailsForSecurity(row)} variation="link" size={"medium"} style={{}} />
       ), // Replace with the appropriate field from your data
       sortable: false,
     },
@@ -268,7 +228,7 @@ const FacilityPopUp = ({ details, onClose }) => {
       name: t("MP_FACILITY_TOTALPOPULATION"), // Change to your column type
       selector: (row) => row.totalPopulation, // Replace with the appropriate field from your data
       sortable: false,
-    }
+    },
     // Add more columns as needed
   ];
 
@@ -349,6 +309,11 @@ const FacilityPopUp = ({ details, onClose }) => {
     setCurrentPage(1); // Reset to first page when changing rows per page
   };
 
+  const selectProps = {
+    hideLabel: true,
+    mainClassName: "data-table-select-checkbox",
+  };
+
   return (
     <>
       {loader ? (
@@ -358,8 +323,8 @@ const FacilityPopUp = ({ details, onClose }) => {
           onClose={onClose}
           heading={`${t(`MICROPLAN_ASSIGNMENT_FACILITY`)} ${details?.additionalDetails?.facilityName}`}
           children={[
-            <div>
-              <div className="card-container" style={{ border: "1px solid #D6D5D4", borderRadius: "3px" }}>
+            <div className="facilitypopup-serach-results-wrapper">
+              <div className="facilitypopup-tab-serach-wrapper">
                 <Tab
                   activeLink={activeLink.code}
                   configItemKey="code"
@@ -370,64 +335,80 @@ const FacilityPopUp = ({ details, onClose }) => {
                   style={{
                     width: "auto", // Allow tab width to adjust automatically
                     whiteSpace: "nowrap", // Prevent text from breaking
-                    padding: "10px 15px", // Add padding for spacing
                   }}
                   itemStyle={{ width: "unset !important" }}
                 />
-                <SearchJurisdiction
-                  key={searchKey} // Use key to force re-render
-                  boundaries={boundaries}
-                  jurisdiction={jurisdiction}
-                  onSubmit={censusSearch}
-                  style={{ border: "1px solid black", padding: "10px" }}
-                  onClear={() => censusSearch([])}
-                />
+                <Card className="facility-popup-table-card" type={"primary"}>
+                  <SearchJurisdiction
+                    key={searchKey} // Use key to force re-render
+                    boundaries={boundaries}
+                    jurisdiction={jurisdiction}
+                    onSubmit={censusSearch}
+                    style={{ padding: "0px" }}
+                    onClear={() => censusSearch([])}
+                  />
+                </Card>
               </div>
-              <div className="card-container" style={{ border: "1px solid #D6D5D4", borderRadius: "3px" }}>
+              <Card className="facility-popup-table-card" type={"primary"}>
                 {selectedRows.length > 0 && (
-                  <div className="card-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', borderBottom: '1px solid #D6D5D4', padding: '1rem' }}>
-                    <div>
-                      {selectedRows.length} {selectedRows.length === 1 ? t('MICROPLAN_SELECTED') : t('MICROPLAN_SELECTED_PLURAL')}
+                  <div className="selection-state-wrapper">
+                    <div className="svg-state-wrapper">
+                      <SVG.DoneAll width={"1.5rem"} height={"1.5rem"} fill={"#C84C0E"}></SVG.DoneAll>
+                      <div className={"selected-state"}>{`${selectedRows.length} ${
+                        selectedRows?.length === 1 ? t("MICROPLAN_SELECTED") : t("MICROPLAN_SELECTED_PLURAL")
+                      }`}</div>
                     </div>
-                    <Button
-                      className={"campaign-type-alert-button"}
-                      type={"button"}
-                      size={"large"}
-                      variation={"secondary"}
-                      label={facilityAssignedStatus ? `${t("MICROPLAN_UNASSIGN_FACILITY")} ${details?.additionalDetails?.facilityName}` : `${t("MICROPLAN_ASSIGN_FACILITY")} ${details?.additionalDetails?.facilityName}`}
-                      onClick={handleAssignUnassign}
-                      icon={"AddIcon"}
-                    />
+
+                    <div className={`table-actions-wrapper`}>
+                      <Button
+                        className={"campaign-type-alert-button"}
+                        variation="secondary"
+                        label={
+                          facilityAssignedStatus
+                            ? `${t("MICROPLAN_UNASSIGN_FACILITY")} ${details?.additionalDetails?.facilityName}`
+                            : `${t("MICROPLAN_ASSIGN_FACILITY")} ${details?.additionalDetails?.facilityName}`
+                        }
+                        type="button"
+                        onClick={handleAssignUnassign}
+                        size={"large"}
+                        icon={"AddIcon"}
+                      />
+                    </div>
                   </div>
                 )}
-                {tableLoader ? <Loader /> : censusData && (
-                  <DataTable
-                    columns={columns}
-                    data={censusData}
-                    pagination
-                    paginationServer
-                    paginationDefaultPage={currentPage}
-                    paginationPerPage={rowsPerPage}
-                    onChangePage={handlePageChange}
-                    onChangeRowsPerPage={handleRowsPerPageChange}
-                    paginationRowsPerPageOptions={[10, 20, 50, 100]}
-                    paginationTotalRows={totalCensusCount}
-                    highlightOnHover
-                    pointerOnHover
-                    striped
-                    style={{ marginTop: "20px", border: "1px solid #D6D5D4", borderRadius: "3px" }}
-                  />
+                {tableLoader ? (
+                  <Loader />
+                ) : (
+                  censusData && (
+                    <DataTable
+                      columns={columns}
+                      data={censusData}
+                      pagination
+                      paginationServer
+                      paginationDefaultPage={currentPage}
+                      paginationPerPage={rowsPerPage}
+                      onChangePage={handlePageChange}
+                      onChangeRowsPerPage={handleRowsPerPageChange}
+                      paginationRowsPerPageOptions={[10, 20, 50, 100]}
+                      paginationTotalRows={totalCensusCount}
+                      selectableRows
+                      selectableRowsHighlight
+                      noContextMenu
+                      onSelectedRowsChange={handleRowSelect}
+                      customStyles={tableCustomStyle}
+                      selectableRowsComponent={CheckBox}
+                      selectableRowsComponentProps={selectProps}
+                    />
+                  )
                 )}
-                {viewDetails && accessibilityData && (
-                  <AccessibilityPopUp onClose={() => closeViewDetails()} census={accessibilityData} />
-                )}
-                {viewDetails && securityData && (
-                  <SecurityPopUp onClose={() => closeViewDetails()} census={securityData} />
-                )}
-              </div>
+                {viewDetails && accessibilityData && <AccessibilityPopUp onClose={() => closeViewDetails()} census={accessibilityData} />}
+                {viewDetails && securityData && <SecurityPopUp onClose={() => closeViewDetails()} census={securityData} />}
+              </Card>
               {showToast && (
                 <Toast
-                  type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
+                  type={
+                    showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"
+                  }
                   label={t(showToast.label)}
                   transitionTime={showToast.transitionTime}
                   onClose={() => setShowToast(null)}

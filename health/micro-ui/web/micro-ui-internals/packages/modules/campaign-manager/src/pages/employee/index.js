@@ -8,12 +8,12 @@ import ConfigureApp from "./ConfigureApp";
 import { CreateChecklist} from "./CreateChecklist";
 import SearchChecklist from "./SearchChecklist";
 import UpdateBoundary from "./UpdateBoundary";
-import Boundary from "./Boundary";
 import GeoPode from "./GeoPode";
 import ViewBoundary from "./ViewBoundary";
 import ViewHierarchy from "./ViewHierarchy";
 import ViewChecklist from "./ViewChecklist";
 import UpdateChecklist from "./UpdateChecklist";
+import BoundaryHome from "./BoundaryHome";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -143,7 +143,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
           <PrivateRoute path={`${path}/checklist/search`} component={() => <SearchChecklist />} />
           <PrivateRoute path={`${path}/checklist/view`} component={() => <ViewChecklist />} />
           <PrivateRoute path={`${path}/checklist/update`} component={() => <UpdateChecklist />} />
-          <PrivateRoute path={`${path}/boundary/home`} component={()=> <Boundary />} />
+          <PrivateRoute path={`${path}/boundary/home`} component={()=> <BoundaryHome />} />
           <PrivateRoute path={`${path}/boundary/geopode`} component={()=> <GeoPode />} />
           <PrivateRoute path={`${path}/boundary/view-all-hierarchy`} component={()=> <ViewBoundary />} />
           <PrivateRoute path={`${path}/boundary/view-hierarchy`} component={()=> <ViewHierarchy />} />

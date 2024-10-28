@@ -1,4 +1,4 @@
-const searchPlanEmployeeWithTaggingConfig = async ({ tenantId, body, limit, offset, sortOrder = "ASC" }) => {
+const searchPlanEmployeeWithTaggingConfig = async ({ tenantId, body, limit, offset, sortOrder = "ASC", names }) => {
   try {
     const response = await Digit.CustomService.getResponse({
       url: "/plan-service/employee/_search",
@@ -31,6 +31,7 @@ const searchPlanEmployeeWithTaggingConfig = async ({ tenantId, body, limit, offs
         offset: offset,
         sortOrder: sortOrder,
         userServiceUuids: uuids.join(","),
+        names: names
       },
     });
     if (!fetchEmployeeData) {

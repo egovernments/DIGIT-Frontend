@@ -98,7 +98,7 @@ const SecurityPopUp = ({ onClose, census, onSuccess }) => {
                   }}
                 >
                   <div className="security-question-label">
-                    {q.question}
+                    {t(q.question)}
                   </div>
                   <div> {/* Add margin for space between label and options */}
                     <RadioButtons
