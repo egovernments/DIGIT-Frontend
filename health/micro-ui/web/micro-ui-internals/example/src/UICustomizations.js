@@ -18,6 +18,39 @@ const inboxModuleNameMap = {
   "muster-roll-approval": "muster-roll-service",
 };
 
+const WrapperForAction = ({row,t,...props}) => {
+  const [showPopup, setShowPopup] = useState(false);
+  const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
+
+  return (
+    <>
+              <ButtonNew
+                className=""
+                icon="ArrowForward"
+                iconFill=""
+                isSuffix
+                label={t("MICROPLAN_ASSIGN")}
+                onClick={() => setShowPopup(true)}
+                options={[]}
+                optionsKey=""
+                size="medium"
+                style={{}}
+                title=""
+                variation="secondary"
+              />
+              {showPopup && (
+                <FacilityPopUp
+                  details={row}
+                  onClose={() => {
+                    setShowPopup(false);
+                  }}
+                />
+              )}
+            </>
+  )
+}
+
+
 function filterUniqueByKey(arr, key) {
   const uniqueValues = new Set();
   const result = [];
@@ -1207,39 +1240,13 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      const [showPopup, setShowPopup] = useState(false);
-      const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
-
       switch (key) {
         case "MICROPLAN_FACILITY_ASSIGNED_VILLAGES":
           const assignedVillages = row?.additionalDetails?.assignedVillages;
           return assignedVillages ? assignedVillages.length : null;
         case "MICROPLAN_FACILITY_ACTION":
           return (
-            <>
-              <ButtonNew
-                className=""
-                icon="ArrowForward"
-                iconFill=""
-                isSuffix
-                label={t("MICROPLAN_ASSIGN")}
-                onClick={() => setShowPopup(true)}
-                options={[]}
-                optionsKey=""
-                size="medium"
-                style={{}}
-                title=""
-                variation="secondary"
-              />
-              {showPopup && (
-                <FacilityPopUp
-                  details={row}
-                  onClose={() => {
-                    setShowPopup(false);
-                  }}
-                />
-              )}
-            </>
+            <WrapperForAction row={row} t={t}/>
           );
         default:
           return null;
