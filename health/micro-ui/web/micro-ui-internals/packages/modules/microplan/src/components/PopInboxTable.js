@@ -145,6 +145,9 @@ const PopInboxTable = ({ ...props }) => {
           setShowEditVillagePopup({});
         }}
         census={showEditVillagePopup}
+        onSuccess={(data) => {
+          props.onSuccessEdit();
+        }}
       />
     );
   }

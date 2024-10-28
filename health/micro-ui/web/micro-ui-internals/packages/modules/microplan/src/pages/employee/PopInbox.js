@@ -192,7 +192,7 @@ const PopInbox = () => {
         tenantId: tenantId,
         source: microplanId,
         status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
-        assignee: activeLink.code === "ASSIGNED_TO_ME" && selectedFilter !== "PENDING_FOR_VALIDATION" ? user?.info?.uuid : "",
+        assignee: activeLink.code === "ASSIGNED_TO_ALL" || selectedFilter === "PENDING_FOR_VALIDATION" ? "" : user?.info?.uuid,
         jurisdiction: jurisdiction,
         limit: limitAndOffset?.limit,
         offset: limitAndOffset?.offset
@@ -269,7 +269,7 @@ const PopInbox = () => {
       setVillagesSelected(0);
       setSelectedRows([]);
     }
-  }, [data, selectedFilter, activeLink]);
+  }, [data]);
 
   useEffect(() => {
     if (jurisdiction?.length > 0) {
@@ -283,16 +283,14 @@ const PopInbox = () => {
       setShowTab(false);
     } else {
       if (!showTab) {
-        setShowTab(true);
         setActiveLink({
           code: "ASSIGNED_TO_ME",
           name: "ASSIGNED_TO_ME"
         });
+        setShowTab(true);
       }
     }
   }, [selectedFilter]);
-
-
 
   const onFilter = (selectedStatus) => {
     setSelectedFilter(selectedStatus?.code);
@@ -310,13 +308,12 @@ const PopInbox = () => {
   }
 
   const clearFilters = () => {
-    if (selectedFilter !== Object.entries(data?.StatusCount)?.[0]?.[0]) {
-      setSelectedFilter(Object.entries(data?.StatusCount)?.[0]?.[0]);
+    if (selectedFilter !== Object.entries(activeFilter)?.[0]?.[0]) {
+      setSelectedFilter(Object.entries(activeFilter)?.[0]?.[0]);
     }
   };
 
   const handleActionClick = (action) => {
-
     setworkFlowPopUp(action);
   };
 
@@ -446,7 +443,7 @@ const PopInbox = () => {
                     requestPayload={{ Census: updateWorkflowForSelectedRows() }}
                     commentPath="workflow.comments"
                     onSuccess={(data) => {
-                      closePopUp
+                      closePopUp();
                       setShowToast({ key: "success", label: t("WORKFLOW_UPDATE_SUCCESS"), transitionTime: 5000 });
                       refetch();
                     }}
@@ -457,7 +454,7 @@ const PopInbox = () => {
                 )}
               </div>
             )}
-            {isFetching ? <Loader /> : <PopInboxTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap} />}
+            {isFetching ? <Loader /> : <PopInboxTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap} onSuccessEdit={() => refetch()} />}
           </Card>
         </div>
       </div>
@@ -495,9 +492,9 @@ const PopInbox = () => {
           commentPath="workflow.comments"
           onSuccess={(data) => {
             history.push(`/${window.contextPath}/employee/microplan/population-finalise-success`, {
-              fileName: 'filename', // need to update when api is success
-              message: "POPULATION_FINALISED_SUCCESSFUL",
-              back: "GO_BACK_TO_HOME",
+              fileName: data?.PlanConfiguration?.[0]?.name,
+              message: t(`POPULATION_FINALISED_SUCCESSFUL`),
+              back: t(`GO_BACK_TO_HOME`),
               backlink: "/employee"
             });
           }}
