@@ -345,7 +345,7 @@ function RoleTableComposer({ nationalRoles }) {
             selected={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedHierarchy || null}
             disabled={nationalRoles?.includes(category) ? true : false}
             isMandatory={true}
-            option={state?.boundaryHierarchy.filter((item) => !(item.boundaryType === "Village" || item.boundaryType==="Country"))}
+            option={state?.boundaryHierarchy.filter((item) => !(item.boundaryType === "Village" || item.boundaryType === "Country"))}
             select={(value) => {
               row.selectedHeirarchy = value;
               handleHierarchyChange(value, row);
@@ -383,6 +383,12 @@ function RoleTableComposer({ nationalRoles }) {
           HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
             ? true
             : false;
+
+        console.log(
+          "NABEELAYUBEE",
+          row,
+          HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)
+        );
         return (
           <Button
             className={"roleTableCell"}

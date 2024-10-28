@@ -808,7 +808,6 @@ export const UICustomizations = {
             <Dropdown
               option={options}
               select={(e) => {
-                console.log(e, "event"); // e contains the selected option
                 if (e.name == "Edit Setup") {
                   // Use window.location.href to navigate
                   window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${1}&microplanId=${row.id}&campaignId=${
