@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
+import PropTypes from 'prop-types';
 
 const TableSearchField = ({ onSearch}) => {
   const { t } = useTranslation();
@@ -58,5 +59,9 @@ const styles = {
     pointerEvents: 'none', // Prevents the icon from blocking clicks on the input
   },
 };
+
+TableSearchField.propTypes = {
+    onSearch: PropTypes.func.isRequired,
+ };
 
 export default TableSearchField;
