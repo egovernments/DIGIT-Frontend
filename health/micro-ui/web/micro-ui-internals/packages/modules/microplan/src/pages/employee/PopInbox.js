@@ -27,8 +27,10 @@ const PopInbox = () => {
   const [activeFilter, setActiveFilter] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(50);
+  const [assigneeUuids, setAssigneeUuids] = useState([]);
   const [totalRows, setTotalRows] = useState(0);
   const [showToast, setShowToast] = useState(null);
+  const [employeeNameMap, setEmployeeNameMap] = useState({});
   const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   const [activeLink, setActiveLink] = useState({
@@ -203,6 +205,38 @@ const PopInbox = () => {
 
   const { isLoading, data, isFetching, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
 
+  // // Extract assignee IDs in order, including null values
+  // useEffect(() => {
+  //   if (data?.Census) {
+  //    // Join with commas
+  //   }
+  // }, [data]);
+  // Custom hook to fetch census data based on microplanId and boundaryCode
+  const reqCri = {
+    url: `/health-hrms/employees/_search`,
+    params: {
+      tenantId: tenantId,
+      userServiceUuids: assigneeUuids,
+    },
+    config: {
+      enabled: assigneeUuids?.length > 0 ? true : false,
+    },
+  };
+
+  const { isLoading: isEmployeeLoading, data: employeeData } = Digit.Hooks.useCustomAPIHook(reqCri);
+
+
+  useEffect(() => {
+    // Create a map of assignee IDs to names for easy lookup
+    const nameMap = employeeData?.Employees?.reduce((acc, emp) => {
+      acc[emp?.user?.userServiceUuid] = emp.user?.name || "NA"; // Map UUID to name
+      return acc;
+    }, {});
+
+    setEmployeeNameMap(nameMap);
+  }, [employeeData]);
+
+
   useEffect(() => {
     if (data) {
       setCensusData(data?.Census);
@@ -218,6 +252,9 @@ const PopInbox = () => {
 
       // Set reordered data to active filter
       setActiveFilter(reorderedStatusCount);
+
+      const uniqueAssignees = [...new Set(data.Census.map(item => item.assignee).filter(Boolean))];
+      setAssigneeUuids(uniqueAssignees.join(","));
 
 
 
@@ -327,7 +364,7 @@ const PopInbox = () => {
   };
 
 
-  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading || isWorkflowLoading) {
+  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading || isWorkflowLoading || isEmployeeLoading) {
     return <Loader />;
   }
 
@@ -420,7 +457,7 @@ const PopInbox = () => {
                 )}
               </div>
             )}
-            {isFetching ? <Loader /> : <PopInboxTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} />}
+            {isFetching ? <Loader /> : <PopInboxTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap} />}
           </Card>
         </div>
       </div>
