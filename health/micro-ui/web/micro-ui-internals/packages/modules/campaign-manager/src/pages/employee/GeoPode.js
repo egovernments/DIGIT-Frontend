@@ -1,18 +1,13 @@
 import { Card } from "@egovernments/digit-ui-components";
-import { Button, PopUp, FieldV1, Uploader, ActionBar, TextInput, Toast } from "@egovernments/digit-ui-components";
-import { inRange, isError } from "lodash";
+import { Button, ActionBar, TextInput, Toast } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState , useRef} from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
 import { DustbinIcon } from "../../components/icons/DustbinIcon";
 import { Svgicon } from "../../utils/Svgicon";
 import { useLocation } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import FinalPopup from "../../components/FinalPopup";
 
-
-
-// import { TextInput } from "@egovernments/digit-ui-react-components";
 
 const GeoPode = () => {
     const { t } = useTranslation();
@@ -23,23 +18,16 @@ const GeoPode = () => {
     const hierarchyType = searchParams.get("hierarchyType");
     const defaultHierarchyType = searchParams.get("defaultHierarchyType")
     const newHierarchy = JSON.parse(searchParams.get("newHierarchy"));
-    const [showPopUp, setShowPopUp] = useState(false);
-    const [additionalData, setAdditionalData] = useState(false);
     const [showFinalPopup, setShowFinalPopup] = useState(false);
-    const [enableCreate, setEnableCreate] = useState(false);
 
     // const state = window.history.state;
     const state = location.state;
-    let receivedData = state?.data?.BoundaryHierarchy?.[0]?.boundaryHierarchy;
+    
+    let receivedData = state?.data?.boundaryHierarchy;
     const [boundaryData, setBoundaryData]=useState((receivedData === undefined ? [] : receivedData));
     const [newBoundaryData, setNewBoundaryData] = useState([]);
     const [firstPage, setFirstPage] = useState(true);
-    const [uploadPage, setUploadPage] = useState(false);
-    const [previewPage, setPreviewPage] = useState(false);
-    const inputRef = useRef(null); // Ref to trigger file input
     const [showToast, setShowToast] = useState(null); // State to handle toast notifications
-    const [fileUrl, setFileUrl] = useState("");
-    const [fileData, setFileData] = useState({});
 
 
     useEffect(() => {

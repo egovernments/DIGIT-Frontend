@@ -1,9 +1,11 @@
 import React from "react";
 import { PopUp, Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
 
-const BoundaryPopup = ({ showPopUp, setShowPopUp, callGeoPode, geoPodeData })=> {
+const BoundaryPopup = ({ showPopUp, setShowPopUp, data })=> {
     const { t } = useTranslation();
+    const history = useHistory();
     return (
         showPopUp &&  (
             <PopUp 
@@ -27,11 +29,13 @@ const BoundaryPopup = ({ showPopUp, setShowPopUp, callGeoPode, geoPodeData })=> 
                 <Button
                     type={"button"}
                     size={"large"}
-                    isDisabled={!geoPodeData}
+                    isDisabled={Object.keys(data?.defaultBoundaryData||{})?.length==0}
                     variation={"secondary"}
                     label={t("GET_BOUNDARY_DATA_FROM_GEOPODE")}
                     onClick={() => {
-                        callGeoPode(false);
+                        history.push(`/${window.contextPath}/employee/campaign/boundary/geopode?defaultHierarchyType=${data?.defaultHierarchyName}&hierarchyType=${data?.hierarchyName}&newHierarchy=${false}`,
+                            { data: data?.defaultBoundaryData }
+                        );
                     }}
                     style={{height:"4rem"}}
                 />
@@ -41,7 +45,7 @@ const BoundaryPopup = ({ showPopUp, setShowPopUp, callGeoPode, geoPodeData })=> 
                     variation={"secondary"}
                     label={t("CREATE_MY_OWN_BOUNDARY_DATA")}
                     onClick={() => {
-                        callGeoPode(true);
+                        history.push(`/${window.contextPath}/employee/campaign/boundary/geopode?defaultHierarchyType=${data?.defaultHierarchyName}&hierarchyType=${data?.hierarchyName}&newHierarchy=${true}`);
                     }}
                     style={{height:"4rem"}}
                 />
