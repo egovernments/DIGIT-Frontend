@@ -74,7 +74,7 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
 
   const moduleCode = BOUNDARY_HIERARCHY_TYPE 
   ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`] 
-  : [ "campaignmanager", "schema", "admin-schemas"]; 
+  : [ "campaignmanager", "schema", "admin-schemas","checklist"]; 
 
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
