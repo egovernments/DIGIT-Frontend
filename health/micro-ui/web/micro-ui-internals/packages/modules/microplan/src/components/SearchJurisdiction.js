@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useMyContext } from "../utils/context";
 import { Dropdown, MultiSelectDropdown } from "@egovernments/digit-ui-components";
 
-const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, onClear = () => { } }) => {
+const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, onClear = () => { } ,style={}}) => {
   const { t } = useTranslation();
   const {
     state: { hierarchyType, boundaryHierarchy },
@@ -51,10 +51,10 @@ const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, on
   }
 
   return (
-    <div className={"search-wrapper"}>
+    <div className={"search-wrapper"} style={style}>
       <div className={`search-field-wrapper search custom-both-clear-search`}>
         <LabelFieldPair style={{ flexDirection: "column", gap: "0rem" }}>
-          <CardLabel>{t("SELECT_HIERARCHY_LEVEL")}</CardLabel>
+          <CardLabel style={{width:"100%"}}>{t("SELECT_HIERARCHY_LEVEL")}</CardLabel>
           <Dropdown
             t={t}
             option={hierarchy}
@@ -67,7 +67,7 @@ const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, on
           />
         </LabelFieldPair>
         <LabelFieldPair style={{ flexDirection: "column", gap: "0rem" }}>
-          <CardLabel>{t("SELECT_BOUNDARIES")}</CardLabel>
+          <CardLabel style={{width:"100%"}}>{t("SELECT_BOUNDARIES")}</CardLabel>
           <div style={{width: "100%" }}>
           <MultiSelectDropdown
             variant={"nestedmultiselect"}

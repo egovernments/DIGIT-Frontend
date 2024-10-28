@@ -1,3 +1,19 @@
 .facility-popup{
     max-width: 85% !important;
 }
+
+.facilitypopup-serach-results-wrapper{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.facility-popup-table-card{
+    border: 1px solid #d6d5d4;
+}
+
+.facilitypopup-tab-serach-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
