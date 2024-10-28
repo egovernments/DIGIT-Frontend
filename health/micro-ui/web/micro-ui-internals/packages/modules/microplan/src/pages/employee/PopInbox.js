@@ -388,13 +388,13 @@ const PopInbox = () => {
                 </div>
 
                 <div className={`table-actions-wrapper`}>
-                  {actionsMain?.filter(action => !actionsToHide.includes(action.action))?.map((action, index) => (
+                  {actionsMain?.filter(action => !actionsToHide.includes(action.action))?.map((actions, index) => (
                     <Button
                       key={index}
                       variation="secondary"
-                      label={t(action.action)}
+                      label={t(actions.action)}
                       type="button"
-                      onClick={(action) => handleActionClick(action?.target?.textContent)}
+                      onClick={(action) => handleActionClick(actions?.action)}
                       size={"large"}
                     />
                   ))}
