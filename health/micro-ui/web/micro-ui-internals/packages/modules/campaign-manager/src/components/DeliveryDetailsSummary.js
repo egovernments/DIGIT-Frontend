@@ -152,7 +152,7 @@ function reverseDeliveryRemap(data, t) {
 
   const mapDeliveries = (deliveries) => {
     return deliveries?.map((delivery, deliveryIndex) => ({
-      active: true,
+      active: deliveryIndex === 0,
       deliveryIndex: String(deliveryIndex + 1),
       deliveryRules: mapDoseCriteriaToDeliveryRules(delivery.doseCriteria),
     }));
