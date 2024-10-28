@@ -23,19 +23,19 @@ const FormulaView = ({ output="N/A", input1="N/A", input2="N/A", input3="N/A" })
             {/* Inputs in a grid layout */}
             <TextInput
               type="text"
-              value={input1}
+              value={t(input1)}
               nonEditable={true}
               style={{ width: "100%" }}
             />
             <TextInput
               type="text"
-              value={input2}
+              value={t(input2)}
               nonEditable={true}
               style={{ width: "100%" }}
             />
             <TextInput
               type="text"
-              value={input3}
+              value={t(input3)}
               nonEditable={true}
               style={{ width: "100%" }}
             />
