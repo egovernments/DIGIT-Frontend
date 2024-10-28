@@ -1209,7 +1209,7 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      const [showPopup, setShowPopup] = useState(false);
+      const [showPopup, setShowPopup] = React.useState(false);
       const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
 
       switch (key) {
