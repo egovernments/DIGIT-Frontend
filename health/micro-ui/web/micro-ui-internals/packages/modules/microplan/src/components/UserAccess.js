@@ -1,9 +1,11 @@
-import { Button, Card, Chip, Header, NoResultsFound, PopUp, Toast } from "@egovernments/digit-ui-components";
+import { Button, Card, Chip, Header, Loader, NoResultsFound, PopUp, Toast } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import RoleTableComposer from "./RoleTableComposer";
 import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./tableCustomStyle";
+import TableSearchField from "./TableSearchBar";
+import { useQueryClient } from "react-query";
 
 const Wrapper = ({ setShowPopUp, alreadyQueuedSelectedState }) => {
   const { t } = useTranslation();
@@ -35,12 +37,16 @@ function UserAccess({ category, setData, nationalRoles }) {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
+  const queryClient = useQueryClient();
   const [showPopUp, setShowPopUp] = useState(null);
   const [chipPopUp, setChipPopUp] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [totalRows, setTotalRows] = useState(0);
+  const [isLoading, setIsLoading] = useState(null);
+  const [searchQuery, setSearchQuery] = useState(null);
+  const { mutate: planEmployeeUpdate } = Digit.Hooks.microplanv1.usePlanEmployeeUpdate();
   const {
     isLoading: isPlanEmpSearchLoading,
     data: planEmployee,
@@ -50,6 +56,7 @@ function UserAccess({ category, setData, nationalRoles }) {
     tenantId: tenantId,
     limit: rowsPerPage,
     offset: (currentPage - 1) * 5,
+    names: searchQuery,
     body: {
       PlanEmployeeAssignmentSearchCriteria: {
         tenantId: tenantId,
@@ -70,6 +77,7 @@ function UserAccess({ category, setData, nationalRoles }) {
             number: item?.user?.mobileNumber,
             hierarchyLevel: data?.planData?.find((i) => i?.employeeId === item?.user?.userServiceUuid)?.hierarchyLevel,
             jurisdiction: data?.planData?.find((i) => i?.employeeId === item?.user?.userServiceUuid)?.jurisdiction,
+            planData: data?.planData?.find((i) => i?.employeeId === item?.user?.userServiceUuid)
           };
         });
         return {
@@ -82,7 +90,7 @@ function UserAccess({ category, setData, nationalRoles }) {
 
   useEffect(() => {
     refetchPlanEmployee();
-  }, [totalRows, currentPage, rowsPerPage]);
+  }, [totalRows, currentPage, rowsPerPage, searchQuery]);
   useEffect(() => {
     setTotalRows(planEmployee?.totalCount);
   }, [planEmployee]);
@@ -94,6 +102,28 @@ function UserAccess({ category, setData, nationalRoles }) {
     setRowsPerPage(newPerPage); // Update the rows per page state
     setCurrentPage(page); // Optionally reset the current page or maintain it
     refetchPlanEmployee();
+  };
+
+  const handleUpdateAssignEmployee = (row) => {
+    setIsLoading(true);
+    const payload = {
+      PlanEmployeeAssignment: {
+        ...row?.planData,
+        active: !row?.planData?.active,
+      },
+    };
+    planEmployeeUpdate(payload, {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries("PLAN_SEARCH_EMPLOYEE_WITH_TAGGING");
+        refetchPlanEmployee();
+        setShowToast({ key: "success", label: t("UNASSIGNED_SUCCESSFULLY") });
+        setIsLoading(false);
+      },
+      onError: (error, variables) => {
+        setShowToast({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") });
+        setIsLoading(false);
+      },
+    });
   };
   const columns = [
     {
@@ -172,7 +202,33 @@ function UserAccess({ category, setData, nationalRoles }) {
       },
       sortable: true,
     },
+    {
+      name: t("ACTION"),
+      cell: (row) => {
+        return (
+          <Button
+            className={"roleTableCell"}
+            variation={"secondary" }
+            label={t(`UNASSIGN`)}
+            icon={"Close"}
+            isSuffix={false}
+            onClick={(value) => handleUpdateAssignEmployee(row)}
+          />
+        );
+      },
+    },
   ];
+
+  const handleSearch = (query) => {
+    if(query?.length >= 2 ){
+      setSearchQuery(query);
+    }
+    else {
+      setSearchQuery(null);
+    }
+
+    // Handle search logic, such as filtering or API calls
+  };
 
   return (
     <>
@@ -183,13 +239,18 @@ function UserAccess({ category, setData, nationalRoles }) {
 
       {planEmployee?.data?.length > 0 ? (
         <Card>
-          <div style={{ display: "flex", flexDirection: "row-reverse" }}>
+          <div style={styles.container}>
+            <TableSearchField 
+            onSearch={handleSearch}
+            />
             <Button variation="secondary" label={t(`ASSIGN`)} icon={"AddIcon"} onClick={() => setShowPopUp(true)} />
           </div>
           <DataTable
             category={category}
             columns={columns}
             data={planEmployee?.data}
+            progressPending={isLoading || isPlanEmpSearchLoading}
+            progressComponent={<Loader />}
             pagination
             paginationServer
             customStyles={tableCustomStyle}
@@ -234,5 +295,19 @@ function UserAccess({ category, setData, nationalRoles }) {
     </>
   );
 }
+
+const styles = {
+  container: {
+    display: 'flex',
+    justifyContent: 'space-between', // Ensures space between search and button
+    alignItems: 'center',
+    width: '100%',
+    padding: '8px', // Optional padding for layout
+  },
+  buttonContainer: {
+    display: 'flex',
+    flexDirection: 'row-reverse',
+  },
+};
 
 export default UserAccess;
