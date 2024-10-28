@@ -404,62 +404,6 @@ const FacilityPopUp = ({ details, onClose }) => {
                 {viewDetails && accessibilityData && <AccessibilityPopUp onClose={() => closeViewDetails()} census={accessibilityData} />}
                 {viewDetails && securityData && <SecurityPopUp onClose={() => closeViewDetails()} census={securityData} />}
               </Card>
-              {/* <div className="card-container" style={{ border: "1px solid #D6D5D4", borderRadius: "3px" }}>
-                {selectedRows.length > 0 && (
-                  <div className="selection-state-wrapper">
-                    <div className="svg-state-wrapper">
-                      <SVG.DoneAll width={"1.5rem"} height={"1.5rem"} fill={"#C84C0E"}></SVG.DoneAll>
-                      <div className={"selected-state"}>{`${selectedRows.length} ${
-                        selectedRows?.length === 1 ? t("MICROPLAN_SELECTED") : t("MICROPLAN_SELECTED_PLURAL")
-                      }`}</div>
-                    </div>
-
-                    <div className={`table-actions-wrapper`}>
-                      <Button
-                        className={"campaign-type-alert-button"}
-                        variation="secondary"
-                        label={
-                          facilityAssignedStatus
-                            ? `${t("MICROPLAN_UNASSIGN_FACILITY")} ${details?.additionalDetails?.facilityName}`
-                            : `${t("MICROPLAN_ASSIGN_FACILITY")} ${details?.additionalDetails?.facilityName}`
-                        }
-                        type="button"
-                        onClick={handleAssignUnassign}
-                        size={"large"}
-                        icon={"AddIcon"}
-                      />
-                    </div>
-                  </div>
-                )}
-                {tableLoader ? (
-                  <Loader />
-                ) : (
-                  censusData && (
-                    <DataTable
-                      columns={columns}
-                      data={censusData}
-                      pagination
-                      paginationServer
-                      paginationDefaultPage={currentPage}
-                      paginationPerPage={rowsPerPage}
-                      onChangePage={handlePageChange}
-                      onChangeRowsPerPage={handleRowsPerPageChange}
-                      paginationRowsPerPageOptions={[10, 20, 50, 100]}
-                      paginationTotalRows={totalCensusCount}
-                      // style={{ marginTop: "20px", border: "1px solid #D6D5D4", borderRadius: "3px" }}
-                      selectableRows
-                      selectableRowsHighlight
-                      noContextMenu
-                      onSelectedRowsChange={handleRowSelect}
-                      customStyles={tableCustomStyle}
-                      selectableRowsComponent={CheckBox}
-                      selectableRowsComponentProps={selectProps}
-                    />
-                  )
-                )}
-                {viewDetails && accessibilityData && <AccessibilityPopUp onClose={() => closeViewDetails()} census={accessibilityData} />}
-                {viewDetails && securityData && <SecurityPopUp onClose={() => closeViewDetails()} census={securityData} />}
-              </div> */}
               {showToast && (
                 <Toast
                   type={
