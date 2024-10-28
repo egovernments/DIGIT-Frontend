@@ -11,6 +11,7 @@ const UpdateBoundaryWrapper = ({ onSelect,...props }) => {
   const searchParams = new URLSearchParams(location.search);
   const parentId = searchParams.get("parentId");
   const id = searchParams.get("id");
+  const isDraft = searchParams.get("draft");
   // const hierarchyType = props?.props?.hierarchyType;
   const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
   const [selectedData, setSelectedData] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData || []);
@@ -37,7 +38,7 @@ const UpdateBoundaryWrapper = ({ onSelect,...props }) => {
 
 
   useEffect (() => {
-    if(!id) setSelectedData(CampaignData?.CampaignDetails?.[0]?.boundaries);
+    if(!id || isDraft) setSelectedData(CampaignData?.CampaignDetails?.[0]?.boundaries);
     SetHierarchyType(CampaignData?.CampaignDetails?.[0]?.hierarchyType);
   },[CampaignData])
 
