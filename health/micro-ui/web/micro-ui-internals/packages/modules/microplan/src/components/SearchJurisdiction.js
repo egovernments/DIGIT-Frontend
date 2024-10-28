@@ -66,7 +66,7 @@ const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, on
             }}
           />
         </LabelFieldPair>
-        <LabelFieldPair style={{ flexDirection: "column", gap: "0rem" }}>
+        <LabelFieldPair style={{ flexDirection: "column", gap: "0rem", marginBottom: 0 }}>
           <CardLabel>{t("SELECT_BOUNDARIES")}</CardLabel>
           <div style={{width: "100%" }}>
           <MultiSelectDropdown
