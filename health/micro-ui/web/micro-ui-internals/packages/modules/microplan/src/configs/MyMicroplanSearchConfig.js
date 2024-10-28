@@ -81,6 +81,7 @@ const defaultSearchValues = {
                   {
                     label: "MICROPLAN_STATUS",
                     jsonPath: "status",
+                    additionalCustomization:true
                   },
                   {
                     label: "CAMPAIGN_DISEASE",
@@ -88,11 +89,13 @@ const defaultSearchValues = {
                   },
                   {
                     label:"CAMPAIGN_TYPE",
-                    jsonPath:"additionalDetails.campaignType"
+                    jsonPath:"additionalDetails.campaignType",
+                    additionalCustomization:true
                   },
                   {
                     label:"DISTIRBUTION_STRATEGY",
-                    jsonPath:"additionalDetails.resourceDistributionStrategyCode"
+                    jsonPath:"additionalDetails.resourceDistributionStrategyCode",
+                    additionalCustomization:true
                   },
                   {
                     label:"ACTIONS",
