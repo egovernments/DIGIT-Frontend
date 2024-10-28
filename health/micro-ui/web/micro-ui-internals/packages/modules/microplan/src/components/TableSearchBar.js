@@ -8,7 +8,7 @@ const TableSearchField = ({ onSearch}) => {
   const handleInputChange = (e) => {
     const newQuery = e.target.value;
     setQuery(newQuery);
-    onSearch(newQuery); // Trigger search only if input has more than 2 characters
+    onSearch(newQuery); 
   };
 
   return (
