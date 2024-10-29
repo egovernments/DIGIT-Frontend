@@ -46,7 +46,7 @@ function RoleTableComposer({ nationalRoles }) {
   const totalFormData = Digit.SessionStorage.get("MICROPLAN_DATA");
   const selectedData = totalFormData?.BOUNDARY?.boundarySelection?.selectedData || [];
   const { hierarchyData, category } = useUserAccessContext();
-  const { state } = useMyContext();
+  const { state, lowestHierarchy } = useMyContext();
   const [rowData, setRowData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -60,8 +60,9 @@ function RoleTableComposer({ nationalRoles }) {
   const { mutate: planEmployeeUpdate } = Digit.Hooks.microplanv1.usePlanEmployeeUpdate();
   const [isLoading, setIsLoading] = useState(null);
   const topBoundary = state?.boundaryHierarchy.find((boundary) => boundary.parentBoundaryType === null);
-  const topBoundaryValue = totalFormData?.BOUNDARY?.boundarySelection?.boundaryData?.Country
-    ? Object.values(totalFormData.BOUNDARY.boundarySelection.boundaryData.Country)[0]
+  const topBoundaryCode = topBoundary?.boundaryType;
+  const topBoundaryValue = totalFormData?.BOUNDARY?.boundarySelection?.boundaryData?.[topBoundaryCode]
+    ? Object.values(totalFormData.BOUNDARY.boundarySelection.boundaryData?.[topBoundaryCode])[0]
     : undefined;
   const { isLoading: isHrmsLoading, data: HrmsData, error: hrmsError, refetch: refetchHrms } = Digit.Hooks.microplanv1.useSearchHRMSEmployee({
     tenantId: tenantId,
@@ -351,7 +352,7 @@ function RoleTableComposer({ nationalRoles }) {
             selected={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedHierarchy || null}
             disabled={isUserAlreadyAssignedActive || nationalRoles?.includes(category) ? true : false}
             isMandatory={true}
-            option={state?.boundaryHierarchy.filter((item) => !(item.boundaryType === "Village" || item.boundaryType === "Country"))}
+            option={state?.boundaryHierarchy.filter((item) => item.parentBoundaryType !== null && item.boundaryType !== state?.lowestHierarchy)}
             select={(value) => {
               row.selectedHeirarchy = value;
               handleHierarchyChange(value, row);
@@ -430,6 +431,7 @@ function RoleTableComposer({ nationalRoles }) {
   const handleSearchSubmit = (e) => {
     if (number?.length > 0 && number?.length <= 10) {
       setShowToast({ key: "error", label: t("INVALID_MOBILE_NUMBER_LENGTH") });
+      return;
     }
 
     setCurrentPage(1);
@@ -493,7 +495,8 @@ function RoleTableComposer({ nationalRoles }) {
                   type={"number"}
                   name={"number"}
                   onChange={(e) => {
-                    setNumber(e.target.value);
+                    const newValue = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
+                    setNumber(newValue);
                   }}
                   //   inputRef={ref}
                   errorStyle={""}
