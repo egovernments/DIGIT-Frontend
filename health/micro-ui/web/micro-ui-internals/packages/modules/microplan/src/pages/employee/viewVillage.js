@@ -296,31 +296,15 @@ const VillageView = () => {
                             variation="secondary"
                         />}
                     </div>
-                    {/* need to reupdated  */}
-                    {/* <div className="label-pair">
-                        <span className="label-heading">{t(`HCM_MICROPLAN_UPLOADED_TARGET_POPULATION_LABEL`)}</span>
-                        <span className="label-text">{data?.additionalDetails?.targetPopulation}</span>
-                    </div> */}
-                    <Divider className="" variant="small" />
-                    <div className="label-pair">
-                        <span className="label-heading">{t(`HCM_MICROPLAN_UPLOADED_TOTAL_POPULATION_LABEL`)}</span>
-                        <span className="label-text">{data?.totalPopulation}</span>
-                    </div>
-                    {/* <Divider className="" variant="small" />
-                    <div className="label-pair ">
-                        <span className="label-heading">{t(`HCM_MICROPLAN_CONFIRM_TARGET_POPULATION_LABEL`)}</span>
-                        <span className="label-text">{data?.additionalDetails?.confirmedTargetPopulation}</span>
-                    </div>
-                    <Divider className="" variant="small" />
-                    <div className="label-pair">
-                        <span className="label-heading">{t(`HCM_MICROPLAN_CONFIRM_TOTAL_POPULATION_LABEL`)}</span>
-                        <span className="label-text">{data?.additionalDetails?.confirmedTotalPopulation}</span>
-                    </div> */}
-                    <Divider className="" variant="small" />
-                    <div className="label-pair">
-                        <span className="label-heading">{t(`HCM_MICROPLAN_ASSIGNED_DATA_APPROVER_LABEL`)}</span>
-                        <span className="label-text">{assigneeName || t("ES_COMMON_NA")}</span>
-                    </div>
+                    {Object.entries(data?.additionalFields || []).map(([key, value]) => (
+                        <React.Fragment key={key}>
+                            <div className="label-pair">
+                                <span className="label-heading">{t(`HCM_MICROPLAN_${key}_LABEL`)}</span>
+                                <span className="label-text">{value || t("ES_COMMON_NA")}</span>
+                            </div>
+                            <Divider className="" variant="small" />
+                        </React.Fragment>
+                    ))}
                 </Card>
 
                 {showEditVillagePopulationPopup && (
