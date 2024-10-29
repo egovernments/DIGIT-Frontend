@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import FileComponent from '../../components/FileComponent';
 import HeaderComp from '../../components/HeaderComp';
-import { TextBlock, Card,Button,ActionBar } from '@egovernments/digit-ui-components';
+import { TextBlock, Card, Button, ActionBar } from '@egovernments/digit-ui-components';
 import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
-import { Link } from 'react-router-dom/cjs/react-router-dom.min';
-
+import { Link } from 'react-router-dom';
 
 const UserDownload = () => {
     const { t } = useTranslation();
-    const {history}=useHistory();
-    const [Files, setFile] = useState(""); // Initialize as an empty string
+    const [files, setFiles] = useState([]); // Store file data as an array
+    const [currentPage, setCurrentPage] = useState(1); // State for current page
+    const [rowsPerPage, setRowsPerPage] = useState(5); // Items per page
+
+    // Fetch data
     const { data, isFetching, isLoading } = Digit.Hooks.microplanv1.useFileDownload({
         "SearchCriteria": {
             "tenantId": Digit.ULBService.getCurrentTenantId(),
             "type": "user",
             "status": "completed"
-            // "action": "create"
         }
     },
         {
@@ -25,69 +25,96 @@ const UserDownload = () => {
             select: data => {
                 const currentUserUuid = Digit.UserService.getUser().info.uuid;
                 const ResourceDetails = data?.ResourceDetails || [];
-                const filteredData = ResourceDetails.filter(item => item?.auditDetails?.createdBy == currentUserUuid && item?.action == "create");
-                data.ResourceDetails = filteredData
+                const filteredData = ResourceDetails.filter(item => item?.auditDetails?.createdBy === currentUserUuid && item?.action === "create");
+                data.ResourceDetails = filteredData;
                 return data;
             }
         }
+    );
 
-    )
-
-
-
-
-
-
-    // Use useEffect to update Files only when data changes
+    // Update files when data changes
     useEffect(() => {
         if (data && data["ResourceDetails"]) {
-            // Create a new array of file IDs based on the data
-            const newFiles = data["ResourceDetails"].map(ob => ob["processedFilestoreId"]);
-            setFile(newFiles); // Update the state with the new file IDs
+            setFiles([...data["ResourceDetails"]].reverse()); // Reverse to show latest first
         }
-    }, [data]); // Only run this effect when `data` changes
+    }, [data]);
 
+    // Calculate total pages
+    const totalPages = Math.ceil(files.length / rowsPerPage);
 
+    // Get current page data
+    const currentData = files.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
 
+    // Handlers for pagination
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+    };
 
-
-
-
-
-
-
-
-
+    const handleRowsPerPageChange = (e) => {
+        setRowsPerPage(Number(e.target.value));
+        setCurrentPage(1); // Reset to the first page
+    };
 
     return (
         <div>
             {isLoading && <LoaderWithGap text={t("CS_LOADING")} />}
-            <Card type="secondary" >
+            <Card type="secondary">
                 <HeaderComp title="DOWNLOAD_USER_DATA" styles={{ color: "black" }} />
                 <TextBlock body={t("DOWNLOAD_DESC")} />
-                {data?.ResourceDetails &&
-                    [...data?.ResourceDetails].reverse().map((item, index) => {
-                        let fileName = item?.additionalDetails?.fileName || `FileNo${item?.processedFilestoreId?.slice(0, 4) || ''}`;
 
-                        console.log("item", item);
-                        return (
-                            <FileComponent
-                                title=""
-                                fileName={fileName}
-                                downloadHandler={() => {
-                                    Digit.Utils.campaign.downloadExcelWithCustomName({
-                                        fileStoreId: item?.processedFilestoreId,
-                                        customName: String(fileName)
+                {/* Display paginated files */}
+                {currentData.map((item, index) => {
+                    const fileName = item?.additionalDetails?.fileName || `FileNo${item?.processedFilestoreId?.slice(0, 4) || ''}`;
+                    return (
+                        <FileComponent
+                            key={index}
+                            title=""
+                            fileName={fileName}
+                            downloadHandler={() => {
+                                Digit.Utils.campaign.downloadExcelWithCustomName({
+                                    fileStoreId: item?.processedFilestoreId,
+                                    customName: String(fileName)
+                                });
+                            }}
+                            auditDetails={{ userName: item?.username, lastmodTime: item?.auditDetails?.lastmodtime }}
+                        />
+                    );
+                })}
 
-                                    });
-                                }} // Passing the download function
-                                auditDetails={{ userName: item?.username, lastmodTime: item?.auditDetails?.lastmodtime }}
-                            />
-                        )
+                {/* Pagination Controls */}
+                <div className="pagination-controls">
+                    <label>
+                        {t("Rows per page")}:
+                        <select value={rowsPerPage} onChange={handleRowsPerPageChange}>
+                            {[5, 10, 15, 20].map(size => (
+                                <option key={size} value={size}>{size}</option>
+                            ))}
+                        </select>
+                    </label>
+                    <div>
+                        {t("Page")}: {currentPage} / {totalPages}
+                        <Button
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            isDisabled={currentPage === 1}
+                            icon={"ArrowBackIos"}
+                            variation="teritiary"
+                            
+                         />
+                           
+                       
+                        <Button
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            isDisabled={currentPage === totalPages}
+                            variation="teritiary"
+                            icon={"ArrowForwardIos"}
 
-                    })
+                        />
+                           
+                        
+                    </div>
+                </div>
 
-                }
+                {/* Back Button */}
                 <ActionBar style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", zIndex: "1" }}>
                     <Link to="/microplan-ui/employee/" style={{ textDecoration: "none" }}>
                         <Button
@@ -98,11 +125,10 @@ const UserDownload = () => {
                             icon={"ArrowBack"}
                         />
                     </Link>
-                   
                 </ActionBar>
             </Card>
         </div>
     );
-}
+};
 
 export default UserDownload;

@@ -199,3 +199,49 @@
   display: flex;
 }
 
+/* Add these styles to your CSS file */
+
+.pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-top: 1px solid #ccc;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.pagination-controls label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pagination-controls select {
+  padding: 0.3rem;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.pagination-controls div {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pagination-controls button {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.pagination-controls button:disabled {
+  color: #ccc;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  text-decoration: underline;
+}
