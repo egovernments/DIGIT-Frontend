@@ -452,7 +452,6 @@ export const UICustomizations = {
         config: {
           enabled: true,
           select: (data) => {
-            console.log("dataaa",data)
             const roles = data?.mdms.map((item) => {
               return {
                 roleCode: item.data.roleCode,
