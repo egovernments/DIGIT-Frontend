@@ -612,6 +612,8 @@ const createUpdatePlanProject = async (req) => {
               message: "SETUP_COMPLETED",
               back: "BACK_TO_HOME",
               backlink: `/${window.contextPath}/employee`,
+              responseId: planResForCompleteSetup?.PlanConfiguration?.[0]?.name,
+              info: "SETUP_MICROPLAN_SUCCESS_NAME",
               description: "SETUP_MICROPLAN_SUCCESS_RESPONSE_DESC",
             },
           };
