@@ -15,7 +15,7 @@
     border: 1px solid #d6d5d4;
     border-radius: 0.4rem;
     padding: 1rem;
-    margin-right: 1.5rem;
+    margin-right: 1rem;
     margin-bottom: 1.5rem;
     .card-text {
       margin: 0;
@@ -239,6 +239,7 @@
     display: flex;
     align-content: center;
     justify-content: space-between;
+    font-family: theme(digitv2.fontFamily.sans);
   }
   .attribute-container {
     border: 1px solid #d6d5d4;

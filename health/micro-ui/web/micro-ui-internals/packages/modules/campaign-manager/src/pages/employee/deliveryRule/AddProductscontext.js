@@ -1,8 +1,8 @@
-import { AddIcon, Button, CardText, Label, LabelFieldPair } from "@egovernments/digit-ui-react-components";
+import { AddIcon, CardText, Label, LabelFieldPair } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import PlusMinusInput from "../../../components/PlusMinusInput";
 import { useTranslation } from "react-i18next";
-import { Dropdown, TextInput, Toast } from "@egovernments/digit-ui-components";
+import { Dropdown, TextInput, Toast ,Button } from "@egovernments/digit-ui-components";
 import { Link } from "react-router-dom";
 import { CycleContext } from ".";
 import { PRIMARY_COLOR } from "../../../utils";
@@ -231,9 +231,20 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
               {t(`CAMPAIGN_RESOURCE`)} {c + 1}
             </CardText>
             {products?.length > 1 ? (
-              <div className="delete-resource-icon" onClick={() => deleteItem(i, c)}>
-                <DustbinIcon />
-              </div>
+              // <div className="delete-resource-icon" onClick={() => deleteItem(i, c)}>
+              //   <DustbinIcon />
+              // </div>
+              <Button
+              // className="custom-class"
+              icon="Delete"
+              iconFill=""
+              label={t(`DELETE`)}
+              onClick={() => deleteItem(i, c)}
+              size=""
+              style={{}}
+              title=""
+              variation="link"
+            />
             ) : null}
           </div>
           <div className="add-resource-label-field-container">
@@ -265,8 +276,8 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
           variation="secondary"
           label={t(`CAMPAIGN_PRODUCTS_MODAL_SECONDARY_ACTION`)}
           className={"add-rule-btn hover"}
-          icon={<AddIcon fill={PRIMARY_COLOR} styles={{ height: "1.5rem", width: "1.5rem" }} />}
-          onButtonClick={add}
+          icon="AddIcon"
+          onClick={add}
         />
       )}
       <div
