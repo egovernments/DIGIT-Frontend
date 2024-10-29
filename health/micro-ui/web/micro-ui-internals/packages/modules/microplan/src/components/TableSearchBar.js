@@ -19,6 +19,11 @@ const TableSearchField = ({ onSearch}) => {
         placeholder={t("CS_INBOX_SEARCH")}
         value={query}
         onChange={handleInputChange}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault(); // Prevent form submission
+          }
+        }}
         style={styles.input}
       />
       <div style={styles.iconContainer}>
