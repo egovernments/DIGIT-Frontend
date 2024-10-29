@@ -15,6 +15,9 @@ const Response = () => {
     const { state } = useLocation();
     const back=(state?.back)?state?.back:"BACK";
     const backlink=(state?.backlink)?(state.backlink):"employee";
+    const description=(state?.description)?state.description:"";
+    const message=(state?.message)?(state?.message):"";
+    const fileName=(state?.fileName)?(state.fileName):"";
     return (
         <>
             <PanelCard
@@ -26,7 +29,7 @@ const Response = () => {
                 cardStyles={{}}
                 className=""
                 customIcon=""
-                description={t(state.description)}
+                description={t(description)}
                 // footerChildren={[
                 //     <Button label="OK" onClick={function noRefCheck() { }} type="button" />
                 // ]}
@@ -34,7 +37,7 @@ const Response = () => {
                 iconFill=""
                 info=""
                 maxFooterButtonsAllowed={5}
-                message={t(state?.message)}
+                message={t(message)}
                 multipleResponses={[]}
                 props={{}}
                 response={t(state?.fileName)}
@@ -45,15 +48,16 @@ const Response = () => {
 
             </PanelCard>
             <ActionBar className="mc_back">
-                <Link to={`/${window.contextPath}${backlink}`}>
+                
                     <Button
                         style={{ margin: "0.5rem", minWidth: "10rem", marginLeft: "6rem" }}
-                        className="previous-button"
+                        className="ab-actions"
                         variation="secondary"
-                        label={t(back)}
+                        label={t("USER_MANAGEMENT_BATMAN_SPIDY")}
                         icon={"ArrowBack"}
+                        onClick={()=>{history.push(`/${window.context}/microplan-ui/employee`)}}
                     />
-                </Link>
+               
             </ActionBar>
         </>
     );
