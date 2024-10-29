@@ -274,13 +274,16 @@ const createUpdatePlanProject = async (req) => {
                 })
               : [],
         };
+        
         // update plan object
         const planUpdateForBoundaryInvalidation = await updatePlan(updatedPlanObjectForBoundaryInvalidate);
         if (planUpdateForBoundaryInvalidation) {
-          setCurrentKey((prev) => prev + 1);
-          setCurrentStep((prev) => prev + 1);
+          // doing this after invalidating the session
+          // setCurrentKey((prev) => prev + 1);
+          // setCurrentStep((prev) => prev + 1); 
           return {
             triggeredFrom,
+            invalidateSession:true
           };
         } else {
           setShowToast({ key: "error", label: "ERR_BOUNDARY_UPDATE" });
@@ -289,14 +292,15 @@ const createUpdatePlanProject = async (req) => {
       case "ASSUMPTIONS_FORM":
         // here we have to invalidate the existing assumptions in update call if there is a change in assumptionsForm
         // check whether the currentAssumptionsForm is equal to prev assumptionsForm (if so then skip this update call)
-
-        if (_.isEqual(planObject?.additionalDetails?.assumptionsForm, totalFormData?.ASSUMPTIONS_FORM?.assumptionsForm)) {
+        
+        if (_.isEqual(planObject?.additionalDetails?.assumptionsForm, totalFormData?.ASSUMPTIONS_FORM?.assumptionsForm) && Object.keys(planObject?.additionalDetails?.assumptionsForm).length>0) {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
           return {
             triggeredFrom,
           };
         }
+
         //otherwise update with invalidating assumptions and formula(operations)
         const invalidatedAssumptions =
           planObject.assumptions.length > 0
@@ -343,10 +347,11 @@ const createUpdatePlanProject = async (req) => {
         };
         const planResAssumptionsForm = await updatePlan(updatedPlanObjAssumptionsForm);
         if (planResAssumptionsForm?.PlanConfiguration?.[0]?.id) {
-          setCurrentKey((prev) => prev + 1);
-          setCurrentStep((prev) => prev + 1);
+          // setCurrentKey((prev) => prev + 1);
+          // setCurrentStep((prev) => prev + 1);
           return {
             triggeredFrom,
+            invalidateSession:true
           };
         } else {
           setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
