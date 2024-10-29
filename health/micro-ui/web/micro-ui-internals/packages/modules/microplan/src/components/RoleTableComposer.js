@@ -340,11 +340,16 @@ function RoleTableComposer({ nationalRoles }) {
     {
       name: t("HIERARCHY"),
       cell: (row) => {
+        const isUserAlreadyAssignedActive =
+          HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.length > 0 &&
+          HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
+            ? true
+            : false;
         return (
           <Dropdown
             className="roleTableCell"
             selected={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedHierarchy || null}
-            disabled={nationalRoles?.includes(category) ? true : false}
+            disabled={isUserAlreadyAssignedActive || nationalRoles?.includes(category) ? true : false}
             isMandatory={true}
             option={state?.boundaryHierarchy.filter((item) => !(item.boundaryType === "Village" || item.boundaryType === "Country"))}
             select={(value) => {
@@ -360,20 +365,27 @@ function RoleTableComposer({ nationalRoles }) {
 
     {
       name: t("SELECTED_BOUNDARY"),
-      cell: (row) => (
-        <MultiSelectDropdown
-          disabled={nationalRoles?.includes(category) ? true : false}
-          props={{ className: "roleTableCell" }}
-          t={t}
-          options={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.boundaryOptions || []}
-          optionsKey={"code"}
-          selected={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedBoundaries || []}
-          onSelect={(value) => handleBoundaryChange(value, row)}
-          addCategorySelectAllCheck={true}
-          addSelectAllCheck={true}
-          variant="nestedmultiselect"
-        />
-      ),
+      cell: (row) => {
+        const isUserAlreadyAssignedActive =
+          HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.length > 0 &&
+          HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
+            ? true
+            : false;
+        return (
+          <MultiSelectDropdown
+            disabled={isUserAlreadyAssignedActive || nationalRoles?.includes(category) ? true : false}
+            props={{ className: "roleTableCell" }}
+            t={t}
+            options={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.boundaryOptions || []}
+            optionsKey={"code"}
+            selected={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedBoundaries || []}
+            onSelect={(value) => handleBoundaryChange(value, row)}
+            addCategorySelectAllCheck={true}
+            addSelectAllCheck={true}
+            variant="nestedmultiselect"
+          />
+        );
+      },
     },
     {
       name: t("ACTION"),
@@ -399,10 +411,7 @@ function RoleTableComposer({ nationalRoles }) {
             label={isUserAlreadyAssignedActive ? t(`UNASSIGN`) : t(`ASSIGN`)}
             icon={isUserAlreadyAssignedActive ? "Close" : "DoubleArrow"}
             isSuffix={isUserAlreadyAssignedActive ? false : true}
-            onClick={(value) =>
-              isUserAlreadyAssignedActive ? handleUpdateAssignEmployee(row)
-                : handleAssignEmployee(row)
-            }
+            onClick={(value) => (isUserAlreadyAssignedActive ? handleUpdateAssignEmployee(row) : handleAssignEmployee(row))}
           />
         );
       },
