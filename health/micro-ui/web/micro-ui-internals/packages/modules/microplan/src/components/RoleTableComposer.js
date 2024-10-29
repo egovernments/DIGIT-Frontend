@@ -8,6 +8,7 @@ import { useMyContext } from "../utils/context";
 import { useQueryClient } from "react-query";
 import { tableCustomStyle } from "./tableCustomStyle";
 import styled, { keyframes } from "styled-components";
+// import _ from "lodash";
 
 const rotate360 = keyframes`
   from {
@@ -31,7 +32,7 @@ const Spinner = styled.div`
   height: 80px;
   border-radius: 50%;
 `;
-function CustomLoader() {
+export function CustomLoader() {
   return (
     <div style={{ padding: "24px" }}>
       <Spinner />
@@ -45,7 +46,7 @@ function RoleTableComposer({ nationalRoles }) {
   const totalFormData = Digit.SessionStorage.get("MICROPLAN_DATA");
   const selectedData = totalFormData?.BOUNDARY?.boundarySelection?.selectedData || [];
   const { hierarchyData, category } = useUserAccessContext();
-  const { state } = useMyContext();
+  const { state, lowestHierarchy } = useMyContext();
   const [rowData, setRowData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -59,8 +60,9 @@ function RoleTableComposer({ nationalRoles }) {
   const { mutate: planEmployeeUpdate } = Digit.Hooks.microplanv1.usePlanEmployeeUpdate();
   const [isLoading, setIsLoading] = useState(null);
   const topBoundary = state?.boundaryHierarchy.find((boundary) => boundary.parentBoundaryType === null);
-  const topBoundaryValue = totalFormData?.BOUNDARY?.boundarySelection?.boundaryData?.Country
-    ? Object.values(totalFormData.BOUNDARY.boundarySelection.boundaryData.Country)[0]
+  const topBoundaryCode = topBoundary?.boundaryType;
+  const topBoundaryValue = totalFormData?.BOUNDARY?.boundarySelection?.boundaryData?.[topBoundaryCode]
+    ? Object.values(totalFormData.BOUNDARY.boundarySelection.boundaryData?.[topBoundaryCode])[0]
     : undefined;
   const { isLoading: isHrmsLoading, data: HrmsData, error: hrmsError, refetch: refetchHrms } = Digit.Hooks.microplanv1.useSearchHRMSEmployee({
     tenantId: tenantId,
@@ -71,7 +73,7 @@ function RoleTableComposer({ nationalRoles }) {
     roles: category,
     filters: filters,
     config: {
-      enabled: false,
+      enabled: true,
       select: (data) => {
         const resp = data?.Employees?.map((item, index) => {
           return {
@@ -294,7 +296,7 @@ function RoleTableComposer({ nationalRoles }) {
     });
   };
 
-  const handleUpdateAssignEmployee = (row) => {
+  const handleUpdateAssignEmployee = (row, updateAssignee) => {
     setIsLoading(true);
     const payload = {
       PlanEmployeeAssignment: {
@@ -339,13 +341,18 @@ function RoleTableComposer({ nationalRoles }) {
     {
       name: t("HIERARCHY"),
       cell: (row) => {
+        const isUserAlreadyAssignedActive =
+          HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.length > 0 &&
+          HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
+            ? true
+            : false;
         return (
           <Dropdown
             className="roleTableCell"
             selected={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedHierarchy || null}
-            disabled={nationalRoles?.includes(category) ? true : false}
+            disabled={isUserAlreadyAssignedActive || nationalRoles?.includes(category) ? true : false}
             isMandatory={true}
-            option={state?.boundaryHierarchy.filter((item) => !(item.boundaryType === "Village" || item.boundaryType === "Country"))}
+            option={state?.boundaryHierarchy.filter((item) => item.parentBoundaryType !== null && item.boundaryType !== state?.lowestHierarchy)}
             select={(value) => {
               row.selectedHeirarchy = value;
               handleHierarchyChange(value, row);
@@ -359,20 +366,27 @@ function RoleTableComposer({ nationalRoles }) {
 
     {
       name: t("SELECTED_BOUNDARY"),
-      cell: (row) => (
-        <MultiSelectDropdown
-          disabled={nationalRoles?.includes(category) ? true : false}
-          props={{ className: "roleTableCell" }}
-          t={t}
-          options={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.boundaryOptions || []}
-          optionsKey={"code"}
-          selected={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedBoundaries || []}
-          onSelect={(value) => handleBoundaryChange(value, row)}
-          addCategorySelectAllCheck={true}
-          addSelectAllCheck={true}
-          variant="nestedmultiselect"
-        />
-      ),
+      cell: (row) => {
+        const isUserAlreadyAssignedActive =
+          HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.length > 0 &&
+          HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
+            ? true
+            : false;
+        return (
+          <MultiSelectDropdown
+            disabled={isUserAlreadyAssignedActive || nationalRoles?.includes(category) ? true : false}
+            props={{ className: "roleTableCell" }}
+            t={t}
+            options={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.boundaryOptions || []}
+            optionsKey={"code"}
+            selected={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedBoundaries || []}
+            onSelect={(value) => handleBoundaryChange(value, row)}
+            addCategorySelectAllCheck={true}
+            addSelectAllCheck={true}
+            variant="nestedmultiselect"
+          />
+        );
+      },
     },
     {
       name: t("ACTION"),
@@ -384,11 +398,13 @@ function RoleTableComposer({ nationalRoles }) {
             ? true
             : false;
 
-        console.log(
-          "NABEELAYUBEE",
-          row,
-          HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)
-        );
+        // const selectedBoundaries = rowData?.find((i) => i.employeeId === row.employeeId)?.selectedBoundaries?.map((i) => i?.code);
+        // const incomingBoundaries = HrmsData?.planSearchData.find((i) => i.employeeId === row.employeeId)?.jurisdiction;
+        // const selectedHierarchy = HrmsData?.planSearchData.find((i) => i.employeeId === row.employeeId)?.selectedHierarchy?.boundaryType;
+        // const incomingHierarchy = rowData?.find((i) => i.employeeId === row.employeeId)?.hierarchyLevel;
+        // const isHierarchyEqual = !incomingHierarchy ? true : _.isEqual(incomingHierarchy, selectedHierarchy);
+        // const isBoundaryEqual = !incomingBoundaries || incomingBoundaries?.length === 0 ? true : _.isEqual(incomingBoundaries, selectedBoundaries);
+
         return (
           <Button
             className={"roleTableCell"}
@@ -415,7 +431,10 @@ function RoleTableComposer({ nationalRoles }) {
   const handleSearchSubmit = (e) => {
     if (number?.length > 0 && number?.length <= 10) {
       setShowToast({ key: "error", label: t("INVALID_MOBILE_NUMBER_LENGTH") });
+      return;
     }
+
+    setCurrentPage(1);
     setFilters({
       name: name,
       number: number,
@@ -424,6 +443,7 @@ function RoleTableComposer({ nationalRoles }) {
   const handleClearSearch = () => {
     setName("");
     setNumber("");
+    setCurrentPage(1);
     setFilters({});
   };
   useEffect(() => {
@@ -475,7 +495,8 @@ function RoleTableComposer({ nationalRoles }) {
                   type={"number"}
                   name={"number"}
                   onChange={(e) => {
-                    setNumber(e.target.value);
+                    const newValue = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
+                    setNumber(newValue);
                   }}
                   //   inputRef={ref}
                   errorStyle={""}

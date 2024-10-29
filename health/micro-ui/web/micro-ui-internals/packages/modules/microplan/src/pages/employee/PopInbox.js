@@ -495,7 +495,7 @@ const PopInbox = () => {
               fileName: data?.PlanConfiguration?.[0]?.name,
               message: t(`POPULATION_FINALISED_SUCCESSFUL`),
               back: t(`GO_BACK_TO_HOME`),
-              backlink: "/employee"
+              backlink: `/${window.contextPath}/employee`
             });
           }}
           onError={(data) => {
