@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import FileComponent from '../../components/FileComponent';
 import HeaderComp from '../../components/HeaderComp';
-import { TextBlock, Card } from '@egovernments/digit-ui-components';
-import {LoaderWithGap} from "@egovernments/digit-ui-react-components";
+import { TextBlock, Card,Button,ActionBar } from '@egovernments/digit-ui-components';
+import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 
 
 const UserDownload = () => {
     const { t } = useTranslation();
+    const {history}=useHistory();
     const [Files, setFile] = useState(""); // Initialize as an empty string
     const { data, isFetching, isLoading } = Digit.Hooks.microplanv1.useFileDownload({
         "SearchCriteria": {
@@ -19,7 +22,7 @@ const UserDownload = () => {
     },
         {
             enabled: true,
-            select: data => { 
+            select: data => {
                 const currentUserUuid = Digit.UserService.getUser().info.uuid;
                 const ResourceDetails = data?.ResourceDetails || [];
                 const filteredData = ResourceDetails.filter(item => item?.auditDetails?.createdBy == currentUserUuid && item?.action == "create");
@@ -44,7 +47,7 @@ const UserDownload = () => {
         }
     }, [data]); // Only run this effect when `data` changes
 
-    
+
 
 
 
@@ -62,12 +65,12 @@ const UserDownload = () => {
             <Card type="secondary" >
                 <HeaderComp title="DOWNLOAD_USER_DATA" styles={{ color: "black" }} />
                 <TextBlock body={t("DOWNLOAD_DESC")} />
-                    {data?.ResourceDetails &&
-                        [...data?.ResourceDetails].reverse().map((item, index) => {
-                            let fileName = item?.additionalDetails?.fileName || `FileNo${item?.processedFilestoreId?.slice(0, 4) || ''}`;
-                            
+                {data?.ResourceDetails &&
+                    [...data?.ResourceDetails].reverse().map((item, index) => {
+                        let fileName = item?.additionalDetails?.fileName || `FileNo${item?.processedFilestoreId?.slice(0, 4) || ''}`;
 
-                            return (
+                        console.log("item", item);
+                        return (
                             <FileComponent
                                 title=""
                                 fileName={fileName}
@@ -78,13 +81,25 @@ const UserDownload = () => {
 
                                     });
                                 }} // Passing the download function
-                                auditDetails={{userName:item?.username,lastmodTime:item?.auditDetails?.lastmodtime}}
+                                auditDetails={{ userName: item?.username, lastmodTime: item?.auditDetails?.lastmodtime }}
                             />
-                            )
+                        )
 
-    })
+                    })
 
-                    }
+                }
+                <ActionBar style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", zIndex: "1" }}>
+                    <Link to="/microplan-ui/employee/" style={{ textDecoration: "none" }}>
+                        <Button
+                            style={{ margin: "0.5rem", minWidth: "12rem", marginLeft: "6rem" }}
+                            className="previous-button"
+                            variation="secondary"
+                            label={t("BACK")}
+                            icon={"ArrowBack"}
+                        />
+                    </Link>
+                   
+                </ActionBar>
             </Card>
         </div>
     );

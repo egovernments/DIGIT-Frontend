@@ -6,7 +6,7 @@ import { Button } from "@egovernments/digit-ui-components";
 
 const FileComponent = ({ title, fileName, auditDetails, editHandler, deleteHandler, downloadHandler }) => {
     const { t } = useTranslation();
-    const { lastmodTime } = auditDetails || {}; // Destructuring the audit details for easy access
+    const { lastmodTime,userName } = auditDetails || {}; // Destructuring the audit details for easy access
     return (
         <div>
 
@@ -15,12 +15,16 @@ const FileComponent = ({ title, fileName, auditDetails, editHandler, deleteHandl
                 <CardSubHeader style={{ marginTop: 0, fontSize: "1.5rem", color: " #0B4B66", marginBottom: "0rem" }}>{title}</CardSubHeader>
             </div>
 
-            <Card type={"secondary"} className="card-color">
+            <Card type={"secondary"}
+                className="card-color"
+                onClick={(e) => {
+                    downloadHandler();
+                }}
+            >
                 <div className="dm-parent-container">
                     {/* Left side: File Icon */}
                     <div
                         className="dm-uploaded-file-container-sub"
-                        onClick={() => setShowPreview(true)}
                     >
                         <FileIcon className="dm-icon" />
                         <div>{fileName}</div>
@@ -30,12 +34,11 @@ const FileComponent = ({ title, fileName, auditDetails, editHandler, deleteHandl
                     <div className="dm-actions-container">
 
                         {/* Display audit details (Uploaded by user and last modified time) */}
-                        {(lastmodTime) ?(
-                            <div className="dm-audit-info11">
-                                {/* Displaying the audit information */}
-                                {lastmodTime && <span style={{ color: "#C84C0E" }}>{lastmodTime}</span>}
-                            </div>):null
-                        }
+                        {lastmodTime && userName && (
+                            <div className="dm-audit-info" style={{ fontSize: "1rem", color: "#8e9497" }}>
+                                Uploaded by {userName} | {lastmodTime}
+                            </div>
+                        )}
                         {/* Edit Icon and Button */}
                         <div className="dm-campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
                             {editHandler &&
@@ -74,9 +77,6 @@ const FileComponent = ({ title, fileName, auditDetails, editHandler, deleteHandl
                                 icon={"FileDownload"}
                                 type="button"
                                 className="dm-workbench-download-template-btn dm-hover"
-                                onClick={(e) => {
-                                    downloadHandler();
-                                }}
                             />
                         }
                     </div>
