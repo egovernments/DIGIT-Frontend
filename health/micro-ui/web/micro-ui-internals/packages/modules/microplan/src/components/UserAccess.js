@@ -1,7 +1,7 @@
 import { Button, Card, Chip, Header, Loader, NoResultsFound, PopUp, Toast } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import RoleTableComposer from "./RoleTableComposer";
+import RoleTableComposer, { CustomLoader } from "./RoleTableComposer";
 import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./tableCustomStyle";
 import TableSearchField from "./TableSearchBar";
@@ -77,7 +77,7 @@ function UserAccess({ category, setData, nationalRoles }) {
             number: item?.user?.mobileNumber,
             hierarchyLevel: data?.planData?.find((i) => i?.employeeId === item?.user?.userServiceUuid)?.hierarchyLevel,
             jurisdiction: data?.planData?.find((i) => i?.employeeId === item?.user?.userServiceUuid)?.jurisdiction,
-            planData: data?.planData?.find((i) => i?.employeeId === item?.user?.userServiceUuid)
+            planData: data?.planData?.find((i) => i?.employeeId === item?.user?.userServiceUuid),
           };
         });
         return {
@@ -208,7 +208,7 @@ function UserAccess({ category, setData, nationalRoles }) {
         return (
           <Button
             className={"roleTableCell"}
-            variation={"secondary" }
+            variation={"secondary"}
             label={t(`UNASSIGN`)}
             icon={"Close"}
             isSuffix={false}
@@ -220,13 +220,11 @@ function UserAccess({ category, setData, nationalRoles }) {
   ];
 
   const handleSearch = (query) => {
-    if(query?.length >= 2 ){
+    if (query?.length >= 2) {
       setSearchQuery(query);
-    }
-    else {
+    } else {
       setSearchQuery(null);
     }
-
     // Handle search logic, such as filtering or API calls
   };
 
@@ -237,20 +235,23 @@ function UserAccess({ category, setData, nationalRoles }) {
         <p className="mp-description">{t(`${category}_DESCRIPTION`)}</p>
       </Card>
 
-      {planEmployee?.data?.length > 0 ? (
-        <Card>
-          <div style={styles.container}>
-            <TableSearchField 
-            onSearch={handleSearch}
-            />
-            <Button variation="secondary" label={t(`ASSIGN`)} icon={"AddIcon"} onClick={() => setShowPopUp(true)} />
-          </div>
+      <Card>
+        <div style={styles.container}>
+          <TableSearchField onSearch={handleSearch} />
+          <Button variation="secondary" label={t(`ASSIGN`)} icon={"AddIcon"} onClick={() => setShowPopUp(true)} />
+        </div>
+        {!isPlanEmpSearchLoading && (!planEmployee?.data || planEmployee?.data?.length === 0) ? (
+          <Card>
+            <NoResultsFound />
+            <Button variation="secondary" label={t(`ASSIGN`)} style={{ margin: "auto" }} icon={"AddIcon"} onClick={() => setShowPopUp(true)} />
+          </Card>
+        ) : (
           <DataTable
             category={category}
             columns={columns}
             data={planEmployee?.data}
-            progressPending={isLoading || isPlanEmpSearchLoading}
-            progressComponent={<Loader />}
+            progressPending={isPlanEmpSearchLoading}
+            progressComponent={<CustomLoader />}
             pagination
             paginationServer
             customStyles={tableCustomStyle}
@@ -260,13 +261,8 @@ function UserAccess({ category, setData, nationalRoles }) {
             paginationPerPage={rowsPerPage}
             paginationRowsPerPageOptions={[5, 10, 15, 20]}
           />
-        </Card>
-      ) : (
-        <Card>
-          <NoResultsFound />
-          <Button variation="secondary" label={t(`ASSIGN`)} style={{ margin: "auto" }} icon={"AddIcon"} onClick={() => setShowPopUp(true)} />
-        </Card>
-      )}
+        )}
+      </Card>
 
       {showPopUp && (
         <PopUp
@@ -298,15 +294,15 @@ function UserAccess({ category, setData, nationalRoles }) {
 
 const styles = {
   container: {
-    display: 'flex',
-    justifyContent: 'space-between', // Ensures space between search and button
-    alignItems: 'center',
-    width: '100%',
-    padding: '8px', // Optional padding for layout
+    display: "flex",
+    justifyContent: "space-between", // Ensures space between search and button
+    alignItems: "center",
+    width: "100%",
+    padding: "8px", // Optional padding for layout
   },
   buttonContainer: {
-    display: 'flex',
-    flexDirection: 'row-reverse',
+    display: "flex",
+    flexDirection: "row-reverse",
   },
 };
 
