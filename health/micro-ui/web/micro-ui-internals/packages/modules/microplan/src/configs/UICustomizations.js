@@ -216,7 +216,7 @@ export const UICustomizations = {
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       const rolesCodes = Digit.Hooks.useSessionStorage("User", {})[0]?.info?.roles;
       const roles = rolesCodes.map((item) => item.code);
-      const hasRequiredRole = roles.some((role) => role === "ROOT_POPULATION_DATA_APPROVER" || role === "ROOT_POPULATION_APPROVER");
+      const hasRequiredRole = roles.some((role) => role === "ROOT_POPULATION_DATA_APPROVER" || role === "POPULATION_DATA_APPROVER");
       switch (key) {
         case "ACTIONS":
           const onActionSelect = (key, row) => {
