@@ -33,18 +33,18 @@ const SummaryScreen = ({ props: customProps }) => {
               {
                 key: t("CAMPAIGN_TYPE"),
                 // value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code || "NA",
-                value: campaignDetails?.campaignType?.code || "NA",
+                value: t(campaignDetails?.campaignType?.code) || t("NA"),
               },
               {
                 key: t("CMAPAIGN_DISEASE"),
                 // value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.disease?.code || "NA",
-                value: campaignDetails?.disease?.code || "NA",
+                value: t(campaignDetails?.disease?.code) || t("NA"),
               },
               {
                 key: t("RESOURCE_DISTRIBUTION_STRATEGY"),
                 // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
                 // value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode || "NA",
-                value: campaignDetails?.distributionStrat?.resourceDistributionStrategyCode || "NA",
+                value: t(campaignDetails?.distributionStrat?.resourceDistributionStrategyCode) || t("NA"),
               },
             ],
             inlineStyles: {
