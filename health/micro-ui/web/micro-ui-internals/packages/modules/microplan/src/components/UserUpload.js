@@ -33,10 +33,7 @@ const UserUpload = React.memo(() => {
   const [downloadError, setDownloadError] = useState(false);
   const [resourceId, setResourceId] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
-  const [executionCount, setExecutionCount] = useState(0);
-  const [isDisabled, setIsDisabled] = useState(false);
   const [showInfoCard, setShowInfoCard] = useState(false);
-  const [readMeInfo, setReadMeInfo] = useState({});
   const [loader, setLoader] = useState(false);
   const [downloadTemplateLoader, setDownloadTemplateLoader] = useState(false);
   const [processedFile, setProcessedFile] = useState([]);
@@ -321,11 +318,19 @@ const UserUpload = React.memo(() => {
             setShowToast({ key: "info", label: t("ERROR_WHILE_DOWNLOADING_FROM_FILESTORE") });
           }
         },
-        onError: (result) => {
-          setDownloadTemplateLoader(false);
-          setDownloadError(true);
-          generateData();
-          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+        onError: (error, result) => {
+          const errorCode = error?.response?.data?.Errors?.[0]?.code;
+          if (errorCode == "NativeIoException") {
+            setDownloadError(true);
+            setDownloadTemplateLoader(false);
+            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+          }
+          else {
+            setDownloadTemplateLoader(false);
+            setDownloadError(true);
+            generateData();
+            setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+          }
         },
       }
     );
@@ -411,7 +416,7 @@ const UserUpload = React.memo(() => {
         setDownloadTemplateLoader(false);
         return;
       }
-      history.push(`/${window.contextPath}/employee/microplan/upload-user-success`, { fileName: fileName,message:"USER_DATA_UPLOAD_SUCCESSFUL",description:"The user data uploaded will be available in your microplan user assignment",back:"GO_BACK_TO_USER_MANAGEMENT",backlink:"/employee/microplan/user-management" });
+      history.push(`/${window.contextPath}/employee/microplan/upload-user-success`, { fileName: fileName, message: "USER_DATA_UPLOAD_SUCCESSFUL", description: "The user data uploaded will be available in your microplan user assignment", back: "GO_BACK_TO_USER_MANAGEMENT", backlink: "/employee/microplan/user-management" });
     }
     else {
       setShowToast({ key: "error", label: t("ERROR_MANDATORY_FIELDS_FOR_SUBMIT") });

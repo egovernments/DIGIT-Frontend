@@ -2,9 +2,9 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { EditIcon } from "@egovernments/digit-ui-react-components";
 import { DeleteIconv2, DownloadIcon, FileIcon, Card, CardSubHeader } from "@egovernments/digit-ui-react-components";
-import { Button } from "@egovernments/digit-ui-components";
+import { Button, InfoButton } from "@egovernments/digit-ui-components";
 
-const FileComponent = ({ title, fileName, auditDetails, editHandler, deleteHandler, downloadHandler }) => {
+const FileComponent = ({ title, fileName, status, auditDetails, editHandler, deleteHandler, downloadHandler }) => {
     const { t } = useTranslation();
     const { lastmodTime } = auditDetails || {}; // Destructuring the audit details for easy access
     return (
@@ -30,11 +30,11 @@ const FileComponent = ({ title, fileName, auditDetails, editHandler, deleteHandl
                     <div className="dm-actions-container">
 
                         {/* Display audit details (Uploaded by user and last modified time) */}
-                        {(lastmodTime) ?(
+                        {(lastmodTime) ? (
                             <div className="dm-audit-info11">
                                 {/* Displaying the audit information */}
                                 {lastmodTime && <span style={{ color: "#C84C0E" }}>{lastmodTime}</span>}
-                            </div>):null
+                            </div>) : null
                         }
                         {/* Edit Icon and Button */}
                         <div className="dm-campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
@@ -67,7 +67,7 @@ const FileComponent = ({ title, fileName, auditDetails, editHandler, deleteHandl
                         }
 
                         {/* Download Button */}
-                        {downloadHandler &&
+                        {(downloadHandler && status === "completed") && (
                             <Button
                                 label={t("WBH_DOWNLOAD")}
                                 variation="secondary"
@@ -78,7 +78,26 @@ const FileComponent = ({ title, fileName, auditDetails, editHandler, deleteHandl
                                     downloadHandler();
                                 }}
                             />
-                        }
+                        )}
+                        {(downloadHandler && status === "data-accepted") && (
+                            <Button
+                                label={t("WBH_INPROGRESS")}
+                                variation="secondary"
+                                icon={"Inprogress"}
+                                type="button"
+                                className="dm-workbench-download-template-btn"
+                            />
+                        )}
+
+                        {(downloadHandler && status !== "completed" && status !== "data-accepted") && (
+                            <InfoButton
+                                className="dm-workbench-download-template-btn"
+                                infobuttontype="error"
+                                label={t("WBH_FAILED")}
+                                isDisabled={true}
+                                style={{ background: "#b30505" ,opacity : 1}}
+                            />
+                        )}
                     </div>
                 </div>
             </Card>

@@ -12,9 +12,7 @@ const UserDownload = () => {
     const { data, isFetching, isLoading } = Digit.Hooks.microplanv1.useFileDownload({
         "SearchCriteria": {
             "tenantId": Digit.ULBService.getCurrentTenantId(),
-            "type": "user",
-            "status": "completed"
-            // "action": "create"
+            "type": "user"
         }
     },
         {
@@ -78,6 +76,7 @@ const UserDownload = () => {
 
                                     });
                                 }} // Passing the download function
+                                status={item?.status}
                                 auditDetails={{userName:item?.username,lastmodTime:item?.auditDetails?.lastmodtime}}
                             />
                             )
