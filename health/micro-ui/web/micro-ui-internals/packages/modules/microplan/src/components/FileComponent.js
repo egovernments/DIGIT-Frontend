@@ -36,7 +36,8 @@ const FileComponent = ({ title, fileName, auditDetails, editHandler, deleteHandl
                         {/* Display audit details (Uploaded by user and last modified time) */}
                         {lastmodTime && userName && (
                             <div className="dm-audit-info" style={{ fontSize: "1rem", color: "#8e9497" }}>
-                                Uploaded by {userName} | {lastmodTime}
+                                {/* Uploaded by {userName} | {lastmodTime} */}
+                                Last Modified time {lastmodTime}
                             </div>
                         )}
                         {/* Edit Icon and Button */}
