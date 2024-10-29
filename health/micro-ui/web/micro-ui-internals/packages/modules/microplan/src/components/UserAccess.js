@@ -236,10 +236,12 @@ function UserAccess({ category, setData, nationalRoles }) {
       </Card>
 
       <Card>
-        <div style={styles.container}>
-          <TableSearchField onSearch={handleSearch} />
-          <Button variation="secondary" label={t(`ASSIGN`)} icon={"AddIcon"} onClick={() => setShowPopUp(true)} />
-        </div>
+        {planEmployee?.data?.length > 0 ? (
+          <div style={styles.container}>
+            <TableSearchField onSearch={handleSearch} />
+            <Button variation="secondary" label={t(`ASSIGN`)} icon={"AddIcon"} onClick={() => setShowPopUp(true)} />
+          </div>
+        ) : null}
         {!isPlanEmpSearchLoading && (!planEmployee?.data || planEmployee?.data?.length === 0) ? (
           <Card>
             <NoResultsFound />
