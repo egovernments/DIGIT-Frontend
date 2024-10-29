@@ -8,7 +8,7 @@ import { useMyContext } from "../utils/context";
 import { useQueryClient } from "react-query";
 import { tableCustomStyle } from "./tableCustomStyle";
 import styled, { keyframes } from "styled-components";
-import _ from "lodash";
+// import _ from "lodash";
 
 const rotate360 = keyframes`
   from {
@@ -297,20 +297,12 @@ function RoleTableComposer({ nationalRoles }) {
 
   const handleUpdateAssignEmployee = (row, updateAssignee) => {
     setIsLoading(true);
-    const payload = updateAssignee
-      ? {
-          PlanEmployeeAssignment: {
-            ...row?.planData,
-            jurisdiction: HrmsData?.planSearchData.find((i) => i.employeeId === row.employeeId)?.jurisdiction,
-            hierarchyLevel: HrmsData?.planSearchData.find((i) => i.employeeId === row.employeeId)?.selectedHierarchy?.boundaryType,
-          },
-        }
-      : {
-          PlanEmployeeAssignment: {
-            ...row?.planData,
-            active: !row?.planData?.active,
-          },
-        };
+    const payload = {
+      PlanEmployeeAssignment: {
+        ...row?.planData,
+        active: !row?.planData?.active,
+      },
+    };
     planEmployeeUpdate(payload, {
       onSuccess: (data) => {
         queryClient.invalidateQueries("PLAN_SEARCH_EMPLOYEE_WITH_TAGGING");
@@ -356,7 +348,7 @@ function RoleTableComposer({ nationalRoles }) {
             isMandatory={true}
             option={state?.boundaryHierarchy.filter((item) => !(item.boundaryType === "Village" || item.boundaryType === "Country"))}
             select={(value) => {
-              // row.selectedHeirarchy = value;
+              row.selectedHeirarchy = value;
               handleHierarchyChange(value, row);
             }}
             optionKey="boundaryType"
@@ -393,27 +385,22 @@ function RoleTableComposer({ nationalRoles }) {
             ? true
             : false;
 
-        const selectedBoundaries = rowData?.find((i) => i.employeeId === row.employeeId)?.selectedBoundaries?.map((i) => i?.code);
-        const incomingBoundaries = HrmsData?.planSearchData.find((i) => i.employeeId === row.employeeId)?.jurisdiction;
-        const selectedHierarchy = HrmsData?.planSearchData.find((i) => i.employeeId === row.employeeId)?.selectedHierarchy?.boundaryType;
-        const incomingHierarchy = rowData?.find((i) => i.employeeId === row.employeeId)?.hierarchyLevel;
+        // const selectedBoundaries = rowData?.find((i) => i.employeeId === row.employeeId)?.selectedBoundaries?.map((i) => i?.code);
+        // const incomingBoundaries = HrmsData?.planSearchData.find((i) => i.employeeId === row.employeeId)?.jurisdiction;
+        // const selectedHierarchy = HrmsData?.planSearchData.find((i) => i.employeeId === row.employeeId)?.selectedHierarchy?.boundaryType;
+        // const incomingHierarchy = rowData?.find((i) => i.employeeId === row.employeeId)?.hierarchyLevel;
+        // const isHierarchyEqual = !incomingHierarchy ? true : _.isEqual(incomingHierarchy, selectedHierarchy);
+        // const isBoundaryEqual = !incomingBoundaries || incomingBoundaries?.length === 0 ? true : _.isEqual(incomingBoundaries, selectedBoundaries);
 
-        console.log("BOUNDARIES", incomingBoundaries, selectedBoundaries);
-        console.log("HIERARCHY", incomingHierarchy, selectedHierarchy);
-        const isHierarchyEqual = !incomingHierarchy ? true : _.isEqual(incomingHierarchy, selectedHierarchy);
-        const isBoundaryEqual = !incomingBoundaries || incomingBoundaries?.length === 0 ? true : _.isEqual(incomingBoundaries, selectedBoundaries);
-
-        console.log("isHierarchyEqual", isHierarchyEqual, "isBoundaryEqual", isBoundaryEqual);
         return (
           <Button
             className={"roleTableCell"}
             variation={isUserAlreadyAssignedActive ? "secondary" : "primary"}
-            label={!isBoundaryEqual || !isHierarchyEqual ? t(`ASSIGN`) : isUserAlreadyAssignedActive ? t(`UNASSIGN`) : t(`ASSIGN`)}
+            label={isUserAlreadyAssignedActive ? t(`UNASSIGN`) : t(`ASSIGN`)}
             icon={isUserAlreadyAssignedActive ? "Close" : "DoubleArrow"}
             isSuffix={isUserAlreadyAssignedActive ? false : true}
             onClick={(value) =>
-              isUserAlreadyAssignedActive || !isBoundaryEqual || !isHierarchyEqual
-                ? handleUpdateAssignEmployee(row, isBoundaryEqual || isHierarchyEqual)
+              isUserAlreadyAssignedActive ? handleUpdateAssignEmployee(row)
                 : handleAssignEmployee(row)
             }
           />
