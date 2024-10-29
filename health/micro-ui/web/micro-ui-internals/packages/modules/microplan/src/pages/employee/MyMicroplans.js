@@ -33,7 +33,7 @@ const MyMicroplans = () => {
   return (
     <React.Fragment>
 
-      <Header styles={{ fontSize: "32px" }}>{t("MICROPLANS")}</Header>
+      <Header styles={{ fontSize: "32px" }}>{t("MY_MICROPLANS_HEADING")}</Header>
       <div className="inbox-search-wrapper">
         {/* Pass defaultValues as props to InboxSearchComposer */}
         <InboxSearchComposer
