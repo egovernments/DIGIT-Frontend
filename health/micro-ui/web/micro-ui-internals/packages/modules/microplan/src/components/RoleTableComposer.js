@@ -72,7 +72,7 @@ function RoleTableComposer({ nationalRoles }) {
     roles: category,
     filters: filters,
     config: {
-      enabled: false,
+      enabled: true,
       select: (data) => {
         const resp = data?.Employees?.map((item, index) => {
           return {
@@ -431,6 +431,8 @@ function RoleTableComposer({ nationalRoles }) {
     if (number?.length > 0 && number?.length <= 10) {
       setShowToast({ key: "error", label: t("INVALID_MOBILE_NUMBER_LENGTH") });
     }
+
+    setCurrentPage(1);
     setFilters({
       name: name,
       number: number,
@@ -439,6 +441,7 @@ function RoleTableComposer({ nationalRoles }) {
   const handleClearSearch = () => {
     setName("");
     setNumber("");
+    setCurrentPage(1);
     setFilters({});
   };
   useEffect(() => {
