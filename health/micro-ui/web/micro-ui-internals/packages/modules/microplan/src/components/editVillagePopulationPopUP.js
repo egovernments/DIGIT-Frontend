@@ -49,10 +49,11 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
         body: {
           Census: {
             ...census,
+            totalPopulation: confirmedTotalPopulation,
             additionalDetails: {
               ...census.additionalDetails,
-              confirmedTotalPopulation,
-              confirmedTargetPopulation,
+              // confirmedTotalPopulation,
+              //confirmedTargetPopulation,
             },
             workflow: {
               ...census.workflow,
@@ -82,7 +83,7 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
           <Card key="dropdown-card" type="secondary">
             <div className="edit-label-field-pair">
               <div className="edit-label">{t(`HCM_MICROPLAN_EDIT_VILLAGE`)}</div>
-              <div className="edit-value">{census?.boundaryCode || "NA"}</div>
+              <div className="edit-value">{t(census?.boundaryCode) || "NA"}</div>
             </div>
             <Divider className="" variant="small" />
             <div className="edit-label-field-pair">
@@ -106,7 +107,7 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
                 />
               </div>
             </div>
-            <Divider className="" variant="small" />
+            {/* <Divider className="" variant="small" />
             <div className="edit-label-field-pair">
               <div className="edit-label">{t(`HCM_MICROPLAN_CONFIRM_TARGET_POPULATION`)}</div>
               <div className="edit-value">
@@ -117,7 +118,7 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
                   placeholder={t(`HCM_MICROPLAN_ENTER_TARGET_POPULATION`)}
                 />
               </div>
-            </div>
+            </div> */}
           </Card>,
         ]}
         onOverlayClick={onClose}

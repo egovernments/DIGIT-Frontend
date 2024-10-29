@@ -66,7 +66,7 @@ const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, on
             }}
           />
         </LabelFieldPair>
-        <LabelFieldPair style={{ flexDirection: "column", gap: "0rem",marginBottom: 0 }}>
+        <LabelFieldPair style={{ flexDirection: "column", gap: "0rem" }}>
           <CardLabel style={{width:"100%"}}>{t("SELECT_BOUNDARIES")}</CardLabel>
           <div style={{width: "100%" }}>
           <MultiSelectDropdown
@@ -75,6 +75,7 @@ const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, on
             onSelect={(e) => {
               handleBoundarySelect(e)
             }}
+            props={{className:"searchjurisdiction-multiselectdropdown"}}
             isSearchable={true}
             t={t}
             addCategorySelectAllCheck={true}

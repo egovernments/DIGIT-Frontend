@@ -128,10 +128,10 @@ const FacilityCatchmentMapping = () => {
           commentPath="workflow.comment"
           onSuccess={(data) => {
             history.push(`/${window.contextPath}/employee/microplan/village-finalise-success`, {
-              fileName: 'filename', // need to update when api is success
-              message: "VILLAGE_ASSIGNED_TO_FACILITIES_SUCCESSFUL",
-              back: "GO_BACK_TO_HOME",
-              backlink: "/employee"
+              fileName: data?.PlanConfiguration?.[0]?.name,
+              message: t(`VILLAGE_ASSIGNED_TO_FACILITIES_SUCCESSFUL`),
+              back: t(`GO_BACK_TO_HOME`),
+              backlink: `/${window.contextPath}/employee`
             });
           }}
         />

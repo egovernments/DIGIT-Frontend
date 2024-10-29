@@ -22,6 +22,7 @@ const VillageView = () => {
     const [showSecurityPopup, setShowSecurityPopup] = useState(false);
     const [showEditVillagePopulationPopup, setShowEditVillagePopulationPopup] = useState(false);
     const [showCommentLogPopup, setShowCommentLogPopup] = useState(false);
+    const [assigneeName, setAssigneeName] = useState(null);
 
     const findHierarchyPath = (boundaryCode, data, maxHierarchyLevel) => {
         const hierarchy = [];
@@ -105,6 +106,26 @@ const VillageView = () => {
     const { isLoading, data, isFetching, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
 
 
+    const reqCri = {
+        url: `/health-hrms/employees/_search`,
+        params: {
+            tenantId: tenantId,
+            userServiceUuids: data?.assignee,
+        },
+        config: {
+            enabled: data ? true : false,
+            select: (data) => {
+                return data?.Employees[0];
+            },
+        },
+    };
+
+    const { isLoading: isEmployeeLoading, data: employeeData } = Digit.Hooks.useCustomAPIHook(reqCri);
+
+
+
+
+
     const { isLoading: isWorkflowLoading, data: workflowData, revalidate, refetch: refetchBussinessService } = Digit.Hooks.useCustomAPIHook({
         url: "/egov-workflow-v2/egov-wf/businessservice/_search",
         params: {
@@ -118,6 +139,12 @@ const VillageView = () => {
             },
         },
     });
+
+    useEffect(() => {
+        if (employeeData?.user?.name) {
+            setAssigneeName(employeeData?.user?.name);
+        }
+    }, [employeeData]);
 
 
     useEffect(() => {
@@ -170,6 +197,7 @@ const VillageView = () => {
     };
     const onEditPopulationClose = () => {
         setShowEditVillagePopulationPopup(false);
+        refetch();
     };
 
     if (isLoading || isLoadingCampaignObject || isLoadingPlanEmployee || isWorkflowLoading) {
@@ -192,7 +220,7 @@ const VillageView = () => {
                             <span className="label-heading">
                                 {t(`HCM_MICROPLAN_${node.type.toUpperCase()}_LABEL`)}
                             </span>
-                            <span className="label-text">{node.name}</span>
+                            <span className="label-text">{t(node.name)}</span>
                         </div>
                     ))}
                 </Card>
@@ -268,17 +296,17 @@ const VillageView = () => {
                             variation="secondary"
                         />}
                     </div>
-                    {/* Five Label-Text Pairs */}
-                    <div className="label-pair">
+                    {/* need to reupdated  */}
+                    {/* <div className="label-pair">
                         <span className="label-heading">{t(`HCM_MICROPLAN_UPLOADED_TARGET_POPULATION_LABEL`)}</span>
                         <span className="label-text">{data?.additionalDetails?.targetPopulation}</span>
-                    </div>
+                    </div> */}
                     <Divider className="" variant="small" />
                     <div className="label-pair">
                         <span className="label-heading">{t(`HCM_MICROPLAN_UPLOADED_TOTAL_POPULATION_LABEL`)}</span>
                         <span className="label-text">{data?.totalPopulation}</span>
                     </div>
-                    <Divider className="" variant="small" />
+                    {/* <Divider className="" variant="small" />
                     <div className="label-pair ">
                         <span className="label-heading">{t(`HCM_MICROPLAN_CONFIRM_TARGET_POPULATION_LABEL`)}</span>
                         <span className="label-text">{data?.additionalDetails?.confirmedTargetPopulation}</span>
@@ -287,11 +315,11 @@ const VillageView = () => {
                     <div className="label-pair">
                         <span className="label-heading">{t(`HCM_MICROPLAN_CONFIRM_TOTAL_POPULATION_LABEL`)}</span>
                         <span className="label-text">{data?.additionalDetails?.confirmedTotalPopulation}</span>
-                    </div>
+                    </div> */}
                     <Divider className="" variant="small" />
                     <div className="label-pair">
                         <span className="label-heading">{t(`HCM_MICROPLAN_ASSIGNED_DATA_APPROVER_LABEL`)}</span>
-                        <span className="label-text">{data?.assignee}</span>
+                        <span className="label-text">{assigneeName || t("ES_COMMON_NA")}</span>
                     </div>
                 </Card>
 

@@ -7,8 +7,6 @@ import axios from "axios";
 import { Link, useHistory } from "react-router-dom";
 import { ArrowBack } from "@egovernments/digit-ui-svg-components";
 
-
-
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
  * for different types of data in a web application.
@@ -39,14 +37,20 @@ const UserUpload = React.memo(() => {
   const [processedFile, setProcessedFile] = useState([]);
   const params = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
   const searchParams = new URLSearchParams(location.search);
-  const type = "userWithBoundary"
+  const type = "userWithBoundary";
   const id = searchParams.get("campaignId") || "null";
-  const { data: boundaryHierarchy } = Digit.Hooks.useCustomMDMS(tenantId, "hcm-microplanning", [{ name: "hierarchyConfig" }], {
-    select: (data) => {
-      const item = data?.["hcm-microplanning"]?.hierarchyConfig?.find((item) => item.isActive)
-      return item?.hierarchy
+  const { data: boundaryHierarchy } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    "hcm-microplanning",
+    [{ name: "hierarchyConfig" }],
+    {
+      select: (data) => {
+        const item = data?.["hcm-microplanning"]?.hierarchyConfig?.find((item) => item.isActive);
+        return item?.hierarchy;
+      },
     },
-  }, { schemaCode: "BASE_MASTER_DATA_INITIAL" });
+    { schemaCode: "BASE_MASTER_DATA_INITIAL" }
+  );
   const XlsPreview = Digit.ComponentRegistryService.getComponent("XlsPreview");
   const BulkUpload = Digit.ComponentRegistryService.getComponent("BulkUpload");
   const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "baseTimeout" }]);
@@ -151,8 +155,7 @@ const UserUpload = React.memo(() => {
                   console.error("Error parsing JSON:", e);
                   setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
                 }
-              }
-              else {
+              } else {
                 setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
               }
               return;
@@ -164,7 +167,7 @@ const UserUpload = React.memo(() => {
                   const urlParts = i?.url?.split("/");
                   const id = fileUrl?.[0]?.id;
                   // const fileName = file?.[0]?.name;
-                  const fileType = "user"
+                  const fileType = "user";
                   return {
                     ...i,
                     filestoreId: id,
@@ -239,7 +242,6 @@ const UserUpload = React.memo(() => {
         [type]: "", // Clear the error message
       }));
       setShowInfoCard(false);
-
     } catch (error) {
       // const message = error?.message || t("HCM_ERROR_DEFAULT_MESSAGE");
       setShowToast({ key: "error", label: t("HCM_ERROR_FILE_UPLOAD_FAILED") });
@@ -352,9 +354,9 @@ const UserUpload = React.memo(() => {
         body: {
           RequestInfo: {
             authToken: Digit.UserService.getUser().access_token,
-            msgId: `${ts}|${Digit.StoreData.getCurrentLanguage()}`
-          }
-        }
+            msgId: `${ts}|${Digit.StoreData.getCurrentLanguage()}`,
+          },
+        },
       };
 
       try {
@@ -381,7 +383,7 @@ const UserUpload = React.memo(() => {
         body: {
           RequestInfo: {
             authToken: Digit.UserService.getUser().access_token,
-            msgId: `${ts}|${Digit.StoreData.getCurrentLanguage()}`
+            msgId: `${ts}|${Digit.StoreData.getCurrentLanguage()}`,
           },
           ResourceDetails: {
             tenantId: Digit.ULBService.getCurrentTenantId(),
@@ -393,11 +395,11 @@ const UserUpload = React.memo(() => {
             campaignId: id,
             additionalDetails: {
               source: "microplan",
-              fileName: fileName
-            }
-          }
-        }
-      }
+              fileName: fileName,
+            },
+          },
+        },
+      };
       try {
         await axios.post(reqCriteria.url, reqCriteria.body);
       } catch (error) {
@@ -416,13 +418,18 @@ const UserUpload = React.memo(() => {
         setDownloadTemplateLoader(false);
         return;
       }
-      history.push(`/${window.contextPath}/employee/microplan/upload-user-success`, { fileName: fileName, message: "USER_DATA_UPLOAD_SUCCESSFUL", description: "The user data uploaded will be available in your microplan user assignment", back: "GO_BACK_TO_USER_MANAGEMENT", backlink: "/employee/microplan/user-management" });
-    }
-    else {
+      history.push(`/${window.contextPath}/employee/microplan/upload-user-success`, {
+        fileName: fileName,
+        message: "USER_DATA_UPLOAD_SUCCESSFUL",
+        description: "The user data uploaded will be available in your microplan user assignment",
+        back: "GO_BACK_TO_USER_MANAGEMENT",
+        backlink: `/${window.contextPath}/employee/microplan/user-management`,
+      });
+    } else {
       setShowToast({ key: "error", label: t("ERROR_MANDATORY_FIELDS_FOR_SUBMIT") });
     }
     setDownloadTemplateLoader(false);
-  }
+  };
 
   return (
     <>
@@ -432,9 +439,7 @@ const UserUpload = React.memo(() => {
         <div className="card-container" style={{ width: "100%" }}>
           <Card>
             <div className="campaign-bulk-upload">
-              <Header className="digit-form-composer-sub-header">
-                {t("MP_UPLOAD_USER")}
-              </Header>
+              <Header className="digit-form-composer-sub-header">{t("MP_UPLOAD_USER")}</Header>
               <Button
                 label={t("WBH_DOWNLOAD_TEMPLATE")}
                 variation="secondary"
@@ -444,11 +449,7 @@ const UserUpload = React.memo(() => {
                 onClick={downloadTemplate}
               />
             </div>
-            {uploadedFile.length === 0 && (
-              <div className="info-text">
-                {t("MP_USER_MESSAGE")}
-              </div>
-            )}
+            {uploadedFile.length === 0 && <div className="info-text">{t("MP_USER_MESSAGE")}</div>}
             <BulkUpload onSubmit={onBulkUploadSubmit} fileData={uploadedFile} onFileDelete={onFileDelete} onFileDownload={onFileDownload} />
             {showInfoCard && (
               <InfoCard
@@ -478,34 +479,38 @@ const UserUpload = React.memo(() => {
               />
             )}
           </Card>
-          {(sheetErrors > 0) && <InfoCard
-            populators={{
-              name: "infocard",
-            }}
-            variant={sheetErrors ? "error" : "default"}
-            style={{ margin: "0rem", maxWidth: "100%", marginTop: "1rem" }}
-            additionalElements={
-              sheetErrors ? (
-                [<Button
-                  type="button"
-                  size="large"
-                  variation="default"
-                  label={t("HCM_VIEW_ERROR")}
-                  onClick={() => setShowPreview(true)}
-                  style={{
-                    marginTop: "1rem",
-                    backgroundColor: "#B91900"
-                  }}
-                  textStyles={{
-                    color: "#FFFFFF"
-                  }}
-                />]
-              ) : (
-                null
-              )
-            }
-            label={`${sheetErrors} ${sheetErrors === 1 ? t("HCM_MICROPLAN_SINGLE_ERROR") : t("HCM_MICROPLAN_PLURAL_ERRORS")} ${t("HCM_MICROPLAN_ERRORS_FOUND")}`}
-          />}
+          {sheetErrors > 0 && (
+            <InfoCard
+              populators={{
+                name: "infocard",
+              }}
+              variant={sheetErrors ? "error" : "default"}
+              style={{ margin: "0rem", maxWidth: "100%", marginTop: "1rem" }}
+              additionalElements={
+                sheetErrors
+                  ? [
+                      <Button
+                        type="button"
+                        size="large"
+                        variation="default"
+                        label={t("HCM_VIEW_ERROR")}
+                        onClick={() => setShowPreview(true)}
+                        style={{
+                          marginTop: "1rem",
+                          backgroundColor: "#B91900",
+                        }}
+                        textStyles={{
+                          color: "#FFFFFF",
+                        }}
+                      />,
+                    ]
+                  : null
+              }
+              label={`${sheetErrors} ${sheetErrors === 1 ? t("HCM_MICROPLAN_SINGLE_ERROR") : t("HCM_MICROPLAN_PLURAL_ERRORS")} ${t(
+                "HCM_MICROPLAN_ERRORS_FOUND"
+              )}`}
+            />
+          )}
         </div>
         {showToast && (
           <Toast
@@ -515,7 +520,9 @@ const UserUpload = React.memo(() => {
             onClose={() => setShowToast(null)}
           />
         )}
-        {showPreview && <XlsPreview file={processedFile?.[0]} onDownload={() => onFileDownload(processedFile?.[0])} onBack={() => setShowPreview(false)} />}
+        {showPreview && (
+          <XlsPreview file={processedFile?.[0]} onDownload={() => onFileDownload(processedFile?.[0])} onBack={() => setShowPreview(false)} />
+        )}
       </div>
       <ActionBar style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", zIndex: "1" }}>
         <Link to="/microplan-ui/employee/microplan/user-management" style={{ textDecoration: "none" }}>
@@ -527,16 +534,8 @@ const UserUpload = React.memo(() => {
             icon={"ArrowBack"}
           />
         </Link>
-        <Button
-          style={{ margin: "0.5rem", minWidth: "12rem" }}
-          className="next-button"
-          variation="primary"
-          label={t("SUBMIT")}
-          onClick={onSubmit}
-        />
+        <Button style={{ margin: "0.5rem", minWidth: "12rem" }} className="next-button" variation="primary" label={t("SUBMIT")} onClick={onSubmit} />
       </ActionBar>
-
-
     </>
   );
 });

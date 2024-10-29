@@ -277,7 +277,7 @@ const PlanInbox = () => {
         setShowTab(true);
         setActiveLink({
           code: "ASSIGNED_TO_ME",
-          name: "ASSIGNED_TO_ME"
+          name: "ASSIGNED_TO_ME",
         });
       }
     }
@@ -309,32 +309,32 @@ const PlanInbox = () => {
   const columns = [
     {
       name: t(`INBOX_VILLAGE`),
-      cell: (row) => row?.village || "NA",
+      cell: (row) => t(row?.village) || "NA",
       sortable: true,
     },
     {
       name: t(`VILLAGE_ROAD_CONDITION`),
-      cell: (row) => row?.villageRoadCondition || "NA",
+      cell: (row) => t(row?.villageRoadCondition) || "NA",
       sortable: true,
     },
     {
       name: t(`VILLAGE_TERRAIN`),
-      cell: (row) => row?.villageTerrain || "NA",
+      cell: (row) => t(row?.villageTerrain) || "NA",
       sortable: true,
     },
     {
       name: t(`VILLAGE_TARNSPORTATION_MODE`),
-      cell: (row) => row?.villageTransportMode || "NA",
+      cell: (row) => t(row?.villageTransportMode) || "NA",
       sortable: true,
     },
     {
       name: t(`TOTAL_POPULATION`),
-      cell: (row) => row?.totalPop || "NA",
+      cell: (row) => t(row?.totalPop) || "NA",
       sortable: true,
     },
     {
       name: t(`TARGET_POPULATION`),
-      cell: (row) => row?.targetPop || "NA",
+      cell: (row) => t(row?.targetPop) || "NA",
       sortable: true,
     },
     ...resourceColumns,
@@ -544,10 +544,10 @@ const PlanInbox = () => {
           commentPath="workflow.comments"
           onSuccess={(data) => {
             history.push(`/${window.contextPath}/employee/microplan/microplan-success`, {
-              fileName: "filename", // need to update when api is success
-              message: "FINALISE_MICROPLAN_SUCCESSFUL",
-              back: "GO_BACK_TO_HOME",
-              backlink: "/employee",
+              fileName: data?.PlanConfiguration?.[0]?.name,
+              message: t(`FINALISED_MICROPLAN_SUCCESSFUL`),
+              back: t(`GO_BACK_TO_HOME`),
+              backlink: `/${window.contextPath}/employee`,
             });
           }}
           onError={(data) => {
