@@ -236,14 +236,27 @@ function UserAccess({ category, setData, nationalRoles }) {
       </Card>
 
       <Card>
-        <div style={styles.container}>
-          <TableSearchField onSearch={handleSearch} />
-          <Button variation="secondary" label={t(`ASSIGN`)} icon={"AddIcon"} onClick={() => setShowPopUp(true)} />
-        </div>
+        {planEmployee?.data?.length > 0 ? (
+          <div style={styles.container}>
+            <TableSearchField onSearch={handleSearch} />
+            <Button
+              variation="secondary"
+              label={t(Digit.Utils.locale.getTransformedLocale(`ASSIGN_` + category))}
+              icon={"AddIcon"}
+              onClick={() => setShowPopUp(true)}
+            />
+          </div>
+        ) : null}
         {!isPlanEmpSearchLoading && (!planEmployee?.data || planEmployee?.data?.length === 0) ? (
           <Card>
             <NoResultsFound />
-            <Button variation="secondary" label={t(`ASSIGN`)} style={{ margin: "auto" }} icon={"AddIcon"} onClick={() => setShowPopUp(true)} />
+            <Button
+              variation="secondary"
+              label={t(Digit.Utils.locale.getTransformedLocale(`ASSIGN_` + category))}
+              style={{ margin: "auto" }}
+              icon={"AddIcon"}
+              onClick={() => setShowPopUp(true)}
+            />
           </Card>
         ) : (
           <DataTable
