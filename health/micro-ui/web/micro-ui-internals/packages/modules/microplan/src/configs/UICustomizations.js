@@ -93,13 +93,13 @@ export const UICustomizations = {
                 if (e.name == "Edit Setup") {
                   // Use window.location.href to navigate
                   window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${1}&microplanId=${row.id}&campaignId=${
-                    row.CampaignDetails.id
+                    row.campaignDetails.id
                   }`;
                 }
                 if (e.name == "View Summary") {
                   // Use window.location.href to navigate
                   window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${
-                    row.CampaignDetails.id
+                    row.campaignDetails.id
                   }&setup-completed=${true}`;
                 }
               }}
