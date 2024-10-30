@@ -409,6 +409,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
           onClose={() => setShowPopUp(false)}
           onOverlayClick={() => setShowPopUp(false)}
           type="alert"
+          className={"alert-popup-setup-microplan"}
         >
           <div>{t(`${filteredConfig?.[0]?.form?.[0]?.body?.[0]?.showPopupOnSubmission?.alertMessage}`)}</div>
         </PopUp>

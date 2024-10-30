@@ -68,6 +68,8 @@ export const UICustomizations = {
       const location = useLocation();
       const searchParams = new URLSearchParams(location.search);
       const campaignName = searchParams.get("name");
+      const projectType = searchParams.get("projectType");
+      const campaignId = searchParams.get("campaignId");
       switch (key) {
        
           case "STATUS":
@@ -105,7 +107,7 @@ export const UICustomizations = {
                 variation="secondary"
                 label={t("VIEW")}
                 onClick={() => {
-                  history.push(`/${window.contextPath}/employee/campaign/checklist/view?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}`)
+                  history.push(`/${window.contextPath}/employee/campaign/checklist/view?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}`)
                 }}
               />
               )
@@ -119,7 +121,7 @@ export const UICustomizations = {
                 variation="secondary"
                 label={t("CREATE")}
                 onClick={() => {
-                  history.push(`/${window.contextPath}/employee/campaign/checklist/create?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}`)
+                  history.push(`/${window.contextPath}/employee/campaign/checklist/create?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}`)
                 }}
               />
               )
