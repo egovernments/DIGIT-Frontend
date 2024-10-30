@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 import FileComponent from './FileComponent';
 import HeaderComp from './HeaderComp';
 import { Card,Button } from '@egovernments/digit-ui-components';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 export const DataMgmtComponent = ({ customProps }) => {
     const history=useHistory();
@@ -33,7 +33,6 @@ export const DataMgmtComponent = ({ customProps }) => {
                         className="dm-workbench-download-template-btn dm-hover"
                         onClick={(e) => {
                             const url = Digit.Hooks.useQueryParams();
-                            console.log("edited", url);
                             const urlParams = Digit.Hooks.useQueryParams();
                             urlParams.key = '4';
                             const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
