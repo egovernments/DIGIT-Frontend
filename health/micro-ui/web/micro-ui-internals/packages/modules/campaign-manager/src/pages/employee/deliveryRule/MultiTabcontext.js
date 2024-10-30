@@ -154,8 +154,8 @@ const TabContent = ({ activeSubTab, subTabCount = 3, onSubTabChange, project }) 
     <Card className="sub-tab-container">
       <SubTabs campaignData={campaignData} subTabCount={subTabCount} activeSubTab={activeSubTab} onSubTabChange={onSubTabChange} />
       <div>
-        <CardSubHeader className="tab-content-header">{t(`CAMPAIGN_TAB_TEXT`)}</CardSubHeader>
-        <CardText>{t(`CAMPAIGN_TAB_SUB_TEXT_${project?.code ? project?.code?.toUpperCase() : project?.toUpperCase()}`)} </CardText>
+        {/* <CardSubHeader className="tab-content-header">{t(`CAMPAIGN_TAB_TEXT`)}</CardSubHeader> */}
+        <CardText>{t(`CAMPAIGN_DELIVERY_TAB_SUB_TEXT_${project?.code ? project?.code?.toUpperCase() : project?.toUpperCase()}`)} </CardText>
       </div>
       {/* Add content specific to each tab as needed */}
       {/* <InfoCard
