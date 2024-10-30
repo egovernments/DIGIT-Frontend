@@ -987,7 +987,7 @@ const PopInboxTable = ({ ...props }) => {
         },
       },
       ...(
-        censusData?.[0]?.additionalFields
+        (censusData?.[0]?.additionalFields || [])
           .filter((field) => field.showOnUi)
           .sort((a, b) => a.order - b.order)
           .map((field) => ({
@@ -1016,11 +1016,6 @@ const PopInboxTable = ({ ...props }) => {
           }))
       ),
       {
-        name: t("INBOX_TOTAL_POPULATION"),
-        selector: (row, index) => row?.totalPopulation,
-        sortable: true,
-      },
-      {
         name: t("INBOX_STATUSLOGS"),
         cell: (row, index, column, id) => (
           <Button
@@ -1041,39 +1036,8 @@ const PopInboxTable = ({ ...props }) => {
         selector: (row, index) => props?.employeeNameData?.[row?.assignee] || t("ES_COMMON_NA"),
         sortable: true,
       },
-      // ...(props.showEditColumn
-      //   ? [
-      //     {
-      //       name: t("INBOX_EDITPOPULATION"),
-      //       cell: (row, index, column, id) => (
-      //         <Button
-      //           label={t(`EDIT_POPULATION`)}
-      //           onClick={() => {
-      //             setShowEditVillagePopup(row);
-      //           }}
-      //           variation="link"
-      //           style={{}}
-      //           size={"medium"}
-      //           icon={"Edit"}
-      //         />
-      //       ),
-      //       sortable: false,
-      //     },
-      //   ]
-      //   : []),
-      // {
-      //   name: t(`INBOX_VILLAGE`),
-      //   cell: (row, index, column, id) => <a onClick={()=>{console.log(row)}} href="">View Logs</a>,
-      //   sortable: true,
-      // },
-      // {
-      //   name: 'Comment Logs',
-      //   cell: row => <a onClick={()=>{console.log(row)}} href="#">View Logs</a>,
-      // },
     ];
   }, [censusData, props.showEditColumn, props.employeeNameData]);
-
-  console.log("Final Columns Array:", columns);
 
   const handlePageChange = (page, totalRows) => {
     props?.handlePageChange(page, totalRows);
