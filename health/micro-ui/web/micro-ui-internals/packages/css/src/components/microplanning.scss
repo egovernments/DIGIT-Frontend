@@ -109,6 +109,7 @@ $border-color: rgba(214, 213, 212, 1);
     font-size: 1rem;
   }
 }
+
 /*
 .non-editable-component {
   pointer-events: none !important;
@@ -167,6 +168,7 @@ $border-color: rgba(214, 213, 212, 1);
 .microplan-naming-conventions {
   display: flex;
   flex-direction: column;
+
   .microplan-naming-convention-instruction-list-container {
     margin-left: 0.3rem;
     display: flex;
@@ -176,6 +178,7 @@ $border-color: rgba(214, 213, 212, 1);
       min-width: 1.2rem !important;
     }
   }
+
   .microplan-naming-convention-instruction-list {
     font-family: Roboto;
     font-size: 1rem;
@@ -185,6 +188,7 @@ $border-color: rgba(214, 213, 212, 1);
     margin: 0;
     line-height: 1.5rem;
   }
+
   .microplan-naming-conventions-heading {
     font-family: Roboto;
     font-size: 1.2rem;
@@ -251,6 +255,7 @@ $border-color: rgba(214, 213, 212, 1);
       width: 1.875rem;
       height: 2.188rem;
     }
+
     .end {
       position: absolute;
       right: 0.5rem;
@@ -335,9 +340,11 @@ $border-color: rgba(214, 213, 212, 1);
         height: 2.5rem;
         border: 0.063rem $primary-theme-color solid;
         background-color: #f1f1f100;
+
         &:hover {
           box-shadow: inset 0 -0.125rem 0 0 $primary-theme-color;
         }
+
         .icon {
           display: flex;
           align-items: center;
@@ -523,6 +530,7 @@ $border-color: rgba(214, 213, 212, 1);
         border: 0.063rem $primary-theme-color solid;
         background-color: white;
         cursor: pointer;
+
         &:hover {
           box-shadow: inset 0 -0.125rem 0 0 $primary-theme-color;
         }
@@ -559,9 +567,11 @@ $border-color: rgba(214, 213, 212, 1);
     justify-content: center;
     padding: 0;
     margin: 0;
+
     &:hover {
       box-shadow: inset 0 -0.125rem 0 0 $primary-theme-color;
     }
+
     .icon {
       display: flex;
       align-items: center;
@@ -580,6 +590,7 @@ $border-color: rgba(214, 213, 212, 1);
   .file-upload-error-container {
     display: flex;
     flex-direction: column;
+
     .link-wrapper {
       padding-top: 1rem;
       display: flex;
@@ -593,6 +604,7 @@ $border-color: rgba(214, 213, 212, 1);
         cursor: pointer;
       }
     }
+
     p {
       padding: 0;
       margin: 0;
@@ -1187,24 +1199,29 @@ $border-color: rgba(214, 213, 212, 1);
       height: 21rem;
 
       @include custom-scrollbar;
+
       .example-wrapper {
         display: flex;
         align-items: center;
         width: 100%;
+
         .example {
           border: 0.063rem solid rgba(214, 213, 212, 1);
           background-color: rgb(250, 250, 250);
           padding: 1rem 0.7rem;
           overflow: hidden;
+
           @media (min-width: 99.438rem) {
             flex: 1;
             max-width: 90rem;
           }
+
           @media (min-width: 112.688rem) {
             .example-equal-to {
               margin: 0 3.5% !important;
             }
           }
+
           @media (min-width: 120.938rem) {
             .example-equal-to {
               margin: 0 4% !important;
@@ -1228,6 +1245,7 @@ $border-color: rgba(214, 213, 212, 1);
               font-weight: 400;
             }
           }
+
           .value {
             width: 22.05rem;
           }
@@ -1257,6 +1275,7 @@ $border-color: rgba(214, 213, 212, 1);
           }
         }*/
         }
+
         .delete-button {
           margin: 0 0 0 0.244rem;
         }
@@ -1400,6 +1419,7 @@ $border-color: rgba(214, 213, 212, 1);
 }
 
 .create-microplan {
+
   .custom-action-bar,
   .custom-action-bar-no-first-button {
     display: flex !important;
@@ -1427,9 +1447,11 @@ $border-color: rgba(214, 213, 212, 1);
       margin-left: 5.3rem;
       padding-left: 0.7rem !important;
       border-color: $primary-theme-color;
+
       &:hover {
         box-shadow: inset 0 -0.125rem 0 0 $primary-theme-color;
       }
+
       .icon {
         margin: 0 1rem 0 0 !important;
       }
@@ -1628,6 +1650,7 @@ $border-color: rgba(214, 213, 212, 1);
               padding-top: 1rem;
             }
           }
+
           .scrollable {
             padding-right: 0.35rem;
             margin-right: 0.05rem;
@@ -1801,6 +1824,7 @@ $border-color: rgba(214, 213, 212, 1);
         display: flex !important;
         flex-direction: column;
         margin-top: 1.5rem !important;
+
         .icon-rest {
           display: flex !important;
           align-items: center;
@@ -1823,6 +1847,7 @@ $border-color: rgba(214, 213, 212, 1);
             height: 1.667rem;
           }
         }
+
         .filter-section-option-wrapper,
         .choropleth-section-option-wrapper {
           position: absolute;
@@ -1858,7 +1883,7 @@ $border-color: rgba(214, 213, 212, 1);
                 margin-right: auto;
               }
 
-              input:checked ~ .inputIconClassname {
+              input:checked~.inputIconClassname {
                 border-color: $primary-theme-color;
               }
 
@@ -1871,11 +1896,13 @@ $border-color: rgba(214, 213, 212, 1);
               }
             }
           }
+
           .button-primary {
             background-color: rgba(250, 250, 250, 1) !important;
           }
         }
       }
+
       .choropleth-section-option-wrapper .custom-box-wrapper {
         .radio-option-container {
           padding: 0.7rem;
@@ -1883,12 +1910,14 @@ $border-color: rgba(214, 213, 212, 1);
           width: 100%;
           border-bottom: 0.063rem solid rgba(214, 213, 212, 1);
         }
+
         .custom-box {
           padding: 0 !important;
           margin: 0;
           border-bottom: none;
         }
       }
+
       .base-map-selector {
         display: flex !important;
         flex-direction: column;
@@ -2087,6 +2116,7 @@ $border-color: rgba(214, 213, 212, 1);
         padding: 0 0 0.3rem 0;
         margin: 0;
       }
+
       width: 19.75rem;
       padding-right: 0.7rem;
     }
@@ -2150,12 +2180,14 @@ $border-color: rgba(214, 213, 212, 1);
         padding-right: 0.4rem;
         padding-left: 1.5rem;
         padding-right: 1.5rem;
+
         h3 {
           background-color: #f4f4f4;
           padding: 0.625rem;
           margin: 0;
         }
       }
+
       .scrollable {
         padding-right: 0.8rem;
         margin-right: 0.2rem;
@@ -2318,6 +2350,7 @@ $border-color: rgba(214, 213, 212, 1);
 
               background: rgb(255, 255, 255);
             }
+
             th {
               padding: 0 0 0.4rem 0 !important;
             }
@@ -2483,8 +2516,9 @@ $border-color: rgba(214, 213, 212, 1);
     outline-offset: -0.125rem !important;
   }
 }
-.popup-wrap-rest-unfocus {
-}
+
+.popup-wrap-rest-unfocus {}
+
 .popup-wrap-rest-unfocus-active {
   button:focus {
     outline: none !important;
@@ -2511,15 +2545,17 @@ $border-color: rgba(214, 213, 212, 1);
 /* MP_HYPOTHESIS_CSS */
 
 .mp-description {
-  margin-top: 2rem;
-  margin-bottom: 1rem;
+  margin-top: 0rem;
+  margin-bottom: 0rem;
 }
+
 .mp-hypothesis-label-field {
   display: flex;
   align-items: baseline;
   margin: 1rem 0rem 0.5rem 0rem;
 }
-.mp-hypothesis-label-field > div > span {
+
+.mp-hypothesis-label-field>div>span {
   font-weight: bold;
   font-size: 1.2rem;
 }
@@ -2537,6 +2573,7 @@ $border-color: rgba(214, 213, 212, 1);
   align-items: center;
   width: 30rem !important;
 }
+
 .assumption-label {
   display: flex;
   flex-wrap: wrap;
@@ -2561,7 +2598,8 @@ $border-color: rgba(214, 213, 212, 1);
 
 .kpi-card h2 {
   margin: 0;
-  color: #0a4a6d; /* Custom color */
+  color: #0a4a6d;
+  /* Custom color */
   font-size: 2em;
 }
 
@@ -2578,7 +2616,8 @@ $border-color: rgba(214, 213, 212, 1);
   gap: 1.5rem;
   align-items: start !important;
 }
-.assumptionsForm-label-field > div > span {
+
+.assumptionsForm-label-field>div>span {
   font-size: 1.5rem;
   font-weight: bold;
 }
@@ -2599,6 +2638,7 @@ $border-color: rgba(214, 213, 212, 1);
       margin-bottom: 0;
     }
   }
+
   display: grid;
   align-items: end;
   grid-template-columns: 1fr 1fr 2fr;
@@ -2624,6 +2664,7 @@ $border-color: rgba(214, 213, 212, 1);
   margin: 0;
   width: 15rem;
   min-width: 15rem !important;
+
   .digit-multiselectdropdown-server {
     top: unset !important;
     position: fixed !important;
@@ -2636,7 +2677,7 @@ $border-color: rgba(214, 213, 212, 1);
   margin: unset !important;
 }
 
-.digit-card-component.primary.microPlanBulkTable{
+.digit-card-component.primary.microPlanBulkTable {
   max-width: 70vw !important;
 }
 
@@ -2646,7 +2687,8 @@ $border-color: rgba(214, 213, 212, 1);
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent background */
+  background-color: rgba(255, 255, 255, 0.7);
+  /* Semi-transparent background */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -2665,6 +2707,7 @@ $border-color: rgba(214, 213, 212, 1);
   background-repeat: no-repeat;
   animation: l23 1s infinite steps(12);
 }
+
 .loader::before,
 .loader::after {
   content: "";
@@ -2685,12 +2728,14 @@ $border-color: rgba(214, 213, 212, 1);
     transform: rotate(1turn);
   }
 }
-.search-field-wrapper.search.custom-both-clear-search{
+
+.search-field-wrapper.search.custom-both-clear-search {
   align-items: center;
 }
-.microplan-response-button{
-  .icon-label-container{
-    .digit-button-label{
+
+.microplan-response-button {
+  .icon-label-container {
+    .digit-button-label {
       min-width: max-content;
       min-width: max-content;
     }

@@ -62,10 +62,8 @@
 }
 
 .mandatory-span {
-  margin-left: 0.5rem;
-  color: red !important;
-  font-size: 1rem;
-  font-weight: 700;
+  color: #B91900 !important;
+  margin-left: 0.25rem;
 }
 
 .digit-employee-card-input.numeric {
@@ -86,6 +84,16 @@
 
 .info-text {
   padding-bottom: 1.5rem;
+}
+
+.microplan-bulk-upload {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0rem;
+
+  .campaign-download-template-btn {
+    font-weight: 700;
+  }
 }
 
 .view-composer-header-section {
@@ -959,7 +967,9 @@ tbody {
   border-top-right-radius: 0.25rem;
   border-bottom-left-radius: 0rem;
   border-bottom-right-radius: 0rem;
+  padding: .75rem;
   border: 0.063rem solid;
+  align-items: center;
   color: theme(digitv2.lightTheme.header-sidenav);
 }
 

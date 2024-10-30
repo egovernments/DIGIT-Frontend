@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { Card, Header, LabelFieldPair } from "@egovernments/digit-ui-react-components";
-import { Dropdown, PopUp, RadioButtons,CardText,Button, Loader } from "@egovernments/digit-ui-components";
+import { Header, LabelFieldPair } from "@egovernments/digit-ui-react-components";
+import { Dropdown, PopUp, RadioButtons, CardText, Button, Loader, Card } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../utils/context";
 
 const AssumptionsForm = ({ onSelect, ...props }) => {
@@ -16,66 +16,66 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
     const [executionCount, setExecutionCount] = useState(0);
     const resourceDistributionStrategyCode = props?.props?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode;
 
-    const [showPopup,setShowPopup] = useState(false)
+    const [showPopup, setShowPopup] = useState(false)
 
     const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
     const { isLoading: isLoadingPlanObject, data: planObject, error: errorPlan, refetch: refetchPlan } = Digit.Hooks.microplanv1.useSearchPlanConfig(
         {
-          PlanConfigurationSearchCriteria: {
-            tenantId,
-            id: microplanId,
-          },
+            PlanConfigurationSearchCriteria: {
+                tenantId,
+                id: microplanId,
+            },
         },
         {
-          enabled: microplanId ? true : false,
-          cacheTime:0
-        //   queryKey: currentKey,
+            enabled: microplanId ? true : false,
+            cacheTime: 0
+            //   queryKey: currentKey,
         }
-      );
+    );
 
     //to show alert
     useEffect(() => {
-      //if there are any assumptions filled show this popup by default
-      if(planObject?.assumptions?.length>0){
-        setShowPopup(true)
-      }
-    }, [planObject,isLoadingPlanObject])
-    
+        //if there are any assumptions filled show this popup by default
+        if (planObject?.assumptions?.length > 0) {
+            setShowPopup(true)
+        }
+    }, [planObject, isLoadingPlanObject])
+
 
     useEffect(() => {
         if (executionCount < 5) {
-            if(resourceDistributionStrategyCode === "MIXED"){
-                onSelect(props.props.name, {selectedRegistrationProcess,selectedDistributionProcess})
+            if (resourceDistributionStrategyCode === "MIXED") {
+                onSelect(props.props.name, { selectedRegistrationProcess, selectedDistributionProcess })
                 setExecutionCount((prevCount) => prevCount + 1);
                 return;
             }
-         
-            onSelect(props.props.name,{selectedRegistrationDistributionMode} )
+
+            onSelect(props.props.name, { selectedRegistrationDistributionMode })
             setExecutionCount((prevCount) => prevCount + 1);
         }
-      });
-    
+    });
 
-      useEffect(()=>{
-    
-        if(resourceDistributionStrategyCode === "MIXED"){
-            onSelect(props.props.name, {selectedRegistrationProcess,selectedDistributionProcess})
+
+    useEffect(() => {
+
+        if (resourceDistributionStrategyCode === "MIXED") {
+            onSelect(props.props.name, { selectedRegistrationProcess, selectedDistributionProcess })
             return;
         }
-     
-        onSelect(props.props.name,{selectedRegistrationDistributionMode} )
-        
-      },[selectedDistributionProcess, selectedRegistrationDistributionMode, selectedRegistrationProcess, resourceDistributionStrategyCode])
+
+        onSelect(props.props.name, { selectedRegistrationDistributionMode })
+
+    }, [selectedDistributionProcess, selectedRegistrationDistributionMode, selectedRegistrationProcess, resourceDistributionStrategyCode])
 
 
 
- 
+
     const filteredOptions = resourceDistributionStrategyCode === "MIXED"
-    ? optionsForProcesses.filter(option => option.resourceDistributionStrategyName !== "Fixed post & House-to-House")
+        ? optionsForProcesses.filter(option => option.resourceDistributionStrategyName !== "Fixed post & House-to-House")
         : optionsForProcesses;
-   
-    if(isLoadingPlanObject){
-        return <Loader/>
+
+    if (isLoadingPlanObject) {
+        return <Loader />
     }
 
 
@@ -143,7 +143,7 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
 
             {/* Show radio buttons only if the code is HOUSE_TO_HOUSE or FIXED_POST */}
             {["HOUSE_TO_HOUSE", "FIXED_POST"].includes(resourceDistributionStrategyCode) && (
-                <Card className="assumptionsForm-card">
+                <Card type="secondary">
                     <LabelFieldPair className="assumptionsForm-label-field">
                         <div style={{ width: "100%" }}>
                             <span>{t("REGISTRATION_AND_DISTRIBUTION")} </span>
@@ -158,7 +158,7 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
                                 value: item.registrationAndDistributionHappeningTogetherOrSeparatelyName,
                             }))}
                             optionsKey="code"
-                            style={{ display: "flex", gap: "15rem" }}
+                            style={{ display: "flex", gap: "15rem", marginBottom: 0 }}
                             onSelect={(value) => {
                                 setSelectedRegistrationDistributionMode(value);
                             }}
@@ -168,38 +168,38 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
                 </Card>
             )}
 
-            {showPopup &&  <PopUp
-            className={"boundaries-pop-module"}
-            type={"alert"}
-            alertHeading={t("MP_WARNING_ASSUMPTIONS_FORM")}
-            alertMessage={t("MP_ASSUMPTIONS_INVALIDATION_MESSAGE")}
-            // heading={t("MP_ASSUMTI")}
-            // children={[
-            //   <div>
-            //     <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_TYPE_MODAL_TEXT") + " "}</CardText>
-            //   </div>,
-            // ]}
-            onOverlayClick={() => {
-              setShowPopup(false);
-            }}
-            onClose={() => {
-              setShowPopup(false);
-            }}
-            footerChildren={[
-              <Button
-                className={"campaign-type-alert-button"}
-                type={"button"}
-                size={"large"}
-                variation={"secondary"}
-                label={t("MP_ACK")}
-                onClick={() => {
-                  setShowPopup(false);
-                //   setCanUpdate(true);
+            {showPopup && <PopUp
+                className={"boundaries-pop-module"}
+                type={"alert"}
+                alertHeading={t("MP_WARNING_ASSUMPTIONS_FORM")}
+                alertMessage={t("MP_ASSUMPTIONS_INVALIDATION_MESSAGE")}
+                // heading={t("MP_ASSUMTI")}
+                // children={[
+                //   <div>
+                //     <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_TYPE_MODAL_TEXT") + " "}</CardText>
+                //   </div>,
+                // ]}
+                onOverlayClick={() => {
+                    setShowPopup(false);
                 }}
-              />
-            ]}
+                onClose={() => {
+                    setShowPopup(false);
+                }}
+                footerChildren={[
+                    <Button
+                        className={"campaign-type-alert-button"}
+                        type={"button"}
+                        size={"large"}
+                        variation={"secondary"}
+                        label={t("MP_ACK")}
+                        onClick={() => {
+                            setShowPopup(false);
+                            //   setCanUpdate(true);
+                        }}
+                    />
+                ]}
             // sortFooterChildren={true}
-          ></PopUp>}
+            ></PopUp>}
         </Card>
     );
 };

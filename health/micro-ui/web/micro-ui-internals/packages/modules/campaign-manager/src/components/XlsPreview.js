@@ -1,6 +1,7 @@
-import { PopUp, SVG, DownloadIcon, Button } from "@egovernments/digit-ui-react-components";
+import { PopUp, SVG, DownloadIcon } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+import { Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { PRIMARY_COLOR } from "../utils";
 
@@ -18,12 +19,12 @@ function XlsPreview({ file, ...props }) {
   const { t } = useTranslation();
   const documents = file
     ? [
-        {
-          fileType: "xlsx",
-          fileName: file?.filename,
-          uri: file?.url,
-        },
-      ]
+      {
+        fileType: "xlsx",
+        fileName: file?.filename,
+        uri: file?.url,
+      },
+    ]
     : null;
 
   return (
@@ -31,19 +32,16 @@ function XlsPreview({ file, ...props }) {
       <div style={{ display: "flex", justifyContent: "space-between", marginLeft: "2.5rem", marginRight: "2.5rem", marginTop: "2.5rem" }}>
         <Button
           label={t("BACK")}
+          onClick={() => props?.onBack()}
           variation="secondary"
-          icon={<ArrowBack styles={{ height: "1.25rem", width: "1.25rem" }} fill={PRIMARY_COLOR} />}
-          type="button"
-          className="workbench-download-template-btn"
-          onButtonClick={() => props?.onBack()}
+          icon="ArrowBack"
         />
         <Button
           label={t("WBH_DOWNLOAD")}
-          variation="secondary"
-          icon={<DownloadIcon styles={{ height: "1.25rem", width: "1.25rem" }} fill={PRIMARY_COLOR} />}
-          type="button"
-          className="workbench-download-template-btn"
           onButtonClick={() => props?.onDownload()}
+          variation="primary"
+          isSuffix
+          icon="FileDownload"
         />
       </div>
       <div className="campaign-popup-module" style={{ marginTop: "1.5rem" }}>
@@ -53,7 +51,7 @@ function XlsPreview({ file, ...props }) {
             primary: PRIMARY_COLOR,
             secondary: "#feefe7",
             tertiary: "#feefe7",
-            textPrimary: "#0B0C0C",
+            textPrimary: "#FFFFFF",
             textSecondary: "#505A5F",
             textTertiary: "#00000099",
             disableThemeScrollbar: true,
