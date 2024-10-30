@@ -86,10 +86,33 @@
   padding-bottom: 1.5rem;
 }
 
+.microplan-bulk-upload {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0rem;
+  padding-bottom: 0rem;
+
+  .campaign-download-template-btn {
+    font-weight: 700;
+  }
+}
+
+.uploader-sub-heading {
+  @extend .typography.heading-xl;
+  color: theme(digitv2.lightTheme.text-primary);
+  margin-bottom: 0rem;
+}
+
 .view-composer-header-section {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+}
+
+.vertical-stepper-card {
+  height: 36.5rem;
+  padding-top: 0rem;
+  margin-bottom: 1.5rem !important;
 }
 
 .card-with-background {
@@ -566,6 +589,16 @@ tbody {
   }
 }
 
+.digit-radio-options-wrap {
+  gap: 2rem;
+  margin-bottom: 0 !important;
+
+  .radio-option-container {
+    margin-bottom: 0;
+    align-items: center;
+  }
+}
+
 .bold {
   font-weight: 700;
 }
@@ -957,8 +990,14 @@ tbody {
   border-top-right-radius: 0.25rem;
   border-bottom-left-radius: 0rem;
   border-bottom-right-radius: 0rem;
+  padding: .75rem;
   border: 0.063rem solid;
-  color: theme(digitv2.lightTheme.header-sidenav);
+  align-items: center;
+  color: theme(digitv2.lightTheme.header-sidenav) !important;
+
+  .digit-text-block-subheader {
+    color: theme(digitv2.lightTheme.header-sidenav) !important;
+  }
 }
 
 .stepper-subheader {
@@ -1133,8 +1172,6 @@ tbody {
 }
 
 
-
-
 .dustbin-icon {
   margin-bottom: 1rem;
   margin-top: 0.7rem;
@@ -1146,4 +1183,8 @@ tbody {
 
 .digit-action-bar-wrap div {
   width: unset;
+}
+
+.digit-button-secondary.disabled h2 {
+  color: #C5C5C5 !important;
 }
