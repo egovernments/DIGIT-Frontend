@@ -23,12 +23,6 @@ const SummaryScreen = ({ props: customProps }) => {
           {
             type: "DATA",
             cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, marginBottom: "0.5rem", fontSize: "1.5rem" } },
-            cardSecondaryAction: (
-              <div className="campaign-preview-edit-container" onClick={() => {}}>
-                <span>{t(`CAMPAIGN_EDIT`)}</span>
-                <EditIcon />
-              </div>
-            ),
             values: [
               {
                 key: t("CAMPAIGN_TYPE"),
@@ -60,12 +54,6 @@ const SummaryScreen = ({ props: customProps }) => {
           {
             type: "DATA",
             cardHeader: { value: t("Name of microplan"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-            cardSecondaryAction: (
-              <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                <span>{t(`CAMPAIGN_EDIT`)}</span>
-                <EditIcon />
-              </div>
-            ),
             values: [
               {
                 key: t("NAME_OF_MICROPLAN"),

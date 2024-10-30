@@ -3,9 +3,11 @@ import { Button, Card, LabelFieldPair } from '@egovernments/digit-ui-components'
 import HeaderComp from './HeaderComp';
 import { useTranslation } from 'react-i18next';
 import { EditIcon } from '@egovernments/digit-ui-react-components';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 const AssumptionsList = ({ customProps }) => {
     const { t } = useTranslation();
+    const history=useHistory();
 
     const assumptionValues = customProps?.sessionData?.HYPOTHESIS?.Assumptions?.assumptionValues || [];
     let dic = {};
@@ -35,9 +37,13 @@ const AssumptionsList = ({ customProps }) => {
                             icon={"EditIcon"}
                             type="button"
                             className="dm-workbench-download-template-btn dm-hover"
-                            onButtonClick={(e) => {
-                                downloadHandler();
-                            }}
+                            onClick={(e) => {
+                                const url = Digit.Hooks.useQueryParams();
+                                const urlParams = Digit.Hooks.useQueryParams(); 
+                                urlParams.key = '7'; 
+                                const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
+                                history.push(updatedUrl);
+                              }}
                         />
                     </div>
 
