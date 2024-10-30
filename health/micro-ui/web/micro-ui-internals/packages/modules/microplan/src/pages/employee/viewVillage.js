@@ -239,18 +239,13 @@ const VillageView = () => {
                                 onClick={handleSecurityClick}
                                 options={[]}
                                 optionsKey=""
-                                size=""
+                                size="medium"
                                 style={{ alignSelf: 'flex-start' }}
                                 title=""
                                 variation="link"
                             />
                         </div>
                     </div>
-                    <Divider
-                        className=""
-                        variant="small"
-                    />
-
                     <div className="label-pair">
                         <span className="label-heading">{t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_LABEL`)}</span>
                         <div className="label-text">
@@ -263,7 +258,7 @@ const VillageView = () => {
                                 onClick={handleAccibilityClick}
                                 options={[]}
                                 optionsKey=""
-                                size=""
+                                size="medium"
                                 style={{ alignSelf: 'flex-start' }}
                                 title=""
                                 variation="link"
@@ -290,7 +285,7 @@ const VillageView = () => {
                             onClick={handleEditPopulationClick}
                             options={[]}
                             optionsKey=""
-                            size=""
+                            size="small"
                             style={{}}
                             title=""
                             variation="secondary"
@@ -301,7 +296,6 @@ const VillageView = () => {
                         <span className="label-heading">{t(`HCM_MICROPLAN_UPLOADED_TARGET_POPULATION_LABEL`)}</span>
                         <span className="label-text">{data?.additionalDetails?.targetPopulation}</span>
                     </div> */}
-                    <Divider className="" variant="small" />
                     <div className="label-pair">
                         <span className="label-heading">{t(`HCM_MICROPLAN_UPLOADED_TOTAL_POPULATION_LABEL`)}</span>
                         <span className="label-text">{data?.totalPopulation}</span>

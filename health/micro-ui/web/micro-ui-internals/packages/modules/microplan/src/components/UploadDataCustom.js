@@ -622,11 +622,19 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             setShowToast({ key: "info", label: t("ERROR_WHILE_DOWNLOADING_FROM_FILESTORE") });
           }
         },
-        onError: (result) => {
-          setDownloadTemplateLoader(false);
-          setDownloadError(true);
-          generateData();
-          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+        onError: (error, result) => {
+          const errorCode = error?.response?.data?.Errors?.[0]?.code;
+          if (errorCode == "NativeIoException") {
+            setDownloadError(true);
+            setDownloadTemplateLoader(false);
+            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+          }
+          else {
+            setDownloadTemplateLoader(false);
+            setDownloadError(true);
+            generateData();
+            setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+          }
         },
       }
     );

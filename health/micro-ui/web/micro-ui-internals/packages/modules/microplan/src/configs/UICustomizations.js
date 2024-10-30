@@ -257,7 +257,7 @@ export const UICustomizations = {
               icon={"ArrowForward"}
               type="button"
               isDisabled={!hasRequiredRole}
-              className="dm-workbench-download-template-btn dm-hover"
+              // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("START", row)}
             />
           ) : row.status === "RESOURCE_ESTIMATIONS_APPROVED" ? (
@@ -266,16 +266,16 @@ export const UICustomizations = {
               variation="secondary"
               icon={"FileDownload"}
               type="button"
-              className="dm-workbench-download-template-btn dm-hover"
+              // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("DOWNLOAD", row)}
             />
           ) : (
             <ButtonNew
               label={t("WBH_EDIT")}
               variation="secondary"
-              icon={"EditIcon"}
+              icon={"Edit"}
               type="button"
-              className="dm-workbench-download-template-btn dm-hover"
+              // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("EDIT", row)}
             />
           );
