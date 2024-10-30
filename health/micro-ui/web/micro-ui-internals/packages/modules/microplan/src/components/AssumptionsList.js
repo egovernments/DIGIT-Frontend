@@ -2,7 +2,6 @@ import React from 'react';
 import { Button, Card, LabelFieldPair } from '@egovernments/digit-ui-components';
 import HeaderComp from './HeaderComp';
 import { useTranslation } from 'react-i18next';
-import { EditIcon } from '@egovernments/digit-ui-react-components';
 import { useHistory } from 'react-router-dom';
 
 const AssumptionsList = ({ customProps }) => {
