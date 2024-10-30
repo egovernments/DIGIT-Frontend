@@ -42,8 +42,6 @@ const SummaryScreen = ({ props: customProps }) => {
               },
               {
                 key: t("RESOURCE_DISTRIBUTION_STRATEGY"),
-                // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
-                // value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode || "NA",
                 value: t(campaignDetails?.distributionStrat?.resourceDistributionStrategyCode) || t("NA"),
               },
             ],
@@ -148,21 +146,6 @@ const SummaryScreen = ({ props: customProps }) => {
           },
         ],
       },
-      // {
-      //     navigationKey: "card6",
-      //     sections:
-
-      //             [
-      //                 {
-
-      //                     type: "COMPONENT",
-      //                     component: "UserAccessManagement",
-      //                     props: {
-      //                     },
-      //                 },
-      //             ]
-
-      // },
       {
         navigationKey: "card7",
         noCardStyle: true,
@@ -177,20 +160,6 @@ const SummaryScreen = ({ props: customProps }) => {
           },
         ],
       },
-
-      // type: "COMPONENT",
-      //                     component: "FormulaSection",
-
-      //                     props: {
-
-      //                         title:"GENERAL_ESTIMATION",
-      //                         threeInputArr:[["Number of households per boundary","Population of the boundary","Divided by","Average people HJ/H"],
-      //                         [ "Number of bednets per boundary","Population of the boundary","Divided by","Average people HJ/H"],
-      //                         [ "Number of bales per boundary","Population of the boundary","Divided by","Average people HJ/H"]
-
-      //                     ]
-
-      //                     },
       {
         navigationKey: "card6",
         noCardStyle: true,
