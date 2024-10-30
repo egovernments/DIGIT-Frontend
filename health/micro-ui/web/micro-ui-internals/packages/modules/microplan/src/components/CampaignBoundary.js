@@ -5,7 +5,7 @@ import SubBoundaryView from "./subBoundaryView";
 import HeaderComp from "./HeaderComp";
 import { Card, Button } from "@egovernments/digit-ui-components";
 import BoundaryKpi from "./BoundaryKpi";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useHistory } from "react-router-dom";
 
 const CampaignBoundary = ({ customProps }) => {
   const { dispatch, state } = useMyContext();
@@ -287,7 +287,6 @@ const CampaignBoundary = ({ customProps }) => {
   }, [boundaryHierarchy]); // Only re-run when boundaryHierarchy changes
 
   const editHandler=()=> {
-    const url = Digit.Hooks.useQueryParams();
     const urlParams = Digit.Hooks.useQueryParams(); 
     urlParams.key = '3'; 
     const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
