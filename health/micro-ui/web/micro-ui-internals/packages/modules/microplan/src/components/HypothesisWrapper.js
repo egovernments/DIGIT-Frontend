@@ -110,33 +110,33 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         }
     
         // Move to the next step if validation passes
-        // if (internalKey < assumptionCategories.length) {
-        //     setInternalKey((prevKey) => prevKey + 1); // Update key in URL
-        // }
+        if (internalKey < assumptionCategories.length) {
+            setInternalKey((prevKey) => prevKey + 1); // Update key in URL
+        }
 
         //after everything is done make an api call and assume it will be successfull(let user go to next screen)
         // API CALL
         const assumptionsToUpdate = assumptionValues?.filter?.(row => {
             return row.key && row.value && row.category
         })
-        updateResources({
-            config:{
-                name:"SUB_HYPOTHESIS"
-            },
-            assumptionsToUpdate
-        },{
-            onSuccess: (data) => {
-                if (internalKey < assumptionCategories.length) {
-                    setInternalKey((prevKey) => prevKey + 1); // Update key in URL
-                }
-                refetchPlan();
-            },
-            onError: (error, variables) => {
-                console.error(error)
+        // updateResources({
+        //     config:{
+        //         name:"SUB_HYPOTHESIS"
+        //     },
+        //     assumptionsToUpdate
+        // },{
+        //     onSuccess: (data) => {
+        //         if (internalKey < assumptionCategories.length) {
+        //             setInternalKey((prevKey) => prevKey + 1); // Update key in URL
+        //         }
+        //         refetchPlan();
+        //     },
+        //     onError: (error, variables) => {
+        //         console.error(error)
                 
-            //   setShowToast(({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") }))
-            },
-        })
+        //     //   setShowToast(({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") }))
+        //     },
+        // })
 
 
     };

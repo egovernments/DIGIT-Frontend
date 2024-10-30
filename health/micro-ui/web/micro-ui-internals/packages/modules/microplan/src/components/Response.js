@@ -26,18 +26,18 @@ const Response = () => {
         cardStyles={{}}
         className=""
         customIcon=""
-        description={t(state.description)}
+        description={t(state?.description)}
         // footerChildren={[
         //     <Button label="OK" onClick={function noRefCheck() { }} type="button" />
         // ]}
         footerStyles={{}}
         iconFill=""
-        info=""
+        info={t(state?.info)}
         maxFooterButtonsAllowed={5}
         message={t(state?.message)}
         multipleResponses={[]}
         props={{}}
-        response={t(state?.fileName)}
+        response={t(state?.fileName ? state?.fileName : state?.responseId ? state?.responseId : "")}
         sortFooterButtons
         style={{}}
         type="success"
