@@ -23,9 +23,15 @@ const UserManagement = () => {
     const history=useHistory();
 
     const onClickRow = (data) => {
+        const selection = window.getSelection().toString();
+        if (selection.length > 0) {
+            return; 
+        }
+
         if (Array.isArray(data.cells) && data.cells.length > 0) {
           const row = data.cells[0].value;
-          history.push(`/digit-ui/employee/hrms/details/mz/${row}`);
+          const tenantId=Digit.ULBService.getCurrentTenantId();
+          history.push(`/digit-ui/employee/hrms/details/${tenantId}/${row}`);
         } else {
           console.error("Invalid data format: cells array is missing or empty.");
         }
