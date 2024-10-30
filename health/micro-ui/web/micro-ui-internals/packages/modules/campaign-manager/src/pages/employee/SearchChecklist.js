@@ -1,5 +1,5 @@
 import { Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
-import { Dropdown, ViewCardFieldPair, Toast, Card, TextBlock, Button, PopUp, CardText, Stepper } from "@egovernments/digit-ui-components";
+import { Dropdown, ViewCardFieldPair, Toast, Card, TextBlock, Button, PopUp, CardText, Stepper} from "@egovernments/digit-ui-components";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -12,6 +12,7 @@ const SearchChecklist = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("campaignId");
+  const [showToast, setShowToast] = useState(null);
   const [campaignName, setCampaignName] = useState(searchParams.get("name"));
 
   const stateData = window.history.state;
@@ -86,7 +87,9 @@ const SearchChecklist = () => {
   }, [HCM]);
 
   const onStepClick = (step) => {
-    history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=13&summary=true`);
+      setShowToast({ key: "error", label: "CAMPAIGN_CANNOT_CLICK" });
+      return;
+    // history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=13&summary=true`);
   };
   // useEffect(() => {
   //   setListsOpt(HCM?.HCM?.CHECKLIST_TYPES?.map((item) => ({ list: `HCM_CHECKLIST_TYPE_${item.code}` })));
@@ -99,6 +102,10 @@ const SearchChecklist = () => {
   };
   const handleUpdateList = (data) => {
     setList(data);
+  };
+
+  const closeToast = () => {
+    setShowToast(null);
   };
 
   checklistSearchConfig[0].sections.search.uiConfig.fields[0].populators.options = codesopt;
@@ -225,6 +232,14 @@ const SearchChecklist = () => {
             ></InboxSearchComposer>
           </div>
         </div>
+        {showToast && (
+        <Toast
+          type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
+          label={t(showToast?.label)}
+          transitionTime={showToast.transitionTime}
+          onClose={closeToast}
+        />
+      )}
       </React.Fragment>
     );
   }
