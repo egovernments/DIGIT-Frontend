@@ -374,7 +374,13 @@ function RoleTableComposer({ nationalRoles }) {
             : false;
         return (
           <MultiSelectDropdown
-            disabled={isUserAlreadyAssignedActive || nationalRoles?.includes(category) ? true : false}
+            disabled={
+              isUserAlreadyAssignedActive ||
+              nationalRoles?.includes(category) ||
+              !rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedHierarchy
+                ? true
+                : false
+            }
             props={{ className: "roleTableCell" }}
             t={t}
             options={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.boundaryOptions || []}
@@ -407,6 +413,10 @@ function RoleTableComposer({ nationalRoles }) {
 
         return (
           <Button
+            isDisabled={
+              !rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedBoundaries ||
+              rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedBoundaries?.length === 0
+            }
             className={"roleTableCell"}
             variation={isUserAlreadyAssignedActive ? "secondary" : "primary"}
             label={isUserAlreadyAssignedActive ? t(`UNASSIGN`) : t(`ASSIGN`)}
@@ -429,11 +439,10 @@ function RoleTableComposer({ nationalRoles }) {
     refetchHrms(); // Fetch the updated data with the new rows per page
   };
   const handleSearchSubmit = (e) => {
-    if (number?.length > 0 && number?.length <= 10) {
+    if (number?.length > 0 && number?.length !== 10) {
       setShowToast({ key: "error", label: t("INVALID_MOBILE_NUMBER_LENGTH") });
       return;
     }
-
     setCurrentPage(1);
     setFilters({
       name: name,
@@ -492,7 +501,7 @@ function RoleTableComposer({ nationalRoles }) {
                 <CardLabel style={{ marginBottom: "0.4rem" }}>{t("Number")}</CardLabel>
                 <TextInput
                   value={number}
-                  type={"number"}
+                  type={"text"}
                   name={"number"}
                   onChange={(e) => {
                     const newValue = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters

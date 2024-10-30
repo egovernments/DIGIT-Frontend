@@ -25,6 +25,7 @@ const searchPlanWithCensus = async ({ tenantId, microplanId, body, limit, offset
         CensusSearchCriteria: {
           tenantId: tenantId,
           source: microplanId,
+          limit: body?.PlanSearchCriteria?.limit,
           jurisdiction: localityArray,
         },
       },
