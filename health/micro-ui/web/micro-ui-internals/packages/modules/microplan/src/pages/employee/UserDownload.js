@@ -22,9 +22,8 @@ const UserDownload = () => {
         {
             enabled: true,
             select: data => {
-                const currentUserUuid = Digit.UserService.getUser().info.uuid;
                 const ResourceDetails = data?.ResourceDetails || [];
-                const filteredData = ResourceDetails.filter(item => item?.auditDetails?.createdBy === currentUserUuid && item?.action === "create");
+                const filteredData = ResourceDetails.filter(item => item?.action === "create");
                 data.ResourceDetails = filteredData;
                 return data;
             }
@@ -53,11 +52,10 @@ const UserDownload = () => {
         setRowsPerPage(Number(e.target.value));
         setCurrentPage(1); // Reset to the first page
     };
-
     return (
         <div>
             {isLoading && <LoaderWithGap text={t("CS_LOADING")} />}
-            <Card type="secondary" style={{ margin: "1.5rem 0 0 0.5rem" }}>
+            <Card type="secondary" style={{ margin: "1.5rem 0 0 0.5rem", background: "#FFFFFF" }}>
                 <HeaderComp title="DOWNLOAD_USER_DATA" styles={{ color: "black" }} />
                 <TextBlock body={t("DOWNLOAD_DESC")} />
 
