@@ -671,8 +671,11 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
                     message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
                     text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
                     info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
-                    actionLabel: t("HCM_CAMPAIGN_SUCCESS_RESPONSE_ACTION"),
-                    actionLink: `/${window.contextPath}/employee/campaign/my-campaign`,
+                    actionLabel: t("HCM_CONFIGURE_APP_RESPONSE_ACTION"),
+                    actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${data?.CampaignDetails?.campaignName}&campaignId=${data?.CampaignDetails?.id}`,
+                    name: data?.CampaignDetails?.campaignName,
+                    projectId: data?.CampaignDetails?.projectId,
+                    data: data,
                   }
                 );
                 Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
@@ -1374,7 +1377,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       setCurrentKey(14);
       setCurrentStep(5);
     } else if (step === 1 && totalFormData["HCM_CAMPAIGN_NAME"] && totalFormData["HCM_CAMPAIGN_TYPE"] && totalFormData["HCM_CAMPAIGN_DATE"]) {
-      setCurrentKey(5);
+      setCurrentKey(4);
       setCurrentStep(1);
     } else if (!totalFormData["HCM_CAMPAIGN_NAME"] || !totalFormData["HCM_CAMPAIGN_NAME"]) {
       // Do not set stepper and key
@@ -1537,7 +1540,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     <React.Fragment>
       {noAction !== "false" && (
         <Stepper
-          customSteps={["HCM_CAMPAIGN_SETUP_DETAILS", "HCM_BOUNDARY_DETAILS", "HCM_DELIVERY_DETAILS", "HCM_UPLOAD_DATA", "HCM_REVIEW_DETAILS"]}
+          customSteps={["HCM_CAMPAIGN_SETUP_DETAILS", "HCM_BOUNDARY_DETAILS", "HCM_DELIVERY_DETAILS", "HCM_UPLOAD_DATA", "HCM_REVIEW_DETAILS" , "HCM_CONFIGURE_APP"]}
           currentStep={currentStep + 1}
           onStepClick={onStepClick}
           activeSteps={active}
