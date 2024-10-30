@@ -78,8 +78,6 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      console.log("rowwwer",row)
-
       switch (key) {
         case "ACTIONS":
           let options = [];
