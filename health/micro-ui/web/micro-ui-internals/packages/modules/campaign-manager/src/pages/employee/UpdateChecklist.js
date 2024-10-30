@@ -13,6 +13,8 @@ const UpdateChecklist = () => {
     const campaignName = searchParams.get("campaignName");
     const role = searchParams.get("role");
     const rlt = searchParams.get("role");
+    const projectType = searchParams.get("projectType");
+    const campaignId = searchParams.get("campaignId");
     const roleLocal = (!rlt.startsWith("ACCESSCONTROL_ROLES_ROLES_")) ? "ACCESSCONTROL_ROLES_ROLES_"+rlt : rlt;
     const checklistType = searchParams.get("checklistType");
     let clt = searchParams.get("checklistType");
@@ -347,8 +349,10 @@ const UpdateChecklist = () => {
                 history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
                     message: "ES_CHECKLIST_UPDATE_SUCCESS_RESPONSE",
                     preText: "ES_CHECKLIST_UPDATE_SUCCESS_RESPONSE_PRE_TEXT",
-                    actionLabel: "ES_CHECKLIST_RESPONSE_ACTION",
-                    actionLink: `/${window.contextPath}/employee/campaign/my-campaign`,
+                    actionLabel: "CS_CHECKLIST_NEW_RESPONSE_ACTION",
+                    actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${campaignName}&campaignId=${campaignId}&projectType=${projectType}`,
+                    secondaryActionLabel: "MY_CAMPAIGN",
+                    secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign`,
                 });
             } else {
                 setShowToast({ label: "CHECKLIST_UPDATE_FAILED", isError: "true" });
@@ -424,16 +428,7 @@ const UpdateChecklist = () => {
                                     onClick={() => {
                                         setShowPopUp(false);
                                     }}
-                                />,
-                                <Button
-                                    type={"button"}
-                                    size={"large"}
-                                    variation={"primary"}
-                                    label={t("UPDATE_CHECKLIST")}
-                                    onClick={() => {
-                                        onSubmit(null, 1, tempFormData);
-                                    }}
-                                />,
+                                />
                             ]}
                             sortFooterChildren={true}
                         >
