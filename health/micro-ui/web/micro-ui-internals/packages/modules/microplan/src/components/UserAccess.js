@@ -1,4 +1,4 @@
-import { Button, Card, Chip, Header, Loader, NoResultsFound, PopUp, Toast } from "@egovernments/digit-ui-components";
+import { Button, Card, Chip, Header, Loader, PopUp, Toast } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import RoleTableComposer, { CustomLoader } from "./RoleTableComposer";
@@ -6,6 +6,7 @@ import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./tableCustomStyle";
 import TableSearchField from "./TableSearchBar";
 import { useQueryClient } from "react-query";
+import NoResultsFound from "./NoResultsFound";
 
 const Wrapper = ({ setShowPopUp, alreadyQueuedSelectedState }) => {
   const { t } = useTranslation();
@@ -129,19 +130,19 @@ function UserAccess({ category, setData, nationalRoles }) {
     {
       name: t("NAME"),
       selector: (row) => {
-        return row.name;
+        return row.name || t("NA");
       },
       sortable: true,
     },
     {
       name: t("EMAIL"),
-      selector: (row) => row.email,
+      selector: (row) => row.email || t("NA"),
       sortable: true,
     },
     {
       name: t("CONTACT_NUMBER"),
       selector: (row) => {
-        return row.number;
+        return row.number || t("NA");
       },
       sortable: true,
     },
@@ -210,6 +211,8 @@ function UserAccess({ category, setData, nationalRoles }) {
             className={"roleTableCell"}
             variation={"secondary"}
             label={t(`UNASSIGN`)}
+            title={t(`UNASSIGN`)}
+            style={{ padding: "1rem" }}
             icon={"Close"}
             isSuffix={false}
             onClick={(value) => handleUpdateAssignEmployee(row)}
@@ -249,7 +252,7 @@ function UserAccess({ category, setData, nationalRoles }) {
         ) : null}
         {!isPlanEmpSearchLoading && (!planEmployee?.data || planEmployee?.data?.length === 0) ? (
           <Card style={{ boxShadow: "none" }}>
-            <NoResultsFound />
+            <NoResultsFound text={Digit.Utils.locale.getTransformedLocale(`NO_RESULTS_${category}`)} />
             <Button
               variation="secondary"
               label={t(Digit.Utils.locale.getTransformedLocale(`ASSIGN_` + category))}
@@ -283,8 +286,17 @@ function UserAccess({ category, setData, nationalRoles }) {
           type={"default"}
           heading={t(`${category}_POPUP_HEADING`)}
           children={[<RoleTableComposer category={category} nationalRoles={nationalRoles} />]}
-          onOverlayClick={() => { }}
-          footerChildren={[<Button type={"button"} size={"large"} variation={"secondary"} label={t("CLOSE")} onClick={() => setShowPopUp(false)} style={{ minWidth: "200px" }} />]}
+          onOverlayClick={() => {}}
+          footerChildren={[
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"secondary"}
+              label={t("CLOSE")}
+              onClick={() => setShowPopUp(false)}
+              style={{ minWidth: "200px" }}
+            />,
+          ]}
           sortFooterChildren={true}
           onClose={() => setShowPopUp(false)}
         />
