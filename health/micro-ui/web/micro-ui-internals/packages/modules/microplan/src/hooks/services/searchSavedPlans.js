@@ -39,7 +39,7 @@ const SearchSavedPlans = async (body) => {
     });
     const finalResponse = {
       PlanConfiguration: mergePlanAndCampaign(responsePlan?.PlanConfiguration, "campaignDetails", responseCampaign?.CampaignDetails),
-      TotalCount:responsePlan?.TotalCount
+      TotalCount:responsePlan?.TotalCount || 0
     };
     return finalResponse;
   } catch (error) {
