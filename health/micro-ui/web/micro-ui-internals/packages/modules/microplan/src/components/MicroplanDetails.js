@@ -83,7 +83,7 @@ const MicroplanDetails = ({ onSelect, props: customProps, ...props }) => {
                 <Row
                   key={idx}
                   label={row?.label}
-                  text={row?.value}
+                  text={t(row?.value)}
                   rowContainerStyle={{ margin: "0", padding: "0", height: "2.4rem", justifyContent: "flex-start" }}
                   className="border-none"
                   last={idx === campaignCard?.length - 1}
