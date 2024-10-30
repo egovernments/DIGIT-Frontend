@@ -224,7 +224,7 @@ const PopInbox = () => {
     },
   };
 
-  const { isLoading: isEmployeeLoading, data: employeeData } = Digit.Hooks.useCustomAPIHook(reqCri);
+  const { isLoading: isEmployeeLoading, data: employeeData, refetch: refetchHrms } = Digit.Hooks.useCustomAPIHook(reqCri);
 
 
   useEffect(() => {
@@ -237,6 +237,11 @@ const PopInbox = () => {
     setEmployeeNameMap(nameMap);
   }, [employeeData]);
 
+  useEffect(() => {
+    if (assigneeUuids?.length > 0) {
+      refetchHrms();
+    }
+  }, [assigneeUuids]);
 
   useEffect(() => {
     if (data) {
@@ -465,7 +470,7 @@ const PopInbox = () => {
                 )}
               </div>
             )}
-            {isFetching ? <Loader /> : <PopInboxTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap} onSuccessEdit={() => refetch()} />}
+            <PopInboxTable progressPending={isFetching || isEmployeeLoading} currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap} onSuccessEdit={() => refetch()} />
           </Card>
         </div>
       </div>
