@@ -4,7 +4,7 @@ import HeaderComp from './HeaderComp';
 import { useTranslation } from 'react-i18next';
 import FormulaView from './FormulaView';
 import { Loader, Button, Card  } from '@egovernments/digit-ui-components';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { useHistory } from 'react-router-dom';
 
 const FormulaConfigScreen = ({ customProps }) => {
    
@@ -49,7 +49,6 @@ const FormulaConfigScreen = ({ customProps }) => {
                             type="button"
                             className="dm-workbench-download-template-btn dm-hover"
                             onClick={(e) => {
-                                const url = Digit.Hooks.useQueryParams();
                                 const urlParams = Digit.Hooks.useQueryParams(); 
                                 urlParams.key = '8'; 
                                 const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
