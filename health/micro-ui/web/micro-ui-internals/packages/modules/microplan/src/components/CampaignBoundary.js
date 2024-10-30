@@ -316,11 +316,7 @@ const CampaignBoundary = ({ customProps }) => {
                   type="button"
                   className="dm-workbench-download-template-btn dm-hover"
                   onClick={(e) => {
-                    const url = Digit.Hooks.useQueryParams();
-                    const urlParams = Digit.Hooks.useQueryParams(); 
-                    urlParams.key = '3'; 
-                    const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
-                    history.push(updatedUrl);
+                    editHandler();
                   }}
                 />
               </div>
