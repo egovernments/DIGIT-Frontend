@@ -153,6 +153,43 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
         if (data?.redirectTo) {
           history.push(data?.redirectTo, data?.state); // Navigate to the specified route
         }
+
+        //invalidation of files session
+        if(data?.invalidateSession && data?.triggeredFrom==="BOUNDARY"){  
+          // setTotalFormData((prev) => {
+          //   return {
+          //     ...prev,
+          //     UPLOADBOUNDARYDATA: {},
+          //   };
+          // })
+          const currentSession = Digit.SessionStorage.get("MICROPLAN_DATA")
+          setParams({
+            ...currentSession,
+            UPLOADBOUNDARYDATA: null,
+            UPLOADFACILITYDATA: null
+          });
+          setCurrentKey((prev) => prev + 1);
+          setCurrentStep((prev) => prev + 1);
+        }
+
+        //invalidation of formula and hypothesis session
+        if(data?.invalidateSession && data?.triggeredFrom==="ASSUMPTIONS_FORM"){
+          // setTotalFormData((prev) => {
+          //   return {
+          //     ...prev,
+          //     HYPOTHESIS: {},
+          //     FORMULA_CONFIGURATION:{}
+          //   };
+          // })
+          const currentSession = Digit.SessionStorage.get("MICROPLAN_DATA")
+          setParams({
+            ...currentSession,
+            HYPOTHESIS: null,
+            FORMULA_CONFIGURATION:null
+          });
+          setCurrentKey((prev) => prev + 1);
+          setCurrentStep((prev) => prev + 1);
+        }
       },
       onError: (error, variables) => {
         setLoader(false);

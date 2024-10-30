@@ -34,7 +34,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
   const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
-  const assumptionsInPlan = Digit.SessionStorage.get("MICROPLAN_DATA")?.HYPOTHESIS.Assumptions.assumptionValues
+  const assumptionsInPlan = Digit.SessionStorage.get("MICROPLAN_DATA")?.HYPOTHESIS?.Assumptions?.assumptionValues ? Digit.SessionStorage.get("MICROPLAN_DATA")?.HYPOTHESIS?.Assumptions?.assumptionValues : []
   // const { isLoading: isLoadingPlanObject, data: planObject, error: errorPlan, refetch: refetchPlan } = Digit.Hooks.microplanv1.useSearchPlanConfig(
   //   {
   //     PlanConfigurationSearchCriteria: {
