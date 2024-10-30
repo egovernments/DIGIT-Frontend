@@ -17,7 +17,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
   const [formulaConfigValues, setFormulaConfigValues] = useState(
     Digit.SessionStorage.get("MICROPLAN_DATA")?.FORMULA_CONFIGURATION?.formulaConfiguration?.formulaConfigValues || []
   );
-  
+
   const assumptionsFormValues = customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm; //array with key value pair
   const campaignType = customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code;
   const resourceDistributionStrategyCode =
@@ -131,13 +131,13 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
 
   const handleNext = () => {
     //here just check formulConfigValues
-    if(formulaConfigValues.filter(row => row.category === currentCategory).every(row=>{
+    if (formulaConfigValues.filter(row => row.category === currentCategory).every(row => {
       return row.assumptionValue && row.input && row.output && row.operatorName
-    })){
+    })) {
       if (formulaInternalKey < ruleConfigurationCategories?.length) {
         setFormulaInternalKey((prevKey) => prevKey + 1); // Update key in URL
       }
-    }else{
+    } else {
       setShowToast({
         key: "error",
         label: t("ERR_MANDATORY_FIELD"),
@@ -147,7 +147,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
     // TODO:
     //simply returning from here, rest of the code is not required for now maybe required later
     return;
-    
+
     //array of objects each with input, output, operatorName, assumptionValue
     const currentRuleConfigurations = ruleConfigurationCategories[formulaInternalKey - 1]?.ruleConfigurations || [];
     const existingFormulaOutputs = formulaConfigValues?.map((formula) => formula.output);
@@ -254,23 +254,23 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
     // calculate this based on prevOutputs also
     const legalValuesForAssumptions = assumptionsInPlan?.map(assumption => assumption.key)
     const prevOutputs = []
-  
-    const initialFormulas = filteredFormulas.map((item) => {
-      const updatedObj =  {
-      source: "MDMS",
-      category: currentCategory,
-      input: item.input,
-      output: item.output,
-      operatorName: item.operatorName,
-      //check this assumption is there in plan object or not
-      assumptionValue:legalValuesForAssumptions?.includes(item.assumptionValue) || prevOutputs?.includes(item.assumptionValue) ? item.assumptionValue : "",
-      // assumptionValue:item.assumptionValue,
-      showOnEstimationDashboard: true,
-    }
 
-    prevOutputs.push(item.output)
-    return updatedObj;
-  });
+    const initialFormulas = filteredFormulas.map((item) => {
+      const updatedObj = {
+        source: "MDMS",
+        category: currentCategory,
+        input: item.input,
+        output: item.output,
+        operatorName: item.operatorName,
+        //check this assumption is there in plan object or not
+        assumptionValue: legalValuesForAssumptions?.includes(item.assumptionValue) || prevOutputs?.includes(item.assumptionValue) ? item.assumptionValue : "",
+        // assumptionValue:item.assumptionValue,
+        showOnEstimationDashboard: true,
+      }
+
+      prevOutputs.push(item.output)
+      return updatedObj;
+    });
     const existingOutputs = new Set(formulaConfigValues.map((formula) => formula.output));
     const newFormulas = initialFormulas?.filter((formula) => !existingOutputs.has(formula.output) && !deletedFormulas.includes(formula.output));
 
@@ -281,7 +281,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
 
   useEffect(() => {
     // Step 1: Filter assumptions based on current category
-    if (assumptionsInPlan?.length > 0 ) {
+    if (assumptionsInPlan?.length > 0) {
       const filteredAssumptions = assumptionsInPlan?.filter((assumption) => assumption.category === currentCategory);
 
       // Step 2: Extract keys from filtered assumptions
@@ -358,12 +358,12 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
       <FormulaContext.Provider
         value={{ formulaConfigValues, handleFormulaChange, setFormulaConfigValues, deletedFormulas, setDeletedFormulas, assumptionsInPlan }}
       >
-        <div style={{ display: "flex", gap: "2rem" }}>
+        <div style={{ display: "flex", gap: "1.5rem" }}>
           <div className="card-container">
             <Card className="card-header-timeline">
               <TextBlock subHeader={t("FORMULA_CONFIGURATION")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
             </Card>
-            <Card className="stepper-card">
+            <Card className="vertical-stepper-card">
               <Stepper
                 customSteps={ruleConfigurationCategories.map((category) => category.category)}
                 currentStep={formulaInternalKey}

@@ -468,7 +468,7 @@ const SelectingBoundaryComponent = ({
 
                 return boundary?.parentBoundaryType == null ? (
                   <LabelFieldPair style={{ alignItems: "flex-start", paddingRight: "30%" }}>
-                    <CardLabel>
+                    <CardLabel className={"boundary-selection-label"}>
                       {t((hierarchyType + "_" + boundary?.boundaryType).toUpperCase())}
                       <span className="mandatory-span">*</span>
                     </CardLabel>
@@ -499,12 +499,13 @@ const SelectingBoundaryComponent = ({
                         }}
                         frozenData={frozenData}
                         frozenType={frozenType}
+                        isSearchable={true}
                       />
                     </div>
                   </LabelFieldPair>
                 ) : (
                   <LabelFieldPair style={{ alignItems: "flex-start", paddingRight: "30%" }}>
-                    <CardLabel>
+                    <CardLabel className={"boundary-selection-label"}>
                       {t((hierarchyType + "_" + boundary?.boundaryType).toUpperCase())}
                       <span className="mandatory-span">*</span>
                     </CardLabel>
@@ -564,6 +565,7 @@ const SelectingBoundaryComponent = ({
                         frozenType={frozenType}
                         // frozenData={frozenType === "frozen" ? frozenData : []}
                         popUpOption={boundaryOptions}
+                        isSearchable={true}
                       />
                     </div>
                   </LabelFieldPair>
@@ -578,7 +580,7 @@ const SelectingBoundaryComponent = ({
               })
               .map((boundary) => (
                 <LabelFieldPair style={{ alignItems: "flex-start", paddingRight: "30%" }}>
-                  <CardLabel>
+                  <CardLabel className={"boundary-selection-label"}>
                     {t((hierarchyType + "_" + boundary?.boundaryType).toUpperCase())}
                     <span className="mandatory-span">*</span>
                   </CardLabel>
