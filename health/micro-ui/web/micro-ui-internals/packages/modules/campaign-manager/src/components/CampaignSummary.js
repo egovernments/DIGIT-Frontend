@@ -707,7 +707,7 @@ const CampaignSummary = (props) => {
 
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
+      <div style={{ display: "flex", justifyContent: "space-between" , marginBottom:"-2.5rem" }}>
         <Header className="summary-header">{t("ES_TQM_SUMMARY_HEADING")}</Header>
         {/* {userCredential && (
           <Button
