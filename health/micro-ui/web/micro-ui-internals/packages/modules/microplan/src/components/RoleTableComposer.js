@@ -86,8 +86,8 @@ function RoleTableComposer({ nationalRoles }) {
             selectedHierarchy: nationalRoles?.includes(category)
               ? topBoundary
               : state?.boundaryHierarchy?.find(
-                  (j) => j.boundaryType === data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.hierarchyLevel
-                ),
+                (j) => j.boundaryType === data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.hierarchyLevel
+              ),
             selectedBoundaries: nationalRoles?.includes(category)
               ? topBoundaryValue
               : data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.jurisdiction,
@@ -162,11 +162,11 @@ function RoleTableComposer({ nationalRoles }) {
         return prev.map((i) =>
           i.rowIndex === row.rowIndex
             ? {
-                ...i,
-                selectedHierarchy: value,
-                boundaryOptions,
-                selectedBoundaries: [], // Keep existing selected boundaries
-              }
+              ...i,
+              selectedHierarchy: value,
+              boundaryOptions,
+              selectedBoundaries: [], // Keep existing selected boundaries
+            }
             : i
         );
       } else {
@@ -220,9 +220,9 @@ function RoleTableComposer({ nationalRoles }) {
           return prev.map((i) =>
             i.rowIndex === row.rowIndex
               ? {
-                  ...i,
-                  selectedBoundaries: [], // Clear selected boundaries
-                }
+                ...i,
+                selectedBoundaries: [], // Clear selected boundaries
+              }
               : i
           );
         } else {
@@ -251,9 +251,9 @@ function RoleTableComposer({ nationalRoles }) {
         return prev.map((i) =>
           i.rowIndex === row.rowIndex
             ? {
-                ...i,
-                selectedBoundaries: boundariesInEvent, // Update boundaries
-              }
+              ...i,
+              selectedBoundaries: boundariesInEvent, // Update boundaries
+            }
             : i
         );
       } else {
@@ -343,7 +343,7 @@ function RoleTableComposer({ nationalRoles }) {
       cell: (row) => {
         const isUserAlreadyAssignedActive =
           HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.length > 0 &&
-          HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
+            HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
             ? true
             : false;
         return (
@@ -369,15 +369,15 @@ function RoleTableComposer({ nationalRoles }) {
       cell: (row) => {
         const isUserAlreadyAssignedActive =
           HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.length > 0 &&
-          HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
+            HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
             ? true
             : false;
         return (
           <MultiSelectDropdown
             disabled={
               isUserAlreadyAssignedActive ||
-              nationalRoles?.includes(category) ||
-              !rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedHierarchy
+                nationalRoles?.includes(category) ||
+                !rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedHierarchy
                 ? true
                 : false
             }
@@ -400,7 +400,7 @@ function RoleTableComposer({ nationalRoles }) {
         const isUserAlreadyAssigned = HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.length > 0 ? true : false;
         const isUserAlreadyAssignedActive =
           HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.length > 0 &&
-          HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
+            HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
             ? true
             : false;
 
@@ -513,11 +513,19 @@ function RoleTableComposer({ nationalRoles }) {
                   minlength={10}
                 />
               </LabelFieldPair>
-              <div className={`search-button-wrapper roleComposer`}>
-                <LinkLabel style={{ marginBottom: 0, whiteSpace: "nowrap" }} onClick={handleClearSearch}>
-                  {t("Clear Search")}
-                </LinkLabel>
-                <SubmitBar onSubmit={handleSearchSubmit} label={t("Search")} disabled={false} />
+              <div className={`search-field-wrapper roleComposer`} style={{ display: "flex", justifyContent: "flex-end" }}>
+
+                <Button
+                  variation="teritiary"
+                  label={t("Clear")}
+                  onClick={handleClearSearch}
+                />
+
+                <Button
+                  variation="primary"
+                  label={t("Search")}
+                  onClick={handleSearchSubmit}
+                />
               </div>
             </div>
           </div>
@@ -530,7 +538,7 @@ function RoleTableComposer({ nationalRoles }) {
           data={HrmsData?.data}
           pagination
           progressPending={isLoading || isHrmsLoading}
-          progressComponent={<CustomLoader />}
+          progressComponent={<Loader />}
           paginationServer
           paginationTotalRows={totalRows}
           customStyles={tableCustomStyle}

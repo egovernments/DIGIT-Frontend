@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import PropTypes from 'prop-types';
 
-const TableSearchField = ({ onSearch}) => {
+const TableSearchField = ({ onSearch }) => {
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
 
   const handleInputChange = (e) => {
     const newQuery = e.target.value;
     setQuery(newQuery);
-    onSearch(newQuery); 
+    onSearch(newQuery);
   };
 
   return (
@@ -51,7 +51,7 @@ const styles = {
     width: '100%',
     padding: '8px 40px 8px 12px', // Adds space on the right for the icon
     border: '1px solid #ccc',
-    borderRadius: '4px',
+    borderRadius: '0px',
     outline: 'none',
     fontSize: '16px',
     boxSizing: 'border-box',
@@ -66,7 +66,7 @@ const styles = {
 };
 
 TableSearchField.propTypes = {
-    onSearch: PropTypes.func.isRequired,
- };
+  onSearch: PropTypes.func.isRequired,
+};
 
 export default TableSearchField;

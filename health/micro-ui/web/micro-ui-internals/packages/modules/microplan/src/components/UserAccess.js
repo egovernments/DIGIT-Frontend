@@ -230,8 +230,8 @@ function UserAccess({ category, setData, nationalRoles }) {
 
   return (
     <>
-      <Card style={{ marginBottom: "1rem" }}>
-        <Header>{t(category)}</Header>
+      <Card className="middle-child">
+        <Header className="uploader-sub-heading">{t(category)}</Header>
         <p className="mp-description">{t(`${category}_DESCRIPTION`)}</p>
       </Card>
 
@@ -283,8 +283,8 @@ function UserAccess({ category, setData, nationalRoles }) {
           type={"default"}
           heading={t(`${category}_POPUP_HEADING`)}
           children={[<RoleTableComposer category={category} nationalRoles={nationalRoles} />]}
-          onOverlayClick={() => {}}
-          footerChildren={[<Button type={"button"} size={"large"} variation={"secondary"} label={t("CLOSE")} onClick={() => setShowPopUp(false)} />]}
+          onOverlayClick={() => { }}
+          footerChildren={[<Button type={"button"} size={"large"} variation={"secondary"} label={t("CLOSE")} onClick={() => setShowPopUp(false)} style={{ minWidth: "200px" }} />]}
           sortFooterChildren={true}
           onClose={() => setShowPopUp(false)}
         />

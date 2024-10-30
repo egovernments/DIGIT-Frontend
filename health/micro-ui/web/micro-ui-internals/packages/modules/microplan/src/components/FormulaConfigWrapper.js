@@ -358,7 +358,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
       <FormulaContext.Provider
         value={{ formulaConfigValues, handleFormulaChange, setFormulaConfigValues, deletedFormulas, setDeletedFormulas, assumptionsInPlan }}
       >
-        <div style={{ display: "flex", gap: "1.5rem" }}>
+        <div className="container-full">
           <div className="card-container">
             <Card className="card-header-timeline">
               <TextBlock subHeader={t("FORMULA_CONFIGURATION")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
@@ -373,7 +373,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
             </Card>
           </div>
 
-          <div style={{ width: "100%" }}>
+          <div className="card-container" style={{ width: "80%" }}>
             <FormulaConfiguration
               category={ruleConfigurationCategories[formulaInternalKey - 1]?.category}
               formulas={filteredFormulas?.filter((item) => !deletedFormulas?.includes(item.output))}
