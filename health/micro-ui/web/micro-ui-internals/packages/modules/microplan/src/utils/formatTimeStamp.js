@@ -15,9 +15,10 @@ function formatTimestamp(timestamp) {
     const minutes = date.getMinutes().toString().padStart(2, '0'); // Pad minutes with leading zero
     const ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12 || 12; // Convert to 12-hour format
+    const year = date.getFullYear();
 
     // Construct the final string
-    return `${day}${suffix} ${month} ${hours}:${minutes} ${ampm}`;
+    return `${day}${suffix} ${month} ${year} ${hours}:${minutes} ${ampm}`;
 }
 
 // Helper function to get the appropriate day suffix (st, nd, rd, th)

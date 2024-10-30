@@ -39,6 +39,7 @@ a{
     background: #FAFAFA;
     padding: 0.5rem 1rem;
     margin: 0.5rem 0;
+    cursor: pointer;
   }
   
   /* Uploaded file container (left side) */
@@ -62,7 +63,7 @@ a{
   .dm-actions-container {
     display: flex;
     align-items: center;
-    gap: 0.75rem; /* Space between edit and delete buttons */
+    gap: 1rem; /* Space between edit and delete buttons */
   }
   
   /* Edit container */
@@ -120,17 +121,6 @@ a{
   overflow: visible; /* Ensure text isn't cut off */
 }
 
-.dm-audit-info{
-  max-width: 70%; /* Ensure this section doesn't take too much space */
-  overflow: hidden;
-  text-overflow: ellipsis; /* Handle long text with ellipsis */
-  white-space: nowrap; /* Prevent wrapping */
-  color: #C84C0E;
-  margin-bottom: "1rem";
-  font-size: "0.875rem"
-}
-
-
 .header-container {
   display: flex;
   justify-content: space-between;
@@ -177,6 +167,7 @@ a{
   display: flex;
   justify-content: right;
   align-items: center;
+  
 }
 
 .digit-multiselectdropdown-wrap.nestedmultiselect {
@@ -198,4 +189,62 @@ a{
   overflow: auto;             /* Allow overflow if content is larger */
   align-items: center;
   border-bottom: '1px solid #e0e0e0'        /* Align items vertically in the center */
+}
+
+.dm-audit-info{
+   font-size: 1rem;
+   color: #8e9497;
+   display:flex;
+}
+
+.ab-actions{
+  margin-left: 4rem;
+  display: flex;
+}
+
+/* Add these styles to your CSS file */
+
+.pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-top: 1px solid #ccc;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.pagination-controls label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pagination-controls select {
+  padding: 0.3rem;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.pagination-controls div {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pagination-controls button {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.pagination-controls button:disabled {
+  color: #ccc;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  text-decoration: underline;
 }

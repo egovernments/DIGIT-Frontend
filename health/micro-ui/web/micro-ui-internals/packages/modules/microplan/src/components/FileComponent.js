@@ -1,89 +1,130 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EditIcon } from "@egovernments/digit-ui-react-components";
 import { DeleteIconv2, DownloadIcon, FileIcon, Card, CardSubHeader } from "@egovernments/digit-ui-react-components";
-import { Button } from "@egovernments/digit-ui-components";
+import { Button, InfoButton, TooltipWrapper } from "@egovernments/digit-ui-components";
+import { CustomSVG } from "@egovernments/digit-ui-components";
 
-const FileComponent = ({ title, fileName, auditDetails, editHandler, deleteHandler, downloadHandler }) => {
+
+const FileComponent = ({ title, fileName, status, auditDetails, editHandler, deleteHandler, downloadHandler, rowDetails }) => {
     const { t } = useTranslation();
-    const { lastmodTime } = auditDetails || {}; // Destructuring the audit details for easy access
+    const { XlsxFile } = CustomSVG;
+    const tenantId = Digit.ULBService.getCurrentTenantId();
+    const { userName, lastmodTime } = auditDetails || {};
+    const [showPreview, setShowPreview] = useState(false);
+    const [fileForPreview, setFileForPreview] = useState([]);
+    const XlsPreview = Digit.ComponentRegistryService.getComponent("XlsPreview");
+
+    const handleFilePreview = async (fileStoreId) => {
+        const { data: { fileStoreIds } = {} } = await Digit.UploadServices.Filefetch([fileStoreId], tenantId);
+        const file = {
+            filename: fileName,
+            url: fileStoreIds?.[0]?.url,
+            filestoreId: fileStoreIds?.[0]?.id
+        }
+        setFileForPreview(file);
+        setShowPreview(true);
+    };
+
+    const onFileDownload = (file) => {
+        if (file && file?.url) {
+            const fileNameWithoutExtension = file?.filename.split(/\.(xlsx|xls)/)[0];
+            Digit.Utils.campaign.downloadExcelWithCustomName({ fileStoreId: file?.filestoreId, customName: fileNameWithoutExtension });
+        }
+    };
+
     return (
-        <div>
-
-            {/* First card */}
-            <div className="view-composer-header-section">
-                <CardSubHeader style={{ marginTop: 0, fontSize: "1.5rem", color: " #0B4B66", marginBottom: "0rem" }}>{title}</CardSubHeader>
-            </div>
-
-            <Card type={"secondary"} className="card-color">
-                <div className="dm-parent-container">
-                    {/* Left side: File Icon */}
-                    <div
-                        className="dm-uploaded-file-container-sub"
-                        onClick={() => setShowPreview(true)}
-                    >
-                        <FileIcon className="dm-icon" />
-                        <div>{fileName}</div>
+        <Card
+            style={{ background: "#FAFAFA", border: "1px solid #D6D5D4" }}
+        >
+            <div className="dm-parent-container" style={{ background: "#FAFAFA", margin: "0" }}>
+                <div
+                    className="dm-uploaded-file-container-sub"
+                    style={{ marginLeft: "-1rem" }}
+                >
+                    <div onClick={async () => await handleFilePreview(rowDetails?.fileStoreId)}>
+                        <XlsxFile styles={{ width: "6rem", height: "6rem" }} />
                     </div>
+                    <div style={{ marginLeft: "0.5rem", marginTop: "0.5rem" }}>{fileName}</div>
+                </div>
 
-                    {/* Right side: Edit, Delete, and Audit details */}
-                    <div className="dm-actions-container">
+                <div className="dm-actions-container">
 
-                        {/* Display audit details (Uploaded by user and last modified time) */}
-                        {(lastmodTime) ?(
-                            <div className="dm-audit-info11">
-                                {/* Displaying the audit information */}
-                                {lastmodTime && <span style={{ color: "#C84C0E" }}>{lastmodTime}</span>}
-                            </div>):null
-                        }
-                        {/* Edit Icon and Button */}
-                        <div className="dm-campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                            {editHandler &&
-                                <Button
-                                    label={t("WBH_EDIT")}
-                                    variation="secondary"
-                                    icon={<EditIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
-                                    type="button"
-                                    className="dm-workbench-download-template-btn dm-hover"
-                                    onButtonClick={(e) => {
-                                        editHandler();
-                                    }}
-                                />
-                            }
-                        </div>
-
-                        {/* Delete Button */}
-                        {deleteHandler &&
+                    {(lastmodTime) ? (
+                        <div className="dm-audit-info11">
+                            {userName && <span style={{ color: "#787878" }}>{t("WBH_UPLOADED_BY")} {userName} {'at'} </span>}
+                            {lastmodTime && <span style={{ color: "#787878" }}>{lastmodTime}</span>}
+                        </div>) : null
+                    }
+                    <div className="dm-campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
+                        {editHandler &&
                             <Button
-                                label={t("WBH_DELETE")}
+                                label={t("WBH_EDIT")}
                                 variation="secondary"
-                                icon={<DeleteIconv2 styles={{ height: "1.25rem", width: "2.5rem" }} />}
+                                icon={<EditIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
                                 type="button"
                                 className="dm-workbench-download-template-btn dm-hover"
                                 onButtonClick={(e) => {
-                                    deleteHandler();
-                                }}
-                            />
-                        }
-
-                        {/* Download Button */}
-                        {downloadHandler &&
-                            <Button
-                                label={t("WBH_DOWNLOAD")}
-                                variation="secondary"
-                                icon={"FileDownload"}
-                                type="button"
-                                className="dm-workbench-download-template-btn dm-hover"
-                                onClick={(e) => {
-                                    downloadHandler();
+                                    editHandler();
                                 }}
                             />
                         }
                     </div>
-                </div>
-            </Card>
 
-        </div>
+                    {deleteHandler &&
+                        <Button
+                            label={t("WBH_DELETE")}
+                            variation="secondary"
+                            icon={<DeleteIconv2 styles={{ height: "1.25rem", width: "2.5rem" }} />}
+                            type="button"
+                            className="dm-workbench-download-template-btn dm-hover"
+                            onButtonClick={(e) => {
+                                deleteHandler();
+                            }}
+                            style={{ width: "11rem" }}
+                        />
+                    }
+
+                    {(downloadHandler && status === "completed") && (
+                        <Button
+                            label={t("WBH_DOWNLOAD")}
+                            variation="secondary"
+                            icon={"FileDownload"}
+                            type="button"
+                            className="dm-workbench-download-template-btn dm-hover"
+                            onClick={(e) => {
+                                downloadHandler();
+                            }}
+                            style={{ width: "11rem" }}
+                        />
+                    )}
+                    {(downloadHandler && status === "data-accepted") && (
+                        <TooltipWrapper content={t('MP_INPROGRESS_USER_CREATION')} >
+                            <InfoButton
+                                className="dm-workbench-download-template-btn"
+                                infobuttontype="info"
+                                icon={"Info"}
+                                label={t("WBH_INPROGRESS")}
+                                style={{ opacity: 1, width: "11rem", border: "none" }}
+                            />
+                        </TooltipWrapper>
+                    )}
+
+                    {(downloadHandler && status !== "completed" && status !== "data-accepted") && (
+                        <TooltipWrapper content={t('MP_FAILED_USER_CREATION')} >
+                            <InfoButton
+                                className="dm-workbench-download-template-btn"
+                                infobuttontype="error"
+                                icon={"Info"}
+                                label={t("WBH_FAILED")}
+                                style={{ opacity: 1, width: "11rem", border: "none" }}
+                            />
+                        </TooltipWrapper>
+                    )}
+                </div>
+                {showPreview && <XlsPreview file={fileForPreview} onBack={() => setShowPreview(false)} onDownload={() => onFileDownload(fileForPreview)} />}
+            </div>
+        </Card>
     );
 };
 
