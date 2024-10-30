@@ -3,7 +3,7 @@ import { Button, Card, LabelFieldPair } from '@egovernments/digit-ui-components'
 import HeaderComp from './HeaderComp';
 import { useTranslation } from 'react-i18next';
 import { EditIcon } from '@egovernments/digit-ui-react-components';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { useHistory } from 'react-router-dom';
 
 const AssumptionsList = ({ customProps }) => {
     const { t } = useTranslation();
@@ -38,7 +38,6 @@ const AssumptionsList = ({ customProps }) => {
                             type="button"
                             className="dm-workbench-download-template-btn dm-hover"
                             onClick={(e) => {
-                                const url = Digit.Hooks.useQueryParams();
                                 const urlParams = Digit.Hooks.useQueryParams(); 
                                 urlParams.key = '7'; 
                                 const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
