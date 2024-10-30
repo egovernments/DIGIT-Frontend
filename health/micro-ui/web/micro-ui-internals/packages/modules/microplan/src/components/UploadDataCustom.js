@@ -114,7 +114,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       setDownloadError(false);
       setIsError(false);
       setIsSuccess(props?.props?.sessionData?.UPLOADBOUNDARYDATA?.[type]?.isSuccess || null);
-      setShowPopUp(!props?.props?.sessionData?.UPLOADBOUNDARYDATA?.[type]?.uploadedFile?.length || 0);
+      setShowPopUp(!props?.props?.sessionData?.UPLOADBOUNDARYDATA?.[type]?.uploadedFile?.length || false);
     }
     else if (type == 'facilityWithBoundary') {
       setUploadedFile(props?.props?.sessionData?.UPLOADFACILITYDATA?.[type]?.uploadedFile || []);
@@ -124,7 +124,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       setDownloadError(false);
       setIsError(false);
       setIsSuccess(props?.props?.sessionData?.UPLOADFACILITYDATA?.[type]?.isSuccess || null);
-      setShowPopUp(!props?.props?.sessionData?.UPLOADFACILITYDATA?.[type]?.uploadedFile?.length || 0);
+      setShowPopUp(!props?.props?.sessionData?.UPLOADFACILITYDATA?.[type]?.uploadedFile?.length || false);
     }
   }, [type, props?.props?.sessionData]);
 
@@ -670,7 +670,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
               wrapperClassName={"stepper-wrapper"}
             />
           </Card>
-          <Card className="stepper-card">
+          <Card className="vertical-stepper-card">
             <Stepper
               customSteps={["HCM_UPLOAD_BOUNDARY_MICROPLAN", "HCM_UPLOAD_FACILITY_MICROPLAN"]}
               currentStep={key - baseKey + 1}
@@ -684,7 +684,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
         <div className="card-container" style={{ width: "100%" }}>
           <Card>
             <div className="microplan-bulk-upload">
-              <Header className="digit-form-composer-sub-header">
+              <Header className="uploader-sub-heading">
                 {type === "boundary" ? t("WBH_UPLOAD_TARGET_MICROPLAN") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY_MICROPLAN") : t("WBH_UPLOAD_UNKNOWN")}
               </Header>
               <Button

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment, useContext, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Card, Header, DeleteIconv2, LabelFieldPair, AddIcon, Button, CardText, } from "@egovernments/digit-ui-react-components";
-import { Dropdown, FieldV1, PopUp, } from "@egovernments/digit-ui-components";
+import { Header, DeleteIconv2, AddIcon, CardText, LabelFieldPair } from "@egovernments/digit-ui-react-components";
+import { Dropdown, FieldV1, PopUp, Card, Button, Divider } from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR } from "../utils/utilities";
 import { useMyContext } from "../utils/context";
 import { useAssumptionContext } from "./HypothesisWrapper";
@@ -103,8 +103,8 @@ const Hypothesis = ({ category, assumptions: initialAssumptions }) => {
   return (
     <>
 
-      <Card>
-        <Header>{t(category)}</Header>
+      <Card className="middle-child">
+        <Header className="uploader-sub-heading">{t(category)}</Header>
         <p className="mp-description">{t(`RESOURCE_CALCULATION`)}</p>
       </Card>
 
@@ -148,18 +148,15 @@ const Hypothesis = ({ category, assumptions: initialAssumptions }) => {
           )
         })}
 
-        <div style={{ background: "#eee", height: "0.2rem", margin: "1.5rem 1.0rem" }}></div>
+        <Divider
+          className=""
+          variant="small"
+        />
+
         <Button
-          className="custom-class"
-          icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem", }} fill={PRIMARY_COLOR} />}
-          iconFill=""
+          icon="Add"
           label={t("ADD_ASSUMPTION")}
-          onButtonClick={() => setAssumptionsPopUp(true)}
-          options={[]}
-          optionsKey=""
-          size=""
-          style={{ height: "50px", fontSize: "20px" }}
-          title=""
+          onClick={() => setAssumptionsPopUp(true)}
           variation="secondary"
           isDisabled={isAddNewDisabled}
 
@@ -183,7 +180,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions }) => {
               size={"large"}
               variation={"secondary"}
               label={t("YES")}
-              onButtonClick={() => {
+              onClick={() => {
                 handleConfirmDelete()
               }}
             />,
@@ -192,7 +189,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions }) => {
               size={"large"}
               variation={"primary"}
               label={t("NO")}
-              onButtonClick={handleCancelDelete}
+              onClick={handleCancelDelete}
             />,
           ]}
           sortFooterChildren={true}
@@ -231,20 +228,21 @@ const Hypothesis = ({ category, assumptions: initialAssumptions }) => {
               type={"button"}
               size={"large"}
               variation={"secondary"}
-              label={t("YES")}
-              onButtonClick={() => {
-                addNewAssumption()
+              label={t("NO")}
+              onClick={() => {
+                setAssumptionsPopUp(false)
               }}
             />,
             <Button
               type={"button"}
               size={"large"}
               variation={"primary"}
-              label={t("NO")}
-              onButtonClick={() => {
-                setAssumptionsPopUp(false)
+              label={t("YES")}
+              onClick={() => {
+                addNewAssumption()
               }}
             />,
+
           ]}
           sortFooterChildren={true}
           onClose={() => {

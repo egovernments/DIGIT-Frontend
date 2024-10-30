@@ -2551,13 +2551,13 @@ $border-color: rgba(214, 213, 212, 1);
 
 .mp-hypothesis-label-field {
   display: flex;
-  align-items: baseline;
-  margin: 1rem 0rem 0.5rem 0rem;
+  align-items: flex-start;
+  margin: 0rem;
 }
 
 .mp-hypothesis-label-field>div>span {
-  font-weight: bold;
-  font-size: 1.2rem;
+  @extend .typography.heading-s;
+  color: theme(digitv2.lightTheme.text-primary);
 }
 
 .hypothesis-delete-button {

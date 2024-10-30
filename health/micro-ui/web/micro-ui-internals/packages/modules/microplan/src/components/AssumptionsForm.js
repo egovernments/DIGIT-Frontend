@@ -81,14 +81,14 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
 
     return (
         <Card>
-            <Header>{t("PROVIDE_DETAILS")}</Header>
+            <Header className="uploader-sub-heading">{t("PROVIDE_DETAILS")}</Header>
             <p className="mp-description">{t("ANSWER_TO_PROVIDE_ESTIMATE")}</p>
 
             {/* Show dropdowns only if the code is MIXED */}
             {resourceDistributionStrategyCode === "MIXED" && (
                 <>
                     {/* Dropdown for Registration Process */}
-                    <Card className="assumptionsForm-card">
+                    <Card type="secondary" className="assumptionsForm-card">
                         <LabelFieldPair className="assumptionsForm-label-field">
                             <div style={{ width: "100%" }}>
                                 <span>{t("REGISTRATION_PROCESS")} </span>
@@ -114,7 +114,7 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
                     </Card>
 
                     {/* Dropdown for Distribution Process */}
-                    <Card className="assumptionsForm-card">
+                    <Card type="secondary" className="assumptionsForm-card">
                         <LabelFieldPair className="assumptionsForm-label-field">
                             <div style={{ width: "100%" }}>
                                 <span>{t("DISTRIBUTION_PROCESS")} </span>
