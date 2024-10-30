@@ -7,16 +7,18 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
 
-  // State to manage confirmed population and target population
-  const [confirmedTotalPopulation, setConfirmedTotalPopulation] = useState("");
-  const [confirmedTargetPopulation, setConfirmedTargetPopulation] = useState("");
+  // State to manage confirmed population values dynamically
+  const [confirmedValues, setConfirmedValues] = useState({});
   const [showToast, setShowToast] = useState(null);
 
   // Load initial values from census data
   useEffect(() => {
-    if (census?.additionalDetails) {
-      setConfirmedTotalPopulation(census.additionalDetails.confirmedTotalPopulation || "");
-      setConfirmedTargetPopulation(census.additionalDetails.confirmedTargetPopulation || "");
+    if (census?.additionalFields) {
+      const initialValues = {};
+      census.additionalFields.forEach(field => {
+        initialValues[field.key] = field.value;
+      });
+      setConfirmedValues(initialValues);
     }
   }, [census]);
 
@@ -27,34 +29,31 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
     }
   }, [showToast]);
 
-
   // Define the mutation configuration
   const mutation = Digit.Hooks.useCustomAPIMutationHook({
     url: "/census-service/_update", // Replace with the appropriate API endpoint
   });
 
   const handleSave = async () => {
-    // Determine workflow action based on user roles
-    let workflowAction = ""; // Default action
-
-    // Check user roles and set workflow action accordingly
+    let workflowAction = "";
     if (userRoles && userRoles.includes('POPULATION_DATA_APPROVER')) {
       workflowAction = "EDIT_AND_SEND_FOR_APPROVAL";
     } else if (userRoles && userRoles.includes('ROOT_POPULATION_DATA_APPROVER')) {
       workflowAction = "EDIT_AND_VALIDATE";
     }
 
+    // Prepare the updated fields payload
+    const updatedAdditionalFields = census.additionalFields.map(field => ({
+      ...field,
+      value: confirmedValues[field.key] || field.value
+    }));
+
     await mutation.mutate(
       {
         body: {
           Census: {
             ...census,
-            totalPopulation: confirmedTotalPopulation,
-            additionalDetails: {
-              ...census.additionalDetails,
-              // confirmedTotalPopulation,
-              //confirmedTargetPopulation,
-            },
+            additionalFields: updatedAdditionalFields,
             workflow: {
               ...census.workflow,
               action: workflowAction,
@@ -74,6 +73,10 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
     );
   };
 
+  // Separate fields into editable and non-editable
+  const nonEditableFields = census.additionalFields.filter(field => !field.editable);
+  const editableFields = census.additionalFields.filter(field => field.editable);
+
   return (
     <>
       <PopUp
@@ -86,39 +89,42 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
               <div className="edit-value">{t(census?.boundaryCode) || "NA"}</div>
             </div>
             <Divider className="" variant="small" />
-            <div className="edit-label-field-pair">
-              <div className="edit-label">{t(`HCM_MICROPLAN_EDIT_VILLAGE_POPULATION`)}</div>
-              <div className="edit-value">{census?.totalPopulation || "NA"}</div>
-            </div>
-            <Divider className="" variant="small" />
-            <div className="edit-label-field-pair">
-              <div className="edit-label">{t(`HCM_MICROPLAN_EDIT_TARGET_POPULATION`)}</div>
-              <div className="edit-value">{census?.additionalDetails?.targetPopulation || "NA"}</div>
-            </div>
-            <Divider className="" variant="small" />
-            <div className="edit-label-field-pair">
-              <div className="edit-label">{t(`HCM_MICROPLAN_CONFIRM_VILLAGE_POPULATION`)}</div>
-              <div className="edit-value">
-                <TextInput
-                  type="text"
-                  value={confirmedTotalPopulation}
-                  onChange={(e) => setConfirmedTotalPopulation(e.target.value)}
-                  placeholder={t(`HCM_MICROPLAN_ENTER_VILLAGE_POPULATION`)}
-                />
-              </div>
-            </div>
-            {/* <Divider className="" variant="small" />
-            <div className="edit-label-field-pair">
-              <div className="edit-label">{t(`HCM_MICROPLAN_CONFIRM_TARGET_POPULATION`)}</div>
-              <div className="edit-value">
-                <TextInput
-                  type="text"
-                  value={confirmedTargetPopulation}
-                  onChange={(e) => setConfirmedTargetPopulation(e.target.value)}
-                  placeholder={t(`HCM_MICROPLAN_ENTER_TARGET_POPULATION`)}
-                />
-              </div>
-            </div> */}
+
+            {/* Render non-editable fields first */}
+            {nonEditableFields.map((field) => (
+              <Fragment key={field.key}>
+                <div className="edit-label-field-pair">
+                  <div className="edit-label">{t(field.key)}</div>
+                  <div className="edit-value">
+                    <span>{field.value || t("ES_COMMON_NA")}</span>
+                  </div>
+                </div>
+                <Divider className="" variant="small" />
+              </Fragment>
+            ))}
+
+            {/* Render editable fields next */}
+            {editableFields.map((field) => (
+              <Fragment key={field.key}>
+                <div className="edit-label-field-pair">
+                  <div className="edit-label">{t(field.key)}</div>
+                  <div className="edit-value">
+                    <TextInput
+                      type="text"
+                      value={confirmedValues[field.key]}
+                      onChange={(e) =>
+                        setConfirmedValues({
+                          ...confirmedValues,
+                          [field.key]: e.target.value
+                        })
+                      }
+                      placeholder={t(`HCM_MICROPLAN_ENTER_${field.key}`)}
+                    />
+                  </div>
+                </div>
+                <Divider className="" variant="small" />
+              </Fragment>
+            ))}
           </Card>,
         ]}
         onOverlayClick={onClose}
@@ -137,7 +143,7 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
             size={"large"}
             variation={"primary"}
             label={t(`HCM_MICROPLAN_EDIT_POPULATION_SEND_FOR_APPOVAL`)}
-            onClick={handleSave} // Calls save function on click
+            onClick={handleSave}
             isDisabled={mutation.isLoading}
           />,
         ]}
