@@ -25,8 +25,6 @@ function mergeArrays(array1, key1, array2, key2) {
 
 const SearchSavedPlans = async (body) => {
   try {
-    debugger;
-    console.log("entering");
     //here get response from both apis and process data and return
     const responsePlan = await Digit.CustomService.getResponse({
       url: "/plan-service/config/_search",
@@ -56,10 +54,7 @@ const SearchSavedPlans = async (body) => {
     });
     const finalResult = {
       PlanConfiguration: mergeArrays(responsePlan?.PlanConfiguration, "campaignId", responseCampaign?.CampaignDetails, "id"),
-      totalCount:responsePlan?.TotalCount
     };
-    console.log("final result",finalResult);
-    debugger;
     return finalResult;
   } catch (error) {
     if (error?.response?.data?.Errors) {
