@@ -991,6 +991,8 @@ tbody {
   border-bottom-left-radius: 0rem;
   border-bottom-right-radius: 0rem;
   padding: .75rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
   border: 0.063rem solid;
   align-items: center;
   color: theme(digitv2.lightTheme.header-sidenav) !important;
@@ -1187,4 +1189,8 @@ tbody {
 
 .digit-button-secondary.disabled h2 {
   color: #C5C5C5 !important;
+}
+
+.back-button-xlsxpreview{
+  width: 170px;
 }

@@ -35,6 +35,7 @@ function XlsPreview({ file, ...props }) {
           onClick={() => props?.onBack()}
           variation="secondary"
           icon="ArrowBack"
+          className={"back-button-xlsxpreview"}
         />
         <Button
           label={t("WBH_DOWNLOAD")}
