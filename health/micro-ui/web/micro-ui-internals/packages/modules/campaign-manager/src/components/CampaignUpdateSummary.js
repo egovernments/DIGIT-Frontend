@@ -214,26 +214,6 @@ const CampaignUpdateSummary = (props) => {
               navigationKey: "card2",
               sections: [
                 {
-                  name: "target",
-                  type: "COMPONENT",
-                  component: "CampaignDocumentsPreview",
-                  props: {
-                    documents: data?.[0]?.resources?.filter((i) => i?.type === "boundaryWithTarget"),
-                  },
-                  cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                  cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(4)}>
-                      <span>{t(`CAMPAIGN_EDIT`)}</span>
-                      <EditIcon />
-                    </div>
-                  ),
-                },
-              ],
-            },
-            {
-              navigationKey: "card2",
-              sections: [
-                {
                   name: "facility",
                   type: "COMPONENT",
                   component: "CampaignDocumentsPreview",
@@ -263,6 +243,26 @@ const CampaignUpdateSummary = (props) => {
                   cardHeader: { value: t("USER_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
                     <div className="campaign-preview-edit-container" onClick={() => handleRedirect(3)}>
+                      <span>{t(`CAMPAIGN_EDIT`)}</span>
+                      <EditIcon />
+                    </div>
+                  ),
+                },
+              ],
+            },
+            {
+              navigationKey: "card2",
+              sections: [
+                {
+                  name: "target",
+                  type: "COMPONENT",
+                  component: "CampaignDocumentsPreview",
+                  props: {
+                    documents: data?.[0]?.resources?.filter((i) => i?.type === "boundaryWithTarget"),
+                  },
+                  cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                  cardSecondaryAction: noAction !== "false" && (
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(4)}>
                       <span>{t(`CAMPAIGN_EDIT`)}</span>
                       <EditIcon />
                     </div>
