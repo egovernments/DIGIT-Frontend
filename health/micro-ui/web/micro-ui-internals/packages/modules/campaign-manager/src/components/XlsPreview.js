@@ -39,7 +39,7 @@ function XlsPreview({ file, ...props }) {
         />
         <Button
           label={t("WBH_DOWNLOAD")}
-          onButtonClick={() => props?.onDownload()}
+          onClick={() => props?.onDownload()}
           variation="primary"
           isSuffix
           icon="FileDownload"
