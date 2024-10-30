@@ -183,3 +183,26 @@
 .digit-tag-container{
   gap: 1rem;
 }
+
+.pop-inbox-header{
+  margin: 0rem;
+}
+
+.pagination{
+  justify-content: flex-end;
+}
+
+.search-component-table::-webkit-scrollbar {
+  height: 0.5rem;
+  background-color: #d6d5d4;
+}
+
+.search-component-table::-webkit-scrollbar-track {
+  background-color: #d6d5d4;
+  border-radius: 0.563rem;
+}
+
+.search-component-table::-webkit-scrollbar-thumb {
+  background-color: #d6d5d4;
+  border-radius: 0.563rem;
+}

@@ -6,6 +6,7 @@ import { Card, Tab, Button, SVG, Loader, ActionBar, Toast } from "@egovernments/
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
+import { Header } from "@egovernments/digit-ui-react-components";
 
 const PopInbox = () => {
   const { t } = useTranslation();
@@ -361,6 +362,13 @@ const PopInbox = () => {
   };
 
 
+  const actionIconMap = {
+    "VALIDATE" : {isSuffix:false,icon:"CheckCircle"},
+    "EDIT_AND_SEND_FOR_APPROVAL": {isSuffix:false,icon:"Edit"},
+    "APPROVE" : {isSuffix:false,icon:"CheckCircle"},
+    "SEND_BACK_FOR_CORRECTION": {isSuffix:true,icon:"ArrowForward"},
+  }
+
   if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading || isWorkflowLoading || isEmployeeLoading) {
     return <Loader />;
   }
@@ -368,6 +376,7 @@ const PopInbox = () => {
 
   return (
     <div className="pop-inbox-wrapper">
+      <Header className="pop-inbox-header">{t(`VALIDATE_APPROVE_POPULATIONDATA`)}</Header>
       <SearchJurisdiction
         boundaries={boundaries}
         jurisdiction={{
@@ -393,7 +402,7 @@ const PopInbox = () => {
             <Tab
               activeLink={activeLink?.code}
               configItemKey="code"
-              itemStyle={{ width: "unset !important" }}
+              itemStyle={{ width: "290px" }}
               configNavItems={[
                 {
                   code: "ASSIGNED_TO_ME",
@@ -430,6 +439,8 @@ const PopInbox = () => {
                       type="button"
                       onClick={(action) => handleActionClick(actions?.action)}
                       size={"large"}
+                      icon={actionIconMap[actions.action]?.icon}
+                      isSuffix={actionIconMap[actions.action]?.isSuffix}
                     />
                   ))}
                 </div>

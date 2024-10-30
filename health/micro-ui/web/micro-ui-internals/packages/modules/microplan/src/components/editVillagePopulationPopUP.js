@@ -141,6 +141,7 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
             isDisabled={mutation.isLoading}
           />,
         ]}
+        equalWidthButtons={true}
       />
       {showToast && (
         <Toast style={{ zIndex: 10001 }}
