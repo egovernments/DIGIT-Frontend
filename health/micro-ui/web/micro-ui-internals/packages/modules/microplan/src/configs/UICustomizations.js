@@ -78,6 +78,8 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      console.log("rowwwer",row)
+
       switch (key) {
         case "ACTIONS":
           let options = [];
@@ -122,6 +124,7 @@ export const UICustomizations = {
                 <p>{t(value)}</p>
               </div>
             );
+
           } else {
             return (
               <div>
@@ -256,7 +259,7 @@ export const UICustomizations = {
               variation="secondary"
               icon={"ArrowForward"}
               type="button"
-              isDisabled={!hasRequiredRole}
+              isDisabled={!hasRequiredRole && row.status!="RESOURCE_ESTIMATIONS_APPROVED"}
               className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("START", row)}
             />
