@@ -7,7 +7,6 @@ import { Loader } from "@egovernments/digit-ui-components";
 const SummaryScreen = ({ props: customProps }) => {
   const { t } = useTranslation();
   const history = useHistory();
-  // const [totalFormData, setTotalFormData] = Digit.Hooks.useSessionStorage("MICROPLAN_DATA", {});
   const campaignDetails = customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails;
   const microplanDetails = customProps?.sessionData?.MICROPLAN_DETAILS?.microplanDetails;
   const assumptionsForm = customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm;
@@ -32,12 +31,10 @@ const SummaryScreen = ({ props: customProps }) => {
             values: [
               {
                 key: t("CAMPAIGN_TYPE"),
-                // value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code || "NA",
-                value: t(campaignDetails?.campaignType?.code) || t("NA"),
+                value: t(Digit.Utils.locale.getTransformedLocale(`CAMPAIGN_TYPE_` + campaignDetails?.campaignType?.code)) || "NA",
               },
               {
                 key: t("CMAPAIGN_DISEASE"),
-                // value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.disease?.code || "NA",
                 value: t(campaignDetails?.disease?.code) || t("NA"),
               },
               {
@@ -48,7 +45,6 @@ const SummaryScreen = ({ props: customProps }) => {
             inlineStyles: {
               marginBottom: "0rem",
             },
-            // values: data31(),
           },
         ],
       },

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { InfoCard, Loader, PopUp,Button } from "@egovernments/digit-ui-components";
 import BoundaryKpi from "./BoundaryKpi";
 import { useMyContext } from "../utils/context";
+import { Card as CardNew } from "@egovernments/digit-ui-components";
 
 const BoundarySelection = ({ onSelect, props: customProps, ...props }) => {
   const {state:{boundaryHierarchy,hierarchyType,lowestHierarchy}} = useMyContext()
@@ -94,9 +95,9 @@ const BoundarySelection = ({ onSelect, props: customProps, ...props }) => {
   return (
     <>
       <BoundaryKpi data={statusMap} />
-      <Card>
-        <Header>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</Header>
-        <p className="description-type">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
+      <CardNew className={"selecting-boundary-card"}>
+        <Header styles={{margin:"0rem"}}>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</Header>
+        <p className="boundary-selection-description">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
         <BoundaryWrapper
           hierarchyType={hierarchyType}
           lowest={lowestHierarchy}
@@ -109,7 +110,7 @@ const BoundarySelection = ({ onSelect, props: customProps, ...props }) => {
             handleBoundaryChange(value);
           }}
         ></BoundaryWrapper>
-      </Card>
+      </CardNew>
       {showPopup &&  <PopUp
             className={"boundaries-pop-module"}
             type={"alert"}

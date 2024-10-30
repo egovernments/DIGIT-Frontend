@@ -117,6 +117,7 @@ module.exports = {
         "primary-bg": "#FEEFE7",
         "text-primary": "#363636",
         "error-v2": "#D4351C",
+        "text-secondary": "#787878",
       },
       alert: {
         error: "#b91900",

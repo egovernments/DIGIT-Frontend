@@ -129,7 +129,7 @@ export const UserManagementConfig = {
             ],
             "label": "USER_MANAGEMENT",
             "logoIcon": {
-              "component": "TqmInboxIcon",
+              "component": "Population",
               "customClass": "inbox-links-icon"
             }
           },

@@ -60,7 +60,7 @@ const PlanInbox = () => {
   );
 
   useEffect(() => {
-    if (selectedFilter === "PENDING_FOR_VALIDATION") {
+    if (selectedFilter === "VALIDATED") {
       setActiveLink({ code: "", name: "" });
       setShowTab(false);
     }
@@ -102,8 +102,7 @@ const PlanInbox = () => {
         active: true,
         jurisdiction: jurisdiction,
         status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
-        assignee: activeLink.code === "ASSIGNED_TO_ME" && selectedFilter !== "PENDING_FOR_VALIDATION" ? user?.info?.uuid : "",
-        // assignee: activeLink.code === "ASSIGNED_TO_ME" ? user?.info?.uuid : "",
+        assignee: activeLink.code === "ASSIGNED_TO_ALL" || selectedFilter === "VALIDATED" ? "" : user?.info?.uuid,
         planConfigurationId: microplanId, //list of plan ids
         limit: limitAndOffset?.limit,
         offset: limitAndOffset?.offset,
@@ -119,8 +118,24 @@ const PlanInbox = () => {
             return acc;
           }, {});
 
+          const dynamicResource = item?.resources?.reduce((acc, item) => {
+            if (item?.resourceType && item?.estimatedNumber !== undefined) {
+              acc[item?.resourceType] = item?.estimatedNumber;
+            }
+            return acc;
+          }, {});
+
+          const dynamicAdditionalFields = filteredCensus?.additionalFields
+            ?.filter((field) => field.editable === false) // Filter fields where `editable` is `false`
+            ?.sort((a, b) => a.order - b.order) // Sort by `order`
+            ?.reduce((acc, field) => {
+              acc[field.key] = field.value; // Set `key` as property name and `value` as property value
+              return acc;
+            }, {});
+
           return {
             original: item,
+            censusOriginal: filteredCensus,
             village: filteredCensus?.boundaryCode || "NA",
             villageRoadCondition: filteredCensus?.additionalDetails?.accessibilityDetails?.roadCondition?.code || "NA",
             villageTerrain: filteredCensus?.additionalDetails?.accessibilityDetails?.terrain?.code || "NA",
@@ -128,6 +143,8 @@ const PlanInbox = () => {
             totalPop: filteredCensus?.additionalDetails?.totalPopulation || "NA",
             targetPop: filteredCensus?.additionalDetails?.targetPopulation || "NA",
             ...dynamicSecurityData,
+            ...dynamicResource,
+            ...dynamicAdditionalFields,
           };
         });
         return {
@@ -269,16 +286,16 @@ const PlanInbox = () => {
   }, [selectedFilter, activeLink, jurisdiction, limitAndOffset]);
 
   useEffect(() => {
-    if (selectedFilter === "PENDING_FOR_VALIDATION") {
+    if (selectedFilter === "VALIDATED") {
       setActiveLink({ code: "", name: "" });
       setShowTab(false);
     } else {
       if (!showTab) {
-        setShowTab(true);
         setActiveLink({
           code: "ASSIGNED_TO_ME",
           name: "ASSIGNED_TO_ME",
         });
+        setShowTab(true);
       }
     }
   }, [selectedFilter]);
@@ -288,8 +305,8 @@ const PlanInbox = () => {
   };
 
   const clearFilters = () => {
-    if (selectedFilter !== Object.entries(planWithCensus?.StatusCount)?.[0]?.[0]) {
-      setSelectedFilter(Object.entries(planWithCensus?.StatusCount)?.[0]?.[0]);
+    if (selectedFilter !== Object.entries(activeFilter)?.[0]?.[0]) {
+      setSelectedFilter(Object.entries(activeFilter)?.[0]?.[0]);
     }
   };
 
@@ -297,15 +314,39 @@ const PlanInbox = () => {
     setworkFlowPopUp(action);
   };
 
-  const resources = planWithCensus?.planData?.[0]?.resources || []; // Resources array
-  const resourceColumns = resources.map((resource) => ({
-    name: t(`RESOURCE_TYPE_${resource.resourceType}`), // Dynamic column name for each resourceType
-    cell: (row) => {
-      return resource.estimatedNumber ? resource.estimatedNumber : "NA"; // Return estimatedNumber if exists
-    },
-    sortable: true,
-  }));
+  const getResourceColumns = () => {
+    const resources = planWithCensus?.planData?.[0]?.resources || []; // Resources array
+    return (resources || []).map((resource) => ({
+      name: t(`RESOURCE_TYPE_${resource.resourceType}`), // Dynamic column name for each resourceType
+      cell: (row) => {
+        return row?.[resource?.resourceType] || "NA"; // Return estimatedNumber if exists
+      },
+      sortable: true,
+    }));
+  };
 
+  const getAdditionalFieldsColumns = () => {
+    return (planWithCensus?.censusData?.[0]?.additionalFields || [])
+      .filter((field) => !field?.editable)
+      .sort((a, b) => a?.order - b?.order)
+      .map((field) => ({
+        name: t(field?.key),
+        selector: (row) => {
+          return row?.[field?.key] || t("ES_COMMON_NA");
+        },
+        sortable: true,
+      }));
+  };
+
+  const getSecurityDetailsColumns = () => {
+    const sampleSecurityData = planWithCensus?.censusData?.[0]?.additionalDetails?.securityDetails || {};
+    const securityColumns = Object.keys(sampleSecurityData).map((key) => ({
+      name: t(`SECURITY_DETAIL_${key}`),
+      cell: (row) => row[`securityDetail_${key}`],
+      sortable: true,
+    }));
+    return securityColumns;
+  };
   const columns = [
     {
       name: t(`INBOX_VILLAGE`),
@@ -327,17 +368,19 @@ const PlanInbox = () => {
       cell: (row) => t(row?.villageTransportMode) || "NA",
       sortable: true,
     },
-    {
-      name: t(`TOTAL_POPULATION`),
-      cell: (row) => t(row?.totalPop) || "NA",
-      sortable: true,
-    },
-    {
-      name: t(`TARGET_POPULATION`),
-      cell: (row) => t(row?.targetPop) || "NA",
-      sortable: true,
-    },
-    ...resourceColumns,
+    ...getAdditionalFieldsColumns(),
+    ...getResourceColumns(),
+    ...getSecurityDetailsColumns(),
+    // {
+    //   name: t(`TOTAL_POPULATION`),
+    //   cell: (row) => t(row?.totalPop) || "NA",
+    //   sortable: true,
+    // },
+    // {
+    //   name: t(`TARGET_POPULATION`),
+    //   cell: (row) => t(row?.targetPop) || "NA",
+    //   sortable: true,
+    // },
   ];
 
   // // Always return an array for `securityColumns`, even if it's empty
@@ -465,7 +508,7 @@ const PlanInbox = () => {
                         variation="secondary"
                         label={t(action.action)}
                         type="button"
-                        onClick={(action) => handleActionClick(action?.target?.textContent)}
+                        onClick={(curr) => handleActionClick(action?.action)}
                         size={"large"}
                       />
                     ))}
@@ -544,7 +587,7 @@ const PlanInbox = () => {
           commentPath="workflow.comments"
           onSuccess={(data) => {
             history.push(`/${window.contextPath}/employee/microplan/microplan-success`, {
-              fileName: data?.PlanConfiguration?.[0]?.name,
+              responseId: data?.PlanConfiguration?.[0]?.name,
               message: t(`FINALISED_MICROPLAN_SUCCESSFUL`),
               back: t(`GO_BACK_TO_HOME`),
               backlink: `/${window.contextPath}/employee`,

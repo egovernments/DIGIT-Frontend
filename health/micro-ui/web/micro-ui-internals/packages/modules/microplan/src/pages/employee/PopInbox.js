@@ -192,7 +192,7 @@ const PopInbox = () => {
         tenantId: tenantId,
         source: microplanId,
         status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
-        assignee: activeLink.code === "ASSIGNED_TO_ALL" || selectedFilter === "PENDING_FOR_VALIDATION" ? "" : user?.info?.uuid,
+        assignee: activeLink.code === "ASSIGNED_TO_ALL" || selectedFilter === "VALIDATED" ? "" : user?.info?.uuid,
         jurisdiction: jurisdiction,
         limit: limitAndOffset?.limit,
         offset: limitAndOffset?.offset
@@ -223,7 +223,7 @@ const PopInbox = () => {
     },
   };
 
-  const { isLoading: isEmployeeLoading, data: employeeData } = Digit.Hooks.useCustomAPIHook(reqCri);
+  const { isLoading: isEmployeeLoading, data: employeeData, refetch: refetchHrms } = Digit.Hooks.useCustomAPIHook(reqCri);
 
 
   useEffect(() => {
@@ -236,6 +236,11 @@ const PopInbox = () => {
     setEmployeeNameMap(nameMap);
   }, [employeeData]);
 
+  useEffect(() => {
+    if (assigneeUuids?.length > 0) {
+      refetchHrms();
+    }
+  }, [assigneeUuids]);
 
   useEffect(() => {
     if (data) {
@@ -278,7 +283,7 @@ const PopInbox = () => {
   }, [selectedFilter, jurisdiction, limitAndOffset, activeLink]);
 
   useEffect(() => {
-    if (selectedFilter === "PENDING_FOR_VALIDATION") {
+    if (selectedFilter === "VALIDATED") {
       setActiveLink({ code: "", name: "" });
       setShowTab(false);
     } else {
@@ -454,7 +459,7 @@ const PopInbox = () => {
                 )}
               </div>
             )}
-            {isFetching ? <Loader /> : <PopInboxTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap} onSuccessEdit={() => refetch()} />}
+            <PopInboxTable progressPending={isFetching || isEmployeeLoading} currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap} onSuccessEdit={() => refetch()} />
           </Card>
         </div>
       </div>

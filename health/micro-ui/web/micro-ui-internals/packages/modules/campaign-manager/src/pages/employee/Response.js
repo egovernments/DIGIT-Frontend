@@ -1,8 +1,8 @@
 import React, { useState, Fragment } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ActionBar, SubmitBar } from "@egovernments/digit-ui-react-components";
-import { PanelCard } from "@egovernments/digit-ui-components";
+import {  } from "@egovernments/digit-ui-react-components";
+import { PanelCard ,ActionBar,Button} from "@egovernments/digit-ui-components";
 
 const Response = () => {
   const { t } = useTranslation();
@@ -15,12 +15,9 @@ const Response = () => {
   const { state } = useLocation();
   const isMobile = window.Digit.Utils.browser.isMobile();
 
-  const navigate = (page) => {
-    switch (page) {
-      case "contracts-inbox": {
-        history.push(`/${window.contextPath}/employee/tqm/summary`);
-      }
-    }
+  const navigate = (link) => {
+        history.push(link ? link : `/${window.contextPath}/employee/`);
+      
   };
 
   const children = [
@@ -47,7 +44,7 @@ const Response = () => {
         footerChildren={[]}
         children={children}
       />
-      {isMobile ? (
+      {/* {isMobile ? (
         <Link to={state?.actionLink ? state?.actionLink : `/${window.contextPath}/employee/`}>
           <SubmitBar label={state?.actionLabel ? t(state?.actionLabel) : t("ES_CAMPAIGN_RESPONSE_ACTION")} />
         </Link>
@@ -57,7 +54,18 @@ const Response = () => {
             <SubmitBar label={state?.actionLabel ? t(state?.actionLabel) : t("ES_CAMPAIGN_RESPONSE_ACTION")} />
           </Link>
         </ActionBar>
-      )}
+      )} */}
+      <ActionBar
+  actionFields={[
+     <Button  label={state?.secondaryActionLabel ? t(state?.secondaryActionLabel) : t("ES_CAMPAIGN_RESPONSE_ACTION")} onClick={()=>navigate(state?.secondaryActionLink)} type="button" variation="secondary"/>,
+      <Button icon="ArrowForward" isSuffix label={state?.actionLabel ? t(state?.actionLabel) : t("ES_CAMPAIGN_RESPONSE_ACTION")} onClick={()=>navigate(state?.actionLink)} type="button"/>
+  ]}
+  className=""
+  maxActionFieldsAllowed={5}
+  setactionFieldsToRight
+  sortActionFields
+  style={{}}
+/>
     </>
   );
 };
