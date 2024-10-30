@@ -13,6 +13,8 @@ const ViewChecklist = () => {
     const campaignName = searchParams.get("campaignName");
     const role = searchParams.get("role");
     const rlt = searchParams.get("role");
+    const projectType = searchParams.get("projectType");
+    const campaignId = searchParams.get("campaignId");
     const roleLocal = (!rlt.startsWith("ACCESSCONTROL_ROLES_ROLES_")) ? "ACCESSCONTROL_ROLES_ROLES_" + rlt : rlt;
     const checklistType = searchParams.get("checklistType");
     let clt = searchParams.get("checklistType");
@@ -175,16 +177,7 @@ const ViewChecklist = () => {
                             onClick={() => {
                                 setShowPopUp(false);
                             }}
-                        />,
-                        <Button
-                            type={"button"}
-                            size={"large"}
-                            variation={"primary"}
-                            label={t("UPDATE_CHECKLIST")}
-                            onClick={() => {
-                                history.push(`/${window.contextPath}/employee/campaign/checklist/update?campaignName=${campaignName}&role=${role}&checklistType=${checklistType}`)
-                            }}
-                        />,
+                        />
                     ]}
                     sortFooterChildren={true}
                 >
@@ -216,7 +209,7 @@ const ViewChecklist = () => {
                 label={t("UPDATE")}
                 config={config}
                 onSubmit={() => {
-                    history.push(`/${window.contextPath}/employee/campaign/checklist/update?campaignName=${campaignName}&role=${role}&checklistType=${checklistType}`)
+                    history.push(`/${window.contextPath}/employee/campaign/checklist/update?campaignName=${campaignName}&role=${role}&checklistType=${checklistType}&projectType=${projectType}&campaignId=${campaignId}`)
                 }}
                 fieldStyle={{ marginRight: 0 }}
                 noBreakLine={true}

@@ -7,7 +7,6 @@ import { Loader } from "@egovernments/digit-ui-components";
 const SummaryScreen = ({ props: customProps }) => {
   const { t } = useTranslation();
   const history = useHistory();
-  // const [totalFormData, setTotalFormData] = Digit.Hooks.useSessionStorage("MICROPLAN_DATA", {});
   const campaignDetails = customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails;
   const microplanDetails = customProps?.sessionData?.MICROPLAN_DETAILS?.microplanDetails;
   const assumptionsForm = customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm;
@@ -26,25 +25,20 @@ const SummaryScreen = ({ props: customProps }) => {
             values: [
               {
                 key: t("CAMPAIGN_TYPE"),
-                // value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code || "NA",
-                value: campaignDetails?.campaignType?.code || "NA",
+                value: t(Digit.Utils.locale.getTransformedLocale(`CAMPAIGN_TYPE_` + campaignDetails?.campaignType?.code)) || "NA",
               },
               {
                 key: t("CMAPAIGN_DISEASE"),
-                // value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.disease?.code || "NA",
-                value: campaignDetails?.disease?.code || "NA",
+                value: t(campaignDetails?.disease?.code) || t("NA"),
               },
               {
                 key: t("RESOURCE_DISTRIBUTION_STRATEGY"),
-                // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
-                // value: totalFormData.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode || "NA",
-                value: campaignDetails?.distributionStrat?.resourceDistributionStrategyCode || "NA",
+                value: t(campaignDetails?.distributionStrat?.resourceDistributionStrategyCode) || t("NA"),
               },
             ],
             inlineStyles: {
               marginBottom: "0rem",
             },
-            // values: data31(),
           },
         ],
       },
@@ -136,21 +130,6 @@ const SummaryScreen = ({ props: customProps }) => {
           },
         ],
       },
-      // {
-      //     navigationKey: "card6",
-      //     sections:
-
-      //             [
-      //                 {
-
-      //                     type: "COMPONENT",
-      //                     component: "UserAccessManagement",
-      //                     props: {
-      //                     },
-      //                 },
-      //             ]
-
-      // },
       {
         navigationKey: "card7",
         noCardStyle: true,
@@ -165,22 +144,6 @@ const SummaryScreen = ({ props: customProps }) => {
           },
         ],
       },
-
-      
-
-      // type: "COMPONENT",
-      //                     component: "FormulaSection",
-
-      //                     props: {
-
-      //                         title:"GENERAL_ESTIMATION",
-      //                         threeInputArr:[["Number of households per boundary","Population of the boundary","Divided by","Average people HJ/H"],
-      //                         [ "Number of bednets per boundary","Population of the boundary","Divided by","Average people HJ/H"],
-      //                         [ "Number of bales per boundary","Population of the boundary","Divided by","Average people HJ/H"]
-
-      //                     ]
-
-      //                     },
       {
         navigationKey: "card6",
         noCardStyle: true,

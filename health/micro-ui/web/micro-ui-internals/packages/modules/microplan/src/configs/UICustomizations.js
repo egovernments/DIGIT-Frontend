@@ -93,13 +93,13 @@ export const UICustomizations = {
                 if (e.name == "Edit Setup") {
                   // Use window.location.href to navigate
                   window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${1}&microplanId=${row.id}&campaignId=${
-                    row.CampaignDetails.id
+                    row.campaignDetails.id
                   }`;
                 }
                 if (e.name == "View Summary") {
                   // Use window.location.href to navigate
                   window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${
-                    row.CampaignDetails.id
+                    row.campaignDetails.id
                   }&setup-completed=${true}`;
                 }
               }}
@@ -216,7 +216,7 @@ export const UICustomizations = {
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       const rolesCodes = Digit.Hooks.useSessionStorage("User", {})[0]?.info?.roles;
       const roles = rolesCodes.map((item) => item.code);
-      const hasRequiredRole = roles.some((role) => role === "ROOT_POPULATION_DATA_APPROVER" || role === "ROOT_POPULATION_APPROVER");
+      const hasRequiredRole = roles.some((role) => role === "ROOT_POPULATION_DATA_APPROVER" || role === "POPULATION_DATA_APPROVER");
       switch (key) {
         case "ACTIONS":
           const onActionSelect = (key, row) => {
@@ -257,7 +257,7 @@ export const UICustomizations = {
               icon={"ArrowForward"}
               type="button"
               isDisabled={!hasRequiredRole}
-              className="dm-workbench-download-template-btn dm-hover"
+              // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("START", row)}
             />
           ) : row.status === "RESOURCE_ESTIMATIONS_APPROVED" ? (
@@ -266,16 +266,16 @@ export const UICustomizations = {
               variation="secondary"
               icon={"FileDownload"}
               type="button"
-              className="dm-workbench-download-template-btn dm-hover"
+              // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("DOWNLOAD", row)}
             />
           ) : (
             <ButtonNew
               label={t("WBH_EDIT")}
               variation="secondary"
-              icon={"EditIcon"}
+              icon={"Edit"}
               type="button"
-              className="dm-workbench-download-template-btn dm-hover"
+              // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("EDIT", row)}
             />
           );

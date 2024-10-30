@@ -1,7 +1,7 @@
-import { Header, LoaderWithGap} from "@egovernments/digit-ui-react-components";
-import React, {  useState, useEffect, Fragment, useMemo } from "react";
+import { Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
+import React, { useState, useEffect, Fragment, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { InfoCard, PopUp, Toast, Button, Stepper, TextBlock , Card} from "@egovernments/digit-ui-components";
+import { InfoCard, PopUp, Toast, Button, Stepper, TextBlock, Card, InfoButton } from "@egovernments/digit-ui-components";
 import axios from "axios";
 
 /**
@@ -57,14 +57,14 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
 
   const { data: boundaryHierarchy } = Digit.Hooks.useCustomMDMS(tenantId, "hcm-microplanning", [{ name: "hierarchyConfig" }], {
     select: (data) => {
-       const item = data?.["hcm-microplanning"]?.hierarchyConfig?.find((item) => item.isActive)
-       return item?.hierarchy
-      },
-  },{schemaCode:"BASE_MASTER_DATA_INITIAL"});
+      const item = data?.["hcm-microplanning"]?.hierarchyConfig?.find((item) => item.isActive)
+      return item?.hierarchy
+    },
+  }, { schemaCode: "BASE_MASTER_DATA_INITIAL" });
   const totalData = Digit.SessionStorage.get("MICROPLAN_DATA");
   const campaignType = totalData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code
   const [loader, setLoader] = useState(false);
-  const [ downloadTemplateLoader,setDownloadTemplateLoader] = useState(false);
+  const [downloadTemplateLoader, setDownloadTemplateLoader] = useState(false);
   const XlsPreview = Digit.ComponentRegistryService.getComponent("XlsPreview");
   const BulkUpload = Digit.ComponentRegistryService.getComponent("BulkUpload");
   const baseKey = 4;
@@ -87,26 +87,26 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
 
   const enrichFileDetails = (uploadedFile) => {
     if (!uploadedFile || uploadedFile.length === 0) return undefined;
-  
+
     const fileDetails = uploadedFile[0];
-  
+
     // Extract the inputFileType (everything after the last dot in filename)
     fileDetails.inputFileType = fileDetails.filename
       ? fileDetails.filename.substring(fileDetails.filename.lastIndexOf('.') + 1)
       : undefined;
-  
+
     // Set the templateIdentifier based on the fileDetails.type
     fileDetails.templateIdentifier = fileDetails.type === 'boundaryWithTarget'
       ? 'Population'
       : fileDetails.type === 'facilityWithBoundary'
-      ? 'Facility'
-      : undefined;
-  
+        ? 'Facility'
+        : undefined;
+
     uploadedFile[0] = fileDetails;
   };
 
   useEffect(() => {
-    if(type=='boundary'){
+    if (type == 'boundary') {
       setUploadedFile(props?.props?.sessionData?.UPLOADBOUNDARYDATA?.[type]?.uploadedFile || []);
       setFileName(props?.props?.sessionData?.UPLOADBOUNDARYDATA?.[type]?.uploadedFile?.[0]?.fileName || null);
       setApiError(null);
@@ -114,9 +114,9 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       setDownloadError(false);
       setIsError(false);
       setIsSuccess(props?.props?.sessionData?.UPLOADBOUNDARYDATA?.[type]?.isSuccess || null);
-      setShowPopUp(!props?.props?.sessionData?.UPLOADBOUNDARYDATA?.[type]?.uploadedFile?.length || 0);
+      setShowPopUp(!props?.props?.sessionData?.UPLOADBOUNDARYDATA?.[type]?.uploadedFile?.length || false);
     }
-    else if(type=='facilityWithBoundary'){
+    else if (type == 'facilityWithBoundary') {
       setUploadedFile(props?.props?.sessionData?.UPLOADFACILITYDATA?.[type]?.uploadedFile || []);
       setFileName(props?.props?.sessionData?.UPLOADFACILITYDATA?.[type]?.uploadedFile?.[0]?.fileName || null);
       setApiError(null);
@@ -124,12 +124,12 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       setDownloadError(false);
       setIsError(false);
       setIsSuccess(props?.props?.sessionData?.UPLOADFACILITYDATA?.[type]?.isSuccess || null);
-      setShowPopUp(!props?.props?.sessionData?.UPLOADFACILITYDATA?.[type]?.uploadedFile?.length || 0);
+      setShowPopUp(!props?.props?.sessionData?.UPLOADFACILITYDATA?.[type]?.uploadedFile?.length || false);
     }
   }, [type, props?.props?.sessionData]);
 
   const generateData = async () => {
-    if(boundaryHierarchy && type && id) {
+    if (boundaryHierarchy && type && id) {
       const ts = new Date().getTime();
       const reqCriteria = {
         url: `/project-factory/v1/data/_generate`,
@@ -142,13 +142,13 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           source: "microplan",
         },
         body: {
-          RequestInfo : {
+          RequestInfo: {
             authToken: Digit.UserService.getUser().access_token,
             msgId: `${ts}|${Digit.StoreData.getCurrentLanguage()}`
           }
         }
       };
-  
+
       try {
         await axios.post(reqCriteria.url, reqCriteria.body, {
           params: reqCriteria.params,
@@ -158,7 +158,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       }
     }
   };
-  
+
 
   useEffect(() => {
     enrichFileDetails(uploadedFile);
@@ -215,7 +215,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   };
 
   var translateReadMeInfo = (schema) => {
-    if(schema){
+    if (schema) {
       const translatedSchema = schema.map((item) => {
         return {
           header: t(item.header),
@@ -233,7 +233,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       });
       return translatedSchema;
     }
-    else{
+    else {
       return null;
     }
   };
@@ -295,7 +295,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       const newReadMeFacility = await translateReadMeInfo(
         readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === `${type}-MP`)?.[0]?.texts
       );
-      const newReadMeUser = await translateReadMeInfo(readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === `${type-'MP'}`)?.[0]?.texts);
+      const newReadMeUser = await translateReadMeInfo(readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === `${type - 'MP'}`)?.[0]?.texts);
       const newReadMeboundary = await translateReadMeInfo(
         readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === `${type}-MP`)?.[0]?.texts
       );
@@ -346,28 +346,28 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
         setShowToast({ key: "error", label: t("HCM_ERROR_MORE_THAN_ONE_FILE") });
         return;
       }
-  
+
       setFileName(file?.[0]?.name);
       const module = "HCM-ADMIN-CONSOLE-CLIENT";
-  
+
       // Try uploading the file
       const { data: { files: fileStoreIds } = {} } = await Digit.UploadServices.MultipleFilesStorage(module, file, tenantId);
-  
+
       // If file upload fails (fileStoreIds is undefined or empty), show an error toast
       if (!fileStoreIds || fileStoreIds.length === 0) {
         throw new Error(t("HCM_ERROR_FILE_UPLOAD_FAILED"));
       }
-  
+
       const filesArray = [fileStoreIds?.[0]?.fileStoreId];
-  
+
       // Try fetching the uploaded file URL
       const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, tenantId);
-  
+
       // If file URL fetch fails (fileUrl is undefined or empty), show an error toast
       if (!fileUrl || fileUrl.length === 0) {
         throw new Error(t("HCM_ERROR_FILE_FETCH_FAILED"));
       }
-  
+
       const fileData = fileUrl
         .map((i) => {
           const urlParts = i?.url?.split("/");
@@ -375,7 +375,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           const id = fileUrl?.[0]?.id;
           const fileType =
             type === "facilityWithBoundary" ? "facility" : type === "userWithBoundary" ? "user" : type === "boundary" ? "boundaryWithTarget" : type;
-  
+
           return {
             filestoreId: id,
             resourceId: resourceId,
@@ -384,20 +384,20 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           };
         })
         .map(({ id, ...rest }) => rest);
-  
+
       setUploadedFile(fileData);
       setErrorsType((prevErrors) => ({
         ...prevErrors,
         [type]: "", // Clear the error message
       }));
       setShowInfoCard(false);
-  
+
     } catch (error) {
       // const message = error?.message || t("HCM_ERROR_DEFAULT_MESSAGE");
       setShowToast({ key: "error", label: t("HCM_ERROR_FILE_UPLOAD_FAILED") });
     }
   };
-  
+
 
   const onFileDelete = (file, index) => {
     setUploadedFile((prev) => prev.filter((i) => i.id !== file.id));
@@ -434,7 +434,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             tenantId,
             id,
             baseTimeOut?.["HCM-ADMIN-CONSOLE"],
-            { source : "microplan" }
+            { source: "microplan" }
           );
           if (temp?.isError) {
             setLoader(false);
@@ -504,7 +504,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             setSheetErrors(temp?.additionalDetails?.sheetErrors?.length || 0);
             const processedFileStore = temp?.processedFilestoreId;
             if (!processedFileStore) {
-              if(temp?.status=="failed" && temp?.additionalDetails?.error){
+              if (temp?.status == "failed" && temp?.additionalDetails?.error) {
                 try {
                   const parsedError = JSON.parse(temp.additionalDetails.error);
                   const errorMessage = parsedError?.description || parsedError?.message || t("HCM_VALIDATION_FAILED");
@@ -514,7 +514,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
                   setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
                 }
               }
-              else{
+              else {
                 setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
               }
               return;
@@ -550,7 +550,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
               setIsError(true);
             }
           }
-        } catch (error) { 
+        } catch (error) {
           console.log(error);
         }
       }
@@ -622,11 +622,19 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             setShowToast({ key: "info", label: t("ERROR_WHILE_DOWNLOADING_FROM_FILESTORE") });
           }
         },
-        onError: (result) => {
-          setDownloadTemplateLoader(false);
-          setDownloadError(true);
-          generateData();
-          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+        onError: (error, result) => {
+          const errorCode = error?.response?.data?.Errors?.[0]?.code;
+          if (errorCode == "NativeIoException") {
+            setDownloadError(true);
+            setDownloadTemplateLoader(false);
+            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+          }
+          else {
+            setDownloadTemplateLoader(false);
+            setDownloadError(true);
+            generateData();
+            setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+          }
         },
       }
     );
@@ -651,8 +659,8 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   }, [key]);
 
   const onStepClick = (currentStepForKey) => {
-    const stepKey= currentStepForKey + baseKey;
-    if(stepKey > key  && !totalData?.UPLOADBOUNDARYDATA?.boundary?.isSuccess) {
+    const stepKey = currentStepForKey + baseKey;
+    if (stepKey > key && !totalData?.UPLOADBOUNDARYDATA?.boundary?.isSuccess) {
       return;
     }
     setShowToast(null);
@@ -670,7 +678,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
               wrapperClassName={"stepper-wrapper"}
             />
           </Card>
-          <Card className="stepper-card">
+          <Card className="vertical-stepper-card">
             <Stepper
               customSteps={["HCM_UPLOAD_BOUNDARY_MICROPLAN", "HCM_UPLOAD_FACILITY_MICROPLAN"]}
               currentStep={key - baseKey + 1}
@@ -680,11 +688,11 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           </Card>
         </div>
         {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
-        {downloadTemplateLoader && <LoaderWithGap/>}
+        {downloadTemplateLoader && <LoaderWithGap />}
         <div className="card-container" style={{ width: "100%" }}>
           <Card>
-            <div className="campaign-bulk-upload">
-              <Header className="digit-form-composer-sub-header">
+            <div className="microplan-bulk-upload">
+              <Header className="uploader-sub-heading">
                 {type === "boundary" ? t("WBH_UPLOAD_TARGET_MICROPLAN") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY_MICROPLAN") : t("WBH_UPLOAD_UNKNOWN")}
               </Header>
               <Button
@@ -697,7 +705,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
               />
             </div>
             {uploadedFile.length === 0 && (
-              <div className="info-text">
+              <div >
                 {type === "boundary" ? t("HCM_BOUNDARY_MESSAGE") : type === "facilityWithBoundary" ? t("HCM_FACILITY_MESSAGE") : t("HCM_USER_MESSAGE")}
               </div>
             )}
@@ -734,28 +742,22 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             populators={{
               name: "infocard",
             }}
-            variant= {sheetErrors ? "error" : "default"}
+            variant={sheetErrors ? "error" : "default"}
             style={{ margin: "0rem", maxWidth: "100%", marginTop: "1rem" }}
             additionalElements={
               sheetErrors ? (
-                  [<Button
-                    type="button"
-                    size="large"
-                    variation="default"
-                    label={t("HCM_VIEW_ERROR")}
-                    onClick={() => setShowPreview(true)}
-                    style={{
-                      marginTop: "1rem",
-                      backgroundColor: "#B91900"
-                    }}
-                    textStyles={{
-                      color: "#FFFFFF"
-                    }}
-                  />]
+                [<InfoButton
+                  infobuttontype="error"
+                  label={t("HCM_VIEW_ERROR")}
+                  onClick={() => setShowPreview(true)}
+                  size=""
+                  style={{}}
+                />
+                ]
               ) : (
                 readMeInfo[type]?.map((info, index) => (
                   <div key={index} style={{ display: "flex", flexDirection: "column" }}>
-                    <ul style={{ paddingLeft: 0 }}>
+                    <ul style={{ paddingLeft: 0, marginTop: 0, marginBottom: 0 }}>
                       {info?.descriptions.map((desc, i) => (
                         <li key={i} className="info-points">
                           {desc.isBold ? (
@@ -771,7 +773,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
               )
             }
             label={
-              sheetErrors 
+              sheetErrors
                 ? `${sheetErrors} ${sheetErrors === 1 ? t("HCM_MICROPLAN_SINGLE_ERROR") : t("HCM_MICROPLAN_PLURAL_ERRORS")} ${t("HCM_MICROPLAN_ERRORS_FOUND")}`
                 : t("HCM_MICROPLAN_DATA_UPLOAD_GUIDELINES")
             }

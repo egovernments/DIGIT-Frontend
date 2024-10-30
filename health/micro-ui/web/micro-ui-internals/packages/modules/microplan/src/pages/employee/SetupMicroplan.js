@@ -155,25 +155,25 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
         }
 
         //invalidation of files session
-        if(data?.invalidateSession && data?.triggeredFrom==="BOUNDARY"){  
+        if (data?.invalidateSession && data?.triggeredFrom === "BOUNDARY") {
           // setTotalFormData((prev) => {
           //   return {
           //     ...prev,
           //     UPLOADBOUNDARYDATA: {},
           //   };
           // })
-          const currentSession = Digit.SessionStorage.get("MICROPLAN_DATA")
+          const currentSession = Digit.SessionStorage.get("MICROPLAN_DATA");
           setParams({
             ...currentSession,
             UPLOADBOUNDARYDATA: null,
-            UPLOADFACILITYDATA: null
+            UPLOADFACILITYDATA: null,
           });
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
         }
 
         //invalidation of formula and hypothesis session
-        if(data?.invalidateSession && data?.triggeredFrom==="ASSUMPTIONS_FORM"){
+        if (data?.invalidateSession && data?.triggeredFrom === "ASSUMPTIONS_FORM") {
           // setTotalFormData((prev) => {
           //   return {
           //     ...prev,
@@ -181,11 +181,11 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
           //     FORMULA_CONFIGURATION:{}
           //   };
           // })
-          const currentSession = Digit.SessionStorage.get("MICROPLAN_DATA")
+          const currentSession = Digit.SessionStorage.get("MICROPLAN_DATA");
           setParams({
             ...currentSession,
             HYPOTHESIS: null,
-            FORMULA_CONFIGURATION:null
+            FORMULA_CONFIGURATION: null,
           });
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
@@ -258,7 +258,12 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   };
 
   const onStepClick = (step) => {
-    // setCurrentStep(prev => prev + 1)
+    if (step > currentStep) return;
+    const filteredSteps = microplanConfig?.[0].form.filter((item) => item.stepCount === String(step + 1));
+    const minKeyStep = filteredSteps.reduce((min, step) => {
+      return parseInt(step.key) < parseInt(min.key) ? step : min;
+    });
+    setCurrentKey(parseInt(minKeyStep?.key));
   };
 
   const moveToPreviousStep = () => {
@@ -329,7 +334,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
           "ROLE_ACCESS_CONFIGURATION",
           "SUMMARY",
         ]}
-        onStepClick={() => null}
+        onStepClick={onStepClick}
         currentStep={currentStep + 1}
         activeSteps={active}
       />
@@ -409,6 +414,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
           onClose={() => setShowPopUp(false)}
           onOverlayClick={() => setShowPopUp(false)}
           type="alert"
+          className={"alert-popup-setup-microplan"}
         >
           <div>{t(`${filteredConfig?.[0]?.form?.[0]?.body?.[0]?.showPopupOnSubmission?.alertMessage}`)}</div>
         </PopUp>

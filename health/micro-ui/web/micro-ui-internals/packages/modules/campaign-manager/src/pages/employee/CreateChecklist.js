@@ -19,7 +19,8 @@ const CreateChecklist = () => {
   const checklistTypeLocal = (!clt.startsWith("HCM_CHECKLIST_TYPE_")) ? "HCM_CHECKLIST_TYPE_" + clt : clt;
   const clTranslated = t(`${checklistTypeLocal}`);
   const projectName = searchParams.get("campaignName");
-  const campagnType = searchParams.get("campaignType");
+  const projectType = searchParams.get("projectType");
+  const campaignId = searchParams.get("campaignId");
   const [checklistTypeCode, setChecklistTypeCode] = useState(null);
   const [roleCode, setRoleCode] = useState(null);
   const flow = searchParams.get("flow");
@@ -340,7 +341,6 @@ const CreateChecklist = () => {
     return result;
   }
   let uniqueLocal;
-console.log(def_data,'def_data');
 
   const payloadData = (data) => {
 
@@ -408,8 +408,10 @@ console.log(def_data,'def_data');
         history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
           message: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE",
           preText: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE_PRE_TEXT",
-          actionLabel: "ES_CHECKLIST_RESPONSE_ACTION",
-          actionLink: `/${window.contextPath}/employee/campaign/my-campaign`,
+          actionLabel: "CS_CHECKLIST_NEW_RESPONSE_ACTION",
+          actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}`,
+          secondaryActionLabel: "MY_CAMPAIGN",
+          secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign`,
         });
       } else {
         setShowToast({ label: "CHECKLIST_CREATED_FAILED", isError: "true" });

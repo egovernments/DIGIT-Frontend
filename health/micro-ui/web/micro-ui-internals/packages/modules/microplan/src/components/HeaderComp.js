@@ -20,7 +20,7 @@ const HeaderComp = ({ title,styles = {} }) => {
     return (
         <div>
             {/* Apply the merged styles */}
-            <Header className="header-comp-blue" style={mergedStyles}>
+            <Header style={mergedStyles}>
                 {t(title)}
             </Header>
         </div>

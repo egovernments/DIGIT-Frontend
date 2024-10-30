@@ -12,7 +12,7 @@ const defaultSearchValues = {
     showTab: true, // setting true will enable tab screen
     TabSearchconfig: [ // all tab config should be added in json array
       {
-        label: "MY_MICROPLANS",
+        label: "ALL",
         type: "search",
         apiDetails: {
           serviceName: "/plan-service/config/_search", 

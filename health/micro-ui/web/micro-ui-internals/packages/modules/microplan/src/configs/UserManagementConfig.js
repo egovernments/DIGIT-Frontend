@@ -37,8 +37,8 @@ export const UserManagementConfig = {
             "secondaryLabel": "ES_COMMON_CLEAR_SEARCH",
             "minReqFields": 0,
             "defaultValues": {
-              name:"",
-              phone:""
+              "name":"",
+              "phone":""
 
             },
             "fields": [
@@ -129,7 +129,7 @@ export const UserManagementConfig = {
             ],
             "label": "USER_MANAGEMENT",
             "logoIcon": {
-              "component": "TqmInboxIcon",
+              "component": "Population",
               "customClass": "inbox-links-icon"
             }
           },
@@ -139,7 +139,7 @@ export const UserManagementConfig = {
         "filter": {
           "uiConfig": {
             "headerLabel": "ROLES",
-            "secondaryLabel": "ES_COMMON_CLEAR_SEARCH",
+            "secondaryLabel": "ES_COMMON_CLEAR_FILTER",
             "formClassName": "filter",
             "type": "filter",
             "typeMobile":"sort",

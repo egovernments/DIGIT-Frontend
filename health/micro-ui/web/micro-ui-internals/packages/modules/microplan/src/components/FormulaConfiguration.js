@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment, useContext, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Card, Header, DeleteIconv2, LabelFieldPair, AddIcon, Button, CardText } from "@egovernments/digit-ui-react-components";
-import { Dropdown, CheckBox, PopUp } from "@egovernments/digit-ui-components";
+import { Header, DeleteIconv2, LabelFieldPair, AddIcon, CardText } from "@egovernments/digit-ui-react-components";
+import { Dropdown, CheckBox, PopUp, Card, Button, Divider } from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR } from "../utils/utilities";
 import { useFormulaContext } from "./FormulaConfigWrapper";
 import _ from "lodash";
@@ -28,7 +28,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
     setFormulas(initialFormulas);
   }, [initialFormulas]);
 
-  const handleDeleteClick = (index,formula) => {
+  const handleDeleteClick = (index, formula) => {
     setFormulaToDelete(formula);
     setShowPopUp(true);
   };
@@ -43,7 +43,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
 
       //matching output for deleting a formula
       const updatedFormulas = formulas.filter(operation => {
-        if(operation.output === formulaToDelete.output){
+        if (operation.output === formulaToDelete.output) {
           return false
         }
         return true
@@ -70,27 +70,27 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
         //now basically check whether this is getting used in any of the input or assumptionValue
         //if yes clear that
         const updatedFormulaValues = prevValues?.map(formula => {
-          if(formula.input === deletedFormulaOutput && formula.assumptionValue === deletedFormulaOutput){
+          if (formula.input === deletedFormulaOutput && formula.assumptionValue === deletedFormulaOutput) {
             const updatedFormulaObj = {
               ...formula,
-              input:"",
-              assumptionValue:""
+              input: "",
+              assumptionValue: ""
             }
             return updatedFormulaObj
           }
-          else if(formula.input === deletedFormulaOutput  ){
+          else if (formula.input === deletedFormulaOutput) {
             const updatedFormulaObj = {
               ...formula,
-              input:""
+              input: ""
             }
             return updatedFormulaObj
-          }else if(formula.assumptionValue === deletedFormulaOutput){
+          } else if (formula.assumptionValue === deletedFormulaOutput) {
             const updatedFormulaObj = {
               ...formula,
-              assumptionValue:""
+              assumptionValue: ""
             }
             return updatedFormulaObj
-          } else{
+          } else {
             return formula
           }
         })
@@ -135,8 +135,8 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
 
   return (
     <>
-      <Card>
-        <Header>{t(category)}</Header>
+      <Card className="middle-child">
+        <Header className="uploader-sub-heading">{t(category)}</Header>
         <p className="mp-description">{t(`Please configure the formula with respect to the assumptions considered for resource estimation`)}</p>
       </Card>
       <Card>
@@ -161,89 +161,84 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
           ]
           return (
             <>
-              <Card style={{ margin: "0", padding: "0 1rem", background: "#eee", border: "0.1rem solid #ddd" }}>
-                <LabelFieldPair className="formula-label-field">
-                  <span>{`${t(formula.output)}`}</span>
-                  <div className="equals-icon">=</div>
-                  <Dropdown
-                    variant="select-dropdown"
-                    t={t}
-                    isMandatory={true}
-                    option={inputOptions}
-                    select={(value) => {
-                      handleFormulaChange(formula.output, "input", value, category);
-                    }}
-                    selected={() => ({ code: formula.input })}
-                    optionKey="code"
-                    showToolTip={true}
-                    style={{ width: "20rem" }}
-                  />
+              <div>
+                <Card type="secondary">
+                  <LabelFieldPair className="formula-label-field">
+                    <span>{`${t(formula.output)}`}</span>
+                    <div className="equals-icon">=</div>
+                    <Dropdown
+                      variant="select-dropdown"
+                      t={t}
+                      isMandatory={true}
+                      option={inputOptions}
+                      select={(value) => {
+                        handleFormulaChange(formula.output, "input", value, category);
+                      }}
+                      selected={() => ({ code: formula.input })}
+                      optionKey="code"
+                      showToolTip={true}
+                      style={{ width: "20rem" }}
+                    />
 
-                  <Dropdown
-                    variant="select-dropdown"
-                    t={t}
-                    isMandatory={false}
-                    option={operators.map((operator) => ({
-                      code: operator.operatorCode,
-                      label: operator.operatorName,
-                    }))}
-                    select={(value) => {
-                      handleFormulaChange(formula.output, "operatorName", {code:value.label}, category);
-                    }}
-                    selected={() => ({ label: formula.operatorName })}
-                    optionKey="label"
-                    showToolTip={true}
-                    style={{ width: "10rem" }}
-                  />
-                  <Dropdown
-                    variant="select-dropdown"
-                    t={t}
-                    isMandatory={false}
-                    option={assumptionOptions}
-                    select={(value) => {
-                      handleFormulaChange(formula.output, "assumptionValue", value, category);
-                    }}
-                    selected={() => ({ code: formula.assumptionValue })}
-                    optionKey="code"
-                    showToolTip={true}
-                    style={{ width: "15rem" }}
-                  />
-                  <Button
-                    className="custom-class"
-                    icon={<DeleteIconv2 styles={{ height: "1.5rem", width: "2.5rem", margin: "0rem" }} />}
-                    iconFill=""
-                    label="Delete"
-                    size=""
-                    style={{ height: "50px", fontSize: "20px" }}
-                    title=""
-                    variation="secondary"
-                    onButtonClick={() => handleDeleteClick(index,formula)}
-                  />
-                </LabelFieldPair>
-              </Card>
-              <CheckBox
-                //key={field.key}
-                mainClassName={"checkboxOptionVariant"}
-                label={t("Show on Estimation Dashboard")}
-                checked={formula.showOnEstimationDashboard ? true : false}
-                onChange={(event) => handleFormulaChange(formula.output, "showOnEstimationDashboard", !formula.showOnEstimationDashboard, category)}
-                isLabelFirst={false}
-              />
-              <div style={{ background: "#eee", height: "0.2rem", marginBottom: "1rem" }}></div>
+                    <Dropdown
+                      variant="select-dropdown"
+                      t={t}
+                      isMandatory={false}
+                      option={operators.map((operator) => ({
+                        code: operator.operatorCode,
+                        label: operator.operatorName,
+                      }))}
+                      select={(value) => {
+                        handleFormulaChange(formula.output, "operatorName", { code: value.label }, category);
+                      }}
+                      selected={() => ({ label: formula.operatorName })}
+                      optionKey="label"
+                      showToolTip={true}
+                      style={{ width: "10rem" }}
+                    />
+                    <Dropdown
+                      variant="select-dropdown"
+                      t={t}
+                      isMandatory={false}
+                      option={assumptionOptions}
+                      select={(value) => {
+                        handleFormulaChange(formula.output, "assumptionValue", value, category);
+                      }}
+                      selected={() => ({ code: formula.assumptionValue })}
+                      optionKey="code"
+                      showToolTip={true}
+                      style={{ width: "15rem" }}
+                    />
+                    <Button
+                      icon="Delete"
+                      iconFill=""
+                      label="Delete"
+                      size=""
+                      title=""
+                      variation="secondary"
+                      onClick={() => handleDeleteClick(index, formula)}
+                    />
+                  </LabelFieldPair>
+                </Card>
+                <CheckBox
+                  className="custom-assumption-checkbox"
+                  //key={field.key}
+                  mainClassName={"checkboxOptionVariant"}
+                  label={t("Show on Estimation Dashboard")}
+                  checked={formula.showOnEstimationDashboard ? true : false}
+                  onChange={(event) => handleFormulaChange(formula.output, "showOnEstimationDashboard", !formula.showOnEstimationDashboard, category)}
+                  isLabelFirst={false}
+                />
+                <Divider className="" variant="small" />
+              </div>
+
             </>
           );
         })}
         <Button
-          className="custom-class"
-          icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
-          iconFill=""
+          icon="Add"
           label={t("ADD_NEW_FORMULA")}
-          onButtonClick={() => setFormulasPopUp(true)}
-          options={[]}
-          optionsKey=""
-          size=""
-          style={{ height: "50px", fontSize: "20px" }}
-          title=""
+          onClick={() => setFormulasPopUp(true)}
           variation="secondary"
           isDisabled={isAddNewDisabled}
         />
@@ -267,11 +262,11 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                 size={"large"}
                 variation={"secondary"}
                 label={t("YES")}
-                onButtonClick={() => {
+                onClick={() => {
                   handleConfirmDelete();
                 }}
               />,
-              <Button type={"button"} size={"large"} variation={"primary"} label={t("NO")} onButtonClick={handleCancelDelete} />,
+              <Button type={"button"} size={"large"} variation={"primary"} label={t("NO")} onClick={handleCancelDelete} />,
             ]}
             sortFooterChildren={true}
             onClose={() => {
@@ -312,7 +307,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                 size={"large"}
                 variation={"secondary"}
                 label={t("YES")}
-                onButtonClick={() => {
+                onClick={() => {
                   addNewFormula();
                 }}
               />,
@@ -321,7 +316,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                 size={"large"}
                 variation={"primary"}
                 label={t("NO")}
-                onButtonClick={() => {
+                onClick={() => {
                   setFormulasPopUp(false);
                 }}
               />,
