@@ -9,6 +9,7 @@ import { CustomSVG } from "@egovernments/digit-ui-components";
 import { CheckBox } from "@egovernments/digit-ui-components";
 import EditVillagePopulationPopUp from "./editVillagePopulationPopUP";
 import { tableCustomStyle } from "./tableCustomStyle";
+import { CustomLoader } from "./RoleTableComposer";
 
 const PopInboxTable = ({ ...props }) => {
   const { t } = useTranslation();
@@ -167,7 +168,8 @@ const PopInboxTable = ({ ...props }) => {
       sortIcon={<CustomSVG.SortUp />}
       defaultSortFieldId={1}
       selectableRowsComponentProps={selectProps}
-      // progressPending={loading}
+      progressPending={props?.progressPending}
+      progressComponent={<CustomLoader />}// progressPending={loading}
       // title="Users"
       // paginationDefaultPage={currentPage}
       // paginationDefaultRowsPerPage={rowsPerPage}
