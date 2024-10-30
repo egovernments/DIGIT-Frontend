@@ -236,7 +236,7 @@ function UserAccess({ category, setData, nationalRoles }) {
       </Card>
 
       <Card>
-        {planEmployee?.data?.length > 0 ? (
+        {planEmployee?.data?.length > 0 || searchQuery ? (
           <div style={styles.container}>
             <TableSearchField onSearch={handleSearch} />
             <Button
@@ -248,7 +248,7 @@ function UserAccess({ category, setData, nationalRoles }) {
           </div>
         ) : null}
         {!isPlanEmpSearchLoading && (!planEmployee?.data || planEmployee?.data?.length === 0) ? (
-          <Card>
+          <Card style={{ boxShadow: "none" }}>
             <NoResultsFound />
             <Button
               variation="secondary"
