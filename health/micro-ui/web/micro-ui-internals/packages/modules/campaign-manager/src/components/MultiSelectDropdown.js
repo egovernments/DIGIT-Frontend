@@ -267,7 +267,8 @@ const MultiSelectDropdown = ({
   selectedNumber,
   popUpOption,
   hierarchyType,
-  frozenType
+  frozenType,
+  isSearchable=false,
 }) => {
   const [active, setActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState();
@@ -388,6 +389,10 @@ const MultiSelectDropdown = ({
         )
       : options;
 
+  useEffect(() => {
+    setOptionIndex(0);
+  }, [searchQuery]);
+      
   function onSearch(e) {
     setSearchQuery(e.target.value);
   }
@@ -786,10 +791,14 @@ const MultiSelectDropdown = ({
         ref={dropdownRef}
         style={props?.style}
       >
-        <div className={`digit-multiselectdropdown-master${active ? `-active` : ``} ${disabled ? "disabled" : ""}  ${variant ? variant : ""}`}>
+        <div
+          className={`digit-multiselectdropdown-master${active ? `-active` : ``} ${disabled ? "disabled" : ""}  ${variant ? variant : ""} ${
+            isSearchable ? "serachable" : ""
+          }`}
+        >
           <input
             className="digit-cursorPointer"
-            style={{ opacity: 0 }}
+            style={{}}
             type="text"
             onKeyDown={keyChange}
             onFocus={() => setActive(true)}
@@ -875,9 +884,9 @@ const MultiSelectDropdown = ({
               alreadyQueuedSelectedState={alreadyQueuedSelectedState}
               onSelect={onSelect}
               popUpOption={popUpOption}
-              hierarchyType ={hierarchyType}
-              frozenData = {frozenData}
-              frozenType ={ frozenType}
+              hierarchyType={hierarchyType}
+              frozenData={frozenData}
+              frozenType={frozenType}
             ></Wrapper>
           )}
           {alreadyQueuedSelectedState.length > 0 && frozenData.length == 0 && (
@@ -894,7 +903,7 @@ const MultiSelectDropdown = ({
                 alignItems: "center",
                 borderRadius: "0.25rem",
                 border: "1px solid #C84C0E",
-                background: background,
+                background: "#FFFFFF",
               }}
               textStyles={{
                 height: "auto",
