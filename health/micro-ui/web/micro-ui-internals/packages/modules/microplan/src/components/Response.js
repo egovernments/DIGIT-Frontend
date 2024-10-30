@@ -49,7 +49,7 @@ const Response = () => {
                         style={{ margin: "0.5rem", minWidth: "10rem", marginLeft: "6rem" }}
                         className="ab-actions"
                         variation="secondary"
-                        label={t("USER_MANAGEMENT_BATMAN_SPIDY")}
+                        label={t(back)}
                         icon={"ArrowBack"}
                         onClick={()=>{history.push(`/${window.context}/microplan-ui/employee`)}}
                     />
