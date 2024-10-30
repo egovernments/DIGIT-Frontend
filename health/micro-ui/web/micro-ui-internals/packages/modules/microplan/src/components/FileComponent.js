@@ -6,7 +6,7 @@ import { Button, InfoButton } from "@egovernments/digit-ui-components";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 
 
-const FileComponent = ({ title, fileName, status, auditDetails, editHandler, deleteHandler, downloadHandler }) => {
+const FileComponent = ({ title, fileName, status, auditDetails, editHandler, deleteHandler, downloadHandler, rowDetails }) => {
     const { t } = useTranslation();
     const { XlsxFile } = CustomSVG;
     const { lastmodTime } = auditDetails || {};

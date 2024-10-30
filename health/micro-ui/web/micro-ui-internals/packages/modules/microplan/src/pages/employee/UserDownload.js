@@ -5,7 +5,6 @@ import { TextBlock, Card, ActionBar, Button } from '@egovernments/digit-ui-compo
 import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import { Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 
 const UserDownload = () => {
     const { t } = useTranslation();
@@ -58,35 +57,6 @@ const UserDownload = () => {
     return (
         <div>
             {isLoading && <LoaderWithGap text={t("CS_LOADING")} />}
-            {/* <Card type="secondary" style={{ margin: "1.5rem 0 0 0.5rem" }}>
-                <HeaderComp title="DOWNLOAD_USER_DATA" styles={{ color: "black" }} />
-                <TextBlock body={
-                    <div style={{ color: "black" }}>
-                        <span>  {t("DOWNLOAD_DESC")}  </span>
-                    </div>
-                }
-                />
-                {data?.ResourceDetails &&
-                    [...data?.ResourceDetails].reverse().map((item, index) => {
-                        let fileName = item?.additionalDetails?.fileName || `FileNo${item?.processedFilestoreId?.slice(0, 4) || ''}`;
-
-
-                        return (
-                            <FileComponent
-                                title=""
-                                fileName={fileName}
-                                downloadHandler={() => {
-                                    Digit.Utils.campaign.downloadExcelWithCustomName({
-                                        fileStoreId: item?.processedFilestoreId,
-                                        customName: String(fileName)
-                                    });
-                                }} // Passing the download function
-                                status={item?.status}
-                                auditDetails={{ userName: item?.username, lastmodTime: item?.auditDetails?.lastmodtime }}
-                            />
-                        )
-                    })
-                } */}
             <Card type="secondary" style={{ margin: "1.5rem 0 0 0.5rem" }}>
                 <HeaderComp title="DOWNLOAD_USER_DATA" styles={{ color: "black" }} />
                 <TextBlock body={t("DOWNLOAD_DESC")} />
@@ -107,6 +77,7 @@ const UserDownload = () => {
                             }}
                             status={item?.status}
                             auditDetails={{ userName: item?.username, lastmodTime: item?.auditDetails?.lastmodtime }}
+                            rowDetails={item}
                         />
                     );
                 })}
@@ -143,19 +114,6 @@ const UserDownload = () => {
                         
                     </div>
                 </div>
-
-                {/* Back Button */}
-                <ActionBar style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", zIndex: "1" }}>
-                    <Link to="/microplan-ui/employee/" style={{ textDecoration: "none" }}>
-                        <Button
-                            style={{ margin: "0.5rem", minWidth: "12rem", marginLeft: "6rem" }}
-                            className="previous-button"
-                            variation="secondary"
-                            label={t("BACK")}
-                            icon={"ArrowBack"}
-                        />
-                    </Link>
-                </ActionBar>
             </Card>
             <ActionBar style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", zIndex: "1" }}>
                 <div style={{ marginLeft: "auto" }}>
