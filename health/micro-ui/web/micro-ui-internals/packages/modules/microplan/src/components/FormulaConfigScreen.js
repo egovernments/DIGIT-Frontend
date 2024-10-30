@@ -53,7 +53,6 @@ const FormulaConfigScreen = ({ customProps }) => {
                                 urlParams.key = '8'; 
                                 urlParams.formulaInternalKey=ind+1;
                                 const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
-                                console.log("updated",updatedUrl);
                                 history.push(updatedUrl);
                               }}
                         />

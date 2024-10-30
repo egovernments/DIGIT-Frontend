@@ -41,7 +41,6 @@ const AssumptionsList = ({ customProps }) => {
                                 urlParams.key = '7'; 
                                 urlParams.internalKey=ind+1;
                                 const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
-                                console.log("updated url",updatedUrl);
                                 history.push(updatedUrl);
                               }}
                         />

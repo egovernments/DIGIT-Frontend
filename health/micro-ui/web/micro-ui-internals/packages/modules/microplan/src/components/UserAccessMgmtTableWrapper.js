@@ -197,7 +197,6 @@ const UserAccessMgmtTableWrapper = ({ role,internalKey}) => {
                             urlParams.key = '9';
                             urlParams.internalKey=internalKey+1;
                             const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
-                            console.log("updated 1",updatedUrl);
                             history.push(updatedUrl);
                         }}
                     />
