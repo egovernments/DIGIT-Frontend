@@ -1,5 +1,5 @@
 
-
+// THIS CONFIG FOR SUPERVISOR TAGGED USER 
 // default values of search input component
 const defaultSearchValues = {
     microplanName: "",
@@ -85,16 +85,17 @@ const defaultSearchValues = {
                   },
                   {
                     label: "CAMPAIGN_DISEASE",
-                    jsonPath:  "additionalDetails.disease",
+                    jsonPath:  "campaignDetails.additionalDetails.disease",
+                    additionalCustomization:true
                   },
                   {
                     label:"CAMPAIGN_TYPE",
-                    jsonPath:"additionalDetails.campaignType",
+                    jsonPath:"campaignDetails.projectType",
                     additionalCustomization:true
                   },
                   {
                     label:"DISTIRBUTION_STRATEGY",
-                    jsonPath:"additionalDetails.resourceDistributionStrategyCode",
+                    jsonPath:"campaignDetails.additionalDetails.resourceDistributionStrategy",
                     additionalCustomization:true
                   },
                   {

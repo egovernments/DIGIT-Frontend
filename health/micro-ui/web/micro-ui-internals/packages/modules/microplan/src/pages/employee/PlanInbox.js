@@ -60,7 +60,7 @@ const PlanInbox = () => {
   );
 
   useEffect(() => {
-    if (selectedFilter === "PENDING_FOR_VALIDATION") {
+    if (selectedFilter === "VALIDATED") {
       setActiveLink({ code: "", name: "" });
       setShowTab(false);
     }
@@ -102,8 +102,7 @@ const PlanInbox = () => {
         active: true,
         jurisdiction: jurisdiction,
         status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
-        assignee: activeLink.code === "ASSIGNED_TO_ME" && selectedFilter !== "PENDING_FOR_VALIDATION" ? user?.info?.uuid : "",
-        // assignee: activeLink.code === "ASSIGNED_TO_ME" ? user?.info?.uuid : "",
+        assignee: activeLink.code === "ASSIGNED_TO_ALL" || selectedFilter === "VALIDATED" ? "" : user?.info?.uuid,
         planConfigurationId: microplanId, //list of plan ids
         limit: limitAndOffset?.limit,
         offset: limitAndOffset?.offset,
@@ -269,16 +268,16 @@ const PlanInbox = () => {
   }, [selectedFilter, activeLink, jurisdiction, limitAndOffset]);
 
   useEffect(() => {
-    if (selectedFilter === "PENDING_FOR_VALIDATION") {
+    if (selectedFilter === "VALIDATED") {
       setActiveLink({ code: "", name: "" });
       setShowTab(false);
     } else {
       if (!showTab) {
-        setShowTab(true);
         setActiveLink({
           code: "ASSIGNED_TO_ME",
-          name: "ASSIGNED_TO_ME"
+          name: "ASSIGNED_TO_ME",
         });
+        setShowTab(true);
       }
     }
   }, [selectedFilter]);
@@ -288,8 +287,8 @@ const PlanInbox = () => {
   };
 
   const clearFilters = () => {
-    if (selectedFilter !== Object.entries(planWithCensus?.StatusCount)?.[0]?.[0]) {
-      setSelectedFilter(Object.entries(planWithCensus?.StatusCount)?.[0]?.[0]);
+    if (selectedFilter !== Object.entries(activeFilter)?.[0]?.[0]) {
+      setSelectedFilter(Object.entries(activeFilter)?.[0]?.[0]);
     }
   };
 
@@ -309,32 +308,32 @@ const PlanInbox = () => {
   const columns = [
     {
       name: t(`INBOX_VILLAGE`),
-      cell: (row) => row?.village || "NA",
+      cell: (row) => t(row?.village) || "NA",
       sortable: true,
     },
     {
       name: t(`VILLAGE_ROAD_CONDITION`),
-      cell: (row) => row?.villageRoadCondition || "NA",
+      cell: (row) => t(row?.villageRoadCondition) || "NA",
       sortable: true,
     },
     {
       name: t(`VILLAGE_TERRAIN`),
-      cell: (row) => row?.villageTerrain || "NA",
+      cell: (row) => t(row?.villageTerrain) || "NA",
       sortable: true,
     },
     {
       name: t(`VILLAGE_TARNSPORTATION_MODE`),
-      cell: (row) => row?.villageTransportMode || "NA",
+      cell: (row) => t(row?.villageTransportMode) || "NA",
       sortable: true,
     },
     {
       name: t(`TOTAL_POPULATION`),
-      cell: (row) => row?.totalPop || "NA",
+      cell: (row) => t(row?.totalPop) || "NA",
       sortable: true,
     },
     {
       name: t(`TARGET_POPULATION`),
-      cell: (row) => row?.targetPop || "NA",
+      cell: (row) => t(row?.targetPop) || "NA",
       sortable: true,
     },
     ...resourceColumns,
@@ -465,7 +464,7 @@ const PlanInbox = () => {
                         variation="secondary"
                         label={t(action.action)}
                         type="button"
-                        onClick={(action) => handleActionClick(action?.target?.textContent)}
+                        onClick={(curr) => handleActionClick(action?.action)}
                         size={"large"}
                       />
                     ))}
@@ -544,10 +543,10 @@ const PlanInbox = () => {
           commentPath="workflow.comments"
           onSuccess={(data) => {
             history.push(`/${window.contextPath}/employee/microplan/microplan-success`, {
-              fileName: data?.PlanConfiguration?.[0]?.name,
+              responseId: data?.PlanConfiguration?.[0]?.name,
               message: t(`FINALISED_MICROPLAN_SUCCESSFUL`),
               back: t(`GO_BACK_TO_HOME`),
-              backlink: "/employee",
+              backlink: `/${window.contextPath}/employee`,
             });
           }}
           onError={(data) => {

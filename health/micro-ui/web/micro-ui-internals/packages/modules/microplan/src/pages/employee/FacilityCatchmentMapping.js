@@ -131,7 +131,7 @@ const FacilityCatchmentMapping = () => {
               fileName: data?.PlanConfiguration?.[0]?.name,
               message: t(`VILLAGE_ASSIGNED_TO_FACILITIES_SUCCESSFUL`),
               back: t(`GO_BACK_TO_HOME`),
-              backlink: "/employee"
+              backlink: `/${window.contextPath}/employee`
             });
           }}
         />

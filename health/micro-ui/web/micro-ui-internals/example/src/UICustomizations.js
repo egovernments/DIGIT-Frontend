@@ -934,7 +934,7 @@ export const UICustomizations = {
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       const rolesCodes = Digit.Hooks.useSessionStorage("User", {})[0]?.info?.roles;
       const roles = rolesCodes.map((item) => item.code);
-      const hasRequiredRole = roles.some((role) => role === "ROOT_POPULATION_DATA_APPROVER" || role === "ROOT_POPULATION_APPROVER");
+      const hasRequiredRole = roles.some((role) => role === "ROOT_POPULATION_DATA_APPROVER" || role === "POPULATION_DATA_APPROVER");
       switch (key) {
         case "ACTIONS":
           const onActionSelect = (key, row) => {
@@ -974,7 +974,7 @@ export const UICustomizations = {
               variation="secondary"
               icon={"ArrowForward"}
               type="button"
-              disabled={!hasRequiredRole}
+              isDisabled={!hasRequiredRole}
               className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("START", row)}
             />
@@ -1029,7 +1029,7 @@ export const UICustomizations = {
                   overflowWrap: "break-word", // Break long words at the edge
                 }}
               >
-                <p>{t(value)}</p>
+                <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_DISEASE_" + value))}</p>
               </div>
             );
           } else {
@@ -1050,7 +1050,7 @@ export const UICustomizations = {
                   overflowWrap: "break-word", // Break long words at the edge
                 }}
               >
-                <p>{t(value)}</p>
+                <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_TYPE_" + value))}</p>
               </div>
             );
           } else {
@@ -1071,7 +1071,7 @@ export const UICustomizations = {
                   overflowWrap: "break-word", // Break long words at the edge
                 }}
               >
-                <p>{t(value)}</p>
+                <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_DISTRIBUTION_" + value))}</p>
               </div>
             );
           } else {
@@ -1083,7 +1083,7 @@ export const UICustomizations = {
           }
         case "MICROPLAN_STATUS":
           if (value && value != "NA") {
-            return t(value);
+            return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_STATUS_" + value))}</p>;
           } else {
             return (
               <div>

@@ -34,7 +34,7 @@ const ProjectBreadCrumb = ({ location }) => {
     },
     {
       path: `/${window?.contextPath}/employee`,
-      content: t(location.pathname.split("/").pop()),
+      content: t(Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop())),
       show: true,
     },
   ];

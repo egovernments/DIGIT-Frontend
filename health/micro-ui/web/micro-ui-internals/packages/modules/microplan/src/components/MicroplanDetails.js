@@ -87,7 +87,6 @@ const MicroplanDetails = ({ onSelect, props: customProps, ...props }) => {
         style={{}}
         type="primary"
       />
-
       <CardNew
         style={{
           marginTop: "1.5rem",

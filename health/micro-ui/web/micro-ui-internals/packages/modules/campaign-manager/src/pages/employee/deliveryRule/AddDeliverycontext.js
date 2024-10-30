@@ -18,7 +18,7 @@ import { useTranslation } from "react-i18next";
 import RemoveableTagNew from "../../../components/RemovableTagNew";
 import AddProducts from "./AddProductscontext";
 import { CycleContext } from ".";
-import { RadioButtons, TextInput } from "@egovernments/digit-ui-components";
+import { RadioButtons, TextInput , Chip } from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR } from "../../../utils";
 
 const DustbinIcon = () => (
@@ -820,19 +820,11 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
           index={index}
           key={key}
         />
-        <div className="product-tag-container">
+        <div className="product-tag-container digit-tag-container">
           {delivery?.products?.length > 0 &&
             delivery?.products?.map((i) => {
               return i?.value && i?.count ? (
-                <RemoveableTagNew
-                  extraStyles={{
-                    closeIconStyles: {
-                      fill: "#505A5F",
-                    },
-                  }}
-                  text={{ value: i?.name }}
-                  onClick={() => removeProduct(i)}
-                />
+                <Chip key={i.key} text={i?.name} onClick={() => removeProduct(i)} className="multiselectdropdown-tag" hideClose={false} />
               ) : null;
             })}
         </div>
