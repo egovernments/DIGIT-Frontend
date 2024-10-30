@@ -5,6 +5,8 @@ import DataTable from "react-data-table-component";
 import { CardSubHeader, Card } from "@egovernments/digit-ui-react-components";
 import { tableCustomStyle } from "./tableCustomStyle";
 import { ShowMoreWrapper } from "./ShowMoreWrapper";
+import HeaderComp from "./HeaderComp";
+import { useHistory } from "react-router-dom";
 
 
 function groupEmployeesByPlan(data, planData) {
@@ -32,7 +34,8 @@ function groupEmployeesByPlan(data, planData) {
     return groupedEmployees ? Object.values(groupedEmployees) : [];
   }
 
-const UserAccessMgmtTableWrapper = ({ role,}) => {
+const UserAccessMgmtTableWrapper = ({ role,internalKey}) => {
+  const history=useHistory();
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [currentPage, setCurrentPage] = useState(1);
@@ -177,9 +180,28 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
   else {
   return(
     <Card>
-            <div className="view-composer-header-section">
+            {/* <div className="view-composer-header-section">
                 <CardSubHeader style={{ marginTop: 0, fontSize: "1.5rem", color: " #0B4B66", marginBottom: "0rem" }}>{t(planAssignmentData?.role)}</CardSubHeader>
-            </div>
+            </div> */}
+            <div className="header-container">
+                    <HeaderComp title={t(planAssignmentData?.role)} styles={{ color: "black" }} />
+                    <Button
+                        label={t("WBH_EDIT")}
+                        variation="secondary"
+                        icon={"EditIcon"}
+                        type="button"
+                        className="dm-workbench-download-template-btn dm-hover"
+                        onClick={(e) => {
+                            const url = Digit.Hooks.useQueryParams();
+                            const urlParams = Digit.Hooks.useQueryParams();
+                            urlParams.key = '9';
+                            urlParams.internalKey=internalKey+1;
+                            const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
+                            console.log("updated 1",updatedUrl);
+                            history.push(updatedUrl);
+                        }}
+                    />
+                </div>
             <DataTable
                 columns={columns}
                 data={planAssignmentData?.data}

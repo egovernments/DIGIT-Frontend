@@ -78,7 +78,7 @@ export const DataMgmtComponent = ({ customProps }) => {
                         onClick={(e) => {
                             const url = Digit.Hooks.useQueryParams();
                             const urlParams = Digit.Hooks.useQueryParams();
-                            urlParams.key = '4';
+                            urlParams.key = '5';
                             const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
                             history.push(updatedUrl);
                         }}

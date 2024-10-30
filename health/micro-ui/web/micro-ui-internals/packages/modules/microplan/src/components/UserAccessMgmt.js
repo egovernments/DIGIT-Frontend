@@ -21,9 +21,10 @@ const UserAccessMgmt = ({}) => {
         <Header styles={{ fontSize: "32px" }}>{t("USER_ACCESS_MGMT")}</Header>
         </Card>
         {rolesArray?.map((role, index) => {
+
             return(
               <UserAccessMgmtTableWrapper
-              key={index}
+              internalKey={index}
               role={role}
               />
                 );

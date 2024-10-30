@@ -38,7 +38,7 @@ const FormulaConfigScreen = ({ customProps }) => {
     return (
         <>
             {Object.keys(dictionary).length > 0 && (
-                Object.keys(dictionary).map((category) => (
+                Object.keys(dictionary).map((category,ind) => (
                     <Fragment key={category}>
                         <div className="header-container">
                         <HeaderComp title={t(String(category))} />
@@ -51,7 +51,9 @@ const FormulaConfigScreen = ({ customProps }) => {
                             onClick={(e) => {
                                 const urlParams = Digit.Hooks.useQueryParams(); 
                                 urlParams.key = '8'; 
+                                urlParams.formulaInternalKey=ind+1;
                                 const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
+                                console.log("updated",updatedUrl);
                                 history.push(updatedUrl);
                               }}
                         />
