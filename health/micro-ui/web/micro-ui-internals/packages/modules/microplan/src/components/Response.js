@@ -30,9 +30,6 @@ const Response = () => {
                 className=""
                 customIcon=""
                 description={t(description)}
-                // footerChildren={[
-                //     <Button label="OK" onClick={function noRefCheck() { }} type="button" />
-                // ]}
                 footerStyles={{}}
                 iconFill=""
                 info=""
@@ -48,7 +45,6 @@ const Response = () => {
 
             </PanelCard>
             <ActionBar className="mc_back">
-                
                     <Button
                         style={{ margin: "0.5rem", minWidth: "10rem", marginLeft: "6rem" }}
                         className="ab-actions"
@@ -57,7 +53,6 @@ const Response = () => {
                         icon={"ArrowBack"}
                         onClick={()=>{history.push(`/${window.context}/microplan-ui/employee`)}}
                     />
-               
             </ActionBar>
         </>
     );

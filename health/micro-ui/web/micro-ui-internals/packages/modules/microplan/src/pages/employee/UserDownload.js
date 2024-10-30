@@ -99,19 +99,14 @@ const UserDownload = () => {
                             isDisabled={currentPage === 1}
                             icon={"ArrowBackIos"}
                             variation="teritiary"
-                            
-                         />
-                           
-                       
+
+                        />
                         <Button
                             onClick={() => handlePageChange(currentPage + 1)}
                             isDisabled={currentPage === totalPages}
                             variation="teritiary"
                             icon={"ArrowForwardIos"}
-
                         />
-                           
-                        
                     </div>
                 </div>
             </Card>
