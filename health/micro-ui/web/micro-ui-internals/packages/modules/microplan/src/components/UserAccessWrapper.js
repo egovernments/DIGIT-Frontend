@@ -14,12 +14,12 @@ export const useUserAccessContext = () => {
 const UserAccessWrapper = ({ onSelect, props: customProps }) => {
   const { t } = useTranslation();
   const { state } = useMyContext();
-  const [data,setData]=useState(null);
+  const [data, setData] = useState(null);
   // vertical stepper array role code fetch and sorted based on orderNumber
   const rolesArray = state?.rolesForMicroplan?.sort((a, b) => a.orderNumber - b.orderNumber).map((item) => item.roleCode);
-  let mpRolesArray=rolesArray.map((item)=>t(`MP_ROLE_${item}`));
+  let mpRolesArray = rolesArray.map((item) => t(`MP_ROLE_${item}`));
 
-  const nationalRoles=["ROOT_PLAN_ESTIMATION_APPROVER","ROOT_POPULATION_DATA_APPROVER","ROOT_FACILITY_CATCHMENT_MAPPER"]
+  const nationalRoles = ["ROOT_PLAN_ESTIMATION_APPROVER", "ROOT_POPULATION_DATA_APPROVER", "ROOT_FACILITY_CATCHMENT_MAPPER"]
   const hierarchyData = customProps?.hierarchyData;
   const campaignType = customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code;
 
@@ -51,7 +51,7 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
     Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
     Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
   };
-  
+
   const updateUrlParams = (params) => {
     const url = new URL(window.location.href);
     Object.entries(params).forEach(([key, value]) => {
@@ -71,7 +71,7 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
       }
     });
   };
-  
+
 
   const handleBack = () => {
     if (internalKey > 1) {
@@ -125,21 +125,21 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
   return (
     <Fragment>
       <UserAccessContext.Provider value={{ hierarchyData, category: rolesArray?.[internalKey - 1] }}>
-        <div style={{ display: "flex", gap: "2rem" }}>
+        <div style={{ display: "flex", gap: "1.5rem" }}>
           <div className="card-container">
             <Card className="card-header-timeline">
               <TextBlock subHeader={t("USER_ACCESS_MANAGEMENT")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
             </Card>
-            <Card className="stepper-card">
+            <Card className="vertical-stepper-card">
               <Stepper customSteps={[...mpRolesArray]} currentStep={internalKey} onStepClick={() => null} direction={"vertical"} />
             </Card>
           </div>
 
           <div style={{ width: "100%" }}>
-            <UserAccess 
-            category={rolesArray?.[internalKey - 1] }
-            setData={setData}
-            nationalRoles={nationalRoles}
+            <UserAccess
+              category={rolesArray?.[internalKey - 1]}
+              setData={setData}
+              nationalRoles={nationalRoles}
             />
           </div>
         </div>

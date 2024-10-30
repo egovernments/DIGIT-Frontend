@@ -150,6 +150,7 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
             variation={"secondary"}
             label={t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_CLOSE_LABEL`)}
             onClick={onClose}
+            style={{width:"160px"}}
           />,
           <Button
             className={"campaign-type-alert-button"}
@@ -157,6 +158,7 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
             size={"large"}
             variation={"primary"}
             label={t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_SAVE_LABEL`)}
+            style={{width:"160px"}}
             onClick={handleSave} // Calls save function on click
             isDisabled={!isChanged() || mutation.isLoading} // Disable if no changes are made or during API call
           />,

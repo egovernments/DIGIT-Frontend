@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { useTranslation } from "react-i18next";
-import { PopUp, Button, RadioButtons, Card, Toast } from '@egovernments/digit-ui-components';
+import { PopUp, Button, RadioButtons, Card, Toast ,Divider} from '@egovernments/digit-ui-components';
 import { useMyContext } from "../utils/context";
 
 const SecurityPopUp = ({ onClose, census, onSuccess }) => {
@@ -91,7 +91,8 @@ const SecurityPopUp = ({ onClose, census, onSuccess }) => {
             <div>
               {/* Loop through the sorted questions */}
               {questions.map((q, index) => (
-                <div
+                <div>
+                                  <div
                   key={q.id}
                   style={{
                     marginBottom: index !== questions.length - 1 ? "1rem" : "0", // No margin after the last question
@@ -112,12 +113,14 @@ const SecurityPopUp = ({ onClose, census, onSuccess }) => {
                       style={{
                         display: "flex",
                         flexDirection: "column",  // Makes sure options appear in a vertical direction (each in a new line)
-                        gap: "1rem",  // Adds space between the radio buttons
+                        gap: "1.5rem",  // Adds space between the radio buttons
                       }}
                       onSelect={(value) => handleOptionChange(q.id, value)}
                     />
                   </div>
                 </div>
+                {index !== questions.length - 1 && <Divider className={"questions-divider"} variant="small" />}
+                  </div>
               ))}
             </div>
           </Card>
