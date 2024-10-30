@@ -1419,7 +1419,6 @@ $border-color: rgba(214, 213, 212, 1);
 }
 
 .create-microplan {
-
   .custom-action-bar,
   .custom-action-bar-no-first-button {
     display: flex !important;
@@ -1883,7 +1882,7 @@ $border-color: rgba(214, 213, 212, 1);
                 margin-right: auto;
               }
 
-              input:checked~.inputIconClassname {
+              input:checked ~ .inputIconClassname {
                 border-color: $primary-theme-color;
               }
 
@@ -2517,7 +2516,8 @@ $border-color: rgba(214, 213, 212, 1);
   }
 }
 
-.popup-wrap-rest-unfocus {}
+.popup-wrap-rest-unfocus {
+}
 
 .popup-wrap-rest-unfocus-active {
   button:focus {
@@ -2555,7 +2555,7 @@ $border-color: rgba(214, 213, 212, 1);
   margin: 0rem;
 }
 
-.mp-hypothesis-label-field>div>span {
+.mp-hypothesis-label-field > div > span {
   @extend .typography.heading-s;
   color: theme(digitv2.lightTheme.text-primary);
 }
@@ -2614,7 +2614,7 @@ $border-color: rgba(214, 213, 212, 1);
   align-items: start !important;
 }
 
-.assumptionsForm-label-field>div>span {
+.assumptionsForm-label-field > div > span {
   font-size: 1.5rem;
   font-weight: bold;
 }
@@ -2659,13 +2659,13 @@ $border-color: rgba(214, 213, 212, 1);
 
 .digit-multiselectdropdown-wrap.roleTableCell.nestedmultiselect {
   margin: 0;
-  width: 15rem;
-  min-width: 15rem !important;
+  width: unset;
+  min-width: unset !important;
 
   .digit-multiselectdropdown-server {
     top: unset !important;
     position: fixed !important;
-    max-width: 15rem !important;
+    max-width: unset !important;
     max-height: 15rem !important;
   }
 }
@@ -2698,8 +2698,7 @@ $border-color: rgba(214, 213, 212, 1);
   aspect-ratio: 1;
   display: grid;
   border-radius: 50%;
-  background:
-    linear-gradient(0deg, rgba(0, 0, 0, 0.5) 30%, transparent 0 70%, rgba(0, 0, 0, 1) 0) 50%/8% 100%,
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 30%, transparent 0 70%, rgba(0, 0, 0, 1) 0) 50%/8% 100%,
     linear-gradient(90deg, rgba(0, 0, 0, 0.25) 30%, transparent 0 70%, rgba(0, 0, 0, 0.75) 0) 50%/100% 8%;
   background-repeat: no-repeat;
   animation: l23 1s infinite steps(12);
@@ -2737,4 +2736,7 @@ $border-color: rgba(214, 213, 212, 1);
       min-width: max-content;
     }
   }
+}
+.sc-fzXfNN.sc-fzXfNO.sc-fzXfNP.iSamCd.rdt_TableCell > div:first-of-type {
+  width: 100%;
 }
