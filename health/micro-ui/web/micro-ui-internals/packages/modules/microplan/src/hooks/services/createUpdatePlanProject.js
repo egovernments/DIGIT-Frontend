@@ -481,6 +481,47 @@ const createUpdatePlanProject = async (req) => {
           setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
         }
 
+        case "SUB_FORMULA":
+        //first fetch current plan object
+        const fetchedPlanForSubFormula = await searchPlanConfig({
+          PlanConfigurationSearchCriteria: {
+            tenantId,
+            id: microplanId,
+          },
+        });
+        // const currentCategory = 
+        const prevFormulaValues =
+          fetchedPlanForSubFormula?.operations.length > 0
+            ? fetchedPlanForSubFormula?.operations?.map((row) => {
+                const updatedRow = {
+                  ...row,
+                  active: false,
+                };
+                return updatedRow;
+              })
+            : [];
+
+        //get the list of assumptions from UI
+        const formulasToUpdateFromUIForSubFormula = req?.formulasToUpdate?.filter((row) => {
+          return row.category && row.output && row.input && row.operatorName && row.assumptionValue;
+        })
+        ?.map((row) => {
+          const updatedRow = { ...row };
+          const operatorName = row?.operatorName;
+          delete updatedRow?.operatorName;
+          updatedRow.operator = state?.RuleConfigureOperators?.find((operation) => operation.operatorName === operatorName)?.operatorCode;
+          return updatedRow;
+        });
+        //mix the current + api res
+        const upatedPlanObjSubFormula = {
+          ...fetchedPlanForSubFormula,
+          operations: [...prevFormulaValues, ...formulasToUpdateFromUIForSubFormula],
+        };
+
+        await updatePlan(upatedPlanObjSubFormula);
+        return;
+
+        
       case "UPLOADBOUNDARYDATA":
         const fetchedPlanForBoundary = await searchPlanConfig({
           PlanConfigurationSearchCriteria: {
