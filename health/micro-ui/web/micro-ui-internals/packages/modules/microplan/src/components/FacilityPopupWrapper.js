@@ -4,6 +4,7 @@ import React, { useState, Fragment } from "react";
 const FacilityPopUpWrapper = (props) => {
   const [showPopup, setShowPopup] = useState(false);
   const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
+console.log(FacilityPopUp,"FacilityPopUp",props);
 
   return (
     <React.Fragment>
@@ -21,7 +22,7 @@ const FacilityPopUpWrapper = (props) => {
         title=""
         variation="secondary"
       />
-      {showPopup && (
+      {showPopup && FacilityPopUp && (
         <FacilityPopUp
           details={props?.row}
           onClose={() => {
