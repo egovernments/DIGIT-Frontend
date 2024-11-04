@@ -99,7 +99,6 @@ const Wrapper = ({
       frozenType={frozenType}
       selectedData1={selectedData}
       boundaryOptionsPage={boundaryOptions}
-      updateBoundary={updateBoundary}
       data={hierarchyData}
       isMultiSelect={isMultiSelect}
       restrictSelectionPage = {restrictSelection}
