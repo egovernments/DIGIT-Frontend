@@ -314,6 +314,10 @@ const FacilityPopUp = ({ details, onClose }) => {
     mainClassName: "data-table-select-checkbox",
   };
 
+if(isLoadingPlanEmployee || isLoadingCampaign){
+  return null;
+}
+
   return (
     <>
       {loader ? (
