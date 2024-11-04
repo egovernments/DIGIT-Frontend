@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { useLocation, useHistory, Link, useParams } from "react-router-dom";
-import React, { useState, Fragment } from "react";
+import React, {  Fragment } from "react";
 import { Dropdown } from "@egovernments/digit-ui-components";
 import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader, EditIcon, ArrowForward } from "@egovernments/digit-ui-react-components";
 import { Button as ButtonNew } from "@egovernments/digit-ui-components";
@@ -1207,8 +1207,7 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      const [showPopup, setShowPopup] = useState(false);
-      const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
+      const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopUpWrapper");
 
       switch (key) {
         case "MICROPLAN_FACILITY_ASSIGNED_VILLAGES":
@@ -1217,28 +1216,7 @@ export const UICustomizations = {
         case "MICROPLAN_FACILITY_ACTION":
           return (
             <>
-              <ButtonNew
-                className=""
-                icon="ArrowForward"
-                iconFill=""
-                isSuffix
-                label={t("MICROPLAN_ASSIGN")}
-                onClick={() => setShowPopup(true)}
-                options={[]}
-                optionsKey=""
-                size="medium"
-                style={{}}
-                title=""
-                variation="secondary"
-              />
-              {showPopup && (
-                <FacilityPopUp
-                  details={row}
-                  onClose={() => {
-                    setShowPopup(false);
-                  }}
-                />
-              )}
+            <FacilityPopUp t={t} row={row} />
             </>
           );
         default:

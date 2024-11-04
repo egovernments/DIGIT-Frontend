@@ -60,9 +60,7 @@ export const UICustomizations = {
       return data;
     },
 
-
-    additionalCustomizations: (row, key, column, value, searchResult) => {
-      const { t } = useTranslation();
+    additionalCustomizations:(row, key, column, value, t, searchResult) => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
       const history = useHistory();
       const location = useLocation();

@@ -155,14 +155,14 @@ export const Search = {
 
       //searched Project details
       projectDetails.searchedProject["basicDetails"] = projects?.searchedProject?.basicDetails;
-      projectDetails.searchedProject["details"]["projectDetails"] = {
-        applicationDetails: [
-          projects?.searchedProject?.headerDetails,
-          projects?.searchedProject?.projectDetails,
-          projects?.searchedProject?.locationDetails,
-          projects?.searchedProject?.documentDetails,
-        ],
-      }; //rest categories will come here
+      // projectDetails.searchedProject?.["details"]["projectDetails"] = {
+      //   applicationDetails: [
+      //     projects?.searchedProject?.headerDetails,
+      //     projects?.searchedProject?.projectDetails,
+      //     projects?.searchedProject?.locationDetails,
+      //     projects?.searchedProject?.documentDetails,
+      //   ],
+      // }; //rest categories will come here
     }
 
     return {
