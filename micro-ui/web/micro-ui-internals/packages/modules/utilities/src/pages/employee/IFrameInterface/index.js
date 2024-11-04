@@ -26,6 +26,33 @@ const IFrameInterface = (props) => {
     enabled: true,
   });
 
+    function addBoundaryFilters(url, filters) {
+    const { province, district } = filters || {};
+  
+    // Determine filter type based on district and province
+    const filter = district
+      ? `(query:(match_phrase:(Data.boundaryHierarchy.district.keyword:'${district}')))`
+      : province
+      ? `(query:(match_phrase:(Data.boundaryHierarchy.province.keyword:'${province}')))`
+      : null;
+  
+    // If there's a filter to apply
+    if (filter) {
+      // Match existing filters in the URL
+      const existingFilters = /filters:\!\((.*?)\)/.exec(url);
+  
+      // Replace existing filters or append the new filter
+      const updatedUrl = existingFilters
+        ? url.replace(existingFilters[0], `filters:!(${filter})`).replace(/ /g, '%20')
+        : url;
+  
+      setUrl(updatedUrl);
+    } else {
+      // No filter to add, keep original URL
+      setUrl(url);
+    }
+  }
+
   const injectCustomHttpInterceptors = (iframeWindow) => {
     // console.log("iframeInInterceptor",iframeWindow)
     const injectCustomHttpInterceptor = () => {
@@ -173,6 +200,7 @@ const IFrameInterface = (props) => {
       : "";
     const title = pageObject?.["title"] || "";
     let url = `${domain}${contextPath}`;
+    addBoundaryFilters(url, filters?.filters);
     if (pageObject?.authToken && pageObject?.authToken?.enable) {
       const authKey = pageObject?.authToken?.key || "auth-token";
       if (pageObject?.authToken?.customFun && Digit.Utils.createFunction(pageObject?.authToken?.customFun)) {
