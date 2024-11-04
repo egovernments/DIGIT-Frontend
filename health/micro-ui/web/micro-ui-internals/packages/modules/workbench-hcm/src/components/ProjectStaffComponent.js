@@ -6,6 +6,7 @@ import ProjectStaffModal from "./ProjectStaffModal";
 import ConfirmationDialog from "./ConfirmationDialog";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 const healthProjecturl = getProjectServiceUrl();
+const HRMS_CONTEXT_PATH = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || "egov-hrms";
 
 const ProjectStaffComponent = (props) => {
     const { t } = useTranslation();
@@ -111,7 +112,7 @@ const ProjectStaffComponent = (props) => {
 
 
     const searchCriteria = {
-        url: "/egov-hrms/employees/_search",
+        url: `/${HRMS_CONTEXT_PATH}/employees/_search`,
 
         config: {
             enable: true,
