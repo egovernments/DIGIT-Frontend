@@ -86,10 +86,9 @@ const Wrapper = ({
   selectedData,
   onSelect,
   boundaryOptions,
-  updateBoundary,
   hierarchyData,
   isMultiSelect,
-  restrictSelection
+  restrictSelection,
 }) => {
   return (
     <SelectingBoundaryComponent
@@ -129,7 +128,6 @@ const SelectingBoundaryComponent = ({
   const [showPopUp, setShowPopUp] = useState(false);
   const timerRef = useRef(null);
   const [parentRoot, setParentRoot] = useState(selectedData?.find((item) => item?.isRoot === true)?.type || {});
-  //   const [updateBoundarySelected, setUpdateBoundary] = useState(updateBoundary);
   const [restrictSelection , setRestrictSelection] = useState(restrictSelectionPage);
 
 
@@ -423,21 +421,19 @@ const SelectingBoundaryComponent = ({
     }
 
     timerRef.current = setTimeout(() => {
-      onSelect({ selectedData: selectedData, boundaryOptions: boundaryOptions });
+      onSelect({ selectedData: selectedData, boundaryOptions: boundaryOptions, restrictSelection: restrictSelection });
     }, 1);
-  }, [selectedData, boundaryOptions]);
+  }, [selectedData, boundaryOptions , restrictSelection]);
 
   const checkDataPresent = ({ action }) => {
     if (action === false) {
       setShowPopUp(false);
-      //   setUpdateBoundary(true);
       setRestrictSelection(false);
       return;
     }
     if (action === true) {
       setShowPopUp(false);
       setRestrictSelection(true);
-      //   setUpdateBoundary(false);
       return;
     }
   };
