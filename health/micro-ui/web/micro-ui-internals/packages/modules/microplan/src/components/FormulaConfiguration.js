@@ -124,10 +124,63 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
 
         // **Conditionally Add to formulaConfigValues if not already present**
         if (!formulaConfigValues.some((formula) => formula.output === formulaToAdd)) {
-          setFormulaConfigValues((prevValues) => [
-            ...prevValues,
-            { source: "MDMS", output: formulaToAdd, input: "", operatorName: "", assumptionValue: "", category: category }, // or an initial value
-          ]);
+          // setFormulaConfigValues((prevValues) => [
+          //   ...prevValues,
+          //   { source: "MDMS", output: formulaToAdd, input: "", operatorName: "", assumptionValue: "", category: category }, // or an initial value
+          // ]);
+
+          //pushing but maintaining the order
+          // setFormulaConfigValues((prevValues) => {
+          //   // Find the index where the new formula should be inserted
+          //   debugger
+          //   const insertIndex = prevValues.findIndex(
+          //     (item) => item.category > category
+          //   );
+          
+          //   // If no matching category is found, insert at the end of the array
+          //   const newValues =
+          //     insertIndex === -1
+          //       ? [...prevValues, { source: "MDMS", output: formulaToAdd, input: "", operatorName: "", assumptionValue: "", category: category }]
+          //       : [
+          //           ...prevValues.slice(0, insertIndex),
+          //           { source: "MDMS", output: formulaToAdd, input: "", operatorName: "", assumptionValue: "", category: category },
+          //           ...prevValues.slice(insertIndex)
+          //         ];
+          
+          //   return newValues;
+          // });
+
+          //pushing but maintaining the order
+          setFormulaConfigValues((prevValues) => {
+            // Define the new formula object
+            const newFormula = {
+              source: "MDMS",
+              output: formulaToAdd,
+              input: "", 
+              operatorName: "", 
+              assumptionValue: "", 
+              category: category,
+              showOnEstimationDashboard: true // Default to true; adjust as needed
+            };
+          
+            // Find the last index of the specified category by reversing the array
+            const lastIndexInCategory = [...prevValues]
+              .reverse()
+              .findIndex((item) => item.category === category);
+          
+            // Calculate the correct insertion index in the original array
+            const insertIndex =
+              lastIndexInCategory === -1 ? prevValues.length : prevValues.length - lastIndexInCategory;
+          
+            // Insert the new formula at the determined index, maintaining grouped categories
+            const newValues = [
+              ...prevValues.slice(0, insertIndex),
+              newFormula,
+              ...prevValues.slice(insertIndex)
+            ];
+          
+            return newValues;
+          });
         }
 
         setSelectedDeletedFormula(null);
@@ -147,9 +200,9 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
 
   const filteredFormulas = formulaConfigValues.filter((formula) => formula.category === category);
 
-
+console.log("formulaConfigValues",formulaConfigValues);
   const filteredFormulaOutputs = filteredFormulas.map((formula) => formula.output);
-
+  
   return (
     <>
       <Card className="middle-child">
@@ -158,8 +211,12 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
       </Card>
       <Card>
         {filteredFormulas.map((formula, index) => {
+          // try using formulaConfigValues to calculate options for both 1st and 2nd inputs
           // Gather outputs from previous formulas
-          const previousOutputs = filteredFormulas
+          // const previousOutputs = filteredFormulas
+          //   .slice(0, index) // Get outputs of all previous formulas
+          //   .map((prevFormula) => prevFormula.output); // Extract outputs
+          const previousOutputs = formulaConfigValues
             .slice(0, index) // Get outputs of all previous formulas
             .map((prevFormula) => prevFormula.output); // Extract outputs
 
@@ -177,6 +234,15 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
             ...previousOutputs.map((output) => ({ code: output, label: output })),
             ...inputOptions
           ]
+
+          const dropdownOptions = [
+            ...filteredInputs.map((input) => ({ code: input, label: input })),
+            ...previousOutputs.map((output) => ({ code: output, label: output })),
+            ...assumptions.map((assumptionValue) => ({
+              code: assumptionValue,
+              label: assumptionValue,
+            })),
+          ]
           return (
             <>
               <div>
@@ -188,7 +254,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                       variant="select-dropdown"
                       t={t}
                       isMandatory={true}
-                      option={inputOptions}
+                      option={dropdownOptions}
                       select={(value) => {
                         handleFormulaChange(formula.output, "input", value, category);
                       }}
@@ -218,7 +284,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                       variant="select-dropdown"
                       t={t}
                       isMandatory={false}
-                      option={assumptionOptions}
+                      option={dropdownOptions}
                       select={(value) => {
                         handleFormulaChange(formula.output, "assumptionValue", value, category);
                       }}
