@@ -187,6 +187,13 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
             HYPOTHESIS: null,
             FORMULA_CONFIGURATION: null,
           });
+          //since we are invalidating we need to update this global state
+          dispatch({
+            type: "MASTER_DATA",
+            state: {
+                allAssumptions:[],
+            },
+          });
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
         }

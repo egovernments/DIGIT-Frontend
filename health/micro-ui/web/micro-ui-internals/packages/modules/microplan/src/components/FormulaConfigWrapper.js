@@ -285,9 +285,12 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
   useEffect(() => {
     //TODO:
     // calculate this based on prevOutputs and inputs as well 
+    // only check for legal values for assumptions only not outputs and inputs
     const legalValuesForAssumptions = assumptionsInPlan?.map(assumption => assumption.key)
     const prevOutputs = []
     const prevInputs = []
+    //if item is there in allAssumptions that means it has to be in legalValueForAssumptions if not then set as empty otherwise the autofilled value is not part of the assumption so let it set
+    const allAssumptions = state?.allAssumptions?.length > 0 ? state?.allAssumptions : []
     const initialFormulas = filteredFormulas.map((item) => {
       const updatedObj = {
         source: "MDMS",
@@ -296,7 +299,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
         output: item.output,
         operatorName: item.operatorName,
         //check this assumption is there in plan object or not
-        assumptionValue: legalValuesForAssumptions?.includes(item.assumptionValue) || prevOutputs?.includes(item.assumptionValue) || prevInputs?.includes(item.assumptionValue) ? item.assumptionValue : "",
+        assumptionValue:allAssumptions.includes(item.assumptionValue) ? legalValuesForAssumptions?.includes(item.assumptionValue) || prevOutputs?.includes(item.assumptionValue) || prevInputs?.includes(item.assumptionValue) ? item.assumptionValue : "" : item.assumptionValue,
         // assumptionValue:item.assumptionValue,
         showOnEstimationDashboard: true,
       }
