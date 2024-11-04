@@ -11,7 +11,7 @@ export const useUserAccessContext = () => {
   return useContext(UserAccessContext);
 };
 
-const UserAccessWrapper = ({ onSelect, props: customProps }) => {
+const UserAccessWrapper = ({ onSelect, props: customProps,setupCompleted }) => {
   const { t } = useTranslation();
   const { state } = useMyContext();
   const [data, setData] = useState(null);

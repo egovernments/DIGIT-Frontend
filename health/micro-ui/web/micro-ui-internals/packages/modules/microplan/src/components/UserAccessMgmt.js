@@ -5,7 +5,7 @@ import { useMyContext } from "../utils/context";
 import UserAccessMgmtTableWrapper from "./UserAccessMgmtTableWrapper";
 
 
-const UserAccessMgmt = ({}) => {
+const UserAccessMgmt = ({setupCompleted}) => {
     const { state } = useMyContext();
     const rolesArray = state?.rolesForMicroplan?.sort((a, b) => a.orderNumber - b.orderNumber).map((item) => item.roleCode) || [];
     
@@ -21,10 +21,12 @@ const UserAccessMgmt = ({}) => {
         <Header styles={{ fontSize: "32px" }}>{t("USER_ACCESS_MGMT")}</Header>
         </Card>
         {rolesArray?.map((role, index) => {
+
             return(
               <UserAccessMgmtTableWrapper
-              key={index}
+              internalKey={index}
               role={role}
+              setupCompleted={setupCompleted}
               />
                 );
         })

@@ -1,38 +1,41 @@
-import { Button, PopUp, Chip, Loader,} from "@egovernments/digit-ui-components";
+import { Button, PopUp, Chip, Loader, } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DataTable from "react-data-table-component";
 import { CardSubHeader, Card } from "@egovernments/digit-ui-react-components";
 import { tableCustomStyle } from "./tableCustomStyle";
 import { ShowMoreWrapper } from "./ShowMoreWrapper";
+import HeaderComp from "./HeaderComp";
+import { useHistory } from "react-router-dom";
 
 
 function groupEmployeesByPlan(data, planData) {
-    const groupedEmployees = planData?.reduce((acc, plan) => {
-      // Find matching user from data array by comparing userServiceUuid with employeeId
-      const matchedEmployee = data.find(employee => employee.user?.userServiceUuid === plan.employeeId);
-  
-      // If matched employee is found
-      if (matchedEmployee) {
-        // Group by employeeId
-        if (!acc[plan.employeeId]) {
-          acc[plan.employeeId] = {
-            employeeId: plan.employeeId,
-            role: plan.role,
-            userName: matchedEmployee.user?.userName,
-            employeeName: matchedEmployee.user?.name,
-            data: matchedEmployee,
-            planData: plan,
-          };
-        }
-      }
-      return acc;
-    }, {});
-    // Convert grouped object to an array of values for easier use
-    return groupedEmployees ? Object.values(groupedEmployees) : [];
-  }
+  const groupedEmployees = planData?.reduce((acc, plan) => {
+    // Find matching user from data array by comparing userServiceUuid with employeeId
+    const matchedEmployee = data.find(employee => employee.user?.userServiceUuid === plan.employeeId);
 
-const UserAccessMgmtTableWrapper = ({ role,}) => {
+    // If matched employee is found
+    if (matchedEmployee) {
+      // Group by employeeId
+      if (!acc[plan.employeeId]) {
+        acc[plan.employeeId] = {
+          employeeId: plan.employeeId,
+          role: plan.role,
+          userName: matchedEmployee.user?.userName,
+          employeeName: matchedEmployee.user?.name,
+          data: matchedEmployee,
+          planData: plan,
+        };
+      }
+    }
+    return acc;
+  }, {});
+  // Convert grouped object to an array of values for easier use
+  return groupedEmployees ? Object.values(groupedEmployees) : [];
+}
+
+const UserAccessMgmtTableWrapper = ({ role, internalKey,setupCompleted }) => {
+  const history = useHistory();
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [currentPage, setCurrentPage] = useState(1);
@@ -42,28 +45,28 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
   const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
 
 
-  const { isLoading, data: planAssignmentData, refetch: refetchPlanSearch} = Digit.Hooks.microplanv1.usePlanSearchEmployeeWithTagging({
+  const { isLoading, data: planAssignmentData, refetch: refetchPlanSearch } = Digit.Hooks.microplanv1.usePlanSearchEmployeeWithTagging({
     tenantId: tenantId,
     body: {
-        "PlanEmployeeAssignmentSearchCriteria": {
-            tenantId: tenantId,
-            planConfigurationId: microplanId, //Eg. "653441d7-a2ec-4196-b978-e2619d9e0848"
-            role: [role]
-        },
+      "PlanEmployeeAssignmentSearchCriteria": {
+        tenantId: tenantId,
+        planConfigurationId: microplanId, //Eg. "653441d7-a2ec-4196-b978-e2619d9e0848"
+        role: [role]
+      },
     },
     limit: rowsPerPage,
     offset: (currentPage - 1) * 5,
     config: {
-        select: (data) => {
-            return  {
-                data: groupEmployeesByPlan(data?.data, data?.planData),
-                role: data?.planData[0]?.role,
-                totalCount: data?.totalCount,
-            };
-        } 
+      select: (data) => {
+        return {
+          data: groupEmployeesByPlan(data?.data, data?.planData),
+          role: data?.planData[0]?.role,
+          totalCount: data?.totalCount,
+        };
+      }
     }
   },
-)
+  )
 
 
   useEffect(() => {
@@ -77,7 +80,7 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
   const openPopUp = () => {
     setShowPopUp(true);
   };
- 
+
   const columns = [
     {
       name: t("CORE_COMMON_NAME"),
@@ -100,69 +103,69 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
     },
 
     {
-        name: t("MICROPLAN_ADMINISTRATIVE_HIERARCHY"),
-        selector: (row) => {
-          return t(`MICROPLAN_${row?.planData?.hierarchyLevel?.toUpperCase()}`) ;
-        },
-        sortable: true,
+      name: t("MICROPLAN_ADMINISTRATIVE_HIERARCHY"),
+      selector: (row) => {
+        return t(`MICROPLAN_${row?.planData?.hierarchyLevel?.toUpperCase()}`);
+      },
+      sortable: true,
     },
     {
-        name: t("MICROPLAN_ADMINISTRATIVE_AREA"),
-        cell: (row) => {
-            return (
-                <div className="digit-tag-container userAccessCell">
-                    {row?.planData?.jurisdiction?.length > 0 &&
-            row.planData?.jurisdiction
-              ?.slice(0, 2)
-              ?.map((value, index) => {
-                const translatedText = t(value);
-                return (
-                  <Chip
-                    key={index}
-                    text={translatedText?.length > 64 ? `${translatedText.slice(0, 64)}...` : translatedText}
-                    className=""
-                    error=""
-                    extraStyles={{}}
-                    iconReq=""
-                    hideClose={true}
-                  />
-                );
-              })}
+      name: t("MICROPLAN_ADMINISTRATIVE_AREA"),
+      cell: (row) => {
+        return (
+          <div className="digit-tag-container userAccessCell">
+            {row?.planData?.jurisdiction?.length > 0 &&
+              row.planData?.jurisdiction
+                ?.slice(0, 2)
+                ?.map((value, index) => {
+                  const translatedText = t(value);
+                  return (
+                    <Chip
+                      key={index}
+                      text={translatedText?.length > 64 ? `${translatedText.slice(0, 64)}...` : translatedText}
+                      className=""
+                      error=""
+                      extraStyles={{}}
+                      iconReq=""
+                      hideClose={true}
+                    />
+                  );
+                })}
 
-          {row.planData.jurisdiction?.length > (2) && (
-            <Button
-              label={`+${row?.planData?.jurisdiction?.length - (2)} ${t("ES_MORE")}`}
-              onClick={() => openPopUp()}
-              variation="link"
-              style={{
-                height: "2rem",
-                minWidth: "4.188rem",
-                minHeight: "2rem",
-                padding: "0.5rem",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              textStyles={{
-                height: "auto",
-                fontSize: "0.875rem",
-                fontWeight: "400",
-                width: "100%",
-                lineHeight: "16px",
-                color: "#C84C0E",
-              }}
-            />
-          )}
-           {showPopUp && (
-            <ShowMoreWrapper
-            setShowPopUp={setShowPopUp}
-            alreadyQueuedSelectedState={row?.planData?.jurisdiction}
-            heading={"MICROPLAN_ADMINISTRATIVE_AREA"}
-          />
-          )}
-                </div>
-            );
-        },
-        sortable: true,
+            {row.planData.jurisdiction?.length > (2) && (
+              <Button
+                label={`+${row?.planData?.jurisdiction?.length - (2)} ${t("ES_MORE")}`}
+                onClick={() => openPopUp()}
+                variation="link"
+                style={{
+                  height: "2rem",
+                  minWidth: "4.188rem",
+                  minHeight: "2rem",
+                  padding: "0.5rem",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                textStyles={{
+                  height: "auto",
+                  fontSize: "0.875rem",
+                  fontWeight: "400",
+                  width: "100%",
+                  lineHeight: "16px",
+                  color: "#C84C0E",
+                }}
+              />
+            )}
+            {showPopUp && (
+              <ShowMoreWrapper
+                setShowPopUp={setShowPopUp}
+                alreadyQueuedSelectedState={row?.planData?.jurisdiction}
+                heading={"MICROPLAN_ADMINISTRATIVE_AREA"}
+              />
+            )}
+          </div>
+        );
+      },
+      sortable: true,
     },
   ];
 
@@ -171,30 +174,51 @@ const UserAccessMgmtTableWrapper = ({ role,}) => {
   };
 
   if (isLoading) return <Loader />;
-  else if(planAssignmentData?.data?.length === 0){
+  else if (planAssignmentData?.data?.length === 0) {
     return null;
   }
   else {
-  return(
-    <Card>
-            <div className="view-composer-header-section">
+    return (
+      <Card>
+        {/* <div className="view-composer-header-section">
                 <CardSubHeader style={{ marginTop: 0, fontSize: "1.5rem", color: " #0B4B66", marginBottom: "0rem" }}>{t(planAssignmentData?.role)}</CardSubHeader>
-            </div>
-            <DataTable
-                columns={columns}
-                data={planAssignmentData?.data}
-                customStyles={tableCustomStyle}
-                pagination
-                paginationServer
-                paginationTotalRows={totalRows}
-                onChangePage={handlePaginationChange}
-                paginationPerPage={rowsPerPage}
-                paginationRowsPerPageOptions={[5, 10, 15, 20]}
+            </div> */}
+        <div className="header-container">
+          <HeaderComp title={t(planAssignmentData?.role)} styles={{ color: "black" }} />
+          {!(setupCompleted === 'true') &&
+
+            <Button
+              label={t("WBH_EDIT")}
+              variation="secondary"
+              icon={"EditIcon"}
+              type="button"
+              className="dm-workbench-download-template-btn dm-hover"
+              onClick={(e) => {
+                const url = Digit.Hooks.useQueryParams();
+                const urlParams = Digit.Hooks.useQueryParams();
+                urlParams.key = '9';
+                urlParams.internalKey = internalKey + 1;
+                const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
+                history.push(updatedUrl);
+              }}
             />
-        
-    </Card>
+          }
+        </div>
+        <DataTable
+          columns={columns}
+          data={planAssignmentData?.data}
+          customStyles={tableCustomStyle}
+          pagination
+          paginationServer
+          paginationTotalRows={totalRows}
+          onChangePage={handlePaginationChange}
+          paginationPerPage={rowsPerPage}
+          paginationRowsPerPageOptions={[5, 10, 15, 20]}
+        />
+
+      </Card>
     );
-}
+  }
 }
 
 export default UserAccessMgmtTableWrapper;
