@@ -374,6 +374,16 @@ const PopInbox = () => {
     "SEND_BACK_FOR_CORRECTION": { isSuffix: true, icon: "ArrowForward" },
   }
 
+  const conditionalRowStyles = [
+    {
+      when: row => selectedRows.some(selectedRow => selectedRow.id === row.id),
+      style: {
+        backgroundColor: '#FBEEE8',
+      },
+      classNames: ['selectedRow'],
+    },
+  ];
+
   if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading || isWorkflowLoading || isEmployeeLoading) {
     return <Loader />;
   }
@@ -492,7 +502,7 @@ const PopInbox = () => {
                 )}
               </div>
             )}
-            <PopInboxTable progressPending={isFetching || isEmployeeLoading} currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap} onSuccessEdit={() => refetch()} />
+            <PopInboxTable progressPending={isFetching || isEmployeeLoading} currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap} onSuccessEdit={() => refetch()} conditionalRowStyles={conditionalRowStyles} />
           </Card>
         </div>
       </div>

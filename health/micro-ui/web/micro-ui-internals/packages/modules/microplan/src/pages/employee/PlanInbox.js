@@ -438,6 +438,16 @@ const PlanInbox = () => {
     setactionBarPopUp(false);
   };
 
+  const conditionalRowStyles = [
+    {
+      when: row => selectedRows.some(selectedRow => selectedRow?.original?.id === row?.original?.id),
+      style: {
+        backgroundColor: '#FBEEE8',
+      },
+      classNames: ['selectedRow'],
+    },
+  ];
+
   if (isPlanEmpSearchLoading || isLoadingCampaignObject || isWorkflowLoading) {
     return <Loader />;
   }
@@ -551,6 +561,7 @@ const PlanInbox = () => {
               selectableRowsComponent={CheckBox}
               customStyles={tableCustomStyle}
               paginationTotalRows={totalRows}
+              conditionalRowStyles={conditionalRowStyles}
               paginationPerPage={rowsPerPage}
               paginationRowsPerPageOptions={[10, 20, 50, 100]}
             />
