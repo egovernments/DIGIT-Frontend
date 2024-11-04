@@ -341,14 +341,18 @@ const MultiSelectDropdown = ({
   useEffect(() => {
     const initialCategorySelectedState = options.reduce((acc, category) => {
       if (category.options) {
-        acc[category.code] = category.options.every((option) =>
+        var filteredCategoryOptions = category?.options;
+        if(searchQuery?.length>0){
+          filteredCategoryOptions = category?.options?.filter((option) => t(option?.code)?.toLowerCase()?.includes(searchQuery?.toLowerCase()));
+        }
+        acc[category.code] = filteredCategoryOptions.every((option) =>
           alreadyQueuedSelectedState.some((selectedOption) => selectedOption.code === option.code)
         );
       }
       return acc;
     }, {});
     setCategorySelected(initialCategorySelectedState);
-  }, [options, alreadyQueuedSelectedState]);
+  }, [options, alreadyQueuedSelectedState, searchQuery]);
 
   const checkSelection = (optionstobeiterated) => {
     if (optionstobeiterated && optionstobeiterated.length > 0) {
@@ -368,11 +372,35 @@ const MultiSelectDropdown = ({
     options
       .filter((option) => option.options)
       .forEach((category) => {
-        const allChildrenSelected = checkSelection(category.options);
-        newCategorySelected[category.code] = allChildrenSelected;
+        newCategorySelected[category.code] = undefined;
       });
+    options
+      .filter((option) => option.options)
+      .forEach((category) => {
+        // If the category has already been marked as false, skip further processing for this category.
+        if (newCategorySelected[category.code] === false) return;
+
+        let filteredCategoryOptions = category?.options;
+
+        if (searchQuery?.length > 0) {
+          filteredCategoryOptions = category?.options?.filter((option) =>
+            t(option?.code)?.toLowerCase()?.includes(searchQuery?.toLowerCase())
+          );
+        }
+
+        if (filteredCategoryOptions?.length > 0) {
+          const allChildrenSelected = checkSelection(filteredCategoryOptions);
+
+          if (!allChildrenSelected) {
+            newCategorySelected[category.code] = false; // Mark as false if any child is not selected.
+          } else {
+            newCategorySelected[category.code] = true; // Mark as true if all children are selected.
+          }
+        }
+      });
+
     setCategorySelected(newCategorySelected);
-  }, [options, alreadyQueuedSelectedState]);
+  }, [options, alreadyQueuedSelectedState, searchQuery]);
 
   function handleOutsideClickAndSubmitSimultaneously() {
     setActive(false);
@@ -596,16 +624,28 @@ const MultiSelectDropdown = ({
       selectOptionThroughKeys(e, optionToScroll[optionIndex]);
     }
   };
+  const filteredOptions = searchQuery?.length > 0
+  ? options?.map((option) => {
+      if (option?.options && option.options.length > 0) {
+        const matchingNestedOptions = option.options.filter((nestedOption) => 
+          t(nestedOption.code).toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        if (matchingNestedOptions.length > 0) {
+          return {
+            ...option,
+            options: matchingNestedOptions,
+          };
+        }
+      } else if (option?.code) {
+        if (t(option.code).toLowerCase().includes(searchQuery.toLowerCase())) {
+          return option;
+        }
+      }
 
-  const filteredOptions =
-    searchQuery?.length > 0
-      ? options?.filter(
-          (option) =>
-            t(option[optionsKey] && typeof option[optionsKey] == "string" && option[optionsKey].toUpperCase())
-              .toLowerCase()
-              .indexOf(searchQuery.toLowerCase()) >= 0
-        )
-      : options;
+      return null;
+    }).filter(Boolean)
+  : options;
+
 
   const parentOptionsWithChildren = filteredOptions.filter((option) => option.options && option.options.length > 0);
 
@@ -768,7 +808,7 @@ const MultiSelectDropdown = ({
                 {addCategorySelectAllCheck && (
                   <div className="digit-category-selectAll" onClick={() => handleCategorySelection(option)}>
                     <div className="category-selectAll-label">{categorySelectAllLabel ? categorySelectAllLabel : "Select All"}</div>
-                    <input type="checkbox" checked={selectAllChecked || categorySelected[option.code]} />
+                    <input type="checkbox" checked={categorySelected[option.code]} />
                     <div className={`digit-multiselectdropodwn-custom-checkbox-selectAll`}>
                       <SVG.Check width="20px" height="20px" fill={primaryIconColor} />
                     </div>
@@ -783,7 +823,6 @@ const MultiSelectDropdown = ({
       </div>
     );
   };
-
   return (
     <div>
       <div
