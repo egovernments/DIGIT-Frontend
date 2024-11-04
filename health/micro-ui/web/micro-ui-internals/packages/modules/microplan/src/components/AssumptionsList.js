@@ -54,11 +54,6 @@ const AssumptionsList = ({ customProps, setupCompleted }) => {
 
                             return (
                                 <LabelFieldPair className="as-label-field">
-
-
-                                    {/* <div key={`pair_${index}`} className="as-table-row" style={{ borderBottom: '1px solid #e0e0e0' }} > */}
-                                    {/* className="as-table-cell as-key-cell"
-                                    className="as-table-cell as-value-cell" */}
                                     <span >
                                         <strong>{t(key)}</strong>
                                     </span>
