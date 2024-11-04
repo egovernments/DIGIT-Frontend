@@ -102,7 +102,9 @@ const PlanInbox = () => {
         active: true,
         jurisdiction: jurisdiction,
         status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
-        assignee: activeLink.code === "ASSIGNED_TO_ALL" || selectedFilter === "VALIDATED" ? "" : user?.info?.uuid,
+        ...(activeLink.code == "ASSIGNED_TO_ALL" || selectedFilter == "VALIDATED"
+          ? {}
+          : { assignee: user.info.uuid }),
         planConfigurationId: microplanId, //list of plan ids
         limit: limitAndOffset?.limit,
         offset: limitAndOffset?.offset,

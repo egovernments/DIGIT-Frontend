@@ -504,7 +504,8 @@ export const UICustomizations = {
                 iconFill=""
                 isSuffix
                 label={t("MICROPLAN_ASSIGN")}
-                onClick={() => setShowPopup(true)}
+                // onClick={() => setShowPopup(true)}// removed this because due to popup crashing on dev
+                onClick={() => console.log("temp action")}
                 options={[]}
                 optionsKey=""
                 size="medium"

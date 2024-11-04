@@ -260,3 +260,18 @@
 .inbox-search-wrapper .inbox-search-component-wrapper .sections-parent.search{
   gap: 1.5rem;
 }
+
+.horizontal-nav {
+  overflow: auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-top: 1.5rem;
+}
+
+.header-style{
+  margin-top: 0;
+  font-size: 1.8rem;
+  color: #0B4B66 !important;
+}
+

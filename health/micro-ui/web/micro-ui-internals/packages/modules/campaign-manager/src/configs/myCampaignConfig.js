@@ -178,8 +178,8 @@ export const myCampaignConfig = {
             secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
             minReqFields: 0,
             defaultValues: {
-              name: "",
-              type: "",
+              campaignName: "",
+              campaignType: "",
             },
             fields: [
               {
@@ -315,8 +315,8 @@ export const myCampaignConfig = {
             secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
             minReqFields: 0,
             defaultValues: {
-              name: "",
-              type: "",
+              campaignName: "",
+              campaignType: "",
             },
             fields: [
               {
@@ -583,8 +583,8 @@ export const myCampaignConfig = {
             secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
             minReqFields: 0,
             defaultValues: {
-              name: "",
-              type: "",
+              campaignName: "",
+              campaignType: "",
             },
             fields: [
               {
