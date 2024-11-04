@@ -8,7 +8,7 @@ import { useAssumptionContext } from "./HypothesisWrapper";
 
 
 
-const Hypothesis = ({ category, assumptions: initialAssumptions }) => {
+const Hypothesis = ({ category, assumptions: initialAssumptions,setShowToast,allMdmsAssumptionsForThisCategory }) => {
 
   const { t } = useTranslation();
   const [showPopUP, setShowPopUp] = useState(false)
@@ -35,6 +35,15 @@ const Hypothesis = ({ category, assumptions: initialAssumptions }) => {
 
 
   const handleDeleteClick = (index) => {
+    if(assumptions?.length === 1){
+      //atleast one assumption in each category has to be mandatory to support draft functionality
+      setShowToast({
+        key: "error",
+        label: t("ERR_ATLEAST_ONE_MANDATORY_FIELD"),
+        transitionTime: 3000,
+    });
+      return
+    }
     setAssumptionToDelete(index);
     setShowPopUp(true);
   };
@@ -158,8 +167,8 @@ const Hypothesis = ({ category, assumptions: initialAssumptions }) => {
           label={t("ADD_ASSUMPTION")}
           onClick={() => setAssumptionsPopUp(true)}
           variation="secondary"
-          isDisabled={isAddNewDisabled}
-
+          // isDisabled={isAddNewDisabled}
+          isDisabled={false}
         />
         {showPopUP && <PopUp
           className={"popUpClass"}
@@ -208,7 +217,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions }) => {
               variant="select-dropdown"
               t={t}
               isMandatory={false}
-              option={availableDeletedAssumptions.map(item => ({ code: item }))}
+              option={[...new Set(deletedAssumptions?.filter(del=>allMdmsAssumptionsForThisCategory?.includes(del)))]?.map(item => ({ code: item }))}
               select={(value) => {
                 setSelectedDeletedAssumption(value)
               }}

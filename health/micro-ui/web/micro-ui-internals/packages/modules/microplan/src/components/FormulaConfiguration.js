@@ -6,7 +6,7 @@ import { PRIMARY_COLOR } from "../utils/utilities";
 import { useFormulaContext } from "./FormulaConfigWrapper";
 import _ from "lodash";
 
-const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initialFormulas }) => {
+const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initialFormulas,setShowToast,allMdmsFormulasForThisCategory }) => {
   const { t } = useTranslation();
   const [showPopUP, setShowPopUp] = useState(false);
   const [formulasPopUP, setFormulasPopUp] = useState(false);
@@ -29,6 +29,14 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
   }, [initialFormulas]);
 
   const handleDeleteClick = (index, formula) => {
+    if(formulas?.length ===1){
+      setShowToast({
+        key: "error",
+        label: t("ERR_ATLEAST_ONE_MANDATORY_FORMULA"),
+        transitionTime: 3000,
+      })
+      return;
+    }
     setFormulaToDelete(formula);
     setShowPopUp(true);
   };
@@ -129,7 +137,16 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
   };
   const { filteredInputs, filteredOutputs, operators, assumptions } = customProps;
 
+  //here only show items which are there in formulas state 
+  // const filteredFormulas = formulaConfigValues.filter((formula) => formula.category === category)?.filter(formula => {
+  //   const currentFormulasOutputs = formulas?.filter(item => item.category === category)?.map(item => item.output)
+  //   // return formula?.output?.includes(currentFormulasOutputs)
+  //   return currentFormulasOutputs?.includes(formula?.output)
+    
+  // })
+
   const filteredFormulas = formulaConfigValues.filter((formula) => formula.category === category);
+
 
   const filteredFormulaOutputs = filteredFormulas.map((formula) => formula.output);
 
@@ -158,6 +175,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
               label: assumptionValue,
             })),
             ...previousOutputs.map((output) => ({ code: output, label: output })),
+            ...inputOptions
           ]
           return (
             <>
@@ -226,7 +244,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                   mainClassName={"checkboxOptionVariant"}
                   label={t("Show on Estimation Dashboard")}
                   checked={formula.showOnEstimationDashboard ? true : false}
-                  onChange={(event) => handleFormulaChange(formula.output, "showOnEstimationDashboard", !formula.showOnEstimationDashboard, category)}
+                  onChange={(event) => handleFormulaChange(formula.output, "showOnEstimationDashboard", {code : !formula.showOnEstimationDashboard}, category)}
                   isLabelFirst={false}
                 />
                 <Divider className="" variant="small" />
@@ -240,7 +258,8 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
           label={t("ADD_NEW_FORMULA")}
           onClick={() => setFormulasPopUp(true)}
           variation="secondary"
-          isDisabled={isAddNewDisabled}
+          // isDisabled={isAddNewDisabled}
+          isDisabled={false}
         />
         {showPopUP && (
           <PopUp
@@ -286,7 +305,8 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                 variant="select-dropdown"
                 t={t}
                 isMandatory={false}
-                option={availableDeletedFormulas.map((item) => ({ code: item }))}
+                // option={availableDeletedFormulas.map((item) => ({ code: item }))}
+                option={[...new Set(deletedFormulas?.filter(del=>allMdmsFormulasForThisCategory?.includes(del)))]?.map(item => ({ code: item }))}
                 select={(value) => {
                   setSelectedDeletedFormula(value);
                 }}

@@ -19,7 +19,7 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
   const rolesArray = state?.rolesForMicroplan?.sort((a, b) => a.orderNumber - b.orderNumber).map((item) => item.roleCode);
   let mpRolesArray = rolesArray.map((item) => t(`MP_ROLE_${item}`));
 
-  const nationalRoles = ["ROOT_PLAN_ESTIMATION_APPROVER", "ROOT_POPULATION_DATA_APPROVER", "ROOT_FACILITY_CATCHMENT_MAPPER"]
+  const nationalRoles = ["ROOT_PLAN_ESTIMATION_APPROVER", "ROOT_POPULATION_DATA_APPROVER", "ROOT_FACILITY_CATCHMENT_MAPPER"];
   const hierarchyData = customProps?.hierarchyData;
   const campaignType = customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code;
 
@@ -33,7 +33,6 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
   const [showToast, setShowToast] = useState(null);
   const [showErrorToast, setShowErrorToast] = useState(null);
 
-
   const [executionCount, setExecutionCount] = useState(0);
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -45,13 +44,25 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
       setInternalKey((prevKey) => prevKey - 1);
     }
   };
-
+  useEffect(() => {
+    window.addEventListener("UserAccessVerticalStepper", moveToPreviousStep);
+    return () => {
+      window.removeEventListener("UserAccessVerticalStepper", moveToPreviousStep);
+    };
+  }, [internalKey]);
   const isLastStep = () => {
     //deleting these params on last step
     Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
     Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
   };
-
+  useEffect(() => {
+    if (internalKey === mpRolesArray.length) {
+      Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: true });
+    } else {
+      // Assuming 1 is the first step
+      Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: false });
+    }
+  }, [internalKey]);
   const updateUrlParams = (params) => {
     const url = new URL(window.location.href);
     Object.entries(params).forEach(([key, value]) => {
@@ -71,7 +82,6 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
       }
     });
   };
-
 
   const handleBack = () => {
     if (internalKey > 1) {
@@ -136,11 +146,7 @@ const UserAccessWrapper = ({ onSelect, props: customProps }) => {
           </div>
 
           <div style={{ width: "100%" }}>
-            <UserAccess
-              category={rolesArray?.[internalKey - 1]}
-              setData={setData}
-              nationalRoles={nationalRoles}
-            />
+            <UserAccess category={rolesArray?.[internalKey - 1]} setData={setData} nationalRoles={nationalRoles} />
           </div>
         </div>
 
