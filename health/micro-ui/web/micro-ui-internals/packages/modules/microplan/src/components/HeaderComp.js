@@ -15,11 +15,6 @@ const HeaderComp = ({ title,styles = {} }) => {
     // Merge default styles with the custom styles passed as a prop
     const mergedStyles = { ...styles };
 
-    console.log(mergedStyles,"merged")
-    
-   
-
-
     return (
         
             <Header className="header-style"styles={mergedStyles}>
