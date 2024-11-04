@@ -69,7 +69,7 @@ const SearchUnderJurisdiction = () => {
       return
     }
     const selection = boundary?.[0]?.[1]
-    console.log(boundary);
+ 
     
   }
 
