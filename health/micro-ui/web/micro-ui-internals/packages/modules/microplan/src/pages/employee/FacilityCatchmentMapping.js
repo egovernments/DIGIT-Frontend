@@ -15,8 +15,9 @@ const FacilityCatchmentMapping = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const user = Digit.UserService.getUser();
   const userRoles = user?.info?.roles?.map((roleData) => roleData?.code);
-
-
+  const [showPopup, setShowPopup] = useState(false);
+  const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
+  const [currentRow,setCurrentRow] = useState(null)
   // Check if the user has the 'rootfacilitycatchmentmapper' role
   const isRootApprover = userRoles?.includes("ROOT_FACILITY_CATCHMENT_MAPPER");
 
@@ -93,6 +94,10 @@ const FacilityCatchmentMapping = () => {
     return updatedPlanConfig;
   };
 
+  const onClickRow = (row) => {
+    setShowPopup(true)
+    setCurrentRow(row.original)
+  }
 
   if (isPlanEmpSearchLoading || isLoading || isLoadingPlanObject)
     return <Loader />
@@ -103,6 +108,11 @@ const FacilityCatchmentMapping = () => {
       <div className="inbox-search-wrapper">
         <InboxSearchComposer
           configs={config}
+          additionalConfig = {{
+            resultsTable:{
+              onClickRow,
+            }
+          }}
         ></InboxSearchComposer>
       </div>
 
@@ -117,6 +127,16 @@ const FacilityCatchmentMapping = () => {
           sortActionFields
           style={{}}
         />}
+
+          {showPopup && currentRow && (
+                <FacilityPopUp
+                  details={currentRow}
+                  onClose={() => {
+                    setShowPopup(false);
+                    setCurrentRow(null);
+                  }}
+                />
+              )}
 
       {actionBarPopUp && (
         <WorkflowCommentPopUp
