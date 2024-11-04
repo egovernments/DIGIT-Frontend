@@ -1,6 +1,9 @@
 import { useQuery } from "react-query";
 
 const MDMS_V2_CONTEXT_PATH = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
+const HRMS_CONTEXT_PATH = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || "egov-hrms";
+
+
 
 const generateFile = async (hierarchyType, tenantId) => {
   const res = await Digit.CustomService.getResponse({
@@ -43,7 +46,7 @@ const fetchEmployeeDetails = async (userName, tenantId) => {
   try {
     // Second API Call: Fetch Service Definitions
     const res = await Digit.CustomService.getResponse({
-      url: `/health-hrms/employees/_search`,
+      url: `/${HRMS_CONTEXT_PATH}/employees/_search`,
       params: {
         tenantId: tenantId,
         codes: userName,
