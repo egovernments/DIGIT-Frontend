@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { useHistory } from "react-router-dom";
 import PopInboxTable from "../../components/PopInboxTable";
-import { Card, Tab, Button, SVG, Loader, ActionBar, Toast } from "@egovernments/digit-ui-components";
+import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonsGroup } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
@@ -368,10 +368,10 @@ const PopInbox = () => {
 
 
   const actionIconMap = {
-    "VALIDATE" : {isSuffix:false,icon:"CheckCircle"},
-    "EDIT_AND_SEND_FOR_APPROVAL": {isSuffix:false,icon:"Edit"},
-    "APPROVE" : {isSuffix:false,icon:"CheckCircle"},
-    "SEND_BACK_FOR_CORRECTION": {isSuffix:true,icon:"ArrowForward"},
+    "VALIDATE": { isSuffix: false, icon: "CheckCircle" },
+    "EDIT_AND_SEND_FOR_APPROVAL": { isSuffix: false, icon: "Edit" },
+    "APPROVE": { isSuffix: false, icon: "CheckCircle" },
+    "SEND_BACK_FOR_CORRECTION": { isSuffix: true, icon: "ArrowForward" },
   }
 
   const conditionalRowStyles = [
@@ -446,18 +446,40 @@ const PopInbox = () => {
                 </div>
 
                 <div className={`table-actions-wrapper`}>
-                  {actionsMain?.filter(action => !actionsToHide.includes(action.action))?.map((actions, index) => (
-                    <Button
-                      key={index}
-                      variation="secondary"
-                      label={t(actions.action)}
-                      type="button"
-                      onClick={(action) => handleActionClick(actions?.action)}
-                      size={"large"}
-                      icon={actionIconMap[actions.action]?.icon}
-                      isSuffix={actionIconMap[actions.action]?.isSuffix}
+                  {actionsMain?.filter((action) => !actionsToHide.includes(action.action)).length > 1 ? (
+                    <ButtonsGroup
+                      buttonsArray={actionsMain
+                        ?.filter((action) => !actionsToHide.includes(action.action))
+                        ?.map((action, index) => (
+                          <Button
+                            key={index}
+                            variation="secondary"
+                            label={t(action.action)}
+                            type="button"
+                            onClick={() => handleActionClick(action.action)}
+                            size="large"
+                            icon={actionIconMap[action.action]?.icon}
+                            isSuffix={actionIconMap[action.action]?.isSuffix}
+                          />
+                        ))
+                      }
                     />
-                  ))}
+                  ) : (
+                    actionsMain
+                      ?.filter((action) => !actionsToHide.includes(action.action))
+                      ?.map((action, index) => (
+                        <Button
+                          key={index}
+                          variation="secondary"
+                          label={t(action.action)}
+                          type="button"
+                          onClick={() => handleActionClick(action.action)}
+                          size="large"
+                          icon={actionIconMap[action.action]?.icon}
+                          isSuffix={actionIconMap[action.action]?.isSuffix}
+                        />
+                      ))
+                  )}
                 </div>
 
                 {workFlowPopUp !== '' && (

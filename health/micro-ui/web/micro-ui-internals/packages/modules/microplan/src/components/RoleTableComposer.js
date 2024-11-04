@@ -39,6 +39,7 @@ export function CustomLoader() {
     </div>
   );
 }
+
 function RoleTableComposer({ nationalRoles }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -86,8 +87,8 @@ function RoleTableComposer({ nationalRoles }) {
             selectedHierarchy: nationalRoles?.includes(category)
               ? topBoundary
               : state?.boundaryHierarchy?.find(
-                  (j) => j.boundaryType === data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.hierarchyLevel
-                ),
+                (j) => j.boundaryType === data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.hierarchyLevel
+              ),
             selectedBoundaries: nationalRoles?.includes(category)
               ? topBoundaryValue
               : data?.planData?.find((i) => i.employeeId === item?.user?.userServiceUuid)?.jurisdiction,
@@ -162,11 +163,11 @@ function RoleTableComposer({ nationalRoles }) {
         return prev.map((i) =>
           i.rowIndex === row.rowIndex
             ? {
-                ...i,
-                selectedHierarchy: value,
-                boundaryOptions,
-                selectedBoundaries: [], // Keep existing selected boundaries
-              }
+              ...i,
+              selectedHierarchy: value,
+              boundaryOptions,
+              selectedBoundaries: [], // Keep existing selected boundaries
+            }
             : i
         );
       } else {
@@ -220,9 +221,9 @@ function RoleTableComposer({ nationalRoles }) {
           return prev.map((i) =>
             i.rowIndex === row.rowIndex
               ? {
-                  ...i,
-                  selectedBoundaries: [], // Clear selected boundaries
-                }
+                ...i,
+                selectedBoundaries: [], // Clear selected boundaries
+              }
               : i
           );
         } else {
@@ -251,9 +252,9 @@ function RoleTableComposer({ nationalRoles }) {
         return prev.map((i) =>
           i.rowIndex === row.rowIndex
             ? {
-                ...i,
-                selectedBoundaries: boundariesInEvent, // Update boundaries
-              }
+              ...i,
+              selectedBoundaries: boundariesInEvent, // Update boundaries
+            }
             : i
         );
       } else {
@@ -343,7 +344,7 @@ function RoleTableComposer({ nationalRoles }) {
       cell: (row) => {
         const isUserAlreadyAssignedActive =
           HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.length > 0 &&
-          HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
+            HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
             ? true
             : false;
         return (
@@ -369,15 +370,15 @@ function RoleTableComposer({ nationalRoles }) {
       cell: (row) => {
         const isUserAlreadyAssignedActive =
           HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.length > 0 &&
-          HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
+            HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
             ? true
             : false;
         return (
           <MultiSelectDropdown
             disabled={
               isUserAlreadyAssignedActive ||
-              nationalRoles?.includes(category) ||
-              !rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedHierarchy
+                nationalRoles?.includes(category) ||
+                !rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedHierarchy
                 ? true
                 : false
             }
@@ -400,7 +401,7 @@ function RoleTableComposer({ nationalRoles }) {
         const isUserAlreadyAssigned = HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.length > 0 ? true : false;
         const isUserAlreadyAssignedActive =
           HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.length > 0 &&
-          HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
+            HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
             ? true
             : false;
 
@@ -516,29 +517,27 @@ function RoleTableComposer({ nationalRoles }) {
               <div className={`search-field-wrapper roleComposer`} style={{ display: "flex", justifyContent: "flex-end" }}>
                 <Button variation="teritiary" label={t("Clear")} onClick={handleClearSearch} />
 
-                <Button variation="primary" label={t("Search")} onClick={handleSearchSubmit} />
+                <Button variation="primary" label={t("Search")} onClick={handleSearchSubmit} style={{ width: "140px" }} />
               </div>
             </div>
           </div>
         </form>
       </Card>
-      <div style={{ overflowY: "auto" }}>
-        {/* {isLoading || isHrmsLoading ? <LoaderOverlay /> : null} */}
-        <DataTable
-          columns={columns}
-          data={HrmsData?.data}
-          pagination
-          progressPending={isLoading || isHrmsLoading}
-          progressComponent={<Loader />}
-          paginationServer
-          paginationTotalRows={totalRows}
-          customStyles={tableCustomStyle}
-          onChangePage={handlePaginationChange}
-          onChangeRowsPerPage={handleRowsPerPageChange}
-          paginationPerPage={rowsPerPage}
-          paginationRowsPerPageOptions={[5, 10, 15, 20]}
-        />
-      </div>
+      {/* {isLoading || isHrmsLoading ? <LoaderOverlay /> : null} */}
+      <DataTable
+        columns={columns}
+        data={HrmsData?.data}
+        pagination
+        progressPending={isLoading || isHrmsLoading}
+        progressComponent={<Loader />}
+        paginationServer
+        paginationTotalRows={totalRows}
+        customStyles={tableCustomStyle}
+        onChangePage={handlePaginationChange}
+        onChangeRowsPerPage={handleRowsPerPageChange}
+        paginationPerPage={rowsPerPage}
+        paginationRowsPerPageOptions={[5, 10, 15, 20]}
+      />
       {showToast && (
         <Toast
           type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}

@@ -286,7 +286,7 @@ function UserAccess({ category, setData, nationalRoles }) {
           type={"default"}
           heading={t(`${category}_POPUP_HEADING`)}
           children={[<RoleTableComposer category={category} nationalRoles={nationalRoles} />]}
-          onOverlayClick={() => {}}
+          onOverlayClick={() => { }}
           footerChildren={[
             <Button
               type={"button"}
