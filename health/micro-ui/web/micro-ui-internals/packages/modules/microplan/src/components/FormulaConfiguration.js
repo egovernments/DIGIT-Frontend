@@ -200,7 +200,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
 
   const filteredFormulas = formulaConfigValues.filter((formula) => formula.category === category);
 
-console.log("formulaConfigValues",formulaConfigValues);
+
   const filteredFormulaOutputs = filteredFormulas.map((formula) => formula.output);
   
   return (
