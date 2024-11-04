@@ -14,6 +14,16 @@ const SummaryScreen = ({ props: customProps }) => {
   if (!customProps?.sessionData) {
     return <Loader />;
   }
+  const [setupCompleted, setSetupCompleted] = useState(false); // State to track setup completion
+  const urlParams = Digit.Hooks.useQueryParams();
+  
+  useEffect(() => {
+    // Assume `setup-completed` is a boolean value in your customProps
+    const setupComp = urlParams["setup-completed"] ? urlParams["setup-completed"] : false;
+
+
+    setSetupCompleted(setupComp);
+  }, [urlParams]);
   const data = {
     cards: [
       {
@@ -22,12 +32,6 @@ const SummaryScreen = ({ props: customProps }) => {
           {
             type: "DATA",
             cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, marginBottom: "0.5rem", fontSize: "1.5rem" } },
-            cardSecondaryAction: (
-              <div className="campaign-preview-edit-container" onClick={() => {}}>
-                <span>{t(`CAMPAIGN_EDIT`)}</span>
-                <EditIcon />
-              </div>
-            ),
             values: [
               {
                 key: t("CAMPAIGN_TYPE"),
@@ -54,12 +58,6 @@ const SummaryScreen = ({ props: customProps }) => {
           {
             type: "DATA",
             cardHeader: { value: t("Name of microplan"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-            cardSecondaryAction: (
-              <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                <span>{t(`CAMPAIGN_EDIT`)}</span>
-                <EditIcon />
-              </div>
-            ),
             values: [
               {
                 key: t("NAME_OF_MICROPLAN"),
@@ -80,25 +78,29 @@ const SummaryScreen = ({ props: customProps }) => {
             component: "AssumptionsList",
             props: {
               customProps: customProps,
+              setupCompleted: setupCompleted
+
             },
           },
         ],
       },
       customProps?.sessionData?.BOUNDARY?.boundarySelection?.selectedData
         ? {
-            navigationKey: "card9",
-            noCardStyle: "true",
-            sections: [
-              {
-                type: "COMPONENT",
-                component: "CampaignBoundary",
-                noCardStyle: true,
-                props: {
-                  customProps: customProps,
-                },
+          navigationKey: "card9",
+          noCardStyle: "true",
+          sections: [
+            {
+              type: "COMPONENT",
+              component: "CampaignBoundary",
+              noCardStyle: true,
+              props: {
+                customProps: customProps,
+                setupCompleted: setupCompleted
+
               },
-            ],
-          }
+            },
+          ],
+        }
         : {},
       {
         navigationKey: "card3",
@@ -138,6 +140,8 @@ const SummaryScreen = ({ props: customProps }) => {
             component: "FormulaConfigScreen",
             props: {
               customProps,
+              setupCompleted: setupCompleted
+
             },
           },
         ],
@@ -152,6 +156,8 @@ const SummaryScreen = ({ props: customProps }) => {
             noCardStyle: true,
             props: {
               customProps: customProps,
+              setupCompleted: setupCompleted
+
             },
           },
         ],
@@ -166,6 +172,8 @@ const SummaryScreen = ({ props: customProps }) => {
             component: "UserAccessMgmt",
             props: {
               customProps: customProps,
+              setupCompleted: setupCompleted
+
             },
           },
         ],
@@ -181,6 +189,7 @@ const SummaryScreen = ({ props: customProps }) => {
 
             props: {
               customProps: customProps,
+              setupCompleted: setupCompleted
             },
           },
         ],
