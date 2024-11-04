@@ -180,8 +180,8 @@ const formValidator = (formData, key, state) => {
 
 
   const microplanAssumptionsValidator = (formData) => {
-
-    if (!areFieldsValid(formData.assumptionValues)) {
+    
+    if (!areFieldsValid(formData.assumptionValues?.filter(row => !(row.category===undefined && row.value===undefined)))) {
       return { key: "error", label: "ERROR_MANDATORY_FIELDS" };
     }
 

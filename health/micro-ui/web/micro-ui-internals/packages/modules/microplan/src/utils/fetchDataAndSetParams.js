@@ -200,7 +200,8 @@ export const fetchDataAndSetParams = (  state, setParams, campaignObject, planOb
            output: operation?.output,
            category: operation?.category,
            assumptionValue : operation?.assumptionValue,
-           operatorName : state?.RuleConfigureOperators?.find((rule) => rule?.operatorCode == operation?.operator)?.operatorName || operation?.operator || null
+           operatorName : state?.RuleConfigureOperators?.find((rule) => rule?.operatorCode == operation?.operator)?.operatorName || operation?.operator || null,
+           showOnEstimationDashboard:operation?.showOnEstimationDashboard 
         });
       }
       draftFormData.FORMULA_CONFIGURATION = { formulaConfiguration : {formulaConfigValues :  formulaConfigValues} };
