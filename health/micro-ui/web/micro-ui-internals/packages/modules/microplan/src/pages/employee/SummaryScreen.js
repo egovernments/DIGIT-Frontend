@@ -19,7 +19,8 @@ const SummaryScreen = ({ props: customProps }) => {
   
   useEffect(() => {
     // Assume `setup-completed` is a boolean value in your customProps
-    const setupComp = urlParams.setupCompleted;
+    const setupComp = urlParams["setup-completed"] ? urlParams["setup-completed"] : false;
+
 
     setSetupCompleted(setupComp);
   }, [urlParams]);
