@@ -319,7 +319,6 @@ const CampaignBoundary = ({ customProps,setupCompleted }) => {
                     variation="secondary"
                     icon={"EditIcon"}
                     type="button"
-                    className="dm-workbench-download-template-btn dm-hover"
                     onClick={(e) => {
                       editHandler();
                     }}

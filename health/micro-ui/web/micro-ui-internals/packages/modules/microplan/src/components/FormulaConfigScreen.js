@@ -48,7 +48,6 @@ const FormulaConfigScreen = ({ customProps, setupCompleted }) => {
                                     variation="secondary"
                                     icon={"EditIcon"}
                                     type="button"
-                                    className="dm-workbench-download-template-btn dm-hover"
                                     onClick={(e) => {
                                         const urlParams = Digit.Hooks.useQueryParams();
                                         urlParams.key = '8';

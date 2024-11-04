@@ -192,7 +192,6 @@ const UserAccessMgmtTableWrapper = ({ role, internalKey,setupCompleted }) => {
               variation="secondary"
               icon={"EditIcon"}
               type="button"
-              className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => {
                 const url = Digit.Hooks.useQueryParams();
                 const urlParams = Digit.Hooks.useQueryParams();
