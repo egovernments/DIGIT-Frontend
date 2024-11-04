@@ -1,4 +1,5 @@
 import { AppContainer, BreadCrumb, Loader, PrivateRoute } from "@egovernments/digit-ui-react-components";
+import BreadCrumbNew from "./BreadCrumbNew";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Switch, useLocation } from "react-router-dom";
@@ -23,22 +24,22 @@ import PlanInbox from "./PlanInbox";
 
 
 
-const bredCrumbStyle = { maxWidth: "min-content" };
+// const bredCrumbStyle = { maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
   const crumbs = [
     {
-      path: `/${window?.contextPath}/employee`,
+      internalLink: `/${window?.contextPath}/employee`,
       content: t("HOME"),
       show: true,
     },
     {
-      path: `/${window?.contextPath}/employee`,
+      internalLink: `/${window?.contextPath}/employee`,
       content: t(Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop())),
       show: true,
     },
   ];
-  return <BreadCrumb crumbs={crumbs} spanStyle={bredCrumbStyle} />;
+  return <BreadCrumbNew crumbs={crumbs} />;
 };
 
 const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hierarchyData, lowestHierarchy }) => {

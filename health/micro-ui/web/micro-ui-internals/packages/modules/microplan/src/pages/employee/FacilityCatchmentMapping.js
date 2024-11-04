@@ -99,7 +99,7 @@ const FacilityCatchmentMapping = () => {
 
   return (
     <React.Fragment>
-      <Header>{t("MICROPLAN_ASSIGN_CATCHMENT_VILLAGES")}</Header>
+      <Header styles={{marginBottom:"1.5rem"}}>{t("MICROPLAN_ASSIGN_CATCHMENT_VILLAGES")}</Header>
       <div className="inbox-search-wrapper">
         <InboxSearchComposer
           configs={config}
