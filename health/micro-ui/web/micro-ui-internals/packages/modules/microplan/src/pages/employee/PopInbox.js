@@ -193,7 +193,9 @@ const PopInbox = () => {
         tenantId: tenantId,
         source: microplanId,
         status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
-        assignee: activeLink.code === "ASSIGNED_TO_ALL" || selectedFilter === "VALIDATED" ? "" : user?.info?.uuid,
+        ...(activeLink.code == "ASSIGNED_TO_ALL" || selectedFilter == "VALIDATED"
+          ? {}
+          : { assignee: user.info.uuid }),
         jurisdiction: jurisdiction,
         limit: limitAndOffset?.limit,
         offset: limitAndOffset?.offset
@@ -368,10 +370,10 @@ const PopInbox = () => {
 
 
   const actionIconMap = {
-    "VALIDATE" : {isSuffix:false,icon:"CheckCircle"},
-    "EDIT_AND_SEND_FOR_APPROVAL": {isSuffix:false,icon:"Edit"},
-    "APPROVE" : {isSuffix:false,icon:"CheckCircle"},
-    "SEND_BACK_FOR_CORRECTION": {isSuffix:true,icon:"ArrowForward"},
+    "VALIDATE": { isSuffix: false, icon: "CheckCircle" },
+    "EDIT_AND_SEND_FOR_APPROVAL": { isSuffix: false, icon: "Edit" },
+    "APPROVE": { isSuffix: false, icon: "CheckCircle" },
+    "SEND_BACK_FOR_CORRECTION": { isSuffix: true, icon: "ArrowForward" },
   }
 
   if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading || isWorkflowLoading || isEmployeeLoading) {
