@@ -14,6 +14,15 @@ const SummaryScreen = ({ props: customProps }) => {
   if (!customProps?.sessionData) {
     return <Loader />;
   }
+  const [setupCompleted, setSetupCompleted] = useState(false); // State to track setup completion
+  const urlParams = Digit.Hooks.useQueryParams();
+  
+  useEffect(() => {
+    // Assume `setup-completed` is a boolean value in your customProps
+    const setupComp = urlParams.setupCompleted;
+
+    setSetupCompleted(setupComp);
+  }, [urlParams]);
   const data = {
     cards: [
       {
@@ -68,25 +77,29 @@ const SummaryScreen = ({ props: customProps }) => {
             component: "AssumptionsList",
             props: {
               customProps: customProps,
+              setupCompleted: setupCompleted
+
             },
           },
         ],
       },
       customProps?.sessionData?.BOUNDARY?.boundarySelection?.selectedData
         ? {
-            navigationKey: "card9",
-            noCardStyle: "true",
-            sections: [
-              {
-                type: "COMPONENT",
-                component: "CampaignBoundary",
-                noCardStyle: true,
-                props: {
-                  customProps: customProps,
-                },
+          navigationKey: "card9",
+          noCardStyle: "true",
+          sections: [
+            {
+              type: "COMPONENT",
+              component: "CampaignBoundary",
+              noCardStyle: true,
+              props: {
+                customProps: customProps,
+                setupCompleted: setupCompleted
+
               },
-            ],
-          }
+            },
+          ],
+        }
         : {},
       {
         navigationKey: "card3",
@@ -126,6 +139,8 @@ const SummaryScreen = ({ props: customProps }) => {
             component: "FormulaConfigScreen",
             props: {
               customProps,
+              setupCompleted: setupCompleted
+
             },
           },
         ],
@@ -140,6 +155,8 @@ const SummaryScreen = ({ props: customProps }) => {
             noCardStyle: true,
             props: {
               customProps: customProps,
+              setupCompleted: setupCompleted
+
             },
           },
         ],
@@ -154,6 +171,8 @@ const SummaryScreen = ({ props: customProps }) => {
             component: "UserAccessMgmt",
             props: {
               customProps: customProps,
+              setupCompleted: setupCompleted
+
             },
           },
         ],
@@ -169,6 +188,7 @@ const SummaryScreen = ({ props: customProps }) => {
 
             props: {
               customProps: customProps,
+              setupCompleted: setupCompleted
             },
           },
         ],

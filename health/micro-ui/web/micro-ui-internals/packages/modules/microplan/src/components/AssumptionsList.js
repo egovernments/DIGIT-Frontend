@@ -4,9 +4,9 @@ import HeaderComp from './HeaderComp';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 
-const AssumptionsList = ({ customProps }) => {
+const AssumptionsList = ({ customProps, setupCompleted }) => {
     const { t } = useTranslation();
-    const history=useHistory();
+    const history = useHistory();
 
     const assumptionValues = customProps?.sessionData?.HYPOTHESIS?.Assumptions?.assumptionValues || [];
     let dic = {};
@@ -30,20 +30,22 @@ const AssumptionsList = ({ customProps }) => {
                     {/* Header with title and edit button */}
                     <div className="header-container">
                         <HeaderComp title={String(item)} />
-                        <Button
-                            label={t("WBH_EDIT")}
-                            variation="secondary"
-                            icon={"EditIcon"}
-                            type="button"
-                            className="dm-workbench-download-template-btn dm-hover"
-                            onClick={(e) => {
-                                const urlParams = Digit.Hooks.useQueryParams(); 
-                                urlParams.key = '7'; 
-                                urlParams.internalKey=ind+1;
-                                const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
-                                history.push(updatedUrl);
-                              }}
-                        />
+                        {!(setupCompleted === 'true') &&
+                            <Button
+                                label={t("WBH_EDIT")}
+                                variation="secondary"
+                                icon={"EditIcon"}
+                                type="button"
+                                className="dm-workbench-download-template-btn dm-hover"
+                                onClick={(e) => {
+                                    const urlParams = Digit.Hooks.useQueryParams();
+                                    urlParams.key = '7';
+                                    urlParams.internalKey = ind + 1;
+                                    const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
+                                    history.push(updatedUrl);
+                                }}
+                            />
+                        }
                     </div>
 
                     <div>
@@ -55,14 +57,14 @@ const AssumptionsList = ({ customProps }) => {
 
 
                                     {/* <div key={`pair_${index}`} className="as-table-row" style={{ borderBottom: '1px solid #e0e0e0' }} > */}
-                                        {/* className="as-table-cell as-key-cell"
+                                    {/* className="as-table-cell as-key-cell"
                                     className="as-table-cell as-value-cell" */}
-                                        <span >
-                                            <strong>{t(key)}</strong>
-                                        </span>
-                                        <span >
-                                            {t(value)}
-                                        </span>
+                                    <span >
+                                        <strong>{t(key)}</strong>
+                                    </span>
+                                    <span >
+                                        {t(value)}
+                                    </span>
                                     {/* </div> */}
                                 </LabelFieldPair>
                             );

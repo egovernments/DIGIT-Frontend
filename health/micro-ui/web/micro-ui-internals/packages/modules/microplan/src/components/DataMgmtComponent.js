@@ -1,12 +1,12 @@
 import React, { Fragment } from 'react'
 import FileComponent from './FileComponent';
 import HeaderComp from './HeaderComp';
-import { Card,Button } from '@egovernments/digit-ui-components';
+import { Card, Button } from '@egovernments/digit-ui-components';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-export const DataMgmtComponent = ({ customProps }) => {
-    const history=useHistory();
-    const {t}=useTranslation();
+export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
+    const history = useHistory();
+    const { t } = useTranslation();
     const totalFormData = customProps;
     const uploadedFiles = totalFormData?.sessionData?.UPLOADBOUNDARYDATA?.boundary?.uploadedFile ? totalFormData?.sessionData?.UPLOADBOUNDARYDATA?.boundary?.uploadedFile : []
     const uploadedFacilities = totalFormData?.sessionData?.UPLOADFACILITYDATA?.facilityWithBoundary?.uploadedFile ? totalFormData?.sessionData?.UPLOADFACILITYDATA?.facilityWithBoundary?.uploadedFile : []
@@ -25,20 +25,22 @@ export const DataMgmtComponent = ({ customProps }) => {
             <Card style={{ marginBottom: "1rem" }}>
                 <div className="header-container">
                     <HeaderComp title="POPULATION" styles={{ color: "black" }} />
-                    <Button
-                        label={t("WBH_EDIT")}
-                        variation="secondary"
-                        icon={"EditIcon"}
-                        type="button"
-                        className="dm-workbench-download-template-btn dm-hover"
-                        onClick={(e) => {
-                            const url = Digit.Hooks.useQueryParams();
-                            const urlParams = Digit.Hooks.useQueryParams();
-                            urlParams.key = '4';
-                            const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
-                            history.push(updatedUrl);
-                        }}
-                    />
+                    {!(setupCompleted === 'true') &&
+                        <Button
+                            label={t("WBH_EDIT")}
+                            variation="secondary"
+                            icon={"EditIcon"}
+                            type="button"
+                            className="dm-workbench-download-template-btn dm-hover"
+                            onClick={(e) => {
+                                const url = Digit.Hooks.useQueryParams();
+                                const urlParams = Digit.Hooks.useQueryParams();
+                                urlParams.key = '4';
+                                const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
+                                history.push(updatedUrl);
+                            }}
+                        />
+                    }
                 </div>
 
                 {
@@ -67,22 +69,25 @@ export const DataMgmtComponent = ({ customProps }) => {
             </Card>
             <Card>
 
-            <div className="header-container">
+                <div className="header-container">
                     <HeaderComp title="FACILITIES" styles={{ color: "black" }} />
-                    <Button
-                        label={t("WBH_EDIT")}
-                        variation="secondary"
-                        icon={"EditIcon"}
-                        type="button"
-                        className="dm-workbench-download-template-btn dm-hover"
-                        onClick={(e) => {
-                            const url = Digit.Hooks.useQueryParams();
-                            const urlParams = Digit.Hooks.useQueryParams();
-                            urlParams.key = '5';
-                            const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
-                            history.push(updatedUrl);
-                        }}
-                    />
+                    {!(setupCompleted === 'true') &&
+
+                        <Button
+                            label={t("WBH_EDIT")}
+                            variation="secondary"
+                            icon={"EditIcon"}
+                            type="button"
+                            className="dm-workbench-download-template-btn dm-hover"
+                            onClick={(e) => {
+                                const url = Digit.Hooks.useQueryParams();
+                                const urlParams = Digit.Hooks.useQueryParams();
+                                urlParams.key = '5';
+                                const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
+                                history.push(updatedUrl);
+                            }}
+                        />
+                    }
                 </div>
                 {
                     uploadedFacilities?.map((item) => {
