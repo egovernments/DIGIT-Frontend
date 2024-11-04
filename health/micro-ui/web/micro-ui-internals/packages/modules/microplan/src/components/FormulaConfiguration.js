@@ -132,7 +132,6 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
           //pushing but maintaining the order
           // setFormulaConfigValues((prevValues) => {
           //   // Find the index where the new formula should be inserted
-          //   debugger
           //   const insertIndex = prevValues.findIndex(
           //     (item) => item.category > category
           //   );
