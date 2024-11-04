@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { useHistory } from "react-router-dom";
 import PopInboxTable from "../../components/PopInboxTable";
-import { Card, Tab, Button, SVG, Loader, ActionBar, Toast } from "@egovernments/digit-ui-components";
+import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonsGroup } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
@@ -376,6 +376,16 @@ const PopInbox = () => {
     "SEND_BACK_FOR_CORRECTION": { isSuffix: true, icon: "ArrowForward" },
   }
 
+  const conditionalRowStyles = [
+    {
+      when: row => selectedRows.some(selectedRow => selectedRow.id === row.id),
+      style: {
+        backgroundColor: '#FBEEE8',
+      },
+      classNames: ['selectedRow'],
+    },
+  ];
+
   if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading || isWorkflowLoading || isEmployeeLoading) {
     return <Loader />;
   }
@@ -438,18 +448,40 @@ const PopInbox = () => {
                 </div>
 
                 <div className={`table-actions-wrapper`}>
-                  {actionsMain?.filter(action => !actionsToHide.includes(action.action))?.map((actions, index) => (
-                    <Button
-                      key={index}
-                      variation="secondary"
-                      label={t(actions.action)}
-                      type="button"
-                      onClick={(action) => handleActionClick(actions?.action)}
-                      size={"large"}
-                      icon={actionIconMap[actions.action]?.icon}
-                      isSuffix={actionIconMap[actions.action]?.isSuffix}
+                  {actionsMain?.filter((action) => !actionsToHide.includes(action.action)).length > 1 ? (
+                    <ButtonsGroup
+                      buttonsArray={actionsMain
+                        ?.filter((action) => !actionsToHide.includes(action.action))
+                        ?.map((action, index) => (
+                          <Button
+                            key={index}
+                            variation="secondary"
+                            label={t(action.action)}
+                            type="button"
+                            onClick={() => handleActionClick(action.action)}
+                            size="large"
+                            icon={actionIconMap[action.action]?.icon}
+                            isSuffix={actionIconMap[action.action]?.isSuffix}
+                          />
+                        ))
+                      }
                     />
-                  ))}
+                  ) : (
+                    actionsMain
+                      ?.filter((action) => !actionsToHide.includes(action.action))
+                      ?.map((action, index) => (
+                        <Button
+                          key={index}
+                          variation="secondary"
+                          label={t(action.action)}
+                          type="button"
+                          onClick={() => handleActionClick(action.action)}
+                          size="large"
+                          icon={actionIconMap[action.action]?.icon}
+                          isSuffix={actionIconMap[action.action]?.isSuffix}
+                        />
+                      ))
+                  )}
                 </div>
 
                 {workFlowPopUp !== '' && (
@@ -472,7 +504,7 @@ const PopInbox = () => {
                 )}
               </div>
             )}
-            <PopInboxTable progressPending={isFetching || isEmployeeLoading} currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap} onSuccessEdit={() => refetch()} />
+            <PopInboxTable progressPending={isFetching || isEmployeeLoading} currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap} onSuccessEdit={() => refetch()} conditionalRowStyles={conditionalRowStyles} />
           </Card>
         </div>
       </div>

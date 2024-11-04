@@ -67,7 +67,7 @@ export const tableCustomStyle = {
     },
     pagination: {
       style: {
-        marginTop: "-16px",
+        marginTop: "-60px",
         borderStyle: "solid",
         borderWidth: "1px",
         borderColor: "#D6D5D4",

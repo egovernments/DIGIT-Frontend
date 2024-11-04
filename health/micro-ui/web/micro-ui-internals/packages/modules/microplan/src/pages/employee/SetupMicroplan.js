@@ -7,14 +7,13 @@ import {
   Close,
   LogoutIcon,
   Menu,
-  ActionBar,
   SubmitBar,
 } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import { MicroplanConfig } from "../../configs/SetupMicroplanConfig";
-import { Stepper, Toast, PopUp, CardText, InfoCard, Button } from "@egovernments/digit-ui-components";
+import { Stepper, Toast, PopUp, CardText, InfoCard, Button, ActionBar } from "@egovernments/digit-ui-components";
 import _ from "lodash";
 import { useMyContext } from "../../utils/context";
 import { useLocation } from "react-router-dom/cjs/react-router-dom";
@@ -350,7 +349,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
         secondaryLabel={t("MP_BACK")}
         actionClassName={"actionBarClass"}
         className="setup-campaign"
-        cardClassName="setup-campaign-card"
+        cardClassName="setup-compaign-card"
         noCardStyle={true}
         onSecondayActionClick={onSecondayActionClick}
         label={getNextActionLabel()}

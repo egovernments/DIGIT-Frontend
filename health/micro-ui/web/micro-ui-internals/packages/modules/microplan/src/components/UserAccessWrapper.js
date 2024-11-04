@@ -136,7 +136,7 @@ const UserAccessWrapper = ({ onSelect, props: customProps,setupCompleted }) => {
     <Fragment>
       <UserAccessContext.Provider value={{ hierarchyData, category: rolesArray?.[internalKey - 1] }}>
         <div style={{ display: "flex", gap: "1.5rem" }}>
-          <div className="card-container">
+          <div className="card-container" style={{ marginBottom: "2.5rem" }}>
             <Card className="card-header-timeline">
               <TextBlock subHeader={t("USER_ACCESS_MANAGEMENT")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
             </Card>
