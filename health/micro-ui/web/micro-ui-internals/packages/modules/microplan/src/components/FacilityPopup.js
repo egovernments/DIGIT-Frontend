@@ -315,7 +315,7 @@ const FacilityPopUp = ({ details, onClose }) => {
   };
 
 if(isLoadingPlanEmployee || isLoadingCampaign){
-  return null;
+  return 'loading';
 }
 
   return (
@@ -353,7 +353,7 @@ if(isLoadingPlanEmployee || isLoadingCampaign){
                   />
                 </Card>
               </div>
-              <Card className="facility-popup-table-card" type={"primary"}>
+              {/* <Card className="facility-popup-table-card" type={"primary"}>
                 {selectedRows.length > 0 && (
                   <div className="selection-state-wrapper">
                     <div className="svg-state-wrapper">
@@ -407,7 +407,7 @@ if(isLoadingPlanEmployee || isLoadingCampaign){
                 )}
                 {viewDetails && accessibilityData && <AccessibilityPopUp onClose={() => closeViewDetails()} census={accessibilityData} />}
                 {viewDetails && securityData && <SecurityPopUp onClose={() => closeViewDetails()} census={securityData} />}
-              </Card>
+              </Card> */}
               {showToast && (
                 <Toast
                   type={
