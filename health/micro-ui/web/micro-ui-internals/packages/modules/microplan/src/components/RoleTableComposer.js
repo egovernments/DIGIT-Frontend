@@ -523,21 +523,24 @@ function RoleTableComposer({ nationalRoles }) {
           </div>
         </form>
       </Card>
+
       {/* {isLoading || isHrmsLoading ? <LoaderOverlay /> : null} */}
-      <DataTable
-        columns={columns}
-        data={HrmsData?.data}
-        pagination
-        progressPending={isLoading || isHrmsLoading}
-        progressComponent={<Loader />}
-        paginationServer
-        paginationTotalRows={totalRows}
-        customStyles={tableCustomStyle}
-        onChangePage={handlePaginationChange}
-        onChangeRowsPerPage={handleRowsPerPageChange}
-        paginationPerPage={rowsPerPage}
-        paginationRowsPerPageOptions={[5, 10, 15, 20]}
-      />
+      <Card style={{ boxShadow: "none", padding: "0px" }}>
+        <DataTable
+          columns={columns}
+          data={HrmsData?.data}
+          pagination
+          progressPending={isLoading || isHrmsLoading}
+          progressComponent={<Loader />}
+          paginationServer
+          paginationTotalRows={totalRows}
+          customStyles={tableCustomStyle}
+          onChangePage={handlePaginationChange}
+          onChangeRowsPerPage={handleRowsPerPageChange}
+          paginationPerPage={rowsPerPage}
+          paginationRowsPerPageOptions={[5, 10, 15, 20]}
+        />
+      </Card>
       {showToast && (
         <Toast
           type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}

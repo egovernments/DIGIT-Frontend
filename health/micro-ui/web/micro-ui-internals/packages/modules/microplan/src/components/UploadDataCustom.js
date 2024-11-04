@@ -678,7 +678,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
               wrapperClassName={"stepper-wrapper"}
             />
           </Card>
-          <Card className="vertical-custom-height-stepper-card">
+          <Card className="vertical-stepper-card">
             <Stepper
               customSteps={["HCM_UPLOAD_BOUNDARY_MICROPLAN", "HCM_UPLOAD_FACILITY_MICROPLAN"]}
               currentStep={key - baseKey + 1}

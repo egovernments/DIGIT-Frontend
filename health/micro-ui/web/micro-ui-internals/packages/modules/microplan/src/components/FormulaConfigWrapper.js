@@ -423,7 +423,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
         value={{ formulaConfigValues, handleFormulaChange, setFormulaConfigValues, deletedFormulas, setDeletedFormulas, assumptionsInPlan }}
       >
         <div className="container-full" >
-          <div className="card-container">
+          <div className="card-container" style={{ marginBottom: "2.5rem" }}>
             <Card className="card-header-timeline">
               <TextBlock subHeader={t("FORMULA_CONFIGURATION")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
             </Card>

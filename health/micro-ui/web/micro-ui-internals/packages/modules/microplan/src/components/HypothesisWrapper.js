@@ -327,7 +327,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
             <AssumptionContext.Provider value={{ assumptionValues, handleAssumptionChange, setAssumptionValues, deletedAssumptions, setDeletedAssumptions }}>
 
                 <div style={{ display: "flex", gap: "1.5rem" }}>
-                    <div className="card-container">
+                    <div className="card-container" style={{ marginBottom: "2.5rem" }}>
                         <Card className="card-header-timeline">
                             <TextBlock subHeader={t("ESTIMATION_ASSUMPTIONS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
                         </Card>
