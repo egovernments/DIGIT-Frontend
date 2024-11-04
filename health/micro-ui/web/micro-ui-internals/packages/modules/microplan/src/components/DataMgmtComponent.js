@@ -20,6 +20,8 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
     //                     "inputFileType": "xlsx",
     //                         "templateIdentifier": "Population"
     // }
+    console.log("uploaded files",uploadedFiles);
+
     return (
         <>
             <Card style={{ marginBottom: "1rem" }}>
@@ -31,7 +33,6 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
                             variation="secondary"
                             icon={"EditIcon"}
                             type="button"
-                            className="dm-workbench-download-template-btn dm-hover"
                             onClick={(e) => {
                                 const url = Digit.Hooks.useQueryParams();
                                 const urlParams = Digit.Hooks.useQueryParams();
@@ -54,7 +55,6 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
                                     Digit.Utils.campaign.downloadExcelWithCustomName({
                                         fileStoreId: item?.filestoreId,
                                         customName: String(fileName)
-
                                     });
                                 }} // Passing the download function
 
@@ -78,7 +78,6 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
                             variation="secondary"
                             icon={"EditIcon"}
                             type="button"
-                            className="dm-workbench-download-template-btn dm-hover"
                             onClick={(e) => {
                                 const url = Digit.Hooks.useQueryParams();
                                 const urlParams = Digit.Hooks.useQueryParams();

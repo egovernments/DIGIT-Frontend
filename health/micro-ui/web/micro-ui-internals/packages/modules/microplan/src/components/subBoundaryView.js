@@ -26,7 +26,6 @@ const SubBoundaryView = ({ title, arr, style,editHandler,isEditable}) => {
                 variation="secondary"
                 icon={"EditIcon"}
                 type="button"
-                className="dm-workbench-download-template-btn dm-hover"
                 onClick={(e) => {
                  editHandler();
                 }}

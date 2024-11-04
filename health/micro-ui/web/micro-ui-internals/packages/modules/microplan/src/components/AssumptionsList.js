@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{Fragment} from 'react';
 import { Button, Card, LabelFieldPair } from '@egovernments/digit-ui-components';
 import HeaderComp from './HeaderComp';
 import { useTranslation } from 'react-i18next';
@@ -36,7 +36,6 @@ const AssumptionsList = ({ customProps, setupCompleted }) => {
                                 variation="secondary"
                                 icon={"EditIcon"}
                                 type="button"
-                                className="dm-workbench-download-template-btn dm-hover"
                                 onClick={(e) => {
                                     const urlParams = Digit.Hooks.useQueryParams();
                                     urlParams.key = '7';
@@ -53,7 +52,8 @@ const AssumptionsList = ({ customProps, setupCompleted }) => {
                             const [key, value] = Object.entries(item1)[0] || ['NA', 'NA'];
 
                             return (
-                                <LabelFieldPair className="as-label-field">
+                                <>
+                                <LabelFieldPair className="as-label-field" style={{marginBottom:"1rem"}}>
                                     <span >
                                         <strong>{t(key)}</strong>
                                     </span>
@@ -62,6 +62,10 @@ const AssumptionsList = ({ customProps, setupCompleted }) => {
                                     </span>
                                     {/* </div> */}
                                 </LabelFieldPair>
+                                {index < dic[item].length - 1 && (
+                                    <div style={{ borderBottom: '1px solid #D3D3D3',marginBottom:"1rem" }}></div>
+                                )}
+                                </>
                             );
                         })}
                     </div>
