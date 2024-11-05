@@ -23,7 +23,7 @@ const UserDownload = () => {
             enabled: true,
             select: data => {
                 const ResourceDetails = data?.ResourceDetails || [];
-                const filteredData = ResourceDetails.filter(item => item?.action === "create");
+                const filteredData = ResourceDetails.filter(item => item?.action === "create" && item?.additionalDetails?.source == "microplan");
                 data.ResourceDetails = filteredData;
                 return data;
             }

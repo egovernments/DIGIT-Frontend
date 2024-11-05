@@ -12,7 +12,7 @@ export const useFormulaContext = () => {
 
 const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
   const { mutate: updateResources, ...rest } = Digit.Hooks.microplanv1.useCreateUpdatePlanProject();
-  const [manualLoader,setManualLoader] = useState(false)
+  const [manualLoader, setManualLoader] = useState(false)
   const { t } = useTranslation();
   const { state } = useMyContext();
   const [formulaConfigValues, setFormulaConfigValues] = useState(
@@ -44,7 +44,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
     },
     {
       enabled: microplanId ? true : false,
-      cacheTime:0
+      cacheTime: 0
       //   queryKey: currentKey,
     }
   );
@@ -91,7 +91,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
             ...formula,
             source: "MDMS",
             category,
-            [type]: value.code , // Set to null if input is empty
+            [type]: value.code, // Set to null if input is empty
           };
         }
         return formula;
@@ -129,7 +129,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
     setFilteredFormulas(currentCategoryRuleConfigurations?.map(row => {
       return {
         ...row,
-        category:currentCategory
+        category: currentCategory
       }
     }));
   }, [currentCategoryRuleConfigurations]);
@@ -156,28 +156,28 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
     // const formulasToUpdate = formulaConfigValues.filter(row => row.category === currentCategory)
     const formulasToUpdate = formulaConfigValues
     updateResources({
-      config:{
-          name:"SUB_FORMULA"
+      config: {
+        name: "SUB_FORMULA"
       },
       formulasToUpdate,
       state
-  },{
+    }, {
       onSuccess: (data) => {
-          setManualLoader(false)
-          if (formulaInternalKey < ruleConfigurationCategories?.length) {
-            setFormulaInternalKey((prevKey) => prevKey + 1); // Update key in URL
-          }
-          refetchPlan();
-          // TODO: here see if session can be updated (refresh)
+        setManualLoader(false)
+        if (formulaInternalKey < ruleConfigurationCategories?.length) {
+          setFormulaInternalKey((prevKey) => prevKey + 1); // Update key in URL
+        }
+        refetchPlan();
+        // TODO: here see if session can be updated (refresh)
       },
       onError: (error, variables) => {
-          setManualLoader(false)
-          console.error(error)
-          // setShowToast()
+        setManualLoader(false)
+        console.error(error)
+        // setShowToast()
 
         setShowToast(({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") }))
       },
-  })
+    })
     //simply returning from here, rest of the code is not required for now maybe required later
     return;
 
@@ -285,9 +285,12 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
   useEffect(() => {
     //TODO:
     // calculate this based on prevOutputs and inputs as well 
+    // only check for legal values for assumptions only not outputs and inputs
     const legalValuesForAssumptions = assumptionsInPlan?.map(assumption => assumption.key)
     const prevOutputs = []
     const prevInputs = []
+    //if item is there in allAssumptions that means it has to be in legalValueForAssumptions if not then set as empty otherwise the autofilled value is not part of the assumption so let it set
+    const allAssumptions = state?.allAssumptions?.length > 0 ? state?.allAssumptions : []
     const initialFormulas = filteredFormulas.map((item) => {
       const updatedObj = {
         source: "MDMS",
@@ -296,7 +299,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
         output: item.output,
         operatorName: item.operatorName,
         //check this assumption is there in plan object or not
-        assumptionValue: legalValuesForAssumptions?.includes(item.assumptionValue) || prevOutputs?.includes(item.assumptionValue) || prevInputs?.includes(item.assumptionValue) ? item.assumptionValue : "",
+        assumptionValue:allAssumptions.includes(item.assumptionValue) ? legalValuesForAssumptions?.includes(item.assumptionValue) || prevOutputs?.includes(item.assumptionValue) || prevInputs?.includes(item.assumptionValue) ? item.assumptionValue : "" : item.assumptionValue,
         // assumptionValue:item.assumptionValue,
         showOnEstimationDashboard: true,
       }
@@ -316,26 +319,26 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
     // in that case don't render the deleted ones because for them session will not be there
     // basically preset the deleted ones
     // const currentCategory = assumptionCategories?.[internalKey - 1]?.category
-    if(planObject?.operations?.length > 0 && currentCategory && filteredFormulas?.length > 0){
-        // this is the list of items already filled for this microplan for this category
-        const formulasFilledForThisCategory = planObject?.operations?.filter(row => row.category === currentCategory)?.map(row => row.output)
-        // if this category is not yet filled
-        if(formulasFilledForThisCategory.length === 0){
-            return
-        }
-        // filteredFormulas -> this is the current list from master data
-        // basically what all is there in filteredFormulas, some of them could have been deleted so if something is there in formulasFilledForThisCategory but not in filteredFormulas then put that in deleted ones
-        const deletedFormulasForThisCategory = filteredFormulas?.filter(item => item.category===currentCategory)?.map(row => row.output)?.filter(item => !formulasFilledForThisCategory.includes(item));
-        if(deletedFormulasForThisCategory.length>0){
-            setDeletedFormulas(prev=> [...prev,...deletedFormulasForThisCategory])
-            //here set formula config values as well
-            setFormulaConfigValues(prev=>{
-              return [...prev.filter(prevFormula => !deletedFormulasForThisCategory.includes(prevFormula.output) )]
-            })
-        }
-        
+    if (planObject?.operations?.length > 0 && currentCategory && filteredFormulas?.length > 0) {
+      // this is the list of items already filled for this microplan for this category
+      const formulasFilledForThisCategory = planObject?.operations?.filter(row => row.category === currentCategory)?.map(row => row.output)
+      // if this category is not yet filled
+      if (formulasFilledForThisCategory.length === 0) {
+        return
+      }
+      // filteredFormulas -> this is the current list from master data
+      // basically what all is there in filteredFormulas, some of them could have been deleted so if something is there in formulasFilledForThisCategory but not in filteredFormulas then put that in deleted ones
+      const deletedFormulasForThisCategory = filteredFormulas?.filter(item => item.category === currentCategory)?.map(row => row.output)?.filter(item => !formulasFilledForThisCategory.includes(item));
+      if (deletedFormulasForThisCategory.length > 0) {
+        setDeletedFormulas(prev => [...prev, ...deletedFormulasForThisCategory])
+        //here set formula config values as well
+        setFormulaConfigValues(prev => {
+          return [...prev.filter(prevFormula => !deletedFormulasForThisCategory.includes(prevFormula.output))]
+        })
+      }
+
     }
-  }, [planObject,isLoadingPlanObject,formulaInternalKey,filteredFormulas])
+  }, [planObject, isLoadingPlanObject, formulaInternalKey, filteredFormulas])
 
   //to get existing assumptions to provide options for assumptionValue dropdown
 
@@ -413,7 +416,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
   customProps.assumptions = assumptions;
 
 
-  if(isLoadingPlanObject || manualLoader){
+  if (isLoadingPlanObject || manualLoader) {
     return <Loader />
   }
 
@@ -422,8 +425,8 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
       <FormulaContext.Provider
         value={{ formulaConfigValues, handleFormulaChange, setFormulaConfigValues, deletedFormulas, setDeletedFormulas, assumptionsInPlan }}
       >
-        <div className="container-full">
-          <div className="card-container">
+        <div className="container-full" >
+          <div className="card-container" style={{ marginBottom: "2.5rem" }}>
             <Card className="card-header-timeline">
               <TextBlock subHeader={t("FORMULA_CONFIGURATION")} subHeaderClasName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
             </Card>
@@ -437,7 +440,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
             </Card>
           </div>
 
-          <div className="card-container" style={{ width: "80%" }}>
+          <div className="card-container" style={{ maxWidth: "100%", overflow: "auto", marginBottom: "2.5rem" }}>
             <FormulaConfiguration
               category={ruleConfigurationCategories[formulaInternalKey - 1]?.category}
               formulas={filteredFormulas?.filter((item) => !deletedFormulas?.includes(item.output))}

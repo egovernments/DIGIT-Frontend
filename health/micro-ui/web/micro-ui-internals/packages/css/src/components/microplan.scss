@@ -1,6 +1,3 @@
-a{
-  text-decoration: none !important;
-}
 .search-tabs-container {
     display: flex;
     justify-content: space-between;
@@ -248,3 +245,33 @@ a{
 .pagination-controls button:hover:not(:disabled) {
   text-decoration: underline;
 }
+
+.rdt_TableRow{
+  &.selectedRow{
+    background-color: #FBEEE8 !important;
+    border-bottom-color: #d6d5d4 !important;
+  }
+}
+
+.digit-bread-crumb {
+  margin-bottom: 1.5rem;
+}
+
+.inbox-search-wrapper .inbox-search-component-wrapper .sections-parent.search{
+  gap: 1.5rem;
+}
+
+.horizontal-nav {
+  overflow: auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-top: 1.5rem;
+}
+
+.header-style{
+  margin-top: 0;
+  font-size: 1.8rem;
+  color: #0B4B66 !important;
+}
+

@@ -314,6 +314,16 @@ const FacilityPopUp = ({ details, onClose }) => {
     mainClassName: "data-table-select-checkbox",
   };
 
+  const conditionalRowStyles = [
+    {
+      when: row => selectedRows.some(selectedRow => selectedRow === row.id),
+      style: {
+        backgroundColor: '#FBEEE8',
+      },
+      classNames: ['selectedRow'],
+    },
+  ];
+
   return (
     <>
       {loader ? (
@@ -398,6 +408,7 @@ const FacilityPopUp = ({ details, onClose }) => {
                       customStyles={tableCustomStyle}
                       selectableRowsComponent={CheckBox}
                       selectableRowsComponentProps={selectProps}
+                      conditionalRowStyles={conditionalRowStyles}
                     />
                   )
                 )}
@@ -425,6 +436,7 @@ const FacilityPopUp = ({ details, onClose }) => {
               variation={"secondary"}
               label={t(`MICROPLAN_CLOSE_BUTTON`)}
               onClick={onClose}
+              style={{width:"200px"}}
             />,
           ]}
           className={"facility-popup"}

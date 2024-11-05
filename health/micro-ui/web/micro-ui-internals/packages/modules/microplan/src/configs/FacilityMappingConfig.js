@@ -145,6 +145,12 @@ const facilityMappingConfig = () => {
               jsonPath: "",
               additionalCustomization: true,
             },
+            // {
+            //   label: "MICROPLAN_FACILITY_ACTION",
+            //   // jsonPath: "message",
+            //   // type:"action",
+            //   svg:"EditIcon",
+            // }
           ],
           enableGlobalSearch: false,
           enableColumnSort: true,

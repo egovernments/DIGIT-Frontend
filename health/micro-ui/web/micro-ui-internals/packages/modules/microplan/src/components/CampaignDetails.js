@@ -2,7 +2,7 @@ import React, { useState, useMemo, useRef, useEffect, useCallback } from "react"
 import { UploadIcon, FileIcon, DeleteIconv2, Toast, Card, Header, Loader } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 // import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
-import { Button, CardText, Dropdown, ErrorMessage, PopUp, MultiSelectDropdown,LabelFieldPair } from "@egovernments/digit-ui-components";
+import { Button, CardText, Dropdown, ErrorMessage, PopUp, MultiSelectDropdown, LabelFieldPair } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../utils/context";
 import { Card as CardNew } from "@egovernments/digit-ui-components";
 
@@ -18,8 +18,8 @@ const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
     diseaseSession
       ? diseaseSession
       : {
-          code: "MALARIA",
-        }
+        code: "MALARIA",
+      }
   );
   const [distributionStrat, setDistributionStrat] = useState(distributionStratSession);
   useEffect(() => {
@@ -81,16 +81,16 @@ const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
   }
 
   return (
-    <CardNew>
-      <Header styles={{marginBottom:"0rem"}}>{t(`HCM_CAMPAIGN_DETAILS_HEADER`)}</Header>
+    <CardNew style={{ gap: "1.5rem" }}>
+      <Header styles={{ marginBottom: "0rem" }}>{t(`HCM_CAMPAIGN_DETAILS_HEADER`)}</Header>
       <p className="campaign-details-description">{t(`HCM_CAMPAIGN_DETAILS_DESC`)}</p>
-      <LabelFieldPair style={{marginBottom:"0rem"}}>
+      <LabelFieldPair style={{ marginBottom: "0rem" }}>
         <div className="campaign-type-label-pair" style={{ minWidth: "17rem" }}>
           <span className="campaign-type-label">{`${t("HCM_DISEASE_TYPE")}`}</span>
           <span className="mandatory-span">*</span>
         </div>
         <Dropdown
-          style={{ width: "40rem"}}
+          style={{ width: "40rem" }}
           // variant={error ? "error" : ""}
           t={t}
           option={data?.diseases}
@@ -102,7 +102,7 @@ const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
           disabled={isFreezed}
         />
       </LabelFieldPair>
-      <LabelFieldPair style={{marginBottom:"0rem"}}>
+      <LabelFieldPair style={{ marginBottom: "0rem" }}>
         <div className="campaign-type-label-pair" style={{ minWidth: "17rem" }}>
           <span className="campaign-type-label">{`${t("HCM_CAMPAIGN_TYPE_OF")}`}</span>
           <span className="mandatory-span">*</span>
@@ -120,13 +120,13 @@ const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
           disabled={isFreezed}
         />
       </LabelFieldPair>
-      <LabelFieldPair style={{marginBottom:"0rem"}}>
+      <LabelFieldPair style={{ marginBottom: "0rem" }}>
         <div className="campaign-type-label-pair" style={{ minWidth: "17rem" }}>
           <span className="campaign-type-label">{`${t("HCM_CAMPAIGN_RESOURCE_DIST_STRAT")}`}</span>
           <span className="mandatory-span">*</span>
         </div>
         <Dropdown
-          style={{ width: "40rem"}}
+          style={{ width: "40rem" }}
           // variant={error ? "error" : ""}
           t={t}
           option={data?.distributionStrategies}

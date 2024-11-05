@@ -181,6 +181,7 @@ const PopInboxTable = ({ ...props }) => {
       paginationTotalRows={props?.totalRows}
       paginationPerPage={props?.rowsPerPage}
       paginationRowsPerPageOptions={[10, 20, 50, 100]}
+      conditionalRowStyles={props?.conditionalRowStyles}
     />
   );
 };

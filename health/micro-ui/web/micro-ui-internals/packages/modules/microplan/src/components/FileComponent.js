@@ -63,7 +63,6 @@ const FileComponent = ({ title, fileName, status, auditDetails, editHandler, del
                                 variation="secondary"
                                 icon={<EditIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
                                 type="button"
-                                className="dm-workbench-download-template-btn dm-hover"
                                 onButtonClick={(e) => {
                                     editHandler();
                                 }}
@@ -77,7 +76,6 @@ const FileComponent = ({ title, fileName, status, auditDetails, editHandler, del
                             variation="secondary"
                             icon={<DeleteIconv2 styles={{ height: "1.25rem", width: "2.5rem" }} />}
                             type="button"
-                            className="dm-workbench-download-template-btn dm-hover"
                             onButtonClick={(e) => {
                                 deleteHandler();
                             }}
@@ -91,7 +89,6 @@ const FileComponent = ({ title, fileName, status, auditDetails, editHandler, del
                             variation="secondary"
                             icon={"FileDownload"}
                             type="button"
-                            className="dm-workbench-download-template-btn dm-hover"
                             onClick={(e) => {
                                 downloadHandler();
                             }}

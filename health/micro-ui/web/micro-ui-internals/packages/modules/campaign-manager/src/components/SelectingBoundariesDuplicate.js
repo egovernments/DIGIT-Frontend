@@ -20,15 +20,12 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData || {}
   );
   const [executionCount, setExecutionCount] = useState(0);
-  const [showPopUp, setShowPopUp] = useState(null);
-  const [updateBoundary, setUpdateBoundary] = useState(true);
   const [currentStep, setCurrentStep] = useState(2);
   const currentKey = searchParams.get("key");
   const [key, setKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
-  const [updatedSelected, setUpdatedSelected] = useState(null);
   const [restrictSelection, setRestrictSelection] = useState(null);
 
   useEffect(() => {
@@ -44,8 +41,8 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   };
 
   useEffect(() => {
-    onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions , updateBoundary: updateBoundary});
-  }, [selectedData, boundaryOptions]);
+    onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions ,  updateBoundary: !restrictSelection});
+  }, [selectedData, boundaryOptions , restrictSelection]);
 
   useEffect(() => {
     setSelectedData(
@@ -62,24 +59,10 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
 
   useEffect(() => {
     if (executionCount < 5) {
-      onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions , updateBoundary: updateBoundary});
+      onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions , updateBoundary: !restrictSelection});
       setExecutionCount((prevCount) => prevCount + 1);
     }
   });
-
-  const checkDataPresent = ({ action }) => {
-    if (action === false) {
-      setShowPopUp(false);
-      setUpdateBoundary(true);
-      setRestrictSelection(false);
-      return;
-    }
-    if (action === true) {
-      setShowPopUp(false);
-      setUpdateBoundary(false);
-      return;
-    }
-  };
 
 
   useEffect(() => {
@@ -90,11 +73,12 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
       ) {
         setRestrictSelection(true);
       }
-  }, [props?.props?.sessionData, updateBoundary]);
+  }, [props?.props?.sessionData]);
 
   const handleBoundaryChange = (value) => {
     setBoundaryOptions(value?.boundaryOptions);
     setSelectedData(value?.selectedData);
+    setRestrictSelection(value?.restrictSelection);
   };
 
   function updateUrlParams(params) {
@@ -131,7 +115,6 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
               lowest={lowestHierarchy}
               selectedData={selectedData}
               boundaryOptions={boundaryOptions}
-              updateBoundary={updateBoundary}
               hierarchyData={props?.props?.hierarchyData}
               isMultiSelect={"true"}
               restrictSelection = {restrictSelection}

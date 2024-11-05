@@ -3,12 +3,15 @@ import { useTranslation } from "react-i18next";
 import { useMyContext } from "../utils/context";
 import SubBoundaryView from "./subBoundaryView";
 import HeaderComp from "./HeaderComp";
-import { Card } from "@egovernments/digit-ui-components";
+import { Card, Button } from "@egovernments/digit-ui-components";
 import BoundaryKpi from "./BoundaryKpi";
+import { useHistory } from "react-router-dom";
 
-const CampaignBoundary = ({ customProps }) => {
+const CampaignBoundary = ({ customProps,setupCompleted }) => {
   const { dispatch, state } = useMyContext();
   const { t } = useTranslation();
+
+  
 
   const handleViewMore = (ind) => {
     // Create a copy of the boundaryStatus array
@@ -178,6 +181,7 @@ const CampaignBoundary = ({ customProps }) => {
   // ]
 
   const [selectedData, setSelectedData] = useState(customProps?.sessionData?.BOUNDARY?.boundarySelection?.selectedData);
+  const history = useHistory();
 
   useEffect(() => {
     if (customProps?.sessionData?.BOUNDARY?.boundarySelection?.selectedData) {
@@ -284,20 +288,44 @@ const CampaignBoundary = ({ customProps }) => {
     setBoundaryStatus(updatedBoundaryStatus);
   }, [boundaryHierarchy]); // Only re-run when boundaryHierarchy changes
 
+  const editHandler = () => {
+    const urlParams = Digit.Hooks.useQueryParams();
+    urlParams.key = '3';
+    const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
+    history.push(updatedUrl);
+  }
+  const isEditable=setupCompleted==='true'? false:true;
+
+
   return (
     <div>
       <BoundaryKpi data={statusMap} />
       {bHierarchy.length > 1 ? (
         <div className="marginBottom">
-          <SubBoundaryView style={{ background: "#fff" }} title={bHierarchy?.[1]} arr={parent_group?.[bHierarchy?.[1]]} />
+  <SubBoundaryView style={{ background: "#fff" }} title={bHierarchy?.[1]} arr={parent_group?.[bHierarchy?.[1]]} editHandler={editHandler} isEditable={isEditable} />
         </div>
       ) : null}
 
       {bHierarchy.length > 1 &&
-        bHierarchy.slice(1, -1).map((item, ind) => (
+        bHierarchy.slice(1, -1).map((item, ind) => {
+          return (
           <div key={`header_${ind}`}>
             <Card className="marginBottom">
-              <HeaderComp title={bHierarchy[ind + 2]} /> {/* Wrap each bHierarchy item with Card */}
+              <div className="header-container">
+                <HeaderComp title={bHierarchy[ind + 2]} />
+                {!(setupCompleted==='true') &&
+                  <Button
+                    label={t("WBH_EDIT")}
+                    variation="secondary"
+                    icon={"EditIcon"}
+                    type="button"
+                    onClick={(e) => {
+                      editHandler();
+                    }}
+                  /> 
+                }
+              </div>
+              {/* <HeaderComp title={bHierarchy[ind + 2]} /> */}
               {parent_group?.[item]?.map((item1, idx) =>
                 Array.isArray(parents?.[item1]) && boundaryStatus?.[ind + 2] && (idx === 0 || idx === 1) ? (
                   <SubBoundaryView key={`${item1}_${idx}`} title={item1} arr={parents?.[item1]} />
@@ -316,7 +344,7 @@ const CampaignBoundary = ({ customProps }) => {
               ) : null}
             </Card>
           </div>
-        ))}
+)})}
     </div>
   );
 };
