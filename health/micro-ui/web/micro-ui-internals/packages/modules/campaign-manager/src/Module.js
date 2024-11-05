@@ -52,8 +52,8 @@ import BoundarySummary from "./components/BoundarySummary";
 import GeoPode from "./pages/employee/GeoPode";
 import ViewBoundary from "./pages/employee/ViewBoundary";
 import ViewHierarchy from "./pages/employee/ViewHierarchy";
-
 import MultiSelectDropdown from "./components/MultiSelectDropdown";
+import MapView from "./components/MapView";
 /**
  * The CampaignModule function fetches store data based on state code, module code, and language, and
  * renders the EmployeeApp component within a TourProvider component if the data is not loading.
@@ -146,7 +146,8 @@ const componentsToRegister = {
   GeoPode,
   ViewBoundary,
   ViewHierarchy,
-  BoundarySummary
+  BoundarySummary,
+  MapView
 };
 
 const overrideHooks = () => {
