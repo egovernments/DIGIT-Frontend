@@ -6,6 +6,8 @@ import XLSX from "xlsx";
 import XlsPreview from "./XlsPreview";
 import { PRIMARY_COLOR } from "../utils";
 import { Toast } from "@egovernments/digit-ui-components";
+import { CustomSVG } from "@egovernments/digit-ui-components";
+
 
 /**
  * The BulkUpload component in JavaScript allows users to upload, validate, preview, download, and
@@ -25,6 +27,7 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
   const [fileUrl, setFileUrl] = useState(fileData?.[0]);
   const [fileName, setFileName] = useState(null);
   const [showToast, setShowToast] = useState(false);
+  const { XlsxFile } = CustomSVG;
 
   useEffect(() => {
     const fetch = async () => {
@@ -140,7 +143,7 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
           //   setShowPreview(true);
           // }}
         >
-          <FileIcon className="icon" />
+          <XlsxFile styles={{ width: "3rem", height: "3rem" }} />
           <div style={{ marginLeft: "0.5rem", color: "#505A5F", fontWeight: "700" }}>{file.filename}</div>
         </div>
         <div className="delete-and-download-button">
