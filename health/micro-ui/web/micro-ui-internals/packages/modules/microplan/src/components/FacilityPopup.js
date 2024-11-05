@@ -8,7 +8,7 @@ import AccessibilityPopUp from "./accessbilityPopUP";
 import SecurityPopUp from "./securityPopUp";
 import { tableCustomStyle } from "./tableCustomStyle";
 
-const FacilityPopUp = ({ details, onClose }) => {
+const FacilityPopUp = ({ details, onClose , updateDetails}) => {
   const { t } = useTranslation();
   const currentUserUuid = Digit.UserService.getUser().info.uuid;
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -254,10 +254,6 @@ const FacilityPopUp = ({ details, onClose }) => {
         return !boundarySet.has(boundary)
       })
       newDetails.serviceBoundaries = filteredBoundaries
-      // TODO : remove this logic
-      // newDetails.serviceBoundaries = Array.from(new Set(newDetails.serviceBoundaries.map(boundary => boundary[0] === " " ? boundary.slice(1) : boundary)));
-
-
     }
     else {
       const boundarySet = new Set(selectedRowData.map((row) => {
@@ -267,9 +263,6 @@ const FacilityPopUp = ({ details, onClose }) => {
         !newDetails.serviceBoundaries.includes(boundary)
       );
       newDetails.serviceBoundaries = newDetails?.serviceBoundaries?.concat(filteredBoundaries);
-      // TODO : remove this logic
-      // newDetails.serviceBoundaries = Array.from(new Set(newDetails.serviceBoundaries.map(boundary => boundary[0] === " " ? boundary.slice(1) : boundary)));
-
     }
     await mutationForPlanFacilityUpdate.mutate(
       {
@@ -281,6 +274,7 @@ const FacilityPopUp = ({ details, onClose }) => {
         onSuccess: async (result) => {
           setSelectedRows([]);
           setIsAllSelected(false);
+          updateDetails(newDetails);
         },
         onError: async (result) => {
           // setDownloadError(true);

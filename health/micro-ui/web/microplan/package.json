@@ -8,7 +8,8 @@
     "node": ">=14"
   },
   "workspaces": [
-    "micro-ui-internals/packages/modules/microplan"
+    "micro-ui-internals/packages/modules/microplan",
+    "micro-ui-internals/packages/modules/campaign-manager"
   ],
   "homepage": "/microplan-ui",
   "dependencies": {
