@@ -104,7 +104,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         if (hasEmptyFields) {
             setShowToast({
                 key: "error",
-                label: t("ERR_MANDATORY_FIELD"),
+                label: t("HYP_ERR_MANDATORY_FIELD"),
                 transitionTime: 3000,
             });
             return; // Prevent moving to the next step

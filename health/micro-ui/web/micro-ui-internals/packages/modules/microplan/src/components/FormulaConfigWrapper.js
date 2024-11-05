@@ -146,7 +146,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
     } else {
       setShowToast({
         key: "error",
-        label: t("ERR_MANDATORY_FIELD"),
+        label: t("FOR_ERR_MANDATORY_FIELD"),
         transitionTime: 3000,
       });
       return;
