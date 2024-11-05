@@ -1419,6 +1419,7 @@ $border-color: rgba(214, 213, 212, 1);
 }
 
 .create-microplan {
+
   .custom-action-bar,
   .custom-action-bar-no-first-button {
     display: flex !important;
@@ -1882,7 +1883,7 @@ $border-color: rgba(214, 213, 212, 1);
                 margin-right: auto;
               }
 
-              input:checked ~ .inputIconClassname {
+              input:checked~.inputIconClassname {
                 border-color: $primary-theme-color;
               }
 
@@ -2516,8 +2517,7 @@ $border-color: rgba(214, 213, 212, 1);
   }
 }
 
-.popup-wrap-rest-unfocus {
-}
+.popup-wrap-rest-unfocus {}
 
 .popup-wrap-rest-unfocus-active {
   button:focus {
@@ -2555,7 +2555,7 @@ $border-color: rgba(214, 213, 212, 1);
   margin: 0rem;
 }
 
-.mp-hypothesis-label-field > div > span {
+.mp-hypothesis-label-field>div>span {
   @extend .typography.heading-s;
   color: theme(digitv2.lightTheme.text-primary);
 }
@@ -2585,9 +2585,6 @@ $border-color: rgba(214, 213, 212, 1);
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  background-color: rgba(255, 255, 255, var(--bg-opacity));
-  margin-bottom: 1.5rem;
-  box-shadow: 0px 1px 2px 0px #00000029;
 }
 
 .kpi-card {
@@ -2598,7 +2595,8 @@ $border-color: rgba(214, 213, 212, 1);
 .kpi-card h2 {
   @extend .typography.heading-xl;
   margin: 0;
-  color: theme(digitv2.lightTheme.primary-2); /* Custom color */
+  color: theme(digitv2.lightTheme.primary-2);
+  /* Custom color */
 }
 
 .kpi-card p {
@@ -2614,7 +2612,7 @@ $border-color: rgba(214, 213, 212, 1);
   align-items: start !important;
 }
 
-.assumptionsForm-label-field > div > span {
+.assumptionsForm-label-field>div>span {
   font-size: 1.5rem;
   font-weight: bold;
 }
@@ -2659,8 +2657,8 @@ $border-color: rgba(214, 213, 212, 1);
 
 .digit-multiselectdropdown-wrap.roleTableCell.nestedmultiselect {
   margin: 0;
-  width: unset;
-  min-width: unset !important;
+  width: 13rem;
+  min-width: 13rem !important;
 
   .digit-multiselectdropdown-server {
     top: unset !important;
@@ -2673,6 +2671,7 @@ $border-color: rgba(214, 213, 212, 1);
 
 .digit-tag-container.userAccessCell {
   margin: unset !important;
+  max-width: unset !important;
 }
 
 .digit-card-component.primary.microPlanBulkTable {
@@ -2738,6 +2737,7 @@ $border-color: rgba(214, 213, 212, 1);
     }
   }
 }
-.sc-fzXfNN.sc-fzXfNO.sc-fzXfNP.iSamCd.rdt_TableCell > div:first-of-type {
+
+.sc-fzXfNN.sc-fzXfNO.sc-fzXfNP.iSamCd.rdt_TableCell>div:first-of-type {
   width: 100%;
 }

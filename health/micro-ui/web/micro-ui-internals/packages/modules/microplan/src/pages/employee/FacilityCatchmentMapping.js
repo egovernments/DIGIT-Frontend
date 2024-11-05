@@ -17,7 +17,8 @@ const FacilityCatchmentMapping = () => {
   const userRoles = user?.info?.roles?.map((roleData) => roleData?.code);
   const [showPopup, setShowPopup] = useState(false);
   const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
-  const [currentRow,setCurrentRow] = useState(null)
+  const [currentRow,setCurrentRow] = useState(null);
+  const [censusQueryName, setCensusQueryName] = useState("censusData");
   // Check if the user has the 'rootfacilitycatchmentmapper' role
   const isRootApprover = userRoles?.includes("ROOT_FACILITY_CATCHMENT_MAPPER");
 
@@ -56,6 +57,7 @@ const FacilityCatchmentMapping = () => {
     config: {
       enabled: planEmployee?.planData?.[0]?.jurisdiction ? true : false,
     },
+    changeQueryName: censusQueryName
   };
 
   const { isLoading, data, isFetching, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
@@ -134,7 +136,9 @@ const FacilityCatchmentMapping = () => {
                   onClose={() => {
                     setShowPopup(false);
                     setCurrentRow(null);
+                    setCensusQueryName(`censusData${Date.now()}`);
                   }}
+                  updateDetails={setCurrentRow}
                 />
               )}
 

@@ -116,6 +116,18 @@
   margin-bottom: 0rem;
 }
 
+.summary-main-heading {
+  @extend .typography.heading-l;
+  color: theme(digitv2.lightTheme.text-primary);
+  margin-bottom: 0rem;
+}
+
+.summary-sub-heading {
+  @extend .typography.heading-m;
+  color: theme(digitv2.lightTheme.primary-2) !important;
+  margin-bottom: 0rem;
+}
+
 .view-composer-header-section {
   display: flex;
   justify-content: space-between;
