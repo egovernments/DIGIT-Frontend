@@ -39,9 +39,9 @@ const FormulaConfigScreen = ({ customProps, setupCompleted }) => {
         <>
             {Object.keys(dictionary).length > 0 && (
                 Object.keys(dictionary).map((category, ind) => (
-                    <Fragment key={category}>
-                        <div className="header-container">
-                            <HeaderComp title={t(String(category))} />
+                    <Card key={category} style={{marginBottom:"1.5rem"}}>
+                        <div className="mp-header-container">
+                            <HeaderComp title={t(String(category))} styles={{marginBottom:"1rem"}} />
                             {!(setupCompleted === 'true') &&
                                 <Button
                                     label={t("WBH_EDIT")}
@@ -68,7 +68,7 @@ const FormulaConfigScreen = ({ customProps, setupCompleted }) => {
                                 />
                             </Fragment>
                         ))}
-                    </Fragment>
+                    </Card>
                 ))
             )}
 

@@ -68,7 +68,7 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
             </Card>
             <Card>
 
-                <div className="header-container">
+                <div className="mp-header-container">
                     <HeaderComp title="FACILITIES" styles={{ color: "black" }} />
                     {!(setupCompleted === 'true') &&
 
