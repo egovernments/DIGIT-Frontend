@@ -19,7 +19,7 @@ const SubBoundaryView = ({ title, arr, style,editHandler,isEditable}) => {
         arr && arr.length > 0 ? (
           <Card type={"secondary"} style={style}>
 
-            <div className="header-container">
+            <div className="mp-header-container">
               <HeaderComp title={title} />
               {isEditable && editHandler && <Button
                 label={t("WBH_EDIT")}
