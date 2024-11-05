@@ -1,4 +1,4 @@
-import React,{Fragment} from 'react';
+import React, { Fragment } from 'react';
 import { Button, Card, LabelFieldPair } from '@egovernments/digit-ui-components';
 import HeaderComp from './HeaderComp';
 import { useTranslation } from 'react-i18next';
@@ -34,7 +34,7 @@ const AssumptionsList = ({ customProps, setupCompleted }) => {
                             <Button
                                 label={t("WBH_EDIT")}
                                 variation="secondary"
-                                icon={"EditIcon"}
+                                icon={"Edit"}
                                 type="button"
                                 onClick={(e) => {
                                     const urlParams = Digit.Hooks.useQueryParams();
@@ -53,18 +53,18 @@ const AssumptionsList = ({ customProps, setupCompleted }) => {
 
                             return (
                                 <>
-                                <LabelFieldPair className="as-label-field" style={{marginBottom:"1rem"}}>
-                                    <span >
-                                        <strong>{t(key)}</strong>
-                                    </span>
-                                    <span >
-                                        {t(value)}
-                                    </span>
-                                    {/* </div> */}
-                                </LabelFieldPair>
-                                {index < dic[item].length - 1 && (
-                                    <div style={{ borderBottom: '1px solid #D3D3D3',marginBottom:"1rem" }}></div>
-                                )}
+                                    <LabelFieldPair className="as-label-field" style={{ marginBottom: "1rem" }}>
+                                        <span >
+                                            <strong>{t(key)}</strong>
+                                        </span>
+                                        <span >
+                                            {t(value)}
+                                        </span>
+                                        {/* </div> */}
+                                    </LabelFieldPair>
+                                    {index < dic[item].length - 1 && (
+                                        <div style={{ borderBottom: '1px solid #D3D3D3', marginBottom: "1rem" }}></div>
+                                    )}
                                 </>
                             );
                         })}
