@@ -20,17 +20,16 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
     //                     "inputFileType": "xlsx",
     //                         "templateIdentifier": "Population"
     // }
-
     return (
         <>
-            <Card style={{ marginBottom: "1rem" }}>
-                <div className="mp-header-container">
+            <Card className="middle">
+                <div className="header-container">
                     <HeaderComp title="POPULATION" styles={{ color: "black" }} />
                     {!(setupCompleted === 'true') &&
                         <Button
                             label={t("WBH_EDIT")}
                             variation="secondary"
-                            icon={"EditIcon"}
+                            icon={"Edit"}
                             type="button"
                             onClick={(e) => {
                                 const url = Digit.Hooks.useQueryParams();
@@ -56,6 +55,7 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
                                         customName: String(fileName)
                                     });
                                 }} // Passing the download function
+                                status="completed"
 
 
 
@@ -75,7 +75,7 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
                         <Button
                             label={t("WBH_EDIT")}
                             variation="secondary"
-                            icon={"EditIcon"}
+                            icon={"Edit"}
                             type="button"
                             onClick={(e) => {
                                 const url = Digit.Hooks.useQueryParams();
@@ -101,6 +101,8 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
 
                                     });
                                 }} // Passing the download function
+                                status="completed"
+
                             />
                         )
 

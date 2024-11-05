@@ -1,10 +1,8 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState,Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
-import { Button, EditIcon, Header, Loader, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Toast , Stepper , TextBlock ,Card  } from "@egovernments/digit-ui-components";
+import { Header, Loader, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Toast, Stepper, TextBlock, Card } from "@egovernments/digit-ui-components";
 
-import { downloadExcelWithCustomName } from "../utils";
 
 
 
@@ -36,30 +34,15 @@ function boundaryDataGrp(boundaryData) {
 
 const BoundarySummary = (props) => {
   const { t } = useTranslation();
-  const history = useHistory();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
-  const noAction = searchParams.get("action");
   const [showToast, setShowToast] = useState(null);
-  const isPreview = searchParams.get("preview");
-  const [currentStep, setCurrentStep] = useState(2);
   const currentKey = searchParams.get("key");
   const [key, setKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
-  const handleRedirect = (step, activeCycle) => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get("id");
-    urlParams.set("key", step);
-    urlParams.set("preview", false);
-    if (activeCycle) {
-      urlParams.set("activeCycle", activeCycle);
-    }
-    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-    history.push(newUrl);
-  };
 
   function updateUrlParams(params) {
     const url = new URL(window.location.href);
@@ -75,7 +58,7 @@ const BoundarySummary = (props) => {
     window.dispatchEvent(new Event("checking"));
   }, [key]);
 
-  const { isLoading, data, error, refetch } = Digit.Hooks.campaign.useSearchCampaign({
+  const { isLoading, data, error, refetch,isFetching } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
       ids: [id],
@@ -125,9 +108,7 @@ const BoundarySummary = (props) => {
     },
   });
 
-  if (isLoading) {
-    return <Loader />;
-  }
+
   const closeToast = () => {
     setShowToast(null);
   };
@@ -136,13 +117,10 @@ const BoundarySummary = (props) => {
       setTimeout(closeToast, 5000);
     }
   }, [showToast]);
-  const downloadUserCred = async () => {
-    downloadExcelWithCustomName(userCredential);
-  };
+
 
   useEffect(() => {
     setKey(currentKey);
-    setCurrentStep(currentKey);
   }, [currentKey]);
 
   const onStepClick = (currentStep) => {
@@ -155,8 +133,13 @@ const BoundarySummary = (props) => {
 
   const updatedObject = { ...data };
 
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <>
+    {(isLoading || (!data && !error) || isFetching) &&<LoaderWithGap text={t("DATA_SYNC_WITH_SERVER")} />}
      <div className="container-full">
         <div className="card-container">
           <Card className="card-header-timeline">

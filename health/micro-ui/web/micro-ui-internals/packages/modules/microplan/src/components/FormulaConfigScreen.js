@@ -46,7 +46,7 @@ const FormulaConfigScreen = ({ customProps, setupCompleted }) => {
                                 <Button
                                     label={t("WBH_EDIT")}
                                     variation="secondary"
-                                    icon={"EditIcon"}
+                                    icon={"Edit"}
                                     type="button"
                                     onClick={(e) => {
                                         const urlParams = Digit.Hooks.useQueryParams();
