@@ -5,7 +5,7 @@ import XlsPreviewNew from "../../components/XlsPreviewNew";
 import { Svgicon } from "../../utils/Svgicon";
 import { useHistory } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-
+import MapView from "../../components/MapView";
 const ViewHierarchy = () => {
     const { t } = useTranslation();
     const location = useLocation();
@@ -294,42 +294,76 @@ const ViewHierarchy = () => {
                                         );
                                     } else {
                                         return (
-                                            <div>
-                                                <div style={{ display: "flex", justifyContent: "space-between" }} key={index}>
-                                                    <div style={{ fontWeight: "600", fontSize: "1.2rem" }}>
-                                                        {hierItem?.boundaryType}
-                                                    </div>
-                                                    <Uploader
+                                          <div>
+                                            <div style={{ display: "flex", justifyContent: "space-between" }} key={index}>
+                                              <div style={{ fontWeight: "600", fontSize: "1.2rem" }}>{hierItem?.boundaryType}</div>
+                                              {/* <Uploader
                                                         onUpload={() => {}}
                                                         showAsTags
                                                         uploadedFiles={[]}
                                                         variant="uploadFile"
                                                         style={{width:"50rem"}}
-                                                    />
-                                                </div>
-                                                <div style={{height:"2rem"}}></div>
-                                                <hr style={{borderTop:"1px solid #ccc", margin:"1rem 0"}}/>
+                                                    /> */}
+                                              <input
+                                                ref={inputRef}
+                                                type="file"
+                                                style={{ display: "none" }}
+                                                onChange={handleFileChange} // Trigger file upload when a file is selected
+                                              />
+                                              <Button
+                                                className="custom-class"
+                                                icon="Upload"
+                                                iconFill=""
+                                                label={t("UPLOAD_EXCEL")}
+                                                onClick={handleUpload}
+                                                options={[]}
+                                                optionsKey=""
+                                                size="large"
+                                                style={{}}
+                                                title=""
+                                                variation="secondary"
+                                              />
                                             </div>
+                                            <div style={{ height: "2rem" }}></div>
+                                            <hr style={{ borderTop: "1px solid #ccc", margin: "1rem 0" }} />
+                                          </div>
                                         );
                                     }
                                 } else {
                                     return (
-                                        <div>
-                                                <div style={{ display: "flex", justifyContent: "space-between" }} key={index}>
-                                                    <div style={{ fontWeight: "600", fontSize: "1.2rem" }}>
-                                                        {hierItem?.boundaryType}
-                                                    </div>
-                                                    <Uploader
+                                      <div>
+                                        <div style={{ display: "flex", justifyContent: "space-between" }} key={index}>
+                                          <div style={{ fontWeight: "600", fontSize: "1.2rem" }}>{hierItem?.boundaryType}</div>
+                                          {/* <Uploader
                                                         onUpload={() => {}}
                                                         showAsTags
                                                         uploadedFiles={[]}
                                                         variant="uploadFile"
                                                         style={{width:"50rem"}}
-                                                    />
-                                                </div>
-                                                <div style={{height:"2rem"}}></div>
-                                                <hr style={{borderTop:"1px solid #ccc", margin:"1rem 0"}}/>
-                                            </div>
+                                                    /> */}
+                                          <input
+                                            ref={inputRef}
+                                            type="file"
+                                            style={{ display: "none" }}
+                                            onChange={handleFileChange} // Trigger file upload when a file is selected
+                                          />
+                                          <Button
+                                            className="custom-class"
+                                            icon="Upload"
+                                            iconFill=""
+                                            label={t("UPLOAD_EXCEL")}
+                                            onClick={handleUpload}
+                                            options={[]}
+                                            optionsKey=""
+                                            size="large"
+                                            style={{}}
+                                            title=""
+                                            variation="secondary"
+                                          />
+                                        </div>
+                                        <div style={{ height: "2rem" }}></div>
+                                        <hr style={{ borderTop: "1px solid #ccc", margin: "1rem 0" }} />
+                                      </div>
                                     );
                                 }
                             })}

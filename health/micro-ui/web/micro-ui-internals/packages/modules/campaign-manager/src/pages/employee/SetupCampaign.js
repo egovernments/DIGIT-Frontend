@@ -117,10 +117,7 @@ function restructureData(data, cycleData, DeliveryConfig, projectType) {
 
 function reverseDeliveryRemap(data, t) {
   if (!data) return null;
-  const reversedData = [];
-  let currentCycleIndex = null;
-  let currentCycle = null;
-
+  
   const operatorMapping = {
     "<=": "LESS_THAN_EQUAL_TO",
     ">=": "GREATER_THAN_EQUAL_TO",
@@ -132,6 +129,7 @@ function reverseDeliveryRemap(data, t) {
   };
 
   const cycles = data?.[0]?.cycles || [];
+  
   const mapProductVariants = (productVariants) => {
     return productVariants.map((variant, key) => ({
       key: key + 1,
@@ -141,27 +139,25 @@ function reverseDeliveryRemap(data, t) {
     }));
   };
 
-  const parseConditionAndCreateRules = (condition, ruleKey, products) => {
+  const parseConditionAndCreateRules = (condition, ruleKey, products ,deliveryStrategy) => {
     const conditionParts = condition.split("and").map((part) => part.trim());
-    let rules = [];
+    const attributes = [];
 
     conditionParts.forEach((part) => {
       const parts = part.split(" ").filter(Boolean);
-      let attributes = [];
 
       // Handle "IN_BETWEEN" operator
       if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
         const toValue = parts[0];
         const fromValue = parts[4];
         attributes.push({
-          key: 1,
+          key: attributes.length + 1,
           operator: { code: operatorMapping["IN_BETWEEN"] },
           attribute: { code: parts[2] },
           fromValue,
           toValue,
         });
       } else {
-     
         const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
         if (match) {
           const attributeCode = match[1].trim();
@@ -175,20 +171,22 @@ function reverseDeliveryRemap(data, t) {
           });
         }
       }
-      rules.push({
-        ruleKey: ruleKey + 1,
-        delivery: {},
-        products,
-        attributes,
-      });
     });
 
-    return rules;
+    // Return a single rule with all attributes in one rule
+    return [{
+      ruleKey: ruleKey + 1,
+      delivery: {},
+      deliveryStrategy: deliveryStrategy,
+      products,
+      attributes,
+    }];
   };
-  const mapDoseCriteriaToDeliveryRules = (doseCriteria) => {
+
+  const mapDoseCriteriaToDeliveryRules = (doseCriteria , deliveryStrategy) => {
     return doseCriteria?.flatMap((criteria, ruleKey) => {
       const products = mapProductVariants(criteria.ProductVariants);
-      return parseConditionAndCreateRules(criteria.condition, ruleKey, products);
+      return parseConditionAndCreateRules(criteria.condition, ruleKey, products , deliveryStrategy);
     });
   };
 
@@ -196,7 +194,8 @@ function reverseDeliveryRemap(data, t) {
     return deliveries?.map((delivery, deliveryIndex) => ({
       active: deliveryIndex === 0,
       deliveryIndex: String(deliveryIndex + 1),
-      deliveryRules: mapDoseCriteriaToDeliveryRules(delivery.doseCriteria),
+      deliveryStrategy: delivery.deliveryStrategy || "DIRECT",
+      deliveryRules: mapDoseCriteriaToDeliveryRules(delivery.doseCriteria , delivery.deliveryStrategy),
     }));
   };
 
@@ -206,11 +205,11 @@ function reverseDeliveryRemap(data, t) {
     deliveries: mapDeliveries(cycle.deliveries),
   }));
 
-
+  console.log("ttt" , transformedCycles);
 
   return transformedCycles;
-
 }
+
 
 function processDelivery(delivery, resourcesMap, ageInfo) {
 
@@ -252,7 +251,7 @@ function processDoseCriteria(rule, resourcesMap) {
   });
 
   return {
-    condition: conditions.join(" and "),
+    condition: conditions.join("and"),
     ProductVariants: rule.products.map(product => ({
       productVariantId: product.value,
       name: product.name
@@ -426,7 +425,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       if (isSkip === "false") {
         currentKey !== 1 ? null : setCurrentKey(1);
       } else {
-        setCurrentKey(draftData?.additionalDetails?.key);
+        if(draftData?.additionalDetails?.key === 7) setCurrentKey(8);
+        else setCurrentKey(draftData?.additionalDetails?.key);
       }
       return;
     }
@@ -441,6 +441,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     if (isLoading) return;
     if (Object.keys(params).length !== 0) return;
     if (!draftData) return;
+    console.log("dataSt" , draftData);
     const delivery = Array.isArray(draftData?.deliveryRules) ? draftData?.deliveryRules : [];
     const filteredProjectType = projectType?.["HCM-PROJECT-TYPES"]?.projectTypes?.filter((i) => i?.code === draftData?.projectType);
     const restructureFormData = {
@@ -542,11 +543,12 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     return resources;
   }
 
-  // useEffect(async () => {
-  //   if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-  //     const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
-  //   }
-  // }, [shouldUpdate]);
+  useEffect(async () => {
+    if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
+      // const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
+      const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule , totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure , DeliveryConfig);
+    }
+  }, [shouldUpdate]);
 
   const compareIdentical = (draftData, payload) => {
     return _.isEqual(draftData, payload);
