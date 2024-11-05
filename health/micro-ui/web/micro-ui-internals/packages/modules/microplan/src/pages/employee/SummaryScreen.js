@@ -132,6 +132,7 @@ const SummaryScreen = ({ props: customProps }) => {
         ],
       },
       {
+        noCardStyle: true,
         navigationKey: "card5",
         sections: [
           {
