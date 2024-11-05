@@ -373,38 +373,38 @@ export const cycleDataRemap=(data)=> {
 
 
 
-  // export const draftFilterStep = (totalFormData,campaignConfig) => {
-  //   const stepFind = (name) => {
-  //     const step = campaignConfig?.[0]?.form.find((step) => step.name === name);
-  //     return step ? parseInt(step.stepCount, 14) : null;
-  //   };
-  //   let v = [];
-  //   if (totalFormData?.HCM_CAMPAIGN_NAME?.campaignName) v.push(stepFind("HCM_CAMPAIGN_NAME"));
-  //   if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.selectedData?.length) v.push(stepFind("HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"));
-  //   if (totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate && totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate)
-  //     v.push(stepFind("HCM_CAMPAIGN_DATE"));
-  //   if (totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleData?.length) v.push(stepFind("HCM_CAMPAIGN_CYCLE_CONFIGURE"));
-  //   if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule?.length) v.push(stepFind("HCM_CAMPAIGN_DELIVERY_DATA"));
-  //   if (totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length) v.push(stepFind("HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA"));
-  //   if (totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length) v.push(stepFind("HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"));
-  //   if (totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.length) v.push(stepFind("HCM_CAMPAIGN_UPLOAD_USER_DATA"));
+  export const draftFilterStep = (totalFormData,campaignConfig) => {
+    const stepFind = (name) => {
+      const step = campaignConfig?.[0]?.form.find((step) => step.name === name);
+      return step ? parseInt(step.stepCount, 14) : null;
+    };
+    let v = [];
+    if (totalFormData?.HCM_CAMPAIGN_NAME?.campaignName) v.push(stepFind("HCM_CAMPAIGN_NAME"));
+    if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.selectedData?.length) v.push(stepFind("HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"));
+    if (totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate && totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate)
+      v.push(stepFind("HCM_CAMPAIGN_DATE"));
+    if (totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleData?.length) v.push(stepFind("HCM_CAMPAIGN_CYCLE_CONFIGURE"));
+    if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule?.length) v.push(stepFind("HCM_CAMPAIGN_DELIVERY_DATA"));
+    if (totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length) v.push(stepFind("HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA"));
+    if (totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length) v.push(stepFind("HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"));
+    if (totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.length) v.push(stepFind("HCM_CAMPAIGN_UPLOAD_USER_DATA"));
 
-  //   const highestNumber = Math.max(...v);
-  //   return highestNumber;
-  // };
+    const highestNumber = Math.max(...v);
+    return highestNumber;
+  };
 
-  // export const findHighestStepCount = () => {
-  //   const totalFormDataKeys = Object.keys(totalFormData);
+  export const findHighestStepCount = ({totalFormData,campaignConfig,isDraft,setActive}) => {
+    const totalFormDataKeys = Object.keys(totalFormData);
 
-  //   const nonNullFormDataKeys = filterNonEmptyValues(totalFormData);
+    const nonNullFormDataKeys = filterNonEmptyValues(totalFormData);
 
-  //   const relatedSteps = campaignConfig?.[0]?.form.filter((step) => nonNullFormDataKeys.includes(step.name));
+    const relatedSteps = campaignConfig?.[0]?.form.filter((step) => nonNullFormDataKeys.includes(step.name));
 
-  //   const highestStep = relatedSteps.reduce((max, step) => Math.max(max, parseInt(step.stepCount)), 0);
-  //   if (isDraft == "true") {
-  //     const filteredStep = draftFilterStep(totalFormData);
-  //     setActive(filteredStep);
-  //   } else {
-  //     setActive(highestStep);
-  //   }
-  // };
+    const highestStep = relatedSteps.reduce((max, step) => Math.max(max, parseInt(step.stepCount)), 0);
+    if (isDraft == "true") {
+      const filteredStep = draftFilterStep(totalFormData,campaignConfig);
+      setActive(filteredStep);
+    } else {
+      setActive(highestStep);
+    }
+  };

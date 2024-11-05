@@ -10,7 +10,7 @@ import { useHistory } from "react-router-dom";
 import { CampaignConfig } from "../../configs/CampaignConfig";
 import { Stepper, Toast } from "@egovernments/digit-ui-components";
 import _ from "lodash";
-import { cycleDataRemap, updateUrlParams,compareIdentical,resourceData, groupByTypeRemap, restructureData, reverseDeliveryRemap, filterCampaignConfig, filterNonEmptyValues } from "../../utils/setupCampaignHelpers";
+import { cycleDataRemap, updateUrlParams,transformDraftDataToFormData,compareIdentical,resourceData, groupByTypeRemap, restructureData, reverseDeliveryRemap, filterCampaignConfig, filterNonEmptyValues, findHighestStepCount } from "../../utils/setupCampaignHelpers";
 
 /**
  * The `SetupCampaign` function in JavaScript handles the setup and management of campaign details,
@@ -960,44 +960,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   };
 
 
-  const draftFilterStep = (totalFormData) => {
-    const stepFind = (name) => {
-      const step = campaignConfig?.[0]?.form.find((step) => step.name === name);
-      return step ? parseInt(step.stepCount, 14) : null;
-    };
-    let v = [];
-    if (totalFormData?.HCM_CAMPAIGN_NAME?.campaignName) v.push(stepFind("HCM_CAMPAIGN_NAME"));
-    if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.selectedData?.length) v.push(stepFind("HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"));
-    if (totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate && totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate)
-      v.push(stepFind("HCM_CAMPAIGN_DATE"));
-    if (totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleData?.length) v.push(stepFind("HCM_CAMPAIGN_CYCLE_CONFIGURE"));
-    if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule?.length) v.push(stepFind("HCM_CAMPAIGN_DELIVERY_DATA"));
-    if (totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length) v.push(stepFind("HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA"));
-    if (totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length) v.push(stepFind("HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"));
-    if (totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.length) v.push(stepFind("HCM_CAMPAIGN_UPLOAD_USER_DATA"));
-
-    const highestNumber = Math.max(...v);
-    return highestNumber;
-  };
-
-  const findHighestStepCount = () => {
-    const totalFormDataKeys = Object.keys(totalFormData);
-
-    const nonNullFormDataKeys = filterNonEmptyValues(totalFormData);
-
-    const relatedSteps = campaignConfig?.[0]?.form.filter((step) => nonNullFormDataKeys.includes(step.name));
-
-    const highestStep = relatedSteps.reduce((max, step) => Math.max(max, parseInt(step.stepCount)), 0);
-    if (isDraft == "true") {
-      const filteredStep = draftFilterStep(totalFormData);
-      setActive(filteredStep);
-    } else {
-      setActive(highestStep);
-    }
-  };
-
   useEffect(() => {
-    findHighestStepCount();
+    findHighestStepCount({totalFormData,campaignConfig,isDraft,setActive});
   }, [totalFormData, campaignConfig]);
 
   const onSecondayActionClick = () => {
