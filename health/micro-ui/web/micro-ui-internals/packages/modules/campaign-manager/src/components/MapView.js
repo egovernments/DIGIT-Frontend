@@ -29,9 +29,9 @@ const MapView = ({ fileData }) => {
         zoom: 6,
         zoomControl: true,
         layers: [
-          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-          }),
+          // L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          //   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          // }),
         ],
       });
     }
