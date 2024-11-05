@@ -1,3 +1,6 @@
+/**
+ * This file contains all the utils or helpers required for create campaign and drafts
+ */
 
 export const cycleDataRemap=(data)=> {
     if (!data) return null;
