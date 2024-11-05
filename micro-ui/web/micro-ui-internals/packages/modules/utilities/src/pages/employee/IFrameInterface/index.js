@@ -174,7 +174,7 @@ const IFrameInterface = (props) => {
     const title = pageObject?.["title"] || "";
     let url = `${domain}${contextPath}`;
     // add custom customatizations of url in UICustomizations
-    url = Digit?.Customizations?.['commonUiConfig']?.["IframeInterfaceConfig"]?.addAdditionalFilters(url, filters?.filters)
+    url = Digit?.Customizations?.['commonUiConfig']?.["IframeInterfaceConfig"]?.addAdditionalFilters?Digit?.Customizations?.['commonUiConfig']?.["IframeInterfaceConfig"]?.addAdditionalFilters(url, filters?.filters):url;
     if (pageObject?.authToken && pageObject?.authToken?.enable) {
       const authKey = pageObject?.authToken?.key || "auth-token";
       if (pageObject?.authToken?.customFun && Digit.Utils.createFunction(pageObject?.authToken?.customFun)) {
