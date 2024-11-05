@@ -331,11 +331,11 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
           <PopUp
             className={"popUpClass"}
             type={"default"}
-            heading={t("CONFIRM_TO_DELETE")}
+            heading={t("FOR_CONFIRM_TO_DELETE")}
             equalWidthButtons={true}
             children={[
               <div>
-                <CardText style={{ margin: 0 }}>{t("PERMANENT_DELETE")}</CardText>
+                <CardText style={{ margin: 0 }}>{t("FOR_PERMANENT_DELETE")}</CardText>
               </div>,
             ]}
             onOverlayClick={() => {
