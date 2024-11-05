@@ -20,7 +20,7 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
     //                     "inputFileType": "xlsx",
     //                         "templateIdentifier": "Population"
     // }
-
+    console.log("files",uploadedFiles);
     return (
         <>
             <Card style={{ marginBottom: "1rem" }}>
@@ -56,6 +56,7 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
                                         customName: String(fileName)
                                     });
                                 }} // Passing the download function
+                                status="completed"
 
 
 
@@ -101,6 +102,8 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
 
                                     });
                                 }} // Passing the download function
+                                status="completed"
+
                             />
                         )
 
