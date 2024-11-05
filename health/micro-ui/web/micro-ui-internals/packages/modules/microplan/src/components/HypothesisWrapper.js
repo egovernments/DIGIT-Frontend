@@ -134,7 +134,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
                 }
                 if (internalKey === assumptionCategories.length) {
                     const params = { key:key }; // Replace with your parameters
-                    const event = new CustomEvent("AssumptionsLastPage", { detail: params });
+                    const event = new Event("AssumptionsLastPage");
                     window.dispatchEvent(event);
                 }
                 refetchPlan();
