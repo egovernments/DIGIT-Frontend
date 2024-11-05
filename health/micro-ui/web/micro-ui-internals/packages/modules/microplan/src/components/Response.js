@@ -43,15 +43,17 @@ const Response = () => {
         type="success"
       ></PanelCard>
       <ActionBar className="mc_back">
-        <Link to={state?.backlink ? state?.backlink : `/${window.contextPath}/employee/`}>
-          <Button
-            style={{ margin: "0.5rem", marginLeft: "6rem" }}
-            className="microplan-response-button"
-            variation="secondary"
-            label={t(back)}
-            icon={"ArrowBack"}
-          />
-        </Link>
+        <Button
+          style={{ margin: "0.5rem", marginLeft: "6rem" }}
+          className="microplan-response-button"
+          variation="secondary"
+          label={t(back)}
+          icon={"ArrowBack"}
+          onClick={() => {
+            const backlink = state?.backlink || `/${window.contextPath}/employee/`;
+            history.push(backlink);
+          }}
+        />
       </ActionBar>
     </>
   );
