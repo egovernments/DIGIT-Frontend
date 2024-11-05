@@ -1,8 +1,12 @@
 import React, { Fragment } from 'react'
 import FileComponent from './FileComponent';
 import HeaderComp from './HeaderComp';
-import { Card } from '@egovernments/digit-ui-components';
-export const DataMgmtComponent = ({ customProps }) => {
+import { Card, Button } from '@egovernments/digit-ui-components';
+import { useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
+    const history = useHistory();
+    const { t } = useTranslation();
     const totalFormData = customProps;
     const uploadedFiles = totalFormData?.sessionData?.UPLOADBOUNDARYDATA?.boundary?.uploadedFile ? totalFormData?.sessionData?.UPLOADBOUNDARYDATA?.boundary?.uploadedFile : []
     const uploadedFacilities = totalFormData?.sessionData?.UPLOADFACILITYDATA?.facilityWithBoundary?.uploadedFile ? totalFormData?.sessionData?.UPLOADFACILITYDATA?.facilityWithBoundary?.uploadedFile : []
@@ -18,8 +22,25 @@ export const DataMgmtComponent = ({ customProps }) => {
     // }
     return (
         <>
-            <Card style={{marginBottom:"1rem"}}>
-                <HeaderComp title="POPULATION" styles={{ color: "black" }} />
+            <Card className="middle">
+                <div className="header-container">
+                    <HeaderComp title="POPULATION" styles={{ color: "black" }} />
+                    {!(setupCompleted === 'true') &&
+                        <Button
+                            label={t("WBH_EDIT")}
+                            variation="secondary"
+                            icon={"Edit"}
+                            type="button"
+                            onClick={(e) => {
+                                const url = Digit.Hooks.useQueryParams();
+                                const urlParams = Digit.Hooks.useQueryParams();
+                                urlParams.key = '4';
+                                const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
+                                history.push(updatedUrl);
+                            }}
+                        />
+                    }
+                </div>
 
                 {
                     uploadedFiles?.map((item) => {
@@ -32,9 +53,9 @@ export const DataMgmtComponent = ({ customProps }) => {
                                     Digit.Utils.campaign.downloadExcelWithCustomName({
                                         fileStoreId: item?.filestoreId,
                                         customName: String(fileName)
-
                                     });
                                 }} // Passing the download function
+                                status="completed"
 
 
 
@@ -45,9 +66,27 @@ export const DataMgmtComponent = ({ customProps }) => {
                     })
                 }
             </Card>
-            <Card> 
+            <Card>
 
-                <HeaderComp title="FACILITIES" styles={{ color: "black" }} />
+                <div className="header-container">
+                    <HeaderComp title="FACILITIES" styles={{ color: "black" }} />
+                    {!(setupCompleted === 'true') &&
+
+                        <Button
+                            label={t("WBH_EDIT")}
+                            variation="secondary"
+                            icon={"Edit"}
+                            type="button"
+                            onClick={(e) => {
+                                const url = Digit.Hooks.useQueryParams();
+                                const urlParams = Digit.Hooks.useQueryParams();
+                                urlParams.key = '5';
+                                const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
+                                history.push(updatedUrl);
+                            }}
+                        />
+                    }
+                </div>
                 {
                     uploadedFacilities?.map((item) => {
                         const fileName = item?.filename ? (item?.filename) : (`FileNo${item?.filestoreId}`)
@@ -62,6 +101,8 @@ export const DataMgmtComponent = ({ customProps }) => {
 
                                     });
                                 }} // Passing the download function
+                                status="completed"
+
                             />
                         )
 

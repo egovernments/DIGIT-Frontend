@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Button, Card, LabelFieldPair } from '@egovernments/digit-ui-components';
 import HeaderComp from './HeaderComp';
 import { useTranslation } from 'react-i18next';
-import { EditIcon } from '@egovernments/digit-ui-react-components';
+import { useHistory } from 'react-router-dom';
 
-const AssumptionsList = ({ customProps }) => {
+const AssumptionsList = ({ customProps, setupCompleted }) => {
     const { t } = useTranslation();
+    const history = useHistory();
 
     const assumptionValues = customProps?.sessionData?.HYPOTHESIS?.Assumptions?.assumptionValues || [];
     let dic = {};
@@ -29,16 +30,21 @@ const AssumptionsList = ({ customProps }) => {
                     {/* Header with title and edit button */}
                     <div className="header-container">
                         <HeaderComp title={String(item)} />
-                        <Button
-                            label={t("WBH_EDIT")}
-                            variation="secondary"
-                            icon={"EditIcon"}
-                            type="button"
-                            className="dm-workbench-download-template-btn dm-hover"
-                            onButtonClick={(e) => {
-                                downloadHandler();
-                            }}
-                        />
+                        {!(setupCompleted === 'true') &&
+                            <Button
+                                label={t("WBH_EDIT")}
+                                variation="secondary"
+                                icon={"Edit"}
+                                type="button"
+                                onClick={(e) => {
+                                    const urlParams = Digit.Hooks.useQueryParams();
+                                    urlParams.key = '7';
+                                    urlParams.internalKey = ind + 1;
+                                    const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
+                                    history.push(updatedUrl);
+                                }}
+                            />
+                        }
                     </div>
 
                     <div>
@@ -46,20 +52,20 @@ const AssumptionsList = ({ customProps }) => {
                             const [key, value] = Object.entries(item1)[0] || ['NA', 'NA'];
 
                             return (
-                                <LabelFieldPair className="as-label-field">
-
-
-                                    {/* <div key={`pair_${index}`} className="as-table-row" style={{ borderBottom: '1px solid #e0e0e0' }} > */}
-                                        {/* className="as-table-cell as-key-cell"
-                                    className="as-table-cell as-value-cell" */}
+                                <>
+                                    <LabelFieldPair className="as-label-field" style={{ marginBottom: "1rem" }}>
                                         <span >
                                             <strong>{t(key)}</strong>
                                         </span>
                                         <span >
                                             {t(value)}
                                         </span>
-                                    {/* </div> */}
-                                </LabelFieldPair>
+                                        {/* </div> */}
+                                    </LabelFieldPair>
+                                    {index < dic[item].length - 1 && (
+                                        <div style={{ borderBottom: '1px solid #D3D3D3', marginBottom: "1rem" }}></div>
+                                    )}
+                                </>
                             );
                         })}
                     </div>

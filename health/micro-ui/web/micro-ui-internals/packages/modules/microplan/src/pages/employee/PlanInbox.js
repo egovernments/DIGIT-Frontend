@@ -102,7 +102,9 @@ const PlanInbox = () => {
         active: true,
         jurisdiction: jurisdiction,
         status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
-        assignee: activeLink.code === "ASSIGNED_TO_ALL" || selectedFilter === "VALIDATED" ? "" : user?.info?.uuid,
+        ...(activeLink.code == "ASSIGNED_TO_ALL" || selectedFilter == "VALIDATED"
+          ? {}
+          : { assignee: user.info.uuid }),
         planConfigurationId: microplanId, //list of plan ids
         limit: limitAndOffset?.limit,
         offset: limitAndOffset?.offset,
@@ -438,6 +440,16 @@ const PlanInbox = () => {
     setactionBarPopUp(false);
   };
 
+  const conditionalRowStyles = [
+    {
+      when: row => selectedRows.some(selectedRow => selectedRow?.original?.id === row?.original?.id),
+      style: {
+        backgroundColor: '#FBEEE8',
+      },
+      classNames: ['selectedRow'],
+    },
+  ];
+
   if (isPlanEmpSearchLoading || isLoadingCampaignObject || isWorkflowLoading) {
     return <Loader />;
   }
@@ -551,6 +563,7 @@ const PlanInbox = () => {
               selectableRowsComponent={CheckBox}
               customStyles={tableCustomStyle}
               paginationTotalRows={totalRows}
+              conditionalRowStyles={conditionalRowStyles}
               paginationPerPage={rowsPerPage}
               paginationRowsPerPageOptions={[10, 20, 50, 100]}
             />

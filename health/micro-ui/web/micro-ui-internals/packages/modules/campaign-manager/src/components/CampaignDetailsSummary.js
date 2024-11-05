@@ -1,7 +1,7 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Button, EditIcon, Header, Loader, ViewComposer } from "@egovernments/digit-ui-react-components";
+import {  EditIcon, Header, Loader, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Toast , Stepper , TextBlock ,Card } from "@egovernments/digit-ui-components";
 
 const CampaignDetailsSummary = (props) => {
@@ -49,7 +49,7 @@ const CampaignDetailsSummary = (props) => {
     window.dispatchEvent(new Event("checking"));
   }, [key]);
 
-  const { isLoading, data, error, refetch } = Digit.Hooks.campaign.useSearchCampaign({
+  const { isLoading, data, error, refetch ,isFetching} = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
       ids: [id],
@@ -103,9 +103,6 @@ const CampaignDetailsSummary = (props) => {
     },
   });
 
-  if (isLoading) {
-    return <Loader />;
-  }
   const closeToast = () => {
     setShowToast(null);
   };
@@ -142,10 +139,13 @@ const CampaignDetailsSummary = (props) => {
     }
     else setKey(3);
   };
-
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <>
+    {(isLoading || (!data && !error) || isFetching) &&<LoaderWithGap text={t("DATA_SYNC_WITH_SERVER")} />}
     <div className="container-full">
         <div className="card-container">
           <Card className="card-header-timeline">

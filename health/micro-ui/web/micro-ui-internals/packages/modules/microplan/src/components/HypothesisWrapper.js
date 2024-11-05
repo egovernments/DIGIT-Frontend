@@ -16,7 +16,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
 
     const { mutate: updateResources, ...rest } = Digit.Hooks.microplanv1.useCreateUpdatePlanProject();
     const { t } = useTranslation();
-    const { state } = useMyContext();
+    const { state, dispatch } = useMyContext();
     const [assumptionValues, setAssumptionValues] = useState(Digit.SessionStorage.get("MICROPLAN_DATA")?.HYPOTHESIS?.Assumptions?.assumptionValues || []);
     const assumptionsFormValues = customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm //array with key and value 
     const campaignType = customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code
@@ -26,7 +26,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         const keyParam = searchParams.get("internalKey");
         return keyParam ? parseInt(keyParam) : 1;
     });
-    const [manualLoader,setManualLoader] = useState(false)
+    const [manualLoader, setManualLoader] = useState(false)
     const [showToast, setShowToast] = useState(null);
     const [deletedAssumptions, setDeletedAssumptions] = useState([]);
     const [executionCount, setExecutionCount] = useState(0);
@@ -43,7 +43,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         },
         {
             enabled: microplanId ? true : false,
-            cacheTime:0,
+            cacheTime: 0,
             //   queryKey: currentKey,
         }
     );
@@ -122,15 +122,20 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         })
         setManualLoader(true)
         updateResources({
-            config:{
-                name:"SUB_HYPOTHESIS"
+            config: {
+                name: "SUB_HYPOTHESIS"
             },
             assumptionsToUpdate
-        },{
+        }, {
             onSuccess: (data) => {
                 setManualLoader(false)
                 if (internalKey < assumptionCategories.length) {
                     setInternalKey((prevKey) => prevKey + 1); // Update key in URL
+                }
+                if (internalKey === assumptionCategories.length) {
+                    const params = { key:key }; // Replace with your parameters
+                    const event = new Event("AssumptionsLastPage");
+                    window.dispatchEvent(event);
                 }
                 refetchPlan();
                 // TODO: here see if session can be updated (refresh)
@@ -140,7 +145,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
                 console.error(error)
                 // setShowToast()
 
-              setShowToast(({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") }))
+                setShowToast(({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") }))
             },
         })
 
@@ -169,6 +174,19 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     });
     const assumptionCategories = filteredData.length > 0 ? filteredData[0].assumptionCategories : [];
     const filteredAssumptions = assumptionCategories.length > 0 ? (assumptionCategories[internalKey - 1]?.assumptions || []) : [];
+
+    //this data is used in formulaConfigWrapper
+    useEffect(() => {
+        if (assumptionCategories.length > 0 && !state?.allAssumptions?.length > 0) {
+            const allAssumptions = assumptionCategories?.flatMap((item) => item.assumptions);
+            dispatch({
+                type: "MASTER_DATA",
+                state: {
+                    allAssumptions: allAssumptions,
+                },
+            });
+        }
+    })
 
 
 
@@ -248,7 +266,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
 
 
     useEffect(() => {
-        onSelect(customProps.name, { assumptionValues: assumptionValues?.filter(val => val.category && val.key && val.source && val.value)});
+        onSelect(customProps.name, { assumptionValues: assumptionValues?.filter(val => val.category && val.key && val.source && val.value) });
     }, [assumptionValues, internalKey]);
     useEffect(() => {
         if (executionCount < 5) {
@@ -290,22 +308,22 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         // in that case don't render the deleted ones because for them session will not be there
         // basically preset the deleted ones
         const currentCategory = assumptionCategories?.[internalKey - 1]?.category
-        if(planObject?.assumptions?.length > 0 && currentCategory ){
+        if (planObject?.assumptions?.length > 0 && currentCategory) {
             // this is the list of items already filled for this microplan for this category
             const assumptionsFilledForThisCategory = planObject?.assumptions?.filter(row => row.category === currentCategory)?.map(row => row.key)
             // if this category is not yet filled
-            if(assumptionsFilledForThisCategory.length === 0){
+            if (assumptionsFilledForThisCategory.length === 0) {
                 return
             }
             // filteredAssumptions -> this is the current list from master data
             // basically what all is there in filteredAssumptions, some of them could have been deleted so if something is there in assumptionsFilledForThisCategory but not in filteredAssumptions then put that in deleted ones
             const deletedAssumptionsForThisCategory = filteredAssumptions.filter(item => !assumptionsFilledForThisCategory.includes(item));
-            if(deletedAssumptionsForThisCategory.length>0){
-                setDeletedAssumptions(prev=> [...prev,...deletedAssumptionsForThisCategory])
+            if (deletedAssumptionsForThisCategory.length > 0) {
+                setDeletedAssumptions(prev => [...prev, ...deletedAssumptionsForThisCategory])
             }
-            
+
         }
-    }, [planObject,isLoadingPlanObject,internalKey])
+    }, [planObject, isLoadingPlanObject, internalKey])
 
 
     useEffect(() => {
@@ -326,8 +344,8 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         <Fragment>
             <AssumptionContext.Provider value={{ assumptionValues, handleAssumptionChange, setAssumptionValues, deletedAssumptions, setDeletedAssumptions }}>
 
-                <div style={{ display: "flex", gap: "2rem" }}>
-                    <div className="card-container">
+                <div style={{ display: "flex", gap: "1.5rem" }}>
+                    <div className="card-container" style={{ marginBottom: "2.5rem" }}>
                         <Card className="card-header-timeline">
                             <TextBlock subHeader={t("ESTIMATION_ASSUMPTIONS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
                         </Card>
@@ -355,7 +373,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
                     </div>
                 </div>
 
-                {(internalKey > 0 && internalKey < assumptionCategories.length) && (
+                {(internalKey > 0 && internalKey < assumptionCategories.length+1) && (
                     <ActionBar>
                         <Button className="previous-button" variation="secondary" label={t("BACK")} onClick={handleBack} />
                         <Button className="previous-button" variation="primary" label={t("NEXT")} onClick={handleNext} />

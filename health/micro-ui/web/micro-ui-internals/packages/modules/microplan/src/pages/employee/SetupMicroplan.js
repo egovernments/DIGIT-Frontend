@@ -7,14 +7,13 @@ import {
   Close,
   LogoutIcon,
   Menu,
-  ActionBar,
   SubmitBar,
 } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import { MicroplanConfig } from "../../configs/SetupMicroplanConfig";
-import { Stepper, Toast, PopUp, CardText, InfoCard, Button } from "@egovernments/digit-ui-components";
+import { Stepper, Toast, PopUp, CardText, InfoCard, Button, ActionBar } from "@egovernments/digit-ui-components";
 import _ from "lodash";
 import { useMyContext } from "../../utils/context";
 import { useLocation } from "react-router-dom/cjs/react-router-dom";
@@ -127,6 +126,19 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const handleAssumptionsSubmitEvent = () => {
+      const newKey = parseInt(new URLSearchParams(window.location.search).get("key")) || 1;
+      setCurrentKey(newKey+1);
+    };
+
+    window.addEventListener("AssumptionsLastPage", handleAssumptionsSubmitEvent);
+
+    return () => {
+      window.removeEventListener("AssumptionsLastPage", handleAssumptionsSubmitEvent);
+    };
+  }, []);
+
   // setting the current step when the key is changed on the basis of the config
   useEffect(() => {
     setCurrentStep(Number(filteredConfig?.[0]?.form?.[0]?.stepCount - 1));
@@ -186,6 +198,13 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
             ...currentSession,
             HYPOTHESIS: null,
             FORMULA_CONFIGURATION: null,
+          });
+          //since we are invalidating we need to update this global state
+          dispatch({
+            type: "MASTER_DATA",
+            state: {
+                allAssumptions:[],
+            },
           });
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
@@ -350,7 +369,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
         secondaryLabel={t("MP_BACK")}
         actionClassName={"actionBarClass"}
         className="setup-campaign"
-        cardClassName="setup-campaign-card"
+        cardClassName="setup-compaign-card"
         noCardStyle={true}
         onSecondayActionClick={onSecondayActionClick}
         label={getNextActionLabel()}

@@ -154,7 +154,7 @@ function UserAccess({ category, setData, nationalRoles }) {
         // } else {
         //   return row?.hierarchyLevel; // Otherwise, return the existing hierarchy level
         // }
-        return row?.hierarchyLevel;
+        return t(row?.hierarchyLevel || "NA");
       },
       sortable: true,
     },
@@ -162,13 +162,11 @@ function UserAccess({ category, setData, nationalRoles }) {
       name: t("ADMINISTRATIVE_BOUNDARY"),
       selector: (row) => {
         return (
-          <>
+          <div className="digit-tag-container userAccessCell">
             {row?.jurisdiction?.length > 0 && (
               <>
                 {row.jurisdiction.slice(0, 2).map((item, index) => (
-                  <div className="digit-tag-container userAccessCell" key={index}>
-                    <Chip className="" error="" extraStyles={{}} iconReq="" hideClose={true} text={t(item)} />
-                  </div>
+                  <Chip className="" error="" extraStyles={{}} iconReq="" hideClose={true} text={t(item)} />
                 ))}
 
                 {row.jurisdiction.length > 2 && (
@@ -198,7 +196,7 @@ function UserAccess({ category, setData, nationalRoles }) {
                 {chipPopUp && <Wrapper setShowPopUp={setChipPopUp} alreadyQueuedSelectedState={row.jurisdiction} />}
               </>
             )}
-          </>
+          </div>
         );
       },
       sortable: true,
@@ -238,7 +236,7 @@ function UserAccess({ category, setData, nationalRoles }) {
         <p className="mp-description">{t(`${category}_DESCRIPTION`)}</p>
       </Card>
 
-      <Card>
+      <Card style={{ maxWidth: "100%", overflow: "auto", marginBottom: "2.5rem" }}>
         {planEmployee?.data?.length > 0 || searchQuery ? (
           <div style={styles.container}>
             <TableSearchField onSearch={handleSearch} />
@@ -286,7 +284,7 @@ function UserAccess({ category, setData, nationalRoles }) {
           type={"default"}
           heading={t(`${category}_POPUP_HEADING`)}
           children={[<RoleTableComposer category={category} nationalRoles={nationalRoles} />]}
-          onOverlayClick={() => {}}
+          onOverlayClick={() => { }}
           footerChildren={[
             <Button
               type={"button"}

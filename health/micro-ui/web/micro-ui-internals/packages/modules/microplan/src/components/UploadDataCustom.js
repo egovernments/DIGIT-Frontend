@@ -716,7 +716,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
                   name: "infocard",
                 }}
                 variant="error"
-                style={{ marginLeft: "0rem", maxWidth: "100%" }}
+                style={{ marginLeft: "0rem", maxWidth: "100%", marginTop: "1.5rem" }}
                 label={t("HCM_ERROR")}
                 additionalElements={[
                   <React.Fragment key={type}>
@@ -743,7 +743,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
               name: "infocard",
             }}
             variant={sheetErrors ? "error" : "default"}
-            style={{ margin: "0rem", maxWidth: "100%", marginTop: "1rem" }}
+            style={{ margin: "0rem", maxWidth: "100%", marginTop: "1.5rem" }}
             additionalElements={
               sheetErrors ? (
                 [<InfoButton
