@@ -101,7 +101,7 @@ const getDeliveryConfig = ({ data, projectType }) => {
 
 const generateMRDNConfig = (data) => {
   
-  return data.deliveries.map(delivery => {
+  return data?.deliveries?.map(delivery => {
     const conditionConfig = delivery.doseCriteria.map(dose => {
       const productConfig = dose.ProductVariants.map(variant => ({
         key: 1,

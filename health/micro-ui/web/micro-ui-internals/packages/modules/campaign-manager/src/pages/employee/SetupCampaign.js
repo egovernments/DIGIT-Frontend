@@ -135,7 +135,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       if (isSkip === "false") {
         currentKey !== 1 ? null : setCurrentKey(1);
       } else {
-        setCurrentKey(draftData?.additionalDetails?.key);
+        if(draftData?.additionalDetails?.key === 7) setCurrentKey(8);
+        else setCurrentKey(draftData?.additionalDetails?.key);
       }
       return;
     }
