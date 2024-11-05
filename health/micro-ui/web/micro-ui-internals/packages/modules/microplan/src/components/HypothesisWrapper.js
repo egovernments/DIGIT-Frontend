@@ -16,7 +16,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
 
     const { mutate: updateResources, ...rest } = Digit.Hooks.microplanv1.useCreateUpdatePlanProject();
     const { t } = useTranslation();
-    const { state,dispatch } = useMyContext();
+    const { state, dispatch } = useMyContext();
     const [assumptionValues, setAssumptionValues] = useState(Digit.SessionStorage.get("MICROPLAN_DATA")?.HYPOTHESIS?.Assumptions?.assumptionValues || []);
     const assumptionsFormValues = customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm //array with key and value 
     const campaignType = customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code
@@ -132,6 +132,11 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
                 if (internalKey < assumptionCategories.length) {
                     setInternalKey((prevKey) => prevKey + 1); // Update key in URL
                 }
+                if (internalKey === assumptionCategories.length) {
+                    const params = { key:key }; // Replace with your parameters
+                    const event = new CustomEvent("AssumptionsLastPage", { detail: params });
+                    window.dispatchEvent(event);
+                }
                 refetchPlan();
                 // TODO: here see if session can be updated (refresh)
             },
@@ -172,17 +177,17 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
 
     //this data is used in formulaConfigWrapper
     useEffect(() => {
-      if(assumptionCategories.length > 0 && !state?.allAssumptions?.length>0) {
-        const allAssumptions = assumptionCategories?.flatMap((item) => item.assumptions);
-        dispatch({
-            type: "MASTER_DATA",
-            state: {
-                allAssumptions:allAssumptions,
-            },
-          });
-      }
+        if (assumptionCategories.length > 0 && !state?.allAssumptions?.length > 0) {
+            const allAssumptions = assumptionCategories?.flatMap((item) => item.assumptions);
+            dispatch({
+                type: "MASTER_DATA",
+                state: {
+                    allAssumptions: allAssumptions,
+                },
+            });
+        }
     })
-    
+
 
 
     const handleBack = () => {
@@ -368,7 +373,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
                     </div>
                 </div>
 
-                {(internalKey > 0 && internalKey < assumptionCategories.length) && (
+                {(internalKey > 0 && internalKey < assumptionCategories.length+1) && (
                     <ActionBar>
                         <Button className="previous-button" variation="secondary" label={t("BACK")} onClick={handleBack} />
                         <Button className="previous-button" variation="primary" label={t("NEXT")} onClick={handleNext} />

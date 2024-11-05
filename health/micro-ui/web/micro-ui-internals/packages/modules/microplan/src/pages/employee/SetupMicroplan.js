@@ -126,6 +126,19 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const handleAssumptionsSubmitEvent = () => {
+      const newKey = parseInt(new URLSearchParams(window.location.search).get("key")) || 1;
+      setCurrentKey(newKey+1);
+    };
+
+    window.addEventListener("AssumptionsLastPage", handleAssumptionsSubmitEvent);
+
+    return () => {
+      window.removeEventListener("AssumptionsLastPage", handleAssumptionsSubmitEvent);
+    };
+  }, []);
+
   // setting the current step when the key is changed on the basis of the config
   useEffect(() => {
     setCurrentStep(Number(filteredConfig?.[0]?.form?.[0]?.stepCount - 1));
