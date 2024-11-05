@@ -15,7 +15,7 @@ const ProjectStaffComponent = (props) => {
     const [showModal, setShowModal] = useState(false);
     const [userName, setUserName] = useState("");
     const [showToast, setShowToast] = useState(false);
-    const [showResult, setShowResult] = useState("");
+    const [showResult, setShowResult] = useState(null);
     const [deletionDetails, setDeletionDetails] = useState({
         projectId: null,
         userId: null,
@@ -36,7 +36,7 @@ const ProjectStaffComponent = (props) => {
             limit: 10,
         },
         config: {
-            enable: data?.horizontalNav?.configNavItems[0].code === "Project Resource" ? true : false,
+            enable: props.projectId && data?.horizontalNav?.configNavItems[0].code === "HCM_STAFF_MAPPED" ? true : false,
         },
         body: {
             ProjectStaff: {
@@ -69,7 +69,10 @@ const ProjectStaffComponent = (props) => {
         body: {
             "tenantId": "mz",
             "uuid": userIds
-        }
+        },
+        config: {
+          enable: userIds?.length>0 ? true : false,
+      },
     };
 
   const { isLoading: isUserSearchLoading, data: userInfo } = Digit.Hooks.useCustomAPIHook(userRequestCriteria);
@@ -99,6 +102,8 @@ const ProjectStaffComponent = (props) => {
   const columns = [
     { label: t("PROJECT_STAFF_ID"), key: "id" },
     { label: t("USERNAME"), key: "userInfo.userName" },
+    { label: t("NAME"), key: "userInfo.name" },
+    { label: t("MOBILENUMBER"), key: "userInfo.mobileNumber" },
     { label: t("ROLES"), key: "userInfo.roles" },
     { label: t("IS_DELETED"), key: "isDeleted" },
     { label: t("START_DATE"), key: "formattedStartDate" },
@@ -134,8 +139,9 @@ const ProjectStaffComponent = (props) => {
                 {
                     onSuccess: async (data) => {
                         if (data?.Employees && data?.Employees?.length > 0) {
-                            setShowResult(data?.Employees[0]?.code);
+                            setShowResult(data?.Employees[0]);
                         } else {
+                          setShowResult(null);
                             setShowToast({ label: "WBH_USER_NOT_FOUND", isError: true });
                             setTimeout(() => setShowToast(null), 5000);
                         }
@@ -168,7 +174,7 @@ const ProjectStaffComponent = (props) => {
         setShowModal(false);
         setShowPopup(false);
         setUserName("");
-        setShowResult("");
+        setShowResult(null);
     };
 
   const closeToast = () => {
@@ -195,7 +201,7 @@ const ProjectStaffComponent = (props) => {
                         ProjectStaff: {
                             tenantId,
                             userId: userId,
-                            projectId: projectId,
+                            projectId: props?.Project[0]?.id || projectId,
                             startDate: props?.Project[0]?.startDate,
                             endDate: props?.Project[0]?.endDate,
                         },
@@ -270,7 +276,7 @@ const ProjectStaffComponent = (props) => {
             onSubmit={handleProjectStaffSubmit}
             onClose={closeModal}
             heading={"WBH_ASSIGN_PROJECT_STAFF"}
-            isDisabled={!showResult || showResult.length === 0} // Set isDisabled based on the condition
+            isDisabled={showResult==null} // Set isDisabled based on the condition
           />
         )}
         {showPopup && (
