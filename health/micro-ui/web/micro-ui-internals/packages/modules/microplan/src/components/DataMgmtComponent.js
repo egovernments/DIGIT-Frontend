@@ -22,14 +22,14 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
     // }
     return (
         <>
-            <Card style={{ marginBottom: "1rem" }}>
+            <Card className="middle">
                 <div className="header-container">
                     <HeaderComp title="POPULATION" styles={{ color: "black" }} />
                     {!(setupCompleted === 'true') &&
                         <Button
                             label={t("WBH_EDIT")}
                             variation="secondary"
-                            icon={"EditIcon"}
+                            icon={"Edit"}
                             type="button"
                             onClick={(e) => {
                                 const url = Digit.Hooks.useQueryParams();
@@ -75,7 +75,7 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
                         <Button
                             label={t("WBH_EDIT")}
                             variation="secondary"
-                            icon={"EditIcon"}
+                            icon={"Edit"}
                             type="button"
                             onClick={(e) => {
                                 const url = Digit.Hooks.useQueryParams();

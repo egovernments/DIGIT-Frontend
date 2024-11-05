@@ -224,6 +224,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions,setShowToast,all
               selected={selectedDeletedAssumption}
               optionKey="code"
               showToolTip={true}
+              style={{maxWidth:"100%"}}
               placeholder={t("SELECT_OPTION")}
               onChange={(e) => setSelectedDeletedAssumption(e.target.value)}
               optionCardStyles={{ position: "relative" }}
