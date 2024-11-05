@@ -1090,10 +1090,12 @@ tbody {
   /* Add padding to questions */
   overflow-y: auto;
   /* Enable vertical scrolling */
-  border: 1px solid #ccc;
+  /*border: 1px solid #ccc;*/
   /* Optional: add a border */
-  border-radius: 1rem;
+  border-radius: 0rem;
   /* Optional: rounded corners */
+  padding-left: 0.4rem;
+  padding-right: 0.4rem;
 }
 
 /* Header styling */
@@ -1129,10 +1131,12 @@ tbody {
 
 /* Question and answer styling */
 .mobile-questions .mobile-question-item {
-  border-bottom: 0.0625rem solid #ccc;
-  /* 1px */
-  padding: 0.625rem 0;
-  /* 10px */
+  border-bottom: 1px solid #ccc; /* Standard border */
+  padding: 10px 0;
+}
+
+.mobile-questions .mobile-question-item:last-child {
+  border-bottom: none; /* Remove border for the last item */
 }
 
 .mobile-question {
@@ -1147,6 +1151,18 @@ tbody {
   margin-left: 0.625rem;
   /* 10px */
 }
+
+.mobile-question-number {
+  font-weight: 700;
+  margin-bottom: 0.3rem; /* Adjust spacing */
+  color: #444; /* Adjust color */
+}
+
+.mandatory-asterisk {
+  color: #c84c0e;
+  margin-left: 4px; /* Adjust spacing between the question number and asterisk */
+}
+
 
 .custom-pop-up {
   width: fit-content !important;

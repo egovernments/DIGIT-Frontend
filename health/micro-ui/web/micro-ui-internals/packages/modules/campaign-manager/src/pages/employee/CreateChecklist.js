@@ -201,72 +201,114 @@ const CreateChecklist = () => {
     return organizedQuestions;
   }
 
-
-
   const generateCodes = (questions) => {
-    const codes = {}; // Store codes for each question
+    const codes = {};
     const local = [];
+    let activeCounters = { top: 0 }; // Track active question counts at each level
 
     // Helper function to generate codes recursively
-    const generateCode = (question, prefix, index) => {
-      // Determine the code based on the index
+    const generateCode = (question, prefix, index, parentCounter = '') => {
+      // Generate code regardless of isActive status
       let code = '';
       if (question.parentId === null) {
-        code = `SN${index + 1}`; // Top-level questions
+        code = `SN${index + 1}`;
+        // Only increment counter for active questions
+        if (question.isActive) {
+          activeCounters.top += 1;
+          parentCounter = String(activeCounters.top);
+        }
       } else {
-        code = `${prefix}.SN${index + 1}`; // Nested questions
+        code = `${prefix}.SN${index + 1}`;
+
+        // Initialize counter for this nesting level if it doesn't exist
+        const nestingKey = prefix || 'root';
+        if (!activeCounters[nestingKey]) {
+          activeCounters[nestingKey] = 0;
+        }
+
+        // Only increment counter for active questions
+        if (question.isActive) {
+          activeCounters[nestingKey] += 1;
+          // Build the counter string (e.g., "2.1" or "2.1.3")
+          parentCounter = parentCounter + '.' + activeCounters[nestingKey];
+        }
       }
+
       codes[question.id] = code;
 
       let moduleChecklist = "hcm-checklist";
-
       let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
       let roleTemp = role.toUpperCase().replace(/ /g, "_");
       if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
+
+      // Format the final string with the code (generate for all questions)
       let formattedString = `${campaignName}.${checklistTypeTemp}.${roleTemp}.${code}`;
 
-
-      const obj = {
-        "code": formattedString,
-        "message": String(question.title),
-        "module": moduleChecklist,
-        "locale": locale
+      // Only add message with numbering for active questions
+      if (question.isActive) {
+        const msg = `${parentCounter}) ${String(question.title)}`;
+        const obj = {
+          "code": formattedString,
+          "message": String(msg),
+          "module": moduleChecklist,
+          "locale": locale
+        }
+        local.push(obj);
       }
-      local.push(obj);
 
-      // Recursively generate codes for options and subQuestions
+      // Process options
       if (question.options) {
-
         question.options.forEach((option, optionIndex) => {
-          //generateCode(option, code, optionIndex);
           const optionval = option.label;
           const upperCaseString = optionval.toUpperCase();
           const transformedString = upperCaseString.replace(/ /g, '_');
+
           if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
-          option.label = transformedString;
-          let formattedStringTemp = `${campaignName}.${checklistTypeTemp}.${roleTemp}.${option.label}`;
+          let formattedStringTemp = `${campaignName}.${checklistTypeTemp}.${roleTemp}.${transformedString}`;
+
+          // Generate codes for options regardless of question's active status
           const obj = {
             "code": formattedStringTemp,
             "message": String(optionval),
-            "module": moduleChecklist, // to be dynamic
-            "locale": locale //to be dynamic
+            "module": moduleChecklist,
+            "locale": locale
           }
           local.push(obj);
+
+          // Process subquestions under options
           if (option.subQuestions) {
-            option.subQuestions.forEach((subQuestion, subQuestionIndex) =>
-              generateCode(subQuestion, `${code}.${option.label}`, subQuestionIndex)
-            );
+            const optionNestingKey = `${code}.${transformedString}`;
+            activeCounters[optionNestingKey] = 0;
+
+            option.subQuestions.forEach((subQuestion, subQuestionIndex) => {
+              generateCode(
+                subQuestion,
+                `${code}.${transformedString}`,
+                subQuestionIndex,
+                question.isActive ? parentCounter : ''
+              );
+            });
           }
         });
       }
+
+      // Process direct subquestions
       if (question.subQuestions) {
-        question.subQuestions.forEach((subQuestion, subQuestionIndex) =>
-          generateCode(subQuestion, code, subQuestionIndex)
-        );
+        // Reset counter for this level of subquestions
+        activeCounters[code] = 0;
+
+        question.subQuestions.forEach((subQuestion, subQuestionIndex) => {
+          generateCode(
+            subQuestion,
+            code,
+            subQuestionIndex,
+            question.isActive ? parentCounter : ''
+          );
+        });
       }
     };
 
-    // Process all questions, starting with those that have no parentId
+    // Process all top-level questions
     questions.forEach((question, index) => {
       if (question.parentId === null) {
         generateCode(question, '', index);
@@ -276,36 +318,28 @@ const CreateChecklist = () => {
     return { codes: codes, local: local };
   };
 
-  function createQuestionObject(item, tenantId) {
-    const questionObject = {
-      tenantId: tenantId,
-      code: idCodeMap[item.id],  // Use the idCodeMap to get the code
-      dataType: item?.type?.code,
-      values: item?.value,
-      required: item?.isRequired,
-      isActive: true,
-      reGex: item?.isRegex ? item?.regex?.regex : null,
-      order: item?.key,
-      additionalDetails: item // Complete object goes here
-    };
-
-    return questionObject;
-  }
-
-  // Helper function to generate the desired object format for each question
+  // Helper function remains unchanged as it already handles both active and inactive questions
   function createQuestionObject(item, tenantId, idCodeMap) {
     let labelsArray = [];
-    if (item?.options) labelsArray = item?.options.map(option => option?.label);
+    if (item?.options) {
+      labelsArray = item.options.map(option => {
+        const optionval = option?.label || "";
+        const upperCaseString = optionval.toUpperCase();
+        return upperCaseString.replace(/ /g, '_');
+      });
+    }
+
     const questionObject = {
+      id: item.id,
       tenantId: tenantId,
-      code: idCodeMap[item.id],  // Use the idCodeMap to get the code
+      code: idCodeMap[item.id],
       dataType: String(item?.type?.code),
       values: labelsArray,
       required: item?.isRequired,
-      isActive: true,
+      isActive: item?.isActive,
       reGex: item?.isRegex ? item?.regex?.regex : null,
       order: item?.key,
-      additionalDetails: item // Complete object goes here
+      additionalDetails: item
     };
 
     return questionObject;
@@ -344,12 +378,19 @@ const CreateChecklist = () => {
 
   const payloadData = (data) => {
 
+    data.forEach((question) => {
+      if (question.type.code === "Short Answer") {
+        question.type.code = "String";
+        delete question.options;
+      }
+    });
+
     processedData = organizeQuestions(data);
     let { codes, local } = generateCodes(processedData);
     // let codes = generateCodes(processedData);
     let final_payload = transformQuestions(processedData, tenantId, codes);
     uniqueLocal = local.filter((value, index, self) =>
-      index === self.findIndex((t) => JSON.stringify(t) === JSON.stringify(value))
+      index === self.findIndex((t) => t.code === value.code)
     );
     let fp = final_payload.filter((value, index, self) =>
       index === self.findIndex((t) => JSON.stringify(t) === JSON.stringify(value))

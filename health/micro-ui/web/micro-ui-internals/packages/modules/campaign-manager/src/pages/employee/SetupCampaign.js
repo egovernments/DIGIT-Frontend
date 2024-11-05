@@ -1520,7 +1520,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         });
         break;
         case "HCM_CONFIGURE_APP":
-          history.push(`/${window.contextPath}/employee/campaign/checklist/search?name=${draftData?.campaignName}&campaignId=${draftData?.id}`, {
+          history.push(`/${window.contextPath}/employee/campaign/checklist/search?name=${draftData?.campaignName}&campaignId=${draftData?.id}&projectType=${draftData?.projectType}`, {
             name: draftData?.campaignName,
             projectId: draftData?.projectId,
             data: draftData,

@@ -189,3 +189,12 @@ header {
 .selecting-boundaries-pop {
   min-height: 50%;
 }
+.employee .digit-employeeSidebar .sidebar {
+  z-index: 999;
+}
+.employee .topbar {
+  z-index: 9999;
+}
+.digit-popup-overlay .digit-popup-wrapper {
+  z-index: 10000;
+}
