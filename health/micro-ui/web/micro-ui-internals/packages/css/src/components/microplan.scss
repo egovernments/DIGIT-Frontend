@@ -275,3 +275,32 @@
   color: #0B4B66 !important;
 }
 
+
+.digit-card-component{
+  &.activity-card{
+
+    .activity-card-label{
+      margin: 0rem !important;
+      color: theme(digitv2.lightTheme.text-primary);
+
+      &.disable-label{
+        color: #A0ADAD;
+      }
+    }
+    &:not(.disabled-activity):hover {
+      box-shadow: 0px 4px 5.2px 0px rgba(0, 0, 0, 0.15);
+      border: 1px solid theme(digitv2.lightTheme.primary); 
+
+      .activity-card-label {
+        color: #C84C0E;
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+.digit-popup-overlay{
+  .digit-popup-wrapper{
+    opacity: 1;
+  }
+}
