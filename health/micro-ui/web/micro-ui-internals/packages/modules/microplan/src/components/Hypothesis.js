@@ -173,11 +173,11 @@ const Hypothesis = ({ category, assumptions: initialAssumptions,setShowToast,all
         {showPopUP && <PopUp
           className={"popUpClass"}
           type={"default"}
-          heading={t("CONFIRM_TO_DELETE")}
+          heading={t("HYP_CONFIRM_TO_DELETE")}
           equalWidthButtons={true}
           children={[
             <div>
-              <CardText style={{ margin: 0 }}>{t("PERMANENT_DELETE")}</CardText>
+              <CardText style={{ margin: 0 }}>{t("HYP_PERMANENT_DELETE")}</CardText>
             </div>,
           ]}
           onOverlayClick={() => {
