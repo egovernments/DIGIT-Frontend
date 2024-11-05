@@ -65,35 +65,35 @@ const ChooseActivity = () => {
       {
         name: t("VALIDATE_N_APPROVE_POPULATION_DATA"),
         link: `pop-inbox?campaignId=${campaignId}&microplanId=${microplanId}`,
-        icon: <SVG.Population height="36" width="36" />,
+        icon: <SVG.Population height="36" width="36" fill={isCardDisabled(["POPULATION_DATA_APPROVER", "ROOT_POPULATION_DATA_APPROVER"], workflowData, ["EXECUTION_TO_BE_DONE","CENSUS_DATA_APPROVAL_IN_PROGRESS"]) ? "#C5C5C5" : "#C84C0E"}/>,
         disable: isCardDisabled(["POPULATION_DATA_APPROVER", "ROOT_POPULATION_DATA_APPROVER"], workflowData, ["EXECUTION_TO_BE_DONE","CENSUS_DATA_APPROVAL_IN_PROGRESS"]),
         optionKey: "VALIDATE_N_APPROVE_POPULATION_DATA"
       },
       {
         name: t("ASSIGN_FACILITIES_TO_VILLAGE"),
         link: `assign-facilities-to-villages?campaignId=${campaignId}&microplanId=${microplanId}`,
-        icon: <SVG.AssignmentTurnedIn height="36" width="36" />,
+        icon: <SVG.AssignmentTurnedIn height="36" width="36" fill={isCardDisabled(["FACILITY_CATCHMENT_MAPPER", "ROOT_FACILITY_CATCHMENT_MAPPER"], workflowData, ["CENSUS_DATA_APPROVED"]) ? "#C5C5C5" : "#C84C0E"} />,
         disable: isCardDisabled(["FACILITY_CATCHMENT_MAPPER", "ROOT_FACILITY_CATCHMENT_MAPPER"], workflowData, ["CENSUS_DATA_APPROVED"]),
         optionKey: "ASSIGN_FACILITIES_TO_VILLAGE"
       },
       {
         name: t("VALIDATE_N_APPROVE_MICROPLAN_ESTIMATIONS"),
         link: `plan-inbox?campaignId=${campaignId}&microplanId=${microplanId}`,
-        icon: <SVG.FactCheck height="36" width="36" />,
+        icon: <SVG.FactCheck height="36" width="36" fill={isCardDisabled(["PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"], workflowData, ["RESOURCE_ESTIMATION_IN_PROGRESS"]) ? "#C5C5C5" : "#C84C0E"} />,
         disable: isCardDisabled(["PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"], workflowData, ["RESOURCE_ESTIMATION_IN_PROGRESS"]),
         optionKey: "VALIDATE_N_APPROVE_MICROPLAN_ESTIMATIONS"
       },
       {
         name: t("GEOSPATIAL_MAP_VIEW"),
         link: null,
-        icon: <SVG.LocationOn height="36" width="36" />,
+        icon: <SVG.LocationOn height="36" width="36" fill={isCardDisabled([], workflowData) ? "#C5C5C5" : "#C84C0E"} />,
         disable: isCardDisabled([], workflowData),
         optionKey: "GEOSPATIAL_MAP_VIEW"
       },
       {
         name: t("VIEW_MICROPLAN_ESTIMATIONS"),
         link: `pop-inbox?campaignId=${campaignId}&microplanId=${microplanId}`,
-        icon: <SVG.Visibility height="36" width="36" />,
+        icon: <SVG.Visibility height="36" width="36" fill={isCardDisabled(["MICROPLAN_VIEWER"], workflowData) ? "#C5C5C5" : "#C84C0E"} />,
         disable: isCardDisabled(["MICROPLAN_VIEWER"], workflowData),
         optionKey: "VIEW_MICROPLAN_ESTIMATIONS"
       }
