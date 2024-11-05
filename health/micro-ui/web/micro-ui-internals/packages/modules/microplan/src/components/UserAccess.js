@@ -154,7 +154,7 @@ function UserAccess({ category, setData, nationalRoles }) {
         // } else {
         //   return row?.hierarchyLevel; // Otherwise, return the existing hierarchy level
         // }
-        return row?.hierarchyLevel;
+        return t(row?.hierarchyLevel || "NA");
       },
       sortable: true,
     },
