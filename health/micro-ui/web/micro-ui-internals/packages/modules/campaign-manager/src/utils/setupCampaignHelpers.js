@@ -63,10 +63,7 @@ export const cycleDataRemap=(data)=> {
   
   export const  reverseDeliveryRemap=(data, t) =>{
     if (!data) return null;
-    const reversedData = [];
-    let currentCycleIndex = null;
-    let currentCycle = null;
-  
+
     const operatorMapping = {
       "<=": "LESS_THAN_EQUAL_TO",
       ">=": "GREATER_THAN_EQUAL_TO",
@@ -87,20 +84,19 @@ export const cycleDataRemap=(data)=> {
       }));
     };
   
-    const parseConditionAndCreateRules = (condition, ruleKey, products) => {
+    const parseConditionAndCreateRules = (condition, ruleKey, products ,deliveryStrategy) => {
       const conditionParts = condition.split("and").map((part) => part.trim());
-      let rules = [];
+      const attributes = [];
   
       conditionParts.forEach((part) => {
         const parts = part.split(" ").filter(Boolean);
-        let attributes = [];
   
         // Handle "IN_BETWEEN" operator
         if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
           const toValue = parts[0];
           const fromValue = parts[4];
           attributes.push({
-            key: 1,
+            key: attributes.length + 1,
             operator: { code: operatorMapping["IN_BETWEEN"] },
             attribute: { code: parts[2] },
             fromValue,
@@ -121,20 +117,20 @@ export const cycleDataRemap=(data)=> {
             });
           }
         }
-        rules.push({
-          ruleKey: ruleKey + 1,
-          delivery: {},
-          products,
-          attributes,
-        });
       });
   
-      return rules;
+      return [{
+        ruleKey: ruleKey + 1,
+        delivery: {},
+        deliveryStrategy: deliveryStrategy,
+        products,
+        attributes,
+      }];;
     };
-    const mapDoseCriteriaToDeliveryRules = (doseCriteria) => {
+    const mapDoseCriteriaToDeliveryRules = (doseCriteria , deliveryStrategy) => {
       return doseCriteria?.flatMap((criteria, ruleKey) => {
         const products = mapProductVariants(criteria.ProductVariants);
-        return parseConditionAndCreateRules(criteria.condition, ruleKey, products);
+        return parseConditionAndCreateRules(criteria.condition, ruleKey, products , deliveryStrategy);
       });
     };
   
@@ -142,7 +138,8 @@ export const cycleDataRemap=(data)=> {
       return deliveries?.map((delivery, deliveryIndex) => ({
         active: deliveryIndex === 0,
         deliveryIndex: String(deliveryIndex + 1),
-        deliveryRules: mapDoseCriteriaToDeliveryRules(delivery.doseCriteria),
+        deliveryStrategy: delivery.deliveryStrategy || "DIRECT",
+        deliveryRules: mapDoseCriteriaToDeliveryRules(delivery.doseCriteria , delivery.deliveryStrategy),
       }));
     };
   
@@ -198,7 +195,7 @@ export const cycleDataRemap=(data)=> {
     });
   
     return {
-      condition: conditions.join(" and "),
+      condition: conditions.join("and"),
       ProductVariants: rule.products.map(product => ({
         productVariantId: product.value,
         name: product.name

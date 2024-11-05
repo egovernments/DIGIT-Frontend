@@ -993,6 +993,13 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     setShowToast(null);
   }, [currentKey]);
 
+  useEffect(async () => {
+    if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
+      // const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
+      const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule , totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure , DeliveryConfig);
+    }
+  }, [shouldUpdate]);
+
   const closeToast = () => {
     setShowToast(null);
   };
