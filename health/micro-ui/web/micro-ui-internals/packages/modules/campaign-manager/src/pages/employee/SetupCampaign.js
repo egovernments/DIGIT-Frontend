@@ -205,8 +205,6 @@ function reverseDeliveryRemap(data, t) {
     deliveries: mapDeliveries(cycle.deliveries),
   }));
 
-  console.log("ttt" , transformedCycles);
-
   return transformedCycles;
 }
 
@@ -441,7 +439,6 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     if (isLoading) return;
     if (Object.keys(params).length !== 0) return;
     if (!draftData) return;
-    console.log("dataSt" , draftData);
     const delivery = Array.isArray(draftData?.deliveryRules) ? draftData?.deliveryRules : [];
     const filteredProjectType = projectType?.["HCM-PROJECT-TYPES"]?.projectTypes?.filter((i) => i?.code === draftData?.projectType);
     const restructureFormData = {
