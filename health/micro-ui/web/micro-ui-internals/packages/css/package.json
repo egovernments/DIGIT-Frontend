@@ -1,10 +1,6 @@
 {
   "name": "@egovernments/digit-ui-health-css",
-<<<<<<< HEAD
-  "version": "0.1.19",
-=======
-  "version": "0.1.20",
->>>>>>> console
+  "version": "0.1.21",
   "license": "MIT",
   "main": "dist/index.css",
   "author": "Jagankumar <jagan.kumar@egov.org.in>",
