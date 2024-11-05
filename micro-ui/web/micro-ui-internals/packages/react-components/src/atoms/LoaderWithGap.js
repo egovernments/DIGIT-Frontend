@@ -5,11 +5,11 @@ import { useTranslation } from "react-i18next";
 export const LoaderWithGap = (props) => {
   const { t } = useTranslation();
   return (
-    <div className="loader-with-gap-container">
-      <div className="loader">
-        <div className="loader-inner" />
+    <div className="bg-loader-with-gap-container">
+      <div className="bg-loader">
+        <div className="bg-loader-inner" />
       </div>
-      <div className="loader-text">{t(props.text || "LOADING")}</div>
+      <div className="bg-loader-text">{t(props.text || "LOADING")}</div>
     </div>
   );
 };
