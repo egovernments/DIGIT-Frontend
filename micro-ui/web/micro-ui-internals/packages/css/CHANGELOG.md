@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.8.2-beta.49]
+- Updated Loader with text styles
+
 ## [1.8.2-beta.28]
 - Fixed the loader style 
 

@@ -3,6 +3,10 @@ Here's the `CHANGELOG` file for the specified versions:
 ```markdown
 # Changelog
 
+## [1.8.2-beta.17]
+- updated loader component style
+
+
 ## [1.8.2-beta.12]
 - updated serachcomponent for using inboxserachcomposer inside popup
 
