@@ -20,7 +20,6 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
     //                     "inputFileType": "xlsx",
     //                         "templateIdentifier": "Population"
     // }
-    console.log("files",uploadedFiles);
     return (
         <>
             <Card style={{ marginBottom: "1rem" }}>
