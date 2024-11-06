@@ -31,6 +31,7 @@ const PopInbox = () => {
   const [assigneeUuids, setAssigneeUuids] = useState([]);
   const [totalRows, setTotalRows] = useState(0);
   const [showToast, setShowToast] = useState(null);
+  const [allowAction, setAllowAction] = useState(true);
   const [employeeNameMap, setEmployeeNameMap] = useState({});
   const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
@@ -300,6 +301,15 @@ const PopInbox = () => {
     }
   }, [selectedFilter]);
 
+
+  useEffect(() => {
+    if (selectedFilter !== "VALIDATED" && activeLink.code === "ASSIGNED_TO_ALL") {
+      setAllowAction(false);
+    } else {
+      setAllowAction(true);
+    }
+  }, [selectedFilter, activeLink]);
+
   const onFilter = (selectedStatus) => {
     setSelectedFilter(selectedStatus?.code);
   };
@@ -329,6 +339,7 @@ const PopInbox = () => {
     setSelectedRows(event?.selectedRows);
     setVillagesSelected(event?.selectedCount);
   };
+
 
   // Function to check the status count condition
   const isStatusConditionMet = (statusCount) => {
@@ -504,7 +515,7 @@ const PopInbox = () => {
                 )}
               </div>
             )}
-            <PopInboxTable progressPending={isFetching || isEmployeeLoading} currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap} onSuccessEdit={() => refetch()} conditionalRowStyles={conditionalRowStyles} />
+            {isLoading || isFetching ? <Loader /> : <PopInboxTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap} onSuccessEdit={() => refetch()} conditionalRowStyles={conditionalRowStyles} allowAction={allowAction} />}
           </Card>
         </div>
       </div>
@@ -520,7 +531,7 @@ const PopInbox = () => {
         style={{}}
       /> */}
 
-      {isRootApprover && isStatusConditionMet(activeFilter) &&
+      {isRootApprover && isStatusConditionMet(activeFilter) && planObject?.status === "CENSUS_DATA_APPROVAL_IN_PROGRESS" &&
         <ActionBar
           actionFields={[
             <Button icon="CheckCircle" label={t(`HCM_MICROPLAN_FINALIZE_POPULATION_DATA`)} onClick={handleActionBarClick} type="button" variation="primary" />,

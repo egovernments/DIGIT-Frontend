@@ -33,6 +33,7 @@ const PlanInbox = () => {
   const [rowsPerPage, setRowsPerPage] = useState(50);
   const [totalRows, setTotalRows] = useState(0);
   const [perPage, setPerPage] = useState(10);
+  const [allowAction, setAllowAction] = useState(true);
   const [showToast, setShowToast] = useState(null);
   const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
@@ -302,6 +303,15 @@ const PlanInbox = () => {
     }
   }, [selectedFilter]);
 
+
+  useEffect(() => {
+    if (selectedFilter !== "VALIDATED" && activeLink.code === "ASSIGNED_TO_ALL") {
+      setAllowAction(false);
+    } else {
+      setAllowAction(true);
+    }
+  }, [selectedFilter, activeLink]);
+
   const onFilter = (selectedStatus) => {
     setSelectedFilter(selectedStatus?.code);
   };
@@ -553,7 +563,7 @@ const PlanInbox = () => {
               data={planWithCensus?.tableData}
               pagination
               paginationServer
-              selectableRows
+              selectableRows={allowAction}
               selectableRowsHighlight
               onChangeRowsPerPage={handlePerRowsChange}
               onChangePage={handlePageChange}
@@ -571,7 +581,7 @@ const PlanInbox = () => {
         </div>
       </div>
 
-      {isRootApprover && isStatusConditionMet(activeFilter) && (
+      {isRootApprover && isStatusConditionMet(activeFilter) && planObject?.status === "RESOURCE_ESTIMATION_IN_PROGRESS" && (
         <ActionBar
           actionFields={[
             <Button
