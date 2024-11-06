@@ -302,7 +302,7 @@ const CampaignBoundary = ({ customProps, setupCompleted }) => {
     <div>
       <BoundaryKpi data={statusMap} heading={t("CAMPAIGN_BOUNDARY")} />
       {bHierarchy.length > 1 ? (
-        <div>
+        <div className="mp-margin-bottom">
           <SubBoundaryView style={{ background: "#fff", gap: "1.5rem" }} title={bHierarchy?.[1]} arr={parent_group?.[bHierarchy?.[1]]} editHandler={editHandler} isEditable={isEditable} />
         </div>
       ) : null}
@@ -312,7 +312,7 @@ const CampaignBoundary = ({ customProps, setupCompleted }) => {
           return (
             <div key={`header_${ind}`}>
               <Card className="middle-child">
-                <div className="header-container" style={{ marginBottom: "0px" }}>
+                <div className="mp-header-container" style={{ marginBottom: "0px" }}>
                   <Header className="summary-sub-heading">
                     {bHierarchy[ind + 2]}
                   </Header>

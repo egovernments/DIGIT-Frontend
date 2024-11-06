@@ -28,7 +28,7 @@ const AssumptionsList = ({ customProps, setupCompleted }) => {
             {Object.keys(dic).map((item, ind) => (
                 <Card key={`card_${ind}`} style={{ padding: '20px', marginBottom: '15px' }}>
                     {/* Header with title and edit button */}
-                    <div className="header-container">
+                    <div className="mp-header-container">
                         <HeaderComp title={String(item)} />
                         {!(setupCompleted === 'true') &&
                             <Button

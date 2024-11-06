@@ -22,8 +22,8 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
     // }
     return (
         <>
-            <Card className="middle">
-                <div className="header-container">
+            <Card className="mp-margin-bottom">
+                <div className="mp-header-container">
                     <HeaderComp title="POPULATION" styles={{ color: "black" }} />
                     {!(setupCompleted === 'true') &&
                         <Button
@@ -68,7 +68,7 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
             </Card>
             <Card>
 
-                <div className="header-container">
+                <div className="mp-header-container">
                     <HeaderComp title="FACILITIES" styles={{ color: "black" }} />
                     {!(setupCompleted === 'true') &&
 
