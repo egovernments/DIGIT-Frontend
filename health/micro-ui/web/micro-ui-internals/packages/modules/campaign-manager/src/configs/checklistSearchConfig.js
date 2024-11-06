@@ -1,4 +1,3 @@
-import { CONSOLE_MDMS_MODULENAME } from "../Module";
 
   
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -15,7 +14,7 @@ import { CONSOLE_MDMS_MODULENAME } from "../Module";
         requestBody: {
           MdmsCriteria: {
             tenantId: tenantId,
-            schemaCode: `${CONSOLE_MDMS_MODULENAME}.ChecklistTemplates`,
+            schemaCode: `HCM-ADMIN-CONSOLE.ChecklistTemplates`,
             filters : {}
           }
         },

@@ -3,7 +3,6 @@ import {
   AddIcon,
   CardLabel,
   Dropdown,
-  // TextInput,
   Button,
   Card,
   CardHeader,
@@ -13,9 +12,6 @@ import {
 import { SVG } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-// import { attributeConfig } from "../../../configs/attributeConfig";
-// import { operatorConfig } from "../../../configs/operatorConfig";
-import RemoveableTagNew from "../../../components/RemovableTagNew";
 import AddProducts from "./AddProductscontext";
 import { CycleContext } from ".";
 import { RadioButtons, TextInput , Chip } from "@egovernments/digit-ui-components";
@@ -549,7 +545,8 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
       select: (data) => {
         return data?.[CONSOLE_MDMS_MODULENAME]?.attributeConfig;
       },
-    }
+    },
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.attributeConfig` }
   );
   const { isLoading: operatorConfigLoading, data: operatorConfig } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -559,13 +556,17 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
       select: (data) => {
         return data?.[CONSOLE_MDMS_MODULENAME]?.operatorConfig;
       },
-    }
+    },
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.operatorConfig` }
+
+
   );
   const { isLoading: genderConfigLoading, data: genderConfig } = Digit.Hooks.useCustomMDMS(tenantId, "common-masters", [{ name: "GenderType" }], {
     select: (data) => {
       return data?.["common-masters"]?.GenderType?.filter((i) => i.active !== false);
     },
-  });
+  },    { schemaCode: `${"common-masters"}.GenderType` }
+);
 
   const { data: structureConfig } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -575,7 +576,8 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
       select: (data) => {
         return data?.["HCM"]?.["HOUSE_STRUCTURE_TYPES"];
       },
-    }
+    },
+    { schemaCode: `${"HCM"}.HOUSE_STRUCTURE_TYPES` }
   );
 
   const [attributes, setAttributes] = useState([{ key: 1, deliveryRuleIndex, attribute: "", operator: "", value: "" }]);
@@ -711,7 +713,9 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
       select: (data) => {
         return data?.[CONSOLE_MDMS_MODULENAME]?.deliveryTypeConfig;
       },
-    }
+    },
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.deliveryTypeConfig` }
+
   );
   useEffect(() => {
     if (showToast) {

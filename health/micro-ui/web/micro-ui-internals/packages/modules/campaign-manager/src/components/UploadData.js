@@ -50,12 +50,11 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.adminSchema` }
   );
 
-  const { data: readMe } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "ReadMeConfig" }]);
-  const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "baseTimeout" }]);
+  const { data: readMe } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "ReadMeConfig" }] ,{},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.ReadMeConfig` });
+  const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "baseTimeout" }] ,{},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.baseTimeout` });
   const [sheetHeaders, setSheetHeaders] = useState({});
   const [translatedSchema, setTranslatedSchema] = useState({});
   const [readMeInfo, setReadMeInfo] = useState({});
-  const [enabled, setEnabled] = useState(false);
   const [showPopUp, setShowPopUp] = useState(true);
   const currentKey = searchParams.get("key");
   const [key, setKey] = useState(() => {
