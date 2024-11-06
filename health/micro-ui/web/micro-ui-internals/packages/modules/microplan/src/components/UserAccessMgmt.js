@@ -17,8 +17,8 @@ const UserAccessMgmt = ({ setupCompleted }) => {
     }
 
     return (
-        <div>
-            <Card style={{ marginBottom: "1px" }}>
+        <div style={{ marginBottom: "2.5rem" }}>
+            <Card className="middle-child">
                 <Header className="summary-main-heading">{t("USER_ACCESS_MGMT")} </Header>
             </Card>
             {rolesArray?.map((role, index) => {
