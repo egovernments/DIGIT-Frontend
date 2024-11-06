@@ -56,6 +56,7 @@ const initDigitUI = () => {
 ### Changelog
 
 ```bash
+0.0.48 Cleaned up code and and added comments
 0.0.40 base version
 ```
 

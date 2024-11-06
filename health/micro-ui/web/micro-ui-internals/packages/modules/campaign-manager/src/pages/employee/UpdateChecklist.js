@@ -15,10 +15,10 @@ const UpdateChecklist = () => {
     const rlt = searchParams.get("role");
     const projectType = searchParams.get("projectType");
     const campaignId = searchParams.get("campaignId");
-    const roleLocal = (!rlt.startsWith("ACCESSCONTROL_ROLES_ROLES_")) ? "ACCESSCONTROL_ROLES_ROLES_"+rlt : rlt;
+    const roleLocal = (!rlt.startsWith("ACCESSCONTROL_ROLES_ROLES_")) ? "ACCESSCONTROL_ROLES_ROLES_" + rlt : rlt;
     const checklistType = searchParams.get("checklistType");
     let clt = searchParams.get("checklistType");
-    const checklistTypeLocal = (!clt.startsWith("HCM_CHECKLIST_TYPE_")) ? "HCM_CHECKLIST_TYPE_"+clt : clt;
+    const checklistTypeLocal = (!clt.startsWith("HCM_CHECKLIST_TYPE_")) ? "HCM_CHECKLIST_TYPE_" + clt : clt;
     const history = useHistory(); // Get history object for navigation
     const [config, setConfig] = useState(null);
     const [checklistTypeCode, setChecklistTypeCode] = useState(null);
@@ -37,6 +37,7 @@ const UpdateChecklist = () => {
     const [tempFormData, setTempFormData] = useState([]);
     const [previewData, setPreviewData] = useState([]);
     const [showPopUp, setShowPopUp] = useState(false);
+    const [curActive, setCurActive] = useState(false);
 
 
     const popShow = () => {
@@ -71,6 +72,7 @@ const UpdateChecklist = () => {
         config: {
             select: (res) => {
                 if (res?.ServiceDefinitions?.[0]?.attributes) {
+                    setCurActive(res?.ServiceDefinitions?.[0].isActive);
                     let temp_data = res?.ServiceDefinitions?.[0]?.attributes
                     let formatted_data = temp_data.map((item) => item.additionalDetails);
                     let nvd = formatted_data.filter((value, index, self) =>
@@ -82,9 +84,15 @@ const UpdateChecklist = () => {
         }
     }
     const { isLoading, data, isFetching } = Digit.Hooks.useCustomAPIHook(res);
-  
+
     useEffect(() => {
         if (data) {
+            data.forEach((question) => {
+                if (question.type.code === "String") {
+                    question.type.code = "Short Answer";
+                }
+            });
+
             setViewData(data);
         }
     }, [data])
@@ -141,114 +149,147 @@ const UpdateChecklist = () => {
         return organizedQuestions;
     }
 
-
-
     const generateCodes = (questions) => {
-        const codes = {}; // Store codes for each question
+        const codes = {};
         const local = [];
-
+        let activeCounters = { top: 0 }; // Track active question counts at each level
+    
         // Helper function to generate codes recursively
-        const generateCode = (question, prefix, index) => {
-            // Determine the code based on the index
+        const generateCode = (question, prefix, index, parentCounter = '') => {
+            // Generate code regardless of isActive status
             let code = '';
             if (question.parentId === null) {
-                code = `SN${index + 1}`; // Top-level questions
+                code = `SN${index + 1}`;
+                // Only increment counter for active questions
+                if (question.isActive) {
+                    activeCounters.top += 1;
+                    parentCounter = String(activeCounters.top);
+                }
             } else {
-                code = `${prefix}.SN${index + 1}`; // Nested questions
+                code = `${prefix}.SN${index + 1}`;
+                
+                // Initialize counter for this nesting level if it doesn't exist
+                const nestingKey = prefix || 'root';
+                if (!activeCounters[nestingKey]) {
+                    activeCounters[nestingKey] = 0;
+                }
+                
+                // Only increment counter for active questions
+                if (question.isActive) {
+                    activeCounters[nestingKey] += 1;
+                    // Build the counter string (e.g., "2.1" or "2.1.3")
+                    parentCounter = parentCounter + '.' + activeCounters[nestingKey];
+                }
             }
+            
             codes[question.id] = code;
-
+    
             let moduleChecklist = "hcm-checklist";
-
             let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
             let roleTemp = role.toUpperCase().replace(/ /g, "_");
             if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
+            
+            // Format the final string with the code (generate for all questions)
             let formattedString = `${campaignName}.${checklistTypeTemp}.${roleTemp}.${code}`;
-
-
-            const obj = {
-                "code": formattedString,
-                "message": String(question.title),
-                "module": moduleChecklist,
-                "locale": locale
+            
+            // Only add message with numbering for active questions
+            if (question.isActive) {
+                const msg = `${parentCounter}) ${String(question.title)}`;
+                const obj = {
+                    "code": formattedString,
+                    "message": String(msg),
+                    "module": moduleChecklist,
+                    "locale": locale
+                }
+                local.push(obj);
             }
-            local.push(obj);
-
-            // Recursively generate codes for options and subQuestions
+    
+            // Process options
             if (question.options) {
-
                 question.options.forEach((option, optionIndex) => {
-                    //generateCode(option, code, optionIndex);
                     const optionval = option.label;
                     const upperCaseString = optionval.toUpperCase();
                     const transformedString = upperCaseString.replace(/ /g, '_');
+                    
                     if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
-                    option.label = transformedString;
-                    let formattedStringTemp = `${campaignName}.${checklistTypeTemp}.${roleTemp}.${option.label}`;
+                    let formattedStringTemp = `${campaignName}.${checklistTypeTemp}.${roleTemp}.${transformedString}`;
+                    
+                    // Generate codes for options regardless of question's active status
                     const obj = {
                         "code": formattedStringTemp,
                         "message": String(optionval),
-                        "module": moduleChecklist, // to be dynamic
-                        "locale": locale //to be dynamic
+                        "module": moduleChecklist,
+                        "locale": locale
                     }
                     local.push(obj);
+    
+                    // Process subquestions under options
                     if (option.subQuestions) {
-                        option.subQuestions.forEach((subQuestion, subQuestionIndex) =>
-                            generateCode(subQuestion, `${code}.${option.label}`, subQuestionIndex)
-                        );
+                        const optionNestingKey = `${code}.${transformedString}`;
+                        activeCounters[optionNestingKey] = 0;
+                        
+                        option.subQuestions.forEach((subQuestion, subQuestionIndex) => {
+                            generateCode(
+                                subQuestion, 
+                                `${code}.${transformedString}`, 
+                                subQuestionIndex,
+                                question.isActive ? parentCounter : ''
+                            );
+                        });
                     }
                 });
             }
+    
+            // Process direct subquestions
             if (question.subQuestions) {
-                question.subQuestions.forEach((subQuestion, subQuestionIndex) =>
-                    generateCode(subQuestion, code, subQuestionIndex)
-                );
+                // Reset counter for this level of subquestions
+                activeCounters[code] = 0;
+                
+                question.subQuestions.forEach((subQuestion, subQuestionIndex) => {
+                    generateCode(
+                        subQuestion, 
+                        code, 
+                        subQuestionIndex, 
+                        question.isActive ? parentCounter : ''
+                    );
+                });
             }
         };
-
-        // Process all questions, starting with those that have no parentId
+    
+        // Process all top-level questions
         questions.forEach((question, index) => {
             if (question.parentId === null) {
                 generateCode(question, '', index);
             }
         });
-
+    
         return { codes: codes, local: local };
     };
-
-    function createQuestionObject(item, tenantId) {
-        const questionObject = {
-            tenantId: tenantId,
-            code: idCodeMap[item.id],  // Use the idCodeMap to get the code
-            dataType: item?.type?.code,
-            values: item?.value,
-            required: item?.isRequired,
-            isActive: item?.isActive,
-            reGex: item?.isRegex ? item?.regex?.regex : null,
-            order: item?.key,
-            additionalDetails: item // Complete object goes here
-        };
-
-        return questionObject;
-    }
-
-    // Helper function to generate the desired object format for each question
+    
+    // Helper function remains unchanged as it already handles both active and inactive questions
     function createQuestionObject(item, tenantId, idCodeMap) {
         let labelsArray = [];
-        if (item?.options) labelsArray = item?.options.map(option => option?.label);
+        if (item?.options) {
+            labelsArray = item.options.map(option => {
+                const optionval = option?.label || "";
+                const upperCaseString = optionval.toUpperCase();
+                return upperCaseString.replace(/ /g, '_');
+            });
+        }
+    
         const questionObject = {
             id: item.id,
             tenantId: tenantId,
-            code: idCodeMap[item.id],  // Use the idCodeMap to get the code
+            code: idCodeMap[item.id],
             dataType: String(item?.type?.code),
             values: labelsArray,
             required: item?.isRequired,
             isActive: item?.isActive,
             reGex: item?.isRegex ? item?.regex?.regex : null,
             order: item?.key,
-            additionalDetails: item // Complete object goes here
+            additionalDetails: item
         };
-
+    
         return questionObject;
     }
 
@@ -284,6 +325,14 @@ const UpdateChecklist = () => {
     let uniqueLocal;
 
     const payloadData = (data) => {
+
+        data.forEach((question) => {
+            if (question.type.code === "Short Answer") {
+                question.type.code = "String";
+                delete question.options;
+            }
+        });
+
         processedData = organizeQuestions(data);
         let { codes, local } = generateCodes(processedData);
         // let codes = generateCodes(processedData);
@@ -291,7 +340,7 @@ const UpdateChecklist = () => {
 
         const fp = final_payload.filter((value, index, self) =>
             index === self.findIndex((t) => t.id === value.id || t.code === value.code)
-          );
+        );
         uniqueLocal = local.filter((value, index, self) =>
             index === self.findIndex((t) => JSON.stringify(t) === JSON.stringify(value))
         );
@@ -303,7 +352,7 @@ const UpdateChecklist = () => {
             tenantId: tenantId,
             // code: role,
             code: code_of_checklist,
-            isActive: true,
+            isActive: curActive,
             attributes: fp,
             additionalDetails: {
                 name: checklistName,
@@ -377,7 +426,7 @@ const UpdateChecklist = () => {
         // { label: "CHECKLIST_NAME", value: name}            
     ];
 
-    if(isLoading) {
+    if (isLoading) {
         return <Loader />;
     }
     return (
@@ -420,10 +469,11 @@ const UpdateChecklist = () => {
                                 setShowPopUp(false);
                             }}
                             footerChildren={[
+                                <div></div>,
                                 <Button
                                     type={"button"}
                                     size={"large"}
-                                    variation={"secondary"}
+                                    variation={"primary"}
                                     label={t("CLOSE")}
                                     onClick={() => {
                                         setShowPopUp(false);
@@ -433,7 +483,7 @@ const UpdateChecklist = () => {
                             sortFooterChildren={true}
                         >
 
-                            <MobileChecklist questions={previewData} checklistRole={t(`${roleLocal}`)} typeOfChecklist={t(`${checklistTypeLocal}`)}></MobileChecklist>
+                            <MobileChecklist questions={previewData} campaignName={campaignName} checklistRole={t(`${roleLocal}`)} typeOfChecklist={t(`${checklistTypeLocal}`)}></MobileChecklist>
                         </PopUp>
                     )}
                     <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
@@ -451,7 +501,7 @@ const UpdateChecklist = () => {
                             </div>
                         ))}
                     </Card>
-                    <div style={{height:"1rem"}}></div>
+                    <div style={{ height: "1rem" }}></div>
                     {!isLoading && <FormComposerV2
                         showMultipleCardsWithoutNavs={true}
                         label={t("UPDATE_CHECKLIST")}

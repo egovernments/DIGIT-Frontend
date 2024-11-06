@@ -11,6 +11,7 @@ import {
   resourceData, restructureData, filterCampaignConfig, findHighestStepCount
 } from "../../utils/setupCampaignHelpers";
 import { handleValidate } from "../../utils/setupCampaignValidators";
+import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 
 /**
  * The `SetupCampaign` function in JavaScript handles the setup and management of campaign details,
@@ -56,9 +57,9 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const [fetchBoundary, setFetchBoundary] = useState(() => Boolean(searchParams.get("fetchBoundary")));
   const [fetchUpload, setFetchUpload] = useState(false);
   const [active, setActive] = useState(0);
-  const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
+  const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "hierarchyConfig" }]);
   const lowestHierarchy = useMemo(() => {
-    return hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)?.lowestHierarchy;
+    return hierarchyConfig?.[CONSOLE_MDMS_MODULENAME]?.hierarchyConfig?.find((item) => item.isActive)?.lowestHierarchy;
   }, [hierarchyConfig]);
 
   const { data: DeliveryConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }], {
@@ -663,13 +664,13 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
           data: draftData,
         });
         break;
-      case "HCM_CONFIGURE_APP":
-        history.push(`/${window.contextPath}/employee/campaign/checklist/search?name=${draftData?.campaignName}&campaignId=${draftData?.id}`, {
-          name: draftData?.campaignName,
-          projectId: draftData?.projectId,
-          data: draftData,
-        });
-        break;
+        case "HCM_CONFIGURE_APP":
+          history.push(`/${window.contextPath}/employee/campaign/checklist/search?name=${draftData?.campaignName}&campaignId=${draftData?.id}&projectType=${draftData?.projectType}`, {
+            name: draftData?.campaignName,
+            projectId: draftData?.projectId,
+            data: draftData,
+          });
+          break;
       case "HCM_UPDATE_CAMPAIGN":
         history.push(`/${window.contextPath}/employee/campaign/update-campaign?key=1&parentId=${draftData?.id}`, {
           name: draftData?.campaignName,

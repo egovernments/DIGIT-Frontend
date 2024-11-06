@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { InfoCard, PopUp, Button, Toast } from "@egovernments/digit-ui-components";
 import { mailConfig } from "../configs/mailConfig";
 import MultiSelectDropdown from "./MultiSelectDropdown";
+import { CONSOLE_MDMS_MODULENAME } from "../Module";
 /**
  * The function `SelectingBoundaries` in JavaScript handles the selection of boundaries based on
  * hierarchy data and allows users to choose specific boundaries within the hierarchy.
@@ -41,12 +42,10 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
   const [restrictSelection, setRestrictSelection] = useState(null);
   const [updateBoundary, setUpdateBoundary] = useState(null);
   const [loaderEnabled, setLoaderEnabled] = useState(false);
-  const { isLoading, data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
+  const { isLoading, data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "hierarchyConfig" }]);
 
-  // const lowestHierarchy = hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.lowestHierarchy;
-  // const lowestHierarchy = useMemo(() => hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.lowestHierarchy, [hierarchyConfig]);
   const lowestHierarchy = useMemo(() => {
-    return hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find(item => item.isActive)?.lowestHierarchy;
+    return hierarchyConfig?.[CONSOLE_MDMS_MODULENAME]?.hierarchyConfig?.find(item => item.isActive)?.lowestHierarchy;
   }, [hierarchyConfig]);
   const lowestChild = hierarchyTypeDataresult?.boundaryHierarchy.filter((item) => item.parentBoundaryType === lowestHierarchy)?.[0]?.boundaryType;
   const searchParams = new URLSearchParams(location.search);

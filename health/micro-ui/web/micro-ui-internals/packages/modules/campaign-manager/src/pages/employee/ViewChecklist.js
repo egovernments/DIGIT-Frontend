@@ -54,6 +54,11 @@ const ViewChecklist = () => {
     useEffect(() => {
 
         if (data) {
+            data.forEach((question) => {
+                if (question.type.code === "String") {
+                  question.type.code = "Short Answer";
+                }
+              });
 
             setViewData(data);
 
@@ -169,10 +174,11 @@ const ViewChecklist = () => {
                         setShowPopUp(false);
                     }}
                     footerChildren={[
+                        <div></div>,
                         <Button
                             type={"button"}
                             size={"large"}
-                            variation={"secondary"}
+                            variation={"primary"}
                             label={t("CLOSE")}
                             onClick={() => {
                                 setShowPopUp(false);
@@ -184,7 +190,7 @@ const ViewChecklist = () => {
                     {/* <PreviewComponent
               questionsArray={previewData}></PreviewComponent> */}
 
-                    <MobileChecklist questions={previewData} checklistRole={t(`${roleLocal}`)} typeOfChecklist={t(`${checklistTypeLocal}`)}></MobileChecklist>
+                    <MobileChecklist questions={previewData} campaignName={campaignName} checklistRole={t(`${roleLocal}`)} typeOfChecklist={t(`${checklistTypeLocal}`)}></MobileChecklist>
                 </PopUp>
             )}
 
