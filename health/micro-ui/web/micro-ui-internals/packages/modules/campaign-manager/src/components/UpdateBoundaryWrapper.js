@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useLocation , useHistory } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
 import { Loader } from "@egovernments/digit-ui-components";
+import { CONSOLE_MDMS_MODULENAME } from "../Module";
 
 const UpdateBoundaryWrapper = ({ onSelect,...props }) => {
   const { t } = useTranslation();
@@ -13,14 +14,14 @@ const UpdateBoundaryWrapper = ({ onSelect,...props }) => {
   const id = searchParams.get("id");
   const isDraft = searchParams.get("draft");
   // const hierarchyType = props?.props?.hierarchyType;
-  const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
+  const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "hierarchyConfig" }]);
   const [selectedData, setSelectedData] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData || []);
   const [boundaryOptions, setBoundaryOptions] = useState(
     props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData || {}
   );
   const [hierarchyType , SetHierarchyType] = useState(props?.props?.hierarchyType);
   const lowestHierarchy = useMemo(() => {
-    return hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
+    return hierarchyConfig?.[CONSOLE_MDMS_MODULENAME]?.hierarchyConfig?.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
   }, [hierarchyConfig, hierarchyType]);
 
   const reqCriteriaCampaign = {

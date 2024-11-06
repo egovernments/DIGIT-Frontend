@@ -5,6 +5,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { Toast , Stepper} from "@egovernments/digit-ui-components";
 import _ from "lodash";
 import { UpdateBoundaryConfig } from "../../configs/UpdateBoundaryConfig";
+import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 
 /**
  * The `SetupCampaign` function in JavaScript handles the setup and management of campaign details,
@@ -120,10 +121,10 @@ const UpdateBoundary = ({hierarchyData }) => {
   const [fetchBoundary, setFetchBoundary] = useState(() => Boolean(searchParams.get("fetchBoundary")));
   const [fetchUpload, setFetchUpload] = useState(false);
   const [active, setActive] = useState(0);
-  const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
+  const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "hierarchyConfig" }]);
   const [hierarchyType, setHierarchyType] = useState();
   const lowestHierarchy = useMemo(() => {
-    return hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
+    return hierarchyConfig?.[CONSOLE_MDMS_MODULENAME]?.hierarchyConfig?.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
   }, [hierarchyConfig, hierarchyType]);
   const { isLoading, data: projectType } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }]);
   
