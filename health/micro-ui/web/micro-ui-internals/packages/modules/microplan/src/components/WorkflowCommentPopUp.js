@@ -133,6 +133,7 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
                 </div>
             ]}
             onOverlayClick={onClose}
+            equalWidthButtons={true}
             footerChildren={[
                 <Button
                     key="close-button"

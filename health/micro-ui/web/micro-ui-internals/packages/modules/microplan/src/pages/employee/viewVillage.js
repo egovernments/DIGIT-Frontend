@@ -212,7 +212,7 @@ const VillageView = () => {
 
             <div>
                 <div className="village-header" >
-                    {'Village 1'}
+                    {t(boundaryCode)}
                 </div>
                 <Card type="primary" className="middle-child">
                     {hierarchy.map((node, index) => (
@@ -321,7 +321,7 @@ const VillageView = () => {
                     <EditVillagePopulationPopUp onClose={onEditPopulationClose} census={data} onSuccess={(data) => { refetch(); }} />
                 )}
 
-                <Card type="primary" className="info-card">
+                <Card type="primary" className="info-card" style={{ marginBottom: "2.5rem" }}>
                     <div className="card-heading">
                         <h2 className="card-heading-title">{t(`HCM_MICROPLAN_COMMENT_LOG_HEADING`)}</h2>
                         <Button

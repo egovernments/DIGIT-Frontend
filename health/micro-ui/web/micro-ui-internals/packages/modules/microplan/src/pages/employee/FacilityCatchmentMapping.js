@@ -17,7 +17,7 @@ const FacilityCatchmentMapping = () => {
   const userRoles = user?.info?.roles?.map((roleData) => roleData?.code);
   const [showPopup, setShowPopup] = useState(false);
   const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
-  const [currentRow,setCurrentRow] = useState(null);
+  const [currentRow, setCurrentRow] = useState(null);
   const [censusQueryName, setCensusQueryName] = useState("censusData");
   // Check if the user has the 'rootfacilitycatchmentmapper' role
   const isRootApprover = userRoles?.includes("ROOT_FACILITY_CATCHMENT_MAPPER");
@@ -106,19 +106,19 @@ const FacilityCatchmentMapping = () => {
 
   return (
     <React.Fragment>
-      <Header styles={{marginBottom:"1.5rem"}}>{t("MICROPLAN_ASSIGN_CATCHMENT_VILLAGES")}</Header>
+      <Header styles={{ marginBottom: "1.5rem" }}>{t("MICROPLAN_ASSIGN_CATCHMENT_VILLAGES")}</Header>
       <div className="inbox-search-wrapper">
         <InboxSearchComposer
           configs={config}
-          additionalConfig = {{
-            resultsTable:{
+          additionalConfig={{
+            resultsTable: {
               onClickRow,
             }
           }}
         ></InboxSearchComposer>
       </div>
 
-      {isRootApprover && data?.TotalCount === 0 &&
+      {isRootApprover && data?.TotalCount === 0 && planObject?.status === "CENSUS_DATA_APPROVED" &&
         <ActionBar
           actionFields={[
             <Button icon="CheckCircle" label={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT`)} onClick={handleActionBarClick} type="button" variation="primary" />,
@@ -130,17 +130,17 @@ const FacilityCatchmentMapping = () => {
           style={{}}
         />}
 
-          {showPopup && currentRow && (
-                <FacilityPopUp
-                  details={currentRow}
-                  onClose={() => {
-                    setShowPopup(false);
-                    setCurrentRow(null);
-                    setCensusQueryName(`censusData${Date.now()}`);
-                  }}
-                  updateDetails={setCurrentRow}
-                />
-              )}
+      {showPopup && currentRow && (
+        <FacilityPopUp
+          details={currentRow}
+          onClose={() => {
+            setShowPopup(false);
+            setCurrentRow(null);
+            setCensusQueryName(`censusData${Date.now()}`);
+          }}
+          updateDetails={setCurrentRow}
+        />
+      )}
 
       {actionBarPopUp && (
         <WorkflowCommentPopUp
