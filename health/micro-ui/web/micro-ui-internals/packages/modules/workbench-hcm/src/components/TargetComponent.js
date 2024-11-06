@@ -34,7 +34,7 @@ const TargetComponent = (props) => {
   const columns = [
     { label: t("WBH_BENEFICIARY_TYPE"), key: "beneficiaryType" },
     { label: t("WBH_TOTAL_NUMBER"), key: "totalNo" },
-    { label: t("WBH_TARGET_NUMBER"), key: "targetNo" },
+    { label: t("WBH_TARGET_NO_LABEL"), key: "targetNo" },
     // { label: t("WBH_ACTIONS"), key: "actions" },
   ];
 
@@ -47,20 +47,18 @@ const TargetComponent = (props) => {
 
   // const handleEditButtonClick = (index) => {
   //   const updatedTarget = { ...props.targets[index], isDeleted: true };
-  
+
   //   console.log(updatedTarget); // It should print true
-  
+
   //   setFormData(updatedTarget);
   //   setShowModal(true);
   // };
-  
 
   const url = getProjectServiceUrl();
   const reqCriteria = {
-   url: `${url}/v1/_update`,
-    config: false
+    url: `${url}/v1/_update`,
+    config: false,
   };
-
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteria);
   // const { refetch } = Digit.Hooks.useCustomAPIHook(reqCriteria);
@@ -110,7 +108,6 @@ const TargetComponent = (props) => {
       );
 
       setShowModal(false);
-
     } else {
       // Handle case when the target doesn't exist (optional)
       console.log("Target not found for update");

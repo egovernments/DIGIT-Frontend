@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import React from "react";
 
 export const data = (project) => {
   const { t } = useTranslation();
   const ancestor = project?.Project?.[0]?.ancestors;
-  const lastAncestor = ancestor?.length  > 0 ? ancestor[ancestor?.length - 1] : { projectNumber: "NA" };
-  const isLink = ancestor?.length > 0 ? true: false;
+  const lastAncestor = ancestor?.length > 0 ? ancestor[ancestor?.length - 1] : { projectNumber: "NA" };
+  const isLink = ancestor?.length > 0 ? true : false;
 
   return {
     cards: [
@@ -19,33 +19,33 @@ export const data = (project) => {
                 value: project?.Project?.[0]?.projectNumber || "NA",
               },
               {
-                key: "WORKBENCH_PROJECT_NAME",
+                key: "CAMPAIGN_NAME",
                 value: project?.Project?.[0]?.name || "NA",
               },
               {
-                key: "WORKBENCH_PROJECT_TYPE",
-                value: project?.Project?.[0]?.projectType || "NA",
+                key: "CAMPAIGN_TYPE",
+                value: (project?.Project?.[0]?.projectType && t(`CAMPAIGN_PROJECT_${project?.Project?.[0]?.projectType}`)) || "NA",
               },
               {
-                key: "WORKBENCH_PROJECT_START_DATE",
+                key: "CAMPAIGN_START_DATE",
                 value: Digit.DateUtils.ConvertEpochToDate(project?.Project?.[0]?.startDate) || "NA",
               },
               {
-                key: "WORKBENCH_PROJECT_END_DATE",
+                key: "CAMPAIGN_END_DATE",
                 value: Digit.DateUtils.ConvertEpochToDate(project?.Project?.[0]?.endDate) || "NA",
               },
               {
                 key: "WORKBENCH_PROJECT_PRIMARY",
-                value: project?.Project?.[0]?.targets?.[0]?.beneficiaryType || "NA",
+                value: t(project?.Project?.[0]?.targets?.[0]?.beneficiaryType) || "NA",
               },
               {
                 key: "WORKBENCH_PROJECT_PARENT_PROJECT_NUMBER",
                 value: ancestor?.length > 0 ? ancestor[ancestor?.length - 1]?.projectNumber : "NA",
                 isLink: ancestor?.length > 0 ? true : false,
-                to: isLink? `campaign-view?tenantId=mz&projectNumber=${ancestor[ancestor?.length - 1].projectNumber}` : undefined
+                to: isLink ? `campaign-view?tenantId=mz&projectNumber=${ancestor[ancestor?.length - 1].projectNumber}` : undefined,
               },
               {
-                key: "WORKBENCH_PROJECT_PRIMARY_TARGET_NO",
+                key: "WBH_TARGET_NO_LABEL",
                 value: project?.Project?.[0]?.targets?.[0]?.targetNo || "NA",
               },
               {
@@ -53,8 +53,8 @@ export const data = (project) => {
                 value: project?.Project?.[0]?.targets?.[0]?.totalNo || "NA",
               },
               {
-                key: "WORKBENCH_PROJECT_BOUNDARY",
-                value: project?.Project?.[0]?.address?.boundary || "NA",
+                key: "WBH_BOUNDARY",
+                value: t(project?.Project?.[0]?.address?.boundary) || "NA",
               },
               {
                 key: "WORKBENCH_PROJECT_BOUNDARY_TYPE",
@@ -111,7 +111,7 @@ export const data = (project) => {
           },
         ],
       },
-    
+
       {
         navigationKey: "card4",
         sections: [
@@ -124,7 +124,6 @@ export const data = (project) => {
           },
         ],
       },
-    
     ],
     apiResponse: {},
     additionalDetails: {},
@@ -134,7 +133,7 @@ export const data = (project) => {
         {
           name: "card1",
           active: true,
-          code: "HCM_TARGET_MAPPED",
+          code: "TARGET_DETAILS",
         },
         {
           name: "card3",
@@ -144,20 +143,19 @@ export const data = (project) => {
         {
           name: "card2",
           active: true,
-          code: "HCM_RESOURCE_MAPPED",
+          code: "CAMPAIGN_PRODUCT_LABEL",
         },
         {
           name: "card5",
           active: true,
-          code: "HCM_STAFF_MAPPED",
+          code: "USER_DETAILS",
         },
-     
+
         {
           name: "card4",
           active: true,
-          code: "HCM_FACILITY_MAPPED",
+          code: "FACILITY_DETAILS",
         },
-       
       ],
       activeByDefault: "card1",
     },
