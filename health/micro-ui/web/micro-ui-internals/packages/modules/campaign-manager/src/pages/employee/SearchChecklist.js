@@ -129,8 +129,8 @@ const SearchChecklist = () => {
           onStepClick={onStepClick}
           activeSteps={6}
         />
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <Header styles={{ fontSize: "32px", marginBottom: "2rem", marginTop: "2rem" }}>{t("ACTION_LABEL_CONFIGURE_APP")}</Header>
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop: "2rem" }}>
+          {/* <Header styles={{ fontSize: "32px", marginBottom: "2rem", marginTop: "2rem" }}>{t("ACTION_LABEL_CONFIGURE_APP")}</Header> */}
           {/* <Button
             variation="secondary"
             label={t("ADD_NEW_CHECKLIST")}

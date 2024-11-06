@@ -54,6 +54,11 @@ const ViewChecklist = () => {
     useEffect(() => {
 
         if (data) {
+            data.forEach((question) => {
+                if (question.type.code === "String") {
+                  question.type.code = "Short Answer";
+                }
+              });
 
             setViewData(data);
 
@@ -169,10 +174,11 @@ const ViewChecklist = () => {
                         setShowPopUp(false);
                     }}
                     footerChildren={[
+                        <div></div>,
                         <Button
                             type={"button"}
                             size={"large"}
-                            variation={"secondary"}
+                            variation={"primary"}
                             label={t("CLOSE")}
                             onClick={() => {
                                 setShowPopUp(false);
