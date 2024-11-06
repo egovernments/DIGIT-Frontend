@@ -54,6 +54,12 @@ import ViewBoundary from "./pages/employee/ViewBoundary";
 import ViewHierarchy from "./pages/employee/ViewHierarchy";
 import MultiSelectDropdown from "./components/MultiSelectDropdown";
 import MapView from "./components/MapView";
+
+/**
+ * MDMS Module name
+ */
+export const CONSOLE_MDMS_MODULENAME="HCM-ADMIN-CONSOLE";
+
 /**
  * The CampaignModule function fetches store data based on state code, module code, and language, and
  * renders the EmployeeApp component within a TourProvider component if the data is not loading.
@@ -62,9 +68,9 @@ import MapView from "./components/MapView";
  */
 const CampaignModule = ({ stateCode, userType, tenants }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const { data: BOUNDARY_HIERARCHY_TYPE , isLoading: hierarchyLoading } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }], {
+  const { data: BOUNDARY_HIERARCHY_TYPE , isLoading: hierarchyLoading } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "hierarchyConfig" }], {
     select: (data) => {
-      return data?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)?.hierarchy;
+      return data?.[CONSOLE_MDMS_MODULENAME]?.hierarchyConfig?.find((item) => item.isActive)?.hierarchy;
     },
   });
 
@@ -97,6 +103,7 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
     </ErrorBoundary>
   );
 };
+
 
 const componentsToRegister = {
   CampaignModule: CampaignModule,

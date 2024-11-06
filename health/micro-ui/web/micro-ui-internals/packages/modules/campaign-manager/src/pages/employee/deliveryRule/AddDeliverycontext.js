@@ -20,6 +20,7 @@ import AddProducts from "./AddProductscontext";
 import { CycleContext } from ".";
 import { RadioButtons, TextInput , Chip } from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR } from "../../../utils";
+import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 
 const DustbinIcon = () => (
   <svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -542,21 +543,21 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { isLoading: attributeConfigLoading, data: attributeConfig } = Digit.Hooks.useCustomMDMS(
     tenantId,
-    "HCM-ADMIN-CONSOLE",
+    CONSOLE_MDMS_MODULENAME,
     [{ name: "attributeConfig" }],
     {
       select: (data) => {
-        return data?.["HCM-ADMIN-CONSOLE"]?.attributeConfig;
+        return data?.[CONSOLE_MDMS_MODULENAME]?.attributeConfig;
       },
     }
   );
   const { isLoading: operatorConfigLoading, data: operatorConfig } = Digit.Hooks.useCustomMDMS(
     tenantId,
-    "HCM-ADMIN-CONSOLE",
+    CONSOLE_MDMS_MODULENAME,
     [{ name: "operatorConfig" }],
     {
       select: (data) => {
-        return data?.["HCM-ADMIN-CONSOLE"]?.operatorConfig;
+        return data?.[CONSOLE_MDMS_MODULENAME]?.operatorConfig;
       },
     }
   );
@@ -704,11 +705,11 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
   const closeToast = () => setShowToast(null);
   const { isLoading: deliveryTypeConfigLoading, data: deliveryTypeConfig } = Digit.Hooks.useCustomMDMS(
     tenantId,
-    "HCM-ADMIN-CONSOLE",
+    CONSOLE_MDMS_MODULENAME,
     [{ name: "deliveryTypeConfig" }],
     {
       select: (data) => {
-        return data?.["HCM-ADMIN-CONSOLE"]?.deliveryTypeConfig;
+        return data?.[CONSOLE_MDMS_MODULENAME]?.deliveryTypeConfig;
       },
     }
   );
