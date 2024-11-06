@@ -10,8 +10,7 @@ const AssumptionsList = ({ customProps, setupCompleted }) => {
 
     const assumptionValues = customProps?.sessionData?.HYPOTHESIS?.Assumptions?.assumptionValues || [];
     const campaignAssumption = customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm || [];
-    console.log(assumptionValues, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-    console.log(campaignAssumption, 'vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv');
+
     let dic = {};
 
     for (const ob of assumptionValues) {
