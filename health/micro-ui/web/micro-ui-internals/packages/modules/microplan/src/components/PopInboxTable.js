@@ -168,7 +168,7 @@ const PopInboxTable = ({ ...props }) => {
       onSelectedRowsChange={handleRowSelect}
       customStyles={tableCustomStyle}
       selectableRowsComponent={CheckBox}
-      sortIcon={<CustomSVG.SortUp />}
+      sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
       defaultSortFieldId={1}
       selectableRowsComponentProps={selectProps}
       progressPending={props?.progressPending}
