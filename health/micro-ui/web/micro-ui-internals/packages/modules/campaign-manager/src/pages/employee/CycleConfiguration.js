@@ -78,6 +78,9 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     "HCM-PROJECT-TYPES",
     [{ name: "projectTypes" }],
     {
+      staleTime: 0,
+      cacheTime: 0,
+      enabled: true,
       select: (data) => {
         const temp= getDeliveryConfig({data: data?.["HCM-PROJECT-TYPES"], projectType:selectedProjectType});
         return temp;
