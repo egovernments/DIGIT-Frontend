@@ -96,8 +96,8 @@ const BoundarySelection = ({ onSelect, props: customProps, ...props }) => {
     <>
       <BoundaryKpi data={statusMap} />
       <CardNew className={"selecting-boundary-card"}>
-        <Header styles={{margin:"0rem"}}>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</Header>
-        <p className="boundary-selection-description">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
+        <Header styles={{margin:"0rem"}}>{t(`MICROPLAN_SELECT_BOUNDARY`)}</Header>
+        <p className="boundary-selection-description">{t(`MICROPLAN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
         <BoundaryWrapper
           hierarchyType={hierarchyType}
           lowest={lowestHierarchy}
