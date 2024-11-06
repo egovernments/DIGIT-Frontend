@@ -1,13 +1,14 @@
 import React, { Fragment, useState, useEffect, useMemo } from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { useHistory } from "react-router-dom";
-import { Card, Tab, Button, SVG, Loader, ActionBar, Toast } from "@egovernments/digit-ui-components";
+import { Card, Tab, Button, SVG, Loader, ActionBar, Toast , ButtonsGroup} from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import DataTable from "react-data-table-component";
 import { CheckBox } from "@egovernments/digit-ui-components";
 import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
 import { tableCustomStyle } from "../../components/tableCustomStyle";
+import { CustomSVG } from "@egovernments/digit-ui-components";
 
 const PlanInbox = () => {
   const { t } = useTranslation();
@@ -33,6 +34,7 @@ const PlanInbox = () => {
   const [rowsPerPage, setRowsPerPage] = useState(50);
   const [totalRows, setTotalRows] = useState(0);
   const [perPage, setPerPage] = useState(10);
+  const [allowAction, setAllowAction] = useState(true);
   const [showToast, setShowToast] = useState(null);
   const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
@@ -302,6 +304,15 @@ const PlanInbox = () => {
     }
   }, [selectedFilter]);
 
+
+  useEffect(() => {
+    if (selectedFilter !== "VALIDATED" && activeLink.code === "ASSIGNED_TO_ALL") {
+      setAllowAction(false);
+    } else {
+      setAllowAction(true);
+    }
+  }, [selectedFilter, activeLink]);
+
   const onFilter = (selectedStatus) => {
     setSelectedFilter(selectedStatus?.code);
   };
@@ -450,6 +461,13 @@ const PlanInbox = () => {
     },
   ];
 
+  const actionIconMap = {
+    "VALIDATE": { isSuffix: false, icon: "CheckCircle" },
+    "EDIT_AND_SEND_FOR_APPROVAL": { isSuffix: false, icon: "Edit" },
+    "APPROVE": { isSuffix: false, icon: "CheckCircle" },
+    "SEND_BACK_FOR_CORRECTION": { isSuffix: true, icon: "ArrowForward" },
+  }
+
   if (isPlanEmpSearchLoading || isLoadingCampaignObject || isWorkflowLoading) {
     return <Loader />;
   }
@@ -483,7 +501,7 @@ const PlanInbox = () => {
             <Tab
               activeLink={activeLink?.code}
               configItemKey="code"
-              itemStyle={{ width: "unset !important" }}
+              itemStyle={{ width: "290px" }}
               configNavItems={[
                 {
                   code: "ASSIGNED_TO_ME",
@@ -510,20 +528,41 @@ const PlanInbox = () => {
                   <SVG.DoneAll width={"1.5rem"} height={"1.5rem"} fill={"#C84C0E"}></SVG.DoneAll>
                   <div className={"selected-state"}>{`${villagesSlected} ${t("MICROPLAN_VILLAGES_SELECTED")}`}</div>
                 </div>
-
                 <div className={`table-actions-wrapper`}>
-                  {actionsMain
-                    ?.filter((action) => !actionsToHide.includes(action.action))
-                    ?.map((action, index) => (
-                      <Button
-                        key={index}
-                        variation="secondary"
-                        label={t(action.action)}
-                        type="button"
-                        onClick={(curr) => handleActionClick(action?.action)}
-                        size={"large"}
-                      />
-                    ))}
+                  {actionsMain?.filter((action) => !actionsToHide.includes(action.action)).length > 1 ? (
+                    <ButtonsGroup
+                      buttonsArray={actionsMain
+                        ?.filter((action) => !actionsToHide.includes(action.action))
+                        ?.map((action, index) => (
+                          <Button
+                            key={index}
+                            variation="secondary"
+                            label={t(action.action)}
+                            type="button"
+                            onClick={(curr) => handleActionClick(action?.action)}
+                            size="large"
+                            icon={actionIconMap[action.action]?.icon}
+                            isSuffix={actionIconMap[action.action]?.isSuffix}
+                          />
+                        ))
+                      }
+                    />
+                  ) : (
+                    actionsMain
+                      ?.filter((action) => !actionsToHide.includes(action.action))
+                      ?.map((action, index) => (
+                        <Button
+                          key={index}
+                          variation="secondary"
+                          label={t(action.action)}
+                          type="button"
+                          onClick={(curr) => handleActionClick(action?.action)}
+                          size="large"
+                          icon={actionIconMap[action.action]?.icon}
+                          isSuffix={actionIconMap[action.action]?.isSuffix}
+                        />
+                      ))
+                  )}
                 </div>
 
                 {workFlowPopUp !== "" && (
@@ -553,7 +592,7 @@ const PlanInbox = () => {
               data={planWithCensus?.tableData}
               pagination
               paginationServer
-              selectableRows
+              selectableRows={allowAction}
               selectableRowsHighlight
               onChangeRowsPerPage={handlePerRowsChange}
               onChangePage={handlePageChange}
@@ -566,12 +605,13 @@ const PlanInbox = () => {
               conditionalRowStyles={conditionalRowStyles}
               paginationPerPage={rowsPerPage}
               paginationRowsPerPageOptions={[10, 20, 50, 100]}
+              sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
             />
           </Card>
         </div>
       </div>
 
-      {isRootApprover && isStatusConditionMet(activeFilter) && (
+      {isRootApprover && isStatusConditionMet(activeFilter) && planObject?.status === "RESOURCE_ESTIMATION_IN_PROGRESS" && (
         <ActionBar
           actionFields={[
             <Button

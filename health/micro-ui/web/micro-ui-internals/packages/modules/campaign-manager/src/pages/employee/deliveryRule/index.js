@@ -34,7 +34,8 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
         const temp= getDeliveryConfig({data: data?.["HCM-PROJECT-TYPES"], projectType:selectedProjectType});
         return temp;
       },
-    }
+    },
+    { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` }
   );
   useEffect(() => {
     setCycleData(config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure);

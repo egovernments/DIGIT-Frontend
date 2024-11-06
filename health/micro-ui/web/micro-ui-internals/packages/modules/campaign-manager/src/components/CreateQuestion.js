@@ -16,7 +16,8 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
   subQparent,
   subQparentId,
   subQinitialQuestionData,
-  typeOfCall
+  typeOfCall,
+  parentNumber
 }) => {
 
   const [options, setOptions] = useState(() => {
@@ -169,6 +170,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
           subQparentId={subQparentId}
           subQinitialQuestionData={subQinitialQuestionData}
           typeOfCall={typeOfCall}
+          parentNumber={parentNumber}
         />
       );
       break;
@@ -193,6 +195,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
           subQparentId={subQparentId}
           subQinitialQuestionData={subQinitialQuestionData}
           typeOfCall={typeOfCall}
+          parentNumber={parentNumber}
         />
       );
       break;
@@ -217,6 +220,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
           subQparentId={subQparentId}
           subQinitialQuestionData={subQinitialQuestionData}
           typeOfCall={typeOfCall}
+          parentNumber={parentNumber}
         />
       );
       break;
@@ -226,7 +230,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
   }
 };
 
-const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, parent = null, parentId = null, optionId, typeOfCall = null }) => {
+const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, parent = null, parentId = null, optionId, typeOfCall = null, parentNumber = "" }) => {
   const { t } = useTranslation();
   const state = Digit.ULBService.getStateId();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -243,7 +247,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
     { code: "SingleValueList" },
     { code: "MultiValueList" },
     { code: "Short Answer" },
-    { code: "Dropdown" }
+    // { code: "Dropdown" }
   ];
   const regexOption = [
     {
@@ -267,6 +271,14 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
       regex: `^(\w+\s*){1,99}$`,
     },
   ];
+
+  const getQuestionNumber = (index, level, parentNumber) => {
+    const currentNumber = index + 1;
+    if (parentNumber) {
+      return `${parentNumber}.${currentNumber}`;
+    }
+    return currentNumber.toString();
+  };
 
   useEffect(() => {
     if (level === 1) {
@@ -345,13 +357,15 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
       {initialQuestionData
         ?.filter((i) => i.level === level && (i.parentId ? (i.parentId === parentId) : true) && (i.level <= 3) && (i.isActive === true))
         ?.map((field, index) => {
+          const questionNumber = getQuestionNumber(index, level, parentNumber);
           return (
             <div>
-              <Card type={"primary"} variant={"form"} className={`question-card-container ${className}`}>
+              <Card type={"primary"} variant={"form"} className={`question-card-container ${className}`} style={{backgroundColor: level % 2 === 0 ? "#F0F0F0" : "#FFFFFF"}}>
                 <LabelFieldPair className="question-label-field" style={{ display: "block" }}>
                   <div className="question-label" style={{ height: "3rem", display: "flex", justifyContent: "space-between", width: "100%" }}>
                     <div style={{ display: "flex", gap: "1rem" }}>
-                      <span style={{ fontWeight: "700", marginTop: "1rem" }}>{`${t("QUESTION")} ${index + 1}`}</span>
+                      {/* <span style={{ fontWeight: "700", marginTop: "1rem" }}>{`${t("QUESTION")} ${index + 1}`}</span> */}
+                      <span style={{ fontWeight: "700", marginTop: "1rem" }}>{`${t("QUESTION")} ${questionNumber}`}</span>
                       <div style={{ alignItems: "center" }}>
                         <CheckBox
                           disabled={dis}
@@ -449,12 +463,14 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                           subQparentId={field.id}
                           subQinitialQuestionData={initialQuestionData}
                           typeOfCall={typeOfCall}
+                          parentNumber={questionNumber}
+                          ind={index}
                         />
                       )}
                       {
                         (field?.type?.code === "Short Answer") && (
                           <FieldV1
-                            disabled="true"
+                            disabled={dis}
                             className="example"
                             type={"textarea"}
                             populators={{
@@ -476,6 +492,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                           parent={field}
                           parentId={field.id}
                           initialQuestionData={initialQuestionData} // Pass sub-questions data to nested component
+                          parentNumber={questionNumber}
                         >
                         </CreateQuestion>
                       )}

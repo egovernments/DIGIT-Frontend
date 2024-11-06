@@ -1,10 +1,9 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Button, EditIcon, Header, Loader, ViewComposer } from "@egovernments/digit-ui-react-components";
-import {  Toast ,Stepper , TextBlock ,Card } from "@egovernments/digit-ui-components";
-import { DownloadIcon } from "@egovernments/digit-ui-react-components";
-import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
+import {  EditIcon, Header, Loader, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Toast, Stepper, TextBlock, Card } from "@egovernments/digit-ui-components";
+import {  downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 
 function mergeObjects(item) {
@@ -37,7 +36,6 @@ function mergeObjects(item) {
 
   return mergedArr;
 }
-
 
 const fetchResourceFile = async (tenantId, resourceIdArr) => {
   const res = await Digit.CustomService.getResponse({
@@ -97,8 +95,8 @@ const DataUploadSummary = (props) => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
-  const [currentStep , setCurrentStep] = useState(1);
-  const baseKey = 9; 
+  const [currentStep, setCurrentStep] = useState(1);
+  const baseKey = 9;
   const handleRedirect = (step, activeCycle) => {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
@@ -111,11 +109,10 @@ const DataUploadSummary = (props) => {
     history.push(newUrl);
   };
 
-  useEffect(() =>{
+  useEffect(() => {
     setKey(currentKey);
     setCurrentStep(currentKey - baseKey + 1);
-  }, [currentKey])
-
+  }, [currentKey]);
 
   function updateUrlParams(params) {
     const url = new URL(window.location.href);
@@ -124,7 +121,6 @@ const DataUploadSummary = (props) => {
     });
     window.history.replaceState({}, "", url);
   }
-
 
   useEffect(() => {
     updateUrlParams({ key: key });
@@ -147,7 +143,7 @@ const DataUploadSummary = (props) => {
     }
   }, [props?.props?.summaryErrors]);
 
-  const { isLoading, data, error, refetch } = Digit.Hooks.campaign.useSearchCampaign({
+  const { isLoading, data, error, refetch, isFetching } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
       ids: [id],
@@ -173,68 +169,68 @@ const DataUploadSummary = (props) => {
         return {
           cards: [
             {
-                name: "target",
-                errorName: "target",
-                sections: [
-                  {
-                    name: "target",
-                    type: "COMPONENT",
-                    component: "CampaignDocumentsPreview",
-                    props: {
-                      documents: data?.[0]?.resources?.filter((i) => i?.type === "boundaryWithTarget"),
-                    },
-                    cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                    cardSecondaryAction: noAction !== "false" && (
-                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(12)}>
-                        <span>{t(`CAMPAIGN_EDIT`)}</span>
-                        <EditIcon />
-                      </div>
-                    ),
+              name: "target",
+              errorName: "target",
+              sections: [
+                {
+                  name: "target",
+                  type: "COMPONENT",
+                  component: "CampaignDocumentsPreview",
+                  props: {
+                    documents: data?.[0]?.resources?.filter((i) => i?.type === "boundaryWithTarget"),
                   },
-                ],
-              },
-              {
-                name: "facility",
-                errorName: "facility",
-                sections: [
-                  {
-                    name: "facility",
-                    type: "COMPONENT",
-                    component: "CampaignDocumentsPreview",
-                    props: {
-                      documents: data?.[0]?.resources?.filter((i) => i.type === "facility"),
-                    },
-                    cardHeader: { value: t("FACILITY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                    cardSecondaryAction: noAction !== "false" && (
-                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(10)}>
-                        <span>{t(`CAMPAIGN_EDIT`)}</span>
-                        <EditIcon />
-                      </div>
-                    ),
+                  cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                  cardSecondaryAction: noAction !== "false" && (
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(12)}>
+                      <span>{t(`CAMPAIGN_EDIT`)}</span>
+                      <EditIcon />
+                    </div>
+                  ),
+                },
+              ],
+            },
+            {
+              name: "facility",
+              errorName: "facility",
+              sections: [
+                {
+                  name: "facility",
+                  type: "COMPONENT",
+                  component: "CampaignDocumentsPreview",
+                  props: {
+                    documents: data?.[0]?.resources?.filter((i) => i.type === "facility"),
                   },
-                ],
-              },
-              {
-                name: "user",
-                errorName: "user",
-                sections: [
-                  {
-                    name: "user",
-                    type: "COMPONENT",
-                    component: "CampaignDocumentsPreview",
-                    props: {
-                      documents: data?.[0]?.resources?.filter((i) => i.type === "user"),
-                    },
-                    cardHeader: { value: t("USER_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                    cardSecondaryAction: noAction !== "false" && (
-                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(11)}>
-                        <span>{t(`CAMPAIGN_EDIT`)}</span>
-                        <EditIcon />
-                      </div>
-                    ),
+                  cardHeader: { value: t("FACILITY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                  cardSecondaryAction: noAction !== "false" && (
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(10)}>
+                      <span>{t(`CAMPAIGN_EDIT`)}</span>
+                      <EditIcon />
+                    </div>
+                  ),
+                },
+              ],
+            },
+            {
+              name: "user",
+              errorName: "user",
+              sections: [
+                {
+                  name: "user",
+                  type: "COMPONENT",
+                  component: "CampaignDocumentsPreview",
+                  props: {
+                    documents: data?.[0]?.resources?.filter((i) => i.type === "user"),
                   },
-                ],
-              },
+                  cardHeader: { value: t("USER_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                  cardSecondaryAction: noAction !== "false" && (
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(11)}>
+                      <span>{t(`CAMPAIGN_EDIT`)}</span>
+                      <EditIcon />
+                    </div>
+                  ),
+                },
+              ],
+            },
           ],
           error: data?.[0]?.additionalDetails?.error,
           data: data?.[0],
@@ -248,9 +244,6 @@ const DataUploadSummary = (props) => {
     },
   });
 
-  if (isLoading) {
-    return <Loader />;
-  }
   const closeToast = () => {
     setShowToast(null);
   };
@@ -278,39 +271,41 @@ const DataUploadSummary = (props) => {
   const updatedObject = { ...data };
 
   const onStepClick = (currentStep) => {
-    setCurrentStep(currentStep+1);
-    if(currentStep === 0){
+    setCurrentStep(currentStep + 1);
+    if (currentStep === 0) {
       setKey(10);
-    }
-    else if(currentStep === 1){
+    } else if (currentStep === 1) {
       setKey(11);
-    }
-    else if(currentStep === 3){
+    } else if (currentStep === 3) {
       setKey(12);
-    }
-    else setKey(13);
+    } else setKey(13);
   };
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <>
-    <div className="container-full">
+      {(isLoading || (!data && !error) || isFetching) && <LoaderWithGap text={t("DATA_SYNC_WITH_SERVER")} />}
+      <div className="container-full">
         <div className="card-container">
           <Card className="card-header-timeline">
             <TextBlock subHeader={t("HCM_UPLOAD_DATA")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
           <Card className="stepper-card">
-            <Stepper 
-            customSteps={["HCM_UPLOAD_FACILITY", "HCM_UPLOAD_USER" , "HCM_UPLOAD_TARGET" , "HCM_SUMMARY"]}
-             currentStep={currentStep} 
-             onStepClick={onStepClick} 
-             direction={"vertical"} />
+            <Stepper
+              customSteps={["HCM_UPLOAD_FACILITY", "HCM_UPLOAD_USER", "HCM_UPLOAD_TARGET", "HCM_SUMMARY"]}
+              currentStep={currentStep}
+              onStepClick={onStepClick}
+              direction={"vertical"}
+            />
           </Card>
         </div>
 
         <div className="card-container-delivery">
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Header className="summary-header">{t("HCM_DATA_UPLOAD_SUMMARY")}</Header>
-        {/* {userCredential && (
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <Header className="summary-header">{t("HCM_DATA_UPLOAD_SUMMARY")}</Header>
+            {/* {userCredential && (
           <Button
             label={t("CAMPAIGN_DOWNLOAD_USER_CRED")}
             variation="secondary"
@@ -320,18 +315,18 @@ const DataUploadSummary = (props) => {
             onButtonClick={downloadUserCred}
           />
         )} */}
-      </div>
-      <div className="campaign-summary-container">
-        <ViewComposer data={updatedObject} cardErrors={summaryErrors} />
-        {showToast && (
-          <Toast
-            type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : "success"}
-            label={t(showToast?.label)}
-            onClose={closeToast}
-          />
-        )}
-      </div>
-      </div>
+          </div>
+          <div className="campaign-summary-container">
+            <ViewComposer data={updatedObject} cardErrors={summaryErrors} />
+            {showToast && (
+              <Toast
+                type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : "success"}
+                label={t(showToast?.label)}
+                onClose={closeToast}
+              />
+            )}
+          </div>
+        </div>
       </div>
     </>
   );

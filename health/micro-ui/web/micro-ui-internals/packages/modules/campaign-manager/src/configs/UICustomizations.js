@@ -70,26 +70,27 @@ export const UICustomizations = {
       const campaignName = searchParams.get("name");
       const projectType = searchParams.get("projectType");
       const campaignId = searchParams.get("campaignId");
-      switch (key) {
-       
+      switch (key) {       
           case "STATUS":
             
-            // const [localIsActive, setLocalIsActive] = useState(rowDataCache[serviceCode].isActive);
+            const [localIsActive, setLocalIsActive] = useState(row?.ServiceRequest?.[0]?.isActive);
             const toggle = async () => {
               const prev = row?.ServiceRequest?.[0]?.isActive;
               const sdcode = row?.ServiceRequest?.[0]?.code;
               const res = await updateServiceDefinition(tenantId, !prev, sdcode);
+              setLocalIsActive(!localIsActive);
               if(res)
               {
 
               }
             };
 
-            // const switchText = localIsActive ? "Active" : "Inactive";
+
+            const switchText = localIsActive ? "Active" : "Inactive";
             return (
               row?.ServiceRequest?.[0]?(<Switch
                 isCheckedInitially={row?.ServiceRequest?.[0]?.isActive}
-                label={""}
+                label={switchText}
                 onToggle={toggle}
               />):(<>{t("CHECKLIST_TOBE_CONFIGURED")}</>)
             );
@@ -103,9 +104,10 @@ export const UICustomizations = {
               <Button
                 type="button"
                 size="medium"
+                style={{width: "8rem"}}
                 // icon="View"
                 variation="secondary"
-                label={t("VIEW")}
+                label={t("HCM_CHECKLIST_VIEW")}
                 onClick={() => {
                   history.push(`/${window.contextPath}/employee/campaign/checklist/view?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}`)
                 }}
@@ -117,9 +119,10 @@ export const UICustomizations = {
                 <Button
                 type="button"
                 size="medium"
+                style={{width: "8rem"}}
                 // icon="View"
                 variation="secondary"
-                label={t("CREATE")}
+                label={t("HCM_CHECKLIST_CREATE")}
                 onClick={() => {
                   history.push(`/${window.contextPath}/employee/campaign/checklist/create?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}`)
                 }}
@@ -292,7 +295,7 @@ export const UICustomizations = {
     },
     populateCampaignTypeReqCriteria: () => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      const url = getMDMSUrl();
+      const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
         params: { tenantId },
@@ -474,7 +477,7 @@ export const UICustomizations = {
     },
     populateCampaignTypeReqCriteria: () => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      const url = getMDMSUrl();
+      const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
         params: { tenantId },
@@ -609,7 +612,7 @@ export const UICustomizations = {
     },
     populateCampaignTypeReqCriteria: () => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      const url = getMDMSUrl();
+      const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
         params: { tenantId },
@@ -795,7 +798,7 @@ export const UICustomizations = {
     },
     populateCampaignTypeReqCriteria: () => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      const url = getMDMSUrl();
+      const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
         params: { tenantId },
@@ -885,7 +888,7 @@ export const UICustomizations = {
     },
     populateCampaignTypeReqCriteria: () => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      const url = getMDMSUrl();
+      const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
         params: { tenantId },

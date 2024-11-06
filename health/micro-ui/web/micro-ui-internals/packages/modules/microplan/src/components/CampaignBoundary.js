@@ -5,13 +5,14 @@ import SubBoundaryView from "./subBoundaryView";
 import HeaderComp from "./HeaderComp";
 import { Card, Button } from "@egovernments/digit-ui-components";
 import BoundaryKpi from "./BoundaryKpi";
+import { Header } from "@egovernments/digit-ui-react-components";
 import { useHistory } from "react-router-dom";
 
-const CampaignBoundary = ({ customProps,setupCompleted }) => {
+const CampaignBoundary = ({ customProps, setupCompleted }) => {
   const { dispatch, state } = useMyContext();
   const { t } = useTranslation();
 
-  
+
 
   const handleViewMore = (ind) => {
     // Create a copy of the boundaryStatus array
@@ -294,57 +295,60 @@ const CampaignBoundary = ({ customProps,setupCompleted }) => {
     const updatedUrl = `${window.location.pathname}?${new URLSearchParams(urlParams).toString()}`;
     history.push(updatedUrl);
   }
-  const isEditable=setupCompleted==='true'? false:true;
+  const isEditable = setupCompleted === 'true' ? false : true;
 
 
   return (
     <div>
-      <BoundaryKpi data={statusMap} />
+      <BoundaryKpi data={statusMap} heading={t("CAMPAIGN_BOUNDARY")} />
       {bHierarchy.length > 1 ? (
-        <div className="marginBottom">
-  <SubBoundaryView style={{ background: "#fff" }} title={bHierarchy?.[1]} arr={parent_group?.[bHierarchy?.[1]]} editHandler={editHandler} isEditable={isEditable} />
+        <div className="mp-margin-bottom">
+          <SubBoundaryView style={{ background: "#fff", gap: "1.5rem" }} title={bHierarchy?.[1]} arr={parent_group?.[bHierarchy?.[1]]} editHandler={editHandler} isEditable={isEditable} />
         </div>
       ) : null}
 
       {bHierarchy.length > 1 &&
         bHierarchy.slice(1, -1).map((item, ind) => {
           return (
-          <div key={`header_${ind}`}>
-            <Card className="marginBottom">
-              <div className="header-container">
-                <HeaderComp title={bHierarchy[ind + 2]} />
-                {!(setupCompleted==='true') &&
-                  <Button
-                    label={t("WBH_EDIT")}
-                    variation="secondary"
-                    icon={"EditIcon"}
-                    type="button"
-                    onClick={(e) => {
-                      editHandler();
-                    }}
-                  /> 
-                }
-              </div>
-              {/* <HeaderComp title={bHierarchy[ind + 2]} /> */}
-              {parent_group?.[item]?.map((item1, idx) =>
-                Array.isArray(parents?.[item1]) && boundaryStatus?.[ind + 2] && (idx === 0 || idx === 1) ? (
-                  <SubBoundaryView key={`${item1}_${idx}`} title={item1} arr={parents?.[item1]} />
-                ) : Array.isArray(parents?.[item1]) && !boundaryStatus?.[ind + 2] ? (
-                  <SubBoundaryView key={`${item1}_${idx}`} title={item1} arr={parents?.[item1]} />
-                ) : null
-              ) || null}
-              {boundaryStatus?.[ind + 2] && parent_group[item]?.length > 2 ? (
-                <div onClick={() => handleViewMore(ind + 2)} className="view-more">
-                  {t("VIEW_MORE")}
+            <div key={`header_${ind}`}>
+              <Card className="middle-child">
+                <div className="mp-header-container" style={{ marginBottom: "0px" }}>
+                  <Header className="summary-sub-heading">
+                    {bHierarchy[ind + 2]}
+                  </Header>
+                  {!(setupCompleted === 'true') &&
+                    <Button
+                      label={t("WBH_EDIT")}
+                      variation="secondary"
+                      icon={"Edit"}
+                      type="button"
+                      onClick={(e) => {
+                        editHandler();
+                      }}
+                    />
+                  }
                 </div>
-              ) : !boundaryStatus?.[ind + 2] ? (
-                <div onClick={() => handleViewMore(ind + 2)} className="view-more">
-                  {t("VIEW_LESS")}
-                </div>
-              ) : null}
-            </Card>
-          </div>
-)})}
+                {/* <HeaderComp title={bHierarchy[ind + 2]} /> */}
+                {parent_group?.[item]?.map((item1, idx) =>
+                  Array.isArray(parents?.[item1]) && boundaryStatus?.[ind + 2] && (idx === 0 || idx === 1) ? (
+                    <SubBoundaryView style={{ gap: "1.5rem", marginBottom: "0px" }} key={`${item1}_${idx}`} title={item1} arr={parents?.[item1]} />
+                  ) : Array.isArray(parents?.[item1]) && !boundaryStatus?.[ind + 2] ? (
+                    <SubBoundaryView style={{ gap: "1.5rem", marginBottom: "0px" }} key={`${item1}_${idx}`} title={item1} arr={parents?.[item1]} />
+                  ) : null
+                ) || null}
+                {boundaryStatus?.[ind + 2] && parent_group[item]?.length > 2 ? (
+                  <div onClick={() => handleViewMore(ind + 2)} className="view-more">
+                    {t("VIEW_MORE")}
+                  </div>
+                ) : !boundaryStatus?.[ind + 2] ? (
+                  <div onClick={() => handleViewMore(ind + 2)} className="view-more">
+                    {t("VIEW_LESS")}
+                  </div>
+                ) : null}
+              </Card>
+            </div>
+          )
+        })}
     </div>
   );
 };

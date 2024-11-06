@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Card, Header, Button, Loader, Toast, SVG, Modal } from "@egovernments/digit-ui-react-components";
+import { Header, Button, Loader, Toast, SVG } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { data } from "../configs/ViewProjectConfig";
 import ProjectStaffModal from "./ProjectStaffModal";
 import ConfirmationDialog from "./ConfirmationDialog";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
@@ -9,51 +8,48 @@ const healthProjecturl = getProjectServiceUrl();
 const HRMS_CONTEXT_PATH = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || "egov-hrms";
 
 const ProjectStaffComponent = (props) => {
-    const { t } = useTranslation();
-    const [userIds, setUserIds] = useState([]);
-    const [userInfoMap, setUserInfoMap] = useState({});
-    const [showModal, setShowModal] = useState(false);
-    const [userName, setUserName] = useState("");
-    const [showToast, setShowToast] = useState(false);
-    const [showResult, setShowResult] = useState("");
-    const [deletionDetails, setDeletionDetails] = useState({
-        projectId: null,
-        userId: null,
-        id: null,
-    });
+  const { t } = useTranslation();
+  const [userIds, setUserIds] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const [showResult, setShowResult] = useState(null);
+  const [deletionDetails, setDeletionDetails] = useState({
+    projectId: null,
+    userId: null,
+    id: null,
+  });
 
-    const userId = Digit.UserService.getUser().info.uuid;
+  const [showPopup, setShowPopup] = useState(false);
 
-    const [showPopup, setShowPopup] = useState(false);
-
-    const { tenantId, projectId } = Digit.Hooks.useQueryParams();
-    const requestCriteria = {
-        url: `${healthProjecturl}/staff/v1/_search`,
-        changeQueryName: props.projectId,
-        params: {
-            tenantId: "mz",
-            offset: 0,
-            limit: 10,
-        },
-        config: {
-            enable: data?.horizontalNav?.configNavItems[0].code === "Project Resource" ? true : false,
-        },
-        body: {
-            ProjectStaff: {
-                projectId: [props.projectId],
-            },
-        },
-    };
+  const { tenantId, projectId } = Digit.Hooks.useQueryParams();
+  const requestCriteria = {
+    url: `${healthProjecturl}/staff/v1/_search`,
+    changeQueryName: props.projectId,
+    params: {
+      tenantId: "mz",
+      offset: 0,
+      limit: 10,
+    },
+    config: {
+      enable: props.projectId ? true : false,
+    },
+    body: {
+      ProjectStaff: {
+        projectId: [props.projectId],
+      },
+    },
+  };
 
   const { isLoading, data: projectStaff, refetch } = Digit.Hooks.useCustomAPIHook(requestCriteria);
 
   const isValidTimestamp = (timestamp) => timestamp !== 0 && !isNaN(timestamp);
 
   //to convert epoch to date and to convert isDeleted boolean to string
-  const dateConversion = projectStaff?.ProjectStaff.forEach((row) => {
+  projectStaff?.ProjectStaff.forEach((row) => {
     row.formattedStartDate = isValidTimestamp(row.startDate) ? Digit.DateUtils.ConvertEpochToDate(row.startDate) : "NA";
     row.formattedEndDate = isValidTimestamp(row.endDate) ? Digit.DateUtils.ConvertEpochToDate(row.endDate) : "NA";
-    row.isDeleted = row.isDeleted ? true : false;
+    row.isDeleted = row.isDeleted == true ? "INACTIVE" : "ACTIVE";
   });
 
   useEffect(() => {
@@ -64,13 +60,16 @@ const ProjectStaffComponent = (props) => {
     }
   }, [projectStaff]);
 
-    const userRequestCriteria = {
-        url: "/user/_search",
-        body: {
-            "tenantId": "mz",
-            "uuid": userIds
-        }
-    };
+  const userRequestCriteria = {
+    url: "/user/_search",
+    body: {
+      tenantId: "mz",
+      uuid: userIds,
+    },
+    config: {
+      enable: userIds?.length > 0 ? true : false,
+    },
+  };
 
   const { isLoading: isUserSearchLoading, data: userInfo } = Digit.Hooks.useCustomAPIHook(userRequestCriteria);
 
@@ -97,61 +96,63 @@ const ProjectStaffComponent = (props) => {
   });
 
   const columns = [
-    { label: t("PROJECT_STAFF_ID"), key: "id" },
-    { label: t("USERNAME"), key: "userInfo.userName" },
-    { label: t("ROLES"), key: "userInfo.roles" },
-    { label: t("IS_DELETED"), key: "isDeleted" },
-    { label: t("START_DATE"), key: "formattedStartDate" },
-    { label: t("END_DATE"), key: "formattedEndDate" },
+    { label: t("HCM_PROJECT_STAFF_ID"), key: "id" },
+    { label: t("WBH_USERNAME"), key: "userInfo.userName" },
+    { label: t("HCM_ADMIN_CONSOLE_USER_NAME"), key: "userInfo.name" },
+    { label: t("HCM_ADMIN_CONSOLE_USER_PHONE_NUMBER"), key: "userInfo.mobileNumber" },
+    { label: t("HCM_ADMIN_CONSOLE_USER_ROLE"), key: "userInfo.roles" },
+    { label: t("HCM_ADMIN_CONSOLE_USER_USAGE"), key: "isDeleted" },
+    { label: t("HCM_STAFF_START_DATE"), key: "formattedStartDate" },
+    { label: t("HCM_STAFF_END_DATE"), key: "formattedEndDate" },
     // { label: t("ACTIONS") },
   ];
 
-    function getNestedPropertyValue(obj, path) {
-        return path.split('.').reduce((acc, key) => (acc && acc[key]) ? acc[key] : "NA", obj);
-    }
+  function getNestedPropertyValue(obj, path) {
+    return path.split(".").reduce((acc, key) => (acc && acc[key] ? acc[key] : "NA"), obj);
+  }
 
+  const searchCriteria = {
+    url: `/${HRMS_CONTEXT_PATH}/employees/_search`,
 
-    const searchCriteria = {
-        url: `/${HRMS_CONTEXT_PATH}/employees/_search`,
-
-        config: {
-            enable: true,
-        },
-    };
+    config: {
+      enable: true,
+    },
+  };
 
   const mutationHierarchy = Digit.Hooks.useCustomAPIMutationHook(searchCriteria);
 
-    const handleSearch = async () => {
-        try {
-            await mutationHierarchy.mutate(
-                {
-                    params: {
-                        codes: userName,
-                        tenantId,
-                    },
-                    body: {},
-                },
-                {
-                    onSuccess: async (data) => {
-                        if (data?.Employees && data?.Employees?.length > 0) {
-                            setShowResult(data?.Employees[0]?.code);
-                        } else {
-                            setShowToast({ label: "WBH_USER_NOT_FOUND", isError: true });
-                            setTimeout(() => setShowToast(null), 5000);
-                        }
-                    },
-                }
-            );
-        } catch (error) {
-            throw error;
+  const handleSearch = async () => {
+    try {
+      await mutationHierarchy.mutate(
+        {
+          params: {
+            codes: userName,
+            tenantId,
+          },
+          body: {},
+        },
+        {
+          onSuccess: async (data) => {
+            if (data?.Employees && data?.Employees?.length > 0) {
+              setShowResult(data?.Employees[0]);
+            } else {
+              setShowResult(null);
+              setShowToast({ label: "WBH_USER_NOT_FOUND", isError: true });
+              setTimeout(() => setShowToast(null), 5000);
+            }
+          },
         }
-    };
+      );
+    } catch (error) {
+      throw error;
+    }
+  };
 
   const handleInputChange = (event) => {
     setUserName(event.target.value);
   };
   const reqCriteria = {
-     url: `${healthProjecturl}/staff/v1/_create`,
+    url: `${healthProjecturl}/staff/v1/_create`,
 
     config: false,
   };
@@ -162,14 +163,14 @@ const ProjectStaffComponent = (props) => {
     config: false,
   };
 
-    const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteria);
-    const mutationDelete = Digit.Hooks.useCustomAPIMutationHook(reqDeleteCriteria);
-    const closeModal = () => {
-        setShowModal(false);
-        setShowPopup(false);
-        setUserName("");
-        setShowResult("");
-    };
+  const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteria);
+  const mutationDelete = Digit.Hooks.useCustomAPIMutationHook(reqDeleteCriteria);
+  const closeModal = () => {
+    setShowModal(false);
+    setShowPopup(false);
+    setUserName("");
+    setShowResult(null);
+  };
 
   const closeToast = () => {
     setTimeout(() => {
@@ -177,35 +178,35 @@ const ProjectStaffComponent = (props) => {
     }, 5000);
   };
 
-    const onSuccess = () => {
-        closeToast();
-        refetch();
-        setShowToast({ key: "success", label: "WBH_PROJECT_STAFF_ADDED_SUCESSFULLY" });
-    };
-    const onError = (resp) => {
-        const label = resp?.response?.data?.Errors?.[0]?.code;
-        setShowToast({ isError: true, label });
-        refetch();
-    };
-    const handleProjectStaffSubmit = async () => {
-        try {
-            await mutation.mutate(
-                {
-                    body: {
-                        ProjectStaff: {
-                            tenantId,
-                            userId: userId,
-                            projectId: projectId,
-                            startDate: props?.Project[0]?.startDate,
-                            endDate: props?.Project[0]?.endDate,
-                        },
-                    },
-                },
-                {
-                    onError,
-                    onSuccess,
-                }
-            );
+  const onSuccess = () => {
+    closeToast();
+    refetch();
+    setShowToast({ key: "success", label: "WBH_PROJECT_STAFF_ADDED_SUCESSFULLY" });
+  };
+  const onError = (resp) => {
+    const label = resp?.response?.data?.Errors?.[0]?.code;
+    setShowToast({ isError: true, label });
+    refetch();
+  };
+  const handleProjectStaffSubmit = async () => {
+    try {
+      await mutation.mutate(
+        {
+          body: {
+            ProjectStaff: {
+              tenantId,
+              userId: showResult?.user?.userServiceUuid,
+              projectId: props?.Project[0]?.id || projectId,
+              startDate: props?.Project[0]?.startDate,
+              endDate: props?.Project[0]?.endDate,
+            },
+          },
+        },
+        {
+          onError,
+          onSuccess,
+        }
+      );
 
       setShowModal(false);
     } catch (error) {
@@ -218,16 +219,21 @@ const ProjectStaffComponent = (props) => {
     try {
       setShowPopup(false);
       if (confirmed) {
+        const ProjectStaff = {
+          tenantId,
+          id,
+          userId: staffId,
+          projectId: projectId,
+          ...deletionDetails,
+        };
+        delete ProjectStaff?.userInfo;
+        delete ProjectStaff?.formattedEndDate;
+        delete ProjectStaff?.formattedStartDate;
+        ProjectStaff.isDeleted = true;
         await mutationDelete.mutate(
           {
             body: {
-              ProjectStaff: {
-                tenantId,
-                id,
-                userId: staffId,
-                projectId: projectId,
-                ...deletionDetails,
-              },
+              ProjectStaff,
             },
           },
           {
@@ -270,7 +276,7 @@ const ProjectStaffComponent = (props) => {
             onSubmit={handleProjectStaffSubmit}
             onClose={closeModal}
             heading={"WBH_ASSIGN_PROJECT_STAFF"}
-            isDisabled={!showResult || showResult.length === 0} // Set isDisabled based on the condition
+            isDisabled={showResult == null} // Set isDisabled based on the condition
           />
         )}
         {showPopup && (

@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Card, CardHeader } from "@egovernments/digit-ui-react-components";
+import { Card as CardNew } from "@egovernments/digit-ui-components";
 
 const ActivityHomeCard = ({onClickCard=()=>{},...props}) => {
   const { t } = useTranslation();
@@ -11,16 +12,21 @@ const ActivityHomeCard = ({onClickCard=()=>{},...props}) => {
     <React.Fragment>
   <Card className="fsm" style={{ backgroundColor: "transparent", boxShadow: "none", paddingTop: "0" }}>
     <CardHeader> {t(props.title)} </CardHeader>
-    <div style={{ display: "grid", gridTemplateColumns: "33.3% 33.3% 33.3%", textAlign: "-webkit-center", gap: "10px" }}>
+    <div style={{ display: "grid", gridTemplateColumns: "33.3% 33.3% 33.3%", textAlign: "-webkit-center", gap: "24px" }}>
       {props.module.map((i) => {
         return (
-          <Card
+          <CardNew
+          className={`activity-card ${i.disable ? "disabled-activity" : ""}`}
             key={i.name} // Always use key when rendering list items
             style={{ 
                 minWidth: "100px", 
                 cursor: i.disable ? "not-allowed" : "pointer", 
-                opacity: i.disable ? 0.6 : 1,  // To visually indicate the disabled state
-                margin: "10px" 
+                opacity: i.disable ? 0.8 : 1,  
+                backgroundColor:i.disable ? "transparent" : "#FFFFFF",
+                // To visually indicate the disabled state
+                justifyContent: "center",
+                alignItems: "center",
+                height: "130px",
               }} // Adding margin to each card
             onClick={() => {
                 if (!i.disable) { // Check if disabled
@@ -31,10 +37,10 @@ const ActivityHomeCard = ({onClickCard=()=>{},...props}) => {
             children={
               <>
                 {i.icon} 
-                <p>{t(i.name)}</p>
+                <p className={`activity-card-label ${i.disable ? "disable-label" : ""}`}>{t(i.name)}</p>
               </>
             }
-          ></Card>
+          ></CardNew>
         );
       })}
     </div>

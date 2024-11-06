@@ -1,11 +1,10 @@
-import { Button, PopUp, Chip, Loader, } from "@egovernments/digit-ui-components";
+import { Button, PopUp, Chip, Loader, Card } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DataTable from "react-data-table-component";
-import { CardSubHeader, Card } from "@egovernments/digit-ui-react-components";
+import { CardSubHeader, Header } from "@egovernments/digit-ui-react-components";
 import { tableCustomStyle } from "./tableCustomStyle";
 import { ShowMoreWrapper } from "./ShowMoreWrapper";
-import HeaderComp from "./HeaderComp";
 import { useHistory } from "react-router-dom";
 
 
@@ -34,7 +33,7 @@ function groupEmployeesByPlan(data, planData) {
   return groupedEmployees ? Object.values(groupedEmployees) : [];
 }
 
-const UserAccessMgmtTableWrapper = ({ role, internalKey,setupCompleted }) => {
+const UserAccessMgmtTableWrapper = ({ role, internalKey, setupCompleted }) => {
   const history = useHistory();
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -179,19 +178,23 @@ const UserAccessMgmtTableWrapper = ({ role, internalKey,setupCompleted }) => {
   }
   else {
     return (
-      <Card>
+      <Card className="middle-child">
         {/* <div className="view-composer-header-section">
                 <CardSubHeader style={{ marginTop: 0, fontSize: "1.5rem", color: " #0B4B66", marginBottom: "0rem" }}>{t(planAssignmentData?.role)}</CardSubHeader>
             </div> */}
-        <div className="header-container">
-          <HeaderComp title={t(planAssignmentData?.role)} styles={{ color: "black" }} />
+        <div className="mp-header-container">
+          <Header className="summary-sub-heading">
+            {t(planAssignmentData?.role)}
+          </Header>
           {!(setupCompleted === 'true') &&
 
             <Button
               label={t("WBH_EDIT")}
               variation="secondary"
-              icon={"EditIcon"}
+              icon={"Edit"}
+              style={{ width: "110px" }}
               type="button"
+              size="medium"
               onClick={(e) => {
                 const url = Digit.Hooks.useQueryParams();
                 const urlParams = Digit.Hooks.useQueryParams();
@@ -203,6 +206,7 @@ const UserAccessMgmtTableWrapper = ({ role, internalKey,setupCompleted }) => {
             />
           }
         </div>
+        {/* <Card > */}
         <DataTable
           columns={columns}
           data={planAssignmentData?.data}
@@ -214,7 +218,7 @@ const UserAccessMgmtTableWrapper = ({ role, internalKey,setupCompleted }) => {
           paginationPerPage={rowsPerPage}
           paginationRowsPerPageOptions={[5, 10, 15, 20]}
         />
-
+        {/* </Card> */}
       </Card>
     );
   }

@@ -133,12 +133,14 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
                 </div>
             ]}
             onOverlayClick={onClose}
+            equalWidthButtons={true}
             footerChildren={[
                 <Button
                     key="close-button"
                     className="campaign-type-alert-button"
                     type="button"
                     size="large"
+                    style={{minWidth:"270px"}}
                     variation="secondary"
                     label={t(`HCM_MICROPLAN_EDIT_POPULATION_CLOSE`)}
                     onClick={onClose}
@@ -150,6 +152,7 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
                     type="button"
                     size="large"
                     variation="primary"
+                    style={{minWidth:"270px"}}
                     label={t(submitLabel)}
                     onClick={handleSave}
                     isDisabled={isSubmitting}  // Disable button during submission
