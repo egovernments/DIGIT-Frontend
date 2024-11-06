@@ -72,7 +72,9 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
     select: (data) => {
       return data?.[CONSOLE_MDMS_MODULENAME]?.hierarchyConfig?.find((item) => item.isActive)?.hierarchy;
     },
-  });
+  },
+  { schemaCode: `${CONSOLE_MDMS_MODULENAME}.hierarchyConfig` }
+);
 
 
   const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({BOUNDARY_HIERARCHY_TYPE,tenantId});

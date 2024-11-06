@@ -109,8 +109,8 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
     select: (data) => {
       return data?.[CONSOLE_MDMS_MODULENAME]?.hierarchyConfig?.find((item) => item.isActive)?.hierarchy;
     },
-  });
-  const { isLoading, data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "hierarchyConfig" }]);
+  },{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.hierarchyConfig` });
+  const { isLoading, data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "hierarchyConfig" }],{},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.hierarchyConfig` });
   const lowestHierarchy = useMemo(() => {
     return hierarchyConfig?.[CONSOLE_MDMS_MODULENAME]?.hierarchyConfig?.find((item) => item.isActive)?.lowestHierarchy;
   }, [hierarchyConfig]);

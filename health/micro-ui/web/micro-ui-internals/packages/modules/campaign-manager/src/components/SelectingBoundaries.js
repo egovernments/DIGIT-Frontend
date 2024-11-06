@@ -42,7 +42,7 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
   const [restrictSelection, setRestrictSelection] = useState(null);
   const [updateBoundary, setUpdateBoundary] = useState(null);
   const [loaderEnabled, setLoaderEnabled] = useState(false);
-  const { isLoading, data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "hierarchyConfig" }]);
+  const { isLoading, data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "hierarchyConfig" }],{},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.hierarchyConfig` });
 
   const lowestHierarchy = useMemo(() => {
     return hierarchyConfig?.[CONSOLE_MDMS_MODULENAME]?.hierarchyConfig?.find(item => item.isActive)?.lowestHierarchy;
