@@ -28,7 +28,7 @@ function createStatusMap(data, boundaryHierarchy) {
   return statusMap;
 }
 
-const formValidator = (formData, key, state) => {
+const formValidator = (formData, key, state,t) => {
   function getValueFromPath(obj, path) {
     return path.split(".").reduce((acc, part) => acc && acc[part], obj);
   }
@@ -120,9 +120,8 @@ const formValidator = (formData, key, state) => {
     if (missedType.length > 0) {
       return {
         key: "error",
-        label: `${(`HCM_CAMPAIGN_FOR`)} ${(`${state?.hierarchyType}_${missedType?.[0]?.type}`?.toUpperCase())} ${(missedType?.[0]?.code)} ${(
-          `HCM_CAMPAIGN_CHILD_NOT_PRESENT`
-        )}`,
+        label: `${t(`HCM_CAMPAIGN_FOR`)} ${t(`${state?.hierarchyType}_${missedType?.[0]?.type}`?.toUpperCase())} ${t(missedType?.[0]?.code)} ${
+          t(`HCM_CAMPAIGN_CHILD_NOT_PRESENT`)}`,
       }
     }
     return null;
