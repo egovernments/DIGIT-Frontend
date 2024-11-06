@@ -116,7 +116,6 @@ const PopInboxTable = ({ ...props }) => {
     // if(!event?.allSelected && event?.selectedCount >0){
     //     setIsIntermediate(true);
     // }
-    console.log(event?.allSelected, 'ssssssssssssssssssssssssssssssssssssssssssssss');
     props?.onRowSelect(event);
   };
 
