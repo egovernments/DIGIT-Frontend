@@ -36,6 +36,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const [showToast, setShowToast] = useState(null);
   const [summaryErrors, setSummaryErrors] = useState({});
   const { mutate } = Digit.Hooks.campaign.useCreateCampaign(tenantId);
+  const [isDataCreating, setIsDataCreating] = useState(false);
   const { mutate: updateCampaign } = Digit.Hooks.campaign.useUpdateCampaign(tenantId);
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
@@ -300,6 +301,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
           }
           if (compareIdentical(draftData, payloadData) === false) {
+            setIsDataCreating(true);
+
             await updateCampaign(payloadData, {
               onError: (error, variables) => {
                 console.log(error);
@@ -323,6 +326,11 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
                   }
                 );
                 Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+              },
+              onSettled: () => {
+                // This will always run after the mutation completes
+                setIsDataCreating(false);
+                // Final function logic here
               },
             });
           }
@@ -379,7 +387,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             payloadData.deliveryRules = temp?.[0];
             // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
           }
-
+          setIsDataCreating(true);
           await mutate(payloadData, {
             onError: (error, variables) => {
               if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
@@ -393,6 +401,11 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
               if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
                 setCurrentKey(currentKey + 1);
               }
+            },
+            onSettled: () => {
+              // This will always run after the mutation completes
+              setIsDataCreating(false);
+              // Final function logic here
             },
           });
         };
@@ -693,6 +706,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             body: config?.body.filter((a) => !a.hideInEmployee),
           };
         })}
+        isDisabled={isDataCreating}
         onSubmit={onSubmit}
         showSecondaryLabel={currentKey > 1 ? true : false}
         secondaryLabel={isChangeDates === "true" && currentKey == 6 ? t("HCM_BACK") : noAction === "false" ? null : t("HCM_BACK")}
