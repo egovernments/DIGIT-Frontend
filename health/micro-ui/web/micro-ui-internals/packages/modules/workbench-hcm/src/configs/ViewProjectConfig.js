@@ -65,10 +65,10 @@ export const data = (project) => {
         ],
       },
       {
-        navigationKey: "card5",
+        navigationKey: "card1",
         sections: [
           {
-            navigationKey: "card5",
+            navigationKey: "card1",
 
             type: "COMPONENT",
             component: "TargetComponent",
@@ -100,10 +100,10 @@ export const data = (project) => {
         ],
       },
       {
-        navigationKey: "card1",
+        navigationKey: "card5",
         sections: [
           {
-            navigationKey: "card1",
+            navigationKey: "card5",
 
             type: "COMPONENT",
             component: "ProjectStaffComponent",
@@ -132,30 +132,30 @@ export const data = (project) => {
       showNav: true,
       configNavItems: [
         {
-          name: "card5",
+          name: "card1",
           active: true,
-          code: "Targets",
+          code: "HCM_TARGET_MAPPED",
         },
         {
           name: "card3",
           active: true,
-          code: "Children",
+          code: "HCM_CHILDREN_MAPPED",
         },
         {
           name: "card2",
           active: true,
-          code: "Project Resource",
+          code: "HCM_RESOURCE_MAPPED",
         },
         {
-          name: "card1",
+          name: "card5",
           active: true,
-          code: "Project Staff",
+          code: "HCM_STAFF_MAPPED",
         },
      
         {
           name: "card4",
           active: true,
-          code: "Facility",
+          code: "HCM_FACILITY_MAPPED",
         },
        
       ],

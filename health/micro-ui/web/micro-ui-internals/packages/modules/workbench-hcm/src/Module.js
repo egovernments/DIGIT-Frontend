@@ -14,13 +14,15 @@ import RowDetails from "./components/RowDetails";
 import TargetComponent from "./components/TargetComponent";
 
 const HCMWORKBENCHModule = ({ stateCode, userType, tenants }) => {
-  const moduleCode = ["workbench-hcm"];
+  const modulePrefix = "hcm";
+  const moduleCode = ["campaign-settings"];
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
     moduleCode,
     language,
+    modulePrefix,
   });
 
   if (isLoading) {

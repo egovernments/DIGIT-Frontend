@@ -39,7 +39,7 @@ const FacilityComponent = (props) => {
         },
         body: {
             Facility: {
-                "id": [projectFacility?.ProjectFacilities?.[0]?.facilityId]
+                "id": projectFacility?.ProjectFacilities?.map(mapping=>mapping?.facilityId)
             },
         },
         config:{

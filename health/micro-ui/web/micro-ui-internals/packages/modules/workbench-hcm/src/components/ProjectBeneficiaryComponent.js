@@ -82,7 +82,7 @@ const ProjectBeneficiaryComponent = (props) => {
             },
         },
         config:{
-            enabled: productIds.length>0 ? true: false
+            enabled: Boolean(productIds?.length)
         }
     };
 
@@ -136,10 +136,7 @@ const ProjectBeneficiaryComponent = (props) => {
         { label: t("PRODUCT_ID"), key: "productVariant.productId" },
         { label: t("SKU"), key: "productVariant.sku" },
         { label: t("PRODUCT_VARIATION"), key: "productVariant.variation" },
-        { label: t("START_DATE"), key: "formattedStartDate" },
-        { label: t("END_DATE"), key: "formattedEndDate" },
         { label: t("RESOURCE_TYPE"), key: "resource.type" },
-        // { label: t("IS_BASE_UNIT_VARIANT"), key: "resource.isBaseUnitVariant" },
         { label: t("NAME"), key: "productVariant.product.name" },
         { label: t("MANUFACTURER"), key: "productVariant.product.manufacturer" },
         { label: t("PRODUCT_TYPE"), key: "productVariant.product.type" }
