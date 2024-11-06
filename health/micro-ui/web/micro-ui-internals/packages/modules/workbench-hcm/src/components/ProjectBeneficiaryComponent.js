@@ -82,7 +82,7 @@ const ProjectBeneficiaryComponent = (props) => {
             },
         },
         config:{
-            enabled: productIds?.length>0 ? true: false
+            enabled: Boolean(productIds?.length)
         }
     };
 
