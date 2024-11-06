@@ -195,12 +195,13 @@ const DropdownOption = ({
                 position: 'absolute',
                 backgroundColor: '#363636',
                 color: '#ffffff',
-                padding: '0.5rem',
+                padding: '1rem',
                 borderRadius: '4px',
                 fontSize: '1rem',
                 boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.15)',
                 zIndex: 9999,
-                maxWidth: '200px', // Limit tooltip width
+                width: 'auto',
+                maxWidth: '20rem', // Limit tooltip width
                 wordWrap: 'break-word', // Enable word wrapping
                 whiteSpace: 'normal', // Allow text to wrap
                 lineHeight: '1.4', // Improve readability of wrapped text

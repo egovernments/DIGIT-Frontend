@@ -14,7 +14,7 @@ const MobileChecklist = ({ questions, checklistRole, typeOfChecklist }) => {
         <div className="mobile-header">
           <h2 className='mobile-checklist-highlight'>{typeOfChecklist} {checklistRole}</h2>
           {/* <h1 className="mobile-checklist-highlight">{checklistRole}</h1> */}
-          <p className="mobile-description"></p>
+          {/* <p className="mobile-description"></p> */}
         </div>
 
         <div className="mobile-questions">

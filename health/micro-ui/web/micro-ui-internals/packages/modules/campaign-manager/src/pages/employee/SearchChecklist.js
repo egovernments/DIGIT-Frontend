@@ -129,8 +129,7 @@ const SearchChecklist = () => {
           onStepClick={onStepClick}
           activeSteps={6}
         />
-        <div style={{height:"2rem"}}></div>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop: "2rem" }}>
           {/* <Header styles={{ fontSize: "32px", marginBottom: "2rem", marginTop: "2rem" }}>{t("ACTION_LABEL_CONFIGURE_APP")}</Header> */}
           {/* <Button
             variation="secondary"
@@ -216,7 +215,7 @@ const SearchChecklist = () => {
             <Card className="card-header-timeline">
               <TextBlock subHeader={t("ACTION_LABEL_CONFIGURE_APP")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
             </Card>
-            <Card className="stepper-card" style={{height:"100vh"}}>
+            <Card className="stepper-card">
               <Stepper customSteps={["HCM_MANAGE_CHECKLIST"]} currentStep={1} onStepClick={() => { }} direction={"vertical"} />
             </Card>
           </div>
