@@ -483,7 +483,7 @@ const UpdateChecklist = () => {
                             sortFooterChildren={true}
                         >
 
-                            <MobileChecklist questions={previewData} checklistRole={t(`${roleLocal}`)} typeOfChecklist={t(`${checklistTypeLocal}`)}></MobileChecklist>
+                            <MobileChecklist questions={previewData} campaignName={campaignName} checklistRole={t(`${roleLocal}`)} typeOfChecklist={t(`${checklistTypeLocal}`)}></MobileChecklist>
                         </PopUp>
                     )}
                     <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
