@@ -19,7 +19,7 @@ const SubBoundaryView = ({ title, arr, style, editHandler, isEditable }) => {
         arr && arr.length > 0 ? (
           <Card type={"secondary"} style={style}>
 
-            <div className="header-container" style={{ marginBottom: "0px" }}>
+            <div className="mp-header-container" style={{ marginBottom: "0px" }}>
               <Header className="summary-sub-heading">
                 {t(title)}
               </Header>

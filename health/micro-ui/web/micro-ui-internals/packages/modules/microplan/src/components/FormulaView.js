@@ -8,7 +8,7 @@ const FormulaView = ({ output="N/A", input1="N/A", input2="N/A", input3="N/A" })
   const { t } = useTranslation();
 
   return (
-    <div>
+    <div style={{marginBottom:"0rem"}}>
       {/* Card Component */}
       <Card className="card-color">
         <div>
@@ -41,8 +41,6 @@ const FormulaView = ({ output="N/A", input1="N/A", input2="N/A", input3="N/A" })
             />
           </LabelFieldPair>
 
-          {/* Divider */}
-          <div style={{ background: "#eee", height: "0.2rem", marginBottom: "1rem" }}></div>
         </div>
       </Card>
     </div>

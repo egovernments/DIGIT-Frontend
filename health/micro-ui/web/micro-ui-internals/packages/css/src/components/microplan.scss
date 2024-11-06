@@ -118,11 +118,10 @@
   overflow: visible; /* Ensure text isn't cut off */
 }
 
-.header-container {
+.mp-header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
 }
 
 .as-table-like {
@@ -303,4 +302,8 @@
   .digit-popup-wrapper{
     opacity: 1;
   }
+}
+
+.mp-margin-bottom{
+  margin-bottom: 1.5rem;
 }
