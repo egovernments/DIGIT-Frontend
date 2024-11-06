@@ -9,7 +9,7 @@ const AssumptionsList = ({ customProps, setupCompleted }) => {
     const history = useHistory();
 
     const assumptionValues = customProps?.sessionData?.HYPOTHESIS?.Assumptions?.assumptionValues || [];
-    const campaignAssumption = customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm || [];
+    const campaignAssumption = customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm || {};
 
     let dic = {};
 
@@ -32,7 +32,9 @@ const AssumptionsList = ({ customProps, setupCompleted }) => {
             <Card className="middle-child">
                 <Header className="summary-main-heading">{t(`MICROPLAN_ESTIMATION_ASSUMPTIONS_HEADING`)} </Header>
                 {orderedKeys.map((key, index) => {
-                    const { code, value } = campaignAssumption[key];
+                    const assumption = campaignAssumption?.[key] || {};
+                    const code = assumption.code || "NA";
+                    const value = assumption.value || "NA";
                     return (
                         <>
                             <LabelFieldPair className="as-label-field" style={{ marginBottom: "0px" }}>
