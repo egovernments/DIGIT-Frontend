@@ -39,8 +39,8 @@ const FormulaConfigScreen = ({ customProps, setupCompleted }) => {
         <>
             {Object.keys(dictionary).length > 0 && (
                 Object.keys(dictionary).map((category, ind) => (
-                    <Fragment key={category}>
-                        <div className="header-container">
+                    <Card key={category} className="mp-margin-bottom">
+                        <div className="mp-header-container">
                             <HeaderComp title={t(String(category))} />
                             {!(setupCompleted === 'true') &&
                                 <Button
@@ -68,7 +68,7 @@ const FormulaConfigScreen = ({ customProps, setupCompleted }) => {
                                 />
                             </Fragment>
                         ))}
-                    </Fragment>
+                    </Card>
                 ))
             )}
 
