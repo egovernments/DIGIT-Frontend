@@ -49,8 +49,6 @@ const ProjectBreadCrumb = ({ location }) => {
   return <BreadCrumbNew crumbs={crumbs} />;
 };
 
-console.log("this",Digit.Utils.locale.getTransformedLocale(location.pathname))
-console.log("this1",Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()))
 
 
 
