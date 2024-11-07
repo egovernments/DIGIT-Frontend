@@ -6,9 +6,6 @@ import BulkUpload from "./BulkUpload";
 import Ajv from "ajv";
 import XLSX from "xlsx";
 import { InfoCard, PopUp, Toast, Button, DownloadIcon, Stepper, TextBlock } from "@egovernments/digit-ui-components";
-import { schemaConfig } from "../configs/schemaConfig";
-import { headerConfig } from "../configs/headerConfig";
-import { PRIMARY_COLOR } from "../utils";
 import { downloadExcelWithCustomName } from "../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 
@@ -27,7 +24,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const params = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
   const [showInfoCard, setShowInfoCard] = useState(false);
   const [errorsType, setErrorsType] = useState({});
-  const [schema, setSchema] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const type = props?.props?.type;
   const [executionCount, setExecutionCount] = useState(0);
@@ -50,8 +46,12 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.adminSchema` }
   );
 
-  const { data: readMe } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "ReadMeConfig" }] ,{},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.ReadMeConfig` });
-  const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "baseTimeout" }] ,{},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.baseTimeout` });
+  const { data: readMe } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "ReadMeConfig" }] 
+    ,{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.ReadMeConfig` }
+  );
+  const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "baseTimeout" }] ,
+    {select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.baseTimeout` }
+  );
   const [sheetHeaders, setSheetHeaders] = useState({});
   const [translatedSchema, setTranslatedSchema] = useState({});
   const [readMeInfo, setReadMeInfo] = useState({});
