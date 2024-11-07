@@ -23,7 +23,7 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
-  const lessDate = searchParams.get("date");
+  const showDateUpdateInfo = searchParams.get("date");
 
   function updateUrlParams(params) {
     const url = new URL(window.location.href);
