@@ -569,6 +569,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       const headersToValidate = XLSX.utils.sheet_to_json(sheet, {
         header: 1,
       })[0];
+      const requiredProperties = translatedSchema?.boundary?.required || [];
 
       const jsonData = XLSX.utils.sheet_to_json(sheet, { blankrows: true });
 
@@ -578,10 +579,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
       for (const row of jsonData) {
         for (let j = boundaryCodeIndex + 1; j < headersToValidate.length; j++) {
-          if(headersToValidate[j] === "Household Target at village level (Mandatory and to be entered by the user)(OLD)"){
-            continue;
-          }
           const value = row[headersToValidate[j]];
+          if(!requiredProperties.includes(headersToValidate[j])) continue;
           
           if (value === undefined || value === null) {
             targetError.push(

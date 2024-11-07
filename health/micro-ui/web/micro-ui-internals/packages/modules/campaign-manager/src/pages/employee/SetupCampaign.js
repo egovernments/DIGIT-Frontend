@@ -46,6 +46,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const noAction = searchParams.get("action");
   const isDraft = searchParams.get("draft");
   const isSkip = searchParams.get("skip");
+  const isDateRestricted = searchParams.get("date");
   const isChangeDates = searchParams.get("changeDates");
   const actionBar = searchParams.get("actionBar");
   const [isDraftCreated, setIsDraftCreated] = useState(false);
@@ -61,6 +62,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const lowestHierarchy = useMemo(() => {
     return hierarchyConfig?.[CONSOLE_MDMS_MODULENAME]?.hierarchyConfig?.find((item) => item.isActive)?.lowestHierarchy;
   }, [hierarchyConfig]);
+  
 
   const { data: DeliveryConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }], {
     select: (data) => {
@@ -131,8 +133,14 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       if (isSkip === "false") {
         currentKey !== 1 ? null : setCurrentKey(1);
       } else {
-        if (draftData?.additionalDetails?.key === 7) setCurrentKey(8);
-        else setCurrentKey(draftData?.additionalDetails?.key);
+        if (isDateRestricted === "true") {
+          setCurrentKey(3);
+        } else if (draftData?.additionalDetails?.key) {
+          setCurrentKey(draftData?.additionalDetails?.key);
+        } else {
+          console.warn("No valid key found in draftData");
+          setCurrentKey(1); // Fallback to initial key
+        }
       }
       return;
     }
