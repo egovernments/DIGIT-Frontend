@@ -77,6 +77,7 @@
 .mandatory-span {
   font-size: 1rem;
   font-weight: 700;
+  color: #c84c0e !important;
 }
 
 .digit-employee-card-input.numeric {
@@ -435,7 +436,7 @@ tbody {
 .add-new-product-container {
   border: 1px solid #d6d5d4;
   background-color: #fafafa;
-  width: 70%;
+  width: 100%;
   padding-top: 0;
 
   .heading-bar {
@@ -464,6 +465,7 @@ tbody {
 
 .page-padding-fix {
   margin-top: 1.5rem;
+  padding: 1.5rem;
 }
 
 .addProductActionClass {

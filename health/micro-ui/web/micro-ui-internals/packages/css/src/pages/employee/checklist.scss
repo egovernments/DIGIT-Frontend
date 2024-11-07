@@ -334,7 +334,7 @@
 
 /* Header styling */
 .mobile-header h2 {
-    color: #555;
+    color: #000000;
     font-size: 0.875rem;
     /* 14px */
     margin-bottom: 0.3125rem;
@@ -351,6 +351,7 @@
     font-weight: theme(digitv2.fontWeight.bold);
     padding: 0 0.3125rem;
     font-size: larger;
+    font-family: 'Roboto Condensed', sans-serif;
     /* 0 to 5px */
 }
 
@@ -379,6 +380,7 @@
 .mobile-question {
     font-weight: theme(digitv2.fontWeight.bold);
     font-size: 0.875rem;
+    color: #000000;
     /* 14px */
 }
 
@@ -398,7 +400,7 @@
 }
 
 .mandatory-asterisk {
-    color: #c84c0e;
+    color: #B91900;
     margin-left: 4px;
     /* Adjust spacing between the question number and asterisk */
 }

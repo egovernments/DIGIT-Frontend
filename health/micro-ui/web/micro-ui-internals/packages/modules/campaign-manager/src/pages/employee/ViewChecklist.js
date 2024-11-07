@@ -128,7 +128,7 @@ const ViewChecklist = () => {
 
 
     const fieldPairs = [
-        { label: "ROLE", value: roleLocal },
+        { label: "CHECKLIST_ROLE", value: roleLocal },
         { label: "TYPE_OF_CHECKLIST", value: checklistTypeLocal },
         { label: "CAMPAIGN_NAME", value: campaignName },
     ];
@@ -139,7 +139,7 @@ const ViewChecklist = () => {
 
 
     return (
-        <div>
+        <div style={{marginBottom: "2rem"}}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
                     <h2 style={{ fontSize: "36px", fontWeight: "700" }}>
