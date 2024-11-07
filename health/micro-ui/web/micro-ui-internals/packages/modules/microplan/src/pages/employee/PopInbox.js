@@ -31,12 +31,13 @@ const PopInbox = () => {
   const [assigneeUuids, setAssigneeUuids] = useState([]);
   const [totalRows, setTotalRows] = useState(0);
   const [showToast, setShowToast] = useState(null);
+  const [showComment, setShowComment] = useState(false);
   const [allowAction, setAllowAction] = useState(true);
   const [employeeNameMap, setEmployeeNameMap] = useState({});
   const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
-  const [assignee, setAssignee] = useState(null);
   const [assignedToMeCount, setAssignedToMeCount] = useState(0);
   const [assignedToAllCount, setAssignedToAllCount] = useState(0);
+  const [updatedCensus, setUpdatedCensus] = useState(null);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   const [activeLink, setActiveLink] = useState({
     code: "ASSIGNED_TO_ME",
@@ -208,7 +209,7 @@ const PopInbox = () => {
         tenantId: tenantId,
         source: microplanId,
         status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
-        ...(assignee || selectedFilter == "VALIDATED"
+        ...(activeLink.code == "ASSIGNED_TO_ALL" || selectedFilter == "VALIDATED"
           ? {}
           : { assignee: user.info.uuid }),
         jurisdiction: jurisdiction,
@@ -293,10 +294,11 @@ const PopInbox = () => {
       setVillagesSelected(0);
       setSelectedRows([]);
 
-      if (assignee != null) {
-        setAssignedToAllCount(data?.TotalCount);
-      } else {
+      if (activeLink.code === "ASSIGNED_TO_ME") {
         setAssignedToMeCount(data?.TotalCount);
+        setAssignedToAllCount(data?.StatusCount[selectedFilter] || 0)
+      } else {
+        setAssignedToAllCount(data?.TotalCount);
       }
     }
   }, [data]);
@@ -305,7 +307,7 @@ const PopInbox = () => {
     if (jurisdiction?.length > 0) {
       refetch(); // Trigger the API call again after activeFilter changes
     }
-  }, [selectedFilter, jurisdiction, limitAndOffset]);
+  }, [selectedFilter, jurisdiction, limitAndOffset, activeLink]);
 
   useEffect(() => {
     if (selectedFilter === "VALIDATED") {
@@ -333,6 +335,10 @@ const PopInbox = () => {
 
   const onFilter = (selectedStatus) => {
     setSelectedFilter(selectedStatus?.code);
+    setActiveLink({
+      code: "ASSIGNED_TO_ME",
+      name: "ASSIGNED_TO_ME"
+    });
   };
 
   const handlePageChange = (page, totalRows) => {
@@ -407,6 +413,11 @@ const PopInbox = () => {
     "APPROVE": { isSuffix: false, icon: "CheckCircle" },
     "SEND_BACK_FOR_CORRECTION": { isSuffix: true, icon: "ArrowForward" },
   }
+
+
+  const onCommentLogClose = () => {
+    setShowComment(false);
+  };
 
   const conditionalRowStyles = [
     {
@@ -537,8 +548,31 @@ const PopInbox = () => {
                 )}
               </div>
             )}
-            {isLoading || isFetching ? <Loader /> : <PopInboxTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap} onSuccessEdit={() => refetch()} conditionalRowStyles={conditionalRowStyles} allowAction={allowAction} />}
+            {isLoading || isFetching ? <Loader /> : <PopInboxTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap}
+              onSuccessEdit={(data) => {
+                setUpdatedCensus(data);
+                setShowComment(true);
+              }}
+              conditionalRowStyles={conditionalRowStyles} allowAction={allowAction} />}
           </Card>
+          {showComment && (
+            <WorkflowCommentPopUp
+              onClose={onCommentLogClose}
+              heading={t(`HCM_MICROPLAN_EDIT_POPULATION_COMMENT_LABEL`)}
+              submitLabel={t(`HCM_MICROPLAN_EDIT_POPULATION_COMMENT_SUBMIT_LABEL`)}
+              url="/census-service/_update"
+              requestPayload={{ Census: updatedCensus }}
+              commentPath="workflow.comments"
+              onSuccess={(data) => {
+                setShowToast({ key: "success", label: t("HCM_MICROPLAN_EDIT_WORKFLOW_UPDATED_SUCCESSFULLY"), transitionTime: 5000 });
+                onCommentLogClose();
+                refetch();
+              }}
+              onError={(error) => {
+                setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+              }}
+            />
+          )}
         </div>
       </div>
 
@@ -568,8 +602,8 @@ const PopInbox = () => {
       {actionBarPopUp && (
         <WorkflowCommentPopUp
           onClose={closeActionBarPopUp}
-          heading={t(`HCM_MICROPLAN_FINALIZE_POPULATION_DATA`)}
-          submitLabel={t(`HCM_MICROPLAN_FINALIZE_POPULATION_DATA`)}
+          heading={t(`HCM_MICROPLAN_FINALIZE_POPULATION_DATA_LABEL`)}
+          submitLabel={t(`HCM_MICROPLAN_FINALIZE_POPULATION_DATA_SUBMIT_ACTION`)}
           url="/plan-service/config/_update"
           requestPayload={{ PlanConfiguration: updateWorkflowForFooterAction() }}
           commentPath="workflow.comments"

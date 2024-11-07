@@ -28,7 +28,7 @@ function createStatusMap(data, boundaryHierarchy) {
   return statusMap;
 }
 
-const formValidator = (formData, key, state,t) => {
+const formValidator = (formData, key, state, t) => {
   function getValueFromPath(obj, path) {
     return path.split(".").reduce((acc, part) => acc && acc[part], obj);
   }
@@ -120,8 +120,7 @@ const formValidator = (formData, key, state,t) => {
     if (missedType.length > 0) {
       return {
         key: "error",
-        label: `${t(`HCM_CAMPAIGN_FOR`)} ${t(`${state?.hierarchyType}_${missedType?.[0]?.type}`?.toUpperCase())} ${t(missedType?.[0]?.code)} ${
-          t(`HCM_CAMPAIGN_CHILD_NOT_PRESENT`)}`,
+        label: `${t(`HCM_CAMPAIGN_FOR`)} ${t(`${state?.hierarchyType}_${missedType?.[0]?.type}`?.toUpperCase())} ${t(missedType?.[0]?.code)} ${t(`HCM_CAMPAIGN_CHILD_NOT_PRESENT`)}`,
       }
     }
     return null;
@@ -179,8 +178,8 @@ const formValidator = (formData, key, state,t) => {
 
 
   const microplanAssumptionsValidator = (formData) => {
-    
-    if (!areFieldsValid(formData.assumptionValues?.filter(row => !(row.category===undefined && row.value===undefined)))) {
+
+    if (!areFieldsValid(formData.assumptionValues?.filter(row => !(row.category === undefined && row.value === undefined)))) {
       return { key: "error", label: "ERROR_MANDATORY_FIELDS" };
     }
 
@@ -235,11 +234,11 @@ function getCurrentMonth() {
 const updateUrlParams = (params) => {
   const url = new URL(window.location.href);
   Object.entries(params).forEach(([key, value]) => {
-      if (value === null || value === undefined) {
-          url.searchParams.delete(key);
-      } else {
-          url.searchParams.set(key, value);
-      }
+    if (value === null || value === undefined) {
+      url.searchParams.delete(key);
+    } else {
+      url.searchParams.set(key, value);
+    }
   });
   window.history.replaceState({}, "", url);
 };
@@ -441,15 +440,17 @@ function groupByParent(data) {
 function epochToDateTime(epoch) {
   // Create a new Date object using the epoch time
   const date = new Date(epoch);
-  // Extract the date components
+
+
   const year = date.getFullYear();
+
   const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based, so add 1
   const day = String(date.getDate()).padStart(2, "0");
 
-  // Extract the time components
+
+  // Extract time components
   let hours = date.getHours();
   const minutes = String(date.getMinutes()).padStart(2, "0");
-  const seconds = String(date.getSeconds()).padStart(2, "0");
 
   // Determine AM/PM and convert to 12-hour format
   const ampm = hours >= 12 ? "PM" : "AM";
@@ -457,13 +458,13 @@ function epochToDateTime(epoch) {
   hours = hours ? hours : 12; // the hour '0' should be '12'
   const formattedHours = String(hours).padStart(2, "0");
 
-  // Format the date and time
-  const formattedDate = `${day}/${month}/${year}`;
-  const formattedTime = `${formattedHours}:${minutes}:${seconds} ${ampm}`;
+  // Format date and time as "DD MMM YYYY, HH:MM AM/PM"
+  const formattedDateTime = `${day} ${month} ${year} ${formattedHours}:${minutes} ${ampm}`;
 
   // Return the formatted date and time
-  return `${formattedDate} ${formattedTime}`;
+  return formattedDateTime;
 }
+
 
 function filterUniqueByKey(arr, key) {
   const uniqueValues = new Set();

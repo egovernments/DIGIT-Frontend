@@ -5,8 +5,7 @@ import { PopUp, Button, TextArea, ErrorMessage, Toast } from "@egovernments/digi
 const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPayload, commentPath, onSuccess, onError }) => {
 
     const { t } = useTranslation();
-    const [comment, setComment] = useState("");
-    const [error, setError] = useState(false);
+    const [comment, setComment] = useState(null);
     const [showToast, setShowToast] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -20,9 +19,6 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
 
     const handleTextAreaChange = (e) => {
         setComment(e.target.value);
-        if (e.target.value.trim()) {
-            setError(false);
-        }
     };
 
     const handleKeyPress = (e) => {
@@ -35,6 +31,8 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
         const keys = path.split(".");
         const key = Object.keys(payloadObject)?.[0]; // Get the first key in the payloadObject
         const value = payloadObject[key]; // Get the value associated with that key
+
+        const finalComment = comment && comment.trim() ? comment : null;
 
         // Check if the value is an array or a single object
         if (Array.isArray(value)) {
@@ -50,7 +48,7 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
                         nestedObject = nestedObject[keys[i]];
                     }
 
-                    nestedObject[keys[keys.length - 1]] = comment;
+                    nestedObject[keys[keys.length - 1]] = finalComment;
 
                     return updatedItem;
                 })
@@ -65,7 +63,7 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
                 nestedObject = nestedObject[keys[i]];
             }
 
-            nestedObject[keys[keys.length - 1]] = comment;
+            nestedObject[keys[keys.length - 1]] = finalComment;
 
             return {
                 ...payloadObject,
@@ -79,10 +77,6 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
     };
 
     const handleSave = async () => {
-        if (!comment.trim()) {
-            setError(true);
-            return;
-        }
 
         setIsSubmitting(true);
 
@@ -112,28 +106,21 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
     return (
         <>
             <PopUp
+                style={{ width: "700px" }}
                 onClose={onClose}
                 heading={t(heading)}
                 children={[
                     <div key="comment-section">
                         <div className="comment-label">
-                            {t(`HCM_MICROPLAN_ADD_COMMENT_LABEL`)} <span className="required">*</span>
+                            {t(`HCM_MICROPLAN_ADD_COMMENT_LABEL`)}
                         </div>
                         <TextArea
                             style={{ maxWidth: "100%" }}
                             value={comment}
                             onChange={handleTextAreaChange}
                             onKeyPress={handleKeyPress}
-                            error={error}
+                            maxlength={140}
                         />
-                        {error && (
-                            <ErrorMessage
-                                message={t('HCM_MICROPLAN_ADD_COMMENT_REQUIRED')}
-                                truncateMessage={true}
-                                maxLength={256}
-                                showIcon={true}
-                            />
-                        )}
                     </div>
                 ]}
                 onOverlayClick={onClose}

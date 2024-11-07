@@ -7,6 +7,7 @@ import AccessibilityPopUP from '../../components/accessbilityPopUP';
 import SecurityPopUp from '../../components/securityPopUp';
 import EditVillagePopulationPopUp from '../../components/editVillagePopulationPopUP';
 import TimelinePopUpWrapper from '../../components/timelinePopUpWrapper';
+import WorkflowCommentPopUp from '../../components/WorkflowCommentPopUp';
 
 const VillageView = () => {
     const location = useLocation();
@@ -24,6 +25,8 @@ const VillageView = () => {
     const [showEditVillagePopulationPopup, setShowEditVillagePopulationPopup] = useState(false);
     const [showCommentLogPopup, setShowCommentLogPopup] = useState(false);
     const [assigneeName, setAssigneeName] = useState(null);
+    const [showComment, setShowComment] = useState(false);
+    const [updatedCensus, setUpdatedCensus] = useState(null);
 
     const findHierarchyPath = (boundaryCode, data, maxHierarchyLevel) => {
         const hierarchy = [];
@@ -201,6 +204,10 @@ const VillageView = () => {
         refetch();
     };
 
+    const onCommentClose = () => {
+        setShowComment(false);
+    };
+
     if (isLoading || isLoadingCampaignObject || isLoadingPlanEmployee || isWorkflowLoading) {
         return <Loader />;
     }
@@ -318,7 +325,31 @@ const VillageView = () => {
                 </Card>
 
                 {showEditVillagePopulationPopup && (
-                    <EditVillagePopulationPopUp onClose={onEditPopulationClose} census={data} onSuccess={(data) => { refetch(); }} />
+                    <EditVillagePopulationPopUp onClose={onEditPopulationClose} census={data} onSuccess={(data) => {
+                        setUpdatedCensus(data);
+                        setShowComment(true);
+                        // setShowToast({ key: "success", label: t("EDIT_WORKFLOW_UPDATED_SUCCESSFULLY"), transitionTime: 5000 });
+                        // refetch();
+                    }} />
+                )}
+
+                {showComment && (
+                    <WorkflowCommentPopUp
+                        onClose={onCommentClose}
+                        heading={t(`HCM_MICROPLAN_EDIT_POPULATION_COMMENT_LABEL`)}
+                        submitLabel={t(`HCM_MICROPLAN_EDIT_POPULATION_COMMENT_SUBMIT_LABEL`)}
+                        url="/census-service/_update"
+                        requestPayload={{ Census: updatedCensus }}
+                        commentPath="workflow.comments"
+                        onSuccess={(data) => {
+                            setShowToast({ key: "success", label: t("HCM_MICROPLAN_EDIT_WORKFLOW_UPDATED_SUCCESSFULLY"), transitionTime: 5000 });
+                            onCommentClose();
+                            refetch();
+                        }}
+                        onError={(error) => {
+                            setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+                        }}
+                    />
                 )}
 
                 <Card type="primary" className="info-card" style={{ marginBottom: "2.5rem" }}>
