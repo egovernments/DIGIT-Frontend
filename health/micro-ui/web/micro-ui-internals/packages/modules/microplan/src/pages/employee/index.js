@@ -45,12 +45,8 @@ const ProjectBreadCrumb = ({ location }) => {
       show: true,
     },
   ];
-  debugger;
   return <BreadCrumbNew crumbs={crumbs} />;
 };
-
-
-
 
 const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hierarchyData, lowestHierarchy }) => {
   const { dispatch } = useMyContext();
