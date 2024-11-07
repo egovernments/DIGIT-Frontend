@@ -1,26 +1,40 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { useTranslation } from "react-i18next";
-import { PopUp, Button, Card, Divider, TextInput, Toast } from '@egovernments/digit-ui-components';
+import { PopUp, Button, Card, Divider, TextInput, Toast, ErrorMessage } from '@egovernments/digit-ui-components';
+import WorkflowCommentPopUp from './WorkflowCommentPopUp';
 
 const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
   const { t } = useTranslation();
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
 
-  // State to manage confirmed population and target population
-  const [confirmedTotalPopulation, setConfirmedTotalPopulation] = useState("");
-  const [confirmedTargetPopulation, setConfirmedTargetPopulation] = useState("");
+  const [confirmedValues, setConfirmedValues] = useState({});
+  const [showComment, setShowComment] = useState(false);
+  const [errors, setErrors] = useState({});
   const [showToast, setShowToast] = useState(null);
+  const [updatedCensus, setUpdatedCensus] = useState(null); // Add updatedCensus as state
 
-  // Load initial values from census data
+  let workflowAction = "";
+  if (userRoles && userRoles.includes('POPULATION_DATA_APPROVER')) {
+    workflowAction = "EDIT_AND_SEND_FOR_APPROVAL";
+  } else if (userRoles && userRoles.includes('ROOT_POPULATION_DATA_APPROVER')) {
+    workflowAction = "EDIT_AND_VALIDATE";
+  }
+
   useEffect(() => {
-    if (census?.additionalDetails) {
-      setConfirmedTotalPopulation(census.additionalDetails.confirmedTotalPopulation || "");
-      setConfirmedTargetPopulation(census.additionalDetails.confirmedTargetPopulation || "");
+    if (census?.additionalFields) {
+      const initialValues = {};
+      census.additionalFields.forEach(field => {
+        initialValues[field.key] = field.value;
+      });
+      setConfirmedValues(initialValues);
     }
   }, [census]);
 
-  // Close the toast after 5 seconds
+  const onCommentLogClose = () => {
+    setShowComment(false);
+  };
+
   useEffect(() => {
     if (showToast) {
       setTimeout(() => setShowToast(null), 5000);
@@ -28,51 +42,46 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
   }, [showToast]);
 
 
-  // Define the mutation configuration
-  const mutation = Digit.Hooks.useCustomAPIMutationHook({
-    url: "/census-service/_update", // Replace with the appropriate API endpoint
-  });
+  const handleSave = () => {
 
-  const handleSave = async () => {
-    // Determine workflow action based on user roles
-    let workflowAction = ""; // Default action
-
-    // Check user roles and set workflow action accordingly
-    if (userRoles && userRoles.includes('POPULATION_DATA_APPROVER')) {
-      workflowAction = "EDIT_AND_SEND_FOR_APPROVAL";
-    } else if (userRoles && userRoles.includes('ROOT_POPULATION_DATA_APPROVER')) {
-      workflowAction = "EDIT_AND_VALIDATE";
+    if (Object.keys(errors).some((key) => errors[key])) {
+      setShowToast({ key: "error", label: t("HCM_MICROPLAN_ONLY_POSITIVE_NUMBERS") });
+      return;
     }
 
-    await mutation.mutate(
-      {
-        body: {
-          Census: {
-            ...census,
-            totalPopulation: confirmedTotalPopulation,
-            additionalDetails: {
-              ...census.additionalDetails,
-              // confirmedTotalPopulation,
-              //confirmedTargetPopulation,
-            },
-            workflow: {
-              ...census.workflow,
-              action: workflowAction,
-            },
-          },
-        }
+    const updatedAdditionalFields = census.additionalFields.map(field => ({
+      ...field,
+      value: confirmedValues[field.key] || field.value
+    }));
+
+    const newUpdatedCensus = {
+      ...census,
+      additionalFields: updatedAdditionalFields,
+      workflow: {
+        ...census.workflow,
+        action: workflowAction,
       },
-      {
-        onSuccess: (data) => {
-          onSuccess && onSuccess(data); // Call the onSuccess callback if provided
-          onClose();
-        },
-        onError: (error) => {
-          setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
-        }
-      }
-    );
+    };
+
+    setUpdatedCensus(newUpdatedCensus);
+    onSuccess(newUpdatedCensus);
+    onClose();
   };
+
+  const handleInputChange = (fieldKey, value) => {
+    setConfirmedValues({
+      ...confirmedValues,
+      [fieldKey]: value,
+    });
+
+    setErrors((prev) => ({
+      ...prev,
+      [fieldKey]: !value || Number(value) <= 0
+    }));
+  };
+
+  const nonEditableFields = census.additionalFields.filter(field => !field.editable);
+  const editableFields = census.additionalFields.filter(field => field.editable);
 
   return (
     <>
@@ -86,42 +95,48 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
               <div className="edit-value">{t(census?.boundaryCode) || "NA"}</div>
             </div>
             <Divider className="" variant="small" />
-            <div className="edit-label-field-pair">
-              <div className="edit-label">{t(`HCM_MICROPLAN_EDIT_VILLAGE_POPULATION`)}</div>
-              <div className="edit-value">{census?.totalPopulation || "NA"}</div>
-            </div>
-            <Divider className="" variant="small" />
-            <div className="edit-label-field-pair">
-              <div className="edit-label">{t(`HCM_MICROPLAN_EDIT_TARGET_POPULATION`)}</div>
-              <div className="edit-value">{census?.additionalDetails?.targetPopulation || "NA"}</div>
-            </div>
-            <Divider className="" variant="small" />
-            <div className="edit-label-field-pair">
-              <div className="edit-label">{t(`HCM_MICROPLAN_CONFIRM_VILLAGE_POPULATION`)}</div>
-              <div className="edit-value">
-                <TextInput
-                  type="text"
-                  value={confirmedTotalPopulation}
-                  onChange={(e) => setConfirmedTotalPopulation(e.target.value)}
-                  placeholder={t(`HCM_MICROPLAN_ENTER_VILLAGE_POPULATION`)}
-                />
-              </div>
-            </div>
-            {/* <Divider className="" variant="small" />
-            <div className="edit-label-field-pair">
-              <div className="edit-label">{t(`HCM_MICROPLAN_CONFIRM_TARGET_POPULATION`)}</div>
-              <div className="edit-value">
-                <TextInput
-                  type="text"
-                  value={confirmedTargetPopulation}
-                  onChange={(e) => setConfirmedTargetPopulation(e.target.value)}
-                  placeholder={t(`HCM_MICROPLAN_ENTER_TARGET_POPULATION`)}
-                />
-              </div>
-            </div> */}
-          </Card>,
+
+            {nonEditableFields.map((field, index) => (
+              <Fragment key={field.key}>
+                <div className="edit-label-field-pair">
+                  <div className="edit-label">{t(field.key)}</div>
+                  <div className="edit-value">
+                    <span>{field.value || t("ES_COMMON_NA")}</span>
+                  </div>
+                </div>
+                {index < nonEditableFields.length - 1 && <Divider className="" variant="small" />}
+              </Fragment>
+            ))}
+
+            {editableFields.map((field, index) => (
+              <Fragment key={field.key}>
+                <div className="edit-label-field-pair">
+                  <div className="edit-label">{t(field.key)}</div>
+                  <div className="edit-value">
+                    <TextInput
+                      type="number"
+                      value={confirmedValues[field.key]}
+                      onChange={(e) => handleInputChange(field.key, e.target.value)}
+                      placeholder={t(`HCM_MICROPLAN_ENTER_${field.key}`)}
+                      error={errors[field.key]}
+                    />
+                    {errors[field.key] && (
+                      <ErrorMessage
+                        message={t("HCM_MICROPLAN_ONLY_POSITIVE_NUMBERS")}
+                        truncateMessage={true}
+                        maxLength={256}
+                        showIcon={true}
+                      />
+                    )}
+                  </div>
+                </div>
+                {index < editableFields.length - 1 && <Divider className="" variant="small" />}
+              </Fragment>
+            ))}
+          </Card>
         ]}
         onOverlayClick={onClose}
+        equalWidthButtons={true}
         footerChildren={[
           <Button
             className={"campaign-type-alert-button"}
@@ -136,12 +151,10 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
             type={"button"}
             size={"large"}
             variation={"primary"}
-            label={t(`HCM_MICROPLAN_EDIT_POPULATION_SEND_FOR_APPOVAL`)}
-            onClick={handleSave} // Calls save function on click
-            isDisabled={mutation.isLoading}
+            label={t(`HCM_MICROPLAN_EDIT_POPULATION_${workflowAction}`)}
+            onClick={handleSave}
           />,
         ]}
-        equalWidthButtons={true}
       />
       {showToast && (
         <Toast style={{ zIndex: 10001 }}
@@ -151,6 +164,8 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
           onClose={() => setShowToast(null)}
         />
       )}
+
+
     </>
   );
 };

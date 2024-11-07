@@ -24,12 +24,16 @@
 .label-pair {
     display: flex;
     justify-content: space-between;
+    gap: 1.5rem;
 }
 
 .label-heading {
     @extend .typography.heading-s;
     color: theme(digitv2.lightTheme.text-primary);
     width: 20%;
+    text-align: left;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 .label-text {
@@ -41,17 +45,20 @@
 .edit-label-field-pair {
     display: flex;
     justify-content: space-between;
+    gap: 1.5rem;
 }
 
 .edit-label {
     @extend .typography.heading-s;
     color: theme(digitv2.lightTheme.text-primary);
-    width: 50%;
+    width: 40%;
     text-align: left;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 .edit-value {
-    width: 50%;
+    width: 60%;
     text-align: start;
 }
 
@@ -75,6 +82,6 @@
     color: theme(digitv2.lightTheme.text-primary);
 }
 
-.questions-divider{
+.questions-divider {
     margin-bottom: 1rem;
 }
