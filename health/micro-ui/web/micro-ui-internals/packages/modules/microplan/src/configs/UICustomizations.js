@@ -1,9 +1,7 @@
-import { Link, useLocation, useHistory, useParams } from "react-router-dom";
 import _ from "lodash";
 import React, { useState, Fragment } from "react";
 import { Button as ButtonNew } from "@egovernments/digit-ui-components";
-import { Dropdown } from "@egovernments/digit-ui-components";
-import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader, EditIcon, ArrowForward } from "@egovernments/digit-ui-react-components";
+import ActionComponent from "../components/actionComponent";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
@@ -78,35 +76,10 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
+
       switch (key) {
         case "ACTIONS":
-          let options = [];
-          if (row?.status == "DRAFT") {
-            options = [{ code: "1", name: "Edit Setup" }];
-          } else {
-            options = [{ code: "1", name: "View Summary" }];
-          }
-          return (
-            <Dropdown
-              option={options}
-              select={(e) => {
-                if (e.name == "Edit Setup") {
-                  // Use window.location.href to navigate
-                  window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${1}&microplanId=${row.id}&campaignId=${
-                    row.campaignDetails.id
-                  }`;
-                }
-                if (e.name == "View Summary") {
-                  // Use window.location.href to navigate
-                  window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${
-                    row.campaignDetails.id
-                  }&setup-completed=${true}`;
-                }
-              }}
-              optionKey={"name"}
-              selected={{ code: "1", name: "Actions" }}
-            />
-          );
+          return ActionComponent({ row });
 
         case "NAME_OF_MICROPLAN":
           if (value && value !== "NA") {
