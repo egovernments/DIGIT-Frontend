@@ -7,6 +7,7 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
     const { t } = useTranslation();
     const [comment, setComment] = useState("");
     const [error, setError] = useState(false);
+    const [showToast, setShowToast] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Mutation hook for updating via a dynamic URL
@@ -98,6 +99,7 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
                     onSuccess && onSuccess(data); // Call the onSuccess callback if provided
                 },
                 onError: (error) => {
+                    setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
                     onError && onError(error); // Call the onError callback if provided
                 }
             }
@@ -106,59 +108,71 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
         setIsSubmitting(false);
     };
 
+
     return (
-        <PopUp
-            onClose={onClose}
-            heading={t(heading)}
-            children={[
-                <div key="comment-section">
-                    <div className="comment-label">
-                        {t(`HCM_MICROPLAN_ADD_COMMENT_LABEL`)} <span className="required">*</span>
-                    </div>
-                    <TextArea
-                        style={{ maxWidth: "100%" }}
-                        value={comment}
-                        onChange={handleTextAreaChange}
-                        onKeyPress={handleKeyPress}
-                        error={error}
-                    />
-                    {error && (
-                        <ErrorMessage
-                            message={t('HCM_MICROPLAN_ADD_COMMENT_REQUIRED')}
-                            truncateMessage={true}
-                            maxLength={256}
-                            showIcon={true}
+        <>
+            <PopUp
+                onClose={onClose}
+                heading={t(heading)}
+                children={[
+                    <div key="comment-section">
+                        <div className="comment-label">
+                            {t(`HCM_MICROPLAN_ADD_COMMENT_LABEL`)} <span className="required">*</span>
+                        </div>
+                        <TextArea
+                            style={{ maxWidth: "100%" }}
+                            value={comment}
+                            onChange={handleTextAreaChange}
+                            onKeyPress={handleKeyPress}
+                            error={error}
                         />
-                    )}
-                </div>
-            ]}
-            onOverlayClick={onClose}
-            equalWidthButtons={true}
-            footerChildren={[
-                <Button
-                    key="close-button"
-                    className="campaign-type-alert-button"
-                    type="button"
-                    size="large"
-                    style={{minWidth:"270px"}}
-                    variation="secondary"
-                    label={t(`HCM_MICROPLAN_EDIT_POPULATION_CLOSE`)}
-                    onClick={onClose}
-                    isDisabled={isSubmitting}  // Disable button during submission
-                />,
-                <Button
-                    key="submit-button"
-                    className="campaign-type-alert-button"
-                    type="button"
-                    size="large"
-                    variation="primary"
-                    style={{minWidth:"270px"}}
-                    label={t(submitLabel)}
-                    onClick={handleSave}
-                    isDisabled={isSubmitting}  // Disable button during submission
-                />,
-            ]}
-        />
+                        {error && (
+                            <ErrorMessage
+                                message={t('HCM_MICROPLAN_ADD_COMMENT_REQUIRED')}
+                                truncateMessage={true}
+                                maxLength={256}
+                                showIcon={true}
+                            />
+                        )}
+                    </div>
+                ]}
+                onOverlayClick={onClose}
+                equalWidthButtons={true}
+                footerChildren={[
+                    <Button
+                        key="close-button"
+                        className="campaign-type-alert-button"
+                        type="button"
+                        size="large"
+                        style={{ minWidth: "270px" }}
+                        variation="secondary"
+                        label={t(`HCM_MICROPLAN_EDIT_POPULATION_CLOSE`)}
+                        onClick={onClose}
+                        isDisabled={isSubmitting}  // Disable button during submission
+                    />,
+                    <Button
+                        key="submit-button"
+                        className="campaign-type-alert-button"
+                        type="button"
+                        size="large"
+                        variation="primary"
+                        style={{ minWidth: "270px" }}
+                        label={t(submitLabel)}
+                        onClick={handleSave}
+                        isDisabled={isSubmitting}  // Disable button during submission
+                    />,
+                ]}
+            />
+            {showToast && (
+                <Toast style={{ zIndex: 10001 }}
+                    label={showToast.label}
+                    type={showToast.key}
+                    error={showToast.key === "error"}
+                    onClose={() => setShowToast(null)}
+                />
+            )}
+        </>
+
     );
 };
 

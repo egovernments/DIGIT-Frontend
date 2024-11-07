@@ -33,7 +33,7 @@ const TimelinePopUpWrapper = ({ onClose, businessId, heading }) => {
 
             // Map API response to timeline steps
             const steps = workflowData.ProcessInstances.map((instance, index) => ({
-                label: t(instance.state.applicationStatus),
+                label: t(instance?.action),
                 variant: 'completed',
                 subElements: [Digit.Utils.microplanv1.epochToDateTime(instance?.auditDetails?.lastModifiedTime),
                 instance?.assignes?.length > 0 ? instance.assignes[0]?.name : 'NA',

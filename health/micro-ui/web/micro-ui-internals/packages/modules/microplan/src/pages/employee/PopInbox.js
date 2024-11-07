@@ -34,6 +34,7 @@ const PopInbox = () => {
   const [allowAction, setAllowAction] = useState(true);
   const [employeeNameMap, setEmployeeNameMap] = useState({});
   const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
+  const [assignee, setAssignee] = useState(null);
   const [assignedToMeCount, setAssignedToMeCount] = useState(0);
   const [assignedToAllCount, setAssignedToAllCount] = useState(0);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
@@ -207,7 +208,7 @@ const PopInbox = () => {
         tenantId: tenantId,
         source: microplanId,
         status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
-        ...(activeLink.code == "ASSIGNED_TO_ALL" || selectedFilter == "VALIDATED"
+        ...(assignee || selectedFilter == "VALIDATED"
           ? {}
           : { assignee: user.info.uuid }),
         jurisdiction: jurisdiction,
@@ -292,21 +293,10 @@ const PopInbox = () => {
       setVillagesSelected(0);
       setSelectedRows([]);
 
-      // Calculate counts for each tab based on the 'assignee' field or any other criteria
-      const assignedToMeCount = data?.Census?.filter(
-        (item) => item.assignee === user.info.uuid // or the condition for "ASSIGNED_TO_ME"
-      ).length;
-
-      const assignedToAllCount = data?.Census?.length;
-
-      if (activeLink.code === "ASSIGNED_TO_ALL") {
-        setAssignedToAllCount(assignedToAllCount);
+      if (assignee != null) {
+        setAssignedToAllCount(data?.TotalCount);
       } else {
-        if (assignedToAllCount <= assignedToMeCount) {
-          setAssignedToAllCount(assignedToMeCount);
-        }
-        // Update state with these counts
-        setAssignedToMeCount(assignedToMeCount);
+        setAssignedToMeCount(data?.TotalCount);
       }
     }
   }, [data]);
@@ -315,7 +305,7 @@ const PopInbox = () => {
     if (jurisdiction?.length > 0) {
       refetch(); // Trigger the API call again after activeFilter changes
     }
-  }, [selectedFilter, jurisdiction, limitAndOffset, activeLink]);
+  }, [selectedFilter, jurisdiction, limitAndOffset]);
 
   useEffect(() => {
     if (selectedFilter === "VALIDATED") {
