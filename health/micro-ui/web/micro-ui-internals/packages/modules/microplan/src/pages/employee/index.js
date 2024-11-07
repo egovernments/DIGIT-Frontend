@@ -34,6 +34,12 @@ const ProjectBreadCrumb = ({ location }) => {
       show: true,
     },
     {
+      internalLink: `/${window?.contextPath}/employee/microplan/user-management`,
+      content:t("USER_MANAGEMENT"),
+      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop())==="UPLOAD_USER" || Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop())==="USER_DOWNLOAD"
+
+    },
+    {
       internalLink: `/${window?.contextPath}/employee`,
       content: t(Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop())),
       show: true,

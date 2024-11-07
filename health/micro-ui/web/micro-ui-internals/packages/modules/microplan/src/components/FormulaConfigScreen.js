@@ -1,9 +1,9 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import FormulaSectionCard from './FormulaSectionCard';
-import HeaderComp from './HeaderComp';
 import { useTranslation } from 'react-i18next';
 import FormulaView from './FormulaView';
 import { Loader, Button, Card } from '@egovernments/digit-ui-components';
+import { Header } from '@egovernments/digit-ui-react-components';
 import { useHistory } from 'react-router-dom';
 
 const FormulaConfigScreen = ({ customProps, setupCompleted }) => {
@@ -36,12 +36,17 @@ const FormulaConfigScreen = ({ customProps, setupCompleted }) => {
 
 
     return (
-        <>
+        <div style={{ marginBottom: "2.5rem" }}>
+            <Card className="middle-child">
+                <Header className="summary-main-heading">{t(`MICROPLAN_FORMULA_CONFIGURATION_HEADING`)} </Header>
+            </Card>
             {Object.keys(dictionary).length > 0 && (
                 Object.keys(dictionary).map((category, ind) => (
-                    <Card key={category} className="mp-margin-bottom">
+                    <Card key={category} className="middle-child">
                         <div className="mp-header-container">
-                            <HeaderComp title={t(String(category))} />
+                            <Header className="summary-sub-heading">
+                                {t(String(category))}
+                            </Header>
                             {!(setupCompleted === 'true') &&
                                 <Button
                                     label={t("WBH_EDIT")}
@@ -72,7 +77,7 @@ const FormulaConfigScreen = ({ customProps, setupCompleted }) => {
                 ))
             )}
 
-        </>
+        </div>
     );
 };
 
