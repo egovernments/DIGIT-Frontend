@@ -46,9 +46,7 @@ const MapView = ({ fileData }) => {
         layers: [layers["Street Map"]], // Set the default layer
       });
 
-      // Add layer control to the map
-    //   L.control.layers(layers).addTo(mapRef.current);
-    L.control.layers(layers, null, { position: "topright" }).addTo(mapRef.current);
+      L.control.layers(layers, null, { position: "topright" }).addTo(mapRef.current);
 
 
       // Add zoom control to the map
