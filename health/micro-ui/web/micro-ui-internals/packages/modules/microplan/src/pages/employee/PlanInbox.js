@@ -330,7 +330,7 @@ const PlanInbox = () => {
   const getResourceColumns = () => {
     const resources = planWithCensus?.planData?.[0]?.resources || []; // Resources array
     return (resources || []).map((resource) => ({
-      name: t(`RESOURCE_TYPE_${resource.resourceType}`), // Dynamic column name for each resourceType
+      name: t(resource.resourceType), // Dynamic column name for each resourceType
       cell: (row) => {
         return row?.[resource?.resourceType] || "NA"; // Return estimatedNumber if exists
       },
