@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { checklistSearchConfig } from "../../configs/checklistSearchConfig";
+import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 
 const SearchChecklist = () => {
   const { t } = useTranslation();
@@ -48,7 +49,7 @@ const SearchChecklist = () => {
     body: {
       MdmsCriteria: {
         tenantId: tenantId,
-        schemaCode: "HCM-ADMIN-CONSOLE.rolesForChecklist"
+        schemaCode: `${CONSOLE_MDMS_MODULENAME}.rolesForChecklist`,
       }
     }
   };
@@ -129,8 +130,8 @@ const SearchChecklist = () => {
           onStepClick={onStepClick}
           activeSteps={6}
         />
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <Header styles={{ fontSize: "32px", marginBottom: "2rem", marginTop: "2rem" }}>{t("ACTION_LABEL_CONFIGURE_APP")}</Header>
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop: "2rem" }}>
+          {/* <Header styles={{ fontSize: "32px", marginBottom: "2rem", marginTop: "2rem" }}>{t("ACTION_LABEL_CONFIGURE_APP")}</Header> */}
           {/* <Button
             variation="secondary"
             label={t("ADD_NEW_CHECKLIST")}

@@ -133,6 +133,7 @@ const SummaryScreen = ({ props: customProps }) => {
       },
       {
         navigationKey: "card5",
+        noCardStyle: "true",
         sections: [
           {
             type: "COMPONENT",
@@ -177,22 +178,7 @@ const SummaryScreen = ({ props: customProps }) => {
           },
         ],
       },
-      {
-        navigationKey: "card8",
-        noCardStyle: true,
-        sections: [
-          {
-            type: "COMPONENT",
-            noCardStyle: true,
-            component: "FormulaConfigScreen",
-
-            props: {
-              customProps: customProps,
-              setupCompleted: setupCompleted
-            },
-          },
-        ],
-      },
+    
     ],
     horizontalNav: {
       showNav: true,

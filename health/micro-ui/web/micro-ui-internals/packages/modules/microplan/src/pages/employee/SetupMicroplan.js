@@ -231,7 +231,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
 
     //Run sync validations on formData based on the screen(key)
 
-    const toastObject = Digit.Utils.microplanv1.formValidator(formData?.[currentConfBody?.key], currentConfBody?.key, state);
+    const toastObject = Digit.Utils.microplanv1.formValidator(formData?.[currentConfBody?.key], currentConfBody?.key, state,t);
     if (toastObject) {
       setShowToast(toastObject);
       return;

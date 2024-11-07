@@ -182,7 +182,7 @@ const UserAccessMgmtTableWrapper = ({ role, internalKey, setupCompleted }) => {
         {/* <div className="view-composer-header-section">
                 <CardSubHeader style={{ marginTop: 0, fontSize: "1.5rem", color: " #0B4B66", marginBottom: "0rem" }}>{t(planAssignmentData?.role)}</CardSubHeader>
             </div> */}
-        <div className="header-container">
+        <div className="mp-header-container">
           <Header className="summary-sub-heading">
             {t(planAssignmentData?.role)}
           </Header>

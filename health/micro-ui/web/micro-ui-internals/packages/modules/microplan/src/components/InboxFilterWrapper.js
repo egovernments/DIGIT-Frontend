@@ -59,6 +59,7 @@ const InboxFilterWrapper = (props) => {
 
   return (
     <FilterCard
+      style={{ flexGrow: 1, display: "flex", flexDirection: "column" }}
       layoutType={"vertical"}
       onClose={props?.onClose}
       onPrimaryPressed={handleApplyFilters} // Apply filters
@@ -67,22 +68,24 @@ const InboxFilterWrapper = (props) => {
       secondaryActionLabel={resultArray.length > 0 && t(props?.secondaryActionLabel)}
       title={t(props?.title)}
     >
-      {/* Only render LabelFieldPair if resultArray has items */}
-      {resultArray.length > 0 && (
-        <LabelFieldPair>
-          <RadioButtons
-            options={resultArray}
-            optionsKey={"name"} // Use "name" key for display
-            selectedOption={selectedValue?.code} // Pass current selected option's code for comparison
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "1rem", // Adds space between options
-            }}
-            onSelect={handleSelect} // Function to handle selection
-          />
-        </LabelFieldPair>
-      )}
+      <div className="filter-content-wrapper" style={{ height: "18rem" }}>
+        {/* Only render LabelFieldPair if resultArray has items */}
+        {resultArray.length > 0 && (
+          <LabelFieldPair>
+            <RadioButtons
+              options={resultArray}
+              optionsKey={"name"} // Use "name" key for display
+              selectedOption={selectedValue?.code} // Pass current selected option's code for comparison
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "1rem", // Adds space between options
+              }}
+              onSelect={handleSelect} // Function to handle selection
+            />
+          </LabelFieldPair>
+        )}
+      </div>
     </FilterCard>
   );
 };

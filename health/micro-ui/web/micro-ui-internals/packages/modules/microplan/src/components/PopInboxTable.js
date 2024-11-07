@@ -3,7 +3,7 @@ import axios from "axios";
 import DataTable from "react-data-table-component";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Button } from "@egovernments/digit-ui-components";
+import { Button, Loader } from "@egovernments/digit-ui-components";
 import TimelinePopUpWrapper from "./timelinePopUpWrapper";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { CheckBox } from "@egovernments/digit-ui-components";
@@ -22,6 +22,7 @@ const PopInboxTable = ({ ...props }) => {
   const [isIntermediate, setIsIntermediate] = useState(false);
 
   const columns = useMemo(() => {
+
     return [
       {
         name: t(`INBOX_VILLAGE`),
@@ -103,11 +104,13 @@ const PopInboxTable = ({ ...props }) => {
       //   cell: row => <a onClick={()=>{console.log(row)}} href="#">View Logs</a>,
       // },
     ];
-  }, [props.showEditColumn, props.employeeNameData]);
+  }, [props.showEditColumn, props.employeeNameData, props.censusData]);
 
   const handlePageChange = (page, totalRows) => {
     props?.handlePageChange(page, totalRows);
   };
+
+
 
   const handleRowSelect = (event) => {
     // if(!event?.allSelected && event?.selectedCount >0){
@@ -159,17 +162,17 @@ const PopInboxTable = ({ ...props }) => {
     <DataTable
       columns={columns}
       data={props.censusData}
-      selectableRows
+      selectableRows={props.allowAction}
       selectableRowsHighlight
       noContextMenu
       onSelectedRowsChange={handleRowSelect}
       customStyles={tableCustomStyle}
       selectableRowsComponent={CheckBox}
-      sortIcon={<CustomSVG.SortUp />}
+      sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
       defaultSortFieldId={1}
       selectableRowsComponentProps={selectProps}
       progressPending={props?.progressPending}
-      progressComponent={<CustomLoader />}// progressPending={loading}
+      progressComponent={<Loader />}// progressPending={loading}
       // title="Users"
       // paginationDefaultPage={currentPage}
       // paginationDefaultRowsPerPage={rowsPerPage}

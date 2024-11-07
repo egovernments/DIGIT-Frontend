@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import FileComponent from './FileComponent';
-import HeaderComp from './HeaderComp';
+import { Header } from '@egovernments/digit-ui-react-components';
 import { Card, Button } from '@egovernments/digit-ui-components';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -22,9 +22,11 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
     // }
     return (
         <>
-            <Card className="middle">
-                <div className="header-container">
-                    <HeaderComp title="POPULATION" styles={{ color: "black" }} />
+            <Card className="mp-margin-bottom">
+                <div className="mp-header-container">
+                    <Header className="summary-sub-heading">
+                        {t(`POPULATION`)}
+                    </Header>
                     {!(setupCompleted === 'true') &&
                         <Button
                             label={t("WBH_EDIT")}
@@ -68,8 +70,10 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
             </Card>
             <Card>
 
-                <div className="header-container">
-                    <HeaderComp title="FACILITIES" styles={{ color: "black" }} />
+                <div className="mp-header-container">
+                    <Header className="summary-sub-heading">
+                        {t(`FACILITIES`)}
+                    </Header>
                     {!(setupCompleted === 'true') &&
 
                         <Button
