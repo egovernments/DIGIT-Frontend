@@ -133,10 +133,14 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       if (isSkip === "false") {
         currentKey !== 1 ? null : setCurrentKey(1);
       } else {
-        if(lessDate === "true"){
+        if (lessDate === "true") {
           setCurrentKey(3);
+        } else if (draftData?.additionalDetails?.key) {
+          setCurrentKey(draftData?.additionalDetails?.key);
+        } else {
+          console.warn("No valid key found in draftData");
+          setCurrentKey(1); // Fallback to initial key
         }
-       else setCurrentKey(draftData?.additionalDetails?.key);
       }
       return;
     }
