@@ -5,8 +5,8 @@ import { PopUp, Button, TextArea, ErrorMessage, Toast } from "@egovernments/digi
 const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPayload, commentPath, onSuccess, onError }) => {
 
     const { t } = useTranslation();
-    const [comment, setComment] = useState("");
-    const [error, setError] = useState(false);
+    const [comment, setComment] = useState(null);
+    const [showToast, setShowToast] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Mutation hook for updating via a dynamic URL
@@ -19,9 +19,6 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
 
     const handleTextAreaChange = (e) => {
         setComment(e.target.value);
-        if (e.target.value.trim()) {
-            setError(false);
-        }
     };
 
     const handleKeyPress = (e) => {
@@ -34,6 +31,8 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
         const keys = path.split(".");
         const key = Object.keys(payloadObject)?.[0]; // Get the first key in the payloadObject
         const value = payloadObject[key]; // Get the value associated with that key
+
+        const finalComment = comment && comment.trim() ? comment : null;
 
         // Check if the value is an array or a single object
         if (Array.isArray(value)) {
@@ -49,7 +48,7 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
                         nestedObject = nestedObject[keys[i]];
                     }
 
-                    nestedObject[keys[keys.length - 1]] = comment;
+                    nestedObject[keys[keys.length - 1]] = finalComment;
 
                     return updatedItem;
                 })
@@ -64,7 +63,7 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
                 nestedObject = nestedObject[keys[i]];
             }
 
-            nestedObject[keys[keys.length - 1]] = comment;
+            nestedObject[keys[keys.length - 1]] = finalComment;
 
             return {
                 ...payloadObject,
@@ -78,10 +77,6 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
     };
 
     const handleSave = async () => {
-        if (!comment.trim()) {
-            setError(true);
-            return;
-        }
 
         setIsSubmitting(true);
 
@@ -98,6 +93,7 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
                     onSuccess && onSuccess(data); // Call the onSuccess callback if provided
                 },
                 onError: (error) => {
+                    setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
                     onError && onError(error); // Call the onError callback if provided
                 }
             }
@@ -106,59 +102,64 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
         setIsSubmitting(false);
     };
 
+
     return (
-        <PopUp
-            onClose={onClose}
-            heading={t(heading)}
-            children={[
-                <div key="comment-section">
-                    <div className="comment-label">
-                        {t(`HCM_MICROPLAN_ADD_COMMENT_LABEL`)} <span className="required">*</span>
-                    </div>
-                    <TextArea
-                        style={{ maxWidth: "100%" }}
-                        value={comment}
-                        onChange={handleTextAreaChange}
-                        onKeyPress={handleKeyPress}
-                        error={error}
-                    />
-                    {error && (
-                        <ErrorMessage
-                            message={t('HCM_MICROPLAN_ADD_COMMENT_REQUIRED')}
-                            truncateMessage={true}
-                            maxLength={256}
-                            showIcon={true}
+        <>
+            <PopUp
+                style={{ width: "700px" }}
+                onClose={onClose}
+                heading={t(heading)}
+                children={[
+                    <div key="comment-section">
+                        <div className="comment-label">
+                            {t(`HCM_MICROPLAN_ADD_COMMENT_LABEL`)}
+                        </div>
+                        <TextArea
+                            style={{ maxWidth: "100%" }}
+                            value={comment}
+                            onChange={handleTextAreaChange}
+                            onKeyPress={handleKeyPress}
+                            maxlength={140}
                         />
-                    )}
-                </div>
-            ]}
-            onOverlayClick={onClose}
-            equalWidthButtons={true}
-            footerChildren={[
-                <Button
-                    key="close-button"
-                    className="campaign-type-alert-button"
-                    type="button"
-                    size="large"
-                    style={{minWidth:"270px"}}
-                    variation="secondary"
-                    label={t(`HCM_MICROPLAN_EDIT_POPULATION_CLOSE`)}
-                    onClick={onClose}
-                    isDisabled={isSubmitting}  // Disable button during submission
-                />,
-                <Button
-                    key="submit-button"
-                    className="campaign-type-alert-button"
-                    type="button"
-                    size="large"
-                    variation="primary"
-                    style={{minWidth:"270px"}}
-                    label={t(submitLabel)}
-                    onClick={handleSave}
-                    isDisabled={isSubmitting}  // Disable button during submission
-                />,
-            ]}
-        />
+                    </div>
+                ]}
+                onOverlayClick={onClose}
+                equalWidthButtons={true}
+                footerChildren={[
+                    <Button
+                        key="close-button"
+                        className="campaign-type-alert-button"
+                        type="button"
+                        size="large"
+                        style={{ minWidth: "270px" }}
+                        variation="secondary"
+                        label={t(`HCM_MICROPLAN_EDIT_POPULATION_CLOSE`)}
+                        onClick={onClose}
+                        isDisabled={isSubmitting}  // Disable button during submission
+                    />,
+                    <Button
+                        key="submit-button"
+                        className="campaign-type-alert-button"
+                        type="button"
+                        size="large"
+                        variation="primary"
+                        style={{ minWidth: "270px" }}
+                        label={t(submitLabel)}
+                        onClick={handleSave}
+                        isDisabled={isSubmitting}  // Disable button during submission
+                    />,
+                ]}
+            />
+            {showToast && (
+                <Toast style={{ zIndex: 10001 }}
+                    label={showToast.label}
+                    type={showToast.key}
+                    error={showToast.key === "error"}
+                    onClose={() => setShowToast(null)}
+                />
+            )}
+        </>
+
     );
 };
 
