@@ -62,17 +62,10 @@ const MyCampaign = () => {
         if (row?.parentId) {
           history.push(`/${window.contextPath}/employee/campaign/update-campaign?parentId=${row.parentId}&id=${row.id}&draft=${true}`);
         } else {
-          if (row.startDate <= currentDate || row.endDate <= currentDate) {
-            history.push(
-              `/${window.contextPath}/employee/campaign/setup-campaign?id=${
-                row.id
-              }&draft=${true}&fetchBoundary=${true}&draftBoundary=${true}&date=${true}`
-            );
-          } else {
-            history.push(
-              `/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&draft=${true}&fetchBoundary=${true}&draftBoundary=${true}`
-            );
-          }
+          const baseUrl = `/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&draft=true&fetchBoundary=true&draftBoundary=true`; 
+          const hasPassedDates = row.startDate <= currentDate || row.endDate <= currentDate; 
+          const finalUrl = hasPassedDates ? `${baseUrl}&date=true` : baseUrl;
+          history.push(finalUrl);
         }
         break;
       case "CAMPAIGN_FAILED":
