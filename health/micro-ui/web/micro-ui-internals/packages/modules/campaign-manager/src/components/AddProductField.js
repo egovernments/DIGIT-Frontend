@@ -62,6 +62,7 @@ const AddProductField = ({ onSelect }) => {
         {t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_DESCRIPTION_PRE_TEXT`)} <b> {t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_DESCRIPTION_BOLD_TEXT`)} </b>
         {t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_DESCRIPTION_POST_TEXT`)}
       </p>
+      <div style={{height:"1.5rem"}}></div>
       {productFieldData?.map((field, index) => {
         return (
           <Card className="add-new-product-container">
@@ -100,7 +101,7 @@ const AddProductField = ({ onSelect }) => {
               />
             </LabelFieldPair>
             <LabelFieldPair>
-              <div className="product-label-field" style={{ alignSelf: "flex-start", marginTop: "1rem" }}>
+              <div className="product-label-field" style={{position: "relative", top: "-1rem"}}>
                 <span>{`${t("HCM_PRODUCT_TYPE")}`}</span>
                 <span className="mandatory-span">*</span>
               </div>

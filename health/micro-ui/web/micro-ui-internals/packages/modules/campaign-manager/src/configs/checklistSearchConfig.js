@@ -37,7 +37,7 @@
             minReqFields: 0,
             fields: [
               {
-                  label: "ROLE",
+                  label: "CHECKLIST_ROLE",
                   isMandatory: "false",
                   key: "Role",
                   type: "dropdown",
@@ -85,12 +85,12 @@
                 translate:true
               },
               {
-                label: "STATUS",
+                label: "HCM_CHECKLIST_STATUS",
                 jsonPath:"isActive",
                 additionalCustomization: true
               },
               {
-                label: "ACTION",
+                label: "HCM_CHECKLIST_ACTION",
                 jsonpath: "",
                 additionalCustomization: true
               }

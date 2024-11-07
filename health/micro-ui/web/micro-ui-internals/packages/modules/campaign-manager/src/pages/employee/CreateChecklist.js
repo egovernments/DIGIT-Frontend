@@ -140,7 +140,7 @@ const CreateChecklist = () => {
         id: crypto.randomUUID(),
         key: 1,
         parentQuestionId: newId,
-        label: "OPTION",
+        label: `${t("HCM_CHECKLIST_OPTION")} 1`,
         optionDependency: false,
         optionComment: false,
       }]
@@ -431,7 +431,7 @@ const CreateChecklist = () => {
       if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
       let roleTemp = role.toUpperCase().replace(/ /g, "_");
       uniqueLocal.push({
-        code: `${campaignName}_${checklistTypeTemp}_${roleTemp}`,
+        code: `${campaignName}.${checklistTypeTemp}.${roleTemp}`,
         locale: locale,
         message: `${checklistType} ${role}`,
         module: "hcm-checklist"
@@ -466,11 +466,18 @@ const CreateChecklist = () => {
     }
   };
 
+  useEffect(()=>{
+    if(showToast !== null)
+    {
+      setShowPopUp(false);
+    }
+  }, [showToast])
+
 
 
 
   const fieldPairs = [
-    { label: "ROLE", value: roleLocal },
+    { label: "CHECKLIST_ROLE", value: roleLocal },
     { label: "TYPE_OF_CHECKLIST", value: checklistTypeLocal },
     { label: "CAMPAIGN_NAME", value: campaignName }
   ];
@@ -581,7 +588,7 @@ const CreateChecklist = () => {
             showMultipleCardsWithoutNavs={true}
             label={t("CREATE_CHECKLIST")}
             config={config}
-            onSubmit={onSubmit}
+            onSubmit={popShow}
             fieldStyle={{ marginRight: 0 }}
             noBreakLine={true}
             // cardClassName={"page-padding-fix"}
@@ -603,6 +610,7 @@ const CreateChecklist = () => {
           )}
         </div>
       }
+      <div style={{ height: "2rem" }}></div>
     </div>
   );
 };

@@ -278,14 +278,15 @@ const ViewHierarchy = () => {
                                         return (
                                             <div>
                                                 <div style={{fontWeight:"600", fontSize:"1.2rem"}}>
-                                                    {hierItem?.boundaryType}
+                                                    {/* {t(hierItem?.boundaryType)} */}
+                                                    {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toUpperCase())}`}
                                                 </div>
                                                 <div style={{height:"1rem"}}></div>
                                                 <Card type={"primary"} variant={"form"} className={"question-card-container"} >
                                                     <div style={{display:"flex", gap:"2rem"}}>
                                                     <Svgicon />
                                                     <div style={{display:"flex", alignItems:"center", fontWeight:"600"}}>
-                                                        {hierItem?.boundaryType}{".shp"}
+                                                    {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toUpperCase())}`}{".shp"}
                                                     </div>
                                                     </div>
                                                 </Card>

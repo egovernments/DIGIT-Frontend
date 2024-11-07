@@ -35,7 +35,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     {
       path: pathVar === "my-campaign" ? "" : `/${window?.contextPath}/employee/campaign/my-campaign`,
       content: t("MY_CAMPAIGN"),
-      show: pathVar === "my-campaign" || pathVar === "checklist/search" || pathVar === "checklist/create" || pathVar === "checklist/view" || pathVar === "checklist/update" ? true : false,
+      show: pathVar === "my-campaign" || pathVar === "checklist/search" || pathVar === "checklist/create" || pathVar === "checklist/view" || pathVar === "checklist/update"  || pathVar === "update-dates-boundary" ? true : false,
     },
     {
       path: pathVar === "setup-campaign" ? "" : `/${window?.contextPath}/employee/campaign/setup-campaign`,

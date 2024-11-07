@@ -43,6 +43,7 @@ const MobileChecklist = ({ questions, campaignName, checklistRole, typeOfCheckli
                       <label className="mobile-answer">{option.label}</label>
                     </div>
                   ))}
+                  <div style={{height:"0.5rem"}}></div>
                 </div>
               )}
               {question.type.code === "Short Answer" && 

@@ -30,7 +30,8 @@ const Dropdowns = ({
   addComment,
   handleOptionComment,
   typeOfCall,
-  parentNumber
+  parentNumber,
+  questionNumber
 }) => {
   let dis = typeOfCall === "view" ? true : false;
   return (
@@ -91,16 +92,16 @@ const Dropdowns = ({
           }
         </>
       ))}
-      {!dis && <div>
+      {!dis && <div style={{marginTop: "0.8rem"}}>
         <Button
           className="custom-class"
           icon="AddIcon"
           iconFill=""
-          label={t("ADD_OPTIONS")}
+          label={`${t("ADD_OPTIONS")} ${questionNumber}`}
           onClick={() => addOption()}
           size="medium"
           title=""
-          variation="teritiary"
+          variation="link"
           textStyles={{ width: 'unset' }}
 
         />
@@ -181,7 +182,7 @@ const DropdownOption = ({
             name="title"
             ref={optionInputRef}
             // value={field?.title || ""}
-            value={title}
+            value={t(title)}
             onChange={(ev) => updateOption({ value: ev.target.value, id: index })}
             placeholder={"Dropdown section"}
           />
@@ -256,7 +257,7 @@ const DropdownOption = ({
               iconFill=""
               label={t(`DELETE`)}
               onClick={() => removeOption(index)}
-              size=""
+              size="medium"
               style={{}}
               title=""
               variation="link"
