@@ -34,13 +34,25 @@ const ProjectBreadCrumb = ({ location }) => {
       show: true,
     },
     {
+      internalLink: `/${window?.contextPath}/employee/microplan/user-management`,
+      content:t("USER_MANAGEMENT"),
+      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop())==="UPLOAD_USER" || Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop())==="USER_DOWNLOAD"
+
+    },
+    {
       internalLink: `/${window?.contextPath}/employee`,
       content: t(Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop())),
       show: true,
     },
   ];
+  debugger;
   return <BreadCrumbNew crumbs={crumbs} />;
 };
+
+console.log("this",Digit.Utils.locale.getTransformedLocale(location.pathname))
+console.log("this1",Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()))
+
+
 
 const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hierarchyData, lowestHierarchy }) => {
   const { dispatch } = useMyContext();
