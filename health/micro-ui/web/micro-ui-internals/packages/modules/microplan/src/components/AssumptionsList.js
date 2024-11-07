@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
-import { Button, Card, LabelFieldPair } from '@egovernments/digit-ui-components';
-import HeaderComp from './HeaderComp';
+import { Header } from '@egovernments/digit-ui-react-components';
+import { Button, Card, Divider, LabelFieldPair } from '@egovernments/digit-ui-components';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 
@@ -9,6 +9,8 @@ const AssumptionsList = ({ customProps, setupCompleted }) => {
     const history = useHistory();
 
     const assumptionValues = customProps?.sessionData?.HYPOTHESIS?.Assumptions?.assumptionValues || [];
+
+    const campaignAssumption = customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm || {};
 
     let dic = {};
 
@@ -24,13 +26,35 @@ const AssumptionsList = ({ customProps, setupCompleted }) => {
         }
     }
 
+    const orderedKeys = ["selectedRegistrationProcess", "selectedDistributionProcess", "selectedRegistrationDistributionMode"];
+
     return (
-        <div>
+        <div style={{ marginBottom: "2.5rem" }}>
+            <Card className="middle-child">
+                <Header className="summary-main-heading">{t(`MICROPLAN_ESTIMATION_ASSUMPTIONS_HEADING`)} </Header>
+                {orderedKeys.map((key, index) => {
+                    const assumption = campaignAssumption?.[key] || {};
+                    const code = assumption.code || "NA";
+                    const value = assumption.value || "NA";
+                    return (
+                        <>
+                            <LabelFieldPair className="as-label-field" style={{ marginBottom: "0px" }}>
+                                <span>
+                                    <strong>{t(key)}</strong>
+                                </span>
+                                <span>{t(code)}</span>
+                            </LabelFieldPair>
+                        </>
+                    );
+                })}
+            </Card>
             {Object.keys(dic).map((item, ind) => (
-                <Card key={`card_${ind}`} style={{ padding: '20px', marginBottom: '15px' }}>
+                <Card key={`card_${ind}`} className="middle-child">
                     {/* Header with title and edit button */}
                     <div className="mp-header-container">
-                        <HeaderComp title={String(item)} />
+                        <Header className="summary-sub-heading">
+                            {t(String(item))}
+                        </Header>
                         {!(setupCompleted === 'true') &&
                             <Button
                                 label={t("WBH_EDIT")}
@@ -48,28 +72,28 @@ const AssumptionsList = ({ customProps, setupCompleted }) => {
                         }
                     </div>
 
-                    <div>
-                        {dic[item].map((item1, index) => {
-                            const [key, value] = Object.entries(item1)[0] || ['NA', 'NA'];
 
-                            return (
-                                <>
-                                    <LabelFieldPair className="as-label-field" style={{ marginBottom: "1rem" }}>
-                                        <span >
-                                            <strong>{t(key)}</strong>
-                                        </span>
-                                        <span >
-                                            {t(value)}
-                                        </span>
-                                        {/* </div> */}
-                                    </LabelFieldPair>
-                                    {index < dic[item].length - 1 && (
-                                        <div style={{ borderBottom: '1px solid #D3D3D3', marginBottom: "1rem" }}></div>
-                                    )}
-                                </>
-                            );
-                        })}
-                    </div>
+                    {dic[item].map((item1, index) => {
+                        const [key, value] = Object.entries(item1)[0] || ['NA', 'NA'];
+
+                        return (
+                            <>
+                                <LabelFieldPair className="as-label-field" style={{ marginBottom: "0px" }}>
+                                    <span >
+                                        <strong>{t(key)}</strong>
+                                    </span>
+                                    <span >
+                                        {t(value)}
+                                    </span>
+                                    {/* </div> */}
+                                </LabelFieldPair>
+                                {index < dic[item].length - 1 && (
+                                    <Divider variant="small" />
+                                )}
+                            </>
+                        );
+                    })}
+
                 </Card>
             ))}
         </div>
