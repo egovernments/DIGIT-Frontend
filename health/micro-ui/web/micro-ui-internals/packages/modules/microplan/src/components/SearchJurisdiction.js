@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useMyContext } from "../utils/context";
 import { Dropdown, MultiSelectDropdown } from "@egovernments/digit-ui-components";
 
-const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, onClear = () => { } ,style={}}) => {
+const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, onClear = () => { }, style = {} }) => {
   const { t } = useTranslation();
   const {
     state: { hierarchyType, boundaryHierarchy },
@@ -19,6 +19,7 @@ const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, on
 
   const [selectedBoundaries, setSelectedBoundaries] = useState([]);
   const [selectedHierarchy, setSelectedHierarchy] = useState(null);
+  const MultiSelectWrapper = Digit.ComponentRegistryService.getComponent("MultiSelectDropdownBoundary");
 
   useEffect(() => {
     if (!selectedHierarchy) {
@@ -54,7 +55,7 @@ const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, on
     <div className={"search-wrapper"} style={style}>
       <div className={`search-field-wrapper search custom-both-clear-search`}>
         <LabelFieldPair style={{ flexDirection: "column", gap: "0rem" }}>
-          <CardLabel style={{width:"100%"}}>{t("SELECT_HIERARCHY_LEVEL")}</CardLabel>
+          <CardLabel style={{ width: "100%" }}>{t("SELECT_HIERARCHY_LEVEL")}</CardLabel>
           <Dropdown
             t={t}
             option={hierarchy}
@@ -67,23 +68,22 @@ const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, on
           />
         </LabelFieldPair>
         <LabelFieldPair style={{ flexDirection: "column", gap: "0rem" }}>
-          <CardLabel style={{width:"100%"}}>{t("SELECT_BOUNDARIES")}</CardLabel>
-          <div style={{width: "100%" }}>
-          <MultiSelectDropdown
-            variant={"nestedmultiselect"}
-            selected={selectedBoundaries}
-            onSelect={(e) => {
-              handleBoundarySelect(e)
-            }}
-            props={{className:"searchjurisdiction-multiselectdropdown"}}
-            isSearchable={true}
-            t={t}
-            addCategorySelectAllCheck={true}
-            addSelectAllCheck={true}
-            options={boundaryOptions}
-            optionsKey={"name"}
-            name={"nestedmultiselectoptions"}
-          />
+          <CardLabel style={{ width: "100%" }}>{t("SELECT_BOUNDARIES")}</CardLabel>
+          <div style={{ width: "100%" }}>
+            <MultiSelectWrapper
+              props={{ className: "searchjurisdiction-multiselectdropdown" }}
+              t={t}
+              addCategorySelectAllCheck={true}
+              addSelectAllCheck={true}
+              variant="nestedmultiselect"
+              options={boundaryOptions}
+              selected={selectedBoundaries}
+              onSelect={(e) => {
+                handleBoundarySelect(e)
+              }}
+              isSearchable={true}
+              optionsKey={"name"}
+            />
           </div>
         </LabelFieldPair>
         <div className={`search-button-wrapper`} style={{}}>
