@@ -34,6 +34,8 @@ const PopInbox = () => {
   const [allowAction, setAllowAction] = useState(true);
   const [employeeNameMap, setEmployeeNameMap] = useState({});
   const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
+  const [assignedToMeCount, setAssignedToMeCount] = useState(0);
+  const [assignedToAllCount, setAssignedToAllCount] = useState(0);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   const [activeLink, setActiveLink] = useState({
     code: "ASSIGNED_TO_ME",
@@ -270,6 +272,7 @@ const PopInbox = () => {
         })
       );
 
+
       // Set reordered data to active filter
       setActiveFilter(reorderedStatusCount);
 
@@ -288,6 +291,23 @@ const PopInbox = () => {
       }
       setVillagesSelected(0);
       setSelectedRows([]);
+
+      // Calculate counts for each tab based on the 'assignee' field or any other criteria
+      const assignedToMeCount = data?.Census?.filter(
+        (item) => item.assignee === user.info.uuid // or the condition for "ASSIGNED_TO_ME"
+      ).length;
+
+      const assignedToAllCount = data?.Census?.length;
+
+      if (activeLink.code === "ASSIGNED_TO_ALL") {
+        setAssignedToAllCount(assignedToAllCount);
+      } else {
+        if (assignedToAllCount <= assignedToMeCount) {
+          setAssignedToAllCount(assignedToMeCount);
+        }
+        // Update state with these counts
+        setAssignedToMeCount(assignedToMeCount);
+      }
     }
   }, [data]);
 
@@ -441,15 +461,16 @@ const PopInbox = () => {
             <Tab
               activeLink={activeLink?.code}
               configItemKey="code"
+              configDisplayKey="name"
               itemStyle={{ width: "290px" }}
               configNavItems={[
                 {
                   code: "ASSIGNED_TO_ME",
-                  name: "ASSIGNED_TO_ME",
+                  name: `${`${t(`ASSIGNED_TO_ME`)} (${assignedToMeCount})`}`,
                 },
                 {
                   code: "ASSIGNED_TO_ALL",
-                  name: "ASSIGNED_TO_ALL",
+                  name: `${`${t(`ASSIGNED_TO_ALL`)} (${assignedToAllCount})`}`,
                 },
               ]}
               navStyles={{}}
