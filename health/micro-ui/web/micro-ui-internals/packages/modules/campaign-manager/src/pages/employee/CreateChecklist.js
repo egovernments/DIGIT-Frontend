@@ -6,6 +6,7 @@ import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
 import { useTranslation } from "react-i18next";
 import data_hook from "../../hooks/data_hook";
 import MobileChecklist from "../../components/MobileChecklist";
+import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 
 let temp_data = []
 
@@ -67,7 +68,7 @@ const CreateChecklist = () => {
         body: {
           MdmsCriteria: {
             tenantId: tenantId,
-            schemaCode: "HCM-ADMIN-CONSOLE.ChecklistTemplates",
+            schemaCode: `${CONSOLE_MDMS_MODULENAME}.ChecklistTemplates`,
             filters: {
               role: role,
               checklistType: checklistType
@@ -542,7 +543,7 @@ const CreateChecklist = () => {
               ]}
               sortFooterChildren={true}
             >
-              <MobileChecklist questions={previewData} checklistRole={t(`${roleLocal}`)} typeOfChecklist={t(`${checklistTypeLocal}`)}></MobileChecklist>
+              <MobileChecklist questions={previewData} campaignName={campaignName} checklistRole={t(`${roleLocal}`)} typeOfChecklist={t(`${checklistTypeLocal}`)}></MobileChecklist>
             </PopUp>
           )}
           <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { checklistSearchConfig } from "../../configs/checklistSearchConfig";
+import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 
 const SearchChecklist = () => {
   const { t } = useTranslation();
@@ -48,7 +49,7 @@ const SearchChecklist = () => {
     body: {
       MdmsCriteria: {
         tenantId: tenantId,
-        schemaCode: "HCM-ADMIN-CONSOLE.rolesForChecklist"
+        schemaCode: `${CONSOLE_MDMS_MODULENAME}.rolesForChecklist`,
       }
     }
   };

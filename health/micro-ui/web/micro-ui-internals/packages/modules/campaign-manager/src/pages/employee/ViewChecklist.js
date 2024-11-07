@@ -190,7 +190,7 @@ const ViewChecklist = () => {
                     {/* <PreviewComponent
               questionsArray={previewData}></PreviewComponent> */}
 
-                    <MobileChecklist questions={previewData} checklistRole={t(`${roleLocal}`)} typeOfChecklist={t(`${checklistTypeLocal}`)}></MobileChecklist>
+                    <MobileChecklist questions={previewData} campaignName={campaignName} checklistRole={t(`${roleLocal}`)} typeOfChecklist={t(`${checklistTypeLocal}`)}></MobileChecklist>
                 </PopUp>
             )}
 

@@ -78,11 +78,15 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     "HCM-PROJECT-TYPES",
     [{ name: "projectTypes" }],
     {
+      staleTime: 0,
+      cacheTime: 0,
+      enabled: true,
       select: (data) => {
         const temp= getDeliveryConfig({data: data?.["HCM-PROJECT-TYPES"], projectType:selectedProjectType});
         return temp;
       },
-    }
+    },
+    { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` }
   );
   const saved = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
   const refetch = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleConfgureDate

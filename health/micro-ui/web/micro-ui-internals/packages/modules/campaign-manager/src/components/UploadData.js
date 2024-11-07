@@ -6,10 +6,8 @@ import BulkUpload from "./BulkUpload";
 import Ajv from "ajv";
 import XLSX from "xlsx";
 import { InfoCard, PopUp, Toast, Button, DownloadIcon, Stepper, TextBlock } from "@egovernments/digit-ui-components";
-import { schemaConfig } from "../configs/schemaConfig";
-import { headerConfig } from "../configs/headerConfig";
-import { PRIMARY_COLOR } from "../utils";
 import { downloadExcelWithCustomName } from "../utils";
+import { CONSOLE_MDMS_MODULENAME } from "../Module";
 
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
@@ -26,7 +24,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const params = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
   const [showInfoCard, setShowInfoCard] = useState(false);
   const [errorsType, setErrorsType] = useState({});
-  const [schema, setSchema] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const type = props?.props?.type;
   const [executionCount, setExecutionCount] = useState(0);
@@ -43,18 +40,21 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
   const { data: Schemas, isLoading: isThisLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
-    "HCM-ADMIN-CONSOLE",
+    CONSOLE_MDMS_MODULENAME,
     [{ name: "adminSchema" }],
     {},
-    { schemaCode: "HCM-ADMIN-CONSOLE.adminSchema" }
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.adminSchema` }
   );
 
-  const { data: readMe } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "ReadMeConfig" }]);
-  const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "baseTimeout" }]);
+  const { data: readMe } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "ReadMeConfig" }] 
+    ,{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.ReadMeConfig` }
+  );
+  const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "baseTimeout" }] ,
+    {select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.baseTimeout` }
+  );
   const [sheetHeaders, setSheetHeaders] = useState({});
   const [translatedSchema, setTranslatedSchema] = useState({});
   const [readMeInfo, setReadMeInfo] = useState({});
-  const [enabled, setEnabled] = useState(false);
   const [showPopUp, setShowPopUp] = useState(true);
   const currentKey = searchParams.get("key");
   const [key, setKey] = useState(() => {
@@ -205,18 +205,18 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   }, [uploadedFile]);
 
   useEffect(async () => {
-    if (Schemas?.MdmsRes?.["HCM-ADMIN-CONSOLE"]?.adminSchema && (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)) {
+    if (Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema && (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)) {
       const facility = await convertIntoSchema(
-        Schemas?.MdmsRes?.["HCM-ADMIN-CONSOLE"]?.adminSchema?.filter((item) => item.title === "facility" && item.campaignType === "all")?.[0]
+        Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter((item) => item.title === "facility" && item.campaignType === "all")?.[0]
       );
       const boundary = await convertIntoSchema(
-        Schemas?.MdmsRes?.["HCM-ADMIN-CONSOLE"]?.adminSchema?.filter(
+        Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter(
           (item) => item.title === "boundaryWithTarget" &&
            item.campaignType === (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)
         )?.[0]
       );
       const user = await convertIntoSchema(
-        Schemas?.MdmsRes?.["HCM-ADMIN-CONSOLE"]?.adminSchema?.filter((item) => item.title === "user" && item.campaignType === "all")?.[0]
+        Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter((item) => item.title === "user" && item.campaignType === "all")?.[0]
       );
       const schema = {
         boundary: boundary,
@@ -263,13 +263,13 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   }, [convertedSchema]);
 
   useEffect(async () => {
-    if (readMe?.["HCM-ADMIN-CONSOLE"]) {
+    if (readMe?.[CONSOLE_MDMS_MODULENAME]) {
       const newReadMeFacility = await translateReadMeInfo(
-        readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
+        readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
       );
-      const newReadMeUser = await translateReadMeInfo(readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts);
+      const newReadMeUser = await translateReadMeInfo(readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts);
       const newReadMeboundary = await translateReadMeInfo(
-        readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
+        readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
       );
 
       const readMeText = {
@@ -280,7 +280,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
       setReadMeInfo(readMeText);
     }
-  }, [readMe?.["HCM-ADMIN-CONSOLE"], type]);
+  }, [readMe?.[CONSOLE_MDMS_MODULENAME], type]);
 
   useEffect(() => {
     if (executionCount < 5) {
@@ -836,7 +836,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             type,
             tenantId,
             id,
-            baseTimeOut?.["HCM-ADMIN-CONSOLE"]
+            baseTimeOut?.[CONSOLE_MDMS_MODULENAME]
           );
           if (temp?.isError) {
             setLoader(false);

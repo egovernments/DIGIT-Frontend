@@ -147,11 +147,11 @@ const ProjectBeneficiaryComponent = (props) => {
 
     // Handle boolean values
     if (typeof value === "boolean") {
-      return value.toString();
+      return value?.toString();
     }
 
     // Check if the value exists, otherwise return 'NA'
-    return value !== undefined ? value.toString() : "NA";
+    return value !== undefined ? value?.toString() : "NA";
   };
 
   if (isLoading) {

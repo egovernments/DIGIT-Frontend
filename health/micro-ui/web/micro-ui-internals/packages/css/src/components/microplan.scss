@@ -307,3 +307,26 @@
 .mp-margin-bottom{
   margin-bottom: 1.5rem;
 }
+
+.rdt_TableCol_Sortable{
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  &:hover{
+    opacity: 1 !important;
+  }
+
+  .__rdt_custom_sort_icon__{
+    display: flex;
+    align-items: center;
+  }
+}
+
+.rdt_TableCol{
+  border-radius: 0rem !important;
+
+  &:last-of-type{
+    border-left: none !important;
+  }
+}

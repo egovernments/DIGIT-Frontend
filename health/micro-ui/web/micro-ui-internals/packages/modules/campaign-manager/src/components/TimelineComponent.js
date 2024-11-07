@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@egovernments/digit-ui-components";
 import { LabelFieldPair } from "@egovernments/digit-ui-components";
 import { downloadExcelWithCustomName } from "../utils";
+import { CONSOLE_MDMS_MODULENAME } from "../Module";
 
 function epochToDateTime(epoch) {
   // Create a new Date object using the epoch time
@@ -40,7 +41,7 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
   const [newResourceId, setNewResourceId] = useState(resourceId);
   const [searchDATA, setSearchDATA] = useState(null);
   const [dataFetched, setDataFetched] = useState(false);
-  const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "baseTimeOut" }]);
+  const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "baseTimeOut" }]);
 
   const formatLabel = (label) => {
     if (!label) return null;
@@ -153,7 +154,7 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
     if (failedProcess?.status !== "failed" && lastCompletedProcess?.type !== "campaign-creation") {
       intervalId = setInterval(() => {
         refetch();
-      }, baseTimeOut?.["HCM-ADMIN-CONSOLE"]?.baseTimeOut?.[0]?.timelineRefetch);
+      }, baseTimeOut?.[CONSOLE_MDMS_MODULENAME]?.baseTimeOut?.[0]?.timelineRefetch);
     }
 
     return () => {
