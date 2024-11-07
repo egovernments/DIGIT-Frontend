@@ -151,7 +151,7 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
             type={"button"}
             size={"large"}
             variation={"primary"}
-            label={`${t("HCM_MICROPLAN_EDIT_POPULATION_")}${workflowAction}`}
+            label={t(`HCM_MICROPLAN_EDIT_POPULATION_${workflowAction}`)}
             onClick={handleSave}
           />,
         ]}
