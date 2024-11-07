@@ -133,7 +133,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       if (isSkip === "false") {
         currentKey !== 1 ? null : setCurrentKey(1);
       } else {
-        if (lessDate === "true") {
+        if (isDateRestricted === "true") {
           setCurrentKey(3);
         } else if (draftData?.additionalDetails?.key) {
           setCurrentKey(draftData?.additionalDetails?.key);
