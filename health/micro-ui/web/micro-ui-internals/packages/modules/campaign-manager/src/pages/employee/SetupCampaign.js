@@ -11,6 +11,7 @@ import {
   resourceData, restructureData, filterCampaignConfig, findHighestStepCount
 } from "../../utils/setupCampaignHelpers";
 import { handleValidate } from "../../utils/setupCampaignValidators";
+import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 
 /**
  * The `SetupCampaign` function in JavaScript handles the setup and management of campaign details,
@@ -45,6 +46,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const noAction = searchParams.get("action");
   const isDraft = searchParams.get("draft");
   const isSkip = searchParams.get("skip");
+  const isDateRestricted = searchParams.get("date");
   const isChangeDates = searchParams.get("changeDates");
   const actionBar = searchParams.get("actionBar");
   const [isDraftCreated, setIsDraftCreated] = useState(false);
@@ -56,16 +58,18 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const [fetchBoundary, setFetchBoundary] = useState(() => Boolean(searchParams.get("fetchBoundary")));
   const [fetchUpload, setFetchUpload] = useState(false);
   const [active, setActive] = useState(0);
-  const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
+  const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "hierarchyConfig" }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.hierarchyConfig` });
   const lowestHierarchy = useMemo(() => {
-    return hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)?.lowestHierarchy;
+    return hierarchyConfig?.[CONSOLE_MDMS_MODULENAME]?.hierarchyConfig?.find((item) => item.isActive)?.lowestHierarchy;
   }, [hierarchyConfig]);
+  
 
   const { data: DeliveryConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }], {
     select: (data) => {
       return data?.["HCM-PROJECT-TYPES"]?.projectTypes;
     },
-  });
+  },    { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` }
+);
 
   const reqCriteria = {
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
@@ -107,7 +111,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     };
   }, []);
 
-  const { isLoading, data: projectType } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }]);
+  const { isLoading, data: projectType } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }],{select:(MdmsRes)=>MdmsRes}, { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` });
 
   useEffect(() => {
     if (fetchUpload) {
@@ -129,8 +133,14 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       if (isSkip === "false") {
         currentKey !== 1 ? null : setCurrentKey(1);
       } else {
-        if (draftData?.additionalDetails?.key === 7) setCurrentKey(8);
-        else setCurrentKey(draftData?.additionalDetails?.key);
+        if (isDateRestricted === "true") {
+          setCurrentKey(3);
+        } else if (draftData?.additionalDetails?.key) {
+          setCurrentKey(draftData?.additionalDetails?.key);
+        } else {
+          console.warn("No valid key found in draftData");
+          setCurrentKey(1); // Fallback to initial key
+        }
       }
       return;
     }

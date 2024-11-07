@@ -299,7 +299,7 @@ const CampaignBoundary = ({ customProps, setupCompleted }) => {
 
 
   return (
-    <div>
+    <div style={{ marginBottom: "2.5rem" }}>
       <BoundaryKpi data={statusMap} heading={t("CAMPAIGN_BOUNDARY")} />
       {bHierarchy.length > 1 ? (
         <div className="mp-margin-bottom">

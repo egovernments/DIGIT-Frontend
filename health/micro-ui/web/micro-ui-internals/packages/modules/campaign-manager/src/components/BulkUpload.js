@@ -7,6 +7,7 @@ import XlsPreview from "./XlsPreview";
 import { PRIMARY_COLOR } from "../utils";
 import { Toast } from "@egovernments/digit-ui-components";
 import { CustomSVG } from "@egovernments/digit-ui-components";
+import { Button as ButtonNew } from "@egovernments/digit-ui-components";
 
 
 /**
@@ -147,24 +148,26 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
           <div style={{ marginLeft: "0.5rem", color: "#505A5F", fontWeight: "700" }}>{file.filename}</div>
         </div>
         <div className="delete-and-download-button">
-          <Button
+          <ButtonNew
             label={t("WBH_DOWNLOAD")}
             variation="secondary"
-            icon={<DownloadIcon styles={{ height: "1.25rem", width: "1.25rem" }} fill={PRIMARY_COLOR} />}
+            // icon={<DownloadIcon styles={{ height: "1.25rem", width: "1.25rem" }} fill={PRIMARY_COLOR} />}
             type="button"
-            className="workbench-download-template-btn hover"
-            onButtonClick={(e) => {
+            icon={"DownloadIcon"}
+            // className="workbench-download-template-btn hover"
+            onClick={(e) => {
               e.stopPropagation();
               handleFileDownload(e, fileUrl);
             }}
           />
-          <Button
+          <ButtonNew
             label={t("WBH_DELETE")}
             variation="secondary"
-            icon={<DeleteIconv2 styles={{ height: "1.25rem", width: "2.5rem" }} fill={PRIMARY_COLOR} />}
+            // icon={<DeleteIconv2 styles={{ height: "1.25rem", width: "2.5rem" }} fill={PRIMARY_COLOR} />}
             type="button"
-            className="workbench-download-template-btn hover"
-            onButtonClick={(e) => {
+            icon={"Delete"}
+            // className="workbench-download-template-btn hover"
+            onClick={(e) => {
               e.stopPropagation();
               handleFileDelete(file, index);
               setShowPreview(false);

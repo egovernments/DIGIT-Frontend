@@ -6,6 +6,7 @@ import { InfoBannerIcon, Toast } from "@egovernments/digit-ui-components";
 import { DownloadIcon } from "@egovernments/digit-ui-react-components";
 import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
+import NoResultsFound from "./NoResultsFound";
 
 function boundaryDataGrp(boundaryData) {
   // Create an empty object to hold grouped data by type
@@ -177,39 +178,55 @@ const CampaignUpdateSummary = (props) => {
         const target = data?.[0]?.deliveryRules;
         const boundaryData = boundaryDataGrp(data?.[0]?.boundaries);
         const hierarchyType = data?.[0]?.hierarchyType;
+        
         return {
           cards: [
-            ...boundaryData?.map((item, index) => {
-              return {
-                navigationKey: "card1",
-                name: `HIERARCHY_${index + 1}`,
-                sections: [
-                  {
+            ...(
+              boundaryData.length > 0 
+                ? boundaryData.map((item, index) => ({
+                    navigationKey: "card1",
                     name: `HIERARCHY_${index + 1}`,
-                    type: "COMPONENT",
-                    // cardHeader:  { value: `${t(( hierarchyType + "_" + item?.type).toUpperCase())}`, inlineStyles: { color: "#0B4B66" } },
-                    cardHeader: { 
-                      value: hierarchyType 
-                          ? `${t((hierarchyType + "_" + item?.type).toUpperCase())}` 
-                          : t("To Be Updated"), 
-                      inlineStyles: { color: "#0B4B66" } 
-                  },
-                  
-                    component: "BoundaryDetailsSummary",
-                    cardSecondaryAction: noAction !== "false" && (
-                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                        <span>{t(`CAMPAIGN_EDIT`)}</span>
-                        <EditIcon />
-                      </div>
-                    ),
-                    props: {
-                      boundaries: item,
-                      hierarchyType: hierarchyType
-                    },
-                  },
-                ],
-              };
-            }),
+                    sections: [
+                      {
+                        name: `HIERARCHY_${index + 1}`,
+                        type: "COMPONENT",
+                        cardHeader: { 
+                          value: hierarchyType 
+                              ? `${t((hierarchyType + "_" + item?.type).toUpperCase())}` 
+                              : t("To Be Updated"), 
+                          inlineStyles: { color: "#0B4B66" } 
+                        },
+                        component: "BoundaryDetailsSummary",
+                        cardSecondaryAction: noAction !== "false" && (
+                          <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
+                            <span>{t(`CAMPAIGN_EDIT`)}</span>
+                            <EditIcon />
+                          </div>
+                        ),
+                        props: {
+                          boundaries: item,
+                          hierarchyType: hierarchyType
+                        },
+                      },
+                    ],
+                  }))
+                : [
+                    {
+                      navigationKey: "card1",
+                      name: "HIERARCHY_1",
+                      sections: [
+                        {
+                          name: "NoResults",
+                          type: "COMPONENT",
+                          component: "NoResultsFound",
+                          props: {
+                            text: Digit.Utils.locale.getTransformedLocale(`NO_RESULTS`)
+                          }
+                        }
+                      ]
+                    }
+                  ]
+            ),
             {
               navigationKey: "card2",
               sections: [

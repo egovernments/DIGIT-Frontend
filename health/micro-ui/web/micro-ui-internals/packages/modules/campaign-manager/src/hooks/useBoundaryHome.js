@@ -1,4 +1,5 @@
 import { useQuery } from "react-query";
+import { CONSOLE_MDMS_MODULENAME } from "../Module";
 
 const MDMS_V2_CONTEXT_PATH = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 const HRMS_CONTEXT_PATH = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || "egov-hrms";
@@ -79,7 +80,7 @@ const useBoundaryHome = ({ screenType = "campaign", defaultHierarchyType = "", h
         body: {
           MdmsCriteria: {
             tenantId: tenantId,
-            schemaCode: "HCM-ADMIN-CONSOLE.HierarchySchema",
+            schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema`,
           },
         },
       });

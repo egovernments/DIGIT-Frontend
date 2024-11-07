@@ -2553,6 +2553,7 @@ $border-color: rgba(214, 213, 212, 1);
   display: flex;
   align-items: flex-start;
   margin: 0rem;
+  gap: 1.5rem;
 }
 
 .mp-hypothesis-label-field>div>span {
@@ -2569,16 +2570,20 @@ $border-color: rgba(214, 213, 212, 1);
 
 .fieldv1-deleteIcon-container {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  width: 30rem !important;
+  width: 60% !important;
+
+  .digit-field{
+    min-width: 25rem !important;
+  }
 }
 
 .assumption-label {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  width: 30rem;
+  width: 40%;
 }
 
 .kpi-container {

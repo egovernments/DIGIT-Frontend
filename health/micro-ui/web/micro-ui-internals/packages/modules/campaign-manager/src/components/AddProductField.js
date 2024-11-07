@@ -5,13 +5,14 @@ import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
 import { DustbinIcon } from "./icons/DustbinIcon";
 // import { productType } from "../configs/productType";
 import { PRIMARY_COLOR } from "../utils";
+import { CONSOLE_MDMS_MODULENAME } from "../Module";
 
 const AddProductField = ({ onSelect }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const { isLoading: productTypeLoading, data: productType } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "productType" }], {
+  const { isLoading: productTypeLoading, data: productType } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "productType" }], {
     select: (data) => {
-      return data?.["HCM-ADMIN-CONSOLE"]?.productType;
+      return data?.[CONSOLE_MDMS_MODULENAME]?.productType;
     },
   });
   const [productFieldData, setProductFieldData] = useState([{ key: 1, name: null, type: null, variant: null }]);

@@ -295,7 +295,7 @@ export const UICustomizations = {
     },
     populateCampaignTypeReqCriteria: () => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      const url = getMDMSUrl();
+      const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
         params: { tenantId },
@@ -477,7 +477,7 @@ export const UICustomizations = {
     },
     populateCampaignTypeReqCriteria: () => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      const url = getMDMSUrl();
+      const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
         params: { tenantId },
@@ -612,7 +612,7 @@ export const UICustomizations = {
     },
     populateCampaignTypeReqCriteria: () => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      const url = getMDMSUrl();
+      const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
         params: { tenantId },
@@ -798,7 +798,7 @@ export const UICustomizations = {
     },
     populateCampaignTypeReqCriteria: () => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      const url = getMDMSUrl();
+      const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
         params: { tenantId },
@@ -888,7 +888,7 @@ export const UICustomizations = {
     },
     populateCampaignTypeReqCriteria: () => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      const url = getMDMSUrl();
+      const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
         params: { tenantId },

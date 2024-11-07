@@ -127,6 +127,10 @@
   @extend .typography.heading-m;
   color: theme(digitv2.lightTheme.primary-2) !important;
   margin-bottom: 0rem;
+
+  &.subBoundary{
+    @extend .typography.heading-s;
+  }
 }
 
 .view-composer-header-section {

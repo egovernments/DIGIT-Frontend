@@ -1,7 +1,7 @@
 import React, { useState, useEffect , Fragment } from "react";
 import { DatePicker, LabelFieldPair, Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { ErrorMessage, FieldV1, TextInput ,Stepper , TextBlock , Card  } from "@egovernments/digit-ui-components";
+import { ErrorMessage, FieldV1, TextInput ,Stepper , TextBlock , Card , InfoCard  } from "@egovernments/digit-ui-components";
 
 const CampaignDates = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
@@ -23,6 +23,7 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
+  const showDateUpdateInfo = searchParams.get("date");
 
   function updateUrlParams(params) {
     const url = new URL(window.location.href);
@@ -175,6 +176,16 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
         </div>
       </LabelFieldPair>
       </Card>
+      {showDateUpdateInfo && 
+              <InfoCard
+                populators={{
+                  name: "infocard",
+                }}
+                variant="info"
+                text={t("HCM_UPDATE_DATE_INFO")}
+                style={{ marginTop: "1rem", maxWidth: "100%" }}
+              />
+            }
       </div>
       </div>
     </>

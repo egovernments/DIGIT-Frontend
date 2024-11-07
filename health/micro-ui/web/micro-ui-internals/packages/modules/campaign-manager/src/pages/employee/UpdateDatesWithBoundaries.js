@@ -5,6 +5,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import { dateChangeBoundaryConfig, dateChangeConfig } from "../../configs/dateChangeBoundaryConfig";
 import { Button, InfoCard, PopUp, Toast } from "@egovernments/digit-ui-components";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
+import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 
 function UpdateDatesWithBoundaries() {
   const { t } = useTranslation();
@@ -17,11 +18,11 @@ function UpdateDatesWithBoundaries() {
   const id = searchParams.get("id");
   const { isLoading: DateWithBoundaryLoading, data: DateWithBoundary } = Digit.Hooks.useCustomMDMS(
     tenantId,
-    "HCM-ADMIN-CONSOLE",
+    CONSOLE_MDMS_MODULENAME,
     [{ name: "dateWithBoundary" }],
     {
       select: (data) => {
-        return data?.["HCM-ADMIN-CONSOLE"]?.dateWithBoundary?.[0]?.dateWithBoundary;
+        return data?.[CONSOLE_MDMS_MODULENAME]?.dateWithBoundary?.[0]?.dateWithBoundary;
       },
     }
   );

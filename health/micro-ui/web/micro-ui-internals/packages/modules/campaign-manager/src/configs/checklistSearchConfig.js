@@ -1,3 +1,4 @@
+
   
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
@@ -13,13 +14,13 @@
         requestBody: {
           MdmsCriteria: {
             tenantId: tenantId,
-            schemaCode: "HCM-ADMIN-CONSOLE.ChecklistTemplates",
+            schemaCode: `HCM-ADMIN-CONSOLE.ChecklistTemplates`,
             filters : {}
           }
         },
           Pagination:{
             "offset": 0,
-            "limit": 5
+            "limit": 100
           },
         masterName: "commonUiConfig",
         moduleName: "MyChecklistSearchConfig",
