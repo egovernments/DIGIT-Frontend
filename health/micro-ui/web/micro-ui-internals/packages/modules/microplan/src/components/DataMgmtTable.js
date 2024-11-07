@@ -42,7 +42,7 @@ const DataMgmtTable = ({ file, index, handleFileDelete, handleRedirect, setShowP
                     getCellProps={(cellInfo) => {
                         return {
                             style: {
-                                padding: "20px 18px",
+                                padding: "16px",
                                 fontSize: "16px",
                                 whiteSpace: "normal",
                             },

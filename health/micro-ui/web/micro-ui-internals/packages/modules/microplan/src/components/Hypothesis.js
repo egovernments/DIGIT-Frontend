@@ -140,6 +140,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions,setShowToast,all
                   style={{ marginBottom: "0", }}
                   populators={{ name: item }}
                   id={index}
+                  placeholder={t("MP_ENTER_ASSUMPTION")}
                   onChange={(event) => {
 
                     handleAssumptionChange(category, event, item);
