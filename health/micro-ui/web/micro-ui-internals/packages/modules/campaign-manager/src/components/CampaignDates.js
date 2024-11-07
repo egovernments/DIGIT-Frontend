@@ -176,7 +176,7 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
         </div>
       </LabelFieldPair>
       </Card>
-      {lessDate && 
+      {showDateUpdateInfo && 
               <InfoCard
                 populators={{
                   name: "infocard",
