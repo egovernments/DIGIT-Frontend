@@ -9,6 +9,7 @@ const AssumptionsList = ({ customProps, setupCompleted }) => {
     const history = useHistory();
 
     const assumptionValues = customProps?.sessionData?.HYPOTHESIS?.Assumptions?.assumptionValues || [];
+
     let dic = {};
 
     for (const ob of assumptionValues) {

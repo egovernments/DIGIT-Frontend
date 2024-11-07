@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import { Loader, Header } from '@egovernments/digit-ui-react-components';
-import { Divider, Button, PopUp, Card, ActionBar, Link } from '@egovernments/digit-ui-components';
+import { Divider, Button, PopUp, Card, ActionBar, Link, ViewCardFieldPair, Toast } from '@egovernments/digit-ui-components';
 import AccessibilityPopUP from '../../components/accessbilityPopUP';
 import SecurityPopUp from '../../components/securityPopUp';
 import EditVillagePopulationPopUp from '../../components/editVillagePopulationPopUP';
@@ -20,6 +20,7 @@ const VillageView = () => {
     const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
     const [showAccessbilityPopup, setShowAccessbilityPopup] = useState(false);
     const [showSecurityPopup, setShowSecurityPopup] = useState(false);
+    const [showToast, setShowToast] = useState(null);
     const [showEditVillagePopulationPopup, setShowEditVillagePopulationPopup] = useState(false);
     const [showCommentLogPopup, setShowCommentLogPopup] = useState(false);
     const [assigneeName, setAssigneeName] = useState(null);
@@ -30,9 +31,9 @@ const VillageView = () => {
         let currentNode = data.find(item => item.code === boundaryCode);
 
         while (currentNode) {
-            hierarchy.unshift({ name: currentNode.name, type: currentNode.type }); // Store name and type in the hierarchy
-            if (currentNode.type === maxHierarchyLevel) break; // Stop if type matches maxHierarchyLevel
-            currentNode = data.find(item => item.code === currentNode.parent); // Move up to the parent
+            hierarchy.unshift({ name: currentNode.name, type: currentNode.type });
+            if (currentNode.type === maxHierarchyLevel) break;
+            currentNode = data.find(item => item.code === currentNode.parent);
         }
 
         return hierarchy;
@@ -267,11 +268,19 @@ const VillageView = () => {
                     </div>
                 </Card>
                 {showAccessbilityPopup && (
-                    <AccessibilityPopUP onClose={onAccibilityClose} census={data} onSuccess={(data) => { refetch(); }} />
+                    <AccessibilityPopUP onClose={onAccibilityClose} census={data} onSuccess={(data) => {
+                        onAccibilityClose();
+                        setShowToast({ key: "success", label: t("ACCESSIBILITY_DETAILS_UPDATE_SUCCESS"), transitionTime: 5000 });
+                        refetch();
+                    }} />
                 )}
 
                 {showSecurityPopup && (
-                    <SecurityPopUp onClose={onSecurityClose} census={data} onSuccess={(data) => { refetch(); }} />
+                    <SecurityPopUp onClose={onSecurityClose} census={data} onSuccess={(data) => {
+                        onSecurityClose();
+                        setShowToast({ key: "success", label: t("SECURITY_DETAILS_UPDATE_SUCCESS"), transitionTime: 5000 });
+                        refetch();
+                    }} />
                 )}
 
                 <Card type="primary" className="info-card middle-child">
@@ -291,30 +300,21 @@ const VillageView = () => {
                             variation="secondary"
                         />}
                     </div>
-                    {/* need to reupdated  */}
-                    {/* <div className="label-pair">
-                        <span className="label-heading">{t(`HCM_MICROPLAN_UPLOADED_TARGET_POPULATION_LABEL`)}</span>
-                        <span className="label-text">{data?.additionalDetails?.targetPopulation}</span>
-                    </div> */}
-                    <div className="label-pair">
-                        <span className="label-heading">{t(`HCM_MICROPLAN_UPLOADED_TOTAL_POPULATION_LABEL`)}</span>
-                        <span className="label-text">{data?.totalPopulation}</span>
-                    </div>
-                    {/* <Divider className="" variant="small" />
-                    <div className="label-pair ">
-                        <span className="label-heading">{t(`HCM_MICROPLAN_CONFIRM_TARGET_POPULATION_LABEL`)}</span>
-                        <span className="label-text">{data?.additionalDetails?.confirmedTargetPopulation}</span>
-                    </div>
-                    <Divider className="" variant="small" />
-                    <div className="label-pair">
-                        <span className="label-heading">{t(`HCM_MICROPLAN_CONFIRM_TOTAL_POPULATION_LABEL`)}</span>
-                        <span className="label-text">{data?.additionalDetails?.confirmedTotalPopulation}</span>
-                    </div> */}
-                    <Divider className="" variant="small" />
-                    <div className="label-pair">
-                        <span className="label-heading">{t(`HCM_MICROPLAN_ASSIGNED_DATA_APPROVER_LABEL`)}</span>
-                        <span className="label-text">{assigneeName || t("ES_COMMON_NA")}</span>
-                    </div>
+                    {Object.entries(data?.additionalFields || []).map(([key, fieldData]) => (
+                        <React.Fragment key={fieldData.id || key}>
+                            <ViewCardFieldPair
+                                className=""
+                                inline
+                                label={t(`HCM_MICROPLAN_${fieldData.key || key}_LABEL`)}
+                                style={{}}
+                                value={fieldData.value || t("ES_COMMON_NA")}
+                            />
+                            {/* Only show the divider if it's not the last item */}
+                            {key !== Object.keys(data?.additionalFields).slice(-1)[0] && (
+                                <Divider className="" variant="small" />
+                            )}
+                        </React.Fragment>
+                    ))}
                 </Card>
 
                 {showEditVillagePopulationPopup && (
@@ -357,6 +357,15 @@ const VillageView = () => {
                 style={{}}
             />
 
+            {showToast && (
+                <Toast style={{ zIndex: 10001 }}
+                    label={showToast.label}
+                    type={showToast.key}
+                    // error={showToast.key === "error"}
+                    transitionTime={showToast.transitionTime}
+                    onClose={() => setShowToast(null)}
+                />
+            )}
         </React.Fragment>
 
 

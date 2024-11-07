@@ -72,6 +72,17 @@ const PopInbox = () => {
 
     // Set jurisdiction with the list of boundary codes
     setjurisdiction(boundaryCodes);
+
+    if (selectedBoundaries.length === 0) {
+      setShowToast({ key: "warning", label: t("MICROPLAN_BOUNDARY_IS_EMPTY_WARNING"), transitionTime: 5000 });
+    } else {
+      // Extract the list of codes from the selectedBoundaries array
+      const boundaryCodes = selectedBoundaries.map((boundary) => boundary.code);
+
+      // Set jurisdiction with the list of boundary codes
+      setjurisdiction(boundaryCodes);
+    }
+
   };
 
 
