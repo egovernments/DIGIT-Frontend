@@ -12,43 +12,54 @@ const UserManagement = () => {
     const location = useLocation()
     const moduleName = Digit?.Utils?.getConfigModuleName() || "commonSanitationUiConfig"
     const tenant = Digit.ULBService.getStateId();
-    
 
-    
+    const { isLoading, data:hcmData } = Digit.Hooks.useCustomMDMS(
+        tenant,  
+        "hcm-microplanning", 
+        [{ name: "ContextPathForUser" }],  
+        { select: (data) => data }, 
+        true  
+      );
+
+
+
+
     const config = UserManagementConfig?.UserManagementConfig?.[0];
-    
+
 
     const tqmInboxSession = Digit.Hooks.useSessionStorage("TQM_INBOX_SESSION", {});
 
-    const history=useHistory();
+    const history = useHistory();
 
     const onClickRow = (data) => {
+        
         const selection = window.getSelection().toString();
         if (selection.length > 0) {
-            return; 
+            return;
         }
 
         if (Array.isArray(data.cells) && data.cells.length > 0) {
-          const row = data.cells[0].value;
-          const tenantId=Digit.ULBService.getCurrentTenantId();
-          history.push(`/digit-ui/employee/hrms/details/${tenantId}/${row}`);
+            const row = data.cells[0].value;
+            const tenantId = Digit.ULBService.getCurrentTenantId();
+            const contextPath=hcmData["hcm-microplanning"].ContextPathForUser[0].contextPathConfig
+            history.push(`/${contextPath}/employee/hrms/details/${tenantId}/${row}`);
         } else {
-          console.error("Invalid data format: cells array is missing or empty.");
+            console.error("Invalid data format: cells array is missing or empty.");
         }
-      }
+    }
 
-    
+
 
     const { dispatch, state } = useMyContext();
     const [microplanData, setData] = useState(state["rolesForMicroplan"]);
-   
+
 
     return (
         <React.Fragment>
             <Header styles={{ fontSize: "32px" }}>{t(config?.label)}{<span className="inbox-count">{location?.state?.count ? location?.state?.count : 0}</span>}</Header>
             <div className="inbox-search-wrapper">
                 <InboxSearchComposer
-                    configs={{...config,additionalDetails: { microplanData }}}
+                    configs={{ ...config, additionalDetails: { microplanData } }}
                     // browserSession={tqmInboxSession}
                     additionalConfig={{
                         resultsTable: {
