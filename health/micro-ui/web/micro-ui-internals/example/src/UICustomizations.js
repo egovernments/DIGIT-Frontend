@@ -1,9 +1,8 @@
 import _ from "lodash";
 import { useLocation, useHistory, Link, useParams } from "react-router-dom";
 import React, { useState, Fragment } from "react";
-import { Dropdown } from "@egovernments/digit-ui-components";
 import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader, EditIcon, ArrowForward } from "@egovernments/digit-ui-react-components";
-import { Button as ButtonNew } from "@egovernments/digit-ui-components";
+import { Button as ButtonNew , Dropdown} from "@egovernments/digit-ui-components";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
@@ -798,32 +797,43 @@ export const UICustomizations = {
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       switch (key) {
         case "ACTIONS":
+          // TODO : Replace dummy file id with real file id when API is ready
+          const dummyFile = "c22a7676-d5d7-49b6-bcdb-83e9519f58df"
+          const microplanFileId = row?.campaignDetails?.additionalDetails?.microplanFileId || dummyFile;
           let options = [];
+
           if (row?.status == "DRAFT") {
             options = [{ code: "1", name: "Edit Setup" }];
           } else {
             options = [{ code: "1", name: "View Summary" }];
           }
+
+          const handleDownload = () => {
+            Digit.Utils.campaign.downloadExcelWithCustomName({ fileStoreId: microplanFileId, customName: t("Microplan Final Sheet") });
+          };
+
           return (
-            <Dropdown
-              option={options}
-              select={(e) => {
-                if (e.name == "Edit Setup") {
-                  // Use window.location.href to navigate
-                  window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${1}&microplanId=${row.id}&campaignId=${
-                    row.campaignDetails.id
-                  }`;
-                }
-                if (e.name == "View Summary") {
-                  // Use window.location.href to navigate
-                  window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${
-                    row.campaignDetails.id
-                  }`;
-                }
-              }}
-              optionKey={"name"}
-              selected={{ code: "1", name: "Actions" }}
-            />
+            <div>
+              {microplanFileId && row?.status == "RESOURCE_ESTIMATIONS_APPROVED" ? (
+                <div>
+                  <ButtonNew onClick={handleDownload} label={t("WBH_DOWNLOAD")} />
+                </div>
+              ) : (
+                <Dropdown
+                  option={options}
+                  select={(e) => {
+                    if (e.name == "Edit Setup") {
+                      window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${1}&microplanId=${row.id}&campaignId=${row.campaignDetails.id}`;
+                    }
+                    if (e.name == "View Summary") {
+                      window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${row.campaignDetails.id}&setup-completed=true`;
+                    }
+                  }}
+                  optionKey={"name"}
+                  selected={{ code: "1", name: "Actions" }}
+                />
+              )}
+            </div>
           );
 
         case "NAME_OF_MICROPLAN":
