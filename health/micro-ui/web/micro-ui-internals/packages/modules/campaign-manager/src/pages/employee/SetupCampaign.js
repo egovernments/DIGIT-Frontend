@@ -46,7 +46,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const noAction = searchParams.get("action");
   const isDraft = searchParams.get("draft");
   const isSkip = searchParams.get("skip");
-  const lessDate = searchParams.get("date");
+  const isDateRestricted = searchParams.get("date");
   const isChangeDates = searchParams.get("changeDates");
   const actionBar = searchParams.get("actionBar");
   const [isDraftCreated, setIsDraftCreated] = useState(false);
