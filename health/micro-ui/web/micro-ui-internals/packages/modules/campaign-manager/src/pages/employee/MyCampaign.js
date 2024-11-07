@@ -47,6 +47,7 @@ const MyCampaign = () => {
 
   const onClickRow = ({ original: row }) => {
     const currentTab = tabData?.find((i) => i?.active === true)?.label;
+    const currentDate = new Date().getTime();
     switch (currentTab) {
       case "CAMPAIGN_ONGOING":
         history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}&actionBar=${true}`);
@@ -61,16 +62,19 @@ const MyCampaign = () => {
         if (row?.parentId) {
           history.push(`/${window.contextPath}/employee/campaign/update-campaign?parentId=${row.parentId}&id=${row.id}&draft=${true}`);
         } else {
-          history.push(
-            `/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&draft=${true}&fetchBoundary=${true}&draftBoundary=${true}`
-          );
+          if (row.startDate <= currentDate || row.endDate <= currentDate) {
+            history.push(
+              `/${window.contextPath}/employee/campaign/setup-campaign?id=${
+                row.id
+              }&draft=${true}&fetchBoundary=${true}&draftBoundary=${true}&date=${true}`
+            );
+          } else {
+            history.push(
+              `/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&draft=${true}&fetchBoundary=${true}&draftBoundary=${true}`
+            );
+          }
         }
         break;
-      // case "CAMPAIGN_DRAFTS":
-      //   history.push(
-      //     `/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&draft=${true}&fetchBoundary=${true}&draftBoundary=${true}`
-      //   );
-      //   break;
       case "CAMPAIGN_FAILED":
         history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}`);
         break;
