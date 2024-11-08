@@ -7,6 +7,7 @@ import { Button, PopUp, Switch, Tooltip, TooltipWrapper } from "@egovernments/di
 import TimelineComponent from "../components/TimelineComponent";
 import getMDMSUrl from "../utils/getMDMSUrl";
 import { useTranslation } from "react-i18next";
+import { Toast } from "@egovernments/digit-ui-components";
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
@@ -53,8 +54,8 @@ export const UICustomizations = {
       if (data?.state?.searchForm && Object.keys(data.state.searchForm).length === 0) {
         data.body.MdmsCriteria.filters = {};
       }
-      data.params.limit = 5;
-      data.params.offset = 0;
+      // data.params.limit = 5;
+      // data.params.offset = 0;
 
       // if (additionalDetails?.campaignName) setCampaignName(additionalDetails?.campaignName);
       return data;
@@ -218,33 +219,54 @@ export const UICustomizations = {
             return res;
           }
           const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+          const [showToast, setShowToast] = useState(null);
+          const closeToast = () => {
+            setShowToast(null);
+          };
           const generateTemplate = async () => {
-            const res = await Digit.CustomService.getResponse({
-              url: `/project-factory/v1/data/_download`,
-              body: {
-              },
-              params: {
-                tenantId: tenantId,
-                type: "boundaryManagement",
-                hierarchyType: row?.hierarchyType,
-                campaignId: "default"
-              }
-            });
-            return res;
+            try{
+              const res = await Digit.CustomService.getResponse({
+                url: `/project-factory/v1/data/_download`,
+                body: {
+                },
+                params: {
+                  tenantId: tenantId,
+                  type: "boundaryManagement",
+                  hierarchyType: row?.hierarchyType,
+                  campaignId: "default"
+                }
+              });
+              return res;
+            }
+            catch(error){
+              setShowToast({label: error?.response?.data?.Errors?.[0]?.message, type: "error"})
+              return error;
+            }
           }
           const downloadExcelTemplate = async () => {
             // const res = await generateFile();
             // await delay(2000);
             const resFile = await generateTemplate();
+            
             if (resFile && resFile?.GeneratedResource?.[0]?.fileStoreid) {
               // Splitting filename before .xlsx or .xls
+              setShowToast({label: "BOUNDARY_DOWNLOADING", type: "info"});
               const fileNameWithoutExtension = row?.hierarchyType;
 
               Digit.Utils.campaign.downloadExcelWithCustomName({ fileStoreId: resFile?.GeneratedResource?.[0]?.fileStoreid, customName: fileNameWithoutExtension });
+              setShowToast({label: "BOUNDARY_DOWNLOADED", type: "success"});
             }
           }
           return (
             <>
+              {showToast && (
+                <Toast
+                  type={String(showToast?.type)}
+                  label={t(showToast?.label)}
+                  isDleteBtn={"true"}
+                  onClose={()=>closeToast()}
+                />
+              )}
               <Button
                 type={"button"}
                 size={"medium"}

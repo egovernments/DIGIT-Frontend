@@ -14,7 +14,8 @@ const ViewHierarchy = () => {
     const searchParams = new URLSearchParams(location.search);
     const defaultHierarchyType = searchParams.get("defaultHierarchyType");
     const hierarchyType = searchParams.get("hierarchyType");
-    
+    const locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
+
     const inputRef = useRef(null); // Ref to trigger file input
 
     const [defData, setDefData] = useState([]);
@@ -46,7 +47,20 @@ const ViewHierarchy = () => {
         return res;
 
     }
-
+    const language = Digit.StoreData.getCurrentLanguage();
+    const modulePrefix = "hcm";
+    const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "mz";
+    const moduleCode = `campaignmanager-${hierarchyType.toLowerCase().replace(/\s+/g, "_")}`;
+    const { isLoading, data } = Digit.Services.useStore({
+      stateCode,
+      moduleCode,
+      language,
+      modulePrefix,
+    });
+    useEffect(()=>{
+      console.log(t("boundary-demo-015_country"));
+    }, [data])
+  
     const [viewState, setViewState] = useState(false);
 
     const fetchData = async()=>{
@@ -64,6 +78,22 @@ const ViewHierarchy = () => {
     useEffect(()=>{
         fetchData();
     }, []);
+
+    const generateFile = async () => {
+      const res = await Digit.CustomService.getResponse({
+        url: `/project-factory/v1/data/_generate`,
+        body: {
+        },
+        params: {
+          tenantId: tenantId,
+          type: "boundaryManagement",
+          forceUpdate: true,
+          hierarchyType: hierarchyType,
+          campaignId: "default"
+        }
+      });
+      return res;
+    }
 
     const generateTemplate = async() => {
         const res = await Digit.CustomService.getResponse({
@@ -165,6 +195,7 @@ const ViewHierarchy = () => {
       
           return createResponse;
         } catch (error) {
+          console.log("error error error", error);
           setDisable(false);
           let label;
           
@@ -187,15 +218,74 @@ const ViewHierarchy = () => {
         }
       };
       
+      // const pollForStatusCompletion = async (id, typeOfData) => {
+      //   const pollInterval = 1000; // Poll every 1 second
+      //   const maxRetries = 100; // Maximum number of retries
+      //   let retries = 0;
+      
+      //   return new Promise((resolve, reject) => {
+      //     const poll = async () => {
+      //       try {
+              
+      //         if (retries >= maxRetries) {
+      //           setDataCreationGoing(false);
+      //           reject(new Error("Max retries reached"));
+      //           return;
+      //         }
+      
+      //         const searchResponse = await Digit.CustomService.getResponse({
+      //           url: "/project-factory/v1/data/_search",
+      //           params: {},
+      //           body: {
+      //             SearchCriteria: {
+      //               id: [id],
+      //               tenantId: tenantId,
+      //               type: typeOfData
+      //             }
+      //           },
+      //         });
+      
+              
+      //         const status = searchResponse?.ResourceDetails?.status;
+      
+      //         if (status === "completed") {
+      //           setShowToast({ label: `${t("WBH_HIERARCHY_STATUS_COMPLETED")}`, isError: "success" });
+      //           setDataCreationGoing(false);
+      //           resolve(true);
+      //         } else if (status === "failed") {
+      //           reject(new Error("Operation failed"));
+      //         } else {
+      //           retries++;
+      //           setTimeout(poll, pollInterval);
+      //         }
+      //       } catch (error) {
+      //         setDataCreationGoing(false);
+      //         reject(error);
+      //       }
+      //     };
+      
+      //     // Start the polling
+      //     poll().catch(reject);
+      
+      //     // Set a timeout for the entire polling operation
+      //     const timeoutDuration = (maxRetries + 1) * pollInterval;
+      //     setTimeout(() => {
+      //       if (retries < maxRetries) {  // Only reject if not already resolved
+      //         setDataCreationGoing(false);
+      //         reject(new Error("Polling timeout"));
+      //       }
+      //     }, timeoutDuration);
+      //   });
+      // };
+
       const pollForStatusCompletion = async (id, typeOfData) => {
         const pollInterval = 1000; // Poll every 1 second
-        const maxRetries = 10; // Maximum number of retries
+        const maxRetries = 100; // Maximum number of retries
         let retries = 0;
       
         return new Promise((resolve, reject) => {
           const poll = async () => {
             try {
-              
               if (retries >= maxRetries) {
                 setDataCreationGoing(false);
                 reject(new Error("Max retries reached"));
@@ -209,13 +299,12 @@ const ViewHierarchy = () => {
                   SearchCriteria: {
                     id: [id],
                     tenantId: tenantId,
-                    type: typeOfData
-                  }
+                    type: typeOfData,
+                  },
                 },
               });
       
-              
-              const status = searchResponse?.ResourceDetails?.status;
+              const status = searchResponse?.ResourceDetails?.[0]?.status;
       
               if (status === "completed") {
                 setShowToast({ label: `${t("WBH_HIERARCHY_STATUS_COMPLETED")}`, isError: "success" });
@@ -228,8 +317,9 @@ const ViewHierarchy = () => {
                 setTimeout(poll, pollInterval);
               }
             } catch (error) {
-              setDataCreationGoing(false);
-              reject(error);
+              console.error("Error while polling:", error);
+              retries++;
+              setTimeout(poll, pollInterval);
             }
           };
       
@@ -239,13 +329,15 @@ const ViewHierarchy = () => {
           // Set a timeout for the entire polling operation
           const timeoutDuration = (maxRetries + 1) * pollInterval;
           setTimeout(() => {
-            if (retries < maxRetries) {  // Only reject if not already resolved
+            if (retries < maxRetries) {
+              // Only reject if not already resolved
               setDataCreationGoing(false);
               reject(new Error("Polling timeout"));
             }
           }, timeoutDuration);
         });
       };
+
     
     const createData = async()=> {
         const res = await callCreateDataApi();
@@ -253,7 +345,7 @@ const ViewHierarchy = () => {
     }
 
    
-    if(!viewState)
+    if(!viewState || isLoading)
     {
         return (
             <Loader />
@@ -279,14 +371,14 @@ const ViewHierarchy = () => {
                                             <div>
                                                 <div style={{fontWeight:"600", fontSize:"1.2rem"}}>
                                                     {/* {t(hierItem?.boundaryType)} */}
-                                                    {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toUpperCase())}`}
+                                                    {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toLowerCase().replace(/\s+/g, "_"))}`}
                                                 </div>
                                                 <div style={{height:"1rem"}}></div>
                                                 <Card type={"primary"} variant={"form"} className={"question-card-container"} >
                                                     <div style={{display:"flex", gap:"2rem"}}>
                                                     <Svgicon />
                                                     <div style={{display:"flex", alignItems:"center", fontWeight:"600"}}>
-                                                    {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toUpperCase())}`}{"-geojson.json"}
+                                                    {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toLowerCase().replace(/\s+/g, "_"))}`}{"-geojson.json"}
                                                     </div>
                                                     </div>
                                                 </Card>

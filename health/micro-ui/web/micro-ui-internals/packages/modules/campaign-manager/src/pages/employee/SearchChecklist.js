@@ -70,7 +70,8 @@ const SearchChecklist = () => {
     body: {
       MdmsCriteria: {
         tenantId: tenantId,
-        schemaCode: "HCM.CHECKLIST_TYPES"
+        schemaCode: "HCM.CHECKLIST_TYPES",
+        filters: {"type": "DEFAULT"}
       }
     },
     changeQueryName: "HCM"
