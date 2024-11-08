@@ -8,18 +8,17 @@ import { useContext } from "react";
 import { useMyContext } from "../../utils/context";
 
 const UserManagement = () => {
+    const { dispatch, state } = useMyContext();
     const { t } = useTranslation();
     const location = useLocation()
     const moduleName = Digit?.Utils?.getConfigModuleName() || "commonSanitationUiConfig"
     const tenant = Digit.ULBService.getStateId();
 
-    const { isLoading, data:hcmData } = Digit.Hooks.useCustomMDMS(
-        tenant,  
-        "hcm-microplanning", 
-        [{ name: "ContextPathForUser" }],  
-        { select: (data) => data }, 
-        true  
-      );
+    // const [hcmData, sethcmData] = useState(state);
+    // console.log("state",state.hcmData["hcm-microplanning"].ContextPathForUser);
+    console.log("state",state)
+    
+    const [contextPathData,setContextPathData]=useState(state.hcmData["hcm-microplanning"].ContextPathForUser);
 
 
 
@@ -41,7 +40,8 @@ const UserManagement = () => {
         if (Array.isArray(data.cells) && data.cells.length > 0) {
             const row = data.cells[0].value;
             const tenantId = Digit.ULBService.getCurrentTenantId();
-            const contextPath=hcmData["hcm-microplanning"].ContextPathForUser[0].contextPathConfig
+            const contextPath=contextPathData[0].contextPathConfig
+            console.log("context",`/${contextPath}/employee/hrms/details/${tenantId}/${row}`);
             history.push(`/${contextPath}/employee/hrms/details/${tenantId}/${row}`);
         } else {
             console.error("Invalid data format: cells array is missing or empty.");
@@ -50,7 +50,6 @@ const UserManagement = () => {
 
 
 
-    const { dispatch, state } = useMyContext();
     const [microplanData, setData] = useState(state["rolesForMicroplan"]);
 
 
