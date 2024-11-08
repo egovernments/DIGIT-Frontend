@@ -267,12 +267,13 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
 
   const filteredFormulaOutputs = filteredFormulas.map((formula) => formula.output);
   const handleUpdateField = (value, name) => {
-    setSelectedDeletedFormula((prev) => {
-      return {
-        ...prev,
-        name: value,
-      };
-    });
+    if (!value.trim()) {
+      return;
+    }
+    setSelectedDeletedFormula((prev) => ({
+      ...prev,
+      name: value.trim(),
+    }));
   };
   return (
     <>
