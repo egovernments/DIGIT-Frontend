@@ -53,7 +53,7 @@ const UserDownload = () => {
         setCurrentPage(1); // Reset to the first page
     };
     return (
-        <div>
+        <div style={{ marginBottom: "2.5rem" }}>
             {isLoading && <LoaderWithGap text={t("CS_LOADING")} />}
             <Card  >
                 <Header className="summary-main-heading">
