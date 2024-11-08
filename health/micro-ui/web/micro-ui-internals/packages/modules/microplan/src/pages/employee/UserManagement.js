@@ -14,8 +14,7 @@ const UserManagement = () => {
     const moduleName = Digit?.Utils?.getConfigModuleName() || "commonSanitationUiConfig"
     const tenant = Digit.ULBService.getStateId();
 
-
-    const [contextPathData, setContextPathData] = useState(state?.hcmData["hcm-microplanning"]?.ContextPathForUser) || [];
+    const [contextPathData, setContextPathData] = useState(state?.ContextPathForUser) || [];
     const config = UserManagementConfig?.UserManagementConfig?.[0];
     const tqmInboxSession = Digit.Hooks.useSessionStorage("TQM_INBOX_SESSION", {});
 

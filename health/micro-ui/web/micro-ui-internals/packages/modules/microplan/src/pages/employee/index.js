@@ -92,7 +92,8 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
       { name: "villageTerrain" },
       { name: "securityQuestions" },
       { name: "facilityType" },
-      { name: "facilityStatus" }
+      { name: "facilityStatus" },
+      { name: "ContextPathForUser" }
     ],
     {
       cacheTime: Infinity,
@@ -185,22 +186,6 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
   };
   const { data: hierarchyDefinition, isLoading: isBoundaryHierarchyLoading } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-  const { isLoading, data:hcmData } = Digit.Hooks.useCustomMDMS(
-    tenantId,  
-    "hcm-microplanning", 
-    [{ name: "ContextPathForUser" }],  
-    { select: (data) => {
-      dispatch({
-        type: "MASTER_DATA",
-        state: {
-          hcmData: data,
-        },
-      });
-      return data
-    }
-   }, 
-    true  
-  );
 
 
   if (isLoadingMdmsMicroplanData || isLoadingMdmsAdditionalData || isBoundaryHierarchyLoading) {
