@@ -37,6 +37,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
   const parentId = searchParams.get("parentId");
+  const [showExitWarning, setShowExitWarning] = useState(false);
+
 
   const { data: Schemas, isLoading: isThisLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -69,6 +71,28 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const baseKey = 10; 
   // const projectType = props?.props?.projectType;
 
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (showExitWarning) {
+        e.preventDefault();
+        e.returnValue = ""; // Required for most browsers
+      }
+    };
+  
+    if (showExitWarning) {
+      window.addEventListener("beforeunload", handleBeforeUnload);
+    }
+  
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [showExitWarning]);
+
+  const handleUserAction = () => {
+    // User performs an action that completes their workflow
+    setShowExitWarning(false);
+  };
+  
 
   function updateUrlParams(params) {
     const url = new URL(window.location.href);
@@ -569,6 +593,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       const headersToValidate = XLSX.utils.sheet_to_json(sheet, {
         header: 1,
       })[0];
+      const requiredProperties = translatedSchema?.boundary?.required || [];
 
       const jsonData = XLSX.utils.sheet_to_json(sheet, { blankrows: true });
 
@@ -579,6 +604,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       for (const row of jsonData) {
         for (let j = boundaryCodeIndex + 1; j < headersToValidate.length; j++) {
           const value = row[headersToValidate[j]];
+          if(!requiredProperties.includes(headersToValidate[j])) continue;
           
           if (value === undefined || value === null) {
             targetError.push(
@@ -850,12 +876,14 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             setIsValidation(false);
             if (temp?.additionalDetails?.sheetErrors.length === 0) {
               setShowToast({ key: "success", label: t("HCM_VALIDATION_COMPLETED") });
+              console.log("validated");
               if (temp?.id) {
                 setResourceId(temp?.id);
               }
               if (!errorsType[type]) {
                 setIsError(false);
                 setIsSuccess(true);
+                setShowExitWarning(true); // Enable the exit warning
                 return;
                 // setIsValidation(false);
               }

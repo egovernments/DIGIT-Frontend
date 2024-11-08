@@ -19,7 +19,7 @@ const SearchHRMSEmployeeConfig = async ({ tenantId, body = {}, limit, microplanI
     if (response?.Employees?.length === 0) {
       throw new Error("Employee not found with the given role");
     }
-    const employeeId = response?.Employees?.map((i) => i.user.userServiceUuid);
+    const employeeId = response?.Employees?.map((i) => i.user.userServiceUuid)?.filter((i) => i);
 
     const planSearch = await Digit.CustomService.getResponse({
       url: "/plan-service/employee/_search",
@@ -32,6 +32,7 @@ const SearchHRMSEmployeeConfig = async ({ tenantId, body = {}, limit, microplanI
           tenantId: tenantId,
           planConfigurationId: microplanId,
           employeeId: employeeId,
+          role: [roles],
         },
       },
     });

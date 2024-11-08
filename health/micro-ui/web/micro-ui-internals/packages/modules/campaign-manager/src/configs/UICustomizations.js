@@ -71,7 +71,7 @@ export const UICustomizations = {
       const projectType = searchParams.get("projectType");
       const campaignId = searchParams.get("campaignId");
       switch (key) {       
-          case "STATUS":
+          case "HCM_CHECKLIST_STATUS":
             
             const [localIsActive, setLocalIsActive] = useState(row?.ServiceRequest?.[0]?.isActive);
             const toggle = async () => {
@@ -94,7 +94,7 @@ export const UICustomizations = {
                 onToggle={toggle}
               />):(<>{t("CHECKLIST_TOBE_CONFIGURED")}</>)
             );
-        case "ACTION":
+        case "HCM_CHECKLIST_ACTION":
           const role_code = row?.data?.role;
           const cl_code = row?.data?.checklistType;
              const sd = row?.ServiceRequest?.[0];
@@ -233,8 +233,8 @@ export const UICustomizations = {
             return res;
           }
           const downloadExcelTemplate = async () => {
-            const res = await generateFile();
-            await delay(2000);
+            // const res = await generateFile();
+            // await delay(2000);
             const resFile = await generateTemplate();
             if (resFile && resFile?.GeneratedResource?.[0]?.fileStoreid) {
               // Splitting filename before .xlsx or .xls

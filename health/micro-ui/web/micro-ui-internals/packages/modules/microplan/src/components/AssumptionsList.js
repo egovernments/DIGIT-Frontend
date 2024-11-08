@@ -9,6 +9,7 @@ const AssumptionsList = ({ customProps, setupCompleted }) => {
     const history = useHistory();
 
     const assumptionValues = customProps?.sessionData?.HYPOTHESIS?.Assumptions?.assumptionValues || [];
+
     const campaignAssumption = customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm || {};
 
     let dic = {};

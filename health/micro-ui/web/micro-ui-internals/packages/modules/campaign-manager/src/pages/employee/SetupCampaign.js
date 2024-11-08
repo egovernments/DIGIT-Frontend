@@ -98,9 +98,33 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       },
     },
   });
+
+  useEffect(() => {
+    if (isPreview === "true") {
+        setIsDraftCreated(true);
+        setCurrentKey(14);
+    }
+     else if (isDraft === "true") {
+        setIsDraftCreated(true);
+        if (isSkip === "false") {
+            if (currentKey === 1) setCurrentKey(1);
+        } else if (isDateRestricted === "true") {
+            setCurrentKey(3);
+        } else {
+          if(draftData?.additionalDetails?.key === 7 || draftData?.additionalDetails?.key === 8){
+            setCurrentKey(6);
+          }
+          else{
+            setCurrentKey(draftData?.additionalDetails?.key);
+          }  
+        }
+    }
+}, [isPreview, isDraft, draftData]);
+
+
   const getCurrentKey = () => {
     const key = Number((/key=([^&]+)/.exec(location.search) || [])[1]);
-    setCurrentKey(key);
+      setCurrentKey(key);
   };
 
   useEffect(() => {
@@ -122,29 +146,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     }
   }, [fetchUpload, fetchBoundary]);
 
-  useEffect(() => {
-    if (isPreview === "true") {
-      setIsDraftCreated(true);
-      setCurrentKey(14);
-      return;
-    }
-    if (isDraft === "true") {
-      setIsDraftCreated(true);
-      if (isSkip === "false") {
-        currentKey !== 1 ? null : setCurrentKey(1);
-      } else {
-        if (isDateRestricted === "true") {
-          setCurrentKey(3);
-        } else if (draftData?.additionalDetails?.key) {
-          setCurrentKey(draftData?.additionalDetails?.key);
-        } else {
-          console.warn("No valid key found in draftData");
-          setCurrentKey(1); // Fallback to initial key
-        }
-      }
-      return;
-    }
-  }, [isPreview, isDraft, draftData]);
+  
+
 
   useEffect(() => {
     setTotalFormData(params);

@@ -91,7 +91,7 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
       {
         onSuccess: (data) => {
           onSuccess && onSuccess(data); // Call the onSuccess callback if provided
-          onClose();
+          //onClose();
         },
         onError: (error) => {
           setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
@@ -114,7 +114,7 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
                 optionKey="name"
                 selected={dropdown1Value}
                 select={(value) => handleDropdownChange(value, "dropdown1")}
-                t={(label) => label} // Replace with translation function
+                t={t}
               />
             </LabelFieldPair>
 
@@ -125,7 +125,7 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
                 optionKey="name"
                 selected={dropdown2Value}
                 select={(value) => handleDropdownChange(value, "dropdown2")}
-                t={(label) => label} // Replace with translation function
+                t={t}
               />
             </LabelFieldPair>
 
@@ -136,7 +136,7 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
                 optionKey="name"
                 selected={dropdown3Value}
                 select={(value) => handleDropdownChange(value, "dropdown3")}
-                t={(label) => label} // Replace with translation function
+                t={t}
               />
             </LabelFieldPair>
           </Card>,
@@ -150,7 +150,7 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
             variation={"secondary"}
             label={t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_CLOSE_LABEL`)}
             onClick={onClose}
-            style={{width:"160px"}}
+            style={{ width: "160px" }}
           />,
           <Button
             className={"campaign-type-alert-button"}
@@ -158,7 +158,7 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
             size={"large"}
             variation={"primary"}
             label={t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_SAVE_LABEL`)}
-            style={{width:"160px"}}
+            style={{ width: "160px" }}
             onClick={handleSave} // Calls save function on click
             isDisabled={!isChanged() || mutation.isLoading} // Disable if no changes are made or during API call
           />,

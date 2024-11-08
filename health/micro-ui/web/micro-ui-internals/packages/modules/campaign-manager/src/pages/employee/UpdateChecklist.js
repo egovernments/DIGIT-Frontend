@@ -380,7 +380,7 @@ const UpdateChecklist = () => {
             if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
             let roleTemp = role.toUpperCase().replace(/ /g, "_");
             uniqueLocal.push({
-                code: `${campaignName}_${checklistTypeTemp}_${roleTemp}`,
+                code: `${campaignName}.${checklistTypeTemp}.${roleTemp}`,
                 locale: locale,
                 message: `${checklistType} ${role}`,
                 module: "hcm-checklist"
@@ -415,12 +415,19 @@ const UpdateChecklist = () => {
         }
     };
 
+    useEffect(()=>{
+        if(showToast !== null)
+        {
+          setShowPopUp(false);
+        }
+      }, [showToast])
+
 
 
 
     const name = t(`${checklistTypeLocal}`) + " " + t(`${roleLocal}`);
     const fieldPairs = [
-        { label: "ROLE", value: roleLocal },
+        { label: "CHECKLIST_ROLE", value: roleLocal },
         { label: "TYPE_OF_CHECKLIST", value: checklistTypeLocal },
         { label: "CAMPAIGN_NAME", value: campaignName },
         // { label: "CHECKLIST_NAME", value: name}            
@@ -529,6 +536,7 @@ const UpdateChecklist = () => {
 
                 </div>
             }
+            <div style={{height: "2rem"}}></div>
         </div>
     )
 
