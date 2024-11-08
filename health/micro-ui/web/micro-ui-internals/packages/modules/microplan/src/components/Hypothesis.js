@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment, useContext, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Header, DeleteIconv2, AddIcon, CardText, LabelFieldPair } from "@egovernments/digit-ui-react-components";
-import { Dropdown, FieldV1, PopUp, Card, Button, Divider } from "@egovernments/digit-ui-components";
+import { Header, DeleteIconv2, AddIcon, CardText, LabelFieldPair, InfoBannerIcon } from "@egovernments/digit-ui-react-components";
+import { Dropdown, FieldV1, PopUp, Card, Button, Divider, TooltipWrapper } from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR } from "../utils/utilities";
 import { useMyContext } from "../utils/context";
 import { useAssumptionContext } from "./HypothesisWrapper";
@@ -127,9 +127,11 @@ const Hypothesis = ({ category, assumptions: initialAssumptions,setShowToast,all
               <div className="assumption-label">
                 <span>{`${t(item)}`}
                   <span className="mandatory-span">*</span>
+                  <span className="icon-wrapper">
+                    <TooltipWrapper content={t(`HYPOTHEISIS_MESSAGE_FOR_${item}`)} children={<InfoBannerIcon fill={'#C84C0E'}/>} />
+                  </span>
                 </span>
               </div>
-
 
               <div className="fieldv1-deleteIcon-container">
                 <FieldV1

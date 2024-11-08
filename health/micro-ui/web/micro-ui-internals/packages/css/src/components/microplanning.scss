@@ -2584,6 +2584,12 @@ $border-color: rgba(214, 213, 212, 1);
   flex-wrap: wrap;
   align-items: center;
   width: 40%;
+
+  .icon-wrapper {
+    position: relative;
+    top: 0.28rem;
+    margin-left: 0.2rem;
+  }
 }
 
 .kpi-container {
