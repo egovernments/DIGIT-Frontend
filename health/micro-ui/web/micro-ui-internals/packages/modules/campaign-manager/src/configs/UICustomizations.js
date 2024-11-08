@@ -163,6 +163,7 @@ export const UICustomizations = {
         res = await callSearch();
       }
       // fun();
+      const [showToast, setShowToast] = useState(null);
       switch (key) {
         case "HIERARCHY_NAME":
           return row?.hierarchyType;
@@ -219,7 +220,6 @@ export const UICustomizations = {
             return res;
           }
           const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-          const [showToast, setShowToast] = useState(null);
           const closeToast = () => {
             setShowToast(null);
           };
