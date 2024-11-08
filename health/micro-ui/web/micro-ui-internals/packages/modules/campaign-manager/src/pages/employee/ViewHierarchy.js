@@ -374,7 +374,7 @@ const ViewHierarchy = () => {
                                                     <div style={{display:"flex", gap:"2rem"}}>
                                                     <Svgicon />
                                                     <div style={{display:"flex", alignItems:"center", fontWeight:"600"}}>
-                                                    {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toLowerCase().replace(/\s+/g, "_"))}`}{"-geojson.json"}
+                                                    {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toLowerCase().replace(/\s+/g, "_"))}-geojson.json`}
                                                     </div>
                                                     </div>
                                                 </Card>
