@@ -16,7 +16,7 @@
             tenantId: tenantId,
             schemaCode: `HCM-ADMIN-CONSOLE.ChecklistTemplates`,
             filters : {},
-            limit: 1,
+            limit: 10,
             offset: 0,
           }
         },
