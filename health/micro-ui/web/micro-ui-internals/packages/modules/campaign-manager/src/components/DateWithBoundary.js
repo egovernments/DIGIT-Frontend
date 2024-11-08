@@ -105,15 +105,21 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   const { state } = useLocation();
   const historyState = window.history.state;
   const [selectedBoundaries, setSelectedBoundaries] = useState(null);
-  const { data: BOUNDARY_HIERARCHY_TYPE } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "hierarchyConfig" }], {
+  const { data: BOUNDARY_HIERARCHY_TYPE } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ 
+    name: "HierarchySchema",
+    "filter": "[?(@.type=='console')]"
+   }], {
     select: (data) => {
-      return data?.[CONSOLE_MDMS_MODULENAME]?.hierarchyConfig?.find((item) => item.isActive)?.hierarchy;
+      return data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy;
     },
-  },{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.hierarchyConfig` });
-  const { isLoading, data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "hierarchyConfig" }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.hierarchyConfig` });
+  },{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` });
+  const { isLoading, data: HierarchySchema } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ 
+    name: "HierarchySchema",
+    "filter": "[?(@.type=='console')]"
+   }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` });
   const lowestHierarchy = useMemo(() => {
-    return hierarchyConfig?.[CONSOLE_MDMS_MODULENAME]?.hierarchyConfig?.find((item) => item.isActive)?.lowestHierarchy;
-  }, [hierarchyConfig]);
+    return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.lowestHierarchy;
+  }, [HierarchySchema]);
   const [hierarchyTypeDataresult, setHierarchyTypeDataresult] = useState([]);
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [filteredBoundaries, setFilteredBoundaries] = useState([]);

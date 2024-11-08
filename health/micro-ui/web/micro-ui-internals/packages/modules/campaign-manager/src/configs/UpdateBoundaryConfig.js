@@ -125,7 +125,8 @@ export const UpdateBoundaryConfig = ({totalFormData , hierarchyType , projectTyp
                     customProps: {
                       module: "HCM",
                       sessionData: totalFormData,
-                      summaryErrors: summaryErrors
+                      summaryErrors: summaryErrors,
+                      hierarchyType : hierarchyType
                     },
                     populators: {
                       name: "summary",

@@ -11,11 +11,14 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const tenantId = Digit.ULBService.getStateId();
   const searchParams = new URLSearchParams(location.search);
   const hierarchyType = props?.props?.dataParams?.hierarchyType;
-  const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "hierarchyConfig" }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.hierarchyConfig` });
+  const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ 
+    name: "HierarchySchema",
+    "filter": "[?(@.type=='console')]"
+   }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` });
   const { data: mailConfig } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "mailConfig" }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.mailConfig` });
   const lowestHierarchy = useMemo(() => {
-    return hierarchyConfig?.[CONSOLE_MDMS_MODULENAME]?.hierarchyConfig?.find((item) => item.isActive)?.lowestHierarchy;
-  }, [hierarchyConfig]);
+    return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.lowestHierarchy;
+  }, [HierarchySchema]);
   const [selectedData, setSelectedData] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData || []);
   const [boundaryOptions, setBoundaryOptions] = useState(
     props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData || {}

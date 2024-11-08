@@ -58,10 +58,14 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const [fetchBoundary, setFetchBoundary] = useState(() => Boolean(searchParams.get("fetchBoundary")));
   const [fetchUpload, setFetchUpload] = useState(false);
   const [active, setActive] = useState(0);
-  const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "hierarchyConfig" }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.hierarchyConfig` });
+  const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ 
+    name: "HierarchySchema",
+    "filter": "[?(@.type=='console')]"
+   }],{select:(MdmsRes)=>MdmsRes},
+   { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` });
   const lowestHierarchy = useMemo(() => {
-    return hierarchyConfig?.[CONSOLE_MDMS_MODULENAME]?.hierarchyConfig?.find((item) => item.isActive)?.lowestHierarchy;
-  }, [hierarchyConfig]);
+    return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.lowestHierarchy;
+  }, [HierarchySchema]);
   
 
   const { data: DeliveryConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }], {
@@ -601,7 +605,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     if (step === 6 && Object.keys(totalFormData).includes("HCM_CAMPAIGN_UPLOAD_USER_DATA")) {
       setCurrentKey(14);
       setCurrentStep(5);
-    } else if (step === 1 && totalFormData["HCM_CAMPAIGN_NAME"] && totalFormData["HCM_CAMPAIGN_TYPE"] && totalFormData["HCM_CAMPAIGN_DATE"]) {
+    } else if (step === 0 && totalFormData["HCM_CAMPAIGN_NAME"] && totalFormData["HCM_CAMPAIGN_TYPE"] && totalFormData["HCM_CAMPAIGN_DATE"]) {
       setCurrentKey(4);
       setCurrentStep(1);
     } else if (!totalFormData["HCM_CAMPAIGN_NAME"] || !totalFormData["HCM_CAMPAIGN_NAME"]) {

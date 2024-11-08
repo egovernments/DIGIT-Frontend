@@ -42,11 +42,14 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
   const [restrictSelection, setRestrictSelection] = useState(null);
   const [updateBoundary, setUpdateBoundary] = useState(null);
   const [loaderEnabled, setLoaderEnabled] = useState(false);
-  const { isLoading, data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "hierarchyConfig" }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.hierarchyConfig` });
+  const { isLoading, data: HierarchySchema } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME,[{ 
+    name: "HierarchySchema",
+    "filter": "[?(@.type=='console')]"
+   }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` });
 
   const lowestHierarchy = useMemo(() => {
-    return hierarchyConfig?.[CONSOLE_MDMS_MODULENAME]?.hierarchyConfig?.find(item => item.isActive)?.lowestHierarchy;
-  }, [hierarchyConfig]);
+    return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.find(item => item.isActive)?.lowestHierarchy;
+  }, [HierarchySchema]);
   const lowestChild = hierarchyTypeDataresult?.boundaryHierarchy.filter((item) => item.parentBoundaryType === lowestHierarchy)?.[0]?.boundaryType;
   const searchParams = new URLSearchParams(location.search);
   const isDraft = searchParams.get("draft");
