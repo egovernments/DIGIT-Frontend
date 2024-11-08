@@ -50,7 +50,7 @@ const ViewHierarchy = () => {
     const language = Digit.StoreData.getCurrentLanguage();
     const modulePrefix = "hcm";
     const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "mz";
-    const moduleCode = `campaignmanager-${hierarchyType.toLowerCase().replace(/\s+/g, "_")}`;
+    const moduleCode = `boundary-${hierarchyType.toLowerCase().replace(/\s+/g, "_")}`;
     const { isLoading, data } = Digit.Services.useStore({
       stateCode,
       moduleCode,
