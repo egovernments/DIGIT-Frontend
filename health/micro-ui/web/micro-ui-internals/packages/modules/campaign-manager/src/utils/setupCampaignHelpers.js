@@ -2,6 +2,9 @@
  * This file contains all the utils or helpers required for create campaign and drafts
  */
 
+// import { cloneDeep } from "lodash";
+import cloneDeep from 'lodash/cloneDeep';
+
 export const cycleDataRemap=(data)=> {
     if (!data) return null;
     const uniqueCycleObjects = Object.values(
@@ -32,11 +35,7 @@ export const cycleDataRemap=(data)=> {
     return operatorMapping[operator] || ""; // Default to empty if not found
   }
   export const  restructureData=(data, cycleData, DeliveryConfig, projectType)=> {
-    const deliveryConfig = DeliveryConfig?.find((e) => e.code === String(projectType));
-    if (deliveryConfig) {
-      delete deliveryConfig.cycles;   
-      delete deliveryConfig.resources;  
-    }
+    const deliveryConfig = cloneDeep(DeliveryConfig?.find(e => e.code === String(projectType)));
   
     const resourcesMap = new Map();
     const ageInfo = { maxAge: -Infinity, minAge: Infinity };  
@@ -125,7 +124,7 @@ export const cycleDataRemap=(data)=> {
       return [{
         ruleKey: ruleKey + 1,
         delivery: {},
-        deliveryStrategy: deliveryStrategy,
+        deliveryType: deliveryStrategy || "DIRECT",
         products,
         attributes,
       }];;
@@ -141,7 +140,7 @@ export const cycleDataRemap=(data)=> {
       return deliveries?.map((delivery, deliveryIndex) => ({
         active: deliveryIndex === 0,
         deliveryIndex: String(deliveryIndex + 1),
-        deliveryStrategy: delivery.deliveryStrategy || "DIRECT",
+        deliveryType: delivery.deliveryStrategy || "DIRECT",
         deliveryRules: mapDoseCriteriaToDeliveryRules(delivery.doseCriteria , delivery.deliveryStrategy),
       }));
     };
@@ -162,7 +161,7 @@ export const cycleDataRemap=(data)=> {
   
     return {
       id: parseInt(delivery.deliveryIndex, 10),
-      deliveryStrategy: delivery.deliveryStrategy || "DIRECT",
+      deliveryType: delivery.deliveryStrategy || "DIRECT",
       mandatoryWaitSinceLastDeliveryInDays: null,
       doseCriteria: delivery.deliveryRules.map(rule => {
         const doseCriteriaResult = processDoseCriteria(rule, resourcesMap);

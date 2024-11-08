@@ -23,6 +23,9 @@ const DetailsTable = ({ className = "", columnsData, rowsData, summaryRows, card
       else{
       return{
       ...i,
+      value: typeof i?.value === "string" 
+      ? t(i.value) 
+      : i?.value,
       operator: t(i?.operator?.code) || t(i?.operator),
       attribute: i?.attribute?.code 
     ? t(`CAMPAIGN_ATTRIBUTE_${i.attribute.code.toUpperCase()}`) 
