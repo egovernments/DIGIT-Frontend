@@ -160,7 +160,6 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     setLoader(true);
     updateResources(propsForMutate, {
       onSuccess: (data) => {
-        setLoader(false);
         // Check if there is a redirectTo property in the response
         if (data?.redirectTo) {
           history.push(data?.redirectTo, data?.state); // Navigate to the specified route
@@ -199,6 +198,10 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
             HYPOTHESIS: null,
             FORMULA_CONFIGURATION: null,
           });
+          
+          setCurrentKey((prev) => prev + 1);
+          setCurrentStep((prev) => prev + 1);
+
           //since we are invalidating we need to update this global state
           dispatch({
             type: "MASTER_DATA",
@@ -206,9 +209,9 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
                 allAssumptions:[],
             },
           });
-          setCurrentKey((prev) => prev + 1);
-          setCurrentStep((prev) => prev + 1);
         }
+
+        setLoader(false);
       },
       onError: (error, variables) => {
         setLoader(false);
