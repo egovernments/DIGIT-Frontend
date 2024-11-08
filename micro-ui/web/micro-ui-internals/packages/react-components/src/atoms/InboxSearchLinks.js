@@ -2,9 +2,17 @@ import React, { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-const getIconComponent = (iconName="")=>{
-    return require("@egovernments/digit-ui-react-components")?.[iconName];
-}
+
+const getIconComponent = (iconName = "") => {
+    // Trying to get the icon from "digit-ui-react-components"
+    let IconComponent = require("@egovernments/digit-ui-react-components")?.[iconName];
+    // If the icon is not found, trying to get it from "digit-ui-svg-components"
+    if (!IconComponent) {
+      IconComponent = require("@egovernments/digit-ui-svg-components")?.[iconName];
+    }
+    return IconComponent;
+};
+  
 
 const InboxSearchLinks = ({headerText, links, businessService, customClass="", logoIcon}) => {
   
