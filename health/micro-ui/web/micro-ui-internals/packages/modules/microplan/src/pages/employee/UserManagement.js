@@ -14,7 +14,6 @@ const UserManagement = () => {
     const moduleName = Digit?.Utils?.getConfigModuleName() || "commonSanitationUiConfig"
     const tenant = Digit.ULBService.getStateId();
 
-    const contextPathData = state?.ContextPathForUser || [];
     const config = UserManagementConfig?.UserManagementConfig?.[0];
     const tqmInboxSession = Digit.Hooks.useSessionStorage("TQM_INBOX_SESSION", {});
 
@@ -30,7 +29,7 @@ const UserManagement = () => {
         if (Array.isArray(data.cells) && data.cells.length > 0) {
             const row = data.cells[0].value;
             const tenantId = Digit.ULBService.getCurrentTenantId();
-            const contextPath = contextPathData?.[0]?.contextPathConfig;
+            const contextPath = state?.ContextPathForUser?.[0]?.contextPathConfig;
             if (!contextPath) {
                   console.error("Context path configuration is missing");
                   return;
