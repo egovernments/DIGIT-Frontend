@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import FileComponent from '../../components/FileComponent';
-import HeaderComp from '../../components/HeaderComp';
+import { Header } from '@egovernments/digit-ui-react-components';
 import { TextBlock, Card, ActionBar, Button } from '@egovernments/digit-ui-components';
 import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import { Link } from "react-router-dom";
@@ -55,8 +55,10 @@ const UserDownload = () => {
     return (
         <div>
             {isLoading && <LoaderWithGap text={t("CS_LOADING")} />}
-            <Card type="secondary" style={{ margin: "1.5rem 0 0 0.5rem", background: "#FFFFFF" }}>
-                <HeaderComp title="DOWNLOAD_USER_DATA" styles={{ color: "black" }} />
+            <Card  >
+                <Header className="summary-main-heading">
+                    {t(`DOWNLOAD_USER_DATA`)}
+                </Header>
                 <TextBlock body={t("DOWNLOAD_DESC")} />
 
                 {/* Display paginated files */}
