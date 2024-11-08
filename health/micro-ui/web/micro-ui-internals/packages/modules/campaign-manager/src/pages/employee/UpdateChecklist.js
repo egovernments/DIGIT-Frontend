@@ -382,7 +382,7 @@ const UpdateChecklist = () => {
             uniqueLocal.push({
                 code: `${campaignName}.${checklistTypeTemp}.${roleTemp}`,
                 locale: locale,
-                message: `${checklistType} ${role}`,
+                message: `${t(checklistTypeLocal)} ${t(roleLocal)}`,
                 module: "hcm-checklist"
             });
             if (data.success) { // Replace with your actual condition

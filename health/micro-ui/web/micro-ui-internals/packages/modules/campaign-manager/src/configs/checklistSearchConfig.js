@@ -15,17 +15,19 @@
           MdmsCriteria: {
             tenantId: tenantId,
             schemaCode: `HCM-ADMIN-CONSOLE.ChecklistTemplates`,
-            filters : {}
+            filters : {},
+            limit: 10,
+            offset: 0,
           }
         },
           Pagination:{
             "offset": 0,
-            "limit": 100
+            "limit": 1
           },
         masterName: "commonUiConfig",
         moduleName: "MyChecklistSearchConfig",
         minParametersForSearchForm: 0,
-        tableFormJsonPath: "requestParam",
+        tableFormJsonPath: "requestBody.MdmsCriteria",
         filterFormJsonPath: "requestBody",
         searchFormJsonPath: "requestBody",
       },
