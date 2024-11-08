@@ -1,5 +1,5 @@
 import React, { useReducer, Fragment, useEffect, useState } from "react";
-import { CardText, LabelFieldPair, Card, CardLabel, CardSubHeader, Paragraph, Header } from "@egovernments/digit-ui-react-components";
+import { CardText, LabelFieldPair, Card, CardLabel, CardSubHeader, Paragraph, Header , Loader } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { TextInput, InfoCard , Stepper , TextBlock } from "@egovernments/digit-ui-components";
 import { deliveryConfig } from "../../configs/deliveryConfig";
@@ -72,6 +72,7 @@ const updateCycleData = (cycleData, index, update) => {
 
 function CycleConfiguration({ onSelect, formData, control, ...props }) {
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [isLoading , setIsLoading] = useState(false);
   const selectedProjectType = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_TYPE?.projectType?.code;
   const { isLoading: deliveryConfigLoading, data: filteredDeliveryConfig } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -80,7 +81,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     {
       staleTime: 0,
       cacheTime: 0,
-      enabled: true,
+      enabled: selectedProjectType ? true : false,
       select: (data) => {
         const temp= getDeliveryConfig({data: data?.["HCM-PROJECT-TYPES"], projectType:selectedProjectType});
         return temp;
@@ -88,6 +89,13 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     },
     { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` }
   );
+
+  useEffect(()=>{
+    if(!filteredDeliveryConfig ||  !filteredDeliveryConfig?.code){
+      setIsLoading(true);
+    }
+    else setIsLoading(false);
+  },[filteredDeliveryConfig])
   const saved = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
   const refetch = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleConfgureDate
     ?.refetch;
@@ -176,6 +184,10 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     else if(currentStep === 2) setKey(9);
     else setKey(8);
   };
+
+  if(isLoading){
+    return <Loader />;
+  }
 
   return (
     <>

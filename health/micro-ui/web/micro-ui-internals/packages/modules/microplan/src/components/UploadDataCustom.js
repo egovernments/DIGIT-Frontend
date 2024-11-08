@@ -53,7 +53,6 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const [sheetHeaders, setSheetHeaders] = useState({});
   const [translatedSchema, setTranslatedSchema] = useState({});
   const [readMeInfo, setReadMeInfo] = useState({});
-  const [showPopUp, setShowPopUp] = useState(true);
 
   const { data: boundaryHierarchy } = Digit.Hooks.useCustomMDMS(tenantId, "hcm-microplanning", [{ name: "hierarchyConfig" }], {
     select: (data) => {
@@ -114,7 +113,6 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       setDownloadError(false);
       setIsError(false);
       setIsSuccess(props?.props?.sessionData?.UPLOADBOUNDARYDATA?.[type]?.isSuccess || null);
-      setShowPopUp(!props?.props?.sessionData?.UPLOADBOUNDARYDATA?.[type]?.uploadedFile?.length || false);
     }
     else if (type == 'facilityWithBoundary') {
       setUploadedFile(props?.props?.sessionData?.UPLOADFACILITYDATA?.[type]?.uploadedFile || []);
@@ -124,7 +122,6 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       setDownloadError(false);
       setIsError(false);
       setIsSuccess(props?.props?.sessionData?.UPLOADFACILITYDATA?.[type]?.isSuccess || null);
-      setShowPopUp(!props?.props?.sessionData?.UPLOADFACILITYDATA?.[type]?.uploadedFile?.length || false);
     }
   }, [type, props?.props?.sessionData]);
 
@@ -779,58 +776,6 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
             }
           />
         </div>
-        {showPopUp && (
-          <PopUp
-            type={"default"}
-            className={"popUpClass"}
-            footerclassName={"popUpFooter"}
-            heading={
-              type === "boundary"
-                ? t("MP_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_HEADER")
-                : type === "facilityWithBoundary"
-                  ? t("MP_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER")
-                  : t("MP_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER")
-            }
-            children={[
-              <div>
-                {type === "boundary"
-                  ? t("MP_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_TEXT")
-                  : type === "facilityWithBoundary"
-                    ? t("MP_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT")
-                    : t("MP_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT ")}
-              </div>,
-            ]}
-            onOverlayClick={() => {
-              setShowPopUp(false);
-            }}
-            footerChildren={[
-              <Button
-                type={"button"}
-                size={"large"}
-                variation={"secondary"}
-                label={t("MP_CAMPAIGN_UPLOAD_SKIP")}
-                onClick={() => {
-                  setShowPopUp(false);
-                }}
-              />,
-              <Button
-                type={"button"}
-                size={"large"}
-                variation={"primary"}
-                icon={"FileDownload"}
-                label={t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
-                title={t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
-                onClick={() => {
-                  downloadTemplate(), setShowPopUp(false);
-                }}
-              />,
-            ]}
-            sortFooterChildren={true}
-            onClose={() => {
-              setShowPopUp(false);
-            }}
-          ></PopUp>
-        )}
         {showToast && (
           <Toast
             type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}

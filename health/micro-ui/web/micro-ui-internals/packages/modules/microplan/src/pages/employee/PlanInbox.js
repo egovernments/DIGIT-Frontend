@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect, useMemo } from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { useHistory } from "react-router-dom";
-import { Card, Tab, Button, SVG, Loader, ActionBar, Toast , ButtonsGroup} from "@egovernments/digit-ui-components";
+import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonsGroup } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import DataTable from "react-data-table-component";
@@ -22,6 +22,7 @@ const PlanInbox = () => {
   const [showTab, setShowTab] = useState(true);
   const user = Digit.UserService.getUser();
   const [jurisdiction, setjurisdiction] = useState([]);
+  const [censusJurisdiction, setCensusJurisdiction] = useState([]);
   const [hierarchyLevel, setHierarchyLevel] = useState("");
   const [censusData, setCensusData] = useState([]);
   const [boundaries, setBoundaries] = useState([]);
@@ -61,10 +62,20 @@ const PlanInbox = () => {
     }
   );
 
+  console.log(censusJurisdiction, "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJj");
+
   useEffect(() => {
     if (selectedFilter === "VALIDATED") {
       setActiveLink({ code: "", name: "" });
       setShowTab(false);
+    } else {
+      if (!showTab) {
+        setActiveLink({
+          code: "ASSIGNED_TO_ME",
+          name: "ASSIGNED_TO_ME"
+        });
+        setShowTab(true);
+      }
     }
   }, [selectedFilter]);
 
@@ -102,7 +113,7 @@ const PlanInbox = () => {
       PlanSearchCriteria: {
         tenantId: tenantId,
         active: true,
-        jurisdiction: jurisdiction,
+        jurisdiction: censusJurisdiction,
         status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
         ...(activeLink.code == "ASSIGNED_TO_ALL" || selectedFilter == "VALIDATED"
           ? {}
@@ -113,7 +124,7 @@ const PlanInbox = () => {
       },
     },
     config: {
-      enabled: jurisdiction?.length > 0 ? true : false,
+      enabled: censusJurisdiction?.length > 0 ? true : false,
       select: (data) => {
         const tableData = data?.planData?.map((item, index) => {
           const filteredCensus = data?.censusData?.find((d) => d?.boundaryCode === item?.locality);
@@ -163,11 +174,15 @@ const PlanInbox = () => {
   });
 
   const onSearch = (selectedBoundaries) => {
-    // Extract the list of codes from the selectedBoundaries array
-    const boundaryCodes = selectedBoundaries.map((boundary) => boundary.code);
+    if (selectedBoundaries.length === 0) {
+      setShowToast({ key: "warning", label: t("MICROPLAN_BOUNDARY_IS_EMPTY_WARNING"), transitionTime: 5000 });
+    } else {
+      // Extract the list of codes from the selectedBoundaries array
+      const boundaryCodes = selectedBoundaries.map((boundary) => boundary.code);
 
-    // Set jurisdiction with the list of boundary codes
-    setjurisdiction(boundaryCodes);
+      // Set census jurisdiction with the list of boundary codes
+      setCensusJurisdiction(boundaryCodes);
+    }
   };
 
   // need to add table and filter card
@@ -221,12 +236,13 @@ const PlanInbox = () => {
   useEffect(() => {
     if (planEmployee?.planData) {
       setjurisdiction(planEmployee?.planData?.[0]?.jurisdiction);
+      setCensusJurisdiction(planEmployee?.planData?.[0]?.jurisdiction);
       setHierarchyLevel(planEmployee?.planData?.[0]?.hierarchyLevel);
     }
   }, [planEmployee]);
 
   const onClear = () => {
-    setjurisdiction(planEmployee?.planData?.[0]?.jurisdiction);
+    setCensusJurisdiction(planEmployee?.planData?.[0]?.jurisdiction);
   };
 
   const { isLoading: isWorkflowLoading, data: workflowData, revalidate, refetch: refetchBussinessService } = Digit.Hooks.useCustomAPIHook({
@@ -284,10 +300,10 @@ const PlanInbox = () => {
   }, [planWithCensus, selectedFilter, activeLink]);
 
   useEffect(() => {
-    if (jurisdiction?.length > 0) {
-      refetchPlanEmployee(); // Trigger the API call again after activeFilter changes
+    if (censusJurisdiction?.length > 0) {
+      refetchPlanWithCensus(); // Trigger the API call again after activeFilter changes
     }
-  }, [selectedFilter, activeLink, jurisdiction, limitAndOffset]);
+  }, [selectedFilter, activeLink, censusJurisdiction, limitAndOffset]);
 
   useEffect(() => {
     if (selectedFilter === "VALIDATED") {
@@ -335,6 +351,7 @@ const PlanInbox = () => {
         return row?.[resource?.resourceType] || "NA"; // Return estimatedNumber if exists
       },
       sortable: true,
+      width: "180px"
     }));
   };
 
@@ -348,6 +365,7 @@ const PlanInbox = () => {
           return row?.[field?.key] || t("ES_COMMON_NA");
         },
         sortable: true,
+        width: "180px"
       }));
   };
 
@@ -357,6 +375,7 @@ const PlanInbox = () => {
       name: t(`SECURITY_DETAIL_${key}`),
       cell: (row) => row[`securityDetail_${key}`],
       sortable: true,
+      width: "180px"
     }));
     return securityColumns;
   };
@@ -365,21 +384,25 @@ const PlanInbox = () => {
       name: t(`INBOX_VILLAGE`),
       cell: (row) => t(row?.village) || "NA",
       sortable: true,
+      width: "180px"
     },
     {
       name: t(`VILLAGE_ROAD_CONDITION`),
       cell: (row) => t(row?.villageRoadCondition) || "NA",
       sortable: true,
+      width: "180px"
     },
     {
       name: t(`VILLAGE_TERRAIN`),
       cell: (row) => t(row?.villageTerrain) || "NA",
       sortable: true,
+      width: "180px"
     },
     {
       name: t(`VILLAGE_TARNSPORTATION_MODE`),
       cell: (row) => t(row?.villageTransportMode) || "NA",
       sortable: true,
+      width: "180px"
     },
     ...getAdditionalFieldsColumns(),
     ...getResourceColumns(),
@@ -484,7 +507,7 @@ const PlanInbox = () => {
         onClear={onClear}
       />
 
-      <div className="pop-inbox-wrapper-filter-table-wrapper">
+      <div className="pop-inbox-wrapper-filter-table-wrapper" style={{ marginBottom: "2.5rem" }}>
         <InboxFilterWrapper
           options={activeFilter}
           onApplyFilters={onFilter}
@@ -586,27 +609,28 @@ const PlanInbox = () => {
                 )}
               </div>
             )}
-            {isPlanWithCensusLoading ? <Loader /> : null}
-            <DataTable
-              columns={columns}
-              data={planWithCensus?.tableData}
-              pagination
-              paginationServer
-              selectableRows={allowAction}
-              selectableRowsHighlight
-              onChangeRowsPerPage={handlePerRowsChange}
-              onChangePage={handlePageChange}
-              noContextMenu
-              onSelectedRowsChange={handleRowSelect}
-              selectableRowsComponentProps={selectProps}
-              selectableRowsComponent={CheckBox}
-              customStyles={tableCustomStyle}
-              paginationTotalRows={totalRows}
-              conditionalRowStyles={conditionalRowStyles}
-              paginationPerPage={rowsPerPage}
-              paginationRowsPerPageOptions={[10, 20, 50, 100]}
-              sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
-            />
+            {isPlanWithCensusLoading ? <Loader /> :
+              <DataTable
+                columns={columns}
+                data={planWithCensus?.tableData}
+                pagination
+                paginationServer
+                selectableRows={allowAction}
+                selectableRowsHighlight
+                onChangeRowsPerPage={handlePerRowsChange}
+                onChangePage={handlePageChange}
+                noContextMenu
+                onSelectedRowsChange={handleRowSelect}
+                selectableRowsComponentProps={selectProps}
+                selectableRowsComponent={CheckBox}
+                customStyles={tableCustomStyle}
+                paginationTotalRows={totalRows}
+                conditionalRowStyles={conditionalRowStyles}
+                paginationPerPage={rowsPerPage}
+                paginationRowsPerPageOptions={[10, 20, 50, 100]}
+                sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
+              />
+            }
           </Card>
         </div>
       </div>

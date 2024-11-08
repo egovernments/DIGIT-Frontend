@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EditIcon } from "@egovernments/digit-ui-react-components";
-import { DeleteIconv2, DownloadIcon, FileIcon, Card, CardSubHeader } from "@egovernments/digit-ui-react-components";
-import { Button, InfoButton, TooltipWrapper } from "@egovernments/digit-ui-components";
+import { DeleteIconv2, DownloadIcon, FileIcon, CardSubHeader } from "@egovernments/digit-ui-react-components";
+import { Button, InfoButton, TooltipWrapper, Card } from "@egovernments/digit-ui-components";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 
 
@@ -14,6 +14,18 @@ const FileComponent = ({ title, fileName, status, auditDetails, editHandler, del
     const [showPreview, setShowPreview] = useState(false);
     const [fileForPreview, setFileForPreview] = useState([]);
     const XlsPreview = Digit.ComponentRegistryService.getComponent("XlsPreview");
+
+
+    function formatDate(dateString) {
+        // Parse the input date string
+        const [day, month, year, time, period] = dateString.split(' ');
+
+        // Remove the ordinal suffix (e.g., "5th" to "5")
+        const dayNumber = parseInt(day, 10);
+
+        // Format the output date string
+        return `${dayNumber.toString().padStart(2, '0')} ${month} ${year}, ${time} ${period}`;
+    }
 
     const handleFilePreview = async (fileStoreId) => {
         const { data: { fileStoreIds } = {} } = await Digit.UploadServices.Filefetch([fileStoreId], tenantId);
@@ -34,9 +46,7 @@ const FileComponent = ({ title, fileName, status, auditDetails, editHandler, del
     };
 
     return (
-        <Card
-            style={{ background: "#FAFAFA", border: "1px solid #D6D5D4" }}
-        >
+        <Card type="secondary">
             <div className="dm-parent-container" style={{ background: "#FAFAFA", margin: "0" }}>
                 <div
                     className="dm-uploaded-file-container-sub"
@@ -53,7 +63,7 @@ const FileComponent = ({ title, fileName, status, auditDetails, editHandler, del
                     {(lastmodTime) ? (
                         <div className="dm-audit-info11">
                             {userName && <span style={{ color: "#787878" }}>{t("WBH_UPLOADED_BY")} {userName} {'at'} </span>}
-                            {lastmodTime && <span style={{ color: "#787878" }}>{lastmodTime}</span>}
+                            {lastmodTime && <span style={{ color: "#787878" }}>{formatDate(lastmodTime)}</span>}
                         </div>) : null
                     }
                     <div className="dm-campaign-preview-edit-container" onClick={() => handleRedirect(1)}>

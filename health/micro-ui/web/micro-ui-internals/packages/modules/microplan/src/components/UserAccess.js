@@ -250,7 +250,7 @@ function UserAccess({ category, setData, nationalRoles }) {
         ) : null}
         {!isPlanEmpSearchLoading && (!planEmployee?.data || planEmployee?.data?.length === 0) ? (
           <Card style={{ boxShadow: "none" }}>
-            <NoResultsFound text={Digit.Utils.locale.getTransformedLocale(`NO_RESULTS_${category}`)} />
+            <NoResultsFound text={searchQuery ? Digit.Utils.locale.getTransformedLocale(`NO_SEARCH_RESUTS_${category}`) : Digit.Utils.locale.getTransformedLocale(`NO_RESULTS_${category}`)} />
             <Button
               variation="secondary"
               label={t(Digit.Utils.locale.getTransformedLocale(`ASSIGN_` + category))}
@@ -284,7 +284,9 @@ function UserAccess({ category, setData, nationalRoles }) {
           type={"default"}
           heading={t(`${category}_POPUP_HEADING`)}
           children={[<RoleTableComposer category={category} nationalRoles={nationalRoles} />]}
-          onOverlayClick={() => { }}
+          onOverlayClick={() => {
+            setShowPopUp(false);
+          }}
           footerChildren={[
             <Button
               type={"button"}
