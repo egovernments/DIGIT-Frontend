@@ -62,8 +62,6 @@ const PlanInbox = () => {
     }
   );
 
-  console.log(censusJurisdiction, "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJj");
-
   useEffect(() => {
     if (selectedFilter === "VALIDATED") {
       setActiveLink({ code: "", name: "" });
