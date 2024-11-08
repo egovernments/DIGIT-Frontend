@@ -102,7 +102,7 @@ const getDeliveryConfig = ({ data, projectType }) => {
 const generateMRDNConfig = (data) => {
   
   return data?.deliveries?.map(delivery => {
-    const conditionConfig = delivery.doseCriteria.map(dose => {
+    const conditionConfig = delivery.doseCriteria.map((dose, index) => {
       const productConfig = dose.ProductVariants.map(variant => ({
         key: 1,
         name: variant.name,
@@ -132,7 +132,7 @@ const generateMRDNConfig = (data) => {
         deliveryType: delivery.deliveryStrategy,
         productConfig,
         attributeConfig: attributeConfigs, // Use the array of attributeConfigs
-        disableDeliveryType: true
+        disableDeliveryType: index === 0
       };
     });
 
