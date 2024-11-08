@@ -98,6 +98,10 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
     {
       cacheTime: Infinity,
       select: (data) => {
+        const contextPath = data?.["hcm-microplanning"]?.ContextPathForUser;
+         if (!contextPath) {
+            console.error("Missing ContextPathForUser configuration");
+          }
         dispatch({
           type: "MASTER_DATA",
           state: {
