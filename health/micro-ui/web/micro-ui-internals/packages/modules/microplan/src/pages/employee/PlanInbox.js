@@ -62,10 +62,20 @@ const PlanInbox = () => {
     }
   );
 
+  console.log(censusJurisdiction, "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJj");
+
   useEffect(() => {
     if (selectedFilter === "VALIDATED") {
       setActiveLink({ code: "", name: "" });
       setShowTab(false);
+    } else {
+      if (!showTab) {
+        setActiveLink({
+          code: "ASSIGNED_TO_ME",
+          name: "ASSIGNED_TO_ME"
+        });
+        setShowTab(true);
+      }
     }
   }, [selectedFilter]);
 
@@ -291,7 +301,7 @@ const PlanInbox = () => {
 
   useEffect(() => {
     if (censusJurisdiction?.length > 0) {
-      refetchPlanEmployee(); // Trigger the API call again after activeFilter changes
+      refetchPlanWithCensus(); // Trigger the API call again after activeFilter changes
     }
   }, [selectedFilter, activeLink, censusJurisdiction, limitAndOffset]);
 
@@ -341,6 +351,7 @@ const PlanInbox = () => {
         return row?.[resource?.resourceType] || "NA"; // Return estimatedNumber if exists
       },
       sortable: true,
+      width: "180px"
     }));
   };
 
@@ -354,6 +365,7 @@ const PlanInbox = () => {
           return row?.[field?.key] || t("ES_COMMON_NA");
         },
         sortable: true,
+        width: "180px"
       }));
   };
 
@@ -363,6 +375,7 @@ const PlanInbox = () => {
       name: t(`SECURITY_DETAIL_${key}`),
       cell: (row) => row[`securityDetail_${key}`],
       sortable: true,
+      width: "180px"
     }));
     return securityColumns;
   };
@@ -371,21 +384,25 @@ const PlanInbox = () => {
       name: t(`INBOX_VILLAGE`),
       cell: (row) => t(row?.village) || "NA",
       sortable: true,
+      width: "180px"
     },
     {
       name: t(`VILLAGE_ROAD_CONDITION`),
       cell: (row) => t(row?.villageRoadCondition) || "NA",
       sortable: true,
+      width: "180px"
     },
     {
       name: t(`VILLAGE_TERRAIN`),
       cell: (row) => t(row?.villageTerrain) || "NA",
       sortable: true,
+      width: "180px"
     },
     {
       name: t(`VILLAGE_TARNSPORTATION_MODE`),
       cell: (row) => t(row?.villageTransportMode) || "NA",
       sortable: true,
+      width: "180px"
     },
     ...getAdditionalFieldsColumns(),
     ...getResourceColumns(),
@@ -490,7 +507,7 @@ const PlanInbox = () => {
         onClear={onClear}
       />
 
-      <div className="pop-inbox-wrapper-filter-table-wrapper">
+      <div className="pop-inbox-wrapper-filter-table-wrapper" style={{ marginBottom: "2.5rem" }}>
         <InboxFilterWrapper
           options={activeFilter}
           onApplyFilters={onFilter}
@@ -592,27 +609,28 @@ const PlanInbox = () => {
                 )}
               </div>
             )}
-            {isPlanWithCensusLoading ? <Loader /> : null}
-            <DataTable
-              columns={columns}
-              data={planWithCensus?.tableData}
-              pagination
-              paginationServer
-              selectableRows={allowAction}
-              selectableRowsHighlight
-              onChangeRowsPerPage={handlePerRowsChange}
-              onChangePage={handlePageChange}
-              noContextMenu
-              onSelectedRowsChange={handleRowSelect}
-              selectableRowsComponentProps={selectProps}
-              selectableRowsComponent={CheckBox}
-              customStyles={tableCustomStyle}
-              paginationTotalRows={totalRows}
-              conditionalRowStyles={conditionalRowStyles}
-              paginationPerPage={rowsPerPage}
-              paginationRowsPerPageOptions={[10, 20, 50, 100]}
-              sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
-            />
+            {isPlanWithCensusLoading ? <Loader /> :
+              <DataTable
+                columns={columns}
+                data={planWithCensus?.tableData}
+                pagination
+                paginationServer
+                selectableRows={allowAction}
+                selectableRowsHighlight
+                onChangeRowsPerPage={handlePerRowsChange}
+                onChangePage={handlePageChange}
+                noContextMenu
+                onSelectedRowsChange={handleRowSelect}
+                selectableRowsComponentProps={selectProps}
+                selectableRowsComponent={CheckBox}
+                customStyles={tableCustomStyle}
+                paginationTotalRows={totalRows}
+                conditionalRowStyles={conditionalRowStyles}
+                paginationPerPage={rowsPerPage}
+                paginationRowsPerPageOptions={[10, 20, 50, 100]}
+                sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
+              />
+            }
           </Card>
         </div>
       </div>
