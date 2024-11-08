@@ -16,16 +16,10 @@ const UserManagement = () => {
 
     
     const [contextPathData,setContextPathData]=useState(state.hcmData["hcm-microplanning"].ContextPathForUser);
-
-
-
-
     const config = UserManagementConfig?.UserManagementConfig?.[0];
-
-
     const tqmInboxSession = Digit.Hooks.useSessionStorage("TQM_INBOX_SESSION", {});
 
-    const history = useHistory();
+    const history=useHistory();
 
     const onClickRow = (data) => {
         

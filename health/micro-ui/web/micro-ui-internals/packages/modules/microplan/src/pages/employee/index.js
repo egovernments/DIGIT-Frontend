@@ -185,43 +185,6 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
   };
   const { data: hierarchyDefinition, isLoading: isBoundaryHierarchyLoading } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-  // const hcmDataCriteria = {
-  //   url: `/mdms-service/v1/_search`,  // Adjust to match the endpoint used in MDMS API
-  //   changeQueryName: `hcm-microplanning-ContextUrlForUser`,
-  //   body: {
-  //     MdmsCriteria: {
-  //       tenantId,
-  //       moduleDetails: [
-  //         {
-  //           moduleName: "hcm-microplanning",
-  //           masterDetails: [{ name: "ContextUrlForUser" }],
-  //         },
-  //       ],
-  //     },
-  //   },
-  //   config: {
-  //     cacheTime: Infinity,
-  //     enabled: true,
-  //     select: (data) => {
-  //       const contextUrlData = data?.MdmsRes?.["hcm-microplanning"]?.ContextUrlForUser;
-
-  //       // Dispatch data to context
-  //       dispatch({
-  //         type: "MASTER_DATA",
-  //         state: {
-  //           hcmData: contextUrlData,
-  //         },
-  //       });
-
-  //       return contextUrlData;
-  //     },
-  //   },
-  // };
-
-  
-  // Use Digit.Hooks.useCustomAPIHook with hcmDataCriteria
-  // const { data: hcmData, isLoading: isLoadingHcmData } = Digit.Hooks.useCustomAPIHook(hcmDataCriteria);
-
   const { isLoading, data:hcmData } = Digit.Hooks.useCustomMDMS(
     tenantId,  
     "hcm-microplanning", 
