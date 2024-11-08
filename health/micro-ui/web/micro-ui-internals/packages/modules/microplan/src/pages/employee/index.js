@@ -238,7 +238,6 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
    }, 
     true  
   );
-  console.log("hcmData1",hcmData);
 
 
   if (isLoadingMdmsMicroplanData || isLoadingMdmsAdditionalData || isBoundaryHierarchyLoading) {
