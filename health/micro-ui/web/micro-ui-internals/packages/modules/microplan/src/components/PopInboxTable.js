@@ -3,13 +3,14 @@ import axios from "axios";
 import DataTable from "react-data-table-component";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Button } from "@egovernments/digit-ui-components";
+import { Button, Loader } from "@egovernments/digit-ui-components";
 import TimelinePopUpWrapper from "./timelinePopUpWrapper";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { CheckBox } from "@egovernments/digit-ui-components";
 import EditVillagePopulationPopUp from "./editVillagePopulationPopUP";
 import { tableCustomStyle } from "./tableCustomStyle";
 import { CustomLoader } from "./RoleTableComposer";
+import { min } from "lodash";
 
 const PopInboxTable = ({ ...props }) => {
   const { t } = useTranslation();
@@ -22,6 +23,7 @@ const PopInboxTable = ({ ...props }) => {
   const [isIntermediate, setIsIntermediate] = useState(false);
 
   const columns = useMemo(() => {
+
     return [
       {
         name: t(`INBOX_VILLAGE`),
@@ -46,12 +48,42 @@ const PopInboxTable = ({ ...props }) => {
           if (boundaryCodeA > boundaryCodeB) return 1;
           return 0;
         },
+        width: "180px"
       },
-      {
-        name: t("INBOX_TOTAL_POPULATION"),
-        selector: (row, index) => row?.totalPopulation,
-        sortable: true,
-      },
+      ...(
+        (props?.censusData?.[0]?.additionalFields || [])
+          .filter((field) => field.showOnUi)
+          .sort((a, b) => a.order - b.order)
+          .map((field) => ({
+            name: t(field.key) || t("ES_COMMON_NA"),
+            selector: (row) => {
+              const fieldValue = row.additionalFields.find((f) => f.key === field.key)?.value || t("ES_COMMON_NA");
+
+              // Render a button if editable is true, otherwise render the field value as text
+              return row.additionalFields.find((f) => f.key === field.key)?.editable ? (
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: "flex-end" }}>
+                  <span style={{ marginRight: '0.5rem' }}>{fieldValue}</span>
+                  {props.showEditColumn && <Button
+                    onClick={() => {
+                      setShowEditVillagePopup(row);
+                    }}
+                    variation="secondary"
+                    icon={"Edit"}
+                    size="small"
+                    style={{ paddingLeft: "16px", minWidth: "unset", paddingRight: "8px" }}
+                  />}
+                </div>
+              ) : (
+                fieldValue
+              );
+            },
+            sortable: true,
+            width: "180px",
+            style: {
+              justifyContent: "flex-end",
+            },
+          }))
+      ),
       {
         name: t("INBOX_STATUSLOGS"),
         cell: (row, index, column, id) => (
@@ -67,47 +99,22 @@ const PopInboxTable = ({ ...props }) => {
           />
         ),
         sortable: false,
+        width: "180px",
       },
       {
         name: t("INBOX_ASSIGNEE"),
-        selector: (row, index) => props?.employeeNameData?.[props.censusData?.[0]?.assignee] || t("ES_COMMON_NA"),
+        selector: (row, index) => props?.employeeNameData?.[row?.assignee] || t("ES_COMMON_NA"),
         sortable: true,
+        width: "180px",
       },
-      ...(props.showEditColumn
-        ? [
-          {
-            name: t("INBOX_EDITPOPULATION"),
-            cell: (row, index, column, id) => (
-              <Button
-                label={t(`EDIT_POPULATION`)}
-                onClick={() => {
-                  setShowEditVillagePopup(row);
-                }}
-                variation="link"
-                style={{}}
-                size={"medium"}
-                icon={"Edit"}
-              />
-            ),
-            sortable: false,
-          },
-        ]
-        : []),
-      // {
-      //   name: t(`INBOX_VILLAGE`),
-      //   cell: (row, index, column, id) => <a onClick={()=>{console.log(row)}} href="">View Logs</a>,
-      //   sortable: true,
-      // },
-      // {
-      //   name: 'Comment Logs',
-      //   cell: row => <a onClick={()=>{console.log(row)}} href="#">View Logs</a>,
-      // },
     ];
-  }, [props.showEditColumn, props.employeeNameData]);
+  }, [props.showEditColumn, props.employeeNameData, props.censusData]);
 
   const handlePageChange = (page, totalRows) => {
     props?.handlePageChange(page, totalRows);
   };
+
+
 
   const handleRowSelect = (event) => {
     // if(!event?.allSelected && event?.selectedCount >0){
@@ -147,7 +154,7 @@ const PopInboxTable = ({ ...props }) => {
         }}
         census={showEditVillagePopup}
         onSuccess={(data) => {
-          props.onSuccessEdit();
+          props.onSuccessEdit(data);
         }}
       />
     );
@@ -159,17 +166,17 @@ const PopInboxTable = ({ ...props }) => {
     <DataTable
       columns={columns}
       data={props.censusData}
-      selectableRows
+      selectableRows={props.allowAction}
       selectableRowsHighlight
       noContextMenu
       onSelectedRowsChange={handleRowSelect}
       customStyles={tableCustomStyle}
       selectableRowsComponent={CheckBox}
-      sortIcon={<CustomSVG.SortUp />}
+      sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
       defaultSortFieldId={1}
       selectableRowsComponentProps={selectProps}
       progressPending={props?.progressPending}
-      progressComponent={<CustomLoader />}// progressPending={loading}
+      progressComponent={<Loader />}// progressPending={loading}
       // title="Users"
       // paginationDefaultPage={currentPage}
       // paginationDefaultRowsPerPage={rowsPerPage}

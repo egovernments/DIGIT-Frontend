@@ -1,6 +1,7 @@
 .formula-label-field{
     display: flex;
     gap:1.5rem;
+    align-items: center;
   }
   .equals-icon {
     font-family: 'Roboto Condensed';  /* Set font family */
@@ -16,10 +17,18 @@
   }
   
   .formula-label-field > span {
-    width: 20rem;
+    width: 25rem;
     font-size: 1.2rem;
     margin-right: 2rem;
     font-weight: bold;
+
+    margin-top: 0.25rem;
+  }
+
+  .icon-wrapper{
+    position: relative;
+    top: 0.28rem;
+    margin-left: 0.3rem;
   }
 
 /* styles.css */

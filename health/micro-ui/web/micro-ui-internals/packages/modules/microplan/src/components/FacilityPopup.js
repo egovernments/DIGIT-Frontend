@@ -1,6 +1,6 @@
 import React, { useState, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { PopUp, Button, Tab, CheckBox, Card, Toast,SVG } from "@egovernments/digit-ui-components";
+import { PopUp, Button, Tab, CheckBox, Card, Toast, SVG } from "@egovernments/digit-ui-components";
 import SearchJurisdiction from "./SearchJurisdiction";
 import { LoaderWithGap, Loader } from "@egovernments/digit-ui-react-components";
 import DataTable from "react-data-table-component";
@@ -8,7 +8,7 @@ import AccessibilityPopUp from "./accessbilityPopUP";
 import SecurityPopUp from "./securityPopUp";
 import { tableCustomStyle } from "./tableCustomStyle";
 
-const FacilityPopUp = ({ details, onClose }) => {
+const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const { t } = useTranslation();
   const currentUserUuid = Digit.UserService.getUser().info.uuid;
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -254,10 +254,6 @@ const FacilityPopUp = ({ details, onClose }) => {
         return !boundarySet.has(boundary)
       })
       newDetails.serviceBoundaries = filteredBoundaries
-      // TODO : remove this logic
-      // newDetails.serviceBoundaries = Array.from(new Set(newDetails.serviceBoundaries.map(boundary => boundary[0] === " " ? boundary.slice(1) : boundary)));
-
-
     }
     else {
       const boundarySet = new Set(selectedRowData.map((row) => {
@@ -267,9 +263,6 @@ const FacilityPopUp = ({ details, onClose }) => {
         !newDetails.serviceBoundaries.includes(boundary)
       );
       newDetails.serviceBoundaries = newDetails?.serviceBoundaries?.concat(filteredBoundaries);
-      // TODO : remove this logic
-      // newDetails.serviceBoundaries = Array.from(new Set(newDetails.serviceBoundaries.map(boundary => boundary[0] === " " ? boundary.slice(1) : boundary)));
-
     }
     await mutationForPlanFacilityUpdate.mutate(
       {
@@ -281,6 +274,7 @@ const FacilityPopUp = ({ details, onClose }) => {
         onSuccess: async (result) => {
           setSelectedRows([]);
           setIsAllSelected(false);
+          updateDetails(newDetails);
         },
         onError: async (result) => {
           // setDownloadError(true);
@@ -364,9 +358,8 @@ const FacilityPopUp = ({ details, onClose }) => {
                   <div className="selection-state-wrapper">
                     <div className="svg-state-wrapper">
                       <SVG.DoneAll width={"1.5rem"} height={"1.5rem"} fill={"#C84C0E"}></SVG.DoneAll>
-                      <div className={"selected-state"}>{`${selectedRows.length} ${
-                        selectedRows?.length === 1 ? t("MICROPLAN_SELECTED") : t("MICROPLAN_SELECTED_PLURAL")
-                      }`}</div>
+                      <div className={"selected-state"}>{`${selectedRows.length} ${selectedRows?.length === 1 ? t("MICROPLAN_SELECTED") : t("MICROPLAN_SELECTED_PLURAL")
+                        }`}</div>
                     </div>
 
                     <div className={`table-actions-wrapper`}>
@@ -412,8 +405,18 @@ const FacilityPopUp = ({ details, onClose }) => {
                     />
                   )
                 )}
-                {viewDetails && accessibilityData && <AccessibilityPopUp onClose={() => closeViewDetails()} census={accessibilityData} />}
-                {viewDetails && securityData && <SecurityPopUp onClose={() => closeViewDetails()} census={securityData} />}
+                {viewDetails && accessibilityData && <AccessibilityPopUp onClose={() => closeViewDetails()} census={accessibilityData}
+                  onSuccess={(data) => {
+                    setShowToast({ key: "success", label: t("ACCESSIBILITY_DETAILS_UPDATE_SUCCESS"), transitionTime: 5000 });
+                    closeViewDetails();
+                  }}
+                />}
+                {viewDetails && securityData && <SecurityPopUp onClose={() => closeViewDetails()} census={securityData}
+                  onSuccess={(data) => {
+                    setShowToast({ key: "success", label: t("SECURITY_DETAILS_UPDATE_SUCCESS"), transitionTime: 5000 });
+                    closeViewDetails();
+                  }}
+                />}
               </Card>
               {showToast && (
                 <Toast
@@ -436,7 +439,7 @@ const FacilityPopUp = ({ details, onClose }) => {
               variation={"secondary"}
               label={t(`MICROPLAN_CLOSE_BUTTON`)}
               onClick={onClose}
-              style={{width:"200px"}}
+              style={{ width: "200px" }}
             />,
           ]}
           className={"facility-popup"}

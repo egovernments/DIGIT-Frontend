@@ -6,6 +6,22 @@ const MapView = ({ fileData }) => {
   const mapRef = useRef(null);
   const [geoJsonData, setGeoJsonData] = useState(null);
 
+  // Define layers for different map views
+  const layers = {
+    "Street Map": L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; OpenStreetMap contributors',
+    }),
+    "Satellite": L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; OpenTopoMap',
+    }),
+    "Topography": L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; OpenTopoMap contributors',
+    }),
+    "Light Theme": L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+      attribution: '&copy; CARTO',
+    }),
+  };
+
   useEffect(() => {
     // Fetch the GeoJSON data from the URL
     const fetchGeoJson = async () => {
@@ -22,18 +38,21 @@ const MapView = ({ fileData }) => {
   }, [fileData.url]);
 
   useEffect(() => {
-    if (mapRef.current === null) {
-      // Initialize the map only once
+    // Initialize the map only once
+    if (!mapRef.current) {
       mapRef.current = L.map("map", {
-        center: [-12.5, 37.8], // Center on Mozambique's approximate location
+        center: [-12.5, 37.8],
         zoom: 6,
-        zoomControl: true,
-        layers: [
-          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-          }),
-        ],
+        layers: [layers["Street Map"]], // Set the default layer
       });
+
+      L.control.layers(layers, null, { position: "topright" }).addTo(mapRef.current);
+
+
+      // Add zoom control to the map
+      L.control.zoom({
+        position: "bottomleft", // Position of zoom buttons
+      }).addTo(mapRef.current);
     }
 
     // Function to add GeoJSON data to the map
@@ -53,17 +72,12 @@ const MapView = ({ fileData }) => {
         },
       });
 
-      // Add the GeoJSON layer to the map
       geoJsonLayer.addTo(mapRef.current);
-
-      // Fit the map bounds to the district coordinates
-      const bounds = geoJsonLayer.getBounds();
-      mapRef.current.fitBounds(bounds);
+      mapRef.current.fitBounds(geoJsonLayer.getBounds());
     };
 
-    // Add GeoJSON layer if data is available
     if (geoJsonData) {
-      // Remove any existing GeoJSON layers before adding new data
+      // Clear previous GeoJSON layers before adding new data
       mapRef.current.eachLayer((layer) => {
         if (layer instanceof L.GeoJSON) {
           mapRef.current.removeLayer(layer);
@@ -74,7 +88,11 @@ const MapView = ({ fileData }) => {
     }
   }, [geoJsonData]);
 
-  return <div id="map" style={{ height: "100vh", width: "100%" }}></div>;
+  return (
+    <div>
+      <div id="map" style={{ height: "100vh", width: "100%" , display: "inline-block" }}></div>
+    </div>
+  );
 };
 
 export default MapView;

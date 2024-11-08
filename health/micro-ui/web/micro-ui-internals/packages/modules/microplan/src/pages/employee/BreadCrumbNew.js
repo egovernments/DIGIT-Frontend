@@ -57,12 +57,14 @@ const BreadCrumbNew = (props) => {
     setExpanded(!expanded);
   };
 
+  const validCrumbsMain = crumbsToDisplay?.filter((crumb) => crumb?.show === true);
+
   return (
     <ol
       className={`digit-bread-crumb ${props?.className ? props?.className : ""}`}
       style={props?.style}
     >
-      {crumbsToDisplay?.map((crumb, ci) => {
+      {validCrumbsMain?.map((crumb, ci) => {
         if (!crumb?.show) return null;
         if (crumb?.isBack)
           return (

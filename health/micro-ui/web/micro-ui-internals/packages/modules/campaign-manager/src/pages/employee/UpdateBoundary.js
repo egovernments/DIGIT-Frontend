@@ -5,6 +5,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { Toast , Stepper} from "@egovernments/digit-ui-components";
 import _ from "lodash";
 import { UpdateBoundaryConfig } from "../../configs/UpdateBoundaryConfig";
+import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 
 /**
  * The `SetupCampaign` function in JavaScript handles the setup and management of campaign details,
@@ -16,31 +17,7 @@ import { UpdateBoundaryConfig } from "../../configs/UpdateBoundaryConfig";
  * triggers API calls to create or update the campaign
  */
 
-function loopAndReturn(dataa) {
-  let newArray = [];
-  const data = dataa?.map((i) => ({ ...i, operator: { code: i?.operator }, attribute: { code: i?.attribute } }));
 
-  data.forEach((item) => {
-    // Check if an object with the same attribute already exists in the newArray
-    const existingIndex = newArray.findIndex((element) => element.attribute.code === item.attribute.code);
-    if (existingIndex !== -1) {
-      // If an existing item is found, replace it with the new object
-      const existingItem = newArray[existingIndex];
-      newArray[existingIndex] = {
-        attribute: existingItem.attribute,
-        operator: { code: "IN_BETWEEN" },
-        toValue: existingItem.value && item.value ? Math.min(existingItem.value, item.value) : null,
-        fromValue: existingItem.value && item.value ? Math.max(existingItem.value, item.value) : null,
-      };
-    }
-    else {
-      newArray.push(item);
-    }
-  });
-
-  const withKey = newArray.map((i, c) => ({ key: c + 1, ...i }));
-  return withKey;
-}
 
 
 function groupByTypeRemap(data) {
@@ -107,11 +84,8 @@ const UpdateBoundary = ({hierarchyData }) => {
   const noAction = searchParams.get("action");
   const isDraft = searchParams.get("draft");
   const isSkip = searchParams.get("skip");
-  const keyParam = searchParams.get("key");
   const isChangeDates = searchParams.get("changeDates");
-  const actionBar = searchParams.get("actionBar");
   const [isDraftCreated, setIsDraftCreated] = useState(false);
-  const filteredBoundaryData = params?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
   const [currentKey, setCurrentKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
@@ -120,12 +94,12 @@ const UpdateBoundary = ({hierarchyData }) => {
   const [fetchBoundary, setFetchBoundary] = useState(() => Boolean(searchParams.get("fetchBoundary")));
   const [fetchUpload, setFetchUpload] = useState(false);
   const [active, setActive] = useState(0);
-  const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
+  const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "hierarchyConfig" }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.hierarchyConfig` });
   const [hierarchyType, setHierarchyType] = useState();
   const lowestHierarchy = useMemo(() => {
-    return hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
+    return hierarchyConfig?.[CONSOLE_MDMS_MODULENAME]?.hierarchyConfig?.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
   }, [hierarchyConfig, hierarchyType]);
-  const { isLoading, data: projectType } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }]);
+  const { isLoading, data: projectType } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }],{select:(MdmsRes)=>MdmsRes}, { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` });
   
 
   const reqCriteriaCampaign = {
@@ -215,8 +189,6 @@ const UpdateBoundary = ({hierarchyData }) => {
     if (isLoading) return;
     if (Object.keys(params).length !== 0) return;
     if (!draftData) return;
-    const delivery = Array.isArray(draftData?.deliveryRules) ? draftData?.deliveryRules : [];
-    const filteredProjectType = projectType?.["HCM-PROJECT-TYPES"]?.projectTypes?.filter((i) => i?.code === draftData?.projectType);
     const restructureFormData = {
       HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA: {
         boundaryType: {
@@ -453,12 +425,7 @@ const UpdateBoundary = ({hierarchyData }) => {
           } else {
             payloadData.additionalDetails.cycleData = {};
           }
-          // if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-          //   const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
-          //   payloadData.deliveryRules = temp;
-          // } else {
-          //   payloadData.deliveryRules = [];
-          // }
+
           payloadData.deliveryRules = CampaignData?.CampaignDetails?.[0]?.deliveryRules;
           if (!payloadData?.startDate && !payloadData?.endDate) {
             delete payloadData?.startDate;

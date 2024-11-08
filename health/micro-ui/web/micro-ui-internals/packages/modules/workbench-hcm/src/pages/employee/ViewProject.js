@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory, useLocation } from "react-router-dom";
-import { Header, Card, Loader, ViewComposer, ActionBar, SubmitBar, Toast, Menu } from "@egovernments/digit-ui-react-components";
+import { useLocation } from "react-router-dom";
+import { Header, ViewComposer, ActionBar, SubmitBar, Toast, Menu } from "@egovernments/digit-ui-react-components";
 import { data } from "../../configs/ViewProjectConfig";
 import AssignCampaign from "../../components/AssignCampaign";
 import AssignTarget from "../../components/AssignTarget";
@@ -59,9 +59,9 @@ const ViewProject = () => {
       }
     }
   };
-  
+
   const requestCriteria = {
-      url: `${projectUrl}/v1/_search`,
+    url: `${projectUrl}/v1/_search`,
     changeQueryName: projectId || projectNumber,
     params: {
       tenantId,
@@ -150,7 +150,7 @@ const ViewProject = () => {
     setShowEditDateModal(false);
     setShowTargetModal(false);
   };
-  
+
   const reqCriteria = {
     url: `${projectUrl}/v1/_update`,
     config: false,

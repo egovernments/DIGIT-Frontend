@@ -4,13 +4,9 @@ import {
   TextInput,
   Close,
   CloseSvg,
-  Card,
-  BreakLine,
-  LabelFieldPair,
-  CardLabel,
-  ViewComposer,
+  Card, LabelFieldPair, ViewComposer
 } from "@egovernments/digit-ui-react-components";
-import React, { useState } from "react";
+import React from "react";
 import { projectStaffData } from "../configs/ProjectStaffConfig";
 
 const ProjectStaffModal = ({

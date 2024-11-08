@@ -42,6 +42,7 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
     "/hcmworkbench/boundary",
     "/hcmworkbench/facility",
     "/project-landing-screen",
+    "/advanced-landing-screen",
   ].some(pattern => location.pathname.includes(pattern));
 
   const isShow3 = [

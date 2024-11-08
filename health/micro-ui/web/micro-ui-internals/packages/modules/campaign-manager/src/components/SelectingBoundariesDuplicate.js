@@ -4,16 +4,17 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useHistory } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
 import { InfoCard, PopUp, Stepper, TextBlock } from "@egovernments/digit-ui-components";
+import { CONSOLE_MDMS_MODULENAME } from "../Module";
 
 const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getStateId();
   const searchParams = new URLSearchParams(location.search);
   const hierarchyType = props?.props?.dataParams?.hierarchyType;
-  const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
-  const { data: mailConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "mailConfig" }]);
+  const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "hierarchyConfig" }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.hierarchyConfig` });
+  const { data: mailConfig } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "mailConfig" }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.mailConfig` });
   const lowestHierarchy = useMemo(() => {
-    return hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)?.lowestHierarchy;
+    return hierarchyConfig?.[CONSOLE_MDMS_MODULENAME]?.hierarchyConfig?.find((item) => item.isActive)?.lowestHierarchy;
   }, [hierarchyConfig]);
   const [selectedData, setSelectedData] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData || []);
   const [boundaryOptions, setBoundaryOptions] = useState(
@@ -132,8 +133,8 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
             additionalElements={[
               <span style={{ color: "#505A5F" }}>
                 {t("HCM_BOUNDARY_INFO ")}
-                <a href={`mailto:${mailConfig?.["HCM-ADMIN-CONSOLE"]?.mailConfig?.[0]?.mailId}`} style={{ color: "black" }}>
-                  {mailConfig?.["HCM-ADMIN-CONSOLE"]?.mailConfig?.[0]?.mailId}
+                <a href={`mailto:${mailConfig?.[CONSOLE_MDMS_MODULENAME]?.mailConfig?.[0]?.mailId}`} style={{ color: "black" }}>
+                  {mailConfig?.[CONSOLE_MDMS_MODULENAME]?.mailConfig?.[0]?.mailId}
                 </a>
               </span>,
             ]}

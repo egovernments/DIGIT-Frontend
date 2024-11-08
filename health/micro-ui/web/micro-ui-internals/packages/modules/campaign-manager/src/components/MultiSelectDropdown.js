@@ -284,14 +284,23 @@ const MultiSelectDropdown = ({
   function reducer(state, action) {
     switch (action.type) {
       case "ADD_TO_SELECTED_EVENT_QUEUE":
-        return [...state, { code: action?.payload?.[1]?.code, name: action?.payload?.[1]?.name, propsData: action.payload }];
-      // const updatedState = [...state, { code: action.payload?.[1]?.code, propsData: action.payload }];
-      //   onSelect(
-      //     updatedState.map((e) => e.propsData),
-      //     getCategorySelectAllState(),
-      //     props
-      //   );
-      //   return updatedState;
+        // Check if the item already exists to prevent duplication
+        if (state.some((e) => e.code === action.payload?.[1]?.code) || !action?.payload?.[1]?.type) {
+          return state; // Return state unchanged if item is already in queue
+        }
+        return [
+          ...state,
+          { code: action?.payload?.[1]?.code, name: action?.payload?.[1]?.name, propsData: action.payload },
+        ];
+        // Check if the item already exists to prevent duplication
+        if (state.some((e) => e.code === action.payload?.[1]?.code) || !action?.payload?.[1]?.type) {
+          return state; // Return state unchanged if item is already in queue
+        }
+        return [
+          ...state,
+          { code: action?.payload?.[1]?.code, name: action?.payload?.[1]?.name, propsData: action.payload },
+        ];
+
       case "REMOVE_FROM_SELECTED_EVENT_QUEUE":
         const newState = state.filter((e) => e?.code !== action.payload?.[1]?.code);
         onSelect(
@@ -789,7 +798,6 @@ const MultiSelectDropdown = ({
       <p className={`digit-label ${addSelectAllCheck ? "selectAll" : ""}`}>{selectAllLabel ? selectAllLabel : "Select All"}</p>
     </div>
   );
-
   const Menu = () => {
     const optionsToRender = variant === "nestedmultiselect" ? flattenedOptions : filteredOptions;
 

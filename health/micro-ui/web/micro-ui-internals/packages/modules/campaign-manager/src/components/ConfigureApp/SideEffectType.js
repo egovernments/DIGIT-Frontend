@@ -6,7 +6,7 @@ import { Dropdown, ErrorMessage } from "@egovernments/digit-ui-components";
 const SideEffectType = ({ onSelect, formData, formState, ...props }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getStateId();
-  const { isLoading, data: projectType } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }]);
+  const { isLoading, data: projectType } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }],{select:(MdmsRes)=>MdmsRes}, { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` });
   const [type, setType] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_TYPE?.projectType || {});
   const [beneficiaryType, setBeneficiaryType] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_TYPE?.projectType?.beneficiaryType || "");
   const [showBeneficiary, setShowBeneficiaryType] = useState(Boolean(props?.props?.sessionData?.HCM_CAMPAIGN_TYPE?.projectType?.beneficiaryType));

@@ -8,14 +8,15 @@
     "node": ">=14"
   },
   "workspaces": [
-    "micro-ui-internals/packages/modules/microplan"
+    "micro-ui-internals/packages/modules/microplan",
+    "micro-ui-internals/packages/modules/campaign-manager"
   ],
   "homepage": "/microplan-ui",
   "dependencies": {
     "@egovernments/digit-ui-libraries": "1.8.2-beta.7",
     "@egovernments/digit-ui-module-core": "1.8.2-beta.13",
     "@egovernments/digit-ui-module-utilities": "1.0.1-beta.23",
-    "@egovernments/digit-ui-react-components": "1.8.2-beta.16",
+    "@egovernments/digit-ui-react-components": "1.8.2-beta.17",
     "@egovernments/digit-ui-module-hcmmicroplanning":"0.0.2",
     "@egovernments/digit-ui-module-microplan":"0.0.1",
     "@egovernments/digit-ui-components": "0.0.2-beta.39",

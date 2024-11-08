@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import HeaderComp from './HeaderComp';
+import { Header } from '@egovernments/digit-ui-react-components';
 import { Card, Button, PopUp, Chip, Loader } from '@egovernments/digit-ui-components';
 import { ShowMoreWrapper } from './ShowMoreWrapper';
 import { useTranslation } from 'react-i18next';
 
-const SubBoundaryView = ({ title, arr, style,editHandler,isEditable}) => {
-  
+const SubBoundaryView = ({ title, arr, style, editHandler, isEditable }) => {
+
   const [showPopUp, setShowPopUp] = useState(false);
   const { t } = useTranslation();
 
@@ -19,15 +19,17 @@ const SubBoundaryView = ({ title, arr, style,editHandler,isEditable}) => {
         arr && arr.length > 0 ? (
           <Card type={"secondary"} style={style}>
 
-            <div className="header-container">
-              <HeaderComp title={title} />
+            <div className="mp-header-container" style={{ marginBottom: "0px" }}>
+              <Header className="summary-sub-heading subBoundary">
+                {t(title)}
+              </Header>
               {isEditable && editHandler && <Button
                 label={t("WBH_EDIT")}
                 variation="secondary"
-                icon={"EditIcon"}
+                icon={"Edit"}
                 type="button"
                 onClick={(e) => {
-                 editHandler();
+                  editHandler();
                 }}
               />}
             </div>

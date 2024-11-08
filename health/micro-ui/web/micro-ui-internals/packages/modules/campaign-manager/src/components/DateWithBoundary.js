@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import { LabelFieldPair, Header } from "@egovernments/digit-ui-react-components";
 import { Button, Card, Dropdown, MultiSelectDropdown, Toast } from "@egovernments/digit-ui-components";
 import BoundaryWithDate from "./BoundaryWithDate";
+import { CONSOLE_MDMS_MODULENAME } from "../Module";
 
 const initialState = (projectData) => {
   return projectData;
@@ -104,14 +105,14 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   const { state } = useLocation();
   const historyState = window.history.state;
   const [selectedBoundaries, setSelectedBoundaries] = useState(null);
-  const { data: BOUNDARY_HIERARCHY_TYPE } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }], {
+  const { data: BOUNDARY_HIERARCHY_TYPE } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "hierarchyConfig" }], {
     select: (data) => {
-      return data?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)?.hierarchy;
+      return data?.[CONSOLE_MDMS_MODULENAME]?.hierarchyConfig?.find((item) => item.isActive)?.hierarchy;
     },
-  });
-  const { isLoading, data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
+  },{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.hierarchyConfig` });
+  const { isLoading, data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "hierarchyConfig" }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.hierarchyConfig` });
   const lowestHierarchy = useMemo(() => {
-    return hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)?.lowestHierarchy;
+    return hierarchyConfig?.[CONSOLE_MDMS_MODULENAME]?.hierarchyConfig?.find((item) => item.isActive)?.lowestHierarchy;
   }, [hierarchyConfig]);
   const [hierarchyTypeDataresult, setHierarchyTypeDataresult] = useState([]);
   const [selectedLevel, setSelectedLevel] = useState(null);

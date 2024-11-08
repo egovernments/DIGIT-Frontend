@@ -1,10 +1,9 @@
 import React, { useState, useEffect, Fragment, useContext, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Header, DeleteIconv2, LabelFieldPair, AddIcon, CardText } from "@egovernments/digit-ui-react-components";
-import { Dropdown, CheckBox, PopUp, Card, Button, Divider, TextInput } from "@egovernments/digit-ui-components";
+import { Header, DeleteIconv2, LabelFieldPair, AddIcon, CardText, InfoBannerIcon } from "@egovernments/digit-ui-react-components";
+import { Dropdown, CheckBox, PopUp, Card, Button, Divider, TooltipWrapper, TextInput } from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR } from "../utils/utilities";
 import { useFormulaContext } from "./FormulaConfigWrapper";
-import _ from "lodash";
 
 const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initialFormulas, setShowToast, allMdmsFormulasForThisCategory }) => {
   const { t } = useTranslation();
@@ -320,7 +319,11 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
               <div>
                 <Card type="secondary">
                   <LabelFieldPair className="formula-label-field">
-                    <span>{`${t(formula.output)}`}</span>
+                    <span>{`${t(formula.output)}`}
+                    <span className="icon-wrapper">
+                      <TooltipWrapper content={t(`FORMULA_MESSAGE_FOR_${formula.output}`)} children={<InfoBannerIcon fill={'#C84C0E'} />} />
+                    </span>
+                    </span>
                     <div className="equals-icon">=</div>
                     <Dropdown
                       variant="select-dropdown"

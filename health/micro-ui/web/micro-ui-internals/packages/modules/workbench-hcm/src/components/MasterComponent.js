@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 
-const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui", "health-ui", "sanitation-ui", "core-ui"];
+const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui","microplan-ui", "health-ui", "sanitation-ui", "core-ui"];
 
 const navigateToRespectiveURL = (history = {}, url = "") => {
   if (url?.indexOf(`/${window?.contextPath}`) === -1) {
@@ -41,31 +41,30 @@ const MasterComponent = () => {
 
   const RenderCard = () => {
     const mdmsData = Schemadata?.mdms || [];
-    const sortedLinks =  mdmsData.length > 0 && mdmsData
-    ?.filter((e) => e.isActive)?.[0]
-    .data?.links?.sort((a, b) =>a.order - b.order);
+    const sortedLinks = mdmsData.length > 0 && mdmsData?.filter((e) => e.isActive)?.[0].data?.links?.sort((a, b) => a.order - b.order);
 
     return (
       <div className="master-container">
-          {sortedLinks?.length && sortedLinks?.map((ele, index) => {
-              const icon = ele.icon;
-              let IconComp = require("@egovernments/digit-ui-svg-components")?.[icon];
-              IconComp = IconComp ? <IconComp /> : <SVG.Work />;
-              return (
-                <div className="master-card" key={index}>
-                  <Card className="custom-master">
-                    <a
-                      onClick={() => {
-                        navigateToRespectiveURL(history, `${ele.url}`);
-                      }}
-                    >
-                      <div className="master-icon">{IconComp}</div>
-                      {t(Digit.Utils.locale.getTransformedLocale(`${screen}_${ele.code}`))}
-                    </a>
-                  </Card>
-                </div>
-              );
-            })}
+        {sortedLinks?.length &&
+          sortedLinks?.map((ele, index) => {
+            const icon = ele.icon;
+            let IconComp = require("@egovernments/digit-ui-svg-components")?.[icon];
+            IconComp = IconComp ? <IconComp /> : <SVG.Work />;
+            return (
+              <div className="master-card" key={index}>
+                <Card className="custom-master">
+                  <a
+                    onClick={() => {
+                      navigateToRespectiveURL(history, `${ele.url}`);
+                    }}
+                  >
+                    <div className="master-icon">{IconComp}</div>
+                    {t(Digit.Utils.locale.getTransformedLocale(`${screen}_${ele.code}`))}
+                  </a>
+                </Card>
+              </div>
+            );
+          })}
       </div>
     );
   };
