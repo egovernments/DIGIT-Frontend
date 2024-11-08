@@ -29,9 +29,33 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     const [manualLoader, setManualLoader] = useState(false)
     const [showToast, setShowToast] = useState(null);
     const [deletedAssumptions, setDeletedAssumptions] = useState([]);
+    const [defautAssumptions, setDefaultAssumptions] = useState(["NEW_ASSUMPTION"]);
     const [executionCount, setExecutionCount] = useState(0);
+    const [customAssumption, setCustomAssumption] = useState([]);
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
+    const filteredData = state.HypothesisAssumptions.filter((item) => {
+        const isHouseToHouseOrFixedPost = resourceDistributionStrategyCode === "HOUSE_TO_HOUSE" ||
+            resourceDistributionStrategyCode === "FIXED_POST";
+
+        if (isHouseToHouseOrFixedPost) {
+            return (
+                campaignType === item.campaignType &&
+                resourceDistributionStrategyCode === item.resourceDistributionStrategyCode &&
+                assumptionsFormValues?.selectedRegistrationDistributionMode?.code === item.isRegistrationAndDistributionHappeningTogetherOrSeparately
+
+            )
+        }
+
+        return (
+            campaignType === item.campaignType &&
+            resourceDistributionStrategyCode === item.resourceDistributionStrategyCode &&
+            assumptionsFormValues?.selectedRegistrationProcess?.code === item?.RegistrationProcess &&
+            assumptionsFormValues?.selectedDistributionProcess?.code === item.DistributionProcess
+        )
+    });
+    const assumptionCategories = filteredData.length > 0 ? filteredData[0].assumptionCategories : [];
+    const filteredAssumptions = assumptionCategories.length > 0 ? (assumptionCategories[internalKey - 1]?.assumptions || []) : [];
 
     //fetching existing plan object
     const { isLoading: isLoadingPlanObject, data: planObject, error: errorPlan, refetch: refetchPlan } = Digit.Hooks.microplanv1.useSearchPlanConfig(
@@ -49,6 +73,11 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     );
 
 
+    useEffect(() => {
+        const tc = assumptionCategories[internalKey - 1]?.category
+        const temp = assumptionValues?.filter((i) => i.category === tc && i.source === "CUSTOM")?.map((i) => i.key) || [];
+        setCustomAssumption(temp)
+    },[assumptionValues, internalKey])
     const moveToPreviousStep = () => {
         if (internalKey > 1) {
             setInternalKey((prevKey) => prevKey - 1);
@@ -147,29 +176,6 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
 
     };
 
-    const filteredData = state.HypothesisAssumptions.filter((item) => {
-        const isHouseToHouseOrFixedPost = resourceDistributionStrategyCode === "HOUSE_TO_HOUSE" ||
-            resourceDistributionStrategyCode === "FIXED_POST";
-
-        if (isHouseToHouseOrFixedPost) {
-            return (
-                campaignType === item.campaignType &&
-                resourceDistributionStrategyCode === item.resourceDistributionStrategyCode &&
-                assumptionsFormValues?.selectedRegistrationDistributionMode?.code === item.isRegistrationAndDistributionHappeningTogetherOrSeparately
-
-            )
-        }
-
-        return (
-            campaignType === item.campaignType &&
-            resourceDistributionStrategyCode === item.resourceDistributionStrategyCode &&
-            assumptionsFormValues?.selectedRegistrationProcess?.code === item?.RegistrationProcess &&
-            assumptionsFormValues?.selectedDistributionProcess?.code === item.DistributionProcess
-        )
-    });
-    const assumptionCategories = filteredData.length > 0 ? filteredData[0].assumptionCategories : [];
-    const filteredAssumptions = assumptionCategories.length > 0 ? (assumptionCategories[internalKey - 1]?.assumptions || []) : [];
-
     //this data is used in formulaConfigWrapper
     useEffect(() => {
       if(assumptionCategories.length > 0 && !state?.allAssumptions?.length>0) {
@@ -181,7 +187,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
             },
           });
       }
-    })
+    }, [assumptionCategories, state?.allAssumptions ])
     
 
 
@@ -246,18 +252,12 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
 
     useEffect(() => {
         window.addEventListener("verticalStepper", moveToPreviousStep);
-        return () => {
-            window.removeEventListener("verticalStepper", moveToPreviousStep);
-        };
-    }, [internalKey]);
-
-    useEffect(() => {
         window.addEventListener("isLastStep", isLastStep);
         return () => {
+            window.removeEventListener("verticalStepper", moveToPreviousStep);
             window.removeEventListener("isLastStep", isLastStep);
         };
     }, [internalKey]);
-
 
 
     useEffect(() => {
@@ -337,7 +337,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
 
     return (
         <Fragment>
-            <AssumptionContext.Provider value={{ assumptionValues, handleAssumptionChange, setAssumptionValues, deletedAssumptions, setDeletedAssumptions }}>
+            <AssumptionContext.Provider value={{ assumptionValues, handleAssumptionChange, setAssumptionValues, deletedAssumptions, setDeletedAssumptions, defautAssumptions, setDefaultAssumptions }}>
 
                 <div style={{ display: "flex", gap: "1.5rem" }}>
                     <div className="card-container" style={{ marginBottom: "2.5rem" }}>
@@ -359,7 +359,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
                     }}>
                         <Hypothesis
                             category={assumptionCategories[internalKey - 1]?.category}
-                            assumptions={filteredAssumptions.filter(item => !deletedAssumptions?.includes(item))}
+                            assumptions={[...filteredAssumptions.filter(item => !deletedAssumptions?.includes(item)), ...customAssumption]}
                             onSelect={onSelect}
                             customProps={customProps}
                             setShowToast={setShowToast}

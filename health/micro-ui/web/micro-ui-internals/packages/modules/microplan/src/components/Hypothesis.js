@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment, useContext, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Header, DeleteIconv2, AddIcon, CardText, LabelFieldPair } from "@egovernments/digit-ui-react-components";
-import { Dropdown, FieldV1, PopUp, Card, Button, Divider } from "@egovernments/digit-ui-components";
+import { Dropdown, FieldV1, PopUp, Card, Button, Divider, TextInput } from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR } from "../utils/utilities";
 import { useMyContext } from "../utils/context";
 import { useAssumptionContext } from "./HypothesisWrapper";
@@ -16,7 +16,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions,setShowToast,all
   const [assumptionToDelete, setAssumptionToDelete] = useState(null)
   const [assumptions, setAssumptions] = useState(initialAssumptions);
   const [selectedDeletedAssumption, setSelectedDeletedAssumption] = useState(null);
-  const { assumptionValues, handleAssumptionChange, setAssumptionValues, setDeletedAssumptions, deletedAssumptions } = useAssumptionContext();
+  const { assumptionValues, handleAssumptionChange, setAssumptionValues, setDeletedAssumptions, deletedAssumptions, defautAssumptions, setDefautAssumptions } = useAssumptionContext();
   const deletedAssumptionCategories = useRef({});
   const isAddNewDisabled = !deletedAssumptionCategories.current[category] ||
     deletedAssumptionCategories.current[category].length === 0 ||
@@ -29,7 +29,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions,setShowToast,all
   ));
 
   useEffect(() => {
-    setAssumptions(initialAssumptions)
+      setAssumptions(initialAssumptions)
   }, [initialAssumptions])
 
 
@@ -79,7 +79,19 @@ const Hypothesis = ({ category, assumptions: initialAssumptions,setShowToast,all
 
 
   const addNewAssumption = () => {
-    if (selectedDeletedAssumption) {
+    if(selectedDeletedAssumption?.code === "NEW_ASSUMPTION"){
+      const assumptionToAdd = selectedDeletedAssumption;
+      setAssumptions([...assumptions, assumptionToAdd?.name]);
+      if (!assumptionValues.some(assumption => assumption.key === assumptionToAdd)) {
+        setAssumptionValues(prevValues => [
+          ...prevValues,
+          { source: "CUSTOM", key: assumptionToAdd?.name, value: null, category: category } // or an initial value
+        ]);
+      }
+
+      setSelectedDeletedAssumption(null);
+      setAssumptionsPopUp(false);
+    } else if (selectedDeletedAssumption) {
       const assumptionToAdd = deletedAssumptions.find(assumption => assumption === selectedDeletedAssumption.code);
 
       // **Check if it already exists**
@@ -107,7 +119,14 @@ const Hypothesis = ({ category, assumptions: initialAssumptions,setShowToast,all
     }
   };
 
-
+  const handleUpdateField = (value, name) => {
+    setSelectedDeletedAssumption((prev) => {
+      return {
+        ...prev,
+        name: value,
+      };
+    });
+  };
 
   return (
     <>
@@ -119,7 +138,6 @@ const Hypothesis = ({ category, assumptions: initialAssumptions,setShowToast,all
 
 
       <Card>
-
         {assumptions.map((item, index) => {
 
           return (
@@ -217,7 +235,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions,setShowToast,all
               variant="select-dropdown"
               t={t}
               isMandatory={false}
-              option={[...new Set(deletedAssumptions?.filter(del=>allMdmsAssumptionsForThisCategory?.includes(del)))]?.map(item => ({ code: item }))}
+              option={[...new Set(deletedAssumptions?.filter(del=>allMdmsAssumptionsForThisCategory?.includes(del))), ...defautAssumptions]?.map(item => ({ code: item }))}
               select={(value) => {
                 setSelectedDeletedAssumption(value)
               }}
@@ -228,7 +246,14 @@ const Hypothesis = ({ category, assumptions: initialAssumptions,setShowToast,all
               placeholder={t("SELECT_OPTION")}
               onChange={(e) => setSelectedDeletedAssumption(e.target.value)}
               optionCardStyles={{ position: "relative" }}
-            />
+              />,
+              selectedDeletedAssumption?.code === "NEW_ASSUMPTION" && (
+                <TextInput
+                  name="name"
+                  value={selectedDeletedAssumption?.name || ""}
+                  onChange={(event) => handleUpdateField(event.target.value, "name")}
+                />
+              ),
           ]}
           onOverlayClick={() => {
             setAssumptionsPopUp(false)

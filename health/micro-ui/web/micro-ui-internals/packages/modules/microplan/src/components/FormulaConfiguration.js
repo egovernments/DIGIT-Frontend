@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment, useContext, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Header, DeleteIconv2, LabelFieldPair, AddIcon, CardText } from "@egovernments/digit-ui-react-components";
-import { Dropdown, CheckBox, PopUp, Card, Button, Divider } from "@egovernments/digit-ui-components";
+import { Dropdown, CheckBox, PopUp, Card, Button, Divider, TextInput } from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR } from "../utils/utilities";
 import { useFormulaContext } from "./FormulaConfigWrapper";
 import _ from "lodash";
@@ -13,7 +13,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
   const [formulaToDelete, setFormulaToDelete] = useState(null);
   const [formulas, setFormulas] = useState(initialFormulas);
   const [selectedDeletedFormula, setSelectedDeletedFormula] = useState(null);
-  const { formulaConfigValues, handleFormulaChange, setFormulaConfigValues, deletedFormulas, setDeletedFormulas, assumptionsInPlan } = useFormulaContext();
+  const { formulaConfigValues, handleFormulaChange, setFormulaConfigValues, deletedFormulas, setDeletedFormulas, assumptionsInPlan, defautFormula, setDefaultFormula } = useFormulaContext();
   const deletedFormulaCategories = useRef({});
   const isAddNewDisabled =
     !deletedFormulaCategories.current[category] ||
@@ -110,7 +110,73 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
   };
 
   const addNewFormula = () => {
-    if (selectedDeletedFormula) {
+    if(selectedDeletedFormula?.code === "NEW_FORMULA"){
+      const formulaToAdd = selectedDeletedFormula;
+      if (formulaToAdd && !formulas.some((formula) => formula.output === formulaToAdd)) {
+        setFormulas([...formulas, { source:"CUSTOM", output: formulaToAdd?.name, category: category, input: "", operatorName: "", assumptionValue: "" }]);
+
+        if (!formulaConfigValues.some((formula) => formula.output === formulaToAdd)) {
+          // setFormulaConfigValues((prevValues) => [
+          //   ...prevValues,
+          //   { source: "MDMS", output: formulaToAdd, input: "", operatorName: "", assumptionValue: "", category: category }, // or an initial value
+          // ]);
+
+          //pushing but maintaining the order
+          // setFormulaConfigValues((prevValues) => {
+          //   // Find the index where the new formula should be inserted
+          //   const insertIndex = prevValues.findIndex(
+          //     (item) => item.category > category
+          //   );
+          
+          //   // If no matching category is found, insert at the end of the array
+          //   const newValues =
+          //     insertIndex === -1
+          //       ? [...prevValues, { source: "MDMS", output: formulaToAdd, input: "", operatorName: "", assumptionValue: "", category: category }]
+          //       : [
+          //           ...prevValues.slice(0, insertIndex),
+          //           { source: "MDMS", output: formulaToAdd, input: "", operatorName: "", assumptionValue: "", category: category },
+          //           ...prevValues.slice(insertIndex)
+          //         ];
+          
+          //   return newValues;
+          // });
+
+          //pushing but maintaining the order
+          setFormulaConfigValues((prevValues) => {
+            // Define the new formula object
+            const newFormula = {
+              source: "CUSTOM",
+              output: formulaToAdd?.name,
+              input: "", 
+              operatorName: "", 
+              assumptionValue: "", 
+              category: category,
+              showOnEstimationDashboard: true // Default to true; adjust as needed
+            };
+          
+            // Find the last index of the specified category by reversing the array
+            const lastIndexInCategory = [...prevValues]
+              .reverse()
+              .findIndex((item) => item.category === category);
+          
+            // Calculate the correct insertion index in the original array
+            const insertIndex =
+              lastIndexInCategory === -1 ? prevValues.length : prevValues.length - lastIndexInCategory;
+          
+            // Insert the new formula at the determined index, maintaining grouped categories
+            const newValues = [
+              ...prevValues.slice(0, insertIndex),
+              newFormula,
+              ...prevValues.slice(insertIndex)
+            ];
+          
+            return newValues;
+          });
+        }
+      }
+      setSelectedDeletedFormula(null);
+      setFormulasPopUp(false);
+    } else if (selectedDeletedFormula) {
       const formulaToAdd = deletedFormulas.find((formula) => formula === selectedDeletedFormula.code);
 
       // **Check if it already exists**
@@ -201,7 +267,14 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
 
 
   const filteredFormulaOutputs = filteredFormulas.map((formula) => formula.output);
-  
+  const handleUpdateField = (value, name) => {
+    setSelectedDeletedFormula((prev) => {
+      return {
+        ...prev,
+        name: value,
+      };
+    });
+  };
   return (
     <>
       <Card className="middle-child">
@@ -372,7 +445,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                 t={t}
                 isMandatory={false}
                 // option={availableDeletedFormulas.map((item) => ({ code: item }))}
-                option={[...new Set(deletedFormulas?.filter(del => allMdmsFormulasForThisCategory?.includes(del)))]?.map(item => ({ code: item }))}
+                option={[...new Set(deletedFormulas?.filter(del => allMdmsFormulasForThisCategory?.includes(del))), ...defautFormula]?.map(item => ({ code: item }))}
                 select={(value) => {
                   setSelectedDeletedFormula(value);
                 }}
@@ -383,6 +456,13 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                 onChange={(e) => setSelectedDeletedFormula(e.target.value)}
                 optionCardStyles={{ position: "relative" }}
               />,
+              selectedDeletedFormula?.code === "NEW_FORMULA" && (
+                <TextInput
+                  name="name"
+                  value={selectedDeletedFormula?.name || ""}
+                  onChange={(event) => handleUpdateField(event.target.value, "name")}
+                />
+              ),
             ]}
             onOverlayClick={() => {
               setFormulasPopUp(false);
