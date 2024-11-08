@@ -49,7 +49,7 @@ const ViewHierarchy = () => {
     }
     const language = Digit.StoreData.getCurrentLanguage();
     const modulePrefix = "hcm";
-    const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "mz";
+    const stateCode = Digit.ULBService.getCurrentTenantId();
     const moduleCode = `boundary-${hierarchyType.toLowerCase().replace(/\s+/g, "_")}`;
     const { isLoading, data } = Digit.Services.useStore({
       stateCode,
@@ -57,9 +57,6 @@ const ViewHierarchy = () => {
       language,
       modulePrefix,
     });
-    useEffect(()=>{
-      console.log(t("boundary-demo-015_country"));
-    }, [data])
   
     const [viewState, setViewState] = useState(false);
 
@@ -195,7 +192,6 @@ const ViewHierarchy = () => {
       
           return createResponse;
         } catch (error) {
-          console.log("error error error", error);
           setDisable(false);
           let label;
           

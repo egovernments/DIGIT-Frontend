@@ -239,7 +239,7 @@ export const UICustomizations = {
               return res;
             }
             catch(error){
-              setShowToast({label: error?.response?.data?.Errors?.[0]?.message, type: "error"})
+              setShowToast({label: error?.response?.data?.Errors?.[0]?.code, type: "error"})
               return error;
             }
           }

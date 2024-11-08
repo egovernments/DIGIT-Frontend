@@ -108,7 +108,7 @@ const GeoPode = () => {
             const local = bh.map(item => ({
                 code: `${hierarchyType}_${item.boundaryType}`.toLowerCase().replace(/\s+/g, "_"),
                 message: item.boundaryType,
-                module: `hcm-campaignmanager-${hierarchyType.toLowerCase().replace(/\s+/g, "_")}`,
+                module: `hcm-boundary-${hierarchyType.toLowerCase().replace(/\s+/g, "_")}`,
                 locale: locale
             }));
             console.log("localisations codes", local);
