@@ -18,6 +18,7 @@ const PopInbox = () => {
   const [showTab, setShowTab] = useState(true);
   const user = Digit.UserService.getUser();
   const [jurisdiction, setjurisdiction] = useState([]);
+  const [censusJurisdiction, setCensusJurisdiction] = useState([]);
   const [hierarchyLevel, setHierarchyLevel] = useState("");
   const [censusData, setCensusData] = useState([]);
   const [boundaries, setBoundaries] = useState([]);
@@ -71,11 +72,6 @@ const PopInbox = () => {
   };
 
   const onSearch = (selectedBoundaries) => {
-    // Extract the list of codes from the selectedBoundaries array
-    const boundaryCodes = selectedBoundaries.map((boundary) => boundary.code);
-
-    // Set jurisdiction with the list of boundary codes
-    setjurisdiction(boundaryCodes);
 
     if (selectedBoundaries.length === 0) {
       setShowToast({ key: "warning", label: t("MICROPLAN_BOUNDARY_IS_EMPTY_WARNING"), transitionTime: 5000 });
@@ -83,8 +79,8 @@ const PopInbox = () => {
       // Extract the list of codes from the selectedBoundaries array
       const boundaryCodes = selectedBoundaries.map((boundary) => boundary.code);
 
-      // Set jurisdiction with the list of boundary codes
-      setjurisdiction(boundaryCodes);
+      // Set census jurisdiction with the list of boundary codes
+      setCensusJurisdiction(boundaryCodes);
     }
 
   };
@@ -149,12 +145,13 @@ const PopInbox = () => {
   useEffect(() => {
     if (planEmployee?.planData) {
       setjurisdiction(planEmployee?.planData?.[0]?.jurisdiction);
+      setCensusJurisdiction(planEmployee?.planData?.[0]?.jurisdiction);
       setHierarchyLevel(planEmployee?.planData?.[0]?.hierarchyLevel);
     }
   }, [planEmployee]);
 
   const onClear = () => {
-    setjurisdiction(planEmployee?.planData?.[0]?.jurisdiction);
+    setCensusJurisdiction(planEmployee?.planData?.[0]?.jurisdiction);
   };
 
   const { isLoading: isWorkflowLoading, data: workflowData, revalidate, refetch: refetchBussinessService } = Digit.Hooks.useCustomAPIHook({
@@ -212,13 +209,13 @@ const PopInbox = () => {
         ...(activeLink.code == "ASSIGNED_TO_ALL" || selectedFilter == "VALIDATED"
           ? {}
           : { assignee: user.info.uuid }),
-        jurisdiction: jurisdiction,
+        jurisdiction: censusJurisdiction,
         limit: limitAndOffset?.limit,
         offset: limitAndOffset?.offset
       },
     },
     config: {
-      enabled: jurisdiction?.length > 0 ? true : false,
+      enabled: censusJurisdiction?.length > 0 ? true : false,
     },
   };
 
@@ -304,10 +301,10 @@ const PopInbox = () => {
   }, [data]);
 
   useEffect(() => {
-    if (jurisdiction?.length > 0) {
+    if (censusJurisdiction?.length > 0) {
       refetch(); // Trigger the API call again after activeFilter changes
     }
-  }, [selectedFilter, jurisdiction, limitAndOffset, activeLink]);
+  }, [selectedFilter, censusJurisdiction, limitAndOffset, activeLink]);
 
   useEffect(() => {
     if (selectedFilter === "VALIDATED") {
@@ -447,7 +444,7 @@ const PopInbox = () => {
         onClear={onClear}
       />
 
-      <div className="pop-inbox-wrapper-filter-table-wrapper">
+      <div className="pop-inbox-wrapper-filter-table-wrapper" style={{ marginBottom: "2.5rem" }}>
         <InboxFilterWrapper
           options={activeFilter}
           onApplyFilters={onFilter}

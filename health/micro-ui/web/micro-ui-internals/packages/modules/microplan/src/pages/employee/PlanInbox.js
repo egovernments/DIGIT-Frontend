@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect, useMemo } from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { useHistory } from "react-router-dom";
-import { Card, Tab, Button, SVG, Loader, ActionBar, Toast , ButtonsGroup} from "@egovernments/digit-ui-components";
+import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonsGroup } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import DataTable from "react-data-table-component";
@@ -22,6 +22,7 @@ const PlanInbox = () => {
   const [showTab, setShowTab] = useState(true);
   const user = Digit.UserService.getUser();
   const [jurisdiction, setjurisdiction] = useState([]);
+  const [censusJurisdiction, setCensusJurisdiction] = useState([]);
   const [hierarchyLevel, setHierarchyLevel] = useState("");
   const [censusData, setCensusData] = useState([]);
   const [boundaries, setBoundaries] = useState([]);
@@ -102,7 +103,7 @@ const PlanInbox = () => {
       PlanSearchCriteria: {
         tenantId: tenantId,
         active: true,
-        jurisdiction: jurisdiction,
+        jurisdiction: censusJurisdiction,
         status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
         ...(activeLink.code == "ASSIGNED_TO_ALL" || selectedFilter == "VALIDATED"
           ? {}
@@ -113,7 +114,7 @@ const PlanInbox = () => {
       },
     },
     config: {
-      enabled: jurisdiction?.length > 0 ? true : false,
+      enabled: censusJurisdiction?.length > 0 ? true : false,
       select: (data) => {
         const tableData = data?.planData?.map((item, index) => {
           const filteredCensus = data?.censusData?.find((d) => d?.boundaryCode === item?.locality);
@@ -163,11 +164,15 @@ const PlanInbox = () => {
   });
 
   const onSearch = (selectedBoundaries) => {
-    // Extract the list of codes from the selectedBoundaries array
-    const boundaryCodes = selectedBoundaries.map((boundary) => boundary.code);
+    if (selectedBoundaries.length === 0) {
+      setShowToast({ key: "warning", label: t("MICROPLAN_BOUNDARY_IS_EMPTY_WARNING"), transitionTime: 5000 });
+    } else {
+      // Extract the list of codes from the selectedBoundaries array
+      const boundaryCodes = selectedBoundaries.map((boundary) => boundary.code);
 
-    // Set jurisdiction with the list of boundary codes
-    setjurisdiction(boundaryCodes);
+      // Set census jurisdiction with the list of boundary codes
+      setCensusJurisdiction(boundaryCodes);
+    }
   };
 
   // need to add table and filter card
@@ -221,12 +226,13 @@ const PlanInbox = () => {
   useEffect(() => {
     if (planEmployee?.planData) {
       setjurisdiction(planEmployee?.planData?.[0]?.jurisdiction);
+      setCensusJurisdiction(planEmployee?.planData?.[0]?.jurisdiction);
       setHierarchyLevel(planEmployee?.planData?.[0]?.hierarchyLevel);
     }
   }, [planEmployee]);
 
   const onClear = () => {
-    setjurisdiction(planEmployee?.planData?.[0]?.jurisdiction);
+    setCensusJurisdiction(planEmployee?.planData?.[0]?.jurisdiction);
   };
 
   const { isLoading: isWorkflowLoading, data: workflowData, revalidate, refetch: refetchBussinessService } = Digit.Hooks.useCustomAPIHook({
@@ -284,10 +290,10 @@ const PlanInbox = () => {
   }, [planWithCensus, selectedFilter, activeLink]);
 
   useEffect(() => {
-    if (jurisdiction?.length > 0) {
+    if (censusJurisdiction?.length > 0) {
       refetchPlanEmployee(); // Trigger the API call again after activeFilter changes
     }
-  }, [selectedFilter, activeLink, jurisdiction, limitAndOffset]);
+  }, [selectedFilter, activeLink, censusJurisdiction, limitAndOffset]);
 
   useEffect(() => {
     if (selectedFilter === "VALIDATED") {
