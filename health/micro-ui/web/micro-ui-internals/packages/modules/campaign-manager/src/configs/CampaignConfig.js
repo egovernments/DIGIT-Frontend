@@ -136,7 +136,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
           ],
         },
         {
-          stepCount: "1",
+          stepCount: "2",
           key: "6",
           body: [
             {

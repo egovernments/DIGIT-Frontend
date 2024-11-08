@@ -8,31 +8,67 @@ import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import NoResultsFound from "./NoResultsFound";
 
-function boundaryDataGrp(boundaryData) {
-  // Create an empty object to hold grouped data by type
+// function boundaryDataGrp(boundaryData) {
+//   // Create an empty object to hold grouped data by type
+//   const groupedData = {};
+
+//   // Iterate through each boundary item in the data
+//   boundaryData.forEach((item) => {
+//     const { type } = item; // Extract the type
+
+//     // If the type doesn't exist in the groupedData, create an array for it
+//     if (!groupedData[type]) {
+//       groupedData[type] = [];
+//     }
+
+//     // Add the current item to its corresponding type array
+//     groupedData[type].push(item);
+//   });
+
+//   // Convert the grouped object into an array of objects
+//   const result = Object.keys(groupedData).map((type) => ({
+//     type,
+//     boundaries: groupedData[type], 
+//   }));
+
+//   return result;
+// }
+
+// Define the function that groups boundary data based on hierarchy
+function boundaryDataGrp(boundaryData, hierarchyDefinition) {
+  if (!hierarchyDefinition) return []; 
+
   const groupedData = {};
 
-  // Iterate through each boundary item in the data
-  boundaryData.forEach((item) => {
-    const { type } = item; // Extract the type
+  // Function to order the boundary types based on parent-child relationship
+  function getOrderedBoundaryTypes(hierarchy) {
+    const result = [];
+    let currentItem = hierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy.find(item => item.parentBoundaryType === null);
+    while (currentItem) {
+        result.push(currentItem.boundaryType);
+        currentItem = hierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy.find(item => item.parentBoundaryType === currentItem.boundaryType);
+    }
+    return result;
+  }
 
-    // If the type doesn't exist in the groupedData, create an array for it
+  // Get the ordered boundary types from hierarchy
+  const orderedBoundaryTypes = getOrderedBoundaryTypes(hierarchyDefinition);
+
+  boundaryData.forEach((item) => {
+    const { type } = item; 
     if (!groupedData[type]) {
       groupedData[type] = [];
     }
-
-    // Add the current item to its corresponding type array
     groupedData[type].push(item);
   });
-
-  // Convert the grouped object into an array of objects
-  const result = Object.keys(groupedData).map((type) => ({
+  const result = orderedBoundaryTypes.map((type) => ({
     type,
-    boundaries: groupedData[type], 
-  }));
+    boundaries: groupedData[type] || [], 
+  })).filter(entry => entry.boundaries.length > 0);
 
   return result;
 }
+
 
 const fetchResourceFile = async (tenantId, resourceIdArr) => {
   const res = await Digit.CustomService.getResponse({
@@ -80,16 +116,8 @@ const CampaignUpdateSummary = (props) => {
   const noAction = searchParams.get("action");
   const [showToast, setShowToast] = useState(null);
   const [userCredential, setUserCredential] = useState(null);
-  const [deliveryErrors, setDeliveryErrors] = useState(null);
-  const [targetErrors, setTargetErrors] = useState(null);
-  const [facilityErrors, setFacilityErrors] = useState(null);
-  const [userErrors, setUserErrors] = useState(null);
-  const [cycleDatesError, setCycleDatesError] = useState(null);
   const [summaryErrors, setSummaryErrors] = useState(null);
   const [projectId, setprojectId] = useState(null);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [cycles, setCycles] = useState([]);
   const [cards, setCards] = useState([]);
   const isPreview = searchParams.get("preview");
   const parentId = searchParams.get("parentId");
@@ -97,6 +125,7 @@ const CampaignUpdateSummary = (props) => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
+  const params = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
   const handleRedirect = (step, activeCycle) => {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
@@ -152,6 +181,30 @@ const CampaignUpdateSummary = (props) => {
   //   // }
   // }, [props?.props?.summaryErrors]);
 
+  const reqCriteria = {
+    url: `/boundary-service/boundary-hierarchy-definition/_search`,
+    changeQueryName: `${params?.hierarchyType}`,
+    body: {
+      BoundaryTypeHierarchySearchCriteria: {
+        tenantId: tenantId,
+        limit: 2,
+        offset: 0,
+        hierarchyType: params?.hierarchyType,
+      },
+    },
+  };
+
+  const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+
+  function getOrderedBoundaryTypes(hierarchy) {
+    const result = [];
+    let currentItem = hierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.find(item => item.parentBoundaryType === null);
+    while (currentItem) {
+        result.push(currentItem.boundaryType);
+        currentItem = hierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.find(item => item.parentBoundaryType === currentItem.boundaryType);
+    }
+    return result;
+}
 
   const { isLoading, data, error, refetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
@@ -176,7 +229,7 @@ const CampaignUpdateSummary = (props) => {
         };
         ss();
         const target = data?.[0]?.deliveryRules;
-        const boundaryData = boundaryDataGrp(data?.[0]?.boundaries);
+        const boundaryData = boundaryDataGrp(data?.[0]?.boundaries ,hierarchyDefinition );
         const hierarchyType = data?.[0]?.hierarchyType;
         
         return {

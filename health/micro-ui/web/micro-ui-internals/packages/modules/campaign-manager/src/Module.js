@@ -69,12 +69,15 @@ export const CONSOLE_MDMS_MODULENAME="HCM-ADMIN-CONSOLE";
  */
 const CampaignModule = ({ stateCode, userType, tenants }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const { data: BOUNDARY_HIERARCHY_TYPE , isLoading: hierarchyLoading } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "hierarchyConfig" }], {
+  const { data: BOUNDARY_HIERARCHY_TYPE , isLoading: hierarchyLoading } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ 
+    name: "HierarchySchema",
+    "filter": "[?(@.type=='console')]"
+   }], {
     select: (data) => {
-      return data?.[CONSOLE_MDMS_MODULENAME]?.hierarchyConfig?.find((item) => item.isActive)?.hierarchy;
+      return data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy;
     },
   },
-  { schemaCode: `${CONSOLE_MDMS_MODULENAME}.hierarchyConfig` }
+  { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
 );
 
 
