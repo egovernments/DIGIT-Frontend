@@ -92,7 +92,8 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
       { name: "villageTerrain" },
       { name: "securityQuestions" },
       { name: "facilityType" },
-      { name: "facilityStatus" }
+      { name: "facilityStatus" },
+      { name: "VehicleDetails" }
     ],
     {
       cacheTime: Infinity,
