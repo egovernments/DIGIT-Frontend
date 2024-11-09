@@ -246,7 +246,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
                         variant="select-dropdown"
                         t={t}
                         isMandatory={false}
-                        option={[...state?.VehicleDetails]}
+                        option={[...(state?.VehicleDetails || [])]}
                         select={(value) => {
                           setSelectedDeletedAssumption(value);
                         }}
