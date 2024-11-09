@@ -14,15 +14,18 @@ const UpdateBoundaryWrapper = ({ onSelect,...props }) => {
   const id = searchParams.get("id");
   const isDraft = searchParams.get("draft");
   // const hierarchyType = props?.props?.hierarchyType;
-  const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "hierarchyConfig" }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.hierarchyConfig` });
+  const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ 
+    name: "HierarchySchema",
+    "filter": "[?(@.type=='console')]"
+   }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` });
   const [selectedData, setSelectedData] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData || []);
   const [boundaryOptions, setBoundaryOptions] = useState(
     props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData || {}
   );
   const [hierarchyType , SetHierarchyType] = useState(props?.props?.hierarchyType);
   const lowestHierarchy = useMemo(() => {
-    return hierarchyConfig?.[CONSOLE_MDMS_MODULENAME]?.hierarchyConfig?.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
-  }, [hierarchyConfig, hierarchyType]);
+    return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
+  }, [HierarchySchema, hierarchyType]);
 
   const reqCriteriaCampaign = {
     url: `/project-factory/v1/project-type/search`,

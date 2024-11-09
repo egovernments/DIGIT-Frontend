@@ -12,10 +12,12 @@ export const boundarySearchConfig = [
         requestBody: {
           BoundaryTypeHierarchySearchCriteria: {
             "tenantId": tenantId,
-            "hierarchyType": ""
+            "hierarchyType": "",
+            "limit": 10,
+            "offset": 0,
+          
           },
-          "offset": 0,
-          "limit": 10
+          
 
         },
           Pagination:{
@@ -25,7 +27,7 @@ export const boundarySearchConfig = [
         masterName: "commonUiConfig",
         moduleName: "MyBoundarySearchConfig",
         minParametersForSearchForm: 0,
-        tableFormJsonPath: "requestParam",
+        tableFormJsonPath: "requestBody.BoundaryTypeHierarchySearchCriteria",
         filterFormJsonPath: "requestBody",
         searchFormJsonPath: "requestBody",
       },
@@ -36,6 +38,9 @@ export const boundarySearchConfig = [
             primaryLabel: "ES_COMMON_SEARCH",
             secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
             minReqFields: 0,
+            defaultValues: {
+              Name: ""
+            },
             fields: [
               {
                   label: "HIERARCHY_NAME",

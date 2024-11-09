@@ -1029,9 +1029,16 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT") });
           }
         },
-        onError: (result) => {
-          setDownloadError(true);
-          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+        onError: (error, result) => {
+          const errorCode = error?.response?.data?.Errors?.[0]?.code;
+          if (errorCode == "NativeIoException") {
+            setDownloadError(true);
+            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+          }
+          else {
+            setDownloadError(true);
+            setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+          }
         },
       }
     );

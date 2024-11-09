@@ -434,7 +434,7 @@ const CreateChecklist = () => {
       uniqueLocal.push({
         code: `${campaignName}.${checklistTypeTemp}.${roleTemp}`,
         locale: locale,
-        message: `${checklistType} ${role}`,
+        message: `${t(checklistTypeLocal)} ${t(roleLocal)}`,
         module: "hcm-checklist"
       });
       if (data.success) { // Replace with your actual condition
@@ -497,7 +497,7 @@ const CreateChecklist = () => {
             <div style={{ display: "flex", gap: "1rem" }}>
               <Button
                 variation="secondary"
-                label={t("CLEAR")}
+                label={t("HCM_CHECKLIST_CLEAR")}
                 className={"hover"}
                 style={{ marginTop: "2rem", marginBottom: "2rem" }}
                 // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}

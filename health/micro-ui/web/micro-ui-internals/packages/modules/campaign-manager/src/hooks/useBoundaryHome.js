@@ -86,14 +86,18 @@ const useBoundaryHome = ({ screenType = "campaign", defaultHierarchyType = "", h
       });
       // Second API Call: Merge MDMS Data with Service Definition
       const final = selectData(mdmsResponse);
+      // let final = selectData(mdmsResponse);
+      // final.campaign.hierarchyType="BOUNDARYDEMO35";
 
       const boundaryConfig = final?.[screenType];
+
       const employeeDetails = (boundaryConfig?.department?.length > 0 && (await fetchEmployeeDetails(userName, tenantId))) || null;
-      const hierarchyName=hierarchyType || boundaryConfig?.hierarchytype;
-      const defaultHierarchyName=defaultHierarchyType || final?.["default"]?.hierarchytype;
+      const hierarchyName=hierarchyType || boundaryConfig?.hierarchy;
+      // const hierarchyName="BOUNDARYDEMO000";
+      const defaultHierarchyName=defaultHierarchyType || final?.["default"]?.hierarchy;
       const boundaryData = await fetchBoundaryHierarchy(hierarchyName, tenantId);
       const defaultBoundaryData = await fetchBoundaryHierarchy(defaultHierarchyName, tenantId);
-      boundaryData && generateFile(hierarchyType || boundaryConfig?.hierarchytype, tenantId);
+      boundaryData && generateFile(hierarchyType || boundaryConfig?.hierarchy, tenantId);
 
       // Return a promise that resolves after both API calls are complete
       return new Promise((resolve) => {

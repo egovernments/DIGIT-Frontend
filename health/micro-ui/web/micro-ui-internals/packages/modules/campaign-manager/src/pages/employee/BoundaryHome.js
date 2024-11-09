@@ -52,7 +52,6 @@ const BoundaryHome = () => {
 const type=searchParams.get("type")|| config?.type;
 
   const {isLoading,data,error}=Digit.Hooks.campaign.useBoundaryHome({ screenType: type,defaultHierarchyType:searchParams?.get("defaultHierarchyType"),hierarchyType:searchParams?.get("hierarchyType"),userName:Digit.UserService.getUser()?.info?.userName,tenantId });
-
   if (isLoading) return <Loader />;
 
   return (
