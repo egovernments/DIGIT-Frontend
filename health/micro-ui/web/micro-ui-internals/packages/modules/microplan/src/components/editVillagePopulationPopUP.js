@@ -80,8 +80,14 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
     }));
   };
 
-  const nonEditableFields = census.additionalFields.filter(field => !field.editable);
-  const editableFields = census.additionalFields.filter(field => field.editable);
+  const nonEditableFields = census.additionalFields
+    .filter(field => !field.editable)
+    .sort((a, b) => a.order - b.order);
+
+  const editableFields = census.additionalFields
+    .filter(field => field.editable)
+    .sort((a, b) => a.order - b.order);
+
 
   return (
     <>
