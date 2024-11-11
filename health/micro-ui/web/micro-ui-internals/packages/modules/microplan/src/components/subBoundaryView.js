@@ -4,7 +4,7 @@ import { Card, Button, PopUp, Chip, Loader } from '@egovernments/digit-ui-compon
 import { ShowMoreWrapper } from './ShowMoreWrapper';
 import { useTranslation } from 'react-i18next';
 
-const SubBoundaryView = ({ title, arr, style, editHandler, isEditable }) => {
+const SubBoundaryView = ({ title, arr, style, editHandler, isEditable, headerStyle={fontSize:"1rem"} }) => {
 
   const [showPopUp, setShowPopUp] = useState(false);
   const { t } = useTranslation();
@@ -20,7 +20,7 @@ const SubBoundaryView = ({ title, arr, style, editHandler, isEditable }) => {
           <Card type={"secondary"} style={style}>
 
             <div className="mp-header-container" style={{ marginBottom: "0px" }}>
-              <Header className="summary-sub-heading subBoundary">
+              <Header className="summary-sub-heading subBoundary" styles={headerStyle}>
                 {t(title)}
               </Header>
               {isEditable && editHandler && <Button
