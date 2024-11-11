@@ -502,6 +502,11 @@ export const myCampaignConfig = {
                 // additionalCustomization: true,
               },
               {
+                label: "CM_DRAFT_TYPE",
+                jsonPath: "parentId",
+                additionalCustomization: true,
+              },
+              {
                 label: "CAMPAIGN_TYPE",
                 jsonPath: "projectType",
                 prefix: "CAMPAIGN_PROJECT_",

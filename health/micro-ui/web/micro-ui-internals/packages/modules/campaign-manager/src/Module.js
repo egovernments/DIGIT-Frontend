@@ -40,7 +40,7 @@ import DeliveryDetailsSummary from "./components/DeliveryDetailsSummary";
 import DataUploadSummary from "./components/DataUploadSummary";
 import CampaignDetailsSummary from "./components/CampaignDetailsSummary";
 import BoundaryDetailsSummary from "./components/BoundaryDetailsSummary";
-import UpdateBoundary from "./pages/employee/UpdateBoundary";
+import UpdateBoundary from "./pages/employee/UpdateCampaign";
 import UpdateBoundaryWrapper from "./components/UpdateBoundaryWrapper";
 // import SelectingBoundaryComponent from "./components/SelectingBoundaryComponent";
 import { Wrapper } from "./components/SelectingBoundaryComponent";
