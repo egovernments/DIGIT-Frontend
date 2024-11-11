@@ -671,6 +671,7 @@ tbody {
       @extend .typography.text-heading-m;
       margin: unset;
       margin-bottom: 1rem;
+      margin-top: 0rem !important;
     }
 
     .label-field-grid {
