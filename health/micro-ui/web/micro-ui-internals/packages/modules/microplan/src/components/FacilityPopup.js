@@ -57,8 +57,15 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
 
     // Reset selected rows when changing tabs
     setSelectedRows([]);
+    setCurrentPage(1);
     setIsAllSelected(false);
   };
+
+  useEffect(async () => {
+    setLoader(true);
+    await censusSearch([]);
+    setLoader(false);
+  }, [currentPage, rowsPerPage])
 
 
 
@@ -207,7 +214,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const columns = [
     {
       name: t("MP_FACILITY_VILLAGE"), // Change to your column name
-      selector: (row) => row.boundaryCode, // Replace with the appropriate field from your data
+      selector: (row) => t(row.boundaryCode), // Replace with the appropriate field from your data
       sortable: false,
     },
     {
@@ -283,7 +290,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
       }
     );
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    await censusSearch([]);
+    // setCurrentPage(1);
     setLoader(false);
   };
 

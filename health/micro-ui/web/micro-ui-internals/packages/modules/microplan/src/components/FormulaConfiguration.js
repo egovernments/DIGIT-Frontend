@@ -320,11 +320,11 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
               <div>
                 <Card type="secondary">
                   <LabelFieldPair className="formula-label-field">
-                    <span>{`${t(formula.output)}`}
-                    <span className="icon-wrapper">
+                    <span style={{ marginRight: "0rem" }}>{`${t(formula.output)}`}
+                    </span>
+                    <div style={{ marginTop: "0.75rem" }}>
                       <TooltipWrapper content={t(`FORMULA_MESSAGE_FOR_${formula.output}`)} children={<InfoBannerIcon fill={'#C84C0E'} />} />
-                    </span>
-                    </span>
+                    </div>
                     <div className="equals-icon">=</div>
                     <Dropdown
                       variant="select-dropdown"
