@@ -19,11 +19,13 @@
   align-items: start;
 }
 .campaign-type {
+  margin-top: 0.8rem;
   margin-right: 5rem;
   padding-bottom: 1.2rem;
   font-weight: bold;
 }
 .name-container {
+  margin-top: 0.8rem;
   margin-right: 4rem;
   font-weight: bold;
   text-wrap: nowrap;
@@ -176,4 +178,23 @@
   .digit-button-primary {
     align-self: flex-end;
   }
+}
+
+.hierarchy-boundary-heading {
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+.hierarchy-boundary-sub-heading {
+  width: 20rem;
+  margin-top: 0.6rem;
+  font-weight: 600;
+  font-family: 'Roboto', sans-serif;
+}
+
+.hierarchy-boundary-sub-heading2 {
+  font-size: 1.2rem; 
+  font-weight: 600;
+  font-family: 'Roboto', sans-serif;
 }

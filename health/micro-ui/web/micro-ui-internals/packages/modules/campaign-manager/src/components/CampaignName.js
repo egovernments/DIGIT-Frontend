@@ -103,7 +103,7 @@ const CampaignName = ({ onSelect, formData, control, formState, ...props }) => {
         <Card className = "setup-campaign-card">
       <Header styles={{ margin: '0px' }}>{t(`HCM_CAMPAIGN_NAME_HEADER`)}</Header>
       <p className="name-description">{t(`HCM_CAMPAIGN_NAME_DESCRIPTION`)}</p>
-      <LabelFieldPair className="name-container-label" style={{ alignItems: "center" , display: "flex" }}>
+      <LabelFieldPair className="name-container-label" style={{ display: "flex" }}>
         <div className="name-container">
           <span>{`${t("HCM_CAMPAIGN_NAME")}`}</span>
           <span className="mandatory-span">*</span>

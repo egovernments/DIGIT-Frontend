@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect, Fragment } from "react";
 import { UploadIcon, FileIcon, DeleteIconv2, Toast,  Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
+import { LabelFieldPair } from "@egovernments/digit-ui-components";
 import { Button, CardText, Dropdown, ErrorMessage, PopUp, Stepper, TextBlock , Card} from "@egovernments/digit-ui-components";
 
 const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
@@ -110,7 +110,7 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
           <Card className = "setup-campaign-card">
             <Header styles={{ margin: '0px' }}>{t(`HCM_CAMPAIGN_TYPE_HEADER`)}</Header>
             <p className="description-type">{t(`HCM_CAMPAIGN_TYPE_DESCRIPTION`)}</p>
-            <LabelFieldPair style={{ alignItems: "center" , display: "flex" }}>
+            <LabelFieldPair style={{ display: "flex", marginBottom:"-0.8rem" }}>
               <div className="campaign-type">
                 <span>{`${t("HCM_CAMPAIGN_TYPE")}`}</span>
                 <span className="mandatory-span">*</span>
