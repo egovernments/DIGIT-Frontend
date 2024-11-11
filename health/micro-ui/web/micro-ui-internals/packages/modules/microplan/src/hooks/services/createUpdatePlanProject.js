@@ -59,7 +59,7 @@ const CreateResource = async (req) => {
       tenantId: Digit.ULBService.getCurrentTenantId(),
       action: "draft",
       parentId: null,
-      startDate: Math.floor(new Date(new Date().setDate(new Date().getDate() + 100)).getTime()),
+      startDate: Math.floor(new Date(new Date().setDate(new Date().getDate() + 30)).getTime()), //hardcoding this rn to update campaign. Check with admin console team
       campaignName: totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName,
       resources: [],
       projectType: totalFormData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code,
@@ -324,8 +324,6 @@ const createUpdatePlanProject = async (req) => {
         const updatedCampaignObject = {
           ...campaignObjectForBoundary,
           boundaries: totalFormData?.BOUNDARY?.boundarySelection?.selectedData,
-          startDate: Math.floor(new Date(new Date().setDate(new Date().getDate() + 100)).getTime()),
-          //hardcoding this rn to update campaign. Check with admin console team
         };
         const campaignResBoundary = await updateProject(updatedCampaignObject);
         await new Promise((resolve) => setTimeout(resolve, 5000));
