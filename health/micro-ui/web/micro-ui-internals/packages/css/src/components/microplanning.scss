@@ -2752,3 +2752,24 @@ $border-color: rgba(214, 213, 212, 1);
 .sc-fzXfNN.sc-fzXfNO.sc-fzXfNP.iSamCd.rdt_TableCell>div:first-of-type {
   width: 100%;
 }
+.label-field-pair.new-assumption-pop{
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  .bold{
+    margin-top: 0.5rem;
+    width: 14rem
+  }
+  .digit-dropdown-employee-select-wrap{
+    width: 27rem;
+  }
+  .digit-text-input-field{
+    width: 27rem;
+  }
+}
+.popUpClass.new-assumption-pop{
+  .digit-popup-footer{
+    width: 30rem;
+    margin-left: auto;
+  }
+}

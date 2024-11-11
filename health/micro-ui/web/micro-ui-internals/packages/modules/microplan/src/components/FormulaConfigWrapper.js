@@ -366,10 +366,10 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
   useEffect(() => {
     // Step 1: Filter assumptions based on current category
     if (assumptionsInPlan?.length > 0) {
-      const filteredAssumptions = assumptionsInPlan?.filter((assumption) => assumption.category === currentCategory);
+      // const filteredAssumptions = assumptionsInPlan?.filter((assumption) => assumption.category === currentCategory);
 
       // Step 2: Extract keys from filtered assumptions
-      const keys = filteredAssumptions?.map((assumption) => assumption.key);
+      const keys = assumptionsInPlan?.map((assumption) => assumption.key);
       setAssumptions(keys);
     }
   }, [currentCategory, formulaConfigValues, setFormulaConfigValues]);
