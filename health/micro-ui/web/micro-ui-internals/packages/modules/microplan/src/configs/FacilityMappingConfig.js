@@ -1,7 +1,7 @@
 import { useMyContext } from "../utils/context";
 
 const facilityMappingConfig = (projectType) => {
-  console.log(projectType, 'PPPPPPPPPPP');
+
   const { state, dispatch } = useMyContext();
   return {
     label: "",
