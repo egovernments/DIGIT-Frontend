@@ -1,6 +1,7 @@
 import { useMyContext } from "../utils/context";
 
-const facilityMappingConfig = () => {
+const facilityMappingConfig = (projectType) => {
+  console.log(projectType, 'PPPPPPPPPPP');
   const { state, dispatch } = useMyContext();
   return {
     label: "",
@@ -63,7 +64,7 @@ const facilityMappingConfig = () => {
                 optionsCustomStyle: {
                   top: "2.3rem",
                 },
-                options:state?.facilityType || []
+                options: state?.facilityType || []
               },
             },
             {
@@ -77,7 +78,7 @@ const facilityMappingConfig = () => {
                 },
                 name: "status",
                 optionsKey: "name",
-                options:state?.facilityStatus || []
+                options: state?.facilityStatus || []
               },
             },
             {
@@ -120,7 +121,7 @@ const facilityMappingConfig = () => {
               jsonPath: "additionalDetails.facilityStatus",
             },
             {
-              label: "MICROPLAN_FACILITY_CAPACITY",
+              label: `MICROPLAN_FACILITY_${projectType}_CAPACITY`,
               jsonPath: "additionalDetails.capacity",
             },
             {
@@ -160,7 +161,7 @@ const facilityMappingConfig = () => {
         show: true,
       },
     },
-    customHookName:"microplanv1.useFcilityCatchmentMapping",
+    customHookName: "microplanv1.useFcilityCatchmentMapping",
     additionalSections: {},
   };
 };
