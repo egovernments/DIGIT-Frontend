@@ -35,7 +35,8 @@ const GeoPode = () => {
     const language = Digit.StoreData.getCurrentLanguage();
     const modulePrefix = "hcm";
     const stateCode = Digit.ULBService.getCurrentTenantId();
-    const moduleCode = `boundary-${defaultHierarchyType.toLowerCase().replace(/\s+/g, "_")}`;
+    const getModuleCode = (hierarchyType) => `boundary-${hierarchyType.toLowerCase().replace(/\s+/g, "_")}`;
+    const moduleCode = getModuleCode(defaultHierarchyType);
     const { isLoading, data } = Digit.Services.useStore({
         stateCode,
         moduleCode,
