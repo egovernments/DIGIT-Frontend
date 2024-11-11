@@ -203,7 +203,7 @@ const GeoPode = () => {
                         <div style={{ height: "2rem" }}></div>
                         <div>
                             {boundaryData.map((item, index) => (
-                                <div>
+                                <div key={`boundary-${index}`}>
                                     <div style={{ fontWeight: "600", fontSize: "1.2rem" }}>
                                         {/* {item?.boundaryType} */}
                                         {`${t((defaultHierarchyType + "_" + item?.boundaryType).toUpperCase().replace(/\s+/g, "_"))}`}
