@@ -172,7 +172,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
                   style={{ marginBottom: "0" }}
                   populators={{ name: item }}
                   id={index}
-                  placeholder={t("MP_ENTER_ASSUMPTION")}
+                  placeholder={category === "CAMPAIGN_VEHICLES" ?  t(`MP_ENTER_ASSUMPTION_${category}`) : t("MP_ENTER_ASSUMPTION")}
                   onChange={(event) => {
                     handleAssumptionChange(category, event, item);
                   }}
@@ -192,7 +192,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
 
         <Button
           icon="Add"
-          label={t("ADD_ASSUMPTION")}
+          label={category === "CAMPAIGN_VEHICLES" ? t(`ADD_ASSUMPTION_${category}`) : t("ADD_ASSUMPTION")}
           onClick={() => setAssumptionsPopUp(true)}
           variation="secondary"
           // isDisabled={isAddNewDisabled}
@@ -235,7 +235,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
           <PopUp
             className={"popUpClass new-assumption-pop"}
             type={"default"}
-            heading={t("CONFIRM_NEW_ASSUMPTION")}
+            heading={t(category === "CAMPAIGN_VEHICLES" ? `CONFIRM_NEW_ASSUMPTION_${category}` : "CONFIRM_NEW_ASSUMPTION")}
             equalWidthButtons={true}
             children={
               category === "CAMPAIGN_VEHICLES"
