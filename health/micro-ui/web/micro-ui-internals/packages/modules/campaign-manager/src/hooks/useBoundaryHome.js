@@ -93,7 +93,6 @@ const useBoundaryHome = ({ screenType = "campaign", defaultHierarchyType = "", h
 
       const employeeDetails = (boundaryConfig?.department?.length > 0 && (await fetchEmployeeDetails(userName, tenantId))) || null;
       const hierarchyName=hierarchyType || boundaryConfig?.hierarchy;
-      // const hierarchyName="BOUNDARYDEMO000";
       const defaultHierarchyName=defaultHierarchyType || final?.["default"]?.hierarchy;
       const boundaryData = await fetchBoundaryHierarchy(hierarchyName, tenantId);
       const defaultBoundaryData = await fetchBoundaryHierarchy(defaultHierarchyName, tenantId);
