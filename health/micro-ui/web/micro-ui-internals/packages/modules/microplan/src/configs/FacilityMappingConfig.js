@@ -140,6 +140,7 @@ const facilityMappingConfig = (projectType) => {
             {
               label: "MICROPLAN_FACILITY_RESIDINGVILLAGE",
               jsonPath: "residingBoundary",
+              additionalCustomization: true,
             },
             {
               label: "MICROPLAN_FACILITY_ACTION",

@@ -42,15 +42,21 @@ export const MicroplanModule = ({ stateCode, userType, tenants }) => {
 
   const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({BOUNDARY_HIERARCHY_TYPE,tenantId});
 
-  const moduleCode = ["Microplanning","campaignmanager", "workbench", "mdms", "schema", "hcm-admin-schemas", `boundary-${BOUNDARY_HIERARCHY_TYPE}`];
+  const moduleCode = ["Microplanning","campaignmanager", "workbench", "mdms", "schema", "hcm-admin-schemas"];
   const language = Digit.StoreData.getCurrentLanguage();
+  const { isLoading: isBoundaryLocalisationLoading, data: boundaryStore } = Digit.Services.useStore({
+    stateCode,
+    moduleCode:[`boundary-${BOUNDARY_HIERARCHY_TYPE}`],
+    language,
+    modulePrefix : "hcm",
+  });
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
     moduleCode,
     language,
   });
 
-  if (isLoading) {
+  if (isLoading && isBoundaryLocalisationLoading) {
     return <Loader />;
   }
   return (
