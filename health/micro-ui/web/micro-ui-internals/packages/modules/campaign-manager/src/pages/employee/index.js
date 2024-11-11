@@ -7,7 +7,7 @@ import SelectingBoundaries from "../../components/SelectingBoundaries";
 import ConfigureApp from "./ConfigureApp";
 import { CreateChecklist} from "./CreateChecklist";
 import SearchChecklist from "./SearchChecklist";
-import UpdateBoundary from "./UpdateBoundary";
+import UpdateCampaign from "./UpdateCampaign";
 import GeoPode from "./GeoPode";
 import ViewBoundary from "./ViewBoundary";
 import ViewHierarchy from "./ViewHierarchy";
@@ -147,7 +147,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
           <PrivateRoute path={`${path}/boundary/geopode`} component={()=> <GeoPode />} />
           <PrivateRoute path={`${path}/boundary/view-all-hierarchy`} component={()=> <ViewBoundary />} />
           <PrivateRoute path={`${path}/boundary/view-hierarchy`} component={()=> <ViewHierarchy />} />
-          <PrivateRoute path={`${path}/update-campaign`} component={() => <UpdateBoundary />} />
+          <PrivateRoute path={`${path}/update-campaign`} component={() => <UpdateCampaign />} />
         </AppContainer>
       </Switch>
     </React.Fragment>

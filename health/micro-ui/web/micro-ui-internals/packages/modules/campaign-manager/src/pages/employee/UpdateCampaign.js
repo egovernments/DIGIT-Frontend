@@ -6,12 +6,13 @@ import { Toast , Stepper} from "@egovernments/digit-ui-components";
 import _ from "lodash";
 import { UpdateBoundaryConfig } from "../../configs/UpdateBoundaryConfig";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
+import { compareIdentical, groupByTypeRemap, resourceData, updateUrlParams } from "../../utils/setupCampaignHelpers";
 
 /**
- * The `SetupCampaign` function in JavaScript handles the setup and management of campaign details,
+ * The `UpdateCampaign` function in JavaScript handles the Updating of campaign details,
  * including form data handling, validation, and submission.
- * @returns The `SetupCampaign` component is being returned. It consists of a form setup for creating
- * or updating a campaign with multiple steps like campaign details, delivery details, boundary
+ * @returns The `UpdateCampaign` component is being returned. It consists of a form setup for Updating
+ * a Created campaign with multiple steps like boundary
  * details, targets, facility details, user details, and review details. The form data is validated at
  * each step, and the user can navigate between steps using a stepper component. The form submission
  * triggers API calls to create or update the campaign
@@ -20,54 +21,15 @@ import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 
 
 
-function groupByTypeRemap(data) {
-  if (!data) return null;
-
-  const result = {};
-
-  data.forEach((item) => {
-    const type = item?.type;
-    const boundaryType = item?.type;
-    const parentCode = item?.parent !== undefined ? item.parent : null;
-
-    if (!result[type]) {
-      result[type] = {};
-    }
-
-    if (!result[type][parentCode]) {
-      result[type][parentCode] = {
-        parentCode,
-        boundaryTypeData: {
-          TenantBoundary: [
-            {
-              boundary: [],
-            },
-          ],
-        },
-      };
-    }
-
-    const targetBoundaryArray = result[type][parentCode].boundaryTypeData.TenantBoundary[0].boundary;
-    targetBoundaryArray.push({ ...item, boundaryType });
-  });
-}
-// Example usage:
-// updateUrlParams({ id: 'sdjkhsdjkhdshfsdjkh', anotherParam: 'value' });
-function updateUrlParams(params) {
-  const url = new URL(window.location.href);
-  Object.entries(params).forEach(([key, value]) => {
-    url.searchParams.set(key, value);
-  });
-  window.history.replaceState({}, "", url);
-}
-
-const UpdateBoundary = ({hierarchyData }) => {
+const UpdateCampaign = ({hierarchyData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const history = useHistory();
   const [currentStep, setCurrentStep] = useState(0);
   const [totalFormData, setTotalFormData] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDataCreating, setIsDataCreating] = useState(false);
+
   const [campaignConfig, setCampaignConfig] = useState(UpdateBoundaryConfig(totalFormData, null, isSubmitting ));
   const [shouldUpdate, setShouldUpdate] = useState(false);
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_UPDATE_FORM_DATA", {});
@@ -90,7 +52,6 @@ const UpdateBoundary = ({hierarchyData }) => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
-  const [displayMenu, setDisplayMenu] = useState(null);
   const [fetchBoundary, setFetchBoundary] = useState(() => Boolean(searchParams.get("fetchBoundary")));
   const [fetchUpload, setFetchUpload] = useState(false);
   const [active, setActive] = useState(0);
@@ -272,14 +233,8 @@ const UpdateBoundary = ({hierarchyData }) => {
     
   }
 
-  function resourceData(facilityData, boundaryData, userData) {
-    const resources = [facilityData, boundaryData, userData].filter((data) => data !== null && data !== undefined);
-    return resources;
-  }
 
-  const compareIdentical = (draftData, payload) => {
-    return _.isEqual(draftData, payload);
-  };
+
   //API CALL
   useEffect(async () => {
     if (shouldUpdate === true) {
@@ -319,6 +274,8 @@ const UpdateBoundary = ({hierarchyData }) => {
           // }
           payloadData.deliveryRules = CampaignData?.CampaignDetails?.[0]?.deliveryRules;
           if (compareIdentical(draftData, payloadData) === false) {
+            setIsDataCreating(true);
+
             await updateCampaign(payloadData, {
               onError: (error, variables) => {
                 console.log(error);
@@ -337,6 +294,11 @@ const UpdateBoundary = ({hierarchyData }) => {
                   }
                 );
                 Digit.SessionStorage.del("HCM_CAMPAIGN_UPDATE_FORM_DATA");
+              },
+              onSettled: () => {
+                // This will always run after the mutation completes
+                setIsDataCreating(false);
+                // Final function logic here
               },
             });
           }
@@ -376,6 +338,7 @@ const UpdateBoundary = ({hierarchyData }) => {
           //   payloadData.deliveryRules = temp;
           // }
           payloadData.deliveryRules = CampaignData?.CampaignDetails?.[0]?.deliveryRules;
+          setIsDataCreating(true);
 
           await mutate(payloadData, {
             onError: (error, variables) => {
@@ -390,6 +353,11 @@ const UpdateBoundary = ({hierarchyData }) => {
               if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
                 setCurrentKey(currentKey + 1);
               }
+            },
+            onSettled: () => {
+              // This will always run after the mutation completes
+              setIsDataCreating(false);
+              // Final function logic here
             },
           });
         };
@@ -849,20 +817,6 @@ const UpdateBoundary = ({hierarchyData }) => {
     return <Loader />;
   }
 
-  function onActionSelect(action) {
-    setDisplayMenu(false);
-    switch (action) {
-      case "UPDATE_DATES":
-        history.push(`/${window.contextPath}/employee/campaign/update-dates-boundary?id=${id}`, {
-          name: draftData?.campaignName,
-          projectId: draftData?.projectId,
-          data: draftData,
-        });
-        break;
-      default:
-        break;
-    }
-  }
 
   return (
     <React.Fragment>
@@ -882,6 +836,8 @@ const UpdateBoundary = ({hierarchyData }) => {
           };
         })}
         onSubmit={onSubmit}
+        isDisabled={isDataCreating}
+
         showSecondaryLabel={currentKey > 1 ? true : false}
         secondaryLabel={isChangeDates === "true" && currentKey == 6 ? t("HCM_BACK") : noAction === "false" ? null : t("HCM_BACK")}
         actionClassName={"actionBarClass"}
@@ -903,5 +859,5 @@ const UpdateBoundary = ({hierarchyData }) => {
   );
 };
 
-export default UpdateBoundary;
+export default UpdateCampaign;
 
