@@ -71,7 +71,7 @@ const type=searchParams.get("type")|| config?.type;
             label={t(key)}
             isDisabled={key=="EDIT_BOUNDARY_DATA"&&Object.keys(data?.boundaryData||{})?.length==0}
             onClick={()=>navigate(history,key,data,setShowPopUp)}
-            style={{ width: "38rem", height: "5rem" }}
+            style={{ width: "35rem", height: "5rem" }}
             textStyles={{ fontSize: "1.5rem" }}
           />)
         })}
