@@ -1,7 +1,7 @@
 import { Link, useLocation, useHistory, useParams } from "react-router-dom";
 import _ from "lodash";
 import React, { useState, Fragment } from "react";
-import { Button as ButtonNew , Dropdown} from "@egovernments/digit-ui-components";
+import { Button as ButtonNew, Dropdown } from "@egovernments/digit-ui-components";
 import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader, EditIcon, ArrowForward } from "@egovernments/digit-ui-react-components";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
@@ -504,7 +504,7 @@ export const UICustomizations = {
       const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
       switch (key) {
         case "MICROPLAN_FACILITY_ASSIGNED_VILLAGES":
-          const assignedVillages = row?.additionalDetails?.assignedVillages;
+          const assignedVillages = row?.serviceBoundaries;
           return assignedVillages ? assignedVillages.length : null;
         case "MICROPLAN_FACILITY_ACTION":
           return (
