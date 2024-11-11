@@ -441,12 +441,10 @@ function epochToDateTime(epoch) {
   // Create a new Date object using the epoch time
   const date = new Date(epoch);
 
-
   const year = date.getFullYear();
-
-  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based, so add 1
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const month = monthNames[date.getMonth()]; // Get month name
   const day = String(date.getDate()).padStart(2, "0");
-
 
   // Extract time components
   let hours = date.getHours();
@@ -459,7 +457,7 @@ function epochToDateTime(epoch) {
   const formattedHours = String(hours).padStart(2, "0");
 
   // Format date and time as "DD MMM YYYY, HH:MM AM/PM"
-  const formattedDateTime = `${day} ${month} ${year} ${formattedHours}:${minutes} ${ampm}`;
+  const formattedDateTime = `${day} ${month} ${year}, ${formattedHours}:${minutes} ${ampm}`;
 
   // Return the formatted date and time
   return formattedDateTime;

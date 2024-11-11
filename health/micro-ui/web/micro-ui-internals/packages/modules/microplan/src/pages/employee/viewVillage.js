@@ -307,21 +307,23 @@ const VillageView = () => {
                             variation="secondary"
                         />}
                     </div>
-                    {Object.entries(data?.additionalFields || []).map(([key, fieldData]) => (
-                        <React.Fragment key={fieldData.id || key}>
-                            <ViewCardFieldPair
-                                className=""
-                                inline
-                                label={t(`HCM_MICROPLAN_${fieldData.key || key}_LABEL`)}
-                                style={{}}
-                                value={fieldData.value || t("ES_COMMON_NA")}
-                            />
-                            {/* Only show the divider if it's not the last item */}
-                            {key !== Object.keys(data?.additionalFields).slice(-1)[0] && (
-                                <Divider className="" variant="small" />
-                            )}
-                        </React.Fragment>
-                    ))}
+                    {Object.values(data?.additionalFields || [])
+                        .sort((a, b) => a.order - b.order)
+                        .map((fieldData, index, array) => (
+                            <React.Fragment key={fieldData.id || index}>
+                                <ViewCardFieldPair
+                                    className=""
+                                    inline
+                                    label={t(`HCM_MICROPLAN_${fieldData.key}_LABEL`)}
+                                    style={{}}
+                                    value={fieldData.value || t("ES_COMMON_NA")}
+                                />
+                                {/* Only show the divider if it's not the last item */}
+                                {index !== array.length - 1 && (
+                                    <Divider className="" variant="small" />
+                                )}
+                            </React.Fragment>
+                        ))}
                 </Card>
 
                 {showEditVillagePopulationPopup && (
