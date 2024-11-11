@@ -35,7 +35,6 @@ const PlanInbox = () => {
   const [rowsPerPage, setRowsPerPage] = useState(50);
   const [totalRows, setTotalRows] = useState(0);
   const [perPage, setPerPage] = useState(10);
-  const [allowAction, setAllowAction] = useState(true);
   const [showToast, setShowToast] = useState(null);
   const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
@@ -61,8 +60,6 @@ const PlanInbox = () => {
       //   queryKey: currentKey,
     }
   );
-
-  console.log(censusJurisdiction, "JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJj");
 
   useEffect(() => {
     if (selectedFilter === "VALIDATED") {
@@ -319,15 +316,6 @@ const PlanInbox = () => {
       }
     }
   }, [selectedFilter]);
-
-
-  useEffect(() => {
-    if (selectedFilter !== "VALIDATED" && activeLink.code === "ASSIGNED_TO_ALL") {
-      setAllowAction(false);
-    } else {
-      setAllowAction(true);
-    }
-  }, [selectedFilter, activeLink]);
 
   const onFilter = (selectedStatus) => {
     setSelectedFilter(selectedStatus?.code);
@@ -615,7 +603,7 @@ const PlanInbox = () => {
                 data={planWithCensus?.tableData}
                 pagination
                 paginationServer
-                selectableRows={allowAction}
+                selectableRows
                 selectableRowsHighlight
                 onChangeRowsPerPage={handlePerRowsChange}
                 onChangePage={handlePageChange}

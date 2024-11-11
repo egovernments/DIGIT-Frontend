@@ -10,7 +10,6 @@ const FacilityCatchmentMapping = () => {
   const [actionBarPopUp, setactionBarPopUp] = useState(false);
   const { t } = useTranslation();
   const history = useHistory();
-  const config = facilityMappingConfig();
   const url = Digit.Hooks.useQueryParams();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const user = Digit.UserService.getUser();
@@ -18,6 +17,7 @@ const FacilityCatchmentMapping = () => {
   const [showPopup, setShowPopup] = useState(false);
   const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
   const [currentRow, setCurrentRow] = useState(null);
+  const [projectType, setProjectType] = useState('');
   const [censusQueryName, setCensusQueryName] = useState("censusData");
   // Check if the user has the 'rootfacilitycatchmentmapper' role
   const isRootApprover = userRoles?.includes("ROOT_FACILITY_CATCHMENT_MAPPER");
@@ -42,6 +42,23 @@ const FacilityCatchmentMapping = () => {
     },
   });
 
+
+  const {
+    isLoading: isLoadingCampaignObject,
+    data: campaignObject,
+    error: errorCampaign,
+    refetch: refetchCampaign,
+  } = Digit.Hooks.microplanv1.useSearchCampaign(
+    {
+      CampaignDetails: {
+        tenantId,
+        ids: [url?.campaignId],
+      },
+    },
+    {
+      enabled: url?.campaignId ? true : false,
+    }
+  );
 
   // Custom hook to fetch census data based on microplanId 
   const reqCriteriaResource = {
@@ -96,12 +113,21 @@ const FacilityCatchmentMapping = () => {
     return updatedPlanConfig;
   };
 
+  // Effect to update projectType based on campaign data
+  useEffect(() => {
+    if (campaignObject?.projectType) {
+      setProjectType(campaignObject?.projectType);
+    }
+  }, [campaignObject]);
+
   const onClickRow = (row) => {
     setShowPopup(true)
     setCurrentRow(row.original)
   }
 
-  if (isPlanEmpSearchLoading || isLoading || isLoadingPlanObject)
+  const config = facilityMappingConfig(projectType);
+
+  if (isPlanEmpSearchLoading || isLoading || isLoadingPlanObject || isLoadingCampaignObject)
     return <Loader />
 
   return (

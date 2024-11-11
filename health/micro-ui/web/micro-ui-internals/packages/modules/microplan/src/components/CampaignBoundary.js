@@ -256,7 +256,6 @@ const CampaignBoundary = ({ customProps, setupCompleted }) => {
     let bH = [];
     let top = null;
     let dic = {};
-
     for (const ob of boundaryHierarchy) {
       let bType = ob["boundaryType"];
       let parent = ob["parentBoundaryType"];
@@ -303,7 +302,7 @@ const CampaignBoundary = ({ customProps, setupCompleted }) => {
       <BoundaryKpi data={statusMap} heading={t("CAMPAIGN_BOUNDARY")} />
       {bHierarchy.length > 1 ? (
         <div className="mp-margin-bottom">
-          <SubBoundaryView style={{ background: "#fff", gap: "1.5rem" }} title={bHierarchy?.[1]} arr={parent_group?.[bHierarchy?.[1]]} editHandler={editHandler} isEditable={isEditable} />
+          <SubBoundaryView style={{ background: "#fff", gap: "1.5rem" }} title={bHierarchy?.[1]} arr={parent_group?.[bHierarchy?.[1]]} editHandler={editHandler} isEditable={isEditable} headerStyle={{fontSize:"1.6rem"}} />
         </div>
       ) : null}
 
@@ -314,7 +313,7 @@ const CampaignBoundary = ({ customProps, setupCompleted }) => {
               <Card className="middle-child">
                 <div className="mp-header-container" style={{ marginBottom: "0px" }}>
                   <Header className="summary-sub-heading">
-                    {bHierarchy[ind + 2]}
+                    {t(`MP_${bHierarchy[ind + 2].toUpperCase()}`)}
                   </Header>
                   {!(setupCompleted === 'true') &&
                     <Button
