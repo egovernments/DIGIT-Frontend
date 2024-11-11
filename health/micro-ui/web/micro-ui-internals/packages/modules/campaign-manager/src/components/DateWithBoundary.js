@@ -249,9 +249,9 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   return (
     <>
       <Card className={"campaign-update-container"}>
-        <Header className="header">{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_HEADER`)}</Header>
-        <Card className={"search-field-container"}>
-          <p className="field-description">{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_SUB_TEXT`)}</p>
+        <Header className="header" styles={{ marginBottom: "0rem" }}>{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_HEADER`)}</Header>
+        <div className={"search-field-container"}>
+          <p className="field-description" style={{ marginTop: "0rem" }}>{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_SUB_TEXT`)}</p>
           <div className="label-field-grid">
             <LabelFieldPair className="update-date-labelField">
               <div className="update-label">
@@ -291,7 +291,7 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
             </LabelFieldPair>
             <Button variation="primary" label={t(`CAMPAIGN_SELECT_BOUNDARY_BUTTON`)} onClick={() => selectBoundary()} />
           </div>
-        </Card>
+        </div>
       </Card>
       {dateReducer?.length > 0 &&
         dateReducer?.map((item, index) => (

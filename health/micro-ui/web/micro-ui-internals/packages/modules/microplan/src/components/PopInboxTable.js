@@ -166,7 +166,7 @@ const PopInboxTable = ({ ...props }) => {
     <DataTable
       columns={columns}
       data={props.censusData}
-      selectableRows={props.allowAction}
+      selectableRows
       selectableRowsHighlight
       noContextMenu
       onSelectedRowsChange={handleRowSelect}

@@ -103,6 +103,7 @@
 }
 header {
   @extend .typography.text-heading-xl;
+  margin-bottom: 0rem;
 }
 .digit-button-primary {
   background-color: theme(digitv2.lightTheme.primary) !important;
@@ -200,4 +201,8 @@ header {
 }
 .action-bar-wrap .actionBarClass {
   z-index: 10;
+}
+.campaign-flow-stepper{
+  margin-left: -5.625rem;
+  margin-right: -6.875rem;
 }
