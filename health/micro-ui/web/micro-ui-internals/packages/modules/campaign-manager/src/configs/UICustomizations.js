@@ -861,7 +861,8 @@ export const UICustomizations = {
               </Link>
             </span>
           );
-
+        case "CM_DRAFT_TYPE":
+          return value ? t("CM_UPDATE_REQUEST") : t("CM_CREATE_REQUEST");
         case "CAMPAIGN_START_DATE":
           return Digit.DateUtils.ConvertEpochToDate(value);
         case "CAMPAIGN_END_DATE":
