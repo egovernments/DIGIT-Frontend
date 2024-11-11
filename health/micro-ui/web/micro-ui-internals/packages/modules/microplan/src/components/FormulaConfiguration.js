@@ -279,14 +279,8 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
       </Card>
       <Card>
         {filteredFormulas.map((formula, index) => {
-          // try using formulaConfigValues to calculate options for both 1st and 2nd inputs
-          // Gather outputs from previous formulas
-          // const previousOutputs = filteredFormulas
-          //   .slice(0, index) // Get outputs of all previous formulas
-          //   .map((prevFormula) => prevFormula.output); // Extract outputs
-          const previousOutputs = formulaConfigValues
-            .slice(0, index) // Get outputs of all previous formulas
-            .map((prevFormula) => prevFormula.output); // Extract outputs
+          const currentIndex = formulaConfigValues.findIndex((f) => f.output === formula.output);
+          const previousOutputs = currentIndex !== -1 ? formulaConfigValues.slice(0, currentIndex).map((prevFormula) => prevFormula.output) : [];
 
           // Combine with filteredInputs for dropdown options
           const inputOptions = [

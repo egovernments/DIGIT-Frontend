@@ -70,6 +70,7 @@ const SearchSavedPlansWithCampaign = async (body) => {
     });
     const finalResponse = {
       PlanConfiguration: mergePlanAndCampaign(responsePlan?.PlanConfiguration, "campaignDetails", responseCampaign?.CampaignDetails),
+      TotalCount: responsePlan?.TotalCount
     };
     return finalResponse;
   } catch (error) {
