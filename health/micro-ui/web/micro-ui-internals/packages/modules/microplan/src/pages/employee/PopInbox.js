@@ -33,7 +33,6 @@ const PopInbox = () => {
   const [totalRows, setTotalRows] = useState(0);
   const [showToast, setShowToast] = useState(null);
   const [showComment, setShowComment] = useState(false);
-  const [allowAction, setAllowAction] = useState(true);
   const [employeeNameMap, setEmployeeNameMap] = useState({});
   const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
   const [assignedToMeCount, setAssignedToMeCount] = useState(0);
@@ -321,15 +320,6 @@ const PopInbox = () => {
     }
   }, [selectedFilter]);
 
-
-  useEffect(() => {
-    if (selectedFilter !== "VALIDATED" && activeLink.code === "ASSIGNED_TO_ALL") {
-      setAllowAction(false);
-    } else {
-      setAllowAction(true);
-    }
-  }, [selectedFilter, activeLink]);
-
   const onFilter = (selectedStatus) => {
     setSelectedFilter(selectedStatus?.code);
     setActiveLink({
@@ -550,7 +540,7 @@ const PopInbox = () => {
                 setUpdatedCensus(data);
                 setShowComment(true);
               }}
-              conditionalRowStyles={conditionalRowStyles} allowAction={allowAction} />}
+              conditionalRowStyles={conditionalRowStyles} />}
           </Card>
           {showComment && (
             <WorkflowCommentPopUp

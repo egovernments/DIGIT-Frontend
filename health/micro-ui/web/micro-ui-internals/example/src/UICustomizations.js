@@ -2,7 +2,7 @@ import _ from "lodash";
 import { useLocation, useHistory, Link, useParams } from "react-router-dom";
 import React, { useState, Fragment } from "react";
 import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader, EditIcon, ArrowForward } from "@egovernments/digit-ui-react-components";
-import { Button as ButtonNew , Dropdown} from "@egovernments/digit-ui-components";
+import { Button as ButtonNew, Dropdown } from "@egovernments/digit-ui-components";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
@@ -303,9 +303,8 @@ export const UICustomizations = {
         return (
           <span className="link">
             <Link
-              to={`/${
-                window.contextPath
-              }/employee/attendencemgmt/view-attendance?tenantId=${Digit.ULBService.getCurrentTenantId()}&musterRollNumber=${value}`}
+              to={`/${window.contextPath
+                }/employee/attendencemgmt/view-attendance?tenantId=${Digit.ULBService.getCurrentTenantId()}&musterRollNumber=${value}`}
             >
               {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
             </Link>
@@ -1224,7 +1223,7 @@ export const UICustomizations = {
         case "MICROPLAN_FACILITY_RESIDINGVILLAGE":
           return t(row?.residingBoundary);
         case "MICROPLAN_FACILITY_ASSIGNED_VILLAGES":
-          const assignedVillages = row?.additionalDetails?.assignedVillages;
+          const assignedVillages = row?.serviceBoundaries;
           return assignedVillages ? assignedVillages.length : null;
         case "MICROPLAN_FACILITY_ACTION":
           return (
@@ -1236,7 +1235,7 @@ export const UICustomizations = {
                 isSuffix
                 label={t("MICROPLAN_ASSIGN")}
                 // onClick={() => setShowPopup(true)}// removed this because due to popup crashing on dev
-                onClick={() => console.log("temp action")} 
+                onClick={() => console.log("temp action")}
                 options={[]}
                 optionsKey=""
                 size="medium"

@@ -366,10 +366,10 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
   useEffect(() => {
     // Step 1: Filter assumptions based on current category
     if (assumptionsInPlan?.length > 0) {
-      const filteredAssumptions = assumptionsInPlan?.filter((assumption) => assumption.category === currentCategory);
+      // const filteredAssumptions = assumptionsInPlan?.filter((assumption) => assumption.category === currentCategory);
 
       // Step 2: Extract keys from filtered assumptions
-      const keys = filteredAssumptions?.map((assumption) => assumption.key);
+      const keys = assumptionsInPlan?.map((assumption) => assumption.key);
       setAssumptions(keys);
     }
   }, [currentCategory, formulaConfigValues, setFormulaConfigValues]);
@@ -469,7 +469,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
             </Card>
           </div>
 
-          <div className="card-container" style={{ maxWidth: "100%", overflow: "auto", marginBottom: "2.5rem" }}>
+          <div className="card-container" style={{ width: "100%", maxWidth: "100%", overflow: "auto", marginBottom: "2.5rem" }}>
             <FormulaConfiguration
               category={ruleConfigurationCategories[formulaInternalKey - 1]?.category}
               formulas={[...filteredFormulas?.filter((item) => !deletedFormulas?.includes(item.output)), ...customFormula]}

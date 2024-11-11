@@ -1,8 +1,8 @@
 import React, { useState, useMemo, useRef, useEffect, Fragment } from "react";
-import { UploadIcon, FileIcon, DeleteIconv2, Toast, Card, Header } from "@egovernments/digit-ui-react-components";
+import { UploadIcon, FileIcon, DeleteIconv2, Toast,  Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
-import { Button, CardText, Dropdown, ErrorMessage, PopUp, Stepper, TextBlock } from "@egovernments/digit-ui-components";
+import { LabelFieldPair } from "@egovernments/digit-ui-components";
+import { Button, CardText, Dropdown, ErrorMessage, PopUp, Stepper, TextBlock , Card} from "@egovernments/digit-ui-components";
 
 const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
   const { t } = useTranslation();
@@ -108,9 +108,9 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
 
         <div className="card-container2">
           <Card className = "setup-campaign-card">
-            <Header>{t(`HCM_CAMPAIGN_TYPE_HEADER`)}</Header>
+            <Header styles={{ margin: '0px' }}>{t(`HCM_CAMPAIGN_TYPE_HEADER`)}</Header>
             <p className="description-type">{t(`HCM_CAMPAIGN_TYPE_DESCRIPTION`)}</p>
-            <LabelFieldPair>
+            <LabelFieldPair style={{ display: "flex", marginBottom:"-0.8rem" }}>
               <div className="campaign-type">
                 <span>{`${t("HCM_CAMPAIGN_TYPE")}`}</span>
                 <span className="mandatory-span">*</span>
@@ -148,7 +148,7 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
               </div>
             </LabelFieldPair>
             {showBeneficiary && (
-              <LabelFieldPair>
+              <LabelFieldPair style={{ alignItems: "center" , display: "flex" }} >
                 <div className="beneficiary-type">{`${t("HCM_BENEFICIARY_TYPE")}`}</div>
                 <div>{t(`CAMPAIGN_TYPE_${beneficiaryType}`)}</div>
               </LabelFieldPair>

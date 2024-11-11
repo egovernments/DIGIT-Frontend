@@ -115,6 +115,9 @@ const ViewHierarchy = () => {
             const fileNameWithoutExtension = hierarchyType ;
             Digit.Utils.campaign.downloadExcelWithCustomName({ fileStoreId: resFile?.GeneratedResource?.[0]?.fileStoreid, customName: fileNameWithoutExtension });
         }
+        else if ( resFile && resFile?.GeneratedResource?.[0]?.status === "inprogress"){
+          setShowToast({label: "PLEASE_WAIT_AND_RETRY_AFTER_SOME_TIME", isError: "info" });
+        }
 
     }
 
@@ -313,7 +316,7 @@ const ViewHierarchy = () => {
                 setTimeout(poll, pollInterval);
               }
             } catch (error) {
-              console.error("Error while polling:", error);
+              // console.error("Error while polling:", error);
               retries++;
               setTimeout(poll, pollInterval);
             }
@@ -355,7 +358,7 @@ const ViewHierarchy = () => {
                 {firstPage && 
                     <div>
                         <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
-                            <div style={{ fontSize: "2.5rem", fontWeight: 700 }}>{t(`HIERARCHY`)} {hierarchyType}</div>
+                            <div className="hierarchy-boundary-heading">{t(`HIERARCHY`)} {hierarchyType}</div>
                             <div style={{ height: "2rem" }}></div>
                             {hierData.map((hierItem, index) => {
                                 // Check if the index is less than defData length
@@ -365,16 +368,16 @@ const ViewHierarchy = () => {
                                     if (hierItem?.boundaryType === defData[index]?.boundaryType) {
                                         return (
                                             <div>
-                                                <div style={{fontWeight:"600", fontSize:"1.2rem"}}>
+                                                <div className="hierarchy-boundary-sub-heading2">
                                                     {/* {t(hierItem?.boundaryType)} */}
-                                                    {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toLowerCase().replace(/\s+/g, "_"))}`}
+                                                    {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toUpperCase().replace(/\s+/g, "_"))}`}
                                                 </div>
                                                 <div style={{height:"1rem"}}></div>
                                                 <Card type={"primary"} variant={"form"} className={"question-card-container"} >
                                                     <div style={{display:"flex", gap:"2rem"}}>
                                                     <Svgicon />
-                                                    <div style={{display:"flex", alignItems:"center", fontWeight:"600"}}>
-                                                    {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toLowerCase().replace(/\s+/g, "_"))}-geojson.json`}
+                                                    <div style={{display:"flex", alignItems:"center", fontWeight:"600", fontFamily:"Roboto"}}>
+                                                    {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toUpperCase().replace(/\s+/g, "_"))}-geojson.json`}
                                                     </div>
                                                     </div>
                                                 </Card>
@@ -385,7 +388,9 @@ const ViewHierarchy = () => {
                                         return (
                                           <div>
                                             <div style={{ display: "flex", justifyContent: "space-between" }} key={index}>
-                                              <div style={{ fontWeight: "600", fontSize: "1.2rem" }}>{hierItem?.boundaryType}</div>
+                                              <div className="hierarchy-boundary-sub-heading2">
+                                                {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toUpperCase().replace(/\s+/g, "_"))}`}
+                                              </div>
                                               {/* <Uploader
                                                         onUpload={() => {}}
                                                         showAsTags
@@ -422,7 +427,8 @@ const ViewHierarchy = () => {
                                     return (
                                       <div>
                                         <div style={{ display: "flex", justifyContent: "space-between" }} key={index}>
-                                          <div style={{ fontWeight: "600", fontSize: "1.2rem" }}>{hierItem?.boundaryType}</div>
+                                          <div className="hierarchy-boundary-sub-heading2">{`${t(( hierarchyType + "_" + hierItem?.boundaryType).toUpperCase().replace(/\s+/g, "_"))}`}
+                                          </div>
                                           {/* <Uploader
                                                         onUpload={() => {}}
                                                         showAsTags
@@ -457,9 +463,10 @@ const ViewHierarchy = () => {
                                 }
                             })}
                         </Card>
+                        <div style={{height:"1rem"}}></div>
                         <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
                             <div style={{display:"flex", justifyContent:"space-between"}}>
-                                <div style={{fontSize:"2.5rem", fontWeight:700}}>{t("UPLOAD_EXCEL")}</div>
+                                <div className="hierarchy-boundary-heading">{t("UPLOAD_EXCEL")}</div>
                                 <Button
                                     className="custom-class"
                                     icon="DownloadIcon"
@@ -497,6 +504,7 @@ const ViewHierarchy = () => {
                                         variation="secondary"
                                     />
                                 </div>
+                                <div style={{height:"2rem"}}></div>
                             </div>                  
                         </Card>
                         <ActionBar
@@ -533,7 +541,7 @@ const ViewHierarchy = () => {
                 {showToast && <Toast label={showToast.label} type={showToast.isError} onClose={() => setShowToast(null)} />}
                 {previewPage && (
                     <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
-                        <div style={{fontSize:"2.5rem", fontWeight:700}}>{t("CONFIRM_BOUNDARY_DATA")}</div>
+                        <div className="hierarchy-boundary-heading">{t("CONFIRM_BOUNDARY_DATA")}</div>
                         <div style={{height:"1.5rem"}}></div>
                         {!dataCreationGoing && <XlsPreviewNew file={fileData} onDownload={() => {}} onBack={() => {setShowPreview(false); setUploadPage(true)}} />}
                         {dataCreationGoing && <Loader />}
