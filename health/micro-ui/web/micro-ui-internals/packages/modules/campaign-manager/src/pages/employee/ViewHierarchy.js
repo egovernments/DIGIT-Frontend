@@ -205,24 +205,8 @@ const ViewHierarchy = () => {
         
             // Initialize the label with a failure message
             label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
+            if(error?.message) label += `${t(error?.message)}`;
             
-            // Check if the error has a response with detailed error information
-            if (error.response?.data?.Errors?.length > 0) {
-              // Append each error code to the label
-              error.response.data.Errors.forEach((err, idx) => {
-                const transformedError = t(Digit.Utils.locale.getTransformedLocale(err.code));
-                
-                // Add comma separation except for the last item
-                if (idx === error.response.data.Errors.length - 1) {
-                  label += `${transformedError}.`;
-                } else {
-                  label += `${transformedError}, `;
-                }
-              });
-            } else {
-              // Fallback if no error details are provided in the response
-              label += error.message || t("WBH_UNKNOWN_ERROR");
-            }
           }
         
           setShowToast({ label, isError: "error" });

@@ -133,7 +133,7 @@
   height: 31.25rem;
 }
 .stepper-card{
-  height: 30rem;
+  height: 39rem;
   margin-bottom: 1.5rem !important;
 }
 .stepper-subheader{
@@ -197,4 +197,9 @@
   font-size: 1.2rem; 
   font-weight: 600;
   font-family: 'Roboto', sans-serif;
+}
+.campaign-preview{
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }

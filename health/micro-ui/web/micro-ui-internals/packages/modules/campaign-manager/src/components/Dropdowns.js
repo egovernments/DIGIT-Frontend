@@ -64,7 +64,8 @@ const Dropdowns = ({
           />
           {item.optionComment && <FieldV1
             // className="example"
-            disabled={dis}
+            // disabled={dis}
+            nonEditable={dis}
             type={"textarea"}
             populators={{
               resizeSmart: true
@@ -178,7 +179,8 @@ const DropdownOption = ({
           >
           <TextInput
             // style={{ maxWidth: "40rem" }}
-            disabled={dis}
+            // disabled={dis}
+            nonEditable={dis}
             name="title"
             ref={optionInputRef}
             // value={field?.title || ""}
