@@ -37,7 +37,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
   }, [initialFormulas]);
 
   const handleDeleteClick = (index, formula) => {
-    if (formulas?.length === 1) {
+    if (formulas?.length === 1 && category !== "CAMPAIGN_VEHICLES") {
       setShowToast({
         key: "error",
         label: t("ERR_ATLEAST_ONE_MANDATORY_FORMULA"),
@@ -68,11 +68,11 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
       if (!deletedFormulaCategories.current[category]) {
         deletedFormulaCategories.current[category] = [];
       }
-      deletedFormulaCategories.current[category].push(deletedFormula.output);
+      deletedFormulaCategories?.current[category].push(deletedFormula?.output);
 
-      setDeletedFormulas((prev) => [...prev, deletedFormula.output]);
+      setDeletedFormulas((prev) => [...prev, deletedFormula?.output]);
 
-      setFormulaConfigValues((prevValues) => prevValues.filter((value) => value.output !== deletedFormula.output));
+      setFormulaConfigValues((prevValues) => prevValues.filter((value) => value.output !== deletedFormula?.output));
 
       setFormulas(updatedFormulas);
 
@@ -307,7 +307,13 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
               <div>
                 <Card type="secondary">
                   <LabelFieldPair className="formula-label-field">
-                    <span style={{ marginRight: "0rem" }}>{`${t(formula.output)}`}
+                    <span>
+                      {`${t(formula.output)}`}
+                      {category === "CAMPAIGN_VEHICLES" || formula?.source === "CUSTOM" ? null : (
+                        <span className="icon-wrapper">
+                          <TooltipWrapper content={t(`FORMULA_MESSAGE_FOR_${formula.output}`)} children={<InfoBannerIcon fill={"#C84C0E"} />} />
+                        </span>
+                      )}
                     </span>
                     <div style={{ marginTop: "0.75rem" }}>
                       <TooltipWrapper content={t(`FORMULA_MESSAGE_FOR_${formula.output}`)} children={<InfoBannerIcon fill={'#C84C0E'} />} />

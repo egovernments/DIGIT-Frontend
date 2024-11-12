@@ -74,7 +74,7 @@ const UpdateChecklist = () => {
                 if (res?.ServiceDefinitions?.[0]?.attributes) {
                     setCurActive(res?.ServiceDefinitions?.[0].isActive);
                     let temp_data = res?.ServiceDefinitions?.[0]?.attributes
-                    let formatted_data = temp_data.map((item) => item.additionalDetails);
+                    let formatted_data = temp_data.map((item) => item.additionalFields);
                     let nvd = formatted_data.filter((value, index, self) =>
                         index === self.findIndex((t) => t.id === value.id)
                     );
@@ -287,7 +287,7 @@ const UpdateChecklist = () => {
             isActive: item?.isActive,
             reGex: item?.isRegex ? item?.regex?.regex : null,
             order: item?.key,
-            additionalDetails: item
+            additionalFields: item
         };
     
         return questionObject;
@@ -354,7 +354,7 @@ const UpdateChecklist = () => {
             code: code_of_checklist,
             isActive: curActive,
             attributes: fp,
-            additionalDetails: {
+            additionalFields: {
                 name: checklistName,
                 type: checklistType,
                 role: role

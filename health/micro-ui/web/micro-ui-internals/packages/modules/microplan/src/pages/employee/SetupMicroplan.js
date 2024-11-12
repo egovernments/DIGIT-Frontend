@@ -1,14 +1,5 @@
 //http://localhost:3000/microplan-ui/employee/microplan/setup-microplan?key=1&summary=false&microplanId=cc3751e8-da9a-4743-a239-ada7facacd76&campaignId=afbffd11-57bc-4008-ad40-d26a30432f72
-import {
-  Loader,
-  FormComposerV2,
-  Header,
-  MultiUploadWrapper,
-  Close,
-  LogoutIcon,
-  Menu,
-  SubmitBar,
-} from "@egovernments/digit-ui-react-components";
+import { Loader, FormComposerV2, Header, MultiUploadWrapper, Close, LogoutIcon, Menu, SubmitBar } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
