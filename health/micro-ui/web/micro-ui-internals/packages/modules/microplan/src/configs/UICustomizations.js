@@ -74,7 +74,7 @@ export const UICustomizations = {
       const tabId = url.tabId || "0"; // Default to '0' if tabId is undefined
       data.body.PlanConfigurationSearchCriteria.status = dic[String(tabId)];
       cleanObject(data.body.PlanConfigurationSearchCriteria);
-      if(data.body.PlanConfigurationSearchCriteria.status[0]==="RESOURCE_ESTIMATIONS_APPROVED"){
+      if(data.body.PlanConfigurationSearchCriteria.status && data.body.PlanConfigurationSearchCriteria.status[0]==="RESOURCE_ESTIMATIONS_APPROVED"){
         delete data.body.PlanConfigurationSearchCriteria.userUuid
 
       }
