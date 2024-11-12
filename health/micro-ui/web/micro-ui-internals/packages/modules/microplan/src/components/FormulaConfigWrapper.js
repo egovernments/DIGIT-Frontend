@@ -147,7 +147,14 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
 
   const handleNext = () => {
     //here just check formulConfigValues
-    if (
+    if (formulaConfigValues.some((i) => i.operatorName === "SUBSTRACTION" && i.input === i.assumptionValue)) {
+      setShowToast({
+        key: "error",
+        label: t("ERR_MANDATORY_FIELD_SAME_OPERAND"),
+        transitionTime: 3000,
+      });
+      return;
+    } else if (
       formulaConfigValues
         .filter((row) => row.category === currentCategory)
         .every((row) => {

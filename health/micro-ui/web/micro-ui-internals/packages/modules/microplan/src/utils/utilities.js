@@ -186,6 +186,29 @@ const formValidator = (formData, key, state, t) => {
     return null
   }
 
+  const formulaConfigurationValidator = (formData) => {
+    if (formData?.formulaConfigValues?.some((i) => i.operatorName === "SUBSTRACTION" && i.input === i.assumptionValue)) {
+      return {
+        key: "error",
+        label: t("ERR_MANDATORY_FIELD_SAME_OPERAND"),
+        transitionTime: 3000,
+      };
+    } else if (
+      formData?.formulaConfigValues
+        .every((row) => {
+          return row.assumptionValue && row.input && row.output && row.operatorName;
+        })
+    ) {
+      return null;
+    } else {
+      return {
+        key: "error",
+        label: t("ERR_MANDATORY_FIELD"),
+        transitionTime: 3000,
+      };
+    }
+  }
+
   const uploadDataValidator = (formData) => {
     if (formData?.isSuccess) return null;
     return { key: "error", label: "ERROR_VALID_MANDATORY_FILES" };
@@ -203,6 +226,8 @@ const formValidator = (formData, key, state, t) => {
       return assumptionsFormValidator(formData);
     case "Assumptions":
       return microplanAssumptionsValidator(formData);
+    case "formulaConfiguration":
+      return formulaConfigurationValidator(formData);
     case "boundary":
       return uploadDataValidator(formData);
     case "facilityWithBoundary":
