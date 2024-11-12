@@ -1,5 +1,5 @@
 import _ from "lodash";
-const requestBodyGenerator = () => {};
+const requestBodyGenerator = () => { };
 //checking for duplicates
 const isValidResourceName = async (name) => {
   try {
@@ -60,6 +60,7 @@ const CreateResource = async (req) => {
       action: "draft",
       parentId: null,
       campaignName: totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName,
+      startDate: Math.floor(new Date(new Date().setDate(new Date().getDate() + 30)).getTime()),
       resources: [],
       projectType: totalFormData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code,
       additionalDetails: {
@@ -247,7 +248,6 @@ const createUpdatePlanProject = async (req) => {
         const updatedCampaignObject = {
           ...campaignObjectForBoundary,
           boundaries: totalFormData?.BOUNDARY?.boundarySelection?.selectedData,
-          startDate: Math.floor(new Date(new Date().setDate(new Date().getDate() + 100)).getTime()),
           //hardcoding this rn to update campaign. Check with admin console team
         };
         const campaignResBoundary = await updateProject(updatedCampaignObject);
@@ -267,14 +267,14 @@ const createUpdatePlanProject = async (req) => {
           files:
             fetchedPlanForBoundaryInvalidate?.files?.length > 0
               ? fetchedPlanForBoundaryInvalidate?.files?.map((file) => {
-                  return {
-                    ...file,
-                    active: false,
-                  };
-                })
+                return {
+                  ...file,
+                  active: false,
+                };
+              })
               : [],
         };
-        
+
         // update plan object
         const planUpdateForBoundaryInvalidation = await updatePlan(updatedPlanObjectForBoundaryInvalidate);
         if (planUpdateForBoundaryInvalidation) {
@@ -283,7 +283,7 @@ const createUpdatePlanProject = async (req) => {
           // setCurrentStep((prev) => prev + 1); 
           return {
             triggeredFrom,
-            invalidateSession:true
+            invalidateSession: true
           };
         } else {
           setShowToast({ key: "error", label: "ERR_BOUNDARY_UPDATE" });
@@ -292,8 +292,8 @@ const createUpdatePlanProject = async (req) => {
       case "ASSUMPTIONS_FORM":
         // here we have to invalidate the existing assumptions in update call if there is a change in assumptionsForm
         // check whether the currentAssumptionsForm is equal to prev assumptionsForm (if so then skip this update call)
-        
-        if (_.isEqual(planObject?.additionalDetails?.assumptionsForm, totalFormData?.ASSUMPTIONS_FORM?.assumptionsForm) && Object.keys(planObject?.additionalDetails?.assumptionsForm).length>0) {
+
+        if (_.isEqual(planObject?.additionalDetails?.assumptionsForm, totalFormData?.ASSUMPTIONS_FORM?.assumptionsForm) && Object.keys(planObject?.additionalDetails?.assumptionsForm).length > 0) {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
           return {
@@ -305,20 +305,20 @@ const createUpdatePlanProject = async (req) => {
         const invalidatedAssumptions =
           planObject.assumptions.length > 0
             ? planObject.assumptions.map((row) => {
-                return {
-                  ...row,
-                  active: false,
-                };
-              })
+              return {
+                ...row,
+                active: false,
+              };
+            })
             : [];
         const invalidatedOperations =
           planObject.operations.length > 0
             ? planObject.operations.map((row) => {
-                return {
-                  ...row,
-                  active: false,
-                };
-              })
+              return {
+                ...row,
+                active: false,
+              };
+            })
             : [];
         const updatedPlanObjAssumptionsForm = {
           ...planObject,
@@ -351,7 +351,7 @@ const createUpdatePlanProject = async (req) => {
           // setCurrentStep((prev) => prev + 1);
           return {
             triggeredFrom,
-            invalidateSession:true
+            invalidateSession: true
           };
         } else {
           setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
@@ -406,12 +406,12 @@ const createUpdatePlanProject = async (req) => {
         const prevAssumptionsForSubHypothesis =
           fetchedPlanForSubHypothesis?.assumptions.length > 0
             ? fetchedPlanForSubHypothesis?.assumptions?.map((row) => {
-                const updatedRow = {
-                  ...row,
-                  active: false,
-                };
-                return updatedRow;
-              })
+              const updatedRow = {
+                ...row,
+                active: false,
+              };
+              return updatedRow;
+            })
             : [];
 
         //get the list of assumptions from UI
@@ -481,7 +481,7 @@ const createUpdatePlanProject = async (req) => {
           setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
         }
 
-        case "SUB_FORMULA":
+      case "SUB_FORMULA":
         //first fetch current plan object
         const fetchedPlanForSubFormula = await searchPlanConfig({
           PlanConfigurationSearchCriteria: {
@@ -493,25 +493,25 @@ const createUpdatePlanProject = async (req) => {
         const prevFormulaValues =
           fetchedPlanForSubFormula?.operations.length > 0
             ? fetchedPlanForSubFormula?.operations?.map((row) => {
-                const updatedRow = {
-                  ...row,
-                  active: false,
-                };
-                return updatedRow;
-              })
+              const updatedRow = {
+                ...row,
+                active: false,
+              };
+              return updatedRow;
+            })
             : [];
 
         //get the list of assumptions from UI
         const formulasToUpdateFromUIForSubFormula = req?.formulasToUpdate?.filter((row) => {
           return row.category && row.output && row.input && row.operatorName && row.assumptionValue;
         })
-        ?.map((row) => {
-          const updatedRow = { ...row };
-          const operatorName = row?.operatorName;
-          delete updatedRow?.operatorName;
-          updatedRow.operator = state?.RuleConfigureOperators?.find((operation) => operation.operatorName === operatorName)?.operatorCode;
-          return updatedRow;
-        });
+          ?.map((row) => {
+            const updatedRow = { ...row };
+            const operatorName = row?.operatorName;
+            delete updatedRow?.operatorName;
+            updatedRow.operator = state?.RuleConfigureOperators?.find((operation) => operation.operatorName === operatorName)?.operatorCode;
+            return updatedRow;
+          });
         //mix the current + api res
         const upatedPlanObjSubFormula = {
           ...fetchedPlanForSubFormula,
@@ -521,7 +521,7 @@ const createUpdatePlanProject = async (req) => {
         await updatePlan(upatedPlanObjSubFormula);
         return;
 
-        
+
       case "UPLOADBOUNDARYDATA":
         const fetchedPlanForBoundary = await searchPlanConfig({
           PlanConfigurationSearchCriteria: {
