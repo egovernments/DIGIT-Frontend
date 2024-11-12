@@ -40,7 +40,7 @@ const ViewChecklist = () => {
             select: (res) => {
                 if (res?.ServiceDefinitions?.[0]?.attributes) {
                     const temp_data = res?.ServiceDefinitions?.[0]?.attributes
-                    const formatted_data = temp_data.map((item) => item.additionalDetails);
+                    const formatted_data = temp_data.map((item) => item.additionalFields);
                     const nvd = formatted_data.filter((value, index, self) =>
                         index === self.findIndex((t) => t.id === value.id)
                     );
