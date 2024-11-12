@@ -18,7 +18,7 @@ const ActivityHomeCard = ({onClickCard=()=>{},...props}) => {
       gridTemplateColumns: "33.3% 33.3% 33.3%", 
       textAlign: "-webkit-center",
       gap: "24px",
-      marginRight:"2rem"
+      marginRight:"3rem"
       }}
        >
       {props.module.map((i) => {
