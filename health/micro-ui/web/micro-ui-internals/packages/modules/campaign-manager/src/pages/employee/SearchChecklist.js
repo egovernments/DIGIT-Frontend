@@ -130,6 +130,7 @@ const SearchChecklist = () => {
           currentStep={6}
           onStepClick={onStepClick}
           activeSteps={6}
+          // className={"campaign-flow-stepper"}
         />
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: "2rem" }}>
           {/* <Header styles={{ fontSize: "32px", marginBottom: "2rem", marginTop: "2rem" }}>{t("ACTION_LABEL_CONFIGURE_APP")}</Header> */}

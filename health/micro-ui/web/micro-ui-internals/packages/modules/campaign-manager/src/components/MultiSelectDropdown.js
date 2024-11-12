@@ -55,7 +55,7 @@ const primaryIconColor = Colors.lightTheme.primary[1];
 const dividerColor = Colors.lightTheme.generic.divider;
 const background = Colors.lightTheme.paper.secondary;
 
-const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, onSelect, popUpOption ,hierarchyType ,frozenData , frozenType }) => {
+const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, onSelect, popUpOption, hierarchyType, frozenData, frozenType, onClose }) => {
   const [dummySelected, setDummySelected] = useState(alreadyQueuedSelectedState);
   const boundaryType = alreadyQueuedSelectedState.find((item) => item.propsData[1] !== null)?.propsData[1]?.type;
   const { t } = useTranslation();
@@ -124,6 +124,7 @@ const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, on
           onClick={() => {
             const selectedPropsData = dummySelected.map((item) => item.propsData);
             onSelect(selectedPropsData);
+            onClose(selectedPropsData);
             setShowPopUp(false);
           }}
         />,
@@ -135,7 +136,7 @@ const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, on
     >
       <LabelFieldPair>
         <CardLabel>
-        {t((hierarchyType + "_" + boundaryType).toUpperCase())}
+          {t((hierarchyType + "_" + boundaryType).toUpperCase())}
           <span className="mandatory-span">*</span>
         </CardLabel>
         <div style={{ width: "100%" }}>
@@ -192,7 +193,7 @@ const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, on
         }, {})
       ).map(([parent, items]) => (
         <div key={parent} className="parent-group">
-          <div className="parent">{t(parent)}</div> 
+          <div className="parent">{t(parent)}</div>
           <div className="digit-tag-container">
             {items.map((value, index) => {
               const translatedText = t(value.code);
@@ -250,6 +251,7 @@ const MultiSelectDropdown = ({
   optionsKey,
   selected = [],
   onSelect,
+  onClose,
   defaultLabel = "",
   defaultUnit = "",
   props,
@@ -268,7 +270,7 @@ const MultiSelectDropdown = ({
   popUpOption,
   hierarchyType,
   frozenType,
-  isSearchable=false,
+  isSearchable = false,
 }) => {
   const [active, setActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState();
@@ -307,7 +309,15 @@ const MultiSelectDropdown = ({
           newState.map((e) => e.propsData),
           getCategorySelectAllState(),
           props
-        ); // Update the form state here
+        );
+        if (onClose && !active) {
+          onClose(
+            newState.map((e) => e.propsData),
+            getCategorySelectAllState(),
+            props
+          );
+        }
+        // Update the form state here
         return newState;
       case "REPLACE_COMPLETE_STATE":
         return action.payload;
@@ -344,6 +354,14 @@ const MultiSelectDropdown = ({
         getCategorySelectAllState(),
         props
       );
+      if (onClose) {
+        onClose(
+          alreadyQueuedSelectedState?.map((e) => e.propsData),
+          getCategorySelectAllState(),
+          props
+        );
+      }
+
     }
   }, [active]);
 
@@ -351,7 +369,7 @@ const MultiSelectDropdown = ({
     const initialCategorySelectedState = options.reduce((acc, category) => {
       if (category.options) {
         var filteredCategoryOptions = category?.options;
-        if(searchQuery?.length>0){
+        if (searchQuery?.length > 0) {
           filteredCategoryOptions = category?.options?.filter((option) => t(option?.code)?.toLowerCase()?.includes(searchQuery?.toLowerCase()));
         }
         acc[category.code] = filteredCategoryOptions.every((option) =>
@@ -419,17 +437,17 @@ const MultiSelectDropdown = ({
   const filtOptns =
     searchQuery?.length > 0
       ? options?.filter(
-          (option) =>
-            t(option[optionsKey] && typeof option[optionsKey] == "string" && option[optionsKey].toUpperCase())
-              .toLowerCase()
-              .indexOf(searchQuery.toLowerCase()) >= 0
-        )
+        (option) =>
+          t(option[optionsKey] && typeof option[optionsKey] == "string" && option[optionsKey].toUpperCase())
+            .toLowerCase()
+            .indexOf(searchQuery.toLowerCase()) >= 0
+      )
       : options;
 
   useEffect(() => {
     setOptionIndex(0);
   }, [searchQuery]);
-      
+
   function onSearch(e) {
     setSearchQuery(e.target.value);
   }
@@ -460,13 +478,14 @@ const MultiSelectDropdown = ({
           }
         });
       } else {
+
         const isChecked = arguments[0].target.checked;
         isChecked
           ? dispatch({ type: "ADD_TO_SELECTED_EVENT_QUEUE", payload: arguments })
           : dispatch({
-              type: "REMOVE_FROM_SELECTED_EVENT_QUEUE",
-              payload: arguments,
-            });
+            type: "REMOVE_FROM_SELECTED_EVENT_QUEUE",
+            payload: arguments,
+          });
       }
       onSelect(
         alreadyQueuedSelectedState?.map((e) => e.propsData),
@@ -486,6 +505,9 @@ const MultiSelectDropdown = ({
   const handleClearAll = () => {
     dispatch({ type: "REPLACE_COMPLETE_STATE", payload: [] });
     onSelect([], getCategorySelectAllState(), props);
+    if (onClose) {
+      onClose([], getCategorySelectAllState(), props);
+    }
   };
 
   const openPopUp = (alreadyQueuedSelectedState) => {
@@ -501,17 +523,17 @@ const MultiSelectDropdown = ({
         const payload =
           variant === "nestedmultiselect"
             ? flattenedOptions
-                .filter((option) => !option.options)
-                .map((option) => ({
-                  code: option.code,
-                  name: option.name,
-                  propsData: [null, option],
-                }))
-            : options.map((option) => ({
+              .filter((option) => !option.options)
+              .map((option) => ({
                 code: option.code,
                 name: option.name,
                 propsData: [null, option],
-              }));
+              }))
+            : options.map((option) => ({
+              code: option.code,
+              name: option.name,
+              propsData: [null, option],
+            }));
         dispatch({
           type: "REPLACE_COMPLETE_STATE",
           payload: payload,
@@ -634,9 +656,9 @@ const MultiSelectDropdown = ({
     }
   };
   const filteredOptions = searchQuery?.length > 0
-  ? options?.map((option) => {
+    ? options?.map((option) => {
       if (option?.options && option.options.length > 0) {
-        const matchingNestedOptions = option.options.filter((nestedOption) => 
+        const matchingNestedOptions = option.options.filter((nestedOption) =>
           t(nestedOption.code).toLowerCase().includes(searchQuery.toLowerCase())
         );
         if (matchingNestedOptions.length > 0) {
@@ -653,7 +675,7 @@ const MultiSelectDropdown = ({
 
       return null;
     }).filter(Boolean)
-  : options;
+    : options;
 
 
   const parentOptionsWithChildren = filteredOptions.filter((option) => option.options && option.options.length > 0);
@@ -728,11 +750,9 @@ const MultiSelectDropdown = ({
     return (
       <div
         key={index}
-        className={`digit-multiselectdropodwn-menuitem ${variant ? variant : ""} ${
-          alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? "checked" : ""
-        } ${index === optionIndex && !alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? "keyChange" : ""}${
-          isFrozen ? "frozen" : ""
-        }`}
+        className={`digit-multiselectdropodwn-menuitem ${variant ? variant : ""} ${alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? "checked" : ""
+          } ${index === optionIndex && !alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? "keyChange" : ""}${isFrozen ? "frozen" : ""
+          }`}
         onMouseDown={() => setIsActive(true)}
         onMouseUp={() => setIsActive(false)}
         onMouseLeave={() => setIsActive(false)}
@@ -839,9 +859,8 @@ const MultiSelectDropdown = ({
         style={props?.style}
       >
         <div
-          className={`digit-multiselectdropdown-master${active ? `-active` : ``} ${disabled ? "disabled" : ""}  ${variant ? variant : ""} ${
-            isSearchable ? "serachable" : ""
-          }`}
+          className={`digit-multiselectdropdown-master${active ? `-active` : ``} ${disabled ? "disabled" : ""}  ${variant ? variant : ""} ${isSearchable ? "serachable" : ""
+            }`}
         >
           <input
             className="digit-cursorPointer"
@@ -867,8 +886,8 @@ const MultiSelectDropdown = ({
                 {selectedNumber
                   ? `${selectedNumber} ${defaultUnit} Selected`
                   : alreadyQueuedSelectedState.length > 0
-                  ? `${alreadyQueuedSelectedState.length} ${defaultUnit} Selected`
-                  : defaultLabel}
+                    ? `${alreadyQueuedSelectedState.length} ${defaultUnit} Selected`
+                    : defaultLabel}
               </p>
             )}
             <SVG.ArrowDropDown fill={disabled ? dividerColor : inputBorderColor} />
@@ -908,8 +927,12 @@ const MultiSelectDropdown = ({
                       variant === "treemultiselect"
                         ? () => onSelectToAddToQueue([value])
                         : isPropsNeeded
-                        ? (e) => onSelectToAddToQueue(e, value, props)
-                        : (e) => onSelectToAddToQueue(e, value)
+                          ? (e) => onSelectToAddToQueue(e, value, props)
+                          : (e) => {
+
+                            onSelectToAddToQueue(e, value);
+                          }
+
                     }
                     hideClose={isClose}
                     className="multiselectdropdown-tag"
@@ -930,6 +953,7 @@ const MultiSelectDropdown = ({
               setShowPopUp={setShowPopUp}
               alreadyQueuedSelectedState={alreadyQueuedSelectedState}
               onSelect={onSelect}
+              onClose={onClose}
               popUpOption={popUpOption}
               hierarchyType={hierarchyType}
               frozenData={frozenData}
@@ -973,6 +997,7 @@ MultiSelectDropdown.propTypes = {
   optionsKey: PropTypes.string.isRequired,
   selected: PropTypes.array,
   onSelect: PropTypes.func.isRequired,
+  onClose: PropTypes.func,
   defaultLabel: PropTypes.string,
   defaultUnit: PropTypes.string,
   props: PropTypes.object,

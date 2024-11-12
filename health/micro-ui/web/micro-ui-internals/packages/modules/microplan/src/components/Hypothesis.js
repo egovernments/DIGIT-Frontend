@@ -153,7 +153,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
         {assumptions.map((item, index) => {
           const sourceCheck = assumptionValues?.find((i) => i?.key === item)?.source;
           return (
-            <LabelFieldPair className="mp-hypothesis-label-field" key={index}>
+            <LabelFieldPair className="mp-hypothesis-label-field" style={{ alignItems: "center"}} key={index}>
               <div className="assumption-label">
                 <span>
                   {`${t(item)}`}
@@ -164,6 +164,9 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
                     </span>
                   )}
                 </span>
+              </div>
+              <div style={{ alignSelf : "center"}}>
+                <TooltipWrapper content={t(`HYPOTHEISIS_MESSAGE_FOR_${item}`)} children={<InfoBannerIcon fill={'#C84C0E'} />} />
               </div>
 
               <div className="fieldv1-deleteIcon-container">

@@ -714,7 +714,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
           currentStep={currentStep + 1}
           onStepClick={onStepClick}
           activeSteps={active}
-          className={"campaign-flow-stepper"}
+          // className={"campaign-flow-stepper"}
         />
       )}
       <FormComposerV2

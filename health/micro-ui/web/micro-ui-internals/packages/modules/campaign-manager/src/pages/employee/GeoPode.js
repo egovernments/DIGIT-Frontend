@@ -112,7 +112,7 @@ const GeoPode = () => {
 
         try {
             // setShowLoader(true);
-            setShowToast({ label: "HIERARCHY_PLEASE_WAIT", isError: "info", transitionTime:100});
+            setShowToast({ label: "HIERARCHY_PLEASE_WAIT", isError: "info", transitionTime:100000});
             const res = await callCreate();
             const res1 = await generateFile();
             const bh = res?.BoundaryHierarchy?.[0]?.boundaryHierarchy;
@@ -189,7 +189,7 @@ const GeoPode = () => {
                 <React.Fragment>
                     {firstPage && !newHierarchy && <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
                         <div style={{ display: "flex", justifyContent: "space-between" }}>
-                            <div style={{ fontSize: "2.5rem", fontWeight: 700 }}>Boundary data from GeoPoDe</div>
+                            <div className="hierarchy-boundary-heading">{t("BOUNDARY_DATA_FROM_GEOPODE")}</div>
                             <Button
                                 icon={"Preview"}
                                 type={"button"}
@@ -226,9 +226,10 @@ const GeoPode = () => {
                     }
                     {firstPage && newBoundaryData.length > 0 && (
                         <div>
+                            <div style={{height:"1rem"}}></div>
                             <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
                                 <div>
-                                    <div style={{ fontSize: "2.5rem", fontWeight: 700 }}>{t("NEWLY_ADDED_BOUNDARY_DATA")}</div>
+                                    <div className="hierarchy-boundary-heading">{t("NEWLY_ADDED_BOUNDARY_DATA")}</div>
                                     <div style={{ height: "2rem" }}>
                                     </div>
                                 </div>
@@ -237,7 +238,7 @@ const GeoPode = () => {
                                         newBoundaryData.map((item, index) => (
                                             <div>
                                                 <div style={{ display: "flex" }}>
-                                                    <div style={{ width: "20rem", marginTop: "0.6rem", fontWeight: "600" }}>{t("LEVEL")} {boundaryData.length + index + 1}</div>
+                                                    <div className="hierarchy-boundary-sub-heading">{t("LEVEL")} {boundaryData.length + index + 1}</div>
                                                     <div style={{ display: "flex", gap: "1rem" }}>
                                                         <TextInput
                                                             type={"text"}
@@ -319,7 +320,7 @@ const GeoPode = () => {
                         <div>
                             <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
                                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                    <div style={{ fontSize: "2.5rem", fontWeight: 700 }}>{t("CREATE_BOUNDARY_HIERARCHY")}</div>
+                                    <div className="hierarchy-boundary-heading">{t("CREATE_BOUNDARY_HIERARCHY")}</div>
                                 </div>
                                 <div style={{ height: "1.5rem" }}></div>
                                 <div>
@@ -331,7 +332,7 @@ const GeoPode = () => {
                                         newBoundaryData.map((item, index) => (
                                             <div>
                                                 <div style={{ display: "flex" }}>
-                                                    <div style={{ width: "20rem", marginTop: "0.6rem", fontWeight: "600" }}>{t("LEVEL")} {index + 1}</div>
+                                                    <div className="hierarchy-boundary-sub-heading">{t("LEVEL")} {index + 1}</div>
                                                     <div style={{ display: "flex", gap: "1rem" }}>
                                                         <TextInput
                                                             type={"text"}

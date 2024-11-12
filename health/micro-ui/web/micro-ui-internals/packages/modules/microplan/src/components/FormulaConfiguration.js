@@ -315,6 +315,9 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                         </span>
                       )}
                     </span>
+                    <div style={{ marginTop: "0.75rem" }}>
+                      <TooltipWrapper content={t(`FORMULA_MESSAGE_FOR_${formula.output}`)} children={<InfoBannerIcon fill={'#C84C0E'} />} />
+                    </div>
                     <div className="equals-icon">=</div>
                     <Dropdown
                       variant="select-dropdown"

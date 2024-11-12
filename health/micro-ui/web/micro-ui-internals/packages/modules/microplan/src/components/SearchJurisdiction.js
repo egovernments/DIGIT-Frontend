@@ -79,6 +79,9 @@ const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, on
               options={boundaryOptions}
               selected={selectedBoundaries}
               onSelect={(e) => {
+                // handleBoundarySelect(e)
+              }}
+              onClose={(e) => {
                 handleBoundarySelect(e)
               }}
               isSearchable={true}

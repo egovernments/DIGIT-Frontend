@@ -36,7 +36,7 @@ const PopInboxTable = ({ ...props }) => {
             title={t(`${row.boundaryCode}`)}
             variation="link"
             size={"medium"}
-            style={{}}
+            style={{ minWidth: "unset" }}
           />
         ),
         // selector:(row, index)=>row.boundaryCode,
@@ -48,7 +48,7 @@ const PopInboxTable = ({ ...props }) => {
           if (boundaryCodeA > boundaryCodeB) return 1;
           return 0;
         },
-        width: "180px"
+        width: "180px",
       },
       ...(
         (props?.censusData?.[0]?.additionalFields || [])
