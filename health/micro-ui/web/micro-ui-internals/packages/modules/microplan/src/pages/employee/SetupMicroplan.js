@@ -1,14 +1,5 @@
 //http://localhost:3000/microplan-ui/employee/microplan/setup-microplan?key=1&summary=false&microplanId=cc3751e8-da9a-4743-a239-ada7facacd76&campaignId=afbffd11-57bc-4008-ad40-d26a30432f72
-import {
-  Loader,
-  FormComposerV2,
-  Header,
-  MultiUploadWrapper,
-  Close,
-  LogoutIcon,
-  Menu,
-  SubmitBar,
-} from "@egovernments/digit-ui-react-components";
+import { Loader, FormComposerV2, Header, MultiUploadWrapper, Close, LogoutIcon, Menu, SubmitBar } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
@@ -129,7 +120,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   useEffect(() => {
     const handleAssumptionsSubmitEvent = () => {
       const newKey = parseInt(new URLSearchParams(window.location.search).get("key")) || 1;
-      setCurrentKey(newKey+1);
+      setCurrentKey(newKey + 1);
     };
 
     window.addEventListener("AssumptionsLastPage", handleAssumptionsSubmitEvent);
@@ -198,7 +189,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
             HYPOTHESIS: null,
             FORMULA_CONFIGURATION: null,
           });
-          
+
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
 
@@ -206,7 +197,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
           dispatch({
             type: "MASTER_DATA",
             state: {
-                allAssumptions:[],
+              allAssumptions: [],
             },
           });
         }
@@ -234,7 +225,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
 
     //Run sync validations on formData based on the screen(key)
 
-    const toastObject = Digit.Utils.microplanv1.formValidator(formData?.[currentConfBody?.key], currentConfBody?.key, state,t);
+    const toastObject = Digit.Utils.microplanv1.formValidator(formData?.[currentConfBody?.key], currentConfBody?.key, state, t);
     if (toastObject) {
       setShowToast(toastObject);
       return;
@@ -378,7 +369,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
         label={getNextActionLabel()}
       />
       {setupCompleted ? (
-        <ActionBar style={{ zIndex: "19" }}>
+        <ActionBar style={{ zIndex: "19", flexDirection: "row-reverse" }}>
           <SubmitBar label={t("GO_BACK_TO_MY_MICROPLAN")} onSubmit={() => history.goBack()} />
         </ActionBar>
       ) : null}
