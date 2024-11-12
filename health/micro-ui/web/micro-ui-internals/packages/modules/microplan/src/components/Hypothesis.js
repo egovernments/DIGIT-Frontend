@@ -157,7 +157,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
                 <span>
                   {`${t(item)}`}
                   <span className="icon-wrapper">
-                    <TooltipWrapper content={t(`HYPOTHEISIS_MESSAGE_FOR_${item}`)} children={<InfoBannerIcon fill={"#C84C0E"} />} />
+                    <TooltipWrapper content={t(`HYPOTHESIS_MESSAGE_FOR_${item}`)} children={<InfoBannerIcon fill={"#C84C0E"} />} />
                   </span>
                 </span>
               </div>
