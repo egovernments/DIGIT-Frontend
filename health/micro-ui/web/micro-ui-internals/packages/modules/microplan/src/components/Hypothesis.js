@@ -38,7 +38,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
   }, [initialAssumptions]);
 
   const handleDeleteClick = (index) => {
-    if (assumptions?.length === 1) {
+    if (assumptions?.length === 1 && category !== "CAMPAIGN_VEHICLES") {
       //atleast one assumption in each category has to be mandatory to support draft functionality
       setShowToast({
         key: "error",
@@ -151,12 +151,18 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
 
       <Card>
         {assumptions.map((item, index) => {
+          const sourceCheck = assumptionValues?.find((i) => i?.key === item)?.source;
           return (
             <LabelFieldPair className="mp-hypothesis-label-field" style={{ alignItems: "center"}} key={index}>
               <div className="assumption-label">
                 <span>
                   {`${t(item)}`}
-                  <span className="mandatory-span">*</span>
+                  {/* {category === "CAMPAIGN_VEHICLES" || sourceCheck === "CUSTOM" ? null : <span className="mandatory-span">*</span>} */}
+                  {category === "CAMPAIGN_VEHICLES" || sourceCheck === "CUSTOM" ? null : (
+                    <span className="icon-wrapper">
+                      <TooltipWrapper content={t(`HYPOTHEISIS_MESSAGE_FOR_${item}`)} children={<InfoBannerIcon fill={"#C84C0E"} />} />
+                    </span>
+                  )}
                 </span>
               </div>
               <div style={{ alignSelf : "center"}}>
@@ -172,7 +178,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
                   style={{ marginBottom: "0" }}
                   populators={{ name: item }}
                   id={index}
-                  placeholder={category === "CAMPAIGN_VEHICLES" ?  t(`MP_ENTER_ASSUMPTION_${category}`) : t("MP_ENTER_ASSUMPTION")}
+                  placeholder={category === "CAMPAIGN_VEHICLES" ? t(`MP_ENTER_ASSUMPTION_${category}`) : t("MP_ENTER_ASSUMPTION")}
                   onChange={(event) => {
                     handleAssumptionChange(category, event, item);
                   }}

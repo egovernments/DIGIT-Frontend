@@ -78,7 +78,12 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
   const currentCategoryRuleConfigurations =
     ruleConfigurationCategories?.length > 0 ? ruleConfigurationCategories[formulaInternalKey - 1]?.ruleConfigurations || [] : [];
   const currentCategory = ruleConfigurationCategories[formulaInternalKey - 1]?.category;
-  useEffect(() => {}, [formulaInternalKey, formulaConfigValues]);
+
+  useEffect(() => {
+    const temp = formulaConfigValues?.filter((i) => i.category === currentCategory && i.source === "CUSTOM") || [];
+    setCustomFormula(temp);
+  }, [formulaInternalKey, formulaConfigValues]);
+
   const navigateBack = () => {
     if (formulaInternalKey > 1) {
       setFormulaInternalKey((prevKey) => prevKey - 1);

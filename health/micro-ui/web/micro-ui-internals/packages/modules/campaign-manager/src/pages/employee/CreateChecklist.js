@@ -340,7 +340,7 @@ const CreateChecklist = () => {
       isActive: item?.isActive,
       reGex: item?.isRegex ? item?.regex?.regex : null,
       order: item?.key,
-      additionalDetails: item
+      additionalFields: item
     };
 
     return questionObject;
@@ -406,7 +406,7 @@ const CreateChecklist = () => {
       code: code_of_checklist,
       isActive: true,
       attributes: fp,
-      additionalDetails: {
+      additionalFields: {
         name: checklistName,
         type: checklistType,
         role: role
