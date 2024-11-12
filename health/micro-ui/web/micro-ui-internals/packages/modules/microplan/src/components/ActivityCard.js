@@ -7,7 +7,6 @@ import { Card as CardNew } from "@egovernments/digit-ui-components";
 const ActivityHomeCard = ({onClickCard=()=>{},...props}) => {
   const { t } = useTranslation();
   const history = useHistory();
-  console.log("prop title",t(props.title));
 
   return (
     <React.Fragment>
