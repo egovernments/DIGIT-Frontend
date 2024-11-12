@@ -17,6 +17,15 @@
   margin: 0;
 }
 
+.digit-sidebar {
+  top: 4.5rem;
+}
+
+.user-profile {
+  margin-top: 6rem;
+  margin-left: 3.5rem;
+}
+
 
 .main.digit-home-main {
   margin-left: 72px;
@@ -128,7 +137,7 @@
   color: theme(digitv2.lightTheme.primary-2) !important;
   margin-bottom: 0rem;
 
-  &.subBoundary{
+  &.subBoundary {
     @extend .typography.heading-s;
   }
 }
