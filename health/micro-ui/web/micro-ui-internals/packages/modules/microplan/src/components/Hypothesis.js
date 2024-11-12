@@ -152,15 +152,15 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
       <Card>
         {assumptions.map((item, index) => {
           return (
-            <LabelFieldPair className="mp-hypothesis-label-field" style={{ alignItems: "center"}} key={index}>
+            <LabelFieldPair className="mp-hypothesis-label-field" key={index}>
               <div className="assumption-label">
                 <span>
                   {`${t(item)}`}
                   <span className="mandatory-span">*</span>
+                  <span className="icon-wrapper">
+                    <TooltipWrapper content={t(`HYPOTHEISIS_MESSAGE_FOR_${item}`)} children={<InfoBannerIcon fill={"#C84C0E"} />} />
+                  </span>
                 </span>
-              </div>
-              <div style={{ alignSelf : "center"}}>
-                <TooltipWrapper content={t(`HYPOTHEISIS_MESSAGE_FOR_${item}`)} children={<InfoBannerIcon fill={'#C84C0E'} />} />
               </div>
 
               <div className="fieldv1-deleteIcon-container">
