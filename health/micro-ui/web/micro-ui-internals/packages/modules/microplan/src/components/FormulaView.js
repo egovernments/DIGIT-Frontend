@@ -28,19 +28,19 @@ const FormulaView = ({ output = "N/A", input1 = "N/A", input2 = "N/A", input3 = 
               nonEditable={true}
               style={{
                 width: "100%",
-                padding: "0.5rem",
-                border: "1px solid #ccc",
-                borderRadius: "0.25rem",
                 cursor: "pointer",
-                boxSizing: "border-box"
               }}
+              className="mp-tooltip"
               title={t(input1)}
             />
             <TextInput
               type="text"
               value={t(input2)}
               nonEditable={true}
-              style={{ width: "100%" }}
+              style={{
+                width: "100%",
+                cursor: "pointer",
+              }}
             />
             <TextInput
               type="text"
@@ -48,11 +48,8 @@ const FormulaView = ({ output = "N/A", input1 = "N/A", input2 = "N/A", input3 = 
               nonEditable={true}
               style={{
                 width: "100%",
-                padding: "0.5rem",
-                border: "1px solid #ccc",
-                borderRadius: "0.25rem",
                 cursor: "pointer",
-                boxSizing: "border-box"
+                
               }}
               title={t(input3)}
             />
