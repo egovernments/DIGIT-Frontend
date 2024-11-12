@@ -12,13 +12,7 @@ const ActivityHomeCard = ({onClickCard=()=>{},...props}) => {
     <React.Fragment>
   <Card className="fsm" style={{ backgroundColor: "transparent", boxShadow: "none", paddingTop: "0",marginRight:"1rem",marginLeft:"1rem" }}>
     <CardHeader> {t(props.title)} </CardHeader>
-    <div style={{ 
-      display: "grid", 
-      gridTemplateColumns: "33.3% 33.3% 33.3%", 
-      textAlign: "-webkit-center",
-      gap: "24px",
-      marginRight:"3rem"
-      }}
+    <div className="activity-grid"
        >
       {props.module.map((i) => {
         return (

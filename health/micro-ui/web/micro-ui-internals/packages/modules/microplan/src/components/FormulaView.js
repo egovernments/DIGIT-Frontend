@@ -28,9 +28,9 @@ const FormulaView = ({ output = "N/A", input1 = "N/A", input2 = "N/A", input3 = 
               nonEditable={true}
               style={{
                 width: "100%",
-                padding: "8px",
+                padding: "0.5rem",
                 border: "1px solid #ccc",
-                borderRadius: "4px",
+                borderRadius: "0.25rem",
                 cursor: "pointer",
                 boxSizing: "border-box"
               }}
@@ -48,9 +48,9 @@ const FormulaView = ({ output = "N/A", input1 = "N/A", input2 = "N/A", input3 = 
               nonEditable={true}
               style={{
                 width: "100%",
-                padding: "8px",
+                padding: "0.5rem",
                 border: "1px solid #ccc",
-                borderRadius: "4px",
+                borderRadius: "0.25rem",
                 cursor: "pointer",
                 boxSizing: "border-box"
               }}
