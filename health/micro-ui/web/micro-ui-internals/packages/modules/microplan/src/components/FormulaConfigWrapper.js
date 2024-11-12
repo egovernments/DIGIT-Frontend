@@ -481,7 +481,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
             </Card>
           </div>
 
-          <div className="card-container" style={{ width: "100%", maxWidth: "100%", overflow: "auto", marginBottom: "2.5rem" }}>
+          <div className="card-container" style={{ width: "77vw", marginBottom: "2.5rem" }}>
             <FormulaConfiguration
               category={ruleConfigurationCategories[formulaInternalKey - 1]?.category}
               formulas={[...filteredFormulas?.filter((item) => !deletedFormulas?.includes(item.output)), ...customFormula]}
