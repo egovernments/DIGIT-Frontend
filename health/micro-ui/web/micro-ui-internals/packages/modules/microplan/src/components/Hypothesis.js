@@ -158,18 +158,13 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
                 <span>
                   {`${t(item)}`}
                   {/* {category === "CAMPAIGN_VEHICLES" || sourceCheck === "CUSTOM" ? null : <span className="mandatory-span">*</span>} */}
-                  {/* {category === "CAMPAIGN_VEHICLES" || sourceCheck === "CUSTOM" ? null : (
+                  {category === "CAMPAIGN_VEHICLES" || sourceCheck === "CUSTOM" ? null : (
                     <span className="icon-wrapper">
-                      <TooltipWrapper content={t(`HYPOTHEISIS_MESSAGE_FOR_${item}`)} children={<InfoBannerIcon fill={"#C84C0E"} />} />
+                      <TooltipWrapper content={t(`HYPOTHESIS_MESSAGE_FOR_${item}`)} children={<InfoBannerIcon fill={"#C84C0E"} />} />
                     </span>
-                  )} */}
+                  )}
                 </span>
               </div>
-              {category === "CAMPAIGN_VEHICLES" || sourceCheck === "CUSTOM" ? null : (
-                <div style={{ alignSelf: "center" }}>
-                  <TooltipWrapper content={t(`HYPOTHEISIS_MESSAGE_FOR_${item}`)} children={<InfoBannerIcon fill={"#C84C0E"} />} />
-                </div>
-              )}
 
               <div className="fieldv1-deleteIcon-container">
                 <FieldV1

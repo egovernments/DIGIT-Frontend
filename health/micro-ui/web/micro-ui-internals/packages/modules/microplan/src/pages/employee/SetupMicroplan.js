@@ -369,9 +369,11 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
         label={getNextActionLabel()}
       />
       {setupCompleted ? (
-        <ActionBar style={{ zIndex: "19", flexDirection: "row-reverse" }}>
-          <SubmitBar label={t("GO_BACK_TO_MY_MICROPLAN")} onSubmit={() => history.goBack()} />
-        </ActionBar>
+        <ActionBar style={{ zIndex: "19" }} setactionFieldsToRight
+          actionFields={[
+            <Button label={t("GO_BACK_TO_MY_MICROPLAN")} onClick={() => history.goBack()} />
+          ]}
+        />
       ) : null}
       {showToast && (
         <Toast

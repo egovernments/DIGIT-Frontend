@@ -309,17 +309,12 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                   <LabelFieldPair className="formula-label-field">
                     <span>
                       {`${t(formula.output)}`}
-                      {/* {category === "CAMPAIGN_VEHICLES" || formula?.source === "CUSTOM" ? null : (
+                      {category === "CAMPAIGN_VEHICLES" || formula?.source === "CUSTOM" ? null : (
                         <span className="icon-wrapper">
                           <TooltipWrapper content={t(`FORMULA_MESSAGE_FOR_${formula.output}`)} children={<InfoBannerIcon fill={"#C84C0E"} />} />
                         </span>
-                      )} */}
+                      )}
                     </span>
-                    {category === "CAMPAIGN_VEHICLES" || formula?.source === "CUSTOM" ? null : (
-                      <div style={{ marginTop: "0.75rem" }}>
-                        <TooltipWrapper content={t(`FORMULA_MESSAGE_FOR_${formula.output}`)} children={<InfoBannerIcon fill={"#C84C0E"} />} />
-                      </div>
-                    )}
                     <div className="equals-icon">=</div>
                     <Dropdown
                       variant="select-dropdown"
