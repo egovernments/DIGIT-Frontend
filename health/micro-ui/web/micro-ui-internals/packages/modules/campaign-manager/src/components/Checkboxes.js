@@ -64,7 +64,8 @@ const Checkboxes = ({
           />
           {item.optionComment && <FieldV1
             // className="example"
-            disabled={dis}
+            // disabled={dis}
+            nonEditable={dis}
             type={"textarea"}
             populators={{
               resizeSmart: true

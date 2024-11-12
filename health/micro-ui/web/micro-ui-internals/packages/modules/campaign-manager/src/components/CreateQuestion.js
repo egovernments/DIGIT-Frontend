@@ -439,14 +439,15 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                       <div className="question-field-container">
                         <div className="question-field" style={{ display: "flex", height: "3.5rem", gap: "1.5rem" }}>
                           <TextInput
-                            disabled={dis}
+                            // disabled={dis}
+                            nonEditable={dis}
                             isRequired={true}
                             className="tetxinput-example"
                             type={"text"}
                             name="title"
                             value={field?.title || ""}
                             onChange={(event) => handleUpdateField(event.target.value, "title", field.key, field.id)}
-                            placeholder={"Type your question here"}
+                            placeholder={t("TYPE_YOUR_QUESTION_HERE")}
                           />
                           {!dis && <Dropdown
                             style={{ width: "20%" }}
@@ -497,7 +498,8 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                         {
                           (field?.type?.code === "Short Answer") && (
                             <FieldV1
-                              disabled={dis}
+                              nonEditable={dis}
+                              // disabled={dis}
                               className="example"
                               type={"textarea"}
                               populators={{
