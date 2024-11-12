@@ -156,7 +156,6 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
               <div className="assumption-label">
                 <span>
                   {`${t(item)}`}
-                  <span className="mandatory-span">*</span>
                   <span className="icon-wrapper">
                     <TooltipWrapper content={t(`HYPOTHEISIS_MESSAGE_FOR_${item}`)} children={<InfoBannerIcon fill={"#C84C0E"} />} />
                   </span>
