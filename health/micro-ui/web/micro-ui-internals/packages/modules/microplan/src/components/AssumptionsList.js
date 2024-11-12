@@ -7,10 +7,22 @@ import { useHistory } from 'react-router-dom';
 const AssumptionsList = ({ customProps, setupCompleted }) => {
     const { t } = useTranslation();
     const history = useHistory();
-
+    const campaign_dist=customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode
+    
     const assumptionValues = customProps?.sessionData?.HYPOTHESIS?.Assumptions?.assumptionValues || [];
+    let campaignAssumption={};
+    if(campaign_dist!="MIXED"){
+        
+        // const campaignAssumption = customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm || {};
+        campaignAssumption["selectedRegistrationProcess"]=customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode;
+        campaignAssumption["selectedDistributionProcess"]=customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode;
+        campaignAssumption["selectedRegistrationDistributionMode"]=customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm?.selectedRegistrationDistributionMode?.code;
+    }else{
+        campaignAssumption["selectedRegistrationProcess"]=customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm?.selectedRegistrationProcess?.code;
+        campaignAssumption["selectedDistributionProcess"]=customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm?.selectedDistributionProcess?.code;
+        campaignAssumption["selectedRegistrationDistributionMode"]=customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyName
 
-    const campaignAssumption = customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm || {};
+    }
 
     let dic = {};
 
@@ -34,8 +46,8 @@ const AssumptionsList = ({ customProps, setupCompleted }) => {
                 <Header className="summary-main-heading">{t(`MICROPLAN_ESTIMATION_ASSUMPTIONS_HEADING`)} </Header>
                 {orderedKeys.map((key, index) => {
                     const assumption = campaignAssumption?.[key] || {};
-                    const code = assumption.code || "NA";
-                    const value = assumption.value || "NA";
+                    const code = assumption || "NA";
+                    const value = assumption || "NA";
                     return (
                         <>
                             <LabelFieldPair className="as-label-field" style={{ marginBottom: "0px" }}>
