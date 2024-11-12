@@ -21,6 +21,8 @@ const SearchSavedPlansWithCampaign = async (body) => {
         PlanEmployeeAssignmentSearchCriteria: {
           tenantId: tenantId,
           employeeId: [uuid],
+          limit: body?.PlanConfigurationSearchCriteria?.limit,
+          offset: body?.PlanConfigurationSearchCriteria?.offset,
           filterUniqueByPlanConfig: true,
         },
       },
@@ -41,8 +43,8 @@ const SearchSavedPlansWithCampaign = async (body) => {
         PlanConfigurationSearchCriteria: {
           tenantId: tenantId,
           status: body?.PlanConfigurationSearchCriteria?.status,
-          limit: body?.PlanConfigurationSearchCriteria?.limit,
-          offset: body?.PlanConfigurationSearchCriteria?.offset,
+          // limit: body?.PlanConfigurationSearchCriteria?.limit,
+          // offset: body?.PlanConfigurationSearchCriteria?.offset,
           name: body.PlanConfigurationSearchCriteria.name,
           ids: listOfPlans,
         },
@@ -70,7 +72,7 @@ const SearchSavedPlansWithCampaign = async (body) => {
     });
     const finalResponse = {
       PlanConfiguration: mergePlanAndCampaign(responsePlan?.PlanConfiguration, "campaignDetails", responseCampaign?.CampaignDetails),
-      TotalCount: responsePlan?.TotalCount
+      TotalCount: planEmployeeSearch?.TotalCount
     };
     return finalResponse;
   } catch (error) {
