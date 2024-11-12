@@ -9,11 +9,12 @@ import { CheckBox } from "@egovernments/digit-ui-components";
 import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
 import { tableCustomStyle } from "../../components/tableCustomStyle";
 import { CustomSVG } from "@egovernments/digit-ui-components";
+import { useMyContext } from "../../utils/context";
 
 const PlanInbox = () => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
-
+  const { state } = useMyContext();
   const url = Digit.Hooks.useQueryParams();
   const microplanId = url?.microplanId;
   const campaignId = url?.campaignId;
@@ -69,7 +70,7 @@ const PlanInbox = () => {
       if (!showTab) {
         setActiveLink({
           code: "ASSIGNED_TO_ME",
-          name: "ASSIGNED_TO_ME"
+          name: "ASSIGNED_TO_ME",
         });
         setShowTab(true);
       }
@@ -112,9 +113,7 @@ const PlanInbox = () => {
         active: true,
         jurisdiction: censusJurisdiction,
         status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
-        ...(activeLink.code == "ASSIGNED_TO_ALL" || selectedFilter == "VALIDATED"
-          ? {}
-          : { assignee: user.info.uuid }),
+        ...(activeLink.code == "ASSIGNED_TO_ALL" || selectedFilter == "VALIDATED" ? {} : { assignee: user.info.uuid }),
         planConfigurationId: microplanId, //list of plan ids
         limit: limitAndOffset?.limit,
         offset: limitAndOffset?.offset,
@@ -339,7 +338,7 @@ const PlanInbox = () => {
         return row?.[resource?.resourceType] || "NA"; // Return estimatedNumber if exists
       },
       sortable: true,
-      width: "180px"
+      width: "180px",
     }));
   };
 
@@ -353,18 +352,26 @@ const PlanInbox = () => {
           return row?.[field?.key] || t("ES_COMMON_NA");
         },
         sortable: true,
-        width: "180px"
+        width: "180px",
       }));
   };
 
   const getSecurityDetailsColumns = () => {
-    const sampleSecurityData = planWithCensus?.censusData?.[0]?.additionalDetails?.securityDetails || {};
-    const securityColumns = Object.keys(sampleSecurityData).map((key) => ({
-      name: t(`SECURITY_DETAIL_${key}`),
-      cell: (row) => row[`securityDetail_${key}`],
-      sortable: true,
-      width: "180px"
-    }));
+    // const sampleSecurityData = planWithCensus?.censusData?.[0]?.additionalDetails?.securityDetails || {};
+    const securityColumns = state?.securityQuestions?.map((i) => {
+      return {
+        name: t(i?.question),
+        cell: (row) => row?.[`securityDetail_${i?.question}`] || t("ES_COMMON_NA"),
+        sortable: true,
+        width: "180px",
+      };
+    });
+    // const securityColumns = Object.keys(sampleSecurityData).map((key) => ({
+    //   name: t(`${key}`),
+    //   cell: (row) => row[`securityDetail_${key}`],
+    //   sortable: true,
+    //   width: "180px",
+    // }));
     return securityColumns;
   };
   const columns = [
@@ -372,29 +379,29 @@ const PlanInbox = () => {
       name: t(`INBOX_VILLAGE`),
       cell: (row) => t(row?.village) || "NA",
       sortable: true,
-      width: "180px"
+      width: "180px",
     },
     {
-      name: t(`VILLAGE_ROAD_CONDITION`),
+      name: t(`HCM_MICROPLAN_VILLAGE_ROAD_CONDITION_LABEL`),
       cell: (row) => t(row?.villageRoadCondition) || "NA",
       sortable: true,
-      width: "180px"
+      width: "180px",
     },
     {
-      name: t(`VILLAGE_TERRAIN`),
+      name: t(`HCM_MICROPLAN_VILLAGE_TERRAIN_LABEL`),
       cell: (row) => t(row?.villageTerrain) || "NA",
       sortable: true,
-      width: "180px"
+      width: "180px",
     },
     {
-      name: t(`VILLAGE_TARNSPORTATION_MODE`),
+      name: t(`HCM_MICROPLAN_VILLAGE_TRANSPORTATION_MODE_LABEL`),
       cell: (row) => t(row?.villageTransportMode) || "NA",
       sortable: true,
-      width: "180px"
+      width: "180px",
     },
+    ...getSecurityDetailsColumns(),
     ...getAdditionalFieldsColumns(),
     ...getResourceColumns(),
-    ...getSecurityDetailsColumns(),
     // {
     //   name: t(`TOTAL_POPULATION`),
     //   cell: (row) => t(row?.totalPop) || "NA",
@@ -464,20 +471,20 @@ const PlanInbox = () => {
 
   const conditionalRowStyles = [
     {
-      when: row => selectedRows.some(selectedRow => selectedRow?.original?.id === row?.original?.id),
+      when: (row) => selectedRows.some((selectedRow) => selectedRow?.original?.id === row?.original?.id),
       style: {
-        backgroundColor: '#FBEEE8',
+        backgroundColor: "#FBEEE8",
       },
-      classNames: ['selectedRow'],
+      classNames: ["selectedRow"],
     },
   ];
 
   const actionIconMap = {
-    "VALIDATE": { isSuffix: false, icon: "CheckCircle" },
-    "EDIT_AND_SEND_FOR_APPROVAL": { isSuffix: false, icon: "Edit" },
-    "APPROVE": { isSuffix: false, icon: "CheckCircle" },
-    "SEND_BACK_FOR_CORRECTION": { isSuffix: true, icon: "ArrowForward" },
-  }
+    VALIDATE: { isSuffix: false, icon: "CheckCircle" },
+    EDIT_AND_SEND_FOR_APPROVAL: { isSuffix: false, icon: "Edit" },
+    APPROVE: { isSuffix: false, icon: "CheckCircle" },
+    SEND_BACK_FOR_CORRECTION: { isSuffix: true, icon: "ArrowForward" },
+  };
 
   if (isPlanEmpSearchLoading || isLoadingCampaignObject || isWorkflowLoading) {
     return <Loader />;
@@ -555,8 +562,7 @@ const PlanInbox = () => {
                             icon={actionIconMap[action.action]?.icon}
                             isSuffix={actionIconMap[action.action]?.isSuffix}
                           />
-                        ))
-                      }
+                        ))}
                     />
                   ) : (
                     actionsMain
@@ -597,7 +603,9 @@ const PlanInbox = () => {
                 )}
               </div>
             )}
-            {isPlanWithCensusLoading ? <Loader /> :
+            {isPlanWithCensusLoading ? (
+              <Loader />
+            ) : (
               <DataTable
                 columns={columns}
                 data={planWithCensus?.tableData}
@@ -618,7 +626,7 @@ const PlanInbox = () => {
                 paginationRowsPerPageOptions={[10, 20, 50, 100]}
                 sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
               />
-            }
+            )}
           </Card>
         </div>
       </div>
