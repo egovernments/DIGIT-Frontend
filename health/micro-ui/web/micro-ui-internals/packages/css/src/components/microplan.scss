@@ -336,3 +336,11 @@
     margin: 0rem;
   }
 }
+
+.activity-grid { 
+  display: grid; 
+  grid-template-columns: 33.3% 33.3% 33.3%; 
+  text-align: -webkit-center;
+  gap: 24px;
+  margin-right: 3rem;
+}
