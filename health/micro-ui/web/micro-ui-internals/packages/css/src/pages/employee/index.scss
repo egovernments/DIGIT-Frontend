@@ -749,8 +749,9 @@ tbody {
 }
 
 .boundary-header {
-  @extend .typography.text-heading-m;
+  @extend .typography.heading-s;
   color: theme(digitv2.lightTheme.header-sidenav);
+  padding-bottom: 1rem;
 }
 
 .card-header-timeline {
@@ -779,7 +780,7 @@ tbody {
   border-width: 0.063rem;
   background: theme(digitv2.lightTheme.paper-secondary);
   border-color: #D4D5D6;
-  border-radius: 0.5rem;
+  border-radius: 0.25rem;
   padding: 1rem;
 }
 
