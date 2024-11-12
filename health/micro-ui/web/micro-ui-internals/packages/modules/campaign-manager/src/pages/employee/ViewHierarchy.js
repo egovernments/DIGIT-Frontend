@@ -198,23 +198,38 @@ const ViewHierarchy = () => {
           setDisable(false);
           let label;
           
+          // Handle known errors like polling timeout and max retries
           if (error.message === "Polling timeout" || error.message === "Max retries reached") {
             label = `${t("WBH_BOUNDARY_CREATION_TIMEOUT")}: ${t("WBH_OPERATION_INCOMPLETE")}`;
           } else {
+        
+            // Initialize the label with a failure message
             label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
-            error?.response?.data?.Errors?.forEach((err, idx) => {
-              if (idx === error?.response?.data?.Errors?.length - 1) {
-                label += t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ".";
-              } else {
-                label += t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ", ";
-              }
-            });
+            
+            // Check if the error has a response with detailed error information
+            if (error.response?.data?.Errors?.length > 0) {
+              // Append each error code to the label
+              error.response.data.Errors.forEach((err, idx) => {
+                const transformedError = t(Digit.Utils.locale.getTransformedLocale(err.code));
+                
+                // Add comma separation except for the last item
+                if (idx === error.response.data.Errors.length - 1) {
+                  label += `${transformedError}.`;
+                } else {
+                  label += `${transformedError}, `;
+                }
+              });
+            } else {
+              // Fallback if no error details are provided in the response
+              label += error.message || t("WBH_UNKNOWN_ERROR");
+            }
           }
-          
+        
           setShowToast({ label, isError: "error" });
           setDataCreationGoing(false);
           return {};
         }
+  
       };
       
       // const pollForStatusCompletion = async (id, typeOfData) => {
@@ -304,13 +319,18 @@ const ViewHierarchy = () => {
               });
       
               const status = searchResponse?.ResourceDetails?.[0]?.status;
+              let errorString = searchResponse?.ResourceDetails?.[0]?.additionalDetails.error;
+              let errorObject={};
+              let errorCode="HIERARCHY_FAILED";
+              if(errorString) errorObject = JSON.parse(errorString);
+              if(errorObject) errorCode = errorObject.code;
       
               if (status === "completed") {
                 setShowToast({ label: `${t("WBH_HIERARCHY_STATUS_COMPLETED")}`, isError: "success" });
                 setDataCreationGoing(false);
                 resolve(true);
               } else if (status === "failed") {
-                reject(new Error("Operation failed"));
+                reject(new Error(errorCode));
               } else {
                 retries++;
                 setTimeout(poll, pollInterval);
