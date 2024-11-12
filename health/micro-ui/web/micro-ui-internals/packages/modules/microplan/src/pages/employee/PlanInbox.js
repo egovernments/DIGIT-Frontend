@@ -585,14 +585,14 @@ const PlanInbox = () => {
                 {workFlowPopUp !== "" && (
                   <WorkflowCommentPopUp
                     onClose={closePopUp}
-                    heading={t(`SEND_FOR_${workFlowPopUp}`)}
-                    submitLabel={t(`SEND_FOR_${workFlowPopUp}`)}
+                    heading={t(`PLAN_INBOX_SEND_FOR_${workFlowPopUp}_HEADING_LABEL`)}
+                    submitLabel={t(`PLAN_INBOX_SEND_FOR_${workFlowPopUp}_SUBMIT_LABEL`)}
                     url="/plan-service/plan/bulk/_update"
                     requestPayload={{ Plans: updateWorkflowForSelectedRows() }}
                     commentPath="workflow.comments"
                     onSuccess={(data) => {
                       closePopUp();
-                      setShowToast({ key: "success", label: t("WORKFLOW_UPDATE_SUCCESS"), transitionTime: 5000 });
+                      setShowToast({ key: "success", label: t("PLAN_INBOX_WORKFLOW_UPDATE_SUCCESS"), transitionTime: 5000 });
                       refetchPlanWithCensus();
                     }}
                     onError={(data) => {
@@ -653,8 +653,8 @@ const PlanInbox = () => {
       {actionBarPopUp && (
         <WorkflowCommentPopUp
           onClose={closeActionBarPopUp}
-          heading={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN`)}
-          submitLabel={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN`)}
+          heading={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN_HEADING_LABEL`)}
+          submitLabel={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN_SUBMIT_LABEL`)}
           url="/plan-service/config/_update"
           requestPayload={{ PlanConfiguration: updateWorkflowForFooterAction() }}
           commentPath="workflow.comments"
