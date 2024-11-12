@@ -37,6 +37,27 @@ const updateServiceDefinition = async (tenantId, newStatus, sdcode) => {
     return null;
   }
 };
+const retryCampaign = async (row,searchResult) => {
+  const filteredCampaign=searchResult.filter(item => item?.id === row?.id)
+  if(filteredCampaign?.length>0){
+    const newCampaignObject=filteredCampaign?.[0]||{}
+  try {
+    const res = await Digit.CustomService.getResponse({
+      url: "/project-factory/v1/project-type/retry",
+      body: {
+        CampaignDetails: {
+          ...newCampaignObject,
+          action:"retry"
+        },
+      },
+    });
+    return res;
+  } catch (error) {
+    // console.error("Error updating service definition:", error);
+    return null;
+  }
+}
+};
 export const UICustomizations = {
   MyChecklistSearchConfig: {
 
@@ -955,6 +976,9 @@ export const UICustomizations = {
           case "ACTION_LABEL_VIEW_TIMELINE":
             setTimeline(true);
             break;
+          case "ACTION_LABEL_RETRY":
+            retryCampaign(row,searchResult);
+              break;
           default:
             console.log(value);
             break;
@@ -982,7 +1006,7 @@ export const UICustomizations = {
                 type="actionButton"
                 variation="secondary"
                 label={"Action"}
-                options={[{ key: 1, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") }]}
+                options={[{ key: 1, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },{ key: 2, code: "ACTION_LABEL_RETRY", i18nKey: t("ACTION_LABEL_RETRY") }].filter(obj=>Digit.Utils.didEmployeeHasAtleastOneRole(["SYSTEM_ADMINISTRATOR"]||obj?.key!=2))}  //added retry for system adminstrator for failed campaign
                 optionsKey="i18nKey"
                 showBottom={true}
                 isSearchable={false}
