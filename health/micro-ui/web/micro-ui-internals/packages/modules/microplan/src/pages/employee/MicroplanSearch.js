@@ -41,7 +41,7 @@ const MicroplanSearch = () => {
           defaultValues={defaultValues}
           showTab={true}
           tabData={tabData}
-          onTabChange={onTabChange} //!activated ion tabChange
+          onTabChange={onTabChange} 
         ></InboxSearchComposer>
       </div>
     </React.Fragment>
