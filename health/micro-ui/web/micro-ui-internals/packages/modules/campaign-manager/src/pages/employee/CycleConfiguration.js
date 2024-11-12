@@ -263,7 +263,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
             }`
           )}
         </CardText>
-        <LabelFieldPair>
+        <LabelFieldPair  style={{ marginBottom:"1.5rem" }}>
           <CardLabel>
             {t(`CAMPAIGN_NO_OF_CYCLE`)}
             <span className="mandatory-span">*</span>

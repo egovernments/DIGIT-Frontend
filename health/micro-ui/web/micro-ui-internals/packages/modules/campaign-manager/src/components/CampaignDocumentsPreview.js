@@ -37,8 +37,8 @@ function CampaignDocumentsPreview({ documents = [], svgStyles = {}, isUserGenera
           documents?.map(
             (document, index) =>
               (document?.id || document?.filestoreId) && (
-                <div key={index} style={{ marginRight: "1rem" }}>
-                  <div onClick={() => setShowPreview(true)}>
+                <div key={index} style={{ marginRight: "1rem" , display: "flex"  }}>
+                  <div onClick={() => setShowPreview(true)} className="campaign-preview">
                     <div style={{ display: "flex" }}>
                       <XlsxFile />
                     </div>

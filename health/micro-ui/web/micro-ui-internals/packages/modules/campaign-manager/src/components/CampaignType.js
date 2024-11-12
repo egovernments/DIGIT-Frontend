@@ -148,7 +148,7 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
               </div>
             </LabelFieldPair>
             {showBeneficiary && (
-              <LabelFieldPair style={{ alignItems: "center" , display: "flex" }} >
+              <LabelFieldPair style={{ alignItems: "center" , display: "flex" , marginBottom: "0rem" }} >
                 <div className="beneficiary-type">{`${t("HCM_BENEFICIARY_TYPE")}`}</div>
                 <div>{t(`CAMPAIGN_TYPE_${beneficiaryType}`)}</div>
               </LabelFieldPair>

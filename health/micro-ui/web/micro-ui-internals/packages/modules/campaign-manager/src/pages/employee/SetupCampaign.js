@@ -709,7 +709,6 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             "HCM_DELIVERY_DETAILS",
             "HCM_UPLOAD_DATA",
             "HCM_REVIEW_DETAILS",
-            "HCM_CONFIGURE_APP",
           ]}
           currentStep={currentStep + 1}
           onStepClick={onStepClick}
