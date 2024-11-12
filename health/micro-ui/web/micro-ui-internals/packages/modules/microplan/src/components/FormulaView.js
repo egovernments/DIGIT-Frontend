@@ -26,7 +26,15 @@ const FormulaView = ({ output = "N/A", input1 = "N/A", input2 = "N/A", input3 = 
               type="text"
               value={t(input1)}
               nonEditable={true}
-              style={{ width: "100%" }}
+              style={{
+                width: "100%",
+                padding: "8px",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                cursor: "pointer",
+                boxSizing: "border-box"
+              }}
+              title={t(input1)}
             />
             <TextInput
               type="text"
@@ -38,7 +46,15 @@ const FormulaView = ({ output = "N/A", input1 = "N/A", input2 = "N/A", input3 = 
               type="text"
               value={t(input3)}
               nonEditable={true}
-              style={{ width: "100%" }}
+              style={{
+                width: "100%",
+                padding: "8px",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                cursor: "pointer",
+                boxSizing: "border-box"
+              }}
+              title={t(input3)}
             />
           </LabelFieldPair>
 
