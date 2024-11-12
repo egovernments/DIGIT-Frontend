@@ -153,21 +153,23 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
         {assumptions.map((item, index) => {
           const sourceCheck = assumptionValues?.find((i) => i?.key === item)?.source;
           return (
-            <LabelFieldPair className="mp-hypothesis-label-field" style={{ alignItems: "center"}} key={index}>
+            <LabelFieldPair className="mp-hypothesis-label-field" style={{ alignItems: "center" }} key={index}>
               <div className="assumption-label">
                 <span>
                   {`${t(item)}`}
                   {/* {category === "CAMPAIGN_VEHICLES" || sourceCheck === "CUSTOM" ? null : <span className="mandatory-span">*</span>} */}
-                  {category === "CAMPAIGN_VEHICLES" || sourceCheck === "CUSTOM" ? null : (
+                  {/* {category === "CAMPAIGN_VEHICLES" || sourceCheck === "CUSTOM" ? null : (
                     <span className="icon-wrapper">
                       <TooltipWrapper content={t(`HYPOTHEISIS_MESSAGE_FOR_${item}`)} children={<InfoBannerIcon fill={"#C84C0E"} />} />
                     </span>
-                  )}
+                  )} */}
                 </span>
               </div>
-              <div style={{ alignSelf : "center"}}>
-                <TooltipWrapper content={t(`HYPOTHEISIS_MESSAGE_FOR_${item}`)} children={<InfoBannerIcon fill={'#C84C0E'} />} />
-              </div>
+              {category === "CAMPAIGN_VEHICLES" || sourceCheck === "CUSTOM" ? null : (
+                <div style={{ alignSelf: "center" }}>
+                  <TooltipWrapper content={t(`HYPOTHEISIS_MESSAGE_FOR_${item}`)} children={<InfoBannerIcon fill={"#C84C0E"} />} />
+                </div>
+              )}
 
               <div className="fieldv1-deleteIcon-container">
                 <FieldV1
