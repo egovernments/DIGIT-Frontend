@@ -7,12 +7,20 @@ import { Card as CardNew } from "@egovernments/digit-ui-components";
 const ActivityHomeCard = ({onClickCard=()=>{},...props}) => {
   const { t } = useTranslation();
   const history = useHistory();
+  console.log("prop title",t(props.title));
 
   return (
     <React.Fragment>
-  <Card className="fsm" style={{ backgroundColor: "transparent", boxShadow: "none", paddingTop: "0" }}>
+  <Card className="fsm" style={{ backgroundColor: "transparent", boxShadow: "none", paddingTop: "0",marginRight:"1rem",marginLeft:"1rem" }}>
     <CardHeader> {t(props.title)} </CardHeader>
-    <div style={{ display: "grid", gridTemplateColumns: "33.3% 33.3% 33.3%", textAlign: "-webkit-center", gap: "24px" }}>
+    <div style={{ 
+      display: "grid", 
+      gridTemplateColumns: "33.3% 33.3% 33.3%", 
+      textAlign: "-webkit-center",
+      gap: "24px",
+      marginRight:"2rem"
+      }}
+       >
       {props.module.map((i) => {
         return (
           <CardNew
