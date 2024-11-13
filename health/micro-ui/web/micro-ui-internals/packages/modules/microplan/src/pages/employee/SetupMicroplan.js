@@ -271,6 +271,9 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   };
 
   const onStepClick = (step) => {
+    if(setupCompleted){
+      return
+    }
     if (step > currentStep) return;
     const filteredSteps = microplanConfig?.[0].form.filter((item) => item.stepCount === String(step + 1));
     const minKeyStep = filteredSteps.reduce((min, step) => {

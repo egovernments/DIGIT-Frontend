@@ -8,7 +8,7 @@ import ConfigureApp from "./ConfigureApp";
 import { CreateChecklist} from "./CreateChecklist";
 import SearchChecklist from "./SearchChecklist";
 import UpdateCampaign from "./UpdateCampaign";
-import GeoPode from "./GeoPode";
+import BoundaryRelationCreate from "./BoundaryRelationCreate";
 import ViewBoundary from "./ViewBoundary";
 import ViewHierarchy from "./ViewHierarchy";
 import ViewChecklist from "./ViewChecklist";
@@ -144,9 +144,9 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
           <PrivateRoute path={`${path}/checklist/view`} component={() => <ViewChecklist />} />
           <PrivateRoute path={`${path}/checklist/update`} component={() => <UpdateChecklist />} />
           <PrivateRoute path={`${path}/boundary/home`} component={()=> <BoundaryHome />} />
-          <PrivateRoute path={`${path}/boundary/geopode`} component={()=> <GeoPode />} />
+          <PrivateRoute path={`${path}/boundary/create`} component={()=> <BoundaryRelationCreate />} />
           <PrivateRoute path={`${path}/boundary/view-all-hierarchy`} component={()=> <ViewBoundary />} />
-          <PrivateRoute path={`${path}/boundary/view-hierarchy`} component={()=> <ViewHierarchy />} />
+          <PrivateRoute path={`${path}/boundary/data`} component={()=> <ViewHierarchy />} />
           <PrivateRoute path={`${path}/update-campaign`} component={() => <UpdateCampaign />} />
         </AppContainer>
       </Switch>

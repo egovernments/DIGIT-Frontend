@@ -76,7 +76,7 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
 
     setErrors((prev) => ({
       ...prev,
-      [fieldKey]: !value || Number(value) <= 0
+      [fieldKey]: !value || Number(value) <= 0 || Number(value) > 100000
     }));
   };
 
@@ -110,7 +110,7 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
                     <span>{field.value || t("ES_COMMON_NA")}</span>
                   </div>
                 </div>
-                {index < nonEditableFields.length - 1 && <Divider className="" variant="small" />}
+                {editableFields?.length > 0 && <Divider className="" variant="small" />}
               </Fragment>
             ))}
 
@@ -128,7 +128,7 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
                     />
                     {errors[field.key] && (
                       <ErrorMessage
-                        message={t("HCM_MICROPLAN_ONLY_POSITIVE_NUMBERS")}
+                        message={t("HCM_MICROPLAN_ONLY_POSITIVE_NUMBERS_MAX_LIMIT_VALIDATION_ERROR")}
                         truncateMessage={true}
                         maxLength={256}
                         showIcon={true}

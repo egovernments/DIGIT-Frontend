@@ -118,7 +118,7 @@ const SearchChecklist = () => {
   else {
     return (
       <React.Fragment>
-        <Stepper
+        {/* <Stepper
           customSteps={[
             "HCM_CAMPAIGN_SETUP_DETAILS",
             "HCM_BOUNDARY_DETAILS",
@@ -131,8 +131,9 @@ const SearchChecklist = () => {
           onStepClick={onStepClick}
           activeSteps={6}
           // className={"campaign-flow-stepper"}
-        />
-        <div style={{ display: "flex", justifyContent: "space-between", marginTop: "2rem" }}>
+        /> */}
+        <div style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>{t("CONFIGURE_CHECKLIST")}</div>
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1rem" }}>
           {/* <Header styles={{ fontSize: "32px", marginBottom: "2rem", marginTop: "2rem" }}>{t("ACTION_LABEL_CONFIGURE_APP")}</Header> */}
           {/* <Button
             variation="secondary"
@@ -214,14 +215,14 @@ const SearchChecklist = () => {
           )}
         </div>
           <div className="container-full">
-          <div className="card-container">
+          {/* <div className="card-container">
             <Card className="card-header-timeline">
               <TextBlock subHeader={t("ACTION_LABEL_CONFIGURE_APP")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
             </Card>
             <Card className="stepper-card">
               <Stepper customSteps={["HCM_MANAGE_CHECKLIST"]} currentStep={1} onStepClick={() => { }} direction={"vertical"} />
             </Card>
-          </div>
+          </div> */}
           <div className="inbox-search-wrapper card-container1" style={{ width: "100%" }}>
             {/* Pass defaultValues as props to InboxSearchComposer */} 
            <InboxSearchComposer

@@ -21,14 +21,14 @@ const navigate=(history,key,data,setShowPopUp)=>{
 let url="";
 switch (key){
   case "CREATE_NEW_BOUNDARY_DATA":
-    url=`/${window.contextPath}/employee/campaign/boundary/view-hierarchy?defaultHierarchyType=${data?.defaultHierarchyName}&hierarchyType=${data?.hierarchyName}`;
+    url=`/${window.contextPath}/employee/campaign/boundary/data?defaultHierarchyType=${data?.defaultHierarchyName}&hierarchyType=${data?.hierarchyName}`;
         break;
   case "VIEW_EXISTING_BOUNDARY_DATA":
     url=`/${window.contextPath}/employee/campaign/boundary/view-all-hierarchy`;
 
     break;
   case "EDIT_BOUNDARY_DATA":
-    url=`/${window.contextPath}/employee/campaign/boundary/view-hierarchy?defaultHierarchyType=${data?.defaultHierarchyName}&hierarchyType=${data?.hierarchyName}`;
+    url=`/${window.contextPath}/employee/campaign/boundary/data?defaultHierarchyType=${data?.defaultHierarchyName}&hierarchyType=${data?.hierarchyName}`;
     break;
   default:
     break;
@@ -60,8 +60,7 @@ const type=searchParams.get("type")|| config?.type;
       {/* {toast &&
         <Toast label={t("USER_NOT_AUTHORISED")} type={"error"} onClose={() => setToast(false)} />} */}
       <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
-        <div style={{ fontWeight: 700, fontSize: "2.5rem" }}>{t("BOUNDARY_DATA_MANAGEMENT")}</div>
-        <div style={{ height: "2rem" }}></div>
+        <div style={{ fontWeight: 700, fontSize: "2.5rem", fontFamily:"Roboto Condensed"}}>{t("BOUNDARY_DATA_MANAGEMENT")}</div>
         <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
         {Object.keys(boundaryHomeConfig)?.map(key=>{
           return (<Button

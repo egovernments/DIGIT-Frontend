@@ -9,7 +9,7 @@ const ViewBoundary = () => {
 
     return (
         <div>
-            <Header styles={{ fontSize: "32px", marginBottom:"2rem", marginTop:"2rem"}}>{t("CURRENT_HIERARCHIES")}</Header> 
+            <Header styles={{ fontSize: "2.5rem", marginBottom:"1rem", marginTop:"2rem"}}>{t("CURRENT_HIERARCHIES")}</Header> 
             <div className="inbox-search-wrapper">
                 {/* Pass defaultValues as props to InboxSearchComposer */}
                 <InboxSearchComposer configs={boundarySearchConfig?.[0]} 

@@ -88,10 +88,10 @@ const BoundaryDetailsSummary = (props) => {
       {Object.keys(groupedByParent)
         .slice(0, 2)
         .map((parentKey, index) => (
-          <div className="parent-group" key={index} style={{ marginBottom: "20px" }}>
+          <div className="parent-group" key={index}>
             {parentKey && parentKey !== "undefined" && parentKey.trim() !== "" && <div className="boundary-header">{t(parentKey)}</div>}
             <div>
-              <div className="digit-tag-container" style={{ display: "flex", maxWidth: "100%" }}>
+              <div className="digit-tag-container" style={{ display: "flex", maxWidth: "100%" , margin: "0rem" }}>
                 {groupedByParent[parentKey].slice(0, expandedGroups[parentKey] ? groupedByParent[parentKey].length : 10).map((boundary) => (
                   <Chip key={boundary.code} text={t(boundary.code)} onClick={() => {}} className="multiselectdropdown-tag" hideClose={true} />
                 ))}

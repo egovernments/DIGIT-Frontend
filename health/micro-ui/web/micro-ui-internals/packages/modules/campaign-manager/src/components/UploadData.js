@@ -1173,7 +1173,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           additionalElements={readMeInfo[type]?.map((info, index) => (
             <div key={index} style={{ display: "flex", flexDirection: "column" }}>
               <h2>{info?.header}</h2>
-              <ul style={{ paddingLeft: 0 }}>
+              <ul style={{ paddingLeft: 0 , marginBottom: "0px" }}>
                 {info?.descriptions.map((desc, i) => (
                   <li key={i} className="info-points">
                     {desc.isBold ? <h2>{desc.text}</h2> : <p>{desc.text}</p>}

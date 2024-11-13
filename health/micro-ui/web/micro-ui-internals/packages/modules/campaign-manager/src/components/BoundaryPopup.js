@@ -33,7 +33,7 @@ const BoundaryPopup = ({ showPopUp, setShowPopUp, data })=> {
                     variation={"secondary"}
                     label={t("GET_BOUNDARY_DATA_FROM_GEOPODE")}
                     onClick={() => {
-                        history.push(`/${window.contextPath}/employee/campaign/boundary/geopode?defaultHierarchyType=${data?.defaultHierarchyName}&hierarchyType=${data?.hierarchyName}&newHierarchy=${false}`,
+                        history.push(`/${window.contextPath}/employee/campaign/boundary/create?defaultHierarchyType=${data?.defaultHierarchyName}&hierarchyType=${data?.hierarchyName}&newHierarchy=${false}`,
                             { data: data?.defaultBoundaryData }
                         );
                     }}
@@ -45,7 +45,7 @@ const BoundaryPopup = ({ showPopUp, setShowPopUp, data })=> {
                     variation={"secondary"}
                     label={t("CREATE_MY_OWN_BOUNDARY_DATA")}
                     onClick={() => {
-                        history.push(`/${window.contextPath}/employee/campaign/boundary/geopode?defaultHierarchyType=${data?.defaultHierarchyName}&hierarchyType=${data?.hierarchyName}&newHierarchy=${true}`);
+                        history.push(`/${window.contextPath}/employee/campaign/boundary/create?defaultHierarchyType=${data?.defaultHierarchyName}&hierarchyType=${data?.hierarchyName}&newHierarchy=${true}`);
                     }}
                     style={{height:"4rem"}}
                 />
