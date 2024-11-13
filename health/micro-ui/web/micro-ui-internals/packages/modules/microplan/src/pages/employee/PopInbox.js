@@ -518,14 +518,14 @@ const PopInbox = () => {
                 {workFlowPopUp !== '' && (
                   <WorkflowCommentPopUp
                     onClose={closePopUp}
-                    heading={t(`SEND_FOR_${workFlowPopUp}`)}
-                    submitLabel={t(`SEND_FOR_${workFlowPopUp}`)}
+                    heading={t(`POP_INBOX_SEND_FOR_${workFlowPopUp}_HEADING_LABEL`)}
+                    submitLabel={t(`POP_INBOX_SEND_FOR_${workFlowPopUp}_SUBMIT_LABEL`)}
                     url="/census-service/bulk/_update"
                     requestPayload={{ Census: updateWorkflowForSelectedRows() }}
                     commentPath="workflow.comments"
                     onSuccess={(data) => {
                       closePopUp();
-                      setShowToast({ key: "success", label: t("WORKFLOW_UPDATE_SUCCESS"), transitionTime: 5000 });
+                      setShowToast({ key: "success", label: t("POP_INBOX_WORKFLOW_UPDATE_SUCCESS"), transitionTime: 5000 });
                       refetch();
                     }}
                     onError={(data) => {
@@ -545,8 +545,8 @@ const PopInbox = () => {
           {showComment && (
             <WorkflowCommentPopUp
               onClose={onCommentLogClose}
-              heading={t(`HCM_MICROPLAN_EDIT_POPULATION_COMMENT_LABEL`)}
-              submitLabel={t(`HCM_MICROPLAN_EDIT_POPULATION_COMMENT_SUBMIT_LABEL`)}
+              heading={t(`POP_INBOX_HCM_MICROPLAN_EDIT_POPULATION_COMMENT_LABEL`)}
+              submitLabel={t(`POP_INBOX_HCM_MICROPLAN_EDIT_POPULATION_COMMENT_SUBMIT_LABEL`)}
               url="/census-service/_update"
               requestPayload={{ Census: updatedCensus }}
               commentPath="workflow.comments"

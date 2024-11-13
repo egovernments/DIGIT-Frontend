@@ -1,4 +1,4 @@
-import { Card, Uploader, Button,  ActionBar, Toast, Loader } from "@egovernments/digit-ui-components";
+import { Card, Uploader, Button,  ActionBar, Toast, Loader, PopUp } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState, useRef} from "react";
 import { useTranslation } from "react-i18next";
 import XlsPreviewNew from "../../components/XlsPreviewNew";
@@ -76,21 +76,7 @@ const ViewHierarchy = () => {
         fetchData();
     }, []);
 
-    const generateFile = async () => {
-      const res = await Digit.CustomService.getResponse({
-        url: `/project-factory/v1/data/_generate`,
-        body: {
-        },
-        params: {
-          tenantId: tenantId,
-          type: "boundaryManagement",
-          forceUpdate: true,
-          hierarchyType: hierarchyType,
-          campaignId: "default"
-        }
-      });
-      return res;
-    }
+
 
     const generateTemplate = async() => {
         const res = await Digit.CustomService.getResponse({
@@ -114,9 +100,11 @@ const ViewHierarchy = () => {
             // Splitting filename before .xlsx or .xls
             const fileNameWithoutExtension = hierarchyType ;
             Digit.Utils.campaign.downloadExcelWithCustomName({ fileStoreId: resFile?.GeneratedResource?.[0]?.fileStoreid, customName: fileNameWithoutExtension });
+            setShowPopUp(false);
         }
         else if ( resFile && resFile?.GeneratedResource?.[0]?.status === "inprogress"){
           setShowToast({label: "PLEASE_WAIT_AND_RETRY_AFTER_SOME_TIME", isError: "info" });
+          setShowPopUp(false);
         }
 
     }
@@ -132,7 +120,7 @@ const ViewHierarchy = () => {
             // Call function to upload the selected file to an API
             await uploadFileToAPI(file);
             setDisableFile(true);
-            setShowToast({ label: t("FILE_UPLOADED_SUCCESSFULLY"), isError:"success"});
+            setShowToast({ label: t("FILE_UPLOADED_SUCCESSFULLY"), isError:"info"});
           } catch (error) {
             setShowToast({ label: error?.response?.data?.Errors?.[0]?.message ? error?.response?.data?.Errors?.[0]?.message : t("FILE_UPLOAD_FAILED") , isError:"error" });
           }
@@ -187,7 +175,16 @@ const ViewHierarchy = () => {
             try {
               await pollForStatusCompletion(id, typeOfData);
               setDataCreateToast(false);
-              setShowToast({ label: `${t("WBH_HIERARCHY_CREATED")}`, isError: "success" });
+              history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
+                message: "ES_BOUNDARY_DATA_CREATED_SUCCESS_RESPONSE",
+                preText: "ES_BOUNDARY_DATA__CREATED_SUCCESS_RESPONSE_PRE_TEXT",
+                actionLabel: "CS_BOUNDARY_dATA_NEW_RESPONSE_ACTION",
+                actionLink: `/${window.contextPath}/employee/campaign/boundary/data?defaultHierarchyType=${defaultHierarchyType}&hierarchyType=${hierarchyType}`,
+                secondaryActionLabel: "CS_HOME",
+                secondaryActionLink: `/${window?.contextPath}/employee`,
+            });
+
+              // setShowToast({ label: `${t("WBH_HIERARCHY_CREATED")}`, isError: "success" });
             } catch (pollError) {
               throw pollError; // Propagate polling errors to the outer catch block
             }
@@ -277,7 +274,7 @@ const ViewHierarchy = () => {
       // };
 
       const pollForStatusCompletion = async (id, typeOfData) => {
-        const pollInterval = 1000; // Poll every 1 second
+        const pollInterval = 2000; // Poll every 1 second
         const maxRetries = 100; // Maximum number of retries
         let retries = 0;
       
@@ -347,6 +344,7 @@ const ViewHierarchy = () => {
 
     }
 
+    const [showPopUp, setShowPopUp] = useState(false);
    
     if(!viewState || isLoading)
     {
@@ -373,7 +371,6 @@ const ViewHierarchy = () => {
                                         return (
                                             <div>
                                                 <div className="hierarchy-boundary-sub-heading2">
-                                                    {/* {t(hierItem?.boundaryType)} */}
                                                     {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toUpperCase().replace(/\s+/g, "_"))}`}
                                                 </div>
                                                 <div style={{height:"1rem"}}></div>
@@ -395,13 +392,6 @@ const ViewHierarchy = () => {
                                               <div className="hierarchy-boundary-sub-heading2">
                                                 {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toUpperCase().replace(/\s+/g, "_"))}`}
                                               </div>
-                                              {/* <Uploader
-                                                        onUpload={() => {}}
-                                                        showAsTags
-                                                        uploadedFiles={[]}
-                                                        variant="uploadFile"
-                                                        style={{width:"50rem"}}
-                                                    /> */}
                                               <input
                                                 ref={inputRef}
                                                 type="file"
@@ -412,10 +402,11 @@ const ViewHierarchy = () => {
                                                 className="custom-class"
                                                 icon="Upload"
                                                 iconFill=""
-                                                label={t("UPLOAD_EXCEL")}
+                                                label={t("UPLOAD_GEOJSONS")}
                                                 onClick={handleUpload}
                                                 options={[]}
                                                 optionsKey=""
+                                                isDisabled={true}
                                                 size="large"
                                                 style={{}}
                                                 title=""
@@ -450,13 +441,14 @@ const ViewHierarchy = () => {
                                             className="custom-class"
                                             icon="Upload"
                                             iconFill=""
-                                            label={t("UPLOAD_EXCEL")}
+                                            label={t("UPLOAD_GEOJSONS")}
                                             onClick={handleUpload}
                                             options={[]}
                                             optionsKey=""
                                             size="large"
                                             style={{}}
                                             title=""
+                                            isDisabled={true}
                                             variation="secondary"
                                           />
                                         </div>
@@ -476,7 +468,9 @@ const ViewHierarchy = () => {
                                     icon="DownloadIcon"
                                     iconFill=""
                                     label={t("DOWNLOAD_EXCEL_TEMPLATE")}
-                                    onClick={downloadExcelTemplate}
+                                    onClick={()=>{
+                                      setShowPopUp(true);
+                                    }}
                                     options={[]}
                                     optionsKey=""
                                     size="small"
@@ -516,7 +510,7 @@ const ViewHierarchy = () => {
                                 <Button 
                                     icon="ArrowBack" 
                                     style={{marginLeft:"3.5rem"}} 
-                                    label={t("Back")} 
+                                    label={t("COMMON_BACK")} 
                                     isDisabled={true}
                                     // onClick={{}}
                                     type="button" 
@@ -528,7 +522,7 @@ const ViewHierarchy = () => {
                                     isDisabled={!disableFile }
                                     style={{marginLeft:"auto"}} 
                                     isSuffix 
-                                    label={t("Next")} 
+                                    label={t("CMN_BOUNDARY_REL_DATA_CREATE_PREVIEW")} 
                                     onClick={()=>{setPreviewPage(true); setFirstPage(false);}} 
                                     type="button" 
                                     textStyles={{width:'unset'}}
@@ -542,6 +536,47 @@ const ViewHierarchy = () => {
                         />
                     </div>
                 }
+                {showPopUp && (
+                  <PopUp
+                    className={"popUpClass"}
+                    footerclassName={"popUpFooter"}
+                    type={"default"}
+                    // style={{width:"70%"}}
+                    heading={t("DOWNLOAD_EXCEL_TEMPLATE_FOR_BOUNDARY")}
+                    children={[
+                    ]}
+                    onOverlayClick={() => {
+                      setShowPopUp(false);
+                    }}
+                    onClose={() => {
+                      setShowPopUp(false);
+                    }}
+                    footerChildren={[
+                      <Button
+                        type={"button"}
+                        size={"large"}
+                        variation={"secondary"}
+                        label={t("CLOSE")}
+                        onClick={() => {
+                          setShowPopUp(false);
+                        }}
+                      />,
+                      <Button
+                        type={"button"}
+                        size={"large"}
+                        variation={"primary"}
+                        label={t("DOWNLOAD_TEMPLATE_BOUNDARY")}
+                        icon={"DownloadIcon"}
+                        onClick={downloadExcelTemplate}
+                      />,
+                    ]}
+                    sortFooterChildren={true}
+                  >
+                    <div style={{fontWeight:"400", fontSize:"1.25rem", fontFamily: "Roboto", marginTop:"1rem", marginBottom:"1rem"}}>
+                      {t("BOUNDARY_DOWNLOAD_MESSAGE")}
+                    </div>
+                  </PopUp>
+                )}
                 {showToast && <Toast label={showToast.label} type={showToast.isError} onClose={() => setShowToast(null)} />}
                 {previewPage && (
                     <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
@@ -555,7 +590,7 @@ const ViewHierarchy = () => {
                                     icon="ArrowBack" 
                                     style={{marginLeft:"3.5rem"}} 
                                     isDisabled={disable}
-                                    label={t("Back")} 
+                                    label={t("COMMON_BACK")} 
                                     onClick={()=>{setFirstPage(true); setPreviewPage(false)}} 
                                     type="button" 
                                     variation="secondary"  
@@ -566,7 +601,7 @@ const ViewHierarchy = () => {
                                     isDisabled={dataCreationGoing}
                                     style={{marginLeft:"auto"}} 
                                     isSuffix 
-                                    label={t("Next")} 
+                                    label={t("CMN_BOUNDARY_REL_DATA_CREATE")} 
                                     onClick={()=>{createData()}} 
                                     type="button" 
                                     textStyles={{width:'unset'}}
