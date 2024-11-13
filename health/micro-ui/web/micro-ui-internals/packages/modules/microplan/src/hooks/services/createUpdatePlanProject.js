@@ -113,6 +113,10 @@ const CreateResource = async (req) => {
   }
 };
 
+/// we will update the name of microplan and and campaign
+const UpdateResource = async (req, currentPlanObject, currentCampaignObject) => {
+};
+
 const searchPlanConfig = async (body) => {
   //assuming it will be success
   const response = await Digit.CustomService.getResponse({
@@ -195,13 +199,42 @@ const createUpdatePlanProject = async (req) => {
         };
 
       case "MICROPLAN_DETAILS":
-        //both the screens will be freezed so don't need to do anything
-        //here just check if microplanId and campaignId is already there then don't do anything (details will be freezed so only create will be required no update)
+         /// updating these changes becuase now we will update the campaign and microplan name
+
+
+        //here just check if microplanId and campaignId is already available(we will update the name only)
         if (microplanId && campaignId) {
+
+          // if current name is same as previous name do not need to do anything
+          if (planObject?.name === totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName) {
+            setCurrentKey((prev) => prev + 1);
+            setCurrentStep((prev) => prev + 1);
+            return {
+              triggeredFrom,
+            };
+          }
+
+          // check if the name is valid
+          const isResourceNameValid = await isValidResourceName(totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName);
+          if (!isResourceNameValid) {
+            setShowToast({ key: "error", label: "ERROR_MICROPLAN_NAME_ALREADY_EXISTS" });
+            return;
+          }
+          // we will udpate the current planobject and campaign object
+          const isResourceCreated = await UpdateResource(req, planObject, campaignObject);
+          if (!isResourceCreated) {
+            setShowToast({ key: "error", label: "ERROR_CREATING_MICROPLAN" });
+            return;
+          }
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
-          return;
+
+          return {
+            triggeredFrom,
+          };
+
         }
+
         //if we reach here then we need to create a plan and project instance
         // validate campaign and microplan name feasible or not -> search campaign + search plan
         const isResourceNameValid = await isValidResourceName(totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName);
