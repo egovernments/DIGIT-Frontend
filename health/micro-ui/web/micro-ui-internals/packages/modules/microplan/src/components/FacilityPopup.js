@@ -1,6 +1,6 @@
 import React, { useState, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { PopUp, Button, Tab, CheckBox, Card, Toast, SVG } from "@egovernments/digit-ui-components";
+import { PopUp, Button, Tab, CheckBox, Card, Toast, SVG,CardText } from "@egovernments/digit-ui-components";
 import SearchJurisdiction from "./SearchJurisdiction";
 import { LoaderWithGap, Loader } from "@egovernments/digit-ui-react-components";
 import DataTable from "react-data-table-component";
@@ -30,6 +30,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [boundaryData, setBoundaryData] = useState([]);
+  const [confirmUnasignPopup,setConfirmUnasignPopup]=useState(false);
   const configNavItem = [
     {
       code: t(`MICROPLAN_UNASSIGNED_FACILITIES`),
@@ -274,12 +275,19 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
 
   const mutationForPlanFacilityUpdate = Digit.Hooks.useCustomAPIMutationHook(planFacilityUpdateMutaionConfig);
 
-  const handleAssignUnassign = async () => {
+  const handleUnsaasignFalse= async ()=>{
+    setConfirmUnasignPopup(false);
+    return
+
+  }
+
+  const handleUnsaasignTrue= async ()=>{
     // Fetching the full data of selected rows
     setLoader(true);
     const selectedRowData = censusData.filter(row => selectedRows.includes(row.id));
     var newDetails = JSON.parse(JSON.stringify(details));
     if (facilityAssignedStatus) {
+      
       const boundarySet = new Set(selectedRowData.map((row) => {
         return row.boundaryCode
       }))
@@ -317,6 +325,26 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     );
     await new Promise((resolve) => setTimeout(resolve, 1000));
     // setCurrentPage(1);
+    setLoader(false);
+    setConfirmUnasignPopup(false);
+
+  }
+
+  const handleAssignUnassign = async () => {
+    // Fetching the full data of selected rows
+    setLoader(true);
+    const selectedRowData = censusData.filter(row => selectedRows.includes(row.id));
+    var newDetails = JSON.parse(JSON.stringify(details));
+    if (facilityAssignedStatus) {
+      setConfirmUnasignPopup(true);
+      const boundarySet = new Set(selectedRowData.map((row) => {
+        return row.boundaryCode
+      }))
+      const filteredBoundaries = newDetails?.serviceBoundaries?.filter((boundary) => {
+        return !boundarySet.has(boundary)
+      })
+      newDetails.serviceBoundaries = filteredBoundaries
+    }
     setLoader(false);
   };
 
@@ -478,6 +506,40 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
           className={"facility-popup"}
         />
       )}
+
+{confirmUnasignPopup &&  <PopUp
+            className={"popUpClass"}
+            type={"default"}
+            heading={t("FAC_UNASSIGN_CONFIRM")}
+            equalWidthButtons={true}
+            children={[
+              <div>
+                <CardText style={{ margin: 0 }}>{t("FAC_UNASSIGN_CONFIRM_DESC")}</CardText>
+              </div>,
+            ]}
+            onOverlayClick={() => {
+              setConfirmUnasignPopup(false);
+            }}
+            footerChildren={[
+              <Button
+                type={"button"}
+                size={"large"}
+                variation={"secondary"}
+                label={t("YES")}
+                onClick={
+                  
+                  handleUnsaasignTrue
+                }
+              />,
+              <Button type={"button"} size={"large"} variation={"primary"} label={t("NO")} onClick={handleUnsaasignFalse} />,
+            ]}
+            sortFooterChildren={true}
+            onClose={() => {
+              setConfirmUnasignPopup(false);
+            }}
+          ></PopUp>}
+
+
     </>
   );
 };
