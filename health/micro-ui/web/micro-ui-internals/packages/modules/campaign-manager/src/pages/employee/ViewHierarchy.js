@@ -76,21 +76,7 @@ const ViewHierarchy = () => {
         fetchData();
     }, []);
 
-    const generateFile = async () => {
-      const res = await Digit.CustomService.getResponse({
-        url: `/project-factory/v1/data/_generate`,
-        body: {
-        },
-        params: {
-          tenantId: tenantId,
-          type: "boundaryManagement",
-          forceUpdate: true,
-          hierarchyType: hierarchyType,
-          campaignId: "default"
-        }
-      });
-      return res;
-    }
+
 
     const generateTemplate = async() => {
         const res = await Digit.CustomService.getResponse({
@@ -132,7 +118,7 @@ const ViewHierarchy = () => {
             // Call function to upload the selected file to an API
             await uploadFileToAPI(file);
             setDisableFile(true);
-            setShowToast({ label: t("FILE_UPLOADED_SUCCESSFULLY"), isError:"success"});
+            setShowToast({ label: t("FILE_UPLOADED_SUCCESSFULLY"), isError:"info"});
           } catch (error) {
             setShowToast({ label: error?.response?.data?.Errors?.[0]?.message ? error?.response?.data?.Errors?.[0]?.message : t("FILE_UPLOAD_FAILED") , isError:"error" });
           }
@@ -277,7 +263,7 @@ const ViewHierarchy = () => {
       // };
 
       const pollForStatusCompletion = async (id, typeOfData) => {
-        const pollInterval = 1000; // Poll every 1 second
+        const pollInterval = 2000; // Poll every 1 second
         const maxRetries = 100; // Maximum number of retries
         let retries = 0;
       
@@ -373,7 +359,6 @@ const ViewHierarchy = () => {
                                         return (
                                             <div>
                                                 <div className="hierarchy-boundary-sub-heading2">
-                                                    {/* {t(hierItem?.boundaryType)} */}
                                                     {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toUpperCase().replace(/\s+/g, "_"))}`}
                                                 </div>
                                                 <div style={{height:"1rem"}}></div>
@@ -395,13 +380,6 @@ const ViewHierarchy = () => {
                                               <div className="hierarchy-boundary-sub-heading2">
                                                 {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toUpperCase().replace(/\s+/g, "_"))}`}
                                               </div>
-                                              {/* <Uploader
-                                                        onUpload={() => {}}
-                                                        showAsTags
-                                                        uploadedFiles={[]}
-                                                        variant="uploadFile"
-                                                        style={{width:"50rem"}}
-                                                    /> */}
                                               <input
                                                 ref={inputRef}
                                                 type="file"
@@ -412,10 +390,11 @@ const ViewHierarchy = () => {
                                                 className="custom-class"
                                                 icon="Upload"
                                                 iconFill=""
-                                                label={t("UPLOAD_EXCEL")}
+                                                label={t("UPLOAD_GEOJSONS")}
                                                 onClick={handleUpload}
                                                 options={[]}
                                                 optionsKey=""
+                                                isDisabled={true}
                                                 size="large"
                                                 style={{}}
                                                 title=""
@@ -450,13 +429,14 @@ const ViewHierarchy = () => {
                                             className="custom-class"
                                             icon="Upload"
                                             iconFill=""
-                                            label={t("UPLOAD_EXCEL")}
+                                            label={t("UPLOAD_GEOJSONS")}
                                             onClick={handleUpload}
                                             options={[]}
                                             optionsKey=""
                                             size="large"
                                             style={{}}
                                             title=""
+                                            isDisabled={true}
                                             variation="secondary"
                                           />
                                         </div>
@@ -516,7 +496,7 @@ const ViewHierarchy = () => {
                                 <Button 
                                     icon="ArrowBack" 
                                     style={{marginLeft:"3.5rem"}} 
-                                    label={t("Back")} 
+                                    label={t("COMMON_BACK")} 
                                     isDisabled={true}
                                     // onClick={{}}
                                     type="button" 
@@ -528,7 +508,7 @@ const ViewHierarchy = () => {
                                     isDisabled={!disableFile }
                                     style={{marginLeft:"auto"}} 
                                     isSuffix 
-                                    label={t("Next")} 
+                                    label={t("CMN_BOUNDARY_REL_DATA_CREATE_PREVIEW")} 
                                     onClick={()=>{setPreviewPage(true); setFirstPage(false);}} 
                                     type="button" 
                                     textStyles={{width:'unset'}}
@@ -555,7 +535,7 @@ const ViewHierarchy = () => {
                                     icon="ArrowBack" 
                                     style={{marginLeft:"3.5rem"}} 
                                     isDisabled={disable}
-                                    label={t("Back")} 
+                                    label={t("COMMON_BACK")} 
                                     onClick={()=>{setFirstPage(true); setPreviewPage(false)}} 
                                     type="button" 
                                     variation="secondary"  
@@ -566,7 +546,7 @@ const ViewHierarchy = () => {
                                     isDisabled={dataCreationGoing}
                                     style={{marginLeft:"auto"}} 
                                     isSuffix 
-                                    label={t("Next")} 
+                                    label={t("CMN_BOUNDARY_REL_DATA_CREATE")} 
                                     onClick={()=>{createData()}} 
                                     type="button" 
                                     textStyles={{width:'unset'}}

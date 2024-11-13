@@ -49,7 +49,7 @@ import CampaignUpdateSummary from "./components/CampaignUpdateSummary";
 import XlsPreview from "./components/XlsPreview";
 import BulkUpload from "./components/BulkUpload";
 import BoundarySummary from "./components/BoundarySummary";
-import GeoPode from "./pages/employee/GeoPode";
+import GeoPode from "./pages/employee/BoundaryRelationCreate";
 import ViewBoundary from "./pages/employee/ViewBoundary";
 import ViewHierarchy from "./pages/employee/ViewHierarchy";
 import MultiSelectDropdown from "./components/MultiSelectDropdown";

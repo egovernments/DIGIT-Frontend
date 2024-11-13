@@ -21,14 +21,14 @@ const navigate=(history,key,data,setShowPopUp)=>{
 let url="";
 switch (key){
   case "CREATE_NEW_BOUNDARY_DATA":
-    url=`/${window.contextPath}/employee/campaign/boundary/view-hierarchy?defaultHierarchyType=${data?.defaultHierarchyName}&hierarchyType=${data?.hierarchyName}`;
+    url=`/${window.contextPath}/employee/campaign/boundary/data?defaultHierarchyType=${data?.defaultHierarchyName}&hierarchyType=${data?.hierarchyName}`;
         break;
   case "VIEW_EXISTING_BOUNDARY_DATA":
     url=`/${window.contextPath}/employee/campaign/boundary/view-all-hierarchy`;
 
     break;
   case "EDIT_BOUNDARY_DATA":
-    url=`/${window.contextPath}/employee/campaign/boundary/view-hierarchy?defaultHierarchyType=${data?.defaultHierarchyName}&hierarchyType=${data?.hierarchyName}`;
+    url=`/${window.contextPath}/employee/campaign/boundary/data?defaultHierarchyType=${data?.defaultHierarchyName}&hierarchyType=${data?.hierarchyName}`;
     break;
   default:
     break;
