@@ -34,7 +34,7 @@ export const cycleDataRemap=(data)=> {
     };
     return operatorMapping[operator] || ""; // Default to empty if not found
   }
-  export const  restructureData=(data, cycleData, DeliveryConfig, projectType)=> {
+  export const  restructureData=(data, cycleData, DeliveryConfig, projectType , type)=> {
     const deliveryConfig = cloneDeep(DeliveryConfig?.find(e => e.code === String(projectType)));
   
     const resourcesMap = new Map();
@@ -49,7 +49,7 @@ export const cycleDataRemap=(data)=> {
         startDate: cycleStartDate,
         endDate: cycleEndDate,
         id: parseInt(cycle.cycleIndex, 10),
-        deliveries: cycle?.deliveries?.map(delivery => processDelivery(delivery, resourcesMap, ageInfo))
+        deliveries: cycle?.deliveries?.map(delivery => processDelivery(delivery, resourcesMap, ageInfo , type))
       };
     });
   
@@ -157,14 +157,14 @@ export const cycleDataRemap=(data)=> {
   
   }
   
-  export const  processDelivery=(delivery, resourcesMap, ageInfo)=> {
+  export const  processDelivery=(delivery, resourcesMap, ageInfo , type)=> {
   
     return {
       id: parseInt(delivery.deliveryIndex, 10),
       deliveryStrategy: delivery.deliveryStrategy || "DIRECT",
       mandatoryWaitSinceLastDeliveryInDays: null,
       doseCriteria: delivery.deliveryRules.map(rule => {
-        const doseCriteriaResult = processDoseCriteria(rule, resourcesMap);
+        const doseCriteriaResult = processDoseCriteria(rule, resourcesMap ,type);
         const ages = extractAgesFromConditions(doseCriteriaResult.condition);
         if (ages.length > 0) { 
           ageInfo.maxAge = Math.max(ageInfo.maxAge, ...ages);
@@ -174,7 +174,7 @@ export const cycleDataRemap=(data)=> {
       })
     };
   }
-  export const  processDoseCriteria =(rule, resourcesMap) =>{
+  export const  processDoseCriteria =(rule, resourcesMap ,type) =>{
     rule.products.forEach(product => {
       if (resourcesMap.has(product.value)) {
         resourcesMap.get(product.value).count += product.count;
@@ -190,9 +190,16 @@ export const cycleDataRemap=(data)=> {
   
     const conditions = rule.attributes.map(attr => {
       if (attr?.operator?.code === "IN_BETWEEN") {
-        return `${attr.toValue} <= ${attr.attribute.code} < ${attr.fromValue}`;
+        if (type === "create") {
+          return `${attr.toValue}<=${attr.attribute.code.toLowerCase()}and${attr.attribute.code.toLowerCase()}<${attr.fromValue}`;
+        }        
+        else return `${attr.toValue} <= ${attr.attribute.code} < ${attr.fromValue}`;
       } else {
-        return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${attr?.value}`;
+        if (type === "create") {
+          return `${attr?.attribute?.code.toLowerCase()}${getOperatorSymbol(attr?.operator?.code)}${attr?.value}`;
+        }        
+        else return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${attr?.value}`;
+        
       }
     });
   

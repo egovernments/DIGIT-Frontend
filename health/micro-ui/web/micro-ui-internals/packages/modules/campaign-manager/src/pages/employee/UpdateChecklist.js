@@ -276,6 +276,9 @@ const UpdateChecklist = () => {
                 return upperCaseString.replace(/ /g, '_');
             });
         }
+        if(String(item?.type?.code) === "SingleValueList"){
+            labelsArray.push("NOT_SELECTED");
+        }
     
         const questionObject = {
             id: item.id,
