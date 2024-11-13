@@ -525,7 +525,7 @@ function RoleTableComposer({ nationalRoles }) {
       </Card>
 
       {/* {isLoading || isHrmsLoading ? <LoaderOverlay /> : null} */}
-      <Card style={{ boxShadow: "none", padding: "0px" }}>
+      <Card style={{ overflow: "visible", boxShadow: "none", padding: "0px" }}>
         <DataTable
           columns={columns}
           data={HrmsData?.data}

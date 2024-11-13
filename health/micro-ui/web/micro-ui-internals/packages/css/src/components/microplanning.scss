@@ -2661,7 +2661,7 @@ $border-color: rgba(214, 213, 212, 1);
 
 .digit-dropdown-employee-select-wrap.roleTableCell {
   .digit-dropdown-options-card {
-    position: fixed;
+    position: absolute;
     max-width: 14rem;
   }
 }
@@ -2673,7 +2673,7 @@ $border-color: rgba(214, 213, 212, 1);
 
   .digit-multiselectdropdown-server {
     top: unset !important;
-    position: fixed !important;
+    position: absolute !important;
     max-width: unset !important;
     max-height: 15rem !important;
     width: 14rem !important;

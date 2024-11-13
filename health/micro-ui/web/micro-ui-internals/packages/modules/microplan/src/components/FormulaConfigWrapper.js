@@ -84,6 +84,22 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
     setCustomFormula(temp);
   }, [formulaInternalKey, formulaConfigValues]);
 
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault(); // Prevent default Enter key behavior globally
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   const navigateBack = () => {
     if (formulaInternalKey > 1) {
       setFormulaInternalKey((prevKey) => prevKey - 1);
@@ -473,7 +489,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
             </Card>
             <Card className="vertical-stepper-card">
               <Stepper
-                customSteps={ruleConfigurationCategories.map((category) => category.category)}
+                customSteps={ruleConfigurationCategories.map((category) => `FORMULA_${category.category}`)}
                 currentStep={formulaInternalKey}
                 onStepClick={() => null}
                 direction={"vertical"}

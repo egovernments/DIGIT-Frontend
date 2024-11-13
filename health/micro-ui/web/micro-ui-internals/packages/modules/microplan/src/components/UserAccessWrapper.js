@@ -11,7 +11,7 @@ export const useUserAccessContext = () => {
   return useContext(UserAccessContext);
 };
 
-const UserAccessWrapper = ({ onSelect, props: customProps,setupCompleted }) => {
+const UserAccessWrapper = ({ onSelect, props: customProps, setupCompleted }) => {
   const { t } = useTranslation();
   const { state } = useMyContext();
   const [data, setData] = useState(null);
@@ -75,7 +75,9 @@ const UserAccessWrapper = ({ onSelect, props: customProps,setupCompleted }) => {
     setInternalKey((prevKey) => {
       // Check the latest value of internalKey by using prevKey
       if (data === null && nationalRoles.includes(String(rolesArray?.[prevKey - 1]))) {
-        setShowErrorToast(true);
+        setShowErrorToast({
+          message: `EMPLOYESS_NOT_FOUND_${rolesArray?.[prevKey - 1]}`,
+        });
         return prevKey; // Keep the same value if condition is true
       } else {
         return prevKey + 1; // Increment internalKey if condition is false
@@ -172,7 +174,7 @@ const UserAccessWrapper = ({ onSelect, props: customProps,setupCompleted }) => {
       {showErrorToast && (
         <Toast
           type={"error"} // Adjust based on your needs
-          label={t("EMPLOYESS_NOT_FOUND")}
+          label={t(showErrorToast?.message)}
           onClose={() => {
             setShowErrorToast(false);
           }}
