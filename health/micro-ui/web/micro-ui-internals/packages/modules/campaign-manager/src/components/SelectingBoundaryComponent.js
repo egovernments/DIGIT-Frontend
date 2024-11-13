@@ -217,10 +217,10 @@ const SelectingBoundaryComponent = ({
   }, [boundaryData]);
 
   useEffect(() => {
-    if (isBoundaryDataValid && hierarchy && selectedData1?.length > 0) {
+    if (isBoundaryDataValid && hierarchy && selectedData1?.length > 0 && boundaryOptions[parentRoot]) {
       updateBoundaryOptions(selectedData1, boundaryData, hierarchy);
     }
-  }, [hierarchy, isBoundaryDataValid]);
+  }, [hierarchy, isBoundaryDataValid ,boundaryOptions[parentRoot] ]);
 
   function createHierarchyStructure(hierarchy) {
     const hierarchyStructure = {};
