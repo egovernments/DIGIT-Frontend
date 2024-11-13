@@ -441,9 +441,9 @@ const UpdateChecklist = () => {
             {/* {submitting && <Loader />} */}
             {!submitting &&
                 <div>
-                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", height: "5.8rem" }}>
                         <div>
-                            <h2 style={{ fontSize: "36px", fontWeight: "700" }}>
+                            <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>
                                 {t("UPDATE_CHECKLIST")}
                             </h2>
                         </div>
