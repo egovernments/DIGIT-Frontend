@@ -30,7 +30,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [boundaryData, setBoundaryData] = useState([]);
-  const [confirmUnassignPopup,setConfirmUnassignPopup]=useState(false);
+  const [confirmUnasignPopup,setConfirmUnasignPopup]=useState(false);
   const configNavItem = [
     {
       code: t(`MICROPLAN_UNASSIGNED_FACILITIES`),
@@ -276,7 +276,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const mutationForPlanFacilityUpdate = Digit.Hooks.useCustomAPIMutationHook(planFacilityUpdateMutaionConfig);
 
   const handleUnsaasignFalse= async ()=>{
-    setConfirmUnassignPopup(false);
+    setConfirmUnasignPopup(false);
     return
 
   }
@@ -326,7 +326,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     // setCurrentPage(1);
     setLoader(false);
-    setConfirmUnassignPopup(false);
+    setConfirmUnasignPopup(false);
 
   }
 
@@ -336,7 +336,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     const selectedRowData = censusData.filter(row => selectedRows.includes(row.id));
     var newDetails = JSON.parse(JSON.stringify(details));
     if (facilityAssignedStatus) {
-      setConfirmUnassignPopup(true);
+      setConfirmUnasignPopup(true);
       const boundarySet = new Set(selectedRowData.map((row) => {
         return row.boundaryCode
       }))
@@ -344,8 +344,36 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
         return !boundarySet.has(boundary)
       })
       newDetails.serviceBoundaries = filteredBoundaries
-    }
-    setLoader(false);
+    }else{
+      const boundarySet = new Set(selectedRowData.map((row) => {
+        return row.boundaryCode;
+      }));
+      const filteredBoundaries = [...boundarySet].filter(boundary =>
+        !newDetails.serviceBoundaries.includes(boundary)
+      );
+      newDetails.serviceBoundaries = newDetails?.serviceBoundaries?.concat(filteredBoundaries);
+    await mutationForPlanFacilityUpdate.mutate(
+      {
+        body: {
+          PlanFacility: newDetails
+        },
+      },
+      {
+        onSuccess: async (result) => {
+          setSelectedRows([]);
+          setIsAllSelected(false);
+          updateDetails(newDetails);
+        },
+        onError: async (result) => {
+          // setDownloadError(true);
+          setShowToast({ key: "error", label: t("ERROR_WHILE_UPDATING_PLANFACILITY"), transitionTime: 5000 });
+        },
+      }
+    );
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // setCurrentPage(1);
+  }
+  setLoader(false);
   };
 
   const closeViewDetails = () => {
@@ -507,7 +535,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
         />
       )}
 
-{confirmUnassignPopup &&  <PopUp
+{confirmUnasignPopup &&  <PopUp
             className={"popUpClass"}
             type={"default"}
             heading={t("FAC_UNASSIGN_CONFIRM")}
@@ -518,7 +546,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
               </div>,
             ]}
             onOverlayClick={() => {
-              setConfirmUnassignPopup(false);
+              setConfirmUnasignPopup(false);
             }}
             footerChildren={[
               <Button
@@ -535,7 +563,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
             ]}
             sortFooterChildren={true}
             onClose={() => {
-              setConfirmUnassignPopup(false);
+              setConfirmUnasignPopup(false);
             }}
           ></PopUp>}
 
