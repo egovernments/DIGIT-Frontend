@@ -115,8 +115,52 @@ const CreateResource = async (req) => {
   }
 };
 
-/// function to update resource
+/// we will update the name of microplan and and campaign
 const UpdateResource = async (req, currentPlanObject, currentCampaignObject) => {
+  //creating a microplan and campaign instance here
+  const { totalFormData, state, setShowToast, setCurrentKey, setCurrentStep, config, campaignObject, planObject } = req;
+  try {
+
+    // Update the campaign object by keeping existing properties and only changing the name
+    const updatedCampaignObject = {
+      ...currentCampaignObject,
+      campaignName: totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName,
+    };
+
+    const campaignRes = await Digit.CustomService.getResponse({
+      url: "/project-factory/v1/project-type/update",
+      body: {
+        CampaignDetails: updatedCampaignObject,
+      },
+    });
+
+    // Update the plan object by keeping existing properties and only changing the name
+    const updatedPlanObject = {
+      ...currentPlanObject,
+      name: totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName,
+    };
+
+    const planRes = await Digit.CustomService.getResponse({
+      url: "/plan-service/config/_update",
+      useCache: false,
+      method: "POST",
+      userService: true,
+      body: {
+        PlanConfiguration: updatedPlanObject
+      },
+    });
+
+    if (campaignRes?.CampaignDetails?.id && planRes?.PlanConfiguration?.[0]?.id) {
+      return true;
+    }
+    return false;
+  } catch (error) {
+    if (!error?.response?.data?.Errors[0].description) {
+      throw new Error(error?.response?.data?.Errors[0].code);
+    } else {
+      throw new Error(error?.response?.data?.Errors[0].description);
+    }
+  }
 };
 
 const searchPlanConfig = async (body) => {
