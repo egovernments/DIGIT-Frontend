@@ -50,61 +50,61 @@ const isValidResourceName = async (name) => {
   }
 };
 
-/// check for duplicate before update
-const isValidUpdateResourceName = async (name) => {
-  if (!name) {
-    console.error("Please provide a name for the microplan");
-    throw new Error("Please provide a name for the microplan");
-  }
+// /// check for duplicate before update
+// const isValidUpdateResourceName = async (name) => {
+//   if (!name) {
+//     console.error("Please provide a name for the microplan");
+//     throw new Error("Please provide a name for the microplan");
+//   }
 
-  try {
-    const tenantId = Digit.ULBService.getCurrentTenantId();
+//   try {
+//     const tenantId = Digit.ULBService.getCurrentTenantId();
 
-    // Search project
-    const projectRes = await Digit.CustomService.getResponse({
-      url: "/project-factory/v1/project-type/search",
-      useCache: false,
-      method: "POST",
-      userService: false,
-      body: {
-        CampaignDetails: {
-          campaignName: name,
-          tenantId,
-        },
-      },
-    });
+//     // Search project
+//     const projectRes = await Digit.CustomService.getResponse({
+//       url: "/project-factory/v1/project-type/search",
+//       useCache: false,
+//       method: "POST",
+//       userService: false,
+//       body: {
+//         CampaignDetails: {
+//           campaignName: name,
+//           tenantId,
+//         },
+//       },
+//     });
 
-    if (projectRes?.CampaignDetails.some((row) => row.campaignName === name)) {
-      return false;
-    }
+//     if (projectRes?.CampaignDetails.some((row) => row.campaignName === name)) {
+//       return false;
+//     }
 
-    // Search plan only if the project check passes
-    const planRes = await Digit.CustomService.getResponse({
-      url: "/plan-service/config/_search",
-      useCache: false,
-      method: "POST",
-      userService: true,
-      body: {
-        PlanConfigurationSearchCriteria: {
-          tenantId,
-          name,
-        },
-      },
-    });
+//     // Search plan only if the project check passes
+//     const planRes = await Digit.CustomService.getResponse({
+//       url: "/plan-service/config/_search",
+//       useCache: false,
+//       method: "POST",
+//       userService: true,
+//       body: {
+//         PlanConfigurationSearchCriteria: {
+//           tenantId,
+//           name,
+//         },
+//       },
+//     });
 
-    if (planRes?.PlanConfiguration.some((row) => row.name === name)) {
-      return false;
-    }
+//     if (planRes?.PlanConfiguration.some((row) => row.name === name)) {
+//       return false;
+//     }
 
-    // If neither search found a match, return true
-    return true;
+//     // If neither search found a match, return true
+//     return true;
 
-  } catch (error) {
-    console.error("Error checking resource name:", error);
-    const errorMessage = error?.response?.data?.Errors?.[0]?.message || error.message;
-    throw new Error(errorMessage);
-  }
-};
+//   } catch (error) {
+//     console.error("Error checking resource name:", error);
+//     const errorMessage = error?.response?.data?.Errors?.[0]?.message || error.message;
+//     throw new Error(errorMessage);
+//   }
+// };
 
 //generating campaign and microplan
 //this will only be called on first time create so it doesn't have to be generic
@@ -309,11 +309,11 @@ const createUpdatePlanProject = async (req) => {
         if (microplanId && campaignId && planObject?.name !== totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName) {
           console.log('till now not creating issue');
            // validate campaign and microplan name feasible or not -> search campaign + search plan
-           const isNameValid = await isValidUpdateResourceName(totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName);
-           if (!isNameValid) {
-             setShowToast({ key: "error", label: "ERROR_MICROPLAN_NAME_ALREADY_EXISTS" });
-             return;
-           }
+          //  const isNameValid = await isValidUpdateResourceName(totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName);
+          //  if (!isNameValid) {
+          //    setShowToast({ key: "error", label: "ERROR_MICROPLAN_NAME_ALREADY_EXISTS" });
+          //    return;
+          //  }
           // we will udpate the current planobject and campaign object
           const isResourceCreated = await UpdateResource(req, planObject, campaignObject);
           if (!isResourceCreated) {
