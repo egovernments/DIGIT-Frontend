@@ -250,6 +250,14 @@ const createUpdatePlanProject = async (req) => {
 
         if (microplanId && campaignId && planObject?.name !== totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName) {
           console.log('till now not creating issue');
+           // validate campaign and microplan name feasible or not -> search campaign + search plan
+        const isResourceNameValid = await isValidResourceName(totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName);
+        if (!isResourceNameValid) {
+          setShowToast({ key: "error", label: "ERROR_MICROPLAN_NAME_ALREADY_EXISTS" });
+          return;
+        }
+
+        console.log('validating the name also');
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
           return;
