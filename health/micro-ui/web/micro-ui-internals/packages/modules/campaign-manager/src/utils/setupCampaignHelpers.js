@@ -161,7 +161,7 @@ export const cycleDataRemap=(data)=> {
   
     return {
       id: parseInt(delivery.deliveryIndex, 10),
-      deliveryType: delivery.deliveryStrategy || "DIRECT",
+      deliveryStrategy: delivery.deliveryStrategy || "DIRECT",
       mandatoryWaitSinceLastDeliveryInDays: null,
       doseCriteria: delivery.deliveryRules.map(rule => {
         const doseCriteriaResult = processDoseCriteria(rule, resourcesMap);
