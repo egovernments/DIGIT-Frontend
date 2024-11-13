@@ -250,7 +250,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
     // { code: "String" },
     { code: "SingleValueList" },
     { code: "MultiValueList" },
-    { code: "Short Answer" },
+    // { code: "Short Answer" },
     // { code: "Dropdown" }
   ];
   const regexOption = [

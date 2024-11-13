@@ -340,7 +340,16 @@ const CreateChecklist = () => {
       isActive: item?.isActive,
       reGex: item?.isRegex ? item?.regex?.regex : null,
       order: item?.key,
-      additionalFields: item
+      additionalFields: {
+        schema: "serviceDefinition",
+        version: 1,
+        fields: [
+          {
+            key: crypto.randomUUID(),  // Using crypto.randomUUID() for a unique key
+            value: item
+          }
+        ]
+      }
     };
 
     return questionObject;
@@ -407,9 +416,18 @@ const CreateChecklist = () => {
       isActive: true,
       attributes: fp,
       additionalFields: {
-        name: checklistName,
-        type: checklistType,
-        role: role
+        schema: "serviceDefinition",
+        version: 1,
+        fields: [
+          {
+            key: crypto.randomUUID(),  // Using crypto.randomUUID() for a unique key
+            value: {
+              name: checklistName,
+              type: checklistType,
+              role: role
+            }
+          }
+        ]
       },
 
     }
