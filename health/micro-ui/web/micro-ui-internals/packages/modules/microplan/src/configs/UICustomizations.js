@@ -500,13 +500,14 @@ export const UICustomizations = {
       return data;
     },
     getFacilitySearchRequest: ( prop) => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
       const {campaignId} = Digit.Hooks.useQueryParams();
       return {
         url: `/project-factory/v1/project-type/search`,
         params: {  },
         body: {
           CampaignDetails: {
-            "tenantId": "mz",
+            "tenantId": tenantId,
             "ids": [
               campaignId
             ]
