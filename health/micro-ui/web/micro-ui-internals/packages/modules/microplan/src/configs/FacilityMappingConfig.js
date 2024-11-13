@@ -27,13 +27,13 @@ const facilityMappingConfig = (projectType) => {
           formClassName: "custom-both-clear-search",
           primaryLabel: "ES_COMMON_FILTER",
           secondaryLabel: "ES_COMMON_CLEAR_FILTER",
-          minReqFields: 1,
+          minReqFields: 0,
           showFormInstruction: "",
           defaultValues: {
             facilityName: "",
             facilityType: "",
             status: "",
-            residingVillage: "",
+            residingBoundaries: [],
           },
           fields: [
             {
@@ -83,21 +83,22 @@ const facilityMappingConfig = (projectType) => {
             },
             {
               label: "MICROPLAN_RESIDING_VILLAGE",
-              type: "text",
+              type: "apidropdown",
               isMandatory: false,
               disable: false,
-              preProcess: {
-                convertStringToRegEx: ["populators.validation.pattern"],
-              },
               populators: {
-                name: "residingVillage",
-                error: "MICROPLAN_PATTERN_ERR_MSG",
-                validation: {
-                  pattern: '^[^\\$"<>?\\\\~`!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$',
-                  minlength: 2,
+                optionsCustomStyle: {
+                  top: "2.3rem",
                 },
-              },
-            },
+                name: "residingBoundaries",
+                optionsKey: "code",
+                allowMultiSelect: false,
+                masterName: "commonUiConfig",
+                moduleName: "FacilityMappingConfig",
+                customfn: "getFacilitySearchRequest",
+                lowestHierarchy: state?.lowestHierarchy
+              }
+            }                   
           ],
         },
         label: "",
