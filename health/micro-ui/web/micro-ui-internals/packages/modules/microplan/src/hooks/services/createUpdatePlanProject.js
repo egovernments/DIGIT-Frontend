@@ -115,6 +115,10 @@ const CreateResource = async (req) => {
   }
 };
 
+/// function to update resource
+const UpdateResource = async (req, currentPlanObject, currentCampaignObject) => {
+};
+
 const searchPlanConfig = async (body) => {
   //assuming it will be success
   const response = await Digit.CustomService.getResponse({
@@ -200,7 +204,7 @@ const createUpdatePlanProject = async (req) => {
         //both the screens will be freezed so don't need to do anything
         //here just check if microplanId and campaignId is already there then don't do anything (details will be freezed so only create will be required no update)
 
-        if (microplanId && campaignId && planObject?.name === totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName) {
+        if (microplanId && campaignId && planObject?.name !== totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName) {
           console.log('till now not creating issue');
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
