@@ -256,6 +256,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
       MdmsCriteria: {
         tenantId: tenantId,
         schemaCode: "HCM-ADMIN-CONSOLE.appFieldTypes",
+        isActive: true
       }
     }
   }), [tenantId]); // Only recreate if tenantId changes
