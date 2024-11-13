@@ -2,7 +2,7 @@ import React from "react";
 import { PopUp, Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 
-const FinalPopup = ({ showFinalPopUp, setShowFinalPopup, addParents, createNewHierarchy })=> {
+const FinalPopup = ({ showFinalPopUp, setShowFinalPopup, onConfirmClick})=> {
     const { t } = useTranslation();
     return (
         showFinalPopUp &&  (
@@ -38,8 +38,7 @@ const FinalPopup = ({ showFinalPopUp, setShowFinalPopup, addParents, createNewHi
                         variation={"primary"}
                         label={t("CREATE")}
                         onClick={() => {
-                            addParents();
-                            createNewHierarchy();
+                            onConfirmClick();
                             setShowFinalPopup(false);
                         }}
                     />

@@ -1,16 +1,16 @@
 import { Card, Loader } from "@egovernments/digit-ui-components";
 import { Button, ActionBar, TextInput, Toast } from "@egovernments/digit-ui-components";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DustbinIcon } from "../../components/icons/DustbinIcon";
 import { Svgicon } from "../../utils/Svgicon";
 import { useLocation } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import FinalPopup from "../../components/FinalPopup";
-import { isError } from "lodash";
+import {  LoaderWithGap } from "@egovernments/digit-ui-react-components";
 
 
-const GeoPode = () => {
+const BoundaryRelationCreate = () => {
     const { t } = useTranslation();
     const location = useLocation();
     const history = useHistory();
@@ -28,6 +28,7 @@ const GeoPode = () => {
     const [boundaryData, setBoundaryData] = useState((receivedData === undefined ? [] : receivedData));
     const [newBoundaryData, setNewBoundaryData] = useState([]);
     const [firstPage, setFirstPage] = useState(true);
+    const [creatingData, setCreatingData] = useState(false);
     const [showToast, setShowToast] = useState(null); // State to handle toast notifications
     const [showLoader, setShowLoader] = useState(false);
     const { mutateAsync: localisationMutateAsync } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, locale);
@@ -112,6 +113,7 @@ const GeoPode = () => {
 
         try {
             // setShowLoader(true);
+            setCreatingData(true);
             setShowToast({ label: "HIERARCHY_PLEASE_WAIT", isError: "info", transitionTime:100000});
             const res = await callCreate();
             const res1 = await generateFile();
@@ -129,11 +131,11 @@ const GeoPode = () => {
             }
             setShowToast({ label: t("HIERARCHY_CREATED_SUCCESSFULLY"), isError: "success" });
 
+            setCreatingData(false);
 
             await sleep(2000);
-
-            history.push(
-                `/${window.contextPath}/employee/campaign/boundary/view-hierarchy?defaultHierarchyType=${defaultHierarchyType}&hierarchyType=${hierarchyType}`,
+            history.replace(
+                `/${window.contextPath}/employee/campaign/boundary/data?defaultHierarchyType=${defaultHierarchyType}&hierarchyType=${hierarchyType}`,
                 {}
             );
 
@@ -143,10 +145,15 @@ const GeoPode = () => {
             const errorMessage = error.message === "LEVELS_CANNOT_BE_EMPTY"
                 ? t("LEVELS_CANNOT_BE_EMPTY")
                 : error?.response?.data?.Errors?.[0]?.message || t("HIERARCHY_CREATION_FAILED");
+                setCreatingData(false);
 
             setShowToast({ label: errorMessage, isError: "error" });
         }
     }
+const onConfirmClick=()=>{
+    addParents();
+     createNewHierarchy();
+}
 
     const goBackToBoundary = () => {
         history.push(
@@ -278,13 +285,13 @@ const GeoPode = () => {
                         </div>
                     )
                     }
-                    <FinalPopup showFinalPopUp={showFinalPopup} setShowFinalPopup={setShowFinalPopup} addParents={addParents} createNewHierarchy={createNewHierarchy} />
+                    <FinalPopup showFinalPopUp={showFinalPopup} setShowFinalPopup={setShowFinalPopup}  onConfirmClick={onConfirmClick} />
                     <ActionBar
                         actionFields={[
                             <Button
                                 icon="ArrowBack"
                                 style={{ marginLeft: "3.5rem" }}
-                                label={t("BACK")}
+                                label={t("COMMON_BACK")}
                                 onClick={goBackToBoundary}
                                 type="button"
                                 variation="secondary"
@@ -294,9 +301,18 @@ const GeoPode = () => {
                                 icon="ArrowForward"
                                 style={{ marginLeft: "auto" }}
                                 isSuffix
-                                label={t("NEXT")}
+                                label={t("CMN_BOUNDARY_REL_CREATE")}
                                 // onClick={goToPreview} 
-                                onClick={() => { setShowFinalPopup(true) }}
+                                isDisabled={creatingData}
+
+                                onClick={() => { 
+                                    console.log(newBoundaryData,'cnewBoundaryData');
+                                    const checkValid= newBoundaryData?.every(obj=>obj?.boundaryType);
+                                    if(checkValid){
+                                       setShowFinalPopup(true)
+                                    }else{ setShowToast({ label: "CMN_FILLORDELETE_CREATED_HIERARCHY", isError: "error" });
+                                   }
+                                     }}
                                 type="button"
                                 textStyles={{ width: 'unset' }}
                             />
@@ -307,6 +323,7 @@ const GeoPode = () => {
                         sortActionFields
                         style={{}}
                     />
+                    {creatingData&&<LoaderWithGap text={t("DATA_SYNC_WITH_SERVER")} />}
 
                     {showToast && <Toast label={showToast.label} type={showToast.isError} transitionTime={showToast?.transitionTime} onClose={() => setShowToast(null)} />}
                 </React.Fragment>
@@ -369,13 +386,13 @@ const GeoPode = () => {
                             </Card>
                         </div>
                     )}
-                    <FinalPopup showFinalPopUp={showFinalPopup} setShowFinalPopup={setShowFinalPopup} addParents={addParents} createNewHierarchy={createNewHierarchy} />
+                    <FinalPopup showFinalPopUp={showFinalPopup} setShowFinalPopup={setShowFinalPopup} onConfirmClick={onConfirmClick}   />
                     <ActionBar
                         actionFields={[
                             <Button
                                 icon="ArrowBack"
                                 style={{ marginLeft: "3.5rem" }}
-                                label={t("Back")}
+                                label={t("COMMON_BACK")}
                                 onClick={goBackToBoundary}
                                 type="button"
                                 variation="secondary"
@@ -385,9 +402,20 @@ const GeoPode = () => {
                                 icon="ArrowForward"
                                 style={{ marginLeft: "auto" }}
                                 isSuffix
-                                label={t("Next")}
+                                label={t("CMN_BOUNDARY_REL_CREATE")}
                                 // onClick={goToPreview} 
-                                onClick={() => { setShowFinalPopup(true) }}
+                                isDisabled={creatingData}
+                                onClick={() => {
+                                    console.log(newBoundaryData,'newBoundaryData');
+                                    const checkValid= newBoundaryData?.every(obj=>obj?.boundaryType);
+                                         if(checkValid){
+                                            setShowFinalPopup(true)
+                                         }else if(newBoundaryData?.some(obj=>obj?.boundaryType)){
+                                            setShowToast({ label: "CMN_ATLEAST_ONE_HIERARCHY", isError: "error" })
+                                         }else{ setShowToast({ label: "CMN_FILLORDELETE_CREATED_HIERARCHY", isError: "error" });
+                                        }
+
+                                     }}
                                 type="button"
                                 textStyles={{ width: 'unset' }}
                             />
@@ -399,7 +427,7 @@ const GeoPode = () => {
                         style={{}}
                     />
                     {showToast && <Toast label={showToast.label} type={showToast.isError} transitionTime={showToast?.transitionTime} onClose={() => setShowToast(null)} />}
-
+                    {creatingData&&<LoaderWithGap text={t("DATA_SYNC_WITH_SERVER")} />}
                 </React.Fragment>
 
 
@@ -410,4 +438,4 @@ const GeoPode = () => {
 };
 
 
-export default GeoPode;
+export default BoundaryRelationCreate;
