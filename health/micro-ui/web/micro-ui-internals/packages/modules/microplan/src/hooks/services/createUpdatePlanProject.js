@@ -61,6 +61,8 @@ const CreateResource = async (req) => {
       parentId: null,
       campaignName: totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName,
       resources: [],
+      startDate: Math.floor(new Date(new Date().setDate(new Date().getDate() + 30)).getTime()),
+      //hardcoding this rn to update campaign. Check with admin console team
       projectType: totalFormData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code,
       additionalDetails: {
         resourceDistributionStrategy: totalFormData?.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode,
@@ -197,6 +199,14 @@ const createUpdatePlanProject = async (req) => {
       case "MICROPLAN_DETAILS":
         //both the screens will be freezed so don't need to do anything
         //here just check if microplanId and campaignId is already there then don't do anything (details will be freezed so only create will be required no update)
+
+        if (microplanId && campaignId && planObject?.name === totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName) {
+          console.log('till now not creating issue');
+          setCurrentKey((prev) => prev + 1);
+          setCurrentStep((prev) => prev + 1);
+          return;
+        }
+
         if (microplanId && campaignId) {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
@@ -247,8 +257,6 @@ const createUpdatePlanProject = async (req) => {
         const updatedCampaignObject = {
           ...campaignObjectForBoundary,
           boundaries: totalFormData?.BOUNDARY?.boundarySelection?.selectedData,
-          startDate: Math.floor(new Date(new Date().setDate(new Date().getDate() + 100)).getTime()),
-          //hardcoding this rn to update campaign. Check with admin console team
         };
         const campaignResBoundary = await updateProject(updatedCampaignObject);
         await new Promise((resolve) => setTimeout(resolve, 5000));
