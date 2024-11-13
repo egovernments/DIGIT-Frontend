@@ -178,14 +178,18 @@ const SelectingBoundaryComponent = ({
     return result;
   }
 
+  console.log(data, "tttttttttttttttttttttttttttttttttttttttttttttttttt");
+
   const boundaryData = processData(data?.[0], "", lowest);
 
   const updateBoundaryOptions = (selectedData1, boundaryData, hierarchy) => {
+    console.log(selectedData1, boundaryData, hierarchy, "checking for updates");
     selectedData1?.forEach((item) => {
       const { type, code } = item;
 
       const childBoundaryType = hierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy.find((boundary) => boundary.parentBoundaryType === type)
         ?.boundaryType;
+      console.log(childBoundaryType, "ccccccccccccccccccccccccccccccccccccc");
       if (boundaryData[childBoundaryType]) {
         const filteredBoundaries = Object.entries(boundaryData[childBoundaryType])
           .filter(([key, value]) => value.includes(code))
@@ -193,6 +197,8 @@ const SelectingBoundaryComponent = ({
             acc[key] = value;
             return acc;
           }, {});
+        console.log(filteredBoundaries, "fffffffffffffffffffffffffffffff");
+        console.log(boundaryOptions, "oooooooooooooooooooooooooooooooo");
         setBoundaryOptions((prevOptions) => ({
           ...prevOptions,
           [childBoundaryType]: {
@@ -201,8 +207,16 @@ const SelectingBoundaryComponent = ({
           },
         }));
       }
+      console.log(boundaryOptions, 'boundary options after update')
     });
   };
+
+
+  // Log the updated boundaryOptions
+  useEffect(() => {
+    console.log(boundaryOptions, "UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
+  }, [boundaryOptions]);
+
 
   useEffect(() => {
 
