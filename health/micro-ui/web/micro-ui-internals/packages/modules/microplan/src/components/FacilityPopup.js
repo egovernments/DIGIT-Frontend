@@ -213,31 +213,57 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
 
   const columns = [
     {
-      name: t("MP_FACILITY_VILLAGE"), // Change to your column name
-      selector: (row) => t(row.boundaryCode), // Replace with the appropriate field from your data
+      name: t("MP_FACILITY_VILLAGE"),
+      selector: (row) => t(row.boundaryCode),
       sortable: false,
-    },
-    {
-      name: t("MP_VILLAGE_ACCESSIBILITY_LEVEL"), // Change to your column type
       cell: (row) => (
-        <Button label={t("VIEW_DETAILS")} onClick={() => handleViewDetailsForAccessibility(row)} variation="link" size={"medium"} style={{}} />
-      ), // Replace with the appropriate field from your data
-      sortable: false,
+        <div title={t(row.boundaryCode)} style={{ cursor: "pointer" }}>
+          {t(row.boundaryCode)}
+        </div>
+      ),
     },
     {
-      name: t("MP_VILLAGE_SECURITY_LEVEL"), // Change to your column type
+      name: t("MP_VILLAGE_ACCESSIBILITY_LEVEL"),
       cell: (row) => (
-        <Button label={t("VIEW_DETAILS")} onClick={() => handleViewDetailsForSecurity(row)} variation="link" size={"medium"} style={{}} />
-      ), // Replace with the appropriate field from your data
+        <div title={t(row.accessibilityLevel)} style={{ cursor: "pointer" }}>
+          <Button
+            label={t("VIEW_DETAILS")}
+            onClick={() => handleViewDetailsForAccessibility(row)}
+            variation="link"
+            size={"medium"}
+          />
+        </div>
+      ),
       sortable: false,
     },
     {
-      name: t("MP_FACILITY_TOTALPOPULATION"), // Change to your column type
-      selector: (row) => row.totalPopulation, // Replace with the appropriate field from your data
+      name: t("MP_VILLAGE_SECURITY_LEVEL"),
+      cell: (row) => (
+        <div title={t(row.securityLevel)} style={{ cursor: "pointer" }}>
+          <Button
+            label={t("VIEW_DETAILS")}
+            onClick={() => handleViewDetailsForSecurity(row)}
+            variation="link"
+            size={"medium"}
+          />
+        </div>
+      ),
       sortable: false,
+    },
+    {
+      name: t("MP_FACILITY_TOTALPOPULATION"),
+      selector: (row) => row.totalPopulation,
+      sortable: false,
+      cell: (row) => (
+        <div title={t(row.totalPopulation)} style={{ cursor: "pointer" }}>
+          {row.totalPopulation}
+        </div>
+      ),
     },
     // Add more columns as needed
   ];
+  
+  
 
   const planFacilityUpdateMutaionConfig = {
     url: "/plan-service/plan/facility/_update",
