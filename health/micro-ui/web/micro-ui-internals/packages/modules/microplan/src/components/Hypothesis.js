@@ -37,7 +37,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
     setAssumptions(initialAssumptions);
   }, [initialAssumptions]);
 
-  const handleDeleteClick = (index) => {
+  const handleDeleteClick = (index, item) => {
     if (assumptions?.length === 1 && category !== "CAMPAIGN_VEHICLES") {
       //atleast one assumption in each category has to be mandatory to support draft functionality
       setShowToast({
@@ -48,7 +48,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
       return;
     }
     setAssumptionToDelete(index);
-    setShowPopUp(true);
+    setShowPopUp(assumptionValues?.find((i) => i.key === item)?.source || true);
   };
 
   const handleCancelDelete = () => {
@@ -179,10 +179,15 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
                   onChange={(event) => {
                     handleAssumptionChange(category, event, item);
                   }}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      event.preventDefault(); // Prevent form submission on Enter
+                    }
+                  }}
                 />
                 <div className="hypothesis-delete-button">
                   <DeleteIconv2 />
-                  <span style={{ color: "#B91900", textDecoration: "Underline" }} onClick={() => handleDeleteClick(index)}>
+                  <span style={{ color: "#B91900", textDecoration: "Underline" }} onClick={() => handleDeleteClick(index, item)}>
                     {t("DELETE")}
                   </span>
                 </div>
@@ -209,7 +214,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
             equalWidthButtons={true}
             children={[
               <div>
-                <CardText style={{ margin: 0 }}>{t("HYP_PERMANENT_DELETE")}</CardText>
+                <CardText style={{ margin: 0 }}>{showPopUP === "CUSTOM" ? t(`HYP_PERMANENT_DELETE_CUSTOM`) : t("HYP_PERMANENT_DELETE")}</CardText>
               </div>,
             ]}
             onOverlayClick={() => {
