@@ -1,4 +1,4 @@
-import _ from "lodash";
+import isEqual from "lodash/isEqual";
 const requestBodyGenerator = () => {};
 //checking for duplicates
 const isValidResourceName = async (name) => {
@@ -309,11 +309,11 @@ const createUpdatePlanProject = async (req) => {
         if (microplanId && campaignId && planObject?.name !== totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName) {
           console.log('till now not creating issue');
            // validate campaign and microplan name feasible or not -> search campaign + search plan
-          //  const isNameValid = await isValidUpdateResourceName(totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName);
-          //  if (!isNameValid) {
-          //    setShowToast({ key: "error", label: "ERROR_MICROPLAN_NAME_ALREADY_EXISTS" });
-          //    return;
-          //  }
+           const isNameValid = await isValidUpdateResourceName(totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName);
+           if (!isNameValid) {
+             setShowToast({ key: "error", label: "ERROR_MICROPLAN_NAME_ALREADY_EXISTS" });
+             return;
+           }
           // we will udpate the current planobject and campaign object
           const isResourceCreated = await UpdateResource(req, planObject, campaignObject);
           if (!isResourceCreated) {
@@ -372,7 +372,7 @@ const createUpdatePlanProject = async (req) => {
 
         const prevSelectedBoundaries = campaignObjectForBoundary?.boundaries;
         //if both are equal then we don't even have to make any update call and we don't have to invalidate
-        if (_.isEqual(prevSelectedBoundaries, totalFormData?.BOUNDARY?.boundarySelection?.selectedData)) {
+        if (isEqual(prevSelectedBoundaries, totalFormData?.BOUNDARY?.boundarySelection?.selectedData)) {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
           return {
@@ -427,7 +427,7 @@ const createUpdatePlanProject = async (req) => {
         // here we have to invalidate the existing assumptions in update call if there is a change in assumptionsForm
         // check whether the currentAssumptionsForm is equal to prev assumptionsForm (if so then skip this update call)
         
-        if (_.isEqual(planObject?.additionalDetails?.assumptionsForm, totalFormData?.ASSUMPTIONS_FORM?.assumptionsForm) && Object.keys(planObject?.additionalDetails?.assumptionsForm).length>0) {
+        if (isEqual(planObject?.additionalDetails?.assumptionsForm, totalFormData?.ASSUMPTIONS_FORM?.assumptionsForm) && Object.keys(planObject?.additionalDetails?.assumptionsForm).length>0) {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
           return {
