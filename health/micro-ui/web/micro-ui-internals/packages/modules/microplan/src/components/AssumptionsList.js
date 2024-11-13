@@ -20,7 +20,7 @@ const AssumptionsList = ({ customProps, setupCompleted }) => {
     }else{
         campaignAssumption["selectedRegistrationProcess"]=customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm?.selectedRegistrationProcess?.code;
         campaignAssumption["selectedDistributionProcess"]=customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm?.selectedDistributionProcess?.code;
-        campaignAssumption["selectedRegistrationDistributionMode"]=customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyName
+        campaignAssumption["selectedRegistrationDistributionMode"]=customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.distributionStrat?.resourceDistributionStrategyCode;
 
     }
 
