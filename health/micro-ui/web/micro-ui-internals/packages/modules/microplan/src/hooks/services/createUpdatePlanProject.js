@@ -306,6 +306,12 @@ const createUpdatePlanProject = async (req) => {
         //both the screens will be freezed so don't need to do anything
         //here just check if microplanId and campaignId is already there then don't do anything (details will be freezed so only create will be required no update)
 
+        if (microplanId && campaignId && planObject?.name === totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName) {
+          setCurrentKey((prev) => prev + 1);
+          setCurrentStep((prev) => prev + 1);
+          return;
+        }
+        
         if (microplanId && campaignId && planObject?.name !== totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName) {
           console.log('till now not creating issue');
            // validate campaign and microplan name feasible or not -> search campaign + search plan
@@ -331,14 +337,8 @@ const createUpdatePlanProject = async (req) => {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
           return;
-        }
-
-        if (microplanId && campaignId) {
-          setCurrentKey((prev) => prev + 1);
-          setCurrentStep((prev) => prev + 1);
-          return;
-        }
-        //if we reach here then we need to create a plan and project instance
+        }else{
+//if we reach here then we need to create a plan and project instance
         // validate campaign and microplan name feasible or not -> search campaign + search plan
         const isResourceNameValid = await isValidResourceName(totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName);
         if (!isResourceNameValid) {
@@ -357,6 +357,10 @@ const createUpdatePlanProject = async (req) => {
         return {
           triggeredFrom,
         };
+        }
+
+        
+        
 
       case "BOUNDARY":
         // call an update to plan
