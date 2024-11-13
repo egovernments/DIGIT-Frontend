@@ -353,7 +353,31 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
                     variant = "upcoming";
                     allCompleted = false; // If any process is upcoming, mark as not all completed
                   }
-  
+                  if(process?.type === "campaign-creation")
+                  {
+                    processesToRender.push(
+                      <Timeline
+                        key={i}
+                        label={t(formatLabel(process?.type))}
+                        subElements={[epochToDateTime(process.lastModifiedTime)]}
+                        variant={variant}
+                        showConnector={true}
+                        additionalElements={[
+                          // {userCredential && lastCompletedProcess?.type === "campaign-creation" && (
+                            <Button
+                              label={t("CAMPAIGN_DOWNLOAD_USER_CRED")}
+                              variation="primary"
+                              icon={"DownloadIcon"}
+                              type="button"
+                              className="campaign-download-template-btn hover"
+                              onClick={downloadUserCred}
+                            />
+                          // )}
+                        ]}
+                      />
+                    );
+                  }
+                  else{
                   processesToRender.push(
                     <Timeline
                       key={i}
@@ -362,7 +386,7 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
                       variant={variant}
                       showConnector={true}
                     />
-                  );
+                  );}
                 }
               }
             }
@@ -383,7 +407,7 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
         ) : (
           <p></p> // You can replace this with a loading spinner or any other indicator
         )}
-        {userCredential && lastCompletedProcess?.type === "campaign-creation" && (
+        {/* {userCredential && lastCompletedProcess?.type === "campaign-creation" && (
           <Button
             label={t("CAMPAIGN_DOWNLOAD_USER_CRED")}
             variation="primary"
@@ -392,7 +416,7 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
             className="campaign-download-template-btn hover"
             onClick={downloadUserCred}
           />
-        )}
+        )} */}
       </div>
     </React.Fragment>
   );
