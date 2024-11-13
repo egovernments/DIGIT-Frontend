@@ -74,10 +74,11 @@ const UpdateChecklist = () => {
                 if (res?.ServiceDefinitions?.[0]?.attributes) {
                     setCurActive(res?.ServiceDefinitions?.[0].isActive);
                     let temp_data = res?.ServiceDefinitions?.[0]?.attributes
-                    let formatted_data = temp_data.map((item) => item.additionalFields);
+                    let formatted_data = temp_data.map((item) => item.additionalFields?.fields?.[0]?.value);
                     let nvd = formatted_data.filter((value, index, self) =>
                         index === self.findIndex((t) => t.id === value.id)
                     );
+                    console.log("nvd", nvd);
                     return nvd;
                 }
             }
@@ -287,7 +288,16 @@ const UpdateChecklist = () => {
             isActive: item?.isActive,
             reGex: item?.isRegex ? item?.regex?.regex : null,
             order: item?.key,
-            additionalFields: item
+            additionalFields: {
+                schema: "serviceDefinition",
+                version: 1,
+                fields: [
+                  {
+                    key: crypto.randomUUID(),  // Using crypto.randomUUID() for a unique key
+                    value: item
+                  }
+                ]
+              }
         };
     
         return questionObject;
@@ -355,10 +365,19 @@ const UpdateChecklist = () => {
             isActive: curActive,
             attributes: fp,
             additionalFields: {
-                name: checklistName,
-                type: checklistType,
-                role: role
-            },
+                schema: "serviceDefinition",
+                version: 1,
+                fields: [
+                  {
+                    key: crypto.randomUUID(),  // Using crypto.randomUUID() for a unique key
+                    value: {
+                      name: checklistName,
+                      type: checklistType,
+                      role: role
+                    }
+                  }
+                ]
+              },
 
         }
     };
