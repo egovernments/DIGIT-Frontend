@@ -146,7 +146,7 @@ const BoundarySummary = (props) => {
             <TextBlock subHeader={t("HCM_BOUNDARY_DETAILS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
           <Card className="stepper-card">
-            <Stepper customSteps={["HCM_BOUNDARY_DETAILS", "HCM_SUMMARY"]} currentStep={2} onStepClick={onStepClick} direction={"vertical"} />
+            <Stepper customSteps={["HCM_BOUNDARY_DETAILS_VERTICAL", "HCM_SUMMARY"]} currentStep={2} onStepClick={onStepClick} direction={"vertical"} />
           </Card>
         </div>
 
