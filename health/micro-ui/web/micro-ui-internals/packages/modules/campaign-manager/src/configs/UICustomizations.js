@@ -291,7 +291,7 @@ export const UICustomizations = {
               <Button
                 type={"button"}
                 size={"medium"}
-                icon={"Add"}
+                icon={"DownloadIcon"}
                 variation={"secondary"}
                 label={t("DOWNLOAD")}
                 onClick={() => {

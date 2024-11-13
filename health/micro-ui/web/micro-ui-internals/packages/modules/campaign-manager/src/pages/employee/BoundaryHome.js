@@ -60,8 +60,7 @@ const type=searchParams.get("type")|| config?.type;
       {/* {toast &&
         <Toast label={t("USER_NOT_AUTHORISED")} type={"error"} onClose={() => setToast(false)} />} */}
       <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
-        <div style={{ fontWeight: 700, fontSize: "2.5rem" }}>{t("BOUNDARY_DATA_MANAGEMENT")}</div>
-        <div style={{ height: "2rem" }}></div>
+        <div style={{ fontWeight: 700, fontSize: "2.5rem", fontFamily:"Roboto Condensed"}}>{t("BOUNDARY_DATA_MANAGEMENT")}</div>
         <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
         {Object.keys(boundaryHomeConfig)?.map(key=>{
           return (<Button

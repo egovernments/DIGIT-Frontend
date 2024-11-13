@@ -1,4 +1,4 @@
-import { Card, Uploader, Button,  ActionBar, Toast, Loader } from "@egovernments/digit-ui-components";
+import { Card, Uploader, Button,  ActionBar, Toast, Loader, PopUp } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState, useRef} from "react";
 import { useTranslation } from "react-i18next";
 import XlsPreviewNew from "../../components/XlsPreviewNew";
@@ -100,9 +100,11 @@ const ViewHierarchy = () => {
             // Splitting filename before .xlsx or .xls
             const fileNameWithoutExtension = hierarchyType ;
             Digit.Utils.campaign.downloadExcelWithCustomName({ fileStoreId: resFile?.GeneratedResource?.[0]?.fileStoreid, customName: fileNameWithoutExtension });
+            setShowPopUp(false);
         }
         else if ( resFile && resFile?.GeneratedResource?.[0]?.status === "inprogress"){
           setShowToast({label: "PLEASE_WAIT_AND_RETRY_AFTER_SOME_TIME", isError: "info" });
+          setShowPopUp(false);
         }
 
     }
@@ -173,7 +175,16 @@ const ViewHierarchy = () => {
             try {
               await pollForStatusCompletion(id, typeOfData);
               setDataCreateToast(false);
-              setShowToast({ label: `${t("WBH_HIERARCHY_CREATED")}`, isError: "success" });
+              history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
+                message: "ES_BOUNDARY_DATA_CREATED_SUCCESS_RESPONSE",
+                preText: "ES_BOUNDARY_DATA__CREATED_SUCCESS_RESPONSE_PRE_TEXT",
+                actionLabel: "CS_BOUNDARY_dATA_NEW_RESPONSE_ACTION",
+                actionLink: `/${window.contextPath}/employee/campaign/boundary/data?defaultHierarchyType=${defaultHierarchyType}&hierarchyType=${hierarchyType}`,
+                secondaryActionLabel: "CS_HOME",
+                secondaryActionLink: `/${window?.contextPath}/employee`,
+            });
+
+              // setShowToast({ label: `${t("WBH_HIERARCHY_CREATED")}`, isError: "success" });
             } catch (pollError) {
               throw pollError; // Propagate polling errors to the outer catch block
             }
@@ -333,6 +344,7 @@ const ViewHierarchy = () => {
 
     }
 
+    const [showPopUp, setShowPopUp] = useState(false);
    
     if(!viewState || isLoading)
     {
@@ -456,7 +468,9 @@ const ViewHierarchy = () => {
                                     icon="DownloadIcon"
                                     iconFill=""
                                     label={t("DOWNLOAD_EXCEL_TEMPLATE")}
-                                    onClick={downloadExcelTemplate}
+                                    onClick={()=>{
+                                      setShowPopUp(true);
+                                    }}
                                     options={[]}
                                     optionsKey=""
                                     size="small"
@@ -522,6 +536,47 @@ const ViewHierarchy = () => {
                         />
                     </div>
                 }
+                {showPopUp && (
+                  <PopUp
+                    className={"popUpClass"}
+                    footerclassName={"popUpFooter"}
+                    type={"default"}
+                    // style={{width:"70%"}}
+                    heading={t("DOWNLOAD_EXCEL_TEMPLATE_FOR_BOUNDARY")}
+                    children={[
+                    ]}
+                    onOverlayClick={() => {
+                      setShowPopUp(false);
+                    }}
+                    onClose={() => {
+                      setShowPopUp(false);
+                    }}
+                    footerChildren={[
+                      <Button
+                        type={"button"}
+                        size={"large"}
+                        variation={"secondary"}
+                        label={t("CLOSE")}
+                        onClick={() => {
+                          setShowPopUp(false);
+                        }}
+                      />,
+                      <Button
+                        type={"button"}
+                        size={"large"}
+                        variation={"primary"}
+                        label={t("DOWNLOAD_TEMPLATE_BOUNDARY")}
+                        icon={"DownloadIcon"}
+                        onClick={downloadExcelTemplate}
+                      />,
+                    ]}
+                    sortFooterChildren={true}
+                  >
+                    <div style={{fontWeight:"400", fontSize:"1.25rem", fontFamily: "Roboto", marginTop:"1rem", marginBottom:"1rem"}}>
+                      {t("BOUNDARY_DOWNLOAD_MESSAGE")}
+                    </div>
+                  </PopUp>
+                )}
                 {showToast && <Toast label={showToast.label} type={showToast.isError} onClose={() => setShowToast(null)} />}
                 {previewPage && (
                     <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
