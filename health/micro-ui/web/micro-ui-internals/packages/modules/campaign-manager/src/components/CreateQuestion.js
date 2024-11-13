@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useContext } from "react";
+import React, { useState, useEffect, Fragment, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { DustbinIcon } from "./icons/DustbinIcon";
 import { PRIMARY_COLOR } from "../utils";
@@ -7,6 +7,7 @@ import MultipleChoice from "./MultipleChoice";
 import Checkboxes from "./Checkboxes";
 import Dropdowns from "./Dropdowns";
 import { QuestionContext } from "./CreateQuestionContext";
+
 
 
 // field selector for multiselect and signle select component.
@@ -246,13 +247,33 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
   const role = searchParams.get("role");
   let locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
   const { questionData, dispatchQuestionData } = useContext(QuestionContext);
-  const dataType = [
-    // { code: "String" },
-    { code: "SingleValueList" },
-    { code: "MultiValueList" },
-    // { code: "Short Answer" },
-    // { code: "Dropdown" }
-  ];
+  
+  const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
+
+  const reqCriteria = useMemo(() => ({
+    url: `/${mdms_context_path}/v2/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId: tenantId,
+        schemaCode: "HCM-ADMIN-CONSOLE.appFieldTypes",
+      }
+    }
+  }), [tenantId]); // Only recreate if tenantId changes
+
+  // Use the custom hook with memoized criteria
+  const { isLoading1, data: mdmsData, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+
+  // Memoize the dataType array based on the API response
+  const dataType = useMemo(() => {
+    if (!mdmsData) return [
+      { code: "SingleValueList" },
+      { code: "MultiValueList" }
+    ];
+    return mdmsData.mdms?.map(role => ({
+      code: role?.data?.code
+    })) || [];
+  }, [mdmsData]); // Only recompute when mdmsData changes
+
   const regexOption = [
     {
       code: "TEXT_ONLY",

@@ -78,7 +78,6 @@ const UpdateChecklist = () => {
                     let nvd = formatted_data.filter((value, index, self) =>
                         index === self.findIndex((t) => t.id === value.id)
                     );
-                    console.log("nvd", nvd);
                     return nvd;
                 }
             }
