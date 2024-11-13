@@ -12,9 +12,7 @@ const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, on
   } = useMyContext();
 
   //hierarchy dropdowns for this jurisdiction
-  const [hierarchy, setHierarchy] = useState(
-    Digit.Utils.microplanv1.getFilteredHierarchy(boundaryHierarchy, jurisdiction.boundaryType, hierarchyType)
-  );
+  const hierarchy =  Digit.Utils.microplanv1.getFilteredHierarchy(boundaryHierarchy, jurisdiction.boundaryType, hierarchyType);
   const [boundaryOptions, setBoundaryOptions] = useState([]);
 
   const [selectedBoundaries, setSelectedBoundaries] = useState([]);
