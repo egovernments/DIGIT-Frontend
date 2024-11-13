@@ -30,7 +30,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [boundaryData, setBoundaryData] = useState([]);
-  const [confirmUnasignPopup,setConfirmUnasignPopup]=useState(false);
+  const [confirmUnassignPopup,setConfirmUnassignPopup]=useState(false);
   const configNavItem = [
     {
       code: t(`MICROPLAN_UNASSIGNED_FACILITIES`),
@@ -276,7 +276,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const mutationForPlanFacilityUpdate = Digit.Hooks.useCustomAPIMutationHook(planFacilityUpdateMutaionConfig);
 
   const handleUnsaasignFalse= async ()=>{
-    setConfirmUnasignPopup(false);
+    setConfirmUnassignPopup(false);
     return
 
   }
@@ -326,7 +326,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     // setCurrentPage(1);
     setLoader(false);
-    setConfirmUnasignPopup(false);
+    setConfirmUnassignPopup(false);
 
   }
 
@@ -336,7 +336,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     const selectedRowData = censusData.filter(row => selectedRows.includes(row.id));
     var newDetails = JSON.parse(JSON.stringify(details));
     if (facilityAssignedStatus) {
-      setConfirmUnasignPopup(true);
+      setConfirmUnassignPopup(true);
       const boundarySet = new Set(selectedRowData.map((row) => {
         return row.boundaryCode
       }))
@@ -507,7 +507,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
         />
       )}
 
-{confirmUnasignPopup &&  <PopUp
+{confirmUnassignPopup &&  <PopUp
             className={"popUpClass"}
             type={"default"}
             heading={t("FAC_UNASSIGN_CONFIRM")}
@@ -518,7 +518,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
               </div>,
             ]}
             onOverlayClick={() => {
-              setConfirmUnasignPopup(false);
+              setConfirmUnassignPopup(false);
             }}
             footerChildren={[
               <Button
@@ -535,7 +535,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
             ]}
             sortFooterChildren={true}
             onClose={() => {
-              setConfirmUnasignPopup(false);
+              setConfirmUnassignPopup(false);
             }}
           ></PopUp>}
 
