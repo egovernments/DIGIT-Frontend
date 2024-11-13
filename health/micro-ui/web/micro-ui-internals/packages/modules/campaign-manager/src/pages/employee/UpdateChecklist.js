@@ -352,7 +352,7 @@ const UpdateChecklist = () => {
             index === self.findIndex((t) => t.id === value.id || t.code === value.code)
         );
         uniqueLocal = local.filter((value, index, self) =>
-            index === self.findIndex((t) => JSON.stringify(t) === JSON.stringify(value))
+            index === self.findIndex((t) => JSON.stringify(t.code) === JSON.stringify(value.code))
         );
         let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
         let roleTemp = role.toUpperCase().replace(/ /g, "_");
