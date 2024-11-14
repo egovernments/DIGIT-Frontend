@@ -1257,6 +1257,30 @@ export const UICustomizations = {
           return null;
       }
     },
+    getFacilitySearchRequest: ( prop) => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const {campaignId} = Digit.Hooks.useQueryParams();
+      return {
+        url: `/project-factory/v1/project-type/search`,
+        params: {  },
+        body: {
+          CampaignDetails: {
+            "tenantId": tenantId,
+            "ids": [
+              campaignId
+            ]
+        }
+        },
+        changeQueryName: `boundarySearchForPlanFacility`,
+        config: {
+          enabled: true,
+          select: (data) => {
+            const result = data?.CampaignDetails?.[0]?.boundaries?.filter((item) => item.type == prop.lowestHierarchy) || [];
+            return result
+          },
+        },
+      };
+    }
   },
   MyMicroplanSearchConfigExample: {
     test: "yes",
