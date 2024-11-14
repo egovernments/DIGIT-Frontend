@@ -282,6 +282,13 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
           setSelectedRows([]);
           setIsAllSelected(false);
           updateDetails(newDetails);
+          if(facilityAssignedStatus){
+            setShowToast({ key: "success", label: `${ t("UNASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 });
+
+            
+          }else{
+            setShowToast({ key: "success", label: `${ t("ASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 });
+          }
         },
         onError: async (result) => {
           // setDownloadError(true);
