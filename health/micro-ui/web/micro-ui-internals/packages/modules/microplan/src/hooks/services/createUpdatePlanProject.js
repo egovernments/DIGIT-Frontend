@@ -60,6 +60,8 @@ const CreateResource = async (req) => {
       action: "draft",
       parentId: null,
       campaignName: totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName,
+      startDate: Math.floor(new Date(new Date().setDate(new Date().getDate() + 30)).getTime()),
+      //hardcoding this rn to update campaign. Check with admin console team
       resources: [],
       projectType: totalFormData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code,
       additionalDetails: {
@@ -101,6 +103,54 @@ const CreateResource = async (req) => {
         microplanId: planRes?.PlanConfiguration?.[0]?.id,
         campaignId: campaignRes?.CampaignDetails?.id,
       });
+      return true;
+    }
+    return false;
+  } catch (error) {
+    if (!error?.response?.data?.Errors[0].description) {
+      throw new Error(error?.response?.data?.Errors[0].code);
+    } else {
+      throw new Error(error?.response?.data?.Errors[0].description);
+    }
+  }
+};
+
+/// we will update the name of microplan and and campaign
+const UpdateResource = async (req, currentPlanObject, currentCampaignObject) => {
+  //creating a microplan and campaign instance here
+  const { totalFormData, state, setShowToast, setCurrentKey, setCurrentStep, config, campaignObject, planObject } = req;
+  try {
+
+    // Update the campaign object by keeping existing properties and only changing the name
+    const updatedCampaignObject = {
+      ...currentCampaignObject,
+      campaignName: totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName,
+    };
+
+    const campaignRes = await Digit.CustomService.getResponse({
+      url: "/project-factory/v1/project-type/update",
+      body: {
+        CampaignDetails: updatedCampaignObject,
+      },
+    });
+
+    // Update the plan object by keeping existing properties and only changing the name
+    const updatedPlanObject = {
+      ...currentPlanObject,
+      name: totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName,
+    };
+
+    const planRes = await Digit.CustomService.getResponse({
+      url: "/plan-service/config/_update",
+      useCache: false,
+      method: "POST",
+      userService: true,
+      body: {
+        PlanConfiguration: updatedPlanObject
+      },
+    });
+
+    if (campaignRes?.CampaignDetails?.id && planRes?.PlanConfiguration?.[0]?.id) {
       return true;
     }
     return false;
@@ -195,32 +245,58 @@ const createUpdatePlanProject = async (req) => {
         };
 
       case "MICROPLAN_DETAILS":
-        //both the screens will be freezed so don't need to do anything
-        //here just check if microplanId and campaignId is already there then don't do anything (details will be freezed so only create will be required no update)
-        if (microplanId && campaignId) {
+    
+        //here just check if microplanId and campaignId is already there then if microplan name is same as old one no need to do anything
+        if (microplanId && campaignId && planObject?.name === totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName) {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
           return;
         }
+
+        /// now check if microplan and campaign id is there but name need to be updated
+        if (microplanId && campaignId && planObject?.name !== totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName) {
+
+          // check if the name is valid
+          const isResourceNameValid = await isValidResourceName(totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName);
+          if (!isResourceNameValid) {
+            setShowToast({ key: "error", label: "ERROR_MICROPLAN_NAME_ALREADY_EXISTS" });
+            return;
+          }
+          // we will udpate the current planobject and campaign object
+          const isResourceCreated = await UpdateResource(req, planObject, campaignObject);
+          if (!isResourceCreated) {
+            setShowToast({ key: "error", label: "ERROR_CREATING_MICROPLAN" });
+            return;
+          }
+          setCurrentKey((prev) => prev + 1);
+          setCurrentStep((prev) => prev + 1);
+
+          return {
+            triggeredFrom,
+          };
+
+        }else{
         //if we reach here then we need to create a plan and project instance
         // validate campaign and microplan name feasible or not -> search campaign + search plan
-        const isResourceNameValid = await isValidResourceName(totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName);
-        if (!isResourceNameValid) {
-          setShowToast({ key: "error", label: "ERROR_MICROPLAN_NAME_ALREADY_EXISTS" });
-          return;
-        }
+          const isResourceNameValid = await isValidResourceName(totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName);
+          if (!isResourceNameValid) {
+            setShowToast({ key: "error", label: "ERROR_MICROPLAN_NAME_ALREADY_EXISTS" });
+            return;
+          }
 
-        const isResourceCreated = await CreateResource(req);
-        if (!isResourceCreated) {
-          setShowToast({ key: "error", label: "ERROR_CREATING_MICROPLAN" });
-          return;
-        }
-        setCurrentKey((prev) => prev + 1);
-        setCurrentStep((prev) => prev + 1);
+          const isResourceCreated = await CreateResource(req);
+          if (!isResourceCreated) {
+            setShowToast({ key: "error", label: "ERROR_CREATING_MICROPLAN" });
+            return;
+          }
+          setCurrentKey((prev) => prev + 1);
+          setCurrentStep((prev) => prev + 1);
 
-        return {
-          triggeredFrom,
-        };
+          return {
+            triggeredFrom,
+          };
+        }
+        
 
       case "BOUNDARY":
         // call an update to plan
@@ -247,8 +323,6 @@ const createUpdatePlanProject = async (req) => {
         const updatedCampaignObject = {
           ...campaignObjectForBoundary,
           boundaries: totalFormData?.BOUNDARY?.boundarySelection?.selectedData,
-          startDate: Math.floor(new Date(new Date().setDate(new Date().getDate() + 100)).getTime()),
-          //hardcoding this rn to update campaign. Check with admin console team
         };
         const campaignResBoundary = await updateProject(updatedCampaignObject);
         await new Promise((resolve) => setTimeout(resolve, 5000));
