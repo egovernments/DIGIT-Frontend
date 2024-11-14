@@ -275,12 +275,14 @@ function generateCampaignString(sessionData, t) {
   const campaignTypeCode = sessionData.CAMPAIGN_DETAILS.campaignDetails.campaignType.i18nKey;
   const resourceDistributionStrategy = sessionData.CAMPAIGN_DETAILS.campaignDetails.distributionStrat.resourceDistributionStrategyCode;
 
-  // Get current year and take the last two digits
-  const currentYear = new Date().getFullYear();
-  const yearLastTwoDigits = currentYear.toString().slice(-2);
-  const currentMonth = getCurrentMonth()
+   // Get current date details
+   const currentDate = new Date();
+   const day = String(currentDate.getDate()).padStart(2, '0'); // Two-digit day
+   const monthAbbr = currentDate.toLocaleString('en-US', { month: 'short' }); // Three-letter month abbreviation
+   const yearLastTwoDigits = currentDate.getFullYear().toString().slice(-2); // Last two digits of the year
+
   // Construct the final string
-  const result = `${t(diseaseCode)}-${t(campaignTypeCode)}-${t(resourceDistributionStrategy)}-${currentMonth} ${yearLastTwoDigits}`;
+  const result = `${t(diseaseCode)}-${t(campaignTypeCode)}-${t(resourceDistributionStrategy)}-${day} ${monthAbbr} ${yearLastTwoDigits}`;
   return result;
 }
 

@@ -982,6 +982,7 @@ export const UICustomizations = {
               label={t("START")}
               variation="secondary"
               icon={"ArrowForward"}
+              style={{minWidth:"240px"}}
               type="button"
               isDisabled={!hasRequiredRole}
               // className="dm-workbench-download-template-btn dm-hover"
@@ -992,6 +993,7 @@ export const UICustomizations = {
               label={t("WBH_DOWNLOAD")}
               variation="secondary"
               icon={"FileDownload"}
+              style={{minWidth:"240px"}}
               type="button"
               // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("DOWNLOAD", row)}
@@ -1001,6 +1003,7 @@ export const UICustomizations = {
               label={t("WBH_EDIT")}
               variation="secondary"
               icon={"Edit"}
+              style={{minWidth:"240px"}}
               type="button"
               // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("EDIT", row)}
@@ -1220,6 +1223,8 @@ export const UICustomizations = {
       const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
 
       switch (key) {
+        case "MICROPLAN_FACILITY_SERVINGPOPULATION":
+          return row?.additionalDetails?.servingPopulation;
         case "MICROPLAN_FACILITY_RESIDINGVILLAGE":
           return t(row?.residingBoundary);
         case "MICROPLAN_FACILITY_ASSIGNED_VILLAGES":
@@ -1257,6 +1262,30 @@ export const UICustomizations = {
           return null;
       }
     },
+    getFacilitySearchRequest: ( prop) => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const {campaignId} = Digit.Hooks.useQueryParams();
+      return {
+        url: `/project-factory/v1/project-type/search`,
+        params: {  },
+        body: {
+          CampaignDetails: {
+            "tenantId": tenantId,
+            "ids": [
+              campaignId
+            ]
+        }
+        },
+        changeQueryName: `boundarySearchForPlanFacility`,
+        config: {
+          enabled: true,
+          select: (data) => {
+            const result = data?.CampaignDetails?.[0]?.boundaries?.filter((item) => item.type == prop.lowestHierarchy) || [];
+            return result
+          },
+        },
+      };
+    }
   },
   MyMicroplanSearchConfigExample: {
     test: "yes",

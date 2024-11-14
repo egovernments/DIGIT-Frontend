@@ -78,7 +78,6 @@ const UpdateChecklist = () => {
                     let nvd = formatted_data.filter((value, index, self) =>
                         index === self.findIndex((t) => t.id === value.id)
                     );
-                    console.log("nvd", nvd);
                     return nvd;
                 }
             }
@@ -276,6 +275,9 @@ const UpdateChecklist = () => {
                 const upperCaseString = optionval.toUpperCase();
                 return upperCaseString.replace(/ /g, '_');
             });
+        }
+        if(String(item?.type?.code) === "SingleValueList"){
+            labelsArray.push("NOT_SELECTED");
         }
     
         const questionObject = {

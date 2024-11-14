@@ -3,7 +3,9 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 const ROLES = {
-  CAMPAIGN_MANAGER:["CAMPAIGN_MANAGER"],
+  CAMPAIGN_MANAGER:["CAMPAIGN_MANAGER","MICROPLAN_CAMPAIGN_INTEGRATOR"],
+  BOUNDARY_MANAGER:["BOUNDARY_MANAGER"],
+  CAMPAIGN_MANAGER_ONLY:["CAMPAIGN_MANAGER"],
   NATIONAL_SUPERVISOR:["NATIONAL_SUPERVISOR"]
 };
 
@@ -20,41 +22,24 @@ const CampaignCard = () => {
   }
 
   const { t } = useTranslation();
-  const tenantId = Digit.ULBService.getCurrentTenantId();
-  // const reqCriteria = {
-  //   url: "/project-factory/v1/project-type/search",
-  //   params: {},
-  //   body: { CampaignDetails:{
-  //     tenantId,
-  //     createdBy: Digit.UserService.getUser().info.uuid,
-  //     pagination: {
-  //       "sortBy": "createdTime",
-  //       "sortOrder": "desc",
-  //       "limit": 1,
-  //       "offset": 0
-  //     }
-  //   } },
-  //   config: {
-  //     select: (data) => {
-  //       return data?.totalCount;
-  //     },
-  //   },
-  // };
-  // const { isLoading, data } = Digit.Hooks.useCustomAPIHook(
-  //   reqCriteria
-  // );
+ 
   let links = [
 
     {
       label: t("ACTION_TEST_SETUP_CAMPAIGN"),
       link: `/${window?.contextPath}/employee/campaign/setup-campaign`,
-      roles: ROLES.CAMPAIGN_MANAGER
+      roles: ROLES.CAMPAIGN_MANAGER_ONLY
     },
     {
       label: t("ACTION_TEST_MY_CAMPAIGN"),
       link: `/${window?.contextPath}/employee/campaign/my-campaign`,
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
+    },  
+    { //@Bhavya put the new url and remove the comment
+      label: t("ACTION_TEST_SETUP_CAMPAIGN_FROM_MICROPLAN"),
+      link: `/${window?.contextPath}/employee/campaign/setup-campaign`,
+      roles: ROLES.CAMPAIGN_MANAGER
     },
     {
       label: t("NATIONAL_DASHBOARD"),
@@ -71,7 +56,7 @@ const CampaignCard = () => {
     {
       label: t("BOUNDARY_MANAGEMENT"),
       link: `/${window?.contextPath}/employee/campaign/boundary/home`,
-      roles: ROLES.CAMPAIGN_MANAGER,
+      roles: ROLES.BOUNDARY_MANAGER,
       // count: isLoading?"-":data
     },
   ];

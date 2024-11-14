@@ -22,7 +22,8 @@ const useFcilityCatchmentMapping = (props) => {
     },
   });
 
-  const { facilityName, facilityType, residingVillage, status } = props?.state?.searchForm || {};
+  const { facilityName, facilityType, residingBoundaries, status } = props?.state?.searchForm || {};
+  var residingBoundariesCodes = residingBoundaries?.map?.((i) => i.code);
 
   const reqCriteria = {
     url: `/plan-service/plan/facility/_search`,
@@ -37,14 +38,14 @@ const useFcilityCatchmentMapping = (props) => {
         facilityName: facilityName,
         facilityType: facilityType?.name,
         facilityStatus: status?.name,
-        residingVillage: residingVillage,
+        residingBoundaries: residingBoundariesCodes,
       },
     },
     config: {
       enabled: !!planEmployee,
       select: (data) => data,
     },
-    changeQueryName: `${facilityName}${facilityType?.name}${residingVillage}${status?.name}${props?.state?.tableForm?.limit}${props?.state?.tableForm?.offset}`,
+    changeQueryName: `${facilityName}${facilityType?.name}${residingBoundaries?.[0]?.code}${status?.name}${props?.state?.tableForm?.limit}${props?.state?.tableForm?.offset}`,
   };
   const { isLoading, data, isFetching, refetch, revalidate } = Digit.Hooks.useCustomAPIHook(reqCriteria);
   return {

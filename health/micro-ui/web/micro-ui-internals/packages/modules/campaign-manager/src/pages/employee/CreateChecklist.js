@@ -72,7 +72,8 @@ const CreateChecklist = () => {
             filters: {
               role: role,
               checklistType: checklistType
-            }
+            },
+            isActive: true
           }
         },
       });
@@ -328,6 +329,9 @@ const CreateChecklist = () => {
         const upperCaseString = optionval.toUpperCase();
         return upperCaseString.replace(/ /g, '_');
       });
+    }
+    if(String(item?.type?.code) === "SingleValueList"){
+      labelsArray.push("NOT_SELECTED");
     }
 
     const questionObject = {

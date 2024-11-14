@@ -37,6 +37,7 @@ const PlanInbox = () => {
   const [totalRows, setTotalRows] = useState(0);
   const [perPage, setPerPage] = useState(10);
   const [showToast, setShowToast] = useState(null);
+  const [disabledAction, setDisabledAction] = useState(false);
   const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   const [activeLink, setActiveLink] = useState({
@@ -150,7 +151,7 @@ const PlanInbox = () => {
             village: filteredCensus?.boundaryCode || "NA",
             villageRoadCondition: filteredCensus?.additionalDetails?.accessibilityDetails?.roadCondition?.code || "NA",
             villageTerrain: filteredCensus?.additionalDetails?.accessibilityDetails?.terrain?.code || "NA",
-            villageTransportMode: filteredCensus?.additionalDetails?.accessibilityDetails?.transportationMode?.code || "NA",
+           // villageTransportMode: filteredCensus?.additionalDetails?.accessibilityDetails?.transportationMode?.code || "NA",
             totalPop: filteredCensus?.additionalDetails?.totalPopulation || "NA",
             targetPop: filteredCensus?.additionalDetails?.targetPopulation || "NA",
             ...dynamicSecurityData,
@@ -301,6 +302,29 @@ const PlanInbox = () => {
     }
   }, [selectedFilter, activeLink, censusJurisdiction, limitAndOffset]);
 
+
+  // fetch the process instance for the current microplan to check if we need to disabled actions or not  
+  const { isLoading:isProcessLoading, data: processData, } = Digit.Hooks.useCustomAPIHook({
+    url: "/egov-workflow-v2/egov-wf/process/_search",
+    params: {
+       tenantId: tenantId,
+       history: true,
+        businessIds: microplanId,
+   },
+    config: {
+        enabled: true,
+        select: (data) => {
+          return data?.ProcessInstances;
+     },
+    },
+  });
+
+  useEffect(() => {
+    if (processData && processData.some((instance) => instance.action === "APPROVE_ESTIMATIONS")) {
+      setDisabledAction(true);
+    }
+  }, [processData]);
+
   useEffect(() => {
     if (selectedFilter === "VALIDATED") {
       setActiveLink({ code: "", name: "" });
@@ -393,12 +417,12 @@ const PlanInbox = () => {
       sortable: true,
       width: "180px",
     },
-    {
-      name: t(`HCM_MICROPLAN_VILLAGE_TRANSPORTATION_MODE_LABEL`),
-      cell: (row) => t(row?.villageTransportMode) || "NA",
-      sortable: true,
-      width: "180px",
-    },
+    // {
+    //   name: t(`HCM_MICROPLAN_VILLAGE_TRANSPORTATION_MODE_LABEL`),
+    //   cell: (row) => t(row?.villageTransportMode) || "NA",
+    //   sortable: true,
+    //   width: "180px",
+    // },
     ...getSecurityDetailsColumns(),
     ...getAdditionalFieldsColumns(),
     ...getResourceColumns(),
@@ -483,10 +507,11 @@ const PlanInbox = () => {
     VALIDATE: { isSuffix: false, icon: "CheckCircle" },
     EDIT_AND_SEND_FOR_APPROVAL: { isSuffix: false, icon: "Edit" },
     APPROVE: { isSuffix: false, icon: "CheckCircle" },
+    ROOT_APPROVE: { isSuffix: false, icon: "CheckCircle" },
     SEND_BACK_FOR_CORRECTION: { isSuffix: true, icon: "ArrowForward" },
   };
 
-  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isWorkflowLoading) {
+  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isWorkflowLoading || isProcessLoading) {
     return <Loader />;
   }
 
@@ -611,7 +636,7 @@ const PlanInbox = () => {
                 data={planWithCensus?.tableData}
                 pagination
                 paginationServer
-                selectableRows
+                selectableRows={!disabledAction}
                 selectableRowsHighlight
                 onChangeRowsPerPage={handlePerRowsChange}
                 onChangePage={handlePageChange}

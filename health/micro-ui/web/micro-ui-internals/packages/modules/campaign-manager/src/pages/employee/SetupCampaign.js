@@ -312,7 +312,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
               totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
               totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
               DeliveryConfig,
-              totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code
+              totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code,
+              "create"
             );
             payloadData.deliveryRules = [temp?.[0]];
             // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
@@ -399,7 +400,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
               totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
               totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
               DeliveryConfig,
-              totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code
+              totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code,
+              "draft"
             );
             payloadData.deliveryRules = temp?.[0];
             // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
@@ -473,7 +475,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
               totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
               totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
               DeliveryConfig,
-              totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code
+              totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code,
+              "draft"
             );
             payloadData.deliveryRules = [temp?.[0]];
             // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
