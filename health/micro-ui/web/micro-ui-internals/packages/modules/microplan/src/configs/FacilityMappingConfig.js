@@ -133,6 +133,7 @@ const facilityMappingConfig = (projectType) => {
             {
               label: "MICROPLAN_FACILITY_SERVINGPOPULATION",
               jsonPath: "additionalDetails.servingPopulation",
+              additionalCustomization: true,
             },
             {
               label: "MICROPLAN_FACILITY_FIXEDPOST",

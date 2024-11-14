@@ -50,6 +50,12 @@ const PopInboxTable = ({ ...props }) => {
         },
         width: "180px",
       },
+      {
+        name: t("INBOX_ASSIGNEE"),
+        selector: (row, index) => props?.employeeNameData?.[row?.assignee] || t("ES_COMMON_NA"),
+        sortable: true,
+        width: "180px",
+      },
       ...(
         (props?.censusData?.[0]?.additionalFields || [])
           .filter((field) => field.showOnUi)
@@ -99,12 +105,6 @@ const PopInboxTable = ({ ...props }) => {
           />
         ),
         sortable: false,
-        width: "180px",
-      },
-      {
-        name: t("INBOX_ASSIGNEE"),
-        selector: (row, index) => props?.employeeNameData?.[row?.assignee] || t("ES_COMMON_NA"),
-        sortable: true,
         width: "180px",
       },
     ];

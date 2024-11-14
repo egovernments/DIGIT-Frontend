@@ -11,22 +11,22 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
   // Initialize dropdown values with the existing accessibility details from additionalDetails if available
   const [dropdown1Value, setDropdown1Value] = useState(null);
   const [dropdown2Value, setDropdown2Value] = useState(null);
-  const [dropdown3Value, setDropdown3Value] = useState(null);
+ // const [dropdown3Value, setDropdown3Value] = useState(null);
   const [initialValues, setInitialValues] = useState({});
   const [showToast, setShowToast] = useState(null);
 
   useEffect(() => {
     if (census?.additionalDetails?.accessibilityDetails) {
-      const { roadCondition, terrain, transportationMode } = census?.additionalDetails?.accessibilityDetails || {};
+      const { roadCondition, terrain} = census?.additionalDetails?.accessibilityDetails || {}; /// removed transportationMode
       setDropdown1Value(roadCondition);
       setDropdown2Value(terrain);
-      setDropdown3Value(transportationMode);
+     // setDropdown3Value(transportationMode);
 
       // Store initial values to compare later
       setInitialValues({
         roadCondition,
         terrain,
-        transportationMode,
+       // transportationMode,
       });
     }
   }, [census]);
@@ -46,9 +46,9 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
       case "dropdown2":
         setDropdown2Value(value);
         break;
-      case "dropdown3":
-        setDropdown3Value(value);
-        break;
+      // case "dropdown3":
+      //   setDropdown3Value(value);
+      //   break;
       default:
         break;
     }
@@ -63,7 +63,7 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
         accessibilityDetails: {
           roadCondition: dropdown1Value,
           terrain: dropdown2Value,
-          transportationMode: dropdown3Value,
+         // transportationMode: dropdown3Value,
         },
       },
     },
@@ -73,10 +73,10 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
   const isChanged = React.useCallback(() => {
     return (
       dropdown1Value !== initialValues.roadCondition ||
-      dropdown2Value !== initialValues.terrain ||
-      dropdown3Value !== initialValues.transportationMode
+      dropdown2Value !== initialValues.terrain 
+      //dropdown3Value !== initialValues.transportationMode
     );
-  }, [dropdown1Value, dropdown2Value, dropdown3Value, initialValues]);
+  }, [dropdown1Value, dropdown2Value, initialValues]);
 
   // Define the mutation configuration
   const mutation = Digit.Hooks.useCustomAPIMutationHook({
@@ -129,7 +129,7 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
               />
             </LabelFieldPair>
 
-            <LabelFieldPair>
+            {/* <LabelFieldPair>
               <div className="edit-label">{t(`HCM_MICROPLAN_VILLAGE_TRANSPORTATION_MODE_LABEL`)}</div>
               <Dropdown
                 option={[{ name: "OTHER", code: "OTHER" }]} // Your options list
@@ -138,7 +138,7 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
                 select={(value) => handleDropdownChange(value, "dropdown3")}
                 t={t}
               />
-            </LabelFieldPair>
+            </LabelFieldPair> */}
           </Card>,
         ]}
         onOverlayClick={onClose}
