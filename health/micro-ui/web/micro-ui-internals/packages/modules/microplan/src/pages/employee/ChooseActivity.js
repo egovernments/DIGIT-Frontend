@@ -90,13 +90,14 @@ const ChooseActivity = () => {
         disable: isCardDisabled([], workflowData),
         optionKey: "GEOSPATIAL_MAP_VIEW"
       },
-      {
-        name: t("VIEW_MICROPLAN_ESTIMATIONS"),
-        link: `pop-inbox?campaignId=${campaignId}&microplanId=${microplanId}`,
-        icon: <SVG.Visibility height="36" width="36" fill={isCardDisabled(["MICROPLAN_VIEWER"], workflowData) ? "#C5C5C5" : "#C84C0E"} />,
-        disable: isCardDisabled(["MICROPLAN_VIEWER"], workflowData),
-        optionKey: "VIEW_MICROPLAN_ESTIMATIONS"
-      }
+      //commenting this as for now we are not showing viewer
+      // {
+      //   name: t("VIEW_MICROPLAN_ESTIMATIONS"),
+      //   link: `pop-inbox?campaignId=${campaignId}&microplanId=${microplanId}`,
+      //   icon: <SVG.Visibility height="36" width="36" fill={isCardDisabled(["MICROPLAN_VIEWER"], workflowData) ? "#C5C5C5" : "#C84C0E"} />,
+      //   disable: isCardDisabled(["MICROPLAN_VIEWER"], workflowData),
+      //   optionKey: "VIEW_MICROPLAN_ESTIMATIONS"
+      // }
     ];
 
     const updatePlan = async (req) => {
