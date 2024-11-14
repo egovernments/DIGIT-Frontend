@@ -267,7 +267,7 @@ export const UICustomizations = {
               variation="secondary"
               icon={"ArrowForward"}
               type="button"
-              style={{minWidth:"200px"}}
+              style={{minWidth:"240px"}}
               isDisabled={!hasRequiredRole}
               // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("START", row)}
@@ -277,7 +277,7 @@ export const UICustomizations = {
               label={t("WBH_DOWNLOAD")}
               variation="secondary"
               icon={"FileDownload"}
-              style={{minWidth:"200px"}}
+              style={{minWidth:"240px"}}
               type="button"
               // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("DOWNLOAD", row)}
@@ -287,7 +287,7 @@ export const UICustomizations = {
               label={t("WBH_EDIT")}
               variation="secondary"
               icon={"Edit"}
-              style={{minWidth:"200px"}}
+              style={{minWidth:"240px"}}
               type="button"
               // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("EDIT", row)}
