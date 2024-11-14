@@ -1,4 +1,24 @@
 export const tableCustomStyle = {
+  tableWrapper: {
+    style: {
+      overflow: "visible",
+    },
+  },
+  table: {
+    style: {
+      overflow: "visible",
+    },
+  },
+  responsiveWrapper: {
+    style: {
+      overflow: "visible",
+    },
+  },
+  contextMenu: {
+    style: {
+      overflow: "visible",
+    },
+  },
   header: {
     style: {
       minHeight: "56px",

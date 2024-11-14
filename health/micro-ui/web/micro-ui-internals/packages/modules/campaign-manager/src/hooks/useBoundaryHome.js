@@ -81,6 +81,7 @@ const useBoundaryHome = ({ screenType = "campaign", defaultHierarchyType = "", h
           MdmsCriteria: {
             tenantId: tenantId,
             schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema`,
+            isActive: true
           },
         },
       });

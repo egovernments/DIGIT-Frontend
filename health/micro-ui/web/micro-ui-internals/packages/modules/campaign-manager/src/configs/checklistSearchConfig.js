@@ -15,6 +15,7 @@
           MdmsCriteria: {
             tenantId: tenantId,
             schemaCode: `HCM-ADMIN-CONSOLE.ChecklistTemplates`,
+            isActive: true,
             filters : {},
             limit: 10,
             offset: 0,

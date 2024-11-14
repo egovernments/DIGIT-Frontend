@@ -71,6 +71,22 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     }
   );
 
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault(); // Prevent default Enter key behavior globally
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   useEffect(() => {
     const tc = assumptionCategories[internalKey - 1]?.category;
     const temp = assumptionValues?.filter((i) => i.category === tc && i.source === "CUSTOM")?.map((i) => i.key) || [];

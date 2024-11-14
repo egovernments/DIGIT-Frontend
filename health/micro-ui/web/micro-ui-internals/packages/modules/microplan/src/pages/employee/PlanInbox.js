@@ -150,7 +150,7 @@ const PlanInbox = () => {
             village: filteredCensus?.boundaryCode || "NA",
             villageRoadCondition: filteredCensus?.additionalDetails?.accessibilityDetails?.roadCondition?.code || "NA",
             villageTerrain: filteredCensus?.additionalDetails?.accessibilityDetails?.terrain?.code || "NA",
-            villageTransportMode: filteredCensus?.additionalDetails?.accessibilityDetails?.transportationMode?.code || "NA",
+           // villageTransportMode: filteredCensus?.additionalDetails?.accessibilityDetails?.transportationMode?.code || "NA",
             totalPop: filteredCensus?.additionalDetails?.totalPopulation || "NA",
             targetPop: filteredCensus?.additionalDetails?.targetPopulation || "NA",
             ...dynamicSecurityData,
@@ -393,12 +393,12 @@ const PlanInbox = () => {
       sortable: true,
       width: "180px",
     },
-    {
-      name: t(`HCM_MICROPLAN_VILLAGE_TRANSPORTATION_MODE_LABEL`),
-      cell: (row) => t(row?.villageTransportMode) || "NA",
-      sortable: true,
-      width: "180px",
-    },
+    // {
+    //   name: t(`HCM_MICROPLAN_VILLAGE_TRANSPORTATION_MODE_LABEL`),
+    //   cell: (row) => t(row?.villageTransportMode) || "NA",
+    //   sortable: true,
+    //   width: "180px",
+    // },
     ...getSecurityDetailsColumns(),
     ...getAdditionalFieldsColumns(),
     ...getResourceColumns(),
@@ -483,6 +483,7 @@ const PlanInbox = () => {
     VALIDATE: { isSuffix: false, icon: "CheckCircle" },
     EDIT_AND_SEND_FOR_APPROVAL: { isSuffix: false, icon: "Edit" },
     APPROVE: { isSuffix: false, icon: "CheckCircle" },
+    ROOT_APPROVE: { isSuffix: false, icon: "CheckCircle" },
     SEND_BACK_FOR_CORRECTION: { isSuffix: true, icon: "ArrowForward" },
   };
 

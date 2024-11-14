@@ -221,11 +221,11 @@ function UserAccess({ category, setData, nationalRoles }) {
   ];
 
   const handleSearch = (query) => {
-    if (query?.length >= 2) {
+    // if (query?.length >= 2) {
       setSearchQuery(query);
-    } else {
-      setSearchQuery(null);
-    }
+    // } else {
+      // setSearchQuery(null);
+    // }
     // Handle search logic, such as filtering or API calls
   };
 

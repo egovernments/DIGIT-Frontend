@@ -243,7 +243,7 @@ const VillageView = () => {
                                 icon="ArrowForward"
                                 iconFill=""
                                 isSuffix
-                                label={t(`HCM_MICROPLAN_VILLAGE_SECURITY_DETAIL_LINK`)}
+                                label={data?.additionalDetails?.securityDetails ? t(`HCM_MICROPLAN_VILLAGE_SECURITY_EDIT_LINK`) : t(`HCM_MICROPLAN_VILLAGE_SECURITY_DETAIL_LINK`)}
                                 onClick={handleSecurityClick}
                                 options={[]}
                                 optionsKey=""
@@ -262,7 +262,7 @@ const VillageView = () => {
                                 icon="ArrowForward"
                                 iconFill=""
                                 isSuffix
-                                label={t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_DETAIL_LINK`)}
+                                label={data?.additionalDetails?.accessibilityDetails ? t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_DETAIL_EDIT_LINK`) : t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_DETAIL_LINK`)}
                                 onClick={handleAccibilityClick}
                                 options={[]}
                                 optionsKey=""
@@ -297,11 +297,11 @@ const VillageView = () => {
                             className="custom-class"
                             icon="Edit"
                             iconFill=""
-                            label="Edit Confirmed Population"
+                            label={t(`HCM_MICROPLAN_EDIT_CONFIRM_POPULATION_LABEL`)}
                             onClick={handleEditPopulationClick}
                             options={[]}
                             optionsKey=""
-                            size="small"
+                            size="medium"
                             style={{}}
                             title=""
                             variation="secondary"
