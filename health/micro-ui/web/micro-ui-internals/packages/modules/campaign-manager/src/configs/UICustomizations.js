@@ -299,11 +299,66 @@ export const UICustomizations = {
                 }}
               />
             </>
-          )
+          );
       }
-
     },
+  },
+  MicroplanCampaignSearchConfig: {
+    preProcess: (data, additionalDetails) => {
+      const { name, status } = data?.state?.searchForm || {};
+      data.body.PlanConfigurationSearchCriteria = {};
+      data.body.PlanConfigurationSearchCriteria.limit = data?.state?.tableForm?.limit;
+      // data.body.PlanConfigurationSearchCriteria.limit = 10
+      data.body.PlanConfigurationSearchCriteria.offset = data?.state?.tableForm?.offset;
+      data.body.PlanConfigurationSearchCriteria.name = name;
+      data.body.PlanConfigurationSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
+      data.body.PlanConfigurationSearchCriteria.userUuid = Digit.UserService.getUser().info.uuid;
+      // delete data.body.PlanConfigurationSearchCriteria.pagination
+      data.body.PlanConfigurationSearchCriteria.status = status?.status;
+      data.body.PlanConfigurationSearchCriteria.name = data?.state?.searchForm?.microplanName;
+      data.body.PlanConfigurationSearchCriteria.campaignType = data?.state?.searchForm?.campaignType?.[0]?.code;
+      return data;
+    },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      switch (key) {
+        case "NAME_OF_MICROPLAN":
+          if (value && value !== "NA") {
+            return (
+              <div
+                style={{
+                  maxWidth: "15rem", // Set the desired maximum width
+                  wordWrap: "break-word", // Allows breaking within words
+                  whiteSpace: "normal", // Ensures text wraps normally
+                  overflowWrap: "break-word", // Break long words at the edge
+                }}
+              >
+                <p>{t(value)}</p>
+              </div>
+            );
+          } else {
+            return (
+              <div>
+                <p>{t("NA")}</p>
+              </div>
+            );
+          }
 
+        case "CAMPAIGN_TYPE":
+          if (value && value != "NA") {
+            return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_TYPE_" + value))}</p>;
+          } else {
+            return (
+              <div>
+                <p>{t("NA")}</p>
+              </div>
+            );
+          }
+        case "LAST_MODIFIED_TIME":
+          return Digit.DateUtils.ConvertEpochToDate(value);
+        default:
+          return null; // Handle any unexpected keys here if needed
+      }
+    },
   },
   MyCampaignConfigOngoing: {
     preProcess: (data, additionalDetails) => {
@@ -886,7 +941,7 @@ export const UICustomizations = {
           return value ? t("CM_UPDATE_REQUEST") : t("CM_CREATE_REQUEST");
         case "CAMPAIGN_START_DATE":
           return Digit.DateUtils.ConvertEpochToDate(value);
-        case "CAMPAIGN_END_DATE":
+        case "LAST_MODIFIED_TIME":
           return Digit.DateUtils.ConvertEpochToDate(value);
         default:
           return "case_not_found";
@@ -993,7 +1048,8 @@ export const UICustomizations = {
               </Link>
             </span>
           );
-
+        case "CM_DRAFT_TYPE":
+          return value ? t("CM_UPDATE_REQUEST") : t("CM_CREATE_REQUEST");
         case "CAMPAIGN_START_DATE":
           return Digit.DateUtils.ConvertEpochToDate(value);
         case "CAMPAIGN_END_DATE":

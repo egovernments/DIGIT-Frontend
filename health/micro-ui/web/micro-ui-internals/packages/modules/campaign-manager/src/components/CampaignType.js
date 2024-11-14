@@ -19,6 +19,7 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
   const searchParams = new URLSearchParams(location.search);
   const [currentStep , setCurrentStep] = useState(1);
   const currentKey = searchParams.get("key");
+  const productType = searchParams.get("type");
   const [key, setKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
@@ -118,7 +119,7 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
               <div
                 className="campaign-type-wrapper"
                 onClick={(e) => {
-                  if (props?.props?.sessionData?.HCM_CAMPAIGN_TYPE?.projectType && !canUpdate) {
+                  if (props?.props?.sessionData?.HCM_CAMPAIGN_TYPE?.projectType && !canUpdate && productType!=="microplan") {
                     setShowPopUp(true);
                     return;
                   }
@@ -143,6 +144,8 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
                     setStartValidation(true);
                     handleChange(value);
                   }}
+                  disabled = {productType === "microplan"}
+                  
                 />
                 {error?.message && <ErrorMessage message={t(error?.message)} showIcon={true} />}
               </div>
