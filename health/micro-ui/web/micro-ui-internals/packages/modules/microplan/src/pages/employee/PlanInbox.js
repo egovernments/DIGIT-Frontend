@@ -10,6 +10,7 @@ import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
 import { tableCustomStyle } from "../../components/tableCustomStyle";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../../utils/context";
+import ConfirmationPopUp from "../../components/ConfirmationPopUp";
 
 const PlanInbox = () => {
   const { t } = useTranslation();
@@ -676,13 +677,12 @@ const PlanInbox = () => {
       )}
 
       {actionBarPopUp && (
-        <WorkflowCommentPopUp
+        <ConfirmationPopUp
           onClose={closeActionBarPopUp}
-          heading={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN_HEADING_LABEL`)}
+          alertMessage={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN_ALERT_MESSAGE`)}
           submitLabel={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN_SUBMIT_LABEL`)}
           url="/plan-service/config/_update"
           requestPayload={{ PlanConfiguration: updateWorkflowForFooterAction() }}
-          commentPath="workflow.comments"
           onSuccess={(data) => {
             history.push(`/${window.contextPath}/employee/microplan/microplan-success`, {
               responseId: data?.PlanConfiguration?.[0]?.name,
@@ -690,9 +690,6 @@ const PlanInbox = () => {
               back: t(`GO_BACK_TO_HOME`),
               backlink: `/${window.contextPath}/employee`,
             });
-          }}
-          onError={(data) => {
-            setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
           }}
         />
       )}
