@@ -20,7 +20,6 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const [searchKey, setSearchKey] = useState(0); // Key for forcing re-render of SearchJurisdiction
   const [loader, setLoader] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]); // State for selected rows
-  const [isAllSelected, setIsAllSelected] = useState(false);
   const [censusData, setCensusData] = useState([]);
   const [showToast, setShowToast] = useState(null);
   const [accessibilityData, setAccessibilityData] = useState(null);
@@ -59,7 +58,6 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     // Reset selected rows when changing tabs
     setSelectedRows([]);
     setCurrentPage(1);
-    setIsAllSelected(false);
   };
 
   useEffect(async () => {
@@ -199,7 +197,6 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
       }
     );
     setSelectedRows([]);
-    setIsAllSelected(false);
     await new Promise((resolve) => setTimeout(resolve, 500));
     setTableLoader(false);
   }
@@ -217,7 +214,6 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     const newSelectedRows = event.selectedRows.map(row => row.id);
     // Update the state with the list of selected IDs
     setSelectedRows(newSelectedRows);
-    setIsAllSelected(event.allSelected);
   };
 
   const handleViewDetailsForAccessibility = (row) => {
@@ -301,11 +297,11 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
       {
         onSuccess: async (result) => {
           setSelectedRows([]);
-          setIsAllSelected(false);
           updateDetails(newDetails);
         },
         onError: async (result) => {
           // setDownloadError(true);
+          setSelectedRows([]);
           setShowToast({ key: "error", label: t("ERROR_WHILE_UPDATING_PLANFACILITY"), transitionTime: 5000 });
         },
       }
@@ -402,7 +398,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
                         type="button"
                         onClick={handleAssignUnassign}
                         size={"large"}
-                        icon={"AddIcon"}
+                        icon={facilityAssignedStatus ? "Close" : "AddIcon"}
                       />
                     </div>
                   </div>
