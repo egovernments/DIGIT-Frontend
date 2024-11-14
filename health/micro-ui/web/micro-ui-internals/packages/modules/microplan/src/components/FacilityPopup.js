@@ -1,6 +1,6 @@
 import React, { useState, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { PopUp, Button, Tab, CheckBox, Card, Toast, SVG } from "@egovernments/digit-ui-components";
+import { PopUp, Button, Tab, CheckBox, Card, Toast, SVG,CardText } from "@egovernments/digit-ui-components";
 import SearchJurisdiction from "./SearchJurisdiction";
 import { LoaderWithGap, Loader } from "@egovernments/digit-ui-react-components";
 import DataTable from "react-data-table-component";
@@ -30,6 +30,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [boundaryData, setBoundaryData] = useState([]);
+  const [confirmUnasignPopup,setConfirmUnasignPopup]=useState(false);
   const configNavItem = [
     {
       code: t(`MICROPLAN_UNASSIGNED_FACILITIES`),
@@ -213,31 +214,57 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
 
   const columns = [
     {
-      name: t("MP_FACILITY_VILLAGE"), // Change to your column name
-      selector: (row) => t(row.boundaryCode), // Replace with the appropriate field from your data
+      name: t("MP_FACILITY_VILLAGE"),
+      selector: (row) => t(row.boundaryCode),
       sortable: false,
-    },
-    {
-      name: t("MP_VILLAGE_ACCESSIBILITY_LEVEL"), // Change to your column type
       cell: (row) => (
-        <Button label={t("VIEW_DETAILS")} onClick={() => handleViewDetailsForAccessibility(row)} variation="link" size={"medium"} style={{}} />
-      ), // Replace with the appropriate field from your data
-      sortable: false,
+        <div title={t(row.boundaryCode)} style={{ cursor: "pointer" }}>
+          {t(row.boundaryCode)}
+        </div>
+      ),
     },
     {
-      name: t("MP_VILLAGE_SECURITY_LEVEL"), // Change to your column type
+      name: t("MP_VILLAGE_ACCESSIBILITY_LEVEL"),
       cell: (row) => (
-        <Button label={t("VIEW_DETAILS")} onClick={() => handleViewDetailsForSecurity(row)} variation="link" size={"medium"} style={{}} />
-      ), // Replace with the appropriate field from your data
+        <div title={t(row.accessibilityLevel)} style={{ cursor: "pointer" }}>
+          <Button
+            label={t("VIEW_DETAILS")}
+            onClick={() => handleViewDetailsForAccessibility(row)}
+            variation="link"
+            size={"medium"}
+          />
+        </div>
+      ),
       sortable: false,
     },
     {
-      name: t("MP_FACILITY_TOTALPOPULATION"), // Change to your column type
-      selector: (row) => row.totalPopulation, // Replace with the appropriate field from your data
+      name: t("MP_VILLAGE_SECURITY_LEVEL"),
+      cell: (row) => (
+        <div title={t(row.securityLevel)} style={{ cursor: "pointer" }}>
+          <Button
+            label={t("VIEW_DETAILS")}
+            onClick={() => handleViewDetailsForSecurity(row)}
+            variation="link"
+            size={"medium"}
+          />
+        </div>
+      ),
       sortable: false,
+    },
+    {
+      name: t("MP_FACILITY_TOTALPOPULATION"),
+      selector: (row) => row.totalPopulation,
+      sortable: false,
+      cell: (row) => (
+        <div title={t(row.totalPopulation)} style={{ cursor: "pointer" }}>
+          {row.totalPopulation}
+        </div>
+      ),
     },
     // Add more columns as needed
   ];
+  
+  
 
   const planFacilityUpdateMutaionConfig = {
     url: "/plan-service/plan/facility/_update",
@@ -248,12 +275,19 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
 
   const mutationForPlanFacilityUpdate = Digit.Hooks.useCustomAPIMutationHook(planFacilityUpdateMutaionConfig);
 
-  const handleAssignUnassign = async () => {
+  const handleUnsaasignFalse= async ()=>{
+    setConfirmUnasignPopup(false);
+    return
+
+  }
+
+  const handleUnsaasignTrue= async ()=>{
     // Fetching the full data of selected rows
     setLoader(true);
     const selectedRowData = censusData.filter(row => selectedRows.includes(row.id));
     var newDetails = JSON.parse(JSON.stringify(details));
     if (facilityAssignedStatus) {
+      
       const boundarySet = new Set(selectedRowData.map((row) => {
         return row.boundaryCode
       }))
@@ -292,6 +326,54 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     // setCurrentPage(1);
     setLoader(false);
+    setConfirmUnasignPopup(false);
+
+  }
+
+  const handleAssignUnassign = async () => {
+    // Fetching the full data of selected rows
+    setLoader(true);
+    const selectedRowData = censusData.filter(row => selectedRows.includes(row.id));
+    var newDetails = JSON.parse(JSON.stringify(details));
+    if (facilityAssignedStatus) {
+      setConfirmUnasignPopup(true);
+      const boundarySet = new Set(selectedRowData.map((row) => {
+        return row.boundaryCode
+      }))
+      const filteredBoundaries = newDetails?.serviceBoundaries?.filter((boundary) => {
+        return !boundarySet.has(boundary)
+      })
+      newDetails.serviceBoundaries = filteredBoundaries
+    }else{
+      const boundarySet = new Set(selectedRowData.map((row) => {
+        return row.boundaryCode;
+      }));
+      const filteredBoundaries = [...boundarySet].filter(boundary =>
+        !newDetails.serviceBoundaries.includes(boundary)
+      );
+      newDetails.serviceBoundaries = newDetails?.serviceBoundaries?.concat(filteredBoundaries);
+    await mutationForPlanFacilityUpdate.mutate(
+      {
+        body: {
+          PlanFacility: newDetails
+        },
+      },
+      {
+        onSuccess: async (result) => {
+          setSelectedRows([]);
+          setIsAllSelected(false);
+          updateDetails(newDetails);
+        },
+        onError: async (result) => {
+          // setDownloadError(true);
+          setShowToast({ key: "error", label: t("ERROR_WHILE_UPDATING_PLANFACILITY"), transitionTime: 5000 });
+        },
+      }
+    );
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // setCurrentPage(1);
+  }
+  setLoader(false);
   };
 
   const closeViewDetails = () => {
@@ -452,6 +534,40 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
           className={"facility-popup"}
         />
       )}
+
+{confirmUnasignPopup &&  <PopUp
+            className={"popUpClass"}
+            type={"default"}
+            heading={t("FAC_UNASSIGN_CONFIRM")}
+            equalWidthButtons={true}
+            children={[
+              <div>
+                <CardText style={{ margin: 0 }}>{t("FAC_UNASSIGN_CONFIRM_DESC")}</CardText>
+              </div>,
+            ]}
+            onOverlayClick={() => {
+              setConfirmUnasignPopup(false);
+            }}
+            footerChildren={[
+              <Button
+                type={"button"}
+                size={"large"}
+                variation={"secondary"}
+                label={t("YES")}
+                onClick={
+                  
+                  handleUnsaasignTrue
+                }
+              />,
+              <Button type={"button"} size={"large"} variation={"primary"} label={t("NO")} onClick={handleUnsaasignFalse} />,
+            ]}
+            sortFooterChildren={true}
+            onClose={() => {
+              setConfirmUnasignPopup(false);
+            }}
+          ></PopUp>}
+
+
     </>
   );
 };
