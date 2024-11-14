@@ -413,12 +413,14 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
                     setShowToast({ key: "success", label: t("ACCESSIBILITY_DETAILS_UPDATE_SUCCESS"), transitionTime: 5000 });
                     closeViewDetails();
                   }}
+                  editingDisabled={true}
                 />}
                 {viewDetails && securityData && <SecurityPopUp onClose={() => closeViewDetails()} census={securityData}
                   onSuccess={(data) => {
                     setShowToast({ key: "success", label: t("SECURITY_DETAILS_UPDATE_SUCCESS"), transitionTime: 5000 });
                     closeViewDetails();
                   }}
+                  editingDisabled={true}
                 />}
               </Card>
               {showToast && (

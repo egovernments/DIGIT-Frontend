@@ -4,7 +4,7 @@ import { PopUp, Button, Dropdown, LabelFieldPair, Card, Toast } from "@egovernme
 import { useMyContext } from "../utils/context"; // Ensure that the translation function `t` is handled here
 
 
-const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
+const AccessibilityPopUp = ({ onClose, census, onSuccess, editingDisabled = false }) => {
   const { state } = useMyContext(); // Extract state from context
   const { t } = useTranslation();
 
@@ -115,6 +115,7 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
                 selected={dropdown1Value}
                 select={(value) => handleDropdownChange(value, "dropdown1")}
                 t={t}
+                disabled={editingDisabled}
               />
             </LabelFieldPair>
 
@@ -126,6 +127,7 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
                 selected={dropdown2Value}
                 select={(value) => handleDropdownChange(value, "dropdown2")}
                 t={t}
+                disabled={editingDisabled}
               />
             </LabelFieldPair>
 
@@ -160,7 +162,7 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
             label={t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_SAVE_LABEL`)}
             style={{ width: "160px" }}
             onClick={handleSave} // Calls save function on click
-            isDisabled={!isChanged() || mutation.isLoading} // Disable if no changes are made or during API call
+            isDisabled={!isChanged() || mutation.isLoading || editingDisabled} // Disable if no changes are made or during API call
           />,
         ]}
       />
