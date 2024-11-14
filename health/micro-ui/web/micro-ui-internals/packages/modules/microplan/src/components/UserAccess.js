@@ -194,7 +194,6 @@ function UserAccess({ category, setData, nationalRoles }) {
                   />
                 )}
 
-                {/* {chipPopUp && <Wrapper setShowPopUp={setChipPopUp} alreadyQueuedSelectedState={row.jurisdiction} />} */}
                 {chipPopUpRowId === row.id && (
                   <Wrapper setShowPopUp={setChipPopUpRowId} alreadyQueuedSelectedState={row.jurisdiction} />
                 )}
