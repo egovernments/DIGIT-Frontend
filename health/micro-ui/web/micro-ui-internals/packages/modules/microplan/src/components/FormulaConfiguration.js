@@ -272,7 +272,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
     <>
       <Card className="middle-child">
         <Header className="uploader-sub-heading">{t(category)}</Header>
-        <p className="mp-description">{t(`Please configure the formula with respect to the assumptions considered for resource estimation`)}</p>
+        <p className="mp-description">{t(`FORMULA_CONFIGURATION_DESCRIPTION`)}</p>
       </Card>
       <Card>
         {filteredFormulas.map((formula, index) => {
@@ -324,7 +324,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                       select={(value) => {
                         handleFormulaChange(formula.output, "input", value, category);
                       }}
-                      selected={() => ({ code: formula.input })}
+                      selected={() => (dropdownOptions?.find((i) => i.code === formula.input) ? { code: formula.input } : "")}
                       optionKey="code"
                       showToolTip={true}
                       style={{ width: "20rem" }}
@@ -354,7 +354,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                       select={(value) => {
                         handleFormulaChange(formula.output, "assumptionValue", value, category);
                       }}
-                      selected={() => ({ code: formula.assumptionValue })}
+                      selected={() => (dropdownOptions?.find((i) => i.code === formula.assumptionValue) ? { code: formula.assumptionValue } : "")}
                       optionKey="code"
                       showToolTip={true}
                       style={{ width: "15rem" }}
