@@ -36,9 +36,9 @@ const TimelinePopUpWrapper = ({ onClose, businessId, heading }) => {
                 label: t(instance?.action),
                 variant: 'completed',
                 subElements: [Digit.Utils.microplanv1.epochToDateTime(instance?.auditDetails?.lastModifiedTime),
-                instance?.assignes?.length > 0 &&
-                `${instance.assignes[0]?.name} - ${instance.assignes[0]?.roles?.[0]?.name || 'NA'}`,
-                instance.comment && t(`${instance.comment}`)
+                instance?.assigner &&
+                `${instance.assigner?.name} - ${instance.assigner?.roles?.[0]?.name || 'NA'}`,
+                instance.comment && `${t('COMMENT_PREFIX')} "${instance.comment}"`
                 ],
                 showConnector: true
             }));
