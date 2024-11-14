@@ -20,7 +20,6 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const [searchKey, setSearchKey] = useState(0); // Key for forcing re-render of SearchJurisdiction
   const [loader, setLoader] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]); // State for selected rows
-  const [isAllSelected, setIsAllSelected] = useState(false);
   const [censusData, setCensusData] = useState([]);
   const [showToast, setShowToast] = useState(null);
   const [accessibilityData, setAccessibilityData] = useState(null);
@@ -29,6 +28,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const [totalCensusCount, setTotalCensusCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [disabledAction, setDisabledAction] = useState(false);
   const [boundaryData, setBoundaryData] = useState([]);
   const configNavItem = [
     {
@@ -58,7 +58,6 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     // Reset selected rows when changing tabs
     setSelectedRows([]);
     setCurrentPage(1);
-    setIsAllSelected(false);
   };
 
   useEffect(async () => {
@@ -67,7 +66,27 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     setLoader(false);
   }, [currentPage, rowsPerPage])
 
+  // fetch the process instance for the current microplan to check if we need to disabled actions or not  
+  const { isLoading:isProcessLoading, data: processData, } = Digit.Hooks.useCustomAPIHook({
+    url: "/egov-workflow-v2/egov-wf/process/_search",
+    params: {
+       tenantId: tenantId,
+       history: true,
+        businessIds: microplanId,
+   },
+    config: {
+        enabled: true,
+        select: (data) => {
+          return data?.ProcessInstances;
+     },
+    },
+  });
 
+  useEffect(() => {
+    if (processData && processData.some((instance) => instance.action === "FINALIZE_CATCHMENT_MAPPING")) {
+      setDisabledAction(true);
+    }
+  }, [processData]);
 
 
   const { data: planEmployeeDetailsData, isLoading: isLoadingPlanEmployee } = Digit.Hooks.microplanv1.usePlanSearchEmployee({
@@ -178,25 +197,23 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
       }
     );
     setSelectedRows([]);
-    setIsAllSelected(false);
     await new Promise((resolve) => setTimeout(resolve, 500));
     setTableLoader(false);
   }
 
   useEffect(() => {
-    if (isLoadingPlanEmployee || isLoadingCampaign) {
+    if (isLoadingPlanEmployee || isLoadingCampaign || isProcessLoading) {
       setLoader(true);
     } else {
       setLoader(false);
     }
-  }, [isLoadingPlanEmployee, isLoadingCampaign]);
+  }, [isLoadingPlanEmployee, isLoadingCampaign, isProcessLoading]);
 
   const handleRowSelect = (event) => {
     // Extract the IDs of all selected rows
     const newSelectedRows = event.selectedRows.map(row => row.id);
     // Update the state with the list of selected IDs
     setSelectedRows(newSelectedRows);
-    setIsAllSelected(event.allSelected);
   };
 
   const handleViewDetailsForAccessibility = (row) => {
@@ -280,11 +297,11 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
       {
         onSuccess: async (result) => {
           setSelectedRows([]);
-          setIsAllSelected(false);
           updateDetails(newDetails);
         },
         onError: async (result) => {
           // setDownloadError(true);
+          setSelectedRows([]);
           setShowToast({ key: "error", label: t("ERROR_WHILE_UPDATING_PLANFACILITY"), transitionTime: 5000 });
         },
       }
@@ -381,7 +398,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
                         type="button"
                         onClick={handleAssignUnassign}
                         size={"large"}
-                        icon={"AddIcon"}
+                        icon={facilityAssignedStatus ? "Close" : "AddIcon"}
                       />
                     </div>
                   </div>
@@ -401,7 +418,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
                       onChangeRowsPerPage={handleRowsPerPageChange}
                       paginationRowsPerPageOptions={[10, 20, 50, 100]}
                       paginationTotalRows={totalCensusCount}
-                      selectableRows
+                      selectableRows={!disabledAction}
                       selectableRowsHighlight
                       noContextMenu
                       onSelectedRowsChange={handleRowSelect}
