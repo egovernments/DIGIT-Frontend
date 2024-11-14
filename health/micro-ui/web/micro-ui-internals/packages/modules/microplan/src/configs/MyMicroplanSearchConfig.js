@@ -22,8 +22,9 @@ const defaultSearchValues = {
            masterName: "commonUiConfig",
             moduleName: "MyMicroplanSearchConfig",  //uses same as microplan search
             minParametersForSearchForm: 0,
+            minParametersForFilterForm: 0,
             tableFormJsonPath: "requestBody.PlanConfigurationSearchCriteria.pagination",
-            // filterFormJsonPath: "requestBody.MdmsCriteria.customs",
+            filterFormJsonPath: "requestBody.PlanConfigurationSearchCriteria.customs",
             searchFormJsonPath: "requestBody.PlanConfigurationSearchCriteria",
           },
   
