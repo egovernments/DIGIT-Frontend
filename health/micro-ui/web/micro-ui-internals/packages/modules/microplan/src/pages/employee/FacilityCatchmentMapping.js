@@ -131,7 +131,7 @@ const FacilityCatchmentMapping = () => {
     return <Loader />
 
   return (
-    <React.Fragment>
+    <div style={{ marginBottom: "2.5rem" }}>
       <Header styles={{ marginBottom: "1.5rem" }}>{t("MICROPLAN_ASSIGN_CATCHMENT_VILLAGES")}</Header>
       <div className="inbox-search-wrapper">
         <InboxSearchComposer
@@ -171,8 +171,8 @@ const FacilityCatchmentMapping = () => {
       {actionBarPopUp && (
         <WorkflowCommentPopUp
           onClose={closeActionBarPopUp}
-          heading={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT`)}
-          submitLabel={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT`)}
+          heading={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT_HEADING_LABEL`)}
+          submitLabel={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT_SUBMIT_LABEL`)}
           url="/plan-service/config/_update"
           requestPayload={{ PlanConfiguration: updateWorkflowForFooterAction() }}
           commentPath="workflow.comment"
@@ -186,7 +186,7 @@ const FacilityCatchmentMapping = () => {
           }}
         />
       )}
-    </React.Fragment>
+    </div>
   );
 };
 
