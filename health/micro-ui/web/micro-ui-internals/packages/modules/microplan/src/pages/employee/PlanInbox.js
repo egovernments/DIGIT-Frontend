@@ -37,6 +37,7 @@ const PlanInbox = () => {
   const [totalRows, setTotalRows] = useState(0);
   const [perPage, setPerPage] = useState(10);
   const [showToast, setShowToast] = useState(null);
+  const [disabledAction, setDisabledAction] = useState(false);
   const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   const [activeLink, setActiveLink] = useState({
@@ -301,6 +302,29 @@ const PlanInbox = () => {
     }
   }, [selectedFilter, activeLink, censusJurisdiction, limitAndOffset]);
 
+
+  // fetch the process instance for the current microplan to check if we need to disabled actions or not  
+  const { isLoading:isProcessLoading, data: processData, } = Digit.Hooks.useCustomAPIHook({
+    url: "/egov-workflow-v2/egov-wf/process/_search",
+    params: {
+       tenantId: tenantId,
+       history: true,
+        businessIds: microplanId,
+   },
+    config: {
+        enabled: true,
+        select: (data) => {
+          return data?.ProcessInstances;
+     },
+    },
+  });
+
+  useEffect(() => {
+    if (processData && processData.some((instance) => instance.action === "APPROVE_ESTIMATIONS")) {
+      setDisabledAction(true);
+    }
+  }, [processData]);
+
   useEffect(() => {
     if (selectedFilter === "VALIDATED") {
       setActiveLink({ code: "", name: "" });
@@ -487,7 +511,7 @@ const PlanInbox = () => {
     SEND_BACK_FOR_CORRECTION: { isSuffix: true, icon: "ArrowForward" },
   };
 
-  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isWorkflowLoading) {
+  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isWorkflowLoading || isProcessLoading) {
     return <Loader />;
   }
 
@@ -612,7 +636,7 @@ const PlanInbox = () => {
                 data={planWithCensus?.tableData}
                 pagination
                 paginationServer
-                selectableRows
+                selectableRows={!disabledAction}
                 selectableRowsHighlight
                 onChangeRowsPerPage={handlePerRowsChange}
                 onChangePage={handlePageChange}
