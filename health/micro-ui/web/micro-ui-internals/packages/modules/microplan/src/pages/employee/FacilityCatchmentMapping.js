@@ -132,7 +132,7 @@ const FacilityCatchmentMapping = () => {
     return <Loader />
 
   return (
-    <React.Fragment>
+    <div style={{ marginBottom: "2.5rem" }}>
       <Header styles={{ marginBottom: "1.5rem" }}>{t("MICROPLAN_ASSIGN_CATCHMENT_VILLAGES")}</Header>
       <div className="inbox-search-wrapper">
         <InboxSearchComposer
@@ -186,7 +186,7 @@ const FacilityCatchmentMapping = () => {
           }}
         />
       )}
-    </React.Fragment>
+    </div>
   );
 };
 

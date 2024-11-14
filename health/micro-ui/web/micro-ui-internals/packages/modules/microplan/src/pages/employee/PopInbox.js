@@ -37,6 +37,7 @@ const PopInbox = () => {
   const [employeeNameMap, setEmployeeNameMap] = useState({});
   const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
   const [assignedToMeCount, setAssignedToMeCount] = useState(0);
+  const [disabledAction, setDisabledAction] = useState(false);
   const [assignedToAllCount, setAssignedToAllCount] = useState(0);
   const [updatedCensus, setUpdatedCensus] = useState(null);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
@@ -65,6 +66,30 @@ const PopInbox = () => {
       //   queryKey: currentKey,
     }
   );
+
+
+  // fetch the process instance for the current microplan to check if we need to disabled actions or not
+  const { isLoading:isProcessLoading, data: processData, } = Digit.Hooks.useCustomAPIHook({
+    url: "/egov-workflow-v2/egov-wf/process/_search",
+    params: {
+        tenantId: tenantId,
+        history: true,
+        businessIds: microplanId,
+    },
+    config: {
+        enabled: true,
+        select: (data) => {
+          return data?.ProcessInstances;
+      },
+    },
+  });
+
+
+  useEffect(() => {
+    if (processData && processData.some((instance) => instance.action === "APPROVE_CENSUS_DATA")) {
+      setDisabledAction(true);
+    }
+  }, [processData]);
 
 
   const handleActionBarClick = () => {
@@ -542,7 +567,7 @@ const PopInbox = () => {
                 setUpdatedCensus(data);
                 setShowComment(true);
               }}
-              conditionalRowStyles={conditionalRowStyles} />}
+              conditionalRowStyles={conditionalRowStyles} disabledAction={disabledAction}/>}
           </Card>
           {showComment && (
             <WorkflowCommentPopUp
