@@ -398,6 +398,7 @@ const PopInbox = () => {
     "VALIDATE": { isSuffix: false, icon: "CheckCircle" },
     "EDIT_AND_SEND_FOR_APPROVAL": { isSuffix: false, icon: "Edit" },
     "APPROVE": { isSuffix: false, icon: "CheckCircle" },
+    "ROOT_APPROVE": { isSuffix: false, icon: "CheckCircle" },
     "SEND_BACK_FOR_CORRECTION": { isSuffix: true, icon: "ArrowForward" },
   }
 
