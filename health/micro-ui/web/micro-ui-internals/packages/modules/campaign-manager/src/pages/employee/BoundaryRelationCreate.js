@@ -111,6 +111,7 @@ const BoundaryRelationCreate = () => {
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     const generateTemplate = async() => {
+        const hier = (newHierarchy === false) ? defaultHierarchyType : hierarchyType;
         const res = await Digit.CustomService.getResponse({
             url: `/project-factory/v1/data/_download`,
             body: {
@@ -118,7 +119,7 @@ const BoundaryRelationCreate = () => {
             params: {
                 tenantId: tenantId,
                 type: "boundaryManagement",
-                hierarchyType: defaultHierarchyType,
+                hierarchyType: hier,
                 campaignId: "default"
             }
         });
