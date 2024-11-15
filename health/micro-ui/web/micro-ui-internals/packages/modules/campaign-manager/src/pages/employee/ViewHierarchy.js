@@ -120,7 +120,7 @@ const ViewHierarchy = () => {
             // Call function to upload the selected file to an API
             await uploadFileToAPI(file);
             setDisableFile(true);
-            setShowToast({ label: t("FILE_UPLOADED_SUCCESSFULLY"), isError:"info"});
+            setShowToast({ label: t("FILE_UPLOADED_SUCCESSFULLY"), isError:"success"});
           } catch (error) {
             setShowToast({ label: error?.response?.data?.Errors?.[0]?.message ? error?.response?.data?.Errors?.[0]?.message : t("FILE_UPLOAD_FAILED") , isError:"error" });
           }

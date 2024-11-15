@@ -126,17 +126,7 @@ const BoundaryRelationCreate = () => {
         return res;
 
     }
-    // const downloadExcelTemplate = async() => {
-    //     const resFile = await generateTemplate();
-    //     if (resFile && resFile?.GeneratedResource?.[0]?.fileStoreid) {
-    //         setFileStoreId(resFile?.GeneratedResource?.[0]?.fileStoreid);
-    //     }
-    //     else if ( resFile && resFile?.GeneratedResource?.[0]?.status === "inprogress"){
-    //       setShowToast({label: "PLEASE_WAIT_AND_RETRY_AFTER_SOME_TIME", isError: "info" });
-    //       setShowPopUp(false);
-    //     }
 
-    // }
     const pollForTemplateGeneration = async () => {
         const pollInterval = 2000; // Poll every 2 seconds
         const maxRetries = 50; // Maximum number of retries
@@ -203,7 +193,6 @@ const BoundaryRelationCreate = () => {
                 errorMessage = "TEMPLATE_GENERATION_FAILED";
             }
             setShowToast({ label: errorMessage, isError: "error" });
-            setShowPopUp(false);
             throw error; // Propagate the error to the calling function
         }
     }
