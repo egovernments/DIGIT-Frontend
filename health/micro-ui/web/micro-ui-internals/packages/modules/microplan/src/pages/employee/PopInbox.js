@@ -120,7 +120,6 @@ const PopInbox = () => {
 //     queryKey: 'totalData'
 // });
 
-console.log(totalStatusCount, 'ttttttttttttttttttttttttttttt');
 
   // fetch the process instance for the current microplan to check if we need to disabled actions or not
   const { isLoading:isProcessLoading, data: processData, } = Digit.Hooks.useCustomAPIHook({
