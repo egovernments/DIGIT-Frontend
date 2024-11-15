@@ -97,7 +97,7 @@ const useBoundaryHome = ({ screenType = "campaign", defaultHierarchyType = "", h
       const defaultHierarchyName=defaultHierarchyType || final?.["default"]?.hierarchy;
       const boundaryData = await fetchBoundaryHierarchy(hierarchyName, tenantId);
       const defaultBoundaryData = await fetchBoundaryHierarchy(defaultHierarchyName, tenantId);
-      boundaryData && generateFile(hierarchyType || boundaryConfig?.hierarchy, tenantId);
+      // boundaryData && generateFile(hierarchyType || boundaryConfig?.hierarchy, tenantId);
 
       // Return a promise that resolves after both API calls are complete
       return new Promise((resolve) => {
