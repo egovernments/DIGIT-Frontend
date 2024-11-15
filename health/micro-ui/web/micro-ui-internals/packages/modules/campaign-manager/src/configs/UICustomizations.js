@@ -149,8 +149,8 @@ export const UICustomizations = {
                   history.push(`/${window.contextPath}/employee/campaign/checklist/create?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}`)
                 }}
               />
-              )
-             }
+            );
+          }
         default:
           return value;
       }
@@ -299,11 +299,63 @@ export const UICustomizations = {
                 }}
               />
             </>
-          )
+          );
       }
-
     },
+  },
+  MicroplanCampaignSearchConfig: {
+    preProcess: (data, additionalDetails) => {
+      const url = window.location.pathname;
+      const queryString = url.includes("?") ? url.split("?")[1] : url.split("&").slice(1).join("&");
+      const searchParams = new URLSearchParams(queryString);
+      const userId = searchParams.get("userId");
+      const status = searchParams.get("status");
+      data.body.PlanConfigurationSearchCriteria.userUuid = userId;
+      data.body.PlanConfigurationSearchCriteria.status = [status];
+      data.body.PlanConfigurationSearchCriteria.name = data?.state?.searchForm?.microplanName;
+      // data.body.PlanConfigurationSearchCriteria.campaignType = data?.state?.searchForm?.campaignType?.[0]?.code;
+      return data;
+    },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      switch (key) {
+        case "NAME_OF_MICROPLAN":
+          if (value && value !== "NA") {
+            return (
+              <div
+                style={{
+                  maxWidth: "15rem",
+                  wordWrap: "break-word",
+                  whiteSpace: "normal",
+                  overflowWrap: "break-word",
+                }}
+              >
+                <p>{t(value)}</p>
+              </div>
+            );
+          } else {
+            return (
+              <div>
+                <p>{t("NA")}</p>
+              </div>
+            );
+          }
 
+        case "CAMPAIGN_TYPE":
+          if (value && value != "NA") {
+            return <p>{t(Digit.Utils.locale.getTransformedLocale("CAMPAIGN_TYPE_" + value))}</p>;
+          } else {
+            return (
+              <div>
+                <p>{t("NA")}</p>
+              </div>
+            );
+          }
+        case "LAST_MODIFIED_TIME":
+          return Digit.DateUtils.ConvertEpochToDate(value);
+        default:
+          return null; // Handle any unexpected keys here if needed
+      }
+    },
   },
   MyCampaignConfigOngoing: {
     preProcess: (data, additionalDetails) => {
@@ -397,7 +449,6 @@ export const UICustomizations = {
             setTimeline(true);
             break;
           case "ACTION_LABEL_CONFIGURE_APP":
-
             window.history.pushState(
               {
                 name: row?.campaignName,
@@ -715,7 +766,6 @@ export const UICustomizations = {
             setTimeline(true);
             break;
 
-
           case "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS":
             window.history.pushState(
               {
@@ -735,7 +785,7 @@ export const UICustomizations = {
                 name: row?.campaignName,
                 data: row,
                 projectId: row?.projectId,
-                campaignType: row?.projectType
+                campaignType: row?.projectType,
               },
               "",
               `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}&campaignId=${row?.id}&projectType=${row?.projectType}`
@@ -886,7 +936,7 @@ export const UICustomizations = {
           return value ? t("CM_UPDATE_REQUEST") : t("CM_CREATE_REQUEST");
         case "CAMPAIGN_START_DATE":
           return Digit.DateUtils.ConvertEpochToDate(value);
-        case "CAMPAIGN_END_DATE":
+        case "LAST_MODIFIED_TIME":
           return Digit.DateUtils.ConvertEpochToDate(value);
         default:
           return "case_not_found";
@@ -977,8 +1027,8 @@ export const UICustomizations = {
             setTimeline(true);
             break;
           case "ACTION_LABEL_RETRY":
-            retryCampaign(row,searchResult);
-              break;
+            retryCampaign(row, searchResult);
+            break;
           default:
             console.log(value);
             break;
@@ -993,7 +1043,8 @@ export const UICustomizations = {
               </Link>
             </span>
           );
-
+        case "CM_DRAFT_TYPE":
+          return value ? t("CM_UPDATE_REQUEST") : t("CM_CREATE_REQUEST");
         case "CAMPAIGN_START_DATE":
           return Digit.DateUtils.ConvertEpochToDate(value);
         case "CAMPAIGN_END_DATE":
@@ -1006,7 +1057,10 @@ export const UICustomizations = {
                 type="actionButton"
                 variation="secondary"
                 label={"Action"}
-                options={[{ key: 1, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },{ key: 2, code: "ACTION_LABEL_RETRY", i18nKey: t("ACTION_LABEL_RETRY") }].filter(obj=>Digit.Utils.didEmployeeHasAtleastOneRole(["SYSTEM_ADMINISTRATOR"]||obj?.key!=2))}  //added retry for system adminstrator for failed campaign
+                options={[
+                  { key: 1, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
+                  { key: 2, code: "ACTION_LABEL_RETRY", i18nKey: t("ACTION_LABEL_RETRY") },
+                ].filter((obj) => Digit.Utils.didEmployeeHasAtleastOneRole(["SYSTEM_ADMINISTRATOR"] || obj?.key != 2))} //added retry for system adminstrator for failed campaign
                 optionsKey="i18nKey"
                 showBottom={true}
                 isSearchable={false}

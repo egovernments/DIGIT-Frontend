@@ -191,8 +191,8 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
       if (typeof formData?.campaignName !== "string" || !formData?.campaignName.trim()) {
         setShowToast({ key: "error", label: "CAMPAIGN_NAME_MISSING_TYPE_ERROR" });
         return false;
-      } else if (formData.campaignName.length > 250) {
-        setShowToast({ key: "error", label: "CAMPAIGN_NAME_TOO_LONG_ERROR" });
+      } else if (formData.campaignName.length > 30) {
+        setShowToast({ key: "error", label: "CAMPAIGN_NAME_LONG_ERROR" });
         return false;
       } else {
         setShowToast(null);
