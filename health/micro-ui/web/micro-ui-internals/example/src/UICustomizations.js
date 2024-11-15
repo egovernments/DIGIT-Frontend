@@ -1230,7 +1230,8 @@ export const UICustomizations = {
         case "MICROPLAN_FACILITY_ASSIGNED_VILLAGES":
           const assignedVillages = row?.serviceBoundaries;
           return assignedVillages ? assignedVillages.length : null;
-          case "HCM_MICROPLAN_FACILITY_VIEW_ASSIGNMENT" || "HCM_MICROPLAN_FACILITY_ACTION_ASSIGNMENT":
+        case "HCM_MICROPLAN_FACILITY_VIEW_ASSIGNMENT":
+        case "HCM_MICROPLAN_FACILITY_ACTION_ASSIGNMENT":
           return (
             <>
               <ButtonNew

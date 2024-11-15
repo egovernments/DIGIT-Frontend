@@ -73,10 +73,29 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
       ...confirmedValues,
       [fieldKey]: value,
     });
+  
+    let error = !value || Number(value) <= 0 || Number(value) > 100000;
+  
+   // Additional check for TARGET_POPULATION vs TOTAL_POPULATION
+  if (fieldKey.includes("TARGET_POPULATION")) {
+    // Find the corresponding TOTAL_POPULATION field with the same prefix
+    const totalPopulationField = census.additionalFields.find(field => 
+      field.key.includes("TOTAL_POPULATION") &&
+      field.key.replace("TOTAL_POPULATION", "") === fieldKey.replace("TARGET_POPULATION", "")
+    );
 
+    if (totalPopulationField) {
+      const totalPopulationValue = confirmedValues[totalPopulationField.key] || totalPopulationField.value;
+
+      if (Number(value) > Number(totalPopulationValue)) {
+        setShowToast({ key: "error", label: t("HCM_MICROPLAN_TARGET_CANNOT_EXCEED_TOTAL") });
+      }
+    }
+  }
+  
     setErrors((prev) => ({
       ...prev,
-      [fieldKey]: !value || Number(value) <= 0 || Number(value) > 100000
+      [fieldKey]: error,
     }));
   };
 

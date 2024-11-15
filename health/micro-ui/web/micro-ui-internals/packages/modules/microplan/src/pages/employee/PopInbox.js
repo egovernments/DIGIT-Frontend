@@ -40,6 +40,8 @@ const PopInbox = () => {
   const [disabledAction, setDisabledAction] = useState(false);
   const [assignedToAllCount, setAssignedToAllCount] = useState(0);
   const [updatedCensus, setUpdatedCensus] = useState(null);
+  const [triggerTotalCensus, setTriggerTotalCensus] = useState(false);
+  const [totalStatusCount, setTotalStatusCount] = useState({});
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   const [activeLink, setActiveLink] = useState({
     code: "ASSIGNED_TO_ME",
@@ -67,6 +69,58 @@ const PopInbox = () => {
     }
   );
 
+  useEffect(() => {
+    fetchStatusCount();
+  }, [planObject]);
+
+  const fetchStatusCount = async () => {
+    if (planObject) {
+      try {
+        await mutation.mutateAsync(
+          {
+            body: {
+              CensusSearchCriteria: {
+                tenantId: tenantId,
+                source: microplanId,
+              },
+            }
+          },
+          {
+            onSuccess: (data) => {
+              setTotalStatusCount(data?.StatusCount);
+            },
+            onError: (error) => {
+              setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+            }
+          }
+        );
+      } catch (error) {
+        setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+      }
+    }
+  };
+
+
+  const mutation = Digit.Hooks.useCustomAPIMutationHook({
+    url: "/census-service/_search",
+  });
+
+// // fetch the total census data for showing footer action
+// const { isLoading:isLoadingTotalCensus, data: totalCensusData, } = Digit.Hooks.useCustomAPIHook({
+//   url: `/census-service/_search`,
+//     body: {
+//       CensusSearchCriteria: {
+//         tenantId: tenantId,
+//         source: microplanId,
+//       },
+//     },
+//     config: {
+//       enabled: triggerTotalCensus,
+//     },
+//     queryKey: 'totalData'
+// });
+
+console.log(totalStatusCount, 'ttttttttttttttttttttttttttttt');
 
   // fetch the process instance for the current microplan to check if we need to disabled actions or not
   const { isLoading:isProcessLoading, data: processData, } = Digit.Hooks.useCustomAPIHook({
@@ -101,6 +155,10 @@ const PopInbox = () => {
     if (selectedBoundaries.length === 0) {
       setShowToast({ key: "warning", label: t("MICROPLAN_BOUNDARY_IS_EMPTY_WARNING"), transitionTime: 5000 });
     } else {
+      setActiveLink({
+        code: "ASSIGNED_TO_ME",
+        name: "ASSIGNED_TO_ME"
+      });
       // Extract the list of codes from the selectedBoundaries array
       const boundaryCodes = selectedBoundaries.map((boundary) => boundary.code);
 
@@ -381,16 +439,16 @@ const PopInbox = () => {
   };
 
 
-  // Function to check the status count condition
-  const isStatusConditionMet = (statusCount) => {
-    // Extract all keys and values from statusCount object
-    const statusValues = Object.keys(statusCount).map((key) => statusCount[key]);
+ // Function to check the status count condition
+const isStatusConditionMet = (statusCount) => {
+  // Return false if statusCount is null or an empty object
+  if (!statusCount || Object.keys(statusCount).length === 0) return false;
 
-    // Check if all statuses except "VALIDATED" are 0, and "VALIDATED" is more than 0
-    return Object.keys(statusCount).every(
-      (key) => (key === "VALIDATED" ? statusCount[key] > 0 : statusCount[key] === 0)
-    );
-  };
+  // Check if all statuses except "VALIDATED" are 0, and "VALIDATED" is more than 0
+  return Object.keys(statusCount).every(
+    (key) => (key === "VALIDATED" ? statusCount[key] > 0 : statusCount[key] === 0)
+  );
+};
 
 
   // This function will update the workflow action for every selected row
@@ -443,7 +501,7 @@ const PopInbox = () => {
     },
   ];
 
-  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading || isWorkflowLoading || isEmployeeLoading) {
+  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading || isWorkflowLoading || isEmployeeLoading || mutation.isLoading) {
     return <Loader />;
   }
 
@@ -461,7 +519,7 @@ const PopInbox = () => {
         onClear={onClear}
       />
 
-        <div className="pop-inbox-wrapper-filter-table-wrapper" style={{ marginBottom: isRootApprover && isStatusConditionMet(activeFilter) && planObject?.status === "CENSUS_DATA_APPROVAL_IN_PROGRESS" ? "2.5rem" : "0rem" }}>
+        <div className="pop-inbox-wrapper-filter-table-wrapper" style={{ marginBottom: isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "CENSUS_DATA_APPROVAL_IN_PROGRESS" ? "2.5rem" : "0rem" }}>
           <InboxFilterWrapper
             options={activeFilter}
             onApplyFilters={onFilter}
@@ -555,6 +613,7 @@ const PopInbox = () => {
                         setShowToast({ key: "success", label: t("POP_INBOX_WORKFLOW_UPDATE_SUCCESS"), transitionTime: 5000 });
                         refetch();
                         refetchPlan();
+                        fetchStatusCount();
                       }}
                       onError={(data) => {
                         setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
@@ -602,7 +661,7 @@ const PopInbox = () => {
         style={{}}
       /> */}
 
-      {isRootApprover && isStatusConditionMet(activeFilter) && planObject?.status === "CENSUS_DATA_APPROVAL_IN_PROGRESS" &&
+      {isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "CENSUS_DATA_APPROVAL_IN_PROGRESS" &&
         <ActionBar
           actionFields={[
             <Button icon="CheckCircle" label={t(`HCM_MICROPLAN_FINALIZE_POPULATION_DATA`)} onClick={handleActionBarClick} type="button" variation="primary" />,
