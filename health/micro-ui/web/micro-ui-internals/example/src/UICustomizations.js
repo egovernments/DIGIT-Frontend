@@ -1223,6 +1223,8 @@ export const UICustomizations = {
       const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
 
       switch (key) {
+        case "MICROPLAN_FACILITY_SERVINGPOPULATION":
+          return row?.additionalDetails?.servingPopulation;
         case "MICROPLAN_FACILITY_RESIDINGVILLAGE":
           return t(row?.residingBoundary);
         case "MICROPLAN_FACILITY_ASSIGNED_VILLAGES":

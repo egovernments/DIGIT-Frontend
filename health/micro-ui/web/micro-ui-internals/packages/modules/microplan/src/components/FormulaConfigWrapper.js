@@ -142,7 +142,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
             ...formula,
             source: formula?.source || "MDMS",
             category,
-            [type]: value.code, // Set to null if input is empty
+            [type]: value?.code, // Set to null if input is empty
           };
         }
         return formula;

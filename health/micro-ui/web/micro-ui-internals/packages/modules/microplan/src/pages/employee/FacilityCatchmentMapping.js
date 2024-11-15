@@ -5,6 +5,7 @@ import { useHistory } from "react-router-dom";
 import facilityMappingConfig from "../../configs/FacilityMappingConfig";
 import { Loader, ActionBar, Button } from "@egovernments/digit-ui-components";
 import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
+import ConfirmationPopUp from "../../components/ConfirmationPopUp";
 
 const FacilityCatchmentMapping = () => {
   const [actionBarPopUp, setactionBarPopUp] = useState(false);
@@ -131,7 +132,7 @@ const FacilityCatchmentMapping = () => {
     return <Loader />
 
   return (
-    <React.Fragment>
+    <div style={{ marginBottom: "2.5rem" }}>
       <Header styles={{ marginBottom: "1.5rem" }}>{t("MICROPLAN_ASSIGN_CATCHMENT_VILLAGES")}</Header>
       <div className="inbox-search-wrapper">
         <InboxSearchComposer
@@ -169,13 +170,12 @@ const FacilityCatchmentMapping = () => {
       )}
 
       {actionBarPopUp && (
-        <WorkflowCommentPopUp
+        <ConfirmationPopUp
           onClose={closeActionBarPopUp}
-          heading={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT`)}
+          alertMessage={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT_ALERT_MESSAGE`)}
           submitLabel={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT`)}
           url="/plan-service/config/_update"
           requestPayload={{ PlanConfiguration: updateWorkflowForFooterAction() }}
-          commentPath="workflow.comment"
           onSuccess={(data) => {
             history.push(`/${window.contextPath}/employee/microplan/village-finalise-success`, {
               fileName: data?.PlanConfiguration?.[0]?.name,
@@ -186,7 +186,7 @@ const FacilityCatchmentMapping = () => {
           }}
         />
       )}
-    </React.Fragment>
+    </div>
   );
 };
 
