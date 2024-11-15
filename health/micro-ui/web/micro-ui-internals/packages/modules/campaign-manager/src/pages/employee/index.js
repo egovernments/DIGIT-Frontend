@@ -151,7 +151,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
           <PrivateRoute path={`${path}/boundary/view-all-hierarchy`} component={()=> <ViewBoundary />} />
           <PrivateRoute path={`${path}/boundary/data`} component={()=> <ViewHierarchy />} />
           <PrivateRoute path={`${path}/update-campaign`} component={() => <UpdateCampaign />} />
-          <PrivateRoute path={`${path}/setup-microplan&userId=${userId}&status=${microplanStatus}`} component={() => <MyMicroplans />} />
+          <PrivateRoute path={`${path}/setup-from-microplan`} component={() => <MyMicroplans />} />
         </AppContainer>
       </Switch>
     </React.Fragment>

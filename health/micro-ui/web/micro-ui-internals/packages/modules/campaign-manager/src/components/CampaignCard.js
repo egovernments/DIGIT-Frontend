@@ -40,7 +40,7 @@ const CampaignCard = () => {
     },  
     { 
       label: t("ACTION_TEST_SETUP_CAMPAIGN_FROM_MICROPLAN"),
-      link: `/${window?.contextPath}/employee/campaign/setup-microplan&userId=${userId}&status=${microplanStatus}`,
+      link: `/${window?.contextPath}/employee/campaign/setup-from-microplan&userId=${userId}&status=${microplanStatus}`,
       roles: ROLES.CAMPAIGN_MANAGER
     },
     {

@@ -119,7 +119,7 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
               <div
                 className="campaign-type-wrapper"
                 onClick={(e) => {
-                  if (props?.props?.sessionData?.HCM_CAMPAIGN_TYPE?.projectType && !canUpdate && productType!=="microplan") {
+                  if (props?.props?.sessionData?.HCM_CAMPAIGN_TYPE?.projectType && !canUpdate && source!=="microplan") {
                     setShowPopUp(true);
                     return;
                   }
