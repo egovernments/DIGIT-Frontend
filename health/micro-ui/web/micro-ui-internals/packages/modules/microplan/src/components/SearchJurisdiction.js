@@ -1,4 +1,4 @@
-import { LabelFieldPair, CardLabel, SubmitBar, LinkLabel } from "@egovernments/digit-ui-components";
+import { LabelFieldPair, CardLabel, SubmitBar, LinkLabel, InfoCard } from "@egovernments/digit-ui-components";
 import React, { useEffect, Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useMyContext } from "../utils/context";
@@ -51,6 +51,12 @@ const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, on
 
   return (
     <div className={"search-wrapper"} style={style}>
+      <InfoCard
+      variant="info"
+      text={t("HCM_MICROPLAN_SEARCH_JURISDICTION_INFO_DESCRIPTION")}
+      label={t("HCM_MICROPLAN_SEARCH_JURISDICTION_INFO_HEADING")}
+      style={{ marginTop: ".5rem", marginBottom: "1rem", maxWidth: "100%" }}
+      />
       <div className={`search-field-wrapper search custom-both-clear-search`}>
         <LabelFieldPair style={{ flexDirection: "column", gap: "0rem" }}>
           <CardLabel style={{ width: "100%" }}>{t("SELECT_HIERARCHY_LEVEL")}</CardLabel>
