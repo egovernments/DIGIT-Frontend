@@ -57,7 +57,7 @@ const ChooseActivity = () => {
       const hasValidCurrentStatus = validStatuses?.includes(planObject?.status);
 
       // Disable if either hasValidRole or hasValidNextAction is false
-      return !(hasValidRole && hasValidCurrentStatus /*hasValidNextAction*/ );
+      return !(hasValidRole && hasValidCurrentStatus) /*hasValidNextAction*/;
 };
 
 // Usage in activityCardData
@@ -85,9 +85,10 @@ const ChooseActivity = () => {
       },
       {
         name: t("GEOSPATIAL_MAP_VIEW"),
-        link: null,
-        icon: <SVG.LocationOn height="36" width="36" fill={isCardDisabled([], workflowData) ? "#C5C5C5" : "#C84C0E"} />,
-        disable: isCardDisabled([], workflowData),
+        link: `map-view?campaignId=${campaignId}&microplanId=${microplanId}`,
+        icon: <SVG.LocationOn height="36" width="36" 
+        fill={isCardDisabled(["POPULATION_DATA_APPROVER","ROOT_POPULATION_DATA_APPROVER","FACILITY_CATCHMENT_MAPPER","ROOT_FACILITY_CATCHMENT_MAPPER","MICROPLAN_VIEWER","PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"], workflowData, ["RESOURCE_ESTIMATION_IN_PROGRESS","RESOURCE_ESTIMATIONS_APPROVED"]) ? "#C5C5C5" : "#C84C0E"}/>,
+        disable: isCardDisabled(["POPULATION_DATA_APPROVER","ROOT_POPULATION_DATA_APPROVER","FACILITY_CATCHMENT_MAPPER","ROOT_FACILITY_CATCHMENT_MAPPER","MICROPLAN_VIEWER","PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"], workflowData, ["RESOURCE_ESTIMATION_IN_PROGRESS","RESOURCE_ESTIMATIONS_APPROVED"]),
         optionKey: "GEOSPATIAL_MAP_VIEW"
       },
       //commenting this as for now we are not showing viewer
