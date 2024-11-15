@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
 import { Header } from "@egovernments/digit-ui-react-components";
+import ConfirmationPopUp from "../../components/ConfirmationPopUp";
 
 const PopInbox = () => {
   const { t } = useTranslation();
@@ -613,13 +614,12 @@ const PopInbox = () => {
         />}
 
       {actionBarPopUp && (
-        <WorkflowCommentPopUp
+        <ConfirmationPopUp
           onClose={closeActionBarPopUp}
-          heading={t(`HCM_MICROPLAN_FINALIZE_POPULATION_DATA_LABEL`)}
+          alertMessage={t(`HCM_MICROPLAN_FINALIZE_POPULATION_ALERT_MESSAGE`)}
           submitLabel={t(`HCM_MICROPLAN_FINALIZE_POPULATION_DATA_SUBMIT_ACTION`)}
           url="/plan-service/config/_update"
           requestPayload={{ PlanConfiguration: updateWorkflowForFooterAction() }}
-          commentPath="workflow.comments"
           onSuccess={(data) => {
             history.push(`/${window.contextPath}/employee/microplan/population-finalise-success`, {
               fileName: data?.PlanConfiguration?.[0]?.name,
@@ -627,9 +627,6 @@ const PopInbox = () => {
               back: t(`GO_BACK_TO_HOME`),
               backlink: `/${window.contextPath}/employee`
             });
-          }}
-          onError={(data) => {
-            setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
           }}
         />
       )}
