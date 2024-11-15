@@ -19,6 +19,7 @@ const FacilityCatchmentMapping = () => {
   const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
   const [currentRow, setCurrentRow] = useState(null);
   const [projectType, setProjectType] = useState('');
+  const [disabledAction, setDisabledAction] = useState(false);
   const [censusQueryName, setCensusQueryName] = useState("censusData");
   // Check if the user has the 'rootfacilitycatchmentmapper' role
   const isRootApprover = userRoles?.includes("ROOT_FACILITY_CATCHMENT_MAPPER");
@@ -94,6 +95,30 @@ const FacilityCatchmentMapping = () => {
   );
 
 
+   // fetch the process instance for the current microplan to check if we need to disabled actions or not
+   const { isLoading:isProcessLoading, data: processData, } = Digit.Hooks.useCustomAPIHook({
+    url: "/egov-workflow-v2/egov-wf/process/_search",
+    params: {
+        tenantId: tenantId,
+        history: true,
+        businessIds: url?.microplanId,
+    },
+    config: {
+        enabled: true,
+        select: (data) => {
+          return data?.ProcessInstances;
+      },
+    },
+  });
+
+
+  useEffect(() => {
+    if (processData && processData.some((instance) => instance.action === "APPROVE_CENSUS_DATA")) {
+      setDisabledAction(true);
+    }
+  }, [processData]);
+
+
   const handleActionBarClick = () => {
     setactionBarPopUp(true);
   };
@@ -126,13 +151,13 @@ const FacilityCatchmentMapping = () => {
     setCurrentRow(row.original)
   }
 
-  const config = facilityMappingConfig(projectType);
+  const config = facilityMappingConfig(projectType, disabledAction);
 
-  if (isPlanEmpSearchLoading || isLoading || isLoadingPlanObject || isLoadingCampaignObject)
+  if (isPlanEmpSearchLoading || isLoading || isLoadingPlanObject || isLoadingCampaignObject || isProcessLoading)
     return <Loader />
 
   return (
-    <div style={{ marginBottom: "2.5rem" }}>
+    <div style={{ marginBottom: isRootApprover && data?.TotalCount === 0 && planObject?.status === "CENSUS_DATA_APPROVED" ?"2.5rem" :"0rem"}}>
       <Header styles={{ marginBottom: "1.5rem" }}>{t("MICROPLAN_ASSIGN_CATCHMENT_VILLAGES")}</Header>
       <div className="inbox-search-wrapper">
         <InboxSearchComposer

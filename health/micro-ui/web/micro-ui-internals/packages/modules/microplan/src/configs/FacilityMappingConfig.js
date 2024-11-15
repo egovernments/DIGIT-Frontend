@@ -1,6 +1,6 @@
 import { useMyContext } from "../utils/context";
 
-const facilityMappingConfig = (projectType) => {
+const facilityMappingConfig = (projectType, disabledAction) => {
 
   const { state, dispatch } = useMyContext();
   return {
@@ -145,7 +145,7 @@ const facilityMappingConfig = (projectType) => {
               additionalCustomization: true,
             },
             {
-              label: "MICROPLAN_FACILITY_ACTION",
+              label: disabledAction ? "HCM_MICROPLAN_FACILITY_VIEW_ASSIGNMENT":"HCM_MICROPLAN_FACILITY_ACTION_ASSIGNMENT",
               jsonPath: "",
               additionalCustomization: true,
             },

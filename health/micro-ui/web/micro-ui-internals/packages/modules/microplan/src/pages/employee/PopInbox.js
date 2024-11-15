@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { useHistory } from "react-router-dom";
 import PopInboxTable from "../../components/PopInboxTable";
-import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonsGroup } from "@egovernments/digit-ui-components";
+import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonsGroup, NoResultsFound } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
@@ -40,6 +40,8 @@ const PopInbox = () => {
   const [disabledAction, setDisabledAction] = useState(false);
   const [assignedToAllCount, setAssignedToAllCount] = useState(0);
   const [updatedCensus, setUpdatedCensus] = useState(null);
+  const [triggerTotalCensus, setTriggerTotalCensus] = useState(false);
+  const [totalStatusCount, setTotalStatusCount] = useState({});
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   const [activeLink, setActiveLink] = useState({
     code: "ASSIGNED_TO_ME",
@@ -66,6 +68,57 @@ const PopInbox = () => {
       //   queryKey: currentKey,
     }
   );
+
+  useEffect(() => {
+    fetchStatusCount();
+  }, [planObject]);
+
+  const fetchStatusCount = async () => {
+    if (planObject) {
+      try {
+        await mutation.mutateAsync(
+          {
+            body: {
+              CensusSearchCriteria: {
+                tenantId: tenantId,
+                source: microplanId,
+              },
+            }
+          },
+          {
+            onSuccess: (data) => {
+              setTotalStatusCount(data?.StatusCount);
+            },
+            onError: (error) => {
+              setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+            }
+          }
+        );
+      } catch (error) {
+        setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+      }
+    }
+  };
+
+
+  const mutation = Digit.Hooks.useCustomAPIMutationHook({
+    url: "/census-service/_search",
+  });
+
+// // fetch the total census data for showing footer action
+// const { isLoading:isLoadingTotalCensus, data: totalCensusData, } = Digit.Hooks.useCustomAPIHook({
+//   url: `/census-service/_search`,
+//     body: {
+//       CensusSearchCriteria: {
+//         tenantId: tenantId,
+//         source: microplanId,
+//       },
+//     },
+//     config: {
+//       enabled: triggerTotalCensus,
+//     },
+//     queryKey: 'totalData'
+// });
 
 
   // fetch the process instance for the current microplan to check if we need to disabled actions or not
@@ -101,6 +154,10 @@ const PopInbox = () => {
     if (selectedBoundaries.length === 0) {
       setShowToast({ key: "warning", label: t("MICROPLAN_BOUNDARY_IS_EMPTY_WARNING"), transitionTime: 5000 });
     } else {
+      setActiveLink({
+        code: "ASSIGNED_TO_ME",
+        name: "ASSIGNED_TO_ME"
+      });
       // Extract the list of codes from the selectedBoundaries array
       const boundaryCodes = selectedBoundaries.map((boundary) => boundary.code);
 
@@ -381,16 +438,16 @@ const PopInbox = () => {
   };
 
 
-  // Function to check the status count condition
-  const isStatusConditionMet = (statusCount) => {
-    // Extract all keys and values from statusCount object
-    const statusValues = Object.keys(statusCount).map((key) => statusCount[key]);
+ // Function to check the status count condition
+const isStatusConditionMet = (statusCount) => {
+  // Return false if statusCount is null or an empty object
+  if (!statusCount || Object.keys(statusCount).length === 0) return false;
 
-    // Check if all statuses except "VALIDATED" are 0, and "VALIDATED" is more than 0
-    return Object.keys(statusCount).every(
-      (key) => (key === "VALIDATED" ? statusCount[key] > 0 : statusCount[key] === 0)
-    );
-  };
+  // Check if all statuses except "VALIDATED" are 0, and "VALIDATED" is more than 0
+  return Object.keys(statusCount).every(
+    (key) => (key === "VALIDATED" ? statusCount[key] > 0 : statusCount[key] === 0)
+  );
+};
 
 
   // This function will update the workflow action for every selected row
@@ -443,7 +500,7 @@ const PopInbox = () => {
     },
   ];
 
-  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading || isWorkflowLoading || isEmployeeLoading) {
+  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading || isWorkflowLoading || isEmployeeLoading || mutation.isLoading) {
     return <Loader />;
   }
 
@@ -461,54 +518,71 @@ const PopInbox = () => {
         onClear={onClear}
       />
 
-      <div className="pop-inbox-wrapper-filter-table-wrapper" style={{ marginBottom: "2.5rem" }}>
-        <InboxFilterWrapper
-          options={activeFilter}
-          onApplyFilters={onFilter}
-          clearFilters={clearFilters}
-          defaultValue={
-            selectedFilter === Object.entries(activeFilter)?.[0]?.[0] ? { [Object.entries(activeFilter)?.[0]?.[0]]: Object.entries(activeFilter)?.[0]?.[1] } : null
-          }
-        ></InboxFilterWrapper>
+        <div className="pop-inbox-wrapper-filter-table-wrapper" style={{ marginBottom: isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "CENSUS_DATA_APPROVAL_IN_PROGRESS" ? "2.5rem" : "0rem" }}>
+          <InboxFilterWrapper
+            options={activeFilter}
+            onApplyFilters={onFilter}
+            clearFilters={clearFilters}
+            defaultValue={
+              selectedFilter === Object.entries(activeFilter)?.[0]?.[0] ? { [Object.entries(activeFilter)?.[0]?.[0]]: Object.entries(activeFilter)?.[0]?.[1] } : null
+            }
+          ></InboxFilterWrapper>
 
-        <div className={"pop-inbox-table-wrapper"}>
-          {showTab && (
-            <Tab
-              activeLink={activeLink?.code}
-              configItemKey="code"
-              configDisplayKey="name"
-              itemStyle={{ width: "290px" }}
-              configNavItems={[
-                {
-                  code: "ASSIGNED_TO_ME",
-                  name: `${`${t(`ASSIGNED_TO_ME`)} (${assignedToMeCount})`}`,
-                },
-                {
-                  code: "ASSIGNED_TO_ALL",
-                  name: `${`${t(`ASSIGNED_TO_ALL`)} (${assignedToAllCount})`}`,
-                },
-              ]}
-              navStyles={{}}
-              onTabClick={(e) => {
-                setActiveLink(e);
-              }}
-              setActiveLink={setActiveLink}
-              showNav={showTab}
-              style={{}}
-            />
-          )}
-          <Card className="microPlanBulkTable" type={"primary"}>
-            {villagesSlected !== 0 && (
-              <div className="selection-state-wrapper">
-                <div className="svg-state-wrapper">
-                  <SVG.DoneAll width={"1.5rem"} height={"1.5rem"} fill={"#C84C0E"}></SVG.DoneAll>
-                  <div className={"selected-state"}>{`${villagesSlected} ${t("MICROPLAN_VILLAGES_SELECTED")}`}</div>
-                </div>
+          <div className={"pop-inbox-table-wrapper"}>
+            {showTab && (
+              <Tab
+                activeLink={activeLink?.code}
+                configItemKey="code"
+                configDisplayKey="name"
+                itemStyle={{ width: "290px" }}
+                configNavItems={[
+                  {
+                    code: "ASSIGNED_TO_ME",
+                    name: `${`${t(`ASSIGNED_TO_ME`)} (${assignedToMeCount})`}`,
+                  },
+                  {
+                    code: "ASSIGNED_TO_ALL",
+                    name: `${`${t(`ASSIGNED_TO_ALL`)} (${assignedToAllCount})`}`,
+                  },
+                ]}
+                navStyles={{}}
+                onTabClick={(e) => {
+                  setActiveLink(e);
+                }}
+                setActiveLink={setActiveLink}
+                showNav={showTab}
+                style={{}}
+              />
+            )}
+            <Card className="microPlanBulkTable" type={"primary"}>
+              {villagesSlected !== 0 && (
+                <div className="selection-state-wrapper">
+                  <div className="svg-state-wrapper">
+                    <SVG.DoneAll width={"1.5rem"} height={"1.5rem"} fill={"#C84C0E"}></SVG.DoneAll>
+                    <div className={"selected-state"}>{`${villagesSlected} ${t("MICROPLAN_VILLAGES_SELECTED")}`}</div>
+                  </div>
 
-                <div className={`table-actions-wrapper`}>
-                  {actionsMain?.filter((action) => !actionsToHide.includes(action.action)).length > 1 ? (
-                    <ButtonsGroup
-                      buttonsArray={actionsMain
+                  <div className={`table-actions-wrapper`}>
+                    {actionsMain?.filter((action) => !actionsToHide.includes(action.action)).length > 1 ? (
+                      <ButtonsGroup
+                        buttonsArray={actionsMain
+                          ?.filter((action) => !actionsToHide.includes(action.action))
+                          ?.map((action, index) => (
+                            <Button
+                              key={index}
+                              variation="secondary"
+                              label={t(action.action)}
+                              type="button"
+                              onClick={() => handleActionClick(action.action)}
+                              size="large"
+                              icon={actionIconMap[action.action]?.icon}
+                              isSuffix={actionIconMap[action.action]?.isSuffix}
+                            />
+                          ))
+                        }
+                      />
+                    ) : (
+                      actionsMain
                         ?.filter((action) => !actionsToHide.includes(action.action))
                         ?.map((action, index) => (
                           <Button
@@ -522,73 +596,58 @@ const PopInbox = () => {
                             isSuffix={actionIconMap[action.action]?.isSuffix}
                           />
                         ))
-                      }
+                    )}
+                  </div>
+
+                  {workFlowPopUp !== '' && (
+                    <WorkflowCommentPopUp
+                      onClose={closePopUp}
+                      heading={t(`POP_INBOX_SEND_FOR_${workFlowPopUp}_HEADING_LABEL`)}
+                      submitLabel={t(`POP_INBOX_SEND_FOR_${workFlowPopUp}_SUBMIT_LABEL`)}
+                      url="/census-service/bulk/_update"
+                      requestPayload={{ Census: updateWorkflowForSelectedRows() }}
+                      commentPath="workflow.comments"
+                      onSuccess={(data) => {
+                        closePopUp();
+                        setShowToast({ key: "success", label: t("POP_INBOX_WORKFLOW_UPDATE_SUCCESS"), transitionTime: 5000 });
+                        refetch();
+                        refetchPlan();
+                        fetchStatusCount();
+                      }}
+                      onError={(data) => {
+                        setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+                      }}
                     />
-                  ) : (
-                    actionsMain
-                      ?.filter((action) => !actionsToHide.includes(action.action))
-                      ?.map((action, index) => (
-                        <Button
-                          key={index}
-                          variation="secondary"
-                          label={t(action.action)}
-                          type="button"
-                          onClick={() => handleActionClick(action.action)}
-                          size="large"
-                          icon={actionIconMap[action.action]?.icon}
-                          isSuffix={actionIconMap[action.action]?.isSuffix}
-                        />
-                      ))
                   )}
                 </div>
-
-                {workFlowPopUp !== '' && (
-                  <WorkflowCommentPopUp
-                    onClose={closePopUp}
-                    heading={t(`POP_INBOX_SEND_FOR_${workFlowPopUp}_HEADING_LABEL`)}
-                    submitLabel={t(`POP_INBOX_SEND_FOR_${workFlowPopUp}_SUBMIT_LABEL`)}
-                    url="/census-service/bulk/_update"
-                    requestPayload={{ Census: updateWorkflowForSelectedRows() }}
-                    commentPath="workflow.comments"
-                    onSuccess={(data) => {
-                      closePopUp();
-                      setShowToast({ key: "success", label: t("POP_INBOX_WORKFLOW_UPDATE_SUCCESS"), transitionTime: 5000 });
-                      refetch();
-                    }}
-                    onError={(data) => {
-                      setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
-                    }}
-                  />
-                )}
-              </div>
+              )}
+              {isLoading || isFetching ? <Loader /> : censusData.length===0 ? <NoResultsFound style={{height:selectedFilter === "VALIDATED" ? "472px" : "408px"}} text={t(`HCM_MICROPLAN_NO_DATA_FOUND_FOR_CENSUS`)} /> : <PopInboxTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap}
+                onSuccessEdit={(data) => {
+                  setUpdatedCensus(data);
+                  setShowComment(true);
+                }}
+                conditionalRowStyles={conditionalRowStyles} disabledAction={disabledAction}/>}
+            </Card>
+            {showComment && (
+              <WorkflowCommentPopUp
+                onClose={onCommentLogClose}
+                heading={t(`POP_INBOX_HCM_MICROPLAN_EDIT_POPULATION_COMMENT_LABEL`)}
+                submitLabel={t(`POP_INBOX_HCM_MICROPLAN_EDIT_POPULATION_COMMENT_SUBMIT_LABEL`)}
+                url="/census-service/_update"
+                requestPayload={{ Census: updatedCensus }}
+                commentPath="workflow.comments"
+                onSuccess={(data) => {
+                  setShowToast({ key: "success", label: t("HCM_MICROPLAN_EDIT_WORKFLOW_UPDATED_SUCCESSFULLY"), transitionTime: 5000 });
+                  onCommentLogClose();
+                  refetch();
+                }}
+                onError={(error) => {
+                  setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+                }}
+              />
             )}
-            {isLoading || isFetching ? <Loader /> : <PopInboxTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap}
-              onSuccessEdit={(data) => {
-                setUpdatedCensus(data);
-                setShowComment(true);
-              }}
-              conditionalRowStyles={conditionalRowStyles} disabledAction={disabledAction}/>}
-          </Card>
-          {showComment && (
-            <WorkflowCommentPopUp
-              onClose={onCommentLogClose}
-              heading={t(`POP_INBOX_HCM_MICROPLAN_EDIT_POPULATION_COMMENT_LABEL`)}
-              submitLabel={t(`POP_INBOX_HCM_MICROPLAN_EDIT_POPULATION_COMMENT_SUBMIT_LABEL`)}
-              url="/census-service/_update"
-              requestPayload={{ Census: updatedCensus }}
-              commentPath="workflow.comments"
-              onSuccess={(data) => {
-                setShowToast({ key: "success", label: t("HCM_MICROPLAN_EDIT_WORKFLOW_UPDATED_SUCCESSFULLY"), transitionTime: 5000 });
-                onCommentLogClose();
-                refetch();
-              }}
-              onError={(error) => {
-                setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
-              }}
-            />
-          )}
+          </div>
         </div>
-      </div>
 
       {/* <ActionBar
         actionFields={[
@@ -601,7 +660,7 @@ const PopInbox = () => {
         style={{}}
       /> */}
 
-      {isRootApprover && isStatusConditionMet(activeFilter) && planObject?.status === "CENSUS_DATA_APPROVAL_IN_PROGRESS" &&
+      {isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "CENSUS_DATA_APPROVAL_IN_PROGRESS" &&
         <ActionBar
           actionFields={[
             <Button icon="CheckCircle" label={t(`HCM_MICROPLAN_FINALIZE_POPULATION_DATA`)} onClick={handleActionBarClick} type="button" variation="primary" />,
