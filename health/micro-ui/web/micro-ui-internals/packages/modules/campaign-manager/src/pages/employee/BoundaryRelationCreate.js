@@ -208,127 +208,134 @@ const BoundaryRelationCreate = () => {
         }
     }
 
+    const pollForStatusCompletion = async (id, typeOfData) => {
+        const pollInterval = 2000;
+        const maxRetries = 100;
+        let retries = 0;
+        let pollTimer = null;
+        let timeoutTimer = null;
+    
+        return new Promise((resolve, reject) => {
+            const cleanup = () => {
+                if (pollTimer) clearTimeout(pollTimer);
+                if (timeoutTimer) clearTimeout(timeoutTimer);
+            };
+    
+            const poll = async () => {
+                try {
+                    if (retries >= maxRetries) {
+                        cleanup();
+                        reject(new Error("Max retries reached"));
+                        return;
+                    }
+    
+                    const searchResponse = await Digit.CustomService.getResponse({
+                        url: "/project-factory/v1/data/_search",
+                        params: {},
+                        body: {
+                            SearchCriteria: {
+                                id: [id],
+                                tenantId: tenantId,
+                                type: typeOfData,
+                            },
+                        },
+                    });
+    
+                    const status = searchResponse?.ResourceDetails?.[0]?.status;
+                    
+                    let errorString = searchResponse?.ResourceDetails?.[0]?.additionalDetails?.error;
+                    let errorObject = {};
+                    let errorCode = "HIERARCHY_FAILED";
+                    
+                    if (errorString) {
+                        try {
+                            errorObject = JSON.parse(errorString);
+                            if (errorObject) errorCode = errorObject.code;
+                        } catch (e) {
+                            console.error("Error parsing error string:", e);
+                        }
+                    }
+    
+                    if (status === "completed") {
+                        cleanup();
+                        setShowToast({ label: `${t("WBH_HIERARCHY_STATUS_COMPLETED")}`, isError: "success" });
+                        resolve(true);
+                        return; // Add explicit return to stop further execution
+                    }
+                    
+                    // Only continue polling if status is not completed
+                    retries++;
+                    pollTimer = setTimeout(poll, pollInterval);
+                } catch (error) {
+                    console.error("Polling error:", error);
+                    cleanup(); // Add cleanup here too
+                    reject(error); // Reject immediately on error instead of continuing to poll
+                    return;
+                }
+            };
+    
+            // Start polling
+            poll().catch((error) => {
+                cleanup();
+                reject(error);
+            });
+    
+            // Set overall timeout
+            const timeoutDuration = (maxRetries + 1) * pollInterval;
+            timeoutTimer = setTimeout(() => {
+                cleanup();
+                reject(new Error("Polling timeout"));
+            }, timeoutDuration);
+        });
+    };
+    
     const callCreateDataApi = async (fid) => {
         try {
-        //   setDataCreateToast(true);
-          const createResponse = await Digit.CustomService.getResponse({
-            url: "/project-factory/v1/data/_create",
-            params: {},
-            body: {
-              ResourceDetails: {
-                tenantId: tenantId,
-                type: "boundaryManagement",
-                fileStoreId: fid,
-                action: "create",
-                hierarchyType: hierarchyType,
-                additionalDetails: {
-                  source: "boundary",
-                },
-                campaignId: "default"
-              },
-            },
-          });
-      
-          const id = createResponse?.ResourceDetails?.id;
-          const typeOfData = createResponse?.ResourceDetails?.type;
-      
-          if (id) {
-            try {
-              await pollForStatusCompletion(id, typeOfData);
-              setDataCreateToast(false);
-
-              // setShowToast({ label: `${t("WBH_HIERARCHY_CREATED")}`, isError: "success" });
-            } catch (pollError) {
-              throw pollError; // Propagate polling errors to the outer catch block
-            }
-          }
-      
-          return createResponse;
-        } catch (error) {
-          setDisable(false);
-          let label;
-          
-          // Handle known errors like polling timeout and max retries
-          if (error.message === "Polling timeout" || error.message === "Max retries reached") {
-            label = `${t("WBH_BOUNDARY_CREATION_TIMEOUT")}: ${t("WBH_OPERATION_INCOMPLETE")}`;
-          } else {
-        
-            // Initialize the label with a failure message
-            label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
-            if(error?.message) label += `${t(error?.message)}`;
-            
-          }
-        
-          setShowToast({ label, isError: "error" });
-        //   setDataCreationGoing(false);
-          return {};
-        }
-  
-    };
-    const pollForStatusCompletion = async (id, typeOfData) => {
-        const pollInterval = 2000; // Poll every 1 second
-        const maxRetries = 100; // Maximum number of retries
-        let retries = 0;
-      
-        return new Promise((resolve, reject) => {
-          const poll = async () => {
-            try {
-              if (retries >= maxRetries) {
-                setDataCreationGoing(false);
-                reject(new Error("Max retries reached"));
-                return;
-              }
-      
-              const searchResponse = await Digit.CustomService.getResponse({
-                url: "/project-factory/v1/data/_search",
+            const createResponse = await Digit.CustomService.getResponse({
+                url: "/project-factory/v1/data/_create",
                 params: {},
                 body: {
-                  SearchCriteria: {
-                    id: [id],
-                    tenantId: tenantId,
-                    type: typeOfData,
-                  },
+                    ResourceDetails: {
+                        tenantId: tenantId,
+                        type: "boundaryManagement",
+                        fileStoreId: fid,
+                        action: "create",
+                        hierarchyType: hierarchyType,
+                        additionalDetails: {
+                            source: "boundary",
+                        },
+                        campaignId: "default"
+                    },
                 },
-              });
-      
-              const status = searchResponse?.ResourceDetails?.[0]?.status;
-              let errorString = searchResponse?.ResourceDetails?.[0]?.additionalDetails.error;
-              let errorObject={};
-              let errorCode="HIERARCHY_FAILED";
-              if(errorString) errorObject = JSON.parse(errorString);
-              if(errorObject) errorCode = errorObject.code;
-      
-              if (status === "completed") {
-                setShowToast({ label: `${t("WBH_HIERARCHY_STATUS_COMPLETED")}`, isError: "success" });
-                setDataCreationGoing(false);
-                resolve(true);
-              } else if (status === "failed") {
-                reject(new Error(errorCode));
-              } else {
-                retries++;
-                setTimeout(poll, pollInterval);
-              }
-            } catch (error) {
-              // console.error("Error while polling:", error);
-              retries++;
-              setTimeout(poll, pollInterval);
+            });
+    
+            const id = createResponse?.ResourceDetails?.id;
+            const typeOfData = createResponse?.ResourceDetails?.type;
+    
+            if (id) {
+                try {
+                    await pollForStatusCompletion(id, typeOfData);
+                } catch (pollError) {
+                    throw pollError;
+                }
             }
-          };
-      
-          // Start the polling
-          poll().catch(reject);
-      
-          // Set a timeout for the entire polling operation
-          const timeoutDuration = (maxRetries + 1) * pollInterval;
-          setTimeout(() => {
-            if (retries < maxRetries) {
-              // Only reject if not already resolved
-              setDataCreationGoing(false);
-              reject(new Error("Polling timeout"));
+    
+            return createResponse;
+        } catch (error) {
+            setDisable(false);
+            let label;
+    
+            if (error.message === "Polling timeout" || error.message === "Max retries reached") {
+                label = `${t("WBH_BOUNDARY_CREATION_TIMEOUT")}: ${t("WBH_OPERATION_INCOMPLETE")}`;
+            } else {
+                label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
+                if (error?.message) label += `${t(error?.message)}`;
             }
-          }, timeoutDuration);
-        });
-      };
+    
+            setShowToast({ label, isError: "error" });
+            return {};
+        }
+    };
 
 
     const createNewHierarchy = async () => {
@@ -347,9 +354,9 @@ const BoundaryRelationCreate = () => {
                         
             const bh = [...boundaryData, ...newBoundaryData];
             const local = bh.map(item => ({
-                code: `${hierarchyType}_${item.boundaryType}`.toUpperCase().replace(/\s+/g, "_"),
+                code: `${hierarchyType}_${item.boundaryType}`.toUpperCase(),
                 message: item.boundaryType,
-                module: `hcm-boundary-${hierarchyType.toLowerCase().replace(/\s+/g, "_")}`,
+                module: `hcm-boundary-${hierarchyType.toLowerCase()}`,
                 locale: locale
             }));
     
@@ -413,16 +420,17 @@ const onConfirmClick=()=>{
         setNewBoundaryData((prevItems) => {
             // Loop through the array starting from the second element
             return prevItems.map((item, idx) => {
+                item.boundaryType = item.boundaryType.trim();
                 if (idx === 0) {
                     if (newHierarchy) item.parentBoundaryType = null;
                     else {
                         if (boundaryData.length === 0) item.parentBoundaryType = null;
-                        else item.parentBoundaryType = boundaryData[boundaryData.length - 1].boundaryType;
+                        else item.parentBoundaryType = boundaryData[boundaryData.length - 1].boundaryType.trim();
 
                     }
                 }
                 if (idx > 0) {
-                    item.parentBoundaryType = prevItems[idx - 1].boundaryType;
+                    item.parentBoundaryType = prevItems[idx - 1].boundaryType.trim();
                 }
                 return item;
             });
@@ -460,14 +468,14 @@ const onConfirmClick=()=>{
                                 <div key={`boundary-${index}`}>
                                     <div style={{ fontWeight: "600", fontSize: "1.2rem" }}>
                                         {/* {item?.boundaryType} */}
-                                        {`${t((defaultHierarchyType + "_" + item?.boundaryType).toUpperCase().replace(/\s+/g, "_"))}`}
+                                        {`${t((defaultHierarchyType + "_" + item?.boundaryType).toUpperCase())}`}
                                     </div>
                                     <div style={{ height: "1rem" }}></div>
                                     <Card type={"primary"} variant={"form"} className={"question-card-container"} >
                                         <div style={{ display: "flex", gap: "2rem" }}>
                                             <Svgicon />
                                             <div style={{ display: "flex", alignItems: "center", fontWeight: "600" }}>
-                                                {`${t((defaultHierarchyType + "_" + item?.boundaryType).toUpperCase().replace(/\s+/g, "_"))}`}{"-geojson.json"}
+                                                {`${t((defaultHierarchyType + "_" + item?.boundaryType).toUpperCase())}`}{"-geojson.json"}
                                             </div>
                                         </div>
                                     </Card>
