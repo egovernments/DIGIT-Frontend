@@ -14,6 +14,7 @@ import ViewHierarchy from "./ViewHierarchy";
 import ViewChecklist from "./ViewChecklist";
 import UpdateChecklist from "./UpdateChecklist";
 import BoundaryHome from "./BoundaryHome";
+import MyMicroplans from "./MyMicroplans";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -92,6 +93,8 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
  */
 const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
   const location = useLocation();
+  const userId = Digit.UserService.getUser().info.uuid;
+  const microplanStatus =  "RESOURCE_ESTIMATIONS_APPROVED"
   const UploadBoundaryData = Digit?.ComponentRegistryService?.getComponent("UploadBoundaryData");
   const CycleConfiguration = Digit?.ComponentRegistryService?.getComponent("CycleConfiguration");
   const DeliveryRule = Digit?.ComponentRegistryService?.getComponent("DeliveryRule");
@@ -148,6 +151,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
           <PrivateRoute path={`${path}/boundary/view-all-hierarchy`} component={()=> <ViewBoundary />} />
           <PrivateRoute path={`${path}/boundary/data`} component={()=> <ViewHierarchy />} />
           <PrivateRoute path={`${path}/update-campaign`} component={() => <UpdateCampaign />} />
+          <PrivateRoute path={`${path}/setup-from-microplan`} component={() => <MyMicroplans />} />
         </AppContainer>
       </Switch>
     </React.Fragment>

@@ -24,6 +24,7 @@ const SearchSavedPlansWithCampaign = async (body) => {
           limit: body?.PlanConfigurationSearchCriteria?.limit,
           offset: body?.PlanConfigurationSearchCriteria?.offset,
           filterUniqueByPlanConfig: true,
+          planConfigurationName: body.PlanConfigurationSearchCriteria.name,
         },
       },
     });
@@ -45,7 +46,7 @@ const SearchSavedPlansWithCampaign = async (body) => {
           status: body?.PlanConfigurationSearchCriteria?.status,
           // limit: body?.PlanConfigurationSearchCriteria?.limit,
           // offset: body?.PlanConfigurationSearchCriteria?.offset,
-          name: body.PlanConfigurationSearchCriteria.name,
+          // name: body.PlanConfigurationSearchCriteria.name,
           ids: listOfPlans,
         },
       },
@@ -72,7 +73,7 @@ const SearchSavedPlansWithCampaign = async (body) => {
     });
     const finalResponse = {
       PlanConfiguration: mergePlanAndCampaign(responsePlan?.PlanConfiguration, "campaignDetails", responseCampaign?.CampaignDetails),
-      TotalCount: planEmployeeSearch?.TotalCount
+      TotalCount: planEmployeeSearch?.TotalCount,
     };
     return finalResponse;
   } catch (error) {

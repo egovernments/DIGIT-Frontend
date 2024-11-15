@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
 import { Header } from "@egovernments/digit-ui-react-components";
+import ConfirmationPopUp from "../../components/ConfirmationPopUp";
 
 const PopInbox = () => {
   const { t } = useTranslation();
@@ -36,6 +37,7 @@ const PopInbox = () => {
   const [employeeNameMap, setEmployeeNameMap] = useState({});
   const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
   const [assignedToMeCount, setAssignedToMeCount] = useState(0);
+  const [disabledAction, setDisabledAction] = useState(false);
   const [assignedToAllCount, setAssignedToAllCount] = useState(0);
   const [updatedCensus, setUpdatedCensus] = useState(null);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
@@ -64,6 +66,30 @@ const PopInbox = () => {
       //   queryKey: currentKey,
     }
   );
+
+
+  // fetch the process instance for the current microplan to check if we need to disabled actions or not
+  const { isLoading:isProcessLoading, data: processData, } = Digit.Hooks.useCustomAPIHook({
+    url: "/egov-workflow-v2/egov-wf/process/_search",
+    params: {
+        tenantId: tenantId,
+        history: true,
+        businessIds: microplanId,
+    },
+    config: {
+        enabled: true,
+        select: (data) => {
+          return data?.ProcessInstances;
+      },
+    },
+  });
+
+
+  useEffect(() => {
+    if (processData && processData.some((instance) => instance.action === "APPROVE_CENSUS_DATA")) {
+      setDisabledAction(true);
+    }
+  }, [processData]);
 
 
   const handleActionBarClick = () => {
@@ -541,7 +567,7 @@ const PopInbox = () => {
                 setUpdatedCensus(data);
                 setShowComment(true);
               }}
-              conditionalRowStyles={conditionalRowStyles} />}
+              conditionalRowStyles={conditionalRowStyles} disabledAction={disabledAction}/>}
           </Card>
           {showComment && (
             <WorkflowCommentPopUp
@@ -588,13 +614,12 @@ const PopInbox = () => {
         />}
 
       {actionBarPopUp && (
-        <WorkflowCommentPopUp
+        <ConfirmationPopUp
           onClose={closeActionBarPopUp}
-          heading={t(`HCM_MICROPLAN_FINALIZE_POPULATION_DATA_LABEL`)}
+          alertMessage={t(`HCM_MICROPLAN_FINALIZE_POPULATION_ALERT_MESSAGE`)}
           submitLabel={t(`HCM_MICROPLAN_FINALIZE_POPULATION_DATA_SUBMIT_ACTION`)}
           url="/plan-service/config/_update"
           requestPayload={{ PlanConfiguration: updateWorkflowForFooterAction() }}
-          commentPath="workflow.comments"
           onSuccess={(data) => {
             history.push(`/${window.contextPath}/employee/microplan/population-finalise-success`, {
               fileName: data?.PlanConfiguration?.[0]?.name,
@@ -602,9 +627,6 @@ const PopInbox = () => {
               back: t(`GO_BACK_TO_HOME`),
               backlink: `/${window.contextPath}/employee`
             });
-          }}
-          onError={(data) => {
-            setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
           }}
         />
       )}
