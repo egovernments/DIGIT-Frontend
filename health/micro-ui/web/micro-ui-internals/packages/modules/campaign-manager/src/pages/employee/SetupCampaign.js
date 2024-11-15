@@ -49,6 +49,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const isDateRestricted = searchParams.get("date");
   const isChangeDates = searchParams.get("changeDates");
   const actionBar = searchParams.get("actionBar");
+  const source = searchParams.get("source");
+  const microplanName = searchParams.get("microName");
   const [isDraftCreated, setIsDraftCreated] = useState(false);
   const [currentKey, setCurrentKey] = useState(() => {
     const keyParam = searchParams.get("key");
@@ -112,9 +114,14 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         setIsDraftCreated(true);
         if (isSkip === "false") {
             if (currentKey === 1) setCurrentKey(1);
-        } else if (isDateRestricted === "true") {
-            setCurrentKey(3);
-        } else {
+            //if user comes from set up microplan
+        } else if (source === "microplan") {
+            setCurrentKey(2);
+            //if the campaign is in draft and the start date is passed
+        }else if (isDateRestricted === "true") {
+          setCurrentKey(3);
+      }
+         else {
           if(draftData?.additionalDetails?.key === 7 || draftData?.additionalDetails?.key === 8){
             setCurrentKey(6);
           }
