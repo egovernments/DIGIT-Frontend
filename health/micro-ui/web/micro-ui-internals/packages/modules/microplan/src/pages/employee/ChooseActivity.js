@@ -9,7 +9,11 @@ const ChooseActivity = () => {
     const { campaignId, microplanId,  } = Digit.Hooks.useQueryParams();
     const tenantId = Digit.ULBService.getStateId();
     const userInfo = Digit.UserService.getUser();
-    const { isLoading: isLoadingPlanObject, data: planObject,} = Digit.Hooks.microplanv1.useSearchPlanConfig(
+    const [activityCardData, setActivityCardData] = useState([]);
+
+
+
+    const { isLoading: isLoadingPlanObject, data: planObject, refetch: refetchPlanObject} = Digit.Hooks.microplanv1.useSearchPlanConfig(
         {
           PlanConfigurationSearchCriteria: {
             tenantId,
@@ -17,9 +21,14 @@ const ChooseActivity = () => {
           },
         },
         {
-          enabled: microplanId ? true : false,
+          enabled: true,
         }
     );
+
+  //   // Watch for campaignId or microplanId changes to trigger the fetch
+    useEffect(() => {
+     refetchPlanObject();
+  }, [microplanId, campaignId]);
 
     const { isLoading: isBusinessServiceLoading, data: workflowData, } = Digit.Hooks.useCustomAPIHook({
         url: "/egov-workflow-v2/egov-wf/businessservice/_search",
@@ -37,69 +46,86 @@ const ChooseActivity = () => {
         },
       });
 
+    // fetch the process instance for the current microplan to check if current process is done or not
+      const { isLoading:isProcessLoading, data: processData, revalidate } = Digit.Hooks.useCustomAPIHook({
+        url: "/egov-workflow-v2/egov-wf/process/_search",
+        params: {
+            tenantId: tenantId,
+            history: true,
+            businessIds: microplanId,
+        },
+        config: {
+            enabled: true,
+            select: (data) => {
+              return data?.ProcessInstances;
+          },
+        },
+      });
 
-      if(isLoadingPlanObject || isBusinessServiceLoading){
-        return <Loader/>;
-      }
-      else{
-      // Merged function to disable a card based on user roles and available actions in the current state
-      const isCardDisabled = (validRoles = [], currentState, validStatuses = [],) => {
-      const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code) || [];
 
-      // Check if user has any valid roles
-      const hasValidRole = validRoles?.length > 0 && validRoles?.some(role => userRoles.includes(role));
+      useEffect(() => {
+        if(planObject && workflowData && processData){
+          const updatedActivityCardData = [
+            {
+              name: t("VALIDATE_N_APPROVE_POPULATION_DATA"),
+              link: `pop-inbox?campaignId=${campaignId}&microplanId=${microplanId}`,
+              doneLabel: isProcessDone(processData, "APPROVE_CENSUS_DATA") && "CENSUS_VALIDATED_LABEL",
+              icon: <SVG.Population height="36" width="36" fill={isCardDisabled(["POPULATION_DATA_APPROVER", "ROOT_POPULATION_DATA_APPROVER"], isProcessDone(processData, "APPROVE_CENSUS_DATA"), ["EXECUTION_TO_BE_DONE","CENSUS_DATA_APPROVAL_IN_PROGRESS"]) ? "#C5C5C5" : "#C84C0E"}/>,
+              disable: isCardDisabled(["POPULATION_DATA_APPROVER", "ROOT_POPULATION_DATA_APPROVER"], isProcessDone(processData, "APPROVE_CENSUS_DATA"), ["EXECUTION_TO_BE_DONE","CENSUS_DATA_APPROVAL_IN_PROGRESS"]),
+              optionKey: "VALIDATE_N_APPROVE_POPULATION_DATA"
+            },
+            {
+              name: t("ASSIGN_FACILITIES_TO_VILLAGE"),
+              link: `assign-facilities-to-villages?campaignId=${campaignId}&microplanId=${microplanId}`,
+              doneLabel: isProcessDone(processData, "FINALIZE_CATCHMENT_MAPPING") && "FACILITY_CATCHEMENT_DONE_LABEL",
+              icon: <SVG.AssignmentTurnedIn height="36" width="36" fill={isCardDisabled(["FACILITY_CATCHMENT_MAPPER", "ROOT_FACILITY_CATCHMENT_MAPPER"], isProcessDone(processData, "FINALIZE_CATCHMENT_MAPPING"), ["CENSUS_DATA_APPROVED"]) ? "#C5C5C5" : "#C84C0E"} />,
+              disable: isCardDisabled(["FACILITY_CATCHMENT_MAPPER", "ROOT_FACILITY_CATCHMENT_MAPPER"], isProcessDone(processData, "FINALIZE_CATCHMENT_MAPPING"), ["CENSUS_DATA_APPROVED"]),
+              optionKey: "ASSIGN_FACILITIES_TO_VILLAGE"
+            },
+            {
+              name: t("VALIDATE_N_APPROVE_MICROPLAN_ESTIMATIONS"),
+              link: `plan-inbox?campaignId=${campaignId}&microplanId=${microplanId}`,
+              doneLabel: isProcessDone(processData, "APPROVE_ESTIMATIONS") && "ESTIMATIONS_APPROVED_LABEL",
+              icon: <SVG.FactCheck height="36" width="36" fill={isCardDisabled(["PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"], isProcessDone(processData, "APPROVE_ESTIMATIONS"), ["RESOURCE_ESTIMATION_IN_PROGRESS"]) ? "#C5C5C5" : "#C84C0E"} />,
+              disable: isCardDisabled(["PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"], isProcessDone(processData, "APPROVE_ESTIMATIONS"), ["RESOURCE_ESTIMATION_IN_PROGRESS"]),
+              optionKey: "VALIDATE_N_APPROVE_MICROPLAN_ESTIMATIONS"
+            },
+            {
+              name: t("GEOSPATIAL_MAP_VIEW"),
+              link: `map-view?campaignId=${campaignId}&microplanId=${microplanId}`,
+              icon: <SVG.LocationOn height="36" width="36" 
+              fill={isCardDisabled(["POPULATION_DATA_APPROVER","ROOT_POPULATION_DATA_APPROVER","FACILITY_CATCHMENT_MAPPER","ROOT_FACILITY_CATCHMENT_MAPPER","MICROPLAN_VIEWER","PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"], workflowData, ["RESOURCE_ESTIMATION_IN_PROGRESS","RESOURCE_ESTIMATIONS_APPROVED"]) ? "#C5C5C5" : "#C84C0E"}/>,
+              disable: isCardDisabled(["POPULATION_DATA_APPROVER","ROOT_POPULATION_DATA_APPROVER","FACILITY_CATCHMENT_MAPPER","ROOT_FACILITY_CATCHMENT_MAPPER","MICROPLAN_VIEWER","PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"], workflowData, ["RESOURCE_ESTIMATION_IN_PROGRESS","RESOURCE_ESTIMATIONS_APPROVED"]),
+              optionKey: "GEOSPATIAL_MAP_VIEW"
+            },
+          ];
+          setActivityCardData(updatedActivityCardData);
+        }
+     }, [planObject, workflowData, processData]);
 
-      // Check if there are valid actions in the current state that match user roles
-      const hasValidNextAction = currentState?.actions?.some(action =>
-        action?.roles.some(role => userRoles?.includes(role))
-      );
 
-      const hasValidCurrentStatus = validStatuses?.includes(planObject?.status);
+// Merged function to disable a card based on user roles 
+const isCardDisabled = (validRoles = [], isProcessDone, validStatuses = [],) => {
+  const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code) || [];
 
-      // Disable if either hasValidRole or hasValidNextAction is false
-      return !(hasValidRole && hasValidCurrentStatus) /*hasValidNextAction*/;
+  // Check if user has any valid roles
+  const hasValidRole = validRoles?.length > 0 && validRoles?.some(role => userRoles.includes(role));
+
+  const hasValidCurrentStatus = validStatuses?.includes(planObject?.status);
+
+  // Disable if either hasValidRole or hasValidNextAction is false
+  return !(hasValidRole &&(isProcessDone || hasValidCurrentStatus) /*hasValidNextAction*/ );
+};
+
+
+// Function to check if process is done for the current card
+const isProcessDone = (ProcessInstances, process) => {
+  // Iterate over each process instance in the array
+  return ProcessInstances.some((instance) => instance.action === process);
 };
 
 // Usage in activityCardData
-    const activityCardData = [
-      {
-        name: t("VALIDATE_N_APPROVE_POPULATION_DATA"),
-        link: `pop-inbox?campaignId=${campaignId}&microplanId=${microplanId}`,
-        icon: <SVG.Population height="36" width="36" fill={isCardDisabled(["POPULATION_DATA_APPROVER", "ROOT_POPULATION_DATA_APPROVER"], workflowData, ["EXECUTION_TO_BE_DONE","CENSUS_DATA_APPROVAL_IN_PROGRESS"]) ? "#C5C5C5" : "#C84C0E"}/>,
-        disable: isCardDisabled(["POPULATION_DATA_APPROVER", "ROOT_POPULATION_DATA_APPROVER"], workflowData, ["EXECUTION_TO_BE_DONE","CENSUS_DATA_APPROVAL_IN_PROGRESS"]),
-        optionKey: "VALIDATE_N_APPROVE_POPULATION_DATA"
-      },
-      {
-        name: t("ASSIGN_FACILITIES_TO_VILLAGE"),
-        link: `assign-facilities-to-villages?campaignId=${campaignId}&microplanId=${microplanId}`,
-        icon: <SVG.AssignmentTurnedIn height="36" width="36" fill={isCardDisabled(["FACILITY_CATCHMENT_MAPPER", "ROOT_FACILITY_CATCHMENT_MAPPER"], workflowData, ["CENSUS_DATA_APPROVED"]) ? "#C5C5C5" : "#C84C0E"} />,
-        disable: isCardDisabled(["FACILITY_CATCHMENT_MAPPER", "ROOT_FACILITY_CATCHMENT_MAPPER"], workflowData, ["CENSUS_DATA_APPROVED"]),
-        optionKey: "ASSIGN_FACILITIES_TO_VILLAGE"
-      },
-      {
-        name: t("VALIDATE_N_APPROVE_MICROPLAN_ESTIMATIONS"),
-        link: `plan-inbox?campaignId=${campaignId}&microplanId=${microplanId}`,
-        icon: <SVG.FactCheck height="36" width="36" fill={isCardDisabled(["PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"], workflowData, ["RESOURCE_ESTIMATION_IN_PROGRESS"]) ? "#C5C5C5" : "#C84C0E"} />,
-        disable: isCardDisabled(["PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"], workflowData, ["RESOURCE_ESTIMATION_IN_PROGRESS"]),
-        optionKey: "VALIDATE_N_APPROVE_MICROPLAN_ESTIMATIONS"
-      },
-      {
-        name: t("GEOSPATIAL_MAP_VIEW"),
-        link: `map-view?campaignId=${campaignId}&microplanId=${microplanId}`,
-        icon: <SVG.LocationOn height="36" width="36" 
-        fill={isCardDisabled(["POPULATION_DATA_APPROVER","ROOT_POPULATION_DATA_APPROVER","FACILITY_CATCHMENT_MAPPER","ROOT_FACILITY_CATCHMENT_MAPPER","MICROPLAN_VIEWER","PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"], workflowData, ["RESOURCE_ESTIMATION_IN_PROGRESS","RESOURCE_ESTIMATIONS_APPROVED"]) ? "#C5C5C5" : "#C84C0E"}/>,
-        disable: isCardDisabled(["POPULATION_DATA_APPROVER","ROOT_POPULATION_DATA_APPROVER","FACILITY_CATCHMENT_MAPPER","ROOT_FACILITY_CATCHMENT_MAPPER","MICROPLAN_VIEWER","PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"], workflowData, ["RESOURCE_ESTIMATION_IN_PROGRESS","RESOURCE_ESTIMATIONS_APPROVED"]),
-        optionKey: "GEOSPATIAL_MAP_VIEW"
-      },
-      //commenting this as for now we are not showing viewer
-      // {
-      //   name: t("VIEW_MICROPLAN_ESTIMATIONS"),
-      //   link: `pop-inbox?campaignId=${campaignId}&microplanId=${microplanId}`,
-      //   icon: <SVG.Visibility height="36" width="36" fill={isCardDisabled(["MICROPLAN_VIEWER"], workflowData) ? "#C5C5C5" : "#C84C0E"} />,
-      //   disable: isCardDisabled(["MICROPLAN_VIEWER"], workflowData),
-      //   optionKey: "VIEW_MICROPLAN_ESTIMATIONS"
-      // }
-    ];
+    
 
     const updatePlan = async (req) => {
       const planRes = await Digit.CustomService.getResponse({
@@ -128,12 +154,15 @@ const ChooseActivity = () => {
       }
     }
 
+    if(isLoadingPlanObject || isBusinessServiceLoading || isProcessLoading){
+      return <Loader/>;
+    }
+
     return (
         <React.Fragment>
             <ActivityHomeCard title={t("SELECT_AN_ACTIVITY_TO_CONTINUE")} module={activityCardData} onClickCard={onClickCard}/>
         </React.Fragment>
     );
-}
 }
 
 export default ChooseActivity;
