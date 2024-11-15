@@ -31,6 +31,7 @@ const BoundaryRelationCreate = () => {
     const [creatingData, setCreatingData] = useState(false);
     const [showToast, setShowToast] = useState(null); // State to handle toast notifications
     const [showLoader, setShowLoader] = useState(false);
+    const [fileStoreId, setFileStoreId] = useState(null);
     const { mutateAsync: localisationMutateAsync } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, locale);
 
     const language = Digit.StoreData.getCurrentLanguage();
@@ -109,44 +110,285 @@ const BoundaryRelationCreate = () => {
 
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+    const generateTemplate = async() => {
+        const hier = (newHierarchy === false) ? defaultHierarchyType : hierarchyType;
+        const res = await Digit.CustomService.getResponse({
+            url: `/project-factory/v1/data/_download`,
+            body: {
+            },
+            params: {
+                tenantId: tenantId,
+                type: "boundaryManagement",
+                hierarchyType: hier,
+                campaignId: "default"
+            }
+        });
+        return res;
+
+    }
+
+    const pollForTemplateGeneration = async () => {
+        const pollInterval = 2000; // Poll every 2 seconds
+        const maxRetries = 50; // Maximum number of retries
+        let retries = 0;
+    
+        return new Promise((resolve, reject) => {
+            const poll = async () => {
+                try {
+                    if (retries >= maxRetries) {
+                        reject(new Error("Max template generation retries reached"));
+                        return;
+                    }
+    
+                    const resFile = await generateTemplate();
+                    
+                    // Case 1: We got a valid fileStoreId
+                    if (resFile?.GeneratedResource?.[0]?.fileStoreid) {
+                        resolve(resFile.GeneratedResource[0].fileStoreid);
+                        return;
+                    }
+                    // Case 2: Status is in progress, continue polling
+                    else if (resFile?.GeneratedResource?.[0]?.status === "inprogress") {
+                        retries++;
+                        setTimeout(poll, pollInterval);
+                    }
+                    // Case 3: Empty response or invalid response
+                    else {
+                        retries++;
+                        setTimeout(poll, pollInterval);
+                    }
+                } catch (error) {
+                    retries++;
+                    setTimeout(poll, pollInterval);
+                }
+            };
+    
+            // Start the polling
+            poll().catch(reject);
+    
+            // Set a timeout for the entire polling operation
+            const timeoutDuration = (maxRetries + 1) * pollInterval;
+            setTimeout(() => {
+                if (retries < maxRetries) {
+                    reject(new Error("Template generation polling timeout"));
+                }
+            }, timeoutDuration);
+        });
+    };
+    
+    const downloadExcelTemplate = async() => {
+        try {
+            setShowToast({ label: "TEMPLATE_GENERATION_IN_PROGRESS", isError: "info" });
+            
+            const fid = await pollForTemplateGeneration();
+            setFileStoreId(fid);
+            setShowToast({ label: "TEMPLATE_GENERATED_SUCCESSFULLY", isError: "success" });
+            return fid;
+        } catch (error) {
+            let errorMessage;
+            if (error.message === "Template generation polling timeout" || 
+                error.message === "Max template generation retries reached") {
+                errorMessage = "TEMPLATE_GENERATION_TIMEOUT";
+            } else {
+                errorMessage = "TEMPLATE_GENERATION_FAILED";
+            }
+            setShowToast({ label: errorMessage, isError: "error" });
+            throw error; // Propagate the error to the calling function
+        }
+    }
+
+    const pollForStatusCompletion = async (id, typeOfData) => {
+        const pollInterval = 2000;
+        const maxRetries = 100;
+        let retries = 0;
+        let pollTimer = null;
+        let timeoutTimer = null;
+    
+        return new Promise((resolve, reject) => {
+            const cleanup = () => {
+                if (pollTimer) clearTimeout(pollTimer);
+                if (timeoutTimer) clearTimeout(timeoutTimer);
+            };
+    
+            const poll = async () => {
+                try {
+                    if (retries >= maxRetries) {
+                        cleanup();
+                        reject(new Error("Max retries reached"));
+                        return;
+                    }
+    
+                    const searchResponse = await Digit.CustomService.getResponse({
+                        url: "/project-factory/v1/data/_search",
+                        params: {},
+                        body: {
+                            SearchCriteria: {
+                                id: [id],
+                                tenantId: tenantId,
+                                type: typeOfData,
+                            },
+                        },
+                    });
+    
+                    const status = searchResponse?.ResourceDetails?.[0]?.status;
+                    
+                    let errorString = searchResponse?.ResourceDetails?.[0]?.additionalDetails?.error;
+                    let errorObject = {};
+                    let errorCode = "HIERARCHY_FAILED";
+                    
+                    if (errorString) {
+                        try {
+                            errorObject = JSON.parse(errorString);
+                            if (errorObject) errorCode = errorObject.code;
+                        } catch (e) {
+                            console.error("Error parsing error string:", e);
+                        }
+                    }
+    
+                    if (status === "completed") {
+                        cleanup();
+                        setShowToast({ label: `${t("WBH_HIERARCHY_STATUS_COMPLETED")}`, isError: "success" });
+                        resolve(true);
+                        return; // Add explicit return to stop further execution
+                    }
+                    
+                    // Only continue polling if status is not completed
+                    retries++;
+                    pollTimer = setTimeout(poll, pollInterval);
+                } catch (error) {
+                    console.error("Polling error:", error);
+                    cleanup(); // Add cleanup here too
+                    reject(error); // Reject immediately on error instead of continuing to poll
+                    return;
+                }
+            };
+    
+            // Start polling
+            poll().catch((error) => {
+                cleanup();
+                reject(error);
+            });
+    
+            // Set overall timeout
+            const timeoutDuration = (maxRetries + 1) * pollInterval;
+            timeoutTimer = setTimeout(() => {
+                cleanup();
+                reject(new Error("Polling timeout"));
+            }, timeoutDuration);
+        });
+    };
+    
+    const callCreateDataApi = async (fid) => {
+        try {
+            const createResponse = await Digit.CustomService.getResponse({
+                url: "/project-factory/v1/data/_create",
+                params: {},
+                body: {
+                    ResourceDetails: {
+                        tenantId: tenantId,
+                        type: "boundaryManagement",
+                        fileStoreId: fid,
+                        action: "create",
+                        hierarchyType: hierarchyType,
+                        additionalDetails: {
+                            source: "boundary",
+                        },
+                        campaignId: "default"
+                    },
+                },
+            });
+    
+            const id = createResponse?.ResourceDetails?.id;
+            const typeOfData = createResponse?.ResourceDetails?.type;
+    
+            if (id) {
+                try {
+                    await pollForStatusCompletion(id, typeOfData);
+                } catch (pollError) {
+                    throw pollError;
+                }
+            }
+    
+            return createResponse;
+        } catch (error) {
+            setDisable(false);
+            let label;
+    
+            if (error.message === "Polling timeout" || error.message === "Max retries reached") {
+                label = `${t("WBH_BOUNDARY_CREATION_TIMEOUT")}: ${t("WBH_OPERATION_INCOMPLETE")}`;
+            } else {
+                label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
+                if (error?.message) label += `${t(error?.message)}`;
+            }
+    
+            setShowToast({ label, isError: "error" });
+            return {};
+        }
+    };
+
+
     const createNewHierarchy = async () => {
 
+        // first call the upsert
+        // then call the create bouondary
+        // then call the download
+        // then call upload (if boudnary taken from geopode)
         try {
-            // setShowLoader(true);
             setCreatingData(true);
-            setShowToast({ label: "HIERARCHY_PLEASE_WAIT", isError: "info", transitionTime:100000});
-            const res = await callCreate();
-            const res1 = await generateFile();
-            const bh = res?.BoundaryHierarchy?.[0]?.boundaryHierarchy;
+            setShowToast({ 
+                label: "HIERARCHY_PLEASE_WAIT", 
+                isError: "info", 
+                transitionTime: 100000
+            });
+                        
+            const bh = [...boundaryData, ...newBoundaryData];
             const local = bh.map(item => ({
-                code: `${hierarchyType}_${item.boundaryType}`.toUpperCase().replace(/\s+/g, "_"),
+                code: `${hierarchyType}_${item.boundaryType}`.toUpperCase(),
                 message: item.boundaryType,
-                module: `hcm-boundary-${hierarchyType.toLowerCase().replace(/\s+/g, "_")}`,
+                module: `hcm-boundary-${hierarchyType.toLowerCase()}`,
                 locale: locale
             }));
+    
             const localisationResult = await localisationMutateAsync(local);
             if (!localisationResult.success) {
                 setShowToast({ label: "BOUNDARY_LOCALISATION_ERROR", isError: "error" });
-                // return; // Exit if localization fails
             }
-            setShowToast({ label: t("HIERARCHY_CREATED_SUCCESSFULLY"), isError: "success" });
+    
+            const res = await callCreate();
 
+            if(newHierarchy === true)
+            {
+                await sleep(2000);// wait for 2 seconds
+            }
+            
+            // Template generation with retries
+            const res11 = await downloadExcelTemplate();
+            
+            // Only proceed with data creation if template generation was successful
+            if(newHierarchy === false) 
+                {
+                    const res22 = await callCreateDataApi(res11);
+                }
+            
+            setShowToast({ 
+                label: t("HIERARCHY_CREATED_SUCCESSFULLY"), 
+                isError: "success" 
+            });
+    
             setCreatingData(false);
-
+    
             await sleep(2000);
             history.replace(
                 `/${window.contextPath}/employee/campaign/boundary/data?defaultHierarchyType=${defaultHierarchyType}&hierarchyType=${hierarchyType}`,
                 {}
             );
-
+    
         } catch (error) {
-            // setShowToast({ label: error?.response?.data?.Errors?.[0]?.message ? error?.response?.data?.Errors?.[0]?.message : t("HIERARCHY_CREATION_FAILED"), isError: "error" });
-            // setShowLoader(false);
             const errorMessage = error.message === "LEVELS_CANNOT_BE_EMPTY"
                 ? t("LEVELS_CANNOT_BE_EMPTY")
                 : error?.response?.data?.Errors?.[0]?.message || t("HIERARCHY_CREATION_FAILED");
-                setCreatingData(false);
-
+            
+            setCreatingData(false);
             setShowToast({ label: errorMessage, isError: "error" });
         }
     }
@@ -167,16 +409,17 @@ const onConfirmClick=()=>{
         setNewBoundaryData((prevItems) => {
             // Loop through the array starting from the second element
             return prevItems.map((item, idx) => {
+                item.boundaryType = item.boundaryType.trim();
                 if (idx === 0) {
                     if (newHierarchy) item.parentBoundaryType = null;
                     else {
                         if (boundaryData.length === 0) item.parentBoundaryType = null;
-                        else item.parentBoundaryType = boundaryData[boundaryData.length - 1].boundaryType;
+                        else item.parentBoundaryType = boundaryData[boundaryData.length - 1].boundaryType.trim();
 
                     }
                 }
                 if (idx > 0) {
-                    item.parentBoundaryType = prevItems[idx - 1].boundaryType;
+                    item.parentBoundaryType = prevItems[idx - 1].boundaryType.trim();
                 }
                 return item;
             });
@@ -214,14 +457,14 @@ const onConfirmClick=()=>{
                                 <div key={`boundary-${index}`}>
                                     <div style={{ fontWeight: "600", fontSize: "1.2rem" }}>
                                         {/* {item?.boundaryType} */}
-                                        {`${t((defaultHierarchyType + "_" + item?.boundaryType).toUpperCase().replace(/\s+/g, "_"))}`}
+                                        {`${t((defaultHierarchyType + "_" + item?.boundaryType).toUpperCase())}`}
                                     </div>
                                     <div style={{ height: "1rem" }}></div>
                                     <Card type={"primary"} variant={"form"} className={"question-card-container"} >
                                         <div style={{ display: "flex", gap: "2rem" }}>
                                             <Svgicon />
                                             <div style={{ display: "flex", alignItems: "center", fontWeight: "600" }}>
-                                                {`${t((defaultHierarchyType + "_" + item?.boundaryType).toUpperCase().replace(/\s+/g, "_"))}`}{"-geojson.json"}
+                                                {`${t((defaultHierarchyType + "_" + item?.boundaryType).toUpperCase())}`}{"-geojson.json"}
                                             </div>
                                         </div>
                                     </Card>
@@ -306,7 +549,6 @@ const onConfirmClick=()=>{
                                 isDisabled={creatingData}
 
                                 onClick={() => { 
-                                    console.log(newBoundaryData,'cnewBoundaryData');
                                     const checkValid= newBoundaryData?.every(obj=>obj?.boundaryType);
                                     if(checkValid){
                                        setShowFinalPopup(true)
@@ -406,7 +648,6 @@ const onConfirmClick=()=>{
                                 // onClick={goToPreview} 
                                 isDisabled={creatingData}
                                 onClick={() => {
-                                    console.log(newBoundaryData,'newBoundaryData');
                                     const checkValid= newBoundaryData?.every(obj=>obj?.boundaryType);
                                          if(checkValid){
                                             setShowFinalPopup(true)

@@ -50,7 +50,7 @@ const ViewHierarchy = () => {
     const language = Digit.StoreData.getCurrentLanguage();
     const modulePrefix = "hcm";
     const stateCode = Digit.ULBService.getCurrentTenantId();
-    const moduleCode = `boundary-${hierarchyType.toLowerCase().replace(/\s+/g, "_")}`;
+    const moduleCode = `boundary-${hierarchyType.toLowerCase()}`;
     const { isLoading, data } = Digit.Services.useStore({
       stateCode,
       moduleCode,
@@ -120,7 +120,7 @@ const ViewHierarchy = () => {
             // Call function to upload the selected file to an API
             await uploadFileToAPI(file);
             setDisableFile(true);
-            setShowToast({ label: t("FILE_UPLOADED_SUCCESSFULLY"), isError:"info"});
+            setShowToast({ label: t("FILE_UPLOADED_SUCCESSFULLY"), isError:"success"});
           } catch (error) {
             setShowToast({ label: error?.response?.data?.Errors?.[0]?.message ? error?.response?.data?.Errors?.[0]?.message : t("FILE_UPLOAD_FAILED") , isError:"error" });
           }
@@ -371,17 +371,17 @@ const ViewHierarchy = () => {
                                         return (
                                             <div>
                                                 <div className="hierarchy-boundary-sub-heading2">
-                                                    {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toUpperCase().replace(/\s+/g, "_"))}`}
+                                                    {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toUpperCase())}`}
                                                 </div>
                                                 <div style={{height:"1rem"}}></div>
-                                                <Card type={"primary"} variant={"form"} className={"question-card-container"} >
+                                                {/* <Card type={"primary"} variant={"form"} className={"question-card-container"} >
                                                     <div style={{display:"flex", gap:"2rem"}}>
                                                     <Svgicon />
                                                     <div style={{display:"flex", alignItems:"center", fontWeight:"600", fontFamily:"Roboto"}}>
-                                                    {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toUpperCase().replace(/\s+/g, "_"))}-geojson.json`}
+                                                    {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toUpperCase())}-geojson.json`}
                                                     </div>
                                                     </div>
-                                                </Card>
+                                                </Card> */}
                                                 <hr style={{borderTop:"1px solid #ccc", margin:"1rem 0"}}/>
                                             </div>
                                         );
@@ -392,7 +392,7 @@ const ViewHierarchy = () => {
                                               <div className="hierarchy-boundary-sub-heading2">
                                                 {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toUpperCase().replace(/\s+/g, "_"))}`}
                                               </div>
-                                              <input
+                                              {/* <input
                                                 ref={inputRef}
                                                 type="file"
                                                 style={{ display: "none" }}
@@ -411,9 +411,9 @@ const ViewHierarchy = () => {
                                                 style={{}}
                                                 title=""
                                                 variation="secondary"
-                                              />
+                                              /> */}
                                             </div>
-                                            <div style={{ height: "2rem" }}></div>
+                                            <div style={{ height: "1rem" }}></div>
                                             <hr style={{ borderTop: "1px solid #ccc", margin: "1rem 0" }} />
                                           </div>
                                         );
@@ -431,7 +431,7 @@ const ViewHierarchy = () => {
                                                         variant="uploadFile"
                                                         style={{width:"50rem"}}
                                                     /> */}
-                                          <input
+                                          {/* <input
                                             ref={inputRef}
                                             type="file"
                                             style={{ display: "none" }}
@@ -450,9 +450,9 @@ const ViewHierarchy = () => {
                                             title=""
                                             isDisabled={true}
                                             variation="secondary"
-                                          />
+                                          /> */}
                                         </div>
-                                        <div style={{ height: "2rem" }}></div>
+                                        <div style={{ height: "1rem" }}></div>
                                         <hr style={{ borderTop: "1px solid #ccc", margin: "1rem 0" }} />
                                       </div>
                                     );

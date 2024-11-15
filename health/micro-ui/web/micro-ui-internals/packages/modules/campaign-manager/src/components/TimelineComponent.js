@@ -1,4 +1,4 @@
-import { Timeline, TimelineMolecule } from "@egovernments/digit-ui-components";
+import { Timeline, TimelineMolecule, InfoCard } from "@egovernments/digit-ui-components";
 import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@egovernments/digit-ui-components";
@@ -320,7 +320,7 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
   
   return (
     <React.Fragment>
-      <div className="timeline-user">
+      <div className="timeline-user" style={{marginBottom:"1rem"}}>
         {progessTrack ? (
           (() => {
             const processesToRender = [];
@@ -418,6 +418,13 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
           />
         )} */}
       </div>
+      {lastCompletedProcess?.type !== "campaign-creation" && 
+        <InfoCard
+        label="Info"
+        text={t("CAMPAIGN_CREATION_TAKES_SOME_TIME_PLEASE_WAIT")}
+        variant="default"
+        />
+      }
     </React.Fragment>
   );
 };
