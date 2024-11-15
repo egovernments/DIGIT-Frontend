@@ -93,6 +93,8 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
  */
 const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
   const location = useLocation();
+  const userId = Digit.UserService.getUser().info.uuid;
+  const microplanStatus =  "RESOURCE_ESTIMATIONS_APPROVED"
   const UploadBoundaryData = Digit?.ComponentRegistryService?.getComponent("UploadBoundaryData");
   const CycleConfiguration = Digit?.ComponentRegistryService?.getComponent("CycleConfiguration");
   const DeliveryRule = Digit?.ComponentRegistryService?.getComponent("DeliveryRule");
@@ -149,7 +151,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
           <PrivateRoute path={`${path}/boundary/view-all-hierarchy`} component={()=> <ViewBoundary />} />
           <PrivateRoute path={`${path}/boundary/data`} component={()=> <ViewHierarchy />} />
           <PrivateRoute path={`${path}/update-campaign`} component={() => <UpdateCampaign />} />
-          <PrivateRoute path={`${path}/my-microplan`} component={() => <MyMicroplans />} />
+          <PrivateRoute path={`${path}/setup-microplan&userId=${userId}&status=${microplanStatus}`} component={() => <MyMicroplans />} />
         </AppContainer>
       </Switch>
     </React.Fragment>

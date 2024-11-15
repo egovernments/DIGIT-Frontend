@@ -19,7 +19,7 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
   const searchParams = new URLSearchParams(location.search);
   const [currentStep , setCurrentStep] = useState(1);
   const currentKey = searchParams.get("key");
-  const productType = searchParams.get("type");
+  const source = searchParams.get("source");
   const [key, setKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
@@ -144,7 +144,7 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
                     setStartValidation(true);
                     handleChange(value);
                   }}
-                  disabled = {productType === "microplan"}
+                  disabled = {source === "microplan"}
                   
                 />
                 {error?.message && <ErrorMessage message={t(error?.message)} showIcon={true} />}

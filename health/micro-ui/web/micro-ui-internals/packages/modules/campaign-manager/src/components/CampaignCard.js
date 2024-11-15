@@ -22,6 +22,8 @@ const CampaignCard = () => {
   }
 
   const { t } = useTranslation();
+  const userId = Digit.UserService.getUser().info.uuid;
+  const microplanStatus =  "RESOURCE_ESTIMATIONS_APPROVED"
  
   let links = [
 
@@ -36,9 +38,9 @@ const CampaignCard = () => {
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
     },  
-    { //@Bhavya put the new url and remove the comment
+    { 
       label: t("ACTION_TEST_SETUP_CAMPAIGN_FROM_MICROPLAN"),
-      link: `/${window?.contextPath}/employee/campaign/setup-campaign`,
+      link: `/${window?.contextPath}/employee/campaign/setup-microplan&userId=${userId}&status=${microplanStatus}`,
       roles: ROLES.CAMPAIGN_MANAGER
     },
     {
@@ -58,13 +60,7 @@ const CampaignCard = () => {
       link: `/${window?.contextPath}/employee/campaign/boundary/home`,
       roles: ROLES.BOUNDARY_MANAGER,
       // count: isLoading?"-":data
-    },
-    {
-      label: t("MICROPLAN_CAMPAIGN"),
-      link: `/${window?.contextPath}/employee/campaign/my-microplan`,
-      roles: ROLES.CAMPAIGN_MANAGER,
-      // count: isLoading?"-":data
-    },
+    }
   ];
 
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));

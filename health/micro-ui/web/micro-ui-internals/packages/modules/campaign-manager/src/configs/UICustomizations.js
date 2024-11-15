@@ -149,8 +149,8 @@ export const UICustomizations = {
                   history.push(`/${window.contextPath}/employee/campaign/checklist/create?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}`)
                 }}
               />
-              )
-             }
+            );
+          }
         default:
           return value;
       }
@@ -305,18 +305,15 @@ export const UICustomizations = {
   },
   MicroplanCampaignSearchConfig: {
     preProcess: (data, additionalDetails) => {
-      const { name, status } = data?.state?.searchForm || {};
-      data.body.PlanConfigurationSearchCriteria = {};
-      data.body.PlanConfigurationSearchCriteria.limit = data?.state?.tableForm?.limit;
-      // data.body.PlanConfigurationSearchCriteria.limit = 10
-      data.body.PlanConfigurationSearchCriteria.offset = data?.state?.tableForm?.offset;
-      data.body.PlanConfigurationSearchCriteria.name = name;
-      data.body.PlanConfigurationSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
-      data.body.PlanConfigurationSearchCriteria.userUuid = Digit.UserService.getUser().info.uuid;
-      // delete data.body.PlanConfigurationSearchCriteria.pagination
-      data.body.PlanConfigurationSearchCriteria.status = status?.status;
+      const url = window.location.pathname;
+      const queryString = url.includes("?") ? url.split("?")[1] : url.split("&").slice(1).join("&");
+      const searchParams = new URLSearchParams(queryString);
+      const userId = searchParams.get("userId");
+      const status = searchParams.get("status");
+      data.body.PlanConfigurationSearchCriteria.userUuid = userId;
+      data.body.PlanConfigurationSearchCriteria.status = [status];
       data.body.PlanConfigurationSearchCriteria.name = data?.state?.searchForm?.microplanName;
-      data.body.PlanConfigurationSearchCriteria.campaignType = data?.state?.searchForm?.campaignType?.[0]?.code;
+      // data.body.PlanConfigurationSearchCriteria.campaignType = data?.state?.searchForm?.campaignType?.[0]?.code;
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
@@ -326,10 +323,10 @@ export const UICustomizations = {
             return (
               <div
                 style={{
-                  maxWidth: "15rem", // Set the desired maximum width
-                  wordWrap: "break-word", // Allows breaking within words
-                  whiteSpace: "normal", // Ensures text wraps normally
-                  overflowWrap: "break-word", // Break long words at the edge
+                  maxWidth: "15rem",
+                  wordWrap: "break-word",
+                  whiteSpace: "normal",
+                  overflowWrap: "break-word",
                 }}
               >
                 <p>{t(value)}</p>
@@ -345,7 +342,7 @@ export const UICustomizations = {
 
         case "CAMPAIGN_TYPE":
           if (value && value != "NA") {
-            return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_TYPE_" + value))}</p>;
+            return <p>{t(Digit.Utils.locale.getTransformedLocale("CAMPAIGN_TYPE_" + value))}</p>;
           } else {
             return (
               <div>
@@ -452,7 +449,6 @@ export const UICustomizations = {
             setTimeline(true);
             break;
           case "ACTION_LABEL_CONFIGURE_APP":
-
             window.history.pushState(
               {
                 name: row?.campaignName,
@@ -770,7 +766,6 @@ export const UICustomizations = {
             setTimeline(true);
             break;
 
-
           case "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS":
             window.history.pushState(
               {
@@ -790,7 +785,7 @@ export const UICustomizations = {
                 name: row?.campaignName,
                 data: row,
                 projectId: row?.projectId,
-                campaignType: row?.projectType
+                campaignType: row?.projectType,
               },
               "",
               `/${window.contextPath}/employee/campaign/checklist/search?name=${row?.campaignName}&campaignId=${row?.id}&projectType=${row?.projectType}`
@@ -1032,8 +1027,8 @@ export const UICustomizations = {
             setTimeline(true);
             break;
           case "ACTION_LABEL_RETRY":
-            retryCampaign(row,searchResult);
-              break;
+            retryCampaign(row, searchResult);
+            break;
           default:
             console.log(value);
             break;
@@ -1062,7 +1057,10 @@ export const UICustomizations = {
                 type="actionButton"
                 variation="secondary"
                 label={"Action"}
-                options={[{ key: 1, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },{ key: 2, code: "ACTION_LABEL_RETRY", i18nKey: t("ACTION_LABEL_RETRY") }].filter(obj=>Digit.Utils.didEmployeeHasAtleastOneRole(["SYSTEM_ADMINISTRATOR"]||obj?.key!=2))}  //added retry for system adminstrator for failed campaign
+                options={[
+                  { key: 1, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
+                  { key: 2, code: "ACTION_LABEL_RETRY", i18nKey: t("ACTION_LABEL_RETRY") },
+                ].filter((obj) => Digit.Utils.didEmployeeHasAtleastOneRole(["SYSTEM_ADMINISTRATOR"] || obj?.key != 2))} //added retry for system adminstrator for failed campaign
                 optionsKey="i18nKey"
                 showBottom={true}
                 isSearchable={false}

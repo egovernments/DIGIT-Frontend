@@ -6,14 +6,24 @@ import { ErrorMessage, FieldV1 , Stepper , TextBlock ,Card } from "@egovernments
 
 const CampaignName = ({ onSelect, formData, control, formState, ...props }) => {
   const { t } = useTranslation();
-  const [name, setName] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName || "");
+  
   const [executionCount, setExecutionCount] = useState(0);
   const [startValidation, setStartValidation] = useState(null);
   const [error, setError] = useState(null);
-  useEffect(() => {
-    setName(props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName);
-  }, [props?.props?.sessionData?.HCM_CAMPAIGN_NAME]);
   const searchParams = new URLSearchParams(location.search);
+  const microplanName = searchParams.get("microName");
+  const source = searchParams.get("source");
+  const [name, setName] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName || "");
+  useEffect(() => {
+    if(source === "microplan"){
+          const sessionName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName.replace(/&/g, "and");
+          if(sessionName === microplanName){
+            setName("");
+          }
+        }
+    else setName(props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName);
+  }, [props?.props?.sessionData?.HCM_CAMPAIGN_NAME]);
+ 
   const [currentStep , setCurrentStep] = useState(1);
   const currentKey = searchParams.get("key");
   const [key, setKey] = useState(() => {

@@ -11,11 +11,10 @@
         requestParam: {
         },
         requestBody: {
-          "PlanConfigurationSearchCriteria": {
+        "PlanConfigurationSearchCriteria": {
         "limit": 10,
         "offset": 0,
-        "tenantId": "mz",
-        "userUuid": "ff4ca65b-de7a-48de-ab9d-23c7728dc1aa"
+        "tenantId": tenantId,
     },
         },
         masterName: "commonUiConfig",
@@ -38,7 +37,7 @@
             },
             fields: [
               {
-                label: "Name of the microplan",
+                label: "NAME_OF_MICROPLAN",
                 isMandatory: false,
                 key: "microplanName",
                 type: "text",
@@ -46,23 +45,23 @@
                   name: "microplanName"
                 },
               },
-              {
-                label: "CAMPAIGN_SEARCH_TYPE",
-                type: "apidropdown",
-                isMandatory: false,
-                disable: false,
-                populators: {
-                  optionsCustomStyle: {
-                    top: "2.3rem",
-                  },
-                  name: "campaignType",
-                  optionsKey: "code",
-                  allowMultiSelect: false,
-                  masterName: "commonUiConfig",
-                  moduleName: "MyCampaignConfigDrafts",
-                  customfn: "populateCampaignTypeReqCriteria",
-                },
-              },
+              // {
+              //   label: "CAMPAIGN_SEARCH_TYPE",
+              //   type: "apidropdown",
+              //   isMandatory: false,
+              //   disable: false,
+              //   populators: {
+              //     optionsCustomStyle: {
+              //       top: "2.3rem",
+              //     },
+              //     name: "campaignType",
+              //     optionsKey: "code",
+              //     allowMultiSelect: false,
+              //     masterName: "commonUiConfig",
+              //     moduleName: "MyCampaignConfigDrafts",
+              //     customfn: "populateCampaignTypeReqCriteria",
+              //   },
+              // },
             ],
           },
 
@@ -78,7 +77,7 @@
               },
               {
                 label:"CAMPAIGN_TYPE",
-                jsonPath:"campaignDetails.projectType",
+                jsonPath:"additionalDetails.campaignType",
                 additionalCustomization:true
               },
               {
@@ -90,14 +89,11 @@
             resultsJsonPath: "PlanConfiguration",
 
             enableColumnSort: true,
-            // resultsJsonPath: "mdms",
           },
           show: true,
         },
-       // customHookName: "microplanv1.useSavedMicroplans", 
         
       },
-      customHookName:"microplanv1.useSavedMicroplans"
     },
   ];
 
