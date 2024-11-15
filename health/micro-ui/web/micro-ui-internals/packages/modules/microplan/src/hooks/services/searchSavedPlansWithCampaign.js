@@ -49,6 +49,7 @@ const SearchSavedPlansWithCampaign = async (body) => {
           // offset: body?.PlanConfigurationSearchCriteria?.offset,
           // name: body.PlanConfigurationSearchCriteria.name,
           ids: listOfPlans,
+          limit:listOfPlans?.length ? listOfPlans?.length : 10
         },
       },
     });
