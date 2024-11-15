@@ -135,7 +135,8 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
             style={{ margin: "0rem", maxWidth: "100%" }}
             additionalElements={[
               <span style={{ color: "#505A5F" }}>
-                {t("HCM_BOUNDARY_INFO ")}
+                {t("HCM_BOUNDARY_INFO")}
+                &nbsp;
                 <a href={`mailto:${mailConfig?.[CONSOLE_MDMS_MODULENAME]?.mailConfig?.[0]?.mailId}`} style={{ color: "black" }}>
                   {mailConfig?.[CONSOLE_MDMS_MODULENAME]?.mailConfig?.[0]?.mailId}
                 </a>

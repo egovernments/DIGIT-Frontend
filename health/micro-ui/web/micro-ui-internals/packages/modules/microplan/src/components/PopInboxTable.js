@@ -108,7 +108,7 @@ const PopInboxTable = ({ ...props }) => {
         width: "180px",
       },
     ];
-  }, [props.showEditColumn, props.employeeNameData, props.censusData]);
+  }, [props.showEditColumn, props.employeeNameData, props.censusData, selectedBusinessId]);
 
   const handlePageChange = (page, totalRows) => {
     props?.handlePageChange(page, totalRows);
@@ -136,6 +136,7 @@ const PopInboxTable = ({ ...props }) => {
   if (showTimelinePopup) {
     return (
       <TimelinePopUpWrapper
+      key={`${selectedBusinessId}-${Date.now()}`}
         onClose={() => {
           setShowTimelinePopup(false);
           setSelectedBusinessId(null); // Reset the selectedBusinessId when popup is closed
@@ -166,7 +167,7 @@ const PopInboxTable = ({ ...props }) => {
     <DataTable
       columns={columns}
       data={props.censusData}
-      selectableRows
+      selectableRows={!props.disabledAction}
       selectableRowsHighlight
       noContextMenu
       onSelectedRowsChange={handleRowSelect}

@@ -41,6 +41,7 @@ function UserAccess({ category, setData, nationalRoles }) {
   const queryClient = useQueryClient();
   const [showPopUp, setShowPopUp] = useState(null);
   const [chipPopUp, setChipPopUp] = useState(null);
+  const [chipPopUpRowId, setChipPopUpRowId] = useState(null); 
   const [showToast, setShowToast] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -172,7 +173,7 @@ function UserAccess({ category, setData, nationalRoles }) {
                 {row.jurisdiction.length > 2 && (
                   <Button
                     label={`+${row.jurisdiction.length - 2} ${t("ES_MORE")}`}
-                    onClick={() => setChipPopUp(true)}
+                    onClick={() => setChipPopUpRowId(row.id)}
                     variation="link"
                     style={{
                       height: "2rem",
@@ -193,7 +194,9 @@ function UserAccess({ category, setData, nationalRoles }) {
                   />
                 )}
 
-                {chipPopUp && <Wrapper setShowPopUp={setChipPopUp} alreadyQueuedSelectedState={row.jurisdiction} />}
+                {chipPopUpRowId === row.id && (
+                  <Wrapper setShowPopUp={setChipPopUpRowId} alreadyQueuedSelectedState={row.jurisdiction} />
+                )}
               </>
             )}
           </div>

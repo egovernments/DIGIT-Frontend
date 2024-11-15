@@ -530,12 +530,15 @@ export const UICustomizations = {
       const [showPopup, setShowPopup] = useState(false);
       const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
       switch (key) {
+        case "MICROPLAN_FACILITY_SERVINGPOPULATION":
+          return row?.additionalDetails?.servingPopulation;
         case "MICROPLAN_FACILITY_RESIDINGVILLAGE":
           return t(row?.residingBoundary);
         case "MICROPLAN_FACILITY_ASSIGNED_VILLAGES":
           const assignedVillages = row?.serviceBoundaries;
           return assignedVillages ? assignedVillages.length : null;
-        case "MICROPLAN_FACILITY_ACTION":
+        case "HCM_MICROPLAN_FACILITY_VIEW_ASSIGNMENT":
+        case "HCM_MICROPLAN_FACILITY_ACTION_ASSIGNMENT":
           return (
             <>
               <ButtonNew
@@ -543,7 +546,7 @@ export const UICustomizations = {
                 icon="ArrowForward"
                 iconFill=""
                 isSuffix
-                label={t("MICROPLAN_ASSIGN")}
+                label={t(key)}
                 // onClick={() => setShowPopup(true)}// removed this because due to popup crashing on dev
                 onClick={() => console.log("temp action")}
                 options={[]}

@@ -458,7 +458,7 @@ function RoleTableComposer({ nationalRoles }) {
   };
   useEffect(() => {
     if (showToast) {
-      setTimeout(closeToast, 1000);
+      setTimeout(closeToast, 5000);
     }
   }, [showToast]);
   const closeToast = () => {

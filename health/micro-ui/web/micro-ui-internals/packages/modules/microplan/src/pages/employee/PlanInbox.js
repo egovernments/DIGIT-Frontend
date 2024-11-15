@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect, useMemo } from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { useHistory } from "react-router-dom";
-import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonsGroup } from "@egovernments/digit-ui-components";
+import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonsGroup, NoResultsFound } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import DataTable from "react-data-table-component";
@@ -10,6 +10,7 @@ import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
 import { tableCustomStyle } from "../../components/tableCustomStyle";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../../utils/context";
+import ConfirmationPopUp from "../../components/ConfirmationPopUp";
 
 const PlanInbox = () => {
   const { t } = useTranslation();
@@ -37,6 +38,7 @@ const PlanInbox = () => {
   const [totalRows, setTotalRows] = useState(0);
   const [perPage, setPerPage] = useState(10);
   const [showToast, setShowToast] = useState(null);
+  const [disabledAction, setDisabledAction] = useState(false);
   const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   const [activeLink, setActiveLink] = useState({
@@ -301,6 +303,29 @@ const PlanInbox = () => {
     }
   }, [selectedFilter, activeLink, censusJurisdiction, limitAndOffset]);
 
+
+  // fetch the process instance for the current microplan to check if we need to disabled actions or not  
+  const { isLoading:isProcessLoading, data: processData, } = Digit.Hooks.useCustomAPIHook({
+    url: "/egov-workflow-v2/egov-wf/process/_search",
+    params: {
+       tenantId: tenantId,
+       history: true,
+        businessIds: microplanId,
+   },
+    config: {
+        enabled: true,
+        select: (data) => {
+          return data?.ProcessInstances;
+     },
+    },
+  });
+
+  useEffect(() => {
+    if (processData && processData.some((instance) => instance.action === "APPROVE_ESTIMATIONS")) {
+      setDisabledAction(true);
+    }
+  }, [processData]);
+
   useEffect(() => {
     if (selectedFilter === "VALIDATED") {
       setActiveLink({ code: "", name: "" });
@@ -487,7 +512,7 @@ const PlanInbox = () => {
     SEND_BACK_FOR_CORRECTION: { isSuffix: true, icon: "ArrowForward" },
   };
 
-  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isWorkflowLoading) {
+  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isWorkflowLoading || isProcessLoading) {
     return <Loader />;
   }
 
@@ -606,13 +631,13 @@ const PlanInbox = () => {
             )}
             {isPlanWithCensusLoading ? (
               <Loader />
-            ) : (
+            ) : planWithCensus?.tableData?.length===0 ? <NoResultsFound style={{height:selectedFilter === "VALIDATED" ? "472px" : "408px"}} text={t(`HCM_MICROPLAN_NO_DATA_FOUND_FOR_PLAN_INBOX_PLAN`)} /> : (
               <DataTable
                 columns={columns}
                 data={planWithCensus?.tableData}
                 pagination
                 paginationServer
-                selectableRows
+                selectableRows={!disabledAction}
                 selectableRowsHighlight
                 onChangeRowsPerPage={handlePerRowsChange}
                 onChangePage={handlePageChange}
@@ -652,13 +677,12 @@ const PlanInbox = () => {
       )}
 
       {actionBarPopUp && (
-        <WorkflowCommentPopUp
+        <ConfirmationPopUp
           onClose={closeActionBarPopUp}
-          heading={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN_HEADING_LABEL`)}
+          alertMessage={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN_ALERT_MESSAGE`)}
           submitLabel={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN_SUBMIT_LABEL`)}
           url="/plan-service/config/_update"
           requestPayload={{ PlanConfiguration: updateWorkflowForFooterAction() }}
-          commentPath="workflow.comments"
           onSuccess={(data) => {
             history.push(`/${window.contextPath}/employee/microplan/microplan-success`, {
               responseId: data?.PlanConfiguration?.[0]?.name,
@@ -666,9 +690,6 @@ const PlanInbox = () => {
               back: t(`GO_BACK_TO_HOME`),
               backlink: `/${window.contextPath}/employee`,
             });
-          }}
-          onError={(data) => {
-            setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
           }}
         />
       )}

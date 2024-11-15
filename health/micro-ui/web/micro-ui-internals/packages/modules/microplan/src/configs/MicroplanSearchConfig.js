@@ -36,7 +36,7 @@ const defaultSearchValues = {
               defaultValues: defaultSearchValues, // Set default values for search fields
               fields: [
                 {
-                  label: "Name of the microplan",
+                  label: "MP_NAME_OF_MICROPLAN_OPEN_MICROPLANS",
                   isMandatory: false,
                   key: "microplanName",
                   type: "text",

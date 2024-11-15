@@ -524,11 +524,16 @@ export const myCampaignConfig = {
                 additionalCustomization: true,
                 // disableSortBy: true,
               },
+              // {
+              //   label: "CAMPAIGN_END_DATE",
+              //   jsonPath: "endDate",
+              //   additionalCustomization: true,
+              //   // disableSortBy: true,
+              // },
               {
-                label: "CAMPAIGN_END_DATE",
-                jsonPath: "endDate",
-                additionalCustomization: true,
-                // disableSortBy: true,
+                label:"LAST_MODIFIED_TIME",
+                jsonPath:"auditDetails.lastModifiedTime",
+                additionalCustomization:true
               },
             ],
             enableGlobalSearch: false,
@@ -636,6 +641,11 @@ export const myCampaignConfig = {
                 label: "CAMPAIGN_NAME",
                 jsonPath: "campaignName",
                 // additionalCustomization: true,
+              },
+              {
+                label: "CM_DRAFT_TYPE",
+                jsonPath: "parentId",
+                additionalCustomization: true,
               },
               {
                 label: "CAMPAIGN_TYPE",
