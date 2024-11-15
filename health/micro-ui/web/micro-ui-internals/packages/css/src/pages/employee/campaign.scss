@@ -67,7 +67,10 @@
   border-width: 0rem 1.5rem;
   tbody {
     tr:hover {
-      background: rgba(#f47738, 0.12);
+      td{
+        background: rgba(#f47738, 0.12);
+          cursor: pointer;
+      }
     }
   }
 }
