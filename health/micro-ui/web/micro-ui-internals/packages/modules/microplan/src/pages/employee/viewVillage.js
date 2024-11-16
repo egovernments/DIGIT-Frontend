@@ -375,7 +375,7 @@ const VillageView = () => {
                 </Card>
 
                 {showCommentLogPopup && (
-                    <TimelinePopUpWrapper onClose={onCommentLogClose} businessId={data?.id} heading="HCM_MICROPLAN_STATUS_LOG_LABEL" />
+                    <TimelinePopUpWrapper onClose={onCommentLogClose} businessId={data?.id} heading={`${t("HCM_MICROPLAN_STATUS_LOG_FOR_LABEL")} ${boundaryCode}`}  />
                 )}
 
             </div>

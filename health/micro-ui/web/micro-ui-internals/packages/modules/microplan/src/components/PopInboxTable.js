@@ -22,6 +22,7 @@ const PopInboxTable = ({ ...props }) => {
   const [selectedBusinessId, setSelectedBusinessId] = useState(null);
   const url = Digit.Hooks.useQueryParams();
   const [isIntermediate, setIsIntermediate] = useState(false);
+  const [selectedBoundaryCode, setSelectedBoundaryCode] = useState(null);
 
   const columns = useMemo(() => {
 
@@ -101,6 +102,7 @@ const PopInboxTable = ({ ...props }) => {
             label={t(`VIEW_LOGS`)}
             onClick={() => {
               setSelectedBusinessId(row.id); // Set the row.id to state
+              setSelectedBoundaryCode(row.boundaryCode);
               setShowTimelinePopup(true);
             }}
             variation="link"
@@ -143,10 +145,11 @@ const PopInboxTable = ({ ...props }) => {
       key={`${selectedBusinessId}-${Date.now()}`}
         onClose={() => {
           setShowTimelinePopup(false);
+          setSelectedBoundaryCode(null);
           setSelectedBusinessId(null); // Reset the selectedBusinessId when popup is closed
         }}
         businessId={selectedBusinessId} // Pass selectedBusinessId as businessId
-        heading="HCM_MICROPLAN_STATUS_LOG_LABEL"
+        heading={`${t("HCM_MICROPLAN_STATUS_LOG_FOR_LABEL")} ${selectedBoundaryCode}`} 
       />
     );
   }
