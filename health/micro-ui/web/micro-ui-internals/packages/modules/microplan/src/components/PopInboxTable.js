@@ -11,6 +11,7 @@ import EditVillagePopulationPopUp from "./editVillagePopulationPopUP";
 import { tableCustomStyle } from "./tableCustomStyle";
 import { CustomLoader } from "./RoleTableComposer";
 import { min } from "lodash";
+import VillageHierarchyTooltipWrapper from "./VillageHierarchyTooltipWrapper";
 
 const PopInboxTable = ({ ...props }) => {
   const { t } = useTranslation();
@@ -28,6 +29,7 @@ const PopInboxTable = ({ ...props }) => {
       {
         name: t(`INBOX_VILLAGE`),
         cell: (row, index, column, id) => (
+          <div style={{display:"flex", gap:".5rem"}}>
           <Button
             label={t(`${row.boundaryCode}`)}
             onClick={() =>
@@ -38,6 +40,8 @@ const PopInboxTable = ({ ...props }) => {
             size={"medium"}
             style={{ minWidth: "unset" }}
           />
+          <VillageHierarchyTooltipWrapper  boundaryCode={row?.boundaryCode}/>
+          </div>
         ),
         // selector:(row, index)=>row.boundaryCode,
         sortable: true,

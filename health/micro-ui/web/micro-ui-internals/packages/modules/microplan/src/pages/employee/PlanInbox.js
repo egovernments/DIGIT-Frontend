@@ -11,6 +11,7 @@ import { tableCustomStyle } from "../../components/tableCustomStyle";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../../utils/context";
 import ConfirmationPopUp from "../../components/ConfirmationPopUp";
+import VillageHierarchyTooltipWrapper from "../../components/VillageHierarchyTooltipWrapper";
 
 const PlanInbox = () => {
   const { t } = useTranslation();
@@ -402,7 +403,13 @@ const PlanInbox = () => {
   const columns = [
     {
       name: t(`INBOX_VILLAGE`),
-      cell: (row) => t(row?.village) || "NA",
+      cell: (row) => (
+        <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
+          <span>{t(`${row?.village}`)}</span>
+          <VillageHierarchyTooltipWrapper boundaryCode={row?.village} />
+        </div>
+      ),
+      // cell: (row) => t(row?.village) || "NA",
       sortable: true,
       width: "180px",
     },
