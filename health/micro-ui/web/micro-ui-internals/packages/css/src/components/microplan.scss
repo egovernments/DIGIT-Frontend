@@ -317,6 +317,10 @@
     opacity: 1 !important;
   }
 
+  /* Target the first div directly inside .rdt_TableCol_Sortable */
+  > div:first-child {
+    white-space: normal;
+  }
   .__rdt_custom_sort_icon__{
     display: flex;
     align-items: center;

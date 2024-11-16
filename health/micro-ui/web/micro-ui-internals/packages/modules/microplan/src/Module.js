@@ -27,6 +27,13 @@ import UserAccessMgmt from "./components/UserAccessMgmt";
 import UserAccessMgmtTableWrapper from "./components/UserAccessMgmtTableWrapper";
 import { DataMgmtComponent } from "./components/DataMgmtComponent";
 import { ShowMoreWrapper } from "./components/ShowMoreWrapper";
+import MapViewComponent from "./components/MapViewComponent";
+import BoundaryFilter from "./components/BoundaryFilter";
+import BaseMapSwitcher from "./components/BaseMapSwitcher";
+import CustomScaleControl from "./components/CustomScaleControl";
+import MapFilterIndex from "./components/MapFilterIndex";
+import FilterSection from "./components/FilterSection";
+import ChoroplethSelection from "./components/ChoroplethSelection";
 
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -91,6 +98,13 @@ const componentsToRegister = {
   UserAccessMgmtTableWrapper,
   DataMgmtComponent,
   ShowMoreWrapper,
+  MapViewComponent,
+  BoundaryFilter,
+  BaseMapSwitcher,
+  CustomScaleControl,
+  MapFilterIndex,
+  FilterSection,
+  ChoroplethSelection
 };
 
 export const initMicroplanComponents = () => {

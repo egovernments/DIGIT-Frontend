@@ -980,7 +980,7 @@ export const UICustomizations = {
           return row.status === "EXECUTION_TO_BE_DONE" ? (
             <ButtonNew
               label={t("START")}
-              variation="secondary"
+              variation="primary"
               icon={"ArrowForward"}
               style={{minWidth:"240px"}}
               type="button"
@@ -991,7 +991,7 @@ export const UICustomizations = {
           ) : row.status === "RESOURCE_ESTIMATIONS_APPROVED" ? (
             <ButtonNew
               label={t("WBH_DOWNLOAD")}
-              variation="secondary"
+              variation="primary"
               icon={"FileDownload"}
               style={{minWidth:"240px"}}
               type="button"
@@ -1001,7 +1001,7 @@ export const UICustomizations = {
           ) : (
             <ButtonNew
               label={t("WBH_EDIT")}
-              variation="secondary"
+              variation="primary"
               icon={"Edit"}
               style={{minWidth:"240px"}}
               type="button"
