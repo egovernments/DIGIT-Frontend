@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { PopUp, Button, TextArea, ErrorMessage, Toast } from "@egovernments/digit-ui-components";
 
-const ConfirmationPopUp = ({ onClose, alertMessage, submitLabel, url, requestPayload, onSuccess, onError }) => {
+const ConfirmationPopUp = ({ onClose, alertMessage, submitLabel, url, requestPayload, onSuccess, onError, cancelLabel }) => {
 
     const { t } = useTranslation();
     const [comment, setComment] = useState(null);
@@ -55,7 +55,7 @@ const ConfirmationPopUp = ({ onClose, alertMessage, submitLabel, url, requestPay
                         type="button"
                         size="large"
                         variation="secondary"
-                        label={t(`HCM_MICROPLAN_EDIT_POPULATION_CLOSE`)}
+                        label={t(cancelLabel)}
                         onClick={onClose}
                         isDisabled={isSubmitting}  // Disable button during submission
                     />,
