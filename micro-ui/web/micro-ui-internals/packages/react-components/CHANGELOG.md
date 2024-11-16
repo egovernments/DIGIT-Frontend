@@ -3,6 +3,9 @@ Here's the `CHANGELOG` file for the specified versions:
 ```markdown
 # Changelog
 
+## [1.8.2-beta.19]
+- Updated the Employee Module card component
+
 ## [1.8.2-beta.17]
 - updated loader component style
 
