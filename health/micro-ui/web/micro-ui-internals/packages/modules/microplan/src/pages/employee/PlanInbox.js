@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect, useMemo } from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { useHistory } from "react-router-dom";
 import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonsGroup, NoResultsFound } from "@egovernments/digit-ui-components";
+import { Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import DataTable from "react-data-table-component";
@@ -525,6 +526,12 @@ const PlanInbox = () => {
 
   return (
     <div className="pop-inbox-wrapper">
+       <div>
+      <Header styles={{marginBottom:"1rem"}} className="pop-inbox-header">{t(`HCM_MICROPLAN_VALIDATE_AND_APPROVE_MICROPLAN_ESTIMATIONS`)}</Header>
+      <div className="summary-sub-heading">
+      {`"${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${campaignObject?.campaignName || t("NO_NAME_AVAILABLE")}"`}
+    </div>
+    </div>
       <SearchJurisdiction
         boundaries={boundaries}
         jurisdiction={{

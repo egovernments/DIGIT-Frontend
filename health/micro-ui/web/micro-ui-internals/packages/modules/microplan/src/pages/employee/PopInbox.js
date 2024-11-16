@@ -507,7 +507,12 @@ const isStatusConditionMet = (statusCount) => {
 
   return (
     <div className="pop-inbox-wrapper">
-      <Header className="pop-inbox-header">{t(`VALIDATE_APPROVE_POPULATIONDATA`)}</Header>
+      <div>
+      <Header styles={{marginBottom:"1rem"}} className="pop-inbox-header">{t(`VALIDATE_APPROVE_POPULATIONDATA`)}</Header>
+      <div className="summary-sub-heading">
+      {`"${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${planObject?.name || t("NO_NAME_AVAILABLE")}"`}
+    </div>
+    </div>
       <SearchJurisdiction
         boundaries={boundaries}
         jurisdiction={{

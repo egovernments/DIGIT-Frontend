@@ -158,7 +158,10 @@ const FacilityCatchmentMapping = () => {
 
   return (
     <div style={{ marginBottom: isRootApprover && data?.TotalCount === 0 && planObject?.status === "CENSUS_DATA_APPROVED" ?"2.5rem" :"0rem"}}>
-      <Header styles={{ marginBottom: "1.5rem" }}>{t("MICROPLAN_ASSIGN_CATCHMENT_VILLAGES")}</Header>
+      <Header styles={{ marginBottom: "1rem" }}>{t("MICROPLAN_ASSIGN_CATCHMENT_VILLAGES")}</Header>
+      <div className="summary-sub-heading" style={{marginBottom:"1.5rem"}}>
+      {`"${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${planObject?.name || t("NO_NAME_AVAILABLE")}"`}
+    </div>
       <div className="inbox-search-wrapper">
         <InboxSearchComposer
           configs={config}

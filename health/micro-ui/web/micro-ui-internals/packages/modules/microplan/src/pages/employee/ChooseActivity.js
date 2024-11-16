@@ -159,7 +159,7 @@ const isProcessDone = (ProcessInstances, process) => {
 
     return (
         <React.Fragment>
-            <ActivityHomeCard title={t("SELECT_AN_ACTIVITY_TO_CONTINUE")} module={activityCardData} onClickCard={onClickCard}/>
+            <ActivityHomeCard title={t("SELECT_AN_ACTIVITY_TO_CONTINUE")} module={activityCardData} onClickCard={onClickCard}microplanName={planObject?.name}/>
         </React.Fragment>
     );
 }
