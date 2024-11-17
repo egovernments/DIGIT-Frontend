@@ -113,7 +113,7 @@ const FacilityCatchmentMapping = () => {
 
 
   useEffect(() => {
-    if (processData && processData.some((instance) => instance.action === "APPROVE_CENSUS_DATA")) {
+    if (processData && processData.some((instance) => instance.action === "FINALIZE_CATCHMENT_MAPPING")) {
       setDisabledAction(true);
     }
   }, [processData]);
