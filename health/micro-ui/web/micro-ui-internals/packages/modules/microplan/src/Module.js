@@ -34,6 +34,7 @@ import CustomScaleControl from "./components/CustomScaleControl";
 import MapFilterIndex from "./components/MapFilterIndex";
 import FilterSection from "./components/FilterSection";
 import ChoroplethSelection from "./components/ChoroplethSelection";
+import VillageHierarchyTooltipWrapper from "./components/VillageHierarchyTooltipWrapper";
 
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -94,6 +95,7 @@ const componentsToRegister = {
   AssumptionsList,
   FormulaConfigScreen,
   FacilityPopup,
+  VillageHierarchyTooltipWrapper,
   UserAccessMgmt,
   UserAccessMgmtTableWrapper,
   DataMgmtComponent,
