@@ -485,6 +485,20 @@ const isStatusConditionMet = (statusCount) => {
     "SEND_BACK_FOR_CORRECTION": { isSuffix: true, icon: "ArrowForward" },
   }
 
+  const getButtonState = (action) => {
+    console.log(selectedFilter, action);
+    if (selectedFilter === "PENDING_FOR_VALIDATION" && action === "VALIDATE") {
+      return true;
+    }
+    if (selectedFilter === "PENDING_FOR_APPROVAL" && (action === "APPROVE" || action === "ROOT_APPROVE")) {
+      return true;
+    }
+    if (selectedFilter === "VALIDATED" && action === "SEND_BACK_FOR_CORRECTION") {
+      return true;
+    }
+    return false;
+  };
+
 
   const onCommentLogClose = () => {
     setShowComment(false);
@@ -572,10 +586,14 @@ const isStatusConditionMet = (statusCount) => {
                       <ButtonsGroup
                         buttonsArray={actionsMain
                           ?.filter((action) => !actionsToHide.includes(action.action))
-                          ?.map((action, index) => (
+                          ?.map((action, index) => {
+
+                            const isPrimary = getButtonState(action.action);
+
+                            return (
                             <Button
                               key={index}
-                              variation="secondary"
+                              variation={isPrimary ? "primary" : "secondary"}
                               label={t(action.action)}
                               type="button"
                               onClick={() => handleActionClick(action.action)}
@@ -583,16 +601,20 @@ const isStatusConditionMet = (statusCount) => {
                               icon={actionIconMap[action.action]?.icon}
                               isSuffix={actionIconMap[action.action]?.isSuffix}
                             />
-                          ))
+                          );
+                        })
                         }
                       />
                     ) : (
                       actionsMain
                         ?.filter((action) => !actionsToHide.includes(action.action))
-                        ?.map((action, index) => (
+                        ?.map((action, index) => {
+                          const isPrimary = getButtonState(action.action);
+
+                          return(
                           <Button
                             key={index}
-                            variation="secondary"
+                            variation={isPrimary ? "primary" : "secondary"}
                             label={t(action.action)}
                             type="button"
                             onClick={() => handleActionClick(action.action)}
@@ -600,7 +622,8 @@ const isStatusConditionMet = (statusCount) => {
                             icon={actionIconMap[action.action]?.icon}
                             isSuffix={actionIconMap[action.action]?.isSuffix}
                           />
-                        ))
+                        );
+                      })
                     )}
                   </div>
 
@@ -637,7 +660,7 @@ const isStatusConditionMet = (statusCount) => {
               <WorkflowCommentPopUp
                 onClose={onCommentLogClose}
                 heading={t(`POP_INBOX_HCM_MICROPLAN_EDIT_POPULATION_COMMENT_LABEL`)}
-                submitLabel={t(`POP_INBOX_HCM_MICROPLAN_EDIT_POPULATION_COMMENT_SUBMIT_LABEL`)}
+                submitLabel={t(`${root ? 'ROOT_' : ''}POP_INBOX_HCM_MICROPLAN_EDIT_POPULATION_COMMENT_SUBMIT_LABEL`)}
                 url="/census-service/_update"
                 requestPayload={{ Census: updatedCensus }}
                 commentPath="workflow.comments"
