@@ -3,6 +3,7 @@ import _ from "lodash";
 import React, { useState, Fragment } from "react";
 import { Button as ButtonNew, Dropdown } from "@egovernments/digit-ui-components";
 import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader, EditIcon, ArrowForward } from "@egovernments/digit-ui-react-components";
+import VillageHierarchyTooltipWrapper from "../components/VillageHierarchyTooltipWrapper";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
@@ -533,7 +534,10 @@ export const UICustomizations = {
         case "MICROPLAN_FACILITY_SERVINGPOPULATION":
           return row?.additionalDetails?.servingPopulation;
         case "MICROPLAN_FACILITY_RESIDINGVILLAGE":
-          return t(row?.residingBoundary);
+          return <div style={{display:"flex", gap:".5rem"}}>
+          {t(row?.residingBoundary)}
+          <VillageHierarchyTooltipWrapper  boundaryCode={row?.residingBoundary}/>
+        </div>
         case "MICROPLAN_FACILITY_ASSIGNED_VILLAGES":
           const assignedVillages = row?.serviceBoundaries;
           return assignedVillages ? assignedVillages.length : null;
