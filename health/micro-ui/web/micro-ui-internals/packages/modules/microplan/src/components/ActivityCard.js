@@ -1,8 +1,8 @@
 import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { CardHeader, Header } from "@egovernments/digit-ui-react-components";
-import { Card, Tag } from "@egovernments/digit-ui-components";
+import { CardHeader, Header, InfoIconOutline } from "@egovernments/digit-ui-react-components";
+import { Card, Tag, TooltipWrapper } from "@egovernments/digit-ui-components";
 
 const ActivityHomeCard = ({onClickCard=()=>{},...props}) => {
   const { t } = useTranslation();
@@ -26,9 +26,10 @@ const ActivityHomeCard = ({onClickCard=()=>{},...props}) => {
                 minWidth: "100px", 
                 cursor: i.disable ? "not-allowed" : "pointer", 
                 opacity: i.disable ? 0.8 : 1,  // To visually indicate the disabled state
-                justifyContent: "center",
-                alignItems: "center",
+                // justifyContent: "center",
+                 alignItems: "center",
                 height: "200px",
+                padding: "0px"
               }} // Adding margin to each card
             onClick={() => {
                 if (!i.disable) { // Check if disabled
@@ -38,14 +39,19 @@ const ActivityHomeCard = ({onClickCard=()=>{},...props}) => {
               }}
             children={
               <>
-                {i.icon} 
-                {i.doneLabel && <Tag
+              <div className="select-activity-info">
+              <TooltipWrapper content={t(`SELECT_ACTIVITY_TOOLTIP_CONTENT_${i.name}`)} placement={"right"}>
+            <InfoIconOutline width="1.75rem" height="1.75rem" fill="#363636" />
+          </TooltipWrapper>
+              {i.doneLabel && <Tag
                                 icon=""
                                 label={t(i.doneLabel)}
                                 labelStyle={{}}
                                 style={{}}
                                 type="success"
                               />}
+  </div>
+                {i.icon} 
                 <p className={`activity-card-label ${i.disable ? "disable-label" : ""}`}>{t(i.name)}</p>
               </>
             }
