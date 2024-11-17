@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect, useMemo } from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { useHistory } from "react-router-dom";
 import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonsGroup, NoResultsFound } from "@egovernments/digit-ui-components";
+import { Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import DataTable from "react-data-table-component";
@@ -11,6 +12,7 @@ import { tableCustomStyle } from "../../components/tableCustomStyle";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../../utils/context";
 import ConfirmationPopUp from "../../components/ConfirmationPopUp";
+import VillageHierarchyTooltipWrapper from "../../components/VillageHierarchyTooltipWrapper";
 
 const PlanInbox = () => {
   const { t } = useTranslation();
@@ -402,7 +404,13 @@ const PlanInbox = () => {
   const columns = [
     {
       name: t(`INBOX_VILLAGE`),
-      cell: (row) => t(row?.village) || "NA",
+      cell: (row) => (
+        <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
+          <span>{t(`${row?.village}`)}</span>
+          <VillageHierarchyTooltipWrapper boundaryCode={row?.village} />
+        </div>
+      ),
+      // cell: (row) => t(row?.village) || "NA",
       sortable: true,
       width: "180px",
     },
@@ -518,6 +526,12 @@ const PlanInbox = () => {
 
   return (
     <div className="pop-inbox-wrapper">
+       <div>
+      <Header styles={{marginBottom:"1rem"}} className="pop-inbox-header">{t(`HCM_MICROPLAN_VALIDATE_AND_APPROVE_MICROPLAN_ESTIMATIONS`)}</Header>
+      <div className="summary-sub-heading">
+      {`"${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${campaignObject?.campaignName || t("NO_NAME_AVAILABLE")}"`}
+    </div>
+    </div>
       <SearchJurisdiction
         boundaries={boundaries}
         jurisdiction={{
@@ -681,6 +695,7 @@ const PlanInbox = () => {
           onClose={closeActionBarPopUp}
           alertMessage={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN_ALERT_MESSAGE`)}
           submitLabel={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN_SUBMIT_LABEL`)}
+          cancelLabel={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN_CANCEL_ACTION`)}
           url="/plan-service/config/_update"
           requestPayload={{ PlanConfiguration: updateWorkflowForFooterAction() }}
           onSuccess={(data) => {
