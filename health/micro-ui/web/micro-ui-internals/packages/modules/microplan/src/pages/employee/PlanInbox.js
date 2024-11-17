@@ -520,6 +520,20 @@ const PlanInbox = () => {
     SEND_BACK_FOR_CORRECTION: { isSuffix: true, icon: "ArrowForward" },
   };
 
+  const getButtonState = (action) => {
+    
+    if (selectedFilter === "PENDING_FOR_VALIDATION" && action === "VALIDATE") {
+      return true;
+    }
+    if (selectedFilter === "PENDING_FOR_APPROVAL" && (action === "APPROVE" || action === "ROOT_APPROVE")) {
+      return true;
+    }
+    if (selectedFilter === "VALIDATED" && action === "SEND_BACK_FOR_CORRECTION") {
+      return true;
+    }
+    return false;
+  };
+
   if (isPlanEmpSearchLoading || isLoadingCampaignObject || isWorkflowLoading || isProcessLoading) {
     return <Loader />;
   }
@@ -591,10 +605,14 @@ const PlanInbox = () => {
                     <ButtonsGroup
                       buttonsArray={actionsMain
                         ?.filter((action) => !actionsToHide.includes(action.action))
-                        ?.map((action, index) => (
+                        ?.map((action, index) => {
+
+                          const isPrimary = getButtonState(action.action);
+
+                          return(
                           <Button
                             key={index}
-                            variation="secondary"
+                            variation={isPrimary ? "primary" : "secondary"}
                             label={t(action.action)}
                             type="button"
                             onClick={(curr) => handleActionClick(action?.action)}
@@ -602,15 +620,20 @@ const PlanInbox = () => {
                             icon={actionIconMap[action.action]?.icon}
                             isSuffix={actionIconMap[action.action]?.isSuffix}
                           />
-                        ))}
+                        );
+                      })}
                     />
                   ) : (
                     actionsMain
                       ?.filter((action) => !actionsToHide.includes(action.action))
-                      ?.map((action, index) => (
+                      ?.map((action, index) => {
+
+                        const isPrimary = getButtonState(action.action);
+
+                        return(
                         <Button
                           key={index}
-                          variation="secondary"
+                          variation={isPrimary ? "primary" : "secondary"}
                           label={t(action.action)}
                           type="button"
                           onClick={(curr) => handleActionClick(action?.action)}
@@ -618,7 +641,8 @@ const PlanInbox = () => {
                           icon={actionIconMap[action.action]?.icon}
                           isSuffix={actionIconMap[action.action]?.isSuffix}
                         />
-                      ))
+                      );
+                    })
                   )}
                 </div>
 
