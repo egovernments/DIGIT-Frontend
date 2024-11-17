@@ -40,7 +40,7 @@ const ActivityHomeCard = ({onClickCard=()=>{},...props}) => {
             children={
               <>
               <div className="select-activity-info">
-              <TooltipWrapper content={t(`SELECT_ACTIVITY_TOOLTIP_CONTENT_${i.name}`)} placement={"right"}>
+              <TooltipWrapper content={t(`SELECT_ACTIVITY_TOOLTIP_CONTENT_${i.name}`)} placement={"right-start"}>
             <InfoIconOutline width="1.75rem" height="1.75rem" fill="#363636" />
           </TooltipWrapper>
               {i.doneLabel && <Tag

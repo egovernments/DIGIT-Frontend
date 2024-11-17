@@ -82,6 +82,9 @@ const PopInbox = () => {
               CensusSearchCriteria: {
                 tenantId: tenantId,
                 source: microplanId,
+                ...(isRootApprover
+                  ? {}
+                  : {jurisdiction: jurisdiction }), 
               },
             }
           },
@@ -486,7 +489,7 @@ const isStatusConditionMet = (statusCount) => {
   }
 
   const getButtonState = (action) => {
-    console.log(selectedFilter, action);
+    
     if (selectedFilter === "PENDING_FOR_VALIDATION" && action === "VALIDATE") {
       return true;
     }
@@ -537,7 +540,7 @@ const isStatusConditionMet = (statusCount) => {
         onClear={onClear}
       />
 
-        <div className="pop-inbox-wrapper-filter-table-wrapper" style={{ marginBottom: isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "CENSUS_DATA_APPROVAL_IN_PROGRESS" ? "2.5rem" : "0rem" }}>
+        <div className="pop-inbox-wrapper-filter-table-wrapper" style={{ marginBottom: (isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "CENSUS_DATA_APPROVAL_IN_PROGRESS") || (!isRootApprover && isStatusConditionMet(totalStatusCount)) || disabledAction ? "2.5rem" : "0rem" }}>
           <InboxFilterWrapper
             options={activeFilter}
             onApplyFilters={onFilter}
@@ -660,7 +663,7 @@ const isStatusConditionMet = (statusCount) => {
               <WorkflowCommentPopUp
                 onClose={onCommentLogClose}
                 heading={t(`POP_INBOX_HCM_MICROPLAN_EDIT_POPULATION_COMMENT_LABEL`)}
-                submitLabel={t(`${root ? 'ROOT_' : ''}POP_INBOX_HCM_MICROPLAN_EDIT_POPULATION_COMMENT_SUBMIT_LABEL`)}
+                submitLabel={t(`${isRootApprover ? 'ROOT_' : ''}POP_INBOX_HCM_MICROPLAN_EDIT_POPULATION_COMMENT_SUBMIT_LABEL`)}
                 url="/census-service/_update"
                 requestPayload={{ Census: updatedCensus }}
                 commentPath="workflow.comments"
@@ -692,6 +695,20 @@ const isStatusConditionMet = (statusCount) => {
         <ActionBar
           actionFields={[
             <Button icon="CheckCircle" label={t(`HCM_MICROPLAN_FINALIZE_POPULATION_DATA`)} onClick={handleActionBarClick} type="button" variation="primary" />,
+          ]}
+          className=""
+          maxActionFieldsAllowed={5}
+          setactionFieldsToRight
+          sortActionFields
+          style={{}}
+        />}
+
+      {((!isRootApprover && isStatusConditionMet(totalStatusCount)) || disabledAction) &&
+        <ActionBar
+          actionFields={[
+            <Button label={t(`HCM_MICROPLAN_POP_INBOX_BACK_BUTTON`)} onClick={()=> {
+              history.push(`/${window.contextPath}/employee/microplan/select-activity?microplanId=${url?.microplanId}&campaignId=${url?.campaignId}`);
+            }} type="button" variation="primary" />,
           ]}
           className=""
           maxActionFieldsAllowed={5}
