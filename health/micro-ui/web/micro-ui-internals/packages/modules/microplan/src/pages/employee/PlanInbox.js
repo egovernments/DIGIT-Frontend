@@ -529,7 +529,7 @@ const PlanInbox = () => {
        <div>
       <Header styles={{marginBottom:"1rem"}} className="pop-inbox-header">{t(`HCM_MICROPLAN_VALIDATE_AND_APPROVE_MICROPLAN_ESTIMATIONS`)}</Header>
       <div className="summary-sub-heading">
-      {`"${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${campaignObject?.campaignName || t("NO_NAME_AVAILABLE")}"`}
+      {`${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${campaignObject?.campaignName || t("NO_NAME_AVAILABLE")}`}
     </div>
     </div>
       <SearchJurisdiction
