@@ -39,6 +39,8 @@ const PlanInbox = () => {
   const [rowsPerPage, setRowsPerPage] = useState(50);
   const [totalRows, setTotalRows] = useState(0);
   const [perPage, setPerPage] = useState(10);
+  const [assignedToMeCount, setAssignedToMeCount] = useState(0);
+  const [assignedToAllCount, setAssignedToAllCount] = useState(0);
   const [showToast, setShowToast] = useState(null);
   const [disabledAction, setDisabledAction] = useState(false);
   const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
@@ -177,6 +179,12 @@ const PlanInbox = () => {
     if (selectedBoundaries.length === 0) {
       setShowToast({ key: "warning", label: t("MICROPLAN_BOUNDARY_IS_EMPTY_WARNING"), transitionTime: 5000 });
     } else {
+
+      setActiveLink({
+        code: "ASSIGNED_TO_ME",
+        name: "ASSIGNED_TO_ME"
+      });
+
       // Extract the list of codes from the selectedBoundaries array
       const boundaryCodes = selectedBoundaries.map((boundary) => boundary.code);
 
@@ -295,7 +303,15 @@ const PlanInbox = () => {
         setSelectedFilter(activeFilterKeys[0]);
       }
       setVillagesSelected(0);
+
       setSelectedRows([]);
+      if (activeLink.code === "ASSIGNED_TO_ME") {
+        setAssignedToMeCount(planWithCensus?.TotalCount);
+        setAssignedToAllCount(planWithCensus?.StatusCount[selectedFilter] || 0)
+      } else {
+        setAssignedToAllCount(planWithCensus?.TotalCount);
+      }
+
     }
   }, [planWithCensus, selectedFilter, activeLink]);
 
@@ -345,6 +361,10 @@ const PlanInbox = () => {
 
   const onFilter = (selectedStatus) => {
     setSelectedFilter(selectedStatus?.code);
+    setActiveLink({
+      code: "ASSIGNED_TO_ME",
+      name: "ASSIGNED_TO_ME"
+    });
   };
 
   const clearFilters = () => {
@@ -573,16 +593,17 @@ const PlanInbox = () => {
             <Tab
               activeLink={activeLink?.code}
               configItemKey="code"
+              configDisplayKey="name"
               itemStyle={{ width: "290px" }}
               configNavItems={[
                 {
-                  code: "ASSIGNED_TO_ME",
-                  name: "ASSIGNED_TO_ME",
-                },
-                {
-                  code: "ASSIGNED_TO_ALL",
-                  name: "ASSIGNED_TO_ALL",
-                },
+                    code: "ASSIGNED_TO_ME",
+                    name: `${`${t(`ASSIGNED_TO_ME`)} (${assignedToMeCount})`}`,
+                  },
+                  {
+                    code: "ASSIGNED_TO_ALL",
+                    name: `${`${t(`ASSIGNED_TO_ALL`)} (${assignedToAllCount})`}`,
+                  },
               ]}
               navStyles={{}}
               onTabClick={(e) => {
