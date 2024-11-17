@@ -55,7 +55,7 @@ export const fetchDataAndSetParams = (  state, setParams, campaignObject, planOb
         },
         campaignType: {
           code: campaignObject?.projectType,
-          i18nKey: `CAMPAIGN_TYPE_${campaignObject?.projectType}`,
+          i18nKey: Digit.Utils.locale.getTransformedLocale(`CAMPAIGN_TYPE_${campaignObject?.projectType}`),
         },
       },
     };
