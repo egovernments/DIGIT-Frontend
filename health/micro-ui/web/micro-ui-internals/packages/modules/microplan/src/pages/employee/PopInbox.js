@@ -614,7 +614,7 @@ const isStatusConditionMet = (statusCount) => {
                       commentPath="workflow.comments"
                       onSuccess={(data) => {
                         closePopUp();
-                        setShowToast({ key: "success", label: t("POP_INBOX_WORKFLOW_UPDATE_SUCCESS"), transitionTime: 5000 });
+                        setShowToast({ key: "success", label: t(`POP_INBOX_WORKFLOW_FOR_${workFlowPopUp}_UPDATE_SUCCESS`), transitionTime: 5000 });
                         refetch();
                         refetchPlan();
                         fetchStatusCount();
@@ -680,7 +680,8 @@ const isStatusConditionMet = (statusCount) => {
       {actionBarPopUp && (
         <ConfirmationPopUp
           onClose={closeActionBarPopUp}
-          alertMessage={t(`HCM_MICROPLAN_FINALIZE_POPULATION_ALERT_MESSAGE`)}
+          alertHeading={t(`HCM_MICROPLAN_FINALIZE_POPULATION_ALERT_HEADING_MESSAGE`)}
+          alertMessage={t(`HCM_MICROPLAN_FINALIZE_POPULATION_ALERT_DESCRIPTION_MESSAGE`)}
           submitLabel={t(`HCM_MICROPLAN_FINALIZE_POPULATION_DATA_SUBMIT_ACTION`)}
           cancelLabel={t(`HCM_MICROPLAN_FINALIZE_POPULATION_DATA_CANCEL_ACTION`)}
           url="/plan-service/config/_update"

@@ -200,6 +200,7 @@ const FacilityCatchmentMapping = () => {
       {actionBarPopUp && (
         <ConfirmationPopUp
           onClose={closeActionBarPopUp}
+          alertHeading={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT_ALERT_HEADING`)}
           alertMessage={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT_ALERT_MESSAGE`)}
           submitLabel={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT_SUBMIT_ACTION`)}
           cancelLabel={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT_CANCEL_ACTION`)}

@@ -632,7 +632,7 @@ const PlanInbox = () => {
                     commentPath="workflow.comments"
                     onSuccess={(data) => {
                       closePopUp();
-                      setShowToast({ key: "success", label: t("PLAN_INBOX_WORKFLOW_UPDATE_SUCCESS"), transitionTime: 5000 });
+                      setShowToast({ key: "success", label: t(`PLAN_INBOX_WORKFLOW_FOR_${workFlowPopUp}_UPDATE_SUCCESS`), transitionTime: 5000 });
                       refetchPlanWithCensus();
                     }}
                     onError={(data) => {
@@ -693,6 +693,7 @@ const PlanInbox = () => {
       {actionBarPopUp && (
         <ConfirmationPopUp
           onClose={closeActionBarPopUp}
+          alertHeading={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN_ALERT_HEADING`)}
           alertMessage={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN_ALERT_MESSAGE`)}
           submitLabel={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN_SUBMIT_LABEL`)}
           cancelLabel={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN_CANCEL_ACTION`)}
