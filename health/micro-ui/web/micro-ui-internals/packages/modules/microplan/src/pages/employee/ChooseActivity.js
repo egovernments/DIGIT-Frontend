@@ -67,7 +67,7 @@ const ChooseActivity = () => {
         if(planObject && workflowData && processData){
           const updatedActivityCardData = [
             {
-              name: t("VALIDATE_N_APPROVE_POPULATION_DATA"),
+              name: "VALIDATE_N_APPROVE_POPULATION_DATA",
               link: `pop-inbox?campaignId=${campaignId}&microplanId=${microplanId}`,
               doneLabel: isProcessDone(processData, "APPROVE_CENSUS_DATA") && "CENSUS_VALIDATED_LABEL",
               icon: <SVG.Population height="36" width="36" fill={isCardDisabled(["POPULATION_DATA_APPROVER", "ROOT_POPULATION_DATA_APPROVER"], isProcessDone(processData, "APPROVE_CENSUS_DATA"), ["EXECUTION_TO_BE_DONE","CENSUS_DATA_APPROVAL_IN_PROGRESS"]) ? "#C5C5C5" : "#C84C0E"}/>,
@@ -75,7 +75,7 @@ const ChooseActivity = () => {
               optionKey: "VALIDATE_N_APPROVE_POPULATION_DATA"
             },
             {
-              name: t("ASSIGN_FACILITIES_TO_VILLAGE"),
+              name: "ASSIGN_FACILITIES_TO_VILLAGE",
               link: `assign-facilities-to-villages?campaignId=${campaignId}&microplanId=${microplanId}`,
               doneLabel: isProcessDone(processData, "FINALIZE_CATCHMENT_MAPPING") && "FACILITY_CATCHEMENT_DONE_LABEL",
               icon: <SVG.AssignmentTurnedIn height="36" width="36" fill={isCardDisabled(["FACILITY_CATCHMENT_MAPPER", "ROOT_FACILITY_CATCHMENT_MAPPER"], isProcessDone(processData, "FINALIZE_CATCHMENT_MAPPING"), ["CENSUS_DATA_APPROVED"]) ? "#C5C5C5" : "#C84C0E"} />,
@@ -83,7 +83,7 @@ const ChooseActivity = () => {
               optionKey: "ASSIGN_FACILITIES_TO_VILLAGE"
             },
             {
-              name: t("VALIDATE_N_APPROVE_MICROPLAN_ESTIMATIONS"),
+              name: "VALIDATE_N_APPROVE_MICROPLAN_ESTIMATIONS",
               link: `plan-inbox?campaignId=${campaignId}&microplanId=${microplanId}`,
               doneLabel: isProcessDone(processData, "APPROVE_ESTIMATIONS") && "ESTIMATIONS_APPROVED_LABEL",
               icon: <SVG.FactCheck height="36" width="36" fill={isCardDisabled(["PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"], isProcessDone(processData, "APPROVE_ESTIMATIONS"), ["RESOURCE_ESTIMATION_IN_PROGRESS"]) ? "#C5C5C5" : "#C84C0E"} />,
@@ -91,7 +91,7 @@ const ChooseActivity = () => {
               optionKey: "VALIDATE_N_APPROVE_MICROPLAN_ESTIMATIONS"
             },
             {
-              name: t("GEOSPATIAL_MAP_VIEW"),
+              name: "GEOSPATIAL_MAP_VIEW",
               link: `map-view?campaignId=${campaignId}&microplanId=${microplanId}`,
               icon: <SVG.LocationOn height="36" width="36" fill={isCardDisabled(["POPULATION_DATA_APPROVER","ROOT_POPULATION_DATA_APPROVER","FACILITY_CATCHMENT_MAPPER","ROOT_FACILITY_CATCHMENT_MAPPER","MICROPLAN_VIEWER","PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"], workflowData, ["RESOURCE_ESTIMATION_IN_PROGRESS","RESOURCE_ESTIMATIONS_APPROVED"]) ? "#C5C5C5" : "#C84C0E"}/>,
               disable: isCardDisabled(["POPULATION_DATA_APPROVER","ROOT_POPULATION_DATA_APPROVER","FACILITY_CATCHMENT_MAPPER","ROOT_FACILITY_CATCHMENT_MAPPER","MICROPLAN_VIEWER","PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"], workflowData, ["RESOURCE_ESTIMATION_IN_PROGRESS","RESOURCE_ESTIMATIONS_APPROVED"]),

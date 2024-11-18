@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { PopUp, Button, TextArea, ErrorMessage, Toast } from "@egovernments/digit-ui-components";
 
-const ConfirmationPopUp = ({ onClose, alertMessage, submitLabel, url, requestPayload, onSuccess, onError, cancelLabel }) => {
+const ConfirmationPopUp = ({ onClose, alertHeading, alertMessage, submitLabel, url, requestPayload, onSuccess, onError, cancelLabel }) => {
 
     const { t } = useTranslation();
     const [comment, setComment] = useState(null);
@@ -46,6 +46,7 @@ const ConfirmationPopUp = ({ onClose, alertMessage, submitLabel, url, requestPay
                 type="alert"
                 onClose={onClose}
                 alertMessage={alertMessage}
+                alertHeading={alertHeading}
                 onOverlayClick={onClose}
                 equalWidthButtons={true}
                 footerChildren={[
