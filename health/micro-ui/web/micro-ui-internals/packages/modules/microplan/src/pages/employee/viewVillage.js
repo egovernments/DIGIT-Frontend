@@ -221,7 +221,7 @@ const VillageView = () => {
             <div>
             <Header styles={{marginBottom:"1rem"}} className="pop-inbox-header">{t(boundaryCode)}</Header>
                 <div className="summary-sub-heading" style={{marginBottom:"1.5rem"}}>
-                 {`"${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${campaignObject?.campaignName || t("NO_NAME_AVAILABLE")}"`}
+                 {`${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${campaignObject?.campaignName || t("NO_NAME_AVAILABLE")}`}
                 </div>
                 <Card type="primary" className="middle-child">
                     {hierarchy.map((node, index) => (

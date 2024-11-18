@@ -103,7 +103,7 @@ const HCMWORKBENCHCard = () => {
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));
 
   const propsForModuleCard = {
-    Icon: <WorksMgmtIcon />,
+    Icon: "AdminPanelSettings",
     moduleName: t("WORKBENCH_HCM_WORKBENCH"),
     kpis: [],
     links: links,

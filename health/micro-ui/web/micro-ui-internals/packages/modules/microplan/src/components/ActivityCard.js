@@ -13,7 +13,7 @@ const ActivityHomeCard = ({onClickCard=()=>{},...props}) => {
   <div >
   <Header styles={{marginBottom:"1rem"}} className="pop-inbox-header">{t(props.title)}</Header>
                 <div className="summary-sub-heading" style={{marginBottom:"1.5rem"}}>
-                 {`"${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${props.microplanName || t("NO_NAME_AVAILABLE")}"`}
+                 {`${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${props.microplanName || t("NO_NAME_AVAILABLE")}`}
                 </div>
     <div className="activity-grid"
        >
