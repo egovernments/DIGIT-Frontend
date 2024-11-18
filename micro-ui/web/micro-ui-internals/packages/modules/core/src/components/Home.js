@@ -4,7 +4,7 @@ import {
   Loader,
 } from "@egovernments/digit-ui-react-components";
 
-import { BackLink, CustomSVG } from "@egovernments/digit-ui-components";
+import { BackLink, CustomSVG ,LandingPageWrapper } from "@egovernments/digit-ui-components";
 
 import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
