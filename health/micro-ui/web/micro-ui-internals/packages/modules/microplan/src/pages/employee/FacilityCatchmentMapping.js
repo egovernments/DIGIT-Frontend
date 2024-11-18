@@ -81,16 +81,12 @@ const FacilityCatchmentMapping = () => {
 
   const { isLoading, data, isFetching, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
 
-
-  const { isLoading: isLoadingPlanObject, data: planObject, error: errorPlan, refetch: refetchPlan } = Digit.Hooks.microplanv1.useSearchPlanConfig(
+  const { isLoading: isLoadingPlanObject, data: planObject } = Digit.Hooks.microplanv1.useSearchPlanConfig(
     {
       PlanConfigurationSearchCriteria: {
         tenantId,
         id: url?.microplanId,
       },
-    },
-    {
-      enabled: isRootApprover && data?.TotalCount === 0,
     }
   );
 
@@ -160,7 +156,7 @@ const FacilityCatchmentMapping = () => {
     <div style={{ marginBottom: isRootApprover && data?.TotalCount === 0 && planObject?.status === "CENSUS_DATA_APPROVED" ?"2.5rem" :"0rem"}}>
       <Header styles={{ marginBottom: "1rem" }}>{t("MICROPLAN_ASSIGN_CATCHMENT_VILLAGES")}</Header>
       <div className="summary-sub-heading" style={{marginBottom:"1.5rem"}}>
-      {`"${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${planObject?.name || t("NO_NAME_AVAILABLE")}"`}
+      {`${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${planObject?.name || t("NO_NAME_AVAILABLE")}`}
     </div>
       <div className="inbox-search-wrapper">
         <InboxSearchComposer
@@ -183,6 +179,15 @@ const FacilityCatchmentMapping = () => {
           setactionFieldsToRight
           sortActionFields
           style={{}}
+        />}
+
+      {!isRootApprover && data?.TotalCount === 0 && planObject?.status === "CENSUS_DATA_APPROVED" &&
+        <ActionBar
+          actionFields={[
+            <Button icon={"ArrowBack"} label={t(`GO_BACK_TO_HOME`)} onClick={() => history.push(`/${window.contextPath}/employee`)} type="button" variation="primary" />,
+          ]}
+          setactionFieldsToRight
+          sortActionFields
         />}
 
       {showPopup && currentRow && (
