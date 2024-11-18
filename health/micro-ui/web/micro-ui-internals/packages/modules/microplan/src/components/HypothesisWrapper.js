@@ -375,6 +375,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
               onSelect={onSelect}
               customProps={customProps}
               setShowToast={setShowToast}
+              campaignType={campaignType}
               allMdmsAssumptionsForThisCategory={filteredAssumptions}
             />
           </div>
