@@ -213,6 +213,7 @@ const FacilityCatchmentMapping = () => {
           requestPayload={{ PlanConfiguration: updateWorkflowForFooterAction() }}
           onSuccess={(data) => {
             history.push(`/${window.contextPath}/employee/microplan/village-finalise-success`, {
+              info:"MP_PLAN_MICROPLAN_NAME",
               fileName: data?.PlanConfiguration?.[0]?.name,
               message: t(`VILLAGE_ASSIGNED_TO_FACILITIES_SUCCESSFUL`),
               back: t(`GO_BACK_TO_HOME`),

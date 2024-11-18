@@ -41,6 +41,8 @@ const UserAccessMgmtTableWrapper = ({ role, internalKey, setupCompleted }) => {
   const [rowsPerPage] = useState(5);
   const [totalRows, setTotalRows] = useState(0);
   const [showPopUp, setShowPopUp] = useState(false);
+  const [chipPopUpRowId, setChipPopUpRowId] = useState(null); 
+
   const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
 
 
@@ -76,9 +78,6 @@ const UserAccessMgmtTableWrapper = ({ role, internalKey, setupCompleted }) => {
     setTotalRows(planAssignmentData?.totalCount);
   }, [planAssignmentData]);
 
-  const openPopUp = () => {
-    setShowPopUp(true);
-  };
 
   const columns = [
     {
@@ -134,7 +133,9 @@ const UserAccessMgmtTableWrapper = ({ role, internalKey, setupCompleted }) => {
             {row.planData.jurisdiction?.length > (2) && (
               <Button
                 label={`+${row?.planData?.jurisdiction?.length - (2)} ${t("ES_MORE")}`}
-                onClick={() => openPopUp()}
+                onClick={() => {
+                  setChipPopUpRowId(row.planData.id)
+                }}
                 variation="link"
                 style={{
                   height: "2rem",
@@ -154,9 +155,9 @@ const UserAccessMgmtTableWrapper = ({ role, internalKey, setupCompleted }) => {
                 }}
               />
             )}
-            {showPopUp && (
+            {chipPopUpRowId===row.planData.id && (
               <ShowMoreWrapper
-                setShowPopUp={setShowPopUp}
+                setShowPopUp={setChipPopUpRowId}
                 alreadyQueuedSelectedState={row?.planData?.jurisdiction}
                 heading={"MICROPLAN_ADMINISTRATIVE_AREA"}
               />
