@@ -15,7 +15,7 @@ import { initSandboxComponents } from "@egovernments/digit-ui-module-sandbox";
 
 import "@egovernments/digit-ui-css/example/index.css";
 
-import { pgrCustomizations, pgrComponents } from "./pgr";
+import { pgrCustomizations, overrideComponents } from "./pgr";
 import { UICustomizations } from "./UICustomizations";
 
 var Digit = window.Digit || {};
@@ -80,8 +80,10 @@ const initDigitUI = () => {
     PGR: pgrCustomizations,
     commonUiConfig: UICustomizations,
   };
+  initEngagementComponents();
+
   window?.Digit.ComponentRegistryService.setupRegistry({
-    ...pgrComponents,
+    ...overrideComponents,
     // PaymentModule,
     // ...paymentConfigs,
     // PaymentLinks,
@@ -89,7 +91,6 @@ const initDigitUI = () => {
   initCoreComponents();
   initDSSComponents();
   initHRMSComponents();
-  initEngagementComponents();
   initUtilitiesComponents();
   initWorkbenchComponents();
   initPGRComponents();

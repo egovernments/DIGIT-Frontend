@@ -48,7 +48,7 @@ let propsForSandbox = [
   propsForCSR = propsForCSR.filter(link => link?.roles ? Digit.Utils.didEmployeeHasAtleastOneRole(link.roles) : true );
   propsForSandbox = propsForSandbox.filter(link => link?.roles ? Digit.Utils.didEmployeeHasAtleastOneRole(link.roles) : true );
   const propsForModuleCard = {
-    Icon: <Icon />,
+    Icon: "File",
     moduleName: t("ES_PGR_HEADER_COMPLAINT"),
     kpis: [
         {

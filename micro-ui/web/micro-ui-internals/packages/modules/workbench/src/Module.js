@@ -35,7 +35,7 @@ const componentsToRegister = {
   DigitJSONForm,
   LevelCards,
   DSSCard: null, // TO HIDE THE DSS CARD IN HOME SCREEN as per workbench
-  // HRMSCard // Overridden the HRMS card as per workbench
+  HRMSCard // Overridden the HRMS card as per workbench
 };
 
 const overrideHooks = () => {

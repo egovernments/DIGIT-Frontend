@@ -34,6 +34,7 @@ const componentsToRegister = {
   SandboxModule,
   SandboxCard,
   WorkbenchCard: null,
+  HRMSCard:null,
   SandboxModuleCard: ModuleCard,
   ConfigUploaderComponent,
   LogoUploaderComponent
