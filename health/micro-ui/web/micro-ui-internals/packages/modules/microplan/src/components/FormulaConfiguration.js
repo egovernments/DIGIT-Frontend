@@ -272,7 +272,9 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
     <>
       <Card className="middle-child">
         <Header className="uploader-sub-heading">{t(category)}</Header>
+        {(category==="FORMULA_CAMPAIGN_VEHICLES")?  <p className="mp-description">{t(`FORMULA_VEHICLE_DESCRIPTION`)}</p>:
         <p className="mp-description">{t(`FORMULA_CONFIGURATION_DESCRIPTION`)}</p>
+        }
       </Card>
       <Card>
         {filteredFormulas.map((formula, index) => {

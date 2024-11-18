@@ -794,6 +794,7 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
+
       switch (key) {
         case "ACTIONS":
           // TODO : Replace dummy file id with real file id when API is ready
@@ -859,7 +860,7 @@ export const UICustomizations = {
 
         case "MICROPLAN_STATUS":
           if (value && value != "NA") {
-            return t(value);
+            return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_STATUS_" + value))}</p>;
           } else {
             return (
               <div>
@@ -870,7 +871,7 @@ export const UICustomizations = {
 
         case "CAMPAIGN_DISEASE":
           if (value && value != "NA") {
-            return t(value);
+            return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_DISEASE_" + value))}</p>;
           } else {
             return (
               <div>
@@ -881,7 +882,7 @@ export const UICustomizations = {
 
         case "CAMPAIGN_TYPE":
           if (value && value != "NA") {
-            return t(value);
+            return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_TYPE_" + value))}</p>;
           } else {
             return (
               <div>
@@ -892,7 +893,7 @@ export const UICustomizations = {
 
         case "DISTIRBUTION_STRATEGY":
           if (value && value != "NA") {
-            return t(value);
+            return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_DISTRIBUTION_" + value))}</p>;
           } else {
             return (
               <div>
