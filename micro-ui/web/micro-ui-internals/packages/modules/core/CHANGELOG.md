@@ -1,5 +1,8 @@
 # Changelog 
 
+## 1.8.2-beta.27
+- Integrated new Landingpage card component & its wrapper
+
 ## 1.8.2-beta.17
 - Integrated new topbar,sidebar and hambuger
 
