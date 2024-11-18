@@ -6,7 +6,7 @@ import { PRIMARY_COLOR } from "../utils/utilities";
 import { useMyContext } from "../utils/context";
 import { useAssumptionContext } from "./HypothesisWrapper";
 
-const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, allMdmsAssumptionsForThisCategory }) => {
+const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, allMdmsAssumptionsForThisCategory,campaignType }) => {
   const { state, dispatch } = useMyContext();
   const { t } = useTranslation();
   const [showPopUP, setShowPopUp] = useState(false);
@@ -175,7 +175,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
                   style={{ marginBottom: "0" }}
                   populators={{ name: item }}
                   id={index}
-                  placeholder={category === "CAMPAIGN_VEHICLES" ? t(`MP_ENTER_ASSUMPTION_${category}`) : t("MP_ENTER_ASSUMPTION")}
+                  placeholder={category === "CAMPAIGN_VEHICLES" ? t(`MP_ENTER_ASSUMPTION_${category}_${campaignType}`) : t("MP_ENTER_ASSUMPTION")}
                   onChange={(event) => {
                     handleAssumptionChange(category, event, item);
                   }}
