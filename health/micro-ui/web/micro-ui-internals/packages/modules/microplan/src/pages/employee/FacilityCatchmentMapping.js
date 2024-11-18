@@ -152,12 +152,34 @@ const FacilityCatchmentMapping = () => {
   if (isPlanEmpSearchLoading || isLoading || isLoadingPlanObject || isLoadingCampaignObject || isProcessLoading)
     return <Loader />
 
+  //role and name of User extracted
+
+  const roles=Digit.UserService.getUser().info.roles;
+  const userName=Digit.UserService.getUser().info.userName;
+  let userRole = "";
+
+  roles.forEach(role => {
+    if (role.code === "ROOT_FACILITY_CATCHMENT_MAPPER") {
+      userRole = "ROOT_FACILITY_CATCHMENT_MAPPER";
+    } else if (userRole!== "ROOT_FACILITY_CATCHMENT_MAPPER" && role.code === "FACILITY_CATCHMENT_MAPPER") {
+      userRole = "FACILITY_CATCHMENT_MAPPER";
+    
+  }});
+
+
+
   return (
     <div style={{ marginBottom: isRootApprover && data?.TotalCount === 0 && planObject?.status === "CENSUS_DATA_APPROVED" ?"2.5rem" :"0rem"}}>
       <Header styles={{ marginBottom: "1rem" }}>{t("MICROPLAN_ASSIGN_CATCHMENT_VILLAGES")}</Header>
-      <div className="summary-sub-heading" style={{marginBottom:"1.5rem"}}>
-      {`${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${planObject?.name || t("NO_NAME_AVAILABLE")}`}
-    </div>
+      <div className="role-summary-sub-heading">
+          <div>
+          {`${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${planObject?.name || t("NO_NAME_AVAILABLE")}`}
+          </div>
+          <div>
+          {`Logged in as ${t(userName)} - ${t(userRole)}`}
+          </div>
+          
+        </div>
       <div className="inbox-search-wrapper">
         <InboxSearchComposer
           configs={config}
