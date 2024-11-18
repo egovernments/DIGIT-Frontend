@@ -46,7 +46,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
       return;
     }
     setFormulaToDelete(formula);
-    setShowPopUp(true);
+    setShowPopUp(formula?.source || true);
   };
 
   const handleCancelDelete = () => {
@@ -271,8 +271,12 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
   return (
     <>
       <Card className="middle-child">
+<<<<<<< HEAD
         <Header className="uploader-sub-heading">{t(category)}</Header>
         {(category==="FORMULA_CAMPAIGN_VEHICLES")?  <p className="mp-description">{t(`FORMULA_VEHICLE_DESCRIPTION`)}</p>:
+=======
+        <Header className="uploader-sub-heading">{t(`SUB_HEADING_${category}`)}</Header>
+>>>>>>> console
         <p className="mp-description">{t(`FORMULA_CONFIGURATION_DESCRIPTION`)}</p>
         }
       </Card>
@@ -405,7 +409,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
             equalWidthButtons={true}
             children={[
               <div>
-                <CardText style={{ margin: 0 }}>{t("FOR_PERMANENT_DELETE")}</CardText>
+                <CardText style={{ margin: 0 }}>{showPopUP === "CUSTOM" ? t(`FORMULA_PERMANENT_DELETE_CUSTOM`) :t("FOR_PERMANENT_DELETE")}</CardText>
               </div>,
             ]}
             onOverlayClick={() => {

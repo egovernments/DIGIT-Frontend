@@ -747,6 +747,7 @@ const PopInbox = () => {
           requestPayload={{ PlanConfiguration: updateWorkflowForFooterAction() }}
           onSuccess={(data) => {
             history.push(`/${window.contextPath}/employee/microplan/population-finalise-success`, {
+              info:"MP_PLAN_MICROPLAN_NAME",
               fileName: data?.PlanConfiguration?.[0]?.name,
               message: t(`POPULATION_FINALISED_SUCCESSFUL`),
               back: t(`GO_BACK_TO_HOME`),

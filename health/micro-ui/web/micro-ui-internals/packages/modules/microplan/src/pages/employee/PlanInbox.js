@@ -780,6 +780,7 @@ const PlanInbox = () => {
           requestPayload={{ PlanConfiguration: updateWorkflowForFooterAction() }}
           onSuccess={(data) => {
             history.push(`/${window.contextPath}/employee/microplan/microplan-success`, {
+              info:"MP_PLAN_MICROPLAN_NAME",
               responseId: data?.PlanConfiguration?.[0]?.name,
               message: t(`FINALISED_MICROPLAN_SUCCESSFUL`),
               back: t(`GO_BACK_TO_HOME`),
