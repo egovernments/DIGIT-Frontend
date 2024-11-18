@@ -11,6 +11,7 @@ import EditVillagePopulationPopUp from "./editVillagePopulationPopUP";
 import { tableCustomStyle } from "./tableCustomStyle";
 import { CustomLoader } from "./RoleTableComposer";
 import { min } from "lodash";
+import VillageHierarchyTooltipWrapper from "./VillageHierarchyTooltipWrapper";
 
 const PopInboxTable = ({ ...props }) => {
   const { t } = useTranslation();
@@ -21,6 +22,7 @@ const PopInboxTable = ({ ...props }) => {
   const [selectedBusinessId, setSelectedBusinessId] = useState(null);
   const url = Digit.Hooks.useQueryParams();
   const [isIntermediate, setIsIntermediate] = useState(false);
+  const [selectedBoundaryCode, setSelectedBoundaryCode] = useState(null);
 
   const columns = useMemo(() => {
 
@@ -28,6 +30,7 @@ const PopInboxTable = ({ ...props }) => {
       {
         name: t(`INBOX_VILLAGE`),
         cell: (row, index, column, id) => (
+          <div style={{display:"flex", gap:".5rem"}}>
           <Button
             label={t(`${row.boundaryCode}`)}
             onClick={() =>
@@ -38,6 +41,8 @@ const PopInboxTable = ({ ...props }) => {
             size={"medium"}
             style={{ minWidth: "unset" }}
           />
+          <VillageHierarchyTooltipWrapper  boundaryCode={row?.boundaryCode}/>
+          </div>
         ),
         // selector:(row, index)=>row.boundaryCode,
         sortable: true,
@@ -97,6 +102,7 @@ const PopInboxTable = ({ ...props }) => {
             label={t(`VIEW_LOGS`)}
             onClick={() => {
               setSelectedBusinessId(row.id); // Set the row.id to state
+              setSelectedBoundaryCode(row.boundaryCode);
               setShowTimelinePopup(true);
             }}
             variation="link"
@@ -108,7 +114,7 @@ const PopInboxTable = ({ ...props }) => {
         width: "180px",
       },
     ];
-  }, [props.showEditColumn, props.employeeNameData, props.censusData]);
+  }, [props.showEditColumn, props.employeeNameData, props.censusData, selectedBusinessId]);
 
   const handlePageChange = (page, totalRows) => {
     props?.handlePageChange(page, totalRows);
@@ -136,12 +142,14 @@ const PopInboxTable = ({ ...props }) => {
   if (showTimelinePopup) {
     return (
       <TimelinePopUpWrapper
+      key={`${selectedBusinessId}-${Date.now()}`}
         onClose={() => {
           setShowTimelinePopup(false);
+          setSelectedBoundaryCode(null);
           setSelectedBusinessId(null); // Reset the selectedBusinessId when popup is closed
         }}
         businessId={selectedBusinessId} // Pass selectedBusinessId as businessId
-        heading="HCM_MICROPLAN_STATUS_LOG_LABEL"
+        heading={`${t("HCM_MICROPLAN_STATUS_LOG_FOR_LABEL")} ${selectedBoundaryCode}`} 
       />
     );
   }

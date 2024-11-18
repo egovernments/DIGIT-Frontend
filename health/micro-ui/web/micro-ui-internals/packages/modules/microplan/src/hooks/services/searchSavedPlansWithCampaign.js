@@ -25,6 +25,7 @@ const SearchSavedPlansWithCampaign = async (body) => {
           offset: body?.PlanConfigurationSearchCriteria?.offset,
           filterUniqueByPlanConfig: true,
           planConfigurationName: body.PlanConfigurationSearchCriteria.name,
+          planConfigurationStatus:body?.PlanConfigurationSearchCriteria?.status
         },
       },
     });
@@ -43,11 +44,12 @@ const SearchSavedPlansWithCampaign = async (body) => {
       body: {
         PlanConfigurationSearchCriteria: {
           tenantId: tenantId,
-          status: body?.PlanConfigurationSearchCriteria?.status,
+          // status: body?.PlanConfigurationSearchCriteria?.status,
           // limit: body?.PlanConfigurationSearchCriteria?.limit,
           // offset: body?.PlanConfigurationSearchCriteria?.offset,
           // name: body.PlanConfigurationSearchCriteria.name,
           ids: listOfPlans,
+          limit:listOfPlans?.length ? listOfPlans?.length : 10
         },
       },
     });

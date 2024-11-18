@@ -21,9 +21,10 @@ const TimelinePopUpWrapper = ({ onClose, businessId, heading }) => {
         config: {
             enabled: true,
         },
+        changeQueryName: businessId,
     }
     );
-
+    
     // Manage timeline data
     const [timelineSteps, setTimelineSteps] = useState([]);
 

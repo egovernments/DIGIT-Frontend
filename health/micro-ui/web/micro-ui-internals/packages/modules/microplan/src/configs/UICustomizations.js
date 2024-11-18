@@ -264,7 +264,7 @@ export const UICustomizations = {
           return row.status === "EXECUTION_TO_BE_DONE" ? (
             <ButtonNew
               label={t("START")}
-              variation="secondary"
+              variation="primary"
               icon={"ArrowForward"}
               type="button"
               style={{minWidth:"240px"}}
@@ -275,7 +275,7 @@ export const UICustomizations = {
           ) : row.status === "RESOURCE_ESTIMATIONS_APPROVED" ? (
             <ButtonNew
               label={t("WBH_DOWNLOAD")}
-              variation="secondary"
+              variation="primary"
               icon={"FileDownload"}
               style={{minWidth:"240px"}}
               type="button"
@@ -285,7 +285,7 @@ export const UICustomizations = {
           ) : (
             <ButtonNew
               label={t("WBH_EDIT")}
-              variation="secondary"
+              variation="primary"
               icon={"Edit"}
               style={{minWidth:"240px"}}
               type="button"
@@ -537,7 +537,8 @@ export const UICustomizations = {
         case "MICROPLAN_FACILITY_ASSIGNED_VILLAGES":
           const assignedVillages = row?.serviceBoundaries;
           return assignedVillages ? assignedVillages.length : null;
-        case "MICROPLAN_FACILITY_ACTION":
+        case "HCM_MICROPLAN_FACILITY_VIEW_ASSIGNMENT":
+        case "HCM_MICROPLAN_FACILITY_ACTION_ASSIGNMENT":
           return (
             <>
               <ButtonNew
@@ -545,7 +546,7 @@ export const UICustomizations = {
                 icon="ArrowForward"
                 iconFill=""
                 isSuffix
-                label={t("MICROPLAN_ASSIGN")}
+                label={t(key)}
                 // onClick={() => setShowPopup(true)}// removed this because due to popup crashing on dev
                 onClick={() => console.log("temp action")}
                 options={[]}

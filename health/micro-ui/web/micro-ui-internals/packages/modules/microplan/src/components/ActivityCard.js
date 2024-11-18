@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { CardHeader } from "@egovernments/digit-ui-react-components";
+import { CardHeader, Header } from "@egovernments/digit-ui-react-components";
 import { Card, Tag } from "@egovernments/digit-ui-components";
 
 const ActivityHomeCard = ({onClickCard=()=>{},...props}) => {
@@ -11,8 +11,9 @@ const ActivityHomeCard = ({onClickCard=()=>{},...props}) => {
   return (
     <React.Fragment>
   <div >
-  <div className="village-header" >
-  {t(props.title)}
+  <Header styles={{marginBottom:"1rem"}} className="pop-inbox-header">{t(props.title)}</Header>
+                <div className="summary-sub-heading" style={{marginBottom:"1.5rem"}}>
+                 {`${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${props.microplanName || t("NO_NAME_AVAILABLE")}`}
                 </div>
     <div className="activity-grid"
        >

@@ -7,6 +7,7 @@ import DataTable from "react-data-table-component";
 import AccessibilityPopUp from "./accessbilityPopUP";
 import SecurityPopUp from "./securityPopUp";
 import { tableCustomStyle } from "./tableCustomStyle";
+import VillageHierarchyTooltipWrapper from "./VillageHierarchyTooltipWrapper";
 
 const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const { t } = useTranslation();
@@ -230,8 +231,14 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
 
   const columns = [
     {
-      name: t("MP_FACILITY_VILLAGE"), // Change to your column name
-      selector: (row) => t(row.boundaryCode), // Replace with the appropriate field from your data
+      name: t("MP_FACILITY_VILLAGE"), 
+      cell: (row) => (
+        <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
+          <span>{t(`${row.boundaryCode}`)}</span>
+          <VillageHierarchyTooltipWrapper boundaryCode={row?.boundaryCode} />
+        </div>
+      ),
+      //selector: (row) => t(row.boundaryCode), // Replace with the appropriate field from your data
       sortable: false,
     },
     {
