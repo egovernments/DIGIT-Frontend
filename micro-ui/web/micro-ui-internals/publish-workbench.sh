@@ -56,5 +56,6 @@ cd "$BASEDIR/packages/modules/dss" &&  rm -rf dist && yarn&& npm publish --tag w
 # msg "Building and publishing Common module"
 cd "$BASEDIR/packages/modules/common" &&   rm -rf dist && yarn&& npm publish --tag workbench-1.1
 
+
 # msg "Building and publishing pgr module"
 cd "$BASEDIR/packages/modules/pgr" &&   rm -rf dist && yarn&&npm publish --tag workbench-1.1
