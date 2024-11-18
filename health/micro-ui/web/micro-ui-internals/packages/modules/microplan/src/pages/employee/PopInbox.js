@@ -82,6 +82,9 @@ const PopInbox = () => {
               CensusSearchCriteria: {
                 tenantId: tenantId,
                 source: microplanId,
+                ...(isRootApprover
+                  ? {}
+                  : {jurisdiction: jurisdiction }), 
               },
             }
           },
@@ -485,6 +488,20 @@ const isStatusConditionMet = (statusCount) => {
     "SEND_BACK_FOR_CORRECTION": { isSuffix: true, icon: "ArrowForward" },
   }
 
+  const getButtonState = (action) => {
+    
+    if (selectedFilter === "PENDING_FOR_VALIDATION" && action === "VALIDATE") {
+      return true;
+    }
+    if (selectedFilter === "PENDING_FOR_APPROVAL" && (action === "APPROVE" || action === "ROOT_APPROVE")) {
+      return true;
+    }
+    if (selectedFilter === "VALIDATED" && action === "SEND_BACK_FOR_CORRECTION") {
+      return true;
+    }
+    return false;
+  };
+
 
   const onCommentLogClose = () => {
     setShowComment(false);
@@ -523,7 +540,7 @@ const isStatusConditionMet = (statusCount) => {
         onClear={onClear}
       />
 
-        <div className="pop-inbox-wrapper-filter-table-wrapper" style={{ marginBottom: isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "CENSUS_DATA_APPROVAL_IN_PROGRESS" ? "2.5rem" : "0rem" }}>
+        <div className="pop-inbox-wrapper-filter-table-wrapper" style={{ marginBottom: (isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "CENSUS_DATA_APPROVAL_IN_PROGRESS") || (!isRootApprover && isStatusConditionMet(totalStatusCount)) || disabledAction ? "2.5rem" : "0rem" }}>
           <InboxFilterWrapper
             options={activeFilter}
             onApplyFilters={onFilter}
@@ -572,10 +589,14 @@ const isStatusConditionMet = (statusCount) => {
                       <ButtonsGroup
                         buttonsArray={actionsMain
                           ?.filter((action) => !actionsToHide.includes(action.action))
-                          ?.map((action, index) => (
+                          ?.map((action, index) => {
+
+                            const isPrimary = getButtonState(action.action);
+
+                            return (
                             <Button
                               key={index}
-                              variation="secondary"
+                              variation={isPrimary ? "primary" : "secondary"}
                               label={t(action.action)}
                               type="button"
                               onClick={() => handleActionClick(action.action)}
@@ -583,16 +604,20 @@ const isStatusConditionMet = (statusCount) => {
                               icon={actionIconMap[action.action]?.icon}
                               isSuffix={actionIconMap[action.action]?.isSuffix}
                             />
-                          ))
+                          );
+                        })
                         }
                       />
                     ) : (
                       actionsMain
                         ?.filter((action) => !actionsToHide.includes(action.action))
-                        ?.map((action, index) => (
+                        ?.map((action, index) => {
+                          const isPrimary = getButtonState(action.action);
+
+                          return(
                           <Button
                             key={index}
-                            variation="secondary"
+                            variation={isPrimary ? "primary" : "secondary"}
                             label={t(action.action)}
                             type="button"
                             onClick={() => handleActionClick(action.action)}
@@ -600,7 +625,8 @@ const isStatusConditionMet = (statusCount) => {
                             icon={actionIconMap[action.action]?.icon}
                             isSuffix={actionIconMap[action.action]?.isSuffix}
                           />
-                        ))
+                        );
+                      })
                     )}
                   </div>
 
@@ -614,7 +640,7 @@ const isStatusConditionMet = (statusCount) => {
                       commentPath="workflow.comments"
                       onSuccess={(data) => {
                         closePopUp();
-                        setShowToast({ key: "success", label: t("POP_INBOX_WORKFLOW_UPDATE_SUCCESS"), transitionTime: 5000 });
+                        setShowToast({ key: "success", label: t(`POP_INBOX_WORKFLOW_FOR_${workFlowPopUp}_UPDATE_SUCCESS`), transitionTime: 5000 });
                         refetch();
                         refetchPlan();
                         fetchStatusCount();
@@ -637,7 +663,7 @@ const isStatusConditionMet = (statusCount) => {
               <WorkflowCommentPopUp
                 onClose={onCommentLogClose}
                 heading={t(`POP_INBOX_HCM_MICROPLAN_EDIT_POPULATION_COMMENT_LABEL`)}
-                submitLabel={t(`POP_INBOX_HCM_MICROPLAN_EDIT_POPULATION_COMMENT_SUBMIT_LABEL`)}
+                submitLabel={t(`${isRootApprover ? 'ROOT_' : ''}POP_INBOX_HCM_MICROPLAN_EDIT_POPULATION_COMMENT_SUBMIT_LABEL`)}
                 url="/census-service/_update"
                 requestPayload={{ Census: updatedCensus }}
                 commentPath="workflow.comments"
@@ -677,10 +703,25 @@ const isStatusConditionMet = (statusCount) => {
           style={{}}
         />}
 
+      {((!isRootApprover && isStatusConditionMet(totalStatusCount)) || disabledAction) &&
+        <ActionBar
+          actionFields={[
+            <Button label={t(`HCM_MICROPLAN_POP_INBOX_BACK_BUTTON`)} onClick={()=> {
+              history.push(`/${window.contextPath}/employee/microplan/select-activity?microplanId=${url?.microplanId}&campaignId=${url?.campaignId}`);
+            }} type="button" variation="primary" />,
+          ]}
+          className=""
+          maxActionFieldsAllowed={5}
+          setactionFieldsToRight
+          sortActionFields
+          style={{}}
+        />}
+
       {actionBarPopUp && (
         <ConfirmationPopUp
           onClose={closeActionBarPopUp}
-          alertMessage={t(`HCM_MICROPLAN_FINALIZE_POPULATION_ALERT_MESSAGE`)}
+          alertHeading={t(`HCM_MICROPLAN_FINALIZE_POPULATION_ALERT_HEADING_MESSAGE`)}
+          alertMessage={t(`HCM_MICROPLAN_FINALIZE_POPULATION_ALERT_DESCRIPTION_MESSAGE`)}
           submitLabel={t(`HCM_MICROPLAN_FINALIZE_POPULATION_DATA_SUBMIT_ACTION`)}
           cancelLabel={t(`HCM_MICROPLAN_FINALIZE_POPULATION_DATA_CANCEL_ACTION`)}
           url="/plan-service/config/_update"

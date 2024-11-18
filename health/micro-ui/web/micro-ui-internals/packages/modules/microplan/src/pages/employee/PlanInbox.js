@@ -753,6 +753,7 @@ const PlanInbox = () => {
       {actionBarPopUp && (
         <ConfirmationPopUp
           onClose={closeActionBarPopUp}
+          alertHeading={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN_ALERT_HEADING`)}
           alertMessage={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN_ALERT_MESSAGE`)}
           submitLabel={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN_SUBMIT_LABEL`)}
           cancelLabel={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN_CANCEL_ACTION`)}
