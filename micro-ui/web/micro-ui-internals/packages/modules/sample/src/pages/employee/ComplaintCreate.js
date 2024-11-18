@@ -2,12 +2,12 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { FormComposerV2, Header } from "@egovernments/digit-ui-react-components";
-import { newConfig } from "../../configs/IndividualCreateConfig";
+import { newConfig } from "../../configs/ComplaintCreateConfig";
 import { transformCreateData } from "../../utils/createUtils";
 
 
 
-const IndividualCreate = () => {
+const ComplaintCreate = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const history = useHistory();
@@ -37,9 +37,9 @@ const IndividualCreate = () => {
   };
   return (
     <div>
-      <Header> {t("CREATE_INDIVIDUAL")}</Header>
+      <Header> {t("New Complaint")}</Header>
       <FormComposerV2
-        label={t("SUBMIT_BUTTON")}
+        label={t("Submit Application")}
         config={newConfig.map((config) => {
           return {
             ...config,
@@ -57,4 +57,4 @@ const IndividualCreate = () => {
   );
 }
 
-export default IndividualCreate;
+export default ComplaintCreate;

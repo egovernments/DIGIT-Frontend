@@ -1,10 +1,10 @@
 import React,{useState,useEffect,useMemo} from "react";
 import { useTranslation } from "react-i18next";
 import { Header, InboxSearchComposer, Loader } from "@egovernments/digit-ui-react-components";
-import {inboxConfig} from "../../configs/SampleInboxConfig";
+import pgrInboxConfig from "../../configs/PgrInboxConfig";
 import { useLocation } from 'react-router-dom';
 
-const Inbox = () => {
+const PGRInbox = () => {
     const { t } = useTranslation();
     const location = useLocation()
     
@@ -35,12 +35,12 @@ const Inbox = () => {
     if(isLoading || !pageConfig)  return <Loader />
     return (
         <React.Fragment>
-            <Header styles={{ fontSize: "32px" }}>{t(updatedConfig?.label)}{location?.state?.count ? <span className="inbox-count">{location?.state?.count}</span> : null}</Header>
+            {/* <Header styles={{ fontSize: "32px" }}>{t(updatedConfig?.label)}{location?.state?.count ? <span className="inbox-count">{location?.state?.count}</span> : null}</Header> */}
             <div className="inbox-search-wrapper">
-                <InboxSearchComposer configs={updatedConfig}></InboxSearchComposer>
+                <InboxSearchComposer configs={pgrInboxConfig()}></InboxSearchComposer>
             </div>
         </React.Fragment>
     )
 }
 
-export default Inbox;
+export default PGRInbox;

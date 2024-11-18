@@ -1,0 +1,17 @@
+.sections-parent {
+    &.inbox {
+        .section {
+            &.filter {
+                .search-wrapper {
+                    .search-field-wrapper {
+                        &.inbox {
+                            display: flex;
+                            flex-direction: column;
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+}
