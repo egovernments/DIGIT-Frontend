@@ -78,9 +78,6 @@ const UserAccessMgmtTableWrapper = ({ role, internalKey, setupCompleted }) => {
     setTotalRows(planAssignmentData?.totalCount);
   }, [planAssignmentData]);
 
-  // const openPopUp = () => {
-  //   setShowPopUp(true);
-  // };
 
   const columns = [
     {
