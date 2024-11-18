@@ -28,6 +28,10 @@ const MicroplanCard = () => {
       roles: roles,
     };
   };
+  
+  if (!Digit.Utils.didEmployeeHasAtleastOneRole(Object.values(ROLES).flatMap((e) => e))) {
+    return null;
+  }
 
   let links = [
     generateLink("SETUP_MICROPLAN","setup-microplan"),

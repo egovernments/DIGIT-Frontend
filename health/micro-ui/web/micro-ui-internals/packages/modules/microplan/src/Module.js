@@ -34,6 +34,7 @@ import CustomScaleControl from "./components/CustomScaleControl";
 import MapFilterIndex from "./components/MapFilterIndex";
 import FilterSection from "./components/FilterSection";
 import ChoroplethSelection from "./components/ChoroplethSelection";
+import CampaignCard from "./components/OldCampaignCard"; // @nipunarora-eGov remove this once migrated to new react component card implementation
 
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -104,7 +105,8 @@ const componentsToRegister = {
   CustomScaleControl,
   MapFilterIndex,
   FilterSection,
-  ChoroplethSelection
+  ChoroplethSelection,
+  CampaignCard
 };
 
 export const initMicroplanComponents = () => {

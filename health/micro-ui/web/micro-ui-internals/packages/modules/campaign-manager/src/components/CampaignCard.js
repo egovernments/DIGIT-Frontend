@@ -1,6 +1,8 @@
-import { EmployeeModuleCard, SVG } from "@egovernments/digit-ui-react-components";
-import React from "react";
 import { useTranslation } from "react-i18next";
+
+
+import React, { Fragment } from "react";
+import { EmployeeModuleCard } from "@egovernments/digit-ui-react-components";
 
 const ROLES = {
   CAMPAIGN_MANAGER:["CAMPAIGN_MANAGER","MICROPLAN_CAMPAIGN_INTEGRATOR"],
@@ -16,6 +18,7 @@ const ROLES = {
  * campaign actions, such as setting up a campaign and viewing personal campaigns. The links are
  * filtered based on employee roles before being displayed in the EmployeeModuleCard component.
  */
+
 const CampaignCard = () => {
   if (!Digit.Utils.didEmployeeHasAtleastOneRole(Object.values(ROLES).flatMap((e) => e))) {
   return null;
@@ -40,7 +43,7 @@ const CampaignCard = () => {
     },  
     { 
       label: t("ACTION_TEST_SETUP_CAMPAIGN_FROM_MICROPLAN"),
-      link: `/${window?.contextPath}/employee/campaign/setup-from-microplan&userId=${userId}&status=${microplanStatus}`,
+      link: `/${window?.contextPath}/employee/campaign/setup-from-microplan?userId=${userId}&status=${microplanStatus}`,
       roles: ROLES.CAMPAIGN_MANAGER
     },
     {
@@ -66,7 +69,7 @@ const CampaignCard = () => {
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));
 
   const propsForModuleCard = {
-    Icon: <SVG.Support fill="white" height="36" width="36"/>,
+    Icon: "Engineering",
     moduleName: t("ACTION_TEST_CAMPAIGN"),
     kpis: [],
     links: links,
@@ -75,3 +78,77 @@ const CampaignCard = () => {
 };
 
 export default CampaignCard;
+
+
+
+// to be revisited
+
+// const propsForModuleCardW = {
+//   icon: "Settings",
+//   moduleName: t("ACTION_TEST_CAMPAIGN"),
+//   metrics: [],
+//   links: [
+//     {
+//       icon: 'Launch',
+//       label: 'BOUNDARY_MANAGEMENT',
+//       link: `/${window?.contextPath}/employee/campaign/boundary/home`,
+//     },
+//     {
+//       icon: 'Preview',
+//       label: t("BOUNDARY_MANAGEMENT"),
+//       link: 'https://unified-dev.digit.org/storybook/?path=/story/atoms-backlink--primary'
+//     },
+//     {
+//       icon: 'Launch',
+//       label: 'BOUNDARY_MANAGEMENT',
+//       link: 'https://unified-dev.digit.org/storybook/?path=/story/atoms-backlink--primary'
+//     }
+//   ],
+//   centreChildrens: [
+//     <div>
+//       <Button
+//         variation="teritiary"
+//         label={"NATIONAL_DASHBOARD"}
+//         icon={"Delete"}
+//         type="button"
+//         size={"medium"}
+//         onClick={() => window.open("", "_blank")}
+//         style={{ padding: "0px" }}
+//       />
+//               <Button
+//         variation="teritiary"
+//         label={""}
+//         icon={"delete"}
+//         type="button"
+//         size={buttonSize || "medium"}
+//         onClick={() => handleLinkClick({ link, label, icon })}
+//         style={{ padding: "0px" }}
+//       />
+
+//       <Button
+//         variation="teritiary"
+//         label={"sasas"}
+//         icon={"Delete"}
+//         type="button"
+//         size={"medium"}
+//         onClick={() => window.open("", "_blank")}
+//         style={{ padding: "0px" }}
+//       />
+//       </div>
+    
+//   ],
+//   endChildren:[
+        
+//           <Button
+//             variation="teritiary"
+//             label={t("BOUNDARY_MANAGEMENT")}
+//             icon={"Map"}
+//             type="button"
+//             size={"medium"}
+//             onClick={() => history?.push("  ")}
+//             style={{ padding: "0px" }}
+//           />
+       
+//       ]
+    
+// };
