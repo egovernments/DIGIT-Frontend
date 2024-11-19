@@ -704,7 +704,7 @@ const PlanInbox = () => {
                 onSelectedRowsChange={handleRowSelect}
                 selectableRowsComponentProps={selectProps}
                 selectableRowsComponent={CheckBox}
-                customStyles={getTableCustomStyle(true)}
+                customStyles={tableCustomStyle}
                 paginationTotalRows={totalRows}
                 conditionalRowStyles={conditionalRowStyles}
                 paginationPerPage={rowsPerPage}
