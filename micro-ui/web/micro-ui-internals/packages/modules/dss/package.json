@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-dss",
-  "version": "1.8.3",
+  "version": "1.8.10",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",

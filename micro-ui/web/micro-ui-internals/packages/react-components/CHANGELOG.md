@@ -3,7 +3,11 @@ Here's the `CHANGELOG` file for the specified versions:
 ```markdown
 # Changelog
 
-## [1.8.3] 19-Nov-2024
+## [1.8.10] [19-Nov-2024]
+- Republihsing the same due to component version issue, 
+
+
+## [1.8.3]  [19-Nov-2024]
 - Updated Landing page css and made the stable version with new components integrated core + sandbox
 
 
