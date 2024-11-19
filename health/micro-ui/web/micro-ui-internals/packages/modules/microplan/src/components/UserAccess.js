@@ -232,7 +232,7 @@ function UserAccess({ category, setData, nationalRoles }) {
     // Handle search logic, such as filtering or API calls
   };
 
-  const [unassignPopup, setUnassignPopup] = useState(false);
+  const [unassignPopup, setUnassignPopup] = useState(false); // usually set to row value for true case
 
   return (
     <>
