@@ -1,6 +1,6 @@
 import React, { useState, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { PopUp, Button, Tab, CheckBox, Card, Toast, SVG } from "@egovernments/digit-ui-components";
+import { PopUp, Button, Tab, CheckBox, Card, Toast, SVG, CardText } from "@egovernments/digit-ui-components";
 import SearchJurisdiction from "./SearchJurisdiction";
 import { LoaderWithGap, Loader } from "@egovernments/digit-ui-react-components";
 import DataTable from "react-data-table-component";
@@ -31,6 +31,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [disabledAction, setDisabledAction] = useState(false);
   const [boundaryData, setBoundaryData] = useState([]);
+  const [unassignPopup, setUnassignPopup] = useState(false);
   const configNavItem = [
     {
       code: t(`MICROPLAN_UNASSIGNED_FACILITIES`),
@@ -68,18 +69,18 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   }, [currentPage, rowsPerPage])
 
   // fetch the process instance for the current microplan to check if we need to disabled actions or not  
-  const { isLoading:isProcessLoading, data: processData, } = Digit.Hooks.useCustomAPIHook({
+  const { isLoading: isProcessLoading, data: processData, } = Digit.Hooks.useCustomAPIHook({
     url: "/egov-workflow-v2/egov-wf/process/_search",
     params: {
-       tenantId: tenantId,
-       history: true,
-        businessIds: microplanId,
-   },
+      tenantId: tenantId,
+      history: true,
+      businessIds: microplanId,
+    },
     config: {
-        enabled: true,
-        select: (data) => {
-          return data?.ProcessInstances;
-     },
+      enabled: true,
+      select: (data) => {
+        return data?.ProcessInstances;
+      },
     },
   });
 
@@ -231,7 +232,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
 
   const columns = [
     {
-      name: t("MP_FACILITY_VILLAGE"), 
+      name: t("MP_FACILITY_VILLAGE"),
       cell: (row) => (
         <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
           <span>{t(`${row.boundaryCode}`)}</span>
@@ -305,12 +306,12 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
         onSuccess: async (result) => {
           setSelectedRows([]);
           updateDetails(newDetails);
-          if(facilityAssignedStatus){
-            setShowToast({ key: "success", label: `${ t("UNASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 });
+          if (facilityAssignedStatus) {
+            setShowToast({ key: "success", label: `${t("UNASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 });
 
-            
-          }else{
-            setShowToast({ key: "success", label: `${ t("ASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 });
+
+          } else {
+            setShowToast({ key: "success", label: `${t("ASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 });
           }
         },
         onError: async (result) => {
@@ -323,6 +324,93 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     // setCurrentPage(1);
     setLoader(false);
+  };
+
+  const handleAssignment = async () => {
+    // Fetching the full data of selected rows
+    setLoader(true);
+    const selectedRowData = censusData.filter(row => selectedRows.includes(row.id));
+    var newDetails = JSON.parse(JSON.stringify(details));
+    const boundarySet = new Set(selectedRowData.map((row) => {
+      return row.boundaryCode;
+    }));
+    const filteredBoundaries = [...boundarySet].filter(boundary =>
+      !newDetails.serviceBoundaries.includes(boundary)
+    );
+    newDetails.serviceBoundaries = newDetails?.serviceBoundaries?.concat(filteredBoundaries);
+    await mutationForPlanFacilityUpdate.mutate(
+      {
+        body: {
+          PlanFacility: newDetails
+        },
+      },
+      {
+        onSuccess: async (result) => {
+          setSelectedRows([]);
+          updateDetails(newDetails);
+          if (facilityAssignedStatus) {
+            setShowToast({ key: "success", label: `${t("UNASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 });
+
+
+          } else {
+            setShowToast({ key: "success", label: `${t("ASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 });
+          }
+        },
+        onError: async (result) => {
+          // setDownloadError(true);
+          setSelectedRows([]);
+          setShowToast({ key: "error", label: t("ERROR_WHILE_UPDATING_PLANFACILITY"), transitionTime: 5000 });
+        },
+      }
+    );
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // setCurrentPage(1);
+    setLoader(false);
+  };
+  const handleUnassignment = async () => {
+    // Fetching the full data of selected rows
+    setLoader(true);
+    const selectedRowData = censusData.filter(row => selectedRows.includes(row.id));
+    var newDetails = JSON.parse(JSON.stringify(details));
+
+    const boundarySet = new Set(selectedRowData.map((row) => {
+      return row.boundaryCode
+    }))
+    const filteredBoundaries = newDetails?.serviceBoundaries?.filter((boundary) => {
+      return !boundarySet.has(boundary)
+    })
+    newDetails.serviceBoundaries = filteredBoundaries
+
+    await mutationForPlanFacilityUpdate.mutate(
+      {
+        body: {
+          PlanFacility: newDetails
+        },
+      },
+      {
+        onSuccess: async (result) => {
+          setSelectedRows([]);
+          updateDetails(newDetails);
+          if (facilityAssignedStatus) {
+            setShowToast({ key: "success", label: `${t("UNASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 });
+
+
+          } else {
+            setShowToast({ key: "success", label: `${t("ASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 });
+          }
+        },
+        onError: async (result) => {
+          // setDownloadError(true);
+          setSelectedRows([]);
+          setShowToast({ key: "error", label: t("ERROR_WHILE_UPDATING_PLANFACILITY"), transitionTime: 5000 });
+        },
+      }
+    );
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // setCurrentPage(1);
+    setLoader(false);
+    setUnassignPopup(false);
+
   };
 
   const closeViewDetails = () => {
@@ -410,7 +498,13 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
                             : `${t("MICROPLAN_ASSIGN_FACILITY")} ${details?.additionalDetails?.facilityName}`
                         }
                         type="button"
-                        onClick={handleAssignUnassign}
+                        onClick={() => {
+                          if (facilityAssignedStatus) {
+                            setUnassignPopup(true); // When assigned, open the unassign popup
+                          } else {
+                            handleAssignment(); // When not assigned, call the assignment function
+                          }
+                        }}
                         size={"large"}
                         icon={facilityAssignedStatus ? "Close" : "AddIcon"}
                       />
@@ -466,7 +560,43 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
                   onClose={() => setShowToast(null)}
                 />
               )}
-            </div>,
+
+              {unassignPopup && (
+                <PopUp
+                  className={"popUpClass"}
+                  type={"default"}
+                  heading={t("USERTAG_CONFIRM_TO_UNASSIGN")}
+                  equalWidthButtons={true}
+                  children={[
+                    <div>
+                      <CardText style={{ margin: 0 }}>{t("USERTAG_CONFIRM_TO_UNASSIGN_DESC")}</CardText>
+                    </div>,
+                  ]}
+                  onOverlayClick={() => {
+                    setUnassignPopup(false);
+                  }}
+                  footerChildren={[
+                    <Button
+                      type={"button"}
+                      size={"large"}
+                      variation={"primary"}
+                      label={t("YES")}
+                      onClick={() => {
+                        handleUnassignment();
+                      }}
+                    />,
+                    <Button type={"button"} size={"large"} variation={"secondary"} label={t("NO")} onClick={() => { setUnassignPopup(false); }} />,
+                  ]}
+                  sortFooterChildren={true}
+                  onClose={() => {
+                    setUnassignPopup(false);
+                  }}
+                ></PopUp>
+              )}
+            </div>
+
+
+            ,
           ]}
           onOverlayClick={onClose}
           footerChildren={[
