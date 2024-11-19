@@ -1203,7 +1203,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                   ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_TEXT")
                   : type === "facilityWithBoundary"
                   ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT")
-                  : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT ")}
+                  : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT")}
               </div>,
             ]}
             onOverlayClick={() => {
