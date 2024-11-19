@@ -17,7 +17,7 @@
     "@egovernments/digit-ui-libraries": "1.8.2-beta.8",
     "@egovernments/digit-ui-module-workbench": "1.0.2-beta.10",
     "@egovernments/digit-ui-components":"0.0.2-beta.54",
-    "@egovernments/digit-ui-module-core": "1.8.2-beta.29",
+    "@egovernments/digit-ui-module-core": "1.8.3",
     "@egovernments/digit-ui-module-utilities": "1.0.1-beta.41",
     "@egovernments/digit-ui-react-components": "1.8.3",
     "babel-loader": "8.1.0",
