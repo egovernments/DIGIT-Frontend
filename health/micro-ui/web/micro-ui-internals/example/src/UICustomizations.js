@@ -815,7 +815,7 @@ export const UICustomizations = {
             <div>
               {microplanFileId && row?.status == "RESOURCE_ESTIMATIONS_APPROVED" ? (
                 <div>
-                  <ButtonNew onClick={handleDownload} label={t("WBH_DOWNLOAD")} />
+                  <ButtonNew onClick={handleDownload} label={t("WBH_DOWNLOAD_MICROPLAN")} />
                 </div>
               ) : (
                 <Dropdown
@@ -990,7 +990,7 @@ export const UICustomizations = {
             />
           ) : row.status === "RESOURCE_ESTIMATIONS_APPROVED" ? (
             <ButtonNew
-              label={t("WBH_DOWNLOAD")}
+              label={t("WBH_DOWNLOAD_MICROPLAN")}
               variation="primary"
               icon={"FileDownload"}
               style={{minWidth:"240px"}}
