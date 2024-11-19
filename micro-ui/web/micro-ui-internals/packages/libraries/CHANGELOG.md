@@ -1,7 +1,10 @@
 # Changelog
 
-## [1.8.3]
+## [1.8.4]
 - Fixed the module stablity & new components integrated, sandbox enabled 
+
+## [1.8.3]
+- 
 
 ## [1.8.2-beta.7]
 - Added select function support for mdms-v2 in useCustomMDMS hook
