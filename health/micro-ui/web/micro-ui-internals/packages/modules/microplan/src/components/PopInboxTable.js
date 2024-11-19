@@ -8,7 +8,7 @@ import TimelinePopUpWrapper from "./timelinePopUpWrapper";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { CheckBox } from "@egovernments/digit-ui-components";
 import EditVillagePopulationPopUp from "./editVillagePopulationPopUP";
-import { tableCustomStyle } from "./tableCustomStyle";
+import { tableCustomStyle,getTableCustomStyle } from "./tableCustomStyle";
 import { CustomLoader } from "./RoleTableComposer";
 import { min } from "lodash";
 import VillageHierarchyTooltipWrapper from "./VillageHierarchyTooltipWrapper";
@@ -149,7 +149,8 @@ const PopInboxTable = ({ ...props }) => {
           setSelectedBusinessId(null); // Reset the selectedBusinessId when popup is closed
         }}
         businessId={selectedBusinessId} // Pass selectedBusinessId as businessId
-        heading={`${t("HCM_MICROPLAN_STATUS_LOG_FOR_LABEL")} ${selectedBoundaryCode}`} 
+        heading={`${t("HCM_MICROPLAN_STATUS_LOG_FOR_LABEL")} ${t(selectedBoundaryCode)}`} 
+        labelPrefix={"POP_ACTIONS_"}
       />
     );
   }
@@ -178,7 +179,7 @@ const PopInboxTable = ({ ...props }) => {
       selectableRowsHighlight
       noContextMenu
       onSelectedRowsChange={handleRowSelect}
-      customStyles={tableCustomStyle}
+      customStyles={getTableCustomStyle(true)}
       selectableRowsComponent={CheckBox}
       sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
       defaultSortFieldId={1}
