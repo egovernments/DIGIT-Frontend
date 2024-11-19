@@ -1,4 +1,4 @@
-import { Button, Card, Chip, Header, Loader, PopUp, Toast } from "@egovernments/digit-ui-components";
+import { Button, Card, Chip, Header, Loader, PopUp, Toast, CardText } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import RoleTableComposer, { CustomLoader } from "./RoleTableComposer";
@@ -41,7 +41,7 @@ function UserAccess({ category, setData, nationalRoles }) {
   const queryClient = useQueryClient();
   const [showPopUp, setShowPopUp] = useState(null);
   const [chipPopUp, setChipPopUp] = useState(null);
-  const [chipPopUpRowId, setChipPopUpRowId] = useState(null); 
+  const [chipPopUpRowId, setChipPopUpRowId] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -107,7 +107,6 @@ function UserAccess({ category, setData, nationalRoles }) {
   };
 
   const handleUpdateAssignEmployee = (row) => {
-    setIsLoading(true);
     const payload = {
       PlanEmployeeAssignment: {
         ...row?.planData,
@@ -118,12 +117,12 @@ function UserAccess({ category, setData, nationalRoles }) {
       onSuccess: (data) => {
         queryClient.invalidateQueries("PLAN_SEARCH_EMPLOYEE_WITH_TAGGING");
         refetchPlanEmployee();
+        setUnassignPopup(false)
         setShowToast({ key: "success", label: t("UNASSIGNED_SUCCESSFULLY") });
-        setIsLoading(false);
       },
       onError: (error, variables) => {
+        setUnassignPopup(false)
         setShowToast({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") });
-        setIsLoading(false);
       },
     });
   };
@@ -216,7 +215,8 @@ function UserAccess({ category, setData, nationalRoles }) {
             style={{ padding: "1rem" }}
             icon={"Close"}
             isSuffix={false}
-            onClick={(value) => handleUpdateAssignEmployee(row)}
+            onClick={(value) => setUnassignPopup(row)}
+          // onClick={(value) => handleUpdateAssignEmployee(row)}
           />
         );
       },
@@ -225,12 +225,14 @@ function UserAccess({ category, setData, nationalRoles }) {
 
   const handleSearch = (query) => {
     // if (query?.length >= 2) {
-      setSearchQuery(query);
+    setSearchQuery(query);
     // } else {
-      // setSearchQuery(null);
+    // setSearchQuery(null);
     // }
     // Handle search logic, such as filtering or API calls
   };
+
+  const [unassignPopup, setUnassignPopup] = useState(false);
 
   return (
     <>
@@ -315,6 +317,39 @@ function UserAccess({ category, setData, nationalRoles }) {
           }}
           isDleteBtn={true}
         />
+      )}
+
+      {unassignPopup && (
+        <PopUp
+          className={"popUpClass"}
+          type={"default"}
+          heading={t("USERTAG_CONFIRM_TO_UNASSIGN")}
+          equalWidthButtons={true}
+          children={[
+            <div>
+              <CardText style={{ margin: 0 }}>{t("FOR_PERMANENT_DELETE")}</CardText>
+            </div>,
+          ]}
+          onOverlayClick={() => {
+            setUnassignPopup(false);
+          }}
+          footerChildren={[
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"secondary"}
+              label={t("YES")}
+              onClick={() => {
+                handleUpdateAssignEmployee(unassignPopup);
+              }}
+            />,
+            <Button type={"button"} size={"large"} variation={"primary"} label={t("NO")} onClick={() => { setUnassignPopup(false); }} />,
+          ]}
+          sortFooterChildren={true}
+          onClose={() => {
+            setUnassignPopup(false);
+          }}
+        ></PopUp>
       )}
     </>
   );
