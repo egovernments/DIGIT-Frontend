@@ -327,7 +327,7 @@ function UserAccess({ category, setData, nationalRoles }) {
           equalWidthButtons={true}
           children={[
             <div>
-              <CardText style={{ margin: 0 }}>{t("FOR_PERMANENT_DELETE")}</CardText>
+              <CardText style={{ margin: 0 }}>{t("USERTAG_CONFIRM_TO_UNASSIGN_DESC")}</CardText>
             </div>,
           ]}
           onOverlayClick={() => {
