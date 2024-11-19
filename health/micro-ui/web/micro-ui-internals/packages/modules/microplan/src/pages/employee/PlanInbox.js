@@ -13,6 +13,7 @@ import { CustomSVG } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../../utils/context";
 import ConfirmationPopUp from "../../components/ConfirmationPopUp";
 import VillageHierarchyTooltipWrapper from "../../components/VillageHierarchyTooltipWrapper";
+import TimelinePopUpWrapper from "../../components/timelinePopUpWrapper";
 
 const PlanInbox = () => {
   const { t } = useTranslation();
@@ -49,6 +50,11 @@ const PlanInbox = () => {
     code: "ASSIGNED_TO_ME",
     name: "ASSIGNED_TO_ME",
   });
+  const [showTimelinePopup, setShowTimelinePopup] = useState(false);
+  const [selectedBoundaryCode, setSelectedBoundaryCode] = useState(null);
+  const [selectedBusinessId, setSelectedBusinessId] = useState(null);
+  const [assigneeUuids, setAssigneeUuids] = useState([]);
+  const [employeeNameMap, setEmployeeNameMap] = useState({});
 
   const userRoles = user?.info?.roles?.map((roleData) => roleData?.code);
 
@@ -143,7 +149,7 @@ const PlanInbox = () => {
           }, {});
 
           const dynamicAdditionalFields = filteredCensus?.additionalFields
-            ?.filter((field) => field.editable === false) // Filter fields where `editable` is `false`
+            ?.filter((field) => field?.editable === true) // Filter fields where `editable` is `false`
             ?.sort((a, b) => a.order - b.order) // Sort by `order`
             ?.reduce((acc, field) => {
               acc[field.key] = field.value; // Set `key` as property name and `value` as property value
@@ -312,6 +318,8 @@ const PlanInbox = () => {
         setAssignedToAllCount(planWithCensus?.TotalCount);
       }
 
+      const uniqueAssignees = [...new Set(planWithCensus?.censusData.map(item => item.assignee).filter(Boolean))];
+      setAssigneeUuids(uniqueAssignees.join(","));
     }
   }, [planWithCensus, selectedFilter, activeLink]);
 
@@ -322,6 +330,34 @@ const PlanInbox = () => {
   }, [selectedFilter, activeLink, censusJurisdiction, limitAndOffset]);
 
 
+  const reqCri = {
+    url: `/health-hrms/employees/_search`,
+    params: {
+      tenantId: tenantId,
+      userServiceUuids: assigneeUuids,
+    },
+    config: {
+      enabled: assigneeUuids?.length > 0 ? true : false,
+    },
+  };
+
+  const { isLoading: isEmployeeLoading, data: employeeData, refetch: refetchHrms } = Digit.Hooks.useCustomAPIHook(reqCri);
+
+  useEffect(() => {
+    if (assigneeUuids?.length > 0) {
+      refetchHrms();
+    }
+  }, [assigneeUuids]);
+
+  useEffect(() => {
+    // Create a map of assignee IDs to names for easy lookup
+    const nameMap = employeeData?.Employees?.reduce((acc, emp) => {
+      acc[emp?.user?.userServiceUuid] = emp.user?.name || "NA"; // Map UUID to name
+      return acc;
+    }, {});
+
+    setEmployeeNameMap(nameMap);
+  }, [employeeData]);
   // fetch the process instance for the current microplan to check if we need to disabled actions or not  
   const { isLoading:isProcessLoading, data: processData, } = Digit.Hooks.useCustomAPIHook({
     url: "/egov-workflow-v2/egov-wf/process/_search",
@@ -378,8 +414,9 @@ const PlanInbox = () => {
   };
 
   const getResourceColumns = () => {
+    const operationArr = planObject?.operations?.sort((a, b) => a.executionOrder - b.executionOrder).map((item) => t(item.output));
     const resources = planWithCensus?.planData?.[0]?.resources || []; // Resources array
-    return (resources || []).map((resource) => ({
+    const resourceArr = (resources || []).map((resource) => ({
       name: t(resource.resourceType), // Dynamic column name for each resourceType
       cell: (row) => {
         return row?.[resource?.resourceType] || "NA"; // Return estimatedNumber if exists
@@ -387,11 +424,19 @@ const PlanInbox = () => {
       sortable: true,
       width: "180px",
     }));
+
+    return (operationArr || [])
+      ?.map((output) => {
+        // Find the corresponding field based on its name matching the `output`
+        const field = resourceArr.find((f) => f.name === output);
+        return field || null; // If no matching field is found, return null
+      })
+      ?.filter(Boolean);
   };
 
   const getAdditionalFieldsColumns = () => {
     return (planWithCensus?.censusData?.[0]?.additionalFields || [])
-      .filter((field) => !field?.editable)
+      .filter((field) => field?.editable)
       .sort((a, b) => a?.order - b?.order)
       .map((field) => ({
         name: t(field?.key),
@@ -435,6 +480,12 @@ const PlanInbox = () => {
       width: "180px",
     },
     {
+      name: t("INBOX_ASSIGNEE"),
+      selector: (row, index) => employeeNameMap?.[row?.censusOriginal?.assignee] || t("ES_COMMON_NA"),
+      sortable: true,
+      width: "180px",
+    },
+    {
       name: t(`HCM_MICROPLAN_VILLAGE_ROAD_CONDITION_LABEL`),
       cell: (row) => t(row?.villageRoadCondition) || "NA",
       sortable: true,
@@ -455,6 +506,24 @@ const PlanInbox = () => {
     ...getSecurityDetailsColumns(),
     ...getAdditionalFieldsColumns(),
     ...getResourceColumns(),
+    {
+      name: t("INBOX_STATUSLOGS"),
+      cell: (row, index, column, id) => (
+        <Button
+          label={t(`VIEW_LOGS`)}
+          onClick={() => {
+            setSelectedBusinessId(row.id); // Set the row.id to state
+            setSelectedBoundaryCode(row.boundaryCode);
+            setShowTimelinePopup(true);
+          }}
+          variation="link"
+          style={{}}
+          size={"medium"}
+        />
+      ),
+      sortable: false,
+      width: "180px",
+    },
     // {
     //   name: t(`TOTAL_POPULATION`),
     //   cell: (row) => t(row?.totalPop) || "NA",
@@ -556,6 +625,22 @@ const PlanInbox = () => {
 
   if (isPlanEmpSearchLoading || isLoadingCampaignObject || isWorkflowLoading || isProcessLoading) {
     return <Loader />;
+  }
+
+  if (showTimelinePopup) {
+    return (
+      <TimelinePopUpWrapper
+        key={`${selectedBusinessId}-${Date.now()}`}
+        onClose={() => {
+          setShowTimelinePopup(false);
+          setSelectedBoundaryCode(null);
+          setSelectedBusinessId(null); // Reset the selectedBusinessId when popup is closed
+        }}
+        businessId={selectedBusinessId} // Pass selectedBusinessId as businessId
+        heading={`${t("HCM_MICROPLAN_STATUS_LOG_FOR_LABEL")} ${t(selectedBoundaryCode)}`}
+        labelPrefix={"PLAN_ACTIONS_"}
+      />
+    );
   }
 
   return (
