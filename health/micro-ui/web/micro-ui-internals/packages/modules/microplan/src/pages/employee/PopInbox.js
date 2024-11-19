@@ -521,18 +521,18 @@ const PopInbox = () => {
     return <Loader />;
   }
 
-  //role and name of User extracted
-  const roles=Digit.UserService.getUser().info.roles;
-  const userName=Digit.UserService.getUser().info.userName;
+  const roles = Digit.UserService.getUser().info.roles;
+  const userName = Digit.UserService.getUser().info.userName;
   let userRole = "";
 
   roles.forEach(role => {
     if (role.code === "ROOT_POPULATION_DATA_APPROVER") {
       userRole = "ROOT_POPULATION_DATA_APPROVER";
-    } else if (userRole!== "ROOT_POPULATION_DATA_APPROVER" && role.code === "POPULATION_DATA_APPROVER") {
+    } else if (userRole !== "ROOT_POPULATION_DATA_APPROVER" && role.code === "POPULATION_DATA_APPROVER") {
       userRole = "POPULATION_DATA_APPROVER";
-    
-  }});
+
+    }
+  });
 
 
   return (
@@ -747,7 +747,7 @@ const PopInbox = () => {
           requestPayload={{ PlanConfiguration: updateWorkflowForFooterAction() }}
           onSuccess={(data) => {
             history.push(`/${window.contextPath}/employee/microplan/population-finalise-success`, {
-              info:"MP_PLAN_MICROPLAN_NAME",
+              info: "MP_PLAN_MICROPLAN_NAME",
               fileName: data?.PlanConfiguration?.[0]?.name,
               message: t(`POPULATION_FINALISED_SUCCESSFUL`),
               back: t(`GO_BACK_TO_HOME`),
