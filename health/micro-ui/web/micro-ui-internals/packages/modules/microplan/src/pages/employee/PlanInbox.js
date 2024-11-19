@@ -165,6 +165,7 @@ const PlanInbox = () => {
            // villageTransportMode: filteredCensus?.additionalDetails?.accessibilityDetails?.transportationMode?.code || "NA",
             totalPop: filteredCensus?.additionalDetails?.totalPopulation || "NA",
             targetPop: filteredCensus?.additionalDetails?.targetPopulation || "NA",
+            servingFacility: filteredCensus?.additionalDetails?.facilityName || "NA",
             ...dynamicSecurityData,
             ...dynamicResource,
             ...dynamicAdditionalFields,
@@ -482,6 +483,12 @@ const PlanInbox = () => {
     {
       name: t("INBOX_ASSIGNEE"),
       selector: (row, index) => employeeNameMap?.[row?.censusOriginal?.assignee] || t("ES_COMMON_NA"),
+      sortable: true,
+      width: "180px",
+    },
+    {
+      name: t(`HCM_MICROPLAN_SERVING_FACILITY`),
+      cell: (row) => t(row?.servingFacility) || "NA",
       sortable: true,
       width: "180px",
     },
