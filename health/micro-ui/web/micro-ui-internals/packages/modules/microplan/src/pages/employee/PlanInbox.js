@@ -580,7 +580,7 @@ const PlanInbox = () => {
           {`${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${campaignObject?.campaignName  || t("NO_NAME_AVAILABLE")}`}
           </div>
           <div>
-          {`Logged in as ${t(userName)} - ${t(userRole)}`}
+          {`${t("LOGGED_IN_AS")} ${t(userName)} - ${t(userRole)}`}
           </div>
           
         </div>
