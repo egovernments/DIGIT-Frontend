@@ -822,10 +822,10 @@ export const UICustomizations = {
                 <Dropdown
                   option={options}
                   select={(e) => {
-                    if (e.name == "Edit Setup") {
+                    if (e.name ==  "MP_ACTIONS_EDIT_SETUP") {
                       window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${1}&microplanId=${row.id}&campaignId=${row.campaignDetails.id}`;
                     }
-                    if (e.name == "View Summary") {
+                    if (e.name == "MP_ACTIONS_VIEW_SUMMARY") {
                       window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${row.campaignDetails.id}&setup-completed=true`;
                     }
                   }}
