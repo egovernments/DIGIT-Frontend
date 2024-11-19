@@ -11,6 +11,7 @@ import VillageHierarchyTooltipWrapper from "./VillageHierarchyTooltipWrapper";
 
 const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const { t } = useTranslation();
+  const url = Digit.Hooks.useQueryParams();
   const currentUserUuid = Digit.UserService.getUser().info.uuid;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [facilityAssignedStatus, setFacilityAssignedStatus] = useState(false);
@@ -68,18 +69,18 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   }, [currentPage, rowsPerPage])
 
   // fetch the process instance for the current microplan to check if we need to disabled actions or not  
-  const { isLoading:isProcessLoading, data: processData, } = Digit.Hooks.useCustomAPIHook({
+  const { isLoading: isProcessLoading, data: processData, } = Digit.Hooks.useCustomAPIHook({
     url: "/egov-workflow-v2/egov-wf/process/_search",
     params: {
-       tenantId: tenantId,
-       history: true,
-        businessIds: microplanId,
-   },
+      tenantId: tenantId,
+      history: true,
+      businessIds: microplanId,
+    },
     config: {
-        enabled: true,
-        select: (data) => {
-          return data?.ProcessInstances;
-     },
+      enabled: true,
+      select: (data) => {
+        return data?.ProcessInstances;
+      },
     },
   });
 
@@ -231,7 +232,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
 
   const columns = [
     {
-      name: t("MP_FACILITY_VILLAGE"), 
+      name: t("MP_FACILITY_VILLAGE"),
       cell: (row) => (
         <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
           <span>{t(`${row.boundaryCode}`)}</span>
@@ -272,6 +273,36 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
 
   const mutationForPlanFacilityUpdate = Digit.Hooks.useCustomAPIMutationHook(planFacilityUpdateMutaionConfig);
 
+  // const reqCriteriaForPlanFacility = {
+  //   url: `/plan-service/plan/facility/_search`,
+  //   params: {},
+  //   body: {
+  //     PlanFacilitySearchCriteria: {
+  //       limit: props?.state?.tableForm?.limit || 10,
+  //       offset: props?.state?.tableForm?.offset || 0,
+  //       tenantId: tenantId,
+  //       planConfigurationId: url?.microplanId,
+  //       jurisdiction: planEmployee?.planData?.[0]?.jurisdiction,
+  //       facilityName: facilityName,
+  //       facilityType: facilityType?.name,
+  //       facilityStatus: status?.name,
+  //       residingBoundaries: residingBoundariesCodes,
+  //     },
+  //   },
+  //   config: {
+  //     enabled: true,
+  //   },
+  // };
+  // const {
+  //   isLoading: isFacilitySearchLoading,
+  //   data: facilitySearchData,
+  //   isFetching: isFacilitySearchFetching,
+  //   refetch2,
+  //   revalidate,
+  // } = Digit.Hooks.useCustomAPIHook(reqCriteriaForPlanFacility);
+  // console.log("plan1",facilitySearchData);
+  console.log("details", details);
+
   const handleAssignUnassign = async () => {
     // Fetching the full data of selected rows
     setLoader(true);
@@ -305,12 +336,12 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
         onSuccess: async (result) => {
           setSelectedRows([]);
           updateDetails(newDetails);
-          if(facilityAssignedStatus){
-            setShowToast({ key: "success", label: `${ t("UNASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 });
+          if (facilityAssignedStatus) {
+            setShowToast({ key: "success", label: `${t("UNASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 });
 
-            
-          }else{
-            setShowToast({ key: "success", label: `${ t("ASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 });
+
+          } else {
+            setShowToast({ key: "success", label: `${t("ASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 });
           }
         },
         onError: async (result) => {
@@ -356,6 +387,16 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     },
   ];
 
+  const dummyData = {
+    facilityName: "Facility 1",
+    facilityType: "Warehouse",
+    facilityStatus: "Permanent",
+    capacity: "500",
+    servingPopulation: "5500 / 5000",
+    fixedPost: "Yes",
+    residingVillage: "Village 1",
+  };
+
   return (
     <>
       {loader ? (
@@ -366,6 +407,17 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
           heading={`${t(`MICROPLAN_ASSIGNMENT_FACILITY`)} ${details?.additionalDetails?.facilityName}`}
           children={[
             <div className="facilitypopup-serach-results-wrapper">
+              <Card className="fac-middle-child">
+                {<div className="summary-main-heading">{"RAndom"}</div>}
+                <div className="fac-kpi-container">
+                  {Object.keys(dummyData).map((key) => (
+                    <div key={key} className="fac-kpi-card">
+                      <h2>{dummyData[key]}</h2>
+                      <p>{t(`MICROPLAN_${key.toUpperCase()}`)}</p>
+                    </div>
+                  ))}
+                </div>
+              </Card>
               <div className="facilitypopup-tab-serach-wrapper">
                 <Tab
                   activeLink={activeLink.code}

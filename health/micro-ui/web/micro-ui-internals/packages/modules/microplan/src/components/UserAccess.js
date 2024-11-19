@@ -316,7 +316,7 @@ function UserAccess({ category, setData, nationalRoles }) {
         <Toast
           type={showToast.key === "error" ? "error" : "success"} // Adjust based on your needs
           label={t(showToast.label)}
-          transitionTime={showToast.transitionTime}
+          transitionTime={5000}
           onClose={() => {
             setShowToast(false);
           }}
