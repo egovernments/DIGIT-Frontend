@@ -8,7 +8,7 @@ import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import DataTable from "react-data-table-component";
 import { CheckBox } from "@egovernments/digit-ui-components";
 import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
-import { tableCustomStyle } from "../../components/tableCustomStyle";
+import { getTableCustomStyle, tableCustomStyle } from "../../components/tableCustomStyle";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../../utils/context";
 import ConfirmationPopUp from "../../components/ConfirmationPopUp";
@@ -704,7 +704,7 @@ const PlanInbox = () => {
                 onSelectedRowsChange={handleRowSelect}
                 selectableRowsComponentProps={selectProps}
                 selectableRowsComponent={CheckBox}
-                customStyles={tableCustomStyle}
+                customStyles={getTableCustomStyle(true)}
                 paginationTotalRows={totalRows}
                 conditionalRowStyles={conditionalRowStyles}
                 paginationPerPage={rowsPerPage}

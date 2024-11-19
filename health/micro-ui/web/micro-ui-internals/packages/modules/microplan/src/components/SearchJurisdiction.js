@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useMyContext } from "../utils/context";
 import { Dropdown, MultiSelectDropdown } from "@egovernments/digit-ui-components";
 
-const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, onClear = () => { }, style = {} }) => {
+const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, onClear = () => { }, style = {},showInstruction=false }) => {
   const { t } = useTranslation();
   const {
     state: { hierarchyType, boundaryHierarchy },
@@ -51,7 +51,7 @@ const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, on
 
   return (
     <div className={"search-wrapper"} style={style}>
-      <p className="search-instruction-header">{t("HCM_MICROPLAN_SEARCH_JURISDICTION_INFO_DESCRIPTION")}</p>
+      {showInstruction && <p className="search-instruction-header">{t("HCM_MICROPLAN_SEARCH_JURISDICTION_INFO_DESCRIPTION")}</p>}
       <div className={`search-field-wrapper search custom-both-clear-search`}>
         <LabelFieldPair style={{ flexDirection: "column", gap: "0rem" }}>
           <CardLabel style={{ width: "100%" }}>{t("SELECT_HIERARCHY_LEVEL")}</CardLabel>

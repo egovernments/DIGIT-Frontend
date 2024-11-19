@@ -4,7 +4,7 @@ import { PopUp, Timeline, TimelineMolecule, Loader } from '@egovernments/digit-u
 import { useMyContext } from "../utils/context";
 
 
-const TimelinePopUpWrapper = ({ onClose, businessId, heading }) => {
+const TimelinePopUpWrapper = ({ onClose, businessId, heading,labelPrefix="" }) => {
     const { state } = useMyContext();
     const { t } = useTranslation();
 
@@ -34,7 +34,7 @@ const TimelinePopUpWrapper = ({ onClose, businessId, heading }) => {
 
             // Map API response to timeline steps
             const steps = workflowData.ProcessInstances.map((instance, index) => ({
-                label: t(instance?.action),
+                label: t(`${labelPrefix}${instance?.action}`),
                 variant: 'completed',
                 subElements: [Digit.Utils.microplanv1.epochToDateTime(instance?.auditDetails?.lastModifiedTime),
                 instance?.assigner &&

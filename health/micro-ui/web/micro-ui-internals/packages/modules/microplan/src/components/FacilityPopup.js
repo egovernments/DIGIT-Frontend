@@ -6,7 +6,7 @@ import { LoaderWithGap, Loader } from "@egovernments/digit-ui-react-components";
 import DataTable from "react-data-table-component";
 import AccessibilityPopUp from "./accessbilityPopUP";
 import SecurityPopUp from "./securityPopUp";
-import { tableCustomStyle } from "./tableCustomStyle";
+import { getTableCustomStyle, tableCustomStyle } from "./tableCustomStyle";
 import VillageHierarchyTooltipWrapper from "./VillageHierarchyTooltipWrapper";
 
 const FacilityPopUp = ({ details, onClose, updateDetails }) => {
@@ -436,7 +436,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
                       selectableRowsHighlight
                       noContextMenu
                       onSelectedRowsChange={handleRowSelect}
-                      customStyles={tableCustomStyle}
+                      customStyles={getTableCustomStyle(true)}
                       selectableRowsComponent={CheckBox}
                       selectableRowsComponentProps={selectProps}
                       conditionalRowStyles={conditionalRowStyles}
