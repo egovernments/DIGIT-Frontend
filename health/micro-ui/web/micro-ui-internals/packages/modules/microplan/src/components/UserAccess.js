@@ -274,7 +274,7 @@ function UserAccess({ category, setData, nationalRoles }) {
             category={category}
             columns={columns}
             data={planEmployee?.data}
-            progressPending={isPlanEmpSearchLoading}
+            progressPending={isLoading || isPlanEmpSearchLoading}
             progressComponent={<CustomLoader />}
             pagination
             paginationServer
@@ -356,10 +356,6 @@ function UserAccess({ category, setData, nationalRoles }) {
           }}
         ></PopUp>
       )}
-
-      {
-        isLoading && <Loader/>
-      }
     </>
   );
 }
