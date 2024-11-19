@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.8.3]
+- Fixed the module stablity & new components integrated, sandbox enabled 
+
 ## 1.8.2-beta.27
 - Integrated new Landingpage card component & its wrapper
 
