@@ -40,6 +40,7 @@ function UserAccess({ category, setData, nationalRoles }) {
   const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
   const queryClient = useQueryClient();
   const [showPopUp, setShowPopUp] = useState(null);
+  const [unassignPopup, setUnassignPopup] = useState(false); // usually set to row value for true case
   const [chipPopUp, setChipPopUp] = useState(null);
   const [chipPopUpRowId, setChipPopUpRowId] = useState(null);
   const [showToast, setShowToast] = useState(null);
@@ -237,7 +238,6 @@ function UserAccess({ category, setData, nationalRoles }) {
     // Handle search logic, such as filtering or API calls
   };
 
-  const [unassignPopup, setUnassignPopup] = useState(false); // usually set to row value for true case
 
   return (
     <>
