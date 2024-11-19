@@ -107,6 +107,7 @@ function UserAccess({ category, setData, nationalRoles }) {
   };
 
   const handleUpdateAssignEmployee = (row) => {
+    setIsLoading(true);
     const payload = {
       PlanEmployeeAssignment: {
         ...row?.planData,
@@ -119,10 +120,14 @@ function UserAccess({ category, setData, nationalRoles }) {
         refetchPlanEmployee();
         setUnassignPopup(false)
         setShowToast({ key: "success", label: t("UNASSIGNED_SUCCESSFULLY") });
+        setIsLoading(false);
+        
       },
       onError: (error, variables) => {
         setUnassignPopup(false)
         setShowToast({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") });
+        setIsLoading(false);
+
       },
     });
   };
@@ -337,13 +342,13 @@ function UserAccess({ category, setData, nationalRoles }) {
             <Button
               type={"button"}
               size={"large"}
-              variation={"secondary"}
+              variation={"primary"}
               label={t("YES")}
               onClick={() => {
                 handleUpdateAssignEmployee(unassignPopup);
               }}
             />,
-            <Button type={"button"} size={"large"} variation={"primary"} label={t("NO")} onClick={() => { setUnassignPopup(false); }} />,
+            <Button type={"button"} size={"large"} variation={"secondary"} label={t("NO")} onClick={() => { setUnassignPopup(false); }} />,
           ]}
           sortFooterChildren={true}
           onClose={() => {
@@ -351,6 +356,10 @@ function UserAccess({ category, setData, nationalRoles }) {
           }}
         ></PopUp>
       )}
+
+      {
+        isLoading && <Loader/>
+      }
     </>
   );
 }
