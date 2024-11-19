@@ -436,7 +436,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
                       selectableRowsHighlight
                       noContextMenu
                       onSelectedRowsChange={handleRowSelect}
-                      customStyles={getTableCustomStyle(true)}
+                      customStyles={tableCustomStyle}
                       selectableRowsComponent={CheckBox}
                       selectableRowsComponentProps={selectProps}
                       conditionalRowStyles={conditionalRowStyles}
