@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.8.3]
+- Updated Landing page css and made the stable version with new components integrated core + sandbox
+
 ## [1.8.2-beta.49]
 - Updated Loader with text styles
 

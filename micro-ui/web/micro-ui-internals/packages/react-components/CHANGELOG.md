@@ -3,6 +3,10 @@ Here's the `CHANGELOG` file for the specified versions:
 ```markdown
 # Changelog
 
+## [1.8.3] 19-Nov-2024
+- Updated Landing page css and made the stable version with new components integrated core + sandbox
+
+
 ## [1.8.2-beta.19]
 - Updated the Employee Module card component
 
