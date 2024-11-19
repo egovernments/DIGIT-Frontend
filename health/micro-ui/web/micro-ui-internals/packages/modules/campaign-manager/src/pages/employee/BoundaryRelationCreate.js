@@ -178,11 +178,11 @@ const BoundaryRelationCreate = () => {
     
     const downloadExcelTemplate = async() => {
         try {
-            setShowToast({ label: "TEMPLATE_GENERATION_IN_PROGRESS", isError: "info" });
+            setShowToast({ label: t("TEMPLATE_GENERATION_IN_PROGRESS"), isError: "info" });
             
             const fid = await pollForTemplateGeneration();
             setFileStoreId(fid);
-            setShowToast({ label: "TEMPLATE_GENERATED_SUCCESSFULLY", isError: "success" });
+            setShowToast({ label: t("TEMPLATE_GENERATED_SUCCESSFULLY"), isError: "success" });
             return fid;
         } catch (error) {
             let errorMessage;
@@ -192,7 +192,7 @@ const BoundaryRelationCreate = () => {
             } else {
                 errorMessage = "TEMPLATE_GENERATION_FAILED";
             }
-            setShowToast({ label: errorMessage, isError: "error" });
+            setShowToast({ label: t(errorMessage), isError: "error" });
             throw error; // Propagate the error to the calling function
         }
     }
@@ -336,7 +336,7 @@ const BoundaryRelationCreate = () => {
         try {
             setCreatingData(true);
             setShowToast({ 
-                label: "HIERARCHY_PLEASE_WAIT", 
+                label: t("HIERARCHY_PLEASE_WAIT"), 
                 isError: "info", 
                 transitionTime: 100000
             });
@@ -351,7 +351,7 @@ const BoundaryRelationCreate = () => {
     
             const localisationResult = await localisationMutateAsync(local);
             if (!localisationResult.success) {
-                setShowToast({ label: "BOUNDARY_LOCALISATION_ERROR", isError: "error" });
+                setShowToast({ label: t("BOUNDARY_LOCALISATION_ERROR"), isError: "error" });
             }
     
             const res = await callCreate();
@@ -552,7 +552,7 @@ const onConfirmClick=()=>{
                                     const checkValid= newBoundaryData?.every(obj=>obj?.boundaryType);
                                     if(checkValid){
                                        setShowFinalPopup(true)
-                                    }else{ setShowToast({ label: "CMN_FILLORDELETE_CREATED_HIERARCHY", isError: "error" });
+                                    }else{ setShowToast({ label: t("CMN_FILLORDELETE_CREATED_HIERARCHY"), isError: "error" });
                                    }
                                      }}
                                 type="button"
