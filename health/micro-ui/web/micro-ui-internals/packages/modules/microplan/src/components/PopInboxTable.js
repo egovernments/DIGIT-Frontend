@@ -179,7 +179,7 @@ const PopInboxTable = ({ ...props }) => {
       selectableRowsHighlight
       noContextMenu
       onSelectedRowsChange={handleRowSelect}
-      customStyles={getTableCustomStyle(true)}
+      customStyles={tableCustomStyle}
       selectableRowsComponent={CheckBox}
       sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
       defaultSortFieldId={1}
