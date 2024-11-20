@@ -120,6 +120,8 @@ const UserAccessWrapper = ({ onSelect, props: customProps, setupCompleted }) => 
     return () => {
       window.removeEventListener("verticalStepper", moveToPreviousStep);
       window.removeEventListener("isLastStep", isLastStep);
+      Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
+      Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });  
     };
   }, [internalKey]);
 
