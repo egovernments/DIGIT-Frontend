@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { CheckCircle } from "@egovernments/digit-ui-svg-components";
 import { useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Header } from "@egovernments/digit-ui-react-components";
+import { Toast } from "@egovernments/digit-ui-components";
+
 
 const DummyLoaderScreen = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -21,9 +24,11 @@ const DummyLoaderScreen = () => {
     "FILLING_CAMPAIGN_FACILITY_DATA_FROM_MICROPLAN",
     "FETCHING_CAMPAIGN_USER_FROM_MICROPLAN",
     "FILLING_CAMPAIGN_USER_DATA_FROM_MICROPLAN",
+    "UPDATED_CAMPAIGN_WITH_UPLODAED_DATA",
     "CMN_ALL_DATA_FETCH_DONE",
   ];
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [showToast, setShowToast] = useState(null);
 
   const reqCriteriaResource = {
     url: `/project-factory/v1/project-type/fetch-from-microplan`,
@@ -38,6 +43,11 @@ const DummyLoaderScreen = () => {
     config: {
       enabled: true,
       select: (data) => {
+        if(data?.CampaignDetails){
+          setShowToast({ key: "info", label: t("PLS_WAIT_UNTIL_PAGE_REDIRECTS") });
+        }else{
+          setShowToast({ key: "error", label: t("SOME_ERROR_OCCURED_IN_FETCH") });
+        }
         return data?.CampaignDetails;
       },
     },
@@ -58,7 +68,7 @@ const DummyLoaderScreen = () => {
         history.push({
           pathname: `/${window?.contextPath}/employee/campaign/setup-campaign?${searchParams?.toString()}`,
         });
-      }, 1000);
+      }, 1500);
 
       return () => clearTimeout(navigateTimeout); // Cleanup timeout
     }
@@ -67,6 +77,15 @@ const DummyLoaderScreen = () => {
       clearInterval(stepInterval);
     };
   }, [currentStep]);
+
+  const closeToast = () => {
+    setShowToast(null);
+  };
+  useEffect(() => {
+    if (showToast) {
+      setTimeout(closeToast, 3500);
+    }
+  }, [showToast]);
 
   return (
     <React.Fragment>
@@ -82,6 +101,13 @@ const DummyLoaderScreen = () => {
           ))}
         </ul>
       </div>
+      {showToast && (
+          <Toast
+            type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : "success"}
+            label={t(showToast?.label)}
+            onClose={closeToast}
+          />
+        )}
     </React.Fragment>
   );
 };
