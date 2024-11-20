@@ -23,7 +23,7 @@ const MyMicroplans = () => {
   // },[])
   const onClickRow = ({ original: row }) => {
     const updatedName = row.name.replace(/&/g, "and");
-    history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.campaignId}&draft=true&fetchBoundary=true&draftBoundary=true&source=microplan&microName=${updatedName}`);
+    history.push(`/${window.contextPath}/employee/campaign/fetch-from-microplan?id=${row.campaignId}&draft=true&fetchBoundary=true&draftBoundary=true&source=microplan&microName=${updatedName}&planConfigurationId=${row.id}`);
   };
   return (
     <React.Fragment>
