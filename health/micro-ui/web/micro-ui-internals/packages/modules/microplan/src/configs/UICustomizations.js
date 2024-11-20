@@ -245,7 +245,6 @@ export const UICustomizations = {
                 window.dispatchEvent(navEvent);
                 break;
               case "EDIT":
-                console.log("row",row);
                 window.history.pushState(
                   {
                     microplanId: row?.id,
@@ -265,6 +264,7 @@ export const UICustomizations = {
                   fileStoreId: fileId,
                   customName: `Population data for ${campaignName}`
               });
+              break;
                 
               default:
                 console.log(value);
