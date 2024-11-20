@@ -2752,9 +2752,32 @@ $border-color: rgba(214, 213, 212, 1);
   }
 }
 
+.scroll-container {
+  overflow: scroll; /* Enables scrolling */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Edge */
+}
+
 .sc-fzXfNN.sc-fzXfNO.sc-fzXfNP.iSamCd.rdt_TableCell>div:first-of-type {
   width: 100%;
 }
+
+.microPlanBulkTable {
+  overflow: scroll; /* Enables scrolling */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
+.microPlanBulkTable::-webkit-scrollbar {
+  overflow: scroll; /* Enables scrolling */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
 .label-field-pair.new-assumption-pop{
   display: flex;
   align-items: flex-start;
