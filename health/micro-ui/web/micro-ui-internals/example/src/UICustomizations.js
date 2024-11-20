@@ -961,6 +961,7 @@ export const UICustomizations = {
                 window.dispatchEvent(navEvent);
                 break;
               case "EDIT":
+                console.log("row",row);
                 window.history.pushState(
                   {
                     microplanId: row?.id,
@@ -972,6 +973,15 @@ export const UICustomizations = {
                 const navEvent2 = new PopStateEvent("popstate");
                 window.dispatchEvent(navEvent2);
                 break;
+              case "DOWNLOAD":
+                const files=row?.files;
+                const fileId=files.find((item)=>item.templateIdentifier ==="Population");
+                const campaignName=`row?.name.subString(0,5)` || "";
+                Digit.Utils.campaign.downloadExcelWithCustomName({
+                  fileStoreId: fileId,
+                  customName: `Population data for ${campaignName}`
+              });
+                
               default:
                 console.log(value);
                 break;
@@ -982,8 +992,8 @@ export const UICustomizations = {
               label={t("START")}
               variation="primary"
               icon={"ArrowForward"}
-              style={{minWidth:"240px"}}
               type="button"
+              style={{width:"290px"}}
               isDisabled={!hasRequiredRole}
               // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("START", row)}
@@ -993,7 +1003,7 @@ export const UICustomizations = {
               label={t("WBH_DOWNLOAD_MICROPLAN")}
               variation="primary"
               icon={"FileDownload"}
-              style={{minWidth:"240px"}}
+              style={{width:"290px"}}
               type="button"
               // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("DOWNLOAD", row)}
@@ -1003,7 +1013,7 @@ export const UICustomizations = {
               label={t("WBH_EDIT")}
               variation="primary"
               icon={"Edit"}
-              style={{minWidth:"240px"}}
+              style={{width:"290px"}}
               type="button"
               // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("EDIT", row)}
