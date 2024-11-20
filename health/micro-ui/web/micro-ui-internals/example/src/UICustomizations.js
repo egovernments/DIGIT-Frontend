@@ -809,7 +809,14 @@ export const UICustomizations = {
           }
 
           const handleDownload = () => {
-            Digit.Utils.campaign.downloadExcelWithCustomName({ fileStoreId: microplanFileId, customName: t("Microplan Final Sheet") });
+            const files = row?.files;
+            const file = files.find((item) => item.templateIdentifier === "Population");
+            const fileId = file?.filestoreId;
+            const campaignName = row?.name.substring(0, 5) || "";
+            Digit.Utils.campaign.downloadExcelWithCustomName({
+              fileStoreId: fileId,
+              customName: campaignName
+            });
           };
 
           return (
@@ -973,16 +980,16 @@ export const UICustomizations = {
                 const navEvent2 = new PopStateEvent("popstate");
                 window.dispatchEvent(navEvent2);
                 break;
-              case "DOWNLOAD":
-                const files=row?.files;
-                const file = files.find((item) => item.templateIdentifier === "Population");
-                const fileId = file?.fileStoreId;
-                const campaignName=row?.name.subString(0,5) || "";
-                Digit.Utils.campaign.downloadExcelWithCustomName({
-                  fileStoreId: fileId,
-                  customName: campaignName
-              });
-              break;
+                case "DOWNLOAD":
+                  const files = row?.files;
+                  const file = files.find((item) => item.templateIdentifier === "Population");
+                  const fileId = file?.filestoreId;
+                  const campaignName = row?.name.substring(0, 5) || "";
+                  Digit.Utils.campaign.downloadExcelWithCustomName({
+                    fileStoreId: fileId,
+                    customName: campaignName
+                  });
+                  break;
                 
               default:
                 console.log(value);
