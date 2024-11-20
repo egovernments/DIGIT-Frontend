@@ -15,8 +15,10 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
   const { mutate: updateResources, ...rest } = Digit.Hooks.microplanv1.useCreateUpdatePlanProject();
   const { t } = useTranslation();
   const { state, dispatch } = useMyContext();
+  const [hypothesisParams, setHypothesisParams, clearHypothesisParams] = Digit.Hooks.useSessionStorage("HYPOTHESIS_DATA", {});
   const [assumptionValues, setAssumptionValues] = useState(
-    Digit.SessionStorage.get("MICROPLAN_DATA")?.HYPOTHESIS?.Assumptions?.assumptionValues || []
+    // Digit.SessionStorage.get("MICROPLAN_DATA")?.HYPOTHESIS?.Assumptions?.assumptionValues || []
+    Digit.SessionStorage.get("HYPOTHESIS_DATA")?.assumptionValues || []
   );
   const assumptionsFormValues = customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm; //array with key and value
   const campaignType = customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code;
@@ -71,6 +73,34 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     }
   );
 
+  useEffect(() => {
+    const curr = Digit.SessionStorage.get("MICROPLAN_DATA")?.HYPOTHESIS?.Assumptions?.assumptionValues;
+    if (curr?.length > 0) {
+      setHypothesisParams(curr);
+    }
+    return () => {
+      clearHypothesisParams();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (planObject?.assumptions?.length > 0) {
+      const currentSession = Digit.SessionStorage.get("FORMULA_DATA");
+      const assumptionValues = [];
+      for (const assumption of planObject?.assumptions) {
+        assumptionValues.push({
+          source: assumption?.source,
+          key: assumption?.key,
+          value: assumption?.value,
+          category: assumption?.category,
+        });
+      }
+      setHypothesisParams({
+        ...currentSession,
+        assumptionValues: assumptionValues,
+      });
+    }
+  }, [planObject]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {

@@ -133,9 +133,10 @@ const PopInbox = () => {
       businessIds: microplanId,
     },
     config: {
-      enabled: true,
-      select: (data) => {
-        return data?.ProcessInstances;
+        cacheTime:Infinity,
+        enabled: true,
+        select: (data) => {
+          return data?.ProcessInstances;
       },
     },
   });

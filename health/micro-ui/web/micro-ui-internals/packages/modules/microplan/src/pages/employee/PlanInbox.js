@@ -69,7 +69,7 @@ const PlanInbox = () => {
       },
     },
     {
-      enabled: isRootApprover ? true : false,
+      enabled: true,
       //   queryKey: currentKey,
     }
   );
@@ -319,7 +319,7 @@ const PlanInbox = () => {
         setAssignedToAllCount(planWithCensus?.TotalCount);
       }
 
-      const uniqueAssignees = [...new Set(planWithCensus?.censusData.map(item => item.assignee).filter(Boolean))];
+      const uniqueAssignees = [...new Set(planWithCensus?.planData.map(item => item.assignee).filter(Boolean))];
       setAssigneeUuids(uniqueAssignees.join(","));
     }
   }, [planWithCensus, selectedFilter, activeLink]);
@@ -482,7 +482,7 @@ const PlanInbox = () => {
     },
     {
       name: t("INBOX_ASSIGNEE"),
-      selector: (row, index) => employeeNameMap?.[row?.censusOriginal?.assignee] || t("ES_COMMON_NA"),
+      selector: (row, index) => employeeNameMap?.[row?.original?.assignee] || t("ES_COMMON_NA"),
       sortable: true,
       width: "180px",
     },
@@ -630,7 +630,7 @@ const PlanInbox = () => {
     return false;
   };
 
-  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isWorkflowLoading || isProcessLoading) {
+  if (isLoadingPlanObject || isPlanEmpSearchLoading || isLoadingCampaignObject || isWorkflowLoading || isProcessLoading) {
     return <Loader />;
   }
   // campaignObject?.campaignName 
@@ -821,6 +821,8 @@ const PlanInbox = () => {
                 paginationPerPage={rowsPerPage}
                 paginationRowsPerPageOptions={[10, 20, 50, 100]}
                 sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
+                fixedHeader={true}
+                fixedHeaderScrollHeight={"100vh"}
               />
             )}
           </Card>
