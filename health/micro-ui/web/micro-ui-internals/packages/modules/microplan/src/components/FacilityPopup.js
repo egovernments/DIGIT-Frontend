@@ -359,15 +359,6 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     },
   ];
 
-  const dummyData = {
-    facilityName: details?.additionalDetails?.facilityName || "",
-    facilityType: details?.additionalDetails?.facilityType || "",
-    facilityStatus: details?.additionalDetails?.facilityStatus || "",
-    capacity: details?.additionalDetails?.capacity || "",
-    servingPopulation: details?.additionalDetails?.servingPopulation || "",
-    fixedPost: details?.additionalDetails?.fixedPost || "",
-    residingVillage: details?.residingBoundary || ""
-  };
   useEffect(() => {
     if (details) {
       setKpiParams([
