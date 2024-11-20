@@ -802,6 +802,8 @@ const PlanInbox = () => {
                 paginationPerPage={rowsPerPage}
                 paginationRowsPerPageOptions={[10, 20, 50, 100]}
                 sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
+                fixedHeader={true}
+                fixedHeaderScrollHeight={"100vh"}
               />
             )}
           </Card>

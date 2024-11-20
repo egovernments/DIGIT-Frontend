@@ -47,8 +47,8 @@ const PopInboxTable = ({ ...props }) => {
         // selector:(row, index)=>row.boundaryCode,
         sortable: true,
         sortFunction: (rowA, rowB) => {
-          const boundaryCodeA = rowA.boundaryCode.toLowerCase();
-          const boundaryCodeB = rowB.boundaryCode.toLowerCase();
+          const boundaryCodeA = t(rowA.boundaryCode).toLowerCase();
+          const boundaryCodeB = t(rowB.boundaryCode).toLowerCase();
           if (boundaryCodeA < boundaryCodeB) return -1;
           if (boundaryCodeA > boundaryCodeB) return 1;
           return 0;
@@ -182,13 +182,10 @@ const PopInboxTable = ({ ...props }) => {
       customStyles={tableCustomStyle}
       selectableRowsComponent={CheckBox}
       sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
-      defaultSortFieldId={1}
+      // defaultSortFieldId={1}
       selectableRowsComponentProps={selectProps}
       progressPending={props?.progressPending}
       progressComponent={<Loader />}// progressPending={loading}
-      // title="Users"
-      // paginationDefaultPage={currentPage}
-      // paginationDefaultRowsPerPage={rowsPerPage}
       pagination
       paginationServer
       paginationDefaultPage={props?.currentPage}
@@ -198,6 +195,8 @@ const PopInboxTable = ({ ...props }) => {
       paginationPerPage={props?.rowsPerPage}
       paginationRowsPerPageOptions={[10, 20, 50, 100]}
       conditionalRowStyles={props?.conditionalRowStyles}
+      fixedHeader={true}
+      fixedHeaderScrollHeight={"100vh"}
     />
   );
 };
