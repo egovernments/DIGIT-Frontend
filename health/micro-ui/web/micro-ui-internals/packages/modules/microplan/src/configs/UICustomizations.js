@@ -263,7 +263,7 @@ export const UICustomizations = {
                 const campaignName=row?.name.subString(0,5) || "";
                 Digit.Utils.campaign.downloadExcelWithCustomName({
                   fileStoreId: fileId,
-                  customName: `Population data for ${campaignName}`
+                  customName: campaignName
               });
               break;
                 
