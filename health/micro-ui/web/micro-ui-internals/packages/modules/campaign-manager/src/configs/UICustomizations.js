@@ -305,9 +305,7 @@ export const UICustomizations = {
   },
   MicroplanCampaignSearchConfig: {
     preProcess: (data, additionalDetails) => {
-      const url = window.location.pathname;
-      const queryString = url.includes("?") ? url.split("?")[1] : url.split("&").slice(1).join("&");
-      const searchParams = new URLSearchParams(queryString);
+      const searchParams = new URLSearchParams(window.location.search);
       const userId = searchParams.get("userId");
       const status = searchParams.get("status");
       data.body.PlanConfigurationSearchCriteria.userUuid = userId;

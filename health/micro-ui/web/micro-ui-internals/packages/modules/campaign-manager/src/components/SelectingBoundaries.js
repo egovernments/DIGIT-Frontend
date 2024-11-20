@@ -541,7 +541,7 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
         style={{ margin: "0rem", maxWidth: "100%" }}
         additionalElements={[
           <span style={{ color: "#505A5F" }}>
-            {t("HCM_BOUNDARY_INFO ")}
+            {t("HCM_BOUNDARY_INFO")}
             <a href={`mailto:${mailConfig.mailId}`} style={{ color: "black" }}>
               {mailConfig?.mailId}
             </a>
