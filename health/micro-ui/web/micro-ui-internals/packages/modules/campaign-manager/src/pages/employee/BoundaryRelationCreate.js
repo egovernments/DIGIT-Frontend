@@ -583,7 +583,7 @@ const onConfirmClick=()=>{
                                 </div>
                                 <div style={{ height: "1.5rem" }}></div>
                                 <div>
-                                    {t("MSG")}
+                                    {t("BOUNDARY_HIERARCHY_INFO_MSG")}
                                 </div>
                                 <div style={{ height: "2rem" }}></div>
                                 <div>
