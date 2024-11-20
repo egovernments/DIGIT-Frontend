@@ -181,7 +181,7 @@
 .as-label-field { 
   display: grid;               /* Enable grid layout */
   grid-template-columns: 1fr 2fr; /* Define two columns with different widths */
-  gap: 0rem;                  /* Space between items (adjust as needed) */
+  gap: 1rem;                  /* Space between items (adjust as needed) */
   overflow: auto;             /* Allow overflow if content is larger */
   align-items: center;
   border-bottom: '1px solid #e0e0e0'        /* Align items vertically in the center */
