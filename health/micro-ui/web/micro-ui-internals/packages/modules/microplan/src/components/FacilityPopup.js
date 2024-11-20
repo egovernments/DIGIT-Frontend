@@ -387,7 +387,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     },
   ];
 
-  const dummyData1 = {
+  const dummyData = {
     facilityName: details?.additionalDetails?.facilityName || "",
     facilityType: details?.additionalDetails?.facilityType || "",
     facilityStatus: details?.additionalDetails?.facilityStatus || "",
@@ -396,15 +396,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     fixedPost: details?.additionalDetails?.fixedPost || "",
     residingVillage: details?.residingBoundary || ""
   };
-  const dummyData = {
-    a: details?.additionalDetails?.facilityName || "",
-    b: details?.additionalDetails?.facilityType || "",
-    c: details?.additionalDetails?.facilityStatus || "",
-    d: details?.additionalDetails?.capacity || "",
-    servingPopulation: details?.additionalDetails?.servingPopulation || "",
-    e: details?.additionalDetails?.fixedPost || "",
-    residingVillage: "a" || ""
-  };
+
 
   return (
     <>
