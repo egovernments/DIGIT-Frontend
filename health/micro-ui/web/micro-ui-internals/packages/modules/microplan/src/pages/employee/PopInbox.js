@@ -291,7 +291,7 @@ const PopInbox = () => {
         tenantId: tenantId,
         source: microplanId,
         status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
-        ...(activeLink.code == "ASSIGNED_TO_ALL" || selectedFilter == "VALIDATED"
+        ...(activeLink.code == "MP_POP_ASSIGNED_TO_ALL" || selectedFilter == "VALIDATED"
           ? {}
           : { assignee: user.info.uuid }),
         jurisdiction: censusJurisdiction,
@@ -563,7 +563,7 @@ const isStatusConditionMet = (statusCount) => {
                     name: `${`${t(`ASSIGNED_TO_ME`)} (${assignedToMeCount})`}`,
                   },
                   {
-                    code: "ASSIGNED_TO_ALL",
+                    code: "MP_POP_ASSIGNED_TO_ALL",
                     name: `${`${t(`ASSIGNED_TO_ALL`)} (${assignedToAllCount})`}`,
                   },
                 ]}

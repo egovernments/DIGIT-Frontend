@@ -559,7 +559,7 @@ export const UICustomizations = {
                 size="medium"
                 style={{}}
                 title=""
-                variation="secondary"
+                variation="primary"
               />
               {showPopup && (
                 <FacilityPopUp
