@@ -1,8 +1,8 @@
 import React, { useState, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { PopUp, Button, Tab, CheckBox, Card, Toast, SVG } from "@egovernments/digit-ui-components";
+import { PopUp, Button, Tab, CheckBox, Card, Toast, SVG,TooltipWrapper } from "@egovernments/digit-ui-components";
 import SearchJurisdiction from "./SearchJurisdiction";
-import { LoaderWithGap, Loader } from "@egovernments/digit-ui-react-components";
+import { LoaderWithGap, Loader,InfoBannerIcon } from "@egovernments/digit-ui-react-components";
 import DataTable from "react-data-table-component";
 import AccessibilityPopUp from "./accessbilityPopUP";
 import SecurityPopUp from "./securityPopUp";
@@ -32,6 +32,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [disabledAction, setDisabledAction] = useState(false);
   const [boundaryData, setBoundaryData] = useState([]);
+  const VillageHierarchyTooltipWrapper = Digit.ComponentRegistryService.getComponent("VillageHierarchyTooltipWrapper");
   const configNavItem = [
     {
       code: t(`MICROPLAN_UNASSIGNED_FACILITIES`),
@@ -301,7 +302,6 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   //   revalidate,
   // } = Digit.Hooks.useCustomAPIHook(reqCriteriaForPlanFacility);
   // console.log("plan1",facilitySearchData);
-  console.log("details", details);
 
   const handleAssignUnassign = async () => {
     // Fetching the full data of selected rows
@@ -387,14 +387,23 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     },
   ];
 
+  const dummyData1 = {
+    facilityName: details?.additionalDetails?.facilityName || "",
+    facilityType: details?.additionalDetails?.facilityType || "",
+    facilityStatus: details?.additionalDetails?.facilityStatus || "",
+    capacity: details?.additionalDetails?.capacity || "",
+    servingPopulation: details?.additionalDetails?.servingPopulation || "",
+    fixedPost: details?.additionalDetails?.fixedPost || "",
+    residingVillage: details?.residingBoundary || ""
+  };
   const dummyData = {
-    facilityName: "Facility 1",
-    facilityType: "Warehouse",
-    facilityStatus: "Permanent",
-    capacity: "500",
-    servingPopulation: "5500 / 5000",
-    fixedPost: "Yes",
-    residingVillage: "Village 1",
+    a: details?.additionalDetails?.facilityName || "",
+    b: details?.additionalDetails?.facilityType || "",
+    c: details?.additionalDetails?.facilityStatus || "",
+    d: details?.additionalDetails?.capacity || "",
+    servingPopulation: details?.additionalDetails?.servingPopulation || "",
+    e: details?.additionalDetails?.fixedPost || "",
+    residingVillage: "a" || ""
   };
 
   return (
@@ -408,12 +417,27 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
           children={[
             <div className="facilitypopup-serach-results-wrapper">
               <Card className="fac-middle-child">
-                {<div className="summary-main-heading">{"RAndom"}</div>}
                 <div className="fac-kpi-container">
                   {Object.keys(dummyData).map((key) => (
                     <div key={key} className="fac-kpi-card">
-                      <h2>{dummyData[key]}</h2>
-                      <p>{t(`MICROPLAN_${key.toUpperCase()}`)}</p>
+                      {key === "servingPopulation" ? (
+                        <p className="mp-fac-value">
+                          <span style={{ color: "#D4351C" }}>{dummyData[key]}</span>{" "}
+                          / <span style={{ color: "#0B4B66" }}>{5000}</span>
+                        </p>
+                      ) : key === "residingVillage" ?
+                       (
+                        <p className="mp-fac-value">
+                        <span style={{ color: "#0B4B66" }}>{dummyData[key]}</span>{" "}
+                        <VillageHierarchyTooltipWrapper  boundaryCode={details?.residingBoundary}  placement={"bottom"}/>
+                         
+                      </p>
+
+                       ) : 
+                      (
+                        <p className="mp-fac-value">{dummyData[key]}</p>
+                      )}
+                      <p className="mp-fac-key">{t(`MICROPLAN_${key.toUpperCase()}`)}</p>
                     </div>
                   ))}
                 </div>
