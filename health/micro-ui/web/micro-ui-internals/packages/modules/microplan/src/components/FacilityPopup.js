@@ -33,6 +33,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const [disabledAction, setDisabledAction] = useState(false);
   const [boundaryData, setBoundaryData] = useState([]);
   const VillageHierarchyTooltipWrapper = Digit.ComponentRegistryService.getComponent("VillageHierarchyTooltipWrapper");
+  const [kpiParams, setKpiParams] = useState([]);
   const configNavItem = [
     {
       code: t(`MICROPLAN_UNASSIGNED_FACILITIES`),
@@ -367,6 +368,34 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     fixedPost: details?.additionalDetails?.fixedPost || "",
     residingVillage: details?.residingBoundary || ""
   };
+  useEffect(() => {
+    if (details) {
+      setKpiParams([
+        { key: "facilityName", value: details?.additionalDetails?.facilityName || t("NA") },
+        { key: "facilityType", value: details?.additionalDetails?.facilityType || t("NA") },
+        { key: "facilityStatus", value: details?.additionalDetails?.facilityStatus || t("NA")},
+        { key: "capacity", value: details?.additionalDetails?.capacity || t("NA") },
+        { key: "servingPopulation", value: details?.additionalDetails?.servingPopulation || t("NA") },
+        { key: "fixedPost", value: details?.additionalDetails?.fixedPost || t("NA") },
+        { key: "residingVillage", value: details?.residingBoundary || t("NA")}
+      ]);
+    }
+  }, [details]);
+
+  const customRenderers = {
+    servingPopulation: (value) => (
+      <p className="mp-fac-value">
+        <span style={{ color: "#D4351C" }}>{value}</span> /{" "}
+        <span style={{ color: "#0B4B66" }}>{5000}</span>
+      </p>
+    ),
+    residingVillage: (value) => (
+      <p className="mp-fac-value">
+        <span style={{ color: "#0B4B66" }}>{value}</span>{" "}
+        <VillageHierarchyTooltipWrapper boundaryCode={details?.residingBoundary} placement={"bottom"} />
+      </p>
+    )
+  };
 
 
   return (
@@ -381,25 +410,9 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
             <div className="facilitypopup-serach-results-wrapper">
               <Card className="fac-middle-child">
                 <div className="fac-kpi-container">
-                  {Object.keys(dummyData).map((key) => (
+                  {kpiParams.map(({ key, value }) => (
                     <div key={key} className="fac-kpi-card">
-                      {key === "servingPopulation" ? (
-                        <p className="mp-fac-value">
-                          <span style={{ color: "#D4351C" }}>{dummyData[key]}</span>{" "}
-                          / <span style={{ color: "#0B4B66" }}>{5000}</span>
-                        </p>
-                      ) : key === "residingVillage" ?
-                       (
-                        <p className="mp-fac-value">
-                        <span style={{ color: "#0B4B66" }}>{dummyData[key]}</span>{" "}
-                        <VillageHierarchyTooltipWrapper  boundaryCode={details?.residingBoundary}  placement={"bottom"}/>
-                         
-                      </p>
-
-                       ) : 
-                      (
-                        <p className="mp-fac-value">{dummyData[key]}</p>
-                      )}
+                      {customRenderers[key] ? customRenderers[key](value) : <p className="mp-fac-value">{value}</p>}
                       <p className="mp-fac-key">{t(`MICROPLAN_${key.toUpperCase()}`)}</p>
                     </div>
                   ))}
