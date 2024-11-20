@@ -15,8 +15,10 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
   const [manualLoader, setManualLoader] = useState(false);
   const { t } = useTranslation();
   const { state } = useMyContext();
+  const [formulaParams, setFormulaParams, clearFormulaParams] = Digit.Hooks.useSessionStorage("FORMULA_DATA", {});
   const [formulaConfigValues, setFormulaConfigValues] = useState(
-    Digit.SessionStorage.get("MICROPLAN_DATA")?.FORMULA_CONFIGURATION?.formulaConfiguration?.formulaConfigValues || []
+    // Digit.SessionStorage.get("MICROPLAN_DATA")?.FORMULA_CONFIGURATION?.formulaConfiguration?.formulaConfigValues || []
+    Digit.SessionStorage.get("FORMULA_DATA")?.formulaConfigValues || []
   );
   const assumptionsFormValues = customProps?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm; //array with key value pair
   const campaignType = customProps?.sessionData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code;
@@ -52,6 +54,40 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
       //   queryKey: currentKey,
     }
   );
+  useEffect(() => {
+    const curr = Digit.SessionStorage.get("MICROPLAN_DATA")?.FORMULA_CONFIGURATION?.formulaConfiguration?.formulaConfigValues;
+    if (curr?.length > 0) {
+      setFormulaParams(curr);
+    }
+
+    return () => {
+      clearFormulaParams();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (planObject?.operations?.length > 0 && state?.RuleConfigureOperators?.length > 0) {
+      const currentSession = Digit.SessionStorage.get("FORMULA_DATA");
+      var formulaConfigValues = [];
+      for (const operation of planObject?.operations) {
+        formulaConfigValues.push({
+          source: operation?.source,
+          input: operation?.input,
+          output: operation?.output,
+          category: operation?.category,
+          assumptionValue: operation?.assumptionValue,
+          operatorName:
+            state?.RuleConfigureOperators?.find((rule) => rule?.operatorCode == operation?.operator)?.operatorName || operation?.operator || null,
+          showOnEstimationDashboard: operation?.showOnEstimationDashboard,
+        });
+      }
+      setFormulaParams({
+        ...currentSession,
+        formulaConfigValues: formulaConfigValues,
+      });
+    }
+  }, [planObject]);
+
   const filteredAutoFilledRuleConfigurations = state.AutoFilledRuleConfigurations?.filter((item) => {
     const isHouseToHouseOrFixedPost = resourceDistributionStrategyCode === "HOUSE_TO_HOUSE" || resourceDistributionStrategyCode === "FIXED_POST";
 
@@ -83,7 +119,6 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
     const temp = formulaConfigValues?.filter((i) => i.category === currentCategory && i.source === "CUSTOM") || [];
     setCustomFormula(temp);
   }, [formulaInternalKey, formulaConfigValues]);
-
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -307,7 +342,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
     window.addEventListener("isFormulaLastStep", isFormulaLastStep);
     return () => {
       Digit.Utils.microplanv1.updateUrlParams({ isFormulaLastVerticalStep: null });
-      Digit.Utils.microplanv1.updateUrlParams({ formulaInternalKey: null });  
+      Digit.Utils.microplanv1.updateUrlParams({ formulaInternalKey: null });
       window.removeEventListener("isFormulaLastStep", isFormulaLastStep);
     };
   }, []);
