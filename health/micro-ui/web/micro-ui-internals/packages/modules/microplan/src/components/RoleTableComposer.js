@@ -310,12 +310,10 @@ function RoleTableComposer({ nationalRoles }) {
       onSuccess: (data) => {
         queryClient.invalidateQueries("PLAN_SEARCH_EMPLOYEE_WITH_TAGGING");
         refetchHrms();
-        setIsLoading(false);
         setShowToast({ key: "success", label: t("UNASSIGNED_SUCCESSFULLY") });
         setIsLoading(false);
       },
       onError: (error, variables) => {
-        setIsLoading(false);
         setShowToast({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") });
         setIsLoading(false);
       },

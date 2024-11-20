@@ -274,35 +274,6 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
 
   const mutationForPlanFacilityUpdate = Digit.Hooks.useCustomAPIMutationHook(planFacilityUpdateMutaionConfig);
 
-  // const reqCriteriaForPlanFacility = {
-  //   url: `/plan-service/plan/facility/_search`,
-  //   params: {},
-  //   body: {
-  //     PlanFacilitySearchCriteria: {
-  //       limit: props?.state?.tableForm?.limit || 10,
-  //       offset: props?.state?.tableForm?.offset || 0,
-  //       tenantId: tenantId,
-  //       planConfigurationId: url?.microplanId,
-  //       jurisdiction: planEmployee?.planData?.[0]?.jurisdiction,
-  //       facilityName: facilityName,
-  //       facilityType: facilityType?.name,
-  //       facilityStatus: status?.name,
-  //       residingBoundaries: residingBoundariesCodes,
-  //     },
-  //   },
-  //   config: {
-  //     enabled: true,
-  //   },
-  // };
-  // const {
-  //   isLoading: isFacilitySearchLoading,
-  //   data: facilitySearchData,
-  //   isFetching: isFacilitySearchFetching,
-  //   refetch2,
-  //   revalidate,
-  // } = Digit.Hooks.useCustomAPIHook(reqCriteriaForPlanFacility);
-  // console.log("plan1",facilitySearchData);
-
   const handleAssignUnassign = async () => {
     // Fetching the full data of selected rows
     setLoader(true);
