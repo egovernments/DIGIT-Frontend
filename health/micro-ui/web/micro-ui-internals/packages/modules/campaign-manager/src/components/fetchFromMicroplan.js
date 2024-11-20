@@ -10,6 +10,7 @@ const DummyLoaderScreen = () => {
   const { t } = useTranslation();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
+  const planConfigurationId = searchParams.get("planConfigurationId");
 
   const steps = [
     "FETCHING_CAMPAIGN_DATA_FROM_MICROPLAN",
@@ -27,12 +28,12 @@ const DummyLoaderScreen = () => {
   const reqCriteriaResource = {
     url: `/project-factory/v1/project-type/fetch-from-microplan`,
     body: {
-      "MicroplanDetails": {
-        "tenantId": tenantId,
-        "campaignId": id,
-        "planConfigurationId":  "e79072f7-4eae-4274-b663-7cf7ad5cb51e",
-        "resourceId":"filestoreid"
-    }
+      MicroplanDetails: {
+        tenantId: tenantId,
+        campaignId: id,
+        planConfigurationId: planConfigurationId,
+        resourceId: "filestoreid",
+      },
     },
     config: {
       enabled: true,
@@ -49,14 +50,13 @@ const DummyLoaderScreen = () => {
       if (currentStep < steps.length) {
         setCurrentStep((prev) => prev + 1);
       }
-    }, 2000); // 1 second delay for each step
+    }, 2500); // 1 second delay for each step
 
     if (currentStep === steps.length) {
       clearInterval(stepInterval); // Clear the interval to stop further updates
       const navigateTimeout = setTimeout(() => {
         history.push({
-          pathname: `/${window?.globalPath}/employee/campaign/setup-campaign?${searchParams?.toString()}`,
-          
+          pathname: `/${window?.contextPath}/employee/campaign/setup-campaign?${searchParams?.toString()}`,
         });
       }, 1000);
 
@@ -69,17 +69,20 @@ const DummyLoaderScreen = () => {
   }, [currentStep]);
 
   return (
-    <div className="sandbox-loader-screen">
-      <div className="sandbox-loader"></div>
-      <ul className="sandbox-installation-steps">
-        {steps.map((step, index) => (
-          <li key={index} className={`sandbox-step ${index < currentStep ? "sandbox-visible" : ""}`}>
-            <span className="sandbox-step-text">{t(step)}</span>
-            {index < currentStep && <CheckCircle fill="#00703C" />}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <React.Fragment>
+      <Header styles={{ fontSize: "32px" }}>{t("MY_MICROPLANS_HEADING")}</Header>
+      <div className="sandbox-loader-screen" style={{ height: "100%" }}>
+        <div className="sandbox-loader"></div>
+        <ul className="sandbox-installation-steps">
+          {steps.map((step, index) => (
+            <li key={index} className={`sandbox-step ${index < currentStep ? "sandbox-visible" : ""}`}>
+              <span className="sandbox-step-text">{t(step)}</span>
+              {index < currentStep && <CheckCircle fill="#00703C" />}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </React.Fragment>
   );
 };
 
