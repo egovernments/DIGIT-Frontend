@@ -306,6 +306,8 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
   useEffect(() => {
     window.addEventListener("isFormulaLastStep", isFormulaLastStep);
     return () => {
+      Digit.Utils.microplanv1.updateUrlParams({ isFormulaLastVerticalStep: null });
+      Digit.Utils.microplanv1.updateUrlParams({ formulaInternalKey: null });  
       window.removeEventListener("isFormulaLastStep", isFormulaLastStep);
     };
   }, []);

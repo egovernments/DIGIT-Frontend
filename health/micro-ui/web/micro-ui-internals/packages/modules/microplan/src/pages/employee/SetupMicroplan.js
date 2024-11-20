@@ -21,7 +21,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const [active, setActive] = useState(0);
   const [showToast, setShowToast] = useState(false);
   const [showPopUp, setShowPopUp] = useState(false);
-  const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
+  const { campaignId, microplanId, key, isFormulaLastVerticalStep, isLastVerticalStep, ...queryParams } = Digit.Hooks.useQueryParams();
   const setupCompleted = queryParams?.["setup-completed"];
   const [shouldUpdate, setShouldUpdate] = useState(false);
   const [currentKey, setCurrentKey] = useState(() => {
@@ -271,8 +271,8 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   };
 
   const onStepClick = (step) => {
-    if(setupCompleted){
-      return
+    if (setupCompleted) {
+      return;
     }
     if (step > currentStep) return;
     const filteredSteps = microplanConfig?.[0].form.filter((item) => item.stepCount === String(step + 1));
@@ -328,10 +328,15 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   }
 
   const getNextActionLabel = () => {
-    if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.isLast) {
+    if (isLastVerticalStep && isLastVerticalStep === "false") {
+      return null;
+    } else if (isFormulaLastVerticalStep && isFormulaLastVerticalStep === "false") {
+      return null;
+    } else if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.isLast) {
       return t("MP_COMPLETE_SETUP");
+    } else {
+      return t("MP_SAVE_PROCEED");
     }
-    return t("MP_SAVE_PROCEED");
   };
 
   if (loader) {
@@ -372,10 +377,10 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
         label={getNextActionLabel()}
       />
       {setupCompleted ? (
-        <ActionBar style={{ zIndex: "19" }} setactionFieldsToRight
-          actionFields={[
-            <Button label={t("GO_BACK_TO_MY_MICROPLAN")} onClick={() => history.goBack()} />
-          ]}
+        <ActionBar
+          style={{ zIndex: "19" }}
+          setactionFieldsToRight
+          actionFields={[<Button label={t("GO_BACK_TO_MY_MICROPLAN")} onClick={() => history.goBack()} />]}
         />
       ) : null}
       {showToast && (
