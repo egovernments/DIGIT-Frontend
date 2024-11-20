@@ -258,8 +258,9 @@ export const UICustomizations = {
                 break;
               case "DOWNLOAD":
                 const files=row?.files;
-                const fileId=files.find((item)=>item.templateIdentifier ==="Population");
-                const campaignName=`row?.name.subString(0,5)` || "";
+                const file = files.find((item) => item.templateIdentifier === "Population");
+                const fileId = file?.fileStoreId;
+                const campaignName=row?.name.subString(0,5) || "";
                 Digit.Utils.campaign.downloadExcelWithCustomName({
                   fileStoreId: fileId,
                   customName: `Population data for ${campaignName}`
