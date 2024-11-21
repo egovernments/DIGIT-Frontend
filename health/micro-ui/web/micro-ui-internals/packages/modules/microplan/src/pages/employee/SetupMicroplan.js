@@ -21,7 +21,16 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const [active, setActive] = useState(0);
   const [showToast, setShowToast] = useState(false);
   const [showPopUp, setShowPopUp] = useState(false);
-  const { campaignId, microplanId, key, isFormulaLastVerticalStep, isLastVerticalStep, ...queryParams } = Digit.Hooks.useQueryParams();
+  const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
+  const searchParams = new URLSearchParams(location.search);
+  const [isLastVerticalStep, setIsLastVerticalStep] = useState(() => {
+    const searchParams = new URLSearchParams(location.search);
+    return searchParams.get("isLastVerticalStep");
+  });
+  const [isFormulaLastVerticalStep, setIsFormulaLastVerticalStep] = useState(() => {
+    const searchParams = new URLSearchParams(location.search);
+    return searchParams.get("isFormulaLastVerticalStep");
+  });
   const setupCompleted = queryParams?.["setup-completed"];
   const [shouldUpdate, setShouldUpdate] = useState(false);
   const [currentKey, setCurrentKey] = useState(() => {
@@ -31,6 +40,21 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
 
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("MICROPLAN_DATA", {});
   const [microplanConfig, setMicroplanConfig] = useState(MicroplanConfig(totalFormData, null, isSubmitting, null, hierarchyData));
+
+  const handleUrlChange = (event) => {
+    const searchParams = new URLSearchParams(location.search);
+    setIsLastVerticalStep(searchParams.get("isLastVerticalStep"));
+    setIsFormulaLastVerticalStep(searchParams.get("isFormulaLastVerticalStep"));
+  };
+  useEffect(() => {
+    // Add event listener for popstate to detect URL changes
+    window.addEventListener("urlChanged", handleUrlChange);
+
+    // Clean up the event listener when the component unmounts or on URL change
+    return () => {
+      window.removeEventListener("urlChanged", handleUrlChange);
+    };
+  }, []);
 
   //fetch existing campaign object
   const {

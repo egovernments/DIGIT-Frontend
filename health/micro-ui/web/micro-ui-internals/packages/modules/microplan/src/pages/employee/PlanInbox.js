@@ -519,7 +519,7 @@ const PlanInbox = () => {
         <Button
           label={t(`VIEW_LOGS`)}
           onClick={() => {
-            setSelectedBusinessId(row.id); // Set the row.id to state
+            setSelectedBusinessId(row?.original?.id); // Set the row.id to state
             setSelectedBoundaryCode(row.boundaryCode);
             setShowTimelinePopup(true);
           }}
