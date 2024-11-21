@@ -272,7 +272,20 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     },
   };
 
+  const planFacilitySearchMutaionConfig = {
+    url: "/plan-service/plan/facility/_search",
+    body: {
+      PlanFacilitySearchCriteria: {
+        tenantId: tenantId,
+        planConfigurationId: url?.microplanId,
+        ids: [details?.id]
+      }
+    },
+  };
+
   const mutationForPlanFacilityUpdate = Digit.Hooks.useCustomAPIMutationHook(planFacilityUpdateMutaionConfig);
+
+  const mutationForPlanFacilitySearch = Digit.Hooks.useCustomAPIMutationHook(planFacilitySearchMutaionConfig);
 
   const handleAssignUnassign = async () => {
     // Fetching the full data of selected rows
@@ -306,14 +319,26 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
       {
         onSuccess: async (result) => {
           setSelectedRows([]);
-          updateDetails(newDetails);
           if (facilityAssignedStatus) {
-            setShowToast({ key: "success", label: `${t("UNASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 });
-
-
+            setShowToast({ key: "success", label: `${t("UNASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 })
           } else {
             setShowToast({ key: "success", label: `${t("ASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 });
           }
+          // search call for same plan facility
+          // Add a delay of 1 second before making the second mutation call to make sure data is persisted
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          await mutationForPlanFacilitySearch.mutate(
+            {},
+            {
+              onSuccess: async (result) => { 
+                updateDetails(result?.PlanFacility?.[0]);
+              },
+              onError: async (result) => {
+                setShowToast({ key: "error", label: t("ERROR_WHILE_SEARCHING_PLANFACILITY"), transitionTime: 5000 });
+              },
+            }
+          );
+          //updateDetails(newDetails);
         },
         onError: async (result) => {
           // setDownloadError(true);
@@ -483,12 +508,14 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
                 {viewDetails && accessibilityData && <AccessibilityPopUp onClose={() => closeViewDetails()} census={accessibilityData}
                   onSuccess={(data) => {
                     setShowToast({ key: "success", label: t("ACCESSIBILITY_DETAILS_UPDATE_SUCCESS"), transitionTime: 5000 });
+                    censusSearch(boundaryData);
                     closeViewDetails();
                   }}
                 />}
                 {viewDetails && securityData && <SecurityPopUp onClose={() => closeViewDetails()} census={securityData}
                   onSuccess={(data) => {
                     setShowToast({ key: "success", label: t("SECURITY_DETAILS_UPDATE_SUCCESS"), transitionTime: 5000 });
+                    censusSearch(boundaryData);
                     closeViewDetails();
                   }}
                 />}
