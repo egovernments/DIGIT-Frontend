@@ -86,9 +86,9 @@ export const UICustomizations = {
           let options = [];
 
           if (row?.status == "DRAFT") {
-            options = [{ code: "1", name: "Edit Setup" }];
+            options = [{ code: "1", name: "MP_ACTIONS_EDIT_SETUP" }];
           } else {
-            options = [{ code: "1", name: "View Summary" }];
+            options = [{ code: "1", name: "MP_ACTIONS_VIEW_SUMMARY" }];
           }
 
           const handleDownload = () => {
@@ -116,15 +116,15 @@ export const UICustomizations = {
                 <Dropdown
                   option={options}
                   select={(e) => {
-                    if (e.name == "Edit Setup") {
+                    if (e.name ==  "MP_ACTIONS_EDIT_SETUP") {
                       window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${1}&microplanId=${row.id}&campaignId=${row.campaignDetails.id}`;
                     }
-                    if (e.name == "View Summary") {
+                    if (e.name == "MP_ACTIONS_VIEW_SUMMARY") {
                       window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${row.campaignDetails.id}&setup-completed=true`;
                     }
                   }}
                   optionKey={"name"}
-                  selected={{ code: "1", name: "Actions" }}
+                  selected={{ code: "1", name: "MP_ACTIONS_FOR_MICROPLAN_SEARCH" }}
                 />
               )}
             </div>
