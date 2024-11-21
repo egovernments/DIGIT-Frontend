@@ -27,6 +27,7 @@ const VillageView = () => {
   const [assigneeName, setAssigneeName] = useState(null);
   const [showComment, setShowComment] = useState(false);
   const [updatedCensus, setUpdatedCensus] = useState(null);
+  const [disabledAction, setDisabledAction] = useState(false);
 
   const findHierarchyPath = (boundaryCode, data, maxHierarchyLevel) => {
     const hierarchy = [];
@@ -140,6 +141,30 @@ const VillageView = () => {
     }
   }, [employeeData]);
 
+  // fetch the process instance for the current microplan to check if we need to disabled actions or not
+  const { isLoading: isProcessLoading, data: processData, } = Digit.Hooks.useCustomAPIHook({
+    url: "/egov-workflow-v2/egov-wf/process/_search",
+    params: {
+      tenantId: tenantId,
+      history: true,
+      businessIds: microplanId,
+    },
+    config: {
+        cacheTime:Infinity,
+        enabled: true,
+        select: (data) => {
+          return data?.ProcessInstances;
+      },
+    },
+  });
+
+
+  useEffect(() => {
+    if (processData && processData.some((instance) => instance.action === "FINALIZE_CATCHMENT_MAPPING")) {
+      setDisabledAction(true);
+    }
+  }, [processData]);
+
   useEffect(() => {
     if (workflowData) {
       // Assume selectedFilter maps to applicationStatus or state
@@ -190,7 +215,7 @@ const VillageView = () => {
     setShowComment(false);
   };
 
-  if (isLoading || isLoadingCampaignObject || isLoadingPlanEmployee || isWorkflowLoading) {
+  if (isLoading || isLoadingCampaignObject || isLoadingPlanEmployee || isWorkflowLoading || isProcessLoading) {
     return <Loader />;
   }
 
@@ -223,7 +248,7 @@ const VillageView = () => {
                 iconFill=""
                 isSuffix
                 label={
-                  data?.additionalDetails?.securityDetails
+                  disabledAction ? t(`HCM_MICROPLAN_VILLAGE_SECURITY_VIEW_LINK`): data?.additionalDetails?.securityDetails
                     ? t(`HCM_MICROPLAN_VILLAGE_SECURITY_EDIT_LINK`)
                     : t(`HCM_MICROPLAN_VILLAGE_SECURITY_DETAIL_LINK`)
                 }
@@ -246,7 +271,7 @@ const VillageView = () => {
                 iconFill=""
                 isSuffix
                 label={
-                  data?.additionalDetails?.accessibilityDetails
+                  disabledAction ? t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_DETAIL_VIEW_LINK`): data?.additionalDetails?.accessibilityDetails
                     ? t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_DETAIL_EDIT_LINK`)
                     : t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_DETAIL_LINK`)
                 }
@@ -270,6 +295,7 @@ const VillageView = () => {
               setShowToast({ key: "success", label: t("ACCESSIBILITY_DETAILS_UPDATE_SUCCESS"), transitionTime: 5000 });
               refetch();
             }}
+            disableEditing={disabledAction}
           />
         )}
 
@@ -282,6 +308,7 @@ const VillageView = () => {
               setShowToast({ key: "success", label: t("SECURITY_DETAILS_UPDATE_SUCCESS"), transitionTime: 5000 });
               refetch();
             }}
+            disableEditing={disabledAction}
           />
         )}
 
