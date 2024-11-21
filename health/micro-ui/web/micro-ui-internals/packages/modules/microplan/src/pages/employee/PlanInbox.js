@@ -713,7 +713,7 @@ const PlanInbox = () => {
                   },
                   {
                     code: "ASSIGNED_TO_ALL",
-                    name: `${`${t(`ASSIGNED_TO_ALL`)} (${assignedToAllCount})`}`,
+                    name: `${`${t(`MP_PLAN_ASSIGNED_TO_ALL`)} (${assignedToAllCount})`}`,
                   },
               ]}
               navStyles={{}}
