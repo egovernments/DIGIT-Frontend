@@ -43,6 +43,9 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
   const [dataFetched, setDataFetched] = useState(false);
   const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "baseTimeOut" }]);
 
+  useEffect(()=>{
+    console.log("hehe", baseTimeOut);
+  }, [baseTimeOut]);
   const formatLabel = (label) => {
     if (!label) return null;
     return `HCM_${label.replace(/-/g, "_").toUpperCase()}`;
@@ -355,6 +358,7 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
                   }
                   if(process?.type === "campaign-creation")
                   {
+                    console.log("huihui", baseTimeOut);
                     processesToRender.push(
                       <Timeline
                         key={i}
