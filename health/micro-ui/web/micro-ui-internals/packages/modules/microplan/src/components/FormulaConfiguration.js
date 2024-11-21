@@ -271,7 +271,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
   return (
     <>
       <Card className="middle-child">
-        <Header className="uploader-sub-heading">{t(category)}</Header>
+        <Header className="uploader-sub-heading">{t(`FORMULA_${category}`)}</Header>
         {(category==="FORMULA_CAMPAIGN_VEHICLES")?  <p className="mp-description">{t(`FORMULA_VEHICLE_DESCRIPTION`)}</p>:
         <p className="mp-description">{t(`FORMULA_CONFIGURATION_DESCRIPTION`)}</p>
         }
