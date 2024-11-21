@@ -61,7 +61,7 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
   }, [location]);
 
   useEffect(() => {
-    if (window.location.pathname !== "/microplan-ui/employee/microplan/setup-microplan") {
+    if (window.location.pathname !== `/${window.contextPath}/employee/microplan/setup-microplan`) {
       window.Digit.SessionStorage.del("MICROPLAN_DATA");
       window.Digit.SessionStorage.del("HYPOTHESIS_DATA");
       window.Digit.SessionStorage.del("FORMULA_DATA");
