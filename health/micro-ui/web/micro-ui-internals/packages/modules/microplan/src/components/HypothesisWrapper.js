@@ -440,6 +440,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
             setShowToast(false);
           }}
           isDleteBtn={true}
+          style={showToast.style ? showToast.style : {}}
         />
       )}
     </Fragment>
