@@ -378,12 +378,6 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
         <span style={{ color: "#D4351C" }}>{value}</span> /{" "}
         <span style={{ color: "#0B4B66" }}>{5000}</span>
       </p>
-    ),
-    residingVillage: (value) => (
-      <p className="mp-fac-value">
-        <span style={{ color: "#0B4B66" }}>{value}</span>{" "}
-        <VillageHierarchyTooltipWrapper boundaryCode={details?.residingBoundary} placement={"bottom"} />
-      </p>
     )
   };
 
