@@ -663,7 +663,7 @@ const isStatusConditionMet = (statusCount) => {
             {showComment && (
               <WorkflowCommentPopUp
                 onClose={onCommentLogClose}
-                heading={t(`POP_INBOX_HCM_MICROPLAN_EDIT_POPULATION_COMMENT_LABEL`)}
+                heading={t(`${isRootApprover ? 'ROOT_' : ''}POP_INBOX_HCM_MICROPLAN_EDIT_POPULATION_COMMENT_HEADING_LABEL`)}
                 submitLabel={t(`${isRootApprover ? 'ROOT_' : ''}POP_INBOX_HCM_MICROPLAN_EDIT_POPULATION_COMMENT_SUBMIT_LABEL`)}
                 url="/census-service/_update"
                 requestPayload={{ Census: updatedCensus }}
@@ -708,7 +708,7 @@ const isStatusConditionMet = (statusCount) => {
         <ActionBar
           actionFields={[
             <Button label={t(`HCM_MICROPLAN_POP_INBOX_BACK_BUTTON`)} onClick={()=> {
-              history.push(`/${window.contextPath}/employee/microplan/select-activity?microplanId=${url?.microplanId}&campaignId=${url?.campaignId}`);
+              history.push(`/${window.contextPath}/employee`);
             }} type="button" variation="primary" />,
           ]}
           className=""

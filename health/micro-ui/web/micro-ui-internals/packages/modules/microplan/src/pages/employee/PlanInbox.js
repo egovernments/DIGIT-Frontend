@@ -833,7 +833,7 @@ const PlanInbox = () => {
         <ActionBar
           actionFields={[
             <Button label={t(`HCM_MICROPLAN_PLAN_INBOX_BACK_BUTTON`)} onClick={()=> {
-              history.push(`/${window.contextPath}/employee/microplan/select-activity?microplanId=${url?.microplanId}&campaignId=${url?.campaignId}`);
+              history.push(`/${window.contextPath}/employee`);
             }} type="button" variation="primary" />,
           ]}
           className=""
