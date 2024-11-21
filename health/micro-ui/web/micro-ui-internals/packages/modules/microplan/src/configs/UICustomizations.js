@@ -114,6 +114,7 @@ export const UICustomizations = {
                 </div>
               ) : (
                 <Dropdown
+                  t={t}
                   option={options}
                   select={(e) => {
                     if (e.name ==  "MP_ACTIONS_EDIT_SETUP") {
