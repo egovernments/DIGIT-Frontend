@@ -133,6 +133,7 @@ const PopInbox = () => {
         businessIds: microplanId,
     },
     config: {
+        cacheTime:Infinity,
         enabled: true,
         select: (data) => {
           return data?.ProcessInstances;

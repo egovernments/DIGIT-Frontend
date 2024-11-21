@@ -1,22 +1,22 @@
 export const tableCustomStyle = {
   tableWrapper: {
     style: {
-      overflow: "visible",
+      // overflow: "scroll",
     },
   },
   table: {
     style: {
-      overflow: "visible",
+      // overflow: "scroll",
     },
   },
   responsiveWrapper: {
     style: {
-      overflow: "visible",
+      // overflow: "scroll",
     },
   },
   contextMenu: {
     style: {
-      overflow: "visible",
+      // overflow: "scroll",
     },
   },
   header: {
@@ -64,6 +64,7 @@ export const tableCustomStyle = {
       color: "#0B4B66",
       padding: "16px",
       lineHeight: "1.14rem",
+      zIndex:10
     },
   },
   cells: {
@@ -100,22 +101,22 @@ export const tableCustomStyle = {
 export const getTableCustomStyle = (freezeFirstColumn = false) => ({
   tableWrapper: {
     style: {
-      overflow: "visible",
+      // overflow: "scroll",
     },
   },
   table: {
     style: {
-      overflow: "visible",
+      // overflow: "scroll",
     },
   },
   responsiveWrapper: {
     style: {
-      overflow: "visible",
+      // overflow: "scroll",
     },
   },
   contextMenu: {
     style: {
-      overflow: "visible",
+      // overflow: "scroll",
     },
   },
   header: {
