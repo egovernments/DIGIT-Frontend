@@ -633,7 +633,20 @@ const PlanInbox = () => {
   if (isLoadingPlanObject || isPlanEmpSearchLoading || isLoadingCampaignObject || isWorkflowLoading || isProcessLoading) {
     return <Loader />;
   }
+  // campaignObject?.campaignName 
+   //role and name of User extracted
 
+   const roles=Digit.UserService.getUser().info.roles;
+   const userName=Digit.UserService.getUser().info.userName;
+   let userRole = "";
+ 
+   roles.forEach(role => {
+     if (role.code === "ROOT_PLAN_ESTIMATION_APPROVER") {
+       userRole = "ROOT_PLAN_ESTIMATION_APPROVER";
+     } else if (userRole!== "ROOT_PLAN_ESTIMATION_APPROVER" && role.code === "PLAN_ESTIMATION_APPROVER") {
+       userRole = "PLAN_ESTIMATION_APPROVER";
+     
+   }});
   if (showTimelinePopup) {
     return (
       <TimelinePopUpWrapper
@@ -654,9 +667,15 @@ const PlanInbox = () => {
     <div className="pop-inbox-wrapper">
        <div>
       <Header styles={{marginBottom:"1rem"}} className="pop-inbox-header">{t(`HCM_MICROPLAN_VALIDATE_AND_APPROVE_MICROPLAN_ESTIMATIONS`)}</Header>
-      <div className="summary-sub-heading">
-      {`${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${campaignObject?.campaignName || t("NO_NAME_AVAILABLE")}`}
-    </div>
+      <div className="role-summary-sub-heading">
+          <div>
+          {`${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${campaignObject?.campaignName  || t("NO_NAME_AVAILABLE")}`}
+          </div>
+          <div>
+          {`${t("LOGGED_IN_AS")} ${userName} - ${t(userRole)}`}
+          </div>
+          
+        </div>
     </div>
       <SearchJurisdiction
         boundaries={boundaries}
@@ -694,7 +713,7 @@ const PlanInbox = () => {
                   },
                   {
                     code: "ASSIGNED_TO_ALL",
-                    name: `${`${t(`ASSIGNED_TO_ALL`)} (${assignedToAllCount})`}`,
+                    name: `${`${t(`MP_PLAN_ASSIGNED_TO_ALL`)} (${assignedToAllCount})`}`,
                   },
               ]}
               navStyles={{}}
