@@ -6,8 +6,7 @@ import { LoaderWithGap, Loader,InfoBannerIcon } from "@egovernments/digit-ui-rea
 import DataTable from "react-data-table-component";
 import AccessibilityPopUp from "./accessbilityPopUP";
 import SecurityPopUp from "./securityPopUp";
-import { getTableCustomStyle, tableCustomStyle } from "./tableCustomStyle";
-import VillageHierarchyTooltipWrapper from "./VillageHierarchyTooltipWrapper";
+import {  tableCustomStyle } from "./tableCustomStyle";
 
 const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const { t } = useTranslation();
