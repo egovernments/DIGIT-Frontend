@@ -518,7 +518,7 @@ const PopInbox = () => {
     },
   ];
 
-  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading || isWorkflowLoading || isEmployeeLoading || mutation.isLoading) {
+  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading || isWorkflowLoading || isEmployeeLoading || mutation.isLoading || isFetching) {
     return <Loader />;
   }
 
@@ -534,7 +534,6 @@ const PopInbox = () => {
 
     }
   });
-
 
   return (
     <div className="pop-inbox-wrapper">
@@ -560,60 +559,59 @@ const PopInbox = () => {
         onClear={onClear}
       />
 
-      <div className="pop-inbox-wrapper-filter-table-wrapper" style={{ marginBottom: (isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "CENSUS_DATA_APPROVAL_IN_PROGRESS") || (!isRootApprover && isStatusConditionMet(totalStatusCount)) || disabledAction ? "2.5rem" : "0rem" }}>
-        <InboxFilterWrapper
-          options={activeFilter}
-          onApplyFilters={onFilter}
-          clearFilters={clearFilters}
-          defaultValue={
-            selectedFilter === Object.entries(activeFilter)?.[0]?.[0] ? { [Object.entries(activeFilter)?.[0]?.[0]]: Object.entries(activeFilter)?.[0]?.[1] } : null
-          }
-        ></InboxFilterWrapper>
+        <div className="pop-inbox-wrapper-filter-table-wrapper" style={{ marginBottom: (isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "CENSUS_DATA_APPROVAL_IN_PROGRESS") || (!isRootApprover && isStatusConditionMet(totalStatusCount)) || disabledAction ? "2.5rem" : "0rem" }}>
+          <InboxFilterWrapper
+            options={activeFilter}
+            onApplyFilters={onFilter}
+            clearFilters={clearFilters}
+            defaultValue={ { [selectedFilter]: activeFilter[selectedFilter]} 
+      }
+          ></InboxFilterWrapper>
 
-        <div className={"pop-inbox-table-wrapper"}>
-          {showTab && (
-            <Tab
-              activeLink={activeLink?.code}
-              configItemKey="code"
-              configDisplayKey="name"
-              itemStyle={{ width: "290px" }}
-              configNavItems={[
-                {
-                  code: "ASSIGNED_TO_ME",
-                  name: `${`${t(`ASSIGNED_TO_ME`)} (${assignedToMeCount})`}`,
-                },
-                {
-                  code: "ASSIGNED_TO_ALL",
-                  name: `${`${t(`ASSIGNED_TO_ALL`)} (${assignedToAllCount})`}`,
-                },
-              ]}
-              navStyles={{}}
-              onTabClick={(e) => {
-                setActiveLink(e);
-              }}
-              setActiveLink={setActiveLink}
-              showNav={showTab}
-              style={{}}
-            />
-          )}
-          <Card className="microPlanBulkTable" type={"primary"}>
-            {villagesSlected !== 0 && (
-              <div className="selection-state-wrapper">
-                <div className="svg-state-wrapper">
-                  <SVG.DoneAll width={"1.5rem"} height={"1.5rem"} fill={"#C84C0E"}></SVG.DoneAll>
-                  <div className={"selected-state"}>{`${villagesSlected} ${t("MICROPLAN_VILLAGES_SELECTED")}`}</div>
-                </div>
+          <div className={"pop-inbox-table-wrapper"}>
+            {showTab && (
+              <Tab
+                activeLink={activeLink?.code}
+                configItemKey="code"
+                configDisplayKey="name"
+                itemStyle={{ width: "290px" }}
+                configNavItems={[
+                  {
+                    code: "ASSIGNED_TO_ME",
+                    name: `${`${t(`ASSIGNED_TO_ME`)} (${assignedToMeCount})`}`,
+                  },
+                  {
+                    code: "ASSIGNED_TO_ALL",
+                    name: `${`${t(`ASSIGNED_TO_ALL`)} (${assignedToAllCount})`}`,
+                  },
+                ]}
+                navStyles={{}}
+                onTabClick={(e) => {
+                  setActiveLink(e);
+                }}
+                setActiveLink={setActiveLink}
+                showNav={showTab}
+                style={{}}
+              />
+            )}
+            <Card className="microPlanBulkTable" type={"primary"}>
+              {villagesSlected !== 0 && (
+                <div className="selection-state-wrapper">
+                  <div className="svg-state-wrapper">
+                    <SVG.DoneAll width={"1.5rem"} height={"1.5rem"} fill={"#C84C0E"}></SVG.DoneAll>
+                    <div className={"selected-state"}>{`${villagesSlected} ${t("MICROPLAN_VILLAGES_SELECTED")}`}</div>
+                  </div>
 
-                <div className={`table-actions-wrapper`}>
-                  {actionsMain?.filter((action) => !actionsToHide.includes(action.action)).length > 1 ? (
-                    <ButtonsGroup
-                      buttonsArray={actionsMain
-                        ?.filter((action) => !actionsToHide.includes(action.action))
-                        ?.map((action, index) => {
+                  <div className={`table-actions-wrapper`}>
+                    {actionsMain?.filter((action) => !actionsToHide.includes(action.action)).length > 1 ? (
+                      <ButtonsGroup
+                        buttonsArray={actionsMain
+                          ?.filter((action) => !actionsToHide.includes(action.action))
+                          ?.map((action, index) => {
 
-                          const isPrimary = getButtonState(action.action);
+                            const isPrimary = getButtonState(action.action);
 
-                          return (
+                            return (
                             <Button
                               key={index}
                               variation={isPrimary ? "primary" : "secondary"}
@@ -682,13 +680,13 @@ const PopInbox = () => {
           {showComment && (
             <WorkflowCommentPopUp
               onClose={onCommentLogClose}
-              heading={t(`POP_INBOX_HCM_MICROPLAN_EDIT_POPULATION_COMMENT_LABEL`)}
-              submitLabel={t(`${isRootApprover ? 'ROOT_' : ''}POP_INBOX_HCM_MICROPLAN_EDIT_POPULATION_COMMENT_SUBMIT_LABEL`)}
-              url="/census-service/_update"
-              requestPayload={{ Census: updatedCensus }}
-              commentPath="workflow.comments"
-              onSuccess={(data) => {
-                setShowToast({ key: "success", label: t("HCM_MICROPLAN_EDIT_WORKFLOW_UPDATED_SUCCESSFULLY"), transitionTime: 5000 });
+                heading={t(`${isRootApprover ? 'ROOT_' : ''}POP_INBOX_HCM_MICROPLAN_EDIT_POPULATION_COMMENT_HEADING_LABEL`)}
+                submitLabel={t(`${isRootApprover ? 'ROOT_' : ''}POP_INBOX_HCM_MICROPLAN_EDIT_POPULATION_COMMENT_SUBMIT_LABEL`)}
+                url="/census-service/_update"
+                requestPayload={{ Census: updatedCensus }}
+                commentPath="workflow.comments"
+                onSuccess={(data) => {
+                  setShowToast({ key: "success", label: t(`${isRootApprover ? 'ROOT_' : ''}POP_INBOX_HCM_MICROPLAN_EDIT_WORKFLOW_UPDATED_SUCCESSFULLY`), transitionTime: 5000 });
                 onCommentLogClose();
                 refetch();
               }}
@@ -726,8 +724,8 @@ const PopInbox = () => {
       {((!isRootApprover && isStatusConditionMet(totalStatusCount)) || disabledAction) &&
         <ActionBar
           actionFields={[
-            <Button label={t(`HCM_MICROPLAN_POP_INBOX_BACK_BUTTON`)} onClick={() => {
-              history.push(`/${window.contextPath}/employee/microplan/select-activity?microplanId=${url?.microplanId}&campaignId=${url?.campaignId}`);
+            <Button label={t(`HCM_MICROPLAN_POP_INBOX_BACK_BUTTON`)} onClick={()=> {
+              history.push(`/${window.contextPath}/employee`);
             }} type="button" variation="primary" />,
           ]}
           className=""
