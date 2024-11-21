@@ -815,7 +815,7 @@ export const UICustomizations = {
             const campaignName = row?.name || "";
             if (!fileId) {
                   console.error("Population template file not found");
-                
+                  return;
                 }
             Digit.Utils.campaign.downloadExcelWithCustomName({
               fileStoreId: fileId,
@@ -990,6 +990,7 @@ export const UICustomizations = {
                   const fileId = file?.filestoreId;
                   if (!fileId) {
                       console.error("Population template file not found");
+                      return;
                     }
                   const campaignName = row?.name || "";
                   Digit.Utils.campaign.downloadExcelWithCustomName({
