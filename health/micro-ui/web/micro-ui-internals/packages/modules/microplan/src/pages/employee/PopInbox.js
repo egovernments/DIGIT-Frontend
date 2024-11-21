@@ -518,10 +518,9 @@ const isStatusConditionMet = (statusCount) => {
     },
   ];
 
-  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading || isWorkflowLoading || isEmployeeLoading || mutation.isLoading) {
+  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading || isWorkflowLoading || isEmployeeLoading || mutation.isLoading || isFetching) {
     return <Loader />;
   }
-
 
   return (
     <div className="pop-inbox-wrapper">
@@ -546,9 +545,8 @@ const isStatusConditionMet = (statusCount) => {
             options={activeFilter}
             onApplyFilters={onFilter}
             clearFilters={clearFilters}
-            defaultValue={
-              selectedFilter === Object.entries(activeFilter)?.[0]?.[0] ? { [Object.entries(activeFilter)?.[0]?.[0]]: Object.entries(activeFilter)?.[0]?.[1] } : null
-            }
+            defaultValue={ { [selectedFilter]: activeFilter[selectedFilter]} 
+      }
           ></InboxFilterWrapper>
 
           <div className={"pop-inbox-table-wrapper"}>
@@ -669,7 +667,7 @@ const isStatusConditionMet = (statusCount) => {
                 requestPayload={{ Census: updatedCensus }}
                 commentPath="workflow.comments"
                 onSuccess={(data) => {
-                  setShowToast({ key: "success", label: t("HCM_MICROPLAN_EDIT_WORKFLOW_UPDATED_SUCCESSFULLY"), transitionTime: 5000 });
+                  setShowToast({ key: "success", label: t(`${isRootApprover ? 'ROOT_' : ''}POP_INBOX_HCM_MICROPLAN_EDIT_WORKFLOW_UPDATED_SUCCESSFULLY`), transitionTime: 5000 });
                   onCommentLogClose();
                   refetch();
                 }}
