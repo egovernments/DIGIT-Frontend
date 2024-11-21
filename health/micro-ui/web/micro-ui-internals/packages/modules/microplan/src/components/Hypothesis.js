@@ -322,6 +322,31 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
                 variation={"primary"}
                 label={t("YES")}
                 onClick={() => {
+                  //here if assumption name is not given then show a toast message and return 
+                  if(!selectedDeletedAssumption){
+                    setShowToast({
+                      key: "error",
+                      label: t("PLS_SELECT_ASSUMPTION"),
+                      transitionTime: 3000,
+                      style:{
+                        zIndex:1000000
+                      }
+                    });
+                    return;
+                  }
+                  
+                  if(selectedDeletedAssumption?.code === "NEW_ASSUMPTION" && !selectedDeletedAssumption?.name){
+                    setShowToast({
+                      key: "error",
+                      label: t("PLS_ENTER_ASSUMPTION_NAME"),
+                      transitionTime: 3000,
+                      style:{
+                        zIndex:1000000
+                      }
+                    });
+                    return;
+                  }
+                  //If no issues then go ahead and add assumption
                   addNewAssumption();
                 }}
               />,

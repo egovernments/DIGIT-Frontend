@@ -28,6 +28,7 @@ const ChooseActivity = () => {
   //   // Watch for campaignId or microplanId changes to trigger the fetch
     useEffect(() => {
      refetchPlanObject();
+     refetchProcessInstance();
   }, [microplanId, campaignId]);
 
     const { isLoading: isBusinessServiceLoading, data: workflowData, } = Digit.Hooks.useCustomAPIHook({
@@ -47,7 +48,7 @@ const ChooseActivity = () => {
       });
 
     // fetch the process instance for the current microplan to check if current process is done or not
-      const { isLoading:isProcessLoading, data: processData, revalidate } = Digit.Hooks.useCustomAPIHook({
+      const { isLoading:isProcessLoading, data: processData, revalidate, refetch:refetchProcessInstance } = Digit.Hooks.useCustomAPIHook({
         url: "/egov-workflow-v2/egov-wf/process/_search",
         params: {
             tenantId: tenantId,
