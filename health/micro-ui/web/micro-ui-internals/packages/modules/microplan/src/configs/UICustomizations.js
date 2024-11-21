@@ -77,7 +77,6 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      console.log("rowww", row);
 
       switch (key) {
         case "ACTIONS":
@@ -96,7 +95,10 @@ export const UICustomizations = {
             const files = row?.files;
             const file = files.find((item) => item.templateIdentifier === "Population");
             const fileId = file?.filestoreId;
-            const campaignName = row?.name.substring(0, 5) || "";
+            if (!fileId) {
+                  console.error("Population template file not found");
+                }
+            const campaignName = row?.name || "";
             Digit.Utils.campaign.downloadExcelWithCustomName({
               fileStoreId: fileId,
               customName: campaignName
@@ -268,7 +270,10 @@ export const UICustomizations = {
                 const files = row?.files;
                 const file = files.find((item) => item.templateIdentifier === "Population");
                 const fileId = file?.filestoreId;
-                const campaignName = row?.name.substring(0, 5) || "";
+                if (!fileId) {
+                      console.error("Population template file not found");
+                    }
+                const campaignName = row?.name || "";
                 Digit.Utils.campaign.downloadExcelWithCustomName({
                   fileStoreId: fileId,
                   customName: campaignName
