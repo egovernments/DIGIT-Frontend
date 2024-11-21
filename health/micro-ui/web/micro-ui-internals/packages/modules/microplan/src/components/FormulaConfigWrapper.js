@@ -59,10 +59,6 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
     if (curr?.length > 0) {
       setFormulaParams(curr);
     }
-
-    return () => {
-      clearFormulaParams();
-    };
   }, []);
 
   useEffect(() => {
