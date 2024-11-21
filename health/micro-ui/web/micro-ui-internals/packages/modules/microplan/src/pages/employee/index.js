@@ -66,13 +66,13 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
       window.Digit.SessionStorage.del("HYPOTHESIS_DATA");
       window.Digit.SessionStorage.del("FORMULA_DATA");
     }
-    if (window.location.pathname === "/microplan-ui/employee/microplan/response") {
+    if (window.location.pathname === `/${window.contextPath}/employee/microplan/response`) {
       window.Digit.SessionStorage.del("MICROPLAN_DATA");
       window.Digit.SessionStorage.del("HYPOTHESIS_DATA");
       window.Digit.SessionStorage.del("FORMULA_DATA");
     }
     return () => {
-      if (window.location.pathname !== "/microplan-ui/employee/microplan/setup-microplan") {
+      if (window.location.pathname !== `/${window.contextPath}/employee/microplan/setup-microplan`) {
       window.Digit.SessionStorage.del("MICROPLAN_DATA");
       window.Digit.SessionStorage.del("HYPOTHESIS_DATA");
       window.Digit.SessionStorage.del("FORMULA_DATA");
