@@ -511,6 +511,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
                     censusSearch(boundaryData);
                     closeViewDetails();
                   }}
+                  editingDisabled={true}
                 />}
                 {viewDetails && securityData && <SecurityPopUp onClose={() => closeViewDetails()} census={securityData}
                   onSuccess={(data) => {
@@ -518,6 +519,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
                     censusSearch(boundaryData);
                     closeViewDetails();
                   }}
+                  editingDisabled={true}
                 />}
               </Card>
               {showToast && (
