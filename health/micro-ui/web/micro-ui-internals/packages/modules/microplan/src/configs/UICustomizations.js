@@ -86,13 +86,24 @@ export const UICustomizations = {
           let options = [];
 
           if (row?.status == "DRAFT") {
-            options = [{ code: "1", name: "Edit Setup" }];
+            options = [{ code: "1", name: "MP_ACTIONS_EDIT_SETUP" }];
           } else {
-            options = [{ code: "1", name: "View Summary" }];
+            options = [{ code: "1", name: "MP_ACTIONS_VIEW_SUMMARY" }];
           }
 
           const handleDownload = () => {
-            Digit.Utils.campaign.downloadExcelWithCustomName({ fileStoreId: microplanFileId, customName: t("Microplan Final Sheet") });
+            const files = row?.files;
+            const file = files.find((item) => item.templateIdentifier === "Population");
+            const fileId = file?.filestoreId;
+            if (!fileId) {
+                  console.error("Population template file not found");
+                  return;
+                }
+            const campaignName = row?.name || "";
+            Digit.Utils.campaign.downloadExcelWithCustomName({
+              fileStoreId: fileId,
+              customName: campaignName
+            });
           };
 
           return (
@@ -105,15 +116,15 @@ export const UICustomizations = {
                 <Dropdown
                   option={options}
                   select={(e) => {
-                    if (e.name == "Edit Setup") {
+                    if (e.name ==  "MP_ACTIONS_EDIT_SETUP") {
                       window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${1}&microplanId=${row.id}&campaignId=${row.campaignDetails.id}`;
                     }
-                    if (e.name == "View Summary") {
+                    if (e.name == "MP_ACTIONS_VIEW_SUMMARY") {
                       window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${row.campaignDetails.id}&setup-completed=true`;
                     }
                   }}
                   optionKey={"name"}
-                  selected={{ code: "1", name: "Actions" }}
+                  selected={{ code: "1", name: "MP_ACTIONS_FOR_MICROPLAN_SEARCH" }}
                 />
               )}
             </div>
@@ -228,6 +239,19 @@ export const UICustomizations = {
       const rolesCodes = Digit.Hooks.useSessionStorage("User", {})[0]?.info?.roles;
       const roles = rolesCodes.map((item) => item.code);
       const hasRequiredRole = roles.some((role) => role === "ROOT_POPULATION_DATA_APPROVER" || role === "POPULATION_DATA_APPROVER");
+      const handleFileDownload=()=>{
+        const fileId = row?.files.find((item) => item.templateIdentifier === "Population")?.filestoreId;
+        if (!fileId) {
+              console.error("Population template file not found");
+              return;
+            }
+        const campaignName = row?.name || "";
+        Digit.Utils.campaign.downloadExcelWithCustomName({
+          fileStoreId: fileId,
+          customName: campaignName
+        });
+
+      }
       switch (key) {
         case "ACTIONS":
           const onActionSelect = (key, row) => {
@@ -256,6 +280,10 @@ export const UICustomizations = {
                 const navEvent2 = new PopStateEvent("popstate");
                 window.dispatchEvent(navEvent2);
                 break;
+              case "DOWNLOAD":
+                handleFileDownload();
+                break;
+
               default:
                 console.log(value);
                 break;
@@ -267,7 +295,7 @@ export const UICustomizations = {
               variation="primary"
               icon={"ArrowForward"}
               type="button"
-              style={{minWidth:"240px"}}
+              style={{ width: "290px" }}
               isDisabled={!hasRequiredRole}
               // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("START", row)}
@@ -277,7 +305,7 @@ export const UICustomizations = {
               label={t("WBH_DOWNLOAD_MICROPLAN")}
               variation="primary"
               icon={"FileDownload"}
-              style={{minWidth:"240px"}}
+              style={{ width: "290px" }}
               type="button"
               // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("DOWNLOAD", row)}
@@ -287,7 +315,7 @@ export const UICustomizations = {
               label={t("WBH_EDIT")}
               variation="primary"
               icon={"Edit"}
-              style={{minWidth:"240px"}}
+              style={{ width: "290px" }}
               type="button"
               // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("EDIT", row)}
@@ -502,19 +530,19 @@ export const UICustomizations = {
     preProcess: (data) => {
       return data;
     },
-    getFacilitySearchRequest: ( prop) => {
+    getFacilitySearchRequest: (prop) => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      const {campaignId} = Digit.Hooks.useQueryParams();
+      const { campaignId } = Digit.Hooks.useQueryParams();
       return {
         url: `/project-factory/v1/project-type/search`,
-        params: {  },
+        params: {},
         body: {
           CampaignDetails: {
             "tenantId": tenantId,
             "ids": [
               campaignId
             ]
-        }
+          }
         },
         changeQueryName: `boundarySearchForPlanFacility`,
         config: {
@@ -535,10 +563,10 @@ export const UICustomizations = {
         case "MICROPLAN_FACILITY_SERVINGPOPULATION":
           return row?.additionalDetails?.servingPopulation;
         case "MICROPLAN_FACILITY_RESIDINGVILLAGE":
-          return <div style={{display:"flex", gap:".5rem"}}>
-          {t(row?.residingBoundary)}
-          <VillageHierarchyTooltipWrapper  boundaryCode={row?.residingBoundary}/>
-        </div>
+          return <div style={{ display: "flex", gap: ".5rem" }}>
+            {t(row?.residingBoundary)}
+            <VillageHierarchyTooltipWrapper boundaryCode={row?.residingBoundary} />
+          </div>
         case "MICROPLAN_FACILITY_ASSIGNED_VILLAGES":
           const assignedVillages = row?.serviceBoundaries;
           return assignedVillages ? assignedVillages.length : null;
@@ -559,7 +587,7 @@ export const UICustomizations = {
                 size="medium"
                 style={{}}
                 title=""
-                variation="secondary"
+                variation="primary"
               />
               {showPopup && (
                 <FacilityPopUp

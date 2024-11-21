@@ -34,7 +34,7 @@ const UserManagement = () => {
                   console.error("Context path configuration is missing");
                   return;
                 }
-            history.push(`/${contextPath}/employee/hrms/details/${tenantId}/${row}`);
+            window.location.href=`/${contextPath}/employee/hrms/details/${tenantId}/${row}`
         } else {
             console.error("Invalid data format: cells array is missing or empty.");
         }

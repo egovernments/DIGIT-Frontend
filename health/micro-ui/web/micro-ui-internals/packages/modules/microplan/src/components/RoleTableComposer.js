@@ -1,4 +1,4 @@
-import { Button, Card, Dropdown, Loader, MultiSelectDropdown, TableMolecule, Toast } from "@egovernments/digit-ui-components";
+import { Button, Card, Dropdown, Loader, MultiSelectDropdown, TableMolecule, Toast, CardText,PopUp } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DataTable from "react-data-table-component";
@@ -60,6 +60,7 @@ function RoleTableComposer({ nationalRoles }) {
   const { mutate: planEmployeeCreate } = Digit.Hooks.microplanv1.usePlanEmployeeCreate();
   const { mutate: planEmployeeUpdate } = Digit.Hooks.microplanv1.usePlanEmployeeUpdate();
   const [isLoading, setIsLoading] = useState(null);
+  const [unassignPopup, setUnassignPopup] = useState(false); //true when set to rows
   const topBoundary = state?.boundaryHierarchy.find((boundary) => boundary.parentBoundaryType === null);
   const topBoundaryCode = topBoundary?.boundaryType;
   const topBoundaryValue = totalFormData?.BOUNDARY?.boundarySelection?.boundaryData?.[topBoundaryCode]
@@ -309,14 +310,16 @@ function RoleTableComposer({ nationalRoles }) {
       onSuccess: (data) => {
         queryClient.invalidateQueries("PLAN_SEARCH_EMPLOYEE_WITH_TAGGING");
         refetchHrms();
-        setIsLoading(false);
         setShowToast({ key: "success", label: t("UNASSIGNED_SUCCESSFULLY") });
+        setIsLoading(false);
       },
       onError: (error, variables) => {
-        setIsLoading(false);
         setShowToast({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") });
+        setIsLoading(false);
       },
     });
+
+    setUnassignPopup(false);
   };
 
   const columns = [
@@ -423,7 +426,7 @@ function RoleTableComposer({ nationalRoles }) {
             label={isUserAlreadyAssignedActive ? t(`UNASSIGN`) : t(`ASSIGN`)}
             icon={isUserAlreadyAssignedActive ? "Close" : "DoubleArrow"}
             isSuffix={isUserAlreadyAssignedActive ? false : true}
-            onClick={(value) => (isUserAlreadyAssignedActive ? handleUpdateAssignEmployee(row) : handleAssignEmployee(row))}
+            onClick={(value) => (isUserAlreadyAssignedActive ? setUnassignPopup(row) : handleAssignEmployee(row))}
           />
         );
       },
@@ -549,6 +552,40 @@ function RoleTableComposer({ nationalRoles }) {
           onClose={closeToast}
         />
       )}
+
+      {unassignPopup && (
+        <PopUp
+          className={"popUpClass"}
+          type={"default"}
+          heading={t("USERTAG_CONFIRM_TO_UNASSIGN")}
+          equalWidthButtons={true}
+          children={[
+            <div>
+              <CardText style={{ margin: 0 }}>{t("USERTAG_CONFIRM_TO_UNASSIGN_DESC")}</CardText>
+            </div>,
+          ]}
+          onOverlayClick={() => {
+            setUnassignPopup(false);
+          }}
+          footerChildren={[
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("YES")}
+              onClick={() => {
+                handleUpdateAssignEmployee(unassignPopup);
+              }}
+            />,
+            <Button type={"button"} size={"large"} variation={"secondary"} label={t("NO")} onClick={() => { setUnassignPopup(false); }} />,
+          ]}
+          sortFooterChildren={true}
+          onClose={() => {
+            setUnassignPopup(false);
+          }}
+        ></PopUp>
+      )}
+     
     </>
   );
 }

@@ -59,10 +59,6 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
     if (curr?.length > 0) {
       setFormulaParams(curr);
     }
-
-    return () => {
-      clearFormulaParams();
-    };
   }, []);
 
   useEffect(() => {
@@ -536,7 +532,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
 
           <div className="card-container" style={{ width: "77vw", marginBottom: "2.5rem" }}>
             <FormulaConfiguration
-              category={ruleConfigurationCategories[formulaInternalKey - 1]?.category}
+              category={`FORMULA_${ruleConfigurationCategories[formulaInternalKey - 1]?.category}`}
               formulas={[...filteredFormulas?.filter((item) => !deletedFormulas?.includes(item.output)), ...customFormula]}
               onSelect={onSelect}
               customProps={customProps}

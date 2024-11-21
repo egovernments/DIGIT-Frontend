@@ -310,9 +310,10 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const onSecondayActionClick = () => {
     if (currentKey === 1) {
       Digit.SessionStorage.del("MICROPLAN_DATA");
+      Digit.SessionStorage.del("HYPOTHESIS_DATA");
+      Digit.SessionStorage.del("FORMULA_DATA");
       history.push(`/${window.contextPath}/employee`);
     }
-    const { isLastVerticalStep, isFormulaLastVerticalStep } = Digit.Hooks.useQueryParams();
 
     if (isLastVerticalStep === "true" || isFormulaLastVerticalStep === "true") {
       window.dispatchEvent(new Event("verticalStepper"));
@@ -328,9 +329,9 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   }
 
   const getNextActionLabel = () => {
-    if (isLastVerticalStep && isLastVerticalStep === "false") {
+    if ((currentKey === 7 || currentKey === 9) && isLastVerticalStep && isLastVerticalStep === "false") {
       return null;
-    } else if (isFormulaLastVerticalStep && isFormulaLastVerticalStep === "false") {
+    } else if (currentKey === 8 && isFormulaLastVerticalStep && isFormulaLastVerticalStep === "false") {
       return null;
     } else if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.isLast) {
       return t("MP_COMPLETE_SETUP");
