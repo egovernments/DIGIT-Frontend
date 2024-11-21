@@ -6,6 +6,9 @@ import { Svgicon } from "../../utils/Svgicon";
 import { useHistory } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import MapView from "../../components/MapView";
+import * as XLSX from "xlsx";
+import { CONSOLE_MDMS_MODULENAME } from "../../Module";
+
 const ViewHierarchy = () => {
     const { t } = useTranslation();
     const location = useLocation();
@@ -31,6 +34,9 @@ const ViewHierarchy = () => {
     const [disable, setDisable] = useState(false);
     const [disableFile, setDisableFile] = useState(false);
     const [dataCreationGoing, setDataCreationGoing] = useState(false);
+    const [noOfRows, setNoOfRows] = useState(100);
+
+    const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "baseTimeOut" }]);
 
     const callSearch = async(hierarchy) =>{
         const res = await Digit.CustomService.getResponse({
@@ -133,16 +139,33 @@ const ViewHierarchy = () => {
             let fileDataTemp = {};
             fileDataTemp.fileName = file?.name
             
-            const response = await Digit.UploadServices.Filestorage(module, file, tenantId);
-            fileDataTemp.fileStoreId = response?.data?.[0]?.fileStoreId;
-            let fileStoreIdTemp = response?.data?.files?.[0]?.fileStoreId;
-            setFileStoreId(response?.data?.files?.[0]?.fileStoreId);
-            const { data: { fileStoreIds: fileUrlTemp } = {} } = await Digit.UploadServices.Filefetch([fileStoreIdTemp], tenantId);
-            fileDataTemp.url = fileUrlTemp?.[0]?.url;
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                const data = new Uint8Array(event.target.result);
+                const workbook = XLSX.read(data, { type: "array" });
 
-            setFileUrl(fileDataTemp?.url);
-            setFileData(fileDataTemp);
-      };
+                // Assume the first sheet
+                const sheetName = workbook.SheetNames[0];
+                const sheet = workbook.Sheets[sheetName];
+
+                // Convert sheet to JSON and count rows
+                const rows = XLSX.utils.sheet_to_json(sheet);
+
+                // After parsing locally, upload to API
+                const response = await Digit.UploadServices.Filestorage(module, file, tenantId);
+                fileDataTemp.fileStoreId = response?.data?.[0]?.fileStoreId;
+                let fileStoreIdTemp = response?.data?.files?.[0]?.fileStoreId;
+                setFileStoreId(response?.data?.files?.[0]?.fileStoreId);
+                const { data: { fileStoreIds: fileUrlTemp } = {} } = await Digit.UploadServices.Filefetch([fileStoreIdTemp], tenantId);
+                fileDataTemp.url = fileUrlTemp?.[0]?.url;
+
+                setFileUrl(fileDataTemp?.url);
+                setFileData(fileDataTemp);
+            };
+
+            reader.readAsArrayBuffer(file); // Read the file as an array buffer
+
+     };
       
     const callCreateDataApi = async () => {
         setDisable(true);
@@ -274,9 +297,12 @@ const ViewHierarchy = () => {
       // };
 
       const pollForStatusCompletion = async (id, typeOfData) => {
-        const pollInterval = 2000; // Poll every 1 second
-        const maxRetries = 100; // Maximum number of retries
+        // const pollInterval = 2000; // Poll every 1 second
+        const maxRetries = 20; // Maximum number of retries
         let retries = 0;
+        const baseDelay = baseTimeOut?.["HCM-ADMIN-CONSOLE"]?.baseTimeOut?.[0]?.baseTimeOut;
+        const maxTime = baseTimeOut?.["HCM-ADMIN-CONSOLE"]?.baseTimeOut?.[0]?.maxTime;
+        const pollInterval = Math.max(baseDelay * noOfRows , maxTime);
       
         return new Promise((resolve, reject) => {
           const poll = async () => {
