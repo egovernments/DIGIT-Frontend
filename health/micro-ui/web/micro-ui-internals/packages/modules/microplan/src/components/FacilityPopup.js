@@ -392,7 +392,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
         { key: "capacity", value: details?.additionalDetails?.capacity || t("NA") },
         { key: "servingPopulation", value: details?.additionalDetails?.servingPopulation || t("NA") },
         { key: "fixedPost", value: details?.additionalDetails?.fixedPost || t("NA") },
-        { key: "residingVillage", value: details?.residingBoundary || t("NA")}
+        { key: "residingVillage", value: t(details?.residingBoundary) || t("NA")}
       ]);
     }
   }, [details]);
