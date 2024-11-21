@@ -582,7 +582,7 @@ const PopInbox = () => {
                   },
                   {
                     code: "ASSIGNED_TO_ALL",
-                    name: `${`${t(`ASSIGNED_TO_ALL`)} (${assignedToAllCount})`}`,
+                    name: `${`${t(`MP_POP_ASSIGNED_TO_ALL`)} (${assignedToAllCount})`}`,
                   },
                 ]}
                 navStyles={{}}
