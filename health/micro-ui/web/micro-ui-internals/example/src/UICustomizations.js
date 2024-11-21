@@ -794,6 +794,7 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
+
       switch (key) {
         case "ACTIONS":
           // TODO : Replace dummy file id with real file id when API is ready
@@ -808,7 +809,18 @@ export const UICustomizations = {
           }
 
           const handleDownload = () => {
-            Digit.Utils.campaign.downloadExcelWithCustomName({ fileStoreId: microplanFileId, customName: t("Microplan Final Sheet") });
+            const files = row?.files;
+            const file = files.find((item) => item.templateIdentifier === "Population");
+            const fileId = file?.filestoreId;
+            const campaignName = row?.name || "";
+            if (!fileId) {
+                  console.error("Population template file not found");
+                  return;
+                }
+            Digit.Utils.campaign.downloadExcelWithCustomName({
+              fileStoreId: fileId,
+              customName: campaignName
+            });
           };
 
           return (
@@ -859,7 +871,7 @@ export const UICustomizations = {
 
         case "MICROPLAN_STATUS":
           if (value && value != "NA") {
-            return t(value);
+            return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_STATUS_" + value))}</p>;
           } else {
             return (
               <div>
@@ -870,7 +882,7 @@ export const UICustomizations = {
 
         case "CAMPAIGN_DISEASE":
           if (value && value != "NA") {
-            return t(value);
+            return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_DISEASE_" + value))}</p>;
           } else {
             return (
               <div>
@@ -881,7 +893,7 @@ export const UICustomizations = {
 
         case "CAMPAIGN_TYPE":
           if (value && value != "NA") {
-            return t(value);
+            return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_TYPE_" + value))}</p>;
           } else {
             return (
               <div>
@@ -892,7 +904,7 @@ export const UICustomizations = {
 
         case "DISTIRBUTION_STRATEGY":
           if (value && value != "NA") {
-            return t(value);
+            return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_DISTRIBUTION_" + value))}</p>;
           } else {
             return (
               <div>
@@ -944,6 +956,19 @@ export const UICustomizations = {
       const rolesCodes = Digit.Hooks.useSessionStorage("User", {})[0]?.info?.roles;
       const roles = rolesCodes.map((item) => item.code);
       const hasRequiredRole = roles.some((role) => role === "ROOT_POPULATION_DATA_APPROVER" || role === "POPULATION_DATA_APPROVER");
+      const handleFileDownload=()=>{
+        const fileId = row?.files.find((item) => item.templateIdentifier === "Population")?.filestoreId;
+        if (!fileId) {
+              console.error("Population template file not found");
+              return;
+            }
+        const campaignName = row?.name || "";
+        Digit.Utils.campaign.downloadExcelWithCustomName({
+          fileStoreId: fileId,
+          customName: campaignName
+        });
+
+      }
       switch (key) {
         case "ACTIONS":
           const onActionSelect = (key, row) => {
@@ -972,6 +997,10 @@ export const UICustomizations = {
                 const navEvent2 = new PopStateEvent("popstate");
                 window.dispatchEvent(navEvent2);
                 break;
+                case "DOWNLOAD":
+                  handleFileDownload();
+                  break;
+                
               default:
                 console.log(value);
                 break;
@@ -982,8 +1011,8 @@ export const UICustomizations = {
               label={t("START")}
               variation="primary"
               icon={"ArrowForward"}
-              style={{minWidth:"240px"}}
               type="button"
+              style={{width:"290px"}}
               isDisabled={!hasRequiredRole}
               // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("START", row)}
@@ -993,7 +1022,7 @@ export const UICustomizations = {
               label={t("WBH_DOWNLOAD_MICROPLAN")}
               variation="primary"
               icon={"FileDownload"}
-              style={{minWidth:"240px"}}
+              style={{width:"290px"}}
               type="button"
               // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("DOWNLOAD", row)}
@@ -1003,7 +1032,7 @@ export const UICustomizations = {
               label={t("WBH_EDIT")}
               variation="primary"
               icon={"Edit"}
-              style={{minWidth:"240px"}}
+              style={{width:"290px"}}
               type="button"
               // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("EDIT", row)}
@@ -1218,6 +1247,30 @@ export const UICustomizations = {
     preProcess: (data) => {
       return data;
     },
+    getFacilitySearchRequest: ( prop) => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const {campaignId} = Digit.Hooks.useQueryParams();
+      return {
+        url: `/project-factory/v1/project-type/search`,
+        params: {  },
+        body: {
+          CampaignDetails: {
+            "tenantId": tenantId,
+            "ids": [
+              campaignId
+            ]
+        }
+        },
+        changeQueryName: `boundarySearchForPlanFacility`,
+        config: {
+          enabled: true,
+          select: (data) => {
+            const result = data?.CampaignDetails?.[0]?.boundaries?.filter((item) => item.type == prop.lowestHierarchy) || [];
+            return result
+          },
+        },
+      };
+    },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       const [showPopup, setShowPopup] = useState(false);
       const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
@@ -1251,7 +1304,7 @@ export const UICustomizations = {
                 size="medium"
                 style={{}}
                 title=""
-                variation="secondary"
+                variation="primary"
               />
               {showPopup && (
                 <FacilityPopUp
@@ -1267,30 +1320,6 @@ export const UICustomizations = {
           return null;
       }
     },
-    getFacilitySearchRequest: ( prop) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
-      const {campaignId} = Digit.Hooks.useQueryParams();
-      return {
-        url: `/project-factory/v1/project-type/search`,
-        params: {  },
-        body: {
-          CampaignDetails: {
-            "tenantId": tenantId,
-            "ids": [
-              campaignId
-            ]
-        }
-        },
-        changeQueryName: `boundarySearchForPlanFacility`,
-        config: {
-          enabled: true,
-          select: (data) => {
-            const result = data?.CampaignDetails?.[0]?.boundaries?.filter((item) => item.type == prop.lowestHierarchy) || [];
-            return result
-          },
-        },
-      };
-    }
   },
   MyMicroplanSearchConfigExample: {
     test: "yes",
