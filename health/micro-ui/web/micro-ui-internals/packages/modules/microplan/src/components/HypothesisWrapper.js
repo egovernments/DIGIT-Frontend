@@ -77,7 +77,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     const curr = Digit.SessionStorage.get("MICROPLAN_DATA")?.HYPOTHESIS?.Assumptions?.assumptionValues;
     if (curr?.length > 0) {
       setHypothesisParams(curr);
-      setAssumptionValues(curr)
+      setAssumptionValues(curr);
     }
   }, []);
 
@@ -166,6 +166,15 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     const visibleAssumptions = currentAssumptions.filter((item) => existingAssumptionKeys?.includes(item) && !deletedAssumptions?.includes(item));
 
     //Validate: Check if any value is empty for visible assumptions
+    const atleastOneMDMS = visibleAssumptions?.filter((i) => i?.source === "MDMS")?.length === 0;
+    if (atleastOneMDMS) {
+      setShowToast({
+        key: "error",
+        label: t("ATLEAST_ONE_MDMS_ASSUMPTION"),
+        transitionTime: 3000,
+      });
+      return; // Prevent moving to the next step
+    }
     const hasEmptyFields = visibleAssumptions.some((item) => {
       const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
       return !value; // Check if any value is empty
@@ -325,12 +334,22 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
   }, [internalKey]);
 
   useEffect(() => {
-    const initialAssumptions = filteredAssumptions.map((item) => ({
-      source: "MDMS",
-      category: undefined,
-      key: item,
-      value: undefined,
-    }));
+    const result = assumptionValues?.filter((item) => filteredAssumptions?.includes(item?.key));
+
+    const initialAssumptions =
+      result.length > 0
+        ? result.map((item) => ({
+            source: item.source,
+            category: item.category,
+            key: item.key,
+            value: item.value,
+          }))
+        : filteredAssumptions.map((item) => ({
+            source: "MDMS",
+            category: undefined,
+            key: item,
+            value: undefined,
+          }));
 
     // Create a set of existing keys for quick lookup
     const existingKeys = new Set(assumptionValues.map((assumption) => assumption.key));
@@ -364,7 +383,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         setDeletedAssumptions((prev) => [...prev, ...deletedAssumptionsForThisCategory]);
       }
     }
-  }, [planObject, isLoadingPlanObject, internalKey]);
+  }, [planObject, filteredAssumptions, isLoadingPlanObject, internalKey]);
 
   useEffect(() => {
     if (internalKey === assumptionCategories.length) {
@@ -414,7 +433,11 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
           >
             <Hypothesis
               category={assumptionCategories[internalKey - 1]?.category}
-              assumptions={[...filteredAssumptions.filter((item) => !deletedAssumptions?.includes(item)), ...customAssumption]}
+              assumptions={
+                filteredAssumptions?.filter((i) => assumptionValues?.some((j) => j.key === i))?.length > 0
+                  ? [...filteredAssumptions?.filter((i) => assumptionValues?.some((j) => j.key === i)), ...customAssumption]
+                  : [...filteredAssumptions.filter((item) => !deletedAssumptions?.includes(item)), ...customAssumption]
+              }
               onSelect={onSelect}
               customProps={customProps}
               setShowToast={setShowToast}

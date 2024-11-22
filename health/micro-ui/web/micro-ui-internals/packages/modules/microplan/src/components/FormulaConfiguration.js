@@ -480,6 +480,42 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                 variation={"secondary"}
                 label={t("YES")}
                 onClick={() => {
+                  if(selectedDeletedFormula?.code === "NEW_FORMULA" && !selectedDeletedFormula){
+                    setShowToast({
+                      key: "error",
+                      label: t("PLS_ENTER_FORMULA_NAME"),
+                      transitionTime: 3000,
+                      style:{
+                        zIndex:1000000
+                      }
+                    });
+                    return;
+                  }
+
+                  if(selectedDeletedFormula?.code === "NEW_FORMULA" && selectedDeletedFormula?.name?.trim()?.length === 0){
+                    setShowToast({
+                      key: "error",
+                      label: t("INVALID_FORMULA_NAME"),
+                      transitionTime: 3000,
+                      style:{
+                        zIndex:1000000
+                      }
+                    });
+                    return;
+                  }
+
+                  if(selectedDeletedFormula?.code === "NEW_FORMULA" && selectedDeletedFormula?.name?.length > 100){
+                    setShowToast({
+                      key: "error",
+                      label: t("SELECT_FORMULA_NAME_LONG_THAN_100"),
+                      transitionTime: 3000,
+                      style:{
+                        zIndex:1000000
+                      }
+                    });
+                    return;
+                  }
+
                   addNewFormula();
                 }}
               />,
