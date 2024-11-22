@@ -3,7 +3,8 @@ import { useTranslation } from "react-i18next";
 import { Loader, TooltipWrapper } from "@egovernments/digit-ui-components";
 import { InfoBannerIcon } from "@egovernments/digit-ui-react-components";
 
-const VillageHierarchyTooltipWrapper = ({ boundaryCode,wrapperClassName}) => {
+
+const VillageHierarchyTooltipWrapper = ({ boundaryCode,placement="right",wrapperClassName}) => {
     const { t } = useTranslation();
     const { microplanId, campaignId } = Digit.Hooks.useQueryParams();
     const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -111,7 +112,7 @@ const VillageHierarchyTooltipWrapper = ({ boundaryCode,wrapperClassName}) => {
     return (
       <TooltipWrapper
         header={t(`HCM_MICROPLAN_VILLAGE_HIERARCHY_LABEL`)}
-        placement="right"
+        placement={placement}
         description={tooltipContent}
         wrapperClassName={wrapperClassName || ""}
       >

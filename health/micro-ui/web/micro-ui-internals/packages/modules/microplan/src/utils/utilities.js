@@ -266,6 +266,8 @@ const updateUrlParams = (params) => {
     }
   });
   window.history.replaceState({}, "", url);
+  const event = new CustomEvent("urlChanged", { detail: url });
+  window.dispatchEvent(event);
 };
 
 function generateCampaignString(sessionData, t) {

@@ -1,17 +1,17 @@
 import React, { useState, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { PopUp, Button, Tab, CheckBox, Card, Toast, SVG } from "@egovernments/digit-ui-components";
+import { PopUp, Button, Tab, CheckBox, Card, Toast, SVG,TooltipWrapper } from "@egovernments/digit-ui-components";
 import SearchJurisdiction from "./SearchJurisdiction";
-import { LoaderWithGap, Loader } from "@egovernments/digit-ui-react-components";
+import { LoaderWithGap, Loader,InfoBannerIcon } from "@egovernments/digit-ui-react-components";
 import DataTable from "react-data-table-component";
 import AccessibilityPopUp from "./accessbilityPopUP";
 import SecurityPopUp from "./securityPopUp";
 import { getTableCustomStyle, tableCustomStyle } from "./tableCustomStyle";
 import VillageHierarchyTooltipWrapper from "./VillageHierarchyTooltipWrapper";
 import { CustomSVG } from "@egovernments/digit-ui-components";
-
 const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const { t } = useTranslation();
+  const url = Digit.Hooks.useQueryParams();
   const currentUserUuid = Digit.UserService.getUser().info.uuid;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [facilityAssignedStatus, setFacilityAssignedStatus] = useState(false);
@@ -32,6 +32,10 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [disabledAction, setDisabledAction] = useState(false);
   const [boundaryData, setBoundaryData] = useState([]);
+  const [defaultHierarchy, setDefaultSelectedHierarchy] = useState(null);
+  const [defaultBoundaries, setDefaultBoundaries] = useState([]);
+  const VillageHierarchyTooltipWrapper = Digit.ComponentRegistryService.getComponent("VillageHierarchyTooltipWrapper");
+  const [kpiParams, setKpiParams] = useState([]);
   const configNavItem = [
     {
       code: t(`MICROPLAN_UNASSIGNED_FACILITIES`),
@@ -69,18 +73,18 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   }, [currentPage, rowsPerPage])
 
   // fetch the process instance for the current microplan to check if we need to disabled actions or not  
-  const { isLoading:isProcessLoading, data: processData, } = Digit.Hooks.useCustomAPIHook({
+  const { isLoading: isProcessLoading, data: processData, } = Digit.Hooks.useCustomAPIHook({
     url: "/egov-workflow-v2/egov-wf/process/_search",
     params: {
-       tenantId: tenantId,
-       history: true,
-        businessIds: microplanId,
-   },
+      tenantId: tenantId,
+      history: true,
+      businessIds: microplanId,
+    },
     config: {
-        enabled: true,
-        select: (data) => {
-          return data?.ProcessInstances;
-     },
+      enabled: true,
+      select: (data) => {
+        return data?.ProcessInstances;
+      },
     },
   });
 
@@ -232,7 +236,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
 
   const columns = [
     {
-      name: t("MP_FACILITY_VILLAGE"), 
+      name: t("MP_FACILITY_VILLAGE"),
       cell: (row) => (
         <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
           <span>{t(`${row.boundaryCode}`)}</span>
@@ -278,7 +282,20 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     },
   };
 
+  const planFacilitySearchMutaionConfig = {
+    url: "/plan-service/plan/facility/_search",
+    body: {
+      PlanFacilitySearchCriteria: {
+        tenantId: tenantId,
+        planConfigurationId: url?.microplanId,
+        ids: [details?.id]
+      }
+    },
+  };
+
   const mutationForPlanFacilityUpdate = Digit.Hooks.useCustomAPIMutationHook(planFacilityUpdateMutaionConfig);
+
+  const mutationForPlanFacilitySearch = Digit.Hooks.useCustomAPIMutationHook(planFacilitySearchMutaionConfig);
 
   const handleAssignUnassign = async () => {
     // Fetching the full data of selected rows
@@ -312,14 +329,26 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
       {
         onSuccess: async (result) => {
           setSelectedRows([]);
-          updateDetails(newDetails);
-          if(facilityAssignedStatus){
-            setShowToast({ key: "success", label: `${ t("UNASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 });
-
-            
-          }else{
-            setShowToast({ key: "success", label: `${ t("ASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 });
+          if (facilityAssignedStatus) {
+            setShowToast({ key: "success", label: `${t("UNASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 })
+          } else {
+            setShowToast({ key: "success", label: `${t("ASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 });
           }
+          // search call for same plan facility
+          // Add a delay of 1 second before making the second mutation call to make sure data is persisted
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          await mutationForPlanFacilitySearch.mutate(
+            {},
+            {
+              onSuccess: async (result) => { 
+                updateDetails(result?.PlanFacility?.[0]);
+              },
+              onError: async (result) => {
+                setShowToast({ key: "error", label: t("ERROR_WHILE_SEARCHING_PLANFACILITY"), transitionTime: 5000 });
+              },
+            }
+          );
+          //updateDetails(newDetails);
         },
         onError: async (result) => {
           // setDownloadError(true);
@@ -364,6 +393,50 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     },
   ];
 
+  const onSearch = (selectedBoundaries, selectedHierarchy) => {
+
+    if (selectedBoundaries.length === 0) {
+      setShowToast({ key: "warning", label: t("MICROPLAN_BOUNDARY_IS_EMPTY_WARNING"), transitionTime: 5000 });
+    } else {
+
+      setDefaultSelectedHierarchy(selectedHierarchy);
+      setDefaultBoundaries(selectedBoundaries);
+      censusSearch(selectedBoundaries);
+    }
+
+  };
+
+  const onClear = () => {
+    setDefaultBoundaries([]);
+    setDefaultSelectedHierarchy(null);
+    censusSearch([]);
+  };
+
+  useEffect(() => {
+    if (details) {
+      setKpiParams([
+        { key: "facilityName", value: details?.additionalDetails?.facilityName || t("NA") },
+        { key: "facilityType", value: details?.additionalDetails?.facilityType || t("NA") },
+        { key: "facilityStatus", value: details?.additionalDetails?.facilityStatus || t("NA")},
+        { key: "capacity", value: details?.additionalDetails?.capacity || t("NA") },
+        { key: "servingPopulation", value: details?.additionalDetails?.servingPopulation || t("NA") },
+        { key: "fixedPost", value: details?.additionalDetails?.fixedPost || t("NA") },
+        { key: "residingVillage", value: t(details?.residingBoundary) || t("NA")}
+      ]);
+    }
+  }, [details]);
+
+  const customRenderers = {
+
+  residingVillage: (value) => (
+    <p className="mp-fac-value">
+      <span style={{ color: "#0B4B66" }}>{t(value)}</span>{" "}
+      <VillageHierarchyTooltipWrapper boundaryCode={details?.residingBoundary} placement={"bottom"} />
+    </p>
+
+  )};
+
+
   return (
     <>
       {loader ? (
@@ -374,6 +447,16 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
           heading={`${t(`MICROPLAN_ASSIGNMENT_FACILITY`)} ${details?.additionalDetails?.facilityName}`}
           children={[
             <div className="facilitypopup-serach-results-wrapper">
+              <Card className="fac-middle-child">
+                <div className="fac-kpi-container">
+                  {kpiParams.map(({ key, value }) => (
+                    <div key={key} className="fac-kpi-card">
+                      {customRenderers[key] ? customRenderers[key](value) : <p className="mp-fac-value">{value}</p>}
+                      <p className="mp-fac-key">{t(`MICROPLAN_${key.toUpperCase()}`)}</p>
+                    </div>
+                  ))}
+                </div>
+              </Card>
               <div className="facilitypopup-tab-serach-wrapper">
                 <Tab
                   activeLink={activeLink.code}
@@ -392,10 +475,12 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
                   <SearchJurisdiction
                     key={searchKey} // Use key to force re-render
                     boundaries={boundaries}
+                    defaultBoundaries={defaultBoundaries}
+                    defaultHierarchy={defaultHierarchy}
                     jurisdiction={jurisdiction}
-                    onSubmit={censusSearch}
+                    onSubmit={onSearch}
                     style={{ padding: "0px" }}
-                    onClear={() => censusSearch([])}
+                    onClear={onClear}
                   />
                 </Card>
               </div>
@@ -457,14 +542,18 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
                 {viewDetails && accessibilityData && <AccessibilityPopUp onClose={() => closeViewDetails()} census={accessibilityData}
                   onSuccess={(data) => {
                     setShowToast({ key: "success", label: t("ACCESSIBILITY_DETAILS_UPDATE_SUCCESS"), transitionTime: 5000 });
+                    censusSearch(boundaryData);
                     closeViewDetails();
                   }}
+                  disableEditing={disabledAction}
                 />}
                 {viewDetails && securityData && <SecurityPopUp onClose={() => closeViewDetails()} census={securityData}
                   onSuccess={(data) => {
                     setShowToast({ key: "success", label: t("SECURITY_DETAILS_UPDATE_SUCCESS"), transitionTime: 5000 });
+                    censusSearch(boundaryData);
                     closeViewDetails();
                   }}
+                  disableEditing={disabledAction}
                 />}
               </Card>
               {showToast && (

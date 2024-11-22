@@ -78,9 +78,6 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     if (curr?.length > 0) {
       setHypothesisParams(curr);
     }
-    return () => {
-      clearHypothesisParams();
-    };
   }, []);
 
   useEffect(() => {
@@ -113,6 +110,8 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
 
     // Cleanup the event listener on component unmount
     return () => {
+      Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
+      Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
@@ -171,7 +170,20 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
       return !value; // Check if any value is empty
     });
 
+    const hasNaNFields = visibleAssumptions.some((item) => {
+      const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
+      return !value || isNaN(value); // Check if any value is NAN
+    });
+
     // If there are empty fields, show an error and do not allow moving to the next step
+    if (hasNaNFields) {
+      setShowToast({
+        key: "error",
+        label: t("ERR_INCORRECT_FIELD"),
+        transitionTime: 3000,
+      });
+      return; // Prevent moving to the next step
+    }
     if (hasEmptyFields) {
       setShowToast({
         key: "error",
@@ -428,6 +440,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
             setShowToast(false);
           }}
           isDleteBtn={true}
+          style={showToast.style ? showToast.style : {}}
         />
       )}
     </Fragment>

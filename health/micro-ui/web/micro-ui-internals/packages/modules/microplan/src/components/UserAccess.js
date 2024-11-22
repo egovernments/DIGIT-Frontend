@@ -1,4 +1,4 @@
-import { Button, Card, Chip, Header, Loader, PopUp, Toast } from "@egovernments/digit-ui-components";
+import { Button, Card, Chip, Header, Loader, PopUp, Toast, CardText } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import RoleTableComposer, { CustomLoader } from "./RoleTableComposer";
@@ -41,8 +41,9 @@ function UserAccess({ category, setData, nationalRoles }) {
   const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
   const queryClient = useQueryClient();
   const [showPopUp, setShowPopUp] = useState(null);
+  const [unassignPopup, setUnassignPopup] = useState(false); // usually set to row value for true case
   const [chipPopUp, setChipPopUp] = useState(null);
-  const [chipPopUpRowId, setChipPopUpRowId] = useState(null); 
+  const [chipPopUpRowId, setChipPopUpRowId] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -119,12 +120,16 @@ function UserAccess({ category, setData, nationalRoles }) {
       onSuccess: (data) => {
         queryClient.invalidateQueries("PLAN_SEARCH_EMPLOYEE_WITH_TAGGING");
         refetchPlanEmployee();
+        setUnassignPopup(false)
         setShowToast({ key: "success", label: t("UNASSIGNED_SUCCESSFULLY") });
         setIsLoading(false);
+        
       },
       onError: (error, variables) => {
+        setUnassignPopup(false)
         setShowToast({ key: "error", label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE") });
         setIsLoading(false);
+
       },
     });
   };
@@ -256,7 +261,8 @@ function UserAccess({ category, setData, nationalRoles }) {
             style={{ padding: "1rem" }}
             icon={"Close"}
             isSuffix={false}
-            onClick={(value) => handleUpdateAssignEmployee(row)}
+            onClick={(value) => setUnassignPopup(row)}
+          // onClick={(value) => handleUpdateAssignEmployee(row)}
           />
         );
       },
@@ -265,12 +271,13 @@ function UserAccess({ category, setData, nationalRoles }) {
 
   const handleSearch = (query) => {
     // if (query?.length >= 2) {
-      setSearchQuery(query);
+    setSearchQuery(query);
     // } else {
-      // setSearchQuery(null);
+    // setSearchQuery(null);
     // }
     // Handle search logic, such as filtering or API calls
   };
+
 
   return (
     <>
@@ -307,7 +314,7 @@ function UserAccess({ category, setData, nationalRoles }) {
             category={category}
             columns={columns}
             data={planEmployee?.data}
-            progressPending={isPlanEmpSearchLoading}
+            progressPending={isLoading || isPlanEmpSearchLoading}
             progressComponent={<CustomLoader />}
             pagination
             paginationServer
@@ -350,12 +357,45 @@ function UserAccess({ category, setData, nationalRoles }) {
         <Toast
           type={showToast.key === "error" ? "error" : "success"} // Adjust based on your needs
           label={t(showToast.label)}
-          transitionTime={showToast.transitionTime}
+          transitionTime={5000}
           onClose={() => {
             setShowToast(false);
           }}
           isDleteBtn={true}
         />
+      )}
+
+      {unassignPopup && (
+        <PopUp
+          className={"popUpClass"}
+          type={"default"}
+          heading={t("USERTAG_CONFIRM_TO_UNASSIGN")}
+          equalWidthButtons={true}
+          children={[
+            <div>
+              <CardText style={{ margin: 0 }}>{t("USERTAG_CONFIRM_TO_UNASSIGN_DESC")}</CardText>
+            </div>,
+          ]}
+          onOverlayClick={() => {
+            setUnassignPopup(false);
+          }}
+          footerChildren={[
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("YES")}
+              onClick={() => {
+                handleUpdateAssignEmployee(unassignPopup);
+              }}
+            />,
+            <Button type={"button"} size={"large"} variation={"secondary"} label={t("NO")} onClick={() => { setUnassignPopup(false); }} />,
+          ]}
+          sortFooterChildren={true}
+          onClose={() => {
+            setUnassignPopup(false);
+          }}
+        ></PopUp>
       )}
     </>
   );

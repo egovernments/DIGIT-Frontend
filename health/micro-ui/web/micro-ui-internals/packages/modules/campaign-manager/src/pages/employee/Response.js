@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment  , useEffect} from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {  } from "@egovernments/digit-ui-react-components";
@@ -19,6 +19,16 @@ const Response = () => {
         history.push(link ? link : `/${window.contextPath}/employee/`);
       
   };
+
+  useEffect(() => {
+    if (state?.actionLabel === "HCM_CONFIGURE_APP_RESPONSE_ACTION" &&  queryStrings?.isSuccess === "true") {
+      const timer = setTimeout(() => {
+        navigate(state?.actionLink || `/${window.contextPath}/employee/`);
+      }, 2000);
+
+      return () => clearTimeout(timer); 
+    }
+  }, [state?.actionLabel, state?.actionLink]);
 
   const children = [
     <div style={{ display: "flex" }} key="response-text">

@@ -181,7 +181,7 @@
 .as-label-field { 
   display: grid;               /* Enable grid layout */
   grid-template-columns: 1fr 2fr; /* Define two columns with different widths */
-  gap: 0rem;                  /* Space between items (adjust as needed) */
+  gap: 1rem;                  /* Space between items (adjust as needed) */
   overflow: auto;             /* Allow overflow if content is larger */
   align-items: center;
   border-bottom: '1px solid #e0e0e0'        /* Align items vertically in the center */
@@ -348,3 +348,72 @@
   gap: 24px;
   margin-right: 3rem;
 }
+
+.role-summary-sub-heading {
+  
+  color: theme(digitv2.lightTheme.primary-2) !important;
+  margin-bottom: 0rem;
+  font-size: 1rem;
+  display:flex;
+  justify-content: space-between;
+
+
+
+
+}
+
+.fac-middle-child {
+  border: 1px solid #ddd;
+  border-radius: 0.1rem;
+  padding: 1rem;
+  background-color: #FAFAFA;
+  margin: 1rem 0;
+}
+
+.fac-kpi-container {
+  display: flex;
+  justify-content: space-between; /* Spread items evenly */
+  gap: 0rem; /* Add spacing between items */
+  align-items: center;
+}
+
+.fac-kpi-card {
+  flex: 1; /* Ensure equal width for all items */
+  text-align: center;
+  padding: 0.5rem; 
+}
+
+.fac-kpi-card:last-child {
+  border-right: none; /* Remove border from the last item */
+}
+
+.fac-kpi-card .highlighted {
+  color: #d9534f; /* Red color for emphasis (like "5500") */
+  font-weight: bold;
+}
+
+.mp-fac-key{
+    font-family: Roboto, sans-serif; /* Fallback to sans-serif in case Roboto isn't available */
+    font-size: 1rem; /* 16px */
+    font-weight: 400; /* Regular weight */
+    
+    text-align: center; /* Center-align text */
+    text-underline-position: from-font; /* Preserve font-based underline position */
+    text-decoration-skip-ink: none; /* Ensure underlines do not skip over glyphs */
+}
+
+.mp-fac-value {
+  font-family: Roboto, sans-serif; /* Fallback to sans-serif in case Roboto isn't available */
+  font-size: 1.5rem; /* 24px */
+  font-weight: 700; /* Bold weight */
+  
+  text-align: center; /* Center-align text */
+  text-underline-position: from-font; /* Preserve font-based underline position */
+  text-decoration-skip-ink: none; /* Ensure underlines do not skip over glyphs */
+  color:#0B4B66;
+}
+
+tbody tr:last-child td:last-child .digit-dropdown-employee-select-wrap .digit-dropdown-options-card {           
+  position: relative;       
+}
+

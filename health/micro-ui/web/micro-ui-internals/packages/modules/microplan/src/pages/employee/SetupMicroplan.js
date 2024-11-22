@@ -21,7 +21,16 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const [active, setActive] = useState(0);
   const [showToast, setShowToast] = useState(false);
   const [showPopUp, setShowPopUp] = useState(false);
-  const { campaignId, microplanId, key, isFormulaLastVerticalStep, isLastVerticalStep, ...queryParams } = Digit.Hooks.useQueryParams();
+  const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
+  const searchParams = new URLSearchParams(location.search);
+  const [isLastVerticalStep, setIsLastVerticalStep] = useState(() => {
+    const searchParams = new URLSearchParams(location.search);
+    return searchParams.get("isLastVerticalStep");
+  });
+  const [isFormulaLastVerticalStep, setIsFormulaLastVerticalStep] = useState(() => {
+    const searchParams = new URLSearchParams(location.search);
+    return searchParams.get("isFormulaLastVerticalStep");
+  });
   const setupCompleted = queryParams?.["setup-completed"];
   const [shouldUpdate, setShouldUpdate] = useState(false);
   const [currentKey, setCurrentKey] = useState(() => {
@@ -31,6 +40,21 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
 
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("MICROPLAN_DATA", {});
   const [microplanConfig, setMicroplanConfig] = useState(MicroplanConfig(totalFormData, null, isSubmitting, null, hierarchyData));
+
+  const handleUrlChange = (event) => {
+    const searchParams = new URLSearchParams(location.search);
+    setIsLastVerticalStep(searchParams.get("isLastVerticalStep"));
+    setIsFormulaLastVerticalStep(searchParams.get("isFormulaLastVerticalStep"));
+  };
+  useEffect(() => {
+    // Add event listener for popstate to detect URL changes
+    window.addEventListener("urlChanged", handleUrlChange);
+
+    // Clean up the event listener when the component unmounts or on URL change
+    return () => {
+      window.removeEventListener("urlChanged", handleUrlChange);
+    };
+  }, []);
 
   //fetch existing campaign object
   const {
@@ -310,9 +334,10 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const onSecondayActionClick = () => {
     if (currentKey === 1) {
       Digit.SessionStorage.del("MICROPLAN_DATA");
+      Digit.SessionStorage.del("HYPOTHESIS_DATA");
+      Digit.SessionStorage.del("FORMULA_DATA");
       history.push(`/${window.contextPath}/employee`);
     }
-    const { isLastVerticalStep, isFormulaLastVerticalStep } = Digit.Hooks.useQueryParams();
 
     if (isLastVerticalStep === "true" || isFormulaLastVerticalStep === "true") {
       window.dispatchEvent(new Event("verticalStepper"));
@@ -328,9 +353,9 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   }
 
   const getNextActionLabel = () => {
-    if (isLastVerticalStep && isLastVerticalStep === "false") {
+    if ((currentKey === 7 || currentKey === 9) && isLastVerticalStep && isLastVerticalStep === "false") {
       return null;
-    } else if (isFormulaLastVerticalStep && isFormulaLastVerticalStep === "false") {
+    } else if (currentKey === 8 && isFormulaLastVerticalStep && isFormulaLastVerticalStep === "false") {
       return null;
     } else if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.isLast) {
       return t("MP_COMPLETE_SETUP");

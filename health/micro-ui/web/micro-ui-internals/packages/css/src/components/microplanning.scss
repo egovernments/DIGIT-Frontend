@@ -2770,6 +2770,11 @@ $border-color: rgba(214, 213, 212, 1);
   width: 100%;
 }
 
+.rdt_Table{
+  overflow: scroll !important;
+  scrollbar-width: none !important;
+}
+
 .microPlanBulkTable {
   overflow: scroll; /* Enables scrolling */
   -ms-overflow-style: none; /* Internet Explorer 10+ */

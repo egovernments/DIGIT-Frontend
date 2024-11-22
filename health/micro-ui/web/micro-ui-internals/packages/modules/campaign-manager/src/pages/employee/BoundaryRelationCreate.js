@@ -129,7 +129,7 @@ const BoundaryRelationCreate = () => {
 
     const pollForTemplateGeneration = async () => {
         const pollInterval = 2000; // Poll every 2 seconds
-        const maxRetries = 50; // Maximum number of retries
+        const maxRetries = 200; // Maximum number of retries
         let retries = 0;
     
         return new Promise((resolve, reject) => {
@@ -199,7 +199,7 @@ const BoundaryRelationCreate = () => {
 
     const pollForStatusCompletion = async (id, typeOfData) => {
         const pollInterval = 2000;
-        const maxRetries = 100;
+        const maxRetries = 200;
         let retries = 0;
         let pollTimer = null;
         let timeoutTimer = null;
