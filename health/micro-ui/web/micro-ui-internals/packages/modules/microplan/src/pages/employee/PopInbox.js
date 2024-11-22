@@ -530,7 +530,7 @@ const PopInbox = () => {
   }
 
   const roles = Digit.UserService.getUser().info.roles;
-  const userName = Digit.UserService.getUser().info.userName;
+  const userName = Digit.UserService.getUser().info.name;
   let userRole = "";
 
   roles.forEach(role => {
