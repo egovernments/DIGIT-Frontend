@@ -44,8 +44,6 @@ const Response = () => {
     </div>,
   ];
 
-  console.log("state" , state);
-
   return (
     <>
       <PanelCard
