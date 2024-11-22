@@ -518,7 +518,7 @@ const PopInbox = () => {
     },
   ];
 
-  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading || isWorkflowLoading || isEmployeeLoading || mutation.isLoading || isFetching) {
+  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading || isWorkflowLoading || isEmployeeLoading || mutation.isLoading) {
     return <Loader />;
   }
 
