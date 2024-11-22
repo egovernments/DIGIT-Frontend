@@ -64,7 +64,7 @@ const PopInbox = () => {
       },
     },
     {
-      enabled: isRootApprover ? true : false,
+      enabled: true,
       //   queryKey: currentKey,
     }
   );
