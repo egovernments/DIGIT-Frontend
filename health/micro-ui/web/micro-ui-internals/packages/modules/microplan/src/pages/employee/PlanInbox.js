@@ -481,6 +481,24 @@ const PlanInbox = () => {
       width: "180px",
     },
     {
+      name: t("INBOX_STATUSLOGS"),
+      cell: (row, index, column, id) => (
+        <Button
+          label={t(`VIEW_LOGS`)}
+          onClick={() => {
+            setSelectedBusinessId(row?.original?.id); // Set the row.id to state
+            setSelectedBoundaryCode(row.boundaryCode);
+            setShowTimelinePopup(true);
+          }}
+          variation="link"
+          style={{}}
+          size={"medium"}
+        />
+      ),
+      sortable: false,
+      width: "180px",
+    },
+    {
       name: t("INBOX_ASSIGNEE"),
       selector: (row, index) => employeeNameMap?.[row?.original?.assignee] || t("ES_COMMON_NA"),
       sortable: true,
@@ -637,7 +655,7 @@ const PlanInbox = () => {
    //role and name of User extracted
 
    const roles=Digit.UserService.getUser().info.roles;
-   const userName=Digit.UserService.getUser().info.userName;
+   const userName=Digit.UserService.getUser().info.name;
    let userRole = "";
  
    roles.forEach(role => {
