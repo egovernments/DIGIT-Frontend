@@ -156,6 +156,27 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   };
 
   const mutationForCensusSearch = Digit.Hooks.useCustomAPIMutationHook(censusSearchMutaionConfig);
+  console.log("details",details);
+  const reqCriteria = {
+    url: `/plan-service/plan/facility/_search`,
+    params: {},
+    body: {
+      PlanFacilitySearchCriteria: {
+        "tenantId":Digit.ULBService.getCurrentTenantId(),
+        "planConfigurationId":details.planConfigurationId,
+        "facilityId":details.facilityId,
+
+      },
+    },
+    config: {
+      select: (data) => data,
+    },
+  };
+
+  const { isLoading, data:kpiData, isFetching, refetch, revalidate } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  console.log("hello kpi",kpiData);
+
+
 
 
   const censusSearch = async (data) => {
@@ -331,6 +352,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
             {},
             {
               onSuccess: async (result) => { 
+                refetch();
                 updateDetails(result?.PlanFacility?.[0]);
               },
               onError: async (result) => {
