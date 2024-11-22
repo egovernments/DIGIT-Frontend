@@ -43,8 +43,8 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
 
   const handleUrlChange = (event) => {
     const searchParams = new URLSearchParams(location.search);
-    setIsLastVerticalStep(searchParams.get("isLastVerticalStep"));
-    setIsFormulaLastVerticalStep(searchParams.get("isFormulaLastVerticalStep"));
+    setIsLastVerticalStep(searchParams.get("internalKey") === "6" || searchParams.get("internalKey") === "9"? true : searchParams.get("isLastVerticalStep"));
+    setIsFormulaLastVerticalStep(searchParams.get("internalKey") === "6" ? true : searchParams.get("isFormulaLastVerticalStep"));
   };
   useEffect(() => {
     // Add event listener for popstate to detect URL changes
@@ -225,7 +225,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
             },
           });
         }
-
+        refetchPlan();
         setLoader(false);
       },
       onError: (error, variables) => {

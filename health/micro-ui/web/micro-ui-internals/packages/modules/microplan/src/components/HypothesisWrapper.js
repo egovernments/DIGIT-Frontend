@@ -77,6 +77,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     const curr = Digit.SessionStorage.get("MICROPLAN_DATA")?.HYPOTHESIS?.Assumptions?.assumptionValues;
     if (curr?.length > 0) {
       setHypothesisParams(curr);
+      setAssumptionValues(curr)
     }
   }, []);
 

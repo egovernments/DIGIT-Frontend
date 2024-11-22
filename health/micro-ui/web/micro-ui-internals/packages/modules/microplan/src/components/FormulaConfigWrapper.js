@@ -58,6 +58,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
     const curr = Digit.SessionStorage.get("MICROPLAN_DATA")?.FORMULA_CONFIGURATION?.formulaConfiguration?.formulaConfigValues;
     if (curr?.length > 0) {
       setFormulaParams(curr);
+      setFormulaConfigValues(curr)
     }
   }, []);
 
