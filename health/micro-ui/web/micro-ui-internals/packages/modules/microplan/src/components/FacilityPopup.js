@@ -158,7 +158,6 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   };
 
   const mutationForCensusSearch = Digit.Hooks.useCustomAPIMutationHook(censusSearchMutaionConfig);
-  console.log("details", details);
   const reqCriteria = {
     url: `/plan-service/plan/facility/_search`,
     params: {},
