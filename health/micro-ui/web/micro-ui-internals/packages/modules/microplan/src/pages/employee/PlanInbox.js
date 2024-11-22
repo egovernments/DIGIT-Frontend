@@ -345,11 +345,15 @@ const PlanInbox = () => {
       setCensusData(planWithCensus?.censusData);
       setTotalRows(planWithCensus?.TotalCount);
       const reorderedStatusCount = Object.fromEntries(
-        Object.entries(planWithCensus?.StatusCount || {}).sort(([keyA], [keyB]) => {
-          if (keyA === "PENDING_FOR_VALIDATION") return -1;
-          if (keyB === "PENDING_FOR_VALIDATION") return 1;
-          return 0;
-        })
+        Object.entries(planWithCensus?.StatusCount || {})
+          // Filter out the PENDING_FOR_APPROVAL status /// need to revisit as this is hardcoded to remove from workflow ///
+          .filter(([key]) => key !== "PENDING_FOR_APPROVAL")
+          // Sort the statuses, prioritizing PENDING_FOR_VALIDATION
+          .sort(([keyA], [keyB]) => {
+            if (keyA === "PENDING_FOR_VALIDATION") return -1;
+            if (keyB === "PENDING_FOR_VALIDATION") return 1;
+            return 0;
+          })
       );
       setActiveFilter(reorderedStatusCount);
       const activeFilterKeys = Object.keys(reorderedStatusCount || {});
