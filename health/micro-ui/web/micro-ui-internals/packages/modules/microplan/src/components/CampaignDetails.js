@@ -85,7 +85,7 @@ const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
       <Header styles={{ marginBottom: "0rem" }}>{t(`HCM_CAMPAIGN_DETAILS_HEADER`)}</Header>
       <p className="campaign-details-description">{t(`HCM_CAMPAIGN_DETAILS_DESC`)}</p>
       <LabelFieldPair style={{ marginBottom: "0rem" }}>
-        <div className="campaign-type-label-pair" style={{ minWidth: "17rem" }}>
+        <div className="campaign-type-label-pair" style={{ minWidth: "20%" }}>
           <span className="campaign-type-label">{`${t("HCM_DISEASE_TYPE")}`}</span>
           <span className="mandatory-span">*</span>
         </div>
@@ -103,7 +103,7 @@ const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
         />
       </LabelFieldPair>
       <LabelFieldPair style={{ marginBottom: "0rem" }}>
-        <div className="campaign-type-label-pair" style={{ minWidth: "17rem" }}>
+        <div className="campaign-type-label-pair" style={{ minWidth: "20%" }}>
           <span className="campaign-type-label">{`${t("HCM_CAMPAIGN_TYPE_OF")}`}</span>
           <span className="mandatory-span">*</span>
         </div>
@@ -121,7 +121,7 @@ const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
         />
       </LabelFieldPair>
       <LabelFieldPair style={{ marginBottom: "0rem" }}>
-        <div className="campaign-type-label-pair" style={{ minWidth: "17rem" }}>
+        <div className="campaign-type-label-pair" style={{ minWidth: "20%" }}>
           <span className="campaign-type-label">{`${t("HCM_CAMPAIGN_RESOURCE_DIST_STRAT")}`}</span>
           <span className="mandatory-span">*</span>
         </div>

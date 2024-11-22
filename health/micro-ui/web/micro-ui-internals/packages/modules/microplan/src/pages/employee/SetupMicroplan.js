@@ -407,6 +407,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
               size={"large"}
               variation={"secondary"}
               label={t("SAVE_PROCEED")}
+              title={t("SAVE_PROCEED")}
               onClick={() => {
                 setShowPopUp(false);
                 //passing props for mutate

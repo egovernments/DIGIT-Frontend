@@ -1,4 +1,4 @@
-import { Button, Card, Dropdown, Loader, MultiSelectDropdown, TableMolecule, Toast } from "@egovernments/digit-ui-components";
+import { Button, Card, Dropdown, Loader, MultiSelectDropdown, TableMolecule, Toast,CustomSVG } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DataTable from "react-data-table-component";
@@ -326,11 +326,18 @@ function RoleTableComposer({ nationalRoles }) {
         return <div title={row?.name || t("NA")}>{row.name || t("NA")}</div>;
       },
       sortable: true,
+      sortFunction: (rowA, rowB) => {
+        const nameA = t(rowA.name).toLowerCase();
+        const nameB = t(rowB.name).toLowerCase();
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
+        return 0;
+      },
     },
     {
       name: t("EMAIL"),
       selector: (row) => <div title={row?.email || t("NA")}>{row?.email || t("NA")}</div>,
-      sortable: true,
+      sortable: false,
     },
     {
       name: t("CONTACT_NUMBER"),
@@ -338,6 +345,16 @@ function RoleTableComposer({ nationalRoles }) {
         return row.number || t("NA");
       },
       sortable: true,
+      sortFunction: (rowA, rowB) => {
+        const numberA = parseInt(rowA.number, 10);
+        const numberB = parseInt(rowB.number, 10);
+        if (isNaN(numberA)) return 1; // Treat invalid numbers as larger
+        if (isNaN(numberB)) return -1;
+    
+        if (numberA < numberB) return -1;
+        if (numberA > numberB) return 1;
+        return 0;
+      },
     },
     {
       name: t("HIERARCHY"),
@@ -363,6 +380,7 @@ function RoleTableComposer({ nationalRoles }) {
           />
         );
       },
+      sortable:false
     },
 
     {
@@ -394,6 +412,7 @@ function RoleTableComposer({ nationalRoles }) {
           />
         );
       },
+      sortable:false
     },
     {
       name: t("ACTION"),
@@ -427,6 +446,7 @@ function RoleTableComposer({ nationalRoles }) {
           />
         );
       },
+      sortable:false
     },
   ];
 
@@ -525,7 +545,7 @@ function RoleTableComposer({ nationalRoles }) {
       </Card>
 
       {/* {isLoading || isHrmsLoading ? <LoaderOverlay /> : null} */}
-      <Card style={{ overflow: "visible", boxShadow: "none", padding: "0px" }}>
+      <Card style={{ overflow: "auto", boxShadow: "none", padding: "0px" }}>
         <DataTable
           columns={columns}
           data={HrmsData?.data}
@@ -538,7 +558,10 @@ function RoleTableComposer({ nationalRoles }) {
           onChangePage={handlePaginationChange}
           onChangeRowsPerPage={handleRowsPerPageChange}
           paginationPerPage={rowsPerPage}
+          sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
           paginationRowsPerPageOptions={[5, 10, 15, 20]}
+          fixedHeader={true}
+          fixedHeaderScrollHeight={"100vh"}
         />
       </Card>
       {showToast && (

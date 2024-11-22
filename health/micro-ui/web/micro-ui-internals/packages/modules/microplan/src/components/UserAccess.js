@@ -6,6 +6,7 @@ import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./tableCustomStyle";
 import TableSearchField from "./TableSearchBar";
 import { useQueryClient } from "react-query";
+import { CustomSVG } from "@egovernments/digit-ui-components";
 import NoResultsFound from "./NoResultsFound";
 
 const Wrapper = ({ setShowPopUp, alreadyQueuedSelectedState }) => {
@@ -134,11 +135,18 @@ function UserAccess({ category, setData, nationalRoles }) {
         return row.name || t("NA");
       },
       sortable: true,
+      sortFunction: (rowA, rowB) => {
+        const nameA = t(rowA.name).toLowerCase();
+        const nameB = t(rowB.name).toLowerCase();
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
+        return 0;
+      },
     },
     {
       name: t("EMAIL"),
       selector: (row) => row.email || t("NA"),
-      sortable: true,
+      sortable: false,
     },
     {
       name: t("CONTACT_NUMBER"),
@@ -146,6 +154,16 @@ function UserAccess({ category, setData, nationalRoles }) {
         return row.number || t("NA");
       },
       sortable: true,
+      sortFunction: (rowA, rowB) => {
+        const numberA = parseInt(rowA.number, 10);
+        const numberB = parseInt(rowB.number, 10);
+        if (isNaN(numberA)) return 1; // Treat invalid numbers as larger
+        if (isNaN(numberB)) return -1;
+    
+        if (numberA < numberB) return -1;
+        if (numberA > numberB) return 1;
+        return 0;
+      },
     },
     {
       name: t("ADMINISTRATIVE_HIERARCHY"),
@@ -158,6 +176,13 @@ function UserAccess({ category, setData, nationalRoles }) {
         return t(row?.hierarchyLevel || "NA");
       },
       sortable: true,
+      sortFunction: (rowA, rowB) => {
+        const hierarchylevelA = t(rowA.hierarchyLevel).toLowerCase();
+        const hierarchylevelB = t(rowB.hierarchyLevel).toLowerCase();
+        if (hierarchylevelA < hierarchylevelB) return -1;
+        if (hierarchylevelA > hierarchylevelB) return 1;
+        return 0;
+      },
     },
     {
       name: t("ADMINISTRATIVE_BOUNDARY"),
@@ -167,7 +192,23 @@ function UserAccess({ category, setData, nationalRoles }) {
             {row?.jurisdiction?.length > 0 && (
               <>
                 {row.jurisdiction.slice(0, 2).map((item, index) => (
-                  <Chip className="" error="" extraStyles={{}} iconReq="" hideClose={true} text={t(item)} />
+                  <Chip
+                    className=""
+                    error=""
+                    extraStyles={{
+                      tagStyles: {
+                        maxWidth: "180px",
+                        whiteSpace: "normal",
+                        height: "100%",
+                      },
+                      textStyles:{
+                        whiteSpace:'normal'
+                      }
+                    }}
+                    iconReq=""
+                    hideClose={true}
+                    text={t(item)}
+                  />
                 ))}
 
                 {row.jurisdiction.length > 2 && (
@@ -194,18 +235,17 @@ function UserAccess({ category, setData, nationalRoles }) {
                   />
                 )}
 
-                {chipPopUpRowId === row.id && (
-                  <Wrapper setShowPopUp={setChipPopUpRowId} alreadyQueuedSelectedState={row.jurisdiction} />
-                )}
+                {chipPopUpRowId === row.id && <Wrapper setShowPopUp={setChipPopUpRowId} alreadyQueuedSelectedState={row.jurisdiction} />}
               </>
             )}
           </div>
         );
       },
-      sortable: true,
+      sortable: false,
     },
     {
       name: t("ACTION"),
+      sortable: false,
       cell: (row) => {
         return (
           <Button
@@ -276,6 +316,7 @@ function UserAccess({ category, setData, nationalRoles }) {
             onChangePage={handlePaginationChange}
             onChangeRowsPerPage={handleRowsPerPageChange}
             paginationPerPage={rowsPerPage}
+            sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
             paginationRowsPerPageOptions={[5, 10, 15, 20]}
           />
         )}

@@ -473,7 +473,7 @@ const PlanInbox = () => {
       cell: (row) => (
         <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
           <span>{t(`${row?.village}`)}</span>
-          <VillageHierarchyTooltipWrapper boundaryCode={row?.village} />
+          <VillageHierarchyTooltipWrapper boundaryCode={row?.village} wrapperClassName={"village-hierarchy-tooltip-wrapper-class"}/>
         </div>
       ),
       // cell: (row) => t(row?.village) || "NA",
@@ -789,6 +789,7 @@ const PlanInbox = () => {
                 pagination
                 paginationServer
                 selectableRows={!disabledAction}
+                className={!disabledAction ? "selectable" : "unselectable"}
                 selectableRowsHighlight
                 onChangeRowsPerPage={handlePerRowsChange}
                 onChangePage={handlePageChange}
