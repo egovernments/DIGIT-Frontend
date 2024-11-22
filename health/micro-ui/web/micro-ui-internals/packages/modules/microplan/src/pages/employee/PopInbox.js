@@ -42,6 +42,8 @@ const PopInbox = () => {
   const [updatedCensus, setUpdatedCensus] = useState(null);
   const [triggerTotalCensus, setTriggerTotalCensus] = useState(false);
   const [totalStatusCount, setTotalStatusCount] = useState({});
+  const [defaultHierarchy, setDefaultSelectedHierarchy] = useState(null);
+  const [defaultBoundaries, setDefaultBoundaries] = useState([]);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   const [activeLink, setActiveLink] = useState({
     code: "ASSIGNED_TO_ME",
@@ -153,7 +155,7 @@ const PopInbox = () => {
     setactionBarPopUp(true);
   };
 
-  const onSearch = (selectedBoundaries) => {
+  const onSearch = (selectedBoundaries, selectedHierarchy) => {
 
     if (selectedBoundaries.length === 0) {
       setShowToast({ key: "warning", label: t("MICROPLAN_BOUNDARY_IS_EMPTY_WARNING"), transitionTime: 5000 });
@@ -162,6 +164,9 @@ const PopInbox = () => {
         code: "ASSIGNED_TO_ME",
         name: "ASSIGNED_TO_ME"
       });
+
+      setDefaultSelectedHierarchy(selectedHierarchy);
+      setDefaultBoundaries(selectedBoundaries);
       // Extract the list of codes from the selectedBoundaries array
       const boundaryCodes = selectedBoundaries.map((boundary) => boundary.code);
 
@@ -237,6 +242,8 @@ const PopInbox = () => {
   }, [planEmployee]);
 
   const onClear = () => {
+    setDefaultBoundaries([]);
+    setDefaultSelectedHierarchy(null);
     setCensusJurisdiction(planEmployee?.planData?.[0]?.jurisdiction);
   };
 
@@ -551,10 +558,12 @@ const PopInbox = () => {
       </div>
       <SearchJurisdiction
         boundaries={boundaries}
+        defaultHierarchy={defaultHierarchy}
         jurisdiction={{
           boundaryType: hierarchyLevel,
           boundaryCodes: jurisdiction,
         }}
+        defaultBoundaries={defaultBoundaries}
         onSubmit={onSearch}
         onClear={onClear}
       />
