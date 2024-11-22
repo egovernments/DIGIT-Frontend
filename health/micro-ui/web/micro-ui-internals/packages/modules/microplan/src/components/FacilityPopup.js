@@ -432,7 +432,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
         { key: "facilityType", value: details?.additionalDetails?.facilityType || t("NA") },
         { key: "facilityStatus", value: details?.additionalDetails?.facilityStatus || t("NA") },
         { key: "capacity", value: details?.additionalDetails?.capacity || t("NA") },
-        { key: "servingPopulation", value: latestKpiData?.PlanFacility[0]?.additionalDetails?.servingPopulation || 0},
+        { key: "servingPopulation", value: latestKpiData?.PlanFacility[0]?.additionalDetails?.servingPopulation || t("NA")},
         { key: "fixedPost", value: details?.additionalDetails?.fixedPost || t("NA") },
         { key: "residingVillage", value: t(details?.residingBoundary) || t("NA") }
       ]);
