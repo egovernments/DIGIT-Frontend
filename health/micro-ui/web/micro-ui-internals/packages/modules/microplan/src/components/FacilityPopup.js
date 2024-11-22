@@ -175,7 +175,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   };
 
 
-  const { isLoading, data: latestKpiData, iskpiDataLoading, refetch, revalidate } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  const { isLoading:iskpiDataLoading, data: latestKpiData, refetch, revalidate } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
 
 
