@@ -173,8 +173,8 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     },
   };
 
-  const { isLoading, data: kpiData, isFetching, refetch, revalidate } = Digit.Hooks.useCustomAPIHook(reqCriteria);
-  console.log("hello kpi", kpiData);
+
+  const { isLoading, data: latestKpiData, iskpiDataLoading, refetch, revalidate } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
 
 
@@ -226,12 +226,12 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   }
 
   useEffect(() => {
-    if (isLoadingPlanEmployee || isLoadingCampaign || isProcessLoading) {
+    if (isLoadingPlanEmployee || isLoadingCampaign || isProcessLoading || iskpiDataLoading) {
       setLoader(true);
     } else {
       setLoader(false);
     }
-  }, [isLoadingPlanEmployee, isLoadingCampaign, isProcessLoading]);
+  }, [isLoadingPlanEmployee, isLoadingCampaign, isProcessLoading,iskpiDataLoading]);
 
   const handleRowSelect = (event) => {
     // Extract the IDs of all selected rows
@@ -412,12 +412,12 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
         { key: "facilityType", value: details?.additionalDetails?.facilityType || t("NA") },
         { key: "facilityStatus", value: details?.additionalDetails?.facilityStatus || t("NA") },
         { key: "capacity", value: details?.additionalDetails?.capacity || t("NA") },
-        { key: "servingPopulation", value: details?.additionalDetails?.servingPopulation || t("NA") },
+        { key: "servingPopulation", value: latestKpiData?.PlanFacility[0]?.additionalDetails?.servingPopulation || 0},
         { key: "fixedPost", value: details?.additionalDetails?.fixedPost || t("NA") },
         { key: "residingVillage", value: t(details?.residingBoundary) || t("NA") }
       ]);
     }
-  }, [details]);
+  }, [details, latestKpiData]);
 
 
 
@@ -432,7 +432,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
           heading={`${t(`MICROPLAN_ASSIGNMENT_FACILITY`)} ${details?.additionalDetails?.facilityName}`}
           children={[
             <div className="facilitypopup-serach-results-wrapper">
-              <Card className="fac-middle-child">
+              {iskpiDataLoading? <Loader/>:<Card className="fac-middle-child">
                 <div className="fac-kpi-container">
                   {kpiParams.map(({ key, value }) => (
                     <div key={key} className="fac-kpi-card">
@@ -441,7 +441,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
                     </div>
                   ))}
                 </div>
-              </Card>
+              </Card>}
               <div className="facilitypopup-tab-serach-wrapper">
                 <Tab
                   activeLink={activeLink.code}
