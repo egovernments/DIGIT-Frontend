@@ -31,6 +31,8 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [disabledAction, setDisabledAction] = useState(false);
   const [boundaryData, setBoundaryData] = useState([]);
+  const [defaultHierarchy, setDefaultSelectedHierarchy] = useState(null);
+  const [defaultBoundaries, setDefaultBoundaries] = useState([]);
   const VillageHierarchyTooltipWrapper = Digit.ComponentRegistryService.getComponent("VillageHierarchyTooltipWrapper");
   const [kpiParams, setKpiParams] = useState([]);
   const configNavItem = [
@@ -383,6 +385,25 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     },
   ];
 
+  const onSearch = (selectedBoundaries, selectedHierarchy) => {
+
+    if (selectedBoundaries.length === 0) {
+      setShowToast({ key: "warning", label: t("MICROPLAN_BOUNDARY_IS_EMPTY_WARNING"), transitionTime: 5000 });
+    } else {
+
+      setDefaultSelectedHierarchy(selectedHierarchy);
+      setDefaultBoundaries(selectedBoundaries);
+      censusSearch(selectedBoundaries);
+    }
+
+  };
+
+  const onClear = () => {
+    setDefaultBoundaries([]);
+    setDefaultSelectedHierarchy(null);
+    censusSearch([]);
+  };
+
   useEffect(() => {
     if (details) {
       setKpiParams([
@@ -446,10 +467,12 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
                   <SearchJurisdiction
                     key={searchKey} // Use key to force re-render
                     boundaries={boundaries}
+                    defaultBoundaries={defaultBoundaries}
+                    defaultHierarchy={defaultHierarchy}
                     jurisdiction={jurisdiction}
-                    onSubmit={censusSearch}
+                    onSubmit={onSearch}
                     style={{ padding: "0px" }}
-                    onClear={() => censusSearch([])}
+                    onClear={onClear}
                   />
                 </Card>
               </div>
