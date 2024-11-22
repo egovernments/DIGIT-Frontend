@@ -308,8 +308,8 @@ export const UICustomizations = {
       const searchParams = new URLSearchParams(window.location.search);
       const userId = searchParams.get("userId");
       const status = searchParams.get("status");
-      data.body.PlanConfigurationSearchCriteria.userUuid = userId;
-      data.body.PlanConfigurationSearchCriteria.status = [status];
+      userId&&(data.body.PlanConfigurationSearchCriteria.userUuid = userId);
+      status&&(data.body.PlanConfigurationSearchCriteria.status = [status]);
       data.body.PlanConfigurationSearchCriteria.name = data?.state?.searchForm?.microplanName;
       // data.body.PlanConfigurationSearchCriteria.campaignType = data?.state?.searchForm?.campaignType?.[0]?.code;
       return data;
@@ -340,7 +340,7 @@ export const UICustomizations = {
 
         case "CAMPAIGN_TYPE":
           if (value && value != "NA") {
-            return <p>{t(Digit.Utils.locale.getTransformedLocale("CAMPAIGN_TYPE_" + value))}</p>;
+            return <p>{t(Digit.Utils.locale.getTransformedLocale("CAMPAIGN_PROJECT_" + value))}</p>;
           } else {
             return (
               <div>
