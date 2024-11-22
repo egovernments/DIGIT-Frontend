@@ -54,8 +54,10 @@ const PlanInbox = () => {
   const [selectedBoundaryCode, setSelectedBoundaryCode] = useState(null);
   const [selectedBusinessId, setSelectedBusinessId] = useState(null);
   const [assigneeUuids, setAssigneeUuids] = useState([]);
+  const [totalStatusCount, setTotalStatusCount] = useState({});
   const [employeeNameMap, setEmployeeNameMap] = useState({});
-
+  const [defaultHierarchy, setDefaultSelectedHierarchy] = useState(null);
+  const [defaultBoundaries, setDefaultBoundaries] = useState([]);
   const userRoles = user?.info?.roles?.map((roleData) => roleData?.code);
 
   // Check if the user has the 'rootapprover' role
@@ -73,6 +75,45 @@ const PlanInbox = () => {
       //   queryKey: currentKey,
     }
   );
+
+  const mutation = Digit.Hooks.useCustomAPIMutationHook({
+    url: "/plan-service/plan/_search",
+  });
+
+
+  useEffect(() => {
+    fetchStatusCount();
+  }, [planObject]);
+
+  const fetchStatusCount = async () => {
+    if (planObject) {
+      try {
+        await mutation.mutateAsync(
+          {
+            body: {
+              PlanSearchCriteria: {
+                tenantId: tenantId,
+                planConfigurationId: microplanId,
+                ...(isRootApprover
+                  ? {}
+                  : { jurisdiction: jurisdiction }),
+              },
+            }
+          },
+          {
+            onSuccess: (data) => {
+              setTotalStatusCount(data?.StatusCount);
+            },
+            onError: (error) => {
+              setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+            }
+          }
+        );
+      } catch (error) {
+        setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+      }
+    }
+  };
 
   useEffect(() => {
     if (selectedFilter === "VALIDATED") {
@@ -116,6 +157,7 @@ const PlanInbox = () => {
     data: planWithCensus,
     error: planWithCensusError,
     refetch: refetchPlanWithCensus,
+    isFetching,
   } = Digit.Hooks.microplanv1.usePlanSearchWithCensus({
     tenantId: tenantId,
     microplanId: microplanId,
@@ -182,7 +224,7 @@ const PlanInbox = () => {
     },
   });
 
-  const onSearch = (selectedBoundaries) => {
+  const onSearch = (selectedBoundaries, selectedHierarchy) => {
     if (selectedBoundaries.length === 0) {
       setShowToast({ key: "warning", label: t("MICROPLAN_BOUNDARY_IS_EMPTY_WARNING"), transitionTime: 5000 });
     } else {
@@ -191,7 +233,10 @@ const PlanInbox = () => {
         code: "ASSIGNED_TO_ME",
         name: "ASSIGNED_TO_ME"
       });
+      
 
+      setDefaultSelectedHierarchy(selectedHierarchy);
+      setDefaultBoundaries(selectedBoundaries);
       // Extract the list of codes from the selectedBoundaries array
       const boundaryCodes = selectedBoundaries.map((boundary) => boundary.code);
 
@@ -257,6 +302,8 @@ const PlanInbox = () => {
   }, [planEmployee]);
 
   const onClear = () => {
+    setDefaultBoundaries([]);
+    setDefaultSelectedHierarchy(null);
     setCensusJurisdiction(planEmployee?.planData?.[0]?.jurisdiction);
   };
 
@@ -298,11 +345,15 @@ const PlanInbox = () => {
       setCensusData(planWithCensus?.censusData);
       setTotalRows(planWithCensus?.TotalCount);
       const reorderedStatusCount = Object.fromEntries(
-        Object.entries(planWithCensus?.StatusCount || {}).sort(([keyA], [keyB]) => {
-          if (keyA === "PENDING_FOR_VALIDATION") return -1;
-          if (keyB === "PENDING_FOR_VALIDATION") return 1;
-          return 0;
-        })
+        Object.entries(planWithCensus?.StatusCount || {})
+          // Filter out the PENDING_FOR_APPROVAL status /// need to revisit as this is hardcoded to remove from workflow ///
+          .filter(([key]) => key !== "PENDING_FOR_APPROVAL")
+          // Sort the statuses, prioritizing PENDING_FOR_VALIDATION
+          .sort(([keyA], [keyB]) => {
+            if (keyA === "PENDING_FOR_VALIDATION") return -1;
+            if (keyB === "PENDING_FOR_VALIDATION") return 1;
+            return 0;
+          })
       );
       setActiveFilter(reorderedStatusCount);
       const activeFilterKeys = Object.keys(reorderedStatusCount || {});
@@ -648,7 +699,7 @@ const PlanInbox = () => {
     return false;
   };
 
-  if (isLoadingPlanObject || isPlanEmpSearchLoading || isLoadingCampaignObject || isWorkflowLoading || isProcessLoading) {
+  if (isLoadingPlanObject || isPlanEmpSearchLoading || isLoadingCampaignObject || isWorkflowLoading || isProcessLoading || mutation.isLoading || isPlanWithCensusLoading) {
     return <Loader />;
   }
   // campaignObject?.campaignName 
@@ -697,6 +748,8 @@ const PlanInbox = () => {
     </div>
       <SearchJurisdiction
         boundaries={boundaries}
+        defaultHierarchy={defaultHierarchy}
+        defaultBoundaries={defaultBoundaries}
         jurisdiction={{
           boundaryType: hierarchyLevel,
           boundaryCodes: jurisdiction,
@@ -705,16 +758,12 @@ const PlanInbox = () => {
         onClear={onClear}
       />
 
-      <div className="pop-inbox-wrapper-filter-table-wrapper" style={{ marginBottom: (isRootApprover && isStatusConditionMet(activeFilter) && planObject?.status === "RESOURCE_ESTIMATION_IN_PROGRESS") || (!isRootApprover && isStatusConditionMet(activeFilter) && planObject?.status === "RESOURCE_ESTIMATION_IN_PROGRESS") || disabledAction? "2.5rem" : "0rem" }}>
+      <div className="pop-inbox-wrapper-filter-table-wrapper" style={{ marginBottom: (isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "RESOURCE_ESTIMATION_IN_PROGRESS") || (!isRootApprover && isStatusConditionMet(totalStatusCount)) || disabledAction? "2.5rem" : "0rem" }}>
         <InboxFilterWrapper
           options={activeFilter}
           onApplyFilters={onFilter}
           clearFilters={clearFilters}
-          defaultValue={
-            selectedFilter === Object.entries(activeFilter)?.[0]?.[0]
-              ? { [Object.entries(activeFilter)?.[0]?.[0]]: Object.entries(activeFilter)?.[0]?.[1] }
-              : null
-          }
+          defaultValue={ { [selectedFilter]: activeFilter[selectedFilter]} }
         ></InboxFilterWrapper>
 
         <div className={"pop-inbox-table-wrapper"}>
@@ -808,6 +857,7 @@ const PlanInbox = () => {
                       closePopUp();
                       setShowToast({ key: "success", label: t(`PLAN_INBOX_WORKFLOW_FOR_${workFlowPopUp}_UPDATE_SUCCESS`), transitionTime: 5000 });
                       refetchPlanWithCensus();
+                      fetchStatusCount();
                     }}
                     onError={(data) => {
                       closePopUp();
@@ -817,7 +867,7 @@ const PlanInbox = () => {
                 )}
               </div>
             )}
-            {isPlanWithCensusLoading ? (
+            {isFetching ? (
               <Loader />
             ) : planWithCensus?.tableData?.length===0 ? <NoResultsFound style={{height:selectedFilter === "VALIDATED" ? "472px" : "408px"}} text={t(`HCM_MICROPLAN_NO_DATA_FOUND_FOR_PLAN_INBOX_PLAN`)} /> : (
               <DataTable
@@ -847,7 +897,7 @@ const PlanInbox = () => {
         </div>
       </div>
 
-      {isRootApprover && isStatusConditionMet(activeFilter) && planObject?.status === "RESOURCE_ESTIMATION_IN_PROGRESS" && (
+      {isRootApprover && isStatusConditionMet(totalStatusCount) && (
         <ActionBar
           actionFields={[
             <Button
@@ -866,7 +916,7 @@ const PlanInbox = () => {
         />
       )}
 
-{(!isRootApprover && isStatusConditionMet(activeFilter) && planObject?.status === "RESOURCE_ESTIMATION_IN_PROGRESS") || disabledAction && (
+{(!isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "RESOURCE_ESTIMATION_IN_PROGRESS") || disabledAction && (
         <ActionBar
           actionFields={[
             <Button label={t(`HCM_MICROPLAN_PLAN_INBOX_BACK_BUTTON`)} onClick={()=> {
