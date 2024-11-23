@@ -36,9 +36,8 @@ const UserUpload = React.memo(() => {
   const [downloadTemplateLoader, setDownloadTemplateLoader] = useState(false);
   const [processedFile, setProcessedFile] = useState([]);
   const params = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
-  const searchParams = new URLSearchParams(location.search);
   const type = "userWithBoundary";
-  const id = searchParams.get("campaignId") || "null";
+  const id =  "miroplan";
   const { data: boundaryHierarchy } = Digit.Hooks.useCustomMDMS(
     tenantId,
     "hcm-microplanning",
@@ -348,7 +347,7 @@ const UserUpload = React.memo(() => {
           type: type,
           forceUpdate: true,
           hierarchyType: boundaryHierarchy,
-          campaignId: "null",
+          campaignId: id,
           source: "microplan",
         },
         body: {

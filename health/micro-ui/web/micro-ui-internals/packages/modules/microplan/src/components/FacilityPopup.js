@@ -6,8 +6,9 @@ import { LoaderWithGap, Loader,InfoBannerIcon } from "@egovernments/digit-ui-rea
 import DataTable from "react-data-table-component";
 import AccessibilityPopUp from "./accessbilityPopUP";
 import SecurityPopUp from "./securityPopUp";
-import {  tableCustomStyle } from "./tableCustomStyle";
-
+import { getTableCustomStyle, tableCustomStyle } from "./tableCustomStyle";
+import VillageHierarchyTooltipWrapper from "./VillageHierarchyTooltipWrapper";
+import { CustomSVG } from "@egovernments/digit-ui-components";
 const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const { t } = useTranslation();
   const url = Digit.Hooks.useQueryParams();
@@ -243,7 +244,14 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
         </div>
       ),
       //selector: (row) => t(row.boundaryCode), // Replace with the appropriate field from your data
-      sortable: false,
+      sortable: true,
+      sortFunction: (rowA, rowB) => {
+        const boundaryCodeA = t(rowA.boundaryCode).toLowerCase();
+        const boundaryCodeB = t(rowB.boundaryCode).toLowerCase();
+        if (boundaryCodeA < boundaryCodeB) return -1;
+        if (boundaryCodeA > boundaryCodeB) return 1;
+        return 0;
+      },
     },
     {
       name: t("MP_VILLAGE_ACCESSIBILITY_LEVEL"), // Change to your column type
@@ -262,7 +270,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     {
       name: t("MP_FACILITY_TOTALPOPULATION"), // Change to your column type
       selector: (row) => row.totalPopulation, // Replace with the appropriate field from your data
-      sortable: false,
+      sortable: true,
     },
     // Add more columns as needed
   ];
@@ -525,6 +533,9 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
                       selectableRowsComponent={CheckBox}
                       selectableRowsComponentProps={selectProps}
                       conditionalRowStyles={conditionalRowStyles}
+                      fixedHeader={true}
+                      fixedHeaderScrollHeight={"100vh"}
+                      sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
                     />
                   )
                 )}
