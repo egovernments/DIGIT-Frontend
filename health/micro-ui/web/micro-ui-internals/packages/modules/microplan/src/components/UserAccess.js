@@ -368,14 +368,10 @@ function UserAccess({ category, setData, nationalRoles }) {
       {unassignPopup && (
         <PopUp
           className={"popUpClass"}
-          type={"default"}
-          heading={t("USERTAG_CONFIRM_TO_UNASSIGN")}
+          type={"alert"}
+          alertHeading={t("USERTAG_CONFIRM_TO_UNASSIGN")}
+          alertMessage={t("USERTAG_CONFIRM_TO_UNASSIGN_DESC")}
           equalWidthButtons={true}
-          children={[
-            <div>
-              <CardText style={{ margin: 0 }}>{t("USERTAG_CONFIRM_TO_UNASSIGN_DESC")}</CardText>
-            </div>,
-          ]}
           onOverlayClick={() => {
             setUnassignPopup(false);
           }}

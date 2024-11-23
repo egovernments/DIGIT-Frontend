@@ -1,8 +1,8 @@
 import React, { useState, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { PopUp, Button, Tab, CheckBox, Card, Toast, SVG,TooltipWrapper } from "@egovernments/digit-ui-components";
+import { PopUp, Button, Tab, CheckBox, Card, Toast, SVG, TooltipWrapper } from "@egovernments/digit-ui-components";
 import SearchJurisdiction from "./SearchJurisdiction";
-import { LoaderWithGap, Loader,InfoBannerIcon } from "@egovernments/digit-ui-react-components";
+import { LoaderWithGap, Loader, InfoBannerIcon } from "@egovernments/digit-ui-react-components";
 import DataTable from "react-data-table-component";
 import AccessibilityPopUp from "./accessbilityPopUP";
 import SecurityPopUp from "./securityPopUp";
@@ -159,6 +159,26 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   };
 
   const mutationForCensusSearch = Digit.Hooks.useCustomAPIMutationHook(censusSearchMutaionConfig);
+  const reqCriteria = {
+    url: `/plan-service/plan/facility/_search`,
+    params: {},
+    body: {
+      PlanFacilitySearchCriteria: {
+        "tenantId": Digit.ULBService.getCurrentTenantId(),
+        "planConfigurationId": details.planConfigurationId,
+        "facilityId": details.facilityId,
+
+      },
+    },
+    config: {
+      select: (data) => data,
+    },
+  };
+
+
+  const { isLoading:iskpiDataLoading, data: latestKpiData, refetch, revalidate } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+
+
 
 
   const censusSearch = async (data) => {
@@ -208,12 +228,12 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   }
 
   useEffect(() => {
-    if (isLoadingPlanEmployee || isLoadingCampaign || isProcessLoading) {
+    if (isLoadingPlanEmployee || isLoadingCampaign || isProcessLoading || iskpiDataLoading) {
       setLoader(true);
     } else {
       setLoader(false);
     }
-  }, [isLoadingPlanEmployee, isLoadingCampaign, isProcessLoading]);
+  }, [isLoadingPlanEmployee, isLoadingCampaign, isProcessLoading,iskpiDataLoading]);
 
   const handleRowSelect = (event) => {
     // Extract the IDs of all selected rows
@@ -340,7 +360,8 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
           await mutationForPlanFacilitySearch.mutate(
             {},
             {
-              onSuccess: async (result) => { 
+              onSuccess: async (result) => {
+                refetch();
                 updateDetails(result?.PlanFacility?.[0]);
               },
               onError: async (result) => {
@@ -417,24 +438,16 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
       setKpiParams([
         { key: "facilityName", value: details?.additionalDetails?.facilityName || t("NA") },
         { key: "facilityType", value: details?.additionalDetails?.facilityType || t("NA") },
-        { key: "facilityStatus", value: details?.additionalDetails?.facilityStatus || t("NA")},
+        { key: "facilityStatus", value: details?.additionalDetails?.facilityStatus || t("NA") },
         { key: "capacity", value: details?.additionalDetails?.capacity || t("NA") },
-        { key: "servingPopulation", value: details?.additionalDetails?.servingPopulation || t("NA") },
+        { key: "servingPopulation", value: latestKpiData?.PlanFacility[0]?.additionalDetails?.servingPopulation || t("NA")},
         { key: "fixedPost", value: details?.additionalDetails?.fixedPost || t("NA") },
-        { key: "residingVillage", value: t(details?.residingBoundary) || t("NA")}
+        { key: "residingVillage", value: t(details?.residingBoundary) || t("NA") }
       ]);
     }
-  }, [details]);
+  }, [details, latestKpiData]);
 
-  const customRenderers = {
 
-  residingVillage: (value) => (
-    <p className="mp-fac-value">
-      <span style={{ color: "#0B4B66" }}>{t(value)}</span>{" "}
-      <VillageHierarchyTooltipWrapper boundaryCode={details?.residingBoundary} placement={"bottom"} />
-    </p>
-
-  )};
 
 
   return (
@@ -447,16 +460,16 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
           heading={`${t(`MICROPLAN_ASSIGNMENT_FACILITY`)} ${details?.additionalDetails?.facilityName}`}
           children={[
             <div className="facilitypopup-serach-results-wrapper">
-              <Card className="fac-middle-child">
+              {iskpiDataLoading? <Loader/>:<Card className="fac-middle-child">
                 <div className="fac-kpi-container">
                   {kpiParams.map(({ key, value }) => (
                     <div key={key} className="fac-kpi-card">
-                      {customRenderers[key] ? customRenderers[key](value) : <p className="mp-fac-value">{value}</p>}
+                      <p className="mp-fac-value">{value}</p>
                       <p className="mp-fac-key">{t(`MICROPLAN_${key.toUpperCase()}`)}</p>
                     </div>
                   ))}
                 </div>
-              </Card>
+              </Card>}
               <div className="facilitypopup-tab-serach-wrapper">
                 <Tab
                   activeLink={activeLink.code}
