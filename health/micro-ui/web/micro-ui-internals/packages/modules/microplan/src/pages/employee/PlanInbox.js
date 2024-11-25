@@ -471,7 +471,7 @@ const PlanInbox = () => {
     const resourceArr = (resources || []).map((resource) => ({
       name: t(resource.resourceType), // Dynamic column name for each resourceType
       cell: (row) => {
-        return row?.[resource?.resourceType] || "NA"; // Return estimatedNumber if exists
+        return row?.[resource?.resourceType]; // Return estimatedNumber if exists
       },
       sortable: true,
       width: "180px",
