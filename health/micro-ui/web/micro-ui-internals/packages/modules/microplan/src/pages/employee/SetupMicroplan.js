@@ -42,9 +42,9 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const [microplanConfig, setMicroplanConfig] = useState(MicroplanConfig(totalFormData, null, isSubmitting, null, hierarchyData));
 
   const handleUrlChange = (event) => {
-    const searchParams = new URLSearchParams(location.search);
-    setIsLastVerticalStep(searchParams.get("isLastVerticalStep"));
-    setIsFormulaLastVerticalStep(searchParams.get("isFormulaLastVerticalStep"));
+    const { isLastVerticalStep, isFormulaLastVerticalStep, ...queryParams } = Digit.Hooks.useQueryParams();
+    setIsLastVerticalStep(isLastVerticalStep);
+    setIsFormulaLastVerticalStep(isFormulaLastVerticalStep);
   };
   useEffect(() => {
     // Add event listener for popstate to detect URL changes
@@ -213,6 +213,8 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
             HYPOTHESIS: null,
             FORMULA_CONFIGURATION: null,
           });
+          Digit.SessionStorage.del("HYPOTHESIS_DATA");
+          Digit.SessionStorage.del("FORMULA_DATA");
 
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
@@ -225,7 +227,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
             },
           });
         }
-
+        refetchPlan();
         setLoader(false);
       },
       onError: (error, variables) => {

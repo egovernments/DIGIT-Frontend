@@ -6,7 +6,7 @@ import { PRIMARY_COLOR } from "../utils/utilities";
 import { useMyContext } from "../utils/context";
 import { useAssumptionContext } from "./HypothesisWrapper";
 
-const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, allMdmsAssumptionsForThisCategory,campaignType }) => {
+const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, allMdmsAssumptionsForThisCategory, campaignType }) => {
   const { state, dispatch } = useMyContext();
   const { t } = useTranslation();
   const [showPopUP, setShowPopUp] = useState(false);
@@ -322,27 +322,51 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
                 variation={"primary"}
                 label={t("YES")}
                 onClick={() => {
-                  //here if assumption name is not given then show a toast message and return 
-                  if(!selectedDeletedAssumption){
+                  //here if assumption name is not given then show a toast message and return
+                  if (selectedDeletedAssumption?.name?.length > 100) {
+                    setShowToast({
+                      key: "error",
+                      label: t("SELECT_ASSUMPTION_NAME_LONG_THAN_100"),
+                      transitionTime: 3000,
+                      style: {
+                        zIndex: 1000000,
+                      },
+                    });
+                    return;
+                  }
+
+                  if (!selectedDeletedAssumption) {
                     setShowToast({
                       key: "error",
                       label: t("PLS_SELECT_ASSUMPTION"),
                       transitionTime: 3000,
-                      style:{
-                        zIndex:1000000
-                      }
+                      style: {
+                        zIndex: 1000000,
+                      },
                     });
                     return;
                   }
-                  
-                  if(selectedDeletedAssumption?.code === "NEW_ASSUMPTION" && !selectedDeletedAssumption?.name){
+
+                  if (selectedDeletedAssumption?.code === "NEW_ASSUMPTION" && selectedDeletedAssumption?.name?.trim()?.length === 0) {
+                    setShowToast({
+                      key: "error",
+                      label: t("INVALID_ASSUMPTION_NAME"),
+                      transitionTime: 3000,
+                      style: {
+                        zIndex: 1000000,
+                      },
+                    });
+                    return;
+                  }
+
+                  if (selectedDeletedAssumption?.code === "NEW_ASSUMPTION" && !selectedDeletedAssumption?.name) {
                     setShowToast({
                       key: "error",
                       label: t("PLS_ENTER_ASSUMPTION_NAME"),
                       transitionTime: 3000,
-                      style:{
-                        zIndex:1000000
-                      }
+                      style: {
+                        zIndex: 1000000,
+                      },
                     });
                     return;
                   }
