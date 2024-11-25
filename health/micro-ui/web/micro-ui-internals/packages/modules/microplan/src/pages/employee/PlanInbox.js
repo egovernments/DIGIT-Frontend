@@ -918,7 +918,7 @@ const PlanInbox = () => {
         <ConfirmationPopUp
           onClose={closeActionBarPopUp}
           alertHeading={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN_ALERT_HEADING`)}
-          alertMessage={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN_ALERT_MESSAGE`)}
+          alertMessage={`${t("HCM_MICROPLAN_FINALIZE_MICROPLAN_ALERT_PREFIX_MESSAGE")} ${totalStatusCount?.["VALIDATED"]} ${t("HCM_MICROPLAN_FINALIZE_MICROPLAN_ALERT_SUFFIX_MESSAGE")}`}
           submitLabel={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN_SUBMIT_LABEL`)}
           cancelLabel={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN_CANCEL_ACTION`)}
           url="/plan-service/config/_update"

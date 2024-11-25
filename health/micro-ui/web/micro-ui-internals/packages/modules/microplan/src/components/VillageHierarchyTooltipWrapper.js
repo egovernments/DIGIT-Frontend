@@ -105,7 +105,7 @@ const VillageHierarchyTooltipWrapper = ({ boundaryCode,placement="right",wrapper
           </span>
         </div>
       ))
-    : t("NO_DATA_AVAILABLE");
+    : t("HCM_MICROPLAN_NOT_ABLE_TO_FETCH_DETAILS");
 
 
 
