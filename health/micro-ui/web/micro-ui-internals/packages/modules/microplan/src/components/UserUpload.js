@@ -37,7 +37,7 @@ const UserUpload = React.memo(() => {
   const [processedFile, setProcessedFile] = useState([]);
   const params = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
   const type = "userWithBoundary";
-  const id =  "miroplan";
+  const id =  "microplan";
   const { data: boundaryHierarchy } = Digit.Hooks.useCustomMDMS(
     tenantId,
     "hcm-microplanning",
