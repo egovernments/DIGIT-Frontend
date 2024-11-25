@@ -818,3 +818,43 @@ tbody {
   font-family: theme(digitv2.fontFamily.sans);
   padding-bottom: 1rem;
 }
+
+
+.view-campaign-details-card {
+
+  .view-composer-header-section{
+    margin-bottom: 1.5rem;
+    header{
+      margin:0rem;
+    }
+  }
+  .employee-data-table {
+    .row {
+      padding: 0rem;
+      margin: 0rem;
+
+      margin-bottom: 1.5rem;
+
+      h2 {
+        margin: 0rem;
+      }
+
+      .value {
+        p {
+          margin: 0rem;
+        }
+      }
+
+      &.last {
+        margin: 0rem;
+      }
+
+    }
+  }
+}
+
+.facility-mapping-config {
+  .multi-select-dropdown-wrap {
+    margin-bottom: 1.5rem;
+  }
+}

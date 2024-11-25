@@ -735,7 +735,7 @@ const PopInbox = () => {
           actionFields={[
             <Button label={t(`HCM_MICROPLAN_POP_INBOX_BACK_BUTTON`)} onClick={()=> {
               history.push(`/${window.contextPath}/employee`);
-            }} type="button" variation="primary" />,
+            }} type="button" variation="primary" icon={"ArrowBack"}/>,
           ]}
           className=""
           maxActionFieldsAllowed={5}

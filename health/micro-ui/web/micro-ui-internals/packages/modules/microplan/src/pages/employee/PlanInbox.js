@@ -858,7 +858,7 @@ const PlanInbox = () => {
                 pagination
                 paginationServer
                 selectableRows={!disabledAction}
-                className={!disabledAction ? "selectable" : "unselectable"}
+                className={`data-table ${!disabledAction ? "selectable" : "unselectable"}`}
                 selectableRowsHighlight
                 onChangeRowsPerPage={handlePerRowsChange}
                 onChangePage={handlePageChange}
