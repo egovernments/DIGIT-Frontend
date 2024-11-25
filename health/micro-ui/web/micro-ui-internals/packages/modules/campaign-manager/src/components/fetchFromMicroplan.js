@@ -60,14 +60,12 @@ const DummyLoaderScreen = () => {
       if (currentStep < steps.length) {
         setCurrentStep((prev) => prev + 1);
       }
-    }, 2500); // 1 second delay for each step
+    }, 3000); // 1 second delay for each step
 
     if (currentStep === steps.length) {
       clearInterval(stepInterval); // Clear the interval to stop further updates
       const navigateTimeout = setTimeout(() => {
-        history.push({
-          pathname: `/${window?.contextPath}/employee/campaign/setup-campaign?${searchParams?.toString()}`,
-        });
+        history.push(`/${window?.contextPath}/employee/campaign/setup-campaign?${searchParams?.toString()}`);
       }, 1500);
 
       return () => clearTimeout(navigateTimeout); // Cleanup timeout
