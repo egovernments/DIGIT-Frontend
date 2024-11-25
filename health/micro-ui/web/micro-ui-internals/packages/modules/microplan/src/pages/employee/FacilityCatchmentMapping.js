@@ -91,6 +91,21 @@ const FacilityCatchmentMapping = () => {
   );
 
 
+  const planFacilitySearchConfig = {
+    url: "/plan-service/plan/facility/_search",
+    body: {
+      PlanFacilitySearchCriteria: {
+        tenantId: tenantId,
+        planConfigurationId: url?.microplanId,
+      }
+    },
+  };
+
+
+  const { isLoading: isPlanFacilityLoading, data: planFacility } = Digit.Hooks.useCustomAPIHook(planFacilitySearchConfig);
+
+
+
    // fetch the process instance for the current microplan to check if we need to disabled actions or not
    const { isLoading:isProcessLoading, data: processData, } = Digit.Hooks.useCustomAPIHook({
     url: "/egov-workflow-v2/egov-wf/process/_search",
@@ -149,7 +164,7 @@ const FacilityCatchmentMapping = () => {
 
   const config = facilityMappingConfig(projectType, disabledAction);
 
-  if (isPlanEmpSearchLoading || isLoading || isLoadingPlanObject || isLoadingCampaignObject || isProcessLoading)
+  if (isPlanEmpSearchLoading || isLoading || isLoadingPlanObject || isLoadingCampaignObject || isProcessLoading ||isPlanFacilityLoading)
     return <Loader />
 
   //role and name of User extracted
@@ -192,7 +207,7 @@ const FacilityCatchmentMapping = () => {
         ></InboxSearchComposer>
       </div>
 
-      {isRootApprover && data?.TotalCount === 0 && planObject?.status === "CENSUS_DATA_APPROVED" &&
+      {isRootApprover && data?.TotalCount === 0 &&
         <ActionBar
           actionFields={[
             <Button icon="CheckCircle" label={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT`)} onClick={handleActionBarClick} type="button" variation="primary" />,
@@ -229,7 +244,7 @@ const FacilityCatchmentMapping = () => {
         <ConfirmationPopUp
           onClose={closeActionBarPopUp}
           alertHeading={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT_ALERT_HEADING`)}
-          alertMessage={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT_ALERT_MESSAGE`)}
+          alertMessage={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT_ALERT_PREFIX_MESSAGE${planFacility?.TotalCount}FINALIZED_MIDDLE_MASSAGE${data?.StatusCount?.["VALIDATED"]}_HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT_ALERT_SUFFIX_MESSAGE`)}
           submitLabel={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT_SUBMIT_ACTION`)}
           cancelLabel={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT_CANCEL_ACTION`)}
           url="/plan-service/config/_update"
