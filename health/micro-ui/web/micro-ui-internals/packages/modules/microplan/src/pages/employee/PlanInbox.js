@@ -14,6 +14,7 @@ import { useMyContext } from "../../utils/context";
 import ConfirmationPopUp from "../../components/ConfirmationPopUp";
 import VillageHierarchyTooltipWrapper from "../../components/VillageHierarchyTooltipWrapper";
 import TimelinePopUpWrapper from "../../components/timelinePopUpWrapper";
+import AssigneeChips from "../../components/AssigneeChips";
 
 const PlanInbox = () => {
   const { t } = useTranslation();
@@ -370,7 +371,7 @@ const PlanInbox = () => {
         setAssignedToAllCount(planWithCensus?.TotalCount);
       }
 
-      const uniqueAssignees = [...new Set(planWithCensus?.planData.map(item => item.assignee).filter(Boolean))];
+      const uniqueAssignees = [...new Set(planWithCensus?.planData?.flatMap(item => item.assignee || []))];
       setAssigneeUuids(uniqueAssignees.join(","));
     }
   }, [planWithCensus, selectedFilter, activeLink]);
@@ -551,7 +552,16 @@ const PlanInbox = () => {
     },
     {
       name: t("INBOX_ASSIGNEE"),
-      selector: (row, index) => employeeNameMap?.[row?.original?.assignee] || t("ES_COMMON_NA"),
+      selector: (row, index) =>
+        row?.assignee?.length > 0 ? (
+          <AssigneeChips
+            assignees={row?.original?.assignee} 
+            assigneeNames={employeeNameMap} 
+            heading={t("HCM_MICROPLAN_PLAN_INBOX_TOTAL_ASSIGNEES")} 
+          />
+        ) : (
+          t("ES_COMMON_NA")
+        ),
       sortable: true,
       width: "180px",
     },
