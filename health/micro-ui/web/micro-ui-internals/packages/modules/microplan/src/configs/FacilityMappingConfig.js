@@ -24,7 +24,7 @@ const facilityMappingConfig = (projectType, disabledAction) => {
       search: {
         uiConfig: {
           headerStyle: null,
-          formClassName: "custom-both-clear-search",
+          formClassName: "custom-both-clear-search facility-mapping-config",
           primaryLabel: "ES_COMMON_FILTER",
           secondaryLabel: "ES_COMMON_CLEAR_FILTER",
           minReqFields: 0,
