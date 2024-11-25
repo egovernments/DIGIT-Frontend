@@ -6,7 +6,6 @@ import { initLibraries } from "@egovernments/digit-ui-libraries";
 import { DigitUI } from "@egovernments/digit-ui-module-core";
 import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
 import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
-import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 // import { initUtilitiesComponents } from  "@egovernments/digit-ui-module-utilities";
 import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench";
 import { PGRReducers , initPGRComponents} from "@egovernments/digit-ui-module-pgr";
@@ -66,7 +65,7 @@ const initDigitUI = () => {
   });
 
   initDSSComponents();
-  initHRMSComponents();
+
   initEngagementComponents();
   // initUtilitiesComponents();
   initWorkbenchComponents();
