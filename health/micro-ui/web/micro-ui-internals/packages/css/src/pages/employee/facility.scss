@@ -198,12 +198,17 @@
   justify-content: flex-end;
 }
 
-.search-component-table::-webkit-scrollbar {
+.search-component-table{
+  background-color: #FFFFFF;
+  overflow-y:auto;
+}
+
+.search-component-table::-webkit-scrollbar{
   height: 0.5rem;
   background-color: #d6d5d4;
 }
 
-.search-component-table::-webkit-scrollbar-track {
+.search-component-table::-webkit-scrollbar-track{
   background-color: #d6d5d4;
   border-radius: 0.563rem;
 }
@@ -211,6 +216,11 @@
 .search-component-table::-webkit-scrollbar-thumb {
   background-color: #d6d5d4;
   border-radius: 0.563rem;
+}
+
+.search-component-table::-webkit-scrollbar:vertical{
+  width: 0.5rem;
+  background-color: #d6d5d4;
 }
 
 .digit-topbar .digit-logo-ulb-wrapper .digit-topbar-logo{

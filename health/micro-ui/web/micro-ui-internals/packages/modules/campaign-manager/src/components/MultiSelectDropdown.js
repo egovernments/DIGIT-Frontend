@@ -142,6 +142,7 @@ const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, on
         <div style={{ width: "100%" }}>
           <MultiSelectDropdown
             t={t}
+            isSearchable={true}
             props={{ className: "selecting-boundaries-dropdown" }}
             options={Object.entries(popUpOption)
               .filter(([key]) => key.startsWith(boundaryType))
