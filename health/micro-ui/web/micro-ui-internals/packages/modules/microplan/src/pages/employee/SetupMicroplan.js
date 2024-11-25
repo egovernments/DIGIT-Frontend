@@ -213,6 +213,8 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
             HYPOTHESIS: null,
             FORMULA_CONFIGURATION: null,
           });
+          Digit.SessionStorage.del("HYPOTHESIS_DATA");
+          Digit.SessionStorage.del("FORMULA_DATA");
 
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
