@@ -15,7 +15,7 @@ const AssigneeChips = ({ assignees = [], assigneeNames, heading }) => {
           text={
             assigneeNames?.[assignees[0]]?.length > 64
               ? `${assigneeNames?.[assignees[0]].slice(0, 64)}...`
-              : assigneeNames?.[assignees[0]] || "N/A"
+              : assigneeNames?.[assignees[0]] || t("ES_COMMON_NA")
           }
           className=""
           error=""

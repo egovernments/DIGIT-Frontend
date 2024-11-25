@@ -553,7 +553,7 @@ const PlanInbox = () => {
     {
       name: t("INBOX_ASSIGNEE"),
       selector: (row, index) =>
-        row?.assignee?.length > 0 ? (
+        row?.original?.assignee?.length > 0 ? (
           <AssigneeChips
             assignees={row?.original?.assignee} 
             assigneeNames={employeeNameMap} 
