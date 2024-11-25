@@ -92,7 +92,7 @@ const facilityMappingConfig = (projectType, disabledAction) => {
                 },
                 name: "residingBoundaries",
                 optionsKey: "code",
-                allowMultiSelect: false,
+                allowMultiSelect: true,
                 masterName: "commonUiConfig",
                 moduleName: "FacilityMappingConfig",
                 customfn: "getFacilitySearchRequest",
