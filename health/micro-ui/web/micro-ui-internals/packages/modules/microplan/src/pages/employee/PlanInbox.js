@@ -582,24 +582,6 @@ const PlanInbox = () => {
     ...getSecurityDetailsColumns(),
     ...getAdditionalFieldsColumns(),
     ...getResourceColumns(),
-    {
-      name: t("INBOX_STATUSLOGS"),
-      cell: (row, index, column, id) => (
-        <Button
-          label={t(`VIEW_LOGS`)}
-          onClick={() => {
-            setSelectedBusinessId(row?.original?.id); // Set the row.id to state
-            setSelectedBoundaryCode(row.boundaryCode);
-            setShowTimelinePopup(true);
-          }}
-          variation="link"
-          style={{}}
-          size={"medium"}
-        />
-      ),
-      sortable: false,
-      width: "180px",
-    },
     // {
     //   name: t(`TOTAL_POPULATION`),
     //   cell: (row) => t(row?.totalPop) || "NA",
