@@ -547,7 +547,7 @@ const PopInbox = () => {
       <div>
         <Header styles={{ marginBottom: "1rem" }} className="pop-inbox-header">{t(`VALIDATE_APPROVE_POPULATIONDATA`)}</Header>
         <div className="role-summary-sub-heading">
-          <div>
+          <div className="mp-heading-bold">
           {`${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${planObject?.name || t("NO_NAME_AVAILABLE")}`}
           </div>
           <div>

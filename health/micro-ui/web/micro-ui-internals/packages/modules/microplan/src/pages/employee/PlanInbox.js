@@ -524,7 +524,7 @@ const PlanInbox = () => {
       cell: (row) => (
         <div style={{ display: "flex", alignItems: "center", gap: ".5rem" }}>
           <span>{t(`${row?.village}`)}</span>
-          <VillageHierarchyTooltipWrapper boundaryCode={row?.village} />
+          <VillageHierarchyTooltipWrapper boundaryCode={row?.village} wrapperClassName={"village-hierarchy-tooltip-wrapper-class"}/>
         </div>
       ),
       // cell: (row) => t(row?.village) || "NA",
@@ -737,7 +737,7 @@ const PlanInbox = () => {
        <div>
       <Header styles={{marginBottom:"1rem"}} className="pop-inbox-header">{t(`HCM_MICROPLAN_VALIDATE_AND_APPROVE_MICROPLAN_ESTIMATIONS`)}</Header>
       <div className="role-summary-sub-heading">
-          <div>
+          <div className="mp-heading-bold">
           {`${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${campaignObject?.campaignName  || t("NO_NAME_AVAILABLE")}`}
           </div>
           <div>
@@ -876,6 +876,7 @@ const PlanInbox = () => {
                 pagination
                 paginationServer
                 selectableRows={!disabledAction}
+                className={!disabledAction ? "selectable" : "unselectable"}
                 selectableRowsHighlight
                 onChangeRowsPerPage={handlePerRowsChange}
                 onChangePage={handlePageChange}

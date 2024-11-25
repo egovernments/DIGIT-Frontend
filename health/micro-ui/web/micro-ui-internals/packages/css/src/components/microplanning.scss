@@ -2677,6 +2677,10 @@ $border-color: rgba(214, 213, 212, 1);
     max-width: unset !important;
     max-height: 15rem !important;
     width: 14rem !important;
+
+    .category-selectAll-label{
+      display: none;
+    }
   }
 }
 
@@ -2685,12 +2689,12 @@ $border-color: rgba(214, 213, 212, 1);
   max-width: unset !important;
 }
 
-.digit-card-component.primary.microPlanBulkTable {
+/*.digit-card-component.primary.microPlanBulkTable {
   overflow: hidden;
   >div:first-child {
    overflow: auto;
   }
-}
+}*/
 
 .loader-overlay {
   position: fixed;
@@ -2766,11 +2770,6 @@ $border-color: rgba(214, 213, 212, 1);
   width: 100%;
 }
 
-.rdt_Table{
-  overflow: scroll !important;
-  scrollbar-width: none !important;
-}
-
 .microPlanBulkTable {
   overflow: scroll; /* Enables scrolling */
   -ms-overflow-style: none; /* Internet Explorer 10+ */
@@ -2803,4 +2802,8 @@ $border-color: rgba(214, 213, 212, 1);
     width: 30rem;
     margin-left: auto;
   }
+}
+
+.digit-popup-alert-message{
+  line-height: normal !important;
 }

@@ -30,7 +30,7 @@ const PopInboxTable = ({ ...props }) => {
       {
         name: t(`INBOX_VILLAGE`),
         cell: (row, index, column, id) => (
-          <div style={{display:"flex", gap:".5rem"}}>
+          <div style={{display:"flex", gap:".5rem"}} className="village-tooltip-wrap">
           <Button
             label={t(`${row.boundaryCode}`)}
             onClick={() =>
@@ -41,7 +41,7 @@ const PopInboxTable = ({ ...props }) => {
             size={"medium"}
             style={{ minWidth: "unset" }}
           />
-          <VillageHierarchyTooltipWrapper  boundaryCode={row?.boundaryCode}/>
+          <VillageHierarchyTooltipWrapper  boundaryCode={row?.boundaryCode} wrapperClassName={"village-hierarchy-tooltip-wrapper-class"}/>
           </div>
         ),
         // selector:(row, index)=>row.boundaryCode,
@@ -175,6 +175,7 @@ const PopInboxTable = ({ ...props }) => {
     <DataTable
       columns={columns}
       data={props.censusData}
+      className={!props.disabledAction ? "selectable" : "unselectable"}
       selectableRows={!props.disabledAction}
       selectableRowsHighlight
       noContextMenu

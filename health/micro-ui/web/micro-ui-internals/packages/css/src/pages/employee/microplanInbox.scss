@@ -70,3 +70,83 @@
   background-color: #d6d5d4;
   border-radius: 0.563rem;
 }
+
+.rdt_TableHead{
+  z-index: 13 !important;
+}
+
+.rdt_TableRow > .rdt_TableCell:first-of-type {
+  position: sticky;
+  z-index: 10;
+  left: 0rem;
+  background-color: #ffffff;
+}
+
+.rdt_TableRow:hover > .rdt_TableCell:first-of-type {
+  position: sticky;
+  z-index: 10;
+  left: 0rem;
+  background-color: #FBEEE8;
+}
+
+
+.rdt_TableRow.selectedRow > .rdt_TableCell:first-of-type {
+  position: sticky;
+  z-index: 10;
+  left: 0rem;
+  background-color: #FBEEE8;
+}
+
+.rdt_TableHeadRow > .rdt_TableCol:first-of-type {
+  position: sticky;
+  z-index: 12;
+  left: 0rem;
+  top: 0rem;
+  background-color: #eeeeee;
+}
+
+.microPlanBulkTable{
+  .selectable{
+    .rdt_TableRow > .rdt_TableCell:nth-of-type(2) {
+      position: sticky;
+      z-index: 10;
+      left: 48px;
+      background-color: #ffffff;
+    }
+    
+    .rdt_TableRow:hover > .rdt_TableCell:nth-of-type(2) {
+      position: sticky;
+      z-index: 10;
+      left: 48px;
+      background-color: #FBEEE8;
+    }
+    
+    
+    .rdt_TableRow.selectedRow > .rdt_TableCell:nth-of-type(2) {
+      position: sticky;
+      z-index: 10;
+      left: 48px;
+      background-color: #FBEEE8;
+    }
+    
+    .rdt_TableHeadRow > .rdt_TableCol:nth-of-type(2) {
+      position: sticky;
+      z-index: 12;
+      left: 48px;
+      top: 0rem;
+      background-color: #eeeeee;
+    }
+  }
+}
+
+.rdt_TableHeadRow{
+  justify-content: space-between;
+}
+
+.rdt_TableRow{
+  justify-content: space-between;
+}
+
+.village-hierarchy-tooltip-wrapper-class{
+  position: static;
+}
