@@ -450,7 +450,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
       // Assuming 1 is the first step
       Digit.Utils.microplanv1.updateUrlParams({ isFormulaLastVerticalStep: false });
     }
-  }, [formulaInternalKey]);
+  }, [formulaInternalKey, ruleConfigurationCategories]);
 
   //array of objects each with operatorCode and operatorName
   const operators = state.RuleConfigureOperators;

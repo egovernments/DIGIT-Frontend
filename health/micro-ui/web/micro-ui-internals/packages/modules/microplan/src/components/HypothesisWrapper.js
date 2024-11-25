@@ -55,7 +55,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
       assumptionsFormValues?.selectedDistributionProcess?.code === item.DistributionProcess
     );
   });
-  const assumptionCategories = filteredData.length > 0 ? filteredData[0].assumptionCategories : [];
+  const assumptionCategories = filteredData.length > 0 ? filteredData?.[0].assumptionCategories : [];
   const filteredAssumptions = assumptionCategories.length > 0 ? assumptionCategories[internalKey - 1]?.assumptions || [] : [];
 
   //fetching existing plan object
@@ -393,7 +393,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
       // Assuming 1 is the first step
       Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: false });
     }
-  }, [internalKey]);
+  }, [internalKey, assumptionCategories]);
 
   if (isLoadingPlanObject || manualLoader) {
     return <Loader />;

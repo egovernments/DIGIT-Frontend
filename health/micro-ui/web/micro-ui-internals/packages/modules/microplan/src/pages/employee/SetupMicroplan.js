@@ -42,9 +42,9 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const [microplanConfig, setMicroplanConfig] = useState(MicroplanConfig(totalFormData, null, isSubmitting, null, hierarchyData));
 
   const handleUrlChange = (event) => {
-    const searchParams = new URLSearchParams(location.search);
-    setIsLastVerticalStep(searchParams.get("internalKey") === "6" || searchParams.get("internalKey") === "9"? true : searchParams.get("isLastVerticalStep"));
-    setIsFormulaLastVerticalStep(searchParams.get("internalKey") === "6" ? true : searchParams.get("isFormulaLastVerticalStep"));
+    const { isLastVerticalStep, isFormulaLastVerticalStep, ...queryParams } = Digit.Hooks.useQueryParams();
+    setIsLastVerticalStep(isLastVerticalStep);
+    setIsFormulaLastVerticalStep(isFormulaLastVerticalStep);
   };
   useEffect(() => {
     // Add event listener for popstate to detect URL changes
