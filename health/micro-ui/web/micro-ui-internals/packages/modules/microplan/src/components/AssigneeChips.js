@@ -1,22 +1,21 @@
 import { Button, Chip } from "@egovernments/digit-ui-components";
 import React, { useState } from "react";
 import { ShowMoreWrapper } from "./ShowMoreWrapper";
+import { useTranslation } from "react-i18next";
 
-const AssigneeChips = ({ assignees, assigneeNames, heading }) => {
+const AssigneeChips = ({ assignees = [], assigneeNames, heading }) => {
+  const { t } = useTranslation();
   const [showPopUp, setShowPopUp] = useState(false);
 
-  // Safely handle empty or undefined assignee arrays
-  const assigneeList = assignees || [];
-
   return (
-    <div className="digit-tag-container" style={{minWidth:"unset", margin:"0rem", gap:"0rem"}}>
-      {assigneeList.length > 0 && (
+    <div className="digit-tag-container" style={{ minWidth: "unset", margin: "0rem", gap: "0rem" }}>
+      {assignees.length > 0 && (
         <Chip
           key={0}
           text={
-            assigneeNames?.[assigneeList[0]]?.length > 64
-              ? `${assigneeNames[assigneeList[0]].slice(0, 64)}...`
-              : assigneeNames?.[assigneeList[0]] || "N/A"
+            assigneeNames?.[assignees[0]]?.length > 64
+              ? `${assigneeNames?.[assignees[0]].slice(0, 64)}...`
+              : assigneeNames?.[assignees[0]] || "N/A"
           }
           className=""
           error=""
@@ -26,16 +25,16 @@ const AssigneeChips = ({ assignees, assigneeNames, heading }) => {
         />
       )}
 
-      {assigneeList.length > 1 && (
+      {assignees.length > 1 && (
         <Button
-          label={`+${assigneeList.length - 1} More`}
+          label={`+${assignees.length - 1} ${t("ES_MORE")}`}
           onClick={() => setShowPopUp(true)}
           variation="link"
           style={{
             height: "2rem",
             minHeight: "2rem",
             padding: "0.5rem",
-            minWidth:"0px",
+            minWidth: "0px",
             justifyContent: "center",
             alignItems: "center",
           }}
@@ -53,8 +52,8 @@ const AssigneeChips = ({ assignees, assigneeNames, heading }) => {
       {showPopUp && (
         <ShowMoreWrapper
           setShowPopUp={setShowPopUp}
-          alreadyQueuedSelectedState={assigneeList.map((assignee) => assigneeNames?.[assignee] || "N/A")}
-          heading={heading || "More Assignees"}
+          alreadyQueuedSelectedState={assignees.map((assignee) => assigneeNames?.[assignee] || "N/A")}
+          heading={heading || t("ASSIGNEE LIST")}
         />
       )}
     </div>
