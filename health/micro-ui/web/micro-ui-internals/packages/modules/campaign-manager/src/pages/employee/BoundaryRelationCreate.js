@@ -652,9 +652,9 @@ const onConfirmClick=()=>{
                         if (checkValid) {
                           setShowFinalPopup(true);
                         } else if (newBoundaryData?.some((obj) => obj?.boundaryType)) {
-                          setShowToast({ label: "CMN_ATLEAST_ONE_HIERARCHY", isError: "error" });
+                            setShowToast({ label: "CMN_FILLORDELETE_CREATED_HIERARCHY", isError: "error" });
                         } else {
-                          setShowToast({ label: "CMN_FILLORDELETE_CREATED_HIERARCHY", isError: "error" });
+                          setShowToast({ label: "CMN_ATLEAST_ONE_HIERARCHY", isError: "error" });
                         }
                       }}
                       type="button"
