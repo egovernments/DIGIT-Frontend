@@ -166,7 +166,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     const visibleAssumptions = currentAssumptions.filter((item) => existingAssumptionKeys?.includes(item) && !deletedAssumptions?.includes(item));
 
     //Validate: Check if any value is empty for visible assumptions
-    const atleastOneMDMS = visibleAssumptions?.filter((i) => i?.source === "MDMS")?.length === 0;
+    const atleastOneMDMS = assumptionValues?.filter((i) => i?.source === "MDMS")?.length === 0;
     if (atleastOneMDMS) {
       setShowToast({
         key: "error",
