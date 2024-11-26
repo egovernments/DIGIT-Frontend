@@ -51,6 +51,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
 
   const handleCancelDelete = () => {
     setShowPopUp(false);
+    setSelectedDeletedFormula(null);
   };
 
   const handleConfirmDelete = () => {
@@ -272,9 +273,11 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
     <>
       <Card className="middle-child">
         <Header className="uploader-sub-heading">{t(`FORMULA_HEADER_${category}`)}</Header>
-        {(category==="FORMULA_CAMPAIGN_VEHICLES")?  <p className="mp-description">{t(`FORMULA_VEHICLE_DESCRIPTION`)}</p>:
-        <p className="mp-description">{t(`FORMULA_CONFIGURATION_DESCRIPTION`)}</p>
-        }
+        {category === "FORMULA_CAMPAIGN_VEHICLES" ? (
+          <p className="mp-description">{t(`FORMULA_VEHICLE_DESCRIPTION`)}</p>
+        ) : (
+          <p className="mp-description">{t(`FORMULA_CONFIGURATION_DESCRIPTION`)}</p>
+        )}
       </Card>
       <Card>
         {filteredFormulas.map((formula, index) => {
@@ -405,7 +408,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
             equalWidthButtons={true}
             children={[
               <div>
-                <CardText style={{ margin: 0 }}>{showPopUP === "CUSTOM" ? t(`FORMULA_PERMANENT_DELETE_CUSTOM`) :t("FOR_PERMANENT_DELETE")}</CardText>
+                <CardText style={{ margin: 0 }}>{showPopUP === "CUSTOM" ? t(`FORMULA_PERMANENT_DELETE_CUSTOM`) : t("FOR_PERMANENT_DELETE")}</CardText>
               </div>,
             ]}
             onOverlayClick={() => {
@@ -472,53 +475,9 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
             ]}
             onOverlayClick={() => {
               setFormulasPopUp(false);
+              setSelectedDeletedFormula(null);
             }}
             footerChildren={[
-              <Button
-                type={"button"}
-                size={"large"}
-                variation={"secondary"}
-                label={t("YES")}
-                onClick={() => {
-                  if(selectedDeletedFormula?.code === "NEW_FORMULA" && !selectedDeletedFormula){
-                    setShowToast({
-                      key: "error",
-                      label: t("PLS_ENTER_FORMULA_NAME"),
-                      transitionTime: 3000,
-                      style:{
-                        zIndex:1000000
-                      }
-                    });
-                    return;
-                  }
-
-                  if(selectedDeletedFormula?.code === "NEW_FORMULA" && selectedDeletedFormula?.name?.trim()?.length === 0){
-                    setShowToast({
-                      key: "error",
-                      label: t("INVALID_FORMULA_NAME"),
-                      transitionTime: 3000,
-                      style:{
-                        zIndex:1000000
-                      }
-                    });
-                    return;
-                  }
-
-                  if(selectedDeletedFormula?.code === "NEW_FORMULA" && selectedDeletedFormula?.name?.length > 100){
-                    setShowToast({
-                      key: "error",
-                      label: t("SELECT_FORMULA_NAME_LONG_THAN_100"),
-                      transitionTime: 3000,
-                      style:{
-                        zIndex:1000000
-                      }
-                    });
-                    return;
-                  }
-
-                  addNewFormula();
-                }}
-              />,
               <Button
                 type={"button"}
                 size={"large"}
@@ -526,12 +485,70 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                 label={t("NO")}
                 onClick={() => {
                   setFormulasPopUp(false);
+                  setSelectedDeletedFormula(null);
+                }}
+              />,
+              <Button
+                type={"button"}
+                size={"large"}
+                variation={"secondary"}
+                label={t("YES")}
+                onClick={() => {
+                  if (selectedDeletedFormula?.code === "NEW_FORMULA" && !selectedDeletedFormula) {
+                    setShowToast({
+                      key: "error",
+                      label: t("PLS_ENTER_FORMULA_NAME"),
+                      transitionTime: 3000,
+                      style: {
+                        zIndex: 1000000,
+                      },
+                    });
+                    return;
+                  }
+
+                  if (selectedDeletedFormula?.code === "NEW_FORMULA" && selectedDeletedFormula?.name?.trim()?.length === 0) {
+                    setShowToast({
+                      key: "error",
+                      label: t("INVALID_FORMULA_NAME"),
+                      transitionTime: 3000,
+                      style: {
+                        zIndex: 1000000,
+                      },
+                    });
+                    return;
+                  }
+
+                  if (selectedDeletedFormula?.code === "NEW_FORMULA" && selectedDeletedFormula?.name?.length > 100) {
+                    setShowToast({
+                      key: "error",
+                      label: t("SELECT_FORMULA_NAME_LONG_THAN_100"),
+                      transitionTime: 3000,
+                      style: {
+                        zIndex: 1000000,
+                      },
+                    });
+                    return;
+                  }
+                  if (category !== "FORMULA_CAMPAIGN_VEHICLES" && filteredFormulas.some((i) => i.output === selectedDeletedFormula?.name)) {
+                    setShowToast({
+                      key: "error",
+                      label: t("FORMULA_ALREADY_PRESENT"),
+                      transitionTime: 3000,
+                      style: {
+                        zIndex: 1000000,
+                      },
+                    });
+                    return;
+                  }
+
+                  addNewFormula();
                 }}
               />,
             ]}
             sortFooterChildren={true}
             onClose={() => {
               setFormulasPopUp(false);
+              setSelectedDeletedFormula(null);
             }}
           ></PopUp>
         )}
