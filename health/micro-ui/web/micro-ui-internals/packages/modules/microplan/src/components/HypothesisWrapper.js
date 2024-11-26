@@ -174,6 +174,13 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
       const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
       return !value || isNaN(value); // Check if any value is NAN
     });
+    const hasExceededUpperBound = visibleAssumptions.some((item) => {
+      const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
+      if(value>=1000){
+        return true
+      }
+    });
+
 
     // If there are empty fields, show an error and do not allow moving to the next step
     if (hasNaNFields) {
@@ -188,6 +195,14 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
       setShowToast({
         key: "error",
         label: t("ERR_MANDATORY_FIELD"),
+        transitionTime: 3000,
+      });
+      return; // Prevent moving to the next step
+    }
+    if(hasExceededUpperBound){
+      setShowToast({
+        key: "error",
+        label: t("ERR_SHOULD_NOT_EXCEED_999.99"),
         transitionTime: 3000,
       });
       return; // Prevent moving to the next step
@@ -437,6 +452,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
           label={t(showToast.label)}
           transitionTime={showToast.transitionTime}
           onClose={() => {
+            console.log("hiiii");
             setShowToast(false);
           }}
           isDleteBtn={true}
