@@ -121,10 +121,6 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
     if (selectedDeletedFormula?.code === "NEW_FORMULA") {
       const formulaToAdd = selectedDeletedFormula;
       if (formulaToAdd && !formulas.some((formula) => formula.output === formulaToAdd)) {
-        if (!(formulaToAdd?.name && /^[a-zA-Z0-9]*$/.test(formulaToAdd.name) && formulaToAdd.name.length < 100)) {
-          setWrongFormulaNameToast(true);
-          return
-        }
         setFormulas([
           ...formulas,
           { source: "CUSTOM", output: formulaToAdd?.name, category: category, input: "", operatorName: "", assumptionValue: "" },
@@ -438,118 +434,124 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
 
         {formulasPopUP && (
           <>
-                    <PopUp
-            className={"popUpClass new-assumption-pop"}
-            type={"default"}
-            heading={t("CONFIRM_NEW_FORMULA")}
-            equalWidthButtons={true}
-            children={[
-              <LabelFieldPair className="new-assumption-pop">
-                <span className="bold">{t(`SELECT_FORMULA`)}</span>
-                <Dropdown
-                  variant="select-dropdown"
-                  t={t}
-                  isMandatory={false}
-                  // option={availableDeletedFormulas.map((item) => ({ code: item }))}
-                  option={[
-                    ...new Set(deletedFormulas?.filter((del) => allMdmsFormulasForThisCategory?.includes(del))),
-                    ...defautFormula,
-                  ]?.map((item) => ({ code: item }))}
-                  select={(value) => {
-                    setSelectedDeletedFormula(value);
-                  }}
-                  selected={selectedDeletedFormula}
-                  optionKey="code"
-                  showToolTip={true}
-                  placeholder={t("SELECT_OPTION")}
-                  onChange={(e) => setSelectedDeletedFormula(e.target.value)}
-                  optionCardStyles={{ position: "relative" }}
-                />
-              </LabelFieldPair>,
-              selectedDeletedFormula?.code === "NEW_FORMULA" && (
+            <PopUp
+              className={"popUpClass new-assumption-pop"}
+              type={"default"}
+              heading={t("CONFIRM_NEW_FORMULA")}
+              equalWidthButtons={true}
+              children={[
                 <LabelFieldPair className="new-assumption-pop">
-                  <span className="bold">{t(`FORMULA_NAME`)}</span>
-                  <TextInput
-                    name="name"
-                    value={selectedDeletedFormula?.name || ""}
-                    onChange={(event) => handleUpdateField(event.target.value, "name")}
+                  <span className="bold">{t(`SELECT_FORMULA`)}</span>
+                  <Dropdown
+                    variant="select-dropdown"
+                    t={t}
+                    isMandatory={false}
+                    // option={availableDeletedFormulas.map((item) => ({ code: item }))}
+                    option={[
+                      ...new Set(deletedFormulas?.filter((del) => allMdmsFormulasForThisCategory?.includes(del))),
+                      ...defautFormula,
+                    ]?.map((item) => ({ code: item }))}
+                    select={(value) => {
+                      setSelectedDeletedFormula(value);
+                    }}
+                    selected={selectedDeletedFormula}
+                    optionKey="code"
+                    showToolTip={true}
+                    placeholder={t("SELECT_OPTION")}
+                    onChange={(e) => setSelectedDeletedFormula(e.target.value)}
+                    optionCardStyles={{ position: "relative" }}
                   />
-                  
-                </LabelFieldPair>
-              ),
-            ]}
-            onOverlayClick={() => {
-              setFormulasPopUp(false);
-            }}
-            footerChildren={[
-              <Button
-                type={"button"}
-                size={"large"}
-                variation={"secondary"}
-                label={t("YES")}
-                onClick={() => {
-                  if(selectedDeletedFormula?.code === "NEW_FORMULA" && !selectedDeletedFormula){
-                    setShowToast({
-                      key: "error",
-                      label: t("PLS_ENTER_FORMULA_NAME"),
-                      transitionTime: 3000,
-                      style:{
-                        zIndex:1000000
-                      }
-                    });
-                    return;
-                  }
+                </LabelFieldPair>,
+                selectedDeletedFormula?.code === "NEW_FORMULA" && (
+                  <LabelFieldPair className="new-assumption-pop">
+                    <span className="bold">{t(`FORMULA_NAME`)}</span>
+                    <TextInput
+                      name="name"
+                      value={selectedDeletedFormula?.name || ""}
+                      onChange={(event) => handleUpdateField(event.target.value, "name")}
+                    />
 
-                  if(selectedDeletedFormula?.code === "NEW_FORMULA" && selectedDeletedFormula?.name?.trim()?.length === 0){
-                    setShowToast({
-                      key: "error",
-                      label: t("INVALID_FORMULA_NAME"),
-                      transitionTime: 3000,
-                      style:{
-                        zIndex:1000000
-                      }
-                    });
-                    return;
-                  }
+                  </LabelFieldPair>
+                ),
+              ]}
+              onOverlayClick={() => {
+                setFormulasPopUp(false);
+              }}
+              footerChildren={[
+                <Button
+                  type={"button"}
+                  size={"large"}
+                  variation={"secondary"}
+                  label={t("YES")}
+                  onClick={() => {
+                    if (selectedDeletedFormula?.code === "NEW_FORMULA" && !selectedDeletedFormula) {
+                      setShowToast({
+                        key: "error",
+                        label: t("PLS_ENTER_FORMULA_NAME"),
+                        transitionTime: 3000,
+                        style: {
+                          zIndex: 1000000
+                        }
+                      });
+                      return;
+                    }
 
-                  if(selectedDeletedFormula?.code === "NEW_FORMULA" && selectedDeletedFormula?.name?.length > 100){
-                    setShowToast({
-                      key: "error",
-                      label: t("SELECT_FORMULA_NAME_LONG_THAN_100"),
-                      transitionTime: 3000,
-                      style:{
-                        zIndex:1000000
-                      }
-                    });
-                    return;
-                  }
 
-                  addNewFormula();
-                }}
-              />,
-              <Button
-                type={"button"}
-                size={"large"}
-                variation={"primary"}
-                label={t("NO")}
-                onClick={() => {
-                  setFormulasPopUp(false);
-                }}
-              />,
-            ]}
-            sortFooterChildren={true}
-            onClose={() => {
-              setFormulasPopUp(false);
-            }}
-          ></PopUp>
-          {
-            wrongFormulaNameToast &&  <Toast
-            style={{zIndex:9999}}
-            type={"error"}
-            label={t("MP_FORMULA_LENGTH_LESS_THAN_100")}
-            onClose={()=>setWrongFormulaNameToast(false)}
-          />
-          }
+                    if (!(selectedDeletedFormula?.name && /^[a-zA-Z0-9]*$/.test(selectedDeletedFormula?.name) && selectedDeletedFormula?.name.length < 100)) {
+                      setWrongFormulaNameToast(true);
+                      return
+                    }
+
+                    if (selectedDeletedFormula?.code === "NEW_FORMULA" && selectedDeletedFormula?.name?.trim()?.length === 0) {
+                      setShowToast({
+                        key: "error",
+                        label: t("INVALID_FORMULA_NAME"),
+                        transitionTime: 3000,
+                        style: {
+                          zIndex: 1000000
+                        }
+                      });
+                      return;
+                    }
+
+                    if (selectedDeletedFormula?.code === "NEW_FORMULA" && selectedDeletedFormula?.name?.length > 100) {
+                      setShowToast({
+                        key: "error",
+                        label: t("SELECT_FORMULA_NAME_LONG_THAN_100"),
+                        transitionTime: 3000,
+                        style: {
+                          zIndex: 1000000
+                        }
+                      });
+                      return;
+                    }
+
+                    addNewFormula();
+                  }}
+                />,
+                <Button
+                  type={"button"}
+                  size={"large"}
+                  variation={"primary"}
+                  label={t("NO")}
+                  onClick={() => {
+                    setFormulasPopUp(false);
+                  }}
+                />,
+              ]}
+              sortFooterChildren={true}
+              onClose={() => {
+                setFormulasPopUp(false);
+              }}
+            ></PopUp>
+            {
+              wrongFormulaNameToast && <Toast
+                style={{ zIndex: 9999 }}
+                type={"error"}
+                label={t("MP_FORMULA_LENGTH_LESS_THAN_100")}
+                onClose={() => setWrongFormulaNameToast(false)}
+              />
+            }
           </>
         )}
       </Card>
