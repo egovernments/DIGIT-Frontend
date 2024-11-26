@@ -18,7 +18,15 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
 
 
     const handleTextAreaChange = (e) => {
-        setComment(e.target.value);
+      const inputValue = e.target.value;
+      if (inputValue.length > 140) {
+        // Showing toast when input exceeds 140 characters
+        setShowToast({ key: "error", label: t("HCM_MICROPLANNING_COMMENT_CHAR_LENGTH_ERROR_TOAST_MESSAGE") });
+        // Trimming the comment back to 140 characters
+        setComment(inputValue.substring(0, 140));
+      } else {
+        setComment(inputValue);
+      }
     };
 
     const handleKeyPress = (e) => {
@@ -119,7 +127,6 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
                             value={comment}
                             onChange={handleTextAreaChange}
                             onKeyPress={handleKeyPress}
-                            maxlength={140}
                         />
                     </div>
                 ]}

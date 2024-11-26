@@ -207,7 +207,7 @@ const FacilityCatchmentMapping = () => {
         ></InboxSearchComposer>
       </div>
 
-      {isRootApprover && data?.TotalCount === 0 &&
+      {isRootApprover && data?.TotalCount === 0 && planObject?.status === "CENSUS_DATA_APPROVED" &&
         <ActionBar
           actionFields={[
             <Button icon="CheckCircle" label={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT`)} onClick={handleActionBarClick} type="button" variation="primary" />,
@@ -219,7 +219,7 @@ const FacilityCatchmentMapping = () => {
           style={{}}
         />}
 
-      {!isRootApprover && data?.TotalCount === 0 && planObject?.status === "CENSUS_DATA_APPROVED" &&
+      {!isRootApprover && data?.TotalCount === 0  &&
         <ActionBar
           actionFields={[
             <Button icon={"ArrowBack"} label={t(`GO_BACK_TO_HOME`)} onClick={() => history.push(`/${window.contextPath}/employee`)} type="button" variation="primary" />,
