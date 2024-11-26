@@ -24,7 +24,7 @@ const Response = () => {
     if (state?.actionLabel === "HCM_CONFIGURE_APP_RESPONSE_ACTION" &&  queryStrings?.isSuccess === "true") {
       const timer = setTimeout(() => {
         navigate(state?.actionLink || `/${window.contextPath}/employee/`);
-      }, 2000);
+      }, 5000);
 
       return () => clearTimeout(timer); 
     }
