@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.8.11]  [26-Nov-2024]
+- Republished with new component version incremented 
+
 ## [1.8.10]  [19-Nov-2024]
 - Fixed the module stablity & new components integrated republihsing the same due to component version issue, 
 
