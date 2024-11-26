@@ -340,14 +340,22 @@ const BoundaryRelationCreate = () => {
                 isError: "info", 
                 transitionTime: 100000
             });
-                        
-            const bh = [...boundaryData, ...newBoundaryData];
-            const local = bh.map(item => ({
-                code: `${hierarchyType}_${item.boundaryType}`.toUpperCase(),
-                message: item.boundaryType,
-                module: `hcm-boundary-${hierarchyType.toLowerCase()}`,
-                locale: locale
-            }));
+
+            const local = [
+                ...boundaryData.map(item => ({
+                    code: `${hierarchyType}_${item.boundaryType.trim().replace(/[\s_]+/g, '')}`.toUpperCase(),
+                    message: `${t((defaultHierarchyType + "_" + item?.boundaryType).toUpperCase())}`,
+                    module: `hcm-boundary-${hierarchyType.toLowerCase()}`,
+                    locale: locale
+                })),
+                ...newBoundaryData.map(item => ({
+                    code: `${hierarchyType}_${item.boundaryType.trim().replace(/[\s_]+/g, '')}`.toUpperCase(),
+                    message: item.boundaryType.trim(),
+                    module: `hcm-boundary-${hierarchyType.toLowerCase()}`,
+                    locale: locale
+                }))
+            ];
+            
     
             const localisationResult = await localisationMutateAsync(local);
             if (!localisationResult.success) {
@@ -409,17 +417,17 @@ const onConfirmClick=()=>{
         setNewBoundaryData((prevItems) => {
             // Loop through the array starting from the second element
             return prevItems.map((item, idx) => {
-                item.boundaryType = item.boundaryType.trim();
+                item.boundaryType = item.boundaryType.trim().replace(/[\s_]+/g, '').toUpperCase();
                 if (idx === 0) {
                     if (newHierarchy) item.parentBoundaryType = null;
                     else {
                         if (boundaryData.length === 0) item.parentBoundaryType = null;
-                        else item.parentBoundaryType = boundaryData[boundaryData.length - 1].boundaryType.trim();
+                        else item.parentBoundaryType = boundaryData[boundaryData.length - 1].boundaryType;
 
                     }
                 }
                 if (idx > 0) {
-                    item.parentBoundaryType = prevItems[idx - 1].boundaryType.trim();
+                    item.parentBoundaryType = prevItems[idx - 1].boundaryType.trim().replace(/[\s_]+/g, '');
                 }
                 return item;
             });
