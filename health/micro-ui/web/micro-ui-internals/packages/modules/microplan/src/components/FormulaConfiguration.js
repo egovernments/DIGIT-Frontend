@@ -8,7 +8,6 @@ import { useFormulaContext } from "./FormulaConfigWrapper";
 const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initialFormulas, setShowToast, allMdmsFormulasForThisCategory }) => {
   const { t } = useTranslation();
   const [showPopUP, setShowPopUp] = useState(false);
-  const [wrongFormulaNameToast, setWrongFormulaNameToast] = useState(false);
   const [formulasPopUP, setFormulasPopUp] = useState(false);
   const [formulaToDelete, setFormulaToDelete] = useState(null);
   const [formulas, setFormulas] = useState(initialFormulas);
