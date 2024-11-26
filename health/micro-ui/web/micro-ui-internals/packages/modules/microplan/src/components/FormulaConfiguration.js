@@ -1,13 +1,14 @@
 import React, { useState, useEffect, Fragment, useContext, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Header, DeleteIconv2, LabelFieldPair, AddIcon, CardText, InfoBannerIcon } from "@egovernments/digit-ui-react-components";
-import { Dropdown, CheckBox, PopUp, Card, Button, Divider, TooltipWrapper, TextInput } from "@egovernments/digit-ui-components";
+import { Dropdown, CheckBox, PopUp, Card, Button, Divider, TooltipWrapper, TextInput, Toast } from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR } from "../utils/utilities";
 import { useFormulaContext } from "./FormulaConfigWrapper";
 
 const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initialFormulas, setShowToast, allMdmsFormulasForThisCategory }) => {
   const { t } = useTranslation();
   const [showPopUP, setShowPopUp] = useState(false);
+  const [wrongFormulaNameToast, setWrongFormulaNameToast] = useState(false);
   const [formulasPopUP, setFormulasPopUp] = useState(false);
   const [formulaToDelete, setFormulaToDelete] = useState(null);
   const [formulas, setFormulas] = useState(initialFormulas);
@@ -120,6 +121,10 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
     if (selectedDeletedFormula?.code === "NEW_FORMULA") {
       const formulaToAdd = selectedDeletedFormula;
       if (formulaToAdd && !formulas.some((formula) => formula.output === formulaToAdd)) {
+        if (!(formulaToAdd?.name && /^[a-zA-Z0-9]*$/.test(formulaToAdd.name) && formulaToAdd.name.length < 100)) {
+          setWrongFormulaNameToast(true);
+          return
+        }
         setFormulas([
           ...formulas,
           { source: "CUSTOM", output: formulaToAdd?.name, category: category, input: "", operatorName: "", assumptionValue: "" },
@@ -268,12 +273,13 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
       name: value,
     }));
   };
+
   return (
     <>
       <Card className="middle-child">
         <Header className="uploader-sub-heading">{t(`FORMULA_HEADER_${category}`)}</Header>
-        {(category==="FORMULA_CAMPAIGN_VEHICLES")?  <p className="mp-description">{t(`FORMULA_VEHICLE_DESCRIPTION`)}</p>:
-        <p className="mp-description">{t(`FORMULA_CONFIGURATION_DESCRIPTION`)}</p>
+        {(category === "FORMULA_CAMPAIGN_VEHICLES") ? <p className="mp-description">{t(`FORMULA_VEHICLE_DESCRIPTION`)}</p> :
+          <p className="mp-description">{t(`FORMULA_CONFIGURATION_DESCRIPTION`)}</p>
         }
       </Card>
       <Card>
@@ -405,7 +411,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
             equalWidthButtons={true}
             children={[
               <div>
-                <CardText style={{ margin: 0 }}>{showPopUP === "CUSTOM" ? t(`FORMULA_PERMANENT_DELETE_CUSTOM`) :t("FOR_PERMANENT_DELETE")}</CardText>
+                <CardText style={{ margin: 0 }}>{showPopUP === "CUSTOM" ? t(`FORMULA_PERMANENT_DELETE_CUSTOM`) : t("FOR_PERMANENT_DELETE")}</CardText>
               </div>,
             ]}
             onOverlayClick={() => {
@@ -431,7 +437,8 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
         )}
 
         {formulasPopUP && (
-          <PopUp
+          <>
+                    <PopUp
             className={"popUpClass new-assumption-pop"}
             type={"default"}
             heading={t("CONFIRM_NEW_FORMULA")}
@@ -467,6 +474,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                     value={selectedDeletedFormula?.name || ""}
                     onChange={(event) => handleUpdateField(event.target.value, "name")}
                   />
+                  
                 </LabelFieldPair>
               ),
             ]}
@@ -498,6 +506,15 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
               setFormulasPopUp(false);
             }}
           ></PopUp>
+          {
+            wrongFormulaNameToast &&  <Toast
+            style={{zIndex:9999}}
+            type={"error"}
+            label={t("MP_FORMULA_LENGTH_LESS_THAN_100")}
+            onClose={()=>setWrongFormulaNameToast(false)}
+          />
+          }
+          </>
         )}
       </Card>
     </>
