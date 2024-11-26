@@ -17,7 +17,7 @@ const DummyLoaderScreen = () => {
 
   const [showToast, setShowToast] = useState(null);
   const { isLoading, data, error } = Digit.Hooks.campaign.useFetchFromMicroplan(tenantId, id, planConfigurationId);
-  console.log(data);
+  
 
   const steps = [
     "FETCHING_CAMPAIGN_DATA_FROM_MICROPLAN",
@@ -54,15 +54,18 @@ const DummyLoaderScreen = () => {
 
   // Handle progress through steps
   useEffect(() => {
-    if ((data?.campaignData && currentStep < 2) || (data?.newCampaignId && currentStep < 4) || (data?.fetchedCampaign && currentStep < 15)) {
+    if ((data?.campaignData && currentStep < 2) || (data?.newCampaignUpdatedData && currentStep < 4) || (data?.fetchedCampaign?.id && currentStep < 15)) {
       const interval = setInterval(() => {
         if (currentStep < steps.length) {
           setCurrentStep((prev) => prev + 1);
         }
         if (currentStep === steps.length) {
+          setShowToast({ key: "success", label: t("CMN_ALL_DATA_FETCH_DONE") });
+
           clearInterval(interval); // Clear the interval to stop further updates
           const navigateTimeout = setTimeout(() => {
-            searchParams?.set("id", data?.newCampaignId);
+            searchParams?.set("id", data?.fetchedCampaign?.id);
+            searchParams?.set("microName", data?.fetchedCampaign?.campaignName);
             history.push(`/${window?.contextPath}/employee/campaign/setup-campaign?${searchParams?.toString()}`);
           }, 1500);
 
