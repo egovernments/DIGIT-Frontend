@@ -157,7 +157,9 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   // setting the current step when the key is changed on the basis of the config
   useEffect(() => {
     setCurrentStep(Number(filteredConfig?.[0]?.form?.[0]?.stepCount - 1));
-    // setShowToast(null);
+    // setting the toast to null when moving to next step successfully
+    // if any issue comes related to Toast, update here 
+    setShowToast(null);
   }, [currentKey, filteredConfig]);
 
   useEffect(() => {

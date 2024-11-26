@@ -388,31 +388,35 @@ function RoleTableComposer({ nationalRoles }) {
 
     {
       name: t("SELECTED_BOUNDARY"),
+      grow: 2,
       cell: (row) => {
         const isUserAlreadyAssignedActive =
           HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.length > 0 &&
-            HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
+          HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
             ? true
             : false;
         return (
-          <MultiSelectDropdown
-            disabled={
-              isUserAlreadyAssignedActive ||
+          <div style={{ width: "100%" }}>
+            <MultiSelectDropdown
+              disabled={
+                isUserAlreadyAssignedActive ||
                 nationalRoles?.includes(category) ||
                 !rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedHierarchy
-                ? true
-                : false
-            }
-            props={{ className: "roleTableCell" }}
-            t={t}
-            options={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.boundaryOptions || []}
-            optionsKey={"code"}
-            selected={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedBoundaries || []}
-            onSelect={(value) => handleBoundaryChange(value, row)}
-            addCategorySelectAllCheck={true}
-            addSelectAllCheck={true}
-            variant="nestedmultiselect"
-          />
+                  ? true
+                  : false
+              }
+              props={{ className: "roleTableCell" }}
+              t={t}
+              options={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.boundaryOptions || []}
+              optionsKey={"code"}
+              selected={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedBoundaries || []}
+              onSelect={(value) => handleBoundaryChange(value, row)}
+              addCategorySelectAllCheck={true}
+              addSelectAllCheck={true}
+              style={{ width: "100%" }}
+              variant="nestedmultiselect"
+            />
+          </div>
         );
       },
       sortable:false

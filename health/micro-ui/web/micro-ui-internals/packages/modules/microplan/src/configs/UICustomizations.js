@@ -110,7 +110,7 @@ export const UICustomizations = {
             <div>
               {microplanFileId && row?.status == "RESOURCE_ESTIMATIONS_APPROVED" ? (
                 <div>
-                  <ButtonNew onClick={handleDownload} label={t("WBH_DOWNLOAD_MICROPLAN")} />
+                  <ButtonNew style={{width:"100%"}} onClick={handleDownload} label={t("WBH_DOWNLOAD_MICROPLAN")} />
                 </div>
               ) : (
                 <Dropdown
