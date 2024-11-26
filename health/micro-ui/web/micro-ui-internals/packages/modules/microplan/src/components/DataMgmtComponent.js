@@ -22,7 +22,11 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
     // }
     return (
         <>
+            <Card className="middle-child">
+                <Header className="summary-main-heading">{t(`MICROPLAN_DATA_CONFIGURATION_HEADING`)} </Header>
+            </Card>
             <Card className="mp-margin-bottom">
+            
                 <div className="mp-header-container">
                     <Header className="summary-sub-heading">
                         {t(`POPULATION`)}
