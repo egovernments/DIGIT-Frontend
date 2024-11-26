@@ -84,6 +84,7 @@ const VillageHierarchyTooltipWrapper = ({ boundaryCode,placement="right",wrapper
             display: "flex",
             alignItems: "flex-start",
             width: "100%",
+            gap:"0.25rem"
           }}
         >
           <span
@@ -91,6 +92,8 @@ const VillageHierarchyTooltipWrapper = ({ boundaryCode,placement="right",wrapper
               fontWeight: "bold",
               flex: 1,
               textAlign: "left", 
+              whiteSpace:"normal",
+              wordBreak:"break-word"
             }}
           >
             {t(item.type)}:
