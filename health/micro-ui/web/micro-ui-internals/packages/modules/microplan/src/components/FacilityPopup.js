@@ -460,12 +460,12 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
           heading={`${t(`MICROPLAN_ASSIGNMENT_FACILITY`)} ${details?.additionalDetails?.facilityName}`}
           children={[
             <div className="facilitypopup-serach-results-wrapper">
-              {iskpiDataLoading? <Loader/>:<Card className="fac-middle-child">
+              {iskpiDataLoading? <Loader/>:<Card className="fac-middle-child" style={{margin:"0rem",padding:"1.5rem"}}>
                 <div className="fac-kpi-container">
                   {kpiParams.map(({ key, value }) => (
-                    <div key={key} className="fac-kpi-card">
-                      <p className="mp-fac-value">{value}</p>
-                      <p className="mp-fac-key">{t(`MICROPLAN_${key.toUpperCase()}`)}</p>
+                    <div key={key} className="fac-kpi-card" style={{padding:"0rem"}}>
+                      <p style={{margin:"0rem",marginBottom:"1rem"}} className="mp-fac-value">{value}</p>
+                      <p style={{margin:"0rem"}} className="mp-fac-key">{t(`MICROPLAN_${key.toUpperCase()}`)}</p>
                     </div>
                   ))}
                 </div>
@@ -547,6 +547,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
                       selectableRowsComponentProps={selectProps}
                       conditionalRowStyles={conditionalRowStyles}
                       fixedHeader={true}
+                      className={"facility-popup-table-no-frozen-columns"}
                       fixedHeaderScrollHeight={"100vh"}
                       sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
                     />

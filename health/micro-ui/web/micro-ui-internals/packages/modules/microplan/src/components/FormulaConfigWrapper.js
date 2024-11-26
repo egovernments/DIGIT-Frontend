@@ -58,6 +58,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
     const curr = Digit.SessionStorage.get("MICROPLAN_DATA")?.FORMULA_CONFIGURATION?.formulaConfiguration?.formulaConfigValues;
     if (curr?.length > 0) {
       setFormulaParams(curr);
+      setFormulaConfigValues(curr);
     }
   }, []);
 
@@ -194,7 +195,14 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
 
   const handleNext = () => {
     //here just check formulConfigValues
-    if (formulaConfigValues.some((i) => i.operatorName === "SUBSTRACTION" && i.input === i.assumptionValue)) {
+    if (formulaConfigValues?.filter((row) => row?.category === currentCategory)?.filter((i) => i.source === "MDMS")?.length === 0) {
+      setShowToast({
+        key: "error",
+        label: t("ATLEAST_ONE_MDMS_FORMULA"),
+        transitionTime: 3000,
+      });
+      return;
+    } else if (formulaConfigValues.some((i) => i.operatorName === "SUBSTRACTION" && i.input === i.assumptionValue)) {
       setShowToast({
         key: "error",
         label: t("ERR_MANDATORY_FIELD_SAME_OPERAND"),
@@ -442,7 +450,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
       // Assuming 1 is the first step
       Digit.Utils.microplanv1.updateUrlParams({ isFormulaLastVerticalStep: false });
     }
-  }, [formulaInternalKey]);
+  }, [formulaInternalKey, ruleConfigurationCategories]);
 
   //array of objects each with operatorCode and operatorName
   const operators = state.RuleConfigureOperators;

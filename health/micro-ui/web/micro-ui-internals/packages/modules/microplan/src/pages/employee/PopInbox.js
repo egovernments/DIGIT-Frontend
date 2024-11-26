@@ -334,7 +334,6 @@ const PopInbox = () => {
 
   const { isLoading: isEmployeeLoading, data: employeeData, refetch: refetchHrms } = Digit.Hooks.useCustomAPIHook(reqCri);
 
-
   useEffect(() => {
     // Create a map of assignee IDs to names for easy lookup
     const nameMap = employeeData?.Employees?.reduce((acc, emp) => {
@@ -353,6 +352,7 @@ const PopInbox = () => {
 
   useEffect(() => {
     if (data) {
+
       setCensusData(data?.Census);
       setTotalRows(data?.TotalCount)
       // reorder the status count to show pending for validation on top
@@ -366,11 +366,11 @@ const PopInbox = () => {
 
 
       // Set reordered data to active filter
-      setActiveFilter(reorderedStatusCount);
+    setActiveFilter(reorderedStatusCount);
 
-      const uniqueAssignees = [...new Set(data.Census.map(item => item.assignee).filter(Boolean))];
+      const uniqueAssignees = [...new Set(data?.Census?.flatMap(item => item.assignee || []))];
+
       setAssigneeUuids(uniqueAssignees.join(","));
-
 
 
       const activeFilterKeys = Object.keys(reorderedStatusCount || {});
@@ -735,7 +735,7 @@ const PopInbox = () => {
           actionFields={[
             <Button label={t(`HCM_MICROPLAN_POP_INBOX_BACK_BUTTON`)} onClick={()=> {
               history.push(`/${window.contextPath}/employee`);
-            }} type="button" variation="primary" />,
+            }} type="button" variation="primary" icon={"ArrowBack"}/>,
           ]}
           className=""
           maxActionFieldsAllowed={5}

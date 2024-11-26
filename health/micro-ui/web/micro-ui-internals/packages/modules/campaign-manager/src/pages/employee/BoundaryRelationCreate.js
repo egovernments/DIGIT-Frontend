@@ -574,104 +574,109 @@ const onConfirmClick=()=>{
         }
         else {
             return (
-                <React.Fragment>
-                    {firstPage && (
-                        <div>
-                            <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
-                                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                    <div className="hierarchy-boundary-heading">{t("CREATE_BOUNDARY_HIERARCHY")}</div>
-                                </div>
-                                <div style={{ height: "1.5rem" }}></div>
-                                <div>
-                                    {t("BOUNDARY_HIERARCHY_INFO_MSG")}
-                                </div>
-                                <div style={{ height: "2rem" }}></div>
-                                <div>
-                                    {
-                                        newBoundaryData.map((item, index) => (
-                                            <div>
-                                                <div style={{ display: "flex" }}>
-                                                    <div className="hierarchy-boundary-sub-heading">{t("LEVEL")} {index + 1}</div>
-                                                    <div style={{ display: "flex", gap: "1rem" }}>
-                                                        <TextInput
-                                                            type={"text"}
-                                                            populators={{
-                                                                resizeSmart: false
-                                                            }}
-                                                            style={{ width: "27rem", display: "flex", justifyContent: "flex-end" }}
-                                                            value={item?.boundaryType}
-                                                            onChange={(event) => addLevelName(event.target.value, index)}
-                                                            placeholder={""}
-                                                        />
-                                                        <div className="dustbin-icon" onClick={() => removeLevel(index)}>
-                                                            <DustbinIcon />
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                                <div style={{ height: "1.5rem" }}></div>
-                                            </div>
-                                        ))
-                                    }
-                                    <Button
-                                        className="custom-class"
-                                        icon="Add"
-                                        iconFill=""
-                                        label={t("ADD_HIERARCHY_LEVEL")}
-                                        onClick={() => addLevel()}
-                                        size="medium"
-                                        title=""
-                                        variation="secondary"
-                                        textStyles={{ width: 'unset' }}
-                                    />
-                                </div>
-                            </Card>
-                        </div>
-                    )}
-                    <FinalPopup showFinalPopUp={showFinalPopup} setShowFinalPopup={setShowFinalPopup} onConfirmClick={onConfirmClick}   />
-                    <ActionBar
-                        actionFields={[
-                            <Button
-                                icon="ArrowBack"
-                                style={{ marginLeft: "3.5rem" }}
-                                label={t("COMMON_BACK")}
-                                onClick={goBackToBoundary}
-                                type="button"
-                                variation="secondary"
-                                textStyles={{ width: 'unset' }}
-                            />,
-                            <Button
-                                icon="ArrowForward"
-                                style={{ marginLeft: "auto" }}
-                                isSuffix
-                                label={t("CMN_BOUNDARY_REL_CREATE")}
-                                // onClick={goToPreview} 
-                                isDisabled={creatingData}
-                                onClick={() => {
-                                    const checkValid= newBoundaryData?.every(obj=>obj?.boundaryType);
-                                         if(checkValid){
-                                            setShowFinalPopup(true)
-                                         }else if(newBoundaryData?.some(obj=>obj?.boundaryType)){
-                                            setShowToast({ label: "CMN_ATLEAST_ONE_HIERARCHY", isError: "error" })
-                                         }else{ setShowToast({ label: "CMN_FILLORDELETE_CREATED_HIERARCHY", isError: "error" });
-                                        }
-
-                                     }}
-                                type="button"
-                                textStyles={{ width: 'unset' }}
-                            />
-                        ]}
-                        className="custom-action-bar"
-                        maxActionFieldsAllowed={5}
-                        setactionFieldsToRight
-                        sortActionFields
-                        style={{}}
-                    />
-                    {showToast && <Toast label={showToast.label} type={showToast.isError} transitionTime={showToast?.transitionTime} onClose={() => setShowToast(null)} />}
-                    {creatingData&&<LoaderWithGap text={t("DATA_SYNC_WITH_SERVER")} />}
-                </React.Fragment>
-
-
+              <React.Fragment>
+                {firstPage && (
+                  <div>
+                    <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
+                      <div style={{ display: "flex", justifyContent: "space-between" }}>
+                        <div className="hierarchy-boundary-heading">{t("CREATE_BOUNDARY_HIERARCHY")}</div>
+                      </div>
+                      <div style={{ height: "1.5rem" }}></div>
+                      <div>{t("BOUNDARY_HIERARCHY_INFO_MSG")}</div>
+                      <div style={{ height: "2rem" }}></div>
+                      <div>
+                        {newBoundaryData.map((item, index) => (
+                          <div>
+                            <div style={{ display: "flex" }}>
+                              <div className="hierarchy-boundary-sub-heading">
+                                {t("LEVEL")} {index + 1}
+                                {index === 0 && <span className="mandatory-span">*</span>}
+                              </div>
+                              <div style={{ display: "flex", gap: "1rem" }}>
+                                <TextInput
+                                  type={"text"}
+                                  populators={{
+                                    resizeSmart: false,
+                                  }}
+                                  style={{ width: "27rem", display: "flex", justifyContent: "flex-end" }}
+                                  value={item?.boundaryType}
+                                  onChange={(event) => addLevelName(event.target.value, index)}
+                                  placeholder={""}
+                                />
+                                {index !== 0 && (
+                                  <div className="dustbin-icon" onClick={() => removeLevel(index)}>
+                                    <DustbinIcon />
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <div style={{ height: "1.5rem" }}></div>
+                          </div>
+                        ))}
+                        <Button
+                          className="custom-class"
+                          icon="Add"
+                          iconFill=""
+                          label={t("ADD_HIERARCHY_LEVEL")}
+                          onClick={() => addLevel()}
+                          size="medium"
+                          title=""
+                          variation="secondary"
+                          textStyles={{ width: "unset" }}
+                        />
+                      </div>
+                    </Card>
+                  </div>
+                )}
+                <FinalPopup showFinalPopUp={showFinalPopup} setShowFinalPopup={setShowFinalPopup} onConfirmClick={onConfirmClick} />
+                <ActionBar
+                  actionFields={[
+                    <Button
+                      icon="ArrowBack"
+                      style={{ marginLeft: "3.5rem" }}
+                      label={t("COMMON_BACK")}
+                      onClick={goBackToBoundary}
+                      type="button"
+                      variation="secondary"
+                      textStyles={{ width: "unset" }}
+                    />,
+                    <Button
+                      icon="ArrowForward"
+                      style={{ marginLeft: "auto" }}
+                      isSuffix
+                      label={t("CMN_BOUNDARY_REL_CREATE")}
+                      // onClick={goToPreview}
+                      isDisabled={creatingData}
+                      onClick={() => {
+                        const checkValid = newBoundaryData?.every((obj) => obj?.boundaryType);
+                        if (checkValid) {
+                          setShowFinalPopup(true);
+                        } else if (newBoundaryData?.some((obj) => obj?.boundaryType)) {
+                            setShowToast({ label: t("CMN_FILLORDELETE_CREATED_HIERARCHY"), isError: "error" });
+                        } else {
+                          setShowToast({ label: t("CMN_ATLEAST_ONE_HIERARCHY"), isError: "error" });
+                        }
+                      }}
+                      type="button"
+                      textStyles={{ width: "unset" }}
+                    />,
+                  ]}
+                  className="custom-action-bar"
+                  maxActionFieldsAllowed={5}
+                  setactionFieldsToRight
+                  sortActionFields
+                  style={{}}
+                />
+                {showToast && (
+                  <Toast
+                    label={showToast.label}
+                    type={showToast.isError}
+                    transitionTime={showToast?.transitionTime}
+                    onClose={() => setShowToast(null)}
+                  />
+                )}
+                {creatingData && <LoaderWithGap text={t("DATA_SYNC_WITH_SERVER")} />}
+              </React.Fragment>
             );
         }
     }

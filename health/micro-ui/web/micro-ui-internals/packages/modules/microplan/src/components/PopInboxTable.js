@@ -12,6 +12,7 @@ import { tableCustomStyle,getTableCustomStyle } from "./tableCustomStyle";
 import { CustomLoader } from "./RoleTableComposer";
 import { min } from "lodash";
 import VillageHierarchyTooltipWrapper from "./VillageHierarchyTooltipWrapper";
+import AssigneeChips from "./AssigneeChips";
 
 const PopInboxTable = ({ ...props }) => {
   const { t } = useTranslation();
@@ -57,7 +58,16 @@ const PopInboxTable = ({ ...props }) => {
       },
       {
         name: t("INBOX_ASSIGNEE"),
-        selector: (row, index) => props?.employeeNameData?.[row?.assignee] || t("ES_COMMON_NA"),
+        selector: (row, index) =>
+          row?.assignee?.length > 0 ? (
+            <AssigneeChips
+              assignees={row?.assignee} 
+              assigneeNames={props?.employeeNameData} 
+              heading={t("HCM_MICROPLAN_POP_INBOX_TOTAL_ASSIGNEES")} 
+            />
+          ) : (
+            t("ES_COMMON_NA") 
+          ),
         sortable: true,
         width: "180px",
       },
@@ -175,7 +185,7 @@ const PopInboxTable = ({ ...props }) => {
     <DataTable
       columns={columns}
       data={props.censusData}
-      className={!props.disabledAction ? "selectable" : "unselectable"}
+      className={`data-table ${!props.disabledAction ? "selectable" : "unselectable"}`}
       selectableRows={!props.disabledAction}
       selectableRowsHighlight
       noContextMenu
