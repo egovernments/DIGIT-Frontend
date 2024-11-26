@@ -326,6 +326,9 @@ const BoundaryRelationCreate = () => {
         }
     };
 
+    const trimming = (val)=>{
+        return `${hierarchyType}_${val.trim().replace(/[\s_]+/g, '')}`.toUpperCase();
+    }
 
     const createNewHierarchy = async () => {
 
@@ -343,13 +346,13 @@ const BoundaryRelationCreate = () => {
 
             const local = [
                 ...boundaryData.map(item => ({
-                    code: `${hierarchyType}_${item.boundaryType.trim().replace(/[\s_]+/g, '')}`.toUpperCase(),
+                    code: trimming(item.boundaryType),
                     message: `${t((defaultHierarchyType + "_" + item?.boundaryType).toUpperCase())}`,
                     module: `hcm-boundary-${hierarchyType.toLowerCase()}`,
                     locale: locale
                 })),
                 ...newBoundaryData.map(item => ({
-                    code: `${hierarchyType}_${item.boundaryType.trim().replace(/[\s_]+/g, '')}`.toUpperCase(),
+                    code: trimming(item.boundaryType),
                     message: item.boundaryType.trim(),
                     module: `hcm-boundary-${hierarchyType.toLowerCase()}`,
                     locale: locale

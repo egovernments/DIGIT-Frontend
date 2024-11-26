@@ -370,6 +370,10 @@ const ViewHierarchy = () => {
 
     }
 
+    const trimming = (val)=>{
+      return `${t(( hierarchyType + "_" + val.trim().replace(/[\s_]+/g, '')).toUpperCase())}`;
+    }
+
     const [showPopUp, setShowPopUp] = useState(false);
    
     if(!viewState || isLoading)
@@ -397,7 +401,7 @@ const ViewHierarchy = () => {
                                         return (
                                             <div>
                                                 <div className="hierarchy-boundary-sub-heading2">
-                                                    {`${t(( hierarchyType + "_" + hierItem?.boundaryType.trim().replace(/[\s_]+/g, '')).toUpperCase())}`}
+                                                    {trimming(hierItem?.boundaryType)}
                                                 </div>
                                                 <div style={{height:"1rem"}}></div>
                                                 {/* <Card type={"primary"} variant={"form"} className={"question-card-container"} >
@@ -416,7 +420,7 @@ const ViewHierarchy = () => {
                                           <div>
                                             <div style={{ display: "flex", justifyContent: "space-between" }} key={index}>
                                               <div className="hierarchy-boundary-sub-heading2">
-                                                {`${t(( hierarchyType + "_" + hierItem?.boundaryType.trim().replace(/[\s_]+/g, '')).toUpperCase().replace(/\s+/g, "_"))}`}
+                                                {trimming(hierItem?.boundaryType)}
                                               </div>
                                               {/* <input
                                                 ref={inputRef}
@@ -448,7 +452,8 @@ const ViewHierarchy = () => {
                                     return (
                                       <div>
                                         <div style={{ display: "flex", justifyContent: "space-between" }} key={index}>
-                                          <div className="hierarchy-boundary-sub-heading2">{`${t(( hierarchyType + "_" + hierItem?.boundaryType.trim().replace(/[\s_]+/g, '')).toUpperCase().replace(/\s+/g, "_"))}`}
+                                          <div className="hierarchy-boundary-sub-heading2">
+                                            {trimming(hierItem?.boundaryType)}
                                           </div>
                                           {/* <Uploader
                                                         onUpload={() => {}}
