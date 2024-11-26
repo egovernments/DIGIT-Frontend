@@ -498,7 +498,14 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
 
 
                     if (!(selectedDeletedFormula?.name && /^[a-zA-Z0-9]*$/.test(selectedDeletedFormula?.name) && selectedDeletedFormula?.name.length < 100)) {
-                      setWrongFormulaNameToast(true);
+                      setShowToast({
+                        key: "error",
+                        label: t("MP_FORMULA_LENGTH_LESS_THAN_100") ,
+                        transitionTime: 3000,
+                        style: {
+                          zIndex: 1000000
+                        }
+                      });
                       return
                     }
 
@@ -549,7 +556,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                 style={{ zIndex: 9999 }}
                 type={"error"}
                 label={t("MP_FORMULA_LENGTH_LESS_THAN_100")}
-                onClose={() => setWrongFormulaNameToast(false)}
+                onClose={() => setShowToast(false)}
               />
             }
           </>
