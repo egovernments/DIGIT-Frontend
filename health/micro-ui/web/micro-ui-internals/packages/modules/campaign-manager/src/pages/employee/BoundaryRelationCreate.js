@@ -326,9 +326,9 @@ const BoundaryRelationCreate = () => {
         }
     };
 
-    const trimming = (val)=>{
-        return `${hierarchyType}_${val.trim().replace(/[\s_]+/g, '')}`.toUpperCase();
-    }
+    const trimming = (val) => {
+        return val.trim().replace(/[\s_]+/g, '');
+    };
 
     const createNewHierarchy = async () => {
 
@@ -346,13 +346,13 @@ const BoundaryRelationCreate = () => {
 
             const local = [
                 ...boundaryData.map(item => ({
-                    code: trimming(item.boundaryType),
+                    code: `${hierarchyType}_${trimming(item.boundaryType)}`.toUpperCase(),
                     message: `${t((defaultHierarchyType + "_" + item?.boundaryType).toUpperCase())}`,
                     module: `hcm-boundary-${hierarchyType.toLowerCase()}`,
                     locale: locale
                 })),
                 ...newBoundaryData.map(item => ({
-                    code: trimming(item.boundaryType),
+                    code: `${hierarchyType}_${trimming(item.boundaryType)}`.toUpperCase(),
                     message: item.boundaryType.trim(),
                     module: `hcm-boundary-${hierarchyType.toLowerCase()}`,
                     locale: locale
@@ -420,7 +420,7 @@ const onConfirmClick=()=>{
         setNewBoundaryData((prevItems) => {
             // Loop through the array starting from the second element
             return prevItems.map((item, idx) => {
-                item.boundaryType = item.boundaryType.trim().replace(/[\s_]+/g, '').toUpperCase();
+                item.boundaryType = trimming(item.boundaryType).toUpperCase();
                 if (idx === 0) {
                     if (newHierarchy) item.parentBoundaryType = null;
                     else {
@@ -430,7 +430,7 @@ const onConfirmClick=()=>{
                     }
                 }
                 if (idx > 0) {
-                    item.parentBoundaryType = prevItems[idx - 1].boundaryType.trim().replace(/[\s_]+/g, '');
+                    item.parentBoundaryType = trimming(prevItems[idx - 1].boundaryType);
                 }
                 return item;
             });

@@ -109,7 +109,7 @@ const ViewHierarchy = () => {
             setShowPopUp(false);
         }
         else if ( resFile && resFile?.GeneratedResource?.[0]?.status === "inprogress"){
-          setShowToast({label: "PLEASE_WAIT_AND_RETRY_AFTER_SOME_TIME", isError: "info" });
+          setShowToast({label: t("PLEASE_WAIT_AND_RETRY_AFTER_SOME_TIME"), isError: "info" });
           setShowPopUp(false);
         }
 
