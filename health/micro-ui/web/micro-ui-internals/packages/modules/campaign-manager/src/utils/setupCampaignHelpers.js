@@ -49,7 +49,7 @@ export const cycleDataRemap=(data)=> {
         startDate: cycleStartDate,
         endDate: cycleEndDate,
         id: parseInt(cycle.cycleIndex, 10),
-        deliveries: cycle?.deliveries?.map(delivery => processDelivery(delivery, resourcesMap, ageInfo , type))
+        deliveries: cycle?.deliveries?.map(delivery => processDelivery(delivery, resourcesMap, ageInfo , type , projectType))
       };
     });
   
@@ -157,14 +157,14 @@ export const cycleDataRemap=(data)=> {
   
   }
   
-  export const  processDelivery=(delivery, resourcesMap, ageInfo , type)=> {
+  export const  processDelivery=(delivery, resourcesMap, ageInfo , type ,projectType)=> {
   
     return {
       id: parseInt(delivery.deliveryIndex, 10),
       deliveryStrategy: delivery.deliveryStrategy || "DIRECT",
       mandatoryWaitSinceLastDeliveryInDays: null,
       doseCriteria: delivery.deliveryRules.map(rule => {
-        const doseCriteriaResult = processDoseCriteria(rule, resourcesMap ,type);
+        const doseCriteriaResult = processDoseCriteria(rule, resourcesMap ,type ,projectType);
         const ages = extractAgesFromConditions(doseCriteriaResult.condition);
         if (ages.length > 0) { 
           ageInfo.maxAge = Math.max(ageInfo.maxAge, ...ages);
@@ -174,7 +174,7 @@ export const cycleDataRemap=(data)=> {
       })
     };
   }
-  export const  processDoseCriteria =(rule, resourcesMap ,type) =>{
+  export const  processDoseCriteria =(rule, resourcesMap ,type ,projectType) =>{
     rule.products.forEach(product => {
       if (resourcesMap.has(product.value)) {
         resourcesMap.get(product.value).count += product.count;
@@ -189,14 +189,19 @@ export const cycleDataRemap=(data)=> {
     });
   
     const conditions = rule.attributes.map(attr => {
+      const attributeCode = projectType === "IRS-mz" 
+      ? "structure" 
+      : projectType === "LLIN-mz" 
+      ? "memberCount" 
+      : attr?.attribute?.code;
       if (attr?.operator?.code === "IN_BETWEEN") {
         if (type === "create") {
-          return `${attr.toValue}<=${attr.attribute.code.toLowerCase()}and${attr.attribute.code.toLowerCase()}<${attr.fromValue}`;
+          return `${attr.toValue}<=${attributeCode.toLowerCase()}and${attributeCode.toLowerCase()}<${attr.fromValue}`;
         }        
         else return `${attr.toValue} <= ${attr.attribute.code} < ${attr.fromValue}`;
       } else {
         if (type === "create") {
-          return `${attr?.attribute?.code.toLowerCase()}${getOperatorSymbol(attr?.operator?.code)}${attr?.value}`;
+          return `${attributeCode.toLowerCase()}${getOperatorSymbol(attr?.operator?.code)}${attr?.value}`;
         }        
         else return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${attr?.value}`;
         
