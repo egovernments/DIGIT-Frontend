@@ -11,6 +11,8 @@ import preProcessMDMSConfig from "./preProcessMDMSConfig";
 import preProcessMDMSConfigInboxSearch from "./preProcessMDMSConfigInboxSearch";
 import * as parsingUtils from "../services/atoms/Utils/ParsingUtils"
 import { iconRender } from "./iconRender";
+import {getFieldIdName} from "./field";
+
 const GetParamFromUrl = (key, fallback, search) => {
   if (typeof window !== "undefined") {
     search = search || window.location.search;
@@ -435,5 +437,6 @@ export default {
   getRoleBasedHomeCard,
   sandboxAccess,
   iconRender,
-  transformURL
+  transformURL,
+  getFieldIdName
 };

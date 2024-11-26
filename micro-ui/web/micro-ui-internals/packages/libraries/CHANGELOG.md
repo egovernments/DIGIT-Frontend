@@ -1,9 +1,9 @@
 # Changelog
 
-## [1.8.10]  [19-Nov-2024]
-- Republihsing the same due to component version issue, 
+## [1.8.5]  [26-Nov-2024]
+- added new field util to generate field id
 
-## [1.8.4]
+## [1.8.4] [19-Nov-2024]
 - Fixed the module stablity & new components integrated, sandbox enabled 
 
 ## [1.8.3]
