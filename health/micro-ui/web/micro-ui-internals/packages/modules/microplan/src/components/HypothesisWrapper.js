@@ -452,7 +452,6 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
           label={t(showToast.label)}
           transitionTime={showToast.transitionTime}
           onClose={() => {
-            console.log("hiiii");
             setShowToast(false);
           }}
           isDleteBtn={true}
