@@ -287,7 +287,7 @@ function UserAccess({ category, setData, nationalRoles }) {
       </Card>
 
       <Card style={{ maxWidth: "100%", overflow: "auto", marginBottom: "2.5rem" }}>
-        {planEmployee?.data?.length > 0 || searchQuery? (
+        {planEmployee?.data?.length > 0 || searchQuery ? (
           <div style={styles.container}>
             <TableSearchField onSearch={handleSearch} />
             <Button
