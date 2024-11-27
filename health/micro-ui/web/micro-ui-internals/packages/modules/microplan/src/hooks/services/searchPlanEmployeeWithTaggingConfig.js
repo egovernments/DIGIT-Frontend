@@ -1,17 +1,24 @@
 const searchPlanEmployeeWithTaggingConfig = async ({ tenantId, body, limit, offset, sortOrder = "ASC", names }) => {
   try {
+    const {PlanEmployeeAssignmentSearchCriteria}= body;
+    const updatedPlanEmployeeAssignmentSearchCriteria={
+      ...PlanEmployeeAssignmentSearchCriteria,
+      tenantId: tenantId,
+      limit: limit,
+      offset: offset,
+    }    
     const response = await Digit.CustomService.getResponse({
       url: "/plan-service/employee/_search",
       useCache: false,
       method: "POST",
       userService: false,
       params: {
-        tenantId: tenantId,
-        limit: limit,
-        offset: offset,
-        sortOrder: sortOrder,
+        
+        // sortOrder: sortOrder,
       },
-      body: body,
+      body:{
+       PlanEmployeeAssignmentSearchCriteria:{...updatedPlanEmployeeAssignmentSearchCriteria}
+      }
     });
     if (!response) {
       throw new Error("Employee not found with the given role");
@@ -27,8 +34,8 @@ const searchPlanEmployeeWithTaggingConfig = async ({ tenantId, body, limit, offs
       userService: false,
       params: {
         tenantId: tenantId,
-        limit: limit,
-        offset: offset,
+        // limit: limit,
+        // offset: offset,
         sortOrder: sortOrder,
         userServiceUuids: uuids.join(","),
         names: names

@@ -59,7 +59,7 @@ function UserAccess({ category, setData, nationalRoles }) {
   } = Digit.Hooks.microplanv1.usePlanSearchEmployeeWithTagging({
     tenantId: tenantId,
     limit: rowsPerPage,
-    offset: (currentPage - 1) * 5,
+    offset: (currentPage - 1) *  rowsPerPage,
     names: searchQuery,
     body: {
       PlanEmployeeAssignmentSearchCriteria: {
