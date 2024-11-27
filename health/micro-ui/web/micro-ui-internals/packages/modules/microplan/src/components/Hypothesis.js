@@ -398,6 +398,20 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
                     });
                     return;
                   }
+                  
+                  //alphanumeric name of assumption
+                  if (!(selectedDeletedAssumption?.name && /^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/.test(selectedDeletedAssumption?.name))) {
+                    setShowToast({
+                      key: "error",
+                      label: t("MP_ASSUMPTION_NAME_INVALID") ,
+                      transitionTime: 3000,
+                      style: {
+                        zIndex: 1000000
+                      }
+                    });
+                    return
+                  }
+
                   //If no issues then go ahead and add assumption
                   addNewAssumption();
                 }}

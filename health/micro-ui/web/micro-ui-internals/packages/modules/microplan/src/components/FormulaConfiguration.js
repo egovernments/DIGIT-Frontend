@@ -518,7 +518,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                     return;
                   }
 
-                  if (!(selectedDeletedFormula?.name && /^[a-zA-Z0-9]*$/.test(selectedDeletedFormula?.name))) {
+                  if (!(selectedDeletedFormula?.name && /^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/.test(selectedDeletedFormula?.name))) {
                     setShowToast({
                       key: "error",
                       label: t("MP_FORMULA_NAME_INVALID") ,
