@@ -190,7 +190,7 @@ export const cycleDataRemap=(data)=> {
   
     const conditions = rule.attributes.map(attr => {
       const attributeCode = projectType === "IRS-mz" 
-      ? "structure" 
+      ? "TYPE_OF_STRUCTURE" 
       : projectType === "LLIN-mz" 
       ? "memberCount" 
       : attr?.attribute?.code;
