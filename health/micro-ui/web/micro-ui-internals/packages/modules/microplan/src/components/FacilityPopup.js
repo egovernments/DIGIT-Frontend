@@ -292,7 +292,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     // dynamic columns
     ...(
       (censusData?.[0]?.additionalFields || [])
-        .filter((field) => field.showOnUi && field.key.includes("CONFIRM") && field.key.includes("TARGET"))
+        .filter((field) => field.showOnUi && field.key.includes("CONFIRMED") && field.key.includes("TARGET"))
         .sort((a, b) => a.order - b.order)
         .map((field) => ({
           name: t(field.key) || t("ES_COMMON_NA"),
