@@ -65,7 +65,7 @@ const PopInboxTable = ({ ...props }) => {
           ) : (
             t("ES_COMMON_NA")
           ),
-        sortable: true,
+        sortable: false,
         width: "180px",
       },
       ...(props?.censusData?.[0]?.additionalFields || [])

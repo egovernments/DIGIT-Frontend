@@ -409,7 +409,13 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
         <ActionBar
           style={{ zIndex: "19" }}
           setactionFieldsToRight
-          actionFields={[<Button label={t("GO_BACK_TO_MY_MICROPLAN")} onClick={() => history.goBack()} />]}
+          actionFields={[
+            <Button
+              label={t("GO_BACK_TO_MY_MICROPLAN")}
+              // onClick={() => history.goBack()}
+              onClick={() => history.push(`/${window.contextPath}/employee/microplan/microplan-search`)}
+            />,
+          ]}
         />
       ) : null}
       {showToast && (

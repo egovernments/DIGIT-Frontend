@@ -529,9 +529,9 @@ const PlanInbox = () => {
       
       return {
         name: t(i?.question),
+        sortable: false,
         cell: (row) => {
           return row?.[`securityDetail_${i?.question}`] || t("ES_COMMON_NA")},
-        sortable: true,
         width: "180px",
       };
     });
@@ -554,6 +554,13 @@ const PlanInbox = () => {
       ),
       // cell: (row) => t(row?.village) || "NA",
       sortable: true,
+      sortFunction: (rowA, rowB) => {
+        const villageA = t(rowA?.village).toLowerCase();
+        const villageB = t(rowB?.village).toLowerCase();
+        if (villageA < villageB) return -1;
+        if (villageA > villageB) return 1;
+        return 0;
+      },
       width: "180px",
     },
     {
@@ -586,24 +593,45 @@ const PlanInbox = () => {
         ) : (
           t("ES_COMMON_NA")
         ),
-      sortable: true,
+      sortable: false,
       width: "180px",
     },
     {
       name: t(`HCM_MICROPLAN_SERVING_FACILITY`),
       cell: (row) => t(row?.servingFacility) || "NA",
+      sortFunction: (rowA, rowB) => {
+        const facilityA = t(rowA?.servingFacility).toLowerCase();
+        const facilityB = t(rowB?.servingFacility).toLowerCase();
+        if (facilityA < facilityB) return -1;
+        if (facilityA > facilityB) return 1;
+        return 0;
+      },
       sortable: true,
       width: "180px",
     },
     {
       name: t(`HCM_MICROPLAN_VILLAGE_ROAD_CONDITION_LABEL`),
       cell: (row) => t(row?.villageRoadCondition) || "NA",
+      sortFunction: (rowA, rowB) => {
+        const villageRoadConditionA = t(rowA?.villageRoadCondition).toLowerCase();
+        const villageRoadConditionB = t(rowB?.villageRoadCondition).toLowerCase();
+        if (villageRoadConditionA < villageRoadConditionB) return -1;
+        if (villageRoadConditionA > villageRoadConditionB) return 1;
+        return 0;
+      },
       sortable: true,
       width: "180px",
     },
     {
       name: t(`HCM_MICROPLAN_VILLAGE_TERRAIN_LABEL`),
       cell: (row) => t(row?.villageTerrain) || "NA",
+      sortFunction: (rowA, rowB) => {
+        const villageTerrainA = t(rowA?.villageTerrain).toLowerCase();
+        const villageTerrainB = t(rowB?.villageTerrain).toLowerCase();
+        if (villageTerrainA < villageTerrainB) return -1;
+        if (villageTerrainA > villageTerrainB) return 1;
+        return 0;
+      },
       sortable: true,
       width: "180px",
     },
