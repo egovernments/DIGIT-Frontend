@@ -94,7 +94,7 @@ const PlanInbox = () => {
               PlanSearchCriteria: {
                 tenantId: tenantId,
                 planConfigurationId: microplanId,
-                ...(isRootApprover ? {} : { jurisdiction: jurisdiction }),
+                ...(isRootApprover ? {} : { assignee: user.info.uuid }),
               },
             },
           },

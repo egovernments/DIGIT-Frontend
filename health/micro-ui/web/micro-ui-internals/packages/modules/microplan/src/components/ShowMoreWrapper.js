@@ -14,15 +14,8 @@ export const ShowMoreWrapper = ({ setShowPopUp, alreadyQueuedSelectedState, head
        }}
        type={"default"}
        heading={t(heading)}
-       children={[]}
-       onOverlayClick={() => {
-           setShowPopUp(false);
-       }}
-       onClose={() => {
-           setShowPopUp(false);
-       }}
-       >
-       <div className="digit-tag-container userAccessCell">
+       children={[
+        <div className="digit-tag-container userAccessCell">
       {alreadyQueuedSelectedState?.map((item, index) => (
                <Chip 
                 key={index} 
@@ -35,6 +28,14 @@ export const ShowMoreWrapper = ({ setShowPopUp, alreadyQueuedSelectedState, head
                />
          ))}  
          </div>
+       ]}
+       onOverlayClick={() => {
+           setShowPopUp(false);
+       }}
+       onClose={() => {
+           setShowPopUp(false);
+       }}
+       >
        </PopUp>
     );
 
