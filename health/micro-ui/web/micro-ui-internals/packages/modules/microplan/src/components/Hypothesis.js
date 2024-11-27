@@ -401,7 +401,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
                   
               
                   //alphanumeric name of assumption
-                  if (selectedDeletedAssumption?.code === "NEW_ASSUMPTION" && !(selectedDeletedAssumption?.name && /^(?=.*[a-zA-Z])[a-zA-Z0-9 ]+$/.test(selectedDeletedAssumption?.name))) {
+                  if (selectedDeletedAssumption?.code === "NEW_ASSUMPTION" && !(selectedDeletedAssumption?.name && /^(?=.*[a-zA-Z])[a-zA-Z0-9]+(?: [a-zA-Z0-9]+)*$/.test(selectedDeletedAssumption?.name))) {
                     setShowToast({
                       key: "error",
                       label: t("MP_ASSUMPTION_NAME_INVALID") ,
