@@ -411,6 +411,7 @@
   text-underline-position: from-font; /* Preserve font-based underline position */
   text-decoration-skip-ink: none; /* Ensure underlines do not skip over glyphs */
   color:#0B4B66;
+  line-height: normal;
 }
 
 tbody tr:last-child td:last-child .digit-dropdown-employee-select-wrap .digit-dropdown-options-card {           
