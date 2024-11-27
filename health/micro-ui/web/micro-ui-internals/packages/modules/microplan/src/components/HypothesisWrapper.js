@@ -183,7 +183,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
 
     const hasNaNFields = visibleAssumptions.some((item) => {
       const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
-      return !value || isNaN(value); // Check if any value is NAN
+      return !value || isNaN(value) || value <= 0; // Check if any value is NAN
     });
     const hasExceededUpperBound = visibleAssumptions.some((item) => {
       const value = assumptionValues.find((assumption) => assumption.key === item)?.value;

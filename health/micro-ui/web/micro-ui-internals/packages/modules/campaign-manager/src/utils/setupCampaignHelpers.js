@@ -80,7 +80,7 @@ export const cycleDataRemap=(data)=> {
     const mapProductVariants = (productVariants) => {
       return productVariants.map((variant, key) => ({
         key: key + 1,
-        count: 1,
+        quantity: variant.quantity,
         value: variant.productVariantId,
         name: variant.name,
       }));
@@ -183,7 +183,7 @@ export const cycleDataRemap=(data)=> {
           productVariantId: product.value,
           isBaseUnitVariant: false,
           name: product.name,
-          count: product.count
+          quantity: product.quantity
         });
       }
     });
@@ -201,7 +201,7 @@ export const cycleDataRemap=(data)=> {
         else return `${attr.toValue} <= ${attr.attribute.code} < ${attr.fromValue}`;
       } else {
         if (type === "create") {
-          return `${attributeCode.toLowerCase()}${getOperatorSymbol(attr?.operator?.code)}${attr?.value}`;
+          return `${projectType === "LLIN-mz" ? attributeCode : attributeCode.toLowerCase()}${getOperatorSymbol(attr?.operator?.code)}${attr?.value}`;
         }        
         else return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${attr?.value}`;
         
@@ -212,7 +212,8 @@ export const cycleDataRemap=(data)=> {
       condition: conditions.join("and"),
       ProductVariants: rule.products.map(product => ({
         productVariantId: product.value,
-        name: product.name
+        name: product.name,
+        quantity: product.quantity
       }))
     };
   }

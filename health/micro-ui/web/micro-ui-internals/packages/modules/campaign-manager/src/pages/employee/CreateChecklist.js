@@ -472,7 +472,7 @@ const CreateChecklist = () => {
         history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
           message: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE",
           preText: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE_PRE_TEXT",
-          actionLabel: "CS_CHECKLIST_NEW_RESPONSE_ACTION",
+          actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
           actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}`,
           secondaryActionLabel: "MY_CAMPAIGN",
           secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign`,
@@ -495,6 +495,10 @@ const CreateChecklist = () => {
       setShowPopUp(false);
     }
   }, [showToast])
+
+  const onSecondayActionClick = () => {
+    history.push(`/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}`);
+  };
 
 
 
@@ -616,9 +620,11 @@ const CreateChecklist = () => {
             noBreakLine={true}
             // cardClassName={"page-padding-fix"}
             onFormValueChange={onFormValueChange}
-            actionClassName={"checklistCreate"}
-            // noCardStyle={currentKey === 4 || currentStep === 7 || currentStep === 0 ? false : true}
+            actionClassName={"actionBarClass"}
             noCardStyle={true}
+            showSecondaryLabel={true}
+            secondaryLabel={t("HCM_BACK")}
+            onSecondayActionClick={onSecondayActionClick}
           // showWrapperContainers={false}
           />
 

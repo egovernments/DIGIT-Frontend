@@ -109,7 +109,7 @@ const ViewHierarchy = () => {
             setShowPopUp(false);
         }
         else if ( resFile && resFile?.GeneratedResource?.[0]?.status === "inprogress"){
-          setShowToast({label: "PLEASE_WAIT_AND_RETRY_AFTER_SOME_TIME", isError: "info" });
+          setShowToast({label: t("PLEASE_WAIT_AND_RETRY_AFTER_SOME_TIME"), isError: "info" });
           setShowPopUp(false);
         }
 
@@ -307,11 +307,11 @@ const ViewHierarchy = () => {
         return new Promise((resolve, reject) => {
           const poll = async () => {
             try {
-              if (retries >= maxRetries) {
-                setDataCreationGoing(false);
-                reject(new Error("Max retries reached"));
-                return;
-              }
+              // if (retries >= maxRetries) {
+              //   setDataCreationGoing(false);
+              //   reject(new Error("Max retries reached"));
+              //   return;
+              // }
       
               const searchResponse = await Digit.CustomService.getResponse({
                 url: "/project-factory/v1/data/_search",
@@ -353,14 +353,14 @@ const ViewHierarchy = () => {
           poll().catch(reject);
       
           // Set a timeout for the entire polling operation
-          const timeoutDuration = (maxRetries + 1) * pollInterval;
-          setTimeout(() => {
-            if (retries < maxRetries) {
-              // Only reject if not already resolved
-              setDataCreationGoing(false);
-              reject(new Error("Polling timeout"));
-            }
-          }, timeoutDuration);
+          // const timeoutDuration = (maxRetries + 1) * pollInterval;
+          // setTimeout(() => {
+          //   if (retries < maxRetries) {
+          //     // Only reject if not already resolved
+          //     setDataCreationGoing(false);
+          //     reject(new Error("Polling timeout"));
+          //   }
+          // }, timeoutDuration);
         });
       };
 
@@ -368,6 +368,10 @@ const ViewHierarchy = () => {
     const createData = async()=> {
         const res = await callCreateDataApi();
 
+    }
+
+    const trimming = (val)=>{
+      return `${t(( hierarchyType + "_" + val.trim().replace(/[\s_]+/g, '')).toUpperCase())}`;
     }
 
     const [showPopUp, setShowPopUp] = useState(false);
@@ -397,7 +401,7 @@ const ViewHierarchy = () => {
                                         return (
                                             <div>
                                                 <div className="hierarchy-boundary-sub-heading2">
-                                                    {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toUpperCase())}`}
+                                                    {trimming(hierItem?.boundaryType)}
                                                 </div>
                                                 <div style={{height:"1rem"}}></div>
                                                 {/* <Card type={"primary"} variant={"form"} className={"question-card-container"} >
@@ -416,7 +420,7 @@ const ViewHierarchy = () => {
                                           <div>
                                             <div style={{ display: "flex", justifyContent: "space-between" }} key={index}>
                                               <div className="hierarchy-boundary-sub-heading2">
-                                                {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toUpperCase().replace(/\s+/g, "_"))}`}
+                                                {trimming(hierItem?.boundaryType)}
                                               </div>
                                               {/* <input
                                                 ref={inputRef}
@@ -448,7 +452,8 @@ const ViewHierarchy = () => {
                                     return (
                                       <div>
                                         <div style={{ display: "flex", justifyContent: "space-between" }} key={index}>
-                                          <div className="hierarchy-boundary-sub-heading2">{`${t(( hierarchyType + "_" + hierItem?.boundaryType).toUpperCase().replace(/\s+/g, "_"))}`}
+                                          <div className="hierarchy-boundary-sub-heading2">
+                                            {trimming(hierItem?.boundaryType)}
                                           </div>
                                           {/* <Uploader
                                                         onUpload={() => {}}
@@ -537,8 +542,8 @@ const ViewHierarchy = () => {
                                     icon="ArrowBack" 
                                     style={{marginLeft:"3.5rem"}} 
                                     label={t("COMMON_BACK")} 
-                                    isDisabled={true}
-                                    // onClick={{}}
+                                    // isDisabled={true}
+                                    onClick={()=>{history.push(`/${window.contextPath}/employee/campaign/boundary/home`)}}
                                     type="button" 
                                     variation="secondary"  
                                     textStyles={{width:'unset'}}
