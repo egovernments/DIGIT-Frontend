@@ -32,7 +32,7 @@ const ViewHierarchy = () => {
     const [showToast, setShowToast] = useState(null); // State to handle toast notifications
     const [dataCreateToast, setDataCreateToast] = useState(false);
     const [disable, setDisable] = useState(false);
-    const [disableFile, setDisableFile] = useState(false);
+    const [disableFile, setDisableFile] = useState(true);
     const [dataCreationGoing, setDataCreationGoing] = useState(false);
     const [noOfRows, setNoOfRows] = useState(100);
 
@@ -122,10 +122,19 @@ const ViewHierarchy = () => {
     const handleFileChange = async (event) => {
         const file = [event.target.files[0]]; // Get the first selected file
         if (file) {
+          // Check file extension
+          const validExtensions = ['xls', 'xlsx'];
+          const fileExtension = file[0].name.split('.').pop().toLowerCase(); // Get the file extension
+          
+          if (!validExtensions.includes(fileExtension)) {
+              setShowToast({ label: t("INVALID_FILE_FORMAT"), isError: "error" });
+              setDisableFile(true);
+              return; // Exit the function if the file is not valid
+          }
           try {
             // Call function to upload the selected file to an API
             await uploadFileToAPI(file);
-            setDisableFile(true);
+            setDisableFile(false);
             setShowToast({ label: t("FILE_UPLOADED_SUCCESSFULLY"), isError:"success"});
           } catch (error) {
             setShowToast({ label: error?.response?.data?.Errors?.[0]?.message ? error?.response?.data?.Errors?.[0]?.message : t("FILE_UPLOAD_FAILED") , isError:"error" });
@@ -225,7 +234,7 @@ const ViewHierarchy = () => {
         
             // Initialize the label with a failure message
             label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
-            if(error?.message) label += `${t(error?.message)}`;
+            if(error?.message) label += `${t(error?.message)}`; // the message here is sent from the polling mechnism which sendds the error code from backend.
             
           }
         
@@ -550,7 +559,7 @@ const ViewHierarchy = () => {
                                 />,
                                 <Button 
                                     icon="ArrowForward" 
-                                    isDisabled={!disableFile }
+                                    isDisabled={disableFile }
                                     style={{marginLeft:"auto"}} 
                                     isSuffix 
                                     label={t("CMN_BOUNDARY_REL_DATA_CREATE_PREVIEW")} 
