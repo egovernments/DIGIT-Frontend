@@ -28,7 +28,7 @@ export const fetchFromMicroplan = async (campaignId, tenantId, planConfigId) => 
     return error;
   }
 };
-const searchCampaign = async (campaignId, tenantId) => {
+export const searchCampaign = async (campaignId, tenantId) => {
     try {
       const response = await Digit.CustomService.getResponse({
         url: `/project-factory/v1/project-type/search`,
@@ -100,7 +100,9 @@ const createCampaign = async (campaignData, tenantId, planConfigId) => {
   }
 };
 
-
+export const waitForSomeTime = (time=3000) => {
+  return new Promise((resolve) => setTimeout(resolve, time));
+};
 /**
  * Fetches consolidated data by combining campaign search and boundary data.
  *
@@ -129,7 +131,9 @@ const fetchConsolidatedData = async (tenantId, campaignId, planConfigId) => {
     }
 
     const newCampaignSearchResponse = newCampaignResponse&&newCampaignResponse?.id&& await  searchCampaign(newCampaignResponse?.id,tenantId);
-    setTimeout(()=>{},1500);
+ 
+    
+    await waitForSomeTime(3000);
 
     const updatedCampaignData =newCampaignResponse&&newCampaignResponse?.id&& newCampaignSearchResponse&&await  updateCampaign({...newCampaignSearchResponse,boundaries:campaignData?.boundaries},"update");
 
