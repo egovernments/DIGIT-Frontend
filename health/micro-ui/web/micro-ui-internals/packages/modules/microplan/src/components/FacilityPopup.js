@@ -509,7 +509,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
                     <div className={`table-actions-wrapper`}>
                       <Button
                         className={"campaign-type-alert-button"}
-                        variation="secondary"
+                        variation="primary"
                         label={
                           facilityAssignedStatus
                             ? `${t("MICROPLAN_UNASSIGN_FACILITY")} ${details?.additionalDetails?.facilityName}`

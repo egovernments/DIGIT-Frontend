@@ -315,7 +315,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
               <Button
                 type={"button"}
                 size={"large"}
-                variation={"secondary"}
+                variation={"primary"}
                 label={t("NO")}
                 onClick={() => {
                   setAssumptionsPopUp(false);
@@ -325,7 +325,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
               <Button
                 type={"button"}
                 size={"large"}
-                variation={"primary"}
+                variation={"secondary"}
                 label={t("YES")}
                 onClick={() => {
                   //here if assumption name is not given then show a toast message and return

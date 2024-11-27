@@ -566,6 +566,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
           onClose={() => {
             setShowToast(false);
           }}
+          style={{ zIndex: 9999 }}
           isDleteBtn={true}
         />
       )}
