@@ -31,7 +31,7 @@ const SummaryScreen = ({ props: customProps }) => {
         sections: [
           {
             type: "DATA",
-            cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+            cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "2rem" } },
             values: [
               {
                 key: t("CAMPAIGN_TYPE"),
