@@ -521,7 +521,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                   if (!(selectedDeletedFormula?.name && /^[a-zA-Z0-9]*$/.test(selectedDeletedFormula?.name))) {
                     setShowToast({
                       key: "error",
-                      label: t("MP_FORMULA_ENTER_ALPHA_NUMERIC_CHARACTERS") ,
+                      label: t("MP_FORMULA_NAME_INVALID") ,
                       transitionTime: 3000,
                       style: {
                         zIndex: 1000000
