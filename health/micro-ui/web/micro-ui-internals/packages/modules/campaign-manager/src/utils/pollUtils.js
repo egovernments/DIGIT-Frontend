@@ -65,5 +65,5 @@ const downloadTemplate = async (hierarchyType, campaignId, tenantId, type) => {
 
 
 export const callTemplateDownloadByUntilCompleted =async(hierarchyType,campaignId,tenantId,type)=>{
-    await pollForTemplateGeneration(()=>downloadTemplate(hierarchyType,campaignId,tenantId,type),conditionForTermination,5000,15,8000);
+    await pollForTemplateGeneration(()=>downloadTemplate(hierarchyType,campaignId,tenantId,type),conditionForTermination,5000,10,10000);
 }

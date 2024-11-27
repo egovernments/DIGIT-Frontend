@@ -28,7 +28,7 @@ export const fetchFromMicroplan = async (campaignId, tenantId, planConfigId) => 
     return error;
   }
 };
-const searchCampaign = async (campaignId, tenantId) => {
+export const searchCampaign = async (campaignId, tenantId) => {
     try {
       const response = await Digit.CustomService.getResponse({
         url: `/project-factory/v1/project-type/search`,
@@ -100,7 +100,7 @@ const createCampaign = async (campaignData, tenantId, planConfigId) => {
   }
 };
 
-const waitForSomeTime = (time=3000) => {
+export const waitForSomeTime = (time=3000) => {
   return new Promise((resolve) => setTimeout(resolve, time));
 };
 /**
