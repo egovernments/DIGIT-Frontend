@@ -112,6 +112,10 @@ const ViewHierarchy = () => {
           setShowToast({label: t("PLEASE_WAIT_AND_RETRY_AFTER_SOME_TIME"), isError: "info" });
           setShowPopUp(false);
         }
+        else{
+          setShowToast({label: t("PLEASE_WAIT_AND_RETRY_AFTER_SOME_TIME"), isError: "info" });
+          setShowPopUp(false);
+        }
 
     }
 
