@@ -34,8 +34,6 @@ const searchPlanEmployeeWithTaggingConfig = async ({ tenantId, body, limit, offs
       userService: false,
       params: {
         tenantId: tenantId,
-        // limit: limit,
-        // offset: offset,
         sortOrder: sortOrder,
         userServiceUuids: uuids.join(","),
         names: names
