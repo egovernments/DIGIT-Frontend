@@ -162,6 +162,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const reqCriteria = {
     url: `/plan-service/plan/facility/_search`,
     params: {},
+    changeQueryName: `${details.facilityId}`,
     body: {
       PlanFacilitySearchCriteria: {
         "tenantId": Digit.ULBService.getCurrentTenantId(),
@@ -171,6 +172,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
       },
     },
     config: {
+      enabled: true,
       select: (data) => data,
     },
   };
