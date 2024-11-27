@@ -287,12 +287,23 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
       ), // Replace with the appropriate field from your data
       sortable: false,
     },
-    {
-      name: t("MP_FACILITY_TOTALPOPULATION"), // Change to your column type
-      selector: (row) => row.totalPopulation, // Replace with the appropriate field from your data
-      sortable: true,
-    },
-    // Add more columns as needed
+    // dynamic columns
+    ...(
+      (censusData?.[0]?.additionalFields || [])
+        .filter((field) => field.showOnUi && !field.key.includes("TOTAL") && !field.key.includes("UPLOADED"))
+        .sort((a, b) => a.order - b.order)
+        .map((field) => ({
+          name: t(field.key) || t("ES_COMMON_NA"),
+          selector: (row) => {
+            const fieldValue = row.additionalFields.find((f) => f.key === field.key)?.value || t("ES_COMMON_NA");
+            return fieldValue;
+          },
+          sortable: true,
+          style: {
+            justifyContent: "flex-end",
+          },
+        }))
+    ),
   ];
 
   const planFacilityUpdateMutaionConfig = {
