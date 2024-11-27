@@ -8,7 +8,7 @@ import { useQuery } from "react-query";
  * @param {string} planConfigId - The plan configuration ID.
  * @returns {object} Boundary hierarchy data or error object.
  */
-const fetchFromMicroplan = async (campaignId, tenantId, planConfigId) => {
+export const fetchFromMicroplan = async (campaignId, tenantId, planConfigId) => {
   try {
     const response = await Digit.CustomService.getResponse({
       url: `/project-factory/v1/project-type/fetch-from-microplan`,
@@ -129,16 +129,16 @@ const fetchConsolidatedData = async (tenantId, campaignId, planConfigId) => {
     }
 
     const newCampaignSearchResponse = newCampaignResponse&&newCampaignResponse?.id&& await  searchCampaign(newCampaignResponse?.id,tenantId);
+    setTimeout(()=>{},1500);
 
-    const newCampaignUpdatedData =newCampaignResponse&&newCampaignResponse?.id&& newCampaignSearchResponse&&await  updateCampaign({...newCampaignSearchResponse,boundaries:campaignData?.boundaries},"update");
+    const updatedCampaignData =newCampaignResponse&&newCampaignResponse?.id&& newCampaignSearchResponse&&await  updateCampaign({...newCampaignSearchResponse,boundaries:campaignData?.boundaries},"update");
 
-    setTimeout(()=>{},2000)
     // Fetch boundary hierarchy for the new campaign
-    const fetchedCampaign = newCampaignResponse&&newCampaignResponse?.id&& newCampaignSearchResponse&&newCampaignUpdatedData&&await fetchFromMicroplan(newCampaignResponse?.id, tenantId, planConfigId);
+    // const fetchedCampaign = newCampaignResponse&&newCampaignResponse?.id&& newCampaignSearchResponse&&newCampaignUpdatedData&&await fetchFromMicroplan(newCampaignResponse?.id, tenantId, planConfigId);
 
 
 
-    return { campaignData, newCampaignSearchResponse, newCampaignUpdatedData,fetchedCampaign};
+    return { campaignData, newCampaignSearchResponse, updatedCampaignData};
   } catch (error) {
     console.error("Error fetching consolidated data:", error);
     return { error };

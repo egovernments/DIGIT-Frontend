@@ -15,7 +15,7 @@ import ViewChecklist from "./ViewChecklist";
 import UpdateChecklist from "./UpdateChecklist";
 import BoundaryHome from "./BoundaryHome";
 import ApprovedMicroplans from "./ApprovedMicroplans";
-import DummyLoaderScreen from "../../components/fetchFromMicroplan";
+import FetchFromMicroplan from "../../components/fetchFromMicroplan";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -137,7 +137,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
           <PrivateRoute path={`${path}/create-campaign/delivery-details`} component={() => <DeliveryRule />} />
           <PrivateRoute path={`${path}/setup-campaign`} component={() => <SetupCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData}/>} />
           <PrivateRoute path={`${path}/my-campaign`} component={() => <MyCampaign />} />
-          <PrivateRoute path={`${path}/fetch-from-microplan`} component={() => <DummyLoaderScreen />} />
+          <PrivateRoute path={`${path}/fetch-from-microplan`} component={() => <FetchFromMicroplan />} />
           <PrivateRoute path={`${path}/preview`} component={() => <CampaignSummary />} />
           <PrivateRoute path={`${path}/response`} component={() => <Response />} />
           <PrivateRoute path={`${path}/selecting-boundary`} component={() => <SelectingBoundaries />} />
