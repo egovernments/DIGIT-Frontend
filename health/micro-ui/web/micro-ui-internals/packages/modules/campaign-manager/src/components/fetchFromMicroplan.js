@@ -108,9 +108,16 @@ const FetchFromMicroplanScreen = () => {
         setMicroplan({
           ...fetchFromMicroplanResponse,
         });
+        const MICROPLAN_FETCH_STEP = 7;
+        const MICROPLAN_FETCH_TIMEOUT = 8000;
+        
+        // Show loading state
+        setShowToast({ key: "info", label: t("FETCHING_MICROPLAN_DATA") });
+        
         setTimeout(() => {
-          setCurrentStep((prev) => 7);
-        }, 8000);
+          // Ensure progressive updates
+          setCurrentStep((prev) => Math.min(prev + 1, MICROPLAN_FETCH_STEP));
+        }, MICROPLAN_FETCH_TIMEOUT);
       } catch (error) {
         console.error("Error fetching microplan data:", error);
       }
