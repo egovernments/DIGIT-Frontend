@@ -57,7 +57,7 @@ const getDeliveryConfig = ({ data, projectType }) => {
             productSet.add(variant.productVariantId);
             productConfig.push({
               key: productConfig.length + 1,
-              count: variant.quantity || 1,
+              quantity: variant.quantity || 1,
               value: variant.productVariantId,
               name: variant.name,
             });
@@ -106,7 +106,7 @@ const generateMRDNConfig = (data) => {
       const productConfig = dose.ProductVariants.map(variant => ({
         key: 1,
         name: variant.name,
-        count: variant.quantity,
+        quantity: variant.quantity,
         value: variant.productVariantId
       }));
       

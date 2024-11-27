@@ -146,7 +146,11 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
     <>
       <Card className="middle-child">
         <Header className="uploader-sub-heading">{t(category)}</Header>
-        <p className="mp-description">{t(`RESOURCE_CALCULATION`)}</p>
+        {category === "CAMPAIGN_VEHICLES" ? (
+          <p className="mp-description">{t(`ASSUMPTION_VEHICLE_DESCRIPTION`)}</p>
+        ) : (
+          <p className="mp-description">{t(`RESOURCE_CALCULATION`)}</p>
+        )}
       </Card>
 
       <Card>
@@ -305,24 +309,48 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
             }
             onOverlayClick={() => {
               setAssumptionsPopUp(false);
+              setSelectedDeletedAssumption(null);
             }}
             footerChildren={[
               <Button
                 type={"button"}
                 size={"large"}
-                variation={"secondary"}
+                variation={"primary"}
                 label={t("NO")}
                 onClick={() => {
                   setAssumptionsPopUp(false);
+                  setSelectedDeletedAssumption(null);
                 }}
               />,
               <Button
                 type={"button"}
                 size={"large"}
-                variation={"primary"}
+                variation={"secondary"}
                 label={t("YES")}
                 onClick={() => {
                   //here if assumption name is not given then show a toast message and return
+                  if (category !== "CAMPAIGN_VEHICLES" && assumptions?.includes(selectedDeletedAssumption?.name)) {
+                    setShowToast({
+                      key: "error",
+                      label: t("SELECT_ASSUMPTION_ALREADY_ADDED"),
+                      transitionTime: 3000,
+                      style: {
+                        zIndex: 1000000,
+                      },
+                    });
+                    return;
+                  }
+                  if (category === "CAMPAIGN_VEHICLES" && assumptions?.includes(selectedDeletedAssumption?.model)) {
+                    setShowToast({
+                      key: "error",
+                      label: t("SELECT_ASSUMPTION_ALREADY_ADDED"),
+                      transitionTime: 3000,
+                      style: {
+                        zIndex: 1000000,
+                      },
+                    });
+                    return;
+                  }
                   if (selectedDeletedAssumption?.name?.length > 100) {
                     setShowToast({
                       key: "error",
@@ -378,6 +406,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
             sortFooterChildren={true}
             onClose={() => {
               setAssumptionsPopUp(false);
+              setSelectedDeletedAssumption(null);
             }}
           ></PopUp>
         )}

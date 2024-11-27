@@ -81,10 +81,10 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
       [fieldKey]: value,
     });
   
-    let error = !value || Number(value) <= 0 || Number(value) > 100000;
+    let error = !value || Number(value) <= 0 || Number(value) > 100000 || !Number.isInteger(Number(value));
   
   // Additional check for TARGET_POPULATION vs TOTAL_POPULATION
-if (fieldKey.includes("TARGET_POPULATION")) {
+  if (fieldKey.includes("TARGET_POPULATION")) {
 
   // Find the corresponding TOTAL_POPULATION field
   const totalPopulationField = census.additionalFields.find(
@@ -110,6 +110,24 @@ if (fieldKey.includes("TARGET_POPULATION")) {
       setTargetExceed(true);
       setShowToast({ key: "error", label: t("HCM_MICROPLAN_TARGET_CANNOT_EXCEED_TOTAL") });
     }
+  }
+  }
+
+ // Check for TOTAL_POPULATION being less than TARGET_POPULATION sum
+ if (fieldKey.includes("TOTAL_POPULATION")) {
+  // Calculate the sum of all TARGET_POPULATION values
+  const targetPopulationSum = census.additionalFields
+    .filter((field) => field.key.includes("CONFIRMED_HCM_ADMIN_CONSOLE_TARGET_POPULATION"))
+    .reduce((sum, field) => {
+      const fieldValue = confirmedValues[field.key] || field.value || 0;
+      return sum + Number(fieldValue);
+    }, 0);
+
+  // Check if TOTAL_POPULATION is less than the sum of TARGET_POPULATION
+  if (Number(value) < targetPopulationSum) {
+    setTargetExceed(true);
+    setShowToast({ key: "error", label: t("HCM_MICROPLAN_TOTAL_CANNOT_BE_LESS_THAN_TARGET") });
+    error = true;
   }
 }
 

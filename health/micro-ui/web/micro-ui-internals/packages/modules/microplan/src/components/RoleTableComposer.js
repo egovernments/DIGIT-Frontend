@@ -1,4 +1,4 @@
-import { Button, Card, Dropdown, Loader, MultiSelectDropdown, TableMolecule, Toast, CardText,PopUp,CustomSVG } from "@egovernments/digit-ui-components";
+import { Button, Card, Dropdown, Loader, TableMolecule, Toast, CardText,PopUp,CustomSVG } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DataTable from "react-data-table-component";
@@ -45,6 +45,7 @@ function RoleTableComposer({ nationalRoles }) {
   const queryClient = useQueryClient();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const totalFormData = Digit.SessionStorage.get("MICROPLAN_DATA");
+  const MultiSelectWrapper = Digit.ComponentRegistryService.getComponent("MultiSelectDropdownBoundary");
   const selectedData = totalFormData?.BOUNDARY?.boundarySelection?.selectedData || [];
   const { hierarchyData, category } = useUserAccessContext();
   const { state, lowestHierarchy } = useMyContext();
@@ -388,31 +389,36 @@ function RoleTableComposer({ nationalRoles }) {
 
     {
       name: t("SELECTED_BOUNDARY"),
+      grow: 2,
       cell: (row) => {
         const isUserAlreadyAssignedActive =
           HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.length > 0 &&
-            HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
+          HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
             ? true
             : false;
         return (
-          <MultiSelectDropdown
-            disabled={
-              isUserAlreadyAssignedActive ||
+          <div style={{ width: "100%" }}>
+            <MultiSelectWrapper
+              disabled={
+                isUserAlreadyAssignedActive ||
                 nationalRoles?.includes(category) ||
                 !rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedHierarchy
-                ? true
-                : false
-            }
-            props={{ className: "roleTableCell" }}
-            t={t}
-            options={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.boundaryOptions || []}
-            optionsKey={"code"}
-            selected={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedBoundaries || []}
-            onSelect={(value) => handleBoundaryChange(value, row)}
-            addCategorySelectAllCheck={true}
-            addSelectAllCheck={true}
-            variant="nestedmultiselect"
-          />
+                  ? true
+                  : false
+              }
+              props={{ className: "roleTableCell" }}
+              t={t}
+              options={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.boundaryOptions || []}
+              optionsKey={"code"}
+              selected={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedBoundaries || []}
+              onClose={(value) => handleBoundaryChange(value, row)}
+              onSelect={()=>{}}
+              addCategorySelectAllCheck={true}
+              addSelectAllCheck={true}
+              style={{ width: "100%" }}
+              variant="nestedmultiselect"
+            />
+          </div>
         );
       },
       sortable:false

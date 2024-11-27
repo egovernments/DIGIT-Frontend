@@ -2662,13 +2662,11 @@ $border-color: rgba(214, 213, 212, 1);
 .digit-dropdown-employee-select-wrap.roleTableCell {
   .digit-dropdown-options-card {
     position: absolute;
-    max-width: 14rem;
   }
 }
 
 .digit-multiselectdropdown-wrap.roleTableCell.nestedmultiselect {
   margin: 0;
-  width: 13rem;
   min-width: 13rem !important;
 
   .digit-multiselectdropdown-server {
@@ -2676,11 +2674,6 @@ $border-color: rgba(214, 213, 212, 1);
     position: absolute !important;
     max-width: unset !important;
     max-height: 15rem !important;
-    width: 14rem !important;
-
-    .category-selectAll-label{
-      display: none;
-    }
   }
 }
 
