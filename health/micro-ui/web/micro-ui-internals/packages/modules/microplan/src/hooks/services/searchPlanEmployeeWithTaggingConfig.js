@@ -1,6 +1,5 @@
 const searchPlanEmployeeWithTaggingConfig = async ({ tenantId, body, limit, offset, sortOrder = "ASC", names }) => {
   try {
-    const {PlanEmployeeAssignmentSearchCriteria}= body;  
     const response = await Digit.CustomService.getResponse({
       url: "/plan-service/employee/_search",
       useCache: false,
