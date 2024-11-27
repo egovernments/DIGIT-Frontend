@@ -162,20 +162,28 @@ const FetchFromMicroplanScreen = () => {
     }
   }, [currentStep, data]);
 
-  useEffect(async () => {
-    if (currentStep === steps.length - 2) {
-      if (completed == null) {
-        const response = await searchCampaign(data?.updatedCampaignData?.id, data?.updatedCampaignData?.tenantId);
-        if (response?.resources && response?.resources?.length > 0) {
-          setCompleted({ ...response });
-          setCurrentStep((curr) => curr + 1);
-        } else {
-          setShowToast({ key: "warn", label: t("SOME_ERROR_OCCURED_IN_FETCH_RETRYING") });
-
-          setCurrentStep(TEMPLATE_GENERATION_STEP);
+  useEffect(() => {
+    const fetchCampaign = async () => {
+      if (currentStep === steps.length - 2 && completed == null) {
+        try {
+          const response = await searchCampaign(
+            data?.updatedCampaignData?.id,
+            data?.updatedCampaignData?.tenantId
+          );
+          if (response?.resources && response?.resources?.length > 0) {
+            setCompleted({ ...response });
+            setCurrentStep((curr) => curr + 1);
+          } else {
+            setShowToast({ key: "warn", label: t("SOME_ERROR_OCCURED_IN_FETCH_RETRYING") });
+            setCurrentStep(TEMPLATE_GENERATION_STEP);
+          }
+        } catch (error) {
+          console.error("Error fetching campaign:", error);
+          setShowToast({ key: "error", label: t("ERROR_FETCHING_CAMPAIGN") });
         }
       }
-    }
+    };
+    fetchCampaign();
   }, [currentStep, completed]);
 
   useEffect(async () => {
