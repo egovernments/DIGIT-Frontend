@@ -38,7 +38,7 @@ const UserAccessMgmtTableWrapper = ({ role, internalKey, setupCompleted }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage] = useState(5);
+  const [rowsPerPage,setRowsPerPage] = useState(5);
   const [totalRows, setTotalRows] = useState(0);
   const [showPopUp, setShowPopUp] = useState(false);
   const [chipPopUpRowId, setChipPopUpRowId] = useState(null); 
@@ -48,15 +48,17 @@ const UserAccessMgmtTableWrapper = ({ role, internalKey, setupCompleted }) => {
 
   const { isLoading, data: planAssignmentData, refetch: refetchPlanSearch } = Digit.Hooks.microplanv1.usePlanSearchEmployeeWithTagging({
     tenantId: tenantId,
+    limit: rowsPerPage,
+    offset: (currentPage - 1) *  rowsPerPage,
     body: {
       "PlanEmployeeAssignmentSearchCriteria": {
         tenantId: tenantId,
         planConfigurationId: microplanId, //Eg. "653441d7-a2ec-4196-b978-e2619d9e0848"
-        role: [role]
+        role: [role],
+        config:{queryKey:`${microplanId} ${role} ${currentPage}`}
       },
     },
-    limit: rowsPerPage,
-    offset: (currentPage - 1) * 5,
+   
     config: {
       select: (data) => {
         return {
@@ -171,6 +173,13 @@ const UserAccessMgmtTableWrapper = ({ role, internalKey, setupCompleted }) => {
 
   const handlePaginationChange = (page) => {
     setCurrentPage(page);
+    
+  };
+
+  const handleRowsPerPageChange = (newPerPage, page) => {
+    setRowsPerPage(newPerPage); // Update the rows per page state
+    setCurrentPage(page); // Optionally reset the current page or maintain it
+    
   };
 
   if (isLoading) return <Loader />;
@@ -218,6 +227,7 @@ const UserAccessMgmtTableWrapper = ({ role, internalKey, setupCompleted }) => {
           onChangePage={handlePaginationChange}
           paginationPerPage={rowsPerPage}
           paginationRowsPerPageOptions={[5, 10, 15, 20]}
+          onChangeRowsPerPage={handleRowsPerPageChange}
         />
         {/* </Card> */}
       </Card>

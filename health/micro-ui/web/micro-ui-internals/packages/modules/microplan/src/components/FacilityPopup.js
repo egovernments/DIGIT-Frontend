@@ -68,6 +68,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
 
   useEffect(async () => {
     setLoader(true);
+    setTableLoader(true);
     await censusSearch([]);
     setLoader(false);
   }, [currentPage, rowsPerPage])
@@ -143,6 +144,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     else {
       jurisdictionArray = planEmployeeDetailsData?.PlanEmployeeAssignment?.[0]?.jurisdiction?.map((item) => { return { code: item } });
     }
+    setTableLoader(true);
     censusSearch(jurisdictionArray);
   }, [microplanId, facilityAssignedStatus, details, planEmployeeDetailsData, currentPage, rowsPerPage]);
 
@@ -162,6 +164,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const reqCriteria = {
     url: `/plan-service/plan/facility/_search`,
     params: {},
+    changeQueryName: `${details.facilityId}`,
     body: {
       PlanFacilitySearchCriteria: {
         "tenantId": Digit.ULBService.getCurrentTenantId(),
@@ -171,6 +174,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
       },
     },
     config: {
+      enabled: true,
       select: (data) => data,
     },
   };
@@ -183,7 +187,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
 
   const censusSearch = async (data) => {
     setBoundaryData(data);
-    setTableLoader(true);
+    
     const codeArray = data?.length === 0
       ? planEmployeeDetailsData?.PlanEmployeeAssignment?.[0]?.jurisdiction?.map((item) => item) || []
       : data?.map((item) => item?.code);
@@ -287,12 +291,23 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
       ), // Replace with the appropriate field from your data
       sortable: false,
     },
-    {
-      name: t("MP_FACILITY_TOTALPOPULATION"), // Change to your column type
-      selector: (row) => row.totalPopulation, // Replace with the appropriate field from your data
-      sortable: true,
-    },
-    // Add more columns as needed
+    // dynamic columns
+    ...(
+      (censusData?.[0]?.additionalFields || [])
+        .filter((field) => field.showOnUi && field.key.includes("CONFIRMED") && field.key.includes("TARGET"))
+        .sort((a, b) => a.order - b.order)
+        .map((field) => ({
+          name: t(field.key) || t("ES_COMMON_NA"),
+          selector: (row) => {
+            const fieldValue = row.additionalFields.find((f) => f.key === field.key)?.value || t("ES_COMMON_NA");
+            return fieldValue;
+          },
+          sortable: true,
+          style: {
+            justifyContent: "flex-end",
+          },
+        }))
+    ),
   ];
 
   const planFacilityUpdateMutaionConfig = {
@@ -379,7 +394,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
       }
     );
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    // setCurrentPage(1);
+     setCurrentPage(1);
     setLoader(false);
   };
 
@@ -419,9 +434,9 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     if (selectedBoundaries.length === 0) {
       setShowToast({ key: "warning", label: t("MICROPLAN_BOUNDARY_IS_EMPTY_WARNING"), transitionTime: 5000 });
     } else {
-
       setDefaultSelectedHierarchy(selectedHierarchy);
       setDefaultBoundaries(selectedBoundaries);
+      setCurrentPage(1); 
       censusSearch(selectedBoundaries);
     }
 
@@ -430,6 +445,8 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const onClear = () => {
     setDefaultBoundaries([]);
     setDefaultSelectedHierarchy(null);
+    setCurrentPage(1); 
+    setTableLoader(true);
     censusSearch([]);
   };
 
@@ -439,8 +456,8 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
         { key: "facilityName", value: details?.additionalDetails?.facilityName || t("NA") },
         { key: "facilityType", value: details?.additionalDetails?.facilityType || t("NA") },
         { key: "facilityStatus", value: details?.additionalDetails?.facilityStatus || t("NA") },
-        { key: "capacity", value: details?.additionalDetails?.capacity || t("NA") },
-        { key: "servingPopulation", value: latestKpiData?.PlanFacility[0]?.additionalDetails?.servingPopulation || t("NA")},
+        { key: "capacity", value: details?.additionalDetails?.capacity || "0" },
+        { key: "servingPopulation", value: latestKpiData?.PlanFacility[0]?.additionalDetails?.servingPopulation || "0"},
         { key: "fixedPost", value: details?.additionalDetails?.fixedPost || t("NA") },
         { key: "residingVillage", value: t(details?.residingBoundary) || t("NA") }
       ]);
@@ -556,6 +573,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
                 {viewDetails && accessibilityData && <AccessibilityPopUp onClose={() => closeViewDetails()} census={accessibilityData}
                   onSuccess={(data) => {
                     setShowToast({ key: "success", label: t("ACCESSIBILITY_DETAILS_UPDATE_SUCCESS"), transitionTime: 5000 });
+                    setTableLoader(true);
                     censusSearch(boundaryData);
                     closeViewDetails();
                   }}
@@ -564,6 +582,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
                 {viewDetails && securityData && <SecurityPopUp onClose={() => closeViewDetails()} census={securityData}
                   onSuccess={(data) => {
                     setShowToast({ key: "success", label: t("SECURITY_DETAILS_UPDATE_SUCCESS"), transitionTime: 5000 });
+                    setTableLoader(true);
                     censusSearch(boundaryData);
                     closeViewDetails();
                   }}

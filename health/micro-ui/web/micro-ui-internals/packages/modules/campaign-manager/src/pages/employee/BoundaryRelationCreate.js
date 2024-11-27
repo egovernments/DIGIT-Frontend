@@ -318,7 +318,7 @@ const BoundaryRelationCreate = () => {
                 label = `${t("WBH_BOUNDARY_CREATION_TIMEOUT")}: ${t("WBH_OPERATION_INCOMPLETE")}`;
             } else {
                 label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
-                if (error?.message) label += `${t(error?.message)}`;
+                // if (error?.message) label += `${t(error?.message)}`;
             }
     
             setShowToast({ label, isError: "error" });
@@ -397,10 +397,12 @@ const BoundaryRelationCreate = () => {
         } catch (error) {
             const errorMessage = error.message === "LEVELS_CANNOT_BE_EMPTY"
                 ? t("LEVELS_CANNOT_BE_EMPTY")
-                : error?.response?.data?.Errors?.[0]?.message || t("HIERARCHY_CREATION_FAILED");
+                : t(error?.response?.data?.Errors?.[0]?.code) || t("HIERARCHY_CREATION_FAILED");
             
             setCreatingData(false);
             setShowToast({ label: errorMessage, isError: "error" });
+            await sleep(2000);
+            history.push(`/${window.contextPath}/employee/campaign/boundary/home`,{});
         }
     }
 const onConfirmClick=()=>{
