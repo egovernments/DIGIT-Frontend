@@ -54,7 +54,7 @@ const FetchFromMicroplanScreen = () => {
 
         try {
           const { hierarchyType, id, tenantId } = data?.updatedCampaignData;
-          waitForSomeTime(3000);
+          await waitForSomeTime(3000);
           // Execute all API calls in parallel
           const [facilityFile, targetFile, userFile] = await Promise.all([
             callTemplateDownloadByUntilCompleted(hierarchyType, id, tenantId, "facility"),
@@ -72,6 +72,7 @@ const FetchFromMicroplanScreen = () => {
           setCurrentStep((prev) => TEMPLATE_GENERATION_STEP);
         } catch (error) {
           console.error("Error fetching templates:", error);
+          setShowToast({ key: "warn", label: t("EMPTY_TEMPLATE_GENERTAION_NOTCOMPLETED_STILL_PROCEEDING") });
           setCurrentStep((prev) => TEMPLATE_GENERATION_STEP);
           setTemplates({
             facilityFile: null,
@@ -110,6 +111,8 @@ const FetchFromMicroplanScreen = () => {
         }, MICROPLAN_FETCH_TIMEOUT);
       } catch (error) {
         console.error("Error fetching microplan data:", error);
+        setShowToast({ key: "error", label: t("ERROR_FETCHING_MICROPLAN") });
+
       }
     };
     if (templates?.completed) {
@@ -170,7 +173,7 @@ const FetchFromMicroplanScreen = () => {
             data?.updatedCampaignData?.id,
             data?.updatedCampaignData?.tenantId
           );
-          if (response?.resources && response?.resources?.length > 0) {
+          if (response?.resources && response?.resources?.length ==3) {
             setCompleted({ ...response });
             setCurrentStep((curr) => curr + 1);
           } else {
@@ -226,7 +229,7 @@ const FetchFromMicroplanScreen = () => {
           ))}
           <li key={currentStep + 1} className={`sandbox-step ${0 < currentStep ? "sandbox-visible" : ""}`}>
             <span className="sandbox-step-text">
-              {t("COMPELTED_STEPS")} - {currentStep} {t("OUT_OFF")} - {steps?.length}
+              {t("MP_COMPELTED_STEPS")} - {currentStep} {t("MP_OUT_OFF")} - {steps?.length}
             </span>
           </li>
         </ul>
