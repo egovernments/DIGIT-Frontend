@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Loader, TooltipWrapper } from "@egovernments/digit-ui-components";
 import { InfoBannerIcon } from "@egovernments/digit-ui-react-components";
-
+import { InfoOutline } from "@egovernments/digit-ui-svg-components";
 
 const VillageHierarchyTooltipWrapper = ({ boundaryCode,placement="right",wrapperClassName}) => {
     const { t } = useTranslation();
@@ -119,7 +119,7 @@ const VillageHierarchyTooltipWrapper = ({ boundaryCode,placement="right",wrapper
         description={tooltipContent}
         wrapperClassName={wrapperClassName || ""}
       >
-        <InfoBannerIcon fill={"#C84C0E"} />
+        <InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />
       </TooltipWrapper>
     );
 };

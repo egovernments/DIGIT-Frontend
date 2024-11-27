@@ -822,8 +822,18 @@ const MultiSelectDropdown = ({
   const Menu = () => {
     const optionsToRender = variant === "nestedmultiselect" ? flattenedOptions : filteredOptions;
 
-    if (!optionsToRender) {
-      return null;
+    if (!optionsToRender || optionsToRender?.length === 0) {
+      return (
+        <div
+          className={`digit-multiselectdropodwn-menuitem ${
+            variant ? variant : ""
+          } unsuccessfulresults`}
+          key={"-1"}
+          onClick={() => {}}
+        >
+          {<span> {t("NO_RESULTS_FOUND")}</span>}
+        </div>
+      );
     }
 
     return (
