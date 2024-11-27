@@ -3,7 +3,7 @@ import { CheckCircle } from "@egovernments/digit-ui-svg-components";
 import { useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Header } from "@egovernments/digit-ui-react-components";
-import { Toast } from "@egovernments/digit-ui-components";
+import { InfoCard, Toast } from "@egovernments/digit-ui-components";
 import { callTemplateDownloadByUntilCompleted } from "../utils/pollUtils";
 import { fetchFromMicroplan } from "../hooks/useFetchFromMicroplan";
 
@@ -82,8 +82,6 @@ const FetchFromMicroplanScreen = () => {
 
   useEffect(async () => {
     if (templates && templates?.completed) {
-      console.log(templates, "templates");
-
       if (currentStep == 4) {
         setCurrentStep((prev) => prev + 1);
       }
@@ -110,10 +108,9 @@ const FetchFromMicroplanScreen = () => {
         setMicroplan({
           ...fetchFromMicroplanResponse,
         });
-        const navigateTimeout = setTimeout(() => {
-          setCurrentStep((prev) => prev + 1);
-        }, 3000);
-        return () => clearTimeout(navigateTimeout); // Cleanup timeout
+        setTimeout(() => {
+          setCurrentStep((prev) => 7);
+        }, 8000);
       } catch (error) {
         console.error("Error fetching microplan data:", error);
       }
@@ -151,7 +148,7 @@ const FetchFromMicroplanScreen = () => {
   useEffect(() => {
     if (data?.campaignData && data?.updatedCampaignData && currentStep > 0) {
       const interval = setInterval(() => {
-        if (currentStep < steps.length && currentStep != 4 && currentStep != 10) {
+        if (currentStep < steps.length && currentStep != 4 && currentStep != 6) {
           setCurrentStep((prev) => prev + 1);
         }
         if (currentStep === steps.length) {
@@ -178,6 +175,15 @@ const FetchFromMicroplanScreen = () => {
   return (
     <>
       <Header styles={{ fontSize: "32px" }}>{t("MY_FETCH_FROM_MICROPLAN_HEADING")}</Header>
+      <InfoCard
+        populators={{
+          name: "infocard",
+        }}
+        variant="info"
+        text={t("HCM_FETCH_FROM_PLAN_INFO")}
+        style={{ marginTop: "1rem", maxWidth: "100%" }}
+      />
+
       <div className="sandbox-loader-screen" style={{ height: "100%" }}>
         {showToast?.key != "error" && id?.key?.length > 0 && <div className="sandbox-loader"></div>}
         <ul className="sandbox-installation-steps">
