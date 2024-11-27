@@ -72,7 +72,7 @@ const FetchFromMicroplanScreen = () => {
           setCurrentStep((prev) => TEMPLATE_GENERATION_STEP);
         } catch (error) {
           console.error("Error fetching templates:", error);
-          setShowToast({ key: "warn", label: t("EMPTY_TEMPLATE_GENERTAION_NOTCOMPLETED_STILL_PROCEEDING") });
+          setShowToast({ key: "warning", label: t("EMPTY_TEMPLATE_GENERTAION_NOTCOMPLETED_STILL_PROCEEDING") });
           setCurrentStep((prev) => TEMPLATE_GENERATION_STEP);
           setTemplates({
             facilityFile: null,
@@ -177,7 +177,7 @@ const FetchFromMicroplanScreen = () => {
             setCompleted({ ...response });
             setCurrentStep((curr) => curr + 1);
           } else {
-            setShowToast({ key: "warn", label: t("SOME_ERROR_OCCURED_IN_FETCH_RETRYING") });
+            setShowToast({ key: "warning", label: t("SOME_ERROR_OCCURED_IN_FETCH_RETRYING") });
             setCurrentStep(TEMPLATE_GENERATION_STEP);
           }
         } catch (error) {
