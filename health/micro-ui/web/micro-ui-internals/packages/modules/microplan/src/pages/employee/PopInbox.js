@@ -86,7 +86,7 @@ const PopInbox = () => {
                 source: microplanId,
                 ...(isRootApprover
                   ? {}
-                  : { jurisdiction: jurisdiction }),
+                  : { assignee: user.info.uuid }),
               },
             }
           },
@@ -163,6 +163,12 @@ const PopInbox = () => {
       setActiveLink({
         code: "ASSIGNED_TO_ME",
         name: "ASSIGNED_TO_ME"
+      });
+      setLimitAndOffset((prev)=>{
+        return {
+          limit: prev.limit,
+          offset: 0
+        }
       });
 
       setDefaultSelectedHierarchy(selectedHierarchy);
@@ -244,6 +250,12 @@ const PopInbox = () => {
   const onClear = () => {
     setDefaultBoundaries([]);
     setDefaultSelectedHierarchy(null);
+    setLimitAndOffset((prev)=>{
+      return {
+        limit: prev.limit,
+        offset: 0
+      }
+    });
     setCensusJurisdiction(planEmployee?.planData?.[0]?.jurisdiction);
   };
 
@@ -415,6 +427,13 @@ const PopInbox = () => {
   }, [selectedFilter]);
 
   const onFilter = (selectedStatus) => {
+    setLimitAndOffset((prev)=>{
+      return {
+        limit: prev.limit,
+        offset: 0
+      }
+    });
+    setCurrentPage(1);
     setSelectedFilter(selectedStatus?.code);
     setActiveLink({
       code: "ASSIGNED_TO_ME",
@@ -437,6 +456,13 @@ const PopInbox = () => {
     if (selectedFilter !== Object.entries(activeFilter)?.[0]?.[0]) {
       setSelectedFilter(Object.entries(activeFilter)?.[0]?.[0]);
     }
+    setLimitAndOffset((prev)=>{
+      return {
+        limit: prev.limit,
+        offset: 0
+      }
+    });
+    setCurrentPage(1);
   };
 
   const handleActionClick = (action) => {
@@ -596,6 +622,13 @@ const PopInbox = () => {
                 ]}
                 navStyles={{}}
                 onTabClick={(e) => {
+                  setLimitAndOffset((prev)=>{
+                    return {
+                      limit: prev.limit,
+                      offset: 0
+                    }
+                  });
+                  setCurrentPage(1);
                   setActiveLink(e);
                 }}
                 setActiveLink={setActiveLink}
@@ -668,6 +701,13 @@ const PopInbox = () => {
                     onSuccess={(data) => {
                       closePopUp();
                       setShowToast({ key: "success", label: t(`POP_INBOX_WORKFLOW_FOR_${workFlowPopUp}_UPDATE_SUCCESS`), transitionTime: 5000 });
+                      setLimitAndOffset((prev)=>{
+                        return {
+                          limit: prev.limit,
+                          offset: 0
+                        }
+                      });
+                      setCurrentPage(1);
                       refetch();
                       refetchPlan();
                       fetchStatusCount();
