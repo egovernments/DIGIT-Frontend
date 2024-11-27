@@ -1,12 +1,6 @@
 const searchPlanEmployeeWithTaggingConfig = async ({ tenantId, body, limit, offset, sortOrder = "ASC", names }) => {
   try {
-    const {PlanEmployeeAssignmentSearchCriteria}= body;
-    const updatedPlanEmployeeAssignmentSearchCriteria={
-      ...PlanEmployeeAssignmentSearchCriteria,
-      tenantId: tenantId,
-      limit: limit,
-      offset: offset,
-    }    
+    const {PlanEmployeeAssignmentSearchCriteria}= body;  
     const response = await Digit.CustomService.getResponse({
       url: "/plan-service/employee/_search",
       useCache: false,
@@ -17,7 +11,7 @@ const searchPlanEmployeeWithTaggingConfig = async ({ tenantId, body, limit, offs
         // sortOrder: sortOrder,
       },
       body:{
-       PlanEmployeeAssignmentSearchCriteria:{...updatedPlanEmployeeAssignmentSearchCriteria}
+       PlanEmployeeAssignmentSearchCriteria:{...body.PlanEmployeeAssignmentSearchCriteria,limit,offset,tenantId}
       }
     });
     if (!response) {

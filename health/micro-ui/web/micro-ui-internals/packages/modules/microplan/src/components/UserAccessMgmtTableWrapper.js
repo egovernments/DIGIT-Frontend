@@ -173,13 +173,13 @@ const UserAccessMgmtTableWrapper = ({ role, internalKey, setupCompleted }) => {
 
   const handlePaginationChange = (page) => {
     setCurrentPage(page);
-    refetchPlanSearch();
+    
   };
 
   const handleRowsPerPageChange = (newPerPage, page) => {
     setRowsPerPage(newPerPage); // Update the rows per page state
     setCurrentPage(page); // Optionally reset the current page or maintain it
-    refetchPlanSearch();
+    
   };
 
   if (isLoading) return <Loader />;
