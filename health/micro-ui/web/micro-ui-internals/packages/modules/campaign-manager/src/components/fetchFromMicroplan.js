@@ -112,7 +112,7 @@ const FetchFromMicroplanScreen = () => {
         console.error("Error fetching microplan data:", error);
       }
     };
-    if (templates && templates?.completed) {
+    if (templates?.completed) {
       if (currentStep === TEMPLATE_GENERATION_STEP) {
         setCurrentStep((prev) => prev + 1);
         fetchMicroplanData();
