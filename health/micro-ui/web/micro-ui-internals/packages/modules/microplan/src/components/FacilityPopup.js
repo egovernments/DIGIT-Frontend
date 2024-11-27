@@ -9,7 +9,7 @@ import SecurityPopUp from "./securityPopUp";
 import { getTableCustomStyle, tableCustomStyle } from "./tableCustomStyle";
 import VillageHierarchyTooltipWrapper from "./VillageHierarchyTooltipWrapper";
 import { CustomSVG } from "@egovernments/digit-ui-components";
-const FacilityPopUp = ({ details, onClose, updateDetails }) => {
+const FacilityPopUp = ({ detail, onClose }) => {
   const { t } = useTranslation();
   const url = Digit.Hooks.useQueryParams();
   const currentUserUuid = Digit.UserService.getUser().info.uuid;
@@ -29,6 +29,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const [viewDetails, setViewDetails] = useState(false)
   const [totalCensusCount, setTotalCensusCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [details, updateDetails] = useState(detail);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [disabledAction, setDisabledAction] = useState(false);
   const [boundaryData, setBoundaryData] = useState([]);

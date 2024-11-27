@@ -1310,7 +1310,7 @@ export const UICustomizations = {
               />
               {showPopup && (
                 <FacilityPopUp
-                  details={row}
+                  detail={row}
                   onClose={() => {
                     setShowPopup(false);
                   }}
