@@ -380,7 +380,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                   className="custom-assumption-checkbox"
                   //key={field.key}
                   mainClassName={"checkboxOptionVariant"}
-                  label={t("Show on Estimation Dashboard")}
+                  label={t("SHOW_ON_ESTIMATION_DASHBOARD")}
                   checked={formula.showOnEstimationDashboard ? true : false}
                   onChange={(event) =>
                     handleFormulaChange(formula.output, "showOnEstimationDashboard", { code: !formula.showOnEstimationDashboard }, category)
