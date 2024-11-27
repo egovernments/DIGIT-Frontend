@@ -148,7 +148,14 @@ const FetchFromMicroplanScreen = () => {
   useEffect(() => {
     if (data?.campaignData && data?.updatedCampaignData && currentStep > 0) {
       const interval = setInterval(() => {
-        if (currentStep < steps.length && currentStep != 4 && currentStep != 6) {
+        // Step constants for template generation and facility data
+        const TEMPLATE_GENERATION_STEP = 4;
+        const FACILITY_DATA_STEP = 6;
+
+        // Skip template generation and facility data steps as they're handled separately
+        if (currentStep < steps.length && 
+            currentStep !== TEMPLATE_GENERATION_STEP && 
+            currentStep !== FACILITY_DATA_STEP) {
           setCurrentStep((prev) => prev + 1);
         }
         if (currentStep === steps.length) {
