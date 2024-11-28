@@ -160,7 +160,7 @@ const VillageView = () => {
 
 
   useEffect(() => {
-    if (processData && processData.some((instance) => instance.action === "FINALIZE_CATCHMENT_MAPPING")) {
+    if (processData && processData.some((instance) => instance.action === "APPROVE_CENSUS_DATA")) {
       setDisabledAction(true);
     }
   }, [processData]);
