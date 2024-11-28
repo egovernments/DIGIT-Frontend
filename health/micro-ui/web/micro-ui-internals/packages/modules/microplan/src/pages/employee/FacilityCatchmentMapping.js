@@ -6,6 +6,7 @@ import facilityMappingConfig from "../../configs/FacilityMappingConfig";
 import { Loader, ActionBar, Button } from "@egovernments/digit-ui-components";
 import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
 import ConfirmationPopUp from "../../components/ConfirmationPopUp";
+import GenericKpiFromDSS from "../../components/GenericKpiFromDSS";
 
 const FacilityCatchmentMapping = () => {
   const [actionBarPopUp, setactionBarPopUp] = useState(false);
@@ -196,6 +197,7 @@ const FacilityCatchmentMapping = () => {
           </div>
           
         </div>
+      <GenericKpiFromDSS module="MICROPLAN-FACILITY" planId={url?.microplanId} campaignType={campaignObject?.projectType} planEmployee={planEmployee}/>
       <div className="inbox-search-wrapper">
         <InboxSearchComposer
           configs={config}

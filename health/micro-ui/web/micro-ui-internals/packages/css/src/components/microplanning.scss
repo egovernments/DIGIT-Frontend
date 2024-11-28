@@ -2601,6 +2601,15 @@ $border-color: rgba(214, 213, 212, 1);
 .kpi-card {
   text-align: center;
   width: 120px;
+
+  .kpi-text {
+    font-size: 1rem;
+    line-height: 1.2;
+    text-align: center;
+    word-break: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .kpi-card h2 {
