@@ -243,6 +243,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
         onSuccess: (data) => {
           setManualLoader(false);
           if (formulaInternalKey < ruleConfigurationCategories?.length) {
+            setShowToast(null);
             setFormulaInternalKey((prevKey) => prevKey + 1); // Update key in URL
           }
           refetchPlan();
