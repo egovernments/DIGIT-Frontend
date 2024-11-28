@@ -380,7 +380,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                   className="custom-assumption-checkbox"
                   //key={field.key}
                   mainClassName={"checkboxOptionVariant"}
-                  label={t("Show on Estimation Dashboard")}
+                  label={t("SHOW_ON_ESTIMATION_DASHBOARD")}
                   checked={formula.showOnEstimationDashboard ? true : false}
                   onChange={(event) =>
                     handleFormulaChange(formula.output, "showOnEstimationDashboard", { code: !formula.showOnEstimationDashboard }, category)
@@ -517,8 +517,8 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                     });
                     return;
                   }
-
-                  if (!(selectedDeletedFormula?.name && /^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/.test(selectedDeletedFormula?.name))) {
+             
+                  if (selectedDeletedFormula?.code === "NEW_FORMULA" && !(selectedDeletedFormula?.name && /^(?=.*[a-zA-Z])[a-zA-Z0-9]+(?: [a-zA-Z0-9]+)*$/.test(selectedDeletedFormula?.name))) {
                     setShowToast({
                       key: "error",
                       label: t("MP_FORMULA_NAME_INVALID") ,

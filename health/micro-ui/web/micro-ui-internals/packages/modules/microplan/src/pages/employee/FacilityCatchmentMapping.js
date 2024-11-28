@@ -201,11 +201,11 @@ const FacilityCatchmentMapping = () => {
       <div className="inbox-search-wrapper">
         <InboxSearchComposer
           configs={config}
-          additionalConfig={{
-            resultsTable: {
-              onClickRow,
-            }
-          }}
+          // additionalConfig={{
+          //   resultsTable: {
+          //     onClickRow,
+          //   }
+          // }}
         ></InboxSearchComposer>
       </div>
 

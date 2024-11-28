@@ -37,7 +37,7 @@ const facilityMappingConfig = (projectType, disabledAction) => {
           },
           fields: [
             {
-              label: "MICROPLAN_FACILITY_NAME",
+              label: "MICROPLAN_FACILITY_NAME_LABEL",
               type: "text",
               isMandatory: false,
               disable: false,
@@ -54,7 +54,7 @@ const facilityMappingConfig = (projectType, disabledAction) => {
               },
             },
             {
-              label: "MICROPLAN_FACILITY_TYPE",
+              label: "MICROPLAN_FACILITY_TYPE_LABEL",
               type: "dropdown",
               isMandatory: false,
               disable: false,
@@ -68,7 +68,7 @@ const facilityMappingConfig = (projectType, disabledAction) => {
               },
             },
             {
-              label: "CORE_COMMON_STATUS",
+              label: "CORE_COMMON_STATUS_LABEL",
               type: "dropdown",
               isMandatory: false,
               disable: false,
@@ -82,7 +82,7 @@ const facilityMappingConfig = (projectType, disabledAction) => {
               },
             },
             {
-              label: "MICROPLAN_RESIDING_VILLAGE",
+              label: "MICROPLAN_RESIDING_VILLAGE_LABEL",
               type: "apidropdown",
               isMandatory: false,
               disable: false,

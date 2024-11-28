@@ -95,7 +95,7 @@ const PlanInbox = () => {
               PlanSearchCriteria: {
                 tenantId: tenantId,
                 planConfigurationId: microplanId,
-                ...(isRootApprover ? {} : { jurisdiction: jurisdiction }),
+                ...(isRootApprover ? {} : { assignee: user.info.uuid }),
               },
             },
           },
@@ -178,7 +178,7 @@ const PlanInbox = () => {
         const tableData = data?.planData?.map((item, index) => {
           const filteredCensus = data?.censusData?.find((d) => d?.boundaryCode === item?.locality);
           const dynamicSecurityData = Object.keys(filteredCensus?.additionalDetails?.securityDetails || {}).reduce((acc, key) => {
-            acc[`securityDetail_${key}`] = filteredCensus?.additionalDetails?.securityDetails[key]?.code || "NA"; // Correctly referencing securityDetails
+            acc[`securityDetail_SECURITY_LEVEL_Q${key}`] = filteredCensus?.additionalDetails?.securityDetails[key]?.code || "NA"; // Correctly referencing securityDetails
             return acc;
           }, {});
 
@@ -230,6 +230,13 @@ const PlanInbox = () => {
       setActiveLink({
         code: "ASSIGNED_TO_ME",
         name: "ASSIGNED_TO_ME",
+      });
+      setCurrentPage(1);
+      setLimitAndOffset((prev)=>{
+        return {
+          limit: prev.limit,
+          offset: 0
+        }
       });
 
       setDefaultSelectedHierarchy(selectedHierarchy);
@@ -301,6 +308,13 @@ const PlanInbox = () => {
   const onClear = () => {
     setDefaultBoundaries([]);
     setDefaultSelectedHierarchy(null);
+    setCurrentPage(1);
+    setLimitAndOffset((prev)=>{
+      return {
+        limit: prev.limit,
+        offset: 0
+      }
+    });
     setCensusJurisdiction(planEmployee?.planData?.[0]?.jurisdiction);
   };
 
@@ -445,6 +459,13 @@ const PlanInbox = () => {
 
   const onFilter = (selectedStatus) => {
     setSelectedFilter(selectedStatus?.code);
+    setCurrentPage(1);
+    setLimitAndOffset((prev)=>{
+      return {
+        limit: prev.limit,
+        offset: 0
+      }
+    });
     setActiveLink({
       code: "ASSIGNED_TO_ME",
       name: "ASSIGNED_TO_ME",
@@ -455,6 +476,13 @@ const PlanInbox = () => {
     if (selectedFilter !== Object.entries(activeFilter)?.[0]?.[0]) {
       setSelectedFilter(Object.entries(activeFilter)?.[0]?.[0]);
     }
+    setCurrentPage(1);
+    setLimitAndOffset((prev)=>{
+      return {
+        limit: prev.limit,
+        offset: 0
+      }
+    });
   };
 
   const handleActionClick = (action) => {
@@ -499,10 +527,12 @@ const PlanInbox = () => {
   const getSecurityDetailsColumns = () => {
     // const sampleSecurityData = planWithCensus?.censusData?.[0]?.additionalDetails?.securityDetails || {};
     const securityColumns = state?.securityQuestions?.map((i) => {
+      
       return {
         name: t(i?.question),
-        cell: (row) => row?.[`securityDetail_${i?.question}`] || t("ES_COMMON_NA"),
-        sortable: true,
+        sortable: false,
+        cell: (row) => {
+          return row?.[`securityDetail_${i?.question}`] || t("ES_COMMON_NA")},
         width: "180px",
       };
     });
@@ -525,6 +555,13 @@ const PlanInbox = () => {
       ),
       // cell: (row) => t(row?.village) || "NA",
       sortable: true,
+      sortFunction: (rowA, rowB) => {
+        const villageA = t(rowA?.village).toLowerCase();
+        const villageB = t(rowB?.village).toLowerCase();
+        if (villageA < villageB) return -1;
+        if (villageA > villageB) return 1;
+        return 0;
+      },
       width: "180px",
     },
     {
@@ -534,7 +571,7 @@ const PlanInbox = () => {
           label={t(`VIEW_LOGS`)}
           onClick={() => {
             setSelectedBusinessId(row?.original?.id); // Set the row.id to state
-            setSelectedBoundaryCode(row.boundaryCode);
+            setSelectedBoundaryCode(row?.original?.locality);
             setShowTimelinePopup(true);
           }}
           variation="link"
@@ -557,24 +594,44 @@ const PlanInbox = () => {
         ) : (
           t("ES_COMMON_NA")
         ),
-      sortable: true,
-      width: "180px",
+      sortable: false,
     },
     {
       name: t(`HCM_MICROPLAN_SERVING_FACILITY`),
       cell: (row) => t(row?.servingFacility) || "NA",
+      sortFunction: (rowA, rowB) => {
+        const facilityA = t(rowA?.servingFacility).toLowerCase();
+        const facilityB = t(rowB?.servingFacility).toLowerCase();
+        if (facilityA < facilityB) return -1;
+        if (facilityA > facilityB) return 1;
+        return 0;
+      },
       sortable: true,
       width: "180px",
     },
     {
       name: t(`HCM_MICROPLAN_VILLAGE_ROAD_CONDITION_LABEL`),
       cell: (row) => t(row?.villageRoadCondition) || "NA",
+      sortFunction: (rowA, rowB) => {
+        const villageRoadConditionA = t(rowA?.villageRoadCondition).toLowerCase();
+        const villageRoadConditionB = t(rowB?.villageRoadCondition).toLowerCase();
+        if (villageRoadConditionA < villageRoadConditionB) return -1;
+        if (villageRoadConditionA > villageRoadConditionB) return 1;
+        return 0;
+      },
       sortable: true,
       width: "180px",
     },
     {
       name: t(`HCM_MICROPLAN_VILLAGE_TERRAIN_LABEL`),
       cell: (row) => t(row?.villageTerrain) || "NA",
+      sortFunction: (rowA, rowB) => {
+        const villageTerrainA = t(rowA?.villageTerrain).toLowerCase();
+        const villageTerrainB = t(rowB?.villageTerrain).toLowerCase();
+        if (villageTerrainA < villageTerrainB) return -1;
+        if (villageTerrainA > villageTerrainB) return 1;
+        return 0;
+      },
       sortable: true,
       width: "180px",
     },
@@ -790,6 +847,13 @@ const PlanInbox = () => {
               ]}
               navStyles={{}}
               onTabClick={(e) => {
+                setCurrentPage(1);
+                setLimitAndOffset((prev)=>{
+                  return {
+                    limit: prev.limit,
+                    offset: 0
+                  }
+                });
                 setActiveLink(e);
               }}
               setActiveLink={setActiveLink}
@@ -859,6 +923,13 @@ const PlanInbox = () => {
                     onSuccess={(data) => {
                       closePopUp();
                       setShowToast({ key: "success", label: t(`PLAN_INBOX_WORKFLOW_FOR_${workFlowPopUp}_UPDATE_SUCCESS`), transitionTime: 5000 });
+                      setCurrentPage(1);
+                      setLimitAndOffset((prev)=>{
+                        return {
+                          limit: prev.limit,
+                          offset: 0
+                        }
+                      });
                       refetchPlanWithCensus();
                       fetchStatusCount();
                     }}
@@ -891,6 +962,7 @@ const PlanInbox = () => {
                 noContextMenu
                 onSelectedRowsChange={handleRowSelect}
                 selectableRowsComponentProps={selectProps}
+                paginationDefaultPage={currentPage}
                 selectableRowsComponent={CheckBox}
                 customStyles={tableCustomStyle}
                 paginationTotalRows={totalRows}
@@ -905,6 +977,20 @@ const PlanInbox = () => {
           </Card>
         </div>
       </div>
+
+      {
+showTimelinePopup && <TimelinePopUpWrapper
+key={`${selectedBusinessId}-${Date.now()}`}
+onClose={() => {
+  setShowTimelinePopup(false);
+  setSelectedBoundaryCode(null);
+  setSelectedBusinessId(null); // Reset the selectedBusinessId when popup is closed
+}}
+businessId={selectedBusinessId} // Pass selectedBusinessId as businessId
+heading={`${t("HCM_MICROPLAN_STATUS_LOG_FOR_LABEL")} ${t(selectedBoundaryCode)}`}
+labelPrefix={"PLAN_ACTIONS_"}
+/>
+      }
 
       {isRootApprover && isStatusConditionMet(totalStatusCount) && (
         <ActionBar

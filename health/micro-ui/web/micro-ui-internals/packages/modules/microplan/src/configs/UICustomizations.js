@@ -581,8 +581,9 @@ export const UICustomizations = {
                 iconFill=""
                 isSuffix
                 label={t(key)}
-                // onClick={() => setShowPopup(true)}// removed this because due to popup crashing on dev
-                onClick={() => console.log("temp action")}
+                onClick={() => setShowPopup(true)}
+                // removed this because due to popup crashing on dev
+                // onClick={() => console.log("temp action")}
                 options={[]}
                 optionsKey=""
                 size="medium"
@@ -592,7 +593,7 @@ export const UICustomizations = {
               />
               {showPopup && (
                 <FacilityPopUp
-                  details={row}
+                  detail={row}
                   onClose={() => {
                     setShowPopup(false);
                   }}

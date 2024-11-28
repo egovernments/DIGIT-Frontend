@@ -36,7 +36,7 @@ const FormulaConfigScreen = ({ customProps, setupCompleted }) => {
 
 
     return (
-        <div style={{ marginBottom: "2.5rem" }}>
+        <div style={{ marginBottom: "1.5rem" }}>
             <Card className="middle-child">
                 <Header className="summary-main-heading">{t(`MICROPLAN_FORMULA_CONFIGURATION_HEADING`)} </Header>
             </Card>
@@ -52,6 +52,7 @@ const FormulaConfigScreen = ({ customProps, setupCompleted }) => {
                                     label={t("WBH_EDIT")}
                                     variation="secondary"
                                     icon={"Edit"}
+                                    size="medium"
                                     type="button"
                                     onClick={(e) => {
                                         const urlParams = Digit.Hooks.useQueryParams();
