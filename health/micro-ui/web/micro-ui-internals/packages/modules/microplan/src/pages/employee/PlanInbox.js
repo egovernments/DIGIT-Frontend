@@ -15,6 +15,7 @@ import ConfirmationPopUp from "../../components/ConfirmationPopUp";
 import VillageHierarchyTooltipWrapper from "../../components/VillageHierarchyTooltipWrapper";
 import TimelinePopUpWrapper from "../../components/timelinePopUpWrapper";
 import AssigneeChips from "../../components/AssigneeChips";
+import GenericKpiFromDSS from "../../components/GenericKpiFromDSS";
 
 const PlanInbox = () => {
   const { t } = useTranslation();
@@ -594,7 +595,6 @@ const PlanInbox = () => {
           t("ES_COMMON_NA")
         ),
       sortable: false,
-      width: "180px",
     },
     {
       name: t(`HCM_MICROPLAN_SERVING_FACILITY`),
@@ -767,6 +767,7 @@ const PlanInbox = () => {
       userRole = "PLAN_ESTIMATION_APPROVER";
     }
   });
+  
 
   return (
     <div className="pop-inbox-wrapper">
@@ -781,6 +782,7 @@ const PlanInbox = () => {
           <div>{`${t("LOGGED_IN_AS")} ${userName} - ${t(userRole)}`}</div>
         </div>
       </div>
+      <GenericKpiFromDSS module="MICROPLAN" planId={microplanId} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
       <SearchJurisdiction
         boundaries={boundaries}
         defaultHierarchy={defaultHierarchy}

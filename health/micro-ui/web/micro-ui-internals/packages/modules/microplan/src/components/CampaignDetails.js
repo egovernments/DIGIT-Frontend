@@ -111,7 +111,9 @@ const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
           style={{ width: "40rem" }}
           // variant={error ? "error" : ""}
           t={t}
-          option={data?.campaignTypes}
+          option={data?.campaignTypes?.filter(
+            (campaign) => campaign.code !== "IRS-mz"
+          )}
           optionKey={"i18nKey"}
           selected={campaignType}
           select={(value) => {

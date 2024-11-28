@@ -38,6 +38,8 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
     setFormulas(initialFormulas);
   }, [initialFormulas]);
 
+
+
   const handleDeleteClick = (index, formula) => {
     if (formulas?.length === 1 && category !== "CAMPAIGN_VEHICLES") {
       setShowToast({
@@ -507,6 +509,17 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                 variation={"primary"}
                 label={t("ADD")}
                 onClick={() => {
+                  if(!selectedDeletedFormula){
+                    setShowToast({
+                      key: "error",
+                      label: t("ERR_FORMULA_SELECT_OPTION"),
+                      transitionTime: 3000,
+                      style: {
+                        zIndex: 1000000,
+                      },
+                    });
+                    return;
+                  }
                   if (selectedDeletedFormula?.code === "NEW_FORMULA" && !selectedDeletedFormula) {
                     setShowToast({
                       key: "error",
@@ -530,21 +543,18 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                     });
                     return;
                   }
-
-                  if (
-                    selectedDeletedFormula?.code === "NEW_FORMULA" &&
-                    !(selectedDeletedFormula?.name && /^(?=.*[a-zA-Z])[a-zA-Z0-9]+(?: [a-zA-Z0-9]+)*$/.test(selectedDeletedFormula?.name))
-                  ) {
-                    setShowToast({
-                      key: "error",
-                      label: t("MP_FORMULA_NAME_INVALID"),
-                      transitionTime: 3000,
-                      style: {
-                        zIndex: 1000000,
-                      },
-                    });
-                    return;
-                  }
+             
+                  // if (selectedDeletedFormula?.code === "NEW_FORMULA" && !(selectedDeletedFormula?.name && /^(?=.*[a-zA-Z])[a-zA-Z0-9]+(?: [a-zA-Z0-9]+)*$/.test(selectedDeletedFormula?.name))) {
+                  //   setShowToast({
+                  //     key: "error",
+                  //     label: t("MP_FORMULA_NAME_INVALID") ,
+                  //     transitionTime: 3000,
+                  //     style: {
+                  //       zIndex: 1000000
+                  //     }
+                  //   });
+                  //   return
+                  // }
 
                   if (selectedDeletedFormula?.code === "NEW_FORMULA" && selectedDeletedFormula?.name?.length > 100) {
                     setShowToast({

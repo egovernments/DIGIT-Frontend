@@ -8,6 +8,7 @@ import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
 import { Header } from "@egovernments/digit-ui-react-components";
 import ConfirmationPopUp from "../../components/ConfirmationPopUp";
+import GenericKpiFromDSS from "../../components/GenericKpiFromDSS";
 
 const PopInbox = () => {
   const { t } = useTranslation();
@@ -567,7 +568,7 @@ const PopInbox = () => {
 
     }
   });
-
+  
   return (
     <div className="pop-inbox-wrapper">
       <div>
@@ -582,6 +583,7 @@ const PopInbox = () => {
           
         </div>
       </div>
+      <GenericKpiFromDSS module="CENSUS" planId={microplanId} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
       <SearchJurisdiction
         boundaries={boundaries}
         defaultHierarchy={defaultHierarchy}

@@ -194,7 +194,6 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
   }, [currentCategoryRuleConfigurations]);
 
   const handleNext = () => {
-    //here just check formulConfigValues
     if (formulaConfigValues?.filter((row) => row?.category === currentCategory)?.filter((i) => i.source === "MDMS")?.length === 0) {
       setShowToast({
         key: "error",
@@ -209,24 +208,24 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
         transitionTime: 3000,
       });
       return;
-    } else if (
-      formulaConfigValues
-        .filter((row) => row.category === currentCategory)
-        .every((row) => {
-          return row.assumptionValue && row.input && row.output && row.operatorName;
-        })
-    ) {
-      //will do this on onSuccess
-      // if (formulaInternalKey < ruleConfigurationCategories?.length) {
-      //   setFormulaInternalKey((prevKey) => prevKey + 1); // Update key in URL
-      // }
-    } else {
-      setShowToast({
-        key: "error",
-        label: t("ERR_MANDATORY_FIELD"),
-        transitionTime: 3000,
-      });
-      return;
+      } else if (!(
+        formulaConfigValues
+          .filter((row) => row.category === currentCategory)
+          .every((row) => {
+            return row.assumptionValue && row.input && row.output && row.operatorName;
+          }))
+      ) {
+        //will do this on onSuccess
+        // if (formulaInternalKey < ruleConfigurationCategories?.length) {
+        //   setFormulaInternalKey((prevKey) => prevKey + 1); // Update key in URL
+        // }
+        setShowToast({
+          key: "error",
+          label: t("ERR_MANDATORY_FIELD"),
+          transitionTime: 3000,
+        });
+      } else {
+    
     }
     // TODO: here update plan config
     setManualLoader(true);

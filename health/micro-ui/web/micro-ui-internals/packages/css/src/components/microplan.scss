@@ -422,7 +422,6 @@ tbody tr:last-child td:last-child .digit-dropdown-employee-select-wrap .digit-dr
   font-weight: 700;
 }
 
-
 .microplan-deatils-view-card{
   .digit-view-card-header{
     @extend .typography.heading-m;
@@ -492,4 +491,10 @@ tbody tr:last-child td:last-child .digit-dropdown-employee-select-wrap .digit-dr
   display: flex;
   gap: 0.5rem;
   align-items: center;
+}
+
+.accessibility-pop-up{
+  .digit-popup-children-wrap{
+    overflow: visible !important;
+  }
 }

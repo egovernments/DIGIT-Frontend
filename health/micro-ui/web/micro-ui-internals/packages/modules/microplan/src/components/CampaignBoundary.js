@@ -319,6 +319,7 @@ const CampaignBoundary = ({ customProps, setupCompleted }) => {
                       variation="secondary"
                       icon={"Edit"}
                       type="button"
+                      size="medium"
                       onClick={(e) => {
                         editHandler();
                       }}

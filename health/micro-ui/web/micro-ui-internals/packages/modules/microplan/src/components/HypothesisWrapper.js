@@ -192,6 +192,24 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
       }
     });
 
+    const hasMoreDecimalPlaces = visibleAssumptions.some((item) => {
+      const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
+    
+      // Check if the value has more than 2 decimal places
+      if (value % 1 !== 0 && value.toString().split(".")[1]?.length > 2) {
+        return true;
+      }
+    });
+
+    if (hasEmptyFields) {
+      setShowToast({
+        key: "error",
+        label: t("ERR_MANDATORY_FIELD"),
+        transitionTime: 3000,
+      });
+      return; // Prevent moving to the next step
+    }
+
 
     // If there are empty fields, show an error and do not allow moving to the next step
     if (hasNaNFields) {
@@ -202,18 +220,20 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
       });
       return; // Prevent moving to the next step
     }
-    if (hasEmptyFields) {
+   
+    if(hasExceededUpperBound && (!hasNaNFields || !hasEmptyFields)){
       setShowToast({
         key: "error",
-        label: t("ERR_MANDATORY_FIELD"),
+        label: t("ERR_SHOULD_NOT_EXCEED_999.99"),
         transitionTime: 3000,
       });
       return; // Prevent moving to the next step
     }
-    if(hasExceededUpperBound){
+
+    if(hasMoreDecimalPlaces){
       setShowToast({
         key: "error",
-        label: t("ERR_SHOULD_NOT_EXCEED_999.99"),
+        label: t("ERR_DECIMAL_PLACES_LESS_THAN_TWO"),
         transitionTime: 3000,
       });
       return; // Prevent moving to the next step

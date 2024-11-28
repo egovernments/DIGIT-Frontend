@@ -2597,24 +2597,36 @@ $border-color: rgba(214, 213, 212, 1);
   flex-direction: row;
   justify-content: space-around;
   scrollbar-width:none
+  gap: 1rem; 
+  overflow-x: auto; 
+  width: 100%;
 }
 
 .kpi-card {
   text-align: center;
-  width: 120px;
+  display: grid;
+  justify-content: center;
+  flex-shrink: 0;
+
+  .kpi-text {
+    font-size: 1rem;
+    line-height: 1.2;
+    text-align: center;
+  }
+
 }
 
 .kpi-card h2 {
   @extend .typography.heading-xl;
   margin: 0;
-  color: theme(digitv2.lightTheme.primary-2);
-  /* Custom color */
+  color: theme(digitv2.lightTheme.primary-2); 
 }
 
 .kpi-card p {
   margin: 0;
   @extend .typography.heading-m;
   color: theme(digitv2.lightTheme.text-secondary);
+  white-space: nowrap; /* Prevent text wrapping inside the card */
 }
 
 .assumptionsForm-label-field {
