@@ -259,9 +259,9 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
       },
       {
         onSuccess: (data) => {
-          setShowToast(null);
           setManualLoader(false);
           if (internalKey < assumptionCategories.length) {
+            setShowToast(null);
             setInternalKey((prevKey) => prevKey + 1); // Update key in URL
           }
           if (internalKey === assumptionCategories.length) {

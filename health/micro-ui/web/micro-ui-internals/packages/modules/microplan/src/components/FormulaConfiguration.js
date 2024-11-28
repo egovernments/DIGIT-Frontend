@@ -519,7 +519,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                       },
                     });
                     return;
-                  }if(!selectedDeletedFormula?.name){
+                  }if(!selectedDeletedFormula?.name && selectedDeletedFormula?.code === "NEW_FORMULA"){
                     setShowToast({
                       key: "error",
                       label: t("ERR_FORMULA_ENTER_FORMULA_NAME"),
