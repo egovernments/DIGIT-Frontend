@@ -40,9 +40,9 @@ export const cycleDataRemap=(data)=> {
     const resourcesMap = new Map();
     const ageInfo = { maxAge: -Infinity, minAge: Infinity };  
   
-    const cycles = data.map(cycle => {
-      const cycleStartDate = Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[0]?.fromDate, "daystart");
-      const cycleEndDate = Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[0]?.toDate, "dayend");
+    const cycles = data.map((cycle, index) => {
+      const cycleStartDate = Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[index]?.fromDate, "daystart");
+      const cycleEndDate = Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[index]?.toDate, "dayend");
       return {
         mandatoryWaitSinceLastCycleInDays: null,
         startDate: cycleStartDate,
