@@ -155,6 +155,7 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
             variation="secondary"
             // icon={<DownloadIcon styles={{ height: "1.25rem", width: "1.25rem" }} fill={PRIMARY_COLOR} />}
             type="button"
+            size={"medium"}
             icon={"DownloadIcon"}
             // className="workbench-download-template-btn hover"
             onClick={(e) => {
@@ -165,6 +166,7 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
           <ButtonNew
             label={t("WBH_DELETE")}
             variation="secondary"
+            size={"medium"}
             // icon={<DeleteIconv2 styles={{ height: "1.25rem", width: "2.5rem" }} fill={PRIMARY_COLOR} />}
             type="button"
             icon={"Delete"}

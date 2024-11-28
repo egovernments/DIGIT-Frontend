@@ -120,7 +120,7 @@ const VillageHierarchyTooltipWrapper = ({ boundaryCode,placement="right",wrapper
         header={t(`HCM_MICROPLAN_VILLAGE_HIERARCHY_LABEL`)}
         placement={placement}
         description={tooltipContent}
-        wrapperClassName={wrapperClassName || ""}
+        wrapperClassName={`${wrapperClassName} tooltip-warpper-village-hierarchy`}
       >
         <InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />
       </TooltipWrapper>
