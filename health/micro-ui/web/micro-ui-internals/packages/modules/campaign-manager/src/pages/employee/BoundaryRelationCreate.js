@@ -589,7 +589,7 @@ const onConfirmClick=()=>{
             return (
               <React.Fragment>
                 {firstPage && (
-                  <div>
+                  <div style={{marginBottom:"2rem"}}>
                     <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
                       <div style={{ display: "flex", justifyContent: "space-between" }}>
                         <div className="hierarchy-boundary-heading">{t("CREATE_BOUNDARY_HIERARCHY")}</div>
