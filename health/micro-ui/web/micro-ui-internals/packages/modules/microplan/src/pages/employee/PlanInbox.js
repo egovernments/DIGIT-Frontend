@@ -767,21 +767,6 @@ const PlanInbox = () => {
       userRole = "PLAN_ESTIMATION_APPROVER";
     }
   });
-  if (showTimelinePopup) {
-    return (
-      <TimelinePopUpWrapper
-        key={`${selectedBusinessId}-${Date.now()}`}
-        onClose={() => {
-          setShowTimelinePopup(false);
-          setSelectedBoundaryCode(null);
-          setSelectedBusinessId(null); // Reset the selectedBusinessId when popup is closed
-        }}
-        businessId={selectedBusinessId} // Pass selectedBusinessId as businessId
-        heading={`${t("HCM_MICROPLAN_STATUS_LOG_FOR_LABEL")} ${t(selectedBoundaryCode)}`}
-        labelPrefix={"PLAN_ACTIONS_"}
-      />
-    );
-  }
   
 
   return (
