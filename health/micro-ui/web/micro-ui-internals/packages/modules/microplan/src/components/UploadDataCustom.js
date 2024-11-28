@@ -3,6 +3,7 @@ import React, { useState, useEffect, Fragment, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { InfoCard, PopUp, Toast, Button, Stepper, TextBlock, Card, InfoButton } from "@egovernments/digit-ui-components";
 import axios from "axios";
+import { useMyContext } from "../utils/context";
 
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
@@ -14,6 +15,7 @@ import axios from "axios";
  */
 const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const { t } = useTranslation();
+  const { state } = useMyContext();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [uploadedFile, setUploadedFile] = useState([]);
   const [processedFile, setProcessedFile] = useState([]);
@@ -53,13 +55,6 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const [sheetHeaders, setSheetHeaders] = useState({});
   const [translatedSchema, setTranslatedSchema] = useState({});
   const [readMeInfo, setReadMeInfo] = useState({});
-
-  const { data: boundaryHierarchy } = Digit.Hooks.useCustomMDMS(tenantId, "hcm-microplanning", [{ name: "hierarchyConfig" }], {
-    select: (data) => {
-      const item = data?.["hcm-microplanning"]?.hierarchyConfig?.find((item) => item.isActive)
-      return item?.hierarchy
-    },
-  }, { schemaCode: "BASE_MASTER_DATA_INITIAL" });
   const totalData = Digit.SessionStorage.get("MICROPLAN_DATA");
   const campaignType = totalData?.CAMPAIGN_DETAILS?.campaignDetails?.campaignType?.code
   const [loader, setLoader] = useState(false);
@@ -73,8 +68,6 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
     const keyParam = searchParams.get("key");
     setKey(keyParam ? parseInt(keyParam) : 1);
   }, [location.search]);
-
-
 
   function updateUrlParams(params) {
     const url = new URL(window.location.href);
@@ -126,7 +119,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   }, [type, props?.props?.sessionData]);
 
   const generateData = async () => {
-    if (boundaryHierarchy && type && id) {
+    if (state?.hierarchyType && type && id) {
       const ts = new Date().getTime();
       const reqCriteria = {
         url: `/project-factory/v1/data/_generate`,
@@ -134,7 +127,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           tenantId: Digit.ULBService.getCurrentTenantId(),
           type: type,
           forceUpdate: true,
-          hierarchyType: boundaryHierarchy,
+          hierarchyType: state?.hierarchyType,
           campaignId: id,
           source: "microplan",
         },
@@ -426,7 +419,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
         try {
           const temp = await Digit.Hooks.campaign.useResourceData(
             uploadedFile,
-            boundaryHierarchy,
+            state?.hierarchyType,
             type,
             tenantId,
             id,
@@ -560,7 +553,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
     params: {
       tenantId: tenantId,
       type: type,
-      hierarchyType: boundaryHierarchy,
+      hierarchyType: state?.hierarchyType,
       id: type === "boundary" ? params?.boundaryId : type === "facilityWithBoundary" ? params?.facilityId : params?.userId,
     },
   };
@@ -573,7 +566,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
         params: {
           tenantId: tenantId,
           type: type,
-          hierarchyType: boundaryHierarchy,
+          hierarchyType: state?.hierarchyType,
           campaignId: id,
         },
       },
