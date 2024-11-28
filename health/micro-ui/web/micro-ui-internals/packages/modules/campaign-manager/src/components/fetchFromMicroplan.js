@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useEffect, useState } from "react";
 import { CheckCircle } from "@egovernments/digit-ui-svg-components";
 import { useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -207,20 +207,19 @@ const FetchFromMicroplanScreen = () => {
     setShowToast(null);
   };
   return (
-    <>
-      <Header styles={{ fontSize: "32px" }}>{t("MY_FETCH_FROM_MICROPLAN_HEADING")}</Header>
+    <span className="fetch-from-microplan">
+      <Header >{t("MY_FETCH_FROM_MICROPLAN_HEADING")}</Header>
       <InfoCard
         populators={{
           name: "infocard",
         }}
         variant="info"
         text={t("HCM_FETCH_FROM_PLAN_INFO")}
-        style={{ marginTop: "1rem", maxWidth: "100%", marginBottom: "1rem" }}
       />
 
-      <div className="sandbox-loader-screen" style={{ height: "100%" }}>
+      <div className="sandbox-loader-screen " >
         {showToast?.key != "error" && <LoaderWithGap text={t("DATA_FECTHING_FROM_SERVER")} />}
-        <ul className="sandbox-installation-steps" style={{ margin: "1rem" }}>
+        <ul className="sandbox-installation-steps" >
           {steps.map((step, index) => (
             <li key={index} className={`sandbox-step ${index < currentStep ? "sandbox-visible" : ""}`}>
               <span className="sandbox-step-text">{t(step)}</span>
@@ -235,7 +234,7 @@ const FetchFromMicroplanScreen = () => {
         </ul>
       </div>
       {showToast && <Toast type={showToast?.key} label={t(showToast?.label)} onClose={closeToast} />}
-    </>
+    </span>
   );
 };
 
