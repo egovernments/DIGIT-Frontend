@@ -14,7 +14,7 @@ const GenericKpiFromDSS = (props) => {
     if (localBoundariesForKpi.length === 0) {
         const hierarchyLevel = planEmployee?.planData?.[0]?.hierarchyLevel;
         const jurisdictionCodes = planEmployee?.planData?.[0]?.jurisdiction;
-        if(jurisdictionCodes && hierarchyLevel){
+        if(jurisdictionCodes?.length > 0 && hierarchyLevel){
             for (const code of jurisdictionCodes) {
                 localBoundariesForKpi.push({
                     type: hierarchyLevel,
