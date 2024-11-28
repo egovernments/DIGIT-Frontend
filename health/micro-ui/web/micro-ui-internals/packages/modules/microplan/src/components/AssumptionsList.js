@@ -41,7 +41,7 @@ const AssumptionsList = ({ customProps, setupCompleted }) => {
     const orderedKeys = ["selectedRegistrationProcess", "selectedDistributionProcess", "selectedRegistrationDistributionMode"];
 
     return (
-        <div style={{ marginBottom: "2.5rem" }}>
+        <div style={{ marginBottom: "1.5rem" }}>
             <Card className="middle-child">
                 <Header className="summary-main-heading">{t(`MICROPLAN_ESTIMATION_ASSUMPTIONS_HEADING`)} </Header>
                 {orderedKeys.map((key, index) => {
@@ -72,6 +72,7 @@ const AssumptionsList = ({ customProps, setupCompleted }) => {
                                 label={t("WBH_EDIT")}
                                 variation="secondary"
                                 icon={"Edit"}
+                                size="medium"
                                 type="button"
                                 onClick={(e) => {
                                     const urlParams = Digit.Hooks.useQueryParams();

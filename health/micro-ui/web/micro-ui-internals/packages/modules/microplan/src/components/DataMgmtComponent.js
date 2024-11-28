@@ -21,8 +21,8 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
     //                         "templateIdentifier": "Population"
     // }
     return (
-        <>
-            <Card className="middle-child">
+        <div style={{ marginBottom: "1.5rem" }}>
+            <Card className="middle-child" >
                 <Header className="summary-main-heading">{t(`MICROPLAN_DATA_CONFIGURATION_HEADING`)} </Header>
             </Card>
             <Card className="mp-margin-bottom">
@@ -36,6 +36,7 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
                             label={t("WBH_EDIT")}
                             variation="secondary"
                             icon={"Edit"}
+                            size="medium"
                             type="button"
                             onClick={(e) => {
                                 const url = Digit.Hooks.useQueryParams();
@@ -84,6 +85,7 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
                             label={t("WBH_EDIT")}
                             variation="secondary"
                             icon={"Edit"}
+                            size="medium"
                             type="button"
                             onClick={(e) => {
                                 const url = Digit.Hooks.useQueryParams();
@@ -119,7 +121,7 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
 
 
             </Card>
-        </>
+        </div>
 
 
     )
