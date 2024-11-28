@@ -167,15 +167,15 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     const visibleAssumptions = currentAssumptions.filter((item) => existingAssumptionKeys?.includes(item) && !deletedAssumptions?.includes(item));
 
     //Validate: Check if any value is empty for visible assumptions
-    const atleastOneMDMS = assumptionValues?.filter((j) => j.category === currentCategory)?.filter((i) => i?.source === "MDMS")?.length === 0;
-    if (atleastOneMDMS) {
-      setShowToast({
-        key: "error",
-        label: t("ATLEAST_ONE_MDMS_ASSUMPTION"),
-        transitionTime: 3000,
-      });
-      return; // Prevent moving to the next step
-    }
+    // const atleastOneMDMS = assumptionValues?.filter((j) => j.category === currentCategory)?.filter((i) => i?.source === "MDMS")?.length === 0;
+    // if (atleastOneMDMS) {
+    //   setShowToast({
+    //     key: "error",
+    //     label: t("ATLEAST_ONE_MDMS_ASSUMPTION"),
+    //     transitionTime: 3000,
+    //   });
+    //   return; // Prevent moving to the next step
+    // }
     const hasEmptyFields = visibleAssumptions.some((item) => {
       const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
       return !value; // Check if any value is empty
@@ -192,13 +192,14 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
       }
     });
 
-    const hasMoreDecimalPlaces = visibleAssumptions.some((item) => {
-      const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
+    const hasMoreDecimalPlaces = assumptionValues.some((item) => {
+      const value = item?.value
     
       // Check if the value has more than 2 decimal places
-      if (value % 1 !== 0 && value.toString().split(".")[1]?.length > 2) {
+      if (value && value % 1 !== 0 && value.toString().split(".")[1]?.length > 2) {
         return true;
       }
+      return false
     });
 
     if (hasEmptyFields) {
