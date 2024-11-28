@@ -38,19 +38,20 @@ const GenericKpiFromDSS = (props) => {
     }
 
     return (
-        <Card>
-            <div className="kpi-container">
-                {Object.keys(data || {}).map((key) => (
-                    <div key={key} className={`kpi-card`}>
-                        <h2>{String(data[key] || 0).padStart(2, '0')}</h2>
-                        <p className="kpi-text">
-                            {t(key)}
-                        </p>
-                    </div>
-                ))}
-            </div>
-        </Card>
+        data ? (
+            <Card>
+                <div className="kpi-container">
+                    {Object.keys(data || {}).map((key) => (
+                        <div key={key} className="kpi-card">
+                            <h2>{String(data[key] || 0).padStart(2, '0')}</h2>
+                            <p className="kpi-text">{t(key)}</p>
+                        </div>
+                    ))}
+                </div>
+            </Card>
+        ) : null
     );
+
 };
 
 export default GenericKpiFromDSS;
