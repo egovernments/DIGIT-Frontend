@@ -31,7 +31,8 @@ const Dropdowns = ({
   handleOptionComment,
   typeOfCall,
   parentNumber,
-  questionNumber
+  questionNumber,
+  maxDepth
 }) => {
   let dis = typeOfCall === "view" ? true : false;
   return (
@@ -61,6 +62,7 @@ const Dropdowns = ({
             t={t}
             typeOfCall={typeOfCall}
             parentNumber={parentNumber}
+            maxDepth={maxDepth}
           />
           {item.optionComment && <FieldV1
             // className="example"
@@ -134,7 +136,9 @@ const DropdownOption = ({
   addComment,
   handleOptionComment,
   t,
-  typeOfCall
+  typeOfCall,
+  subQlevel,
+  maxDepth
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isOverflowing, setIsOverflowing] = useState(false);
@@ -237,7 +241,7 @@ const DropdownOption = ({
               <CheckBox
                 key={field.key}
                 mainClassName={"checkboxOptionVariant"}
-                disabled={optionComment ? true : false}
+                disabled={optionComment ? true : false || subQlevel>=maxDepth+1}
                 // styles={{ margin: "0px 0px 0px", maxWidth: "70%",  }}
                 // className={"digit-checkbox-containe  r"}
                 label={t("LINK_NESTED_CHECKLIST")}

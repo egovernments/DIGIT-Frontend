@@ -40,10 +40,9 @@ export const cycleDataRemap=(data)=> {
     const resourcesMap = new Map();
     const ageInfo = { maxAge: -Infinity, minAge: Infinity };  
   
-    const cycles = data.map(cycle => {
-      const cycleStartDate = Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[0]?.fromDate);
-      const cycleEndDate = Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[0]?.toDate);
-  
+    const cycles = data.map((cycle, index) => {
+      const cycleStartDate = Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[index]?.fromDate, "daystart");
+      const cycleEndDate = Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[index]?.toDate, "dayend");
       return {
         mandatoryWaitSinceLastCycleInDays: null,
         startDate: cycleStartDate,
@@ -183,7 +182,7 @@ export const cycleDataRemap=(data)=> {
           productVariantId: product.value,
           isBaseUnitVariant: false,
           name: product.name,
-          quantity: product.quantity
+          quantity: product.count
         });
       }
     });
@@ -213,7 +212,7 @@ export const cycleDataRemap=(data)=> {
       ProductVariants: rule.products.map(product => ({
         productVariantId: product.value,
         name: product.name,
-        quantity: product.quantity
+        quantity: product.count
       }))
     };
   }
