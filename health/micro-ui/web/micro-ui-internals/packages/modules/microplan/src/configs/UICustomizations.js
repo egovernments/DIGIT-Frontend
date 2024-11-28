@@ -123,13 +123,13 @@ export const UICustomizations = {
             <div>
               {microplanFileId && row?.status == "RESOURCE_ESTIMATIONS_APPROVED" ? (
                 <div>
-                  <ButtonNew style={{ width: "20rem" }} onClick={handleDownload} label={t("WBH_DOWNLOAD_MICROPLAN")} />
+                  <ButtonNew style={{ width: "20rem" }} icon="DownloadIcon" onClick={handleDownload} label={t("WBH_DOWNLOAD_MICROPLAN")} />
                 </div>
               ) : (
                 <div className={"action-button-open-microplan"}>
                   <ButtonNew
                     type="actionButton"
-                    variation="primary"
+                    variation="secondary"
                     label={t("MP_ACTIONS_FOR_MICROPLAN_SEARCH")}
                     options={options}
                     style={{ width: "20rem" }}
