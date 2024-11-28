@@ -380,7 +380,6 @@ const UserUpload = React.memo(() => {
             type: "user",
             fileStoreId: fileId,
             hierarchyType: state?.hierarchyType,
-            campaignId: id,
             action: "create",
             campaignId: id,
             additionalDetails: {
