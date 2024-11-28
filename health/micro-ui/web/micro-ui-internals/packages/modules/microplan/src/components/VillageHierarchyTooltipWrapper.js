@@ -84,24 +84,26 @@ const VillageHierarchyTooltipWrapper = ({ boundaryCode,placement="right",wrapper
             display: "flex",
             alignItems: "flex-start",
             width: "100%",
-            gap:"0.25rem"
+            gap: "0.5rem", 
           }}
         >
           <span
             style={{
               fontWeight: "bold",
-              flex: 1,
-              textAlign: "left", 
-              whiteSpace:"normal",
-              wordBreak:"break-word"
+              width: "50%", 
+              textAlign: "left",
+              whiteSpace: "normal",
+              wordBreak: "break-word",
             }}
           >
             {t(item.type)}:
           </span>
           <span
             style={{
-              flex: 1, 
-              textAlign: "left", 
+              width: "50%", 
+              textAlign: "left",
+              wordBreak: "break-word",
+              whiteSpace: "normal",
             }}
           >
             {t(item.name)}
@@ -109,6 +111,7 @@ const VillageHierarchyTooltipWrapper = ({ boundaryCode,placement="right",wrapper
         </div>
       ))
     : t("HCM_MICROPLAN_NOT_ABLE_TO_FETCH_DETAILS");
+  
 
 
 
