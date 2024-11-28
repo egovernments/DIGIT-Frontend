@@ -513,7 +513,7 @@ function RoleTableComposer({ nationalRoles }) {
           <div>
             <div className={`search-field-wrapper roleComposer`}>
               <LabelFieldPair key={1}>
-                <CardLabel style={{ marginBottom: "0.4rem" }}>{t("Name")}</CardLabel>
+                <CardLabel style={{ margin:"0rem", marginBottom: "0.5rem" }}>{t("Name")}</CardLabel>
                 <TextInput
                   value={name}
                   type={"text"}
@@ -528,7 +528,7 @@ function RoleTableComposer({ nationalRoles }) {
                 />
               </LabelFieldPair>
               <LabelFieldPair key={2}>
-                <CardLabel style={{ marginBottom: "0.4rem" }}>{t("Number")}</CardLabel>
+                <CardLabel style={{ margin:"0rem", marginBottom: "0.5rem" }}>{t("Number")}</CardLabel>
                 <TextInput
                   value={number}
                   type={"text"}

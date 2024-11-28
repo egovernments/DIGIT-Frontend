@@ -302,7 +302,7 @@ const CampaignBoundary = ({ customProps, setupCompleted }) => {
       <BoundaryKpi data={statusMap} heading={t("CAMPAIGN_BOUNDARY")} />
       {bHierarchy.length > 1 ? (
         <div className="mp-margin-bottom">
-          <SubBoundaryView style={{ background: "#fff", gap: "1.5rem" }} title={bHierarchy?.[1]} arr={parent_group?.[bHierarchy?.[1]]} editHandler={editHandler} isEditable={isEditable} headerStyle={{fontSize:"1.6rem"}} />
+          <SubBoundaryView style={{ background: "#fff" }} title={bHierarchy?.[1]} arr={parent_group?.[bHierarchy?.[1]]} editHandler={editHandler} isEditable={isEditable} headerStyle={{fontSize:"1.6rem"}} />
         </div>
       ) : null}
 
@@ -312,10 +312,8 @@ const CampaignBoundary = ({ customProps, setupCompleted }) => {
             <div key={`header_${ind}`}>
               <Card className="middle-child">
                 <div className="mp-header-container" style={{ marginBottom: "0px" }}>
-                  <Header className="summary-sub-heading">
-                    {t(`MP_${bHierarchy[ind + 2].toUpperCase()}`)}
-                  </Header>
-                  {!(setupCompleted === 'true') &&
+                  <Header className="summary-sub-heading">{t(`MP_${bHierarchy[ind + 2].toUpperCase()}`)}</Header>
+                  {!(setupCompleted === "true") && (
                     <Button
                       label={t("WBH_EDIT")}
                       variation="secondary"
@@ -325,28 +323,38 @@ const CampaignBoundary = ({ customProps, setupCompleted }) => {
                         editHandler();
                       }}
                     />
-                  }
+                  )}
                 </div>
                 {/* <HeaderComp title={bHierarchy[ind + 2]} /> */}
                 {parent_group?.[item]?.map((item1, idx) =>
                   Array.isArray(parents?.[item1]) && boundaryStatus?.[ind + 2] && (idx === 0 || idx === 1) ? (
-                    <SubBoundaryView style={{ gap: "1.5rem", marginBottom: "0px" }} key={`${item1}_${idx}`} title={item1} arr={parents?.[item1]} />
+                    <SubBoundaryView style={{ marginBottom: "0px" }} key={`${item1}_${idx}`} title={item1} arr={parents?.[item1]} />
                   ) : Array.isArray(parents?.[item1]) && !boundaryStatus?.[ind + 2] ? (
-                    <SubBoundaryView style={{ gap: "1.5rem", marginBottom: "0px" }} key={`${item1}_${idx}`} title={item1} arr={parents?.[item1]} />
+                    <SubBoundaryView style={{ marginBottom: "0px" }} key={`${item1}_${idx}`} title={item1} arr={parents?.[item1]} />
                   ) : null
                 ) || null}
                 {boundaryStatus?.[ind + 2] && parent_group[item]?.length > 2 ? (
-                  <div onClick={() => handleViewMore(ind + 2)} className="view-more">
-                    {t("VIEW_MORE")}
-                  </div>
+                  <Button
+                    label={t("VIEW_MORE")}
+                    onClick={() => handleViewMore(ind + 2)}
+                    variation="link"
+                    icon="ArrowDropDown"
+                    size="medium"
+                    isSuffix={true}
+                  />
                 ) : !boundaryStatus?.[ind + 2] ? (
-                  <div onClick={() => handleViewMore(ind + 2)} className="view-more">
-                    {t("VIEW_LESS")}
-                  </div>
+                  <Button
+                    isSuffix={true}
+                    label={t("VIEW_LESS")}
+                    icon="ArrowDropUp"
+                    onClick={() => handleViewMore(ind + 2)}
+                    variation="link"
+                    size="medium"
+                  />
                 ) : null}
               </Card>
             </div>
-          )
+          );
         })}
     </div>
   );
