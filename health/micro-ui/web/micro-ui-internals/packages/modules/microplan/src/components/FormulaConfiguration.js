@@ -36,6 +36,8 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
     setFormulas(initialFormulas);
   }, [initialFormulas]);
 
+
+
   const handleDeleteClick = (index, formula) => {
     if (formulas?.length === 1 && category !== "CAMPAIGN_VEHICLES") {
       setShowToast({
@@ -481,7 +483,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
               <Button
                 type={"button"}
                 size={"large"}
-                variation={"primary"}
+                variation={"secondary"}
                 label={t("NO")}
                 onClick={() => {
                   setFormulasPopUp(false);
@@ -491,9 +493,20 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
               <Button
                 type={"button"}
                 size={"large"}
-                variation={"secondary"}
+                variation={"primary"}
                 label={t("YES")}
                 onClick={() => {
+                  if(!selectedDeletedFormula){
+                    setShowToast({
+                      key: "error",
+                      label: t("ERR_FORMULA_SELECT_OPTION"),
+                      transitionTime: 3000,
+                      style: {
+                        zIndex: 1000000,
+                      },
+                    });
+                    return;
+                  }
                   if (selectedDeletedFormula?.code === "NEW_FORMULA" && !selectedDeletedFormula) {
                     setShowToast({
                       key: "error",
