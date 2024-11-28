@@ -257,8 +257,9 @@ function UserAccess({ category, setData, nationalRoles }) {
             className={"roleTableCell"}
             variation={"secondary"}
             label={t(`UNASSIGN`)}
+            size="medium"
             title={t(`UNASSIGN`)}
-            style={{ padding: "1rem" }}
+            style={{ padding: "1rem", width:"100%" }}
             icon={"Close"}
             isSuffix={false}
             onClick={(value) => setUnassignPopup(row)}

@@ -446,6 +446,8 @@ function RoleTableComposer({ nationalRoles }) {
               !rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedBoundaries ||
               rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedBoundaries?.length === 0
             }
+            style={{width:"100%"}}
+            size="medium"
             className={"roleTableCell"}
             variation={isUserAlreadyAssignedActive ? "secondary" : "primary"}
             label={isUserAlreadyAssignedActive ? t(`UNASSIGN`) : t(`ASSIGN`)}
