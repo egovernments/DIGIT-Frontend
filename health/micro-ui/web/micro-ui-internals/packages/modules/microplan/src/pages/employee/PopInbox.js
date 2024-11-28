@@ -428,6 +428,8 @@ const PopInbox = () => {
   }, [selectedFilter]);
 
   const onFilter = (selectedStatus) => {
+    setVillagesSelected(0);
+      setSelectedRows([]);
     setLimitAndOffset((prev)=>{
       return {
         limit: prev.limit,
