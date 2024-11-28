@@ -33,17 +33,17 @@ const GenericKpiFromDSS = (props) => {
         boundariesForKpi: localBoundariesForKpi
     });
 
-    if (loader || !data) {
+    if (loader) {
         return <Loader />
     }
 
     return (
         <Card>
             <div className="kpi-container">
-                {Object.keys(data).map((key) => (
+                {Object.keys(data || {}).map((key) => (
                     <div key={key} className={`kpi-card`}>
-                        <h2>{String(data[key]).padStart(2, '0')}</h2>
-                        <p className='kpi-text'>
+                        <h2>{String(data[key] || 0).padStart(2, '0')}</h2>
+                        <p className="kpi-text">
                             {t(key)}
                         </p>
                     </div>
