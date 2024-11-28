@@ -185,19 +185,21 @@ const FacilityCatchmentMapping = () => {
 
 
   return (
-    <div style={{ marginBottom: isRootApprover && data?.TotalCount === 0 && planObject?.status === "CENSUS_DATA_APPROVED" ?"2.5rem" :"0rem"}}>
+    <div style={{ marginBottom: isRootApprover && data?.TotalCount === 0 && planObject?.status === "CENSUS_DATA_APPROVED" ? "2.5rem" : "0rem" }}>
       <Header styles={{ marginBottom: "1rem" }}>{t("MICROPLAN_ASSIGN_CATCHMENT_VILLAGES")}</Header>
-      <div className="role-summary-sub-heading" style={{marginBottom:"1.5rem"}}>
-          <div className="mp-heading-bold">
+      <div className="role-summary-sub-heading" style={{ marginBottom: "1.5rem" }}>
+        <div className="mp-heading-bold">
           {`${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${planObject?.name || t("NO_NAME_AVAILABLE")}`}
-          </div>
-          <div>
+        </div>
+        <div>
           {`${t("LOGGED_IN_AS")} ${userName} - ${t(userRole)}`}
 
-          </div>
-          
         </div>
-      <GenericKpiFromDSS module="MICROPLAN-FACILITY" planId={url?.microplanId} campaignType={campaignObject?.projectType} planEmployee={planEmployee}/>
+
+      </div>
+      <div style={{ marginBottom: "1rem" }}>
+        <GenericKpiFromDSS module="MICROPLAN-FACILITY" planId={url?.microplanId} campaignType={campaignObject?.projectType} planEmployee={planEmployee} />
+      </div>
       <div className="inbox-search-wrapper">
         <InboxSearchComposer
           configs={config}

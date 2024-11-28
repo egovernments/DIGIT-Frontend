@@ -2595,7 +2595,7 @@ $border-color: rgba(214, 213, 212, 1);
 .kpi-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between; 
+  justify-content: space-around; 
   gap: 1rem; 
   overflow-x: auto; 
   padding: 8px; 
@@ -2604,7 +2604,6 @@ $border-color: rgba(214, 213, 212, 1);
 
 .kpi-card {
   text-align: center;
-  width: 120px;
   display: grid;
   justify-content: center;
   flex-shrink: 0;
@@ -2613,9 +2612,6 @@ $border-color: rgba(214, 213, 212, 1);
     font-size: 1rem;
     line-height: 1.2;
     text-align: center;
-    word-break: break-word;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
 }
