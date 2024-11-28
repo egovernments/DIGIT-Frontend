@@ -26,6 +26,7 @@ const SubBoundaryView = ({ title, arr, style, editHandler, isEditable, headerSty
               {isEditable && editHandler && <Button
                 label={t("WBH_EDIT")}
                 variation="secondary"
+                size="medium"
                 icon={"Edit"}
                 type="button"
                 onClick={(e) => {
