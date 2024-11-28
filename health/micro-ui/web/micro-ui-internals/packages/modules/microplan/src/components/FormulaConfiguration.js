@@ -506,6 +506,17 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                       },
                     });
                     return;
+                  }if(!selectedDeletedFormula?.name){
+                    setShowToast({
+                      key: "error",
+                      label: t("ERR_FORMULA_ENTER_FORMULA_NAME"),
+                      transitionTime: 3000,
+                      style: {
+                        zIndex: 1000000,
+                      },
+                    });
+                    return;
+
                   }
                   if (selectedDeletedFormula?.code === "NEW_FORMULA" && !selectedDeletedFormula) {
                     setShowToast({
