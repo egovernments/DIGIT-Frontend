@@ -208,12 +208,10 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
         transitionTime: 3000,
       });
       return;
-      } else if (!(
+      } else if (
         formulaConfigValues
           .filter((row) => row.category === currentCategory)
-          .every((row) => {
-            return row.assumptionValue && row.input && row.output && row.operatorName;
-          }))
+          .some((row) => !row.assumptionValue || !row.input || !row.output || !row.operatorName)
       ) {
         //will do this on onSuccess
         // if (formulaInternalKey < ruleConfigurationCategories?.length) {
@@ -224,8 +222,20 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
           label: t("ERR_MANDATORY_FIELD"),
           transitionTime: 3000,
         });
+        return;
       } else {
     
+    }
+
+    if(formulaConfigValues
+      .filter((row) => row.category === currentCategory)
+      .some((row) => !row.assumptionValue || !row.input || !row.output || !row.operatorName)){
+      setShowToast({
+        key: "error",
+        label: t("ERR_MANDATORY_FIELD"),
+        transitionTime: 3000,
+      });
+      return;
     }
     // TODO: here update plan config
     setManualLoader(true);
