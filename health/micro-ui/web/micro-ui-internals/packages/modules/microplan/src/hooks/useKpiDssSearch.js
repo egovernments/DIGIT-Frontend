@@ -6,7 +6,6 @@ const useKpiDssSearch = (moduleAndPlanConfig) => {
     const planId = moduleAndPlanConfig?.planId;
     const campaignType = moduleAndPlanConfig?.campaignType;
     const boundaries = moduleAndPlanConfig?.boundariesForKpi;
-    console.log(boundaries," bbbbbbbbbbbbb2222222222222222222222222")
     const queryString = `dss-${module}-${planId}_${campaignType}_${JSON.stringify(boundaries)}`;
     const { isLoading, data, isFetching, refetch } = useQuery([queryString, "/dashboard-analytics/dashboard/getChartV2"], () => searchDssChartV2(module, planId, campaignType, boundaries), {
         ...{},
