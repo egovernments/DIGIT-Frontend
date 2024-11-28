@@ -202,7 +202,7 @@ const UserAccessMgmtTableWrapper = ({ role, internalKey, setupCompleted }) => {
               label={t("WBH_EDIT")}
               variation="secondary"
               icon={"Edit"}
-              style={{ width: "110px" }}
+              style={{ width: "7.48rem" }}
               type="button"
               size="medium"
               onClick={(e) => {
