@@ -51,16 +51,6 @@ const ConfirmationPopUp = ({ onClose, alertHeading, alertMessage, submitLabel, u
                 equalWidthButtons={true}
                 footerChildren={[
                     <Button
-                        key="close-button"
-                        className="campaign-type-alert-button"
-                        type="button"
-                        size="large"
-                        variation="primary"
-                        label={t(cancelLabel)}
-                        onClick={onClose}
-                        isDisabled={isSubmitting}  // Disable button during submission
-                    />,
-                    <Button
                         key="submit-button"
                         className="campaign-type-alert-button"
                         type="button"
@@ -68,6 +58,16 @@ const ConfirmationPopUp = ({ onClose, alertHeading, alertMessage, submitLabel, u
                         variation="secondary" 
                         label={t(submitLabel)}
                         onClick={handleSave}
+                        isDisabled={isSubmitting}  // Disable button during submission
+                    />,
+                    <Button
+                        key="close-button"
+                        className="campaign-type-alert-button"
+                        type="button"
+                        size="large"
+                        variation="primary"
+                        label={t(cancelLabel)}
+                        onClick={onClose}
                         isDisabled={isSubmitting}  // Disable button during submission
                     />,
                 ]}

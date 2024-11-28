@@ -2595,10 +2595,10 @@ $border-color: rgba(214, 213, 212, 1);
 .kpi-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-around; 
+  justify-content: space-around;
+  scrollbar-width: none;
   gap: 1rem; 
   overflow-x: auto; 
-  padding: 8px; 
   width: 100%;
 }
 

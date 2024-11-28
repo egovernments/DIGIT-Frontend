@@ -4,6 +4,8 @@ import { Header, DeleteIconv2, LabelFieldPair, AddIcon, CardText, InfoBannerIcon
 import { Dropdown, CheckBox, PopUp, Card, Button, Divider, TooltipWrapper, TextInput } from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR } from "../utils/utilities";
 import { useFormulaContext } from "./FormulaConfigWrapper";
+import { InfoOutline } from "@egovernments/digit-ui-svg-components";
+
 
 const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initialFormulas, setShowToast, allMdmsFormulasForThisCategory }) => {
   const { t } = useTranslation();
@@ -314,11 +316,14 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
               <div>
                 <Card type="secondary">
                   <LabelFieldPair className="formula-label-field">
-                    <span>
+                    <span className="assumption-label-icon-wrapper">
                       {`${t(formula.output)}`}
                       {category === "CAMPAIGN_VEHICLES" || formula?.source === "CUSTOM" ? null : (
                         <span className="icon-wrapper">
-                          <TooltipWrapper content={t(`FORMULA_MESSAGE_FOR_${formula.output}`)} children={<InfoBannerIcon fill={"#C84C0E"} />} />
+                          <TooltipWrapper
+                            content={t(`FORMULA_MESSAGE_FOR_${formula.output}`)}
+                            children={<InfoOutline fill={"#C84C0E"} width={"1.25rem"} height={"1.25rem"} />}
+                          />
                         </span>
                       )}
                     </span>
@@ -410,7 +415,15 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
             equalWidthButtons={true}
             children={[
               <div>
-                <CardText style={{ margin: 0 }}>{showPopUP === "CUSTOM" ? t(`FORMULA_PERMANENT_DELETE_CUSTOM`) : t("FOR_PERMANENT_DELETE")}</CardText>
+                <CardText style={{ margin: 0 }}>
+                  {showPopUP === "CUSTOM" ? (
+                    t(`FORMULA_PERMANENT_DELETE_CUSTOM`)
+                  ) : (
+                    <>
+                      {t("FOR_PERMANENT_DELETE")} <b>{t(`ADD_FORMULA`)}</b> {t(`BUTTON`)}
+                    </>
+                  )}
+                </CardText>
               </div>,
             ]}
             onOverlayClick={() => {
@@ -484,7 +497,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                 type={"button"}
                 size={"large"}
                 variation={"secondary"}
-                label={t("NO")}
+                label={t("CANCEL")}
                 onClick={() => {
                   setFormulasPopUp(false);
                   setSelectedDeletedFormula(null);
@@ -494,7 +507,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                 type={"button"}
                 size={"large"}
                 variation={"primary"}
-                label={t("YES")}
+                label={t("ADD")}
                 onClick={() => {
                   if(!selectedDeletedFormula){
                     setShowToast({
@@ -542,7 +555,6 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                   //   });
                   //   return
                   // }
-
 
                   if (selectedDeletedFormula?.code === "NEW_FORMULA" && selectedDeletedFormula?.name?.length > 100) {
                     setShowToast({
