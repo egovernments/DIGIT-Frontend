@@ -58,9 +58,6 @@ const UserUpload = React.memo(() => {
     setShowToast(null);
   };
 
-
-  console.log(state, 'sssssssssssssssssssssssssssssss');
-
   useEffect(async () => {
     const fetchData = async () => {
       if (!errorsType[type] && uploadedFile?.length > 0 && !isSuccess) {
