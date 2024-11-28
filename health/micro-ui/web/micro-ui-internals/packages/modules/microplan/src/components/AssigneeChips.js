@@ -8,7 +8,7 @@ const AssigneeChips = ({ assignees = [], assigneeNames, heading }) => {
   const [showPopUp, setShowPopUp] = useState(false);
 
   return (
-    <div className="digit-tag-container" style={{ minWidth: "unset", margin: "0rem", gap: "0rem" }}>
+    <div className="digit-tag-container" style={{margin: "0rem", gap: "0rem" }}>
       {assignees.length > 0 && (
         <Chip
           key={0}
@@ -25,7 +25,7 @@ const AssigneeChips = ({ assignees = [], assigneeNames, heading }) => {
         />
       )}
 
-      {assignees.length > 1 && (
+      {assignees.length > 1 && ( 
         <Button
           label={`+${assignees.length - 1} ${t("ES_MORE")}`}
           onClick={() => setShowPopUp(true)}

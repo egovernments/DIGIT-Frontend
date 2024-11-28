@@ -594,7 +594,6 @@ const PlanInbox = () => {
           t("ES_COMMON_NA")
         ),
       sortable: false,
-      width: "180px",
     },
     {
       name: t(`HCM_MICROPLAN_SERVING_FACILITY`),
