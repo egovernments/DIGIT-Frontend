@@ -30,7 +30,7 @@ const PopInboxTable = ({ ...props }) => {
       {
         name: t(`INBOX_VILLAGE`),
         cell: (row, index, column, id) => (
-          <div style={{ display: "flex", gap: ".5rem" }} className="village-tooltip-wrap">
+          <div className="village-tooltip-wrap">
             <Button
               label={t(`${row.boundaryCode}`)}
               onClick={() =>

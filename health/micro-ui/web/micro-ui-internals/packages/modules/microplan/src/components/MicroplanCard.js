@@ -42,10 +42,11 @@ const MicroplanCard = () => {
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));
 
   const propsForModuleCard = {
-    Icon: <SVG.UpdateExpense fill="white"  height="50" width="50" />,
+    Icon: "UpdateExpense",
     moduleName: isSupervisorLoggedIn ? t("MICROPLAN_MODULE_PROCESS") :t("MICROPLAN_MODULE_SETUP"),
     kpis: [],
     links: links,
+    className:"microplan-employee-module-card"
   };
   return <EmployeeModuleCard {...propsForModuleCard} />;
 };

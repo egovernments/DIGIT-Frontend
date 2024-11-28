@@ -823,27 +823,39 @@ export const UICustomizations = {
             });
           };
 
+          const onActionSelect = (e) => {
+            if (e.name == "MP_ACTIONS_EDIT_SETUP") {
+              window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${1}&microplanId=${row.id}&campaignId=${
+                row.campaignDetails.id
+              }`;
+            }
+            if (e.name == "MP_ACTIONS_VIEW_SUMMARY") {
+              window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${
+                row.campaignDetails.id
+              }&setup-completed=true`;
+            }
+          };
+
           return (
             <div>
               {microplanFileId && row?.status == "RESOURCE_ESTIMATIONS_APPROVED" ? (
                 <div>
-                  <ButtonNew style={{width:"100%"}} onClick={handleDownload} label={t("WBH_DOWNLOAD_MICROPLAN")} />
+                  <ButtonNew style={{ width: "20rem" }} onClick={handleDownload} icon="DownloadIcon" label={t("WBH_DOWNLOAD_MICROPLAN")} />
                 </div>
               ) : (
-                <Dropdown
-                  t={t}
-                  option={options}
-                  select={(e) => {
-                    if (e.name ==  "MP_ACTIONS_EDIT_SETUP") {
-                      window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${1}&microplanId=${row.id}&campaignId=${row.campaignDetails.id}`;
-                    }
-                    if (e.name == "MP_ACTIONS_VIEW_SUMMARY") {
-                      window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${row.campaignDetails.id}&setup-completed=true`;
-                    }
-                  }}
-                  optionKey={"name"}
-                  selected={{ code: "1", name: "MP_ACTIONS_FOR_MICROPLAN_SEARCH" }}
-                />
+                <div className={"action-button-open-microplan"}>
+                  <ButtonNew
+                    type="actionButton"
+                    variation="secondary"
+                    label={t("MP_ACTIONS_FOR_MICROPLAN_SEARCH")}
+                    options={options}
+                    style={{ width: "20rem" }}
+                    optionsKey="name"
+                    showBottom={true}
+                    isSearchable={false}
+                    onOptionSelect={(item) => onActionSelect(item)}
+                  />
+                </div>
               )}
             </div>
           );
@@ -1013,6 +1025,7 @@ export const UICustomizations = {
               variation="primary"
               icon={"ArrowForward"}
               type="button"
+              isSuffix={true}
               style={{width:"290px"}}
               isDisabled={!hasRequiredRole}
               // className="dm-workbench-download-template-btn dm-hover"

@@ -828,14 +828,18 @@ tbody {
     .row {
       padding: 0rem;
       margin: 0rem;
-
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
       margin-bottom: 1.5rem;
 
       h2 {
         margin: 0rem;
+        width: 20%;
       }
 
       .value {
+        width: 80%;
         p {
           margin: 0rem;
         }

@@ -203,11 +203,11 @@ const FacilityCatchmentMapping = () => {
       <div className="inbox-search-wrapper">
         <InboxSearchComposer
           configs={config}
-          // additionalConfig={{
-          //   resultsTable: {
-          //     onClickRow,
-          //   }
-          // }}
+          additionalConfig={{
+            resultsTable: {
+              onClickRow,
+            }
+          }}
         ></InboxSearchComposer>
       </div>
 
@@ -234,13 +234,13 @@ const FacilityCatchmentMapping = () => {
 
       {showPopup && currentRow && (
         <FacilityPopUp
-          details={currentRow}
+          detail={currentRow}
           onClose={() => {
             setShowPopup(false);
             setCurrentRow(null);
             setCensusQueryName(`censusData${Date.now()}`);
           }}
-          updateDetails={setCurrentRow}
+          // updateDetails={setCurrentRow}
         />
       )}
 
