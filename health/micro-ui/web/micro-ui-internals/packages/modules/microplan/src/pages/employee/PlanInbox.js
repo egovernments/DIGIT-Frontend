@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect, useMemo } from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { useHistory } from "react-router-dom";
-import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonsGroup, NoResultsFound } from "@egovernments/digit-ui-components";
+import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonGroup, NoResultsFound } from "@egovernments/digit-ui-components";
 import { Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
@@ -855,7 +855,7 @@ const PlanInbox = () => {
                 </div>
                 <div className={`table-actions-wrapper`}>
                   {actionsMain?.filter((action) => !actionsToHide.includes(action.action)).length > 1 ? (
-                    <ButtonsGroup
+                    <ButtonGroup
                       buttonsArray={actionsMain
                         ?.filter((action) => !actionsToHide.includes(action.action))
                         ?.map((action, index) => {
