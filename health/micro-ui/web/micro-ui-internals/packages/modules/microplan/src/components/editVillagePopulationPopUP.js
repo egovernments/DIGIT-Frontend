@@ -12,6 +12,7 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
   const [showComment, setShowComment] = useState(false);
   const [errors, setErrors] = useState({});
   const [showToast, setShowToast] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [targetExceed, setTargetExceed] = useState(false);
   const [updatedCensus, setUpdatedCensus] = useState(null); // Add updatedCensus as state
 
@@ -82,6 +83,9 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
     });
   
     let error = !value || Number(value) <= 0 || Number(value) > 100000 || !Number.isInteger(Number(value));
+    if(error===true){
+      setErrorMessage({ key: "error", label: t("HCM_MICROPLAN_ONLY_POSITIVE_NUMBERS_MAX_LIMIT_VALIDATION_ERROR") });
+    }
   
   // Additional check for TARGET_POPULATION vs TOTAL_POPULATION
   if (fieldKey.includes("TARGET_POPULATION")) {
@@ -108,7 +112,8 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
     // Check if the sum of TARGET_POPULATION exceeds TOTAL_POPULATION
     if (targetPopulationSum > Number(totalPopulationValue)) {
       setTargetExceed(true);
-      setShowToast({ key: "error", label: t("HCM_MICROPLAN_TARGET_CANNOT_EXCEED_TOTAL") });
+      setErrorMessage({ key: "error", label: t("HCM_MICROPLAN_TARGET_CANNOT_EXCEED_TOTAL") });
+      error =true;
     }
   }
   }
@@ -126,7 +131,7 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
   // Check if TOTAL_POPULATION is less than the sum of TARGET_POPULATION
   if (Number(value) < targetPopulationSum) {
     setTargetExceed(true);
-    setShowToast({ key: "error", label: t("HCM_MICROPLAN_TOTAL_CANNOT_BE_LESS_THAN_TARGET") });
+    setErrorMessage({ key: "error", label: t("HCM_MICROPLAN_TOTAL_CANNOT_BE_LESS_THAN_TARGET") });
     error = true;
   }
 }
@@ -186,7 +191,7 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
                     />
                     {errors[field.key] && (
                       <ErrorMessage
-                        message={t("HCM_MICROPLAN_ONLY_POSITIVE_NUMBERS_MAX_LIMIT_VALIDATION_ERROR")}
+                        message={errorMessage.label}
                         truncateMessage={true}
                         maxLength={256}
                         showIcon={true}
