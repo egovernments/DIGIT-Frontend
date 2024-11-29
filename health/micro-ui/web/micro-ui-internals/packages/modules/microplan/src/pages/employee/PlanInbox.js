@@ -87,7 +87,7 @@ const PlanInbox = () => {
   }, [planObject]);
 
   const fetchStatusCount = async () => {
-    console.log('fffffffffffffffffffffffffff');
+ 
     if (planObject) {
       try {
         await mutation.mutateAsync(
@@ -805,9 +805,6 @@ const PlanInbox = () => {
       userRole = "PLAN_ESTIMATION_APPROVER";
     }
   });
-
-  console.log(!isRootApprover, isStatusConditionMet(totalStatusCount), 'chhhhhhhhhhhhhhhhhhhhhhhhhh');
-  
 
   return (
     <div className="pop-inbox-wrapper">
