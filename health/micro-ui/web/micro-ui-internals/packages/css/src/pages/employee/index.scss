@@ -310,6 +310,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .campaign-preview-edit-container {
   display: flex;
   gap: 1rem;
+  cursor: pointer;
 
   span {
     color: theme(digitv2.lightTheme.primary);

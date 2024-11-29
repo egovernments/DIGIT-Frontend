@@ -80,95 +80,6 @@ function loopAndReturn(dataa, t) {
   return format;
 }
 
-function reverseDeliveryRemap(data, t) {
-  if (!data) return null;
-  const reversedData = [];
-  let currentCycleIndex = null;
-  let currentCycle = null;
-
-  const operatorMapping = {
-    "<=": "LESS_THAN_EQUAL_TO",
-    ">=": "GREATER_THAN_EQUAL_TO",
-    "<": "LESS_THAN",
-    ">": "GREATER_THAN",
-    "==": "EQUAL_TO",
-    "!=": "NOT_EQUAL_TO",
-    IN_BETWEEN: "IN_BETWEEN",
-  };
-
-  const cycles = data?.[0]?.cycles || [];
-  const mapProductVariants = (productVariants) => {
-    return productVariants.map((variant, key) => ({
-      key: key + 1,
-      count: 1,
-      value: variant.productVariantId,
-      name: variant.name,
-    }));
-  };
-
-  const parseConditionAndCreateRules = (condition, ruleKey, products) => {
-    const conditionParts = condition.split("and").map((part) => part.trim());
-    let attributes = [];
-  
-    conditionParts.forEach((part) => {
-      const parts = part.split(" ").filter(Boolean);
-  
-      // Handle "IN_BETWEEN" operator
-      if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
-        const toValue = parts[0];
-        const fromValue = parts[4];
-        attributes.push({
-          key: attributes.length + 1,
-          operator: { code: operatorMapping["IN_BETWEEN"] },
-          attribute: { code: parts[2] },
-          fromValue,
-          toValue,
-        });
-      } else {
-        const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
-        if (match) {
-          const attributeCode = match[1].trim();
-          const operatorSymbol = match[2].trim();
-          const value = match[3].trim();
-          attributes.push({
-            key: attributes.length + 1,
-            value,
-            operator: { code: operatorMapping[operatorSymbol] },
-            attribute: { code: attributeCode },
-          });
-        }
-      }
-    });
-    return [{
-      ruleKey: ruleKey + 1,
-      delivery: {},
-      products,
-      attributes,
-    }];
-  };
-  const mapDoseCriteriaToDeliveryRules = (doseCriteria) => {
-    return doseCriteria?.flatMap((criteria, ruleKey) => {
-      const products = mapProductVariants(criteria.ProductVariants);
-      return parseConditionAndCreateRules(criteria.condition, ruleKey, products);
-    });
-  };
-
-  const mapDeliveries = (deliveries) => {
-    return deliveries?.map((delivery, deliveryIndex) => ({
-      active: deliveryIndex === 0,
-      deliveryIndex: String(deliveryIndex + 1),
-      deliveryRules: mapDoseCriteriaToDeliveryRules(delivery.doseCriteria),
-    }));
-  };
-
-  const transformedCycles = cycles.map((cycle) => ({
-    active: true,
-    cycleIndex: String(cycle.id),
-    deliveries: mapDeliveries(cycle.deliveries),
-  }));
-
-  return transformedCycles;
-}
 
 function boundaryDataGrp(boundaryData) {
   // Create an empty object to hold grouped data by type
@@ -284,6 +195,133 @@ const CampaignSummary = (props) => {
     updateUrlParams({ key: key });
     window.dispatchEvent(new Event("checking"));
   }, [key]);
+
+  function reverseDeliveryRemap(data, t) {
+    if (!data) return null;
+    const reversedData = [];
+    let currentCycleIndex = null;
+    let currentCycle = null;
+  
+    const operatorMapping = {
+      "<=": "LESS_THAN_EQUAL_TO",
+      ">=": "GREATER_THAN_EQUAL_TO",
+      "<": "LESS_THAN",
+      ">": "GREATER_THAN",
+      "==": "EQUAL_TO",
+      "!=": "NOT_EQUAL_TO",
+      IN_BETWEEN: "IN_BETWEEN",
+    };
+  
+    const cycles = data?.[0]?.cycles || [];
+    const mapProductVariants = (productVariants) => {
+      return productVariants.map((variant, key) => ({
+        key: key + 1,
+        count: 1,
+        value: variant.productVariantId,
+        name: variant.name,
+      }));
+    };
+  
+    const parseConditionAndCreateRules = (condition, ruleKey, products) => {
+      // const conditionParts = condition.split("and").map((part) => part.trim());
+      // let attributes = [];
+      let attributes = [];
+  
+      if (isPreview) {
+        // Handle preview condition `3<=ageandage<11` or `3 <= Age < 11` in "IN_BETWEEN" style
+        const inBetweenMatch = condition.match(/(\d+)(<=|<|>=|>)(\w+)and(\w+)(<=|<|>=|>)(\d+)/);
+        if (inBetweenMatch) {
+          const toValue = inBetweenMatch[1].trim();
+          const fromValue = inBetweenMatch[6].trim();
+          const attributeCode = inBetweenMatch[3].trim();
+    
+          attributes.push({
+            key: attributes.length + 1,
+            operator: { code: "IN_BETWEEN" },
+            attribute: { code: attributeCode },
+            fromValue,
+            toValue,
+          });
+        } else {
+          // Handle regular conditions in preview mode
+          const conditionParts = condition.split("and").map((part) => part.trim());
+          conditionParts.forEach((part) => {
+            const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
+            if (match) {
+              const attributeCode = match[1].trim();
+              const operatorSymbol = match[2].trim();
+              const value = match[3].trim();
+              attributes.push({
+                key: attributes.length + 1,
+                value,
+                operator: { code: operatorMapping[operatorSymbol] },
+                attribute: { code: attributeCode },
+              });
+            }
+          });
+        }
+      }  else {
+        const conditionParts = condition.split("and").map((part) => part.trim());
+      conditionParts.forEach((part) => {
+        const parts = part.split(" ").filter(Boolean);
+    
+        // Handle "IN_BETWEEN" operator
+        if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
+          const toValue = parts[0];
+          const fromValue = parts[4];
+          attributes.push({
+            key: attributes.length + 1,
+            operator: { code: operatorMapping["IN_BETWEEN"] },
+            attribute: { code: parts[2] },
+            fromValue,
+            toValue,
+          });
+        } else {
+          const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
+          if (match) {
+            const attributeCode = match[1].trim();
+            const operatorSymbol = match[2].trim();
+            const value = match[3].trim();
+            attributes.push({
+              key: attributes.length + 1,
+              value,
+              operator: { code: operatorMapping[operatorSymbol] },
+              attribute: { code: attributeCode },
+            });
+          }
+        }
+      });
+    }
+      return [{
+        ruleKey: ruleKey + 1,
+        delivery: {},
+        products,
+        attributes,
+      }];
+    };
+    const mapDoseCriteriaToDeliveryRules = (doseCriteria) => {
+      return doseCriteria?.flatMap((criteria, ruleKey) => {
+        const products = mapProductVariants(criteria.ProductVariants);
+        return parseConditionAndCreateRules(criteria.condition, ruleKey, products);
+      });
+    };
+  
+    const mapDeliveries = (deliveries) => {
+      return deliveries?.map((delivery, deliveryIndex) => ({
+        active: deliveryIndex === 0,
+        deliveryIndex: String(deliveryIndex + 1),
+        deliveryRules: mapDoseCriteriaToDeliveryRules(delivery.doseCriteria),
+      }));
+    };
+  
+    const transformedCycles = cycles.map((cycle) => ({
+      active: true,
+      cycleIndex: String(cycle.id),
+      deliveries: mapDeliveries(cycle.deliveries),
+    }));
+  
+    return transformedCycles;
+  }
 
   // useEffect(() => {
   //   if (props?.props?.summaryErrors) {
