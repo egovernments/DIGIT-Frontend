@@ -159,6 +159,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
   };
 
   const handleNext = () => {
+    
     const currentCategory = assumptionCategories?.[internalKey - 1]?.category;
     const currentAssumptions = assumptionCategories[internalKey - 1]?.assumptions || [];
     const existingAssumptionKeys = assumptionValues?.map((assumption) => assumption.key);
@@ -167,19 +168,17 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     const visibleAssumptions = currentAssumptions.filter((item) => existingAssumptionKeys?.includes(item) && !deletedAssumptions?.includes(item));
 
     //Validate: Check if any value is empty for visible assumptions
-    // const atleastOneMDMS = assumptionValues?.filter((j) => j.category === currentCategory)?.filter((i) => i?.source === "MDMS")?.length === 0;
-    // if (atleastOneMDMS) {
-    //   setShowToast({
-    //     key: "error",
-    //     label: t("ATLEAST_ONE_MDMS_ASSUMPTION"),
-    //     transitionTime: 3000,
-    //   });
-    //   return; // Prevent moving to the next step
-    // }
+    const atleastOneMDMS = assumptionValues?.filter((j) => j.category === currentCategory)?.filter((i) => i?.source === "MDMS")?.length === 0;
+   
+
     const hasEmptyFields = visibleAssumptions.some((item) => {
       const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
       return !value; // Check if any value is empty
     });
+
+    const hasCustomEmptyFields = assumptionValues?.filter(assumption => assumption.source==="CUSTOM" && assumption.category===currentCategory)?.some(assumption => {
+      return !assumption.value
+    })
 
     const hasNaNFields = visibleAssumptions.some((item) => {
       const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
@@ -210,7 +209,23 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
       });
       return; // Prevent moving to the next step
     }
+    if(hasCustomEmptyFields){
+      setShowToast({
+        key: "error",
+        label: t("ERR_MANDATORY_FIELD"),
+        transitionTime: 3000,
+      });
+      return; // Prevent moving to the next step
+    }
 
+    if (atleastOneMDMS) {
+      setShowToast({
+        key: "error",
+        label: t("ATLEAST_ONE_MDMS_ASSUMPTION"),
+        transitionTime: 3000,
+      });
+      return; // Prevent moving to the next step
+    }
 
     // If there are empty fields, show an error and do not allow moving to the next step
     if (hasNaNFields) {
