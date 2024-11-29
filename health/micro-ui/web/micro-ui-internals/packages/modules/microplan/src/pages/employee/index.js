@@ -100,6 +100,7 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
       { name: "facilityStatus" },
       { name: "VehicleDetails" },
       { name: "ContextPathForUser" },
+      { name: "DssKpiConfigs" },
     ],
     {
       cacheTime: Infinity,
