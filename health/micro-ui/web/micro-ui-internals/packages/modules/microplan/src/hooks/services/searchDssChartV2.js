@@ -1,8 +1,7 @@
 import { DssChartConfig } from "../../configs/DssChartConfig";
 
-const searchDssChartV2 = async (module, planId, campaignType, boundaries=[]) => {
+const searchDssChartV2 = async (module, planId, campaignType, boundaries = []) => {
     try {
-
         // Validate inputs
         if (!module || !planId || !campaignType) {
             console.error("Invalid module or planId or campaignType provided");
@@ -38,21 +37,29 @@ const searchDssChartV2 = async (module, planId, campaignType, boundaries=[]) => 
         const tenantId = Digit.ULBService.getCurrentTenantId();
         filters["tenantId"] = [tenantId];
 
+        // Collect all unique visualizationCodes (both primary and concatenateKey) for requests
+        const charts = campaignConfig.charts.filter(chart => chart.active); // Only active charts
+        const visualizationCodes = new Set();
 
-        // Construct request bodies for all active charts in the campaignType
-        const requests = campaignConfig.charts
-            .filter(chart => chart.active) // Include only active charts
-            .map(chart => ({
-                aggregationRequestDto: {
-                    visualizationType: chart.visualizationType,
-                    visualizationCode: chart.visualizationCode,
-                    filters: filters,
-                    moduleLevel: chart.moduleLevel,
-                },
-                headers: {
-                    tenantId: tenantId,
-                }
-            }));
+        charts.forEach(chart => {
+            visualizationCodes.add(chart.visualizationCode);
+            if (chart.concatenateKey) {
+                visualizationCodes.add(chart.concatenateKey);
+            }
+        });
+
+        // Construct request bodies for all unique visualizationCodes
+        const requests = Array.from(visualizationCodes).map(visualizationCode => ({
+            aggregationRequestDto: {
+                visualizationType: "METRIC", // Assume METRIC as default type
+                visualizationCode: visualizationCode,
+                filters: filters,
+                moduleLevel: module, // Assuming moduleLevel matches the module
+            },
+            headers: {
+                tenantId: tenantId,
+            }
+        }));
 
         // Send all requests in parallel
         const responses = await Promise.all(
@@ -67,20 +74,31 @@ const searchDssChartV2 = async (module, planId, campaignType, boundaries=[]) => 
             )
         );
 
-        // Extract and map headerValue from responses
-        const finalResponse = campaignConfig.charts
-            .filter(chart => chart.active) // Ensure only active charts are included
-            .sort((a, b) => a.order - b.order) // Sort by the 'order' field
-            .reduce((acc, chart, index) => {
-                const response = responses[index]; // Match response to chart by index
-                const headerValue = response?.responseData?.data?.[0]?.headerValue || 0;
+        // Map responses for quick access
+        const responseMap = responses.reduce((acc, response) => {
+            const code = response?.responseData?.visualizationCode;
+            const headerValue = response?.responseData?.data?.[0]?.headerValue || 0;
+            if (code) acc[code] = headerValue;
+            return acc;
+        }, {});
 
-                // Add chart code and headerValue to final response in order
-                acc[chart.localeKey] = headerValue;
+        // Construct the final response with concatenated values where applicable
+        const finalResponse = charts
+            .sort((a, b) => a.order - b.order) // Sort by the 'order' field
+            .reduce((acc, chart) => {
+                const primaryValue = responseMap[chart.visualizationCode] || 0;
+
+                if (chart.concatenateKey) {
+                    const concatenateValue = responseMap[chart.concatenateKey] || 0;
+                    acc[chart.localeKey] = `${primaryValue} ${chart.concateChars || ""} ${concatenateValue}`;
+                } else {
+                    acc[chart.localeKey] = primaryValue;
+                }
+
                 return acc;
             }, {});
 
-        return finalResponse; // Return an object with visualizationCode as keys and headerValues as values
+        return finalResponse; // Return an object with localeKeys as keys and final values as values
     } catch (error) {
         console.error(error);
         if (error?.response?.data?.Errors) {

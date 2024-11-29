@@ -188,10 +188,12 @@ export const DssChartConfig =
                 {
                     "campaignType": "MR-DN",
                     "charts": [
-                        {
+                        {   
                             "visualizationType": "METRIC",
                             "localeKey": "TOTAL_FACILITIES_WITH_MAPPED_VILLAGES",
                             "visualizationCode": "totalFacilitiesWithMappedVillages",
+                            "concateChars": "/",
+                            "concatenateKey": "microplanTotalFacilityCount",
                             "order": 1,
                             "active": true,
                             "moduleLevel": "MICROPLAN-FACILITY"
@@ -200,6 +202,8 @@ export const DssChartConfig =
                             "visualizationType": "METRIC",
                             "localeKey": "TOTAL_VILLAGES_WITH_FACILITY_ASSIGNED",
                             "visualizationCode": "totalVillagesWithFacilityAssigned",
+                            "concateChars": "/",
+                            "concatenateKey": "microplanTotalVillageCount",
                             "order": 2,
                             "active": true,
                             "moduleLevel": "MICROPLAN-FACILITY"
@@ -213,6 +217,8 @@ export const DssChartConfig =
                             "visualizationType": "METRIC",
                             "localeKey": "TOTAL_FACILITIES_WITH_MAPPED_VILLAGES",
                             "visualizationCode": "totalFacilitiesWithMappedVillages",
+                            "concateChars": "/",
+                            "concatenateKey": "microplanTotalFacilityCount",
                             "order": 1,
                             "active": true,
                             "moduleLevel": "MICROPLAN-FACILITY"
@@ -221,6 +227,8 @@ export const DssChartConfig =
                             "visualizationType": "METRIC",
                             "localeKey": "TOTAL_VILLAGES_WITH_FACILITY_ASSIGNED",
                             "visualizationCode": "totalVillagesWithFacilityAssigned",
+                            "concateChars": "/",
+                            "concatenateKey": "microplanTotalVillageCount",
                             "order": 2,
                             "active": true,
                             "moduleLevel": "MICROPLAN-FACILITY"
