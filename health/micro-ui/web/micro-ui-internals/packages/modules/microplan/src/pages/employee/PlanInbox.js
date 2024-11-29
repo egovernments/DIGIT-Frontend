@@ -87,6 +87,7 @@ const PlanInbox = () => {
   }, [planObject]);
 
   const fetchStatusCount = async () => {
+ 
     if (planObject) {
       try {
         await mutation.mutateAsync(
@@ -150,6 +151,42 @@ const PlanInbox = () => {
     setCurrentPage(1);
     setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * currentRowsPerPage });
   };
+
+  // Custom hook to fetch assign to me count when workflow data is updated in assign to all case
+  const {
+    isLoading: isCountPlanWithCensusLoading,
+    data: planWithCensusCount,
+    error: planWithCensusCountError,
+    refetch: refetchPlanWithCensusCount,
+    isFetching: isFetchingCount,
+  } = Digit.Hooks.microplanv1.usePlanSearchWithCensus({
+    tenantId: tenantId,
+    microplanId: microplanId,
+    body: {
+      PlanSearchCriteria: {
+        tenantId: tenantId,
+        active: true,
+        jurisdiction: censusJurisdiction,
+        status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
+        assignee: user.info.uuid,
+        planConfigurationId: microplanId, 
+        limit: limitAndOffset?.limit,
+        offset: limitAndOffset?.offset,
+      },
+    },
+    config: {
+      enabled: censusJurisdiction?.length > 0 ? true : false,
+    },
+    changeQueryName:"count"
+  });
+
+  useEffect(() => {
+    if (planWithCensusCount) {
+      setAssignedToMeCount(planWithCensusCount?.TotalCount);
+    }
+  }, [planWithCensusCount]);
+
+
 
   const {
     isLoading: isPlanWithCensusLoading,
@@ -749,7 +786,8 @@ const PlanInbox = () => {
     isWorkflowLoading ||
     isProcessLoading ||
     mutation.isLoading ||
-    isPlanWithCensusLoading
+    isPlanWithCensusLoading ||
+    isCountPlanWithCensusLoading
   ) {
     return <Loader />;
   }
@@ -767,7 +805,6 @@ const PlanInbox = () => {
       userRole = "PLAN_ESTIMATION_APPROVER";
     }
   });
-  
 
   return (
     <div className="pop-inbox-wrapper">
@@ -814,7 +851,7 @@ const PlanInbox = () => {
         ></InboxFilterWrapper>
 
         <div className={"pop-inbox-table-wrapper"}>
-          {showTab && (
+          {showTab && !isFetchingCount && (
             <Tab
               activeLink={activeLink?.code}
               configItemKey="code"
@@ -915,6 +952,7 @@ const PlanInbox = () => {
                           offset: 0
                         }
                       });
+                      refetchPlanWithCensusCount();
                       refetchPlanWithCensus();
                       fetchStatusCount();
                     }}
@@ -977,7 +1015,7 @@ labelPrefix={"PLAN_ACTIONS_"}
 />
       }
 
-      {isRootApprover && isStatusConditionMet(totalStatusCount) && (
+      {isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "RESOURCE_ESTIMATION_IN_PROGRESS" && (
         <ActionBar
           actionFields={[
             <Button
@@ -996,8 +1034,7 @@ labelPrefix={"PLAN_ACTIONS_"}
         />
       )}
 
-      {(!isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "RESOURCE_ESTIMATION_IN_PROGRESS") ||
-        (disabledAction && (
+      {((!isRootApprover && isStatusConditionMet(totalStatusCount) ) || disabledAction) && (
           <ActionBar
             actionFields={[
               <Button
@@ -1015,7 +1052,7 @@ labelPrefix={"PLAN_ACTIONS_"}
             sortActionFields
             style={{}}
           />
-        ))}
+        )}
 
       {actionBarPopUp && (
         <ConfirmationPopUp
