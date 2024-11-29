@@ -819,7 +819,7 @@ const PlanInbox = () => {
           <div>{`${t("LOGGED_IN_AS")} ${userName} - ${t(userRole)}`}</div>
         </div>
       </div>
-      <GenericKpiFromDSS module="MICROPLAN" config={state?.DssKpiConfigs} planId={microplanId} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
+      <GenericKpiFromDSS module="MICROPLAN"  planId={microplanId} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
       <SearchJurisdiction
         boundaries={boundaries}
         defaultHierarchy={defaultHierarchy}

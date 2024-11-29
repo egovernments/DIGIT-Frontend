@@ -7,12 +7,10 @@ import { Loader, ActionBar, Button } from "@egovernments/digit-ui-components";
 import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
 import ConfirmationPopUp from "../../components/ConfirmationPopUp";
 import GenericKpiFromDSS from "../../components/GenericKpiFromDSS";
-import { useMyContext } from "../../utils/context";
 
 const FacilityCatchmentMapping = () => {
   const [actionBarPopUp, setactionBarPopUp] = useState(false);
   const { t } = useTranslation();
-  const { state } = useMyContext();
   const history = useHistory();
   const url = Digit.Hooks.useQueryParams();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -200,7 +198,7 @@ const FacilityCatchmentMapping = () => {
 
       </div>
       <div style={{ marginBottom: "1rem" }}>
-        <GenericKpiFromDSS module="MICROPLAN-FACILITY" planId={url?.microplanId} config={state?.DssKpiConfigs} campaignType={campaignObject?.projectType} planEmployee={planEmployee} />
+        <GenericKpiFromDSS module="MICROPLAN-FACILITY" planId={url?.microplanId} campaignType={campaignObject?.projectType} planEmployee={planEmployee} />
       </div>
       <div className="inbox-search-wrapper">
         <InboxSearchComposer

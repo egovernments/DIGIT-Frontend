@@ -2,9 +2,9 @@ const searchDssChartV2 = async (module, planId, config, campaignType, boundaries
     try {
 
         // Validate inputs
-        if (!module || !planId || !campaignType) {
-            console.error("Invalid module or planId or campaignType provided");
-            throw new Error("Invalid module or planId or campaignType provided");
+        if (!module || !planId || !campaignType || !config) {
+            console.error("Any of module, planId, campaignType or config is invalid for searchDssChartV2");
+            throw new Error("Any of module, planId, campaignType or config is invalid for searchDssChartV2");
         }
 
         // Find the configuration for the provided module

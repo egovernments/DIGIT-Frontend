@@ -1,12 +1,14 @@
 import { useQuery } from "react-query";
+import { useMyContext } from "../utils/context";
 import searchDssChartV2 from "./services/searchDssChartV2";
 
 const useKpiDssSearch = (moduleAndPlanConfig) => {
+    const { state } = useMyContext();
     const module = moduleAndPlanConfig?.module;
     const planId = moduleAndPlanConfig?.planId;
     const campaignType = moduleAndPlanConfig?.campaignType;
     const boundaries = moduleAndPlanConfig?.boundariesForKpi;
-    const config = moduleAndPlanConfig?.config;
+    const config = state?.DssKpiConfigs;;
     const queryString = `dss-${module}-${planId}_${campaignType}_${JSON.stringify(boundaries)}`;
     const { isLoading, data, isFetching, refetch } = useQuery([queryString, "/dashboard-analytics/dashboard/getChartV2"], () => searchDssChartV2(module, planId, config, campaignType, boundaries), {
         ...{},
