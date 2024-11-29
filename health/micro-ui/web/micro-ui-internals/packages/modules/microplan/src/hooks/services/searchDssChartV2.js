@@ -49,17 +49,24 @@ const searchDssChartV2 = async (module, planId, campaignType, boundaries = []) =
         });
 
         // Construct request bodies for all unique visualizationCodes
-        const requests = Array.from(visualizationCodes).map(visualizationCode => ({
-            aggregationRequestDto: {
-                visualizationType: "METRIC", // Assume METRIC as default type
-                visualizationCode: visualizationCode,
-                filters: filters,
-                moduleLevel: module, // Assuming moduleLevel matches the module
-            },
-            headers: {
-                tenantId: tenantId,
-            }
-        }));
+        const requests = Array.from(visualizationCodes).map(visualizationCode => {
+            // Find the chart configuration corresponding to the visualizationCode
+            const chartConfig = charts.find(
+                chart => chart.visualizationCode === visualizationCode || chart.concatenateKey === visualizationCode
+            );
+
+            return {
+                aggregationRequestDto: {
+                    visualizationType: chartConfig?.visualizationType || "METRIC", // Use visualizationType from config, fallback to METRIC
+                    visualizationCode: visualizationCode,
+                    filters: filters,
+                    moduleLevel: chartConfig?.moduleLevel || module, // Use moduleLevel from config, fallback to module
+                },
+                headers: {
+                    tenantId: tenantId,
+                }
+            };
+        });
 
         // Send all requests in parallel
         const responses = await Promise.all(
