@@ -828,7 +828,7 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
         <div className="product-tag-container digit-tag-container">
           {delivery?.products?.length > 0 &&
             delivery?.products?.map((i) => {
-              return i?.value && i?.count ? (
+              return i?.value && i?.quantity ? (
                 <Chip key={i.key} text={i?.name} onClick={() => removeProduct(i)} className="multiselectdropdown-tag" hideClose={false} />
               ) : null;
             })}
