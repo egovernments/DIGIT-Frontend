@@ -87,6 +87,7 @@ const PlanInbox = () => {
   }, [planObject]);
 
   const fetchStatusCount = async () => {
+    console.log('fffffffffffffffffffffffffff');
     if (planObject) {
       try {
         await mutation.mutateAsync(
@@ -804,6 +805,8 @@ const PlanInbox = () => {
       userRole = "PLAN_ESTIMATION_APPROVER";
     }
   });
+
+  console.log(!isRootApprover, isStatusConditionMet(totalStatusCount), 'chhhhhhhhhhhhhhhhhhhhhhhhhh');
   
 
   return (
@@ -1015,7 +1018,7 @@ labelPrefix={"PLAN_ACTIONS_"}
 />
       }
 
-      {isRootApprover && isStatusConditionMet(totalStatusCount) && (
+      {isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "RESOURCE_ESTIMATION_IN_PROGRESS" && (
         <ActionBar
           actionFields={[
             <Button
@@ -1034,8 +1037,7 @@ labelPrefix={"PLAN_ACTIONS_"}
         />
       )}
 
-      {(!isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "RESOURCE_ESTIMATION_IN_PROGRESS") ||
-        (disabledAction && (
+      {((!isRootApprover && isStatusConditionMet(totalStatusCount) ) || disabledAction) && (
           <ActionBar
             actionFields={[
               <Button
@@ -1053,7 +1055,7 @@ labelPrefix={"PLAN_ACTIONS_"}
             sortActionFields
             style={{}}
           />
-        ))}
+        )}
 
       {actionBarPopUp && (
         <ConfirmationPopUp

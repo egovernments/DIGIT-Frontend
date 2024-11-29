@@ -58,7 +58,7 @@ const ConfirmationPopUp = ({ onClose, alertHeading, alertMessage, submitLabel, u
                         variation="secondary" 
                         label={t(submitLabel)}
                         onClick={handleSave}
-                        isDisabled={isSubmitting}  // Disable button during submission
+                        isDisabled={isSubmitting || mutation.isLoading}  // Disable button during submission
                     />,
                     <Button
                         key="close-button"
@@ -68,7 +68,7 @@ const ConfirmationPopUp = ({ onClose, alertHeading, alertMessage, submitLabel, u
                         variation="primary"
                         label={t(cancelLabel)}
                         onClick={onClose}
-                        isDisabled={isSubmitting}  // Disable button during submission
+                        isDisabled={isSubmitting || mutation.isLoading}  // Disable button during submission
                     />,
                 ]}
             />
