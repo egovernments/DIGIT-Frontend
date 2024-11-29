@@ -184,9 +184,10 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
       const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
       return !value || isNaN(value) || value <= 0; // Check if any value is NAN
     });
-    const hasExceededUpperBound = visibleAssumptions.some((item) => {
-      const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
-      if(value>=1000){
+    const hasExceededUpperBound = assumptionValues.some((item) => {
+      // const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
+      const value = item?.value;
+      if(value>1000){
         return true
       }
     });
@@ -313,6 +314,43 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
   });
 
   const handleBack = () => {
+    //here check for current assumption values if something is invalid throw a toast
+    const currentCategory = assumptionCategories?.[internalKey - 1]?.category;
+    // console.log(assumptionValues);
+    const currentAssumptions = assumptionValues?.filter(assumption => assumption?.category === currentCategory);
+
+    //if we go back with some invalid value show a toast to correct it
+    function hasInvalidValues(currentAssumptions) {
+      return currentAssumptions
+        .filter((item) => item?.value !== "") // Filter out empty string values
+        .some((item) => {
+          const value = Number(item?.value); // Parse the value into a number
+    
+          // Check if the value is invalid
+          if (isNaN(value) || value < 0 || value > 1000) {
+            return true; // Invalid if not a number or out of range
+          }
+    
+          // Check if the value has more than 2 decimal places
+          const decimalPlaces = value.toString().split(".")[1]?.length || 0;
+          return decimalPlaces > 2;
+        });
+    }
+
+    if(hasInvalidValues(currentAssumptions)){
+      setShowToast({
+        key: "error",
+        label: t("ERR_PLS_ENTER_VALID_ASSUMPTION_VALUE"),
+        transitionTime: 3000,
+      });
+      return;
+    }
+
+
+    
+    
+
+    
     if (internalKey > 1) {
       setInternalKey((prevKey) => prevKey - 1); // Update key in URL
     } else {
