@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { useHistory } from "react-router-dom";
 import PopInboxTable from "../../components/PopInboxTable";
-import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonsGroup, NoResultsFound } from "@egovernments/digit-ui-components";
+import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonGroup, NoResultsFound } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
@@ -428,8 +428,7 @@ const PopInbox = () => {
   }, [selectedFilter]);
 
   const onFilter = (selectedStatus) => {
-    setVillagesSelected(0);
-      setSelectedRows([]);
+
     setLimitAndOffset((prev)=>{
       return {
         limit: prev.limit,
@@ -650,7 +649,7 @@ const PopInbox = () => {
 
                   <div className={`table-actions-wrapper`}>
                     {actionsMain?.filter((action) => !actionsToHide.includes(action.action)).length > 1 ? (
-                      <ButtonsGroup
+                      <ButtonGroup
                         buttonsArray={actionsMain
                           ?.filter((action) => !actionsToHide.includes(action.action))
                           ?.map((action, index) => {
