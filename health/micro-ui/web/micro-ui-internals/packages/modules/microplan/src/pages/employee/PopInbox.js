@@ -9,9 +9,11 @@ import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
 import { Header } from "@egovernments/digit-ui-react-components";
 import ConfirmationPopUp from "../../components/ConfirmationPopUp";
 import GenericKpiFromDSS from "../../components/GenericKpiFromDSS";
+import { useMyContext } from "../../utils/context";
 
 const PopInbox = () => {
   const { t } = useTranslation();
+  const { state } = useMyContext();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const history = useHistory();
   const url = Digit.Hooks.useQueryParams();
@@ -615,7 +617,7 @@ const PopInbox = () => {
           
         </div>
       </div>
-      <GenericKpiFromDSS module="CENSUS" planId={microplanId} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
+      <GenericKpiFromDSS module="CENSUS" planId={microplanId} config={state?.DssKpiConfigs} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
       <SearchJurisdiction
         boundaries={boundaries}
         defaultHierarchy={defaultHierarchy}

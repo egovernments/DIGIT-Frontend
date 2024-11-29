@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import useKpiDssSearch from '../hooks/useKpiDssSearch';
 
 const GenericKpiFromDSS = (props) => {
-    const { module, planId, campaignType, planEmployee={}, boundariesForKpi=[] } = props;
+    const { module, planId, campaignType, config, planEmployee={}, boundariesForKpi=[] } = props;
 
     // Create a copy of the boundariesForKpi array
     const localBoundariesForKpi = [...boundariesForKpi];
@@ -30,6 +30,7 @@ const GenericKpiFromDSS = (props) => {
         module,
         planId,
         campaignType,
+        config,
         boundariesForKpi: localBoundariesForKpi
     });
 

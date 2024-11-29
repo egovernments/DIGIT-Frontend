@@ -1,7 +1,6 @@
-import { DssChartConfig } from "../../configs/DssChartConfig";
-
-const searchDssChartV2 = async (module, planId, campaignType, boundaries = []) => {
+const searchDssChartV2 = async (module, planId, config, campaignType, boundaries = []) => {
     try {
+
         // Validate inputs
         if (!module || !planId || !campaignType) {
             console.error("Invalid module or planId or campaignType provided");
@@ -9,7 +8,7 @@ const searchDssChartV2 = async (module, planId, campaignType, boundaries = []) =
         }
 
         // Find the configuration for the provided module
-        const moduleConfig = DssChartConfig.find(config => config.module === module);
+        const moduleConfig = config.find(config => config.module === module);
 
         if (!moduleConfig) {
             console.error(`No DSS Chart configuration found for module: ${module}`);
@@ -38,7 +37,7 @@ const searchDssChartV2 = async (module, planId, campaignType, boundaries = []) =
         filters["tenantId"] = [tenantId];
 
         // Collect all unique visualizationCodes (both primary and concatenateKey) for requests
-        const charts = campaignConfig.charts.filter(chart => chart.active); // Only active charts
+        const charts = campaignConfig.charts;
         const visualizationCodes = new Set();
 
         charts.forEach(chart => {
