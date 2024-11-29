@@ -7,6 +7,7 @@ import { EmployeeModuleCard } from "@egovernments/digit-ui-react-components";
 const ROLES = {
   CAMPAIGN_MANAGER:["CAMPAIGN_MANAGER","MICROPLAN_CAMPAIGN_INTEGRATOR"],
   BOUNDARY_MANAGER:["BOUNDARY_MANAGER"],
+  MICROPLAN_INTEGRATOR:["MICROPLAN_CAMPAIGN_INTEGRATOR"],
   CAMPAIGN_MANAGER_ONLY:["CAMPAIGN_MANAGER"],
   NATIONAL_SUPERVISOR:["NATIONAL_SUPERVISOR"]
 };
@@ -43,7 +44,7 @@ const CampaignCard = () => {
     { 
       label: t("ACTION_TEST_SETUP_CAMPAIGN_FROM_MICROPLAN"),
       link: `/${window?.contextPath}/employee/campaign/setup-from-microplan?status=${microplanStatus}`,
-      roles: ROLES.CAMPAIGN_MANAGER
+      roles: ROLES.MICROPLAN_INTEGRATOR
     },
     {
       label: t("NATIONAL_DASHBOARD"),
