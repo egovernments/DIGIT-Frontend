@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card } from '@egovernments/digit-ui-components';
 import { Loader } from '@egovernments/digit-ui-react-components';
 import { useTranslation } from 'react-i18next';
 import useKpiDssSearch from '../hooks/useKpiDssSearch';
 
 const GenericKpiFromDSS = (props) => {
-    const { module, planId, campaignType, planEmployee={}, boundariesForKpi=[] } = props;
-
+    const { module, planId, campaignType, planEmployee = {}, boundariesForKpi = [], refetchTrigger } = props;
     // Create a copy of the boundariesForKpi array
     const localBoundariesForKpi = [...boundariesForKpi];
 
@@ -26,12 +25,18 @@ const GenericKpiFromDSS = (props) => {
 
     const { t } = useTranslation();
 
-    const { data, loader } = useKpiDssSearch({
+    const { data, loader, refetch } = useKpiDssSearch({
         module,
         planId,
         campaignType,
         boundariesForKpi: localBoundariesForKpi
     });
+
+    useEffect(() => {
+        if (refetchTrigger) {
+            refetch();
+        }
+    }, [refetchTrigger]);
 
     if (loader) {
         return <Loader />

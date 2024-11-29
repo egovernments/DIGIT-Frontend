@@ -41,6 +41,7 @@ const PopInbox = () => {
   const [disabledAction, setDisabledAction] = useState(false);
   const [assignedToAllCount, setAssignedToAllCount] = useState(0);
   const [updatedCensus, setUpdatedCensus] = useState(null);
+  const [refetchTrigger, setRefetchTrigger] = useState(0);
   const [triggerTotalCensus, setTriggerTotalCensus] = useState(false);
   const [totalStatusCount, setTotalStatusCount] = useState({});
   const [defaultHierarchy, setDefaultSelectedHierarchy] = useState(null);
@@ -615,7 +616,7 @@ const PopInbox = () => {
           
         </div>
       </div>
-      <GenericKpiFromDSS module="CENSUS" planId={microplanId} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
+      <GenericKpiFromDSS module="CENSUS" planId={microplanId} refetchTrigger={refetchTrigger} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
       <SearchJurisdiction
         boundaries={boundaries}
         defaultHierarchy={defaultHierarchy}
@@ -757,7 +758,7 @@ const PopInbox = () => {
             {isLoading || isFetching ? <Loader /> : censusData.length === 0 ? <NoResultsFound style={{ height: selectedFilter === "VALIDATED" ? "472px" : "408px" }} text={t(`HCM_MICROPLAN_NO_DATA_FOUND_FOR_CENSUS`)} /> : <PopInboxTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap}
               onSuccessEdit={(data) => {
                 setUpdatedCensus(data);
-                setShowComment(true);
+                setShowComment(true); 
               }}
               conditionalRowStyles={conditionalRowStyles} disabledAction={disabledAction} />}
           </Card>
@@ -769,11 +770,14 @@ const PopInbox = () => {
                 url="/census-service/_update"
                 requestPayload={{ Census: updatedCensus }}
                 commentPath="workflow.comments"
-                onSuccess={(data) => {
+                onSuccess={ async (data)=> {
                   setShowToast({ key: "success", label: t(`${isRootApprover ? 'ROOT_' : ''}POP_INBOX_HCM_MICROPLAN_EDIT_WORKFLOW_UPDATED_SUCCESSFULLY`), transitionTime: 5000 });
                 onCommentLogClose();
                 refetchCount();
                 refetchCensus();
+                // wait for 5 seconds
+                await new Promise((resolve) => setTimeout(resolve, 5000));
+                setRefetchTrigger(prev => prev + 1);
               }}
               onError={(error) => {
                 setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
