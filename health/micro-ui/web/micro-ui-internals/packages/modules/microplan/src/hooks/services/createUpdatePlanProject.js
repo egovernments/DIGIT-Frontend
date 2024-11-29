@@ -48,6 +48,24 @@ const isValidResourceName = async (name) => {
     throw new Error(error);
   }
 };
+
+function updateFormulasSource(formulasToUpdate, assumptions) {
+  // Extract keys of assumptions with source "CUSTOM"
+  const customKeys = assumptions
+    .filter((assumption) => assumption.source === "CUSTOM")
+    .map((assumption) => assumption.key);
+
+  // Update the source of formulas based on the conditions
+  return formulasToUpdate.map((formula) => {
+    if (
+      formula.source === "MDMS" && // Check if the formula's source is "MDMS"
+      (customKeys.includes(formula.input) || customKeys.includes(formula.assumptionValue)) // Check if input or assumptionValue belongs to "CUSTOM"
+    ) {
+      return { ...formula, source: "CUSTOM" }; // Update the source to "CUSTOM"
+    }
+    return formula; // Return unchanged formula otherwise
+  });
+}
 //generating campaign and microplan
 //this will only be called on first time create so it doesn't have to be generic
 const CreateResource = async (req) => {
@@ -535,10 +553,11 @@ const createUpdatePlanProject = async (req) => {
             updatedRow.operator = state?.RuleConfigureOperators?.find((operation) => operation.operatorName === operatorName)?.operatorCode;
             return updatedRow;
           });
-
+        const formulasToUpdateWithUpdatedSource = updateFormulasSource(formulasToUpdate,fetchedPlanForFormula?.assumptions)
+          //here we need to update the source of operations
         const updatedPlanObjFormula = {
           ...fetchedPlanForFormula,
-          operations: [...prevFormulas, ...formulasToUpdate],
+          operations: [...prevFormulas, ...formulasToUpdateWithUpdatedSource],
         };
 
         const planResFormula = await updatePlan(updatedPlanObjFormula);
