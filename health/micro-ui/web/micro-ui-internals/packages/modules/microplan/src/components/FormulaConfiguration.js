@@ -474,7 +474,6 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                   showToolTip={true}
                   placeholder={t("SELECT_OPTION")}
                   onChange={(e) => setSelectedDeletedFormula(e.target.value)}
-                  optionCardStyles={{ position: "relative" }}
                 />
               </LabelFieldPair>,
               selectedDeletedFormula?.code === "NEW_FORMULA" && (

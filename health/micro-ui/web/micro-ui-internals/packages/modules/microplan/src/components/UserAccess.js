@@ -316,7 +316,7 @@ function UserAccess({ category, setData, nationalRoles }) {
             columns={columns}
             data={planEmployee?.data}
             progressPending={isLoading || isPlanEmpSearchLoading}
-            progressComponent={<CustomLoader />}
+            progressComponent={<Loader />}
             pagination
             paginationServer
             customStyles={tableCustomStyle}
@@ -404,7 +404,6 @@ const styles = {
     justifyContent: "space-between", // Ensures space between search and button
     alignItems: "center",
     width: "100%",
-    padding: "8px", // Optional padding for layout
   },
   buttonContainer: {
     display: "flex",

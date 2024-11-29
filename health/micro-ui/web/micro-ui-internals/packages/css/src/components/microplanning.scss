@@ -2804,8 +2804,12 @@ $border-color: rgba(214, 213, 212, 1);
   }*/
 }
 .popUpClass.new-assumption-pop{
+  .digit-popup-children-wrap   {
+    overflow: visible;
+    position: relative;
+  }
   .digit-popup-footer{
-    width: 30rem;
+    width: 100%;
     margin-left: auto;
   }
 }

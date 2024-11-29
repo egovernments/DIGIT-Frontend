@@ -127,17 +127,19 @@ export const UICustomizations = {
                 </div>
               ) : (
                 <div className={"action-button-open-microplan"}>
-                  <ButtonNew
-                    type="actionButton"
-                    variation="secondary"
-                    label={t("MP_ACTIONS_FOR_MICROPLAN_SEARCH")}
-                    options={options}
-                    style={{ width: "20rem" }}
-                    optionsKey="name"
-                    showBottom={true}
-                    isSearchable={false}
-                    onOptionSelect={(item) => onActionSelect(item)}
-                  />
+                  <div style={{ position: "relative" }}>
+                    <ButtonNew
+                      type="actionButton"
+                      variation="secondary"
+                      label={t("MP_ACTIONS_FOR_MICROPLAN_SEARCH")}
+                      options={options}
+                      style={{ width: "20rem" }}
+                      optionsKey="name"
+                      showBottom={true}
+                      isSearchable={false}
+                      onOptionSelect={(item) => onActionSelect(item)}
+                    />
+                  </div>
                 </div>
               )}
             </div>
