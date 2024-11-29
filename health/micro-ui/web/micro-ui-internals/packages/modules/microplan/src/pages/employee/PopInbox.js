@@ -304,6 +304,37 @@ const PopInbox = () => {
   const actionsToHide = actionsMain?.filter(action => action?.action?.includes("EDIT"))?.map(action => action?.action);
 
 
+   // Custom hook to fetch assign to me count when workflow data is updated in assign to all case
+   const reqCriteriaResourceCount = {
+    url: `/census-service/_search`,
+    body: {
+      CensusSearchCriteria: {
+        tenantId: tenantId,
+        source: microplanId,
+        status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
+        assignee: user.info.uuid,
+        jurisdiction: censusJurisdiction,
+        limit: limitAndOffset?.limit,
+        offset: limitAndOffset?.offset
+      },
+    },
+    config: {
+      enabled: censusJurisdiction?.length > 0 ? true : false,
+    },
+    changeQueryName: "count"
+  };
+
+  const { isLoading:isCountLoading, data:countData, isFetching:isCountFetching, refetch:refetchCount } = Digit.Hooks.useCustomAPIHook(reqCriteriaResourceCount);
+
+  useEffect(() => {
+  
+    if (countData) {
+      setAssignedToMeCount(countData?.TotalCount);
+    }
+   
+  }, [countData]);
+
+
   // Custom hook to fetch census data based on microplanId and boundaryCode
   const reqCriteriaResource = {
     url: `/census-service/_search`,
@@ -325,7 +356,7 @@ const PopInbox = () => {
     },
   };
 
-  const { isLoading, data, isFetching, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
+  const { isLoading, data, isFetching, refetch:refetchCensus } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
 
   // // Extract assignee IDs in order, including null values
   // useEffect(() => {
@@ -408,7 +439,7 @@ const PopInbox = () => {
 
   useEffect(() => {
     if (censusJurisdiction?.length > 0) {
-      refetch(); // Trigger the API call again after activeFilter changes
+      refetchCensus(); // Trigger the API call again after activeFilter changes
     }
   }, [selectedFilter, censusJurisdiction, limitAndOffset, activeLink]);
 
@@ -553,7 +584,7 @@ const PopInbox = () => {
     },
   ];
 
-  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading || isWorkflowLoading || isEmployeeLoading || mutation.isLoading) {
+  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading || isWorkflowLoading || isEmployeeLoading || mutation.isLoading || isCountLoading) {
     return <Loader />;
   }
 
@@ -607,7 +638,7 @@ const PopInbox = () => {
           ></InboxFilterWrapper>
 
           <div className={"pop-inbox-table-wrapper"}>
-            {showTab && (
+            {showTab && !isCountFetching && (
               <Tab
                 activeLink={activeLink?.code}
                 configItemKey="code"
@@ -711,7 +742,8 @@ const PopInbox = () => {
                         }
                       });
                       setCurrentPage(1);
-                      refetch();
+                      refetchCount();
+                      refetchCensus();
                       refetchPlan();
                       fetchStatusCount();
                     }}
@@ -740,7 +772,8 @@ const PopInbox = () => {
                 onSuccess={(data) => {
                   setShowToast({ key: "success", label: t(`${isRootApprover ? 'ROOT_' : ''}POP_INBOX_HCM_MICROPLAN_EDIT_WORKFLOW_UPDATED_SUCCESSFULLY`), transitionTime: 5000 });
                 onCommentLogClose();
-                refetch();
+                refetchCount();
+                refetchCensus();
               }}
               onError={(error) => {
                 setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
