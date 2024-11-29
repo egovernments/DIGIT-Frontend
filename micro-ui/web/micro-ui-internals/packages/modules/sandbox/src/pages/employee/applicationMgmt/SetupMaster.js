@@ -1,7 +1,7 @@
-import React, { Fragment, useEffect, useMemo, useState } from "react";
+import React, { useEffect,Fragment, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Header, Table } from "@egovernments/digit-ui-react-components";
-import { Button, Card, CardHeader, CardText, Loader, PopUp, SVG } from "@egovernments/digit-ui-components";
+import { Button, Card, CardHeader, CardText, Loader, SVG, PopUp } from "@egovernments/digit-ui-components";
 import { useHistory, useLocation } from "react-router-dom";
 import { setupMasterConfig } from "./config/setupMasterConfig";
 
@@ -17,6 +17,7 @@ const SetupMaster = () => {
   const [showPopUp, setShowPopUp] = useState(null);
   const [filters, setFilters] = useState(null);
   const [isUserExist, setIsUserExist] = useState(null);
+
   const config = useMemo(() => {
     return setupMasterConfig(isUserExist)?.SetupMaster?.filter((item) => item.module === module)?.[0];
   }, [module, isUserExist]);
@@ -85,6 +86,7 @@ const SetupMaster = () => {
 
   useEffect(() => {
     if (!masterCountLoading) {
+
       setIsUserExist(masterCount);
     }
   }, [masterCountLoading, masterCount]);
@@ -131,7 +133,8 @@ const SetupMaster = () => {
     );
   };
 
-  if (moduleMasterLoading && masterCountLoading) {
+  // Show loader until isUserExist is determined
+  if (moduleMasterLoading || masterCountLoading || isUserExist === null) {
     return <Loader />;
   }
   return (
@@ -154,7 +157,7 @@ const SetupMaster = () => {
           <div className="setupMasterSetupActionBar">
             <Button
               className="actionButton"
-              label={isUserExist ? t(`EDIT_MASTER`) : t(config.actionText)}
+              label={t(isUserExist ? "EDIT_MASTER" : "SETUP_MASTER")}
               variation={"secondary"}
               icon="ArrowForward"
               isSuffix={true}
