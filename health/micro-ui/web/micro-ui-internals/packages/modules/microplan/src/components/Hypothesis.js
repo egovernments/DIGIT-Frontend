@@ -283,7 +283,6 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
                         style={{ maxWidth: "100%" }}
                         placeholder={t("SELECT_OPTION")}
                         onChange={(e) => setSelectedDeletedAssumption(e.target.value)}
-                        optionCardStyles={{ position: "relative" }}
                       />
                     </LabelFieldPair>,
                   ]
@@ -307,7 +306,6 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
                         style={{ maxWidth: "100%" }}
                         placeholder={t("SELECT_OPTION")}
                         onChange={(e) => setSelectedDeletedAssumption(e.target.value)}
-                        optionCardStyles={{ position: "relative" }}
                       />
                     </LabelFieldPair>,
                     selectedDeletedAssumption?.code === "NEW_ASSUMPTION" && (
