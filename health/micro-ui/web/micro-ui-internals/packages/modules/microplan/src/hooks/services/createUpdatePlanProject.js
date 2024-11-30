@@ -51,10 +51,15 @@ const isValidResourceName = async (name) => {
 
 function updateFormulasSource(formulasToUpdate, assumptions) {
   // Extract keys of assumptions with source "CUSTOM"
-  const customKeys = assumptions
-    .filter((assumption) => assumption.source === "CUSTOM")
-    .map((assumption) => assumption.key);
+  let customKeys = assumptions
+  .filter((assumption) => assumption.source === "CUSTOM")
+  .map((assumption) => assumption.key);
 
+  const customKeysFromFormula = formulasToUpdate
+  ?.filter((formula) => formula.source === "CUSTOM")
+  ?.map((formula) => formula.output);
+
+  customKeys = [...customKeys, ...customKeysFromFormula];
   // Update the source of formulas based on the conditions
   return formulasToUpdate.map((formula) => {
     if (
