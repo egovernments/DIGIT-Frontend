@@ -332,6 +332,7 @@ const VillageView = () => {
             )}
           </div>
           {Object.values(data?.additionalFields || [])
+          .filter((field) => field.showOnUi)
             .sort((a, b) => a.order - b.order)
             .map((fieldData, index, array) => (
               <React.Fragment key={fieldData.id || index}>

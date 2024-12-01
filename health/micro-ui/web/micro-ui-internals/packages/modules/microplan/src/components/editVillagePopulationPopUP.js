@@ -155,11 +155,15 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
   
   
 
-  const nonEditableFields = census.additionalFields
+  const fieldsToShow = census?.additionalFields
+  ? census.additionalFields.filter((field) => field.showOnUi)
+  : [];
+
+  const nonEditableFields = fieldsToShow
     .filter(field => !field.editable)
     .sort((a, b) => a.order - b.order);
 
-  const editableFields = census.additionalFields
+  const editableFields = fieldsToShow
     .filter(field => field.editable)
     .sort((a, b) => a.order - b.order);
 
