@@ -223,7 +223,7 @@ const FacilityCatchmentMapping = () => {
           style={{}}
         />}
 
-      {!isRootApprover && data?.TotalCount === 0  &&
+      {((!isRootApprover && data?.TotalCount === 0) || disabledAction)  &&
         <ActionBar
           actionFields={[
             <Button icon={"ArrowBack"} label={t(`GO_BACK_TO_HOME`)} onClick={() => history.push(`/${window.contextPath}/employee`)} type="button" variation="primary" />,
