@@ -22,7 +22,6 @@ import Response from "../../components/Response";
 import FacilityCatchmentMapping from "./FacilityCatchmentMapping";
 import PlanInbox from "./PlanInbox";
 import MapViewComponent from "../../components/MapViewComponent";
-import { query } from "jsonpath";
 
 // const bredCrumbStyle = { maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
