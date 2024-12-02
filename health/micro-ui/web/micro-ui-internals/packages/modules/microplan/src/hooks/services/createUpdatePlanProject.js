@@ -222,6 +222,8 @@ const updateProject = async (req) => {
 };
 
 const updatePlan = async (req) => {
+  const { key} = Digit.Hooks.useQueryParams();
+  req.additionalDetails.key=key;
   const planRes = await Digit.CustomService.getResponse({
     url: "/plan-service/config/_update",
     body: {
@@ -236,7 +238,7 @@ const createUpdatePlanProject = async (req) => {
     //later this object must have an invalidation config which can be used to invalidate data such as files uploaded,assumptions,formulas etc...
 
     const { totalFormData, state, setShowToast, setCurrentKey, setCurrentStep, config, invalidateConfig } = req;
-    const { microplanId, campaignId } = Digit.Hooks.useQueryParams();
+    const { microplanId, campaignId} = Digit.Hooks.useQueryParams();
     const tenantId = Digit.ULBService.getCurrentTenantId();
     //now basically we need to decide from which screen this hook was triggered and take action accordingly
     let planObject = {};
