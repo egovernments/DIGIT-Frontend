@@ -103,7 +103,7 @@ const BreadCrumbNew = (props) => {
                 </Link>
               ) : (
                 <Link
-                  to={{ pathname: crumb.internalLink, state: { count: crumb?.count } }}
+                  to={{ pathname: crumb.internalLink, state: { count: crumb?.count }, search: crumb?.query }}
                   className={`digit-bread-crumb-content ${isLast(ci) ? "current" : "default"}`}
                 >
                   {crumb?.icon && crumb.icon}
