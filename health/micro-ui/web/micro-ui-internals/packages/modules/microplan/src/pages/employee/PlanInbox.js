@@ -57,6 +57,7 @@ const PlanInbox = () => {
   const [selectedBusinessId, setSelectedBusinessId] = useState(null);
   const [assigneeUuids, setAssigneeUuids] = useState([]);
   const [totalStatusCount, setTotalStatusCount] = useState({});
+  const [totalCount, setTotalCount] = useState(null);
   const [employeeNameMap, setEmployeeNameMap] = useState({});
   const [defaultHierarchy, setDefaultSelectedHierarchy] = useState(null);
   const [defaultBoundaries, setDefaultBoundaries] = useState([]);
@@ -103,6 +104,7 @@ const PlanInbox = () => {
           {
             onSuccess: (data) => {
               setTotalStatusCount(data?.StatusCount);
+              setTotalCount(data?.TotalCount);
             },
             onError: (error) => {
               setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
@@ -569,7 +571,7 @@ const PlanInbox = () => {
         name: t(i?.question),
         sortable: false,
         cell: (row) => {
-          return row?.[`securityDetail_${i?.question}`] || t("ES_COMMON_NA")},
+          return t(`${row?.[`securityDetail_${i?.question}`]}`) || t("ES_COMMON_NA")},
         width: "180px",
       };
     });
@@ -837,7 +839,7 @@ const PlanInbox = () => {
         style={{
           marginBottom:
             (isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "RESOURCE_ESTIMATION_IN_PROGRESS") ||
-            (!isRootApprover && isStatusConditionMet(totalStatusCount)) ||
+            (!isRootApprover && totalCount===0) ||
             disabledAction
               ? "2.5rem"
               : "0rem",
@@ -1034,7 +1036,7 @@ labelPrefix={"PLAN_ACTIONS_"}
         />
       )}
 
-      {((!isRootApprover && isStatusConditionMet(totalStatusCount) ) || disabledAction) && (
+      {((!isRootApprover && totalCount===0 ) || disabledAction) && (
           <ActionBar
             actionFields={[
               <Button
