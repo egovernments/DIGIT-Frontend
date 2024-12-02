@@ -57,6 +57,7 @@ const PlanInbox = () => {
   const [selectedBusinessId, setSelectedBusinessId] = useState(null);
   const [assigneeUuids, setAssigneeUuids] = useState([]);
   const [totalStatusCount, setTotalStatusCount] = useState({});
+  const [totalCount, setTotalCount] = useState(null);
   const [employeeNameMap, setEmployeeNameMap] = useState({});
   const [defaultHierarchy, setDefaultSelectedHierarchy] = useState(null);
   const [defaultBoundaries, setDefaultBoundaries] = useState([]);
@@ -103,6 +104,7 @@ const PlanInbox = () => {
           {
             onSuccess: (data) => {
               setTotalStatusCount(data?.StatusCount);
+              setTotalCount(data?.TotalCount);
             },
             onError: (error) => {
               setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
@@ -527,7 +529,8 @@ const PlanInbox = () => {
   };
 
   const getResourceColumns = () => {
-    const operationArr = planObject?.operations?.sort((a, b) => a.executionOrder - b.executionOrder).map((item) => t(item.output));
+    const operationArr = planObject?.operations?.filter(operation => operation.showOnEstimationDashboard)?.sort((a, b) => a.executionOrder - b.executionOrder).map((item) => t(item.output));
+    
     const resources = planWithCensus?.planData?.[0]?.resources || []; // Resources array
     const resourceArr = (resources || []).map((resource) => ({
       name: t(resource.resourceType), // Dynamic column name for each resourceType
@@ -576,7 +579,7 @@ const PlanInbox = () => {
         name: t(i?.question),
         sortable: true,
         cell: (row) => {
-          return row?.[`securityDetail_${i?.question}`] || t("ES_COMMON_NA")},
+          return t(`${row?.[`securityDetail_${i?.question}`]}`) || t("ES_COMMON_NA")},
         width: "180px",
         sortFunction: (rowA, rowB) => {
           const valueA = (rowA?.[`securityDetail_${i?.question}`] || t("ES_COMMON_NA")).toLowerCase();
@@ -833,7 +836,7 @@ const PlanInbox = () => {
           <div>{`${t("LOGGED_IN_AS")} ${userName} - ${t(userRole)}`}</div>
         </div>
       </div>
-      <GenericKpiFromDSS module="MICROPLAN"  planId={microplanId} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
+      <GenericKpiFromDSS module="MICROPLAN" status={selectedFilter} planId={microplanId} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
       <SearchJurisdiction
         boundaries={boundaries}
         defaultHierarchy={defaultHierarchy}
@@ -851,7 +854,7 @@ const PlanInbox = () => {
         style={{
           marginBottom:
             (isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "RESOURCE_ESTIMATION_IN_PROGRESS") ||
-            (!isRootApprover && isStatusConditionMet(totalStatusCount)) ||
+            (!isRootApprover && totalCount===0) ||
             disabledAction
               ? "2.5rem"
               : "0rem",
@@ -1048,7 +1051,7 @@ labelPrefix={"PLAN_ACTIONS_"}
         />
       )}
 
-      {((!isRootApprover && isStatusConditionMet(totalStatusCount) ) || disabledAction) && (
+      {((!isRootApprover && totalCount===0 ) || disabledAction) && (
           <ActionBar
             actionFields={[
               <Button

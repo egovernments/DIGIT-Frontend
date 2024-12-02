@@ -142,21 +142,32 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
   };
   const handleAssumptionChange = (category, event, item) => {
     const newValue = event.target.value;
-
+  
+    // Validation function for range and decimal places
+    const isValidValue = (value) => {
+      const numericValue = parseFloat(value);
+      return (
+        numericValue > 0 &&
+        numericValue <= 1000 &&
+        /^[0-9]+(\.[0-9]{1,2})?$/.test(value) // Check for at most 2 decimals
+      );
+    };
+  
     setAssumptionValues((prevValues) => {
       return prevValues.map((assumption) => {
-        // If the key matches, update the value; otherwise, return the existing assumption
+        // If the key matches, validate and update the value
         if (assumption.key === item) {
           return {
             ...assumption,
             category,
-            value: newValue === "" ? null : newValue, // Set to null if input is empty
+            value: newValue === "" || isValidValue(newValue) ? newValue : assumption.value, // Set to newValue if valid, else keep existing
           };
         }
         return assumption;
       });
     });
   };
+  
 
   const handleNext = () => {
     

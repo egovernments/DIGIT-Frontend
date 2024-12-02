@@ -1,4 +1,4 @@
-const searchDssChartV2 = async (module, planId, config, campaignType, boundaries = []) => {
+const searchDssChartV2 = async (module, planId, status , config, campaignType, boundaries = []) => {
     try {
 
         // Validate inputs
@@ -30,6 +30,11 @@ const searchDssChartV2 = async (module, planId, config, campaignType, boundaries
             acc[boundary.type].push(boundary.code);
             return acc;
         }, {});
+
+        // Add status filter
+        if(status){
+            filters["status"] = [ status ];
+        }
 
         // Add other required filters
         filters["planConfigurationId"] = [planId];

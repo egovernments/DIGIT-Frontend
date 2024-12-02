@@ -528,7 +528,7 @@ export const UICustomizations = {
     },
 
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      if (key === "Role") {
+      if (key === "MP_USER_MANAGEMENT_ROLE") {
         return (
           <div>
             {value.map((item, index) => (
