@@ -529,7 +529,8 @@ const PlanInbox = () => {
   };
 
   const getResourceColumns = () => {
-    const operationArr = planObject?.operations?.sort((a, b) => a.executionOrder - b.executionOrder).map((item) => t(item.output));
+    const operationArr = planObject?.operations?.filter(operation => operation.showOnEstimationDashboard)?.sort((a, b) => a.executionOrder - b.executionOrder).map((item) => t(item.output));
+    
     const resources = planWithCensus?.planData?.[0]?.resources || []; // Resources array
     const resourceArr = (resources || []).map((resource) => ({
       name: t(resource.resourceType), // Dynamic column name for each resourceType
