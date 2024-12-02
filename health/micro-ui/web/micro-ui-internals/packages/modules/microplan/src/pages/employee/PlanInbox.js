@@ -571,7 +571,7 @@ const PlanInbox = () => {
         name: t(i?.question),
         sortable: false,
         cell: (row) => {
-          return row?.[`securityDetail_${i?.question}`] || t("ES_COMMON_NA")},
+          return t(`${row?.[`securityDetail_${i?.question}`]}`) || t("ES_COMMON_NA")},
         width: "180px",
       };
     });
