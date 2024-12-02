@@ -82,19 +82,19 @@ export const UserManagementConfig = {
           "uiConfig": {
             "columns": [
               {
-                "label": "Name",
+                "label": "MP_USER_MANAGEMENT_NAME",
                 "jsonPath": "user.name",
               },
               {
-                "label": "Email",
+                "label": "MP_USER_MANAGEMENT_EMAIL",
                 "jsonPath": "user.emailId",
               },
               {
-                "label": "Contact Number",
+                "label": "MP_USER_MANAGEMENT_MOBILE_NO",
                 "jsonPath": "user.mobileNumber",
               },
               {
-                "label":"Role",
+                "label":"MP_USER_MANAGEMENT_ROLE",
                 "jsonPath":"user.roles",
                 "additionalCustomization":true
               }
@@ -144,7 +144,7 @@ export const UserManagementConfig = {
             "type": "filter",
             "typeMobile":"sort",
             "headerStyle": null,
-            "primaryLabel": "Filter",
+            "primaryLabel": "MP_UM_FILTER",
             "minReqFields": 0,
             "defaultValues": {
               "roleschosen": '',
@@ -171,7 +171,7 @@ export const UserManagementConfig = {
               },
             ]
           },
-          "label": "Filter",
+          "label": "MP_USER_MANAGEMENT_FILTER",
           "labelMobile": "TQM_INBOX_FILTER",
           "show": true
         }
