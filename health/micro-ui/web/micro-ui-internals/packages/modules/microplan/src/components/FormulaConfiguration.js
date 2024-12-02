@@ -374,7 +374,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                     <Button
                       icon="Delete"
                       iconFill=""
-                      label="Delete"
+                      label={t("DELETE")}
                       size=""
                       style={{ padding: "0px" }}
                       title=""
