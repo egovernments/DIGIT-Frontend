@@ -508,3 +508,19 @@ tbody tr:last-child td:last-child .digit-dropdown-employee-select-wrap .digit-dr
     z-index: 19 !important;
   }
 }
+
+.digit-popup-wrapper {
+  &.wrapper-popup-boundary-chips {
+    overflow: auto !important;
+
+    .digit-popup-header {
+      overflow: visible !important;
+    }
+
+    .digit-popup-children-wrap {
+      .digit-tag-container {
+        overflow-y: unset !important;
+      }
+    }
+  }
+}

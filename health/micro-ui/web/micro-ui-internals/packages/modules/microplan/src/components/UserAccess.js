@@ -13,13 +13,13 @@ const Wrapper = ({ setShowPopUp, alreadyQueuedSelectedState }) => {
   const { t } = useTranslation();
   return (
     <PopUp
-      className={""}
+      className={"wrapper-popup-boundary-chips"}
       style={{
         maxWidth: "40%",
       }}
       type={"default"}
       heading={t("MICROPLAN_ADMINISTRATIVE_AREA")}
-      children={[]}
+      footerChildren={[]}
       onOverlayClick={() => {
         setShowPopUp(false);
       }}
