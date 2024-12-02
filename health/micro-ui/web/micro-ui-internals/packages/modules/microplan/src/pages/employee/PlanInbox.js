@@ -41,6 +41,7 @@ const PlanInbox = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(50);
   const [totalRows, setTotalRows] = useState(0);
+  const [refetchTrigger, setRefetchTrigger] = useState(0);
   const [perPage, setPerPage] = useState(10);
   const [assignedToMeCount, setAssignedToMeCount] = useState(0);
   const [assignedToAllCount, setAssignedToAllCount] = useState(0);
@@ -836,7 +837,7 @@ const PlanInbox = () => {
           <div>{`${t("LOGGED_IN_AS")} ${userName} - ${t(userRole)}`}</div>
         </div>
       </div>
-      <GenericKpiFromDSS module="MICROPLAN" status={selectedFilter} planId={microplanId} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
+      <GenericKpiFromDSS module="MICROPLAN" status={selectedFilter} planId={microplanId} refetchTrigger={refetchTrigger} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
       <SearchJurisdiction
         boundaries={boundaries}
         defaultHierarchy={defaultHierarchy}
@@ -959,7 +960,7 @@ const PlanInbox = () => {
                     url="/plan-service/plan/bulk/_update"
                     requestPayload={{ Plans: updateWorkflowForSelectedRows() }}
                     commentPath="workflow.comments"
-                    onSuccess={(data) => {
+                    onSuccess={async (data) => {
                       closePopUp();
                       setShowToast({ key: "success", label: t(`PLAN_INBOX_WORKFLOW_FOR_${workFlowPopUp}_UPDATE_SUCCESS`), transitionTime: 5000 });
                       setCurrentPage(1);
@@ -972,6 +973,9 @@ const PlanInbox = () => {
                       refetchPlanWithCensusCount();
                       refetchPlanWithCensus();
                       fetchStatusCount();
+                      // wait for 5 seconds
+                      await new Promise((resolve) => setTimeout(resolve, 5000));
+                      setRefetchTrigger(prev => prev + 1);
                     }}
                     onError={(data) => {
                       closePopUp();

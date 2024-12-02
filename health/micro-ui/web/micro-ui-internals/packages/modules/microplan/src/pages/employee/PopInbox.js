@@ -734,7 +734,7 @@ const PopInbox = () => {
                     url="/census-service/bulk/_update"
                     requestPayload={{ Census: updateWorkflowForSelectedRows() }}
                     commentPath="workflow.comments"
-                    onSuccess={(data) => {
+                    onSuccess={async (data) => {
                       closePopUp();
                       setShowToast({ key: "success", label: t(`POP_INBOX_WORKFLOW_FOR_${workFlowPopUp}_UPDATE_SUCCESS`), transitionTime: 5000 });
                       setLimitAndOffset((prev)=>{
@@ -748,6 +748,9 @@ const PopInbox = () => {
                       refetchCensus();
                       refetchPlan();
                       fetchStatusCount();
+                      // wait for 5 seconds
+                      await new Promise((resolve) => setTimeout(resolve, 5000));
+                      setRefetchTrigger(prev => prev + 1);
                     }}
                     onError={(data) => {
                       setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
