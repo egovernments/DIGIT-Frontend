@@ -502,3 +502,9 @@ tbody tr:last-child td:last-child .digit-dropdown-employee-select-wrap .digit-dr
 .microplan-employee-module-card{
   min-height: 16.25rem;
 }
+
+.action-bar-wrap{
+  &.microplan-actionbar{
+    z-index: 19 !important;
+  }
+}

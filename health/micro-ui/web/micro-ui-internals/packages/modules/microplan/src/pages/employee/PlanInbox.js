@@ -536,6 +536,13 @@ const PlanInbox = () => {
       },
       sortable: true,
       width: "180px",
+      sortFunction: (rowA, rowB) => {
+        const fieldA = rowA?.[resource?.resourceType];
+        const fieldB = rowB?.[resource?.resourceType];
+        const valueA = parseFloat(fieldA || 0); 
+        const valueB = parseFloat(fieldB || 0);
+        return valueA - valueB;
+      },
     }));
 
     return (operationArr || [])
@@ -567,10 +574,17 @@ const PlanInbox = () => {
       
       return {
         name: t(i?.question),
-        sortable: false,
+        sortable: true,
         cell: (row) => {
           return row?.[`securityDetail_${i?.question}`] || t("ES_COMMON_NA")},
         width: "180px",
+        sortFunction: (rowA, rowB) => {
+          const valueA = (rowA?.[`securityDetail_${i?.question}`] || t("ES_COMMON_NA")).toLowerCase();
+          const valueB = (rowB?.[`securityDetail_${i?.question}`] || t("ES_COMMON_NA")).toLowerCase();
+          if (valueA < valueB) return -1;
+          if (valueA > valueB) return 1;
+          return 0;
+        },
       };
     });
     // const securityColumns = Object.keys(sampleSecurityData).map((key) => ({

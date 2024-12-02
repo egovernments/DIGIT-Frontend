@@ -398,7 +398,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
         onSubmit={onSubmit}
         showSecondaryLabel={true}
         secondaryLabel={t("MP_BACK")}
-        actionClassName={"actionBarClass"}
+        actionClassName={"actionBarClass microplan-actionbar"}
         className="setup-campaign"
         cardClassName="setup-compaign-card"
         noCardStyle={true}
