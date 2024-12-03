@@ -194,10 +194,10 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
   }, [currentCategoryRuleConfigurations]);
 
   const handleNext = () => {
-    if (formulaConfigValues?.filter((row) => row?.category === currentCategory)?.filter((i) => i.source === "MDMS")?.length === 0) {
+    if (formulaConfigValues?.filter((row) => row?.category === currentCategory)?.length === 0) {
       setShowToast({
         key: "error",
-        label: t("ATLEAST_ONE_MDMS_FORMULA"),
+        label: t("ATLEAST_ONE_FORMULA"),
         transitionTime: 3000,
       });
       return;
