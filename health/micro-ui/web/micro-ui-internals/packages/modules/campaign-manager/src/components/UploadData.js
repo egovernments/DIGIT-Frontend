@@ -38,7 +38,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const id = searchParams.get("id");
   const parentId = searchParams.get("parentId");
   const [showExitWarning, setShowExitWarning] = useState(false);
-  console.log("props" , props);
   const campaignName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName || searchParams.get("campaignName") ;
   const { data: Schemas, isLoading: isThisLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
