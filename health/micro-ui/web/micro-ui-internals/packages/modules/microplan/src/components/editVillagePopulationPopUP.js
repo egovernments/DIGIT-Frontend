@@ -53,7 +53,7 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
       // Set the toast with the key and its value
       setShowToast({ 
         key: "error", 
-        label: errors[errorKey]
+        label: t(errors[errorKey])
       });
       
       return;
@@ -89,17 +89,17 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
     // Basic validation for positive integers within the range
     const isValueValid = value && Number(value) > 0 && Number(value) <= 100000 && Number.isInteger(Number(value));
     if (!isValueValid) {
-      newErrors[fieldKey] = t("HCM_MICROPLAN_ONLY_POSITIVE_NUMBERS_MAX_LIMIT_VALIDATION_ERROR");
+      newErrors[fieldKey] = "HCM_MICROPLAN_ONLY_POSITIVE_NUMBERS_MAX_LIMIT_VALIDATION_ERROR";
     } else {
       // Clear basic validation errors only if no dependency errors exist for this field
-      if (!errors[fieldKey]?.includes(t("HCM_MICROPLAN_TARGET_CANNOT_EXCEED_TOTAL")) &&
-          !errors[fieldKey]?.includes(t("HCM_MICROPLAN_TOTAL_CANNOT_BE_LESS_THAN_TARGET"))) {
+      if (!errors[fieldKey]?.includes("HCM_MICROPLAN_TARGET_CANNOT_EXCEED_TOTAL") &&
+          !errors[fieldKey]?.includes("HCM_MICROPLAN_TOTAL_CANNOT_BE_LESS_THAN_TARGET")) {
         delete newErrors[fieldKey];  /// safely delete when error is becuase of this condition
       }
     }
   
     // Dependency checks for TARGET_POPULATION and TOTAL_POPULATION
-    if (fieldKey.includes("TARGET_POPULATION")) {
+    if (fieldKey.includes("CONFIRMED_HCM_ADMIN_CONSOLE_TARGET_POPULATION")) {
       const totalPopulationField = census.additionalFields.find((f) =>
         f.key.includes("CONFIRMED_HCM_ADMIN_CONSOLE_TOTAL_POPULATION")
       );
@@ -113,19 +113,19 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
         }, 0);
   
       if (targetPopulationSum > Number(totalPopulationValue)) {
-        newErrors[fieldKey] = t("HCM_MICROPLAN_TARGET_CANNOT_EXCEED_TOTAL");
+        newErrors[fieldKey] = "HCM_MICROPLAN_TARGET_CANNOT_EXCEED_TOTAL";
       } else {
-        if (newErrors[fieldKey] === t("HCM_MICROPLAN_TARGET_CANNOT_EXCEED_TOTAL")) {
+        if (newErrors[fieldKey] === "HCM_MICROPLAN_TARGET_CANNOT_EXCEED_TOTAL") {
           delete newErrors[fieldKey];
         }
-        const totalErrorKey = census.additionalFields.find((f) => f.key.includes("TOTAL_POPULATION"))?.key;
-        if (totalErrorKey && newErrors[totalErrorKey] === t("HCM_MICROPLAN_TOTAL_CANNOT_BE_LESS_THAN_TARGET")) {
+        const totalErrorKey = census.additionalFields.find((f) => f.key.includes("CONFIRMED_HCM_ADMIN_CONSOLE_TOTAL_POPULATION"))?.key;
+        if (totalErrorKey && newErrors[totalErrorKey] === "HCM_MICROPLAN_TOTAL_CANNOT_BE_LESS_THAN_TARGET") {
           delete newErrors[totalErrorKey];
         }
       }
     }
   
-    if (fieldKey.includes("TOTAL_POPULATION")) {
+    if (fieldKey.includes("CONFIRMED_HCM_ADMIN_CONSOLE_TOTAL_POPULATION")) {
       const targetPopulationSum = census.additionalFields
         .filter((f) => f.key.includes("CONFIRMED_HCM_ADMIN_CONSOLE_TARGET_POPULATION"))
         .reduce((sum, f) => {
@@ -134,16 +134,16 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
         }, 0);
   
       if (Number(value) < targetPopulationSum) {
-        newErrors[fieldKey] = t("HCM_MICROPLAN_TOTAL_CANNOT_BE_LESS_THAN_TARGET");
+        newErrors[fieldKey] = "HCM_MICROPLAN_TOTAL_CANNOT_BE_LESS_THAN_TARGET";
       } else {
-        if (newErrors[fieldKey] === t("HCM_MICROPLAN_TOTAL_CANNOT_BE_LESS_THAN_TARGET")) {
+        if (newErrors[fieldKey] === "HCM_MICROPLAN_TOTAL_CANNOT_BE_LESS_THAN_TARGET") {
           delete newErrors[fieldKey];
         }
         const targetErrorKeys = census.additionalFields
-          .filter((f) => f.key.includes("TARGET_POPULATION"))
+          .filter((f) => f.key.includes("CONFIRMED_HCM_ADMIN_CONSOLE_TARGET_POPULATION"))
           .map((f) => f.key);
         targetErrorKeys.forEach((targetKey) => {
-          if (newErrors[targetKey] === t("HCM_MICROPLAN_TARGET_CANNOT_EXCEED_TOTAL")) {
+          if (newErrors[targetKey] === "HCM_MICROPLAN_TARGET_CANNOT_EXCEED_TOTAL") {
             delete newErrors[targetKey];
           }
         });
@@ -207,7 +207,7 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
                     />
                     {errors[field.key] && (
                       <ErrorMessage
-                        message={errors[field.key]}
+                        message={t(errors[field.key])}
                         truncateMessage
                         maxLength={256}
                         showIcon
