@@ -1,7 +1,7 @@
 import React, { useState, useEffect , Fragment } from "react";
 import { DatePicker, LabelFieldPair, Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { ErrorMessage, FieldV1, TextInput ,Stepper , TextBlock , Card , InfoCard  } from "@egovernments/digit-ui-components";
+import { ErrorMessage, FieldV1, TextInput ,Stepper , TextBlock , Card , InfoCard ,Tag  } from "@egovernments/digit-ui-components";
 
 const CampaignDates = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
@@ -24,6 +24,7 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
     return keyParam ? parseInt(keyParam) : 1;
   });
   const showDateUpdateInfo = searchParams.get("date");
+  const campaignName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName;
 
   function updateUrlParams(params) {
     const url = new URL(window.location.href);
@@ -117,76 +118,77 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
       <div className="container">
         <div className="card-container">
           <Card className="card-header-timeline">
-            <TextBlock subHeader={t("HCM_CAMPAIGN_DETAILS")}  subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+            <TextBlock subHeader={t("HCM_CAMPAIGN_DETAILS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
           <Card className="stepper-card">
             <Stepper
-              customSteps={[ "HCM_CAMPAIGN_TYPE","HCM_CAMPAIGN_NAME", "HCM_CAMPAIGN_DATE" , "HCM_SUMMARY"]}
+              customSteps={["HCM_CAMPAIGN_TYPE", "HCM_CAMPAIGN_NAME", "HCM_CAMPAIGN_DATE", "HCM_SUMMARY"]}
               currentStep={currentStep}
               onStepClick={onStepClick}
               direction={"vertical"}
             />
           </Card>
         </div>
-      
-      <div className="card-container2">
-        <Card className = "setup-campaign-card">
-      <Header>{t(`HCM_CAMPAIGN_DATES_HEADER`)}</Header>
-      <p className="dates-description">{t(`HCM_CAMPAIGN_DATES_DESCRIPTION`)}</p>
-      <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "13rem 2fr", alignItems: "start" }}>
-        <div className="campaign-dates">
-          <p>{t(`HCM_CAMPAIGN_DATES`)}</p>
-          <span className="mandatory-date">*</span>
+
+        <div className="card-container2">
+        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} style={{border: '0.5px solid #0B4B66',marginBottom: "1rem"}} />
+          <Card className="setup-campaign-card">
+            <Header>{t(`HCM_CAMPAIGN_DATES_HEADER`)}</Header>
+            <p className="dates-description">{t(`HCM_CAMPAIGN_DATES_DESCRIPTION`)}</p>
+            <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "13rem 2fr", alignItems: "start" }}>
+              <div className="campaign-dates">
+                <p>{t(`HCM_CAMPAIGN_DATES`)}</p>
+                <span className="mandatory-date">*</span>
+              </div>
+              <div className="date-field-container">
+                <FieldV1
+                  error={error?.startDate ? t(error?.startDate) : ""}
+                  withoutLabel={true}
+                  type="date"
+                  value={startDate}
+                  placeholder={t("HCM_START_DATE")}
+                  populators={{
+                    validation: {
+                      min: Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS),
+                    },
+                  }}
+                  min={Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS)}
+                  onChange={(d) => {
+                    // setStartValidation(true);
+                    setStart(d);
+                  }}
+                />
+                <FieldV1
+                  error={error?.endDate ? t(error?.endDate) : ""}
+                  withoutLabel={true}
+                  type="date"
+                  value={endDate}
+                  placeholder={t("HCM_END_DATE")}
+                  populators={{
+                    validation: {
+                      min: Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS),
+                    },
+                  }}
+                  min={Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS)}
+                  onChange={(d) => {
+                    setStartValidation(true);
+                    setEnd(d);
+                  }}
+                />
+              </div>
+            </LabelFieldPair>
+          </Card>
+          {showDateUpdateInfo && (
+            <InfoCard
+              populators={{
+                name: "infocard",
+              }}
+              variant="info"
+              text={t("HCM_UPDATE_DATE_INFO")}
+              style={{ marginTop: "1rem", maxWidth: "100%" }}
+            />
+          )}
         </div>
-        <div className="date-field-container">
-          <FieldV1
-            error={error?.startDate ? t(error?.startDate) : ""}
-            withoutLabel={true}
-            type="date"
-            value={startDate}
-            placeholder={t("HCM_START_DATE")}
-            populators={{
-              validation: {
-                min: Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS),
-              },
-            }}
-            min={Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS)}
-            onChange={(d) => {
-              // setStartValidation(true);
-              setStart(d);
-            }}
-          />
-          <FieldV1
-            error={error?.endDate ? t(error?.endDate) : ""}
-            withoutLabel={true}
-            type="date"
-            value={endDate}
-            placeholder={t("HCM_END_DATE")}
-            populators={{
-              validation: {
-                min: Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS),
-              },
-            }}
-            min={Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS)}
-            onChange={(d) => {
-              setStartValidation(true);
-              setEnd(d);
-            }}
-          />
-        </div>
-      </LabelFieldPair>
-      </Card>
-      {showDateUpdateInfo && 
-              <InfoCard
-                populators={{
-                  name: "infocard",
-                }}
-                variant="info"
-                text={t("HCM_UPDATE_DATE_INFO")}
-                style={{ marginTop: "1rem", maxWidth: "100%" }}
-              />
-            }
-      </div>
       </div>
     </>
   );

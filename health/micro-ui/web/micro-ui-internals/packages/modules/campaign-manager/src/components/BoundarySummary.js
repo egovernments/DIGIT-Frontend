@@ -1,7 +1,7 @@
 import React, { useEffect, useState,Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Header, Loader, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Toast, Stepper, TextBlock, Card } from "@egovernments/digit-ui-components";
+import { Toast, Stepper, TextBlock, Card ,Tag } from "@egovernments/digit-ui-components";
 
 
 
@@ -39,6 +39,7 @@ const BoundarySummary = (props) => {
   const id = searchParams.get("id");
   const [showToast, setShowToast] = useState(null);
   const currentKey = searchParams.get("key");
+  const campaignName = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_NAME?.campaignName;
   const [key, setKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
@@ -151,6 +152,7 @@ const BoundarySummary = (props) => {
         </div>
 
         <div className="card-container-delivery">
+        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} style={{border: '0.5px solid #0B4B66', marginBottom: "1rem"}} />
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Header className="summary-header">{t("ES_BOUNDARY_SUMMARY_HEADING")}</Header>
       </div>

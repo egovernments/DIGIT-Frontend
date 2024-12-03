@@ -843,7 +843,7 @@ const UpdateCampaign = ({hierarchyData }) => {
         actionClassName={"actionBarClass"}
         className="setup-campaign"
         cardClassName="setup-campaign-card"
-        noCardStyle = {currentKey === 1 ? false : true}
+        noCardStyle = {true}
         onSecondayActionClick={onSecondayActionClick}
         label={filteredConfig?.[0]?.form?.[0]?.isLast === true ? t("HCM_UPDATE") : t("HCM_NEXT")}
       />

@@ -1,5 +1,5 @@
 import { Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
-import { Dropdown, ViewCardFieldPair, Toast, Card, TextBlock, Button, PopUp, CardText, Stepper} from "@egovernments/digit-ui-components";
+import { Dropdown, ViewCardFieldPair, Toast, Card, TextBlock, Button, PopUp, CardText, Stepper ,Tag} from "@egovernments/digit-ui-components";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -134,6 +134,7 @@ const SearchChecklist = () => {
           activeSteps={6}
           // className={"campaign-flow-stepper"}
         /> */}
+        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} style={{border: '0.5px solid #0B4B66', marginBottom: "1rem"}} />
         <div style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>{t("CONFIGURE_CHECKLIST")}</div>
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1rem" }}>
           {/* <Header styles={{ fontSize: "32px", marginBottom: "2rem", marginTop: "2rem" }}>{t("ACTION_LABEL_CONFIGURE_APP")}</Header> */}

@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import {  EditIcon, Header, Loader, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Toast , Stepper , TextBlock ,Card } from "@egovernments/digit-ui-components";
+import { Toast , Stepper , TextBlock ,Card ,Tag } from "@egovernments/digit-ui-components";
 
 const CampaignDetailsSummary = (props) => {
   const { t } = useTranslation();
@@ -18,6 +18,7 @@ const CampaignDetailsSummary = (props) => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
+  const campaignName = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_NAME?.campaignName;
   const handleRedirect = (step, activeCycle) => {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
@@ -157,6 +158,7 @@ const CampaignDetailsSummary = (props) => {
         </div>
 
         <div className="card-container-delivery">
+        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} style={{border: '0.5px solid #0B4B66', marginBottom: "1rem"}} />
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Header className="summary-header">{t("HCM_CAMPAIGN_DETAILS_SUMMARY")}</Header>
       </div>

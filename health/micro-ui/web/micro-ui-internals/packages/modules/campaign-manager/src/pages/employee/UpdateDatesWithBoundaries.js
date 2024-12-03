@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router-dom";
 import { dateChangeBoundaryConfig, dateChangeConfig } from "../../configs/dateChangeBoundaryConfig";
-import { Button, InfoCard, PopUp, Toast } from "@egovernments/digit-ui-components";
+import { Button, InfoCard, PopUp, Toast , Tag} from "@egovernments/digit-ui-components";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 
@@ -16,6 +16,7 @@ function UpdateDatesWithBoundaries() {
   const [showPopUp, setShowPopUp] = useState(null);
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
+  const campaignName = searchParams.get("campaignName");
   const { isLoading: DateWithBoundaryLoading, data: DateWithBoundary } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
@@ -144,6 +145,7 @@ function UpdateDatesWithBoundaries() {
 
   return (
     <div>
+      <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} style={{border: '0.5px solid #0B4B66', marginBottom: "1rem"}} />
       <FormComposerV2
         label={t("CAMPAIGN_UPDATE_DATE_SUBMIT")}
         config={
