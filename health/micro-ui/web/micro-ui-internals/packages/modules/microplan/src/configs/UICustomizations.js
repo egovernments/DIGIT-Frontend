@@ -107,29 +107,10 @@ export const UICustomizations = {
           };
 
           const onActionSelect = (e) => {
-            if (e.name == "MP_ACTIONS_EDIT_SETUP") {
-              const searchPlanConfig = async (body) => {
-                //assuming it will be success
-                const response = await Digit.CustomService.getResponse({
-                  url: "/plan-service/config/_search",
-                  useCache: false,
-                  method: "POST",
-                  userService: true,
-                  body
-                });
-                window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${String(parseInt(response?.PlanConfiguration[0]?.additionalDetails?.key || "0")+1)}&microplanId=${row.id}&campaignId=${
+            if (e.name == "MP_ACTIONS_EDIT_SETUP") { 
+                window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${String(parseInt(row?.additionalDetails?.key || '0') + 1)}&microplanId=${row.id}&campaignId=${
                   row.campaignDetails.id
                 }`;
-              }
-              
-                const reqBody={
-                  PlanConfigurationSearchCriteria:{
-                    id: row.id,
-                    tenantId:Digit.ULBService.getCurrentTenantId()
-
-                  }
-                }
-                searchPlanConfig(reqBody);
               }
              
             if (e.name == "MP_ACTIONS_VIEW_SUMMARY") {
