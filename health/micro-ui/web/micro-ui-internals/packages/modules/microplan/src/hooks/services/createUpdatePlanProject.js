@@ -767,7 +767,7 @@ const createUpdatePlanProject = async (req) => {
           setShowToast({ key: "error", label: "ERR_FAILED_TO_COMPLETE_SETUP" });
         }
 
-        case "ROLE_ACCESS_CONFIGURATION":        
+        case "ROLE_ACCESS_CONFIGURATION":{
           // Function to run API validations
           const searchAndUpdatePlanConfig = async (body) => {
             try {
@@ -829,6 +829,7 @@ const createUpdatePlanProject = async (req) => {
               error: "API call failed. Please try again.",
             };
           }
+        }
         
       default:
         setShowToast({ key: "error", label: "ERROR_UNHANDLED_NEXT_OPERATION" });
