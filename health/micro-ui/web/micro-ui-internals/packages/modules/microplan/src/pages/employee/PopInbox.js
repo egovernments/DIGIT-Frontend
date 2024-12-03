@@ -462,7 +462,6 @@ const PopInbox = () => {
   }, [selectedFilter]);
 
   const onFilter = (selectedStatus) => {
-
     setLimitAndOffset((prev)=>{
       return {
         limit: prev.limit,
@@ -618,7 +617,7 @@ const PopInbox = () => {
           
         </div>
       </div>
-      <GenericKpiFromDSS module="CENSUS" planId={microplanId} refetchTrigger={refetchTrigger} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
+      <GenericKpiFromDSS module="CENSUS" status={selectedFilter} planId={microplanId} refetchTrigger={refetchTrigger} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
       <SearchJurisdiction
         boundaries={boundaries}
         defaultHierarchy={defaultHierarchy}
@@ -735,7 +734,7 @@ const PopInbox = () => {
                     url="/census-service/bulk/_update"
                     requestPayload={{ Census: updateWorkflowForSelectedRows() }}
                     commentPath="workflow.comments"
-                    onSuccess={(data) => {
+                    onSuccess={async (data) => {
                       closePopUp();
                       setShowToast({ key: "success", label: t(`POP_INBOX_WORKFLOW_FOR_${workFlowPopUp}_UPDATE_SUCCESS`), transitionTime: 5000 });
                       setLimitAndOffset((prev)=>{
@@ -749,6 +748,9 @@ const PopInbox = () => {
                       refetchCensus();
                       refetchPlan();
                       fetchStatusCount();
+                      // wait for 5 seconds
+                      await new Promise((resolve) => setTimeout(resolve, 5000));
+                      setRefetchTrigger(prev => prev + 1);
                     }}
                     onError={(data) => {
                       setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });

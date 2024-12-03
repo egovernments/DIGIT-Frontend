@@ -509,6 +509,11 @@ const FacilityPopUp = ({ detail, onClose }) => {
                             ? `${t("MICROPLAN_UNASSIGN_FACILITY")} ${details?.additionalDetails?.facilityName}`
                             : `${t("MICROPLAN_ASSIGN_FACILITY")} ${details?.additionalDetails?.facilityName}`
                         }
+                        title={
+                          facilityAssignedStatus
+                            ? `${t("MICROPLAN_UNASSIGN_FACILITY")} ${details?.additionalDetails?.facilityName}`
+                            : `${t("MICROPLAN_ASSIGN_FACILITY")} ${details?.additionalDetails?.facilityName}`
+                        }
                         type="button"
                         onClick={handleAssignUnassign}
                         size={"large"}

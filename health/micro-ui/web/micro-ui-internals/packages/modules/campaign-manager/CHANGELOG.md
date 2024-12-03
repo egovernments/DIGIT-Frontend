@@ -1,9 +1,6 @@
 # Changelog
 All notable changes to this module will be documented in this file.
 
-# Changelog
-All notable changes to this module will be documented in this file.
-
 ## 0.3.0 - 2024-12-03
 #### Base Admin console web
   1. Updating the campaign details

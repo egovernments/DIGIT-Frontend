@@ -447,6 +447,7 @@ function RoleTableComposer({ nationalRoles }) {
               rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedBoundaries?.length === 0
             }
             style={{width:"100%"}}
+            title={isUserAlreadyAssignedActive ? t(`UNASSIGN`) : t(`ASSIGN`)}
             size="medium"
             className={"roleTableCell"}
             variation={isUserAlreadyAssignedActive ? "secondary" : "primary"}
@@ -546,9 +547,9 @@ function RoleTableComposer({ nationalRoles }) {
                 />
               </LabelFieldPair>
               <div className={`search-field-wrapper roleComposer`} style={{ display: "flex", justifyContent: "flex-end" }}>
-                <Button variation="teritiary" label={t("MP_USER_TAG_CLEAR")} onClick={handleClearSearch} />
+                <Button variation="teritiary" title={t("MP_USER_TAG_CLEAR")} label={t("MP_USER_TAG_CLEAR")} onClick={handleClearSearch} />
 
-                <Button variation="primary" label={t("MP_USER_TAG_SEARCH")} onClick={handleSearchSubmit} style={{ width: "140px" }} />
+                <Button variation="primary" label={t("MP_USER_TAG_SEARCH")} title={t("MP_USER_TAG_SEARCH")} onClick={handleSearchSubmit} style={{ width: "140px" }} />
               </div>
             </div>
           </div>
