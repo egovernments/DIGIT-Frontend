@@ -117,8 +117,7 @@ export const UICustomizations = {
                   userService: true,
                   body
                 });
-
-                window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${response?.PlanConfiguration[0].additionalDetails.key}&microplanId=${row.id}&campaignId=${
+                window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${String(parseInt(response?.PlanConfiguration[0]?.additionalDetails?.key || "0")+1)}&microplanId=${row.id}&campaignId=${
                   row.campaignDetails.id
                 }`;
               }

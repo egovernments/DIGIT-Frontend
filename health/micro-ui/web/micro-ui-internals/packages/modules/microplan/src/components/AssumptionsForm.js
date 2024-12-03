@@ -68,7 +68,10 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
     }, [selectedDistributionProcess, selectedRegistrationDistributionMode, selectedRegistrationProcess, resourceDistributionStrategyCode])
 
 
-
+    useEffect(()=>{
+        setSelectedDistributionProcess(props?.props?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm?.selectedDistributionProcess);
+        setSelectedRegistrationProcess(props?.props?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm?.selectedRegistrationProcess);
+    },[props?.props?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm])
 
     const filteredOptions = resourceDistributionStrategyCode === "MIXED"
         ? optionsForProcesses.filter(option => option.resourceDistributionStrategyName !== "Fixed post & House-to-House")

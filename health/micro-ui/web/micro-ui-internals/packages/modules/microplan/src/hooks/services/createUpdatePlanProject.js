@@ -767,16 +767,69 @@ const createUpdatePlanProject = async (req) => {
           setShowToast({ key: "error", label: "ERR_FAILED_TO_COMPLETE_SETUP" });
         }
 
-      case "ROLE_ACCESS_CONFIGURATION":
-        //run any api validations if any/
-        setCurrentKey((prev) => prev + 1);
-        setCurrentStep((prev) => prev + 1);
-        window.dispatchEvent(new Event("isLastStep"));
-        Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
-        Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
-        return {
-          triggeredFrom,
-        };
+        case "ROLE_ACCESS_CONFIGURATION":        
+          // Function to run API validations
+          const searchAndUpdatePlanConfig = async (body) => {
+            try {
+              // Make the API call
+              const { key} = Digit.Hooks.useQueryParams();
+              const fetchedPlanConfig = await searchPlanConfig({
+                PlanConfigurationSearchCriteria: {
+                  tenantId,
+                  id: microplanId,
+                },
+              });
+
+              const response = await Digit.CustomService.getResponse({
+                url: "/plan-service/config/_update",
+                body: {
+                  PlanConfiguration: {...fetchedPlanConfig,
+                    additionalDetails:{...fetchedPlanConfig.additionalDetails,key:key
+                    }},
+                },
+              });
+        
+              // Process the response if necessary
+              console.log("API Response:", response);
+              return response; // Return the response for further usage if needed
+            } catch (error) {
+              console.error("Error in searchPlanConfig:", error);
+              throw error; // Rethrow error to handle it further up the chain if needed
+            }
+          };
+        
+          // Request body for the API call
+          const reqBody = {
+            PlanConfigurationSearchCriteria: {
+              id: microplanId,
+              tenantId: Digit.ULBService.getCurrentTenantId(),
+            },
+          };
+        
+          // Execute the API call
+          try {
+            const apiResponse = await searchAndUpdatePlanConfig(reqBody); // Wait for the API call to complete
+            console.log("API call completed successfully:", apiResponse);
+        
+            // Proceed with the rest of the logic
+            setCurrentKey((prev) => prev + 1);
+            setCurrentStep((prev) => prev + 1);
+            window.dispatchEvent(new Event("isLastStep"));
+            Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
+            Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
+        
+            // Return as expected
+            return {
+              triggeredFrom,
+            };
+          } catch (error) {
+            console.error("Error during ROLE_ACCESS_CONFIGURATION flow:", error);
+            // Optionally handle the error here, e.g., show an error message to the user
+            return {
+              error: "API call failed. Please try again.",
+            };
+          }
+        
       default:
         setShowToast({ key: "error", label: "ERROR_UNHANDLED_NEXT_OPERATION" });
         return {
