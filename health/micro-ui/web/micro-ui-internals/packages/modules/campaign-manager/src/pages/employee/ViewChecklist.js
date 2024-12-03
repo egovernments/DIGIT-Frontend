@@ -140,7 +140,7 @@ const ViewChecklist = () => {
 
     return (
         <div style={{marginBottom: "2rem"}}>
-            <div style={{ display: "flex", justifyContent: "space-between", height:"5.8rem" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", height:"5.8rem", marginTop:"-2rem" }}>
                 <div>
                     <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed"}}>
                         {t("VIEW_CHECKLIST")}
