@@ -134,7 +134,7 @@ const SearchChecklist = () => {
           activeSteps={6}
           // className={"campaign-flow-stepper"}
         /> */}
-        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} style={{border: '0.5px solid #0B4B66', marginBottom: "1rem"}} />
+        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
         <div style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>{t("CONFIGURE_CHECKLIST")}</div>
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1rem" }}>
           {/* <Header styles={{ fontSize: "32px", marginBottom: "2rem", marginTop: "2rem" }}>{t("ACTION_LABEL_CONFIGURE_APP")}</Header> */}

@@ -215,7 +215,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
           </Card>
         </div>
         <div className="card-container2">
-        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} style={{border: '0.5px solid #0B4B66', marginBottom: "1rem"}} />
+        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
         <Card>
       <Header>
         {t(

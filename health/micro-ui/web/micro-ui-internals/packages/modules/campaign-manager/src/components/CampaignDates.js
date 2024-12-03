@@ -131,7 +131,7 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
         </div>
 
         <div className="card-container2">
-        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} style={{border: '0.5px solid #0B4B66',marginBottom: "1rem"}} />
+        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
           <Card className="setup-campaign-card">
             <Header>{t(`HCM_CAMPAIGN_DATES_HEADER`)}</Header>
             <p className="dates-description">{t(`HCM_CAMPAIGN_DATES_DESCRIPTION`)}</p>
