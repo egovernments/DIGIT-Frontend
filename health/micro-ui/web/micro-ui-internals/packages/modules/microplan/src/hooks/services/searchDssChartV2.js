@@ -33,6 +33,7 @@ const searchDssChartV2 = async (module, planId, status , config, campaignType, b
 
         // Add status filter
         if(status){
+            // TODO : Remove comment when api will be fixed
             // filters["status"] = [ status ];
         }
 
