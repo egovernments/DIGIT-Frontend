@@ -159,8 +159,16 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     setCurrentStep(Number(filteredConfig?.[0]?.form?.[0]?.stepCount - 1));
     // setting the toast to null when moving to next step successfully
     // if any issue comes related to Toast, update here 
-    setShowToast(null);
+    // setShowToast(null);
+    // this null was causing toast to immediatealy go to null since filteredConfig gets affected
   }, [currentKey, filteredConfig]);
+
+  useEffect(() => {
+     // setting the toast to null when moving to next step successfully
+    // if any issue comes related to Toast, update here 
+      setShowToast(null)
+  }, [currentKey])
+  
 
   useEffect(() => {
     setIsSubmitting(false);
@@ -179,7 +187,8 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
       onSuccess: (data) => {
         // Check if there is a redirectTo property in the response
         if (data?.redirectTo) {
-          history.push(data?.redirectTo, data?.state); // Navigate to the specified route
+          history.push(data?.redirectTo, data?.state);
+          return; // Navigate to the specified route
         }
 
         //invalidation of files session
@@ -218,8 +227,10 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
           Digit.SessionStorage.del("HYPOTHESIS_DATA");
           Digit.SessionStorage.del("FORMULA_DATA");
 
+          
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
+          
 
           //since we are invalidating we need to update this global state
           dispatch({

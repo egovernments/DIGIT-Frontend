@@ -69,7 +69,9 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     {
       enabled: microplanId ? true : false,
       cacheTime: 0,
-      //   queryKey: currentKey,
+      staleTime:0,
+      refetchOnMount: true,
+      queryKey:state?.allAssumptions ? state?.allAssumptions.length : "hypothesis_plan" 
     }
   );
 
