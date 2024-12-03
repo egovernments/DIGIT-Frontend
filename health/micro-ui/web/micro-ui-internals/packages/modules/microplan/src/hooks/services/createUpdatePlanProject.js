@@ -67,7 +67,7 @@ function updateFormulasSource(formulasToUpdate, assumptions) {
       (customKeys.includes(formula.input) || customKeys.includes(formula.assumptionValue)) // Check if input or assumptionValue belongs to "CUSTOM"
     ) {
        // Dynamically add this formula's output to customKeys
-      // customKeys.push(formula.output)
+      customKeys.push(formula.output)
       return { ...formula, source: "CUSTOM" }; // Update the source to "CUSTOM"
     }
     return formula; // Return unchanged formula otherwise
