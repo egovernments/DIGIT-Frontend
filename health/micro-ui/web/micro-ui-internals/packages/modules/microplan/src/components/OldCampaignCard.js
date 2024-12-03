@@ -60,12 +60,13 @@ const CampaignCard = () => {
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));
 
   const propsForModuleCard = {
-    Icon: <SVG.Support fill="white" height="36" width="36"/>,
+    Icon: "Engineering",
     moduleName: t("ACTION_TEST_CAMPAIGN"),
     kpis: [],
     links: links,
   };
   return <EmployeeModuleCard {...propsForModuleCard} />;
 };
+
 
 export default CampaignCard;

@@ -1057,7 +1057,7 @@ export const UICustomizations = {
                 label={"Action"}
                 options={[
                   { key: 1, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
-                  { key: 2, code: "ACTION_LABEL_RETRY", i18nKey: t("ACTION_LABEL_RETRY") },
+                  // { key: 2, code: "ACTION_LABEL_RETRY", i18nKey: t("ACTION_LABEL_RETRY") }, // disabling in UI Since it is just beta functionality
                 ].filter((obj) => Digit.Utils.didEmployeeHasAtleastOneRole(["SYSTEM_ADMINISTRATOR"] || obj?.key != 2))} //added retry for system adminstrator for failed campaign
                 optionsKey="i18nKey"
                 showBottom={true}

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import useKpiDssSearch from '../hooks/useKpiDssSearch';
 
 const GenericKpiFromDSS = (props) => {
-    const { module, planId, campaignType, planEmployee = {}, boundariesForKpi = [], refetchTrigger } = props;
+    const { module, status, planId, campaignType, planEmployee = {}, boundariesForKpi = [], refetchTrigger } = props;
     // Create a copy of the boundariesForKpi array
     const localBoundariesForKpi = [...boundariesForKpi];
 
@@ -25,9 +25,10 @@ const GenericKpiFromDSS = (props) => {
 
     const { t } = useTranslation();
 
-    const { data, loader, refetch } = useKpiDssSearch({
+    const { data, isLoading, refetch } = useKpiDssSearch({
         module,
         planId,
+        status,
         campaignType,
         boundariesForKpi: localBoundariesForKpi
     });
@@ -38,7 +39,7 @@ const GenericKpiFromDSS = (props) => {
         }
     }, [refetchTrigger]);
 
-    if (loader) {
+    if (isLoading) {
         return <Loader />
     }
 

@@ -185,7 +185,7 @@ const FacilityCatchmentMapping = () => {
 
 
   return (
-    <div style={{ marginBottom: isRootApprover && data?.TotalCount === 0 && planObject?.status === "CENSUS_DATA_APPROVED" ? "2.5rem" : "0rem" }}>
+    <div style={{ marginBottom: (isRootApprover && data?.TotalCount === 0 && planObject?.status === "CENSUS_DATA_APPROVED") || ((!isRootApprover && data?.TotalCount === 0) || disabledAction) ? "2.5rem" : "0rem" }}>
       <Header styles={{ marginBottom: "1rem" }}>{t("MICROPLAN_ASSIGN_CATCHMENT_VILLAGES")}</Header>
       <div className="role-summary-sub-heading" style={{ marginBottom: "1.5rem" }}>
         <div className="mp-heading-bold">
@@ -223,7 +223,7 @@ const FacilityCatchmentMapping = () => {
           style={{}}
         />}
 
-      {!isRootApprover && data?.TotalCount === 0  &&
+      {((!isRootApprover && data?.TotalCount === 0) || disabledAction)  &&
         <ActionBar
           actionFields={[
             <Button icon={"ArrowBack"} label={t(`GO_BACK_TO_HOME`)} onClick={() => history.push(`/${window.contextPath}/employee`)} type="button" variation="primary" />,
