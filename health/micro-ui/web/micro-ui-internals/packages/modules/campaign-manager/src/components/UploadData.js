@@ -1058,7 +1058,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   useEffect(() => {
     // Only show popup if the template for this type hasn't been downloaded yet
     if (downloadedTemplates[type]) {
-      console.log("hehe");
       setShowPopUp(false);
     }
   }, [downloadedTemplates]);
