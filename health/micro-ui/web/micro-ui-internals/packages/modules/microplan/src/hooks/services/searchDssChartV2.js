@@ -33,7 +33,7 @@ const searchDssChartV2 = async (module, planId, status , config, campaignType, b
 
         // Add status filter
         if(status){
-            filters["status"] = [ status ];
+            // filters["status"] = [ status ];
         }
 
         // Add other required filters
