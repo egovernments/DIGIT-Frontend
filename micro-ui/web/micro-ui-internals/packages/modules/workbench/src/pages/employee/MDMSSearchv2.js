@@ -109,11 +109,11 @@ const MDMSSearchv2 = () => {
   
   useEffect(() => {
     if (currentSchema) {
-      const dropDownOptions = [];
+      let dropDownOptions = [];
       const {
         definition: { properties },
       } = currentSchema;
-      
+      const schemaCodeToValidate = `${master}.${modulee}`;
       Object.keys(properties)?.forEach((key) => {
         if (properties[key].type === "string" && !properties[key].format) {
           dropDownOptions.push({
@@ -124,6 +124,11 @@ const MDMSSearchv2 = () => {
           });
         }
       });
+      dropDownOptions =
+        dropDownOptions?.length > 0 &&
+        Digit?.Customizations?.["commonUiConfig"]?.["SearchMDMSv2Config"]?.[schemaCodeToValidate]?.sortValidDatesFirst(dropDownOptions)
+          ? Digit?.Customizations?.["commonUiConfig"]?.["SearchMDMSv2Config"]?.[schemaCodeToValidate]?.sortValidDatesFirst(dropDownOptions)
+          : dropDownOptions;
 
       Config.sections.search.uiConfig.fields[0].populators.options = dropDownOptions;
       Config.actionLink=Config.actionLink+`?moduleName=${masterName?.name}&masterName=${moduleName?.name}`;
@@ -153,7 +158,8 @@ const MDMSSearchv2 = () => {
           label:option.i18nKey,
           i18nKey:option.i18nKey,
           jsonPath:`data.${option.code}`,
-          dontShowNA:true
+          dontShowNA:true,
+          additionalCustomization: currentSchema?.definition?.["x-ui-schema"]?.[option?.name]?.formatType === "EPOC" ? true : false
         }
       }),{
         label:"WBH_ISACTIVE",
@@ -180,7 +186,10 @@ const MDMSSearchv2 = () => {
   const onClickRow = ({original:row}) => {
     const [moduleName,masterName] = row.schemaCode.split(".")
     const additionalParamString = new URLSearchParams(additionalParams).toString();
-    history.push(`/${window.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${row.uniqueIdentifier}${additionalParamString ? "&"+additionalParamString : ""}`)
+    if(window.location.href.includes("mukta") && master === "WORKS-SOR" && modulee === "Composition")
+      window.location.href = `/works-ui/employee/rateanalysis/view-rate-analysis?sorId=${row?.data?.sorId}&fromeffective=${row?.data?.effectiveFrom}`
+    else
+      history.push(`/${window.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${row.uniqueIdentifier}${additionalParamString ? "&"+additionalParamString : ""}`)
   }
 
   if (isLoading) return <Loader />;
@@ -188,7 +197,7 @@ const MDMSSearchv2 = () => {
     <React.Fragment>
       <Header className="digit-form-composer-sub-header">{t(Digit.Utils.workbench.getMDMSLabel(`SCHEMA_` + currentSchema?.code))}</Header>
       {
-        updatedConfig && Digit.Utils.didEmployeeHasAtleastOneRole(updatedConfig?.actionRoles) &&
+        updatedConfig && Digit.Utils.didEmployeeHasAtleastOneRole(updatedConfig?.actionRoles) && Digit.Utils.didEmployeeisAllowed(master,modulee) &&
         <ActionBar >
           <SubmitBar disabled={false} className="mdms-add-btn" onSubmit={handleAddMasterData} label={t("WBH_ADD_MDMS")} />
         </ActionBar>

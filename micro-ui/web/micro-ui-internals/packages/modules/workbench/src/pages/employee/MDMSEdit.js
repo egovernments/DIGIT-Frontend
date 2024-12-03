@@ -32,7 +32,7 @@ const MDMSEdit = ({...props}) => {
   };
 
   const reqCriteriaSchema = {
-    url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/schema/v1/_search`,
+    url: Digit.Utils.workbench.getMDMSActionURL(moduleName,masterName,"update"),
     params: {},
     body: {
       SchemaDefCriteria: {
@@ -82,6 +82,18 @@ const MDMSEdit = ({...props}) => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaUpdate);
 
   const handleUpdate = async (formData) => {
+    const schemaCodeToValidate = `${moduleName}.${masterName}`;
+    let transformedData = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.getTrasformedData(formData, data) ;
+    transformedData = transformedData && transformedData !== undefined && transformedData !== "undefined" ? transformedData : formData;
+    const validation = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.validateForm(transformedData, { tenantId: stateId });
+
+    if (validation && !validation?.isValid) {
+      setShowToast({
+        label: `${t("RA_DATE_RANGE_ERROR")}`,
+        isError: true
+      });
+      return;
+    }
 
     const onSuccess = (resp) => {
       
@@ -109,7 +121,7 @@ const MDMSEdit = ({...props}) => {
         body: {
           Mdms:{
             ...data,
-            data:formData
+            data:transformedData
           },
         },
       },
@@ -121,11 +133,29 @@ const MDMSEdit = ({...props}) => {
 
   }
 
+  const convertEpochToDate = (dateEpoch) => {
+    if (!dateEpoch || dateEpoch == null || dateEpoch == undefined || dateEpoch == "") {
+      return "NA";
+    }
+    const dateObject = new Date(dateEpoch);
+    const day = String(dateObject.getDate()).padStart(2, '0');
+    const month = String(dateObject.getMonth() + 1).padStart(2, '0');
+    const year = dateObject.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  const formattedData = data?.data
+  ? {
+      ...data?.data,
+      validFrom: convertEpochToDate(Number(data?.data?.validFrom)),
+    }
+  : null;
+
   if(isLoading || isLoadingSchema || renderLoader ) return <Loader />
   
   return (
     <React.Fragment>
-      <MDMSAdd defaultFormData = {data?.data} screenType={"edit"} onSubmitEditAction={handleUpdate} updatesToUISchema ={schemaData?.updatesToUiSchema} />
+      <MDMSAdd defaultFormData = {(`${moduleName}.${masterName}` === "WORKS-SOR.Rates" || `${moduleName}.${masterName}` === "WORKS-SOR.Composition") ? formattedData : data?.data} screenType={"edit"} onSubmitEditAction={handleUpdate} updatesToUISchema ={schemaData?.updatesToUiSchema} />
       {showToast && <Toast label={t(showToast.label)} error={showToast?.isError} onClose={()=>setShowToast(null)} ></Toast>}
     </React.Fragment>
   )

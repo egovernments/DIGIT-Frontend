@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect ,useRef} from "react";
 import { Switch, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
@@ -17,23 +17,31 @@ import BoundaryHierarchyTypeAdd from "./BoundaryHierarchyTypeAdd";
 import UploadBoundary from "./UploadBoundary";
 import UploadBoundaryPure from "./BoundaryUploadPure";
 
-const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
+const WorkbenchBreadCrumb = ({ location, defaultPath, initialContextPath}) => {
   const { t } = useTranslation();
   const search = useLocation().search;
   const fromScreen = new URLSearchParams(search).get("from") || null;
   const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
   const { masterName, moduleName, uniqueIdentifier, from, screen, action } = Digit.Hooks.useQueryParams();
 
+  const getHomePath = () => {
+    if (window.location.href.includes("mukta")) {
+      return '/works-ui/employee';
+    }
+    return `/${window.contextPath}/employee`;
+  };
+
   const crumbs = [
     {
-      path: `/${window?.contextPath}/employee`,
+      path: getHomePath(),
       content: t("WORKBENCH_HOME"),
       show: true,
+      externalPath: true
     },
     {
       path: `/${window.contextPath}/employee/workbench/manage-master-data`,
       content: t(`WBH_MANAGE_MASTER_DATA`),
-      show: from ? false : pathVar.includes("mdms-") ? true : false,
+      show: pathVar.includes("mdms-") && !(window.location.href.includes("mukta")) ? true : false,
       // query:`moduleName=${moduleName}&masterName=${masterName}`
     },
     {
@@ -72,6 +80,7 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
 
 const App = ({ path }) => {
   const location = useLocation();
+  const initialContextPath = useRef(window.contextPath);
   const MDMSCreateSession = Digit.Hooks.useSessionStorage("MDMS_add", {});
   const [sessionFormData, setSessionFormData, clearSessionFormData] = MDMSCreateSession;
 
@@ -113,7 +122,7 @@ const App = ({ path }) => {
   return (
     <React.Fragment>
       <div className="wbh-header-container">
-        <WorkbenchBreadCrumb location={location} defaultPath={path} />
+        <WorkbenchBreadCrumb location={location} defaultPath={path} initialContextPath={initialContextPath.current}/>
         {!isBoundaryPath && <WorkbenchHeader />}
       </div>
 
