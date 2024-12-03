@@ -1,9 +1,10 @@
 import { logoutV1 } from "./logout";
-import { UICreateConfigGenerator , getMDMSContextPath,getMDMSSchema,isSchemaCodeInMDMSAction, isSchemaCodeInMDMSAction } from "./workbench";
+import { UICreateConfigGenerator , getMDMSContextPath,getMDMSSchema,isSchemaCodeInMDMSAction } from "./workbench";
 import utils from "../utils";
 import useLocalisationSearch from "./useLocalisationSearch";
 import {useWorkbenchFormContext} from "./useWorkbenchFormContext";
 import usePureSchemaDefinition from "./fetchPureSchemaDefinition";
+import useMDMSPopupSearch from "./inbox";
 
 const UserService = {
   logoutV1,
