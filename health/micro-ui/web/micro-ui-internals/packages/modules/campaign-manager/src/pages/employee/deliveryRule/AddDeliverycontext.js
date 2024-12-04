@@ -828,7 +828,7 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
         <div className="product-tag-container digit-tag-container">
           {delivery?.products?.length > 0 &&
             delivery?.products?.map((i) => {
-              return i?.value && i?.quantity ? (
+              return i?.value && i?.count ? (
                 <Chip key={i.key} text={i?.name} onClick={() => removeProduct(i)} className="multiselectdropdown-tag" hideClose={false} />
               ) : null;
             })}
@@ -882,13 +882,10 @@ const AddDeliveryRuleWrapper = ({}) => {
 
   useEffect(() => {
     const dd = campaignData?.find((i) => i?.active === true)?.deliveries?.find((d) => d?.active === true);
+    const tt = dd?.deliveryRules;
     setTargetedData(dd);
-  }, [campaignData]);
-
-  useEffect(() => {
-    const tt = targetedData?.deliveryRules;
     setDeliveryRules(tt);
-  }, [targetedData]);
+  }, [campaignData]);
 
   useEffect(() => {
     dispatchCampaignData({

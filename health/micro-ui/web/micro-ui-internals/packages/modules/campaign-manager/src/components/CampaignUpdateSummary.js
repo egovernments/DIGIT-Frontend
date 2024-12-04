@@ -2,8 +2,7 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Button, EditIcon, Header, Loader, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { InfoBannerIcon, Toast } from "@egovernments/digit-ui-components";
-import { DownloadIcon } from "@egovernments/digit-ui-react-components";
+import { Toast , Tag } from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import NoResultsFound from "./NoResultsFound";
@@ -113,6 +112,7 @@ const CampaignUpdateSummary = (props) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
+  const campaignName = searchParams.get("campaignName");
   const noAction = searchParams.get("action");
   const [showToast, setShowToast] = useState(null);
   const [userCredential, setUserCredential] = useState(null);
@@ -444,6 +444,7 @@ const CampaignUpdateSummary = (props) => {
 
   return (
     <>
+          <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
       <div style={{ display: "flex", justifyContent: "space-between" , marginBottom:"-1.5rem" }}>
         <Header className="summary-header">{t("ES_TQM_SUMMARY_HEADING")}</Header>
       </div>

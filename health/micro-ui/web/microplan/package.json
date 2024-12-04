@@ -13,7 +13,7 @@
   ],
   "homepage": "/microplan-ui",
   "dependencies": {
-    "@egovernments/digit-ui-libraries": "1.8.2-beta.8",
+    "@egovernments/digit-ui-libraries": "1.8.6",
     "@egovernments/digit-ui-module-core": "1.8.11",
     "@egovernments/digit-ui-module-utilities": "1.0.1-beta.23",
     "@egovernments/digit-ui-react-components": "1.8.10",
