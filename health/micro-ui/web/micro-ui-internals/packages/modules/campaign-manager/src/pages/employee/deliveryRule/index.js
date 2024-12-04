@@ -523,7 +523,7 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
       cycle: cycleData?.cycleConfgureDate?.cycle,
       deliveries: cycleData?.cycleConfgureDate?.deliveries,
     });
-  }, [cycleData]);
+  }, [cycleData , filteredDeliveryConfig]);
 
   useEffect(() => {
     onSelect("deliveryRule", campaignData);
