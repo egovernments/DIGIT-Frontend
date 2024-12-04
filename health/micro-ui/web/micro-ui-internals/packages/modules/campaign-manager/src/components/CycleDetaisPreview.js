@@ -129,7 +129,7 @@ const CycleDetaisPreview = ({ data, items, index }) => {
               },
               {
                 Header: t("Count"),
-                accessor: "count",
+                accessor: "quantity",
               },
             ]}
             rowsData={item?.products}
