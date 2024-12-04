@@ -724,7 +724,7 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
   }, [showToast]);
 
   const confirmResources = () => {
-    const isValid = prodRef.current?.every((item) => item?.count !== null && item?.value !== null);
+    const isValid = prodRef.current?.every((item) => item?.quantity !== null && item?.value !== null);
     if (!isValid) {
       setShowToast({ key: "error", label: "CAMPAIGN_PRODUCT_MISSING_ERROR" });
       return;
@@ -767,6 +767,8 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
       return updatedDeliveryRules;
     });
   };
+
+  console.log("delivery" , delivery);
 
   return (
     <>
@@ -828,7 +830,7 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
         <div className="product-tag-container digit-tag-container">
           {delivery?.products?.length > 0 &&
             delivery?.products?.map((i) => {
-              return i?.value && i?.count ? (
+              return i?.value && i?.quantity? (
                 <Chip key={i.key} text={i?.name} onClick={() => removeProduct(i)} className="multiselectdropdown-tag" hideClose={false} />
               ) : null;
             })}
