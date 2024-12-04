@@ -1,9 +1,9 @@
-import { Loader, FormComposerV2, Menu, ActionBar, SubmitBar, LoaderWithGap } from "@egovernments/digit-ui-react-components";
+import { Loader, FormComposerV2, Menu, SubmitBar, LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { CampaignConfig } from "../../configs/CampaignConfig";
-import { Stepper, Toast,Button ,ActionBar } from "@egovernments/digit-ui-components";
+import { Stepper, Toast, Button, ActionBar } from "@egovernments/digit-ui-components";
 import {
   updateUrlParams,
   transformDraftDataToFormData,
@@ -965,14 +965,13 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       default:
         break;
     }
-
   }
 
   const actionbarOptions = [
-    {code:"HCM_UPDATE_DATES",name:"CS_ACTION_HCM_UPDATE_DATES"},
-    {code:"HCM_CONFIGURE_APP",name:"CS_ACTION_HCM_CONFIGURE_APP"},
-    {code:"HCM_UPDATE_CAMPAIGN",name:"CS_ACTION_HCM_UPDATE_CAMPAIGN"}
-  ]
+    { code: "HCM_UPDATE_DATES", name: "CS_ACTION_HCM_UPDATE_DATES" },
+    { code: "HCM_CONFIGURE_APP", name: "CS_ACTION_HCM_CONFIGURE_APP" },
+    { code: "HCM_UPDATE_CAMPAIGN", name: "CS_ACTION_HCM_UPDATE_CAMPAIGN" },
+  ];
 
   const onActionClick = () => {
     history.push(`/${window?.contextPath}/employee/campaign/my-campaign`);
@@ -1020,34 +1019,34 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         }
       />
       {actionBar === "true" && (
-         <ActionBar
-         actionFields={[
-           <Button
-             type={"button"}
-             style={{ marginLeft: "2.5rem"  , width : "14rem"}}
-             label={t("HCM_BACK")}
-             variation={"secondary"}
-             t={t}
-             onClick={() => {
-              onActionClick();
-             }}
-           ></Button>,
-           <Button
-             type={"actionButton"}
-             options={actionbarOptions}
-             label={t("ES_COMMON_TAKE_ACTION")}
-             variation={"primary"}
-             style={{ width : "14rem"}}
-             optionsKey={"name"}
-             isSearchable={false}
-             t={t}
-             onOptionSelect={(option) => {
-                 onActionSelect(option?.code)
-             }}
-           ></Button>
-         ]}
-         className={"new-actionbar"}
-       />
+        <ActionBar
+          actionFields={[
+            <Button
+              type={"button"}
+              style={{ marginLeft: "2.5rem", width: "14rem" }}
+              label={t("HCM_BACK")}
+              variation={"secondary"}
+              t={t}
+              onClick={() => {
+                onActionClick();
+              }}
+            ></Button>,
+            <Button
+              type={"actionButton"}
+              options={actionbarOptions}
+              label={t("ES_COMMON_TAKE_ACTION")}
+              variation={"primary"}
+              style={{ width: "14rem" }}
+              optionsKey={"name"}
+              isSearchable={false}
+              t={t}
+              onOptionSelect={(option) => {
+                onActionSelect(option?.code);
+              }}
+            ></Button>,
+          ]}
+          className={"new-actionbar"}
+        />
       )}
       {showToast && (
         <Toast
