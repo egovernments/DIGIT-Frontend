@@ -1,7 +1,7 @@
 import React, { useEffect, useState, createContext, useContext } from "react";
 import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
 import { useTranslation } from "react-i18next";
-import { ViewCardFieldPair, Toast, Card, TextBlock, Button, PopUp, CardText, TextInput, BreadCrumb, Loader, ActionBar } from "@egovernments/digit-ui-components";
+import { ViewCardFieldPair, Toast, Card, TextBlock, Button, PopUp, CardText, TextInput, BreadCrumb, Loader, ActionBar, Tag} from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useHistory, useLocation } from "react-router-dom";
 import MobileChecklist from "../../components/MobileChecklist";
@@ -140,7 +140,8 @@ const ViewChecklist = () => {
 
     return (
         <div style={{marginBottom: "2rem"}}>
-            <div style={{ display: "flex", justifyContent: "space-between", height:"5.8rem" }}>
+            <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} style={{border: '0.5px solid #0B4B66'}} />
+            <div style={{ display: "flex", justifyContent: "space-between", height:"5.8rem", marginTop:"-1.2rem" }}>
                 <div>
                     <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed"}}>
                         {t("VIEW_CHECKLIST")}

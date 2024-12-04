@@ -327,7 +327,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         setDownloadError(false);
         setIsError(false);
         setIsSuccess(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.isSuccess || null);
-        setShowPopUp(!props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile.length);
+        setShowPopUp(!downloadedTemplates[type] && !props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile.length);
         break;
       case "facilityWithBoundary":
         setUploadedFile(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile || []);
@@ -336,7 +336,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         setDownloadError(false);
         setIsError(false);
         setIsSuccess(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.isSuccess || null);
-        setShowPopUp(!props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile.length);
+        setShowPopUp(!downloadedTemplates[type] && !props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile.length);
         break;
       default:
         setUploadedFile(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile || []);
@@ -345,7 +345,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         setDownloadError(false);
         setIsError(false);
         setIsSuccess(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.isSuccess || null);
-        setShowPopUp(!props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile.length);
+        setShowPopUp(!downloadedTemplates[type] && !props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile.length);
         break;
     }
   }, [type, props?.props?.sessionData]);
@@ -979,6 +979,13 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   };
   const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
 
+  // Add a new state to track downloaded templates
+  const [downloadedTemplates, setDownloadedTemplates] = useState({
+    boundary: false,
+    facilityWithBoundary: false,
+    user: false
+  });
+
   const downloadTemplate = async () => {
     await mutation.mutate(
       {
@@ -1022,6 +1029,10 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             setDownloadError(false);
             if (fileData?.[0]?.id) {
               downloadExcelWithCustomName({ fileStoreId: fileData?.[0]?.id, customName: fileData?.[0]?.filename });
+              setDownloadedTemplates(prev => ({
+                ...prev,
+                [type]: true
+              }));
             }
           } else {
             setDownloadError(true);
@@ -1042,6 +1053,14 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       }
     );
   };
+    // Modify the condition for showing the popup
+  useEffect(() => {
+    // Only show popup if the template for this type hasn't been downloaded yet
+    if (downloadedTemplates[type]) {
+      setShowPopUp(false);
+    }
+  }, [downloadedTemplates]);
+
   const closeToast = () => {
     setShowToast(null);
   };
