@@ -176,13 +176,13 @@ export const cycleDataRemap=(data)=> {
   export const  processDoseCriteria =(rule, resourcesMap ,type ,projectType) =>{
     rule.products.forEach(product => {
       if (resourcesMap.has(product.value)) {
-        resourcesMap.get(product.value).count += product.count;
+        resourcesMap.get(product.value).quantity += product.quantity;
       } else {
         resourcesMap.set(product.value, {
           productVariantId: product.value,
           isBaseUnitVariant: false,
           name: product.name,
-          quantity: product.count
+          quantity: product.quantity
         });
       }
     });
@@ -212,7 +212,7 @@ export const cycleDataRemap=(data)=> {
       ProductVariants: rule.products.map(product => ({
         productVariantId: product.value,
         name: product.name,
-        quantity: product.count
+        quantity: product.quantity
       }))
     };
   }

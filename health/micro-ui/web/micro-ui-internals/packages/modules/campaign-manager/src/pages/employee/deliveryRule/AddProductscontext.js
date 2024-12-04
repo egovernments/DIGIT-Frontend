@@ -34,7 +34,7 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
   const [products, setProducts] = useState([
     {
       key: 1,
-      count: 1,
+      quantity: 1,
       value: null,
     },
   ]);
@@ -44,7 +44,7 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
       const id = selectedProduct?.value;
       return {
         key: index + 1,
-        count: selectedProduct?.count || 1,
+        quantity: selectedProduct?.quantity || 1,
         // value: selectedProduct.additionalData,
         value: {
           displayName: selectedProduct.name,
@@ -181,7 +181,7 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
       {
         key: prevState.length + 1,
         value: null,
-        count: 1,
+        quantity: 1,
       },
     ]);
   };
@@ -200,7 +200,7 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
     setProducts((prevState) => {
       return prevState.map((item) => {
         if (item.key === data.key) {
-          return { ...item, count: value?.target?.value ? Number(value?.target?.value) : value };
+          return { ...item, quantity: value?.target?.value ? Number(value?.target?.value) : value };
         }
         return item;
       });
@@ -265,7 +265,7 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
             {filteredDeliveryConfig?.projectType === "MR-DN" && (
               <LabelFieldPair style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
                 <Label>{t(`CAMPAIGN_COUNT_LABEL`)}</Label>
-                <TextInput type="numeric" defaultValue={i?.count} value={i?.count} onChange={(d) => incrementC(i, d)} />
+                <TextInput type="numeric" defaultValue={i?.quantity} value={i?.quantity} onChange={(d) => incrementC(i, d)} />
               </LabelFieldPair>
             )}
           </div>
