@@ -700,7 +700,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
           });
           break;
       case "HCM_UPDATE_CAMPAIGN":
-        history.push(`/${window.contextPath}/employee/campaign/update-campaign?key=1&parentId=${draftData?.id}`, {
+        history.push(`/${window.contextPath}/employee/campaign/update-campaign?key=1&parentId=${draftData?.id}&campaignName=${draftData?.campaignName}`, {
           name: draftData?.campaignName,
           projectId: draftData?.projectId,
           data: draftData,
