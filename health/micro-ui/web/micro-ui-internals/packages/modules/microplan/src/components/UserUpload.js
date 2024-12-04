@@ -6,6 +6,7 @@ import { ActionBar, SubmitBar } from "@egovernments/digit-ui-react-components";
 import axios from "axios";
 import { Link, useHistory } from "react-router-dom";
 import { ArrowBack } from "@egovernments/digit-ui-svg-components";
+import { useMyContext } from "../utils/context";
 
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
@@ -20,6 +21,7 @@ const UserUpload = React.memo(() => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [uploadedFile, setUploadedFile] = useState([]);
   const history = useHistory();
+  const { state } = useMyContext();
   const [errorsType, setErrorsType] = useState({});
   const [showToast, setShowToast] = useState(null);
   const [sheetErrors, setSheetErrors] = useState(0);
@@ -36,21 +38,9 @@ const UserUpload = React.memo(() => {
   const [downloadTemplateLoader, setDownloadTemplateLoader] = useState(false);
   const [processedFile, setProcessedFile] = useState([]);
   const params = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
-  const searchParams = new URLSearchParams(location.search);
   const type = "userWithBoundary";
-  const id = searchParams.get("campaignId") || "null";
-  const { data: boundaryHierarchy } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    "hcm-microplanning",
-    [{ name: "hierarchyConfig" }],
-    {
-      select: (data) => {
-        const item = data?.["hcm-microplanning"]?.hierarchyConfig?.find((item) => item.isActive);
-        return item?.hierarchy;
-      },
-    },
-    { schemaCode: "BASE_MASTER_DATA_INITIAL" }
-  );
+  const id =  "microplan";
+ 
   const XlsPreview = Digit.ComponentRegistryService.getComponent("XlsPreview");
   const BulkUpload = Digit.ComponentRegistryService.getComponent("BulkUpload");
   const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "baseTimeout" }]);
@@ -78,7 +68,7 @@ const UserUpload = React.memo(() => {
         try {
           const temp = await Digit.Hooks.campaign.useResourceData(
             uploadedFile,
-            boundaryHierarchy,
+            state?.hierarchyType,
             type,
             tenantId,
             id,
@@ -261,7 +251,7 @@ const UserUpload = React.memo(() => {
     params: {
       tenantId: tenantId,
       type: type,
-      hierarchyType: boundaryHierarchy,
+      hierarchyType: state?.hierarchyType,
       id: params?.userId,
     },
   };
@@ -274,7 +264,7 @@ const UserUpload = React.memo(() => {
         params: {
           tenantId: tenantId,
           type: type,
-          hierarchyType: boundaryHierarchy,
+          hierarchyType: state?.hierarchyType,
           campaignId: id,
         },
       },
@@ -339,7 +329,7 @@ const UserUpload = React.memo(() => {
   };
 
   const generateData = async () => {
-    if (boundaryHierarchy && id) {
+    if (state?.hierarchyType && id) {
       const ts = new Date().getTime();
       const reqCriteria = {
         url: `/project-factory/v1/data/_generate`,
@@ -347,8 +337,8 @@ const UserUpload = React.memo(() => {
           tenantId: Digit.ULBService.getCurrentTenantId(),
           type: type,
           forceUpdate: true,
-          hierarchyType: boundaryHierarchy,
-          campaignId: "null",
+          hierarchyType: state?.hierarchyType,
+          campaignId: id,
           source: "microplan",
         },
         body: {
@@ -371,7 +361,7 @@ const UserUpload = React.memo(() => {
 
   useEffect(() => {
     generateData();
-  }, [id, boundaryHierarchy]);
+  }, [id, state?.hierarchyType]);
 
   const onSubmit = async () => {
     setDownloadTemplateLoader(true);
@@ -389,8 +379,7 @@ const UserUpload = React.memo(() => {
             tenantId: Digit.ULBService.getCurrentTenantId(),
             type: "user",
             fileStoreId: fileId,
-            hierarchyType: boundaryHierarchy,
-            campaignId: id,
+            hierarchyType: state?.hierarchyType,
             action: "create",
             campaignId: id,
             additionalDetails: {

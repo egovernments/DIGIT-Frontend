@@ -23,12 +23,15 @@ import FacilityCatchmentMapping from "./FacilityCatchmentMapping";
 import PlanInbox from "./PlanInbox";
 import MapViewComponent from "../../components/MapViewComponent";
 
-
-
-
 // const bredCrumbStyle = { maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
+
+  const url = Digit.Hooks.useQueryParams();
+  const microplanId = url?.microplanId;
+  const campaignId = url?.campaignId;
+  const setupCompleted = url?.["setup-completed"];
+
   const crumbs = [
     {
       internalLink: `/${window?.contextPath}/employee`,
@@ -38,15 +41,48 @@ const ProjectBreadCrumb = ({ location }) => {
     {
       internalLink: `/${window?.contextPath}/employee/microplan/user-management`,
       content: t("USER_MANAGEMENT"),
-      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "UPLOAD_USER" || Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "USER_DOWNLOAD"
-
+      show:
+        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "UPLOAD_USER" ||
+        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "USER_DOWNLOAD",
     },
     {
+      internalLink: `/${window?.contextPath}/employee/microplan/microplan-search`,
+      content: t("OPEN_MICROPLANS"),
+      show: (Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "SETUP_MICROPLAN" && setupCompleted==="true")
+    },  
+    {
+      internalLink: `/${window?.contextPath}/employee/microplan/my-microplans`,
+      content: t("MY_MICROPLANS"),
+      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "SELECT_ACTIVITY" ||
+      Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "POP_INBOX" ||
+      Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "ASSIGN_FACILITIES_TO_VILLAGES" ||
+      Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "PLAN_INBOX" ||
+      Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VILLAGE_VIEW",
+    }, 
+    {
+      internalLink: `/${window?.contextPath}/employee/microplan/select-activity`,
+      content: t("SELECT_ACTIVITY"),
+      query: `microplanId=${microplanId}&campaignId=${campaignId}`,
+      show:
+        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "POP_INBOX" ||
+        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "ASSIGN_FACILITIES_TO_VILLAGES" ||
+        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "PLAN_INBOX" ||
+        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VILLAGE_VIEW",
+    },
+    {
+      internalLink: `/${window?.contextPath}/employee/microplan/pop-inbox`,
+      content: t("POP_INBOX"),
+      query: `microplanId=${microplanId}&campaignId=${campaignId}`,
+      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VILLAGE_VIEW"
+    }, 
+    {
       internalLink: `/${window?.contextPath}/employee`,
-      content: t(Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop())),
+      content: setupCompleted ? t("VIEW_SUMMARY") : t(Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop())),
       show: true,
     },
+   
   ];
+  
   return <BreadCrumbNew crumbs={crumbs} />;
 };
 
@@ -73,13 +109,12 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
     }
     return () => {
       if (window.location.pathname !== `/${window.contextPath}/employee/microplan/setup-microplan`) {
-      window.Digit.SessionStorage.del("MICROPLAN_DATA");
-      window.Digit.SessionStorage.del("HYPOTHESIS_DATA");
-      window.Digit.SessionStorage.del("FORMULA_DATA");
+        window.Digit.SessionStorage.del("MICROPLAN_DATA");
+        window.Digit.SessionStorage.del("HYPOTHESIS_DATA");
+        window.Digit.SessionStorage.del("FORMULA_DATA");
       }
     };
   }, []);
-
 
   const { isLoading: isLoadingMdmsMicroplanData, data: MicroplanMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
@@ -102,7 +137,8 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
       { name: "facilityType" },
       { name: "facilityStatus" },
       { name: "VehicleDetails" },
-      { name: "ContextPathForUser" }
+      { name: "ContextPathForUser" },
+      { name: "DssKpiConfigs" },
     ],
     {
       cacheTime: Infinity,
@@ -113,7 +149,7 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
             ...data?.["hcm-microplanning"],
           },
         });
-      }
+      },
     },
     { schemaCode: "BASE_MASTER_DATA" } //mdmsv2
   );
@@ -121,10 +157,7 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
   const { isLoading: isLoadingMdmsAdditionalData, data: AdditionalMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     "HCM-ADMIN-CONSOLE",
-    [
-      { name: "hierarchyConfig" },
-
-    ],
+    [{ name: "hierarchyConfig" }],
     {
       cacheTime: Infinity,
       select: (data) => {
@@ -159,9 +192,8 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
         //     ],
         //     ...data?.["HCM-ADMIN-CONSOLE"],
         //   },
-
         // });
-      }
+      },
     },
     { schemaCode: "ADDITIONAL_MASTER_DATA" } //mdmsv2
   );
@@ -186,7 +218,7 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
           state: {
             boundaryHierarchy: data?.BoundaryHierarchy?.[0]?.boundaryHierarchy,
             hierarchyType: BOUNDARY_HIERARCHY_TYPE,
-            lowestHierarchy
+            lowestHierarchy,
           },
         });
         return data?.BoundaryHierarchy?.[0];
@@ -195,14 +227,11 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
   };
   const { data: hierarchyDefinition, isLoading: isBoundaryHierarchyLoading } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-
-
   if (isLoadingMdmsMicroplanData || isLoadingMdmsAdditionalData || isBoundaryHierarchyLoading) {
-    return <Loader />
+    return <Loader />;
   }
 
   //TODO: Hardcode jurisdiction in state for now, need a microplan with complete setup done with all selected boundaries(in campaign), need superviser users with jurisdiction and tagging
-
 
   return (
     <Switch>
@@ -210,9 +239,12 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
         <React.Fragment>
           <ProjectBreadCrumb location={location} />
         </React.Fragment>
-        <PrivateRoute path={`${path}/setup-microplan`} component={() => <SetupMicroplan hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />} />
+        <PrivateRoute
+          path={`${path}/setup-microplan`}
+          component={() => <SetupMicroplan hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />}
+        />
         <PrivateRoute path={`${path}/microplan-search`} component={() => <MicroplanSearch></MicroplanSearch>} />
-        <PrivateRoute path={`${path}/user-management`} component={() => <UserManagement ></UserManagement>} />
+        <PrivateRoute path={`${path}/user-management`} component={() => <UserManagement></UserManagement>} />
         <PrivateRoute path={`${path}/user-download`} component={() => <UserDownload />} />
         <PrivateRoute path={`${path}/select-activity`} component={() => <ChooseActivity />} />
         <PrivateRoute path={`${path}/campaign-boundary`} component={() => <CampaignBoundary />} />
@@ -230,10 +262,6 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
         <PrivateRoute path={`${path}/village-finalise-success`} component={() => <Response />} />
         <PrivateRoute path={`${path}/microplan-success`} component={() => <Response />} />
         <PrivateRoute path={`${path}/map-view`} component={() => <MapViewComponent />} />
-
-
-
-
       </AppContainer>
     </Switch>
   );

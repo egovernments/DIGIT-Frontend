@@ -129,7 +129,7 @@ const BoundaryRelationCreate = () => {
 
     const pollForTemplateGeneration = async () => {
         const pollInterval = 2000; // Poll every 2 seconds
-        const maxRetries = 50; // Maximum number of retries
+        const maxRetries = 200; // Maximum number of retries
         let retries = 0;
     
         return new Promise((resolve, reject) => {
@@ -199,7 +199,7 @@ const BoundaryRelationCreate = () => {
 
     const pollForStatusCompletion = async (id, typeOfData) => {
         const pollInterval = 2000;
-        const maxRetries = 100;
+        const maxRetries = 200;
         let retries = 0;
         let pollTimer = null;
         let timeoutTimer = null;
@@ -318,7 +318,7 @@ const BoundaryRelationCreate = () => {
                 label = `${t("WBH_BOUNDARY_CREATION_TIMEOUT")}: ${t("WBH_OPERATION_INCOMPLETE")}`;
             } else {
                 label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
-                if (error?.message) label += `${t(error?.message)}`;
+                // if (error?.message) label += `${t(error?.message)}`;
             }
     
             setShowToast({ label, isError: "error" });
@@ -326,6 +326,9 @@ const BoundaryRelationCreate = () => {
         }
     };
 
+    const trimming = (val) => {
+        return val.trim().replace(/[\s_]+/g, '');
+    };
 
     const createNewHierarchy = async () => {
 
@@ -340,14 +343,22 @@ const BoundaryRelationCreate = () => {
                 isError: "info", 
                 transitionTime: 100000
             });
-                        
-            const bh = [...boundaryData, ...newBoundaryData];
-            const local = bh.map(item => ({
-                code: `${hierarchyType}_${item.boundaryType}`.toUpperCase(),
-                message: item.boundaryType,
-                module: `hcm-boundary-${hierarchyType.toLowerCase()}`,
-                locale: locale
-            }));
+
+            const local = [
+                ...boundaryData.map(item => ({
+                    code: `${hierarchyType}_${trimming(item.boundaryType)}`.toUpperCase(),
+                    message: `${t((defaultHierarchyType + "_" + item?.boundaryType).toUpperCase())}`,
+                    module: `hcm-boundary-${hierarchyType.toLowerCase()}`,
+                    locale: locale
+                })),
+                ...newBoundaryData.map(item => ({
+                    code: `${hierarchyType}_${trimming(item.boundaryType)}`.toUpperCase(),
+                    message: item.boundaryType.trim(),
+                    module: `hcm-boundary-${hierarchyType.toLowerCase()}`,
+                    locale: locale
+                }))
+            ];
+            
     
             const localisationResult = await localisationMutateAsync(local);
             if (!localisationResult.success) {
@@ -386,10 +397,12 @@ const BoundaryRelationCreate = () => {
         } catch (error) {
             const errorMessage = error.message === "LEVELS_CANNOT_BE_EMPTY"
                 ? t("LEVELS_CANNOT_BE_EMPTY")
-                : error?.response?.data?.Errors?.[0]?.message || t("HIERARCHY_CREATION_FAILED");
+                : t(error?.response?.data?.Errors?.[0]?.code) || t("HIERARCHY_CREATION_FAILED");
             
             setCreatingData(false);
             setShowToast({ label: errorMessage, isError: "error" });
+            await sleep(2000);
+            history.push(`/${window.contextPath}/employee/campaign/boundary/home`,{});
         }
     }
 const onConfirmClick=()=>{
@@ -409,17 +422,17 @@ const onConfirmClick=()=>{
         setNewBoundaryData((prevItems) => {
             // Loop through the array starting from the second element
             return prevItems.map((item, idx) => {
-                item.boundaryType = item.boundaryType.trim();
+                item.boundaryType = trimming(item.boundaryType).toUpperCase();
                 if (idx === 0) {
                     if (newHierarchy) item.parentBoundaryType = null;
                     else {
                         if (boundaryData.length === 0) item.parentBoundaryType = null;
-                        else item.parentBoundaryType = boundaryData[boundaryData.length - 1].boundaryType.trim();
+                        else item.parentBoundaryType = boundaryData[boundaryData.length - 1].boundaryType;
 
                     }
                 }
                 if (idx > 0) {
-                    item.parentBoundaryType = prevItems[idx - 1].boundaryType.trim();
+                    item.parentBoundaryType = trimming(prevItems[idx - 1].boundaryType);
                 }
                 return item;
             });
@@ -574,104 +587,109 @@ const onConfirmClick=()=>{
         }
         else {
             return (
-                <React.Fragment>
-                    {firstPage && (
-                        <div>
-                            <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
-                                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                    <div className="hierarchy-boundary-heading">{t("CREATE_BOUNDARY_HIERARCHY")}</div>
-                                </div>
-                                <div style={{ height: "1.5rem" }}></div>
-                                <div>
-                                    {t("BOUNDARY_HIERARCHY_INFO_MSG")}
-                                </div>
-                                <div style={{ height: "2rem" }}></div>
-                                <div>
-                                    {
-                                        newBoundaryData.map((item, index) => (
-                                            <div>
-                                                <div style={{ display: "flex" }}>
-                                                    <div className="hierarchy-boundary-sub-heading">{t("LEVEL")} {index + 1}</div>
-                                                    <div style={{ display: "flex", gap: "1rem" }}>
-                                                        <TextInput
-                                                            type={"text"}
-                                                            populators={{
-                                                                resizeSmart: false
-                                                            }}
-                                                            style={{ width: "27rem", display: "flex", justifyContent: "flex-end" }}
-                                                            value={item?.boundaryType}
-                                                            onChange={(event) => addLevelName(event.target.value, index)}
-                                                            placeholder={""}
-                                                        />
-                                                        <div className="dustbin-icon" onClick={() => removeLevel(index)}>
-                                                            <DustbinIcon />
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                                <div style={{ height: "1.5rem" }}></div>
-                                            </div>
-                                        ))
-                                    }
-                                    <Button
-                                        className="custom-class"
-                                        icon="Add"
-                                        iconFill=""
-                                        label={t("ADD_HIERARCHY_LEVEL")}
-                                        onClick={() => addLevel()}
-                                        size="medium"
-                                        title=""
-                                        variation="secondary"
-                                        textStyles={{ width: 'unset' }}
-                                    />
-                                </div>
-                            </Card>
-                        </div>
-                    )}
-                    <FinalPopup showFinalPopUp={showFinalPopup} setShowFinalPopup={setShowFinalPopup} onConfirmClick={onConfirmClick}   />
-                    <ActionBar
-                        actionFields={[
-                            <Button
-                                icon="ArrowBack"
-                                style={{ marginLeft: "3.5rem" }}
-                                label={t("COMMON_BACK")}
-                                onClick={goBackToBoundary}
-                                type="button"
-                                variation="secondary"
-                                textStyles={{ width: 'unset' }}
-                            />,
-                            <Button
-                                icon="ArrowForward"
-                                style={{ marginLeft: "auto" }}
-                                isSuffix
-                                label={t("CMN_BOUNDARY_REL_CREATE")}
-                                // onClick={goToPreview} 
-                                isDisabled={creatingData}
-                                onClick={() => {
-                                    const checkValid= newBoundaryData?.every(obj=>obj?.boundaryType);
-                                         if(checkValid){
-                                            setShowFinalPopup(true)
-                                         }else if(newBoundaryData?.some(obj=>obj?.boundaryType)){
-                                            setShowToast({ label: "CMN_ATLEAST_ONE_HIERARCHY", isError: "error" })
-                                         }else{ setShowToast({ label: "CMN_FILLORDELETE_CREATED_HIERARCHY", isError: "error" });
-                                        }
-
-                                     }}
-                                type="button"
-                                textStyles={{ width: 'unset' }}
-                            />
-                        ]}
-                        className="custom-action-bar"
-                        maxActionFieldsAllowed={5}
-                        setactionFieldsToRight
-                        sortActionFields
-                        style={{}}
-                    />
-                    {showToast && <Toast label={showToast.label} type={showToast.isError} transitionTime={showToast?.transitionTime} onClose={() => setShowToast(null)} />}
-                    {creatingData&&<LoaderWithGap text={t("DATA_SYNC_WITH_SERVER")} />}
-                </React.Fragment>
-
-
+              <React.Fragment>
+                {firstPage && (
+                  <div style={{marginBottom:"2rem"}}>
+                    <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
+                      <div style={{ display: "flex", justifyContent: "space-between" }}>
+                        <div className="hierarchy-boundary-heading">{t("CREATE_BOUNDARY_HIERARCHY")}</div>
+                      </div>
+                      <div style={{ height: "1.5rem" }}></div>
+                      <div>{t("BOUNDARY_HIERARCHY_INFO_MSG")}</div>
+                      <div style={{ height: "2rem" }}></div>
+                      <div>
+                        {newBoundaryData.map((item, index) => (
+                          <div>
+                            <div style={{ display: "flex" }}>
+                              <div className="hierarchy-boundary-sub-heading">
+                                {t("LEVEL")} {index + 1}
+                                {index === 0 && <span className="mandatory-span">*</span>}
+                              </div>
+                              <div style={{ display: "flex", gap: "1rem" }}>
+                                <TextInput
+                                  type={"text"}
+                                  populators={{
+                                    resizeSmart: false,
+                                  }}
+                                  style={{ width: "27rem", display: "flex", justifyContent: "flex-end" }}
+                                  value={item?.boundaryType}
+                                  onChange={(event) => addLevelName(event.target.value, index)}
+                                  placeholder={""}
+                                />
+                                {index !== 0 && (
+                                  <div className="dustbin-icon" onClick={() => removeLevel(index)}>
+                                    <DustbinIcon />
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <div style={{ height: "1.5rem" }}></div>
+                          </div>
+                        ))}
+                        <Button
+                          className="custom-class"
+                          icon="Add"
+                          iconFill=""
+                          label={t("ADD_HIERARCHY_LEVEL")}
+                          onClick={() => addLevel()}
+                          size="medium"
+                          title=""
+                          variation="secondary"
+                          textStyles={{ width: "unset" }}
+                        />
+                      </div>
+                    </Card>
+                  </div>
+                )}
+                <FinalPopup showFinalPopUp={showFinalPopup} setShowFinalPopup={setShowFinalPopup} onConfirmClick={onConfirmClick} />
+                <ActionBar
+                  actionFields={[
+                    <Button
+                      icon="ArrowBack"
+                      style={{ marginLeft: "3.5rem" }}
+                      label={t("COMMON_BACK")}
+                      onClick={goBackToBoundary}
+                      type="button"
+                      variation="secondary"
+                      textStyles={{ width: "unset" }}
+                    />,
+                    <Button
+                      icon="ArrowForward"
+                      style={{ marginLeft: "auto" }}
+                      isSuffix
+                      label={t("CMN_BOUNDARY_REL_CREATE")}
+                      // onClick={goToPreview}
+                      isDisabled={creatingData}
+                      onClick={() => {
+                        const checkValid = newBoundaryData?.every((obj) => obj?.boundaryType);
+                        if (checkValid) {
+                          setShowFinalPopup(true);
+                        } else if (newBoundaryData?.some((obj) => obj?.boundaryType)) {
+                            setShowToast({ label: t("CMN_FILLORDELETE_CREATED_HIERARCHY"), isError: "error" });
+                        } else {
+                          setShowToast({ label: t("CMN_ATLEAST_ONE_HIERARCHY"), isError: "error" });
+                        }
+                      }}
+                      type="button"
+                      textStyles={{ width: "unset" }}
+                    />,
+                  ]}
+                  className="custom-action-bar"
+                  maxActionFieldsAllowed={5}
+                  setactionFieldsToRight
+                  sortActionFields
+                  style={{}}
+                />
+                {showToast && (
+                  <Toast
+                    label={showToast.label}
+                    type={showToast.isError}
+                    transitionTime={showToast?.transitionTime}
+                    onClose={() => setShowToast(null)}
+                  />
+                )}
+                {creatingData && <LoaderWithGap text={t("DATA_SYNC_WITH_SERVER")} />}
+              </React.Fragment>
             );
         }
     }

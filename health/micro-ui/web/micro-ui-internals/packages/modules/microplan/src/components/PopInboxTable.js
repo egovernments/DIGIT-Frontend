@@ -8,10 +8,11 @@ import TimelinePopUpWrapper from "./timelinePopUpWrapper";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { CheckBox } from "@egovernments/digit-ui-components";
 import EditVillagePopulationPopUp from "./editVillagePopulationPopUP";
-import { tableCustomStyle,getTableCustomStyle } from "./tableCustomStyle";
+import { tableCustomStyle, getTableCustomStyle } from "./tableCustomStyle";
 import { CustomLoader } from "./RoleTableComposer";
 import { min } from "lodash";
 import VillageHierarchyTooltipWrapper from "./VillageHierarchyTooltipWrapper";
+import AssigneeChips from "./AssigneeChips";
 
 const PopInboxTable = ({ ...props }) => {
   const { t } = useTranslation();
@@ -25,23 +26,24 @@ const PopInboxTable = ({ ...props }) => {
   const [selectedBoundaryCode, setSelectedBoundaryCode] = useState(null);
 
   const columns = useMemo(() => {
-
     return [
       {
         name: t(`INBOX_VILLAGE`),
         cell: (row, index, column, id) => (
-          <div style={{display:"flex", gap:".5rem"}}>
-          <Button
-            label={t(`${row.boundaryCode}`)}
-            onClick={() =>
-              history.push(`/${window.contextPath}/employee/microplan/village-view?microplanId=${url?.microplanId}&boundaryCode=${row.boundaryCode}&campaignId=${url?.campaignId}`)
-            }
-            title={t(`${row.boundaryCode}`)}
-            variation="link"
-            size={"medium"}
-            style={{ minWidth: "unset" }}
-          />
-          <VillageHierarchyTooltipWrapper  boundaryCode={row?.boundaryCode}/>
+          <div className="village-tooltip-wrap">
+            <Button
+              label={t(`${row.boundaryCode}`)}
+              onClick={() =>
+                history.push(
+                  `/${window.contextPath}/employee/microplan/village-view?microplanId=${url?.microplanId}&boundaryCode=${row.boundaryCode}&campaignId=${url?.campaignId}`
+                )
+              }
+              title={t(`${row.boundaryCode}`)}
+              variation="link"
+              size={"medium"}
+              style={{ minWidth: "unset" }}
+            />
+            <VillageHierarchyTooltipWrapper boundaryCode={row?.boundaryCode} wrapperClassName={"village-hierarchy-tooltip-wrapper-class"} />
           </div>
         ),
         // selector:(row, index)=>row.boundaryCode,
@@ -57,24 +59,28 @@ const PopInboxTable = ({ ...props }) => {
       },
       {
         name: t("INBOX_ASSIGNEE"),
-        selector: (row, index) => props?.employeeNameData?.[row?.assignee] || t("ES_COMMON_NA"),
-        sortable: true,
-        width: "180px",
+        selector: (row, index) =>
+          row?.assignee?.length > 0 ? (
+            <AssigneeChips assignees={row?.assignee} assigneeNames={props?.employeeNameData} heading={t("HCM_MICROPLAN_POP_INBOX_TOTAL_ASSIGNEES")} />
+          ) : (
+            t("ES_COMMON_NA")
+          ),
+        sortable: false,
       },
-      ...(
-        (props?.censusData?.[0]?.additionalFields || [])
-          .filter((field) => field.showOnUi)
-          .sort((a, b) => a.order - b.order)
-          .map((field) => ({
-            name: t(field.key) || t("ES_COMMON_NA"),
-            selector: (row) => {
-              const fieldValue = row.additionalFields.find((f) => f.key === field.key)?.value || t("ES_COMMON_NA");
+      ...(props?.censusData?.[0]?.additionalFields || [])
+        .filter((field) => field.showOnUi)
+        .sort((a, b) => a.order - b.order)
+        .map((field) => ({
+          name: t(`INBOX_${field.key}`) || t("ES_COMMON_NA"),
+          selector: (row) => {
+            const fieldValue = row.additionalFields.find((f) => f.key === field.key)?.value || t("ES_COMMON_NA");
 
-              // Render a button if editable is true, otherwise render the field value as text
-              return row.additionalFields.find((f) => f.key === field.key)?.editable ? (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: "flex-end" }}>
-                  <span style={{ marginRight: '0.5rem' }}>{fieldValue}</span>
-                  {props.showEditColumn && <Button
+            // Render a button if editable is true, otherwise render the field value as text
+            return row.additionalFields.find((f) => f.key === field.key)?.editable ? (
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
+                <span style={{ marginRight: "0.5rem" }}>{fieldValue}</span>
+                {props.showEditColumn && (
+                  <Button
                     onClick={() => {
                       setShowEditVillagePopup(row);
                     }}
@@ -82,19 +88,33 @@ const PopInboxTable = ({ ...props }) => {
                     icon={"Edit"}
                     size="small"
                     style={{ paddingLeft: "16px", minWidth: "unset", paddingRight: "8px" }}
-                  />}
-                </div>
-              ) : (
-                fieldValue
-              );
-            },
-            sortable: true,
-            width: "180px",
-            style: {
-              justifyContent: "flex-end",
-            },
-          }))
-      ),
+                  />
+                )}
+              </div>
+            ) : (
+              fieldValue
+            );
+          },
+          sortFunction: (rowA, rowB) => {
+            const fieldA = rowA.additionalFields.find((f) => f.key === field.key);
+            const fieldB = rowB.additionalFields.find((f) => f.key === field.key);
+          
+            const valueA = parseFloat(fieldA?.value || 0); // Converting to number, default to 0 if undefined
+            const valueB = parseFloat(fieldB?.value || 0);
+          
+            if (fieldA?.editable && !fieldB?.editable) return 1; // Editable rows after non-editable
+            if (!fieldA?.editable && fieldB?.editable) return -1; // Non-editable rows before editable
+          
+            // Numeric comparison for rows with same editability
+            return valueA - valueB;
+          },
+          
+          sortable: true,
+          width: "180px",
+          style: {
+            justifyContent: "flex-end",
+          },
+        })),
       {
         name: t("INBOX_STATUSLOGS"),
         cell: (row, index, column, id) => (
@@ -120,8 +140,6 @@ const PopInboxTable = ({ ...props }) => {
     props?.handlePageChange(page, totalRows);
   };
 
-
-
   const handleRowSelect = (event) => {
     // if(!event?.allSelected && event?.selectedCount >0){
     //     setIsIntermediate(true);
@@ -142,14 +160,14 @@ const PopInboxTable = ({ ...props }) => {
   if (showTimelinePopup) {
     return (
       <TimelinePopUpWrapper
-      key={`${selectedBusinessId}-${Date.now()}`}
+        key={`${selectedBusinessId}-${Date.now()}`}
         onClose={() => {
           setShowTimelinePopup(false);
           setSelectedBoundaryCode(null);
           setSelectedBusinessId(null); // Reset the selectedBusinessId when popup is closed
         }}
         businessId={selectedBusinessId} // Pass selectedBusinessId as businessId
-        heading={`${t("HCM_MICROPLAN_STATUS_LOG_FOR_LABEL")} ${t(selectedBoundaryCode)}`} 
+        heading={`${t("HCM_MICROPLAN_STATUS_LOG_FOR_LABEL")} ${t(selectedBoundaryCode)}`}
         labelPrefix={"POP_ACTIONS_"}
       />
     );
@@ -175,6 +193,7 @@ const PopInboxTable = ({ ...props }) => {
     <DataTable
       columns={columns}
       data={props.censusData}
+      className={`data-table ${!props.disabledAction ? "selectable" : "unselectable"}`}
       selectableRows={!props.disabledAction}
       selectableRowsHighlight
       noContextMenu
@@ -185,7 +204,7 @@ const PopInboxTable = ({ ...props }) => {
       // defaultSortFieldId={1}
       selectableRowsComponentProps={selectProps}
       progressPending={props?.progressPending}
-      progressComponent={<Loader />}// progressPending={loading}
+      progressComponent={<Loader />} // progressPending={loading}
       pagination
       paginationServer
       paginationDefaultPage={props?.currentPage}

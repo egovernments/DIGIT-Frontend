@@ -27,10 +27,11 @@ const SummaryScreen = ({ props: customProps }) => {
     cards: [
       {
         navigationKey: "card1",
+        cardStyle:"view-campaign-details-card",
         sections: [
           {
             type: "DATA",
-            cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, marginBottom: "0.5rem", fontSize: "1.5rem" } },
+            cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "2rem" } },
             values: [
               {
                 key: t("CAMPAIGN_TYPE"),
@@ -53,6 +54,7 @@ const SummaryScreen = ({ props: customProps }) => {
       },
       {
         navigationKey: "card1",
+        cardStyle:"view-campaign-details-card",
         sections: [
           {
             type: "DATA",

@@ -17,12 +17,8 @@
   }
   
   .formula-label-field > span {
-    width: 25rem;
-    font-size: 1.2rem;
-    margin-right: 2rem;
-    font-weight: bold;
-
-    margin-top: 0.25rem;
+    width: 27rem;
+    @extend .typography.heading-s;
   }
 
   .icon-wrapper{

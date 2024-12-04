@@ -1,4 +1,4 @@
-import { Button, Card, Dropdown, Loader, MultiSelectDropdown, TableMolecule, Toast, CardText,PopUp } from "@egovernments/digit-ui-components";
+import { Button, Card, Dropdown, Loader, TableMolecule, Toast, CardText,PopUp,CustomSVG } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DataTable from "react-data-table-component";
@@ -45,6 +45,7 @@ function RoleTableComposer({ nationalRoles }) {
   const queryClient = useQueryClient();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const totalFormData = Digit.SessionStorage.get("MICROPLAN_DATA");
+  const MultiSelectWrapper = Digit.ComponentRegistryService.getComponent("MultiSelectDropdownBoundary");
   const selectedData = totalFormData?.BOUNDARY?.boundarySelection?.selectedData || [];
   const { hierarchyData, category } = useUserAccessContext();
   const { state, lowestHierarchy } = useMyContext();
@@ -329,11 +330,18 @@ function RoleTableComposer({ nationalRoles }) {
         return <div title={row?.name || t("NA")}>{row.name || t("NA")}</div>;
       },
       sortable: true,
+      sortFunction: (rowA, rowB) => {
+        const nameA = t(rowA.name).toLowerCase();
+        const nameB = t(rowB.name).toLowerCase();
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
+        return 0;
+      },
     },
     {
       name: t("EMAIL"),
       selector: (row) => <div title={row?.email || t("NA")}>{row?.email || t("NA")}</div>,
-      sortable: true,
+      sortable: false,
     },
     {
       name: t("CONTACT_NUMBER"),
@@ -341,6 +349,16 @@ function RoleTableComposer({ nationalRoles }) {
         return row.number || t("NA");
       },
       sortable: true,
+      sortFunction: (rowA, rowB) => {
+        const numberA = parseInt(rowA.number, 10);
+        const numberB = parseInt(rowB.number, 10);
+        if (isNaN(numberA)) return 1; // Treat invalid numbers as larger
+        if (isNaN(numberB)) return -1;
+    
+        if (numberA < numberB) return -1;
+        if (numberA > numberB) return 1;
+        return 0;
+      },
     },
     {
       name: t("HIERARCHY"),
@@ -366,37 +384,44 @@ function RoleTableComposer({ nationalRoles }) {
           />
         );
       },
+      sortable:false
     },
 
     {
       name: t("SELECTED_BOUNDARY"),
+      grow: 2,
       cell: (row) => {
         const isUserAlreadyAssignedActive =
           HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.length > 0 &&
-            HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
+          HrmsData?.planSearchData?.filter((i) => i.employeeId === row.employeeId)?.[0]?.active
             ? true
             : false;
         return (
-          <MultiSelectDropdown
-            disabled={
-              isUserAlreadyAssignedActive ||
+          <div style={{ width: "100%" }}>
+            <MultiSelectWrapper
+              disabled={
+                isUserAlreadyAssignedActive ||
                 nationalRoles?.includes(category) ||
                 !rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedHierarchy
-                ? true
-                : false
-            }
-            props={{ className: "roleTableCell" }}
-            t={t}
-            options={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.boundaryOptions || []}
-            optionsKey={"code"}
-            selected={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedBoundaries || []}
-            onSelect={(value) => handleBoundaryChange(value, row)}
-            addCategorySelectAllCheck={true}
-            addSelectAllCheck={true}
-            variant="nestedmultiselect"
-          />
+                  ? true
+                  : false
+              }
+              props={{ className: "roleTableCell" }}
+              t={t}
+              options={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.boundaryOptions || []}
+              optionsKey={"code"}
+              selected={rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedBoundaries || []}
+              onClose={(value) => handleBoundaryChange(value, row)}
+              onSelect={()=>{}}
+              addCategorySelectAllCheck={true}
+              addSelectAllCheck={true}
+              style={{ width: "100%" }}
+              variant="nestedmultiselect"
+            />
+          </div>
         );
       },
+      sortable:false
     },
     {
       name: t("ACTION"),
@@ -421,6 +446,9 @@ function RoleTableComposer({ nationalRoles }) {
               !rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedBoundaries ||
               rowData?.find((item) => item?.rowIndex === row?.rowIndex)?.selectedBoundaries?.length === 0
             }
+            style={{width:"100%"}}
+            title={isUserAlreadyAssignedActive ? t(`UNASSIGN`) : t(`ASSIGN`)}
+            size="medium"
             className={"roleTableCell"}
             variation={isUserAlreadyAssignedActive ? "secondary" : "primary"}
             label={isUserAlreadyAssignedActive ? t(`UNASSIGN`) : t(`ASSIGN`)}
@@ -430,6 +458,7 @@ function RoleTableComposer({ nationalRoles }) {
           />
         );
       },
+      sortable:false
     },
   ];
 
@@ -487,7 +516,7 @@ function RoleTableComposer({ nationalRoles }) {
           <div>
             <div className={`search-field-wrapper roleComposer`}>
               <LabelFieldPair key={1}>
-                <CardLabel style={{ marginBottom: "0.4rem" }}>{t("Name")}</CardLabel>
+                <CardLabel style={{ margin:"0rem", marginBottom: "0.5rem" }}>{t("Name")}</CardLabel>
                 <TextInput
                   value={name}
                   type={"text"}
@@ -502,7 +531,7 @@ function RoleTableComposer({ nationalRoles }) {
                 />
               </LabelFieldPair>
               <LabelFieldPair key={2}>
-                <CardLabel style={{ marginBottom: "0.4rem" }}>{t("Number")}</CardLabel>
+                <CardLabel style={{ margin:"0rem", marginBottom: "0.5rem" }}>{t("Number")}</CardLabel>
                 <TextInput
                   value={number}
                   type={"text"}
@@ -518,9 +547,9 @@ function RoleTableComposer({ nationalRoles }) {
                 />
               </LabelFieldPair>
               <div className={`search-field-wrapper roleComposer`} style={{ display: "flex", justifyContent: "flex-end" }}>
-                <Button variation="teritiary" label={t("Clear")} onClick={handleClearSearch} />
+                <Button variation="teritiary" title={t("MP_USER_TAG_CLEAR")} label={t("MP_USER_TAG_CLEAR")} onClick={handleClearSearch} />
 
-                <Button variation="primary" label={t("Search")} onClick={handleSearchSubmit} style={{ width: "140px" }} />
+                <Button variation="primary" label={t("MP_USER_TAG_SEARCH")} title={t("MP_USER_TAG_SEARCH")} onClick={handleSearchSubmit} style={{ width: "140px" }} />
               </div>
             </div>
           </div>
@@ -528,7 +557,7 @@ function RoleTableComposer({ nationalRoles }) {
       </Card>
 
       {/* {isLoading || isHrmsLoading ? <LoaderOverlay /> : null} */}
-      <Card style={{ overflow: "visible", boxShadow: "none", padding: "0px" }}>
+      <Card style={{ overflow: "auto", boxShadow: "none", padding: "0px" }}>
         <DataTable
           columns={columns}
           data={HrmsData?.data}
@@ -541,7 +570,10 @@ function RoleTableComposer({ nationalRoles }) {
           onChangePage={handlePaginationChange}
           onChangeRowsPerPage={handleRowsPerPageChange}
           paginationPerPage={rowsPerPage}
+          sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
           paginationRowsPerPageOptions={[5, 10, 15, 20]}
+          fixedHeader={true}
+          fixedHeaderScrollHeight={"100vh"}
         />
       </Card>
       {showToast && (
@@ -556,14 +588,10 @@ function RoleTableComposer({ nationalRoles }) {
       {unassignPopup && (
         <PopUp
           className={"popUpClass"}
-          type={"default"}
-          heading={t("USERTAG_CONFIRM_TO_UNASSIGN")}
+          type={"alert"}
+          alertHeading={t("USERTAG_CONFIRM_TO_UNASSIGN")}
+          alertMessage={t("USERTAG_CONFIRM_TO_UNASSIGN_DESC")}
           equalWidthButtons={true}
-          children={[
-            <div>
-              <CardText style={{ margin: 0 }}>{t("USERTAG_CONFIRM_TO_UNASSIGN_DESC")}</CardText>
-            </div>,
-          ]}
           onOverlayClick={() => {
             setUnassignPopup(false);
           }}

@@ -6,6 +6,7 @@ import facilityMappingConfig from "../../configs/FacilityMappingConfig";
 import { Loader, ActionBar, Button } from "@egovernments/digit-ui-components";
 import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
 import ConfirmationPopUp from "../../components/ConfirmationPopUp";
+import GenericKpiFromDSS from "../../components/GenericKpiFromDSS";
 
 const FacilityCatchmentMapping = () => {
   const [actionBarPopUp, setactionBarPopUp] = useState(false);
@@ -91,6 +92,21 @@ const FacilityCatchmentMapping = () => {
   );
 
 
+  const planFacilitySearchConfig = {
+    url: "/plan-service/plan/facility/_search",
+    body: {
+      PlanFacilitySearchCriteria: {
+        tenantId: tenantId,
+        planConfigurationId: url?.microplanId,
+      }
+    },
+  };
+
+
+  const { isLoading: isPlanFacilityLoading, data: planFacility } = Digit.Hooks.useCustomAPIHook(planFacilitySearchConfig);
+
+
+
    // fetch the process instance for the current microplan to check if we need to disabled actions or not
    const { isLoading:isProcessLoading, data: processData, } = Digit.Hooks.useCustomAPIHook({
     url: "/egov-workflow-v2/egov-wf/process/_search",
@@ -149,13 +165,13 @@ const FacilityCatchmentMapping = () => {
 
   const config = facilityMappingConfig(projectType, disabledAction);
 
-  if (isPlanEmpSearchLoading || isLoading || isLoadingPlanObject || isLoadingCampaignObject || isProcessLoading)
+  if (isPlanEmpSearchLoading || isLoading || isLoadingPlanObject || isLoadingCampaignObject || isProcessLoading ||isPlanFacilityLoading)
     return <Loader />
 
   //role and name of User extracted
 
   const roles=Digit.UserService.getUser().info.roles;
-  const userName=Digit.UserService.getUser().info.userName;
+  const userName=Digit.UserService.getUser().info.name;
   let userRole = "";
 
   roles.forEach(role => {
@@ -169,18 +185,21 @@ const FacilityCatchmentMapping = () => {
 
 
   return (
-    <div style={{ marginBottom: isRootApprover && data?.TotalCount === 0 && planObject?.status === "CENSUS_DATA_APPROVED" ?"2.5rem" :"0rem"}}>
+    <div style={{ marginBottom: (isRootApprover && data?.TotalCount === 0 && planObject?.status === "CENSUS_DATA_APPROVED") || ((!isRootApprover && data?.TotalCount === 0) || disabledAction) ? "2.5rem" : "0rem" }}>
       <Header styles={{ marginBottom: "1rem" }}>{t("MICROPLAN_ASSIGN_CATCHMENT_VILLAGES")}</Header>
-      <div className="role-summary-sub-heading" style={{marginBottom:"1.5rem"}}>
-          <div>
+      <div className="role-summary-sub-heading" style={{ marginBottom: "1.5rem" }}>
+        <div className="mp-heading-bold">
           {`${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${planObject?.name || t("NO_NAME_AVAILABLE")}`}
-          </div>
-          <div>
+        </div>
+        <div>
           {`${t("LOGGED_IN_AS")} ${userName} - ${t(userRole)}`}
 
-          </div>
-          
         </div>
+
+      </div>
+      <div style={{ marginBottom: "1rem" }}>
+        <GenericKpiFromDSS module="MICROPLAN-FACILITY" planId={url?.microplanId} campaignType={campaignObject?.projectType} planEmployee={planEmployee} />
+      </div>
       <div className="inbox-search-wrapper">
         <InboxSearchComposer
           configs={config}
@@ -204,7 +223,7 @@ const FacilityCatchmentMapping = () => {
           style={{}}
         />}
 
-      {!isRootApprover && data?.TotalCount === 0 && planObject?.status === "CENSUS_DATA_APPROVED" &&
+      {((!isRootApprover && data?.TotalCount === 0) || disabledAction)  &&
         <ActionBar
           actionFields={[
             <Button icon={"ArrowBack"} label={t(`GO_BACK_TO_HOME`)} onClick={() => history.push(`/${window.contextPath}/employee`)} type="button" variation="primary" />,
@@ -215,13 +234,13 @@ const FacilityCatchmentMapping = () => {
 
       {showPopup && currentRow && (
         <FacilityPopUp
-          details={currentRow}
+          detail={currentRow}
           onClose={() => {
             setShowPopup(false);
             setCurrentRow(null);
             setCensusQueryName(`censusData${Date.now()}`);
           }}
-          updateDetails={setCurrentRow}
+          // updateDetails={setCurrentRow}
         />
       )}
 
@@ -229,7 +248,7 @@ const FacilityCatchmentMapping = () => {
         <ConfirmationPopUp
           onClose={closeActionBarPopUp}
           alertHeading={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT_ALERT_HEADING`)}
-          alertMessage={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT_ALERT_MESSAGE`)}
+          alertMessage={`${t("HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT_ALERT_PREFIX_MESSAGE")} ${planFacility?.TotalCount} ${t("FINALIZED_MIDDLE_MASSAGE")} ${data?.StatusCount?.["VALIDATED"]} ${t("HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT_ALERT_SUFFIX_MESSAGE")}`}
           submitLabel={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT_SUBMIT_ACTION`)}
           cancelLabel={t(`HCM_MICROPLAN_FINALIZE_FACILITY_TO_VILLAGE_ASSIGNMENT_CANCEL_ACTION`)}
           url="/plan-service/config/_update"

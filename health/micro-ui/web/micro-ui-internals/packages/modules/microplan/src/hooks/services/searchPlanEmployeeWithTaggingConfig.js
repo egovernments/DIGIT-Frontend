@@ -6,12 +6,12 @@ const searchPlanEmployeeWithTaggingConfig = async ({ tenantId, body, limit, offs
       method: "POST",
       userService: false,
       params: {
-        tenantId: tenantId,
-        limit: limit,
-        offset: offset,
-        sortOrder: sortOrder,
+        
+        // sortOrder: sortOrder,
       },
-      body: body,
+      body:{
+       PlanEmployeeAssignmentSearchCriteria:{...body.PlanEmployeeAssignmentSearchCriteria,limit,offset,tenantId}
+      }
     });
     if (!response) {
       throw new Error("Employee not found with the given role");
@@ -27,8 +27,6 @@ const searchPlanEmployeeWithTaggingConfig = async ({ tenantId, body, limit, offs
       userService: false,
       params: {
         tenantId: tenantId,
-        limit: limit,
-        offset: offset,
         sortOrder: sortOrder,
         userServiceUuids: uuids.join(","),
         names: names

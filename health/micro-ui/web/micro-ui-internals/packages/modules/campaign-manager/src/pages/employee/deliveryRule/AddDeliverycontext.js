@@ -882,13 +882,10 @@ const AddDeliveryRuleWrapper = ({}) => {
 
   useEffect(() => {
     const dd = campaignData?.find((i) => i?.active === true)?.deliveries?.find((d) => d?.active === true);
+    const tt = dd?.deliveryRules;
     setTargetedData(dd);
-  }, [campaignData]);
-
-  useEffect(() => {
-    const tt = targetedData?.deliveryRules;
     setDeliveryRules(tt);
-  }, [targetedData]);
+  }, [campaignData]);
 
   useEffect(() => {
     dispatchCampaignData({

@@ -58,6 +58,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
     const curr = Digit.SessionStorage.get("MICROPLAN_DATA")?.FORMULA_CONFIGURATION?.formulaConfiguration?.formulaConfigValues;
     if (curr?.length > 0) {
       setFormulaParams(curr);
+      setFormulaConfigValues(curr);
     }
   }, []);
 
@@ -193,26 +194,42 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
   }, [currentCategoryRuleConfigurations]);
 
   const handleNext = () => {
-    //here just check formulConfigValues
-    if (formulaConfigValues.some((i) => i.operatorName === "SUBSTRACTION" && i.input === i.assumptionValue)) {
+    if (formulaConfigValues?.filter((row) => row?.category === currentCategory)?.length === 0) {
+      setShowToast({
+        key: "error",
+        label: t("ATLEAST_ONE_FORMULA"),
+        transitionTime: 3000,
+      });
+      return;
+    } else if (formulaConfigValues.some((i) => i.operatorName === "SUBSTRACTION" && i.input === i.assumptionValue)) {
       setShowToast({
         key: "error",
         label: t("ERR_MANDATORY_FIELD_SAME_OPERAND"),
         transitionTime: 3000,
       });
       return;
-    } else if (
-      formulaConfigValues
-        .filter((row) => row.category === currentCategory)
-        .every((row) => {
-          return row.assumptionValue && row.input && row.output && row.operatorName;
-        })
-    ) {
-      //will do this on onSuccess
-      // if (formulaInternalKey < ruleConfigurationCategories?.length) {
-      //   setFormulaInternalKey((prevKey) => prevKey + 1); // Update key in URL
-      // }
-    } else {
+      } else if (
+        formulaConfigValues
+          .filter((row) => row.category === currentCategory)
+          .some((row) => !row.assumptionValue || !row.input || !row.output || !row.operatorName)
+      ) {
+        //will do this on onSuccess
+        // if (formulaInternalKey < ruleConfigurationCategories?.length) {
+        //   setFormulaInternalKey((prevKey) => prevKey + 1); // Update key in URL
+        // }
+        setShowToast({
+          key: "error",
+          label: t("ERR_MANDATORY_FIELD"),
+          transitionTime: 3000,
+        });
+        return;
+      } else {
+    
+    }
+
+    if(formulaConfigValues
+      .filter((row) => row.category === currentCategory)
+      .some((row) => !row.assumptionValue || !row.input || !row.output || !row.operatorName)){
       setShowToast({
         key: "error",
         label: t("ERR_MANDATORY_FIELD"),
@@ -236,6 +253,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
         onSuccess: (data) => {
           setManualLoader(false);
           if (formulaInternalKey < ruleConfigurationCategories?.length) {
+            setShowToast(null);
             setFormulaInternalKey((prevKey) => prevKey + 1); // Update key in URL
           }
           refetchPlan();
@@ -442,7 +460,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
       // Assuming 1 is the first step
       Digit.Utils.microplanv1.updateUrlParams({ isFormulaLastVerticalStep: false });
     }
-  }, [formulaInternalKey]);
+  }, [formulaInternalKey, ruleConfigurationCategories]);
 
   //array of objects each with operatorCode and operatorName
   const operators = state.RuleConfigureOperators;
@@ -532,7 +550,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
 
           <div className="card-container" style={{ width: "77vw", marginBottom: "2.5rem" }}>
             <FormulaConfiguration
-              category={`FORMULA_${ruleConfigurationCategories[formulaInternalKey - 1]?.category}`}
+              category={ruleConfigurationCategories[formulaInternalKey - 1]?.category}
               formulas={[...filteredFormulas?.filter((item) => !deletedFormulas?.includes(item.output)), ...customFormula]}
               onSelect={onSelect}
               customProps={customProps}
@@ -558,6 +576,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
           onClose={() => {
             setShowToast(false);
           }}
+          style={{ zIndex: 9999 }}
           isDleteBtn={true}
         />
       )}

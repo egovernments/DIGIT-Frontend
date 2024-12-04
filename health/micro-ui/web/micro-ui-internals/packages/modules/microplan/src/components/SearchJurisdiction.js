@@ -1,10 +1,13 @@
 import { LabelFieldPair, CardLabel, SubmitBar, LinkLabel, InfoCard } from "@egovernments/digit-ui-components";
-import React, { useEffect, Fragment, useState } from "react";
+import React, { useEffect, Fragment, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useMyContext } from "../utils/context";
 import { Dropdown, MultiSelectDropdown } from "@egovernments/digit-ui-components";
 
-const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, onClear = () => { }, style = {},showInstruction=false }) => {
+const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, onClear = () => { }, style = {},showInstruction=false,
+defaultHierarchy = null,
+  defaultBoundaries = [],
+ }) => {
   const { t } = useTranslation();
   const {
     state: { hierarchyType, boundaryHierarchy },
@@ -15,9 +18,12 @@ const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, on
   const hierarchy =  Digit.Utils.microplanv1.getFilteredHierarchy(boundaryHierarchy, jurisdiction.boundaryType, hierarchyType);
   const [boundaryOptions, setBoundaryOptions] = useState([]);
 
-  const [selectedBoundaries, setSelectedBoundaries] = useState([]);
-  const [selectedHierarchy, setSelectedHierarchy] = useState(null);
+  const [selectedBoundaries, setSelectedBoundaries] = useState(defaultBoundaries);
+  const [selectedHierarchy, setSelectedHierarchy] = useState(defaultHierarchy);
   const MultiSelectWrapper = Digit.ComponentRegistryService.getComponent("MultiSelectDropdownBoundary");
+
+   // Ref to track if the component has mounted
+   const isInitialLoad = useRef(true);
 
   useEffect(() => {
     if (!selectedHierarchy) {
@@ -29,8 +35,12 @@ const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, on
     const filteredBoundaries = userBoundaries.filter((row) => row.type === selectedHierarchy.boundaryType);
     const filteredBoundariesGroupedByParent = Digit.Utils.microplanv1.groupByParent(filteredBoundaries);
     setBoundaryOptions(filteredBoundariesGroupedByParent);
-    //reset selected
-    setSelectedBoundaries([])
+    // Reset selected boundaries only after the initial load
+    if (!isInitialLoad.current) {
+      setSelectedBoundaries([]);
+    } else {
+      isInitialLoad.current = false;
+    }
     //based on the select hierarchy filter from userBoundaries and form options object
   }, [selectedHierarchy]);
 
@@ -99,7 +109,7 @@ const SearchJurisdiction = ({ boundaries, jurisdiction, onSubmit = () => { }, on
           >
             {t("CLEAR")}
           </LinkLabel>
-          <SubmitBar label={t("SEARCH")} onSubmit={() => onSubmit(selectedBoundaries)} />
+          <SubmitBar label={t("SEARCH")} onSubmit={() => onSubmit(selectedBoundaries, selectedHierarchy)} />
         </div>
       </div>
     </div>

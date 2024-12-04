@@ -1,11 +1,12 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Button, EditIcon, Header, Loader, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { InfoBannerIcon, Toast } from "@egovernments/digit-ui-components";
+import { EditIcon, Header, Loader, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Button, InfoBannerIcon, Toast , PopUp } from "@egovernments/digit-ui-components";
 import { DownloadIcon } from "@egovernments/digit-ui-react-components";
 import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
+import TimelineComponent from "./TimelineComponent";
 
 function mergeObjects(item) {
   const arr = item;
@@ -79,95 +80,6 @@ function loopAndReturn(dataa, t) {
   return format;
 }
 
-function reverseDeliveryRemap(data, t) {
-  if (!data) return null;
-  const reversedData = [];
-  let currentCycleIndex = null;
-  let currentCycle = null;
-
-  const operatorMapping = {
-    "<=": "LESS_THAN_EQUAL_TO",
-    ">=": "GREATER_THAN_EQUAL_TO",
-    "<": "LESS_THAN",
-    ">": "GREATER_THAN",
-    "==": "EQUAL_TO",
-    "!=": "NOT_EQUAL_TO",
-    IN_BETWEEN: "IN_BETWEEN",
-  };
-
-  const cycles = data?.[0]?.cycles || [];
-  const mapProductVariants = (productVariants) => {
-    return productVariants.map((variant, key) => ({
-      key: key + 1,
-      count: 1,
-      value: variant.productVariantId,
-      name: variant.name,
-    }));
-  };
-
-  const parseConditionAndCreateRules = (condition, ruleKey, products) => {
-    const conditionParts = condition.split("and").map((part) => part.trim());
-    let attributes = [];
-  
-    conditionParts.forEach((part) => {
-      const parts = part.split(" ").filter(Boolean);
-  
-      // Handle "IN_BETWEEN" operator
-      if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
-        const toValue = parts[0];
-        const fromValue = parts[4];
-        attributes.push({
-          key: attributes.length + 1,
-          operator: { code: operatorMapping["IN_BETWEEN"] },
-          attribute: { code: parts[2] },
-          fromValue,
-          toValue,
-        });
-      } else {
-        const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
-        if (match) {
-          const attributeCode = match[1].trim();
-          const operatorSymbol = match[2].trim();
-          const value = match[3].trim();
-          attributes.push({
-            key: attributes.length + 1,
-            value,
-            operator: { code: operatorMapping[operatorSymbol] },
-            attribute: { code: attributeCode },
-          });
-        }
-      }
-    });
-    return [{
-      ruleKey: ruleKey + 1,
-      delivery: {},
-      products,
-      attributes,
-    }];
-  };
-  const mapDoseCriteriaToDeliveryRules = (doseCriteria) => {
-    return doseCriteria?.flatMap((criteria, ruleKey) => {
-      const products = mapProductVariants(criteria.ProductVariants);
-      return parseConditionAndCreateRules(criteria.condition, ruleKey, products);
-    });
-  };
-
-  const mapDeliveries = (deliveries) => {
-    return deliveries?.map((delivery, deliveryIndex) => ({
-      active: deliveryIndex === 0,
-      deliveryIndex: String(deliveryIndex + 1),
-      deliveryRules: mapDoseCriteriaToDeliveryRules(delivery.doseCriteria),
-    }));
-  };
-
-  const transformedCycles = cycles.map((cycle) => ({
-    active: true,
-    cycleIndex: String(cycle.id),
-    deliveries: mapDeliveries(cycle.deliveries),
-  }));
-
-  return transformedCycles;
-}
 
 function boundaryDataGrp(boundaryData) {
   // Create an empty object to hold grouped data by type
@@ -244,17 +156,15 @@ const CampaignSummary = (props) => {
   const noAction = searchParams.get("action");
   const [showToast, setShowToast] = useState(null);
   const [userCredential, setUserCredential] = useState(null);
-  const [deliveryErrors, setDeliveryErrors] = useState(null);
-  const [targetErrors, setTargetErrors] = useState(null);
-  const [facilityErrors, setFacilityErrors] = useState(null);
-  const [userErrors, setUserErrors] = useState(null);
-  const [cycleDatesError, setCycleDatesError] = useState(null);
   const [summaryErrors, setSummaryErrors] = useState(null);
   const [projectId, setprojectId] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [cycles, setCycles] = useState([]);
   const [cards, setCards] = useState([]);
+  const [timeLine, setTimeline] = useState(false);
+  const [resource, setResource] = useState(null);
+  const [campaignId, setCampaignId] = useState(null);
   const isPreview = searchParams.get("preview");
   const parentId = searchParams.get("parentId");
   const [key, setKey] = useState(() => {
@@ -285,6 +195,133 @@ const CampaignSummary = (props) => {
     updateUrlParams({ key: key });
     window.dispatchEvent(new Event("checking"));
   }, [key]);
+
+  function reverseDeliveryRemap(data, t) {
+    if (!data) return null;
+    const reversedData = [];
+    let currentCycleIndex = null;
+    let currentCycle = null;
+  
+    const operatorMapping = {
+      "<=": "LESS_THAN_EQUAL_TO",
+      ">=": "GREATER_THAN_EQUAL_TO",
+      "<": "LESS_THAN",
+      ">": "GREATER_THAN",
+      "==": "EQUAL_TO",
+      "!=": "NOT_EQUAL_TO",
+      IN_BETWEEN: "IN_BETWEEN",
+    };
+  
+    const cycles = data?.[0]?.cycles || [];
+    const mapProductVariants = (productVariants) => {
+      return productVariants.map((variant, key) => ({
+        key: key + 1,
+        count: 1,
+        value: variant.productVariantId,
+        name: variant.name,
+      }));
+    };
+  
+    const parseConditionAndCreateRules = (condition, ruleKey, products) => {
+      // const conditionParts = condition.split("and").map((part) => part.trim());
+      // let attributes = [];
+      let attributes = [];
+  
+      if (isPreview) {
+        // Handle preview condition `3<=ageandage<11` or `3 <= Age < 11` in "IN_BETWEEN" style
+        const inBetweenMatch = condition.match(/(\d+)(<=|<|>=|>)(\w+)and(\w+)(<=|<|>=|>)(\d+)/);
+        if (inBetweenMatch) {
+          const toValue = inBetweenMatch[1].trim();
+          const fromValue = inBetweenMatch[6].trim();
+          const attributeCode = inBetweenMatch[3].trim();
+    
+          attributes.push({
+            key: attributes.length + 1,
+            operator: { code: "IN_BETWEEN" },
+            attribute: { code: attributeCode },
+            fromValue,
+            toValue,
+          });
+        } else {
+          // Handle regular conditions in preview mode
+          const conditionParts = condition.split("and").map((part) => part.trim());
+          conditionParts.forEach((part) => {
+            const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
+            if (match) {
+              const attributeCode = match[1].trim();
+              const operatorSymbol = match[2].trim();
+              const value = match[3].trim();
+              attributes.push({
+                key: attributes.length + 1,
+                value,
+                operator: { code: operatorMapping[operatorSymbol] },
+                attribute: { code: attributeCode },
+              });
+            }
+          });
+        }
+      }  else {
+        const conditionParts = condition.split("and").map((part) => part.trim());
+      conditionParts.forEach((part) => {
+        const parts = part.split(" ").filter(Boolean);
+    
+        // Handle "IN_BETWEEN" operator
+        if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
+          const toValue = parts[0];
+          const fromValue = parts[4];
+          attributes.push({
+            key: attributes.length + 1,
+            operator: { code: operatorMapping["IN_BETWEEN"] },
+            attribute: { code: parts[2] },
+            fromValue,
+            toValue,
+          });
+        } else {
+          const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
+          if (match) {
+            const attributeCode = match[1].trim();
+            const operatorSymbol = match[2].trim();
+            const value = match[3].trim();
+            attributes.push({
+              key: attributes.length + 1,
+              value,
+              operator: { code: operatorMapping[operatorSymbol] },
+              attribute: { code: attributeCode },
+            });
+          }
+        }
+      });
+    }
+      return [{
+        ruleKey: ruleKey + 1,
+        delivery: {},
+        products,
+        attributes,
+      }];
+    };
+    const mapDoseCriteriaToDeliveryRules = (doseCriteria) => {
+      return doseCriteria?.flatMap((criteria, ruleKey) => {
+        const products = mapProductVariants(criteria.ProductVariants);
+        return parseConditionAndCreateRules(criteria.condition, ruleKey, products);
+      });
+    };
+  
+    const mapDeliveries = (deliveries) => {
+      return deliveries?.map((delivery, deliveryIndex) => ({
+        active: deliveryIndex === 0,
+        deliveryIndex: String(deliveryIndex + 1),
+        deliveryRules: mapDoseCriteriaToDeliveryRules(delivery.doseCriteria),
+      }));
+    };
+  
+    const transformedCycles = cycles.map((cycle) => ({
+      active: true,
+      cycleIndex: String(cycle.id),
+      deliveries: mapDeliveries(cycle.deliveries),
+    }));
+  
+    return transformedCycles;
+  }
 
   // useEffect(() => {
   //   if (props?.props?.summaryErrors) {
@@ -364,35 +401,44 @@ const CampaignSummary = (props) => {
         const hierarchyType = data?.[0]?.hierarchyType;
         return {
           cards: [
+            // {
+            //   navigationKey: "card1",
+            //   sections: [
+            //     ...(isPreview === "true"
+            //       ? [
+            //           {
+            //             navigationKey: "card1",
+            //             type: "COMPONENT",
+            //             component: "TimelineComponent",
+            //             props: {
+            //               campaignId: data?.[0]?.id,
+            //               resourceId: resourceIdArr,
+            //             },
+            //           },
+            //         ]
+            //       : []),
+            //   ],
+            // },
             {
               navigationKey: "card1",
-              sections: [
-                ...(isPreview === "true"
-                  ? [
-                      {
-                        navigationKey: "card1",
-                        type: "COMPONENT",
-                        component: "TimelineComponent",
-                        props: {
-                          campaignId: data?.[0]?.id,
-                          resourceId: resourceIdArr,
-                        },
-                      },
-                    ]
-                  : []),
-              ],
-            },
-            {
-              navigationKey: "card2",
               sections: [
                 {
                   type: "DATA",
                   cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                  cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                      <span>{t(`CAMPAIGN_EDIT`)}</span>
-                      <EditIcon />
-                    </div>
+                  cardSecondaryAction: isPreview === "true" && (
+                    <Button
+                      className={"campaign-type-alert-button"}
+                      type={"button"}
+                      size={"large"}
+                      variation={"primary"}
+                      label={t("ES_CAMPAIGN_DOWNLOAD_USER_DETAILS")}
+                      onClick={() => {
+                        setTimeline(true);
+                        setResource(resourceIdArr);
+                        setCampaignId(data?.[0]?.id);
+
+                      }}
+                    />
                   ),
                   values: [
                     {
@@ -419,7 +465,7 @@ const CampaignSummary = (props) => {
             },
             ...boundaryData?.map((item, index) => {
               return {
-                navigationKey: "card3",
+                navigationKey: "card2",
                 name: `HIERARCHY_${index + 1}`,
                 sections: [
                   {
@@ -438,14 +484,14 @@ const CampaignSummary = (props) => {
                     ),
                     props: {
                       boundaries: item,
-                      hierarchyType: hierarchyType
+                      hierarchyType: hierarchyType,
                     },
                   },
                 ],
               };
             }),
             {
-              navigationKey: "card4",
+              navigationKey: "card3",
               sections: [
                 {
                   type: "DATA",
@@ -477,7 +523,7 @@ const CampaignSummary = (props) => {
               return {
                 name: `CYCLE_${index + 1}`,
                 // errorName: "deliveryErrors",
-                navigationKey: "card4",
+                navigationKey: "card3",
                 sections: [
                   {
                     name: `CYCLE_${index + 1}`,
@@ -498,7 +544,7 @@ const CampaignSummary = (props) => {
               };
             }),
             {
-              navigationKey: "card5",
+              navigationKey: "card4",
               sections: [
                 {
                   name: "facility",
@@ -518,7 +564,7 @@ const CampaignSummary = (props) => {
               ],
             },
             {
-              navigationKey: "card5",
+              navigationKey: "card4",
               sections: [
                 {
                   name: "user",
@@ -538,7 +584,7 @@ const CampaignSummary = (props) => {
               ],
             },
             {
-              navigationKey: "card5",
+              navigationKey: "card4",
               sections: [
                 {
                   name: "target",
@@ -559,7 +605,7 @@ const CampaignSummary = (props) => {
             },
             resourceIdArr?.length > 0
               ? {
-                  navigationKey: "card5",
+                  navigationKey: "card4",
                   sections: [
                     {
                       type: "COMPONENT",
@@ -580,37 +626,37 @@ const CampaignSummary = (props) => {
           horizontalNav: {
             showNav: true,
             configNavItems: [
-              ...(isPreview === "true"
-                ? [
-                    {
-                      name: "card1",
-                      active: true,
-                      code: t("HCM_TIMELINE"),
-                    },
-                  ]
-                : []),
+              // ...(isPreview === "true"
+              //   ? [
+              //       {
+              //         name: "card1",
+              //         active: true,
+              //         code: t("HCM_TIMELINE"),
+              //       },
+              //     ]
+              //   : []),
               {
-                name: "card2",
+                name: "card1",
                 active: true,
                 code: t("HCM_CAMPAIGN_SETUP_DETAILS"),
               },
               {
-                name: "card3",
+                name: "card2",
                 active: true,
                 code: t("HCM_BOUNDARY_DETAILS"),
               },
               {
-                name: "card4",
+                name: "card3",
                 active: true,
                 code: t("HCM_DELIVERY_DETAILS"),
               },
               {
-                name: "card5",
+                name: "card4",
                 active: true,
                 code: t("HCM_DATA_UPLOAD"),
               },
             ],
-            activeByDefault: "card2",
+            activeByDefault: "card1",
           },
 
           error: data?.[0]?.additionalDetails?.error,
@@ -681,8 +727,8 @@ const CampaignSummary = (props) => {
     // Update startDate and endDate in the `data` object
     updatedObject.data.startDate = startDate;
     updatedObject.data.endDate = endDate;
-    updatedObject.cards[1].sections[0].values[2].value = Digit.Utils.date.convertEpochToDate(startDate);
-    updatedObject.cards[1].sections[0].values[3].value = Digit.Utils.date.convertEpochToDate(endDate);
+    updatedObject.cards[0].sections[0].values[2].value = Digit.Utils.date.convertEpochToDate(startDate);
+    updatedObject.cards[0].sections[0].values[3].value = Digit.Utils.date.convertEpochToDate(endDate);
   }, [startDate, endDate]);
 
   if (updatedObject?.cards?.[1]?.sections?.[0]?.values?.[0]?.value == t("MR-DN")) {
@@ -707,18 +753,13 @@ const CampaignSummary = (props) => {
 
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "space-between" , marginBottom:"-1.5rem" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "-1.5rem" }}>
         <Header className="summary-header">{t("ES_TQM_SUMMARY_HEADING")}</Header>
-        {/* {userCredential && (
-          <Button
-            label={t("CAMPAIGN_DOWNLOAD_USER_CRED")}
-            variation="secondary"
-            icon={<DownloadIcon styles={{ height: "1.25rem", width: "1.25rem" }} fill={PRIMARY_COLOR} />}
-            type="button"
-            className="campaign-download-template-btn hover"
-            onButtonClick={downloadUserCred}
-          />
-        )} */}
+        {timeLine && (
+          <PopUp type={"default"} heading={t("ES_CAMPAIGN_TIMELINE")} onOverlayClick={() => setTimeline(false)} onClose={() => setTimeline(false)}>
+            <TimelineComponent campaignId={campaignId} resourceId={resource} />
+          </PopUp>
+        )}
       </div>
       <div className="campaign-summary-container">
         <ViewComposer data={updatedObject} cardErrors={summaryErrors} />

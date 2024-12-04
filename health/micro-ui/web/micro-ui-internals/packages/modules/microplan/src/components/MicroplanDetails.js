@@ -68,7 +68,7 @@ const MicroplanDetails = ({ onSelect, props: customProps, ...props }) => {
   return (
     <>
       <ViewCard
-        className=""
+        className="microplan-deatils-view-card"
         header={""}
         layout={1}
         sections={[

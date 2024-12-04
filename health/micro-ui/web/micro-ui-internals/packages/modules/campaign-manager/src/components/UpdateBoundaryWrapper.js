@@ -1,9 +1,9 @@
-import React, { useState, useMemo, useRef, useEffect } from "react";
+import React, { useState, useMemo, useRef, useEffect ,Fragment} from "react";
 import { UploadIcon, FileIcon, DeleteIconv2, Toast, Card, Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { useLocation , useHistory } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
-import { Loader, InfoCard } from "@egovernments/digit-ui-components";
+import { Loader, InfoCard ,Tag } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 
 const UpdateBoundaryWrapper = ({ onSelect,...props }) => {
@@ -22,6 +22,7 @@ const UpdateBoundaryWrapper = ({ onSelect,...props }) => {
   const [boundaryOptions, setBoundaryOptions] = useState(
     props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData || {}
   );
+  const campaignName = searchParams.get("campaignName");
   const [hierarchyType , SetHierarchyType] = useState(props?.props?.hierarchyType);
   const lowestHierarchy = useMemo(() => {
     return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
@@ -74,7 +75,9 @@ const UpdateBoundaryWrapper = ({ onSelect,...props }) => {
 
 
   return (
-    <React.Fragment>
+    <>
+      <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
+      <Card>
       <Header>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</Header>
       <p className="description-type">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
       {hierarchyData && (
@@ -92,6 +95,7 @@ const UpdateBoundaryWrapper = ({ onSelect,...props }) => {
           selectedData={selectedData}
         />
       )}
+      </Card>
       <div style={{marginTop:"1rem"}}>
         <InfoCard
           label="Info"
@@ -99,7 +103,7 @@ const UpdateBoundaryWrapper = ({ onSelect,...props }) => {
           variant="default"
         />
       </div>
-    </React.Fragment>
+    </>
   );
 };
 

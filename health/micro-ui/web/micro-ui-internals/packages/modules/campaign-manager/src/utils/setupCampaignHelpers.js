@@ -40,16 +40,15 @@ export const cycleDataRemap=(data)=> {
     const resourcesMap = new Map();
     const ageInfo = { maxAge: -Infinity, minAge: Infinity };  
   
-    const cycles = data.map(cycle => {
-      const cycleStartDate = Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[0]?.fromDate);
-      const cycleEndDate = Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[0]?.toDate);
-  
+    const cycles = data.map((cycle, index) => {
+      const cycleStartDate = Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[index]?.fromDate, "daystart");
+      const cycleEndDate = Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[index]?.toDate, "dayend");
       return {
         mandatoryWaitSinceLastCycleInDays: null,
         startDate: cycleStartDate,
         endDate: cycleEndDate,
         id: parseInt(cycle.cycleIndex, 10),
-        deliveries: cycle?.deliveries?.map(delivery => processDelivery(delivery, resourcesMap, ageInfo , type))
+        deliveries: cycle?.deliveries?.map(delivery => processDelivery(delivery, resourcesMap, ageInfo , type , projectType))
       };
     });
   
@@ -80,7 +79,7 @@ export const cycleDataRemap=(data)=> {
     const mapProductVariants = (productVariants) => {
       return productVariants.map((variant, key) => ({
         key: key + 1,
-        count: 1,
+        quantity: variant.quantity,
         value: variant.productVariantId,
         name: variant.name,
       }));
@@ -157,14 +156,14 @@ export const cycleDataRemap=(data)=> {
   
   }
   
-  export const  processDelivery=(delivery, resourcesMap, ageInfo , type)=> {
+  export const  processDelivery=(delivery, resourcesMap, ageInfo , type ,projectType)=> {
   
     return {
       id: parseInt(delivery.deliveryIndex, 10),
       deliveryStrategy: delivery.deliveryStrategy || "DIRECT",
       mandatoryWaitSinceLastDeliveryInDays: null,
       doseCriteria: delivery.deliveryRules.map(rule => {
-        const doseCriteriaResult = processDoseCriteria(rule, resourcesMap ,type);
+        const doseCriteriaResult = processDoseCriteria(rule, resourcesMap ,type ,projectType);
         const ages = extractAgesFromConditions(doseCriteriaResult.condition);
         if (ages.length > 0) { 
           ageInfo.maxAge = Math.max(ageInfo.maxAge, ...ages);
@@ -174,7 +173,7 @@ export const cycleDataRemap=(data)=> {
       })
     };
   }
-  export const  processDoseCriteria =(rule, resourcesMap ,type) =>{
+  export const  processDoseCriteria =(rule, resourcesMap ,type ,projectType) =>{
     rule.products.forEach(product => {
       if (resourcesMap.has(product.value)) {
         resourcesMap.get(product.value).count += product.count;
@@ -183,20 +182,25 @@ export const cycleDataRemap=(data)=> {
           productVariantId: product.value,
           isBaseUnitVariant: false,
           name: product.name,
-          count: product.count
+          quantity: product.count
         });
       }
     });
   
     const conditions = rule.attributes.map(attr => {
+      const attributeCode = projectType === "IRS-mz" 
+      ? "TYPE_OF_STRUCTURE" 
+      : projectType === "LLIN-mz" 
+      ? "memberCount" 
+      : attr?.attribute?.code;
       if (attr?.operator?.code === "IN_BETWEEN") {
         if (type === "create") {
-          return `${attr.toValue}<=${attr.attribute.code.toLowerCase()}and${attr.attribute.code.toLowerCase()}<${attr.fromValue}`;
+          return `${attr.toValue}<=${attributeCode.toLowerCase()}and${attributeCode.toLowerCase()}<${attr.fromValue}`;
         }        
         else return `${attr.toValue} <= ${attr.attribute.code} < ${attr.fromValue}`;
       } else {
         if (type === "create") {
-          return `${attr?.attribute?.code.toLowerCase()}${getOperatorSymbol(attr?.operator?.code)}${attr?.value}`;
+          return `${projectType === "LLIN-mz" ? attributeCode : attributeCode.toLowerCase()}${getOperatorSymbol(attr?.operator?.code)}${attr?.value}`;
         }        
         else return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${attr?.value}`;
         
@@ -207,7 +211,8 @@ export const cycleDataRemap=(data)=> {
       condition: conditions.join("and"),
       ProductVariants: rule.products.map(product => ({
         productVariantId: product.value,
-        name: product.name
+        name: product.name,
+        quantity: product.count
       }))
     };
   }

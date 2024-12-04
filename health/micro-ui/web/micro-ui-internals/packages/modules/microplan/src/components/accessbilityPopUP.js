@@ -4,7 +4,7 @@ import { PopUp, Button, Dropdown, LabelFieldPair, Card, Toast } from "@egovernme
 import { useMyContext } from "../utils/context"; // Ensure that the translation function `t` is handled here
 
 
-const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
+const AccessibilityPopUp = ({ onClose, census, onSuccess, disableEditing=false }) => {
   const { state } = useMyContext(); // Extract state from context
   const { t } = useTranslation();
 
@@ -71,10 +71,12 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
 
   // Check if dropdown values have changed from the initial values
   const isChanged = React.useCallback(() => {
+    const hasValues = dropdown1Value || dropdown2Value; // Ensure dropdown values are not empty
     return (
-      dropdown1Value !== initialValues.roadCondition ||
-      dropdown2Value !== initialValues.terrain 
-      //dropdown3Value !== initialValues.transportationMode
+      hasValues && (
+        dropdown1Value !== initialValues.roadCondition ||
+        dropdown2Value !== initialValues.terrain
+      )
     );
   }, [dropdown1Value, dropdown2Value, initialValues]);
 
@@ -103,6 +105,7 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
   return (
     <>
       <PopUp
+      className='accessibility-pop-up'
         onClose={onClose}
         heading={t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_LABEL`)}
         children={[
@@ -115,6 +118,7 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
                 selected={dropdown1Value}
                 select={(value) => handleDropdownChange(value, "dropdown1")}
                 t={t}
+                disabled={disableEditing}
               />
             </LabelFieldPair>
 
@@ -126,6 +130,7 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
                 selected={dropdown2Value}
                 select={(value) => handleDropdownChange(value, "dropdown2")}
                 t={t}
+                disabled={disableEditing}
               />
             </LabelFieldPair>
 
@@ -160,7 +165,7 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess }) => {
             label={t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_SAVE_LABEL`)}
             style={{ width: "160px" }}
             onClick={handleSave} // Calls save function on click
-            isDisabled={!isChanged() || mutation.isLoading} // Disable if no changes are made or during API call
+            isDisabled={!isChanged() || mutation.isLoading || disableEditing} // Disable if no changes are made or during API call
           />,
         ]}
       />

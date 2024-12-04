@@ -2596,24 +2596,37 @@ $border-color: rgba(214, 213, 212, 1);
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  scrollbar-width: none;
+  gap: 1rem; 
+  overflow-x: auto; 
+  width: 100%;
 }
 
 .kpi-card {
   text-align: center;
-  width: 120px;
+  display: grid;
+  justify-content: center;
+  flex-shrink: 0;
+
+  .kpi-text {
+    font-size: 1rem;
+    line-height: 1.2;
+    text-align: center;
+  }
+
 }
 
 .kpi-card h2 {
   @extend .typography.heading-xl;
   margin: 0;
-  color: theme(digitv2.lightTheme.primary-2);
-  /* Custom color */
+  color: theme(digitv2.lightTheme.primary-2); 
 }
 
 .kpi-card p {
   margin: 0;
   @extend .typography.heading-m;
   color: theme(digitv2.lightTheme.text-secondary);
+  white-space: nowrap; /* Prevent text wrapping inside the card */
 }
 
 .assumptionsForm-label-field {
@@ -2662,13 +2675,11 @@ $border-color: rgba(214, 213, 212, 1);
 .digit-dropdown-employee-select-wrap.roleTableCell {
   .digit-dropdown-options-card {
     position: absolute;
-    max-width: 14rem;
   }
 }
 
 .digit-multiselectdropdown-wrap.roleTableCell.nestedmultiselect {
   margin: 0;
-  width: 13rem;
   min-width: 13rem !important;
 
   .digit-multiselectdropdown-server {
@@ -2676,7 +2687,6 @@ $border-color: rgba(214, 213, 212, 1);
     position: absolute !important;
     max-width: unset !important;
     max-height: 15rem !important;
-    width: 14rem !important;
   }
 }
 
@@ -2685,12 +2695,12 @@ $border-color: rgba(214, 213, 212, 1);
   max-width: unset !important;
 }
 
-.digit-card-component.primary.microPlanBulkTable {
+/*.digit-card-component.primary.microPlanBulkTable {
   overflow: hidden;
   >div:first-child {
    overflow: auto;
   }
-}
+}*/
 
 .loader-overlay {
   position: fixed;
@@ -2794,8 +2804,16 @@ $border-color: rgba(214, 213, 212, 1);
   }*/
 }
 .popUpClass.new-assumption-pop{
+  .digit-popup-children-wrap   {
+    overflow: visible;
+    position: relative;
+  }
   .digit-popup-footer{
-    width: 30rem;
+    width: 100%;
     margin-left: auto;
   }
+}
+
+.digit-popup-alert-message{
+  line-height: normal !important;
 }

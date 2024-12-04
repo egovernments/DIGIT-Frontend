@@ -30,22 +30,26 @@ const TimelinePopUpWrapper = ({ onClose, businessId, heading,labelPrefix="" }) =
 
     useEffect(() => {
         if (workflowData && workflowData.ProcessInstances) {
-
-
             // Map API response to timeline steps
             const steps = workflowData.ProcessInstances.map((instance, index) => ({
                 label: t(`${labelPrefix}${instance?.action}`),
                 variant: 'completed',
-                subElements: [Digit.Utils.microplanv1.epochToDateTime(instance?.auditDetails?.lastModifiedTime),
-                instance?.assigner &&
-                `${instance.assigner?.name} - ${instance.assigner?.roles?.[0]?.name || 'NA'}`,
-                instance.comment && `${t('COMMENT_PREFIX')} "${instance.comment}"`
+                subElements: [
+                    Digit.Utils.microplanv1.epochToDateTime(instance?.auditDetails?.lastModifiedTime),
+                    instance?.assigner &&
+                    `${instance.assigner?.name} - ${
+                        instance.assigner?.roles
+                            ?.map(role => t(Digit.Utils.locale.getTransformedLocale(`MP_ROLE_${role.code}`)))
+                            .join(", ") || t('NA')
+                    }`,
+                    instance.comment && `${t('COMMENT_PREFIX')} "${instance.comment}"`
                 ],
                 showConnector: true
             }));
             setTimelineSteps(steps);
         }
     }, [workflowData]);
+    
 
     return (
         <PopUp

@@ -176,11 +176,22 @@ const formValidator = (formData, key, state, t) => {
 
 
 
+  const checkValueInvalid = (data) => {
+    return data.some(item => {
+      const value = item.value;
+      
+      // Check if the value is null, 0, or less than 0
+      return value === null || value <= 0 || value > 1000;
+  });
+  }
 
   const microplanAssumptionsValidator = (formData) => {
 
     if (!areFieldsValid(formData.assumptionValues?.filter(row => !(row.category === undefined && row.value === undefined)))) {
       return { key: "error", label: "ERROR_MANDATORY_FIELDS" };
+    }
+    if (checkValueInvalid(formData.assumptionValues)) {
+      return { key: "error", label: "INCORRECT_FIELDS" };
     }
 
     return null
@@ -266,6 +277,8 @@ const updateUrlParams = (params) => {
     }
   });
   window.history.replaceState({}, "", url);
+  const event = new CustomEvent("urlChanged", { detail: url });
+  window.dispatchEvent(event);
 };
 
 function generateCampaignString(sessionData, t) {

@@ -55,7 +55,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
       assumptionsFormValues?.selectedDistributionProcess?.code === item.DistributionProcess
     );
   });
-  const assumptionCategories = filteredData.length > 0 ? filteredData[0].assumptionCategories : [];
+  const assumptionCategories = filteredData.length > 0 ? filteredData?.[0].assumptionCategories : [];
   const filteredAssumptions = assumptionCategories.length > 0 ? assumptionCategories[internalKey - 1]?.assumptions || [] : [];
 
   //fetching existing plan object
@@ -69,7 +69,9 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     {
       enabled: microplanId ? true : false,
       cacheTime: 0,
-      //   queryKey: currentKey,
+      staleTime:0,
+      refetchOnMount: true,
+      queryKey:state?.allAssumptions ? state?.allAssumptions.length : "hypothesis_plan" 
     }
   );
 
@@ -77,6 +79,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     const curr = Digit.SessionStorage.get("MICROPLAN_DATA")?.HYPOTHESIS?.Assumptions?.assumptionValues;
     if (curr?.length > 0) {
       setHypothesisParams(curr);
+      setAssumptionValues(curr);
     }
   }, []);
 
@@ -141,23 +144,36 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
   };
   const handleAssumptionChange = (category, event, item) => {
     const newValue = event.target.value;
-
+  
+    // Validation function for range and decimal places
+    const isValidValue = (value) => {
+      const numericValue = parseFloat(value);
+      return (
+        numericValue > 0 &&
+        numericValue <= 1000 &&
+        /^[0-9]+(\.[0-9]{1,2})?$/.test(value) // Check for at most 2 decimals
+      );
+    };
+  
     setAssumptionValues((prevValues) => {
       return prevValues.map((assumption) => {
-        // If the key matches, update the value; otherwise, return the existing assumption
+        // If the key matches, validate and update the value
         if (assumption.key === item) {
           return {
             ...assumption,
             category,
-            value: newValue === "" ? null : newValue, // Set to null if input is empty
+            value: newValue === "" || isValidValue(newValue) ? newValue : assumption.value, // Set to newValue if valid, else keep existing
           };
         }
         return assumption;
       });
     });
   };
+  
 
   const handleNext = () => {
+    
+    const currentCategory = assumptionCategories?.[internalKey - 1]?.category;
     const currentAssumptions = assumptionCategories[internalKey - 1]?.assumptions || [];
     const existingAssumptionKeys = assumptionValues?.map((assumption) => assumption.key);
 
@@ -165,15 +181,65 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     const visibleAssumptions = currentAssumptions.filter((item) => existingAssumptionKeys?.includes(item) && !deletedAssumptions?.includes(item));
 
     //Validate: Check if any value is empty for visible assumptions
+    const atleastOneMDMS = assumptionValues?.filter((j) => j.category === currentCategory)?.filter((i) => i?.source === "MDMS")?.length === 0;
+   
+
     const hasEmptyFields = visibleAssumptions.some((item) => {
       const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
       return !value; // Check if any value is empty
     });
 
+    const hasCustomEmptyFields = assumptionValues?.filter(assumption => assumption.source==="CUSTOM" && assumption.category===currentCategory)?.some(assumption => {
+      return !assumption.value
+    })
+
     const hasNaNFields = visibleAssumptions.some((item) => {
       const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
-      return !value || isNaN(value); // Check if any value is NAN
+      return !value || isNaN(value) || value <= 0; // Check if any value is NAN
     });
+    const hasExceededUpperBound = assumptionValues.some((item) => {
+      // const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
+      const value = item?.value;
+      if(value>1000){
+        return true
+      }
+    });
+
+    const hasMoreDecimalPlaces = assumptionValues.some((item) => {
+      const value = item?.value
+    
+      // Check if the value has more than 2 decimal places
+      if (value && value % 1 !== 0 && value.toString().split(".")[1]?.length > 2) {
+        return true;
+      }
+      return false
+    });
+
+    if (hasEmptyFields) {
+      setShowToast({
+        key: "error",
+        label: t("ERR_MANDATORY_FIELD"),
+        transitionTime: 3000,
+      });
+      return; // Prevent moving to the next step
+    }
+    if(hasCustomEmptyFields){
+      setShowToast({
+        key: "error",
+        label: t("ERR_MANDATORY_FIELD"),
+        transitionTime: 3000,
+      });
+      return; // Prevent moving to the next step
+    }
+
+    if (atleastOneMDMS) {
+      setShowToast({
+        key: "error",
+        label: t("ATLEAST_ONE_MDMS_ASSUMPTION"),
+        transitionTime: 3000,
+      });
+      return; // Prevent moving to the next step
+    }
 
     // If there are empty fields, show an error and do not allow moving to the next step
     if (hasNaNFields) {
@@ -184,10 +250,20 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
       });
       return; // Prevent moving to the next step
     }
-    if (hasEmptyFields) {
+   
+    if(hasExceededUpperBound && (!hasNaNFields || !hasEmptyFields)){
       setShowToast({
         key: "error",
-        label: t("ERR_MANDATORY_FIELD"),
+        label: t("ERR_SHOULD_NOT_EXCEED_999.99"),
+        transitionTime: 3000,
+      });
+      return; // Prevent moving to the next step
+    }
+
+    if(hasMoreDecimalPlaces){
+      setShowToast({
+        key: "error",
+        label: t("ERR_DECIMAL_PLACES_LESS_THAN_TWO"),
         transitionTime: 3000,
       });
       return; // Prevent moving to the next step
@@ -215,6 +291,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         onSuccess: (data) => {
           setManualLoader(false);
           if (internalKey < assumptionCategories.length) {
+            setShowToast(null);
             setInternalKey((prevKey) => prevKey + 1); // Update key in URL
           }
           if (internalKey === assumptionCategories.length) {
@@ -250,6 +327,43 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
   });
 
   const handleBack = () => {
+    //here check for current assumption values if something is invalid throw a toast
+    const currentCategory = assumptionCategories?.[internalKey - 1]?.category;
+    // console.log(assumptionValues);
+    const currentAssumptions = assumptionValues?.filter(assumption => assumption?.category === currentCategory);
+
+    //if we go back with some invalid value show a toast to correct it
+    function hasInvalidValues(currentAssumptions) {
+      return currentAssumptions
+        .filter((item) => item?.value !== "") // Filter out empty string values
+        .some((item) => {
+          const value = Number(item?.value); // Parse the value into a number
+    
+          // Check if the value is invalid
+          if (isNaN(value) || value < 0 || value > 1000) {
+            return true; // Invalid if not a number or out of range
+          }
+    
+          // Check if the value has more than 2 decimal places
+          const decimalPlaces = value.toString().split(".")[1]?.length || 0;
+          return decimalPlaces > 2;
+        });
+    }
+
+    if(hasInvalidValues(currentAssumptions)){
+      setShowToast({
+        key: "error",
+        label: t("ERR_PLS_ENTER_VALID_ASSUMPTION_VALUE"),
+        transitionTime: 3000,
+      });
+      return;
+    }
+
+
+    
+    
+
+    
     if (internalKey > 1) {
       setInternalKey((prevKey) => prevKey - 1); // Update key in URL
     } else {
@@ -324,12 +438,22 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
   }, [internalKey]);
 
   useEffect(() => {
-    const initialAssumptions = filteredAssumptions.map((item) => ({
-      source: "MDMS",
-      category: undefined,
-      key: item,
-      value: undefined,
-    }));
+    const result = assumptionValues?.filter((item) => filteredAssumptions?.includes(item?.key));
+
+    const initialAssumptions =
+      result.length > 0
+        ? result.map((item) => ({
+            source: item.source,
+            category: item.category,
+            key: item.key,
+            value: item.value,
+          }))
+        : filteredAssumptions.map((item) => ({
+            source: "MDMS",
+            category: undefined,
+            key: item,
+            value: undefined,
+          }));
 
     // Create a set of existing keys for quick lookup
     const existingKeys = new Set(assumptionValues.map((assumption) => assumption.key));
@@ -363,7 +487,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         setDeletedAssumptions((prev) => [...prev, ...deletedAssumptionsForThisCategory]);
       }
     }
-  }, [planObject, isLoadingPlanObject, internalKey]);
+  }, [planObject, filteredAssumptions, isLoadingPlanObject, internalKey]);
 
   useEffect(() => {
     if (internalKey === assumptionCategories.length) {
@@ -372,7 +496,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
       // Assuming 1 is the first step
       Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: false });
     }
-  }, [internalKey]);
+  }, [internalKey, assumptionCategories]);
 
   if (isLoadingPlanObject || manualLoader) {
     return <Loader />;
@@ -413,7 +537,11 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
           >
             <Hypothesis
               category={assumptionCategories[internalKey - 1]?.category}
-              assumptions={[...filteredAssumptions.filter((item) => !deletedAssumptions?.includes(item)), ...customAssumption]}
+              assumptions={
+                filteredAssumptions?.filter((i) => assumptionValues?.some((j) => j.key === i))?.length > 0
+                  ? [...filteredAssumptions?.filter((i) => assumptionValues?.some((j) => j.key === i)), ...customAssumption]
+                  : [...filteredAssumptions.filter((item) => !deletedAssumptions?.includes(item)), ...customAssumption]
+              }
               onSelect={onSelect}
               customProps={customProps}
               setShowToast={setShowToast}
@@ -440,6 +568,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
             setShowToast(false);
           }}
           isDleteBtn={true}
+          style={showToast.style ? showToast.style : {}}
         />
       )}
     </Fragment>

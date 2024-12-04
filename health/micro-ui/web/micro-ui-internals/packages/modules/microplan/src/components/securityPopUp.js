@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { PopUp, Button, RadioButtons, Card, Toast ,Divider} from '@egovernments/digit-ui-components';
 import { useMyContext } from "../utils/context";
 
-const SecurityPopUp = ({ onClose, census, onSuccess }) => {
+const SecurityPopUp = ({ onClose, census, onSuccess, disableEditing=false}) => {
   const { state } = useMyContext();
   const { t } = useTranslation();
 
@@ -116,6 +116,7 @@ const SecurityPopUp = ({ onClose, census, onSuccess }) => {
                         gap: "1.5rem",  // Adds space between the radio buttons
                       }}
                       onSelect={(value) => handleOptionChange(q.id, value)}
+                      disabled={disableEditing}
                     />
                   </div>
                 </div>
@@ -143,7 +144,7 @@ const SecurityPopUp = ({ onClose, census, onSuccess }) => {
             variation={"primary"}
             label={t(`HCM_MICROPLAN_VILLAGE_SECURITY_SAVE_LABEL`)}
             onClick={handleSave} // Calls save function on click
-            isDisabled={!isChanged || mutation.isLoading} // Disable if no changes are made or during API call
+            isDisabled={!isChanged || mutation.isLoading || disableEditing} // Disable if no changes are made or during API call
           />,
         ]}
       />

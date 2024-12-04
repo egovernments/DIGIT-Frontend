@@ -6,19 +6,20 @@ import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./tableCustomStyle";
 import TableSearchField from "./TableSearchBar";
 import { useQueryClient } from "react-query";
+import { CustomSVG } from "@egovernments/digit-ui-components";
 import NoResultsFound from "./NoResultsFound";
 
 const Wrapper = ({ setShowPopUp, alreadyQueuedSelectedState }) => {
   const { t } = useTranslation();
   return (
     <PopUp
-      className={""}
+      className={"wrapper-popup-boundary-chips"}
       style={{
         maxWidth: "40%",
       }}
       type={"default"}
       heading={t("MICROPLAN_ADMINISTRATIVE_AREA")}
-      children={[]}
+      footerChildren={[]}
       onOverlayClick={() => {
         setShowPopUp(false);
       }}
@@ -58,7 +59,7 @@ function UserAccess({ category, setData, nationalRoles }) {
   } = Digit.Hooks.microplanv1.usePlanSearchEmployeeWithTagging({
     tenantId: tenantId,
     limit: rowsPerPage,
-    offset: (currentPage - 1) * 5,
+    offset: (currentPage - 1) *  rowsPerPage,
     names: searchQuery,
     body: {
       PlanEmployeeAssignmentSearchCriteria: {
@@ -136,21 +137,52 @@ function UserAccess({ category, setData, nationalRoles }) {
     {
       name: t("NAME"),
       selector: (row) => {
-        return row.name || t("NA");
+        return (
+          <div className="ellipsis-cell" title={row?.name || t("NA")}>
+            {row.name || t("NA")}
+          </div>
+        );
       },
       sortable: true,
+      sortFunction: (rowA, rowB) => {
+        const nameA = t(rowA.name).toLowerCase();
+        const nameB = t(rowB.name).toLowerCase();
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
+        return 0;
+      },
     },
     {
       name: t("EMAIL"),
-      selector: (row) => row.email || t("NA"),
-      sortable: true,
+      selector: (row) => {
+        return (
+          <div className="ellipsis-cell" title={row?.email || t("NA")}>
+            {row.email || t("NA")}
+          </div>
+        );
+      },
+      sortable: false,
     },
     {
       name: t("CONTACT_NUMBER"),
       selector: (row) => {
-        return row.number || t("NA");
+        return (
+          <div className="ellipsis-cell" title={row?.number || t("NA")}>
+            {row?.number || t("NA")}
+          </div>
+        );
       },
       sortable: true,
+      sortFunction: (rowA, rowB) => {
+        const numberA = parseInt(rowA.number, 10);
+        const numberB = parseInt(rowB.number, 10);
+        if (isNaN(numberA)) return 1; // Treat invalid numbers as larger
+        if (isNaN(numberB)) return -1;
+    
+        if (numberA < numberB) return -1;
+        if (numberA > numberB) return 1;
+        return 0;
+      },
     },
     {
       name: t("ADMINISTRATIVE_HIERARCHY"),
@@ -160,19 +192,47 @@ function UserAccess({ category, setData, nationalRoles }) {
         // } else {
         //   return row?.hierarchyLevel; // Otherwise, return the existing hierarchy level
         // }
-        return t(row?.hierarchyLevel || "NA");
+        return (
+          <div className="ellipsis-cell" title={t(row?.hierarchyLevel || "NA")}>
+            {t(row?.hierarchyLevel || "NA")}
+          </div>
+        );
       },
       sortable: true,
+      sortFunction: (rowA, rowB) => {
+        const hierarchylevelA = t(rowA.hierarchyLevel).toLowerCase();
+        const hierarchylevelB = t(rowB.hierarchyLevel).toLowerCase();
+        if (hierarchylevelA < hierarchylevelB) return -1;
+        if (hierarchylevelA > hierarchylevelB) return 1;
+        return 0;
+      },
     },
     {
       name: t("ADMINISTRATIVE_BOUNDARY"),
+      grow: 2,
       selector: (row) => {
         return (
           <div className="digit-tag-container userAccessCell">
             {row?.jurisdiction?.length > 0 && (
               <>
                 {row.jurisdiction.slice(0, 2).map((item, index) => (
-                  <Chip className="" error="" extraStyles={{}} iconReq="" hideClose={true} text={t(item)} />
+                  <Chip
+                    className=""
+                    error=""
+                    extraStyles={{
+                      tagStyles: {
+                        maxWidth: "180px",
+                        whiteSpace: "normal",
+                        height: "100%",
+                      },
+                      textStyles:{
+                        whiteSpace:'normal'
+                      }
+                    }}
+                    iconReq=""
+                    hideClose={true}
+                    text={t(item)}
+                  />
                 ))}
 
                 {row.jurisdiction.length > 2 && (
@@ -199,26 +259,26 @@ function UserAccess({ category, setData, nationalRoles }) {
                   />
                 )}
 
-                {chipPopUpRowId === row.id && (
-                  <Wrapper setShowPopUp={setChipPopUpRowId} alreadyQueuedSelectedState={row.jurisdiction} />
-                )}
+                {chipPopUpRowId === row.id && <Wrapper setShowPopUp={setChipPopUpRowId} alreadyQueuedSelectedState={row.jurisdiction} />}
               </>
             )}
           </div>
         );
       },
-      sortable: true,
+      sortable: false,
     },
     {
       name: t("ACTION"),
+      sortable: false,
       cell: (row) => {
         return (
           <Button
             className={"roleTableCell"}
             variation={"secondary"}
             label={t(`UNASSIGN`)}
+            size="medium"
             title={t(`UNASSIGN`)}
-            style={{ padding: "1rem" }}
+            style={{ padding: "1rem", width:"100%" }}
             icon={"Close"}
             isSuffix={false}
             onClick={(value) => setUnassignPopup(row)}
@@ -275,7 +335,7 @@ function UserAccess({ category, setData, nationalRoles }) {
             columns={columns}
             data={planEmployee?.data}
             progressPending={isLoading || isPlanEmpSearchLoading}
-            progressComponent={<CustomLoader />}
+            progressComponent={<Loader />}
             pagination
             paginationServer
             customStyles={tableCustomStyle}
@@ -283,6 +343,7 @@ function UserAccess({ category, setData, nationalRoles }) {
             onChangePage={handlePaginationChange}
             onChangeRowsPerPage={handleRowsPerPageChange}
             paginationPerPage={rowsPerPage}
+            sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
             paginationRowsPerPageOptions={[5, 10, 15, 20]}
           />
         )}
@@ -327,14 +388,10 @@ function UserAccess({ category, setData, nationalRoles }) {
       {unassignPopup && (
         <PopUp
           className={"popUpClass"}
-          type={"default"}
-          heading={t("USERTAG_CONFIRM_TO_UNASSIGN")}
+          type={"alert"}
+          alertHeading={t("USERTAG_CONFIRM_TO_UNASSIGN")}
+          alertMessage={t("USERTAG_CONFIRM_TO_UNASSIGN_DESC")}
           equalWidthButtons={true}
-          children={[
-            <div>
-              <CardText style={{ margin: 0 }}>{t("USERTAG_CONFIRM_TO_UNASSIGN_DESC")}</CardText>
-            </div>,
-          ]}
           onOverlayClick={() => {
             setUnassignPopup(false);
           }}
@@ -366,7 +423,6 @@ const styles = {
     justifyContent: "space-between", // Ensures space between search and button
     alignItems: "center",
     width: "100%",
-    padding: "8px", // Optional padding for layout
   },
   buttonContainer: {
     display: "flex",

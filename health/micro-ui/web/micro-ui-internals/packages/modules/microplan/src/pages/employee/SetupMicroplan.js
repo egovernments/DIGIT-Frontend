@@ -21,7 +21,16 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const [active, setActive] = useState(0);
   const [showToast, setShowToast] = useState(false);
   const [showPopUp, setShowPopUp] = useState(false);
-  const { campaignId, microplanId, key, isFormulaLastVerticalStep, isLastVerticalStep, ...queryParams } = Digit.Hooks.useQueryParams();
+  const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
+  const searchParams = new URLSearchParams(location.search);
+  const [isLastVerticalStep, setIsLastVerticalStep] = useState(() => {
+    const searchParams = new URLSearchParams(location.search);
+    return searchParams.get("isLastVerticalStep");
+  });
+  const [isFormulaLastVerticalStep, setIsFormulaLastVerticalStep] = useState(() => {
+    const searchParams = new URLSearchParams(location.search);
+    return searchParams.get("isFormulaLastVerticalStep");
+  });
   const setupCompleted = queryParams?.["setup-completed"];
   const [shouldUpdate, setShouldUpdate] = useState(false);
   const [currentKey, setCurrentKey] = useState(() => {
@@ -31,6 +40,21 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
 
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("MICROPLAN_DATA", {});
   const [microplanConfig, setMicroplanConfig] = useState(MicroplanConfig(totalFormData, null, isSubmitting, null, hierarchyData));
+
+  const handleUrlChange = (event) => {
+    const { isLastVerticalStep, isFormulaLastVerticalStep, ...queryParams } = Digit.Hooks.useQueryParams();
+    setIsLastVerticalStep(isLastVerticalStep);
+    setIsFormulaLastVerticalStep(isFormulaLastVerticalStep);
+  };
+  useEffect(() => {
+    // Add event listener for popstate to detect URL changes
+    window.addEventListener("urlChanged", handleUrlChange);
+
+    // Clean up the event listener when the component unmounts or on URL change
+    return () => {
+      window.removeEventListener("urlChanged", handleUrlChange);
+    };
+  }, []);
 
   //fetch existing campaign object
   const {
@@ -133,8 +157,18 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   // setting the current step when the key is changed on the basis of the config
   useEffect(() => {
     setCurrentStep(Number(filteredConfig?.[0]?.form?.[0]?.stepCount - 1));
+    // setting the toast to null when moving to next step successfully
+    // if any issue comes related to Toast, update here 
     // setShowToast(null);
+    // this null was causing toast to immediatealy go to null since filteredConfig gets affected
   }, [currentKey, filteredConfig]);
+
+  useEffect(() => {
+     // setting the toast to null when moving to next step successfully
+    // if any issue comes related to Toast, update here 
+      setShowToast(null)
+  }, [currentKey])
+  
 
   useEffect(() => {
     setIsSubmitting(false);
@@ -153,7 +187,8 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
       onSuccess: (data) => {
         // Check if there is a redirectTo property in the response
         if (data?.redirectTo) {
-          history.push(data?.redirectTo, data?.state); // Navigate to the specified route
+          history.push(data?.redirectTo, data?.state);
+          return; // Navigate to the specified route
         }
 
         //invalidation of files session
@@ -189,9 +224,13 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
             HYPOTHESIS: null,
             FORMULA_CONFIGURATION: null,
           });
+          Digit.SessionStorage.del("HYPOTHESIS_DATA");
+          Digit.SessionStorage.del("FORMULA_DATA");
 
+          
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
+          
 
           //since we are invalidating we need to update this global state
           dispatch({
@@ -201,7 +240,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
             },
           });
         }
-
+        refetchPlan();
         setLoader(false);
       },
       onError: (error, variables) => {
@@ -370,7 +409,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
         onSubmit={onSubmit}
         showSecondaryLabel={true}
         secondaryLabel={t("MP_BACK")}
-        actionClassName={"actionBarClass"}
+        actionClassName={"actionBarClass microplan-actionbar"}
         className="setup-campaign"
         cardClassName="setup-compaign-card"
         noCardStyle={true}
@@ -381,7 +420,13 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
         <ActionBar
           style={{ zIndex: "19" }}
           setactionFieldsToRight
-          actionFields={[<Button label={t("GO_BACK_TO_MY_MICROPLAN")} onClick={() => history.goBack()} />]}
+          actionFields={[
+            <Button
+              label={t("GO_BACK_TO_MY_MICROPLAN")}
+              // onClick={() => history.goBack()}
+              onClick={() => history.push(`/${window.contextPath}/employee/microplan/microplan-search`)}
+            />,
+          ]}
         />
       ) : null}
       {showToast && (
@@ -408,6 +453,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
               size={"large"}
               variation={"secondary"}
               label={t("SAVE_PROCEED")}
+              title={t("SAVE_PROCEED")}
               onClick={() => {
                 setShowPopUp(false);
                 //passing props for mutate

@@ -60,7 +60,7 @@ const MyCampaign = () => {
         break;
       case "CAMPAIGN_DRAFTS":
         if (row?.parentId) {
-          history.push(`/${window.contextPath}/employee/campaign/update-campaign?parentId=${row.parentId}&id=${row.id}&draft=${true}`);
+          history.push(`/${window.contextPath}/employee/campaign/update-campaign?parentId=${row.parentId}&id=${row.id}&draft=${true}&campaignName=${row.campaignName}`);
         } else {
           const baseUrl = `/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&draft=true&fetchBoundary=true&draftBoundary=true`; 
           const hasPassedDates = row.startDate <= currentDate || row.endDate <= currentDate; 

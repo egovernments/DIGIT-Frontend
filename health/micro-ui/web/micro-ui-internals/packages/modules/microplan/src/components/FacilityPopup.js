@@ -1,14 +1,15 @@
 import React, { useState, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { PopUp, Button, Tab, CheckBox, Card, Toast, SVG,TooltipWrapper } from "@egovernments/digit-ui-components";
+import { PopUp, Button, Tab, CheckBox, Card, Toast, SVG, TooltipWrapper } from "@egovernments/digit-ui-components";
 import SearchJurisdiction from "./SearchJurisdiction";
-import { LoaderWithGap, Loader,InfoBannerIcon } from "@egovernments/digit-ui-react-components";
+import { LoaderWithGap, Loader, InfoBannerIcon } from "@egovernments/digit-ui-react-components";
 import DataTable from "react-data-table-component";
 import AccessibilityPopUp from "./accessbilityPopUP";
 import SecurityPopUp from "./securityPopUp";
-import {  tableCustomStyle } from "./tableCustomStyle";
-
-const FacilityPopUp = ({ details, onClose, updateDetails }) => {
+import { getTableCustomStyle, tableCustomStyle } from "./tableCustomStyle";
+import VillageHierarchyTooltipWrapper from "./VillageHierarchyTooltipWrapper";
+import { CustomSVG } from "@egovernments/digit-ui-components";
+const FacilityPopUp = ({ detail, onClose }) => {
   const { t } = useTranslation();
   const url = Digit.Hooks.useQueryParams();
   const currentUserUuid = Digit.UserService.getUser().info.uuid;
@@ -28,9 +29,12 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
   const [viewDetails, setViewDetails] = useState(false)
   const [totalCensusCount, setTotalCensusCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [details, updateDetails] = useState(detail);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [disabledAction, setDisabledAction] = useState(false);
   const [boundaryData, setBoundaryData] = useState([]);
+  const [defaultHierarchy, setDefaultSelectedHierarchy] = useState(null);
+  const [defaultBoundaries, setDefaultBoundaries] = useState([]);
   const VillageHierarchyTooltipWrapper = Digit.ComponentRegistryService.getComponent("VillageHierarchyTooltipWrapper");
   const [kpiParams, setKpiParams] = useState([]);
   const configNavItem = [
@@ -65,6 +69,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
 
   useEffect(async () => {
     setLoader(true);
+    setTableLoader(true);
     await censusSearch([]);
     setLoader(false);
   }, [currentPage, rowsPerPage])
@@ -140,6 +145,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     else {
       jurisdictionArray = planEmployeeDetailsData?.PlanEmployeeAssignment?.[0]?.jurisdiction?.map((item) => { return { code: item } });
     }
+    setTableLoader(true);
     censusSearch(jurisdictionArray);
   }, [microplanId, facilityAssignedStatus, details, planEmployeeDetailsData, currentPage, rowsPerPage]);
 
@@ -157,10 +163,9 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
 
   const mutationForCensusSearch = Digit.Hooks.useCustomAPIMutationHook(censusSearchMutaionConfig);
 
-
   const censusSearch = async (data) => {
     setBoundaryData(data);
-    setTableLoader(true);
+    
     const codeArray = data?.length === 0
       ? planEmployeeDetailsData?.PlanEmployeeAssignment?.[0]?.jurisdiction?.map((item) => item) || []
       : data?.map((item) => item?.code);
@@ -241,7 +246,14 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
         </div>
       ),
       //selector: (row) => t(row.boundaryCode), // Replace with the appropriate field from your data
-      sortable: false,
+      sortable: true,
+      sortFunction: (rowA, rowB) => {
+        const boundaryCodeA = t(rowA.boundaryCode).toLowerCase();
+        const boundaryCodeB = t(rowB.boundaryCode).toLowerCase();
+        if (boundaryCodeA < boundaryCodeB) return -1;
+        if (boundaryCodeA > boundaryCodeB) return 1;
+        return 0;
+      },
     },
     {
       name: t("MP_VILLAGE_ACCESSIBILITY_LEVEL"), // Change to your column type
@@ -257,12 +269,23 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
       ), // Replace with the appropriate field from your data
       sortable: false,
     },
-    {
-      name: t("MP_FACILITY_TOTALPOPULATION"), // Change to your column type
-      selector: (row) => row.totalPopulation, // Replace with the appropriate field from your data
-      sortable: false,
-    },
-    // Add more columns as needed
+    // dynamic columns
+    ...(
+      (censusData?.[0]?.additionalFields || [])
+        .filter((field) => field.showOnUi && field.key.includes("CONFIRMED") && field.key.includes("TARGET"))
+        .sort((a, b) => a.order - b.order)
+        .map((field) => ({
+          name: t(field.key) || t("ES_COMMON_NA"),
+          selector: (row) => {
+            const fieldValue = row.additionalFields.find((f) => f.key === field.key)?.value || t("ES_COMMON_NA");
+            return fieldValue;
+          },
+          sortable: true,
+          style: {
+            justifyContent: "flex-end",
+          },
+        }))
+    ),
   ];
 
   const planFacilityUpdateMutaionConfig = {
@@ -272,7 +295,20 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     },
   };
 
+  const planFacilitySearchMutaionConfig = {
+    url: "/plan-service/plan/facility/_search",
+    body: {
+      PlanFacilitySearchCriteria: {
+        tenantId: tenantId,
+        planConfigurationId: url?.microplanId,
+        ids: [details?.id]
+      }
+    },
+  };
+
   const mutationForPlanFacilityUpdate = Digit.Hooks.useCustomAPIMutationHook(planFacilityUpdateMutaionConfig);
+
+  const mutationForPlanFacilitySearch = Digit.Hooks.useCustomAPIMutationHook(planFacilitySearchMutaionConfig);
 
   const handleAssignUnassign = async () => {
     // Fetching the full data of selected rows
@@ -306,14 +342,26 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
       {
         onSuccess: async (result) => {
           setSelectedRows([]);
-          updateDetails(newDetails);
           if (facilityAssignedStatus) {
-            setShowToast({ key: "success", label: `${t("UNASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 });
-
-
+            setShowToast({ key: "success", label: `${t("UNASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 })
           } else {
             setShowToast({ key: "success", label: `${t("ASSIGNED_SUCESS")} ${details?.additionalDetails?.facilityName}`, transitionTime: 5000 });
           }
+          // search call for same plan facility
+          // Add a delay of 1 second before making the second mutation call to make sure data is persisted
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          await mutationForPlanFacilitySearch.mutate(
+            {},
+            {
+              onSuccess: async (result) => {
+                updateDetails(result?.PlanFacility?.[0]);
+              },
+              onError: async (result) => {
+                setShowToast({ key: "error", label: t("ERROR_WHILE_SEARCHING_PLANFACILITY"), transitionTime: 5000 });
+              },
+            }
+          );
+          //updateDetails(newDetails);
         },
         onError: async (result) => {
           // setDownloadError(true);
@@ -323,7 +371,7 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
       }
     );
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    // setCurrentPage(1);
+     setCurrentPage(1);
     setLoader(false);
   };
 
@@ -358,29 +406,42 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
     },
   ];
 
+  const onSearch = (selectedBoundaries, selectedHierarchy) => {
+
+    if (selectedBoundaries.length === 0) {
+      setShowToast({ key: "warning", label: t("MICROPLAN_BOUNDARY_IS_EMPTY_WARNING"), transitionTime: 5000 });
+    } else {
+      setDefaultSelectedHierarchy(selectedHierarchy);
+      setDefaultBoundaries(selectedBoundaries);
+      setCurrentPage(1); 
+      censusSearch(selectedBoundaries);
+    }
+
+  };
+
+  const onClear = () => {
+    setDefaultBoundaries([]);
+    setDefaultSelectedHierarchy(null);
+    setCurrentPage(1); 
+    setTableLoader(true);
+    censusSearch([]);
+  };
+
   useEffect(() => {
     if (details) {
       setKpiParams([
         { key: "facilityName", value: details?.additionalDetails?.facilityName || t("NA") },
         { key: "facilityType", value: details?.additionalDetails?.facilityType || t("NA") },
-        { key: "facilityStatus", value: details?.additionalDetails?.facilityStatus || t("NA")},
-        { key: "capacity", value: details?.additionalDetails?.capacity || t("NA") },
-        { key: "servingPopulation", value: details?.additionalDetails?.servingPopulation || t("NA") },
+        { key: "facilityStatus", value: details?.additionalDetails?.facilityStatus || t("NA") },
+        { key: "capacity", value: details?.additionalDetails?.capacity || "0" },
+        { key: "servingPopulation", value: details?.additionalDetails?.servingPopulation || "0"},
         { key: "fixedPost", value: details?.additionalDetails?.fixedPost || t("NA") },
-        { key: "residingVillage", value: details?.residingBoundary || t("NA")}
+        { key: "residingVillage", value: t(details?.residingBoundary) || t("NA") }
       ]);
     }
   }, [details]);
 
-  const customRenderers = {
 
-  residingVillage: (value) => (
-    <p className="mp-fac-value">
-      <span style={{ color: "#0B4B66" }}>{value}</span>{" "}
-      <VillageHierarchyTooltipWrapper boundaryCode={details?.residingBoundary} placement={"bottom"} />
-    </p>
-
-  )};
 
 
   return (
@@ -393,16 +454,16 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
           heading={`${t(`MICROPLAN_ASSIGNMENT_FACILITY`)} ${details?.additionalDetails?.facilityName}`}
           children={[
             <div className="facilitypopup-serach-results-wrapper">
-              <Card className="fac-middle-child">
+              {tableLoader? <Loader/>:<Card className="fac-middle-child" style={{margin:"0rem",padding:"1.5rem"}}>
                 <div className="fac-kpi-container">
                   {kpiParams.map(({ key, value }) => (
-                    <div key={key} className="fac-kpi-card">
-                      {customRenderers[key] ? customRenderers[key](value) : <p className="mp-fac-value">{value}</p>}
-                      <p className="mp-fac-key">{t(`MICROPLAN_${key.toUpperCase()}`)}</p>
+                    <div key={key} className="fac-kpi-card" style={{padding:"0rem"}}>
+                      <p style={{margin:"0rem",marginBottom:"1rem"}} className="mp-fac-value">{value}</p>
+                      <p style={{margin:"0rem"}} className="mp-fac-key">{t(`MICROPLAN_${key.toUpperCase()}`)}</p>
                     </div>
                   ))}
                 </div>
-              </Card>
+              </Card>}
               <div className="facilitypopup-tab-serach-wrapper">
                 <Tab
                   activeLink={activeLink.code}
@@ -421,10 +482,12 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
                   <SearchJurisdiction
                     key={searchKey} // Use key to force re-render
                     boundaries={boundaries}
+                    defaultBoundaries={defaultBoundaries}
+                    defaultHierarchy={defaultHierarchy}
                     jurisdiction={jurisdiction}
-                    onSubmit={censusSearch}
+                    onSubmit={onSearch}
                     style={{ padding: "0px" }}
-                    onClear={() => censusSearch([])}
+                    onClear={onClear}
                   />
                 </Card>
               </div>
@@ -440,8 +503,13 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
                     <div className={`table-actions-wrapper`}>
                       <Button
                         className={"campaign-type-alert-button"}
-                        variation="secondary"
+                        variation="primary"
                         label={
+                          facilityAssignedStatus
+                            ? `${t("MICROPLAN_UNASSIGN_FACILITY")} ${details?.additionalDetails?.facilityName}`
+                            : `${t("MICROPLAN_ASSIGN_FACILITY")} ${details?.additionalDetails?.facilityName}`
+                        }
+                        title={
                           facilityAssignedStatus
                             ? `${t("MICROPLAN_UNASSIGN_FACILITY")} ${details?.additionalDetails?.facilityName}`
                             : `${t("MICROPLAN_ASSIGN_FACILITY")} ${details?.additionalDetails?.facilityName}`
@@ -477,20 +545,30 @@ const FacilityPopUp = ({ details, onClose, updateDetails }) => {
                       selectableRowsComponent={CheckBox}
                       selectableRowsComponentProps={selectProps}
                       conditionalRowStyles={conditionalRowStyles}
+                      fixedHeader={true}
+                      className={"facility-popup-table-no-frozen-columns"}
+                      fixedHeaderScrollHeight={"100vh"}
+                      sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
                     />
                   )
                 )}
                 {viewDetails && accessibilityData && <AccessibilityPopUp onClose={() => closeViewDetails()} census={accessibilityData}
                   onSuccess={(data) => {
                     setShowToast({ key: "success", label: t("ACCESSIBILITY_DETAILS_UPDATE_SUCCESS"), transitionTime: 5000 });
+                    setTableLoader(true);
+                    censusSearch(boundaryData);
                     closeViewDetails();
                   }}
+                  disableEditing={disabledAction}
                 />}
                 {viewDetails && securityData && <SecurityPopUp onClose={() => closeViewDetails()} census={securityData}
                   onSuccess={(data) => {
                     setShowToast({ key: "success", label: t("SECURITY_DETAILS_UPDATE_SUCCESS"), transitionTime: 5000 });
+                    setTableLoader(true);
+                    censusSearch(boundaryData);
                     closeViewDetails();
                   }}
+                  disableEditing={disabledAction}
                 />}
               </Card>
               {showToast && (

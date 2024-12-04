@@ -5,7 +5,7 @@ import { Card, Modal, CardText } from "@egovernments/digit-ui-react-components";
 import BulkUpload from "./BulkUpload";
 import Ajv from "ajv";
 import XLSX from "xlsx";
-import { InfoCard, PopUp, Toast, Button, DownloadIcon, Stepper, TextBlock } from "@egovernments/digit-ui-components";
+import { InfoCard, PopUp, Toast, Button, DownloadIcon, Stepper, TextBlock ,Tag } from "@egovernments/digit-ui-components";
 import { downloadExcelWithCustomName } from "../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 
@@ -38,8 +38,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const id = searchParams.get("id");
   const parentId = searchParams.get("parentId");
   const [showExitWarning, setShowExitWarning] = useState(false);
-
-
+  const campaignName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName || searchParams.get("campaignName") ;
   const { data: Schemas, isLoading: isThisLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
@@ -318,7 +317,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         setDownloadError(false);
         setIsError(false);
         setIsSuccess(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.isSuccess || null);
-        setShowPopUp(!props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile.length);
+        setShowPopUp(!downloadedTemplates[type] && !props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile.length);
         break;
       case "facilityWithBoundary":
         setUploadedFile(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile || []);
@@ -327,7 +326,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         setDownloadError(false);
         setIsError(false);
         setIsSuccess(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.isSuccess || null);
-        setShowPopUp(!props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile.length);
+        setShowPopUp(!downloadedTemplates[type] && !props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile.length);
         break;
       default:
         setUploadedFile(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile || []);
@@ -336,7 +335,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         setDownloadError(false);
         setIsError(false);
         setIsSuccess(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.isSuccess || null);
-        setShowPopUp(!props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile.length);
+        setShowPopUp(!downloadedTemplates[type] && !props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile.length);
         break;
     }
   }, [type, props?.props?.sessionData]);
@@ -970,6 +969,13 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   };
   const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
 
+  // Add a new state to track downloaded templates
+  const [downloadedTemplates, setDownloadedTemplates] = useState({
+    boundary: false,
+    facilityWithBoundary: false,
+    user: false
+  });
+
   const downloadTemplate = async () => {
     await mutation.mutate(
       {
@@ -1013,6 +1019,10 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             setDownloadError(false);
             if (fileData?.[0]?.id) {
               downloadExcelWithCustomName({ fileStoreId: fileData?.[0]?.id, customName: fileData?.[0]?.filename });
+              setDownloadedTemplates(prev => ({
+                ...prev,
+                [type]: true
+              }));
             }
           } else {
             setDownloadError(true);
@@ -1033,6 +1043,14 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       }
     );
   };
+    // Modify the condition for showing the popup
+  useEffect(() => {
+    // Only show popup if the template for this type hasn't been downloaded yet
+    if (downloadedTemplates[type]) {
+      setShowPopUp(false);
+    }
+  }, [downloadedTemplates]);
+
   const closeToast = () => {
     setShowToast(null);
   };
@@ -1067,19 +1085,24 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
 
         <div className={parentId ? "card-container2" : "card-container1"}>
-          <Card>
-            <div className="campaign-bulk-upload">
-              <Header className="digit-form-composer-sub-header">
-                {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
-              </Header>
-              <Button
-                label={getDownloadLabel()}
-                variation="secondary"
-                icon={"FileDownload"}
-                type="button"
-                className="campaign-download-template-btn"
-                onClick={downloadTemplate}
-              />
+        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
+        <Card>
+          <div className="campaign-bulk-upload">
+            <Header className="digit-form-composer-sub-header">
+              {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
+            </Header>
+            <Button
+              label={getDownloadLabel()}
+              variation="secondary"
+              icon={"FileDownload"}
+              type="button"
+              className="campaign-download-template-btn"
+              onClick={downloadTemplate}
+            />
+          </div>
+          {uploadedFile.length === 0 && (
+            <div className="info-text">
+              {type === "boundary" ? t("HCM_BOUNDARY_MESSAGE") : type === "facilityWithBoundary" ? t("HCM_FACILITY_MESSAGE") : t("HCM_USER_MESSAGE")}
             </div>
             {uploadedFile.length === 0 && (
               <div className="info-text">

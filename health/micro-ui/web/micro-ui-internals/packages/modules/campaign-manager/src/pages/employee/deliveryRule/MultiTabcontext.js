@@ -3,7 +3,7 @@ import { Card, Header, Paragraph, CardHeader, CardSubHeader, CardText } from "@e
 import AddDeliveryRuleWrapper from "./AddDeliverycontext";
 import { CycleContext } from ".";
 import { useTranslation } from "react-i18next";
-import { InfoCard  , Stepper ,TextBlock} from "@egovernments/digit-ui-components";
+import { InfoCard  , Stepper ,TextBlock , Tag} from "@egovernments/digit-ui-components";
 //just pass campaign data here
 // function restructureData(data) {
 //   const restructuredData = [];
@@ -215,6 +215,7 @@ const MultiTab = ({ tabCount = 3, subTabCount = 2 }) => {
   const searchParams = new URLSearchParams(location.search);
   const [currentStep , setCurrentStep] = useState(1);
   const currentKey = searchParams.get("key");
+  const campaignName = tempSession?.HCM_CAMPAIGN_NAME?.campaignName;
   const [key, setKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
@@ -278,6 +279,7 @@ const MultiTab = ({ tabCount = 3, subTabCount = 2 }) => {
           </Card>
         </div>
         <div className="card-container-delivery">
+        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
       <Header>
         {t(
           `CAMPAIGN_PROJECT_${

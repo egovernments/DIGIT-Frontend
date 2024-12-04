@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ViewCardFieldPair, Toast, Card, Button, PopUp, TextInput, Loader } from "@egovernments/digit-ui-components";
+import { ViewCardFieldPair, Toast, Card, Button, PopUp, TextInput, Loader ,Tag } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useHistory } from "react-router-dom";
 import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
@@ -472,7 +472,7 @@ const CreateChecklist = () => {
         history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
           message: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE",
           preText: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE_PRE_TEXT",
-          actionLabel: "CS_CHECKLIST_NEW_RESPONSE_ACTION",
+          actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
           actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}`,
           secondaryActionLabel: "MY_CAMPAIGN",
           secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign`,
@@ -496,6 +496,10 @@ const CreateChecklist = () => {
     }
   }, [showToast])
 
+  const onSecondayActionClick = () => {
+    history.push(`/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}`);
+  };
+
 
 
 
@@ -510,7 +514,8 @@ const CreateChecklist = () => {
       {!loading_new && submitting && <Loader />}
       {!submitting && !loading_new &&
         <div>
-          <div style={{ display: "flex", justifyContent: "space-between", height:"5.8rem"}}>
+         <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} style={{border: '0.5px solid #0B4B66'}} />
+          <div style={{ display: "flex", justifyContent: "space-between", height:"5.8rem", marginTop: "-1.2rem"}}>
             <div>
               <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>
                 {t("CREATE_NEW_CHECKLIST")}
@@ -616,9 +621,11 @@ const CreateChecklist = () => {
             noBreakLine={true}
             // cardClassName={"page-padding-fix"}
             onFormValueChange={onFormValueChange}
-            actionClassName={"checklistCreate"}
-            // noCardStyle={currentKey === 4 || currentStep === 7 || currentStep === 0 ? false : true}
+            actionClassName={"actionBarClass"}
             noCardStyle={true}
+            showSecondaryLabel={true}
+            secondaryLabel={t("HCM_BACK")}
+            onSecondayActionClick={onSecondayActionClick}
           // showWrapperContainers={false}
           />
 

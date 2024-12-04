@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Loader, TooltipWrapper } from "@egovernments/digit-ui-components";
 import { InfoBannerIcon } from "@egovernments/digit-ui-react-components";
+import { InfoOutline } from "@egovernments/digit-ui-svg-components";
 
-const VillageHierarchyTooltipWrapper = ({ boundaryCode,placement="right"}) => {
+const VillageHierarchyTooltipWrapper = ({ boundaryCode,placement="right",wrapperClassName}) => {
     const { t } = useTranslation();
     const { microplanId, campaignId } = Digit.Hooks.useQueryParams();
     const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -83,35 +84,46 @@ const VillageHierarchyTooltipWrapper = ({ boundaryCode,placement="right"}) => {
             display: "flex",
             alignItems: "flex-start",
             width: "100%",
+            gap: "0.5rem", 
           }}
         >
           <span
             style={{
               fontWeight: "bold",
-              flex: 1,
-              textAlign: "left", 
+              width: "50%", 
+              textAlign: "left",
+              whiteSpace: "normal",
+              wordBreak: "break-word",
             }}
           >
             {t(item.type)}:
           </span>
           <span
             style={{
-              flex: 1, 
-              textAlign: "left", 
+              width: "50%", 
+              textAlign: "left",
+              wordBreak: "break-word",
+              whiteSpace: "normal",
             }}
           >
             {t(item.name)}
           </span>
         </div>
       ))
-    : t("NO_DATA_AVAILABLE");
+    : t("HCM_MICROPLAN_NOT_ABLE_TO_FETCH_DETAILS");
+  
 
 
 
     return (
-        <TooltipWrapper header={t(`HCM_MICROPLAN_VILLAGE_HIERARCHY_LABEL`)} placement={placement} description={tooltipContent}>
-          <InfoBannerIcon fill={"#C84C0E"}/>
-        </TooltipWrapper>
+      <TooltipWrapper
+        header={t(`HCM_MICROPLAN_VILLAGE_HIERARCHY_LABEL`)}
+        placement={placement}
+        description={tooltipContent}
+        wrapperClassName={`${wrapperClassName} tooltip-warpper-village-hierarchy`}
+      >
+        <InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />
+      </TooltipWrapper>
     );
 };
 

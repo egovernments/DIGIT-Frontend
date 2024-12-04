@@ -5,8 +5,9 @@ import { Dropdown, FieldV1, PopUp, Card, Button, Divider, TooltipWrapper, TextIn
 import { PRIMARY_COLOR } from "../utils/utilities";
 import { useMyContext } from "../utils/context";
 import { useAssumptionContext } from "./HypothesisWrapper";
+import { InfoOutline } from "@egovernments/digit-ui-svg-components";
 
-const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, allMdmsAssumptionsForThisCategory,campaignType }) => {
+const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, allMdmsAssumptionsForThisCategory, campaignType }) => {
   const { state, dispatch } = useMyContext();
   const { t } = useTranslation();
   const [showPopUP, setShowPopUp] = useState(false);
@@ -146,7 +147,11 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
     <>
       <Card className="middle-child">
         <Header className="uploader-sub-heading">{t(category)}</Header>
-        <p className="mp-description">{t(`RESOURCE_CALCULATION`)}</p>
+        {category === "CAMPAIGN_VEHICLES" ? (
+          <p className="mp-description">{t(`ASSUMPTION_VEHICLE_DESCRIPTION`)}</p>
+        ) : (
+          <p className="mp-description">{t(`RESOURCE_CALCULATION`)}</p>
+        )}
       </Card>
 
       <Card>
@@ -155,12 +160,15 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
           return (
             <LabelFieldPair className="mp-hypothesis-label-field" style={{ alignItems: "center" }} key={index}>
               <div className="assumption-label">
-                <span>
+                <span className="assumption-label-icon-wrapper">
                   {`${t(item)}`}
                   {/* {category === "CAMPAIGN_VEHICLES" || sourceCheck === "CUSTOM" ? null : <span className="mandatory-span">*</span>} */}
                   {category === "CAMPAIGN_VEHICLES" || sourceCheck === "CUSTOM" ? null : (
                     <span className="icon-wrapper">
-                      <TooltipWrapper content={t(`HYPOTHESIS_MESSAGE_FOR_${item}`)} children={<InfoBannerIcon fill={"#C84C0E"} />} />
+                      <TooltipWrapper
+                        content={t(`HYPOTHESIS_MESSAGE_FOR_${item}`)}
+                        children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />}
+                      />
                     </span>
                   )}
                 </span>
@@ -186,10 +194,13 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
                   }}
                 />
                 <div className="hypothesis-delete-button">
-                  <DeleteIconv2 />
-                  <span style={{ color: "#B91900", textDecoration: "Underline" }} onClick={() => handleDeleteClick(index, item)}>
-                    {t("DELETE")}
-                  </span>
+                  <Button
+                    icon="Delete"
+                    label={t("DELETE")}
+                    onClick={() => handleDeleteClick(index, item)}
+                    variation="link"
+                    isDisabled={assumptions?.length === 1 && category !== "CAMPAIGN_VEHICLES" ? true : false}
+                  />
                 </div>
               </div>
             </LabelFieldPair>
@@ -214,7 +225,15 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
             equalWidthButtons={true}
             children={[
               <div>
-                <CardText style={{ margin: 0 }}>{showPopUP === "CUSTOM" ? t(`HYP_PERMANENT_DELETE_CUSTOM`) : t("HYP_PERMANENT_DELETE")}</CardText>
+                <CardText style={{ margin: 0 }}>
+                  {showPopUP === "CUSTOM" ? (
+                    t(`HYP_PERMANENT_DELETE_CUSTOM`)
+                  ) : (
+                    <>
+                      {t("HYP_PERMANENT_DELETE")} <b>{t(`ADD_ASSUMPTION`)}</b> {t(`BUTTON`)}
+                    </>
+                  )}
+                </CardText>
               </div>,
             ]}
             onOverlayClick={() => {
@@ -264,7 +283,6 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
                         style={{ maxWidth: "100%" }}
                         placeholder={t("SELECT_OPTION")}
                         onChange={(e) => setSelectedDeletedAssumption(e.target.value)}
-                        optionCardStyles={{ position: "relative" }}
                       />
                     </LabelFieldPair>,
                   ]
@@ -288,7 +306,6 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
                         style={{ maxWidth: "100%" }}
                         placeholder={t("SELECT_OPTION")}
                         onChange={(e) => setSelectedDeletedAssumption(e.target.value)}
-                        optionCardStyles={{ position: "relative" }}
                       />
                     </LabelFieldPair>,
                     selectedDeletedAssumption?.code === "NEW_ASSUMPTION" && (
@@ -305,23 +322,109 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
             }
             onOverlayClick={() => {
               setAssumptionsPopUp(false);
+              setSelectedDeletedAssumption(null);
             }}
             footerChildren={[
               <Button
                 type={"button"}
                 size={"large"}
                 variation={"secondary"}
-                label={t("NO")}
+                label={t("CANCEL")}
                 onClick={() => {
                   setAssumptionsPopUp(false);
+                  setSelectedDeletedAssumption(null);
                 }}
               />,
               <Button
                 type={"button"}
                 size={"large"}
                 variation={"primary"}
-                label={t("YES")}
+                label={t("ADD")}
                 onClick={() => {
+                  //here if assumption name is not given then show a toast message and return
+                  if (category !== "CAMPAIGN_VEHICLES" && assumptions?.includes(selectedDeletedAssumption?.name)) {
+                    setShowToast({
+                      key: "error",
+                      label: t("SELECT_ASSUMPTION_ALREADY_ADDED"),
+                      transitionTime: 3000,
+                      style: {
+                        zIndex: 1000000,
+                      },
+                    });
+                    return;
+                  }
+                  if (category === "CAMPAIGN_VEHICLES" && assumptions?.includes(selectedDeletedAssumption?.model)) {
+                    setShowToast({
+                      key: "error",
+                      label: t("SELECT_ASSUMPTION_ALREADY_ADDED"),
+                      transitionTime: 3000,
+                      style: {
+                        zIndex: 1000000,
+                      },
+                    });
+                    return;
+                  }
+                  if (selectedDeletedAssumption?.name?.length > 100) {
+                    setShowToast({
+                      key: "error",
+                      label: t("SELECT_ASSUMPTION_NAME_LONG_THAN_100"),
+                      transitionTime: 3000,
+                      style: {
+                        zIndex: 1000000,
+                      },
+                    });
+                    return;
+                  }
+
+                  if (!selectedDeletedAssumption) {
+                    setShowToast({
+                      key: "error",
+                      label: t("PLS_SELECT_ASSUMPTION"),
+                      transitionTime: 3000,
+                      style: {
+                        zIndex: 1000000,
+                      },
+                    });
+                    return;
+                  }
+
+                  if (selectedDeletedAssumption?.code === "NEW_ASSUMPTION" && selectedDeletedAssumption?.name?.trim()?.length === 0) {
+                    setShowToast({
+                      key: "error",
+                      label: t("INVALID_ASSUMPTION_NAME"),
+                      transitionTime: 3000,
+                      style: {
+                        zIndex: 1000000,
+                      },
+                    });
+                    return;
+                  }
+
+                  if (selectedDeletedAssumption?.code === "NEW_ASSUMPTION" && !selectedDeletedAssumption?.name) {
+                    setShowToast({
+                      key: "error",
+                      label: t("PLS_ENTER_ASSUMPTION_NAME"),
+                      transitionTime: 3000,
+                      style: {
+                        zIndex: 1000000,
+                      },
+                    });
+                    return;
+                  }
+
+                  //alphanumeric name of assumption
+                  // if (selectedDeletedAssumption?.code === "NEW_ASSUMPTION" && !(selectedDeletedAssumption?.name && /^(?=.*[a-zA-Z])[a-zA-Z0-9]+(?: [a-zA-Z0-9]+)*$/.test(selectedDeletedAssumption?.name))) {
+                  //   setShowToast({
+                  //     key: "error",
+                  //     label: t("MP_ASSUMPTION_NAME_INVALID") ,
+                  //     transitionTime: 3000,
+                  //     style: {
+                  //       zIndex: 1000000
+                  //     }
+                  //   });
+                  //   return
+                  // }
+                  //If no issues then go ahead and add assumption
                   addNewAssumption();
                 }}
               />,
@@ -329,6 +432,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
             sortFooterChildren={true}
             onClose={() => {
               setAssumptionsPopUp(false);
+              setSelectedDeletedAssumption(null);
             }}
           ></PopUp>
         )}

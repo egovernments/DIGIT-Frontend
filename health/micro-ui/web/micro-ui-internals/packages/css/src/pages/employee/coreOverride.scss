@@ -8,7 +8,7 @@
 /* login  screen  issue*/
 
 .primary-label-btn {
-  color: theme(digitv2.lightTheme.primary);
+  color: theme(digitv2.lightTheme.primary) !important;
 }
 
 /* landing  screen  issue*/
@@ -205,4 +205,7 @@ header {
 .campaign-flow-stepper{
   margin-left: -5.625rem;
   margin-right: -6.875rem;
+}
+.wbh-header-container{
+  margin: 0rem;
 }
