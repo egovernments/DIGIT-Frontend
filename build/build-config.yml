@@ -31,7 +31,7 @@ config:
         dockerfile: micro-ui/web/docker/Dockerfile
         image-name: karnataka-ui 
 
-  - name: builds/Digit-Frontend/meghalaya-ui
+  - name: builds/Digit-Frontend/modules/meghalaya-ui
     build:
       - work-dir: micro-ui/
         dockerfile: micro-ui/web/docker/Dockerfile
