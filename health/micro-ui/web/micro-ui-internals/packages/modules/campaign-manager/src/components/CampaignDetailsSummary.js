@@ -158,7 +158,7 @@ const CampaignDetailsSummary = (props) => {
         </div>
 
         <div className="card-container-delivery">
-        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
+        <Tag icon="" label={campaignName} labelStyle={{fontSize:"1.5rem", fontWeight:"700"}} showIcon={false} className={"campaign-tag"} />
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Header className="summary-header">{t("HCM_CAMPAIGN_DETAILS_SUMMARY")}</Header>
       </div>

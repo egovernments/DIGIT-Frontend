@@ -628,7 +628,9 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   };
 
   useEffect(() => {
-    findHighestStepCount({ totalFormData, campaignConfig, isDraft, setActive });
+    const isMicroplanScreen = source === "microplan";
+    const urlKey=currentKey;
+    findHighestStepCount({ totalFormData, campaignConfig, isDraft, setActive, isMicroplanScreen, urlKey });
   }, [totalFormData, campaignConfig]);
 
   const onSecondayActionClick = () => {

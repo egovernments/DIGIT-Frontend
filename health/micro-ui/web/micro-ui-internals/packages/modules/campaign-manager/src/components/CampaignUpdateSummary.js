@@ -444,7 +444,7 @@ const CampaignUpdateSummary = (props) => {
 
   return (
     <>
-          <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
+          <Tag icon="" label={campaignName} labelStyle={{fontSize:"1.5rem", fontWeight:"700"}} showIcon={false} className={"campaign-tag"} />
       <div style={{ display: "flex", justifyContent: "space-between" , marginBottom:"-1.5rem" }}>
         <Header className="summary-header">{t("ES_TQM_SUMMARY_HEADING")}</Header>
       </div>
