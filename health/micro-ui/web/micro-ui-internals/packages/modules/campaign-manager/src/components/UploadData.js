@@ -59,16 +59,10 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const [readMeInfo, setReadMeInfo] = useState({});
   const [showPopUp, setShowPopUp] = useState(true);
   const currentKey = searchParams.get("key");
-  const [key, setKey] = useState(() => {
-    const keyParam = searchParams.get("key");
-    return keyParam ? parseInt(keyParam) : 1;
-  });
   const totalData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
   const [convertedSchema, setConvertedSchema] = useState({});
   const [loader, setLoader] = useState(false);
-  const [currentStep , setCurrentStep] = useState(1);
-  const [projectType , setprojectType] = useState(props?.props?.projectType)
-  const baseKey = 10; 
+  const [projectType, setprojectType] = useState(props?.props?.projectType);
   // const projectType = props?.props?.projectType;
 
   useEffect(() => {
@@ -102,10 +96,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     window.history.replaceState({}, "", url);
   }
 
-  useEffect(() =>{
-    setKey(currentKey);
-    setCurrentStep(currentKey - baseKey + 1);
-  }, [currentKey])
 
   useEffect(() =>{
     setprojectType(props?.props?.projectType);
@@ -157,7 +147,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   };
 
   var translateReadMeInfo = (schema) => {
-    const translatedSchema = schema.map((item) => {
+    const translatedSchema = schema?.map((item) => {
       return {
         header: t(item.header),
         isHeaderBold: item.isHeaderBold,
@@ -171,7 +161,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           };
         }),
       };
-    });
+    }) || [];
     return translatedSchema;
   };
 
@@ -1057,25 +1047,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     setShowToast(null);
   }, [currentKey]);
 
-  useEffect(() => {
-    updateUrlParams({ key: key });
-    window.dispatchEvent(new Event("checking"));
-  }, [key]);
-
-  const onStepClick = (currentStep) => {
-    setCurrentStep(currentStep+1);
-    if(currentStep === 0){
-      setKey(10);
-    }
-    else if(currentStep === 1){
-      setKey(11);
-    }
-    else if(currentStep === 3){
-      setKey(13);
-    }
-    else setKey(12);
-  };
-
   const getDownloadLabel = () => {
     if (parentId) {
       if (type === "boundary") {
@@ -1093,97 +1064,81 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   return (
     <>
       <div className="container-full">
-        {!parentId && (
-      <div className="card-container">
-        <Card className="card-header-timeline">
-        <TextBlock
-            subHeader={t("HCM_UPLOAD_DATA")}
-            subHeaderClassName={"stepper-subheader"}
-            wrapperClassName={"stepper-wrapper"}
-          />
-        </Card>
-        <Card className="stepper-card">
-          <Stepper
-            customSteps={["HCM_UPLOAD_FACILITY", "HCM_UPLOAD_USER" , "HCM_UPLOAD_TARGET" , "HCM_SUMMARY"]}
-            currentStep={currentStep}
-            onStepClick={onStepClick}
-            direction={"vertical"}
-          />
-        </Card>
-        </div>
-        )}
         {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
 
         <div className={parentId ? "card-container2" : "card-container1"}>
-
-        <Card>
-          <div className="campaign-bulk-upload">
-            <Header className="digit-form-composer-sub-header">
-              {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
-            </Header>
-            <Button
-              label={getDownloadLabel()}
-              variation="secondary"
-              icon={"FileDownload"}
-              type="button"
-              className="campaign-download-template-btn"
-              onClick={downloadTemplate}
-            />
-          </div>
-          {uploadedFile.length === 0 && (
-            <div className="info-text">
-              {type === "boundary" ? t("HCM_BOUNDARY_MESSAGE") : type === "facilityWithBoundary" ? t("HCM_FACILITY_MESSAGE") : t("HCM_USER_MESSAGE")}
+          <Card>
+            <div className="campaign-bulk-upload">
+              <Header className="digit-form-composer-sub-header">
+                {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
+              </Header>
+              <Button
+                label={getDownloadLabel()}
+                variation="secondary"
+                icon={"FileDownload"}
+                type="button"
+                className="campaign-download-template-btn"
+                onClick={downloadTemplate}
+              />
             </div>
-          )}
-          <BulkUpload onSubmit={onBulkUploadSubmit} fileData={uploadedFile} onFileDelete={onFileDelete} onFileDownload={onFileDownload} />
-          {showInfoCard && (
-            <InfoCard
-              populators={{
-                name: "infocard",
-              }}
-              variant="error"
-              style={{ marginLeft: "0rem", maxWidth: "100%" }}
-              label={t("HCM_ERROR")}
-              additionalElements={[
-                <React.Fragment key={type}>
-                  {errorsType[type] && (
-                    <React.Fragment>
-                      {errorsType[type]
-                        .split(",")
-                        .slice(0, 50)
-                        .map((error, index) => (
-                          <React.Fragment key={index}>
-                            {index > 0 && <br />}
-                            {error.trim()}
-                          </React.Fragment>
-                        ))}
-                    </React.Fragment>
-                  )}
-                </React.Fragment>,
-              ]}
-            />
-          )}
-        </Card>
-        <InfoCard
-          populators={{
-            name: "infocard",
-          }}
-          variant="default"
-          style={{ margin: "0rem", maxWidth: "100%" }}
-          additionalElements={readMeInfo[type]?.map((info, index) => (
-            <div key={index} style={{ display: "flex", flexDirection: "column" }}>
-              <h2>{info?.header}</h2>
-              <ul style={{ paddingLeft: 0 , marginBottom: "0px" }}>
-                {info?.descriptions.map((desc, i) => (
-                  <li key={i} className="info-points">
-                    {desc.isBold ? <h2>{desc.text}</h2> : <p>{desc.text}</p>}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-          label={"Info"}
-        />
+            {uploadedFile.length === 0 && (
+              <div className="info-text">
+                {type === "boundary"
+                  ? t("HCM_BOUNDARY_MESSAGE")
+                  : type === "facilityWithBoundary"
+                  ? t("HCM_FACILITY_MESSAGE")
+                  : t("HCM_USER_MESSAGE")}
+              </div>
+            )}
+            <BulkUpload onSubmit={onBulkUploadSubmit} fileData={uploadedFile} onFileDelete={onFileDelete} onFileDownload={onFileDownload} />
+            {showInfoCard && (
+              <InfoCard
+                populators={{
+                  name: "infocard",
+                }}
+                variant="error"
+                style={{ marginLeft: "0rem", maxWidth: "100%" }}
+                label={t("HCM_ERROR")}
+                additionalElements={[
+                  <React.Fragment key={type}>
+                    {errorsType[type] && (
+                      <React.Fragment>
+                        {errorsType[type]
+                          .split(",")
+                          .slice(0, 50)
+                          .map((error, index) => (
+                            <React.Fragment key={index}>
+                              {index > 0 && <br />}
+                              {error.trim()}
+                            </React.Fragment>
+                          ))}
+                      </React.Fragment>
+                    )}
+                  </React.Fragment>,
+                ]}
+              />
+            )}
+          </Card>
+          <InfoCard
+            populators={{
+              name: "infocard",
+            }}
+            variant="default"
+            style={{ margin: "0rem", maxWidth: "100%" }}
+            additionalElements={readMeInfo[type]?.map((info, index) => (
+              <div key={index} style={{ display: "flex", flexDirection: "column" }}>
+                <h2>{info?.header}</h2>
+                <ul style={{ paddingLeft: 0, marginBottom: "0px" }}>
+                  {info?.descriptions.map((desc, i) => (
+                    <li key={i} className="info-points">
+                      {desc.isBold ? <h2>{desc.text}</h2> : <p>{desc.text}</p>}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+            label={"Info"}
+          />
         </div>
         {showPopUp && (
           <PopUp

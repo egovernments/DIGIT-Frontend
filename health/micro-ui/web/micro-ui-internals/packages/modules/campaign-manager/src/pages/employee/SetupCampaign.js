@@ -1,4 +1,4 @@
-import { Loader, FormComposerV2, Menu, ActionBar, SubmitBar } from "@egovernments/digit-ui-react-components";
+import { Loader, FormComposerV2, Menu, ActionBar, SubmitBar, LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -8,7 +8,10 @@ import {
   updateUrlParams,
   transformDraftDataToFormData,
   compareIdentical,
-  resourceData, restructureData, filterCampaignConfig, findHighestStepCount
+  resourceData,
+  restructureData,
+  filterCampaignConfig,
+  findHighestStepCount,
 } from "../../utils/setupCampaignHelpers";
 import { handleValidate } from "../../utils/setupCampaignValidators";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
@@ -39,6 +42,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const { mutate } = Digit.Hooks.campaign.useCreateCampaign(tenantId);
   const [isDataCreating, setIsDataCreating] = useState(false);
   const { mutate: updateCampaign } = Digit.Hooks.campaign.useUpdateCampaign(tenantId);
+  const { mutate: updateMapping } = Digit.Hooks.campaign.useUpdateAndUploadExcel(tenantId);
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
   const isPreview = searchParams.get("preview");
@@ -50,6 +54,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const isChangeDates = searchParams.get("changeDates");
   const actionBar = searchParams.get("actionBar");
   const source = searchParams.get("source");
+  const [loader, setLoader] = useState(null);
   const microplanName = searchParams.get("microName");
   const [isDraftCreated, setIsDraftCreated] = useState(false);
   const [currentKey, setCurrentKey] = useState(() => {
@@ -60,22 +65,33 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const [fetchBoundary, setFetchBoundary] = useState(() => Boolean(searchParams.get("fetchBoundary")));
   const [fetchUpload, setFetchUpload] = useState(false);
   const [active, setActive] = useState(0);
-  const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ 
-    name: "HierarchySchema",
-    "filter": "[?(@.type=='console')]"
-   }],{select:(MdmsRes)=>MdmsRes},
-   { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` });
+  const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    CONSOLE_MDMS_MODULENAME,
+    [
+      {
+        name: "HierarchySchema",
+        filter: "[?(@.type=='console')]",
+      },
+    ],
+    { select: (MdmsRes) => MdmsRes },
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
+  );
   const lowestHierarchy = useMemo(() => {
     return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.lowestHierarchy;
   }, [HierarchySchema]);
-  
 
-  const { data: DeliveryConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }], {
-    select: (data) => {
-      return data?.["HCM-PROJECT-TYPES"]?.projectTypes;
+  const { data: DeliveryConfig } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    "HCM-PROJECT-TYPES",
+    [{ name: "projectTypes" }],
+    {
+      select: (data) => {
+        return data?.["HCM-PROJECT-TYPES"]?.projectTypes;
+      },
     },
-  },    { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` }
-);
+    { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` }
+  );
 
   const reqCriteria = {
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
@@ -107,35 +123,31 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
 
   useEffect(() => {
     if (isPreview === "true") {
-        setIsDraftCreated(true);
-        setCurrentKey(14);
-    }
-     else if (isDraft === "true") {
-        setIsDraftCreated(true);
-        if (isSkip === "false") {
-            if (currentKey === 1) setCurrentKey(1);
-            //if user comes from set up microplan
-        } else if (source === "microplan") {
-            setCurrentKey(2);
-            //if the campaign is in draft and the start date is passed
-        }else if (isDateRestricted === "true") {
-          setCurrentKey(3);
-      }
-         else {
-          if(draftData?.additionalDetails?.key === 7 || draftData?.additionalDetails?.key === 8){
-            setCurrentKey(6);
-          }
-          else{
-            setCurrentKey(draftData?.additionalDetails?.key);
-          }  
+      setIsDraftCreated(true);
+      setCurrentKey(14);
+    } else if (isDraft === "true") {
+      setIsDraftCreated(true);
+      if (isSkip === "false") {
+        if (currentKey === 1) setCurrentKey(1);
+        //if user comes from set up microplan
+      } else if (source === "microplan") {
+        setCurrentKey(2);
+        //if the campaign is in draft and the start date is passed
+      } else if (isDateRestricted === "true") {
+        setCurrentKey(3);
+      } else {
+        if (draftData?.additionalDetails?.key === 7 || draftData?.additionalDetails?.key === 8) {
+          setCurrentKey(6);
+        } else {
+          setCurrentKey(draftData?.additionalDetails?.key);
         }
+      }
     }
-}, [isPreview, isDraft, draftData]);
-
+  }, [isPreview, isDraft, draftData]);
 
   const getCurrentKey = () => {
     const key = Number((/key=([^&]+)/.exec(location.search) || [])[1]);
-      setCurrentKey(key);
+    setCurrentKey(key);
   };
 
   useEffect(() => {
@@ -146,7 +158,13 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     };
   }, []);
 
-  const { isLoading, data: projectType } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }],{select:(MdmsRes)=>MdmsRes}, { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` });
+  const { isLoading, data: projectType } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    "HCM-PROJECT-TYPES",
+    [{ name: "projectTypes" }],
+    { select: (MdmsRes) => MdmsRes },
+    { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` }
+  );
 
   useEffect(() => {
     if (fetchUpload) {
@@ -156,9 +174,6 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       setFetchBoundary(false);
     }
   }, [fetchUpload, fetchBoundary]);
-
-  
-
 
   useEffect(() => {
     setTotalFormData(params);
@@ -527,7 +542,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     }
   }, [showToast]);
 
-  const onSubmit = (formData, cc) => {
+  const onSubmit = async (formData, cc) => {
     setIsSubmitting(true);
     // validating the screen data on clicking next button
     const checkValid = handleValidate({
@@ -546,7 +561,6 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     }
 
     const name = filteredConfig?.[0]?.form?.[0]?.name;
-
     if (name === "HCM_CAMPAIGN_TYPE" && totalFormData?.["HCM_CAMPAIGN_TYPE"]?.projectType?.code !== formData?.projectType?.code) {
       setTotalFormData((prevData) => ({
         [name]: formData,
@@ -571,6 +585,247 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {},
         ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {},
       });
+    } else if (name === "HCM_CAMPAIGN_UPLOAD_FACILITY_DATA_MAPPING" && formData?.uploadFacilityMapping?.data?.length > 0) {
+      setLoader(true);
+      const schemas = formData?.uploadFacilityMapping?.schemas;
+      const checkValid = formData?.uploadFacilityMapping?.data?.some(
+        (item) =>
+          item?.[t(schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active" &&
+          (!item?.[t(schemas?.find((i) => i.description === "Boundary Code")?.name)] ||
+            item?.[t(schemas?.find((i) => i.description === "Boundary Code")?.name)]?.length === 0)
+      );
+
+      if (checkValid) {
+        setLoader(false);
+        setShowToast({ key: "error", label: "NO_BOUNDARY_SELECTED_FOR_ACTIVE_FACILITY" });
+        return;
+      }
+      await updateMapping(
+        {
+          arrayBuffer: formData?.uploadFacilityMapping?.arrayBuffer,
+          updatedData: formData?.uploadFacilityMapping?.data,
+          tenantId: tenantId,
+          sheetNameToUpdate: "HCM_ADMIN_CONSOLE_FACILITIES",
+          schemas: schemas,
+          t: t,
+        },
+        {
+          onError: (error, variables) => {
+            setLoader(false);
+            setShowToast({ key: "error", label: error });
+            console.log(error);
+          },
+          onSuccess: async (data) => {
+            const responseTemp = await Digit.CustomService.getResponse({
+              url: "/project-factory/v1/data/_create",
+              body: {
+                ResourceDetails: {
+                  type: "facility",
+                  hierarchyType: hierarchyType,
+                  tenantId: Digit.ULBService.getCurrentTenantId(),
+                  fileStoreId: data,
+                  action: "validate",
+                  campaignId: id,
+                  additionalDetails: {},
+                },
+              },
+            });
+
+            const callSecondApiUntilComplete = async () => {
+              let secondApiResponse;
+              let isCompleted = false;
+
+              while (!isCompleted) {
+                secondApiResponse = await Digit.CustomService.getResponse({
+                  url: `/project-factory/v1/data/_search`,
+                  body: {
+                    SearchCriteria: {
+                      tenantId: tenantId,
+                      id: [responseTemp?.ResourceDetails?.id],
+                    },
+                  },
+                });
+
+                // Check if the response has the expected data to continue
+                if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "completed") {
+                  // Replace `someCondition` with your own condition to determine if it's complete
+                  isCompleted = true;
+                } else {
+                  // Optionally, add a delay before retrying
+                  await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second before retrying
+                }
+              }
+
+              return secondApiResponse;
+            };
+            const reqCriteriaResource = await callSecondApiUntilComplete();
+            const temp = totalFormData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.[0];
+            const restructureTemp = {
+              ...temp,
+              resourceId: reqCriteriaResource?.ResourceDetails?.[0]?.id,
+              filestoreId: data,
+            };
+            setTotalFormData((prevData) => ({
+              ...prevData,
+              ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {
+                uploadFacility: {
+                  ...prevData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility,
+                  uploadedFile: [restructureTemp],
+                },
+              },
+            }));
+            //to set the data in the local storage
+            setParams({
+              ...params,
+              ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {
+                uploadFacility: {
+                  ...params?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility,
+                  uploadedFile: [restructureTemp],
+                },
+              },
+            });
+            setLoader(false);
+            if (
+              filteredConfig?.[0]?.form?.[0]?.isLast ||
+              !filteredConfig[0].form[0].body[0].skipAPICall ||
+              (filteredConfig[0].form[0].body[0].skipAPICall && id)
+            ) {
+              setShouldUpdate(true);
+            }
+            if (isChangeDates === "true" && currentKey == 6) {
+              setCurrentKey(14);
+            }
+            if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].mandatoryOnAPI) {
+              setCurrentKey(currentKey + 1);
+            }
+            if (isDraft === "true" && isSkip !== "false") {
+              updateUrlParams({ skip: "false" });
+            }
+            return;
+          },
+        }
+      );
+      return;
+    } else if (name === "HCM_CAMPAIGN_UPLOAD_USER_DATA_MAPPING" && formData?.uploadUserMapping?.data?.length > 0) {
+      setLoader(true);
+      const schemas = formData?.uploadUserMapping?.schemas;
+      const checkValid = formData?.uploadUserMapping?.data?.some(
+        (item) =>
+          item?.[t(schemas?.find((i) => i.description === "User Usage")?.name)] === "Active" &&
+          (!item?.[t(schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)] ||
+            item?.[t(schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)]?.length === 0)
+      );
+
+      if (checkValid) {
+        setLoader(false);
+        setShowToast({ key: "error", label: "NO_BOUNDARY_SELECTED_FOR_ACTIVE_USER" });
+        return;
+      }
+      await updateMapping(
+        {
+          arrayBuffer: formData?.uploadUserMapping?.arrayBuffer,
+          updatedData: formData?.uploadUserMapping?.data,
+          tenantId: tenantId,
+          sheetNameToUpdate: "HCM_ADMIN_CONSOLE_USER_LIST",
+        },
+        {
+          onError: (error, variables) => {
+            setLoader(false);
+            setShowToast({ key: "error", label: error });
+            console.log(error);
+          },
+          onSuccess: async (data) => {
+            const responseTemp = await Digit.CustomService.getResponse({
+              url: "/project-factory/v1/data/_create",
+              body: {
+                ResourceDetails: {
+                  type: "user",
+                  hierarchyType: hierarchyType,
+                  tenantId: Digit.ULBService.getCurrentTenantId(),
+                  fileStoreId: data,
+                  action: "validate",
+                  campaignId: id,
+                  additionalDetails: {},
+                },
+              },
+            });
+
+            const callSecondApiUntilComplete = async () => {
+              let secondApiResponse;
+              let isCompleted = false;
+
+              while (!isCompleted) {
+                secondApiResponse = await Digit.CustomService.getResponse({
+                  url: `/project-factory/v1/data/_search`,
+                  body: {
+                    SearchCriteria: {
+                      tenantId: tenantId,
+                      id: [responseTemp?.ResourceDetails?.id],
+                    },
+                  },
+                });
+
+                // Check if the response has the expected data to continue
+                if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "completed") {
+                  // Replace `someCondition` with your own condition to determine if it's complete
+                  isCompleted = true;
+                } else {
+                  // Optionally, add a delay before retrying
+                  await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second before retrying
+                }
+              }
+
+              return secondApiResponse;
+            };
+            const reqCriteriaResource = await callSecondApiUntilComplete();
+            const temp = totalFormData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser?.uploadedFile?.[0];
+            const restructureTemp = {
+              ...temp,
+              resourceId: reqCriteriaResource?.ResourceDetails?.[0]?.id,
+              filestoreId: data,
+            };
+            setTotalFormData((prevData) => ({
+              ...prevData,
+              ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {
+                uploadUser: {
+                  ...prevData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser,
+                  uploadedFile: [restructureTemp],
+                },
+              },
+            }));
+            //to set the data in the local storage
+            setParams({
+              ...params,
+              ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {
+                uploadUser: {
+                  ...params?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser,
+                  uploadedFile: [restructureTemp],
+                },
+              },
+            });
+            setLoader(false);
+            if (
+              filteredConfig?.[0]?.form?.[0]?.isLast ||
+              !filteredConfig[0].form[0].body[0].skipAPICall ||
+              (filteredConfig[0].form[0].body[0].skipAPICall && id)
+            ) {
+              setShouldUpdate(true);
+            }
+            if (isChangeDates === "true" && currentKey == 6) {
+              setCurrentKey(14);
+            }
+
+            if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].mandatoryOnAPI) {
+              setCurrentKey(currentKey + 1);
+            }
+            if (isDraft === "true" && isSkip !== "false") {
+              updateUrlParams({ skip: "false" });
+            }
+            return;
+          },
+        }
+      );
+      return;
     } else {
       setTotalFormData((prevData) => ({
         ...prevData,
@@ -690,13 +945,16 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
           data: draftData,
         });
         break;
-        case "HCM_CONFIGURE_APP":
-          history.push(`/${window.contextPath}/employee/campaign/checklist/search?name=${draftData?.campaignName}&campaignId=${draftData?.id}&projectType=${draftData?.projectType}`, {
+      case "HCM_CONFIGURE_APP":
+        history.push(
+          `/${window.contextPath}/employee/campaign/checklist/search?name=${draftData?.campaignName}&campaignId=${draftData?.id}&projectType=${draftData?.projectType}`,
+          {
             name: draftData?.campaignName,
             projectId: draftData?.projectId,
             data: draftData,
-          });
-          break;
+          }
+        );
+        break;
       case "HCM_UPDATE_CAMPAIGN":
         history.push(`/${window.contextPath}/employee/campaign/update-campaign?key=1&parentId=${draftData?.id}`, {
           name: draftData?.campaignName,
@@ -711,15 +969,10 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
 
   return (
     <React.Fragment>
+      {loader && <LoaderWithGap text={"PLEASE_WAIT_WHILE_UPDATING"} />}
       {noAction !== "false" && (
         <Stepper
-          customSteps={[
-            "HCM_CAMPAIGN_SETUP_DETAILS",
-            "HCM_BOUNDARY_DETAILS",
-            "HCM_DELIVERY_DETAILS",
-            "HCM_UPLOAD_DATA",
-            "HCM_REVIEW_DETAILS",
-          ]}
+          customSteps={["HCM_CAMPAIGN_SETUP_DETAILS", "HCM_BOUNDARY_DETAILS", "HCM_DELIVERY_DETAILS", "HCM_UPLOAD_DATA", "HCM_REVIEW_DETAILS"]}
           currentStep={currentStep + 1}
           onStepClick={onStepClick}
           activeSteps={active}

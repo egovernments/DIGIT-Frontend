@@ -206,3 +206,17 @@
   align-items: center;
   gap: 0.5rem;
 }
+
+.digit-popup-wrapper.dataMapping {
+  height: 100rem;
+}
+.dataMappingCard {
+  overflow-y: scroll;
+}
+.dataMappingDropdown{
+  min-width: 13rem !important;
+}
+.data-mapping-filter-switch{
+  float: right;
+  margin-bottom: 1.5rem;
+}

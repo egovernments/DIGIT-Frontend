@@ -17,6 +17,7 @@ import { useBoundaryRelationshipSearch } from "./useBoundaryRelationshipSearch";
 import useUpdateChecklist from "./useUpdateChecklist";
 import useMDMSServiceSearch from "./useMDMSServiceSearch";
 import useBoundaryHome from "./useBoundaryHome";
+import { useReadExcelData, useUpdateAndUploadExcel } from "./useReadExcelData";
 
 const UserService = {};
 
@@ -42,7 +43,9 @@ const campaign = {
   useBoundaryRelationshipSearch,
   useUpdateChecklist,
   useMDMSServiceSearch,
-  useBoundaryHome
+  useBoundaryHome,
+  useReadExcelData,
+  useUpdateAndUploadExcel
 };
 
 const Hooks = {
