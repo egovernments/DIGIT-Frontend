@@ -1,9 +1,9 @@
 import React, { useState, useMemo, Fragment, useEffect } from "react";
-import { CardText, Card, Header } from "@egovernments/digit-ui-react-components";
+import { CardText,  Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { useLocation, useHistory } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
-import { InfoCard, PopUp, Stepper, TextBlock } from "@egovernments/digit-ui-components";
+import { InfoCard, PopUp, Stepper, TextBlock,Tag , Card} from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 
 const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
@@ -30,6 +30,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
+  const campaignName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName;
   const [restrictSelection, setRestrictSelection] = useState(null);
 
   useEffect(() => {
@@ -111,6 +112,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
         </div>
 
         <div className="card-container-delivery">
+        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
           <Card>
             <Header>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</Header>
             <p className="description-type">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
@@ -132,7 +134,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
               name: "infocard",
             }}
             variant="default"
-            style={{ margin: "0rem", maxWidth: "100%" }}
+            style={{ margin: "0rem", maxWidth: "100%" , marginTop: "1rem"}}
             additionalElements={[
               <span style={{ color: "#505A5F" }}>
                 {t("HCM_BOUNDARY_INFO")}
