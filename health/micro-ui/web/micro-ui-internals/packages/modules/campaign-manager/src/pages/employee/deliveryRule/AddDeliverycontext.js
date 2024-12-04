@@ -768,8 +768,6 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
     });
   };
 
-  console.log("delivery" , delivery);
-
   return (
     <>
       <Card className="delivery-rule-container">
