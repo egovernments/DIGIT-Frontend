@@ -5,7 +5,7 @@ import { Card, Modal, CardText } from "@egovernments/digit-ui-react-components";
 import BulkUpload from "./BulkUpload";
 import Ajv from "ajv";
 import XLSX from "xlsx";
-import { InfoCard, PopUp, Toast, Button, DownloadIcon, Stepper, TextBlock ,Tag } from "@egovernments/digit-ui-components";
+import { InfoCard, PopUp, Toast, Button, DownloadIcon, Stepper, TextBlock, Tag } from "@egovernments/digit-ui-components";
 import { downloadExcelWithCustomName } from "../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 
@@ -38,7 +38,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const id = searchParams.get("id");
   const parentId = searchParams.get("parentId");
   const [showExitWarning, setShowExitWarning] = useState(false);
-  const campaignName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName || searchParams.get("campaignName") ;
+  const campaignName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName || searchParams.get("campaignName");
   const { data: Schemas, isLoading: isThisLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
@@ -47,11 +47,19 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.adminSchema` }
   );
 
-  const { data: readMe } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "ReadMeConfig" }] 
-    ,{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.ReadMeConfig` }
+  const { data: readMe } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    CONSOLE_MDMS_MODULENAME,
+    [{ name: "ReadMeConfig" }],
+    { select: (MdmsRes) => MdmsRes },
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.ReadMeConfig` }
   );
-  const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "baseTimeout" }] ,
-    {select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.baseTimeout` }
+  const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    CONSOLE_MDMS_MODULENAME,
+    [{ name: "baseTimeout" }],
+    { select: (MdmsRes) => MdmsRes },
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.baseTimeout` }
   );
   const [sheetHeaders, setSheetHeaders] = useState({});
   const [translatedSchema, setTranslatedSchema] = useState({});
@@ -71,11 +79,11 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         e.returnValue = ""; // Required for most browsers
       }
     };
-  
+
     if (showExitWarning) {
       window.addEventListener("beforeunload", handleBeforeUnload);
     }
-  
+
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
@@ -85,7 +93,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     // User performs an action that completes their workflow
     setShowExitWarning(false);
   };
-  
 
   function updateUrlParams(params) {
     const url = new URL(window.location.href);
@@ -95,11 +102,9 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     window.history.replaceState({}, "", url);
   }
 
-
-  useEffect(() =>{
+  useEffect(() => {
     setprojectType(props?.props?.projectType);
-  }, [props?.props?.projectType])
-
+  }, [props?.props?.projectType]);
 
   useEffect(() => {
     if (type === "facilityWithBoundary") {
@@ -146,21 +151,22 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   };
 
   var translateReadMeInfo = (schema) => {
-    const translatedSchema = schema?.map((item) => {
-      return {
-        header: t(item.header),
-        isHeaderBold: item.isHeaderBold,
-        inSheet: item.inSheet,
-        inUiInfo: item.inUiInfo,
-        descriptions: item.descriptions.map((desc) => {
-          return {
-            text: t(desc.text),
-            isStepRequired: desc.isStepRequired,
-            isBold: desc.isBold,
-          };
-        }),
-      };
-    }) || [];
+    const translatedSchema =
+      schema?.map((item) => {
+        return {
+          header: t(item.header),
+          isHeaderBold: item.isHeaderBold,
+          inSheet: item.inSheet,
+          inUiInfo: item.inUiInfo,
+          descriptions: item.descriptions.map((desc) => {
+            return {
+              text: t(desc.text),
+              isStepRequired: desc.isStepRequired,
+              isBold: desc.isBold,
+            };
+          }),
+        };
+      }) || [];
     return translatedSchema;
   };
 
@@ -224,8 +230,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       );
       const boundary = await convertIntoSchema(
         Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter(
-          (item) => item.title === "boundaryWithTarget" &&
-           item.campaignType === (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)
+          (item) => item.title === "boundaryWithTarget" && item.campaignType === (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)
         )?.[0]
       );
       const user = await convertIntoSchema(
@@ -248,15 +253,13 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       const newUserSchema = await translateSchema(convertedSchema?.userWithBoundary);
 
       const filterByUpdateFlag = (schemaProperties) => {
-        return Object.keys(schemaProperties).filter(
-          (key) => {
-            // if (parentId) {
-            //   return schemaProperties[key].isUpdate === true;
-            // }
-            return schemaProperties[key].isUpdate !== true;
-          }
-        );
-    };
+        return Object.keys(schemaProperties).filter((key) => {
+          // if (parentId) {
+          //   return schemaProperties[key].isUpdate === true;
+          // }
+          return schemaProperties[key].isUpdate !== true;
+        });
+      };
 
       const headers = {
         boundary: filterByUpdateFlag(newBoundarySchema?.properties),
@@ -280,7 +283,9 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       const newReadMeFacility = await translateReadMeInfo(
         readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
       );
-      const newReadMeUser = await translateReadMeInfo(readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts);
+      const newReadMeUser = await translateReadMeInfo(
+        readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
+      );
       const newReadMeboundary = await translateReadMeInfo(
         readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
       );
@@ -317,7 +322,9 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         setDownloadError(false);
         setIsError(false);
         setIsSuccess(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.isSuccess || null);
-        setShowPopUp(!downloadedTemplates[type] && !props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile.length);
+        setShowPopUp(
+          !downloadedTemplates[type] && !props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile.length
+        );
         break;
       case "facilityWithBoundary":
         setUploadedFile(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile || []);
@@ -326,7 +333,9 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         setDownloadError(false);
         setIsError(false);
         setIsSuccess(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.isSuccess || null);
-        setShowPopUp(!downloadedTemplates[type] && !props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile.length);
+        setShowPopUp(
+          !downloadedTemplates[type] && !props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile.length
+        );
         break;
       default:
         setUploadedFile(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile || []);
@@ -593,8 +602,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       for (const row of jsonData) {
         for (let j = boundaryCodeIndex + 1; j < headersToValidate.length; j++) {
           const value = row[headersToValidate[j]];
-          if(!requiredProperties.includes(headersToValidate[j])) continue;
-          
+          if (!requiredProperties.includes(headersToValidate[j])) continue;
+
           if (value === undefined || value === null) {
             targetError.push(
               `${t("HCM_DATA_AT_ROW")} ${jsonData.indexOf(row) + 2} ${t("HCM_IN_COLUMN")} "${headersToValidate[j]}" ${t(
@@ -973,7 +982,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const [downloadedTemplates, setDownloadedTemplates] = useState({
     boundary: false,
     facilityWithBoundary: false,
-    user: false
+    user: false,
   });
 
   const downloadTemplate = async () => {
@@ -1019,9 +1028,9 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             setDownloadError(false);
             if (fileData?.[0]?.id) {
               downloadExcelWithCustomName({ fileStoreId: fileData?.[0]?.id, customName: fileData?.[0]?.filename });
-              setDownloadedTemplates(prev => ({
+              setDownloadedTemplates((prev) => ({
                 ...prev,
-                [type]: true
+                [type]: true,
               }));
             }
           } else {
@@ -1034,8 +1043,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           if (errorCode == "NativeIoException") {
             setDownloadError(true);
             setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-          }
-          else {
+          } else {
             setDownloadError(true);
             setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
           }
@@ -1043,7 +1051,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       }
     );
   };
-    // Modify the condition for showing the popup
+  // Modify the condition for showing the popup
   useEffect(() => {
     // Only show popup if the template for this type hasn't been downloaded yet
     if (downloadedTemplates[type]) {
@@ -1085,24 +1093,20 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
 
         <div className={parentId ? "card-container2" : "card-container1"}>
-        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
-        <Card>
-          <div className="campaign-bulk-upload">
-            <Header className="digit-form-composer-sub-header">
-              {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
-            </Header>
-            <Button
-              label={getDownloadLabel()}
-              variation="secondary"
-              icon={"FileDownload"}
-              type="button"
-              className="campaign-download-template-btn"
-              onClick={downloadTemplate}
-            />
-          </div>
-          {uploadedFile.length === 0 && (
-            <div className="info-text">
-              {type === "boundary" ? t("HCM_BOUNDARY_MESSAGE") : type === "facilityWithBoundary" ? t("HCM_FACILITY_MESSAGE") : t("HCM_USER_MESSAGE")}
+          <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
+          <Card>
+            <div className="campaign-bulk-upload">
+              <Header className="digit-form-composer-sub-header">
+                {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
+              </Header>
+              <Button
+                label={getDownloadLabel()}
+                variation="secondary"
+                icon={"FileDownload"}
+                type="button"
+                className="campaign-download-template-btn"
+                onClick={downloadTemplate}
+              />
             </div>
             {uploadedFile.length === 0 && (
               <div className="info-text">
