@@ -65,8 +65,13 @@ export const CreateComplaint = () => {
     }
   };
   const submitComplaint = async () => {
+    let complaintType = JSON.parse(sessionStorage.getItem("complaintType"));
+    let subType = JSON.parse(sessionStorage.getItem("subType"));
+
     if (paramState?.complaintType) {
-      const { city_complaint, locality_complaint, uploadedImages, complaintType, subType, details, ...values } = paramState;
+      const { city_complaint, locality_complaint, uploadedImages,details, ...values } = paramState;
+     // console.log("complaint type", complaintType);
+     // console.log('complaint sub type', subType);
       const { code: cityCode, name: city } = city_complaint;
       const { code: localityCode, name: localityName } = locality_complaint;
       const _uploadImages = uploadedImages?.map((url) => ({

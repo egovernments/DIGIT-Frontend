@@ -6,9 +6,25 @@ import SelectLandmark from "./Steps/SelectLandmark";
 import SelectPincode from "./Steps/SelectPincode";
 import SelectSubType from "./Steps/SelectSubType";
 import SelectGeolocation from "./Steps/SelectGeolocation";
+import ComplaintComment from "./Steps/ComplaintComment";
 
 export const config = {
   routes: {
+    "complaint-comment":{
+      component: ComplaintComment,
+      texts: {
+        header: "Mention the issue in the comment",
+        submitBarLabel: "CS_COMMON_NEXT",
+      },
+      inputs: [
+        {
+          label: "Add the comment here",
+          type: "textarea",
+          name: "comment",
+        },
+      ],
+      nextStep: "map",
+    },
     "complaint-type": {
       component: SelectComplaintType,
       texts: {
@@ -110,5 +126,5 @@ export const config = {
       nextStep: null,
     },
   },
-  indexRoute: "complaint-type",
+  indexRoute: "complaint-comment",
 };
