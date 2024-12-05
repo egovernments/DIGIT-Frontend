@@ -811,7 +811,7 @@ const createUpdatePlanProject = async (req) => {
           const searchAndUpdatePlanConfig = async (body) => {
             try {
               // Make the API call
-              updatePlan(planObject,key);
+              const response= await updatePlan(planObject,key);
         
               // Process the response if necessary
               return response; // Return the response for further usage if needed
