@@ -31,6 +31,7 @@ config:
         dockerfile: micro-ui/web/docker/Dockerfile
         image-name: karnataka-ui 
 
+
   - name: builds/Digit-Frontend/workbench-ui
     build:
       - work-dir: health/micro-ui/
@@ -105,3 +106,10 @@ config:
       - work-dir: micro-ui/
         dockerfile: micro-ui/web/docker/Dockerfile
         image-name: hrms-ui
+
+
+  - name: builds/Digit-Frontend/modules/meghalaya-ui
+    build:
+      - work-dir: micro-ui/
+        dockerfile: micro-ui/web/docker/Dockerfile
+        image-name: meghalaya-ui
