@@ -15,10 +15,20 @@ const validateBoundaryExcelContent = async (file, t) => {
         // Extract data including dynamic headers
         const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" }); // First row as headers
         const headers = jsonData[0]; // First row contains the headers
-        const rows = jsonData.slice(1); // Remaining rows are data
+        let rows = jsonData.slice(1); // Remaining rows are data
   
         if (headers.length === 0) {
           resolve({ success: false, error: t("BOUNDARY_EMPTY_SHEET") });
+          return;
+        }
+
+        // Remove empty rows immediately following the headers
+        while (rows.length > 0 && rows[0].every(cell => !cell?.trim())) {
+          rows = rows.slice(1); // Remove the first row if it's empty
+        }
+
+        if (rows.length === 0) {
+          resolve({ success: false, error: t("BOUNDARY_NO_VALID_ROWS") });
           return;
         }
 
