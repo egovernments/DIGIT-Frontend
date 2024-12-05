@@ -1,7 +1,10 @@
 const SearchHRMSEmployeeConfig = async ({ tenantId, body = {}, limit, microplanId, filters, offset, roles = "" }) => {
+
+  const hrms_context_path = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || 'health-hrms';
+
   try {
     const response = await Digit.CustomService.getResponse({
-      url: "/health-hrms/employees/_search",
+      url: `/${hrms_context_path}/employees/_search`,
       useCache: false,
       method: "POST",
       userService: false,
