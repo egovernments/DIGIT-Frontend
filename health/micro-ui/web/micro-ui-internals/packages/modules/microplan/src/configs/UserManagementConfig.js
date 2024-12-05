@@ -1,4 +1,8 @@
-export const UserManagementConfig = {
+export const UserManagementConfig =() =>{
+
+  const hrms_context_path = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || 'health-hrms';
+
+  return {
   "tenantId": "mz",
   "moduleName": "UserManagementConfig",
   "UserManagementConfig": [
@@ -6,7 +10,7 @@ export const UserManagementConfig = {
       "label": "USER_MANAGEMENT",
       "type": "inbox",
       "apiDetails": {
-        "serviceName": "/health-hrms/employees/_search",
+        "serviceName": `/${hrms_context_path}/employees/_search`,
         "requestParam": {},
         "requestBody": {
           
@@ -181,4 +185,5 @@ export const UserManagementConfig = {
       "showAsRemovableTagsInMobile":true
     }
   ]
+};
 }
