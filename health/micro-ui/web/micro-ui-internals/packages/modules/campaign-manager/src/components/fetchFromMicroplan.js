@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useEffect, useState } from "react";
 import { CheckCircle } from "@egovernments/digit-ui-svg-components";
 import { useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -7,9 +7,10 @@ import { InfoCard, Toast } from "@egovernments/digit-ui-components";
 import { callTemplateDownloadByUntilCompleted } from "../utils/pollUtils";
 import { fetchFromMicroplan, searchCampaign, waitForSomeTime } from "../hooks/useFetchFromMicroplan";
 
-const TEMPLATE_GENERATION_STEP = 4;
+const TEMPLATE_GENERATION_STEP = 5;
 const FACILITY_DATA_STEP = 6;
 const MICROPLAN_FETCH_STEP = 7;
+const MICROPLAN_STOP_STEP = 9;
 const MICROPLAN_FETCH_TIMEOUT = 8000;
 
 const FetchFromMicroplanScreen = () => {
@@ -23,6 +24,7 @@ const FetchFromMicroplanScreen = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [templates, setTemplates] = useState(null);
   const [microplan, setMicroplan] = useState(null);
+  const [aleastOneTemplateFilled, setAleastOneTemplateFilled] = useState(false);
 
   const [completed, setCompleted] = useState(null);
   const [showToast, setShowToast] = useState(null);
@@ -31,16 +33,20 @@ const FetchFromMicroplanScreen = () => {
   const steps = [
     "FETCHING_CAMPAIGN_DATA_FROM_MICROPLAN",
     "FETCHING_CAMPAIGN_TYPE_FROM_MICROPLAN",
-    "FETCHING_CAMPAIGN_TARGET_FROM_MICROPLAN",
+    "FETCHING_CAMPAIGN_BOUNDARIRES_FROM_MICROPLAN",
+    "CREATING_CAMPAIGN_BASED_ON_MICROPLAN",
     "GENERATING_ALL_THE_TEMPLATES",
-    "DOWNLOAD_THE_TARGET_TEMPLATE",
-    "FILLING_CAMPAIGN_TARGET_DATA_FROM_MICROPLAN",
+    "FETCHING_CAMPAIGN_TARGET_FROM_MICROPLAN",
     "FETCHING_CAMPAIGN_FACILITY_FROM_MICROPLAN",
+    "FETCHING_CAMPAIGN_USER_FROM_MICROPLAN",
+    "FETCHED_ALLMAPPING_DATA_FROM_MICROPLAN",
     "DOWNLOAD_THE_FACILITY_TEMPLATE",
     "FILLING_CAMPAIGN_FACILITY_DATA_FROM_MICROPLAN",
+    "DOWNLOAD_THE_TARGET_TEMPLATE",
+    "FILLING_CAMPAIGN_TARGET_DATA_FROM_MICROPLAN",
     "DOWNLOAD_THE_USER_TEMPLATE",
-    "FETCHING_CAMPAIGN_USER_FROM_MICROPLAN",
     "FILLING_CAMPAIGN_USER_DATA_FROM_MICROPLAN",
+    "VALIDATING_THE_USER_TEMPLATE",
     "UPDATED_CAMPAIGN_WITH_UPLODAED_DATA",
     "CMN_ALL_DATA_FETCH_DONE",
   ];
@@ -103,16 +109,15 @@ const FetchFromMicroplanScreen = () => {
         });
 
         // Show loading state
-        setShowToast({ key: "info", label: t("FETCHING_MICROPLAN_DATA") });
 
         setTimeout(() => {
           // Ensure progressive updates
           setCurrentStep((prev) => MICROPLAN_FETCH_STEP);
+          setShowToast({ key: "info", label: t("FETCHING_MICROPLAN_DATA") });
         }, MICROPLAN_FETCH_TIMEOUT);
       } catch (error) {
         console.error("Error fetching microplan data:", error);
         setShowToast({ key: "error", label: t("ERROR_FETCHING_MICROPLAN") });
-
       }
     };
     if (templates?.completed) {
@@ -155,7 +160,7 @@ const FetchFromMicroplanScreen = () => {
           currentStep < steps.length &&
           currentStep !== TEMPLATE_GENERATION_STEP &&
           currentStep !== FACILITY_DATA_STEP &&
-          currentStep !== steps.length - 2
+          currentStep !== MICROPLAN_STOP_STEP
         ) {
           setCurrentStep((prev) => prev + 1);
         }
@@ -167,18 +172,18 @@ const FetchFromMicroplanScreen = () => {
 
   useEffect(() => {
     const fetchCampaign = async () => {
-      if (currentStep === steps.length - 2 && completed == null) {
+      if (currentStep === MICROPLAN_STOP_STEP && completed == null) {
         try {
-          const response = await searchCampaign(
-            data?.updatedCampaignData?.id,
-            data?.updatedCampaignData?.tenantId
-          );
-          if (response?.resources && response?.resources?.length ==3) {
+          const response = await searchCampaign(data?.updatedCampaignData?.id, data?.updatedCampaignData?.tenantId);
+          if (response?.resources && response?.resources?.length == 3) {
             setCompleted({ ...response });
             setCurrentStep((curr) => curr + 1);
           } else {
             setShowToast({ key: "warning", label: t("SOME_ERROR_OCCURED_IN_FETCH_RETRYING") });
             setCurrentStep(TEMPLATE_GENERATION_STEP);
+          }
+          if (response?.resources && response?.resources?.length > 0) {
+            setAleastOneTemplateFilled(true);
           }
         } catch (error) {
           console.error("Error fetching campaign:", error);
@@ -207,24 +212,23 @@ const FetchFromMicroplanScreen = () => {
     setShowToast(null);
   };
   return (
-    <>
-      <Header styles={{ fontSize: "32px" }}>{t("MY_FETCH_FROM_MICROPLAN_HEADING")}</Header>
+    <span className="fetch-from-microplan">
+      <Header>{t("MY_FETCH_FROM_MICROPLAN_HEADING")}</Header>
       <InfoCard
         populators={{
           name: "infocard",
         }}
         variant="info"
         text={t("HCM_FETCH_FROM_PLAN_INFO")}
-        style={{ marginTop: "1rem", maxWidth: "100%", marginBottom: "1rem" }}
       />
 
-      <div className="sandbox-loader-screen" style={{ height: "100%" }}>
-        {showToast?.key != "error" && <LoaderWithGap text={t("DATA_FECTHING_FROM_SERVER")} />}
-        <ul className="sandbox-installation-steps" style={{ margin: "1rem" }}>
+      <div className="sandbox-loader-screen ">
+        {showToast?.key != "error" && <LoaderWithGap text={t(" ")} />}
+        <ul className="sandbox-installation-steps">
           {steps.map((step, index) => (
             <li key={index} className={`sandbox-step ${index < currentStep ? "sandbox-visible" : ""}`}>
               <span className="sandbox-step-text">{t(step)}</span>
-              {index < currentStep && <CheckCircle fill="#00703C" />}
+              {index + 1 < currentStep && (aleastOneTemplateFilled || index < TEMPLATE_GENERATION_STEP) && <CheckCircle fill="#00703C" />}
             </li>
           ))}
           <li key={currentStep + 1} className={`sandbox-step ${0 < currentStep ? "sandbox-visible" : ""}`}>
@@ -235,7 +239,7 @@ const FetchFromMicroplanScreen = () => {
         </ul>
       </div>
       {showToast && <Toast type={showToast?.key} label={t(showToast?.label)} onClose={closeToast} />}
-    </>
+    </span>
   );
 };
 

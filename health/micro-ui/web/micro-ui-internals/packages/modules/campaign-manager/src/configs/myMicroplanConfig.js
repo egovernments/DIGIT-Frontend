@@ -89,6 +89,7 @@
             resultsJsonPath: "PlanConfiguration",
 
             enableColumnSort: true,
+            tableClassName: "table campaign-table",
           },
           show: true,
         },

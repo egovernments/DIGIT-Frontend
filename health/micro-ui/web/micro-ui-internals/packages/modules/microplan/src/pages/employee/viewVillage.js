@@ -160,7 +160,7 @@ const VillageView = () => {
 
 
   useEffect(() => {
-    if (processData && processData.some((instance) => instance.action === "FINALIZE_CATCHMENT_MAPPING")) {
+    if (processData && processData.some((instance) => instance.action === "APPROVE_CENSUS_DATA")) {
       setDisabledAction(true);
     }
   }, [processData]);
@@ -332,6 +332,7 @@ const VillageView = () => {
             )}
           </div>
           {Object.values(data?.additionalFields || [])
+          .filter((field) => field.showOnUi)
             .sort((a, b) => a.order - b.order)
             .map((fieldData, index, array) => (
               <React.Fragment key={fieldData.id || index}>

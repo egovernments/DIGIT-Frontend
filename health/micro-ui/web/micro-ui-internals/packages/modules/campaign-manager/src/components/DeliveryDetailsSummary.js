@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import {  EditIcon, Header, Loader, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
-import {  Toast, Card, Stepper, TextBlock } from "@egovernments/digit-ui-components";
+import {  Toast, Card, Stepper, TextBlock ,Tag } from "@egovernments/digit-ui-components";
 
 
 function mergeObjects(item) {
@@ -97,7 +97,7 @@ function reverseDeliveryRemap(data, t) {
   const mapProductVariants = (productVariants) => {
     return productVariants.map((variant, key) => ({
       key: key + 1,
-      count: 1,
+      quantity: variant.quantity,
       value: variant.productVariantId,
       name: variant.name,
     }));
@@ -182,6 +182,7 @@ const DeliveryDetailsSummary = (props) => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
+  const campaignName = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_NAME?.campaignName;
   const handleRedirect = (step, activeCycle) => {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
@@ -351,6 +352,7 @@ const DeliveryDetailsSummary = (props) => {
           </Card>
         </div>
         <div className="card-container-delivery">
+        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <Header className="summary-header">{t("HCM_DELIVERY_DETAILS_SUMMARY")}</Header>
           </div>

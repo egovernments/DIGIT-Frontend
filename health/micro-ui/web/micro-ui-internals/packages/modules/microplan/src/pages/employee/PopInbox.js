@@ -2,12 +2,13 @@ import React, { Fragment, useState, useEffect } from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { useHistory } from "react-router-dom";
 import PopInboxTable from "../../components/PopInboxTable";
-import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonsGroup, NoResultsFound } from "@egovernments/digit-ui-components";
+import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonGroup, NoResultsFound } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
 import { Header } from "@egovernments/digit-ui-react-components";
 import ConfirmationPopUp from "../../components/ConfirmationPopUp";
+import GenericKpiFromDSS from "../../components/GenericKpiFromDSS";
 
 const PopInbox = () => {
   const { t } = useTranslation();
@@ -40,8 +41,10 @@ const PopInbox = () => {
   const [disabledAction, setDisabledAction] = useState(false);
   const [assignedToAllCount, setAssignedToAllCount] = useState(0);
   const [updatedCensus, setUpdatedCensus] = useState(null);
+  const [refetchTrigger, setRefetchTrigger] = useState(0);
   const [triggerTotalCensus, setTriggerTotalCensus] = useState(false);
   const [totalStatusCount, setTotalStatusCount] = useState({});
+  const [totalcount, setTotalCount] = useState(null);
   const [defaultHierarchy, setDefaultSelectedHierarchy] = useState(null);
   const [defaultBoundaries, setDefaultBoundaries] = useState([]);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
@@ -93,6 +96,7 @@ const PopInbox = () => {
           {
             onSuccess: (data) => {
               setTotalStatusCount(data?.StatusCount);
+              setTotalCount(data?.TotalCount);
             },
             onError: (error) => {
               setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
@@ -303,6 +307,37 @@ const PopInbox = () => {
   const actionsToHide = actionsMain?.filter(action => action?.action?.includes("EDIT"))?.map(action => action?.action);
 
 
+   // Custom hook to fetch assign to me count when workflow data is updated in assign to all case
+   const reqCriteriaResourceCount = {
+    url: `/census-service/_search`,
+    body: {
+      CensusSearchCriteria: {
+        tenantId: tenantId,
+        source: microplanId,
+        status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
+        assignee: user.info.uuid,
+        jurisdiction: censusJurisdiction,
+        limit: limitAndOffset?.limit,
+        offset: limitAndOffset?.offset
+      },
+    },
+    config: {
+      enabled: censusJurisdiction?.length > 0 ? true : false,
+    },
+    changeQueryName: "count"
+  };
+
+  const { isLoading:isCountLoading, data:countData, isFetching:isCountFetching, refetch:refetchCount } = Digit.Hooks.useCustomAPIHook(reqCriteriaResourceCount);
+
+  useEffect(() => {
+  
+    if (countData) {
+      setAssignedToMeCount(countData?.TotalCount);
+    }
+   
+  }, [countData]);
+
+
   // Custom hook to fetch census data based on microplanId and boundaryCode
   const reqCriteriaResource = {
     url: `/census-service/_search`,
@@ -324,7 +359,7 @@ const PopInbox = () => {
     },
   };
 
-  const { isLoading, data, isFetching, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
+  const { isLoading, data, isFetching, refetch:refetchCensus } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
 
   // // Extract assignee IDs in order, including null values
   // useEffect(() => {
@@ -407,7 +442,7 @@ const PopInbox = () => {
 
   useEffect(() => {
     if (censusJurisdiction?.length > 0) {
-      refetch(); // Trigger the API call again after activeFilter changes
+      refetchCensus(); // Trigger the API call again after activeFilter changes
     }
   }, [selectedFilter, censusJurisdiction, limitAndOffset, activeLink]);
 
@@ -551,7 +586,7 @@ const PopInbox = () => {
     },
   ];
 
-  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading || isWorkflowLoading || isEmployeeLoading || mutation.isLoading) {
+  if (isPlanEmpSearchLoading || isLoadingCampaignObject || isLoading || isWorkflowLoading || isEmployeeLoading || mutation.isLoading || isCountLoading) {
     return <Loader />;
   }
 
@@ -567,7 +602,7 @@ const PopInbox = () => {
 
     }
   });
-
+  
   return (
     <div className="pop-inbox-wrapper">
       <div>
@@ -582,6 +617,7 @@ const PopInbox = () => {
           
         </div>
       </div>
+      <GenericKpiFromDSS module="CENSUS" status={selectedFilter} planId={microplanId} refetchTrigger={refetchTrigger} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
       <SearchJurisdiction
         boundaries={boundaries}
         defaultHierarchy={defaultHierarchy}
@@ -594,7 +630,7 @@ const PopInbox = () => {
         onClear={onClear}
       />
 
-        <div className="pop-inbox-wrapper-filter-table-wrapper" style={{ marginBottom: (isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "CENSUS_DATA_APPROVAL_IN_PROGRESS") || (!isRootApprover && isStatusConditionMet(totalStatusCount)) || disabledAction ? "2.5rem" : "0rem" }}>
+        <div className="pop-inbox-wrapper-filter-table-wrapper" style={{ marginBottom: (isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "CENSUS_DATA_APPROVAL_IN_PROGRESS") || (!isRootApprover && totalcount===0) || disabledAction ? "2.5rem" : "0rem" }}>
           <InboxFilterWrapper
             options={activeFilter}
             onApplyFilters={onFilter}
@@ -604,7 +640,7 @@ const PopInbox = () => {
           ></InboxFilterWrapper>
 
           <div className={"pop-inbox-table-wrapper"}>
-            {showTab && (
+            {showTab && !isCountFetching && (
               <Tab
                 activeLink={activeLink?.code}
                 configItemKey="code"
@@ -646,7 +682,7 @@ const PopInbox = () => {
 
                   <div className={`table-actions-wrapper`}>
                     {actionsMain?.filter((action) => !actionsToHide.includes(action.action)).length > 1 ? (
-                      <ButtonsGroup
+                      <ButtonGroup
                         buttonsArray={actionsMain
                           ?.filter((action) => !actionsToHide.includes(action.action))
                           ?.map((action, index) => {
@@ -698,7 +734,7 @@ const PopInbox = () => {
                     url="/census-service/bulk/_update"
                     requestPayload={{ Census: updateWorkflowForSelectedRows() }}
                     commentPath="workflow.comments"
-                    onSuccess={(data) => {
+                    onSuccess={async (data) => {
                       closePopUp();
                       setShowToast({ key: "success", label: t(`POP_INBOX_WORKFLOW_FOR_${workFlowPopUp}_UPDATE_SUCCESS`), transitionTime: 5000 });
                       setLimitAndOffset((prev)=>{
@@ -708,9 +744,13 @@ const PopInbox = () => {
                         }
                       });
                       setCurrentPage(1);
-                      refetch();
+                      refetchCount();
+                      refetchCensus();
                       refetchPlan();
                       fetchStatusCount();
+                      // wait for 5 seconds
+                      await new Promise((resolve) => setTimeout(resolve, 5000));
+                      setRefetchTrigger(prev => prev + 1);
                     }}
                     onError={(data) => {
                       setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
@@ -722,7 +762,7 @@ const PopInbox = () => {
             {isLoading || isFetching ? <Loader /> : censusData.length === 0 ? <NoResultsFound style={{ height: selectedFilter === "VALIDATED" ? "472px" : "408px" }} text={t(`HCM_MICROPLAN_NO_DATA_FOUND_FOR_CENSUS`)} /> : <PopInboxTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap}
               onSuccessEdit={(data) => {
                 setUpdatedCensus(data);
-                setShowComment(true);
+                setShowComment(true); 
               }}
               conditionalRowStyles={conditionalRowStyles} disabledAction={disabledAction} />}
           </Card>
@@ -734,10 +774,14 @@ const PopInbox = () => {
                 url="/census-service/_update"
                 requestPayload={{ Census: updatedCensus }}
                 commentPath="workflow.comments"
-                onSuccess={(data) => {
+                onSuccess={ async (data)=> {
                   setShowToast({ key: "success", label: t(`${isRootApprover ? 'ROOT_' : ''}POP_INBOX_HCM_MICROPLAN_EDIT_WORKFLOW_UPDATED_SUCCESSFULLY`), transitionTime: 5000 });
                 onCommentLogClose();
-                refetch();
+                refetchCount();
+                refetchCensus();
+                // wait for 5 seconds
+                await new Promise((resolve) => setTimeout(resolve, 5000));
+                setRefetchTrigger(prev => prev + 1);
               }}
               onError={(error) => {
                 setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
@@ -770,7 +814,7 @@ const PopInbox = () => {
           style={{}}
         />}
 
-      {((!isRootApprover && isStatusConditionMet(totalStatusCount)) || disabledAction) &&
+      {((!isRootApprover && totalcount===0) || disabledAction) &&
         <ActionBar
           actionFields={[
             <Button label={t(`HCM_MICROPLAN_POP_INBOX_BACK_BUTTON`)} onClick={()=> {

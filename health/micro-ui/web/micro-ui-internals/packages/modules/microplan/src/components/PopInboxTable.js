@@ -30,7 +30,7 @@ const PopInboxTable = ({ ...props }) => {
       {
         name: t(`INBOX_VILLAGE`),
         cell: (row, index, column, id) => (
-          <div style={{ display: "flex", gap: ".5rem" }} className="village-tooltip-wrap">
+          <div className="village-tooltip-wrap">
             <Button
               label={t(`${row.boundaryCode}`)}
               onClick={() =>
@@ -66,7 +66,6 @@ const PopInboxTable = ({ ...props }) => {
             t("ES_COMMON_NA")
           ),
         sortable: false,
-        width: "180px",
       },
       ...(props?.censusData?.[0]?.additionalFields || [])
         .filter((field) => field.showOnUi)
@@ -96,6 +95,20 @@ const PopInboxTable = ({ ...props }) => {
               fieldValue
             );
           },
+          sortFunction: (rowA, rowB) => {
+            const fieldA = rowA.additionalFields.find((f) => f.key === field.key);
+            const fieldB = rowB.additionalFields.find((f) => f.key === field.key);
+          
+            const valueA = parseFloat(fieldA?.value || 0); // Converting to number, default to 0 if undefined
+            const valueB = parseFloat(fieldB?.value || 0);
+          
+            if (fieldA?.editable && !fieldB?.editable) return 1; // Editable rows after non-editable
+            if (!fieldA?.editable && fieldB?.editable) return -1; // Non-editable rows before editable
+          
+            // Numeric comparison for rows with same editability
+            return valueA - valueB;
+          },
+          
           sortable: true,
           width: "180px",
           style: {

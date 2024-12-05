@@ -1,42 +1,42 @@
 import React, { useState } from "react";
 
 const PlusMinusInput = (props, customProps) => {
-  let count = props?.defaultValues || 1;
+  let quantity = props?.defaultValues || 1;
 
   function incrementCount() {
-    if (count >= 1) {
-      count = count + 1;
-      props.onSelect(count);
+    if (quantity >= 1) {
+      quantity = quantity + 1;
+      props.onSelect(quantity);
     } else {
-      count = 1;
-      props.onSelect(count);
+      quantity = 1;
+      props.onSelect(quantity);
     }
   }
   function decrementCount() {
-    if (count > 1) {
-      count = count - 1;
-      props.onSelect(count);
+    if (quantity > 1) {
+      quantity = quantity - 1;
+      props.onSelect(quantity);
     } else {
-      count = 1;
-      props.onSelect(count);
+      quantity = 1;
+      props.onSelect(quantity);
     }
   }
 
   return (
     <React.Fragment>
       <div className="PlusMinus">
-        <button type="button" onClick={() => decrementCount(count)} className="PlusMinusbutton">
+        <button type="button" onClick={() => decrementCount(quantity)} className="PlusMinusbutton">
           -
         </button>
         <input
           readOnly={true}
-          value={count}
+          value={quantity}
           style={{
             textAlign: "center",
             border: "1px solid #505A5F",
           }}
         />
-        <button type="button" onClick={() => incrementCount(count)} className="PlusMinusbutton">
+        <button type="button" onClick={() => incrementCount(quantity)} className="PlusMinusbutton">
           +
         </button>
       </div>

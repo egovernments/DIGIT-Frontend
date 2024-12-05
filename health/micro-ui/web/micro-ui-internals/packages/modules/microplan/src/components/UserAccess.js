@@ -13,13 +13,13 @@ const Wrapper = ({ setShowPopUp, alreadyQueuedSelectedState }) => {
   const { t } = useTranslation();
   return (
     <PopUp
-      className={""}
+      className={"wrapper-popup-boundary-chips"}
       style={{
         maxWidth: "40%",
       }}
       type={"default"}
       heading={t("MICROPLAN_ADMINISTRATIVE_AREA")}
-      children={[]}
+      footerChildren={[]}
       onOverlayClick={() => {
         setShowPopUp(false);
       }}
@@ -137,7 +137,11 @@ function UserAccess({ category, setData, nationalRoles }) {
     {
       name: t("NAME"),
       selector: (row) => {
-        return row.name || t("NA");
+        return (
+          <div className="ellipsis-cell" title={row?.name || t("NA")}>
+            {row.name || t("NA")}
+          </div>
+        );
       },
       sortable: true,
       sortFunction: (rowA, rowB) => {
@@ -150,13 +154,23 @@ function UserAccess({ category, setData, nationalRoles }) {
     },
     {
       name: t("EMAIL"),
-      selector: (row) => row.email || t("NA"),
+      selector: (row) => {
+        return (
+          <div className="ellipsis-cell" title={row?.email || t("NA")}>
+            {row.email || t("NA")}
+          </div>
+        );
+      },
       sortable: false,
     },
     {
       name: t("CONTACT_NUMBER"),
       selector: (row) => {
-        return row.number || t("NA");
+        return (
+          <div className="ellipsis-cell" title={row?.number || t("NA")}>
+            {row?.number || t("NA")}
+          </div>
+        );
       },
       sortable: true,
       sortFunction: (rowA, rowB) => {
@@ -178,7 +192,11 @@ function UserAccess({ category, setData, nationalRoles }) {
         // } else {
         //   return row?.hierarchyLevel; // Otherwise, return the existing hierarchy level
         // }
-        return t(row?.hierarchyLevel || "NA");
+        return (
+          <div className="ellipsis-cell" title={t(row?.hierarchyLevel || "NA")}>
+            {t(row?.hierarchyLevel || "NA")}
+          </div>
+        );
       },
       sortable: true,
       sortFunction: (rowA, rowB) => {
@@ -191,6 +209,7 @@ function UserAccess({ category, setData, nationalRoles }) {
     },
     {
       name: t("ADMINISTRATIVE_BOUNDARY"),
+      grow: 2,
       selector: (row) => {
         return (
           <div className="digit-tag-container userAccessCell">
@@ -257,8 +276,9 @@ function UserAccess({ category, setData, nationalRoles }) {
             className={"roleTableCell"}
             variation={"secondary"}
             label={t(`UNASSIGN`)}
+            size="medium"
             title={t(`UNASSIGN`)}
-            style={{ padding: "1rem" }}
+            style={{ padding: "1rem", width:"100%" }}
             icon={"Close"}
             isSuffix={false}
             onClick={(value) => setUnassignPopup(row)}
@@ -315,7 +335,7 @@ function UserAccess({ category, setData, nationalRoles }) {
             columns={columns}
             data={planEmployee?.data}
             progressPending={isLoading || isPlanEmpSearchLoading}
-            progressComponent={<CustomLoader />}
+            progressComponent={<Loader />}
             pagination
             paginationServer
             customStyles={tableCustomStyle}
@@ -403,7 +423,6 @@ const styles = {
     justifyContent: "space-between", // Ensures space between search and button
     alignItems: "center",
     width: "100%",
-    padding: "8px", // Optional padding for layout
   },
   buttonContainer: {
     display: "flex",

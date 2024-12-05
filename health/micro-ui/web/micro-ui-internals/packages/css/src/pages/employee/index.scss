@@ -310,6 +310,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .campaign-preview-edit-container {
   display: flex;
   gap: 1rem;
+  cursor: pointer;
 
   span {
     color: theme(digitv2.lightTheme.primary);
@@ -828,14 +829,18 @@ tbody {
     .row {
       padding: 0rem;
       margin: 0rem;
-
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
       margin-bottom: 1.5rem;
 
       h2 {
         margin: 0rem;
+        width: 20%;
       }
 
       .value {
+        width: 80%;
         p {
           margin: 0rem;
         }
@@ -852,5 +857,11 @@ tbody {
 .facility-mapping-config {
   .multi-select-dropdown-wrap {
     margin-bottom: 1.5rem;
+  }
+}
+
+.digit-landing-page-wrapper {
+  .digit-landing-page-card{
+    min-width: fit-content;
   }
 }

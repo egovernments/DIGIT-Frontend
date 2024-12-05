@@ -438,7 +438,7 @@ export const UICustomizations = {
                 projectId: row?.projectId,
               },
               "",
-              `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${row?.id}`
+              `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${row?.id}&campaignName=${row?.campaignName}`
             );
             const navEvent = new PopStateEvent("popstate");
             window.dispatchEvent(navEvent);
@@ -467,7 +467,7 @@ export const UICustomizations = {
                 data: row,
               },
               "",
-              `/${window.contextPath}/employee/campaign/update-campaign?key=1&parentId=${row?.id}`
+              `/${window.contextPath}/employee/campaign/update-campaign?key=1&parentId=${row?.id}&campaignName=${row?.campaignName}`
             );
             const nav = new PopStateEvent("popstate");
             window.dispatchEvent(nav);
@@ -755,7 +755,7 @@ export const UICustomizations = {
                 campaignId: row?.id,
               },
               "",
-              `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${row?.id}`
+              `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${row?.id}&campaignName=${row?.campaignName}`
             );
             const navEvent = new PopStateEvent("popstate");
             window.dispatchEvent(navEvent);
@@ -771,7 +771,7 @@ export const UICustomizations = {
                 data: row,
               },
               "",
-              `/${window.contextPath}/employee/campaign/update-campaign?key=1&parentId=${row?.id}`
+              `/${window.contextPath}/employee/campaign/update-campaign?key=1&parentId=${row?.id}&campaignName=${row?.campaignName}`
             );
             const nav = new PopStateEvent("popstate");
             window.dispatchEvent(nav);
@@ -1057,7 +1057,7 @@ export const UICustomizations = {
                 label={"Action"}
                 options={[
                   { key: 1, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
-                  { key: 2, code: "ACTION_LABEL_RETRY", i18nKey: t("ACTION_LABEL_RETRY") },
+                  // { key: 2, code: "ACTION_LABEL_RETRY", i18nKey: t("ACTION_LABEL_RETRY") }, // disabling in UI Since it is just beta functionality
                 ].filter((obj) => Digit.Utils.didEmployeeHasAtleastOneRole(["SYSTEM_ADMINISTRATOR"] || obj?.key != 2))} //added retry for system adminstrator for failed campaign
                 optionsKey="i18nKey"
                 showBottom={true}

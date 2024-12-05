@@ -48,6 +48,67 @@ const isValidResourceName = async (name) => {
     throw new Error(error);
   }
 };
+
+function updateFormulasSource(formulasToUpdate, assumptions) {
+  // Extract keys of assumptions with source "CUSTOM"
+  let customKeys = assumptions
+  .filter((assumption) => assumption.source === "CUSTOM")
+  .map((assumption) => assumption.key);
+
+  const customKeysFromFormula = formulasToUpdate
+  ?.filter((formula) => formula.source === "CUSTOM")
+  ?.map((formula) => formula.output);
+
+  customKeys = [...customKeys, ...customKeysFromFormula];
+  // Update the source of formulas based on the conditions
+  return formulasToUpdate.map((formula) => {
+    if (
+      formula.source === "MDMS" && // Check if the formula's source is "MDMS"
+      (customKeys.includes(formula.input) || customKeys.includes(formula.assumptionValue)) // Check if input or assumptionValue belongs to "CUSTOM"
+    ) {
+       // Dynamically add this formula's output to customKeys
+      customKeys.push(formula.output)
+      return { ...formula, source: "CUSTOM" }; // Update the source to "CUSTOM"
+    }
+    return formula; // Return unchanged formula otherwise
+  });
+}
+
+// function updateFormulasSource(formulasToUpdate, assumptions) {
+//   // Extract keys of assumptions with source "CUSTOM"
+//   let customKeys = assumptions
+//     .filter((assumption) => assumption.source === "CUSTOM")
+//     .map((assumption) => assumption.key);
+
+//   // Extract outputs from formulas already marked as "CUSTOM"
+//   const customKeysFromFormula = formulasToUpdate
+//     .filter((formula) => formula.source === "CUSTOM")
+//     .map((formula) => formula.output);
+
+//   customKeys = [...customKeys, ...customKeysFromFormula];
+
+//   // Use a mutable approach to ensure only relevant formulas are updated
+//   const updatedFormulas = [...formulasToUpdate];
+
+//   updatedFormulas.forEach((formula) => {
+//     // Check if the formula's source should be converted to "CUSTOM"
+//     if (
+//       formula.source === "MDMS" &&
+//       (customKeys.includes(formula.input) || customKeys.includes(formula.assumptionValue))
+//     ) {
+//       // Update the formula's source
+//       formula.source = "CUSTOM";
+
+//       // Add the formula's output to customKeys dynamically
+//       if (!customKeys.includes(formula.output)) {
+//         customKeys.push(formula.output);
+//       }
+//     }
+//   });
+
+//   return updatedFormulas;
+// }
+
 //generating campaign and microplan
 //this will only be called on first time create so it doesn't have to be generic
 const CreateResource = async (req) => {
@@ -535,10 +596,11 @@ const createUpdatePlanProject = async (req) => {
             updatedRow.operator = state?.RuleConfigureOperators?.find((operation) => operation.operatorName === operatorName)?.operatorCode;
             return updatedRow;
           });
-
+        const formulasToUpdateWithUpdatedSource = updateFormulasSource(formulasToUpdate,fetchedPlanForFormula?.assumptions)
+          //here we need to update the source of operations
         const updatedPlanObjFormula = {
           ...fetchedPlanForFormula,
-          operations: [...prevFormulas, ...formulasToUpdate],
+          operations: [...prevFormulas, ...formulasToUpdateWithUpdatedSource],
         };
 
         const planResFormula = await updatePlan(updatedPlanObjFormula);

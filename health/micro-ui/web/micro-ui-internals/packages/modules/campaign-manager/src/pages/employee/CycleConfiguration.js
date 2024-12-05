@@ -1,7 +1,7 @@
 import React, { useReducer, Fragment, useEffect, useState } from "react";
-import { CardText, LabelFieldPair, Card, CardLabel, CardSubHeader, Paragraph, Header , Loader } from "@egovernments/digit-ui-react-components";
+import { CardText, LabelFieldPair, CardLabel, CardSubHeader, Paragraph, Header ,Card, Loader } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { TextInput, InfoCard , Stepper , TextBlock } from "@egovernments/digit-ui-components";
+import { TextInput, InfoCard , Stepper , TextBlock , Tag } from "@egovernments/digit-ui-components";
 import { deliveryConfig } from "../../configs/deliveryConfig";
 import getDeliveryConfig from "../../utils/getDeliveryConfig";
 
@@ -74,6 +74,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [isLoading , setIsLoading] = useState(false);
   const selectedProjectType = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_TYPE?.projectType?.code;
+  const campaignName = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_NAME?.campaignName;
   const { isLoading: deliveryConfigLoading, data: filteredDeliveryConfig } = Digit.Hooks.useCustomMDMS(
     tenantId,
     "HCM-PROJECT-TYPES",
@@ -135,12 +136,20 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     }
   }, [filteredDeliveryConfig, deliveryConfigLoading]);
   useEffect(() => {
-    onSelect("cycleConfigure", state);
+    const updatedState = {
+      ...state,
+      deliveryConfig: filteredDeliveryConfig,
+    };
+    onSelect("cycleConfigure", updatedState);
   }, [state]);
 
   useEffect(() => {
     if (executionCount < 5) {
-      onSelect("cycleConfigure", state);
+      const updatedState = {
+        ...state,
+        deliveryConfig: filteredDeliveryConfig,
+      };
+      onSelect("cycleConfigure", updatedState);
       setExecutionCount((prevCount) => prevCount + 1);
     }
   });
@@ -206,8 +215,8 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
           </Card>
         </div>
         <div className="card-container2">
+        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
         <Card>
-    
       <Header>
         {t(
           `CAMPAIGN_PROJECT_${

@@ -40,10 +40,9 @@ export const cycleDataRemap=(data)=> {
     const resourcesMap = new Map();
     const ageInfo = { maxAge: -Infinity, minAge: Infinity };  
   
-    const cycles = data.map(cycle => {
-      const cycleStartDate = Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[0]?.fromDate);
-      const cycleEndDate = Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[0]?.toDate);
-  
+    const cycles = data.map((cycle, index) => {
+      const cycleStartDate = Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[index]?.fromDate, "daystart");
+      const cycleEndDate = Digit.Utils.pt.convertDateToEpoch(cycleData?.cycleData?.[index]?.toDate, "dayend");
       return {
         mandatoryWaitSinceLastCycleInDays: null,
         startDate: cycleStartDate,
@@ -177,7 +176,7 @@ export const cycleDataRemap=(data)=> {
   export const  processDoseCriteria =(rule, resourcesMap ,type ,projectType) =>{
     rule.products.forEach(product => {
       if (resourcesMap.has(product.value)) {
-        resourcesMap.get(product.value).count += product.count;
+        resourcesMap.get(product.value).quantity += product.quantity;
       } else {
         resourcesMap.set(product.value, {
           productVariantId: product.value,
@@ -405,18 +404,34 @@ export const cycleDataRemap=(data)=> {
     return highestNumber;
   };
 
-  export const findHighestStepCount = ({totalFormData,campaignConfig,isDraft,setActive}) => {
+  export const findHighestStepCount = ({totalFormData,campaignConfig,isDraft,setActive, isMicroplanScreen = false, urlKey = null }) => {
     const totalFormDataKeys = Object.keys(totalFormData);
+    let highestStep;
 
-    const nonNullFormDataKeys = filterNonEmptyValues(totalFormData);
-
-    const relatedSteps = campaignConfig?.[0]?.form.filter((step) => nonNullFormDataKeys.includes(step.name));
-
-    const highestStep = relatedSteps.reduce((max, step) => Math.max(max, parseInt(step.stepCount)), 0);
-    if (isDraft == "true") {
-      const filteredStep = draftFilterStep(totalFormData,campaignConfig);
-      setActive(filteredStep);
-    } else {
+    if (isMicroplanScreen && urlKey) {
+      // Find the step count for the specific key from the URL
+      const matchedStep = campaignConfig?.[0]?.form.find(
+        (step) => step.key === urlKey
+      );
+  
+      highestStep = matchedStep ? parseInt(matchedStep.stepCount) : 0;
       setActive(highestStep);
+    } else {
+      // Existing logic for other screens
+      const nonNullFormDataKeys = filterNonEmptyValues(totalFormData);
+      const relatedSteps = campaignConfig?.[0]?.form.filter((step) => 
+        nonNullFormDataKeys.includes(step.name)
+      );
+  
+      highestStep = relatedSteps.reduce(
+        (max, step) => Math.max(max, parseInt(step.stepCount)), 
+        0
+      );
+      if (isDraft == "true") {
+        const filteredStep = draftFilterStep(totalFormData,campaignConfig);
+        setActive(filteredStep);
+      } else {
+        setActive(highestStep);
+      }
     }
   };

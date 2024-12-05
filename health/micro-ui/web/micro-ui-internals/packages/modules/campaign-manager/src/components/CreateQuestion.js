@@ -8,7 +8,7 @@ import Checkboxes from "./Checkboxes";
 import Dropdowns from "./Dropdowns";
 import { QuestionContext } from "./CreateQuestionContext";
 
-
+const maxDepth = 3;
 
 // field selector for multiselect and signle select component.
 const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field, dispatchQuestionData,
@@ -174,6 +174,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
           typeOfCall={typeOfCall}
           parentNumber={parentNumber}
           questionNumber={questionNumber}
+          maxDepth={maxDepth}
         />
       );
       break;
@@ -200,6 +201,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
           typeOfCall={typeOfCall}
           parentNumber={parentNumber}
           questionNumber={questionNumber}
+          maxDepth={maxDepth}
         />
       );
       break;
@@ -226,6 +228,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
           typeOfCall={typeOfCall}
           parentNumber={parentNumber}
           questionNumber={questionNumber}
+          maxDepth={maxDepth}
         />
       );
       break;
@@ -413,7 +416,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
   return (
     <React.Fragment>
         {initialQuestionData
-          ?.filter((i) => i.level === level && (i.parentId ? (i.parentId === parentId) : true) && (i.level <= 3) && (i.isActive === true))
+          ?.filter((i) => i.level === level && (i.parentId ? (i.parentId === parentId) : true) && (i.level <= maxDepth) && (i.isActive === true))
           ?.map((field, index) => {
             const questionNumber = getQuestionNumber(index, level, parentNumber);
             return (
@@ -557,7 +560,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
               </div>
             );
           })}
-        {!dis && <div style={{ display: "flex", justifyContent: "center", marginBottom: "0.9rem" }}>
+        {!dis && level<=maxDepth && (<div style={{ display: "flex", justifyContent: "center", marginBottom: "0.9rem" }}>
           <Button
             variation="secondary"
             size="medium"
@@ -568,7 +571,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
             onClick={() => addMoreField()}
             textStyles={{ width: 'unset' }}
           />
-        </div>
+        </div>)
         }
     </React.Fragment>
   );

@@ -31,7 +31,8 @@ const MultipleChoice = ({
   handleOptionComment,
   typeOfCall,
   parentNumber,
-  questionNumber
+  questionNumber,
+  maxDepth
 }) => {
   let dis = typeOfCall === "view" ? true : false;
   return (
@@ -61,6 +62,8 @@ const MultipleChoice = ({
             handleOptionComment={handleOptionComment}
             typeOfCall={typeOfCall}
             parentNumber={parentNumber}
+            subQlevel={subQlevel}
+            maxDepth={maxDepth}
           ></RadioButtonOption>
           {item.optionComment && <FieldV1
             // className="example"
@@ -140,7 +143,9 @@ export const RadioButtonOption = ({
   t,
   addComment,
   handleOptionComment,
-  typeOfCall
+  typeOfCall,
+  subQlevel,
+  maxDepth
 }) => {
   // const [optionTitle, setOptionTitle] = useState(title);
   const [isFocused, setIsFocused] = useState(false);
@@ -241,7 +246,7 @@ export const RadioButtonOption = ({
               <CheckBox
                 key={field.key}
                 mainClassName={"checkboxOptionVariant"}
-                disabled={optionDependency ? true : false}
+                disabled={optionDependency ? true : false }  
                 label={t("ADD_COMMENT_(OR)")}
                 checked={optionComment}
                 onChange={(event) => handleOptionComment(optionId)}
@@ -254,7 +259,7 @@ export const RadioButtonOption = ({
               <CheckBox
                 key={field.key}
                 mainClassName={"checkboxOptionVariant"}
-                disabled={optionComment ? true : false}
+                disabled={optionComment ? true : false || subQlevel>=maxDepth+1}
                 label={t("LINK_NESTED_CHECKLIST")}
                 checked={optionDependency}
                 onChange={(event) => handleOptionDependency(optionId)}

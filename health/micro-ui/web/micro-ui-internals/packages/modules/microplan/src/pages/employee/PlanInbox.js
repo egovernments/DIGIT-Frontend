@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect, useMemo } from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { useHistory } from "react-router-dom";
-import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonsGroup, NoResultsFound } from "@egovernments/digit-ui-components";
+import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonGroup, NoResultsFound } from "@egovernments/digit-ui-components";
 import { Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
@@ -15,6 +15,7 @@ import ConfirmationPopUp from "../../components/ConfirmationPopUp";
 import VillageHierarchyTooltipWrapper from "../../components/VillageHierarchyTooltipWrapper";
 import TimelinePopUpWrapper from "../../components/timelinePopUpWrapper";
 import AssigneeChips from "../../components/AssigneeChips";
+import GenericKpiFromDSS from "../../components/GenericKpiFromDSS";
 
 const PlanInbox = () => {
   const { t } = useTranslation();
@@ -40,6 +41,7 @@ const PlanInbox = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(50);
   const [totalRows, setTotalRows] = useState(0);
+  const [refetchTrigger, setRefetchTrigger] = useState(0);
   const [perPage, setPerPage] = useState(10);
   const [assignedToMeCount, setAssignedToMeCount] = useState(0);
   const [assignedToAllCount, setAssignedToAllCount] = useState(0);
@@ -56,6 +58,7 @@ const PlanInbox = () => {
   const [selectedBusinessId, setSelectedBusinessId] = useState(null);
   const [assigneeUuids, setAssigneeUuids] = useState([]);
   const [totalStatusCount, setTotalStatusCount] = useState({});
+  const [totalCount, setTotalCount] = useState(null);
   const [employeeNameMap, setEmployeeNameMap] = useState({});
   const [defaultHierarchy, setDefaultSelectedHierarchy] = useState(null);
   const [defaultBoundaries, setDefaultBoundaries] = useState([]);
@@ -86,6 +89,7 @@ const PlanInbox = () => {
   }, [planObject]);
 
   const fetchStatusCount = async () => {
+ 
     if (planObject) {
       try {
         await mutation.mutateAsync(
@@ -101,6 +105,7 @@ const PlanInbox = () => {
           {
             onSuccess: (data) => {
               setTotalStatusCount(data?.StatusCount);
+              setTotalCount(data?.TotalCount);
             },
             onError: (error) => {
               setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
@@ -149,6 +154,42 @@ const PlanInbox = () => {
     setCurrentPage(1);
     setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * currentRowsPerPage });
   };
+
+  // Custom hook to fetch assign to me count when workflow data is updated in assign to all case
+  const {
+    isLoading: isCountPlanWithCensusLoading,
+    data: planWithCensusCount,
+    error: planWithCensusCountError,
+    refetch: refetchPlanWithCensusCount,
+    isFetching: isFetchingCount,
+  } = Digit.Hooks.microplanv1.usePlanSearchWithCensus({
+    tenantId: tenantId,
+    microplanId: microplanId,
+    body: {
+      PlanSearchCriteria: {
+        tenantId: tenantId,
+        active: true,
+        jurisdiction: censusJurisdiction,
+        status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
+        assignee: user.info.uuid,
+        planConfigurationId: microplanId, 
+        limit: limitAndOffset?.limit,
+        offset: limitAndOffset?.offset,
+      },
+    },
+    config: {
+      enabled: censusJurisdiction?.length > 0 ? true : false,
+    },
+    changeQueryName:"count"
+  });
+
+  useEffect(() => {
+    if (planWithCensusCount) {
+      setAssignedToMeCount(planWithCensusCount?.TotalCount);
+    }
+  }, [planWithCensusCount]);
+
+
 
   const {
     isLoading: isPlanWithCensusLoading,
@@ -489,7 +530,8 @@ const PlanInbox = () => {
   };
 
   const getResourceColumns = () => {
-    const operationArr = planObject?.operations?.sort((a, b) => a.executionOrder - b.executionOrder).map((item) => t(item.output));
+    const operationArr = planObject?.operations?.filter(operation => operation.showOnEstimationDashboard)?.sort((a, b) => a.executionOrder - b.executionOrder).map((item) => t(item.output));
+    
     const resources = planWithCensus?.planData?.[0]?.resources || []; // Resources array
     const resourceArr = (resources || []).map((resource) => ({
       name: t(resource.resourceType), // Dynamic column name for each resourceType
@@ -498,6 +540,13 @@ const PlanInbox = () => {
       },
       sortable: true,
       width: "180px",
+      sortFunction: (rowA, rowB) => {
+        const fieldA = rowA?.[resource?.resourceType];
+        const fieldB = rowB?.[resource?.resourceType];
+        const valueA = parseFloat(fieldA || 0); 
+        const valueB = parseFloat(fieldB || 0);
+        return valueA - valueB;
+      },
     }));
 
     return (operationArr || [])
@@ -529,10 +578,17 @@ const PlanInbox = () => {
       
       return {
         name: t(i?.question),
-        sortable: false,
+        sortable: true,
         cell: (row) => {
-          return row?.[`securityDetail_${i?.question}`] || t("ES_COMMON_NA")},
+          return row?.[`securityDetail_${i?.question}`] ? t(`${row?.[`securityDetail_${i?.question}`]}`) : t("ES_COMMON_NA")},
         width: "180px",
+        sortFunction: (rowA, rowB) => {
+          const valueA = (rowA?.[`securityDetail_${i?.question}`] || t("ES_COMMON_NA")).toLowerCase();
+          const valueB = (rowB?.[`securityDetail_${i?.question}`] || t("ES_COMMON_NA")).toLowerCase();
+          if (valueA < valueB) return -1;
+          if (valueA > valueB) return 1;
+          return 0;
+        },
       };
     });
     // const securityColumns = Object.keys(sampleSecurityData).map((key) => ({
@@ -594,7 +650,6 @@ const PlanInbox = () => {
           t("ES_COMMON_NA")
         ),
       sortable: false,
-      width: "180px",
     },
     {
       name: t(`HCM_MICROPLAN_SERVING_FACILITY`),
@@ -749,7 +804,8 @@ const PlanInbox = () => {
     isWorkflowLoading ||
     isProcessLoading ||
     mutation.isLoading ||
-    isPlanWithCensusLoading
+    isPlanWithCensusLoading ||
+    isCountPlanWithCensusLoading
   ) {
     return <Loader />;
   }
@@ -781,6 +837,7 @@ const PlanInbox = () => {
           <div>{`${t("LOGGED_IN_AS")} ${userName} - ${t(userRole)}`}</div>
         </div>
       </div>
+      <GenericKpiFromDSS module="MICROPLAN" status={selectedFilter} planId={microplanId} refetchTrigger={refetchTrigger} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
       <SearchJurisdiction
         boundaries={boundaries}
         defaultHierarchy={defaultHierarchy}
@@ -798,7 +855,7 @@ const PlanInbox = () => {
         style={{
           marginBottom:
             (isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "RESOURCE_ESTIMATION_IN_PROGRESS") ||
-            (!isRootApprover && isStatusConditionMet(totalStatusCount)) ||
+            (!isRootApprover && totalCount===0) ||
             disabledAction
               ? "2.5rem"
               : "0rem",
@@ -812,7 +869,7 @@ const PlanInbox = () => {
         ></InboxFilterWrapper>
 
         <div className={"pop-inbox-table-wrapper"}>
-          {showTab && (
+          {showTab && !isFetchingCount && (
             <Tab
               activeLink={activeLink?.code}
               configItemKey="code"
@@ -853,7 +910,7 @@ const PlanInbox = () => {
                 </div>
                 <div className={`table-actions-wrapper`}>
                   {actionsMain?.filter((action) => !actionsToHide.includes(action.action)).length > 1 ? (
-                    <ButtonsGroup
+                    <ButtonGroup
                       buttonsArray={actionsMain
                         ?.filter((action) => !actionsToHide.includes(action.action))
                         ?.map((action, index) => {
@@ -903,7 +960,7 @@ const PlanInbox = () => {
                     url="/plan-service/plan/bulk/_update"
                     requestPayload={{ Plans: updateWorkflowForSelectedRows() }}
                     commentPath="workflow.comments"
-                    onSuccess={(data) => {
+                    onSuccess={async (data) => {
                       closePopUp();
                       setShowToast({ key: "success", label: t(`PLAN_INBOX_WORKFLOW_FOR_${workFlowPopUp}_UPDATE_SUCCESS`), transitionTime: 5000 });
                       setCurrentPage(1);
@@ -913,8 +970,12 @@ const PlanInbox = () => {
                           offset: 0
                         }
                       });
+                      refetchPlanWithCensusCount();
                       refetchPlanWithCensus();
                       fetchStatusCount();
+                      // wait for 5 seconds
+                      await new Promise((resolve) => setTimeout(resolve, 5000));
+                      setRefetchTrigger(prev => prev + 1);
                     }}
                     onError={(data) => {
                       closePopUp();
@@ -975,7 +1036,7 @@ labelPrefix={"PLAN_ACTIONS_"}
 />
       }
 
-      {isRootApprover && isStatusConditionMet(totalStatusCount) && (
+      {isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "RESOURCE_ESTIMATION_IN_PROGRESS" && (
         <ActionBar
           actionFields={[
             <Button
@@ -994,8 +1055,7 @@ labelPrefix={"PLAN_ACTIONS_"}
         />
       )}
 
-      {(!isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "RESOURCE_ESTIMATION_IN_PROGRESS") ||
-        (disabledAction && (
+      {((!isRootApprover && totalCount===0 ) || disabledAction) && (
           <ActionBar
             actionFields={[
               <Button
@@ -1013,7 +1073,7 @@ labelPrefix={"PLAN_ACTIONS_"}
             sortActionFields
             style={{}}
           />
-        ))}
+        )}
 
       {actionBarPopUp && (
         <ConfirmationPopUp

@@ -128,7 +128,7 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
                     },
                     {
                       Header: t("CAMPAIGN_COUNT_LABEL"),
-                      accessor: "count",
+                      accessor: "quantity",
                     },
                   ]}
                   rowsData={rules?.products}

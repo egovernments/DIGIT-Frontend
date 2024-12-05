@@ -7,6 +7,7 @@ import { EmployeeModuleCard } from "@egovernments/digit-ui-react-components";
 const ROLES = {
   CAMPAIGN_MANAGER:["CAMPAIGN_MANAGER","MICROPLAN_CAMPAIGN_INTEGRATOR"],
   BOUNDARY_MANAGER:["BOUNDARY_MANAGER"],
+  MICROPLAN_INTEGRATOR:["MICROPLAN_CAMPAIGN_INTEGRATOR"],
   CAMPAIGN_MANAGER_ONLY:["CAMPAIGN_MANAGER"],
   NATIONAL_SUPERVISOR:["NATIONAL_SUPERVISOR"]
 };
@@ -43,7 +44,7 @@ const CampaignCard = () => {
     { 
       label: t("ACTION_TEST_SETUP_CAMPAIGN_FROM_MICROPLAN"),
       link: `/${window?.contextPath}/employee/campaign/setup-from-microplan?status=${microplanStatus}`,
-      roles: ROLES.CAMPAIGN_MANAGER
+      roles: ROLES.MICROPLAN_INTEGRATOR
     },
     {
       label: t("NATIONAL_DASHBOARD"),
@@ -77,77 +78,3 @@ const CampaignCard = () => {
 };
 
 export default CampaignCard;
-
-
-
-// to be revisited
-
-// const propsForModuleCardW = {
-//   icon: "Settings",
-//   moduleName: t("ACTION_TEST_CAMPAIGN"),
-//   metrics: [],
-//   links: [
-//     {
-//       icon: 'Launch',
-//       label: 'BOUNDARY_MANAGEMENT',
-//       link: `/${window?.contextPath}/employee/campaign/boundary/home`,
-//     },
-//     {
-//       icon: 'Preview',
-//       label: t("BOUNDARY_MANAGEMENT"),
-//       link: 'https://unified-dev.digit.org/storybook/?path=/story/atoms-backlink--primary'
-//     },
-//     {
-//       icon: 'Launch',
-//       label: 'BOUNDARY_MANAGEMENT',
-//       link: 'https://unified-dev.digit.org/storybook/?path=/story/atoms-backlink--primary'
-//     }
-//   ],
-//   centreChildrens: [
-//     <div>
-//       <Button
-//         variation="teritiary"
-//         label={"NATIONAL_DASHBOARD"}
-//         icon={"Delete"}
-//         type="button"
-//         size={"medium"}
-//         onClick={() => window.open("", "_blank")}
-//         style={{ padding: "0px" }}
-//       />
-//               <Button
-//         variation="teritiary"
-//         label={""}
-//         icon={"delete"}
-//         type="button"
-//         size={buttonSize || "medium"}
-//         onClick={() => handleLinkClick({ link, label, icon })}
-//         style={{ padding: "0px" }}
-//       />
-
-//       <Button
-//         variation="teritiary"
-//         label={"sasas"}
-//         icon={"Delete"}
-//         type="button"
-//         size={"medium"}
-//         onClick={() => window.open("", "_blank")}
-//         style={{ padding: "0px" }}
-//       />
-//       </div>
-    
-//   ],
-//   endChildren:[
-        
-//           <Button
-//             variation="teritiary"
-//             label={t("BOUNDARY_MANAGEMENT")}
-//             icon={"Map"}
-//             type="button"
-//             size={"medium"}
-//             onClick={() => history?.push("  ")}
-//             style={{ padding: "0px" }}
-//           />
-       
-//       ]
-    
-// };

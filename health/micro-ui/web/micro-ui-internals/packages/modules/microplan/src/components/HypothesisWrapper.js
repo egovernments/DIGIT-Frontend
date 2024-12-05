@@ -69,7 +69,9 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     {
       enabled: microplanId ? true : false,
       cacheTime: 0,
-      //   queryKey: currentKey,
+      staleTime:0,
+      refetchOnMount: true,
+      queryKey:state?.allAssumptions ? state?.allAssumptions.length : "hypothesis_plan" 
     }
   );
 
@@ -142,23 +144,35 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
   };
   const handleAssumptionChange = (category, event, item) => {
     const newValue = event.target.value;
-
+  
+    // Validation function for range and decimal places
+    const isValidValue = (value) => {
+      const numericValue = parseFloat(value);
+      return (
+        numericValue > 0 &&
+        numericValue <= 1000 &&
+        /^[0-9]+(\.[0-9]{1,2})?$/.test(value) // Check for at most 2 decimals
+      );
+    };
+  
     setAssumptionValues((prevValues) => {
       return prevValues.map((assumption) => {
-        // If the key matches, update the value; otherwise, return the existing assumption
+        // If the key matches, validate and update the value
         if (assumption.key === item) {
           return {
             ...assumption,
             category,
-            value: newValue === "" ? null : newValue, // Set to null if input is empty
+            value: newValue === "" || isValidValue(newValue) ? newValue : assumption.value, // Set to newValue if valid, else keep existing
           };
         }
         return assumption;
       });
     });
   };
+  
 
   const handleNext = () => {
+    
     const currentCategory = assumptionCategories?.[internalKey - 1]?.category;
     const currentAssumptions = assumptionCategories[internalKey - 1]?.assumptions || [];
     const existingAssumptionKeys = assumptionValues?.map((assumption) => assumption.key);
@@ -168,6 +182,56 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
 
     //Validate: Check if any value is empty for visible assumptions
     const atleastOneMDMS = assumptionValues?.filter((j) => j.category === currentCategory)?.filter((i) => i?.source === "MDMS")?.length === 0;
+   
+
+    const hasEmptyFields = visibleAssumptions.some((item) => {
+      const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
+      return !value; // Check if any value is empty
+    });
+
+    const hasCustomEmptyFields = assumptionValues?.filter(assumption => assumption.source==="CUSTOM" && assumption.category===currentCategory)?.some(assumption => {
+      return !assumption.value
+    })
+
+    const hasNaNFields = visibleAssumptions.some((item) => {
+      const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
+      return !value || isNaN(value) || value <= 0; // Check if any value is NAN
+    });
+    const hasExceededUpperBound = assumptionValues.some((item) => {
+      // const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
+      const value = item?.value;
+      if(value>1000){
+        return true
+      }
+    });
+
+    const hasMoreDecimalPlaces = assumptionValues.some((item) => {
+      const value = item?.value
+    
+      // Check if the value has more than 2 decimal places
+      if (value && value % 1 !== 0 && value.toString().split(".")[1]?.length > 2) {
+        return true;
+      }
+      return false
+    });
+
+    if (hasEmptyFields) {
+      setShowToast({
+        key: "error",
+        label: t("ERR_MANDATORY_FIELD"),
+        transitionTime: 3000,
+      });
+      return; // Prevent moving to the next step
+    }
+    if(hasCustomEmptyFields){
+      setShowToast({
+        key: "error",
+        label: t("ERR_MANDATORY_FIELD"),
+        transitionTime: 3000,
+      });
+      return; // Prevent moving to the next step
+    }
+
     if (atleastOneMDMS) {
       setShowToast({
         key: "error",
@@ -176,22 +240,6 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
       });
       return; // Prevent moving to the next step
     }
-    const hasEmptyFields = visibleAssumptions.some((item) => {
-      const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
-      return !value; // Check if any value is empty
-    });
-
-    const hasNaNFields = visibleAssumptions.some((item) => {
-      const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
-      return !value || isNaN(value) || value <= 0; // Check if any value is NAN
-    });
-    const hasExceededUpperBound = visibleAssumptions.some((item) => {
-      const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
-      if(value>=1000){
-        return true
-      }
-    });
-
 
     // If there are empty fields, show an error and do not allow moving to the next step
     if (hasNaNFields) {
@@ -202,18 +250,20 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
       });
       return; // Prevent moving to the next step
     }
-    if (hasEmptyFields) {
+   
+    if(hasExceededUpperBound && (!hasNaNFields || !hasEmptyFields)){
       setShowToast({
         key: "error",
-        label: t("ERR_MANDATORY_FIELD"),
+        label: t("ERR_SHOULD_NOT_EXCEED_999.99"),
         transitionTime: 3000,
       });
       return; // Prevent moving to the next step
     }
-    if(hasExceededUpperBound){
+
+    if(hasMoreDecimalPlaces){
       setShowToast({
         key: "error",
-        label: t("ERR_SHOULD_NOT_EXCEED_999.99"),
+        label: t("ERR_DECIMAL_PLACES_LESS_THAN_TWO"),
         transitionTime: 3000,
       });
       return; // Prevent moving to the next step
@@ -241,6 +291,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
         onSuccess: (data) => {
           setManualLoader(false);
           if (internalKey < assumptionCategories.length) {
+            setShowToast(null);
             setInternalKey((prevKey) => prevKey + 1); // Update key in URL
           }
           if (internalKey === assumptionCategories.length) {
@@ -276,6 +327,43 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
   });
 
   const handleBack = () => {
+    //here check for current assumption values if something is invalid throw a toast
+    const currentCategory = assumptionCategories?.[internalKey - 1]?.category;
+    // console.log(assumptionValues);
+    const currentAssumptions = assumptionValues?.filter(assumption => assumption?.category === currentCategory);
+
+    //if we go back with some invalid value show a toast to correct it
+    function hasInvalidValues(currentAssumptions) {
+      return currentAssumptions
+        .filter((item) => item?.value !== "") // Filter out empty string values
+        .some((item) => {
+          const value = Number(item?.value); // Parse the value into a number
+    
+          // Check if the value is invalid
+          if (isNaN(value) || value < 0 || value > 1000) {
+            return true; // Invalid if not a number or out of range
+          }
+    
+          // Check if the value has more than 2 decimal places
+          const decimalPlaces = value.toString().split(".")[1]?.length || 0;
+          return decimalPlaces > 2;
+        });
+    }
+
+    if(hasInvalidValues(currentAssumptions)){
+      setShowToast({
+        key: "error",
+        label: t("ERR_PLS_ENTER_VALID_ASSUMPTION_VALUE"),
+        transitionTime: 3000,
+      });
+      return;
+    }
+
+
+    
+    
+
+    
     if (internalKey > 1) {
       setInternalKey((prevKey) => prevKey - 1); // Update key in URL
     } else {

@@ -36,6 +36,7 @@
   "resolutions": {
     "**/@babel/runtime": "7.20.1",
     "**/styled-components": "5.0.0",
+    "**/@babel/traverse":"7.25.9",
     "**/babel-preset-react-app": "10.0.0"
   },
   "devDependencies": {
@@ -49,8 +50,8 @@
     "*.{js,css,md}": "prettier --write"
   },
   "dependencies": {
-    "@egovernments/digit-ui-react-components": "1.8.2-beta.18",
-    "@egovernments/digit-ui-components": "0.0.2-beta.49",
+    "@egovernments/digit-ui-react-components": "1.8.10",
+    "@egovernments/digit-ui-components": "0.0.2-beta.56",
     "ajv": "8.12.0",
     "lodash": "4.17.21",
     "microbundle-crl": "0.13.11",

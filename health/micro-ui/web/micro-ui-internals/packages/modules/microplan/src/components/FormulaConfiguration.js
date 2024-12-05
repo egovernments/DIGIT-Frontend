@@ -4,6 +4,8 @@ import { Header, DeleteIconv2, LabelFieldPair, AddIcon, CardText, InfoBannerIcon
 import { Dropdown, CheckBox, PopUp, Card, Button, Divider, TooltipWrapper, TextInput } from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR } from "../utils/utilities";
 import { useFormulaContext } from "./FormulaConfigWrapper";
+import { InfoOutline } from "@egovernments/digit-ui-svg-components";
+
 
 const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initialFormulas, setShowToast, allMdmsFormulasForThisCategory }) => {
   const { t } = useTranslation();
@@ -35,6 +37,8 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
   useEffect(() => {
     setFormulas(initialFormulas);
   }, [initialFormulas]);
+
+
 
   const handleDeleteClick = (index, formula) => {
     if (formulas?.length === 1 && category !== "CAMPAIGN_VEHICLES") {
@@ -312,11 +316,14 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
               <div>
                 <Card type="secondary">
                   <LabelFieldPair className="formula-label-field">
-                    <span>
+                    <span className="assumption-label-icon-wrapper">
                       {`${t(formula.output)}`}
                       {category === "CAMPAIGN_VEHICLES" || formula?.source === "CUSTOM" ? null : (
                         <span className="icon-wrapper">
-                          <TooltipWrapper content={t(`FORMULA_MESSAGE_FOR_${formula.output}`)} children={<InfoBannerIcon fill={"#C84C0E"} />} />
+                          <TooltipWrapper
+                            content={t(`FORMULA_MESSAGE_FOR_${formula.output}`)}
+                            children={<InfoOutline fill={"#C84C0E"} width={"1.25rem"} height={"1.25rem"} />}
+                          />
                         </span>
                       )}
                     </span>
@@ -367,7 +374,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                     <Button
                       icon="Delete"
                       iconFill=""
-                      label="Delete"
+                      label={t("DELETE")}
                       size=""
                       style={{ padding: "0px" }}
                       title=""
@@ -408,7 +415,15 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
             equalWidthButtons={true}
             children={[
               <div>
-                <CardText style={{ margin: 0 }}>{showPopUP === "CUSTOM" ? t(`FORMULA_PERMANENT_DELETE_CUSTOM`) : t("FOR_PERMANENT_DELETE")}</CardText>
+                <CardText style={{ margin: 0 }}>
+                  {showPopUP === "CUSTOM" ? (
+                    t(`FORMULA_PERMANENT_DELETE_CUSTOM`)
+                  ) : (
+                    <>
+                      {t("FOR_PERMANENT_DELETE")} <b>{t(`ADD_FORMULA`)}</b> {t(`BUTTON`)}
+                    </>
+                  )}
+                </CardText>
               </div>,
             ]}
             onOverlayClick={() => {
@@ -459,7 +474,6 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                   showToolTip={true}
                   placeholder={t("SELECT_OPTION")}
                   onChange={(e) => setSelectedDeletedFormula(e.target.value)}
-                  optionCardStyles={{ position: "relative" }}
                 />
               </LabelFieldPair>,
               selectedDeletedFormula?.code === "NEW_FORMULA" && (
@@ -481,8 +495,8 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
               <Button
                 type={"button"}
                 size={"large"}
-                variation={"primary"}
-                label={t("NO")}
+                variation={"secondary"}
+                label={t("CANCEL")}
                 onClick={() => {
                   setFormulasPopUp(false);
                   setSelectedDeletedFormula(null);
@@ -491,9 +505,31 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
               <Button
                 type={"button"}
                 size={"large"}
-                variation={"secondary"}
-                label={t("YES")}
+                variation={"primary"}
+                label={t("ADD")}
                 onClick={() => {
+                  if(!selectedDeletedFormula){
+                    setShowToast({
+                      key: "error",
+                      label: t("ERR_FORMULA_SELECT_OPTION"),
+                      transitionTime: 3000,
+                      style: {
+                        zIndex: 1000000,
+                      },
+                    });
+                    return;
+                  }if(!selectedDeletedFormula?.name && selectedDeletedFormula?.code === "NEW_FORMULA"){
+                    setShowToast({
+                      key: "error",
+                      label: t("ERR_FORMULA_ENTER_FORMULA_NAME"),
+                      transitionTime: 3000,
+                      style: {
+                        zIndex: 1000000,
+                      },
+                    });
+                    return;
+
+                  }
                   if (selectedDeletedFormula?.code === "NEW_FORMULA" && !selectedDeletedFormula) {
                     setShowToast({
                       key: "error",
@@ -518,18 +554,17 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                     return;
                   }
              
-                  if (selectedDeletedFormula?.code === "NEW_FORMULA" && !(selectedDeletedFormula?.name && /^(?=.*[a-zA-Z])[a-zA-Z0-9]+(?: [a-zA-Z0-9]+)*$/.test(selectedDeletedFormula?.name))) {
-                    setShowToast({
-                      key: "error",
-                      label: t("MP_FORMULA_NAME_INVALID") ,
-                      transitionTime: 3000,
-                      style: {
-                        zIndex: 1000000
-                      }
-                    });
-                    return
-                  }
-
+                  // if (selectedDeletedFormula?.code === "NEW_FORMULA" && !(selectedDeletedFormula?.name && /^(?=.*[a-zA-Z])[a-zA-Z0-9]+(?: [a-zA-Z0-9]+)*$/.test(selectedDeletedFormula?.name))) {
+                  //   setShowToast({
+                  //     key: "error",
+                  //     label: t("MP_FORMULA_NAME_INVALID") ,
+                  //     transitionTime: 3000,
+                  //     style: {
+                  //       zIndex: 1000000
+                  //     }
+                  //   });
+                  //   return
+                  // }
 
                   if (selectedDeletedFormula?.code === "NEW_FORMULA" && selectedDeletedFormula?.name?.length > 100) {
                     setShowToast({

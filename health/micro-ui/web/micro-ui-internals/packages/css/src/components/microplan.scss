@@ -421,3 +421,106 @@ tbody tr:last-child td:last-child .digit-dropdown-employee-select-wrap .digit-dr
 .mp-heading-bold{
   font-weight: 700;
 }
+
+.microplan-deatils-view-card{
+  .digit-view-card-header{
+    @extend .typography.heading-m;
+    font-family: theme(digitv2.fontFamily.sans);
+    font-style: theme(digitv2.fontStyle.normal);
+    font-weight: theme(digitv2.fontWeight.bold);
+    line-height: theme(digitv2.lineHeight.lineheight1);
+
+    @media (max-aspect-ratio: 9/16) {
+      /* Media query for mobile */
+      font-size: theme(digitv2.fontSize.heading-m.mobile);
+    }
+
+    @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+      /* Media query for tablets */
+      font-size: theme(digitv2.fontSize.heading-m.tablet);
+    }
+
+    @media (min-aspect-ratio: 3/4) {
+      /* Media query for desktop */
+      font-size: theme(digitv2.fontSize.heading-m.desktop);
+    }
+  }
+}
+
+.kpi-card{
+  width: fit-content;
+}
+
+.assumption-label-icon-wrapper{
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  .icon-wrapper{
+    margin-left: 0rem;
+    top: 0rem;
+    display: flex;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+.sub-boundary-summary-card{
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.action-button-open-microplan{
+  .header-dropdown-menu{
+    min-width: 20rem !important;
+    width: 20rem !important;
+  }
+}
+
+.action-bar-wrap{
+  height: 4.5rem;
+  align-items: center;
+}
+
+.tooltip-warpper-village-hierarchy{
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.village-tooltip-wrap{
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.accessibility-pop-up{
+  .digit-popup-children-wrap{
+    overflow: visible !important;
+  }
+}
+
+.microplan-employee-module-card{
+  min-height: 16.25rem;
+}
+
+.action-bar-wrap{
+  &.microplan-actionbar{
+    z-index: 19 !important;
+  }
+}
+
+.digit-popup-wrapper {
+  &.wrapper-popup-boundary-chips {
+    overflow: auto !important;
+
+    .digit-popup-header {
+      overflow: visible !important;
+    }
+
+    .digit-popup-children-wrap {
+      .digit-tag-container {
+        overflow-y: unset !important;
+      }
+    }
+  }
+}

@@ -97,7 +97,7 @@
 
         rule.products.forEach((product) => {
           // Check if count and value are empty
-          if (product.count === null || product.value === null) {
+          if (product.quantity === null || product.value === null) {
             isValid = false;
           }
         });

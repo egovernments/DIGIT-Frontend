@@ -816,7 +816,7 @@ const MultiSelectDropdown = ({
       <div className={`digit-multiselectdropodwn-custom-checkbox-selectAll`}>
         <SVG.Check width="20px" height="20px" fill={primaryIconColor} />
       </div>
-      <p className={`digit-label ${addSelectAllCheck ? "selectAll" : ""}`}>{selectAllLabel ? selectAllLabel : "Select All"}</p>
+      <p className={`digit-label ${addSelectAllCheck ? "selectAll" : ""}`}>{selectAllLabel ? selectAllLabel : t("SELECT_ALL")}</p>
     </div>
   );
   const Menu = () => {
@@ -846,7 +846,7 @@ const MultiSelectDropdown = ({
                 <div className="digit-category-name">{t(option[optionsKey])}</div>
                 {addCategorySelectAllCheck && (
                   <div className="digit-category-selectAll" onClick={() => handleCategorySelection(option)}>
-                    <div className="category-selectAll-label">{categorySelectAllLabel ? categorySelectAllLabel : "Select All"}</div>
+                    <div className="category-selectAll-label">{categorySelectAllLabel ? categorySelectAllLabel : t("SELECT_ALL")}</div>
                     <input type="checkbox" checked={selectAllChecked || categorySelected[option.code]} />
                     <div className={`digit-multiselectdropodwn-custom-checkbox-selectAll`}>
                       <SVG.Check width="20px" height="20px" fill={primaryIconColor} />
@@ -973,7 +973,7 @@ const MultiSelectDropdown = ({
           )}
           {alreadyQueuedSelectedState.length > 0 && frozenData.length == 0 && (
             <Button
-              label={t(config?.clearLabel ? config?.clearLabel : "Clear All")}
+              label={t(config?.clearLabel ? config?.clearLabel : t("CLEAR_ALL"))}
               onClick={handleClearAll}
               variation=""
               style={{

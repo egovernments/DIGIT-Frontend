@@ -105,6 +105,7 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess, disableEditing=false }
   return (
     <>
       <PopUp
+      className='accessibility-pop-up'
         onClose={onClose}
         heading={t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_LABEL`)}
         children={[
