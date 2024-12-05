@@ -17,31 +17,24 @@ import BoundaryHierarchyTypeAdd from "./BoundaryHierarchyTypeAdd";
 import UploadBoundary from "./UploadBoundary";
 import UploadBoundaryPure from "./BoundaryUploadPure";
 
-const WorkbenchBreadCrumb = ({ location, defaultPath, initialContextPath}) => {
+const WorkbenchBreadCrumb = ({ location, defaultPath}) => {
   const { t } = useTranslation();
   const search = useLocation().search;
   const fromScreen = new URLSearchParams(search).get("from") || null;
   const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
   const { masterName, moduleName, uniqueIdentifier, from, screen, action } = Digit.Hooks.useQueryParams();
 
-  const getHomePath = () => {
-    if (window.location.href.includes("mukta")) {
-      return '/works-ui/employee';
-    }
-    return `/${window.contextPath}/employee`;
-  };
 
   const crumbs = [
     {
-      path: getHomePath(),
+      path:`/${window.contextPath}/employee`,
       content: t("WORKBENCH_HOME"),
       show: true,
-      externalPath: true
     },
     {
       path: `/${window.contextPath}/employee/workbench/manage-master-data`,
       content: t(`WBH_MANAGE_MASTER_DATA`),
-      show: pathVar.includes("mdms-") && !(window.location.href.includes("mukta")) ? true : false,
+      show: from ? false : pathVar.includes("mdms-") ? true : false,
       // query:`moduleName=${moduleName}&masterName=${masterName}`
     },
     {
@@ -80,7 +73,6 @@ const WorkbenchBreadCrumb = ({ location, defaultPath, initialContextPath}) => {
 
 const App = ({ path }) => {
   const location = useLocation();
-  const initialContextPath = useRef(window.contextPath);
   const MDMSCreateSession = Digit.Hooks.useSessionStorage("MDMS_add", {});
   const [sessionFormData, setSessionFormData, clearSessionFormData] = MDMSCreateSession;
 
@@ -122,7 +114,7 @@ const App = ({ path }) => {
   return (
     <React.Fragment>
       <div className="wbh-header-container">
-        <WorkbenchBreadCrumb location={location} defaultPath={path} initialContextPath={initialContextPath.current}/>
+        <WorkbenchBreadCrumb location={location} defaultPath={path}/>
         {!isBoundaryPath && <WorkbenchHeader />}
       </div>
 

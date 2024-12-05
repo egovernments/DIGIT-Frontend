@@ -95,12 +95,8 @@ const CustomSelectWidget = (props) => {
   const [isSeeAll, setIsSeeAll] = useState(false);
 
   const fetchDetailsForSelectedOption = async (value) => {
-    const response = await fetch(`/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      params:{},
+    const response = await Digit.CustomService.getResponse({
+      url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
       body: JSON.stringify({
         MdmsCriteria: {
           tenantId,
@@ -108,6 +104,7 @@ const CustomSelectWidget = (props) => {
           filters: { "id": value },
         },
       }),
+      params: {},
     });
     const result = await response.json();
     setSelectedDetails([result?.mdms?.[0]]);
@@ -224,8 +221,7 @@ const CustomSelectWidget = (props) => {
         isSearchable={true}
         isMulti={multiple}
         styles={customStyles}
-        // components={isSeeAll ? { MenuList: SelectMenuButton, Option: OptionWithInfo } : { Option: OptionWithInfo }}
-        components={schema?.schemaCode ? { MenuList: SelectMenuButton, Option: OptionWithInfo } :  { Option: OptionWithInfo }}
+        components={isSeeAll ? { MenuList: SelectMenuButton, Option: OptionWithInfo } : { Option: OptionWithInfo }}
       />
 
       <div className="info-icon-container">
