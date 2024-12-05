@@ -57,7 +57,7 @@ export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading: isBoundaryLocalisationLoading, data: boundaryStore } = Digit.Services.useStore({
     stateCode,
-    moduleCode:[`boundary-${BOUNDARY_HIERARCHY_TYPE}`],
+    moduleCode:[`boundary-${BOUNDARY_HIERARCHY_TYPE}`,'campaignmanager','admin-schemas'],
     language,
     modulePrefix : "hcm",
   });

@@ -515,7 +515,7 @@ const CreateChecklist = () => {
       {!submitting && !loading_new &&
         <div>
          <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} style={{border: '0.5px solid #0B4B66'}} />
-          <div style={{ display: "flex", justifyContent: "space-between", height:"5.8rem"}}>
+          <div style={{ display: "flex", justifyContent: "space-between", height:"5.8rem", marginTop: "-1.2rem"}}>
             <div>
               <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>
                 {t("CREATE_NEW_CHECKLIST")}
