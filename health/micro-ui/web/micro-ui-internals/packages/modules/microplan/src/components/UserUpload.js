@@ -312,7 +312,7 @@ const UserUpload = React.memo(() => {
         },
         onError: (error, result) => {
           const errorCode = error?.response?.data?.Errors?.[0]?.code;
-          if (errorCode == "NativeIoException") {
+          if (errorCode == "NativeIoException" || errorCode == "ZuulRuntimeException") {
             setDownloadError(true);
             setDownloadTemplateLoader(false);
             setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
