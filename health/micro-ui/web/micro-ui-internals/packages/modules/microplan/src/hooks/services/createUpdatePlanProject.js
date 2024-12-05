@@ -814,18 +814,11 @@ const createUpdatePlanProject = async (req) => {
             try {
               // Make the API call
               const { key} = Digit.Hooks.useQueryParams();
-              const fetchedPlanConfig = await searchPlanConfig({
-                PlanConfigurationSearchCriteria: {
-                  tenantId,
-                  id: microplanId,
-                },
-              });
-
               const response = await Digit.CustomService.getResponse({
                 url: "/plan-service/config/_update",
                 body: {
-                  PlanConfiguration: {...fetchedPlanConfig,
-                    additionalDetails:{...fetchedPlanConfig.additionalDetails,key:key
+                  PlanConfiguration: {...planObject,
+                    additionalDetails:{...planObject.additionalDetails,key:key
                     }},
                 },
               });
