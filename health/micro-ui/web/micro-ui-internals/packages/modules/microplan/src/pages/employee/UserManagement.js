@@ -14,7 +14,7 @@ const UserManagement = () => {
     const moduleName = Digit?.Utils?.getConfigModuleName() || "commonSanitationUiConfig"
     const tenant = Digit.ULBService.getStateId();
 
-    const config = UserManagementConfig?.UserManagementConfig?.[0];
+    const config = UserManagementConfig()?.UserManagementConfig?.[0];
     const tqmInboxSession = Digit.Hooks.useSessionStorage("TQM_INBOX_SESSION", {});
 
     const history = useHistory();

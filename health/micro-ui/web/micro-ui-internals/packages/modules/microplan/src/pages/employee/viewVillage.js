@@ -28,6 +28,7 @@ const VillageView = () => {
   const [showComment, setShowComment] = useState(false);
   const [updatedCensus, setUpdatedCensus] = useState(null);
   const [disabledAction, setDisabledAction] = useState(false);
+  const hrms_context_path = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || 'health-hrms';
 
   const findHierarchyPath = (boundaryCode, data, maxHierarchyLevel) => {
     const hierarchy = [];
@@ -106,7 +107,7 @@ const VillageView = () => {
   const { isLoading, data, isFetching, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
 
   const reqCri = {
-    url: `/health-hrms/employees/_search`,
+    url: `/${hrms_context_path}/employees/_search`,
     params: {
       tenantId: tenantId,
       userServiceUuids: data?.assignee,
