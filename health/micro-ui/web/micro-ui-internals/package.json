@@ -36,6 +36,7 @@
   "resolutions": {
     "**/@babel/runtime": "7.20.1",
     "**/styled-components": "5.0.0",
+    "**/@babel/traverse": "7.25.9",
     "**/babel-preset-react-app": "10.0.0"
   },
   "devDependencies": {

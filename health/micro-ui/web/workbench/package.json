@@ -16,9 +16,9 @@
     "@egovernments/digit-ui-module-workbench": "1.0.11",
     "@egovernments/digit-ui-module-core": "1.8.11",
     "@egovernments/digit-ui-module-utilities": "1.0.10",
-    "@egovernments/digit-ui-components":"0.0.2-beta.56",
+    "@egovernments/digit-ui-components": "0.0.2-beta.56",
     "@egovernments/digit-ui-react-components": "1.8.10",
-    "@egovernments/digit-ui-module-hcmworkbench":"0.0.50",
+    "@egovernments/digit-ui-module-hcmworkbench": "0.0.50",
     "@egovernments/digit-ui-module-campaign-manager": "0.2.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -52,16 +52,16 @@
     "babel-loader": "8.1.0",
     "webpack-cli": "4.10.0",
     "clean-webpack-plugin": "4.0.0"
-
   },
-  "resolutions":  {
+  "resolutions": {
     "**/babel-loader": "8.2.2",
     "**/@babel/core": "7.14.0",
+    "**/@babel/traverse": "7.25.9",
     "**/@babel/preset-env": "7.14.0",
     "**/styled-components": "5.0.0",
     "**/@babel/plugin-transform-modules-commonjs": "7.14.0",
-    "**/polished":"4.2.2",
-    "fast-uri":"2.1.0"
+    "**/polished": "4.2.2",
+    "fast-uri": "2.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
