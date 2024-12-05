@@ -16,14 +16,13 @@ import { InfoCard, Modal, Toast, FieldV1,LabelFieldPair} from "@egovernments/dig
 import { Card as CardNew, ViewCard } from "@egovernments/digit-ui-components";
 
 const MicroplanDetails = ({ onSelect, props: customProps, ...props }) => {
-  console.log("props",customProps);
   const { t } = useTranslation();
   const { state, dispatch } = useMyContext();
+  const microplanNameFromSession = customProps?.sessionData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName
   const [microplan, setMicroplan] = useState(
-    customProps?.sessionData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName
-      ? customProps?.sessionData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName
-      : Digit.Utils.microplanv1.generateCampaignString(customProps.sessionData, t)
+    microplanNameFromSession || Digit.Utils.microplanv1.generateCampaignString(customProps.sessionData, t)
   );
+  
   const [executionCount, setExecutionCount] = useState(0);
   const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
   //const [isFreezed, setIsFreezed] = useState(campaignId && microplanId ? true : false);
@@ -65,6 +64,12 @@ const MicroplanDetails = ({ onSelect, props: customProps, ...props }) => {
       setExecutionCount((prevCount) => prevCount + 1);
     }
   });
+
+  useEffect(() => {
+    setMicroplan(
+      microplanNameFromSession ||  Digit.Utils.microplanv1.generateCampaignString(customProps.sessionData, t)
+    )
+  },[microplanNameFromSession]);
 
   return (
     <>
