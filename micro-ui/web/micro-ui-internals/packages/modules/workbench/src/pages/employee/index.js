@@ -1,4 +1,4 @@
-import React, { useEffect ,useRef} from "react";
+import React, { useEffect } from "react";
 import { Switch, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
