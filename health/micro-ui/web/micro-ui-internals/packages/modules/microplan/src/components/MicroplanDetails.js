@@ -16,6 +16,7 @@ import { InfoCard, Modal, Toast, FieldV1,LabelFieldPair} from "@egovernments/dig
 import { Card as CardNew, ViewCard } from "@egovernments/digit-ui-components";
 
 const MicroplanDetails = ({ onSelect, props: customProps, ...props }) => {
+  console.log("props",customProps);
   const { t } = useTranslation();
   const { state, dispatch } = useMyContext();
   const [microplan, setMicroplan] = useState(

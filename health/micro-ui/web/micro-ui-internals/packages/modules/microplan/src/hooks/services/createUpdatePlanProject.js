@@ -181,6 +181,7 @@ const UpdateResource = async (req, currentPlanObject, currentCampaignObject) => 
   //creating a microplan and campaign instance here
   const { totalFormData, state, setShowToast, setCurrentKey, setCurrentStep, config, campaignObject, planObject } = req;
   try {
+    const {key}=Digit.Hooks.useQueryParams();
 
     // Update the campaign object by keeping existing properties and only changing the name
     const updatedCampaignObject = {
@@ -199,7 +200,9 @@ const UpdateResource = async (req, currentPlanObject, currentCampaignObject) => 
     const updatedPlanObject = {
       ...currentPlanObject,
       name: totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName,
+      additionalDetails:{...currentPlanObject.additionalDetails,key:key}
     };
+
 
     const planRes = await Digit.CustomService.getResponse({
       url: "/plan-service/config/_update",
