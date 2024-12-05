@@ -4,6 +4,7 @@ import DataTable from "react-data-table-component";
 import { useTranslation } from "react-i18next";
 import { tableCustomStyle } from "./tableCustomStyle";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
+import MultiSelectDropdown from "./MultiSelectDropdown";
 const initialState = {
   data: [],
   currentPage: 1,
@@ -50,7 +51,7 @@ const reducer = (state, action) => {
               if (item?.[numberLoc] === action?.payload?.row?.[numberLoc]) {
                 return {
                   ...item,
-                  [BoundaryLoc]: action?.payload?.selectedBoundary?.code,
+                  [BoundaryLoc]: action?.payload?.selectedBoundary?.map((i) => i?.code)?.join(","),
                 };
               }
               return item;
@@ -60,7 +61,7 @@ const reducer = (state, action) => {
               if (item?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")] === action?.payload?.row?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) {
                 return {
                   ...item,
-                  [BoundaryLoc]: action?.payload?.selectedBoundary?.code,
+                  [BoundaryLoc]: action?.payload?.selectedBoundary?.map((i) => i?.code)?.join(","),
                 };
               }
               return item;
@@ -556,9 +557,53 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   t={t}
                 />
               </LabelFieldPair>
-              <LabelFieldPair key={1}>
+              <LabelFieldPair className={"multiselect-label-field"} key={1}>
                 <CardLabel style={{ marginBottom: "0.4rem" }}>{t("CHOOSE_BOUNDARY_LEVEL")}</CardLabel>
-                <Dropdown
+                <MultiSelectDropdown
+                  variant="nestedmultiselect"
+                  props={{ className: "data-mapping-dropdown" }}
+                  t={t}
+                  options={
+                    Object.values(
+                      (
+                        sessionData?.["HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"]?.boundaryType?.selectedData?.filter(
+                          (i) => i.type === selectedLevel?.boundaryType
+                        ) || []
+                      ).reduce((acc, item) => {
+                        const { parent, code, type } = item;
+
+                        // Initialize the parent group if it doesn't exist
+                        if (!acc[parent]) {
+                          acc[parent] = {
+                            code: parent,
+                            options: [],
+                          };
+                        }
+
+                        // Add each item as a child of the corresponding parent
+                        acc[parent].options.push({
+                          code,
+                          type,
+                          parent,
+                        });
+
+                        return acc;
+                      }, {})
+                    ) || []
+                  }
+                  optionsKey={"code"}
+                  selected={selectedBoundary ? selectedBoundary : []}
+                  onClose={(value) => {
+                    const boundariesInEvent = value?.map((event) => event?.[1]);
+                    setSelectedBoundary(boundariesInEvent);
+                  }}
+                  onSelect={(value) => {
+                    // setSelectedBoundary(value);
+                  }}
+                  addCategorySelectAllCheck={true}
+                  addSelectAllCheck={true}
+                />
+                {/* <Dropdown
                   className="mappingPopUp"
                   selected={selectedBoundary}
                   disabled={false}
@@ -573,7 +618,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   }}
                   optionKey="code"
                   t={t}
-                />
+                /> */}
               </LabelFieldPair>
             </div>,
           ]}
