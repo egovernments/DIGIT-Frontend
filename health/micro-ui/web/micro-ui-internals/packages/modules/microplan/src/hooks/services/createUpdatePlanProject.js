@@ -831,7 +831,6 @@ const createUpdatePlanProject = async (req) => {
               });
         
               // Process the response if necessary
-              console.log("API Response:", response);
               return response; // Return the response for further usage if needed
             } catch (error) {
               console.error("Error in searchPlanConfig:", error);
@@ -850,7 +849,6 @@ const createUpdatePlanProject = async (req) => {
           // Execute the API call
           try {
             const apiResponse = await searchAndUpdatePlanConfig(reqBody); // Wait for the API call to complete
-            console.log("API call completed successfully:", apiResponse);
         
             // Proceed with the rest of the logic
             setCurrentKey((prev) => prev + 1);
