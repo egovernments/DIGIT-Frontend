@@ -177,12 +177,10 @@ const CreateResource = async (req) => {
 };
 
 /// we will update the name of microplan and and campaign
-const UpdateResource = async (req, currentPlanObject, currentCampaignObject) => {
+const UpdateResource = async (req, currentPlanObject, currentCampaignObject,key=2) => {
   //creating a microplan and campaign instance here
   const { totalFormData, state, setShowToast, setCurrentKey, setCurrentStep, config, campaignObject, planObject } = req;
   try {
-    const {key}=Digit.Hooks.useQueryParams();
-
     // Update the campaign object by keeping existing properties and only changing the name
     const updatedCampaignObject = {
       ...currentCampaignObject,
@@ -262,8 +260,8 @@ const updateProject = async (req) => {
   return planRes;
 };
 
-const updatePlan = async (req) => {
-  const { key} = Digit.Hooks.useQueryParams();
+const updatePlan = async (req,key=2) => {
+  // const { key} = Digit.Hooks.useQueryParams();
   req.additionalDetails.key=key;
   const planRes = await Digit.CustomService.getResponse({
     url: "/plan-service/config/_update",
@@ -279,7 +277,7 @@ const createUpdatePlanProject = async (req) => {
     //later this object must have an invalidation config which can be used to invalidate data such as files uploaded,assumptions,formulas etc...
 
     const { totalFormData, state, setShowToast, setCurrentKey, setCurrentStep, config, invalidateConfig } = req;
-    const { microplanId, campaignId} = Digit.Hooks.useQueryParams();
+    const { microplanId, campaignId,key} = Digit.Hooks.useQueryParams();
     const tenantId = Digit.ULBService.getCurrentTenantId();
     //now basically we need to decide from which screen this hook was triggered and take action accordingly
     let planObject = {};
@@ -329,7 +327,7 @@ const createUpdatePlanProject = async (req) => {
             return;
           }
           // we will udpate the current planobject and campaign object
-          const isResourceCreated = await UpdateResource(req, planObject, campaignObject);
+          const isResourceCreated = await UpdateResource(req, planObject, campaignObject,key);
           if (!isResourceCreated) {
             setShowToast({ key: "error", label: "ERROR_CREATING_MICROPLAN" });
             return;
@@ -416,7 +414,7 @@ const createUpdatePlanProject = async (req) => {
         };
         
         // update plan object
-        const planUpdateForBoundaryInvalidation = await updatePlan(updatedPlanObjectForBoundaryInvalidate);
+        const planUpdateForBoundaryInvalidation = await updatePlan(updatedPlanObjectForBoundaryInvalidate,key);
         if (planUpdateForBoundaryInvalidation) {
           // doing this after invalidating the session
           // setCurrentKey((prev) => prev + 1);
@@ -485,7 +483,7 @@ const createUpdatePlanProject = async (req) => {
                 : totalFormData.ASSUMPTIONS_FORM.assumptionsForm.selectedRegistrationDistributionMode?.code,
           },
         };
-        const planResAssumptionsForm = await updatePlan(updatedPlanObjAssumptionsForm);
+        const planResAssumptionsForm = await updatePlan(updatedPlanObjAssumptionsForm,key);
         if (planResAssumptionsForm?.PlanConfiguration?.[0]?.id) {
           // setCurrentKey((prev) => prev + 1);
           // setCurrentStep((prev) => prev + 1);
@@ -521,7 +519,7 @@ const createUpdatePlanProject = async (req) => {
           assumptions: [...prevAssumptions, ...assumptionsToUpdate],
         };
 
-        const planResHypothesis = await updatePlan(upatedPlanObjHypothesis);
+        const planResHypothesis = await updatePlan(upatedPlanObjHypothesis,key);
         if (planResHypothesis?.PlanConfiguration?.[0]?.id) {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
@@ -562,7 +560,7 @@ const createUpdatePlanProject = async (req) => {
           assumptions: [...prevAssumptionsForSubHypothesis, ...assumptionsToUpdateFromUI],
         };
 
-        await updatePlan(upatedPlanObjSubHypothesis);
+        await updatePlan(upatedPlanObjSubHypothesis,key);
         return;
 
       case "FORMULA_CONFIGURATION":
@@ -608,7 +606,7 @@ const createUpdatePlanProject = async (req) => {
           operations: [...prevFormulas, ...formulasToUpdateWithUpdatedSource],
         };
 
-        const planResFormula = await updatePlan(updatedPlanObjFormula);
+        const planResFormula = await updatePlan(updatedPlanObjFormula,key);
         if (planResFormula?.PlanConfiguration?.[0]?.id) {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
@@ -659,7 +657,7 @@ const createUpdatePlanProject = async (req) => {
           operations: [...prevFormulaValues, ...formulasToUpdateFromUIForSubFormula],
         };
 
-        await updatePlan(upatedPlanObjSubFormula);
+        await updatePlan(upatedPlanObjSubFormula,key);
         return;
 
         
@@ -691,7 +689,7 @@ const createUpdatePlanProject = async (req) => {
           files,
         };
 
-        const planResBoundary = await updatePlan(updatedPlanObjForBoundary);
+        const planResBoundary = await updatePlan(updatedPlanObjForBoundary,key);
         if (planResBoundary?.PlanConfiguration?.[0]?.id) {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
@@ -769,7 +767,7 @@ const createUpdatePlanProject = async (req) => {
             setupCompleted: true, //we can put this in url when we come from microplan search screen to disable routing to other screens -> Only summary screen should show, or only allowed screens should show
           },
         };
-        const planResForCompleteSetup = await updatePlan(updatedReqForCompleteSetup);
+        const planResForCompleteSetup = await updatePlan(updatedReqForCompleteSetup,key);
         // const updatedReqForCompleteSetupNextAction = {
         //   ...fetchedPlanForSummary,
         //   workflow: {
@@ -813,15 +811,7 @@ const createUpdatePlanProject = async (req) => {
           const searchAndUpdatePlanConfig = async (body) => {
             try {
               // Make the API call
-              const { key} = Digit.Hooks.useQueryParams();
-              const response = await Digit.CustomService.getResponse({
-                url: "/plan-service/config/_update",
-                body: {
-                  PlanConfiguration: {...planObject,
-                    additionalDetails:{...planObject.additionalDetails,key:key
-                    }},
-                },
-              });
+              updatePlan(planObject,key);
         
               // Process the response if necessary
               return response; // Return the response for further usage if needed
