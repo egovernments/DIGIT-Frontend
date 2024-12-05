@@ -97,7 +97,7 @@ function reverseDeliveryRemap(data, t) {
   const mapProductVariants = (productVariants) => {
     return productVariants.map((variant, key) => ({
       key: key + 1,
-      count: variant.quantity,
+      quantity: variant.quantity,
       value: variant.productVariantId,
       name: variant.name,
     }));

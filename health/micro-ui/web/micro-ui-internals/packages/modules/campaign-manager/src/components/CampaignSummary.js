@@ -216,7 +216,7 @@ const CampaignSummary = (props) => {
     const mapProductVariants = (productVariants) => {
       return productVariants.map((variant, key) => ({
         key: key + 1,
-        count: 1,
+        quantity: variant.quantity || 1,
         value: variant.productVariantId,
         name: variant.name,
       }));

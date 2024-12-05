@@ -883,7 +883,9 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   };
 
   useEffect(() => {
-    findHighestStepCount({ totalFormData, campaignConfig, isDraft, setActive });
+    const isMicroplanScreen = source === "microplan";
+    const urlKey=currentKey;
+    findHighestStepCount({ totalFormData, campaignConfig, isDraft, setActive, isMicroplanScreen, urlKey });
   }, [totalFormData, campaignConfig]);
 
   const onSecondayActionClick = () => {
@@ -956,7 +958,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         );
         break;
       case "HCM_UPDATE_CAMPAIGN":
-        history.push(`/${window.contextPath}/employee/campaign/update-campaign?key=1&parentId=${draftData?.id}`, {
+        history.push(`/${window.contextPath}/employee/campaign/update-campaign?key=1&parentId=${draftData?.id}&campaignName=${draftData?.campaignName}`, {
           name: draftData?.campaignName,
           projectId: draftData?.projectId,
           data: draftData,
