@@ -185,24 +185,6 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
     subElements: [epochToDateTime(process.lastModifiedTime)],
   }));
 
-  // const inprogressProcesses = progessTrack?.processTrack
-  //   .filter((process) => process.status === "inprogress" && process.showInUi === true)
-  //   .map((process) => ({ type: process.type, lastModifiedTime: process.lastModifiedTime }));
-
-  // const subElements =
-  //   inprogressProcesses?.length > 0
-  //     ? inprogressProcesses.map((process) => `${t(formatLabel(process?.type))} , ${epochToDateTime(process.lastModifiedTime)}`)
-  //     : [];
-
-  // const upcomingProcesses = progessTrack?.processTrack
-  //   .filter((process) => process.status === "toBeCompleted" && process.showInUi === true)
-  //   .map((process) => ({ type: process.type, lastModifiedTime: process.lastModifiedTime }));
-
-  // const subElements2 =
-  //   upcomingProcesses?.length > 0
-  //     ? upcomingProcesses.map((process) => `${t(formatLabel(process?.type))} , ${epochToDateTime(process.lastModifiedTime)}`)
-  //     : [];
-
   const inprogressProcesses = progessTrack?.processTrack
     .filter((process) => process.status === "inprogress" && process.showInUi === true)
     .map((process) => ({ type: process.type, lastModifiedTime: process.lastModifiedTime }));
@@ -220,103 +202,6 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
     label: t(formatLabel(process?.type)),
     subElements: [epochToDateTime(process.lastModifiedTime)],
   }));
-
-  // useEffect(()=>{
-  //   const lastCompletedProcess = progessTrack?.processTrack
-  //   .filter((process) => process.status === "completed")
-  //   .reduce((latestProcess, currentProcess) => {
-  //     if (!latestProcess || currentProcess.lastModifiedTime > latestProcess.lastModifiedTime) {
-  //       return currentProcess;
-  //     }
-  //     return latestProcess;
-  //   }, null);
-  //   setLastCompletedProgress(lastCompletedProcess);
-
-  //   const completedProcesses = progessTrack?.processTrack
-  //   .filter(process => process.status === 'completed')
-  //   .sort((a, b) => b.lastModifiedTime - a.lastModifiedTime)
-  //   .map(process => ({ type: process.type, lastModifiedTime: process.lastModifiedTime }));
-  //   setCompletedProgress(completedProcesses);
-
-  //   const completedTimelines = completedProcesses?.map(process => ({
-  //     label:  t(formatLabel(process.type)),
-  //     subElements: [epochToDateTime(process.lastModifiedTime)],
-  //   }));
-  //   setCompletedTimeline(completedTimelines);
-
-  //   const inprogressProcesses = progessTrack?.processTrack
-  //   .filter(process => process.status === 'inprogress')
-  //   .map(process => ({ type: process.type, lastModifiedTime: process.lastModifiedTime }));
-
-  //   setinprogressProcesses(inprogressProcesses);
-
-  //   const upcomingProcesses = progessTrack?.processTrack
-  //   .filter(process => process.status === "toBeCompleted")
-  //   .map(process => ({ type: process.type, lastModifiedTime: process.lastModifiedTime }));
-
-  //   setupcomingProcesses(upcomingProcesses);
-
-  // }, [progessTrack])
-
-  // return (
-  //   <React.Fragment>
-  //     <div className="timeline-user">
-  //       {upcomingTimelines?.length > 0 || inProgressTimelines?.length > 0 ? (
-  //         <TimelineMolecule>
-  //           {/* <Timeline label={t("HCM_UPCOMING")} variant="upcoming" subElements={subElements2} className={"upcoming-timeline"} showConnector={true} /> */}
-
-  //           {/* <Timeline
-  //             label={t("HCM_CURRENT")}
-  //             subElements={subElements}
-  //             variant="inprogress"
-  //             showConnector={true}
-  //           /> */}
-  //           {/* {subElements.length > 0 && <Timeline label={t("HCM_CURRENT")} subElements={subElements} variant="inprogress" showConnector={true} />} */}
-
-  //           {upcomingTimelines?.map((timeline, index) => (
-  //             <Timeline
-  //               key={index}
-  //               label={timeline?.label}
-  //               subElements={timeline?.subElements}
-  //               variant="upcoming"
-  //               showConnector={true}
-  //               className={"upcoming-timeline"}
-  //             />
-  //           ))}
-
-  //           {inProgressTimelines?.map((timeline, index) => (
-  //             <Timeline key={index} label={timeline?.label} subElements={timeline?.subElements} variant="inprogress" showConnector={true} />
-  //           ))}
-
-  //           {completedTimelines?.map((timeline, index) => (
-  //             <Timeline key={index} label={timeline?.label} subElements={timeline?.subElements} variant="completed" showConnector={true} />
-  //           ))}
-  //         </TimelineMolecule>
-  //       ) : (
-  //         <TimelineMolecule
-  //           initialVisibleCount={1}
-  //           hideFutureLabel={true}
-  //           viewLessLabelForPast={t("HCM_SHOW_LESS")}
-  //           viewMoreLabelForPast={t("HCM_SHOW_MORE")}
-  //         >
-  //           {completedTimelines?.map((timeline, index) => (
-  //             <Timeline key={index} label={timeline?.label} subElements={timeline?.subElements} variant="completed" showConnector={true} />
-  //           ))}
-  //         </TimelineMolecule>
-  //       )}
-  //       {userCredential && lastCompletedProcess?.type === "campaign-creation" && (
-  //         <Button
-  //           label={t("CAMPAIGN_DOWNLOAD_USER_CRED")}
-  //           variation="primary"
-  //           icon={"DownloadIcon"}
-  //           type="button"
-  //           className="campaign-download-template-btn hover"
-  //           onClick={downloadUserCred}
-  //         />
-  //       )}
-  //     </div>
-  //   </React.Fragment>
-  // );
   
   return (
     <React.Fragment>

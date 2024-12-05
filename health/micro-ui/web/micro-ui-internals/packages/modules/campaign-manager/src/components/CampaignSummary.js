@@ -323,40 +323,6 @@ const CampaignSummary = (props) => {
     return transformedCycles;
   }
 
-  // useEffect(() => {
-  //   if (props?.props?.summaryErrors) {
-  //     if (props?.props?.summaryErrors?.deliveryErrors) {
-  //       const temp = props?.props?.summaryErrors?.deliveryErrors?.map((i) => {
-  //         return {
-  //           ...i,
-  //           onClick: i?.dateError ? () => handleRedirect(5) : () => handleRedirect(6, i?.cycle),
-  //         };
-  //       });
-  //       setSummaryErrors({ ...props?.props?.summaryErrors, deliveryErrors: temp });
-  //     } else {
-  //       setSummaryErrors(props?.props?.summaryErrors);
-  //     }
-  //   }
-  //   // if (props?.props?.summaryErrors?.deliveryErrors) {
-  //   //   const temp = props?.props?.summaryErrors?.deliveryErrors?.map((i) => {
-  //   //     return {
-  //   //       ...i,
-  //   //       onClick: () => handleRedirect(6, i?.cycle),
-  //   //     };
-  //   //   });
-  //   //   setDeliveryErrors(temp);
-  //   // }
-  //   // if (props?.props?.summaryErrors?.targetErrors) {
-  //   //   setTargetErrors(props?.props?.summaryErrors?.targetErrors);
-  //   // }
-  //   // if (props?.props?.summaryErrors?.facilityErrors) {
-  //   //   setFacilityErrors(props?.props?.summaryErrors?.facilityErrors);
-  //   // }
-  //   // if (props?.props?.summaryErrors?.userErrors) {
-  //   //   setUserErrors(props?.props?.summaryErrors?.userErrors);
-  //   // }
-  // }, [props?.props?.summaryErrors]);
-
   useEffect(() => {
     const fetchData = async () => {
       let temp = await fetchcd(tenantId, projectId);
@@ -401,24 +367,6 @@ const CampaignSummary = (props) => {
         const hierarchyType = data?.[0]?.hierarchyType;
         return {
           cards: [
-            // {
-            //   navigationKey: "card1",
-            //   sections: [
-            //     ...(isPreview === "true"
-            //       ? [
-            //           {
-            //             navigationKey: "card1",
-            //             type: "COMPONENT",
-            //             component: "TimelineComponent",
-            //             props: {
-            //               campaignId: data?.[0]?.id,
-            //               resourceId: resourceIdArr,
-            //             },
-            //           },
-            //         ]
-            //       : []),
-            //   ],
-            // },
             {
               navigationKey: "card1",
               sections: [
@@ -463,7 +411,7 @@ const CampaignSummary = (props) => {
                 },
               ],
             },
-            ...boundaryData?.map((item, index) => {
+            ...(boundaryData || []).map((item, index) => {
               return {
                 navigationKey: "card2",
                 name: `HIERARCHY_${index + 1}`,
@@ -519,7 +467,7 @@ const CampaignSummary = (props) => {
                 },
               ],
             },
-            ...cycleData?.map((item, index) => {
+            ...(cycleData || []).map((item, index) => {
               return {
                 name: `CYCLE_${index + 1}`,
                 // errorName: "deliveryErrors",
