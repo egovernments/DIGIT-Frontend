@@ -261,7 +261,6 @@ const updateProject = async (req) => {
 };
 
 const updatePlan = async (req,key=2) => {
-  // const { key} = Digit.Hooks.useQueryParams();
   req.additionalDetails.key=key;
   const planRes = await Digit.CustomService.getResponse({
     url: "/plan-service/config/_update",
