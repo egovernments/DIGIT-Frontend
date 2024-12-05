@@ -17,17 +17,16 @@ import BoundaryHierarchyTypeAdd from "./BoundaryHierarchyTypeAdd";
 import UploadBoundary from "./UploadBoundary";
 import UploadBoundaryPure from "./BoundaryUploadPure";
 
-const WorkbenchBreadCrumb = ({ location, defaultPath}) => {
+const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
   const search = useLocation().search;
   const fromScreen = new URLSearchParams(search).get("from") || null;
   const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
   const { masterName, moduleName, uniqueIdentifier, from, screen, action } = Digit.Hooks.useQueryParams();
 
-
   const crumbs = [
     {
-      path:`/${window.contextPath}/employee`,
+      path: `/${window?.contextPath}/employee`,
       content: t("WORKBENCH_HOME"),
       show: true,
     },
@@ -114,7 +113,7 @@ const App = ({ path }) => {
   return (
     <React.Fragment>
       <div className="wbh-header-container">
-        <WorkbenchBreadCrumb location={location} defaultPath={path}/>
+        <WorkbenchBreadCrumb location={location} defaultPath={path} />
         {!isBoundaryPath && <WorkbenchHeader />}
       </div>
 
