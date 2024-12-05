@@ -218,7 +218,7 @@ function CustomFieldTemplate(props) {
           {/* <span >{label}</span> */}
           <span className={`tooltip`}>
             {t(titleCode)} {additionalCode}
-            <span className="tooltiptext">
+            <span className="tooltiptext" style={{maxWidth:"540px"}}>
               <span className="tooltiptextvalue">{t(`TIP_${titleCode}`)}</span>
             </span>
           </span>
@@ -279,6 +279,8 @@ const DigitJSONForm = ({
   };
   const person = { t: t };
 
+  const formDisabled = screenType === "view" ? true : disabled;
+
   return (
     <React.Fragment>
       <Header className="digit-form-composer-header">
@@ -312,7 +314,7 @@ const DigitJSONForm = ({
           transformErrors={transformErrors.bind(person)}
           uiSchema={{ ...uiSchema, ...inputUiSchema }}
           onError={onError}
-          disabled={disabled}
+          disabled={formDisabled}
           // disabled the error onload
           // focusOnFirstError={true}
           /* added logic to show live validations after form submit is clicked */
@@ -331,7 +333,7 @@ const DigitJSONForm = ({
               {/* <LinkButton style={props?.skipStyle} label={t(`CS_SKIP_CONTINUE`)}  /> */}
             </ActionBar>
           )}
-          {screenType === "view" && (
+          {screenType === "view" && viewActions && viewActions.length > 0 && (
             <ActionBar>
               {displayMenu ? (
                 <Menu
