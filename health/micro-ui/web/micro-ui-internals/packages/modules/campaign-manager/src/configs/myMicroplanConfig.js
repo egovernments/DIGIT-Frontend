@@ -89,6 +89,8 @@
             resultsJsonPath: "PlanConfiguration",
 
             enableColumnSort: true,
+            showCheckBox: true,
+            checkBoxActionLabel: "HCM_REDIRECT_CAMPAIGN",
             tableClassName: "table campaign-table",
           },
           show: true,

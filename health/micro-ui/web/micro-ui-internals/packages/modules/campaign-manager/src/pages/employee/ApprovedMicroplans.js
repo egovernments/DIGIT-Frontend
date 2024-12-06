@@ -20,11 +20,11 @@ const ApprovedMicroplans = () => {
       <div className="inbox-search-wrapper">
         <InboxSearchComposer
           configs={MicroplanCampaignSearchConfig?.[0]}
-          additionalConfig={{
-            resultsTable: {
-              onClickRow,
-            },
-          }}
+          // additionalConfig={{
+          //   resultsTable: {
+          //     onClickRow,
+          //   },
+          // }}
         ></InboxSearchComposer>
       </div>
     </React.Fragment>

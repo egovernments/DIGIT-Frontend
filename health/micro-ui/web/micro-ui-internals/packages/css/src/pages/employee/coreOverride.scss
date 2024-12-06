@@ -199,8 +199,12 @@ header {
 .digit-popup-overlay .digit-popup-wrapper {
   z-index: 10000;
 }
-.action-bar-wrap .actionBarClass {
-  z-index: 10;
+.actionBarWrapper {
+  display: flex ;
+  justify-content: space-between;
+  .search-instruction-header{
+    margin: 0rem;
+  }
 }
 .campaign-flow-stepper{
   margin-left: -5.625rem;
