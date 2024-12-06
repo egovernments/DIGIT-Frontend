@@ -356,6 +356,27 @@ export const UICustomizations = {
           return null; // Handle any unexpected keys here if needed
       }
     },
+    selectionHandler: (e) => {
+      const ids = e.map((item) => item.original?.id).filter(Boolean).join(',');
+      const microPlanNames = e
+      .map((item) => item.original?.name.replace(/&/g, "and"))
+      .filter(Boolean)
+      .join(',');      
+      const campaignIds = e.map((item) => item.original?.campaignId).filter(Boolean).join(',');
+      const updatedName = e?.[0]?.original?.name.replace(/&/g, "and");
+      window.history.pushState(
+      {
+        microName: microPlanNames,
+        ids: ids,
+        campaignID: campaignIds,
+      },
+      "",
+      `/${window.contextPath}/employee/campaign/fetch-from-microplan?id=${e?.[0]?.original?.campaignId}&draft=true&fetchBoundary=true&draftBoundary=true&source=microplan&microName=${updatedName}&planConfigurationId=${e?.[0]?.original?.id}`
+    );
+    const navEvent = new PopStateEvent("popstate");
+            window.dispatchEvent(navEvent);
+
+    },
   },
   MyCampaignConfigOngoing: {
     preProcess: (data, additionalDetails) => {
