@@ -63,6 +63,7 @@ const PlanInbox = () => {
   const [defaultHierarchy, setDefaultSelectedHierarchy] = useState(null);
   const [defaultBoundaries, setDefaultBoundaries] = useState([]);
   const userRoles = user?.info?.roles?.map((roleData) => roleData?.code);
+  const hrms_context_path = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || 'health-hrms';
 
   // Check if the user has the 'rootapprover' role
   const isRootApprover = userRoles?.includes("ROOT_PLAN_ESTIMATION_APPROVER");
@@ -433,7 +434,7 @@ const PlanInbox = () => {
   }, [selectedFilter, activeLink, censusJurisdiction, limitAndOffset]);
 
   const reqCri = {
-    url: `/health-hrms/employees/_search`,
+    url: `/${hrms_context_path}/employees/_search`,
     params: {
       tenantId: tenantId,
       userServiceUuids: assigneeUuids,

@@ -1,4 +1,7 @@
 const searchPlanEmployeeWithTaggingConfig = async ({ tenantId, body, limit, offset, sortOrder = "ASC", names }) => {
+
+  const hrms_context_path = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || 'health-hrms';
+
   try {
     const response = await Digit.CustomService.getResponse({
       url: "/plan-service/employee/_search",
@@ -21,7 +24,7 @@ const searchPlanEmployeeWithTaggingConfig = async ({ tenantId, body, limit, offs
       return null;
     }
     const fetchEmployeeData = await Digit.CustomService.getResponse({
-      url: "/health-hrms/employees/_search",
+      url: `/${hrms_context_path}/employees/_search`,
       useCache: false,
       method: "POST",
       userService: false,

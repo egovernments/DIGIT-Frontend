@@ -582,6 +582,7 @@ function RoleTableComposer({ nationalRoles }) {
           label={t(showToast?.label)}
           transitionTime={showToast.transitionTime}
           onClose={closeToast}
+          style={{marginBottom:"0.75rem"}}
         />
       )}
 
