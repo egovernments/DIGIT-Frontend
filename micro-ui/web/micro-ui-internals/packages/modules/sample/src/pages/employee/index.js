@@ -2,11 +2,11 @@ import { AppContainer, BreadCrumb, PrivateRoute } from "@egovernments/digit-ui-r
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Switch } from "react-router-dom";
-import Inbox from "./SampleInbox";
+import Inbox from "./PGRInbox";
 import SearchWageSeeker from "./SampleSearch";
 import AdvancedCreate from "./SampleAdvancedSearch";
 import Response from "./Response";
-import IndividualCreate from "./IndividualCreate";
+import NewComplaint from "./NewComplaint";
 import IndividualSearch from "./IndividualSearch";
 import ViewIndividual from "../../configs/ViewIndividual";
 import Create from "./SampleCreate";
@@ -45,7 +45,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/inbox`} component={() => <Inbox></Inbox>} />
         <PrivateRoute path={`${path}/sample-search`} component={() => <SearchWageSeeker></SearchWageSeeker>} />
         <PrivateRoute path={`${path}/response`} component={() => <Response></Response>} />
-        <PrivateRoute path={`${path}/create-individual`} component={() => <IndividualCreate />} />
+        <PrivateRoute path={`${path}/create-complaint`} component={() => <NewComplaint />} />
         <PrivateRoute path={`${path}/search-individual`} component={() => <IndividualSearch></IndividualSearch>} />
         <PrivateRoute path={`${path}/individual-details`} component={() => <ViewIndividual />} />
         <PrivateRoute path={`${path}/sample-view`} component={() => <View />} />

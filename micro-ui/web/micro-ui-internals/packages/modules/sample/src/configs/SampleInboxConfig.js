@@ -1,24 +1,23 @@
 const inboxConfig = () => {
   return {
-    label: "ES_COMMON_INBOX",
-    postProcessResult: true,
+    label: "Complaints Inbox",
     type: "inbox",
     apiDetails: {
       serviceName: "/inbox/v2/_search",
       requestParam: {},
       requestBody: {
         inbox: {
-          processSearchCriteria: {
-            businessService: ["muster-roll-approval"],
-            moduleName: "muster-roll-service",
-          },
+          // processSearchCriteria: {
+          //   businessService: ["mukta-estimate"],
+          //   moduleName: "estimate-service",
+          // },
           moduleSearchCriteria: {},
         },
       },
       minParametersForSearchForm: 0,
       minParametersForFilterForm: 0,
       masterName: "commonUiConfig",
-      moduleName: "AttendanceInboxConfig",
+      moduleName: "PGRInboxConfig",
       tableFormJsonPath: "requestBody.inbox",
       filterFormJsonPath: "requestBody.inbox.moduleSearchCriteria",
       searchFormJsonPath: "requestBody.inbox.moduleSearchCriteria",
@@ -27,54 +26,56 @@ const inboxConfig = () => {
       search: {
         uiConfig: {
           headerStyle: null,
-          primaryLabel: "ES_COMMON_SEARCH",
-          secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
+          primaryLabel: "Search",
+          secondaryLabel: "Clear Search",
           minReqFields: 1,
           defaultValues: {
-            attendanceRegisterName: "",
-            orgId: "",
-            musterRollNumber: "",
+            complaintNumber: "",
+            mobileNumber: "",
+            DateRange: "",
           },
           fields: [
             {
-              label: "ATM_MUSTER_ROLL_ID",
+              label: "Complaint Number",
               type: "text",
               isMandatory: false,
               disable: false,
-              preProcess: {
-                convertStringToRegEx: ["populators.validation.pattern"],
-              },
+              // preProcess: {
+              //   convertStringToRegEx: ["populators.validation.pattern"],
+              // },
               populators: {
-                name: "musterRollNumber",
-                error: "COMMON_PATTERN_ERR_MSG_MUSTER_ID",
-                validation: {
-                  pattern: "MR\\/[0-9]+-[0-9]+\\/[0-9]+\\/[0-9]+",
-                  minlength: 2,
-                },
+                name: "complaintNumber",
+              //   error: "ESTIMATE_PATTERN_ERR_MSG",
+              //   validation: {
+              //     pattern: "ES\/[0-9]+-[0-9]+\/[0-9]+",
+              //     minlength: 2,
+              //   },
               },
             },
             {
-              label: "ES_COMMON_PROJECT_NAME",
+              label: "Mobile Number",
               type: "text",
               isMandatory: false,
               disable: false,
+              // preProcess: {
+              //   convertStringToRegEx: ["populators.validation.pattern"],
+              // },
               populators: {
-                name: "attendanceRegisterName",
-                error: "PROJECT_PATTERN_ERR_MSG",
+                name: "mobileNumber",
+              //   error: "PROJECT_PATTERN_ERR_MSG",
+              //   validation: {
+              //     pattern: "PR\\/[0-9]+-[0-9]+\\/[0-9]+\\/[0-9]+",
+              //     minlength: 2,
+              //   },
               },
             },
             {
-              label: "COMMON_ORG_NAME",
-              type: "apidropdown",
+              label: "Date Range",
+              type: "date",
               isMandatory: false,
               disable: false,
               populators: {
-                name: "orgId",
-                optionsKey: "name",
-                allowMultiSelect: false,
-                masterName: "commonUiConfig",
-                moduleName: "AttendanceInboxConfig",
-                customfn: "populateReqCriteria",
+                name: "dateRange",
               },
             },
           ],
@@ -83,20 +84,68 @@ const inboxConfig = () => {
         children: {},
         show: true,
       },
+      searchResult: {
+        complaintNumber: "",
+        complaintType: "",
+        area: "",
+        status: "",
+        complaintDate: "",
+        uiConfig: {
+          columns: [
+            {
+              label: "Complaint Number",
+              jsonPath: "ProcessInstance.businessId",
+              key: "complaintNumber",
+              additionalCustomization: true,
+            },
+            {
+              label: "Complaint Type",
+              jsonPath: "businessObject.project.name",
+            },
+            {
+              label: "Area",
+              jsonPath: "businessObject.additionalDetails.creator",
+            },
+            {
+              label: "Status",
+              jsonPath: "ProcessInstance.assignes",
+              key: "status",
+            },
+            {
+              label: "Complaint Data",
+              jsonPath: "ProcessInstance.state.state",
+              additionalCustomization: true,
+              key: "state",
+            },
+          ],
+          enableGlobalSearch: false,
+          enableColumnSort: true,
+          resultsJsonPath: "items",
+        },
+        children: {},
+        show: true,
+      },
       links: {
         uiConfig: {
           links: [
             {
-              text: "ATM_SEARCH_ATTENDANCE",
-              url: "/employee/attendencemgmt/search-attendance",
-              roles: ["MUSTER_ROLL_VERIFIER", "MUSTER_ROLL_APPROVER"],
+              text: "New Complaint",
+              url: "/employee/sample/create-complaint",
+              // roles: ["PROJECT_VIEWER", "ESTIMATE_CREATOR"],
+              roles:["SYSTEM_ADMINISTRATOR"]
+            },
+            {
+              text: "Dashboard",
+              url: "/employee/sample/create-complaint",
+              roles:["SYSTEM_ADMINISTRATOR"]
+              // roles: ["ESTIMATE_VIEWER", "ESTIMATE_CREATOR", "ESTIMATE_VERIFIER", "TECHNICAL_SANCTIONER", "ESTIMATE_APPROVER"],
             },
           ],
-          label: "ES_COMMON_ATTENDENCEMGMT",
-          logoIcon: {
-            component: "MuktaIcon",
-            customClass: "search-icon--projects",
-          },
+          label: "Complaints",
+          // logoIcon: {
+          //   component: "AnnouncementIcon",
+          //   customClass: "inbox-search-icon--projects",
+          // },
         },
         children: {},
         show: true,
@@ -107,113 +156,60 @@ const inboxConfig = () => {
           headerStyle: null,
           primaryLabel: "Filter",
           secondaryLabel: "",
-          minReqFields: 1,
+          minReqFields: 0,
           defaultValues: {
-            state: "",
-            ward: [],
-            locality: [],
-            assignee: {
-              code: "ASSIGNED_TO_ALL",
-              name: "EST_INBOX_ASSIGNED_TO_ALL",
-            },
+            complaintType: [],
+            area: [],
+            status : ""
           },
           fields: [
             {
-              label: "",
-              type: "radio",
-              isMandatory: false,
+              isMandatory: true,
+              key: "complaintType",
+              type: "dropdown",
+              label: "Complain Type",
               disable: false,
               populators: {
-                name: "assignee",
-                options: [
-                  {
-                    code: "ASSIGNED_TO_ME",
-                    name: "EST_INBOX_ASSIGNED_TO_ME",
-                  },
-                  {
-                    code: "ASSIGNED_TO_ALL",
-                    name: "EST_INBOX_ASSIGNED_TO_ALL",
-                  },
-                ],
+                name: "complaintType",
                 optionsKey: "name",
-                styles: {
-                  gap: "1rem",
-                  flexDirection: "column",
-                },
-                innerStyles: {
-                  display: "flex",
+                error: "required ",
+                mdmsConfig: {
+                  masterName: "GenderType",
+                  moduleName: "common-masters",
+                  localePrefix: "COMMON_GENDER",
                 },
               },
             },
             {
-              "label": "COMMON_WARD",
-              "type": "locationdropdown",
-              "isMandatory": false,
-              "disable": false,
-              "populators": {
-                  "name": "ward",
-                  "type": "ward",
-                  "optionsKey": "i18nKey",
-                  "defaultText": "COMMON_SELECT_WARD",
-                  "selectedText": "COMMON_SELECTED",
-                  "allowMultiSelect": true
-              }
+              label: "Area",
+              type: "locationdropdown",
+              isMandatory: false,
+              disable: false,
+              populators: {
+                name: "area",
+                type: "locality",
+                optionsKey: "i18nKey",
+                defaultText: "COMMON_SELECT_LOCALITY",
+                selectedText: "COMMON_SELECTED",
+                allowMultiSelect: true,
+                isDropdownWithChip:true,
+              },
             },
             {
               label: "COMMON_WORKFLOW_STATES",
               type: "workflowstatesfilter",
+              labelClassName:"checkbox-status-filter-label" ,
               isMandatory: false,
               disable: false,
               populators: {
                 name: "state",
-                labelPrefix: "WF_MUSTOR_",
-                businessService: "muster-roll-approval",
+                labelPrefix: "WF_EST_",
+                businessService: "mukta-estimate",
               },
             },
           ],
         },
-        label: "ES_COMMON_FILTERS",
-        show: true,
-      },
-      searchResult: {
-        label: "",
-        uiConfig: {
-          columns: [
-            {
-              label: "ATM_MUSTER_ROLL_ID",
-              jsonPath: "businessObject.musterRollNumber",
-              additionalCustomization: true,
-            },
-            {
-              label: "ES_COMMON_PROJECT_NAME",
-              jsonPath: "businessObject.additionalDetails.attendanceRegisterName",
-            },
-            {
-              label: "ES_COMMON_CBO_NAME",
-              jsonPath: "businessObject.additionalDetails.orgName",
-            },
-            {
-              label: "COMMON_ASSIGNEE",
-              jsonPath: "ProcessInstance.assignes[0].name",
-              key: "assignee",
-            },
-            {
-              label: "COMMON_WORKFLOW_STATES",
-              jsonPath: "ProcessInstance.state.state",
-              "additionalCustomization": true,
-              key: "state",
-            },
-            {
-              label: "ATM_SLA",
-              jsonPath: "businessObject.serviceSla",
-              additionalCustomization: true,
-            },
-          ],
-          enableGlobalSearch: false,
-          enableColumnSort: true,
-          resultsJsonPath: "items",
-        },
-        children: {},
+        label: "Filter",
         show: true,
       },
     },

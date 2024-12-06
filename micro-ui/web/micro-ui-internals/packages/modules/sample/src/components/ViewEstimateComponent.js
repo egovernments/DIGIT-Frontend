@@ -11,8 +11,6 @@ const ViewEstimateComponent = ({editApplicationNumber,...props}) => {
     const { t } = useTranslation()
 
     const { tenantId, estimateNumber } = Digit.Hooks.useQueryParams();
-    console.log("tenantId",tenantId);
-    console.log("estimateNumber",estimateNumber);
     const businessService = Digit?.Customizations?.["commonUiConfig"]?.getBusinessService("estimate");
 
     const { isLoading, data: applicationDetails, isError } = Digit.Hooks.estimates.useEstimateDetailsScreen(t, tenantId, estimateNumber,{}, isStateChanged)  
