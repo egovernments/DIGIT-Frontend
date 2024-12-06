@@ -298,6 +298,9 @@ function UserAccess({ category, setData, nationalRoles }) {
     // Handle search logic, such as filtering or API calls
   };
 
+  useEffect(()=>{
+    setShowToast(null);
+  },[category])
 
   return (
     <>
@@ -377,7 +380,7 @@ function UserAccess({ category, setData, nationalRoles }) {
         <Toast
           type={showToast.key === "error" ? "error" : "success"} // Adjust based on your needs
           label={t(showToast.label)}
-          transitionTime={5000}
+          transitionTime={showToast?.transitionTime || 5000}
           onClose={() => {
             setShowToast(false);
           }}

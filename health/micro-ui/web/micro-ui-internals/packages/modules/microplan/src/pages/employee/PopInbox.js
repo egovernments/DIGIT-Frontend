@@ -52,8 +52,7 @@ const PopInbox = () => {
     code: "ASSIGNED_TO_ME",
     name: "ASSIGNED_TO_ME",
   });
-
-
+  const hrms_context_path = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || 'health-hrms';
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
 
@@ -369,7 +368,7 @@ const PopInbox = () => {
   // }, [data]);
   // Custom hook to fetch census data based on microplanId and boundaryCode
   const reqCri = {
-    url: `/health-hrms/employees/_search`,
+    url: `/${hrms_context_path}/employees/_search`,
     params: {
       tenantId: tenantId,
       userServiceUuids: assigneeUuids,

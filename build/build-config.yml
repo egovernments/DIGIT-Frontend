@@ -27,9 +27,9 @@ config:
 
   - name: builds/Digit-Frontend/karnataka-ui
     build:
-      - work-dir: micro-ui/
-        dockerfile: micro-ui/web/docker/Dockerfile
-        image-name: karnataka-ui 
+      - work-dir: health/micro-ui/
+        dockerfile: health/micro-ui/web/core/Dockerfile
+        image-name: core-ui
 
   - name: builds/Digit-Frontend/workbench-ui
     build:
