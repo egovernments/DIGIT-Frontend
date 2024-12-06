@@ -3,7 +3,6 @@ import { downloadExcelWithCustomName } from "./downloadExcel";
 
 export default {
   downloadExcelWithCustomName,
-  PRIMARY_COLOR: "#C84C0E",
   getModuleName: () => {
     return window?.Digit?.Customizations?.commonUiConfig?.["HCM_MODULE_NAME"] || "console";
   },
