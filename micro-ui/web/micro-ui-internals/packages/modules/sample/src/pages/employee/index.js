@@ -40,19 +40,11 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <React.Fragment>
           <ProjectBreadCrumb location={location} />
         </React.Fragment>
-        <PrivateRoute path={`${path}/sample-create`} component={() => <Create></Create>} />
-        <PrivateRoute path={`${path}/advanced`} component={() => <AdvancedCreate></AdvancedCreate>} />
+
         <PrivateRoute path={`${path}/inbox`} component={() => <Inbox></Inbox>} />
-        <PrivateRoute path={`${path}/sample-search`} component={() => <SearchWageSeeker></SearchWageSeeker>} />
+        <PrivateRoute path={`${path}/complaint/create`} component={() => <IndividualCreate />} />
         <PrivateRoute path={`${path}/response`} component={() => <Response></Response>} />
-        <PrivateRoute path={`${path}/create-individual`} component={() => <IndividualCreate />} />
-        <PrivateRoute path={`${path}/search-individual`} component={() => <IndividualSearch></IndividualSearch>} />
-        <PrivateRoute path={`${path}/individual-details`} component={() => <ViewIndividual />} />
-        <PrivateRoute path={`${path}/sample-view`} component={() => <View />} />
-        <PrivateRoute path={`${path}/sample-components`} component={() => <SampleComponents />} />
-        <PrivateRoute path={`${path}/sample-success`} component={() => <PanelCardResponse />} />
-        <PrivateRoute path={`${path}/tab-search-individual`} component={() => <TabIndividualSearch />} />
-        <PrivateRoute path={`${path}/individual-details-view`} component={() => <IndividualViewDetails />} />
+
       </AppContainer>
     </Switch>
   );

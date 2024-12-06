@@ -5,53 +5,49 @@ import { useTranslation } from "react-i18next";
 const SampleCard = () => {
  
   const { t } = useTranslation();
+  const allLinks = [
+    { text: t("ES_PGR_INBOX"), link: `/${window?.contextPath}/employee/pgr/inbox` },
+    { text: t("ES_PGR_NEW_COMPLAINT"), link: `/${window?.contextPath}/employee/pgr/complaint/create`, accessTo: ["CSR"] },
+  ];
+  const Icon = () => <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+  <path d="M0 0h24v24H0z" fill="none"></path>
+  <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 9h-2V5h2v6zm0 4h-2v-2h2v2z" fill="white"></path>
+</svg>
+
+let propsForCSR =[
+  {
+    label: t("ES_PGR_NEW_COMPLAINT"),
+    link: `/${window?.contextPath}/employee/pgr/complaint/create`,
+    role: "CSR"
+  }
+]
 
   const propsForModuleCard = {
-    Icon: <PropertyHouse />,
-    moduleName: t("Sample"),
+    Icon: <Icon />,
+    moduleName: t("Complaint"),
     kpis: [
-
-    ],
+      {
+          label: t("TOTAL_PGR"),
+          link: `/${window?.contextPath}/employee/pgr/inbox`
+      },
+      {
+        label: t("TOTAL_NEARING_SLA"),
+        link: `/${window?.contextPath}/employee/sample/inbox`
+    }
+  ],
     links: [
    
      
       {
-        label: t("Individual Search"),
-        link: `/${window?.contextPath}/employee/sample/search-individual`,
+        label: t("Inbox"),
+        link: `/${window?.contextPath}/employee/sample/inbox`,
 
       },
       {
-        label: t("Individual Create"),
-        link: `/${window?.contextPath}/employee/sample/create-individual`,
+        label: t("New Complaint"),
+        link: `/${window?.contextPath}/employee/sample/complaint/create`,
 
-      },
-      {
-        label: t("Sample Create"),
-        link: `/${window?.contextPath}/employee/sample/sample-create`,
-
-      },
-      {
-        label: t("Sample Search"),
-        link: `/${window?.contextPath}/employee/sample/sample-search`,
-
-      },
-      {
-        label: t("Sample View"),
-        link: `/${window?.contextPath}/employee/sample/sample-view??tenantId=pg.citya&estimateNumber=ES/2023-24/002390&projectNumber=PJ/2023-24/02/002830`,
-
-      },
-      {
-        label: t("Sample Components"),
-        link: `/${window?.contextPath}/employee/sample/sample-components`,
-      },
-      {
-        label: t("Individual Tab Search"),
-        link: `/${window?.contextPath}/employee/sample/tab-search-individual`,
-      },
-      {
-        label: t("Individual View Details"),
-        link: `/${window?.contextPath}/employee/sample/individual-details-view`,
-      },
+      }
       
     ],
   };
