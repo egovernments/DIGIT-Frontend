@@ -40,8 +40,11 @@ frontend/micro-ui/web/public/index.html
 ### Changelog
 
 ```bash
+## 0.3.0 - 2024-12-03
+#### Base Admin console & microplan web
 
-0.1.0 Base version
+## 0.1.0 
+#### Base version
 
 ```
 ## Contributors
