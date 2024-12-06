@@ -574,6 +574,7 @@ const ViewHierarchy = () => {
                               label="Info"
                               text={uiErrorMsg}
                               variant="error"
+                              style={{maxWidth:"200rem"}}
                             /> }  
                             <div style={{marginBottom:"2rem"}}></div>               
                         </Card>

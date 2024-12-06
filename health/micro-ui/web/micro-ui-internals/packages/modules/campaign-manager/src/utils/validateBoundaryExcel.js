@@ -33,7 +33,7 @@ const validateBoundaryExcelContent = async (file, t) => {
         }
 
         // Find the index of "Service Boundary Code" to exclude validations
-        const excludeStartIndex = headers.indexOf("Service Boundary Code");
+        const excludeStartIndex = headers.indexOf(t("HCM_ADMIN_CONSOLE_BOUNDARY_CODE"));
         const validateColumnsCount = excludeStartIndex === -1 ? headers.length : excludeStartIndex;
   
         // Perform validations
