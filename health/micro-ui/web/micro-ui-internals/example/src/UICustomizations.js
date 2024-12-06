@@ -9,6 +9,7 @@ import { Button as ButtonNew, Dropdown } from "@egovernments/digit-ui-components
 // these functions will act as middlewares
 // var Digit = window.Digit || {};
 
+
 const businessServiceMap = {
   "muster roll": "MR",
 };
