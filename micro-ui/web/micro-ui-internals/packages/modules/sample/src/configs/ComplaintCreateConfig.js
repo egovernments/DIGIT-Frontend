@@ -10,19 +10,19 @@ export const newConfig = [
           disable: false,
           populators: {
             name: "complaintType",
-            optionsKey: "name",
+            optionsKey: "serviceCode",
             error: "required ",
             mdmsConfig: {
-              masterName: "GenderType",
-              moduleName: "common-masters",
-              localePrefix: "COMMON_GENDER",
+              masterName: "ServiceDefs",
+              moduleName: "RAINMAKER-PGR",
+              localePrefix: "COMMON_COMPLAIN",
             },
           },
         },
         {
           inline: true,
           label: "Date of complaint",
-          isMandatory: false,
+          isMandatory: true,
           key: "dob",
           type: "date",
           disable: false,
@@ -49,7 +49,7 @@ export const newConfig = [
           isMandatory: true,
           key: "radio",
           type: "radio",
-          label: "Are you raising complaint for yourself",
+          label: "Are you raising complaint for yourself or another user?",
           disable: false,
           populators: {
             name: "radio",
@@ -93,7 +93,7 @@ export const newConfig = [
         {
           inline: true,
           label: "Supervisor's name",
-          isMandatory: true,
+          isMandatory: false,
           key: "SupervisorsName",
           type: "text",
           disable: false,
@@ -101,7 +101,7 @@ export const newConfig = [
         },
         {
           label: "Supervisor's contact number",
-          isMandatory: true,
+          isMandatory: false,
           key: "Sphno",
           type: "number",
           disable: false,

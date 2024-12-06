@@ -131,12 +131,14 @@ const pgrInboxConfig = () => {
               {
                 text: "New Complaint",
                 url: "/employee/sample/create-complaint",
-                roles: ["PROJECT_VIEWER", "ESTIMATE_CREATOR"],
+                // roles: ["PROJECT_VIEWER", "ESTIMATE_CREATOR"],
+                roles:["SYSTEM_ADMINISTRATOR"]
               },
               {
                 text: "Dashboard",
                 url: "/employee/sample/create-complaint",
-                roles: ["ESTIMATE_VIEWER", "ESTIMATE_CREATOR", "ESTIMATE_VERIFIER", "TECHNICAL_SANCTIONER", "ESTIMATE_APPROVER"],
+                roles:["SYSTEM_ADMINISTRATOR"]
+                // roles: ["ESTIMATE_VIEWER", "ESTIMATE_CREATOR", "ESTIMATE_VERIFIER", "TECHNICAL_SANCTIONER", "ESTIMATE_APPROVER"],
               },
             ],
             label: "Complaints",

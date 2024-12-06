@@ -23,7 +23,7 @@ const Response = () => {
           {t(state?.postText)}
         </p>
       ) : (
-        t(state?.text, { CAMPAIGN_ID: campaignId })
+        t(state?.text, { COMPLAINT_ID: complaintId })
       )}
     </div>,
   ];
@@ -32,12 +32,12 @@ const Response = () => {
     <>
       <PanelCard
         type={isResponseSuccess ? "success" : "error"}
-        message={t("Cmplaint Submitted")}
+        message={isResponseSuccess ? t("Complaint Submitted") : "Complaint Not Submitted"}
         response={complaintId}
         info={"Complaint Number"}
         footerChildren={[]}
         children={children}
-        description={"The notification along with your complaint number is sent to your complainant’s mobile number. Complainant can track the complaint status using mobile or web app."}
+        description={isResponseSuccess ? "The notification along with your complaint number is sent to your complainant’s mobile number. Complainant can track the complaint status using mobile or web app." : "Sorry, there is a problem with the service. Please try again later."}
       />
       <ActionBar
         actionFields={[
