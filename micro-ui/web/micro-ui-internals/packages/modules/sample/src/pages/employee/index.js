@@ -6,8 +6,8 @@ import Inbox from "./SampleInbox";
 import SearchWageSeeker from "./SampleSearch";
 import AdvancedCreate from "./SampleAdvancedSearch";
 import Response from "./Response";
-import IndividualCreate from "./IndividualCreate";
-import IndividualSearch from "./IndividualSearch";
+import complaintCreate from "./ComplaintCreate";
+import complaintSearch from "./ComplaintSearch";
 import ViewIndividual from "../../configs/ViewIndividual";
 import Create from "./SampleCreate";
 import View from "./SampleView";
@@ -45,8 +45,8 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/inbox`} component={() => <Inbox></Inbox>} />
         <PrivateRoute path={`${path}/sample-search`} component={() => <SearchWageSeeker></SearchWageSeeker>} />
         <PrivateRoute path={`${path}/response`} component={() => <Response></Response>} />
-        <PrivateRoute path={`${path}/create-individual`} component={() => <IndividualCreate />} />
-        <PrivateRoute path={`${path}/search-individual`} component={() => <IndividualSearch></IndividualSearch>} />
+        <PrivateRoute path={`${path}/create-complaint`} component={() => <complaintCreate/>} />
+        <PrivateRoute path={`${path}/search-complaint`} component={() => <commplaintSearch></commplaintSearch>} />
         <PrivateRoute path={`${path}/individual-details`} component={() => <ViewIndividual />} />
         <PrivateRoute path={`${path}/sample-view`} component={() => <View />} />
         <PrivateRoute path={`${path}/sample-components`} component={() => <SampleComponents />} />

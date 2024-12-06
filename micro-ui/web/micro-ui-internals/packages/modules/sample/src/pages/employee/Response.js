@@ -10,7 +10,12 @@ const Response = () => {
   const [isResponseSuccess, setIsResponseSuccess] = useState(
     queryStrings?.isSuccess === "true" ? true : queryStrings?.isSuccess === "false" ? false : true
   );
+  const [orgId, setOrgId] = useState(
+    queryStrings?.orgId
+  );
   const { state } = useLocation();
+
+  console.log("jii");
 
   const navigate = (page) => {
     switch (page) {
@@ -25,6 +30,7 @@ const Response = () => {
       <Banner
         successful={isResponseSuccess}
         message={t(state?.message || "SUCCESS")}
+        multipleResponseIDs={[orgId]}
         info={`${state?.showID ? t("CONTRACTS_WO_ID") : ""}`}
         whichSvg={`${isResponseSuccess ? "tick" : null}`}
       />
