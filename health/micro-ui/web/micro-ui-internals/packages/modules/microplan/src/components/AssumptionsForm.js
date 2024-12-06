@@ -192,6 +192,7 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
                         size={"large"}
                         variation={"secondary"}
                         label={t("MP_ACK")}
+                        title={t("MP_ACK")}
                         onClick={() => {
                             setShowPopup(false);
                             //   setCanUpdate(true);

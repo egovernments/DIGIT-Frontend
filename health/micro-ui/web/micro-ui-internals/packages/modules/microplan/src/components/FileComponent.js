@@ -70,6 +70,7 @@ const FileComponent = ({ title, fileName, status, auditDetails, editHandler, del
                         {editHandler &&
                             <Button
                                 label={t("WBH_EDIT")}
+                                title={t("WBH_EDIT")}
                                 variation="secondary"
                                 icon={<EditIcon styles={{ height: "1.25rem", width: "2.5rem" }} />}
                                 type="button"
@@ -83,6 +84,7 @@ const FileComponent = ({ title, fileName, status, auditDetails, editHandler, del
                     {deleteHandler &&
                         <Button
                             label={t("WBH_DELETE")}
+                            title={t("WBH_DELETE")}
                             variation="secondary"
                             icon={<DeleteIconv2 styles={{ height: "1.25rem", width: "2.5rem" }} />}
                             type="button"
@@ -96,6 +98,7 @@ const FileComponent = ({ title, fileName, status, auditDetails, editHandler, del
                     {(downloadHandler && status === "completed") && (
                         <Button
                             label={t("WBH_DOWNLOAD")}
+                            title={t("WBH_DOWNLOAD")}
                             variation="secondary"
                             icon={"FileDownload"}
                             type="button"

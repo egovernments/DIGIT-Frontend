@@ -431,6 +431,7 @@ const UserUpload = React.memo(() => {
               <Header className="digit-form-composer-sub-header">{t("MP_UPLOAD_USER")}</Header>
               <Button
                 label={t("WBH_DOWNLOAD_TEMPLATE")}
+                title={t("WBH_DOWNLOAD_TEMPLATE")}
                 variation="secondary"
                 icon={"FileDownload"}
                 type="button"
@@ -483,6 +484,7 @@ const UserUpload = React.memo(() => {
                         size="large"
                         variation="default"
                         label={t("HCM_VIEW_ERROR")}
+                        title={t("HCM_VIEW_ERROR")}
                         onClick={() => setShowPreview(true)}
                         style={{
                           marginTop: "1rem",
@@ -520,10 +522,11 @@ const UserUpload = React.memo(() => {
             className="previous-button"
             variation="secondary"
             label={t("BACK")}
+            title={t("BACK")}
             icon={"ArrowBack"}
           />
         </Link>
-        <Button style={{ margin: "0.5rem", minWidth: "12rem" }} className="next-button" variation="primary" label={t("SUBMIT")} onClick={onSubmit} />
+        <Button style={{ margin: "0.5rem", minWidth: "12rem" }} className="next-button" variation="primary" label={t("SUBMIT")} title={t("SUBMIT")} onClick={onSubmit} />
       </ActionBar>
     </>
   );

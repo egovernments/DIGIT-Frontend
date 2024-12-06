@@ -133,6 +133,7 @@ const SecurityPopUp = ({ onClose, census, onSuccess, disableEditing=false}) => {
             type={"button"}
             size={"large"}
             variation={"secondary"}
+            title={t(`HCM_MICROPLAN_VILLAGE_SECURITY_CLOSE_LABEL`)}
             label={t(`HCM_MICROPLAN_VILLAGE_SECURITY_CLOSE_LABEL`)}
             onClick={onClose}
           />,
@@ -142,6 +143,7 @@ const SecurityPopUp = ({ onClose, census, onSuccess, disableEditing=false}) => {
             type={"button"}
             size={"large"}
             variation={"primary"}
+            title={t(`HCM_MICROPLAN_VILLAGE_SECURITY_SAVE_LABEL`)}
             label={t(`HCM_MICROPLAN_VILLAGE_SECURITY_SAVE_LABEL`)}
             onClick={handleSave} // Calls save function on click
             isDisabled={!isChanged || mutation.isLoading || disableEditing} // Disable if no changes are made or during API call

@@ -562,8 +562,8 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
 
         {formulaInternalKey > 0 && formulaInternalKey < ruleConfigurationCategories?.length && (
           <ActionBar>
-            <Button className="previous-button" variation="secondary" label={t("BACK")} onClick={handleBack} />
-            <Button className="previous-button" variation="primary" label={t("NEXT")} onClick={handleNext} />
+            <Button className="previous-button" variation="secondary" label={t("BACK")} title={t("BACK")} onClick={handleBack} />
+            <Button className="previous-button" variation="primary" label={t("NEXT")} title={t("NEXT")} onClick={handleNext} />
           </ActionBar>
         )}
       </FormulaContext.Provider>
