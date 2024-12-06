@@ -42,47 +42,6 @@ const BoundaryDetailsSummary = (props) => {
     return acc;
   }, {});
 
-  // return (
-  //   <div>
-  //     <div>
-  //       {Object.keys(groupedByParent)
-  //         .slice(0, showAll ? Object.keys(groupedByParent).length : 2)
-  //         .map((parentKey, index) => (
-  //           <div className="parent-group" key={index} style={{ marginBottom: "20px" }}>
-  //             {parentKey && parentKey !== "undefined" && parentKey.trim() !== "" && <div className="boundary-header">{t(parentKey)}</div>}
-  //             <div>
-  //               <div className="digit-tag-container" style={{ display: "flex", maxWidth: "100%" }}>
-  //                 {groupedByParent[parentKey]
-  //                   .slice(0, expandedGroups[parentKey] ? groupedByParent[parentKey].length : 10)
-  //                   .map((boundary) => (
-  //                     <Chip
-  //                       key={boundary.code}
-  //                       text={t(boundary.code)}
-  //                       onClick={() => {}}
-  //                       className="multiselectdropdown-tag"
-  //                       hideClose={true}
-  //                     />
-  //                   ))}
-  //                 {groupedByParent[parentKey].length > 10 && (
-  //                   <Button
-  //                     label={expandedGroups[parentKey] ? t("HCM_SHOW_LESS_SELECTED") : `+${groupedByParent[parentKey].length - 10} ${t("HCM_SELECTED")}`}
-  //                     onClick={() => handleToggle(parentKey)}
-  //                     variation="link"
-  //                   />
-  //                 )}
-  //               </div>
-  //             </div>
-  //           </div>
-  //         ))}
-
-  //       {/* Show the button if there are more than 2 parent keys */}
-  //       {Object.keys(groupedByParent).length > 2 && (
-  //         <Button label={showAll ? t("HCM_SHOW_LESS_ALL") : t("HCM_SHOW_MORE_ALL")} onClick={handleShowAllToggle} variation="link" />
-  //       )}
-  //     </div>
-  //   </div>
-  // );
-
   return (
     <div>
       {Object.keys(groupedByParent)
