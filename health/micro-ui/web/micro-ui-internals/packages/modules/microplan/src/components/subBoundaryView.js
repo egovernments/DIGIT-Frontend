@@ -25,6 +25,7 @@ const SubBoundaryView = ({ title, arr, style, editHandler, isEditable, headerSty
               </Header>
               {isEditable && editHandler && <Button
                 label={t("WBH_EDIT")}
+                title={t("WBH_EDIT")}
                 variation="secondary"
                 size="medium"
                 icon={"Edit"}
@@ -55,6 +56,7 @@ const SubBoundaryView = ({ title, arr, style, editHandler, isEditable, headerSty
               {arr?.length > (10) && (
                 <Button
                   label={`+${arr?.length - (10)} ${t("ES_MORE")}`}
+                  title={`+${arr?.length - (10)} ${t("ES_MORE")}`}
                   onClick={() => openPopUp()}
                   variation="link"
                   style={{

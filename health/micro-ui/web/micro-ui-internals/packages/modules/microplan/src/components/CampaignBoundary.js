@@ -316,6 +316,7 @@ const CampaignBoundary = ({ customProps, setupCompleted }) => {
                   {!(setupCompleted === "true") && (
                     <Button
                       label={t("WBH_EDIT")}
+                      title={t("WBH_EDIT")}
                       variation="secondary"
                       icon={"Edit"}
                       type="button"
@@ -337,6 +338,7 @@ const CampaignBoundary = ({ customProps, setupCompleted }) => {
                 {boundaryStatus?.[ind + 2] && parent_group[item]?.length > 2 ? (
                   <Button
                     label={t("VIEW_MORE")}
+                    title={t("VIEW_MORE")}
                     onClick={() => handleViewMore(ind + 2)}
                     variation="link"
                     icon="ArrowDropDown"
@@ -347,6 +349,7 @@ const CampaignBoundary = ({ customProps, setupCompleted }) => {
                   <Button
                     isSuffix={true}
                     label={t("VIEW_LESS")}
+                    title={t("VIEW_LESS")}
                     icon="ArrowDropUp"
                     onClick={() => handleViewMore(ind + 2)}
                     variation="link"

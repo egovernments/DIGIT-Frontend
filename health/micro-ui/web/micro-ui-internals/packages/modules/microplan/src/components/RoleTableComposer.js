@@ -602,11 +602,12 @@ function RoleTableComposer({ nationalRoles }) {
               size={"large"}
               variation={"primary"}
               label={t("YES")}
+              title={t("YES")}
               onClick={() => {
                 handleUpdateAssignEmployee(unassignPopup);
               }}
             />,
-            <Button type={"button"} size={"large"} variation={"secondary"} label={t("NO")} onClick={() => { setUnassignPopup(false); }} />,
+            <Button type={"button"} size={"large"} variation={"secondary"} label={t("NO")} title={t("NO")} onClick={() => { setUnassignPopup(false); }} />,
           ]}
           sortFooterChildren={true}
           onClose={() => {

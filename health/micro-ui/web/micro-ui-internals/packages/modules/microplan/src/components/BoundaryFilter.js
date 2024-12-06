@@ -162,6 +162,7 @@ const BoundaryFilter = ({
         icon="FilterAlt"
         variation="secondary"
         className="button-primary"
+        title={t("BUTTON_FILTER_BY_BOUNDARY")}
         label={t("BUTTON_FILTER_BY_BOUNDARY")}
         onClick={() => setIsboundarySelectionSelected((previous) => !previous)}
       />
@@ -186,6 +187,7 @@ const BoundaryFilter = ({
           <Button
             variation="secondary"
             icon={"AutoRenew"}
+            title={t("CLEAR_ALL_FILTERS")}
             label={t("CLEAR_ALL_FILTERS")}
             // onClick={handleClearAll}
           />
