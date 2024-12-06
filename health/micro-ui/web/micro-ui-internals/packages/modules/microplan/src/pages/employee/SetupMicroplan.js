@@ -423,6 +423,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
           actionFields={[
             <Button
               label={t("GO_BACK_TO_MY_MICROPLAN")}
+              title={t("GO_BACK_TO_MY_MICROPLAN")}
               // onClick={() => history.goBack()}
               onClick={() => history.push(`/${window.contextPath}/employee/microplan/microplan-search`)}
             />,
@@ -475,6 +476,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
               size={"large"}
               variation={"primary"}
               label={t("CANCEL")}
+              title={t("CANCEL")}
               onClick={() => {
                 setShowPopUp(false);
               }}

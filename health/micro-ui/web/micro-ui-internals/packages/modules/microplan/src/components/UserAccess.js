@@ -237,6 +237,7 @@ function UserAccess({ category, setData, nationalRoles }) {
 
                 {row.jurisdiction.length > 2 && (
                   <Button
+                  title={`+${row.jurisdiction.length - 2} ${t("ES_MORE")}`}
                     label={`+${row.jurisdiction.length - 2} ${t("ES_MORE")}`}
                     onClick={() => setChipPopUpRowId(row.id)}
                     variation="link"
@@ -317,6 +318,7 @@ function UserAccess({ category, setData, nationalRoles }) {
               variation="secondary"
               label={t(Digit.Utils.locale.getTransformedLocale(`ASSIGN_` + category))}
               icon={"AddIcon"}
+              title={t(Digit.Utils.locale.getTransformedLocale(`ASSIGN_` + category))}
               onClick={() => setShowPopUp(true)}
             />
           </div>
@@ -328,6 +330,7 @@ function UserAccess({ category, setData, nationalRoles }) {
               variation="secondary"
               label={t(Digit.Utils.locale.getTransformedLocale(`ASSIGN_` + category))}
               style={{ margin: "auto" }}
+              title={t(Digit.Utils.locale.getTransformedLocale(`ASSIGN_` + category))}
               icon={"AddIcon"}
               onClick={() => setShowPopUp(true)}
             />
@@ -367,6 +370,7 @@ function UserAccess({ category, setData, nationalRoles }) {
               size={"large"}
               variation={"secondary"}
               label={t("CLOSE")}
+              title={t("CLOSE")}
               onClick={() => setShowPopUp(false)}
               style={{ minWidth: "200px" }}
             />,
@@ -404,11 +408,12 @@ function UserAccess({ category, setData, nationalRoles }) {
               size={"large"}
               variation={"primary"}
               label={t("YES")}
+              title={t("YES")}
               onClick={() => {
                 handleUpdateAssignEmployee(unassignPopup);
               }}
             />,
-            <Button type={"button"} size={"large"} variation={"secondary"} label={t("NO")} onClick={() => { setUnassignPopup(false); }} />,
+            <Button type={"button"} size={"large"} variation={"secondary"} label={t("NO")} title={t("NO")} onClick={() => { setUnassignPopup(false); }} />,
           ]}
           sortFooterChildren={true}
           onClose={() => {

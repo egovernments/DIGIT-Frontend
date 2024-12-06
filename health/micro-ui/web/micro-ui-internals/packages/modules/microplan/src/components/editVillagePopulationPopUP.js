@@ -242,6 +242,7 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
             size={"large"}
             variation={"secondary"}
             label={t(`HCM_MICROPLAN_EDIT_POPULATION_CLOSE`)}
+            title={t(`HCM_MICROPLAN_EDIT_POPULATION_CLOSE`)}
             onClick={onClose}
           />,
           <Button
@@ -250,6 +251,7 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
             size={"large"}
             variation={"primary"}
             label={t(`HCM_MICROPLAN_EDIT_POPULATION_${workflowAction}`)}
+            title={t(`HCM_MICROPLAN_EDIT_POPULATION_${workflowAction}`)}
             onClick={handleSave}
           />,
         ]}

@@ -118,6 +118,7 @@ const UserDownload = () => {
                             className="previous-button"
                             variation="secondary"
                             label={t("BACK")}
+                            title={t("BACK")}
                             icon={"ArrowBack"}
                         />
                     </Link>

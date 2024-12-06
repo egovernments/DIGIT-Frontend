@@ -71,7 +71,7 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { data: BOUNDARY_HIERARCHY_TYPE , isLoading: hierarchyLoading } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ 
     name: "HierarchySchema",
-    "filter": "[?(@.type=='console')]"
+    "filter": `[?(@.type==${window.Digit.Utils.campaign.getModuleName()})]`
    }], {
     select: (data) => {
       return data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy;

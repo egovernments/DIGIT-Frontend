@@ -625,6 +625,7 @@ const PlanInbox = () => {
       cell: (row, index, column, id) => (
         <Button
           label={t(`VIEW_LOGS`)}
+          title={t(`VIEW_LOGS`)}
           onClick={() => {
             setSelectedBusinessId(row?.original?.id); // Set the row.id to state
             setSelectedBoundaryCode(row?.original?.locality);
@@ -922,6 +923,7 @@ const PlanInbox = () => {
                               key={index}
                               variation={isPrimary ? "primary" : "secondary"}
                               label={t(action.action)}
+                              title={t(action.action)}
                               type="button"
                               onClick={(curr) => handleActionClick(action?.action)}
                               size="large"
@@ -942,6 +944,7 @@ const PlanInbox = () => {
                             key={index}
                             variation={isPrimary ? "primary" : "secondary"}
                             label={t(action.action)}
+                            title={t(action.action)}
                             type="button"
                             onClick={(curr) => handleActionClick(action?.action)}
                             size="large"
@@ -1043,6 +1046,7 @@ labelPrefix={"PLAN_ACTIONS_"}
             <Button
               icon="CheckCircle"
               label={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN`)}
+              title={t(`HCM_MICROPLAN_FINALIZE_MICROPLAN`)}
               onClick={handleActionBarClick}
               type="button"
               variation="primary"
@@ -1061,6 +1065,7 @@ labelPrefix={"PLAN_ACTIONS_"}
             actionFields={[
               <Button
                 label={t(`HCM_MICROPLAN_PLAN_INBOX_BACK_BUTTON`)}
+                title={t(`HCM_MICROPLAN_PLAN_INBOX_BACK_BUTTON`)}
                 onClick={() => {
                   history.push(`/${window.contextPath}/employee`);
                 }}

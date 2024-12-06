@@ -553,8 +553,8 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
 
         {internalKey > 0 && internalKey < assumptionCategories.length && (
           <ActionBar>
-            <Button className="previous-button" variation="secondary" label={t("BACK")} onClick={handleBack} />
-            <Button className="previous-button" variation="primary" label={t("NEXT")} onClick={handleNext} />
+            <Button className="previous-button" variation="secondary" label={t("BACK")} title={t("BACK")} onClick={handleBack} />
+            <Button className="previous-button" variation="primary" label={t("NEXT")} title={t("NEXT")} onClick={handleNext} />
           </ActionBar>
         )}
       </AssumptionContext.Provider>

@@ -120,6 +120,7 @@ const PopInboxTable = ({ ...props }) => {
         cell: (row, index, column, id) => (
           <Button
             label={t(`VIEW_LOGS`)}
+            title={t(`VIEW_LOGS`)}
             onClick={() => {
               setSelectedBusinessId(row.id); // Set the row.id to state
               setSelectedBoundaryCode(row.boundaryCode);
