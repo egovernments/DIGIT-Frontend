@@ -13,7 +13,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const hierarchyType = props?.props?.dataParams?.hierarchyType;
   const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ 
     name: "HierarchySchema",
-    "filter": `[?(@.type==${window.Digit.Utils.campaign.getModuleName()})]`
+    "filter": `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`
    }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` });
   const { data: mailConfig } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "mailConfig" }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.mailConfig` });
   const lowestHierarchy = useMemo(() => {

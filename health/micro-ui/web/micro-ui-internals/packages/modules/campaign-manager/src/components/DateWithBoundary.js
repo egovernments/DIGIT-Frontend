@@ -107,7 +107,7 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   const [selectedBoundaries, setSelectedBoundaries] = useState(null);
   const { data: BOUNDARY_HIERARCHY_TYPE } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ 
     name: "HierarchySchema",
-    "filter": `[?(@.type==${window.Digit.Utils.campaign.getModuleName()})]`
+    "filter": `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`
    }], {
     select: (data) => {
       return data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy;
@@ -115,7 +115,7 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   },{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` });
   const { isLoading, data: HierarchySchema } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ 
     name: "HierarchySchema",
-    "filter": `[?(@.type==${window.Digit.Utils.campaign.getModuleName()})]`
+    "filter": `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`
    }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` });
   const lowestHierarchy = useMemo(() => {
     return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.lowestHierarchy;
