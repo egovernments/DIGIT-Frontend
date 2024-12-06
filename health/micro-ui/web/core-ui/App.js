@@ -28,6 +28,20 @@ const enabledModules = [
   "HCMWORKBENCH",
   "Campaign"
 ];
+const HCM_MODULE_NAME = "boundary";
+export const OverrideUICustomizations = {
+  HCM_MODULE_NAME,
+}
+const setupLibraries = (Library, service, method) => {
+  window.Digit = window.Digit || {};
+  window.Digit[Library] = window.Digit[Library] || {};
+  window.Digit[Library][service] = method;
+};
+/* To Overide any existing config/middlewares  we need to use similar method */
+const updateCustomConfigs = () => {
+  setupLibraries("Customizations", "commonUiConfig", { ...window?.Digit?.Customizations?.commonUiConfig, ...OverrideUICustomizations });
+};
+
 
 const moduleReducers = (initData) => ({
   initData,
@@ -44,7 +58,7 @@ const initDigitUI = () => {
   initWorkbenchComponents();
   initWorkbenchHCMComponents();
   initCampaignComponents();
-
+  updateCustomConfigs();
 };
 
 initLibraries().then(() => {
