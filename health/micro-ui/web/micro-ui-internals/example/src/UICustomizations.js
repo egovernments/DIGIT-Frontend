@@ -9,6 +9,8 @@ import { Button as ButtonNew, Dropdown } from "@egovernments/digit-ui-components
 // these functions will act as middlewares
 // var Digit = window.Digit || {};
 
+const HCM_MODULE_NAME = "console";
+
 const businessServiceMap = {
   "muster roll": "MR",
 };
@@ -68,6 +70,7 @@ function cleanObject(obj) {
 }
 
 export const UICustomizations = {
+  HCM_MODULE_NAME,
   businessServiceMap,
   updatePayload: (applicationDetails, data, action, businessService) => {
     if (businessService === businessServiceMap.estimate) {
