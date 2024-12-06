@@ -57,7 +57,7 @@ const UpdateCampaign = ({hierarchyData }) => {
   const [active, setActive] = useState(0);
   const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ 
     name: "HierarchySchema",
-    "filter": `[?(@.type==${window.Digit.Utils.campaign.getModuleName()})]`
+    "filter": `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`
    }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` });
   const [hierarchyType, setHierarchyType] = useState();
   const lowestHierarchy = useMemo(() => {
