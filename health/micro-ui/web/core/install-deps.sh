@@ -20,7 +20,7 @@ copy_file "core/App.js" "src"
 copy_file "core/package.json" "package.json"
 copy_file "core/webpack.config.js" "webpack.config.js"
 copy_file "core/inter-package.json" "$INTERNALS/package.json"
-cp $INTERNALS/example/src/UICustomizations.js src/Customisations
+copy_file "$INTERNALS/example/src/UICustomizations.js" "src/Customisations"
 
 echo "UI :: core " && echo "Branch: $(git branch --show-current)" && echo "$(git log -1 --pretty=%B)" && echo "installing packages" 
 
