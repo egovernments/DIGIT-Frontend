@@ -64,6 +64,7 @@ const ChoroplethSelection = memo(
               }}
               icon={"AutoRenew"}
               label={t("CLEAR_FILTER")}
+              title={t("CLEAR_FILTER")}
               onClick={() => setChoroplethProperty()}
             />
           </div>

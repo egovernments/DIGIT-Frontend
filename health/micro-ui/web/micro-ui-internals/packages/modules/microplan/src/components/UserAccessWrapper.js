@@ -162,8 +162,8 @@ const UserAccessWrapper = ({ onSelect, props: customProps, setupCompleted }) => 
 
         {internalKey > 0 && internalKey < rolesArray.length && (
           <ActionBar>
-            <Button className="previous-button" variation="secondary" label={t("BACK")} onClick={handleBack} />
-            <Button className="previous-button" variation="primary" label={t("NEXT")} onClick={handleNext} />
+            <Button className="previous-button" variation="secondary" label={t("BACK")} title={t("BACK")} onClick={handleBack} />
+            <Button className="previous-button" variation="primary" label={t("NEXT")} title={t("NEXT")} onClick={handleNext} />
           </ActionBar>
         )}
       </UserAccessContext.Provider>

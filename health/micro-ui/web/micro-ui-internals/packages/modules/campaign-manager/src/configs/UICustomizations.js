@@ -16,6 +16,7 @@ const businessServiceMap = {};
 
 const inboxModuleNameMap = {};
 
+const HCM_MODULE_NAME = "console";
 
 const updateServiceDefinition = async (tenantId, newStatus, sdcode) => {
   try {
@@ -59,6 +60,7 @@ const retryCampaign = async (row,searchResult) => {
 }
 };
 export const UICustomizations = {
+  HCM_MODULE_NAME,
   MyChecklistSearchConfig: {
 
     preProcess: (data, additionalDetails) => {

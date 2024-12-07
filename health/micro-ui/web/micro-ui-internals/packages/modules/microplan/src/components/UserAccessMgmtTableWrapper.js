@@ -138,6 +138,7 @@ const UserAccessMgmtTableWrapper = ({ role, internalKey, setupCompleted }) => {
                 onClick={() => {
                   setChipPopUpRowId(row.planData.id)
                 }}
+                title={`+${row?.planData?.jurisdiction?.length - (2)} ${t("ES_MORE")}`}
                 variation="link"
                 style={{
                   height: "2rem",
@@ -200,6 +201,7 @@ const UserAccessMgmtTableWrapper = ({ role, internalKey, setupCompleted }) => {
 
             <Button
               label={t("WBH_EDIT")}
+              title={t("WBH_EDIT")}
               variation="secondary"
               icon={"Edit"}
               style={{ width: "7.48rem" }}

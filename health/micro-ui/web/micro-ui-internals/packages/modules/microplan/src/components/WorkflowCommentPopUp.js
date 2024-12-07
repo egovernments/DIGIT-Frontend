@@ -141,6 +141,7 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
                         style={{ minWidth: "270px" }}
                         variation="secondary"
                         label={t(`HCM_MICROPLAN_EDIT_POPULATION_CLOSE`)}
+                        title={t(`HCM_MICROPLAN_EDIT_POPULATION_CLOSE`)}
                         onClick={onClose}
                         isDisabled={isSubmitting || mutation.isLoading}  // Disable button during submission
                     />,
@@ -152,6 +153,7 @@ const WorkflowCommentPopUp = ({ onClose, heading, submitLabel, url, requestPaylo
                         variation="primary"
                         style={{ minWidth: "270px" }}
                         label={t(submitLabel)}
+                        title={t(submitLabel)}
                         onClick={handleSave}
                         isDisabled={isSubmitting || mutation.isLoading}  // Disable button during submission
                     />,

@@ -258,14 +258,14 @@ const FacilityPopUp = ({ detail, onClose }) => {
     {
       name: t("MP_VILLAGE_ACCESSIBILITY_LEVEL"), // Change to your column type
       cell: (row) => (
-        <Button label={t("VIEW_DETAILS")} onClick={() => handleViewDetailsForAccessibility(row)} variation="link" size={"medium"} style={{}} />
+        <Button label={t("VIEW_DETAILS")} title={t("VIEW_DETAILS")} onClick={() => handleViewDetailsForAccessibility(row)} variation="link" size={"medium"} style={{}} />
       ), // Replace with the appropriate field from your data
       sortable: false,
     },
     {
       name: t("MP_VILLAGE_SECURITY_LEVEL"), // Change to your column type
       cell: (row) => (
-        <Button label={t("VIEW_DETAILS")} onClick={() => handleViewDetailsForSecurity(row)} variation="link" size={"medium"} style={{}} />
+        <Button label={t("VIEW_DETAILS")} title={t("VIEW_DETAILS")} onClick={() => handleViewDetailsForSecurity(row)} variation="link" size={"medium"} style={{}} />
       ), // Replace with the appropriate field from your data
       sortable: false,
     },
@@ -591,6 +591,7 @@ const FacilityPopUp = ({ detail, onClose }) => {
               size={"large"}
               variation={"secondary"}
               label={t(`MICROPLAN_CLOSE_BUTTON`)}
+              title={t(`MICROPLAN_CLOSE_BUTTON`)}
               onClick={onClose}
               style={{ width: "200px" }}
             />,

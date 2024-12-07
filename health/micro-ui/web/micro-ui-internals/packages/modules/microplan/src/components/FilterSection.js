@@ -70,6 +70,7 @@ const FilterSection = memo(
               }}
               icon={"AutoRenew"}
               label={t("CLEAR_ALL_FILTERS")}
+              title={t("CLEAR_ALL_FILTERS")}
               onClick={() => setFilterSelections([])}
             />
           </div>
