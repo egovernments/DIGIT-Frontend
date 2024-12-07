@@ -48,31 +48,66 @@ const moduleReducers = (initData) => ({
 });
 
 const initDigitUI = () => {
-  window.Digit.ComponentRegistryService.setupRegistry({});
-  window.Digit.Customizations = {
-    PGR: {},
-    commonUiConfig: UICustomizations,
-  };
-  // initHRMSComponents();
-  initUtilitiesComponents();
-  initWorkbenchComponents();
-  initWorkbenchHCMComponents();
-  initCampaignComponents();
-  updateCustomConfigs();
+
+  try {
+    window.Digit.ComponentRegistryService.setupRegistry({});
+    window.Digit.Customizations = {
+      PGR: {},
+      commonUiConfig: UICustomizations,
+    };
+    // initHRMSComponents();
+    initUtilitiesComponents();
+    initWorkbenchComponents();
+    initWorkbenchHCMComponents();
+    initCampaignComponents();
+  } catch (error) {
+    console.error('Failed to initialize DigitUI:', error);
+    // Consider showing a user-friendly error message
+  }
+};
+let initializationError = null;
+
+const handleInitError = (error) => {
+  console.error('Failed to initialize libraries:', error);
+  initializationError = error;
 };
 
 initLibraries().then(() => {
   initDigitUI();
-});
+}).catch(handleInitError);
+
+
 
 function App() {
-  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
-  const stateCode =
-    window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") ||
-    process.env.REACT_APP_STATE_LEVEL_TENANT_ID;
-  if (!stateCode) {
-    return <h1>stateCode is not defined</h1>;
+
+    const [stateCode, setStateCode] = React.useState(null);
+
+    const [isLoading, setIsLoading] = React.useState(true);
+    React.useEffect(() => {
+      // Add any necessary initialization checks here
+      window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
+      const code =
+        window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") ||
+        process.env.REACT_APP_STATE_LEVEL_TENANT_ID;
+        setStateCode(code);
+      setIsLoading(false);
+    }, []);
+  
+    if (isLoading) {
+      return <div>Loading application...</div>;
+    }
+    // Consider adding this to your App component:
+if (initializationError) {
+    return <div>Failed to initialize application. Please refresh the page.</div>;
   }
+    if (!stateCode) {
+      return (
+        <div className="error-container">
+          <h1>Configuration Error</h1>
+          <p>State code is not defined. Please check your configuration.</p>
+        </div>
+      );
+    }
   return (
     <DigitUI
       stateCode={stateCode}
