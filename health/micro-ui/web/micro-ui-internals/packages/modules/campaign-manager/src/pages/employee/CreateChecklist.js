@@ -437,7 +437,6 @@ const CreateChecklist = () => {
     }
   };
 
-
   const onSubmit = async (formData, flag = 0, preview = null) => {
     let payload;
     if (flag === 1) {
@@ -447,9 +446,7 @@ const CreateChecklist = () => {
     }
     setSubmitting(true);
     try {
-      const data = await mutateAsync(payload); // Use mutateAsync for await support
-      // Handle successful checklist creation  
-      // Proceed with localization if needed
+      // Prepare localization data
       let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
       if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
       let roleTemp = role.toUpperCase().replace(/ /g, "_");
@@ -459,16 +456,21 @@ const CreateChecklist = () => {
         message: `${t(checklistTypeLocal)} ${t(roleLocal)}`,
         module: "hcm-checklist"
       });
+  
+      // Call upsert first
+      const localisations = uniqueLocal;
+      const localisationResult = await localisationMutateAsync(localisations);
+  
+      if (!localisationResult.success) {
+        // Exit if upsert (localisation) fails
+        setShowToast({ label: "LOCALIZATION_FAILED_PLEASE_TRY_AGAIN", isError: "true" });
+        return;
+      }
+  
+      // Proceed to create checklist
+      const data = await mutateAsync(payload);
+  
       if (data.success) { // Replace with your actual condition
-        const localisations = uniqueLocal;
-        const localisationResult = await localisationMutateAsync(localisations);
-        // Check if localization succeeded
-        if (!localisationResult.success) {
-          setShowToast({ label: "CHECKLIST_CREATED_LOCALISATION_ERROR", isError: "true" });
-          return; // Exit if localization fails
-        }
-
-        // setShowToast({ label: "CHECKLIST_AND_LOCALISATION_CREATED_SUCCESSFULLY"});
         history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
           message: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE",
           preText: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE_PRE_TEXT",
