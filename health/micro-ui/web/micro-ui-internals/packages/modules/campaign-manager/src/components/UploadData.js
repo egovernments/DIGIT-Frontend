@@ -874,7 +874,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             setIsValidation(false);
             if (temp?.additionalDetails?.sheetErrors.length === 0) {
               setShowToast({ key: "success", label: t("HCM_VALIDATION_COMPLETED") });
-              console.log("validated");
               if (temp?.id) {
                 setResourceId(temp?.id);
               }
