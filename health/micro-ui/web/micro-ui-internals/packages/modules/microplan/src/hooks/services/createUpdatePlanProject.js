@@ -826,6 +826,7 @@ const createUpdatePlanProject = async (req) => {
               return response; // Return the response for further usage if needed
             } catch (error) {
               console.error("Error in searchPlanConfig:", error);
+              setShowToast({ key: "error", label: "ERROR_IN_SEARCHPLANCONFIG" });
               throw error; // Rethrow error to handle it further up the chain if needed
             }
           };
