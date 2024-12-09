@@ -57,6 +57,7 @@ const ConfirmationPopUp = ({ onClose, alertHeading, alertMessage, submitLabel, u
                         size="large"
                         variation="secondary" 
                         label={t(submitLabel)}
+                        title={t(submitLabel)}
                         onClick={handleSave}
                         isDisabled={isSubmitting || mutation.isLoading}  // Disable button during submission
                     />,
@@ -67,6 +68,7 @@ const ConfirmationPopUp = ({ onClose, alertHeading, alertMessage, submitLabel, u
                         size="large"
                         variation="primary"
                         label={t(cancelLabel)}
+                        title={t(cancelLabel)}
                         onClick={onClose}
                         isDisabled={isSubmitting || mutation.isLoading}  // Disable button during submission
                     />,

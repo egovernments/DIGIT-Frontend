@@ -70,6 +70,7 @@ const AssumptionsList = ({ customProps, setupCompleted }) => {
                         {!(setupCompleted === 'true') &&
                             <Button
                                 label={t("WBH_EDIT")}
+                                title={t("WBH_EDIT")}
                                 variation="secondary"
                                 icon={"Edit"}
                                 size="medium"

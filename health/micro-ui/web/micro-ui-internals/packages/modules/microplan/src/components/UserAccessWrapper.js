@@ -80,6 +80,8 @@ const UserAccessWrapper = ({ onSelect, props: customProps, setupCompleted }) => 
         });
         return prevKey; // Keep the same value if condition is true
       } else {
+        setShowErrorToast(null);
+        setShowToast(null);
         return prevKey + 1; // Increment internalKey if condition is false
       }
     });
@@ -87,8 +89,12 @@ const UserAccessWrapper = ({ onSelect, props: customProps, setupCompleted }) => 
 
   const handleBack = () => {
     if (internalKey > 1) {
+      setShowErrorToast(null);
+      setShowToast(null);
       setInternalKey((prevKey) => prevKey - 1); // Update key in URL
     } else {
+      setShowErrorToast(null);
+      setShowToast(null);
       window.dispatchEvent(new Event("moveToPrevious"));
     }
   };
@@ -156,8 +162,8 @@ const UserAccessWrapper = ({ onSelect, props: customProps, setupCompleted }) => 
 
         {internalKey > 0 && internalKey < rolesArray.length && (
           <ActionBar>
-            <Button className="previous-button" variation="secondary" label={t("BACK")} onClick={handleBack} />
-            <Button className="previous-button" variation="primary" label={t("NEXT")} onClick={handleNext} />
+            <Button className="previous-button" variation="secondary" label={t("BACK")} title={t("BACK")} onClick={handleBack} />
+            <Button className="previous-button" variation="primary" label={t("NEXT")} title={t("NEXT")} onClick={handleNext} />
           </ActionBar>
         )}
       </UserAccessContext.Provider>
@@ -180,6 +186,7 @@ const UserAccessWrapper = ({ onSelect, props: customProps, setupCompleted }) => 
           onClose={() => {
             setShowErrorToast(false);
           }}
+          style={{zIndex:10001}}
           isDleteBtn={true}
         />
       )}

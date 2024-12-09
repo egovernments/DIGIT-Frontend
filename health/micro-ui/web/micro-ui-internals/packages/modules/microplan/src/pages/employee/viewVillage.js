@@ -248,6 +248,11 @@ const VillageView = () => {
                 icon="ArrowForward"
                 iconFill=""
                 isSuffix
+                title={
+                  disabledAction ? t(`HCM_MICROPLAN_VILLAGE_SECURITY_VIEW_LINK`): data?.additionalDetails?.securityDetails
+                    ? t(`HCM_MICROPLAN_VILLAGE_SECURITY_EDIT_LINK`)
+                    : t(`HCM_MICROPLAN_VILLAGE_SECURITY_DETAIL_LINK`)
+                }
                 label={
                   disabledAction ? t(`HCM_MICROPLAN_VILLAGE_SECURITY_VIEW_LINK`): data?.additionalDetails?.securityDetails
                     ? t(`HCM_MICROPLAN_VILLAGE_SECURITY_EDIT_LINK`)
@@ -258,7 +263,6 @@ const VillageView = () => {
                 optionsKey=""
                 size="medium"
                 style={{ alignSelf: "flex-start" }}
-                title=""
                 variation="link"
               />
             </div>
@@ -281,7 +285,11 @@ const VillageView = () => {
                 optionsKey=""
                 size="medium"
                 style={{ alignSelf: "flex-start" }}
-                title=""
+                title={
+                  disabledAction ? t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_DETAIL_VIEW_LINK`): data?.additionalDetails?.accessibilityDetails
+                    ? t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_DETAIL_EDIT_LINK`)
+                    : t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_DETAIL_LINK`)
+                }
                 variation="link"
               />
             </div>
@@ -327,7 +335,7 @@ const VillageView = () => {
                 optionsKey=""
                 size="medium"
                 style={{}}
-                title=""
+                title={t(`HCM_MICROPLAN_EDIT_CONFIRM_POPULATION_LABEL`)}
                 variation="secondary"
               />
             )}
@@ -395,7 +403,7 @@ const VillageView = () => {
               optionsKey=""
               size=""
               style={{}}
-              title=""
+              title={t(`HCM_MICROPLAN_COMMENT_LOG_VIEW_LINK_LABEL`)}
               variation="secondary"
             />
           </div>
@@ -419,6 +427,7 @@ const VillageView = () => {
             onClick={() => {
               history.push(`/${window.contextPath}/employee/microplan/pop-inbox?microplanId=${microplanId}&campaignId=${campaignId}`);
             }}
+            title={t(`HCM_MICROPLAN_VIEW_VILLAGE_BACK`)}
             type="button"
             variation="secondary"
           />,

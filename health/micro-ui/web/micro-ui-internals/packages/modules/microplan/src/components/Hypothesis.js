@@ -197,6 +197,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
                   <Button
                     icon="Delete"
                     label={t("DELETE")}
+                    title={t("DELETE")}
                     onClick={() => handleDeleteClick(index, item)}
                     variation="link"
                     isDisabled={assumptions?.length === 1 && category !== "CAMPAIGN_VEHICLES" ? true : false}
@@ -211,6 +212,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
 
         <Button
           icon="Add"
+          title={category === "CAMPAIGN_VEHICLES" ? t(`ADD_ASSUMPTION_${category}`) : t("ADD_ASSUMPTION")}
           label={category === "CAMPAIGN_VEHICLES" ? t(`ADD_ASSUMPTION_${category}`) : t("ADD_ASSUMPTION")}
           onClick={() => setAssumptionsPopUp(true)}
           variation="secondary"
@@ -245,11 +247,12 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
                 size={"large"}
                 variation={"secondary"}
                 label={t("YES")}
+                title={t("YES")}
                 onClick={() => {
                   handleConfirmDelete();
                 }}
               />,
-              <Button type={"button"} size={"large"} variation={"primary"} label={t("NO")} onClick={handleCancelDelete} />,
+              <Button type={"button"} size={"large"} variation={"primary"} label={t("NO")} title={t("NO")} onClick={handleCancelDelete} />,
             ]}
             sortFooterChildren={true}
             onClose={() => {
@@ -330,6 +333,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
                 size={"large"}
                 variation={"secondary"}
                 label={t("CANCEL")}
+                title={t("CANCEL")}
                 onClick={() => {
                   setAssumptionsPopUp(false);
                   setSelectedDeletedAssumption(null);
@@ -340,6 +344,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
                 size={"large"}
                 variation={"primary"}
                 label={t("ADD")}
+                title={t("ADD")}
                 onClick={() => {
                   //here if assumption name is not given then show a toast message and return
                   if (category !== "CAMPAIGN_VEHICLES" && assumptions?.includes(selectedDeletedAssumption?.name)) {
