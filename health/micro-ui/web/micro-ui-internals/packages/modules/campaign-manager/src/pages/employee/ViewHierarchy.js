@@ -6,6 +6,7 @@ import { Svgicon } from "../../utils/Svgicon";
 import { useHistory } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import MapView from "../../components/MapView";
+import { DustbinIcon } from "../../components/icons/DustbinIcon";
 import * as XLSX from "xlsx";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import validateBoundaryExcelContent from "../../utils/validateBoundaryExcel";
@@ -30,6 +31,7 @@ const ViewHierarchy = () => {
     const [fileUrl, setFileUrl] = useState("");
     const [fileData, setFileData] = useState({});
     const [fileStoreId, setFileStoreId] = useState("");
+    const [fileName, setFileName] = useState("");
     const [showToast, setShowToast] = useState(null); // State to handle toast notifications
     const [dataCreateToast, setDataCreateToast] = useState(false);
     const [disable, setDisable] = useState(false);
@@ -129,6 +131,7 @@ const ViewHierarchy = () => {
 
     const handleFileChange = async (event) => {
       const file = event.target.files[0]; // Get the selected file
+      setFileName(file.name)
       if (file) {
         // Check file extension
         const validExtensions = ['xls', 'xlsx'];
@@ -409,6 +412,11 @@ const ViewHierarchy = () => {
       return `${t(( hierarchyType + "_" + val.trim().replace(/[\s_]+/g, '')).toUpperCase())}`;
     }
 
+    const removeFile = ()=>{
+      setFileName("");
+      setDisableFile(true);
+    }
+
     const [showPopUp, setShowPopUp] = useState(false);
    
     if(!viewState || isLoading)
@@ -546,7 +554,7 @@ const ViewHierarchy = () => {
                                 />
                             </div>  
                             <div>
-                                <div style={{display:"flex", justifyContent:"space-between"}}>
+                                { disableFile && <div style={{display:"flex", justifyContent:"space-between"}}>
                                     <div style={{fontWeight:"600", fontSize:"1.2rem"}}>{t("UPLOAD_EXCEL_FOR_ALL_BOUNDARIES")}</div>
                                     <input
                                         ref={inputRef}
@@ -558,6 +566,7 @@ const ViewHierarchy = () => {
                                         className="custom-class"
                                         icon="Upload"
                                         iconFill=""
+                                        
                                         label={t("UPLOAD_EXCEL")}
                                         onClick={handleUpload}
                                         options={[]}
@@ -567,7 +576,19 @@ const ViewHierarchy = () => {
                                         title=""
                                         variation="secondary"
                                     />
-                                </div>
+                                </div>}
+                                {!disableFile && 
+                                  <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", width: "100%" }}>
+                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", maxWidth: "20rem", gap:"1rem" }}>
+                                      <div style={{ marginRight: "10px" }}>
+                                        {fileName}
+                                      </div>
+                                      <div className="dustbin-icon" onClick={() => removeFile()} style={{ cursor: "pointer", marginTop:"1.15rem" }}>
+                                        <DustbinIcon />
+                                      </div>
+                                    </div>
+                                  </div>
+                                }
                                 <div style={{height:"2rem"}}></div>
                             </div>
                             {uiValError && <InfoCard
