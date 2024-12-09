@@ -1,4 +1,4 @@
-import { Card, Uploader, Button,  ActionBar, Toast, Loader, PopUp } from "@egovernments/digit-ui-components";
+import { Card, Uploader, Button,  ActionBar, Toast, Loader, PopUp, InfoCard } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState, useRef} from "react";
 import { useTranslation } from "react-i18next";
 import XlsPreviewNew from "../../components/XlsPreviewNew";
@@ -8,6 +8,7 @@ import { useLocation } from "react-router-dom";
 import MapView from "../../components/MapView";
 import * as XLSX from "xlsx";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
+import validateBoundaryExcelContent from "../../utils/validateBoundaryExcel";
 
 const ViewHierarchy = () => {
     const { t } = useTranslation();
@@ -119,31 +120,52 @@ const ViewHierarchy = () => {
 
     }
 
+    const [uiValError, setUiValError] = useState(false);
+    const [uiErrorMsg, setUiErrorMsg] = useState("");
+
     const handleUpload = () => {
         inputRef.current.click();
     };
 
     const handleFileChange = async (event) => {
-        const file = [event.target.files[0]]; // Get the first selected file
-        if (file) {
-          // Check file extension
-          const validExtensions = ['xls', 'xlsx'];
-          const fileExtension = file[0].name.split('.').pop().toLowerCase(); // Get the file extension
-          
-          if (!validExtensions.includes(fileExtension)) {
-              setShowToast({ label: t("INVALID_FILE_FORMAT"), isError: "error" });
-              setDisableFile(true);
-              return; // Exit the function if the file is not valid
-          }
-          try {
-            // Call function to upload the selected file to an API
-            await uploadFileToAPI(file);
-            setDisableFile(false);
-            setShowToast({ label: t("FILE_UPLOADED_SUCCESSFULLY"), isError:"success"});
-          } catch (error) {
-            setShowToast({ label: error?.response?.data?.Errors?.[0]?.message ? error?.response?.data?.Errors?.[0]?.message : t("FILE_UPLOAD_FAILED") , isError:"error" });
-          }
+      const file = event.target.files[0]; // Get the selected file
+      if (file) {
+        // Check file extension
+        const validExtensions = ['xls', 'xlsx'];
+        const fileExtension = file.name.split('.').pop().toLowerCase(); // Get the file extension
+    
+        if (!validExtensions.includes(fileExtension)) {
+          setShowToast({ label: t("INVALID_FILE_FORMAT"), isError: "error" });
+          setDisableFile(true);
+          event.target.value = "";
+          return; // Exit the function if the file is not valid
         }
+    
+        try {
+          // Parse the file and validate its content
+          const isValid = await validateBoundaryExcelContent(file, t);
+          if (!isValid.success) {
+            // setShowToast({ label: isValid.error, isError: "error" });
+            setUiValError(true);
+            setUiErrorMsg(isValid.error);
+            setDisableFile(true);
+            event.target.value = "";
+            return; // Exit if validation fails
+          }
+    
+          // Call function to upload the validated file to an API
+          await uploadFileToAPI([file]);
+          setDisableFile(false);
+          setUiValError(false);
+          setShowToast({ label: t("FILE_UPLOADED_SUCCESSFULLY"), isError: "success" });
+        } catch (error) {
+          event.target.value = "";
+          setShowToast({
+            label: error?.response?.data?.Errors?.[0]?.message || t("FILE_UPLOAD_FAILED"),
+            isError: "error",
+          });
+        }
+      }
     };
 
     const uploadFileToAPI = async (files) => {
@@ -547,7 +569,14 @@ const ViewHierarchy = () => {
                                     />
                                 </div>
                                 <div style={{height:"2rem"}}></div>
-                            </div>                  
+                            </div>
+                            {uiValError && <InfoCard
+                              label="Info"
+                              text={uiErrorMsg}
+                              variant="error"
+                              style={{maxWidth:"200rem"}}
+                            /> }  
+                            <div style={{marginBottom:"2rem"}}></div>               
                         </Card>
                         <ActionBar
                             actionFields={[
@@ -625,7 +654,6 @@ const ViewHierarchy = () => {
                 {previewPage && (
                     <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
                         <div className="hierarchy-boundary-heading">{t("CONFIRM_BOUNDARY_DATA")}</div>
-                        <div style={{height:"1.5rem"}}></div>
                         {!dataCreationGoing && <XlsPreviewNew file={fileData} onDownload={() => {}} onBack={() => {setShowPreview(false); setUploadPage(true)}} />}
                         {dataCreationGoing && <Loader />}
                         <ActionBar
