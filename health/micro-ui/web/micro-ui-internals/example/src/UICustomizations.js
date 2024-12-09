@@ -9,6 +9,7 @@ import { Button as ButtonNew, Dropdown } from "@egovernments/digit-ui-components
 // these functions will act as middlewares
 // var Digit = window.Digit || {};
 
+
 const businessServiceMap = {
   "muster roll": "MR",
 };
@@ -840,7 +841,7 @@ export const UICustomizations = {
             <div>
               {microplanFileId && row?.status == "RESOURCE_ESTIMATIONS_APPROVED" ? (
                 <div>
-                  <ButtonNew style={{ width: "20rem" }} onClick={handleDownload} icon="DownloadIcon" label={t("WBH_DOWNLOAD_MICROPLAN")} />
+                  <ButtonNew style={{ width: "20rem" }} onClick={handleDownload} icon="DownloadIcon" label={t("WBH_DOWNLOAD_MICROPLAN")} title={t("WBH_DOWNLOAD_MICROPLAN")} />
                 </div>
               ) : (
                 <div className={"action-button-open-microplan"}>
@@ -849,6 +850,7 @@ export const UICustomizations = {
                       type="actionButton"
                       variation="secondary"
                       label={t("MP_ACTIONS_FOR_MICROPLAN_SEARCH")}
+                      title={t("MP_ACTIONS_FOR_MICROPLAN_SEARCH")}
                       options={options}
                       style={{ width: "20rem" }}
                       optionsKey="name"
@@ -1024,6 +1026,7 @@ export const UICustomizations = {
           return row.status === "EXECUTION_TO_BE_DONE" ? (
             <ButtonNew
               label={t("START")}
+              title={t("START")}
               variation="primary"
               icon={"ArrowForward"}
               type="button"
@@ -1036,6 +1039,7 @@ export const UICustomizations = {
           ) : row.status === "RESOURCE_ESTIMATIONS_APPROVED" ? (
             <ButtonNew
               label={t("WBH_DOWNLOAD_MICROPLAN")}
+              title={t("WBH_DOWNLOAD_MICROPLAN")}
               variation="primary"
               icon={"FileDownload"}
               style={{width:"290px"}}
@@ -1046,6 +1050,7 @@ export const UICustomizations = {
           ) : (
             <ButtonNew
               label={t("WBH_EDIT")}
+              title={t("WBH_EDIT")}
               variation="primary"
               icon={"Edit"}
               style={{width:"290px"}}
@@ -1321,7 +1326,7 @@ export const UICustomizations = {
                 optionsKey=""
                 size="medium"
                 style={{}}
-                title=""
+                title={t(key)}
                 variation="primary"
               />
               {showPopup && (

@@ -34,6 +34,7 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
                     {!(setupCompleted === 'true') &&
                         <Button
                             label={t("WBH_EDIT")}
+                            title={t("WBH_EDIT")}
                             variation="secondary"
                             icon={"Edit"}
                             size="medium"
@@ -83,6 +84,7 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
 
                         <Button
                             label={t("WBH_EDIT")}
+                            title={t("WBH_EDIT")}
                             variation="secondary"
                             icon={"Edit"}
                             size="medium"

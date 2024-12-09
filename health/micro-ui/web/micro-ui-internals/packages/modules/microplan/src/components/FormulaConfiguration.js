@@ -375,9 +375,9 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                       icon="Delete"
                       iconFill=""
                       label={t("DELETE")}
+                      title={t("DELETE")}
                       size=""
                       style={{ padding: "0px" }}
-                      title=""
                       variation="secondary"
                       onClick={() => handleDeleteClick(index, formula)}
                     />
@@ -402,6 +402,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
         <Button
           icon="Add"
           label={t("ADD_NEW_FORMULA")}
+          title={t("ADD_NEW_FORMULA")}
           onClick={() => setFormulasPopUp(true)}
           variation="secondary"
           // isDisabled={isAddNewDisabled}
@@ -435,11 +436,12 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                 size={"large"}
                 variation={"secondary"}
                 label={t("YES")}
+                title={t("YES")}
                 onClick={() => {
                   handleConfirmDelete();
                 }}
               />,
-              <Button type={"button"} size={"large"} variation={"primary"} label={t("NO")} onClick={handleCancelDelete} />,
+              <Button type={"button"} size={"large"} variation={"primary"} label={t("NO")} title={t("NO")} onClick={handleCancelDelete} />,
             ]}
             sortFooterChildren={true}
             onClose={() => {
@@ -497,6 +499,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                 size={"large"}
                 variation={"secondary"}
                 label={t("CANCEL")}
+                title={t("CANCEL")}
                 onClick={() => {
                   setFormulasPopUp(false);
                   setSelectedDeletedFormula(null);
@@ -507,6 +510,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                 size={"large"}
                 variation={"primary"}
                 label={t("ADD")}
+                title={t("ADD")}
                 onClick={() => {
                   if(!selectedDeletedFormula){
                     setShowToast({

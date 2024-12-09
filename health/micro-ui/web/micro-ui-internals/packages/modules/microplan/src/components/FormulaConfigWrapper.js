@@ -548,7 +548,7 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
             </Card>
           </div>
 
-          <div className="card-container" style={{ width: "77vw", marginBottom: "2.5rem" }}>
+          <div className="card-container" style={{ width: "100%", marginBottom: "2.5rem",maxWidth:'100%',overflow:"hidden" }}>
             <FormulaConfiguration
               category={ruleConfigurationCategories[formulaInternalKey - 1]?.category}
               formulas={[...filteredFormulas?.filter((item) => !deletedFormulas?.includes(item.output)), ...customFormula]}
@@ -562,8 +562,8 @@ const FormulaConfigWrapper = ({ onSelect, props: customProps }) => {
 
         {formulaInternalKey > 0 && formulaInternalKey < ruleConfigurationCategories?.length && (
           <ActionBar>
-            <Button className="previous-button" variation="secondary" label={t("BACK")} onClick={handleBack} />
-            <Button className="previous-button" variation="primary" label={t("NEXT")} onClick={handleNext} />
+            <Button className="previous-button" variation="secondary" label={t("BACK")} title={t("BACK")} onClick={handleBack} />
+            <Button className="previous-button" variation="primary" label={t("NEXT")} title={t("NEXT")} onClick={handleNext} />
           </ActionBar>
         )}
       </FormulaContext.Provider>

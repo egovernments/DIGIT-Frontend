@@ -693,6 +693,7 @@ const PopInbox = () => {
                               key={index}
                               variation={isPrimary ? "primary" : "secondary"}
                               label={t(action.action)}
+                              title={t(action.action)}
                               type="button"
                               onClick={() => handleActionClick(action.action)}
                               size="large"
@@ -714,6 +715,7 @@ const PopInbox = () => {
                             key={index}
                             variation={isPrimary ? "primary" : "secondary"}
                             label={t(action.action)}
+                            title={t(action.action)}
                             type="button"
                             onClick={() => handleActionClick(action.action)}
                             size="large"
@@ -804,7 +806,7 @@ const PopInbox = () => {
       {isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "CENSUS_DATA_APPROVAL_IN_PROGRESS" &&
         <ActionBar
           actionFields={[
-            <Button icon="CheckCircle" label={t(`HCM_MICROPLAN_FINALIZE_POPULATION_DATA`)} onClick={handleActionBarClick} type="button" variation="primary" />,
+            <Button icon="CheckCircle" label={t(`HCM_MICROPLAN_FINALIZE_POPULATION_DATA`)} title={t(`HCM_MICROPLAN_FINALIZE_POPULATION_DATA`)} onClick={handleActionBarClick} type="button" variation="primary" />,
           ]}
           className=""
           maxActionFieldsAllowed={5}
@@ -816,7 +818,7 @@ const PopInbox = () => {
       {((!isRootApprover && totalcount===0) || disabledAction) &&
         <ActionBar
           actionFields={[
-            <Button label={t(`HCM_MICROPLAN_POP_INBOX_BACK_BUTTON`)} onClick={()=> {
+            <Button label={t(`HCM_MICROPLAN_POP_INBOX_BACK_BUTTON`)} title={t(`HCM_MICROPLAN_POP_INBOX_BACK_BUTTON`)} onClick={()=> {
               history.push(`/${window.contextPath}/employee`);
             }} type="button" variation="primary" icon={"ArrowBack"}/>,
           ]}

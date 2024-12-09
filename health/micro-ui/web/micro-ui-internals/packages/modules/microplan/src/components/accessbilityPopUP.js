@@ -156,12 +156,14 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess, disableEditing=false }
             label={t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_CLOSE_LABEL`)}
             onClick={onClose}
             style={{ width: "160px" }}
+            title={t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_CLOSE_LABEL`)}
           />,
           <Button
             className={"campaign-type-alert-button"}
             type={"button"}
             size={"large"}
             variation={"primary"}
+            title={t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_SAVE_LABEL`)}
             label={t(`HCM_MICROPLAN_VILLAGE_ACCESSIBILITY_SAVE_LABEL`)}
             style={{ width: "160px" }}
             onClick={handleSave} // Calls save function on click

@@ -189,23 +189,32 @@ export const cycleDataRemap=(data)=> {
   
     const conditions = rule.attributes.map(attr => {
       const attributeCode = projectType === "IRS-mz" 
-      ? "TYPE_OF_STRUCTURE" 
-      : projectType === "LLIN-mz" 
-      ? "memberCount" 
-      : attr?.attribute?.code;
+        ? "TYPE_OF_STRUCTURE" 
+        : projectType === "LLIN-mz" 
+        ? "memberCount" 
+        : attr?.attribute?.code;
+    
       if (attr?.operator?.code === "IN_BETWEEN") {
-        if (type === "create") {
-          return `${attr.toValue}<=${attributeCode.toLowerCase()}and${attributeCode.toLowerCase()}<${attr.fromValue}`;
-        }        
-        else return `${attr.toValue} <= ${attr.attribute.code} < ${attr.fromValue}`;
-      } else {
-        if (type === "create") {
-          return `${projectType === "LLIN-mz" ? attributeCode : attributeCode.toLowerCase()}${getOperatorSymbol(attr?.operator?.code)}${attr?.value}`;
-        }        
-        else return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${attr?.value}`;
+        // Round toValue and fromValue to the nearest integer
+        const roundedToValue = Math.round(attr.toValue);
+        const roundedFromValue = Math.round(attr.fromValue);
         
+        if (type === "create") {
+          return `${roundedToValue}<=${attributeCode.toLowerCase()}and${attributeCode.toLowerCase()}<${roundedFromValue}`;
+        } else {
+          return `${roundedToValue} <= ${attr.attribute.code} < ${roundedFromValue}`;
+        }
+      } else {
+        // Round attr.value to the nearest integer
+        const roundedValue = Math.round(attr.value);
+    
+        if (type === "create") {
+          return `${projectType === "LLIN-mz" ? attributeCode : attributeCode.toLowerCase()}${getOperatorSymbol(attr?.operator?.code)}${roundedValue}`;
+        } else {
+          return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${roundedValue}`;
+        }
       }
-    });
+    });    
   
     return {
       condition: conditions.join("and"),

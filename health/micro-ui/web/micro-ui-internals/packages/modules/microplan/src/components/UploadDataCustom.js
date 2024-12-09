@@ -687,6 +687,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
               </Header>
               <Button
                 label={t("WBH_DOWNLOAD_TEMPLATE")}
+                title={t("WBH_DOWNLOAD_TEMPLATE")}
                 variation="secondary"
                 icon={"FileDownload"}
                 type="button"

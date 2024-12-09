@@ -71,7 +71,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     [
       {
         name: "HierarchySchema",
-        filter: "[?(@.type=='console')]",
+        filter: `[?(@.type=='${window?.Digit?.Utils?.campaign?.getModuleName()}')]`,
       },
     ],
     { select: (MdmsRes) => MdmsRes },
@@ -884,7 +884,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
 
   useEffect(() => {
     const isMicroplanScreen = source === "microplan";
-    const urlKey=currentKey;
+    const urlKey = currentKey;
     findHighestStepCount({ totalFormData, campaignConfig, isDraft, setActive, isMicroplanScreen, urlKey });
   }, [totalFormData, campaignConfig]);
 
@@ -958,11 +958,14 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         );
         break;
       case "HCM_UPDATE_CAMPAIGN":
-        history.push(`/${window.contextPath}/employee/campaign/update-campaign?key=1&parentId=${draftData?.id}&campaignName=${draftData?.campaignName}`, {
-          name: draftData?.campaignName,
-          projectId: draftData?.projectId,
-          data: draftData,
-        });
+        history.push(
+          `/${window.contextPath}/employee/campaign/update-campaign?key=1&parentId=${draftData?.id}&campaignName=${draftData?.campaignName}`,
+          {
+            name: draftData?.campaignName,
+            projectId: draftData?.projectId,
+            data: draftData,
+          }
+        );
         break;
       default:
         break;
