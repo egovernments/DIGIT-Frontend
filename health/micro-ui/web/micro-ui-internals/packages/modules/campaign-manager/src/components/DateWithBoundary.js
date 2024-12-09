@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import { LabelFieldPair, Header } from "@egovernments/digit-ui-react-components";
 import { Button, Card, Dropdown, MultiSelectDropdown, Toast } from "@egovernments/digit-ui-components";
 import BoundaryWithDate from "./BoundaryWithDate";
+import { CONSOLE_MDMS_MODULENAME } from "../Module";
 
 const initialState = (projectData) => {
   return projectData;
@@ -104,15 +105,21 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   const { state } = useLocation();
   const historyState = window.history.state;
   const [selectedBoundaries, setSelectedBoundaries] = useState(null);
-  const { data: BOUNDARY_HIERARCHY_TYPE } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }], {
+  const { data: BOUNDARY_HIERARCHY_TYPE } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ 
+    name: "HierarchySchema",
+    "filter": `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`
+   }], {
     select: (data) => {
-      return data?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)?.hierarchy;
+      return data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy;
     },
-  });
-  const { isLoading, data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
+  },{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` });
+  const { isLoading, data: HierarchySchema } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ 
+    name: "HierarchySchema",
+    "filter": `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`
+   }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` });
   const lowestHierarchy = useMemo(() => {
-    return hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)?.lowestHierarchy;
-  }, [hierarchyConfig]);
+    return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.lowestHierarchy;
+  }, [HierarchySchema]);
   const [hierarchyTypeDataresult, setHierarchyTypeDataresult] = useState([]);
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [filteredBoundaries, setFilteredBoundaries] = useState([]);
@@ -242,9 +249,9 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   return (
     <>
       <Card className={"campaign-update-container"}>
-        <Header className="header">{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_HEADER`)}</Header>
-        <Card className={"search-field-container"}>
-          <p className="field-description">{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_SUB_TEXT`)}</p>
+        <Header className="header" styles={{ marginBottom: "0rem" }}>{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_HEADER`)}</Header>
+        <div className={"search-field-container"}>
+          <p className="field-description" style={{ marginTop: "0rem" }}>{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_SUB_TEXT`)}</p>
           <div className="label-field-grid">
             <LabelFieldPair className="update-date-labelField">
               <div className="update-label">
@@ -284,7 +291,7 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
             </LabelFieldPair>
             <Button variation="primary" label={t(`CAMPAIGN_SELECT_BOUNDARY_BUTTON`)} onClick={() => selectBoundary()} />
           </div>
-        </Card>
+        </div>
       </Card>
       {dateReducer?.length > 0 &&
         dateReducer?.map((item, index) => (

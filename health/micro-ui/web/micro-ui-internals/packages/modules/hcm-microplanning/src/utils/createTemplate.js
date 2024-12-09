@@ -1,4 +1,4 @@
-import { BOUNDARY_DATA_SHEET, FACILITY_DATA_SHEET, SCHEMA_PROPERTIES_PREFIX, commonColumn } from "../configs/constants";
+import { BOUNDARY_DATA_SHEET, FACILITY_DATA_SHEET, SCHEMA_PROPERTIES_PREFIX, UPLOADED_DATA_ACTIVE_STATUS, commonColumn } from "../configs/constants";
 
 export const fetchBoundaryData = async (tenantId, hierarchyType, codes) => {
   // request for boundary relation api
@@ -349,15 +349,16 @@ async function getAllFacilities(tenantId) {
   return searchedFacilities;
 }
 
-const addFacilitySheet = (xlsxData, mapping, facilities, schema, t) => {
+const addFacilitySheet = (xlsxData, mapping, facilities, schema, activeInactiveField, t) => {
   if (!mapping) return xlsxData;
   // Create header row
   const headers = Object.keys(mapping);
 
   // Create data rows
-  const dataRow = [];
+  let dataRow = [];
   for (const facility of facilities) {
     facility.isPermanent = facility.isPermanent ? t("PERMAENENT") : t("TEMPORARY");
+    // facility[activeInactiveField] = t(UPLOADED_DATA_ACTIVE_STATUS);
     dataRow.push(headers.map((header) => facility[mapping[header]]));
   }
   headers.push(commonColumn);
@@ -371,6 +372,16 @@ const addFacilitySheet = (xlsxData, mapping, facilities, schema, t) => {
     }
   }
   headers.push(...additionalCols);
+  const activeInactiveFieldIndex = headers.indexOf(activeInactiveField);
+  if (activeInactiveFieldIndex !== -1) {
+    dataRow = dataRow.map((item) => {
+      if (item?.length < activeInactiveFieldIndex) {
+        item.push(...Array(activeInactiveFieldIndex - item.length + 1).fill(""));
+      }
+      item[activeInactiveFieldIndex] = t(UPLOADED_DATA_ACTIVE_STATUS);
+      return item;
+    });
+  }
   // Combine headers and data rows
   const arrayOfArrays = [headers.map((item) => generateLocalisationKeyForSchemaProperties(item)), ...dataRow];
 
@@ -474,7 +485,7 @@ const fetchFilteredBoundaries = async (boundaries, tenantId, hierarchyType) => {
 const addFacilityDataToSheets = async (xlsxData, schema, tenantId, t) => {
   const facilities = await getAllFacilities(tenantId);
   if (schema?.template?.facilitySchemaApiMapping) {
-    return addFacilitySheet(xlsxData, schema.template.facilitySchemaApiMapping, facilities, schema, t);
+    return addFacilitySheet(xlsxData, schema.template.facilitySchemaApiMapping, facilities, schema, schema.activeInactiveField, t);
   }
   // If no specific facility schema mapping, add default facility data
   const facilitySheet = {

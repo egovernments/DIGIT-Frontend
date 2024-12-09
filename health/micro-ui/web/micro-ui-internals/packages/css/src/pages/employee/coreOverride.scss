@@ -8,7 +8,7 @@
 /* login  screen  issue*/
 
 .primary-label-btn {
-  color: theme(digitv2.lightTheme.primary);
+  color: theme(digitv2.lightTheme.primary) !important;
 }
 
 /* landing  screen  issue*/
@@ -38,7 +38,12 @@
     background-color: theme(digitv2.lightTheme.primary);
   }
 }
-
+.submit-bar {
+  background-color: theme(digitv2.lightTheme.primary);
+}
+.link-label {
+  color: theme(digitv2.lightTheme.primary) !important;
+}
 .jk-digit-secondary-btn {
   color: theme(digitv2.lightTheme.primary);
   border-color: theme(digitv2.lightTheme.primary);
@@ -77,41 +82,6 @@
 }
 /* toast new componnet css added */
 
-.toast-success {
-  gap: 0.5rem;
-  height: 3rem;
-  padding: 0.75rem 0.5rem 0.75rem 0.75rem !important;
-  background-color: theme(digitv2.alert.success);
-  transition: bottom 0.5s ease;
-  grid-gap: 0.5rem;
-  &.error {
-    background-color: theme(digitv2.alert.error) !important;
-  }
-
-  &.warning {
-    background-color: #f19100;
-
-    &.warning-buttons {
-      @apply block;
-    }
-  }
-
-  h2 {
-    @apply text-left overflow-hidden whitespace-no-wrap flex-grow flex items-center h-6;
-    letter-spacing: 0rem;
-    color: theme(digitv2.lightTheme.paper);
-    margin: 0rem;
-    text-overflow: ellipsis;
-    font-family: Roboto;
-    font-weight: 500;
-    font-size: 1.25rem;
-    font-style: normal;
-  }
-  svg {
-    @apply flex-shrink-0;
-  }
-}
-
 @keyframes slideInFromBottom {
   from {
     bottom: -3rem;
@@ -133,13 +103,14 @@
 }
 header {
   @extend .typography.text-heading-xl;
+  margin-bottom: 0rem;
 }
-.digit-button-primary{
+.digit-button-primary {
   background-color: theme(digitv2.lightTheme.primary) !important;
 }
-.digit-button-secondary{
-  .icon-label-container{
-    h2{
+.digit-button-secondary {
+  .icon-label-container {
+    h2 {
       color: theme(digitv2.lightTheme.primary) !important;
     }
   }
@@ -164,10 +135,77 @@ header {
   @apply flex justify-end;
 }*/
 
-.employee{
-  .digit-employeeSidebar{
-    .sidebar{
-      z-index:999
+.employee {
+  .digit-employeeSidebar {
+    .sidebar {
+      z-index: 999;
     }
   }
+}
+
+.digit-toast-success {
+  transform: translateX(-50%);
+  left: 50%;
+  bottom: -100%;
+}
+
+@keyframes slideInFromBottom {
+  from {
+    bottom: -100%;
+  }
+  to {
+    bottom: 4.5rem;
+  }
+}
+
+.digit-toast-success.animate {
+  animation: slideInFromBottom 0.5s ease forwards;
+}
+.horizontal-nav {
+  background-color: transparent !important;
+}
+.horizontal-nav .sidebar-list.active .menu-label {
+  color: theme(digitv2.lightTheme.primary);
+}
+.horizontal-nav .sidebar-list.active {
+  border-bottom: 3px solid #c84c0e;
+}
+.stepper-wrapper {
+  width: max-content;
+}
+.stepper-label {
+  width: max-content;
+}
+
+.digit-popup-children-wrap {
+  .parent-group {
+    .digit-tag-container {
+      max-width: 100%;
+    }
+  }
+}
+.digit-card-label {
+  width: 30%;
+}
+.selecting-boundaries-pop {
+  min-height: 50%;
+}
+.employee .digit-employeeSidebar .digit-sidebar {
+  z-index: 999;
+}
+.employee .digit-topbar {
+  z-index: 9999;
+}
+.digit-popup-overlay .digit-popup-wrapper {
+  z-index: 10000;
+}
+.action-bar-wrap .actionBarClass {
+  z-index: 10;
+}
+.campaign-flow-stepper{
+  margin-left: -5.625rem;
+  margin-right: -6.875rem;
+}
+.wbh-header-container{
+  margin: 0rem;
 }

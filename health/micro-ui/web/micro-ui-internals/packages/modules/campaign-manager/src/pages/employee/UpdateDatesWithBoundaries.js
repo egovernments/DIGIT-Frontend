@@ -3,8 +3,10 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router-dom";
 import { dateChangeBoundaryConfig, dateChangeConfig } from "../../configs/dateChangeBoundaryConfig";
-import { Button, InfoCard, PopUp, Toast } from "@egovernments/digit-ui-components";
+import { Button, InfoCard, PopUp, Toast , Tag} from "@egovernments/digit-ui-components";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
+import { CONSOLE_MDMS_MODULENAME } from "../../Module";
+
 
 function UpdateDatesWithBoundaries() {
   const { t } = useTranslation();
@@ -15,13 +17,14 @@ function UpdateDatesWithBoundaries() {
   const [showPopUp, setShowPopUp] = useState(null);
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
+  const campaignName = searchParams.get("campaignName");
   const { isLoading: DateWithBoundaryLoading, data: DateWithBoundary } = Digit.Hooks.useCustomMDMS(
     tenantId,
-    "HCM-ADMIN-CONSOLE",
+    CONSOLE_MDMS_MODULENAME,
     [{ name: "dateWithBoundary" }],
     {
       select: (data) => {
-        return data?.["HCM-ADMIN-CONSOLE"]?.dateWithBoundary?.[0]?.dateWithBoundary;
+        return data?.[CONSOLE_MDMS_MODULENAME]?.dateWithBoundary?.[0]?.dateWithBoundary;
       },
     }
   );
@@ -39,12 +42,12 @@ function UpdateDatesWithBoundaries() {
     if (DateWithBoundary) {
       const temp = data?.dateWithBoundary;
       // const allCycleDateValid = temp
-      //   .map((i) => i.additionalDetails.projectType.cycles.every((j) => j.startDate && j.endDate))
+      //   .map((i) => i?.additionalDetails?.projectType?.cycles.every((j) => j?.startDate && j?.endDate))
       //   .every((k) => k === true);
       const allCycleDateValid = temp?.projectType === "MR-DN" 
       ? temp.map((i) => i?.additionalDetails?.projectType?.cycles.every((j) => j?.startDate && j?.endDate)).every((k) => k === true) 
       : true;
-      const allDateValid = temp.every((i) => i.startDate && i.endDate);
+      const allDateValid = temp.every((i) => i?.startDate && i?.endDate);
 
       if (temp?.projectType === "MR-DN" && allCycleDateValid && allDateValid) {
         return true;
@@ -105,6 +108,7 @@ function UpdateDatesWithBoundaries() {
           //   };
           // }
         });
+        // const temp = await Digit.Hooks.campaign.useProjectUpdateWithBoundary({ formData: payload });
         const temp = await Digit.Hooks.campaign.useProjectUpdateWithBoundary({ formData: formData?.dateWithBoundary });
         // setShowToast({ isError: false, label: "DATE_UPDATED_SUCCESSFULLY" });
         history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
@@ -112,7 +116,7 @@ function UpdateDatesWithBoundaries() {
           // text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXTKK"),
           // info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXTKK"),
           actionLabel: t("HCM_DATE_CHANGE_SUCCESS_RESPONSE_ACTION"),
-          actionLink: `/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=10&summary=true`
+          actionLink: `/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=14&summary=true`
         });
       } else {
         const url = getProjectServiceUrl();
@@ -129,7 +133,7 @@ function UpdateDatesWithBoundaries() {
           // text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXTKK"),
           // info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXTKK"),
           actionLabel: t("HCM_DATE_CHANGE_SUCCESS_RESPONSE_ACTION"),
-          actionLink: `/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=10&summary=true`
+          actionLink: `/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=14&summary=true`,
         });
       }
     } catch (error) {
@@ -142,6 +146,7 @@ function UpdateDatesWithBoundaries() {
 
   return (
     <div>
+      <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
       <FormComposerV2
         label={t("CAMPAIGN_UPDATE_DATE_SUBMIT")}
         config={

@@ -33,6 +33,33 @@ import UpdateDatesWithBoundaries from "./pages/employee/UpdateDatesWithBoundarie
 import DateWithBoundary from "./components/DateWithBoundary";
 import BoundaryWithDate from "./components/BoundaryWithDate";
 import DateAndCycleUpdate from "./pages/employee/DateAndCycleUpdate";
+import { CreateChecklist } from "./pages/employee/CreateChecklist";
+import CreateQuestionContext from "./components/CreateQuestionContext";
+import SearchChecklist from "./pages/employee/SearchChecklist";
+import DeliveryDetailsSummary from "./components/DeliveryDetailsSummary";
+import DataUploadSummary from "./components/DataUploadSummary";
+import CampaignDetailsSummary from "./components/CampaignDetailsSummary";
+import BoundaryDetailsSummary from "./components/BoundaryDetailsSummary";
+import UpdateBoundary from "./pages/employee/UpdateCampaign";
+import UpdateBoundaryWrapper from "./components/UpdateBoundaryWrapper";
+// import SelectingBoundaryComponent from "./components/SelectingBoundaryComponent";
+import { Wrapper } from "./components/SelectingBoundaryComponent";
+import SelectingBoundariesDuplicate from "./components/SelectingBoundariesDuplicate";
+import CampaignUpdateSummary from "./components/CampaignUpdateSummary";
+import XlsPreview from "./components/XlsPreview";
+import BulkUpload from "./components/BulkUpload";
+import BoundarySummary from "./components/BoundarySummary";
+import GeoPode from "./pages/employee/BoundaryRelationCreate";
+import ViewBoundary from "./pages/employee/ViewBoundary";
+import ViewHierarchy from "./pages/employee/ViewHierarchy";
+import MultiSelectDropdown from "./components/MultiSelectDropdown";
+import MapView from "./components/MapView";
+import NoResultsFound from "./components/NoResultsFound";
+
+/**
+ * MDMS Module name
+ */
+export const CONSOLE_MDMS_MODULENAME="HCM-ADMIN-CONSOLE";
 
 /**
  * The CampaignModule function fetches store data based on state code, module code, and language, and
@@ -42,19 +69,32 @@ import DateAndCycleUpdate from "./pages/employee/DateAndCycleUpdate";
  */
 const CampaignModule = ({ stateCode, userType, tenants }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const { data: BOUNDARY_HIERARCHY_TYPE } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }], {
+  const { data: BOUNDARY_HIERARCHY_TYPE , isLoading: hierarchyLoading } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ 
+    name: "HierarchySchema",
+    "filter": `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`
+   }], {
     select: (data) => {
-      return data?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)?.hierarchy;
+      return data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy;
     },
-  });
+  },
+  { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
+);
 
-  const moduleCode = ["campaignmanager", "workbench", "mdms", "schema", "hcm-admin-schemas", `boundary-${BOUNDARY_HIERARCHY_TYPE}`];
+
+  const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({BOUNDARY_HIERARCHY_TYPE,tenantId});
+  const modulePrefix = "hcm";
+
+  const moduleCode = BOUNDARY_HIERARCHY_TYPE 
+  ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`] 
+  : [ "campaignmanager", "schema", "admin-schemas","checklist"]; 
+
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
     moduleCode,
     language,
+    modulePrefix,
   });
 
   if (isLoading) {
@@ -64,11 +104,12 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
   return (
     <ErrorBoundary moduleName="CAMPAIGN">
       <TourProvider>
-        <EmployeeApp BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE} path={path} stateCode={stateCode} url={url} userType={userType} />
+        <EmployeeApp BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE} path={path} stateCode={stateCode} url={url} userType={userType} hierarchyData={hierarchyData} />
       </TourProvider>
     </ErrorBoundary>
   );
 };
+
 
 const componentsToRegister = {
   CampaignModule: CampaignModule,
@@ -99,7 +140,28 @@ const componentsToRegister = {
   DateWithBoundary,
   BoundaryWithDate,
   DateAndCycleUpdate,
-  TimelineComponent
+  TimelineComponent,
+  CreateChecklist,
+  CreateQuestion: CreateQuestionContext,
+  SearchChecklist,
+  DeliveryDetailsSummary,
+  DataUploadSummary,
+  CampaignDetailsSummary,
+  BoundaryDetailsSummary,
+  Wrapper,
+  UpdateBoundary,
+  UpdateBoundaryWrapper,
+  SelectingBoundariesDuplicate,
+  BulkUpload,
+  CampaignUpdateSummary,
+  XlsPreview,
+  MultiSelectDropdownBoundary:MultiSelectDropdown,
+  GeoPode,
+  ViewBoundary,
+  ViewHierarchy,
+  BoundarySummary,
+  MapView,
+  NoResultsFound
 };
 
 const overrideHooks = () => {

@@ -92,8 +92,7 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
 
       <Tabs deliveryData={deliveryData} tabCount={deliveryData?.length} activeTab={activeTab} onTabChange={handleTabChange} />
 
-      {deliveryData
-        .find((i) => i.active === true)
+      {deliveryData?.find((i) => i?.active === true)
         ?.deliveryRules?.map((rules, ruleIndex) => {
           return (
             <Card className="delivery-preview-card">
@@ -129,7 +128,7 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
                     },
                     {
                       Header: t("CAMPAIGN_COUNT_LABEL"),
-                      accessor: "count",
+                      accessor: "quantity",
                     },
                   ]}
                   rowsData={rules?.products}

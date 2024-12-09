@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "workspaces": [
-    "example",
-    "packages/css",
-    "packages/modules/*"
+    "packages/modules/microplan",
+    "packages/modules/campaign-manager"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
@@ -22,13 +21,18 @@
     "publish:css": "cd packages/css && yarn publish --access public",
     "dev:example": "cd example && yarn start",
     "dev:hcm-microplanning": "cd packages/modules/hcm-microplanning && yarn start",
+    "dev:microplan": "cd packages/modules/microplan && yarn start",
+    "dev:campaign": "cd packages/modules/campaign-manager && yarn start",
     "build": "run-p build:**",
-    "build:hcm-microplanning": "cd packages/modules/hcm-microplanning && yarn build",
+    "build:campaign": "cd packages/modules/campaign-manager && yarn build",
+    "buildD:hcm-microplanning": "cd packages/modules/hcm-microplanning && yarn build",
+    "build:microplan": "cd packages/modules/microplan && yarn build",
     "deploy:jenkins": "./scripts/jenkins.sh",
     "clean": "rm -rf node_modules"
   },
   "resolutions": {
     "**/@babel/runtime": "7.20.1",
+    "**/@babel/traverse":"7.25.9",
     "**/babel-preset-react-app": "10.0.0",
     "**/babel-loader": "8.2.2",
     "**/@babel/core": "7.14.0",

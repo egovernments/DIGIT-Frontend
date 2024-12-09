@@ -6,4 +6,5 @@ const getProjectServiceUrl = () => {
 };
 
 // Export the function to be used in other parts of the application.
+
 export default getProjectServiceUrl;

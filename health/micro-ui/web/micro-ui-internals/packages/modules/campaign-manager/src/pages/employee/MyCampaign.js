@@ -1,10 +1,8 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, Header, InboxSearchComposer, Loader } from "@egovernments/digit-ui-react-components";
-import { useHistory, useLocation } from "react-router-dom";
+import { Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
+import { useHistory } from "react-router-dom";
 import { myCampaignConfig } from "../../configs/myCampaignConfig";
-import TimelineComponent from "../../components/TimelineComponent";
-import { PopUp } from "@egovernments/digit-ui-components";
 
 /**
  * The `MyCampaign` function is a React component that displays a header with a campaign search title
@@ -16,18 +14,11 @@ import { PopUp } from "@egovernments/digit-ui-components";
  */
 const MyCampaign = () => {
   const { t } = useTranslation();
-  const location = useLocation();
   const history = useHistory();
-  const moduleName = Digit?.Utils?.getConfigModuleName() || "commonCampaignUiConfig";
-  const tenant = Digit.ULBService.getStateId();
-  const tenantId = Digit.ULBService.getCurrentTenantId();
   const [config, setConfig] = useState(myCampaignConfig?.myCampaignConfig?.[0]);
-  const changeDatesEnabled = true;
   const [tabData, setTabData] = useState(
     myCampaignConfig?.myCampaignConfig?.map((configItem, index) => ({ key: index, label: configItem.label, active: index === 0 ? true : false }))
   );
-
-  const searchParams = new URLSearchParams(location.search);
 
   const onTabChange = (n) => {
     setTabData((prev) => prev.map((i, c) => ({ ...i, active: c === n ? true : false })));
@@ -37,6 +28,7 @@ const MyCampaign = () => {
   useEffect(() => {
     window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
     window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
+    window.Digit.SessionStorage.del(" HCM_CAMPAIGN_UPDATE_FORM_DATA");
   }, []);
 
   useEffect(() => {
@@ -53,15 +45,9 @@ const MyCampaign = () => {
     };
   }, [Digit.SessionStorage.get("HCM_TIMELINE_POPUP")]);
 
-  const handlePopupClose = () => {
-    setTimeLine(false);
-    setSession(false);
-    Digit.SessionStorage.set("HCM_TIMELINE_POPUP", false);
-    window.dispatchEvent(new Event("HCM_TIMELINE_POPUP_CHANGE"));
-  };
-
   const onClickRow = ({ original: row }) => {
     const currentTab = tabData?.find((i) => i?.active === true)?.label;
+    const currentDate = new Date().getTime();
     switch (currentTab) {
       case "CAMPAIGN_ONGOING":
         history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}&actionBar=${true}`);
@@ -70,14 +56,17 @@ const MyCampaign = () => {
         history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}`);
         break;
       case "CAMPAIGN_UPCOMING":
-        history.push(
-          `/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}&actionBar=${true}`
-        );
+        history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}&actionBar=${true}`);
         break;
       case "CAMPAIGN_DRAFTS":
-        history.push(
-          `/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&draft=${true}&fetchBoundary=${true}&draftBoundary=${true}`
-        );
+        if (row?.parentId) {
+          history.push(`/${window.contextPath}/employee/campaign/update-campaign?parentId=${row.parentId}&id=${row.id}&draft=${true}&campaignName=${row.campaignName}`);
+        } else {
+          const baseUrl = `/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&draft=true&fetchBoundary=true&draftBoundary=true`; 
+          const hasPassedDates = row.startDate <= currentDate || row.endDate <= currentDate; 
+          const finalUrl = hasPassedDates ? `${baseUrl}&date=true` : baseUrl;
+          history.push(finalUrl);
+        }
         break;
       case "CAMPAIGN_FAILED":
         history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}`);

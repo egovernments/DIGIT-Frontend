@@ -5,11 +5,9 @@ import { Card, Modal, CardText } from "@egovernments/digit-ui-react-components";
 import BulkUpload from "./BulkUpload";
 import Ajv from "ajv";
 import XLSX from "xlsx";
-import { InfoCard, PopUp, Toast, Button, DownloadIcon } from "@egovernments/digit-ui-components";
-import { schemaConfig } from "../configs/schemaConfig";
-import { headerConfig } from "../configs/headerConfig";
-import { PRIMARY_COLOR } from "../utils";
+import { InfoCard, PopUp, Toast, Button, DownloadIcon, Stepper, TextBlock ,Tag } from "@egovernments/digit-ui-components";
 import { downloadExcelWithCustomName } from "../utils";
+import { CONSOLE_MDMS_MODULENAME } from "../Module";
 
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
@@ -26,7 +24,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const params = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
   const [showInfoCard, setShowInfoCard] = useState(false);
   const [errorsType, setErrorsType] = useState({});
-  const [schema, setSchema] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const type = props?.props?.type;
   const [executionCount, setExecutionCount] = useState(0);
@@ -39,31 +36,80 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const [resourceId, setResourceId] = useState(null);
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
-  // const { isLoading, data: Schemas } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [
-  //   { name: "facilitySchema" },
-  //   { name: "userSchema" },
-  //   { name: "Boundary" },
-  // ]);
-
+  const parentId = searchParams.get("parentId");
+  const [showExitWarning, setShowExitWarning] = useState(false);
+  const campaignName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName || searchParams.get("campaignName") ;
   const { data: Schemas, isLoading: isThisLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
-    "HCM-ADMIN-CONSOLE",
+    CONSOLE_MDMS_MODULENAME,
     [{ name: "adminSchema" }],
     {},
-    { schemaCode: "HCM-ADMIN-CONSOLE.adminSchema" }
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.adminSchema` }
   );
 
-  const { data: readMe } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "ReadMeConfig" }]);
-  const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "baseTimeout" }]);
+  const { data: readMe } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "ReadMeConfig" }] 
+    ,{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.ReadMeConfig` }
+  );
+  const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "baseTimeout" }] ,
+    {select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.baseTimeout` }
+  );
   const [sheetHeaders, setSheetHeaders] = useState({});
   const [translatedSchema, setTranslatedSchema] = useState({});
   const [readMeInfo, setReadMeInfo] = useState({});
-  const [enabled, setEnabled] = useState(false);
   const [showPopUp, setShowPopUp] = useState(true);
   const currentKey = searchParams.get("key");
+  const [key, setKey] = useState(() => {
+    const keyParam = searchParams.get("key");
+    return keyParam ? parseInt(keyParam) : 1;
+  });
   const totalData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
   const [convertedSchema, setConvertedSchema] = useState({});
   const [loader, setLoader] = useState(false);
+  const [currentStep , setCurrentStep] = useState(1);
+  const [projectType , setprojectType] = useState(props?.props?.projectType)
+  const baseKey = 10; 
+  // const projectType = props?.props?.projectType;
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (showExitWarning) {
+        e.preventDefault();
+        e.returnValue = ""; // Required for most browsers
+      }
+    };
+  
+    if (showExitWarning) {
+      window.addEventListener("beforeunload", handleBeforeUnload);
+    }
+  
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [showExitWarning]);
+
+  const handleUserAction = () => {
+    // User performs an action that completes their workflow
+    setShowExitWarning(false);
+  };
+  
+
+  function updateUrlParams(params) {
+    const url = new URL(window.location.href);
+    Object.entries(params).forEach(([key, value]) => {
+      url.searchParams.set(key, value);
+    });
+    window.history.replaceState({}, "", url);
+  }
+
+  useEffect(() =>{
+    setKey(currentKey);
+    setCurrentStep(currentKey - baseKey + 1);
+  }, [currentKey])
+
+  useEffect(() =>{
+    setprojectType(props?.props?.projectType);
+  }, [props?.props?.projectType])
+
 
   useEffect(() => {
     if (type === "facilityWithBoundary") {
@@ -152,7 +198,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     var properties = {};
     var required = [];
     var columns = [];
-
     for (const propType of ["enumProperties", "numberProperties", "stringProperties"]) {
       if (convertData?.properties[propType] && Array.isArray(convertData?.properties[propType]) && convertData?.properties[propType]?.length > 0) {
         for (const property of convertData?.properties[propType]) {
@@ -183,17 +228,18 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   }, [uploadedFile]);
 
   useEffect(async () => {
-    if (Schemas?.MdmsRes?.["HCM-ADMIN-CONSOLE"]?.adminSchema) {
+    if (Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema && (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)) {
       const facility = await convertIntoSchema(
-        Schemas?.MdmsRes?.["HCM-ADMIN-CONSOLE"]?.adminSchema?.filter((item) => item.title === "facility" && item.campaignType === "all")?.[0]
+        Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter((item) => item.title === "facility" && item.campaignType === "all")?.[0]
       );
       const boundary = await convertIntoSchema(
-        Schemas?.MdmsRes?.["HCM-ADMIN-CONSOLE"]?.adminSchema?.filter(
-          (item) => item.title === "boundaryWithTarget" && item.campaignType === totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code
+        Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter(
+          (item) => item.title === "boundaryWithTarget" &&
+           item.campaignType === (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)
         )?.[0]
       );
       const user = await convertIntoSchema(
-        Schemas?.MdmsRes?.["HCM-ADMIN-CONSOLE"]?.adminSchema?.filter((item) => item.title === "user" && item.campaignType === "all")?.[0]
+        Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter((item) => item.title === "user" && item.campaignType === "all")?.[0]
       );
       const schema = {
         boundary: boundary,
@@ -210,10 +256,22 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       const newFacilitySchema = await translateSchema(convertedSchema?.facilityWithBoundary);
       const newBoundarySchema = await translateSchema(convertedSchema?.boundary);
       const newUserSchema = await translateSchema(convertedSchema?.userWithBoundary);
+
+      const filterByUpdateFlag = (schemaProperties) => {
+        return Object.keys(schemaProperties).filter(
+          (key) => {
+            // if (parentId) {
+            //   return schemaProperties[key].isUpdate === true;
+            // }
+            return schemaProperties[key].isUpdate !== true;
+          }
+        );
+    };
+
       const headers = {
-        boundary: Object?.keys(newBoundarySchema?.properties),
-        facilityWithBoundary: Object?.keys(newFacilitySchema?.properties),
-        userWithBoundary: Object?.keys(newUserSchema?.properties),
+        boundary: filterByUpdateFlag(newBoundarySchema?.properties),
+        facilityWithBoundary: filterByUpdateFlag(newFacilitySchema?.properties),
+        userWithBoundary: filterByUpdateFlag(newUserSchema?.properties),
       };
 
       const schema = {
@@ -228,13 +286,13 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   }, [convertedSchema]);
 
   useEffect(async () => {
-    if (readMe?.["HCM-ADMIN-CONSOLE"]) {
+    if (readMe?.[CONSOLE_MDMS_MODULENAME]) {
       const newReadMeFacility = await translateReadMeInfo(
-        readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
+        readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
       );
-      const newReadMeUser = await translateReadMeInfo(readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts);
+      const newReadMeUser = await translateReadMeInfo(readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts);
       const newReadMeboundary = await translateReadMeInfo(
-        readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
+        readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
       );
 
       const readMeText = {
@@ -245,7 +303,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
       setReadMeInfo(readMeText);
     }
-  }, [readMe?.["HCM-ADMIN-CONSOLE"], type]);
+  }, [readMe?.[CONSOLE_MDMS_MODULENAME], type]);
 
   useEffect(() => {
     if (executionCount < 5) {
@@ -269,7 +327,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         setDownloadError(false);
         setIsError(false);
         setIsSuccess(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.isSuccess || null);
-        setShowPopUp(!props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile.length);
+        setShowPopUp(!downloadedTemplates[type] && !props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile.length);
         break;
       case "facilityWithBoundary":
         setUploadedFile(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile || []);
@@ -278,7 +336,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         setDownloadError(false);
         setIsError(false);
         setIsSuccess(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.isSuccess || null);
-        setShowPopUp(!props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile.length);
+        setShowPopUp(!downloadedTemplates[type] && !props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile.length);
         break;
       default:
         setUploadedFile(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile || []);
@@ -287,7 +345,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         setDownloadError(false);
         setIsError(false);
         setIsSuccess(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.isSuccess || null);
-        setShowPopUp(!props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile.length);
+        setShowPopUp(!downloadedTemplates[type] && !props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile.length);
         break;
     }
   }, [type, props?.props?.sessionData]);
@@ -317,7 +375,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           const formattedErrors = errors
             .map((error) => {
               let instancePath = error.instancePath || ""; // Assign an empty string if dataPath is not available
-              if (error.instancePath ===  "/Phone Number (Mandatory)" ) {
+              if (error.instancePath === "/Phone Number (Mandatory)") {
                 return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")}  ${t("HCM_DATA_SHOULD_BE_10_DIGIT")}`;
               }
               if (instancePath.startsWith("/")) {
@@ -475,7 +533,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       expectedHeaders = XLSX.utils.sheet_to_json(sheet, { header: 1 })[0];
     }
 
-
     // for (const header of mdmsHeaders) {
     //   if (!expectedHeaders.includes(t(header))) {
     //     const errorMessage = t("HCM_BOUNDARY_INVALID_SHEET");
@@ -535,16 +592,19 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       const headersToValidate = XLSX.utils.sheet_to_json(sheet, {
         header: 1,
       })[0];
+      const requiredProperties = translatedSchema?.boundary?.required || [];
 
       const jsonData = XLSX.utils.sheet_to_json(sheet, { blankrows: true });
-      
-      if(jsonData.length == 0) continue;
+
+      if (jsonData.length == 0) continue;
 
       const boundaryCodeIndex = headersToValidate.indexOf(t("HCM_ADMIN_CONSOLE_BOUNDARY_CODE"));
 
       for (const row of jsonData) {
         for (let j = boundaryCodeIndex + 1; j < headersToValidate.length; j++) {
           const value = row[headersToValidate[j]];
+          if(!requiredProperties.includes(headersToValidate[j])) continue;
+          
           if (value === undefined || value === null) {
             targetError.push(
               `${t("HCM_DATA_AT_ROW")} ${jsonData.indexOf(row) + 2} ${t("HCM_IN_COLUMN")} "${headersToValidate[j]}" ${t(
@@ -798,7 +858,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             type,
             tenantId,
             id,
-            baseTimeOut?.["HCM-ADMIN-CONSOLE"]
+            baseTimeOut?.[CONSOLE_MDMS_MODULENAME]
           );
           if (temp?.isError) {
             setLoader(false);
@@ -821,6 +881,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               if (!errorsType[type]) {
                 setIsError(false);
                 setIsSuccess(true);
+                setShowExitWarning(true); // Enable the exit warning
                 return;
                 // setIsValidation(false);
               }
@@ -917,29 +978,14 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   };
   const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
 
-  const downloadTemplate = async () => {
-    // if (type === "boundary" && params?.isBoundaryLoading) {
-    //   setDownloadError(true);
-    //   setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-    //   return;
-    // }
-    // if (type === "facilityWithBoundary" && params?.isFacilityLoading) {
-    //   setDownloadError(true);
-    //   setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-    //   return;
-    // }
-    // if (type === "userWithBoundary" && params?.isUserLoading) {
-    //   setDownloadError(true);
-    //   setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-    //   return;
-    // }
-    // if (!params?.boundaryId || !params?.facilityId || !params?.userId) {
-    //   setEnabled(true);
+  // Add a new state to track downloaded templates
+  const [downloadedTemplates, setDownloadedTemplates] = useState({
+    boundary: false,
+    facilityWithBoundary: false,
+    user: false
+  });
 
-    //   setDownloadError(true);
-    //   setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-    //   return;
-    // }
+  const downloadTemplate = async () => {
     await mutation.mutate(
       {
         params: {
@@ -982,25 +1028,38 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             setDownloadError(false);
             if (fileData?.[0]?.id) {
               downloadExcelWithCustomName({ fileStoreId: fileData?.[0]?.id, customName: fileData?.[0]?.filename });
+              setDownloadedTemplates(prev => ({
+                ...prev,
+                [type]: true
+              }));
             }
           } else {
             setDownloadError(true);
             setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT") });
           }
         },
-        onError: (result) => {
-          setDownloadError(true);
-          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+        onError: (error, result) => {
+          const errorCode = error?.response?.data?.Errors?.[0]?.code;
+          if (errorCode == "NativeIoException") {
+            setDownloadError(true);
+            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+          }
+          else {
+            setDownloadError(true);
+            setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+          }
         },
       }
     );
   };
+    // Modify the condition for showing the popup
+  useEffect(() => {
+    // Only show popup if the template for this type hasn't been downloaded yet
+    if (downloadedTemplates[type]) {
+      setShowPopUp(false);
+    }
+  }, [downloadedTemplates]);
 
-  // useEffect(() => {
-  //   if (showToast) {
-  //     setTimeout(closeToast, 5000);
-  //   }
-  // }, [showToast]);
   const closeToast = () => {
     setShowToast(null);
   };
@@ -1015,140 +1074,198 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     setShowToast(null);
   }, [currentKey]);
 
+  useEffect(() => {
+    updateUrlParams({ key: key });
+    window.dispatchEvent(new Event("checking"));
+  }, [key]);
+
+  const onStepClick = (currentStep) => {
+    setCurrentStep(currentStep+1);
+    if(currentStep === 0){
+      setKey(10);
+    }
+    else if(currentStep === 1){
+      setKey(11);
+    }
+    else if(currentStep === 3){
+      setKey(13);
+    }
+    else setKey(12);
+  };
+
+  const getDownloadLabel = () => {
+    if (parentId) {
+      if (type === "boundary") {
+        return t("WBH_DOWNLOAD_CURRENT_TARGET");
+      } else if (type === "facilityWithBoundary") {
+        return t("WBH_DOWNLOAD_CURRENT_FACILITY");
+      } else {
+        return t("WBH_DOWNLOAD_CURRENT_USER");
+      }
+    } else {
+      return t("WBH_DOWNLOAD_TEMPLATE");
+    }
+  };
+
   return (
     <>
-      {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
-      <Card>
-        <div className="campaign-bulk-upload">
-          <Header className="digit-form-composer-sub-header">
-            {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
-          </Header>
-          <Button
-            label={t("WBH_DOWNLOAD_TEMPLATE")}
-            variation="secondary"
-            icon={"FileDownload"}
-            type="button"
-            className="campaign-download-template-btn"
-            onClick={downloadTemplate}
+      <div className="container-full">
+        {!parentId && (
+      <div className="card-container">
+        <Card className="card-header-timeline">
+        <TextBlock
+            subHeader={t("HCM_UPLOAD_DATA")}
+            subHeaderClassName={"stepper-subheader"}
+            wrapperClassName={"stepper-wrapper"}
           />
+        </Card>
+        <Card className="stepper-card">
+          <Stepper
+            customSteps={["HCM_UPLOAD_FACILITY", "HCM_UPLOAD_USER" , "HCM_UPLOAD_TARGET" , "HCM_SUMMARY"]}
+            currentStep={currentStep}
+            onStepClick={onStepClick}
+            direction={"vertical"}
+          />
+        </Card>
         </div>
-        {uploadedFile.length === 0 && (
-          <div className="info-text">
-            {type === "boundary" ? t("HCM_BOUNDARY_MESSAGE") : type === "facilityWithBoundary" ? t("HCM_FACILITY_MESSAGE") : t("HCM_USER_MESSAGE")}
-          </div>
         )}
-        <BulkUpload onSubmit={onBulkUploadSubmit} fileData={uploadedFile} onFileDelete={onFileDelete} onFileDownload={onFileDownload} />
-        {showInfoCard && (
-          <InfoCard
-            populators={{
-              name: "infocard",
-            }}
-            variant="error"
-            style={{ marginLeft: "0rem", maxWidth: "100%" }}
-            label={t("HCM_ERROR")}
-            additionalElements={[
-              <React.Fragment key={type}>
-                {errorsType[type] && (
-                  <React.Fragment>
-                    {errorsType[type]
-                      .split(",")
-                      .slice(0, 50)
-                      .map((error, index) => (
-                        <React.Fragment key={index}>
-                          {index > 0 && <br />}
-                          {error.trim()}
-                        </React.Fragment>
-                      ))}
-                  </React.Fragment>
-                )}
-              </React.Fragment>,
+        {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
+
+        <div className={parentId ? "card-container2" : "card-container1"}>
+        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
+        <Card>
+          <div className="campaign-bulk-upload">
+            <Header className="digit-form-composer-sub-header">
+              {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
+            </Header>
+            <Button
+              label={getDownloadLabel()}
+              variation="secondary"
+              icon={"FileDownload"}
+              type="button"
+              className="campaign-download-template-btn"
+              onClick={downloadTemplate}
+            />
+          </div>
+          {uploadedFile.length === 0 && (
+            <div className="info-text">
+              {type === "boundary" ? t("HCM_BOUNDARY_MESSAGE") : type === "facilityWithBoundary" ? t("HCM_FACILITY_MESSAGE") : t("HCM_USER_MESSAGE")}
+            </div>
+          )}
+          <BulkUpload onSubmit={onBulkUploadSubmit} fileData={uploadedFile} onFileDelete={onFileDelete} onFileDownload={onFileDownload} />
+          {showInfoCard && (
+            <InfoCard
+              populators={{
+                name: "infocard",
+              }}
+              variant="error"
+              style={{ marginLeft: "0rem", maxWidth: "100%" }}
+              label={t("HCM_ERROR")}
+              additionalElements={[
+                <React.Fragment key={type}>
+                  {errorsType[type] && (
+                    <React.Fragment>
+                      {errorsType[type]
+                        .split(",")
+                        .slice(0, 50)
+                        .map((error, index) => (
+                          <React.Fragment key={index}>
+                            {index > 0 && <br />}
+                            {error.trim()}
+                          </React.Fragment>
+                        ))}
+                    </React.Fragment>
+                  )}
+                </React.Fragment>,
+              ]}
+            />
+          )}
+        </Card>
+        <InfoCard
+          populators={{
+            name: "infocard",
+          }}
+          variant="default"
+          style={{ margin: "0rem", maxWidth: "100%" }}
+          additionalElements={readMeInfo[type]?.map((info, index) => (
+            <div key={index} style={{ display: "flex", flexDirection: "column" }}>
+              <h2>{info?.header}</h2>
+              <ul style={{ paddingLeft: 0 , marginBottom: "0px" }}>
+                {info?.descriptions.map((desc, i) => (
+                  <li key={i} className="info-points">
+                    {desc.isBold ? <h2>{desc.text}</h2> : <p>{desc.text}</p>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+          label={"Info"}
+        />
+        </div>
+        {showPopUp && (
+          <PopUp
+            type={"default"}
+            className={"popUpClass"}
+            footerclassName={"popUpFooter"}
+            heading={
+              type === "boundary"
+                ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_HEADER")
+                : type === "facilityWithBoundary"
+                ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER")
+                : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER")
+            }
+            children={[
+              <div>
+                {type === "boundary"
+                  ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_TEXT")
+                  : type === "facilityWithBoundary"
+                  ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT")
+                  : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT")}
+              </div>,
             ]}
+            onOverlayClick={() => {
+              setShowPopUp(false);
+            }}
+            footerChildren={[
+              <Button
+                type={"button"}
+                size={"large"}
+                variation={"secondary"}
+                label={t("HCM_CAMPAIGN_UPLOAD_CANCEL")}
+                onClick={() => {
+                  setShowPopUp(false);
+                }}
+              />,
+              <Button
+                type={"button"}
+                size={"large"}
+                variation={"primary"}
+                icon={"FileDownload"}
+                label={getDownloadLabel()}
+                title={t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
+                onClick={() => {
+                  downloadTemplate(), setShowPopUp(false);
+                }}
+              />,
+            ]}
+            sortFooterChildren={true}
+            onClose={() => {
+              setShowPopUp(false);
+            }}
+          ></PopUp>
+        )}
+        {showToast && (uploadedFile?.length > 0 || downloadError) && (
+          <Toast
+            type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
+            // error={showToast.key === "error" ? true : false}
+            // warning={showToast.key === "warning" ? true : false}
+            // info={showToast.key === "info" ? true : false}
+            label={t(showToast.label)}
+            transitionTime={showToast.transitionTime}
+            onClose={closeToast}
           />
         )}
-      </Card>
-      <InfoCard
-        populators={{
-          name: "infocard",
-        }}
-        variant="default"
-        style={{ margin: "0rem", maxWidth: "100%" }}
-        additionalElements={readMeInfo[type]?.map((info, index) => (
-          <div key={index} style={{ display: "flex", flexDirection: "column" }}>
-            <h2>{info?.header}</h2>
-            <ul style={{ paddingLeft: 0 }}>
-              {info?.descriptions.map((desc, i) => (
-                <li key={i} className="info-points">
-                  {desc.isBold ? <h2>{desc.text}</h2> : <p>{desc.text}</p>}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-        label={"Info"}
-      />
-      {showPopUp && (
-        <PopUp
-          type={"default"}
-          className={"popUpClass"}
-          footerclassName={"popUpFooter"}
-          heading={
-            type === "boundary"
-              ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_HEADER")
-              : type === "facilityWithBoundary"
-              ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER")
-              : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER")
-          }
-          children={[
-            <div>
-              {type === "boundary"
-                ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_TEXT")
-                : type === "facilityWithBoundary"
-                ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT")
-                : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT ")}
-            </div>,
-          ]}
-          onOverlayClick={() => {
-            setShowPopUp(false);
-          }}
-          footerChildren={[
-            <Button
-              type={"button"}
-              size={"large"}
-              variation={"secondary"}
-              label={t("HCM_CAMPAIGN_UPLOAD_CANCEL")}
-              onClick={() => {
-                setShowPopUp(false);
-              }}
-            />,
-            <Button
-              type={"button"}
-              size={"large"}
-              variation={"primary"}
-              icon={"FileDownload"}
-              label={t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
-              title={t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
-              onClick={() => {
-                downloadTemplate(), setShowPopUp(false);
-              }}
-            />,
-          ]}
-          sortFooterChildren={true}
-          onClose={() => {
-            setShowPopUp(false);
-          }}
-        ></PopUp>
-      )}
-      {showToast && (uploadedFile?.length > 0 || downloadError) && (
-        <Toast
-          type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
-          // error={showToast.key === "error" ? true : false}
-          // warning={showToast.key === "warning" ? true : false}
-          // info={showToast.key === "info" ? true : false}
-          label={t(showToast.label)}
-          transitionTime={showToast.transitionTime}
-          onClose={closeToast}
-        />
-      )}
+      </div>
     </>
   );
 };

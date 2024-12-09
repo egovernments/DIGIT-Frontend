@@ -19,11 +19,13 @@
   align-items: start;
 }
 .campaign-type {
+  margin-top: 0.8rem;
   margin-right: 5rem;
   padding-bottom: 1.2rem;
   font-weight: bold;
 }
 .name-container {
+  margin-top: 0.8rem;
   margin-right: 4rem;
   font-weight: bold;
   text-wrap: nowrap;
@@ -44,17 +46,14 @@
   font-weight: 700;
 }
 .description-type {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin-top: 0rem;
+  margin-bottom: 0rem;
 }
 .name-description {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin: 0rem;
 }
 .dates-description {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  padding-bottom: 1.2rem;
+  margin: 0rem;
 }
 .selecting-boundary-div {
   padding-top: 0.5rem;
@@ -68,7 +67,10 @@
   border-width: 0rem 1.5rem;
   tbody {
     tr:hover {
-      background: rgba(#f47738, 0.12);
+      td{
+        background: rgba(#f47738, 0.12);
+          cursor: pointer;
+      }
     }
   }
 }
@@ -90,7 +92,7 @@
 
 .digit-popup-wrapper {
   &.popUpClass {
-    width: 45rem;
+    width: 50rem;
 
     .popUpFooter {
       .digit-popup-footer-buttons {
@@ -124,5 +126,94 @@
 .upcoming-timeline{
   .timeline-label{
     color: #b1b4b6;
+  }
+}
+.container{
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  align-items: stretch;
+}
+.stepper-card{
+  height: 39rem;
+  margin-bottom: 1.5rem !important;
+}
+.stepper-subheader{
+  color: theme(digitv2.lightTheme.header-sidenav);
+}
+.container-full{
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  align-items: stretch;
+  height: 100%;
+}
+.name-container-label{
+  .label-field-wrapper{
+    width: -webkit-fill-available;
+  }
+}
+.label-field-grid {
+  display: grid;
+  grid-template-columns: 20rem 20rem 20rem;
+  gap: 2rem;
+
+  .update-date-labelField {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: start;
+
+    .update-label {
+      display: flex;
+
+      p {
+        margin: 0;
+        margin-bottom: 0.25rem;
+      }
+
+      .mandatory-date {
+        margin-top: -0.25rem;
+      }
+    }
+  }
+
+  .digit-button-primary {
+    align-self: flex-end;
+  }
+}
+
+.hierarchy-boundary-heading {
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+.hierarchy-boundary-sub-heading {
+  width: 20rem;
+  margin-top: 0.6rem;
+  font-weight: 600;
+  font-family: 'Roboto', sans-serif;
+}
+
+.hierarchy-boundary-sub-heading2 {
+  font-size: 1.2rem; 
+  font-weight: 600;
+  font-family: 'Roboto', sans-serif;
+}
+.campaign-preview{
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.card-container1{
+  width: 100%;
+}
+.campaign-tag{
+  border: 0.5px solid #0B4B66;
+  margin-bottom: 1rem;
+  height: 3.3rem;
+ .digit-tag-text{
+  font-size: 1.5rem;
+  font-weight: 700;
   }
 }

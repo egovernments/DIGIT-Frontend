@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useReducer, useState } fro
 import MultiTab from "./MultiTabcontext";
 import { Loader } from "@egovernments/digit-ui-react-components";
 // import { deliveryConfig } from "../../../configs/deliveryConfig";
+import getDeliveryConfig from "../../../utils/getDeliveryConfig";
 
 const CycleContext = createContext();
 
@@ -22,24 +23,20 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
   const activeCycle = searchParams.get("activeCycle");
   const { isLoading: deliveryConfigLoading, data: filteredDeliveryConfig } = Digit.Hooks.useCustomMDMS(
     tenantId,
-    "HCM-ADMIN-CONSOLE",
-    [{ name: "deliveryConfig" }],
+    "HCM-PROJECT-TYPES",
+    [{ name: "projectTypes" }],
     {
+      staleTime: 0,
+      cacheTime: 0,
+      enabled: true,
       select: (data) => {
-        const temp = data?.["HCM-ADMIN-CONSOLE"]?.deliveryConfig;
-        return temp?.find((i) => i?.projectType === selectedProjectType);
-        // return deliveryConfig?.find((i) => i?.projectType === selectedProjectType);
+        
+        const temp= getDeliveryConfig({data: data?.["HCM-PROJECT-TYPES"], projectType:selectedProjectType});
+        return temp;
       },
-    }
+    },
+    { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` }
   );
-  // const [filteredDeliveryConfig, setFilteredDeliveryConfig] = useState(deliveryConfig?.find((i) => i?.projectType === selectedProjectType));
-  // useEffect(() => {
-  // if (!deliveryConfigLoading) {
-  // const temp = deliveryConfig?.find((i) => i?.projectType === selectedProjectType);
-  // setFilteredDeliveryConfig(temp);
-  // }
-  // }, [deliveryConfigLoading, filteredDeliveryConfig]);
-  // const filteredDeliveryConfig = deliveryConfig.find((i) => i.projectType === selectedProjectType);
   useEffect(() => {
     setCycleData(config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure);
   }, [config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure]);
@@ -69,6 +66,29 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
                               fromValue: i?.toValue,
                             };
                           }
+                          return {
+                            key: c + 1,
+                            attribute: { code: i?.attrValue },
+                            operator: { code: i?.operatorValue },
+                            value: i?.value,
+                          };
+                        })
+                      : [{ key: 1, attribute: null, operator: null, value: "" }],
+                    // products: [],
+                    products: item?.productConfig
+                      ? item?.productConfig?.map((i, c) => ({
+                          ...i,
+                        }))
+                      : [],
+                  };
+                })
+              : filteredDeliveryConfig?.projectType === "IRS-mz"
+              ? filteredDeliveryConfig?.deliveryConfig?.map((item, index) => {
+                  return {
+                    ruleKey: index + 1,
+                    delivery: {},
+                    attributes: item?.attributeConfig
+                      ? item?.attributeConfig?.map((i, c) => {
                           return {
                             key: c + 1,
                             attribute: { code: i?.attrValue },
@@ -133,8 +153,8 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
                     ruleKey: 1,
                     delivery: {},
                     attributes:
-                      filteredDeliveryConfig && filteredDeliveryConfig?.attributeConfig
-                        ? filteredDeliveryConfig?.attributeConfig?.map((i, c) => ({
+                      filteredDeliveryConfig && filteredDeliveryConfig?.deliveryConfig?.[0]?.attributeConfig
+                        ? filteredDeliveryConfig?.deliveryConfig?.[0]?.attributeConfig?.map((i, c) => ({
                             key: c + 1,
                             attribute: { code: i?.attrValue },
                             operator: { code: i?.operatorValue },
@@ -286,13 +306,13 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
 
     saved.forEach((cycle) => {
       // Remove deliveries if there are more deliveries than the specified number
-      if (cycle.deliveries.length > subTabs) {
-        cycle.deliveries.splice(subTabs);
+      if (cycle?.deliveries?.length > subTabs) {
+        cycle?.deliveries.splice(subTabs);
       }
 
       // Add deliveries if there are fewer deliveries than the specified number
-      if (subTabs > cycle.deliveries.length) {
-        for (let i = cycle.deliveries.length + 1; i <= subTabs; i++) {
+      if (subTabs > cycle?.deliveries?.length) {
+        for (let i = cycle?.deliveries.length + 1; i <= subTabs; i++) {
           const newIndex = i.toString();
           cycle.deliveries.push({
             deliveryIndex: newIndex,
@@ -393,15 +413,16 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
         });
         return tempSub;
       case "ADD_DELIVERY_RULE":
-        const updatedDeliveryRules = [
-          ...action.payload.currentDeliveryRules,
-          {
-            ruleKey: action.payload.currentDeliveryRules.length + 1,
-            delivery: {},
-            attributes: [{ key: 1, attribute: null, operator: null, value: "" }],
-            products: [],
-          },
-        ];
+        const updatedDeliveryRules = 
+          [
+              ...action.payload.currentDeliveryRules,
+              {
+                ruleKey: action.payload.currentDeliveryRules.length + 1,
+                delivery: {},
+                attributes: [{ key: 1, attribute: null, operator: null, value: "" }],
+                products: [],
+              },
+            ];
         const updatedData = state.map((i) => {
           if (i.active) {
             const activeDelivery = i.deliveries.find((j) => j.active);
@@ -502,7 +523,7 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
       cycle: cycleData?.cycleConfgureDate?.cycle,
       deliveries: cycleData?.cycleConfgureDate?.deliveries,
     });
-  }, [cycleData]);
+  }, [cycleData , filteredDeliveryConfig]);
 
   useEffect(() => {
     onSelect("deliveryRule", campaignData);

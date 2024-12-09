@@ -1,8 +1,8 @@
-import { AddIcon, Button, CardText, Label, LabelFieldPair } from "@egovernments/digit-ui-react-components";
+import { AddIcon, CardText, Label, LabelFieldPair } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import PlusMinusInput from "../../../components/PlusMinusInput";
 import { useTranslation } from "react-i18next";
-import { Dropdown, TextInput, Toast } from "@egovernments/digit-ui-components";
+import { Dropdown, TextInput, Toast ,Button } from "@egovernments/digit-ui-components";
 import { Link } from "react-router-dom";
 import { CycleContext } from ".";
 import { PRIMARY_COLOR } from "../../../utils";
@@ -18,7 +18,7 @@ const DustbinIcon = () => (
 function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedProducts }) {
   const { t } = useTranslation();
   const oldSessionData = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-  const { campaignData, dispatchCampaignData } = useContext(CycleContext);
+  const { campaignData, dispatchCampaignData, filteredDeliveryConfig } = useContext(CycleContext);
   const tenantId = Digit.ULBService.getStateId();
   const updateSession = () => {
     const newData = {
@@ -34,18 +34,17 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
   const [products, setProducts] = useState([
     {
       key: 1,
-      count: 1,
+      quantity: 1,
       value: null,
     },
   ]);
-  const data = Digit.Hooks.campaign.useProductList(tenantId);
+  const data = Digit.Hooks.campaign.useProductList(tenantId, filteredDeliveryConfig?.projectType);
   useEffect(() => {
     const updatedProducts = selectedProducts.map((selectedProduct, index) => {
-     
       const id = selectedProduct?.value;
       return {
         key: index + 1,
-        count: selectedProduct?.count || 1,
+        quantity: selectedProduct?.quantity || 1,
         // value: selectedProduct.additionalData,
         value: {
           displayName: selectedProduct.name,
@@ -57,7 +56,6 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
 
     setProducts(updatedProducts);
   }, [selectedProducts]);
-
 
   const filteredData = data?.filter((item) => !selectedDelivery?.products?.some((entry) => entry?.value === item?.id));
   const temp = filteredData?.filter((item) => !products?.some((entry) => entry?.value?.id === item?.id));
@@ -183,7 +181,7 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
       {
         key: prevState.length + 1,
         value: null,
-        count: 1,
+        quantity: 1,
       },
     ]);
   };
@@ -202,7 +200,7 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
     setProducts((prevState) => {
       return prevState.map((item) => {
         if (item.key === data.key) {
-          return { ...item, count: value?.target?.value ? Number(value?.target?.value) : value };
+          return { ...item, quantity: value?.target?.value ? Number(value?.target?.value) : value };
         }
         return item;
       });
@@ -233,9 +231,20 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
               {t(`CAMPAIGN_RESOURCE`)} {c + 1}
             </CardText>
             {products?.length > 1 ? (
-              <div className="delete-resource-icon" onClick={() => deleteItem(i, c)}>
-                <DustbinIcon />
-              </div>
+              // <div className="delete-resource-icon" onClick={() => deleteItem(i, c)}>
+              //   <DustbinIcon />
+              // </div>
+              <Button
+              // className="custom-class"
+              icon="Delete"
+              iconFill=""
+              label={t(`DELETE`)}
+              onClick={() => deleteItem(i, c)}
+              size=""
+              style={{}}
+              title=""
+              variation="link"
+            />
             ) : null}
           </div>
           <div className="add-resource-label-field-container">
@@ -253,11 +262,12 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
                 optionKey="displayName"
               />
             </LabelFieldPair>
-
-            <LabelFieldPair style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-              <Label>{t(`CAMPAIGN_COUNT_LABEL`)}</Label>
-              <TextInput type="numeric" defaultValue={i?.count} value={i?.count} onChange={(d) => incrementC(i, d)} />
-            </LabelFieldPair>
+            {filteredDeliveryConfig?.projectType === "MR-DN" && (
+              <LabelFieldPair style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+                <Label>{t(`CAMPAIGN_COUNT_LABEL`)}</Label>
+                <TextInput type="numeric" defaultValue={i?.quantity} value={i?.quantity} onChange={(d) => incrementC(i, d)} />
+              </LabelFieldPair>
+            )}
           </div>
         </div>
       ))}
@@ -266,8 +276,8 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
           variation="secondary"
           label={t(`CAMPAIGN_PRODUCTS_MODAL_SECONDARY_ACTION`)}
           className={"add-rule-btn hover"}
-          icon={<AddIcon fill={PRIMARY_COLOR} styles={{ height: "1.5rem", width: "1.5rem" }} />}
-          onButtonClick={add}
+          icon="AddIcon"
+          onClick={add}
         />
       )}
       <div
@@ -287,6 +297,7 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
               state: {
                 campaignId: id,
                 urlParams: window?.location?.search,
+                projectType: filteredDeliveryConfig?.projectType,
               },
             }}
           >

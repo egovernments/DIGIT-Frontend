@@ -1,10 +1,12 @@
-name: Node.js Publish Health UI Packages
+# name: Node.js Publish Health UI Packages
+name: Node.js Publish Health UI CSS Packages
 
 on:
   push:
-    branches: [ 'develop','campaign' ,'microplan']
+    branches: [ 'develop','console']
     paths:
-      - 'health/micro-ui/web/micro-ui-internals/**'
+      - 'health/micro-ui/web/micro-ui-internals/packages/css/**'
+      # - 'health/micro-ui/web/micro-ui-internals/**' disabling main since we target only for css
     
   pull_request:
     branches: 

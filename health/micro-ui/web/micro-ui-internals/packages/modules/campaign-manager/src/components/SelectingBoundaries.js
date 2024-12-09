@@ -1,8 +1,10 @@
 import React, { useEffect, useState, Fragment, useMemo } from "react";
 import { CardText, LabelFieldPair, Card, Header, CardLabel, LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { InfoCard, MultiSelectDropdown, PopUp, Button, Toast } from "@egovernments/digit-ui-components";
+import { InfoCard, PopUp, Button, Toast } from "@egovernments/digit-ui-components";
 import { mailConfig } from "../configs/mailConfig";
+import MultiSelectDropdown from "./MultiSelectDropdown";
+import { CONSOLE_MDMS_MODULENAME } from "../Module";
 /**
  * The function `SelectingBoundaries` in JavaScript handles the selection of boundaries based on
  * hierarchy data and allows users to choose specific boundaries within the hierarchy.
@@ -40,13 +42,14 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
   const [restrictSelection, setRestrictSelection] = useState(null);
   const [updateBoundary, setUpdateBoundary] = useState(null);
   const [loaderEnabled, setLoaderEnabled] = useState(false);
-  const { isLoading, data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
+  const { isLoading, data: HierarchySchema } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME,[{ 
+    name: "HierarchySchema",
+    "filter": `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`
+   }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` });
 
-  // const lowestHierarchy = hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.lowestHierarchy;
-  // const lowestHierarchy = useMemo(() => hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.lowestHierarchy, [hierarchyConfig]);
   const lowestHierarchy = useMemo(() => {
-    return hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find(item => item.isActive)?.lowestHierarchy;
-  }, [hierarchyConfig]);
+    return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.find(item => item.isActive)?.lowestHierarchy;
+  }, [HierarchySchema]);
   const lowestChild = hierarchyTypeDataresult?.boundaryHierarchy.filter((item) => item.parentBoundaryType === lowestHierarchy)?.[0]?.boundaryType;
   const searchParams = new URLSearchParams(location.search);
   const isDraft = searchParams.get("draft");
@@ -538,7 +541,7 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
         style={{ margin: "0rem", maxWidth: "100%" }}
         additionalElements={[
           <span style={{ color: "#505A5F" }}>
-            {t("HCM_BOUNDARY_INFO ")}
+            {t("HCM_BOUNDARY_INFO")}
             <a href={`mailto:${mailConfig.mailId}`} style={{ color: "black" }}>
               {mailConfig?.mailId}
             </a>

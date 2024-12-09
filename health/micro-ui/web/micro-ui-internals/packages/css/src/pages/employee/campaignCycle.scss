@@ -15,7 +15,7 @@
     border: 1px solid #d6d5d4;
     border-radius: 0.4rem;
     padding: 1rem;
-    margin-right: 1.5rem;
+    margin-right: 1rem;
     margin-bottom: 1.5rem;
     .card-text {
       margin: 0;
@@ -106,7 +106,8 @@
   }
 }
 .uploaded-file-container {
-  margin-left: 0rem;
+  margin: 0rem;
+  padding: 1rem;
 }
 .upload-drag-drop-container {
   background-color: #fafafa;
@@ -239,6 +240,7 @@
     display: flex;
     align-content: center;
     justify-content: space-between;
+    font-family: theme(digitv2.fontFamily.sans);
   }
   .attribute-container {
     border: 1px solid #d6d5d4;
@@ -284,6 +286,7 @@
 }
 .add-rule-btn {
   margin: auto;
+  margin-bottom: 1rem;
   h2 {
     font-family: Roboto;
     font-size: 1rem;
@@ -327,5 +330,5 @@
   }
 }
 .digit-toast-success {
-  margin-bottom: -0.5rem;
+  margin-bottom: -1.25rem;
 }

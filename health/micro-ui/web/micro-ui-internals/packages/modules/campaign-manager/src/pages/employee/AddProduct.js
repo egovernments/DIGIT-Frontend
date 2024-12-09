@@ -38,7 +38,7 @@ function AddProduct() {
     const isValid = checkValid(formData);
     const invalidName = formData?.addProduct
       ?.map((i) => {
-        if (i?.name?.length > 2 && i?.name?.length < 101) {
+        if (i?.name?.length >= 1 && i?.name?.length < 101) {
           return true;
         } else {
           return false;
@@ -48,7 +48,7 @@ function AddProduct() {
 
     const invalidVariant = formData?.addProduct
       ?.map((i) => {
-        if (i?.variant?.length > 2 && i?.variant?.length < 101) {
+        if (i?.variant?.length >= 2 && i?.variant?.length < 101) {
           return true;
         } else {
           return false;
@@ -84,14 +84,32 @@ function AddProduct() {
       },
       onSuccess: async (data) => {
         const resData = data?.Product;
+        const usedCombinations = new Set();
         const variantPayload = resData.map((i) => {
-          const target = formData?.["addProduct"]?.find((f) => f.name === i.name);
+          const target = formData?.["addProduct"]?.find((f) => {
+            const combination = `${f.name}-${f.variant}`;
+            if (f.name === i.name && !usedCombinations.has(combination)) {
+              usedCombinations.add(combination); 
+              return true;
+            }
+            return false;
+          });
           if (target) {
             return {
               tenantId: tenantId,
               productId: i?.id,
               variation: target?.variant,
               sku: `${target?.name} - ${target?.variant}`,
+              additionalFields: {
+                "schema": "ProductVariant",
+                "version": 1,
+                fields: [
+                    {
+                        value: state?.projectType,
+                        key: "projectType"
+                    }
+                ]
+            }
             };
           }
           return;

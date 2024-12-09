@@ -1,4 +1,4 @@
-export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryErrors) => {
+export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryErrors , hierarchyData) => {
   return [
     {
       form: [
@@ -14,6 +14,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
               skipAPICall: true,
               component: "CampaignSelection",
               withoutLabel: true,
+              withoutLabelFieldPair: true,
               disable: false,
               customProps: {
                 module: "HCM",
@@ -53,35 +54,8 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
           ],
         },
         {
-          stepCount: "2",
+          stepCount: "1",
           key: "3",
-          name: "HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA",
-          body: [
-            {
-              isMandatory: false,
-              key: "boundaryType",
-              type: "component",
-              component: "SelectingBoundaries",
-              withoutLabelFieldPair: true,
-              withoutLabel: true,
-              disable: false,
-              customProps: {
-                module: "HCM",
-                sessionData: totalFormData,
-                dataParams: dataParams,
-              },
-              populators: {
-                name: "boundaryType",
-                // optionsKey: "code",
-                error: "ES__REQUIRED",
-                required: true,
-              },
-            },
-          ],
-        },
-        {
-          stepCount: "3",
-          key: "4",
           name: "HCM_CAMPAIGN_DATE",
           body: [
             {
@@ -90,6 +64,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
               type: "component",
               component: "CampaignDates",
               withoutLabel: true,
+              withoutLabelFieldPair: true,
               disable: false,
               customProps: {
                 module: "HCM",
@@ -106,8 +81,89 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
           ],
         },
         {
-          stepCount: "3",
+          stepCount: "1",
+          key: "4",
+          body: [
+            {
+              isMandatory: false,
+              key: "CampaignDetailsSummary",
+              type: "component",
+              component: "CampaignDetailsSummary",
+              withoutLabel: true,
+              withoutLabelFieldPair: true,
+              disable: false,
+              customProps: {
+                module: "HCM",
+                sessionData: totalFormData,
+                summaryErrors: summaryErrors
+              },
+              populators: {
+                name: "CampaignDetailsSummary",
+                // optionsKey: "code",
+                // error: "ES__REQUIRED",
+                required: true,
+              },
+            },
+          ],
+        },
+        {
+          stepCount: "2",
           key: "5",
+          name: "HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA",
+          body: [
+            {
+              isMandatory: false,
+              key: "boundaryType",
+              type: "component",
+              component : "SelectingBoundariesDuplicate",
+              // component: "SelectingBoundaries",
+              withoutLabelFieldPair: true,
+              withoutLabel: true,
+              disable: false,
+              customProps: {
+                module: "HCM",
+                sessionData: totalFormData,
+                dataParams: dataParams,
+                hierarchyData: hierarchyData
+              },
+              populators: {
+                name: "boundaryType",
+                // optionsKey: "code",
+                error: "ES__REQUIRED",
+                required: true,
+              },
+            },
+          ],
+        },
+        {
+          stepCount: "2",
+          key: "6",
+          body: [
+            {
+              isMandatory: false,
+              key: "BoundarySummary",
+              type: "component",
+              component: "BoundarySummary",
+              withoutLabel: true,
+              withoutLabelFieldPair: true,
+              disable: false,
+              customProps: {
+                module: "HCM",
+                sessionData: totalFormData,
+                summaryErrors: summaryErrors
+              },
+              populators: {
+                name: "BoundarySummary",
+                // optionsKey: "code",
+                // error: "ES__REQUIRED",
+                required: true,
+              },
+            },
+          ],
+        },
+        {
+          stepCount: "3",
+          key: "7",
           name: "HCM_CAMPAIGN_CYCLE_CONFIGURE",
           body: [
             {
@@ -133,7 +189,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
         },
         {
           stepCount: "3",
-          key: "6",
+          key: "8",
           name: "HCM_CAMPAIGN_DELIVERY_DATA",
           body: [
             {
@@ -158,8 +214,84 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
           ],
         },
         {
+          stepCount: "3",
+          key: "9",
+          body: [
+            {
+              isMandatory: false,
+              key: "DeliveryDetailsSummary",
+              type: "component",
+              component: "DeliveryDetailsSummary",
+              withoutLabel: true,
+              withoutLabelFieldPair: true,
+              disable: false,
+              customProps: {
+                module: "HCM",
+                sessionData: totalFormData,
+                summaryErrors: summaryErrors
+              },
+              populators: {
+                name: "DeliveryDetailsSummary",
+                // optionsKey: "code",
+                // error: "ES__REQUIRED",
+                required: true,
+              },
+            },
+          ],
+        },
+        {
           stepCount: "4",
-          key: "7",
+          key: "10",
+          name: "HCM_CAMPAIGN_UPLOAD_FACILITY_DATA",
+          body: [
+            {
+              isMandatory: false,
+              key: "uploadFacility",
+              type: "component",
+              component: "UploadData",
+              withoutLabel: true,
+              withoutLabelFieldPair: true,
+              disable: false,
+              customProps: {
+                module: "HCM",
+                sessionData: totalFormData,
+                type: "facilityWithBoundary",
+              },
+              populators: {
+                name: "uploadFacility",
+                required: true,
+              },
+            },
+          ],
+        },
+        {
+          stepCount: "4",
+          key: "11",
+          name: "HCM_CAMPAIGN_UPLOAD_USER_DATA",
+          body: [
+            {
+              isMandatory: false,
+              key: "uploadUser",
+              type: "component",
+              component: "UploadData",
+              withoutLabel: true,
+              withoutLabelFieldPair: true,
+              disable: false,
+              customProps: {
+                module: "HCM",
+                sessionData: totalFormData,
+                type: "userWithBoundary",
+              },
+              populators: {
+                name: "uploadUser",
+                required: true,
+              },
+            },
+          ],
+        },
+        {
+          stepCount: "4",
+          key: "12",
           name: "HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA",
           body: [
             {
@@ -185,58 +317,34 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
           ],
         },
         {
+          stepCount: "4",
+          key: "13",
+          body: [
+            {
+              isMandatory: false,
+              key: "DataUploadSummary",
+              type: "component",
+              component: "DataUploadSummary",
+              withoutLabel: true,
+              withoutLabelFieldPair: true,
+              disable: false,
+              customProps: {
+                module: "HCM",
+                sessionData: totalFormData,
+                summaryErrors: summaryErrors
+              },
+              populators: {
+                name: "DataUploadSummary",
+                // optionsKey: "code",
+                // error: "ES__REQUIRED",
+                required: true,
+              },
+            },
+          ],
+        },
+        {
           stepCount: "5",
-          key: "8",
-          name: "HCM_CAMPAIGN_UPLOAD_FACILITY_DATA",
-          body: [
-            {
-              isMandatory: false,
-              key: "uploadFacility",
-              type: "component",
-              component: "UploadData",
-              withoutLabel: true,
-              withoutLabelFieldPair: true,
-              disable: false,
-              customProps: {
-                module: "HCM",
-                sessionData: totalFormData,
-                type: "facilityWithBoundary",
-              },
-              populators: {
-                name: "uploadFacility",
-                required: true,
-              },
-            },
-          ],
-        },
-        {
-          stepCount: "6",
-          key: "9",
-          name: "HCM_CAMPAIGN_UPLOAD_USER_DATA",
-          body: [
-            {
-              isMandatory: false,
-              key: "uploadUser",
-              type: "component",
-              component: "UploadData",
-              withoutLabel: true,
-              withoutLabelFieldPair: true,
-              disable: false,
-              customProps: {
-                module: "HCM",
-                sessionData: totalFormData,
-                type: "userWithBoundary",
-              },
-              populators: {
-                name: "uploadUser",
-                required: true,
-              },
-            },
-          ],
-        },
-        {
-          stepCount: "7",
-          key: "10",
+          key: "14",
           isLast: true,
           body: [
             {

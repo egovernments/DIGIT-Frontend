@@ -8,6 +8,7 @@ export const deliveryConfig = [
     cycleConfig: {
       cycle: 1,
       deliveries: 1,
+      IsDisable: true
     },
     deliveryConfig: [
       {
@@ -17,20 +18,24 @@ export const deliveryConfig = [
             label: "Custom",
             attrType: "text",
             attrValue: "CAMPAIGN_BEDNET_INDIVIDUAL_LABEL",
+            operatorValue: "LESS_THAN_EQUAL_TO",
+            value: 3,
           },
           {
             key: 2,
             label: "Custom",
             attrType: "text",
             attrValue: "CAMPAIGN_BEDNET_HOUSEHOLD_LABEL",
+            operatorValue: "LESS_THAN_EQUAL_TO",
+            value: 1.8,
           },
         ],
         productConfig: [
           {
             key: 1,
             count: 1,
-            value: "PVAR-2024-05-03-000305",
-            name: "SP - 250mg",
+            value: "PVAR-2024-03-15-000043",
+            name: "SP 500mg",
           },
         ],
       },
@@ -51,7 +56,6 @@ export const deliveryConfig = [
         conditionConfig: [
           {
             deliveryType: "DIRECT",
-            disableDeliveryType: true,
             attributeConfig: [
               {
                 key: 1,
@@ -67,19 +71,18 @@ export const deliveryConfig = [
               {
                 key: 1,
                 count: 1,
-                value: "PVAR-2024-01-24-000079",
-                name: "AQ - 75mg",
+                value: "PVAR-2024-03-15-000043",
+                name: "SP 500mg",
               },
               {
-                key: 1,
+                key: 2,
                 count: 1,
-                value: "PVAR-2024-05-03-000305",
-                name: "SP - 250mg",
+                value: "PVAR-2024-03-15-000044",
+                name: "AQ 75mg",
               },
             ],
           },
           {
-            disableDeliveryType: true,
             deliveryType: "DIRECT",
             attributeConfig: [
               {
@@ -96,8 +99,8 @@ export const deliveryConfig = [
               {
                 key: 1,
                 count: 1,
-                value: "PVAR-2024-01-24-000078",
-                name: "AQ - 150mg",
+                value: "PVAR-2024-03-15-000043",
+                name: "SP 500mg",
               },
             ],
           },
@@ -123,8 +126,8 @@ export const deliveryConfig = [
               {
                 key: 1,
                 count: 1,
-                value: "PVAR-2024-01-24-000079",
-                name: "AQ - 75mg",
+                value: "PVAR-2024-03-15-000043",
+                name: "SP 500mg",
               },
             ],
           },
@@ -145,8 +148,8 @@ export const deliveryConfig = [
               {
                 key: 1,
                 count: 1,
-                value: "PVAR-2024-01-24-000078",
-                name: "AQ - 150mg",
+                value: "PVAR-2024-03-15-000043",
+                name: "SP 500mg",
               },
             ],
           },
@@ -172,8 +175,8 @@ export const deliveryConfig = [
               {
                 key: 1,
                 count: 1,
-                value: "PVAR-2024-01-24-000079",
-                name: "AQ - 75mg",
+                value: "PVAR-2024-03-15-000043",
+                name: "SP 500mg",
               },
             ],
           },
@@ -194,8 +197,8 @@ export const deliveryConfig = [
               {
                 key: 1,
                 count: 1,
-                value: "PVAR-2024-01-24-000078",
-                name: "AQ - 150mg",
+                value: "PVAR-2024-03-15-000043",
+                name: "SP 500mg",
               },
             ],
           },
@@ -203,4 +206,38 @@ export const deliveryConfig = [
       },
     ],
   },
+    {
+      projectType: "IRS-mz",
+      attrAddDisable: true,
+      deliveryAddDisable: false,
+      customAttribute: true,
+      productCountHide: true,
+      cycleConfig: {
+        cycle: 1,
+        deliveries: 1,
+        IsDisable: true
+      },
+      deliveryConfig: [
+        {
+          attributeConfig: [
+            {
+              key: 1,
+              label: "Custom",
+              attrType: "text",
+              attrValue: "TYPE_OF_STRUCTURE",
+              operatorValue: "EQUAL_TO",
+              value: "CEMENT",
+            },
+          ],
+          productConfig: [
+            {
+              key: 1,
+              count: 1,
+              value: "PVAR-2024-03-15-000043",
+              name: "SP 500mg",
+            },
+          ],
+        },
+      ],
+    },
 ];

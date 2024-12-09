@@ -30,6 +30,7 @@ import {
   prepareGeojson,
   extractGeoData,
 } from "../utils/mappingUtils";
+import { delay } from "../utils/uploadUtils";
 
 const page = "mapping";
 
@@ -249,9 +250,10 @@ const Mapping = ({
   };
 
   // showing selected boundary data
-  useEffect(() => {
+  useEffect(async () => {
     if (!boundarySelections && !choroplethProperty && !filterSelections) return;
     setLoader("LOADING");
+    await delay(100);
     try {
       removeAllLayers(map, layers);
       const { filteredSelection, childrenList } = filterBoundarySelection(boundaryData, boundarySelections);

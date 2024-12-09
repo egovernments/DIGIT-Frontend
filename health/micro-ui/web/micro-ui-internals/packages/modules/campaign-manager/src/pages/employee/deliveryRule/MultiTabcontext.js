@@ -1,9 +1,9 @@
-import React, { Fragment, useContext, useState } from "react";
+import React, { Fragment, useContext, useState , useEffect } from "react";
 import { Card, Header, Paragraph, CardHeader, CardSubHeader, CardText } from "@egovernments/digit-ui-react-components";
 import AddDeliveryRuleWrapper from "./AddDeliverycontext";
 import { CycleContext } from ".";
 import { useTranslation } from "react-i18next";
-import { InfoCard } from "@egovernments/digit-ui-components";
+import { InfoCard  , Stepper ,TextBlock , Tag} from "@egovernments/digit-ui-components";
 //just pass campaign data here
 // function restructureData(data) {
 //   const restructuredData = [];
@@ -154,11 +154,11 @@ const TabContent = ({ activeSubTab, subTabCount = 3, onSubTabChange, project }) 
     <Card className="sub-tab-container">
       <SubTabs campaignData={campaignData} subTabCount={subTabCount} activeSubTab={activeSubTab} onSubTabChange={onSubTabChange} />
       <div>
-        <CardSubHeader className="tab-content-header">{t(`CAMPAIGN_TAB_TEXT`)}</CardSubHeader>
-        <CardText>{t(`CAMPAIGN_TAB_SUB_TEXT_${project?.code ? project?.code?.toUpperCase() : project?.toUpperCase()}`)} </CardText>
+        {/* <CardSubHeader className="tab-content-header">{t(`CAMPAIGN_TAB_TEXT`)}</CardSubHeader> */}
+        <CardText>{t(`CAMPAIGN_DELIVERY_TAB_SUB_TEXT_${project?.code ? project?.code?.toUpperCase() : project?.toUpperCase()}`)} </CardText>
       </div>
       {/* Add content specific to each tab as needed */}
-      <InfoCard
+      {/* <InfoCard
         populators={{
           name: "infocard",
         }}
@@ -179,7 +179,7 @@ const TabContent = ({ activeSubTab, subTabCount = 3, onSubTabChange, project }) 
           </span>
         ]}
         label={"Info"}
-      />
+      /> */}
     </Card>
   );
 };
@@ -212,6 +212,22 @@ const MultiTab = ({ tabCount = 3, subTabCount = 2 }) => {
   const { campaignData, dispatchCampaignData } = useContext(CycleContext);
   const { t } = useTranslation();
   const tempSession = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+  const searchParams = new URLSearchParams(location.search);
+  const [currentStep , setCurrentStep] = useState(1);
+  const currentKey = searchParams.get("key");
+  const campaignName = tempSession?.HCM_CAMPAIGN_NAME?.campaignName;
+  const [key, setKey] = useState(() => {
+    const keyParam = searchParams.get("key");
+    return keyParam ? parseInt(keyParam) : 1;
+  });
+
+  function updateUrlParams(params) {
+    const url = new URL(window.location.href);
+    Object.entries(params).forEach(([key, value]) => {
+      url.searchParams.set(key, value);
+    });
+    window.history.replaceState({}, "", url);
+  }
   const handleTabChange = (tabIndex, index) => {
     dispatchCampaignData({
       type: "TAB_CHANGE_UPDATE",
@@ -228,8 +244,42 @@ const MultiTab = ({ tabCount = 3, subTabCount = 2 }) => {
     });
   };
 
+  useEffect(() =>{
+    setKey(currentKey);
+    setCurrentStep(currentKey);
+  }, [currentKey])
+
+  useEffect(() => {
+    updateUrlParams({ key: key });
+    window.dispatchEvent(new Event("checking"));
+  }, [key]);
+
+  const onStepClick = (currentStep) => {
+    if(currentStep === 0){
+      setKey(7);
+    }
+    else if(currentStep === 2) setKey(9);
+    else setKey(8);
+  };
+
   return (
     <>
+    <div className="container-full">
+        <div className="card-container">
+          <Card className="card-header-timeline">
+            <TextBlock subHeader={t("HCM_DELIVERY_DETAILS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+          </Card>
+          <Card className="stepper-card">
+            <Stepper
+              customSteps={["HCM_CYCLES","HCM_DELIVERY_RULES" ,"HCM_SUMMARY"]}
+              currentStep={2}
+              onStepClick={onStepClick}
+              direction={"vertical"}
+            />
+          </Card>
+        </div>
+        <div className="card-container-delivery">
+        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
       <Header>
         {t(
           `CAMPAIGN_PROJECT_${
@@ -257,6 +307,8 @@ const MultiTab = ({ tabCount = 3, subTabCount = 2 }) => {
           onSubTabChange={handleSubTabChange}
         />
         <AddDeliveryRuleWrapper />
+      </div>
+      </div>
       </div>
     </>
   );

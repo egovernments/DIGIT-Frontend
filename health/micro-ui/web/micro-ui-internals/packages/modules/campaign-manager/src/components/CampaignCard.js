@@ -1,9 +1,14 @@
-import { EmployeeModuleCard, SVG } from "@egovernments/digit-ui-react-components";
-import React from "react";
 import { useTranslation } from "react-i18next";
 
+
+import React, { Fragment } from "react";
+import { EmployeeModuleCard } from "@egovernments/digit-ui-react-components";
+
 const ROLES = {
-  CAMPAIGN_MANAGER:["CAMPAIGN_MANAGER"],
+  CAMPAIGN_MANAGER:["CAMPAIGN_MANAGER","MICROPLAN_CAMPAIGN_INTEGRATOR"],
+  BOUNDARY_MANAGER:["BOUNDARY_MANAGER"],
+  MICROPLAN_INTEGRATOR:["MICROPLAN_CAMPAIGN_INTEGRATOR"],
+  CAMPAIGN_MANAGER_ONLY:["CAMPAIGN_MANAGER"],
   NATIONAL_SUPERVISOR:["NATIONAL_SUPERVISOR"]
 };
 
@@ -14,47 +19,32 @@ const ROLES = {
  * campaign actions, such as setting up a campaign and viewing personal campaigns. The links are
  * filtered based on employee roles before being displayed in the EmployeeModuleCard component.
  */
+
 const CampaignCard = () => {
   if (!Digit.Utils.didEmployeeHasAtleastOneRole(Object.values(ROLES).flatMap((e) => e))) {
   return null;
   }
 
   const { t } = useTranslation();
-  const tenantId = Digit.ULBService.getCurrentTenantId();
-  // const reqCriteria = {
-  //   url: "/project-factory/v1/project-type/search",
-  //   params: {},
-  //   body: { CampaignDetails:{
-  //     tenantId,
-  //     createdBy: Digit.UserService.getUser().info.uuid,
-  //     pagination: {
-  //       "sortBy": "createdTime",
-  //       "sortOrder": "desc",
-  //       "limit": 1,
-  //       "offset": 0
-  //     }
-  //   } },
-  //   config: {
-  //     select: (data) => {
-  //       return data?.totalCount;
-  //     },
-  //   },
-  // };
-  // const { isLoading, data } = Digit.Hooks.useCustomAPIHook(
-  //   reqCriteria
-  // );
+  const microplanStatus =  "RESOURCE_ESTIMATIONS_APPROVED"
+ 
   let links = [
 
     {
       label: t("ACTION_TEST_SETUP_CAMPAIGN"),
       link: `/${window?.contextPath}/employee/campaign/setup-campaign`,
-      roles: ROLES.CAMPAIGN_MANAGER
+      roles: ROLES.CAMPAIGN_MANAGER_ONLY
     },
     {
       label: t("ACTION_TEST_MY_CAMPAIGN"),
       link: `/${window?.contextPath}/employee/campaign/my-campaign`,
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
+    },  
+    { 
+      label: t("ACTION_TEST_SETUP_CAMPAIGN_FROM_MICROPLAN"),
+      link: `/${window?.contextPath}/employee/campaign/setup-from-microplan?status=${microplanStatus}`,
+      roles: ROLES.MICROPLAN_INTEGRATOR
     },
     {
       label: t("NATIONAL_DASHBOARD"),
@@ -67,13 +57,19 @@ const CampaignCard = () => {
       link: "/digit-ui/employee/dss/landing/national-health-dashboard",
       roles: ROLES.NATIONAL_SUPERVISOR,
       // count: isLoading?"-":data
+    },
+    {
+      label: t("BOUNDARY_MANAGEMENT"),
+      link: `/${window?.contextPath}/employee/campaign/boundary/home`,
+      roles: ROLES.BOUNDARY_MANAGER,
+      // count: isLoading?"-":data
     }
   ];
 
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));
 
   const propsForModuleCard = {
-    Icon: <SVG.Support fill="white" height="36" width="36"/>,
+    Icon: "Engineering",
     moduleName: t("ACTION_TEST_CAMPAIGN"),
     kpis: [],
     links: links,

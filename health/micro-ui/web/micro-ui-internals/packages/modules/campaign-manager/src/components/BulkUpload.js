@@ -6,6 +6,9 @@ import XLSX from "xlsx";
 import XlsPreview from "./XlsPreview";
 import { PRIMARY_COLOR } from "../utils";
 import { Toast } from "@egovernments/digit-ui-components";
+import { CustomSVG } from "@egovernments/digit-ui-components";
+import { Button as ButtonNew } from "@egovernments/digit-ui-components";
+
 
 /**
  * The BulkUpload component in JavaScript allows users to upload, validate, preview, download, and
@@ -25,15 +28,18 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
   const [fileUrl, setFileUrl] = useState(fileData?.[0]);
   const [fileName, setFileName] = useState(null);
   const [showToast, setShowToast] = useState(false);
+  const { XlsxFile } = CustomSVG;
 
   useEffect(() => {
     const fetch = async () => {
-      const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch([fileData?.[0]?.filestoreId], tenantId);
-      const temp = fileData?.map((i) => ({
-        ...i,
-        url: fileUrl?.[0]?.url,
-      }));
-      setFileUrl(temp?.[0]);
+      if (fileData?.[0]?.filestoreId) {
+        const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch([fileData?.[0]?.filestoreId], tenantId);
+        const temp = fileData?.map((i) => ({
+          ...i,
+          url: fileUrl?.[0]?.url,
+        }));
+        setFileUrl(temp?.[0]);
+      }
     };
     fetch();
   }, [fileData]);
@@ -140,28 +146,32 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
           //   setShowPreview(true);
           // }}
         >
-          <FileIcon className="icon" />
+          <XlsxFile styles={{ width: "3rem", height: "3rem" }} />
           <div style={{ marginLeft: "0.5rem", color: "#505A5F", fontWeight: "700" }}>{file.filename}</div>
         </div>
         <div className="delete-and-download-button">
-          <Button
+          <ButtonNew
             label={t("WBH_DOWNLOAD")}
             variation="secondary"
-            icon={<DownloadIcon styles={{ height: "1.25rem", width: "1.25rem" }} fill={PRIMARY_COLOR} />}
+            // icon={<DownloadIcon styles={{ height: "1.25rem", width: "1.25rem" }} fill={PRIMARY_COLOR} />}
             type="button"
-            className="workbench-download-template-btn hover"
-            onButtonClick={(e) => {
+            size={"medium"}
+            icon={"DownloadIcon"}
+            // className="workbench-download-template-btn hover"
+            onClick={(e) => {
               e.stopPropagation();
               handleFileDownload(e, fileUrl);
             }}
           />
-          <Button
+          <ButtonNew
             label={t("WBH_DELETE")}
             variation="secondary"
-            icon={<DeleteIconv2 styles={{ height: "1.25rem", width: "2.5rem" }} fill={PRIMARY_COLOR} />}
+            size={"medium"}
+            // icon={<DeleteIconv2 styles={{ height: "1.25rem", width: "2.5rem" }} fill={PRIMARY_COLOR} />}
             type="button"
-            className="workbench-download-template-btn hover"
-            onButtonClick={(e) => {
+            icon={"Delete"}
+            // className="workbench-download-template-btn hover"
+            onClick={(e) => {
               e.stopPropagation();
               handleFileDelete(file, index);
               setShowPreview(false);

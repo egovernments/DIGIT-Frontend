@@ -1,4 +1,4 @@
-export const useProductList = (tenantId) => {
+export const useProductList = (tenantId,projectType) => {
   const reqCriteriaVariant = {
     url: `/product/variant/v1/_search`,
     params: { tenantId: tenantId, limit: 1000, offset: 0 },
@@ -8,7 +8,11 @@ export const useProductList = (tenantId) => {
     config: {
       enabled: true,
       select: (data) => {
-        return data?.ProductVariant;
+        
+        const filteredData = data?.ProductVariant?.filter(item => 
+          item.additionalFields?.fields?.some(field => field.key === "projectType" && field.value === projectType)
+        );
+        return filteredData;
       },
     },
   };
