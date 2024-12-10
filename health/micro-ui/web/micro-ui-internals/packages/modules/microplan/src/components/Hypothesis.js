@@ -161,7 +161,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
             <LabelFieldPair className="mp-hypothesis-label-field" style={{ alignItems: "center" }} key={index}>
               <div className="assumption-label">
                 <span className="assumption-label-icon-wrapper">
-                  {`${t(item)}`}
+                 <span className="assumption-label-icon-wrapper-label">{`${t(item)}`}</span>
                   {/* {category === "CAMPAIGN_VEHICLES" || sourceCheck === "CUSTOM" ? null : <span className="mandatory-span">*</span>} */}
                   {category === "CAMPAIGN_VEHICLES" || sourceCheck === "CUSTOM" ? null : (
                     <span className="icon-wrapper">

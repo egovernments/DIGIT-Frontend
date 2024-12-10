@@ -452,16 +452,19 @@ tbody tr:last-child td:last-child .digit-dropdown-employee-select-wrap .digit-dr
 }
 
 .assumption-label-icon-wrapper{
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
+  display: inline-block;
+
+  .assumption-label-icon-wrapper-label{
+    line-height: 1.25rem;
+  }
 
   .icon-wrapper{
-    margin-left: 0rem;
+    margin-left: 0.25rem;
     top: 0rem;
-    display: flex;
+    display: inline-block;
     width: 1.25rem;
     height: 1.25rem;
+    vertical-align: bottom;
   }
 }
 

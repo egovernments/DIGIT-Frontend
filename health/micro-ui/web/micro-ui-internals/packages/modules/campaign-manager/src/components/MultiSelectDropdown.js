@@ -312,6 +312,7 @@ const MultiSelectDropdown = ({
           props
         );
         if (onClose && !active) {
+          setSearchQuery("");
           onClose(
             newState.map((e) => e.propsData),
             getCategorySelectAllState(),
@@ -350,6 +351,7 @@ const MultiSelectDropdown = ({
 
   useEffect(() => {
     if (!active) {
+      setSearchQuery("");
       onSelect(
         alreadyQueuedSelectedState?.map((e) => e.propsData),
         getCategorySelectAllState(),
