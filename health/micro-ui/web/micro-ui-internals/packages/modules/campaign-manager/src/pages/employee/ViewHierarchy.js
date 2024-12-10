@@ -583,7 +583,14 @@ const ViewHierarchy = () => {
                                       <div style={{ marginRight: "10px" }}>
                                         {fileName}
                                       </div>
-                                      <div className="dustbin-icon" onClick={() => removeFile()} style={{ cursor: "pointer", marginTop:"1.15rem" }}>
+                                      <div
+                                        className="dustbin-icon"
+                                        onClick={() => removeFile()}
+                                        onKeyDown={(e) => { if (e.key === 'Enter') removeFile(); }}
+                                        tabIndex="0"
+                                        role="button"
+                                        style={{ cursor: "pointer", marginTop:"1.15rem" }}
+                                      >
                                         <DustbinIcon />
                                       </div>
                                     </div>
