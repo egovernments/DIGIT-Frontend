@@ -1,8 +1,8 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router-dom";
 import { LabelFieldPair, Header } from "@egovernments/digit-ui-react-components";
-import { Button, Card, Dropdown, DustbinIcon, FieldV1, MultiSelectDropdown } from "@egovernments/digit-ui-components";
+import { Card, FieldV1 } from "@egovernments/digit-ui-components";
+import { DustbinIcon } from "./icons/DustbinIcon";
 
 const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDelete, onDeleteCard }) => {
   const { t } = useTranslation();
