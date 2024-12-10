@@ -21,18 +21,22 @@ jobs:
 
       - name: Validate branch name
         run: |
-          # Define constants
-          PREFIXES="FEATURE|BUGFIX|RELEASE"
-          SYSTEMS="HCMPRE|DPG|SN"
-          TICKET_PATTERN="[0-9]{1,5}"
-          BRANCH_PATTERN="^($PREFIXES)\/($SYSTEMS)-$TICKET_PATTERN$"
-
           # Determine the branch name
-          branch_name="${GITHUB_REF#refs/heads/}"
-
+          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+            branch_name="${GITHUB_HEAD_REF}"
+          else
+            branch_name="${GITHUB_REF#refs/heads/}"
+          fi
+      
+          # Define the branch name pattern
+          PREFIXES="FEATURE|BUGFIX|RELEASE"
+          PROJECTS="HCMPRE|DPG|SN"
+          TICKET_PATTERN="[0-9]{1,5}"
+          BRANCH_PATTERN="^($PREFIXES)\/($PROJECTS)-$TICKET_PATTERN$"
+      
           # Validate the branch name
           if [[ ! "$branch_name" =~ $BRANCH_PATTERN ]]; then
-            echo "Branch name '$branch_name' does not follow the correct pattern: $PREFIXES/$SYSTEMS-<TICKET_NO> where <TICKET_NO> is $TICKET_PATTERN"
+            echo "Branch name '$branch_name' does not follow the correct pattern: $PREFIXES/$PROJECTS-<TICKET_NO> where <TICKET_NO> is $TICKET_PATTERN"
             exit 1
           fi
 
@@ -41,15 +45,15 @@ jobs:
         run: |
           # Define constants
           PREFIXES="FEATURE|BUGFIX|RELEASE"
-          SYSTEMS="HCMPRE|DPG|SN"
+          PROJECTS="HCMPRE|DPG|SN"
           TICKET_PATTERN="[0-9]{1,5}"
-          TITLE_PATTERN="^($PREFIXES)\/($SYSTEMS)-$TICKET_PATTERN: .+$"
+          TITLE_PATTERN="^($PREFIXES)\/($PROJECTS)-$TICKET_PATTERN: .+$"
 
           # Get the PR title
           pr_title="${{ github.event.pull_request.title }}"
 
           # Validate the PR title
           if [[ ! "$pr_title" =~ $TITLE_PATTERN ]]; then
-            echo "PR title '$pr_title' does not follow the correct pattern: $PREFIXES/$SYSTEMS-<TICKET_NO>: <Description> where <TICKET_NO> is $TICKET_PATTERN"
+            echo "PR title '$pr_title' does not follow the correct pattern: $PREFIXES/$PROJECTS-<TICKET_NO>: <Description> where <TICKET_NO> is $TICKET_PATTERN"
             exit 1
           fi
