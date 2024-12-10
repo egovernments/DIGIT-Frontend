@@ -47,7 +47,7 @@ const campaign = {
   useBoundaryHome,
   useReadExcelData,
   useUpdateAndUploadExcel,
-  useFetchFromMicroplan
+  useFetchFromMicroplan,
 };
 
 const Hooks = {
@@ -56,14 +56,14 @@ const Hooks = {
 
 const Utils = {
   browser: {
-    sample: () => { },
+    sample: () => {},
   },
   workbench: {
     ...utils,
   },
   campaign: {
-    ...utils
-  }
+    ...utils,
+  },
 };
 
 export const CustomisedHooks = {

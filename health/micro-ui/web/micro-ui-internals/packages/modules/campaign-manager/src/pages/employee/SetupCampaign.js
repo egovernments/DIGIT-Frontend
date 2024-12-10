@@ -967,6 +967,26 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
           }
         );
         break;
+      case "HCM_CONFIGURE_APP":
+        history.push(
+          `/${window.contextPath}/employee/campaign/checklist/search?name=${draftData?.campaignName}&campaignId=${draftData?.id}&projectType=${draftData?.projectType}`,
+          {
+            name: draftData?.campaignName,
+            projectId: draftData?.projectId,
+            data: draftData,
+          }
+        );
+        break;
+      case "HCM_UPDATE_CAMPAIGN":
+        history.push(
+          `/${window.contextPath}/employee/campaign/update-campaign?key=1&parentId=${draftData?.id}&campaignName=${draftData?.campaignName}`,
+          {
+            name: draftData?.campaignName,
+            projectId: draftData?.projectId,
+            data: draftData,
+          }
+        );
+        break;
       default:
         break;
     }

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router-dom";
 import { dateChangeBoundaryConfig, dateChangeConfig } from "../../configs/dateChangeBoundaryConfig";
-import { Button, InfoCard, PopUp, Toast , Tag} from "@egovernments/digit-ui-components";
+import { Button, InfoCard, PopUp, Toast, Tag } from "@egovernments/digit-ui-components";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 
@@ -43,15 +43,15 @@ function UpdateDatesWithBoundaries() {
       // const allCycleDateValid = temp
       //   .map((i) => i?.additionalDetails?.projectType?.cycles.every((j) => j?.startDate && j?.endDate))
       //   .every((k) => k === true);
-      const allCycleDateValid = temp?.projectType === "MR-DN" 
-      ? temp.map((i) => i?.additionalDetails?.projectType?.cycles.every((j) => j?.startDate && j?.endDate)).every((k) => k === true) 
-      : true;
+      const allCycleDateValid =
+        temp?.projectType === "MR-DN"
+          ? temp.map((i) => i?.additionalDetails?.projectType?.cycles.every((j) => j?.startDate && j?.endDate)).every((k) => k === true)
+          : true;
       const allDateValid = temp.every((i) => i?.startDate && i?.endDate);
 
       if (temp?.projectType === "MR-DN" && allCycleDateValid && allDateValid) {
         return true;
-      }
-      else if (temp?.projectType !== "MR-DN" && allDateValid) {
+      } else if (temp?.projectType !== "MR-DN" && allDateValid) {
         return true;
       }
       return false;
@@ -59,8 +59,7 @@ function UpdateDatesWithBoundaries() {
       const cycleDateValid = data?.dateAndCycle?.additionalDetails?.projectType?.cycles?.every((item) => item?.startDate && item?.endDate);
       if (data?.dateAndCycle?.projectType === "MR-DN" && data?.dateAndCycle?.startDate && data?.dateAndCycle?.endDate && cycleDateValid) {
         return true;
-      }
-      else if (data?.dateAndCycle?.projectType !== "MR-DN" && data?.dateAndCycle?.startDate && data?.dateAndCycle?.endDate) {
+      } else if (data?.dateAndCycle?.projectType !== "MR-DN" && data?.dateAndCycle?.startDate && data?.dateAndCycle?.endDate) {
         return true;
       }
       return false;
@@ -115,7 +114,7 @@ function UpdateDatesWithBoundaries() {
           // text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXTKK"),
           // info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXTKK"),
           actionLabel: t("HCM_DATE_CHANGE_SUCCESS_RESPONSE_ACTION"),
-          actionLink: `/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=13&summary=true`
+          actionLink: `/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=14&summary=true`,
         });
       } else {
         const url = getProjectServiceUrl();
@@ -132,7 +131,7 @@ function UpdateDatesWithBoundaries() {
           // text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXTKK"),
           // info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXTKK"),
           actionLabel: t("HCM_DATE_CHANGE_SUCCESS_RESPONSE_ACTION"),
-          actionLink: `/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=13&summary=true`,
+          actionLink: `/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=14&summary=true`,
         });
       }
     } catch (error) {
@@ -177,8 +176,9 @@ function UpdateDatesWithBoundaries() {
         }}
         variant="default"
         style={{ marginBottom: "1.5rem", marginTop: "1.5rem", marginLeft: "0rem", maxWidth: "100%" }}
-        additionalElements={[<span style={{ color: "#505A5F" }}>{t(`UPDATE_DATE_CHANGE_INFO_TEXT1`)}</span>,
-          <span style={{ color: "#505A5F" }}>{t(`UPDATE_DATE_CHANGE_INFO_TEXT2`)}</span>
+        additionalElements={[
+          <span style={{ color: "#505A5F" }}>{t(`UPDATE_DATE_CHANGE_INFO_TEXT1`)}</span>,
+          <span style={{ color: "#505A5F" }}>{t(`UPDATE_DATE_CHANGE_INFO_TEXT2`)}</span>,
         ]}
         label={"Info"}
         headerClassName={"headerClassName"}
