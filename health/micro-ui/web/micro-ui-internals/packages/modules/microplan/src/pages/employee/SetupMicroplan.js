@@ -248,7 +248,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
         // Display error toast if update fails
         setShowToast({
           key: "error",
-          label: error?.message ? error.message : t("FAILED_TO_UPDATE_RESOURCE"),
+          label: error?.message ? t("SETUP_COMPLETE_FAILED_DUE_TO_API_INTEGRATION") : t("FAILED_TO_UPDATE_RESOURCE"),
         });
       },
     });
