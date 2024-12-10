@@ -1,7 +1,6 @@
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 
 const useProjectSearchWithBoundary = async ({ name, tenantId, boundaries }) => {
-  const url = getProjectServiceUrl();
   const requests = boundaries.map(({ code }) => {
     const url = getProjectServiceUrl();
     return Digit.CustomService.getResponse({
