@@ -110,7 +110,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
   useEffect(() => {
     setKey(currentKey);
-    setCurrentStep(currentKey - baseKey + 1);
   }, [currentKey]);
 
   useEffect(() => {
@@ -1088,17 +1087,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     window.dispatchEvent(new Event("checking"));
   }, [key]);
 
-  const onStepClick = (currentStep) => {
-    setCurrentStep(currentStep + 1);
-    if (currentStep === 0) {
-      setKey(10);
-    } else if (currentStep === 1) {
-      setKey(11);
-    } else if (currentStep === 3) {
-      setKey(13);
-    } else setKey(12);
-  };
-
   const getDownloadLabel = () => {
     if (parentId) {
       if (type === "boundary") {
@@ -1116,21 +1104,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   return (
     <>
       <div className="container-full">
-        {!parentId && (
-          <div className="card-container">
-            <Card className="card-header-timeline">
-              <TextBlock subHeader={t("HCM_UPLOAD_DATA")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
-            </Card>
-            <Card className="stepper-card">
-              <Stepper
-                customSteps={["HCM_UPLOAD_FACILITY", "HCM_UPLOAD_USER", "HCM_UPLOAD_TARGET", "HCM_SUMMARY"]}
-                currentStep={currentStep}
-                onStepClick={onStepClick}
-                direction={"vertical"}
-              />
-            </Card>
-          </div>
-        )}
         {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
 
         <div className={parentId ? "card-container2" : "card-container1"}>

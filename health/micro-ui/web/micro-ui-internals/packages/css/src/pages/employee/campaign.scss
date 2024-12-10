@@ -218,7 +218,9 @@
   }
 }
 .digit-popup-wrapper.dataMapping {
-  height: 100rem;
+  .digit-popup-children-wrap {
+    overflow: visible;
+  }
 }
 .dataMappingCard {
   overflow-y: scroll;
