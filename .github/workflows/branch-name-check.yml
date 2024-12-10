@@ -16,12 +16,21 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        
+
       - name: Validate branch name
         run: |
-          branch_name=$(echo "${GITHUB_REF#refs/heads/}")
+          # Determine the branch name
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            branch_name="${GITHUB_HEAD_REF}"
+          else
+            branch_name="${GITHUB_REF#refs/heads/}"
+          fi
+
+          # Define the pattern
           pattern="^(FEATURE|BUGFIX|RELEASE)\/(HCMPRE|DPG|SN)-[0-9]{1,5}$"
+
+          # Validate the branch name
           if [[ ! "$branch_name" =~ $pattern ]]; then
-            echo "Branch name '$branch_name' does not follow the correct pattern: FEATURE/HCMPRE-<TICKET_NO>, FEATURE/DPG-<TICKET_NO>, FEATURE/SN-<TICKET_NO>, BUGFIX/SN-<TICKET_NO>,  BUGFIX/HCMPRE-<TICKET_NO>, or BUGFIX/DPG-<TICKET_NO> where x is a number between 0 and 99999"
+            echo "Branch name '$branch_name' does not follow the correct pattern: FEATURE/HCMPRE-<TICKET_NO>, FEATURE/DPG-<TICKET_NO>, FEATURE/SN-<TICKET_NO>, BUGFIX/SN-<TICKET_NO>, BUGFIX/HCMPRE-<TICKET_NO>, or BUGFIX/DPG-<TICKET_NO> where x is a number between 0 and 99999"
             exit 1
           fi
