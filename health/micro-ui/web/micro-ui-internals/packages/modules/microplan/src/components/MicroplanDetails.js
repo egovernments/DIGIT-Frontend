@@ -65,6 +65,14 @@ const MicroplanDetails = ({ onSelect, props: customProps, ...props }) => {
     }
   });
 
+  useEffect(() => {
+    setMicroplan(
+      customProps?.sessionData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName
+        ? customProps?.sessionData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName
+        : Digit.Utils.microplanv1.generateCampaignString(customProps.sessionData, t)
+    );
+  }, [customProps?.sessionData]);
+
   return (
     <>
       <ViewCard
