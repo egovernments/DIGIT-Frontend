@@ -500,15 +500,6 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
                     <span className="mandatory-span">*</span>
                   </CardLabel>
                   <div className="digit-field">
-                    {console.log("DHKDKJDH", boundaryData[boundary?.boundaryType]?.map((item) => ({
-                          code: item?.parentCode,
-                          options:
-                            item?.boundaryTypeData?.TenantBoundary?.[0]?.boundary?.map((child) => ({
-                              code: child?.code,
-                              type: child?.boundaryType,
-                              parent: item?.parentCode,
-                            })) || [],
-                        })) || [])}
                     <MultiSelectDropdown
                       t={t}
                       restrictSelection={restrictSelection}

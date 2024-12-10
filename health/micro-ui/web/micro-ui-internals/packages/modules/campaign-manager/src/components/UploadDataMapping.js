@@ -150,6 +150,30 @@ const reducer = (state, action) => {
   }
 };
 
+function flattenHierarchyIterative(data) {
+  const stack = data.map((node) => ({ ...node, parentCode: null })); // Initialize stack with parentCode as null
+  const result = [];
+
+  while (stack.length > 0) {
+    const { id, code, boundaryType, children, parentCode } = stack.pop();
+
+    // Add the current node to the result with the parent code
+    result.push({ id, name: code, code: code, type: boundaryType, parent: parentCode });
+
+    // Push children onto the stack with their parentCode set to the current node's code
+    if (children && children.length > 0) {
+      stack.push(
+        ...children.map((child) => ({
+          ...child,
+          parentCode: code, // Set the parent code for the child
+        }))
+      );
+    }
+  }
+
+  return result;
+}
+
 const Wrapper = ({ setShowPopUp, alreadyQueuedSelectedState }) => {
   const { t } = useTranslation();
   return (
@@ -186,6 +210,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   const [selectedBoundary, setSelectedBoundary] = useState(null);
   const [chipPopUpRowId, setChipPopUpRowId] = useState(null);
   const [allLowestHierarchyCodes, setAllLowestHierarchyCodes] = useState(null);
+  const [allSelectedBoundary, setAllSelectedBoundary] = useState([]);
   const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
   const paramsData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
   const selectedBoundaryData = sessionData?.["HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"]?.boundaryType?.selectedData;
@@ -259,9 +284,12 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   const { isLoading: childrenDataLoading, data: childrenData, isFetching, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
 
   useEffect(() => {
-    if (allLowestHierarchyCodes?.length > 0) {
+    if (allLowestHierarchyCodes?.length > 0 && childrenData?.length > 0) {
+      const allLowestBoundaryData = flattenHierarchyIterative(childrenData);
+      const sessionSelectedData = sessionData?.["HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"]?.boundaryType?.selectedData;
+      setAllSelectedBoundary([...allLowestBoundaryData, ...sessionSelectedData]);
     }
-  }, [allLowestHierarchyCodes]);
+  }, [allLowestHierarchyCodes, childrenData]);
   useEffect(() => {
     if (lowestHierarchy && sessionData?.["HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"]?.boundaryType?.selectedData?.length > 0) {
       const lowestHierarchyCodes = sessionData?.["HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"]?.boundaryType?.selectedData
@@ -565,11 +593,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   t={t}
                   options={
                     Object.values(
-                      (
-                        sessionData?.["HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"]?.boundaryType?.selectedData?.filter(
-                          (i) => i.type === selectedLevel?.boundaryType
-                        ) || []
-                      ).reduce((acc, item) => {
+                      (allSelectedBoundary?.filter((i) => i.type === selectedLevel?.boundaryType) || []).reduce((acc, item) => {
                         const { parent, code, type } = item;
 
                         // Initialize the parent group if it doesn't exist
