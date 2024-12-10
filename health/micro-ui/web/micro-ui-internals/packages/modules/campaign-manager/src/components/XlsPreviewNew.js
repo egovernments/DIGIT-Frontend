@@ -28,8 +28,8 @@ function XlsPreviewNew({ file, ...props }) {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", marginLeft: "2.5rem", marginRight: "2.5rem", marginTop: "2.5rem" }}>
-        {/* <Button
+      {/* <div style={{ display: "flex", justifyContent: "space-between", marginLeft: "2.5rem", marginRight: "2.5rem", marginTop: "2.5rem" }}>
+        <Button
           label={t("BACK")}
           variation="secondary"
           icon={<ArrowBack styles={{ height: "1.25rem", width: "1.25rem" }} fill={PRIMARY_COLOR} />}
@@ -44,9 +44,11 @@ function XlsPreviewNew({ file, ...props }) {
           type="button"
           className="workbench-download-template-btn"
           onButtonClick={() => props?.onDownload()}
-        /> */}
-      </div>
-      <div className="campaign-popup-module" style={{ marginTop: "1.5rem" }}>
+        />
+      </div> */}
+      <div className="campaign-popup-module" 
+      style={{ marginTop: "0.5rem" }}
+      >
         <DocViewer
           style={{ height: "80vh", overflowY: "hidden" }}
           theme={{
