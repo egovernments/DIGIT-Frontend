@@ -284,9 +284,9 @@ const updateUrlParams = (params) => {
 function generateCampaignString(sessionData, t) {
 
   // Extract details from sessionData
-  const diseaseCode = sessionData.CAMPAIGN_DETAILS.campaignDetails.disease.code;
-  const campaignTypeCode = sessionData.CAMPAIGN_DETAILS.campaignDetails.campaignType.i18nKey;
-  const resourceDistributionStrategy = sessionData.CAMPAIGN_DETAILS.campaignDetails.distributionStrat.resourceDistributionStrategyCode;
+  const diseaseCode = sessionData?.CAMPAIGN_DETAILS?.campaignDetails.disease.code;
+  const campaignTypeCode = sessionData?.CAMPAIGN_DETAILS?.campaignDetails.campaignType.i18nKey;
+  const resourceDistributionStrategy = sessionData?.CAMPAIGN_DETAILS?.campaignDetails.distributionStrat.resourceDistributionStrategyCode;
 
    // Get current date details
    const currentDate = new Date();
