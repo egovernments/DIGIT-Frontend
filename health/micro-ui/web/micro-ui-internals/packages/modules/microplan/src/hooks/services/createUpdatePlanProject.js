@@ -181,7 +181,10 @@ const UpdateResource = async (req, currentPlanObject, currentCampaignObject) => 
   //creating a microplan and campaign instance here
   const { totalFormData, state, setShowToast, setCurrentKey, setCurrentStep, config, campaignObject, planObject } = req;
   try {
+<<<<<<< HEAD
+=======
 
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
     // Update the campaign object by keeping existing properties and only changing the name
     const updatedCampaignObject = {
       ...currentCampaignObject,
@@ -199,8 +202,15 @@ const UpdateResource = async (req, currentPlanObject, currentCampaignObject) => 
     const updatedPlanObject = {
       ...currentPlanObject,
       name: totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName,
+<<<<<<< HEAD
+      additionalDetails:{...currentPlanObject.additionalDetails,key:req?.config?.key || "2"}
     };
 
+
+=======
+    };
+
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
     const planRes = await Digit.CustomService.getResponse({
       url: "/plan-service/config/_update",
       useCache: false,
@@ -274,7 +284,12 @@ const createUpdatePlanProject = async (req) => {
     //later this object must have an invalidation config which can be used to invalidate data such as files uploaded,assumptions,formulas etc...
 
     const { totalFormData, state, setShowToast, setCurrentKey, setCurrentStep, config, invalidateConfig } = req;
+<<<<<<< HEAD
+    const { microplanId, campaignId,key} = Digit.Hooks.useQueryParams();
+    // const key=config?.key;
+=======
     const { microplanId, campaignId } = Digit.Hooks.useQueryParams();
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
     const tenantId = Digit.ULBService.getCurrentTenantId();
     //now basically we need to decide from which screen this hook was triggered and take action accordingly
     let planObject = {};
@@ -399,6 +414,10 @@ const createUpdatePlanProject = async (req) => {
         //invalidate files
         const updatedPlanObjectForBoundaryInvalidate = {
           ...fetchedPlanForBoundaryInvalidate,
+<<<<<<< HEAD
+          additionalDetails:{...fetchedPlanForBoundaryInvalidate.additionalDetails,key:key},
+=======
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
           files:
             fetchedPlanForBoundaryInvalidate?.files?.length > 0
               ? fetchedPlanForBoundaryInvalidate?.files?.map((file) => {
@@ -409,6 +428,11 @@ const createUpdatePlanProject = async (req) => {
                 })
               : [],
         };
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
         
         // update plan object
         const planUpdateForBoundaryInvalidation = await updatePlan(updatedPlanObjectForBoundaryInvalidate);
@@ -478,6 +502,10 @@ const createUpdatePlanProject = async (req) => {
               totalFormData.CAMPAIGN_DETAILS.campaignDetails.distributionStrat.resourceDistributionStrategyCode === "MIXED"
                 ? "SEPARATELY"
                 : totalFormData.ASSUMPTIONS_FORM.assumptionsForm.selectedRegistrationDistributionMode?.code,
+<<<<<<< HEAD
+            key:key
+=======
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
           },
         };
         const planResAssumptionsForm = await updatePlan(updatedPlanObjAssumptionsForm);
@@ -514,6 +542,10 @@ const createUpdatePlanProject = async (req) => {
         const upatedPlanObjHypothesis = {
           ...fetchedPlanForHypothesis,
           assumptions: [...prevAssumptions, ...assumptionsToUpdate],
+<<<<<<< HEAD
+          additionalDetails:{...fetchedPlanForHypothesis.additionalDetails,key:key}
+=======
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
         };
 
         const planResHypothesis = await updatePlan(upatedPlanObjHypothesis);
@@ -555,6 +587,10 @@ const createUpdatePlanProject = async (req) => {
         const upatedPlanObjSubHypothesis = {
           ...fetchedPlanForSubHypothesis,
           assumptions: [...prevAssumptionsForSubHypothesis, ...assumptionsToUpdateFromUI],
+<<<<<<< HEAD
+          additionalDetails:{...fetchedPlanForSubHypothesis.additionalDetails,key:key}
+=======
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
         };
 
         await updatePlan(upatedPlanObjSubHypothesis);
@@ -600,6 +636,10 @@ const createUpdatePlanProject = async (req) => {
           //here we need to update the source of operations
         const updatedPlanObjFormula = {
           ...fetchedPlanForFormula,
+<<<<<<< HEAD
+          additionalDetails:{...fetchedPlanForFormula.additionalDetails,key:key},
+=======
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
           operations: [...prevFormulas, ...formulasToUpdateWithUpdatedSource],
         };
 
@@ -652,8 +692,13 @@ const createUpdatePlanProject = async (req) => {
         const upatedPlanObjSubFormula = {
           ...fetchedPlanForSubFormula,
           operations: [...prevFormulaValues, ...formulasToUpdateFromUIForSubFormula],
+<<<<<<< HEAD
+          additionalDetails:{...fetchedPlanForSubFormula.additionalDetails,key:key}
+        };
+=======
         };
 
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
         await updatePlan(upatedPlanObjSubFormula);
         return;
 
@@ -726,6 +771,10 @@ const createUpdatePlanProject = async (req) => {
         const updatedPlanObjForFacility = {
           ...fetchedPlanForFacility,
           files: filesForFacility,
+<<<<<<< HEAD
+          additionalDetails:{ ...fetchedPlanForFacility.additionalDetails,key:key}
+=======
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
         };
 
         const planResFacility = await updatePlan(updatedPlanObjForFacility);

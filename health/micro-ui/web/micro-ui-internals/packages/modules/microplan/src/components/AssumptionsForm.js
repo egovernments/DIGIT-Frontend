@@ -69,7 +69,6 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
 
 
 
-
     const filteredOptions = resourceDistributionStrategyCode === "MIXED"
         ? optionsForProcesses.filter(option => option.resourceDistributionStrategyName !== "Fixed post & House-to-House")
         : optionsForProcesses;

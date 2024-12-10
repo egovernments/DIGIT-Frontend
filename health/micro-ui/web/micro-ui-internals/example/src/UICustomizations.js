@@ -813,11 +813,18 @@ export const UICustomizations = {
             const files = row?.files;
             const file = files.find((item) => item.templateIdentifier === "Population");
             const fileId = file?.filestoreId;
+<<<<<<< HEAD
+=======
             const campaignName = row?.name || "";
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
             if (!fileId) {
                   console.error("Population template file not found");
                   return;
                 }
+<<<<<<< HEAD
+            const campaignName = row?.name || "";
+=======
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
             Digit.Utils.campaign.downloadExcelWithCustomName({
               fileStoreId: fileId,
               customName: campaignName
@@ -825,12 +832,27 @@ export const UICustomizations = {
           };
 
           const onActionSelect = (e) => {
+<<<<<<< HEAD
+            if (e.name === "MP_ACTIONS_EDIT_SETUP") { 
+              if(parseInt(row?.additionalDetails?.key)!==9){
+                window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${String(parseInt(row?.additionalDetails?.key || '2'))}&microplanId=${row.id}&campaignId=${
+                  row.campaignDetails.id
+                }`;
+              }else{
+                window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=10&microplanId=${row.id}&campaignId=${
+                  row.campaignDetails.id
+                }`;
+              }}
+             
+            if (e.name === "MP_ACTIONS_VIEW_SUMMARY") {
+=======
             if (e.name == "MP_ACTIONS_EDIT_SETUP") {
               window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${1}&microplanId=${row.id}&campaignId=${
                 row.campaignDetails.id
               }`;
             }
             if (e.name == "MP_ACTIONS_VIEW_SUMMARY") {
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
               window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${
                 row.campaignDetails.id
               }&setup-completed=true`;
