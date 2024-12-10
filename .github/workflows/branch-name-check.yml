@@ -47,7 +47,7 @@ jobs:
           PREFIXES="FEATURE|BUGFIX|RELEASE"
           PROJECTS="HCMPRE|DPG|SN"
           TICKET_PATTERN="[0-9]{1,5}"
-          TITLE_PATTERN="^($PREFIXES)\/($PROJECTS)-$TICKET_PATTERN: .+$"
+          TITLE_PATTERN="^($PREFIXES)\/($PROJECTS)-$TICKET_PATTERN .+$"
 
           # Get the PR title
           pr_title="${{ github.event.pull_request.title }}"
