@@ -107,18 +107,12 @@ export const UICustomizations = {
           };
 
           const onActionSelect = (e) => {
-            if (e.name === "MP_ACTIONS_EDIT_SETUP") { 
-              if(parseInt(row?.additionalDetails?.key)!==9){
-                window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${String(parseInt(row?.additionalDetails?.key || '2'))}&microplanId=${row.id}&campaignId=${
-                  row.campaignDetails.id
-                }`;
-              }else{
-                window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=10&microplanId=${row.id}&campaignId=${
-                  row.campaignDetails.id
-                }`;
-              }}
-             
-            if (e.name === "MP_ACTIONS_VIEW_SUMMARY") {
+            if (e.name == "MP_ACTIONS_EDIT_SETUP") {
+              window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${1}&microplanId=${row.id}&campaignId=${
+                row.campaignDetails.id
+              }`;
+            }
+            if (e.name == "MP_ACTIONS_VIEW_SUMMARY") {
               window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${
                 row.campaignDetails.id
               }&setup-completed=true`;

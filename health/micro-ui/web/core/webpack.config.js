@@ -29,19 +29,21 @@ module.exports = {
     ],
   },
   output: {
-    filename: "[name].bundle.js",
+    filename: process.env.NODE_ENV === 'production' 
+      ? '[name].[contenthash].bundle.js'
+      : '[name].bundle.js',
     path: path.resolve(__dirname, "build"),
     publicPath: "/core-ui/",
   },
   optimization: {
     splitChunks: {
       chunks: 'all',
-      minSize:20000,
-      maxSize:50000,
-      enforceSizeThreshold:50000,
-      minChunks:1,
-      maxAsyncRequests:30,
-      maxInitialRequests:30
+      minSize: 50000,
+      maxSize: 244000,
+      enforceSizeThreshold: 244000,
+      minChunks: 1,
+      maxAsyncRequests: 10,
+      maxInitialRequests: 5
     },
   },
   plugins: [

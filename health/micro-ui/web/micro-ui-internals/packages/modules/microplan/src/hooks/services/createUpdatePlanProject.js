@@ -181,6 +181,10 @@ const UpdateResource = async (req, currentPlanObject, currentCampaignObject) => 
   //creating a microplan and campaign instance here
   const { totalFormData, state, setShowToast, setCurrentKey, setCurrentStep, config, campaignObject, planObject } = req;
   try {
+<<<<<<< HEAD
+=======
+
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
     // Update the campaign object by keeping existing properties and only changing the name
     const updatedCampaignObject = {
       ...currentCampaignObject,
@@ -198,10 +202,15 @@ const UpdateResource = async (req, currentPlanObject, currentCampaignObject) => 
     const updatedPlanObject = {
       ...currentPlanObject,
       name: totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName,
+<<<<<<< HEAD
       additionalDetails:{...currentPlanObject.additionalDetails,key:req?.config?.key || "2"}
     };
 
 
+=======
+    };
+
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
     const planRes = await Digit.CustomService.getResponse({
       url: "/plan-service/config/_update",
       useCache: false,
@@ -275,8 +284,12 @@ const createUpdatePlanProject = async (req) => {
     //later this object must have an invalidation config which can be used to invalidate data such as files uploaded,assumptions,formulas etc...
 
     const { totalFormData, state, setShowToast, setCurrentKey, setCurrentStep, config, invalidateConfig } = req;
+<<<<<<< HEAD
     const { microplanId, campaignId,key} = Digit.Hooks.useQueryParams();
     // const key=config?.key;
+=======
+    const { microplanId, campaignId } = Digit.Hooks.useQueryParams();
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
     const tenantId = Digit.ULBService.getCurrentTenantId();
     //now basically we need to decide from which screen this hook was triggered and take action accordingly
     let planObject = {};
@@ -401,7 +414,10 @@ const createUpdatePlanProject = async (req) => {
         //invalidate files
         const updatedPlanObjectForBoundaryInvalidate = {
           ...fetchedPlanForBoundaryInvalidate,
+<<<<<<< HEAD
           additionalDetails:{...fetchedPlanForBoundaryInvalidate.additionalDetails,key:key},
+=======
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
           files:
             fetchedPlanForBoundaryInvalidate?.files?.length > 0
               ? fetchedPlanForBoundaryInvalidate?.files?.map((file) => {
@@ -412,8 +428,11 @@ const createUpdatePlanProject = async (req) => {
                 })
               : [],
         };
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
         
         // update plan object
         const planUpdateForBoundaryInvalidation = await updatePlan(updatedPlanObjectForBoundaryInvalidate);
@@ -483,7 +502,10 @@ const createUpdatePlanProject = async (req) => {
               totalFormData.CAMPAIGN_DETAILS.campaignDetails.distributionStrat.resourceDistributionStrategyCode === "MIXED"
                 ? "SEPARATELY"
                 : totalFormData.ASSUMPTIONS_FORM.assumptionsForm.selectedRegistrationDistributionMode?.code,
+<<<<<<< HEAD
             key:key
+=======
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
           },
         };
         const planResAssumptionsForm = await updatePlan(updatedPlanObjAssumptionsForm);
@@ -520,7 +542,10 @@ const createUpdatePlanProject = async (req) => {
         const upatedPlanObjHypothesis = {
           ...fetchedPlanForHypothesis,
           assumptions: [...prevAssumptions, ...assumptionsToUpdate],
+<<<<<<< HEAD
           additionalDetails:{...fetchedPlanForHypothesis.additionalDetails,key:key}
+=======
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
         };
 
         const planResHypothesis = await updatePlan(upatedPlanObjHypothesis);
@@ -562,7 +587,10 @@ const createUpdatePlanProject = async (req) => {
         const upatedPlanObjSubHypothesis = {
           ...fetchedPlanForSubHypothesis,
           assumptions: [...prevAssumptionsForSubHypothesis, ...assumptionsToUpdateFromUI],
+<<<<<<< HEAD
           additionalDetails:{...fetchedPlanForSubHypothesis.additionalDetails,key:key}
+=======
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
         };
 
         await updatePlan(upatedPlanObjSubHypothesis);
@@ -608,7 +636,10 @@ const createUpdatePlanProject = async (req) => {
           //here we need to update the source of operations
         const updatedPlanObjFormula = {
           ...fetchedPlanForFormula,
+<<<<<<< HEAD
           additionalDetails:{...fetchedPlanForFormula.additionalDetails,key:key},
+=======
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
           operations: [...prevFormulas, ...formulasToUpdateWithUpdatedSource],
         };
 
@@ -661,8 +692,13 @@ const createUpdatePlanProject = async (req) => {
         const upatedPlanObjSubFormula = {
           ...fetchedPlanForSubFormula,
           operations: [...prevFormulaValues, ...formulasToUpdateFromUIForSubFormula],
+<<<<<<< HEAD
           additionalDetails:{...fetchedPlanForSubFormula.additionalDetails,key:key}
         };
+=======
+        };
+
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
         await updatePlan(upatedPlanObjSubFormula);
         return;
 
@@ -693,7 +729,6 @@ const createUpdatePlanProject = async (req) => {
         const updatedPlanObjForBoundary = {
           ...fetchedPlanForBoundary,
           files,
-          additionalDetails:{...fetchedPlanForBoundary.additionalDetails,key:key}
         };
 
         const planResBoundary = await updatePlan(updatedPlanObjForBoundary);
@@ -736,7 +771,10 @@ const createUpdatePlanProject = async (req) => {
         const updatedPlanObjForFacility = {
           ...fetchedPlanForFacility,
           files: filesForFacility,
+<<<<<<< HEAD
           additionalDetails:{ ...fetchedPlanForFacility.additionalDetails,key:key}
+=======
+>>>>>>> b3c48dc6636fac039d225f2ad784edc41bf14e3e
         };
 
         const planResFacility = await updatePlan(updatedPlanObjForFacility);
@@ -814,53 +852,16 @@ const createUpdatePlanProject = async (req) => {
           setShowToast({ key: "error", label: "ERR_FAILED_TO_COMPLETE_SETUP" });
         }
 
-        case "ROLE_ACCESS_CONFIGURATION":{
-          // Function to run API validations
-          const searchAndUpdatePlanConfig = async (body) => {
-            try {
-              // Make the API call
-              planObject.additionalDetails.key=key
-              const response= await updatePlan(planObject);
-        
-              // Process the response if necessary
-              return response; // Return the response for further usage if needed
-            } catch (error) {
-              console.error("Error in searchPlanConfig:", error);
-              setShowToast({ key: "error", label: "ERROR_IN_SEARCHPLANCONFIG" });
-              throw error; // Rethrow error to handle it further up the chain if needed
-            }
-          };
-        
-          // Request body for the API call
-          const reqBody = {
-            PlanConfigurationSearchCriteria: {
-              id: microplanId,
-              tenantId: Digit.ULBService.getCurrentTenantId(),
-            },
-          };
-        
-          // Execute the API call
-          try {
-            const apiResponse = await searchAndUpdatePlanConfig(reqBody); // Wait for the API call to complete
-        
-            // Proceed with the rest of the logic
-            setCurrentKey((prev) => prev + 1);
-            setCurrentStep((prev) => prev + 1);
-            window.dispatchEvent(new Event("isLastStep"));
-            Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
-            Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
-        
-            // Return as expected
-            return {
-              triggeredFrom,
-            };
-          } catch (error) {
-            console.error("Error during ROLE_ACCESS_CONFIGURATION flow:", error);
-            // Optionally handle the error here, e.g., show an error message to the user
-            throw error;
-          }
-        }
-        
+      case "ROLE_ACCESS_CONFIGURATION":
+        //run any api validations if any/
+        setCurrentKey((prev) => prev + 1);
+        setCurrentStep((prev) => prev + 1);
+        window.dispatchEvent(new Event("isLastStep"));
+        Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
+        Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
+        return {
+          triggeredFrom,
+        };
       default:
         setShowToast({ key: "error", label: "ERROR_UNHANDLED_NEXT_OPERATION" });
         return {
