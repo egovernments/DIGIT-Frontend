@@ -131,8 +131,8 @@ const ViewHierarchy = () => {
 
     const handleFileChange = async (event) => {
       const file = event.target.files[0]; // Get the selected file
-      setFileName(file.name)
       if (file) {
+        setFileName(file.name);
         // Check file extension
         const validExtensions = ['xls', 'xlsx'];
         const fileExtension = file.name.split('.').pop().toLowerCase(); // Get the file extension
