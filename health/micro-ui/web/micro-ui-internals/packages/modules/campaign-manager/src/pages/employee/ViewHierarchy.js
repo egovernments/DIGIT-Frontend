@@ -604,7 +604,7 @@ const ViewHierarchy = () => {
                               variant="error"
                               style={{maxWidth:"200rem"}}
                             /> }  
-                            <div style={{marginBottom:"2rem"}}></div>               
+                            <div style={{marginBottom:"2rem"}} />               
                         </Card>
                         <ActionBar
                             actionFields={[
