@@ -589,7 +589,7 @@ const ViewHierarchy = () => {
                                     </div>
                                   </div>
                                 }
-                                <div style={{height:"2rem"}}></div>
+                                <div style={{height:"1rem"}}></div>
                             </div>
                             {uiValError && <InfoCard
                               label="Info"
@@ -597,8 +597,9 @@ const ViewHierarchy = () => {
                               variant="error"
                               style={{maxWidth:"200rem"}}
                             /> }  
-                            <div style={{marginBottom:"2rem"}}></div>               
+                            <div style={{marginBottom:"0.5rem"}}></div>               
                         </Card>
+                        <div style={{height:"3rem"}}></div>
                         <ActionBar
                             actionFields={[
                                 <Button 

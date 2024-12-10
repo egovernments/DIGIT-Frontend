@@ -63,12 +63,15 @@ const type=searchParams.get("type")|| config?.type;
         <div style={{ fontWeight: 700, fontSize: "2.5rem", fontFamily:"Roboto Condensed"}}>{t("BOUNDARY_DATA_MANAGEMENT")}</div>
         <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
         {Object.keys(boundaryHomeConfig)?.map(key=>{
+          const isBoundaryDataEmpty = Object.keys(data?.boundaryData || {})?.length === 0;
+          const isEditDisabled = key === "EDIT_BOUNDARY_DATA" && isBoundaryDataEmpty;
+          const isCreateDisabled = key === "CREATE_NEW_BOUNDARY_DATA" && !isBoundaryDataEmpty;
           return (<Button
             type={"button"}
             size={"large"}
             variation={"secondary"}
             label={t(key)}
-            isDisabled={key=="EDIT_BOUNDARY_DATA"&&Object.keys(data?.boundaryData||{})?.length==0 || key=="CREATE_NEW_BOUNDARY_DATA"&&Object.keys(data?.boundaryData||{})?.length!==0}
+            isDisabled={isEditDisabled || isCreateDisabled}
             onClick={()=>navigate(history,key,data,setShowPopUp)}
             style={{ width: "35rem", height: "5rem" }}
             textStyles={{ fontSize: "1.5rem" }}
