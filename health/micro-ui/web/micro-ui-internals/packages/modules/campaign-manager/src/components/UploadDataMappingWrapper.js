@@ -32,7 +32,7 @@ function UploadDataMappingWrapper({ props: customProps, formData, currentCategor
           onClose={() => {
             setShowToast(false);
           }}
-          isDleteBtn={true}
+          isDeleteBtn={true}
         />
       )}
     </Fragment>
