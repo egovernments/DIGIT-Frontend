@@ -813,11 +813,11 @@ export const UICustomizations = {
             const files = row?.files;
             const file = files.find((item) => item.templateIdentifier === "Population");
             const fileId = file?.filestoreId;
-            const campaignName = row?.name || "";
             if (!fileId) {
                   console.error("Population template file not found");
                   return;
                 }
+            const campaignName = row?.name || "";
             Digit.Utils.campaign.downloadExcelWithCustomName({
               fileStoreId: fileId,
               customName: campaignName
@@ -825,11 +825,16 @@ export const UICustomizations = {
           };
 
           const onActionSelect = (e) => {
-            if (e.name == "MP_ACTIONS_EDIT_SETUP") {
-              window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${1}&microplanId=${row.id}&campaignId=${
-                row.campaignDetails.id
-              }`;
-            }
+            if (e.name === "MP_ACTIONS_EDIT_SETUP") { 
+              if(parseInt(row?.additionalDetails?.key)!==9){
+                window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${String(parseInt(row?.additionalDetails?.key || '2'))}&microplanId=${row.id}&campaignId=${
+                  row.campaignDetails.id
+                }`;
+              }else{
+                window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=10&microplanId=${row.id}&campaignId=${
+                  row.campaignDetails.id
+                }`;
+              }}
             if (e.name == "MP_ACTIONS_VIEW_SUMMARY") {
               window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${
                 row.campaignDetails.id
@@ -841,7 +846,7 @@ export const UICustomizations = {
             <div>
               {microplanFileId && row?.status == "RESOURCE_ESTIMATIONS_APPROVED" ? (
                 <div>
-                  <ButtonNew style={{ width: "20rem" }} onClick={handleDownload} icon="DownloadIcon" label={t("WBH_DOWNLOAD_MICROPLAN")} title={t("WBH_DOWNLOAD_MICROPLAN")} />
+                  <ButtonNew style={{ width: "20rem" }} icon="DownloadIcon" onClick={handleDownload} label={t("WBH_DOWNLOAD_MICROPLAN")} title={t("WBH_DOWNLOAD_MICROPLAN")}  />
                 </div>
               ) : (
                 <div className={"action-button-open-microplan"}>

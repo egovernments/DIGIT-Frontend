@@ -199,6 +199,7 @@ const UpdateResource = async (req, currentPlanObject, currentCampaignObject) => 
     const updatedPlanObject = {
       ...currentPlanObject,
       name: totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName,
+      additionalDetails:{...currentPlanObject.additionalDetails,key:req?.config?.key || "2"}
     };
 
     const planRes = await Digit.CustomService.getResponse({
