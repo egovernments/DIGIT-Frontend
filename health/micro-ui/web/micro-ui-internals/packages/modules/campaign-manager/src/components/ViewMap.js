@@ -22,7 +22,7 @@ export const removeAllLayers = (map) => {
   }
   
   Object.values(map._layers).forEach((layer) => {
-    if (layer && layer.remove) {
+    if (layer?.remove) {
       map.removeLayer(layer);
     }
   });
@@ -135,8 +135,8 @@ const ViewMap = ({filterOptions}) => {
 
   const isValidGeoJSON = (geoJson) => {
     try {
-      if (geoJson && geoJson.type && (geoJson.type === "FeatureCollection" || geoJson.type === "GeometryCollection")) {
-        return true;
+        if (geoJson?.type === "FeatureCollection" || geoJson?.type === "GeometryCollection") {
+            return true;
       }
       throw new Error("Invalid GeoJSON structure");
     } catch (error) {
@@ -155,7 +155,7 @@ useEffect(() => {
           const geoJsonLayer = L.geoJSON(geoJsonData).addTo(map);
           const bounds = geoJsonLayer.getBounds();
   
-          if (bounds && bounds.isValid()) {
+          if (bounds?.isValid()) {
             const southWest = proj4(EPSG_3857, EPSG_4326, [
               bounds._southWest.lng,
               bounds._southWest.lat,

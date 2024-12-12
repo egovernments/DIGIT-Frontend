@@ -569,12 +569,8 @@ const ViewHierarchy = () => {
                           <Button
                             className="custom-class"
                             icon="Upload"
-                            isDisabled={
-                              index === 0 
-                                ? false 
-                                : uploadedFiles[index - 1]?.fileStoreId 
-                                  ? false 
-                                  : true
+                            isDisabled = {
+                              !(index === 0 || uploadedFiles[index - 1]?.fileStoreId)
                             }
                             label={t("UPLOAD_FILE")}
                             onClick={() => document.getElementById(`file-upload-${index}`).click()}

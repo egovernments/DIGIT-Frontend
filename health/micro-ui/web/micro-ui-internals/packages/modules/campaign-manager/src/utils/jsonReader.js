@@ -8,7 +8,7 @@ export const jsonReader = async ({ fileStoreId = null }) => {
       const response = await axios.get("/filestore/v1/files/id", {
         responseType: "arraybuffer",
         headers: {
-          Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          Accept:  "application/json",
           "auth-token": Digit.UserService.getUser()?.["access_token"],
         },
         params: {
