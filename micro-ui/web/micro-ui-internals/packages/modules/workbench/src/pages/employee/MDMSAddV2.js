@@ -135,7 +135,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
                 code: fieldProps.localizationCode,
                 message: fieldProps.localizationMessage,
                 // Append "digit_mdms_" to localization code for module
-                module: `digit_mdms_${fieldProps.localizationCode}`,
+                module: `digit_mdms_${schema?.code}`.toUpperCase(),
                 locale: "en_IN",
               });
             }

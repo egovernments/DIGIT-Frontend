@@ -19,10 +19,10 @@ const toDropdownObj = (master = "", mod = "") => {
 
 
 const MDMSSearchv2 = () => {
+  console.log("in the search page now")
   let Config = _.clone(Configg)
   const { t } = useTranslation();
-  const history = useHistory();
-  
+  const history = useHistory();  
   let {masterName:modulee,moduleName:master,tenantId} = Digit.Hooks.useQueryParams()
   let {from, screen, action} = Digit.Hooks.useQueryParams()
 
