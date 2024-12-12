@@ -808,8 +808,18 @@ import { ContractIcon } from "./svg/ContractIcon";
 import { MeasurementMuktaIcon } from "./svg/MeasurementMuktaIcon";
 import { HRIcon } from "./svg/HRIcon";
 import { ShpIcon } from "./svg/ShpIcon";
+import { MyMicroplanSvg } from "./svg/MyMicroplanSvg";
+import { UserManagementSvg } from "./svg/UserManagementSvg";
+import { OpenMicroplanSvg } from "./svg/OpenMicroplanSvg";
+import { SetUpMicroplanSvg } from "./svg/SetUpMicroplanSvg";
+import { AddCircle } from "./svg/AddCircle";
 
 export {
+  AddCircle,
+  SetUpMicroplanSvg,
+  MyMicroplanSvg,
+  OpenMicroplanSvg,
+  UserManagementSvg,
   Add,
   Profile,
   PdfIcon,
