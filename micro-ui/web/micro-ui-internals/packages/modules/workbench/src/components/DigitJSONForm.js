@@ -11,33 +11,20 @@ import {
   Menu,
   CollapseAndExpandGroups,
 } from "@egovernments/digit-ui-react-components";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import _ from "lodash";
 import Form from "@rjsf/core";
 import validator from "@rjsf/validator-ajv8";
-// import { UiSchema } from '@rjsf/utils';
 import { titleId } from "@rjsf/utils";
 import CustomDropdown from "./MultiSelect";
 import CustomDropdownV2 from "./MultiSelectV2";
-
 import CustomCheckbox from "./Checbox";
 import { BulkModal } from "./BulkModal";
-/*
 
-created the foem using rjfs json form 
+const AdditionalPropertiesContext = createContext();
+export const useAdditionalProperties = () => useContext(AdditionalPropertiesContext);
 
-https://rjsf-team.github.io/react-jsonschema-form/docs/
-
-*/
-
-/*
-The  DigitJSONForm  component is a custom form component built using the  react-jsonschema-form  library.
- It takes in a schema, an onSubmit function, an optional uiSchema, 
- a showToast and showErrorToast as props.  
-
-
-*/
 const uiSchema = {
   "ui:title": " ",
   "ui:classNames": "my-class",
@@ -56,25 +43,9 @@ const uiSchema = {
   },
 };
 
-function transformErrors(errors) {
-  const { t } = this;
-  console.log(errors, "errors");
-  // Custom validation logic for all widgets
-  // You can modify or add error messages based on your requirements
-  return errors.map((error) => {
-    error.message = t(Digit.Utils.workbench.getMDMSLabel(`WBH_ERROR_${error?.name}`));
-    if (error?.name === "pattern") {
-      error.message += ` : ${error?.params?.pattern}`;
-    }
-    // if (error.property === '.name' && error.name === 'minLength') {
-    //   error.message = 'Name must be at least 3 characters';
-    // }
-    // if (error.property === '.email' && error.name === 'format') {
-    //   error.message = 'Invalid email format';
-    // }
-    return error;
-  });
-}
+// Removed transformErrors to reduce re-renders
+// Removed Digit references from errors to reduce complexity
+
 const getArrayWrapperClassName = (type) => {
   switch (type) {
     case "array":
@@ -84,50 +55,30 @@ const getArrayWrapperClassName = (type) => {
     default:
       return "jk-array-of-non-objects";
   }
-}
+};
 
 function ArrayFieldItemTemplate(props) {
   const { t } = useTranslation();
-
   const { children, className, index, onDropIndexClick, schema, disabled } = props;
-  const isArrayOfObjects = schema?.type == "object";
+  const isArrayOfObjects = schema?.type === "object";
   const newClass = getArrayWrapperClassName(schema?.type);
   return (
     <div className={`${className} ${newClass}`}>
-      <span className={"array-children"}>{children}</span>
-      {isArrayOfObjects ? (
-        <span className="array-obj">
-          {props.hasRemove && (
-            <div className="array-remove-button-wrapper">
-              <Button
-                label={`${t("WBH_DELETE_ACTION")}`}
-                variation="secondary"
-                className="array-remove-button"
-                icon={<SVG.Delete width={"28"} height={"28"} />}
-                onButtonClick={onDropIndexClick(index)}
-                type="button"
-                isDisabled={disabled}
-              />
-            </div>
-          )}
-        </span>
-      ) : (
-        props.hasRemove && (
-          <div className="array-remove-button-wrapper">
-            <Button
-              label={`${t("WBH_DELETE_ACTION")}`}
-              variation="secondary"
-              className="array-remove-button"
-              icon={<SVG.Delete width={"28"} height={"28"} />}
-              onButtonClick={onDropIndexClick(index)}
-              type="button"
-              isDisabled={disabled}
-            />
-          </div>
-
-        )
+      <span className="array-children">{children}</span>
+      {props.hasRemove && (
+        <div className="array-remove-button-wrapper">
+          <Button
+            label={t("WBH_DELETE_ACTION")}
+            variation="secondary"
+            className="array-remove-button"
+            icon={<SVG.Delete width={"28"} height={"28"} />}
+            onButtonClick={onDropIndexClick(index)}
+            type="button"
+            isDisabled={disabled}
+          />
+        </div>
       )}
-    </div >
+    </div>
   );
 }
 
@@ -140,11 +91,11 @@ function TitleFieldTemplate(props) {
     </header>
   );
 }
-function ArrayFieldTitleTemplate(props) {
-  const { title, idSchema } = props;
-  const id = titleId(idSchema);
+
+function ArrayFieldTitleTemplate() {
   return null;
 }
+
 function ArrayFieldTemplate(props) {
   const { t } = useTranslation();
   if (props?.required && !props?.schema?.minItems) {
@@ -153,16 +104,14 @@ function ArrayFieldTemplate(props) {
 
   return (
     <div className="array-wrapper">
-      {props.items.map((element, index) => {
-        return (
-          <span className="array-element-wrapper">
-            <ArrayFieldItemTemplate title={props?.title} key={index} index={index} {...element}></ArrayFieldItemTemplate>
-          </span>
-        );
-      })}
+      {props.items.map((element, index) => (
+        <span className="array-element-wrapper" key={index}>
+          <ArrayFieldItemTemplate index={index} {...element} />
+        </span>
+      ))}
       {props.canAdd && (
         <Button
-          label={`${t(`WBH_ADD`)} ${t(props?.title)}`}
+          label={`${t("WBH_ADD")} ${t(props?.title)}`}
           variation="secondary"
           icon={<AddFilled style={{ height: "20px", width: "20px" }} />}
           onButtonClick={props.onAddClick}
@@ -175,24 +124,51 @@ function ArrayFieldTemplate(props) {
 }
 
 function ObjectFieldTemplate(props) {
+  const { formData, schema, idSchema, formContext } = props;
+  const { schemaCode, MdmsRes, additionalProperties } = formContext;
+  const isRoot = idSchema["$id"] === "digit_root";
+
+  const localisableFields = MdmsRes?.find((item) => item.schemaCode === schemaCode)?.localisation?.localisableFields || [];
+
   const children = props.properties.map((element) => {
+    const fieldName = element.name;
+    const inputValue = formData[fieldName];
+    const isLocalisable = localisableFields.some((field) => field.fieldPath === fieldName);
+
+    if (isLocalisable && inputValue !== undefined) {
+      const fieldProps = additionalProperties?.[fieldName];
+      const mdmsCode = fieldProps?.mdmsCode;
+      const localizationCode = fieldProps?.localizationCode;
+
+      return (
+        <div key={fieldName}>
+          <div className="field-wrapper object-wrapper" id={`${idSchema["$id"]}_${fieldName}`}>
+            {element.content}
+          </div>
+          <div>
+            <span>{`mdms code: ${mdmsCode || ""}`}</span>
+            <br />
+            <span>{`localization code: ${localizationCode || ""}`}</span>
+          </div>
+        </div>
+      );
+    }
+
     return (
-      <div className="field-wrapper object-wrapper" id={`${props?.idSchema?.["$id"]}_${element.name}`}>
+      <div key={fieldName} className="field-wrapper object-wrapper" id={`${idSchema["$id"]}_${fieldName}`}>
         {element.content}
       </div>
     );
   });
-  const isRoot = props?.["idSchema"]?.["$id"] == "digit_root";
 
   return (
-    <div id={props?.idSchema?.["$id"]}>
-      {/* {props.title} */}
-      {props.description}
-
+    <div id={idSchema["$id"]}>
       {isRoot ? (
         children
       ) : (
-        <CollapseAndExpandGroups showHelper={true} groupHeader={""} groupElements={true} children={children}></CollapseAndExpandGroups>
+        <CollapseAndExpandGroups showHelper={true} groupHeader={""} groupElements={true}>
+          {children}
+        </CollapseAndExpandGroups>
       )}
     </div>
   );
@@ -202,21 +178,25 @@ function CustomFieldTemplate(props) {
   const { t } = useTranslation();
   const { moduleName, masterName } = Digit.Hooks.useQueryParams();
   const { id, classNames, style, label, help, required, description, errors, children } = props;
+
   let titleCode = label;
   let additionalCode = "";
   if (
+    moduleName &&
+    masterName &&
+    typeof Digit?.Utils?.locale?.getTransformedLocale === "function" &&
     !label?.includes(Digit.Utils.locale.getTransformedLocale(moduleName)) &&
     !label?.includes(Digit.Utils.locale.getTransformedLocale(masterName))
   ) {
     titleCode = Digit.Utils.locale.getTransformedLocale(`${moduleName}.${moduleName}_${label?.slice(0, -2)}`);
     additionalCode = label?.slice(-2);
   }
+
   return (
     <span>
       <div className={classNames} style={style}>
         <label htmlFor={id} className="control-label" id={"label_" + id}>
-          {/* <span >{label}</span> */}
-          <span className={`tooltip`}>
+          <span className="tooltip">
             {t(titleCode)} {additionalCode}
             <span className="tooltiptext">
               <span className="tooltiptextvalue">{t(`TIP_${titleCode}`)}</span>
@@ -225,7 +205,7 @@ function CustomFieldTemplate(props) {
           {required ? "*" : null}
         </label>
         {description}
-        <span class="all-input-field-wrapper">
+        <span className="all-input-field-wrapper">
           {children}
           {errors}
           {help}
@@ -235,10 +215,8 @@ function CustomFieldTemplate(props) {
   );
 }
 
-const FieldErrorTemplate = (props) => {
-  const { errors } = props;
-  return errors && errors.length > 0 && errors?.[0] ? <CardLabelError>{errors?.[0]}</CardLabelError> : null;
-};
+const FieldErrorTemplate = ({ errors }) =>
+  errors && errors.length > 0 && errors[0] ? <CardLabelError>{errors[0]}</CardLabelError> : null;
 
 const DigitJSONForm = ({
   schema,
@@ -255,110 +233,169 @@ const DigitJSONForm = ({
   disabled = false,
   setShowToast,
   setShowErrorToast,
-  v2 = true
+  v2 = true,
 }) => {
   const { t } = useTranslation();
+
+  const [additionalProperties, setAdditionalProperties] = useState({});
+  const [displayMenu, setDisplayMenu] = useState(false);
+  const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
+  const { moduleName, masterName } = Digit.Hooks.useQueryParams();
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    "Workbench",
+    [{ name: "UISchema" }],
+    {
+      select: (data) => data?.["Workbench"]?.["UISchema"],
+    }
+  );
+
+  // Compute additionalProperties whenever formData or MdmsRes changes
   useEffect(() => {
-    onFormChange({ formData: Digit.Utils.workbench.postProcessData(formData, inputUiSchema) });
-  }, []);
-  const onSubmitV2 = async ({ formData }) => {
-    const updatedData = await Digit.Utils.workbench.preProcessData(formData, inputUiSchema);
-    onSubmit(updatedData);
+    if (schema?.code && MdmsRes && formData) {
+      const localisableFields =
+        MdmsRes?.find((item) => item.schemaCode === schema.code)?.localisation?.localisableFields || [];
+      let newAdditionalProps = {};
+      for (const fieldName in formData) {
+        const inputValue = formData[fieldName];
+        const isLocalisable = localisableFields.some((field) => field.fieldPath === fieldName);
+        if (isLocalisable && inputValue !== undefined) {
+          const mdmsCode = (inputValue || "").replace(/\s+/g, "").toUpperCase();
+          const localizationCode = `${schema.code}_${fieldName}_${mdmsCode}`.toUpperCase();
+          newAdditionalProps[fieldName] = {
+            localizationMessage: inputValue,
+            mdmsCode,
+            localizationCode,
+          };
+        }
+      }
+      setAdditionalProperties(newAdditionalProps);
+    }
+  }, [formData, MdmsRes, schema]);
+
+  const onSubmitV2 = async ({ formData }, e) => {
+    console.log("additional data", additionalProperties);
+
+    const transformedFormData = { ...formData };
+  
+    for (const fieldName in additionalProperties) {
+      if (additionalProperties.hasOwnProperty(fieldName)) {
+        const fieldProps = additionalProperties[fieldName];
+        if (fieldProps?.localizationCode) {
+          transformedFormData[fieldName] = fieldProps.mdmsCode;
+        }
+      }
+    }
+  
+    // Now transformedFormData has the replaced values
+    console.log("Transformed formData before submit:", transformedFormData);
+  
+    // Call onSubmit with the updated formData and additionalProperties
+    onSubmit && onSubmit(transformedFormData, additionalProperties);
   };
 
   const customWidgets = { SelectWidget: v2 ? CustomDropdown : CustomDropdownV2, CheckboxWidget: CustomCheckbox };
 
-  const [displayMenu, setDisplayMenu] = useState(false);
-  const [liveValidate, setLiveValidate] = useState(false);
-  const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
-  const { moduleName, masterName } = Digit.Hooks.useQueryParams();
-
   const onError = (errors) => {
-    setLiveValidate(true);
-    onFormError(errors);
+    onFormError && onFormError(errors);
   };
-  const person = { t: t };
 
   return (
-    <React.Fragment>
-      <Header className="digit-form-composer-header">
-        {screenType === "add" ? t("WBH_ADD_MDMS") : screenType === "view" ? t("WBH_VIEW_MDMS") : t("WBH_EDIT_MDMS")}
-      </Header>
-      <BulkModal showBulkUploadModal={showBulkUploadModal} setShowBulkUploadModal={setShowBulkUploadModal} moduleName={moduleName} masterName={masterName} uploadFileTypeXlsx={false} />
-      <Card className="workbench-create-form">
-        <Header className="digit-form-composer-sub-header">{t(Digit.Utils.workbench.getMDMSLabel(`SCHEMA_` + schema?.code))}</Header>
-        <Form
-          schema={schema?.definition}
-          validator={validator}
-          showErrorList={false}
-          formData={formData}
-          noHtml5Validate={true}
-          onChange={onFormChange}
-          onSubmit={onSubmitV2}
-          idPrefix="digit_root"
-          templates={{
-            FieldErrorTemplate,
-            ArrayFieldTemplate,
-            FieldTemplate: CustomFieldTemplate,
-            ObjectFieldTemplate,
-            TitleFieldTemplate,
-            ArrayFieldTitleTemplate,
-            ArrayFieldItemTemplate,
-          }}
-          experimental_defaultFormStateBehavior={{
-            arrayMinItems: { populate: "requiredOnly" },
-          }}
-          widgets={customWidgets}
-          transformErrors={transformErrors.bind(person)}
-          uiSchema={{ ...uiSchema, ...inputUiSchema }}
-          onError={onError}
-          disabled={disabled}
-          // disabled the error onload
-          // focusOnFirstError={true}
-          /* added logic to show live validations after form submit is clicked */
-          liveValidate={liveValidate}
-        // liveValidate={formData && Object.keys(formData) && Object.keys(formData)?.length > 0}
-        >
-          {(screenType === "add" || screenType === "edit") && (
-            <ActionBar className="action-bar">
-              {screenType === "add" && (
-                <Button className="action-bar-button" variation="secondary" label={t("WBH_LOC_BULK_UPLOAD_XLS")} onButtonClick={() => setShowBulkUploadModal(true)} />
-              )}
-              <SubmitBar
-                label={screenType === "edit" ? t("WBH_ADD_MDMS_UPDATE_ACTION") : t("WBH_ADD_MDMS_ADD_ACTION")}
-                submit="submit"
-              />
-              {/* <LinkButton style={props?.skipStyle} label={t(`CS_SKIP_CONTINUE`)}  /> */}
-            </ActionBar>
-          )}
-          {screenType === "view" && (
-            <ActionBar>
-              {displayMenu ? (
-                <Menu
-                  localeKeyPrefix={""}
-                  options={viewActions}
-                  optionKey={"label"}
-                  t={t}
-                  onSelect={onViewActionsSelect}
-                  textStyles={{ margin: "0px" }}
+    <AdditionalPropertiesContext.Provider value={{ additionalProperties, updateAdditionalProperties: () => {} }}>
+      <React.Fragment>
+        <Header className="digit-form-composer-header">
+          {screenType === "add" ? t("WBH_ADD_MDMS") : screenType === "view" ? t("WBH_VIEW_MDMS") : t("WBH_EDIT_MDMS")}
+        </Header>
+        <BulkModal
+          showBulkUploadModal={showBulkUploadModal}
+          setShowBulkUploadModal={setShowBulkUploadModal}
+          moduleName={moduleName}
+          masterName={masterName}
+          uploadFileTypeXlsx={false}
+        />
+        <Card className="workbench-create-form">
+          <Header className="digit-form-composer-sub-header">
+            {typeof Digit?.Utils?.workbench?.getMDMSLabel === "function"
+              ? t(Digit.Utils.workbench.getMDMSLabel(`SCHEMA_` + schema?.code))
+              : `SCHEMA_${schema?.code}`}
+          </Header>
+          <Form
+            schema={schema?.definition}
+            validator={validator}
+            showErrorList={false}
+            formData={formData}
+            noHtml5Validate={true}
+            onChange={onFormChange}   // No processing, just pass the event
+            formContext={{
+              schemaCode: schema?.code,
+              MdmsRes,
+              localizationData: {},
+              additionalProperties,
+            }}
+            onSubmit={onSubmitV2}
+            idPrefix="digit_root"
+            templates={{
+              FieldErrorTemplate,
+              ArrayFieldTemplate,
+              FieldTemplate: CustomFieldTemplate,
+              ObjectFieldTemplate,
+              TitleFieldTemplate,
+              ArrayFieldTitleTemplate,
+              ArrayFieldItemTemplate,
+            }}
+            // Removed liveValidate and transformErrors
+            // Removed experimental_defaultFormStateBehavior
+            widgets={customWidgets}
+            uiSchema={{ ...uiSchema, ...inputUiSchema }}
+            onError={onError}
+            disabled={disabled}
+          >
+            {(screenType === "add" || screenType === "edit") && (
+              <ActionBar className="action-bar">
+                {screenType === "add" && (
+                  <Button
+                    className="action-bar-button"
+                    variation="secondary"
+                    label={t("WBH_LOC_BULK_UPLOAD_XLS")}
+                    onButtonClick={() => setShowBulkUploadModal(true)}
+                  />
+                )}
+                <SubmitBar
+                  label={screenType === "edit" ? t("WBH_ADD_MDMS_UPDATE_ACTION") : t("WBH_ADD_MDMS_ADD_ACTION")}
+                  submit="submit"
                 />
-              ) : null}
-              <SubmitBar label={t("WORKS_ACTIONS")} onSubmit={() => setDisplayMenu(!displayMenu)} />
-            </ActionBar>
-          )}
-        </Form>
-      </Card>
-      {showToast && (
-        <Toast
-          label={t(showToast)}
-          error={showErrorToast}
-          onClose={() => {
-            setShowToast(null);
-          }}
-          isDleteBtn={true}
-        ></Toast>
-      )}
-    </React.Fragment >
+              </ActionBar>
+            )}
+            {screenType === "view" && (
+              <ActionBar>
+                {displayMenu ? (
+                  <Menu
+                    localeKeyPrefix=""
+                    options={viewActions}
+                    optionKey={"label"}
+                    t={t}
+                    onSelect={onViewActionsSelect}
+                    textStyles={{ margin: "0px" }}
+                  />
+                ) : null}
+                <SubmitBar label={t("WORKS_ACTIONS")} onSubmit={() => setDisplayMenu(!displayMenu)} />
+              </ActionBar>
+            )}
+          </Form>
+        </Card>
+        {showToast && (
+          <Toast
+            label={t(showToast)}
+            error={showErrorToast}
+            onClose={() => {
+              setShowToast(null);
+            }}
+            isDleteBtn={true}
+          ></Toast>
+        )}
+      </React.Fragment>
+    </AdditionalPropertiesContext.Provider>
   );
 };
 
