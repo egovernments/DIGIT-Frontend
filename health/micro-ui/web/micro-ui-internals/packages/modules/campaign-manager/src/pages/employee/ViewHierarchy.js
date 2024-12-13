@@ -433,7 +433,7 @@ const ViewHierarchy = () => {
                 {firstPage && 
                     <div>
                         <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
-                            <div className="hierarchy-boundary-heading">{t(`HIERARCHY`)} {hierarchyType}</div>
+                            <div className="hierarchy-boundary-heading">{t(`HIERARCHY`)} {t(hierarchyType)}</div>
                             <div style={{ height: "2rem" }}></div>
                             {hierData.map((hierItem, index) => {
                                 // Check if the index is less than defData length
