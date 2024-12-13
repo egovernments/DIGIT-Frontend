@@ -138,13 +138,12 @@ const MDMSView = ({ ...props }) => {
   // Convert schema code to match exactly how module was stored in messages.
   // Example: If messages stored module as: DIGIT_MDMS_RAINMAKER-PGR.SERVICEDEFS
   // Convert rawSchemaCode: "RAINMAKER-PGR.ServiceDefs" -> "RAINMAKER-PGR.SERVICEDEFS"
-  const properSchema = rawSchemaCode?.replace("ServiceDefs", "SERVICEDEFS");
-  const localizationModule = `DIGIT_MDMS_${properSchema}`;
+  const localizationModule = `DIGIT_MDMS_${rawSchemaCode}`.toUpperCase();
 
   const createLocalizationCode = (fieldName, fieldValue) => {
     const upperFieldName = fieldName.toUpperCase();
     const transformedValue = (fieldValue || "").replace(/\s+/g, "").toUpperCase();
-    return `RAINMAKER-PGR.SERVICEDEFS_${upperFieldName}_${transformedValue}`;
+    return `${rawSchemaCode}_${upperFieldName}_${transformedValue}`.toUpperCase();
   };
 
   let localizationCodes = [];

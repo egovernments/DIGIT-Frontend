@@ -274,11 +274,22 @@ const DigitJSONForm = ({
     }
   }, [formData, MdmsRes, schema]);
 
+  // Define second upsert mutation using custom API hook
+  const reqCriteriaSecondUpsert = {
+    url: `/localization/messages/v1/_upsert`,
+    params: {},
+    body: {},
+    config: {
+      enabled: false, // We'll call mutateAsync manually
+    },
+  };
+  const secondFormatLocalizationMutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaSecondUpsert);
+
   const onSubmitV2 = async ({ formData }, e) => {
     console.log("additional data", additionalProperties);
 
     const transformedFormData = { ...formData };
-  
+
     for (const fieldName in additionalProperties) {
       if (additionalProperties.hasOwnProperty(fieldName)) {
         const fieldProps = additionalProperties[fieldName];
@@ -287,11 +298,53 @@ const DigitJSONForm = ({
         }
       }
     }
-  
-    // Now transformedFormData has the replaced values
+
     console.log("Transformed formData before submit:", transformedFormData);
-  
-    // Call onSubmit with the updated formData and additionalProperties
+
+    // Construct second format localization messages
+    // no conditions changed, just always attempt creation
+    const schemaCodeParts = schema?.code?.split(".") || [];
+    const firstPart = schemaCodeParts[0]?.toLowerCase() || "default";
+    const secondPart = schemaCodeParts[1]?.toUpperCase() || "";
+
+    const secondFormatMessages = [];
+    for (const fieldName in additionalProperties) {
+      if (additionalProperties.hasOwnProperty(fieldName)) {
+        const fieldProps = additionalProperties[fieldName];
+        const { mdmsCode, localizationMessage } = fieldProps;
+        if (mdmsCode && localizationMessage) {
+          const code = `${secondPart}.${mdmsCode}`;
+          secondFormatMessages.push({
+            code: code,
+            message: localizationMessage,
+            module: firstPart,
+            locale: "en_IN",
+          });
+        }
+      }
+    }
+
+    console.log("Attempting second format localization upsert before main onSubmit...");
+    console.log("secondFormatMessages:", secondFormatMessages);
+
+    if (secondFormatMessages.length > 0) {
+      try {
+        await secondFormatLocalizationMutation.mutateAsync({
+          params: {},
+          body: {
+            tenantId: tenantId,
+            messages: secondFormatMessages
+          }
+        });
+        console.log("Second format localization upsert successful!");
+      } catch (err) {
+        console.error("Second format localization upsert failed:", err);
+      }
+    } else {
+      console.log("No second format messages to upsert");
+    }
+
+    // Now call main onSubmit
     onSubmit && onSubmit(transformedFormData, additionalProperties);
   };
 
@@ -326,7 +379,7 @@ const DigitJSONForm = ({
             showErrorList={false}
             formData={formData}
             noHtml5Validate={true}
-            onChange={onFormChange}   // No processing, just pass the event
+            onChange={onFormChange}  
             formContext={{
               schemaCode: schema?.code,
               MdmsRes,
@@ -344,8 +397,6 @@ const DigitJSONForm = ({
               ArrayFieldTitleTemplate,
               ArrayFieldItemTemplate,
             }}
-            // Removed liveValidate and transformErrors
-            // Removed experimental_defaultFormStateBehavior
             widgets={customWidgets}
             uiSchema={{ ...uiSchema, ...inputUiSchema }}
             onError={onError}

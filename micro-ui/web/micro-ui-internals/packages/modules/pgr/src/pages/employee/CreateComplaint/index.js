@@ -55,6 +55,7 @@ export const CreateComplaint = ({ parentUrl }) => {
   const [params, setParams] = useState({});
   const tenantId = window.Digit.SessionStorage.get("Employee.tenantId");
   const menu = Digit.Hooks.pgr.useComplaintTypes({ stateCode: tenantId });
+  console.log("complaint types are"+ JSON.stringify(menu));
   const dispatch = useDispatch();
   const match = useRouteMatch();
   const history = useHistory();
