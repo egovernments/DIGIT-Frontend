@@ -16,6 +16,7 @@ const MicroplanSearch = () => {
   const [tabData, setTabData] = useState(
     TabSearchconfig?.TabSearchconfig?.map((configItem, index) => ({ key: index, label: configItem.label, active: index === 0 ? true : false }))
   ); // setting number of tab component and making first index enable as default
+  const [key,setKey] = useState(0)
   useEffect(() => {
     // Set default values when component mounts
     setDefaultValues(defaultSearchValues);
@@ -28,10 +29,10 @@ const MicroplanSearch = () => {
     const url = new URL(window.location.href);
     url.searchParams.set("tabId", `${n}`);
     window.history.replaceState({}, "", url);
-
+    setKey(prev => prev+1)
   };
   return (
-    <React.Fragment>
+    <React.Fragment key={key}>
 
       <Header styles={{ fontSize: "32px" }}>{ t(`SEARCH_${config?.label}`) }</Header>
       <div className="inbox-search-wrapper">

@@ -27,7 +27,7 @@ const UserManagement = () => {
         }
 
         if (Array.isArray(data.cells) && data.cells.length > 0) {
-            const row = data.cells[0].value;
+            const row = data?.original?.user?.userName;
             const tenantId = Digit.ULBService.getCurrentTenantId();
             const contextPath = state?.ContextPathForUser?.[0]?.contextPathConfig;
             if (!contextPath) {
