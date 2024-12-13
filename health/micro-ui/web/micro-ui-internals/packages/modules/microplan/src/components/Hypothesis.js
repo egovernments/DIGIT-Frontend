@@ -211,7 +211,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
         <Divider className="" variant="small" />
 
         <Button
-          icon="Add"
+          icon="AddCircle"
           title={category === "CAMPAIGN_VEHICLES" ? t(`ADD_ASSUMPTION_${category}`) : t("ADD_ASSUMPTION")}
           label={category === "CAMPAIGN_VEHICLES" ? t(`ADD_ASSUMPTION_${category}`) : t("ADD_ASSUMPTION")}
           onClick={() => setAssumptionsPopUp(true)}

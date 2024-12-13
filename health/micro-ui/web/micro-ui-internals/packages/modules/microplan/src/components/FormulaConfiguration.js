@@ -400,7 +400,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
           );
         })}
         <Button
-          icon="Add"
+          icon="AddCircle"
           label={t("ADD_NEW_FORMULA")}
           title={t("ADD_NEW_FORMULA")}
           onClick={() => setFormulasPopUp(true)}
