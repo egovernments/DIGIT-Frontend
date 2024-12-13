@@ -20,7 +20,7 @@ const MyMicroplans = () => {
     // Set default values when component mounts
     setDefaultValues(defaultSearchValues);
   }, []);
-
+  const [key,setKey] = useState(0);
   const onTabChange = (n) => {
     
     setTabData((prev) => prev.map((i, c) => ({ ...i, active: c === n ? true : false }))); //setting tab enable which is being clicked
@@ -28,10 +28,10 @@ const MyMicroplans = () => {
     const url = new URL(window.location.href);
     url.searchParams.set("tabId", `${n}`);
     window.history.replaceState({}, "", url);
-
+    setKey((prev)=>prev+1);
   };
   return (
-    <React.Fragment>
+    <React.Fragment key={key}>
 
       <Header styles={{ fontSize: "32px" }}>{t("MY_MICROPLANS_HEADING")}</Header>
       <div className="inbox-search-wrapper">
