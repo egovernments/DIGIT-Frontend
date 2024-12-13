@@ -217,3 +217,23 @@
   font-weight: 700;
   }
 }
+.digit-popup-wrapper.dataMapping {
+  .digit-popup-children-wrap {
+    overflow: visible;
+  }
+}
+.dataMappingCard {
+  overflow-y: scroll;
+}
+.dataMappingDropdown {
+  min-width: 13rem !important;
+}
+.data-mapping-filter-switch {
+  float: right;
+  margin-bottom: 1.5rem;
+}
+.digit-label-field-pair.multiselect-label-field {
+  > div:nth-of-type(1) {
+    width: 69%;
+  }
+}
