@@ -16,7 +16,6 @@ const MicroplanSearch = () => {
   const [tabData, setTabData] = useState(
     TabSearchconfig?.TabSearchconfig?.map((configItem, index) => ({ key: index, label: configItem.label, active: index === 0 ? true : false }))
   ); // setting number of tab component and making first index enable as default
-  
   const [key,setKey] = useState(0)
   useEffect(() => {
     // Set default values when component mounts
@@ -24,6 +23,7 @@ const MicroplanSearch = () => {
   }, []);
 
   const onTabChange = (n) => {
+    
     setTabData((prev) => prev.map((i, c) => ({ ...i, active: c === n ? true : false }))); //setting tab enable which is being clicked
     // setConfig(TabSearchconfig?.TabSearchconfig?.[n]);// as per tab number filtering the config
     const url = new URL(window.location.href);

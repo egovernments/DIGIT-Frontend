@@ -21,7 +21,6 @@ const MyMicroplans = () => {
     setDefaultValues(defaultSearchValues);
   }, []);
   const [key,setKey] = useState(0);
-
   const onTabChange = (n) => {
     
     setTabData((prev) => prev.map((i, c) => ({ ...i, active: c === n ? true : false }))); //setting tab enable which is being clicked
@@ -30,7 +29,6 @@ const MyMicroplans = () => {
     url.searchParams.set("tabId", `${n}`);
     window.history.replaceState({}, "", url);
     setKey((prev)=>prev+1);
-
   };
   return (
     <React.Fragment key={key}>
