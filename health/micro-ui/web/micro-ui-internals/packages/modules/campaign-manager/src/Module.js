@@ -55,11 +55,13 @@ import ViewHierarchy from "./pages/employee/ViewHierarchy";
 import MultiSelectDropdown from "./components/MultiSelectDropdown";
 import MapView from "./components/MapView";
 import NoResultsFound from "./components/NoResultsFound";
+import UploadDataMappingWrapper from "./components/UploadDataMappingWrapper";
+import DataUploadWrapper from "./components/DataUploadWrapper";
 
 /**
  * MDMS Module name
  */
-export const CONSOLE_MDMS_MODULENAME="HCM-ADMIN-CONSOLE";
+export const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
 
 /**
  * The CampaignModule function fetches store data based on state code, module code, and language, and
@@ -69,24 +71,27 @@ export const CONSOLE_MDMS_MODULENAME="HCM-ADMIN-CONSOLE";
  */
 const CampaignModule = ({ stateCode, userType, tenants }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const { data: BOUNDARY_HIERARCHY_TYPE , isLoading: hierarchyLoading } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ 
-    name: "HierarchySchema",
-    "filter": `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`
-   }], {
-    select: (data) => {
-      return data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy;
+  const { data: BOUNDARY_HIERARCHY_TYPE, isLoading: hierarchyLoading } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    CONSOLE_MDMS_MODULENAME,
+    [
+      {
+        name: "HierarchySchema",
+        filter: `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`,
+      },
+    ],
+    {
+      select: (data) => {
+        return data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy;
+      },
     },
-  },
-  { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
-);
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
+  );
 
-
-  const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({BOUNDARY_HIERARCHY_TYPE,tenantId});
+  const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE, tenantId });
   const modulePrefix = "hcm";
 
-  const moduleCode = BOUNDARY_HIERARCHY_TYPE 
-  ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`] 
-  : [ "campaignmanager", "schema", "admin-schemas","checklist"]; 
+  const moduleCode = BOUNDARY_HIERARCHY_TYPE ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`] : ["campaignmanager", "schema", "admin-schemas", "checklist"];
 
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
@@ -104,12 +109,18 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
   return (
     <ErrorBoundary moduleName="CAMPAIGN">
       <TourProvider>
-        <EmployeeApp BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE} path={path} stateCode={stateCode} url={url} userType={userType} hierarchyData={hierarchyData} />
+        <EmployeeApp
+          BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE}
+          path={path}
+          stateCode={stateCode}
+          url={url}
+          userType={userType}
+          hierarchyData={hierarchyData}
+        />
       </TourProvider>
     </ErrorBoundary>
   );
 };
-
 
 const componentsToRegister = {
   CampaignModule: CampaignModule,
@@ -155,13 +166,15 @@ const componentsToRegister = {
   BulkUpload,
   CampaignUpdateSummary,
   XlsPreview,
-  MultiSelectDropdownBoundary:MultiSelectDropdown,
+  MultiSelectDropdownBoundary: MultiSelectDropdown,
   GeoPode,
   ViewBoundary,
   ViewHierarchy,
   BoundarySummary,
   MapView,
-  NoResultsFound
+  NoResultsFound,
+  UploadDataMappingWrapper,
+  DataUploadWrapper,
 };
 
 const overrideHooks = () => {
