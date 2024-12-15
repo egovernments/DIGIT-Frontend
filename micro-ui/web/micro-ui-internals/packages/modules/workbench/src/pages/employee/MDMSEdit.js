@@ -1,25 +1,25 @@
 import React, { useState } from "react";
 import MDMSAdd from "./MDMSAddV2";
 import { Loader, Toast } from "@egovernments/digit-ui-react-components";
-import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
 import _ from "lodash";
 
 const MDMSEdit = ({ ...props }) => {
   const history = useHistory();
   const { t } = useTranslation();
-  const { moduleName, masterName, from, uniqueIdentifier } = Digit.Hooks.useQueryParams();
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const { moduleName, masterName, tenantId, uniqueIdentifier, from } = Digit.Hooks.useQueryParams();
+  const stateId = Digit.ULBService.getCurrentTenantId();
 
   const [showToast, setShowToast] = useState(false);
+  const [renderLoader, setRenderLoader] = useState(false);
 
   const closeToast = () => {
-    setTimeout(() => {
-      setShowToast(null);
-    }, 5000);
+    setTimeout(() => setShowToast(null), 5000);
   };
 
   const gotoView = () => {
+    setRenderLoader(true);
     history.push(
       `/${window?.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}${
         from ? `&from=${from}` : ""
@@ -27,160 +27,159 @@ const MDMSEdit = ({ ...props }) => {
     );
   };
 
-  // Fetch MDMS data
+  // Fetch MDMS Data
   const reqCriteria = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
     params: {},
     body: {
       MdmsCriteria: {
-        tenantId,
+        tenantId: stateId,
         uniqueIdentifiers: [uniqueIdentifier],
         schemaCode: `${moduleName}.${masterName}`,
       },
     },
     config: {
-      enabled: moduleName && masterName && true,
+      enabled: !!moduleName && !!masterName,
       select: (data) => data?.mdms?.[0],
     },
   };
+
   const { isLoading, data, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-  // Fetch UISchema data
-  const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(tenantId, "Workbench", [{ name: "UISchema" }], {
+  // Fetch UISchema to identify localisable fields
+  const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(stateId, "Workbench", [{ name: "UISchema" }], {
     select: (data) => data?.["Workbench"]?.["UISchema"],
   });
 
-  // Prepare Localization Data
-  const rawSchemaCode = data?.schemaCode || "";
-  const firstPartModule = `DIGIT_MDMS_${rawSchemaCode}`.toUpperCase();
-  const secondPartModule = rawSchemaCode.split(".")[0].toLowerCase();
-  const schemaPart = rawSchemaCode.split(".")[1]?.toUpperCase() || "";
+  const localisableFields = MdmsRes?.find((item) => item.schemaCode === `${moduleName}.${masterName}`)?.localisation
+    ?.localisableFields || [];
 
-  const createLocalizationCode = (prefix, fieldName, fieldValue) => {
+  // Localization Search Preparation
+  const rawSchemaCode = data?.schemaCode;
+  const localizationModule = `DIGIT_MDMS_${rawSchemaCode}`.toUpperCase();
+  const locale = "en_IN";
+  const createLocalizationCode = (fieldName, fieldValue) => {
     const upperFieldName = fieldName.toUpperCase();
     const transformedValue = (fieldValue || "").replace(/\s+/g, "").toUpperCase();
-    return `${prefix}_${upperFieldName}_${transformedValue}`.toUpperCase();
+    return `${rawSchemaCode}_${upperFieldName}_${transformedValue}`.toUpperCase();
   };
 
-  let localisableFields = [];
-  if (MdmsRes && Array.isArray(MdmsRes)) {
-    const schemaDef = MdmsRes.find((item) => item.schemaCode === `${moduleName}.${masterName}`);
-    localisableFields = schemaDef?.localisation?.localisableFields || [];
+  const localizationCodes =
+    data?.data && localisableFields.length > 0
+      ? localisableFields.map((field) => createLocalizationCode(field.fieldPath, data.data[field.fieldPath]))
+      : [];
+
+  const localizationReqCriteria = {
+    url: `/localization/messages/v1/_search?locale=${locale}&tenantId=${stateId}&module=${localizationModule}`,
+    params: {},
+    body: { RequestInfo: { authToken: Digit.UserService.getUser()?.access_token || "" } },
+    config: {
+      enabled: !!data && localizationCodes.length > 0,
+      select: (respData) => {
+        let messageMap = {};
+        if (Array.isArray(respData?.messages)) {
+          respData.messages.forEach((msg) => (messageMap[msg.code] = msg.message));
+        }
+        return messageMap;
+      },
+    },
+  };
+
+  const { data: localizationMap, isLoading: isLocalizationLoading } = Digit.Hooks.useCustomAPIHook(localizationReqCriteria);
+
+  let finalData = data;
+  if (data?.data && localizationMap) {
+    const updatedData = _.cloneDeep(data);
+    localisableFields.forEach((field) => {
+      const code = createLocalizationCode(field.fieldPath, updatedData.data[field.fieldPath]);
+      if (localizationMap[code]) {
+        updatedData.data[field.fieldPath] = localizationMap[code];
+      }
+    });
+    finalData = updatedData;
   }
 
+  // MDMS Update Mutation
   const reqCriteriaUpdate = {
     url: Digit.Utils.workbench.getMDMSActionURL(moduleName, masterName, "update"),
     params: {},
     body: {},
-    config: {
-      enabled: true,
-    },
+    config: { enabled: true },
   };
+
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaUpdate);
 
-  const upsertMutation = Digit.Hooks.useCustomAPIMutationHook({
+  // Localization Upsert Mutation
+  const localizationUpsertMutation = Digit.Hooks.useCustomAPIMutationHook({
     url: `/localization/messages/v1/_upsert`,
     params: {},
     body: {},
     config: { enabled: false },
   });
 
-  const handleUpdate = async (formData) => {
-    const additionalProperties = {};
-    localisableFields.forEach((field) => {
-      const fieldValue = formData[field.fieldPath];
-      if (fieldValue) {
-        additionalProperties[field.fieldPath] = {
-          mdmsCode: fieldValue.replace(/\s+/g, "").toUpperCase(),
-          firstFormatLocalizationCode: createLocalizationCode("RAINMAKER-PGR.SERVICEDEFS", field.fieldPath, fieldValue),
-          secondFormatLocalizationCode: `${schemaPart}.${fieldValue.replace(/\s+/g, "").toUpperCase()}`,
-          localizationMessage: fieldValue,
-        };
+  const handleUpdate = async (formData, additionalProperties) => {
+    const transformedFormData = { ...formData };
+
+    // Prepare Localization Messages
+    const messages = [];
+    if (additionalProperties && typeof additionalProperties === "object") {
+      for (const fieldName in additionalProperties) {
+        if (additionalProperties.hasOwnProperty(fieldName)) {
+          const fieldProps = additionalProperties[fieldName];
+          if (fieldProps?.localizationCode && fieldProps?.localizationMessage) {
+            const mdmsCode = (fieldProps.localizationMessage || "").replace(/\s+/g, "").toUpperCase();
+            messages.push({
+              code: `${rawSchemaCode}_${fieldName}_${mdmsCode}`,
+              message: fieldProps.localizationMessage,
+              module: localizationModule,
+              locale: "en_IN",
+            });
+            transformedFormData[fieldName] = mdmsCode; // Update mdmsCode
+          }
+        }
       }
-    });
-
-    // Construct First Format Messages
-    const firstFormatMessages = Object.values(additionalProperties).map(({ firstFormatLocalizationCode, localizationMessage }) => ({
-      code: firstFormatLocalizationCode,
-      message: localizationMessage,
-      module: firstPartModule,
-      locale: "en_IN",
-    }));
-
-    // Construct Second Format Messages
-    const secondFormatMessages = Object.values(additionalProperties).map(({ secondFormatLocalizationCode, localizationMessage }) => ({
-      code: secondFormatLocalizationCode,
-      message: localizationMessage,
-      module: secondPartModule,
-      locale: "en_IN",
-    }));
+    }
 
     try {
-      if (firstFormatMessages.length > 0) {
-        await upsertMutation.mutateAsync({
-          body: {
-            tenantId,
-            messages: firstFormatMessages,
-          },
+      // Perform Localization Upsert
+      if (messages.length > 0) {
+        await localizationUpsertMutation.mutateAsync({
+          body: { tenantId: stateId, messages },
         });
-        console.log("First localization upsert successful!");
-      }
-
-      if (secondFormatMessages.length > 0) {
-        await upsertMutation.mutateAsync({
-          body: {
-            tenantId,
-            messages: secondFormatMessages,
-          },
-        });
-        console.log("Second localization upsert successful!");
       }
     } catch (err) {
-      console.error("Error during localization upsert:", err);
-      setShowToast({
-        label: t("WBH_ERROR_LOCALIZATION"),
-        isError: true,
-      });
+      console.error("Localization Upsert Failed:", err);
+      setShowToast({ label: t("WBH_ERROR_LOCALIZATION"), isError: true });
       closeToast();
       return;
     }
 
-    // Proceed with MDMS update
+    // Perform MDMS Update
     mutation.mutate(
       {
-        url: reqCriteriaUpdate?.url,
+        url: reqCriteriaUpdate.url,
         params: {},
-        body: {
-          Mdms: {
-            ...data,
-            data: formData,
-          },
-        },
+        body: { Mdms: { ...data, data: transformedFormData } },
       },
       {
         onError: (resp) => {
-          setShowToast({
-            label: `${t("WBH_ERROR_MDMS_DATA")} ${t(resp?.response?.data?.Errors?.[0]?.code)}`,
-            isError: true,
-          });
+          setShowToast({ label: t("WBH_ERROR_MDMS_DATA"), isError: true });
           closeToast();
         },
-        onSuccess: (resp) => {
-          setShowToast({
-            label: `${t("WBH_SUCCESS_UPD_MDMS_MSG")} ${resp?.mdms?.[0]?.id}`,
-          });
+        onSuccess: () => {
+          setShowToast({ label: t("WBH_SUCCESS_UPD_MDMS_MSG") });
           gotoView();
         },
       }
     );
   };
 
-  if (isLoading || isFetching) return <Loader />;
+  if (isLoading || isFetching || isLocalizationLoading || renderLoader) return <Loader />;
 
   return (
     <React.Fragment>
       <MDMSAdd
-        defaultFormData={data?.data}
+        defaultFormData={finalData?.data}
         screenType={"edit"}
         onSubmitEditAction={handleUpdate}
         updatesToUISchema={{ "ui:readonly": false }}
