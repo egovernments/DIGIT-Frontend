@@ -47,7 +47,7 @@ const defaultImage =
   "L+RGKCddCGmatiPyPB/+ekO/M/q/7uvbt22kTt3zEnXPzCV13T3Gel4/6NduDu66xRvlPNkM1RjjxUdv+4WhGx6TftD19Q/dfzpwcHO+rE3fAAAAAElFTkSuQmCC";
 
 const defaultValidationConfig = {
-  "tenantId": `${Digit.ULBService.getCurrentTenantId()}`,
+  "tenantId": `${Digit.ULBService.getStateId()}`,
   "UserProfileValidationConfig": [
     {
       "name": "/^[a-zA-Z ]+$/i",
@@ -96,6 +96,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
       }, {})
     );
   };
+  console.log(tenant,stateId,"pppp")
 
   const [validationConfig,setValidationConfig] = useState(mapConfigToRegExp(defaultValidationConfig) || {});
 
