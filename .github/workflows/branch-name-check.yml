@@ -28,10 +28,10 @@ jobs:
       - name: Validate branch name
         run: |
           # Determine the branch name
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            branch_name="${{ github.head_ref }}"
+          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+            branch_name="${GITHUB_HEAD_REF}"
           else
-            branch_name="${{ github.ref#refs/heads/ }}"
+            branch_name="${GITHUB_REF#refs/heads/}"
           fi
       
           # Define the branch name pattern
