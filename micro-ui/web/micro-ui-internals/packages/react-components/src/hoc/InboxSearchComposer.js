@@ -16,7 +16,7 @@ import Header from "../atoms/Header";
 import { useTranslation } from "react-i18next";
 
 
-const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueChange=()=>{},showTab,tabData,onTabChange}) => {
+const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueChange=()=>{},showTab,showTabLabel,tabData,onTabChange}) => {
     const { t } = useTranslation();
 
     const [enable, setEnable] = useState(false);
@@ -184,6 +184,7 @@ const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueCh
                                 fullConfig={configs}
                                 data={data}
                                 showTab={showTab}
+                                showTabLabel={showTabLabel}
                                 tabData={tabData}
                                 onTabChange={onTabChange}
                                 />
