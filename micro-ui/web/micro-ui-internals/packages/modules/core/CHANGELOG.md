@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.8.13]  [16-Dec-2024]
+- Added dynamic regex validation for profile updates
+
 ## [1.8.11]  [26-Nov-2024]
 - Republished with new component version incremented 
 
