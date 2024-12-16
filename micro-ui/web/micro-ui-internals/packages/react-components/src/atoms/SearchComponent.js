@@ -171,7 +171,7 @@ const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullCon
                     clearSearch({});
                     onTabChange(num);
                   }}>
-                  {showTabLabel? `${t(i?.label)}(${data?.count || data?.TotalCount || data?.totalCount || searchResult?.length})`
+                  {showTabLabel? `${t(i?.label)}(${data?.TotalCount })`
                   : t(i?.label)}
                 </button>
               ))}
