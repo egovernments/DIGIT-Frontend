@@ -6,11 +6,17 @@ on:
       - master
       - develop
       - console
+
   pull_request:
     branches:
       - master
       - develop
       - console
+      
+    types:
+      - opened
+      - edited
+      - reopened
 
 jobs:
   validate-names:
@@ -47,13 +53,27 @@ jobs:
           PREFIXES="FEATURE|BUGFIX|RELEASE"
           PROJECTS="HCMPRE|DPG|SN"
           TICKET_PATTERN="[0-9]{1,5}"
-          TITLE_PATTERN="^($PREFIXES)\/($PROJECTS)-$TICKET_PATTERN .+$"
+          TITLE_PATTERN="^($PREFIXES)\/($PROJECTS)-$TICKET_PATTERN.*$"
+          MIN_TITLE_LENGTH=30
 
-          # Get the PR title
-          pr_title="${{ github.event.pull_request.title }}"
+
+          # Fetch the latest PR title dynamically
+          pr_title=$(curl -s https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} | jq -r '.title')
+          echo "Fetched PR title: $pr_title"
 
           # Validate the PR title
           if [[ ! "$pr_title" =~ $TITLE_PATTERN ]]; then
-            echo "PR title '$pr_title' does not follow the correct pattern: $PREFIXES/$PROJECTS-<TICKET_NO>: <Description> where <TICKET_NO> is $TICKET_PATTERN"
+            echo "PR title '$pr_title' does not follow the correct pattern: $PREFIXES/$PROJECTS-<TICKET_NO> : <Description> where <TICKET_NO> is $TICKET_PATTERN"
             exit 1
           fi
+
+          # Validate the PR title length
+          if [[ ${#pr_title} -lt $MIN_TITLE_LENGTH ]]; then
+            echo "PR title '$pr_title' is too short. It must be at least $MIN_TITLE_LENGTH characters long."
+            exit 1
+          fi
+      
+          echo "PR title validation passed."
+
+
+          
