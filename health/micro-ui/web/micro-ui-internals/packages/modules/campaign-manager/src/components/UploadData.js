@@ -1036,7 +1036,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           if (fileData && fileData?.[0]?.url) {
             setDownloadError(false);
             if (fileData?.[0]?.id) {
-              downloadExcelWithCustomName({ fileStoreId: fileData?.[0]?.id, customName: fileData?.[0]?.filename });
+              downloadExcelWithCustomName({ fileStoreId: fileData?.[0]?.id, customName: `${campaignName}_${fileData[0].filename}` });
               setDownloadedTemplates((prev) => ({
                 ...prev,
                 [type]: true,
