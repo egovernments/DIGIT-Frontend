@@ -1,7 +1,21 @@
 # Changelog 
 
 ## [1.8.13]  [16-Dec-2024]
-- Added dynamic regex validation for profile updates
+- Made validations for name, mobile number, and password fields in user profile update screen configurable through MDMS data
+  - Implemented dynamic regex validation for profile updates based on MDMS data
+  - Added support for custom regex patterns through `UserProfileValidationConfig`
+  - Example MDMS data:
+    {
+      "tenantId": "mz",
+      "moduleName": "commonUiConfig",
+      "UserProfileValidationConfig": [
+        {
+          "name": "^[a-zA-Z0-9 ]+$",
+          "mobileNumber": "^[0-9]{1}[0-9]{9}$",
+          "password": "/^([a-zA-Z0-9@#$%]{8,15})$/i"
+        }
+      ]
+    }
 
 ## [1.8.11]  [26-Nov-2024]
 - Republished with new component version incremented 
