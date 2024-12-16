@@ -85,7 +85,6 @@ const ViewChecklist = () => {
                 },
                 config: {
                     select: (res) => {
-                        console.log("res", res);
                         if (res?.Services?.[0]?.auditDetails) {
                             const lastModifiedTime = res?.Services?.[0]?.auditDetails?.lastModifiedTime;
                             if (lastModifiedTime) {
