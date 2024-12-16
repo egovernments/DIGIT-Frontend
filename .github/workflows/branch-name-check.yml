@@ -6,11 +6,13 @@ on:
       - master
       - develop
       - console
+      - test
   pull_request:
     branches:
       - master
       - develop
       - console
+      - test
 
 jobs:
   validate-names:
