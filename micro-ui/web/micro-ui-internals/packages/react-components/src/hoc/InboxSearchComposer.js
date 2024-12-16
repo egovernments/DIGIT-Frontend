@@ -201,7 +201,7 @@ const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueCh
                                 screenType={configs.type}
                                 fullConfig={configs}
                                 data={data}
-                                showTabCount={configs?.sections?.search?.uiConfig?.showTabCount}
+                                showTabCount={configs?.sections?.filter?.uiConfig?.showTabCount}
                                 />
                         </div> 
                 }
@@ -230,7 +230,7 @@ const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueCh
                                 screenType={configs.type}
                                 fullConfig={configs}
                                 data={data}
-                                showTabCount={configs?.sections?.search?.uiConfig?.showTabCount}
+                                showTabCount={configs?.sections?.filter?.uiConfig?.showTabCount}
                                 />
                         </div> 
                     </MediaQuery>
