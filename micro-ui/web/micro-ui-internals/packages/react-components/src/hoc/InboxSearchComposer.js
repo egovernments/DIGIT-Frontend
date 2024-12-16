@@ -184,7 +184,7 @@ const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueCh
                                 fullConfig={configs}
                                 data={data}
                                 showTab={showTab}
-                                showTabLabel={configs?.sections?.search?.uiConfig?.showTabLabel}
+                                showTabCount={configs?.sections?.search?.uiConfig?.showTabCount}
                                 tabData={tabData}
                                 onTabChange={onTabChange}
                                 />
@@ -201,6 +201,7 @@ const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueCh
                                 screenType={configs.type}
                                 fullConfig={configs}
                                 data={data}
+                                showTabCount={configs?.sections?.search?.uiConfig?.showTabCount}
                                 />
                         </div> 
                 }
@@ -214,6 +215,7 @@ const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueCh
                                 screenType={configs.type}
                                 fullConfig={configs}
                                 data={data}
+                                showTabCount={configs?.sections?.search?.uiConfig?.showTabCount}
                                 />
                         </div>
                      </MediaQuery>
@@ -228,6 +230,7 @@ const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueCh
                                 screenType={configs.type}
                                 fullConfig={configs}
                                 data={data}
+                                showTabCount={configs?.sections?.search?.uiConfig?.showTabCount}
                                 />
                         </div> 
                     </MediaQuery>

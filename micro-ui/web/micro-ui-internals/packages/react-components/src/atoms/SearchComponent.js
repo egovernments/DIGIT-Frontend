@@ -16,7 +16,7 @@ const setUIConf = (uiConfig) => {
   return [{uiConfig}]
 }
 
-const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullConfig, data,activeLink,setActiveLink,browserSession,showTab,showTabLabel=false, tabData, onTabChange}) => {
+const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullConfig, data,activeLink,setActiveLink,browserSession,showTab,showTabCount=false, tabData, onTabChange}) => {
   
   //whenever activeLink changes we'll change uiConfig
   // const [activeLink,setActiveLink] = useState(uiConfig?.configNavItems?.filter(row=>row.activeByDefault)?.[0]?.name)
@@ -171,7 +171,7 @@ const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullCon
                     clearSearch({});
                     onTabChange(num);
                   }}>
-                  {showTabLabel? `${t(i?.label)}(${data?.TotalCount})`
+                  {showTabCount? `${t(i?.label)}(${data?.count || data?.TotalCount || data?.totalCount})`
                   : t(i?.label)}
                 </button>
               ))}
