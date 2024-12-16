@@ -118,6 +118,8 @@ export const UICustomizations = {
                 onToggle={toggle}
               />):(<>{t("CHECKLIST_TOBE_CONFIGURED")}</>)
             );
+        case "CHECKLIST_LAST_UPDATE":
+          return Digit.DateUtils.ConvertEpochToDate(row?.auditDetails?.lastModifiedTime);
         case "HCM_CHECKLIST_ACTION":
           const role_code = row?.data?.role;
           const cl_code = row?.data?.checklistType;
@@ -488,7 +490,8 @@ export const UICustomizations = {
               </Link>
             </span>
           );
-
+        case "CAMPAIGN_LAST_UPDATE":
+          return Digit.DateUtils.ConvertEpochToDate(row?.auditDetails?.lastModifiedTime);
         case "CAMPAIGN_START_DATE":
           return Digit.DateUtils.ConvertEpochToDate(value);
         case "CAMPAIGN_END_DATE":
@@ -629,7 +632,8 @@ export const UICustomizations = {
               </Link>
             </span>
           );
-
+        case "CAMPAIGN_LAST_UPDATE":
+          return Digit.DateUtils.ConvertEpochToDate(row?.auditDetails?.lastModifiedTime);
         case "CAMPAIGN_START_DATE":
           return Digit.DateUtils.ConvertEpochToDate(value);
         case "CAMPAIGN_END_DATE":
@@ -808,7 +812,8 @@ export const UICustomizations = {
               </Link>
             </span>
           );
-
+        case "CAMPAIGN_LAST_UPDATE":
+          return Digit.DateUtils.ConvertEpochToDate(row?.auditDetails?.lastModifiedTime);
         case "CAMPAIGN_START_DATE":
           return Digit.DateUtils.ConvertEpochToDate(value);
         case "CAMPAIGN_END_DATE":
@@ -934,6 +939,8 @@ export const UICustomizations = {
           );
         case "CM_DRAFT_TYPE":
           return value ? t("CM_UPDATE_REQUEST") : t("CM_CREATE_REQUEST");
+        case "CAMPAIGN_LAST_UPDATE":
+          return Digit.DateUtils.ConvertEpochToDate(row?.auditDetails?.lastModifiedTime);
         case "CAMPAIGN_START_DATE":
           return Digit.DateUtils.ConvertEpochToDate(value);
         case "LAST_MODIFIED_TIME":
@@ -1045,6 +1052,8 @@ export const UICustomizations = {
           );
         case "CM_DRAFT_TYPE":
           return value ? t("CM_UPDATE_REQUEST") : t("CM_CREATE_REQUEST");
+        case "CAMPAIGN_LAST_UPDATE":
+          return Digit.DateUtils.ConvertEpochToDate(row?.auditDetails?.lastModifiedTime);
         case "CAMPAIGN_START_DATE":
           return Digit.DateUtils.ConvertEpochToDate(value);
         case "CAMPAIGN_END_DATE":
