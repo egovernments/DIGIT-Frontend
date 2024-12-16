@@ -92,7 +92,9 @@ function TitleFieldTemplate(props) {
   );
 }
 
-function ArrayFieldTitleTemplate() {
+function ArrayFieldTitleTemplate(props) {
+  const { title, idSchema } = props;
+  const id = titleId(idSchema);
   return null;
 }
 
@@ -135,7 +137,7 @@ function ObjectFieldTemplate(props) {
     const inputValue = formData[fieldName];
     const isLocalisable = localisableFields.some((field) => field.fieldPath === fieldName);
 
-    if (isLocalisable && inputValue !== undefined) {
+    if (isLocalisable) {
       const fieldProps = additionalProperties?.[fieldName];
       const mdmsCode = fieldProps?.mdmsCode;
       const localizationCode = fieldProps?.localizationCode;
