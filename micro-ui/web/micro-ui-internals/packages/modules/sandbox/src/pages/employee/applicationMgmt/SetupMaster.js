@@ -131,7 +131,7 @@ const SetupMaster = () => {
     );
   };
 
-  if (moduleMasterLoading && masterCountLoading) {
+  if (moduleMasterLoading || masterCountLoading || isUserExist === null) {
     return <Loader />;
   }
   return (
