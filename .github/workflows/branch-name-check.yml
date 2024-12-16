@@ -7,12 +7,16 @@ on:
       - develop
       - console
       - test
+
   pull_request:
     branches:
       - master
       - develop
-      - console
       - test
+    types:
+      - opened
+      - edited
+      - reopened
 
 jobs:
   validate-names:
@@ -24,10 +28,10 @@ jobs:
       - name: Validate branch name
         run: |
           # Determine the branch name
-          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
-            branch_name="${GITHUB_HEAD_REF}"
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            branch_name="${{ github.head_ref }}"
           else
-            branch_name="${GITHUB_REF#refs/heads/}"
+            branch_name="${{ github.ref#refs/heads/ }}"
           fi
       
           # Define the branch name pattern
@@ -49,13 +53,14 @@ jobs:
           PREFIXES="FEATURE|BUGFIX|RELEASE"
           PROJECTS="HCMPRE|DPG|SN"
           TICKET_PATTERN="[0-9]{1,5}"
-          TITLE_PATTERN="^($PREFIXES)\/($PROJECTS)-$TICKET_PATTERN .+$"
+          TITLE_PATTERN="^($PREFIXES)\/($PROJECTS)-$TICKET_PATTERN.*$"
 
-          # Get the PR title
-          pr_title="${{ github.event.pull_request.title }}"
+          # Fetch the latest PR title dynamically
+          pr_title=$(curl -s https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} | jq -r '.title')
+          echo "Fetched PR title: $pr_title"
 
           # Validate the PR title
           if [[ ! "$pr_title" =~ $TITLE_PATTERN ]]; then
-            echo "PR title '$pr_title' does not follow the correct pattern: $PREFIXES/$PROJECTS-<TICKET_NO>: <Description> where <TICKET_NO> is $TICKET_PATTERN"
+            echo "PR title '$pr_title' does not follow the correct pattern: $PREFIXES/$PROJECTS-<TICKET_NO> : <Description> where <TICKET_NO> is $TICKET_PATTERN"
             exit 1
           fi
