@@ -96,7 +96,6 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
       }, {})
     );
   };
-  console.log(tenant,stateId,"pppp")
 
   const [validationConfig,setValidationConfig] = useState(mapConfigToRegExp(defaultValidationConfig) || {});
 
