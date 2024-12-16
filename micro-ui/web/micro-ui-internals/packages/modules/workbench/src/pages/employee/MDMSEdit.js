@@ -129,7 +129,7 @@ const MDMSEdit = ({ ...props }) => {
           if (fieldProps?.localizationCode && fieldProps?.localizationMessage) {
             const mdmsCode = (fieldProps.localizationMessage || "").replace(/\s+/g, "").toUpperCase();
             messages.push({
-              code: `${rawSchemaCode}_${fieldName}_${mdmsCode}`,
+              code: `${rawSchemaCode}_${fieldName}_${mdmsCode}`.toUpperCase(),
               message: fieldProps.localizationMessage,
               module: localizationModule,
               locale: "en_IN",
