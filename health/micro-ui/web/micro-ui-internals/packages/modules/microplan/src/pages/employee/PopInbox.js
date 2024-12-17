@@ -611,7 +611,10 @@ const PopInbox = () => {
           {`${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${planObject?.name || t("NO_NAME_AVAILABLE")}`}
           </div>
           <div>
-          {`${t("LOGGED_IN_AS")} ${userName} - ${t(userRole)}(${t(planEmployee?.planData[0].hierarchyLevel.toUpperCase())})`}
+          {`${t("LOGGED_IN_AS")} ${userName} - ${t(userRole)}${planEmployee?.planData 
+            ? ` (${t(planEmployee.planData[0].hierarchyLevel.toUpperCase())})` : ""}`
+          }
+
           </div>
           
         </div>
