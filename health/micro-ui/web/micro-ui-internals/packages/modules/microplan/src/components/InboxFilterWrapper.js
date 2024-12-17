@@ -1,9 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { FilterCard, LabelFieldPair, RadioButtons } from "@egovernments/digit-ui-components";
+import { FilterCard, Dropdown, LabelFieldPair, RadioButtons, TextBlock } from "@egovernments/digit-ui-components";
+import { useMyContext } from "../utils/context";
+
 
 const InboxFilterWrapper = (props) => {
+  const { state } = useMyContext();
   const { t } = useTranslation();
+  const [dropdown1Value, setDropdown1Value] = useState(null);
+  const [dropdown2Value, setDropdown2Value] = useState(null);
+  const [dropdownValues, setDropdownValues] = useState(
+    Array(state.securityQuestions.length).fill(null)
+  );
+
 
   // Default selected option
   const defaultSelectedOption = props.defaultValue
@@ -57,9 +66,15 @@ const InboxFilterWrapper = (props) => {
     }
   };
 
+  const handleDropdownChange = (index, value) => {
+    const newValues = [...dropdownValues];
+    newValues[index] = value;
+    setDropdownValues(newValues);
+  };
+
   return (
     <FilterCard
-      style={{ flexGrow: 1, display: "flex", flexDirection: "column",width:"22vw" }}
+      style={{ flexGrow: 1, display: "flex", flexDirection: "column", width: "22vw" }}
       layoutType={"vertical"}
       onClose={props?.onClose}
       onPrimaryPressed={handleApplyFilters} // Apply filters
@@ -68,10 +83,10 @@ const InboxFilterWrapper = (props) => {
       secondaryActionLabel={resultArray.length > 0 && t(props?.secondaryActionLabel)}
       title={t(props?.title)}
     >
-      <div className="filter-content-wrapper" style={{ height: "18rem" }}>
+      <div className="gap-between-dropdowns" style={{ height: "18rem" }}>
         {/* Only render LabelFieldPair if resultArray has items */}
         {resultArray.length > 0 && (
-          <LabelFieldPair>
+          <LabelFieldPair vertical style={{ marginBottom: "1rem" }} >
             <RadioButtons
               options={resultArray}
               optionsKey={"name"} // Use "name" key for display
@@ -85,6 +100,55 @@ const InboxFilterWrapper = (props) => {
             />
           </LabelFieldPair>
         )}
+
+        <LabelFieldPair vertical>
+          <TextBlock body={t(`MP_VILLAGE_ROAD_CONDITION`)} />
+          <Dropdown
+            option={state.villageRoadCondition}
+            optionKey="name"
+            selected={dropdownValues[0]}
+            select={(value) => handleDropdownChange(value, 0)}
+            t={t}
+            disabled={false}
+          />
+        </LabelFieldPair>
+
+        <LabelFieldPair vertical>
+          <TextBlock body={t(`MP_VILLAGE_TERRAIN`)} />
+          <Dropdown
+            option={state.villageTerrain}
+            optionKey="name"
+            selected={dropdownValues[1]}
+            select={(value) => handleDropdownChange(value, 1)}
+            t={t}
+            disabled={false}
+          />
+        </LabelFieldPair>
+
+  
+          {state.securityQuestions.map((item, index) => {
+            // Transform item.values into an array of objects
+            const options = item.values.map((value) => ({
+              code: value,
+              name: value,
+              active: true,
+            }));
+
+            return (
+              <LabelFieldPair vertical>
+                <TextBlock body={t(`MP_SECURITY_QUESTION ${index}`)} />
+                <Dropdown
+                  option={options} // Pass transformed options here
+                  optionKey="name" // Key for displaying dropdown options
+                  selected={dropdownValues[index + 2]} // Set selected value
+                  select={(value) => handleDropdownChange(value, index + 2)} // Handle selection
+                  t={(key) => key} // Translation function (you can replace as needed)
+                  disabled={false}
+                />
+              </LabelFieldPair>
+            );
+          })}
+       
       </div>
     </FilterCard>
   );
