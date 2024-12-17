@@ -46,6 +46,17 @@ const defaultImage =
   "XZOvia7VujatUwVTrIt+Q/Csc7Tuhe+BOakT10b4TuoiiJjvgU9emTO42PwEfBa+cuodKkuf42DXr1D3JpXz73Hnn0j10evHKe+nufgfUm+7B84sX9FfdEzXux2DBpWuKokkCqN/5pa/8pmvn" +
   "L+RGKCddCGmatiPyPB/+ekO/M/q/7uvbt22kTt3zEnXPzCV13T3Gel4/6NduDu66xRvlPNkM1RjjxUdv+4WhGx6TftD19Q/dfzpwcHO+rE3fAAAAAElFTkSuQmCC";
 
+const defaultValidationConfig = {
+  "tenantId": `${Digit.ULBService.getStateId()}`,
+  "UserProfileValidationConfig": [
+    {
+      "name": "/^[a-zA-Z ]+$/i",
+      "mobileNumber": "/^[6-9]{1}[0-9]{9}$/",
+      "password":"/^([a-zA-Z0-9@#$%]{8,15})$/i"
+    }
+  ]
+}
+
 const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const history = useHistory();
   const { t } = useTranslation();
@@ -75,6 +86,27 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
   const [errors, setErrors] = React.useState({});
   const isMobile = window.Digit.Utils.browser.isMobile();
+
+  const mapConfigToRegExp = (config) => {
+    return (
+      config?.UserProfileValidationConfig?.[0] &&
+      Object.entries(config?.UserProfileValidationConfig[0]).reduce((acc, [key, value]) => {
+        acc[key] = new RegExp(value);
+        return acc;
+      }, {})
+    );
+  };
+
+  const [validationConfig,setValidationConfig] = useState(mapConfigToRegExp(defaultValidationConfig) || {});
+
+  const { data: mdmsValidationData, isValidationConfigLoading } = Digit.Hooks.useCommonMDMS(stateCode, "commonUiConfig", ["UserProfileValidationConfig"]);
+
+  useEffect(() => {
+    if(mdmsValidationData && mdmsValidationData?.UserProfileValidationConfig?.[0]){
+      const updatedValidationConfig = mapConfigToRegExp(mdmsValidationData);
+      setValidationConfig(updatedValidationConfig);
+    }
+  },[mdmsValidationData]);
 
   const getUserInfo = async () => {
     const uuid = userInfo?.uuid;
@@ -128,7 +160,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
     setName(value);
 
     if (
-      !new RegExp(/^[a-zA-Z ]+$/i).test(value) ||
+      !validationConfig?.name?.test(value) ||
       value.length === 0 ||
       value.length > 50
     ) {
@@ -169,7 +201,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
     if (
       userType === "employee" &&
-      !new RegExp(/^[6-9]{1}[0-9]{9}$/).test(value)
+      !validationConfig?.mobileNumber?.test(value)
     ) {
       setErrors({
         ...errors,
@@ -186,7 +218,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const setUserCurrentPassword = (value) => {
     setCurrentPassword(value);
 
-    if (!new RegExp(/^([a-zA-Z0-9@#$%]{8,15})$/i).test(value)) {
+    if (!validationConfig?.password.test(value)) {
       setErrors({
         ...errors,
         currentPassword: {
@@ -202,7 +234,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const setUserNewPassword = (value) => {
     setNewPassword(value);
 
-    if (!new RegExp(/^([a-zA-Z0-9@#$%]{8,15})$/i).test(value)) {
+    if (!validationConfig?.password.test(value)) {
       setErrors({
         ...errors,
         newPassword: {
@@ -218,7 +250,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const setUserConfirmPassword = (value) => {
     setConfirmPassword(value);
 
-    if (!new RegExp(/^([a-zA-Z0-9@#$%]{8,15})$/i).test(value)) {
+    if (!validationConfig?.password.test(value)) {
       setErrors({
         ...errors,
         confirmPassword: {
@@ -255,7 +287,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
       };
 
       if (
-        !new RegExp(/^([a-zA-Z ])*$/).test(name) ||
+        !validationConfig?.name.test(name) ||
         name === "" ||
         name.length > 50 ||
         name.length < 1
@@ -268,7 +300,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
       if (
         userType === "employee" &&
-        !new RegExp(/^[6-9]{1}[0-9]{9}$/).test(mobileNumber)
+        !validationConfig?.mobileNumber.test(mobileNumber)
       ) {
         throw JSON.stringify({
           type: "error",
@@ -308,8 +340,8 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         }
 
         if (
-          !new RegExp(/^([a-zA-Z0-9@#$%]{8,15})$/i).test(newPassword) &&
-          !new RegExp(/^([a-zA-Z0-9@#$%]{8,15})$/i).test(confirmPassword)
+          !validationConfig?.password.test(newPassword) &&
+          !validationConfig?.password.test(confirmPassword)
         ) {
           throw JSON.stringify({
             type: "error",
@@ -552,7 +584,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                     onChange={(e) => setUserName(e.target.value)}
                     {...(validation = {
                       isRequired: true,
-                      pattern: "^[a-zA-Z-.`' ]*$",
+                      pattern:mdmsValidationData?.UserProfileValidationConfig?.[0]?.name || defaultValidationConfig?.UserProfileValidationConfig?.[0]?.name,
                       type: "tel",
                       title: t("CORE_COMMON_PROFILE_NAME_ERROR_MESSAGE"),
                     })}
@@ -653,7 +685,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                     placeholder="Enter Your Name"
                     {...(validation = {
                       isRequired: true,
-                      pattern: "^[a-zA-Z-.`' ]*$",
+                      pattern:mdmsValidationData?.UserProfileValidationConfig?.[0]?.name || defaultValidationConfig?.name,
                       type: "text",
                       title: t("CORE_COMMON_PROFILE_NAME_ERROR_MESSAGE"),
                     })}
@@ -728,7 +760,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                     disable={Digit.Utils.getMultiRootTenant()? false : true}
                     {...{
                       required: true,
-                      pattern: "[6-9]{1}[0-9]{9}",
+                      pattern:mdmsValidationData?.UserProfileValidationConfig?.[0]?.mobileNumber || defaultValidationConfig?.UserProfileValidationConfig?.[0]?.mobileNumber,
                       type: "tel",
                       title: t("CORE_COMMON_PROFILE_MOBILE_NUMBER_INVALID"),
                     }}
@@ -798,7 +830,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                             type={"password"}
                             isMandatory={false}
                             name="name"
-                            pattern="^([a-zA-Z0-9@#$%])+$"
+                            pattern={mdmsValidationData?.UserProfileValidationConfig?.[0]?.password || defaultValidationConfig?.password}
                             onChange={(e) => setUserCurrentPassword(e.target.value)}
                             disabled={editScreen}
                           />
@@ -826,7 +858,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                             type={"password"}
                             isMandatory={false}
                             name="name"
-                            pattern="^([a-zA-Z0-9@#$%])+$"
+                            pattern={mdmsValidationData?.UserProfileValidationConfig?.[0]?.password || defaultValidationConfig?.UserProfileValidationConfig?.[0]?.password}
                             onChange={(e) => setUserNewPassword(e.target.value)}
                             disabled={editScreen}
                           />
@@ -854,7 +886,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                             type={"password"}
                             isMandatory={false}
                             name="name"
-                            pattern="^([a-zA-Z0-9@#$%])+$"
+                            pattern={mdmsValidationData?.UserProfileValidationConfig?.[0]?.password || defaultValidationConfig?.UserProfileValidationConfig?.[0]?.password}
                             onChange={(e) => setUserConfirmPassword(e.target.value)}
                             disabled={editScreen}
                           />
