@@ -99,7 +99,11 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
   const [validationConfig,setValidationConfig] = useState(mapConfigToRegExp(defaultValidationConfig) || {});
 
-  const { data: mdmsValidationData, isValidationConfigLoading } = Digit.Hooks.useCommonMDMS(stateCode, "commonUiConfig", ["UserProfileValidationConfig"]);
+  const { data: mdmsValidationData, isValidationConfigLoading } = Digit.Hooks.useCustomMDMS(stateCode, "commonUiConfig", [{ name: "UserProfileValidationConfig" }], {
+    select: (data) => {
+      return data?.commonUiConfig;
+    },
+  });
 
   useEffect(() => {
     if(mdmsValidationData && mdmsValidationData?.UserProfileValidationConfig?.[0]){
@@ -471,7 +475,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
     }
   };
 
-  if (loading) return <Loader></Loader>;
+  if (loading || isValidationConfigLoading) return <Loader></Loader>;
 
   return (
     <div className="user-profile">
@@ -685,7 +689,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                     placeholder="Enter Your Name"
                     {...(validation = {
                       isRequired: true,
-                      pattern:mdmsValidationData?.UserProfileValidationConfig?.[0]?.name || defaultValidationConfig?.name,
+                      pattern:mdmsValidationData?.UserProfileValidationConfig?.[0]?.name || defaultValidationConfig?.UserProfileValidationConfig?.[0]?.name,
                       type: "text",
                       title: t("CORE_COMMON_PROFILE_NAME_ERROR_MESSAGE"),
                     })}
@@ -830,7 +834,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                             type={"password"}
                             isMandatory={false}
                             name="name"
-                            pattern={mdmsValidationData?.UserProfileValidationConfig?.[0]?.password || defaultValidationConfig?.password}
+                            pattern={mdmsValidationData?.UserProfileValidationConfig?.[0]?.password || defaultValidationConfig?.UserProfileValidationConfig?.[0]?.password}
                             onChange={(e) => setUserCurrentPassword(e.target.value)}
                             disabled={editScreen}
                           />
