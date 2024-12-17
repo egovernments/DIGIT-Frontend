@@ -814,49 +814,21 @@ const createUpdatePlanProject = async (req) => {
           setShowToast({ key: "error", label: "ERR_FAILED_TO_COMPLETE_SETUP" });
         }
 
-        case "ROLE_ACCESS_CONFIGURATION":{
-          // Function to run API validations
-          const searchAndUpdatePlanConfig = async (body) => {
-            try {
-              // Make the API call
-              planObject.additionalDetails.key=key
-              const response= await updatePlan(planObject);
-        
-              // Process the response if necessary
-              return response; // Return the response for further usage if needed
-            } catch (error) {
-              console.error("Error in searchPlanConfig:", error);
-              throw error; // Rethrow error to handle it further up the chain if needed
-            }
-          };
-        
-          // Request body for the API call
-          const reqBody = {
-            PlanConfigurationSearchCriteria: {
-              id: microplanId,
-              tenantId: Digit.ULBService.getCurrentTenantId(),
-            },
-          };
-        
-          // Execute the API call
-          try {
-            const apiResponse = await searchAndUpdatePlanConfig(reqBody); // Wait for the API call to complete
-        
-            // Proceed with the rest of the logic
+        case "ROLE_ACCESS_CONFIGURATION":{   
+          planObject.additionalDetails.key=key;
+          const response= await updatePlan(planObject);
+          // Return as expected
+          if(response){
             setCurrentKey((prev) => prev + 1);
-            setCurrentStep((prev) => prev + 1);
-            window.dispatchEvent(new Event("isLastStep"));
-            Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
-            Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
-        
-            // Return as expected
-            return {
-              triggeredFrom,
-            };
-          } catch (error) {
-            console.error("Error during ROLE_ACCESS_CONFIGURATION flow:", error);
-            // Optionally handle the error here, e.g., show an error message to the user
-            throw error;
+          setCurrentStep((prev) => prev + 1);
+          window.dispatchEvent(new Event("isLastStep"));
+          Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
+          Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
+          return {
+            triggeredFrom,
+          };
+          }else{
+            setShowToast({ key: "error", label: "ERR_FAILED_TO_MAKE_PLAN_CALL" });
           }
         }
         
