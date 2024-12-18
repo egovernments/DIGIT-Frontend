@@ -388,53 +388,56 @@ const UpdateChecklist = () => {
     const onSubmit = async (formData, flag = 0, preview = null) => {
         let payload;
         if (flag === 1) {
-            payload = payloadData(preview);
+          payload = payloadData(preview);
         } else {
-            payload = payloadData(formData?.createQuestion?.questionData);
+          payload = payloadData(formData?.createQuestion?.questionData);
         }
         setSubmitting(true);
         try {
-            const data = await mutateAsync(payload); // Use mutateAsync for await support
-            // Handle successful checklist creation  
-            // Proceed with localization if needed
-            let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
-            if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
-            let roleTemp = role.toUpperCase().replace(/ /g, "_");
-            uniqueLocal.push({
-                code: `${campaignName}.${checklistTypeTemp}.${roleTemp}`,
-                locale: locale,
-                message: `${t(checklistTypeLocal)} ${t(roleLocal)}`,
-                module: "hcm-checklist"
+          // Prepare localization data
+          let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
+          if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
+          let roleTemp = role.toUpperCase().replace(/ /g, "_");
+          uniqueLocal.push({
+            code: `${campaignName}.${checklistTypeTemp}.${roleTemp}`,
+            locale: locale,
+            message: `${t(checklistTypeLocal)} ${t(roleLocal)}`,
+            module: "hcm-checklist"
+          });
+      
+          // Call upsert first
+          const localisations = uniqueLocal;
+          const localisationResult = await localisationMutateAsync(localisations);
+      
+          if (!localisationResult.success) {
+            // Exit if upsert (localisation) fails
+            setShowToast({ label: "LOCALIZATION_FAILED_PLEASE_TRY_AGAIN", isError: "true" });
+            return;
+          }
+      
+          // Proceed to create checklist
+          const data = await mutateAsync(payload);
+      
+          if (data.success) { // Replace with your actual condition
+            history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
+                message: "ES_CHECKLIST_UPDATE_SUCCESS_RESPONSE",
+                preText: "ES_CHECKLIST_UPDATE_SUCCESS_RESPONSE_PRE_TEXT",
+                actionLabel: "CS_CHECKLIST_NEW_RESPONSE_ACTION",
+                actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${campaignName}&campaignId=${campaignId}&projectType=${projectType}`,
+                secondaryActionLabel: "MY_CAMPAIGN",
+                secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign`,
             });
-            if (data.success) { // Replace with your actual condition
-                const localisations = uniqueLocal;
-                const localisationResult = await localisationMutateAsync(localisations);
-                // Check if localization succeeded
-                if (!localisationResult.success) {
-                    setShowToast({ label: "CHECKLIST_UPDATE_LOCALISATION_ERROR", isError: "true" });
-                    return; // Exit if localization fails
-                }
-
-                // setShowToast({ label: "CHECKLIST_AND_LOCALISATION_CREATED_SUCCESSFULLY"});
-                history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
-                    message: "ES_CHECKLIST_UPDATE_SUCCESS_RESPONSE",
-                    preText: "ES_CHECKLIST_UPDATE_SUCCESS_RESPONSE_PRE_TEXT",
-                    actionLabel: "CS_CHECKLIST_NEW_RESPONSE_ACTION",
-                    actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${campaignName}&campaignId=${campaignId}&projectType=${projectType}`,
-                    secondaryActionLabel: "MY_CAMPAIGN",
-                    secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign`,
-                });
-            } else {
-                setShowToast({ label: "CHECKLIST_UPDATE_FAILED", isError: "true" });
-            }
-        } catch (error) {
-            // Handle error scenario
+          } else {
             setShowToast({ label: "CHECKLIST_UPDATE_FAILED", isError: "true" });
-            // console.error("Error creating checklist:", error);
+          }
+        } catch (error) {
+          // Handle error scenario
+          setShowToast({ label: "CHECKLIST_UPDATE_FAILED", isError: "true" });
+          // console.error("Error creating checklist:", error);
         } finally {
-            setSubmitting(false);
+          setSubmitting(false);
         }
-    };
+      };
 
     useEffect(()=>{
         if(showToast !== null)

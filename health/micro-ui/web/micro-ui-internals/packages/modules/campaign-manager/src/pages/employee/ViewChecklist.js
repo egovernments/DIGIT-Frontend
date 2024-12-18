@@ -1,4 +1,4 @@
-import React, { useEffect, useState, createContext, useContext } from "react";
+import React, { useEffect, useState, createContext, useContext, useCallback } from "react";
 import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
 import { useTranslation } from "react-i18next";
 import { ViewCardFieldPair, Toast, Card, TextBlock, Button, PopUp, CardText, TextInput, BreadCrumb, Loader, ActionBar, Tag} from "@egovernments/digit-ui-components";
@@ -27,6 +27,9 @@ const ViewChecklist = () => {
 
     const [viewData, setViewData] = useState(null);
 
+    const [serviceDefId, setServiceDefId] = useState(null);
+    const [updateDisable, setUpdateDisable] = useState(false);
+
     const res = {
         url: `/service-request/service/definition/v1/_search`,
         body: {
@@ -39,6 +42,7 @@ const ViewChecklist = () => {
         config: {
             select: (res) => {
                 if (res?.ServiceDefinitions?.[0]?.attributes) {
+                    setServiceDefId(res?.ServiceDefinitions?.[0]?.id);
                     const temp_data = res?.ServiceDefinitions?.[0]?.attributes
                     const formatted_data = temp_data.map((item) => item.additionalFields?.fields?.[0]?.value);
                     const nvd = formatted_data.filter((value, index, self) =>
@@ -52,7 +56,6 @@ const ViewChecklist = () => {
     const { isLoading, data, isFetching } = Digit.Hooks.useCustomAPIHook(res);
 
     useEffect(() => {
-
         if (data) {
             data.forEach((question) => {
                 if (question.type.code === "String") {
@@ -66,6 +69,48 @@ const ViewChecklist = () => {
 
     }, [data])
 
+    // Second API call - use a separate hook with conditional execution
+    const [serviceResponseParam, setServiceResponseParam] = useState(null);
+
+    useEffect(() => {
+        // Only set API params when serviceDefId is available
+        if (serviceDefId) {
+            setServiceResponseParam({
+                url: `/service-request/service/v1/_search`,
+                body: {
+                    ServiceCriteria: {
+                        "tenantId": tenantId,
+                        "serviceDefIds": [serviceDefId]
+                    }
+                },
+                config: {
+                    select: (res) => {
+                        if (res?.Services?.[0]?.auditDetails) {
+                            const lastModifiedTime = res?.Services?.[0]?.auditDetails?.lastModifiedTime;
+                            if (lastModifiedTime) {
+                                const modifiedDate = new Date(lastModifiedTime);
+                                const today = new Date();
+                                const isToday =
+                                    modifiedDate.getDate() === today.getDate() &&
+                                    modifiedDate.getMonth() === today.getMonth() &&
+                                    modifiedDate.getFullYear() === today.getFullYear();
+                                
+                                if (isToday) {
+                                    setUpdateDisable(true);
+                                }
+                            }
+                        }
+                        return res;
+                    }
+                }
+            });
+        }
+    }, [serviceDefId, tenantId]);
+
+    // Conditionally call the hook only when params are available
+    const { isLoading: secondLoading, data: secondData } = Digit.Hooks.useCustomAPIHook(
+        serviceResponseParam || {}  // Provide an empty object if params are not set
+    );
     function organizeQuestions(questions) {
         // Deep clone the questions to avoid mutating the original tempFormData
         const clonedQuestions = JSON.parse(JSON.stringify(questions));
@@ -220,6 +265,7 @@ const ViewChecklist = () => {
                 }}
                 fieldStyle={{ marginRight: 0 }}
                 noBreakLine={true}
+                isDisabled={updateDisable}
                 // cardClassName={"page-padding-fix"}
                 // onFormValueChange={onFormValueChange}
                 actionClassName={"checklistCreate"}
