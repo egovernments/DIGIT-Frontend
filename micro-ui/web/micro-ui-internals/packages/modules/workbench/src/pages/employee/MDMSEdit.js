@@ -79,7 +79,7 @@ const MDMSEdit = ({ ...props }) => {
   const localizationReqCriteria = {
     url: `/localization/messages/v1/_search?locale=${locale}&tenantId=${stateId}&module=${localizationModule}`,
     params: {},
-    body: { RequestInfo: { authToken: Digit.UserService.getUser()?.access_token || "" } },
+    body: {},
     config: {
       enabled: !!data,
       select: (respData) => {

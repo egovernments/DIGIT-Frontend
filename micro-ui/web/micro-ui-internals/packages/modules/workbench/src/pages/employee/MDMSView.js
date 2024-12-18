@@ -132,12 +132,7 @@ const MDMSView = ({ ...props }) => {
     localisableFields = schemaDef?.localisation?.localisableFields || [];
   }
 
-  // Ensure that the module matches what was used when upserting localization messages.
-  // If your messages have module "DIGIT_MDMS_RAINMAKER-PGR.SERVICEDEFS", replicate that exactly:
   const rawSchemaCode = data?.schemaCode;
-  // Convert schema code to match exactly how module was stored in messages.
-  // Example: If messages stored module as: DIGIT_MDMS_RAINMAKER-PGR.SERVICEDEFS
-  // Convert rawSchemaCode: "RAINMAKER-PGR.ServiceDefs" -> "RAINMAKER-PGR.SERVICEDEFS"
   const localizationModule = `DIGIT_MDMS_${rawSchemaCode}`.toUpperCase();
 
   const createLocalizationCode = (fieldName, fieldValue) => {
@@ -152,21 +147,10 @@ const MDMSView = ({ ...props }) => {
   }
 
   const locale = "en_IN";
-
   const localizationReqCriteria = {
     url: `/localization/messages/v1/_search?locale=${locale}&tenantId=${tenantId}&module=${localizationModule}`,
     params: {},
     body: {
-      RequestInfo: {
-        apiId: null,
-        ver: null,
-        ts: null,
-        action: "POST",
-        did: null,
-        key: null,
-        msgId: Date.now().toString(),
-        authToken: Digit.UserService.getUser()?.access_token || "",
-      }
     },
     config: {
       enabled: !!data && !!MdmsRes && !!data?.schemaCode && !!tenantId && localizationCodes.length > 0,
