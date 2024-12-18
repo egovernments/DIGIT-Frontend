@@ -209,9 +209,9 @@ export const cycleDataRemap=(data)=> {
         const roundedValue = Math.round(attr.value);
     
         if (type === "create") {
-          return `${projectType === "LLIN-mz" ? attributeCode : attributeCode.toLowerCase()}${getOperatorSymbol(attr?.operator?.code)}${roundedValue}`;
+          return `${projectType === "LLIN-mz" ? attributeCode : attributeCode.toLowerCase()}${getOperatorSymbol(attr?.operator?.code)}${projectType === "IRS-mz" ? attr?.value : roundedValue}`;
         } else {
-          return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${roundedValue}`;
+          return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${projectType === "IRS-mz" ? attr?.value : roundedValue}`;
         }
       }
     });    
