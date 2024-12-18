@@ -49,6 +49,12 @@ config:
       - work-dir: health/micro-ui/
         dockerfile: health/micro-ui/web/microplan/Dockerfile
         image-name: microplan-ui
+
+  - name: builds/Digit-Frontend/payments-ui
+    build:
+      - work-dir: health/micro-ui/
+        dockerfile: health/micro-ui/web/health-payments/Dockerfile
+        image-name: payments-ui
         
   - name: builds/Digit-Frontend/storybook-svg
     build:
