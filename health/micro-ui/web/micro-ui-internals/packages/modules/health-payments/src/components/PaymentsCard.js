@@ -28,7 +28,11 @@ const PaymentsCard = () => {
     generateLink("CS_COMMON_INBOX","generate-bill", ROLES.BILLS),
     generateLink("CS_TITLE_MY_BILLS","my-bills", ROLES.BILLS),
   ];
-  links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));
+  const hasRequiredRoles = (link) => {
+      if (!link?.roles?.length) return true;
+      return Digit.Utils.didEmployeeHasAtleastOneRole(link.roles);
+    };
+  links = links.filter(hasRequiredRoles);
 
   const propsForModuleCard = {
     Icon: "UpdateExpense",

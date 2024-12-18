@@ -7,8 +7,6 @@ import { UICustomizations } from "./Customisations/UICustomizations";
 import { initPaymentComponents } from "@egovernments/digit-ui-module-health-payments";
 
 
-window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
-
 const enabledModules = [
   "DSS",
   "NDSS",
@@ -25,7 +23,6 @@ const moduleReducers = (initData) => ({
 
 const initDigitUI = () => {
   window.Digit.ComponentRegistryService.setupRegistry({
-    
   });
 
   initPaymentComponents();
@@ -36,9 +33,13 @@ const initDigitUI = () => {
   };
 };
 
-initLibraries().then(() => {
-  initDigitUI();
-});
+initLibraries()
+  .then(() => {
+    initDigitUI();
+  })
+  .catch((error) => {
+    console.error('Failed to initialize application:', error);
+  });
 
 function App() {
   window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
@@ -53,7 +54,6 @@ function App() {
       stateCode={stateCode}
       enabledModules={enabledModules}
       moduleReducers={moduleReducers}
-      // defaultLanding="employee"
     />
   );
 }
