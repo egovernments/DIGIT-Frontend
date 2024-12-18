@@ -8,7 +8,7 @@ import useSearchHRMSEmployee from "./useSearchHRMSEmployee";
 const payments = {
   useSearchCampaign,
   useSearchHRMSEmployee,
-  useFileDownload,
+  // useFileDownload,
 };
 
 const Hooks = {

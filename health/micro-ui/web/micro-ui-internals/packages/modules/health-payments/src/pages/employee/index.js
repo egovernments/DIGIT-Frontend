@@ -20,48 +20,48 @@ const ProjectBreadCrumb = ({ location }) => {
       content: t("HOME"),
       show: true,
     },
-    {
-      internalLink: `/${window?.contextPath}/employee/microplan/user-management`,
-      content: t("USER_MANAGEMENT"),
-      show:
-        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "UPLOAD_USER" ||
-        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "USER_DOWNLOAD",
-    },
-    {
-      internalLink: `/${window?.contextPath}/employee/microplan/microplan-search`,
-      content: t("OPEN_MICROPLANS"),
-      show: (Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "SETUP_MICROPLAN" && setupCompleted==="true")
-    },  
-    {
-      internalLink: `/${window?.contextPath}/employee/microplan/my-microplans`,
-      content: t("MY_MICROPLANS"),
-      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "SELECT_ACTIVITY" ||
-      Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "POP_INBOX" ||
-      Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "ASSIGN_FACILITIES_TO_VILLAGES" ||
-      Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "PLAN_INBOX" ||
-      Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VILLAGE_VIEW",
-    }, 
-    {
-      internalLink: `/${window?.contextPath}/employee/microplan/select-activity`,
-      content: t("SELECT_ACTIVITY"),
-      query: `microplanId=${microplanId}&campaignId=${campaignId}`,
-      show:
-        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "POP_INBOX" ||
-        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "ASSIGN_FACILITIES_TO_VILLAGES" ||
-        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "PLAN_INBOX" ||
-        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VILLAGE_VIEW",
-    },
-    {
-      internalLink: `/${window?.contextPath}/employee/microplan/pop-inbox`,
-      content: t("POP_INBOX"),
-      query: `microplanId=${microplanId}&campaignId=${campaignId}`,
-      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VILLAGE_VIEW"
-    }, 
-    {
-      internalLink: `/${window?.contextPath}/employee`,
-      content: setupCompleted ? t("VIEW_SUMMARY") : t(Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop())),
-      show: true,
-    },
+    // {
+    //   internalLink: `/${window?.contextPath}/employee/microplan/user-management`,
+    //   content: t("USER_MANAGEMENT"),
+    //   show:
+    //     Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "UPLOAD_USER" ||
+    //     Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "USER_DOWNLOAD",
+    // },
+    // {
+    //   internalLink: `/${window?.contextPath}/employee/microplan/microplan-search`,
+    //   content: t("OPEN_MICROPLANS"),
+    //   show: (Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "SETUP_MICROPLAN" && setupCompleted==="true")
+    // },  
+    // {
+    //   internalLink: `/${window?.contextPath}/employee/microplan/my-microplans`,
+    //   content: t("MY_MICROPLANS"),
+    //   show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "SELECT_ACTIVITY" ||
+    //   Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "POP_INBOX" ||
+    //   Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "ASSIGN_FACILITIES_TO_VILLAGES" ||
+    //   Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "PLAN_INBOX" ||
+    //   Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VILLAGE_VIEW",
+    // }, 
+    // {
+    //   internalLink: `/${window?.contextPath}/employee/microplan/select-activity`,
+    //   content: t("SELECT_ACTIVITY"),
+    //   query: `microplanId=${microplanId}&campaignId=${campaignId}`,
+    //   show:
+    //     Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "POP_INBOX" ||
+    //     Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "ASSIGN_FACILITIES_TO_VILLAGES" ||
+    //     Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "PLAN_INBOX" ||
+    //     Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VILLAGE_VIEW",
+    // },
+    // {
+    //   internalLink: `/${window?.contextPath}/employee/microplan/pop-inbox`,
+    //   content: t("POP_INBOX"),
+    //   query: `microplanId=${microplanId}&campaignId=${campaignId}`,
+    //   show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VILLAGE_VIEW"
+    // }, 
+    // {
+    //   internalLink: `/${window?.contextPath}/employee`,
+    //   content: setupCompleted ? t("VIEW_SUMMARY") : t(Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop())),
+    //   show: true,
+    // },
    
   ];
   
@@ -221,7 +221,7 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
         <React.Fragment>
           <ProjectBreadCrumb location={location} />
         </React.Fragment>
-        <PrivateRoute
+        {/* <PrivateRoute
           path={`${path}/setup-microplan`}
           component={() => <SetupMicroplan hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />}
         />
@@ -243,7 +243,7 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
         <PrivateRoute path={`${path}/assign-facilities-to-villages`} component={() => <FacilityCatchmentMapping />} />
         <PrivateRoute path={`${path}/village-finalise-success`} component={() => <Response />} />
         <PrivateRoute path={`${path}/microplan-success`} component={() => <Response />} />
-        <PrivateRoute path={`${path}/map-view`} component={() => <MapViewComponent />} />
+        <PrivateRoute path={`${path}/map-view`} component={() => <MapViewComponent />} /> */}
       </AppContainer>
     </Switch>
   );
