@@ -837,7 +837,7 @@ const createUpdatePlanProject = async (req) => {
             triggeredFrom,
           };
           }else{
-            setShowToast({ key: "error", label: "ERR_FAILED_TO_MAKE_PLAN_CALL" });
+            setShowToast({ key: "error", label: "ERR_FAILED_TO_UPDATE_PLAN" });
           }
         }
         
