@@ -825,7 +825,7 @@ const createUpdatePlanProject = async (req) => {
             ...fetchedPlan,
             additionalDetails:{...fetchedPlanForBoundary.additionalDetails,key:key}
           };
-          const response= await updatePlan(fetchedPlan);
+          const response= await updatePlan(updatedPlanObject);
           // Return as expected
           if(response){
             setCurrentKey((prev) => prev + 1);
