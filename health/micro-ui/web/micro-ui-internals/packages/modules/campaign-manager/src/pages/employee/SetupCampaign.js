@@ -216,9 +216,9 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
 
   useEffect(() => {
     setIsSubmitting(false);
-    if (currentKey === 14 && isSummary !== "true") {
+    if (currentKey === 16 && isSummary !== "true") {
       updateUrlParams({ key: currentKey, summary: true });
-    } else if (currentKey !== 14) {
+    } else if (currentKey !== 16) {
       updateUrlParams({ key: currentKey, summary: false });
       // setSummaryErrors(null);
     }
