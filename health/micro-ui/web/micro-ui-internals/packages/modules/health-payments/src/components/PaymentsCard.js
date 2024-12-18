@@ -32,7 +32,7 @@ const PaymentsCard = () => {
 
   const propsForModuleCard = {
     Icon: "UpdateExpense",
-    moduleName: t("MICROPLAN_MODULE_SETUP"),
+    moduleName: t("HCM_ATTENDANCE_MANAGEMENT_MODULE"),
     kpis: [],
     links: links,
     className:"microplan-employee-module-card"

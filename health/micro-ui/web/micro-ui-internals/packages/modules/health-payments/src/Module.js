@@ -4,6 +4,7 @@ import { useRouteMatch } from "react-router-dom";
 import { default as EmployeeApp } from "./pages/employee";
 import PaymentsCard from "./components/PaymentsCard";
 import { overrideHooks, updateCustomConfigs } from "./utils";
+import { ProviderContext } from "./utils/context";
 
 export const PaymentsModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
