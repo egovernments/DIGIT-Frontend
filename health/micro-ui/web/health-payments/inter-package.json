@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "workspaces": [
-    "packages/modules/health-payments",
-    "packages/modules/microplan",
-    "packages/modules/campaign-manager"
+    "packages/modules/health-payments"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",

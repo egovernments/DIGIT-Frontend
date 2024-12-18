@@ -8,8 +8,6 @@
     "node": ">=14"
   },
   "workspaces": [
-    "micro-ui-internals/packages/modules/microplan",
-    "micro-ui-internals/packages/modules/campaign-manager",
     "micro-ui-internals/packages/modules/health-payments"
   ],
   "homepage": "/microplan-ui",
@@ -18,10 +16,7 @@
     "@egovernments/digit-ui-module-core": "1.8.12",
     "@egovernments/digit-ui-module-utilities": "1.0.1-beta.23",
     "@egovernments/digit-ui-react-components": "1.8.12",
-    "@egovernments/digit-ui-module-hcmmicroplanning": "0.0.2",
-    "@egovernments/digit-ui-module-microplan": "0.0.1",
     "@egovernments/digit-ui-components": "0.0.2-beta.58",
-    "@egovernments/digit-ui-module-campaign-manager": "0.3.0",
     "@egovernments/digit-ui-module-health-payments": "0.0.1",
     "babel-loader": "8.1.0",
     "clean-webpack-plugin": "4.0.0",

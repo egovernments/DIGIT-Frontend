@@ -40,4 +40,4 @@ const PaymentsCard = () => {
   return <EmployeeModuleCard {...propsForModuleCard} />;
 };
 
-export default MicroplanCard;
+export default PaymentsCard;
