@@ -815,8 +815,17 @@ const createUpdatePlanProject = async (req) => {
         }
 
         case "ROLE_ACCESS_CONFIGURATION":{   
-          planObject.additionalDetails.key=key;
-          const response= await updatePlan(planObject);
+          const fetchedPlan = await searchPlanConfig({
+            PlanConfigurationSearchCriteria: {
+              tenantId,
+              id: microplanId,
+            },
+          });
+          const updatedPlanObject = {
+            ...fetchedPlan,
+            additionalDetails:{...fetchedPlanForBoundary.additionalDetails,key:key}
+          };
+          const response= await updatePlan(fetchedPlan);
           // Return as expected
           if(response){
             setCurrentKey((prev) => prev + 1);
