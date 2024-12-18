@@ -1,21 +1,15 @@
-
-import useSearchCampaign from "./useSearchCampaign";
-import utils from "../utils/utilities";
-import useFileDownload from "./useFileDownload";
-
-import useSearchHRMSEmployee from "./useSearchHRMSEmployee";
-
+import utils from "../utils";
 const payments = {
-  useSearchCampaign,
-  useSearchHRMSEmployee,
-  // useFileDownload,
 };
 
 const Hooks = {
-  payments,
+  payments
 };
 
 const Utils = {
+  browser: {
+    payments: () => { },
+  },
   payments: {
     ...utils,
   },

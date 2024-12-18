@@ -1,8 +1,8 @@
 import _ from "lodash";
+import { UICustomizations } from "../configs/UICustomizations";
 
 
 import { CustomisedHooks } from "../hooks";
-import { UICustomizations } from "../configs/UICustomizations";
 
 
 
@@ -46,4 +46,6 @@ export const overrideHooks = () => {
     // setupLibraries("Utils", "parsingUtils", { ...window?.Digit?.Utils?.parsingUtils, ...parsingUtils });
   };
 
-  export const PRIMARY_COLOR = "#C84C0E";
+
+
+export default {};
