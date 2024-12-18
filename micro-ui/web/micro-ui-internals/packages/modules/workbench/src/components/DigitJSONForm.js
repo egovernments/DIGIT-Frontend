@@ -300,13 +300,12 @@ const DigitJSONForm = ({
     }
   }, [formData, MdmsRes, schema]);
 
-  // Define second upsert mutation using custom API hook
   const reqCriteriaSecondUpsert = {
     url: `/localization/messages/v1/_upsert`,
     params: {},
     body: {},
     config: {
-      enabled: false, // We'll call mutateAsync manually
+      enabled: false, 
     },
   };
   const secondFormatLocalizationMutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaSecondUpsert);
@@ -324,9 +323,6 @@ const DigitJSONForm = ({
       }
     }
 
-
-    // Construct second format localization messages
-    // no conditions changed, just always attempt creation
     const schemaCodeParts = schema?.code?.split(".") || [];
     const firstPart = schemaCodeParts[0]?.toLowerCase() || "default";
     const secondPart = schemaCodeParts[1]?.toUpperCase() || "";
