@@ -4,9 +4,6 @@ import { initLibraries } from "@egovernments/digit-ui-libraries";
 import { DigitUI } from "@egovernments/digit-ui-module-core";
 
 import { UICustomizations } from "./Customisations/UICustomizations";
-import { initMicroplanningComponents } from "@egovernments/digit-ui-module-hcmmicroplanning";
-import { initMicroplanComponents } from "@egovernments/digit-ui-module-microplan";
-import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
 import { initPaymentComponents } from "@egovernments/digit-ui-module-health-payments";
 
 
