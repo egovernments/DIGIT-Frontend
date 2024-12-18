@@ -141,38 +141,42 @@ function ObjectFieldTemplate(props) {
       const fieldProps = additionalProperties?.[fieldName];
       const mdmsCode = fieldProps?.mdmsCode;
       const localizationCode = fieldProps?.localizationCode;
-      return (
-        <div key={fieldName} style={{ marginBottom: "1rem" }}>
-          {/* Actual Input Field */}
-          <div className="field-wrapper object-wrapper" id={`${idSchema["$id"]}_${fieldName}`}>
-            {element.content}
-          </div>
-      
-          {/* MDMS and Localization Codes */}
-          <div className="code-details" style={{ padding: "0.5rem 1.5rem", backgroundColor: "#f9f9f9", border: "1px solid #e0e0e0", borderRadius: "4px" }}>
-            <div className="code-row" style={{ display: "flex", alignItems: "flex-start", marginBottom: "0.75rem" }}>
-              <label className="code-key" style={{ flex: "0 0 150px", fontWeight: "bold", color: "#444", textAlign: "left" }}>
-                mdms code:
-              </label>
-              <div className="code-value-container" style={{ display: "flex", flexDirection: "column", flex: "1" }}>
-                <span className="code-value" style={{ fontSize: "0.9rem", color: "#555", marginBottom: "0.2rem" }}>
-                  {mdmsCode || ""}
-                </span>
+      const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
+      if(isMultiRootTenant){
+        return (
+          <div key={fieldName} style={{ marginBottom: "1rem" }}>
+            {/* Actual Input Field */}
+            <div className="field-wrapper object-wrapper" id={`${idSchema["$id"]}_${fieldName}`}>
+              {element.content}
+            </div>
+        
+            {/* MDMS and Localization Codes */}
+            <div className="code-details" style={{ padding: "0.5rem 1.5rem", backgroundColor: "#f9f9f9", border: "1px solid #e0e0e0", borderRadius: "4px" }}>
+              <div className="code-row" style={{ display: "flex", alignItems: "flex-start", marginBottom: "0.75rem" }}>
+                <label className="code-key" style={{ flex: "0 0 150px", fontWeight: "bold", color: "#444", textAlign: "left" }}>
+                  mdms code:
+                </label>
+                <div className="code-value-container" style={{ display: "flex", flexDirection: "column", flex: "1" }}>
+                  <span className="code-value" style={{ fontSize: "0.9rem", color: "#555", marginBottom: "0.2rem" }}>
+                    {mdmsCode || ""}
+                  </span>
+                </div>
+              </div>
+              <div className="code-row" style={{ display: "flex", alignItems: "flex-start" }}>
+                <label className="code-key" style={{ flex: "0 0 150px", fontWeight: "bold", color: "#444", textAlign: "left" }}>
+                  localization code:
+                </label>
+                <div className="code-value-container" style={{ display: "flex", flexDirection: "column", flex: "1" }}>
+                  <span className="code-value" style={{ fontSize: "0.9rem", color: "#555", marginBottom: "0.2rem" }}>
+                    {localizationCode || ""}
+                  </span>
+                </div>
               </div>
             </div>
-            <div className="code-row" style={{ display: "flex", alignItems: "flex-start" }}>
-              <label className="code-key" style={{ flex: "0 0 150px", fontWeight: "bold", color: "#444", textAlign: "left" }}>
-                localization code:
-              </label>
-              <div className="code-value-container" style={{ display: "flex", flexDirection: "column", flex: "1" }}>
-                <span className="code-value" style={{ fontSize: "0.9rem", color: "#555", marginBottom: "0.2rem" }}>
-                  {localizationCode || ""}
-                </span>
-              </div>
-            </div>
           </div>
-        </div>
-      );
+        );
+      }
+
            
     }
 

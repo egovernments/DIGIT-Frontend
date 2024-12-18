@@ -46,14 +46,6 @@ const MDMSEdit = ({ ...props }) => {
 
   const { isLoading, data, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-  // Fetch UISchema to identify localisable fields
-  const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(stateId, "Workbench", [{ name: "UISchema" }], {
-    select: (data) => data?.["Workbench"]?.["UISchema"],
-  });
-
-  const localisableFields = MdmsRes?.find((item) => item.schemaCode === `${moduleName}.${masterName}`)?.localisation
-    ?.localisableFields || [];
-
   // Fetch Schema Definitions
   const reqCriteriaSchema = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/schema/v1/_search`,
@@ -70,10 +62,9 @@ const MDMSEdit = ({ ...props }) => {
         const uniqueFields = data?.SchemaDefinitions?.[0]?.definition?.["x-unique"] || [];
         const updatesToUiSchema = {};
         uniqueFields.forEach((field) => {
-          updatesToUiSchema[field] = { "ui:readonly": true }; // Disable fields dynamically
+          updatesToUiSchema[field] = { "ui:readonly": true };
         });
-        // Explicitly disable Complaint Sub-Type Code
-        updatesToUiSchema["complaintSubTypeCode"] = { "ui:readonly": true };
+        updatesToUiSchema["complaintSubTypeCode"] = { "ui:readonly": true }; // Explicitly disable Complaint Sub-Type Code
         return { schema: data?.SchemaDefinitions?.[0], updatesToUiSchema };
       },
     },
@@ -81,31 +72,22 @@ const MDMSEdit = ({ ...props }) => {
 
   const { isLoading: isSchemaLoading, data: schemaData } = Digit.Hooks.useCustomAPIHook(reqCriteriaSchema);
 
-  // Localization Search Preparation
-  const rawSchemaCode = data?.schemaCode;
-  const localizationModule = `DIGIT_MDMS_${rawSchemaCode}`.toUpperCase();
+  // Localization Search
+  const localizationModule = `DIGIT_MDMS_${data?.schemaCode}`.toUpperCase();
   const locale = "en_IN";
-  const createLocalizationCode = (fieldName, fieldValue) => {
-    const upperFieldName = fieldName.toUpperCase();
-    const transformedValue = (fieldValue || "").replace(/\s+/g, "").toUpperCase();
-    return `${rawSchemaCode}_${upperFieldName}_${transformedValue}`.toUpperCase();
-  };
-
-  const localizationCodes =
-    data?.data && localisableFields.length > 0
-      ? localisableFields.map((field) => createLocalizationCode(field.fieldPath, data.data[field.fieldPath]))
-      : [];
 
   const localizationReqCriteria = {
     url: `/localization/messages/v1/_search?locale=${locale}&tenantId=${stateId}&module=${localizationModule}`,
     params: {},
     body: { RequestInfo: { authToken: Digit.UserService.getUser()?.access_token || "" } },
     config: {
-      enabled: !!data && localizationCodes.length > 0,
+      enabled: !!data,
       select: (respData) => {
-        let messageMap = {};
+        const messageMap = {};
         if (Array.isArray(respData?.messages)) {
-          respData.messages.forEach((msg) => (messageMap[msg.code] = msg.message));
+          respData.messages.forEach((msg) => {
+            messageMap[msg.code] = msg.message;
+          });
         }
         return messageMap;
       },
@@ -114,17 +96,25 @@ const MDMSEdit = ({ ...props }) => {
 
   const { data: localizationMap, isLoading: isLocalizationLoading } = Digit.Hooks.useCustomAPIHook(localizationReqCriteria);
 
+  // Replace values with localized messages
   let finalData = data;
   if (data?.data && localizationMap) {
     const updatedData = _.cloneDeep(data);
-    localisableFields.forEach((field) => {
-      const code = createLocalizationCode(field.fieldPath, updatedData.data[field.fieldPath]);
-      if (localizationMap[code]) {
-        updatedData.data[field.fieldPath] = localizationMap[code];
+    Object.keys(updatedData.data).forEach((field) => {
+      const localizationKey = `${data.schemaCode}_${field}_${updatedData.data[field]}`.toUpperCase();
+      if (localizationMap[localizationKey]) {
+        updatedData.data[field] = localizationMap[localizationKey];
       }
     });
     finalData = updatedData;
   }
+
+  const localizationUpsertMutation = Digit.Hooks.useCustomAPIMutationHook({
+    url: `/localization/messages/v1/_upsert`,
+    params: {},
+    body: {},
+    config: { enabled: false },
+  });
 
   const reqCriteriaUpdate = {
     url: Digit.Utils.workbench.getMDMSActionURL(moduleName, masterName, "update"),
@@ -135,12 +125,46 @@ const MDMSEdit = ({ ...props }) => {
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaUpdate);
 
-  const handleUpdate = async (formData) => {
+  const handleUpdate = async (formData, additionalProperties) => {
+    const transformedFormData = { ...formData };
+
+    // Prepare Localization Messages
+    const messages = [];
+    if (additionalProperties && typeof additionalProperties === "object") {
+      for (const fieldName in additionalProperties) {
+        if (additionalProperties.hasOwnProperty(fieldName)) {
+          const fieldProps = additionalProperties[fieldName];
+          if (fieldProps?.localizationCode && fieldProps?.localizationMessage) {
+            messages.push({
+              code: fieldProps.localizationCode,
+              message: fieldProps.localizationMessage,
+              module: localizationModule,
+              locale: "en_IN",
+            });
+          }
+        }
+      }
+    }
+
+    try {
+      if (messages.length > 0) {
+        await localizationUpsertMutation.mutateAsync({
+          body: { tenantId: stateId, messages },
+        });
+      }
+    } catch (err) {
+      console.error("Localization Upsert Failed:", err);
+      setShowToast({ label: t("WBH_ERROR_LOCALIZATION"), isError: true });
+      closeToast();
+      return;
+    }
+
+    // Perform MDMS Update
     mutation.mutate(
       {
         url: reqCriteriaUpdate.url,
         params: {},
-        body: { Mdms: { ...data, data: formData } },
+        body: { Mdms: { ...data, data: transformedFormData } },
       },
       {
         onError: (resp) => {
@@ -163,7 +187,7 @@ const MDMSEdit = ({ ...props }) => {
         defaultFormData={finalData?.data}
         screenType={"edit"}
         onSubmitEditAction={handleUpdate}
-        updatesToUISchema={schemaData?.updatesToUiSchema} // Pass updatesToUiSchema
+        updatesToUISchema={schemaData?.updatesToUiSchema}
       />
       {showToast && <Toast label={t(showToast.label)} error={showToast?.isError} onClose={() => setShowToast(null)} />}
     </React.Fragment>
