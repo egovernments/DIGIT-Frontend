@@ -163,7 +163,7 @@ const MDMSSearchv2 = () => {
         // dontShowNA:true
       }]
       Config.apiDetails.serviceName=`/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`;
-        
+      console.log("configuration details are"+ JSON.stringify(Config));
       setUpdatedConfig(Config)
     }
   }, [currentSchema]);
@@ -182,6 +182,8 @@ const MDMSSearchv2 = () => {
     const additionalParamString = new URLSearchParams(additionalParams).toString();
     history.push(`/${window.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${row.uniqueIdentifier}${additionalParamString ? "&"+additionalParamString : ""}`)
   }
+
+  console.log("updated configuration"+ JSON.stringify(updatedConfig));
 
   if (isLoading) return <Loader />;
   return (

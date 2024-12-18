@@ -54,6 +54,33 @@ const MDMSEdit = ({ ...props }) => {
   const localisableFields = MdmsRes?.find((item) => item.schemaCode === `${moduleName}.${masterName}`)?.localisation
     ?.localisableFields || [];
 
+  // Fetch Schema Definitions
+  const reqCriteriaSchema = {
+    url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/schema/v1/_search`,
+    params: {},
+    body: {
+      SchemaDefCriteria: {
+        tenantId: stateId,
+        codes: [`${moduleName}.${masterName}`],
+      },
+    },
+    config: {
+      enabled: !!moduleName && !!masterName,
+      select: (data) => {
+        const uniqueFields = data?.SchemaDefinitions?.[0]?.definition?.["x-unique"] || [];
+        const updatesToUiSchema = {};
+        uniqueFields.forEach((field) => {
+          updatesToUiSchema[field] = { "ui:readonly": true }; // Disable fields dynamically
+        });
+        // Explicitly disable Complaint Sub-Type Code
+        updatesToUiSchema["complaintSubTypeCode"] = { "ui:readonly": true };
+        return { schema: data?.SchemaDefinitions?.[0], updatesToUiSchema };
+      },
+    },
+  };
+
+  const { isLoading: isSchemaLoading, data: schemaData } = Digit.Hooks.useCustomAPIHook(reqCriteriaSchema);
+
   // Localization Search Preparation
   const rawSchemaCode = data?.schemaCode;
   const localizationModule = `DIGIT_MDMS_${rawSchemaCode}`.toUpperCase();
@@ -99,7 +126,6 @@ const MDMSEdit = ({ ...props }) => {
     finalData = updatedData;
   }
 
-  // MDMS Update Mutation
   const reqCriteriaUpdate = {
     url: Digit.Utils.workbench.getMDMSActionURL(moduleName, masterName, "update"),
     params: {},
@@ -109,57 +135,12 @@ const MDMSEdit = ({ ...props }) => {
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaUpdate);
 
-  // Localization Upsert Mutation
-  const localizationUpsertMutation = Digit.Hooks.useCustomAPIMutationHook({
-    url: `/localization/messages/v1/_upsert`,
-    params: {},
-    body: {},
-    config: { enabled: false },
-  });
-
-  const handleUpdate = async (formData, additionalProperties) => {
-    const transformedFormData = { ...formData };
-
-    // Prepare Localization Messages
-    const messages = [];
-    if (additionalProperties && typeof additionalProperties === "object") {
-      for (const fieldName in additionalProperties) {
-        if (additionalProperties.hasOwnProperty(fieldName)) {
-          const fieldProps = additionalProperties[fieldName];
-          if (fieldProps?.localizationCode && fieldProps?.localizationMessage) {
-            const mdmsCode = (fieldProps.localizationMessage || "").replace(/\s+/g, "").toUpperCase();
-            messages.push({
-              code: `${rawSchemaCode}_${fieldName}_${mdmsCode}`.toUpperCase(),
-              message: fieldProps.localizationMessage,
-              module: localizationModule,
-              locale: "en_IN",
-            });
-            transformedFormData[fieldName] = mdmsCode; // Update mdmsCode
-          }
-        }
-      }
-    }
-
-    try {
-      // Perform Localization Upsert
-      if (messages.length > 0) {
-        await localizationUpsertMutation.mutateAsync({
-          body: { tenantId: stateId, messages },
-        });
-      }
-    } catch (err) {
-      console.error("Localization Upsert Failed:", err);
-      setShowToast({ label: t("WBH_ERROR_LOCALIZATION"), isError: true });
-      closeToast();
-      return;
-    }
-
-    // Perform MDMS Update
+  const handleUpdate = async (formData) => {
     mutation.mutate(
       {
         url: reqCriteriaUpdate.url,
         params: {},
-        body: { Mdms: { ...data, data: transformedFormData } },
+        body: { Mdms: { ...data, data: formData } },
       },
       {
         onError: (resp) => {
@@ -174,7 +155,7 @@ const MDMSEdit = ({ ...props }) => {
     );
   };
 
-  if (isLoading || isFetching || isLocalizationLoading || renderLoader) return <Loader />;
+  if (isLoading || isFetching || isSchemaLoading || isLocalizationLoading || renderLoader) return <Loader />;
 
   return (
     <React.Fragment>
@@ -182,7 +163,7 @@ const MDMSEdit = ({ ...props }) => {
         defaultFormData={finalData?.data}
         screenType={"edit"}
         onSubmitEditAction={handleUpdate}
-        updatesToUISchema={{ "ui:readonly": false }}
+        updatesToUISchema={schemaData?.updatesToUiSchema} // Pass updatesToUiSchema
       />
       {showToast && <Toast label={t(showToast.label)} error={showToast?.isError} onClose={() => setShowToast(null)} />}
     </React.Fragment>
