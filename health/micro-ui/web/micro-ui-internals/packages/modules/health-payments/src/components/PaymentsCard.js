@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 const ROLES = {
   ATTENDANCE: ["PROXIMITY_SUPERVISOR"],
-  BILLS: ["PROXIMITY_SUPERVISOR"],
+  BILLS: ["CAMPAIGN_SUPERVISOR"],
 };
 
 const PaymentsCard = () => {
@@ -32,7 +32,7 @@ const PaymentsCard = () => {
 
   const propsForModuleCard = {
     Icon: "UpdateExpense",
-    moduleName: t("HCM_ATTENDANCE_MANAGEMENT_MODULE"),
+    moduleName: t("HCM_PAYMENTS"),
     kpis: [],
     links: links,
     className:"microplan-employee-module-card"
