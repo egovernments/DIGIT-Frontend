@@ -765,177 +765,177 @@ export const UICustomizations = {
       }
     },
   },
-  MicroplanSearchConfig: {
-     preProcess: (data, additionalDetails) => {
-       const { name, status } = data?.state?.searchForm || {};
-       data.body.PlanConfigurationSearchCriteria = {};
-       data.body.PlanConfigurationSearchCriteria.limit = data?.state?.tableForm?.limit;
-       // data.body.PlanConfigurationSearchCriteria.limit = 10
-       data.body.PlanConfigurationSearchCriteria.offset = data?.state?.tableForm?.offset;
-       data.body.PlanConfigurationSearchCriteria.name = name;
-       data.body.PlanConfigurationSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
-       data.body.PlanConfigurationSearchCriteria.userUuid = Digit.UserService.getUser().info.uuid;
-       // delete data.body.PlanConfigurationSearchCriteria.pagination
-       data.body.PlanConfigurationSearchCriteria.status = status?.status;
-       data.body.PlanConfigurationSearchCriteria.name = data?.state?.searchForm?.microplanName;
-       cleanObject(data.body.PlanConfigurationSearchCriteria);
- 
-       const dic = {
-         0: null,
-         1: ["DRAFT"],
-         2: ["EXECUTION_TO_BE_DONE"],
-         3: ["CENSUS_DATA_APPROVAL_IN_PROGRESS", "CENSUS_DATA_APPROVED", "RESOURCE_ESTIMATION_IN_PROGRESS"],
-         4: ["RESOURCE_ESTIMATIONS_APPROVED"],
-       };
-       const url = Digit.Hooks.useQueryParams();
- 
-       const tabId = url.tabId || "0"; // Default to '0' if tabId is undefined
-       data.body.PlanConfigurationSearchCriteria.status = dic[String(tabId)];
-       cleanObject(data.body.PlanConfigurationSearchCriteria);
-       return data;
-     },
-     additionalCustomizations: (row, key, column, value, t, searchResult) => {
- 
-       switch (key) {
-         case "ACTIONS":
-           // TODO : Replace dummy file id with real file id when API is ready
-           const dummyFile = "c22a7676-d5d7-49b6-bcdb-83e9519f58df"
-           const microplanFileId = row?.campaignDetails?.additionalDetails?.microplanFileId || dummyFile;
-           let options = [];
- 
-           if (row?.status == "DRAFT") {
-             options = [{ code: "1", name: "MP_ACTIONS_EDIT_SETUP" }];
-           } else {
-             options = [{ code: "1", name: "MP_ACTIONS_VIEW_SUMMARY" }];
-           }
- 
-           const handleDownload = () => {
-             const files = row?.files;
-             const file = files.find((item) => item.templateIdentifier === "Population");
-             const fileId = file?.filestoreId;
-             if (!fileId) {
-                   console.error("Population template file not found");
-                   return;
-                 }
-             const campaignName = row?.name || "";
-             Digit.Utils.campaign.downloadExcelWithCustomName({
-               fileStoreId: fileId,
-               customName: campaignName
-             });
-           };
- 
-           const onActionSelect = (e) => {
-             if (e.name === "MP_ACTIONS_EDIT_SETUP") {
-               const key = parseInt(row?.additionalDetails?.key);
-               const resolvedKey = key === 8 ? 7 : key === 9 ? 10 : key || 2;
-               const url = `/${window.contextPath}/employee/microplan/setup-microplan?key=${resolvedKey}&microplanId=${row.id}&campaignId=${row.campaignDetails.id}`;
-               window.location.href = url;
-             }
-             if (e.name == "MP_ACTIONS_VIEW_SUMMARY") {
-               window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${
-                 row.campaignDetails.id
-               }&setup-completed=true`;
-             }
-           };
- 
-           return (
-             <div>
-               {microplanFileId && row?.status == "RESOURCE_ESTIMATIONS_APPROVED" ? (
-                 <div>
-                   <ButtonNew style={{ width: "20rem" }} icon="DownloadIcon" onClick={handleDownload} label={t("WBH_DOWNLOAD_MICROPLAN")} title={t("WBH_DOWNLOAD_MICROPLAN")}  />
-                 </div>
-               ) : (
-                 <div className={"action-button-open-microplan"}>
-                   <div style={{ position: "relative" }}>
-                     <ButtonNew
-                       type="actionButton"
-                       variation="secondary"
-                       label={t("MP_ACTIONS_FOR_MICROPLAN_SEARCH")}
-                       title={t("MP_ACTIONS_FOR_MICROPLAN_SEARCH")}
-                       options={options}
-                       style={{ width: "20rem" }}
-                       optionsKey="name"
-                       showBottom={true}
-                       isSearchable={false}
-                       onOptionSelect={(item) => onActionSelect(item)}
-                     />
-                   </div>
-                 </div>
-               )}
-             </div>
-           );
- 
-         case "NAME_OF_MICROPLAN":
-           if (value && value !== "NA") {
-             return (
-               <div
-                 style={{
-                   maxWidth: "15rem", // Set the desired maximum width
-                   wordWrap: "break-word", // Allows breaking within words
-                   whiteSpace: "normal", // Ensures text wraps normally
-                   overflowWrap: "break-word", // Break long words at the edge
-                 }}
-               >
-                 <p>{t(value)}</p>
-               </div>
-             );
-           } else {
-             return (
-               <div>
-                 <p>{t("NA")}</p>
-               </div>
-             );
-           }
- 
-         case "MICROPLAN_STATUS":
-           if (value && value != "NA") {
-             return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_STATUS_" + value))}</p>;
-           } else {
-             return (
-               <div>
-                 <p>{t("NA")}</p>
-               </div>
-             );
-           }
- 
-         case "CAMPAIGN_DISEASE":
-           if (value && value != "NA") {
-             return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_DISEASE_" + value))}</p>;
-           } else {
-             return (
-               <div>
-                 <p>{t("NA")}</p>
-               </div>
-             );
-           }
- 
-         case "CAMPAIGN_TYPE":
-           if (value && value != "NA") {
-             return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_TYPE_" + value))}</p>;
-           } else {
-             return (
-               <div>
-                 <p>{t("NA")}</p>
-               </div>
-             );
-           }
- 
-         case "DISTIRBUTION_STRATEGY":
-           if (value && value != "NA") {
-             return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_DISTRIBUTION_" + value))}</p>;
-           } else {
-             return (
-               <div>
-                 <p>{t("NA")}</p>
-               </div>
-             );
-           }
- 
-         default:
-           return null; // Handle any unexpected keys here if needed
-       }
-     },
-   },
+   MicroplanSearchConfig: {
+      preProcess: (data, additionalDetails) => {
+        const { name, status } = data?.state?.searchForm || {};
+        data.body.PlanConfigurationSearchCriteria = {};
+        data.body.PlanConfigurationSearchCriteria.limit = data?.state?.tableForm?.limit;
+        // data.body.PlanConfigurationSearchCriteria.limit = 10
+        data.body.PlanConfigurationSearchCriteria.offset = data?.state?.tableForm?.offset;
+        data.body.PlanConfigurationSearchCriteria.name = name;
+        data.body.PlanConfigurationSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
+        data.body.PlanConfigurationSearchCriteria.userUuid = Digit.UserService.getUser().info.uuid;
+        // delete data.body.PlanConfigurationSearchCriteria.pagination
+        data.body.PlanConfigurationSearchCriteria.status = status?.status;
+        data.body.PlanConfigurationSearchCriteria.name = data?.state?.searchForm?.microplanName;
+        cleanObject(data.body.PlanConfigurationSearchCriteria);
+  
+        const dic = {
+          0: null,
+          1: ["DRAFT"],
+          2: ["EXECUTION_TO_BE_DONE"],
+          3: ["CENSUS_DATA_APPROVAL_IN_PROGRESS", "CENSUS_DATA_APPROVED", "RESOURCE_ESTIMATION_IN_PROGRESS"],
+          4: ["RESOURCE_ESTIMATIONS_APPROVED"],
+        };
+        const url = Digit.Hooks.useQueryParams();
+  
+        const tabId = url.tabId || "0"; // Default to '0' if tabId is undefined
+        data.body.PlanConfigurationSearchCriteria.status = dic[String(tabId)];
+        cleanObject(data.body.PlanConfigurationSearchCriteria);
+        return data;
+      },
+      additionalCustomizations: (row, key, column, value, t, searchResult) => {
+  
+        switch (key) {
+          case "ACTIONS":
+            // TODO : Replace dummy file id with real file id when API is ready
+            const dummyFile = "c22a7676-d5d7-49b6-bcdb-83e9519f58df"
+            const microplanFileId = row?.campaignDetails?.additionalDetails?.microplanFileId || dummyFile;
+            let options = [];
+  
+            if (row?.status == "DRAFT") {
+              options = [{ code: "1", name: "MP_ACTIONS_EDIT_SETUP" }];
+            } else {
+              options = [{ code: "1", name: "MP_ACTIONS_VIEW_SUMMARY" }];
+            }
+  
+            const handleDownload = () => {
+              const files = row?.files;
+              const file = files.find((item) => item.templateIdentifier === "Population");
+              const fileId = file?.filestoreId;
+              if (!fileId) {
+                    console.error("Population template file not found");
+                    return;
+                  }
+              const campaignName = row?.name || "";
+              Digit.Utils.campaign.downloadExcelWithCustomName({
+                fileStoreId: fileId,
+                customName: campaignName
+              });
+            };
+  
+            const onActionSelect = (e) => {
+              if (e.name === "MP_ACTIONS_EDIT_SETUP") {
+                const key = parseInt(row?.additionalDetails?.key);
+                const resolvedKey = key === 8 ? 7 : key === 9 ? 10 : key || 2;
+                const url = `/${window.contextPath}/employee/microplan/setup-microplan?key=${resolvedKey}&microplanId=${row.id}&campaignId=${row.campaignDetails.id}`;
+                window.location.href = url;
+              }
+              if (e.name == "MP_ACTIONS_VIEW_SUMMARY") {
+                window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${
+                  row.campaignDetails.id
+                }&setup-completed=true`;
+              }
+            };
+  
+            return (
+              <div>
+                {microplanFileId && row?.status == "RESOURCE_ESTIMATIONS_APPROVED" ? (
+                  <div>
+                    <ButtonNew style={{ width: "20rem" }} icon="DownloadIcon" onClick={handleDownload} label={t("WBH_DOWNLOAD_MICROPLAN")} title={t("WBH_DOWNLOAD_MICROPLAN")}  />
+                  </div>
+                ) : (
+                  <div className={"action-button-open-microplan"}>
+                    <div style={{ position: "relative" }}>
+                      <ButtonNew
+                        type="actionButton"
+                        variation="secondary"
+                        label={t("MP_ACTIONS_FOR_MICROPLAN_SEARCH")}
+                        title={t("MP_ACTIONS_FOR_MICROPLAN_SEARCH")}
+                        options={options}
+                        style={{ width: "20rem" }}
+                        optionsKey="name"
+                        showBottom={true}
+                        isSearchable={false}
+                        onOptionSelect={(item) => onActionSelect(item)}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+  
+          case "NAME_OF_MICROPLAN":
+            if (value && value !== "NA") {
+              return (
+                <div
+                  style={{
+                    maxWidth: "15rem", // Set the desired maximum width
+                    wordWrap: "break-word", // Allows breaking within words
+                    whiteSpace: "normal", // Ensures text wraps normally
+                    overflowWrap: "break-word", // Break long words at the edge
+                  }}
+                >
+                  <p>{t(value)}</p>
+                </div>
+              );
+            } else {
+              return (
+                <div>
+                  <p>{t("NA")}</p>
+                </div>
+              );
+            }
+  
+          case "MICROPLAN_STATUS":
+            if (value && value != "NA") {
+              return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_STATUS_" + value))}</p>;
+            } else {
+              return (
+                <div>
+                  <p>{t("NA")}</p>
+                </div>
+              );
+            }
+  
+          case "CAMPAIGN_DISEASE":
+            if (value && value != "NA") {
+              return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_DISEASE_" + value))}</p>;
+            } else {
+              return (
+                <div>
+                  <p>{t("NA")}</p>
+                </div>
+              );
+            }
+  
+          case "CAMPAIGN_TYPE":
+            if (value && value != "NA") {
+              return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_TYPE_" + value))}</p>;
+            } else {
+              return (
+                <div>
+                  <p>{t("NA")}</p>
+                </div>
+              );
+            }
+  
+          case "DISTIRBUTION_STRATEGY":
+            if (value && value != "NA") {
+              return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_DISTRIBUTION_" + value))}</p>;
+            } else {
+              return (
+                <div>
+                  <p>{t("NA")}</p>
+                </div>
+              );
+            }
+  
+          default:
+            return null; // Handle any unexpected keys here if needed
+        }
+      },
+    },
   MyMicroplanSearchConfig: {
     preProcess: (data, additionalDetails) => {
       const { name, status } = data?.state?.searchForm || {};
