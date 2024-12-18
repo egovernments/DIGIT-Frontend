@@ -312,7 +312,6 @@ const DigitJSONForm = ({
   const secondFormatLocalizationMutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaSecondUpsert);
 
   const onSubmitV2 = async ({ formData }, e) => {
-    console.log("additional data", additionalProperties);
 
     const transformedFormData = { ...formData };
 
@@ -325,7 +324,6 @@ const DigitJSONForm = ({
       }
     }
 
-    console.log("Transformed formData before submit:", transformedFormData);
 
     // Construct second format localization messages
     // no conditions changed, just always attempt creation
@@ -350,9 +348,6 @@ const DigitJSONForm = ({
       }
     }
 
-    console.log("Attempting second format localization upsert before main onSubmit...");
-    console.log("secondFormatMessages:", secondFormatMessages);
-
     if (secondFormatMessages.length > 0) {
       try {
         await secondFormatLocalizationMutation.mutateAsync({
@@ -362,15 +357,10 @@ const DigitJSONForm = ({
             messages: secondFormatMessages
           }
         });
-        console.log("Second format localization upsert successful!");
       } catch (err) {
         console.error("Second format localization upsert failed:", err);
       }
-    } else {
-      console.log("No second format messages to upsert");
     }
-
-    // Now call main onSubmit
     onSubmit && onSubmit(transformedFormData, additionalProperties);
   };
 

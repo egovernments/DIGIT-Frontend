@@ -1052,39 +1052,39 @@ background-color: #eaffee;
 
 
 .code-details {
-  padding: 0.5rem 1.5rem; /* Retain padding for alignment */
-  background-color: #f9f9f9; /* Keep the subtle background */
-  border: 1px solid #e0e0e0; /* Existing border */
-  border-radius: 4px; /* Rounded corners */
+  padding: 0.5rem 1.5rem; 
+  background-color: #f9f9f9; 
+  border: 1px solid #e0e0e0; 
+  border-radius: 4px; 
 }
 
 .code-row {
   display: flex;
-  align-items: flex-start; /* Align items from the top */
-  margin-bottom: 0.75rem; /* Add spacing between rows */
+  align-items: flex-start; 
+  margin-bottom: 0.75rem; 
 }
 
 .code-key {
-  flex: 0 0 150px; /* Fixed width for keys */
+  flex: 0 0 150px; 
   font-size: 0.9rem;
-  font-weight: bold; /* Retain emphasis on keys */
-  color: #444; /* Key color */
+  font-weight: bold; 
+  color: #444; 
 }
 
 .code-value-container {
   display: flex;
-  flex-direction: column; /* Stack values vertically */
-  flex: 1; /* Take remaining space */
+  flex-direction: column;
+  flex: 1;
 }
 
 .code-value {
   font-size: 0.9rem;
-  color: #555; /* Value color */
-  margin-bottom: 0.2rem; /* Add spacing between stacked values */
+  color: #555; 
+  margin-bottom: 0.2rem;
 }
 
 .code-row:last-child {
-  margin-bottom: 0; /* Remove margin for the last row */
+  margin-bottom: 0; 
 }
 
 
