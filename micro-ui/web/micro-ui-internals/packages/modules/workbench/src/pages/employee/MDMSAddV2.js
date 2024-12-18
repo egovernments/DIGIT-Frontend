@@ -114,9 +114,6 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   };
 
   const onSubmit = (data, additionalProperties) => {
-    console.log("data on submit is" + JSON.stringify(data));
-    console.log("add data on submit is" + JSON.stringify(additionalProperties));
-
     toggleSpinner(true);
     const onSuccess = async (resp) => {
       // After main MDMS add success
@@ -267,7 +264,6 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   }
 
   const uiJSONSchema = formSchema?.["definition"]?.["x-ui-schema"];
-  console.log("session schema object is" + JSON.stringify(formSchema));
   return (
     <React.Fragment>
       {spinner && <DigitLoader />}

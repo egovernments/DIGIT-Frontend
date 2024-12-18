@@ -501,71 +501,9 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      console.log("data printed on the screen is"+ JSON.stringify(searchResult));
       //here we can add multiple conditions
       //like if a cell is link then we return link
       //first we can identify which column it belongs to then we can return relevant result
-
-      const rawSchemaCode = row?.schemaCode;
-      const localizationModule = `DIGIT_MDMS_${rawSchemaCode}`.toUpperCase();
-    
-      // Function to create localization codes
-      const createLocalizationCode = (fieldName, fieldValue) => {
-        const upperFieldName = String(fieldName).toUpperCase();
-        const transformedValue = String(fieldValue || "").replace(/\s+/g, "").toUpperCase();
-        return `${rawSchemaCode}_${upperFieldName}_${transformedValue}`.toUpperCase();
-      };
-    
-      // Prepare localization codes for all fields in row.data
-      const localizationCodes = Object.keys(row.data || {}).map((field) =>
-        createLocalizationCode(field, row.data[field])
-      );
-    
-      // Fetch localization messages
-      const localizationReqCriteria = {
-        url: `/localization/messages/v1/_search?locale=en_IN&tenantId=${Digit.ULBService.getCurrentTenantId()}&module=${localizationModule}`,
-        params: {},
-        body: {
-          RequestInfo: {
-            apiId: null,
-            ver: null,
-            ts: null,
-            action: "POST",
-            did: null,
-            key: null,
-            msgId: Date.now().toString(),
-            authToken: Digit.UserService.getUser()?.access_token || "",
-          },
-        },
-        config: {
-          enabled: localizationCodes.length > 0,
-          select: (respData) => {
-            let messageMap = {};
-            if (Array.isArray(respData?.messages)) {
-              respData.messages.forEach((msg) => {
-                messageMap[msg.code] = msg.message;
-              });
-            }
-            return messageMap;
-          },
-        },
-      };
-    
-      const { data: localizationMap } = Digit.Hooks.useCustomAPIHook(localizationReqCriteria);
-    
-      // Replace row data with localized values if available
-      if (localizationMap && row.data) {
-        Object.keys(row.data).forEach((field) => {
-          const code = createLocalizationCode(field, row.data[field]);
-          if (localizationMap[code]) {
-            row.data[field] = localizationMap[code]; // Replace with localized message
-            console.log("replacing the value"+ JSON.stringify(row));
-            console.log("search result here is on the screen is"+ JSON.stringify(searchResult));
-
-          }
-        });
-      }
-      
       switch (key) {
         case "WBH_UNIQUE_IDENTIFIER":
           const [moduleName, masterName] = row.schemaCode.split(".")

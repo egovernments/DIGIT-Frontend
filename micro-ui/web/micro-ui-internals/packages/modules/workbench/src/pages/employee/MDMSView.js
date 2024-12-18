@@ -149,7 +149,6 @@ const MDMSView = ({ ...props }) => {
   let localizationCodes = [];
   if (data && data.data && localisableFields.length > 0) {
     localizationCodes = localisableFields.map(field => createLocalizationCode(field.fieldPath, data.data[field.fieldPath]));
-    console.log("localizable fields constructed"+localizationCodes);
   }
 
   const locale = "en_IN";
