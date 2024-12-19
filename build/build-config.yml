@@ -19,55 +19,7 @@
 config:
 
 # frontend
-  - name: builds/Digit-Frontend/workbench-ui-core
-    build:
-      - work-dir: micro-ui/
-        dockerfile: micro-ui/web/workbench/Dockerfile
-        image-name: workbench-ui
-
-  - name: builds/Digit-Frontend/karnataka-ui
-    build:
-      - work-dir: health/micro-ui/
-        dockerfile: health/micro-ui/web/core/Dockerfile
-        image-name: core-ui
-
-
-  - name: builds/Digit-Frontend/workbench-ui
-    build:
-      - work-dir: health/micro-ui/
-        dockerfile: health/micro-ui/web/workbench/Dockerfile
-        image-name: workbench-ui
-
-  - name: builds/Digit-Frontend/sandbox-ui
-    build:
-      - work-dir: micro-ui/
-        dockerfile: micro-ui/web/sandbox/Dockerfile
-        image-name: sandbox-ui      
-
-  - name: builds/Digit-Frontend/microplan-ui
-    build:
-      - work-dir: health/micro-ui/
-        dockerfile: health/micro-ui/web/microplan/Dockerfile
-        image-name: microplan-ui
-
-  - name: builds/Digit-Frontend/payments-ui
-    build:
-      - work-dir: health/micro-ui/
-        dockerfile: health/micro-ui/web/health-payments/Dockerfile
-        image-name: payments-ui
-        
-  - name: builds/Digit-Frontend/storybook-svg
-    build:
-    - work-dir: micro-ui/web/micro-ui-internals/packages/svg-components/
-      dockerfile: micro-ui/web/micro-ui-internals/packages/svg-components/docker/Dockerfile
-      image-name: storybook-svg
-      
-  - name: builds/Digit-Frontend/storybook
-    build:
-    - work-dir: micro-ui/web/micro-ui-internals/packages/components-core/
-      dockerfile: micro-ui/web/micro-ui-internals/packages/components-core/docker/Dockerfile
-      image-name: storybook
-
+# Core Frontend Build pipelines
   - name: builds/Digit-Frontend/digit-ui
     build:
       - work-dir: micro-ui/
@@ -79,6 +31,57 @@ config:
       - work-dir: micro-ui/
         dockerfile: micro-ui/web/core/Dockerfile
         image-name: core-ui
+
+  - name: builds/Digit-Frontend/workbench-ui
+    build:
+      - work-dir: micro-ui/
+        dockerfile: micro-ui/web/workbench/Dockerfile
+        image-name: workbench-ui
+
+  - name: builds/Digit-Frontend/sandbox-ui
+    build:
+      - work-dir: micro-ui/
+        dockerfile: micro-ui/web/sandbox/Dockerfile
+        image-name: sandbox-ui 
+
+# Health Frontend Build pipelines
+  - name: builds/Digit-Frontend/health/workbench-ui
+    build:
+      - work-dir: health/micro-ui/
+        dockerfile: health/micro-ui/web/workbench/Dockerfile
+        image-name: workbench-ui
+
+    - name: builds/Digit-Frontend/health/microplan-ui
+    build:
+      - work-dir: health/micro-ui/
+        dockerfile: health/micro-ui/web/microplan/Dockerfile
+        image-name: microplan-ui      
+
+    - name: builds/Digit-Frontend/payments-ui
+    build:
+      - work-dir: health/micro-ui/
+        dockerfile: health/micro-ui/web/health-payments/Dockerfile
+        image-name: payments-ui
+
+  - name: builds/Digit-Frontend/health/core-ui
+    build:
+      - work-dir: health/micro-ui/
+        dockerfile: health/micro-ui/web/core/Dockerfile
+        image-name: core-ui
+
+ # Others       
+  - name: builds/Digit-Frontend/storybook-svg
+    build:
+    - work-dir: micro-ui/web/micro-ui-internals/packages/svg-components/
+      dockerfile: micro-ui/web/micro-ui-internals/packages/svg-components/docker/Dockerfile
+      image-name: storybook-svg
+      
+  - name: builds/Digit-Frontend/storybook
+    build:
+    - work-dir: micro-ui/web/micro-ui-internals/packages/components-core/
+      dockerfile: micro-ui/web/micro-ui-internals/packages/components-core/docker/Dockerfile
+      image-name: storybook
+        
 
   - name: builds/Digit-Frontend/utilities/egov-bff
     build:
@@ -113,9 +116,17 @@ config:
         dockerfile: micro-ui/web/docker/Dockerfile
         image-name: hrms-ui
 
-
+# Other Custom Builds for Impel
+  - name: builds/Digit-Frontend/modules/karnataka-ui
+    build:
+      - work-dir: micro-ui/
+        dockerfile: micro-ui/web/docker/Dockerfile
+        image-name: karnataka-ui
+        
   - name: builds/Digit-Frontend/modules/meghalaya-ui
     build:
       - work-dir: micro-ui/
         dockerfile: micro-ui/web/docker/Dockerfile
         image-name: meghalaya-ui
+
+
