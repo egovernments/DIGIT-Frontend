@@ -11,11 +11,13 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
   const moduleCode = ["payments"];
+  const modulePrefix = "hcm";
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
     moduleCode,
-    language
+    language,
+    modulePrefix
   });
 
 
