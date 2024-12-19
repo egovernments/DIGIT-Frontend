@@ -107,10 +107,11 @@ export const UICustomizations = {
           };
 
           const onActionSelect = (e) => {
-            if (e.name == "MP_ACTIONS_EDIT_SETUP") {
-              window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${1}&microplanId=${row.id}&campaignId=${
-                row.campaignDetails.id
-              }`;
+            if (e.name === "MP_ACTIONS_EDIT_SETUP") {
+              const key = parseInt(row?.additionalDetails?.key);
+              const resolvedKey = key === 8 ? 7 : key === 9 ? 10 : key || 2;
+              const url = `/${window.contextPath}/employee/microplan/setup-microplan?key=${resolvedKey}&microplanId=${row.id}&campaignId=${row.campaignDetails.id}`;
+              window.location.href = url;
             }
             if (e.name == "MP_ACTIONS_VIEW_SUMMARY") {
               window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${
