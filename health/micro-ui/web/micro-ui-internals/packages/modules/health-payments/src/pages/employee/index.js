@@ -3,8 +3,10 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Switch } from "react-router-dom";
 import ViewAttendance from "./ViewAttendance";
-import { BreadCrumb } from "@egovernments/digit-ui-components";
-const bredCrumbStyle = { maxWidth: "min-content" };
+import BreadCrumbs from "../../components/BreadCrumbs";
+import Response from "../../components/Response";
+
+
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
 
@@ -63,8 +65,7 @@ const ProjectBreadCrumb = ({ location }) => {
     // },
    
   ];
-  
-  return <BreadCrumbNew crumbs={crumbs} />;
+  return <BreadCrumbs crumbs={crumbs} />;
 };
 
 const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hierarchyData, lowestHierarchy }) => {
@@ -246,6 +247,7 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
         <PrivateRoute path={`${path}/microplan-success`} component={() => <Response />} />
         <PrivateRoute path={`${path}/map-view`} component={() => <MapViewComponent />} /> */}
         <PrivateRoute path={`${path}/edit-attendance`} component={() => <ViewAttendance editAttandance={true} />} />
+        <PrivateRoute path={`${path}/attendance-approve-success`} component={() => <Response />} />
       </AppContainer>
     </Switch>
   );
