@@ -39,7 +39,7 @@ const initDigitUI = () => {
 
   window.Digit.Customizations = {
     PGR: {},
-    commonUiConfig: UICustomizations,
+    commonUiConfig: {...UICustomizations,HCM_MODULE_NAME:"microplan"},
   };
 };
 
