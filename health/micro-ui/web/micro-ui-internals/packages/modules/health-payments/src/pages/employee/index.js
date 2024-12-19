@@ -2,12 +2,8 @@ import { AppContainer, BreadCrumb, Loader, PrivateRoute } from "@egovernments/di
 import BreadCrumbNew from "./BreadCrumbNew";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Switch, useLocation } from "react-router-dom";
-import { useMyContext } from "../../utils/context";
-import ViewAttendance from "./view_attendance";
-import AttendanceInbox from "./attendance_inbox";
-
-// const bredCrumbStyle = { maxWidth: "min-content" };
+import { Switch } from "react-router-dom";
+const bredCrumbStyle = { maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
 
@@ -248,6 +244,7 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
         <PrivateRoute path={`${path}/village-finalise-success`} component={() => <Response />} />
         <PrivateRoute path={`${path}/microplan-success`} component={() => <Response />} />
         <PrivateRoute path={`${path}/map-view`} component={() => <MapViewComponent />} /> */}
+        <PrivateRoute path={`${path}/edit-attendance`} component={() => <ViewAttendance editAttandance={true} />} />
       </AppContainer>
     </Switch>
   );
