@@ -1,7 +1,9 @@
-import { AppContainer, BreadCrumb, PrivateRoute } from "@egovernments/digit-ui-react-components";
+import { AppContainer, PrivateRoute } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Switch } from "react-router-dom";
+import ViewAttendance from "./ViewAttendance";
+import { BreadCrumb } from "@egovernments/digit-ui-components";
 const bredCrumbStyle = { maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
