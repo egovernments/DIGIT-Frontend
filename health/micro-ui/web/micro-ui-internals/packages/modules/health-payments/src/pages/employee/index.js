@@ -2,7 +2,7 @@ import { AppContainer, BreadCrumb, PrivateRoute } from "@egovernments/digit-ui-r
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Switch } from "react-router-dom";
-const bredCrumbStyle={ maxWidth: "min-content" };
+const bredCrumbStyle = { maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
   const crumbs = [
@@ -27,6 +27,8 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <React.Fragment>
           <ProjectBreadCrumb location={location} />
         </React.Fragment>
+        <PrivateRoute path={`${path}/view-attendance`} component={() => <ViewAttendance />} />
+        <PrivateRoute path={`${path}/edit-attendance`} component={() => <ViewAttendance editAttandance={true} />} />
       </AppContainer>
     </Switch>
   );
