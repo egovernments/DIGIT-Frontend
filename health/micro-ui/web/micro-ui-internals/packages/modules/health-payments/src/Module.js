@@ -1,5 +1,5 @@
 import { Loader } from "@egovernments/digit-ui-react-components";
-import React,{useState} from "react";
+import React, { useState } from "react";
 import { useRouteMatch } from "react-router-dom";
 import { default as EmployeeApp } from "./pages/employee";
 import PaymentsCard from "./components/PaymentsCard";
@@ -15,14 +15,13 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
     moduleCode,
-    language,
-    "hcm"
+    language
   });
 
 
   return (
     <ProviderContext>
-      <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants}/>
+      <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} />
     </ProviderContext>
   );
 };
