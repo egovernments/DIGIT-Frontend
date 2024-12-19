@@ -16,6 +16,7 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
     stateCode,
     moduleCode,
     language,
+    "hcm"
   });
 
 
