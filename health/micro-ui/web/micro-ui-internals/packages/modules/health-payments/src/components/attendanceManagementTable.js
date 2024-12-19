@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useMemo } from "react";
-import axios from "axios";
-import DataTable from "react-data-table-component";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button, Loader } from "@egovernments/digit-ui-components";
@@ -86,33 +84,9 @@ const AttendanceManagementTable = ({ ...props }) => {
   //wrapper to the table card
   //show multiple tabs
   return (
-    <DataTable
-      columns={columns}
-      data={props.data}
-      className={`data-table ${!props.disabledAction ? "selectable" : "unselectable"}`}
-      selectableRows={!props.disabledAction}
-      selectableRowsHighlight
-      noContextMenu
-      onSelectedRowsChange={handleRowSelect}
-    //   customStyles={tableCustomStyle}
-      selectableRowsComponent={CheckBox}
-      sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
-      // defaultSortFieldId={1}
-      selectableRowsComponentProps={selectProps}
-      progressPending={props?.progressPending}
-      progressComponent={<Loader />} // progressPending={loading}
-      pagination
-      paginationServer
-      paginationDefaultPage={props?.currentPage}
-      onChangePage={handlePageChange}
-      onChangeRowsPerPage={handlePerRowsChange}
-      paginationTotalRows={props?.totalRows}
-      paginationPerPage={props?.rowsPerPage}
-      paginationRowsPerPageOptions={[10, 20, 50, 100]}
-      conditionalRowStyles={props?.conditionalRowStyles}
-      fixedHeader={true}
-      fixedHeaderScrollHeight={"100vh"}
-    />
+<div>
+Revisit the table logic, use table from React/UI components
+    </div>
   );
 };
 
