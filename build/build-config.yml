@@ -51,23 +51,23 @@ config:
         dockerfile: health/micro-ui/web/workbench/Dockerfile
         image-name: workbench-ui
 
-    - name: builds/Digit-Frontend/health/microplan-ui
+  - name: builds/Digit-Frontend/health/microplan-ui
     build:
-      - work-dir: health/micro-ui/
-        dockerfile: health/micro-ui/web/microplan/Dockerfile
-        image-name: microplan-ui      
+    - work-dir: health/micro-ui/
+      dockerfile: health/micro-ui/web/microplan/Dockerfile
+      image-name: microplan-ui      
 
-    - name: builds/Digit-Frontend/health/payments-ui
+  - name: builds/Digit-Frontend/health/payments-ui
     build:
-      - work-dir: health/micro-ui/
-        dockerfile: health/micro-ui/web/health-payments/Dockerfile
-        image-name: payments-ui
+    - work-dir: health/micro-ui/
+      dockerfile: health/micro-ui/web/health-payments/Dockerfile
+      image-name: payments-ui
 
   - name: builds/Digit-Frontend/health/core-ui
     build:
-      - work-dir: health/micro-ui/
-        dockerfile: health/micro-ui/web/core/Dockerfile
-        image-name: core-ui
+    - work-dir: health/micro-ui/
+      dockerfile: health/micro-ui/web/core/Dockerfile
+      image-name: core-ui
 
  # Others       
   - name: builds/Digit-Frontend/storybook-svg
@@ -128,4 +128,3 @@ config:
       - work-dir: micro-ui/
         dockerfile: micro-ui/web/docker/Dockerfile
         image-name: meghalaya-ui
-
