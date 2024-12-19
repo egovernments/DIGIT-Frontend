@@ -16,8 +16,7 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
     moduleCode,
-    language,
-    modulePrefix
+    language
   });
 
 
