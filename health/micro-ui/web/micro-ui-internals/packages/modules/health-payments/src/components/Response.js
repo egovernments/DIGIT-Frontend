@@ -8,10 +8,6 @@ const Response = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const queryStrings = Digit.Hooks.useQueryParams();
-  const [campaignId, setCampaignId] = useState(queryStrings?.campaignId);
-  const [isResponseSuccess, setIsResponseSuccess] = useState(
-    queryStrings?.isSuccess === "true" ? true : queryStrings?.isSuccess === "false" ? false : true
-  );
   const { state } = useLocation();
   const back = state?.back ? state?.back : "BACK";
 
@@ -27,9 +23,13 @@ const Response = () => {
         className=""
         customIcon=""
         description={t(state?.description || "")}
-        // footerChildren={[
-        //     <Button label="OK" onClick={function noRefCheck() { }} type="button" />
-        // ]}
+        footerChildren={[
+          <Button label={t(`HCM_AM_VIEW_ANOTHER_REGISTER`)} onClick={
+            () => {
+              history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
+            }
+          } variation="teritiary" icon="ArrowForward" isSuffix />
+        ]}
         footerStyles={{}}
         iconFill=""
         info={t(state?.info || "")}
@@ -45,8 +45,7 @@ const Response = () => {
       <ActionBar className="mc_back">
         <Button
           style={{ margin: "0.5rem", marginLeft: "6rem" }}
-          className="microplan-response-button"
-          variation="secondary"
+          variation="primary"
           label={t(back)}
           icon={"ArrowBack"}
           onClick={() => {
