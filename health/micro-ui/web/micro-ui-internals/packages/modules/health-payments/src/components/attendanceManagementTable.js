@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Button, Loader } from "@egovernments/digit-ui-components";
+import { Button, Card, Loader, TableMolecule } from "@egovernments/digit-ui-components";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { CheckBox } from "@egovernments/digit-ui-components";
 
@@ -22,39 +22,20 @@ const AttendanceManagementTable = ({ ...props }) => {
   const columns = useMemo(() => {
     return [
       {
-        name: t(`HCM_AM_FRONTLINE_WORKER`),
-        selector: (row, index) =>
-            row.workerName,
-        // selector:(row, index)=>row.boundaryCode,
-        sortable: true,
-        sortFunction: (rowA, rowB) => {
-          const boundaryCodeA = t(rowA.boundaryCode).toLowerCase();
-          const boundaryCodeB = t(rowB.boundaryCode).toLowerCase();
-          if (boundaryCodeA < boundaryCodeB) return -1;
-          if (boundaryCodeA > boundaryCodeB) return 1;
-          return 0;
-        },
-        width: "180px",
+        label: t(`HCM_AM_FRONTLINE_WORKER`),
+        type: 'text'
       },
       {
-        name: t("HCM_AM_WORKER_ID"),
-        selector: (row, index) =>
-          row.workerId,
-        sortable: false,
+        label: t("HCM_AM_WORKER_ID"),
+        type: 'text'
       },
       {
-        name: t("HCM_AM_ROLE"),
-        selector: (row, index) =>
-            row.workerRole,
-        sortable: false,
-        width: "180px",
+        label: t("HCM_AM_ROLE"),
+        type: 'text'
       },
       {
-        name: t("HCM_AM_NO_OF_DAYS_WORKED"),
-        selector: (row, index) =>
-            row.noOfDays,
-        sortable: false,
-        width: "180px",
+        label: t("HCM_AM_NO_OF_DAYS_WORKED"),
+        type: 'serialno'
       },
     ];
   }, [props.data]);
@@ -84,8 +65,134 @@ const AttendanceManagementTable = ({ ...props }) => {
   //wrapper to the table card
   //show multiple tabs
   return (
-<div>
-Revisit the table logic, use table from React/UI components
+    <div>
+      <TableMolecule
+        actionButtonLabel=""
+        actions={[]}
+        className=""
+        footerProps={{
+          addStickyFooter: false,
+          footerContent: null,
+          hideFooter: false,
+          isStickyFooter: false,
+          scrollableStickyFooterContent: true,
+          stickyFooterContent: null
+        }}
+        frozenColumns={0}
+        headerData={columns}
+        onFilter={function noRefCheck() { }}
+        pagination={{
+          initialRowsPerPage: 2,
+          rowsPerPageOptions: [
+            2,
+            4,
+            6,
+            8,
+            10
+          ]
+        }}
+        rows={[
+          [
+            {
+              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
+              maxLength: 64
+            },
+            {
+              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
+              maxLength: 64
+            },
+            {
+              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
+              maxLength: 64
+            },
+            1
+          ],
+          [
+            {
+              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
+              maxLength: 64
+            },
+            {
+              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
+              maxLength: 64
+            },
+            {
+              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
+              maxLength: 64
+            },
+            1
+          ],
+          [
+            {
+              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
+              maxLength: 64
+            },
+            {
+              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
+              maxLength: 64
+            },
+            {
+              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
+              maxLength: 64
+            },
+            1
+          ],
+          [
+            {
+              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
+              maxLength: 64
+            },
+            {
+              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
+              maxLength: 64
+            },
+            {
+              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
+              maxLength: 64
+            },
+            1
+          ],
+          [
+            {
+              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
+              maxLength: 64
+            },
+            {
+              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
+              maxLength: 64
+            },
+            {
+              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
+              maxLength: 64
+            },
+            1
+          ],
+        ]}
+        selection={{
+          addCheckbox: false,
+          checkboxLabel: '',
+          initialSelectedRows: [],
+          onSelectedRowsChange: function noRefCheck() { },
+          showSelectedState: false
+        }}
+        sorting={{
+          customSortFunction: function noRefCheck() { },
+          initialSortOrder: '',
+          isTableSortable: false
+        }}
+        styles={{
+          extraStyles: {},
+          withAlternateBg: false,
+          withBorder: true,
+          withColumnDivider: false,
+          withHeaderDivider: true,
+          withRowDivider: true
+        }}
+        tableDetails={{
+          tableDescription: '',
+          tableTitle: ''
+        }}
+      />
     </div>
   );
 };
