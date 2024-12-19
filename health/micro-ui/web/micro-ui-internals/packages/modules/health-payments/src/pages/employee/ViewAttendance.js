@@ -5,7 +5,8 @@ import { Loader, Header } from "@egovernments/digit-ui-react-components";
 import { Divider, Button, PopUp, Card, ActionBar, Link, ViewCardFieldPair, Toast } from "@egovernments/digit-ui-components";
 import AttendanceManagementTable from "../../components/attendanceManagementTable";
 import AlertPopUp from "../../components/alertPopUp";
-import ApproveCommentPopUp from "../../components/apprvoeCommentPopUp";
+import ApproveCommentPopUp from "../../components/approveCommentPopUp";
+
 const ViewAttendance = ({ editAttandance = false }) => {
   const location = useLocation();
   const { t } = useTranslation();
