@@ -5,8 +5,7 @@ import { Loader, Header } from "@egovernments/digit-ui-react-components";
 import { Divider, Button, PopUp, Card, ActionBar, Link, ViewCardFieldPair, Toast } from "@egovernments/digit-ui-components";
 import AttendanceManagementTable from "../../components/attendanceManagementTable";
 import AlertPopUp from "../../components/alertPopUp";
-import ApproveCommentPopUp from "../../components/approveCommentPopUp";
-
+import ApproveCommentPopUp from "../../components/apprvoeCommentPopUp";
 const ViewAttendance = ({ editAttandance = false }) => {
   const location = useLocation();
   const { t } = useTranslation();
@@ -90,15 +89,6 @@ const ViewAttendance = ({ editAttandance = false }) => {
         cancelLabel={t(`HCM_AM_CANCEL`)}
         onPrimaryAction={() => {
           ///TODO:NEED TO INTEGRATE API'S
-          /// for now directly nevigating to success screen
-          history.push(`/${window.contextPath}/employee/payments/attendance-approve-success`, {
-            info: "HCM_AM_MUSTER_ROLL_ID",
-            fileName: 'dummmy name',
-            description: t(`HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION`),
-            message: t(`HCM_AM_ATTENDANCE_APPROVE_SUCCESS`),
-            back: t(`GO_BACK_TO_HOME`),
-            backlink: `/${window.contextPath}/employee`
-          });
         }}
       />}
       {openApproveCommentPopUp && <ApproveCommentPopUp
