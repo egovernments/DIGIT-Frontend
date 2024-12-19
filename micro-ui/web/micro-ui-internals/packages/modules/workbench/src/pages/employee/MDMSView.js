@@ -133,12 +133,17 @@ const MDMSView = ({ ...props }) => {
   }
 
   const rawSchemaCode = data?.schemaCode;
-  const localizationModule = `DIGIT_MDMS_${rawSchemaCode}`.toUpperCase();
+
+  const tranformLocModuleName = (localModuleName) => {
+    if (!localModuleName) return null;
+      return localModuleName.replace(/[^a-zA-Z0-9]/g, "-").toUpperCase();
+  };
+  const localizationModule = tranformLocModuleName(`DIGIT-MDMS-${rawSchemaCode}`);
 
   const createLocalizationCode = (fieldName, fieldValue) => {
     const upperFieldName = fieldName.toUpperCase();
     const transformedValue = (fieldValue || "").replace(/\s+/g, "").toUpperCase();
-    return `${rawSchemaCode}_${upperFieldName}_${transformedValue}`.toUpperCase();
+    return tranformLocModuleName(`${rawSchemaCode}_${upperFieldName}_${transformedValue}`);
   };
 
   let localizationCodes = [];
@@ -146,7 +151,7 @@ const MDMSView = ({ ...props }) => {
     localizationCodes = localisableFields.map(field => createLocalizationCode(field.fieldPath, data.data[field.fieldPath]));
   }
 
-  const locale = "en_IN";
+  let locale = Digit.SessionStorage.get("locale") || Digit.Utils.getDefaultLanguage();
   const localizationReqCriteria = {
     url: `/localization/messages/v1/_search?locale=${locale}&tenantId=${tenantId}&module=${localizationModule}`,
     params: {},
@@ -170,7 +175,7 @@ const MDMSView = ({ ...props }) => {
 
   // Transform data if localizationMap is available
   let finalData = data;
-  if (data && data.data && localizationMap && localisableFields.length > 0) {
+  if (data && data.data && localizationMap && localisableFields?.length > 0) {
     let updatedData = _.cloneDeep(data);
     localisableFields.forEach(field => {
       const code = createLocalizationCode(field.fieldPath, updatedData.data[field.fieldPath]);

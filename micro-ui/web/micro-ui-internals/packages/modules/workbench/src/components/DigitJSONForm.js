@@ -125,6 +125,11 @@ function ArrayFieldTemplate(props) {
   );
 }
 
+const tranformLocModuleName = (localModuleName) => {
+  if (!localModuleName) return null;
+    return localModuleName.replace(/[^a-zA-Z0-9]/g, "-").toUpperCase();
+};
+
 function ObjectFieldTemplate(props) {
   const { formData, schema, idSchema, formContext } = props;
   const { schemaCode, MdmsRes, additionalProperties } = formContext;
@@ -141,6 +146,7 @@ function ObjectFieldTemplate(props) {
       const fieldProps = additionalProperties?.[fieldName];
       const mdmsCode = fieldProps?.mdmsCode;
       const localizationCode = fieldProps?.localizationCode;
+      const transformedLocCode= tranformLocModuleName(localizationCode);
       const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
       if(isMultiRootTenant){
         return (
@@ -168,7 +174,7 @@ function ObjectFieldTemplate(props) {
                 </label>
                 <div className="code-value-container" style={{ display: "flex", flexDirection: "column", flex: "1" }}>
                   <span className="code-value" style={{ fontSize: "0.9rem", color: "#555", marginBottom: "0.2rem" }}>
-                    {localizationCode || ""}
+                    {transformedLocCode || ""}
                   </span>
                 </div>
               </div>
@@ -311,7 +317,7 @@ const DigitJSONForm = ({
   const secondFormatLocalizationMutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaSecondUpsert);
 
   const onSubmitV2 = async ({ formData }, e) => {
-
+    let locale = Digit.SessionStorage.get("locale") || Digit.Utils.getDefaultLanguage();
     const transformedFormData = { ...formData };
 
     for (const fieldName in additionalProperties) {

@@ -113,26 +113,35 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
     }, 5000);
   };
 
+
+  const tranformLocModuleName = (localModuleName) => {
+    if (!localModuleName) return null;
+      return localModuleName.replace(/[^a-zA-Z0-9]/g, "-").toUpperCase();
+  };
+
   const onSubmit = (data, additionalProperties) => {
+    let locale = Digit.SessionStorage.get("locale") || Digit.Utils.getDefaultLanguage();
     toggleSpinner(true);
     const onSuccess = async (resp) => {
       // After main MDMS add success
       const jsonPath = api?.responseJson ? api?.responseJson : "mdms[0].id";
       setShowToast(`${t("WBH_SUCCESS_MDMS_MSG")} ${_.get(resp, jsonPath, "NA")}`);
       setShowErrorToast(false);
-
+      let locModuleName= `digit-mdms-${schema?.code}`;
+      let transformedModuleName= tranformLocModuleName(locModuleName);
       // Build messages array from additionalProperties for localization
       const messages = [];
       if (additionalProperties && typeof additionalProperties === "object") {
         for (const fieldName in additionalProperties) {
           if (additionalProperties.hasOwnProperty(fieldName)) {
             const fieldProps = additionalProperties[fieldName];
+            let transformedLocCode= tranformLocModuleName(fieldProps?.localizationCode);
             if (fieldProps?.localizationCode && fieldProps?.localizationMessage) {
               messages.push({
-                code: fieldProps.localizationCode,
+                code: transformedLocCode,
                 message: fieldProps.localizationMessage,
                 // Append "digit_mdms_" to localization code for module
-                module: `digit_mdms_${schema?.code}`.toUpperCase(),
+                module: transformedModuleName,
                 locale: "en_IN",
               });
             }

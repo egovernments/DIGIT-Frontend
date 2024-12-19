@@ -72,9 +72,14 @@ const MDMSEdit = ({ ...props }) => {
 
   const { isLoading: isSchemaLoading, data: schemaData } = Digit.Hooks.useCustomAPIHook(reqCriteriaSchema);
 
+  const tranformLocModuleName = (localModuleName) => {
+    if (!localModuleName) return null;
+      return localModuleName.replace(/[^a-zA-Z0-9]/g, "-").toUpperCase();
+  };
+
   // Localization Search
-  const localizationModule = `DIGIT_MDMS_${data?.schemaCode}`.toUpperCase();
-  const locale = "en_IN";
+  const localizationModule = tranformLocModuleName(`DIGIT_MDMS_${data?.schemaCode}`)
+  let locale = Digit.SessionStorage.get("locale") || Digit.Utils.getDefaultLanguage();
 
   const localizationReqCriteria = {
     url: `/localization/messages/v1/_search?locale=${locale}&tenantId=${stateId}&module=${localizationModule}`,
@@ -101,7 +106,7 @@ const MDMSEdit = ({ ...props }) => {
   if (data?.data && localizationMap) {
     const updatedData = _.cloneDeep(data);
     Object.keys(updatedData.data).forEach((field) => {
-      const localizationKey = `${data.schemaCode}_${field}_${updatedData.data[field]}`.toUpperCase();
+      const localizationKey = tranformLocModuleName(`${data.schemaCode}_${field}_${updatedData.data[field]}`);
       if (localizationMap[localizationKey]) {
         updatedData.data[field] = localizationMap[localizationKey];
       }
@@ -134,12 +139,13 @@ const MDMSEdit = ({ ...props }) => {
       for (const fieldName in additionalProperties) {
         if (additionalProperties.hasOwnProperty(fieldName)) {
           const fieldProps = additionalProperties[fieldName];
+          const transformedLocCode=tranformLocModuleName(fieldProps.localizationCode)
           if (fieldProps?.localizationCode && fieldProps?.localizationMessage) {
             messages.push({
-              code: fieldProps.localizationCode,
+              code: transformedLocCode,
               message: fieldProps.localizationMessage,
               module: localizationModule,
-              locale: "en_IN",
+              locale: locale,
             });
           }
         }
