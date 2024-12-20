@@ -10,6 +10,7 @@ import AttendanceInbox from "./attendance_inbox";
 
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
+
   const crumbs = [
     {
       internalLink: `/${window?.contextPath}/employee`,
@@ -17,10 +18,17 @@ const ProjectBreadCrumb = ({ location }) => {
       show: true,
     },
     {
+      internalLink: `/${window?.contextPath}/employee/payments/registers-inbox`,
+      content: t("REGISTERS_INBOX"),
+      show:
+        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VIEW_ATTENDANCE" ||
+        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "EDIT_ATTENDANCE"
+    },
+    {
       internalLink: `/${window?.contextPath}/employee`,
       content: t(location.pathname.split("/").pop()),
       show: true,
-    },
+    }
   ];
   return <BreadCrumbs crumbs={crumbs} />;
 };
