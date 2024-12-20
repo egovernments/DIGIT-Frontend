@@ -3,7 +3,8 @@ import { Card, Header, Paragraph, CardHeader, CardSubHeader, CardText } from "@e
 import AddDeliveryRuleWrapper from "./AddDeliverycontext";
 import { CycleContext } from ".";
 import { useTranslation } from "react-i18next";
-import { InfoCard  , Stepper ,TextBlock , Tag} from "@egovernments/digit-ui-components";
+import { InfoCard  , Stepper ,TextBlock} from "@egovernments/digit-ui-components";
+import TagComponent from "../../../components/TagComponent";
 //just pass campaign data here
 // function restructureData(data) {
 //   const restructuredData = [];
@@ -279,7 +280,7 @@ const MultiTab = ({ tabCount = 3, subTabCount = 2 }) => {
           </Card>
         </div>
         <div className="card-container-delivery">
-        <Tag label={campaignName} showIcon={false} className={"campaign-tag"} type={"monochrome"} stroke={true}/>
+        <TagComponent campaignName={campaignName}></TagComponent>      
       <Header>
         {t(
           `CAMPAIGN_PROJECT_${

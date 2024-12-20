@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ViewCardFieldPair, Toast, Card, Button, PopUp, TextInput, Loader ,Tag } from "@egovernments/digit-ui-components";
+import { ViewCardFieldPair, Toast, Card, Button, PopUp, TextInput, Loader } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useHistory } from "react-router-dom";
 import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import data_hook from "../../hooks/data_hook";
 import MobileChecklist from "../../components/MobileChecklist";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
+import TagComponent from "../../components/TagComponent";
 
 let temp_data = []
 
@@ -514,8 +515,8 @@ const CreateChecklist = () => {
       {!loading_new && submitting && <Loader />}
       {!submitting && !loading_new &&
         <div>
-         <Tag label={campaignName} showIcon={false} type={"monochrome"} stroke={true} />
-          <div style={{ display: "flex", justifyContent: "space-between", height:"5.8rem", marginTop: "-1.2rem"}}>
+             <TagComponent campaignName={campaignName}></TagComponent>          
+             <div style={{ display: "flex", justifyContent: "space-between", height:"5.8rem", marginTop: "-1.2rem"}}>
             <div>
               <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>
                 {t("CREATE_NEW_CHECKLIST")}

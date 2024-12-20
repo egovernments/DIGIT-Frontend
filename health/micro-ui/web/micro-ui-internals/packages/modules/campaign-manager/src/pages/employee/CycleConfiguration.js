@@ -1,9 +1,10 @@
 import React, { useReducer, Fragment, useEffect, useState } from "react";
 import { CardText, LabelFieldPair, CardLabel, CardSubHeader, Paragraph, Header ,Card, Loader } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { TextInput, InfoCard , Stepper , TextBlock , Tag } from "@egovernments/digit-ui-components";
+import { TextInput, InfoCard , Stepper , TextBlock  } from "@egovernments/digit-ui-components";
 import { deliveryConfig } from "../../configs/deliveryConfig";
 import getDeliveryConfig from "../../utils/getDeliveryConfig";
+import TagComponent from "../../components/TagComponent";
 
 const initialState = (saved, filteredDeliveryConfig, refetch) => {
   const data = {
@@ -215,7 +216,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
           </Card>
         </div>
         <div className="card-container2">
-        <Tag label={campaignName} showIcon={false} className={"campaign-tag"} type={"monochrome"} stroke={true}/>
+        <TagComponent campaignName={campaignName}></TagComponent>        
         <Card>
       <Header>
         {t(

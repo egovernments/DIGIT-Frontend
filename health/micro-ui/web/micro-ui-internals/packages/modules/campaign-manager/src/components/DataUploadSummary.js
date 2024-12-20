@@ -2,9 +2,10 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import {  EditIcon, Header, Loader, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Toast, Stepper, TextBlock, Card , Tag} from "@egovernments/digit-ui-components";
+import { Toast, Stepper, TextBlock, Card} from "@egovernments/digit-ui-components";
 import {  downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
+import TagComponent from "./TagComponent";
 
 function mergeObjects(item) {
   const arr = item;
@@ -304,8 +305,8 @@ const DataUploadSummary = (props) => {
         </div>
 
         <div className="card-container-delivery">
-        <Tag label={campaignName} showIcon={false} className={"campaign-tag"} type={"monochrome"} stroke={true}/>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <TagComponent campaignName={campaignName}></TagComponent>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
             <Header className="summary-header">{t("HCM_DATA_UPLOAD_SUMMARY")}</Header>
             {/* {userCredential && (
           <Button

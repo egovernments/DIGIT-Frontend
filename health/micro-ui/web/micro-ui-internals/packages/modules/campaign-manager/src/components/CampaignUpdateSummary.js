@@ -2,10 +2,11 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Button, EditIcon, Header, Loader, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Toast , Tag } from "@egovernments/digit-ui-components";
+import { Toast  } from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import NoResultsFound from "./NoResultsFound";
+import TagComponent from "./TagComponent";
 
 // function boundaryDataGrp(boundaryData) {
 //   // Create an empty object to hold grouped data by type
@@ -444,8 +445,8 @@ const CampaignUpdateSummary = (props) => {
 
   return (
     <>
-      <Tag label={campaignName} showIcon={false} className={"campaign-tag"} type={"monochrome"} stroke={true}/>
-      <div style={{ display: "flex", justifyContent: "space-between" , marginBottom:"-1.5rem" }}>
+      <TagComponent campaignName={campaignName}></TagComponent>{" "}
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "-1.5rem" }}>
         <Header className="summary-header">{t("ES_TQM_SUMMARY_HEADING")}</Header>
       </div>
       <div className="campaign-summary-container">

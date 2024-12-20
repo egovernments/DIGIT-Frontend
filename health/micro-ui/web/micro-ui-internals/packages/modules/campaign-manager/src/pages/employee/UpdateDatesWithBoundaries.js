@@ -3,9 +3,10 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router-dom";
 import { dateChangeBoundaryConfig, dateChangeConfig } from "../../configs/dateChangeBoundaryConfig";
-import { Button, InfoCard, PopUp, Toast , Tag} from "@egovernments/digit-ui-components";
+import { Button, InfoCard, PopUp, Toast } from "@egovernments/digit-ui-components";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
+import TagComponent from "../../components/TagComponent";
 
 
 function UpdateDatesWithBoundaries() {
@@ -146,7 +147,7 @@ function UpdateDatesWithBoundaries() {
 
   return (
     <div>
-      <Tag label={campaignName} showIcon={false} className={"campaign-tag"} type={"monochrome"} stroke={true}/>
+      <TagComponent campaignName={campaignName}></TagComponent>
       <FormComposerV2
         label={t("CAMPAIGN_UPDATE_DATE_SUBMIT")}
         config={
