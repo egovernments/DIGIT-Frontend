@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Switch, useLocation } from "react-router-dom";
 import { useMyContext } from "../../utils/context";
 import ViewAttendance from "./view_attendance";
+import AttendanceInbox from "./attendance_inbox";
 
 // const bredCrumbStyle = { maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
@@ -223,6 +224,7 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
           <ProjectBreadCrumb location={location} />
         </React.Fragment>
         <PrivateRoute path={`${path}/view-attendance`} component={() => <ViewAttendance />} />
+        <PrivateRoute path={`${path}/registers-inbox`} component={() => <AttendanceInbox />} />
         {/* <PrivateRoute
           path={`${path}/setup-microplan`}
           component={() => <SetupMicroplan hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />}

@@ -77,11 +77,10 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-
       switch (key) {
         case "ACTIONS":
           // TODO : Replace dummy file id with real file id when API is ready
-          const dummyFile = "c22a7676-d5d7-49b6-bcdb-83e9519f58df"
+          const dummyFile = "c22a7676-d5d7-49b6-bcdb-83e9519f58df";
           const microplanFileId = row?.campaignDetails?.additionalDetails?.microplanFileId || dummyFile;
           let options = [];
 
@@ -96,13 +95,13 @@ export const UICustomizations = {
             const file = files.find((item) => item.templateIdentifier === "Population");
             const fileId = file?.filestoreId;
             if (!fileId) {
-                  console.error("Population template file not found");
-                  return;
-                }
+              console.error("Population template file not found");
+              return;
+            }
             const campaignName = row?.name || "";
             Digit.Utils.campaign.downloadExcelWithCustomName({
               fileStoreId: fileId,
-              customName: campaignName
+              customName: campaignName,
             });
           };
 
@@ -123,7 +122,13 @@ export const UICustomizations = {
             <div>
               {microplanFileId && row?.status == "RESOURCE_ESTIMATIONS_APPROVED" ? (
                 <div>
-                  <ButtonNew style={{ width: "20rem" }} icon="DownloadIcon" onClick={handleDownload} label={t("WBH_DOWNLOAD_MICROPLAN")} title={t("WBH_DOWNLOAD_MICROPLAN")}  />
+                  <ButtonNew
+                    style={{ width: "20rem" }}
+                    icon="DownloadIcon"
+                    onClick={handleDownload}
+                    label={t("WBH_DOWNLOAD_MICROPLAN")}
+                    title={t("WBH_DOWNLOAD_MICROPLAN")}
+                  />
                 </div>
               ) : (
                 <div className={"action-button-open-microplan"}>
@@ -255,19 +260,18 @@ export const UICustomizations = {
       const rolesCodes = Digit.Hooks.useSessionStorage("User", {})[0]?.info?.roles;
       const roles = rolesCodes.map((item) => item.code);
       const hasRequiredRole = roles.some((role) => role === "ROOT_POPULATION_DATA_APPROVER" || role === "POPULATION_DATA_APPROVER");
-      const handleFileDownload=()=>{
+      const handleFileDownload = () => {
         const fileId = row?.files.find((item) => item.templateIdentifier === "Population")?.filestoreId;
         if (!fileId) {
-              console.error("Population template file not found");
-              return;
-            }
+          console.error("Population template file not found");
+          return;
+        }
         const campaignName = row?.name || "";
         Digit.Utils.campaign.downloadExcelWithCustomName({
           fileStoreId: fileId,
-          customName: campaignName
+          customName: campaignName,
         });
-
-      }
+      };
       switch (key) {
         case "ACTIONS":
           const onActionSelect = (key, row) => {
@@ -559,18 +563,16 @@ export const UICustomizations = {
         params: {},
         body: {
           CampaignDetails: {
-            "tenantId": tenantId,
-            "ids": [
-              campaignId
-            ]
-          }
+            tenantId: tenantId,
+            ids: [campaignId],
+          },
         },
         changeQueryName: `boundarySearchForPlanFacility`,
         config: {
           enabled: true,
           select: (data) => {
             const result = data?.CampaignDetails?.[0]?.boundaries?.filter((item) => item.type == prop.lowestHierarchy) || [];
-            return result
+            return result;
           },
         },
       };
@@ -584,10 +586,12 @@ export const UICustomizations = {
         case "MICROPLAN_FACILITY_SERVINGPOPULATION":
           return row?.additionalDetails?.servingPopulation;
         case "MICROPLAN_FACILITY_RESIDINGVILLAGE":
-          return <div style={{ display: "flex", gap: ".5rem" }}>
-            {t(row?.residingBoundary)}
-            <VillageHierarchyTooltipWrapper boundaryCode={row?.residingBoundary} />
-          </div>
+          return (
+            <div style={{ display: "flex", gap: ".5rem" }}>
+              {t(row?.residingBoundary)}
+              <VillageHierarchyTooltipWrapper boundaryCode={row?.residingBoundary} />
+            </div>
+          );
         case "MICROPLAN_FACILITY_ASSIGNED_VILLAGES":
           const assignedVillages = row?.serviceBoundaries;
           return assignedVillages ? assignedVillages.length : null;
@@ -624,6 +628,83 @@ export const UICustomizations = {
         default:
           return null;
       }
+    },
+  },
+
+  AttendanceInboxConfig: {
+    preProcess: (data) => {
+      //set tenantId
+      data.body.tenantId = Digit.ULBService.getCurrentTenantId();
+
+      //adding tenantId to moduleSearchCriteria
+
+      //setting limit and offset becoz somehow they are not getting set in muster inbox
+
+      return data;
+    },
+
+    // postProcess: (responseArray, uiConfig) => {
+    //   debugger;
+    //   const statusOptions = responseArray?.statusMap
+    //     ?.filter((item) => item.applicationstatus)
+    //     ?.map((item) => ({ code: item.applicationstatus, i18nKey: `COMMON_MASTERS_${item.applicationstatus}` }));
+    //   if (uiConfig?.type === "filter") {
+    //     let fieldConfig = uiConfig?.fields?.filter((item) => item.type === "dropdown" && item.populators.name === "musterRollStatus");
+    //     if (fieldConfig.length) {
+    //       fieldConfig[0].populators.options = statusOptions;
+    //     }
+    //   }
+    // },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      
+      //registerNumber
+      // const tenantId = searchResult[0]?.ProcessInstance?.tenantId;
+
+      switch (key) {
+        case "ATTENDANCE_ID":
+          
+          return <span className="link">{Digit.Utils.navigateToViewAttendance(row.registerNumber)}</span>;
+        case "MB_ASSIGNEE":
+          return value ? <span>{value?.[0]?.name}</span> : <span>{t("NA")}</span>;
+        case "MB_WORKFLOW_STATE":
+          return <span>{t(`MB_STATE_${value}`)}</span>;
+        case "MB_AMOUNT":
+          return <Amount customStyle={{ textAlign: "right" }} value={Math.round(value)} t={t}></Amount>;
+        case "MB_SLA_DAYS_REMAINING":
+          return value > 0 ? <span className="sla-cell-success">{value}</span> : <span className="sla-cell-error">{value}</span>;
+        default:
+          return t("ES_COMMON_NA");
+      }
+    },
+
+    MobileDetailsOnClick: (row, tenantId) => {
+      let link;
+      Object.keys(row).map((key) => {
+        if (key === "ATM_MUSTER_ROLL_ID")
+          link = `/${window.contextPath}/employee/attendencemgmt/view-attendance?tenantId=${tenantId}&musterRollNumber=${row[key]}`;
+      });
+      return link;
+    },
+    populateReqCriteria: () => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      return {
+        url: "/org-services/organisation/v1/_search",
+        params: { limit: 50, offset: 0 },
+        body: {
+          SearchCriteria: {
+            tenantId: tenantId,
+            functions: {
+              type: "CBO",
+            },
+          },
+        },
+        config: {
+          enabled: true,
+          select: (data) => {
+            return data?.organisations;
+          },
+        },
+      };
     },
   },
 };

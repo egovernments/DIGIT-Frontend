@@ -183,68 +183,69 @@ export const UICustomizations = {
   },
 
   AttendanceInboxConfig: {
-    preProcess: (data) => {
+    // preProcess: (data) => {
       
-      //set tenantId
-      data.body.inbox.tenantId = Digit.ULBService.getCurrentTenantId();
-      data.body.inbox.processSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
+    //   //set tenantId
+    //   data.body.inbox.tenantId = Digit.ULBService.getCurrentTenantId();
+    //   data.body.inbox.processSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
 
-      const musterRollNumber = data?.body?.inbox?.moduleSearchCriteria?.musterRollNumber?.trim();
-      if(musterRollNumber) data.body.inbox.moduleSearchCriteria.musterRollNumber = musterRollNumber
+    //   const musterRollNumber = data?.body?.inbox?.moduleSearchCriteria?.musterRollNumber?.trim();
+    //   if(musterRollNumber) data.body.inbox.moduleSearchCriteria.musterRollNumber = musterRollNumber
 
-      const attendanceRegisterName = data?.body?.inbox?.moduleSearchCriteria?.attendanceRegisterName?.trim();
-      if(attendanceRegisterName) data.body.inbox.moduleSearchCriteria.attendanceRegisterName = attendanceRegisterName
+    //   const attendanceRegisterName = data?.body?.inbox?.moduleSearchCriteria?.attendanceRegisterName?.trim();
+    //   if(attendanceRegisterName) data.body.inbox.moduleSearchCriteria.attendanceRegisterName = attendanceRegisterName
 
-      // deleting them for now(assignee-> need clarity from pintu,ward-> static for now,not implemented BE side)
-      const assignee = _.clone(data.body.inbox.moduleSearchCriteria.assignee);
-      delete data.body.inbox.moduleSearchCriteria.assignee;
-      if (assignee?.code === "ASSIGNED_TO_ME") {
-        data.body.inbox.moduleSearchCriteria.assignee = Digit.UserService.getUser().info.uuid;
-      }
+    //   // deleting them for now(assignee-> need clarity from pintu,ward-> static for now,not implemented BE side)
+    //   const assignee = _.clone(data.body.inbox.moduleSearchCriteria.assignee);
+    //   delete data.body.inbox.moduleSearchCriteria.assignee;
+    //   if (assignee?.code === "ASSIGNED_TO_ME") {
+    //     data.body.inbox.moduleSearchCriteria.assignee = Digit.UserService.getUser().info.uuid;
+    //   }
 
-      //cloning locality and workflow states to format them
-      // let locality = _.clone(data.body.inbox.moduleSearchCriteria.locality ? data.body.inbox.moduleSearchCriteria.locality : []);
+    //   //cloning locality and workflow states to format them
+    //   // let locality = _.clone(data.body.inbox.moduleSearchCriteria.locality ? data.body.inbox.moduleSearchCriteria.locality : []);
       
-      let selectedOrg =  _.clone(data.body.inbox.moduleSearchCriteria.orgId ? data.body.inbox.moduleSearchCriteria.orgId : null);
-      delete data.body.inbox.moduleSearchCriteria.orgId;
-      if(selectedOrg) {
-         data.body.inbox.moduleSearchCriteria.orgId = selectedOrg?.[0]?.applicationNumber;
-      }
+    //   let selectedOrg =  _.clone(data.body.inbox.moduleSearchCriteria.orgId ? data.body.inbox.moduleSearchCriteria.orgId : null);
+    //   delete data.body.inbox.moduleSearchCriteria.orgId;
+    //   if(selectedOrg) {
+    //      data.body.inbox.moduleSearchCriteria.orgId = selectedOrg?.[0]?.applicationNumber;
+    //   }
 
-      // let selectedWard =  _.clone(data.body.inbox.moduleSearchCriteria.ward ? data.body.inbox.moduleSearchCriteria.ward : null);
-      // delete data.body.inbox.moduleSearchCriteria.ward;
-      // if(selectedWard) {
-      //    data.body.inbox.moduleSearchCriteria.ward = selectedWard?.[0]?.code;
-      // }
+    //   // let selectedWard =  _.clone(data.body.inbox.moduleSearchCriteria.ward ? data.body.inbox.moduleSearchCriteria.ward : null);
+    //   // delete data.body.inbox.moduleSearchCriteria.ward;
+    //   // if(selectedWard) {
+    //   //    data.body.inbox.moduleSearchCriteria.ward = selectedWard?.[0]?.code;
+    //   // }
 
-      let states = _.clone(data.body.inbox.moduleSearchCriteria.state ? data.body.inbox.moduleSearchCriteria.state : []);
-      let ward = _.clone(data.body.inbox.moduleSearchCriteria.ward ? data.body.inbox.moduleSearchCriteria.ward : []);
-      // delete data.body.inbox.moduleSearchCriteria.locality;
-      delete data.body.inbox.moduleSearchCriteria.state;
-      delete data.body.inbox.moduleSearchCriteria.ward;
+    //   let states = _.clone(data.body.inbox.moduleSearchCriteria.state ? data.body.inbox.moduleSearchCriteria.state : []);
+    //   let ward = _.clone(data.body.inbox.moduleSearchCriteria.ward ? data.body.inbox.moduleSearchCriteria.ward : []);
+    //   // delete data.body.inbox.moduleSearchCriteria.locality;
+    //   delete data.body.inbox.moduleSearchCriteria.state;
+    //   delete data.body.inbox.moduleSearchCriteria.ward;
 
-      // locality = locality?.map((row) => row?.code);
-      states = Object.keys(states)?.filter((key) => states[key]);
-      ward = ward?.map((row) => row?.code);
+    //   // locality = locality?.map((row) => row?.code);
+    //   states = Object.keys(states)?.filter((key) => states[key]);
+    //   ward = ward?.map((row) => row?.code);
       
       
-      // //adding formatted data to these keys
-      // if (locality.length > 0) data.body.inbox.moduleSearchCriteria.locality = locality;
-      if (states.length > 0) data.body.inbox.moduleSearchCriteria.status = states;  
-      if (ward.length > 0) data.body.inbox.moduleSearchCriteria.ward = ward;
-      const projectType = _.clone(data.body.inbox.moduleSearchCriteria.projectType ? data.body.inbox.moduleSearchCriteria.projectType : {});
-      if (projectType?.code) data.body.inbox.moduleSearchCriteria.projectType = projectType.code;
+    //   // //adding formatted data to these keys
+    //   // if (locality.length > 0) data.body.inbox.moduleSearchCriteria.locality = locality;
+    //   if (states.length > 0) data.body.inbox.moduleSearchCriteria.status = states;  
+    //   if (ward.length > 0) data.body.inbox.moduleSearchCriteria.ward = ward;
+    //   const projectType = _.clone(data.body.inbox.moduleSearchCriteria.projectType ? data.body.inbox.moduleSearchCriteria.projectType : {});
+    //   if (projectType?.code) data.body.inbox.moduleSearchCriteria.projectType = projectType.code;
 
-      //adding tenantId to moduleSearchCriteria
-      data.body.inbox.moduleSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
+    //   //adding tenantId to moduleSearchCriteria
+    //   data.body.inbox.moduleSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
 
-      //setting limit and offset becoz somehow they are not getting set in muster inbox 
-      data.body.inbox .limit = data.state.tableForm.limit
-      data.body.inbox.offset = data.state.tableForm.offset
-      delete data.state
-      return data;
-    },
+    //   //setting limit and offset becoz somehow they are not getting set in muster inbox 
+    //   data.body.inbox .limit = data.state.tableForm.limit
+    //   data.body.inbox.offset = data.state.tableForm.offset
+    //   delete data.state
+    //   return data;
+    // },
     postProcess: (responseArray, uiConfig) => {
+      debugger;
       const statusOptions = responseArray?.statusMap
         ?.filter((item) => item.applicationstatus)
         ?.map((item) => ({ code: item.applicationstatus, i18nKey: `COMMON_MASTERS_${item.applicationstatus}` }));

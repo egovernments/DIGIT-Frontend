@@ -34,7 +34,6 @@
     "styled-components": "5.0.0",
     "leaflet": "^1.9.4",
     "chroma-js": "^2.4.2",
-    "axios": "^1.6.8",
     "exceljs": "^4.4.0",
     "focus-trap-react": "^10.2.3",
     "geojson-validation": "^1.0.2",
