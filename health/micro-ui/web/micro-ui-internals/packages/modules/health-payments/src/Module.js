@@ -17,7 +17,7 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
     stateCode,
     moduleCode,
     language,
-    modulePrefix
+    modulePrefix,
   });
 
 
