@@ -76,7 +76,7 @@ const UpdateBoundaryWrapper = ({ onSelect,...props }) => {
 
   return (
     <>
-      <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
+      <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} type={"monochrome"} stroke={true}/>
       <Card>
       <Header>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</Header>
       <p className="description-type">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
@@ -101,6 +101,7 @@ const UpdateBoundaryWrapper = ({ onSelect,...props }) => {
           label="Info"
           text={t("CAMPAIGN_CANNOT_REMOVE_PREVIOUS_BOUNDARIES")}
           variant="default"
+          style={{ margin: "0rem", maxWidth: "100%" , marginTop: "1.5rem" , marginBottom: "2rem"}}
         />
       </div>
     </>

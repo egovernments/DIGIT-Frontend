@@ -146,7 +146,7 @@ function UpdateDatesWithBoundaries() {
 
   return (
     <div>
-      <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
+      <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} type={"monochrome"} stroke={true}/>
       <FormComposerV2
         label={t("CAMPAIGN_UPDATE_DATE_SUBMIT")}
         config={

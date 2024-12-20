@@ -373,7 +373,22 @@ const CampaignSummary = (props) => {
                 {
                   type: "DATA",
                   cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                  cardSecondaryAction: isPreview === "true" && (
+                  // cardSecondaryAction: isPreview === "true" && (
+                  //   <Button
+                  //     className={"campaign-type-alert-button"}
+                  //     type={"button"}
+                  //     size={"large"}
+                  //     variation={"primary"}
+                  //     label={t("ES_CAMPAIGN_DOWNLOAD_USER_DETAILS")}
+                  //     onClick={() => {
+                  //       setTimeline(true);
+                  //       setResource(resourceIdArr);
+                  //       setCampaignId(data?.[0]?.id);
+
+                  //     }}
+                  //   />
+                  // ),
+                  cardSecondaryAction: isPreview === "true" ? (
                     <Button
                       className={"campaign-type-alert-button"}
                       type={"button"}
@@ -384,9 +399,16 @@ const CampaignSummary = (props) => {
                         setTimeline(true);
                         setResource(resourceIdArr);
                         setCampaignId(data?.[0]?.id);
-
                       }}
                     />
+                  ) : (
+                    <div
+                      className="campaign-preview-edit-container"
+                      onClick={() => handleRedirect(4)}
+                    >
+                      <span>{t("CAMPAIGN_EDIT")}</span>
+                      <EditIcon />
+                    </div>
                   ),
                   values: [
                     {

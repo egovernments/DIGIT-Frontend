@@ -279,7 +279,7 @@ const MultiTab = ({ tabCount = 3, subTabCount = 2 }) => {
           </Card>
         </div>
         <div className="card-container-delivery">
-        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
+        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} type={"monochrome"} stroke={true}/>
       <Header>
         {t(
           `CAMPAIGN_PROJECT_${
