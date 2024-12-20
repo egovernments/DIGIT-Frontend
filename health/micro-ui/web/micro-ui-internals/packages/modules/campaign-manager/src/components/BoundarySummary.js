@@ -152,7 +152,7 @@ const BoundarySummary = (props) => {
         </div>
 
         <div className="card-container-delivery">
-        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} type={"monochrome"} stroke={true} />
+        <Tag label={campaignName} showIcon={false} className={"campaign-tag"} type={"monochrome"} stroke={true} />
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Header className="summary-header">{t("ES_BOUNDARY_SUMMARY_HEADING")}</Header>
       </div>

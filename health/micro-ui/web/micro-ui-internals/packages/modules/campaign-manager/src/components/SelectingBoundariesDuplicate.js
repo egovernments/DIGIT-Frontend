@@ -112,7 +112,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
         </div>
 
         <div className="card-container-delivery">
-        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} type={"monochrome"} stroke={true}/>
+        <Tag label={campaignName} showIcon={false} className={"campaign-tag"} type={"monochrome"} stroke={true}/>
           <Card>
             <Header>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</Header>
             <p className="description-type">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>

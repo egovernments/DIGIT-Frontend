@@ -1132,7 +1132,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
 
         <div className={parentId ? "card-container2" : "card-container1"}>
-        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} type={"monochrome"} stroke={true}/>
+        <Tag label={campaignName} showIcon={false} className={"campaign-tag"} type={"monochrome"} stroke={true}/>
         <Card>
           <div className="campaign-bulk-upload">
             <Header className="digit-form-composer-sub-header">

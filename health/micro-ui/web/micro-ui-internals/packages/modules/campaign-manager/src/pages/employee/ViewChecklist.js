@@ -140,7 +140,7 @@ const ViewChecklist = () => {
 
     return (
         <div style={{marginBottom: "2rem"}}>
-            <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} type={"monochrome"} stroke={true} />
+            <Tag label={campaignName} showIcon={false} type={"monochrome"} stroke={true} />
             <div style={{ display: "flex", justifyContent: "space-between", height:"5.8rem", marginTop:"-1.2rem" }}>
                 <div>
                     <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed"}}>
