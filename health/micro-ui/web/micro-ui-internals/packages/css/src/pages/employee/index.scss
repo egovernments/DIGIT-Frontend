@@ -238,10 +238,9 @@
         border-right: none;
       }
     }
-  }
+  } 
 
   .campaign-product-table {
-    margin-bottom: 1rem;
     border: 1px solid #d6d5d4;
     overflow: hidden;
     border-radius: 4px;
@@ -792,6 +791,19 @@ tbody {
   border-color: #D4D5D6;
   border-radius: 0.25rem;
   padding: 1rem;
+  padding-bottom: 0rem;
+}
+
+.summary-parent-group {
+  border-width: 0.063rem;
+  background: theme(digitv2.lightTheme.paper-secondary);
+  border-color: #D4D5D6;
+  border-radius: 0.25rem;
+  padding: 1rem;
+}
+
+.summary-parent-group:not(:last-child) {
+  margin-bottom: 1.5rem;
 }
 
 .card-container {
