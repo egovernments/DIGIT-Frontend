@@ -46,6 +46,7 @@
   "resolutions": {
     "**/@babel/runtime": "7.20.1",
     "**/babel-preset-react-app": "10.0.0",
+    "**/@babel/traverse":"7.25.9",
     "**/ajv": "8.11.2",
     "fast-uri":"2.1.0"
   },
