@@ -1,5 +1,9 @@
 import utils from "../utils";
+import useProjectSearch from "./project/useProjectSearch";
+import useProjectStaffSearch from "./project/useProjectStaffSearch";
 const payments = {
+  useProjectSearch,
+  useProjectStaffSearch,
 };
 
 const Hooks = {
