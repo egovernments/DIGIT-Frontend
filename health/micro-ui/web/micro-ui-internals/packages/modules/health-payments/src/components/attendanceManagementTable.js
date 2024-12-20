@@ -93,80 +93,35 @@ const AttendanceManagementTable = ({ ...props }) => {
         }}
         rows={[
           [
-            {
-              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
-              maxLength: 64
-            },
-            {
-              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
-              maxLength: 64
-            },
-            {
-              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
-              maxLength: 64
-            },
-            1
+            { label: "Worker A", maxLength: 64 },
+            { label: "Engineer", maxLength: 64 },
+            { label: "Additional Info", maxLength: 64 },
+            1,
           ],
           [
-            {
-              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
-              maxLength: 64
-            },
-            {
-              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
-              maxLength: 64
-            },
-            {
-              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
-              maxLength: 64
-            },
-            1
+            { label: "Worker B", maxLength: 64 },
+            { label: "Technician", maxLength: 64 },
+            { label: "Additional Info", maxLength: 64 },
+            2,
           ],
           [
-            {
-              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
-              maxLength: 64
-            },
-            {
-              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
-              maxLength: 64
-            },
-            {
-              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
-              maxLength: 64
-            },
-            1
+            { label: "Worker C", maxLength: 64 },
+            { label: "Manager", maxLength: 64 },
+            { label: "Additional Info", maxLength: 64 },
+            3,
           ],
           [
-            {
-              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
-              maxLength: 64
-            },
-            {
-              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
-              maxLength: 64
-            },
-            {
-              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
-              maxLength: 64
-            },
-            1
+            { label: "Worker D", maxLength: 64 },
+            { label: "Analyst", maxLength: 64 },
+            { label: "Additional Info", maxLength: 64 },
+            4,
           ],
           [
-            {
-              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
-              maxLength: 64
-            },
-            {
-              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
-              maxLength: 64
-            },
-            {
-              label: 'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
-              maxLength: 64
-            },
-            1
-          ],
+            { label: "Worker E", maxLength: 64 },
+            { label: "Supervisor", maxLength: 64 },
+            { label: "Additional Info", maxLength: 64 },
+            5,
+          ]
         ]}
         selection={{
           addCheckbox: false,

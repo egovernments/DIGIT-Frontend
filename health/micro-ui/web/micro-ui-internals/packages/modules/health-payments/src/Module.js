@@ -17,15 +17,62 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
     stateCode,
     moduleCode,
     language,
-    modulePrefix
+    modulePrefix,
   });
+  let user = Digit?.SessionStorage.get("User");
+  const staffs = Digit.Hooks.payments.useProjectStaffSearch({
+    data: {
+    "ProjectStaff": {
+      "staffId": [user?.info?.uuid]
+      }
+    },
+    params: {
+      "tenantId": tenantId,
+      "offset": 0,
+      "limit": 100
+    },
+    config: {
+      select: (data) => {
+        return data?.map(item => {
+          return {
+          "id" : item.projectId,
+          "tenantId": tenantId,
+          };
+        })
+      }
+    }
+});
+
+const staffProjects = staffs?.data;
+
+const assignedProjects = Digit.Hooks.payments.useProjectSearch({
+  data: {
+  "Projects": staffProjects
+  },
+  params: {
+    "tenantId": tenantId,
+    "offset": 0,
+    "limit": 100
+  },
+  config: {
+    enabled: staffProjects?.length > 0 ? true : false
+  }
+});
+
+ Digit.SessionStorage.set("staffProjects", assignedProjects?.data); 
 
 
-  return (
-    <ProviderContext>
-      <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} />
-    </ProviderContext>
-  );
+
+  if (isLoading || staffs?.isLoading || assignedProjects?.isLoading) {
+    return <Loader />;
+  }
+  else{
+    return (
+      <ProviderContext>
+        <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} />
+      </ProviderContext>
+    );
+}
 };
 
 const componentsToRegister = {
