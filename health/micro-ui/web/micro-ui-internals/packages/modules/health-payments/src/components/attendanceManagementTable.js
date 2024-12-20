@@ -50,40 +50,21 @@ const AttendanceManagementTable = ({ ...props }) => {
     return baseColumns;
   }, [props.editAttendance, t]);
 
+  // Map attendance data to rows
   const rows = useMemo(() => {
-    return [
-      [
-        { label: "Worker A", maxLength: 64 },
-        { label: "Engineer", maxLength: 64 },
-        { label: "Additional Info", maxLength: 64 },
-        props.editAttendance ? <div><TextInput type={"numeric"} value={1} /></div> : 1,
-      ],
-      [
-        { label: "Worker B", maxLength: 64 },
-        { label: "Technician", maxLength: 64 },
-        { label: "Additional Info", maxLength: 64 },
-        props.editAttendance ? <div><TextInput type={"numeric"} value={2} /></div> : 2,
-      ],
-      [
-        { label: "Worker C", maxLength: 64 },
-        { label: "Manager", maxLength: 64 },
-        { label: "Additional Info", maxLength: 64 },
-        props.editAttendance ? <div><TextInput type={"numeric"} value={3} /></div> : 3,
-      ],
-      [
-        { label: "Worker D", maxLength: 64 },
-        { label: "Analyst", maxLength: 64 },
-        { label: "Additional Info", maxLength: 64 },
-        props.editAttendance ? <div><TextInput type={"numeric"} value={4} /></div> : 4,
-      ],
-      [
-        { label: "Worker E", maxLength: 64 },
-        { label: "Supervisor", maxLength: 64 },
-        { label: "Additional Info", maxLength: 64 },
-        props.editAttendance ? <div><TextInput type={"numeric"} value={5} /></div> : 5,
-      ],
-    ];
-  }, [props.editAttendance]);
+    return props.data.map(([name, id, role, daysWorked]) => [
+      { label: name, maxLength: 64 },
+      { label: id, maxLength: 64 },
+      { label: role, maxLength: 64 },
+      props.editAttendance ? (
+        <div>
+          <TextInput type={"numeric"} value={daysWorked} />
+        </div>
+      ) : (
+        daysWorked
+      ),
+    ]);
+  }, [props.data, props.editAttendance]);
 
   const handlePageChange = (page, totalRows) => {
     props?.handlePageChange(page, totalRows);
