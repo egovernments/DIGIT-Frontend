@@ -3,6 +3,7 @@ import MDMSAdd from "./MDMSAddV2";
 import { Loader, Toast } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
+import { buildLocalizationMessages } from "./localizationUtility";
 import _ from "lodash";
 
 const MDMSEdit = ({ ...props }) => {
@@ -64,7 +65,6 @@ const MDMSEdit = ({ ...props }) => {
         uniqueFields.forEach((field) => {
           updatesToUiSchema[field] = { "ui:readonly": true };
         });
-        updatesToUiSchema["complaintSubTypeCode"] = { "ui:readonly": true }; // Explicitly disable Complaint Sub-Type Code
         return { schema: data?.SchemaDefinitions?.[0], updatesToUiSchema };
       },
     },
@@ -78,8 +78,8 @@ const MDMSEdit = ({ ...props }) => {
   };
 
   // Localization Search
-  const localizationModule = tranformLocModuleName(`DIGIT_MDMS_${data?.schemaCode}`)
-  let locale = Digit.SessionStorage.get("locale") || Digit.Utils.getDefaultLanguage();
+  const localizationModule = tranformLocModuleName(`DIGIT_MDMS_${data?.schemaCode}`).toLowerCase();
+  let locale=Digit.StoreData.getCurrentLanguage();
 
   const localizationReqCriteria = {
     url: `/localization/messages/v1/_search?locale=${locale}&tenantId=${stateId}&module=${localizationModule}`,
@@ -129,29 +129,13 @@ const MDMSEdit = ({ ...props }) => {
   };
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaUpdate);
-
   const handleUpdate = async (formData, additionalProperties) => {
     const transformedFormData = { ...formData };
-
-    // Prepare Localization Messages
-    const messages = [];
-    if (additionalProperties && typeof additionalProperties === "object") {
-      for (const fieldName in additionalProperties) {
-        if (additionalProperties.hasOwnProperty(fieldName)) {
-          const fieldProps = additionalProperties[fieldName];
-          const transformedLocCode=tranformLocModuleName(fieldProps.localizationCode)
-          if (fieldProps?.localizationCode && fieldProps?.localizationMessage) {
-            messages.push({
-              code: transformedLocCode,
-              message: fieldProps.localizationMessage,
-              module: localizationModule,
-              locale: locale,
-            });
-          }
-        }
-      }
-    }
-
+    const locale = Digit.StoreData.getCurrentLanguage();
+  
+    // Prepare Localization Messages using the utility function
+    const messages = buildLocalizationMessages(additionalProperties, localizationModule, locale);
+  
     try {
       if (messages.length > 0) {
         await localizationUpsertMutation.mutateAsync({
@@ -164,7 +148,7 @@ const MDMSEdit = ({ ...props }) => {
       closeToast();
       return;
     }
-
+  
     // Perform MDMS Update
     mutation.mutate(
       {

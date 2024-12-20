@@ -316,55 +316,64 @@ const DigitJSONForm = ({
   };
   const secondFormatLocalizationMutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaSecondUpsert);
 
-  const onSubmitV2 = async ({ formData }, e) => {
-    let locale = Digit.SessionStorage.get("locale") || Digit.Utils.getDefaultLanguage();
-    const transformedFormData = { ...formData };
-
-    for (const fieldName in additionalProperties) {
-      if (additionalProperties.hasOwnProperty(fieldName)) {
-        const fieldProps = additionalProperties[fieldName];
-        if (fieldProps?.localizationCode) {
-          transformedFormData[fieldName] = fieldProps.mdmsCode;
-        }
+const transformFormDataWithProperties = (formData, additionalProperties) => {
+  const transformedFormData = { ...formData };
+  for (const fieldName in additionalProperties) {
+    if (additionalProperties.hasOwnProperty(fieldName)) {
+      const fieldProps = additionalProperties[fieldName];
+      if (fieldProps?.localizationCode) {
+        transformedFormData[fieldName] = fieldProps.mdmsCode;
       }
     }
+  }
+  return transformedFormData;
+};
 
-    const schemaCodeParts = schema?.code?.split(".") || [];
-    const firstPart = schemaCodeParts[0]?.toLowerCase() || "default";
-    const secondPart = schemaCodeParts[1]?.toUpperCase() || "";
+// Utility function to construct second format localization messages
+const buildSecondFormatMessages = (additionalProperties, schemaCode, locale) => {
+  const schemaCodeParts = schemaCode?.split(".") || [];
+  const firstPart = schemaCodeParts[0]?.toLowerCase() || "default";
+  const secondPart = schemaCodeParts[1]?.toUpperCase() || "";
 
-    const secondFormatMessages = [];
-    for (const fieldName in additionalProperties) {
-      if (additionalProperties.hasOwnProperty(fieldName)) {
-        const fieldProps = additionalProperties[fieldName];
-        const { mdmsCode, localizationMessage } = fieldProps;
-        if (mdmsCode && localizationMessage) {
-          const code = `${secondPart}.${mdmsCode}`;
-          secondFormatMessages.push({
-            code: code,
-            message: localizationMessage,
-            module: firstPart,
-            locale: "en_IN",
-          });
-        }
-      }
-    }
-
-    if (secondFormatMessages.length > 0) {
-      try {
-        await secondFormatLocalizationMutation.mutateAsync({
-          params: {},
-          body: {
-            tenantId: tenantId,
-            messages: secondFormatMessages
-          }
+  const messages = [];
+  for (const fieldName in additionalProperties) {
+    if (additionalProperties.hasOwnProperty(fieldName)) {
+      const fieldProps = additionalProperties[fieldName];
+      const { mdmsCode, localizationMessage } = fieldProps;
+      if (mdmsCode && localizationMessage) {
+        const code = `${secondPart}.${mdmsCode}`;
+        messages.push({
+          code: code,
+          message: localizationMessage,
+          module: firstPart,
+          locale: locale,
         });
-      } catch (err) {
-        console.error("Second format localization upsert failed:", err);
       }
     }
-    onSubmit && onSubmit(transformedFormData, additionalProperties);
-  };
+  }
+  return messages;
+};
+
+const onSubmitV2 = async ({ formData }, e) => {
+  let locale = Digit.StoreData.getCurrentLanguage();
+  const transformedFormData = transformFormDataWithProperties(formData, additionalProperties);
+  const secondFormatMessages = buildSecondFormatMessages(additionalProperties, schema?.code, locale);
+  if (secondFormatMessages.length > 0) {
+    try {
+      await secondFormatLocalizationMutation.mutateAsync({
+        params: {},
+        body: {
+          tenantId: tenantId,
+          messages: secondFormatMessages,
+        },
+      });
+    } catch (err) {
+      console.error("Second format localization upsert failed:", err);
+    }
+  }
+  onSubmit && onSubmit(transformedFormData, additionalProperties);
+};
+
 
   const customWidgets = { SelectWidget: v2 ? CustomDropdown : CustomDropdownV2, CheckboxWidget: CustomCheckbox };
 

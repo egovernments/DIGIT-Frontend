@@ -138,7 +138,7 @@ const MDMSView = ({ ...props }) => {
     if (!localModuleName) return null;
       return localModuleName.replace(/[^a-zA-Z0-9]/g, "-").toUpperCase();
   };
-  const localizationModule = tranformLocModuleName(`DIGIT-MDMS-${rawSchemaCode}`);
+  const localizationModule = tranformLocModuleName(`DIGIT-MDMS-${rawSchemaCode}`).toLowerCase();
 
   const createLocalizationCode = (fieldName, fieldValue) => {
     const upperFieldName = fieldName.toUpperCase();
@@ -151,7 +151,7 @@ const MDMSView = ({ ...props }) => {
     localizationCodes = localisableFields.map(field => createLocalizationCode(field.fieldPath, data.data[field.fieldPath]));
   }
 
-  let locale = Digit.SessionStorage.get("locale") || Digit.Utils.getDefaultLanguage();
+  let locale=Digit.StoreData.getCurrentLanguage();
   const localizationReqCriteria = {
     url: `/localization/messages/v1/_search?locale=${locale}&tenantId=${tenantId}&module=${localizationModule}`,
     params: {},

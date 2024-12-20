@@ -5,6 +5,7 @@ import { useHistory } from "react-router-dom";
 import { DigitJSONForm } from "../../Module";
 import _ from "lodash";
 import { DigitLoader } from "../../components/DigitLoader";
+import { buildLocalizationMessages } from "./localizationUtility";
 
 /*
 
@@ -120,41 +121,24 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   };
 
   const onSubmit = (data, additionalProperties) => {
-    let locale = Digit.SessionStorage.get("locale") || Digit.Utils.getDefaultLanguage();
+    let locale = Digit.StoreData.getCurrentLanguage();
     toggleSpinner(true);
+  
     const onSuccess = async (resp) => {
       // After main MDMS add success
       const jsonPath = api?.responseJson ? api?.responseJson : "mdms[0].id";
       setShowToast(`${t("WBH_SUCCESS_MDMS_MSG")} ${_.get(resp, jsonPath, "NA")}`);
       setShowErrorToast(false);
-      let locModuleName= `digit-mdms-${schema?.code}`;
-      let transformedModuleName= tranformLocModuleName(locModuleName);
-      // Build messages array from additionalProperties for localization
-      const messages = [];
-      if (additionalProperties && typeof additionalProperties === "object") {
-        for (const fieldName in additionalProperties) {
-          if (additionalProperties.hasOwnProperty(fieldName)) {
-            const fieldProps = additionalProperties[fieldName];
-            let transformedLocCode= tranformLocModuleName(fieldProps?.localizationCode);
-            if (fieldProps?.localizationCode && fieldProps?.localizationMessage) {
-              messages.push({
-                code: transformedLocCode,
-                message: fieldProps.localizationMessage,
-                // Append "digit_mdms_" to localization code for module
-                module: transformedModuleName,
-                locale: "en_IN",
-              });
-            }
-          }
-        }
-      }
-
+  
+      const locModuleName = `digit-mdms-${schema?.code}`;
+      const messages = buildLocalizationMessages(additionalProperties, locModuleName, locale);
+  
       if (messages.length > 0) {
         const localizationBody = {
           tenantId: tenantId,
           messages: messages,
         };
-
+  
         // Perform localization upsert
         localizationMutation.mutate(
           {
@@ -168,7 +152,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
               setShowErrorToast(true);
               closeToast();
             },
-            onSuccess: (upsertResp) => {
+            onSuccess: () => {
               toggleSpinner(false);
               setSessionFormData({});
               setSession({});
@@ -186,14 +170,14 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
         gotoView();
       }
     };
-
+  
     const onError = (resp) => {
       toggleSpinner(false);
       setShowToast(`${t("WBH_ERROR_MDMS_DATA")} ${t(resp?.response?.data?.Errors?.[0]?.code)}`);
       setShowErrorToast(true);
       closeToast();
     };
-
+  
     _.set(body, api?.requestJson ? api?.requestJson : "Mdms.data", { ...data });
     mutation.mutate(
       {
