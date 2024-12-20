@@ -32,7 +32,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
           <ProjectBreadCrumb location={location} />
         </React.Fragment>
         <PrivateRoute path={`${path}/view-attendance`} component={() => <ViewAttendance />} />
-        <PrivateRoute path={`${path}/edit-attendance`} component={() => <ViewAttendance editAttandance={true} />} />
+        <PrivateRoute path={`${path}/edit-attendance`} component={() => <ViewAttendance editAttendance={true} />} />
         <PrivateRoute path={`${path}/attendance-approve-success`} component={() => <Response />} />
       </AppContainer>
     </Switch>

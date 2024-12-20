@@ -7,7 +7,7 @@ import AttendanceManagementTable from "../../components/attendanceManagementTabl
 import AlertPopUp from "../../components/alertPopUp";
 import ApproveCommentPopUp from "../../components/approveCommentPopUp";
 
-const ViewAttendance = ({ editAttandance = false }) => {
+const ViewAttendance = ({ editAttendance = false }) => {
   const location = useLocation();
   const { t } = useTranslation();
   const history = useHistory();
@@ -42,7 +42,7 @@ const ViewAttendance = ({ editAttandance = false }) => {
     <React.Fragment>
       <div>
         <Header styles={{ marginBottom: "1rem" }} className="pop-inbox-header">
-          {editAttandance ? t('HCM_AM_EDIT_ATTENDANCE') : t('HCM_AM_VIEW_ATTENDANCE')}
+          {editAttendance ? t('HCM_AM_EDIT_ATTENDANCE') : t('HCM_AM_VIEW_ATTENDANCE')}
         </Header>
         <Card type="primary" className="middle-child">
           <div className="label-pair">
@@ -67,7 +67,7 @@ const ViewAttendance = ({ editAttandance = false }) => {
           </div>
         </Card>
         <Card>
-          <AttendanceManagementTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} data={hardCodeData} editAttendance={editAttandance} />
+          <AttendanceManagementTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} data={hardCodeData} editAttendance={editAttendance} />
         </Card>
       </div>
       {openEditAlertPopUp && <AlertPopUp
@@ -112,7 +112,7 @@ const ViewAttendance = ({ editAttandance = false }) => {
       />}
       <ActionBar
         actionFields={[
-          editAttandance ? (
+          editAttendance ? (
             <Button
               icon="CheckCircle"
               label={t(`HCM_AM_SUBMIT_LABEL`)}
