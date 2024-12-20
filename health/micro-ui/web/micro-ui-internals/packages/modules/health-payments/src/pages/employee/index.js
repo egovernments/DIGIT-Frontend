@@ -5,6 +5,7 @@ import { Switch } from "react-router-dom";
 import ViewAttendance from "./ViewAttendance";
 import BreadCrumbs from "../../components/BreadCrumbs";
 import Response from "../../components/Response";
+import AttendanceInbox from "./attendance_inbox";
 
 
 const ProjectBreadCrumb = ({ location }) => {
@@ -34,6 +35,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/view-attendance`} component={() => <ViewAttendance />} />
         <PrivateRoute path={`${path}/edit-attendance`} component={() => <ViewAttendance editAttandance={true} />} />
         <PrivateRoute path={`${path}/attendance-approve-success`} component={() => <Response />} />
+        <PrivateRoute path={`${path}/registers-inbox`} component={() => <AttendanceInbox />} />
       </AppContainer>
     </Switch>
   );

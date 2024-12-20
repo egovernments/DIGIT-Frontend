@@ -1,4 +1,5 @@
 import { Link, useHistory } from "react-router-dom";
+import React, { useState, Fragment } from "react";
 import _ from "lodash";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
@@ -114,4 +115,86 @@ export const UICustomizations = {
           }
         },
       },
+
+      AttendanceInboxConfig: {
+    preProcess: (data) => {
+      //set tenantId
+      data.body.tenantId = Digit.ULBService.getCurrentTenantId();
+
+      //adding tenantId to moduleSearchCriteria
+
+      //setting limit and offset becoz somehow they are not getting set in muster inbox
+
+      return data;
+    },
+
+    // postProcess: (responseArray, uiConfig) => {
+    //   debugger;
+    //   const statusOptions = responseArray?.statusMap
+    //     ?.filter((item) => item.applicationstatus)
+    //     ?.map((item) => ({ code: item.applicationstatus, i18nKey: `COMMON_MASTERS_${item.applicationstatus}` }));
+    //   if (uiConfig?.type === "filter") {
+    //     let fieldConfig = uiConfig?.fields?.filter((item) => item.type === "dropdown" && item.populators.name === "musterRollStatus");
+    //     if (fieldConfig.length) {
+    //       fieldConfig[0].populators.options = statusOptions;
+    //     }
+    //   }
+    // },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      
+      //registerNumber
+      // const tenantId = searchResult[0]?.ProcessInstance?.tenantId;
+
+      switch (key) {
+         case "ATTENDANCE_ID":
+                return (
+                  <span className="link">
+                    <Link to={`/${window?.contextPath}/employee/payments/view-attendance`}>
+                       {String(row.registerNumber ? row.registerNumber : t("ES_COMMON_NA"))}
+                    </Link>
+                  </span>
+                );
+        case "MB_ASSIGNEE":
+          return value ? <span>{value?.[0]?.name}</span> : <span>{t("NA")}</span>;
+        case "MB_WORKFLOW_STATE":
+          return <span>{t(`MB_STATE_${value}`)}</span>;
+        case "MB_AMOUNT":
+          return <Amount customStyle={{ textAlign: "right" }} value={Math.round(value)} t={t}></Amount>;
+        case "MB_SLA_DAYS_REMAINING":
+          return value > 0 ? <span className="sla-cell-success">{value}</span> : <span className="sla-cell-error">{value}</span>;
+        default:
+          return t("ES_COMMON_NA");
+      }
+    },
+
+    MobileDetailsOnClick: (row, tenantId) => {
+      let link;
+      Object.keys(row).map((key) => {
+        if (key === "ATM_MUSTER_ROLL_ID")
+          link = `/${window.contextPath}/employee/attendencemgmt/view-attendance?tenantId=${tenantId}&musterRollNumber=${row[key]}`;
+      });
+      return link;
+    },
+    populateReqCriteria: () => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      return {
+        url: "/org-services/organisation/v1/_search",
+        params: { limit: 50, offset: 0 },
+        body: {
+          SearchCriteria: {
+            tenantId: tenantId,
+            functions: {
+              type: "CBO",
+            },
+          },
+        },
+        config: {
+          enabled: true,
+          select: (data) => {
+            return data?.organisations;
+          },
+        },
+      };
+    },
+  },
 };
