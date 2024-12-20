@@ -5,7 +5,7 @@ export const buildLocalizationMessages = (additionalProperties, moduleName, loca
     const messages = [];
   
     for (const fieldName in additionalProperties) {
-      if (additionalProperties.hasOwnProperty(fieldName)) {
+      if (Object.hasOwn(additionalProperties, fieldName)) {
         const fieldProps = additionalProperties[fieldName];
         const transformedLocCode = tranformLocModuleName(fieldProps?.localizationCode);
   
