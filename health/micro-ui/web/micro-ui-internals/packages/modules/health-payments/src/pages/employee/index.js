@@ -1,12 +1,13 @@
-import { AppContainer, PrivateRoute } from "@egovernments/digit-ui-react-components";
-import React from "react";
+import { AppContainer, BreadCrumb, Loader, PrivateRoute } from "@egovernments/digit-ui-react-components";
+import BreadCrumbNew from "./BreadCrumbNew";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Switch } from "react-router-dom";
-import ViewAttendance from "./ViewAttendance";
-import BreadCrumbs from "../../components/BreadCrumbs";
-import Response from "../../components/Response";
+import { Switch, useLocation } from "react-router-dom";
+import { useMyContext } from "../../utils/context";
+import ViewAttendance from "./view_attendance";
+import AttendanceInbox from "./attendance_inbox";
 
-
+// const bredCrumbStyle = { maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
 
@@ -65,7 +66,8 @@ const ProjectBreadCrumb = ({ location }) => {
     // },
    
   ];
-  return <BreadCrumbs crumbs={crumbs} />;
+  
+  return <BreadCrumbNew crumbs={crumbs} />;
 };
 
 const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hierarchyData, lowestHierarchy }) => {
@@ -222,8 +224,30 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
           <ProjectBreadCrumb location={location} />
         </React.Fragment>
         <PrivateRoute path={`${path}/view-attendance`} component={() => <ViewAttendance />} />
-        <PrivateRoute path={`${path}/edit-attendance`} component={() => <ViewAttendance editAttandance={true} />} />
-        <PrivateRoute path={`${path}/attendance-approve-success`} component={() => <Response />} />
+        <PrivateRoute path={`${path}/registers-inbox`} component={() => <AttendanceInbox />} />
+        {/* <PrivateRoute
+          path={`${path}/setup-microplan`}
+          component={() => <SetupMicroplan hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />}
+        />
+        <PrivateRoute path={`${path}/microplan-search`} component={() => <MicroplanSearch></MicroplanSearch>} />
+        <PrivateRoute path={`${path}/user-management`} component={() => <UserManagement></UserManagement>} />
+        <PrivateRoute path={`${path}/user-download`} component={() => <UserDownload />} />
+        <PrivateRoute path={`${path}/select-activity`} component={() => <ChooseActivity />} />
+        <PrivateRoute path={`${path}/campaign-boundary`} component={() => <CampaignBoundary />} />
+        <PrivateRoute path={`${path}/test`} component={() => <SearchUnderJurisdiction></SearchUnderJurisdiction>} />
+        <PrivateRoute path={`${path}/table`} component={() => <TableNew />} />
+        <PrivateRoute path={`${path}/pop-inbox`} component={() => <PopInbox />} />
+        <PrivateRoute path={`${path}/plan-inbox`} component={() => <PlanInbox />} />
+        <PrivateRoute path={`${path}/upload-user`} component={() => <UserUpload />} />
+        <PrivateRoute path={`${path}/village-view`} component={() => <VillageView />} />
+        <PrivateRoute path={`${path}/my-microplans`} component={() => <MyMicroplans />} />
+        <PrivateRoute path={`${path}/upload-user-success`} component={() => <Response />} />
+        <PrivateRoute path={`${path}/setup-completed-response`} component={() => <Response />} />
+        <PrivateRoute path={`${path}/population-finalise-success`} component={() => <Response />} />
+        <PrivateRoute path={`${path}/assign-facilities-to-villages`} component={() => <FacilityCatchmentMapping />} />
+        <PrivateRoute path={`${path}/village-finalise-success`} component={() => <Response />} />
+        <PrivateRoute path={`${path}/microplan-success`} component={() => <Response />} />
+        <PrivateRoute path={`${path}/map-view`} component={() => <MapViewComponent />} /> */}
       </AppContainer>
     </Switch>
   );
