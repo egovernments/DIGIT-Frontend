@@ -55,6 +55,7 @@ import ViewHierarchy from "./pages/employee/ViewHierarchy";
 import MultiSelectDropdown from "./components/MultiSelectDropdown";
 import MapView from "./components/MapView";
 import NoResultsFound from "./components/NoResultsFound";
+import TagComponent from "./components/TagComponent";
 
 /**
  * MDMS Module name
@@ -161,7 +162,8 @@ const componentsToRegister = {
   ViewHierarchy,
   BoundarySummary,
   MapView,
-  NoResultsFound
+  NoResultsFound,
+  TagComponent
 };
 
 const overrideHooks = () => {

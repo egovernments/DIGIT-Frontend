@@ -5,6 +5,7 @@ import { useLocation, useHistory } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
 import { InfoCard, PopUp, Stepper, TextBlock,Tag , Card} from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
+import TagComponent from "./TagComponent";
 
 const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
@@ -112,7 +113,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
         </div>
 
         <div className="card-container-delivery">
-        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
+        <TagComponent campaignName={campaignName} /> 
           <Card>
             <Header>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</Header>
             <p className="description-type">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
@@ -134,7 +135,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
               name: "infocard",
             }}
             variant="default"
-            style={{ margin: "0rem", maxWidth: "100%" , marginTop: "1rem"}}
+            style={{ margin: "0rem", maxWidth: "100%" , marginTop: "1.5rem" , marginBottom: "2rem"}}
             additionalElements={[
               <span style={{ color: "#505A5F" }}>
                 {t("HCM_BOUNDARY_INFO")}
