@@ -5,6 +5,7 @@ import {  EditIcon, Header, Loader, LoaderWithGap, ViewComposer } from "@egovern
 import { Toast, Stepper, TextBlock, Card , Tag} from "@egovernments/digit-ui-components";
 import {  downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
+import TagComponent from "./TagComponent";
 
 function mergeObjects(item) {
   const arr = item;
@@ -304,7 +305,7 @@ const DataUploadSummary = (props) => {
         </div>
 
         <div className="card-container-delivery">
-        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
+        <TagComponent campaignName={campaignName} /> 
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <Header className="summary-header">{t("HCM_DATA_UPLOAD_SUMMARY")}</Header>
             {/* {userCredential && (

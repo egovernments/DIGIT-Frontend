@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { TextInput, InfoCard , Stepper , TextBlock , Tag } from "@egovernments/digit-ui-components";
 import { deliveryConfig } from "../../configs/deliveryConfig";
 import getDeliveryConfig from "../../utils/getDeliveryConfig";
+import TagComponent from "../../components/TagComponent";
 
 const initialState = (saved, filteredDeliveryConfig, refetch) => {
   const data = {
@@ -215,7 +216,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
           </Card>
         </div>
         <div className="card-container2">
-        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
+        <TagComponent campaignName={campaignName} /> 
         <Card>
       <Header>
         {t(

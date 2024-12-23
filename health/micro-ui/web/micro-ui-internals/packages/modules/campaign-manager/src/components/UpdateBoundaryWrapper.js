@@ -5,6 +5,7 @@ import { useLocation , useHistory } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
 import { Loader, InfoCard ,Tag } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
+import TagComponent from "./TagComponent";
 
 const UpdateBoundaryWrapper = ({ onSelect,...props }) => {
   const { t } = useTranslation();
@@ -76,7 +77,7 @@ const UpdateBoundaryWrapper = ({ onSelect,...props }) => {
 
   return (
     <>
-      <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
+      <TagComponent campaignName={campaignName} /> 
       <Card>
       <Header>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</Header>
       <p className="description-type">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
@@ -101,6 +102,7 @@ const UpdateBoundaryWrapper = ({ onSelect,...props }) => {
           label="Info"
           text={t("CAMPAIGN_CANNOT_REMOVE_PREVIOUS_BOUNDARIES")}
           variant="default"
+          style={{ margin: "0rem", maxWidth: "100%" , marginTop: "1.5rem" , marginBottom: "2rem"}}
         />
       </div>
     </>

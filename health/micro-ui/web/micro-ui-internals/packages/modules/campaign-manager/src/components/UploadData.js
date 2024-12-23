@@ -8,6 +8,7 @@ import XLSX from "xlsx";
 import { InfoCard, PopUp, Toast, Button, DownloadIcon, Stepper, TextBlock ,Tag } from "@egovernments/digit-ui-components";
 import { downloadExcelWithCustomName } from "../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
+import TagComponent from "./TagComponent";
 
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
@@ -1132,7 +1133,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
 
         <div className={parentId ? "card-container2" : "card-container1"}>
-        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
+        <TagComponent campaignName={campaignName} /> 
         <Card>
           <div className="campaign-bulk-upload">
             <Header className="digit-form-composer-sub-header">

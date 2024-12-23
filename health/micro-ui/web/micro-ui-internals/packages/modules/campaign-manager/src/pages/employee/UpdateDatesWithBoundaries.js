@@ -6,6 +6,7 @@ import { dateChangeBoundaryConfig, dateChangeConfig } from "../../configs/dateCh
 import { Button, InfoCard, PopUp, Toast , Tag} from "@egovernments/digit-ui-components";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
+import TagComponent from "../../components/TagComponent";
 
 
 function UpdateDatesWithBoundaries() {
@@ -146,7 +147,7 @@ function UpdateDatesWithBoundaries() {
 
   return (
     <div>
-      <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
+      <TagComponent campaignName={campaignName} /> 
       <FormComposerV2
         label={t("CAMPAIGN_UPDATE_DATE_SUBMIT")}
         config={
