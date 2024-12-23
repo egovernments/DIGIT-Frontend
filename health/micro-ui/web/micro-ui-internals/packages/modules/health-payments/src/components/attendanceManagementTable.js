@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Button, Card, Loader, TableMolecule } from "@egovernments/digit-ui-components";
+import { Button, Card, Loader, TableMolecule, TextInput } from "@egovernments/digit-ui-components";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { CheckBox } from "@egovernments/digit-ui-components";
 
@@ -20,34 +20,57 @@ const AttendanceManagementTable = ({ ...props }) => {
   const [selectedBoundaryCode, setSelectedBoundaryCode] = useState(null);
 
   const columns = useMemo(() => {
-    return [
+    const baseColumns = [
       {
         label: t(`HCM_AM_FRONTLINE_WORKER`),
-        type: 'text'
+        type: "text",
       },
       {
         label: t("HCM_AM_WORKER_ID"),
-        type: 'text'
+        type: "text",
       },
       {
         label: t("HCM_AM_ROLE"),
-        type: 'text'
-      },
-      {
-        label: t("HCM_AM_NO_OF_DAYS_WORKED"),
-        type: 'serialno'
+        type: "text",
       },
     ];
-  }, [props.data]);
+
+    if (!props.editAttendance) {
+      baseColumns.push({
+        label: t("HCM_AM_NO_OF_DAYS_WORKED"),
+        type: "serialno",
+      });
+    } else {
+      baseColumns.push({
+        label: t("HCM_AM_NO_OF_DAYS_WORKED"),
+        type: "custom",
+      });
+    }
+
+    return baseColumns;
+  }, [props.editAttendance, t]);
+
+  // Map attendance data to rows
+  const rows = useMemo(() => {
+    return props.data.map(([name, id, role, daysWorked]) => [
+      { label: name, maxLength: 64 },
+      { label: id, maxLength: 64 },
+      { label: role, maxLength: 64 },
+      props.editAttendance ? (
+        <div>
+          <TextInput type={"numeric"} value={daysWorked} />
+        </div>
+      ) : (
+        daysWorked
+      ),
+    ]);
+  }, [props.data, props.editAttendance]);
 
   const handlePageChange = (page, totalRows) => {
     props?.handlePageChange(page, totalRows);
   };
 
   const handleRowSelect = (event) => {
-    // if(!event?.allSelected && event?.selectedCount >0){
-    //     setIsIntermediate(true);
-    // }
     props?.onRowSelect(event);
   };
 
@@ -61,11 +84,8 @@ const AttendanceManagementTable = ({ ...props }) => {
     mainClassName: "data-table-select-checkbox",
   };
 
-
-  //wrapper to the table card
-  //show multiple tabs
   return (
-    <div>
+    <div className="component-table-wrapper">
       <TableMolecule
         actionButtonLabel=""
         actions={[]}
@@ -76,64 +96,27 @@ const AttendanceManagementTable = ({ ...props }) => {
           hideFooter: false,
           isStickyFooter: false,
           scrollableStickyFooterContent: true,
-          stickyFooterContent: null
+          stickyFooterContent: null,
         }}
         frozenColumns={0}
         headerData={columns}
         onFilter={function noRefCheck() { }}
         pagination={{
           initialRowsPerPage: 2,
-          rowsPerPageOptions: [
-            2,
-            4,
-            6,
-            8,
-            10
-          ]
+          rowsPerPageOptions: [2, 4, 6, 8, 10],
         }}
-        rows={[
-          [
-            { label: "Worker A", maxLength: 64 },
-            { label: "Engineer", maxLength: 64 },
-            { label: "Additional Info", maxLength: 64 },
-            1,
-          ],
-          [
-            { label: "Worker B", maxLength: 64 },
-            { label: "Technician", maxLength: 64 },
-            { label: "Additional Info", maxLength: 64 },
-            2,
-          ],
-          [
-            { label: "Worker C", maxLength: 64 },
-            { label: "Manager", maxLength: 64 },
-            { label: "Additional Info", maxLength: 64 },
-            3,
-          ],
-          [
-            { label: "Worker D", maxLength: 64 },
-            { label: "Analyst", maxLength: 64 },
-            { label: "Additional Info", maxLength: 64 },
-            4,
-          ],
-          [
-            { label: "Worker E", maxLength: 64 },
-            { label: "Supervisor", maxLength: 64 },
-            { label: "Additional Info", maxLength: 64 },
-            5,
-          ]
-        ]}
+        rows={rows}
         selection={{
           addCheckbox: false,
-          checkboxLabel: '',
+          checkboxLabel: "",
           initialSelectedRows: [],
           onSelectedRowsChange: function noRefCheck() { },
-          showSelectedState: false
+          showSelectedState: false,
         }}
         sorting={{
           customSortFunction: function noRefCheck() { },
-          initialSortOrder: '',
-          isTableSortable: false
+          initialSortOrder: "",
+          isTableSortable: false,
         }}
         styles={{
           extraStyles: {},
@@ -141,11 +124,11 @@ const AttendanceManagementTable = ({ ...props }) => {
           withBorder: true,
           withColumnDivider: false,
           withHeaderDivider: true,
-          withRowDivider: true
+          withRowDivider: true,
         }}
         tableDetails={{
-          tableDescription: '',
-          tableTitle: ''
+          tableDescription: "",
+          tableTitle: "",
         }}
       />
     </div>
