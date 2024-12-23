@@ -124,7 +124,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   useEffect(() => {
     if (isPreview === "true") {
       setIsDraftCreated(true);
-      setCurrentKey(14);
+      setCurrentKey(16);
     } else if (isDraft === "true") {
       setIsDraftCreated(true);
       if (isSkip === "false") {
@@ -216,9 +216,9 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
 
   useEffect(() => {
     setIsSubmitting(false);
-    if (currentKey === 14 && isSummary !== "true") {
+    if (currentKey === 16 && isSummary !== "true") {
       updateUrlParams({ key: currentKey, summary: true });
-    } else if (currentKey !== 14) {
+    } else if (currentKey !== 16) {
       updateUrlParams({ key: currentKey, summary: false });
       // setSummaryErrors(null);
     }
@@ -275,7 +275,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
                 updateUrlParams({ id: data?.CampaignDetails?.id });
                 draftRefetch();
                 if (currentKey == 6) {
-                  setCurrentKey(14);
+                  setCurrentKey(16);
                 } else {
                   setCurrentKey(currentKey + 1);
                 }
@@ -283,7 +283,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             });
           } else {
             if (currentKey == 6) {
-              setCurrentKey(14);
+              setCurrentKey(16);
             } else {
               setCurrentKey(currentKey + 1);
             }
@@ -694,7 +694,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
               setShouldUpdate(true);
             }
             if (isChangeDates === "true" && currentKey == 6) {
-              setCurrentKey(14);
+              setCurrentKey(16);
             }
             if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].mandatoryOnAPI) {
               setCurrentKey(currentKey + 1);
@@ -813,7 +813,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
               setShouldUpdate(true);
             }
             if (isChangeDates === "true" && currentKey == 6) {
-              setCurrentKey(14);
+              setCurrentKey(16);
             }
 
             if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].mandatoryOnAPI) {
@@ -847,7 +847,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       setShouldUpdate(true);
     }
     if (isChangeDates === "true" && currentKey == 6) {
-      setCurrentKey(14);
+      setCurrentKey(16);
     }
 
     if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].mandatoryOnAPI) {
@@ -869,7 +869,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     const key = parseInt(filteredSteps[0].key);
     const name = filteredSteps[0].name;
     if (step === 6 && Object.keys(totalFormData).includes("HCM_CAMPAIGN_UPLOAD_USER_DATA")) {
-      setCurrentKey(14);
+      setCurrentKey(16);
       setCurrentStep(5);
     } else if (step === 0 && totalFormData["HCM_CAMPAIGN_NAME"] && totalFormData["HCM_CAMPAIGN_TYPE"] && totalFormData["HCM_CAMPAIGN_DATE"]) {
       setCurrentKey(4);
@@ -1013,7 +1013,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         // noCardStyle={currentStep === 7 ? false : true}
         onSecondayActionClick={onSecondayActionClick}
         label={
-          isChangeDates === "true" && currentKey == 14
+          isChangeDates === "true" && currentKey == 16
             ? t("HCM_UPDATE_DATE")
             : isChangeDates === "true"
             ? null

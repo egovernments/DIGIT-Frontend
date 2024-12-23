@@ -260,6 +260,11 @@
   gap: 1.5rem;
 }
 
+.inbox-search-wrapper .inbox-search-component-wrapper .sections-parent.search .checkbox-wrap input, .checkbox-wrap .input-emp {
+  top:13px;
+  left:-3px;
+}
+
 .horizontal-nav {
   overflow: auto;
   display: -webkit-box;

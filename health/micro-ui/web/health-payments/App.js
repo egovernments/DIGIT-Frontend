@@ -4,12 +4,8 @@ import { initLibraries } from "@egovernments/digit-ui-libraries";
 import { DigitUI } from "@egovernments/digit-ui-module-core";
 
 import { UICustomizations } from "./Customisations/UICustomizations";
-import { initMicroplanningComponents } from "@egovernments/digit-ui-module-hcmmicroplanning";
-import { initMicroplanComponents } from "@egovernments/digit-ui-module-microplan";
-import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
+import { initPaymentComponents } from "@egovernments/digit-ui-module-health-payments";
 
-
-window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
 
 const enabledModules = [
   "DSS",
@@ -18,10 +14,7 @@ const enabledModules = [
   "HRMS",
   "Engagement",
   "Workbench",
-  "Microplanning",
-  "Microplan",
-  "Campaign"
-
+  "Payments"
 ];
 
 const moduleReducers = (initData) => ({
@@ -30,22 +23,23 @@ const moduleReducers = (initData) => ({
 
 const initDigitUI = () => {
   window.Digit.ComponentRegistryService.setupRegistry({
-    
   });
 
-  initCampaignComponents();
-  initMicroplanningComponents()
-  initMicroplanComponents();
+  initPaymentComponents();
 
   window.Digit.Customizations = {
     PGR: {},
-    commonUiConfig: {...UICustomizations,HCM_MODULE_NAME:"microplan"},
+    commonUiConfig: UICustomizations,
   };
 };
 
-initLibraries().then(() => {
-  initDigitUI();
-});
+initLibraries()
+  .then(() => {
+    initDigitUI();
+  })
+  .catch((error) => {
+    console.error('Failed to initialize application:', error);
+  });
 
 function App() {
   window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
@@ -60,7 +54,6 @@ function App() {
       stateCode={stateCode}
       enabledModules={enabledModules}
       moduleReducers={moduleReducers}
-      // defaultLanding="employee"
     />
   );
 }

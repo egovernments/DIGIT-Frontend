@@ -209,9 +209,9 @@ export const cycleDataRemap=(data)=> {
         const roundedValue = Math.round(attr.value);
     
         if (type === "create") {
-          return `${projectType === "LLIN-mz" ? attributeCode : attributeCode.toLowerCase()}${getOperatorSymbol(attr?.operator?.code)}${roundedValue}`;
+          return `${projectType === "LLIN-mz" ? attributeCode : attributeCode.toLowerCase()}${getOperatorSymbol(attr?.operator?.code)}${projectType === "IRS-mz" ? attr?.value : roundedValue}`;
         } else {
-          return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${roundedValue}`;
+          return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${projectType === "IRS-mz" ? attr?.value : roundedValue}`;
         }
       }
     });    
@@ -396,7 +396,7 @@ export const cycleDataRemap=(data)=> {
   export const draftFilterStep = (totalFormData,campaignConfig) => {
     const stepFind = (name) => {
       const step = campaignConfig?.[0]?.form.find((step) => step.name === name);
-      return step ? parseInt(step.stepCount, 14) : null;
+      return step ? parseInt(step.stepCount, 16) : null;
     };
     let v = [];
     if (totalFormData?.HCM_CAMPAIGN_NAME?.campaignName) v.push(stepFind("HCM_CAMPAIGN_NAME"));
