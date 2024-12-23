@@ -21,6 +21,7 @@ import CustomDropdown from "./MultiSelect";
 import CustomDropdownV2 from "./MultiSelectV2";
 import CustomCheckbox from "./Checbox";
 import { BulkModal } from "./BulkModal";
+import { tranformLocModuleName } from "../pages/employee/localizationUtility";
 
 const AdditionalPropertiesContext = createContext();
 export const useAdditionalProperties = () => useContext(AdditionalPropertiesContext);
@@ -59,28 +60,49 @@ const getArrayWrapperClassName = (type) => {
 
 function ArrayFieldItemTemplate(props) {
   const { t } = useTranslation();
+
   const { children, className, index, onDropIndexClick, schema, disabled } = props;
-  const isArrayOfObjects = schema?.type === "object";
+  const isArrayOfObjects = schema?.type == "object";
   const newClass = getArrayWrapperClassName(schema?.type);
   return (
     <div className={`${className} ${newClass}`}>
-      <span className="array-children">{children}</span>
-      {props.hasRemove && (
-        <div className="array-remove-button-wrapper">
-          <Button
-            label={t("WBH_DELETE_ACTION")}
-            variation="secondary"
-            className="array-remove-button"
-            icon={<SVG.Delete width={"28"} height={"28"} />}
-            onButtonClick={onDropIndexClick(index)}
-            type="button"
-            isDisabled={disabled}
-          />
-        </div>
+      <span className={"array-children"}>{children}</span>
+      {isArrayOfObjects ? (
+        <span className="array-obj">
+          {props.hasRemove && (
+            <div className="array-remove-button-wrapper">
+              <Button
+                label={`${t("WBH_DELETE_ACTION")}`}
+                variation="secondary"
+                className="array-remove-button"
+                icon={<SVG.Delete width={"28"} height={"28"} />}
+                onButtonClick={onDropIndexClick(index)}
+                type="button"
+                isDisabled={disabled}
+              />
+            </div>
+          )}
+        </span>
+      ) : (
+        props.hasRemove && (
+          <div className="array-remove-button-wrapper">
+            <Button
+              label={`${t("WBH_DELETE_ACTION")}`}
+              variation="secondary"
+              className="array-remove-button"
+              icon={<SVG.Delete width={"28"} height={"28"} />}
+              onButtonClick={onDropIndexClick(index)}
+              type="button"
+              isDisabled={disabled}
+            />
+          </div>
+
+        )
       )}
-    </div>
+    </div >
   );
 }
+
 
 function TitleFieldTemplate(props) {
   const { id, required, title } = props;
@@ -106,14 +128,16 @@ function ArrayFieldTemplate(props) {
 
   return (
     <div className="array-wrapper">
-      {props.items.map((element, index) => (
-        <span className="array-element-wrapper" key={index}>
-          <ArrayFieldItemTemplate index={index} {...element} />
-        </span>
-      ))}
+      {props.items.map((element, index) => {
+        return (
+          <span className="array-element-wrapper">
+            <ArrayFieldItemTemplate title={props?.title} key={index} index={index} {...element}></ArrayFieldItemTemplate>
+          </span>
+        );
+      })}
       {props.canAdd && (
         <Button
-          label={`${t("WBH_ADD")} ${t(props?.title)}`}
+          label={`${t(`WBH_ADD`)} ${t(props?.title)}`}
           variation="secondary"
           icon={<AddFilled style={{ height: "20px", width: "20px" }} />}
           onButtonClick={props.onAddClick}
@@ -125,21 +149,16 @@ function ArrayFieldTemplate(props) {
   );
 }
 
-const tranformLocModuleName = (localModuleName) => {
-  if (!localModuleName) return null;
-    return localModuleName.replace(/[^a-zA-Z0-9]/g, "-").toUpperCase();
-};
-
 function ObjectFieldTemplate(props) {
   const { formData, schema, idSchema, formContext } = props;
   const { schemaCode, MdmsRes, additionalProperties } = formContext;
   const isRoot = idSchema["$id"] === "digit_root";
+  const { t } = useTranslation();
 
   const localisableFields = MdmsRes?.find((item) => item.schemaCode === schemaCode)?.localisation?.localisableFields || [];
 
   const children = props.properties.map((element) => {
     const fieldName = element.name;
-    const inputValue = formData[fieldName];
     const isLocalisable = localisableFields.some((field) => field.fieldPath === fieldName);
 
     if (isLocalisable) {
@@ -147,33 +166,30 @@ function ObjectFieldTemplate(props) {
       const mdmsCode = fieldProps?.mdmsCode;
       const localizationCode = fieldProps?.localizationCode;
       const transformedLocCode= tranformLocModuleName(localizationCode);
-      const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
-      if(isMultiRootTenant){
         return (
           <div key={fieldName} style={{ marginBottom: "1rem" }}>
-            {/* Actual Input Field */}
             <div className="field-wrapper object-wrapper" id={`${idSchema["$id"]}_${fieldName}`}>
               {element.content}
             </div>
         
             {/* MDMS and Localization Codes */}
-            <div className="code-details" style={{ padding: "0.5rem 1.5rem", backgroundColor: "#f9f9f9", border: "1px solid #e0e0e0", borderRadius: "4px" }}>
-              <div className="code-row" style={{ display: "flex", alignItems: "flex-start", marginBottom: "0.75rem" }}>
-                <label className="code-key" style={{ flex: "0 0 150px", fontWeight: "bold", color: "#444", textAlign: "left" }}>
-                  mdms code:
+            <div className="code-details">
+              <div className="code-row">
+                <label className="code-key">
+                {t("MDMS_CODE_WORKBENCH")}:
                 </label>
-                <div className="code-value-container" style={{ display: "flex", flexDirection: "column", flex: "1" }}>
-                  <span className="code-value" style={{ fontSize: "0.9rem", color: "#555", marginBottom: "0.2rem" }}>
+                <div className="code-value-container" >
+                  <span className="code-value" >
                     {mdmsCode || ""}
                   </span>
                 </div>
               </div>
-              <div className="code-row" style={{ display: "flex", alignItems: "flex-start" }}>
-                <label className="code-key" style={{ flex: "0 0 150px", fontWeight: "bold", color: "#444", textAlign: "left" }}>
-                  localization code:
+              <div className="code-row">
+                <label className="code-key">
+                  {t("LOCALIZATION_CODE_WORKBENCH")}:
                 </label>
-                <div className="code-value-container" style={{ display: "flex", flexDirection: "column", flex: "1" }}>
-                  <span className="code-value" style={{ fontSize: "0.9rem", color: "#555", marginBottom: "0.2rem" }}>
+                <div className="code-value-container" >
+                  <span className="code-value">
                     {transformedLocCode || ""}
                   </span>
                 </div>
@@ -181,9 +197,6 @@ function ObjectFieldTemplate(props) {
             </div>
           </div>
         );
-      }
-
-           
     }
 
     return (
@@ -194,13 +207,14 @@ function ObjectFieldTemplate(props) {
   });
 
   return (
-    <div id={idSchema["$id"]}>
+    <div id={props?.idSchema?.["$id"]}>
+      {/* {props.title} */}
+      {props.description}
+
       {isRoot ? (
         children
       ) : (
-        <CollapseAndExpandGroups showHelper={true} groupHeader={""} groupElements={true}>
-          {children}
-        </CollapseAndExpandGroups>
+        <CollapseAndExpandGroups showHelper={true} groupHeader={""} groupElements={true} children={children}></CollapseAndExpandGroups>
       )}
     </div>
   );

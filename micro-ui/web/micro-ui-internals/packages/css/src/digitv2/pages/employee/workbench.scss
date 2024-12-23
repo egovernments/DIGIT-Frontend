@@ -1052,40 +1052,45 @@ background-color: #eaffee;
 
 
 .code-details {
-  padding: 0.5rem 1.5rem; 
-  background-color: #f9f9f9; 
-  border: 1px solid #e0e0e0; 
-  border-radius: 4px; 
+  padding: 0.5rem 1.5rem;
+  background-color: #f9f9f9;
+  border: 0.125rem solid #e0e0e0;
+  border-radius: 0.25rem;
 }
 
 .code-row {
   display: flex;
-  align-items: flex-start; 
-  margin-bottom: 0.75rem; 
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .code-key {
-  flex: 0 0 150px; 
+  flex: 0 0 9rem; 
   font-size: 0.9rem;
-  font-weight: bold; 
-  color: #444; 
+  font-weight: bold;
+  color: #444;
+  text-align: left;
+  line-height: 1.2rem;
 }
 
 .code-value-container {
   display: flex;
   flex-direction: column;
   flex: 1;
+  margin-left: 0.5rem; 
+  align-items: flex-start; 
 }
 
 .code-value {
   font-size: 0.9rem;
-  color: #555; 
-  margin-bottom: 0.2rem;
+  color: #555;
+  line-height: 1.2rem;
 }
 
-.code-row:last-child {
-  margin-bottom: 0; 
-}
 
 
 
