@@ -558,7 +558,6 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
         }}
         shapeOnOff={true}
       />
-      <div></div>
       {state?.currentData?.length === 0 ? (
         <Fragment>
           <NoResultsFound text={Digit.Utils.locale.getTransformedLocale(state?.filter ? `NO_RESULTS_FOR_ACTIVE_FILTER_${currentCategories}` : `NO_RESULTS_FOR_MAPPING_${currentCategories}`)} />
