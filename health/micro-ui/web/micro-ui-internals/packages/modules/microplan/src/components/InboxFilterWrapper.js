@@ -9,8 +9,8 @@ const InboxFilterWrapper = (props) => {
   const { t } = useTranslation();
   const [dropdown1Value, setDropdown1Value] = useState(null);
   const [dropdown2Value, setDropdown2Value] = useState(null);
-  const [dropdownValues, setDropdownValues] = useState(
-    Array(state.securityQuestions.length).fill(null)
+  const [filterValues, setFilterValues] = useState(
+    {status:null,onRoadCondition:null, terrain:null, securityQ1:null,securityQ2:null}
   );
 
 
@@ -54,22 +54,27 @@ const InboxFilterWrapper = (props) => {
   // Apply filters when the user presses the primary action button
   const handleApplyFilters = () => {
     if (props.onApplyFilters) {
-      props.onApplyFilters(selectedValue); // Call the parent function with selected value
+      debugger;
+      console.log("filt",filterValues);
+      props.onApplyFilters(filterValues); // Call the parent function with selected value
     }
   };
 
   // Clear filters when the user presses the secondary action button
   const clearFilters = () => {
-    setSelectedValue(selectedValue); // Clear the selection
+    // setSelectedValue(selectedValue); // Clear the selection
+    setFilterValues({status:null,onRoadCondition:null,terrain:null,securityQ1:null,securityQ2:null});
     if (props.clearFilters) {
       props.clearFilters();
     }
   };
 
-  const handleDropdownChange = (index, value) => {
-    const newValues = [...dropdownValues];
-    newValues[index] = value;
-    setDropdownValues(newValues);
+  const handleDropdownChange = (key, value) => {
+    console.log("filter",value)
+    setFilterValues((prev)=>({
+      ...prev,
+      [key]:value?.code
+    }));
   };
 
   return (
@@ -90,13 +95,13 @@ const InboxFilterWrapper = (props) => {
             <RadioButtons
               options={resultArray}
               optionsKey={"name"} // Use "name" key for display
-              selectedOption={selectedValue?.code} // Pass current selected option's code for comparison
+              selectedOption={filterValues["status"]} // Pass current selected option's code for comparison
               style={{
                 display: "flex",
                 flexDirection: "column",
                 gap: "1rem", // Adds space between options
               }}
-              onSelect={handleSelect} // Function to handle selection
+              onSelect={(value)=>handleDropdownChange("status",value)} // Function to handle selection
             />
           </LabelFieldPair>
         )}
@@ -106,8 +111,8 @@ const InboxFilterWrapper = (props) => {
           <Dropdown
             option={state.villageRoadCondition}
             optionKey="name"
-            selected={dropdownValues[0]}
-            select={(value) => handleDropdownChange(value, 0)}
+            selected={filterValues["onRoadCondition"]}
+            select={(value) => handleDropdownChange("onRoadCondition",value)}
             t={t}
             disabled={false}
           />
@@ -118,8 +123,8 @@ const InboxFilterWrapper = (props) => {
           <Dropdown
             option={state.villageTerrain}
             optionKey="name"
-            selected={dropdownValues[1]}
-            select={(value) => handleDropdownChange(value, 1)}
+            selected={filterValues["terrain"]}
+            select={(value) => handleDropdownChange("terrain",value)}
             t={t}
             disabled={false}
           />
@@ -136,12 +141,12 @@ const InboxFilterWrapper = (props) => {
 
             return (
               <LabelFieldPair vertical>
-                <TextBlock body={t(`MP_SECURITY_QUESTION ${index}`)} />
+                <TextBlock body={t(`MP_SECURITY_QUESTION ${index+1}`)} />
                 <Dropdown
                   option={options} // Pass transformed options here
                   optionKey="name" // Key for displaying dropdown options
-                  selected={dropdownValues[index + 2]} // Set selected value
-                  select={(value) => handleDropdownChange(value, index + 2)} // Handle selection
+                  selected={filterValues[`securityQ${index+1}`]} // Set selected value
+                  select={(value) => handleDropdownChange( `securityQ${index+1}`,value)} // Handle selection
                   t={(key) => key} // Translation function (you can replace as needed)
                   disabled={false}
                 />
