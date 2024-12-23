@@ -20,7 +20,7 @@ RUN cd web/ \
     && yarn install \ 
     && yarn build:webpack 
 
-FROM nginx:mainline-alpine
+FROM nginx:1.27.2-alpine3.20
 #FROM ghcr.io/egovernments/nginx:mainline-alpine
 ENV WORK_DIR=/var/web/workbench-ui
 
