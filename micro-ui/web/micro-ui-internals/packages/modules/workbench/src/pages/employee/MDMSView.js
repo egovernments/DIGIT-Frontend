@@ -147,11 +147,10 @@ const MDMSView = ({ ...props }) => {
   };
 
   let localizationCodes = [];
-  if (data && data.data && localisableFields.length > 0) {
+  if (data?.data && localisableFields?.length > 0) {
     localizationCodes = localisableFields.map(field => createLocalizationCode(field.fieldPath, data.data[field.fieldPath]));
   }
-
-  let locale=Digit.StoreData.getCurrentLanguage();
+  const locale=Digit.StoreData.getCurrentLanguage();
   const localizationReqCriteria = {
     url: `/localization/messages/v1/_search?locale=${locale}&tenantId=${tenantId}&module=${localizationModule}`,
     params: {},
@@ -160,7 +159,7 @@ const MDMSView = ({ ...props }) => {
     config: {
       enabled: !!data && !!MdmsRes && !!data?.schemaCode && !!tenantId && localizationCodes.length > 0,
       select: (respData) => {
-        let messageMap = {};
+        const messageMap = {};
         if (Array.isArray(respData?.messages)) {
           respData.messages.forEach(msg => {
             messageMap[msg.code] = msg.message;
@@ -176,7 +175,7 @@ const MDMSView = ({ ...props }) => {
   // Transform data if localizationMap is available
   let finalData = data;
   if (data && data.data && localizationMap && localisableFields?.length > 0) {
-    let updatedData = _.cloneDeep(data);
+    const updatedData = _.cloneDeep(data);
     localisableFields.forEach(field => {
       const code = createLocalizationCode(field.fieldPath, updatedData.data[field.fieldPath]);
       if (localizationMap[code]) {
@@ -203,10 +202,10 @@ const MDMSView = ({ ...props }) => {
         variation="secondary"
         icon={"History"}
         onClick={() => {
-          history.push(`../utilities/audit-log?id=${finalData?.id}&tenantId=${tenantId}`)
+          history.push(`../utilities/audit-log?id=${finalData?.id}&tenantId=${tenantId}`);
         }}
-      ></Button>
-      {showToast && <Toast label={t(showToast.label)} error={showToast?.isError} onClose={() => setShowToast(null)}></Toast>}
+      />
+      {showToast && <Toast label={t(showToast.label)} error={showToast?.isError} onClose={() => setShowToast(null)} />}
     </React.Fragment>
   )
 }
