@@ -5,6 +5,8 @@ import { default as EmployeeApp } from "./pages/employee";
 import PaymentsCard from "./components/PaymentsCard";
 import { overrideHooks, updateCustomConfigs } from "./utils";
 import { ProviderContext } from "./utils/context";
+import Sample from "./components/sample";
+import CampaignNameSelection from "./components/campaign_dropdown";
 
 export const PaymentsModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -77,7 +79,9 @@ const assignedProjects = Digit.Hooks.payments.useProjectSearch({
 
 const componentsToRegister = {
   PaymentsModule,
-  PaymentsCard
+  PaymentsCard,
+  Sample,
+  CampaignNameSelection,
 };
 
 export const initPaymentComponents = () => {
