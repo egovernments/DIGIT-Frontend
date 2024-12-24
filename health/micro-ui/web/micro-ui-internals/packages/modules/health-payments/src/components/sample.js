@@ -2,26 +2,25 @@ import { Dropdown } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-const Sample = (props) => {
+const Sample = ({ selectedProject, onChange }) => {
   const { t } = useTranslation();
-  const s = props;
+  const tenantId = Digit.ULBService.getCurrentTenantId();
   const [lastSelectedId, setLastSelectedId] = useState("");
-  console.log(props);
-
+  const [boundary, setBoundary] = useState([]);
+  console.log(selectedProject, "project data in sample");
+  // selectedProject?.address?.boundary.split("_")[0]
   const reqCriteriaResource = {
     url: `/boundary-service/boundary-relationships/_search`,
     params: {
-      tenantId: "mz",
-      hierarchyType: "HIERARCHYTEST",
+      tenantId: tenantId,
+      hierarchyType: selectedProject?.address?.boundary.split("_")[0],
       includeChildren: true,
-      codes: "HIERARCHYTEST_MO_13_02_MOSSURILEE",
-      boundaryType: "DISTRICT",
-      //tenantId=mz&codes=HIERARCHYTEST_MO_13_02_MOSSURILEE&boundaryType=DISTRICT
+      codes: selectedProject?.address?.boundary,
+      boundaryType: selectedProject?.address?.boundaryType,
     },
     config: {
       enabled: true,
       select: (data) => {
-        //return data?.["TenantBoundary"]?.[0]?.boundary;
         return data;
       },
     },
@@ -30,15 +29,15 @@ const Sample = (props) => {
   const { isLoading: childrenDataLoading, data: childrenData } = Digit.Hooks.payments.useAttendanceBoundarySearch(reqCriteriaResource);
 
   useEffect(() => {}, [childrenData]);
-  const handleButtonClick = () => {
-    alert(`Last Selected ID: ${lastSelectedId}`);
+  const handleButtonClick = (value) => {
+    onChange(value);
   };
 
   return (
     <React.Fragment>
       <div>
         <h2>Boundary</h2>
-        {childrenData?.[0]?.boundary.length > 0 && <NestedDropdown data={childrenData?.[0]?.boundary} onLastSelectedIdChange={setLastSelectedId} />}
+        {childrenData?.[0]?.boundary.length > 0 && <NestedDropdown data={childrenData?.[0]?.boundary} onLastSelectedIdChange={handleButtonClick} />}
       </div>
     </React.Fragment>
   );

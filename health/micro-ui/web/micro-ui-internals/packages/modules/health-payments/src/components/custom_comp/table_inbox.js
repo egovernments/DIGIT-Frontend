@@ -5,11 +5,12 @@ import { useTranslation } from "react-i18next";
 import DataTable from "react-data-table-component";
 import { useQueryClient } from "react-query";
 import { CustomSVG } from "@egovernments/digit-ui-components";
+import { tableCustomStyle } from "./table_inbox_custom_style";
 
 const CustomInboxTable = ({ rowsPerPage, isLoading, tableData, customHandleRowsPerPageChange, customHandlePaginationChange, totalCount }) => {
   const { t } = useTranslation();
 
-  useEffect(() => { }, [tableData]);
+  useEffect(() => {}, [tableData]);
 
   const handlePaginationChange = (page) => {
     customHandlePaginationChange(page);
@@ -23,8 +24,8 @@ const CustomInboxTable = ({ rowsPerPage, isLoading, tableData, customHandleRowsP
       name: t("ATTENDANCE_ID"),
       selector: (row) => {
         return (
-          <span className="link">
-            <Link to={`/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`}>
+          <span className="link" style={{ fontSize: "14px" }}>
+             <Link to={`/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`}>
               {String(row?.id ? row?.id : t("ES_COMMON_NA"))}
             </Link>
           </span>
@@ -35,8 +36,8 @@ const CustomInboxTable = ({ rowsPerPage, isLoading, tableData, customHandleRowsP
       name: t("ATTENDANCE_BOUNDARY"),
       selector: (row) => {
         return (
-          <div className="ellipsis-cell" title={row?.name || t("NA")}>
-            {row.name || t("NA")}
+          <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={row?.boundary || t("NA")}>
+            {row.boundary || t("NA")}
           </div>
         );
       },
@@ -45,8 +46,8 @@ const CustomInboxTable = ({ rowsPerPage, isLoading, tableData, customHandleRowsP
       name: t("ATTENDANCE_NAME"),
       selector: (row) => {
         return (
-          <div className="ellipsis-cell" title={row?.boundary || t("NA")}>
-            {row?.boundary || t("NA")}
+          <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={row?.name || t("NA")}>
+            {row?.name || t("NA")}
           </div>
         );
       },
@@ -55,7 +56,7 @@ const CustomInboxTable = ({ rowsPerPage, isLoading, tableData, customHandleRowsP
       name: t("ATTENDANCE_STATUS"),
       selector: (row) => {
         return (
-          <div className="ellipsis-cell" title={t(row?.status || "NA")}>
+          <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={t(row?.status || "NA")}>
             {t(row?.status || "NA")}
           </div>
         );
@@ -83,6 +84,7 @@ const CustomInboxTable = ({ rowsPerPage, isLoading, tableData, customHandleRowsP
                 progressComponent={<Loader />}
                 pagination
                 paginationServer
+                customStyles={tableCustomStyle}
                 paginationTotalRows={totalCount}
                 onChangePage={handlePaginationChange}
                 onChangeRowsPerPage={handleRowsPerPageChange}

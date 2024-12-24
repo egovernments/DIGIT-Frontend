@@ -2,7 +2,7 @@ import { Dropdown, TextInput, SubmitBar, LinkLabel, Label } from "@egovernments/
 import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-const CustomSearchComponent = ({ header = "", screenType = "search" }) => {
+const CustomSearchComponent = ({ onProjectSelect }) => {
   const { t } = useTranslation();
 
   const [project, setProject] = useState([]);
@@ -15,6 +15,7 @@ const CustomSearchComponent = ({ header = "", screenType = "search" }) => {
   };
 
   useEffect(() => {
+    if(project.length==0){
     let datak =
       Digit?.SessionStorage.get("staffProjects") ||
       [].map((target) => ({
@@ -26,6 +27,7 @@ const CustomSearchComponent = ({ header = "", screenType = "search" }) => {
         projectHierarchy: target.projectHierarchy,
       }));
     setProject(datak);
+    }
   }, []);
 
   console.log(project, "testing");
@@ -67,7 +69,7 @@ const CustomSearchComponent = ({ header = "", screenType = "search" }) => {
               name={"code"}
               optionKey={"name"}
               select={(value) => {
-                //handleChange(value);
+                onProjectSelect(value);
               }}
               disabled={false}
               style={{ display: "flex", width: "55%" }}
