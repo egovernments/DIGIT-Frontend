@@ -11,27 +11,27 @@ const PaymentsCard = () => {
   const { t } = useTranslation();
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
-  const generateLink = (labelKey, pathSuffix,roles=ROLES.ATTENDANCE) => {
+  const generateLink = (labelKey, pathSuffix, roles = ROLES.ATTENDANCE) => {
     return {
       label: t(labelKey),
-      link: `/${window?.contextPath}/employee/payments/${pathSuffix}`,
+      link: `/payments-ui/employee/payments/${pathSuffix}`,
       roles: roles,
     };
   };
-  
+
   if (!Digit.Utils.didEmployeeHasAtleastOneRole(Object.values(ROLES).flatMap((e) => e))) {
     return null;
   }
 
   let links = [
-    generateLink("ATTENDANCE_REGISTERS","registers-inbox"),
-    generateLink("CS_COMMON_INBOX","generate-bill", ROLES.BILLS),
-    generateLink("CS_TITLE_MY_BILLS","my-bills", ROLES.BILLS),
+    generateLink("ATTENDANCE_REGISTERS", "registers-inbox"),
+    generateLink("CS_COMMON_INBOX", "generate-bill", ROLES.BILLS),
+    generateLink("CS_TITLE_MY_BILLS", "my-bills", ROLES.BILLS),
   ];
   const hasRequiredRoles = (link) => {
-      if (!link?.roles?.length) return true;
-      return Digit.Utils.didEmployeeHasAtleastOneRole(link.roles);
-    };
+    if (!link?.roles?.length) return true;
+    return Digit.Utils.didEmployeeHasAtleastOneRole(link.roles);
+  };
   links = links.filter(hasRequiredRoles);
 
   const propsForModuleCard = {
@@ -39,7 +39,7 @@ const PaymentsCard = () => {
     moduleName: t("HCM_PAYMENTS"),
     kpis: [],
     links: links,
-    className:"microplan-employee-module-card"
+    className: "microplan-employee-module-card"
   };
   return <EmployeeModuleCard {...propsForModuleCard} />;
 };

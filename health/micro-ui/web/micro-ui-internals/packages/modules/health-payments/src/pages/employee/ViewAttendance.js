@@ -21,6 +21,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [totalRows, setTotalRows] = useState(0);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
 
+  const project = Digit?.SessionStorage.get("staffProjects");
+
+
   const AttendancereqCri = {
     url: `/health-attendance/v1/_search`,
     params: {
@@ -58,6 +61,30 @@ const ViewAttendance = ({ editAttendance = false }) => {
   };
 
   const { isLoading: isEstimateMusterRoleLoading, data: estimateMusterRoleData } = Digit.Hooks.useCustomAPIHook(reqCri);
+
+  const individualReqCriteria = {
+    url: `/health-individual/v1/_search`,
+    params: {
+      tenantId: tenantId,
+      limit: 100,// need to update with table state
+      offset: 0,// need to update with table state
+    },
+    body: {
+      Individual: {
+        id: [AttendanceData?.attendanceRegister[0]?.staff?.[0]?.userId]
+      }
+    },
+    config: {
+      enabled: AttendanceData?.attendanceRegister[0]?.staff?.[0]?.userId ? true : false,
+      select: (data) => {
+        return data;
+      },
+    },
+  };
+
+  const { isLoading: isIndividualsLoading, data: individualsData } = Digit.Hooks.useCustomAPIHook(individualReqCriteria);
+
+  console.log(individualsData, "iiiiiiiiiiiiiiiiiiiiiiiiiiiii");
 
   const hardCodedMusterRoleData = [
     {
@@ -454,7 +481,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * rowsPerPage })
   }
 
-  if (isAttendanceLoading || isEstimateMusterRoleLoading) {
+  if (isAttendanceLoading || isEstimateMusterRoleLoading || isIndividualsLoading) {
     return <LoaderScreen />
   }
 
@@ -470,29 +497,33 @@ const ViewAttendance = ({ editAttendance = false }) => {
             <span className="label-text">{t(registerNumber)}</span>
           </div>
           <div className="label-pair">
-            <span className="label-heading">{t(`HCM_AM_PROJECT_NAME`)}</span>
-            <span className="label-text">{t(`value`)}</span>
+            <span className="label-heading">{t(`HCM_AM_CAMPAIGN_NAME`)}</span>
+            <span className="label-text">{t(project?.[0]?.name || "NA")}</span>
+          </div>
+          <div className="label-pair">
+            <span className="label-heading">{t(`HCM_AM_PROJECT_TYPE`)}</span>
+            <span className="label-text">{t(project?.[0]?.projectType || "NA")}</span>
           </div>
           <div className="label-pair">
             <span className="label-heading">{t(`HCM_AM_ATTENDANCE_OFFICER`)}</span>
-            <span className="label-text">{AttendanceData?.attendanceRegister[0]?.staff?.[0]?.userId}</span>
+            <span className="label-text">{individualsData?.Individual?.[0]?.name?.givenName}</span>
             {/* need to fetch name from individual */}
           </div>
           <div className="label-pair">
             <span className="label-heading">{t(`HCM_AM_ATTENDANCE_OFFICER_CONTACT_NUMBER`)}</span>
-            <span className="label-text">{t(`value`)}</span>
+            <span className="label-text">{individualsData?.Individual?.[0]?.mobileNumber}</span>
             {/* need to fetch name from individual */}
           </div>
           <div className="label-pair">
             <span className="label-heading">{t(`HCM_AM_NO_OF_ATTENDEE`)}</span>
-            <span className="label-text">{AttendanceData?.attendanceRegister[0]?.attendees?.length}</span>
+            <span className="label-text">{AttendanceData?.attendanceRegister[0]?.attendees?.length || 0}</span>
           </div>
           <div className="label-pair">
             <span className="label-heading">{t(`HCM_AM_EVENT_DURATION`)}</span>
             <span className="label-text">{Math.floor((AttendanceData?.attendanceRegister[0]?.endDate - AttendanceData?.attendanceRegister[0]?.startDate) / (24 * 60 * 60 * 1000))}</span>
           </div>
           <div className="label-pair">
-            <span className="label-heading">{t(`STATUS`)}</span>
+            <span className="label-heading">{t(`HCM_AM_STATUS`)}</span>
             <span className="label-text">{t(`PENDING FOR APPROVAL`)}</span>
             {/* HARD CODING NOW NEED TO UPDATE */}
           </div>
@@ -508,7 +539,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
         submitLabel={t(`HCM_AM_PROCEED`)}
         cancelLabel={t(`HCM_AM_CANCEL`)}
         onPrimaryAction={() => {
-          history.push(`/${window.contextPath}/employee/payments/edit-attendance`);
+          history.push(`/${window.contextPath}/employee/payments/edit-attendance?registerNumber=${registerNumber}`);
         }}
       />}
       {openApproveAlertPopUp && <AlertPopUp

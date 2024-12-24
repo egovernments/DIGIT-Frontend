@@ -635,8 +635,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             const callSecondApiUntilComplete = async () => {
               let secondApiResponse;
               let isCompleted = false;
-
-              while (!isCompleted) {
+              let isError = false;
+              while (!isCompleted && !isError) {
                 secondApiResponse = await Digit.CustomService.getResponse({
                   url: `/project-factory/v1/data/_search`,
                   body: {
@@ -651,6 +651,9 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
                 if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "completed") {
                   // Replace `someCondition` with your own condition to determine if it's complete
                   isCompleted = true;
+                } else if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "failed") {
+                  // Replace `someCondition` with your own condition to determine if it's complete
+                  isError = true;
                 } else {
                   // Optionally, add a delay before retrying
                   await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second before retrying
@@ -660,6 +663,11 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
               return secondApiResponse;
             };
             const reqCriteriaResource = await callSecondApiUntilComplete();
+            if (reqCriteriaResource?.ResourceDetails?.[0]?.status === "failed") {
+              setLoader(false);
+              setShowToast({ key: "error", label: JSON.parse(reqCriteriaResource?.ResourceDetails?.[0]?.additionalDetails?.error)?.description });
+              return;
+            }
             const temp = totalFormData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.[0];
             const restructureTemp = {
               ...temp,
@@ -728,6 +736,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
           updatedData: formData?.uploadUserMapping?.data,
           tenantId: tenantId,
           sheetNameToUpdate: "HCM_ADMIN_CONSOLE_USER_LIST",
+          schemas,
+          t: t,
         },
         {
           onError: (error, variables) => {
@@ -754,8 +764,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             const callSecondApiUntilComplete = async () => {
               let secondApiResponse;
               let isCompleted = false;
-
-              while (!isCompleted) {
+              let isError = false;
+              while (!isCompleted && !isError) {
                 secondApiResponse = await Digit.CustomService.getResponse({
                   url: `/project-factory/v1/data/_search`,
                   body: {
@@ -770,6 +780,9 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
                 if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "completed") {
                   // Replace `someCondition` with your own condition to determine if it's complete
                   isCompleted = true;
+                } else if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "failed") {
+                  // Replace `someCondition` with your own condition to determine if it's complete
+                  isError = true;
                 } else {
                   // Optionally, add a delay before retrying
                   await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second before retrying
@@ -779,6 +792,11 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
               return secondApiResponse;
             };
             const reqCriteriaResource = await callSecondApiUntilComplete();
+            if (reqCriteriaResource?.ResourceDetails?.[0]?.status === "failed") {
+              setLoader(false);
+              setShowToast({ key: "error", label: JSON.parse(reqCriteriaResource?.ResourceDetails?.[0]?.additionalDetails?.error)?.description });
+              return;
+            }
             const temp = totalFormData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser?.uploadedFile?.[0];
             const restructureTemp = {
               ...temp,

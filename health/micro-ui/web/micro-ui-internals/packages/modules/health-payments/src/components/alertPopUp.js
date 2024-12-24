@@ -14,16 +14,6 @@ const AlertPopUp = ({ onClose, alertHeading, alertMessage, submitLabel, cancelLa
                 equalWidthButtons={true}
                 footerChildren={[
                     <Button
-                        key="cancel-button"
-                        className="campaign-type-alert-button"
-                        type="button"
-                        size="large"
-                        variation="secondary"
-                        label={t(cancelLabel)}
-                        title={t(cancelLabel)}
-                        onClick={onClose}
-                    />,
-                    <Button
                         key="submit-button"
                         className="campaign-type-alert-button"
                         type="button"
@@ -32,6 +22,16 @@ const AlertPopUp = ({ onClose, alertHeading, alertMessage, submitLabel, cancelLa
                         label={t(submitLabel)}
                         title={t(submitLabel)}
                         onClick={onPrimaryAction}
+                    />,
+                    <Button
+                        key="cancel-button"
+                        className="campaign-type-alert-button"
+                        type="button"
+                        size="large"
+                        variation="secondary"
+                        label={t(cancelLabel)}
+                        title={t(cancelLabel)}
+                        onClick={onClose}
                     />,
                 ]}
             />
