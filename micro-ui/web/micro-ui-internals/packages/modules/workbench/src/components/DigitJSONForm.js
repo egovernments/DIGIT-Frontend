@@ -155,11 +155,10 @@ function ObjectFieldTemplate(props) {
   const isRoot = idSchema["$id"] === "digit_root";
   const { t } = useTranslation();
 
-  const localisableFields = MdmsRes?.find((item) => item.schemaCode === schemaCode)?.localisation?.localisableFields || [];
-
+  const localisableFields = MdmsRes?.find((item) => item?.schemaCode === schemaCode)?.localisation?.localisableFields || [];
   const children = props.properties.map((element) => {
     const fieldName = element.name;
-    const isLocalisable = localisableFields.some((field) => field.fieldPath === fieldName);
+    const isLocalisable = localisableFields.some((field) => field?.fieldPath === fieldName);
 
     if (isLocalisable) {
       const fieldProps = additionalProperties?.[fieldName];
@@ -288,6 +287,7 @@ const DigitJSONForm = ({
   const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
   const { moduleName, masterName } = Digit.Hooks.useQueryParams();
   const tenantId = Digit.ULBService.getCurrentTenantId();
+
   const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(
     tenantId,
     "Workbench",
@@ -297,11 +297,13 @@ const DigitJSONForm = ({
     }
   );
 
+
+
+
   // Compute additionalProperties whenever formData or MdmsRes changes
   useEffect(() => {
     if (schema?.code && MdmsRes && formData) {
-      const localisableFields =
-        MdmsRes?.find((item) => item.schemaCode === schema.code)?.localisation?.localisableFields || [];
+      const localisableFields = MdmsRes?.find((item) => item?.schemaCode === schema?.code)?.localisation?.localisableFields || [];
       let newAdditionalProps = {};
       for (const fieldName in formData) {
         const inputValue = formData[fieldName];
@@ -318,7 +320,7 @@ const DigitJSONForm = ({
       }
       setAdditionalProperties(newAdditionalProps);
     }
-  }, [formData, MdmsRes, schema]);
+  }, [formData, MdmsRes,schema]);
 
   const reqCriteriaSecondUpsert = {
     url: `/localization/messages/v1/_upsert`,
