@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 
 import { useMyContext } from "../../utils/context";
 import { AttendanceInboxConfig } from "../../configs/attendance_inbox_config";
+import CustomInboxSearchComposer from "../../components/custom_inbox_composer";
 
 const AttendanceInbox = () => {
   const { dispatch, state } = useMyContext();
@@ -21,8 +22,8 @@ const AttendanceInbox = () => {
         {location?.state?.count ? <span className="inbox-count">{location?.state?.count}</span> : null}
       </Header>
       <div className="inbox-search-wrapper">
-        <InboxSearchComposer configs={configs}></InboxSearchComposer>
-        {/*<div>Attendance Inbox</div>*/}
+       {/* <InboxSearchComposer configs={configs}></InboxSearchComposer>*/}
+       <CustomInboxSearchComposer></CustomInboxSearchComposer>
       </div>
     </React.Fragment>
   );

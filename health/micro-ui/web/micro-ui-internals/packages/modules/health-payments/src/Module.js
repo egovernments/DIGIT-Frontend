@@ -7,6 +7,11 @@ import { overrideHooks, updateCustomConfigs } from "./utils";
 import { ProviderContext } from "./utils/context";
 import Sample from "./components/sample";
 import CampaignNameSelection from "./components/campaign_dropdown";
+import CustomInboxSearchComposer from "./components/custom_inbox_composer";
+import CustomInboxSearchLinks from "./components/custom_comp/link_section";
+import CustomSearchComponent from "./components/custom_comp/search_section";
+import CustomFilter from "./components/custom_comp/filter_section";
+import CustomInboxTable from "./components/custom_comp/table_inbox";
 
 export const PaymentsModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -82,6 +87,12 @@ const componentsToRegister = {
   PaymentsCard,
   Sample,
   CampaignNameSelection,
+  //
+  CustomInboxSearchComposer,
+  CustomInboxSearchLinks,
+  CustomSearchComponent,
+  CustomFilter,
+  CustomInboxTable,
 };
 
 export const initPaymentComponents = () => {

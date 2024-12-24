@@ -12,7 +12,7 @@ const Sample = (props) => {
     url: `/boundary-service/boundary-relationships/_search`,
     params: {
       tenantId: "mz",
-      // hierarchyType: paramsData?.hierarchy?.hierarchyType,
+      hierarchyType: "HIERARCHYTEST",
       includeChildren: true,
       codes: "HIERARCHYTEST_MO_13_02_MOSSURILEE",
       boundaryType: "DISTRICT",
@@ -39,20 +39,6 @@ const Sample = (props) => {
       <div>
         <h2>Boundary</h2>
         {childrenData?.[0]?.boundary.length > 0 && <NestedDropdown data={childrenData?.[0]?.boundary} onLastSelectedIdChange={setLastSelectedId} />}
-        <button
-          onClick={handleButtonClick}
-          style={{
-            marginTop: "20px",
-            padding: "10px 20px",
-            backgroundColor: "#4CAF50",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          Get Last Selected ID
-        </button>
       </div>
     </React.Fragment>
   );

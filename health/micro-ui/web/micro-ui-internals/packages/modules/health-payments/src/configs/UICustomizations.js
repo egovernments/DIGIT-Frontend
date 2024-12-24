@@ -130,7 +130,7 @@ export const UICustomizations = {
     },
 
     postProcess: (responseArray, uiConfig) => {
-      console.log(responseArray,"responseArray");
+      
       // debugger;
       // const statusOptions = responseArray?.statusMap
       //   ?.filter((item) => item.applicationstatus)
