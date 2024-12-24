@@ -9,7 +9,7 @@ import { CustomSVG } from "@egovernments/digit-ui-components";
 const CustomInboxTable = ({ rowsPerPage, isLoading, tableData, customHandleRowsPerPageChange, customHandlePaginationChange, totalCount }) => {
   const { t } = useTranslation();
 
-  useEffect(() => {}, [tableData]);
+  useEffect(() => { }, [tableData]);
 
   const handlePaginationChange = (page) => {
     customHandlePaginationChange(page);
@@ -24,7 +24,7 @@ const CustomInboxTable = ({ rowsPerPage, isLoading, tableData, customHandleRowsP
       selector: (row) => {
         return (
           <span className="link">
-            <Link to={`/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}`}>
+            <Link to={`/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`}>
               {String(row?.id ? row?.id : t("ES_COMMON_NA"))}
             </Link>
           </span>

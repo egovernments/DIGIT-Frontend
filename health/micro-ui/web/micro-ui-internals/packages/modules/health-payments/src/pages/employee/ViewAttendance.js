@@ -720,9 +720,11 @@ const ViewAttendance = ({ editAttendance = false }) => {
         actionFields={[
           disabledAction ? (
             <Button
-              label={t(`HCM_AM_GO_BACK_TO_HOME`)}
-              title={t(`HCM_AM_GO_BACK_TO_HOME`)}
-              onClick={() => { }}
+              label={t(`HCM_AM_GO_BACK`)}
+              title={t(`HCM_AM_GO_BACK`)}
+              onClick={() => {
+                history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
+              }}
               type="button"
               style={{ minWidth: "14rem" }}
               variation="primary"
