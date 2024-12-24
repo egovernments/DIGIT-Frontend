@@ -671,12 +671,10 @@ const ViewAttendance = ({ editAttendance = false }) => {
           <div className="label-pair">
             <span className="label-heading">{t(`HCM_AM_ATTENDANCE_OFFICER`)}</span>
             <span className="label-text">{individualsData?.Individual?.[0]?.name?.givenName}</span>
-            {/* need to fetch name from individual */}
           </div>
           <div className="label-pair">
             <span className="label-heading">{t(`HCM_AM_ATTENDANCE_OFFICER_CONTACT_NUMBER`)}</span>
             <span className="label-text">{individualsData?.Individual?.[0]?.mobileNumber}</span>
-            {/* need to fetch name from individual */}
           </div>
           <div className="label-pair">
             <span className="label-heading">{t(`HCM_AM_NO_OF_ATTENDEE`)}</span>
