@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState, useMemo } from "react";
+import React, { useEffect, useReducer, useState, useMemo, use } from "react";
 
 import _ from "lodash";
 import CustomInboxSearchLinks from "./custom_comp/link_section";
@@ -12,7 +12,7 @@ const CustomInboxSearchComposer = () => {
   const { t } = useTranslation();
 
   const [filterCriteria, setFilterCriteria] = useState({});
-  const [isFetching, setIsFetching] = useState(false);
+  const [selectedProject, setSelectedProject] = useState({});
   //-------//
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,7 +51,7 @@ const CustomInboxSearchComposer = () => {
     params: {
       tenantId: "mz",
       limit: rowsPerPage,
-      offset: (currentPage - 1) *  rowsPerPage,
+      offset: (currentPage - 1) * rowsPerPage,
       //  ids:'ec3ad628-54a0-4eaf-9101-d78f7869919d'
     },
     config: {
@@ -61,14 +61,14 @@ const CustomInboxSearchComposer = () => {
           return {
             id: item?.registerNumber,
             name: item?.name,
-            boundary: "item?.user?.emailId",
+            boundary: "locality",
             status: item?.status,
           };
         });
         return {
           data: rowData,
-          //totalCount: data?.totalCount,
-          totalCount:200
+          totalCount: data?.totalCount,
+          statusCount: data?.statusCount,
         };
       },
     },
@@ -81,22 +81,23 @@ const CustomInboxSearchComposer = () => {
     refetch: refetchPlanEmployee,
   } = Digit.Hooks.payments.useAttendanceBoundaryRegisterSearch(reqCriteriaResource);
 
-  console.log(childrenData);
+  useEffect(() => {}, [selectedProject]);
+
+  const handleProjectChange = (selectedProject) => {
+    setSelectedProject(selectedProject);
+  };
 
   const handleFilterUpdate = (newFilter) => {
-    setIsFetching(true); // Indicate fetching has started
     setFilterCriteria(newFilter); // Update the filter state
   };
 
-  
-
- useEffect(() => {
+  useEffect(() => {
     refetchPlanEmployee();
   }, [totalRows, currentPage, rowsPerPage, searchQuery]);
 
   useEffect(() => {
-      setTotalRows(childrenData?.totalCount);
-    }, [childrenData]);
+    setTotalRows(childrenData?.totalCount);
+  }, [childrenData]);
 
   const handlePaginationChange = (page) => {
     setCurrentPage(page);
@@ -131,18 +132,18 @@ const CustomInboxSearchComposer = () => {
           </div>
           <div style={{ width: "1%", display: "flex", flexDirection: "row" }} />
           <div style={{ width: "75%", display: "flex", flexDirection: "row" }}>
-            <CustomSearchComponent></CustomSearchComponent>
+            <CustomSearchComponent onProjectSelect={handleProjectChange}></CustomSearchComponent>
           </div>
         </div>
 
         <div style={{ width: "100%", display: "flex", flexDirection: "row" }}>
           <div style={{ width: "20%", display: "flex", flexDirection: "row" }}>
-            <CustomFilter onFilterChange={handleFilterUpdate}></CustomFilter>
+            <CustomFilter projectData={selectedProject} onFilterChange={handleFilterUpdate}></CustomFilter>
           </div>
           <div style={{ width: "1%", display: "flex", flexDirection: "row" }} />
           <div style={{ width: "75%", display: "flex", flexDirection: "row" }}>
             <CustomInboxTable
-            rowsPerPage={rowsPerPage}
+              rowsPerPage={rowsPerPage}
               customHandleRowsPerPageChange={handleRowsPerPageChange}
               customHandlePaginationChange={handlePaginationChange}
               isLoading={childrenDataLoading}

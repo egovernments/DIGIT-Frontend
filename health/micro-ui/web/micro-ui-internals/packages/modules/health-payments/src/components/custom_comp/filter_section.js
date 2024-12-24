@@ -1,21 +1,28 @@
-import React from "react";
+import React,{useState} from "react";
 
 import { useTranslation } from "react-i18next";
 import { SubmitBar } from "@egovernments/digit-ui-components";
 import Sample from "../sample";
 
-const CustomFilter = ({onFilterChange}) => {
+const CustomFilter = ({ onFilterChange, projectData }) => {
   const { t } = useTranslation();
 
+  const [boundary, setBoundary] = useState("");
+
+  console.log("wel come to ");
+  const onChangeId = (value) => {
+    setBoundary(value); 
+  };
+
   const handleApplyFilter = () => {
-    onFilterChange("filter"); // Pass the updated filter to parent
+    onFilterChange(boundary); // Pass the updated filter to parent
   };
 
   return (
     <div className={`inbox-search-links-container`}>
-      <div  >
-        <div style={{ alignItems: "center", gap: ".75rem", marginBottom: "24px" , display: "flex", flexDirection: "row"}}>
-          <div  style={{ display: "flex", alignItems: "center" }}>
+      <div>
+        <div style={{ alignItems: "center", gap: ".75rem", marginBottom: "24px", display: "flex", flexDirection: "row" }}>
+          <div style={{ display: "flex", alignItems: "center" }}>
             <span>
               <svg width="17" height="17" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -26,7 +33,7 @@ const CustomFilter = ({onFilterChange}) => {
             </span>
             <span style={{ marginLeft: "8px", fontWeight: "normal" }}>{t("FILTERS_FILTER_CARD_CAPTION")}:</span>
           </div>
-          
+
           <span onClick={() => {}} style={{ border: "1px solid #e0e0e0", padding: "6px", marginBottom: "10px" }}>
             <svg width="17" height="17" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -40,9 +47,8 @@ const CustomFilter = ({onFilterChange}) => {
           {children}
         </form>*/}
 
-
-        <Sample></Sample>
-        <SubmitBar  onSubmit ={handleApplyFilter} className="w-fullwidth" label={t("ES_COMMON_APPLY")} submit form={23} />
+        {projectData?.address?.boundary && <Sample onChange={onChangeId} selectedProject={projectData}></Sample>}
+        <SubmitBar onSubmit={handleApplyFilter} className="w-fullwidth" label={t("ES_COMMON_APPLY")} submit form={23} />
       </div>
     </div>
   );
