@@ -118,6 +118,7 @@ export const UICustomizations = {
 
   AttendanceInboxConfig: {
     preProcess: (data) => {
+      console.log(data,"dataaaaaa");
       //set tenantId
       data.body.tenantId = Digit.ULBService.getCurrentTenantId();
 
@@ -128,18 +129,19 @@ export const UICustomizations = {
       return data;
     },
 
-    // postProcess: (responseArray, uiConfig) => {
-    //   debugger;
-    //   const statusOptions = responseArray?.statusMap
-    //     ?.filter((item) => item.applicationstatus)
-    //     ?.map((item) => ({ code: item.applicationstatus, i18nKey: `COMMON_MASTERS_${item.applicationstatus}` }));
-    //   if (uiConfig?.type === "filter") {
-    //     let fieldConfig = uiConfig?.fields?.filter((item) => item.type === "dropdown" && item.populators.name === "musterRollStatus");
-    //     if (fieldConfig.length) {
-    //       fieldConfig[0].populators.options = statusOptions;
-    //     }
-    //   }
-    // },
+    postProcess: (responseArray, uiConfig) => {
+      
+      // debugger;
+      // const statusOptions = responseArray?.statusMap
+      //   ?.filter((item) => item.applicationstatus)
+      //   ?.map((item) => ({ code: item.applicationstatus, i18nKey: `COMMON_MASTERS_${item.applicationstatus}` }));
+      // if (uiConfig?.type === "filter") {
+      //   let fieldConfig = uiConfig?.fields?.filter((item) => item.type === "dropdown" && item.populators.name === "musterRollStatus");
+      //   if (fieldConfig.length) {
+      //     fieldConfig[0].populators.options = statusOptions;
+      //   }
+      // }
+    },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
 
       //registerNumber
