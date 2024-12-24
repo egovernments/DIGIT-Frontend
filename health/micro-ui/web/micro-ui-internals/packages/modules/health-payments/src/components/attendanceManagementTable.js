@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Button, Card, Loader, TableMolecule, TextInput } from "@egovernments/digit-ui-components";
+import { Button, Card, Loader, TableMolecule, TextInput, Toast } from "@egovernments/digit-ui-components";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { CheckBox } from "@egovernments/digit-ui-components";
 
@@ -11,13 +11,8 @@ import { CheckBox } from "@egovernments/digit-ui-components";
 const AttendanceManagementTable = ({ ...props }) => {
   const { t } = useTranslation();
   const history = useHistory();
-  const [loading, setLoading] = useState(false);
-  const [showTimelinePopup, setShowTimelinePopup] = useState(false);
-  const [showEditVillagePopup, setShowEditVillagePopup] = useState({});
-  const [selectedBusinessId, setSelectedBusinessId] = useState(null);
   const url = Digit.Hooks.useQueryParams();
-  const [isIntermediate, setIsIntermediate] = useState(false);
-  const [selectedBoundaryCode, setSelectedBoundaryCode] = useState(null);
+  const [showToast, setShowToast] = useState(null);
 
   const columns = useMemo(() => {
     const baseColumns = [
@@ -58,13 +53,53 @@ const AttendanceManagementTable = ({ ...props }) => {
       { label: role, maxLength: 64 },
       props.editAttendance ? (
         <div>
-          <TextInput type={"numeric"} value={daysWorked} />
+          <TextInput
+            type="numeric"
+            value={daysWorked}
+            onChange={(e) => {
+              handleDaysWorkedChange(id, e);
+            }}
+            populators={{ disableTextField: true }}
+          />
         </div>
       ) : (
         daysWorked
       ),
     ]);
   }, [props.data, props.editAttendance]);
+
+  const handleDaysWorkedChange = (workerId, value) => {
+
+    // Find the worker whose attendance is being updated
+    const worker = props.data.find((worker) => worker[1] === workerId);
+
+    if (!worker) return; // If worker is not found, exit early
+
+    const previousValue = worker[3]; // Previous value for daysWorked
+
+    // Check if both current value and previous value are 0
+    if (value === 0 && previousValue === 0) {
+      setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_CAN_NOT_BE_LESS_THAN_ZERO"), transitionTime: 3000 });
+      return;
+    }
+
+    if (value > props.duration) {
+      setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_CAN_NOT_EXCEED_EVENT_DURATION_ERROR"), transitionTime: 3000 });
+      return;
+    }
+
+    // Clear the toast if the input is valid
+    setShowToast(null);
+
+    // Update the data directly using the parent's setState
+    const updatedData = props.data.map((worker) => {
+      if (worker[1] === workerId) {
+        return [worker[0], worker[1], worker[2], value]; // Update the daysWorked value
+      }
+      return worker; // Keep other rows unchanged
+    });
+    props.setAttendanceSummary(updatedData);
+  };
 
   const handlePageChange = (page, totalRows) => {
     props?.handlePageChange(page, totalRows);
@@ -78,11 +113,6 @@ const AttendanceManagementTable = ({ ...props }) => {
     props?.handlePerRowsChange(currentRowsPerPage, currentPage);
   };
 
-  const selectProps = {
-    hideLabel: true,
-    isIntermediate: isIntermediate,
-    mainClassName: "data-table-select-checkbox",
-  };
 
   return (
     <div className="component-table-wrapper">
@@ -131,6 +161,16 @@ const AttendanceManagementTable = ({ ...props }) => {
           tableTitle: "",
         }}
       />
+      {showToast && (
+        <Toast
+          style={{ zIndex: 10001 }}
+          label={showToast.label}
+          type={showToast.key}
+          // error={showToast.key === "error"}
+          transitionTime={showToast.transitionTime}
+          onClose={() => setShowToast(null)}
+        />
+      )}
     </div>
   );
 };
