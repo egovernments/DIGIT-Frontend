@@ -43,6 +43,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/view-attendance`} component={() => <ViewAttendance />} />
         <PrivateRoute path={`${path}/edit-attendance`} component={() => <ViewAttendance editAttendance={true} />} />
         <PrivateRoute path={`${path}/attendance-approve-success`} component={() => <Response />} />
+        <PrivateRoute path={`${path}/attendance-approve-failed`} component={() => <Response />} />
         <PrivateRoute path={`${path}/registers-inbox`} component={() => <AttendanceInbox />} />
       </AppContainer>
     </Switch>

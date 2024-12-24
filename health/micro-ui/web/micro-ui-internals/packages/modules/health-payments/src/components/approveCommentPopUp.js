@@ -6,18 +6,26 @@ const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
 
     const { t } = useTranslation();
     const [comment, setComment] = useState(null);
+    const [showToast, setShowToast] = useState(null);
 
 
     const handleTextAreaChange = (e) => {
         const inputValue = e.target.value;
-        if (inputValue.length > 140) {
-            // Showing toast when input exceeds 140 characters
-            setShowToast({ key: "error", label: t("HCM_MICROPLANNING_COMMENT_CHAR_LENGTH_ERROR_TOAST_MESSAGE") });
-            // Trimming the comment back to 140 characters
-            setComment(inputValue.substring(0, 140));
-        } else {
-            setComment(inputValue);
+        setComment(inputValue);
+    };
+
+    const handleSave = () => {
+        if (!comment || comment.trim() === "") {
+            // Show toast if comment is empty
+            setShowToast({
+                key: "error",
+                label: t("HCM_AM_COMMENT_REQUIRED_ERROR_TOAST_MESSAGE"),
+            });
+            return;
         }
+
+        // Call the onSubmit function with the valid comment
+        onSubmit(comment);
     };
 
     const handleKeyPress = (e) => {
@@ -35,7 +43,7 @@ const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
                 children={[
                     <div key="comment-section">
                         <div className="comment-label">
-                            {t(`HCM_AM_APPROVE_COMMENT_LABEL`)}
+                            {t(`HCM_AM_APPROVE_COMMENT_LABEL`)}<span className="required">*</span>
                         </div>
                         <TextArea
                             style={{ maxWidth: "100%" }}
@@ -68,10 +76,18 @@ const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
                         style={{ minWidth: "270px" }}
                         label={t(`HCM_AM_APPROVE`)}
                         title={t(`HCM_AM_APPROVE`)}
-                        onClick={() => onSubmit(comment)}
+                        onClick={() => handleSave()}
                     />,
                 ]}
             />
+            {showToast && (
+                <Toast
+                    style={{ zIndex: 10001 }}
+                    label={showToast.label}
+                    type={showToast.key}
+                    onClose={() => setShowToast(null)}
+                />
+            )}
         </>
 
     );

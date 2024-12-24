@@ -23,7 +23,7 @@ const Response = () => {
         cardStyles={{}}
         className=""
         customIcon=""
-        description={t(state?.description || "")}
+        description={t(state?.description)}
         footerChildren={[
           <Button label={t(`HCM_AM_VIEW_ANOTHER_REGISTER`)} onClick={
             () => {
@@ -33,15 +33,15 @@ const Response = () => {
         ]}
         footerStyles={{}}
         iconFill=""
-        info={t(state?.info || "")}
+        info={t(state?.info)}
         maxFooterButtonsAllowed={5}
-        message={t(state?.message || "")}
+        message={t(state?.message)}
         multipleResponses={[]}
         props={{}}
         response={t(state?.fileName ? state?.fileName : state?.responseId ? state?.responseId : "")}
         sortFooterButtons
         style={{}}
-        type="success"
+        type={state?.state}
       ></PanelCard>
       <ActionBar className="mc_back">
         <Button

@@ -14,11 +14,15 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const { registerNumber } = Digit.Hooks.useQueryParams();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [currentPage, setCurrentPage] = useState(1);
+  const [attendanceDuration, setAttendanceDuration] = useState(null);
+  const [attendanceSummary, setAttendanceSummary] = useState([]);
+  const [disabledAction, setDisabledAction] = useState(false);
   const [openEditAlertPopUp, setOpenEditAlertPopUp] = useState(false);
   const [openApproveCommentPopUp, setOpenApproveCommentPopUp] = useState(false);
   const [openApproveAlertPopUp, setOpenApproveAlertPopUp] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [totalRows, setTotalRows] = useState(0);
+  const [showToast, setShowToast] = useState(null);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
 
   const project = Digit?.SessionStorage.get("staffProjects");
@@ -40,7 +44,21 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   const { isLoading: isAttendanceLoading, data: AttendanceData } = Digit.Hooks.useCustomAPIHook(AttendancereqCri);
 
-  console.log(AttendanceData, 'aaaaaaaaaaaaa');
+  useEffect(() => {
+    if (AttendanceData) {
+      setAttendanceDuration(
+        Math.floor((AttendanceData?.attendanceRegister[0]?.endDate - AttendanceData?.attendanceRegister[0]?.startDate) / (24 * 60 * 60 * 1000))
+      );
+    }
+  }, [AttendanceData])
+
+  /// ADDED CONDITION THAT IF CAMPAIGN HAS NOT ENDED THEN WE WILL SHOW ESTIMATE DATA ONLY AND DISABLED ALL THE ACTIONS
+
+  useEffect(() => {
+    if (AttendanceData?.attendanceRegister[0]?.endDate > new Date()) {
+      setDisabledAction(true);
+    }
+  }, [AttendanceData])
 
   const reqCri = {
     url: `/muster-roll/v1/_estimate`,
@@ -53,21 +71,155 @@ const ViewAttendance = ({ editAttendance = false }) => {
       }
     },
     config: {
-      enabled: AttendanceData ? true : false,
+      enabled: (AttendanceData ? true : false) && disabledAction,
       select: (data) => {
         return data;
       },
     },
   };
 
-  const { isLoading: isEstimateMusterRoleLoading, data: estimateMusterRoleData } = Digit.Hooks.useCustomAPIHook(reqCri);
+  const { isLoading: isEstimateMusterRollLoading, data: estimateMusterRollData } = Digit.Hooks.useCustomAPIHook(reqCri);
+
+
+  /// SEARCH MUSTERROLL TO CHECK IF WE NEED TO SHOW ESTIMATE OR MUSTERROLL SEARCH DATA
+
+  const searchReqCri = {
+    url: `/muster-roll/v1/_search`,
+    params: {
+      tenantId: tenantId,
+      registerId: AttendanceData?.attendanceRegister[0]?.id
+    },
+    config: {
+      enabled: (AttendanceData ? true : false) && !disabledAction,
+      select: (data) => {
+        return data;
+      },
+    },
+  };
+
+  const { isLoading: isMusterRollLoading, data: MusterRollData } = Digit.Hooks.useCustomAPIHook(searchReqCri);
+
+  const mutation = Digit.Hooks.useCustomAPIMutationHook({
+    url: "/muster-roll/v1/_create",
+  });
+
+  const updateMutation = Digit.Hooks.useCustomAPIMutationHook({
+    url: "/muster-roll/v1/_update",
+  });
+
+  const approveMutation = Digit.Hooks.useCustomAPIMutationHook({
+    url: "/muster-roll/v1/_update",
+  });
+
+  const triggerMusterRollApprove = async () => {
+    try {
+      await updateMutation.mutateAsync(
+        {
+          body: {
+            musterRoll: {
+              tenantId: tenantId,
+              registerId: AttendanceData?.attendanceRegister[0]?.id,
+              startDate: AttendanceData?.attendanceRegister[0]?.startDate,
+              endDate: AttendanceData?.attendanceRegister[0]?.endDate
+            }
+          },
+        },
+        {
+          onSuccess: (data) => {
+            history.push(`/${window.contextPath}/employee/payments/attendance-approve-success`, {
+              state: "success",
+              info: "HCM_AM_MUSTER_ROLL_ID",
+              fileName: 'dummmy name',
+              description: t(`HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION`),
+              message: t(`HCM_AM_ATTENDANCE_APPROVE_SUCCESS`),
+              back: t(`GO_BACK_TO_HOME`),
+              backlink: `/${window.contextPath}/employee`
+            });
+          },
+          onError: (error) => {
+            history.push(`/${window.contextPath}/employee/payments/attendance-approve-failed`, {
+              state: "error",
+              message: t(`HCM_AM_ATTENDANCE_APPROVE_FAILED`),
+              back: t(`GO_BACK_TO_HOME`),
+              backlink: `/${window.contextPath}/employee`
+            });
+          }
+        }
+      );
+    } catch (error) {
+      /// will show estimate data only
+    }
+  };
+
+  const triggerMusterRollUpdate = async () => {
+    try {
+      await updateMutation.mutateAsync(
+        {
+          body: {
+            musterRoll: {
+              tenantId: tenantId,
+              registerId: AttendanceData?.attendanceRegister[0]?.id,
+              startDate: AttendanceData?.attendanceRegister[0]?.startDate,
+              endDate: AttendanceData?.attendanceRegister[0]?.endDate
+            }
+          },
+        },
+        {
+          onSuccess: (data) => {
+            setShowToast({ key: "success", label: t("HCM_AM_ATTENDANCE_UPDATED_SUCCESSFULLY"), transitionTime: 3000 });
+            history.push(`/${window.contextPath}/employee/payments/view-attendance?registerNumber=${registerNumber}`);
+
+          },
+          onError: (error) => {
+            setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
+          }
+        }
+      );
+    } catch (error) {
+      /// will show estimate data only
+    }
+  };
+
+  useEffect(() => {
+    /// need to check api when this response is coming empty
+    triggerMusterRollCreate();
+  }, [MusterRollData]);
+
+  const triggerMusterRollCreate = async () => {
+    if (MusterRollData) {
+      try {
+        await mutation.mutateAsync(
+          {
+            body: {
+              musterRoll: {
+                tenantId: tenantId,
+                registerId: AttendanceData?.attendanceRegister[0]?.id,
+                startDate: AttendanceData?.attendanceRegister[0]?.startDate,
+                endDate: AttendanceData?.attendanceRegister[0]?.endDate
+              }
+            },
+          },
+          {
+            onSuccess: (data) => {
+              /// need to update on success 
+            },
+            onError: (error) => {
+              /// need to show estimate data only
+            }
+          }
+        );
+      } catch (error) {
+        /// will show estimate data only
+      }
+    }
+  };
 
   const individualReqCriteria = {
     url: `/health-individual/v1/_search`,
     params: {
       tenantId: tenantId,
-      limit: 100,// need to update with table state
-      offset: 0,// need to update with table state
+      limit: 100,
+      offset: 0,
     },
     body: {
       Individual: {
@@ -84,9 +236,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   const { isLoading: isIndividualsLoading, data: individualsData } = Digit.Hooks.useCustomAPIHook(individualReqCriteria);
 
-  console.log(individualsData, "iiiiiiiiiiiiiiiiiiiiiiiiiiiii");
-
-  const hardCodedMusterRoleData = [
+  const hardCodedMusterRollData = [
     {
       "id": null,
       "tenantId": "od.testing",
@@ -464,9 +614,11 @@ const ViewAttendance = ({ editAttendance = false }) => {
     });
   }
 
-  const userAttendanceSummary = getUserAttendanceSummary(hardCodedMusterRoleData);
+  // Populate attendanceSummary when AttendanceData changes
+  useEffect(() => {
+    setAttendanceSummary(getUserAttendanceSummary(hardCodedMusterRollData));
+  }, []); /// need to update dependency
 
-  console.log(userAttendanceSummary, 'uuuuuuuuuuuuuuu');
 
   const handlePageChange = (page, totalRows) => {
     setCurrentPage(page);
@@ -475,13 +627,14 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const closeActionBarPopUp = () => {
     setOpenEditAlertPopUp(false);
   };
+
   const handlePerRowsChange = (currentRowsPerPage, currentPage) => {
     setRowsPerPage(currentRowsPerPage);
     setCurrentPage(1);
     setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * rowsPerPage })
   }
 
-  if (isAttendanceLoading || isEstimateMusterRoleLoading || isIndividualsLoading) {
+  if (isAttendanceLoading || isEstimateMusterRollLoading || isIndividualsLoading || isMusterRollLoading) {
     return <LoaderScreen />
   }
 
@@ -520,7 +673,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
           </div>
           <div className="label-pair">
             <span className="label-heading">{t(`HCM_AM_EVENT_DURATION`)}</span>
-            <span className="label-text">{Math.floor((AttendanceData?.attendanceRegister[0]?.endDate - AttendanceData?.attendanceRegister[0]?.startDate) / (24 * 60 * 60 * 1000))}</span>
+            <span className="label-text">{attendanceDuration || 0}</span>
           </div>
           <div className="label-pair">
             <span className="label-heading">{t(`HCM_AM_STATUS`)}</span>
@@ -529,7 +682,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
           </div>
         </Card>
         <Card>
-          <AttendanceManagementTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} data={userAttendanceSummary} editAttendance={editAttendance} />
+          <AttendanceManagementTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} data={attendanceSummary} setAttendanceSummary={setAttendanceSummary} duration={attendanceDuration} editAttendance={editAttendance} />
         </Card>
       </div>
       {openEditAlertPopUp && <AlertPopUp
@@ -551,16 +704,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
         submitLabel={t(`HCM_AM_APPROVE`)}
         cancelLabel={t(`HCM_AM_CANCEL`)}
         onPrimaryAction={() => {
-          ///TODO:NEED TO INTEGRATE API'S
-          /// for now directly nevigating to success screen
-          history.push(`/${window.contextPath}/employee/payments/attendance-approve-success`, {
-            info: "HCM_AM_MUSTER_ROLL_ID",
-            fileName: 'dummmy name',
-            description: t(`HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION`),
-            message: t(`HCM_AM_ATTENDANCE_APPROVE_SUCCESS`),
-            back: t(`GO_BACK_TO_HOME`),
-            backlink: `/${window.contextPath}/employee`
-          });
+          triggerMusterRollApprove();
         }}
       />}
       {openApproveCommentPopUp && <ApproveCommentPopUp
@@ -574,12 +718,24 @@ const ViewAttendance = ({ editAttendance = false }) => {
       />}
       <ActionBar
         actionFields={[
-          editAttendance ? (
+          disabledAction ? (
+            <Button
+              label={t(`HCM_AM_GO_BACK_TO_HOME`)}
+              title={t(`HCM_AM_GO_BACK_TO_HOME`)}
+              onClick={() => { }}
+              type="button"
+              style={{ minWidth: "14rem" }}
+              variation="primary"
+            />
+          ) : editAttendance ? (
             <Button
               icon="CheckCircle"
               label={t(`HCM_AM_SUBMIT_LABEL`)}
               title={t(`HCM_AM_SUBMIT_LABEL`)}
-              onClick={() => { }}
+              onClick={() => {
+                triggerMusterRollUpdate();
+              }}
+              style={{ minWidth: "14rem" }}
               type="button"
               variation="primary"
             />
@@ -587,7 +743,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
             <Button
               className="custom-class"
               iconFill=""
-              label="Actions"
+              label={t(`HCM_AM_ACTIONS`)}
               menuStyles={{
                 bottom: "40px",
               }}
@@ -601,16 +757,16 @@ const ViewAttendance = ({ editAttendance = false }) => {
               options={[
                 {
                   code: "EDIT_ATTENDANCE",
-                  name: "Edit Attendance",
+                  name: t(`HCM_AM_ACTIONS_EDIT_ATTENDANCE`),
                 },
                 {
                   code: "APPROVE",
-                  name: "Approve",
+                  name: t(`HCM_AM_ACTIONS_APPROVE`),
                 },
               ]}
               optionsKey="name"
               size=""
-              style={{}}
+              style={{ minWidth: "14rem" }}
               title=""
               type="actionButton"
             />
@@ -622,7 +778,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
         sortActionFields
         style={{}}
       />
-      {/* {showToast && (
+      {showToast && (
         <Toast
           style={{ zIndex: 10001 }}
           label={showToast.label}
@@ -631,7 +787,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
           transitionTime={showToast.transitionTime}
           onClose={() => setShowToast(null)}
         />
-      )} */}
+      )}
     </React.Fragment>
   );
 };
