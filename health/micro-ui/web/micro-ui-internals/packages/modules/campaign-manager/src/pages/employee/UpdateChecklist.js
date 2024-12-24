@@ -38,6 +38,7 @@ const UpdateChecklist = () => {
     const [previewData, setPreviewData] = useState([]);
     const [showPopUp, setShowPopUp] = useState(false);
     const [curActive, setCurActive] = useState(false);
+    const [helpText, setHelpText] = useState("");
 
 
     const popShow = () => {
@@ -73,6 +74,7 @@ const UpdateChecklist = () => {
             select: (res) => {
                 if (res?.ServiceDefinitions?.[0]?.attributes) {
                     setCurActive(res?.ServiceDefinitions?.[0].isActive);
+                    setHelpText(res?.ServiceDefinitions?.[0]?.additionalFields?.fields?.[0]?.value?.helpText);
                     let temp_data = res?.ServiceDefinitions?.[0]?.attributes
                     let formatted_data = temp_data.map((item) => item.additionalFields?.fields?.[0]?.value);
                     let nvd = formatted_data.filter((value, index, self) =>
@@ -375,7 +377,8 @@ const UpdateChecklist = () => {
                     value: {
                       name: checklistName,
                       type: checklistType,
-                      role: role
+                      role: role,
+                      helpText: helpText
                     }
                   }
                 ]
@@ -398,10 +401,17 @@ const UpdateChecklist = () => {
           let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
           if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
           let roleTemp = role.toUpperCase().replace(/ /g, "_");
+          let helpTextCode = helpText.toUpperCase().replace(/ /g, "_");
           uniqueLocal.push({
             code: `${campaignName}.${checklistTypeTemp}.${roleTemp}`,
             locale: locale,
             message: `${t(checklistTypeLocal)} ${t(roleLocal)}`,
+            module: "hcm-checklist"
+          });
+          uniqueLocal.push({
+            code: `${campaignName}.${checklistTypeTemp}.${roleTemp}.${helpTextCode}`,
+            locale: locale,
+            message: helpText,
             module: "hcm-checklist"
           });
       
@@ -454,6 +464,7 @@ const UpdateChecklist = () => {
         { label: "CHECKLIST_ROLE", value: roleLocal },
         { label: "TYPE_OF_CHECKLIST", value: checklistTypeLocal },
         { label: "CAMPAIGN_NAME", value: campaignName },
+        // { label: "CHECKLIST_HELP_TEXT", value: helpText }
         // { label: "CHECKLIST_NAME", value: name}            
     ];
 
@@ -532,6 +543,21 @@ const UpdateChecklist = () => {
                                 {index !== fieldPairs.length - 1 && <div style={{ height: "1rem" }}></div>}
                             </div>
                         ))}
+                        {
+                            <div style={{ display: "flex" }}>
+                            <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t("CHECKLIST_HELP_TEXT")}</div>
+                            <TextInput
+                                disabled={false}
+                                className="tetxinput-example"
+                                type={"text"}
+                                name={t("CHECKLIST_HELP_TEXT")}
+                                value={helpText}
+                                // value={`${clTranslated} ${rlTranslated}`}
+                                onChange={(event) => setHelpText(event.target.value)}
+                                placeholder={t("CHECKLIST_HELP_TEXT_PALCEHOLDER")}
+                            />
+                            </div>
+                        }
                     </Card>
                     <div style={{ height: "1rem" }}></div>
                     {!isLoading && <FormComposerV2
