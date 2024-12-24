@@ -490,11 +490,11 @@ const CreateChecklist = () => {
           secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign`,
         });
       } else {
-        setShowToast({ label: "CHECKLIST_UPDATE_FAILED", isError: "true" });
+        setShowToast({ label: "CHECKLIST_CREATED_FAILED", isError: "true" });
       }
     } catch (error) {
       // Handle error scenario
-      setShowToast({ label: "CHECKLIST_UPDATE_FAILED", isError: "true" });
+      setShowToast({ label: "CHECKLIST_CREATED_FAILED", isError: "true" });
       // console.error("Error creating checklist:", error);
     } finally {
       setSubmitting(false);
