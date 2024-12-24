@@ -541,6 +541,10 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
         className={"data-mapping-filter-switch"}
         isLabelFirst
         label={t("FILTER_BY_ACTIVE_STATUS")}
+        style={{
+          position: "relative",
+          zIndex: "1",
+        }}
         onToggle={(value) => {
           dispatch({
             type: "FILTER_BY_ACTIVE",
@@ -552,26 +556,32 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             },
           });
         }}
-        shapeOnOff
+        shapeOnOff={true}
       />
-      <DataTable
-        category={"category"}
-        columns={columns}
-        data={state?.currentData}
-        progressPending={isLoading || state?.currentData?.length === 0}
-        progressComponent={<Loader />}
-        pagination
-        paginationServer
-        customStyles={tableCustomStyle}
-        // paginationTotalRows={totalRows}
-        // onChangePage={handlePaginationChange}
-        // onChangeRowsPerPage={handleRowsPerPageChange}
-        // paginationPerPage={rowsPerPage}
-        paginationTotalRows={state.totalRows}
-        onChangePage={handlePageChange}
-        onChangeRowsPerPage={handleRowsPerPageChange}
-        paginationRowsPerPageOptions={[5, 10, 15, 20]}
-      />
+      {state?.currentData?.length === 0 ? (
+        <Fragment>
+          <NoResultsFound text={Digit.Utils.locale.getTransformedLocale(state?.filter ? `NO_RESULTS_FOR_ACTIVE_FILTER_${currentCategories}` : `NO_RESULTS_FOR_MAPPING_${currentCategories}`)} />
+        </Fragment>
+      ) : (
+        <DataTable
+          category={"category"}
+          columns={columns}
+          data={state?.currentData}
+          progressPending={isLoading || state?.currentData?.length === 0}
+          progressComponent={<Loader />}
+          pagination
+          paginationServer
+          customStyles={tableCustomStyle}
+          // paginationTotalRows={totalRows}
+          // onChangePage={handlePaginationChange}
+          // onChangeRowsPerPage={handleRowsPerPageChange}
+          // paginationPerPage={rowsPerPage}
+          paginationTotalRows={state.totalRows}
+          onChangePage={handlePageChange}
+          onChangeRowsPerPage={handleRowsPerPageChange}
+          paginationRowsPerPageOptions={[5, 10, 15, 20]}
+        />
+      )}
       {showPopUp && (
         <PopUp
           className={"dataMapping"}
