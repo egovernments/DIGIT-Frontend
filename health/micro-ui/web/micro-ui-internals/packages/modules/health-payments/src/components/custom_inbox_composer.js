@@ -7,13 +7,12 @@ import CustomSearchComponent from "./custom_comp/search_section";
 import { useTranslation } from "react-i18next";
 import CustomFilter from "./custom_comp/filter_section";
 import CustomInboxTable from "./custom_comp/table_inbox";
-import { FilterCard } from "@egovernments/digit-ui-components";
-import Sample from "./sample";
+import { FilterCard, Toast } from "@egovernments/digit-ui-components";
 
 const CustomInboxSearchComposer = () => {
   const { t } = useTranslation();
-
-  const [filterCriteria, setFilterCriteria] = useState({});
+  const [showToast, setShowToast] = useState(null);
+  const [filterCriteria, setFilterCriteria] = useState(null);
   const [selectedProject, setSelectedProject] = useState({});
   //-------//
 
@@ -30,7 +29,7 @@ const CustomInboxSearchComposer = () => {
     url: "/health-attendance/v1/_search",
   });
 
-  const triggerMusterRollApprove = async () => {
+  const triggerMusterRollApprove = async (filterData) => {
     try {
       setChildrenDataLoading(true);
       await fetchRegisters.mutateAsync(
@@ -39,18 +38,20 @@ const CustomInboxSearchComposer = () => {
             tenantId: Digit.ULBService.getStateId(),
             limit: rowsPerPage,
             offset: (currentPage - 1) * rowsPerPage,
-            //  ids:'ec3ad628-54a0-4eaf-9101-d78f7869919d'
+            referenceId: selectedProject?.id,
+            //staffId:Digit.SessionStorage.get("User")?.info?.uuid,
+            localityCodes: filterData?.code == undefined || filterData?.code == null ? filterCriteria?.code : filterData?.code,
+            //paymentStatus:"APPROVAL_PENDING"
           },
         },
         {
           onSuccess: (data) => {
-
             const rowData = data?.attendanceRegister?.map((item, index) => {
               return {
                 id: item?.registerNumber,
                 name: item?.name,
-                boundary: "locality",
-                status: item?.status,
+                boundary: item?.localityCode,
+                status: t(item?.paymentStatus),
               };
             });
             setChildrenDataLoading(false);
@@ -61,12 +62,7 @@ const CustomInboxSearchComposer = () => {
             });
           },
           onError: (error) => {
-            // history.push(`/${window.contextPath}/employee/payments/attendance-approve-failed`, {
-            //   state: "error",
-            //   message: t(`HCM_AM_ATTENDANCE_APPROVE_FAILED`),
-            //   back: t(`GO_BACK_TO_HOME`),
-            //   backlink: `/${window.contextPath}/employee`,
-            // });
+            setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_REGISTER_FETCH_FAILED"), transitionTime: 3000 });
           },
         }
       );
@@ -77,15 +73,15 @@ const CustomInboxSearchComposer = () => {
 
   //
 
-  useEffect(() => { }, [selectedProject]);
+  useEffect(() => {}, [selectedProject]);
 
   const handleProjectChange = (selectedProject) => {
     setSelectedProject(selectedProject);
   };
 
   const handleFilterUpdate = (newFilter) => {
-    triggerMusterRollApprove();
-    setFilterCriteria(newFilter); // Update the filter state
+    setFilterCriteria(newFilter);
+    triggerMusterRollApprove(newFilter);
   };
 
   // useEffect(() => {
@@ -109,15 +105,17 @@ const CustomInboxSearchComposer = () => {
     // handleCreateRateAnalysis();
     triggerMusterRollApprove();
   };
+  const callServiceOnTap = (status) => {
+   
+    triggerMusterRollApprove();
+  };
 
   return (
     <React.Fragment>
       <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
         <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
           <div style={{ width: "20%", display: "flex", flexDirection: "row" }}>
-            <CustomInboxSearchLinks
-              headerText={"Payments"}
-            ></CustomInboxSearchLinks>
+            <CustomInboxSearchLinks headerText={"Payments"}></CustomInboxSearchLinks>
           </div>
           <div style={{ width: "80%", display: "flex", flexDirection: "row" }}>
             <CustomSearchComponent onProjectSelect={handleProjectChange}></CustomSearchComponent>
@@ -125,16 +123,20 @@ const CustomInboxSearchComposer = () => {
         </div>
 
         <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
-          <div style={{
-            width: "20%", display: "flex", flexDirection: "row",
-            height: "60vh",
-            overflowY: "auto",
-          }}>
+          <div
+            style={{
+              width: "20%",
+              display: "flex",
+              flexDirection: "row",
+              height: "60vh",
+              overflowY: "auto",
+            }}
+          >
             <CustomFilter projectData={selectedProject} onFilterChange={handleFilterUpdate}></CustomFilter>
-
           </div>
-          <div style={{ width: "80%", display: "flex", flexDirection: "row", height: "60vh", }}>
+          <div style={{ width: "80%", display: "flex", flexDirection: "row", height: "60vh" }}>
             <CustomInboxTable
+            handleTabChange={callServiceOnTap}
               rowsPerPage={rowsPerPage}
               customHandleRowsPerPageChange={handleRowsPerPageChange}
               customHandlePaginationChange={handlePaginationChange}
@@ -145,6 +147,16 @@ const CustomInboxSearchComposer = () => {
           </div>
         </div>
       </div>
+      {showToast && (
+        <Toast
+          style={{ zIndex: 10001 }}
+          label={showToast.label}
+          type={showToast.key}
+          // error={showToast.key === "error"}
+          transitionTime={showToast.transitionTime}
+          onClose={() => setShowToast(null)}
+        />
+      )}
     </React.Fragment>
   );
 };

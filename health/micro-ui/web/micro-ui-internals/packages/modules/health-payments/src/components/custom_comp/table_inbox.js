@@ -7,7 +7,7 @@ import { useQueryClient } from "react-query";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { tableCustomStyle } from "./table_inbox_custom_style";
 
-const CustomInboxTable = ({ rowsPerPage, isLoading, tableData, customHandleRowsPerPageChange, customHandlePaginationChange, totalCount }) => {
+const CustomInboxTable = ({ handleTabChange, rowsPerPage, isLoading, tableData, customHandleRowsPerPageChange, customHandlePaginationChange, totalCount }) => {
   const { t } = useTranslation();
   const [activeLink, setActiveLink] = useState({
     code: "HCM_AM_PENDING_FOR_APPROVAL",
@@ -46,8 +46,8 @@ const CustomInboxTable = ({ rowsPerPage, isLoading, tableData, customHandleRowsP
       name: t("ATTENDANCE_BOUNDARY"),
       selector: (row) => {
         return (
-          <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={row?.boundary || t("NA")}>
-            {row.boundary || t("NA")}
+          <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={t(row?.boundary) || t("NA")}>
+            {t(row.boundary) || t("NA")}
           </div>
         );
       },
@@ -100,7 +100,9 @@ const CustomInboxTable = ({ rowsPerPage, isLoading, tableData, customHandleRowsP
                     ]}
                     navStyles={{}}
                     onTabClick={(e) => {
+                      
                       setActiveLink(e);
+                      handleTabChange(e);
                     }}
                     setActiveLink={setActiveLink}
                     style={{}}
