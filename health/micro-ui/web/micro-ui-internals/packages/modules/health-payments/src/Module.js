@@ -17,9 +17,8 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
-  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "ADMIN";
+  const hierarchyType = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "ADMIN";
   const moduleCode = ["payments", `boundary-${hierarchyType}`];
-
   const modulePrefix = "hcm";
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
@@ -46,6 +45,7 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
           return {
             "id": item.projectId,
             "tenantId": tenantId,
+            "userId": item.userId,
           };
         })
       }
@@ -56,7 +56,12 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
 
   const assignedProjects = Digit.Hooks.payments.useProjectSearch({
     data: {
-      "Projects": staffProjects
+      "Projects": staffProjects?.map((staff) => {
+        return {
+          "id": staff.projectId,
+          "tenantId": tenantId,
+        };
+      })
     },
     params: {
       "tenantId": tenantId,
@@ -68,11 +73,36 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
     }
   });
 
+  const IndividualRequestCriteria = {
+    url: `/health-individual/v1/_search`,
+    params: {
+      tenantId: tenantId,
+      offset: 0,
+      limit: 100,
+    },
+    body: {
+      Individual: {
+        userUuid: staffProjects?.map((staff) => {
+          return staff.userId;
+        })
+      }
+    },
+    config: {
+      enabled: staffProjects?.length > 0 ? true : false,
+      select: (data) => {
+        return data;
+      },
+    },
+  };
+
+  const { isLoading: isIndividualsLoading, data: IndividualData } = Digit.Hooks.useCustomAPIHook(IndividualRequestCriteria);
+
+
   Digit.SessionStorage.set("staffProjects", assignedProjects?.data);
+  Digit.SessionStorage.set("UserIndividual", IndividualData?.Individual);
 
 
-
-  if (isLoading || staffs?.isLoading || assignedProjects?.isLoading) {
+  if (isLoading || staffs?.isLoading || assignedProjects?.isLoading || isIndividualsLoading) {
     return <Loader />;
   }
   else {
