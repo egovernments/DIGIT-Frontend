@@ -131,7 +131,7 @@ export const UICustomizations = {
 
     postProcess: (responseArray, uiConfig) => {
       
-      // debugger;
+     
       // const statusOptions = responseArray?.statusMap
       //   ?.filter((item) => item.applicationstatus)
       //   ?.map((item) => ({ code: item.applicationstatus, i18nKey: `COMMON_MASTERS_${item.applicationstatus}` }));

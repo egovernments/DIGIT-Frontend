@@ -10,7 +10,7 @@ import { tableCustomStyle } from "./table_inbox_custom_style";
 const CustomInboxTable = ({ rowsPerPage, isLoading, tableData, customHandleRowsPerPageChange, customHandlePaginationChange, totalCount }) => {
   const { t } = useTranslation();
 
-  // debugger
+  
   // const [tableDatak, setTableDatak] = useState([]); 
 
   // useEffect(() => {
