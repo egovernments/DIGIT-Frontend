@@ -36,7 +36,7 @@ const CustomInboxSearchComposer = () => {
       await fetchRegisters.mutateAsync(
         {
           params: {
-            tenantId:Digit.ULBService.getStateId(),
+            tenantId: Digit.ULBService.getStateId(),
             limit: rowsPerPage,
             offset: (currentPage - 1) * rowsPerPage,
             //  ids:'ec3ad628-54a0-4eaf-9101-d78f7869919d'
@@ -44,7 +44,7 @@ const CustomInboxSearchComposer = () => {
         },
         {
           onSuccess: (data) => {
-          
+
             const rowData = data?.attendanceRegister?.map((item, index) => {
               return {
                 id: item?.registerNumber,
@@ -77,7 +77,7 @@ const CustomInboxSearchComposer = () => {
 
   //
 
-  useEffect(() => {}, [selectedProject]);
+  useEffect(() => { }, [selectedProject]);
 
   const handleProjectChange = (selectedProject) => {
     setSelectedProject(selectedProject);
@@ -99,7 +99,7 @@ const CustomInboxSearchComposer = () => {
 
   const handlePaginationChange = (page) => {
     setCurrentPage(page);
-   
+
     triggerMusterRollApprove();
   };
   const handleRowsPerPageChange = (newPerPage, page) => {
@@ -112,42 +112,28 @@ const CustomInboxSearchComposer = () => {
 
   return (
     <React.Fragment>
-      <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-        <div style={{ width: "100%", display: "flex", flexDirection: "row" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+        <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
           <div style={{ width: "20%", display: "flex", flexDirection: "row" }}>
             <CustomInboxSearchLinks
-              headerText={"links"}
-              links={[
-                {
-                  text: "MB_SEARCH_MB",
-                  url: "/employee/measurement/search",
-                  roles: ["MB_CREATOR", "MB_VERIFIER", "MB_APPROVER", "MB_VIEWER"],
-                },
-                {
-                  text: "MB_CREATE_MB",
-                  url: "/employee/contracts/search-contract?status=ACCEPTED",
-                  roles: ["MB_CREATOR"],
-                },
-              ]}
+              headerText={"Payments"}
             ></CustomInboxSearchLinks>
           </div>
-          <div style={{ width: "1%", display: "flex", flexDirection: "row" }} />
-          <div style={{ width: "75%", display: "flex", flexDirection: "row" }}>
+          <div style={{ width: "80%", display: "flex", flexDirection: "row" }}>
             <CustomSearchComponent onProjectSelect={handleProjectChange}></CustomSearchComponent>
           </div>
         </div>
 
-        <div style={{ width: "100%", display: "flex", flexDirection: "row" }}>
-          <div style={{ width: "20%", display: "flex", flexDirection: "row" ,
-            height: "400px", // Fixed height
-            maxHeight: "400px", // Maximum height
-            overflowY: "auto", 
+        <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
+          <div style={{
+            width: "20%", display: "flex", flexDirection: "row",
+            height: "60vh",
+            overflowY: "auto",
           }}>
-             <CustomFilter projectData={selectedProject} onFilterChange={handleFilterUpdate}></CustomFilter>
-          
+            <CustomFilter projectData={selectedProject} onFilterChange={handleFilterUpdate}></CustomFilter>
+
           </div>
-          <div style={{ width: "1%", display: "flex", flexDirection: "row" }} />
-          <div style={{ width: "75%", display: "flex", flexDirection: "row" }}>
+          <div style={{ width: "80%", display: "flex", flexDirection: "row", height: "60vh", }}>
             <CustomInboxTable
               rowsPerPage={rowsPerPage}
               customHandleRowsPerPageChange={handleRowsPerPageChange}
