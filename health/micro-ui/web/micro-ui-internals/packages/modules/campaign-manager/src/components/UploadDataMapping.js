@@ -34,7 +34,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         currentPage: action.payload,
-        currentData: getPageData(state.data, action.payload, state.rowsPerPage), // Update data for the new page
+        currentData: getPageData(state?.filter ? state?.currentData : state.data, action.payload, state.rowsPerPage), // Update data for the new page
       };
     case "SET_ROWS_PER_PAGE":
       return {
@@ -124,19 +124,20 @@ const reducer = (state, action) => {
         updated: true,
       };
     case "FILTER_BY_ACTIVE":
+      const tempActive = action.payload?.filter
+        ? getPageData(
+            state.data?.filter((i) =>
+              action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
+                ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
+                : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
+            ),
+            1,
+            state.rowsPerPage,
+          )
+        : getPageData(state.data, 1, state.rowsPerPage);
       return {
         ...state,
-        currentData: action.payload?.filter
-          ? getPageData(
-              state.data?.filter((i) =>
-                action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
-                  ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
-                  : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
-              ),
-              state.currentPage,
-              state.rowsPerPage
-            )
-          : getPageData(state.data, state.currentPage, state.rowsPerPage), // Update data for the new page
+        currentData: tempActive, // Update data for the new page
         totalRows: action.payload?.filter
           ? state.data?.filter((i) =>
               action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
@@ -218,6 +219,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   const schemaFilter = currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" ? "facility" : "user";
   const [state, dispatch] = useReducer(reducer, initialState);
   const boundaryHierarchy = paramsData?.hierarchy?.boundaryHierarchy;
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const { data: Schemas, isLoading: isThisLoading, refetch: refetchSchema } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
@@ -346,6 +348,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
     dispatch({ type: "SET_PAGE", payload: page, schemas: Schemas, t: t });
   };
   const handleRowsPerPageChange = (newPerPage) => {
+    setRowsPerPage(newPerPage); // Update the rows per page state
     dispatch({ type: "SET_ROWS_PER_PAGE", payload: newPerPage, schemas: Schemas, t: t });
   };
 
@@ -413,20 +416,49 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           {
             name: t("BOUNDARY"),
             cell: (row) => {
+              const listOfBoundaries = row?.[t(Schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)]?.split(",") || [];
               return (
-                <>
-                  {row?.[t(Schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)] || t("NA")}
+                <div>
+                  <div>
+                    {listOfBoundaries.slice(0, 2).map((item, index) => (
+                      <Chip className="" error="" extraStyles={{}} iconReq="" hideClose={true} text={t(item)} />
+                    ))}
+                    {listOfBoundaries?.length > 2 && (
+                      <Button
+                        label={`+${listOfBoundaries?.length - 2} ${t("ES_MORE")}`}
+                        onClick={() => setChipPopUpRowId(listOfBoundaries)}
+                        variation="link"
+                        style={{
+                          height: "2rem",
+                          minWidth: "4.188rem",
+                          minHeight: "2rem",
+                          padding: "0.5rem",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                        textStyles={{
+                          height: "auto",
+                          fontSize: "0.875rem",
+                          fontWeight: "400",
+                          width: "100%",
+                          lineHeight: "16px",
+                          color: "#C84C0E",
+                        }}
+                      />
+                    )}
+                    {chipPopUpRowId && <Wrapper setShowPopUp={setChipPopUpRowId} alreadyQueuedSelectedState={listOfBoundaries} />}
+                  </div>
                   <Button
                     type={"button"}
                     size={"small"}
                     isDisabled={row?.[t(Schemas?.find((i) => i.description === "User Usage")?.name)] === "Inactive" ? true : false}
                     variation={"teritiary"}
-                    label={t("CHANGE_BOUNDARY")}
+                    label={listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
                     onClick={() => {
                       setShowPopUp(row);
                     }}
                   />
-                </>
+                </div>
               );
             },
           },
@@ -525,7 +557,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                     size={"small"}
                     isDisabled={row?.[t(Schemas?.find((i) => i.description === "Facility usage")?.name)] === "Inactive" ? true : false}
                     variation={"teritiary"}
-                    label={t("CHANGE_BOUNDARY")}
+                    label={listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
                     onClick={() => {
                       setShowPopUp(row);
                     }}
@@ -560,7 +592,11 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
       />
       {state?.currentData?.length === 0 ? (
         <Fragment>
-          <NoResultsFound text={Digit.Utils.locale.getTransformedLocale(state?.filter ? `NO_RESULTS_FOR_ACTIVE_FILTER_${currentCategories}` : `NO_RESULTS_FOR_MAPPING_${currentCategories}`)} />
+          <NoResultsFound
+            text={Digit.Utils.locale.getTransformedLocale(
+              state?.filter ? `NO_RESULTS_FOR_ACTIVE_FILTER_${currentCategories}` : `NO_RESULTS_FOR_MAPPING_${currentCategories}`
+            )}
+          />
         </Fragment>
       ) : (
         <DataTable
@@ -586,11 +622,13 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
         <PopUp
           className={"dataMapping"}
           type={"default"}
-          heading={t("FACILITY_MAPPING_POP_HEADER")}
+          heading={currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" ? t("FACILITY_MAPPING_POP_HEADER") : t("USER_MAPPING_POP_HEADER")}
           equalWidthButtons={true}
           children={[
             <div>
-              <CardText>{t("FACILITY_MAPPING_POP_HEADER")}</CardText>
+              <CardText>
+                {currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" ? t("FACILITY_MAPPING_POP_HEADER_TITLE") : t("USER_MAPPING_POP_HEADER_TITLE")}
+              </CardText>
               <LabelFieldPair key={1}>
                 <CardLabel style={{ marginBottom: "0.4rem" }}>{t("CHOOSE_BOUNDARY_LEVEL")}</CardLabel>
                 <Dropdown
@@ -608,7 +646,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                 />
               </LabelFieldPair>
               <LabelFieldPair className={"multiselect-label-field"} key={1}>
-                <CardLabel style={{ marginBottom: "0.4rem" }}>{t("CHOOSE_BOUNDARY_LEVEL")}</CardLabel>
+                <CardLabel style={{ marginBottom: "0.4rem" }}>{t("CHOOSE_BOUNDARY")}</CardLabel>
                 <MultiSelectDropdown
                   variant="nestedmultiselect"
                   props={{ className: "data-mapping-dropdown" }}
