@@ -17,7 +17,9 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
-  const moduleCode = ["payments"];
+  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "ADMIN";
+  const moduleCode = ["payments", `boundary-${hierarchyType}`];
+
   const modulePrefix = "hcm";
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
@@ -29,8 +31,8 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
   let user = Digit?.SessionStorage.get("User");
   const staffs = Digit.Hooks.payments.useProjectStaffSearch({
     data: {
-    "ProjectStaff": {
-      "staffId": [user?.info?.uuid]
+      "ProjectStaff": {
+        "staffId": [user?.info?.uuid]
       }
     },
     params: {
@@ -42,44 +44,44 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
       select: (data) => {
         return data?.map(item => {
           return {
-          "id" : item.projectId,
-          "tenantId": tenantId,
+            "id": item.projectId,
+            "tenantId": tenantId,
           };
         })
       }
     }
-});
+  });
 
-const staffProjects = staffs?.data;
+  const staffProjects = staffs?.data;
 
-const assignedProjects = Digit.Hooks.payments.useProjectSearch({
-  data: {
-  "Projects": staffProjects
-  },
-  params: {
-    "tenantId": tenantId,
-    "offset": 0,
-    "limit": 100
-  },
-  config: {
-    enabled: staffProjects?.length > 0 ? true : false
-  }
-});
+  const assignedProjects = Digit.Hooks.payments.useProjectSearch({
+    data: {
+      "Projects": staffProjects
+    },
+    params: {
+      "tenantId": tenantId,
+      "offset": 0,
+      "limit": 100
+    },
+    config: {
+      enabled: staffProjects?.length > 0 ? true : false
+    }
+  });
 
- Digit.SessionStorage.set("staffProjects", assignedProjects?.data); 
+  Digit.SessionStorage.set("staffProjects", assignedProjects?.data);
 
 
 
   if (isLoading || staffs?.isLoading || assignedProjects?.isLoading) {
     return <Loader />;
   }
-  else{
+  else {
     return (
       <ProviderContext>
         <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} />
       </ProviderContext>
     );
-}
+  }
 };
 
 const componentsToRegister = {
