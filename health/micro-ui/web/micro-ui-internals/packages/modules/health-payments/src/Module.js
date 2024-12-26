@@ -99,7 +99,7 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
 
 
   Digit.SessionStorage.set("staffProjects", assignedProjects?.data);
-  Digit.SessionStorage.set("UserIndividual", IndividualData);
+  Digit.SessionStorage.set("UserIndividual", IndividualData?.Individual);
 
 
   if (isLoading || staffs?.isLoading || assignedProjects?.isLoading || isIndividualsLoading) {
