@@ -58,7 +58,7 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
     data: {
       "Projects": staffProjects?.map((staff) => {
         return {
-          "id": staff.projectId,
+          "id": staff?.id,
           "tenantId": tenantId,
         };
       })
