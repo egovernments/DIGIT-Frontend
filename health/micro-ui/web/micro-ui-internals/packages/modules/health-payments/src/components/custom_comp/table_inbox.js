@@ -1,4 +1,4 @@
-import { Button, Card, Chip, Header, Loader, PopUp, Toast, CardText } from "@egovernments/digit-ui-components";
+import { Button, Card, Chip, Header, Loader, PopUp, Toast, CardText, NoResultsFound, Tab } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -9,13 +9,17 @@ import { tableCustomStyle } from "./table_inbox_custom_style";
 
 const CustomInboxTable = ({ rowsPerPage, isLoading, tableData, customHandleRowsPerPageChange, customHandlePaginationChange, totalCount }) => {
   const { t } = useTranslation();
+  const [activeLink, setActiveLink] = useState({
+    code: "HCM_AM_PENDING_FOR_APPROVAL",
+    name: "HCM_AM_PENDING_FOR_APPROVAL",
+  });
 
-  
+
   // const [tableDatak, setTableDatak] = useState([]); 
 
   // useEffect(() => {
   //   setTableDatak(tableData)
-    
+
   // }, [tableData]);
 
   const handlePaginationChange = (page) => {
@@ -73,30 +77,54 @@ const CustomInboxTable = ({ rowsPerPage, isLoading, tableData, customHandleRowsP
   return (
     <React.Fragment>
       {
-        <Card style={{ maxWidth: "100%", overflow: "auto", marginBottom: "2.5rem" }}>
+        <Card style={{ maxWidth: "100%", overflow: "auto", }}>
           {
             /*(!planEmployee?.data || planEmployee?.data?.length === 0) */
-            false ? (
-              <Card style={{ boxShadow: "none" }}>
-                <div>working on it</div>
-              </Card>
-            ) : (
-              <DataTable
-                columns={columns}
-                data={tableData}
-                progressPending={isLoading}
-                progressComponent={<Loader />}
-                pagination
-                paginationServer
-                customStyles={tableCustomStyle}
-                paginationTotalRows={totalCount}
-                onChangePage={handlePaginationChange}
-                onChangeRowsPerPage={handleRowsPerPageChange}
-                paginationPerPage={rowsPerPage}
-                sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
-                paginationRowsPerPageOptions={[5, 10, 15, 20]}
-              />
-            )
+            !tableData ? <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} /> :
+              (
+                <div>
+                  <Tab
+                    activeLink={activeLink?.code}
+                    configItemKey="code"
+                    configDisplayKey="name"
+                    itemStyle={{ width: "290px" }}
+                    configNavItems={[
+                      {
+                        code: "HCM_AM_PENDING_FOR_APPROVAL",
+                        name: "HCM_AM_PENDING_FOR_APPROVAL",
+                      },
+                      {
+                        code: "HCM_AM_APPROVED",
+                        name: "HCM_AM_APPROVED",
+                      },
+                    ]}
+                    navStyles={{}}
+                    onTabClick={(e) => {
+                      setActiveLink(e);
+                    }}
+                    setActiveLink={setActiveLink}
+                    style={{}}
+                    showNav={true}
+                  />
+                  {tableData && tableData.length === 0 ? <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} /> :
+
+                    <DataTable
+                      columns={columns}
+                      data={tableData}
+                      progressPending={isLoading}
+                      progressComponent={<Loader />}
+                      pagination
+                      paginationServer
+                      customStyles={tableCustomStyle}
+                      paginationTotalRows={totalCount}
+                      onChangePage={handlePaginationChange}
+                      onChangeRowsPerPage={handleRowsPerPageChange}
+                      paginationPerPage={rowsPerPage}
+                      sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
+                      paginationRowsPerPageOptions={[5, 10, 15, 20]}
+                    />
+                  }
+                </div>)
           }
         </Card>
       }

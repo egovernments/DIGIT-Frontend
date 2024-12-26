@@ -1,4 +1,4 @@
-import { Dropdown } from "@egovernments/digit-ui-react-components";
+import { Dropdown, TextBlock } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -28,9 +28,9 @@ const Sample = ({ selectedProject, onChange }) => {
 
   const { isLoading: childrenDataLoading, data: childrenData } = Digit.Hooks.payments.useAttendanceBoundarySearch(reqCriteriaResource);
 
-  useEffect(() => {}, [childrenData]);
+  useEffect(() => { }, [childrenData]);
   const handleButtonClick = (value) => {
-    
+
     onChange(value);
   };
 
@@ -90,17 +90,14 @@ function NestedDropdown({ data, onLastSelectedIdChange }) {
           </option>
         ))}
       </select>*/}
-      <label style={{ fontWeight: "bold", marginBottom: "10px", display: "block" }}>{t(dropdownLabel)}</label>
+      <TextBlock body={t(dropdownLabel)}></TextBlock>
       <Dropdown
         t={t}
         option={data}
         optionKey={"code"}
         select={(value) => {
-          debugger
           handleChange(value);
         }}
-        disabled={false}
-        style={{ display: "flex", justifyContent: "space-between", width: "300px" }}
       />
 
       {/* Render child dropdowns recursively */}
