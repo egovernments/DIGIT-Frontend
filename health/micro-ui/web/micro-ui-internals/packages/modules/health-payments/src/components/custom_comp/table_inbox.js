@@ -83,7 +83,7 @@ const CustomInboxTable = ({ rowsPerPage, isLoading, tableData, customHandleRowsP
             ) : (
               <DataTable
                 columns={columns}
-                data={tableData}
+                data={tableDatak}
                 progressPending={isLoading}
                 progressComponent={<Loader />}
                 pagination

@@ -55,14 +55,14 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   /// ADDED CONDITION THAT IF CAMPAIGN HAS NOT ENDED THEN WE WILL SHOW ESTIMATE DATA ONLY AND DISABLED ALL THE ACTIONS
 
-  useEffect(() => {
-    if (AttendanceData?.attendanceRegister[0]?.endDate > new Date()) {
-      setDisabledAction(true);
-    }
-  }, [AttendanceData])
+  // useEffect(() => {
+  //   if (AttendanceData?.attendanceRegister[0]?.endDate > new Date()) {
+  //     setDisabledAction(true);
+  //   }
+  // }, [AttendanceData])
 
   const reqCri = {
-    url: `/muster-roll/v1/_estimate`,
+    url: `/health-muster-roll/v1/_estimate`,
     body: {
       musterRoll: {
         tenantId: tenantId,
@@ -85,7 +85,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   /// SEARCH MUSTERROLL TO CHECK IF WE NEED TO SHOW ESTIMATE OR MUSTERROLL SEARCH DATA
 
   const searchReqCri = {
-    url: `/muster-roll/v1/_search`,
+    url: `/health-muster-roll/v1/_search`,
     params: {
       tenantId: tenantId,
       registerId: AttendanceData?.attendanceRegister[0]?.id
@@ -101,15 +101,15 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const { isLoading: isMusterRollLoading, data: MusterRollData } = Digit.Hooks.useCustomAPIHook(searchReqCri);
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook({
-    url: "/muster-roll/v1/_create",
+    url: "/health-muster-roll/v1/_create",
   });
 
   const updateMutation = Digit.Hooks.useCustomAPIMutationHook({
-    url: "/muster-roll/v1/_update",
+    url: "/health-muster-roll/v1/_update",
   });
 
   const approveMutation = Digit.Hooks.useCustomAPIMutationHook({
-    url: "/muster-roll/v1/_update",
+    url: "/health-muster-roll/v1/_update",
   });
 
   const triggerMusterRollApprove = async () => {
