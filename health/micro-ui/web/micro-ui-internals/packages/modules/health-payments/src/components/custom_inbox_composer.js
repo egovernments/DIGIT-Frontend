@@ -39,7 +39,7 @@ const CustomInboxSearchComposer = () => {
             limit: rowsPerPage,
             offset: (currentPage - 1) * rowsPerPage,
             referenceId: selectedProject?.id,
-            //staffId:Digit.SessionStorage.get("User")?.info?.uuid,
+            staffId: Digit.SessionStorage.get("UserIndividual")?.[0]?.id,
             localityCodes: filterData?.code == undefined || filterData?.code == null ? filterCriteria?.code : filterData?.code,
             //paymentStatus:"APPROVAL_PENDING"
           },
@@ -106,7 +106,6 @@ const CustomInboxSearchComposer = () => {
     triggerMusterRollApprove();
   };
   const callServiceOnTap = (status) => {
-   
     triggerMusterRollApprove();
   };
 
@@ -115,7 +114,7 @@ const CustomInboxSearchComposer = () => {
       <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
         <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
           <div style={{ width: "20%", display: "flex", flexDirection: "row" }}>
-            <CustomInboxSearchLinks headerText={"Payments"}></CustomInboxSearchLinks>
+            <CustomInboxSearchLinks headerText={"ATTENDANCE_INBOX_CARD"}></CustomInboxSearchLinks>
           </div>
           <div style={{ width: "80%", display: "flex", flexDirection: "row" }}>
             <CustomSearchComponent onProjectSelect={handleProjectChange}></CustomSearchComponent>
@@ -136,7 +135,7 @@ const CustomInboxSearchComposer = () => {
           </div>
           <div style={{ width: "80%", display: "flex", flexDirection: "row", height: "60vh" }}>
             <CustomInboxTable
-            handleTabChange={callServiceOnTap}
+              handleTabChange={callServiceOnTap}
               rowsPerPage={rowsPerPage}
               customHandleRowsPerPageChange={handleRowsPerPageChange}
               customHandlePaginationChange={handlePaginationChange}
