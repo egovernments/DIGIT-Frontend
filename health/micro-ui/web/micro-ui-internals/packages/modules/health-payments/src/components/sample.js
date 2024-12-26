@@ -53,10 +53,10 @@ function NestedDropdown({ data, onLastSelectedIdChange }) {
   // Helper to generate labels based on boundaryType
   const getLabelByBoundaryType = (boundaryType) => {
     const labels = {
-      DISTRICT: "Select District",
-      ADMINISTRATIVEPOST: "Select Administrative Post",
-      LOCALITY: "Select Locality",
-      VILLAGE: "Select Village",
+      DISTRICT: "ATTENDANCE_DISTRICT",
+      ADMINISTRATIVEPOST: "ATTENDANCE_ADMINISTRATIVEPOST",
+      LOCALITY: "ATTENDANCE_LOCALITY",
+      VILLAGE: "ATTENDANCE_VILLAGE",
     };
     return labels[boundaryType] || "Select Option"; // Default label
   };
