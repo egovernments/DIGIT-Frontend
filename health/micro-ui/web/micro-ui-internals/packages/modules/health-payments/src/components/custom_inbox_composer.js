@@ -44,7 +44,7 @@ const CustomInboxSearchComposer = () => {
         },
         {
           onSuccess: (data) => {
-            debugger;
+          
             const rowData = data?.attendanceRegister?.map((item, index) => {
               return {
                 id: item?.registerNumber,

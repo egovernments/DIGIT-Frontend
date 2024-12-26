@@ -30,7 +30,7 @@ const Sample = ({ selectedProject, onChange }) => {
 
   useEffect(() => {}, [childrenData]);
   const handleButtonClick = (value) => {
-    debugger
+    
     onChange(value);
   };
 

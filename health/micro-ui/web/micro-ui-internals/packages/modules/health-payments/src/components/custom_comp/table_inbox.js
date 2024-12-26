@@ -10,7 +10,7 @@ import { tableCustomStyle } from "./table_inbox_custom_style";
 const CustomInboxTable = ({ rowsPerPage, isLoading, tableData, customHandleRowsPerPageChange, customHandlePaginationChange, totalCount }) => {
   const { t } = useTranslation();
 
-  // debugger
+  
   // const [tableDatak, setTableDatak] = useState([]); 
 
   // useEffect(() => {
@@ -83,7 +83,7 @@ const CustomInboxTable = ({ rowsPerPage, isLoading, tableData, customHandleRowsP
             ) : (
               <DataTable
                 columns={columns}
-                data={tableDatak}
+                data={tableData}
                 progressPending={isLoading}
                 progressComponent={<Loader />}
                 pagination
