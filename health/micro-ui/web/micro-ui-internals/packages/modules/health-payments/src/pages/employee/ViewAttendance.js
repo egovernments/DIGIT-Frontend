@@ -55,11 +55,11 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   /// ADDED CONDITION THAT IF CAMPAIGN HAS NOT ENDED THEN WE WILL SHOW ESTIMATE DATA ONLY AND DISABLED ALL THE ACTIONS
 
-  // useEffect(() => {
-  //   if (AttendanceData?.attendanceRegister[0]?.endDate > new Date()) {
-  //     setDisabledAction(true);
-  //   }
-  // }, [AttendanceData])
+  useEffect(() => {
+    if (AttendanceData?.attendanceRegister[0]?.endDate > new Date()) {
+      setDisabledAction(true);
+    }
+  }, [AttendanceData])
 
   const reqCri = {
     url: `/health-muster-roll/v1/_estimate`,
