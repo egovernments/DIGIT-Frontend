@@ -22,6 +22,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [openApproveAlertPopUp, setOpenApproveAlertPopUp] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [totalRows, setTotalRows] = useState(0);
+  const [comment, setComment] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
 
@@ -113,7 +114,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   const triggerMusterRollApprove = async () => {
     try {
-      await updateMutation.mutateAsync(
+      await approveMutation.mutateAsync(
         {
           body: {
             musterRoll: {
@@ -121,6 +122,10 @@ const ViewAttendance = ({ editAttendance = false }) => {
               registerId: AttendanceData?.attendanceRegister[0]?.id,
               startDate: AttendanceData?.attendanceRegister[0]?.startDate,
               endDate: AttendanceData?.attendanceRegister[0]?.endDate
+            },
+            workflow: {
+              action: "APPROVE",
+              comments: comment,
             }
           },
         },
@@ -161,6 +166,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
               registerId: AttendanceData?.attendanceRegister[0]?.id,
               startDate: AttendanceData?.attendanceRegister[0]?.startDate,
               endDate: AttendanceData?.attendanceRegister[0]?.endDate
+            },
+            workflow: {
+              action: "EDIT",
             }
           },
         },
@@ -196,6 +204,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
                 registerId: AttendanceData?.attendanceRegister[0]?.id,
                 startDate: AttendanceData?.attendanceRegister[0]?.startDate,
                 endDate: AttendanceData?.attendanceRegister[0]?.endDate
+              },
+              workflow: {
+                action: "EDIT",
               }
             },
           },
@@ -660,12 +671,10 @@ const ViewAttendance = ({ editAttendance = false }) => {
           <div className="label-pair">
             <span className="label-heading">{t(`HCM_AM_ATTENDANCE_OFFICER`)}</span>
             <span className="label-text">{individualsData?.Individual?.[0]?.name?.givenName}</span>
-            {/* need to fetch name from individual */}
           </div>
           <div className="label-pair">
             <span className="label-heading">{t(`HCM_AM_ATTENDANCE_OFFICER_CONTACT_NUMBER`)}</span>
             <span className="label-text">{individualsData?.Individual?.[0]?.mobileNumber}</span>
-            {/* need to fetch name from individual */}
           </div>
           <div className="label-pair">
             <span className="label-heading">{t(`HCM_AM_NO_OF_ATTENDEE`)}</span>
@@ -711,7 +720,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
         onClose={() => {
           setOpenApproveCommentPopUp(false);
         }}
-        onSubmit={() => {
+        onSubmit={(comment) => {
+          setComment(comment);
           setOpenApproveCommentPopUp(false);
           setOpenApproveAlertPopUp(true);
         }}

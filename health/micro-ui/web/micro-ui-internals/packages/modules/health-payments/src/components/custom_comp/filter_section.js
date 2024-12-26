@@ -9,7 +9,6 @@ const CustomFilter = ({ onFilterChange, projectData }) => {
 
   const [boundary, setBoundary] = useState("");
 
-  console.log("wel come to ");
   const onChangeId = (value) => {
     setBoundary(value); 
   };
