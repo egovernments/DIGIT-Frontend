@@ -7,6 +7,8 @@ import CustomSearchComponent from "./custom_comp/search_section";
 import { useTranslation } from "react-i18next";
 import CustomFilter from "./custom_comp/filter_section";
 import CustomInboxTable from "./custom_comp/table_inbox";
+import { FilterCard } from "@egovernments/digit-ui-components";
+import Sample from "./sample";
 
 const CustomInboxSearchComposer = () => {
   const { t } = useTranslation();
@@ -21,65 +23,59 @@ const CustomInboxSearchComposer = () => {
 
   const [searchQuery, setSearchQuery] = useState(null);
 
-  //------//
+  const [childrenDataLoading, setChildrenDataLoading] = useState(false);
+  const [childrenData, setchildrenData] = useState([]);
 
-  // const reqCriteriaResource = useMemo(() => ({
-  //   url: `/health-attendance/v1/_search`,
-  //   params: {
-  //     tenantId: "mz",
-  //     ...filterCriteria, // Merge filter criteria into params
-  //   },
-  //   config: {
-  //     enabled: true,
-  //     select: (data) => {
-  //       const rowData = data?.attendanceRegister?.map((item) => ({
-  //         id: item?.registerNumber,
-  //         name: item?.name,
-  //         boundary: item?.user?.emailId,
-  //         status: item?.status,
-  //       }));
-  //       return {
-  //         data: rowData,
-  //         totalCount: data?.totalCount,
-  //       };
-  //     },
-  //   },
-  // }), [filterCriteria]);
+  const fetchRegisters = Digit.Hooks.useCustomAPIMutationHook({
+    url: "/health-attendance/v1/_search",
+  });
 
-  const reqCriteriaResource = {
-    url: `/health-attendance/v1/_search`,
-    params: {
-      tenantId: "mz",
-      limit: rowsPerPage,
-      offset: (currentPage - 1) * rowsPerPage,
-      //  ids:'ec3ad628-54a0-4eaf-9101-d78f7869919d'
-    },
-    config: {
-      enabled: true,
-      select: (data) => {
-        const rowData = data?.attendanceRegister?.map((item, index) => {
-          return {
-            id: item?.registerNumber,
-            name: item?.name,
-            boundary: "locality",
-            status: item?.status,
-          };
-        });
-        return {
-          data: rowData,
-          totalCount: data?.totalCount,
-          statusCount: data?.statusCount,
-        };
-      },
-    },
+  const triggerMusterRollApprove = async () => {
+    try {
+      setChildrenDataLoading(true);
+      await fetchRegisters.mutateAsync(
+        {
+          params: {
+            tenantId:Digit.ULBService.getStateId(),
+            limit: rowsPerPage,
+            offset: (currentPage - 1) * rowsPerPage,
+            //  ids:'ec3ad628-54a0-4eaf-9101-d78f7869919d'
+          },
+        },
+        {
+          onSuccess: (data) => {
+            debugger;
+            const rowData = data?.attendanceRegister?.map((item, index) => {
+              return {
+                id: item?.registerNumber,
+                name: item?.name,
+                boundary: "locality",
+                status: item?.status,
+              };
+            });
+            setChildrenDataLoading(false);
+            setchildrenData({
+              data: rowData,
+              totalCount: data?.totalCount,
+              statusCount: data?.statusCount,
+            });
+          },
+          onError: (error) => {
+            // history.push(`/${window.contextPath}/employee/payments/attendance-approve-failed`, {
+            //   state: "error",
+            //   message: t(`HCM_AM_ATTENDANCE_APPROVE_FAILED`),
+            //   back: t(`GO_BACK_TO_HOME`),
+            //   backlink: `/${window.contextPath}/employee`,
+            // });
+          },
+        }
+      );
+    } catch (error) {
+      /// will show estimate data only
+    }
   };
 
-  const {
-    isLoading: childrenDataLoading,
-    data: childrenData,
-    error: planEmployeeError,
-    refetch: refetchPlanEmployee,
-  } = Digit.Hooks.payments.useAttendanceBoundaryRegisterSearch(reqCriteriaResource);
+  //
 
   useEffect(() => {}, [selectedProject]);
 
@@ -88,25 +84,30 @@ const CustomInboxSearchComposer = () => {
   };
 
   const handleFilterUpdate = (newFilter) => {
+    triggerMusterRollApprove();
     setFilterCriteria(newFilter); // Update the filter state
   };
 
-  useEffect(() => {
-    refetchPlanEmployee();
-  }, [totalRows, currentPage, rowsPerPage, searchQuery]);
+  // useEffect(() => {
+  //   // handleCreateRateAnalysis();
+  //   // triggerMusterRollApprove();
+  // }, [totalRows, currentPage, rowsPerPage, searchQuery]);
 
-  useEffect(() => {
-    setTotalRows(childrenData?.totalCount);
-  }, [childrenData]);
+  // useEffect(() => {
+  //   setTotalRows(childrenData?.totalCount);
+  // }, [childrenData]);
 
   const handlePaginationChange = (page) => {
     setCurrentPage(page);
-    refetchPlanEmployee();
+   
+    triggerMusterRollApprove();
   };
   const handleRowsPerPageChange = (newPerPage, page) => {
     setRowsPerPage(newPerPage); // Update the rows per page state
     setCurrentPage(page); // Optionally reset the current page or maintain it
-    refetchPlanEmployee();
+    // refetchPlanEmployee();
+    // handleCreateRateAnalysis();
+    triggerMusterRollApprove();
   };
 
   return (
@@ -137,8 +138,13 @@ const CustomInboxSearchComposer = () => {
         </div>
 
         <div style={{ width: "100%", display: "flex", flexDirection: "row" }}>
-          <div style={{ width: "20%", display: "flex", flexDirection: "row" }}>
-            <CustomFilter projectData={selectedProject} onFilterChange={handleFilterUpdate}></CustomFilter>
+          <div style={{ width: "20%", display: "flex", flexDirection: "row" ,
+            height: "400px", // Fixed height
+            maxHeight: "400px", // Maximum height
+            overflowY: "auto", 
+          }}>
+             <CustomFilter projectData={selectedProject} onFilterChange={handleFilterUpdate}></CustomFilter>
+          
           </div>
           <div style={{ width: "1%", display: "flex", flexDirection: "row" }} />
           <div style={{ width: "75%", display: "flex", flexDirection: "row" }}>

@@ -1,16 +1,17 @@
-import React,{useState} from "react";
-
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { SubmitBar } from "@egovernments/digit-ui-components";
+import { CheckBox, SubmitBar } from "@egovernments/digit-ui-components";
 import Sample from "../sample";
 
 const CustomFilter = ({ onFilterChange, projectData }) => {
   const { t } = useTranslation();
 
   const [boundary, setBoundary] = useState("");
+  const [checkPending, setCheckPending] = useState(false);
+  const [checkApproved, setCheckApproved] = useState(false);
 
   const onChangeId = (value) => {
-    setBoundary(value); 
+    setBoundary(value);
   };
 
   const handleApplyFilter = () => {
@@ -18,9 +19,29 @@ const CustomFilter = ({ onFilterChange, projectData }) => {
   };
 
   return (
-    <div className={`inbox-search-links-container`}>
-      <div>
-        <div style={{ alignItems: "center", gap: ".75rem", marginBottom: "24px", display: "flex", flexDirection: "row" }}>
+    <div
+      className="inbox-search-links-container"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+      }}
+    >
+      <div
+        style={{
+          flexGrow: 1, // Ensures this section grows to take available space
+          overflowY: "auto", // Enables scrolling if content exceeds available space
+        }}
+      >
+        <div
+          style={{
+            alignItems: "center",
+            gap: ".75rem",
+            marginBottom: "24px",
+            display: "flex",
+            flexDirection: "row",
+          }}
+        >
           <div style={{ display: "flex", alignItems: "center" }}>
             <span>
               <svg width="17" height="17" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -42,12 +63,36 @@ const CustomFilter = ({ onFilterChange, projectData }) => {
             </svg>
           </span>
         </div>
-        {/* <form id={id} onSubmit={handleSubmit(onSubmit)}>
-          {children}
-        </form>*/}
 
         {projectData?.address?.boundary && <Sample onChange={onChangeId} selectedProject={projectData}></Sample>}
-        <SubmitBar onSubmit={handleApplyFilter} className="w-fullwidth" label={t("ES_COMMON_APPLY")} submit form={23} />
+
+        <CheckBox
+          key={"pending"}
+          mainClassName={"checkboxOptionVariant"}
+          disabled={false}
+          label={t("PENDING_FOR_APPROVAL")}
+          checked={checkPending}
+          value={checkPending}
+          onChange={() => setCheckPending(!checkPending)}
+        ></CheckBox>
+        <CheckBox
+          key={"approved"}
+          mainClassName={"checkboxOptionVariant"}
+          disabled={false}
+          label={t("APPROVAL")}
+          checked={checkApproved}
+          value={checkApproved}
+          onChange={() => setCheckApproved(!checkApproved)}
+        ></CheckBox>
+      </div>
+
+      <div
+        style={{
+          marginTop: "auto", // Pushes this section to the bottom
+          paddingTop: "16px", // Adds spacing above the button
+        }}
+      >
+        <SubmitBar onSubmit={handleApplyFilter} className="w-fullwidth" label={t("ES_COMMON_APPLY")} />
       </div>
     </div>
   );

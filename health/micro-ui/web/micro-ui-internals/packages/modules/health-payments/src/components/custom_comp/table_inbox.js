@@ -10,7 +10,13 @@ import { tableCustomStyle } from "./table_inbox_custom_style";
 const CustomInboxTable = ({ rowsPerPage, isLoading, tableData, customHandleRowsPerPageChange, customHandlePaginationChange, totalCount }) => {
   const { t } = useTranslation();
 
-  useEffect(() => {}, [tableData]);
+  // debugger
+  // const [tableDatak, setTableDatak] = useState([]); 
+
+  // useEffect(() => {
+  //   setTableDatak(tableData)
+    
+  // }, [tableData]);
 
   const handlePaginationChange = (page) => {
     customHandlePaginationChange(page);
@@ -25,7 +31,7 @@ const CustomInboxTable = ({ rowsPerPage, isLoading, tableData, customHandleRowsP
       selector: (row) => {
         return (
           <span className="link" style={{ fontSize: "14px" }}>
-             <Link to={`/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`}>
+            <Link to={`/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`}>
               {String(row?.id ? row?.id : t("ES_COMMON_NA"))}
             </Link>
           </span>
@@ -66,8 +72,6 @@ const CustomInboxTable = ({ rowsPerPage, isLoading, tableData, customHandleRowsP
 
   return (
     <React.Fragment>
-      {/*<div>datat</div>*/}
-
       {
         <Card style={{ maxWidth: "100%", overflow: "auto", marginBottom: "2.5rem" }}>
           {
@@ -79,7 +83,7 @@ const CustomInboxTable = ({ rowsPerPage, isLoading, tableData, customHandleRowsP
             ) : (
               <DataTable
                 columns={columns}
-                data={tableData}
+                data={tableDatak}
                 progressPending={isLoading}
                 progressComponent={<Loader />}
                 pagination
