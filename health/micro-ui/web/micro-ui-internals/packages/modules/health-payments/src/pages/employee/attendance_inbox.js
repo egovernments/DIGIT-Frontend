@@ -8,7 +8,7 @@ import { AttendanceInboxConfig } from "../../configs/attendance_inbox_config";
 import CustomInboxSearchComposer from "../../components/custom_inbox_composer";
 
 const AttendanceInbox = () => {
-  const { dispatch, state } = useMyContext();
+ 
   const { t } = useTranslation();
   const location = useLocation();
   // const moduleName = Digit?.Utils?.getConfigModuleName() || "commonSanitationUiConfig"
@@ -18,7 +18,7 @@ const AttendanceInbox = () => {
   return (
     <React.Fragment>
       <Header styles={{ fontSize: "32px" }}>
-        {t(configs?.label)}
+        {t("ES_COMMON_INBOX")}
         {location?.state?.count ? <span className="inbox-count">{location?.state?.count}</span> : null}
       </Header>
       <div className="inbox-search-wrapper">

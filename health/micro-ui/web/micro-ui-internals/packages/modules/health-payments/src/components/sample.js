@@ -30,13 +30,13 @@ const Sample = ({ selectedProject, onChange }) => {
 
   useEffect(() => {}, [childrenData]);
   const handleButtonClick = (value) => {
+    debugger
     onChange(value);
   };
 
   return (
     <React.Fragment>
       <div>
-        <h2>Boundary</h2>
         {childrenData?.[0]?.boundary.length > 0 && <NestedDropdown data={childrenData?.[0]?.boundary} onLastSelectedIdChange={handleButtonClick} />}
       </div>
     </React.Fragment>
@@ -50,14 +50,29 @@ function NestedDropdown({ data, onLastSelectedIdChange }) {
   const [selected, setSelected] = useState("");
   const [children, setChildren] = useState([]);
 
+  // Helper to generate labels based on boundaryType
+  const getLabelByBoundaryType = (boundaryType) => {
+    const labels = {
+      DISTRICT: "Select District",
+      ADMINISTRATIVEPOST: "Select Administrative Post",
+      LOCALITY: "Select Locality",
+      VILLAGE: "Select Village",
+    };
+    return labels[boundaryType] || "Select Option"; // Default label
+  };
+
+  const currentBoundaryType = data[0]?.boundaryType; // Assuming all options share the same boundaryType
+  const dropdownLabel = getLabelByBoundaryType(currentBoundaryType);
+
   const handleChange = (event) => {
     const value = event.id;
     setSelected(value);
-    onLastSelectedIdChange(value);
+    onLastSelectedIdChange(event);
 
     // Reset children dropdown when parent changes
     const selectedNode = data.find((item) => item.id === value);
-    setChildren(selectedNode?.children || []);
+    // setChildren(selectedNode?.children || []);
+    setChildren(selectedNode?.boundaryType !== "DISTRICT" ? selectedNode?.children || [] : []);
   };
   useEffect(() => {
     // Reset children and selected state whenever the data (parent value) changes
@@ -75,11 +90,13 @@ function NestedDropdown({ data, onLastSelectedIdChange }) {
           </option>
         ))}
       </select>*/}
+      <label style={{ fontWeight: "bold", marginBottom: "10px", display: "block" }}>{t(dropdownLabel)}</label>
       <Dropdown
         t={t}
         option={data}
         optionKey={"code"}
         select={(value) => {
+          debugger
           handleChange(value);
         }}
         disabled={false}
@@ -87,7 +104,9 @@ function NestedDropdown({ data, onLastSelectedIdChange }) {
       />
 
       {/* Render child dropdowns recursively */}
-      {children.length > 0 && <NestedDropdown data={children} onLastSelectedIdChange={onLastSelectedIdChange} />}
+      {children.length > 0 && children[0]?.boundaryType !== "DISTRICT" && (
+        <NestedDropdown data={children} onLastSelectedIdChange={onLastSelectedIdChange} />
+      )}
     </div>
   );
 }
