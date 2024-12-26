@@ -51,7 +51,7 @@ const CustomInboxSearchComposer = () => {
                 id: item?.registerNumber,
                 name: item?.name,
                 boundary: item?.localityCode,
-                status: t(item?.paymentStatus),
+                status: item?.staff.length || 0,
               };
             });
             setChildrenDataLoading(false);

@@ -69,7 +69,7 @@ const CustomFilter = ({ onFilterChange, projectData }) => {
           paddingTop: "16px", // Adds spacing above the button
         }}
       >
-        <SubmitBar onSubmit={handleApplyFilter} className="w-fullwidth" label={t("ES_COMMON_APPLY")} />
+        <SubmitBar onSubmit={handleApplyFilter} className="w-fullwidth" label={t("HCM_AM_COMMON_APPLY")} />
       </div>
     </Card>
   );

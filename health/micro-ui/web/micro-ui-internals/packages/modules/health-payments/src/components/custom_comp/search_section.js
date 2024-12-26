@@ -56,12 +56,12 @@ const CustomSearchComponent = ({ onProjectSelect }) => {
   return (
     <React.Fragment>
       <Card variant="search">
-        <div style={{ maxWidth: "100%", width: "100%" }}>
-          <TextBlock body={t("ATTENDANCE_ID")}></TextBlock>
+        {/*<div style={{ maxWidth: "100%", width: "100%" }}>
+          <TextBlock body={t("HCM_AM_ATTENDANCE_ID")}></TextBlock>
           <TextInput type="text"></TextInput>
-        </div>
+        </div>*/}
         <div style={{ maxWidth: "100%", width: "100%" }}>
-          <TextBlock body={t("ATTENDANCE_PROJECT_NAME")}></TextBlock>
+          <TextBlock body={`${t("ATTENDANCE_PROJECT_NAME")} *`}></TextBlock>
           <Dropdown
             t={t}
             option={project}

@@ -18,7 +18,7 @@ const AttendanceInbox = () => {
   return (
     <React.Fragment>
       <Header styles={{ fontSize: "32px" }}>
-        {t("ES_COMMON_INBOX")}
+        {t("HCM_AM_ATTENDANCE_INBOX")}
         {location?.state?.count ? <span className="inbox-count">{location?.state?.count}</span> : null}
       </Header>
       <div className="inbox-search-wrapper">
