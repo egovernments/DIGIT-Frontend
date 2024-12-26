@@ -31,7 +31,7 @@ const CustomInboxTable = ({ handleTabChange, rowsPerPage, isLoading, tableData, 
 
   const columns = [
     {
-      name: t("ATTENDANCE_ID"),
+      name: t("HCM_AM_ATTENDANCE_ID"),
       selector: (row) => {
         return (
           <span className="link" style={{ fontSize: "14px" }}>
@@ -43,17 +43,7 @@ const CustomInboxTable = ({ handleTabChange, rowsPerPage, isLoading, tableData, 
       },
     },
     {
-      name: t("ATTENDANCE_BOUNDARY"),
-      selector: (row) => {
-        return (
-          <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={t(row?.boundary) || t("NA")}>
-            {t(row.boundary) || t("NA")}
-          </div>
-        );
-      },
-    },
-    {
-      name: t("ATTENDANCE_NAME"),
+      name: t("HCM_AM_ATTENDANCE_NAME"),
       selector: (row) => {
         return (
           <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={row?.name || t("NA")}>
@@ -63,7 +53,18 @@ const CustomInboxTable = ({ handleTabChange, rowsPerPage, isLoading, tableData, 
       },
     },
     {
-      name: t("ATTENDANCE_STATUS"),
+      name: t("HCM_AM_ATTENDANCE_BOUNDARY"),
+      selector: (row) => {
+        return (
+          <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={t(row?.boundary) || t("NA")}>
+            {t(row.boundary) || t("NA")}
+          </div>
+        );
+      },
+    },
+    
+    {
+      name: t("HCM_AM_ATTENDANCE_ATTENDEES"),
       selector: (row) => {
         return (
           <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={t(row?.status || "NA")}>
