@@ -321,7 +321,7 @@ const DigitJSONForm = ({
         >
           {(screenType === "add" || screenType === "edit") && (
             <ActionBar className="action-bar">
-              {screenType === "add" && (
+              {screenType === "add" && !Digit.Utils.getMultiRootTenant() && (
                 <Button className="action-bar-button" variation="secondary" label={t("WBH_LOC_BULK_UPLOAD_XLS")} onButtonClick={() => setShowBulkUploadModal(true)} />
               )}
               <SubmitBar
