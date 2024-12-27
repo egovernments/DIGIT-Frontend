@@ -58,11 +58,13 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   /// ADDED CONDITION THAT IF CAMPAIGN HAS NOT ENDED THEN WE WILL SHOW ESTIMATE DATA ONLY AND DISABLED ALL THE ACTIONS
 
-  // useEffect(() => {
-  //   if (AttendanceData?.attendanceRegister[0]?.endDate > new Date()) {
-  //     setDisabledAction(true);
-  //   }
-  // }, [AttendanceData])
+  useEffect(() => {
+    ///NEED TO ADD THIS CONDITION ALSO REMOVING FOR TESTING
+    //AttendanceData?.attendanceRegister[0]?.endDate > new Date()
+    if (data?.[0]?.musterRollStatus === "APPROVED") {
+      setDisabledAction(true);
+    }
+  }, [AttendanceData, data])
 
   const reqCri = {
     url: `/health-muster-roll/v1/_estimate`,
@@ -206,7 +208,10 @@ const ViewAttendance = ({ editAttendance = false }) => {
         {
           onSuccess: (data) => {
             setShowToast({ key: "success", label: t("HCM_AM_ATTENDANCE_UPDATED_SUCCESSFULLY"), transitionTime: 3000 });
-            history.push(`/${window.contextPath}/employee/payments/view-attendance?registerNumber=${registerNumber}`);
+            // Delay the navigation for 3 seconds
+            setTimeout(() => {
+              history.push(`/${window.contextPath}/employee/payments/view-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}`);
+            }, 3000);
 
           },
           onError: (error) => {
