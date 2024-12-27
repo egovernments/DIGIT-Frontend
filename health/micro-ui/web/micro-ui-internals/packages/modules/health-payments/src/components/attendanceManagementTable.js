@@ -47,9 +47,9 @@ const AttendanceManagementTable = ({ ...props }) => {
 
   // Map attendance data to rows
   const rows = useMemo(() => {
-    return props.data.map(([name, id, role, daysWorked]) => [
+    return props.data.map(([id, name, workerId, role, daysWorked]) => [
       { label: name, maxLength: 64 },
-      { label: id, maxLength: 64 },
+      { label: workerId, maxLength: 64 },
       { label: role, maxLength: 64 },
       props.editAttendance ? (
         <div>
@@ -57,7 +57,7 @@ const AttendanceManagementTable = ({ ...props }) => {
             type="numeric"
             value={daysWorked}
             onChange={(e) => {
-              handleDaysWorkedChange(id, e);
+              handleDaysWorkedChange(workerId, e);
             }}
             populators={{ disableTextField: true }}
           />
@@ -71,11 +71,11 @@ const AttendanceManagementTable = ({ ...props }) => {
   const handleDaysWorkedChange = (workerId, value) => {
 
     // Find the worker whose attendance is being updated
-    const worker = props.data.find((worker) => worker[1] === workerId);
+    const worker = props.data.find((worker) => worker[2] === workerId);
 
     if (!worker) return; // If worker is not found, exit early
 
-    const previousValue = worker[3]; // Previous value for daysWorked
+    const previousValue = worker[4]; // Previous value for daysWorked
 
     // Check if both current value and previous value are 0
     if (value === 0 && previousValue === 0) {
@@ -93,8 +93,8 @@ const AttendanceManagementTable = ({ ...props }) => {
 
     // Update the data directly using the parent's setState
     const updatedData = props.data.map((worker) => {
-      if (worker[1] === workerId) {
-        return [worker[0], worker[1], worker[2], value]; // Update the daysWorked value
+      if (worker[2] === workerId) {
+        return [worker[0], worker[1], worker[2], worker[3], value]; // Update the daysWorked value
       }
       return worker; // Keep other rows unchanged
     });
@@ -132,6 +132,7 @@ const AttendanceManagementTable = ({ ...props }) => {
         headerData={columns}
         onFilter={function noRefCheck() { }}
         pagination={{
+
           initialRowsPerPage: 5,
           rowsPerPageOptions: [5, 10, 15, 20],
         }}

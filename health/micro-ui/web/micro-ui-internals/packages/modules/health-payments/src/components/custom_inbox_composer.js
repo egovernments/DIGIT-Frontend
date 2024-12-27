@@ -40,7 +40,7 @@ const CustomInboxSearchComposer = () => {
             offset: (currentPage - 1) * rowsPerPage,
             referenceId: selectedProject?.id,
             staffId: Digit.SessionStorage.get("UserIndividual")?.[0]?.id,
-            localityCodes: filterData?.code == undefined || filterData?.code == null ? filterCriteria?.code : filterData?.code,
+            localityCode: filterData?.code == undefined || filterData?.code == null ? filterCriteria?.code : filterData?.code,
             //paymentStatus:"APPROVAL_PENDING"
           },
         },
@@ -73,7 +73,7 @@ const CustomInboxSearchComposer = () => {
 
   //
 
-  useEffect(() => {}, [selectedProject]);
+  useEffect(() => { }, [selectedProject]);
 
   const handleProjectChange = (selectedProject) => {
     setSelectedProject(selectedProject);
