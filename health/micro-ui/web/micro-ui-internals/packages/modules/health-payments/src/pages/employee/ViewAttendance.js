@@ -399,7 +399,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
       {openEditAlertPopUp && <AlertPopUp
         onClose={closeActionBarPopUp}
         alertHeading={t(`HCM_AM_ALERT_HEADING`)}
-        alertMessage={`HCM_AM_ALERT_EDIT_DESCRIPTION`}
+        alertMessage={t(`HCM_AM_ALERT_EDIT_DESCRIPTION`)}
         submitLabel={t(`HCM_AM_PROCEED`)}
         cancelLabel={t(`HCM_AM_CANCEL`)}
         onPrimaryAction={() => {
@@ -411,7 +411,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
           setOpenApproveAlertPopUp(false);
         }}
         alertHeading={t(`HCM_AM_ALERT_APPROVE_HEADING`)}
-        alertMessage={`HCM_AM_ALERT_APPROVE_DESCRIPTION`}
+        alertMessage={t(`HCM_AM_ALERT_APPROVE_DESCRIPTION`)}
         submitLabel={t(`HCM_AM_APPROVE`)}
         cancelLabel={t(`HCM_AM_CANCEL`)}
         onPrimaryAction={() => {
