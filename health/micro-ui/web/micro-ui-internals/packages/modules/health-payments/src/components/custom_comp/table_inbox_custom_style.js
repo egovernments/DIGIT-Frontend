@@ -2,6 +2,8 @@ export const tableCustomStyle = {
   tableWrapper: {
     style: {
       // overflow: "scroll",
+      minHeight: "400px",
+     // padding:"10px",
     },
   },
   table: {
@@ -93,6 +95,7 @@ export const tableCustomStyle = {
         borderWidth: "1px",
         borderColor: "#D6D5D4",
         borderTopWidth: "0px",
+        padding:"10px",
       },
     },
   },

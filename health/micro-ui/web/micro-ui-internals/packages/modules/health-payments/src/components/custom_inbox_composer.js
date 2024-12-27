@@ -18,7 +18,7 @@ const CustomInboxSearchComposer = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [totalRows, setTotalRows] = useState(0);
+  const [selectedStatus, setSelectedStatus] = useState("PENDINGFORAPPROVAL");
 
   const [searchQuery, setSearchQuery] = useState(null);
 
@@ -29,7 +29,7 @@ const CustomInboxSearchComposer = () => {
     url: "/health-attendance/v1/_search",
   });
 
-  const triggerMusterRollApprove = async (filterData) => {
+  const triggerMusterRollApprove = async (filterData, status, totalRows, totalNext) => {
     try {
       setChildrenDataLoading(true);
       await fetchRegisters.mutateAsync(
@@ -37,24 +37,29 @@ const CustomInboxSearchComposer = () => {
           params: {
             tenantId: Digit.ULBService.getStateId(),
             limit: rowsPerPage,
-            offset: (currentPage - 1) * rowsPerPage,
+            offset: totalNext == undefined ? (currentPage - 1) * rowsPerPage : (totalNext - 1) * totalRows,
             referenceId: selectedProject?.id,
             staffId: Digit.SessionStorage.get("UserIndividual")?.[0]?.id,
             localityCode: filterData?.code == undefined || filterData?.code == null ? filterCriteria?.code : filterData?.code,
-            //paymentStatus:"APPROVAL_PENDING"
+            paymentStatus: status == undefined ? null : status,
           },
         },
         {
           onSuccess: (data) => {
-            const rowData = data?.attendanceRegister?.map((item, index) => {
-              return {
-                id: item?.registerNumber,
-                name: item?.name,
-                boundary: item?.localityCode,
-                status: item?.staff.length || 0,
-              };
-            });
+            const rowData =
+              data?.attendanceRegister.length > 0
+                ? data?.attendanceRegister?.map((item, index) => {
+                    return {
+                      id: item?.registerNumber,
+                      //name: item?.name,
+                      name: selectedProject?.name,
+                      boundary: item?.localityCode,
+                      status: item?.attendees == null ? 0 : item?.attendees.length || 0,
+                    };
+                  })
+                : [];
             setChildrenDataLoading(false);
+
             setchildrenData({
               data: rowData,
               totalCount: data?.totalCount,
@@ -62,6 +67,7 @@ const CustomInboxSearchComposer = () => {
             });
           },
           onError: (error) => {
+            setChildrenDataLoading(false);
             setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_REGISTER_FETCH_FAILED"), transitionTime: 3000 });
           },
         }
@@ -96,17 +102,27 @@ const CustomInboxSearchComposer = () => {
   const handlePaginationChange = (page) => {
     setCurrentPage(page);
 
-    triggerMusterRollApprove();
+    triggerMusterRollApprove(filterCriteria, selectedStatus, rowsPerPage, page);
   };
   const handleRowsPerPageChange = (newPerPage, page) => {
     setRowsPerPage(newPerPage); // Update the rows per page state
     setCurrentPage(page); // Optionally reset the current page or maintain it
     // refetchPlanEmployee();
     // handleCreateRateAnalysis();
-    triggerMusterRollApprove();
+    triggerMusterRollApprove(filterCriteria, selectedStatus, newPerPage, page);
   };
   const callServiceOnTap = (status) => {
-    triggerMusterRollApprove();
+    if (status.code == "HCM_AM_PENDING_FOR_APPROVAL") {
+      setRowsPerPage(5); // Update the rows per page state
+      setCurrentPage(1);
+      setSelectedStatus("PENDINGFORAPPROVAL");
+      triggerMusterRollApprove(filterCriteria, "PENDINGFORAPPROVAL", 5, 1);
+    } else {
+      setRowsPerPage(5); // Update the rows per page state
+      setCurrentPage(1);
+      setSelectedStatus("APPROVED");
+      triggerMusterRollApprove(filterCriteria, "APPROVED", 5, 1);
+    }
   };
 
   return (
@@ -133,8 +149,9 @@ const CustomInboxSearchComposer = () => {
           >
             <CustomFilter projectData={selectedProject} onFilterChange={handleFilterUpdate}></CustomFilter>
           </div>
-          <div style={{ width: "80%", display: "flex", flexDirection: "row", height: "60vh" }}>
+          <div style={{ width: "80%", display: "flex", flexDirection: "row", height: "60vh" ,minHeight: "60vh" }}>
             <CustomInboxTable
+              statusCount={childrenData?.statusCount}
               handleTabChange={callServiceOnTap}
               rowsPerPage={rowsPerPage}
               customHandleRowsPerPageChange={handleRowsPerPageChange}
