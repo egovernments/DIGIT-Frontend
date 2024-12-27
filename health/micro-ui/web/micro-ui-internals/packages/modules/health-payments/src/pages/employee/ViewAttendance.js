@@ -11,7 +11,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const location = useLocation();
   const { t } = useTranslation();
   const history = useHistory();
-  const { registerNumber } = Digit.Hooks.useQueryParams();
+  const { registerNumber, boundaryCode } = Digit.Hooks.useQueryParams();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [currentPage, setCurrentPage] = useState(1);
   const [attendanceDuration, setAttendanceDuration] = useState(null);
@@ -22,6 +22,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [openApproveAlertPopUp, setOpenApproveAlertPopUp] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [totalRows, setTotalRows] = useState(0);
+  const [data, setData] = useState([]);
+  const [individualIds, setIndividualIds] = useState([]);
+  const [triggerEstimate, setTriggerEstimate] = useState(false);
   const [comment, setComment] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
@@ -55,11 +58,11 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   /// ADDED CONDITION THAT IF CAMPAIGN HAS NOT ENDED THEN WE WILL SHOW ESTIMATE DATA ONLY AND DISABLED ALL THE ACTIONS
 
-  useEffect(() => {
-    if (AttendanceData?.attendanceRegister[0]?.endDate > new Date()) {
-      setDisabledAction(true);
-    }
-  }, [AttendanceData])
+  // useEffect(() => {
+  //   if (AttendanceData?.attendanceRegister[0]?.endDate > new Date()) {
+  //     setDisabledAction(true);
+  //   }
+  // }, [AttendanceData])
 
   const reqCri = {
     url: `/health-muster-roll/v1/_estimate`,
@@ -72,7 +75,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
       }
     },
     config: {
-      enabled: (AttendanceData ? true : false) && disabledAction,
+      enabled: ((AttendanceData ? true : false) && disabledAction) || triggerEstimate,
       select: (data) => {
         return data;
       },
@@ -98,7 +101,34 @@ const ViewAttendance = ({ editAttendance = false }) => {
     },
   };
 
+
   const { isLoading: isMusterRollLoading, data: MusterRollData } = Digit.Hooks.useCustomAPIHook(searchReqCri);
+
+  useEffect(() => {
+    if (MusterRollData?.count === 0) {
+      setTriggerEstimate(true);
+      triggerMusterRollCreate();
+    } else if (triggerEstimate === true) {
+      setTriggerEstimate(false);
+    }
+
+    if (MusterRollData?.count > 0) {
+      setData(MusterRollData?.musterRolls);
+    } else if (estimateMusterRollData) {
+      setData(estimateMusterRollData?.musterRolls);
+    }
+
+  }, [estimateMusterRollData, MusterRollData]);
+
+  useEffect(() => {
+    if (data) {
+      // Extract individual IDs
+      const ids = data.flatMap((muster) =>
+        muster.individualEntries.map((entry) => entry.individualId)
+      );
+      setIndividualIds(ids);
+    }
+  }, [data]);
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook({
     url: "/health-muster-roll/v1/_create",
@@ -117,12 +147,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
       await approveMutation.mutateAsync(
         {
           body: {
-            musterRoll: {
-              tenantId: tenantId,
-              registerId: AttendanceData?.attendanceRegister[0]?.id,
-              startDate: AttendanceData?.attendanceRegister[0]?.startDate,
-              endDate: AttendanceData?.attendanceRegister[0]?.endDate
-            },
+            musterRoll: data?.[0],
             workflow: {
               action: "APPROVE",
               comments: comment,
@@ -134,7 +159,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
             history.push(`/${window.contextPath}/employee/payments/attendance-approve-success`, {
               state: "success",
               info: "HCM_AM_MUSTER_ROLL_ID",
-              fileName: 'dummmy name',
+              fileName: data?.musterRolls?.[0]?.musterRollNumber,
               description: t(`HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION`),
               message: t(`HCM_AM_ATTENDANCE_APPROVE_SUCCESS`),
               back: t(`GO_BACK_TO_HOME`),
@@ -162,14 +187,20 @@ const ViewAttendance = ({ editAttendance = false }) => {
         {
           body: {
             musterRoll: {
-              tenantId: tenantId,
-              registerId: AttendanceData?.attendanceRegister[0]?.id,
-              startDate: AttendanceData?.attendanceRegister[0]?.startDate,
-              endDate: AttendanceData?.attendanceRegister[0]?.endDate
+              ...data[0], // Spread the existing data
+              individualEntries: data[0].individualEntries.map((entry) => {
+                const updatedAttendance = attendanceSummary.find(
+                  ([id,]) => id === entry.individualId
+                )?.[4]; // Extract the updated actualTotalAttendance
+                return {
+                  ...entry,
+                  modifiedTotalAttendance: updatedAttendance || entry.actualTotalAttendance,
+                };
+              }),
             },
             workflow: {
               action: "EDIT",
-            }
+            },
           },
         },
         {
@@ -188,10 +219,10 @@ const ViewAttendance = ({ editAttendance = false }) => {
     }
   };
 
-  useEffect(() => {
-    /// need to check api when this response is coming empty
-    triggerMusterRollCreate();
-  }, [MusterRollData]);
+  // useEffect(() => {
+  //   /// need to check api when this response is coming empty
+  //   triggerMusterRollCreate();
+  // }, [MusterRollData]);
 
   const triggerMusterRollCreate = async () => {
     if (MusterRollData) {
@@ -206,7 +237,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
                 endDate: AttendanceData?.attendanceRegister[0]?.endDate
               },
               workflow: {
-                action: "EDIT",
+                action: "SUBMIT",
               }
             },
           },
@@ -224,6 +255,30 @@ const ViewAttendance = ({ editAttendance = false }) => {
       }
     }
   };
+
+
+  const allIndividualReqCriteria = {
+    url: `/health-individual/v1/_search`,
+    params: {
+      tenantId: tenantId,
+      limit: 100,
+      offset: 0,
+    },
+    body: {
+      Individual: {
+        id: individualIds
+      }
+    },
+    config: {
+      enabled: individualIds.length > 0 ? true : false,
+      select: (data) => {
+        return data;
+      },
+    },
+    changeQueryName: "allIndividuals"
+  };
+
+  const { isLoading: isAllIndividualsLoading, data: AllIndividualsData } = Digit.Hooks.useCustomAPIHook(allIndividualReqCriteria);
 
   const individualReqCriteria = {
     url: `/health-individual/v1/_search`,
@@ -247,388 +302,37 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   const { isLoading: isIndividualsLoading, data: individualsData } = Digit.Hooks.useCustomAPIHook(individualReqCriteria);
 
-  const hardCodedMusterRollData = [
-    {
-      "id": null,
-      "tenantId": "od.testing",
-      "musterRollNumber": null,
-      "registerId": "fc54761d-6e88-4b57-a9ad-d13afeb774e9",
-      "status": "ACTIVE",
-      "musterRollStatus": null,
-      "startDate": 1733682600000,
-      "endDate": 1734201000000,
-      "individualEntries": [
-        {
-          "id": null,
-          "individualId": "329a6c2a-e41c-4d38-8c41-9e851c835560",
-          "actualTotalAttendance": 0.5,
-          "modifiedTotalAttendance": null,
-          "attendanceEntries": [
-            {
-              "id": null,
-              "time": 1733682600000,
-              "attendance": 0.0,
-              "auditDetails": {
-                "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "createdTime": 1734686454590,
-                "lastModifiedTime": 1734686454590
-              },
-              "additionalDetails": null
-            },
-            {
-              "id": null,
-              "time": 1733769000000,
-              "attendance": 0.5,
-              "auditDetails": {
-                "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "createdTime": 1734686454590,
-                "lastModifiedTime": 1734686454590
-              },
-              "additionalDetails": {
-                "entryAttendanceLogId": "cef79e8e-c08f-4cee-8313-9dcd86632cc8",
-                "exitAttendanceLogId": "44e91bc0-37d9-4d62-ada4-b5a3cc9c84ee"
-              }
-            },
-            {
-              "id": null,
-              "time": 1733855400000,
-              "attendance": 0.0,
-              "auditDetails": {
-                "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "createdTime": 1734686454590,
-                "lastModifiedTime": 1734686454590
-              },
-              "additionalDetails": null
-            },
-            {
-              "id": null,
-              "time": 1733941800000,
-              "attendance": 0.0,
-              "auditDetails": {
-                "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "createdTime": 1734686454590,
-                "lastModifiedTime": 1734686454590
-              },
-              "additionalDetails": null
-            },
-            {
-              "id": null,
-              "time": 1734028200000,
-              "attendance": 0.0,
-              "auditDetails": {
-                "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "createdTime": 1734686454590,
-                "lastModifiedTime": 1734686454590
-              },
-              "additionalDetails": null
-            },
-            {
-              "id": null,
-              "time": 1734114600000,
-              "attendance": 0.0,
-              "auditDetails": {
-                "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "createdTime": 1734686454590,
-                "lastModifiedTime": 1734686454590
-              },
-              "additionalDetails": null
-            },
-            {
-              "id": null,
-              "time": 1734201000000,
-              "attendance": 0.0,
-              "auditDetails": {
-                "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "createdTime": 1734686454590,
-                "lastModifiedTime": 1734686454590
-              },
-              "additionalDetails": null
-            }
-          ],
-          "additionalDetails": {
-            "skillCode": [
-              "SOR_000371",
-              "SOR_000373"
-            ],
-            "userName": "rakesh",
-            "userId": "IND-2024-09-16-004120",
-            "userRole": "Distributor"
-          },
-          "auditDetails": {
-            "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-            "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-            "createdTime": 1734686454590,
-            "lastModifiedTime": 1734686454590
-          }
-        },
-        {
-          "id": null,
-          "individualId": "e8430fc1-9c07-43ef-aa7d-7da24653e868",
-          "actualTotalAttendance": 0.5,
-          "modifiedTotalAttendance": null,
-          "attendanceEntries": [
-            {
-              "id": null,
-              "time": 1733682600000,
-              "attendance": 0.0,
-              "auditDetails": {
-                "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "createdTime": 1734686454590,
-                "lastModifiedTime": 1734686454590
-              },
-              "additionalDetails": null
-            },
-            {
-              "id": null,
-              "time": 1733769000000,
-              "attendance": 0.5,
-              "auditDetails": {
-                "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "createdTime": 1734686454590,
-                "lastModifiedTime": 1734686454590
-              },
-              "additionalDetails": {
-                "entryAttendanceLogId": "f4719332-516b-4d12-bbf5-d6fb3c2554a3",
-                "exitAttendanceLogId": "14e2a4a0-e3fb-486a-b8a8-bddbdef32eb4"
-              }
-            },
-            {
-              "id": null,
-              "time": 1733855400000,
-              "attendance": 0.0,
-              "auditDetails": {
-                "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "createdTime": 1734686454590,
-                "lastModifiedTime": 1734686454590
-              },
-              "additionalDetails": null
-            },
-            {
-              "id": null,
-              "time": 1733941800000,
-              "attendance": 0.0,
-              "auditDetails": {
-                "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "createdTime": 1734686454590,
-                "lastModifiedTime": 1734686454590
-              },
-              "additionalDetails": null
-            },
-            {
-              "id": null,
-              "time": 1734028200000,
-              "attendance": 0.0,
-              "auditDetails": {
-                "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "createdTime": 1734686454590,
-                "lastModifiedTime": 1734686454590
-              },
-              "additionalDetails": null
-            },
-            {
-              "id": null,
-              "time": 1734114600000,
-              "attendance": 0.0,
-              "auditDetails": {
-                "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "createdTime": 1734686454590,
-                "lastModifiedTime": 1734686454590
-              },
-              "additionalDetails": null
-            },
-            {
-              "id": null,
-              "time": 1734201000000,
-              "attendance": 0.0,
-              "auditDetails": {
-                "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "createdTime": 1734686454590,
-                "lastModifiedTime": 1734686454590
-              },
-              "additionalDetails": null
-            }
-          ],
-          "additionalDetails": {
-            "skillCode": [
-              "SOR_000367",
-              "SOR_000374",
-              "SOR_000378",
-              "SOR_000380",
-              "SOR_000379",
-              "SOR_000381",
-              "SOR_000382",
-              "SOR_000383",
-              "SOR_000384",
-              "SOR_000385",
-              "SOR_000386"
-            ],
-            "userName": "Sam Dham",
-            "userId": "IND-2024-08-13-003194",
-            "userRole": "Distributor"
-          },
-          "auditDetails": {
-            "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-            "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-            "createdTime": 1734686454590,
-            "lastModifiedTime": 1734686454590
-          }
-        },
-        {
-          "id": null,
-          "individualId": "0eb1cc9c-274b-49c4-b0ef-1e6bcadfb94a",
-          "actualTotalAttendance": 0.0,
-          "modifiedTotalAttendance": null,
-          "attendanceEntries": [
-            {
-              "id": null,
-              "time": 1733682600000,
-              "attendance": 0.0,
-              "auditDetails": {
-                "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "createdTime": 1734686454590,
-                "lastModifiedTime": 1734686454590
-              },
-              "additionalDetails": null
-            },
-            {
-              "id": null,
-              "time": 1733769000000,
-              "attendance": 0.0,
-              "auditDetails": {
-                "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "createdTime": 1734686454590,
-                "lastModifiedTime": 1734686454590
-              },
-              "additionalDetails": {
-                "entryAttendanceLogId": "7f3396ce-d8c2-4e7e-8352-0e3c54cb0c90",
-                "exitAttendanceLogId": "cc43447e-ad92-4f76-a58f-8a27d64feb8e"
-              }
-            },
-            {
-              "id": null,
-              "time": 1733855400000,
-              "attendance": 0.0,
-              "auditDetails": {
-                "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "createdTime": 1734686454590,
-                "lastModifiedTime": 1734686454590
-              },
-              "additionalDetails": null
-            },
-            {
-              "id": null,
-              "time": 1733941800000,
-              "attendance": 0.0,
-              "auditDetails": {
-                "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "createdTime": 1734686454590,
-                "lastModifiedTime": 1734686454590
-              },
-              "additionalDetails": null
-            },
-            {
-              "id": null,
-              "time": 1734028200000,
-              "attendance": 0.0,
-              "auditDetails": {
-                "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "createdTime": 1734686454590,
-                "lastModifiedTime": 1734686454590
-              },
-              "additionalDetails": null
-            },
-            {
-              "id": null,
-              "time": 1734114600000,
-              "attendance": 0.0,
-              "auditDetails": {
-                "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "createdTime": 1734686454590,
-                "lastModifiedTime": 1734686454590
-              },
-              "additionalDetails": null
-            },
-            {
-              "id": null,
-              "time": 1734201000000,
-              "attendance": 0.0,
-              "auditDetails": {
-                "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-                "createdTime": 1734686454590,
-                "lastModifiedTime": 1734686454590
-              },
-              "additionalDetails": null
-            }
-          ],
-          "additionalDetails": {
-            "skillCode": [
-              "SOR_000026",
-              "SOR_000438",
-              "SOR_000437",
-              "SOR_000436",
-              "SOR_000435"
-            ],
-            "userName": "DPP check",
-            "userId": "IND-2024-12-10-004160",
-            "userRole": "Distributor"
-          },
-          "auditDetails": {
-            "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-            "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-            "createdTime": 1734686454590,
-            "lastModifiedTime": 1734686454590
-          }
-        }
-      ],
-      "referenceId": null,
-      "serviceCode": "WORKS-CONTRACT",
-      "additionalDetails": null,
-      "auditDetails": {
-        "createdBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-        "lastModifiedBy": "d227b211-d718-43ed-8048-90e12b2525ce",
-        "createdTime": 1734686454590,
-        "lastModifiedTime": 1734686454590
-      },
-      "processInstance": null
-    }
-  ];
+  function getUserAttendanceSummary(data, individualsData) {
+    return data[0].individualEntries.map((individualEntry) => {
+      const individualId = individualEntry.individualId;
+      const matchingIndividual = individualsData?.Individual?.find(
+        (individual) => individual.id === individualId
+      );
 
-  function getUserAttendanceSummary(data) {
-    return data[0].individualEntries.map((individual) => {
-      const userName = individual.additionalDetails.userName;
-      const userId = individual.additionalDetails.userId;
-      const userRole = individual.additionalDetails.userRole;
-      const noOfDaysWorked = individual?.actualTotalAttendance;
+      if (matchingIndividual) {
+        const userName = matchingIndividual.name?.givenName || "Unknown";
+        const userId = matchingIndividual.individualId || "N/A";
+        const userRole =
+          matchingIndividual.userDetails?.roles[0]?.name || "Unassigned";
+        const noOfDaysWorked = individualEntry?.modifiedTotalAttendance || individualEntry.actualTotalAttendance || 0;
+        const id = individualEntry.individualId || 0;
 
-      return [userName, userId, userRole, noOfDaysWorked];
+        return [id, userName, userId, userRole, noOfDaysWorked];
+      } else {
+        // Handle cases where no match is found in individualsData
+        return ["N/A", "Unknown", "N/A", "Unassigned", individualEntry?.modifiedTotalAttendance || individualEntry.actualTotalAttendance || 0];
+      }
     });
   }
 
   // Populate attendanceSummary when AttendanceData changes
   useEffect(() => {
-    setAttendanceSummary(getUserAttendanceSummary(hardCodedMusterRollData));
-  }, []); /// need to update dependency
+
+    if (data.length > 0 && AllIndividualsData) {
+      setAttendanceSummary(getUserAttendanceSummary(data, AllIndividualsData));
+    }
+
+  }, [AllIndividualsData, data]); /// need to update dependency
 
 
   const handlePageChange = (page, totalRows) => {
@@ -645,7 +349,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * rowsPerPage })
   }
 
-  if (isAttendanceLoading || isEstimateMusterRollLoading || isIndividualsLoading || isMusterRollLoading) {
+  if (isAttendanceLoading || isEstimateMusterRollLoading || isIndividualsLoading || isMusterRollLoading || isAllIndividualsLoading) {
     return <LoaderScreen />
   }
 
@@ -686,8 +390,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
           </div>
           <div className="label-pair">
             <span className="label-heading">{t(`HCM_AM_STATUS`)}</span>
-            <span className="label-text">{t(`PENDING FOR APPROVAL`)}</span>
-            {/* HARD CODING NOW NEED TO UPDATE */}
+            <span className="label-text">{t(data?.[0]?.musterRollStatus) || t(`APPROVAL_PENDING`)}</span>
           </div>
         </Card>
         <Card>
@@ -701,7 +404,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
         submitLabel={t(`HCM_AM_PROCEED`)}
         cancelLabel={t(`HCM_AM_CANCEL`)}
         onPrimaryAction={() => {
-          history.push(`/${window.contextPath}/employee/payments/edit-attendance?registerNumber=${registerNumber}`);
+          history.push(`/${window.contextPath}/employee/payments/edit-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}`);
         }}
       />}
       {openApproveAlertPopUp && <AlertPopUp
