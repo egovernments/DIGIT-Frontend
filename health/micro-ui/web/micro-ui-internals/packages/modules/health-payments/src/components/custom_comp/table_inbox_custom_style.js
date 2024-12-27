@@ -3,6 +3,7 @@ export const tableCustomStyle = {
     style: {
       // overflow: "scroll",
       minHeight: "400px",
+      padding:"10px",
     },
   },
   table: {
