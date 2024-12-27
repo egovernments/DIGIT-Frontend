@@ -17,7 +17,9 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
-  const hierarchyType = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "ADMIN";
+  const hierarchyType = "MICROPLAN";
+
+  // const hierarchyType = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "ADMIN";
   const moduleCode = ["payments", `boundary-${hierarchyType}`];
   const modulePrefix = "hcm";
   const language = Digit.StoreData.getCurrentLanguage();
