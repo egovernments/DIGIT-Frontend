@@ -77,7 +77,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
       }
     },
     config: {
-      enabled: ((AttendanceData ? true : false) && disabledAction) || triggerEstimate,
+      enabled: ((AttendanceData ? true : false) && disabledAction && data?.[0]?.musterRollStatus !== "APPROVED") || triggerEstimate,
       select: (data) => {
         return data;
       },
