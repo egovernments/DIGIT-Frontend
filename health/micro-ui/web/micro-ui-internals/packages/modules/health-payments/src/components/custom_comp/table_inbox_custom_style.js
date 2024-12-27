@@ -2,6 +2,7 @@ export const tableCustomStyle = {
   tableWrapper: {
     style: {
       // overflow: "scroll",
+      minHeight: "400px",
     },
   },
   table: {
