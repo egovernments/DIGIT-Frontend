@@ -108,7 +108,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   useEffect(() => {
     if (MusterRollData?.count === 0) {
-      setTriggerEstimate(true);
       triggerMusterRollCreate();
     } else if (triggerEstimate === true) {
       setTriggerEstimate(false);
