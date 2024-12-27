@@ -102,7 +102,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   };
 
 
-  const { isLoading: isMusterRollLoading, data: MusterRollData } = Digit.Hooks.useCustomAPIHook(searchReqCri);
+  const { isLoading: isMusterRollLoading, data: MusterRollData, refetch: refetchMusterRoll } = Digit.Hooks.useCustomAPIHook(searchReqCri);
 
   useEffect(() => {
     if (MusterRollData?.count === 0) {
@@ -219,41 +219,36 @@ const ViewAttendance = ({ editAttendance = false }) => {
     }
   };
 
-  // useEffect(() => {
-  //   /// need to check api when this response is coming empty
-  //   triggerMusterRollCreate();
-  // }, [MusterRollData]);
-
   const triggerMusterRollCreate = async () => {
-    if (MusterRollData) {
-      try {
-        await mutation.mutateAsync(
-          {
-            body: {
-              musterRoll: {
-                tenantId: tenantId,
-                registerId: AttendanceData?.attendanceRegister[0]?.id,
-                startDate: AttendanceData?.attendanceRegister[0]?.startDate,
-                endDate: AttendanceData?.attendanceRegister[0]?.endDate
-              },
-              workflow: {
-                action: "SUBMIT",
-              }
+
+    try {
+      await mutation.mutateAsync(
+        {
+          body: {
+            musterRoll: {
+              tenantId: tenantId,
+              registerId: AttendanceData?.attendanceRegister[0]?.id,
+              startDate: AttendanceData?.attendanceRegister[0]?.startDate,
+              endDate: AttendanceData?.attendanceRegister[0]?.endDate
             },
-          },
-          {
-            onSuccess: (data) => {
-              /// need to update on success 
-            },
-            onError: (error) => {
-              /// need to show estimate data only
+            workflow: {
+              action: "SUBMIT",
             }
+          },
+        },
+        {
+          onSuccess: (data) => {
+            refetchMusterRoll();
+          },
+          onError: (error) => {
+            setTriggerEstimate(true);
           }
-        );
-      } catch (error) {
-        /// will show estimate data only
-      }
+        }
+      );
+    } catch (error) {
+      setTriggerEstimate(true);
     }
+
   };
 
 
