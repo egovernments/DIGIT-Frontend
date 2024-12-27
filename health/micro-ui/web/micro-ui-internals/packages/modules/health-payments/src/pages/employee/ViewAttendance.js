@@ -348,7 +348,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * rowsPerPage })
   }
 
-  if (isAttendanceLoading || isEstimateMusterRollLoading || isIndividualsLoading || isMusterRollLoading || isAllIndividualsLoading) {
+  if (isAttendanceLoading || isEstimateMusterRollLoading || isIndividualsLoading || isMusterRollLoading || isAllIndividualsLoading || mutation.isLoading) {
     return <LoaderScreen />
   }
 
