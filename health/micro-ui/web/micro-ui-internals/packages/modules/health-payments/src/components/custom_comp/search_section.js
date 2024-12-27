@@ -31,17 +31,15 @@ const CustomSearchComponent = ({ onProjectSelect }) => {
     }
   }, []);
 
-  console.log(project, "testing");
+  const onSubmit = (data, e) => {};
 
-  const onSubmit = (data, e) => { };
-
-  const clearSearch = () => { };
+  const clearSearch = () => {};
 
   const closeToast = () => {
     setShowToast(null);
   };
 
-  const handleFilterRefresh = () => { };
+  const handleFilterRefresh = () => {};
 
   const renderHeader = () => {
     return (
@@ -73,22 +71,12 @@ const CustomSearchComponent = ({ onProjectSelect }) => {
           />
         </div>
 
-        <ButtonGroup buttonsArray={[
-          <Button
-            variation="teritiary"
-            label={t(`HCM_AM_CLEAR`)}
-            type="button"
-            onClick={() => { }}
-            size="large"
-          />,
-          <Button
-            variation="primary"
-            label={t(`HCM_AM_SEARCH`)}
-            type="button"
-            onClick={() => { }}
-            size="large"
-          />
-        ]}></ButtonGroup>
+        <ButtonGroup
+          buttonsArray={[
+            <Button variation="teritiary" label={t(`HCM_AM_CLEAR`)} type="button" onClick={() => {}} size="large" />,
+            <Button variation="primary" label={t(`HCM_AM_SEARCH`)} type="button" onClick={() => {}} size="large" />,
+          ]}
+        ></ButtonGroup>
 
         {/*showToast && <Toast 
           error={showToast.error}
