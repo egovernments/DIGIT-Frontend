@@ -4,7 +4,7 @@ import { PGRReducers } from "@egovernments/digit-ui-module-pgr";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 // import { paymentConfigs, PaymentLinks, PaymentModule } from "@egovernments/digit-ui-module-common";
 import { DigitUI, initCoreComponents } from "@egovernments/digit-ui-module-core";
-import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
+//import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
 import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
 import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
@@ -21,7 +21,7 @@ import { UICustomizations } from "./UICustomizations";
 var Digit = window.Digit || {};
 
 const enabledModules = [
-  "DSS",
+  //"DSS",
   "HRMS",
   "Workbench",
   //  "Engagement", "NDSS","QuickPayLinks", "Payment",
@@ -31,6 +31,7 @@ const enabledModules = [
   // "FSM"
   "Sandbox",
   "OpenPayment",
+  "assignment"
 ];
 
 const initTokens = (stateCode) => {
@@ -89,7 +90,7 @@ const initDigitUI = () => {
     // PaymentLinks,
   });
   initCoreComponents();
-  initDSSComponents();
+  //initDSSComponents();
   initHRMSComponents();
   initUtilitiesComponents();
   initWorkbenchComponents();

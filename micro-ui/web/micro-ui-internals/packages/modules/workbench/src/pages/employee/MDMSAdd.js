@@ -114,6 +114,7 @@ const MDMSAdd = ({ FormSession }) => {
   }
 
   const configs = Digit.Hooks.workbench.UICreateConfigGenerator(schema, {});
+  console.log("This is config",configs);
 
   return (
     <FormComposerV2

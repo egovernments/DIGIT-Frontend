@@ -17,7 +17,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "start": "SKIP_PREFLIGHT_CHECK=true run-s build start:dev",
+    "start": "cross-env SKIP_PREFLIGHT_CHECK=true run-s build start:dev",
     "sprint": "SKIP_PREFLIGHT_CHECK=true run-s start:script",
     "start:dev": "run-p dev:**",
     "start:script": "./scripts/create.sh",
@@ -27,7 +27,7 @@
     "dev:components": "cd packages/react-components && yarn start",
     "dev:example": "cd example && yarn start",
     "dev:core": "cd packages/modules/core && yarn start",
-    "dev:dss": "cd packages/modules/dss && yarn start",
+    "devD:dss": "cd packages/modules/dss && yarn start",
     "dev:hrms": "cd packages/modules/hrms && yarn start",
     "devD:common": "cd packages/modules/common && yarn start",
     "devD:utilities": "cd packages/modules/utilities && yarn start",
@@ -41,7 +41,7 @@
     "build:libraries": "cd packages/libraries && yarn build",
     "build:components": "cd packages/react-components && yarn build",
     "build:svgcomponents": "cd packages/svg-components && yarn build",
-    "build:dss": "cd packages/modules/dss && yarn build",
+    "buildD:dss": "cd packages/modules/dss && yarn build",
     "build:core": "cd packages/modules/core && yarn build",
     "build:hrms": "cd packages/modules/hrms && yarn build",
     "build:common": "cd packages/modules/common && yarn build",
@@ -52,7 +52,9 @@
     "build:openpayment": "cd packages/modules/open-payment && yarn build",
     "build:sandbox": "cd packages/modules/sandbox && yarn build",
     "deploy:jenkins": "./scripts/jenkins.sh",
-    "clean": "rm -rf node_modules"
+    "clean": "rm -rf node_modules",
+    "dev:assignment": "cd packages/modules/assignment && yarn start",
+    "build:assignment": "cd packages/modules/assignment && yarn build"
   },
   "resolutions": {
     "**/@babel/runtime": "7.20.1",

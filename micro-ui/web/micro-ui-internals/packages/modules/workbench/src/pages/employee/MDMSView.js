@@ -138,6 +138,8 @@ const MDMSView = ({...props}) => {
     }
   }
 
+  console.log("data",data);
+
   if(isLoading) return <Loader />
 
   return (

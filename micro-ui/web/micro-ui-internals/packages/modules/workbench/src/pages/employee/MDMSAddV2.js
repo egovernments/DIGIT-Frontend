@@ -93,6 +93,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   }
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaAdd);
+  console.log("mutataion",mutation);
   const onSubmit = (data) => {
     toggleSpinner(true);
     const onSuccess = (resp) => {
@@ -196,6 +197,8 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
       setShowToast(null);
     }, 5000);
   };
+
+  console.log("formschema",formSchema);
 
   /* use newConfig instead of commonFields for local development in case needed */
   if (isLoading || !formSchema || Object.keys(formSchema) == 0) {

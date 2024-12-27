@@ -3,6 +3,7 @@ import { Switch, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
 import LocalisationSearch from "./LocalisationSearch";
+import AssignmentSearch from "./AssignmentSearch";
 import MDMSSearch from "./MDMSSearch";
 import MDMSAdd from "./MDMSAdd";
 import MDMSAddV2 from "./MDMSAddV2";
@@ -16,6 +17,7 @@ import WorkbenchHeader from "../../components/WorkbenchHeader";
 import BoundaryHierarchyTypeAdd from "./BoundaryHierarchyTypeAdd";
 import UploadBoundary from "./UploadBoundary";
 import UploadBoundaryPure from "./BoundaryUploadPure";
+import AssignmentView from "./AssignmentView";
 
 const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
@@ -120,6 +122,8 @@ const App = ({ path }) => {
       <Switch>
         <AppContainer className="workbench">
           <PrivateRoute path={`${path}/sample`} component={() => <div>Sample Screen loaded</div>} />
+          <PrivateRoute path={`${path}/assignment-search`} component={() => <AssignmentSearch />} />
+          <PrivateRoute path={`${path}/assignment-view`} component={() => <AssignmentView />} />
           <PrivateRoute path={`${path}/localisation-search`} component={() => <LocalisationSearch />} />
           <PrivateRoute path={`${path}/mdms-search`} component={() => <MDMSSearch />} />
           <PrivateRoute path={`${path}/mdms-add`} component={() => <MDMSAdd FormSession={MDMSCreateSession} parentRoute={path} />} />
