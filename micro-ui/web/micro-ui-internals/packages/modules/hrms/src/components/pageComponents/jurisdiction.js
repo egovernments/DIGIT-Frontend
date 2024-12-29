@@ -303,7 +303,7 @@ function Jurisdiction({
             disable={Boundary?.length === 0}
             option={Boundary}
             select={selectedboundary}
-            optionKey={Digit.Utils.getMultiRootTenant() ? "code" : "i18nkey"}
+            optionKey={"i18nKey"}
             t={t}
           />
         </LabelFieldPair>
