@@ -4,6 +4,7 @@ import { Loader,Toast } from '@egovernments/digit-ui-react-components';
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button } from '@egovernments/digit-ui-components';
+import { transform } from "lodash";
 
 const MDMSView = ({...props}) => {
   const history = useHistory()
@@ -24,27 +25,7 @@ const MDMSView = ({...props}) => {
     }
   });
   // const stateId = Digit.ULBService.getStateId();
-  tenantId = Digit.ULBService.getCurrentTenantId();
-  const fetchActionItems = (data) => {
-    let actionItems = [{
-      action:"EDIT",
-      label:"Edit Master"
-    }]
-
-    const isActive = data?.isActive
-    if(isActive) actionItems.push({
-      action:"DISABLE",
-      label:"Disable Master"
-    })
-    else actionItems.push({
-      action:"ENABLE",
-      label:"Enable Master"
-    })
-
-    return actionItems
-  }
-
-  
+  tenantId = Digit.ULBService.getCurrentTenantId();  
 
   const reqCriteria = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
@@ -72,6 +53,34 @@ const MDMSView = ({...props}) => {
   }
 
   const { isLoading, data, isFetching,refetch,revalidate } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+
+  const reqCriteriaSorSearch = {
+    url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
+    params: {},
+    body: {
+      MdmsCriteria: {
+        tenantId: tenantId?.split(".")[0],
+        uniqueIdentifiers: [uniqueIdentifier?.split(".")[0]],
+        schemaCode: `${moduleName}.${"SOR"}`,
+      },
+    },
+    config: {
+      enabled: data?.data?.sorId ? true : false,
+      select: (response) => {
+        return response?.mdms?.[0];
+      },
+    },
+    changeQueryName: uniqueIdentifier?.split(".")[0],
+  };
+  const { isLoading: isSORLoading, data: sorData } = Digit.Hooks.useCustomAPIHook(reqCriteriaSorSearch);
+
+  let propsToSendButtons = {
+    moduleName,
+    masterName,
+    sorData,
+  };
+
+  const fetchActionItems = (data) => Digit?.Customizations?.["commonUiConfig"]?.["ViewMdmsConfig"]?.fetchActionItems(data, propsToSendButtons);
 
   const reqCriteriaUpdate = {
     url: Digit.Utils.workbench.getMDMSActionURL(moduleName,masterName,"update"),
@@ -124,21 +133,19 @@ const MDMSView = ({...props}) => {
     );
   }
 
-  const onActionSelect = (action) => {
-    const {action:actionSelected} = action 
-    //action===EDIT go to edit screen 
-    if(actionSelected==="EDIT") {
-      const additionalParamString = new URLSearchParams(additionalParams).toString();
-      history.push(`/${window?.contextPath}/employee/workbench/mdms-edit?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}${additionalParamString ? "&"+additionalParamString : ""}`)
-    }
-    //action===DISABLE || ENABLE call update api and show toast respectively
-    else{
-      //call update mutation
-      handleEnableDisable(actionSelected)
-    }
-  }
 
-  if(isLoading) return <Loader />
+  let propsToSend = {
+    moduleName,
+    masterName,
+    tenantId,
+    uniqueIdentifier,
+    data,
+    history,
+    handleEnableDisable,
+  };
+  const onActionSelect = (action) => Digit?.Customizations?.["commonUiConfig"]?.["ViewMdmsConfig"]?.onActionSelect(action, propsToSend);
+
+  if (isLoading || isSORLoading) return <Loader />;
 
   return (
     <React.Fragment>
