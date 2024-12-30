@@ -12,6 +12,7 @@ const InboxFilterWrapper = (props) => {
   const [filterValues, setFilterValues] = useState(
     {status:null,onRoadCondition:null, terrain:null, securityQ1:null,securityQ2:null}
   );
+  const [onRoadCondition,setonRoadCOndition]=useState(null);
 
 
   // Default selected option
@@ -54,7 +55,7 @@ const InboxFilterWrapper = (props) => {
   // Apply filters when the user presses the primary action button
   const handleApplyFilters = () => {
     if (props.onApplyFilters) {
-      debugger;
+      // debugger;
       console.log("filt",filterValues);
       props.onApplyFilters(filterValues); // Call the parent function with selected value
     }
@@ -71,11 +72,18 @@ const InboxFilterWrapper = (props) => {
 
   const handleDropdownChange = (key, value) => {
     console.log("filter",value)
+    debugger
     setFilterValues((prev)=>({
       ...prev,
-      [key]:value?.code
+      [key]:value?.name
     }));
+    
+    // if(key==="onRoadCondition"){
+    //   setonRoadCOndition(value?.code);
+    // }
   };
+  console.log("filtervalue",filterValues);
+  console.log("state",state.villageRoadCondition);
 
   return (
     <FilterCard
@@ -110,7 +118,7 @@ const InboxFilterWrapper = (props) => {
           <TextBlock body={t(`MP_VILLAGE_ROAD_CONDITION`)} />
           <Dropdown
             option={state.villageRoadCondition}
-            optionKey="name"
+            optionKey={"name"}
             selected={filterValues["onRoadCondition"]}
             select={(value) => handleDropdownChange("onRoadCondition",value)}
             t={t}
@@ -122,7 +130,7 @@ const InboxFilterWrapper = (props) => {
           <TextBlock body={t(`MP_VILLAGE_TERRAIN`)} />
           <Dropdown
             option={state.villageTerrain}
-            optionKey="name"
+            optionKey={"name"}
             selected={filterValues["terrain"]}
             select={(value) => handleDropdownChange("terrain",value)}
             t={t}
