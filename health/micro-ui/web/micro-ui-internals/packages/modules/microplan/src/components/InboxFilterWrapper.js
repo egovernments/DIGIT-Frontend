@@ -55,8 +55,6 @@ const InboxFilterWrapper = (props) => {
   // Apply filters when the user presses the primary action button
   const handleApplyFilters = () => {
     if (props.onApplyFilters) {
-      // debugger;
-      console.log("filt",filterValues);
       props.onApplyFilters(filterValues); // Call the parent function with selected value
     }
   };
@@ -71,8 +69,6 @@ const InboxFilterWrapper = (props) => {
   };
 
   const handleDropdownChange = (key, value) => {
-    console.log("filter",value)
-    debugger
     setFilterValues((prev)=>({
       ...prev,
       [key]:value?.name
@@ -82,8 +78,6 @@ const InboxFilterWrapper = (props) => {
     //   setonRoadCOndition(value?.code);
     // }
   };
-  console.log("filtervalue",filterValues);
-  console.log("state",state.villageRoadCondition);
 
   return (
     <FilterCard

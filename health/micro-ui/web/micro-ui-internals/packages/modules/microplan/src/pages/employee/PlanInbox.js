@@ -415,7 +415,6 @@ const PlanInbox = () => {
       );
       setActiveFilter(reorderedStatusCount);
       const activeFilterKeys = Object.keys(reorderedStatusCount || {});
-      console.log("filter activeFIlter",activeFilterKeys);
       if (selectedFilter.filterValue === null || selectedFilter.status=== undefined || selectedFilter.status === "" || !activeFilterKeys.includes(selectedFilter.status)) {
         setSelectedFilter((prev) => ({
           ...prev, // Spread the previous state to retain other attributes
@@ -509,13 +508,7 @@ const PlanInbox = () => {
     }
   }, [selectedFilter.status]);
 
-  useEffect(()=>{
-    console.log("filter filteredValues",selectedFilter)
-  },[selectedFilter]);
-
   const onFilter = (filterValue) => {
-    debugger;
-    print("filter1",filterValue);
     setSelectedFilter((prev)=>(
       {
         ...prev,
@@ -535,9 +528,7 @@ const PlanInbox = () => {
     });
   };
 
-  const clearFilters = () => {
-    debugger;
-    
+  const clearFilters = () => {    
       setSelectedFilter((prev)=>(
         { 
           status:Object.entries(activeFilter)?.[0]?.[0]
