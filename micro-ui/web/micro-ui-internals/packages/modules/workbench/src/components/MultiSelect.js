@@ -49,6 +49,9 @@ const CustomSelectWidget = (props) => {
   /*
   logic added to fetch data of schemas in each component itself
   */
+
+  const limit = schemaCode === "WORKS-SOR.SOR" ? 1000 : 100;
+
   const reqCriteriaForData = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
     params: {},
@@ -56,7 +59,7 @@ const CustomSelectWidget = (props) => {
       MdmsCriteria: {
         tenantId: tenantId,
         schemaCode: schemaCode,
-        limit: 100,
+        limit: limit,
         offset: 0
       },
     },
@@ -85,12 +88,31 @@ const CustomSelectWidget = (props) => {
     () => optionsList.map((e) => ({ label: t(Digit.Utils.locale.getTransformedLocale(`${schemaCode}_${e?.label}`)), value: e.value })),
     [optionsList, schemaCode, data]
   );
+  const [formattedOptions2, setFormattedOptions2] = useState([]);
   const [limitedOptions, setLimitedOptions] = useState([]);
   const [selectedDetails, setSelectedDetails] = useState(null);
   const [showDetails, setShowDetails] = useState(null);
   const [isSelect, setIsSelect] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [isSeeAll, setIsSeeAll] = useState(false);
+
+  const fetchDetailsForSelectedOption = async (value) => {
+    const response = await Digit.CustomService.getResponse({
+      url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
+      body: JSON.stringify({
+        MdmsCriteria: {
+          tenantId,
+          schemaCode,
+          filters: { "id": value },
+        },
+      }),
+      params: {},
+    });
+    const result = await response.json();
+    setSelectedDetails([result?.mdms?.[0]]);
+    setShowDetails([result?.mdms?.[0]]);
+  };
+
   const handleSeeAll = () => {
     setShowModal(true);
   }
@@ -111,7 +133,7 @@ const CustomSelectWidget = (props) => {
       </div>
     )
   }
-  const selectedOption = formattedOptions?.filter((obj) => (multiple ? value?.includes(obj.value) : obj.value == value));
+  const selectedOption = formattedOptions2?.filter((obj) => (multiple ? value?.includes(obj.value) : obj.value == value));
   const handleChange = (selectedValue) => {
     setShowTooltipFlag(true);
     setIsSelect(true);
@@ -130,7 +152,18 @@ const CustomSelectWidget = (props) => {
       setIsSeeAll(true);
     }
     setSelectedDetails(mainData?.filter((obj) => (multiple ? value?.includes(obj.uniqueIdentifier) : obj.uniqueIdentifier == value)));
-  }, [formattedOptions, optionsLimit]);
+    // Update formattedOptions2
+    let newFormattedOptions2 = [...formattedOptions];
+    if (value && value !== "") {
+      const existingOption = formattedOptions.find((option) => option.value === value);
+      if (!existingOption) {
+        const formattedLabel = `${schemaCode}_${value}`.replace(/[-.]/g, "_");
+        newFormattedOptions2.push({ value, label: formattedLabel });
+        fetchDetailsForSelectedOption(value);
+      }
+    }
+    setFormattedOptions2(newFormattedOptions2);
+  }, [formattedOptions, optionsLimit, value]);
   const onClickSelect = (selectedValue) => {
     selectedValue = { ...selectedValue, "value": selectedValue.uniqueIdentifier, "label": selectedValue.description };
     onChange(selectedValue.uniqueIdentifier);

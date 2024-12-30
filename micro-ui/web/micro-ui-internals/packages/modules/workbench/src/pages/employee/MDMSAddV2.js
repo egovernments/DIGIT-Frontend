@@ -93,14 +93,22 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   }
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaAdd);
-  const onSubmit = (data) => {
+  const schemaCodeToValidate = `${moduleName}.${masterName}`;
+  const onSubmit = async (data) => {
+    const validation = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.validateForm(data, { tenantId: tenantId });
+    if (validation && !validation?.isValid) {
+      setShowToast(t(validation.message));
+      setShowErrorToast(true);
+      toggleSpinner(false);
+      return;
+    }
     toggleSpinner(true);
     const onSuccess = (resp) => {
       toggleSpinner(false);
       setSessionFormData({});
       setSession({});
       setShowErrorToast(false);
-      const jsonPath = api?.responseJson ? api?.responseJson : "mdms[0].id";
+      const jsonPath = masterName==="SOR" ? api?.responseJson ? api?.responseJson : "mdms[0].uniqueIdentifier" : api?.responseJson ? api?.responseJson : "mdms[0].id" ;
       setShowToast(`${t("WBH_SUCCESS_MDMS_MSG")} ${_.get(resp, jsonPath, "NA")}`);
       closeToast();
       gotoView();
@@ -109,7 +117,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
     };
     const onError = (resp) => {
       toggleSpinner(false);
-      setShowToast(`${t("WBH_ERROR_MDMS_DATA")} ${t(resp?.response?.data?.Errors?.[0]?.code)}`);
+      setShowToast(`${t("WBH_ERROR_MDMS_DATA")}! ${t(resp?.response?.data?.Errors?.[0]?.code)}`);
       setShowErrorToast(true);
       closeToast();
     };
