@@ -73,10 +73,6 @@ const InboxFilterWrapper = (props) => {
       ...prev,
       [key]:value?.name
     }));
-    
-    // if(key==="onRoadCondition"){
-    //   setonRoadCOndition(value?.code);
-    // }
   };
 
   return (
