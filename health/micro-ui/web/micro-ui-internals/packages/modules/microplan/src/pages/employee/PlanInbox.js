@@ -120,7 +120,7 @@ const PlanInbox = () => {
   };
 
   useEffect(() => {
-    if (selectedFilter.status === "VALIDATED") {
+    if (selectedFilter?.status === "VALIDATED") {
       setActiveLink({ code: "", name: "" });
       setShowTab(false);
     } else {
@@ -132,7 +132,7 @@ const PlanInbox = () => {
         setShowTab(true);
       }
     }
-  }, [selectedFilter.status]);
+  }, [selectedFilter?.status]);
 
   const selectProps = {
     hideLabel: true,
@@ -171,7 +171,7 @@ const PlanInbox = () => {
         tenantId: tenantId,
         active: true,
         jurisdiction: censusJurisdiction,
-        status: selectedFilter.status !== null && selectedFilter.status !== undefined ? selectedFilter.status : "",
+        status: selectedFilter?.status !== null && selectedFilter?.status !== undefined ? selectedFilter?.status : "",
         onRoadCondition:selectedFilter.onRoadCondition,
         terrain:selectedFilter?.terrain,
         securityQ1:selectedFilter?.securityQ1,
@@ -210,8 +210,8 @@ const PlanInbox = () => {
         tenantId: tenantId,
         active: true,
         jurisdiction: censusJurisdiction,
-        status: selectedFilter.status !== null && selectedFilter.status !== undefined ? selectedFilter.status : "",
-        ...(activeLink.code == "ASSIGNED_TO_ALL" || selectedFilter.status == "VALIDATED" ? {} : { assignee: user.info.uuid }),
+        status: selectedFilter?.status !== null && selectedFilter?.status !== undefined ? selectedFilter?.status : "",
+        ...(activeLink.code == "ASSIGNED_TO_ALL" || selectedFilter?.status == "VALIDATED" ? {} : { assignee: user.info.uuid }),
         terrain:selectedFilter?.terrain,
         onRoadCondition:selectedFilter?.onRoadCondition,
         planConfigurationId: microplanId, //list of plan ids
@@ -372,7 +372,7 @@ const PlanInbox = () => {
       businessServices: "PLAN_ESTIMATION",
     },
     config: {
-      enabled: selectedFilter.status ? true : false,
+      enabled: selectedFilter?.status ? true : false,
       select: (data) => {
         return data.BusinessServices?.[0];
       },
@@ -382,7 +382,7 @@ const PlanInbox = () => {
   useEffect(() => {
     if (workflowData) {
       // Assume selectedFilter.filterValue maps to applicationStatus or state
-      const selectedState = workflowData?.states?.find((state) => state.state === selectedFilter.status);
+      const selectedState = workflowData?.states?.find((state) => state.state === selectedFilter?.status);
 
       // Filter actions based on the selected state
       const availableActions = selectedState?.actions?.filter((action) => action.roles.some((role) => userRoles.includes(role)));
@@ -390,7 +390,7 @@ const PlanInbox = () => {
       // Update the available actions state
       setAvailableActionsForUser(availableActions || []);
     }
-  }, [workflowData, selectedFilter.status]);
+  }, [workflowData, selectedFilter?.status]);
 
   // if availableActionsForUser is defined and is an array
   const actionsMain = availableActionsForUser?.length > 0 ? availableActionsForUser : [];
@@ -415,7 +415,7 @@ const PlanInbox = () => {
       );
       setActiveFilter(reorderedStatusCount);
       const activeFilterKeys = Object.keys(reorderedStatusCount || {});
-      if (selectedFilter.filterValue === null || selectedFilter.status=== undefined || selectedFilter.status === "" || !activeFilterKeys.includes(selectedFilter.status)) {
+      if (selectedFilter?.filterValue === null || selectedFilter?.status=== undefined || selectedFilter?.status === "" || !activeFilterKeys.includes(selectedFilter?.status)) {
         setSelectedFilter((prev) => ({
           ...prev, // Spread the previous state to retain other attributes
           status: activeFilterKeys[0], // Update only the `status` key
@@ -427,7 +427,7 @@ const PlanInbox = () => {
       setSelectedRows([]);
       if (activeLink.code === "ASSIGNED_TO_ME") {
         setAssignedToMeCount(planWithCensus?.TotalCount);
-        setAssignedToAllCount(planWithCensus?.StatusCount[selectedFilter.status] || 0);
+        setAssignedToAllCount(planWithCensus?.StatusCount[selectedFilter?.status] || 0);
       } else {
         setAssignedToAllCount(planWithCensus?.TotalCount);
       }
@@ -435,13 +435,13 @@ const PlanInbox = () => {
       const uniqueAssignees = [...new Set(planWithCensus?.planData?.flatMap((item) => item.assignee || []))];
       setAssigneeUuids(uniqueAssignees.join(","));
     }
-  }, [planWithCensus, selectedFilter.status, activeLink]);
+  }, [planWithCensus, selectedFilter?.status, activeLink]);
 
   useEffect(() => {
     if (censusJurisdiction?.length > 0) {
       refetchPlanWithCensus(); // Trigger the API call again after activeFilter changes
     }
-  }, [selectedFilter.status, activeLink, censusJurisdiction, limitAndOffset]);
+  }, [selectedFilter?.status, activeLink, censusJurisdiction, limitAndOffset]);
 
   const reqCri = {
     url: `/${hrms_context_path}/employees/_search`,
@@ -494,7 +494,7 @@ const PlanInbox = () => {
   }, [processData]);
 
   useEffect(() => {
-    if (selectedFilter.status === "VALIDATED") {
+    if (selectedFilter?.status === "VALIDATED") {
       setActiveLink({ code: "", name: "" });
       setShowTab(false);
     } else {
@@ -506,7 +506,7 @@ const PlanInbox = () => {
         setShowTab(true);
       }
     }
-  }, [selectedFilter.status]);
+  }, [selectedFilter?.status]);
 
   const onFilter = (filterValue) => {
     setSelectedFilter((prev)=>(
@@ -804,13 +804,13 @@ const PlanInbox = () => {
   };
 
   const getButtonState = (action) => {
-    if (selectedFilter.status === "PENDING_FOR_VALIDATION" && action === "VALIDATE") {
+    if (selectedFilter?.status === "PENDING_FOR_VALIDATION" && action === "VALIDATE") {
       return true;
     }
-    if (selectedFilter.status === "PENDING_FOR_APPROVAL" && (action === "APPROVE" || action === "ROOT_APPROVE")) {
+    if (selectedFilter?.status === "PENDING_FOR_APPROVAL" && (action === "APPROVE" || action === "ROOT_APPROVE")) {
       return true;
     }
-    if (selectedFilter.status === "VALIDATED" && action === "SEND_BACK_FOR_CORRECTION") {
+    if (selectedFilter?.status === "VALIDATED" && action === "SEND_BACK_FOR_CORRECTION") {
       return true;
     }
     return false;
@@ -856,7 +856,7 @@ const PlanInbox = () => {
           <div>{`${t("LOGGED_IN_AS")} ${userName} - ${t(userRole)}`}</div>
         </div>
       </div>
-      <GenericKpiFromDSS module="MICROPLAN" status={selectedFilter.status} planId={microplanId} refetchTrigger={refetchTrigger} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
+      <GenericKpiFromDSS module="MICROPLAN" status={selectedFilter?.status} planId={microplanId} refetchTrigger={refetchTrigger} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
       <SearchJurisdiction
         boundaries={boundaries}
         defaultHierarchy={defaultHierarchy}
@@ -884,7 +884,7 @@ const PlanInbox = () => {
           options={activeFilter}
           onApplyFilters={onFilter}
           clearFilters={clearFilters}
-          defaultValue={{ [selectedFilter.status]: activeFilter[selectedFilter.status] }}
+          defaultValue={{ [selectedFilter?.status]: activeFilter[selectedFilter?.status] }}
         ></InboxFilterWrapper>
 
         <div className={"pop-inbox-table-wrapper"}>
@@ -1010,7 +1010,7 @@ const PlanInbox = () => {
               <Loader />
             ) : planWithCensus?.tableData?.length === 0 ? (
               <NoResultsFound
-                style={{ height: selectedFilter.status === "VALIDATED" ? "472px" : "408px" }}
+                style={{ height: selectedFilter?.status === "VALIDATED" ? "472px" : "408px" }}
                 text={t(`HCM_MICROPLAN_NO_DATA_FOUND_FOR_PLAN_INBOX_PLAN`)}
               />
             ) : (
