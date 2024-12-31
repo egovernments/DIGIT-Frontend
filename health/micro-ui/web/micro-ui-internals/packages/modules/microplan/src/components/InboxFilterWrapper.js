@@ -56,8 +56,8 @@ const InboxFilterWrapper = (props) => {
       const filtersToApply= {};
 
       for (let key in filterValues) {
-        if (filterValues[key] && typeof filterValues[key] === 'object' && filterValues[key].hasOwnProperty('name')) {
-          filtersToApply[key] = filterValues[key].name; // Extract 'name' if it exists
+        if (filterValues[key] && typeof filterValues[key] === 'object' && filterValues[key].hasOwnProperty('code')) {
+          filtersToApply[key] = filterValues[key].code; // Extract 'name' if it exists
         } else {
           filtersToApply[key] = filterValues[key]; // Keep the value as is (including null)
         }
@@ -102,7 +102,7 @@ const InboxFilterWrapper = (props) => {
           <LabelFieldPair vertical style={{ marginBottom: "1rem" }} >
             <RadioButtons
               options={resultArray}
-              optionsKey={"name"} // Use "name" key for display
+              optionsKey={"code"} // Use "name" key for display
               selectedOption={filterValues["status"]} // Pass current selected option's code for comparison
               style={{
                 display: "flex",
