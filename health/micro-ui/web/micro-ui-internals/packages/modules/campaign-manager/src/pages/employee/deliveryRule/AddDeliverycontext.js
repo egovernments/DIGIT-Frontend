@@ -10,7 +10,7 @@ import {
   CloseSvg,
 } from "@egovernments/digit-ui-react-components";
 import { SVG } from "@egovernments/digit-ui-react-components";
-import React, { Fragment, useContext, useEffect, useRef, useState } from "react";
+import React, { Fragment, useContext, useEffect, useRef, useState , useMemo} from "react";
 import { useTranslation } from "react-i18next";
 import AddProducts from "./AddProductscontext";
 import { CycleContext } from ".";
@@ -46,17 +46,47 @@ const AddAttributeField = ({
   onDelete,
   attributeConfig,
   operatorConfig,
-  genderConfig,
+  tenantId
 }) => {
   const [val, setVal] = useState("");
   const [showAttribute, setShowAttribute] = useState(null);
   const [showOperator, setShowOperator] = useState(null);
   const [addedOption, setAddedOption] = useState(null);
+  const [dropdownOption, setDropdownOption] = useState(null);
   const { t } = useTranslation();
 
   useEffect(() => {
     setAddedOption(delivery?.attributes?.map((i) => i?.attribute?.code)?.filter((i) => i));
   }, [delivery, deliveryRules]);
+
+  const schemaCode = useMemo(() => {
+    const code = showAttribute?.valuesSchema; 
+    return code;
+  }, [showAttribute]);
+
+
+  const { data: structureConfig } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    schemaCode?.split(".")[0] || "", // Provide a fallback to avoid errors
+    schemaCode ? [{ name: schemaCode.split(".")[1] }] : [], // Run only if schemaCode is defined
+    schemaCode
+        ? {
+            select: (data) => {
+                const moduleName = schemaCode.split(".")[0];
+                const schemaName = schemaCode.split(".")[1];
+                return data?.[moduleName]?.[schemaName];
+            },
+        }
+        : null, // Pass null if schemaCode is undefined
+    schemaCode ? { schemaCode } : null // Include schemaCode only if it's defined
+);
+  
+  useEffect(() => {
+    if (showAttribute) {
+      setDropdownOption(structureConfig);
+    }
+  }, [showAttribute, structureConfig, attributeConfig]);
+  
 
   const selectValue = (e) => {
     let val = e.target.value;
@@ -79,7 +109,7 @@ const AddAttributeField = ({
     setDeliveryRules(updatedData);
   };
 
-  const selectGender = (value) => {
+  const selectDropdownValue = (value) => {
     // setAttributes((pre) => pre.map((item) => (item.key === attribute.key ? { ...item, value: e.target.value } : item)));
     const updatedData = deliveryRules.map((item, index) => {
       if (item.ruleKey === deliveryRuleIndex) {
@@ -122,16 +152,16 @@ const AddAttributeField = ({
   };
 
   const selectAttribute = (value) => {
-    // setAttributes((pre) => pre.map((item) => (item.key === attribute.key ? { ...item, value: e.target.value } : item)));
     const updatedData = deliveryRules.map((item, index) => {
       if (item.ruleKey === deliveryRuleIndex) {
         item.attributes.find((i) => i.key === attribute.key).attribute = value;
         item.attributes.find((i) => i.key === attribute.key).value = "";
         item.attributes.find((i) => i.key === attribute.key).toValue = "";
         item.attributes.find((i) => i.key === attribute.key).fromValue = "";
-        if (value.code === "Gender") {
+        const defaultOperator = value.allowedOperators?.[0] || null;
+        if (defaultOperator) {
           item.attributes.find((i) => i.key === attribute.key).operator = {
-            code: "EQUAL_TO",
+            code: defaultOperator,
           };
         }
       }
@@ -179,7 +209,7 @@ const AddAttributeField = ({
         <Dropdown
           className="form-field"
           selected={attribute?.operator}
-          disable={attribute?.attribute?.code === "Gender" ? true : false}
+          // disable={attribute?.attribute?.code === "Gender" ? true : false}
           isMandatory={true}
           option={operatorConfig}
           select={(value) => selectOperator(value)}
@@ -222,15 +252,29 @@ const AddAttributeField = ({
       ) : (
         <LabelFieldPair>
           <CardLabel className="card-label-smaller">{t(`CAMPAIGN_VALUE_LABEL`)}</CardLabel>
-          <div className="field" style={{ display: "flex", width: "100%", marginBottom: attribute?.attribute?.code === "Gender" ? null : "24px" }}>
-            {attribute?.attribute?.code === "Gender" ? (
+          <div
+            className="field"
+            style={{
+              display: "flex",
+              width: "100%",
+              marginBottom:
+                (typeof attribute?.value === "string" && /^[a-zA-Z]+$/.test(attribute?.value)) ||
+                attribute?.attribute?.valuesSchema ||
+                isNaN(attribute?.value)
+                  ? null
+                  : "1.5rem",
+            }}
+          >
+            {(typeof attribute?.value === "string" && /^[a-zA-Z]+$/.test(attribute?.value)) ||
+            attribute?.attribute?.valuesSchema ||
+            isNaN(attribute?.value) ? (
               <Dropdown
                 className="form-field"
                 selected={attribute?.value?.code ? attribute?.value : { code: attribute?.value }}
                 disable={false}
                 isMandatory={true}
-                option={genderConfig}
-                select={(value) => selectGender(value)}
+                option={dropdownOption}
+                select={(value) => selectDropdownValue(value)}
                 optionKey="code"
                 t={t}
               />
@@ -263,290 +307,24 @@ const AddAttributeField = ({
   );
 };
 
-const AddCustomAttributeField = ({
-  config,
-  deliveryRuleIndex,
-  delivery,
-  deliveryRules,
-  setDeliveryRules,
-  attribute,
-  setAttributes,
-  index,
-  onDelete,
-  operatorConfig,
-  genderConfig,
-}) => {
-  const [val, setVal] = useState("");
-  const [showAttribute, setShowAttribute] = useState(null);
-  const [showOperator, setShowOperator] = useState(null);
-  const [addedOption, setAddedOption] = useState(null);
-  const { t } = useTranslation();
-  const { attrConfig } = useContext(CycleContext);
-
-  useEffect(() => {
-    setAddedOption(delivery?.attributes?.map((i) => i?.attribute?.code)?.filter((i) => i));
-  }, [delivery]);
-
-  const selectValue = (e) => {
-    let val = e.target.value;
-    val = val.replace(/[^\d.]/g, "");
-    val = val.match(/^\d*\.?\d{0,2}/)[0] || "";
-    // if (val.startsWith("-")) {
-    //   val = val.slice(1); // Remove the negative sign
-    // }
-    if (isNaN(val) || [" ", "e", "E"].some((f) => val.includes(f))) {
-      val = val.slice(0, -1);
-    }
-    // setAttributes((pre) => pre.map((item) => (item.key === attribute.key ? { ...item, value: e.target.value } : item)));
-    const updatedData = deliveryRules.map((item, index) => {
-      if (item.ruleKey === deliveryRuleIndex) {
-        item.attributes.find((i) => i.key === attribute.key).value = val;
-      }
-      return item;
-    });
-    setDeliveryRules(updatedData);
-  };
-
-  const selectOperator = (value) => {
-    // setAttributes((pre) => pre.map((item) => (item.key === attribute.key ? { ...item, value: e.target.value } : item)));
-    const updatedData = deliveryRules.map((item, index) => {
-      if (item.ruleKey === deliveryRuleIndex) {
-        item.attributes.find((i) => i.key === attribute.key).operator = value;
-      }
-      return item;
-    });
-    setShowOperator(value);
-    setDeliveryRules(updatedData);
-  };
-
-  const selectToFromValue = (e, range) => {
-    let val = e.target.value;
-    val = val.replace(/[^\d.]/g, "");
-    val = val.match(/^\d*\.?\d{0,2}/)[0] || "";
-    // if (val.startsWith("-")) {
-    //   val = val.slice(1); // Remove the negative sign
-    // }
-    if (isNaN(val) || [" ", "e", "E"].some((f) => val.includes(f))) {
-      val = val.slice(0, -1);
-      return;
-    }
-    if (range === "to") {
-      const updatedData = deliveryRules.map((item, index) => {
-        if (item.ruleKey === deliveryRuleIndex) {
-          item.attributes.find((i) => i.key === attribute.key).toValue = val;
-        }
-        return item;
-      });
-      setDeliveryRules(updatedData);
-    } else {
-      const updatedData = deliveryRules.map((item, index) => {
-        if (item.ruleKey === deliveryRuleIndex) {
-          item.attributes.find((i) => i.key === attribute.key).fromValue = val;
-        }
-        return item;
-      });
-      setDeliveryRules(updatedData);
-    }
-  };
-
-  return (
-    <div key={attribute?.key} className="attribute-field-wrapper">
-      <LabelFieldPair>
-        <CardLabel isMandatory={true} className="card-label-smaller">
-          {t(`CAMPAIGN_ATTRIBUTE_LABEL`)}
-        </CardLabel>
-        <div className="field" style={{ display: "flex", width: "100%", marginBottom: "24px" }}>
-          <TextInput type="text" textInputStyle={{ width: "100%" }} value={t(attribute?.attribute?.code)} disabled={true} />
-        </div>
-        {/* <Dropdown
-          className="form-field"
-          selected={attribute?.attribute}
-          disable={false}
-          isMandatory={true}
-          option={addedOption ? attributeConfig.filter((item) => !addedOption.includes(item.code)) : attributeConfig}
-          select={(value) => selectAttribute(value)}
-          optionKey="code"
-          t={t}
-        /> */}
-      </LabelFieldPair>
-      <LabelFieldPair>
-        <CardLabel isMandatory={true} className="card-label-smaller">
-          {t(`CAMPAIGN_OPERATOR_LABEL`)}
-        </CardLabel>
-        <Dropdown
-          className="form-field"
-          selected={attribute?.operator}
-          disable={attribute?.attribute?.code === "Gender" ? true : false}
-          isMandatory={true}
-          option={operatorConfig}
-          select={(value) => selectOperator(value)}
-          optionKey="code"
-          t={t}
-        />
-      </LabelFieldPair>
-      {attribute?.operator?.code === "IN_BETWEEN" ? (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "24px" }}>
-          <LabelFieldPair>
-            <CardLabel className="card-label-smaller">{t(`CAMPAIGN_FROM_LABEL`)}</CardLabel>
-            <div className="field" style={{ display: "flex", width: "100%" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
-                <TextInput
-                  className=""
-                  // textInputStyle={{ width: "80%" }}
-                  value={attribute?.toValue}
-                  onChange={(e) => selectToFromValue(e, "to")}
-                  disable={false}
-                />
-              </div>
-            </div>
-          </LabelFieldPair>
-          <LabelFieldPair>
-            <CardLabel className="card-label-smaller">{t(`CAMPAIGN_TO_LABEL`)}</CardLabel>
-            <div className="field" style={{ display: "flex", width: "100%" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
-                <TextInput
-                  className=""
-                  // textInputStyle={{ width: "80%" }}
-                  value={attribute?.fromValue}
-                  onChange={(e) => selectToFromValue(e, "from")}
-                  disable={false}
-                />
-              </div>
-            </div>
-          </LabelFieldPair>
-        </div>
-      ) : (
-        <LabelFieldPair>
-          <CardLabel className="card-label-smaller">{t(`CAMPAIGN_VALUE_LABEL`)}</CardLabel>
-          <div className="field" style={{ display: "flex", width: "100%", marginBottom: "24px" }}>
-            {attribute?.attribute?.code === "Gender" ? (
-              <Dropdown
-                className="form-field"
-                selected={{ code: attribute?.value }}
-                disable={false}
-                isMandatory={true}
-                option={genderConfig}
-                select={(value) => selectGender(value)}
-                optionKey="code"
-                t={t}
-              />
-            ) : (
-              <TextInput textInputStyle={{ width: "100%" }} value={attribute?.value ? attribute?.value : ""} onChange={selectValue} disable={false} />
-            )}
-          </div>
-        </LabelFieldPair>
-      )}
-    </div>
-  );
-};
-
-const AddIRSCustomAttributeField = ({
-  config,
-  deliveryRuleIndex,
-  delivery,
-  deliveryRules,
-  setDeliveryRules,
-  attribute,
-  setAttributes,
-  index,
-  onDelete,
-  operatorConfig,
-  structureConfig,
-}) => {
-  const [val, setVal] = useState("");
-  const [showAttribute, setShowAttribute] = useState(null);
-  const [showOperator, setShowOperator] = useState(null);
-  const [addedOption, setAddedOption] = useState(null);
-  const { t } = useTranslation();
-  const { attrConfig } = useContext(CycleContext);
-
-  useEffect(() => {
-    setAddedOption(delivery?.attributes?.map((i) => i?.attribute?.code)?.filter((i) => i));
-  }, [delivery]);
-
-  const selectStructureType = (value) => {
-    // setAttributes((pre) => pre.map((item) => (item.key === attribute.key ? { ...item, value: e.target.value } : item)));
-    const updatedData = deliveryRules.map((item, index) => {
-      if (item.ruleKey === deliveryRuleIndex) {
-        item.attributes.find((i) => i.key === attribute.key).attribute = { code: "TYPE_OF_STRUCTURE"};
-        item.attributes.find((i) => i.key === attribute.key).operator = { code: "EQUAL_TO" };
-        item.attributes.find((i) => i.key === attribute.key).value = value?.code;
-      }
-      return item;
-    });
-    setDeliveryRules(updatedData);
-  };
-
-  const selectOperator = (value) => {
-    // setAttributes((pre) => pre.map((item) => (item.key === attribute.key ? { ...item, value: e.target.value } : item)));
-    const updatedData = deliveryRules.map((item, index) => {
-      if (item.ruleKey === deliveryRuleIndex) {
-        item.attributes.find((i) => i.key === attribute.key).operator = value;
-      }
-      return item;
-    });
-    setShowOperator(value);
-    setDeliveryRules(updatedData);
-  };
-
-  return (
-    <div key={attribute?.key} className="attribute-field-wrapper">
-      <LabelFieldPair>
-        <CardLabel isMandatory={true} className="card-label-smaller">
-          {t(`CAMPAIGN_ATTRIBUTE_LABEL`)}
-        </CardLabel>
-        <div className="field" style={{ display: "flex", width: "100%", marginBottom: "24px" }}>
-          <TextInput type="text" textInputStyle={{ width: "100%" }} value={t("TYPE_OF_STRUCTURE")} disabled={true} />
-        </div>
-      </LabelFieldPair>
-      <LabelFieldPair>
-        <CardLabel isMandatory={true} className="card-label-smaller">
-          {t(`CAMPAIGN_OPERATOR_LABEL`)}
-        </CardLabel>
-        <Dropdown
-          className="form-field"
-          selected={{ code: "EQUAL_TO" }}
-          disable={true}
-          isMandatory={true}
-          option={[{ key: 1, code: "EQUAL_TO" }]}
-          select={{ code: "EQUAL_TO" }}
-          optionKey="code"
-          t={t}
-        />
-      </LabelFieldPair>
-      <LabelFieldPair>
-        <CardLabel className="card-label-smaller">{t(`CAMPAIGN_VALUE_LABEL`)}</CardLabel>
-        <div className="field" style={{ display: "flex", width: "100%" }}>
-          <Dropdown
-            className="form-field"
-            selected={{ code: attribute?.value }}
-            disable={false}
-            isMandatory={true}
-            option={structureConfig}
-            select={(value) => selectStructureType(value)}
-            optionKey="code"
-            t={t}
-          />
-        </div>
-      </LabelFieldPair>
-    </div>
-  );
-};
-
 const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, deliveryRules, setDeliveryRules, index, key }) => {
   const { campaignData, dispatchCampaignData, filteredDeliveryConfig } = useContext(CycleContext);
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const { isLoading: attributeConfigLoading, data: attributeConfig } = Digit.Hooks.useCustomMDMS(
+  const { isLoading: commonAttributesLoading, data: attributeConfig } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
-    [{ name: "attributeConfig" }],
+    [{ name: "allAttributes" }],
     {
       select: (data) => {
-        return data?.[CONSOLE_MDMS_MODULENAME]?.attributeConfig;
+        const attributeConfig = data?.[CONSOLE_MDMS_MODULENAME]?.allAttributes;
+        const projectType = filteredDeliveryConfig?.projectType;
+        return attributeConfig.filter((attribute) =>
+          attribute.projectTypes?.includes(projectType)
+        );
       },
     },
-    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.attributeConfig` }
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.allAttributes` }
   );
   const { isLoading: operatorConfigLoading, data: operatorConfig } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -560,24 +338,6 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.operatorConfig` }
 
 
-  );
-  const { isLoading: genderConfigLoading, data: genderConfig } = Digit.Hooks.useCustomMDMS(tenantId, "common-masters", [{ name: "GenderType" }], {
-    select: (data) => {
-      return data?.["common-masters"]?.GenderType?.filter((i) => i.active !== false);
-    },
-  },    { schemaCode: `${"common-masters"}.GenderType` }
-);
-
-  const { data: structureConfig } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    "HCM",
-    [{ name: "HOUSE_STRUCTURE_TYPES" }],
-    {
-      select: (data) => {
-        return data?.["HCM"]?.["HOUSE_STRUCTURE_TYPES"];
-      },
-    },
-    { schemaCode: `${"HCM"}.HOUSE_STRUCTURE_TYPES` }
   );
 
   const [attributes, setAttributes] = useState([{ key: 1, deliveryRuleIndex, attribute: "", operator: "", value: "" }]);
@@ -622,68 +382,27 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
   const selectedStructureCodes = campaignData?.flatMap((cycle) =>
     cycle?.deliveries?.flatMap((delivery) => delivery?.deliveryRules?.flatMap((rule) => rule?.attributes?.map((attribute) => attribute?.value)))
   );
-
-  const filteredStructureConfig = structureConfig?.filter((structure) => !selectedStructureCodes.includes(structure?.code));
-
   return (
     <Card className="attribute-container">
-      {filteredDeliveryConfig?.customAttribute && filteredDeliveryConfig?.projectType === "LLIN-mz"
-        ? delivery.attributes.map((item, index) => (
-            <AddCustomAttributeField
-              deliveryRuleIndex={deliveryRuleIndex}
-              delivery={delivery}
-              deliveryRules={deliveryRules}
-              setDeliveryRules={setDeliveryRules}
-              attribute={item}
-              setAttributes={setAttributes}
-              config={
-                filteredDeliveryConfig?.deliveryConfig?.[targetedData?.deliveryIndex - 1]?.conditionConfig?.[delivery?.ruleKey - 1]
-                  ?.attributeConfig?.[index]
-              }
-              key={index}
-              index={index}
-              onDelete={() => deleteAttribute(item, deliveryRuleIndex)}
-              operatorConfig={operatorConfig}
-              genderConfig={genderConfig}
-            />
-          ))
-        : filteredDeliveryConfig?.customAttribute && filteredDeliveryConfig?.projectType === "IRS-mz"
-        ? delivery.attributes.map((item, index) => (
-            <AddIRSCustomAttributeField
-              deliveryRuleIndex={deliveryRuleIndex}
-              delivery={delivery}
-              deliveryRules={deliveryRules}
-              setDeliveryRules={setDeliveryRules}
-              attribute={item}
-              setAttributes={setAttributes}
-              config={
-                filteredDeliveryConfig?.deliveryConfig?.[targetedData?.deliveryIndex - 1]?.conditionConfig?.[delivery?.ruleKey - 1]
-                  ?.attributeConfig?.[index]
-              }
-              key={index}
-              index={index}
-              onDelete={() => deleteAttribute(item, deliveryRuleIndex)}
-              operatorConfig={operatorConfig}
-              structureConfig={filteredStructureConfig}
-            />
-          ))
-        : delivery.attributes.map((item, index) => (
-            <AddAttributeField
-              config={filteredDeliveryConfig?.attributeConfig?.[index]}
-              deliveryRuleIndex={deliveryRuleIndex}
-              delivery={delivery}
-              deliveryRules={deliveryRules}
-              setDeliveryRules={setDeliveryRules}
-              attribute={item}
-              setAttributes={setAttributes}
-              key={index}
-              index={index}
-              onDelete={() => deleteAttribute(item, deliveryRuleIndex)}
-              attributeConfig={attributeConfig}
-              operatorConfig={operatorConfig}
-              genderConfig={genderConfig}
-            />
-          ))}
+          {
+            delivery.attributes.map((item, index) => (
+              <AddAttributeField
+                config={filteredDeliveryConfig?.attributeConfig?.[index]}
+                deliveryRuleIndex={deliveryRuleIndex}
+                delivery={delivery}
+                deliveryRules={deliveryRules}
+                setDeliveryRules={setDeliveryRules}
+                attribute={item}
+                setAttributes={setAttributes}
+                key={index}
+                index={index}
+                onDelete={() => deleteAttribute(item, deliveryRuleIndex)}
+                attributeConfig={attributeConfig}
+                operatorConfig={operatorConfig}
+                tenantId = {tenantId}
+              />
+            ))
+          }
       {!filteredDeliveryConfig?.attrAddDisable && delivery.attributes.length !== attributeConfig?.length && (
         <Button
           variation="secondary"
@@ -767,7 +486,6 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
       return updatedDeliveryRules;
     });
   };
-
   return (
     <>
       <Card className="delivery-rule-container">
@@ -847,8 +565,6 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
           customClass={"campaign-product-wrapper"}
           popupStyles={{ width: "70%", paddingLeft: "1.5rem", borderRadius: "4px" }}
           headerBarMainStyle={{ fontWeight: 700, fontSize: "1.5rem", alignItems: "baseline" }}
-          // popupModuleMianStyles={}
-          // popupModuleActionBarStyles={}
           hideSubmit={false}
           actionSaveLabel={t(`CAMPAIGN_PRODUCTS_MODAL_SUBMIT_TEXT`)}
           actionSaveOnSubmit={confirmResources}
@@ -917,8 +633,6 @@ const AddDeliveryRuleWrapper = ({}) => {
   const selectedStructureCodes = campaignData?.flatMap((cycle) =>
     cycle?.deliveries?.flatMap((delivery) => delivery?.deliveryRules?.flatMap((rule) => rule?.attributes.map((attribute) => attribute?.value)))
   );
-
-  const isIRSDelivery = filteredDeliveryConfig?.projectType === "IRS-mz" && selectedStructureCodes?.length < 4;
   return (
     <>
       {deliveryRules?.map((item, index) => (
@@ -932,16 +646,6 @@ const AddDeliveryRuleWrapper = ({}) => {
           onDelete={() => deleteDeliveryRule(item)}
         />
       ))}
-      {/* {filteredDeliveryConfig?.projectType === "IRS-mz"?}
-      {((!filteredDeliveryConfig?.deliveryAddDisable && deliveryRules?.length < 5) || isIRSDelivery) && (
-        <Button
-          variation="secondary"
-          label={t(`CAMPAIGN_ADD_MORE_DELIVERY_BUTTON`)}
-          className={"add-rule-btn hover"}
-          icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
-          onButtonClick={addMoreDelivery}
-        />
-      )} */}
       {filteredDeliveryConfig?.projectType === "IRS-mz"
         ? selectedStructureCodes?.length < 4 && (
             <Button

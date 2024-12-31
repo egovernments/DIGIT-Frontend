@@ -8,8 +8,9 @@ const FinalPopup = ({ showFinalPopUp, setShowFinalPopup, onConfirmClick})=> {
         showFinalPopUp &&  (
             <PopUp 
                 className={"custom-popup"}
-                type={"default"}
-                heading={t("CREATE_BOUNDARY_HIERARCHY")}
+                type={"alert"}
+                alertMessage={t("YOU_WON'T_BE_ABLE_TO_UNDO_THIS_STEP_OF_CREATING_HIERARCHY")}
+                alertHeading={t("CREATE_BOUNDARY_HIERARCHY")}
                 children={[
                 ]}
                 onClose={()=>{
@@ -45,9 +46,6 @@ const FinalPopup = ({ showFinalPopUp, setShowFinalPopup, onConfirmClick})=> {
                 ]}
                 sortFooterChildren={true}
             >
-            <div>
-                {<div>{t("YOU_WON'T_BE_ABLE_TO_UNDO_THIS_STEP_OF_CREATING_HIERARCHY")}</div>}
-            </div>
             </PopUp>
 
         )

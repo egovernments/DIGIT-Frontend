@@ -124,7 +124,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   useEffect(() => {
     if (isPreview === "true") {
       setIsDraftCreated(true);
-      setCurrentKey(14);
+      setCurrentKey(16);
     } else if (isDraft === "true") {
       setIsDraftCreated(true);
       if (isSkip === "false") {
@@ -216,9 +216,9 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
 
   useEffect(() => {
     setIsSubmitting(false);
-    if (currentKey === 14 && isSummary !== "true") {
+    if (currentKey === 16 && isSummary !== "true") {
       updateUrlParams({ key: currentKey, summary: true });
-    } else if (currentKey !== 14) {
+    } else if (currentKey !== 16) {
       updateUrlParams({ key: currentKey, summary: false });
       // setSummaryErrors(null);
     }
@@ -275,7 +275,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
                 updateUrlParams({ id: data?.CampaignDetails?.id });
                 draftRefetch();
                 if (currentKey == 6) {
-                  setCurrentKey(14);
+                  setCurrentKey(16);
                 } else {
                   setCurrentKey(currentKey + 1);
                 }
@@ -283,7 +283,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             });
           } else {
             if (currentKey == 6) {
-              setCurrentKey(14);
+              setCurrentKey(16);
             } else {
               setCurrentKey(currentKey + 1);
             }
@@ -635,8 +635,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             const callSecondApiUntilComplete = async () => {
               let secondApiResponse;
               let isCompleted = false;
-
-              while (!isCompleted) {
+              let isError = false;
+              while (!isCompleted && !isError) {
                 secondApiResponse = await Digit.CustomService.getResponse({
                   url: `/project-factory/v1/data/_search`,
                   body: {
@@ -651,6 +651,9 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
                 if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "completed") {
                   // Replace `someCondition` with your own condition to determine if it's complete
                   isCompleted = true;
+                } else if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "failed") {
+                  // Replace `someCondition` with your own condition to determine if it's complete
+                  isError = true;
                 } else {
                   // Optionally, add a delay before retrying
                   await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second before retrying
@@ -660,6 +663,11 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
               return secondApiResponse;
             };
             const reqCriteriaResource = await callSecondApiUntilComplete();
+            if (reqCriteriaResource?.ResourceDetails?.[0]?.status === "failed") {
+              setLoader(false);
+              setShowToast({ key: "error", label: JSON.parse(reqCriteriaResource?.ResourceDetails?.[0]?.additionalDetails?.error)?.description });
+              return;
+            }
             const temp = totalFormData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.[0];
             const restructureTemp = {
               ...temp,
@@ -694,7 +702,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
               setShouldUpdate(true);
             }
             if (isChangeDates === "true" && currentKey == 6) {
-              setCurrentKey(14);
+              setCurrentKey(16);
             }
             if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].mandatoryOnAPI) {
               setCurrentKey(currentKey + 1);
@@ -728,6 +736,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
           updatedData: formData?.uploadUserMapping?.data,
           tenantId: tenantId,
           sheetNameToUpdate: "HCM_ADMIN_CONSOLE_USER_LIST",
+          schemas,
+          t: t,
         },
         {
           onError: (error, variables) => {
@@ -754,8 +764,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             const callSecondApiUntilComplete = async () => {
               let secondApiResponse;
               let isCompleted = false;
-
-              while (!isCompleted) {
+              let isError = false;
+              while (!isCompleted && !isError) {
                 secondApiResponse = await Digit.CustomService.getResponse({
                   url: `/project-factory/v1/data/_search`,
                   body: {
@@ -770,6 +780,9 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
                 if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "completed") {
                   // Replace `someCondition` with your own condition to determine if it's complete
                   isCompleted = true;
+                } else if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "failed") {
+                  // Replace `someCondition` with your own condition to determine if it's complete
+                  isError = true;
                 } else {
                   // Optionally, add a delay before retrying
                   await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second before retrying
@@ -779,6 +792,11 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
               return secondApiResponse;
             };
             const reqCriteriaResource = await callSecondApiUntilComplete();
+            if (reqCriteriaResource?.ResourceDetails?.[0]?.status === "failed") {
+              setLoader(false);
+              setShowToast({ key: "error", label: JSON.parse(reqCriteriaResource?.ResourceDetails?.[0]?.additionalDetails?.error)?.description });
+              return;
+            }
             const temp = totalFormData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser?.uploadedFile?.[0];
             const restructureTemp = {
               ...temp,
@@ -813,7 +831,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
               setShouldUpdate(true);
             }
             if (isChangeDates === "true" && currentKey == 6) {
-              setCurrentKey(14);
+              setCurrentKey(16);
             }
 
             if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].mandatoryOnAPI) {
@@ -847,7 +865,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       setShouldUpdate(true);
     }
     if (isChangeDates === "true" && currentKey == 6) {
-      setCurrentKey(14);
+      setCurrentKey(16);
     }
 
     if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].mandatoryOnAPI) {
@@ -869,7 +887,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     const key = parseInt(filteredSteps[0].key);
     const name = filteredSteps[0].name;
     if (step === 6 && Object.keys(totalFormData).includes("HCM_CAMPAIGN_UPLOAD_USER_DATA")) {
-      setCurrentKey(14);
+      setCurrentKey(16);
       setCurrentStep(5);
     } else if (step === 0 && totalFormData["HCM_CAMPAIGN_NAME"] && totalFormData["HCM_CAMPAIGN_TYPE"] && totalFormData["HCM_CAMPAIGN_DATE"]) {
       setCurrentKey(4);
@@ -1013,7 +1031,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         // noCardStyle={currentStep === 7 ? false : true}
         onSecondayActionClick={onSecondayActionClick}
         label={
-          isChangeDates === "true" && currentKey == 14
+          isChangeDates === "true" && currentKey == 16
             ? t("HCM_UPDATE_DATE")
             : isChangeDates === "true"
             ? null

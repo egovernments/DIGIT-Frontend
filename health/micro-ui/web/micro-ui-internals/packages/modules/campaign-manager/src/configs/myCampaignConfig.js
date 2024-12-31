@@ -97,10 +97,9 @@ export const myCampaignConfig = {
                 translate: true,
               },
               {
-                label: "CAMPAIGN_BENEFICIARY_TYPE",
-                jsonPath: "additionalDetails.beneficiaryType",
-                prefix: "",
-                translate: true,
+                label: "CAMPAIGN_LAST_UPDATE",
+                jsonPath: "lastModified",
+                additionalCustomization: true
               },
               {
                 label: "CAMPAIGN_START_DATE",
@@ -234,10 +233,9 @@ export const myCampaignConfig = {
                 translate: true,
               },
               {
-                label: "CAMPAIGN_BENEFICIARY_TYPE",
-                jsonPath: "additionalDetails.beneficiaryType",
-                prefix: "",
-                translate: true,
+                label: "CAMPAIGN_LAST_UPDATE",
+                jsonPath: "lastModified",
+                additionalCustomization: true
               },
               {
                 label: "CAMPAIGN_START_DATE",
@@ -371,10 +369,9 @@ export const myCampaignConfig = {
                 translate: true,
               },
               {
-                label: "CAMPAIGN_BENEFICIARY_TYPE",
-                jsonPath: "additionalDetails.beneficiaryType",
-                prefix: "",
-                translate: true,
+                label: "CAMPAIGN_LAST_UPDATE",
+                jsonPath: "lastModified",
+                additionalCustomization: true
               },
               {
                 label: "CAMPAIGN_START_DATE",
@@ -513,10 +510,9 @@ export const myCampaignConfig = {
                 translate: true,
               },
               {
-                label: "CAMPAIGN_BENEFICIARY_TYPE",
-                jsonPath: "additionalDetails.beneficiaryType",
-                prefix: "",
-                translate: true,
+                label: "CAMPAIGN_LAST_UPDATE",
+                jsonPath: "lastModified",
+                additionalCustomization: true
               },
               {
                 label: "CAMPAIGN_START_DATE",
@@ -654,10 +650,9 @@ export const myCampaignConfig = {
                 translate: true,
               },
               {
-                label: "CAMPAIGN_BENEFICIARY_TYPE",
-                jsonPath: "additionalDetails.beneficiaryType",
-                prefix: "",
-                translate: true,
+                label: "CAMPAIGN_LAST_UPDATE",
+                jsonPath: "lastModified",
+                additionalCustomization: true
               },
               {
                 label: "CAMPAIGN_START_DATE",
