@@ -132,9 +132,8 @@ const AttendanceManagementTable = ({ ...props }) => {
         headerData={columns}
         onFilter={function noRefCheck() { }}
         pagination={{
-
-          initialRowsPerPage: 5,
-          rowsPerPageOptions: [5, 10, 15, 20],
+          initialRowsPerPage: 10,
+          rowsPerPageOptions: [10, 15, 20, 30],
         }}
         rows={rows}
         selection={{
