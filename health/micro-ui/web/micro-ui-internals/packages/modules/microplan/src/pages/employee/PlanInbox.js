@@ -415,7 +415,7 @@ const PlanInbox = () => {
       );
       setActiveFilter(reorderedStatusCount);
       const activeFilterKeys = Object.keys(reorderedStatusCount || {});
-      if (selectedFilter?.filterValue === null || selectedFilter?.status=== undefined || selectedFilter?.status === "" || !activeFilterKeys.includes(selectedFilter?.status)) {
+      if (selectedFilter?.filterValue === null || selectedFilter?.status=== undefined || selectedFilter?.status === "") {
         setSelectedFilter((prev) => ({
           ...prev, // Spread the previous state to retain other attributes
           status: activeFilterKeys[0], // Update only the `status` key
