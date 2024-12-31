@@ -6,6 +6,8 @@ import ViewAttendance from "./ViewAttendance";
 import BreadCrumbs from "../../components/BreadCrumbs";
 import Response from "../../components/Response";
 import AttendanceInbox from "./attendance_inbox";
+import BillInbox from "./bill_inbox";
+import MyBills from "./my_bills";
 
 
 const ProjectBreadCrumb = ({ location }) => {
@@ -45,6 +47,8 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/attendance-approve-success`} component={() => <Response />} />
         <PrivateRoute path={`${path}/attendance-approve-failed`} component={() => <Response />} />
         <PrivateRoute path={`${path}/registers-inbox`} component={() => <AttendanceInbox />} />
+        <PrivateRoute path={`${path}/generate-bill`} component={() => <BillInbox />} />
+        <PrivateRoute path={`${path}/my-bills`} component={() => <MyBills />} />
       </AppContainer>
     </Switch>
   );

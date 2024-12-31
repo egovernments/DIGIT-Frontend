@@ -29,10 +29,10 @@ const CustomInboxSearchComposer = () => {
     url: "/health-attendance/v1/_search",
   });
 
-  const triggerMusterRollApprove = async (filterData, status, totalRows, totalNext) => {
+  const triggerMusterRollApprove = (filterData, status, totalRows, totalNext, selectedProject) => {
     try {
       setChildrenDataLoading(true);
-      await fetchRegisters.mutateAsync(
+      fetchRegisters.mutateAsync(
         {
           params: {
             tenantId: Digit.ULBService.getStateId(),
@@ -49,14 +49,14 @@ const CustomInboxSearchComposer = () => {
             const rowData =
               data?.attendanceRegister.length > 0
                 ? data?.attendanceRegister?.map((item, index) => {
-                    return {
-                      id: item?.registerNumber,
-                      //name: item?.name,
-                      name: selectedProject?.name,
-                      boundary: item?.localityCode,
-                      status: item?.attendees == null ? 0 : item?.attendees.length || 0,
-                    };
-                  })
+                  return {
+                    id: item?.registerNumber,
+                    //name: item?.name,
+                    name: selectedProject?.name,
+                    boundary: item?.localityCode,
+                    status: item?.attendees == null ? 0 : item?.attendees.length || 0,
+                  };
+                })
                 : [];
             setChildrenDataLoading(false);
 
@@ -77,17 +77,10 @@ const CustomInboxSearchComposer = () => {
     }
   };
 
-  //
-
-  useEffect(() => { }, [selectedProject]);
-
-  const handleProjectChange = (selectedProject) => {
+  const handleFilterUpdate = (newFilter, selectedProject) => {
     setSelectedProject(selectedProject);
-  };
-
-  const handleFilterUpdate = (newFilter) => {
     setFilterCriteria(newFilter);
-    triggerMusterRollApprove(newFilter);
+    triggerMusterRollApprove(newFilter, undefined, undefined, undefined, selectedProject);
   };
 
   // useEffect(() => {
@@ -133,7 +126,7 @@ const CustomInboxSearchComposer = () => {
             <CustomInboxSearchLinks headerText={"ATTENDANCE_INBOX_CARD"}></CustomInboxSearchLinks>
           </div>
           <div style={{ width: "80%", display: "flex", flexDirection: "row" }}>
-            <CustomSearchComponent onProjectSelect={handleProjectChange}></CustomSearchComponent>
+            <CustomSearchComponent onProjectSelect={() => { }}></CustomSearchComponent>
           </div>
         </div>
 
@@ -147,9 +140,9 @@ const CustomInboxSearchComposer = () => {
               overflowY: "auto",
             }}
           >
-            <CustomFilter projectData={selectedProject} onFilterChange={handleFilterUpdate}></CustomFilter>
+            <CustomFilter onFilterChange={handleFilterUpdate}></CustomFilter>
           </div>
-          <div style={{ width: "80%", display: "flex", flexDirection: "row", height: "60vh" ,minHeight: "60vh" }}>
+          <div style={{ width: "80%", display: "flex", flexDirection: "row", height: "60vh", minHeight: "60vh" }}>
             <CustomInboxTable
               statusCount={childrenData?.statusCount}
               handleTabChange={callServiceOnTap}

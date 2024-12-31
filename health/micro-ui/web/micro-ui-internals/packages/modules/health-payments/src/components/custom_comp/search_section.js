@@ -31,15 +31,15 @@ const CustomSearchComponent = ({ onProjectSelect }) => {
     }
   }, []);
 
-  const onSubmit = (data, e) => {};
+  const onSubmit = (data, e) => { };
 
-  const clearSearch = () => {};
+  const clearSearch = () => { };
 
   const closeToast = () => {
     setShowToast(null);
   };
 
-  const handleFilterRefresh = () => {};
+  const handleFilterRefresh = () => { };
 
   const renderHeader = () => {
     return (
@@ -59,22 +59,15 @@ const CustomSearchComponent = ({ onProjectSelect }) => {
           <TextInput type="text"></TextInput>
         </div>*/}
         <div style={{ maxWidth: "100%", width: "100%" }}>
-          <TextBlock body={`${t("ATTENDANCE_PROJECT_NAME")} *`}></TextBlock>
-          <Dropdown
-            t={t}
-            option={project}
-            name={"code"}
-            optionKey={"name"}
-            select={(value) => {
-              onProjectSelect(value);
-            }}
+          <TextBlock body={`${t("HCM_AM_SEARCH_BY_ATTENDANCE_ID")}`}></TextBlock>
+          <TextInput
           />
         </div>
 
         <ButtonGroup
           buttonsArray={[
-            <Button variation="teritiary" label={t(`HCM_AM_CLEAR`)} type="button" onClick={() => {}} size="large" />,
-            <Button variation="primary" label={t(`HCM_AM_SEARCH`)} type="button" onClick={() => {}} size="large" />,
+            <Button variation="teritiary" label={t(`HCM_AM_CLEAR`)} type="button" onClick={() => { }} size="large" />,
+            <Button variation="primary" label={t(`HCM_AM_SEARCH`)} type="button" onClick={() => { }} size="large" />,
           ]}
         ></ButtonGroup>
 
