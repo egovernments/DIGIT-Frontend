@@ -576,19 +576,49 @@ const PlanInbox = () => {
         width: "180px",
       }));
   };
-  const handleSave = (newValue) => {
+  const mutationForAdditionalColumn = Digit.Hooks.useCustomAPIMutationHook({
+    url: "/plan-service/plan/_update",
+    body: {},
+    params: {}
+});
+
+const setAdditionalDetails = (rowData, newValue) => {
+  let additionalDetails = rowData?.row?.original?.additionalDetails || {};
+  const field = rowData?.field;
+  if(additionalDetails)
+  additionalDetails[field] = newValue;
+  const Plan = {
+    ...rowData?.row?.original,
+    additionalDetails, // Update the additionalDetails field
+  };
+  return {
+    Plan
+  };
+};
+  const handleSave = async (newValue) => {
     if (editRowData) {
-      const { row, field } = editRowData;
-      row[field] = newValue;
-      console.log(editRowData,"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
-      console.log(`Updated ${field} to:`, newValue, "for row:", row);
-      setToast({ label: `${field} updated successfully!`, type: "success" });
+    const updatedPayload = setAdditionalDetails(editRowData, newValue)
+      await mutationForAdditionalColumn.mutate(
+        {
+            body: updatedPayload
+        },
+        {
+            onSuccess: (data) => {
+              const { row, field } = editRowData;
+              row.original.additionalDetails[field]=newValue;
+              setToast({ label: `${field} updated successfully!`, type: "success" });
+            },
+            onError: (error) => {
+              setToast({ type: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+              ; 
+            }
+        }
+    );
     }
     setPopupVisible(false);
   };
   const handleEditClick = (row, field) => {
     setEditRowData({ row, field });
-    console.log(editRowData,"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP")
     setPopupVisible(true);
   };
 
@@ -601,7 +631,7 @@ const PlanInbox = () => {
       {
         name: t(`FIXED_MONITORS`),
         cell: (row) => {
-          const value = row?.FIXED_MONITORS || "NA";
+          const value = row?.original?.additionalDetails?.FIXED_MONITORS || "NA";
           const truncatedValue = value.length > 8 ? `${value.substring(0, 8)}...` : value;
   
           return (
@@ -625,7 +655,7 @@ const PlanInbox = () => {
       {
         name: t(`MOVING_MONITORS`),
         cell: (row) => {
-          const value = row?.MOVING_MONITORS || "NA";
+          const value = row?.original?.additionalDetails?.MOVING_MONITORS || "NA";
           const truncatedValue = value.length > 8 ? `${value.substring(0, 8)}...` : value;
   
           return (
@@ -649,7 +679,7 @@ const PlanInbox = () => {
       {
         name: t(`NUMBER_OF_DAYS`),
         cell: (row) => {
-          const value = row?.NUMBER_OF_DAYS || "NA";
+          const value = row?.original?.additionalDetails?.NUMBER_OF_DAYS || "NA";
           const truncatedValue = value.length > 8 ? `${value.substring(0, 8)}...` : value;
   
           return (
@@ -1191,7 +1221,7 @@ labelPrefix={"PLAN_ACTIONS_"}
           isVisible={popupVisible}
           onClose={() => setPopupVisible(false)}
           onSubmit={handleSave}
-          initialValue={editRowData?.row[editRowData?.field] || ""}
+          initialValue={editRowData?.row?.original?.additionalDetails?.[editRowData?.field] || ""}
           alertHeading="Edit Value"
           alertMessage={`ENTER_DETAILS_${editRowData?.field || ""}`}
         />
