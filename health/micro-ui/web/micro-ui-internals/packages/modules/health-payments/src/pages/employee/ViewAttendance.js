@@ -310,9 +310,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
       if (matchingIndividual) {
         const userName = matchingIndividual.name?.givenName || "Unknown";
-        const userId = matchingIndividual.individualId || "N/A";
+        const userId = matchingIndividual?.userDetails?.username || "N/A";
         const userRole =
-          matchingIndividual.userDetails?.roles[0]?.name || "Unassigned";
+          matchingIndividual.skills?.[0]?.type || "NA";
         const noOfDaysWorked = individualEntry?.modifiedTotalAttendance || individualEntry.actualTotalAttendance || 0;
         const id = individualEntry.individualId || 0;
 
