@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect, useMemo } from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { useHistory } from "react-router-dom";
-import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonGroup, NoResultsFound } from "@egovernments/digit-ui-components";
+import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonGroup, NoResultsFound, Tooltip, TooltipWrapper } from "@egovernments/digit-ui-components";
 import { Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
@@ -12,6 +12,7 @@ import { getTableCustomStyle, tableCustomStyle } from "../../components/tableCus
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../../utils/context";
 import ConfirmationPopUp from "../../components/ConfirmationPopUp";
+import DetailsPopUp from "../../components/DetailsPopUp";
 import VillageHierarchyTooltipWrapper from "../../components/VillageHierarchyTooltipWrapper";
 import TimelinePopUpWrapper from "../../components/timelinePopUpWrapper";
 import AssigneeChips from "../../components/AssigneeChips";
@@ -46,6 +47,7 @@ const PlanInbox = () => {
   const [assignedToMeCount, setAssignedToMeCount] = useState(0);
   const [assignedToAllCount, setAssignedToAllCount] = useState(0);
   const [showToast, setShowToast] = useState(null);
+  const [toast, setToast] = useState(null);
   const [disabledAction, setDisabledAction] = useState(false);
   const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
@@ -63,6 +65,8 @@ const PlanInbox = () => {
   const [defaultHierarchy, setDefaultSelectedHierarchy] = useState(null);
   const [defaultBoundaries, setDefaultBoundaries] = useState([]);
   const userRoles = user?.info?.roles?.map((roleData) => roleData?.code);
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [editRowData, setEditRowData] = useState(null);
   const hrms_context_path = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || 'health-hrms';
 
   // Check if the user has the 'rootapprover' role
@@ -572,6 +576,107 @@ const PlanInbox = () => {
         width: "180px",
       }));
   };
+  const handleSave = (newValue) => {
+    if (editRowData) {
+      const { row, field } = editRowData;
+      row[field] = newValue;
+      console.log(editRowData,"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
+      console.log(`Updated ${field} to:`, newValue, "for row:", row);
+      setToast({ label: `${field} updated successfully!`, type: "success" });
+    }
+    setPopupVisible(false);
+  };
+  const handleEditClick = (row, field) => {
+    setEditRowData({ row, field });
+    console.log(editRowData,"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP")
+    setPopupVisible(true);
+  };
+
+  const truncateText = (text, maxLength = 20) => {
+    if (!text) return "";
+    return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
+  };
+  const getTableColumns = () => {
+    const columns = [
+      {
+        name: t(`FIXED_MONITORS`),
+        cell: (row) => {
+          const value = row?.FIXED_MONITORS || "NA";
+          const truncatedValue = value.length > 8 ? `${value.substring(0, 8)}...` : value;
+  
+          return (
+            <div style={{ display: "flex", alignItems: "center", gap: ".5rem" , height:"64px" , width: "180px",justifyContent:"flex-end"}}>
+              <TooltipWrapper description={value || ""}>{truncatedValue}</TooltipWrapper>
+              <Button
+                label={""}
+                onClick={() => handleEditClick(row, "FIXED_MONITORS")}
+                variation="secondary"
+                style={{minWidth: "42px",padding:"0px"}}
+                icon="Edit"
+                size={"small"}
+              />
+            </div>
+          );
+        },
+        sortable: false,
+        width: "180px",
+        height:"64px"
+      },
+      {
+        name: t(`MOVING_MONITORS`),
+        cell: (row) => {
+          const value = row?.MOVING_MONITORS || "NA";
+          const truncatedValue = value.length > 8 ? `${value.substring(0, 8)}...` : value;
+  
+          return (
+            <div style={{ display: "flex", alignItems: "center", gap: ".5rem" , height:"64px",width: "180px",justifyContent:"flex-end"}}>
+           <TooltipWrapper description={value || ""}>{truncatedValue}</TooltipWrapper>
+              <Button
+                label={""}
+                onClick={() => handleEditClick(row, "MOVING_MONITORS")}
+                variation="secondary"
+                style={{minWidth: "42px",padding:"0px"}}
+                icon="Edit"
+                size={"small"}
+              />
+            </div>
+          );
+        },
+        sortable: false,
+        width: "180px",
+        height:"64px"
+      },
+      {
+        name: t(`NUMBER_OF_DAYS`),
+        cell: (row) => {
+          const value = row?.NUMBER_OF_DAYS || "NA";
+          const truncatedValue = value.length > 8 ? `${value.substring(0, 8)}...` : value;
+  
+          return (
+            <div style={{ display: "flex", alignItems: "center", gap: ".5rem" , height:"64px", width: "180px",justifyContent:"flex-end"}}>
+          <TooltipWrapper description={value || ""}>{truncatedValue}</TooltipWrapper>
+              <Button
+                label={""}
+                onClick={() => handleEditClick(row, "NUMBER_OF_DAYS")}
+                variation="secondary"
+                style={{minWidth: "42px",padding:"0px"}}
+                icon="Edit"
+                size={"small"}
+              />
+            </div>
+          );
+        },
+        sortable: false,
+        width: "180px",
+        height:"64px"
+      },
+    ];
+  
+    return columns;
+  };
+  
+  
+
 
   const getSecurityDetailsColumns = () => {
     // const sampleSecurityData = planWithCensus?.censusData?.[0]?.additionalDetails?.securityDetails || {};
@@ -701,6 +806,7 @@ const PlanInbox = () => {
     ...getSecurityDetailsColumns(),
     ...getAdditionalFieldsColumns(),
     ...getResourceColumns(),
+    ...getTableColumns(),
     // {
     //   name: t(`TOTAL_POPULATION`),
     //   cell: (row) => t(row?.totalPop) || "NA",
@@ -1080,6 +1186,24 @@ labelPrefix={"PLAN_ACTIONS_"}
             style={{}}
           />
         )}
+         {popupVisible && (
+        <DetailsPopUp
+          isVisible={popupVisible}
+          onClose={() => setPopupVisible(false)}
+          onSubmit={handleSave}
+          initialValue={editRowData?.row[editRowData?.field] || ""}
+          alertHeading="Edit Value"
+          alertMessage={`ENTER_DETAILS_${editRowData?.field || ""}`}
+        />
+          )}
+        {toast && (
+        <Toast
+          label={toast.label}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+        
 
       {actionBarPopUp && (
         <ConfirmationPopUp

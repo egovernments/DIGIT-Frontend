@@ -14,7 +14,7 @@ const defaultApiCachingSettings = [
     cacheTimeInSecs: 86400,
   },
   {
-    serviceName: "egov-mdms-service",
+    serviceName: "mdms-v2",
     cacheTimeInSecs: 3600,
     debounceTimeInMS: 100,
     moduleSettings: [
