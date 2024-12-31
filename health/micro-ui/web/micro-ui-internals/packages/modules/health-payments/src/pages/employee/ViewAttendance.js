@@ -354,7 +354,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   return (
     <React.Fragment>
-      <div>
+      <div style={{ marginBottom: "2.5rem" }}>
         <Header styles={{ marginBottom: "1rem" }} className="pop-inbox-header">
           {editAttendance ? t('HCM_AM_EDIT_ATTENDANCE') : t('HCM_AM_VIEW_ATTENDANCE')}
         </Header>

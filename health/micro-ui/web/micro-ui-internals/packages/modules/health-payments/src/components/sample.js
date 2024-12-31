@@ -26,7 +26,7 @@ const Sample = ({ selectedProject, onChange }) => {
 
   const { isLoading: childrenDataLoading, data: childrenData } = Digit.Hooks.payments.useAttendanceBoundarySearch(reqCriteriaResource);
 
-  useEffect(() => {}, [childrenData]);
+  useEffect(() => { }, [childrenData]);
   const handleButtonClick = (value) => {
     onChange(value);
   };
@@ -78,7 +78,7 @@ function NestedDropdown({ data, onLastSelectedIdChange }) {
   }, [data]);
 
   return (
-    <div style={{ width: "100%" }}>
+    <div style={{ width: "100%", }}>
       {/*<select value={selected} onChange={handleChange}>
         <option value="">-- Select an Option --</option>
         {data.map((item) => (
@@ -87,15 +87,17 @@ function NestedDropdown({ data, onLastSelectedIdChange }) {
           </option>
         ))}
       </select>*/}
-      <TextBlock body={t(dropdownLabel)}></TextBlock>
-      <Dropdown
-        t={t}
-        option={data}
-        optionKey={"code"}
-        select={(value) => {
-          handleChange(value);
-        }}
-      />
+      <div style={{ marginBottom: "1.5rem" }}>
+        <TextBlock body={t(dropdownLabel)}></TextBlock>
+        <Dropdown
+          t={t}
+          option={data}
+          optionKey={"code"}
+          select={(value) => {
+            handleChange(value);
+          }}
+        />
+      </div>
 
       {/* Render child dropdowns recursively */}
       {children.length > 0 && <NestedDropdown data={children} onLastSelectedIdChange={onLastSelectedIdChange} />}

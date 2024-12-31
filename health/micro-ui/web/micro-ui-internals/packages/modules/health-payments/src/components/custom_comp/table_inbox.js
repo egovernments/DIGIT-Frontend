@@ -86,7 +86,7 @@ const CustomInboxTable = ({
   return (
     <React.Fragment>
       {
-        <Card style={{ maxWidth: "100%", overflow: "auto" ,margin:"0px",padding:"0px"}}>
+        <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", padding: "0px" }}>
           {
             /*(!planEmployee?.data || planEmployee?.data?.length === 0) */
             !tableData ? (

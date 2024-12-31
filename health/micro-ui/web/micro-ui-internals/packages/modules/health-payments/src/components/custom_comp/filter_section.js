@@ -13,7 +13,7 @@ const CustomFilter = ({ onProjectSelect, onFilterChange, projectData }) => {
 
   const [isDistrictSelected, setIsDistrictSelected] = useState(false);
 
-  const [projectSelected,setProjectSelected]=useState();
+  const [projectSelected, setProjectSelected] = useState();
 
   const onChangeId = (value) => {
     setBoundary(value);
@@ -27,11 +27,11 @@ const CustomFilter = ({ onProjectSelect, onFilterChange, projectData }) => {
   };
 
   useEffect(() => {
-      const data=Digit.SessionStorage.get("paymentInbox");
-      if( data?.selectedProject){
-        setProjectSelected(data?.selectedProject);
-      }
-    }, []);
+    const data = Digit.SessionStorage.get("paymentInbox");
+    if (data?.selectedProject) {
+      setProjectSelected(data?.selectedProject);
+    }
+  }, []);
 
   useEffect(() => {
     if (project.length == 0) {
@@ -88,10 +88,10 @@ const CustomFilter = ({ onProjectSelect, onFilterChange, projectData }) => {
             </svg>
           </span>
         </div>
-        <div style={{ maxWidth: "100%", width: "100%" }}>
+        <div style={{ maxWidth: "100%", width: "100%", marginBottom: "1.5rem" }}>
           <TextBlock body={`${t("ATTENDANCE_PROJECT_NAME")} *`}></TextBlock>
           <Dropdown
-          selected={projectSelected}
+            selected={projectSelected}
             t={t}
             option={project}
             name={"code"}
