@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { FilterCard, Dropdown, LabelFieldPair, RadioButtons, TextBlock } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../utils/context";
@@ -8,12 +8,9 @@ import { useMyContext } from "../utils/context";
 const InboxFilterWrapper = (props) => {
   const { state } = useMyContext();
   const { t } = useTranslation();
-  const [dropdown1Value, setDropdown1Value] = useState(null);
-  const [dropdown2Value, setDropdown2Value] = useState(null);
   const [filterValues, setFilterValues] = useState(
     { status: null, onRoadCondition: null, terrain: null, securityQ1: null, securityQ2: null }
   );
-  const [onRoadCondition, setonRoadCOndition] = useState(null);
 
 
   // Default selected option
