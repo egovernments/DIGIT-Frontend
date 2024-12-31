@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { FilterCard, LabelFieldPair, RadioButtons } from "@egovernments/digit-ui-components";
+import { FilterCard, Dropdown, LabelFieldPair, RadioButtons, TextBlock } from "@egovernments/digit-ui-components";
+import { useMyContext } from "../utils/context";
+
+
 
 const InboxFilterWrapper = (props) => {
+  const { state } = useMyContext();
   const { t } = useTranslation();
+  const [filterValues, setFilterValues] = useState(
+    { status: null, onRoadCondition: null, terrain: null, securityQ1: null, securityQ2: null }
+  );
+
 
   // Default selected option
   const defaultSelectedOption = props.defaultValue
@@ -45,21 +53,41 @@ const InboxFilterWrapper = (props) => {
   // Apply filters when the user presses the primary action button
   const handleApplyFilters = () => {
     if (props.onApplyFilters) {
-      props.onApplyFilters(selectedValue); // Call the parent function with selected value
+      const filtersToApply= {};
+
+      for (let key in filterValues) {
+        if (filterValues[key] && typeof filterValues[key] === 'object' && filterValues[key].hasOwnProperty('code')) {
+          filtersToApply[key] = filterValues[key].code; // Extract 'name' if it exists
+        } else {
+          filtersToApply[key] = filterValues[key]; // Keep the value as is (including null)
+        }
+      }
+
+      props.onApplyFilters(filtersToApply); // Pass the new array to onApplyFilters
     }
   };
 
   // Clear filters when the user presses the secondary action button
   const clearFilters = () => {
-    setSelectedValue(selectedValue); // Clear the selection
+    // setSelectedValue(selectedValue); // Clear the selection
+    setFilterValues({ status: null, onRoadCondition: null, terrain: null, securityQ1: null, securityQ2: null });
     if (props.clearFilters) {
       props.clearFilters();
     }
   };
 
+  const handleDropdownChange = (key, value) => {
+    setFilterValues((prev) => ({
+      ...prev,
+      [key]: value
+    }));
+  };
+
+
   return (
+
     <FilterCard
-      style={{ flexGrow: 1, display: "flex", flexDirection: "column",width:"22vw" }}
+      style={{ flexGrow: 1, display: "flex", flexDirection: "column", width: "22vw" }}
       layoutType={"vertical"}
       onClose={props?.onClose}
       onPrimaryPressed={handleApplyFilters} // Apply filters
@@ -68,23 +96,72 @@ const InboxFilterWrapper = (props) => {
       secondaryActionLabel={resultArray.length > 0 && t(props?.secondaryActionLabel)}
       title={t(props?.title)}
     >
-      <div className="filter-content-wrapper" style={{ height: "18rem" }}>
+      <div className="gap-between-dropdowns" style={{ height: "18rem" }}>
         {/* Only render LabelFieldPair if resultArray has items */}
         {resultArray.length > 0 && (
-          <LabelFieldPair>
+          <LabelFieldPair vertical style={{ marginBottom: "1rem" }} >
             <RadioButtons
               options={resultArray}
-              optionsKey={"name"} // Use "name" key for display
-              selectedOption={selectedValue?.code} // Pass current selected option's code for comparison
+              optionsKey={"code"} // Use "name" key for display
+              selectedOption={filterValues["status"]} // Pass current selected option's code for comparison
               style={{
                 display: "flex",
                 flexDirection: "column",
                 gap: "1rem", // Adds space between options
               }}
-              onSelect={handleSelect} // Function to handle selection
+              onSelect={(value) => handleDropdownChange("status", value)} // Function to handle selection
             />
           </LabelFieldPair>
         )}
+
+        <LabelFieldPair vertical>
+          <TextBlock body={t(`MP_VILLAGE_ROAD_CONDITION`)} />
+          <Dropdown
+            option={state.villageRoadCondition}
+            optionKey={"code"}
+            selected={filterValues["onRoadCondition"]}
+            select={(value) => handleDropdownChange("onRoadCondition", value)}
+            t={t}
+            disabled={false}
+          />
+        </LabelFieldPair>
+
+        <LabelFieldPair vertical>
+          <TextBlock body={t(`MP_VILLAGE_TERRAIN`)} />
+          <Dropdown
+            option={state.villageTerrain}
+            optionKey={"code"}
+            selected={filterValues["terrain"]}
+            select={(value) => handleDropdownChange("terrain", value)}
+            t={t}
+            disabled={false}
+          />
+        </LabelFieldPair>
+
+
+        {state.securityQuestions.map((item, index) => {
+          // Transform item.values into an array of objects
+          const options = item.values.map((value) => ({
+            code: value,
+            name: value,
+            active: true,
+          }));
+
+          return (
+            <LabelFieldPair vertical>
+              <TextBlock body={t(`MP_SECURITY_QUESTION ${index + 1}`)} />
+              <Dropdown
+                option={options} // Pass filtersToApplyoptions here
+                optionKey="code" // Key for displaying dropdown options
+                selected={filterValues[`securityQ${index + 1}`]} // Set selected value
+                select={(value) => handleDropdownChange(`securityQ${index + 1}`, value)} // Handle selection
+                t={(key) => key} // Translation function (you can replace as needed)
+                disabled={false}
+              />
+            </LabelFieldPair>
+          );
+        })}
+
       </div>
     </FilterCard>
   );
