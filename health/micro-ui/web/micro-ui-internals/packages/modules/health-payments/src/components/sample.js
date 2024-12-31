@@ -5,9 +5,7 @@ import { useTranslation } from "react-i18next";
 const Sample = ({ selectedProject, onChange }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const [lastSelectedId, setLastSelectedId] = useState("");
-  const [boundary, setBoundary] = useState([]);
-  console.log(selectedProject, "project data in sample");
+
   // selectedProject?.address?.boundary.split("_")[0]
   const reqCriteriaResource = {
     url: `/boundary-service/boundary-relationships/_search`,
@@ -28,9 +26,8 @@ const Sample = ({ selectedProject, onChange }) => {
 
   const { isLoading: childrenDataLoading, data: childrenData } = Digit.Hooks.payments.useAttendanceBoundarySearch(reqCriteriaResource);
 
-  useEffect(() => { }, [childrenData]);
+  useEffect(() => {}, [childrenData]);
   const handleButtonClick = (value) => {
-
     onChange(value);
   };
 
@@ -71,8 +68,8 @@ function NestedDropdown({ data, onLastSelectedIdChange }) {
 
     // Reset children dropdown when parent changes
     const selectedNode = data.find((item) => item.id === value);
-    // setChildren(selectedNode?.children || []);
-    setChildren(selectedNode?.boundaryType !== "DISTRICT" ? selectedNode?.children || [] : []);
+    setChildren(selectedNode?.children || []);
+    // setChildren(selectedNode?.boundaryType !== "DISTRICT" ? selectedNode?.children || [] : []);
   };
   useEffect(() => {
     // Reset children and selected state whenever the data (parent value) changes
@@ -101,9 +98,7 @@ function NestedDropdown({ data, onLastSelectedIdChange }) {
       />
 
       {/* Render child dropdowns recursively */}
-      {children.length > 0 && children[0]?.boundaryType !== "DISTRICT" && (
-        <NestedDropdown data={children} onLastSelectedIdChange={onLastSelectedIdChange} />
-      )}
+      {children.length > 0 && <NestedDropdown data={children} onLastSelectedIdChange={onLastSelectedIdChange} />}
     </div>
   );
 }

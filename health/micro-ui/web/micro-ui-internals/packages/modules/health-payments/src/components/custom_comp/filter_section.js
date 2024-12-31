@@ -2,16 +2,36 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { CheckBox, SubmitBar } from "@egovernments/digit-ui-components";
 import Sample from "../sample";
-import { Card, SVG, Button, ButtonGroup, TextBlock, Dropdown } from "@egovernments/digit-ui-components";
+import { Card, SVG, Button, ButtonGroup, TextBlock, Dropdown, Toast } from "@egovernments/digit-ui-components";
 
-const CustomFilter = ({ onFilterChange }) => {
+const CustomFilter = ({ onProjectSelect, onFilterChange, projectData }) => {
   const { t } = useTranslation();
 
   const [boundary, setBoundary] = useState("");
-  const [selectedProject, setSelectedProject] = useState({});
-  const [checkPending, setCheckPending] = useState(false);
-  const [checkApproved, setCheckApproved] = useState(false);
+
   const [project, setProject] = useState([]);
+
+  const [isDistrictSelected, setIsDistrictSelected] = useState(false);
+
+  const [projectSelected,setProjectSelected]=useState();
+
+  const onChangeId = (value) => {
+    setBoundary(value);
+    if (value?.boundaryType === "DISTRICT") {
+      setIsDistrictSelected(true); // Set flag if district is selected
+    }
+  };
+
+  const handleApplyFilter = () => {
+    onFilterChange(boundary, isDistrictSelected);
+  };
+
+  useEffect(() => {
+      const data=Digit.SessionStorage.get("paymentInbox");
+      if( data?.selectedProject){
+        setProjectSelected(data?.selectedProject);
+      }
+    }, []);
 
   useEffect(() => {
     if (project.length == 0) {
@@ -28,18 +48,6 @@ const CustomFilter = ({ onFilterChange }) => {
       setProject(datak);
     }
   }, []);
-
-  const onChangeId = (value) => {
-    setBoundary(value);
-  };
-
-  const handleApplyFilter = () => {
-    onFilterChange(boundary, selectedProject); // Pass the updated filter to parent
-  };
-
-  const handleProjectChange = (selectedProject) => {
-    setSelectedProject(selectedProject);
-  };
 
   return (
     <Card
@@ -80,8 +88,22 @@ const CustomFilter = ({ onFilterChange }) => {
             </svg>
           </span>
         </div>
+        <div style={{ maxWidth: "100%", width: "100%" }}>
+          <TextBlock body={`${t("ATTENDANCE_PROJECT_NAME")} *`}></TextBlock>
+          <Dropdown
+          selected={projectSelected}
+            t={t}
+            option={project}
+            name={"code"}
+            optionKey={"name"}
+            select={(value) => {
+              setProjectSelected(value)
+              onProjectSelect(value);
+            }}
+          />
+        </div>
 
-        {project && <div style={{ maxWidth: "100%", width: "100%", marginBottom: "24px" }}>
+        {/*project && <div style={{ maxWidth: "100%", width: "100%", marginBottom: "24px" }}>
           <TextBlock body={`${t("ATTENDANCE_PROJECT_NAME")} *`}></TextBlock>
           <Dropdown
             t={t}
@@ -92,9 +114,9 @@ const CustomFilter = ({ onFilterChange }) => {
               handleProjectChange(value);
             }}
           />
-        </div>}
+        </div>*/}
 
-        {selectedProject?.address?.boundary && <Sample onChange={onChangeId} selectedProject={selectedProject}></Sample>}
+        {projectSelected?.address?.boundary && <Sample onChange={onChangeId} selectedProject={projectSelected}></Sample>}
       </div>
 
       <div

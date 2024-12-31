@@ -20,7 +20,7 @@ const CustomInboxSearchComposer = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [selectedStatus, setSelectedStatus] = useState("PENDINGFORAPPROVAL");
 
-  const [searchQuery, setSearchQuery] = useState(null);
+  const [district, setDistrict] = useState(false);
 
   const [childrenDataLoading, setChildrenDataLoading] = useState(false);
   const [childrenData, setchildrenData] = useState([]);
@@ -77,10 +77,53 @@ const CustomInboxSearchComposer = () => {
     }
   };
 
-  const handleFilterUpdate = (newFilter, selectedProject) => {
+  //
+
+  useEffect(() => {
+    const data = Digit.SessionStorage.get("paymentInbox");
+
+    if (data) {
+      triggerMusterRollApprove(data);
+    }
+  }, []);
+
+  // Clear `paymentInbox` on browser back/forward navigation or page close
+  useEffect(() => {
+    const handlePopState = () => {
+      sessionStorage.removeItem("Digit.paymentInbox");
+    };
+
+    const handleBeforeUnload = () => {
+      sessionStorage.removeItem("Digit.paymentInbox");
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
+  useEffect(() => {}, [selectedProject]);
+
+  const handleProjectChange = (selectedProject) => {
     setSelectedProject(selectedProject);
+  };
+
+  const handleFilterUpdate = (newFilter, isSelectedData) => {
     setFilterCriteria(newFilter);
-    triggerMusterRollApprove(newFilter, undefined, undefined, undefined, selectedProject);
+    if (isSelectedData) {
+      Digit.SessionStorage.set("paymentInbox", {
+        ...newFilter,
+        selectedProject: selectedProject,
+      });
+
+      triggerMusterRollApprove(newFilter);
+    } else {
+      setShowToast({ key: "error", label: t("error"), transitionTime: 3000 });
+    }
   };
 
   // useEffect(() => {
@@ -120,39 +163,42 @@ const CustomInboxSearchComposer = () => {
 
   return (
     <React.Fragment>
-      <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+      <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "24px" }}>
         <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
-          <div style={{ width: "20%", display: "flex", flexDirection: "row" }}>
-            <CustomInboxSearchLinks headerText={"ATTENDANCE_INBOX_CARD"}></CustomInboxSearchLinks>
-          </div>
-          <div style={{ width: "80%", display: "flex", flexDirection: "row" }}>
-            <CustomSearchComponent onProjectSelect={() => { }}></CustomSearchComponent>
-          </div>
-        </div>
+          <div style={{ width: "30%", display: "flex", flexDirection: "column", gap: "10px" }}>
+            <div style={{ width: "100%", display: "flex", flexDirection: "row" }}>
+              <CustomInboxSearchLinks headerText={"ATTENDANCE_INBOX_CARD"}></CustomInboxSearchLinks>
+            </div>
+            {/*<div style={{ width: "80%", display: "flex", flexDirection: "row" }}>
+            <CustomSearchComponent onProjectSelect={handleProjectChange}></CustomSearchComponent>
+          </div>*/}
 
-        <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
-          <div
-            style={{
-              width: "20%",
-              display: "flex",
-              flexDirection: "row",
-              height: "60vh",
-              overflowY: "auto",
-            }}
-          >
-            <CustomFilter onFilterChange={handleFilterUpdate}></CustomFilter>
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "row",
+                height: "60vh",
+                overflowY: "auto",
+              }}
+            >
+              <CustomFilter onProjectSelect={handleProjectChange} projectData={selectedProject} onFilterChange={handleFilterUpdate}></CustomFilter>
+            </div>
           </div>
-          <div style={{ width: "80%", display: "flex", flexDirection: "row", height: "60vh", minHeight: "60vh" }}>
-            <CustomInboxTable
-              statusCount={childrenData?.statusCount}
-              handleTabChange={callServiceOnTap}
-              rowsPerPage={rowsPerPage}
-              customHandleRowsPerPageChange={handleRowsPerPageChange}
-              customHandlePaginationChange={handlePaginationChange}
-              isLoading={childrenDataLoading}
-              tableData={childrenData?.data}
-              totalCount={childrenData?.totalCount}
-            ></CustomInboxTable>
+
+          <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
+            <div style={{ width: "100%", display: "flex", flexDirection: "row", height: "60vh", minHeight: "60vh" }}>
+              <CustomInboxTable
+                statusCount={childrenData?.statusCount}
+                handleTabChange={callServiceOnTap}
+                rowsPerPage={rowsPerPage}
+                customHandleRowsPerPageChange={handleRowsPerPageChange}
+                customHandlePaginationChange={handlePaginationChange}
+                isLoading={childrenDataLoading}
+                tableData={childrenData?.data}
+                totalCount={childrenData?.totalCount}
+              ></CustomInboxTable>
+            </div>
           </div>
         </div>
       </div>
