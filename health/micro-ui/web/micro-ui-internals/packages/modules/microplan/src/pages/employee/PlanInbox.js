@@ -528,7 +528,9 @@ const PlanInbox = () => {
   };
 
   const clearFilters = () => {    
-      setSelectedFilter((prev)=>({}));
+      setSelectedFilter((prev)=>({
+        status:Object.entries(activeFilter)?.[0]?.[0]
+      }));
     setCurrentPage(1);
     setLimitAndOffset((prev)=>{
       return {
