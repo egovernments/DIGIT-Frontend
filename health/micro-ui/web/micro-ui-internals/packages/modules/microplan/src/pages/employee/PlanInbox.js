@@ -16,6 +16,7 @@ import VillageHierarchyTooltipWrapper from "../../components/VillageHierarchyToo
 import TimelinePopUpWrapper from "../../components/timelinePopUpWrapper";
 import AssigneeChips from "../../components/AssigneeChips";
 import GenericKpiFromDSS from "../../components/GenericKpiFromDSS";
+import CustomizeAssumptionsPopup from "../../components/CustomizeAssumptionsPopup";
 
 const PlanInbox = () => {
   const { t } = useTranslation();
@@ -38,6 +39,7 @@ const PlanInbox = () => {
   const [actionBarPopUp, setactionBarPopUp] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [workFlowPopUp, setworkFlowPopUp] = useState("");
+  const [customizeAssumptionsPopup, setCustomizeAssumptionsPopup] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(50);
   const [totalRows, setTotalRows] = useState(0);
@@ -389,9 +391,6 @@ const PlanInbox = () => {
   // if availableActionsForUser is defined and is an array
   const actionsMain = availableActionsForUser?.length > 0 ? availableActionsForUser : [];
 
-  // actionsToHide array by checking for "EDIT" in the actionMap
-  const actionsToHide = actionsMain?.filter((action) => action?.action?.includes("EDIT"))?.map((action) => action?.action);
-
   useEffect(() => {
     if (planWithCensus) {
       setCensusData(planWithCensus?.censusData);
@@ -399,7 +398,6 @@ const PlanInbox = () => {
       const reorderedStatusCount = Object.fromEntries(
         Object.entries(planWithCensus?.StatusCount || {})
           // Filter out the PENDING_FOR_APPROVAL status /// need to revisit as this is hardcoded to remove from workflow ///
-          .filter(([key]) => key !== "PENDING_FOR_APPROVAL")
           // Sort the statuses, prioritizing PENDING_FOR_VALIDATION
           .sort(([keyA], [keyB]) => {
             if (keyA === "PENDING_FOR_VALIDATION") return -1;
@@ -527,7 +525,11 @@ const PlanInbox = () => {
   };
 
   const handleActionClick = (action) => {
-    setworkFlowPopUp(action);
+    if(action==="EDIT_AND_VALIDATE"){
+      setCustomizeAssumptionsPopup(true);
+    }else{
+      setworkFlowPopUp(action);
+    }
   };
 
   const getResourceColumns = () => {
@@ -768,6 +770,10 @@ const PlanInbox = () => {
     setactionBarPopUp(false);
   };
 
+  const closeCustomizeAssumptionsPopUp = () => {
+    setCustomizeAssumptionsPopup(false);
+  };
+
   const conditionalRowStyles = [
     {
       when: (row) => selectedRows.some((selectedRow) => selectedRow?.original?.id === row?.original?.id),
@@ -784,6 +790,7 @@ const PlanInbox = () => {
     APPROVE: { isSuffix: false, icon: "CheckCircle" },
     ROOT_APPROVE: { isSuffix: false, icon: "CheckCircle" },
     SEND_BACK_FOR_CORRECTION: { isSuffix: true, icon: "ArrowForward" },
+    EDIT_AND_VALIDATE: { isSuffix: false, icon: "Edit" },
   };
 
   const getButtonState = (action) => {
@@ -839,7 +846,15 @@ const PlanInbox = () => {
           <div>{`${t("LOGGED_IN_AS")} ${userName} - ${t(userRole)}`}</div>
         </div>
       </div>
-      <GenericKpiFromDSS module="MICROPLAN" status={selectedFilter} planId={microplanId} refetchTrigger={refetchTrigger} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
+      <GenericKpiFromDSS
+        module="MICROPLAN"
+        status={selectedFilter}
+        planId={microplanId}
+        refetchTrigger={refetchTrigger}
+        campaignType={campaignObject?.projectType}
+        planEmployee={planEmployee}
+        boundariesForKpi={defaultBoundaries}
+      />
       <SearchJurisdiction
         boundaries={boundaries}
         defaultHierarchy={defaultHierarchy}
@@ -857,7 +872,7 @@ const PlanInbox = () => {
         style={{
           marginBottom:
             (isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "RESOURCE_ESTIMATION_IN_PROGRESS") ||
-            (!isRootApprover && totalCount===0) ||
+            (!isRootApprover && totalCount === 0) ||
             disabledAction
               ? "2.5rem"
               : "0rem",
@@ -890,11 +905,11 @@ const PlanInbox = () => {
               navStyles={{}}
               onTabClick={(e) => {
                 setCurrentPage(1);
-                setLimitAndOffset((prev)=>{
+                setLimitAndOffset((prev) => {
                   return {
                     limit: prev.limit,
-                    offset: 0
-                  }
+                    offset: 0,
+                  };
                 });
                 setActiveLink(e);
               }}
@@ -911,39 +926,16 @@ const PlanInbox = () => {
                   <div className={"selected-state"}>{`${villagesSlected} ${t("MICROPLAN_VILLAGES_SELECTED")}`}</div>
                 </div>
                 <div className={`table-actions-wrapper`}>
-                  {actionsMain?.filter((action) => !actionsToHide.includes(action.action)).length > 1 ? (
+                  {actionsMain?.length > 1 ? (
                     <ButtonGroup
-                      buttonsArray={actionsMain
-                        ?.filter((action) => !actionsToHide.includes(action.action))
-                        ?.map((action, index) => {
-                          const isPrimary = getButtonState(action.action);
-
-                          return (
-                            <Button
-                              key={index}
-                              variation={isPrimary ? "primary" : "secondary"}
-                              label={t(action.action)}
-                              title={t(action.action)}
-                              type="button"
-                              onClick={(curr) => handleActionClick(action?.action)}
-                              size="large"
-                              icon={actionIconMap[action.action]?.icon}
-                              isSuffix={actionIconMap[action.action]?.isSuffix}
-                            />
-                          );
-                        })}
-                    />
-                  ) : (
-                    actionsMain
-                      ?.filter((action) => !actionsToHide.includes(action.action))
-                      ?.map((action, index) => {
+                      buttonsArray={actionsMain?.map((action, index) => {
                         const isPrimary = getButtonState(action.action);
 
                         return (
                           <Button
                             key={index}
                             variation={isPrimary ? "primary" : "secondary"}
-                            label={t(action.action)}
+                            label={t(`PLAN_INBOX_${action.action}`)}
                             title={t(action.action)}
                             type="button"
                             onClick={(curr) => handleActionClick(action?.action)}
@@ -952,7 +944,26 @@ const PlanInbox = () => {
                             isSuffix={actionIconMap[action.action]?.isSuffix}
                           />
                         );
-                      })
+                      })}
+                    />
+                  ) : (
+                    actionsMain?.map((action, index) => {
+                      const isPrimary = getButtonState(action.action);
+
+                      return (
+                        <Button
+                          key={index}
+                          variation={isPrimary ? "primary" : "secondary"}
+                          label={t(action.action)}
+                          title={t(action.action)}
+                          type="button"
+                          onClick={(curr) => handleActionClick(action?.action)}
+                          size="large"
+                          icon={actionIconMap[action.action]?.icon}
+                          isSuffix={actionIconMap[action.action]?.isSuffix}
+                        />
+                      );
+                    })
                   )}
                 </div>
 
@@ -968,18 +979,18 @@ const PlanInbox = () => {
                       closePopUp();
                       setShowToast({ key: "success", label: t(`PLAN_INBOX_WORKFLOW_FOR_${workFlowPopUp}_UPDATE_SUCCESS`), transitionTime: 5000 });
                       setCurrentPage(1);
-                      setLimitAndOffset((prev)=>{
+                      setLimitAndOffset((prev) => {
                         return {
                           limit: prev.limit,
-                          offset: 0
-                        }
+                          offset: 0,
+                        };
                       });
                       refetchPlanWithCensusCount();
                       refetchPlanWithCensus();
                       fetchStatusCount();
                       // wait for 5 seconds
                       await new Promise((resolve) => setTimeout(resolve, 5000));
-                      setRefetchTrigger(prev => prev + 1);
+                      setRefetchTrigger((prev) => prev + 1);
                     }}
                     onError={(data) => {
                       closePopUp();
@@ -1026,19 +1037,19 @@ const PlanInbox = () => {
         </div>
       </div>
 
-      {
-showTimelinePopup && <TimelinePopUpWrapper
-key={`${selectedBusinessId}-${Date.now()}`}
-onClose={() => {
-  setShowTimelinePopup(false);
-  setSelectedBoundaryCode(null);
-  setSelectedBusinessId(null); // Reset the selectedBusinessId when popup is closed
-}}
-businessId={selectedBusinessId} // Pass selectedBusinessId as businessId
-heading={`${t("HCM_MICROPLAN_STATUS_LOG_FOR_LABEL")} ${t(selectedBoundaryCode)}`}
-labelPrefix={"PLAN_ACTIONS_"}
-/>
-      }
+      {showTimelinePopup && (
+        <TimelinePopUpWrapper
+          key={`${selectedBusinessId}-${Date.now()}`}
+          onClose={() => {
+            setShowTimelinePopup(false);
+            setSelectedBoundaryCode(null);
+            setSelectedBusinessId(null); // Reset the selectedBusinessId when popup is closed
+          }}
+          businessId={selectedBusinessId} // Pass selectedBusinessId as businessId
+          heading={`${t("HCM_MICROPLAN_STATUS_LOG_FOR_LABEL")} ${t(selectedBoundaryCode)}`}
+          labelPrefix={"PLAN_ACTIONS_"}
+        />
+      )}
 
       {isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "RESOURCE_ESTIMATION_IN_PROGRESS" && (
         <ActionBar
@@ -1060,26 +1071,26 @@ labelPrefix={"PLAN_ACTIONS_"}
         />
       )}
 
-      {((!isRootApprover && totalCount===0 ) || disabledAction) && (
-          <ActionBar
-            actionFields={[
-              <Button
-                label={t(`HCM_MICROPLAN_PLAN_INBOX_BACK_BUTTON`)}
-                title={t(`HCM_MICROPLAN_PLAN_INBOX_BACK_BUTTON`)}
-                onClick={() => {
-                  history.push(`/${window.contextPath}/employee`);
-                }}
-                type="button"
-                variation="primary"
-              />,
-            ]}
-            className=""
-            maxActionFieldsAllowed={5}
-            setactionFieldsToRight
-            sortActionFields
-            style={{}}
-          />
-        )}
+      {((!isRootApprover && totalCount === 0) || disabledAction) && (
+        <ActionBar
+          actionFields={[
+            <Button
+              label={t(`HCM_MICROPLAN_PLAN_INBOX_BACK_BUTTON`)}
+              title={t(`HCM_MICROPLAN_PLAN_INBOX_BACK_BUTTON`)}
+              onClick={() => {
+                history.push(`/${window.contextPath}/employee`);
+              }}
+              type="button"
+              variation="primary"
+            />,
+          ]}
+          className=""
+          maxActionFieldsAllowed={5}
+          setactionFieldsToRight
+          sortActionFields
+          style={{}}
+        />
+      )}
 
       {actionBarPopUp && (
         <ConfirmationPopUp
@@ -1102,6 +1113,13 @@ labelPrefix={"PLAN_ACTIONS_"}
             });
           }}
         />
+      )}
+      {customizeAssumptionsPopup && (
+        <CustomizeAssumptionsPopup selectedBusinessId={selectedBusinessId} setShowTimelinePopup={setShowTimelinePopup} setSelectedBusinessId={setSelectedBusinessId} showTimelinePopup={showTimelinePopup}            onTimelinePopupClose={() => {
+          setShowTimelinePopup(false);
+          setSelectedBoundaryCode(null);
+          setSelectedBusinessId(null); // Reset the selectedBusinessId when popup is closed
+        }} onClose={closeCustomizeAssumptionsPopUp} data={planWithCensus?.tableData} columns={columns} selectedBoundaryCode={selectedBoundaryCode} setSelectedBoundaryCode={setSelectedBoundaryCode} />
       )}
       {showToast && (
         <Toast
