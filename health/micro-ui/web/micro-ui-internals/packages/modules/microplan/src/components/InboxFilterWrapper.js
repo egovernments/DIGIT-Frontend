@@ -14,23 +14,31 @@ const InboxFilterWrapper = (props) => {
 
 
   // Default selected option
-  const defaultSelectedOption = props.defaultValue
-    ? { code: Object.keys(props.defaultValue)[0], name: `${t(Object.keys(props.defaultValue)[0])} (${Object.values(props.defaultValue)[0]})` }
-    : null;
+  let defaultSelectedOptions = props.defaultValue
+  ? Object.entries(props.defaultValue).reduce((acc, [key, value]) => {
+      if (value !== null) {
+        acc[key] = { code: value, name: `${t(key)} (${value})` };
+      } else {
+        acc[key] = null;
+      }
+      return acc;
+    }, {})
+  : null;
 
   // Initialize state with the default selected option
-  const [selectedValue, setSelectedValue] = useState(defaultSelectedOption);
-
-  // Only update selectedValue when defaultValue from props changes, but not when it's null or undefined
   useEffect(() => {
     if (props.defaultValue && Object.keys(props.defaultValue).length > 0) {
-      const newDefault = {
-        code: Object.keys(props.defaultValue)[0],
-        name: `${t(Object.keys(props.defaultValue)[0])} (${Object.values(props.defaultValue)[0]})`,
-      };
-      setSelectedValue(newDefault);
+      const newDefault = Object.entries(props.defaultValue).reduce((acc, [key, value]) => {
+        acc[key] = value !== null 
+          ? { code: value, name: `${t(key)} (${value})` } 
+          : null;
+        return acc;
+      }, {});
+      setFilterValues(newDefault);
     }
   }, [props.defaultValue, t]);
+  
+  
 
   const createArrayFromObject = (obj, t) => {
     if (!obj || typeof obj !== "object" || Object.keys(obj).length === 0 || typeof t !== "function") {
@@ -71,6 +79,7 @@ const InboxFilterWrapper = (props) => {
   const clearFilters = () => {
     // setSelectedValue(selectedValue); // Clear the selection
     setFilterValues({ status: null, onRoadCondition: null, terrain: null, securityQ1: null, securityQ2: null });
+    defaultSelectedOptions={};
     if (props.clearFilters) {
       props.clearFilters();
     }
@@ -82,7 +91,6 @@ const InboxFilterWrapper = (props) => {
       [key]: value
     }));
   };
-
 
   return (
 
@@ -102,8 +110,8 @@ const InboxFilterWrapper = (props) => {
           <LabelFieldPair vertical style={{ marginBottom: "1rem" }} >
             <RadioButtons
               options={resultArray}
-              optionsKey={"code"} // Use "name" key for display
-              selectedOption={filterValues["status"]} // Pass current selected option's code for comparison
+              optionsKey={"name"} // Use "name" key for display
+              selectedOption={filterValues["status"]?.code || defaultSelectedOptions?.status?.code} // Pass current selected option's code for comparison
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -119,7 +127,7 @@ const InboxFilterWrapper = (props) => {
           <Dropdown
             option={state.villageRoadCondition}
             optionKey={"code"}
-            selected={filterValues["onRoadCondition"]}
+            selected={ filterValues["onRoadCondition"] || defaultSelectedOptions?.onRoadCondition }
             select={(value) => handleDropdownChange("onRoadCondition", value)}
             t={t}
             disabled={false}
@@ -131,7 +139,7 @@ const InboxFilterWrapper = (props) => {
           <Dropdown
             option={state.villageTerrain}
             optionKey={"code"}
-            selected={filterValues["terrain"]}
+            selected={filterValues["terrain"] || defaultSelectedOptions?.terrain}
             select={(value) => handleDropdownChange("terrain", value)}
             t={t}
             disabled={false}
@@ -151,7 +159,7 @@ const InboxFilterWrapper = (props) => {
             <LabelFieldPair vertical>
               <TextBlock body={t(`MP_SECURITY_QUESTION ${index + 1}`)} />
               <Dropdown
-                option={options} // Pass filtersToApplyoptions here
+                option={options} // Pass filtersToApplyoptions her
                 optionKey="code" // Key for displaying dropdown options
                 selected={filterValues[`securityQ${index + 1}`]} // Set selected value
                 select={(value) => handleDropdownChange(`securityQ${index + 1}`, value)} // Handle selection

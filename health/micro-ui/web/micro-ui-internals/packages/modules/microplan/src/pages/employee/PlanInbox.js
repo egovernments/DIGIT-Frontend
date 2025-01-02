@@ -418,7 +418,6 @@ const PlanInbox = () => {
       if (selectedFilter?.filterValue === null || selectedFilter?.status=== undefined || selectedFilter?.status === "") {
         setSelectedFilter((prev) => ({
           ...prev, // Spread the previous state to retain other attributes
-          status: activeFilterKeys[0], // Update only the `status` key
         }));
         
       }
@@ -529,11 +528,7 @@ const PlanInbox = () => {
   };
 
   const clearFilters = () => {    
-      setSelectedFilter((prev)=>(
-        { 
-          status:Object.entries(activeFilter)?.[0]?.[0]
-        }
-      ));
+      setSelectedFilter((prev)=>({}));
     setCurrentPage(1);
     setLimitAndOffset((prev)=>{
       return {
@@ -884,7 +879,7 @@ const PlanInbox = () => {
           options={activeFilter}
           onApplyFilters={onFilter}
           clearFilters={clearFilters}
-          defaultValue={{ [selectedFilter?.status]: activeFilter[selectedFilter?.status] }}
+          defaultValue={selectedFilter}
         ></InboxFilterWrapper>
 
         <div className={"pop-inbox-table-wrapper"}>
