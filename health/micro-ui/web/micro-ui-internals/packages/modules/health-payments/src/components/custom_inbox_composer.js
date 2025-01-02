@@ -106,7 +106,7 @@ const CustomInboxSearchComposer = () => {
     };
   }, []);
 
-  useEffect(() => {}, [selectedProject]);
+  useEffect(() => { }, [selectedProject]);
 
   const handleProjectChange = (selectedProject) => {
     setSelectedProject(selectedProject);
@@ -165,7 +165,7 @@ const CustomInboxSearchComposer = () => {
     <React.Fragment>
       <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "24px" }}>
         <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
-          <div style={{ width: "30%", display: "flex", flexDirection: "column", gap: "10px" }}>
+          <div style={{ width: "30%", display: "flex", flexDirection: "column", gap: "24px" }}>
             <div style={{ width: "100%", display: "flex", flexDirection: "row" }}>
               <CustomInboxSearchLinks headerText={"ATTENDANCE_INBOX_CARD"}></CustomInboxSearchLinks>
             </div>
@@ -187,7 +187,7 @@ const CustomInboxSearchComposer = () => {
           </div>
 
           <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
-            <div style={{ width: "100%", display: "flex", flexDirection: "row", height: "60vh", minHeight: "60vh" }}>
+            <div style={{ width: "100%", display: "flex", flexDirection: "row", height: "72vh", minHeight: "60vh" }}>
               <CustomInboxTable
                 statusCount={childrenData?.statusCount}
                 handleTabChange={callServiceOnTap}
