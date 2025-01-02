@@ -7,7 +7,7 @@ import CustomSearchComponent from "./custom_comp/search_section";
 import { useTranslation } from "react-i18next";
 import CustomFilter from "./custom_comp/filter_section";
 import CustomInboxTable from "./custom_comp/table_inbox";
-import { FilterCard, Toast } from "@egovernments/digit-ui-components";
+import { FilterCard, Toast, Card } from "@egovernments/digit-ui-components";
 
 const CustomInboxSearchComposer = () => {
   const { t } = useTranslation();
@@ -20,7 +20,7 @@ const CustomInboxSearchComposer = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [selectedStatus, setSelectedStatus] = useState("PENDINGFORAPPROVAL");
 
-  const [district, setDistrict] = useState(false);
+  const [card, setCard] = useState(false);
 
   const [childrenDataLoading, setChildrenDataLoading] = useState(false);
   const [childrenData, setchildrenData] = useState([]);
@@ -38,7 +38,7 @@ const CustomInboxSearchComposer = () => {
             tenantId: Digit.ULBService.getStateId(),
             limit: rowsPerPage,
             offset: totalNext == undefined ? (currentPage - 1) * rowsPerPage : (totalNext - 1) * totalRows,
-            referenceId: selectedProject?.id,
+            referenceId: selectedProject?.id == undefined ? Digit.SessionStorage.get("paymentInbox").selectedProject?.id : selectedProject?.id,
             staffId: Digit.SessionStorage.get("UserIndividual")?.[0]?.id,
             localityCode: filterData?.code == undefined || filterData?.code == null ? filterCriteria?.code : filterData?.code,
             paymentStatus: status == undefined ? null : status,
@@ -49,17 +49,18 @@ const CustomInboxSearchComposer = () => {
             const rowData =
               data?.attendanceRegister.length > 0
                 ? data?.attendanceRegister?.map((item, index) => {
-                  return {
-                    id: item?.registerNumber,
-                    //name: item?.name,
-                    name: selectedProject?.name,
-                    boundary: item?.localityCode,
-                    status: item?.attendees == null ? 0 : item?.attendees.length || 0,
-                  };
-                })
+                    return {
+                      id: item?.registerNumber,
+                      //name: item?.name,
+                      name: selectedProject?.name,
+                      boundary: item?.localityCode,
+                      status: item?.attendees == null ? 0 : item?.attendees.length || 0,
+                      markby: item?.staff?.[0].additionalDetails?.staffUserName || "",
+                    };
+                  })
                 : [];
             setChildrenDataLoading(false);
-
+            setCard(data?.totalCount > 0 ? true : false);
             setchildrenData({
               data: rowData,
               totalCount: data?.totalCount,
@@ -67,6 +68,7 @@ const CustomInboxSearchComposer = () => {
             });
           },
           onError: (error) => {
+            setCard(false);
             setChildrenDataLoading(false);
             setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_REGISTER_FETCH_FAILED"), transitionTime: 3000 });
           },
@@ -91,10 +93,12 @@ const CustomInboxSearchComposer = () => {
   useEffect(() => {
     const handlePopState = () => {
       sessionStorage.removeItem("Digit.paymentInbox");
+      sessionStorage.removeItem("selectedValues");
     };
 
     const handleBeforeUnload = () => {
       sessionStorage.removeItem("Digit.paymentInbox");
+      sessionStorage.removeItem("selectedValues");
     };
 
     window.addEventListener("popstate", handlePopState);
@@ -114,6 +118,7 @@ const CustomInboxSearchComposer = () => {
 
   const handleFilterUpdate = (newFilter, isSelectedData) => {
     setFilterCriteria(newFilter);
+
     if (isSelectedData) {
       Digit.SessionStorage.set("paymentInbox", {
         ...newFilter,
@@ -152,12 +157,12 @@ const CustomInboxSearchComposer = () => {
       setRowsPerPage(5); // Update the rows per page state
       setCurrentPage(1);
       setSelectedStatus("PENDINGFORAPPROVAL");
-      triggerMusterRollApprove(filterCriteria, "PENDINGFORAPPROVAL", 5, 1);
+      triggerMusterRollApprove(Digit.SessionStorage.get("paymentInbox"), "PENDINGFORAPPROVAL", 5, 1);
     } else {
       setRowsPerPage(5); // Update the rows per page state
       setCurrentPage(1);
       setSelectedStatus("APPROVED");
-      triggerMusterRollApprove(filterCriteria, "APPROVED", 5, 1);
+      triggerMusterRollApprove(Digit.SessionStorage.get("paymentInbox"), "APPROVED", 5, 1);
     }
   };
 
@@ -187,17 +192,20 @@ const CustomInboxSearchComposer = () => {
           </div>
 
           <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
-            <div style={{ width: "100%", display: "flex", flexDirection: "row", height: "72vh", minHeight: "60vh" }}>
-              <CustomInboxTable
-                statusCount={childrenData?.statusCount}
-                handleTabChange={callServiceOnTap}
-                rowsPerPage={rowsPerPage}
-                customHandleRowsPerPageChange={handleRowsPerPageChange}
-                customHandlePaginationChange={handlePaginationChange}
-                isLoading={childrenDataLoading}
-                tableData={childrenData?.data}
-                totalCount={childrenData?.totalCount}
-              ></CustomInboxTable>
+            <div style={{ width: "100%", display: "flex", flexDirection: "column", height: "60vh", minHeight: "60vh" }}>
+              {card == false?  <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", padding: "0px" }}></Card>:
+              childrenData?.totalCount > 0 && (
+                <CustomInboxTable
+                  statusCount={childrenData?.statusCount}
+                  handleTabChange={callServiceOnTap}
+                  rowsPerPage={rowsPerPage}
+                  customHandleRowsPerPageChange={handleRowsPerPageChange}
+                  customHandlePaginationChange={handlePaginationChange}
+                  isLoading={childrenDataLoading}
+                  tableData={childrenData?.data}
+                  totalCount={childrenData?.totalCount}
+                ></CustomInboxTable>
+              )}
             </div>
           </div>
         </div>
