@@ -33,7 +33,7 @@ const PlanInbox = () => {
   const [hierarchyLevel, setHierarchyLevel] = useState("");
   const [censusData, setCensusData] = useState([]);
   const [boundaries, setBoundaries] = useState([]);
-  const [selectedFilter, setSelectedFilter] = useState({status:null,onRoadCondition:null,terrain:null,securityQ1:null,securityQ2:null});
+  const [selectedFilter, setSelectedFilter] = useState({status:"PENDING_FOR_VALIDATION",onRoadCondition:null,terrain:null,securityQ1:null,securityQ2:null});
   const [activeFilter, setActiveFilter] = useState({});
   const [actionBarPopUp, setactionBarPopUp] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -171,7 +171,7 @@ const PlanInbox = () => {
         tenantId: tenantId,
         active: true,
         jurisdiction: censusJurisdiction,
-        status: selectedFilter?.status !== null && selectedFilter?.status !== undefined ? selectedFilter?.status : "",
+        status: selectedFilter?.status !== null && selectedFilter?.status !== undefined ? selectedFilter?.status : null,
         onRoadCondition:selectedFilter.onRoadCondition,
         terrain:selectedFilter?.terrain,
         securityQ1:selectedFilter?.securityQ1,
