@@ -418,36 +418,53 @@ export const UICustomizations = {
       }
     },
   },
-  SearchMDMSConfig: {
+  SearchFacilityConfig: {
     customValidationCheck: (data) => {
       //checking both to and from date are present
-      const { createdFrom, createdTo, field, value } = data;
-      if ((createdFrom === "" && createdTo !== "") || (createdFrom !== "" && createdTo === ""))
-        return { warning: true, label: "ES_COMMON_ENTER_DATE_RANGE" };
+      // const { createdFrom, createdTo, field, value } = data;
+      // if ((createdFrom === "" && createdTo !== "") || (createdFrom !== "" && createdTo === ""))
+      //   return { warning: true, label: "ES_COMMON_ENTER_DATE_RANGE" };
 
-      if ((field && !value) || (!field && value)) {
-        return { warning: true, label: "WBH_MDMS_SEARCH_VALIDATION_FIELD_VALUE_PAIR" };
-      }
+      // if ((field && !value) || (!field && value)) {
+      //   return { warning: true, label: "WBH_MDMS_SEARCH_VALIDATION_FIELD_VALUE_PAIR" };
+      // }
 
-      return false;
+      // return false;
     },
     preProcess: (data, additionalDetails) => {
-      console.log(data, "data")
-      const tenantId = Digit.ULBService.getCurrentTenantId();
-      data.body.MdmsCriteria.tenantId = tenantId
-      const filters = {}
-      const custom = data.body.MdmsCriteria.custom
-      const { field, value, isActive } = custom || {}
-      filters[field?.code] = value
-      if (isActive) {
-        if (isActive.value === "all") delete data.body.MdmsCriteria.isActive
-        else data.body.MdmsCriteria.isActive = isActive?.value
-      } else {
-        delete data.body.MdmsCriteria.isActive
+      console.log(data, "data in preprocess");
+      const field = data?.state?.searchForm?.field?.code;
+      console.log(field, "field in preprocess")
+      // data.body.Facility={};
+      if(field){
+        const value = data?.state?.searchForm?.value;
+        if(field==="id"){
+          data.body.Facility.id = [value];
+        }
+        else{
+          data.body.Facility[field]=value;
+        }
       }
-      data.body.MdmsCriteria.filters = filters
-      data.body.MdmsCriteria.schemaCode = additionalDetails?.currentSchemaCode
-      delete data.body.MdmsCriteria.custom
+      data.params={
+        limit : data.state.tableForm.limit,
+        offset : data.state.tableForm.offset,
+        tenantId : Digit.ULBService.getCurrentTenantId()
+      }
+      // const tenantId = Digit.ULBService.getCurrentTenantId();
+      // data.body.MdmsCriteria.tenantId = tenantId
+      // const filters = {}
+      // const custom = data.body.MdmsCriteria.custom
+      // const { field, value, isActive } = custom || {}
+      // filters[field?.code] = value
+      // if (isActive) {
+      //   if (isActive.value === "all") delete data.body.MdmsCriteria.isActive
+      //   else data.body.MdmsCriteria.isActive = isActive?.value
+      // } else {
+      //   delete data.body.MdmsCriteria.isActive
+      // }
+      // data.body.MdmsCriteria.filters = filters
+      // data.body.MdmsCriteria.schemaCode = additionalDetails?.currentSchemaCode
+      // delete data.body.MdmsCriteria.custom
       // const {field,value} = data.body.MdmsCriteria.moduleDetails[0].masterDetails[0].custom || {}
 
       // const tenantId = Digit.ULBService.getCurrentTenantId()
@@ -570,21 +587,21 @@ export const UICustomizations = {
     },
     preProcess: (data, additionalDetails) => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      data.body.MdmsCriteria.tenantId = tenantId
-      const filters = {}
-      const custom = data.body.MdmsCriteria.custom
-      const { field, value, isActive } = custom || {}
-      filters[field?.code] = value
-      if (isActive) {
-        if (isActive.value === "all") delete data.body.MdmsCriteria.isActive
-        else data.body.MdmsCriteria.isActive = isActive?.value
-      } else {
-        delete data.body.MdmsCriteria.isActive
-      }
-      data.body.MdmsCriteria.filters = filters
-      data.body.MdmsCriteria.isActive = true;
-      data.body.MdmsCriteria.schemaCode = additionalDetails?.currentSchemaCode
-      delete data.body.MdmsCriteria.custom
+      // data.body.MdmsCriteria.tenantId = tenantId
+      // const filters = {}
+      // const custom = data.body.MdmsCriteria.custom
+      // const { field, value, isActive } = custom || {}
+      // filters[field?.code] = value
+      // if (isActive) {
+      //   if (isActive.value === "all") delete data.body.MdmsCriteria.isActive
+      //   else data.body.MdmsCriteria.isActive = isActive?.value
+      // } else {
+      //   delete data.body.MdmsCriteria.isActive
+      // }
+      // data.body.MdmsCriteria.filters = filters
+      // data.body.MdmsCriteria.isActive = true;
+      // data.body.MdmsCriteria.schemaCode = additionalDetails?.currentSchemaCode
+      // delete data.body.MdmsCriteria.custom
       // const {field,value} = data.body.MdmsCriteria.moduleDetails[0].masterDetails[0].custom || {}
 
       // const tenantId = Digit.ULBService.getCurrentTenantId()

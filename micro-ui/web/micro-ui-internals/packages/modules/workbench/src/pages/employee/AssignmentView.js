@@ -1,73 +1,80 @@
 import React from 'react'
 import { Loader, FormComposerV2 as FormComposer, Toast } from "@egovernments/digit-ui-react-components";
-
-const newConfig = [
-  {
-    head: "Create Individual",
-    body: [
-      {
-        inline: true,
-        label: "Applicant Name",
-        isMandatory: false,
-        key: "applicantname",
-        type: "text",
-        disable: true,
-        populators: { name: "applicantname", error: "Required", validation: { pattern: /^[A-Za-z]+$/i } },
-      },
-      {
-        inline: true,
-        label: "date of birth",
-        isMandatory: false,
-        key: "dob",
-        type: "date",
-        disable: true,
-        populators: { name: "dob", error: "Required" },
-      },
-      {
-        isMandatory: true,
-        key: "genders",
-        type: "dropdown",
-        label: "Enter Gender",
-        disable: true,
-        populators: {
-          name: "genders",
-          optionsKey: "name",
-          error: "required ",
-          mdmsConfig: {
-            masterName: "GenderType",
-            moduleName: "common-masters",
-            localePrefix: "COMMON_GENDER",
-          },
-        },
-      },
-
-      {
-        label: "Phone number",
-        isMandatory: true,
-        key: "phno",
-        type: "number",
-        disable: true,
-        populators: { name: "phno", error: "Required", validation: { min: 0, max: 9999999999 } },
-      },
-    ],
-  },
-];
-
-const defVal = {
-  "applicantname":"Piyush",
-  "dob":"2024-12-11",
-  "genders[name]":"male",
-  "phno":"1234567890"
-}
+import { useLocation } from 'react-router-dom/cjs/react-router-dom';
 
 const AssignmentView = () => {
+  const newConfig = [
+    {
+      head: "View Facility",
+      body: [
+        {
+          inline: true,
+          label: "Facility Name",
+          isMandatory: false,
+          key: "facilityname",
+          type: "text",
+          disable: true,
+          populators: { name: "facilityname", error: "Required", validation: { pattern: /^[A-Za-z]+$/i } },
+        },
+        {
+          inline: true,
+          label: "Facility Id",
+          isMandatory: false,
+          key: "facilityids",
+          type: "text",
+          disable: true,
+          populators: { name: "facilityid", error: "Required" },
+        },
+        {
+          inline: true,
+          label: "Address Id",
+          isMandatory: false,
+          key: "addressid",
+          type: "text",
+          disable: true,
+          populators: { name: "addressid", error: "Required" },
+        },
+        {
+          inline: true,
+          label: "Tenant Id",
+          isMandatory: false,
+          key: "tenantid",
+          type: "text",
+          disable: true,
+          populators: { name: "tenantid", error: "Required" },
+        },
+        {
+          isMandatory: true,
+          key: "usage",
+          type: "dropdown",
+          label: "Usage",
+          disable: true,
+          populators: {
+            name: "usage",
+            optionsKey: "name",
+            error: "required ",
+          },
+        },
+      ],
+    },
+  ];
+  const location = useLocation();
+  console.log(location.state?.rowData)
+  const data = location.state?.rowData;
+
+  const defVal = {
+    "facilityname":`${data["name"]}`,
+    "facilityid":`${data["id"]}`,
+    "tenantid":`${data["tenantId"]}`,
+    "addressid": data.address ? `${data["address"]["id"]}` : "123",
+    "usage[name]":`${data["usage"]}`,
+  }
+
   return (
     <FormComposer
-    label={"PROCEED"}
     config={newConfig}
     defaultValues={defVal}
-    // onFormValueChange={onFormValueChange}
-    onSubmit={(e)=>console.log(e.target.value)}
+    onSubmit={(data)=>console.log(data)}
     fieldStyle={{ marginRight: 0 }}
     className="form-no-margin"
     labelBold={true}

@@ -1,7 +1,7 @@
 {
-    "name": "@egovernments/digit-ui-module-sample",
+    "name": "@egovernments/digit-ui-module-assignment",
     "version": "0.0.1",
-    "description": "Sample Module UI",
+    "description": "Assignment Module UI",
     "main": "dist/index.js",
     "module": "dist/index.modern.js",
     "source": "src/Module.js",

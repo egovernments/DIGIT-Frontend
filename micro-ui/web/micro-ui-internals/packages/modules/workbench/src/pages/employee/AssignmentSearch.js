@@ -1,26 +1,26 @@
 import React from 'react'
 import { AddFilled, Button, Header, InboxSearchComposer, Loader } from "@egovernments/digit-ui-react-components";
+import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 
 const config = {
-    // label: "WBH_SEARCH_MDMS",
+    label: "WBH_SEARCH_MDMS",
     type: "search",
-    // actionLabel: "WBH_ADD_MDMS",
-    // actionRoles: ["MDMS_ADMIN","CAMPAIGN_ADMIN","SUPERUSER"],
-    // actionLink: "workbench/mdms-add-v2",
+    actionLabel: "WBH_ADD_MDMS",
+    actionRoles: ["MDMS_ADMIN","CAMPAIGN_ADMIN","SUPERUSER"],
+    actionLink: "workbench/mdms-add-v2",
     apiDetails: {  
-      serviceName: `/mdms-v2/v2/_search`,
+      serviceName: `/facility/v1/_search`,
       requestParam: {
+        
       },
       requestBody: {
-        MdmsCriteria: {
-        },
       },
       minParametersForSearchForm: 0,
       masterName: "commonUiConfig",
-      moduleName: "SearchMDMSConfig",
-      tableFormJsonPath: "requestBody.MdmsCriteria",
-      filterFormJsonPath: "requestBody.MdmsCriteria.custom",
-      searchFormJsonPath: "requestBody.MdmsCriteria.custom"
+      moduleName: "SearchFacilityConfig", //used in preprocess
+      tableFormJsonPath: "requestBody.Facility",
+      filterFormJsonPath: "requestBody.Facility",
+      searchFormJsonPath: "requestBody.Facility"
     },
     sections: {
       search: {
@@ -41,21 +41,21 @@ const config = {
           headerStyle: null,
           formClassName: "", //"custom-both-clear-search",
           primaryLabel: "ES_COMMON_SEARCH",
-          secondaryLabel: "ASSIGNMENT_CLEAR_SEARCH",
+          secondaryLabel: "Clear",
           minReqFields: 0,
           defaultValues: {
-            value: "",
-            field: "",
-            isActive:{
-              code: "WBH_COMMON_ALL",
-              value: "all",
-            }
+            // value: "",
+            // field: "",
+            // isActive:{
+            //   code: "WBH_COMMON_ALL",
+            //   value: "all",
+            // }
             // createdFrom: "",
             // createdTo: "",
           },
           fields: [
             {
-              label: "assignment_FIELD",
+              label: "Search Criteria",
               type: "dropdown",
               isMandatory: false,
               disable: false,
@@ -65,34 +65,18 @@ const config = {
                 optionsCustomStyle: { top: "2.3rem" },
                 options: [
                   {
-                    code: "DUMMY_1",
-                    value: true,
+                    code: "id",
+                    value: "id",
                   },
                   {
-                    code: "DUMMY_2",
-                    value: false,
-                  },
-                  {
-                    code: "DUMMY_3",
-                    value: "all",
-                  },
-                  {
-                    code: "DUMMY_4",
-                    value: true,
-                  },
-                  {
-                    code: "DUMMY_5",
-                    value: false,
-                  },
-                  {
-                    code: "DUMMY_6",
-                    value: "all",
-                  },
+                    code: "usage",
+                    value: "usage",
+                  }
                 ],
               },
             },
             {
-              label: "assignment_VALUE",
+              label: "Value",
               type: "text",
               isMandatory: false,
               disable: false,
@@ -100,62 +84,7 @@ const config = {
                 name: "value",
                 validation: { pattern: {}, maxlength: 140 },
               },
-            },
-            {
-              label: "assignment_ISACTIVE",
-              type: "dropdown",
-              isMandatory: false,
-              disable: false,
-              populators: {
-                name: "isActive",
-                optionsKey: "code",
-                optionsCustomStyle: { top: "2.3rem" },
-                options: [
-                  {
-                    code: "WBH_COMMON_YES",
-                    value: true,
-                  },
-                  {
-                    code: "WBH_COMMON_NO",
-                    value: false,
-                  },
-                  {
-                    code: "WBH_COMMON_ALL",
-                    value: "all",
-                  }
-                ],
-              },
             }
-            // {
-            //   label: "CREATED_FROM_DATE",
-            //   type: "date",
-            //   isMandatory: false,
-            //   disable: false,
-            //   key: "createdFrom",
-            //   preProcess: {
-            //     updateDependent: ["populators.max"],
-            //   },
-            //   populators: { name: "createdFrom", max: "currentDate" },
-            // },
-            // {
-            //   label: "CREATED_TO_DATE",
-            //   type: "date",
-            //   isMandatory: false,
-            //   disable: false,
-            //   key: "createdTo",
-            //   preProcess: {
-            //     updateDependent: ["populators.max"],
-            //   },
-            //   populators: {
-            //     name: "createdTo",
-            //     error: "DATE_VALIDATION_MSG",
-            //     max: "currentDate",
-            //   },
-            //   additionalValidation: {
-            //     type: "date",
-            //     keys: { start: "createdFrom", end: "createdTo" },
-            //   },
-            // },
           ],
         },
         label: "",
@@ -167,28 +96,20 @@ const config = {
         uiConfig: {
           columns: [
             {
-              label: "Schema Code",
-              jsonPath: "schemaCode"
+              label: "Facility Name",
+              jsonPath: "name"
               // additionalCustomization:true
             },
             {
-              label: "Id",
-              jsonPath: "id",
-            },
-            {
-              label: "Action Id",
-              jsonPath: "data.actionid",
-            },
-            {
-              label: "is Active",
-              jsonPath: "isActive",
+              label: "Facility Usage",
+              jsonPath: "usage",
             },
             { label: "Tenant Id",
-              jsonPath: "tenantId" }
+              jsonPath: "tenantId" },
           ],
           enableGlobalSearch: false,
           enableColumnSort: true,
-          resultsJsonPath: "mdms",
+          resultsJsonPath: "Facilities",
           rowClassName:"table-row-mdms table-row-mdms-hover",
           noColumnBorder:true
         },
@@ -201,9 +122,20 @@ const config = {
 
 
 const AssignmentSearch = () => {
-    console.log("Asgnsearch")
+  const history = useHistory();
+
+  const onClickRow = ({original:row}) => {
+    console.log(row);
+    // const [moduleName,masterName] = row.schemaCode.split(".")
+    // const additionalParamString = new URLSearchParams(additionalParams).toString();
+    history.push(`/${window.contextPath}/employee/workbench/assignment-view`, {rowData : row})
+  }
+  console.log("Asgnsearch")
   return (
-    <InboxSearchComposer configs={config}></InboxSearchComposer>
+    <InboxSearchComposer configs={config} additionalConfig = {{
+      resultsTable:{
+        onClickRow
+      }}}></InboxSearchComposer>
   )
 }
 

@@ -23,7 +23,7 @@ if (isLoading) {
 }
   
 const componentsToRegister = {
-  AssignmentModule,
+  HRMS:AssignmentModule,
 };
 export const initAssignmentComponents = () => {
   overrideHooks();

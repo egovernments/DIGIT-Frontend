@@ -18,6 +18,7 @@ import BoundaryHierarchyTypeAdd from "./BoundaryHierarchyTypeAdd";
 import UploadBoundary from "./UploadBoundary";
 import UploadBoundaryPure from "./BoundaryUploadPure";
 import AssignmentView from "./AssignmentView";
+import AssignmentCreate from "./AssignmentCreate";
 
 const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
@@ -124,6 +125,7 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/sample`} component={() => <div>Sample Screen loaded</div>} />
           <PrivateRoute path={`${path}/assignment-search`} component={() => <AssignmentSearch />} />
           <PrivateRoute path={`${path}/assignment-view`} component={() => <AssignmentView />} />
+          <PrivateRoute path={`${path}/assignment-create`} component={() => <AssignmentCreate />} />
           <PrivateRoute path={`${path}/localisation-search`} component={() => <LocalisationSearch />} />
           <PrivateRoute path={`${path}/mdms-search`} component={() => <MDMSSearch />} />
           <PrivateRoute path={`${path}/mdms-add`} component={() => <MDMSAdd FormSession={MDMSCreateSession} parentRoute={path} />} />
