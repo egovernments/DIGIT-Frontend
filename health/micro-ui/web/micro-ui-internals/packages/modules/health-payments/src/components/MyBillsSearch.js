@@ -15,7 +15,6 @@ const MyBillsSearch = ({ onSubmit = () => { }, onClear = () => { } }) => {
     });
 
     const handleFilterChange = (data) => {
-        console.log('Selected Range:', data);
         setDateRange(data.range);
     };
 

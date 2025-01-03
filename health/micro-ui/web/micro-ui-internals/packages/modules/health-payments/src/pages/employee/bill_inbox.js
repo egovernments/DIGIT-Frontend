@@ -2,19 +2,12 @@ import React, { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Header, InboxSearchComposer, Loader } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
-
-import { useMyContext } from "../../utils/context";
-import { AttendanceInboxConfig } from "../../configs/attendance_inbox_config";
-import CustomInboxSearchComposer from "../../components/custom_inbox_composer";
 import CustomBillInbox from "../../components/BillInbox";
 
 const BillInbox = () => {
 
     const { t } = useTranslation();
     const location = useLocation();
-    // const moduleName = Digit?.Utils?.getConfigModuleName() || "commonSanitationUiConfig"
-    const tenant = Digit.ULBService.getStateId();
-    const configs = AttendanceInboxConfig();
 
     return (
         <React.Fragment>

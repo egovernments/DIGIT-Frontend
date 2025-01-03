@@ -170,8 +170,6 @@ const DateRangePicker = ({ values, onFilterChange, t, labelClass, title, epochSt
         setIsModalOpen(false);
     };
 
-
-    console.log(selectionRange, 'rrrrrrrrrrrrrrrrrr');
     function formatDateRange(selectionRange) {
         const startDate = new Date(selectionRange.startDate);
         const endDate = new Date(selectionRange.endDate);
@@ -195,12 +193,9 @@ const DateRangePicker = ({ values, onFilterChange, t, labelClass, title, epochSt
                 <div className="employee-select-wrap attendence-date-picker" style={{ marginBottom: "0" }} ref={wrapperRef}>
 
                     <TextInput type="text" className="cursorPointer" onIconSelection={() => {
-                        console.log('cccccccccccccccccccccc');
-                        setIsModalOpen((prevState) => !prevState);
-                    }} onChange={() => {
-                        console.log('ooooooooooooooooooooooo');
 
-                    }} populators={{ customIcon: "DateRange" }} value={formatDateRange(selectionRange)}
+                        setIsModalOpen((prevState) => !prevState);
+                    }} onChange={() => { }} populators={{ customIcon: "DateRange" }} value={formatDateRange(selectionRange)}
                     />
 
                     {isModalOpen && (
