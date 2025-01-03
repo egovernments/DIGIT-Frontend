@@ -188,30 +188,23 @@ export const cycleDataRemap=(data)=> {
     });
   
     const conditions = rule.attributes.map(attr => {
-      const attributeCode = projectType === "IRS-mz" 
-        ? "TYPE_OF_STRUCTURE" 
-        : projectType === "LLIN-mz" 
-        ? "memberCount" 
-        : attr?.attribute?.code;
+      const attributeCode = attr?.attribute?.code;
     
       if (attr?.operator?.code === "IN_BETWEEN") {
         // Round toValue and fromValue to the nearest integer
         const roundedToValue = Math.round(attr.toValue);
         const roundedFromValue = Math.round(attr.fromValue);
+
+        return `${roundedToValue} <= ${attr.attribute.code} < ${roundedFromValue}`;
         
-        if (type === "create") {
-          return `${roundedToValue}<=${attributeCode.toLowerCase()}and${attributeCode.toLowerCase()}<${roundedFromValue}`;
-        } else {
-          return `${roundedToValue} <= ${attr.attribute.code} < ${roundedFromValue}`;
-        }
       } else {
-        // Round attr.value to the nearest integer
-        const roundedValue = Math.round(attr.value);
-    
-        if (type === "create") {
-          return `${projectType === "LLIN-mz" ? attributeCode : attributeCode.toLowerCase()}${getOperatorSymbol(attr?.operator?.code)}${roundedValue}`;
-        } else {
+        if (typeof attr.value === "string" && /^\d+(\.\d+)?$/.test(attr.value)) {
+          // Round attr.value to the nearest integer
+          const roundedValue = Math.round(Number(attr.value));
           return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${roundedValue}`;
+        } else {
+          // Return the value as it is if it doesn't contain only numbers
+          return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${attr.value}`;
         }
       }
     });    
@@ -396,7 +389,7 @@ export const cycleDataRemap=(data)=> {
   export const draftFilterStep = (totalFormData,campaignConfig) => {
     const stepFind = (name) => {
       const step = campaignConfig?.[0]?.form.find((step) => step.name === name);
-      return step ? parseInt(step.stepCount, 14) : null;
+      return step ? parseInt(step.stepCount, 16) : null;
     };
     let v = [];
     if (totalFormData?.HCM_CAMPAIGN_NAME?.campaignName) v.push(stepFind("HCM_CAMPAIGN_NAME"));

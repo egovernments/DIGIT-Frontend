@@ -1,0 +1,30 @@
+@import url("../../index.scss");
+
+/* Payment.css */
+
+.component-table-wrapper .pagination {
+    display: unset;
+    justify-content: unset;
+    background-color: unset;
+    border-top: unset;
+    padding: unset;
+    color: unset;
+
+    svg {
+        margin-left: 0rem !important;
+    }
+}
+
+.inbox-header-text {
+    padding-left: 16px;
+    margin-top: 2px;
+    @extend .typography.heading-m;
+    color: theme(digitv2.lightTheme.primary-2);
+}
+
+.custom-inbox-filter-heading {
+    padding-left: 16px;
+    margin-top: 2px;
+    @extend .typography.heading-m;
+    color: theme(digitv2.lightTheme.primary-2);
+}
