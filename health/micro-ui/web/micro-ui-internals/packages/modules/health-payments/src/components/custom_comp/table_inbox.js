@@ -60,6 +60,17 @@ const CustomInboxTable = ({
         );
       },
     },
+
+    {
+      name: t("HCM_AM_ATTENDANCE_MARKED_BY"),
+      selector: (row) => {
+        return (
+          <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={row?.markby || t("NA")}>
+            {row?.markby || t("NA")}
+          </div>
+        );
+      },
+    },
     {
       name: t("HCM_AM_ATTENDANCE_BOUNDARY"),
       selector: (row) => {
