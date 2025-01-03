@@ -852,7 +852,9 @@ const PlanInbox = () => {
           <div className="mp-heading-bold">
             {`${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${campaignObject?.campaignName || t("NO_NAME_AVAILABLE")}`}
           </div>
-          <div>{`${t("LOGGED_IN_AS")} ${userName} - ${t(userRole)}`}</div>
+          <div>{`${t("LOGGED_IN_AS")} ${userName} - ${t(userRole)}${planEmployee?.planData?.[0]?.hierarchyLevel ? 
+            ` (${t(planEmployee.planData[0].hierarchyLevel.toUpperCase())})` : ""}`}
+          </div>
         </div>
       </div>
       <GenericKpiFromDSS module="MICROPLAN" status={selectedFilter?.status} planId={microplanId} refetchTrigger={refetchTrigger} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
