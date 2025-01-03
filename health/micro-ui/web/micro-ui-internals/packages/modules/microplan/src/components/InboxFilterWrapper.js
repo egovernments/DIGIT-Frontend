@@ -51,17 +51,6 @@ const InboxFilterWrapper = (props) => {
       name: `${t(key)} (${value})`,
     }));
   };
-
-  const createFacilityOptions = async (planFacility) => {
-    if (!planFacility || !Array.isArray(planFacility)) return []; // Ensure planFacility is an array
-  
-    const facilityOptions = planFacility.map((facility) => ({
-      name: facility.facilityName, // Extract facility name
-      code: facility.facilityId    // Use facilityId as code
-    }));
-  
-    return facilityOptions;
-  };
   
 
   // Generate options from props.options
@@ -121,7 +110,7 @@ const InboxFilterWrapper = (props) => {
     
         // Extract facilityName and facilityId for each object
         const facilityOptions = data.PlanFacility.map((facility) => ({
-          name: facility.facilityName,
+          code: facility.facilityName,
           Id: facility.facilityId
         }));
     
@@ -193,7 +182,7 @@ const InboxFilterWrapper = (props) => {
           <TextBlock body={t(`MP_FILTER_FACILITY`)} />
           <Dropdown
             option={planFacility}
-            optionKey={"name"}
+            optionKey={"code"}
             selected={filterValues["facility"] || defaultSelectedOptions?.facility}
             select={(value) => handleDropdownChange("facility", value)}
             t={t}
