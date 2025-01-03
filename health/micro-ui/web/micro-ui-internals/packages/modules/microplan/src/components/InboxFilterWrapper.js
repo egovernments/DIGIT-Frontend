@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { FilterCard, Dropdown, LabelFieldPair, RadioButtons, TextBlock } from "@egovernments/digit-ui-components";
+import { FilterCard, Dropdown, LabelFieldPair, RadioButtons, TextBlock, Loader } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../utils/context";
 
 
@@ -8,6 +8,8 @@ import { useMyContext } from "../utils/context";
 const InboxFilterWrapper = (props) => {
   const { state } = useMyContext();
   const { t } = useTranslation();
+  const {microplanId,...rest} = Digit.Hooks.useQueryParams()
+  const tenantId = Digit.ULBService.getCurrentTenantId();
   const [filterValues, setFilterValues] = useState(
     { status: null, onRoadCondition: null, terrain: null, securityQ1: null, securityQ2: null }
   );
@@ -49,6 +51,7 @@ const InboxFilterWrapper = (props) => {
       name: `${t(key)} (${value})`,
     }));
   };
+  
 
   // Generate options from props.options
   const resultArray = createArrayFromObject(props?.options, t);
@@ -92,6 +95,37 @@ const InboxFilterWrapper = (props) => {
     }));
   };
 
+  const planFacilitySearchConfig = {
+    url: "/plan-service/plan/facility/_search",
+    body: {
+      PlanFacilitySearchCriteria: {
+        tenantId: tenantId,
+        planConfigurationId: microplanId,
+      }
+    },
+    config: {
+      enabled: true,
+      select: (data) => {
+        if (!data?.PlanFacility || !Array.isArray(data.PlanFacility)) return [];
+    
+        // Extract facilityName and facilityId for each object
+        const facilityOptions = data.PlanFacility.map((facility) => ({
+          code: facility.facilityName,
+          id: facility.facilityId
+        }));
+    
+        return facilityOptions;
+      },
+      cacheTime:Infinity
+    }  
+  };
+
+  const { isLoading: isPlanFacilityLoading,error:planFacilityerror, data: planFacility }=Digit.Hooks.useCustomAPIHook(planFacilitySearchConfig);
+
+  if(isPlanFacilityLoading){
+    return <Loader/>
+  }
+  
   return (
 
     <FilterCard
@@ -145,6 +179,18 @@ const InboxFilterWrapper = (props) => {
             disabled={false}
           />
         </LabelFieldPair>
+    
+        <LabelFieldPair vertical>
+          <TextBlock body={t(`MP_FILTER_FACILITY`)} />
+          <Dropdown
+            option={planFacility}
+            optionKey={"code"}
+            selected={filterValues["facility"] || defaultSelectedOptions?.facility}
+            select={(value) => handleDropdownChange("facility", value)}
+            t={t}
+            disabled={false}
+          />
+        </LabelFieldPair>   
 
 
         {state.securityQuestions.map((item, index) => {
