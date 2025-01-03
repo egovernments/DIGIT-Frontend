@@ -55,7 +55,7 @@ const CustomInboxSearchComposer = () => {
                       name: selectedProject?.name,
                       boundary: item?.localityCode,
                       status: item?.attendees == null ? 0 : item?.attendees.length || 0,
-                      markby: item?.staff?.[0].additionalDetails?.staffUserName || "",
+                      markby: item?.staff?.[0].additionalDetails?.staffName || "",
                     };
                   })
                 : [];
