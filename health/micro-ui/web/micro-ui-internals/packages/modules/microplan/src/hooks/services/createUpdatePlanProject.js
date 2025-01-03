@@ -487,7 +487,14 @@ const createUpdatePlanProject = async (req) => {
             triggeredFrom,
             invalidateSession:true
           };
-        } else {
+        } 
+        else if (!planUpdateForBoundaryInvalidation){
+          setShowToast({ key: "error", label: "ERR_PLAN_UPDATE_FAILED" });
+        }
+        else if (!allEmployeesUpdated){
+          setShowToast({ key: "error", label: "ERR_EMPLOYEE_UPDATE_FAILED" });
+        }
+        else {
           setShowToast({ key: "error", label: "ERR_BOUNDARY_UPDATE" });
         }
 
