@@ -21,6 +21,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [openApproveCommentPopUp, setOpenApproveCommentPopUp] = useState(false);
   const [openApproveAlertPopUp, setOpenApproveAlertPopUp] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [updateDisabled, setUpdateDisabled] = useState(false);
   const [totalRows, setTotalRows] = useState(0);
   const [data, setData] = useState([]);
   const [individualIds, setIndividualIds] = useState([]);
@@ -209,11 +210,13 @@ const ViewAttendance = ({ editAttendance = false }) => {
             setShowToast({ key: "success", label: t("HCM_AM_ATTENDANCE_UPDATED_SUCCESSFULLY"), transitionTime: 3000 });
             // Delay the navigation for 3 seconds
             setTimeout(() => {
+              setUpdateDisabled(false);
               history.push(`/${window.contextPath}/employee/payments/view-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}`);
             }, 3000);
 
           },
           onError: (error) => {
+            setUpdateDisabled(false);
             setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
           }
         }
@@ -372,6 +375,10 @@ const ViewAttendance = ({ editAttendance = false }) => {
             <span className="label-text">{t(project?.[0]?.projectType || "NA")}</span>
           </div>
           <div className="label-pair">
+            <span className="label-heading">{t(`HCM_AM_BOUNDARY_CODE`)}</span>
+            <span className="label-text">{t(boundaryCode || "NA")}</span>
+          </div>
+          <div className="label-pair">
             <span className="label-heading">{t(`HCM_AM_ATTENDANCE_OFFICER`)}</span>
             <span className="label-text">{individualsData?.Individual?.[0]?.name?.givenName}</span>
           </div>
@@ -447,11 +454,13 @@ const ViewAttendance = ({ editAttendance = false }) => {
               label={t(`HCM_AM_SUBMIT_LABEL`)}
               title={t(`HCM_AM_SUBMIT_LABEL`)}
               onClick={() => {
+                setUpdateDisabled(true);
                 triggerMusterRollUpdate();
               }}
               style={{ minWidth: "14rem" }}
               type="button"
               variation="primary"
+              isDisabled={updateMutation.isLoading || updateDisabled}
             />
           ) : (
             <Button
