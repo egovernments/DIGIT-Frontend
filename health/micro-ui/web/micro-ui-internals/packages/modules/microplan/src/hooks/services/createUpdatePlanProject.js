@@ -237,6 +237,17 @@ const searchPlanConfig = async (body) => {
   return response?.PlanConfiguration?.[0];
 };
 
+const searchPlanEmployeeConfig = async (body) => {
+  const response = await Digit.CustomService.getResponse({
+    url: "/plan-service/employee/_search",
+    useCache: false,
+    method: "POST",
+    userService: false,
+    body,
+  });
+  return response;
+};
+
 const searchCampaignConfig = async (body) => {
   const response = await Digit.CustomService.getResponse({
     url: "/project-factory/v1/project-type/search",
@@ -268,6 +279,14 @@ const updatePlan = async (req) => {
     },
   });
   return planRes;
+};
+
+const updatePlanEmployee = async (req) => {
+  const planEmployeeRes = await Digit.CustomService.getResponse({
+    url: "/plan-service/employee/_update",
+    body:req,
+  });
+  return planEmployeeRes;
 };
 
 const createUpdatePlanProject = async (req) => {
@@ -414,10 +433,53 @@ const createUpdatePlanProject = async (req) => {
         };
 
 
-        
+        const fetchedPlanEmployeeForBoundaryInvalidate = await searchPlanEmployeeConfig({
+          PlanEmployeeAssignmentSearchCriteria: {
+            tenantId: tenantId,
+            planConfigurationId: microplanId,
+            active: true,
+          },
+        });
+
+        const updatedPlanEmployeeObjectForBoundaryInvalidate = {
+          ...fetchedPlanEmployeeForBoundaryInvalidate,
+          PlanEmployeeAssignment:
+            fetchedPlanEmployeeForBoundaryInvalidate?.PlanEmployeeAssignment?.length > 0
+              ? fetchedPlanEmployeeForBoundaryInvalidate.PlanEmployeeAssignment.map((employee) => ({
+                  ...employee,
+                  active: false,
+                }))
+              : [],
+        };
+
         // update plan object
         const planUpdateForBoundaryInvalidation = await updatePlan(updatedPlanObjectForBoundaryInvalidate);
-        if (planUpdateForBoundaryInvalidation) {
+        // Call updatePlanEmployee for each item
+        const planEmployeeAssignments = updatedPlanEmployeeObjectForBoundaryInvalidate.PlanEmployeeAssignment;
+        let allEmployeesUpdated = true; // Flag to track employee update status
+
+        if (planEmployeeAssignments.length > 0) {
+          try {
+            // Use Promise.all to update all employees concurrently
+            await Promise.all(
+              planEmployeeAssignments.map(async (employee) => {
+                const employeeUpdateObject = {
+                  ...fetchedPlanEmployeeForBoundaryInvalidate,
+                  PlanEmployeeAssignment: employee, // Only update this specific employee
+                };
+                try {
+                  const planEmployeeUpdateResponse = await updatePlanEmployee(employeeUpdateObject);
+                } catch (error) {
+                  allEmployeesUpdated = false; // Mark as false if any employee update fails
+                }
+              })
+            );
+          } catch (error) {
+            allEmployeesUpdated = false;
+          }
+        }
+
+        if (planUpdateForBoundaryInvalidation && allEmployeesUpdated) {
           // doing this after invalidating the session
           // setCurrentKey((prev) => prev + 1);
           // setCurrentStep((prev) => prev + 1); 
@@ -425,7 +487,14 @@ const createUpdatePlanProject = async (req) => {
             triggeredFrom,
             invalidateSession:true
           };
-        } else {
+        } 
+        else if (!planUpdateForBoundaryInvalidation){
+          setShowToast({ key: "error", label: "ERR_PLAN_UPDATE_FAILED" });
+        }
+        else if (!allEmployeesUpdated){
+          setShowToast({ key: "error", label: "ERR_EMPLOYEE_UPDATE_FAILED" });
+        }
+        else {
           setShowToast({ key: "error", label: "ERR_BOUNDARY_UPDATE" });
         }
 

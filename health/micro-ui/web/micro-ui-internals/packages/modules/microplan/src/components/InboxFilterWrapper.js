@@ -215,15 +215,15 @@ const InboxFilterWrapper = (props) => {
           return (
             <LabelFieldPair
               vertical
-              style={{ paddingBottom: isLastElement ? "1rem" : "0" }}
+              style={{ paddingBottom: isLastElement ? "1rem" : "0" }} 
             >
               <TextBlock body={t(`MP_SECURITY_QUESTION ${index + 1}`)} />
               <Dropdown
                 option={options}
                 optionKey="code"
-                selected={filterValues[`securityQ${index + 1}`]}
+                selected={filterValues[`securityQ${index + 1}`]} 
                 select={(value) => handleDropdownChange(`securityQ${index + 1}`, value)}
-                t={(key) => key}
+                t={(key) => key} 
                 disabled={false}
               />
             </LabelFieldPair>
