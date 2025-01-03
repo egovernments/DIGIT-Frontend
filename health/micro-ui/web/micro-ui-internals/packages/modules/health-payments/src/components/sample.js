@@ -1,266 +1,8 @@
-// import { Dropdown, TextBlock } from "@egovernments/digit-ui-components";
-// import React, { useEffect, useState } from "react";
-// import { useTranslation } from "react-i18next";
-
-// const Sample = ({ selectedProject, onChange }) => {
-//   const { t } = useTranslation();
-//   const tenantId = Digit.ULBService.getCurrentTenantId();
-
-//   // selectedProject?.address?.boundary.split("_")[0]
-//   const reqCriteriaResource = {
-//     url: `/boundary-service/boundary-relationships/_search`,
-//     params: {
-//       tenantId: tenantId,
-//       hierarchyType: selectedProject?.address?.boundary.split("_")[0],
-//       includeChildren: true,
-//       codes: selectedProject?.address?.boundary,
-//       boundaryType: selectedProject?.address?.boundaryType,
-//     },
-//     config: {
-//       enabled: true,
-//       select: (data) => {
-//         return data;
-//       },
-//     },
-//   };
-
-//   const { isLoading: childrenDataLoading, data: childrenData } = Digit.Hooks.payments.useAttendanceBoundarySearch(reqCriteriaResource);
-
-//   useEffect(() => {}, [childrenData]);
-//   const handleButtonClick = (value) => {
-//     onChange(value);
-//   };
-
-//   return (
-//     <React.Fragment>
-//       <div>
-//         {childrenData?.[0]?.boundary.length > 0 && <NestedDropdown data={childrenData?.[0]?.boundary} onLastSelectedIdChange={handleButtonClick} />}
-//       </div>
-//     </React.Fragment>
-//   );
-// };
-
-// export default Sample;
-
-// function NestedDropdown({ data, onLastSelectedIdChange }) {
-//   const { t } = useTranslation();
-
-//   const [selected, setSelected] = useState();
-//   const [children, setChildren] = useState([]);
-
-//   // Helper to generate labels based on boundaryType
-//   const getLabelByBoundaryType = (boundaryType) => {
-//     const labels = {
-//       COUNTRY: "ATTENDANCE_COUNTRY",
-//       PROVINCE: "ATTENDANCE_PROVINCE",
-//       DISTRICT: "ATTENDANCE_DISTRICT",
-//       ADMINISTRATIVEPOST: "ATTENDANCE_ADMINISTRATIVEPOST",
-//       LOCALITY: "ATTENDANCE_LOCALITY",
-//       VILLAGE: "ATTENDANCE_VILLAGE",
-//     };
-//     return labels[boundaryType] || "Select Option"; // Default label
-//   };
-
-//   const currentBoundaryType = data[0]?.boundaryType; // Assuming all options share the same boundaryType
-//   const dropdownLabel = getLabelByBoundaryType(currentBoundaryType);
-
-//   const handleChange = (event) => {
-//     const value = event.id;
-//     setSelected(event);
-//     onLastSelectedIdChange(event);
-
-//     // Reset children dropdown when parent changes
-//     const selectedNode = data.find((item) => item.id === value);
-//     setChildren(selectedNode?.children || []);
-//     // setChildren(selectedNode?.boundaryType !== "DISTRICT" ? selectedNode?.children || [] : []);
-
-//     Digit.SessionStorage.set(currentBoundaryType, selectedNode);
-//   };
-
-//   // useEffect(() => {
-//   //   const data = Digit.SessionStorage.get(`Digit.${currentBoundaryType}`);
-//   //   if (data) {
-//   //     setSelected(data);
-//   //     setChildren(data?.children||[])
-//   //   }
-//   // }, []);
-
-//   useEffect(() => {
-//     // Reset children and selected state whenever the data (parent value) changes
-//     setSelected("");
-//     setChildren([]);
-//   }, [data]);
-
-//   return (
-//     <div style={{ width: "100%", marginTop: "14px" }}>
-//       <TextBlock body={t(dropdownLabel)}></TextBlock>
-//       <Dropdown
-//         selected={selected}
-//         t={t}
-//         option={data}
-//         optionKey={"code"}
-//         select={(value) => {
-//           handleChange(value);
-//         }}
-//       />
-
-//       {/* Render child dropdowns recursively */}
-//       {children.length > 0 && <NestedDropdown data={children} onLastSelectedIdChange={onLastSelectedIdChange} />}
-//     </div>
-//   );
-// }
-
-// import { Dropdown, TextBlock } from "@egovernments/digit-ui-components";
-// import React, { useEffect, useState } from "react";
-// import { useTranslation } from "react-i18next";
-
-// const Sample = ({ selectedProject, onChange }) => {
-//   const { t } = useTranslation();
-//   const tenantId = Digit.ULBService.getCurrentTenantId();
-
-//   const reqCriteriaResource = {
-//     url: `/boundary-service/boundary-relationships/_search`,
-//     params: {
-//       tenantId: tenantId,
-//       hierarchyType: selectedProject?.address?.boundary.split("_")[0],
-//       includeChildren: true,
-//       codes: selectedProject?.address?.boundary,
-//       boundaryType: selectedProject?.address?.boundaryType,
-//     },
-//     config: {
-//       enabled: true,
-//       select: (data) => data,
-//     },
-//   };
-
-//   const { isLoading: childrenDataLoading, data: childrenData } = Digit.Hooks.payments.useAttendanceBoundarySearch(reqCriteriaResource);
-
-//   useEffect(() => {}, [childrenData]);
-
-//   const handleButtonClick = (value) => {
-//     onChange(value);
-//   };
-
-//   return (
-//     <React.Fragment>
-//       <div>
-//         {childrenData?.[0]?.boundary.length > 0 && (
-//           <BoundaryDropdowns data={childrenData?.[0]?.boundary} onLastSelectedIdChange={handleButtonClick} />
-//         )}
-//       </div>
-//     </React.Fragment>
-//   );
-// };
-
-// export default Sample;
-
-// function BoundaryDropdowns({ data, onLastSelectedIdChange }) {
-//   const { t } = useTranslation();
-
-//   const [selectedValues, setSelectedValues] = useState({
-//     COUNTRY: null,
-//     PROVINCE: null,
-//     DISTRICT: null,
-//     ADMINISTRATIVEPOST: null,
-//     LOCALITY: null,
-//     VILLAGE: null,
-//   });
-
-//   const [boundaryData, setBoundaryData] = useState({
-//     COUNTRY: data,
-//     PROVINCE: [],
-//     DISTRICT: [],
-//     ADMINISTRATIVEPOST: [],
-//     LOCALITY: [],
-//     VILLAGE: [],
-//   });
-
-//   // Helper to generate labels based on boundaryType
-//   const getLabelByBoundaryType = (boundaryType) => {
-//     const labels = {
-//       COUNTRY: "ATTENDANCE_COUNTRY",
-//       PROVINCE: "ATTENDANCE_PROVINCE",
-//       DISTRICT: "ATTENDANCE_DISTRICT",
-//       ADMINISTRATIVEPOST: "ATTENDANCE_ADMINISTRATIVEPOST",
-//       LOCALITY: "ATTENDANCE_LOCALITY",
-//       VILLAGE: "ATTENDANCE_VILLAGE",
-//     };
-//     return labels[boundaryType] || "Select Option"; // Default label
-//   };
-
-//   const handleChange = (boundaryType, selectedOption) => {
-//     setSelectedValues((prev) => ({
-//       ...prev,
-//       [boundaryType]: selectedOption,
-//     }));
-
-//     // Update child dropdown based on selected value
-//     const selectedNode = boundaryData[boundaryType].find((item) => item.id === selectedOption.id);
-//     const childBoundaryType = getNextBoundaryType(boundaryType);
-//     setBoundaryData((prev) => ({
-//       ...prev,
-//       [childBoundaryType]: selectedNode?.children || [],
-//     }));
-
-//     // Save to sessionStorage
-//     Digit.SessionStorage.set(boundaryType, selectedNode);
-//     onLastSelectedIdChange(selectedOption);
-//   };
-
-//   // Helper to get next boundary type
-//   const getNextBoundaryType = (currentType) => {
-//     const boundaryOrder = [
-//       "COUNTRY",
-//       "PROVINCE",
-//       "DISTRICT",
-//       "ADMINISTRATIVEPOST",
-//       "LOCALITY",
-//       "VILLAGE",
-//     ];
-//     const currentIndex = boundaryOrder.indexOf(currentType);
-//     return boundaryOrder[currentIndex + 1];
-//   };
-
-//   useEffect(() => {
-//     // Load saved selections from sessionStorage on component mount
-//     const storedSelections = {};
-//     ["COUNTRY", "PROVINCE", "DISTRICT", "ADMINISTRATIVEPOST", "LOCALITY", "VILLAGE"].forEach((boundaryType) => {
-//       const storedData = Digit.SessionStorage.get(boundaryType);
-//       if (storedData) {
-//         storedSelections[boundaryType] = storedData;
-//       }
-//     });
-//     setSelectedValues(storedSelections);
-//   }, []);
-
-//   return (
-//     <div style={{ width: "100%", marginTop: "14px" }}>
-//       {Object.keys(boundaryData).map((boundaryType) => {
-//         const boundaryLabel = getLabelByBoundaryType(boundaryType);
-//         return (
-//           <div key={boundaryType}>
-//             <TextBlock body={t(boundaryLabel)}></TextBlock>
-//             <Dropdown
-//               selected={selectedValues[boundaryType]}
-//               t={t}
-//               option={boundaryData[boundaryType]}
-//               optionKey={"code"}
-//               select={(value) => handleChange(boundaryType, value)}
-//             />
-//           </div>
-//         );
-//       })}
-//     </div>
-//   );
-// }
-
-//===========
-
 import { Dropdown, TextBlock } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-const Sample = ({ selectedProject, onChange }) => {
+const BoundaryComponent = ({ selectedProject, onChange }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [boundaryData, setBoundaryData] = useState({
@@ -360,8 +102,9 @@ const Sample = ({ selectedProject, onChange }) => {
           LOCALITY: true,
           VILLAGE: true,
         };
-        setBoundaryData({ ...formattedData });
+
         setDistrict([childrenData[0]?.boundary[0]]);
+        setBoundaryData({ ...formattedData });
       } else if (childrenData[0]?.boundary[0].boundaryType == "ADMINISTRATIVEPOST") {
         const formattedData = {
           COUNTRY: false,
@@ -383,17 +126,22 @@ const Sample = ({ selectedProject, onChange }) => {
     switch (value.boundaryType) {
       case "DISTRICT":
         setAdminstrative(value?.children || []);
-        setSelectedValues((prev) => ({ ...prev, ADMINISTRATIVEPOST: null, LOCALITY: null, VILLAGE: null }));
+        setSelectedValues((prev) => ({ ...prev, ADMINISTRATIVEPOST: null, LOCALITY: null, VILLAGE: null, DISTRICT: value }));
+        break;
       case "COUNTRY":
         setProvince(value?.children || []);
-        setSelectedValues((prev) => ({ ...prev, PROVINCE: null, DISTRICT: null, LOCALITY: null, VILLAGE: null }));
+        setSelectedValues((prev) => ({ ...prev, PROVINCE: null, DISTRICT: null, LOCALITY: null, VILLAGE: null, COUNTRY: value }));
+        break;
       case "ADMINISTRATIVEPOST":
         setLocality(value?.children || []);
-        setSelectedValues((prev) => ({ ...prev, LOCALITY: null, VILLAGE: null }));
+        setSelectedValues((prev) => ({ ...prev, LOCALITY: null, VILLAGE: null, ADMINISTRATIVEPOST: value }));
+        break;
       case "LOCALITY":
         setVillage(value?.children || []);
-        setSelectedValues((prev) => ({ ...prev, VILLAGE: null }));
+        setSelectedValues((prev) => ({ ...prev, VILLAGE: null, LOCALITY: value }));
+        break;
       case "VILLAGE":
+        break;
     }
   };
 
@@ -492,4 +240,4 @@ const BoundaryDropdown = ({ label, data, onChange, selected, setSelected }) => {
   );
 };
 
-export default Sample;
+export default BoundaryComponent;

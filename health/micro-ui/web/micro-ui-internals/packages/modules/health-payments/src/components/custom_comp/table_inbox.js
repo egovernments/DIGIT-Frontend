@@ -50,16 +50,16 @@ const CustomInboxTable = ({
         );
       },
     },
-    {
-      name: t("HCM_AM_ATTENDANCE_NAME"),
-      selector: (row) => {
-        return (
-          <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={row?.name || t("NA")}>
-            {row?.name || t("NA")}
-          </div>
-        );
-      },
-    },
+    // {
+    //   name: t("HCM_AM_ATTENDANCE_NAME"),
+    //   selector: (row) => {
+    //     return (
+    //       <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={row?.name || t("NA")}>
+    //         {row?.name || t("NA")}
+    //       </div>
+    //     );
+    //   },
+    // },
 
     {
       name: t("HCM_AM_ATTENDANCE_MARKED_BY"),
@@ -86,8 +86,8 @@ const CustomInboxTable = ({
       name: t("HCM_AM_ATTENDANCE_ATTENDEES"),
       selector: (row) => {
         return (
-          <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={t(row?.status || "NA")}>
-            {t(row?.status || "NA")}
+          <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={t(row?.status || "0")}>
+            {t(row?.status || "0")}
           </div>
         );
       },

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { CheckBox, SubmitBar } from "@egovernments/digit-ui-components";
-import Sample from "../sample";
+import BoundaryComponent from "../sample";
 import { Card, SVG, Button, ButtonGroup, TextBlock, Dropdown, Toast } from "@egovernments/digit-ui-components";
 
 const CustomFilter = ({ onProjectSelect, onFilterChange, projectData }) => {
@@ -116,7 +116,7 @@ const CustomFilter = ({ onProjectSelect, onFilterChange, projectData }) => {
           />
         </div>*/}
 
-        {projectSelected?.address?.boundary && <Sample onChange={onChangeId} selectedProject={projectSelected}></Sample>}
+        {projectSelected?.address?.boundary && <BoundaryComponent onChange={onChangeId} selectedProject={projectSelected}></BoundaryComponent>}
       </div>
 
       <div
