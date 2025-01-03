@@ -8,7 +8,7 @@ import { useMyContext } from "../utils/context";
 const InboxFilterWrapper = (props) => {
   const { state } = useMyContext();
   const { t } = useTranslation();
-  const url = Digit.Hooks.useQueryParams()
+  const {microplanId,...rest} = Digit.Hooks.useQueryParams()
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [filterValues, setFilterValues] = useState(
     { status: null, onRoadCondition: null, terrain: null, securityQ1: null, securityQ2: null }
@@ -100,7 +100,7 @@ const InboxFilterWrapper = (props) => {
     body: {
       PlanFacilitySearchCriteria: {
         tenantId: tenantId,
-        planConfigurationId: url?.microplanId,
+        planConfigurationId: microplanId,
       }
     },
     config: {
@@ -116,10 +116,11 @@ const InboxFilterWrapper = (props) => {
     
         return facilityOptions;
       },
+      cacheTime:Infinity
     }  
   };
 
-  const { isLoading: isPlanFacilityLoading,error:panFacilityerror, data: planFacility }=Digit.Hooks.useCustomAPIHook(planFacilitySearchConfig);
+  const { isLoading: isPlanFacilityLoading,error:planFacilityerror, data: planFacility }=Digit.Hooks.useCustomAPIHook(planFacilitySearchConfig);
   
   return (
 
