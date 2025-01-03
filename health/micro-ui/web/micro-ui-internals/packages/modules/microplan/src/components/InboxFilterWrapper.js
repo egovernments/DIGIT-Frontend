@@ -119,10 +119,7 @@ const InboxFilterWrapper = (props) => {
     }  
   };
 
-  const { isLoading: isPlanFacilityLoading, data: planFacility }=Digit.Hooks.useCustomAPIHook(planFacilitySearchConfig);
-  if (isPlanFacilityLoading) {
-    return <Loader />
-  }
+  const { isLoading: isPlanFacilityLoading,error:panFacilityerror, data: planFacility }=Digit.Hooks.useCustomAPIHook(planFacilitySearchConfig);
   
   return (
 
@@ -177,7 +174,8 @@ const InboxFilterWrapper = (props) => {
             disabled={false}
           />
         </LabelFieldPair>
-
+        {
+        isPlanFacilityLoading?(<Loader/>):(
         <LabelFieldPair vertical>
           <TextBlock body={t(`MP_FILTER_FACILITY`)} />
           <Dropdown
@@ -189,6 +187,7 @@ const InboxFilterWrapper = (props) => {
             disabled={false}
           />
         </LabelFieldPair>
+        )}
 
 
         {state.securityQuestions.map((item, index) => {
