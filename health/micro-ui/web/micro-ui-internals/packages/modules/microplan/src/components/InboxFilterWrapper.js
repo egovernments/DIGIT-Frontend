@@ -15,7 +15,7 @@ const InboxFilterWrapper = (props) => {
 
   // Default selected option
   let defaultSelectedOptions = props.defaultValue
-  ? Object.entries(props.defaultValue).reduce((acc, [key, value]) => {
+    ? Object.entries(props.defaultValue).reduce((acc, [key, value]) => {
       if (value !== null) {
         acc[key] = { code: value, name: `${t(key)} (${value})` };
       } else {
@@ -23,22 +23,22 @@ const InboxFilterWrapper = (props) => {
       }
       return acc;
     }, {})
-  : null;
+    : null;
 
   // Initialize state with the default selected option
   useEffect(() => {
     if (props.defaultValue && Object.keys(props.defaultValue).length > 0) {
       const newDefault = Object.entries(props.defaultValue).reduce((acc, [key, value]) => {
-        acc[key] = value !== null 
-          ? { code: value, name: `${t(key)} (${value})` } 
+        acc[key] = value !== null
+          ? { code: value, name: `${t(key)} (${value})` }
           : null;
         return acc;
       }, {});
       setFilterValues(newDefault);
     }
   }, [props.defaultValue, t]);
-  
-  
+
+
 
   const createArrayFromObject = (obj, t) => {
     if (!obj || typeof obj !== "object" || Object.keys(obj).length === 0 || typeof t !== "function") {
@@ -61,7 +61,7 @@ const InboxFilterWrapper = (props) => {
   // Apply filters when the user presses the primary action button
   const handleApplyFilters = () => {
     if (props.onApplyFilters) {
-      const filtersToApply= {};
+      const filtersToApply = {};
 
       for (let key in filterValues) {
         if (filterValues[key] && typeof filterValues[key] === 'object' && filterValues[key].hasOwnProperty('code')) {
@@ -79,7 +79,7 @@ const InboxFilterWrapper = (props) => {
   const clearFilters = () => {
     // setSelectedValue(selectedValue); // Clear the selection
     setFilterValues({ status: null, onRoadCondition: null, terrain: null, securityQ1: null, securityQ2: null });
-    defaultSelectedOptions={};
+    defaultSelectedOptions = {};
     if (props.clearFilters) {
       props.clearFilters();
     }
@@ -127,7 +127,7 @@ const InboxFilterWrapper = (props) => {
           <Dropdown
             option={state.villageRoadCondition}
             optionKey={"code"}
-            selected={ filterValues["onRoadCondition"] || defaultSelectedOptions?.onRoadCondition }
+            selected={filterValues["onRoadCondition"] || defaultSelectedOptions?.onRoadCondition}
             select={(value) => handleDropdownChange("onRoadCondition", value)}
             t={t}
             disabled={false}
@@ -155,20 +155,26 @@ const InboxFilterWrapper = (props) => {
             active: true,
           }));
 
+          const isLastElement = index === state.securityQuestions.length - 1;
+
           return (
-            <LabelFieldPair vertical>
+            <LabelFieldPair
+              vertical
+              style={{ paddingBottom: isLastElement ? "1rem" : "0" }} 
+            >
               <TextBlock body={t(`MP_SECURITY_QUESTION ${index + 1}`)} />
               <Dropdown
-                option={options} // Pass filtersToApplyoptions her
-                optionKey="code" // Key for displaying dropdown options
-                selected={filterValues[`securityQ${index + 1}`]} // Set selected value
-                select={(value) => handleDropdownChange(`securityQ${index + 1}`, value)} // Handle selection
-                t={(key) => key} // Translation function (you can replace as needed)
+                option={options}
+                optionKey="code"
+                selected={filterValues[`securityQ${index + 1}`]} 
+                select={(value) => handleDropdownChange(`securityQ${index + 1}`, value)}
+                t={(key) => key} 
                 disabled={false}
               />
             </LabelFieldPair>
           );
         })}
+
 
       </div>
     </FilterCard>

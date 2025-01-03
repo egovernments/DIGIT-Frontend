@@ -212,8 +212,10 @@ const PlanInbox = () => {
         jurisdiction: censusJurisdiction,
         status: selectedFilter?.status !== null && selectedFilter?.status !== undefined ? selectedFilter?.status : "",
         ...(activeLink.code == "ASSIGNED_TO_ALL" || selectedFilter?.status == "VALIDATED" ? {} : { assignee: user.info.uuid }),
-        terrain:selectedFilter?.terrain,
-        onRoadCondition:selectedFilter?.onRoadCondition,
+        ...(selectedFilter?.terrain != null && { terrain: selectedFilter.terrain }),
+        ...(selectedFilter?.onRoadCondition != null && { onRoadCondition: selectedFilter.onRoadCondition }),
+        ...(selectedFilter?.securityQ1 != null && { securityQ1: selectedFilter.securityQ1 }),
+        ...(selectedFilter?.securityQ2 != null && { securityQ2: selectedFilter.securityQ2 }),
         planConfigurationId: microplanId, //list of plan ids
         limit: limitAndOffset?.limit,
         offset: limitAndOffset?.offset,
