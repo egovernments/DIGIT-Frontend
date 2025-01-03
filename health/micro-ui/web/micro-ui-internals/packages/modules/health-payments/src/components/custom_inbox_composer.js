@@ -40,8 +40,13 @@ const CustomInboxSearchComposer = () => {
             offset: totalNext == undefined ? (currentPage - 1) * rowsPerPage : (totalNext - 1) * totalRows,
             referenceId: selectedProject?.id == undefined ? Digit.SessionStorage.get("paymentInbox").selectedProject?.id : selectedProject?.id,
             staffId: Digit.SessionStorage.get("UserIndividual")?.[0]?.id,
-            localityCode: filterData?.code == undefined || filterData?.code == null ? filterCriteria?.code : filterData?.code,
-            paymentStatus: status == undefined ? null : status,
+            localityCode:
+              filterData?.code == undefined || filterData?.code == null
+                ? filterCriteria?.code == undefined || filterCriteria?.code == null
+                  ? Digit.SessionStorage.get("paymentInbox").code
+                  : filterCriteria?.code
+                : filterData?.code,
+            paymentStatus: status == undefined ? selectedStatus : status,
           },
         },
         {
@@ -110,7 +115,7 @@ const CustomInboxSearchComposer = () => {
     };
   }, []);
 
-  useEffect(() => { }, [selectedProject]);
+  useEffect(() => {}, [selectedProject]);
 
   const handleProjectChange = (selectedProject) => {
     setSelectedProject(selectedProject);
@@ -193,18 +198,21 @@ const CustomInboxSearchComposer = () => {
 
           <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
             <div style={{ width: "100%", display: "flex", flexDirection: "column", height: "60vh", minHeight: "60vh" }}>
-              {card == false?  <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", padding: "0px" }}></Card>:
-              childrenData?.totalCount > 0 && (
-                <CustomInboxTable
-                  statusCount={childrenData?.statusCount}
-                  handleTabChange={callServiceOnTap}
-                  rowsPerPage={rowsPerPage}
-                  customHandleRowsPerPageChange={handleRowsPerPageChange}
-                  customHandlePaginationChange={handlePaginationChange}
-                  isLoading={childrenDataLoading}
-                  tableData={childrenData?.data}
-                  totalCount={childrenData?.totalCount}
-                ></CustomInboxTable>
+              {card == false ? (
+                <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", padding: "0px" }}></Card>
+              ) : (
+                childrenData?.totalCount > 0 && (
+                  <CustomInboxTable
+                    statusCount={childrenData?.statusCount}
+                    handleTabChange={callServiceOnTap}
+                    rowsPerPage={rowsPerPage}
+                    customHandleRowsPerPageChange={handleRowsPerPageChange}
+                    customHandlePaginationChange={handlePaginationChange}
+                    isLoading={childrenDataLoading}
+                    tableData={childrenData?.data}
+                    totalCount={childrenData?.totalCount}
+                  ></CustomInboxTable>
+                )
               )}
             </div>
           </div>

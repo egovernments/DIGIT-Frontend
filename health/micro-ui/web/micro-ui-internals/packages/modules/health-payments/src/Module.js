@@ -5,7 +5,7 @@ import { default as EmployeeApp } from "./pages/employee";
 import PaymentsCard from "./components/PaymentsCard";
 import { overrideHooks, updateCustomConfigs } from "./utils";
 import { ProviderContext } from "./utils/context";
-import Sample from "./components/sample";
+import BoundaryComponent from "./components/sample";
 import CampaignNameSelection from "./components/campaign_dropdown";
 import CustomInboxSearchComposer from "./components/custom_inbox_composer";
 import CustomInboxSearchLinks from "./components/custom_comp/link_section";
@@ -119,7 +119,7 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
 const componentsToRegister = {
   PaymentsModule,
   PaymentsCard,
-  Sample,
+  BoundaryComponent,
   CampaignNameSelection,
   //
   CustomInboxSearchComposer,
