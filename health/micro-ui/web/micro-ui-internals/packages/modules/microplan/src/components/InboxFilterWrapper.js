@@ -111,7 +111,7 @@ const InboxFilterWrapper = (props) => {
         // Extract facilityName and facilityId for each object
         const facilityOptions = data.PlanFacility.map((facility) => ({
           code: facility.facilityName,
-          Id: facility.facilityId
+          id: facility.facilityId
         }));
     
         return facilityOptions;
