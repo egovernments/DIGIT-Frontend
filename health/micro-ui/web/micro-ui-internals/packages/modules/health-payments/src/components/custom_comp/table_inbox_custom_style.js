@@ -1,24 +1,23 @@
 export const tableCustomStyle = {
   tableWrapper: {
     style: {
-      // overflow: "scroll",
       minHeight: "300px",
-     // padding:"10px",
+      // Remove padding and border styles here if necessary
     },
   },
   table: {
     style: {
-      // overflow: "scroll",
+      // Remove any outer border styling here
     },
   },
   responsiveWrapper: {
     style: {
-      // overflow: "scroll",
+      // Remove overflow or border styling if needed
     },
   },
   contextMenu: {
     style: {
-      // overflow: "scroll",
+      // Remove border styling if needed
     },
   },
   header: {
@@ -52,12 +51,12 @@ export const tableCustomStyle = {
       },
       "&:last-of-type": {
         borderLeftStyle: "solid",
-        borderLeftWidth: "1px",
+        borderLeftWidth: "0px",
         borderLeftColor: "#D6D5D4",
         borderTopRightRadius: "0.25rem",
       },
       borderRightStyle: "solid",
-      borderRightWidth: "1px",
+      borderRightWidth: "0px",
       borderRightColor: "#D6D5D4",
       fontFamily: "Roboto",
       fontWeight: "700",
@@ -66,18 +65,18 @@ export const tableCustomStyle = {
       color: "#0B4B66",
       padding: "16px",
       lineHeight: "1.14rem",
-      zIndex: 10
+      zIndex: 10,
     },
   },
   cells: {
     style: {
       "&:first-of-type": {
         borderLeftStyle: "solid",
-        borderLeftWidth: "1px",
+        borderLeftWidth: "0px",
         borderLeftColor: "#D6D5D4",
       },
       borderRightStyle: "solid",
-      borderRightWidth: "1px",
+      borderRightWidth: "0px",
       borderRightColor: "#D6D5D4",
       color: "#363636",
       fontFamily: "Roboto",
@@ -92,14 +91,16 @@ export const tableCustomStyle = {
       style: {
         marginTop: "-60px",
         borderStyle: "solid",
-        borderWidth: "1px",
+        borderWidth: "0px",
         borderColor: "#D6D5D4",
         borderTopWidth: "0px",
-        padding:"10px",
+        padding: "10px",
+        // Ensure there's no outer border for pagination
       },
     },
   },
 };
+
 
 export const getTableCustomStyle = (freezeFirstColumn = false) => ({
   tableWrapper: {

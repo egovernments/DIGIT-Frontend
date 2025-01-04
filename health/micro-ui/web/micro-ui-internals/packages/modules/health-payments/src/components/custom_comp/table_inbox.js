@@ -97,67 +97,59 @@ const CustomInboxTable = ({
   return (
     <React.Fragment>
       {
-       
-          
-            /*(!planEmployee?.data || planEmployee?.data?.length === 0) */
-            !tableData ? (
-              <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />
-            ) : (
-              <div>
-                <Tab
-                  activeLink={activeLink?.code}
-                  configItemKey="code"
-                  configDisplayKey="name"
-                  itemStyle={{ width: "290px" }}
-                  configNavItems={[
-                    {
-                      code: "HCM_AM_PENDING_FOR_APPROVAL",
+        /*(!planEmployee?.data || planEmployee?.data?.length === 0) */
+        !tableData ? (
+          <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />
+        ) : (
+          <div>
+            <Tab
+              activeLink={activeLink?.code}
+              configItemKey="code"
+              configDisplayKey="name"
+              itemStyle={{ width: "290px" }}
+              configNavItems={[
+                {
+                  code: "HCM_AM_PENDING_FOR_APPROVAL",
 
-                      name: `${`${t(`HCM_AM_PENDING_FOR_APPROVAL`)} (${statusCount?.PENDINGFORAPPROVAL})`}`,
-                    },
-                    {
-                      code: "HCM_AM_APPROVED",
-                      name: `${`${t(`HCM_AM_APPROVED`)} (${statusCount?.APPROVED})`}`,
-                    },
-                  ]}
-                  navStyles={{}}
-                  onTabClick={(e) => {
-                    setActiveLink(e);
-                    handleTabChange(e);
-                  }}
-                  setActiveLink={setActiveLink}
-                  style={{}}
-                  showNav={true}
+                  name: `${`${t(`HCM_AM_PENDING_FOR_APPROVAL`)} (${statusCount?.PENDINGFORAPPROVAL})`}`,
+                },
+                {
+                  code: "HCM_AM_APPROVED",
+                  name: `${`${t(`HCM_AM_APPROVED`)} (${statusCount?.APPROVED})`}`,
+                },
+              ]}
+              navStyles={{}}
+              onTabClick={(e) => {
+                setActiveLink(e);
+                handleTabChange(e);
+              }}
+              setActiveLink={setActiveLink}
+              style={{}}
+              showNav={true}
+            />
+            <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", padding: "10px" }}>
+              {tableData && tableData.length === 0 ? (
+                <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />
+              ) : (
+                <DataTable
+                  columns={columns}
+                  data={tableData}
+                  progressPending={isLoading}
+                  progressComponent={<Loader />}
+                  pagination
+                  paginationServer
+                  customStyles={tableCustomStyle}
+                  paginationTotalRows={totalCount}
+                  onChangePage={handlePaginationChange}
+                  onChangeRowsPerPage={handleRowsPerPageChange}
+                  paginationPerPage={rowsPerPage}
+                  sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
+                  paginationRowsPerPageOptions={[5, 10, 15, 20]}
                 />
-                 <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", padding: "0px" }}>
-               
-                 {tableData && tableData.length === 0 ? (
-                  <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />
-                ) : (
-                  <DataTable
-                    columns={columns}
-                    data={tableData}
-                    progressPending={isLoading}
-                    progressComponent={<Loader />}
-                    pagination
-                    paginationServer
-                    customStyles={tableCustomStyle}
-                    paginationTotalRows={totalCount}
-                    onChangePage={handlePaginationChange}
-                    onChangeRowsPerPage={handleRowsPerPageChange}
-                    paginationPerPage={rowsPerPage}
-                    sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
-                    paginationRowsPerPageOptions={[5, 10, 15, 20]}
-                  />
-                )}
-                 </Card>
-
-              </div>
-              
-            )
-              
-          
-        
+              )}
+            </Card>
+          </div>
+        )
       }
     </React.Fragment>
   );

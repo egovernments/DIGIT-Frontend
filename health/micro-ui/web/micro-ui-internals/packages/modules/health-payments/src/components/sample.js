@@ -2,7 +2,7 @@ import { Dropdown, TextBlock } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-const BoundaryComponent = ({ selectedProject, onChange, lowestLevel }) => {
+const BoundaryComponent = ({initialValue, updateSeeeionStorage, selectedProject, onChange, lowestLevel }) => {
   //const kk = ["COUNTRY", "PROVINCE", "DISTRICT", "ADMINISTRATIVEPOST", "LOCALITY", "VILLAGE"];
 
   const kk = Digit.SessionStorage.get("boundaryHierarchyOrder").map((item) => item.code);
@@ -33,15 +33,15 @@ const BoundaryComponent = ({ selectedProject, onChange, lowestLevel }) => {
   const [selectedValues, setSelectedValues] = useState(defaultSelectData);
 
   useEffect(() => {
-    const storedValues = sessionStorage.getItem("selectedValues");
-    if (storedValues) {
-      setSelectedValues(JSON.parse(storedValues));
+    // const storedValues = sessionStorage.getItem("selectedValues");
+    if (initialValue) {
+      setSelectedValues(JSON.parse(initialValue));
     }
   }, []);
 
-  useEffect(() => {
-    sessionStorage.setItem("selectedValues", JSON.stringify(selectedValues));
-  }, [selectedValues]);
+  // useEffect(() => {
+  //   sessionStorage.setItem("selectedValues", JSON.stringify(selectedValues));
+  // }, [selectedValues]);
 
   const reqCriteriaResource = {
     url: `/boundary-service/boundary-relationships/_search`,
@@ -102,7 +102,10 @@ const BoundaryComponent = ({ selectedProject, onChange, lowestLevel }) => {
 
       setSelectedValues((prev) => {
         const newSelectedValues = { ...prev, [value?.boundaryType]: value };
-        sessionStorage.setItem("selectedValues", JSON.stringify(newSelectedValues));
+        //sessionStorage.setItem("selectedValues", JSON.stringify(newSelectedValues));
+        if(updateSeeeionStorage){
+        updateSeeeionStorage(newSelectedValues)
+        }
         return newSelectedValues;
       });
     }
