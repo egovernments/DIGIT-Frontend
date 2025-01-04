@@ -9,14 +9,23 @@ const MyBillsSearch = ({ onSubmit = () => { }, onClear = () => { } }) => {
     const { t } = useTranslation();
 
     const [dateRange, setDateRange] = useState({
-        startDate: new Date(),
-        endDate: new Date(),
+        startDate: '',
+        endDate: '',
         title: '',
     });
 
     const handleFilterChange = (data) => {
         setDateRange(data.range);
     };
+
+    const handleSearch = (data) => {
+        setDateRange(data.range);
+    };
+
+    const handleClear = (data) => {
+        setDateRange("");
+    };
+
 
 
     return (
@@ -32,7 +41,7 @@ const MyBillsSearch = ({ onSubmit = () => { }, onClear = () => { } }) => {
                     onFilterChange={handleFilterChange}
                     t={(key) => key} // Simple translation function
                     labelClass="custom-label"
-                    title="Select Date Range"
+                    title={t("HCM_AM_SELECTE_DATA_RANGE")}
                     epochStartDate={new Date().getTime()}
                     epochEndDate={new Date().getTime()}
                     disabled={false}
@@ -41,8 +50,8 @@ const MyBillsSearch = ({ onSubmit = () => { }, onClear = () => { } }) => {
 
             <ButtonGroup
                 buttonsArray={[
-                    <Button variation="teritiary" label={t(`HCM_AM_CLEAR`)} type="button" onClick={() => { }} size="large" />,
-                    <Button variation="primary" label={t(`HCM_AM_SEARCH`)} type="button" onClick={() => { }} size="large" />,
+                    <Button variation="teritiary" label={t(`HCM_AM_CLEAR`)} type="button" onClick={handleClear} size="large" />,
+                    <Button variation="primary" label={t(`HCM_AM_SEARCH`)} type="button" onClick={handleSearch} size="large" />,
                 ]}
             ></ButtonGroup>
 

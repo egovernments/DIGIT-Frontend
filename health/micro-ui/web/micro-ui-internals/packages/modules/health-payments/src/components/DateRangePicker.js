@@ -36,8 +36,10 @@ function isStartDateFocused(focusNumber) {
 const DateRangePicker = ({ values, onFilterChange, t, labelClass, title, epochStartDate, epochEndDate, disabled }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [focusedRange, setFocusedRange] = useState([0, 0]);
+    const [initialDate, setInitialDate] = useState({ ...values });
     const [selectionRange, setSelectionRange] = useState({ ...values });
     const wrapperRef = useRef(null);
+
 
     useEffect(() => {
         setSelectionRange(
@@ -152,6 +154,10 @@ const DateRangePicker = ({ values, onFilterChange, t, labelClass, title, epochSt
     const handleSelect = (ranges) => {
         const { range1: selection } = ranges;
         const { startDate, endDate, title, duration } = selection;
+        setInitialDate((prevState) => ({
+            ...prevState, // Keep the previous values
+            startDate: startDate, // Update only the `startDate`
+        }));
         if (isStartDateFocused(focusedRange[1])) {
             setSelectionRange(selection);
         }
@@ -195,7 +201,7 @@ const DateRangePicker = ({ values, onFilterChange, t, labelClass, title, epochSt
                     <TextInput type="text" className="cursorPointer" onIconSelection={() => {
 
                         setIsModalOpen((prevState) => !prevState);
-                    }} onChange={() => { }} populators={{ customIcon: "DateRange" }} value={formatDateRange(selectionRange)}
+                    }} onChange={() => { }} populators={{ customIcon: "DateRange" }} value={initialDate.startDate === "" ? null : formatDateRange(selectionRange)}
                     />
 
                     {isModalOpen && (
