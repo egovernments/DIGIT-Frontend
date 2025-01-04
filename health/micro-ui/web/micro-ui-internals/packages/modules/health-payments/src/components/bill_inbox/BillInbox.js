@@ -1,12 +1,12 @@
 import React, { useEffect, useReducer, useState, useMemo, use } from "react";
 
 import _ from "lodash";
-import CustomInboxSearchLinks from "./custom_comp/link_section";
-import CustomSearchComponent from "./custom_comp/search_section";
+import CustomInboxSearchLinks from "../custom_comp/link_section";
+import CustomSearchComponent from "../custom_comp/search_section";
 
 import { useTranslation } from "react-i18next";
-import CustomFilter from "./custom_comp/filter_section";
-import CustomInboxTable from "./custom_comp/table_inbox";
+import CustomFilter from "../custom_comp/filter_section";
+import CustomInboxTable from "../custom_comp/table_inbox";
 import { FilterCard, Toast } from "@egovernments/digit-ui-components";
 import BillSearchBox from "./BillSearchBox";
 
@@ -25,7 +25,8 @@ const CustomBillInbox = () => {
 
     //   useEffect(() => { }, [selectedProject]);
 
-    const handleProjectChange = (selectedProject) => {
+    const handleSearchChange = (selectedProject, selectedLevel) => {
+        console.log(selectedProject, selectedLevel, 'sssssssssssssssss');
         // setSelectedProject(selectedProject);
     };
 
@@ -85,7 +86,7 @@ const CustomBillInbox = () => {
                         ></CustomInboxSearchLinks>
                     </div>
                     <div style={{ width: "80%", display: "flex", flexDirection: "row" }}>
-                        <BillSearchBox onProjectSelect={handleProjectChange}></BillSearchBox>
+                        <BillSearchBox onLevelSelect={handleSearchChange}></BillSearchBox>
                     </div>
                 </div>
 
