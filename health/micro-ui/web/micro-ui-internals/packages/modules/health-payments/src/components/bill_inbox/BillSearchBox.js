@@ -1,30 +1,49 @@
 import { SubmitBar, LinkLabel, Label } from "@egovernments/digit-ui-react-components";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Card, Dropdown, TextBlock, TextInput, ButtonGroup, Button } from "@egovernments/digit-ui-components";
+import { Card, Dropdown, TextBlock } from "@egovernments/digit-ui-components";
+
+const AGGREGATION_LEVEL_OPTIONS = [
+    { name: "HCM_AM_DISTRICT_LEVEL", code: "DISTRICT" },
+    { name: "HCM_AM_PROVIENCE_LEVEL", code: "PROVIENCE" },
+    { name: "HCM_AM_COUNTRY_LEVEL", code: "COUNTRY" },
+];
 
 const BillSearchBox = ({ onLevelSelect }) => {
     const { t } = useTranslation();
     const [project, setProject] = useState([]);
-
     const [selectedProject, setSelectedProject] = useState(null);
+    const [selectedAggregationLevel, setSelectedAggregationLevel] = useState(null);
+    const [filteredAggregationOptions, setFilteredAggregationOptions] = useState(AGGREGATION_LEVEL_OPTIONS);
 
-
-    // const onSubmit = (data, e) => {
-
-    // };
-
-    // const clearSearch = () => {
-    //     onLevelSelect();
-    // };
-
-    // const closeToast = () => {
-    //     setShowToast(null);
-    // };
+    const HIERARCHY = Digit.SessionStorage.get("boundaryHierarchyOrder");
 
     useEffect(() => {
-        if (project.length == 0) {
-            let datak =
+        if (selectedProject) {
+            // Get the boundary type from the selected project
+            const boundaryType = selectedProject?.address?.boundaryType;
+
+            // Find the order of the boundary type in the hierarchy
+            const boundaryOrder = HIERARCHY.find((item) => item.code === boundaryType)?.order;
+
+            if (boundaryOrder) {
+                // Filter options based on the hierarchy order
+                const filteredOptions = AGGREGATION_LEVEL_OPTIONS.filter((option) => {
+                    const optionOrder = HIERARCHY.find((item) => item.code === option.code)?.order;
+                    return optionOrder >= boundaryOrder;
+                });
+                setFilteredAggregationOptions(filteredOptions);
+            }
+        } else {
+            setFilteredAggregationOptions(AGGREGATION_LEVEL_OPTIONS); // Reset to default if no project selected
+        }
+    }, [selectedProject]);
+
+
+
+    useEffect(() => {
+        if (project.length === 0) {
+            const datak =
                 Digit?.SessionStorage.get("staffProjects") ||
                 [].map((target) => ({
                     code: target.id,
@@ -38,60 +57,36 @@ const BillSearchBox = ({ onLevelSelect }) => {
         }
     }, []);
 
-    const handleFilterRefresh = () => { };
+    const handleAggregationLevelChange = (value) => {
+        setSelectedAggregationLevel(value);
+        onLevelSelect(selectedProject, value); // Pass the selected project and level to the parent
+    };
 
     return (
         <React.Fragment>
             <Card variant="search">
-                {/*<div style={{ maxWidth: "100%", width: "100%" }}>
-          <TextBlock body={t("HCM_AM_ATTENDANCE_ID")}></TextBlock>
-          <TextInput type="text"></TextInput>
-        </div>*/}
                 <div style={{ maxWidth: "100%", width: "100%", marginBottom: "1.5rem" }}>
-                    <TextBlock body={`${t("ATTENDANCE_PROJECT_NAME")} *`}></TextBlock>
+                    <TextBlock body={`${t("ATTENDANCE_PROJECT_NAME")} *`} />
                     <Dropdown
-                        // selected={projectSelected}
                         t={t}
                         option={project}
                         name={"code"}
                         optionKey={"name"}
-                        select={(value) => {
-                            setSelectedProject(value);
-                            //   onProjectSelect(value);
-                        }}
+                        selected={selectedProject}
+                        select={(value) => setSelectedProject(value)}
                     />
                 </div>
                 <div style={{ maxWidth: "100%", width: "100%" }}>
-                    <TextBlock body={`${t("HCM_AM_BILL_AGGREGATION_FOR_EMPLOYEE_MAPPED_AT")} *`}></TextBlock>
+                    <TextBlock body={`${t("HCM_AM_BILL_AGGREGATION_FOR_EMPLOYEE_MAPPED_AT")} *`} />
                     <Dropdown
                         t={t}
-                        option={[
-                            { "name": "HCM_AM_DISTRICT_LEVEL", "code": 'HCM_AM_DISTRICT_LEVEL' },
-                            { "name": "HCM_AM_PROVIENCE_LEVEL", "code": "HCM_AM_PROVIENCE_LEVEL" },
-                            { "name": "HCM_AM_COUNTRY_LEVEL", "code": "HCM_AM_COUNTRY_LEVEL" }
-                        ]}
+                        option={filteredAggregationOptions}
                         name={"code"}
                         optionKey={"name"}
-                        select={(value) => {
-                            onLevelSelect(selectedProject, value);
-                        }}
+                        selected={selectedAggregationLevel}
+                        select={handleAggregationLevelChange}
                     />
                 </div>
-
-                {/* <ButtonGroup
-                    buttonsArray={[
-                        <Button variation="teritiary" label={t(`HCM_AM_CLEAR`)} type="button" onClick={() => { }} size="large" />,
-                        <Button variation="primary" label={t(`HCM_AM_SEARCH`)} type="button" onClick={() => { }} size="large" />,
-                    ]}
-                ></ButtonGroup> */}
-
-                {/*showToast && <Toast 
-          error={showToast.error}
-          warning={showToast.warning}
-          label={t(showToast.label)}
-          isDleteBtn={true}
-          onClose={closeToast} />
-       */}
             </Card>
         </React.Fragment>
     );

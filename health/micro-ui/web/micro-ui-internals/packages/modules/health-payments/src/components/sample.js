@@ -2,7 +2,7 @@ import { Dropdown, TextBlock } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-const BoundaryComponent = ({ selectedProject, onChange }) => {
+const BoundaryComponent = ({ selectedProject, onChange, lowestLevel }) => {
   //const kk = ["COUNTRY", "PROVINCE", "DISTRICT", "ADMINISTRATIVEPOST", "LOCALITY", "VILLAGE"];
 
   const kk = Digit.SessionStorage.get("boundaryHierarchyOrder").map((item) => item.code);
@@ -27,6 +27,8 @@ const BoundaryComponent = ({ selectedProject, onChange }) => {
       return acc;
     }, {})
   );
+
+  console.log(boundaryData, 'bbbbbbbbbbbbbbbbbbbbb');
 
   const [selectedValues, setSelectedValues] = useState(defaultSelectData);
 
@@ -146,11 +148,24 @@ const BoundaryComponent = ({ selectedProject, onChange }) => {
     setSelectedValues(newSelectedValues);
   };
 
+  const isBoundaryAllowed = (boundaryType) => {
+    if (!lowestLevel) {
+      // If lowestLevel is null or undefined, include all boundaries
+      return true;
+    }
+
+    const boundaryIndex = kk.indexOf(boundaryType);
+    const lowestLevelIndex = kk.indexOf(lowestLevel);
+
+    return boundaryIndex <= lowestLevelIndex; // Include only up to the lowestLevel
+  };
+
   return (
     <React.Fragment>
       <div>
         {kk.map((key) => {
-          if (boundaryData[key]) {
+          if (boundaryData[key] && isBoundaryAllowed(key)) {
+            console.log(key, 'kkkkkkkkkkkkkk');
             return (
               <BoundaryDropdown
                 key={key}
