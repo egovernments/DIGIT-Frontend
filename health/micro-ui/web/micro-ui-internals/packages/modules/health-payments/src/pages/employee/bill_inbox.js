@@ -41,7 +41,7 @@ const BillInbox = () => {
     return (
         <React.Fragment>
             <Header styles={{ fontSize: "32px" }}>
-                {t("HCM_AM_ATTENDANCE_INBOX")}
+                {t("HCM_AM_BILL_INBOX")}
                 {location?.state?.count ? <span className="inbox-count">{location?.state?.count}</span> : null}
             </Header>
             <div className="inbox-search-wrapper">
