@@ -9,6 +9,7 @@ import CustomFilter from "../custom_comp/filter_section";
 import CustomInboxTable from "../custom_comp/table_inbox";
 import { FilterCard, Toast } from "@egovernments/digit-ui-components";
 import BillSearchBox from "./BillSearchBox";
+import BillBoundaryFilter from "./bill_boundary_filter";
 
 const CustomBillInbox = () => {
     const { t } = useTranslation();
@@ -19,6 +20,7 @@ const CustomBillInbox = () => {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [selectedLevel, setSelectedLevel] = useState(null);
     const [selectedStatus, setSelectedStatus] = useState("PENDINGFORAPPROVAL");
 
     const [searchQuery, setSearchQuery] = useState(null);
@@ -26,11 +28,13 @@ const CustomBillInbox = () => {
     //   useEffect(() => { }, [selectedProject]);
 
     const handleSearchChange = (selectedProject, selectedLevel) => {
+        setSelectedLevel(selectedLevel);
         console.log(selectedProject, selectedLevel, 'sssssssssssssssss');
-        // setSelectedProject(selectedProject);
+        setSelectedProject(selectedProject);
     };
 
-    const handleFilterUpdate = (newFilter) => {
+    const handleFilterUpdate = (boundaryCode) => {
+        console.log(boundaryCode, "BBBBBBBBBBBBBBBBBB");
         // setFilterCriteria(newFilter);
         // triggerMusterRollApprove(newFilter);
     };
@@ -100,7 +104,7 @@ const CustomBillInbox = () => {
                             overflowY: "auto",
                         }}
                     >
-                        <CustomFilter projectData={selectedProject} onFilterChange={handleFilterUpdate}></CustomFilter>
+                        <BillBoundaryFilter selectedProject={selectedProject} selectedLevel={selectedLevel} onFilterChange={handleFilterUpdate}></BillBoundaryFilter>
                     </div>
                     <div style={{ width: "80%", display: "flex", flexDirection: "row", height: "60vh", minHeight: "60vh" }}>
                         <CustomInboxTable

@@ -4,50 +4,23 @@ import { CheckBox, SubmitBar } from "@egovernments/digit-ui-components";
 import BoundaryComponent from "../sample";
 import { Card, SVG, Button, ButtonGroup, TextBlock, Dropdown, Toast } from "@egovernments/digit-ui-components";
 
-const BillBoundaryFilter = ({ onProjectSelect, onFilterChange, projectData }) => {
+const BillBoundaryFilter = ({ selectedProject, selectedLevel, onFilterChange }) => {
     const { t } = useTranslation();
 
     const [boundary, setBoundary] = useState("");
 
-    const [project, setProject] = useState([]);
-
-    const [isDistrictSelected, setIsDistrictSelected] = useState(false);
-
-    const [projectSelected, setProjectSelected] = useState();
-
-    const onChangeId = (value) => {
-        setBoundary(value);
-        if (value?.boundaryType === "DISTRICT") {
-            setIsDistrictSelected(true); // Set flag if district is selected
-        }
-    };
-
     const handleApplyFilter = () => {
-        onFilterChange(boundary, isDistrictSelected);
+        onFilterChange(boundary);
     };
 
-    useEffect(() => {
-        const data = Digit.SessionStorage.get("paymentInbox");
-        if (data?.selectedProject) {
-            setProjectSelected(data?.selectedProject);
-        }
-    }, []);
+    const onBoundaryChange = (boundary) => {
+        setBoundary(boundary.code);
+        console.log(boundary, 'yyyyyyyyyyyyyy');
+        // onFilterChange(boundary, isDistrictSelected);
+    };
 
-    useEffect(() => {
-        if (project.length == 0) {
-            let datak =
-                Digit?.SessionStorage.get("staffProjects") ||
-                [].map((target) => ({
-                    code: target.id,
-                    projectType: target.projectType,
-                    name: target.name,
-                    boundary: target?.address?.boundary,
-                    boundaryType: target?.address?.boundaryType,
-                    projectHierarchy: target.projectHierarchy,
-                }));
-            setProject(datak);
-        }
-    }, []);
+
+
 
     return (
         <Card
@@ -88,20 +61,6 @@ const BillBoundaryFilter = ({ onProjectSelect, onFilterChange, projectData }) =>
                         </svg>
                     </span>
                 </div>
-                <div style={{ maxWidth: "100%", width: "100%", marginBottom: "1.5rem" }}>
-                    <TextBlock body={`${t("ATTENDANCE_PROJECT_NAME")} *`}></TextBlock>
-                    <Dropdown
-                        selected={projectSelected}
-                        t={t}
-                        option={project}
-                        name={"code"}
-                        optionKey={"name"}
-                        select={(value) => {
-                            setProjectSelected(value);
-                            onProjectSelect(value);
-                        }}
-                    />
-                </div>
 
                 {/*project && <div style={{ maxWidth: "100%", width: "100%", marginBottom: "24px" }}>
           <TextBlock body={`${t("ATTENDANCE_PROJECT_NAME")} *`}></TextBlock>
@@ -116,7 +75,7 @@ const BillBoundaryFilter = ({ onProjectSelect, onFilterChange, projectData }) =>
           />
         </div>*/}
 
-                {projectSelected?.address?.boundary && <BoundaryComponent onChange={onChangeId} selectedProject={projectSelected}></BoundaryComponent>}
+                {selectedProject?.address?.boundary && <BoundaryComponent onChange={onBoundaryChange} selectedProject={selectedProject} lowestLevel={selectedLevel.code}></BoundaryComponent>}
             </div>
 
             <div
