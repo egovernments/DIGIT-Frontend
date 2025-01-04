@@ -291,11 +291,15 @@ const ViewAttendance = ({ editAttendance = false }) => {
     },
     body: {
       Individual: {
-        id: [AttendanceData?.attendanceRegister[0]?.staff?.[0]?.userId]
+        id: [AttendanceData?.attendanceRegister[0]?.staff?.find(
+          (staff) => staff?.staffType?.includes("OWNER")
+        )?.userId]
       }
     },
     config: {
-      enabled: AttendanceData?.attendanceRegister[0]?.staff?.[0]?.userId ? true : false,
+      enabled: AttendanceData?.attendanceRegister[0]?.staff?.find(
+        (staff) => staff?.staffType?.includes("OWNER")
+      )?.userId ? true : false,
       select: (data) => {
         return data;
       },

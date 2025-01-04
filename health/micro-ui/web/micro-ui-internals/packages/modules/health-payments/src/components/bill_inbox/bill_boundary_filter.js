@@ -15,8 +15,6 @@ const BillBoundaryFilter = ({ selectedProject, selectedLevel, onFilterChange }) 
 
     const onBoundaryChange = (boundary) => {
         setBoundary(boundary.code);
-        console.log(boundary, 'yyyyyyyyyyyyyy');
-        // onFilterChange(boundary, isDistrictSelected);
     };
 
 
