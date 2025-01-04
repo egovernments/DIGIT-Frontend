@@ -19,7 +19,7 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
 
   const hierarchyType = "MICROPLAN";
 
-  // const hierarchyType = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "ADMIN";
+  // const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "ADMIN";
   const moduleCode = ["payments", `boundary-${hierarchyType}`];
   const modulePrefix = "hcm";
   const language = Digit.StoreData.getCurrentLanguage();
@@ -30,81 +30,28 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
     modulePrefix,
   });
   let user = Digit?.SessionStorage.get("User");
-  const staffs = Digit.Hooks.payments.useProjectStaffSearch({
-    data: {
-      "ProjectStaff": {
-        "staffId": [user?.info?.uuid]
-      }
-    },
-    params: {
-      "tenantId": tenantId,
-      "offset": 0,
-      "limit": 100
-    },
-    config: {
-      select: (data) => {
-        return data?.map(item => {
-          return {
-            "id": item.projectId,
-            "tenantId": tenantId,
-            "userId": item.userId,
-          };
-        })
-      }
-    }
+  const { isLoading: isPaymentsModuleInitializing, } = Digit.Hooks.payments.usePaymentsInitialization({
+    tenantId: tenantId
   });
 
-  const staffProjects = staffs?.data;
-
-  const assignedProjects = Digit.Hooks.payments.useProjectSearch({
-    data: {
-      "Projects": staffProjects?.map((staff) => {
-        return {
-          "id": staff?.id,
-          "tenantId": tenantId,
-        };
-      })
+  const { isLoading: isBoundaryOrderLoading, data: boundaryOrder } = Digit.Hooks.useCustomMDMS(
+    Digit.ULBService.getCurrentTenantId(),
+    "HCM",
+    [{ name: "BOUNDARYTYPES" }],
+    {
+      cacheTime: Infinity,
     },
-    params: {
-      "tenantId": tenantId,
-      "offset": 0,
-      "limit": 100
-    },
-    config: {
-      enabled: staffProjects?.length > 0 ? true : false
-    }
-  });
+    { schemaCode: "BOUNDARY_MASTER_DATA" } //mdmsv2
+  );
 
-  const IndividualRequestCriteria = {
-    url: `/health-individual/v1/_search`,
-    params: {
-      tenantId: tenantId,
-      offset: 0,
-      limit: 100,
-    },
-    body: {
-      Individual: {
-        userUuid: staffProjects?.map((staff) => {
-          return staff.userId;
-        })
-      }
-    },
-    config: {
-      enabled: staffProjects?.length > 0 ? true : false,
-      select: (data) => {
-        return data;
-      },
-    },
-  };
+  
 
-  const { isLoading: isIndividualsLoading, data: IndividualData } = Digit.Hooks.useCustomAPIHook(IndividualRequestCriteria);
+  const sortedBoundaryData = boundaryOrder?.MdmsRes?.HCM?.BOUNDARYTYPES?.sort((a, b) => a.order - b.order);
+
+  Digit.SessionStorage.set("boundaryHierarchyOrder",sortedBoundaryData );
 
 
-  Digit.SessionStorage.set("staffProjects", assignedProjects?.data);
-  Digit.SessionStorage.set("UserIndividual", IndividualData?.Individual);
-
-
-  if (isLoading || staffs?.isLoading || assignedProjects?.isLoading || isIndividualsLoading) {
+  if (isPaymentsModuleInitializing || isBoundaryOrderLoading) {
     return <Loader />;
   }
   else {
