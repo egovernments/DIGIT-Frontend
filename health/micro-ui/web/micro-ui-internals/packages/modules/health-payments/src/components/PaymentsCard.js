@@ -25,10 +25,9 @@ const PaymentsCard = () => {
 
   let links = [
     generateLink("ATTENDANCE_REGISTERS", "registers-inbox"),
-    // generateLink("CS_COMMON_INBOX", "generate-bill", ROLES.BILLS),
-    generateLink("HCM_AM_BILLS_INBOX", "generate-bill"), /// TODO: removing the roles to works on the bill screens 
-    // generateLink("CS_TITLE_MY_BILLS", "my-bills", ROLES.BILLS),
-    generateLink("HCM_AM_MY_BILLS", "my-bills") /// TODO: removing the roles to works on the bill screens
+    generateLink("CS_COMMON_INBOX", "generate-bill", ROLES.BILLS),
+    generateLink("CS_TITLE_MY_BILLS", "my-bills", ROLES.BILLS),
+
   ];
   const hasRequiredRoles = (link) => {
     if (!link?.roles?.length) return true;

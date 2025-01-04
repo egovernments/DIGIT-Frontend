@@ -23,17 +23,16 @@ const BillSearchBox = ({ onLevelSelect }) => {
             // Get the boundary type from the selected project
             const boundaryType = selectedProject?.address?.boundaryType;
 
-            // Find the order of the boundary type in the hierarchy
-            const boundaryOrder = HIERARCHY.find((item) => item.code === boundaryType)?.order;
+            const filteredOptions = [];
 
-            if (boundaryOrder) {
-                // Filter options based on the hierarchy order
-                const filteredOptions = AGGREGATION_LEVEL_OPTIONS.filter((option) => {
-                    const optionOrder = HIERARCHY.find((item) => item.code === option.code)?.order;
-                    return optionOrder >= boundaryOrder;
-                });
-                setFilteredAggregationOptions(filteredOptions);
+            for (const option of AGGREGATION_LEVEL_OPTIONS) {
+                filteredOptions.push(option);
+                if (option.code === boundaryType) {
+                    break; // Stop once we include the desired boundaryType
+                }
             }
+            setFilteredAggregationOptions(filteredOptions);
+
         } else {
             setFilteredAggregationOptions(AGGREGATION_LEVEL_OPTIONS); // Reset to default if no project selected
         }

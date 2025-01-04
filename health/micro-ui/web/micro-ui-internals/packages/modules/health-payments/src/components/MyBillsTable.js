@@ -5,7 +5,47 @@ import { Button, Card, Loader, TableMolecule, TextInput, Toast } from "@egovernm
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { CheckBox } from "@egovernments/digit-ui-components";
 
+/* Use this util function to download the file from any s3 links */
+export const downloadExcelFromLink = async (link, openIn = "_blank") => {
+    try {
+        const response = await fetch(link, {
+            responseType: "arraybuffer",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // MIME type for Excel
+            },
+            method: "GET",
+            mode: "cors",
+        }).then((res) => res.blob());
 
+        if (window.mSewaApp && window.mSewaApp.isMsewaApp() && window.mSewaApp.downloadBase64File) {
+            var reader = new FileReader();
+            reader.readAsDataURL(response);
+            reader.onloadend = function () {
+                var base64data = reader.result;
+                const fileName = decodeURIComponent(
+                    link.split("?")[0].split("/").pop().slice(13) || "file.xlsx"
+                );
+                window.mSewaApp.downloadBase64File(base64data, fileName);
+            };
+        } else {
+            var a = document.createElement("a");
+            document.body.appendChild(a);
+            a.style = "display: none";
+            const url = window.URL.createObjectURL(response);
+            a.href = url;
+            const fileName = decodeURIComponent(
+                link.split("?")[0].split("/").pop().slice(13) || "file.xlsx"
+            );
+            a.download = fileName.endsWith(".xlsx") ? fileName : `${fileName}.xlsx`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+    } catch (error) {
+        console.error("Error downloading the Excel file:", error);
+    }
+};
 
 
 const MyBillsTable = ({ ...props }) => {
@@ -13,6 +53,36 @@ const MyBillsTable = ({ ...props }) => {
     const history = useHistory();
     const url = Digit.Hooks.useQueryParams();
     const [showToast, setShowToast] = useState(null);
+
+    const getFileUrl = async (fileStoreId) => {
+        try {
+            const response = await Digit.UploadServices.Filefetch([fileStoreId], Digit.ULBService.getStateId());
+            if (response?.data?.fileStoreIds?.length > 0) {
+                const url = response.data.fileStoreIds[0]?.url;
+                if (url.includes(".jpg") || url.includes(".png")) {
+                    const arr = url.split(",");
+                    const [original, large, medium, small] = arr;
+                    return original;
+                }
+                return response.data.fileStoreIds[0]?.url;
+            }
+        } catch (err) {
+        }
+    };
+
+    const downloadDocument = async (filestoreId, filetype) => {
+        if (!filestoreId || !filestoreId.length) {
+            alert("No Document exists!");
+            return;
+        }
+
+        const fileUrl = await getFileUrl(filestoreId);
+        if (fileUrl && filetype === "PDF") {
+            Digit.Utils.downloadPDFFromLink(fileUrl);
+        } else if (fileUrl) {
+            downloadExcelFromLink(fileUrl)
+        }
+    };
 
     const columns = useMemo(() => {
         const baseColumns = [
@@ -49,24 +119,16 @@ const MyBillsTable = ({ ...props }) => {
         return baseColumns;
     }, [, t]);
 
-    const dummyData = [
-        ["B001", "2023-12-20", 3, 25, "Boundary A", "Project Alpha"],
-        ["B002", "2023-12-18", 4, 30, "Boundary B", "Project Beta"],
-        ["B003", "2023-12-15", 2, 20, "Boundary C", "Project Gamma"],
-        ["B004", "2023-12-12", 5, 35, "Boundary D", "Project Delta"],
-        ["B005", "2023-12-10", 6, 40, "Boundary E", "Project Epsilon"],
-        ["B006", "2023-12-08", 1, 10, "Boundary F", "Project Zeta"],
-    ];
-
     // Map attendance data to rows
+    // [billId, billDate, noOfRegisters, noOfWorkers, boundaryCode, projectName, pdfID, excelID]
     const rows = useMemo(() => {
-        return dummyData.map(([id, date, registers, workers, boundary, project]) => [
-            { label: id, maxLength: 64 },
-            { label: date, maxLength: 64 },
-            registers,
-            workers,
-            { label: boundary, maxLength: 64 },
-            { label: project, maxLength: 64 },
+        return props.data.map(([billId, billDate, noOfRegisters, noOfWorkers, boundaryCode, projectName, pdfID, excelID]) => [
+            { label: billId, maxLength: 64 },
+            { label: billDate, maxLength: 64 },
+            noOfRegisters,
+            noOfWorkers,
+            { label: boundaryCode, maxLength: 64 },
+            { label: projectName, maxLength: 64 },
             <Button
                 className="custom-class"
                 iconFill=""
@@ -75,11 +137,11 @@ const MyBillsTable = ({ ...props }) => {
                 label={t(`HCM_AM_DOWNLOAD_BILLS`)}
                 showBottom={true}
                 onOptionSelect={(value) => {
-                    // if (value.code === "EDIT_ATTENDANCE") {
-                    //   setOpenEditAlertPopUp(true);
-                    // } else if (value.code === "APPROVE") {
-                    //   setOpenApproveCommentPopUp(true);
-                    // }
+                    if (value.code === "HCM_AM_PDF") {
+                        downloadDocument(pdfID, "PDF")
+                    } else if (value.code === "HCM_AM_EXCEL") {
+                        downloadDocument(excelID, "EXCEL")
+                    }
                 }}
                 options={[
                     {
