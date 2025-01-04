@@ -3,34 +3,33 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const BoundaryComponent = ({ selectedProject, onChange }) => {
+  //const kk = ["COUNTRY", "PROVINCE", "DISTRICT", "ADMINISTRATIVEPOST", "LOCALITY", "VILLAGE"];
+
+  const kk = Digit.SessionStorage.get("boundaryHierarchyOrder").map((item) => item.code);
+
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const [boundaryData, setBoundaryData] = useState({
-    COUNTRY: false,
-    PROVINCE: false,
-    DISTRICT: false,
-    ADMINISTRATIVEPOST: false,
-    LOCALITY: false,
-    VILLAGE: false,
-  });
 
-  const [country, setCountry] = useState([]);
-  const [province, setProvince] = useState([]);
-  const [district, setDistrict] = useState([]);
-  const [administrative, setAdminstrative] = useState([]);
-  const [locality, setLocality] = useState([]);
-  const [village, setVillage] = useState([]);
+  const defaultBoundaryData = kk.reduce((acc, curr) => {
+    acc[curr] = false;
+    return acc;
+  }, {});
 
-  const [selectedValues, setSelectedValues] = useState({
-    COUNTRY: null,
-    PROVINCE: null,
-    DISTRICT: null,
-    ADMINISTRATIVEPOST: null,
-    LOCALITY: null,
-    VILLAGE: null,
-  });
+  const defaultSelectData = kk.reduce((acc, curr) => {
+    acc[curr] = null;
+    return acc;
+  }, {});
 
-  // Retrieve selected values from sessionStorage if available
+  const [boundaryData, setBoundaryData] = useState(defaultBoundaryData);
+  const [value, setValue] = useState(
+    kk.reduce((acc, curr) => {
+      acc[curr] = [];
+      return acc;
+    }, {})
+  );
+
+  const [selectedValues, setSelectedValues] = useState(defaultSelectData);
+
   useEffect(() => {
     const storedValues = sessionStorage.getItem("selectedValues");
     if (storedValues) {
@@ -38,12 +37,10 @@ const BoundaryComponent = ({ selectedProject, onChange }) => {
     }
   }, []);
 
-  // Store selected values in sessionStorage whenever they change
   useEffect(() => {
     sessionStorage.setItem("selectedValues", JSON.stringify(selectedValues));
   }, [selectedValues]);
 
-  // Request criteria for the API
   const reqCriteriaResource = {
     url: `/boundary-service/boundary-relationships/_search`,
     params: {
@@ -66,155 +63,118 @@ const BoundaryComponent = ({ selectedProject, onChange }) => {
     handleDropdownOptions(value);
   };
 
-  // Process the boundary data
+  const createFormattedData = (activeBoundary) => {
+    const index = kk.indexOf(activeBoundary);
+    return kk.reduce((acc, key, i) => {
+      acc[key] = i >= index;
+      return acc;
+    }, {});
+  };
+
   useEffect(() => {
     if (childrenData && childrenData.length > 0) {
-      // Format data based on boundary type
-      if (childrenData[0]?.boundary[0].boundaryType == "COUNTRY") {
-        const formattedData = {
-          COUNTRY: true,
-          PROVINCE: true,
-          DISTRICT: true,
-          ADMINISTRATIVEPOST: true,
-          LOCALITY: true,
-          VILLAGE: true,
-        };
-        setBoundaryData({ ...formattedData });
+      setValue((prevState) => ({
+        ...prevState,
+        [childrenData[0]?.boundary[0].boundaryType]: [childrenData[0]?.boundary[0]],
+      }));
 
-        setCountry([childrenData[0]?.boundary[0]]);
-      } else if (childrenData[0]?.boundary[0].boundaryType == "PROVINCE") {
-        const formattedData = {
-          COUNTRY: false,
-          PROVINCE: true,
-          DISTRICT: true,
-          ADMINISTRATIVEPOST: true,
-          LOCALITY: true,
-          VILLAGE: true,
-        };
-        setBoundaryData({ ...formattedData });
-        setProvince([childrenData[0]?.boundary[0]]);
-      } else if (childrenData[0]?.boundary[0].boundaryType == "DISTRICT") {
-        const formattedData = {
-          COUNTRY: false,
-          PROVINCE: false,
-          DISTRICT: true,
-          ADMINISTRATIVEPOST: true,
-          LOCALITY: true,
-          VILLAGE: true,
-        };
-
-        setDistrict([childrenData[0]?.boundary[0]]);
-        setBoundaryData({ ...formattedData });
-      } else if (childrenData[0]?.boundary[0].boundaryType == "ADMINISTRATIVEPOST") {
-        const formattedData = {
-          COUNTRY: false,
-          PROVINCE: false,
-          DISTRICT: false,
-          ADMINISTRATIVEPOST: true,
-          LOCALITY: true,
-          VILLAGE: true,
-        };
-        setBoundaryData({ ...formattedData });
-        setAdminstrative([childrenData[0]?.boundary[0]]);
-      }
+      const formattedData = createFormattedData(childrenData[0]?.boundary[0].boundaryType);
+      setBoundaryData(formattedData);
     }
   }, [childrenData]);
 
-  useEffect(() => {}, [locality, administrative, village, district, country, province]);
-
   const handleDropdownOptions = (value) => {
-    switch (value.boundaryType) {
-      case "DISTRICT":
-        setAdminstrative(value?.children || []);
-        setSelectedValues((prev) => ({ ...prev, ADMINISTRATIVEPOST: null, LOCALITY: null, VILLAGE: null, DISTRICT: value }));
-        break;
-      case "COUNTRY":
-        setProvince(value?.children || []);
-        setSelectedValues((prev) => ({ ...prev, PROVINCE: null, DISTRICT: null, LOCALITY: null, VILLAGE: null, COUNTRY: value }));
-        break;
-      case "ADMINISTRATIVEPOST":
-        setLocality(value?.children || []);
-        setSelectedValues((prev) => ({ ...prev, LOCALITY: null, VILLAGE: null, ADMINISTRATIVEPOST: value }));
-        break;
-      case "LOCALITY":
-        setVillage(value?.children || []);
-        setSelectedValues((prev) => ({ ...prev, VILLAGE: null, LOCALITY: value }));
-        break;
-      case "VILLAGE":
-        break;
+    if (value?.children && value.children.length > 0) {
+      const updatedState = value.children.reduce((acc, child) => {
+        const boundaryType = child?.boundaryType;
+        if (boundaryType) {
+          acc[boundaryType] = [...(acc[boundaryType] || []), child];
+        }
+        return acc;
+      }, {});
+
+      setValue((prevState) => ({
+        ...prevState,
+        ...updatedState,
+      }));
+
+      setSelectedValues((prev) => {
+        const newSelectedValues = { ...prev, [value?.boundaryType]: value };
+        sessionStorage.setItem("selectedValues", JSON.stringify(newSelectedValues));
+        return newSelectedValues;
+      });
     }
+  };
+
+  // Handle insertion of new boundary
+  const handleInsertion = (boundaryType, newValue) => {
+    setValue((prevState) => {
+      const newState = { ...prevState };
+      const currentBoundary = newState[boundaryType] || [];
+      if (!currentBoundary.find((item) => item === newValue)) {
+        newState[boundaryType] = [...currentBoundary, newValue];
+      }
+      return newState;
+    });
+
+    // Reset selected values for child boundaries if necessary
+    resetChildrenSelectedValues(boundaryType);
+  };
+
+  // Handle deletion of boundary
+  const handleDeletion = (boundaryType, valueToRemove) => {
+    setValue((prevState) => {
+      const newState = { ...prevState };
+      newState[boundaryType] = newState[boundaryType]?.filter((item) => item !== valueToRemove) || [];
+      return newState;
+    });
+
+    // Reset selected values for child boundaries if necessary
+    resetChildrenSelectedValues(boundaryType);
+  };
+
+  // Reset selected values for child boundaries
+  const resetChildrenSelectedValues = (boundaryType) => {
+    const index = kk.indexOf(boundaryType);
+    const newSelectedValues = { ...selectedValues };
+
+    // Reset all child dropdowns based on the boundary type
+    for (let i = index + 1; i < kk.length; i++) {
+      newSelectedValues[kk[i]] = null;
+    }
+
+    setSelectedValues(newSelectedValues);
   };
 
   return (
     <React.Fragment>
       <div>
-        {/* Render Country dropdown if available */}
-        {boundaryData.COUNTRY && (
-          <BoundaryDropdown
-            label="ATTENDANCE_COUNTRY"
-            data={country}
-            onChange={(value) => handleButtonClick(value)}
-            selected={selectedValues.COUNTRY}
-            setSelected={(value) => setSelectedValues((prev) => ({ ...prev, COUNTRY: value }))}
-          />
-        )}
-
-        {/* Render Province dropdown if available */}
-        {boundaryData.PROVINCE && (
-          <BoundaryDropdown
-            label="ATTENDANCE_PROVINCE"
-            data={province}
-            onChange={(value) => handleButtonClick(value)}
-            selected={selectedValues.PROVINCE}
-            setSelected={(value) => setSelectedValues((prev) => ({ ...prev, PROVINCE: value }))}
-          />
-        )}
-
-        {/* Render District dropdown if available */}
-        {boundaryData.DISTRICT && (
-          <BoundaryDropdown
-            label="ATTENDANCE_DISTRICT"
-            data={district}
-            onChange={(value) => handleButtonClick(value)}
-            selected={selectedValues.DISTRICT}
-            setSelected={(value) => {
-              setSelectedValues((prev) => ({ ...prev, DISTRICT: value }));
-            }}
-          />
-        )}
-
-        {/* Render Administrative Post dropdown if available */}
-        {boundaryData.ADMINISTRATIVEPOST && (
-          <BoundaryDropdown
-            label="ATTENDANCE_ADMINISTRATIVEPOST"
-            data={administrative}
-            onChange={(value) => handleButtonClick(value)}
-            selected={selectedValues.ADMINISTRATIVEPOST}
-            setSelected={(value) => setSelectedValues((prev) => ({ ...prev, ADMINISTRATIVEPOST: value }))}
-          />
-        )}
-
-        {/* Render Locality dropdown if available */}
-        {boundaryData.LOCALITY && (
-          <BoundaryDropdown
-            label="ATTENDANCE_LOCALITY"
-            data={locality}
-            onChange={(value) => handleButtonClick(value)}
-            selected={selectedValues.LOCALITY}
-            setSelected={(value) => setSelectedValues((prev) => ({ ...prev, LOCALITY: value }))}
-          />
-        )}
-
-        {/* Render Village dropdown if available */}
-        {boundaryData.VILLAGE && (
-          <BoundaryDropdown
-            label="ATTENDANCE_VILLAGE"
-            data={village}
-            onChange={(value) => handleButtonClick(value)}
-            selected={selectedValues.VILLAGE}
-            setSelected={(value) => setSelectedValues((prev) => ({ ...prev, VILLAGE: value }))}
-          />
-        )}
+        {kk.map((key) => {
+          if (boundaryData[key]) {
+            return (
+              <BoundaryDropdown
+                key={key}
+                label={`ATTENDANCE_${key}`}
+                data={value[key]}
+                onChange={(selectedValue) => handleButtonClick(selectedValue)}
+                selected={selectedValues[key]}
+                setSelected={(newValue) => {
+                  setSelectedValues((prev) => ({
+                    ...prev,
+                    [key]: newValue,
+                  }));
+                  // You can call handleInsertion or handleDeletion based on your logic
+                  if (newValue) {
+                    handleInsertion(key, newValue); // Add the selected value
+                  } else {
+                    handleDeletion(key, selectedValues[key]); // Remove the previously selected value
+                  }
+                }}
+              />
+            );
+          }
+          return null;
+        })}
       </div>
     </React.Fragment>
   );
