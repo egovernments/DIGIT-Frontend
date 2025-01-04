@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Header, InboxSearchComposer, Loader } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
-import CustomBillInbox from "../../components/BillInbox";
+import CustomBillInbox from "../../components/bill_inbox/BillInbox";
 
 /**
 * Business Flow Description:
