@@ -116,7 +116,9 @@ const CustomFilter = ({ onProjectSelect, onFilterChange, projectData }) => {
           />
         </div>*/}
 
-        {projectSelected?.address?.boundary && <BoundaryComponent onChange={onChangeId} selectedProject={projectSelected}></BoundaryComponent>}
+        {projectSelected?.address?.boundary && <BoundaryComponent initialValue={sessionStorage.getItem("selectedValues")} updateSeeeionStorage={(newSelectedValues)=>{
+          sessionStorage.setItem("selectedValues", JSON.stringify(newSelectedValues));
+        }} onChange={onChangeId} selectedProject={projectSelected}></BoundaryComponent>}
       </div>
 
       <div
