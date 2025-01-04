@@ -97,8 +97,8 @@ const CustomInboxTable = ({
   return (
     <React.Fragment>
       {
-        <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", padding: "0px" }}>
-          {
+       
+          
             /*(!planEmployee?.data || planEmployee?.data?.length === 0) */
             !tableData ? (
               <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />
@@ -129,7 +129,9 @@ const CustomInboxTable = ({
                   style={{}}
                   showNav={true}
                 />
-                {tableData && tableData.length === 0 ? (
+                 <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", padding: "0px" }}>
+               
+                 {tableData && tableData.length === 0 ? (
                   <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />
                 ) : (
                   <DataTable
@@ -148,10 +150,14 @@ const CustomInboxTable = ({
                     paginationRowsPerPageOptions={[5, 10, 15, 20]}
                   />
                 )}
+                 </Card>
+
               </div>
+              
             )
-          }
-        </Card>
+              
+          
+        
       }
     </React.Fragment>
   );
