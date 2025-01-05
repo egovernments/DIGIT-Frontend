@@ -217,7 +217,7 @@ const CustomInboxSearchComposer = () => {
     triggerMusterRollApprove(filterCriteria, selectedStatus, newPerPage, page);
   };
   const callServiceOnTap = (status) => {
-    if (status.code == "HCM_AM_PENDING_FOR_APPROVAL") {
+    if (status.code == "PENDINGFORAPPROVAL") {
       setRowsPerPage(5); // Update the rows per page state
       setCurrentPage(1);
       setSelectedStatus(StatusEnum.PENDING_FOR_APPROVAL);

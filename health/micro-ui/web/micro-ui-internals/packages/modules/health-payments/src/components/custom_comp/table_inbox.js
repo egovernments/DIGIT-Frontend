@@ -19,7 +19,7 @@ const CustomInboxTable = ({
 }) => {
   const { t } = useTranslation();
   const [activeLink, setActiveLink] = useState({
-    code: "HCM_AM_PENDING_FOR_APPROVAL",
+    code: "PENDINGFORAPPROVAL",
     name: "HCM_AM_PENDING_FOR_APPROVAL",
   });
 
@@ -62,7 +62,7 @@ const CustomInboxTable = ({
     // },
 
     {
-      name: t("HCM_AM_ATTENDANCE_MARKED_BY"),
+      name: activeLink?.code == "PENDINGFORAPPROVAL" ? t("HCM_AM_ATTENDANCE_MARKED_BY") : t("HCM_AM_ATTENDANCE_APPROVED_BY"),
       selector: (row) => {
         return (
           <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={row?.markby || t("NA")}>
@@ -109,12 +109,12 @@ const CustomInboxTable = ({
               itemStyle={{ width: "290px" }}
               configNavItems={[
                 {
-                  code: "HCM_AM_PENDING_FOR_APPROVAL",
+                  code: "PENDINGFORAPPROVAL",
 
                   name: `${`${t(`HCM_AM_PENDING_FOR_APPROVAL`)} (${statusCount?.PENDINGFORAPPROVAL})`}`,
                 },
                 {
-                  code: "HCM_AM_APPROVED",
+                  code: "APPROVED",
                   name: `${`${t(`HCM_AM_APPROVED`)} (${statusCount?.APPROVED})`}`,
                 },
               ]}

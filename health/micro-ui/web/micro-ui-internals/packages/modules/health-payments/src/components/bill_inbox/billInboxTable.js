@@ -23,7 +23,7 @@ const BillInboxTable = ({
     };
     const columns = [
         {
-            name: t("HCM_AM_REGISTER_ID"),
+            name: t("HCM_AM_ATTENDANCE_ID"),
             selector: (row) => {
                 return (
                     <Button
@@ -42,7 +42,7 @@ const BillInboxTable = ({
             },
         },
         {
-            name: t("HCM_AM_REGISTER_BOUNDARY"),
+            name: t("HCM_AM_ATTENDANCE_BOUNDARY"),
             selector: (row) => {
                 return (
                     <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={t(row?.boundary) || t("NA")}>
@@ -63,7 +63,7 @@ const BillInboxTable = ({
         },
 
         {
-            name: t("HCM_AM_NO_OF_ATTENDEES"),
+            name: t("HCM_AM_ATTENDANCE_ATTENDEES"),
             selector: (row) => {
                 return (
                     <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={t(row?.status || "0")}>
