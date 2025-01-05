@@ -148,7 +148,7 @@ const CustomBillInbox = () => {
                             links={[
                                 {
                                     url: "/employee/payments/my-bills",
-                                    text: "HCM_AM_MY_BILLS_LINK",
+                                    text: "HCM_AM_MY_BILLS",
                                 },
                             ]}
                         ></CustomInboxSearchLinks>
