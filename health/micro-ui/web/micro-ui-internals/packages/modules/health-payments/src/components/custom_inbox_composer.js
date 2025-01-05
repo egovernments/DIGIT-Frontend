@@ -105,7 +105,7 @@ const CustomInboxSearchComposer = () => {
                   ? Digit.SessionStorage.get("paymentInbox").code
                   : filterCriteria?.code
                 : filterData?.code,
-            paymentStatus: status == undefined ? selectedStatus : status,
+            reviewStatus: status == undefined ? selectedStatus : status,
           },
         },
         {

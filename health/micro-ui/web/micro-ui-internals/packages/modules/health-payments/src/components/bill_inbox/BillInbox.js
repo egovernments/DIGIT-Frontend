@@ -41,10 +41,10 @@ const CustomBillInbox = () => {
             tenantId: Digit.ULBService.getStateId(),
             limit: limitAndOffset?.limit,
             offset: limitAndOffset?.offset,
-            // referenceId: selectedProject == undefined ? Digit.SessionStorage.get("paymentInbox").selectedProject?.id : selectedProject?.id,
+            referenceId: selectedProject == undefined ? Digit.SessionStorage.get("paymentInbox").selectedProject?.id : selectedProject?.id,
             // staffId: Digit.SessionStorage.get("UserIndividual")?.[0]?.id,
             localityCode: selectedBoundaryCode,
-            paymentStatus: activeLink.code,
+            reviewStatus: activeLink.code,
         },
         config: {
             enabled: selectedBoundaryCode && selectedProject ? true : false,
