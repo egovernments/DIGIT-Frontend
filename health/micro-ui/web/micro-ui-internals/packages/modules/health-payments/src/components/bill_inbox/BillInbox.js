@@ -119,14 +119,14 @@ const CustomBillInbox = () => {
                     body: {
                         criteria: {
                             tenantId: tenantId,
-                            locality: selectedBoundaryCode,
+                            localityCode: selectedBoundaryCode,
                             referenceId: selectedProject.id
                         }
                     },
                 },
                 {
                     onSuccess: (data) => {
-                        setShowToast({ key: "success", label: t("HCM_AM_BILL_UPDATED_SUCCESSFULLY"), transitionTime: 3000 });
+                        setShowToast({ key: "success", label: t("HCM_AM_BILL_GENERATED_SUCCESSFULLY"), transitionTime: 3000 });
                     },
                     onError: (error) => {
                         setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
