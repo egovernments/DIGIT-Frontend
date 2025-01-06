@@ -40,7 +40,6 @@ const DateRangePicker = ({ values, onFilterChange, t, labelClass, title, epochSt
     const [selectionRange, setSelectionRange] = useState({ ...values });
     const wrapperRef = useRef(null);
 
-
     useEffect(() => {
         setSelectionRange(
             {
@@ -211,7 +210,7 @@ const DateRangePicker = ({ values, onFilterChange, t, labelClass, title, epochSt
                                 focusedRange={focusedRange}
                                 values={values}
                                 ranges={[selectionRange]}
-                                rangeColors={["#fbeee8"]}
+                                // rangeColors={["#fbeee8"]}
                                 onChange={handleSelect}
                                 onRangeFocusChange={setFocusedRange}
                                 retainEndDateOnFirstSelection={true}

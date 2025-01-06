@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Button, Card, Loader, TableMolecule, TextInput, Toast } from "@egovernments/digit-ui-components";
+import { Button, Card, InfoButton, Loader, TableMolecule, TextInput, Toast } from "@egovernments/digit-ui-components";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { CheckBox } from "@egovernments/digit-ui-components";
 
@@ -117,19 +117,19 @@ const MyBillsTable = ({ ...props }) => {
         ];
 
         return baseColumns;
-    }, [, t]);
+    }, [props.data, t]);
 
     // Map attendance data to rows
     // [billId, billDate, noOfRegisters, noOfWorkers, boundaryCode, projectName, pdfID, excelID]
     const rows = useMemo(() => {
-        return props.data.map(([billId, billDate, noOfRegisters, noOfWorkers, boundaryCode, projectName, pdfID, excelID]) => [
+        return props.data.map(([billId, billDate, noOfRegisters, noOfWorkers, boundaryCode, projectName, reportDetails]) => [
             { label: billId, maxLength: 64 },
             { label: billDate, maxLength: 64 },
             noOfRegisters,
             noOfWorkers,
             { label: boundaryCode, maxLength: 64 },
             { label: projectName, maxLength: 64 },
-            <Button
+            reportDetails?.status === "COMPLETED" ? <Button
                 className="custom-class"
                 iconFill=""
                 icon="FileDownload"
@@ -159,9 +159,25 @@ const MyBillsTable = ({ ...props }) => {
                 title=""
                 type="actionButton"
                 variation="secondary"
-            />
+            /> :
+                <InfoButton
+                    className="dm-workbench-download-template-btn"
+                    infobuttontype={reportDetails.status === "FAILED" ? "error" : "info"}
+                    icon={"Info"}
+                    label={reportDetails.status === "FAILED" ? t("HCM_AM_FAILED_BILL") : t("HCM_AM_PROGRESS_BILL")}
+                    style={{ opacity: 1, width: "16rem", border: "none" }}
+                    onClick={() => {
+                        setShowToast({
+                            key: reportDetails.status === "FAILED" ? "error" : "info", label: reportDetails?.status === "INITIATED"
+                                ? t("HCM_AM_BILL_GENERATION_IN_PROGRESS_MESSAGE")
+                                : (reportDetails?.errorMessage
+                                    ? t(reportDetails?.errorMessage)
+                                    : t("HCM_AM_BILL_GENERATION_FAILED_MESSAGE")), transitionTime: 3000
+                        });
+                    }}
+                />
         ]);
-    }, []);
+    }, [props.data]);
 
     const handlePageChange = (page, totalRows) => {
         props?.handlePageChange(page, totalRows);
@@ -174,6 +190,8 @@ const MyBillsTable = ({ ...props }) => {
     const handlePerRowsChange = async (currentRowsPerPage, currentPage) => {
         props?.handlePerRowsChange(currentRowsPerPage, currentPage);
     };
+
+    console.log(props.data, "PPPPPPPPPPPPPPPPPPPPPPP");
 
 
     return (
@@ -223,6 +241,16 @@ const MyBillsTable = ({ ...props }) => {
                     tableTitle: "",
                 }}
             />
+            {showToast && (
+                <Toast
+                    style={{ zIndex: 10001 }}
+                    label={showToast.label}
+                    type={showToast.key}
+                    // error={showToast.key === "error"}
+                    transitionTime={showToast.transitionTime}
+                    onClose={() => setShowToast(null)}
+                />
+            )}
         </div>
     );
 };

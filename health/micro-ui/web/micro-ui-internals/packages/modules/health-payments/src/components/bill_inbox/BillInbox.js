@@ -27,6 +27,7 @@ const CustomBillInbox = () => {
 
     const [selectedLevel, setSelectedLevel] = useState(null);
     const [selectedStatus, setSelectedStatus] = useState("PENDINGFORAPPROVAL");
+    const project = Digit?.SessionStorage.get("staffProjects");
 
     const [searchQuery, setSearchQuery] = useState(null);
 
@@ -52,6 +53,27 @@ const CustomBillInbox = () => {
     };
 
     const { isLoading: isAttendanceLoading, data: AttendanceData, refetch: refetchAttendance, isFetching } = Digit.Hooks.useCustomAPIHook(registerSearchCri);
+
+    const BillSearchCri = {
+        url: `/health-expense/bill/v1/_search`,
+        body: {
+            billCriteria: {
+                tenantId: tenantId,
+                // ids: ["6eaf462a-4d9a-44c9-9ef7-e127e3fb33f1"],
+                localityCode: selectedBoundaryCode,
+                referenceIds: [project?.[0]?.id]
+            }
+        },
+        config: {
+            enabled: selectedBoundaryCode ? true : false,
+            select: (data) => {
+                return data;
+            },
+        },
+    };
+
+
+    const { isLoading: isBillLoading, data: BillData } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
 
     useEffect(() => {
         if (AttendanceData?.attendanceRegister) {
@@ -90,10 +112,17 @@ const CustomBillInbox = () => {
     const handleSearchChange = (selectedProject, selectedLevel) => {
         setSelectedLevel(selectedLevel);
         setSelectedProject(selectedProject);
+        // setSelectedBoundaryCode(null); // Reset boundary filter
+        // setFilterCriteria(null); // Clear additional filters
+        // setSearchQuery(null); // Clear search query
+        // setTableData([]); // Clear table data
     };
 
     const handleFilterUpdate = (boundaryCode) => {
         setSelectedBoundaryCode(boundaryCode);
+        // setFilterCriteria(null); // Clear additional filters
+        // setSearchQuery(null); // Clear search query
+        // setTableData([]); // Clear table data
     };
 
     const handlePageChange = (page, totalRows) => {
@@ -218,7 +247,7 @@ const CustomBillInbox = () => {
                     </div>
                 </div>
             </div>
-            {showGenerateBillAction && <ActionBar
+            {!isBillLoading && showGenerateBillAction && BillData?.bills?.length === 0 && <ActionBar
                 actionFields={[
                     <Button
                         icon="CheckCircle"

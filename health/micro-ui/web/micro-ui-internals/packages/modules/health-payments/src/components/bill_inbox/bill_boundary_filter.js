@@ -9,6 +9,11 @@ const BillBoundaryFilter = ({ selectedProject, selectedLevel, onFilterChange }) 
 
     const [boundary, setBoundary] = useState("");
 
+    // Reset the boundary state when selectedProject or selectedLevel changes
+    useEffect(() => {
+        setBoundary(""); // Reset boundary when project or level changes
+    }, [selectedProject, selectedLevel]);
+
     const handleApplyFilter = () => {
         onFilterChange(boundary);
     };
@@ -73,7 +78,7 @@ const BillBoundaryFilter = ({ selectedProject, selectedLevel, onFilterChange }) 
           />
         </div>*/}
 
-                {selectedProject?.address?.boundary && <BoundaryComponent onChange={onBoundaryChange} selectedProject={selectedProject} lowestLevel={selectedLevel.code}></BoundaryComponent>}
+                {selectedProject?.address?.boundary && selectedLevel && <BoundaryComponent onChange={onBoundaryChange} selectedProject={selectedProject} lowestLevel={selectedLevel.code}></BoundaryComponent>}
             </div>
 
             <div

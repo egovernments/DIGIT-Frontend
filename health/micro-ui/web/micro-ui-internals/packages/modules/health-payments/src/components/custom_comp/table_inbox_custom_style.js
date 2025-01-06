@@ -1,7 +1,7 @@
 export const tableCustomStyle = {
   tableWrapper: {
     style: {
-      minHeight: "300px",
+      minHeight: "fit-content",
       // Remove padding and border styles here if necessary
     },
   },
