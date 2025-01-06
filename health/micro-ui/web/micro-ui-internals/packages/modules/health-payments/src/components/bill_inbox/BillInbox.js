@@ -1,9 +1,7 @@
 import React, { useEffect, useReducer, useState, useMemo, use } from "react";
-
 import _ from "lodash";
 import CustomInboxSearchLinks from "../custom_comp/link_section";
 import CustomSearchComponent from "../custom_comp/search_section";
-
 import { useTranslation } from "react-i18next";
 import CustomFilter from "../custom_comp/filter_section";
 import CustomInboxTable from "../custom_comp/table_inbox";
@@ -12,7 +10,6 @@ import BillSearchBox from "./BillSearchBox";
 import BillBoundaryFilter from "./bill_boundary_filter";
 import BillInboxTable from "./billInboxTable";
 import { ScreenTypeEnum } from "../../utils/constants";
-
 const CustomBillInbox = () => {
     const { t } = useTranslation();
     const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -27,18 +24,14 @@ const CustomBillInbox = () => {
     const [approvalCount, setApprovalCount] = useState(null);
     const [pendingApprovalCount, setPendingApprovalCount] = useState(null);
     const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
-
     const [selectedLevel, setSelectedLevel] = useState(null);
     const [selectedStatus, setSelectedStatus] = useState("PENDINGFORAPPROVAL");
     const project = Digit?.SessionStorage.get("staffProjects");
-
     const [searchQuery, setSearchQuery] = useState(null);
-
     const [activeLink, setActiveLink] = useState({
         code: "APPROVED",
         name: "HCM_AM_APPROVED_REGISTER",
     });
-
     const registerSearchCri = {
         url: `/health-attendance/v1/_search`,
         params: {
@@ -54,11 +47,9 @@ const CustomBillInbox = () => {
             enabled: selectedBoundaryCode && selectedProject ? true : false,
         },
     };
-
     const { isLoading: isAttendanceLoading, data: AttendanceData, refetch: refetchAttendance, isFetching } = Digit.Hooks.useCustomAPIHook(
         registerSearchCri
     );
-
     const BillSearchCri = {
         url: `/health-expense/bill/v1/_search`,
         body: {
@@ -76,16 +67,13 @@ const CustomBillInbox = () => {
             },
         },
     };
-
     const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching: isFetchingBill } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
-
     useEffect(() => {
         if (AttendanceData?.attendanceRegister) {
             const formattedList = AttendanceData?.attendanceRegister.map((item) => {
                 // Find the staff with type 'APPROVER' and 'OWNER'
                 const approver = item?.staff?.find((staff) => staff?.staffType?.includes("APPROVER"));
                 const owner = item?.staff?.find((staff) => staff?.staffType?.includes("OWNER"));
-
                 return {
                     id: item?.registerNumber,
                     name: selectedProject?.name,
@@ -105,44 +93,36 @@ const CustomBillInbox = () => {
             }
         }
     }, [AttendanceData]);
-
     useEffect(() => {
         if (selectedBoundaryCode) {
             refetchAttendance();
             refetchBill();
         }
     }, [activeLink, limitAndOffset, selectedBoundaryCode]);
-
     useEffect(() => {
         if (selectedBoundaryCode) {
             refetchBill();
         }
     }, [selectedBoundaryCode]);
-
     const handleSearchChange = (selectedProject, selectedLevel) => {
         setSelectedLevel(selectedLevel);
         setSelectedProject(selectedProject);
     };
-
     const handleFilterUpdate = (boundaryCode) => {
         setSelectedBoundaryCode(boundaryCode);
     };
-
     const handlePageChange = (page, totalRows) => {
         setCurrentPage(page);
         setLimitAndOffset({ ...limitAndOffset, offset: (page - 1) * rowsPerPage });
     };
-
     const handlePerRowsChange = (currentRowsPerPage, currentPage) => {
         setRowsPerPage(currentRowsPerPage);
         setCurrentPage(1);
         setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * rowsPerPage });
     };
-
     const generateBillMutation = Digit.Hooks.useCustomAPIMutationHook({
         url: "/health-expense-calculator/v1/_calculate",
     });
-
     const triggerGenerateBill = async () => {
         try {
             await generateBillMutation.mutateAsync(
@@ -168,7 +148,6 @@ const CustomBillInbox = () => {
             /// will show estimate data only
         }
     };
-
     return (
         <React.Fragment>
             <div style={{ display: "flex", flexDirection: "column", gap: "24px", marginBottom: showGenerateBillAction ? "2.5rem" : "0px" }}>
@@ -188,7 +167,6 @@ const CustomBillInbox = () => {
                         <BillSearchBox onLevelSelect={handleSearchChange}></BillSearchBox>
                     </div>
                 </div>
-
                 <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
                     <div
                         style={{
@@ -291,5 +269,4 @@ const CustomBillInbox = () => {
         </React.Fragment>
     );
 };
-
 export default CustomBillInbox;

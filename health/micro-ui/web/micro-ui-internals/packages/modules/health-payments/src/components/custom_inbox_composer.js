@@ -39,35 +39,6 @@ import { ScreenTypeEnum, StatusEnum } from "../utils/constants";
  
  */
 
-/**
-* Business Flow Description:
-* 1. In the search section, a project select dropdown is provided.
-*    - When a project is selected from the dropdown, the Boundary Search Service is invoked to fetch the boundary hierarchy.
-* 2. On successful fetching of the boundary hierarchy from the service:
-*    - A dynamic list of boundary selection dropdowns is rendered in the filter section.
-* 3. When filters are applied:
-*    - The Attendance Register Search API is called with the applied filter criteria.
-*    - On receiving a successful response, the table data is rendered accordingly.
-* 4. Tab Functionality:
-*    - Tabs are implemented in the UI for additional functionality.
-*    - Based on the tab selection, the Attendance Register Search API is triggered with a custom payload specific to the selected tab.
-
-*/
-
-/**
- * Reason for not using React Component - InboxComposer:
- * 1. Restrictions in InboxComposer:
- *    - The component requires showing "No Results" initially, which does not align with our requirement. 
- *    - Search should only be triggered after filters are applied.
- * 2. Dynamic Boundary Filters:
- *    - The boundary filter options need to be dynamically determined based on the selected project.
- * 3. Tab-Specific API Calls:
- *    - On tab selection, the same Attendance Register Search API must be called with different status filters, 
- *      which is not inherently supported by the InboxComposer component.
-
- 
- */
-
 const CustomInboxSearchComposer = () => {
   const { t } = useTranslation();
   const [showToast, setShowToast] = useState(null);
@@ -124,7 +95,7 @@ const CustomInboxSearchComposer = () => {
                   })
                 : [];
             setChildrenDataLoading(false);
-            setCard( true );
+            setCard(true);
             setchildrenData({
               data: rowData,
               totalCount: data?.totalCount,
@@ -154,27 +125,25 @@ const CustomInboxSearchComposer = () => {
   }, []);
 
   // Clear `paymentInbox` on browser back/forward navigation or page close
-  useEffect(() => {
-    const handlePopState = () => {
-      sessionStorage.removeItem("Digit.paymentInbox");
-      sessionStorage.removeItem("selectedValues");
-    };
+  // useEffect(() => {
+  //   const handlePopState = () => {
+  //     sessionStorage.removeItem("Digit.paymentInbox");
+  //     sessionStorage.removeItem("selectedValues");
+  //   };
 
-    const handleBeforeUnload = () => {
-      sessionStorage.removeItem("Digit.paymentInbox");
-      sessionStorage.removeItem("selectedValues");
-    };
+  //   const handleBeforeUnload = () => {
+  //     sessionStorage.removeItem("Digit.paymentInbox");
+  //     sessionStorage.removeItem("selectedValues");
+  //   };
 
-    window.addEventListener("popstate", handlePopState);
-    window.addEventListener("beforeunload", handleBeforeUnload);
+  //   window.addEventListener("popstate", handlePopState);
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
 
-    return () => {
-      window.removeEventListener("popstate", handlePopState);
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
-
-  useEffect(() => {}, [selectedProject]);
+  //   return () => {
+  //     window.removeEventListener("popstate", handlePopState);
+  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //   };
+  // }, []);
 
   const handleProjectChange = (selectedProject) => {
     setSelectedProject(selectedProject);
@@ -184,15 +153,28 @@ const CustomInboxSearchComposer = () => {
     setFilterCriteria(newFilter);
     setSelectedStatus(StatusEnum.PENDING_FOR_APPROVAL);
 
-    if (isSelectedData) {
-      Digit.SessionStorage.set("paymentInbox", {
-        ...newFilter,
-        selectedProject: selectedProject,
-      });
+    if (newFilter == null || newFilter == undefined) {
+      setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_BOUNDARY_SELECT"), transitionTime: 3000 });
+      return;
+    }
 
-      triggerMusterRollApprove(newFilter,StatusEnum.PENDING_FOR_APPROVAL);
+    if (isSelectedData) {
+      const existingData = Digit.SessionStorage.get("paymentInbox") || {};
+
+      // Check if `selectedProject` is already there; update only if it's missing
+      if (!existingData.selectedProject) {
+        existingData.selectedProject = selectedProject;
+      }
+
+      // Always update the object with `newFilter` data
+      Object.assign(existingData, newFilter);
+
+      // Save the updated object back to SessionStorage
+      Digit.SessionStorage.set("paymentInbox", existingData);
+
+      triggerMusterRollApprove(newFilter, StatusEnum.PENDING_FOR_APPROVAL);
     } else {
-      setShowToast({ key: "error", label: t("error"), transitionTime: 3000 });
+      setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_BOUNDARY_SELECT"), transitionTime: 3000 });
     }
   };
 
@@ -218,7 +200,7 @@ const CustomInboxSearchComposer = () => {
     triggerMusterRollApprove(filterCriteria, selectedStatus, newPerPage, page);
   };
   const callServiceOnTap = (status) => {
-    if (status.code == "PENDINGFORAPPROVAL") {
+    if (status.code == StatusEnum.PENDING_FOR_APPROVAL) {
       setRowsPerPage(5); // Update the rows per page state
       setCurrentPage(1);
       setSelectedStatus(StatusEnum.PENDING_FOR_APPROVAL);
@@ -229,6 +211,13 @@ const CustomInboxSearchComposer = () => {
       setSelectedStatus(StatusEnum.APPROVED);
       triggerMusterRollApprove(Digit.SessionStorage.get("paymentInbox"), StatusEnum.APPROVED, 5, 1);
     }
+  };
+
+  const resetTable = () => {
+    setchildrenData([]);
+    setFilterCriteria(null);
+    setSelectedProject({});
+    setCard(false);
   };
 
   return (
@@ -252,7 +241,13 @@ const CustomInboxSearchComposer = () => {
                 overflowY: "auto",
               }}
             >
-              <CustomFilter  isRequired={ScreenTypeEnum.REGISTER} onProjectSelect={handleProjectChange} projectData={selectedProject} onFilterChange={handleFilterUpdate}></CustomFilter>
+              <CustomFilter
+                resetTable={resetTable}
+                isRequired={ScreenTypeEnum.REGISTER}
+                onProjectSelect={handleProjectChange}
+                projectData={selectedProject}
+                onFilterChange={handleFilterUpdate}
+              ></CustomFilter>
             </div>
           </div>
 
@@ -261,18 +256,16 @@ const CustomInboxSearchComposer = () => {
               {card == false ? (
                 <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", padding: "0px" }}></Card>
               ) : (
-                 (
-                  <CustomInboxTable
-                    statusCount={childrenData?.statusCount}
-                    handleTabChange={callServiceOnTap}
-                    rowsPerPage={rowsPerPage}
-                    customHandleRowsPerPageChange={handleRowsPerPageChange}
-                    customHandlePaginationChange={handlePaginationChange}
-                    isLoading={childrenDataLoading}
-                    tableData={childrenData?.data}
-                    totalCount={childrenData?.totalCount}
-                  ></CustomInboxTable>
-                )
+                <CustomInboxTable
+                  statusCount={childrenData?.statusCount}
+                  handleTabChange={callServiceOnTap}
+                  rowsPerPage={rowsPerPage}
+                  customHandleRowsPerPageChange={handleRowsPerPageChange}
+                  customHandlePaginationChange={handlePaginationChange}
+                  isLoading={childrenDataLoading}
+                  tableData={childrenData?.data}
+                  totalCount={childrenData?.totalCount}
+                ></CustomInboxTable>
               )}
             </div>
           </div>

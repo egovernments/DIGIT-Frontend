@@ -1,10 +1,9 @@
-
 import { Dropdown, TextBlock } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ScreenTypeEnum } from "../utils/constants";
 
-const BoundaryComponent = ({ initialValue, updateSeeeionStorage, selectedProject, onChange, lowestLevel, isRequired }) => {
+const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorage, selectedProject, onChange, lowestLevel, isRequired }) => {
   const kk = Digit.SessionStorage.get("boundaryHierarchyOrder").map((item) => item.code);
 
   const { t } = useTranslation();
@@ -55,22 +54,22 @@ const BoundaryComponent = ({ initialValue, updateSeeeionStorage, selectedProject
 
   const { isLoading: childrenDataLoading, data: childrenData } = Digit.Hooks.payments.useAttendanceBoundarySearch(reqCriteriaResource);
 
-  useEffect(() => {
-    if (selectedProject) {
-      setSelectedValues(defaultSelectData);
-      setValue(
-        kk.reduce((acc, curr) => {
-          acc[curr] = [];
-          return acc;
-        }, {})
-      );
-      setBoundaryData(defaultBoundaryData);
+  // useEffect(() => {
+  //   if (selectedProject) {
+  //     setSelectedValues(defaultSelectData);
+  //     setValue(
+  //       kk.reduce((acc, curr) => {
+  //         acc[curr] = [];
+  //         return acc;
+  //       }, {})
+  //     );
+  //     setBoundaryData(defaultBoundaryData);
 
-      if (updateSeeeionStorage) {
-        updateSeeeionStorage(defaultSelectData);
-      }
-    }
-  }, [selectedProject]);
+  //     // if (updateSeeeionStorage) {
+  //     //   updateSeeeionStorage(defaultSelectData);
+  //     // }
+  //   }
+  // }, [selectedProject]);
 
   useEffect(() => {
     if (childrenData && childrenData.length > 0) {
@@ -86,9 +85,21 @@ const BoundaryComponent = ({ initialValue, updateSeeeionStorage, selectedProject
 
   // Reset only dropdowns below the lowest level
   useEffect(() => {
-    setSelectedValues(defaultSelectData);
-    onChange(null);
+    if (lowestLevel != undefined && lowest != undefined) {
+      setSelectedValues(defaultSelectData);
+      onChange(null);
+    }
   }, [lowest, lowestLevel]);
+
+  useEffect(() => {
+    if (reset == true) {
+      setSelectedValues(defaultSelectData);
+      sessionStorage.removeItem("Digit.paymentInbox");
+      sessionStorage.removeItem("selectedValues");
+      makeReset(false);
+      onChange(null);
+    }
+  }, [reset]);
 
   const createFormattedData = (activeBoundary) => {
     const index = kk.indexOf(activeBoundary);
@@ -208,7 +219,7 @@ const BoundaryComponent = ({ initialValue, updateSeeeionStorage, selectedProject
 
 const BoundaryDropdown = ({ label, data, onChange, selected, setSelected, isRequired }) => {
   const { t } = useTranslation();
-  
+
   return (
     <div style={{ width: "100%", marginTop: "14px" }}>
       <TextBlock body={isRequired == true ? `${t(label)}*` : t(label)} />

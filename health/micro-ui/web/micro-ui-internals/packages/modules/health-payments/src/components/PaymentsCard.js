@@ -8,6 +8,8 @@ const ROLES = {
 };
 
 const PaymentsCard = () => {
+  sessionStorage.removeItem("Digit.paymentInbox");
+  sessionStorage.removeItem("selectedValues");
   const { t } = useTranslation();
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
@@ -27,7 +29,6 @@ const PaymentsCard = () => {
     generateLink("ATTENDANCE_REGISTERS", "registers-inbox"),
     generateLink("CS_COMMON_INBOX", "generate-bill", ROLES.BILLS),
     generateLink("CS_TITLE_MY_BILLS", "my-bills", ROLES.BILLS),
-
   ];
   const hasRequiredRoles = (link) => {
     if (!link?.roles?.length) return true;
@@ -40,7 +41,7 @@ const PaymentsCard = () => {
     moduleName: t("HCM_PAYMENTS"),
     kpis: [],
     links: links,
-    className: "microplan-employee-module-card"
+    className: "microplan-employee-module-card",
   };
   return <EmployeeModuleCard {...propsForModuleCard} />;
 };
