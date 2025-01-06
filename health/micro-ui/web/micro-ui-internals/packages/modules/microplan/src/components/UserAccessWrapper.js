@@ -142,6 +142,8 @@ const UserAccessWrapper = ({ onSelect, props: customProps, setupCompleted }) => 
     updateUrlParams({ internalKey });
   }, [internalKey]);
 
+  console.log("hiiiii",internalKey);
+
   return (
     <Fragment>
       <UserAccessContext.Provider value={{ hierarchyData, category: rolesArray?.[internalKey - 1] }}>
