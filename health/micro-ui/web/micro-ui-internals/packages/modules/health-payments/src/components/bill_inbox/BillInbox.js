@@ -24,6 +24,8 @@ const CustomBillInbox = () => {
     const [selectedBoundaryCode, setSelectedBoundaryCode] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [approvalCount, setApprovalCount] = useState(null);
+    const [pendingApprovalCount, setPendingApprovalCount] = useState(null);
     const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
 
     const [selectedLevel, setSelectedLevel] = useState(null);
@@ -75,7 +77,7 @@ const CustomBillInbox = () => {
         },
     };
 
-    const { isLoading: isBillLoading, data: BillData } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
+    const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching: isFetchingBill } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
 
     useEffect(() => {
         if (AttendanceData?.attendanceRegister) {
@@ -93,7 +95,8 @@ const CustomBillInbox = () => {
                     markedBy: owner?.additionalDetails?.staffName || "NA",
                 };
             });
-
+            setApprovalCount(AttendanceData?.statusCount?.APPROVED);
+            setPendingApprovalCount(AttendanceData?.statusCount?.PENDINGFORAPPROVAL);
             setTableData(formattedList);
             if (AttendanceData?.statusCount.PENDINGFORAPPROVAL === 0 && AttendanceData?.statusCount.APPROVED > 0) {
                 setShowGenerateBillAction(true);
@@ -106,8 +109,15 @@ const CustomBillInbox = () => {
     useEffect(() => {
         if (selectedBoundaryCode) {
             refetchAttendance();
+            refetchBill();
         }
     }, [activeLink, limitAndOffset, selectedBoundaryCode]);
+
+    useEffect(() => {
+        if (selectedBoundaryCode) {
+            refetchBill();
+        }
+    }, [selectedBoundaryCode]);
 
     const handleSearchChange = (selectedProject, selectedLevel) => {
         setSelectedLevel(selectedLevel);
@@ -198,7 +208,7 @@ const CustomBillInbox = () => {
                     </div>
                     <div style={{ width: "80%", display: "flex", flexDirection: "row", height: "60vh", minHeight: "60vh" }}>
                         <div style={{ width: "100%" }}>
-                            {AttendanceData && (
+                            {(approvalCount !== null && pendingApprovalCount !== null) && (
                                 <Tab
                                     activeLink={activeLink?.code}
                                     configItemKey="code"
@@ -207,11 +217,11 @@ const CustomBillInbox = () => {
                                     configNavItems={[
                                         {
                                             code: "APPROVED",
-                                            name: `${`${t(`HCM_AM_APPROVED_REGISTER`)} (${AttendanceData?.statusCount?.APPROVED})`}`,
+                                            name: `${`${t(`HCM_AM_APPROVED_REGISTER`)} (${approvalCount})`}`,
                                         },
                                         {
                                             code: "PENDINGFORAPPROVAL",
-                                            name: `${`${t(`HCM_AM_PENDING_REGISTER`)} (${AttendanceData?.statusCount?.PENDINGFORAPPROVAL})`}`,
+                                            name: `${`${t(`HCM_AM_PENDING_REGISTER`)} (${pendingApprovalCount})`}`,
                                         },
                                     ]}
                                     navStyles={{}}
@@ -246,7 +256,7 @@ const CustomBillInbox = () => {
                     </div>
                 </div>
             </div>
-            {!isBillLoading && showGenerateBillAction && BillData?.bills?.length === 0 && (
+            {!isBillLoading && !isFetchingBill && showGenerateBillAction && BillData?.bills?.length === 0 && (
                 <ActionBar
                     actionFields={[
                         <Button

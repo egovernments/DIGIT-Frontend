@@ -8,6 +8,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
     const { t } = useTranslation();
 
     const [boundary, setBoundary] = useState("");
+    const [boundaryKey, setBoundaryKey] = useState(0);
 
     const handleApplyFilter = () => {
         onFilterChange(boundary);
@@ -19,6 +20,11 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
         } else {
             setBoundary(null);
         }
+    };
+
+    const handleClearFilter = () => {
+        setBoundary(""); // Clear the boundary value
+        setBoundaryKey((prevKey) => prevKey + 1); // Increment the key to re-render BoundaryComponent
     };
 
     return (
@@ -36,8 +42,9 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
                     overflowY: "auto", // Enables scrolling if content exceeds available space
                 }}
             >
-                <div
+                <div onClick={handleClearFilter}
                     style={{
+                        cursor: "pointer",
                         alignItems: "center",
                         gap: ".75rem",
                         marginBottom: "24px",
@@ -75,7 +82,13 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
         </div>*/}
 
                 {selectedProject?.address?.boundary && (
-                    <BoundaryComponent isRequired={isRequired} onChange={onBoundaryChange} selectedProject={selectedProject} lowestLevel={selectedLevel.code}></BoundaryComponent>
+                    <BoundaryComponent
+                        key={boundaryKey} // Add the key to force re-render
+                        isRequired={isRequired}
+                        onChange={onBoundaryChange}
+                        selectedProject={selectedProject}
+                        lowestLevel={selectedLevel.code}>
+                    </BoundaryComponent>
                 )}
             </div>
 

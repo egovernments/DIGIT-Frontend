@@ -64,8 +64,10 @@ const BillSearchBox = ({ onLevelSelect }) => {
     return (
         <React.Fragment>
             <Card variant="search">
-                <div style={{ maxWidth: "100%", width: "100%", marginBottom: "1.5rem" }}>
-                    <TextBlock body={`${t("ATTENDANCE_PROJECT_NAME")} *`} />
+                <div style={{ maxWidth: "100%", width: "100%" }}>
+                    <div className="comment-label">
+                        {t(`ATTENDANCE_PROJECT_NAME`)}<span className="required"> *</span>
+                    </div>
                     <Dropdown
                         t={t}
                         option={project}
@@ -76,7 +78,9 @@ const BillSearchBox = ({ onLevelSelect }) => {
                     />
                 </div>
                 <div style={{ maxWidth: "100%", width: "100%" }}>
-                    <TextBlock body={`${t("HCM_AM_BILL_AGGREGATION_FOR_EMPLOYEE_MAPPED_AT")} *`} />
+                    <div className="comment-label">
+                        {t(`HCM_AM_BILL_AGGREGATION_FOR_EMPLOYEE_MAPPED_AT`)}<span className="required"> *</span>
+                    </div>
                     <Dropdown
                         t={t}
                         option={filteredAggregationOptions}
