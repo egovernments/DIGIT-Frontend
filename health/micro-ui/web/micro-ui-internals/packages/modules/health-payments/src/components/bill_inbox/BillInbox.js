@@ -11,6 +11,7 @@ import { ActionBar, Button, Card, FilterCard, LoaderScreen, Tab, Toast } from "@
 import BillSearchBox from "./BillSearchBox";
 import BillBoundaryFilter from "./bill_boundary_filter";
 import BillInboxTable from "./billInboxTable";
+import { ScreenTypeEnum } from "../../utils/constants";
 
 const CustomBillInbox = () => {
     const { t } = useTranslation();
@@ -108,6 +109,7 @@ const CustomBillInbox = () => {
         }
     }, [activeLink, limitAndOffset])
 
+    useEffect(()=>{},[selectedProject])
 
     const handleSearchChange = (selectedProject, selectedLevel) => {
         setSelectedLevel(selectedLevel);
@@ -119,6 +121,7 @@ const CustomBillInbox = () => {
     };
 
     const handleFilterUpdate = (boundaryCode) => {
+        debugger
         setSelectedBoundaryCode(boundaryCode);
         // setFilterCriteria(null); // Clear additional filters
         // setSearchQuery(null); // Clear search query
@@ -197,7 +200,7 @@ const CustomBillInbox = () => {
                             overflowY: "auto",
                         }}
                     >
-                        <BillBoundaryFilter selectedProject={selectedProject} selectedLevel={selectedLevel} onFilterChange={handleFilterUpdate}></BillBoundaryFilter>
+                        <BillBoundaryFilter isRequired={ScreenTypeEnum.BILL} selectedProject={selectedProject} selectedLevel={selectedLevel} onFilterChange={handleFilterUpdate}></BillBoundaryFilter>
                     </div>
                     <div style={{ width: "80%", display: "flex", flexDirection: "row", height: "60vh", minHeight: "60vh" }}>
                         <div style={{ width: "100%" }}>
