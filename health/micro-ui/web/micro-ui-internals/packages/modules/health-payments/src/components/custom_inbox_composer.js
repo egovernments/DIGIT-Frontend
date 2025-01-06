@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import CustomFilter from "./custom_comp/filter_section";
 import CustomInboxTable from "./custom_comp/table_inbox";
 import { FilterCard, Toast, Card } from "@egovernments/digit-ui-components";
-import { StatusEnum } from "../utils/constants";
+import { ScreenTypeEnum, StatusEnum } from "../utils/constants";
 
 /**
 * Business Flow Description:
@@ -124,7 +124,7 @@ const CustomInboxSearchComposer = () => {
                   })
                 : [];
             setChildrenDataLoading(false);
-            setCard(data?.totalCount > 0 ? true : false);
+            setCard( true );
             setchildrenData({
               data: rowData,
               totalCount: data?.totalCount,
@@ -132,7 +132,7 @@ const CustomInboxSearchComposer = () => {
             });
           },
           onError: (error) => {
-            setCard(false);
+            setCard(true);
             setChildrenDataLoading(false);
             setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_REGISTER_FETCH_FAILED"), transitionTime: 3000 });
           },
@@ -182,6 +182,7 @@ const CustomInboxSearchComposer = () => {
 
   const handleFilterUpdate = (newFilter, isSelectedData) => {
     setFilterCriteria(newFilter);
+    setSelectedStatus(StatusEnum.PENDING_FOR_APPROVAL);
 
     if (isSelectedData) {
       Digit.SessionStorage.set("paymentInbox", {
@@ -189,7 +190,7 @@ const CustomInboxSearchComposer = () => {
         selectedProject: selectedProject,
       });
 
-      triggerMusterRollApprove(newFilter);
+      triggerMusterRollApprove(newFilter,StatusEnum.PENDING_FOR_APPROVAL);
     } else {
       setShowToast({ key: "error", label: t("error"), transitionTime: 3000 });
     }
@@ -251,7 +252,7 @@ const CustomInboxSearchComposer = () => {
                 overflowY: "auto",
               }}
             >
-              <CustomFilter onProjectSelect={handleProjectChange} projectData={selectedProject} onFilterChange={handleFilterUpdate}></CustomFilter>
+              <CustomFilter  isRequired={ScreenTypeEnum.REGISTER} onProjectSelect={handleProjectChange} projectData={selectedProject} onFilterChange={handleFilterUpdate}></CustomFilter>
             </div>
           </div>
 
@@ -260,7 +261,7 @@ const CustomInboxSearchComposer = () => {
               {card == false ? (
                 <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", padding: "0px" }}></Card>
               ) : (
-                childrenData?.totalCount > 0 && (
+                 (
                   <CustomInboxTable
                     statusCount={childrenData?.statusCount}
                     handleTabChange={callServiceOnTap}

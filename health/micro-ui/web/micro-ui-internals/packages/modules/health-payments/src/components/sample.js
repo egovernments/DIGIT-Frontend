@@ -1,10 +1,10 @@
+
 import { Dropdown, TextBlock } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { ScreenTypeEnum } from "../utils/constants";
 
-const BoundaryComponent = ({initialValue, updateSeeeionStorage, selectedProject, onChange, lowestLevel }) => {
-  //const kk = ["COUNTRY", "PROVINCE", "DISTRICT", "ADMINISTRATIVEPOST", "LOCALITY", "VILLAGE"];
-
+const BoundaryComponent = ({ initialValue, updateSeeeionStorage, selectedProject, onChange, lowestLevel, isRequired }) => {
   const kk = Digit.SessionStorage.get("boundaryHierarchyOrder").map((item) => item.code);
 
   const { t } = useTranslation();
@@ -28,20 +28,15 @@ const BoundaryComponent = ({initialValue, updateSeeeionStorage, selectedProject,
     }, {})
   );
 
-  console.log(boundaryData, 'bbbbbbbbbbbbbbbbbbbbb');
-
   const [selectedValues, setSelectedValues] = useState(defaultSelectData);
 
+  const [lowest, setLowest] = useState(lowestLevel);
+
   useEffect(() => {
-    // const storedValues = sessionStorage.getItem("selectedValues");
     if (initialValue) {
       setSelectedValues(JSON.parse(initialValue));
     }
   }, []);
-
-  // useEffect(() => {
-  //   sessionStorage.setItem("selectedValues", JSON.stringify(selectedValues));
-  // }, [selectedValues]);
 
   const reqCriteriaResource = {
     url: `/boundary-service/boundary-relationships/_search`,
@@ -60,18 +55,22 @@ const BoundaryComponent = ({initialValue, updateSeeeionStorage, selectedProject,
 
   const { isLoading: childrenDataLoading, data: childrenData } = Digit.Hooks.payments.useAttendanceBoundarySearch(reqCriteriaResource);
 
-  const handleButtonClick = (value) => {
-    onChange(value);
-    handleDropdownOptions(value);
-  };
+  useEffect(() => {
+    if (selectedProject) {
+      setSelectedValues(defaultSelectData);
+      setValue(
+        kk.reduce((acc, curr) => {
+          acc[curr] = [];
+          return acc;
+        }, {})
+      );
+      setBoundaryData(defaultBoundaryData);
 
-  const createFormattedData = (activeBoundary) => {
-    const index = kk.indexOf(activeBoundary);
-    return kk.reduce((acc, key, i) => {
-      acc[key] = i >= index;
-      return acc;
-    }, {});
-  };
+      if (updateSeeeionStorage) {
+        updateSeeeionStorage(defaultSelectData);
+      }
+    }
+  }, [selectedProject]);
 
   useEffect(() => {
     if (childrenData && childrenData.length > 0) {
@@ -85,6 +84,24 @@ const BoundaryComponent = ({initialValue, updateSeeeionStorage, selectedProject,
     }
   }, [childrenData]);
 
+  // Reset only dropdowns below the lowest level
+  useEffect(() => {
+    setSelectedValues(defaultSelectData);
+    onChange(null);
+  }, [lowest, lowestLevel]);
+
+  const createFormattedData = (activeBoundary) => {
+    const index = kk.indexOf(activeBoundary);
+    return kk.reduce((acc, key, i) => {
+      acc[key] = i >= index;
+      return acc;
+    }, {});
+  };
+
+  const handleButtonClick = (value) => {
+    onChange(value);
+    handleDropdownOptions(value);
+  };
   const handleDropdownOptions = (value) => {
     if (value?.children && value.children.length > 0) {
       const updatedState = value.children.reduce((acc, child) => {
@@ -102,16 +119,14 @@ const BoundaryComponent = ({initialValue, updateSeeeionStorage, selectedProject,
 
       setSelectedValues((prev) => {
         const newSelectedValues = { ...prev, [value?.boundaryType]: value };
-        //sessionStorage.setItem("selectedValues", JSON.stringify(newSelectedValues));
-        if(updateSeeeionStorage){
-        updateSeeeionStorage(newSelectedValues)
+        if (updateSeeeionStorage) {
+          updateSeeeionStorage(newSelectedValues);
         }
         return newSelectedValues;
       });
     }
   };
 
-  // Handle insertion of new boundary
   const handleInsertion = (boundaryType, newValue) => {
     setValue((prevState) => {
       const newState = { ...prevState };
@@ -122,11 +137,9 @@ const BoundaryComponent = ({initialValue, updateSeeeionStorage, selectedProject,
       return newState;
     });
 
-    // Reset selected values for child boundaries if necessary
     resetChildrenSelectedValues(boundaryType);
   };
 
-  // Handle deletion of boundary
   const handleDeletion = (boundaryType, valueToRemove) => {
     setValue((prevState) => {
       const newState = { ...prevState };
@@ -134,16 +147,13 @@ const BoundaryComponent = ({initialValue, updateSeeeionStorage, selectedProject,
       return newState;
     });
 
-    // Reset selected values for child boundaries if necessary
     resetChildrenSelectedValues(boundaryType);
   };
 
-  // Reset selected values for child boundaries
   const resetChildrenSelectedValues = (boundaryType) => {
     const index = kk.indexOf(boundaryType);
     const newSelectedValues = { ...selectedValues };
 
-    // Reset all child dropdowns based on the boundary type
     for (let i = index + 1; i < kk.length; i++) {
       newSelectedValues[kk[i]] = null;
     }
@@ -153,14 +163,13 @@ const BoundaryComponent = ({initialValue, updateSeeeionStorage, selectedProject,
 
   const isBoundaryAllowed = (boundaryType) => {
     if (!lowestLevel) {
-      // If lowestLevel is null or undefined, include all boundaries
       return true;
     }
 
     const boundaryIndex = kk.indexOf(boundaryType);
     const lowestLevelIndex = kk.indexOf(lowestLevel);
 
-    return boundaryIndex <= lowestLevelIndex; // Include only up to the lowestLevel
+    return boundaryIndex <= lowestLevelIndex;
   };
 
   return (
@@ -168,9 +177,9 @@ const BoundaryComponent = ({initialValue, updateSeeeionStorage, selectedProject,
       <div>
         {kk.map((key) => {
           if (boundaryData[key] && isBoundaryAllowed(key)) {
-            console.log(key, 'kkkkkkkkkkkkkk');
             return (
               <BoundaryDropdown
+                isRequired={isRequired == ScreenTypeEnum.BILL ? true : key == "DISTRICT" ? true : false}
                 key={key}
                 label={`ATTENDANCE_${key}`}
                 data={value[key]}
@@ -181,11 +190,10 @@ const BoundaryComponent = ({initialValue, updateSeeeionStorage, selectedProject,
                     ...prev,
                     [key]: newValue,
                   }));
-                  // You can call handleInsertion or handleDeletion based on your logic
                   if (newValue) {
-                    handleInsertion(key, newValue); // Add the selected value
+                    handleInsertion(key, newValue);
                   } else {
-                    handleDeletion(key, selectedValues[key]); // Remove the previously selected value
+                    handleDeletion(key, selectedValues[key]);
                   }
                 }}
               />
@@ -198,12 +206,12 @@ const BoundaryComponent = ({initialValue, updateSeeeionStorage, selectedProject,
   );
 };
 
-const BoundaryDropdown = ({ label, data, onChange, selected, setSelected }) => {
+const BoundaryDropdown = ({ label, data, onChange, selected, setSelected, isRequired }) => {
   const { t } = useTranslation();
-
+  
   return (
     <div style={{ width: "100%", marginTop: "14px" }}>
-      <TextBlock body={t(label)} />
+      <TextBlock body={isRequired == true ? `${t(label)}*` : t(label)} />
       <Dropdown
         selected={selected}
         t={t}

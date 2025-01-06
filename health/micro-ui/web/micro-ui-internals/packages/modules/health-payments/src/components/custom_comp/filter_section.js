@@ -4,7 +4,7 @@ import { CheckBox, SubmitBar } from "@egovernments/digit-ui-components";
 import BoundaryComponent from "../sample";
 import { Card, SVG, Button, ButtonGroup, TextBlock, Dropdown, Toast } from "@egovernments/digit-ui-components";
 
-const CustomFilter = ({ onProjectSelect, onFilterChange, projectData }) => {
+const CustomFilter = ({ isRequired, onProjectSelect, onFilterChange, projectData }) => {
   const { t } = useTranslation();
 
   const [boundary, setBoundary] = useState("");
@@ -116,9 +116,17 @@ const CustomFilter = ({ onProjectSelect, onFilterChange, projectData }) => {
           />
         </div>*/}
 
-        {projectSelected?.address?.boundary && <BoundaryComponent initialValue={sessionStorage.getItem("selectedValues")} updateSeeeionStorage={(newSelectedValues)=>{
-          sessionStorage.setItem("selectedValues", JSON.stringify(newSelectedValues));
-        }} onChange={onChangeId} selectedProject={projectSelected}></BoundaryComponent>}
+        {projectSelected?.address?.boundary && (
+          <BoundaryComponent
+            isRequired={isRequired}
+            initialValue={sessionStorage.getItem("selectedValues")}
+            updateSeeeionStorage={(newSelectedValues) => {
+              sessionStorage.setItem("selectedValues", JSON.stringify(newSelectedValues));
+            }}
+            onChange={onChangeId}
+            selectedProject={projectSelected}
+          ></BoundaryComponent>
+        )}
       </div>
 
       <div
