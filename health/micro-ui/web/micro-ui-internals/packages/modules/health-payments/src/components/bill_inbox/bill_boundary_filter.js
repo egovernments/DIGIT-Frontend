@@ -4,52 +4,57 @@ import { CheckBox, SubmitBar } from "@egovernments/digit-ui-components";
 import BoundaryComponent from "../sample";
 import { Card, SVG, Button, ButtonGroup, TextBlock, Dropdown, Toast } from "@egovernments/digit-ui-components";
 
-const BillBoundaryFilter = ({ isRequired,selectedProject, selectedLevel, onFilterChange }) => {
-  const { t } = useTranslation();
+const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilterChange }) => {
+    const { t } = useTranslation();
 
-  const [boundary, setBoundary] = useState("");
+    const [boundary, setBoundary] = useState("");
+    const [boundaryKey, setBoundaryKey] = useState(0);
 
-  const handleApplyFilter = () => {
-    onFilterChange(boundary);
-  };
+ 
 
-  const onBoundaryChange = (boundary) => {
-    if (boundary) {
-      setBoundary(boundary.code);
-    } else {
-      setBoundary(null);
-    }
-  };
+    const onBoundaryChange = (boundary) => {
+        if (boundary) {
+            setBoundary(boundary.code);
+        } else {
+            setBoundary(null);
+        }
+    };
 
-  return (
-    <Card
-      className="inbox-search-links-container"
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-      }}
-    >
-      <div
-        style={{
-          flexGrow: 1, // Ensures this section grows to take available space
-          overflowY: "auto", // Enables scrolling if content exceeds available space
-        }}
-      >
-        <div
-          style={{
-            alignItems: "center",
-            gap: ".75rem",
-            marginBottom: "24px",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
+    const handleClearFilter = () => {
+        setBoundary(""); // Clear the boundary value
+        setBoundaryKey((prevKey) => prevKey + 1); // Increment the key to re-render BoundaryComponent
+    };
+
+    return (
+        <Card
+            className="inbox-search-links-container"
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                height: "100%",
+            }}
         >
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <SVG.FilterAlt width={"32px"} height={"32px"} fill={"#c84c0e"} />
-            <span className="custom-inbox-filter-heading">{t("HCM_AM_FILTER")}</span>
-          </div>
+            <div
+                style={{
+                    flexGrow: 1, // Ensures this section grows to take available space
+                    overflowY: "auto", // Enables scrolling if content exceeds available space
+                }}
+            >
+                <div onClick={handleClearFilter}
+                    style={{
+                        cursor: "pointer",
+                        alignItems: "center",
+                        gap: ".75rem",
+                        marginBottom: "24px",
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                    }}
+                >
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                        <SVG.FilterAlt width={"32px"} height={"32px"} fill={"#c84c0e"} />
+                        <span className="custom-inbox-filter-heading">{t("HCM_AM_FILTER")}</span>
+                    </div>
 
           <span onClick={() => {}} style={{ border: "1px solid #e0e0e0", padding: "6px", marginBottom: "10px" }}>
             <svg width="17" height="17" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -74,10 +79,16 @@ const BillBoundaryFilter = ({ isRequired,selectedProject, selectedLevel, onFilte
           />
         </div>*/}
 
-        {selectedProject?.address?.boundary && (
-          <BoundaryComponent isRequired={isRequired} onChange={onBoundaryChange} selectedProject={selectedProject} lowestLevel={selectedLevel.code}></BoundaryComponent>
-        )}
-      </div>
+                {selectedProject?.address?.boundary && (
+                    <BoundaryComponent
+                        key={boundaryKey} // Add the key to force re-render
+                        isRequired={isRequired}
+                        onChange={onBoundaryChange}
+                        selectedProject={selectedProject}
+                        lowestLevel={selectedLevel.code}>
+                    </BoundaryComponent>
+                )}
+            </div>
 
       <div
         style={{

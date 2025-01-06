@@ -4,85 +4,83 @@ import { useTranslation } from "react-i18next";
 import { Button, Card, InfoButton, Loader, TableMolecule, TextInput, Toast } from "@egovernments/digit-ui-components";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { CheckBox } from "@egovernments/digit-ui-components";
+import axios from "axios";
 
-/* Use this util function to download the file from any s3 links */
-export const downloadExcelFromLink = async (link, openIn = "_blank") => {
-    try {
-        const response = await fetch(link, {
-            responseType: "arraybuffer",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // MIME type for Excel
-            },
-            method: "GET",
-            mode: "cors",
-        }).then((res) => res.blob());
+export const downloadExcelWithName = ({ fileStoreId = null, customName = null }) => {
+    const downloadExcel = (blob, fileName) => {
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName + ".xlsx";
+        document.body.append(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(link.href), 7000);
+    };
 
-        if (window.mSewaApp && window.mSewaApp.isMsewaApp() && window.mSewaApp.downloadBase64File) {
-            var reader = new FileReader();
-            reader.readAsDataURL(response);
-            reader.onloadend = function () {
-                var base64data = reader.result;
-                const fileName = decodeURIComponent(
-                    link.split("?")[0].split("/").pop().slice(13) || "file.xlsx"
+    if (fileStoreId) {
+        axios
+            .get("/filestore/v1/files/id", {
+                responseType: "arraybuffer",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "auth-token": Digit.UserService.getUser()?.["access_token"],
+                },
+                params: {
+                    tenantId: Digit.ULBService.getCurrentTenantId(),
+                    fileStoreId: fileStoreId,
+                },
+            })
+            .then(async (res) => {
+                downloadExcel(
+                    new Blob([res.data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),
+                    customName ? customName : "download"
                 );
-                window.mSewaApp.downloadBase64File(base64data, fileName);
-            };
-        } else {
-            var a = document.createElement("a");
-            document.body.appendChild(a);
-            a.style = "display: none";
-            const url = window.URL.createObjectURL(response);
-            a.href = url;
-            const fileName = decodeURIComponent(
-                link.split("?")[0].split("/").pop().slice(13) || "file.xlsx"
-            );
-            a.download = fileName.endsWith(".xlsx") ? fileName : `${fileName}.xlsx`;
-            a.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
-        }
-    } catch (error) {
-        console.error("Error downloading the Excel file:", error);
+            });
     }
 };
 
+export const downloadPDFWithName = ({ fileStoreId = null, customName = null }) => {
+    const downloadExcel = (blob, fileName) => {
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName + ".pdf";
+        document.body.append(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(link.href), 7000);
+    };
+
+    if (fileStoreId) {
+        axios
+            .get("/filestore/v1/files/id", {
+                responseType: "arraybuffer",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "auth-token": Digit.UserService.getUser()?.["access_token"],
+                },
+                params: {
+                    tenantId: Digit.ULBService.getCurrentTenantId(),
+                    fileStoreId: fileStoreId,
+                },
+            })
+            .then(async (res) => {
+                downloadExcel(
+                    new Blob([res.data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),
+                    customName ? customName : "download"
+                );
+            });
+    }
+};
 
 const MyBillsTable = ({ ...props }) => {
     const { t } = useTranslation();
     const history = useHistory();
     const url = Digit.Hooks.useQueryParams();
     const [showToast, setShowToast] = useState(null);
+    const tenantId = Digit.ULBService.getCurrentTenantId();
 
-    const getFileUrl = async (fileStoreId) => {
-        try {
-            const response = await Digit.UploadServices.Filefetch([fileStoreId], Digit.ULBService.getStateId());
-            if (response?.data?.fileStoreIds?.length > 0) {
-                const url = response.data.fileStoreIds[0]?.url;
-                if (url.includes(".jpg") || url.includes(".png")) {
-                    const arr = url.split(",");
-                    const [original, large, medium, small] = arr;
-                    return original;
-                }
-                return response.data.fileStoreIds[0]?.url;
-            }
-        } catch (err) {
-        }
-    };
-
-    const downloadDocument = async (filestoreId, filetype) => {
-        if (!filestoreId || !filestoreId.length) {
-            alert("No Document exists!");
-            return;
-        }
-
-        const fileUrl = await getFileUrl(filestoreId);
-        if (fileUrl && filetype === "PDF") {
-            Digit.Utils.downloadPDFFromLink(fileUrl);
-        } else if (fileUrl) {
-            downloadExcelFromLink(fileUrl)
-        }
-    };
 
     const columns = useMemo(() => {
         const baseColumns = [
@@ -134,13 +132,14 @@ const MyBillsTable = ({ ...props }) => {
                 iconFill=""
                 icon="FileDownload"
                 isSuffix
+                title={t(`HCM_AM_DOWNLOAD_BILLS`)}
                 label={t(`HCM_AM_DOWNLOAD_BILLS`)}
                 showBottom={true}
                 onOptionSelect={(value) => {
                     if (value.code === "HCM_AM_PDF") {
-                        downloadDocument(pdfID, "PDF")
+                        downloadPDFWithName({ fileStoreId: reportDetails?.pdfReportId, customName: `${billId}` })
                     } else if (value.code === "HCM_AM_EXCEL") {
-                        downloadDocument(excelID, "EXCEL")
+                        downloadExcelWithName({ fileStoreId: reportDetails?.excelReportId, customName: `${billId}` });
                     }
                 }}
                 options={[
@@ -155,8 +154,7 @@ const MyBillsTable = ({ ...props }) => {
                 ]}
                 optionsKey="name"
                 size=""
-                // style={{ minWidth: "15rem" }}
-                title=""
+                style={{ minWidth: "15rem" }}
                 type="actionButton"
                 variation="secondary"
             /> :
@@ -168,7 +166,7 @@ const MyBillsTable = ({ ...props }) => {
                     style={{ opacity: 1, width: "16rem", border: "none" }}
                     onClick={() => {
                         setShowToast({
-                            key: reportDetails.status === "FAILED" ? "error" : "info", label: reportDetails?.status === "INITIATED"
+                            key: reportDetails?.status === "FAILED" ? "error" : "info", label: reportDetails?.status === "INITIATED"
                                 ? t("HCM_AM_BILL_GENERATION_IN_PROGRESS_MESSAGE")
                                 : (reportDetails?.errorMessage
                                     ? t(reportDetails?.errorMessage)
@@ -190,9 +188,6 @@ const MyBillsTable = ({ ...props }) => {
     const handlePerRowsChange = async (currentRowsPerPage, currentPage) => {
         props?.handlePerRowsChange(currentRowsPerPage, currentPage);
     };
-
-    console.log(props.data, "PPPPPPPPPPPPPPPPPPPPPPP");
-
 
     return (
         <div className="component-table-wrapper">

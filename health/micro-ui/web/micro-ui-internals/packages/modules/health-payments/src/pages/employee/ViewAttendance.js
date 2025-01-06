@@ -12,6 +12,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const { registerNumber, boundaryCode } = Digit.Hooks.useQueryParams();
+  const { fromCampaignSupervisor } = location.state || false;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [currentPage, setCurrentPage] = useState(1);
   const [attendanceDuration, setAttendanceDuration] = useState(null);
@@ -65,7 +66,10 @@ const ViewAttendance = ({ editAttendance = false }) => {
     if (data?.[0]?.musterRollStatus === "APPROVED") {
       setDisabledAction(true);
     }
-  }, [AttendanceData, data])
+    if (fromCampaignSupervisor) {
+      setDisabledAction(true);
+    }
+  }, [AttendanceData, data, fromCampaignSupervisor])
 
   const reqCri = {
     url: `/health-muster-roll/v1/_estimate`,
@@ -446,7 +450,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
               label={t(`HCM_AM_GO_BACK`)}
               title={t(`HCM_AM_GO_BACK`)}
               onClick={() => {
-                history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
+                fromCampaignSupervisor ? history.push(`/${window.contextPath}/employee/payments/generate-bill`) :
+                  history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
               }}
               type="button"
               style={{ minWidth: "14rem" }}

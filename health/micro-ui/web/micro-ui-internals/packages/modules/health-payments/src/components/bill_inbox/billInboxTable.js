@@ -30,7 +30,7 @@ const BillInboxTable = ({
                         label={t(`${row.id}`)}
                         onClick={() =>
                             history.push(
-                                `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+                                `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`, { fromCampaignSupervisor: true }
                             )
                         }
                         title={t(`${row.id}`)}
