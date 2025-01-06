@@ -5,6 +5,7 @@ import { useHistory } from "react-router-dom";
 import { DigitJSONForm } from "../../Module";
 import _ from "lodash";
 import { DigitLoader } from "../../components/DigitLoader";
+import { buildLocalizationMessages } from "./localizationUtility";
 
 /*
 
@@ -18,8 +19,6 @@ const onFormError = (errors) => console.log("I have", errors.length, "errors to 
 const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onViewActionsSelect, viewActions, onSubmitEditAction, ...props }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [spinner, toggleSpinner] = useState(false);
-  // const stateId = Digit.ULBService.getStateId();
-
   const [uiSchema, setUiSchema] = useState({});
   const [api, setAPI] = useState(false);
   const [noSchema, setNoSchema] = useState(false);
@@ -66,16 +65,16 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   const body = api?.requestBody
     ? { ...api?.requestBody }
     : {
-      Mdms: {
-        tenantId: tenantId,
-        schemaCode: `${moduleName}.${masterName}`,
-        uniqueIdentifier: null,
-        data: {},
-        isActive: true,
-      },
-    };
+        Mdms: {
+          tenantId: tenantId,
+          schemaCode: `${moduleName}.${masterName}`,
+          uniqueIdentifier: null,
+          data: {},
+          isActive: true,
+        },
+      };
   const reqCriteriaAdd = {
-    url: api ? api?.url : Digit.Utils.workbench.getMDMSActionURL(moduleName,masterName,"create"),
+    url: api ? api?.url : Digit.Utils.workbench.getMDMSActionURL(moduleName, masterName, "create"),
     params: {},
     body: { ...body },
     config: {
@@ -86,34 +85,99 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
     },
   };
 
-  const gotoView = () => { 
+  const gotoView = () => {
     setTimeout(() => {
-      history.push(`/${window?.contextPath}/employee/workbench/mdms-search-v2?moduleName=${moduleName}&masterName=${masterName}${from ? `&from=${from}` : ""}`)
+      history.push(
+        `/${window?.contextPath}/employee/workbench/mdms-search-v2?moduleName=${moduleName}&masterName=${masterName}${
+          from ? `&from=${from}` : ""
+        }`
+      );
     }, 2000);
-  }
+  };
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaAdd);
-  const onSubmit = (data) => {
+
+  // Define a localization upsert mutation similar to how the main mutation is defined
+  const localizationReqCriteria = {
+    url: `/localization/messages/v1/_upsert`,
+    params: {},
+    body: {},
+    config: {
+      enabled: false,
+    },
+  };
+  const localizationMutation = Digit.Hooks.useCustomAPIMutationHook(localizationReqCriteria);
+
+  const closeToast = () => {
+    setTimeout(() => {
+      setShowToast(null);
+    }, 5000);
+  };
+
+
+  const tranformLocModuleName = (localModuleName) => {
+    if (!localModuleName) return null;
+      return localModuleName.replace(/[^a-zA-Z0-9]/g, "-").toUpperCase();
+  };
+
+  const onSubmit = (data, additionalProperties) => {
+    let locale = Digit.StoreData.getCurrentLanguage();
     toggleSpinner(true);
-    const onSuccess = (resp) => {
-      toggleSpinner(false);
-      setSessionFormData({});
-      setSession({});
-      setShowErrorToast(false);
+  
+    const onSuccess = async (resp) => {
+      // After main MDMS add success
       const jsonPath = api?.responseJson ? api?.responseJson : "mdms[0].id";
       setShowToast(`${t("WBH_SUCCESS_MDMS_MSG")} ${_.get(resp, jsonPath, "NA")}`);
-      closeToast();
-      gotoView();
-
-      //here redirect to search screen(check if it's required cos user might want  add multiple masters in one go)
+      setShowErrorToast(false);
+  
+      const locModuleName = `digit-mdms-${schema?.code}`;
+      const messages = buildLocalizationMessages(additionalProperties, locModuleName, locale);
+  
+      if (messages.length > 0) {
+        const localizationBody = {
+          tenantId: tenantId,
+          messages: messages,
+        };
+  
+        // Perform localization upsert
+        localizationMutation.mutate(
+          {
+            params: {},
+            body: localizationBody,
+          },
+          {
+            onError: (resp) => {
+              toggleSpinner(false);
+              setShowToast(`${t("WBH_ERROR_MDMS_DATA")} ${t(resp?.response?.data?.Errors?.[0]?.code)}`);
+              setShowErrorToast(true);
+              closeToast();
+            },
+            onSuccess: () => {
+              toggleSpinner(false);
+              setSessionFormData({});
+              setSession({});
+              closeToast();
+              gotoView();
+            },
+          }
+        );
+      } else {
+        // No localization messages to upsert, just proceed
+        toggleSpinner(false);
+        setSessionFormData({});
+        setSession({});
+        closeToast();
+        gotoView();
+      }
     };
+  
     const onError = (resp) => {
       toggleSpinner(false);
       setShowToast(`${t("WBH_ERROR_MDMS_DATA")} ${t(resp?.response?.data?.Errors?.[0]?.code)}`);
       setShowErrorToast(true);
       closeToast();
     };
-
+  
     _.set(body, api?.requestJson ? api?.requestJson : "Mdms.data", { ...data });
     mutation.mutate(
       {
@@ -128,21 +192,18 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
       }
     );
   };
+
   const onFormValueChange = (updatedSchema, element) => {
     const { formData } = updatedSchema;
-
     if (!_.isEqual(session, formData)) {
       setSession({ ...session, ...formData });
     }
   };
 
   useEffect(() => {
-    // setFormSchema(schema);
-    /* localise */
     if (schema && schema?.definition) {
       Digit.Utils.workbench.updateTitleToLocalisationCodeForObject(schema?.definition, schema?.code);
       setFormSchema(schema);
-      /* logic to search for the reference data from the mdms data api */
 
       if (schema?.definition?.["x-ref-schema"]?.length > 0) {
         schema?.definition?.["x-ref-schema"]?.map((dependent) => {
@@ -159,8 +220,8 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
             }
           }
         });
+        
         setFormSchema({ ...schema });
-        /* added disable to get the complete form re rendered to get the enum values reflected */
         setDisableForm(true);
         setTimeout(() => {
           setDisableForm(false);
@@ -191,18 +252,11 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
     );
   }
 
-  const closeToast = () => {
-    setTimeout(() => {
-      setShowToast(null);
-    }, 5000);
-  };
-
-  /* use newConfig instead of commonFields for local development in case needed */
   if (isLoading || !formSchema || Object.keys(formSchema) == 0) {
     return <Loader />;
   }
-  const uiJSONSchema = formSchema?.["definition"]?.["x-ui-schema"];
 
+  const uiJSONSchema = formSchema?.["definition"]?.["x-ui-schema"];
   return (
     <React.Fragment>
       {spinner && <DigitLoader />}

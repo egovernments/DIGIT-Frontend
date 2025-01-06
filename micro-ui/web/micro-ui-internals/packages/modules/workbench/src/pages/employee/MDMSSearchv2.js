@@ -21,8 +21,7 @@ const toDropdownObj = (master = "", mod = "") => {
 const MDMSSearchv2 = () => {
   let Config = _.clone(Configg)
   const { t } = useTranslation();
-  const history = useHistory();
-  
+  const history = useHistory();  
   let {masterName:modulee,moduleName:master,tenantId} = Digit.Hooks.useQueryParams()
   let {from, screen, action} = Digit.Hooks.useQueryParams()
 
@@ -163,7 +162,6 @@ const MDMSSearchv2 = () => {
         // dontShowNA:true
       }]
       Config.apiDetails.serviceName=`/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`;
-        
       setUpdatedConfig(Config)
     }
   }, [currentSchema]);
