@@ -28,6 +28,7 @@ import { tranformLocModuleName } from "../pages/employee/localizationUtility";
 https://rjsf-team.github.io/react-jsonschema-form/docs/
 */
 
+/* context added for state management in MdmsAddV2*/
 const AdditionalPropertiesContext = createContext();
 export const useAdditionalProperties = () => useContext(AdditionalPropertiesContext);
 
@@ -337,7 +338,7 @@ const DigitJSONForm = ({
 const transformFormDataWithProperties = (formData, additionalProperties) => {
   const transformedFormData = { ...formData };
   for (const fieldName in additionalProperties) {
-    if (additionalProperties.hasOwnProperty(fieldName)) {
+    if (Object.hasOwn(additionalProperties, fieldName)) {
       const fieldProps = additionalProperties[fieldName];
       if (fieldProps?.localizationCode) {
         transformedFormData[fieldName] = fieldProps.mdmsCode;
@@ -355,7 +356,7 @@ const buildSecondFormatMessages = (additionalProperties, schemaCode, locale) => 
 
   const messages = [];
   for (const fieldName in additionalProperties) {
-    if (additionalProperties.hasOwnProperty(fieldName)) {
+    if (Object.hasOwn(additionalProperties, fieldName)) {
       const fieldProps = additionalProperties[fieldName];
       const { mdmsCode, localizationMessage } = fieldProps;
       if (mdmsCode && localizationMessage) {
@@ -373,7 +374,7 @@ const buildSecondFormatMessages = (additionalProperties, schemaCode, locale) => 
 };
 
 const onSubmitV2 = async ({ formData }, e) => {
-  let locale = Digit.StoreData.getCurrentLanguage();
+  const locale = Digit.StoreData.getCurrentLanguage();
   const transformedFormData = transformFormDataWithProperties(formData, additionalProperties);
   const secondFormatMessages = buildSecondFormatMessages(additionalProperties, schema?.code, locale);
   if (secondFormatMessages.length > 0) {

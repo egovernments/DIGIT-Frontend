@@ -10,9 +10,9 @@ const MDMSView = ({ ...props }) => {
   const history = useHistory()
   const { t } = useTranslation()
   const [showToast, setShowToast] = useState(false);
-  let { moduleName, masterName, tenantId, uniqueIdentifier } = Digit.Hooks.useQueryParams();
-  let { from, screen, action } = Digit.Hooks.useQueryParams()
-  tenantId = Digit.ULBService.getCurrentTenantId();
+  const { moduleName, masterName, uniqueIdentifier } = Digit.Hooks.useQueryParams();
+  const { from, screen, action } = Digit.Hooks.useQueryParams()
+  const tenantId = Digit.ULBService.getCurrentTenantId();
 
   const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(
     tenantId,
