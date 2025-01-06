@@ -142,7 +142,6 @@ const UserAccessWrapper = ({ onSelect, props: customProps, setupCompleted }) => 
     updateUrlParams({ internalKey });
   }, [internalKey]);
 
-  console.log("hiiiii",internalKey);
 
   return (
     <Fragment>
