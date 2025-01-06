@@ -21,6 +21,9 @@ import EditEmployee from "./pages/EditEmployee/index";
 import Details from "./pages/EmployeeDetails";
 import Inbox from "./pages/Inbox";
 import Response from "./pages/Response";
+// import { AssignmentModule } from "../../assignment/Module";
+import { AssignmentModule } from "../../assignment/src/Module";
+
 
 export const HRMSModule = ({ stateCode, userType, tenants }) => {
   const moduleCode = "HR";
@@ -53,7 +56,7 @@ const componentsToRegister = {
   SelectEmployeeCorrespondenceAddress,
   SelectEmployeeGender,
   SelectDateofBirthEmployment,
-  HRMSModule,
+  HRMSModule : AssignmentModule,
   HRMSResponse: Response,
   HREditEmpolyee: EditEmployee,
   HRCreateEmployee: CreateEmployee,

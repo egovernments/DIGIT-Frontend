@@ -2,6 +2,9 @@ import { PrivateRoute } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, Switch, useLocation } from "react-router-dom";
+import AssignmentCreate from "./AssignmentCreate";
+import AssignmentSearchs from "./AssignmentSearchs";
+import AssignmentView from "./AssignmentView";
 
 const EmployeeApp = ({ path, url, userType }) => {
     console.log(path);
@@ -47,11 +50,9 @@ const EmployeeApp = ({ path, url, userType }) => {
               <Inbox parentRoute={path} businessService="hrms" filterComponent="HRMS_INBOX_FILTER" initialStates={inboxInitialState} isInbox={true} />
             )}
           />
-          <PrivateRoute path={`${path}/create`} component={() => <CreateEmployee />} />
-          <PrivateRoute path={`${path}/create2`} component={() => <div>Hey there</div>} />
-          <PrivateRoute path={`${path}/response`} component={(props) => <HRMSResponse {...props} parentRoute={path} />} />
-          <PrivateRoute path={`${path}/details/:tenantId/:id`} component={() => <HRMSDetails />} />
-          <PrivateRoute path={`${path}/edit/:tenantId/:id`} component={() => <EditEmpolyee />} />
+          <PrivateRoute path={`${path}/assignment-searchs`} component={() => <AssignmentSearchs />} />
+          <PrivateRoute path={`${path}/assignment-view`} component={() => <AssignmentView />} />
+          <PrivateRoute path={`${path}/assignment-create`} component={() => <AssignmentCreate />} />
         </div>
       </React.Fragment>
     </Switch>

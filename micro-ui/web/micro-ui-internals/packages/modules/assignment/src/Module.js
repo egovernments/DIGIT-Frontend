@@ -2,17 +2,19 @@ import { Loader,TourProvider } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
 import EmployeeApp from "./pages/employee";
-import { CustomisedHooks } from "./hooks";
+// import { CustomisedHooks } from "./hooks";
 import { UICustomizations } from "./configs/UICustomizations";
-import HRMSCard from "./components/HRMSCard";
-import WorkbenchCard from "./components/WorkbenchCard";
-import DigitJSONForm from "./components/DigitJSONForm";
-import LevelCards from "./components/LevelCards";
+// import HRMSCard from "./components/HRMSCard";
+// import WorkbenchCard from "./components/WorkbenchCard";
+// import DigitJSONForm from "./components/DigitJSONForm";
+// import LevelCards from "./components/LevelCards";
 import MyTable from "./components/MyTable";
-import * as parsingUtils from "../src/utils/ParsingUtils"
+// import * as parsingUtils from "../src/utils/ParsingUtils"
 
-const WorkbenchModule = ({ stateCode, userType, tenants }) => {
+export const AssignmentModule = ({ stateCode, userType, tenants }) => {
   console.log('.................');
+  console.log("Hi from assignment module")
+  // console.log(EmployeeApp);
   const moduleCode = ["workbench","mdms","schema","hcm-admin-schemas"];
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
@@ -35,12 +37,7 @@ const WorkbenchModule = ({ stateCode, userType, tenants }) => {
 
 const componentsToRegister = {
   MyTable,
-  WorkbenchModule,
-  WorkbenchCard,
-  DigitJSONForm,
-  LevelCards,
-  DSSCard: null, // TO HIDE THE DSS CARD IN HOME SCREEN as per workbench
-  HRMSCard // Overridden the HRMS card as per workbench
+  AssignmentModule
 };
 
 const overrideHooks = () => {
@@ -86,7 +83,7 @@ const updateCustomConfigs = () => {
 };
 
 
- const initWorkbenchComponents = () => {
+ const initAssignmentComponents = () => {
   overrideHooks();
   updateCustomConfigs();
   Object.entries(componentsToRegister).forEach(([key, value]) => {
@@ -94,5 +91,5 @@ const updateCustomConfigs = () => {
   });
 };
 
-export   {initWorkbenchComponents, DigitJSONForm};
+export {initAssignmentComponents};
 

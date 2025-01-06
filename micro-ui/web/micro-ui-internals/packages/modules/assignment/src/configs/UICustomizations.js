@@ -432,7 +432,7 @@ export const UICustomizations = {
       // return false;
     },
     preProcess: (data, additionalDetails) => {
-      // console.log("additional details from preprocess", additionalDetails);
+      console.log("additional details from preprocess", additionalDetails);
       console.log(data, "data in preprocess");
       const field = data?.state?.searchForm?.field?.code;
       console.log(field, "field in preprocess")
@@ -564,7 +564,7 @@ export const UICustomizations = {
       if(key==="Button")
         return btn;
       if(value==="mz")
-        value = "Mozambique"
+        value = "mozambique"
       return value;
     },
     MobileDetailsOnClick: (row, tenantId) => {

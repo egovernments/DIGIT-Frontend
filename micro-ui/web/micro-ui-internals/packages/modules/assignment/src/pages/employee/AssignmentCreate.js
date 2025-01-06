@@ -1,8 +1,22 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { FormComposer } from '@egovernments/digit-ui-react-components';
 import { values } from 'lodash';
 
 const AssignmentCreate = () => {
+  const [formData, setFormData] = useState({
+    usageType: '',
+    usageName: '',
+    quantity: '',
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
   const newConfig = [
     {
       head: "Create Facility",
@@ -83,7 +97,11 @@ const AssignmentCreate = () => {
           type: "component",
           component: "MyTable",
           withoutLabel: true,
-          key: "MyTable"
+          key: "MyTable",
+          props: {
+            formData,
+            handleInputChange
+          }
         },
       ],
     },
@@ -98,7 +116,8 @@ const AssignmentCreate = () => {
   const defVal = {}
 
   const handleSubmit = (data) => {
-    console.log(data, "data of form");
+    // console.log(data, "data of form");
+    console.log(formData, "component's data")
     // mutation.mutate(
     //   {
     //     method: "POST",

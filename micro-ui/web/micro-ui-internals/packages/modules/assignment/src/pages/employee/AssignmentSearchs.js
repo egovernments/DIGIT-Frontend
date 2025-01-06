@@ -127,15 +127,15 @@ const config = {
   };  
 
 
-const AssignmentSearch = () => {
-  console.log(Digit);
+const AssignmentSearchs = () => {
+  console.log("Assignment Searchs");
   const history = useHistory();
 
   const onClickRow = ({original:row}) => {
     console.log(row);
     // const [moduleName,masterName] = row.schemaCode.split(".")
     // const additionalParamString = new URLSearchParams(additionalParams).toString();
-    history.push(`/${window.contextPath}/employee/workbench/assignment-view`, {rowData : row})
+    history.push(`/${window.contextPath}/employee/hrms/assignment-view`, {rowData : row})
   }
   console.log("Asgnsearch")
   return (
@@ -146,4 +146,4 @@ const AssignmentSearch = () => {
   )
 }
 
-export default AssignmentSearch
+export default AssignmentSearchs;
