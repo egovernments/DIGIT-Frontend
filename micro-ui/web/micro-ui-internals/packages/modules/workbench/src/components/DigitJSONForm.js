@@ -298,9 +298,6 @@ const DigitJSONForm = ({
   );
 
 
-
-
-  // Compute additionalProperties whenever formData or MdmsRes changes
   useEffect(() => {
     if (schema?.code && MdmsRes && formData) {
       const localisableFields = MdmsRes?.find((item) => item?.schemaCode === schema?.code)?.localisation?.localisableFields || [];
@@ -345,7 +342,7 @@ const transformFormDataWithProperties = (formData, additionalProperties) => {
   return transformedFormData;
 };
 
-// Utility function to construct second format localization messages
+
 const buildSecondFormatMessages = (additionalProperties, schemaCode, locale) => {
   const schemaCodeParts = schemaCode?.split(".") || [];
   const firstPart = schemaCodeParts[0]?.toLowerCase() || "default";
