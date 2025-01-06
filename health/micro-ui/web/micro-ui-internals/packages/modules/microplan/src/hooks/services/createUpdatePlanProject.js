@@ -892,7 +892,7 @@ const createUpdatePlanProject = async (req) => {
           });
           const updatedPlanObject = {
             ...fetchedPlan,
-            additionalDetails:{...fetchedPlanForBoundary.additionalDetails,key:key}
+            additionalDetails:{...fetchedPlan.additionalDetails,key:key}
           };
           const response= await updatePlan(updatedPlanObject);
           // Return as expected
