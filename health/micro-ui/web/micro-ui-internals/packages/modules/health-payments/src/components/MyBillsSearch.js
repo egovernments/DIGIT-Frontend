@@ -8,6 +8,7 @@ import DateRangePicker from "./DateRangePicker";
 const MyBillsSearch = ({ onSubmit = () => { }, onClear = () => { } }) => {
     const { t } = useTranslation();
 
+    const [billID, setBillID] = useState(null);
     const [dateRange, setDateRange] = useState({
         startDate: '',
         endDate: '',
@@ -19,20 +20,24 @@ const MyBillsSearch = ({ onSubmit = () => { }, onClear = () => { } }) => {
     };
 
     const handleSearch = (data) => {
-        setDateRange(data.range);
+        onSubmit(billID, dateRange);
     };
 
-    const handleClear = (data) => {
-        setDateRange("");
+    const handleClear = () => {
+        setDateRange({ startDate: '', endDate: '', title: '' });
+        setBillID("");
+        onClear();
     };
-
-
 
     return (
         <Card variant="search" style={{ marginBottom: "1.5rem" }}>
             <div style={{ width: "80%" }}>
-                <TextBlock body={`${t("HCM_AM_BILL_ID")} *`}></TextBlock>
+                <TextBlock body={`${t("HCM_AM_BILL_ID")}`}></TextBlock>
                 <TextInput
+                    value={billID}
+                    onChange={(e) => {
+                        setBillID(e.target.value);
+                    }}
                 />
             </div>
             <div style={{ maxWidth: "100%", width: "100%" }}>
