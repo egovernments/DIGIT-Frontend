@@ -24,7 +24,7 @@ import CustomCheckbox from "./Checbox";
 import { BulkModal } from "./BulkModal";
 import { tranformLocModuleName } from "../pages/employee/localizationUtility";
 
-/*created the foem using rjfs json form 
+/*created the form using rjfs json form 
 https://rjsf-team.github.io/react-jsonschema-form/docs/
 */
 
