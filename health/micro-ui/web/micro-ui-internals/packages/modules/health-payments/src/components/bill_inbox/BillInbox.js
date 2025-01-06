@@ -41,10 +41,10 @@ const CustomBillInbox = () => {
             tenantId: Digit.ULBService.getStateId(),
             limit: limitAndOffset?.limit,
             offset: limitAndOffset?.offset,
-            // referenceId: selectedProject == undefined ? Digit.SessionStorage.get("paymentInbox").selectedProject?.id : selectedProject?.id,
+            referenceId: selectedProject == undefined ? Digit.SessionStorage.get("paymentInbox").selectedProject?.id : selectedProject?.id,
             // staffId: Digit.SessionStorage.get("UserIndividual")?.[0]?.id,
             localityCode: selectedBoundaryCode,
-            paymentStatus: activeLink.code,
+            reviewStatus: activeLink.code,
         },
         config: {
             enabled: selectedBoundaryCode && selectedProject ? true : false,
@@ -119,14 +119,14 @@ const CustomBillInbox = () => {
                     body: {
                         criteria: {
                             tenantId: tenantId,
-                            locality: selectedBoundaryCode,
+                            localityCode: selectedBoundaryCode,
                             referenceId: selectedProject.id
                         }
                     },
                 },
                 {
                     onSuccess: (data) => {
-                        setShowToast({ key: "success", label: t("HCM_AM_BILL_UPDATED_SUCCESSFULLY"), transitionTime: 3000 });
+                        setShowToast({ key: "success", label: t("HCM_AM_BILL_GENERATED_SUCCESSFULLY"), transitionTime: 3000 });
                     },
                     onError: (error) => {
                         setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
@@ -148,7 +148,7 @@ const CustomBillInbox = () => {
                             links={[
                                 {
                                     url: "/employee/payments/my-bills",
-                                    text: "HCM_AM_MY_BILLS_LINK",
+                                    text: "HCM_AM_MY_BILLS",
                                 },
                             ]}
                         ></CustomInboxSearchLinks>

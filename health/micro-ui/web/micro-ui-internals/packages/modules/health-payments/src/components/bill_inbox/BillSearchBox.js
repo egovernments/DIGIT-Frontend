@@ -5,7 +5,7 @@ import { Card, Dropdown, TextBlock } from "@egovernments/digit-ui-components";
 
 const AGGREGATION_LEVEL_OPTIONS = [
     { name: "HCM_AM_DISTRICT_LEVEL", code: "DISTRICT" },
-    { name: "HCM_AM_PROVIENCE_LEVEL", code: "PROVIENCE" },
+    { name: "HCM_AM_PROVINCE_LEVEL", code: "PROVINCE" },
     { name: "HCM_AM_COUNTRY_LEVEL", code: "COUNTRY" },
 ];
 

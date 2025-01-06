@@ -308,7 +308,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   const { isLoading: isIndividualsLoading, data: individualsData } = Digit.Hooks.useCustomAPIHook(individualReqCriteria);
 
-  function getUserAttendanceSummary(data, individualsData) {
+  function getUserAttendanceSummary(data, individualsData, t) {
     return data[0].individualEntries.map((individualEntry) => {
       const individualId = individualEntry.individualId;
       const matchingIndividual = individualsData?.Individual?.find(
@@ -316,10 +316,10 @@ const ViewAttendance = ({ editAttendance = false }) => {
       );
 
       if (matchingIndividual) {
-        const userName = matchingIndividual.name?.givenName || "Unknown";
-        const userId = matchingIndividual?.userDetails?.username || "N/A";
+        const userName = matchingIndividual.name?.givenName || t("NA");
+        const userId = matchingIndividual?.userDetails?.username || t("NA");
         const userRole =
-          matchingIndividual.skills?.[0]?.type || "NA";
+          t(matchingIndividual.skills?.[0]?.type) || t("NA");
         const noOfDaysWorked = individualEntry?.modifiedTotalAttendance || individualEntry.actualTotalAttendance || 0;
         const id = individualEntry.individualId || 0;
 
@@ -335,7 +335,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   useEffect(() => {
 
     if (data.length > 0 && AllIndividualsData) {
-      setAttendanceSummary(getUserAttendanceSummary(data, AllIndividualsData));
+      setAttendanceSummary(getUserAttendanceSummary(data, AllIndividualsData, t));
     }
 
   }, [AllIndividualsData, data]); /// need to update dependency

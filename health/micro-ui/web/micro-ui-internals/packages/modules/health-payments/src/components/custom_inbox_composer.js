@@ -105,7 +105,7 @@ const CustomInboxSearchComposer = () => {
                   ? Digit.SessionStorage.get("paymentInbox").code
                   : filterCriteria?.code
                 : filterData?.code,
-            paymentStatus: status == undefined ? selectedStatus : status,
+            reviewStatus: status == undefined ? selectedStatus : status,
           },
         },
         {
@@ -217,7 +217,7 @@ const CustomInboxSearchComposer = () => {
     triggerMusterRollApprove(filterCriteria, selectedStatus, newPerPage, page);
   };
   const callServiceOnTap = (status) => {
-    if (status.code == "HCM_AM_PENDING_FOR_APPROVAL") {
+    if (status.code == "PENDINGFORAPPROVAL") {
       setRowsPerPage(5); // Update the rows per page state
       setCurrentPage(1);
       setSelectedStatus(StatusEnum.PENDING_FOR_APPROVAL);
