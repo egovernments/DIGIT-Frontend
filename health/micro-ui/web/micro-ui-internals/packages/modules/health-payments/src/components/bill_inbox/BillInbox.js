@@ -138,6 +138,7 @@ const CustomBillInbox = () => {
                 {
                     onSuccess: (data) => {
                         setShowToast({ key: "success", label: t("HCM_AM_BILL_GENERATED_SUCCESSFULLY"), transitionTime: 3000 });
+                        refetchBill();
                     },
                     onError: (error) => {
                         setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
@@ -246,7 +247,7 @@ const CustomBillInbox = () => {
                             style={{ minWidth: "14rem" }}
                             type="button"
                             variation="primary"
-                        //   isDisabled={updateMutation.isLoading || updateDisabled}
+                            isDisabled={generateBillMutation.isLoading}
                         />,
                     ]}
                     className=""
