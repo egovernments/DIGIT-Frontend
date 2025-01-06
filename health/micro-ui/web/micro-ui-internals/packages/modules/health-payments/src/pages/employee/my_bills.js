@@ -26,10 +26,10 @@ const MyBills = () => {
         body: {
             billCriteria: {
                 tenantId: tenantId,
-                ids: ["6eaf462a-4d9a-44c9-9ef7-e127e3fb33f1"],
-                // localityCode: "MICROPLAN_MO_13_02_GBAO",
-                // referenceIds: [project?.[0]?.id],
-                // ...(billID ? { billNumbers: [billID] } : {})
+                // ids: ["6eaf462a-4d9a-44c9-9ef7-e127e3fb33f1"],
+                // localityCode: project?.address?.boundary,
+                referenceIds: [project?.[0]?.id],
+                ...(billID ? { billNumbers: [billID] } : {})
             }
         },
         config: {

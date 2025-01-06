@@ -134,13 +134,14 @@ const MyBillsTable = ({ ...props }) => {
                 iconFill=""
                 icon="FileDownload"
                 isSuffix
+                title={t(`HCM_AM_DOWNLOAD_BILLS`)}
                 label={t(`HCM_AM_DOWNLOAD_BILLS`)}
                 showBottom={true}
                 onOptionSelect={(value) => {
                     if (value.code === "HCM_AM_PDF") {
-                        downloadDocument(pdfID, "PDF")
+                        downloadDocument(reportDetails?.pdfReportId, "PDF")
                     } else if (value.code === "HCM_AM_EXCEL") {
-                        downloadDocument(excelID, "EXCEL")
+                        downloadDocument(reportDetails?.excelReportId, "EXCEL")
                     }
                 }}
                 options={[
@@ -155,8 +156,7 @@ const MyBillsTable = ({ ...props }) => {
                 ]}
                 optionsKey="name"
                 size=""
-                // style={{ minWidth: "15rem" }}
-                title=""
+                style={{ minWidth: "15rem" }}
                 type="actionButton"
                 variation="secondary"
             /> :
@@ -168,7 +168,7 @@ const MyBillsTable = ({ ...props }) => {
                     style={{ opacity: 1, width: "16rem", border: "none" }}
                     onClick={() => {
                         setShowToast({
-                            key: reportDetails.status === "FAILED" ? "error" : "info", label: reportDetails?.status === "INITIATED"
+                            key: reportDetails?.status === "FAILED" ? "error" : "info", label: reportDetails?.status === "INITIATED"
                                 ? t("HCM_AM_BILL_GENERATION_IN_PROGRESS_MESSAGE")
                                 : (reportDetails?.errorMessage
                                     ? t(reportDetails?.errorMessage)
@@ -190,9 +190,6 @@ const MyBillsTable = ({ ...props }) => {
     const handlePerRowsChange = async (currentRowsPerPage, currentPage) => {
         props?.handlePerRowsChange(currentRowsPerPage, currentPage);
     };
-
-    console.log(props.data, "PPPPPPPPPPPPPPPPPPPPPPP");
-
 
     return (
         <div className="component-table-wrapper">
