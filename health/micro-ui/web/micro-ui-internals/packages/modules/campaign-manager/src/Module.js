@@ -57,6 +57,7 @@ import MapView from "./components/MapView";
 import NoResultsFound from "./components/NoResultsFound";
 import UploadDataMappingWrapper from "./components/UploadDataMappingWrapper";
 import DataUploadWrapper from "./components/DataUploadWrapper";
+import AppPreview from "./components/AppPreview";
 
 /**
  * MDMS Module name
@@ -175,6 +176,7 @@ const componentsToRegister = {
   NoResultsFound,
   UploadDataMappingWrapper,
   DataUploadWrapper,
+  AppPreview
 };
 
 const overrideHooks = () => {
