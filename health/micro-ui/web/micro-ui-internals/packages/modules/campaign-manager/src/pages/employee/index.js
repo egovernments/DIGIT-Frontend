@@ -16,6 +16,7 @@ import UpdateChecklist from "./UpdateChecklist";
 import BoundaryHome from "./BoundaryHome";
 import ApprovedMicroplans from "./ApprovedMicroplans";
 import FetchFromMicroplan from "../../components/fetchFromMicroplan";
+import Attendance from "./Attendance";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -78,6 +79,11 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       path: pathVar === "update-campaign" ? "" : `/${window?.contextPath}/employee/campaign/update-campaign`,
       content: t("UPDATE_CAMPAIGN"),
       show: pathVar.match("update-campaign") ? true : false,
+    },
+    {
+      path: "",
+      content: t("ACTION_LABEL_CONFIGURE_REGISTER"),
+      show: pathVar === "attendance" ? true : false
     }
   ];
 
@@ -154,6 +160,8 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
           <PrivateRoute path={`${path}/boundary/data`} component={()=> <ViewHierarchy />} />
           <PrivateRoute path={`${path}/update-campaign`} component={() => <UpdateCampaign />} />
           <PrivateRoute path={`${path}/setup-from-microplan`} component={() => <ApprovedMicroplans />} />
+          <PrivateRoute path={`${path}/attendance`} component={() => <Attendance />} />
+
         </AppContainer>
       </Switch>
     </React.Fragment>

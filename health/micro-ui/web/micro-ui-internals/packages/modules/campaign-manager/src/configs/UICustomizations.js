@@ -464,6 +464,19 @@ export const UICustomizations = {
             const navEvent1 = new PopStateEvent("popstate");
             window.dispatchEvent(navEvent1);
             break;
+          case "ACTION_LABEL_CONFIGURE_REGISTER":
+            window.history.pushState(
+              {
+                name: row?.campaignName,
+                data: row,
+                projectId: row?.projectId,
+              },
+              "",
+              `/${window.contextPath}/employee/campaign/attendance`
+            );
+            const navEvent2 = new PopStateEvent("popstate");
+            window.dispatchEvent(navEvent2);
+            break;
 
           case "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS":
             window.history.pushState(
@@ -509,6 +522,7 @@ export const UICustomizations = {
                   ...(row?.status === "created" ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") }] : []),
                   { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
                   { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
+                  { key: 4, code: "ACTION_LABEL_CONFIGURE_REGISTER", i18nKey: t("ACTION_LABEL_CONFIGURE_REGISTER") },
                   ...(row?.status === "created"
                     ? [{ key: 1, code: "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS", i18nKey: t("ACTION_LABEL_UPDATE_BOUNDARY_DETAILS") }]
                     : []),
@@ -799,6 +813,20 @@ export const UICustomizations = {
             window.dispatchEvent(navEvent1);
             break;
 
+            case "ACTION_LABEL_CONFIGURE_REGISTER":
+              window.history.pushState(
+                {
+                  name: row?.campaignName,
+                  data: row,
+                  projectId: row?.projectId,
+                },
+                "",
+                `/${window.contextPath}/employee/campaign/attendance`
+              );
+              const navEvent2 = new PopStateEvent("popstate");
+              window.dispatchEvent(navEvent2);
+              break;
+
           default:
             console.log(value);
             break;
@@ -831,6 +859,7 @@ export const UICustomizations = {
                   ...(row?.status === "created" ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") }] : []),
                   { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
                   { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
+                  { key: 4, code: "ACTION_LABEL_CONFIGURE_REGISTER", i18nKey: t("ACTION_LABEL_CONFIGURE_REGISTER") },
                   ...(row?.status === "created"
                     ? [{ key: 1, code: "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS", i18nKey: t("ACTION_LABEL_UPDATE_BOUNDARY_DETAILS") }]
                     : []),
