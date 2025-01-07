@@ -120,61 +120,66 @@ const MyBillsTable = ({ ...props }) => {
     // Map attendance data to rows
     // [billId, billDate, noOfRegisters, noOfWorkers, boundaryCode, projectName, pdfID, excelID]
     const rows = useMemo(() => {
-        return props.data.map(([billId, billDate, noOfRegisters, noOfWorkers, boundaryCode, projectName, reportDetails]) => [
-            { label: billId, maxLength: 64 },
-            { label: billDate, maxLength: 64 },
-            noOfRegisters,
-            noOfWorkers,
-            { label: boundaryCode, maxLength: 64 },
-            { label: projectName, maxLength: 64 },
-            reportDetails?.status === "COMPLETED" ? <Button
-                className="custom-class"
-                iconFill=""
-                icon="FileDownload"
-                isSuffix
-                title={t(`HCM_AM_DOWNLOAD_BILLS`)}
-                label={t(`HCM_AM_DOWNLOAD_BILLS`)}
-                showBottom={true}
-                onOptionSelect={(value) => {
-                    if (value.code === "HCM_AM_PDF") {
-                        downloadPDFWithName({ fileStoreId: reportDetails?.pdfReportId, customName: `${billId}` })
-                    } else if (value.code === "HCM_AM_EXCEL") {
-                        downloadExcelWithName({ fileStoreId: reportDetails?.excelReportId, customName: `${billId}` });
-                    }
-                }}
-                options={[
-                    {
-                        code: "HCM_AM_EXCEL",
-                        name: t(`HCM_AM_EXCEL`),
-                    },
-                    {
-                        code: "HCM_AM_PDF",
-                        name: t(`HCM_AM_PDF`),
-                    },
-                ]}
-                optionsKey="name"
-                size=""
-                style={{ minWidth: "15rem" }}
-                type="actionButton"
-                variation="secondary"
-            /> :
-                <InfoButton
-                    className="dm-workbench-download-template-btn"
-                    infobuttontype={reportDetails.status === "FAILED" ? "error" : "info"}
-                    icon={"Info"}
-                    label={reportDetails.status === "FAILED" ? t("HCM_AM_FAILED_BILL") : t("HCM_AM_PROGRESS_BILL")}
-                    style={{ opacity: 1, width: "16rem", border: "none" }}
-                    onClick={() => {
-                        setShowToast({
-                            key: reportDetails?.status === "FAILED" ? "error" : "info", label: reportDetails?.status === "INITIATED"
-                                ? t("HCM_AM_BILL_GENERATION_IN_PROGRESS_MESSAGE")
-                                : (reportDetails?.errorMessage
-                                    ? t(reportDetails?.errorMessage)
-                                    : t("HCM_AM_BILL_GENERATION_FAILED_MESSAGE")), transitionTime: 3000
-                        });
+        return props.data.map(([billId, billDate, noOfRegisters, noOfWorkers, boundaryCode, projectName, reportDetails], index) => {
+
+            const isLastRow = index === props.data.length - 1;
+
+            return [
+                { label: billId, maxLength: 64 },
+                { label: billDate, maxLength: 64 },
+                noOfRegisters,
+                noOfWorkers,
+                { label: boundaryCode, maxLength: 64 },
+                { label: projectName, maxLength: 64 },
+                reportDetails?.status === "COMPLETED" ? <Button
+                    className="custom-class"
+                    iconFill=""
+                    icon="FileDownload"
+                    isSuffix
+                    label={t(`HCM_AM_DOWNLOAD_BILLS`)}
+                    showBottom={isLastRow ? false : true}
+                    onOptionSelect={(value) => {
+                        if (value.code === "HCM_AM_PDF") {
+                            downloadPDFWithName({ fileStoreId: reportDetails?.pdfReportId, customName: `${billId}` })
+                        } else if (value.code === "HCM_AM_EXCEL") {
+                            downloadExcelWithName({ fileStoreId: reportDetails?.excelReportId, customName: `${billId}` });
+                        }
                     }}
-                />
-        ]);
+                    options={[
+                        {
+                            code: "HCM_AM_EXCEL",
+                            name: t(`HCM_AM_EXCEL`),
+                        },
+                        {
+                            code: "HCM_AM_PDF",
+                            name: t(`HCM_AM_PDF`),
+                        },
+                    ]}
+                    optionsKey="name"
+                    size=""
+                    style={{ minWidth: "15rem" }}
+                    type="actionButton"
+                    variation="secondary"
+                /> :
+                    <InfoButton
+                        className="dm-workbench-download-template-btn"
+                        infobuttontype={reportDetails.status === "FAILED" ? "error" : "info"}
+                        icon={"Info"}
+                        label={reportDetails.status === "FAILED" ? t("HCM_AM_FAILED_BILL") : t("HCM_AM_PROGRESS_BILL")}
+                        style={{ opacity: 1, width: "16rem", border: "none" }}
+                        onClick={() => {
+                            setShowToast({
+                                key: reportDetails?.status === "FAILED" ? "error" : "info", label: reportDetails?.status === "INITIATED"
+                                    ? t("HCM_AM_BILL_GENERATION_IN_PROGRESS_MESSAGE")
+                                    : (reportDetails?.errorMessage
+                                        ? t(reportDetails?.errorMessage)
+                                        : t("HCM_AM_BILL_GENERATION_FAILED_MESSAGE")), transitionTime: 3000
+                            });
+                        }}
+                    />
+            ];
+        }
+        );
     }, [props.data]);
 
     const handlePageChange = (page, totalRows) => {
