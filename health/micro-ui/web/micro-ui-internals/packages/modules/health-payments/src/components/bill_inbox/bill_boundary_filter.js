@@ -126,7 +126,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
                     paddingTop: "16px", // Adds spacing above the button
                 }}
             >
-                <SubmitBar onSubmit={handleApplyFilter} className="w-fullwidth" label={t("HCM_AM_COMMON_APPLY")} />
+                {selectedProject?.address?.boundary && selectedLevel && <SubmitBar onSubmit={handleApplyFilter} className="w-fullwidth" label={t("HCM_AM_COMMON_APPLY")} />}
                 {showToast && (
                     <Toast
                         style={{ zIndex: 10001 }}
