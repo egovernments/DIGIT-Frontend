@@ -47,7 +47,7 @@ const CustomBillInbox = () => {
             // staffId: Digit.SessionStorage.get("UserIndividual")?.[0]?.id,
             localityCode: selectedBoundaryCode,
             reviewStatus: activeLink.code,
-            isChildrenRequired: selectedLevel.code === "DISTRICT" ? true : false,
+            isChildrenRequired: selectedLevel != null && selectedLevel?.code === "DISTRICT" ? true : false,
         },
         config: {
             enabled: selectedBoundaryCode && selectedProject ? true : false,
