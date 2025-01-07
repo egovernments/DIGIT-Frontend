@@ -582,6 +582,11 @@ export const UICustomizations = {
       const VillageHierarchyTooltipWrapper = Digit.ComponentRegistryService.getComponent("VillageHierarchyTooltipWrapper");
 
       switch (key) {
+        case `MICROPLAN_FACILITY_${column?.projectType}_CAPACITY`:
+          if (row?.additionalDetails?.capacity || row?.additionalDetails?.capacity === 0) {
+            return row?.additionalDetails?.capacity;
+          }
+          return t("NA");
         case "MICROPLAN_FACILITY_SERVINGPOPULATION":
           return row?.additionalDetails?.servingPopulation;
         case "MICROPLAN_FACILITY_RESIDINGVILLAGE":
