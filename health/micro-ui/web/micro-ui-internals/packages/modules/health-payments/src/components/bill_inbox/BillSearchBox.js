@@ -9,18 +9,18 @@ const AGGREGATION_LEVEL_OPTIONS = [
     { name: "HCM_AM_COUNTRY_LEVEL", code: "COUNTRY" },
 ];
 
-const BillSearchBox = ({ onLevelSelect }) => {
+const BillSearchBox = ({ onLevelSelect, initialProject, initialAggregationLevel }) => {
     const { t } = useTranslation();
     const [project, setProject] = useState([]);
-    const [selectedProject, setSelectedProject] = useState(null);
-    const [selectedAggregationLevel, setSelectedAggregationLevel] = useState(null);
+    const [selectedProject, setSelectedProject] = useState(initialProject || null);
+    const [selectedAggregationLevel, setSelectedAggregationLevel] = useState(initialAggregationLevel || null);
     const [filteredAggregationOptions, setFilteredAggregationOptions] = useState(AGGREGATION_LEVEL_OPTIONS);
 
     const HIERARCHY = Digit.SessionStorage.get("boundaryHierarchyOrder");
 
+    // Update aggregation options based on the selected project
     useEffect(() => {
         if (selectedProject) {
-            // Get the boundary type from the selected project
             const boundaryType = selectedProject?.address?.boundaryType;
 
             const filteredOptions = [];
@@ -28,18 +28,16 @@ const BillSearchBox = ({ onLevelSelect }) => {
             for (const option of AGGREGATION_LEVEL_OPTIONS) {
                 filteredOptions.push(option);
                 if (option.code === boundaryType) {
-                    break; // Stop once we include the desired boundaryType
+                    break;
                 }
             }
             setFilteredAggregationOptions(filteredOptions);
-
         } else {
             setFilteredAggregationOptions(AGGREGATION_LEVEL_OPTIONS); // Reset to default if no project selected
         }
     }, [selectedProject]);
 
-
-
+    // Load project data if not already loaded
     useEffect(() => {
         if (project.length === 0) {
             const datak =
@@ -56,9 +54,16 @@ const BillSearchBox = ({ onLevelSelect }) => {
         }
     }, []);
 
+    // Handle aggregation level change
     const handleAggregationLevelChange = (value) => {
         setSelectedAggregationLevel(value);
         onLevelSelect(selectedProject, value); // Pass the selected project and level to the parent
+    };
+
+    // Handle project selection
+    const handleProjectSelect = (value) => {
+        setSelectedProject(value);
+        onLevelSelect(value, selectedAggregationLevel); // Pass the selected project and level to the parent
     };
 
     return (
@@ -74,7 +79,7 @@ const BillSearchBox = ({ onLevelSelect }) => {
                         name={"code"}
                         optionKey={"name"}
                         selected={selectedProject}
-                        select={(value) => setSelectedProject(value)}
+                        select={handleProjectSelect}
                     />
                 </div>
                 <div style={{ maxWidth: "100%", width: "100%" }}>

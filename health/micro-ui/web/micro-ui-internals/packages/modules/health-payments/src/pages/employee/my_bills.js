@@ -66,7 +66,7 @@ const MyBills = () => {
             const billDate = formatTimestampToDate(individualEntry.billDate);
             const noOfRegisters = individualEntry?.additionalDetails?.noOfRegisters || 0;
             const noOfWorkers = individualEntry?.billDetails?.length || 0;
-            const boundaryCode = individualEntry?.localityCode || "NA";
+            const boundaryCode = t(individualEntry?.localityCode) || "NA";
             const projectName = project?.[0]?.name || "NA";
             const reportDetails = individualEntry?.additionalDetails?.reportDetails || {
                 "status": "FAILED", // INITIATED, COMPLETED, FAILED

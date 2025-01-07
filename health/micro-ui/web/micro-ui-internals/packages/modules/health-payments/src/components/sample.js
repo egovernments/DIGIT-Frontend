@@ -37,6 +37,9 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
     }
   }, []);
 
+
+  console.log(initialValue, "VVVVVVVVVVVVVVVVV");
+
   const reqCriteriaResource = {
     url: `/boundary-service/boundary-relationships/_search`,
     params: {

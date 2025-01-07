@@ -17,14 +17,16 @@ const CustomBillInbox = () => {
     const [tableData, setTableData] = useState([]);
     const [showGenerateBillAction, setShowGenerateBillAction] = useState(false);
     const [filterCriteria, setFilterCriteria] = useState(null);
-    const [selectedProject, setSelectedProject] = useState({});
+    const [selectedProject, setSelectedProject] = useState(() => Digit.SessionStorage.get("selectedProject") || {});
+    const [selectedLevel, setSelectedLevel] = useState(() => Digit.SessionStorage.get("selectedLevel") || null);
+    // const [selectedBoundaryCode, setSelectedBoundaryCode] = useState(() => Digit.SessionStorage.get("selectedBoundaries") || null);
     const [selectedBoundaryCode, setSelectedBoundaryCode] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [approvalCount, setApprovalCount] = useState(null);
+    const [totalCount, setTotalCount] = useState(0);
     const [pendingApprovalCount, setPendingApprovalCount] = useState(null);
     const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
-    const [selectedLevel, setSelectedLevel] = useState(null);
     const [selectedStatus, setSelectedStatus] = useState("PENDINGFORAPPROVAL");
     const project = Digit?.SessionStorage.get("staffProjects");
     const [searchQuery, setSearchQuery] = useState(null);
@@ -85,6 +87,7 @@ const CustomBillInbox = () => {
             });
             setApprovalCount(AttendanceData?.statusCount?.APPROVED);
             setPendingApprovalCount(AttendanceData?.statusCount?.PENDINGFORAPPROVAL);
+            setTotalCount(AttendanceData?.totalCount);
             setTableData(formattedList);
             if (AttendanceData?.statusCount.PENDINGFORAPPROVAL === 0 && AttendanceData?.statusCount.APPROVED > 0) {
                 setShowGenerateBillAction(true);
@@ -104,9 +107,14 @@ const CustomBillInbox = () => {
             refetchBill();
         }
     }, [selectedBoundaryCode]);
-    const handleSearchChange = (selectedProject, selectedLevel) => {
-        setSelectedLevel(selectedLevel);
-        setSelectedProject(selectedProject);
+    // Handlers
+    const handleSearchChange = (project, level) => {
+        setSelectedProject(project);
+        setSelectedLevel(level);
+
+        // Store in SessionStorage
+        Digit.SessionStorage.set("selectedProject", project);
+        Digit.SessionStorage.set("selectedLevel", level);
     };
     const handleFilterUpdate = (boundaryCode) => {
         setSelectedBoundaryCode(boundaryCode);
@@ -138,6 +146,7 @@ const CustomBillInbox = () => {
                 {
                     onSuccess: (data) => {
                         setShowToast({ key: "success", label: t("HCM_AM_BILL_GENERATED_SUCCESSFULLY"), transitionTime: 3000 });
+                        refetchBill();
                     },
                     onError: (error) => {
                         setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
@@ -148,6 +157,9 @@ const CustomBillInbox = () => {
             /// will show estimate data only
         }
     };
+
+    console.log(selectedProject, selectedBoundaryCode, selectedLevel, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+
     return (
         <React.Fragment>
             <div style={{ display: "flex", flexDirection: "column", gap: "24px", marginBottom: showGenerateBillAction ? "2.5rem" : "0px" }}>
@@ -164,7 +176,8 @@ const CustomBillInbox = () => {
                         ></CustomInboxSearchLinks>
                     </div>
                     <div style={{ width: "80%", display: "flex", flexDirection: "row" }}>
-                        <BillSearchBox onLevelSelect={handleSearchChange}></BillSearchBox>
+                        <BillSearchBox onLevelSelect={handleSearchChange} initialProject={selectedProject}
+                            initialAggregationLevel={selectedLevel}></BillSearchBox>
                     </div>
                 </div>
                 <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
@@ -226,7 +239,7 @@ const CustomBillInbox = () => {
                                     rowsPerPage={rowsPerPage}
                                     handlePageChange={handlePageChange}
                                     handlePerRowsChange={handlePerRowsChange}
-                                    totalCount={AttendanceData?.totalCount}
+                                    totalCount={totalCount}
                                     status={activeLink.code}
                                 ></BillInboxTable>
                             </Card>
@@ -246,7 +259,7 @@ const CustomBillInbox = () => {
                             style={{ minWidth: "14rem" }}
                             type="button"
                             variation="primary"
-                        //   isDisabled={updateMutation.isLoading || updateDisabled}
+                            isDisabled={generateBillMutation.isLoading}
                         />,
                     ]}
                     className=""
