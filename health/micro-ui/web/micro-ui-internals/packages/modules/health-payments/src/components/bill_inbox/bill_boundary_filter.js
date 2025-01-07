@@ -3,26 +3,48 @@ import { useTranslation } from "react-i18next";
 import { CheckBox, SubmitBar } from "@egovernments/digit-ui-components";
 import BoundaryComponent from "../sample";
 import { Card, SVG, Button, ButtonGroup, TextBlock, Dropdown, Toast } from "@egovernments/digit-ui-components";
-const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilterChange }) => {
+const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilterChange, updateBoundaryFilters }) => {
     const { t } = useTranslation();
     const [boundary, setBoundary] = useState("");
+    const [showToast, setShowToast] = useState(null);
+    const [boundaryType, setBoundaryType] = useState("");
     const [boundaryKey, setBoundaryKey] = useState(0);
     const [resetFilters, setResetFilters] = useState(false);
+    const [levelSelected, setLevelSelected] = useState(() => Digit.SessionStorage.get("selectedLevel") || null);
 
     const handleApplyFilter = () => {
+        if (boundaryType !== selectedLevel.code) {
+            setShowToast({ key: "error", label: t("HCM_AM_SELECT_BOUNDARY_TILL_LAST_LEVEL"), transitionTime: 3000 });
+            return;
+        }
         onFilterChange(boundary);
     };
     const onBoundaryChange = (boundary) => {
         if (boundary) {
             setBoundary(boundary.code);
+            setBoundaryType(boundary.boundaryType);
         } else {
             setBoundary(null);
+            setBoundaryType("");
         }
     };
-    const handleClearFilter = () => {
-        if (resetFilters) {
-            setResetFilters(false);
+
+    useEffect(() => {
+
+        if (updateBoundaryFilters) {
+            setResetFilters(true);
+            setBoundary("");
         }
+
+    }, [levelSelected])
+
+
+    useEffect(() => {
+        setLevelSelected(selectedLevel);
+    }, [selectedLevel])
+
+    const handleClearFilter = () => {
+        setResetFilters(true);
         setBoundary(""); // Clear the boundary value
         setBoundaryKey((prevKey) => prevKey + 1); // Increment the key to re-render BoundaryComponent
     };
@@ -103,6 +125,14 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
                 }}
             >
                 <SubmitBar onSubmit={handleApplyFilter} className="w-fullwidth" label={t("HCM_AM_COMMON_APPLY")} />
+                {showToast && (
+                    <Toast
+                        style={{ zIndex: 10001 }}
+                        label={showToast.label}
+                        type={showToast.key}
+                        onClose={() => setShowToast(null)}
+                    />
+                )}
             </div>
         </Card>
     );

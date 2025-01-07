@@ -20,6 +20,7 @@ const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
             setShowToast({
                 key: "error",
                 label: t("HCM_AM_COMMENT_REQUIRED_ERROR_TOAST_MESSAGE"),
+                transitionTime: 3000
             });
             return;
         }
