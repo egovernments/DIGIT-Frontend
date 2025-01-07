@@ -5,6 +5,7 @@ import { ViewCardFieldPair, Toast, Card, TextBlock, Button, PopUp, CardText, Tex
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useHistory, useLocation } from "react-router-dom";
 import MobileChecklist from "../../components/MobileChecklist";
+import TagComponent from "../../components/TagComponent";
 
 const ViewChecklist = () => {
     const { t } = useTranslation();
@@ -185,7 +186,7 @@ const ViewChecklist = () => {
 
     return (
         <div style={{marginBottom: "2rem"}}>
-            <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} style={{border: '0.5px solid #0B4B66'}} />
+             <TagComponent campaignName={campaignName} />  
             <div style={{ display: "flex", justifyContent: "space-between", height:"5.8rem", marginTop:"-1.2rem" }}>
                 <div>
                     <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed"}}>
