@@ -153,6 +153,11 @@ const CustomInboxSearchComposer = () => {
     setFilterCriteria(newFilter);
     setSelectedStatus(StatusEnum.PENDING_FOR_APPROVAL);
 
+    if (selectedProject?.id == null || selectedProject?.id == undefined) {
+      setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_PROJECT_SELECT"), transitionTime: 3000 });
+      return;
+    }
+
     if (newFilter == null || newFilter == undefined) {
       setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_BOUNDARY_SELECT"), transitionTime: 3000 });
       return;
@@ -177,15 +182,6 @@ const CustomInboxSearchComposer = () => {
       setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_BOUNDARY_SELECT"), transitionTime: 3000 });
     }
   };
-
-  // useEffect(() => {
-  //   // handleCreateRateAnalysis();
-  //   // triggerMusterRollApprove();
-  // }, [totalRows, currentPage, rowsPerPage, searchQuery]);
-
-  // useEffect(() => {
-  //   setTotalRows(childrenData?.totalCount);
-  // }, [childrenData]);
 
   const handlePaginationChange = (page) => {
     setCurrentPage(page);
