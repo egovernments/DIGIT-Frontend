@@ -206,7 +206,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     var required = [];
     var columns = [];
     for (const propType of ["enumProperties", "numberProperties", "stringProperties"]) {
-      if (convertData?.properties[propType] && Array.isArray(convertData?.properties[propType]) && convertData?.properties[propType]?.length > 0) {
+      if (convertData?.properties?.[propType] && Array.isArray(convertData?.properties?.[propType]) && convertData?.properties?.[propType]?.length > 0) {
         for (const property of convertData?.properties[propType]) {
           properties[property?.name] = {
             ...property,
