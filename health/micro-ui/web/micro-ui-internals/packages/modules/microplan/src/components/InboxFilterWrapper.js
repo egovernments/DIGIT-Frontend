@@ -131,6 +131,7 @@ const InboxFilterWrapper = (props) => {
   if(isPlanFacilityLoading){
     return <Loader/>
   }
+
   return (
 
     <FilterCard
@@ -217,10 +218,10 @@ const InboxFilterWrapper = (props) => {
               <TextBlock body={t(`MP_SECURITY_QUESTION ${index + 1}`)} />
               <Dropdown
                 option={options}
-                optionKey="code"
+                optionKey={"code"}
                 selected={filterValues[`securityQ${index + 1}`]} 
                 select={(value) => handleDropdownChange(`securityQ${index + 1}`, value)}
-                t={(key) => key} 
+                t={t}
                 disabled={false}
               />
             </LabelFieldPair>
