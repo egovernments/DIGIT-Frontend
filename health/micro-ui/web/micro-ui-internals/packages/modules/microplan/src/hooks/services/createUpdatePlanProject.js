@@ -289,6 +289,49 @@ const updatePlanEmployee = async (req) => {
   return planEmployeeRes;
 };
 
+
+/**
+ * Documentation for the createUpdatePlanProject function
+ *
+ * This function handles creation and updates of plan and project based on different triggers(Triggers are screens' next button).
+ *
+ * Flow:
+ * 1. Function takes a request object containing:
+ *    - totalFormData: Form data from different screens
+ *    - state: Application state
+ *    - setShowToast: Toast notification setter
+ *    - setCurrentKey: Current key setter
+ *    - setCurrentStep: Current step setter
+ *    - config: Configuration object
+ *    - invalidateConfig: Config for data invalidation
+ *
+ * 2. Gets microplanId, campaignId and key from URL query params
+ *
+ * 3. Gets current tenant ID
+ *
+ * 4. If microplanId exists:
+ *    - Fetches existing plan configuration using searchPlanConfig
+ *
+ * 5. If campaignId exists:
+ *    - Fetches campaign details using searchCampaignConfig
+ *
+ * 6. Based on triggeredFrom config name:
+ *    - CAMPAIGN_DETAILS: Increments key and step
+ *    - MICROPLAN_DETAILS: Checks if update needed based on name change
+ *    - HYPOTHESIS: Handles assumptions updates
+ *    - SUB_HYPOTHESIS: Updates sub-hypothesis assumptions
+ *    - FORMULA_CONFIGURATION: Validates and updates formula configurations
+ *
+ * 7. Returns appropriate response based on the trigger
+ *
+ * Key APIs Used:
+ * - searchPlanConfig: Fetches plan configuration
+ * - searchCampaignConfig: Fetches campaign details
+ * - updatePlan: Updates plan configuration
+ * - updateProject: Updates project details
+ * - updatePlanEmployee: Updates plan employee details
+ */
+
 const createUpdatePlanProject = async (req) => {
   try {
     //later this object must have an invalidation config which can be used to invalidate data such as files uploaded,assumptions,formulas etc...
