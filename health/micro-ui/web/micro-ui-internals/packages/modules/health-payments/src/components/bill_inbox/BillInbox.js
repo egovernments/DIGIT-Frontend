@@ -16,7 +16,7 @@ const CustomBillInbox = () => {
     const { t } = useTranslation();
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const [showToast, setShowToast] = useState(null);
-    const [tableData, setTableData] = useState([]);
+    const [tableData, setTableData] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
     const [showGenerateBillAction, setShowGenerateBillAction] = useState(false);
     const [filterCriteria, setFilterCriteria] = useState(null);
@@ -125,6 +125,7 @@ const CustomBillInbox = () => {
         setSelectedProject(project);
         setSelectedLevel(level);
         setUpdateFilters(true);
+        setTableData(null);
 
         // Store in SessionStorage
         Digit.SessionStorage.set("selectedProject", project);
@@ -250,7 +251,7 @@ const CustomBillInbox = () => {
                                     style={{}}
                                 />
                             )}
-                            <Card>
+                            {tableData && <Card>
                                 <BillInboxTable
                                     isFetching={isFetching}
                                     tableData={tableData}
@@ -261,7 +262,7 @@ const CustomBillInbox = () => {
                                     totalCount={totalCount}
                                     status={activeLink.code}
                                 ></BillInboxTable>
-                            </Card>
+                            </Card>}
                         </div>
                     </div>
                 </div>
