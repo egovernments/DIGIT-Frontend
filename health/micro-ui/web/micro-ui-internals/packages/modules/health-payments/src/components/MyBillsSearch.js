@@ -14,6 +14,8 @@ const MyBillsSearch = ({ onSubmit = () => { }, onClear = () => { } }) => {
         endDate: '',
         title: '',
     });
+    // To force re-rendering of DateRangePicker
+    const [key, setKey] = useState(0);
 
     const handleFilterChange = (data) => {
         setDateRange(data.range);
@@ -26,6 +28,7 @@ const MyBillsSearch = ({ onSubmit = () => { }, onClear = () => { } }) => {
     const handleClear = () => {
         setDateRange({ startDate: '', endDate: '', title: '' });
         setBillID("");
+        setKey((prevKey) => prevKey + 1);
         onClear();
     };
 
@@ -42,6 +45,7 @@ const MyBillsSearch = ({ onSubmit = () => { }, onClear = () => { } }) => {
             </div>
             <div style={{ maxWidth: "100%", width: "100%" }}>
                 <DateRangePicker
+                    key={key} // Add key to force re-render
                     values={dateRange}
                     onFilterChange={handleFilterChange}
                     t={(key) => key} // Simple translation function

@@ -28,7 +28,7 @@ const ProjectBreadCrumb = ({ location }) => {
     },
     {
       internalLink: `/${window?.contextPath}/employee`,
-      content: t(`HCM_AM_BREADCRUMBS_${location.pathname.split("/").pop()}`),
+      content: t(`HCM_AM_BREADCRUMBS_${location.pathname.split("/").pop().toUpperCase()}`),
       show: true,
     }
   ];
