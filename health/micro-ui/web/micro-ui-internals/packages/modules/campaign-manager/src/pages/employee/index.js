@@ -79,6 +79,11 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       path: pathVar === "update-campaign" ? "" : `/${window?.contextPath}/employee/campaign/update-campaign`,
       content: t("UPDATE_CAMPAIGN"),
       show: pathVar.match("update-campaign") ? true : false,
+    },
+    {
+      path: "",
+      content: t("ACTION_LABEL_CONFIGURE_REGISTER"),
+      show: pathVar === "attendance" ? true : false
     }
   ];
 

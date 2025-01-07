@@ -208,7 +208,7 @@ const IndividualUserTable = ({ tenantId, staffAttendeeIds = [], supervisorName =
         <div>
           <Card type={"secondary"} style={{ maxWidth: "100%", overflow: "auto", marginBottom: "1rem" }}>
             <div>
-              <div style={{ marginBottom: "0.5rem" }}>{t("REGISTER_USER_NAME")}</div>
+              <div style={{ fontFamily: "Roboto Condensed", marginBottom: "0.5rem" }}>{t("REGISTER_USER_NAME")}</div>
               <TextInput
                 style={{ maxWidth: "fit-content" }}
                 disabled={false}
@@ -242,7 +242,7 @@ const IndividualUserTable = ({ tenantId, staffAttendeeIds = [], supervisorName =
           {/* Progress Bar Section */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1rem" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-              <span style={{ fontWeight: 600 }}>{t("REGISTER_ASSIGNED_USERS")}</span>
+              <span style={{ fontFamily: "Roboto Condensed", fontWeight: 600 }}>{t("REGISTER_ASSIGNED_USERS")}</span>
               <ProgressBar amount={40} total={100} />
               <span style={{ fontWeight: 600 }}>{`${40}%`}</span>
             </div>

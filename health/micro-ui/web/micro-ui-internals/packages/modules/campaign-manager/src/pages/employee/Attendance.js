@@ -307,7 +307,8 @@ const Attendance = () => {
           <PopUp
             className="roleComposer"
             type="default"
-            heading={t("REGISTER_ASSIGN_USERS_TO_SUPERVISOR") `${curSupervisor}`}
+            heading={`${t("REGISTER_ASSIGN_USERS_TO_SUPERVISOR")} ${curSupervisor}`}
+            headerclassName={"assign-users-popup"}
             children={[
               <IndividualUserTable 
                 tenantId={tenantId} 

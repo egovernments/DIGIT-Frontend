@@ -13,7 +13,7 @@ export const tableCustomStyle = {
   },
   header: {
     style: {
-      minHeight: "56px",
+      minHeight: "3.5rem", // 56px
     },
   },
   rows: {
@@ -22,12 +22,12 @@ export const tableCustomStyle = {
       "&:hover": {
         backgroundColor: "#FBEEE8",
       },
-      borderBottom: "1px solid #D6D5D4", // Horizontal lines between rows
+      borderBottom: "0.0625rem solid #D6D5D4", // 1px
     },
   },
   headRow: {
     style: {
-      borderBottom: "1px solid #D6D5D4",
+      borderBottom: "0.0625rem solid #D6D5D4", // 1px
       backgroundColor: "#EEEEEE",
     },
   },
@@ -36,12 +36,12 @@ export const tableCustomStyle = {
       fontFamily: "Roboto",
       fontWeight: "700",
       fontStyle: "normal",
-      fontSize: "16px",
+      fontSize: "1rem", // 16px
       color: "#0B4B66",
-      padding: "16px",
-      lineHeight: "1.14rem",
-      borderBottom: "1px solid #D6D5D4", // Only horizontal lines in header
-      borderRight: "none", // Remove vertical lines
+      padding: "1rem", // 16px
+      lineHeight: "1.14rem", // 18.24px
+      borderBottom: "0.0625rem solid #D6D5D4", // 1px
+      borderRight: "none",
     },
   },
   cells: {
@@ -50,50 +50,41 @@ export const tableCustomStyle = {
       fontFamily: "Roboto",
       fontStyle: "normal",
       fontWeight: 400,
-      lineHeight: "1.37rem",
+      lineHeight: "1.37rem", // 21.92px
       textAlign: "left",
-      fontSize: "16px",
-      padding: "16px",
-      borderBottom: "1px solid #D6D5D4", // Horizontal lines between rows
-      borderRight: "none", // Remove vertical lines
+      fontSize: "1rem", // 16px
+      padding: "1rem", // 16px
+      borderBottom: "0.0625rem solid #D6D5D4", // 1px
+      borderRight: "none",
     },
     pagination: {
       style: {
-        marginTop: "-60px",
+        marginTop: "-3.75rem", // -60px
         borderStyle: "solid",
-        borderWidth: "1px",
+        borderWidth: "0.0625rem", // 1px
         borderColor: "#D6D5D4",
-        borderTopWidth: "0px",
+        borderTopWidth: "0",
       },
     },
   },
 };
 
-
 export const getTableCustomStyle = (freezeFirstColumn = false) => ({
   tableWrapper: {
-    style: {
-      // overflow: "scroll",
-    },
+    style: {},
   },
   table: {
-    style: {
-      // overflow: "scroll",
-    },
+    style: {},
   },
   responsiveWrapper: {
-    style: {
-      // overflow: "scroll",
-    },
+    style: {},
   },
   contextMenu: {
-    style: {
-      // overflow: "scroll",
-    },
+    style: {},
   },
   header: {
     style: {
-      minHeight: "56px",
+      minHeight: "3.5rem", // 56px
     },
   },
   rows: {
@@ -107,7 +98,7 @@ export const getTableCustomStyle = (freezeFirstColumn = false) => ({
   headRow: {
     style: {
       borderTopStyle: "solid",
-      borderTopWidth: "1px",
+      borderTopWidth: "0.0625rem", // 1px
       borderTopColor: "#D6D5D4",
       backgroundColor: "#EEEEEE",
     },
@@ -117,9 +108,9 @@ export const getTableCustomStyle = (freezeFirstColumn = false) => ({
       "&:first-of-type": {
         ...(freezeFirstColumn && {
           borderLeftStyle: "solid",
-          borderLeftWidth: "1px",
+          borderLeftWidth: "0.0625rem", // 1px
           borderLeftColor: "#D6D5D4",
-          borderTopLeftRadius: "0.25rem",
+          borderTopLeftRadius: "0.25rem", // 4px
           position: "sticky",
           left: 0,
           backgroundColor: "#EEEEEE",
@@ -128,20 +119,20 @@ export const getTableCustomStyle = (freezeFirstColumn = false) => ({
       },
       "&:last-of-type": {
         borderLeftStyle: "solid",
-        borderLeftWidth: "1px",
+        borderLeftWidth: "0.0625rem", // 1px
         borderLeftColor: "#D6D5D4",
-        borderTopRightRadius: "0.25rem",
+        borderTopRightRadius: "0.25rem", // 4px
       },
       borderRightStyle: "solid",
-      borderRightWidth: "1px",
+      borderRightWidth: "0.0625rem", // 1px
       borderRightColor: "#D6D5D4",
       fontFamily: "Roboto",
       fontWeight: "700",
       fontStyle: "normal",
-      fontSize: "16px",
+      fontSize: "1rem", // 16px
       color: "#0B4B66",
-      padding: "16px",
-      lineHeight: "1.14rem",
+      padding: "1rem", // 16px
+      lineHeight: "1.14rem", // 18.24px
     },
   },
   cells: {
@@ -149,35 +140,36 @@ export const getTableCustomStyle = (freezeFirstColumn = false) => ({
       "&:first-of-type": {
         ...(freezeFirstColumn && {
           borderLeftStyle: "solid",
-          borderLeftWidth: "1px",
+          borderLeftWidth: "0.0625rem", // 1px
           borderLeftColor: "#D6D5D4",
           position: "sticky",
           left: 0,
           backgroundColor: "#FFFFFF",
           zIndex: 1,
-          boxShadow: "2px 0 5px rgba(0, 0, 0, 0.1)",
+          boxShadow: "0.125rem 0 0.3125rem rgba(0, 0, 0, 0.1)", // 2px 0 5px
         }),
       },
       borderRightStyle: "solid",
-      borderRightWidth: "1px",
+      borderRightWidth: "0.0625rem", // 1px
       borderRightColor: "#D6D5D4",
       color: "#363636",
       fontFamily: "Roboto",
       fontStyle: "normal",
       fontWeight: 400,
-      lineHeight: "1.37rem",
+      lineHeight: "1.37rem", // 21.92px
       textAlign: "left",
-      fontSize: "16px",
-      padding: "16px",
+      fontSize: "1rem", // 16px
+      padding: "1rem", // 16px
     },
     pagination: {
       style: {
-        marginTop: "-60px",
+        marginTop: "-3.75rem", // -60px
         borderStyle: "solid",
-        borderWidth: "1px",
+        borderWidth: "0.0625rem", // 1px
         borderColor: "#D6D5D4",
-        borderTopWidth: "0px",
+        borderTopWidth: "0",
       },
     },
   },
 });
+
