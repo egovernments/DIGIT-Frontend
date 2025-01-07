@@ -7,6 +7,8 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
     const { t } = useTranslation();
     const [boundary, setBoundary] = useState("");
     const [boundaryKey, setBoundaryKey] = useState(0);
+    const [resetFilters, setResetFilters] = useState(false);
+
     const handleApplyFilter = () => {
         onFilterChange(boundary);
     };
@@ -18,6 +20,9 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
         }
     };
     const handleClearFilter = () => {
+        if (resetFilters) {
+            setResetFilters(false);
+        }
         setBoundary(""); // Clear the boundary value
         setBoundaryKey((prevKey) => prevKey + 1); // Increment the key to re-render BoundaryComponent
     };
@@ -72,10 +77,18 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
             }}
           />
         </div>*/}
-                {selectedProject?.address?.boundary && (
+                {selectedProject?.address?.boundary && selectedLevel && (
                     <BoundaryComponent
                         key={boundaryKey} // Add the key to force re-render
                         isRequired={isRequired}
+                        reset={resetFilters}
+                        makeReset={() => {
+                            setResetFilters(false);
+                        }}
+                        initialValue={sessionStorage.getItem("selectedValues")}
+                        updateSeeeionStorage={(newSelectedValues) => {
+                            sessionStorage.setItem("selectedValues", JSON.stringify(newSelectedValues));
+                        }}
                         onChange={onBoundaryChange}
                         selectedProject={selectedProject}
                         lowestLevel={selectedLevel.code}>
