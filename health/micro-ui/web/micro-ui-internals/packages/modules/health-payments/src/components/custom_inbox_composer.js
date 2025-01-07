@@ -149,38 +149,104 @@ const CustomInboxSearchComposer = () => {
     setSelectedProject(selectedProject);
   };
 
+  // const handleFilterUpdate = (newFilter, isSelectedData) => {
+  //   setFilterCriteria(newFilter);
+  //   setSelectedStatus(StatusEnum.PENDING_FOR_APPROVAL);
+  //   // console.log(Digit.SessionStorage.get("Digit.paymentInbox"));
+  //   // console.log(selectedProject);
+  //   if (selectedProject == {}) {
+  //     debugger
+  //     if (
+  //       (Digit.SessionStorage.get("Digit.paymentInbox") == null || Digit.SessionStorage.get("Digit.paymentInbox") == undefined) ||
+  //       Digit.SessionStorage.get("Digit.paymentInbox").selectedProject == {}
+  //     ) {
+  //       debugger
+  //       setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_PROJECT_SELECT"), transitionTime: 3000 });
+  //       return;
+  //     }
+  //   }
+  //   if (
+  //     (Digit.SessionStorage.get("Digit.paymentInbox") == null && Digit.SessionStorage.get("Digit.paymentInbox") == undefined) ||
+  //     Digit.SessionStorage.get("Digit.paymentInbox").selectedProject == {}
+  //   ) {
+  //     debugger
+  //     if (selectedProject == {}) {
+  //       debugger
+  //       setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_PROJECT_SELECT"), transitionTime: 3000 });
+  //       return;
+  //     }
+  //   }
+
+  //   //  else if (Digit.SessionStorage.get("paymentInbox") &&( Digit.SessionStorage.get("paymentInbox").selectedProject==null || Digit.SessionStorage.get("paymentInbox").selectedProject==undefined)) {
+  //   //     debugger;
+  //   //     setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_PROJECT_SELECT"), transitionTime: 3000 });
+  //   //     return;
+  //   //   }
+
+  //   if (newFilter == null || newFilter == undefined) {
+  //     debugger
+  //     setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_BOUNDARY_SELECT"), transitionTime: 3000 });
+  //     return;
+  //   }
+
+  //   // if (isSelectedData) {
+  //   const existingData = Digit.SessionStorage.get("paymentInbox") || {};
+
+  //   // Check if `selectedProject` is already there; update only if it's missing
+  //   if (!existingData.selectedProject) {
+  //     existingData.selectedProject = selectedProject;
+  //   }
+
+  //   // Always update the object with `newFilter` data
+  //   Object.assign(existingData, newFilter);
+
+  //   // Save the updated object back to SessionStorage
+  //   Digit.SessionStorage.set("paymentInbox", existingData);
+
+  //   triggerMusterRollApprove(newFilter, StatusEnum.PENDING_FOR_APPROVAL);
+  //   // } else {
+  //   //   debugger
+  //   //   setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_BOUNDARY_SELECT"), transitionTime: 3000 });
+  //   // }
+  // };
+
   const handleFilterUpdate = (newFilter, isSelectedData) => {
     setFilterCriteria(newFilter);
     setSelectedStatus(StatusEnum.PENDING_FOR_APPROVAL);
 
-    if (selectedProject?.id == null || selectedProject?.id == undefined) {
+    const existingPaymentInbox = Digit.SessionStorage.get("paymentInbox");
+
+    const isEmptyObject = (obj) => !obj || Object.keys(obj).length === 0;
+
+    // Validation 1: Check if both `selectedProject` and `existingPaymentInbox.selectedProject` are empty
+    if (isEmptyObject(selectedProject) && isEmptyObject(existingPaymentInbox?.selectedProject)) {
       setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_PROJECT_SELECT"), transitionTime: 3000 });
       return;
     }
 
-    if (newFilter == null || newFilter == undefined) {
+    // Validation 2: Check if `newFilter` is null or undefined
+
+    if ((!newFilter || isEmptyObject(newFilter)) && !existingPaymentInbox?.boundaryType) {
       setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_BOUNDARY_SELECT"), transitionTime: 3000 });
       return;
     }
 
-    if (isSelectedData) {
-      const existingData = Digit.SessionStorage.get("paymentInbox") || {};
+    // Proceed with updating session storage if validations pass
+    const existingData = existingPaymentInbox || {};
 
-      // Check if `selectedProject` is already there; update only if it's missing
-      if (!existingData.selectedProject) {
-        existingData.selectedProject = selectedProject;
-      }
-
-      // Always update the object with `newFilter` data
-      Object.assign(existingData, newFilter);
-
-      // Save the updated object back to SessionStorage
-      Digit.SessionStorage.set("paymentInbox", existingData);
-
-      triggerMusterRollApprove(newFilter, StatusEnum.PENDING_FOR_APPROVAL);
-    } else {
-      setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_BOUNDARY_SELECT"), transitionTime: 3000 });
+    // Ensure `selectedProject` is stored if missing
+    if (!existingData.selectedProject) {
+      existingData.selectedProject = selectedProject;
     }
+
+    // Always update the object with `newFilter` data
+    Object.assign(existingData, newFilter);
+
+    // Save the updated object back to SessionStorage
+    Digit.SessionStorage.set("paymentInbox", existingData);
+
+    // Trigger the approval action
+    triggerMusterRollApprove(newFilter, StatusEnum.PENDING_FOR_APPROVAL);
   };
 
   const handlePaginationChange = (page) => {

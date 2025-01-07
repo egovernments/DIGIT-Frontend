@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { CheckBox, SubmitBar } from "@egovernments/digit-ui-components";
 import BoundaryComponent from "../sample";
 import { Card, SVG, Button, ButtonGroup, TextBlock, Dropdown, Toast } from "@egovernments/digit-ui-components";
+import { lowerBoundaryDefaultSet } from "../../utils/constants";
 
 const CustomFilter = ({ resetTable, isRequired, onProjectSelect, onFilterChange, projectData }) => {
   const { t } = useTranslation();
@@ -143,6 +144,7 @@ const CustomFilter = ({ resetTable, isRequired, onProjectSelect, onFilterChange,
             }}
             onChange={onChangeId}
             selectedProject={projectSelected}
+            lowestLevel={Digit.SessionStorage.get("paymentConfig")?.lowestLevelBoundary || lowerBoundaryDefaultSet}
           ></BoundaryComponent>
         )}
       </div>
