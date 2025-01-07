@@ -13,7 +13,7 @@ const SupervisorPopup = ({ setShowPopUp, supervisors }) => {
       className="wrapper-popup-boundary-chips"
       style={{ maxWidth: "40%" }}
       type="default"
-      heading={t("SUPERVISORS_ASSIGNED")}
+      heading={t("REGISTER_SUPERVISORS_ASSIGNED")}
       footerChildren={[]}
       onOverlayClick={() => setShowPopUp(false)}
       onClose={() => setShowPopUp(false)}
@@ -108,23 +108,23 @@ const IndividualUserTable = ({ tenantId, staffAttendeeIds = [], supervisorName =
 
   const columns = [
     {
-      name: t('Name'),
+      name: t('REGISTER_NAME'),
       selector: row => row.name?.givenName || '',
       sortable: true,
     },
     {
-      name: t('Mobile Number'),
+      name: t('REGISTER_MOBILE_NUMBER'),
       selector: row => row.mobileNumber || '',
       sortable: true,
     },
     {
-      name: t("USER_TYPE"),
+      name: t("REGISTER_USER_TYPE"),
       selector: row => row?.userDetails?.type || '',
       sortable: true
     },
     {
-      name: t('Assigned Supervisor'),
-      selector: row => row.isAssigned ? supervisorName : t('Not Assigned'),
+      name: t('REGISTER_ASSIGNED_SUPERVISOR'),
+      selector: row => row.isAssigned ? supervisorName : t('REGISTER_SUPERVISOR_NOT_ASSIGNED'),
       sortable: true,
       grow: 2,
       cell: row => {
@@ -171,26 +171,26 @@ const IndividualUserTable = ({ tenantId, staffAttendeeIds = [], supervisorName =
                 )}
               </div>
             ) : (
-              <span className="text-gray-400">{t('Not Assigned')}</span>
+              <span className="text-gray-400">{t('REGISTER_SUPERVISOR_NOT_ASSIGNED')}</span>
             )}
           </div>
         );
       },
     },
     {
-      name: t('Actions'),
+      name: t('REGISTER_ACTIONS'),
       cell: row => (
         <div>
           {row.isAssigned ? (
             <Button 
-              label={t('Unassign')}
+              label={t('REGISTER_UNASSIGN')}
               variation="secondary"
               icon="Close"
               onClick={() => handleUnassign(row.id)}
             />
           ) : (
             <Button 
-              label={t('Assign')}
+              label={t('REGISTER_ASSIGN')}
               variation="primary"
               icon="CheckCircle"
               onClick={() => handleAssign(row.id)}
@@ -208,13 +208,13 @@ const IndividualUserTable = ({ tenantId, staffAttendeeIds = [], supervisorName =
         <div>
           <Card type={"secondary"} style={{ maxWidth: "100%", overflow: "auto", marginBottom: "1rem" }}>
             <div>
-              <div style={{ marginBottom: "0.5rem" }}>{t("USER_NAME")}</div>
+              <div style={{ marginBottom: "0.5rem" }}>{t("REGISTER_USER_NAME")}</div>
               <TextInput
                 style={{ maxWidth: "fit-content" }}
                 disabled={false}
                 className="textinput-example"
                 type="text"
-                name={t("USER_NAME")}
+                name={t("REGISTER_USER_NAME")}
                 value={searchQuery}
                 onChange={handleSearchChange}
                 placeholder={t("SEARCH_BY_NAME")}
@@ -236,7 +236,7 @@ const IndividualUserTable = ({ tenantId, staffAttendeeIds = [], supervisorName =
             paginationPerPage={rowsPerPage}
             sortIcon={<CustomSVG.SortUp width="16px" height="16px" fill="#0b4b66" />}
             paginationRowsPerPageOptions={[5, 10, 15, 20]}
-            noDataComponent={<div>{t('No records found')}</div>}
+            noDataComponent={<div>{t('REGISTER_NO_RECORDS_FOUND')}</div>}
           />
   
           {/* Progress Bar Section */}

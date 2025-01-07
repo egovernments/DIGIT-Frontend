@@ -96,10 +96,10 @@ const Attendance = () => {
 
   const columns = [
     {
-      name: t("NAME"),
+      name: t("REGISTER_NAME"),
       selector: (row) => {
         return (
-          <div className="ellipsis-cell" title={row?.name || t("NA")}>
+          <div className="ellipsis-cell" title={row?.name || t("REGISTER_NA")}>
             {row.name || t("NA")}
           </div>
         );
@@ -114,10 +114,10 @@ const Attendance = () => {
       },
     },
     {
-      name: t("EMAIL"),
+      name: t("REGISTER_EMAIL"),
       selector: (row) => {
         return (
-          <div className="ellipsis-cell" title={row?.email || t("NA")}>
+          <div className="ellipsis-cell" title={row?.email || t("REGISTER_NA")}>
             {row.email || t("NA")}
           </div>
         );
@@ -125,10 +125,10 @@ const Attendance = () => {
       sortable: false,
     },
     {
-      name: t("CONTACT_NUMBER"),
+      name: t("REGISTER_CONTACT_NUMBER"),
       selector: (row) => {
         return (
-          <div className="ellipsis-cell" title={row?.mobileNumber || t("NA")}>
+          <div className="ellipsis-cell" title={row?.mobileNumber || t("REGISTER_NA")}>
             {row?.mobileNumber || t("NA")}
           </div>
         );
@@ -146,7 +146,7 @@ const Attendance = () => {
       },
     },
     {
-      name: t("USERS_ASSIGNED"),
+      name: t("REGISTER_USERS_ASSIGNED"),
       sortable: false,
       grow: 2,
       cell: (row) => {
@@ -203,7 +203,7 @@ const Attendance = () => {
             )}
             {userDetails?.staffAttendeeMap[row?.id]?.attendees.length === 0 && (
               <div>
-                {t("USERS_NOT_ASSIGNED")}
+                {t("REGISTER_USERS_NOT_ASSIGNED")}
               </div>
             )}
           </div>
@@ -212,16 +212,16 @@ const Attendance = () => {
       },
     },    
     {
-      name: t("ACTION"),
+      name: t("REGISTER_ACTION"),
       sortable: false,
       cell: (row) => {
         return (
           <Button
             className={"roleTableCell"}
             variation={"primary"}
-            label={t(`ASSIGN`)}
+            label={t(`REGISTER_ASSIGN`)}
             size="medium"
-            title={t(`ASSIGN`)}
+            title={t(`REGISTER_ASSIGN`)}
             style={{ padding: "1rem", width:"100%" }}
             icon={"DoubleArrow"}
             isSuffix={true}
@@ -253,7 +253,7 @@ const Attendance = () => {
         <Card style={{ maxWidth: "100%", overflow: "auto", marginBottom: "1rem" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div style={{ fontFamily: "Roboto Condensed", fontWeight: 800, fontSize: "2rem" }}>
-              {t("SUPERVISORS_AND_TEAM_MEMBERS")}
+              {t("REGISTER_SUPERVISORS_AND_TEAM_MEMBERS")}
             </div>
 
             <div>
@@ -267,7 +267,7 @@ const Attendance = () => {
 
           
           <div style={{fontFamily: "Roboto Condensed", fontWeight: 500, fontSize: "1rem"}}>
-            {t("SUPERVISOR_BODY_TEXT")}
+            {t("REGISTER_SUPERVISOR_BODY_TEXT")}
           </div>
         </Card>
       )}
@@ -281,7 +281,7 @@ const Attendance = () => {
             name="searchSupervisor"
             value={searchQuery}
             onChange={handleSearchChange}
-            placeholder={t("SEARCH_BY_SUPERVISOR_NAME")}
+            placeholder={t("REGISTER_SEARCH_BY_SUPERVISOR_NAME")}
             populators={{customIcon: 'Search'}}
           />
         </div>
@@ -300,14 +300,14 @@ const Attendance = () => {
           paginationPerPage={rowsPerPage}
           sortIcon={<CustomSVG.SortUp width="16px" height="16px" fill="#0b4b66" />}
           paginationRowsPerPageOptions={[5, 10, 15, 20]}
-          noDataComponent={<div style={{padding: "24px"}}>{t("NO_RECORDS_FOUND")}</div>}
+          noDataComponent={<div style={{padding: "24px"}}>{t("REGISTER_NO_RECORDS_FOUND")}</div>}
         />
 
         {assignUsersPopup && (
           <PopUp
             className="roleComposer"
             type="default"
-            heading={t(`ASSIGN_USERS_TO_SUPERVISOR ${curSupervisor}`)}
+            heading={t("REGISTER_ASSIGN_USERS_TO_SUPERVISOR") `${curSupervisor}`}
             children={[
               <IndividualUserTable 
                 tenantId={tenantId} 
@@ -321,7 +321,7 @@ const Attendance = () => {
                 type="button"
                 size="large"
                 variation="secondary"
-                label={t("CLOSE")}
+                label={t("REGISTER_CLOSE")}
                 onClick={() => setAssignUsersPopup(false)}
                 style={{ minWidth: "200px" }}
               />
