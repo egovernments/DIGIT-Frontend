@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Loader, Header } from "@egovernments/digit-ui-react-components";
+import { Loader, Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import { Divider, Button, PopUp, Card, ActionBar, Link, ViewCardFieldPair, Toast, LoaderScreen } from "@egovernments/digit-ui-components";
 import AttendanceManagementTable from "../../components/attendanceManagementTable";
 import AlertPopUp from "../../components/alertPopUp";
@@ -357,6 +357,10 @@ const ViewAttendance = ({ editAttendance = false }) => {
     setRowsPerPage(currentRowsPerPage);
     setCurrentPage(1);
     setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * rowsPerPage })
+  }
+
+  if (updateMutation.isLoading) {
+    <LoaderWithGap />
   }
 
   if (isAttendanceLoading || isEstimateMusterRollLoading || isIndividualsLoading || isMusterRollLoading || isAllIndividualsLoading || mutation.isLoading) {

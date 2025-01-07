@@ -11,6 +11,7 @@ import BillSearchBox from "./BillSearchBox";
 import BillBoundaryFilter from "./bill_boundary_filter";
 import BillInboxTable from "./billInboxTable";
 import { ScreenTypeEnum } from "../../utils/constants";
+import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 const CustomBillInbox = () => {
     const { t } = useTranslation();
     const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -172,6 +173,10 @@ const CustomBillInbox = () => {
             /// will show estimate data only
         }
     };
+
+    if (generateBillMutation.isLoading) {
+        <LoaderWithGap />
+    }
 
     return (
         <React.Fragment>
