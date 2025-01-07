@@ -31,9 +31,40 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
 
   const [lowest, setLowest] = useState(lowestLevel);
 
+  // useEffect(() => {
+  //   debugger;
+  //   if (initialValue) {
+  //     setSelectedValues(JSON.parse(initialValue));
+  //     const data = JSON.parse(initialValue);
+  //     const updatedValues = kk.reduce((acc, boundary) => {
+  //       acc[boundary] = data[boundary] ? [data[boundary]] : [];
+  //       return acc;
+  //     }, {});
+
+  //     debugger;
+  //     setValue(updatedValues);
+  //   }
+  // }, []);
   useEffect(() => {
     if (initialValue) {
-      setSelectedValues(JSON.parse(initialValue));
+      const parsedData = JSON.parse(initialValue);
+
+      // Initialize selected values
+      setSelectedValues(parsedData);
+
+      // Dynamically populate `value` based on hierarchy
+      const updatedValues = kk.reduce((acc, boundary, index) => {
+        // Get parent boundary's selected value
+        const parentBoundary = kk[index - 1];
+        const parentSelectedValue = index > 0 ? parsedData[parentBoundary] : null;
+
+        // Load current boundary options based on parent boundary's children
+        acc[boundary] = parentSelectedValue?.children?.filter((child) => child.boundaryType === boundary) || [];
+
+        return acc;
+      }, {});
+
+      setValue(updatedValues);
     }
   }, []);
 
