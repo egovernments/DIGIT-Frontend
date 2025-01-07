@@ -5,6 +5,7 @@ import CustomSearchComponent from "../custom_comp/search_section";
 import { useTranslation } from "react-i18next";
 import CustomFilter from "../custom_comp/filter_section";
 import CustomInboxTable from "../custom_comp/table_inbox";
+const { fromViewScreen } = location.state || false;
 import { ActionBar, Button, Card, FilterCard, LoaderScreen, Tab, Toast } from "@egovernments/digit-ui-components";
 import BillSearchBox from "./BillSearchBox";
 import BillBoundaryFilter from "./bill_boundary_filter";
@@ -15,13 +16,15 @@ const CustomBillInbox = () => {
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const [showToast, setShowToast] = useState(null);
     const [tableData, setTableData] = useState([]);
+    const [errorMessage, setErrorMessage] = useState(null);
     const [showGenerateBillAction, setShowGenerateBillAction] = useState(false);
     const [filterCriteria, setFilterCriteria] = useState(null);
     const [selectedProject, setSelectedProject] = useState(() => Digit.SessionStorage.get("selectedProject") || {});
     const [selectedLevel, setSelectedLevel] = useState(() => Digit.SessionStorage.get("selectedLevel") || null);
-    // const [selectedBoundaryCode, setSelectedBoundaryCode] = useState(() => Digit.SessionStorage.get("selectedBoundaries") || null);
-    const [selectedBoundaryCode, setSelectedBoundaryCode] = useState(null);
+    const [selectedBoundaryCode, setSelectedBoundaryCode] = useState(() => Digit.SessionStorage.get("selectedBoundaryCode") || null);
+    // const [selectedBoundaryCode, setSelectedBoundaryCode] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
+    const [updateFilters, setUpdateFilters] = useState(false);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [approvalCount, setApprovalCount] = useState(null);
     const [totalCount, setTotalCount] = useState(0);
@@ -44,6 +47,7 @@ const CustomBillInbox = () => {
             // staffId: Digit.SessionStorage.get("UserIndividual")?.[0]?.id,
             localityCode: selectedBoundaryCode,
             reviewStatus: activeLink.code,
+            isChildrenRequired: selectedLevel.code === "DISTRICT" ? true : false,
         },
         config: {
             enabled: selectedBoundaryCode && selectedProject ? true : false,
@@ -107,17 +111,28 @@ const CustomBillInbox = () => {
             refetchBill();
         }
     }, [selectedBoundaryCode]);
+
+    useEffect(() => {
+        if (fromViewScreen) {
+            refetchAttendance();
+            refetchBill();
+        }
+    }, []);
+
     // Handlers
     const handleSearchChange = (project, level) => {
         setSelectedProject(project);
         setSelectedLevel(level);
+        setUpdateFilters(true);
 
         // Store in SessionStorage
         Digit.SessionStorage.set("selectedProject", project);
         Digit.SessionStorage.set("selectedLevel", level);
     };
     const handleFilterUpdate = (boundaryCode) => {
+
         setSelectedBoundaryCode(boundaryCode);
+        Digit.SessionStorage.set("selectedBoundaryCode", boundaryCode);
     };
     const handlePageChange = (page, totalRows) => {
         setCurrentPage(page);
@@ -158,11 +173,9 @@ const CustomBillInbox = () => {
         }
     };
 
-    console.log(selectedProject, selectedBoundaryCode, selectedLevel, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-
     return (
         <React.Fragment>
-            <div style={{ display: "flex", flexDirection: "column", gap: "24px", marginBottom: showGenerateBillAction ? "2.5rem" : "0px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "24px", marginBottom: "2.5rem" }}>
                 <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
                     <div style={{ width: "20%", display: "flex", flexDirection: "row" }}>
                         <CustomInboxSearchLinks
@@ -195,6 +208,7 @@ const CustomBillInbox = () => {
                             selectedProject={selectedProject}
                             selectedLevel={selectedLevel}
                             onFilterChange={handleFilterUpdate}
+                            updateBoundaryFilters={updateFilters}
                         ></BillBoundaryFilter>
                     </div>
                     <div style={{ width: "80%", display: "flex", flexDirection: "row", height: "60vh", minHeight: "60vh" }}>
@@ -247,16 +261,22 @@ const CustomBillInbox = () => {
                     </div>
                 </div>
             </div>
-            {!isBillLoading && !isFetchingBill && showGenerateBillAction && BillData?.bills?.length === 0 && (
+            {!isBillLoading && !isFetchingBill && (
                 <ActionBar
                     actionFields={[
                         <Button
                             icon="CheckCircle"
                             label={t(`HCM_AM_GENERATE_BILL_LABEL`)}
                             onClick={() => {
-                                triggerGenerateBill();
+                                !showGenerateBillAction || BillData?.bills?.length >= 0 ?
+                                    setShowToast({ key: "info", label: t("HCM_AM_GENERATE_BILLS_CANNOT_BE_CALLED_INFO_MESSAGE"), transitionTime: 3000 })
+                                    : triggerGenerateBill();
                             }}
-                            style={{ minWidth: "14rem" }}
+                            style={{
+                                minWidth: "14rem",
+                                cursor: !showGenerateBillAction || BillData?.bills?.length >= 0 ? "not-allowed" : "pointer",
+                                opacity: !showGenerateBillAction || BillData?.bills?.length >= 0 ? 0.5 : 1,
+                            }}
                             type="button"
                             variation="primary"
                             isDisabled={generateBillMutation.isLoading}

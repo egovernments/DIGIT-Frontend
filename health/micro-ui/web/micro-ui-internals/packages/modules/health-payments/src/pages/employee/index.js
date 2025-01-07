@@ -1,5 +1,5 @@
 import { AppContainer, PrivateRoute } from "@egovernments/digit-ui-react-components";
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Switch } from "react-router-dom";
 import ViewAttendance from "./ViewAttendance";
@@ -36,6 +36,16 @@ const ProjectBreadCrumb = ({ location }) => {
 };
 
 const App = ({ path, stateCode, userType, tenants }) => {
+
+
+  useEffect(() => {
+    if (window.location.pathname !== `/${window.contextPath}/employee/`) {
+      window.Digit.SessionStorage.del("selectedLevel");
+      window.Digit.SessionStorage.del("selectedProject");
+      window.Digit.SessionStorage.del("selectedBoundaryCode");
+      sessionStorage.removeItem("selectedValues");
+    }
+  }, []);
 
   return (
     <Switch>

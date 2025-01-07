@@ -37,9 +37,6 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
     }
   }, []);
 
-
-  console.log(initialValue, "VVVVVVVVVVVVVVVVV");
-
   const reqCriteriaResource = {
     url: `/boundary-service/boundary-relationships/_search`,
     params: {
@@ -85,14 +82,6 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
       setBoundaryData(formattedData);
     }
   }, [childrenData]);
-
-  // Reset only dropdowns below the lowest level
-  useEffect(() => {
-    if (lowestLevel != undefined && lowest != undefined) {
-      setSelectedValues(defaultSelectData);
-      onChange(null);
-    }
-  }, [lowest, lowestLevel]);
 
   useEffect(() => {
     if (reset == true) {

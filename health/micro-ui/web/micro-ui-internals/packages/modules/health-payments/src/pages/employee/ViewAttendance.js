@@ -450,7 +450,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
               label={t(`HCM_AM_GO_BACK`)}
               title={t(`HCM_AM_GO_BACK`)}
               onClick={() => {
-                fromCampaignSupervisor ? history.push(`/${window.contextPath}/employee/payments/generate-bill`) :
+                fromCampaignSupervisor ? history.push(`/${window.contextPath}/employee/payments/generate-bill`, { fromViewScreen: true }) :
                   history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
               }}
               type="button"
