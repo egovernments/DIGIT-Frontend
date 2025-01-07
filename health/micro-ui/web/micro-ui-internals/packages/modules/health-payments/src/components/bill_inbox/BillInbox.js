@@ -1,10 +1,7 @@
 import React, { useEffect, useReducer, useState, useMemo, use } from "react";
 import _ from "lodash";
 import CustomInboxSearchLinks from "../custom_comp/link_section";
-import CustomSearchComponent from "../custom_comp/search_section";
 import { useTranslation } from "react-i18next";
-import CustomFilter from "../custom_comp/filter_section";
-import CustomInboxTable from "../custom_comp/table_inbox";
 const { fromViewScreen } = location.state || false;
 import { ActionBar, Button, Card, FilterCard, LoaderScreen, Tab, Toast } from "@egovernments/digit-ui-components";
 import BillSearchBox from "./BillSearchBox";
@@ -180,8 +177,6 @@ const CustomBillInbox = () => {
     if (generateBillMutation.isLoading) {
         <LoaderWithGap />
     }
-
-    console.log(showGenerateBillAction, 'ssssssssssssss');
 
     return (
         <React.Fragment>
