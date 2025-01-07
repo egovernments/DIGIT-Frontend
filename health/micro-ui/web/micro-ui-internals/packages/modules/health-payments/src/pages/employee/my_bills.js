@@ -29,7 +29,8 @@ const MyBills = () => {
                 // ids: ["6eaf462a-4d9a-44c9-9ef7-e127e3fb33f1"],
                 // localityCode: project?.address?.boundary,
                 referenceIds: [project?.[0]?.id],
-                ...(billID ? { billNumbers: [billID] } : {})
+                ...(billID ? { billNumbers: [billID] } : {}),
+                ...(dateRange ? { fromDate: new Date(dateRange.startDate).getTime(), toDate: new Date(dateRange.endDate).getTime() } : {})
             }
         },
         config: {
