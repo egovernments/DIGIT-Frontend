@@ -56,7 +56,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   useEffect(() => {
     if (AttendanceData) {
       setAttendanceDuration(
-        Math.floor((AttendanceData?.attendanceRegister[0]?.endDate - AttendanceData?.attendanceRegister[0]?.startDate) / (24 * 60 * 60 * 1000))
+        Math.ceil((AttendanceData?.attendanceRegister[0]?.endDate - AttendanceData?.attendanceRegister[0]?.startDate) / (24 * 60 * 60 * 1000))
       );
     }
   }, [AttendanceData])
