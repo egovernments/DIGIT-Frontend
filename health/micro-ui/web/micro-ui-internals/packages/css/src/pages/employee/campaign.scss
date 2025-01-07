@@ -237,3 +237,54 @@
     width: 69%;
   }
 }
+
+.attendanceCell {
+  display: flex;
+}
+
+.chip-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* Adjust the spacing between chips and the button */
+}
+
+.chip-wrapper {
+  display: inline-flex;
+}
+
+.more-button {
+  margin-left: 0.5rem; /* Adjust the spacing between chips and the + button */
+}
+
+/* Container for the progress bar */
+.progress-bar-container {
+  position: relative;
+  width: 20rem;
+  max-width: 20rem;
+  height: 20px;
+  background-color: #f3f3f3;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #d6d5d4;
+}
+
+/* The fill of the progress bar */
+.progress-bar-fill {
+  height: 100%;
+  background-color: #2BD27F; /* Use your PRIMARY_COLOR */
+  transition: width 0.4s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Text inside the progress bar */
+.progress-bar-text {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  font-size: 14px;
+  color: #fff;
+  font-weight: bold;
+  pointer-events: none;
+}

@@ -1,28 +1,15 @@
 export const tableCustomStyle = {
   tableWrapper: {
-    style: {
-      overflow: "visible",
-
-      // overflow: "scroll",
-    },
+    style: {},
   },
   table: {
-    style: {
-      overflow: "visible",
-      // overflow: "scroll",
-    },
+    style: {},
   },
   responsiveWrapper: {
-    style: {
-      overflow: "visible",
-      // overflow: "scroll",
-    },
+    style: {},
   },
   contextMenu: {
-    style: {
-      overflow: "visible",
-      // overflow: "scroll",
-    },
+    style: {},
   },
   header: {
     style: {
@@ -35,33 +22,17 @@ export const tableCustomStyle = {
       "&:hover": {
         backgroundColor: "#FBEEE8",
       },
+      borderBottom: "1px solid #D6D5D4", // Horizontal lines between rows
     },
   },
   headRow: {
     style: {
-      borderTopStyle: "solid",
-      borderTopWidth: "1px",
-      borderTopColor: "#D6D5D4",
+      borderBottom: "1px solid #D6D5D4",
       backgroundColor: "#EEEEEE",
     },
   },
   headCells: {
     style: {
-      "&:first-of-type": {
-        borderLeftStyle: "solid",
-        borderLeftWidth: "1px",
-        borderLeftColor: "#D6D5D4",
-        borderTopLeftRadius: "0.25rem",
-      },
-      "&:last-of-type": {
-        borderLeftStyle: "solid",
-        borderLeftWidth: "1px",
-        borderLeftColor: "#D6D5D4",
-        borderTopRightRadius: "0.25rem",
-      },
-      borderRightStyle: "solid",
-      borderRightWidth: "1px",
-      borderRightColor: "#D6D5D4",
       fontFamily: "Roboto",
       fontWeight: "700",
       fontStyle: "normal",
@@ -69,19 +40,12 @@ export const tableCustomStyle = {
       color: "#0B4B66",
       padding: "16px",
       lineHeight: "1.14rem",
-      zIndex: 10,
+      borderBottom: "1px solid #D6D5D4", // Only horizontal lines in header
+      borderRight: "none", // Remove vertical lines
     },
   },
   cells: {
     style: {
-      "&:first-of-type": {
-        borderLeftStyle: "solid",
-        borderLeftWidth: "1px",
-        borderLeftColor: "#D6D5D4",
-      },
-      borderRightStyle: "solid",
-      borderRightWidth: "1px",
-      borderRightColor: "#D6D5D4",
       color: "#363636",
       fontFamily: "Roboto",
       fontStyle: "normal",
@@ -90,6 +54,8 @@ export const tableCustomStyle = {
       textAlign: "left",
       fontSize: "16px",
       padding: "16px",
+      borderBottom: "1px solid #D6D5D4", // Horizontal lines between rows
+      borderRight: "none", // Remove vertical lines
     },
     pagination: {
       style: {
@@ -102,6 +68,7 @@ export const tableCustomStyle = {
     },
   },
 };
+
 
 export const getTableCustomStyle = (freezeFirstColumn = false) => ({
   tableWrapper: {

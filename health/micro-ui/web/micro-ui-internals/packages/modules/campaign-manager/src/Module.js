@@ -57,6 +57,9 @@ import MapView from "./components/MapView";
 import NoResultsFound from "./components/NoResultsFound";
 import UploadDataMappingWrapper from "./components/UploadDataMappingWrapper";
 import DataUploadWrapper from "./components/DataUploadWrapper";
+import Attendance from "./pages/employee/Attendance";
+import IndividualUserTable from "./components/IndividualUserTable";
+import ProgressBar from "./components/ProgressBar";
 
 /**
  * MDMS Module name
@@ -175,6 +178,9 @@ const componentsToRegister = {
   NoResultsFound,
   UploadDataMappingWrapper,
   DataUploadWrapper,
+  Attendance,
+  IndividualUserTable,
+  ProgressBar
 };
 
 const overrideHooks = () => {
