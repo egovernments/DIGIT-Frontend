@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Loader, Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
@@ -6,6 +6,7 @@ import { Divider, Button, PopUp, Card, ActionBar, Link, ViewCardFieldPair, Toast
 import AttendanceManagementTable from "../../components/attendanceManagementTable";
 import AlertPopUp from "../../components/alertPopUp";
 import ApproveCommentPopUp from "../../components/approveCommentPopUp";
+import _ from "lodash";
 
 const ViewAttendance = ({ editAttendance = false }) => {
   const location = useLocation();
@@ -17,6 +18,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [attendanceDuration, setAttendanceDuration] = useState(null);
   const [attendanceSummary, setAttendanceSummary] = useState([]);
+  const [initialAttendanceSummary, setInitialAttendanceSummary] = useState([]);
+  const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
   const [disabledAction, setDisabledAction] = useState(false);
   const [openEditAlertPopUp, setOpenEditAlertPopUp] = useState(false);
   const [openApproveCommentPopUp, setOpenApproveCommentPopUp] = useState(false);
@@ -345,6 +348,32 @@ const ViewAttendance = ({ editAttendance = false }) => {
   }, [AllIndividualsData, data]); /// need to update dependency
 
 
+  useEffect(() => {
+    if (attendanceSummary.length > 0 && initialAttendanceSummary.length === 0) {
+      // Store the initial state of attendanceSummary when data is loaded for the first time
+      setInitialAttendanceSummary(attendanceSummary);
+    }
+  }, [attendanceSummary]);
+
+  useEffect(() => {
+    if (attendanceSummary.length > 0 && initialAttendanceSummary.length > 0) {
+
+      // Compare the current attendanceSummary with the initialAttendanceSummary using Lodash
+      const hasChanged = !_.isEqual(attendanceSummary, initialAttendanceSummary);
+
+      if (hasChanged) {
+        if (!isSubmitEnabled) {
+          setIsSubmitEnabled(true);
+        }
+      } else {
+        if (isSubmitEnabled) {
+          setIsSubmitEnabled(false);
+        }
+      }
+    }
+
+  }, [attendanceSummary]);
+
   const handlePageChange = (page, totalRows) => {
     setCurrentPage(page);
     setLimitAndOffset({ ...limitAndOffset, offset: (page - 1) * rowsPerPage })
@@ -473,7 +502,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
               style={{ minWidth: "14rem" }}
               type="button"
               variation="primary"
-              isDisabled={updateMutation.isLoading || updateDisabled}
+              isDisabled={updateMutation.isLoading || updateDisabled || !isSubmitEnabled}
             />
           ) : (
             <Button

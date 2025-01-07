@@ -5,7 +5,7 @@ import BoundaryComponent from "../sample";
 import { Card, SVG, Button, ButtonGroup, TextBlock, Dropdown, Toast } from "@egovernments/digit-ui-components";
 const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilterChange, updateBoundaryFilters }) => {
     const { t } = useTranslation();
-    const [boundary, setBoundary] = useState("");
+    const [boundary, setBoundary] = useState(() => Digit.SessionStorage.get("boundary") || null);
     const [showToast, setShowToast] = useState(null);
     const [boundaryType, setBoundaryType] = useState("");
     const [boundaryKey, setBoundaryKey] = useState(0);
@@ -13,21 +13,23 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
     const [levelSelected, setLevelSelected] = useState(() => Digit.SessionStorage.get("selectedLevel") || null);
 
     const handleApplyFilter = () => {
-        if (boundaryType !== selectedLevel.code) {
+
+        if (boundary.boundaryType !== selectedLevel.code) {
             setShowToast({ key: "error", label: t("HCM_AM_SELECT_BOUNDARY_TILL_LAST_LEVEL"), transitionTime: 3000 });
             return;
         }
-        // Clear the toast if the input is valid
+        //Clear the toast if the input is valid
         setShowToast(null);
-        onFilterChange(boundary);
+        onFilterChange(boundary.code);
     };
     const onBoundaryChange = (boundary) => {
         if (boundary) {
-            setBoundary(boundary.code);
-            setBoundaryType(boundary.boundaryType);
+            setBoundary(boundary);
+            Digit.SessionStorage.set("boundary", boundary);
+
         } else {
             setBoundary(null);
-            setBoundaryType("");
+            Digit.SessionStorage.set("boundary", null);
         }
     };
 
