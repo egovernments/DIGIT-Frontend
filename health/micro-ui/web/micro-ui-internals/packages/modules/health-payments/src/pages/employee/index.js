@@ -21,14 +21,14 @@ const ProjectBreadCrumb = ({ location }) => {
     },
     {
       internalLink: `/${window?.contextPath}/employee/payments/registers-inbox`,
-      content: t("REGISTERS_INBOX"),
+      content: t("HCM_AM_BREADCRUMBS_REGISTERS_INBOX"),
       show:
         Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VIEW_ATTENDANCE" ||
         Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "EDIT_ATTENDANCE"
     },
     {
       internalLink: `/${window?.contextPath}/employee`,
-      content: t(location.pathname.split("/").pop()),
+      content: t(`HCM_AM_BREADCRUMBS_${location.pathname.split("/").pop()}`),
       show: true,
     }
   ];
