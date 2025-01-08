@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Button, Card, InfoButton, Loader, TableMolecule, TextInput, Toast } from "@egovernments/digit-ui-components";
+import { Button, Card, InfoButton, Loader, TableMolecule, TextInput, Toast, TooltipWrapper } from "@egovernments/digit-ui-components";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { CheckBox } from "@egovernments/digit-ui-components";
 import axios from "axios";
@@ -170,22 +170,25 @@ const MyBillsTable = ({ ...props }) => {
                     type="actionButton"
                     variation="secondary"
                 /> :
-                    <InfoButton
-                        className="dm-workbench-download-template-btn"
-                        infobuttontype={reportDetails.status === "FAILED" ? "error" : "info"}
-                        icon={"Info"}
-                        label={reportDetails.status === "FAILED" ? t("HCM_AM_FAILED_BILL") : t("HCM_AM_PROGRESS_BILL")}
-                        style={{ opacity: 1, width: "16rem", border: "none" }}
-                        onClick={() => {
-                            setShowToast({
-                                key: reportDetails?.status === "FAILED" ? "error" : "info", label: reportDetails?.status === "INITIATED"
-                                    ? t("HCM_AM_BILL_GENERATION_IN_PROGRESS_MESSAGE")
-                                    : (reportDetails?.errorMessage
-                                        ? t(reportDetails?.errorMessage)
-                                        : t("HCM_AM_BILL_GENERATION_FAILED_MESSAGE")), transitionTime: 3000
-                            });
-                        }}
-                    />
+                    <TooltipWrapper placement="top" content={reportDetails.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")} >
+                        <InfoButton
+                            className="dm-workbench-download-template-btn"
+                            infobuttontype={reportDetails.status === "FAILED" ? "error" : "info"}
+                            icon={"Info"}
+                            label={reportDetails.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")}
+                            style={{ opacity: 1, width: "16rem", border: "none" }}
+                        // onClick={() => {
+                        //     setShowToast({
+                        //         key: reportDetails?.status === "FAILED" ? "error" : "info", label: reportDetails?.status === "INITIATED"
+                        //             ? t("HCM_AM_BILL_GENERATION_IN_PROGRESS_MESSAGE")
+                        //             : (reportDetails?.errorMessage
+                        //                 ? t(reportDetails?.errorMessage)
+                        //                 : t("HCM_AM_BILL_GENERATION_FAILED_MESSAGE")), transitionTime: 3000
+                        //     });
+                        // }}
+                        />
+                    </TooltipWrapper>
+
             ];
         }
         );

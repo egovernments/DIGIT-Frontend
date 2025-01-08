@@ -66,13 +66,10 @@ const ViewAttendance = ({ editAttendance = false }) => {
   useEffect(() => {
     ///NEED TO ADD THIS CONDITION ALSO REMOVING FOR TESTING
     //AttendanceData?.attendanceRegister[0]?.endDate > new Date()
-    if (data?.[0]?.musterRollStatus === "APPROVED") {
+    if (AttendanceData?.attendanceRegister?.[0]?.reviewStatus === "APPROVED") {
       setDisabledAction(true);
     }
-    if (fromCampaignSupervisor) {
-      setDisabledAction(true);
-    }
-  }, [AttendanceData, data, fromCampaignSupervisor])
+  }, [AttendanceData])
 
   const reqCri = {
     url: `/health-muster-roll/v1/_estimate`,
@@ -85,7 +82,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
       }
     },
     config: {
-      enabled: ((AttendanceData ? true : false) && disabledAction && data?.[0]?.musterRollStatus !== "APPROVED") || triggerEstimate,
+      enabled: ((AttendanceData ? true : false) && disabledAction && AttendanceData?.attendanceRegister?.[0]?.reviewStatus !== "APPROVED") || triggerEstimate,
       select: (data) => {
         return data;
       },
@@ -101,14 +98,15 @@ const ViewAttendance = ({ editAttendance = false }) => {
     url: `/health-muster-roll/v1/_search`,
     params: {
       tenantId: tenantId,
-      registerId: AttendanceData?.attendanceRegister[0]?.id
+      registerId: AttendanceData?.attendanceRegister?.[0]?.id
     },
     config: {
-      enabled: (AttendanceData ? true : false) && !disabledAction,
+      enabled: (AttendanceData ? true : false) && (!disabledAction || AttendanceData?.attendanceRegister?.[0]?.reviewStatus === "APPROVED"),
       select: (data) => {
         return data;
       },
     },
+    changeQueryName: AttendanceData?.attendanceRegister?.[0]?.id,
   };
 
 
@@ -265,12 +263,11 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   };
 
-
   const allIndividualReqCriteria = {
     url: `/health-individual/v1/_search`,
     params: {
       tenantId: tenantId,
-      limit: 100,
+      limit: data?.[0]?.individualEntries?.length + 1,
       offset: 0,
     },
     body: {
