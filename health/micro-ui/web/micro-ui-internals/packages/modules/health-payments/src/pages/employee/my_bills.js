@@ -26,7 +26,7 @@ const MyBills = () => {
         body: {
             billCriteria: {
                 tenantId: tenantId,
-                localityCode: project?.address?.boundary,
+                localityCode: project?.[0]?.address?.boundary,
                 referenceIds: [project?.[0]?.id],
                 ...(billID ? { billNumbers: [billID] } : {}),
                 ...(dateRange.startDate && dateRange.endDate ? { fromDate: new Date(dateRange.startDate).getTime(), toDate: new Date(dateRange.endDate).getTime() } : {})
