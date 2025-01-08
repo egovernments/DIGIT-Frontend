@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { CheckBox, SubmitBar } from "@egovernments/digit-ui-components";
+import { CheckBox, Divider, SubmitBar } from "@egovernments/digit-ui-components";
 import BoundaryComponent from "../sample";
 import { Card, SVG, Button, ButtonGroup, TextBlock, Dropdown, Toast } from "@egovernments/digit-ui-components";
 import { lowerBoundaryDefaultSet } from "../../utils/constants";
@@ -118,6 +118,8 @@ const CustomFilter = ({ resetTable, isRequired, onProjectSelect, onFilterChange,
           />
         </div>
 
+        <Divider></Divider>
+
         {/*project && <div style={{ maxWidth: "100%", width: "100%", marginBottom: "24px" }}>
           <TextBlock body={`${t("ATTENDANCE_PROJECT_NAME")} *`}></TextBlock>
           <Dropdown
@@ -138,9 +140,9 @@ const CustomFilter = ({ resetTable, isRequired, onProjectSelect, onFilterChange,
               setReset(false);
             }}
             isRequired={isRequired}
-            initialValue={sessionStorage.getItem("selectedValues")}
+            initialValue={Digit.SessionStorage.get("selectedValues")}
             updateSeeeionStorage={(newSelectedValues) => {
-              sessionStorage.setItem("selectedValues", JSON.stringify(newSelectedValues));
+              Digit.SessionStorage.set("selectedValues", JSON.stringify(newSelectedValues));
             }}
             onChange={onChangeId}
             selectedProject={projectSelected}
