@@ -176,7 +176,7 @@ function flattenHierarchyIterative(data) {
   return result;
 }
 
-const Wrapper = ({ setShowPopUp, alreadyQueuedSelectedState }) => {
+const Wrapper = ({  currentCategories, setShowPopUp, alreadyQueuedSelectedState }) => {
   const { t } = useTranslation();
   return (
     <PopUp
@@ -185,7 +185,7 @@ const Wrapper = ({ setShowPopUp, alreadyQueuedSelectedState }) => {
         maxWidth: "40%",
       }}
       type={"default"}
-      heading={t("MICROPLAN_ADMINISTRATIVE_AREA")}
+      heading={t(Digit.Utils.locale.getTransformedLocale(`MICROPLAN_ADMINISTRATIVE_AREA_${currentCategories}`))}
       children={[]}
       onOverlayClick={() => {
         setShowPopUp(false);
@@ -299,12 +299,12 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   const { isLoading: childrenDataLoading, data: childrenData, isFetching, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
 
   useEffect(() => {
-    if (allLowestHierarchyCodes?.length > 0 && childrenData?.length > 0) {
-      const allLowestBoundaryData = flattenHierarchyIterative(childrenData);
+    if (allLowestHierarchyCodes?.length > 0) {
+      // const allLowestBoundaryData = flattenHierarchyIterative(childrenData);
       const sessionSelectedData = sessionData?.["HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"]?.boundaryType?.selectedData;
-      setAllSelectedBoundary([...allLowestBoundaryData, ...sessionSelectedData]);
+      setAllSelectedBoundary([...sessionSelectedData]);
     }
-  }, [allLowestHierarchyCodes, childrenData]);
+  }, [allLowestHierarchyCodes]);
   useEffect(() => {
     if (lowestHierarchy && sessionData?.["HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"]?.boundaryType?.selectedData?.length > 0) {
       const lowestHierarchyCodes = sessionData?.["HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"]?.boundaryType?.selectedData
@@ -446,7 +446,6 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                         }}
                       />
                     )}
-                    {chipPopUpRowId && <Wrapper setShowPopUp={setChipPopUpRowId} alreadyQueuedSelectedState={listOfBoundaries} />}
                   </div>
                   <Button
                     type={"button"}
@@ -550,7 +549,6 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                         }}
                       />
                     )}
-                    {chipPopUpRowId && <Wrapper setShowPopUp={setChipPopUpRowId} alreadyQueuedSelectedState={listOfBoundaries} />}
                   </div>
                   <Button
                     type={"button"}
@@ -618,6 +616,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           paginationRowsPerPageOptions={[5, 10, 15, 20]}
         />
       )}
+      {chipPopUpRowId && <Wrapper currentCategories={currentCategories} setShowPopUp={setChipPopUpRowId} alreadyQueuedSelectedState={chipPopUpRowId} />}
       {showPopUp && (
         <PopUp
           className={"dataMapping"}
