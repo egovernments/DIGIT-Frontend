@@ -46,7 +46,7 @@ const MyBills = () => {
         window.Digit.SessionStorage.del("selectedBoundaryCode");
         window.Digit.SessionStorage.del("boundary");
         sessionStorage.removeItem("selectedValues");
-    });
+    }, []);
 
 
     const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
