@@ -1,21 +1,19 @@
 import React, { useEffect, useReducer, useState, useMemo, use } from "react";
 import _ from "lodash";
 import CustomInboxSearchLinks from "../custom_comp/link_section";
-import CustomSearchComponent from "../custom_comp/search_section";
 import { useTranslation } from "react-i18next";
-import CustomFilter from "../custom_comp/filter_section";
-import CustomInboxTable from "../custom_comp/table_inbox";
 const { fromViewScreen } = location.state || false;
 import { ActionBar, Button, Card, FilterCard, LoaderScreen, Tab, Toast } from "@egovernments/digit-ui-components";
 import BillSearchBox from "./BillSearchBox";
 import BillBoundaryFilter from "./bill_boundary_filter";
 import BillInboxTable from "./billInboxTable";
 import { ScreenTypeEnum } from "../../utils/constants";
+import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 const CustomBillInbox = () => {
     const { t } = useTranslation();
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const [showToast, setShowToast] = useState(null);
-    const [tableData, setTableData] = useState([]);
+    const [tableData, setTableData] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
     const [showGenerateBillAction, setShowGenerateBillAction] = useState(false);
     const [filterCriteria, setFilterCriteria] = useState(null);
@@ -124,6 +122,9 @@ const CustomBillInbox = () => {
         setSelectedProject(project);
         setSelectedLevel(level);
         setUpdateFilters(true);
+        setTableData(null);
+        setApprovalCount(null);
+        setPendingApprovalCount(null);
 
         // Store in SessionStorage
         Digit.SessionStorage.set("selectedProject", project);
@@ -172,6 +173,10 @@ const CustomBillInbox = () => {
             /// will show estimate data only
         }
     };
+
+    if (generateBillMutation.isLoading) {
+        <LoaderWithGap />
+    }
 
     return (
         <React.Fragment>
@@ -245,7 +250,7 @@ const CustomBillInbox = () => {
                                     style={{}}
                                 />
                             )}
-                            <Card>
+                            {tableData && <Card>
                                 <BillInboxTable
                                     isFetching={isFetching}
                                     tableData={tableData}
@@ -256,26 +261,23 @@ const CustomBillInbox = () => {
                                     totalCount={totalCount}
                                     status={activeLink.code}
                                 ></BillInboxTable>
-                            </Card>
+                            </Card>}
                         </div>
                     </div>
                 </div>
             </div>
-            {!isBillLoading && !isFetchingBill && (
+
+            {showGenerateBillAction && BillData?.bills?.length === 0 ?
                 <ActionBar
                     actionFields={[
                         <Button
                             icon="CheckCircle"
                             label={t(`HCM_AM_GENERATE_BILL_LABEL`)}
                             onClick={() => {
-                                !showGenerateBillAction || BillData?.bills?.length >= 0 ?
-                                    setShowToast({ key: "info", label: t("HCM_AM_GENERATE_BILLS_CANNOT_BE_CALLED_INFO_MESSAGE"), transitionTime: 3000 })
-                                    : triggerGenerateBill();
+                                triggerGenerateBill();
                             }}
                             style={{
                                 minWidth: "14rem",
-                                cursor: !showGenerateBillAction || BillData?.bills?.length >= 0 ? "not-allowed" : "pointer",
-                                opacity: !showGenerateBillAction || BillData?.bills?.length >= 0 ? 0.5 : 1,
                             }}
                             type="button"
                             variation="primary"
@@ -288,7 +290,34 @@ const CustomBillInbox = () => {
                     sortActionFields
                     style={{}}
                 />
-            )}
+                : !isBillLoading && !isFetchingBill && (
+                    <ActionBar
+                        actionFields={[
+                            <Button
+                                icon="CheckCircle"
+                                label={t(`HCM_AM_GENERATE_BILL_LABEL`)}
+                                onClick={() => {
+                                    !showGenerateBillAction || BillData?.bills?.length >= 0 ?
+                                        setShowToast({ key: "info", label: t("HCM_AM_GENERATE_BILLS_CANNOT_BE_CALLED_INFO_MESSAGE"), transitionTime: 3000 })
+                                        : triggerGenerateBill();
+                                }}
+                                style={{
+                                    minWidth: "14rem",
+                                    cursor: !showGenerateBillAction || BillData?.bills?.length >= 0 ? "not-allowed" : "pointer",
+                                    opacity: !showGenerateBillAction || BillData?.bills?.length >= 0 ? 0.5 : 1,
+                                }}
+                                type="button"
+                                variation="primary"
+                                isDisabled={generateBillMutation.isLoading}
+                            />,
+                        ]}
+                        className=""
+                        maxActionFieldsAllowed={5}
+                        setactionFieldsToRight
+                        sortActionFields
+                        style={{}}
+                    />
+                )}
             {showToast && (
                 <Toast
                     style={{ zIndex: 10001 }}

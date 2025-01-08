@@ -30,31 +30,29 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
     modulePrefix,
   });
   let user = Digit?.SessionStorage.get("User");
-  const { isLoading: isPaymentsModuleInitializing, } = Digit.Hooks.payments.usePaymentsInitialization({
-    tenantId: tenantId
+  const { isLoading: isPaymentsModuleInitializing } = Digit.Hooks.payments.usePaymentsInitialization({
+    tenantId: tenantId,
   });
 
-  const { isLoading: isBoundaryOrderLoading, data: boundaryOrder } = Digit.Hooks.useCustomMDMS(
+  const { isLoading: isMDMSLoading, data: mdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     "HCM",
-    [{ name: "BOUNDARYTYPES" }],
+    [{ name: "BOUNDARYTYPES" }, { name: "paymentsConfig" }],
     {
       cacheTime: Infinity,
     },
-    { schemaCode: "BOUNDARY_MASTER_DATA" } //mdmsv2
+    { schemaCode: "PAYMENTS_MASTER_DATA" } //mdmsv2
   );
 
-  
+  const sortedBoundaryData = mdmsData?.MdmsRes?.HCM?.BOUNDARYTYPES?.sort((a, b) => a.order - b.order);
+  const paymentsConfig = mdmsData?.MdmsRes?.HCM?.paymentsConfig?.[0];
 
-  const sortedBoundaryData = boundaryOrder?.MdmsRes?.HCM?.BOUNDARYTYPES?.sort((a, b) => a.order - b.order);
+  Digit.SessionStorage.set("boundaryHierarchyOrder", sortedBoundaryData);
+  Digit.SessionStorage.set("paymentsConfig", paymentsConfig);
 
-  Digit.SessionStorage.set("boundaryHierarchyOrder",sortedBoundaryData );
-
-
-  if (isPaymentsModuleInitializing || isBoundaryOrderLoading) {
+  if (isPaymentsModuleInitializing || isMDMSLoading) {
     return <Loader />;
-  }
-  else {
+  } else {
     return (
       <ProviderContext>
         <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} />

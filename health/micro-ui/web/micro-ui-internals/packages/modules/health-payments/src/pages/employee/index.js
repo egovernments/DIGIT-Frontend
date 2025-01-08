@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Switch } from "react-router-dom";
 import ViewAttendance from "./ViewAttendance";
+import { useLocation } from "react-router-dom";
 import BreadCrumbs from "../../components/BreadCrumbs";
 import Response from "../../components/Response";
 import AttendanceInbox from "./attendance_inbox";
@@ -13,6 +14,9 @@ import MyBills from "./my_bills";
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
 
+  const local = useLocation();
+  const { fromCampaignSupervisor } = local?.state || false;
+
   const crumbs = [
     {
       internalLink: `/${window?.contextPath}/employee`,
@@ -20,8 +24,8 @@ const ProjectBreadCrumb = ({ location }) => {
       show: true,
     },
     {
-      internalLink: `/${window?.contextPath}/employee/payments/registers-inbox`,
-      content: t("HCM_AM_BREADCRUMBS_REGISTERS_INBOX"),
+      internalLink: fromCampaignSupervisor ? `/${window?.contextPath}/employee/payments/generate-bill` : `/${window?.contextPath}/employee/payments/registers-inbox`,
+      content: fromCampaignSupervisor ? t("HCM_AM_BREADCRUMBS_GENERATE_BILLS") : t("HCM_AM_BREADCRUMBS_REGISTERS_INBOX"),
       show:
         Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VIEW_ATTENDANCE" ||
         Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "EDIT_ATTENDANCE"
@@ -43,6 +47,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
       window.Digit.SessionStorage.del("selectedLevel");
       window.Digit.SessionStorage.del("selectedProject");
       window.Digit.SessionStorage.del("selectedBoundaryCode");
+      window.Digit.SessionStorage.del("boundary");
       sessionStorage.removeItem("selectedValues");
     }
   }, []);

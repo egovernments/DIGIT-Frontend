@@ -26,11 +26,10 @@ const MyBills = () => {
         body: {
             billCriteria: {
                 tenantId: tenantId,
-                // ids: ["6eaf462a-4d9a-44c9-9ef7-e127e3fb33f1"],
-                // localityCode: project?.address?.boundary,
+                localityCode: project?.address?.boundary,
                 referenceIds: [project?.[0]?.id],
                 ...(billID ? { billNumbers: [billID] } : {}),
-                ...(dateRange ? { fromDate: new Date(dateRange.startDate).getTime(), toDate: new Date(dateRange.endDate).getTime() } : {})
+                ...(dateRange.startDate && dateRange.endDate ? { fromDate: new Date(dateRange.startDate).getTime(), toDate: new Date(dateRange.endDate).getTime() } : {})
             }
         },
         config: {
@@ -45,6 +44,7 @@ const MyBills = () => {
         window.Digit.SessionStorage.del("selectedLevel");
         window.Digit.SessionStorage.del("selectedProject");
         window.Digit.SessionStorage.del("selectedBoundaryCode");
+        window.Digit.SessionStorage.del("boundary");
         sessionStorage.removeItem("selectedValues");
     });
 
@@ -80,7 +80,7 @@ const MyBills = () => {
                 "status": "FAILED", // INITIATED, COMPLETED, FAILED
                 "pdfReportId": "d5a504fb-ebb8-41be-afa0-24b4f1bd575b",
                 "excelReportId": "de5f2b24-b60d-4d1f-b550-56abe1dabb2f",
-                "errorMessage": "error message if status is failed"
+                "errorMessage": "HCM_AM_BILL_REPORT_GENERATION_FAILED"
             };
 
             return [billId, billDate, noOfRegisters, noOfWorkers, boundaryCode, projectName, reportDetails];

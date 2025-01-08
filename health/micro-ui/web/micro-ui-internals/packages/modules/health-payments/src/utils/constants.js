@@ -9,3 +9,6 @@ export const StatusEnum = Object.freeze({
         BILL: "BILL",
         REGISTER: "REGISTER",
         });
+
+
+    export const lowerBoundaryDefaultSet= "DISTRICT";
