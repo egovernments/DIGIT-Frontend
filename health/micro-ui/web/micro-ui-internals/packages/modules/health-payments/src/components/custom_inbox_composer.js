@@ -66,7 +66,7 @@ const CustomInboxSearchComposer = () => {
         {
           params: {
             tenantId: Digit.ULBService.getStateId(),
-            limit: rowsPerPage,
+            limit: totalRows || rowsPerPage,
             offset: totalNext == undefined ? (currentPage - 1) * rowsPerPage : (totalNext - 1) * totalRows,
             referenceId: selectedProject?.id == undefined ? Digit.SessionStorage.get("paymentInbox").selectedProject?.id : selectedProject?.id,
             staffId: Digit.SessionStorage.get("UserIndividual")?.[0]?.id,
@@ -124,91 +124,9 @@ const CustomInboxSearchComposer = () => {
     }
   }, []);
 
-  // Clear `paymentInbox` on browser back/forward navigation or page close
-  // useEffect(() => {
-  //   const handlePopState = () => {
-  //     sessionStorage.removeItem("Digit.paymentInbox");
-  //     sessionStorage.removeItem("selectedValues");
-  //   };
-
-  //   const handleBeforeUnload = () => {
-  //     sessionStorage.removeItem("Digit.paymentInbox");
-  //     sessionStorage.removeItem("selectedValues");
-  //   };
-
-  //   window.addEventListener("popstate", handlePopState);
-  //   window.addEventListener("beforeunload", handleBeforeUnload);
-
-  //   return () => {
-  //     window.removeEventListener("popstate", handlePopState);
-  //     window.removeEventListener("beforeunload", handleBeforeUnload);
-  //   };
-  // }, []);
-
   const handleProjectChange = (selectedProject) => {
     setSelectedProject(selectedProject);
   };
-
-  // const handleFilterUpdate = (newFilter, isSelectedData) => {
-  //   setFilterCriteria(newFilter);
-  //   setSelectedStatus(StatusEnum.PENDING_FOR_APPROVAL);
-  //   // console.log(Digit.SessionStorage.get("Digit.paymentInbox"));
-  //   // console.log(selectedProject);
-  //   if (selectedProject == {}) {
-  //     debugger
-  //     if (
-  //       (Digit.SessionStorage.get("Digit.paymentInbox") == null || Digit.SessionStorage.get("Digit.paymentInbox") == undefined) ||
-  //       Digit.SessionStorage.get("Digit.paymentInbox").selectedProject == {}
-  //     ) {
-  //       debugger
-  //       setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_PROJECT_SELECT"), transitionTime: 3000 });
-  //       return;
-  //     }
-  //   }
-  //   if (
-  //     (Digit.SessionStorage.get("Digit.paymentInbox") == null && Digit.SessionStorage.get("Digit.paymentInbox") == undefined) ||
-  //     Digit.SessionStorage.get("Digit.paymentInbox").selectedProject == {}
-  //   ) {
-  //     debugger
-  //     if (selectedProject == {}) {
-  //       debugger
-  //       setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_PROJECT_SELECT"), transitionTime: 3000 });
-  //       return;
-  //     }
-  //   }
-
-  //   //  else if (Digit.SessionStorage.get("paymentInbox") &&( Digit.SessionStorage.get("paymentInbox").selectedProject==null || Digit.SessionStorage.get("paymentInbox").selectedProject==undefined)) {
-  //   //     debugger;
-  //   //     setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_PROJECT_SELECT"), transitionTime: 3000 });
-  //   //     return;
-  //   //   }
-
-  //   if (newFilter == null || newFilter == undefined) {
-  //     debugger
-  //     setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_BOUNDARY_SELECT"), transitionTime: 3000 });
-  //     return;
-  //   }
-
-  //   // if (isSelectedData) {
-  //   const existingData = Digit.SessionStorage.get("paymentInbox") || {};
-
-  //   // Check if `selectedProject` is already there; update only if it's missing
-  //   if (!existingData.selectedProject) {
-  //     existingData.selectedProject = selectedProject;
-  //   }
-
-  //   // Always update the object with `newFilter` data
-  //   Object.assign(existingData, newFilter);
-
-  //   // Save the updated object back to SessionStorage
-  //   Digit.SessionStorage.set("paymentInbox", existingData);
-
-  //   triggerMusterRollApprove(newFilter, StatusEnum.PENDING_FOR_APPROVAL);
-  //   // } else {
-  //   //   debugger
-  //   //   setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_BOUNDARY_SELECT"), transitionTime: 3000 });
-  //   // }
-  // };
 
   const handleFilterUpdate = (newFilter, isSelectedData) => {
     setFilterCriteria(newFilter);
