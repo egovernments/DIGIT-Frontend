@@ -11,7 +11,7 @@ const InboxFilterWrapper = (props) => {
   const {microplanId,...rest} = Digit.Hooks.useQueryParams()
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [filterValues, setFilterValues] = useState(
-    { status: null, onRoadCondition: null, terrain: null, securityQ1: null, securityQ2: null,facilityID:null }
+    { status: null, onRoadCondition: null, terrain: null, securityQ1: null, securityQ2: null,facilityName:null }
   );
 
   // Default selected option
@@ -107,10 +107,10 @@ const InboxFilterWrapper = (props) => {
       select: (data) => {
         if (!data?.PlanFacility || !Array.isArray(data.PlanFacility)) return [];
     
-        // Extract facilityName and facilityId for each object
+        // Extract facilityName for each object
         const facilityOptions = data.PlanFacility.map((facility) => ({
           code: facility.facilityName,
-          id: facility.facilityId
+          name: facility.facilityName
         }));
     
         return facilityOptions;
