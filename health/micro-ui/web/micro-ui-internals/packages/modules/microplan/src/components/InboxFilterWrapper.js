@@ -17,9 +17,7 @@ const InboxFilterWrapper = (props) => {
   // Default selected option
   let defaultSelectedOptions = props.defaultValue
   ? Object.entries(props.defaultValue).reduce((acc, [key, value]) => {
-      if (key === "facilityId") {
-        acc[key] = { code: value?.code, name: `${t(key)} (${value})` };
-      } else if (value !== null) {
+   if (value !== null) {
         acc[key] = { code: value, name: `${t(key)} (${value})` };
       } else {
         acc[key] = null;
@@ -34,9 +32,7 @@ const InboxFilterWrapper = (props) => {
     if (props.defaultValue && Object.keys(props.defaultValue).length > 0) {
       const newDefault = Object.entries(props.defaultValue).reduce((acc, [key, value]) => {
         acc[key] = value !== null
-          ? key === 'facilityId'
-            ? { code: value?.code }
-            : { code: value, name: `${t(key)} (${value})` }
+          ? { code: value, name: `${t(key)} (${value})` }
           : null;
         return acc;
       }, {});
@@ -71,10 +67,7 @@ const InboxFilterWrapper = (props) => {
     if (props.onApplyFilters) {
       const filtersToApply = {};
       for (let key in filterValues) {
-        if(filterValues[key] && typeof filterValues[key] === 'object' && String(key)==='facilityId' &&filterValues[key].hasOwnProperty('code') ){
-          filtersToApply[key] = filterValues[key]
-        }
-        else if (filterValues[key] && typeof filterValues[key] === 'object' && filterValues[key].hasOwnProperty('code')) {
+        if (filterValues[key] && typeof filterValues[key] === 'object' && filterValues[key].hasOwnProperty('code')) {
           filtersToApply[key] = filterValues[key].code; // Extract 'name' if it exists
         } else {
           filtersToApply[key] = filterValues[key]; // Keep the value as is (including null)
@@ -192,8 +185,8 @@ const InboxFilterWrapper = (props) => {
           <Dropdown
             option={planFacility}
             optionKey={"code"}
-            selected={filterValues["facilityId"] || defaultSelectedOptions?.facilityId  }
-            select={(value) => handleDropdownChange("facilityId", value)}
+            selected={filterValues["facilityName"] || defaultSelectedOptions?.facilityName  }
+            select={(value) => handleDropdownChange("facilityName", value)}
             t={t}
             disabled={false}
           />
@@ -209,18 +202,19 @@ const InboxFilterWrapper = (props) => {
           }));
 
           const isLastElement = index === state.securityQuestions.length - 1;
+          const questionNumber = parseInt(item.id, 10); 
 
           return (
             <LabelFieldPair
               vertical
               style={{ paddingBottom: isLastElement ? "1rem" : "0" }} 
             >
-              <div className="custom-filter-names">{t(`MP_SECURITY_QUESTION ${index + 1}`)}</div>             
+              <div className="custom-filter-names">{t(`MP_SECURITY_QUESTION ${index+1}`)}</div>             
               <Dropdown
                 option={options}
                 optionKey={"code"}
-                selected={filterValues[`securityQ${index + 1}`]} 
-                select={(value) => handleDropdownChange(`securityQ${index + 1}`, value)}
+                selected={filterValues[`securityQ${questionNumber}`]} 
+                select={(value) => handleDropdownChange(`securityQ${questionNumber}`, value)}
                 t={t}
                 disabled={false}
               />
