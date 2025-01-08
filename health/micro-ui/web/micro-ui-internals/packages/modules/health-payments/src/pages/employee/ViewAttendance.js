@@ -20,7 +20,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [attendanceSummary, setAttendanceSummary] = useState([]);
   const [initialAttendanceSummary, setInitialAttendanceSummary] = useState([]);
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
-  const [disabledAction, setDisabledAction] = useState(false);
+  const [disabledAction, setDisabledAction] = useState(fromCampaignSupervisor);
   const [openEditAlertPopUp, setOpenEditAlertPopUp] = useState(false);
   const [openApproveCommentPopUp, setOpenApproveCommentPopUp] = useState(false);
   const [openApproveAlertPopUp, setOpenApproveAlertPopUp] = useState(false);

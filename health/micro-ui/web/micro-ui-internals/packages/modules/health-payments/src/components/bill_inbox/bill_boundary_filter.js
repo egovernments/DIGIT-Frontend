@@ -14,7 +14,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
 
     const handleApplyFilter = () => {
 
-        if (boundary.boundaryType !== selectedLevel.code) {
+        if (!boundary || boundary?.boundaryType !== selectedLevel?.code) {
             setShowToast({ key: "error", label: t("HCM_AM_SELECT_BOUNDARY_TILL_LAST_LEVEL"), transitionTime: 3000 });
             return;
         }
