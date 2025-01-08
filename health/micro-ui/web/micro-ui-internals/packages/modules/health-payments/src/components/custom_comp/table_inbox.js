@@ -65,8 +65,9 @@ const CustomInboxTable = ({
       name: activeLink?.code == "PENDINGFORAPPROVAL" ? t("HCM_AM_ATTENDANCE_MARKED_BY") : t("HCM_AM_ATTENDANCE_APPROVED_BY"),
       selector: (row) => {
         return (
-          <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={row?.markby || t("NA")}>
-            {row?.markby || t("NA")}
+          <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={activeLink?.code == "PENDINGFORAPPROVAL" ? row?.markby : row?.approvedBy
+            || t("NA")}>
+            {activeLink?.code == "PENDINGFORAPPROVAL" ? row?.markby : row?.approvedBy || t("NA")}
           </div>
         );
       },
