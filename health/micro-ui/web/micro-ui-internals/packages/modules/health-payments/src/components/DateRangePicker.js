@@ -211,6 +211,7 @@ const DateRangePicker = ({ values, onFilterChange, t, labelClass, title, epochSt
                                 values={values}
                                 ranges={[selectionRange]}
                                 // rangeColors={["#fbeee8"]}
+                                maxDate={new Date()}
                                 onChange={handleSelect}
                                 onRangeFocusChange={setFocusedRange}
                                 retainEndDateOnFirstSelection={true}

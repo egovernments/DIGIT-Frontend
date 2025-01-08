@@ -101,9 +101,9 @@ const CustomBillInbox = () => {
     useEffect(() => {
         if (selectedBoundaryCode) {
             refetchAttendance();
-            refetchBill();
         }
     }, [activeLink, limitAndOffset, selectedBoundaryCode]);
+
     useEffect(() => {
         if (selectedBoundaryCode) {
             refetchBill();
