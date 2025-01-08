@@ -135,6 +135,13 @@ const CustomBillInbox = () => {
         setSelectedBoundaryCode(boundaryCode);
         Digit.SessionStorage.set("selectedBoundaryCode", boundaryCode);
     };
+
+    const resetBoundaryFilter = () => {
+        setTableData(null);
+        setApprovalCount(null);
+        setPendingApprovalCount(null);
+        setSelectedBoundaryCode(null);
+    };
     const handlePageChange = (page, totalRows) => {
         setCurrentPage(page);
         setLimitAndOffset({ ...limitAndOffset, offset: (page - 1) * rowsPerPage });
@@ -214,6 +221,7 @@ const CustomBillInbox = () => {
                             selectedLevel={selectedLevel}
                             onFilterChange={handleFilterUpdate}
                             updateBoundaryFilters={updateFilters}
+                            resetBoundaryFilter={resetBoundaryFilter}
                         ></BillBoundaryFilter>
                     </div>
                     <div style={{ width: "80%", display: "flex", flexDirection: "row", height: "60vh", minHeight: "60vh" }}>

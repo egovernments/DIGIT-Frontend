@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { CheckBox, SubmitBar } from "@egovernments/digit-ui-components";
 import BoundaryComponent from "../sample";
 import { Card, SVG, Button, ButtonGroup, TextBlock, Dropdown, Toast } from "@egovernments/digit-ui-components";
-const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilterChange, updateBoundaryFilters }) => {
+const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilterChange, updateBoundaryFilters, resetBoundaryFilter }) => {
     const { t } = useTranslation();
     const [boundary, setBoundary] = useState(() => Digit.SessionStorage.get("boundary") || null);
     const [showToast, setShowToast] = useState(null);
@@ -39,6 +39,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
             setResetFilters(true);
             setBoundary(null);
             Digit.SessionStorage.set("boundary", null);
+            Digit.SessionStorage.set("selectedBoundaryCode", null);
         }
 
     }, [levelSelected])
@@ -52,6 +53,9 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
         setResetFilters(true);
         setBoundary(""); // Clear the boundary value
         setBoundaryKey((prevKey) => prevKey + 1); // Increment the key to re-render BoundaryComponent
+        Digit.SessionStorage.set("boundary", null);
+        Digit.SessionStorage.set("selectedBoundaryCode", null);
+        resetBoundaryFilter();
     };
     return (
         <Card
