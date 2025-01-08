@@ -8,7 +8,7 @@ export const useProductList = (tenantId,projectType) => {
     config: {
       enabled: true,
       select: (data) => {
-        if (projectType === "CO-DEL") {
+        if (projectType === "Co-delivery") {
           return data?.ProductVariant;
         }
         const filteredData = data?.ProductVariant?.filter(item => 
