@@ -122,7 +122,6 @@ const reducer = (state = initialState, action) => {
         drawerField: null,
       };
     case "UPDATE_DRAWER_FIELD":
-      console.log("UPDATE_DRAWER_FIELD", state, action);
       return {
         ...state,
         screenData: state?.screenData?.map((item, index) => {
@@ -155,12 +154,13 @@ const reducer = (state = initialState, action) => {
   }
 };
 
+const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
 function AppConfigurationWrapper() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { t } = useTranslation();
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
-    "HCM-ADMIN-CONSOLE",
+    MODULE_CONSTANTS,
     [{ name: "AppScreenConfigTemplateSchema" }, { name: "AppFieldType" }, { name: "DrawerPanelConfig" }, { name: "AppScreenLocalisationConfig" }],
     {
       cacheTime: Infinity,
@@ -181,7 +181,6 @@ function AppConfigurationWrapper() {
     return <Loader />;
   }
 
-  console.log("state", state);
   return (
     <AppConfigContext.Provider value={{ state, dispatch }}>
       <AppFieldScreenWrapper />

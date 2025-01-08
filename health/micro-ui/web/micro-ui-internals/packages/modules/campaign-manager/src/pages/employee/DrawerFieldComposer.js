@@ -9,7 +9,6 @@ import Switch from "../../components/Switch";
 function DrawerFieldComposer() {
   const { t } = useTranslation();
   const { state, dispatch } = useAppConfigContext();
-  console.log("STATEdrawerField", state);
   const [drawerState, setDrawerState] = useState({
     ...state?.drawerField,
   });
@@ -44,7 +43,6 @@ function DrawerFieldComposer() {
           }));
         }}
       />
-      {console.log("drawerState?.required ? true : false", drawerState?.required ? true : false, drawerState)}
       <Switch
         label={t("MANDATORY")}
         onToggle={(value) =>
@@ -85,7 +83,7 @@ function DrawerFieldComposer() {
         />
       )}
 
-      {drawerState?.type === "dropDown" && (
+      {(drawerState?.type === "dropDown" || drawerState?.type === "checkbox") && (
         <div
           style={{ padding: "1.5rem", border: "1px solid #c84c0e", borderRadius: "1rem", display: "flex", flexDirection: "column", gap: "1.5rem" }}
         >
@@ -153,7 +151,7 @@ function DrawerFieldComposer() {
             type={"button"}
             size={"small"}
             variation={"teritiary"}
-            label={t("ADD_OPTIONS_FOR_DROPDOWN")}
+            label={t("ADD_OPTIONS_FOR_DROPDOWN_APP")}
             onClick={
               () =>
                 setDrawerState((prev) => ({

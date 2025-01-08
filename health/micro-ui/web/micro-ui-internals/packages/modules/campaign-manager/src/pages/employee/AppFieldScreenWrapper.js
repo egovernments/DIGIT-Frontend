@@ -38,6 +38,7 @@ function AppFieldScreenWrapper() {
   const [stepper, setStepper] = useState(
     appTemplate
       ?.filter((i) => i.parent === numberTabs.find((j) => j.active)?.parent)
+      .sort((a, b) => a.order - b.order)
       ?.map((k, j, t) => ({
         name: k.name,
         isLast: j === t.length - 1 ? true : false,
@@ -73,6 +74,7 @@ function AppFieldScreenWrapper() {
   const currentCard = useMemo(() => {
     return state?.screenData
       ?.filter((i) => i.parent === numberTabs.find((j) => j.active)?.parent)
+      ?.sort((a, b) => a.order - b.order)
       ?.filter((k) => k.name === stepper.find((l) => l.active)?.name)?.[0];
   }, [state?.screenData, numberTabs, stepper, currentStep]);
 
@@ -111,13 +113,13 @@ function AppFieldScreenWrapper() {
               <AppFieldComposer type={type} label={label} active={active} required={required} headerFields={true} />
             ))}
             <Divider />
-            {fields?.map(({ type, label, active, required, dropDownOptions }, i, c) => (
+            {fields?.map(({ type, label, active, required, dropDownOptions, deleteFlag }, i, c) => (
               <AppFieldComposer
                 type={type}
                 label={label}
                 active={active}
                 required={required}
-                isDelete={true}
+                isDelete={deleteFlag === false ? false : true}
                 dropDownOptions={dropDownOptions}
                 onDelete={() => {
                   dispatch({
@@ -128,7 +130,7 @@ function AppFieldScreenWrapper() {
                       currentField: c[i],
                     },
                   });
-                  return;
+                  // return;
                 }}
                 onSelectField={() => {
                   dispatch({
@@ -139,7 +141,7 @@ function AppFieldScreenWrapper() {
                       drawerField: c[i],
                     },
                   });
-                  return;
+                  // return;
                 }}
                 config={c[i]}
               />
