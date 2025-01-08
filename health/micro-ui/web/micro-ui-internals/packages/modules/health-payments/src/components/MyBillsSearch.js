@@ -22,7 +22,18 @@ const MyBillsSearch = ({ onSubmit = () => { }, onClear = () => { } }) => {
     };
 
     const handleSearch = (data) => {
-        onSubmit(billID, dateRange);
+
+        // Check if startDate and endDate are the same
+        const isSameDateTime =
+            dateRange.startDate &&
+            dateRange.endDate &&
+            new Date(dateRange.startDate).getTime() === new Date(dateRange.endDate).getTime();
+
+        const finalDateRange = isSameDateTime
+            ? { startDate: '', endDate: '', title: '' } // Empty dateRange if start and end are the same
+            : dateRange;
+
+        onSubmit(billID, finalDateRange);
     };
 
     const handleClear = () => {

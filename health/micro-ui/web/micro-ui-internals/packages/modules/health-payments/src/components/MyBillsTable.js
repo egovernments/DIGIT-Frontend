@@ -140,9 +140,18 @@ const MyBillsTable = ({ ...props }) => {
                     showBottom={isLastRow ? false : true}
                     onOptionSelect={(value) => {
                         if (value.code === "HCM_AM_PDF") {
-                            downloadPDFWithName({ fileStoreId: reportDetails?.pdfReportId, customName: `${billId}` })
+                            if (reportDetails?.pdfReportId) {
+                                downloadPDFWithName({ fileStoreId: reportDetails?.pdfReportId, customName: `${billId}` })
+                            } else {
+                                setShowToast({ key: "error", label: t(`HCM_AM_PDF_GENERATION_FAILED`), transitionTime: 3000 });
+                            }
                         } else if (value.code === "HCM_AM_EXCEL") {
-                            downloadExcelWithName({ fileStoreId: reportDetails?.excelReportId, customName: `${billId}` });
+                            if (reportDetails?.excelReportId) {
+                                downloadExcelWithName({ fileStoreId: reportDetails?.excelReportId, customName: `${billId}` });
+                            } else {
+                                setShowToast({ key: "error", label: t(`HCM_AM_EXCEL_GENERATION_FAILED`), transitionTime: 3000 });
+                            }
+
                         }
                     }}
                     options={[
