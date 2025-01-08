@@ -20,6 +20,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [attendanceSummary, setAttendanceSummary] = useState([]);
   const [initialAttendanceSummary, setInitialAttendanceSummary] = useState([]);
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
+  const paymentConfig = Digit?.SessionStorage.get("paymentsConfig");
   const [disabledAction, setDisabledAction] = useState(fromCampaignSupervisor);
   const [openEditAlertPopUp, setOpenEditAlertPopUp] = useState(false);
   const [openApproveCommentPopUp, setOpenApproveCommentPopUp] = useState(false);
@@ -53,21 +54,19 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   const { isLoading: isAttendanceLoading, data: AttendanceData } = Digit.Hooks.useCustomAPIHook(AttendancereqCri);
 
+  /// ADDED CONDITION THAT IF CAMPAIGN HAS NOT ENDED THEN WE WILL SHOW ESTIMATE DATA ONLY AND DISABLED ALL THE ACTIONS
+
   useEffect(() => {
     if (AttendanceData) {
       setAttendanceDuration(
         Math.ceil((AttendanceData?.attendanceRegister[0]?.endDate - AttendanceData?.attendanceRegister[0]?.startDate) / (24 * 60 * 60 * 1000))
       );
-    }
-  }, [AttendanceData])
-
-  /// ADDED CONDITION THAT IF CAMPAIGN HAS NOT ENDED THEN WE WILL SHOW ESTIMATE DATA ONLY AND DISABLED ALL THE ACTIONS
-
-  useEffect(() => {
-    ///NEED TO ADD THIS CONDITION ALSO REMOVING FOR TESTING
-    //AttendanceData?.attendanceRegister[0]?.endDate > new Date()
-    if (AttendanceData?.attendanceRegister?.[0]?.reviewStatus === "APPROVED") {
-      setDisabledAction(true);
+      if (AttendanceData?.attendanceRegister?.[0]?.reviewStatus === "APPROVED") {
+        setDisabledAction(true);
+      }
+      if (!paymentConfig.enableApprovalAnyTime && AttendanceData?.attendanceRegister[0]?.endDate > new Date()) {
+        setDisabledAction(true);
+      }
     }
   }, [AttendanceData])
 
@@ -82,15 +81,15 @@ const ViewAttendance = ({ editAttendance = false }) => {
       }
     },
     config: {
-      enabled: ((AttendanceData ? true : false) && disabledAction && AttendanceData?.attendanceRegister?.[0]?.reviewStatus !== "APPROVED") || triggerEstimate,
+      enabled: triggerEstimate,
       select: (data) => {
         return data;
       },
     },
+    changeQueryName: registerNumber,
   };
 
   const { isLoading: isEstimateMusterRollLoading, data: estimateMusterRollData } = Digit.Hooks.useCustomAPIHook(reqCri);
-
 
   /// SEARCH MUSTERROLL TO CHECK IF WE NEED TO SHOW ESTIMATE OR MUSTERROLL SEARCH DATA
 
@@ -101,20 +100,22 @@ const ViewAttendance = ({ editAttendance = false }) => {
       registerId: AttendanceData?.attendanceRegister?.[0]?.id
     },
     config: {
-      enabled: (AttendanceData ? true : false) && (!disabledAction || AttendanceData?.attendanceRegister?.[0]?.reviewStatus === "APPROVED"),
+      enabled: (AttendanceData ? true : false),
       select: (data) => {
         return data;
       },
-    },
-    changeQueryName: AttendanceData?.attendanceRegister?.[0]?.id,
+    }
   };
-
 
   const { isLoading: isMusterRollLoading, data: MusterRollData, refetch: refetchMusterRoll } = Digit.Hooks.useCustomAPIHook(searchReqCri);
 
   useEffect(() => {
     if (MusterRollData?.count === 0) {
-      triggerMusterRollCreate();
+      if (disabledAction) {
+        setTriggerEstimate(true);
+      } else {
+        triggerMusterRollCreate();
+      }
     } else if (triggerEstimate === true) {
       setTriggerEstimate(false);
     }
