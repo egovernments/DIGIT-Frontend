@@ -54,7 +54,13 @@ const CampaignCard = () => {
       link: `/workbench-ui/employee/campaign/boundary/home`,
       roles: ROLES.BOUNDARY_MANAGER,
       // count: isLoading?"-":data
-    }
+    },
+    {
+      label: t("ACTION_TEST_APP_CONFIGURATION"),
+      link: `/workbench-ui/employee/campaign/app-configuration`,
+      roles: ROLES.CAMPAIGN_MANAGER,
+      // count: isLoading?"-":data
+    },  
   ];
 
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));
