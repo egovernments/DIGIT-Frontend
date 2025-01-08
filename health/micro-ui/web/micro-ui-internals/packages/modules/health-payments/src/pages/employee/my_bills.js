@@ -45,7 +45,7 @@ const MyBills = () => {
         window.Digit.SessionStorage.del("selectedProject");
         window.Digit.SessionStorage.del("selectedBoundaryCode");
         window.Digit.SessionStorage.del("boundary");
-        sessionStorage.removeItem("selectedValues");
+        window.Digit.SessionStorage.del("selectedValues");
     }, []);
 
 

@@ -8,8 +8,13 @@ const ROLES = {
 };
 
 const PaymentsCard = () => {
-  Digit.SessionStorage.del("Digit.paymentInbox");
+  Digit.SessionStorage.del("paymentInbox");
   Digit.SessionStorage.del("selectedValues");
+  window.Digit.SessionStorage.del("selectedLevel");
+  window.Digit.SessionStorage.del("selectedProject");
+  window.Digit.SessionStorage.del("selectedBoundaryCode");
+  window.Digit.SessionStorage.del("boundary");
+
   const { t } = useTranslation();
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
