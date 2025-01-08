@@ -13,7 +13,7 @@ import * as parsingUtils from "../src/utils/ParsingUtils"
 
 const WorkbenchModule = ({ stateCode, userType, tenants }) => {
   console.log('.................');
-  const moduleCode = ["workbench","mdms","schema","hcm-admin-schemas"];
+  const moduleCode = ["workbench","mdms","schema","hcm-admin-schemas"]; //for localization
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
   const modulePrefix = window?.globalConfigs?.getConfig("CORE_UI_MODULE_LOCALE_PREFIX") || "rainmaker";
@@ -28,9 +28,9 @@ const WorkbenchModule = ({ stateCode, userType, tenants }) => {
     return <Loader />;
   }
 
-  return <TourProvider>
-    <EmployeeApp path={path} stateCode={stateCode} />
-  </TourProvider>
+  return <div>
+  <EmployeeApp path={path} stateCode={stateCode} />
+  </div> 
 };
 
 const componentsToRegister = {
