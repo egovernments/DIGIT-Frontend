@@ -135,6 +135,13 @@ const CustomBillInbox = () => {
         setSelectedBoundaryCode(boundaryCode);
         Digit.SessionStorage.set("selectedBoundaryCode", boundaryCode);
     };
+
+    const resetBoundaryFilter = () => {
+        setTableData(null);
+        setApprovalCount(null);
+        setPendingApprovalCount(null);
+        setSelectedBoundaryCode(null);
+    };
     const handlePageChange = (page, totalRows) => {
         setCurrentPage(page);
         setLimitAndOffset({ ...limitAndOffset, offset: (page - 1) * rowsPerPage });
@@ -214,6 +221,7 @@ const CustomBillInbox = () => {
                             selectedLevel={selectedLevel}
                             onFilterChange={handleFilterUpdate}
                             updateBoundaryFilters={updateFilters}
+                            resetBoundaryFilter={resetBoundaryFilter}
                         ></BillBoundaryFilter>
                     </div>
                     <div style={{ width: "80%", display: "flex", flexDirection: "row", height: "60vh", minHeight: "60vh" }}>
@@ -250,7 +258,7 @@ const CustomBillInbox = () => {
                                     style={{}}
                                 />
                             )}
-                            {tableData && <Card>
+                            {tableData && <div style={{ overflow: "auto", maxHeight: "47vh" }}><Card >
                                 <BillInboxTable
                                     isFetching={isFetching}
                                     tableData={tableData}
@@ -261,7 +269,7 @@ const CustomBillInbox = () => {
                                     totalCount={totalCount}
                                     status={activeLink.code}
                                 ></BillInboxTable>
-                            </Card>}
+                            </Card></div>}
                         </div>
                     </div>
                 </div>
@@ -298,7 +306,7 @@ const CustomBillInbox = () => {
                                 label={t(`HCM_AM_GENERATE_BILL_LABEL`)}
                                 onClick={() => {
                                     !showGenerateBillAction || BillData?.bills?.length >= 0 ?
-                                        setShowToast({ key: "info", label: t("HCM_AM_GENERATE_BILLS_CANNOT_BE_CALLED_INFO_MESSAGE"), transitionTime: 3000 })
+                                        setShowToast({ key: "info", label: t("HCM_AM_GENERATE_BILLS_CANNOT_BE_CALLED_INFO_MESSAGE"), transitionTime: 5000 })
                                         : triggerGenerateBill();
                                 }}
                                 style={{

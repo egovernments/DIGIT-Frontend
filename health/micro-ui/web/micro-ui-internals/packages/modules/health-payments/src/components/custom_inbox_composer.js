@@ -77,6 +77,7 @@ const CustomInboxSearchComposer = () => {
                   : filterCriteria?.code
                 : filterData?.code,
             reviewStatus: status == undefined ? selectedStatus : status,
+            isChildrenRequired: true,
           },
         },
         {
@@ -84,15 +85,16 @@ const CustomInboxSearchComposer = () => {
             const rowData =
               data?.attendanceRegister.length > 0
                 ? data?.attendanceRegister?.map((item, index) => {
-                    return {
-                      id: item?.registerNumber,
-                      //name: item?.name,
-                      name: selectedProject?.name,
-                      boundary: item?.localityCode,
-                      status: item?.attendees == null ? 0 : item?.attendees.length || 0,
-                      markby: item?.staff?.[0].additionalDetails?.staffName || "",
-                    };
-                  })
+                  return {
+                    id: item?.registerNumber,
+                    //name: item?.name,
+                    name: selectedProject?.name,
+                    boundary: item?.localityCode,
+                    status: item?.attendees == null ? 0 : item?.attendees.length || 0,
+                    markby: item?.staff?.[0].additionalDetails?.ownerName || "NA",
+                    approvedBy: item?.staff?.[0].additionalDetails?.staffName || "NA",
+                  };
+                })
                 : [];
             setChildrenDataLoading(false);
             setCard(true);
