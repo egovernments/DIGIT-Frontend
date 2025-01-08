@@ -117,7 +117,7 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
   useEffect(() => {
     if (reset == true) {
       setSelectedValues(defaultSelectData);
-      Digit.SessionStorage.del("Digit.paymentInbox");
+      Digit.SessionStorage.del("paymentInbox");
       Digit.SessionStorage.del("selectedValues");
       makeReset(false);
       onChange(null);
