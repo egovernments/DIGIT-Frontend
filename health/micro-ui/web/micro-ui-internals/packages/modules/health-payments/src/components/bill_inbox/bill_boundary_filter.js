@@ -37,7 +37,8 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
 
         if (updateBoundaryFilters) {
             setResetFilters(true);
-            setBoundary("");
+            setBoundary(null);
+            Digit.SessionStorage.set("boundary", null);
         }
 
     }, [levelSelected])

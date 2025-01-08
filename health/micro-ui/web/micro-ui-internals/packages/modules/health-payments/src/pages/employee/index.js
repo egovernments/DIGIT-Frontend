@@ -47,6 +47,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
       window.Digit.SessionStorage.del("selectedLevel");
       window.Digit.SessionStorage.del("selectedProject");
       window.Digit.SessionStorage.del("selectedBoundaryCode");
+      window.Digit.SessionStorage.del("boundary");
       sessionStorage.removeItem("selectedValues");
     }
   }, []);
