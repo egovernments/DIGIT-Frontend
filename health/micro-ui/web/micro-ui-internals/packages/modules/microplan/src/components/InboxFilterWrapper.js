@@ -164,7 +164,7 @@ const InboxFilterWrapper = (props) => {
         {props.isEstimate &&
         <Fragment>
         <LabelFieldPair vertical>
-          <TextBlock body={t(`MP_VILLAGE_ROAD_CONDITION`)} />
+        <div className="custom-filter-names">{t("MP_VILLAGE_ROAD_CONDITION")}</div> 
           <Dropdown
             option={state.villageRoadCondition}
             optionKey={"code"}
@@ -176,8 +176,8 @@ const InboxFilterWrapper = (props) => {
         </LabelFieldPair>
 
         <LabelFieldPair vertical>
-          <TextBlock body={t(`MP_VILLAGE_TERRAIN`)} />
-          <Dropdown
+        <div className="custom-filter-names">{t("MP_VILLAGE_TERRAIN")}</div>           
+        <Dropdown
             option={state.villageTerrain}
             optionKey={"code"}
             selected={filterValues["terrain"] || defaultSelectedOptions?.terrain}
@@ -188,7 +188,7 @@ const InboxFilterWrapper = (props) => {
         </LabelFieldPair>
     
         <LabelFieldPair vertical>
-          <TextBlock body={t(`MP_FILTER_FACILITY`)} />
+        <div className="custom-filter-names">{t("MP_FILTER_FACILITY")}</div>           
           <Dropdown
             option={planFacility}
             optionKey={"code"}
@@ -215,7 +215,7 @@ const InboxFilterWrapper = (props) => {
               vertical
               style={{ paddingBottom: isLastElement ? "1rem" : "0" }} 
             >
-              <TextBlock body={t(`MP_SECURITY_QUESTION ${index + 1}`)} />
+              <div className="custom-filter-names">{t(`MP_SECURITY_QUESTION ${index + 1}`)}</div>             
               <Dropdown
                 option={options}
                 optionKey={"code"}
