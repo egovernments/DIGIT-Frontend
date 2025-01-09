@@ -30,6 +30,7 @@ const CustomBillInbox = () => {
     const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
     const [selectedStatus, setSelectedStatus] = useState("PENDINGFORAPPROVAL");
     const project = Digit?.SessionStorage.get("staffProjects");
+    const [billGenerationStatus, setBillGenerationStatus] = useState(null);
     const [searchQuery, setSearchQuery] = useState(null);
     const [activeLink, setActiveLink] = useState({
         code: "APPROVED",
@@ -168,8 +169,13 @@ const CustomBillInbox = () => {
                 },
                 {
                     onSuccess: (data) => {
-                        setShowToast({ key: "success", label: t("HCM_AM_BILL_GENERATED_SUCCESSFULLY"), transitionTime: 3000 });
-                        refetchBill();
+                        setBillGenerationStatus(data?.statusCode);
+                        if (data?.statusCode === "SUCCESSFUL") {
+                            setShowToast({ key: "success", label: t("HCM_AM_BILL_GENERATED_SUCCESSFULLY"), transitionTime: 3000 });
+                            refetchBill();
+                        } else {
+                            setShowToast({ key: "success", label: t("HCM_AM_BILL_GENERATION_INITIATED"), transitionTime: 3000 });
+                        }
                     },
                     onError: (error) => {
                         setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
@@ -286,6 +292,7 @@ const CustomBillInbox = () => {
                             }}
                             style={{
                                 minWidth: "14rem",
+                                opacity: billGenerationStatus != null ? 0.5 : 1,
                             }}
                             type="button"
                             variation="primary"
@@ -306,7 +313,7 @@ const CustomBillInbox = () => {
                                 label={t(`HCM_AM_GENERATE_BILL_LABEL`)}
                                 onClick={() => {
                                     !showGenerateBillAction || BillData?.bills?.length >= 0 ?
-                                        setShowToast({ key: "info", label: t("HCM_AM_GENERATE_BILLS_CANNOT_BE_CALLED_INFO_MESSAGE"), transitionTime: 5000 })
+                                        setShowToast({ key: "info", label: BillData?.bills?.length >= 0 ? t("HCM_AM_BILL_IS_ALREADY_GENERATED") : showGenerateBillAction ? t("HCM_AM_ALL_THE_REGISTERS_SHOULD_BE_APPROVED_INFO") : t("HCM_AM_GENERATE_BILLS_CANNOT_BE_CALLED_INFO_MESSAGE"), transitionTime: 5000 })
                                         : triggerGenerateBill();
                                 }}
                                 style={{
