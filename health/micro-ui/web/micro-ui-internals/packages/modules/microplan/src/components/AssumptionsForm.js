@@ -74,9 +74,6 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
         setSelectedRegistrationProcess(props?.props?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm?.selectedRegistrationProcess);
     },[props?.props?.sessionData?.ASSUMPTIONS_FORM?.assumptionsForm])
 
-    const filteredOptions = resourceDistributionStrategyCode === "MIXED"
-        ? optionsForProcesses.filter(option => option.resourceDistributionStrategyName !== "Fixed post & House-to-House")
-        : optionsForProcesses;
 
     if (isLoadingPlanObject) {
         return <Loader />
@@ -102,7 +99,7 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
                                 variant="select-dropdown"
                                 t={t}
                                 isMandatory={true}
-                                option={filteredOptions.map(item => ({
+                                option={optionsForProcesses.map(item => ({
                                     code: item.resourceDistributionStrategyCode,
                                     value: item.resourceDistributionStrategyName,
                                 }))}
@@ -128,7 +125,7 @@ const AssumptionsForm = ({ onSelect, ...props }) => {
                                 variant="select-dropdown"
                                 t={t}
                                 isMandatory={true}
-                                option={filteredOptions.map(item => ({
+                                option={optionsForProcesses.map(item => ({
                                     code: item.resourceDistributionStrategyCode,
                                     value: item.resourceDistributionStrategyName,
                                 }))}
