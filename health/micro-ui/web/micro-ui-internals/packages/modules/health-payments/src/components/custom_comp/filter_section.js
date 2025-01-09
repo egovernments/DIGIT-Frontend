@@ -104,7 +104,9 @@ const CustomFilter = ({ resetTable, isRequired, onProjectSelect, onFilterChange,
           </span>
         </div>
         <div style={{ maxWidth: "100%", width: "100%", marginBottom: "1.5rem" }}>
-          <TextBlock body={`${t("ATTENDANCE_PROJECT_NAME")} *`}></TextBlock>
+          <div className="comment-label">
+            {t(`ATTENDANCE_PROJECT_NAME`)}<span className="required"> *</span>
+          </div>
           <Dropdown
             selected={projectSelected}
             t={t}
