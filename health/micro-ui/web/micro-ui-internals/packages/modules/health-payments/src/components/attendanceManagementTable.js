@@ -4,9 +4,8 @@ import { useTranslation } from "react-i18next";
 import { Button, Card, Loader, TableMolecule, TextInput, Toast } from "@egovernments/digit-ui-components";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { CheckBox } from "@egovernments/digit-ui-components";
-
-
-
+import DataTable from "react-data-table-component";
+import { tableCustomStyle } from "./custom_comp/table_inbox_custom_style";
 
 const AttendanceManagementTable = ({ ...props }) => {
   const { t } = useTranslation();
@@ -14,62 +13,119 @@ const AttendanceManagementTable = ({ ...props }) => {
   const url = Digit.Hooks.useQueryParams();
   const [showToast, setShowToast] = useState(null);
 
-  const columns = useMemo(() => {
-    const baseColumns = [
-      {
-        label: t(`HCM_AM_FRONTLINE_WORKER`),
-        type: "text",
-      },
-      {
-        label: t("HCM_AM_WORKER_ID"),
-        type: "text",
-      },
-      {
-        label: t("HCM_AM_ROLE"),
-        type: "text",
-      },
-    ];
+  // const columns = useMemo(() => {
+  //   const baseColumns = [
+  //     {
+  //       label: t(`HCM_AM_FRONTLINE_WORKER`),
+  //       type: "text",
+  //     },
+  //     {
+  //       label: t("HCM_AM_WORKER_ID"),
+  //       type: "text",
+  //     },
+  //     {
+  //       label: t("HCM_AM_ROLE"),
+  //       type: "text",
+  //     },
+  //   ];
 
-    if (!props.editAttendance) {
-      baseColumns.push({
-        label: t("HCM_AM_NO_OF_DAYS_WORKED"),
-        type: "serialno",
-      });
-    } else {
-      baseColumns.push({
-        label: t("HCM_AM_NO_OF_DAYS_WORKED"),
-        type: "custom",
-      });
-    }
+  //   if (!props.editAttendance) {
+  //     baseColumns.push({
+  //       label: t("HCM_AM_NO_OF_DAYS_WORKED"),
+  //       type: "serialno",
+  //     });
+  //   } else {
+  //     baseColumns.push({
+  //       label: t("HCM_AM_NO_OF_DAYS_WORKED"),
+  //       type: "custom",
+  //     });
+  //   }
 
-    return baseColumns;
-  }, [props.editAttendance, t]);
+  //   return baseColumns;
+  // }, [props.editAttendance, t]);
+
+  //=====
+
+  const columns = [
+    {
+      name: t(`HCM_AM_FRONTLINE_WORKER`),
+      selector: (row) => {
+        return (
+          <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
+            {String(row?.[1] ? row?.[1] : t("ES_COMMON_NA"))}
+          </span>
+        );
+      },
+    },
+
+    {
+      name: t("HCM_AM_WORKER_ID"),
+      selector: (row) => {
+        return (
+          <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={row?.[2] || t("NA")}>
+            {row?.[2] || t("NA")}
+          </div>
+        );
+      },
+    },
+    {
+      name: t("HCM_AM_ROLE"),
+      selector: (row) => {
+        return (
+          <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={t(row?.[3]) || t("NA")}>
+            {t(row?.[3]) || t("NA")}
+          </div>
+        );
+      },
+    },
+
+    {
+      name: t("HCM_AM_NO_OF_DAYS_WORKED"),
+      selector: (row) => {
+        return props.editAttendance ? (
+          <div>
+            <TextInput
+              type="numeric"
+              value={daysWorked}
+              onChange={(e) => {
+                handleDaysWorkedChange(workerId, e);
+              }}
+              populators={{ disableTextField: true }}
+            />
+          </div>
+        ) : (
+          <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={t(row?.[4] || "0")}>
+            {t(row?.[4] || "0")}
+          </div>
+        );
+      },
+    },
+  ];
 
   // Map attendance data to rows
-  const rows = useMemo(() => {
-    return props.data.map(([id, name, workerId, role, daysWorked]) => [
-      { label: name, maxLength: 64 },
-      { label: workerId, maxLength: 64 },
-      { label: role, maxLength: 64 },
-      props.editAttendance ? (
-        <div>
-          <TextInput
-            type="numeric"
-            value={daysWorked}
-            onChange={(e) => {
-              handleDaysWorkedChange(workerId, e);
-            }}
-            populators={{ disableTextField: true }}
-          />
-        </div>
-      ) : (
-        daysWorked
-      ),
-    ]);
-  }, [props.data, props.editAttendance]);
+  // const rows = useMemo(() => {
+  //   return props.data.map(([id, name, workerId, role, daysWorked]) => [
+  //     { label: name, maxLength: 64 },
+  //     { label: workerId, maxLength: 64 },
+  //     { label: role, maxLength: 64 },
+  //     props.editAttendance ? (
+  //       <div>
+  //         <TextInput
+  //           type="numeric"
+  //           value={daysWorked}
+  //           onChange={(e) => {
+  //             handleDaysWorkedChange(workerId, e);
+  //           }}
+  //           populators={{ disableTextField: true }}
+  //         />
+  //       </div>
+  //     ) : (
+  //       daysWorked
+  //     ),
+  //   ]);
+  // }, [props.data, props.editAttendance]);
 
   const handleDaysWorkedChange = (workerId, value) => {
-
     // Find the worker whose attendance is being updated
     const worker = props.data.find((worker) => worker[2] === workerId);
 
@@ -113,53 +169,22 @@ const AttendanceManagementTable = ({ ...props }) => {
     props?.handlePerRowsChange(currentRowsPerPage, currentPage);
   };
 
-
   return (
     <div className="component-table-wrapper">
-      <TableMolecule
-        actionButtonLabel=""
-        actions={[]}
-        className=""
-        footerProps={{
-          addStickyFooter: false,
-          footerContent: null,
-          hideFooter: false,
-          isStickyFooter: false,
-          scrollableStickyFooterContent: true,
-          stickyFooterContent: null,
-        }}
-        frozenColumns={0}
-        headerData={columns}
-        onFilter={function noRefCheck() { }}
-        pagination={{
-          initialRowsPerPage: 10,
-          rowsPerPageOptions: [10, 15, 20, 30],
-        }}
-        rows={rows}
-        selection={{
-          addCheckbox: false,
-          checkboxLabel: "",
-          initialSelectedRows: [],
-          onSelectedRowsChange: function noRefCheck() { },
-          showSelectedState: false,
-        }}
-        sorting={{
-          customSortFunction: function noRefCheck() { },
-          initialSortOrder: "",
-          isTableSortable: false,
-        }}
-        styles={{
-          extraStyles: {},
-          withAlternateBg: false,
-          withBorder: true,
-          withColumnDivider: false,
-          withHeaderDivider: true,
-          withRowDivider: true,
-        }}
-        tableDetails={{
-          tableDescription: "",
-          tableTitle: "",
-        }}
+      <DataTable
+        columns={columns}
+        data={props.data}
+        progressPending={false}
+        progressComponent={<Loader />}
+        pagination
+        paginationServer
+        customStyles={tableCustomStyle}
+        paginationTotalRows={props?.totalRows}
+        onChangePage={handlePageChange}
+        onChangeRowsPerPage={handlePerRowsChange}
+        paginationPerPage={props?.rowsPerPage}
+        sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
+        paginationRowsPerPageOptions={[10, 15, 20]}
       />
       {showToast && (
         <Toast
