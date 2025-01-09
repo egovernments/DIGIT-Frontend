@@ -640,7 +640,7 @@ const PopInbox = () => {
 
         <div className="pop-inbox-wrapper-filter-table-wrapper" style={{ marginBottom: (isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "CENSUS_DATA_APPROVAL_IN_PROGRESS") || (!isRootApprover && totalcount===0) || disabledAction ? "2.5rem" : "0rem" }}>
           <InboxFilterWrapper
-            isEstimate={false}
+            isPlanInbox={false}
             options={activeFilter}
             onApplyFilters={onFilter}
             clearFilters={clearFilters}

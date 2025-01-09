@@ -11,13 +11,15 @@ const InboxFilterWrapper = (props) => {
   const {microplanId,...rest} = Digit.Hooks.useQueryParams()
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [filterValues, setFilterValues] = useState(
-    { status: null, onRoadCondition: null, terrain: null, securityQ1: null, securityQ2: null,facilityName:null }
+    { status: null, onRoadCondition: null, terrain: null, securityQ1: null, securityQ2: null,facilityID:null }
   );
 
   // Default selected option
   let defaultSelectedOptions = props.defaultValue
   ? Object.entries(props.defaultValue).reduce((acc, [key, value]) => {
-   if (value !== null) {
+      if (key === "facilityId") {
+        acc[key] = { code: value?.code, name: `${t(key)} (${value})` };
+      } else if (value !== null) {
         acc[key] = { code: value, name: `${t(key)} (${value})` };
       } else {
         acc[key] = null;
@@ -32,7 +34,9 @@ const InboxFilterWrapper = (props) => {
     if (props.defaultValue && Object.keys(props.defaultValue).length > 0) {
       const newDefault = Object.entries(props.defaultValue).reduce((acc, [key, value]) => {
         acc[key] = value !== null
-          ? { code: value, name: `${t(key)} (${value})` }
+          ? key === 'facilityId'
+            ? { code: value?.code }
+            : { code: value, name: `${t(key)} (${value})` }
           : null;
         return acc;
       }, {});
@@ -67,7 +71,10 @@ const InboxFilterWrapper = (props) => {
     if (props.onApplyFilters) {
       const filtersToApply = {};
       for (let key in filterValues) {
-        if (filterValues[key] && typeof filterValues[key] === 'object' && filterValues[key].hasOwnProperty('code')) {
+        if(filterValues[key] && typeof filterValues[key] === 'object' && String(key)==='facilityId' &&filterValues[key].hasOwnProperty('code') ){
+          filtersToApply[key] = filterValues[key]
+        }
+        else if (filterValues[key] && typeof filterValues[key] === 'object' && filterValues[key].hasOwnProperty('code')) {
           filtersToApply[key] = filterValues[key].code; // Extract 'name' if it exists
         } else {
           filtersToApply[key] = filterValues[key]; // Keep the value as is (including null)
@@ -107,10 +114,10 @@ const InboxFilterWrapper = (props) => {
       select: (data) => {
         if (!data?.PlanFacility || !Array.isArray(data.PlanFacility)) return [];
     
-        // Extract facilityName for each object
+        // Extract facilityName and facilityId for each object
         const facilityOptions = data.PlanFacility.map((facility) => ({
           code: facility.facilityName,
-          name: facility.facilityName
+          id: facility.facilityId
         }));
     
         return facilityOptions;
@@ -154,7 +161,7 @@ const InboxFilterWrapper = (props) => {
             />
           </LabelFieldPair>
         )}
-        {props.isEstimate &&
+        {props.isPlanInbox &&
         <Fragment>
         <LabelFieldPair vertical>
         <div className="custom-filter-names">{t("MP_VILLAGE_ROAD_CONDITION")}</div> 
@@ -185,8 +192,8 @@ const InboxFilterWrapper = (props) => {
           <Dropdown
             option={planFacility}
             optionKey={"code"}
-            selected={filterValues["facilityName"] || defaultSelectedOptions?.facilityName  }
-            select={(value) => handleDropdownChange("facilityName", value)}
+            selected={filterValues["facilityId"] || defaultSelectedOptions?.facilityId  }
+            select={(value) => handleDropdownChange("facilityId", value)}
             t={t}
             disabled={false}
           />
@@ -209,7 +216,7 @@ const InboxFilterWrapper = (props) => {
               vertical
               style={{ paddingBottom: isLastElement ? "1rem" : "0" }} 
             >
-              <div className="custom-filter-names">{t(`MP_SECURITY_QUESTION ${index+1}`)}</div>             
+              <div className="custom-filter-names">{t(`MP_SECURITY_QUESTION ${index + 1}`)}</div>             
               <Dropdown
                 option={options}
                 optionKey={"code"}
