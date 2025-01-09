@@ -79,7 +79,6 @@ function RoleTableComposer({ nationalRoles }) {
       enabled: true,
       select: (data) => {
         const resp = data?.Employees
-        ?.filter((emp)=> emp?.user?.userServiceUuid!== null)
         ?.map((item, index) => {
           return {
             rowIndex: index + 1,
