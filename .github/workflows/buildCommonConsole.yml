@@ -7,9 +7,9 @@ on:
   workflow_dispatch: # Enable manual triggering with inputs
     inputs:
       folder_name:
-        description: 'Specify the folder for Docker build (default: console/dockerfile)'
+        description: 'Specify the folder for Docker build (default: console)'
         required: false
-        default: 'console/dockerfile'
+        default: 'console'
 
 jobs:
   docker_image-build:
