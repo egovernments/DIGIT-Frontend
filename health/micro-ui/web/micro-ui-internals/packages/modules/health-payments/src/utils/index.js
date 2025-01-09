@@ -1,5 +1,5 @@
 import _ from "lodash";
-
+import axios from "axios";
 import { CustomisedHooks } from "../hooks";
 
 
@@ -43,6 +43,56 @@ export const updateCustomConfigs = () => {
   setupLibraries("Customizations", "commonUiConfig", { ...window?.Digit?.Customizations?.commonUiConfig });
   // setupLibraries("Utils", "parsingUtils", { ...window?.Digit?.Utils?.parsingUtils, ...parsingUtils });
 };
+
+/// Util function to downloads files with type as pdf or excel
+export const downloadFileWithName = ({ fileStoreId = null, customName = null, type = "excel" }) => {
+  const downloadFile = (blob, fileName, extension) => {
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${fileName}.${extension}`;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(link.href), 7000);
+  };
+
+  if (fileStoreId) {
+    const fileTypeMapping = {
+      excel: {
+        mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        extension: "xlsx",
+      },
+      pdf: {
+        mimeType: "application/pdf",
+        extension: "pdf",
+      },
+    };
+
+    const { mimeType, extension } = fileTypeMapping[type] || fileTypeMapping["excel"]; // Default to Excel if type is invalid
+
+    axios
+      .get("/filestore/v1/files/id", {
+        responseType: "arraybuffer",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: mimeType,
+          "auth-token": Digit.UserService.getUser()?.["access_token"],
+        },
+        params: {
+          tenantId: Digit.ULBService.getCurrentTenantId(),
+          fileStoreId: fileStoreId,
+        },
+      })
+      .then((res) => {
+        downloadFile(
+          new Blob([res.data], { type: mimeType }),
+          customName || "download",
+          extension
+        );
+      });
+  }
+};
+
 
 
 
