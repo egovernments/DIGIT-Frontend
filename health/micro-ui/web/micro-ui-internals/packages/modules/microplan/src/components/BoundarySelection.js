@@ -67,6 +67,10 @@ const BoundarySelection = ({ onSelect, props: customProps, ...props }) => {
       // Hide loader after updating statusMap
       setIsStatusMapLoading(false);
     }
+    return () => {
+      // Cleanup function to prevent state updates if component unmounts during loading
+      setIsStatusMapLoading(false);
+    };
   }, [selectedData, boundaryHierarchy]);
 
 
