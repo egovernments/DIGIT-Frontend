@@ -41,9 +41,9 @@ frontend/micro-ui/web/public/index.html
 
 ## List of features available in this package were as follows
 
-1. Campaign Mangement
-2. Checklist Mangement
-3. Boundary Mangement
+1. Campaign Management
+2. Checklist Management
+3. Boundary Management
 4. Microplanning
 5. Campaign Settings 
 
