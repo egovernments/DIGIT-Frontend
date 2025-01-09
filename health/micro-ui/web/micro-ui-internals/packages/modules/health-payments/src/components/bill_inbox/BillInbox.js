@@ -85,7 +85,7 @@ const CustomBillInbox = () => {
                     boundary: item?.localityCode,
                     noOfAttendees: item?.attendees == null ? 0 : item?.attendees.length || 0,
                     approvedBy: approver?.additionalDetails?.staffName || "NA",
-                    markedBy: owner?.additionalDetails?.staffName || "NA",
+                    markedBy: owner?.additionalDetails?.ownerName || "NA",
                 };
             });
             setApprovalCount(AttendanceData?.statusCount?.APPROVED);
