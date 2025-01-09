@@ -18,6 +18,10 @@ const MyBills = () => {
         endDate: '',
         title: '',
     });
+    const [currentPage, setCurrentPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [totalCount, setTotalCount] = useState(0);
+    const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
 
     const project = Digit?.SessionStorage.get("staffProjects");
 
@@ -29,7 +33,11 @@ const MyBills = () => {
                 // ...(project?.[0]?.address?.boundaryType !== "COUNTRY" ? { localityCode: project?.[0]?.address?.boundary } : {}),
                 referenceIds: [project?.[0]?.id],
                 ...(billID ? { billNumbers: [billID] } : {}),
-                ...(dateRange.startDate && dateRange.endDate ? { fromDate: new Date(dateRange.startDate).getTime(), toDate: new Date(dateRange.endDate).getTime() } : {})
+                ...(dateRange.startDate && dateRange.endDate ? { fromDate: new Date(dateRange.startDate).getTime(), toDate: new Date(dateRange.endDate).getTime() } : {}),
+                pagination: {
+                    limit: limitAndOffset.limit,
+                    offset: limitAndOffset.offset
+                }
             }
         },
         config: {
@@ -51,52 +59,27 @@ const MyBills = () => {
 
     const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
 
-    function formatTimestampToDate(timestamp) {
-        // Check if the timestamp is valid
-        if (!timestamp || typeof timestamp !== "number") {
-            return "Invalid timestamp";
-        }
+    const handlePageChange = (page, totalRows) => {
+        setCurrentPage(page);
+        setLimitAndOffset({ ...limitAndOffset, offset: (page - 1) * rowsPerPage });
+    };
 
-        // Convert timestamp to a JavaScript Date object
-        const date = new Date(timestamp);
-
-        // Format the date to a readable format (e.g., DD/MM/YYYY)
-        const day = date.getDate().toString().padStart(2, "0");
-        const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-indexed
-        const year = date.getFullYear();
-
-        return `${day}/${month}/${year}`;
-    }
-
-    function getBillSummary(data) {
-        return data.map((individualEntry) => {
-            const billId = individualEntry?.billNumber;
-            const billDate = formatTimestampToDate(individualEntry.billDate);
-            const noOfRegisters = individualEntry?.additionalDetails?.noOfRegisters || 0;
-            const noOfWorkers = individualEntry?.billDetails?.length || 0;
-            const boundaryCode = t(individualEntry?.localityCode) || "NA";
-            const projectName = project?.[0]?.name || "NA";
-            const reportDetails = individualEntry?.additionalDetails?.reportDetails || {
-                "status": "FAILED", // INITIATED, COMPLETED, FAILED
-                "pdfReportId": "d5a504fb-ebb8-41be-afa0-24b4f1bd575b",
-                "excelReportId": "de5f2b24-b60d-4d1f-b550-56abe1dabb2f",
-                "errorMessage": "HCM_AM_BILL_REPORT_GENERATION_FAILED"
-            };
-
-            return [billId, billDate, noOfRegisters, noOfWorkers, boundaryCode, projectName, reportDetails];
-
-        });
+    const handlePerRowsChange = (currentRowsPerPage, currentPage) => {
+        setRowsPerPage(currentRowsPerPage);
+        setCurrentPage(1);
+        setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * rowsPerPage });
     }
 
     useEffect(() => {
         if (BillData) {
-            setTableData(getBillSummary(BillData?.bills));
+            setTableData(BillData.bills);
+            setTotalCount(BillData?.pagination?.totalCount);
         }
     }, [BillData])
 
     useEffect(() => {
         refetchBill();
-    }, [billID, dateRange])
+    }, [billID, dateRange, limitAndOffset])
 
     const onSubmit = (billID, dateRange) => {
         setBillID(billID);
@@ -123,7 +106,8 @@ const MyBills = () => {
             <MyBillsSearch onSubmit={onSubmit} onClear={onClear} />
 
             <Card>
-                {isFetching ? <Loader /> : tableData.length === 0 ? <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} /> : <MyBillsTable data={tableData} />}
+                {isFetching ? <Loader /> : tableData.length === 0 ? <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} /> : <MyBillsTable data={tableData} totalCount={totalCount} rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
+                    handlePerRowsChange={handlePerRowsChange} />}
             </Card>
 
         </React.Fragment>
