@@ -33,7 +33,7 @@ const Otp = ({ isLogin = false }) => {
   const [user, setUser] = useState(null);
   const [params, setParams] = useState(location?.state?.data || {});
   const [ifSuperUserExists, setIfSuperUserExist]= useState(false);
-  const { email, tenant } = location.state || {};
+  const { email, tenant ,username,password,loginType} = location.state || {};
   const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(
     tenant,
     "SandBoxLanding",
@@ -135,16 +135,80 @@ const Otp = ({ isLogin = false }) => {
   }, [user]);
 
   const onSubmit = async (formData) => {
-    const requestData = {
-      username: email,
-      password: formData?.OtpComponent?.otp,
-      tenantId: tenant,
-      userType: "EMPLOYEE",
-    };
+    // const requestData = {
+    //   username: email,
+    //   password: formData?.OtpComponent?.otp,
+    //   tenantId: tenant,
+    //   userType: "EMPLOYEE",
+    // };
     try {
-      const { UserRequest: info, ...tokens } = await Digit.UserService.authenticate(requestData);
-      Digit.SessionStorage.set("Employee.tenantId", info?.tenantId);
-      setUser({ info, ...tokens });
+      // const { UserRequest: info, ...tokens } = await Digit.UserService.authenticate(requestData);
+      // Digit.SessionStorage.set("Employee.tenantId", info?.tenantId);
+      // setUser({ info, ...tokens });
+      const response = await fetch("http://localhost:8081/realms/2fa/protocol/openid-connect/token", {
+        method: "POST",
+        headers: {
+          "content-type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          client_id: "testing",
+          // client_secret: "secret",
+          username,
+          password,
+          otp : formData?.OtpComponent?.otp,
+          grant_type: "password",
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+  
+      console.log("JWT:", data.access_token);
+    } catch (err) {
+      setShowToast(
+        err?.response?.data?.error_description ||
+          (err?.message == "ES_ERROR_USER_NOT_PERMITTED" && t("ES_ERROR_USER_NOT_PERMITTED")) ||
+          t("INVALID_LOGIN_CREDENTIALS")
+      );
+      setTimeout(closeToast, 5000);
+    }
+  };
+
+  const onSubmit1 = async (formData) => {
+    // const requestData = {
+    //   username: email,
+    //   password: formData?.OtpComponent?.otp,
+    //   tenantId: tenant,
+    //   userType: "EMPLOYEE",
+    // };
+    try {
+      // const { UserRequest: info, ...tokens } = await Digit.UserService.authenticate(requestData);
+      // Digit.SessionStorage.set("Employee.tenantId", info?.tenantId);
+      // setUser({ info, ...tokens });
+      const response = await fetch("http://localhost:8081/realms/2fa/protocol/openid-connect/token", {
+        method: "POST",
+        headers: {
+          "content-type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          client_id: "testing2",
+          // client_secret: "secret",
+          username,
+          otp : formData?.OtpComponent?.otp,
+          grant_type: "password",
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+  
+      console.log("JWT:", data.access_token);
     } catch (err) {
       setShowToast(
         err?.response?.data?.error_description ||
@@ -161,7 +225,7 @@ const Otp = ({ isLogin = false }) => {
         <BackLink onClick={() => window.history.back()} />
       </div>
       <FormComposerV2
-        onSubmit={onSubmit}
+        onSubmit={loginType === '2fa' ? onSubmit : onSubmit1}
         noBoxShadow
         inline
         submitInForm

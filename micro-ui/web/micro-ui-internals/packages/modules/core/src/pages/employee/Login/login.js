@@ -22,7 +22,7 @@ const setEmployeeDetail = (userObject, token) => {
   localStorage.setItem("Employee.user-info", JSON.stringify(userObject));
 };
 
-const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
+const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased, loginType }) => {
   const { data: cities, isLoading } = Digit.Hooks.useTenants();
   const { data: storeData, isLoading: isStoreLoading } = Digit.Hooks.useStore.getInitData();
   const { stateInfo } = storeData || {};
@@ -30,6 +30,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   const [showToast, setShowToast] = useState(null);
   const [disable, setDisable] = useState(false);
 
+  console.log("lognnnn", loginType)
   const history = useHistory();
   // const getUserType = () => "EMPLOYEE" || Digit.UserService.getType();
 
@@ -62,31 +63,70 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   }, [user]);
 
   const onLogin = async (data) => {
-    // if (!data.city) {
-    //   alert("Please Select City!");
-    //   return;
-    // }
-    setDisable(true);
+    // // if (!data.city) {
+    // //   alert("Please Select City!");
+    // //   return;
+    // // }
+    // setDisable(true);
 
-    const requestData = {
-      ...data,
-      userType: "EMPLOYEE",
-    };
-    requestData.tenantId = data?.city?.code || Digit.ULBService.getStateId();
-    delete requestData.city;
+    // const requestData = {
+    //   ...data,
+    //   userType: "EMPLOYEE",
+    // };
+    // requestData.tenantId = data?.city?.code || Digit.ULBService.getStateId();
+    // delete requestData.city;
+    // try {
+    //   const { UserRequest: info, ...tokens } = await Digit.UserService.authenticate(requestData);
+    //   Digit.SessionStorage.set("Employee.tenantId", info?.tenantId);
+    //   setUser({ info, ...tokens });
+    // } catch (err) {
+    //   setShowToast(
+    //     err?.response?.data?.error_description ||
+    //       (err?.message == "ES_ERROR_USER_NOT_PERMITTED" && t("ES_ERROR_USER_NOT_PERMITTED")) ||
+    //       t("INVALID_LOGIN_CREDENTIALS")
+    //   );
+    //   setTimeout(closeToast, 5000);
+    // }
+    // setDisable(false);
+    const username = data?.username;
+    const password = data?.password
+  
     try {
-      const { UserRequest: info, ...tokens } = await Digit.UserService.authenticate(requestData);
-      Digit.SessionStorage.set("Employee.tenantId", info?.tenantId);
-      setUser({ info, ...tokens });
-    } catch (err) {
+      const response = await fetch("http://localhost:8081/realms/sms/protocol/openid-connect/token", {
+        method: "POST",
+        headers: {
+          "content-type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          client_id: "testing",
+          client_secret: "secret",
+          username,
+          password,
+          grant_type: "password",
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+  
+      console.log("JWT:", data.access_token);
+  
+      // On successful login, redirect to the OTP screen
+      // history.push({
+      //   pathname: `/${window?.contextPath}/employee/user/login/otp`,
+      //   state: { email: username, tenant: Digit.ULBService.getStateId() },
+      // });
+    } catch (error) {
       setShowToast(
-        err?.response?.data?.error_description ||
-          (err?.message == "ES_ERROR_USER_NOT_PERMITTED" && t("ES_ERROR_USER_NOT_PERMITTED")) ||
-          t("INVALID_LOGIN_CREDENTIALS")
+        error?.response?.data?.Errors?.[0]?.code
+          ? `SANDBOX_RESEND_OTP${error.response.data.Errors[0].code}`
+          : `SANDBOX_RESEND_OTP_ERROR`
       );
       setTimeout(closeToast, 5000);
     }
-    setDisable(false);
   };
 
   const reqCreate = {
@@ -99,39 +139,90 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   };
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
-  const onOtpLogin = async (data) => {
-    const inputEmail = data.email;
-    await mutation.mutate(
-      {
-        body: {
-          otp: {
-            userName: data.email,
-            type: "login",
-            tenantId: Digit.ULBService.getStateId(),
-            userType: "EMPLOYEE",
-          },
+  const onKey1Login = async (data) => {
+    const username = data?.username;
+    // const password = data?.password
+  
+    try {
+      const response = await fetch("http://localhost:8081/realms/2fa/protocol/openid-connect/token", {
+        method: "POST",
+        headers: {
+          "content-type": "application/x-www-form-urlencoded",
         },
-        config: {
-          enable: true,
-        },
-      },
-      {
-        onError: (error, variables) => {
-          setShowToast(
-            error?.response?.data?.Errors?.[0].code ? `SANDBOX_RESEND_OTP${error?.response?.data?.Errors?.[0]?.code}` : `SANDBOX_RESEND_OTP_ERROR`
-          );
-          setTimeout(closeToast, 5000);
-        },
-        onSuccess: async (data) => {
-          history.push({
-            pathname: `/${window?.contextPath}/employee/user/login/otp`,
-            state: { email: inputEmail, tenant: Digit.ULBService.getStateId() },
-          });
-        },
-      }
-    );
+        body: new URLSearchParams({
+          client_id: "testing2",
+          // client_secret: "secret",
+          username,
+          grant_type: "password",
+        }),
+      });
+  
+      // if (!response.ok) {
+      //   throw new Error(`HTTP error! status: ${response.status}`);
+      // }
+  
+      // const data = await response.json();
+  
+      // console.log("JWT:", data.access_token);
+  
+      // On successful login, redirect to the OTP screen
+      history.push({
+        pathname: `/${window?.contextPath}/employee/user/login/otp`,
+        state: { email: username, tenant: Digit.ULBService.getStateId(), username : username , loginType : "otp" },
+      });
+    } catch (error) {
+      setShowToast(
+        error?.response?.data?.Errors?.[0]?.code
+          ? `SANDBOX_RESEND_OTP${error.response.data.Errors[0].code}`
+          : `SANDBOX_RESEND_OTP_ERROR`
+      );
+      setTimeout(closeToast, 5000);
+    }
   };
 
+  const onKeyLogin = async (data) => {
+    // const { email: username, password } = data; // Extracting username and password from form data
+    const username = data?.username;
+    const password = data?.password
+  
+    try {
+      const response = await fetch("http://localhost:8081/realms/2fa/protocol/openid-connect/token", {
+        method: "POST",
+        headers: {
+          "content-type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          client_id: "testing",
+          // client_secret: "secret",
+          username,
+          password,
+          grant_type: "password",
+        }),
+      });
+  
+      // if (!response.ok) {
+      //   throw new Error(`HTTP error! status: ${response.status}`);
+      // }
+  
+      // const data = await response.json();
+  
+      // console.log("JWT:", data.access_token);
+  
+      // On successful login, redirect to the OTP screen
+      history.push({
+        pathname: `/${window?.contextPath}/employee/user/login/otp`,
+        state: { email: username, tenant: Digit.ULBService.getStateId(), username : username , password: password , loginType : "2fa" },
+      });
+    } catch (error) {
+      setShowToast(
+        error?.response?.data?.Errors?.[0]?.code
+          ? `SANDBOX_RESEND_OTP${error.response.data.Errors[0].code}`
+          : `SANDBOX_RESEND_OTP_ERROR`
+      );
+      setTimeout(closeToast, 5000);
+    }
+  };
+  
   const closeToast = () => {
     setShowToast(null);
   };
@@ -174,7 +265,15 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       <BackLink onClick={() => window.history.back()}/>
       </div>
       <FormComposerV2
-        onSubmit={loginOTPBased ? onOtpLogin : onLogin}
+        onSubmit={(data) => {
+    if (loginType === "otp") {
+      onKey1Login(data); // Call the appropriate function based on loginType
+    } else if (loginType === "2fa") {
+      onKeyLogin(data);
+    } else {
+      onLogin(data); // Default login method
+    }
+  }}
         isDisabled={isDisabled || disable}
         noBoxShadow
         inline

@@ -3,9 +3,22 @@ export const loginConfig = [
     texts: {
       header: "CORE_COMMON_LOGIN",
       submitButtonLabel: "CORE_COMMON_CONTINUE",
-      secondaryButtonLabel: "CORE_COMMON_FORGOT_PASSWORD",
     },
     inputs: [
+      // {
+      //   label: "CORE_SIGNUP_EMAILID",
+      //   type: "text",
+      //   key: "email",
+      //   isMandatory: true,
+      //   populators: {
+      //     name: "email",
+      //     validation: {
+      //       required: true,
+      //       pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      //     },
+      //     error: "ERR_EMAIL_REQUIRED",
+      //   },
+      // },
       {
         label: "CORE_LOGIN_USERNAME",
         type: "text",
@@ -33,24 +46,19 @@ export const loginConfig = [
         },
       },
       {
-        isMandatory: true,
-        type: "dropdown",
-        key: "city",
-        label: "CORE_COMMON_CITY",
+        isMandatory: false,
+        key: "check",
+        type: "component",
+        component: "PrivacyComponent",
+        withoutLabel: true,
         disable: false,
-        populators: {
-          name: "city",
-          optionsKey: "name",
-          error: "ERR_HRMS_INVALID_CITY",
-          mdmsConfig: {
-            masterName: "tenants",
-            moduleName: "tenant",
-            localePrefix: "TENANT_TENANTS",
-            select:
-              "(data)=>{ return Array.isArray(data['tenant'].tenants) && Digit.Utils.getUnique(data['tenant'].tenants).map(ele=>({code:ele.code,name:Digit.Utils.locale.getTransformedLocale('TENANT_TENANTS_'+ele.code)}))}",
-          },
+        customProps: {
+          module: "Sandbox",
         },
-      }
+        populators: {
+          name: "check",
+        },
+      },
     ],
   },
 ];

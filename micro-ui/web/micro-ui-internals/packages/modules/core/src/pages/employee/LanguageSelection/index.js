@@ -1,31 +1,30 @@
-import { Button, Card ,SubmitBar, Loader} from "@egovernments/digit-ui-components";
-import {CustomButton} from "@egovernments/digit-ui-react-components";
-import React, { useState } from "react";
+import { Button, Card, Loader } from "@egovernments/digit-ui-components";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import Background from "../../../components/Background";
-const defaultLanguage= {label:"English",value:Digit.Utils.getDefaultLanguage()};
+
 const LanguageSelection = () => {
   const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
   const { t } = useTranslation();
   const history = useHistory();
-  const { languages, stateInfo } = storeData || {};
-  let defaultLanguages=languages;
-  if(!defaultLanguages || defaultLanguages?.length==0){
-    defaultLanguages=[defaultLanguage];
-  }
-  const selectedLanguage = Digit.StoreData.getCurrentLanguage();
-  const [selected, setselected] = useState(selectedLanguage);
-  const handleChangeLanguage = (language) => {
-    setselected(language.value);
-    Digit.LocalizationService.changeLanguage(language.value, stateInfo.code);
+  const { stateInfo } = storeData || {};
+
+  // Function to call the Keycloak API and redirect
+  const handleLogin = async (loginType) => {
+    try {
+      console.log("LoginType being passed:", loginType);
+      history.push({
+        pathname: `/${window?.contextPath}/employee/user/login`,
+        state: { loginMethod: loginType },
+      });
+    } catch (error) {
+      console.error(`Error during ${loginType} login:`, error);
+    }
   };
 
-  const handleSubmit = (event) => {
-    history.push(`/${window?.contextPath}/employee/user/login`);
-  };
+  if (isLoading) return <Loader />;
 
-  if (isLoading) return <Loader/>;
   return (
     <Background>
       <Card className={"bannerCard removeBottomMargin languageSelection"}>
@@ -33,19 +32,11 @@ const LanguageSelection = () => {
           <img className="bannerLogo" src={stateInfo?.logoUrl} alt="Digit" />
           <p>{t(`TENANT_TENANTS_${stateInfo?.code?.toUpperCase()}`)}</p>
         </div>
-        <div className="language-selector" style={{ justifyContent: "space-around", marginBottom: "24px", padding: "0 5%" }}>
-          {defaultLanguages.map((language, index) => (
-                <div className="language-button-container" key={index}>
-                  <CustomButton
-                    selected={language.value === selected}
-                    text={t(language.label)}
-                    onClick={() => handleChangeLanguage(language)}
-                  ></CustomButton>
-                </div>
-              )
-            )}
+        <div className="button-container" style={{ display: "flex", justifyContent: "space-around", marginBottom: "24px" }}>
+          <Button label="Direct" onClick={() => handleLogin("direct")} />
+          <Button label="2FA" onClick={() => handleLogin("2fa")} />
+          <Button label="OTP" onClick={() => handleLogin("otp")} />
         </div>
-        <SubmitBar style={{ width: "100%" }} label={t(`CORE_COMMON_CONTINUE`)} onSubmit={handleSubmit}/>
       </Card>
       <div className="EmployeeLoginFooter">
         <img
