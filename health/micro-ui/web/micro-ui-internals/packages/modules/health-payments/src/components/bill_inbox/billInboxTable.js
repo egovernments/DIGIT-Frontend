@@ -77,7 +77,7 @@ const BillInboxTable = ({
     return (
         <React.Fragment>
             {
-                props.isFetching ? <Loader /> : <DataTable
+                props.isFetching || props.tableData.length === 0 ? <div style={{ height: "49.5vh" }}> {props.isFetching ? <Loader /> : <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />} </div> : <DataTable
                     columns={columns}
                     data={props.tableData}
                     pagination

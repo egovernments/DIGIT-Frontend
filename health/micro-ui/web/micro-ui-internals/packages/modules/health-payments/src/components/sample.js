@@ -245,7 +245,10 @@ const BoundaryDropdown = ({ label, data, onChange, selected, setSelected, isRequ
 
   return (
     <div style={{ width: "100%", marginTop: "14px" }}>
-      <TextBlock body={isRequired == true ? `${t(label)}*` : t(label)} />
+      <div className="comment-label">
+        {t(label)}
+        {isRequired && <span className="required"> *</span>}
+      </div>
       <Dropdown
         selected={selected}
         t={t}
