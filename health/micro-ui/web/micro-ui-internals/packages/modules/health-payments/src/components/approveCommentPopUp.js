@@ -1,6 +1,6 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PopUp, Button, TextArea, ErrorMessage, Toast } from "@egovernments/digit-ui-components";
+import { PopUp, Button, TextArea, Toast } from "@egovernments/digit-ui-components";
 
 const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
 
@@ -24,7 +24,8 @@ const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
             });
             return;
         }
-
+        // remove the toast if comment is valid
+        setShowToast(null);
         // Call the onSubmit function with the valid comment
         onSubmit(comment);
     };
@@ -44,7 +45,7 @@ const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
                 children={[
                     <div key="comment-section">
                         <div className="comment-label">
-                            {t(`HCM_AM_APPROVE_COMMENT_LABEL`)}<span className="required">*</span>
+                            {t(`HCM_AM_APPROVE_COMMENT_LABEL`)}<span className="required"> *</span>
                         </div>
                         <TextArea
                             style={{ maxWidth: "100%" }}

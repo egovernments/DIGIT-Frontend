@@ -264,7 +264,7 @@ const CustomBillInbox = () => {
                                     style={{}}
                                 />
                             )}
-                            {tableData && <div style={{ overflow: "auto", maxHeight: "47vh" }}><Card >
+                            {tableData && <div style={{ overflow: "auto", maxHeight: approvalCount !== null && pendingApprovalCount !== null ? "60vh" : "47vh" }}><Card >
                                 <BillInboxTable
                                     isFetching={isFetching}
                                     tableData={tableData}
