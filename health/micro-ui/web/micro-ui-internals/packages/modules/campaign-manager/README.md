@@ -54,9 +54,9 @@ const initDigitUI = () => {
 
 2. Create Data: Validates and creates resource details of type facility,user and boundary.
 
-3. Update Date change
-    > -Provides a screen to change the campaign and cycle start date and end date.
-    > -Date can be change within boundary level or project level based on the MDMS config 
+3. Update Date
+    > -Provides a screen to change the campaign and cycle start and end dates.
+    > -Dates can be changed within boundary level or project level based on the MDMS config 
 
 
 4. View Timeline
@@ -86,7 +86,7 @@ const initDigitUI = () => {
 
 Documentation Site (https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui)
 
-Campaign Module Documentation(https://docs.digit.org/health/0.3/setup/configuration)
+[Campaign Module Documentation](https://docs.digit.org/health/0.3/setup/configuration)
 
 ## Maintainer
 
