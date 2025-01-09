@@ -185,7 +185,7 @@ const Wrapper = ({ currentCategories, setShowPopUp, alreadyQueuedSelectedState }
         maxWidth: "40%",
       }}
       type={"default"}
-      heading={t(Digit.Utils.locale.getTransformedLocale(`MICROPLAN_ADMINISTRATIVE_AREA_${currentCategories}`))}
+      heading={t(Digit.Utils.locale.getTransformedLocale(`POP_ADMINISTRATIVE_AREA_${currentCategories}`))}
       children={[]}
       onOverlayClick={() => {
         setShowPopUp(false);
