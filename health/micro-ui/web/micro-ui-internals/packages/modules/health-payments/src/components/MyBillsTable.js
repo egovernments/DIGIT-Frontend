@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, CustomSVG, InfoButton, Toast, TooltipWrapper } from "@egovernments/digit-ui-components";
+import { Button, CustomSVG, InfoButton, Tag, Toast, TooltipWrapper } from "@egovernments/digit-ui-components";
 import { downloadFileWithName } from "../utils";
 import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./custom_comp/table_inbox_custom_style";
@@ -146,15 +146,15 @@ const MyBillsTable = ({ ...props }) => {
                             type="actionButton"
                             variation="secondary"
                         /> :
-                            <TooltipWrapper placement="top" content={reportDetails?.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")} >
-                                <InfoButton
-                                    className="dm-workbench-download-template-btn"
-                                    infobuttontype={reportDetails?.status === "FAILED" ? "error" : "info"}
-                                    icon={"Info"}
+                            <div>
+                                <Tag
                                     label={reportDetails?.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")}
-                                    style={{ opacity: 1, width: "16rem", border: "none" }}
+                                    labelStyle={{}}
+                                    showIcon={true}
+                                    style={{}}
+                                    {...(reportDetails?.status === "FAILED" && { type: "error" })}
                                 />
-                            </TooltipWrapper>
+                            </div>
                     );
                 },
                 width: "300px",

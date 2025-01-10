@@ -6,6 +6,7 @@ const AlertPopUp = ({ onClose, alertHeading, alertMessage, submitLabel, cancelLa
     return (
         <>
             <PopUp
+                style={{ width: "700px" }}
                 type="alert"
                 onClose={onClose}
                 alertMessage={alertMessage}
