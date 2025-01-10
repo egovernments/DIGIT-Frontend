@@ -373,7 +373,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   };
 
   if (updateMutation.isLoading) {
-    <LoaderWithGap />
+    return <LoaderWithGap />
   }
 
   if (isAttendanceLoading || isEstimateMusterRollLoading || isIndividualsLoading || isMusterRollLoading || isAllIndividualsLoading || mutation.isLoading) {

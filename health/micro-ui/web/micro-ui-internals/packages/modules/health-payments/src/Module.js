@@ -17,9 +17,7 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
-  const hierarchyType = "MICROPLAN";
-
-  // const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "ADMIN";
+  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "ADMIN";
   const moduleCode = ["payments", `boundary-${hierarchyType}`];
   const modulePrefix = "hcm";
   const language = Digit.StoreData.getCurrentLanguage();
@@ -37,20 +35,19 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
   const { isLoading: isMDMSLoading, data: mdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     "HCM",
-    [{ name: "BOUNDARYTYPES" }, { name: "paymentsConfig" }],
+    [{ name: "paymentsConfig" }],
     {
       cacheTime: Infinity,
     },
     { schemaCode: "PAYMENTS_MASTER_DATA" } //mdmsv2
   );
 
-  const sortedBoundaryData = mdmsData?.MdmsRes?.HCM?.BOUNDARYTYPES?.sort((a, b) => a.order - b.order);
   const paymentsConfig = mdmsData?.MdmsRes?.HCM?.paymentsConfig?.[0];
 
-  Digit.SessionStorage.set("boundaryHierarchyOrder", sortedBoundaryData);
+
   Digit.SessionStorage.set("paymentsConfig", paymentsConfig);
 
-  if (isPaymentsModuleInitializing || isMDMSLoading) {
+  if (isLoading ||isPaymentsModuleInitializing || isMDMSLoading) {
     return <Loader />;
   } else {
     return (

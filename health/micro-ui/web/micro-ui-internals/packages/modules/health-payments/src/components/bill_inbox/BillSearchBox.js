@@ -3,35 +3,41 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, Dropdown, TextBlock } from "@egovernments/digit-ui-components";
 
-const AGGREGATION_LEVEL_OPTIONS = [
-    { name: "HCM_AM_DISTRICT_LEVEL", code: "DISTRICT" },
-    { name: "HCM_AM_PROVINCE_LEVEL", code: "PROVINCE" },
-    { name: "HCM_AM_COUNTRY_LEVEL", code: "COUNTRY" },
-];
 
 const BillSearchBox = ({ onLevelSelect, initialProject, initialAggregationLevel }) => {
     const { t } = useTranslation();
     const [project, setProject] = useState([]);
+    const boundaryHierarchyOrder = Digit.SessionStorage.get("boundaryHierarchyOrder");
+    const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentConfig")?.lowestLevelBoundary || "DISTRICT";
+
+    const AGGREGATION_LEVEL_OPTIONS = boundaryHierarchyOrder?.filter(item => item.order <= boundaryHierarchyOrder?.find(d => d.code === lowestLevelBoundaryType)?.order)?.map((b) => {
+        return {
+            name: `HCM_AM_${b?.code}_LEVEL`,
+            code: b?.code,
+            order: b?.order
+        }
+    });
+
     const [selectedProject, setSelectedProject] = useState(initialProject || null);
     const [selectedAggregationLevel, setSelectedAggregationLevel] = useState(initialAggregationLevel || null);
     const [filteredAggregationOptions, setFilteredAggregationOptions] = useState(AGGREGATION_LEVEL_OPTIONS);
 
-    const HIERARCHY = Digit.SessionStorage.get("boundaryHierarchyOrder");
 
     // Update aggregation options based on the selected project
     useEffect(() => {
         if (selectedProject) {
             const boundaryType = selectedProject?.address?.boundaryType;
-
-            const filteredOptions = [];
-
-            for (const option of AGGREGATION_LEVEL_OPTIONS) {
-                filteredOptions.push(option);
-                if (option.code === boundaryType) {
-                    break;
-                }
+            // Find the order of the selected boundary type
+            const boundaryTypeOrder = AGGREGATION_LEVEL_OPTIONS.find(option => option.code === boundaryType)?.order;
+    
+            if (boundaryTypeOrder) {
+                // Filter options dynamically based on the boundaryType's order
+                const filteredOptions = AGGREGATION_LEVEL_OPTIONS.filter(option => option.order >= boundaryTypeOrder);
+                setFilteredAggregationOptions(filteredOptions);
+            } else {
+                console.log("BoundaryType not found in options, resetting to default");
+                setFilteredAggregationOptions(AGGREGATION_LEVEL_OPTIONS);
             }
-            setFilteredAggregationOptions(filteredOptions);
         } else {
             setFilteredAggregationOptions(AGGREGATION_LEVEL_OPTIONS); // Reset to default if no project selected
         }
