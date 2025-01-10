@@ -3,7 +3,7 @@ import _ from "lodash";
 import CustomInboxSearchLinks from "../custom_comp/link_section";
 import { useTranslation } from "react-i18next";
 const { fromViewScreen } = location.state || false;
-import { ActionBar, Button, Card, FilterCard, LoaderScreen, Tab, Toast } from "@egovernments/digit-ui-components";
+import { ActionBar, Button, Card, FilterCard, Loader, LoaderScreen, Tab, Toast } from "@egovernments/digit-ui-components";
 import BillSearchBox from "./BillSearchBox";
 import BillBoundaryFilter from "./bill_boundary_filter";
 import BillInboxTable from "./billInboxTable";
@@ -20,7 +20,7 @@ const CustomBillInbox = () => {
     const [selectedProject, setSelectedProject] = useState(() => Digit.SessionStorage.get("selectedProject") || {});
     const [selectedLevel, setSelectedLevel] = useState(() => Digit.SessionStorage.get("selectedLevel") || null);
     const [selectedBoundaryCode, setSelectedBoundaryCode] = useState(() => Digit.SessionStorage.get("selectedBoundaryCode") || null);
-    // const [selectedBoundaryCode, setSelectedBoundaryCode] = useState(null);
+    const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentConfig")?.lowestLevelBoundary || "DISTRICT";
     const [currentPage, setCurrentPage] = useState(1);
     const [updateFilters, setUpdateFilters] = useState(false);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -28,7 +28,6 @@ const CustomBillInbox = () => {
     const [totalCount, setTotalCount] = useState(0);
     const [pendingApprovalCount, setPendingApprovalCount] = useState(null);
     const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
-    const [selectedStatus, setSelectedStatus] = useState("PENDINGFORAPPROVAL");
     const project = Digit?.SessionStorage.get("staffProjects");
     const [billGenerationStatus, setBillGenerationStatus] = useState(null);
     const [searchQuery, setSearchQuery] = useState(null);
@@ -46,7 +45,7 @@ const CustomBillInbox = () => {
             // staffId: Digit.SessionStorage.get("UserIndividual")?.[0]?.id,
             localityCode: selectedBoundaryCode,
             reviewStatus: activeLink.code,
-            isChildrenRequired: selectedLevel != null && selectedLevel?.code === "DISTRICT" ? true : false,
+            isChildrenRequired: selectedLevel != null && selectedLevel?.code === lowestLevelBoundaryType ? true : false,
         },
         config: {
             enabled: selectedBoundaryCode && selectedProject ? true : false,
@@ -188,9 +187,12 @@ const CustomBillInbox = () => {
     };
 
     if (generateBillMutation.isLoading) {
-        <LoaderWithGap />
+        return <LoaderWithGap />
     }
-
+    if(isAttendanceLoading || isBillLoading){
+        return <Loader/>
+    }
+    else{
     return (
         <React.Fragment>
             <div style={{ display: "flex", flexDirection: "column", gap: "24px", marginBottom: "2.5rem" }}>
@@ -345,5 +347,6 @@ const CustomBillInbox = () => {
             )}
         </React.Fragment>
     );
+}
 };
 export default CustomBillInbox;

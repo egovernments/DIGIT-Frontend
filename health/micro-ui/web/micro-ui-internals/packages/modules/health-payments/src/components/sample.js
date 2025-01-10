@@ -8,6 +8,7 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
 
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentConfig")?.lowestLevelBoundary || "DISTRICT";
 
   const defaultBoundaryData = kk.reduce((acc, curr) => {
     acc[curr] = false;
@@ -213,7 +214,7 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
           if (boundaryData[key] && isBoundaryAllowed(key)) {
             return (
               <BoundaryDropdown
-                isRequired={isRequired == ScreenTypeEnum.BILL ? true : key == "DISTRICT" ? true : false}
+                isRequired={isRequired == ScreenTypeEnum.BILL ? true : key == lowestLevelBoundaryType ? true : false}
                 key={key}
                 label={`ATTENDANCE_${key}`}
                 data={value[key]}
