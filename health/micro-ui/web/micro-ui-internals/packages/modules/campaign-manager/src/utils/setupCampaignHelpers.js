@@ -206,7 +206,7 @@ export const cycleDataRemap=(data)=> {
         }
       } else {
         // Round attr.value to the nearest integer
-        const roundedValue = Math.round(attr.value);
+        const roundedValue = projectType === "IRS-mz" ? attr.value : Math.round(attr.value);
     
         if (type === "create") {
           return `${projectType === "LLIN-mz" ? attributeCode : attributeCode.toLowerCase()}${getOperatorSymbol(attr?.operator?.code)}${roundedValue}`;
