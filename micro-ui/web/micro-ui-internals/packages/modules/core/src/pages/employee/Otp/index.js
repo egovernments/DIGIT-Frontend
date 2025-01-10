@@ -167,6 +167,11 @@ const Otp = ({ isLogin = false }) => {
       const data = await response.json();
   
       console.log("JWT:", data.access_token);
+      localStorage.setItem("jwt", data.access_token);
+      history.push({
+        pathname: `/${window?.contextPath}/employee/user/success`,
+        // state: { email: username, tenant: Digit.ULBService.getStateId() },
+      });
     } catch (err) {
       setShowToast(
         err?.response?.data?.error_description ||
@@ -209,6 +214,11 @@ const Otp = ({ isLogin = false }) => {
       const data = await response.json();
   
       console.log("JWT:", data.access_token);
+      localStorage.setItem("jwt", data.access_token);
+      history.push({
+        pathname: `/${window?.contextPath}/employee/user/success`,
+        // state: { email: username, tenant: Digit.ULBService.getStateId() },
+      });
     } catch (err) {
       setShowToast(
         err?.response?.data?.error_description ||

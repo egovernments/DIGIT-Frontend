@@ -25,7 +25,7 @@ const EmployeeLogin = ({ stateCode }) => {
     modulePrefix,
   });
 
-  console.log("Login Method:", loginMethod);
+  // console.log("Login Method:", loginMethod);
 
   const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(stateCode, "commonUiConfig", ["LoginConfig"], {
     select: (data) => {

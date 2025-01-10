@@ -30,7 +30,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased, loginType })
   const [showToast, setShowToast] = useState(null);
   const [disable, setDisable] = useState(false);
 
-  console.log("lognnnn", loginType)
+  // console.log("lognnnn", loginType)
   const history = useHistory();
   // const getUserType = () => "EMPLOYEE" || Digit.UserService.getType();
 
@@ -62,6 +62,34 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased, loginType })
     history.replace(redirectPath);
   }, [user]);
 
+
+  // const onLogin = async (data) => {
+  //   // if (!data.city) {
+  //   //   alert("Please Select City!");
+  //   //   return;
+  //   // }
+  //   setDisable(true);
+
+  //   const requestData = {
+  //     ...data,
+  //     userType: "EMPLOYEE",
+  //   };
+  //   requestData.tenantId = data?.city?.code || Digit.ULBService.getStateId();
+  //   delete requestData.city;
+  //   try {
+  //     const { UserRequest: info, ...tokens } = await Digit.UserService.authenticate(requestData);
+  //     Digit.SessionStorage.set("Employee.tenantId", info?.tenantId);
+  //     setUser({ info, ...tokens });
+  //   } catch (err) {
+  //     setShowToast(
+  //       err?.response?.data?.error_description ||
+  //         (err?.message == "ES_ERROR_USER_NOT_PERMITTED" && t("ES_ERROR_USER_NOT_PERMITTED")) ||
+  //         t("INVALID_LOGIN_CREDENTIALS")
+  //     );
+  //     setTimeout(closeToast, 5000);
+  //   }
+    
+
   const onLogin = async (data) => {
     // // if (!data.city) {
     // //   alert("Please Select City!");
@@ -92,13 +120,13 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased, loginType })
     const password = data?.password
   
     try {
-      const response = await fetch("http://localhost:8081/realms/sms/protocol/openid-connect/token", {
+      const response = await fetch("http://localhost:8081/realms/2fa/protocol/openid-connect/token", {
         method: "POST",
         headers: {
           "content-type": "application/x-www-form-urlencoded",
         },
         body: new URLSearchParams({
-          client_id: "testing",
+          client_id: "admin-cli",
           client_secret: "secret",
           username,
           password,
@@ -113,12 +141,13 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased, loginType })
       const data = await response.json();
   
       console.log("JWT:", data.access_token);
+      localStorage.setItem("jwt", data.access_token);
   
       // On successful login, redirect to the OTP screen
-      // history.push({
-      //   pathname: `/${window?.contextPath}/employee/user/login/otp`,
-      //   state: { email: username, tenant: Digit.ULBService.getStateId() },
-      // });
+      history.push({
+        pathname: `/${window?.contextPath}/employee/user/success`,
+        // state: { email: username, tenant: Digit.ULBService.getStateId() },
+      });
     } catch (error) {
       setShowToast(
         error?.response?.data?.Errors?.[0]?.code

@@ -16,6 +16,7 @@ import UserProfile from "../citizen/Home/UserProfile";
 import ErrorComponent from "../../components/ErrorComponent";
 import { PrivateRoute } from "@egovernments/digit-ui-components";
 import RoleLanding from "./RoleLanding";
+import LoginSuccessPage from "./LoginSuccesful";
 
 const userScreensExempted = ["user/landing", "user/profile", "user/error"];
 
@@ -112,6 +113,9 @@ const EmployeeApp = ({
               </Route>
               <Route path={`${path}/user/language-selection`}>
                 <LanguageSelection />
+              </Route>
+              <Route path={`${path}/user/success`}>
+                <LoginSuccessPage />
               </Route>
               <Route>
                 <Redirect to={`${path}/user/language-selection`} />

@@ -13,7 +13,7 @@ const LanguageSelection = () => {
   // Function to call the Keycloak API and redirect
   const handleLogin = async (loginType) => {
     try {
-      console.log("LoginType being passed:", loginType);
+      // console.log("LoginType being passed:", loginType);
       history.push({
         pathname: `/${window?.contextPath}/employee/user/login`,
         state: { loginMethod: loginType },
@@ -33,9 +33,9 @@ const LanguageSelection = () => {
           <p>{t(`TENANT_TENANTS_${stateInfo?.code?.toUpperCase()}`)}</p>
         </div>
         <div className="button-container" style={{ display: "flex", justifyContent: "space-around", marginBottom: "24px" }}>
-          <Button label="Direct" onClick={() => handleLogin("direct")} />
-          <Button label="2FA" onClick={() => handleLogin("2fa")} />
-          <Button label="OTP" onClick={() => handleLogin("otp")} />
+          <Button label="Login by password" onClick={() => handleLogin("direct")} />
+          <Button label="MFA with sms" onClick={() => handleLogin("2fa")} />
+          <Button label="Login by otp" onClick={() => handleLogin("otp")} />
         </div>
       </Card>
       <div className="EmployeeLoginFooter">
