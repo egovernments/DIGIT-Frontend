@@ -9,6 +9,7 @@ import CustomFilter from "./custom_comp/filter_section";
 import CustomInboxTable from "./custom_comp/table_inbox";
 import { FilterCard, Toast, Card } from "@egovernments/digit-ui-components";
 import { ScreenTypeEnum, StatusEnum } from "../utils/constants";
+import SearchResultsPlaceholder from "./SearchResultsPlaceholder";
 
 /**
 * Business Flow Description:
@@ -43,7 +44,7 @@ const CustomInboxSearchComposer = () => {
   const { t } = useTranslation();
   const [showToast, setShowToast] = useState(null);
   const [filterCriteria, setFilterCriteria] = useState(null);
-  const [selectedProject, setSelectedProject] = useState({});
+  const [selectedProject, setSelectedProject] = useState(() => Digit.SessionStorage.get("selectedProject") || {});
   //-------//
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -126,10 +127,6 @@ const CustomInboxSearchComposer = () => {
     }
   }, []);
 
-  const handleProjectChange = (selectedProject) => {
-    setSelectedProject(selectedProject);
-  };
-
   const handleFilterUpdate = (newFilter, isSelectedData) => {
     setFilterCriteria(newFilter);
     setSelectedStatus(StatusEnum.PENDING_FOR_APPROVAL);
@@ -206,10 +203,7 @@ const CustomInboxSearchComposer = () => {
     <React.Fragment>
       <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "24px" }}>
         <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
-          <div style={{ width: "30%", display: "flex", flexDirection: "column", gap: "24px" }}>
-            <div style={{ width: "100%", display: "flex", flexDirection: "row" }}>
-              <CustomInboxSearchLinks headerText={"ATTENDANCE_INBOX_CARD"}></CustomInboxSearchLinks>
-            </div>
+          <div style={{ width: "30%", display: "flex", flexDirection: "column", gap: "24px", height: "80vh" }}>
             {/*<div style={{ width: "80%", display: "flex", flexDirection: "row" }}>
             <CustomSearchComponent onProjectSelect={handleProjectChange}></CustomSearchComponent>
           </div>*/}
@@ -219,24 +213,24 @@ const CustomInboxSearchComposer = () => {
                 width: "100%",
                 display: "flex",
                 flexDirection: "row",
-                height: "60vh",
+                height: "75vh",
                 overflowY: "auto",
               }}
             >
               <CustomFilter
                 resetTable={resetTable}
                 isRequired={ScreenTypeEnum.REGISTER}
-                onProjectSelect={handleProjectChange}
-                projectData={selectedProject}
                 onFilterChange={handleFilterUpdate}
               ></CustomFilter>
             </div>
           </div>
 
           <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
-            <div style={{ width: "100%", display: "flex", flexDirection: "column", height: "60vh", minHeight: "60vh" }}>
+            <div style={{ width: "100%", display: "flex", flexDirection: "column", height: "75vh", minHeight: "75vh" }}>
               {card == false ? (
-                <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", padding: "0px" }}></Card>
+                <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", height: "75vh" }}>
+                  <SearchResultsPlaceholder placeholderText={"HCM_AM_FILTER_AND_CHOOSE_BOUNDARY_PLACEHOLDER_TEXT"} />
+                </Card>
               ) : (
                 <CustomInboxTable
                   statusCount={childrenData?.statusCount}

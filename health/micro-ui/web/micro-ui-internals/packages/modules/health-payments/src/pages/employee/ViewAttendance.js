@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Loader, Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
-import { Divider, Button, PopUp, Card, ActionBar, Link, ViewCardFieldPair, Toast, LoaderScreen } from "@egovernments/digit-ui-components";
+import { Divider, Button, PopUp, Card, ActionBar, Link, ViewCardFieldPair, Toast, LoaderScreen, LoaderComponent } from "@egovernments/digit-ui-components";
 import AttendanceManagementTable from "../../components/attendanceManagementTable";
 import AlertPopUp from "../../components/alertPopUp";
 import ApproveCommentPopUp from "../../components/approveCommentPopUp";
@@ -373,7 +373,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   };
 
   if (updateMutation.isLoading) {
-    return <LoaderWithGap />
+    return <LoaderComponent variant={"OverlayLoader"} />
   }
 
   if (isAttendanceLoading || isEstimateMusterRollLoading || isIndividualsLoading || isMusterRollLoading || isAllIndividualsLoading || mutation.isLoading) {

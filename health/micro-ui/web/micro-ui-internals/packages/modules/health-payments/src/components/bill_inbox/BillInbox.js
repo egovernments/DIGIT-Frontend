@@ -3,12 +3,13 @@ import _ from "lodash";
 import CustomInboxSearchLinks from "../custom_comp/link_section";
 import { useTranslation } from "react-i18next";
 const { fromViewScreen } = location.state || false;
-import { ActionBar, Button, Card, FilterCard, Loader, LoaderScreen, Tab, Toast } from "@egovernments/digit-ui-components";
+import { ActionBar, Button, Card, FilterCard, InfoCard, Loader, LoaderScreen, Tab, Toast } from "@egovernments/digit-ui-components";
 import BillSearchBox from "./BillSearchBox";
 import BillBoundaryFilter from "./bill_boundary_filter";
 import BillInboxTable from "./billInboxTable";
 import { ScreenTypeEnum } from "../../utils/constants";
 import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
+import SearchResultsPlaceholder from "../SearchResultsPlaceholder";
 const CustomBillInbox = () => {
     const { t } = useTranslation();
     const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -26,11 +27,13 @@ const CustomBillInbox = () => {
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [approvalCount, setApprovalCount] = useState(null);
     const [totalCount, setTotalCount] = useState(0);
+    const [infoDescription, setInfoDescription] = useState("HCM_AM_DEFUALT_BILL_INBOX_INFO_MESSAGE");
     const [pendingApprovalCount, setPendingApprovalCount] = useState(null);
     const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
     const project = Digit?.SessionStorage.get("staffProjects");
     const [billGenerationStatus, setBillGenerationStatus] = useState(null);
     const [searchQuery, setSearchQuery] = useState(null);
+    const [openAlertPopUp, setOpenAlertPopUp] = useState(null);
     const [activeLink, setActiveLink] = useState({
         code: "APPROVED",
         name: "HCM_AM_APPROVED_REGISTER",
@@ -117,6 +120,16 @@ const CustomBillInbox = () => {
         }
     }, []);
 
+    useEffect(() => {
+        if (BillData) {
+            if (BillData?.bills) {
+                setInfoDescription(`HCM_AM_BILL_IS_ALREADY_GENERATED_INFO_MESSAGE`);
+            } else {
+                triggerGenerateBill();
+            }
+        }
+    }, [BillData]);
+
     // Handlers
     const handleSearchChange = (project, level) => {
         setSelectedProject(project);
@@ -173,7 +186,8 @@ const CustomBillInbox = () => {
                             setShowToast({ key: "success", label: t("HCM_AM_BILL_GENERATED_SUCCESSFULLY"), transitionTime: 3000 });
                             refetchBill();
                         } else {
-                            setShowToast({ key: "success", label: t("HCM_AM_BILL_GENERATION_INITIATED"), transitionTime: 3000 });
+                            setInfoDescription(`HCM_AM_${data?.statusCode}_INFO_MESSAGE`);
+                            setShowToast({ key: "success", label: t(`HCM_AM_BILL_GENERATE_${data?.statusCode}`), transitionTime: 3000 });
                         }
                     },
                     onError: (error) => {
@@ -189,139 +203,131 @@ const CustomBillInbox = () => {
     if (generateBillMutation.isLoading) {
         return <LoaderWithGap />
     }
-    if(isAttendanceLoading || isBillLoading){
-        return <Loader/>
+    if (isAttendanceLoading || isBillLoading) {
+        return <Loader />
     }
-    else{
-    return (
-        <React.Fragment>
-            <div style={{ display: "flex", flexDirection: "column", gap: "24px", marginBottom: "2.5rem" }}>
-                <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
-                    <div style={{ width: "20%", display: "flex", flexDirection: "row" }}>
-                        <CustomInboxSearchLinks
-                            headerText={"HCM_AM_BILL_INBOX"}
-                            links={[
-                                {
-                                    url: "/employee/payments/my-bills",
-                                    text: "HCM_AM_MY_BILLS",
-                                },
-                            ]}
-                        ></CustomInboxSearchLinks>
+    else {
+        return (
+            <React.Fragment>
+                <div style={{ display: "flex", flexDirection: "column", gap: "24px", marginBottom: "2.5rem" }}>
+                    <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
+                        <div style={{ width: "20%", display: "flex", flexDirection: "row" }}>
+                            <CustomInboxSearchLinks
+                                headerText={"HCM_AM_BILL_INBOX"}
+                                links={[
+                                    {
+                                        url: "/employee/payments/my-bills",
+                                        text: "HCM_AM_MY_BILLS",
+                                    },
+                                ]}
+                            ></CustomInboxSearchLinks>
+                        </div>
+                        <div style={{ display: "flex", flexDirection: "row", width: "80%" }}>
+                            <InfoCard
+                                variant="default"
+                                style={{ margin: "0rem", width: "100%", maxWidth: "unset" }}
+                                label={t(`HCM_AM_INFO`)}
+                                text={t(infoDescription)}
+                            />
+                        </div>
                     </div>
-                    <div style={{ width: "80%", display: "flex", flexDirection: "row" }}>
-                        <BillSearchBox onLevelSelect={handleSearchChange} initialProject={selectedProject}
-                            initialAggregationLevel={selectedLevel}></BillSearchBox>
-                    </div>
-                </div>
-                <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
-                    <div
-                        style={{
-                            width: "20%",
-                            display: "flex",
-                            flexDirection: "row",
-                            height: "60vh",
-                            overflowY: "auto",
-                        }}
-                    >
-                        <BillBoundaryFilter
-                            isRequired={ScreenTypeEnum.BILL}
-                            selectedProject={selectedProject}
-                            selectedLevel={selectedLevel}
-                            onFilterChange={handleFilterUpdate}
-                            updateBoundaryFilters={updateFilters}
-                            resetBoundaryFilter={resetBoundaryFilter}
-                        ></BillBoundaryFilter>
-                    </div>
-                    <div style={{ width: "80%", display: "flex", flexDirection: "row", height: "60vh", minHeight: "60vh" }}>
-                        <div style={{ width: "100%" }}>
-                            {(approvalCount !== null && pendingApprovalCount !== null) && (
-                                <Tab
-                                    activeLink={activeLink?.code}
-                                    configItemKey="code"
-                                    configDisplayKey="name"
-                                    itemStyle={{ width: "400px" }}
-                                    configNavItems={[
-                                        {
-                                            code: "APPROVED",
-                                            name: `${`${t(`HCM_AM_APPROVED_REGISTER`)} (${approvalCount})`}`,
-                                        },
-                                        {
-                                            code: "PENDINGFORAPPROVAL",
-                                            name: `${`${t(`HCM_AM_PENDING_REGISTER`)} (${pendingApprovalCount})`}`,
-                                        },
-                                    ]}
-                                    navStyles={{}}
-                                    onTabClick={(e) => {
-                                        setLimitAndOffset((prev) => {
-                                            return {
-                                                limit: prev.limit,
-                                                offset: 0,
-                                            };
-                                        });
-                                        setCurrentPage(1);
-                                        setActiveLink(e);
-                                    }}
-                                    setActiveLink={setActiveLink}
-                                    showNav={true}
-                                    style={{}}
-                                />
-                            )}
-                            {tableData && <div style={{ overflow: "auto", maxHeight: approvalCount !== null && pendingApprovalCount !== null ? "60vh" : "47vh" }}><Card >
-                                <BillInboxTable
-                                    isFetching={isFetching}
-                                    tableData={tableData}
-                                    currentPage={currentPage}
-                                    rowsPerPage={rowsPerPage}
-                                    handlePageChange={handlePageChange}
-                                    handlePerRowsChange={handlePerRowsChange}
-                                    totalCount={totalCount}
-                                    status={activeLink.code}
-                                ></BillInboxTable>
-                            </Card></div>}
+                    <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
+                        <div
+                            style={{
+                                width: "20%",
+                                display: "flex",
+                                flexDirection: "row",
+                                height: "60vh",
+                                overflowY: "auto",
+                            }}
+                        >
+                            <BillBoundaryFilter
+                                isRequired={ScreenTypeEnum.BILL}
+                                selectedProject={selectedProject}
+                                selectedLevel={selectedLevel}
+                                onFilterChange={handleFilterUpdate}
+                                updateBoundaryFilters={updateFilters}
+                                resetBoundaryFilter={resetBoundaryFilter}
+                            ></BillBoundaryFilter>
+                        </div>
+                        <div style={{ width: "80%", display: "flex", flexDirection: "row", height: "60vh", minHeight: "60vh" }}>
+                            <div style={{ width: "100%" }}>
+                                {(approvalCount !== null && pendingApprovalCount !== null) && (
+                                    <Tab
+                                        activeLink={activeLink?.code}
+                                        configItemKey="code"
+                                        configDisplayKey="name"
+                                        itemStyle={{ width: "400px" }}
+                                        configNavItems={[
+                                            {
+                                                code: "APPROVED",
+                                                name: `${`${t(`HCM_AM_APPROVED_REGISTER`)} (${approvalCount})`}`,
+                                            },
+                                            {
+                                                code: "PENDINGFORAPPROVAL",
+                                                name: `${`${t(`HCM_AM_PENDING_REGISTER`)} (${pendingApprovalCount})`}`,
+                                            },
+                                        ]}
+                                        navStyles={{}}
+                                        onTabClick={(e) => {
+                                            setLimitAndOffset((prev) => {
+                                                return {
+                                                    limit: prev.limit,
+                                                    offset: 0,
+                                                };
+                                            });
+                                            setCurrentPage(1);
+                                            setActiveLink(e);
+                                        }}
+                                        setActiveLink={setActiveLink}
+                                        showNav={true}
+                                        style={{}}
+                                    />
+                                )}
+                                {tableData == null && <Card style={{ height: "60vh" }}><SearchResultsPlaceholder /> </Card>}
+                                {tableData && <div style={{ overflow: "auto", maxHeight: approvalCount !== null && pendingApprovalCount !== null ? "60vh" : "47vh" }}><Card >
+                                    <BillInboxTable
+                                        isFetching={isFetching}
+                                        tableData={tableData}
+                                        currentPage={currentPage}
+                                        rowsPerPage={rowsPerPage}
+                                        handlePageChange={handlePageChange}
+                                        handlePerRowsChange={handlePerRowsChange}
+                                        totalCount={totalCount}
+                                        status={activeLink.code}
+                                    ></BillInboxTable>
+                                </Card></div>}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {showGenerateBillAction && BillData?.bills?.length === 0 ?
-                <ActionBar
-                    actionFields={[
-                        <Button
-                            icon="CheckCircle"
-                            label={t(`HCM_AM_GENERATE_BILL_LABEL`)}
-                            onClick={() => {
-                                triggerGenerateBill();
-                            }}
-                            style={{
-                                minWidth: "14rem",
-                                opacity: billGenerationStatus != null ? 0.5 : 1,
-                            }}
-                            type="button"
-                            variation="primary"
-                            isDisabled={generateBillMutation.isLoading}
-                        />,
-                    ]}
-                    className=""
-                    maxActionFieldsAllowed={5}
-                    setactionFieldsToRight
-                    sortActionFields
-                    style={{}}
-                />
-                : !isBillLoading && !isFetchingBill && (
-                    <ActionBar
+                {openAlertPopUp && <AlertPopUp
+                    onClose={() => {
+                        setOpenAlertPopUp(false);
+                    }}
+                    alertHeading={t(`HCM_AM_BILL_GENERATION_ALERT_HEADING`)}
+                    alertMessage={t(`HCM_AM_BILL_GENERATION_ALERT_DESCRIPTION`)}
+                    submitLabel={t(`HCM_AM_GENERATE_BILL`)}
+                    cancelLabel={t(`HCM_AM_CANCEL`)}
+                    onPrimaryAction={() => {
+                        triggerGenerateBill();
+                    }}
+                />}
+
+                {showGenerateBillAction && BillData?.bills?.length === 0 && !isBillLoading && !isFetchingBill && setBillGenerationStatus == null &&
+                    < ActionBar
                         actionFields={[
                             <Button
                                 icon="CheckCircle"
                                 label={t(`HCM_AM_GENERATE_BILL_LABEL`)}
                                 onClick={() => {
-                                    !showGenerateBillAction || BillData?.bills?.length >= 0 ?
-                                        setShowToast({ key: "info", label: BillData?.bills?.length >= 0 ? t("HCM_AM_BILL_IS_ALREADY_GENERATED") : showGenerateBillAction ? t("HCM_AM_ALL_THE_REGISTERS_SHOULD_BE_APPROVED_INFO") : t("HCM_AM_GENERATE_BILLS_CANNOT_BE_CALLED_INFO_MESSAGE"), transitionTime: 5000 })
-                                        : triggerGenerateBill();
+                                    setOpenAlertPopUp(true);
+                                    // triggerGenerateBill();
                                 }}
                                 style={{
                                     minWidth: "14rem",
-                                    cursor: !showGenerateBillAction || BillData?.bills?.length >= 0 ? "not-allowed" : "pointer",
-                                    opacity: !showGenerateBillAction || BillData?.bills?.length >= 0 ? 0.5 : 1,
+                                    opacity: billGenerationStatus != null ? 0.5 : 1,
                                 }}
                                 type="button"
                                 variation="primary"
@@ -334,19 +340,19 @@ const CustomBillInbox = () => {
                         sortActionFields
                         style={{}}
                     />
+                }
+                {showToast && (
+                    <Toast
+                        style={{ zIndex: 10001 }}
+                        label={showToast.label}
+                        type={showToast.key}
+                        // error={showToast.key === "error"}
+                        transitionTime={showToast.transitionTime}
+                        onClose={() => setShowToast(null)}
+                    />
                 )}
-            {showToast && (
-                <Toast
-                    style={{ zIndex: 10001 }}
-                    label={showToast.label}
-                    type={showToast.key}
-                    // error={showToast.key === "error"}
-                    transitionTime={showToast.transitionTime}
-                    onClose={() => setShowToast(null)}
-                />
-            )}
-        </React.Fragment>
-    );
-}
+            </React.Fragment>
+        );
+    }
 };
 export default CustomBillInbox;

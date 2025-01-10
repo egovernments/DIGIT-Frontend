@@ -8,6 +8,7 @@ const ROLES = {
 };
 
 const PaymentsCard = () => {
+  Digit.SessionStorage.set("AttendandeData");
   Digit.SessionStorage.del("paymentInbox");
   Digit.SessionStorage.del("selectedValues");
   window.Digit.SessionStorage.del("selectedLevel");
@@ -31,8 +32,8 @@ const PaymentsCard = () => {
   }
 
   let links = [
-    generateLink("ATTENDANCE_REGISTERS", "registers-inbox"),
-    generateLink("CS_COMMON_INBOX", "generate-bill", ROLES.BILLS),
+    generateLink("ATTENDANCE_REGISTERS", "project-selection"),
+    generateLink("CS_COMMON_INBOX", "project-and-aggregation-selection", ROLES.BILLS),
     generateLink("CS_TITLE_MY_BILLS", "my-bills", ROLES.BILLS),
   ];
   const hasRequiredRoles = (link) => {

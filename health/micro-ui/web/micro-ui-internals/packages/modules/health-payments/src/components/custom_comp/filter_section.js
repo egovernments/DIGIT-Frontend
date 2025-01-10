@@ -5,7 +5,7 @@ import BoundaryComponent from "../sample";
 import { Card, SVG, Button, ButtonGroup, TextBlock, Dropdown, Toast } from "@egovernments/digit-ui-components";
 import { lowerBoundaryDefaultSet } from "../../utils/constants";
 
-const CustomFilter = ({ resetTable, isRequired, onProjectSelect, onFilterChange, projectData }) => {
+const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
   const { t } = useTranslation();
 
   const [reset, setReset] = useState(false);
@@ -15,13 +15,12 @@ const CustomFilter = ({ resetTable, isRequired, onProjectSelect, onFilterChange,
   const [project, setProject] = useState([]);
 
   const [isDistrictSelected, setIsDistrictSelected] = useState(false);
-  const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentConfig")?.lowestLevelBoundary || "DISTRICT";
 
-  const [projectSelected, setProjectSelected] = useState();
+  const [projectSelected, setProjectSelected] = useState(() => Digit.SessionStorage.get("selectedProject") || {});
 
   const onChangeId = (value) => {
     setBoundary(value);
-    if (value?.boundaryType === lowestLevelBoundaryType) {
+    if (value?.boundaryType === "DISTRICT") {
       setIsDistrictSelected(true); // Set flag if district is selected
     }
   };
@@ -104,37 +103,10 @@ const CustomFilter = ({ resetTable, isRequired, onProjectSelect, onFilterChange,
             </svg>
           </span>
         </div>
-        <div style={{ maxWidth: "100%", width: "100%", marginBottom: "1.5rem" }}>
-          <div className="comment-label">
-            {t(`ATTENDANCE_PROJECT_NAME`)}<span className="required"> *</span>
-          </div>
-          <Dropdown
-            selected={projectSelected}
-            t={t}
-            option={project}
-            name={"code"}
-            optionKey={"name"}
-            select={(value) => {
-              setProjectSelected(value);
-              onProjectSelect(value);
-            }}
-          />
+
+        <div className="label-pair">
+          {t(`HCM_AM_CHOOSE_BOUNDARY_DESCRIPTION`)}
         </div>
-
-        <Divider></Divider>
-
-        {/*project && <div style={{ maxWidth: "100%", width: "100%", marginBottom: "24px" }}>
-          <TextBlock body={`${t("ATTENDANCE_PROJECT_NAME")} *`}></TextBlock>
-          <Dropdown
-            t={t}
-            option={project}
-            name={"code"}
-            optionKey={"name"}
-            select={(value) => {
-              handleProjectChange(value);
-            }}
-          />
-        </div>*/}
 
         {projectSelected?.address?.boundary && (
           <BoundaryComponent
