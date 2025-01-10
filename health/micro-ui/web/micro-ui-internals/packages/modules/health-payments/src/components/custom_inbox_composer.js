@@ -195,7 +195,6 @@ const CustomInboxSearchComposer = () => {
   const resetTable = () => {
     setchildrenData([]);
     setFilterCriteria(null);
-    setSelectedProject({});
     setCard(false);
   };
 
@@ -229,6 +228,7 @@ const CustomInboxSearchComposer = () => {
             <div style={{ width: "100%", display: "flex", flexDirection: "column", height: "75vh", minHeight: "75vh" }}>
               {card == false ? (
                 <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", height: "75vh" }}>
+                  <div className="summary-sub-heading">{t(selectedProject?.name)}</div>
                   <SearchResultsPlaceholder placeholderText={"HCM_AM_FILTER_AND_CHOOSE_BOUNDARY_PLACEHOLDER_TEXT"} />
                 </Card>
               ) : (
@@ -241,6 +241,7 @@ const CustomInboxSearchComposer = () => {
                   isLoading={childrenDataLoading}
                   tableData={childrenData?.data}
                   totalCount={childrenData?.totalCount}
+                  selectedProject={selectedProject}
                 ></CustomInboxTable>
               )}
             </div>

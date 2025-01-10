@@ -25,6 +25,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [openApproveCommentPopUp, setOpenApproveCommentPopUp] = useState(false);
   const [openApproveAlertPopUp, setOpenApproveAlertPopUp] = useState(false);
   const [updateDisabled, setUpdateDisabled] = useState(false);
+  const [triggerCreate, setTriggerCreate] = useState(false);
+  const [searchCount, setSearchCount] = useState(1);
   const [data, setData] = useState([]);
   const [individualIds, setIndividualIds] = useState([]);
   const [triggerEstimate, setTriggerEstimate] = useState(false);
@@ -103,14 +105,28 @@ const ViewAttendance = ({ editAttendance = false }) => {
     }
   };
 
-  const { isLoading: isMusterRollLoading, data: MusterRollData, refetch: refetchMusterRoll } = Digit.Hooks.useCustomAPIHook(searchReqCri);
+  const { isLoading: isMusterRollLoading, isrefetching, data: MusterRollData, refetch: refetchMusterRoll } = Digit.Hooks.useCustomAPIHook(searchReqCri);
 
   useEffect(() => {
     if (MusterRollData?.count === 0) {
       if (disabledAction) {
         setTriggerEstimate(true);
       } else {
-        triggerMusterRollCreate();
+        if (triggerCreate) {
+          if (searchCount > 3) {
+            setShowToast({ key: "info", label: t(`HCM_AM_MUSTOROLE_GENERATION_INPROGRESS_INFO_MESSAGE`), transitionTime: 3000 });
+            setTriggerEstimate(true);
+            setDisabledAction(true);
+          } else {
+            setSearchCount((prevKey) => prevKey + 1);
+            setTimeout(() => {
+              refetchMusterRoll();
+            }, 2000);
+          }
+        } else {
+          setTriggerCreate(true);
+          triggerMusterRollCreate();
+        }
       }
     } else if (triggerEstimate === true) {
       setTriggerEstimate(false);
@@ -214,8 +230,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
             setTimeout(() => {
               setUpdateDisabled(false);
               history.push(`/${window.contextPath}/employee/payments/view-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}`);
-            }, 3000);
-
+            }, 2000);
           },
           onError: (error) => {
             setUpdateDisabled(false);
@@ -247,7 +262,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
         },
         {
           onSuccess: (data) => {
-            refetchMusterRoll();
+            setTimeout(() => {
+              refetchMusterRoll();
+            }, 3000);
           },
           onError: (error) => {
             setTriggerEstimate(true);
@@ -376,7 +393,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     return <LoaderComponent variant={"OverlayLoader"} />
   }
 
-  if (isAttendanceLoading || isEstimateMusterRollLoading || isIndividualsLoading || isMusterRollLoading || isAllIndividualsLoading || mutation.isLoading) {
+  if (isAttendanceLoading || isEstimateMusterRollLoading || isIndividualsLoading || isMusterRollLoading || isAllIndividualsLoading || mutation.isLoading || isrefetching) {
     return <LoaderScreen />
   }
 
