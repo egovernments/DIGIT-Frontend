@@ -86,19 +86,47 @@ const ProjectSelect = () => {
     Digit.SessionStorage.set("selectedLevel", value);
   };
 
-  return (
-    <React.Fragment>
-      <div style={{ marginBottom: "2.5rem" }}>
-        <Card type="primary" className="middle-child" style={{ gap: "1.5rem" }}>
-          <Header className="pop-inbox-header">{t("HCM_AM_CHOOSE_PROJECT_TO_VIEW_REGISTERS")}</Header>
-          <div className="label-pair">{t(`HCM_AM_PROJECT_CHOOSE_DESCRIPTION`)}</div>
-          <div className="label-pair">
-            <div className="label-heading">
-              {t(`ATTENDANCE_PROJECT_NAME`)}
-              <span className="required" style={{ color: "#b91900" }}>
-                {" "}
-                *
-              </span>
+    return (
+        <React.Fragment>
+            <div style={{ marginBottom: "2.5rem" }}>
+                <Card type="primary" className="middle-child" style={{ gap: "1.5rem" }}>
+                    <Header className="pop-inbox-header">
+                        {billScreen ? t('HCM_AM_PROJECT_AND_BILL_AGGREGATION_HEADING') : t('HCM_AM_CHOOSE_PROJECT_TO_VIEW_REGISTERS')}
+                    </Header>
+                    <div className="label-pair">
+                        {billScreen ? t(`HCM_AM_PROJECT_AND_BILL_AGGREGATION_DESCRIPTION`) : t(`HCM_AM_PROJECT_CHOOSE_DESCRIPTION`)}
+                    </div>
+                    <div className="label-pair">
+                        <div className="label-heading">
+                            {t(`ATTENDANCE_PROJECT_NAME`)}<span className="required" style={{ color: "#b91900" }}> *</span>
+                        </div>
+                        <div className="label-text">
+                            <Dropdown
+                                t={t}
+                                option={project}
+                                name={"code"}
+                                optionKey={"name"}
+                                selected={selectedProject}
+                                select={handleProjectSelect}
+                            />
+                        </div>
+                    </div>
+                    {billScreen && selectedProject && <div className="label-pair">
+                        <div className="label-heading">
+                            {t(`HCM_AM_BILL_AGGREGATION_FOR_EMPLOYEE_MAPPED_AT`)}<span className="required" style={{ color: "#b91900" }}> *</span>
+                        </div>
+                        <div className="label-text">
+                            <Dropdown
+                                t={t}
+                                option={filteredAggregationOptions}
+                                name={"code"}
+                                optionKey={"name"}
+                                selected={selectedLevel}
+                                select={handleAggregationLevelChange}
+                            />
+                        </div>
+                    </div>}
+                </Card>
             </div>
             <div className="label-text">
               <Dropdown t={t} option={project} name={"code"} optionKey={"name"} selected={selectedProject} select={handleProjectSelect} />
