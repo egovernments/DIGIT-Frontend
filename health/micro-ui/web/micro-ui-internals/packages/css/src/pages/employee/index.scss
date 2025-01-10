@@ -5,6 +5,14 @@
 @import "./villageView.scss";
 @import "./facility.scss";
 
+.results-table-wrapper{
+  margin-bottom: 2rem;
+
+  .pagination{
+    margin-bottom: 2rem;
+  }
+}
+
 .digit-topbar-container {
   width: 100%;
 }
