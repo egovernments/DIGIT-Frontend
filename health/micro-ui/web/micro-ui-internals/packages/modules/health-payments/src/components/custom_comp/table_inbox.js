@@ -92,6 +92,9 @@ const CustomInboxTable = ({
           </div>
         );
       },
+      style: {
+        justifyContent: "flex-end",
+      },
     },
   ];
 
@@ -146,6 +149,8 @@ const CustomInboxTable = ({
                   paginationPerPage={rowsPerPage}
                   sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
                   paginationRowsPerPageOptions={[5, 10, 15, 20]}
+                  fixedHeader={true}
+                  fixedHeaderScrollHeight={"60vh"}
                 />
               )}
             </Card>

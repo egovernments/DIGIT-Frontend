@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { Fragment, useState, } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Button, Card, Loader, TableMolecule, TextInput, Toast } from "@egovernments/digit-ui-components";
+import { Loader, TextInput, Toast } from "@egovernments/digit-ui-components";
 import { CustomSVG } from "@egovernments/digit-ui-components";
-import { CheckBox } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./custom_comp/table_inbox_custom_style";
 
@@ -12,39 +11,21 @@ const AttendanceManagementTable = ({ ...props }) => {
   const history = useHistory();
   const url = Digit.Hooks.useQueryParams();
   const [showToast, setShowToast] = useState(null);
+  // Local state for pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  // const columns = useMemo(() => {
-  //   const baseColumns = [
-  //     {
-  //       label: t(`HCM_AM_FRONTLINE_WORKER`),
-  //       type: "text",
-  //     },
-  //     {
-  //       label: t("HCM_AM_WORKER_ID"),
-  //       type: "text",
-  //     },
-  //     {
-  //       label: t("HCM_AM_ROLE"),
-  //       type: "text",
-  //     },
-  //   ];
+  // Sliced data based on pagination
+  const paginatedData = props.data.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
 
-  //   if (!props.editAttendance) {
-  //     baseColumns.push({
-  //       label: t("HCM_AM_NO_OF_DAYS_WORKED"),
-  //       type: "serialno",
-  //     });
-  //   } else {
-  //     baseColumns.push({
-  //       label: t("HCM_AM_NO_OF_DAYS_WORKED"),
-  //       type: "custom",
-  //     });
-  //   }
+  const handlePageChange = (page, totalRows) => {
+    setCurrentPage(page);
+  };
 
-  //   return baseColumns;
-  // }, [props.editAttendance, t]);
-
-  //=====
+  const handlePerRowsChange = (currentRowsPerPage, currentPage) => {
+    setRowsPerPage(currentRowsPerPage);
+    setCurrentPage(1);
+  }
 
   const columns = [
     {
@@ -83,49 +64,38 @@ const AttendanceManagementTable = ({ ...props }) => {
       name: t("HCM_AM_NO_OF_DAYS_WORKED"),
       selector: (row) => {
         return props.editAttendance ? (
-          <div>
+          <div >
             <TextInput
               type="numeric"
-              value={daysWorked}
+              value={row?.[4]}
               onChange={(e) => {
-                handleDaysWorkedChange(workerId, e);
+                handleDaysWorkedChange(row?.[2], e);
               }}
-              populators={{ disableTextField: true }}
+              populators={{ disableTextField: false }}
+              style={{ width: "100%" }}
             />
           </div>
         ) : (
-          <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={t(row?.[4] || "0")}>
+          <div className="ellipsis-cell" title={t(row?.[4] || "0")}>
             {t(row?.[4] || "0")}
           </div>
         );
       },
+      style: {
+        justifyContent: props.editAttendance ? "flex-start" : "flex-end",
+      },
     },
   ];
 
-  // Map attendance data to rows
-  // const rows = useMemo(() => {
-  //   return props.data.map(([id, name, workerId, role, daysWorked]) => [
-  //     { label: name, maxLength: 64 },
-  //     { label: workerId, maxLength: 64 },
-  //     { label: role, maxLength: 64 },
-  //     props.editAttendance ? (
-  //       <div>
-  //         <TextInput
-  //           type="numeric"
-  //           value={daysWorked}
-  //           onChange={(e) => {
-  //             handleDaysWorkedChange(workerId, e);
-  //           }}
-  //           populators={{ disableTextField: true }}
-  //         />
-  //       </div>
-  //     ) : (
-  //       daysWorked
-  //     ),
-  //   ]);
-  // }, [props.data, props.editAttendance]);
-
   const handleDaysWorkedChange = (workerId, value) => {
+
+    if (value?.target) {
+      value = value?.target?.value;
+    }
+
+    // Remove leading zeros from the value
+    value = String(value).replace(/^0+/, "");
+
     // Find the worker whose attendance is being updated
     const worker = props.data.find((worker) => worker[2] === workerId);
 
@@ -150,41 +120,32 @@ const AttendanceManagementTable = ({ ...props }) => {
     // Update the data directly using the parent's setState
     const updatedData = props.data.map((worker) => {
       if (worker[2] === workerId) {
-        return [worker[0], worker[1], worker[2], worker[3], value]; // Update the daysWorked value
+        return [worker[0], worker[1], worker[2], worker[3], value || 0]; // Update the daysWorked value
       }
       return worker; // Keep other rows unchanged
     });
     props.setAttendanceSummary(updatedData);
   };
 
-  const handlePageChange = (page, totalRows) => {
-    props?.handlePageChange(page, totalRows);
-  };
-
-  const handleRowSelect = (event) => {
-    props?.onRowSelect(event);
-  };
-
-  const handlePerRowsChange = async (currentRowsPerPage, currentPage) => {
-    props?.handlePerRowsChange(currentRowsPerPage, currentPage);
-  };
-
   return (
-    <div className="component-table-wrapper">
+    <>
       <DataTable
         columns={columns}
-        data={props.data}
+        data={paginatedData}
         progressPending={false}
         progressComponent={<Loader />}
         pagination
         paginationServer
         customStyles={tableCustomStyle}
-        paginationTotalRows={props?.totalRows}
+        paginationDefaultPage={currentPage}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handlePerRowsChange}
-        paginationPerPage={props?.rowsPerPage}
+        paginationTotalRows={props?.data.length}
+        paginationPerPage={rowsPerPage}
         sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
-        paginationRowsPerPageOptions={[10, 15, 20]}
+        paginationRowsPerPageOptions={[5, 10, 15, 20]}
+        fixedHeader={true}
+        fixedHeaderScrollHeight={"70vh"}
       />
       {showToast && (
         <Toast
@@ -196,7 +157,7 @@ const AttendanceManagementTable = ({ ...props }) => {
           onClose={() => setShowToast(null)}
         />
       )}
-    </div>
+    </>
   );
 };
 

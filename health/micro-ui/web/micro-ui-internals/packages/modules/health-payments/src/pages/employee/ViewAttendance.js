@@ -15,7 +15,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const { registerNumber, boundaryCode } = Digit.Hooks.useQueryParams();
   const { fromCampaignSupervisor } = location.state || false;
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const [currentPage, setCurrentPage] = useState(1);
   const [attendanceDuration, setAttendanceDuration] = useState(null);
   const [attendanceSummary, setAttendanceSummary] = useState([]);
   const [initialAttendanceSummary, setInitialAttendanceSummary] = useState([]);
@@ -25,15 +24,12 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [openEditAlertPopUp, setOpenEditAlertPopUp] = useState(false);
   const [openApproveCommentPopUp, setOpenApproveCommentPopUp] = useState(false);
   const [openApproveAlertPopUp, setOpenApproveAlertPopUp] = useState(false);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [updateDisabled, setUpdateDisabled] = useState(false);
-  const [totalRows, setTotalRows] = useState(0);
   const [data, setData] = useState([]);
   const [individualIds, setIndividualIds] = useState([]);
   const [triggerEstimate, setTriggerEstimate] = useState(false);
   const [comment, setComment] = useState(null);
   const [showToast, setShowToast] = useState(null);
-  const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
 
   const project = Digit?.SessionStorage.get("staffProjects");
 
@@ -372,19 +368,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   }, [attendanceSummary]);
 
-  const handlePageChange = (page, totalRows) => {
-    setCurrentPage(page);
-    setLimitAndOffset({ ...limitAndOffset, offset: (page - 1) * rowsPerPage })
-  }
   const closeActionBarPopUp = () => {
     setOpenEditAlertPopUp(false);
   };
-
-  const handlePerRowsChange = (currentRowsPerPage, currentPage) => {
-    setRowsPerPage(currentRowsPerPage);
-    setCurrentPage(1);
-    setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * rowsPerPage })
-  }
 
   if (updateMutation.isLoading) {
     <LoaderWithGap />
@@ -439,7 +425,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
           </div>
         </Card>
         <Card>
-          <AttendanceManagementTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} data={attendanceSummary} setAttendanceSummary={setAttendanceSummary} duration={attendanceDuration} editAttendance={editAttendance} />
+          <AttendanceManagementTable data={attendanceSummary} setAttendanceSummary={setAttendanceSummary} duration={attendanceDuration} editAttendance={editAttendance} />
         </Card>
       </div>
       {openEditAlertPopUp && <AlertPopUp

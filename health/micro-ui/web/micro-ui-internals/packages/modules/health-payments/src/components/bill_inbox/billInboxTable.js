@@ -45,7 +45,7 @@ const BillInboxTable = ({
             name: t("HCM_AM_ATTENDANCE_BOUNDARY"),
             selector: (row) => {
                 return (
-                    <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={t(row?.boundary) || t("NA")}>
+                    <div className="ellipsis-cell" title={t(row?.boundary) || t("NA")}>
                         {t(row.boundary) || t("NA")}
                     </div>
                 );
@@ -55,7 +55,7 @@ const BillInboxTable = ({
             name: props.status === "APPROVED" ? t("HCM_AM_ATTENDANCE_APPROVED_BY") : t("HCM_AM_ATTENDANCE_MARKED_BY"),
             selector: (row) => {
                 return (
-                    <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={row?.markby || t("NA")}>
+                    <div className="ellipsis-cell" title={row?.markby || t("NA")}>
                         {props.status === "APPROVED" ? row?.markedBy : row?.approvedBy || t("NA")}
                     </div>
                 );
@@ -66,10 +66,13 @@ const BillInboxTable = ({
             name: t("HCM_AM_ATTENDANCE_ATTENDEES"),
             selector: (row) => {
                 return (
-                    <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={t(row?.status || "0")}>
+                    <div className="ellipsis-cell" title={t(row?.status || "0")}>
                         {t(row?.noOfAttendees || "0")}
                     </div>
                 );
+            },
+            style: {
+                justifyContent: "flex-end",
             },
         },
     ];
