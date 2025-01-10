@@ -102,6 +102,7 @@ export const Config = {
       label: "",
       uiConfig: {
         tableClassName:"table-fixed-last-column table",
+        resultsWrapperClassName:"localization-search-table",
         columns: [
           {
             label: "WBH_LOC_HEADER_CODE",
