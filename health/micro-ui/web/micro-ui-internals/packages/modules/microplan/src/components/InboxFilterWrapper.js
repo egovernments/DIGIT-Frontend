@@ -110,7 +110,7 @@ const InboxFilterWrapper = (props) => {
       }
     },
     config: {
-      enabled: true,
+      enabled: props?.isPlanInbox,
       select: (data) => {
         if (!data?.PlanFacility || !Array.isArray(data.PlanFacility)) return [];
     
@@ -126,9 +126,8 @@ const InboxFilterWrapper = (props) => {
     }  
   };
 
-  // const { isLoading: isPlanFacilityLoading,error:planFacilityerror, data: planFacility }=Digit.Hooks.useCustomAPIHook(planFacilitySearchConfig);
-  const { isLoading: isPlanFacilityLoading, error: planFacilityError, data: planFacility } = 
-  Digit.Hooks.useCustomAPIHook(props.isPlanInbox ? planFacilitySearchConfig : null);
+  const { isLoading: isPlanFacilityLoading, error: planFacilityError, data: planFacility } = Digit.Hooks.useCustomAPIHook(planFacilitySearchConfig);
+
 
 
   if(isPlanFacilityLoading){
