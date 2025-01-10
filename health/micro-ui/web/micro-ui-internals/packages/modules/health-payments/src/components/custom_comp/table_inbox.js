@@ -131,7 +131,7 @@ const CustomInboxTable = ({
               style={{}}
               showNav={true}
             />
-            <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", padding: "10px" }}>
+            <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", }}>
               {tableData && tableData.length === 0 ? (
                 <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />
               ) : (

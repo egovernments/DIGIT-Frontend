@@ -148,6 +148,7 @@ const MyBillsTable = ({ ...props }) => {
                         /> :
                             <div>
                                 <Tag
+                                    {...(reportDetails?.status !== "FAILED" && { icon: "Info" })}
                                     label={reportDetails?.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")}
                                     labelStyle={{}}
                                     showIcon={true}
