@@ -105,7 +105,6 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
 
   useEffect(() => {
     if (childrenData && childrenData.length > 0) {
-     // debugger
       setValue((prevState) => ({
         ...prevState,
         [childrenData[0]?.boundary[0].boundaryType]: [childrenData[0]?.boundary[0]],
@@ -113,7 +112,7 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
 
       const formattedData = createFormattedData(childrenData[0]?.boundary[0].boundaryType);
       setBoundaryData(formattedData);
-      handleButtonClick(childrenData[0]?.boundary[0])
+      handleButtonClick(childrenData[0]?.boundary[0]);
     }
   }, [childrenData]);
 
@@ -140,7 +139,6 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
     handleDropdownOptions(value);
   };
   const handleDropdownOptions = (value) => {
-    
     if (value?.children && value.children.length > 0) {
       const updatedState = value.children.reduce((acc, child) => {
         const boundaryType = child?.boundaryType;
@@ -156,11 +154,8 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
       }));
 
       setSelectedValues((prev) => {
-
-        
         const newSelectedValues = { ...prev, [value?.boundaryType]: value };
         if (updateSeeeionStorage) {
-          debugger
           updateSeeeionStorage(newSelectedValues);
         }
         return newSelectedValues;
