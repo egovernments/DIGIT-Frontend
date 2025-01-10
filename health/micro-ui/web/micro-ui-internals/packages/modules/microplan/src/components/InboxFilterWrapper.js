@@ -110,7 +110,7 @@ const InboxFilterWrapper = (props) => {
       }
     },
     config: {
-      enabled: props?.isPlanInbox,
+      enabled: props?.isPlanInbox ? props?.isPlanInbox: false,
       select: (data) => {
         if (!data?.PlanFacility || !Array.isArray(data.PlanFacility)) return [];
     
