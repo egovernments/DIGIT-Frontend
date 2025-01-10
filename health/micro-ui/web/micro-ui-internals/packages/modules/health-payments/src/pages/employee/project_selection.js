@@ -46,8 +46,6 @@ const ProjectSelect = () => {
         }
     }, [selectedProject]);
 
-    console.log(billScreen, 'llllllllll');
-
     // Load project data if not already loaded
     useEffect(() => {
         if (project.length === 0) {
@@ -63,6 +61,15 @@ const ProjectSelect = () => {
                 }));
             setProject(datak);
         }
+    }, []);
+
+    // clear every other storage when comes on this page
+    useEffect(() => {
+        window.Digit.SessionStorage.del("selectedLevel");
+        window.Digit.SessionStorage.del("selectedBoundaryCode");
+        window.Digit.SessionStorage.del("boundary");
+        window.Digit.SessionStorage.del("selectedValues");
+        window.Digit.SessionStorage.del("paymentInbox");
     }, []);
 
     // Handle project selection
@@ -136,18 +143,17 @@ const ProjectSelect = () => {
                         onClick={() => {
                             if (!billScreen) {
                                 if (selectedProject === null) {
-                                    setShowToast({ key: "error", label: t('HCM_AM_PROJECT_SELECTION_IS_MENDATORY'), transitionTime: 3000 });
+                                    setShowToast({ key: "error", label: t('HCM_AM_PROJECT_SELECTION_IS_MANDATORY'), transitionTime: 3000 });
                                 } else {
                                     history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
                                 }
                             } else {
                                 if (selectedProject === null || selectedLevel == null) {
-                                    setShowToast({ key: "error", label: t('HCM_AM_PLEASE_SELECT_MENDATORY_FIELDS'), transitionTime: 3000 });
+                                    setShowToast({ key: "error", label: t('HCM_AM_PLEASE_SELECT_MANDATORY_FIELDS'), transitionTime: 3000 });
                                 } else {
                                     history.push(`/${window.contextPath}/employee/payments/generate-bill`);
                                 }
                             }
-
                         }}
                         style={{ minWidth: "14rem" }}
                         type="button"

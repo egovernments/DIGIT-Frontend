@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
+import { CustomSVG } from "@egovernments/digit-ui-components";
 // import {SearchCustomSVG} from ./SearchCustomSVG
 
 const SearchResultsPlaceholder = (props) => {
@@ -10,7 +11,10 @@ const SearchResultsPlaceholder = (props) => {
     return (
         <div className={`digit-no-data-found ${props?.className ? props?.className : ""}`} style={props?.style}>
             <SearchCustomSVG height={iconHeight} width={iconWidth} />
-            <span className="digit-error-msg">{t(props?.placeholderText) || t("COMMON_NO_RESULTS_FOUND")}</span>
+            <div style={{ display: "flex", gap: ".5rem", marginTop: "1rem" }}>
+                {<CustomSVG.InfoIconOutline width={"20px"} height={"20px"} fill={"#c84c0e"} />}
+                <div style={{ color: "#0b4b66" }}>{t(props?.placeholderText) || t("COMMON_NO_RESULTS_FOUND")}</div>
+            </div>
         </div>
     );
 };

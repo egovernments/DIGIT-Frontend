@@ -54,7 +54,6 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
 
   useEffect(() => {
     if (reset == true) {
-      setProjectSelected(null);
       resetTable();
     }
   }, [reset]);

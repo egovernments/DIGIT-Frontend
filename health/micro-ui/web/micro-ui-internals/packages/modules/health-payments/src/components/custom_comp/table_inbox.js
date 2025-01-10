@@ -16,6 +16,7 @@ const CustomInboxTable = ({
   customHandlePaginationChange,
   totalCount,
   statusCount,
+  selectedProject
 }) => {
   const { t } = useTranslation();
   const [activeLink, setActiveLink] = useState({
@@ -99,7 +100,8 @@ const CustomInboxTable = ({
   ];
 
   return (
-    <React.Fragment>
+    <Card>
+      <div className="summary-sub-heading">{t(selectedProject?.name)}</div>
       {
         /*(!planEmployee?.data || planEmployee?.data?.length === 0) */
         !tableData ? (
@@ -132,6 +134,7 @@ const CustomInboxTable = ({
               showNav={true}
             />
             <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", }}>
+
               {tableData && tableData.length === 0 ? (
                 <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />
               ) : (
@@ -157,7 +160,7 @@ const CustomInboxTable = ({
           </div>
         )
       }
-    </React.Fragment>
+    </Card>
   );
 };
 
