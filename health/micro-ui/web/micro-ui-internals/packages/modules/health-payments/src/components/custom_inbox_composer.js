@@ -195,6 +195,7 @@ const CustomInboxSearchComposer = () => {
   const resetTable = () => {
     setchildrenData([]);
     setFilterCriteria(null);
+   // setSelectedProject({});
     setCard(false);
   };
 
