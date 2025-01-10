@@ -56,7 +56,7 @@ const BillInboxTable = ({
             selector: (row) => {
                 return (
                     <div className="ellipsis-cell" title={row?.markby || t("NA")}>
-                        {props.status === "APPROVED" ? row?.markedBy : row?.approvedBy || t("NA")}
+                        {props.status === "APPROVED" ? row?.approvedBy : row?.markedBy || t("NA")}
                     </div>
                 );
             },

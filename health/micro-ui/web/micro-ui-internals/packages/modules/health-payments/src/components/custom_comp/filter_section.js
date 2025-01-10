@@ -15,12 +15,13 @@ const CustomFilter = ({ resetTable, isRequired, onProjectSelect, onFilterChange,
   const [project, setProject] = useState([]);
 
   const [isDistrictSelected, setIsDistrictSelected] = useState(false);
+  const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentConfig")?.lowestLevelBoundary || "DISTRICT";
 
   const [projectSelected, setProjectSelected] = useState();
 
   const onChangeId = (value) => {
     setBoundary(value);
-    if (value?.boundaryType === "DISTRICT") {
+    if (value?.boundaryType === lowestLevelBoundaryType) {
       setIsDistrictSelected(true); // Set flag if district is selected
     }
   };
