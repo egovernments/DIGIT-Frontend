@@ -54,6 +54,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
 
   useEffect(() => {
     if (reset == true) {
+      //setProjectSelected(null);
       resetTable();
     }
   }, [reset]);
@@ -116,7 +117,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
             isRequired={isRequired}
             initialValue={Digit.SessionStorage.get("selectedValues")}
             updateSeeeionStorage={(newSelectedValues) => {
-              Digit.SessionStorage.set("selectedValues", JSON.stringify(newSelectedValues));
+              Digit.SessionStorage.set("selectedValues", newSelectedValues);
             }}
             onChange={onChangeId}
             selectedProject={projectSelected}

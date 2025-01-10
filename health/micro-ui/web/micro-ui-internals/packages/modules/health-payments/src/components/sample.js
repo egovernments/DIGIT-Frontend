@@ -48,7 +48,7 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
   // }, []);
   useEffect(() => {
     if (initialValue) {
-      const parsedData = JSON.parse(initialValue);
+      const parsedData = initialValue;
 
       // Initialize selected values
       setSelectedValues(parsedData);
@@ -112,6 +112,7 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
 
       const formattedData = createFormattedData(childrenData[0]?.boundary[0].boundaryType);
       setBoundaryData(formattedData);
+      handleButtonClick(childrenData[0]?.boundary[0]);
     }
   }, [childrenData]);
 
