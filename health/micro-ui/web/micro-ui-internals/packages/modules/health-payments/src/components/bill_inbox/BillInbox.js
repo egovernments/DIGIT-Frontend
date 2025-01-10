@@ -10,6 +10,7 @@ import BillInboxTable from "./billInboxTable";
 import { ScreenTypeEnum } from "../../utils/constants";
 import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import SearchResultsPlaceholder from "../SearchResultsPlaceholder";
+import AlertPopUp from "../alertPopUp";
 const CustomBillInbox = () => {
     const { t } = useTranslation();
     const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -97,6 +98,7 @@ const CustomBillInbox = () => {
             if (AttendanceData?.statusCount.PENDINGFORAPPROVAL === 0 && AttendanceData?.statusCount.APPROVED > 0) {
                 setShowGenerateBillAction(true);
             } else {
+                setInfoDescription("HCM_AM_PENDING_REGISTER_AND_APPROVAL_REGISTER_VALIDATION_FAILED_INFO_MESSAGE")
                 setShowGenerateBillAction(false);
             }
         }
@@ -122,10 +124,8 @@ const CustomBillInbox = () => {
 
     useEffect(() => {
         if (BillData) {
-            if (BillData?.bills) {
+            if (BillData?.bills?.length > 0) {
                 setInfoDescription(`HCM_AM_BILL_IS_ALREADY_GENERATED_INFO_MESSAGE`);
-            } else {
-                triggerGenerateBill();
             }
         }
     }, [BillData]);
@@ -324,11 +324,12 @@ const CustomBillInbox = () => {
                     submitLabel={t(`HCM_AM_GENERATE_BILL`)}
                     cancelLabel={t(`HCM_AM_CANCEL`)}
                     onPrimaryAction={() => {
+                        setOpenAlertPopUp(false);
                         triggerGenerateBill();
                     }}
                 />}
 
-                {showGenerateBillAction && BillData?.bills?.length === 0 && !isBillLoading && !isFetchingBill && setBillGenerationStatus == null &&
+                {showGenerateBillAction && BillData?.bills?.length === 0 && !isBillLoading && !isFetchingBill && billGenerationStatus == null &&
                     < ActionBar
                         actionFields={[
                             <Button
