@@ -80,7 +80,7 @@ const BillInboxTable = ({
     return (
         <React.Fragment>
             {
-                props.isFetching || props.tableData.length === 0 ? <div style={{ height: "49.5vh" }}> {props.isFetching ? <Loader /> : <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />} </div> : <DataTable
+                props.isFetching || props.tableData.length === 0 ? <div style={{ height: "29vh" }}> {props.isFetching ? <Loader /> : <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />} </div> : <DataTable
                     columns={columns}
                     data={props.tableData}
                     pagination
@@ -93,6 +93,8 @@ const BillInboxTable = ({
                     paginationPerPage={props?.rowsPerPage}
                     sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
                     paginationRowsPerPageOptions={[5, 10, 15, 20]}
+                    fixedHeader={true}
+                    fixedHeaderScrollHeight={"30vh"}
                 />
             }
         </React.Fragment>

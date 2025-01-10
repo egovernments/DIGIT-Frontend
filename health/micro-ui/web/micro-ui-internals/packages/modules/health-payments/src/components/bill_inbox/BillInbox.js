@@ -251,7 +251,14 @@ const CustomBillInbox = () => {
                             ></BillBoundaryFilter>
                         </div>
                         <div style={{ width: "80%", display: "flex", flexDirection: "row", height: "60vh", minHeight: "60vh" }}>
-                            <div style={{ width: "100%" }}>
+                            {tableData == null && <Card style={{ height: "60vh" }}>
+                                <div className="summary-sub-heading">{t(selectedProject?.name)}</div>
+                                <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name)}</div>
+
+                                <SearchResultsPlaceholder placeholderText={"HCM_AM_BILL_INBOX_PLACEHOLDER_IMAGE_TEXT"} /> </Card>}
+                            {tableData && <Card style={{ width: "100%" }}>
+                                {tableData != null && <div className="summary-sub-heading">{t(selectedProject?.name)}</div>}
+                                {tableData != null && <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name)}</div>}
                                 {(approvalCount !== null && pendingApprovalCount !== null) && (
                                     <Tab
                                         activeLink={activeLink?.code}
@@ -284,8 +291,14 @@ const CustomBillInbox = () => {
                                         style={{}}
                                     />
                                 )}
-                                {tableData == null && <Card style={{ height: "60vh" }}><SearchResultsPlaceholder /> </Card>}
-                                {tableData && <div style={{ overflow: "auto", maxHeight: approvalCount !== null && pendingApprovalCount !== null ? "60vh" : "47vh" }}><Card >
+                                {tableData && <div style={{ overflow: "auto", maxHeight: approvalCount !== null && pendingApprovalCount !== null ? "50vh" : "30vh" }}> <Card
+                                    style={{
+                                        WebkitBoxShadow: "0 0.063rem 0.125rem 0 rgba(0, 0, 0, 0.16078)",
+                                        boxShadow: "0 0.063rem 0.125rem 0 rgba(0, 0, 0, 0.16078)",
+                                        // -webkit-box-shadow: 0 0.063rem 0.125rem 0 rgba(0, 0, 0, 0.16078);
+                                        // box-shadow: 0 0.063rem 0.125rem 0 rgba(0, 0, 0, 0.1607
+                                    }}
+                                >
                                     <BillInboxTable
                                         isFetching={isFetching}
                                         tableData={tableData}
@@ -297,7 +310,7 @@ const CustomBillInbox = () => {
                                         status={activeLink.code}
                                     ></BillInboxTable>
                                 </Card></div>}
-                            </div>
+                            </Card>}
                         </div>
                     </div>
                 </div>

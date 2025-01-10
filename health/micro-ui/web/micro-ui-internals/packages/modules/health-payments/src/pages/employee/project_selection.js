@@ -89,10 +89,10 @@ const ProjectSelect = () => {
             <div style={{ marginBottom: "2.5rem" }}>
                 <Card type="primary" className="middle-child" style={{ gap: "1.5rem" }}>
                     <Header className="pop-inbox-header">
-                        {t('HCM_AM_CHOOSE_PROJECT_TO_VIEW_REGISTERS')}
+                        {billScreen ? t('HCM_AM_PROJECT_AND_BILL_AGGREGATION_HEADING') : t('HCM_AM_CHOOSE_PROJECT_TO_VIEW_REGISTERS')}
                     </Header>
                     <div className="label-pair">
-                        {t(`HCM_AM_PROJECT_CHOOSE_DESCRIPTION`)}
+                        {billScreen ? t(`HCM_AM_PROJECT_AND_BILL_AGGREGATION_DESCRIPTION`) : t(`HCM_AM_PROJECT_CHOOSE_DESCRIPTION`)}
                     </div>
                     <div className="label-pair">
                         <div className="label-heading">
