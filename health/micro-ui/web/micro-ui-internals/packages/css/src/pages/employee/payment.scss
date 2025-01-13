@@ -28,3 +28,104 @@
     @extend .typography.heading-m;
     color: theme(digitv2.lightTheme.primary-2);
 }
+
+.custom-inbox-table-row {
+    border-right: 2px solid #787878;
+    width: 100%;
+    text-align: start;
+}
+
+.custom-register-inbox-screen{
+
+    width: 100%;
+    display:flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+
+.custom-register-inbox-screen .inner-div-row-section{
+
+    width: 100%;
+    display:flex;
+    flex-direction: row;
+    gap: 24px;
+}
+
+.custom-register-inbox-screen .custom-inbox-filter-section{
+
+    width: 30%;
+    display: flex;
+    flex-direction: column; 
+    gap: 24px;
+    height: 80vh;
+}
+
+
+.custom-register-inbox-screen .custom-inbox-inner-filter-section{
+
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    height: 75vh;
+    overflow-y: auto;
+}
+
+
+
+
+.custom-register-inbox-screen .custom-inbox-outer-table-section{
+
+    width: 100%;
+    display: flex;
+    flex-direction: row; 
+    gap: 24px; 
+}
+
+.custom-inbox-outer-table-section .inner-table-section{
+
+    width: 100%; 
+    display: flex;
+    flex-direction: column;
+    height: 75vh;
+    min-height: 75vh;
+}
+
+.custom-inbox-outer-table-section .card-overide{
+    max-width: 100%; 
+    overflow: auto;
+    margin: 0px;
+    height: 75vh;
+}
+
+
+
+
+
+.on-icon-reset-proximity{
+    border: 1px solid #e0e0e0; padding: 6px; margin-bottom: 10px; cursor: pointer;
+}
+
+
+//
+
+
+.custom-bill-inbox {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 2.5rem;
+  
+
+}
+  
+
+
+
+
+
+
+
+
+
+

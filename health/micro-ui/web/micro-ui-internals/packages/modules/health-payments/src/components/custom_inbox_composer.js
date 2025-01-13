@@ -1,13 +1,11 @@
-import React, { useEffect, useReducer, useState, useMemo, use } from "react";
+import React, { useEffect, useState } from "react";
 
 import _ from "lodash";
-import CustomInboxSearchLinks from "./custom_comp/link_section";
-import CustomSearchComponent from "./custom_comp/search_section";
 
 import { useTranslation } from "react-i18next";
 import CustomFilter from "./custom_comp/filter_section";
 import CustomInboxTable from "./custom_comp/table_inbox";
-import { FilterCard, Toast, Card } from "@egovernments/digit-ui-components";
+import { Toast, Card } from "@egovernments/digit-ui-components";
 import { ScreenTypeEnum, StatusEnum } from "../utils/constants";
 import SearchResultsPlaceholder from "./SearchResultsPlaceholder";
 
@@ -86,16 +84,16 @@ const CustomInboxSearchComposer = () => {
             const rowData =
               data?.attendanceRegister.length > 0
                 ? data?.attendanceRegister?.map((item, index) => {
-                  return {
-                    id: item?.registerNumber,
-                    //name: item?.name,
-                    name: selectedProject?.name,
-                    boundary: item?.localityCode,
-                    status: item?.attendees == null ? 0 : item?.attendees.length || 0,
-                    markby: item?.staff?.[0].additionalDetails?.ownerName || "NA",
-                    approvedBy: item?.staff?.[0].additionalDetails?.staffName || "NA",
-                  };
-                })
+                    return {
+                      id: item?.registerNumber,
+                      //name: item?.name,
+                      name: selectedProject?.name,
+                      boundary: item?.localityCode,
+                      status: item?.attendees == null ? 0 : item?.attendees.length || 0,
+                      markby: item?.staff?.[0].additionalDetails?.ownerName || "NA",
+                      approvedBy: item?.staff?.[0].additionalDetails?.staffName || "NA",
+                    };
+                  })
                 : [];
             setChildrenDataLoading(false);
             setCard(true);
@@ -116,8 +114,6 @@ const CustomInboxSearchComposer = () => {
       /// will show estimate data only
     }
   };
-
-  //
 
   useEffect(() => {
     const data = Digit.SessionStorage.get("paymentInbox");
@@ -195,40 +191,28 @@ const CustomInboxSearchComposer = () => {
   const resetTable = () => {
     setchildrenData([]);
     setFilterCriteria(null);
-   // setSelectedProject({});
+    // setSelectedProject({});
     setCard(false);
   };
 
   return (
     <React.Fragment>
-      <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "24px" }}>
-        <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
-          <div style={{ width: "30%", display: "flex", flexDirection: "column", gap: "24px", height: "80vh" }}>
+      <div className="custom-register-inbox-screen">
+        <div className="inner-div-row-section">
+          <div className="custom-inbox-filter-section">
             {/*<div style={{ width: "80%", display: "flex", flexDirection: "row" }}>
             <CustomSearchComponent onProjectSelect={handleProjectChange}></CustomSearchComponent>
           </div>*/}
 
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "row",
-                height: "75vh",
-                overflowY: "auto",
-              }}
-            >
-              <CustomFilter
-                resetTable={resetTable}
-                isRequired={ScreenTypeEnum.REGISTER}
-                onFilterChange={handleFilterUpdate}
-              ></CustomFilter>
+            <div className="custom-inbox-inner-filter-section">
+              <CustomFilter resetTable={resetTable} isRequired={ScreenTypeEnum.REGISTER} onFilterChange={handleFilterUpdate}></CustomFilter>
             </div>
           </div>
 
-          <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
-            <div style={{ width: "100%", display: "flex", flexDirection: "column", height: "75vh", minHeight: "75vh" }}>
+          <div className="custom-inbox-outer-table-section">
+            <div className="inner-table-section">
               {card == false ? (
-                <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", height: "75vh" }}>
+                <Card className="card-overide">
                   <div className="summary-sub-heading">{t(selectedProject?.name)}</div>
                   <SearchResultsPlaceholder placeholderText={"HCM_AM_FILTER_AND_CHOOSE_BOUNDARY_PLACEHOLDER_TEXT"} />
                 </Card>
