@@ -17,8 +17,17 @@ import ErrorComponent from "../../components/ErrorComponent";
 import { PrivateRoute } from "@egovernments/digit-ui-components";
 import RoleLanding from "./RoleLanding";
 import LoginSuccessPage from "./LoginSuccesful";
+import keycloak from "./LanguageSelection/keycloak";
 
 const userScreensExempted = ["user/landing", "user/profile", "user/error"];
+
+// keycloak.init({ onLoad: "login-required" }).then((authenticated) => {
+//   if (authenticated) {
+//     ReactDOM.render(<App />, document.getElementById("root"));
+//   } else {
+//     console.error("User not authenticated");
+//   }
+// });
 
 const EmployeeApp = ({
   stateInfo,

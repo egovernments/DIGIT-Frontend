@@ -1,25 +1,32 @@
 import { Button, Card, Loader } from "@egovernments/digit-ui-components";
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
 import Background from "../../../components/Background";
+import keycloak from "./keycloak";
 
 const LanguageSelection = () => {
   const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
   const { t } = useTranslation();
-  const history = useHistory();
   const { stateInfo } = storeData || {};
 
-  // Function to call the Keycloak API and redirect
-  const handleLogin = async (loginType) => {
+  useEffect(() => {
+    // If the user is already authenticated, redirect them to the success page
+    if (keycloak.authenticated) {
+      window.location.href = "http://localhost:3000/sandbox-ui/A/employee/user/success";
+    }
+  }, []);
+
+  // Function to call the Keycloak API and trigger login
+  const handleLogin = async () => {
     try {
-      // console.log("LoginType being passed:", loginType);
-      history.push({
-        pathname: `/${window?.contextPath}/employee/user/login`,
-        state: { loginMethod: loginType },
-      });
+      if (!keycloak.authenticated) {
+        // Trigger login if the user is not authenticated
+        await keycloak.login({
+          redirectUri: "http://localhost:3000/sandbox-ui/A/employee/user/success", // Redirect after login
+        });
+      }
     } catch (error) {
-      console.error(`Error during ${loginType} login:`, error);
+      console.error("Error during login:", error);
     }
   };
 
@@ -32,22 +39,13 @@ const LanguageSelection = () => {
           <img className="bannerLogo" src={stateInfo?.logoUrl} alt="Digit" />
           <p>{t(`TENANT_TENANTS_${stateInfo?.code?.toUpperCase()}`)}</p>
         </div>
-        <div className="button-container" style={{ display: "flex", justifyContent: "space-around", marginBottom: "24px" }}>
-          <Button label="Login by password" onClick={() => handleLogin("direct")} />
-          <Button label="MFA with sms" onClick={() => handleLogin("2fa")} />
-          <Button label="Login by otp" onClick={() => handleLogin("otp")} />
+        <div
+          className="button-container"
+          style={{ display: "flex", justifyContent: "space-around", marginBottom: "24px" }}
+        >
+          <Button label="Login by password" onClick={handleLogin} />
         </div>
       </Card>
-      <div className="EmployeeLoginFooter">
-        <img
-          alt="Powered by DIGIT"
-          src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
-          style={{ cursor: "pointer" }}
-          onClick={() => {
-            window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
-          }}
-        />{" "}
-      </div>
     </Background>
   );
 };
