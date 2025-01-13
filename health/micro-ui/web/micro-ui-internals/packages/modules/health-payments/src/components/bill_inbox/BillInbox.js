@@ -256,60 +256,55 @@ const CustomBillInbox = () => {
                                 <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name)}</div>
 
                                 <SearchResultsPlaceholder placeholderText={"HCM_AM_BILL_INBOX_PLACEHOLDER_IMAGE_TEXT"} /> </Card>}
-                            {tableData && <Card style={{ width: "100%" }}>
+                            {tableData && <Card style={{ width: "100%", }}>
                                 {tableData != null && <div className="summary-sub-heading">{t(selectedProject?.name)}</div>}
                                 {tableData != null && <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name)}</div>}
-                                {(approvalCount !== null && pendingApprovalCount !== null) && (
-                                    <Tab
-                                        activeLink={activeLink?.code}
-                                        configItemKey="code"
-                                        configDisplayKey="name"
-                                        itemStyle={{ width: "400px" }}
-                                        configNavItems={[
-                                            {
-                                                code: "APPROVED",
-                                                name: `${`${t(`HCM_AM_APPROVED_REGISTER`)} (${approvalCount})`}`,
-                                            },
-                                            {
-                                                code: "PENDINGFORAPPROVAL",
-                                                name: `${`${t(`HCM_AM_PENDING_REGISTER`)} (${pendingApprovalCount})`}`,
-                                            },
-                                        ]}
-                                        navStyles={{}}
-                                        onTabClick={(e) => {
-                                            setLimitAndOffset((prev) => {
-                                                return {
-                                                    limit: prev.limit,
-                                                    offset: 0,
-                                                };
-                                            });
-                                            setCurrentPage(1);
-                                            setActiveLink(e);
-                                        }}
-                                        setActiveLink={setActiveLink}
-                                        showNav={true}
-                                        style={{}}
-                                    />
-                                )}
-                                {tableData && <div style={{ overflow: "auto", maxHeight: approvalCount !== null && pendingApprovalCount !== null ? "50vh" : "30vh" }}> <Card
-                                    style={{
-                                        WebkitBoxShadow: "0 0.063rem 0.125rem 0 rgba(0, 0, 0, 0.16078)",
-                                        boxShadow: "0 0.063rem 0.125rem 0 rgba(0, 0, 0, 0.16078)",
-                                        // -webkit-box-shadow: 0 0.063rem 0.125rem 0 rgba(0, 0, 0, 0.16078);
-                                        // box-shadow: 0 0.063rem 0.125rem 0 rgba(0, 0, 0, 0.1607
-                                    }}
-                                >
-                                    <BillInboxTable
-                                        isFetching={isFetching}
-                                        tableData={tableData}
-                                        currentPage={currentPage}
-                                        rowsPerPage={rowsPerPage}
-                                        handlePageChange={handlePageChange}
-                                        handlePerRowsChange={handlePerRowsChange}
-                                        totalCount={totalCount}
-                                        status={activeLink.code}
-                                    ></BillInboxTable>
-                                </Card></div>}
+                                <div>
+                                    {(approvalCount !== null && pendingApprovalCount !== null) && (
+                                        <Tab
+                                            activeLink={activeLink?.code}
+                                            configItemKey="code"
+                                            configDisplayKey="name"
+                                            itemStyle={{ width: "400px" }}
+                                            configNavItems={[
+                                                {
+                                                    code: "APPROVED",
+                                                    name: `${`${t(`HCM_AM_APPROVED_REGISTER`)} (${approvalCount})`}`,
+                                                },
+                                                {
+                                                    code: "PENDINGFORAPPROVAL",
+                                                    name: `${`${t(`HCM_AM_PENDING_REGISTER`)} (${pendingApprovalCount})`}`,
+                                                },
+                                            ]}
+                                            navStyles={{}}
+                                            onTabClick={(e) => {
+                                                setLimitAndOffset((prev) => {
+                                                    return {
+                                                        limit: prev.limit,
+                                                        offset: 0,
+                                                    };
+                                                });
+                                                setCurrentPage(1);
+                                                setActiveLink(e);
+                                            }}
+                                            setActiveLink={setActiveLink}
+                                            showNav={true}
+                                            style={{}}
+                                        />
+                                    )}
+                                    {tableData && <div style={{ maxHeight: approvalCount !== null && pendingApprovalCount !== null ? "60vh" : "30vh" }}> <Card>
+                                        <BillInboxTable
+                                            isFetching={isFetching}
+                                            tableData={tableData}
+                                            currentPage={currentPage}
+                                            rowsPerPage={rowsPerPage}
+                                            handlePageChange={handlePageChange}
+                                            handlePerRowsChange={handlePerRowsChange}
+                                            totalCount={totalCount}
+                                            status={activeLink.code}
+                                        ></BillInboxTable>
+                                    </Card></div>}
+                                </div>
                             </Card>}
                         </div>
                     </div>

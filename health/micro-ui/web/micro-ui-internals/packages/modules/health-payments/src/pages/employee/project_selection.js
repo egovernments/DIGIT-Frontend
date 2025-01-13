@@ -65,14 +65,11 @@ const ProjectSelect = () => {
         }
     }, []);
 
-  // clear every other storage when comes on this page
-  useEffect(() => {
-    window.Digit.SessionStorage.del("selectedLevel");
-    window.Digit.SessionStorage.del("selectedBoundaryCode");
-    window.Digit.SessionStorage.del("boundary");
-    window.Digit.SessionStorage.del("selectedValues");
-    window.Digit.SessionStorage.del("paymentInbox");
-  }, []);
+    // // clear every other storage when comes on this page
+    // useEffect(() => {
+
+    //     window.Digit.SessionStorage.del("paymentInbox");
+    // }, []);
 
     // Handle project selection
     const handleProjectSelect = (value) => {
@@ -80,11 +77,16 @@ const ProjectSelect = () => {
         setSelectedProject(value);
     };
 
-  // Handle aggregation level change
-  const handleAggregationLevelChange = (value) => {
-    setSelectedLevel(value);
-    Digit.SessionStorage.set("selectedLevel", value);
-  };
+    // Handle aggregation level change
+    const handleAggregationLevelChange = (value) => {
+        if (value !== window.Digit.SessionStorage.get("selectedLevel")) {
+            window.Digit.SessionStorage.del("selectedBoundaryCode");
+            window.Digit.SessionStorage.del("boundary");
+            window.Digit.SessionStorage.del("selectedValues");
+        }
+        setSelectedLevel(value);
+        Digit.SessionStorage.set("selectedLevel", value);
+    };
 
     return (
         <React.Fragment>

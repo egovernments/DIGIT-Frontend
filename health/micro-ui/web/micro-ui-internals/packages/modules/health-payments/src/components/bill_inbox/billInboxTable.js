@@ -23,7 +23,11 @@ const BillInboxTable = ({
     };
     const columns = [
         {
-            name: t("HCM_AM_ATTENDANCE_ID"),
+            name: (
+                <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                    {t("HCM_AM_ATTENDANCE_ID")}
+                </div>
+            ),
             selector: (row) => {
                 return (
                     <Button
@@ -42,7 +46,11 @@ const BillInboxTable = ({
             },
         },
         {
-            name: t("HCM_AM_ATTENDANCE_BOUNDARY"),
+            name: (
+                <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                    {t("HCM_AM_ATTENDANCE_BOUNDARY")}
+                </div>
+            ),
             selector: (row) => {
                 return (
                     <div className="ellipsis-cell" title={t(row?.boundary) || t("NA")}>
@@ -52,7 +60,11 @@ const BillInboxTable = ({
             },
         },
         {
-            name: props.status === "APPROVED" ? t("HCM_AM_ATTENDANCE_APPROVED_BY") : t("HCM_AM_ATTENDANCE_MARKED_BY"),
+            name: (
+                <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                    {props.status === "APPROVED" ? t("HCM_AM_ATTENDANCE_APPROVED_BY") : t("HCM_AM_ATTENDANCE_MARKED_BY")}
+                </div>
+            ),
             selector: (row) => {
                 return (
                     <div className="ellipsis-cell" title={row?.markby || t("NA")}>
@@ -80,7 +92,7 @@ const BillInboxTable = ({
     return (
         <React.Fragment>
             {
-                props.isFetching || props.tableData.length === 0 ? <div style={{ height: "29vh" }}> {props.isFetching ? <Loader /> : <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />} </div> : <DataTable
+                props.isFetching || props.tableData.length === 0 ? <div style={{ height: "38vh" }}> {props.isFetching ? <Loader /> : <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />} </div> : <DataTable
                     columns={columns}
                     data={props.tableData}
                     pagination
@@ -94,7 +106,7 @@ const BillInboxTable = ({
                     sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
                     paginationRowsPerPageOptions={[5, 10, 15, 20]}
                     fixedHeader={true}
-                    fixedHeaderScrollHeight={"30vh"}
+                    fixedHeaderScrollHeight={"32vh"}
                 />
             }
         </React.Fragment>
