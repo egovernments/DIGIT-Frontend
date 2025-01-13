@@ -498,7 +498,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
             />
           ) : editAttendance ? (
             <Button
-              icon="CheckCircle"
               label={t(`HCM_AM_SUBMIT_LABEL`)}
               title={t(`HCM_AM_SUBMIT_LABEL`)}
               onClick={() => {

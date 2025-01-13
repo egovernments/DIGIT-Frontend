@@ -6,16 +6,16 @@ import { Divider, Button, PopUp, Card, ActionBar, Link, ViewCardFieldPair, Toast
 import _ from "lodash";
 
 const ProjectSelect = () => {
-  const location = useLocation();
-  const { t } = useTranslation();
-  const history = useHistory();
-  const billScreen = location.pathname.includes("project-and-aggregation-selection");
-  const [project, setProject] = useState([]);
-  const [selectedProject, setSelectedProject] = useState(() => Digit.SessionStorage.get("selectedProject") || null);
-  const [showToast, setShowToast] = useState(null);
-  const [selectedLevel, setSelectedLevel] = useState(() => Digit.SessionStorage.get("selectedLevel") || null);
-  const boundaryHierarchyOrder = Digit.SessionStorage.get("boundaryHierarchyOrder");
-  const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentConfig")?.lowestLevelBoundary || "DISTRICT";
+    const location = useLocation();
+    const { t } = useTranslation();
+    const history = useHistory();
+    const billScreen = location.pathname.includes("project-and-aggregation-selection");
+    const [project, setProject] = useState([]);
+    const [selectedProject, setSelectedProject] = useState(() => Digit.SessionStorage.get("selectedProject") || null);
+    const [showToast, setShowToast] = useState(null);
+    const [selectedLevel, setSelectedLevel] = useState(() => Digit.SessionStorage.get("selectedLevel") || null);
+    const boundaryHierarchyOrder = Digit.SessionStorage.get("boundaryHierarchyOrder");
+    const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentConfig")?.lowestLevelBoundary || "DISTRICT";
 
     const AGGREGATION_LEVEL_OPTIONS = boundaryHierarchyOrder
         ?.filter((item) => item.order <= boundaryHierarchyOrder?.find((d) => d.code === lowestLevelBoundaryType)?.order)
@@ -133,6 +133,7 @@ const ProjectSelect = () => {
             <ActionBar
                 actionFields={[
                     <Button
+                        icon="ArrowBack"
                         label={t(`HCM_AM_BACK_LABEL`)}
                         onClick={() => {
                             history.push(`/${window.contextPath}/employee`);
@@ -142,8 +143,9 @@ const ProjectSelect = () => {
                         variation="secondary"
                     />,
                     <Button
+                        icon="ArrowForward"
+                        isSuffix={true}
                         label={t(`HCM_AM_NEXT_LABEL`)}
-                        title={t(`HCM_AM_NEXT_LABEL`)}
                         onClick={() => {
                             if (!billScreen) {
                                 if (selectedProject === null) {
@@ -180,62 +182,8 @@ const ProjectSelect = () => {
                     transitionTime={showToast.transitionTime}
                     onClose={() => setShowToast(null)}
                 />
-             
-          )}
-      
-     
-      <ActionBar
-        actionFields={[
-          <Button
-            label={t(`HCM_AM_BACK_LABEL`)}
-            onClick={() => {
-              history.push(`/${window.contextPath}/employee`);
-            }}
-            style={{ marginLeft: "2.5rem", minWidth: "14rem" }}
-            type="button"
-            variation="secondary"
-          />,
-          <Button
-            label={t(`HCM_AM_NEXT_LABEL`)}
-            title={t(`HCM_AM_NEXT_LABEL`)}
-            onClick={() => {
-              if (!billScreen) {
-                if (selectedProject === null) {
-                  setShowToast({ key: "error", label: t("HCM_AM_PROJECT_SELECTION_IS_MANDATORY"), transitionTime: 3000 });
-                } else {
-                  Digit.SessionStorage.set("selectedProject", selectedProject);
-                  history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
-                }
-              } else {
-                if (selectedProject === null || selectedLevel == null) {
-                  setShowToast({ key: "error", label: t("HCM_AM_PLEASE_SELECT_MANDATORY_FIELDS"), transitionTime: 3000 });
-                } else {
-                  Digit.SessionStorage.set("selectedProject", selectedProject);
-                  history.push(`/${window.contextPath}/employee/payments/generate-bill`);
-                }
-              }
-            }}
-            style={{ minWidth: "14rem" }}
-            type="button"
-            variation="primary"
-          />,
-        ]}
-        className=""
-        maxActionFieldsAllowed={5}
-        sortActionFields
-        style={{}}
-      />
-      {showToast && (
-        <Toast
-          style={{ zIndex: 10001 }}
-          label={showToast.label}
-          type={showToast.key}
-          // error={showToast.key === "error"}
-          transitionTime={showToast.transitionTime}
-          onClose={() => setShowToast(null)}
-        />
-      )}
-    </React.Fragment>
-  );
+            )}
+        </React.Fragment>
+    );
 };
 export default ProjectSelect;
