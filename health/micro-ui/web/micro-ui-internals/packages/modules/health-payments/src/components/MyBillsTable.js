@@ -30,9 +30,12 @@ const MyBillsTable = ({ ...props }) => {
     const columns = useMemo(() => {
         const baseColumns = [
             {
-                name: t("HCM_AM_BILL_ID"),
+                name: (
+                    <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                        {t("HCM_AM_BILL_ID")}
+                    </div>
+                ),
                 selector: (row) => {
-                    console.log(row);
                     return (
                         <div className="ellipsis-cell" title={t(row?.billNumber) || t("NA")}>
                             {t(row?.billNumber) || t("NA")}
@@ -41,7 +44,11 @@ const MyBillsTable = ({ ...props }) => {
                 },
             },
             {
-                name: t("HCM_AM_BILL_DATE"),
+                name: (
+                    <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                        {t("HCM_AM_BILL_DATE")}
+                    </div>
+                ),
                 selector: (row) => {
                     return (
                         <div className="ellipsis-cell" >
@@ -52,10 +59,14 @@ const MyBillsTable = ({ ...props }) => {
             },
 
             {
-                name: t("HCM_AM_NO_OF_REGISTERS"),
+                name: (
+                    <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                        {t("HCM_AM_NO_OF_REGISTERS")}
+                    </div>
+                ),
                 selector: (row) => {
                     return (
-                        <div className="ellipsis-cell" style={{ paddingRight: "4.5rem" }}>
+                        <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
                             {t(row?.additionalDetails?.noOfRegisters || "0")}
                         </div>
                     );
@@ -65,10 +76,14 @@ const MyBillsTable = ({ ...props }) => {
                 },
             },
             {
-                name: t("HCM_AM_NUMBER_OF_WORKERS"),
+                name: (
+                    <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                        {t("HCM_AM_NUMBER_OF_WORKERS")}
+                    </div>
+                ),
                 selector: (row) => {
                     return (
-                        <div className="ellipsis-cell" style={{ paddingRight: "4.5rem" }}>
+                        <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
                             {t(row?.billDetails?.length) || t("0")}
                         </div>
                     );
@@ -78,7 +93,11 @@ const MyBillsTable = ({ ...props }) => {
                 },
             },
             {
-                name: t("HCM_AM_BOUNDARY_NAME"),
+                name: (
+                    <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                        {t("HCM_AM_BOUNDARY_NAME")}
+                    </div>
+                ),
                 selector: (row) => {
                     return (
                         <div className="ellipsis-cell" >
@@ -89,7 +108,11 @@ const MyBillsTable = ({ ...props }) => {
             },
 
             {
-                name: t("HCM_AM_PROJECT_NAME"),
+                name: (
+                    <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                        {t("HCM_AM_PROJECT_NAME")}
+                    </div>
+                ),
                 selector: (row) => {
                     return (
                         <div className="ellipsis-cell" title={t(project?.[0]?.name || "0")}>

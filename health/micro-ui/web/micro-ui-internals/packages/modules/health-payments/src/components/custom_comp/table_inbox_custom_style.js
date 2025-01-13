@@ -50,9 +50,9 @@ export const tableCustomStyle = {
         borderTopLeftRadius: "0.25rem",
       },
       "&:last-of-type": {
-        borderLeftStyle: "solid",
-        borderLeftWidth: "0px",
-        borderLeftColor: "#D6D5D4",
+        borderRightStyle: "solid",
+        borderRightWidth: "1px",
+        borderRightColor: "#D6D5D4",
         borderTopRightRadius: "0.25rem",
       },
       borderRightStyle: "solid",
@@ -72,8 +72,14 @@ export const tableCustomStyle = {
     style: {
       "&:first-of-type": {
         borderLeftStyle: "solid",
-        borderLeftWidth: "0px",
+        borderLeftWidth: "1px",
         borderLeftColor: "#D6D5D4",
+      },
+      "&:last-of-type": {
+        borderRightStyle: "solid",
+        borderRightWidth: "1px",
+        borderRightColor: "#D6D5D4",
+        borderTopRightRadius: "0rem",
       },
       borderRightStyle: "solid",
       borderRightWidth: "0px",

@@ -18,8 +18,6 @@ const ProjectBreadCrumb = ({ location }) => {
   const local = useLocation();
   const { fromCampaignSupervisor } = local?.state || false;
 
-  console.log(Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()), 'vvvvv');
-
   const crumbs = [
     {
       internalLink: `/${window?.contextPath}/employee`,
@@ -30,14 +28,15 @@ const ProjectBreadCrumb = ({ location }) => {
       internalLink: `/${window?.contextPath}/employee/payments/project-selection`,
       content: t("HCM_AM_BREADCRUMBS_PROJECT_SELECTION"),
       show:
-        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "REGISTERS_INBOX" || Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VIEW_ATTENDANCE" ||
-        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "EDIT_ATTENDANCE"
+        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "REGISTERS_INBOX" || ((Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VIEW_ATTENDANCE" ||
+          Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "EDIT_ATTENDANCE") && !fromCampaignSupervisor)
     },
     {
       internalLink: `/${window?.contextPath}/employee/payments/project-and-aggregation-selection`,
       content: t("HCM_AM_BREADCRUMBS_PROJECT_AND_AGGREGATION_SELECTION"),
       show:
-        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "GENERATE_BILL"
+        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "GENERATE_BILL" || ((Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VIEW_ATTENDANCE" ||
+          Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "EDIT_ATTENDANCE") && fromCampaignSupervisor)
     },
     {
       internalLink: fromCampaignSupervisor ? `/${window?.contextPath}/employee/payments/generate-bill` : `/${window?.contextPath}/employee/payments/registers-inbox`,

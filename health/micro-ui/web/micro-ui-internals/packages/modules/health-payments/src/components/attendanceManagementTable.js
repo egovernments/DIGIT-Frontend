@@ -29,7 +29,11 @@ const AttendanceManagementTable = ({ ...props }) => {
 
   const columns = [
     {
-      name: t(`HCM_AM_FRONTLINE_WORKER`),
+      name: (
+        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+          {t(`HCM_AM_FRONTLINE_WORKER`)}
+        </div>
+      ),
       selector: (row) => {
         return (
           <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
@@ -40,7 +44,11 @@ const AttendanceManagementTable = ({ ...props }) => {
     },
 
     {
-      name: t("HCM_AM_WORKER_ID"),
+      name: (
+        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+          {t("HCM_AM_WORKER_ID")}
+        </div>
+      ),
       selector: (row) => {
         return (
           <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={row?.[2] || t("NA")}>
@@ -50,7 +58,11 @@ const AttendanceManagementTable = ({ ...props }) => {
       },
     },
     {
-      name: t("HCM_AM_ROLE"),
+      name: (
+        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+          {t("HCM_AM_ROLE")}
+        </div>
+      ),
       selector: (row) => {
         return (
           <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={t(row?.[3]) || t("NA")}>

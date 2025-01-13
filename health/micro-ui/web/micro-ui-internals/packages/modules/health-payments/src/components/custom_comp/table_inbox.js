@@ -40,7 +40,11 @@ const CustomInboxTable = ({
 
   const columns = [
     {
-      name: t("HCM_AM_ATTENDANCE_ID"),
+      name: (
+        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+          {t("HCM_AM_ATTENDANCE_ID")}
+        </div>
+      ),
       selector: (row) => {
         return (
           <span className="link" style={{ fontSize: "14px" }}>
@@ -51,19 +55,12 @@ const CustomInboxTable = ({
         );
       },
     },
-    // {
-    //   name: t("HCM_AM_ATTENDANCE_NAME"),
-    //   selector: (row) => {
-    //     return (
-    //       <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={row?.name || t("NA")}>
-    //         {row?.name || t("NA")}
-    //       </div>
-    //     );
-    //   },
-    // },
-
     {
-      name: activeLink?.code == "PENDINGFORAPPROVAL" ? t("HCM_AM_ATTENDANCE_MARKED_BY") : t("HCM_AM_ATTENDANCE_APPROVED_BY"),
+      name: (
+        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+          {activeLink?.code == "PENDINGFORAPPROVAL" ? t("HCM_AM_ATTENDANCE_MARKED_BY") : t("HCM_AM_ATTENDANCE_APPROVED_BY")}
+        </div>
+      ),
       selector: (row) => {
         return (
           <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={activeLink?.code == "PENDINGFORAPPROVAL" ? row?.markby : row?.approvedBy
@@ -74,7 +71,11 @@ const CustomInboxTable = ({
       },
     },
     {
-      name: t("HCM_AM_ATTENDANCE_BOUNDARY"),
+      name: (
+        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+          {t("HCM_AM_ATTENDANCE_BOUNDARY")}
+        </div>
+      ),
       selector: (row) => {
         return (
           <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={t(row?.boundary) || t("NA")}>
@@ -136,7 +137,7 @@ const CustomInboxTable = ({
             <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", }}>
 
               {tableData && tableData.length === 0 ? (
-                <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />
+                <NoResultsFound style={{ height: "60vh" }} text={t(`HCM_AM_NO_DATA_FOUND`)} />
               ) : (
                 <DataTable
                   columns={columns}
