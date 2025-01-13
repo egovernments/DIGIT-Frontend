@@ -1,33 +1,23 @@
 import { Button, Card, Loader } from "@egovernments/digit-ui-components";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Background from "../../../components/Background";
-import keycloak from "./keycloak";
 
 const LanguageSelection = () => {
   const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
   const { t } = useTranslation();
-  const { stateInfo } = storeData || {};
+  const { stateInfo } = storeData || [];
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    // If the user is already authenticated, redirect them to the success page
-    if (keycloak.authenticated) {
-      window.location.href = "http://localhost:3000/sandbox-ui/A/employee/user/success";
-    }
-  }, []);
+  // Function to trigger Keycloak login
+  const handleLogin = () => {
+    const clientId = "sandbox-ui-client";
+    const realm = "2fa";
+    const redirectUri = "http://localhost:3000/sandbox-ui/A/employee/user/success";
+    const keycloakUrl = "http://localhost:8081/realms/2fa/protocol/openid-connect/auth";
 
-  // Function to call the Keycloak API and trigger login
-  const handleLogin = async () => {
-    try {
-      if (!keycloak.authenticated) {
-        // Trigger login if the user is not authenticated
-        await keycloak.login({
-          redirectUri: "http://localhost:3000/sandbox-ui/A/employee/user/success", // Redirect after login
-        });
-      }
-    } catch (error) {
-      console.error("Error during login:", error);
-    }
+    // Redirect to Keycloak login page with necessary params
+    window.location.href = `${keycloakUrl}?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=openid`;
   };
 
   if (isLoading) return <Loader />;
