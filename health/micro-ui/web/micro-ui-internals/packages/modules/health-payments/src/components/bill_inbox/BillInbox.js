@@ -209,7 +209,7 @@ const CustomBillInbox = () => {
     else {
         return (
             <React.Fragment>
-                <div className="custom-bill-inbox">
+                <div style={{ display: "flex", flexDirection: "column", gap: "24px", marginBottom: "2.5rem" }}>
                     <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
                         <div style={{ width: "20%", display: "flex", flexDirection: "row" }}>
                             <CustomInboxSearchLinks
