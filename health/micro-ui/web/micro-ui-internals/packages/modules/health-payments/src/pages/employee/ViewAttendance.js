@@ -32,6 +32,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [triggerEstimate, setTriggerEstimate] = useState(false);
   const [comment, setComment] = useState(null);
   const [showToast, setShowToast] = useState(null);
+  const [loding, setLoding] = useState(false);
 
   const project = Digit?.SessionStorage.get("staffProjects");
 
@@ -119,7 +120,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
             setDisabledAction(true);
           } else {
             setSearchCount((prevKey) => prevKey + 1);
+            setLoding(true);
             setTimeout(() => {
+              setLoding(false);
               refetchMusterRoll();
             }, 2000);
           }
@@ -262,9 +265,11 @@ const ViewAttendance = ({ editAttendance = false }) => {
         },
         {
           onSuccess: (data) => {
+            setLoding(true);
             setTimeout(() => {
+              setLoding(false);
               refetchMusterRoll();
-            }, 3000);
+            }, 2000);
           },
           onError: (error) => {
             setTriggerEstimate(true);

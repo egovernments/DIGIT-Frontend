@@ -10,6 +10,7 @@ import BillInboxTable from "./billInboxTable";
 import { ScreenTypeEnum } from "../../utils/constants";
 import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import SearchResultsPlaceholder from "../SearchResultsPlaceholder";
+import AlertPopUp from "../alertPopUp";
 const CustomBillInbox = () => {
     const { t } = useTranslation();
     const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -97,6 +98,7 @@ const CustomBillInbox = () => {
             if (AttendanceData?.statusCount.PENDINGFORAPPROVAL === 0 && AttendanceData?.statusCount.APPROVED > 0) {
                 setShowGenerateBillAction(true);
             } else {
+                setInfoDescription("HCM_AM_PENDING_REGISTER_AND_APPROVAL_REGISTER_VALIDATION_FAILED_INFO_MESSAGE")
                 setShowGenerateBillAction(false);
             }
         }
@@ -122,10 +124,8 @@ const CustomBillInbox = () => {
 
     useEffect(() => {
         if (BillData) {
-            if (BillData?.bills) {
+            if (BillData?.bills?.length > 0) {
                 setInfoDescription(`HCM_AM_BILL_IS_ALREADY_GENERATED_INFO_MESSAGE`);
-            } else {
-                triggerGenerateBill();
             }
         }
     }, [BillData]);
@@ -251,7 +251,14 @@ const CustomBillInbox = () => {
                             ></BillBoundaryFilter>
                         </div>
                         <div style={{ width: "80%", display: "flex", flexDirection: "row", height: "60vh", minHeight: "60vh" }}>
-                            <div style={{ width: "100%" }}>
+                            {tableData == null && <Card style={{ height: "60vh" }}>
+                                <div className="summary-sub-heading">{t(selectedProject?.name)}</div>
+                                <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name)}</div>
+
+                                <SearchResultsPlaceholder placeholderText={"HCM_AM_BILL_INBOX_PLACEHOLDER_IMAGE_TEXT"} /> </Card>}
+                            {tableData && <Card style={{ width: "100%" }}>
+                                {tableData != null && <div className="summary-sub-heading">{t(selectedProject?.name)}</div>}
+                                {tableData != null && <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name)}</div>}
                                 {(approvalCount !== null && pendingApprovalCount !== null) && (
                                     <Tab
                                         activeLink={activeLink?.code}
@@ -284,8 +291,14 @@ const CustomBillInbox = () => {
                                         style={{}}
                                     />
                                 )}
-                                {tableData == null && <Card style={{ height: "60vh" }}><SearchResultsPlaceholder /> </Card>}
-                                {tableData && <div style={{ overflow: "auto", maxHeight: approvalCount !== null && pendingApprovalCount !== null ? "60vh" : "47vh" }}><Card >
+                                {tableData && <div style={{ overflow: "auto", maxHeight: approvalCount !== null && pendingApprovalCount !== null ? "50vh" : "30vh" }}> <Card
+                                    style={{
+                                        WebkitBoxShadow: "0 0.063rem 0.125rem 0 rgba(0, 0, 0, 0.16078)",
+                                        boxShadow: "0 0.063rem 0.125rem 0 rgba(0, 0, 0, 0.16078)",
+                                        // -webkit-box-shadow: 0 0.063rem 0.125rem 0 rgba(0, 0, 0, 0.16078);
+                                        // box-shadow: 0 0.063rem 0.125rem 0 rgba(0, 0, 0, 0.1607
+                                    }}
+                                >
                                     <BillInboxTable
                                         isFetching={isFetching}
                                         tableData={tableData}
@@ -297,7 +310,7 @@ const CustomBillInbox = () => {
                                         status={activeLink.code}
                                     ></BillInboxTable>
                                 </Card></div>}
-                            </div>
+                            </Card>}
                         </div>
                     </div>
                 </div>
@@ -311,11 +324,12 @@ const CustomBillInbox = () => {
                     submitLabel={t(`HCM_AM_GENERATE_BILL`)}
                     cancelLabel={t(`HCM_AM_CANCEL`)}
                     onPrimaryAction={() => {
+                        setOpenAlertPopUp(false);
                         triggerGenerateBill();
                     }}
                 />}
 
-                {showGenerateBillAction && BillData?.bills?.length === 0 && !isBillLoading && !isFetchingBill && setBillGenerationStatus == null &&
+                {showGenerateBillAction && BillData?.bills?.length === 0 && !isBillLoading && !isFetchingBill && billGenerationStatus == null &&
                     < ActionBar
                         actionFields={[
                             <Button
