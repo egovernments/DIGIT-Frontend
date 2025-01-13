@@ -4,17 +4,21 @@ import { useTranslation } from "react-i18next";
 import { ScreenTypeEnum } from "../utils/constants";
 
 const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorage, selectedProject, onChange, lowestLevel, isRequired }) => {
+  // Retrieve boundary hierarchy order from session storage
   const kk = Digit.SessionStorage.get("boundaryHierarchyOrder").map((item) => item.code);
 
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  // Lowest level boundary
   const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentConfig")?.lowestLevelBoundary || "DISTRICT";
 
+  // Initialize boundary data state
   const defaultBoundaryData = kk.reduce((acc, curr) => {
     acc[curr] = false;
     return acc;
   }, {});
 
+  // Initialize selected data state
   const defaultSelectData = kk.reduce((acc, curr) => {
     acc[curr] = null;
     return acc;
@@ -23,7 +27,7 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
   const [boundaryData, setBoundaryData] = useState(defaultBoundaryData);
   const [value, setValue] = useState(
     kk.reduce((acc, curr) => {
-      acc[curr] = [];
+      acc[curr] = []; // Initialize with empty array for boundary options
       return acc;
     }, {})
   );
@@ -32,20 +36,7 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
 
   const [lowest, setLowest] = useState(lowestLevel);
 
-  // useEffect(() => {
-  //   debugger;
-  //   if (initialValue) {
-  //     setSelectedValues(JSON.parse(initialValue));
-  //     const data = JSON.parse(initialValue);
-  //     const updatedValues = kk.reduce((acc, boundary) => {
-  //       acc[boundary] = data[boundary] ? [data[boundary]] : [];
-  //       return acc;
-  //     }, {});
-
-  //     debugger;
-  //     setValue(updatedValues);
-  //   }
-  // }, []);
+  // Populate dropdown values and selected states based on `initialValue`
   useEffect(() => {
     if (initialValue) {
       const parsedData = initialValue;
@@ -69,6 +60,7 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
     }
   }, []);
 
+  // Request configuration for fetching boundary data
   const reqCriteriaResource = {
     url: `/boundary-service/boundary-relationships/_search`,
     params: {
@@ -84,25 +76,10 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
     },
   };
 
+  // Fetch boundary data using a custom hook
   const { isLoading: childrenDataLoading, data: childrenData } = Digit.Hooks.payments.useAttendanceBoundarySearch(reqCriteriaResource);
 
-  // useEffect(() => {
-  //   if (selectedProject) {
-  //     setSelectedValues(defaultSelectData);
-  //     setValue(
-  //       kk.reduce((acc, curr) => {
-  //         acc[curr] = [];
-  //         return acc;
-  //       }, {})
-  //     );
-  //     setBoundaryData(defaultBoundaryData);
-
-  //     // if (updateSeeeionStorage) {
-  //     //   updateSeeeionStorage(defaultSelectData);
-  //     // }
-  //   }
-  // }, [selectedProject]);
-
+  // Handle fetched boundary data
   useEffect(() => {
     if (childrenData && childrenData.length > 0) {
       setValue((prevState) => ({
@@ -116,6 +93,7 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
     }
   }, [childrenData]);
 
+  // Reset dropdowns when the reset flag is set
   useEffect(() => {
     if (reset == true) {
       setSelectedValues(defaultSelectData);
@@ -126,6 +104,7 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
     }
   }, [reset]);
 
+  // Create a formatted boundary data object
   const createFormattedData = (activeBoundary) => {
     const index = kk.indexOf(activeBoundary);
     return kk.reduce((acc, key, i) => {
@@ -134,10 +113,13 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
     }, {});
   };
 
+  // Handle dropdown selection
   const handleButtonClick = (value) => {
-    onChange(value);
-    handleDropdownOptions(value);
+    onChange(value); // Call the callback with the selected value
+    handleDropdownOptions(value); // Update dropdown options
   };
+
+  // Populate child dropdown options based on selection
   const handleDropdownOptions = (value) => {
     if (value?.children && value.children.length > 0) {
       const updatedState = value.children.reduce((acc, child) => {
@@ -163,6 +145,7 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
     }
   };
 
+  // Add a new option to a dropdown
   const handleInsertion = (boundaryType, newValue) => {
     setValue((prevState) => {
       const newState = { ...prevState };
@@ -175,7 +158,7 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
 
     resetChildrenSelectedValues(boundaryType);
   };
-
+  // Remove an option from a dropdown
   const handleDeletion = (boundaryType, valueToRemove) => {
     setValue((prevState) => {
       const newState = { ...prevState };
@@ -186,6 +169,7 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
     resetChildrenSelectedValues(boundaryType);
   };
 
+  // Reset selected values for child boundaries
   const resetChildrenSelectedValues = (boundaryType) => {
     const index = kk.indexOf(boundaryType);
     const newSelectedValues = { ...selectedValues };
@@ -196,7 +180,7 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
 
     setSelectedValues(newSelectedValues);
   };
-
+  // Check if a boundary is allowed for selection
   const isBoundaryAllowed = (boundaryType) => {
     if (!lowestLevel) {
       return true;
@@ -242,6 +226,7 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
   );
 };
 
+// Reusable dropdown component
 const BoundaryDropdown = ({ label, data, onChange, selected, setSelected, isRequired }) => {
   const { t } = useTranslation();
 

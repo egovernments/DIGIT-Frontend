@@ -5,19 +5,23 @@ import BoundaryComponent from "../sample";
 import { Card, SVG, Button, ButtonGroup, TextBlock, Dropdown, Toast } from "@egovernments/digit-ui-components";
 import { lowerBoundaryDefaultSet } from "../../utils/constants";
 
+// CustomFilter component handles filtering logic for a specific UI context
 const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
   const { t } = useTranslation();
 
-  const [reset, setReset] = useState(false);
+  // State variables to manage filter state and project data
+  const [reset, setReset] = useState(false); // Tracks reset state
 
-  const [boundary, setBoundary] = useState("");
+  const [boundary, setBoundary] = useState(""); // Selected boundary
 
-  const [project, setProject] = useState([]);
+  const [project, setProject] = useState([]); // List of projects
 
-  const [isDistrictSelected, setIsDistrictSelected] = useState(false);
+  const [isDistrictSelected, setIsDistrictSelected] = useState(false); // Tracks if a district is selected
 
+  // Preselected project from session storage
   const [projectSelected, setProjectSelected] = useState(() => Digit.SessionStorage.get("selectedProject") || {});
 
+  // Updates boundary state and sets district selection flag if applicable
   const onChangeId = (value) => {
     setBoundary(value);
     if (value?.boundaryType === "DISTRICT") {
@@ -25,10 +29,12 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
     }
   };
 
+  // Handles applying the filter and invoking the parent callback
   const handleApplyFilter = () => {
     onFilterChange(boundary, isDistrictSelected);
   };
 
+  // Fetches selected project from session storage on component mount
   useEffect(() => {
     const data = Digit.SessionStorage.get("paymentInbox");
     if (data?.selectedProject) {
@@ -36,6 +42,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
     }
   }, []);
 
+  // Populates the project list if it is empty, using data from session storage
   useEffect(() => {
     if (project.length == 0) {
       let datak =
@@ -52,6 +59,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
     }
   }, []);
 
+  // Resets the filter table if the reset flag is set
   useEffect(() => {
     if (reset == true) {
       //setProjectSelected(null);
@@ -74,26 +82,18 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
           overflowY: "auto", // Enables scrolling if content exceeds available space
         }}
       >
-        <div
-          style={{
-            alignItems: "center",
-            gap: ".75rem",
-            marginBottom: "24px",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
+        <div className="bill-boundary-filter">
           <div style={{ display: "flex", alignItems: "center" }}>
             <SVG.FilterAlt width={"32px"} height={"32px"} fill={"#c84c0e"} />
             <span className="custom-inbox-filter-heading">{t("HCM_AM_FILTER")}</span>
           </div>
 
+          {/* Reset button */}
           <span
             onClick={() => {
               setReset(true);
             }}
-            style={{ border: "1px solid #e0e0e0", padding: "6px", marginBottom: "10px", cursor: "pointer" }}
+            className="on-icon-reset-proximity"
           >
             <svg width="17" height="17" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -104,10 +104,8 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
           </span>
         </div>
 
-        <div className="label-pair">
-          {t(`HCM_AM_CHOOSE_BOUNDARY_DESCRIPTION`)}
-        </div>
-
+        <div className="label-pair">{t(`HCM_AM_CHOOSE_BOUNDARY_DESCRIPTION`)}</div>
+        {/* Boundary selection component */}
         {projectSelected?.address?.boundary && (
           <BoundaryComponent
             reset={reset}
@@ -125,7 +123,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
           ></BoundaryComponent>
         )}
       </div>
-
+      {/* Apply filter button */}
       <div
         style={{
           justifyContent: "center",
