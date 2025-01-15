@@ -7,6 +7,7 @@ import AttendanceManagementTable from "../../components/attendanceManagementTabl
 import AlertPopUp from "../../components/alertPopUp";
 import ApproveCommentPopUp from "../../components/approveCommentPopUp";
 import _ from "lodash";
+import { formatTimestampToDate } from "../../utils";
 
 const ViewAttendance = ({ editAttendance = false }) => {
   const location = useLocation();
@@ -436,6 +437,14 @@ const ViewAttendance = ({ editAttendance = false }) => {
           <div className="label-pair">
             <span className="label-heading">{t(`HCM_AM_NO_OF_ATTENDEE`)}</span>
             <span className="label-text">{AttendanceData?.attendanceRegister[0]?.attendees?.length || 0}</span>
+          </div>
+          <div className="label-pair">
+            <span className="label-heading">{t(`HCM_AM_CAMPAIGN_START_DATE`)}</span>
+            <span className="label-text">{formatTimestampToDate(project?.[0]?.startDate)}</span>
+          </div>
+          <div className="label-pair">
+            <span className="label-heading">{t(`HCM_AM_CAMPAIGN_END_DATE`)}</span>
+            <span className="label-text">{formatTimestampToDate(project?.[0]?.endDate)}</span>
           </div>
           <div className="label-pair">
             <span className="label-heading">{t(`HCM_AM_EVENT_DURATION`)}</span>

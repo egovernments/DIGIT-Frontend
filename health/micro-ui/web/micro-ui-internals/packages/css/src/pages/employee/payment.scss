@@ -35,34 +35,34 @@
     text-align: start;
 }
 
-.custom-register-inbox-screen{
+.custom-register-inbox-screen {
 
     width: 100%;
-    display:flex;
+    display: flex;
     flex-direction: column;
     gap: 24px;
 }
 
 
-.custom-register-inbox-screen .inner-div-row-section{
+.custom-register-inbox-screen .inner-div-row-section {
 
     width: 100%;
-    display:flex;
+    display: flex;
     flex-direction: row;
     gap: 24px;
 }
 
-.custom-register-inbox-screen .custom-inbox-filter-section{
+.custom-register-inbox-screen .custom-inbox-filter-section {
 
     width: 30%;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     gap: 24px;
     height: 80vh;
 }
 
 
-.custom-register-inbox-screen .custom-inbox-inner-filter-section{
+.custom-register-inbox-screen .custom-inbox-inner-filter-section {
 
     width: 100%;
     display: flex;
@@ -74,25 +74,25 @@
 
 
 
-.custom-register-inbox-screen .custom-inbox-outer-table-section{
+.custom-register-inbox-screen .custom-inbox-outer-table-section {
 
     width: 100%;
     display: flex;
-    flex-direction: row; 
-    gap: 24px; 
+    flex-direction: row;
+    gap: 24px;
 }
 
-.custom-inbox-outer-table-section .inner-table-section{
+.custom-inbox-outer-table-section .inner-table-section {
 
-    width: 100%; 
+    width: 100%;
     display: flex;
     flex-direction: column;
     height: 75vh;
     min-height: 75vh;
 }
 
-.custom-inbox-outer-table-section .card-overide{
-    max-width: 100%; 
+.custom-inbox-outer-table-section .card-overide {
+    max-width: 100%;
     overflow: auto;
     margin: 0px;
     height: 75vh;
@@ -102,8 +102,11 @@
 
 
 
-.on-icon-reset-proximity{
-    border: 1px solid #e0e0e0; padding: 6px; margin-bottom: 10px; cursor: pointer;
+.on-icon-reset-proximity {
+    border: 1px solid #e0e0e0;
+    padding: 6px;
+    margin-bottom: 10px;
+    cursor: pointer;
 }
 
 
@@ -115,17 +118,37 @@
     flex-direction: column;
     gap: 24px;
     margin-bottom: 2.5rem;
-  
+
 
 }
-  
 
+.bill-container {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+}
 
+.bill-container-margin-bottom {
+    margin-bottom: 2.5rem;
+}
 
+.left-section {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
 
+.right-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
 
-
-
-
-
-
+.filter-container {
+    display: flex;
+    flex-direction: row;
+    height: 60vh;
+    overflow-y: auto;
+}

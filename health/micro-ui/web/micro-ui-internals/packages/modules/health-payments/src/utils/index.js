@@ -94,6 +94,28 @@ export const downloadFileWithName = ({ fileStoreId = null, customName = null, ty
 };
 
 
+export function formatTimestampToDate(timestamp) {
+  // Check if the timestamp is valid
+  if (!timestamp || typeof timestamp !== "number") {
+    return "Invalid timestamp";
+  }
+
+  // Convert timestamp to a JavaScript Date object
+  const date = new Date(timestamp);
+
+  // Define an array of month abbreviations
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  // Extract day, month, and year from the date
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = monthNames[date.getMonth()]; // getMonth() returns 0-11
+  const year = date.getFullYear();
+
+  // Return the formatted date string
+  return `${day} ${month} ${year}`;
+}
+
 
 
 export default {};
