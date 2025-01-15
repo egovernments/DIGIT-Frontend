@@ -6,6 +6,7 @@ import DataTable from "react-data-table-component";
 import { useQueryClient } from "react-query";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { tableCustomStyle } from "../custom_comp/table_inbox_custom_style";
+import { defaultPaginationValues } from "../../utils/constants";
 
 const BillInboxTable = ({
     ...props
@@ -104,7 +105,7 @@ const BillInboxTable = ({
                     paginationTotalRows={props?.totalCount}
                     paginationPerPage={props?.rowsPerPage}
                     sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
-                    paginationRowsPerPageOptions={[5, 10, 15, 20]}
+                    paginationRowsPerPageOptions={defaultPaginationValues}
                     fixedHeader={true}
                     fixedHeaderScrollHeight={props.infoDescription ? "32vh" : "47vh"}
                 />

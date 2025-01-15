@@ -5,6 +5,7 @@ import { Loader, TextInput, Toast } from "@egovernments/digit-ui-components";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./custom_comp/table_inbox_custom_style";
+import { defaultPaginationValues, defaultRowsPerPage } from "../utils/constants";
 
 const AttendanceManagementTable = ({ ...props }) => {
   const { t } = useTranslation();
@@ -13,7 +14,7 @@ const AttendanceManagementTable = ({ ...props }) => {
   const [showToast, setShowToast] = useState(null);
   // Local state for pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
 
   // Sliced data based on pagination
   const paginatedData = props.data.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
@@ -105,8 +106,11 @@ const AttendanceManagementTable = ({ ...props }) => {
       value = value?.target?.value;
     }
 
+
+    console.log("Value 1st: ", value);
+
     // Remove leading zeros from the value
-    value = String(value).replace(/^0+/, "");
+    value = value === 0 ?  value : String(value).replace(/^0+/, "") ;
 
     // Find the worker whose attendance is being updated
     const worker = props.data.find((worker) => worker[2] === workerId);
@@ -114,6 +118,7 @@ const AttendanceManagementTable = ({ ...props }) => {
     if (!worker) return; // If worker is not found, exit early
 
     const previousValue = worker[4]; // Previous value for daysWorked
+
 
     // Check if both current value and previous value are 0
     if (value === 0 && previousValue === 0) {
@@ -155,7 +160,7 @@ const AttendanceManagementTable = ({ ...props }) => {
         paginationTotalRows={props?.data.length}
         paginationPerPage={rowsPerPage}
         sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
-        paginationRowsPerPageOptions={[5, 10, 15, 20]}
+        paginationRowsPerPageOptions={defaultPaginationValues}
         fixedHeader={true}
         fixedHeaderScrollHeight={"70vh"}
       />

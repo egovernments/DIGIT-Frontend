@@ -7,7 +7,7 @@ import { ActionBar, Button, Card, FilterCard, InfoCard, Loader, LoaderScreen, Ta
 import BillSearchBox from "./BillSearchBox";
 import BillBoundaryFilter from "./bill_boundary_filter";
 import BillInboxTable from "./billInboxTable";
-import { ScreenTypeEnum } from "../../utils/constants";
+import { defaultRowsPerPage, ScreenTypeEnum } from "../../utils/constants";
 import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import SearchResultsPlaceholder from "../SearchResultsPlaceholder";
 import AlertPopUp from "../alertPopUp";
@@ -25,7 +25,7 @@ const CustomBillInbox = () => {
     const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentConfig")?.lowestLevelBoundary || "DISTRICT";
     const [currentPage, setCurrentPage] = useState(1);
     const [updateFilters, setUpdateFilters] = useState(false);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
     const [approvalCount, setApprovalCount] = useState(null);
     const [totalCount, setTotalCount] = useState(0);
     const [infoDescription, setInfoDescription] = useState(null);
@@ -255,7 +255,7 @@ const CustomBillInbox = () => {
                                 <div className="summary-sub-heading">{t(selectedProject?.name)}</div>
                                 <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name)}</div>
 
-                                <SearchResultsPlaceholder placeholderText={"HCM_AM_BILL_INBOX_PLACEHOLDER_IMAGE_TEXT"} /> </Card>}
+                                <SearchResultsPlaceholder placeholderText={t("HCM_AM_BILL_INBOX_PLACEHOLDER_IMAGE_TEXT")} /> </Card>}
                             {tableData && <Card style={{ width: "100%", }}>
                                 {tableData != null && <div className="summary-sub-heading">{t(selectedProject?.name)}</div>}
                                 {tableData != null && <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name)}</div>}

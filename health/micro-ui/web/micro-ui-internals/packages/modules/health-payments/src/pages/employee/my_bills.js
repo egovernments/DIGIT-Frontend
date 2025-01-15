@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import { Card, LoaderScreen, NoResultsFound } from "@egovernments/digit-ui-components";
 import MyBillsSearch from "../../components/MyBillsSearch";
 import MyBillsTable from "../../components/MyBillsTable";
+import { defaultRowsPerPage } from "../../utils/constants";
 
 const MyBills = () => {
 
@@ -19,7 +20,7 @@ const MyBills = () => {
         title: '',
     });
     const [currentPage, setCurrentPage] = useState(1);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
     const [totalCount, setTotalCount] = useState(0);
     const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
 

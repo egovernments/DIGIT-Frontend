@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import CustomFilter from "./custom_comp/filter_section";
 import CustomInboxTable from "./custom_comp/table_inbox";
 import { Toast, Card } from "@egovernments/digit-ui-components";
-import { ScreenTypeEnum, StatusEnum } from "../utils/constants";
+import { defaultRowsPerPage, ScreenTypeEnum, StatusEnum } from "../utils/constants";
 import SearchResultsPlaceholder from "./SearchResultsPlaceholder";
 
 /**
@@ -46,7 +46,7 @@ const CustomInboxSearchComposer = () => {
   //-------//
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedStatus, setSelectedStatus] = useState(StatusEnum.PENDING_FOR_APPROVAL);
 
   const [card, setCard] = useState(false);
@@ -176,15 +176,15 @@ const CustomInboxSearchComposer = () => {
   };
   const callServiceOnTap = (status) => {
     if (status.code == StatusEnum.PENDING_FOR_APPROVAL) {
-      setRowsPerPage(5); // Update the rows per page state
+      setRowsPerPage(defaultRowsPerPage); // Update the rows per page state
       setCurrentPage(1);
       setSelectedStatus(StatusEnum.PENDING_FOR_APPROVAL);
-      triggerMusterRollApprove(Digit.SessionStorage.get("paymentInbox"), StatusEnum.PENDING_FOR_APPROVAL, 5, 1);
+      triggerMusterRollApprove(Digit.SessionStorage.get("paymentInbox"), StatusEnum.PENDING_FOR_APPROVAL, 10, 1);
     } else {
-      setRowsPerPage(5); // Update the rows per page state
+      setRowsPerPage(defaultRowsPerPage); // Update the rows per page state
       setCurrentPage(1);
       setSelectedStatus(StatusEnum.APPROVED);
-      triggerMusterRollApprove(Digit.SessionStorage.get("paymentInbox"), StatusEnum.APPROVED, 5, 1);
+      triggerMusterRollApprove(Digit.SessionStorage.get("paymentInbox"), StatusEnum.APPROVED, 10, 1);
     }
   };
 

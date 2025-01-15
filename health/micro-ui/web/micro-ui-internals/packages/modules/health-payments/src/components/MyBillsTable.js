@@ -4,6 +4,7 @@ import { Button, CustomSVG, InfoButton, Tag, Toast, TooltipWrapper } from "@egov
 import { downloadFileWithName, formatTimestampToDate } from "../utils";
 import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./custom_comp/table_inbox_custom_style";
+import { defaultPaginationValues } from "../utils/constants";
 
 const MyBillsTable = ({ ...props }) => {
     const { t } = useTranslation();
@@ -193,7 +194,7 @@ const MyBillsTable = ({ ...props }) => {
                 paginationTotalRows={props?.totalCount}
                 paginationPerPage={props?.rowsPerPage}
                 sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
-                paginationRowsPerPageOptions={[5, 10, 15, 20]}
+                paginationRowsPerPageOptions={defaultPaginationValues}
                 fixedHeader={true}
                 fixedHeaderScrollHeight={"70vh"}
             />
