@@ -46,7 +46,7 @@ const CustomInboxSearchComposer = () => {
   //-------//
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
   const [selectedStatus, setSelectedStatus] = useState(StatusEnum.PENDING_FOR_APPROVAL);
 
   const [card, setCard] = useState(false);
@@ -179,12 +179,12 @@ const CustomInboxSearchComposer = () => {
       setRowsPerPage(defaultRowsPerPage); // Update the rows per page state
       setCurrentPage(1);
       setSelectedStatus(StatusEnum.PENDING_FOR_APPROVAL);
-      triggerMusterRollApprove(Digit.SessionStorage.get("paymentInbox"), StatusEnum.PENDING_FOR_APPROVAL, 10, 1);
+      triggerMusterRollApprove(Digit.SessionStorage.get("paymentInbox"), StatusEnum.PENDING_FOR_APPROVAL, defaultRowsPerPage, 1);
     } else {
       setRowsPerPage(defaultRowsPerPage); // Update the rows per page state
       setCurrentPage(1);
       setSelectedStatus(StatusEnum.APPROVED);
-      triggerMusterRollApprove(Digit.SessionStorage.get("paymentInbox"), StatusEnum.APPROVED, 10, 1);
+      triggerMusterRollApprove(Digit.SessionStorage.get("paymentInbox"), StatusEnum.APPROVED, defaultRowsPerPage, 1);
     }
   };
 
