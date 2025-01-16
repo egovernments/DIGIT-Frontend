@@ -17,7 +17,7 @@ const CustomInboxTable = ({
   customHandlePaginationChange,
   totalCount,
   statusCount,
-  selectedProject,
+  selectedProject
 }) => {
   const { t } = useTranslation();
   const [activeLink, setActiveLink] = useState({
@@ -25,21 +25,27 @@ const CustomInboxTable = ({
     name: "HCM_AM_PENDING_FOR_APPROVAL",
   });
 
-  // Handles pagination change
+  // const [tableDatak, setTableDatak] = useState([]);
+
+  // useEffect(() => {
+  //   setTableDatak(tableData)
+
+  // }, [tableData]);
+
   const handlePaginationChange = (page) => {
-    // Call the parent function to update pagination
     customHandlePaginationChange(page);
   };
-  // Handles rows per page change
   const handleRowsPerPageChange = (newPerPage, page) => {
-    // Call the parent function to update pagination
     customHandleRowsPerPageChange(newPerPage, page);
   };
 
-  // Define the table columns with their respective renderers
   const columns = [
     {
-      name: <div className="custom-inbox-table-row">{t("HCM_AM_ATTENDANCE_ID")}</div>,
+      name: (
+        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+          {t("HCM_AM_ATTENDANCE_ID")}
+        </div>
+      ),
       selector: (row) => {
         return (
           <span className="link" style={{ fontSize: "14px" }}>
@@ -52,24 +58,25 @@ const CustomInboxTable = ({
     },
     {
       name: (
-        <div className="custom-inbox-table-row">
+        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
           {activeLink?.code == "PENDINGFORAPPROVAL" ? t("HCM_AM_ATTENDANCE_MARKED_BY") : t("HCM_AM_ATTENDANCE_APPROVED_BY")}
         </div>
       ),
       selector: (row) => {
         return (
-          <div
-            style={{ fontSize: "14px" }}
-            className="ellipsis-cell"
-            title={activeLink?.code == "PENDINGFORAPPROVAL" ? row?.markby : row?.approvedBy || t("NA")}
-          >
+          <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={activeLink?.code == "PENDINGFORAPPROVAL" ? row?.markby : row?.approvedBy
+            || t("NA")}>
             {activeLink?.code == "PENDINGFORAPPROVAL" ? row?.markby : row?.approvedBy || t("NA")}
           </div>
         );
       },
     },
     {
-      name: <div className="custom-inbox-table-row">{t("HCM_AM_ATTENDANCE_BOUNDARY")}</div>,
+      name: (
+        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+          {t("HCM_AM_ATTENDANCE_BOUNDARY")}
+        </div>
+      ),
       selector: (row) => {
         return (
           <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={t(row?.boundary) || t("NA")}>
@@ -128,7 +135,8 @@ const CustomInboxTable = ({
               style={{}}
               showNav={true}
             />
-            <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px" }}>
+            <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", }}>
+
               {tableData && tableData.length === 0 ? (
                 <NoResultsFound style={{ height: "60vh" }} text={t(`HCM_AM_NO_DATA_FOUND`)} />
               ) : (

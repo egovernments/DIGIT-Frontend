@@ -25,7 +25,7 @@ const BillInboxTable = ({
     const columns = [
         {
             name: (
-                <div className="custom-inbox-table-row">
+                <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
                     {t("HCM_AM_ATTENDANCE_ID")}
                 </div>
             ),
@@ -48,7 +48,7 @@ const BillInboxTable = ({
         },
         {
             name: (
-                <div className="custom-inbox-table-row">
+                <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
                     {t("HCM_AM_ATTENDANCE_BOUNDARY")}
                 </div>
             ),
@@ -62,7 +62,7 @@ const BillInboxTable = ({
         },
         {
             name: (
-                <div className="custom-inbox-table-row">
+                <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
                     {props.status === "APPROVED" ? t("HCM_AM_ATTENDANCE_APPROVED_BY") : t("HCM_AM_ATTENDANCE_MARKED_BY")}
                 </div>
             ),
