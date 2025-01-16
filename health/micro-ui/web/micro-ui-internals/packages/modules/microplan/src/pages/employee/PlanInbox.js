@@ -605,7 +605,10 @@ const setAdditionalDetails = (rowData, newValue) => {
         {
             onSuccess: (data) => {
               const { row, field } = editRowData;
-              row.original.additionalDetails[field]=newValue;
+              if (!row?.original?.additionalDetails) {
+                row.original.additionalDetails = {};
+              }
+              row.original.additionalDetails[field] = newValue;
               setToast({ label: `${field} updated successfully!`, type: "success" });
             },
             onError: (error) => {

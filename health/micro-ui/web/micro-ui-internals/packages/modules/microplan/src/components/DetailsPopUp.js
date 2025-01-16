@@ -10,7 +10,6 @@ const DetailsPopUp = ({
   alertMessage,
 }) => {
   const [value, setValue] = useState(initialValue || "");
-console.log(value,"OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
   return (
     <>
       {isVisible && (
