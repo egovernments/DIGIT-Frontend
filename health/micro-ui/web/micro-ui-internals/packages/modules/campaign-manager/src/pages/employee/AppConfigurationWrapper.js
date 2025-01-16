@@ -205,8 +205,8 @@ function AppConfigurationWrapper() {
         dispatch({
           type: "MASTER_DATA",
           state: {
-            // ...data?.["HCM-ADMIN-CONSOLE"],
-            ...dummyMaster,
+            ...data?.["HCM-ADMIN-CONSOLE"],
+            // ...dummyMaster,
           },
         });
       },
