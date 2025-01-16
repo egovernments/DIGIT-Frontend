@@ -5,9 +5,12 @@ import { PRIMARY_COLOR } from "../../utils";
 import { DustbinIcon } from "../../components/icons/DustbinIcon";
 import { useAppConfigContext } from "./AppConfigurationWrapper";
 import Switch from "../../components/Switch";
+import { useCustomT } from "./useCustomT";
+import { useAppLocalisationContext } from "./AppLocalisationWrapper";
 
 function DrawerFieldComposer() {
   const { t } = useTranslation();
+  const { locState, updateLocalization } = useAppLocalisationContext();
   const { state, dispatch } = useAppConfigContext();
   const [drawerState, setDrawerState] = useState({
     ...state?.drawerField,
@@ -72,11 +75,16 @@ function DrawerFieldComposer() {
           className=""
           type={"text"}
           name="title"
-          value={drawerState?.label}
+          value={useCustomT(drawerState?.label)}
           onChange={(event) => {
+            updateLocalization(
+              `MR_DN_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${drawerState?.id}`,
+              Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
+              event.target.value
+            );
             setDrawerState((prev) => ({
               ...prev,
-              label: event.target.value,
+              label: `MR_DN_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${drawerState?.id}`,
             }));
           }}
           placeholder={""}

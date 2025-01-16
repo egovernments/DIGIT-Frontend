@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Button, Card, CardHeader, Divider, Stepper, Tab, ActionBar } from "@egovernments/digit-ui-components";
 import AppFieldComposer from "./AppFieldComposer";
 import _ from "lodash";
+import { useCustomT } from "./useCustomT";
 
 const Tabs = ({ numberTabs, onTabChange }) => {
   const { state, dispatch } = useAppConfigContext();
@@ -109,14 +110,33 @@ function AppFieldScreenWrapper() {
       {currentCard?.cards?.map(({ fields, description, header, headerFields }, index, card) => {
         return (
           <Card className="appConfigScreenCard">
-            {headerFields?.map(({ type, label, active, required }) => (
-              <AppFieldComposer type={type} label={label} active={active} required={required} headerFields={true} />
+            {headerFields?.map(({ type, label, active, required, value }, indx, cx) => (
+              <AppFieldComposer
+                type={type}
+                label={label}
+                active={active}
+                required={required}
+                value={useCustomT(`MR_DN_${currentCard.parent}_${currentCard.name}_${label}`)}
+                headerFields={true}
+                onChange={(event) => {
+                  dispatch({
+                    type: "UPDATE_HEADER_FIELD",
+                    payload: {
+                      currentField: card[index],
+                      currentScreen: currentCard,
+                      field: cx[indx],
+                      localisedCode: `MR_DN_${currentCard.parent}_${currentCard.name}_${label}`,
+                      value: event.target.value,
+                    },
+                  });
+                }}
+              />
             ))}
             <Divider />
             {fields?.map(({ type, label, active, required, dropDownOptions, deleteFlag }, i, c) => (
               <AppFieldComposer
                 type={type}
-                label={label}
+                label={useCustomT(label)}
                 active={active}
                 required={required}
                 isDelete={deleteFlag === false ? false : true}

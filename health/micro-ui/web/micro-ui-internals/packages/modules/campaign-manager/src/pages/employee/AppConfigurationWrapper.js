@@ -1,9 +1,12 @@
-import React, { createContext, useContext, useReducer } from "react";
+import React, { createContext, useContext, useReducer, useState } from "react";
 import AppFieldScreenWrapper from "./AppFieldScreenWrapper";
-import { Dropdown, Loader, Switch, TextInput } from "@egovernments/digit-ui-components";
+import { Button, Divider, Loader, PopUp } from "@egovernments/digit-ui-components";
 import SidePanel from "./SidePanel";
 import { useTranslation } from "react-i18next";
 import DrawerFieldComposer from "./DrawerFieldComposer";
+import { dummyMaster } from "../../configs/dummyMaster";
+import { useAppLocalisationContext } from "./AppLocalisationWrapper";
+import AppLocalisationTable from "./AppLocalisationTable";
 
 const AppConfigContext = createContext();
 
@@ -13,7 +16,7 @@ export const useAppConfigContext = () => {
   return useContext(AppConfigContext);
 };
 
-const reducer = (state = initialState, action) => {
+const reducer = (state = initialState, action, updateLocalization) => {
   switch (action.type) {
     case "MASTER_DATA":
       return {
@@ -109,6 +112,36 @@ const reducer = (state = initialState, action) => {
           return item;
         }),
       };
+    case "UPDATE_HEADER_FIELD":
+      updateLocalization(action?.payload?.localisedCode, Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN", action?.payload?.value);
+      return {
+        ...state,
+        screenData: state?.screenData?.map((item, index) => {
+          if (item?.name === action?.payload?.currentScreen?.name) {
+            return {
+              ...item,
+              cards: item?.cards?.map((j, k) => {
+                if (j.header === action.payload.currentField?.header) {
+                  return {
+                    ...j,
+                    headerFields: j.headerFields?.map((m, n) => {
+                      if (m.label === action?.payload?.field?.label) {
+                        return {
+                          ...m,
+                          value: action?.payload?.localisedCode,
+                        };
+                      }
+                      return m;
+                    }),
+                  };
+                }
+                return j;
+              }),
+            };
+          }
+          return item;
+        }),
+      };
     case "SELECT_DRAWER_FIELD":
       return {
         ...state,
@@ -155,9 +188,12 @@ const reducer = (state = initialState, action) => {
 };
 
 const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
+
 function AppConfigurationWrapper() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const { locState, addMissingKey, updateLocalization } = useAppLocalisationContext();
+  const [state, dispatch] = useReducer((state, action) => reducer(state, action, updateLocalization), initialState);
   const { t } = useTranslation();
+  const [showPopUp, setShowPopUp] = useState(false);
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     MODULE_CONSTANTS,
@@ -169,7 +205,8 @@ function AppConfigurationWrapper() {
         dispatch({
           type: "MASTER_DATA",
           state: {
-            ...data?.["HCM-ADMIN-CONSOLE"],
+            // ...data?.["HCM-ADMIN-CONSOLE"],
+            ...dummyMaster,
           },
         });
       },
@@ -208,7 +245,64 @@ function AppConfigurationWrapper() {
           type="static"
         >
           <DrawerFieldComposer />
+          <Divider />
+          <Button
+            type={"button"}
+            size={"large"}
+            variation={"primary"}
+            label={t("ADD_LOCALISATION")}
+            onClick={() => {
+              setShowPopUp(true);
+            }}
+          />
         </SidePanel>
+      )}
+      {showPopUp && (
+        <PopUp
+          type={"default"}
+          heading={t("ADD_LOCALISATION")}
+          children={[
+            <div>
+              HELLO
+              {state?.screenData
+                ?.find((i) => i.name === state?.currentScreen?.name)
+                ?.cards?.map((card) => [
+                  ...card?.fields?.map((field) => ({ message: field?.label })), // Extract label for fields
+                  ...card?.headerFields?.map((headerField) => ({ message: headerField?.value })), // Extract value for header fields
+                ])
+                ?.flat()}
+            </div>,
+          ]}
+          onOverlayClick={() => {
+            setShowPopUp(false);
+          }}
+          onClose={() => {
+            setShowPopUp(false);
+          }}
+          equalWidthButtons={"false"}
+          footerChildren={[
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("CLOSE")}
+              onClick={() => {
+                setShowPopUp(false);
+              }}
+            />,
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("SUBMIT")}
+              onClick={() => {
+                setShowPopUp(false);
+              }}
+            />,
+          ]}
+        >
+          <AppLocalisationTable />
+        </PopUp>
       )}
     </AppConfigContext.Provider>
   );
