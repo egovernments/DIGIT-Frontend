@@ -268,9 +268,9 @@ function AppFieldComposer({
     <div
       ref={componentRef}
       onClick={(e) => {
-        if (config?.id !== state?.drawerField?.id) {
+        // if (config?.id !== state?.drawerField?.id) {
           onSelectField();
-        }
+        // }
         // e.stopPropagation();
         // onSelectField();
       }}
