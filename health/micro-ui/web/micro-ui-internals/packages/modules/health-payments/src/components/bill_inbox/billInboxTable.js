@@ -6,6 +6,7 @@ import DataTable from "react-data-table-component";
 import { useQueryClient } from "react-query";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { tableCustomStyle } from "../custom_comp/table_inbox_custom_style";
+import { defaultPaginationValues } from "../../utils/constants";
 
 const BillInboxTable = ({
     ...props
@@ -92,7 +93,7 @@ const BillInboxTable = ({
     return (
         <React.Fragment>
             {
-                props.isFetching || props.tableData.length === 0 ? <div style={{ height: "38vh" }}> {props.isFetching ? <Loader /> : <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />} </div> : <DataTable
+                props.isFetching || props.tableData.length === 0 ? <div style={{ height: props.infoDescription ? "38vh" : "52vh" }}> {props.isFetching ? <Loader /> : <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />} </div> : <DataTable
                     columns={columns}
                     data={props.tableData}
                     pagination
@@ -104,9 +105,9 @@ const BillInboxTable = ({
                     paginationTotalRows={props?.totalCount}
                     paginationPerPage={props?.rowsPerPage}
                     sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
-                    paginationRowsPerPageOptions={[5, 10, 15, 20]}
+                    paginationRowsPerPageOptions={defaultPaginationValues}
                     fixedHeader={true}
-                    fixedHeaderScrollHeight={"32vh"}
+                    fixedHeaderScrollHeight={props.infoDescription ? "32vh" : "47vh"}
                 />
             }
         </React.Fragment>

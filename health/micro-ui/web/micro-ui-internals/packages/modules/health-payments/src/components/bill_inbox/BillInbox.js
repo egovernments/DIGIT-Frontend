@@ -7,7 +7,7 @@ import { ActionBar, Button, Card, FilterCard, InfoCard, Loader, LoaderScreen, Ta
 import BillSearchBox from "./BillSearchBox";
 import BillBoundaryFilter from "./bill_boundary_filter";
 import BillInboxTable from "./billInboxTable";
-import { ScreenTypeEnum } from "../../utils/constants";
+import { defaultRowsPerPage, ScreenTypeEnum } from "../../utils/constants";
 import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import SearchResultsPlaceholder from "../SearchResultsPlaceholder";
 import AlertPopUp from "../alertPopUp";
@@ -25,10 +25,10 @@ const CustomBillInbox = () => {
     const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentConfig")?.lowestLevelBoundary || "DISTRICT";
     const [currentPage, setCurrentPage] = useState(1);
     const [updateFilters, setUpdateFilters] = useState(false);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
     const [approvalCount, setApprovalCount] = useState(null);
     const [totalCount, setTotalCount] = useState(0);
-    const [infoDescription, setInfoDescription] = useState("HCM_AM_DEFUALT_BILL_INBOX_INFO_MESSAGE");
+    const [infoDescription, setInfoDescription] = useState(null);
     const [pendingApprovalCount, setPendingApprovalCount] = useState(null);
     const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
     const project = Digit?.SessionStorage.get("staffProjects");
@@ -209,9 +209,9 @@ const CustomBillInbox = () => {
     else {
         return (
             <React.Fragment>
-                <div style={{ display: "flex", flexDirection: "column", gap: "24px", marginBottom: "2.5rem" }}>
-                    <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
-                        <div style={{ width: "20%", display: "flex", flexDirection: "row" }}>
+                <div style={{ display: "flex", flexDirection: "row", gap: "24px", marginBottom: showGenerateBillAction && BillData?.bills?.length === 0 && !isBillLoading && !isFetchingBill && billGenerationStatus == null ? "2.5rem" : "0px" }}>
+                    <div style={{ width: "30%", display: "flex", flexDirection: "column", gap: "24px" }}>
+                        <div style={{ display: "flex", flexDirection: "row" }}>
                             <CustomInboxSearchLinks
                                 headerText={"HCM_AM_BILL_INBOX"}
                                 links={[
@@ -222,19 +222,8 @@ const CustomBillInbox = () => {
                                 ]}
                             ></CustomInboxSearchLinks>
                         </div>
-                        <div style={{ display: "flex", flexDirection: "row", width: "80%" }}>
-                            <InfoCard
-                                variant="default"
-                                style={{ margin: "0rem", width: "100%", maxWidth: "unset" }}
-                                label={t(`HCM_AM_INFO`)}
-                                text={t(infoDescription)}
-                            />
-                        </div>
-                    </div>
-                    <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
                         <div
                             style={{
-                                width: "20%",
                                 display: "flex",
                                 flexDirection: "row",
                                 height: "60vh",
@@ -250,12 +239,23 @@ const CustomBillInbox = () => {
                                 resetBoundaryFilter={resetBoundaryFilter}
                             ></BillBoundaryFilter>
                         </div>
-                        <div style={{ width: "80%", display: "flex", flexDirection: "row", height: "60vh", minHeight: "60vh" }}>
-                            {tableData == null && <Card style={{ height: "60vh" }}>
+
+                    </div>
+                    <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "24px" }}>
+                        {infoDescription && <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
+                            <InfoCard
+                                variant="default"
+                                style={{ margin: "0rem", width: "100%", maxWidth: "unset", height: "124px" }}
+                                label={t(`HCM_AM_INFO`)}
+                                text={t(infoDescription)}
+                            />
+                        </div>}
+                        <div style={{ width: "100%", display: "flex", flexDirection: "row", height: infoDescription ? "60vh" : "74vh", minHeight: "60vh" }}>
+                            {tableData == null && <Card style={{ height: infoDescription ? "60vh" : "74vh" }}>
                                 <div className="summary-sub-heading">{t(selectedProject?.name)}</div>
                                 <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name)}</div>
 
-                                <SearchResultsPlaceholder placeholderText={"HCM_AM_BILL_INBOX_PLACEHOLDER_IMAGE_TEXT"} /> </Card>}
+                                <SearchResultsPlaceholder placeholderText={t("HCM_AM_BILL_INBOX_PLACEHOLDER_IMAGE_TEXT")} /> </Card>}
                             {tableData && <Card style={{ width: "100%", }}>
                                 {tableData != null && <div className="summary-sub-heading">{t(selectedProject?.name)}</div>}
                                 {tableData != null && <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name)}</div>}
@@ -292,7 +292,7 @@ const CustomBillInbox = () => {
                                             style={{}}
                                         />
                                     )}
-                                    {tableData && <div style={{ maxHeight: approvalCount !== null && pendingApprovalCount !== null ? "60vh" : "30vh" }}> <Card>
+                                    {tableData && <div style={{ maxHeight: approvalCount !== null && pendingApprovalCount !== null ? infoDescription ? "60vh" : "74vh" : "30vh" }}> <Card>
                                         <BillInboxTable
                                             isFetching={isFetching}
                                             tableData={tableData}
@@ -302,6 +302,7 @@ const CustomBillInbox = () => {
                                             handlePerRowsChange={handlePerRowsChange}
                                             totalCount={totalCount}
                                             status={activeLink.code}
+                                            infoDescription={infoDescription}
                                         ></BillInboxTable>
                                     </Card></div>}
                                 </div>

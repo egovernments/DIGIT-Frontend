@@ -1,31 +1,15 @@
 import React, { Fragment, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, CustomSVG, InfoButton, Tag, Toast, TooltipWrapper } from "@egovernments/digit-ui-components";
-import { downloadFileWithName } from "../utils";
+import { downloadFileWithName, formatTimestampToDate } from "../utils";
 import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./custom_comp/table_inbox_custom_style";
+import { defaultPaginationValues } from "../utils/constants";
 
 const MyBillsTable = ({ ...props }) => {
     const { t } = useTranslation();
     const [showToast, setShowToast] = useState(null);
     const project = Digit?.SessionStorage.get("staffProjects");
-
-    function formatTimestampToDate(timestamp) {
-        // Check if the timestamp is valid
-        if (!timestamp || typeof timestamp !== "number") {
-            return "Invalid timestamp";
-        }
-
-        // Convert timestamp to a JavaScript Date object
-        const date = new Date(timestamp);
-
-        // Format the date to a readable format (e.g., DD/MM/YYYY)
-        const day = date.getDate().toString().padStart(2, "0");
-        const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-indexed
-        const year = date.getFullYear();
-
-        return `${day}/${month}/${year}`;
-    }
 
     const columns = useMemo(() => {
         const baseColumns = [
@@ -210,7 +194,7 @@ const MyBillsTable = ({ ...props }) => {
                 paginationTotalRows={props?.totalCount}
                 paginationPerPage={props?.rowsPerPage}
                 sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
-                paginationRowsPerPageOptions={[5, 10, 15, 20]}
+                paginationRowsPerPageOptions={defaultPaginationValues}
                 fixedHeader={true}
                 fixedHeaderScrollHeight={"70vh"}
             />

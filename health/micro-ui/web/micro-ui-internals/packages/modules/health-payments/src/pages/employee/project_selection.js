@@ -133,6 +133,7 @@ const ProjectSelect = () => {
             <ActionBar
                 actionFields={[
                     <Button
+                        icon="ArrowBack"
                         label={t(`HCM_AM_BACK_LABEL`)}
                         onClick={() => {
                             history.push(`/${window.contextPath}/employee`);
@@ -142,8 +143,9 @@ const ProjectSelect = () => {
                         variation="secondary"
                     />,
                     <Button
+                        icon="ArrowForward"
+                        isSuffix={true}
                         label={t(`HCM_AM_NEXT_LABEL`)}
-                        title={t(`HCM_AM_NEXT_LABEL`)}
                         onClick={() => {
                             if (!billScreen) {
                                 if (selectedProject === null) {

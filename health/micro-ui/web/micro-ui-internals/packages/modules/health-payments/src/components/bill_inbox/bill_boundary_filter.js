@@ -96,18 +96,6 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
                         </svg>
                     </span>
                 </div>
-                {/*project && <div style={{ maxWidth: "100%", width: "100%", marginBottom: "24px" }}>
-          <TextBlock body={`${t("ATTENDANCE_PROJECT_NAME")} *`}></TextBlock>
-          <Dropdown
-            t={t}
-            option={project}
-            name={"code"}
-            optionKey={"name"}
-            select={(value) => {
-              handleProjectChange(value);
-            }}
-          />
-        </div>*/}
                 {selectedProject?.address?.boundary && selectedLevel && (
                     <BoundaryComponent
                         key={boundaryKey} // Add the key to force re-render
@@ -118,7 +106,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
                         }}
                         initialValue={Digit.SessionStorage.get("selectedValues")}
                         updateSeeeionStorage={(newSelectedValues) => {
-                            Digit.SessionStorage.set("selectedValues",newSelectedValues);
+                            Digit.SessionStorage.set("selectedValues", newSelectedValues);
                         }}
                         onChange={onBoundaryChange}
                         selectedProject={selectedProject}

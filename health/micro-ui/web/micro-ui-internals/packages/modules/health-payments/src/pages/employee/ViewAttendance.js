@@ -7,6 +7,7 @@ import AttendanceManagementTable from "../../components/attendanceManagementTabl
 import AlertPopUp from "../../components/alertPopUp";
 import ApproveCommentPopUp from "../../components/approveCommentPopUp";
 import _ from "lodash";
+import { formatTimestampToDate } from "../../utils";
 
 const ViewAttendance = ({ editAttendance = false }) => {
   const location = useLocation();
@@ -181,7 +182,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
           onSuccess: (data) => {
             history.push(`/${window.contextPath}/employee/payments/attendance-approve-success`, {
               state: "success",
-              info: "HCM_AM_MUSTER_ROLL_ID",
+              info: t("HCM_AM_MUSTER_ROLL_ID"),
               fileName: data?.musterRolls?.[0]?.musterRollNumber,
               description: t(`HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION`),
               message: t(`HCM_AM_ATTENDANCE_APPROVE_SUCCESS`),
@@ -332,7 +333,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const { isLoading: isIndividualsLoading, data: individualsData } = Digit.Hooks.useCustomAPIHook(individualReqCriteria);
 
   function getUserAttendanceSummary(data, individualsData, t) {
-    return data[0].individualEntries.map((individualEntry) => {
+    const attendanceLogData = data[0].individualEntries.map((individualEntry) => {
       const individualId = individualEntry.individualId;
       const matchingIndividual = individualsData?.Individual?.find(
         (individual) => individual.id === individualId
@@ -352,6 +353,14 @@ const ViewAttendance = ({ editAttendance = false }) => {
         return ["N/A", "Unknown", "N/A", "Unassigned", individualEntry?.modifiedTotalAttendance || individualEntry.actualTotalAttendance || 0];
       }
     });
+
+    const sortedData = [...attendanceLogData].sort((a, b) => {
+      const nameA = a[1].toLowerCase(); // Convert to lowercase for case-insensitive sorting
+      const nameB = b[1].toLowerCase();
+      return nameA.localeCompare(nameB);
+  });
+
+    return sortedData;
   }
 
   // Populate attendanceSummary when AttendanceData changes
@@ -438,6 +447,14 @@ const ViewAttendance = ({ editAttendance = false }) => {
             <span className="label-text">{AttendanceData?.attendanceRegister[0]?.attendees?.length || 0}</span>
           </div>
           <div className="label-pair">
+            <span className="label-heading">{t(`HCM_AM_CAMPAIGN_START_DATE`)}</span>
+            <span className="label-text">{formatTimestampToDate(project?.[0]?.startDate)}</span>
+          </div>
+          <div className="label-pair">
+            <span className="label-heading">{t(`HCM_AM_CAMPAIGN_END_DATE`)}</span>
+            <span className="label-text">{formatTimestampToDate(project?.[0]?.endDate)}</span>
+          </div>
+          <div className="label-pair">
             <span className="label-heading">{t(`HCM_AM_EVENT_DURATION`)}</span>
             <span className="label-text">{attendanceDuration || 0}</span>
           </div>
@@ -498,7 +515,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
             />
           ) : editAttendance ? (
             <Button
-              icon="CheckCircle"
               label={t(`HCM_AM_SUBMIT_LABEL`)}
               title={t(`HCM_AM_SUBMIT_LABEL`)}
               onClick={() => {
