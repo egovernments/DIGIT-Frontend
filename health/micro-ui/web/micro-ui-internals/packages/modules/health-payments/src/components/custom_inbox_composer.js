@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import CustomFilter from "./custom_comp/filter_section";
 import CustomInboxTable from "./custom_comp/table_inbox";
 import { FilterCard, Toast, Card } from "@egovernments/digit-ui-components";
-import { ScreenTypeEnum, StatusEnum } from "../utils/constants";
+import { defaultRowsPerPage, ScreenTypeEnum, StatusEnum } from "../utils/constants";
 import SearchResultsPlaceholder from "./SearchResultsPlaceholder";
 
 /**
