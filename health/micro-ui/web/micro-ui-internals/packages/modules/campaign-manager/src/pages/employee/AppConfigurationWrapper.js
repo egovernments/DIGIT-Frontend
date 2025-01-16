@@ -192,6 +192,7 @@ const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
 function AppConfigurationWrapper() {
   const { locState, addMissingKey, updateLocalization } = useAppLocalisationContext();
   const [state, dispatch] = useReducer((state, action) => reducer(state, action, updateLocalization), initialState);
+  console.log("state", state)
   const { t } = useTranslation();
   const [showPopUp, setShowPopUp] = useState(false);
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(

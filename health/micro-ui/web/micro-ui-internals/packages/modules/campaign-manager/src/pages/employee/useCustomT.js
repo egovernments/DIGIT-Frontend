@@ -3,7 +3,7 @@ import { useAppLocalisationContext } from "./AppLocalisationWrapper";
 export const useCustomT = (code) => {
   const { locState, addMissingKey } = useAppLocalisationContext();
   const currentLocale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
-  const entry = locState.find((item) => item.code === code);
+  const entry = locState?.find((item) => item.code === code);
   if (!entry) {
     addMissingKey(code); // Add the missing key
     return ""; // Return the key as a placeholder
