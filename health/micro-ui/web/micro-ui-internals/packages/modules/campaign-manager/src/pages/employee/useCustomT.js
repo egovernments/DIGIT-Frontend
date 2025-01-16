@@ -1,7 +1,6 @@
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
 
 export const useCustomT = (code) => {
-  debugger;
   const { locState, addMissingKey } = useAppLocalisationContext();
   const currentLocale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
   const entry = locState.find((item) => item.code === code);
