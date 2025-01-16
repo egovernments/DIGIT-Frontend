@@ -439,13 +439,13 @@ const PlanInbox = () => {
       const uniqueAssignees = [...new Set(planWithCensus?.planData?.flatMap((item) => item.assignee || []))];
       setAssigneeUuids(uniqueAssignees.join(","));
     }
-  }, [planWithCensus, selectedFilter?.status, activeLink]);
+  }, [planWithCensus, selectedFilter, activeLink]);
 
   useEffect(() => {
     if (censusJurisdiction?.length > 0) {
       refetchPlanWithCensus(); // Trigger the API call again after activeFilter changes
     }
-  }, [selectedFilter?.status, activeLink, censusJurisdiction, limitAndOffset]);
+  }, [selectedFilter, activeLink, censusJurisdiction, limitAndOffset]);
 
   const reqCri = {
     url: `/${hrms_context_path}/employees/_search`,
