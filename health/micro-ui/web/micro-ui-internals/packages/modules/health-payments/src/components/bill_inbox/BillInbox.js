@@ -1,10 +1,9 @@
-import React, { useEffect, useReducer, useState, useMemo, use } from "react";
+import React, { useEffect, useState } from "react";
 import _ from "lodash";
 import CustomInboxSearchLinks from "../custom_comp/link_section";
 import { useTranslation } from "react-i18next";
 const { fromViewScreen } = location.state || false;
-import { ActionBar, Button, Card, FilterCard, InfoCard, Loader, LoaderScreen, Tab, Toast } from "@egovernments/digit-ui-components";
-import BillSearchBox from "./BillSearchBox";
+import { ActionBar, Button, Card, InfoCard, Loader, Tab, Toast } from "@egovernments/digit-ui-components";
 import BillBoundaryFilter from "./bill_boundary_filter";
 import BillInboxTable from "./billInboxTable";
 import { defaultRowsPerPage, ScreenTypeEnum } from "../../utils/constants";
@@ -16,9 +15,7 @@ const CustomBillInbox = () => {
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const [showToast, setShowToast] = useState(null);
     const [tableData, setTableData] = useState(null);
-    const [errorMessage, setErrorMessage] = useState(null);
     const [showGenerateBillAction, setShowGenerateBillAction] = useState(false);
-    const [filterCriteria, setFilterCriteria] = useState(null);
     const [selectedProject, setSelectedProject] = useState(() => Digit.SessionStorage.get("selectedProject") || {});
     const [selectedLevel, setSelectedLevel] = useState(() => Digit.SessionStorage.get("selectedLevel") || null);
     const [selectedBoundaryCode, setSelectedBoundaryCode] = useState(() => Digit.SessionStorage.get("selectedBoundaryCode") || null);
@@ -33,7 +30,6 @@ const CustomBillInbox = () => {
     const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
     const project = Digit?.SessionStorage.get("staffProjects");
     const [billGenerationStatus, setBillGenerationStatus] = useState(null);
-    const [searchQuery, setSearchQuery] = useState(null);
     const [openAlertPopUp, setOpenAlertPopUp] = useState(null);
     const [activeLink, setActiveLink] = useState({
         code: "APPROVED",
@@ -107,10 +103,12 @@ const CustomBillInbox = () => {
         if (selectedBoundaryCode) {
             refetchAttendance();
         }
-    }, [activeLink, limitAndOffset, selectedBoundaryCode]);
+    }, [activeLink, limitAndOffset]);
 
     useEffect(() => {
         if (selectedBoundaryCode) {
+            setInfoDescription(null);
+            refetchAttendance();
             refetchBill();
         }
     }, [selectedBoundaryCode]);
@@ -130,19 +128,6 @@ const CustomBillInbox = () => {
         }
     }, [BillData]);
 
-    // Handlers
-    const handleSearchChange = (project, level) => {
-        setSelectedProject(project);
-        setSelectedLevel(level);
-        setUpdateFilters(true);
-        setTableData(null);
-        setApprovalCount(null);
-        setPendingApprovalCount(null);
-
-        // Store in SessionStorage
-        Digit.SessionStorage.set("selectedProject", project);
-        Digit.SessionStorage.set("selectedLevel", level);
-    };
     const handleFilterUpdate = (boundaryCode) => {
 
         setSelectedBoundaryCode(boundaryCode);
@@ -154,6 +139,7 @@ const CustomBillInbox = () => {
         setApprovalCount(null);
         setPendingApprovalCount(null);
         setSelectedBoundaryCode(null);
+        setInfoDescription(null);
     };
     const handlePageChange = (page, totalRows) => {
         setCurrentPage(page);

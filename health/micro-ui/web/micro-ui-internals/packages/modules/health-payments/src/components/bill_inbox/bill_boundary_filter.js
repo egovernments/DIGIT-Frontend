@@ -55,6 +55,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
         setBoundaryKey((prevKey) => prevKey + 1); // Increment the key to re-render BoundaryComponent
         Digit.SessionStorage.set("boundary", null);
         Digit.SessionStorage.set("selectedBoundaryCode", null);
+        Digit.SessionStorage.set("selectedValues", null);
         resetBoundaryFilter();
     };
     return (
