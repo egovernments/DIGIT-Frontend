@@ -110,7 +110,7 @@ const InboxFilterWrapper = (props) => {
       }
     },
     config: {
-      enabled: true,
+      enabled: props?.isPlanInbox ? props?.isPlanInbox: false,
       select: (data) => {
         if (!data?.PlanFacility || !Array.isArray(data.PlanFacility)) return [];
     
@@ -126,7 +126,9 @@ const InboxFilterWrapper = (props) => {
     }  
   };
 
-  const { isLoading: isPlanFacilityLoading,error:planFacilityerror, data: planFacility }=Digit.Hooks.useCustomAPIHook(planFacilitySearchConfig);
+  const { isLoading: isPlanFacilityLoading, error: planFacilityError, data: planFacility } = Digit.Hooks.useCustomAPIHook(planFacilitySearchConfig);
+
+
 
   if(isPlanFacilityLoading){
     return <Loader/>
@@ -172,6 +174,7 @@ const InboxFilterWrapper = (props) => {
             select={(value) => handleDropdownChange("onRoadCondition", value)}
             t={t}
             disabled={false}
+            showToolTip={true}
           />
         </LabelFieldPair>
 
@@ -184,6 +187,7 @@ const InboxFilterWrapper = (props) => {
             select={(value) => handleDropdownChange("terrain", value)}
             t={t}
             disabled={false}
+            showToolTip={true}
           />
         </LabelFieldPair>
     
@@ -196,6 +200,7 @@ const InboxFilterWrapper = (props) => {
             select={(value) => handleDropdownChange("facilityId", value)}
             t={t}
             disabled={false}
+            showToolTip={true}
           />
         </LabelFieldPair>   
 
@@ -224,6 +229,7 @@ const InboxFilterWrapper = (props) => {
                 select={(value) => handleDropdownChange(`securityQ${questionNumber}`, value)}
                 t={t}
                 disabled={false}
+                showToolTip={true}
               />
             </LabelFieldPair>
           );
