@@ -4,7 +4,7 @@ import { Button, Divider, Loader, PopUp } from "@egovernments/digit-ui-component
 import SidePanel from "./SidePanel";
 import { useTranslation } from "react-i18next";
 import DrawerFieldComposer from "./DrawerFieldComposer";
-import { dummyMaster } from "../../configs/dummyMaster";
+// import { dummyMaster } from "../../configs/dummyMaster";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
 import AppLocalisationTable from "./AppLocalisationTable";
 
