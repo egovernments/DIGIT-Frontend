@@ -1,10 +1,22 @@
 import React, { Fragment, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, CustomSVG, InfoButton, Tag, Toast, TooltipWrapper } from "@egovernments/digit-ui-components";
+import { Button, CustomSVG, Tag, Toast } from "@egovernments/digit-ui-components";
 import { downloadFileWithName, formatTimestampToDate } from "../utils";
 import DataTable from "react-data-table-component";
-import { tableCustomStyle } from "./custom_comp/table_inbox_custom_style";
+import { tableCustomStyle } from "./table_inbox_custom_style";
 import { defaultPaginationValues } from "../utils/constants";
+
+/**
+ * @function MyBillsTable
+ * @param {Object} props - Component props
+ * @param {Array} props.data - Array of objects containing bill data
+ * @param {Function} props.handlePageChange - Function to handle page change
+ * @param {Function} props.handlePerRowsChange - Function to handle per row change
+ * @param {Number} props.currentPage - Current page number
+ * @param {Number} props.rowsPerPage - Number of rows per page
+ * @param {Number} props.totalCount - Total count of bills
+ * @returns {React.ReactElement} Returns the component
+ */
 
 const MyBillsTable = ({ ...props }) => {
     const { t } = useTranslation();

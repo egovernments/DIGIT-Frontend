@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next";
-import { useLocation, useHistory } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { CustomSVG } from "@egovernments/digit-ui-components";
+import { useHistory } from "react-router-dom";
 import { SVG } from "@egovernments/digit-ui-components";
 import { Card, Button } from "@egovernments/digit-ui-components";
 
@@ -12,7 +10,7 @@ const getIconComponent = (iconName = "") => {
     return require("@egovernments/digit-ui-react-components")?.[iconName];
 }
 
-const CustomInboxSearchLinks = ({ headerText, links, businessService, customClass = "", logoIcon }) => {
+const InboxSearchLinkHeader = ({ headerText, links, businessService, customClass = "", logoIcon }) => {
 
     const { t } = useTranslation();
     const history = useHistory();
@@ -60,4 +58,4 @@ const CustomInboxSearchLinks = ({ headerText, links, businessService, customClas
 
 }
 
-export default CustomInboxSearchLinks;
+export default InboxSearchLinkHeader;

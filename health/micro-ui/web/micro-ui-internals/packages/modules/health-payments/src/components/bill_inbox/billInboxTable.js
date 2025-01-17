@@ -5,15 +5,21 @@ import { useTranslation } from "react-i18next";
 import DataTable from "react-data-table-component";
 import { useQueryClient } from "react-query";
 import { CustomSVG } from "@egovernments/digit-ui-components";
-import { tableCustomStyle } from "../custom_comp/table_inbox_custom_style";
+import { tableCustomStyle } from "../table_inbox_custom_style";
 import { defaultPaginationValues } from "../../utils/constants";
 
+/**
+ * BillInboxTable component is used to render the table for the employee's payment inbox.
+ * The table is paginated and it fetches data based on the pagination.
+ * The component also handles the page change and rows per page change.
+ * @param {object} props The props object contains the data and the pagination information.
+ * @returns {JSX.Element} The JSX element for the table.
+ */
 const BillInboxTable = ({
     ...props
 }) => {
     const { t } = useTranslation();
     const history = useHistory();
-
 
     const handlePageChange = (page, totalRows) => {
         props?.handlePageChange(page, totalRows);
@@ -22,10 +28,11 @@ const BillInboxTable = ({
     const handlePerRowsChange = async (currentRowsPerPage, currentPage) => {
         props?.handlePerRowsChange(currentRowsPerPage, currentPage);
     };
+
     const columns = [
         {
             name: (
-                <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                <div className="custom-inbox-table-row">
                     {t("HCM_AM_ATTENDANCE_ID")}
                 </div>
             ),
@@ -48,7 +55,7 @@ const BillInboxTable = ({
         },
         {
             name: (
-                <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                <div className="custom-inbox-table-row">
                     {t("HCM_AM_ATTENDANCE_BOUNDARY")}
                 </div>
             ),
@@ -62,7 +69,7 @@ const BillInboxTable = ({
         },
         {
             name: (
-                <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                <div className="custom-inbox-table-row">
                     {props.status === "APPROVED" ? t("HCM_AM_ATTENDANCE_APPROVED_BY") : t("HCM_AM_ATTENDANCE_MARKED_BY")}
                 </div>
             ),

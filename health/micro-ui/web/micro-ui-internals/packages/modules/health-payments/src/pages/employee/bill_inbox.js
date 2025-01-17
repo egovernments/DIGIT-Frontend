@@ -1,8 +1,8 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { Header, InboxSearchComposer, Loader } from "@egovernments/digit-ui-react-components";
+import { Header, } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
-import CustomBillInbox from "../../components/bill_inbox/BillInbox";
+import BillInboxComponent from "../../components/bill_inbox/BillInbox";
 
 /**
 * Business Flow Description:
@@ -42,11 +42,9 @@ const BillInbox = () => {
         <React.Fragment>
             <Header styles={{ fontSize: "32px" }}>
                 {t("HCM_AM_BILL_INBOX")}
-                {location?.state?.count ? <span className="inbox-count">{location?.state?.count}</span> : null}
             </Header>
             <div className="inbox-search-wrapper">
-                {/* <InboxSearchComposer configs={configs}></InboxSearchComposer>*/}
-                <CustomBillInbox></CustomBillInbox>
+                <BillInboxComponent></BillInboxComponent>
             </div>
         </React.Fragment>
     );

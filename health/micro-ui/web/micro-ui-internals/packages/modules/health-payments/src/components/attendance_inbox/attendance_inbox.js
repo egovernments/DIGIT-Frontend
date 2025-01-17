@@ -1,66 +1,46 @@
-import React, { useEffect, useReducer, useState, useMemo, use } from "react";
-
+import React, { useEffect, useState } from "react";
 import _ from "lodash";
-import CustomInboxSearchLinks from "./custom_comp/link_section";
-import CustomSearchComponent from "./custom_comp/search_section";
-
 import { useTranslation } from "react-i18next";
-import CustomFilter from "./custom_comp/filter_section";
-import CustomInboxTable from "./custom_comp/table_inbox";
-import { FilterCard, Toast, Card } from "@egovernments/digit-ui-components";
-import { defaultRowsPerPage, ScreenTypeEnum, StatusEnum } from "../utils/constants";
-import SearchResultsPlaceholder from "./SearchResultsPlaceholder";
+import CustomFilter from "./filter_section";
+import CustomInboxTable from "./table_inbox";
+import { Toast, Card } from "@egovernments/digit-ui-components";
+import { defaultRowsPerPage, ScreenTypeEnum, StatusEnum } from "../../utils/constants";
+import SearchResultsPlaceholder from "../SearchResultsPlaceholder";
 
 /**
-* Business Flow Description:
-* 1. In the search section, a project select dropdown is provided.
-*    - When a project is selected from the dropdown, the Boundary Search Service is invoked to fetch the boundary hierarchy.
-* 2. On successful fetching of the boundary hierarchy from the service:
-*    - A dynamic list of boundary selection dropdowns is rendered in the filter section.
-* 3. When filters are applied:
-*    - The Attendance Register Search API is called with the applied filter criteria.
-*    - On receiving a successful response, the table data is rendered accordingly.
-* 4. Tab Functionality:
-*    - Tabs are implemented in the UI for additional functionality.
-*    - Based on the tab selection, the Attendance Register Search API is triggered with a custom payload specific to the selected tab.
-
-*/
-
-/**
- * Reason for not using React Component - InboxComposer:
- * 1. Restrictions in InboxComposer:
- *    - The component requires showing "No Results" initially, which does not align with our requirement. 
- *    - Search should only be triggered after filters are applied.
- * 2. Dynamic Boundary Filters:
- *    - The boundary filter options need to be dynamically determined based on the selected project.
- * 3. Tab-Specific API Calls:
- *    - On tab selection, the same Attendance Register Search API must be called with different status filters, 
- *      which is not inherently supported by the InboxComposer component.
-
- 
+ * AttendanceInboxComponent: Displays a filterable and paginated inbox for attendance records.
+ * It fetches data based on user interactions and selected criteria.
  */
-
-const CustomInboxSearchComposer = () => {
+const AttendanceInboxComponent = () => {
   const { t } = useTranslation();
+
+  // State variables for managing filters, pagination, and data
   const [showToast, setShowToast] = useState(null);
   const [filterCriteria, setFilterCriteria] = useState(null);
   const [selectedProject, setSelectedProject] = useState(() => Digit.SessionStorage.get("selectedProject") || {});
-  //-------//
-
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
   const [selectedStatus, setSelectedStatus] = useState(StatusEnum.PENDING_FOR_APPROVAL);
-
   const [card, setCard] = useState(false);
-
   const [childrenDataLoading, setChildrenDataLoading] = useState(false);
   const [childrenData, setchildrenData] = useState([]);
 
+  // API hook for fetching attendance registers
   const fetchRegisters = Digit.Hooks.useCustomAPIMutationHook({
     url: "/health-attendance/v1/_search",
   });
 
-  const triggerMusterRollApprove = (filterData, status, totalRows, totalNext, selectedProject) => {
+  /**
+   * Triggers the API call to fetch attendance registers based on the provided filter criteria,
+   * selected project, and status. Updates the state variables accordingly.
+   *
+   * @param {object} filterData - Filter criteria for attendance registers
+   * @param {string} status - Status of attendance registers (e.g. PENDING_FOR_APPROVAL)
+   * @param {number} totalRows - Total number of rows to fetch
+   * @param {number} totalNext - Offset for pagination
+   * @param {object} selectedProject - Selected project object
+   */
+  const triggerAttendanceSearch = (filterData, status, totalRows, totalNext, selectedProject) => {
     try {
       setChildrenDataLoading(true);
       fetchRegisters.mutateAsync(
@@ -82,13 +62,16 @@ const CustomInboxSearchComposer = () => {
           },
         },
         {
+          /**
+           * Success callback function
+           * @param {object} data - Response data from API
+           */
           onSuccess: (data) => {
             const rowData =
               data?.attendanceRegister.length > 0
                 ? data?.attendanceRegister?.map((item, index) => {
                   return {
                     id: item?.registerNumber,
-                    //name: item?.name,
                     name: selectedProject?.name,
                     boundary: item?.localityCode,
                     status: item?.attendees == null ? 0 : item?.attendees.length || 0,
@@ -105,6 +88,10 @@ const CustomInboxSearchComposer = () => {
               statusCount: data?.statusCount,
             });
           },
+          /**
+           * Error callback function
+           * @param {object} error - Error object
+           */
           onError: (error) => {
             setCard(true);
             setChildrenDataLoading(false);
@@ -113,20 +100,21 @@ const CustomInboxSearchComposer = () => {
         }
       );
     } catch (error) {
-      /// will show estimate data only
+      setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_REGISTER_FETCH_FAILED"), transitionTime: 3000 });
+      /// will show error toast
     }
   };
 
-  //
-
+  // Trigger initial data fetch when the component is mounted
   useEffect(() => {
     const data = Digit.SessionStorage.get("paymentInbox");
 
     if (data) {
-      triggerMusterRollApprove(data);
+      triggerAttendanceSearch(data);
     }
   }, []);
 
+  /// Update filter criteria and fetch new data.
   const handleFilterUpdate = (newFilter, isSelectedData) => {
     setFilterCriteria(newFilter);
     setSelectedStatus(StatusEnum.PENDING_FOR_APPROVAL);
@@ -163,60 +151,46 @@ const CustomInboxSearchComposer = () => {
     Digit.SessionStorage.set("paymentInbox", existingData);
 
     // Trigger the approval action
-    triggerMusterRollApprove(newFilter, StatusEnum.PENDING_FOR_APPROVAL);
+    triggerAttendanceSearch(newFilter, StatusEnum.PENDING_FOR_APPROVAL);
   };
 
   const handlePaginationChange = (page) => {
     setCurrentPage(page);
 
-    triggerMusterRollApprove(filterCriteria, selectedStatus, rowsPerPage, page);
+    triggerAttendanceSearch(filterCriteria, selectedStatus, rowsPerPage, page);
   };
   const handleRowsPerPageChange = (newPerPage, page) => {
     setRowsPerPage(newPerPage); // Update the rows per page state
     setCurrentPage(page); // Optionally reset the current page or maintain it
-    // refetchPlanEmployee();
-    // handleCreateRateAnalysis();
-    triggerMusterRollApprove(filterCriteria, selectedStatus, newPerPage, page);
+    triggerAttendanceSearch(filterCriteria, selectedStatus, newPerPage, page);
   };
   const callServiceOnTap = (status) => {
     if (status.code == StatusEnum.PENDING_FOR_APPROVAL) {
       setRowsPerPage(defaultRowsPerPage); // Update the rows per page state
       setCurrentPage(1);
       setSelectedStatus(StatusEnum.PENDING_FOR_APPROVAL);
-      triggerMusterRollApprove(Digit.SessionStorage.get("paymentInbox"), StatusEnum.PENDING_FOR_APPROVAL, defaultRowsPerPage, 1);
+      triggerAttendanceSearch(Digit.SessionStorage.get("paymentInbox"), StatusEnum.PENDING_FOR_APPROVAL, defaultRowsPerPage, 1);
     } else {
       setRowsPerPage(defaultRowsPerPage); // Update the rows per page state
       setCurrentPage(1);
       setSelectedStatus(StatusEnum.APPROVED);
-      triggerMusterRollApprove(Digit.SessionStorage.get("paymentInbox"), StatusEnum.APPROVED, defaultRowsPerPage, 1);
+      triggerAttendanceSearch(Digit.SessionStorage.get("paymentInbox"), StatusEnum.APPROVED, defaultRowsPerPage, 1);
     }
   };
 
+  // Reset the table and clear filters.
   const resetTable = () => {
     setchildrenData([]);
     setFilterCriteria(null);
-    // setSelectedProject({});
     setCard(false);
   };
 
   return (
     <React.Fragment>
-      <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "24px" }}>
-        <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
-          <div style={{ width: "30%", display: "flex", flexDirection: "column", gap: "24px", height: "80vh" }}>
-            {/*<div style={{ width: "80%", display: "flex", flexDirection: "row" }}>
-            <CustomSearchComponent onProjectSelect={handleProjectChange}></CustomSearchComponent>
-          </div>*/}
-
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "row",
-                height: "75vh",
-                overflowY: "auto",
-              }}
-            >
+      <div className="custom-register-inbox-screen">
+        <div className="inner-div-row-section">
+          <div className="custom-inbox-filter-section">
+            <div className="custom-inbox-inner-filter-section" >
               <CustomFilter
                 resetTable={resetTable}
                 isRequired={ScreenTypeEnum.REGISTER}
@@ -225,10 +199,10 @@ const CustomInboxSearchComposer = () => {
             </div>
           </div>
 
-          <div style={{ width: "100%", display: "flex", flexDirection: "row", gap: "24px" }}>
-            <div style={{ width: "100%", display: "flex", flexDirection: "column", height: "75vh", minHeight: "75vh" }}>
+          <div className="custom-inbox-outer-table-section">
+            <div className="inner-table-section">
               {card == false ? (
-                <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", height: "75vh" }}>
+                <Card className="card-overide">
                   <div className="summary-sub-heading">{t(selectedProject?.name)}</div>
                   <SearchResultsPlaceholder placeholderText={"HCM_AM_FILTER_AND_CHOOSE_BOUNDARY_PLACEHOLDER_TEXT"} />
                 </Card>
@@ -254,7 +228,6 @@ const CustomInboxSearchComposer = () => {
           style={{ zIndex: 10001 }}
           label={showToast.label}
           type={showToast.key}
-          // error={showToast.key === "error"}
           transitionTime={showToast.transitionTime}
           onClose={() => setShowToast(null)}
         />
@@ -263,4 +236,4 @@ const CustomInboxSearchComposer = () => {
   );
 };
 
-export default CustomInboxSearchComposer;
+export default AttendanceInboxComponent;

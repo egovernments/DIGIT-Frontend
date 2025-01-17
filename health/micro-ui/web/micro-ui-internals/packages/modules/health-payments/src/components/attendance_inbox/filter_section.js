@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { CheckBox, Divider, SubmitBar } from "@egovernments/digit-ui-components";
-import BoundaryComponent from "../sample";
+import BoundaryComponent from "../BoundaryComponent";
 import { Card, SVG, Button, ButtonGroup, TextBlock, Dropdown, Toast } from "@egovernments/digit-ui-components";
 import { lowerBoundaryDefaultSet } from "../../utils/constants";
 

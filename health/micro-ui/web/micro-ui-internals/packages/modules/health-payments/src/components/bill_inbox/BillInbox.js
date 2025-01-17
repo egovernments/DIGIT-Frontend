@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import _ from "lodash";
-import CustomInboxSearchLinks from "../custom_comp/link_section";
 import { useTranslation } from "react-i18next";
 const { fromViewScreen } = location.state || false;
 import { ActionBar, Button, Card, InfoCard, Loader, Tab, Toast } from "@egovernments/digit-ui-components";
@@ -10,9 +9,23 @@ import { defaultRowsPerPage, ScreenTypeEnum } from "../../utils/constants";
 import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import SearchResultsPlaceholder from "../SearchResultsPlaceholder";
 import AlertPopUp from "../alertPopUp";
-const CustomBillInbox = () => {
+import InboxSearchLinkHeader from "../InboxSearchLinkHeader";
+
+/**
+ * @returns {React.ReactElement} BillInboxComponent
+ * @description
+ *  This component renders the bill inbox screen with a filter panel and a table.
+ *  It fetches the attendance register data for the selected project and boundary.
+ *  It also fetches the bill data for the selected project.
+ *  It displays the attendance register data in a table and the bill data as a button.
+ *  It also handles the bill generation process.
+ */
+
+const BillInboxComponent = () => {
     const { t } = useTranslation();
     const tenantId = Digit.ULBService.getCurrentTenantId();
+
+    // State Variables
     const [showToast, setShowToast] = useState(null);
     const [tableData, setTableData] = useState(null);
     const [showGenerateBillAction, setShowGenerateBillAction] = useState(false);
@@ -21,20 +34,26 @@ const CustomBillInbox = () => {
     const [selectedBoundaryCode, setSelectedBoundaryCode] = useState(() => Digit.SessionStorage.get("selectedBoundaryCode") || null);
     const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentConfig")?.lowestLevelBoundary || "DISTRICT";
     const [currentPage, setCurrentPage] = useState(1);
-    const [updateFilters, setUpdateFilters] = useState(false);
     const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
     const [approvalCount, setApprovalCount] = useState(null);
     const [totalCount, setTotalCount] = useState(0);
     const [infoDescription, setInfoDescription] = useState(null);
     const [pendingApprovalCount, setPendingApprovalCount] = useState(null);
-    const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
+    const [limitAndOffset, setLimitAndOffset] = useState({
+        limit: rowsPerPage,
+        offset: (currentPage - 1) * rowsPerPage,
+    });
     const project = Digit?.SessionStorage.get("staffProjects");
     const [billGenerationStatus, setBillGenerationStatus] = useState(null);
-    const [openAlertPopUp, setOpenAlertPopUp] = useState(null);
+    const [openAlertPopUp, setOpenAlertPopUp] = useState(false);
     const [activeLink, setActiveLink] = useState({
         code: "APPROVED",
         name: "HCM_AM_APPROVED_REGISTER",
     });
+
+    /**
+     * Query to fetch the attendance register data
+     */
     const registerSearchCri = {
         url: `/health-attendance/v1/_search`,
         params: {
@@ -51,15 +70,17 @@ const CustomBillInbox = () => {
             enabled: selectedBoundaryCode && selectedProject ? true : false,
         },
     };
-    const { isLoading: isAttendanceLoading, data: AttendanceData, refetch: refetchAttendance, isFetching } = Digit.Hooks.useCustomAPIHook(
-        registerSearchCri
-    );
+    // Fetch attendance data
+    const { isLoading: isAttendanceLoading, data: AttendanceData, refetch: refetchAttendance, isFetching } = Digit.Hooks.useCustomAPIHook(registerSearchCri);
+
+    /**
+     * Query to fetch the bill data
+     */
     const BillSearchCri = {
         url: `/health-expense/bill/v1/_search`,
         body: {
             billCriteria: {
                 tenantId: tenantId,
-                // ids: ["6eaf462a-4d9a-44c9-9ef7-e127e3fb33f1"],
                 localityCode: selectedBoundaryCode,
                 referenceIds: [project?.[0]?.id],
             },
@@ -71,9 +92,14 @@ const CustomBillInbox = () => {
             },
         },
     };
+
+    // Fetch configurations for bill data
     const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching: isFetchingBill } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
+
+    // Update attendance table data after attendance data is loaded
     useEffect(() => {
         if (AttendanceData?.attendanceRegister) {
+
             const formattedList = AttendanceData?.attendanceRegister.map((item) => {
                 // Find the staff with type 'APPROVER' and 'OWNER'
                 const approver = item?.staff?.find((staff) => staff?.staffType?.includes("APPROVER"));
@@ -87,10 +113,12 @@ const CustomBillInbox = () => {
                     markedBy: owner?.additionalDetails?.ownerName || "NA",
                 };
             });
+
             setApprovalCount(AttendanceData?.statusCount?.APPROVED);
             setPendingApprovalCount(AttendanceData?.statusCount?.PENDINGFORAPPROVAL);
             setTotalCount(AttendanceData?.totalCount);
             setTableData(formattedList);
+
             if (AttendanceData?.statusCount.PENDINGFORAPPROVAL === 0 && AttendanceData?.statusCount.APPROVED > 0) {
                 setShowGenerateBillAction(true);
             } else {
@@ -99,12 +127,15 @@ const CustomBillInbox = () => {
             }
         }
     }, [AttendanceData]);
+
+    // Refetch data when active link or limit and offset changes
     useEffect(() => {
         if (selectedBoundaryCode) {
             refetchAttendance();
         }
     }, [activeLink, limitAndOffset]);
 
+    // Refetch data and bill when boundary code changes
     useEffect(() => {
         if (selectedBoundaryCode) {
             setInfoDescription(null);
@@ -113,6 +144,7 @@ const CustomBillInbox = () => {
         }
     }, [selectedBoundaryCode]);
 
+    // Refetch data when navigating back from the view screen
     useEffect(() => {
         if (fromViewScreen) {
             refetchAttendance();
@@ -120,6 +152,7 @@ const CustomBillInbox = () => {
         }
     }, []);
 
+    // update bill generation info message when bill data is loaded
     useEffect(() => {
         if (BillData) {
             if (BillData?.bills?.length > 0) {
@@ -134,11 +167,23 @@ const CustomBillInbox = () => {
         Digit.SessionStorage.set("selectedBoundaryCode", boundaryCode);
     };
 
+
+    /// Resets the boundary filter and clears related data states.
+    /// This function is responsible for clearing the table data,
+    /// approval counts, selected boundary code, and info description.
+
     const resetBoundaryFilter = () => {
+        // Clear the table data
         setTableData(null);
+
+        // Reset approval and pending approval counts
         setApprovalCount(null);
         setPendingApprovalCount(null);
+
+        // Clear the selected boundary code
         setSelectedBoundaryCode(null);
+
+        // Remove the info description
         setInfoDescription(null);
     };
     const handlePageChange = (page, totalRows) => {
@@ -153,8 +198,14 @@ const CustomBillInbox = () => {
     const generateBillMutation = Digit.Hooks.useCustomAPIMutationHook({
         url: "/health-expense-calculator/v1/_calculate",
     });
+
+    /// Triggers the bill generation process.
+    /// Utilizes the custom API mutation hook for generating a bill based on specified criteria.
+    /// Handles success and error responses to update UI accordingly.
+
     const triggerGenerateBill = async () => {
         try {
+            // Initiates the bill generation mutation with the provided criteria
             await generateBillMutation.mutateAsync(
                 {
                     body: {
@@ -166,23 +217,29 @@ const CustomBillInbox = () => {
                     },
                 },
                 {
+                    // Callback for successful mutation response
                     onSuccess: (data) => {
                         setBillGenerationStatus(data?.statusCode);
                         if (data?.statusCode === "SUCCESSFUL") {
+                            // Show success toast and refetch bill data
                             setShowToast({ key: "success", label: t("HCM_AM_BILL_GENERATED_SUCCESSFULLY"), transitionTime: 3000 });
                             refetchBill();
                         } else {
+                            // Update info description and show status-specific toast message
                             setInfoDescription(`HCM_AM_${data?.statusCode}_INFO_MESSAGE`);
                             setShowToast({ key: "success", label: t(`HCM_AM_BILL_GENERATE_${data?.statusCode}`), transitionTime: 3000 });
                         }
                     },
+                    // Callback for error in mutation response
                     onError: (error) => {
+                        // Show error toast with message from the error response
                         setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
                     },
                 }
             );
         } catch (error) {
-            /// will show estimate data only
+            setShowToast({ key: "error", label: t(`HCM_AM_BILL_GENERATE_ERROR`), transitionTime: 3000 });
+            // Handle any unexpected errors that occur during the mutation process
         }
     };
 
@@ -192,163 +249,162 @@ const CustomBillInbox = () => {
     if (isAttendanceLoading || isBillLoading) {
         return <Loader />
     }
-    else {
-        return (
-            <React.Fragment>
-                <div style={{ display: "flex", flexDirection: "row", gap: "24px", marginBottom: showGenerateBillAction && BillData?.bills?.length === 0 && !isBillLoading && !isFetchingBill && billGenerationStatus == null ? "2.5rem" : "0px" }}>
-                    <div style={{ width: "30%", display: "flex", flexDirection: "column", gap: "24px" }}>
-                        <div style={{ display: "flex", flexDirection: "row" }}>
-                            <CustomInboxSearchLinks
-                                headerText={"HCM_AM_BILL_INBOX"}
-                                links={[
-                                    {
-                                        url: "/employee/payments/my-bills",
-                                        text: "HCM_AM_MY_BILLS",
-                                    },
-                                ]}
-                            ></CustomInboxSearchLinks>
-                        </div>
-                        <div
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                height: "60vh",
-                                overflowY: "auto",
-                            }}
-                        >
-                            <BillBoundaryFilter
-                                isRequired={ScreenTypeEnum.BILL}
-                                selectedProject={selectedProject}
-                                selectedLevel={selectedLevel}
-                                onFilterChange={handleFilterUpdate}
-                                updateBoundaryFilters={updateFilters}
-                                resetBoundaryFilter={resetBoundaryFilter}
-                            ></BillBoundaryFilter>
-                        </div>
 
+    return (
+        <React.Fragment>
+            <div style={{ display: "flex", flexDirection: "row", gap: "24px", marginBottom: showGenerateBillAction && BillData?.bills?.length === 0 && !isBillLoading && !isFetchingBill && billGenerationStatus == null ? "2.5rem" : "0px" }}>
+                <div style={{ width: "30%", display: "flex", flexDirection: "column", gap: "24px" }}>
+                    <div style={{ display: "flex", flexDirection: "row" }}>
+                        <InboxSearchLinkHeader
+                            headerText={"HCM_AM_BILL_INBOX"}
+                            links={[
+                                {
+                                    url: "/employee/payments/my-bills",
+                                    text: "HCM_AM_MY_BILLS",
+                                },
+                            ]}
+                        ></InboxSearchLinkHeader>
                     </div>
-                    <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "24px" }}>
-                        {infoDescription && <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
-                            <InfoCard
-                                variant="default"
-                                style={{ margin: "0rem", width: "100%", maxWidth: "unset", height: "124px" }}
-                                label={t(`HCM_AM_INFO`)}
-                                text={t(infoDescription)}
-                            />
-                        </div>}
-                        <div style={{ width: "100%", display: "flex", flexDirection: "row", height: infoDescription ? "60vh" : "74vh", minHeight: "60vh" }}>
-                            {tableData == null && <Card style={{ height: infoDescription ? "60vh" : "74vh" }}>
-                                <div className="summary-sub-heading">{t(selectedProject?.name)}</div>
-                                <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name)}</div>
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            height: "60vh",
+                            overflowY: "auto",
+                        }}
+                    >
+                        <BillBoundaryFilter
+                            isRequired={ScreenTypeEnum.BILL}
+                            selectedProject={selectedProject}
+                            selectedLevel={selectedLevel}
+                            onFilterChange={handleFilterUpdate}
+                            resetBoundaryFilter={resetBoundaryFilter}
+                        ></BillBoundaryFilter>
+                    </div>
 
-                                <SearchResultsPlaceholder placeholderText={t("HCM_AM_BILL_INBOX_PLACEHOLDER_IMAGE_TEXT")} /> </Card>}
-                            {tableData && <Card style={{ width: "100%", }}>
-                                {tableData != null && <div className="summary-sub-heading">{t(selectedProject?.name)}</div>}
-                                {tableData != null && <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name)}</div>}
-                                <div>
-                                    {(approvalCount !== null && pendingApprovalCount !== null) && (
-                                        <Tab
-                                            activeLink={activeLink?.code}
-                                            configItemKey="code"
-                                            configDisplayKey="name"
-                                            itemStyle={{ width: "400px" }}
-                                            configNavItems={[
-                                                {
-                                                    code: "APPROVED",
-                                                    name: `${`${t(`HCM_AM_APPROVED_REGISTER`)} (${approvalCount})`}`,
-                                                },
-                                                {
-                                                    code: "PENDINGFORAPPROVAL",
-                                                    name: `${`${t(`HCM_AM_PENDING_REGISTER`)} (${pendingApprovalCount})`}`,
-                                                },
-                                            ]}
-                                            navStyles={{}}
-                                            onTabClick={(e) => {
-                                                setLimitAndOffset((prev) => {
-                                                    return {
-                                                        limit: prev.limit,
-                                                        offset: 0,
-                                                    };
-                                                });
-                                                setCurrentPage(1);
-                                                setActiveLink(e);
-                                            }}
-                                            setActiveLink={setActiveLink}
-                                            showNav={true}
-                                            style={{}}
-                                        />
-                                    )}
-                                    {tableData && <div style={{ maxHeight: approvalCount !== null && pendingApprovalCount !== null ? infoDescription ? "60vh" : "74vh" : "30vh" }}> <Card>
-                                        <BillInboxTable
-                                            isFetching={isFetching}
-                                            tableData={tableData}
-                                            currentPage={currentPage}
-                                            rowsPerPage={rowsPerPage}
-                                            handlePageChange={handlePageChange}
-                                            handlePerRowsChange={handlePerRowsChange}
-                                            totalCount={totalCount}
-                                            status={activeLink.code}
-                                            infoDescription={infoDescription}
-                                        ></BillInboxTable>
-                                    </Card></div>}
-                                </div>
-                            </Card>}
-                        </div>
+                </div>
+                <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "24px" }}>
+                    {infoDescription && <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
+                        <InfoCard
+                            variant="default"
+                            style={{ margin: "0rem", width: "100%", maxWidth: "unset", height: "124px" }}
+                            label={t(`HCM_AM_INFO`)}
+                            text={t(infoDescription)}
+                        />
+                    </div>}
+                    <div style={{ width: "100%", display: "flex", flexDirection: "row", height: infoDescription ? "60vh" : "74vh", minHeight: "60vh" }}>
+                        {tableData == null && <Card style={{ height: infoDescription ? "60vh" : "74vh" }}>
+                            <div className="summary-sub-heading">{t(selectedProject?.name)}</div>
+                            <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name)}</div>
+
+                            <SearchResultsPlaceholder placeholderText={t("HCM_AM_BILL_INBOX_PLACEHOLDER_IMAGE_TEXT")} /> </Card>}
+                        {tableData && <Card style={{ width: "100%", }}>
+                            {tableData != null && <div className="summary-sub-heading">{t(selectedProject?.name)}</div>}
+                            {tableData != null && <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name)}</div>}
+                            <div>
+                                {(approvalCount !== null && pendingApprovalCount !== null) && (
+                                    <Tab
+                                        activeLink={activeLink?.code}
+                                        configItemKey="code"
+                                        configDisplayKey="name"
+                                        itemStyle={{ width: "400px" }}
+                                        configNavItems={[
+                                            {
+                                                code: "APPROVED",
+                                                name: `${`${t(`HCM_AM_APPROVED_REGISTER`)} (${approvalCount})`}`,
+                                            },
+                                            {
+                                                code: "PENDINGFORAPPROVAL",
+                                                name: `${`${t(`HCM_AM_PENDING_REGISTER`)} (${pendingApprovalCount})`}`,
+                                            },
+                                        ]}
+                                        navStyles={{}}
+                                        onTabClick={(e) => {
+                                            setLimitAndOffset((prev) => {
+                                                return {
+                                                    limit: prev.limit,
+                                                    offset: 0,
+                                                };
+                                            });
+                                            setCurrentPage(1);
+                                            setActiveLink(e);
+                                        }}
+                                        setActiveLink={setActiveLink}
+                                        showNav={true}
+                                        style={{}}
+                                    />
+                                )}
+                                {tableData && <div style={{ maxHeight: approvalCount !== null && pendingApprovalCount !== null ? infoDescription ? "60vh" : "74vh" : "30vh" }}> <Card>
+                                    <BillInboxTable
+                                        isFetching={isFetching}
+                                        tableData={tableData}
+                                        currentPage={currentPage}
+                                        rowsPerPage={rowsPerPage}
+                                        handlePageChange={handlePageChange}
+                                        handlePerRowsChange={handlePerRowsChange}
+                                        totalCount={totalCount}
+                                        status={activeLink.code}
+                                        infoDescription={infoDescription}
+                                    ></BillInboxTable>
+                                </Card></div>}
+                            </div>
+                        </Card>}
                     </div>
                 </div>
+            </div>
 
-                {openAlertPopUp && <AlertPopUp
-                    onClose={() => {
-                        setOpenAlertPopUp(false);
-                    }}
-                    alertHeading={t(`HCM_AM_BILL_GENERATION_ALERT_HEADING`)}
-                    alertMessage={t(`HCM_AM_BILL_GENERATION_ALERT_DESCRIPTION`)}
-                    submitLabel={t(`HCM_AM_GENERATE_BILL`)}
-                    cancelLabel={t(`HCM_AM_CANCEL`)}
-                    onPrimaryAction={() => {
-                        setOpenAlertPopUp(false);
-                        triggerGenerateBill();
-                    }}
-                />}
+            {/* Alert Pop-Up for Bill Generation */}
+            {openAlertPopUp && <AlertPopUp
+                onClose={() => {
+                    setOpenAlertPopUp(false);
+                }}
+                alertHeading={t(`HCM_AM_BILL_GENERATION_ALERT_HEADING`)}
+                alertMessage={t(`HCM_AM_BILL_GENERATION_ALERT_DESCRIPTION`)}
+                submitLabel={t(`HCM_AM_GENERATE_BILL`)}
+                cancelLabel={t(`HCM_AM_CANCEL`)}
+                onPrimaryAction={() => {
+                    setOpenAlertPopUp(false);
+                    triggerGenerateBill();
+                }}
+            />}
 
-                {showGenerateBillAction && BillData?.bills?.length === 0 && !isBillLoading && !isFetchingBill && billGenerationStatus == null &&
-                    < ActionBar
-                        actionFields={[
-                            <Button
-                                icon="CheckCircle"
-                                label={t(`HCM_AM_GENERATE_BILL_LABEL`)}
-                                onClick={() => {
-                                    setOpenAlertPopUp(true);
-                                    // triggerGenerateBill();
-                                }}
-                                style={{
-                                    minWidth: "14rem",
-                                    opacity: billGenerationStatus != null ? 0.5 : 1,
-                                }}
-                                type="button"
-                                variation="primary"
-                                isDisabled={generateBillMutation.isLoading}
-                            />,
-                        ]}
-                        className=""
-                        maxActionFieldsAllowed={5}
-                        setactionFieldsToRight
-                        sortActionFields
-                        style={{}}
-                    />
-                }
-                {showToast && (
-                    <Toast
-                        style={{ zIndex: 10001 }}
-                        label={showToast.label}
-                        type={showToast.key}
-                        // error={showToast.key === "error"}
-                        transitionTime={showToast.transitionTime}
-                        onClose={() => setShowToast(null)}
-                    />
-                )}
-            </React.Fragment>
-        );
-    }
+            {/* Action Bar for Bill Generation */}
+            {showGenerateBillAction && BillData?.bills?.length === 0 && !isBillLoading && !isFetchingBill && billGenerationStatus == null &&
+                < ActionBar
+                    actionFields={[
+                        <Button
+                            icon="CheckCircle"
+                            label={t(`HCM_AM_GENERATE_BILL_LABEL`)}
+                            onClick={() => {
+                                setOpenAlertPopUp(true);
+                            }}
+                            style={{
+                                minWidth: "14rem",
+                                opacity: billGenerationStatus != null ? 0.5 : 1,
+                            }}
+                            type="button"
+                            variation="primary"
+                            isDisabled={generateBillMutation.isLoading}
+                        />,
+                    ]}
+                    className=""
+                    maxActionFieldsAllowed={5}
+                    setactionFieldsToRight
+                    sortActionFields
+                    style={{}}
+                />
+            }
+            {showToast && (
+                <Toast
+                    style={{ zIndex: 10001 }}
+                    label={showToast.label}
+                    type={showToast.key}
+                    transitionTime={showToast.transitionTime}
+                    onClose={() => setShowToast(null)}
+                />
+            )}
+        </React.Fragment>
+    );
 };
-export default CustomBillInbox;
+
+export default BillInboxComponent;

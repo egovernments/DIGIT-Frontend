@@ -3,6 +3,21 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ScreenTypeEnum } from "../utils/constants";
 
+/**
+ * BoundaryComponent allows users to select boundaries based on the hierarchy.
+ * It manages the selected boundaries, updates session storage, and fetches child boundaries.
+ *
+ * @param {object} props - Component props.
+ * @param {boolean} props.reset - Flag to reset component state.
+ * @param {function} props.makeReset - Function to toggle reset flag.
+ * @param {object} props.initialValue - Initial selected values for boundaries.
+ * @param {function} props.updateSeeeionStorage - Function to update session storage.
+ * @param {object} props.selectedProject - Selected project details.
+ * @param {function} props.onChange - Callback for boundary selection change.
+ * @param {string} props.lowestLevel - Lowest level boundary type.
+ * @param {boolean} props.isRequired - Indicates if selection is required.
+ */
+
 const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorage, selectedProject, onChange, lowestLevel, isRequired }) => {
   const kk = Digit.SessionStorage.get("boundaryHierarchyOrder").map((item) => item.code);
 
@@ -32,20 +47,6 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
 
   const [lowest, setLowest] = useState(lowestLevel);
 
-  // useEffect(() => {
-  //   debugger;
-  //   if (initialValue) {
-  //     setSelectedValues(JSON.parse(initialValue));
-  //     const data = JSON.parse(initialValue);
-  //     const updatedValues = kk.reduce((acc, boundary) => {
-  //       acc[boundary] = data[boundary] ? [data[boundary]] : [];
-  //       return acc;
-  //     }, {});
-
-  //     debugger;
-  //     setValue(updatedValues);
-  //   }
-  // }, []);
   useEffect(() => {
     if (initialValue) {
       const parsedData = initialValue;
@@ -86,22 +87,6 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
 
   const { isLoading: childrenDataLoading, data: childrenData } = Digit.Hooks.payments.useAttendanceBoundarySearch(reqCriteriaResource);
 
-  // useEffect(() => {
-  //   if (selectedProject) {
-  //     setSelectedValues(defaultSelectData);
-  //     setValue(
-  //       kk.reduce((acc, curr) => {
-  //         acc[curr] = [];
-  //         return acc;
-  //       }, {})
-  //     );
-  //     setBoundaryData(defaultBoundaryData);
-
-  //     // if (updateSeeeionStorage) {
-  //     //   updateSeeeionStorage(defaultSelectData);
-  //     // }
-  //   }
-  // }, [selectedProject]);
 
   useEffect(() => {
     if (childrenData && childrenData.length > 0) {

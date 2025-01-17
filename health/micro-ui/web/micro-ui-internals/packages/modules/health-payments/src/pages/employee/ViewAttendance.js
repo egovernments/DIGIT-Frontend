@@ -9,10 +9,18 @@ import ApproveCommentPopUp from "../../components/approveCommentPopUp";
 import _ from "lodash";
 import { formatTimestampToDate } from "../../utils";
 
+/**
+ * @function ViewAttendance
+ * @description This component is used to view attendance.
+ * @param {boolean} editAttendance - Whether attendance is editable or not.
+ * @returns {ReactFragment} A React Fragment containing the attendance details.
+ */
 const ViewAttendance = ({ editAttendance = false }) => {
   const location = useLocation();
   const { t } = useTranslation();
   const history = useHistory();
+
+  // State variables
   const { registerNumber, boundaryCode } = Digit.Hooks.useQueryParams();
   const { fromCampaignSupervisor } = location.state || false;
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -358,7 +366,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
       const nameA = a[1].toLowerCase(); // Convert to lowercase for case-insensitive sorting
       const nameB = b[1].toLowerCase();
       return nameA.localeCompare(nameB);
-  });
+    });
 
     return sortedData;
   }
@@ -403,11 +411,18 @@ const ViewAttendance = ({ editAttendance = false }) => {
     setOpenEditAlertPopUp(false);
   };
 
+  const renderLabelPair = (heading, text) => (
+    <div className="label-pair">
+      <span className="label-heading">{t(heading)}</span>
+      <span className="label-text">{text}</span>
+    </div>
+  );
+
   if (updateMutation.isLoading) {
     return <LoaderComponent variant={"OverlayLoader"} />
   }
 
-  if (isAttendanceLoading || isEstimateMusterRollLoading || isIndividualsLoading || isMusterRollLoading || isAllIndividualsLoading || mutation.isLoading || isrefetching) {
+  if (loding || isAttendanceLoading || isEstimateMusterRollLoading || isIndividualsLoading || isMusterRollLoading || isAllIndividualsLoading || mutation.isLoading || isrefetching) {
     return <LoaderScreen />
   }
 
@@ -418,55 +433,24 @@ const ViewAttendance = ({ editAttendance = false }) => {
           {editAttendance ? t('HCM_AM_EDIT_ATTENDANCE') : t('HCM_AM_VIEW_ATTENDANCE')}
         </Header>
         <Card type="primary" className="middle-child">
-          <div className="label-pair">
-            <span className="label-heading">{t(`HCM_AM_ATTENDANCE_ID`)}</span>
-            <span className="label-text">{t(registerNumber)}</span>
-          </div>
-          <div className="label-pair">
-            <span className="label-heading">{t(`HCM_AM_CAMPAIGN_NAME`)}</span>
-            <span className="label-text">{t(project?.[0]?.name || "NA")}</span>
-          </div>
-          <div className="label-pair">
-            <span className="label-heading">{t(`HCM_AM_PROJECT_TYPE`)}</span>
-            <span className="label-text">{t(project?.[0]?.projectType || "NA")}</span>
-          </div>
-          <div className="label-pair">
-            <span className="label-heading">{t(`HCM_AM_BOUNDARY_CODE`)}</span>
-            <span className="label-text">{t(boundaryCode || "NA")}</span>
-          </div>
-          <div className="label-pair">
-            <span className="label-heading">{t(`HCM_AM_ATTENDANCE_OFFICER`)}</span>
-            <span className="label-text">{individualsData?.Individual?.[0]?.name?.givenName}</span>
-          </div>
-          <div className="label-pair">
-            <span className="label-heading">{t(`HCM_AM_ATTENDANCE_OFFICER_CONTACT_NUMBER`)}</span>
-            <span className="label-text">{individualsData?.Individual?.[0]?.mobileNumber}</span>
-          </div>
-          <div className="label-pair">
-            <span className="label-heading">{t(`HCM_AM_NO_OF_ATTENDEE`)}</span>
-            <span className="label-text">{AttendanceData?.attendanceRegister[0]?.attendees?.length || 0}</span>
-          </div>
-          <div className="label-pair">
-            <span className="label-heading">{t(`HCM_AM_CAMPAIGN_START_DATE`)}</span>
-            <span className="label-text">{formatTimestampToDate(project?.[0]?.startDate)}</span>
-          </div>
-          <div className="label-pair">
-            <span className="label-heading">{t(`HCM_AM_CAMPAIGN_END_DATE`)}</span>
-            <span className="label-text">{formatTimestampToDate(project?.[0]?.endDate)}</span>
-          </div>
-          <div className="label-pair">
-            <span className="label-heading">{t(`HCM_AM_EVENT_DURATION`)}</span>
-            <span className="label-text">{attendanceDuration || 0}</span>
-          </div>
-          <div className="label-pair">
-            <span className="label-heading">{t(`HCM_AM_STATUS`)}</span>
-            <span className="label-text">{t(data?.[0]?.musterRollStatus) || t(`APPROVAL_PENDING`)}</span>
-          </div>
+          {renderLabelPair('HCM_AM_ATTENDANCE_ID', t(registerNumber))}
+          {renderLabelPair('HCM_AM_CAMPAIGN_NAME', t(project?.[0]?.name || 'NA'))}
+          {renderLabelPair('HCM_AM_PROJECT_TYPE', t(project?.[0]?.projectType || 'NA'))}
+          {renderLabelPair('HCM_AM_BOUNDARY_CODE', t(boundaryCode || 'NA'))}
+          {renderLabelPair('HCM_AM_ATTENDANCE_OFFICER', individualsData?.Individual?.[0]?.name?.givenName)}
+          {renderLabelPair('HCM_AM_ATTENDANCE_OFFICER_CONTACT_NUMBER', individualsData?.Individual?.[0]?.mobileNumber)}
+          {renderLabelPair('HCM_AM_NO_OF_ATTENDEE', AttendanceData?.attendanceRegister[0]?.attendees?.length || 0)}
+          {renderLabelPair('HCM_AM_CAMPAIGN_START_DATE', formatTimestampToDate(project?.[0]?.startDate))}
+          {renderLabelPair('HCM_AM_CAMPAIGN_END_DATE', formatTimestampToDate(project?.[0]?.endDate))}
+          {renderLabelPair('HCM_AM_EVENT_DURATION', attendanceDuration || 0)}
+          {renderLabelPair('HCM_AM_STATUS', t(data?.[0]?.musterRollStatus) || t('APPROVAL_PENDING'))}
         </Card>
         <Card>
           <AttendanceManagementTable data={attendanceSummary} setAttendanceSummary={setAttendanceSummary} duration={attendanceDuration} editAttendance={editAttendance} />
         </Card>
       </div>
+
+      {/* Alert Pop-Up for edit */}
       {openEditAlertPopUp && <AlertPopUp
         onClose={closeActionBarPopUp}
         alertHeading={t(`HCM_AM_ALERT_HEADING`)}
@@ -477,6 +461,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
           history.push(`/${window.contextPath}/employee/payments/edit-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}`);
         }}
       />}
+
+      {/* Alert Pop-Up for approve */}
       {openApproveAlertPopUp && <AlertPopUp
         onClose={() => {
           setOpenApproveAlertPopUp(false);
@@ -489,6 +475,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
           triggerMusterRollApprove();
         }}
       />}
+
+      {/* approve comment pop-up*/}
       {openApproveCommentPopUp && <ApproveCommentPopUp
         onClose={() => {
           setOpenApproveCommentPopUp(false);
@@ -499,6 +487,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
           setOpenApproveAlertPopUp(true);
         }}
       />}
+
+      {/* action bar for bill generation*/}
       <ActionBar
         actionFields={[
           disabledAction ? (

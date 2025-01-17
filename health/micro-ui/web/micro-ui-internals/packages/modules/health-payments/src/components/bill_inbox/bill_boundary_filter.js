@@ -1,17 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { CheckBox, SubmitBar } from "@egovernments/digit-ui-components";
-import BoundaryComponent from "../sample";
-import { Card, SVG, Button, ButtonGroup, TextBlock, Dropdown, Toast } from "@egovernments/digit-ui-components";
-const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilterChange, updateBoundaryFilters, resetBoundaryFilter }) => {
+import BoundaryComponent from "../BoundaryComponent";
+import { Card, SVG, Toast } from "@egovernments/digit-ui-components";
+
+/**
+ * BillBoundaryFilter component allows users to filter boundaries
+ * based on the selected project and level.
+ *
+ * @param {boolean} isRequired - Whether the filter is required.
+ * @param {object} selectedProject - The currently selected project.
+ * @param {object} selectedLevel - The currently selected boundary level.
+ * @param {function} onFilterChange - Callback when a filter is applied.
+ * @param {function} resetBoundaryFilter - Function to reset boundary filters.
+ */
+const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilterChange, resetBoundaryFilter }) => {
     const { t } = useTranslation();
+
+    // State variables
     const [boundary, setBoundary] = useState(() => Digit.SessionStorage.get("boundary") || null);
     const [showToast, setShowToast] = useState(null);
-    const [boundaryType, setBoundaryType] = useState("");
     const [boundaryKey, setBoundaryKey] = useState(0);
     const [resetFilters, setResetFilters] = useState(false);
-    const [levelSelected, setLevelSelected] = useState(() => Digit.SessionStorage.get("selectedLevel") || null);
 
+    /**
+   * Applies the selected boundary filter.
+   * Displays a toast if the boundary is not properly selected.
+   */
     const handleApplyFilter = () => {
 
         if (!boundary || boundary?.boundaryType !== selectedLevel?.code) {
@@ -22,6 +37,8 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
         setShowToast(null);
         onFilterChange(boundary.code);
     };
+
+    // Updates the boundary when changed in the BoundaryComponent.
     const onBoundaryChange = (boundary) => {
         if (boundary) {
             setBoundary(boundary);
@@ -33,22 +50,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
         }
     };
 
-    useEffect(() => {
-
-        if (updateBoundaryFilters) {
-            setResetFilters(true);
-            setBoundary(null);
-            Digit.SessionStorage.set("boundary", null);
-            Digit.SessionStorage.set("selectedBoundaryCode", null);
-        }
-
-    }, [levelSelected])
-
-
-    useEffect(() => {
-        setLevelSelected(selectedLevel);
-    }, [selectedLevel])
-
+    // Clears all applied filters and resets the component state.
     const handleClearFilter = () => {
         setResetFilters(true);
         setBoundary(""); // Clear the boundary value
@@ -58,6 +60,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
         Digit.SessionStorage.set("selectedValues", null);
         resetBoundaryFilter();
     };
+
     return (
         <Card
             className="inbox-search-links-container"

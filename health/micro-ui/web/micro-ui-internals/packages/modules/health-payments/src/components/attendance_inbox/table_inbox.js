@@ -1,11 +1,10 @@
-import { Button, Card, Chip, Header, Loader, PopUp, Toast, CardText, NoResultsFound, Tab } from "@egovernments/digit-ui-components";
+import { Button, Card, Loader, NoResultsFound, Tab } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import DataTable from "react-data-table-component";
-import { useQueryClient } from "react-query";
 import { CustomSVG } from "@egovernments/digit-ui-components";
-import { tableCustomStyle } from "./table_inbox_custom_style";
+import { tableCustomStyle } from "../table_inbox_custom_style";
 import { defaultPaginationValues } from "../../utils/constants";
 
 const CustomInboxTable = ({
@@ -20,17 +19,12 @@ const CustomInboxTable = ({
   selectedProject
 }) => {
   const { t } = useTranslation();
+  const history = useHistory();
+
   const [activeLink, setActiveLink] = useState({
     code: "PENDINGFORAPPROVAL",
     name: "HCM_AM_PENDING_FOR_APPROVAL",
   });
-
-  // const [tableDatak, setTableDatak] = useState([]);
-
-  // useEffect(() => {
-  //   setTableDatak(tableData)
-
-  // }, [tableData]);
 
   const handlePaginationChange = (page) => {
     customHandlePaginationChange(page);
@@ -42,29 +36,38 @@ const CustomInboxTable = ({
   const columns = [
     {
       name: (
-        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+        <div className="custom-inbox-table-row">
           {t("HCM_AM_ATTENDANCE_ID")}
         </div>
       ),
       selector: (row) => {
         return (
-          <span className="link" style={{ fontSize: "14px" }}>
-            <Link to={`/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`}>
-              {String(row?.id ? row?.id : t("ES_COMMON_NA"))}
-            </Link>
+          <span className="link" >
+            <Button
+              label={t(`${row.id}`)}
+              onClick={() =>
+                history.push(
+                  `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+                )
+              }
+              title={t(`${row.id}`)}
+              variation="link"
+              size={"medium"}
+              style={{ minWidth: "unset" }}
+            />
           </span>
         );
       },
     },
     {
       name: (
-        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+        <div className="custom-inbox-table-row">
           {activeLink?.code == "PENDINGFORAPPROVAL" ? t("HCM_AM_ATTENDANCE_MARKED_BY") : t("HCM_AM_ATTENDANCE_APPROVED_BY")}
         </div>
       ),
       selector: (row) => {
         return (
-          <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={activeLink?.code == "PENDINGFORAPPROVAL" ? row?.markby : row?.approvedBy
+          <div className="ellipsis-cell" title={activeLink?.code == "PENDINGFORAPPROVAL" ? row?.markby : row?.approvedBy
             || t("NA")}>
             {activeLink?.code == "PENDINGFORAPPROVAL" ? row?.markby : row?.approvedBy || t("NA")}
           </div>
@@ -73,13 +76,13 @@ const CustomInboxTable = ({
     },
     {
       name: (
-        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+        <div className="custom-inbox-table-row">
           {t("HCM_AM_ATTENDANCE_BOUNDARY")}
         </div>
       ),
       selector: (row) => {
         return (
-          <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={t(row?.boundary) || t("NA")}>
+          <div className="ellipsis-cell" title={t(row?.boundary) || t("NA")}>
             {t(row.boundary) || t("NA")}
           </div>
         );
@@ -90,7 +93,7 @@ const CustomInboxTable = ({
       name: t("HCM_AM_ATTENDANCE_ATTENDEES"),
       selector: (row) => {
         return (
-          <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={t(row?.status || "0")}>
+          <div className="ellipsis-cell" title={t(row?.status || "0")}>
             {t(row?.status || "0")}
           </div>
         );

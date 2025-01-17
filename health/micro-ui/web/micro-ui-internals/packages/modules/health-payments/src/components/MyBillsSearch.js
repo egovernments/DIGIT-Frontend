@@ -1,10 +1,15 @@
-import { LabelFieldPair, CardLabel, SubmitBar, LinkLabel, TextBlock, TextInput, Card, Button, ButtonGroup } from "@egovernments/digit-ui-components";
-import React, { useEffect, Fragment, useState, useRef } from "react";
+import { TextBlock, TextInput, Card, Button, ButtonGroup } from "@egovernments/digit-ui-components";
+import React, { useEffect, Fragment, useState, } from "react";
 import { useTranslation } from "react-i18next";
-import { useMyContext } from "../utils/context";
-import { Dropdown, MultiSelectDropdown } from "@egovernments/digit-ui-components";
 import DateRangePicker from "./DateRangePicker";
 
+/**
+ * MyBillsSearch component allows users to search for bills based on bill ID and date range.
+ *
+ * @param {function} onSubmit - Callback function when search is executed.
+ * @param {function} onClear - Callback function when the search is cleared.
+ * @returns {JSX.Element} The JSX content for the search component.
+ */
 const MyBillsSearch = ({ onSubmit = () => { }, onClear = () => { } }) => {
     const { t } = useTranslation();
 

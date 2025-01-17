@@ -5,13 +5,10 @@ import { default as EmployeeApp } from "./pages/employee";
 import PaymentsCard from "./components/PaymentsCard";
 import { overrideHooks, updateCustomConfigs } from "./utils";
 import { ProviderContext } from "./utils/context";
-import BoundaryComponent from "./components/sample";
-import CampaignNameSelection from "./components/campaign_dropdown";
-import CustomInboxSearchComposer from "./components/custom_inbox_composer";
-import CustomInboxSearchLinks from "./components/custom_comp/link_section";
-import CustomSearchComponent from "./components/custom_comp/search_section";
-import CustomFilter from "./components/custom_comp/filter_section";
-import CustomInboxTable from "./components/custom_comp/table_inbox";
+import BoundaryComponent from "./components/BoundaryComponent";
+import AttendanceInboxComponent from "./components/attendance_inbox/attendance_inbox";
+import InboxSearchLinkHeader from "./components/InboxSearchLinkHeader";
+import SearchResultsPlaceholder from "./components/SearchResultsPlaceholder";
 
 export const PaymentsModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -47,7 +44,7 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
 
   Digit.SessionStorage.set("paymentsConfig", paymentsConfig);
 
-  if (isLoading ||isPaymentsModuleInitializing || isMDMSLoading) {
+  if (isLoading || isPaymentsModuleInitializing || isMDMSLoading) {
     return <Loader />;
   } else {
     return (
@@ -62,13 +59,9 @@ const componentsToRegister = {
   PaymentsModule,
   PaymentsCard,
   BoundaryComponent,
-  CampaignNameSelection,
-  //
-  CustomInboxSearchComposer,
-  CustomInboxSearchLinks,
-  CustomSearchComponent,
-  CustomFilter,
-  CustomInboxTable,
+  AttendanceInboxComponent,
+  InboxSearchLinkHeader,
+  SearchResultsPlaceholder,
 };
 
 export const initPaymentComponents = () => {

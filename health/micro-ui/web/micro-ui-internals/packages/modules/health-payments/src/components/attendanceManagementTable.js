@@ -4,9 +4,20 @@ import { useTranslation } from "react-i18next";
 import { Loader, TextInput, Toast } from "@egovernments/digit-ui-components";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
-import { tableCustomStyle } from "./custom_comp/table_inbox_custom_style";
+import { tableCustomStyle } from "./table_inbox_custom_style";
 import { defaultPaginationValues, defaultRowsPerPage } from "../utils/constants";
 
+/**
+ * A React component for displaying a paginated table of frontline workers
+ * with editable columns for days worked and their roles.
+ *
+ * @param {object} props The props object contains the data to be displayed,
+ * the onEditAttendanceChange function to be called when the user updates
+ * the attendance records, the editAttendance boolean to indicate whether
+ * the table should be editable or not, and the duration of the event to validate max date.
+ *
+ * @returns {ReactElement} The JSX element for the table.
+ */
 const AttendanceManagementTable = ({ ...props }) => {
   const { t } = useTranslation();
   const history = useHistory();
@@ -106,11 +117,8 @@ const AttendanceManagementTable = ({ ...props }) => {
       value = value?.target?.value;
     }
 
-
-    console.log("Value 1st: ", value);
-
     // Remove leading zeros from the value
-    value = value === 0 ?  value : String(value).replace(/^0+/, "") ;
+    value = value === 0 ? value : String(value).replace(/^0+/, "");
 
     // Find the worker whose attendance is being updated
     const worker = props.data.find((worker) => worker[2] === workerId);

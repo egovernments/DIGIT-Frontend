@@ -2,10 +2,21 @@ import React from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { CustomSVG } from "@egovernments/digit-ui-components";
-// import {SearchCustomSVG} from ./SearchCustomSVG
+
+/**
+ * Component to display a placeholder when there are no search is performed.
+ * @param {Object} props Component props.
+ * @param {string} props.className CSS class for the component.
+ * @param {Object} props.style CSS style for the component.
+ * @param {string} [props.placeholderText] Text to be displayed. If not provided, it defaults to "COMMON_NO_RESULTS_FOUND".
+ * @param {number} [props.height] Height of the SearchResultsPlaceholder. If not provided, it defaults to 262.
+ * @param {number} [props.width] Width of the SearchResultsPlaceholder. If not provided, it defaults to 336.
+ * @returns {ReactElement} The component.
+ */
 
 const SearchResultsPlaceholder = (props) => {
     const { t } = useTranslation();
+
     const iconHeight = props?.height || 262;
     const iconWidth = props?.width || 336;
     return (
@@ -22,8 +33,8 @@ SearchResultsPlaceholder.propTypes = {
     style: PropTypes.object,
     className: PropTypes.string,
     placeholderText: PropTypes.string,
-    height: PropTypes.number, // Prop for the height of the NoResultsFoundIcon
-    width: PropTypes.number, // Prop for the width of the NoResultsFoundIcon
+    height: PropTypes.number,
+    width: PropTypes.number,
 };
 
 // Default props for height and width
