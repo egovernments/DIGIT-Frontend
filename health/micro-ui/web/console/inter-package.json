@@ -1,11 +1,9 @@
 {
   "name": "egovernments",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "main": "index.js",
   "workspaces": [
-    "example",
-    "packages/css",
-    "packages/modules/*"
+    "packages/modules/campaign-manager"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
@@ -19,28 +17,21 @@
     "start:dev": "run-p dev:**",
     "start:script": "./scripts/create.sh",
     "dev:css": "cd packages/css && yarn start",
-    "publish:css": "cd packages/css && yarn && npm publish --tag workbench-1.0",
+    "publish:css": "cd packages/css && yarn publish --access public",
     "dev:example": "cd example && yarn start",
     "dev:campaign": "cd packages/modules/campaign-manager && yarn start",
-    "devD:hcmmicroplan": "cd packages/modules/hcm-microplanning && yarn start",
-    "dev:workbench-hcm": "cd packages/modules/workbench-hcm && yarn start",
-    "dev:microplan": "cd packages/modules/microplan && yarn start",
-    "dev:healthpayments": "cd packages/modules/health-payments && yarn start",
     "build": "run-p build:**",
     "build:campaign": "cd packages/modules/campaign-manager && yarn build",
-    "build:hcmmicroplan": "cd packages/modules/hcm-microplanning && yarn build",
-    "build:workbench-hcm": "cd packages/modules/workbench-hcm && yarn build",
-    "build:microplan": "cd packages/modules/microplan && yarn build",
-    "build:healthpayments": "cd packages/modules/health-payments && yarn build",
     "deploy:jenkins": "./scripts/jenkins.sh",
     "clean": "rm -rf node_modules"
   },
   "resolutions": {
     "**/@babel/runtime": "7.20.1",
-    "**/styled-components": "5.0.0",
-    "**/@babel/traverse": "7.25.9",
+    "**/@babel/traverse":"7.25.9",
     "**/babel-preset-react-app": "10.0.0",
-    "**/@jridgewell/gen-mapping": "0.3.5"
+    "**/@jridgewell/gen-mapping": "0.3.5",
+    "**/ajv": "8.11.2",
+    "fast-uri":"2.1.0"
   },
   "devDependencies": {
     "husky": "7.0.4",
@@ -53,11 +44,10 @@
     "*.{js,css,md}": "prettier --write"
   },
   "dependencies": {
-    "@egovernments/digit-ui-react-components": "1.8.14",
-    "@egovernments/digit-ui-components": "0.0.2-beta.58",
-    "ajv": "8.12.0",
     "lodash": "4.17.21",
     "microbundle-crl": "0.13.11",
+    "@egovernments/digit-ui-react-components": "1.8.2-beta.18",
+    "@egovernments/digit-ui-components": "0.0.2-beta.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-hook-form": "6.15.8",

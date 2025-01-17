@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import {  EditIcon, Header, Loader, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
 import {  Toast, Card, Stepper, TextBlock ,Tag } from "@egovernments/digit-ui-components";
-
+import TagComponent from "./TagComponent";
 
 function mergeObjects(item) {
   const arr = item;
@@ -352,7 +352,7 @@ const DeliveryDetailsSummary = (props) => {
           </Card>
         </div>
         <div className="card-container-delivery">
-        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
+        <TagComponent campaignName={campaignName} />  
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <Header className="summary-header">{t("HCM_DELIVERY_DETAILS_SUMMARY")}</Header>
           </div>

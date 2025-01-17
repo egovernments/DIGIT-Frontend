@@ -2,8 +2,7 @@ import React, { useEffect, useState,Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Header, Loader, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Toast, Stepper, TextBlock, Card ,Tag } from "@egovernments/digit-ui-components";
-
-
+import TagComponent from "./TagComponent";
 
 
 function boundaryDataGrp(boundaryData) {
@@ -152,7 +151,7 @@ const BoundarySummary = (props) => {
         </div>
 
         <div className="card-container-delivery">
-        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
+        <TagComponent campaignName={campaignName} />
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Header className="summary-header">{t("ES_BOUNDARY_SUMMARY_HEADING")}</Header>
       </div>

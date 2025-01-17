@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { FilterCard, Dropdown, LabelFieldPair, RadioButtons, TextBlock } from "@egovernments/digit-ui-components";
+import { FilterCard, Dropdown, LabelFieldPair, RadioButtons, TextBlock, Loader } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../utils/context";
 
 
@@ -8,35 +8,42 @@ import { useMyContext } from "../utils/context";
 const InboxFilterWrapper = (props) => {
   const { state } = useMyContext();
   const { t } = useTranslation();
+  const {microplanId,...rest} = Digit.Hooks.useQueryParams()
+  const tenantId = Digit.ULBService.getCurrentTenantId();
   const [filterValues, setFilterValues] = useState(
-    { status: null, onRoadCondition: null, terrain: null, securityQ1: null, securityQ2: null }
+    { status: null, onRoadCondition: null, terrain: null, securityQ1: null, securityQ2: null,facilityID:null }
   );
-
 
   // Default selected option
   let defaultSelectedOptions = props.defaultValue
-    ? Object.entries(props.defaultValue).reduce((acc, [key, value]) => {
-      if (value !== null) {
+  ? Object.entries(props.defaultValue).reduce((acc, [key, value]) => {
+      if (key === "facilityId") {
+        acc[key] = { code: value?.code, name: `${t(key)} (${value})` };
+      } else if (value !== null) {
         acc[key] = { code: value, name: `${t(key)} (${value})` };
       } else {
         acc[key] = null;
       }
       return acc;
     }, {})
-    : null;
+  : null;
+
 
   // Initialize state with the default selected option
   useEffect(() => {
     if (props.defaultValue && Object.keys(props.defaultValue).length > 0) {
       const newDefault = Object.entries(props.defaultValue).reduce((acc, [key, value]) => {
         acc[key] = value !== null
-          ? { code: value, name: `${t(key)} (${value})` }
+          ? key === 'facilityId'
+            ? { code: value?.code }
+            : { code: value, name: `${t(key)} (${value})` }
           : null;
         return acc;
       }, {});
       setFilterValues(newDefault);
     }
   }, [props.defaultValue, t]);
+  
 
 
 
@@ -49,6 +56,7 @@ const InboxFilterWrapper = (props) => {
       name: `${t(key)} (${value})`,
     }));
   };
+  
 
   // Generate options from props.options
   const resultArray = createArrayFromObject(props?.options, t);
@@ -62,15 +70,16 @@ const InboxFilterWrapper = (props) => {
   const handleApplyFilters = () => {
     if (props.onApplyFilters) {
       const filtersToApply = {};
-
       for (let key in filterValues) {
-        if (filterValues[key] && typeof filterValues[key] === 'object' && filterValues[key].hasOwnProperty('code')) {
+        if(filterValues[key] && typeof filterValues[key] === 'object' && String(key)==='facilityId' &&filterValues[key].hasOwnProperty('code') ){
+          filtersToApply[key] = filterValues[key]
+        }
+        else if (filterValues[key] && typeof filterValues[key] === 'object' && filterValues[key].hasOwnProperty('code')) {
           filtersToApply[key] = filterValues[key].code; // Extract 'name' if it exists
         } else {
           filtersToApply[key] = filterValues[key]; // Keep the value as is (including null)
         }
       }
-
       props.onApplyFilters(filtersToApply); // Pass the new array to onApplyFilters
     }
   };
@@ -91,6 +100,39 @@ const InboxFilterWrapper = (props) => {
       [key]: value
     }));
   };
+
+  const planFacilitySearchConfig = {
+    url: "/plan-service/plan/facility/_search",
+    body: {
+      PlanFacilitySearchCriteria: {
+        tenantId: tenantId,
+        planConfigurationId: microplanId,
+      }
+    },
+    config: {
+      enabled: props?.isPlanInbox ? props?.isPlanInbox: false,
+      select: (data) => {
+        if (!data?.PlanFacility || !Array.isArray(data.PlanFacility)) return [];
+    
+        // Extract facilityName and facilityId for each object
+        const facilityOptions = data.PlanFacility.map((facility) => ({
+          code: facility.facilityName,
+          id: facility.facilityId
+        }));
+    
+        return facilityOptions;
+      },
+      cacheTime:Infinity
+    }  
+  };
+
+  const { isLoading: isPlanFacilityLoading, error: planFacilityError, data: planFacility } = Digit.Hooks.useCustomAPIHook(planFacilitySearchConfig);
+
+
+
+  if(isPlanFacilityLoading){
+    return <Loader/>
+  }
 
   return (
 
@@ -121,9 +163,10 @@ const InboxFilterWrapper = (props) => {
             />
           </LabelFieldPair>
         )}
-
+        {props.isPlanInbox &&
+        <Fragment>
         <LabelFieldPair vertical>
-          <TextBlock body={t(`MP_VILLAGE_ROAD_CONDITION`)} />
+        <div className="custom-filter-names">{t("MP_VILLAGE_ROAD_CONDITION")}</div> 
           <Dropdown
             option={state.villageRoadCondition}
             optionKey={"code"}
@@ -131,20 +174,35 @@ const InboxFilterWrapper = (props) => {
             select={(value) => handleDropdownChange("onRoadCondition", value)}
             t={t}
             disabled={false}
+            showToolTip={true}
           />
         </LabelFieldPair>
 
         <LabelFieldPair vertical>
-          <TextBlock body={t(`MP_VILLAGE_TERRAIN`)} />
-          <Dropdown
+        <div className="custom-filter-names">{t("MP_VILLAGE_TERRAIN")}</div>           
+        <Dropdown
             option={state.villageTerrain}
             optionKey={"code"}
             selected={filterValues["terrain"] || defaultSelectedOptions?.terrain}
             select={(value) => handleDropdownChange("terrain", value)}
             t={t}
             disabled={false}
+            showToolTip={true}
           />
         </LabelFieldPair>
+    
+        <LabelFieldPair vertical>
+        <div className="custom-filter-names">{t("MP_FILTER_FACILITY")}</div>           
+          <Dropdown
+            option={planFacility}
+            optionKey={"code"}
+            selected={filterValues["facilityId"] || defaultSelectedOptions?.facilityId  }
+            select={(value) => handleDropdownChange("facilityId", value)}
+            t={t}
+            disabled={false}
+            showToolTip={true}
+          />
+        </LabelFieldPair>   
 
 
         {state.securityQuestions.map((item, index) => {
@@ -156,24 +214,28 @@ const InboxFilterWrapper = (props) => {
           }));
 
           const isLastElement = index === state.securityQuestions.length - 1;
+          const questionNumber = parseInt(item.id, 10); 
 
           return (
             <LabelFieldPair
               vertical
               style={{ paddingBottom: isLastElement ? "1rem" : "0" }} 
             >
-              <TextBlock body={t(`MP_SECURITY_QUESTION ${index + 1}`)} />
+              <div className="custom-filter-names">{t(`MP_SECURITY_QUESTION ${index + 1}`)}</div>             
               <Dropdown
                 option={options}
-                optionKey="code"
-                selected={filterValues[`securityQ${index + 1}`]} 
-                select={(value) => handleDropdownChange(`securityQ${index + 1}`, value)}
-                t={(key) => key} 
+                optionKey={"code"}
+                selected={filterValues[`securityQ${questionNumber}`]} 
+                select={(value) => handleDropdownChange(`securityQ${questionNumber}`, value)}
+                t={t}
                 disabled={false}
+                showToolTip={true}
               />
             </LabelFieldPair>
           );
         })}
+      </Fragment>
+      }
 
 
       </div>

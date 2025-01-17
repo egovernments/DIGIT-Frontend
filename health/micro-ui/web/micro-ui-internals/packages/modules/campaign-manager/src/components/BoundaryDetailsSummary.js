@@ -47,7 +47,7 @@ const BoundaryDetailsSummary = (props) => {
       {Object.keys(groupedByParent)
         .slice(0, 2)
         .map((parentKey, index) => (
-          <div className="parent-group" key={index}>
+          <div className="summary-parent-group" key={index}>
             {parentKey && parentKey !== "undefined" && parentKey.trim() !== "" && <div className="boundary-header">{t(parentKey)}</div>}
             <div>
               <div className="digit-tag-container" style={{ display: "flex", maxWidth: "100%" , margin: "0rem" }}>
@@ -100,7 +100,7 @@ const BoundaryDetailsSummary = (props) => {
         >
           {Object.keys(groupedByParent)
             .map((parentKey, index) => (
-              <div className="parent-group" key={index} style={{ marginBottom: "20px" }}>
+              <div className="parent-group" key={index}>
                 {parentKey && parentKey !== "undefined" && parentKey.trim() !== "" && <div className="boundary-header">{t(parentKey)}</div>}
                 <div>
                   <div className="digit-tag-container" style={{ display: "flex", maxWidth: "100%" }}>

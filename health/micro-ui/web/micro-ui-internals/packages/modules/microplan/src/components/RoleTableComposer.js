@@ -78,7 +78,8 @@ function RoleTableComposer({ nationalRoles }) {
     config: {
       enabled: true,
       select: (data) => {
-        const resp = data?.Employees?.map((item, index) => {
+        const resp = data?.Employees
+        ?.map((item, index) => {
           return {
             rowIndex: index + 1,
             name: item?.user?.name,
