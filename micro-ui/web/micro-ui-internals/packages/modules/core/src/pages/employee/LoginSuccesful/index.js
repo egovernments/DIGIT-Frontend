@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Background from "../../../components/Background";
-import keycloak from "../LanguageSelection/keycloak";
+import UserService from "../LanguageSelection/keycloak";  // Importing the UserService
 import { Card, Button } from "@egovernments/digit-ui-components";
 
 const LoginSuccessPage = () => {
@@ -9,14 +9,15 @@ const LoginSuccessPage = () => {
   const history = useHistory();
 
   useEffect(() => {
-    if (keycloak.token) {
-      setToken(keycloak.token);
+    // If the user is authenticated, get the token
+    if (UserService.isLoggedIn()) {
+      setToken(UserService.getToken());
     }
   }, []);
+  console.log("teri",UserService)
 
-  // Handle logout logic
   const handleLogout = () => {
-    keycloak.logout({
+    UserService.doLogout({
       redirectUri: "http://localhost:3000/sandbox-ui/A/employee/user/language-selection", // Redirect after logout
     });
   };
@@ -55,7 +56,7 @@ const LoginSuccessPage = () => {
               }}
             >
               <strong>JWT Token:</strong>
-              <p>{token}</p>
+              <p>{UserService.getToken}</p>
             </div>
           )}
           <Button
@@ -63,7 +64,6 @@ const LoginSuccessPage = () => {
             onClick={handleProceed}
             style={{ marginTop: "30px" }}
           />
-          {/* Logout Button */}
           <Button
             label="Logout"
             onClick={handleLogout}

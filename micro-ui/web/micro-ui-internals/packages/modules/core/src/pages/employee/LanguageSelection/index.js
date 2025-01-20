@@ -1,8 +1,8 @@
-import { Button, Card, Loader } from "@egovernments/digit-ui-components";
 import React, { useEffect } from "react";
+import { Button, Card, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import Background from "../../../components/Background";
-import keycloak from "./keycloak";
+import UserService from "./keycloak";  // Importing the UserService
 
 const LanguageSelection = () => {
   const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
@@ -10,19 +10,22 @@ const LanguageSelection = () => {
   const { stateInfo } = storeData || {};
 
   useEffect(() => {
-    // If the user is already authenticated, redirect them to the success page
-    if (keycloak.authenticated) {
-      window.location.href = "http://localhost:3000/sandbox-ui/A/employee/user/success";
-    }
+    // Initialize Keycloak and check if the user is authenticated
+    UserService.initKeycloak(() => {
+      if (UserService.isLoggedIn()) {
+        window.location.href = "http://localhost:3000/sandbox-ui/A/employee/user/success";
+      }
+    });
   }, []);
 
-  // Function to call the Keycloak API and trigger login
+  console.log("kjghh",UserService);
+
   const handleLogin = async () => {
     try {
-      if (!keycloak.authenticated) {
+      if (!UserService.isLoggedIn()) {
         // Trigger login if the user is not authenticated
-        await keycloak.login({
-          redirectUri: "http://localhost:3000/sandbox-ui/A/employee/user/success", // Redirect after login
+        await UserService.doLogin({
+          redirectUri: "http://localhost:3000/sandbox-ui/A/employee/user/success",
         });
       }
     } catch (error) {
