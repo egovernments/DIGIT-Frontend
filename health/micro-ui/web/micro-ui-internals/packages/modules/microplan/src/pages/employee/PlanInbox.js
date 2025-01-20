@@ -188,15 +188,10 @@ const PlanInbox = () => {
     },
     changeQueryName:"count"
   });
-
-  useEffect(() => {
-    if (planWithCensusCount) {
-      setAssignedToMeCount(planWithCensusCount?.TotalCount);
-    }
-  }, [planWithCensusCount]);
-
-
-
+ 
+ 
+  
+  
   const {
     isLoading: isPlanWithCensusLoading,
     data: planWithCensus,
@@ -248,7 +243,7 @@ const PlanInbox = () => {
               acc[field.key] = field.value; // Set `key` as property name and `value` as property value
               return acc;
             }, {});
-
+            
           return {
             original: item,
             censusOriginal: filteredCensus,
@@ -295,7 +290,7 @@ const PlanInbox = () => {
       setDefaultBoundaries(selectedBoundaries);
       // Extract the list of codes from the selectedBoundaries array
       const boundaryCodes = selectedBoundaries.map((boundary) => boundary.code);
-
+      
       // Set census jurisdiction with the list of boundary codes
       setCensusJurisdiction(boundaryCodes);
     }
@@ -388,7 +383,7 @@ const PlanInbox = () => {
     if (workflowData) {
       // Assume selectedFilter.filterValue maps to applicationStatus or state
       const selectedState = workflowData?.states?.find((state) => state.state === selectedFilter?.status);
-
+      
       // Filter actions based on the selected state
       const availableActions = selectedState?.actions?.filter((action) => action.roles.some((role) => userRoles.includes(role)));
 
@@ -446,7 +441,7 @@ const PlanInbox = () => {
       refetchPlanWithCensus(); // Trigger the API call again after activeFilter changes
     }
   }, [selectedFilter, activeLink, censusJurisdiction, limitAndOffset]);
-
+  
   const reqCri = {
     url: `/${hrms_context_path}/employees/_search`,
     params: {
@@ -457,6 +452,13 @@ const PlanInbox = () => {
       enabled: assigneeUuids?.length > 0 ? true : false,
     },
   };
+  
+  useEffect(() => {
+    if (planWithCensusCount) {
+      setAssignedToMeCount(planWithCensusCount?.TotalCount);
+      setAssignedToAllCount(planWithCensusCount?.TotalCount);
+    }
+  }, [planWithCensusCount]);
 
   const { isLoading: isEmployeeLoading, data: employeeData, refetch: refetchHrms } = Digit.Hooks.useCustomAPIHook(reqCri);
 
