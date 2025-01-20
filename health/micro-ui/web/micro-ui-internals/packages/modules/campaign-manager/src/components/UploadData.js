@@ -30,6 +30,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const [executionCount, setExecutionCount] = useState(0);
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [notValid, setNotValid] = useState(0);
   const [apiError, setApiError] = useState(null);
   const [isValidation, setIsValidation] = useState(false);
   const [fileName, setFileName] = useState(null);
@@ -853,10 +854,14 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       downloadExcelWithCustomName({ fileStoreId: file?.filestoreId, customName: fileNameWithoutExtension });
     }
   };
+  useEffect(() =>{
+    if(totalData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.resourceId == "not-validated"){
+      setNotValid(1);
+  }
+  },[totalData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.resourceId])
   useEffect(() => {
     const fetchData = async () => {
-      if (!errorsType[type] && uploadedFile?.length > 0 && !isSuccess) {
-        // setShowToast({ key: "info", label: t("HCM_VALIDATION_IN_PROGRESS") });
+      if ((!errorsType[type] && uploadedFile?.length > 0 && !isSuccess) || notValid==1) {
         setIsValidation(true);
         setIsError(true);
         setLoader(true);
@@ -877,7 +882,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             setShowToast({ key: "error", label: errorMessage, transitionTime: 5000000 });
             setIsError(true);
             setApiError(errorMessage);
-
+            setNotValid(2);
             return;
           }
           if (temp?.status === "completed") {
@@ -975,7 +980,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     };
 
     fetchData();
-  }, [errorsType]);
+  }, [errorsType , notValid]);
 
   const Template = {
     url: "/project-factory/v1/data/_download",
