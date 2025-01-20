@@ -58,15 +58,14 @@ const ProjectSelect = () => {
         if (project == null || project?.length === 0) {
             const projectData = Digit?.SessionStorage.get("staffProjects") || [];
             setProject(projectData);
-            Digit.SessionStorage.set("selectedProject", value);
             handleProjectSelect(projectData?.[0]); // Default to the first project
         }
     }, []);
 
     // Handle project selection
     const handleProjectSelect = (value) => {
-        setSelectedProject(value);
         Digit.SessionStorage.set("selectedProject", value);
+        setSelectedProject(value);
     };
 
     // Handle aggregation level selection
@@ -87,12 +86,14 @@ const ProjectSelect = () => {
                 setShowToast({ key: "error", label: t("HCM_AM_PLEASE_SELECT_MANDATORY_FIELDS"), transitionTime: 3000 });
                 return;
             }
+            Digit.SessionStorage.set("selectedProject", selectedProject);
             history.push(`/${window.contextPath}/employee/payments/generate-bill`);
         } else {
             if (!selectedProject) {
                 setShowToast({ key: "error", label: t("HCM_AM_PROJECT_SELECTION_IS_MANDATORY"), transitionTime: 3000 });
                 return;
             }
+            Digit.SessionStorage.set("selectedProject", selectedProject);
             history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
         }
     };

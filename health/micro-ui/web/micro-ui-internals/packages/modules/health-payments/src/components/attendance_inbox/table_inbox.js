@@ -140,7 +140,7 @@ const CustomInboxTable = ({
             />
             <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", }}>
 
-              {tableData && tableData.length === 0 ? (
+              {isLoading ? <Loader /> : tableData && tableData.length === 0 ? (
                 <NoResultsFound style={{ height: "60vh" }} text={t(`HCM_AM_NO_DATA_FOUND`)} />
               ) : (
                 <DataTable
