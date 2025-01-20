@@ -853,6 +853,16 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       downloadExcelWithCustomName({ fileStoreId: file?.filestoreId, customName: fileNameWithoutExtension });
     }
   };
+  useEffect(() =>{
+    if(totalData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.resourceId == "not-validated"){
+    const errorMessage = t("HCM_INVALID_CAPACITY");
+    setErrorsType((prevErrors) => ({
+      ...prevErrors,
+      [type]: errorMessage,
+    }));
+    setIsError(true);
+  }
+  },[totalData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.resourceId])
   useEffect(() => {
     const fetchData = async () => {
       if (!errorsType[type] && uploadedFile?.length > 0 && !isSuccess) {
