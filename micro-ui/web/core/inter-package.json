@@ -45,7 +45,7 @@
     "buildD:common": "cd packages/modules/common && yarn build",
     "build:utilities": "cd packages/modules/utilities && yarn build",
     "buildD:engagement": "cd packages/modules/engagement && yarn build",
-    "buildD:workbench": "cd packages/modules/workbench && yarn build",
+    "build:workbench": "cd packages/modules/workbench && yarn build",
     "build:pgr": "cd packages/modules/pgr && yarn build",
     "buildD:openpayment": "cd packages/modules/open-payment && yarn build",
     "buildD:sandbox": "cd packages/modules/sandbox && yarn build",
