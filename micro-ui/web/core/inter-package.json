@@ -30,7 +30,7 @@
     "dev:hrms": "cd packages/modules/hrms && yarn start",
     "devD:common": "cd packages/modules/common && yarn start",
     "devD:utilities": "cd packages/modules/utilities && yarn start",
-    "devD:workbench": "cd packages/modules/workbench && yarn start",
+    "dev:workbench": "cd packages/modules/workbench && yarn start",
     "dev:pgr": "cd packages/modules/pgr && yarn start",
     "devD:openpayment": "cd packages/modules/open-payment && yarn start",
     "devD:engagement": "cd packages/modules/engagement && yarn start",
