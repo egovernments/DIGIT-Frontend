@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.8.8]  [21-Jan-2025]
+- Removed support for any new context path to have employee linked in the url.To use this,the new context path should be linked with employee. 
+
 ## [1.8.5]  [26-Nov-2024]
 - added new field util to generate field id
 
