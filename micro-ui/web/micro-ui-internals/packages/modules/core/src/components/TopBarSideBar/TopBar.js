@@ -128,7 +128,7 @@ const TopBar = ({
           (cityDetails?.city?.ulbGrade ? (
             <p className="ulb">
               {t(cityDetails?.i18nKey).toUpperCase()}{" "}
-              {t(`ULBGRADE_${cityDetails?.city?.ulbGrade.toUpperCase().replace(" ", "_").replace(".", "_")}`).toUpperCase()}
+              {/* {t(`ULBGRADE_${cityDetails?.city?.ulbGrade.toUpperCase().replace(" ", "_").replace(".", "_")}`).toUpperCase()} */}
             </p>
           ) : (
             <img className="state" src={logoUrl} />
