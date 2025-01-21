@@ -3,7 +3,7 @@ import { Button, LandingPageCard, LandingPageWrapper, Loader } from "@egovernmen
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
-const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui", "health-ui", "sanitation-ui", "core-ui", "mgramseva-web", "sandbox-ui"];
+
 
 export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
   const { isLoading, data } = Digit.Hooks.useAccessControl();
@@ -61,7 +61,7 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
         url = url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`);
         updatedUrl = url;
       } else {
-        updatedUrl = DIGIT_UI_CONTEXTS?.every((e) => url?.indexOf(`/${e}`) === -1) ? "/employee/" + url : url;
+        updatedUrl = url;
       }
       return updatedUrl;
     } else {

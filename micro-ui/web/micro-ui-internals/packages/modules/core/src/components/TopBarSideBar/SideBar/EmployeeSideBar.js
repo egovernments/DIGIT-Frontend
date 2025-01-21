@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import MediaQuery from 'react-responsive';
 
 
-const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui", "health-ui", "sanitation-ui", "core-ui", "mgramseva-web", "sandbox-ui","kibana-v8"];
+
 
 const EmployeeSideBar = () => {
   const { isLoading, data } = Digit.Hooks.useAccessControl();
@@ -97,7 +97,7 @@ const EmployeeSideBar = () => {
         history.push(updatedUrl);
       }
       else{
-        updatedUrl = DIGIT_UI_CONTEXTS?.every((e) => url?.indexOf(`/${e}`) === -1) ? hostUrl + "/employee/" + url : hostUrl + url;
+        updatedUrl = hostUrl + url;
         window.location.href = updatedUrl;
       }
     } else {

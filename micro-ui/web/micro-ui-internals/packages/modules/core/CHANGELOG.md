@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.8.15]  [21-Jan-2025]
+- Removed support for any new context path to have employee linked in the url.To use this,the new context path should be linked with employee. 
+
 ## [1.8.13]  [16-Dec-2024]
 - Made validations for name, mobile number, and password fields in user profile update screen configurable through MDMS data
   - Implemented dynamic regex validation for profile updates based on MDMS data

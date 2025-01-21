@@ -364,7 +364,6 @@ const swAccess = () => {
 };
 
 const transformURL = (url = "", tenantId) => {
-  const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui", "health-ui", "sanitation-ui", "core-ui", "mgramseva-web", "sandbox-ui"];
   if (url == "/") {
     return;
   }
@@ -374,7 +373,7 @@ const transformURL = (url = "", tenantId) => {
       url = url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`);
       updatedUrl = url;
     } else {
-      updatedUrl = DIGIT_UI_CONTEXTS?.every((e) => url?.indexOf(`/${e}`) === -1) ? "/employee/" + url : url;
+      updatedUrl = url;
     }
     return updatedUrl;
   } else {
