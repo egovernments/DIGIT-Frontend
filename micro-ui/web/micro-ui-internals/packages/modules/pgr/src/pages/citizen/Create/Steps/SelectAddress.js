@@ -5,10 +5,11 @@ import { subtract } from "lodash";
 const SelectAddress = ({ t, config, onSelect, value }) => {
   const { data: allCities, isLoading } = Digit.Utils.getMultiRootTenant()? Digit.Hooks.useTenants() :Digit.Hooks.pgr.useTenants();
   const cities = value?.pincode ? allCities.filter((city) => city?.pincode?.some((pin) => pin == value["pincode"])) : allCities;
+  const language = JSON.parse(sessionStorage.getItem('Digit.locale'))?.value;
 
   const [selectedCity, setSelectedCity] = useState(() => {
     const { city_complaint } = value;
-    return city_complaint ? city_complaint : null;
+    return city_complaint ? city_complaint : (cities?.length === 1 ? cities[0] : null);
   });
 
   const { isLoading: hierarchyLOading, data:hierarchyType } = Digit.Hooks.useCustomMDMS(
@@ -34,7 +35,8 @@ const SelectAddress = ({ t, config, onSelect, value }) => {
     {
       enabled: Digit.Utils.getMultiRootTenant() ? !!selectedCity && !!hierarchyType :  !!selectedCity,
     },
-    t
+    t,
+    language
   );
   const [localities, setLocalities] = useState(null);
 
