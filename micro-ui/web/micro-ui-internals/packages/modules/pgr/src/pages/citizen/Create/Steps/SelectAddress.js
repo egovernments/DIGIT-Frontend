@@ -6,10 +6,11 @@ const SelectAddress = ({ t, config, onSelect, value }) => {
   
   // const cities = value?.pincode ? allCities.filter((city) => city?.pincode?.some((pin) => pin == value["pincode"])) : allCities;
   const cities= allCities.filter((city) => city?.code=="pg.amhara");
+  const language = JSON.parse(sessionStorage.getItem('Digit.locale'))?.value;
 
   const [selectedCity, setSelectedCity] = useState(() => {
     const { city_complaint } = value;
-    return city_complaint ? city_complaint : null;
+    return city_complaint ? city_complaint : (cities?.length === 1 ? cities[0] : null);
   });
   const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
     selectedCity?.code,
@@ -17,7 +18,8 @@ const SelectAddress = ({ t, config, onSelect, value }) => {
     {
       enabled: !!selectedCity,
     },
-    t
+    t,
+    language
   );
   const [localities, setLocalities] = useState(null);
 
