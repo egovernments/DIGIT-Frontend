@@ -7,6 +7,7 @@ import Otp from "./pages/employee/Otp";
 import ViewUrl from "./pages/employee/ViewUrl";
 import CustomErrorComponent from "./components/CustomErrorComponent";
 import DummyLoaderScreen from "./components/DummyLoader";
+import { KeycloakProvider } from "./pages/employee/LanguageSelection/KeycloakProvider";
 
 export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen" }) => {
   const history = useHistory();
@@ -72,6 +73,7 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite
   };
 
   return (
+ 
     <Switch>
       <Route path={`/${window?.contextPath}/employee`}>
         <EmployeeApp {...commonProps} />
@@ -83,6 +85,7 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite
         <Redirect to={`/${window?.contextPath}/${defaultLanding}`} />
       </Route>
     </Switch>
+  
   );
 };
 

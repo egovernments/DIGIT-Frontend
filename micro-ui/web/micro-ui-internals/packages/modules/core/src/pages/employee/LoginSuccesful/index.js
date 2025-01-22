@@ -1,88 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { Card } from "@egovernments/digit-ui-components";
+import { Button } from "@egovernments/digit-ui-components";
+// import { useKeycloak } from "../LanguageSelection/KeycloakProvider";
+import { useKeycloak } from "../../../context/Keycloakprovider";
 import { useHistory } from "react-router-dom";
-import Background from "../../../components/Background";
-import keycloak from "../LanguageSelection/keycloak";
-import { Card, Button } from "@egovernments/digit-ui-components";
 
-const LoginSuccessPage = () => {
-  const [token, setToken] = useState(null);
+const SuccessPage = () => {
+  const { keycloak } = useKeycloak();
   const history = useHistory();
 
-  useEffect(() => {
-    if (keycloak.token) {
-      setToken(keycloak.token);
-    }
-  }, []);
+  console.log("succes page",keycloak);
 
-  // Handle logout logic
-  const handleLogout = () => {
-    keycloak.logout({
-      redirectUri: "http://localhost:3000/sandbox-ui/A/employee/user/language-selection", // Redirect after logout
-    });
-  };
-
-  const handleProceed = () => {
-    history.push(`/${window?.contextPath}/employee/user/language-selection`);
+  const redirectToHome = () => {
+    history.push(`/${window?.contextPath}/employee/user/language-selection`); // Use history to navigate
   };
 
   return (
-    <Background>
-      <Card className={"bannerCard removeBottomMargin languageSelection"}>
-        <div className="bannerHeader">
-          <img
-            className="bannerLogo"
-            src={window?.globalConfigs?.getConfig?.("STATE_LOGO_URL")}
-            alt="Digit"
-          />
-          <p>Login Successful</p>
-        </div>
-        <div
-          className="button-container"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            marginBottom: "24px",
-          }}
-        >
-          <p>You have been successfully logged in!</p>
-          {token && (
-            <div
-              style={{
-                wordBreak: "break-word",
-                marginTop: "20px",
-                textAlign: "center",
-              }}
-            >
-              <strong>JWT Token:</strong>
-              <p>{token}</p>
-            </div>
-          )}
-          <Button
-            label="Go to login method screen"
-            onClick={handleProceed}
-            style={{ marginTop: "30px" }}
-          />
-          {/* Logout Button */}
-          <Button
-            label="Logout"
-            onClick={handleLogout}
-            style={{ marginTop: "20px" }}
-          />
-        </div>
+    <div className="SuccessPage">
+      <h1>Login Successful!</h1>
+      <p>Your Access Token:</p>
+      <Card>
+        <p style={{ wordBreak: "break-all" }}>{keycloak.token || "No token available"}</p>
       </Card>
-      <div className="EmployeeLoginFooter">
-        <img
-          alt="Powered by DIGIT"
-          src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
-          style={{ cursor: "pointer" }}
-          onClick={() => {
-            window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
-          }}
+      <div style={{ marginTop: "16px" }}>
+        <Button
+          label="Go to Homepage"
+          onClick={redirectToHome} // Use history for navigation
+          className="primary-btn"
         />
       </div>
-    </Background>
+    </div>
   );
 };
 
-export default LoginSuccessPage;
+export default SuccessPage;

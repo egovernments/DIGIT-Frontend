@@ -1,33 +1,36 @@
+import React, { useEffect, useState } from "react";
+// import { useNavigate } from "react-router-dom";
 import { Button, Card, Loader } from "@egovernments/digit-ui-components";
-import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import Background from "../../../components/Background";
-import keycloak from "./keycloak";
+// import { useKeycloak } from "./KeycloakProvider";
+import { useKeycloak } from "../../../context/Keycloakprovider";
 
 const LanguageSelection = () => {
   const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
   const { t } = useTranslation();
   const { stateInfo } = storeData || {};
+  const { keycloak } = useKeycloak();
+  const [infoMessage, setInfoMessage] = useState("");
+  // const navigate = useNavigate();
 
-  useEffect(() => {
-    // If the user is already authenticated, redirect them to the success page
-    if (keycloak.authenticated) {
-      window.location.href = "http://localhost:3000/sandbox-ui/A/employee/user/success";
-    }
-  }, []);
+  // useEffect(() => {
+  //   // Redirect to success page if authenticated
+  //   if (keycloak.authenticated) {
+  //     navigate("/success");
+  //   }
+  // }, [keycloak, navigate]);
 
-  // Function to call the Keycloak API and trigger login
-  const handleLogin = async () => {
-    try {
-      if (!keycloak.authenticated) {
-        // Trigger login if the user is not authenticated
-        await keycloak.login({
-          redirectUri: "http://localhost:3000/sandbox-ui/A/employee/user/success", // Redirect after login
-        });
-      }
-    } catch (error) {
-      console.error("Error during login:", error);
-    }
+  console.log("language-sel",keycloak);
+
+  const handleLogin = () => {
+    keycloak.login({
+      redirectUri: window.location.origin + "/workbench-ui/employee/user/success", // Redirect after login
+    });
+  };
+
+  const handleShowAccessToken = () => {
+    setInfoMessage(keycloak.token || "No token available");
   };
 
   if (isLoading) return <Loader />;
@@ -39,11 +42,12 @@ const LanguageSelection = () => {
           <img className="bannerLogo" src={stateInfo?.logoUrl} alt="Digit" />
           <p>{t(`TENANT_TENANTS_${stateInfo?.code?.toUpperCase()}`)}</p>
         </div>
-        <div
-          className="button-container"
-          style={{ display: "flex", justifyContent: "space-around", marginBottom: "24px" }}
-        >
+        <div className="button-container" style={{ display: "flex", flexDirection: "column", gap: "16px", alignItems: "center" }}>
           <Button label="Login by password" onClick={handleLogin} />
+          <Button label="Show Access Token" onClick={handleShowAccessToken} />
+          <Card>
+            <p>{infoMessage}</p>
+          </Card>
         </div>
       </Card>
     </Background>
