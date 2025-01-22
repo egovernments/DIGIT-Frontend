@@ -16,7 +16,7 @@ const getDetailsRow = ({ id, service, complaintType }) => ({
   CS_ADDCOMPLAINT_COMPLAINT_TYPE: complaintType === "" ? `SERVICEDEFS.OTHERS` : `SERVICEDEFS.${complaintType}`,
   CS_ADDCOMPLAINT_COMPLAINT_SUB_TYPE: `SERVICEDEFS.${service.serviceCode.toUpperCase()}`,
   CS_COMPLAINT_ADDTIONAL_DETAILS: service.description,
-  CS_COMPLAINT_FILED_DATE: Digit.DateUtils.ConvertTimestampToDate(service.auditDetails.createdTime),
+  CS_COMPLAINT_FILED_DATE: Digit.DateUtils.ConvertEpochToDate(service.auditDetails.createdTime),
   ES_CREATECOMPLAINT_ADDRESS: [
     service.address.landmark,
     Digit.Utils.locale.getLocalityCode(service.address.locality, service.tenantId),
