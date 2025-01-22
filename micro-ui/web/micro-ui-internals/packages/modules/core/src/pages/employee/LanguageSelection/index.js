@@ -25,7 +25,7 @@ const LanguageSelection = () => {
 
   const handleLogin = () => {
     keycloak.login({
-      redirectUri: window.location.origin + "/workbench-ui/employee/user/success", // Redirect after login
+      redirectUri: window.location.origin + "/sandbox-ui/SDFG/employee/user/success", // Redirect after login
     });
   };
 
