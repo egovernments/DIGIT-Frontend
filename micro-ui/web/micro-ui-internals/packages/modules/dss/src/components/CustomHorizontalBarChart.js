@@ -63,7 +63,7 @@ const CustomHorizontalBarChart = ({
       const row = data[i];
       for (let j = 0; j < row.plots.length; j++) {
         const plot = row.plots[j];
-        result[plot.name] = { ...result[plot.name], [t(row.headerName)]: renderPlot(plot,'value',denomination), name: t(plot.name) };
+        result[plot.name] = { ...result[plot.name], [t(row.headerName)]: renderPlot(plot,'value',denomination), name: t(Digit.Utils.locale.getTransformedLocale(plot.name)) };
       }
     }
     return Object.keys(result).map((key) => {
@@ -92,7 +92,7 @@ const CustomHorizontalBarChart = ({
 
   let chartData = useMemo(() => constructChartData(response?.responseData?.data,value?.denomination), [response,value?.denomination]);
 
-  const renderLegend = (value) => <span style={{ fontSize: "14px", color: "#505A5F" }}>{value}</span>;
+  const renderLegend = (value) => <span style={{ fontSize: "14px", color: "#505A5F" }}>{t(`${Digit.Utils.locale.getTransformedLocale(value)}`)}</span>;
 
   const tickFormatter = (value) => {
     if (typeof value === "string") {
