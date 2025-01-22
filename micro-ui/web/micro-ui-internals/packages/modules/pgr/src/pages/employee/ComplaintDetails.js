@@ -220,6 +220,7 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   id="pgr-doc"
   accept=".jpg"
   onUpload={selectfile}
+  textStyles={{marginTop:"8px"}}
   onDelete={() => setUploadedFile(null)}
   uploadedFiles={uploadedFile ? [[uploadedFile.name, uploadedFile]] : []}
   message={uploadedFile ? `1 ${t('CS_ACTION_FILEUPLOADED')}` : ''}
@@ -388,12 +389,12 @@ export const ComplaintDetails = (props) => {
     if (checkpoint.status === "PENDINGFORASSIGNMENT" && complaintDetails?.audit) {
       if(isFirstPendingForAssignment){
         const caption = {
-          date: Digit.DateUtils.ConvertTimestampToDate(complaintDetails.audit.details.createdTime),
+          date: checkpoint.auditDetails.created,
         };
         return <TLCaption data={caption} comments={checkpoint?.wfComment}/>;
       } else {
         const caption = {
-          date: Digit.DateUtils.ConvertTimestampToDate(complaintDetails.audit.details.createdTime),
+          date: checkpoint?.auditDetails?.created,
         };
         return <>
           {checkpoint?.wfComment ? <div>{checkpoint?.wfComment?.map( e => 

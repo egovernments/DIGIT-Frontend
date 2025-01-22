@@ -81,7 +81,7 @@ export const CreateComplaint = () => {
         complaintType: subType.key,
         cityCode,
         city,
-        description: details,
+        description:  details,
         district: city,
         region: city,
         localityCode,
@@ -89,9 +89,9 @@ export const CreateComplaint = () => {
         state: stateInfo.name,
         uploadedImages: _uploadImages,
       };
-
       await dispatch(createComplaint(data));
       await client.refetchQueries(["complaintsList"]);
+      clearParams();
       history.push(`${match.path}/response`);
     }
   };
