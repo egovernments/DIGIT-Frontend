@@ -21,7 +21,7 @@ const Filters = ({
   const { value, setValue } = useContext(FilterContext);
 
   const [selected, setSelected] = useState(() =>
-  [{code: "pg.addisababa", ddrKey: "Ethiopia",ulbKey: "Addis Ababa"}]
+  [{code: "pg.amhara", ddrKey: "Ethiopia",ulbKey: "Ethopia"}]
   );
 
   useEffect(() => {
