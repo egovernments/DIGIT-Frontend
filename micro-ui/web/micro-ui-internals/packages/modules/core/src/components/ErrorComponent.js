@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import ImageComponent from "./ImageComponent";
 
 const ErrorConfig = {
   error: {
@@ -37,7 +38,7 @@ const ErrorComponent = (props) => {
   return (
     <div className="error-boundary">
       <div className="error-container">
-        <img src={config.imgUrl} alt="error" />
+        <ImageComponent src={config.imgUrl} alt="error"/>
         <h1>{t(config.infoMessage)}</h1>
         <button
           onClick={() => {

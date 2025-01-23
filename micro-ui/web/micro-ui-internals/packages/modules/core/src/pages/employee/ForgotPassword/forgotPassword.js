@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
+import ImageComponent from "../../../components/ImageComponent";
 
 
 const ForgotPassword = ({ config: propsConfig, t }) => {
@@ -110,14 +111,15 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
       </FormComposerV2>
       {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
       <div className="EmployeeLoginFooter">
-        <img
-          alt="Powered by DIGIT"
+   
+                                        <ImageComponent  alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
           style={{ cursor: "pointer" }}
           onClick={() => {
             window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
-          }}
-        />{" "}
+          }} />
+
+                                        {" "}
       </div>
     </Background>
   );

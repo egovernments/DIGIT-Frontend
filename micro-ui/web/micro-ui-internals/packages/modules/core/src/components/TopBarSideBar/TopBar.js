@@ -5,6 +5,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import ChangeCity from "../ChangeCity";
 import ChangeLanguage from "../ChangeLanguage";
 import {TopBar as TopBarComponentMain } from "@egovernments/digit-ui-components";
+import ImageComponent from "../ImageComponent";
 
 const TopBar = ({
   t,
@@ -156,7 +157,7 @@ const TopBar = ({
               {t(`ULBGRADE_${cityDetails?.city?.ulbGrade.toUpperCase().replace(" ", "_").replace(".", "_")}`).toUpperCase()}
             </>
           ) : (
-            <img className="state" src={logoUrlWhite} alt="State Logo" />
+                  <ImageComponent  className="state" src={logoUrlWhite} alt="State Logo" />
           )
         ) : (
           <>

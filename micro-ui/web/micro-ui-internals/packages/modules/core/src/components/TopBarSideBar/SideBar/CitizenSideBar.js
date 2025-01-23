@@ -8,6 +8,7 @@ import { defaultImage } from "../../utils";
 import StaticCitizenSideBar from "./StaticCitizenSideBar";
 import { MobileSidebar } from "@egovernments/digit-ui-components";
 import { LogoutIcon } from "@egovernments/digit-ui-react-components";
+import ImageComponent from "../../ImageComponent";
 
 
 const Profile = ({ info, stateName, t }) => {
@@ -37,11 +38,10 @@ const Profile = ({ info, stateName, t }) => {
   return (
     <div className="profile-section">
       <div className="imageloader imageloader-loaded">
-        <img
-          className="img-responsive img-circle img-Profile"
+                          <ImageComponent  className="img-responsive img-circle img-Profile"
           src={profilePic ? profilePic : defaultImage}
-          style={{ objectFit: "cover", objectPosition: "center" }}
-        />
+          style={{ objectFit: "cover", objectPosition: "center" }} alt="Profile Image" />
+        
       </div>
       <div id="profile-name" className="label-container name-Profile">
         <div className="label-text"> {info?.name} </div>

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useRouteMatch, useHistory, useLocation } from "react-router-dom";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
+import ImageComponent from "../../../components/ImageComponent";
 
 const ViewUrl = () => {
   const { t } = useTranslation();
@@ -87,14 +88,14 @@ const ViewUrl = () => {
         <Button isDisabled={buttonDisabled} onClick={onButtonClick} label={t("SIGN_IN")}></Button>
       </Card>
       <div className="EmployeeLoginFooter">
-        <img
-          alt="Powered by DIGIT"
+     
+                                        <ImageComponent  alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
           style={{ cursor: "pointer" }}
           onClick={() => {
             window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
-          }}
-        />
+          }} />
+
       </div>
     </Background>
   );

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import Background from "../../../components/Background";
+import ImageComponent from "../../../components/ImageComponent";
 const defaultLanguage= {label:"English",value:Digit.Utils.getDefaultLanguage()};
 const LanguageSelection = () => {
   const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
@@ -30,7 +31,8 @@ const LanguageSelection = () => {
     <Background>
       <Card className={"bannerCard removeBottomMargin languageSelection"}>
         <div className="bannerHeader">
-          <img className="bannerLogo" src={stateInfo?.logoUrl} alt="Digit" />
+          <ImageComponent  className="bannerLogo" src={stateInfo?.logoUrl} alt="Digit Banner Image" />
+
           <p>{t(`TENANT_TENANTS_${stateInfo?.code?.toUpperCase()}`)}</p>
         </div>
         <div className="language-selector" style={{ justifyContent: "space-around", marginBottom: "24px", padding: "0 5%" }}>
@@ -48,14 +50,14 @@ const LanguageSelection = () => {
         <SubmitBar style={{ width: "100%" }} label={t(`CORE_COMMON_CONTINUE`)} onSubmit={handleSubmit}/>
       </Card>
       <div className="EmployeeLoginFooter">
-        <img
-          alt="Powered by DIGIT"
+  
+                                        <ImageComponent  alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
           style={{ cursor: "pointer" }}
           onClick={() => {
             window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
-          }}
-        />{" "}
+          }} />
+                                        {" "}
       </div>
     </Background>
   );

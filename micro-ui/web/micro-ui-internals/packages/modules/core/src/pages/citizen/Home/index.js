@@ -13,6 +13,7 @@ import {
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
+import ImageComponent from "../../../components/ImageComponent";
 
 const Home = () => {
   const { t } = useTranslation();
@@ -166,9 +167,10 @@ const Home = () => {
         {
           <div className="BannerWithSearch">
             {isMobile ? (
-              <img src={appBannerMobObj?.bannerUrl} />
+      <ImageComponent  src={appBannerMobObj?.bannerUrl} alt="Banner Image" />
             ) : (
-              <img src={appBannerWebObj?.bannerUrl} />
+              <ImageComponent  src={appBannerWebObj?.bannerUrl} alt="Banner Image" />
+              
             )}
             {/* <div className="Search">
             <StandaloneSearchBar placeholder={t("CS_COMMON_SEARCH_PLACEHOLDER")} />
@@ -189,19 +191,21 @@ const Home = () => {
         {(whatsAppBannerMobObj || whatsAppBannerWebObj) && (
           <div className="WhatsAppBanner">
             {isMobile ? (
-              <img
-                src={whatsAppBannerMobObj?.bannerUrl}
-                onClick={() =>
-                  handleClickOnWhatsAppBanner(whatsAppBannerMobObj)
-                }
-              />
+         
+              <ImageComponent                  src={whatsAppBannerMobObj?.bannerUrl}
+              onClick={() =>
+                handleClickOnWhatsAppBanner(whatsAppBannerMobObj)
+              }
+               alt="Whatsapp Banner" />
+
             ) : (
-              <img
-                src={whatsAppBannerWebObj?.bannerUrl}
-                onClick={() =>
-                  handleClickOnWhatsAppBanner(whatsAppBannerWebObj)
-                }
-              />
+      
+              <ImageComponent                 src={whatsAppBannerWebObj?.bannerUrl}
+              onClick={() =>
+                handleClickOnWhatsAppBanner(whatsAppBannerWebObj)
+              }
+               alt="Whatsapp Banner" />
+
             )}
           </div>
         )}

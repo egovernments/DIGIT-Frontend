@@ -22,6 +22,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import UploadDrawer from "./ImageUpload/UploadDrawer";
+import ImageComponent from "../../../components/ImageComponent";
 
 const defaultImage =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAO4AAADUCAMAAACs0e/bAAAAM1BMVEXK0eL" +
@@ -536,16 +537,16 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
               margin: "16px",
             }}
           >
-            <img
-              style={{
+          
+                                            <ImageComponent   style={{
                 margin: "auto",
                 borderRadius: "300px",
                 justifyContent: "center",
                 height: "100%",
                 width: "100%",
               }}
-              src={!profileImg || profileImg === "" ? defaultImage : profileImg}
-            />
+              src={!profileImg || profileImg === "" ? defaultImage : profileImg} alt="Profile Image" />
+
             <button
               style={{
                 position: "absolute",

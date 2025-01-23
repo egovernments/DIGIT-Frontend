@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
+import ImageComponent from "../../../components/ImageComponent";
 
 const Login = ({ config: propsConfig, t, isDisabled }) => {
   const { data: cities, isLoading } = Digit.Hooks.useTenants();
@@ -107,14 +108,14 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
       </FormComposerV2>
       {showToast && <Toast type={"error"} label={t(showToast?.label)} onClose={closeToast} />}
       <div className="employee-login-home-footer" style={{ backgroundColor: "unset" }}>
-        <img
-          alt="Powered by DIGIT"
+ 
+                                        <ImageComponent   alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
           style={{ cursor: "pointer" }}
           onClick={() => {
             window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
-          }}
-        />
+          }} />
+
       </div>
     </Background>
   );

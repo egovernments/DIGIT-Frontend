@@ -16,6 +16,7 @@ import UserProfile from "../citizen/Home/UserProfile";
 import ErrorComponent from "../../components/ErrorComponent";
 import { PrivateRoute } from "@egovernments/digit-ui-components";
 import RoleLanding from "./RoleLanding";
+import ImageComponent from "../../components/ImageComponent";
 
 const userScreensExempted = ["user/landing", "user/profile", "user/error"];
 
@@ -145,14 +146,14 @@ const EmployeeApp = ({
               </ErrorBoundary>
             </div>
             <div className="employee-home-footer">
-              <img
-                alt="Powered by DIGIT"
+   
+                                              <ImageComponent   alt="Powered by DIGIT"
                 src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER")}
                 style={{ height: "1.1em", cursor: "pointer" }}
                 onClick={() => {
                   window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
-                }}
-              />
+                }} />
+
             </div>
           </div>
         </Route>

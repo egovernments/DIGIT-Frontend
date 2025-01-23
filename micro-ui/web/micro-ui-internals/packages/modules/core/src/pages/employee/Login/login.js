@@ -4,10 +4,11 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
+import ImageComponent from "../../../components/ImageComponent";
 
 /* set employee details to enable backward compatiable */
 const setEmployeeDetail = (userObject, token) => {
- if (Digit.Utils.getMultiRootTenant()) {
+ if (Digit.Utils.getMultiRootTenant()&& process.env.NODE_ENV !== "development") {
      return;
    }  
   let locale = JSON.parse(sessionStorage.getItem("Digit.locale"))?.value || Digit.Utils.getDefaultLanguage();
@@ -165,7 +166,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     // Set disable based on the check
     setDisable(hasEmptyFields);
   };
-
+console.log("something",process.env.NODE_ENV === "development" ,process.env.NODE_ENV )
   return isLoading || isStoreLoading ? (
     <Loader />
   ) : (
@@ -194,14 +195,14 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       </FormComposerV2>
       {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
       <div className="employee-login-home-footer" style={{ backgroundColor: "unset" }}>
-        <img
-          alt="Powered by DIGIT"
+  
+                                        <ImageComponent   alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
           style={{ cursor: "pointer" }}
           onClick={() => {
             window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
-          }}
-        />{" "}
+          }} />
+                                        {" "}
       </div>
     </Background>
   );

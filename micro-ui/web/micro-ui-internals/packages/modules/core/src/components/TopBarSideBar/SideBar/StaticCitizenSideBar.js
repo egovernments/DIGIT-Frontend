@@ -26,6 +26,7 @@ import { useHistory } from "react-router-dom";
 import LogoutDialog from "../../Dialog/LogoutDialog";
 import ChangeCity from "../../ChangeCity";
 import { defaultImage } from "../../utils";
+import ImageComponent from "../../ImageComponent";
 
 /* 
 Feature :: Citizen Webview sidebar
@@ -33,10 +34,10 @@ Feature :: Citizen Webview sidebar
 const Profile = ({ info, stateName, t }) => (
   <div className="profile-section">
     <div className="imageloader imageloader-loaded">
-      <img
-        className="img-responsive img-circle img-Profile"
-        src={defaultImage}
-      />
+      
+                        <ImageComponent   className="img-responsive img-circle img-Profile"
+        src={defaultImage} alt="Profile Logo" />
+      
     </div>
     <div id="profile-name" className="label-container name-Profile">
       <div className="label-text"> {info?.name} </div>
