@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.8.19]  [23-Jan-2025]
+- Fixed import issues of new ui-components
+
 ## [1.8.18]  [23-Jan-2025]
 - FIxed some of FEATURE/HCMPRE-1852 :: Fixed some console logs 
 

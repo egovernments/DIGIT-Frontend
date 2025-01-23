@@ -9,7 +9,7 @@ import {
   Loader,
   Button,
   SubmitBar,
-  ActionBar,
+  Footer,
   CardLabel,
   BreadCrumb,
   Toast,
@@ -892,7 +892,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
       </div>
 
       {userType === "employee" && !isMobile ? (
-        <ActionBar actionFields={[<SubmitBar t={t} label={t("CORE_COMMON_SAVE")} onSubmit={updateProfile} />]} className="" setactionFieldsToRight />
+        <Footer actionFields={[<SubmitBar t={t} label={t("CORE_COMMON_SAVE")} onSubmit={updateProfile} />]} className="" setactionFieldsToRight />
       ) : null}
       {toast && (
         <Toast

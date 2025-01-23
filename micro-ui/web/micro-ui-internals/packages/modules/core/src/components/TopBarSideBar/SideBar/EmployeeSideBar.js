@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Sidebar, Loader } from "@egovernments/digit-ui-components";
+import { SideNav, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import MediaQuery from 'react-responsive';
@@ -164,7 +164,7 @@ const EmployeeSideBar = () => {
   
   return (
     <MediaQuery minWidth={768}>
-      <Sidebar
+      <SideNav
         items={sortedTransformedData}
         hideAccessbilityTools={true}
         onSelect={({ item, index, parentIndex }) => onItemSelect({ item, index, parentIndex })}
