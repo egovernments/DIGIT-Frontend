@@ -9,6 +9,7 @@ import { InfoCard, PopUp, Toast, Button} from "@egovernments/digit-ui-components
 import { downloadExcelWithCustomName } from "../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
+import { DataType } from "ajv/dist/compile/validate/dataType";
 
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
@@ -707,17 +708,17 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           });
 
           jsonData = jsonData.filter((element) => element !== undefined);
-          // if (type === "boundary") {
-          //   if (workbook?.SheetNames.filter(sheetName => sheetName !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")).length == 0) {
-          //     const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
-          //     setErrorsType((prevErrors) => ({
-          //       ...prevErrors,
-          //       [type]: errorMessage,
-          //     }));
-          //     setIsError(true);
-          //     return;
-          //   }
-          // } else
+          if (type === "boundary") {
+            if (workbook?.SheetNames.filter(sheetName => sheetName !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")).length == 0) {
+              const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
+              setErrorsType((prevErrors) => ({
+                ...prevErrors,
+                [type]: errorMessage,
+              }));
+              setIsError(true);
+              return;
+            }
+          } else
           if (type === "facilityWithBoundary") {
             if (workbook?.SheetNames.filter((sheetName) => sheetName == t("HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES")).length == 0) {
               const errorMessage = t("HCM_INVALID_FACILITY_SHEET");
@@ -734,15 +735,15 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               if (activeColumnName && uniqueIdentifierColumnName) {
                 jsonData = jsonData.filter((item) => item[activeColumnName] !== "Inactive" || !item[uniqueIdentifierColumnName]);
               }
-              if (jsonData.length == 0) {
-                const errorMessage = t("HCM_FACILITY_USAGE_VALIDATION");
-                setErrorsType((prevErrors) => ({
-                  ...prevErrors,
-                  [type]: errorMessage,
-                }));
-                setIsError(true);
-                return;
-              }
+              // if (jsonData.length == 0) {
+              //   const errorMessage = t("HCM_FACILITY_USAGE_VALIDATION");
+              //   setErrorsType((prevErrors) => ({
+              //     ...prevErrors,
+              //     [type]: errorMessage,
+              //   }));
+              //   setIsError(true);
+              //   return;
+              // }
             }
           } else if (type === "userWithBoundary") {
             if (workbook?.SheetNames.filter((sheetName) => sheetName == t("HCM_ADMIN_CONSOLE_USER_LIST")).length == 0) {
@@ -779,15 +780,15 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             }
           }
 
-          if (jsonData.length == 0) {
-            const errorMessage = t("HCM_EMPTY_SHEET");
-            setErrorsType((prevErrors) => ({
-              ...prevErrors,
-              [type]: errorMessage,
-            }));
-            setIsError(true);
-            return;
-          }
+          // if (jsonData.length == 0) {
+          //   const errorMessage = t("HCM_EMPTY_SHEET");
+          //   setErrorsType((prevErrors) => ({
+          //     ...prevErrors,
+          //     [type]: errorMessage,
+          //   }));
+          //   setIsError(true);
+          //   return;
+          // }
           if (type !== "boundary") {
             if (validateData(jsonData, SheetNames)) {
               resolve(true);
@@ -796,7 +797,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             }
           }
         } catch (error) {
-          console.log(error);
           reject("HCM_FILE_UNAVAILABLE");
         }
       };
@@ -804,6 +804,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       reader.readAsArrayBuffer(selectedFile);
     });
   };
+  
 
   const onBulkUploadSubmit = async (file) => {
     if (file.length > 1) {
