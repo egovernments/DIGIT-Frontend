@@ -66,8 +66,8 @@ config:
   - name: builds/Digit-Frontend/health/core-ui
     build:
     - work-dir: health/micro-ui/
-      dockerfile: health/micro-ui/web/core/Dockerfile
-      image-name: core-ui
+      dockerfile: health/micro-ui/web/console/Dockerfile
+      image-name: console
 
  # Others       
   - name: builds/Digit-Frontend/storybook-svg
