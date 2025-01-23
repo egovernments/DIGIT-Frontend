@@ -195,6 +195,7 @@ export const AppHome = ({
     );
   }
   const isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant()
+  console.log("check 1", isSuperUserWithMultipleRootTenant)
   return Digit.Utils.getRoleBasedHomeCard() ? (
     <div className={isSuperUserWithMultipleRootTenant ? "homeWrapper" : ""}>
       <RoleBasedEmployeeHome modules={modules} additionalComponent={additionalComponent} />

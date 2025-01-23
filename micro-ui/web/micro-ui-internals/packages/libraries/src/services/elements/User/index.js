@@ -44,7 +44,9 @@ export const UserService = {
     Storage.set("user_type", userType);
   },
   getUser: () => {
+    console.log("user",Digit.SessionStorage.get("User"))
     return Digit.SessionStorage.get("User");
+
   },
   logout: async () => {
     const userType = UserService.getType();
@@ -125,15 +127,77 @@ export const UserService = {
     });
   },
   userSearch: async (tenantId, data, filters) => {
-    
-    return ServiceRequest({
-      url: Urls.UserSearch,
-      params: { ...filters },
-      method: "POST",
-      auth: true,
-      useCache: true,
-      userService: true,
-      data: data.pageSize ? { tenantId, ...data } : { tenantId, ...data, pageSize: "100" },
-    });
+    // return ServiceRequest({
+    //   url: Urls.UserSearch,
+    //   params: { ...filters },
+    //   method: "POST",
+    //   auth: true,
+    //   useCache: true,
+    //   userService: true,
+    //   data: data.pageSize ? { tenantId, ...data } : { tenantId, ...data, pageSize: "100" },
+    // });
+
+
+    const userResponse = {
+      "responseInfo": {
+        "apiId": null,
+        "ver": null,
+        "ts": null,
+        "resMsgId": null,
+        "msgId": null,
+        "status": "200"
+      },
+      "user": [
+        {
+          "id": 39509,
+          "userName": "tenant123@gmail.com",
+          "salutation": null,
+          "name": "sdfg",
+          "gender": null,
+          "mobileNumber": "9999999999",
+          "emailId": "tenant123@gmail.com",
+          "altContactNumber": null,
+          "pan": null,
+          "aadhaarNumber": null,
+          "permanentAddress": null,
+          "permanentCity": null,
+          "permanentPinCode": null,
+          "correspondenceAddress": null,
+          "correspondenceCity": null,
+          "correspondencePinCode": null,
+          "alternatemobilenumber": null,
+          "active": true,
+          "locale": null,
+          "type": "EMPLOYEE",
+          "accountLocked": false,
+          "accountLockedDate": 0,
+          "fatherOrHusbandName": null,
+          "relationship": null,
+          "signature": null,
+          "bloodGroup": null,
+          "photo": null,
+          "identificationMark": null,
+          "createdBy": 128,
+          "lastModifiedBy": 128,
+          "tenantId": "SDFG",
+          "roles": [
+            {
+              "code": "SUPERUSER",
+              "name": "Super User",
+              "tenantId": "SDFG"
+            }
+          ],
+          "uuid": "fafdb4f8-4aa0-4325-9283-3299e35d4910",
+          "createdDate": "17-01-2025 16:29:29",
+          "lastModifiedDate": "17-01-2025 16:29:29",
+          "dob": null,
+          "pwdExpiryDate": "17-04-2025 16:29:25"
+        }
+      ]
+    }
+
+
+    // console.log("abcd",abcd)
+    return userResponse;
   },
 };

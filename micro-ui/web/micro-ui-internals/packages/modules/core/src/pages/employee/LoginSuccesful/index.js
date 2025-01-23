@@ -111,62 +111,114 @@ const SuccessPage = () => {
     }
   };
 
-  const redirectToHome = () => {
-     console.log("token",keycloak.token)
-     try {
-      // const { UserRequest: info, ...tokens } = await Digit.UserService.authenticate(requestData);
-      // // console.log("UserRequest", info);
-      // console.log("info",info);
-      // console.log("tokens",tokens)
-      let info = {
-        "id": 39509,
-        "uuid": "fafdb4f8-4aa0-4325-9283-3299e35d4910",
-        "userName": "tenant123@gmail.com",
-        "name": "sdfg",
-        "mobileNumber": "9999999999",
-        "emailId": "tenant123@gmail.com",
-        "locale": null,
-        "type": "EMPLOYEE",
-        "roles": [
-            {
-                "name": "Super User",
-                "code": "SUPERUSER",
-                "tenantId": "SDFG"
-            }
-        ],
-        "active": true,
-        "tenantId": "SDFG",
-        "permanentCity": null
-    }
+  // const redirectToHome = () => {
+  //    console.log("token",keycloak.token)
+  //    try {
+  //     // const { UserRequest: info, ...tokens } = await Digit.UserService.authenticate(requestData);
+  //     // // console.log("UserRequest", info);
+  //     // console.log("info",info);
+  //     // console.log("tokens",tokens)
+  //     let info = {
+  //       "id": 39509,
+  //       "uuid": "fafdb4f8-4aa0-4325-9283-3299e35d4910",
+  //       "userName": "tenant123@gmail.com",
+  //       "name": "sdfg",
+  //       "mobileNumber": "9999999999",
+  //       "emailId": "tenant123@gmail.com",
+  //       "locale": null,
+  //       "type": "EMPLOYEE",
+  //       "roles": [
+  //           {
+  //               "name": "Super User",
+  //               "code": "SUPERUSER",
+  //               "tenantId": "SDFG"
+  //           }
+  //       ],
+  //       "active": true,
+  //       "tenantId": "SDFG",
+  //       "permanentCity": null
+  //   }
 
     
-    let tokens = {
-      "access_token": "af2d65de-0b24-44b5-8f97-fbdbb3656e35",
-      "token_type": "bearer",
-      "refresh_token": "70584cad-b3a7-4fe8-b091-c1f322f570c8",
-      "expires_in": 596251,
-      "scope": "read",
-      "ResponseInfo": {
-          "api_id": "",
-          "ver": "",
-          "ts": "",
-          "res_msg_id": "",
-          "msg_id": "",
-          "status": "Access Token generated successfully"
-      }
+  //   let tokens = {
+  //     "access_token": "af2d65de-0b24-44b5-8f97-fbdbb3656e35",
+  //     "token_type": "bearer",
+  //     "refresh_token": "70584cad-b3a7-4fe8-b091-c1f322f570c8",
+  //     "expires_in": 596251,
+  //     "scope": "read",
+  //     "ResponseInfo": {
+  //         "api_id": "",
+  //         "ver": "",
+  //         "ts": "",
+  //         "res_msg_id": "",
+  //         "msg_id": "",
+  //         "status": "Access Token generated successfully"
+  //     }
+  // }
+
+  //     Digit.SessionStorage.set("Employee.tenantId", info?.tenantId);
+  //     setUser({ info, ...tokens });
+  //   } catch (err) {
+  //     setShowToast(
+  //       err?.response?.data?.error_description ||
+  //         (err?.message == "ES_ERROR_USER_NOT_PERMITTED" && t("ES_ERROR_USER_NOT_PERMITTED")) ||
+  //         t("INVALID_LOGIN_CREDENTIALS")
+  //     );
+  //     setTimeout(closeToast, 5000);
+  //   }
+  // };
+
+  const redirectToHome = () => {
+  if (!userDetails || userDetails.length === 0 || !keycloak.token || !keycloak.refreshToken) {
+    console.error("User details or Keycloak tokens are not available!");
+    return;
   }
 
-      Digit.SessionStorage.set("Employee.tenantId", info?.tenantId);
-      setUser({ info, ...tokens });
-    } catch (err) {
-      setShowToast(
-        err?.response?.data?.error_description ||
-          (err?.message == "ES_ERROR_USER_NOT_PERMITTED" && t("ES_ERROR_USER_NOT_PERMITTED")) ||
-          t("INVALID_LOGIN_CREDENTIALS")
-      );
-      setTimeout(closeToast, 5000);
-    }
-  };
+  try {
+    const userDetail = userDetails[0]; // Assuming userDetails is an array, get the first user
+    const info = {
+      id: 35089,
+      uuid: userDetail.id, // Use appropriate mapping for UUID if available in userDetails
+      userName: userDetail.username,
+      name: `${userDetail.firstName} ${userDetail.lastName}`, // Combine first and last name
+      mobileNumber: userDetail.attributes.mobileNumber?.[0] || "N/A", // Use mobile number if available
+      emailId: userDetail.email,
+      locale: null,
+      type: "EMPLOYEE",
+      roles: [
+        {
+          name: "Super User", // Update role details if dynamic role mapping is needed
+          code: "SUPERUSER",
+          tenantId: "SDFG",
+        },
+      ],
+      active: true,
+      tenantId: "SDFG",
+      permanentCity: null,
+    };
+
+    const tokens = {
+      access_token: keycloak.token, // Get access token from Keycloak
+      refresh_token: keycloak.refreshToken, // Get refresh token from Keycloak
+      expires_in: keycloak.tokenParsed.exp - Math.floor(Date.now() / 1000), // Calculate remaining expiry time in seconds
+      scope: "read",
+      ResponseInfo: {
+        api_id: "",
+        ver: "",
+        ts: "",
+        res_msg_id: "",
+        msg_id: "",
+        status: "Access Token generated successfully",
+      },
+    };
+
+    Digit.SessionStorage.set("Employee.tenantId", info?.tenantId);
+    setUser({ info, ...tokens });
+  } catch (err) {
+    console.error("Error setting user details:", err);
+  }
+};
+
 
   return (
     <div className="SuccessPage">

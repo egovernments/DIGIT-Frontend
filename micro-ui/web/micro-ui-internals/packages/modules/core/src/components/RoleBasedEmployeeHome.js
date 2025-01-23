@@ -14,6 +14,8 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
   let sortedConfigEmployeesSidebar = null;
   const [mdmsOrderData, setMdmsOrderData] = useState([{}]);
 
+  console.log("employee page")
+
   const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(
     tenantId,
     "HomeScreenOrder",

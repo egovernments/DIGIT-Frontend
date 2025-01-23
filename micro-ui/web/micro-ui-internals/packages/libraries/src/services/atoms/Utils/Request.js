@@ -1,12 +1,23 @@
 import Axios from "axios";
 
 /**
- * Custom Request to make all api calls
- *
- * @author jagankumar-egov
- *
+ * Custom Request and ServiceRequest to make all API calls
+ * Adds Authorization Bearer token in headers dynamically
  */
 
+// Axios interceptor to include Authorization Bearer token in all requests
+Axios.interceptors.request.use(
+  (config) => {
+    const token = Digit.UserService.getUser()?.access_token;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+// Axios interceptor to handle errors globally
 Axios.interceptors.response.use(
   (res) => res,
   (err) => {
@@ -17,19 +28,31 @@ Axios.interceptors.response.use(
           localStorage.clear();
           sessionStorage.clear();
           window.location.href =
-          (isEmployee ? `/${window?.contextPath}/employee/user/login` : `/${window?.contextPath}/citizen/login`) +
-            `?from=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+            (isEmployee
+              ? `/${window?.contextPath}/employee/user/login`
+              : `/${window?.contextPath}/citizen/login`) +
+            `?from=${encodeURIComponent(
+              window.location.pathname + window.location.search
+            )}`;
         } else if (
           error?.message?.toLowerCase()?.includes("internal server error") ||
-          error?.message?.toLowerCase()?.includes("some error occured")
+          error?.message?.toLowerCase()?.includes("some error occurred")
         ) {
           window.location.href =
-          (isEmployee ? `/${window?.contextPath}/employee/user/error` : `/${window?.contextPath}/citizen/error`) +
-                      `?type=maintenance&from=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+            (isEmployee
+              ? `/${window?.contextPath}/employee/user/error`
+              : `/${window?.contextPath}/citizen/error`) +
+            `?type=maintenance&from=${encodeURIComponent(
+              window.location.pathname + window.location.search
+            )}`;
         } else if (error.message.includes("ZuulRuntimeException")) {
           window.location.href =
-          (isEmployee ? `/${window?.contextPath}/employee/user/error` : `/${window?.contextPath}/citizen/error`) +
-                      `?type=notfound&from=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+            (isEmployee
+              ? `/${window?.contextPath}/employee/user/error`
+              : `/${window?.contextPath}/citizen/error`) +
+            `?type=notfound&from=${encodeURIComponent(
+              window.location.pathname + window.location.search
+            )}`;
         }
       }
     }
@@ -43,12 +66,19 @@ const requestInfo = () => ({
 
 const authHeaders = () => ({
   "auth-token": Digit.UserService.getUser()?.access_token || null,
+  "Authorization": `Bearer ${Digit.UserService.getUser()?.access_token || ""}`,
 });
 
-const userServiceData = () => ({ userInfo: Digit.UserService.getUser()?.info });
+const userServiceData = () => ({
+  userInfo: Digit.UserService.getUser()?.info,
+});
 
 window.Digit = window.Digit || {};
 window.Digit = { ...window.Digit, RequestCache: window.Digit.RequestCache || {} };
+
+/**
+ * Request function to send API requests
+ */
 export const Request = async ({
   method = "POST",
   url,
@@ -56,7 +86,7 @@ export const Request = async ({
   headers = {},
   useCache = false,
   params = {},
-  auth=true,
+  auth = true,
   urlParams = {},
   userService,
   locale = true,
@@ -69,12 +99,10 @@ export const Request = async ({
   reqTimestamp = false,
 }) => {
   const ts = new Date().getTime();
+
   if (method.toUpperCase() === "POST") {
-   
-    data.RequestInfo = {
-      apiId: "Rainmaker",
-    };
-    
+    data.RequestInfo = { apiId: "Rainmaker" };
+
     if (auth) {
       data.RequestInfo = { ...data.RequestInfo, ...requestInfo() };
     }
@@ -82,29 +110,31 @@ export const Request = async ({
       data.RequestInfo = { ...data.RequestInfo, ...userServiceData() };
     }
     if (locale) {
-      data.RequestInfo = { ...data.RequestInfo, msgId: `${ts}|${Digit.StoreData.getCurrentLanguage()}` };
+      data.RequestInfo = {
+        ...data.RequestInfo,
+        msgId: `${ts}|${Digit.StoreData.getCurrentLanguage()}`,
+      };
     }
-    
     if (noRequestInfo) {
       delete data.RequestInfo;
     }
 
-    /* 
-    Feature :: Privacy
-    
-    Desc :: To send additional field in HTTP Requests inside RequestInfo Object as plainAccessRequest
-    */
     const privacy = Digit.Utils.getPrivacyObject();
     if (privacy && !url.includes("/edcr/rest/dcr/")) {
-      if(!noRequestInfo){
-      data.RequestInfo = { ...data.RequestInfo, plainAccessRequest: { ...privacy } };
+      if (!noRequestInfo) {
+        data.RequestInfo = {
+          ...data.RequestInfo,
+          plainAccessRequest: { ...privacy },
+        };
       }
     }
   }
 
   const headers1 = {
     "Content-Type": "application/json",
-    Accept: window?.globalConfigs?.getConfig("ENABLE_SINGLEINSTANCE") ? "application/pdf,application/json" : "application/pdf",
+    Accept: window?.globalConfigs?.getConfig("ENABLE_SINGLEINSTANCE")
+      ? "application/pdf,application/json"
+      : "application/pdf",
   };
 
   if (authHeader) headers = { ...headers, ...authHeaders() };
@@ -113,7 +143,9 @@ export const Request = async ({
 
   let key = "";
   if (useCache) {
-    key = `${method.toUpperCase()}.${url}.${btoa(escape(JSON.stringify(params, null, 0)))}.${btoa(escape(JSON.stringify(data, null, 0)))}`;
+    key = `${method.toUpperCase()}.${url}.${btoa(
+      escape(JSON.stringify(params, null, 0))
+    )}.${btoa(escape(JSON.stringify(data, null, 0)))}`;
     const value = window.Digit.RequestCache[key];
     if (value) {
       return value;
@@ -121,6 +153,7 @@ export const Request = async ({
   } else if (setTimeParam) {
     params._ = Date.now();
   }
+
   if (reqTimestamp) {
     data.RequestInfo = { ...data.RequestInfo, ts: Number(ts) };
   }
@@ -139,15 +172,14 @@ export const Request = async ({
       url: _url,
       data: multipartData.data,
       params,
-      headers: { "Content-Type": "multipart/form-data", "auth-token": Digit.UserService.getUser()?.access_token || null },
+      headers: {
+        "Content-Type": "multipart/form-data",
+        ...authHeaders(),
+      },
     });
     return multipartFormDataRes;
   }
-  /* 
-  Feature :: Single Instance
 
-  Desc :: Fix for central instance to send tenantID in all query params
-  */
   const tenantInfo =
     Digit.SessionStorage.get("userType") === "citizen"
       ? Digit.ULBService.getStateId()
@@ -157,7 +189,14 @@ export const Request = async ({
   }
 
   const res = userDownload
-    ? await Axios({ method, url: _url, data, params, headers, responseType: "arraybuffer" })
+    ? await Axios({
+        method,
+        url: _url,
+        data,
+        params,
+        headers,
+        responseType: "arraybuffer",
+      })
     : await Axios({ method, url: _url, data, params, headers });
 
   if (userDownload) return res;
@@ -170,17 +209,8 @@ export const Request = async ({
 };
 
 /**
- *
- * @param {*} serviceName
- *
- * preHook:
- * ({params, data}) => ({params, data})
- *
- * postHook:
- * ({resData}) => ({resData})
- *
+ * ServiceRequest function to handle pre-hooks, post-hooks, and API requests
  */
-
 export const ServiceRequest = async ({
   serviceName,
   method = "POST",
@@ -189,9 +219,9 @@ export const ServiceRequest = async ({
   headers = {},
   useCache = false,
   params = {},
-  auth,
-  reqTimestamp,
-  userService,
+  auth = true,
+  reqTimestamp = false,
+  userService = false,
 }) => {
   const preHookName = `${serviceName}Pre`;
   const postHookName = `${serviceName}Post`;
@@ -199,11 +229,21 @@ export const ServiceRequest = async ({
   let reqParams = params;
   let reqData = data;
   if (window[preHookName] && typeof window[preHookName] === "function") {
-    let preHookRes = await window[preHookName]({ params, data });
+    const preHookRes = await window[preHookName]({ params, data });
     reqParams = preHookRes.params;
     reqData = preHookRes.data;
   }
-  const resData = await Request({ method, url, data: reqData, headers, useCache, params: reqParams, auth, userService,reqTimestamp });
+  const resData = await Request({
+    method,
+    url,
+    data: reqData,
+    headers,
+    useCache,
+    params: reqParams,
+    auth,
+    reqTimestamp,
+    userService,
+  });
 
   if (window[postHookName] && typeof window[postHookName] === "function") {
     return await window[postHookName](resData);
