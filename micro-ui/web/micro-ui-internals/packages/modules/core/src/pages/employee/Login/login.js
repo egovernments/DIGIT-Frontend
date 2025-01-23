@@ -8,9 +8,9 @@ import ImageComponent from "../../../components/ImageComponent";
 
 /* set employee details to enable backward compatiable */
 const setEmployeeDetail = (userObject, token) => {
- if (Digit.Utils.getMultiRootTenant()&& process.env.NODE_ENV !== "development") {
-     return;
-   }  
+  if (Digit.Utils.getMultiRootTenant() && process.env.NODE_ENV !== "development") {
+    return;
+  }
   let locale = JSON.parse(sessionStorage.getItem("Digit.locale"))?.value || Digit.Utils.getDefaultLanguage();
   localStorage.setItem("Employee.tenant-id", userObject?.tenantId);
   localStorage.setItem("tenant-id", userObject?.tenantId);
@@ -166,13 +166,13 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     // Set disable based on the check
     setDisable(hasEmptyFields);
   };
-console.log("something",process.env.NODE_ENV === "development" ,process.env.NODE_ENV )
+  console.log("something", process.env.NODE_ENV === "development", process.env.NODE_ENV);
   return isLoading || isStoreLoading ? (
     <Loader />
   ) : (
     <Background>
       <div className="employeeBackbuttonAlign">
-      <BackLink onClick={() => window.history.back()}/>
+        <BackLink onClick={() => window.history.back()} />
       </div>
       <FormComposerV2
         onSubmit={loginOTPBased ? onOtpLogin : onLogin}
@@ -191,18 +191,18 @@ console.log("something",process.env.NODE_ENV === "development" ,process.env.NODE
         cardClassName="loginCardClassName"
         buttonClassName="buttonClassName"
       >
-        {stateInfo?.code ? <Header /> : <Header showTenant={false} /> }
+        {stateInfo?.code ? <Header /> : <Header showTenant={false} />}
       </FormComposerV2>
       {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
       <div className="employee-login-home-footer" style={{ backgroundColor: "unset" }}>
-  
-                                        <ImageComponent   alt="Powered by DIGIT"
+        <ImageComponent
+          alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
           style={{ cursor: "pointer" }}
           onClick={() => {
             window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
-          }} />
-                                        {" "}
+          }}
+        />{" "}
       </div>
     </Background>
   );

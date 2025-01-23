@@ -38,7 +38,7 @@ const ErrorComponent = (props) => {
   return (
     <div className="error-boundary">
       <div className="error-container">
-        <ImageComponent src={config.imgUrl} alt="error"/>
+        <ImageComponent src={config.imgUrl} alt="error" />
         <h1>{t(config.infoMessage)}</h1>
         <button
           onClick={() => {

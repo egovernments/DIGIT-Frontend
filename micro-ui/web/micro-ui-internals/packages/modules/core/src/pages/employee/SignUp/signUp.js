@@ -86,7 +86,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   ) : (
     <Background>
       <div className="employeeBackbuttonAlign">
-      <BackLink onClick={() => window.history.back()}/>
+        <BackLink onClick={() => window.history.back()} />
       </div>
       <FormComposerV2
         onSubmit={onLogin}
@@ -108,14 +108,14 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
       </FormComposerV2>
       {showToast && <Toast type={"error"} label={t(showToast?.label)} onClose={closeToast} />}
       <div className="employee-login-home-footer" style={{ backgroundColor: "unset" }}>
- 
-                                        <ImageComponent   alt="Powered by DIGIT"
+        <ImageComponent
+          alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
           style={{ cursor: "pointer" }}
           onClick={() => {
             window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
-          }} />
-
+          }}
+        />
       </div>
     </Background>
   );

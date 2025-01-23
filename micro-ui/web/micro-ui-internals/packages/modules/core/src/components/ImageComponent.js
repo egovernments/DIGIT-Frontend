@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 
 const ImageComponent = ({
   src,
-  alt="Image not found",
+  alt = "Image not found",
   decorative = false,
-  ariaLabel="No Image description set",
-  ariaLabelledby="no-image-description",
+  ariaLabel = "No Image description set",
+  ariaLabelledby = "no-image-description",
   ...props
 }) => {
   // Determine the appropriate attributes based on the props
@@ -25,9 +25,7 @@ const ImageComponent = ({
     // Use aria-labelledby for descriptive associations
     accessibilityProps["aria-labelledby"] = ariaLabelledby;
   } else {
-    console.warn(
-      "AccessibleImage: Missing alt, aria-label, or aria-labelledby for non-decorative image."
-    );
+    console.warn("AccessibleImage: Missing alt, aria-label, or aria-labelledby for non-decorative image.");
   }
 
   return <img src={src} {...accessibilityProps} {...props} />;

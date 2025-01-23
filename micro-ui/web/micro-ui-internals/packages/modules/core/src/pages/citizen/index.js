@@ -98,8 +98,8 @@ const Home = ({
       <React.Fragment>
         <Route key={index} path={`${path}/${code.toLowerCase()}-home`}>
           <div className="moduleLinkHomePage">
-                              <ImageComponent  src={bannerImage || stateInfo?.bannerUrl} alt="noimagefound" />
-            
+            <ImageComponent src={bannerImage || stateInfo?.bannerUrl} alt="noimagefound" />
+
             <BackLink className="moduleLinkHomePageBackButton" onClick={() => window.history.back()} />
             <h1>{t("MODULE_" + code.toUpperCase())}</h1>
             <div className="moduleLinkHomePageModuleLinks">
@@ -212,14 +212,14 @@ const Home = ({
         </Switch>
       </div>
       <div className="citizen-home-footer" style={window.location.href.includes("citizen/obps") ? { zIndex: "-1" } : {}}>
-        
-                          <ImageComponent   alt="Powered by DIGIT"
+        <ImageComponent
+          alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER")}
           style={{ height: "1.2em", cursor: "pointer" }}
           onClick={() => {
             window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
-          }} />
-        
+          }}
+        />
       </div>
     </div>
   );

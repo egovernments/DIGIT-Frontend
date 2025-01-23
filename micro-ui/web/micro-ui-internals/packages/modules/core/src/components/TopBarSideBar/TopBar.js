@@ -1,10 +1,10 @@
 import { Hamburger, TopBar as TopBarComponent } from "@egovernments/digit-ui-react-components";
 import { Dropdown } from "@egovernments/digit-ui-components";
-import React,{Fragment} from "react";
+import React, { Fragment } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import ChangeCity from "../ChangeCity";
 import ChangeLanguage from "../ChangeLanguage";
-import {TopBar as TopBarComponentMain } from "@egovernments/digit-ui-components";
+import { TopBar as TopBarComponentMain } from "@egovernments/digit-ui-components";
 import ImageComponent from "../ImageComponent";
 
 const TopBar = ({
@@ -26,8 +26,7 @@ const TopBar = ({
   const [profilePic, setProfilePic] = React.useState(null);
 
   React.useEffect(async () => {
-
-    const tenant = Digit.Utils.getMultiRootTenant() ? Digit.ULBService.getStateId(): Digit.ULBService.getCurrentTenantId();
+    const tenant = Digit.Utils.getMultiRootTenant() ? Digit.ULBService.getStateId() : Digit.ULBService.getCurrentTenantId();
     const uuid = userDetails?.info?.uuid;
     if (uuid) {
       const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
@@ -100,23 +99,29 @@ const TopBar = ({
   const loggedin = userDetails?.access_token ? true : false;
 
   //checking for custom topbar components
-  const CustomEmployeeTopBar = Digit.ComponentRegistryService?.getComponent("CustomEmployeeTopBar")
+  const CustomEmployeeTopBar = Digit.ComponentRegistryService?.getComponent("CustomEmployeeTopBar");
 
-  if(CustomEmployeeTopBar) {
-    return <CustomEmployeeTopBar {...{t,
-      stateInfo,
-      toggleSidebar,
-      isSidebarOpen,
-      handleLogout,
-      userDetails,
-      CITIZEN,
-      cityDetails,
-      mobileView,
-      userOptions,
-      handleUserDropdownSelection,
-      logoUrl,
-      showLanguageChange,
-      loggedin}} />
+  if (CustomEmployeeTopBar) {
+    return (
+      <CustomEmployeeTopBar
+        {...{
+          t,
+          stateInfo,
+          toggleSidebar,
+          isSidebarOpen,
+          handleLogout,
+          userDetails,
+          CITIZEN,
+          cityDetails,
+          mobileView,
+          userOptions,
+          handleUserDropdownSelection,
+          logoUrl,
+          showLanguageChange,
+          loggedin,
+        }}
+      />
+    );
   }
   return (
     <TopBarComponentMain
@@ -157,7 +162,7 @@ const TopBar = ({
               {t(`ULBGRADE_${cityDetails?.city?.ulbGrade.toUpperCase().replace(" ", "_").replace(".", "_")}`).toUpperCase()}
             </>
           ) : (
-                  <ImageComponent  className="state" src={logoUrlWhite} alt="State Logo" />
+            <ImageComponent className="state" src={logoUrlWhite} alt="State Logo" />
           )
         ) : (
           <>

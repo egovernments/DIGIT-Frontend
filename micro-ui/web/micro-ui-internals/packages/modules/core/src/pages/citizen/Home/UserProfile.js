@@ -13,11 +13,9 @@ import {
   CardLabel,
   BreadCrumb,
   Toast,
-  ErrorMessage
+  ErrorMessage,
 } from "@egovernments/digit-ui-components";
-import {
-  CameraIcon,
-} from "@egovernments/digit-ui-react-components";
+import { CameraIcon } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -48,15 +46,15 @@ const defaultImage =
   "L+RGKCddCGmatiPyPB/+ekO/M/q/7uvbt22kTt3zEnXPzCV13T3Gel4/6NduDu66xRvlPNkM1RjjxUdv+4WhGx6TftD19Q/dfzpwcHO+rE3fAAAAAElFTkSuQmCC";
 
 const defaultValidationConfig = {
-  "tenantId": `${Digit.ULBService.getStateId()}`,
-  "UserProfileValidationConfig": [
+  tenantId: `${Digit.ULBService.getStateId()}`,
+  UserProfileValidationConfig: [
     {
-      "name": "/^[a-zA-Z ]+$/i",
-      "mobileNumber": "/^[6-9]{1}[0-9]{9}$/",
-      "password":"/^([a-zA-Z0-9@#$%]{8,15})$/i"
-    }
-  ]
-}
+      name: "/^[a-zA-Z ]+$/i",
+      mobileNumber: "/^[6-9]{1}[0-9]{9}$/",
+      password: "/^([a-zA-Z0-9@#$%]{8,15})$/i",
+    },
+  ],
+};
 
 const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const history = useHistory();
@@ -69,12 +67,8 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const [name, setName] = useState(userInfo?.name ? userInfo.name : "");
   const [email, setEmail] = useState(userInfo?.emailId ? userInfo.emailId : "");
   const [gender, setGender] = useState(userDetails?.gender);
-  const [city, setCity] = useState(
-    userInfo?.permanentCity ? userInfo.permanentCity : cityDetails.name
-  );
-  const [mobileNumber, setMobileNo] = useState(
-    userInfo?.mobileNumber ? userInfo.mobileNumber : ""
-  );
+  const [city, setCity] = useState(userInfo?.permanentCity ? userInfo.permanentCity : cityDetails.name);
+  const [mobileNumber, setMobileNo] = useState(userInfo?.mobileNumber ? userInfo.mobileNumber : "");
   const [profilePic, setProfilePic] = useState(null);
   const [profileImg, setProfileImg] = useState("");
   const [openUploadSlide, setOpenUploadSide] = useState(false);
@@ -98,42 +92,38 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
     );
   };
 
-  const [validationConfig,setValidationConfig] = useState(mapConfigToRegExp(defaultValidationConfig) || {});
+  const [validationConfig, setValidationConfig] = useState(mapConfigToRegExp(defaultValidationConfig) || {});
 
-  const { data: mdmsValidationData, isValidationConfigLoading } = Digit.Hooks.useCustomMDMS(stateCode, "commonUiConfig", [{ name: "UserProfileValidationConfig" }], {
-    select: (data) => {
-      return data?.commonUiConfig;
-    },
-  });
+  const { data: mdmsValidationData, isValidationConfigLoading } = Digit.Hooks.useCustomMDMS(
+    stateCode,
+    "commonUiConfig",
+    [{ name: "UserProfileValidationConfig" }],
+    {
+      select: (data) => {
+        return data?.commonUiConfig;
+      },
+    }
+  );
 
   useEffect(() => {
-    if(mdmsValidationData && mdmsValidationData?.UserProfileValidationConfig?.[0]){
+    if (mdmsValidationData && mdmsValidationData?.UserProfileValidationConfig?.[0]) {
       const updatedValidationConfig = mapConfigToRegExp(mdmsValidationData);
       setValidationConfig(updatedValidationConfig);
     }
-  },[mdmsValidationData]);
+  }, [mdmsValidationData]);
 
   const getUserInfo = async () => {
     const uuid = userInfo?.uuid;
     if (uuid) {
-      const usersResponse = await Digit.UserService.userSearch(
-        tenant,
-        { uuid: [uuid] },
-        {}
-      );
-      usersResponse &&
-        usersResponse.user &&
-        usersResponse.user.length &&
-        setUserDetails(usersResponse.user[0]);
+      const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
+      usersResponse && usersResponse.user && usersResponse.user.length && setUserDetails(usersResponse.user[0]);
     }
   };
 
   React.useEffect(() => {
     window.addEventListener("resize", () => setWindowWidth(window.innerWidth));
     return () => {
-      window.removeEventListener("resize", () =>
-        setWindowWidth(window.innerWidth)
-      );
+      window.removeEventListener("resize", () => setWindowWidth(window.innerWidth));
     };
   });
 
@@ -164,11 +154,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const setUserName = (value) => {
     setName(value);
 
-    if (
-      !validationConfig?.name?.test(value) ||
-      value.length === 0 ||
-      value.length > 50
-    ) {
+    if (!validationConfig?.name?.test(value) || value.length === 0 || value.length > 50) {
       setErrors({
         ...errors,
         userName: {
@@ -204,10 +190,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const setUserMobileNumber = (value) => {
     setMobileNo(value);
 
-    if (
-      userType === "employee" &&
-      !validationConfig?.mobileNumber?.test(value)
-    ) {
+    if (userType === "employee" && !validationConfig?.mobileNumber?.test(value)) {
       setErrors({
         ...errors,
         mobileNumber: {
@@ -291,22 +274,14 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         photo: profilePic,
       };
 
-      if (
-        !validationConfig?.name.test(name) ||
-        name === "" ||
-        name.length > 50 ||
-        name.length < 1
-      ) {
+      if (!validationConfig?.name.test(name) || name === "" || name.length > 50 || name.length < 1) {
         throw JSON.stringify({
           type: "error",
           message: t("CORE_COMMON_PROFILE_NAME_INVALID"),
         });
       }
 
-      if (
-        userType === "employee" &&
-        !validationConfig?.mobileNumber.test(mobileNumber)
-      ) {
+      if (userType === "employee" && !validationConfig?.mobileNumber.test(mobileNumber)) {
         throw JSON.stringify({
           type: "error",
           message: t("CORE_COMMON_PROFILE_MOBILE_NUMBER_INVALID"),
@@ -320,10 +295,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         });
       }
 
-      if (
-        changepassword &&
-        (currentPassword.length || newPassword.length || confirmPassword.length)
-      ) {
+      if (changepassword && (currentPassword.length || newPassword.length || confirmPassword.length)) {
         if (newPassword !== confirmPassword) {
           throw JSON.stringify({
             type: "error",
@@ -331,23 +303,14 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
           });
         }
 
-        if (
-          !(
-            currentPassword.length &&
-            newPassword.length &&
-            confirmPassword.length
-          )
-        ) {
+        if (!(currentPassword.length && newPassword.length && confirmPassword.length)) {
           throw JSON.stringify({
             type: "error",
             message: t("CORE_COMMON_PROFILE_PASSWORD_INVALID"),
           });
         }
 
-        if (
-          !validationConfig?.password.test(newPassword) &&
-          !validationConfig?.password.test(confirmPassword)
-        ) {
+        if (!validationConfig?.password.test(newPassword) && !validationConfig?.password.test(confirmPassword)) {
           throw JSON.stringify({
             type: "error",
             message: t("CORE_COMMON_PROFILE_PASSWORD_INVALID"),
@@ -355,10 +318,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         }
       }
 
-      const { responseInfo, user } = await Digit.UserService.updateUser(
-        requestData,
-        stateCode
-      );
+      const { responseInfo, user } = await Digit.UserService.updateUser(requestData, stateCode);
 
       if (responseInfo && responseInfo.status === "200") {
         const user = Digit.UserService.getUser();
@@ -377,11 +337,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         }
       }
 
-      if (
-        currentPassword.length &&
-        newPassword.length &&
-        confirmPassword.length
-      ) {
+      if (currentPassword.length && newPassword.length && confirmPassword.length) {
         const requestData = {
           existingPassword: currentPassword,
           newPassword: newPassword,
@@ -393,21 +349,11 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
         if (newPassword === confirmPassword) {
           try {
-            const res = await Digit.UserService.changePassword(
-              requestData,
-              tenant
-            );
+            const res = await Digit.UserService.changePassword(requestData, tenant);
 
             const { responseInfo: changePasswordResponseInfo } = res;
-            if (
-              changePasswordResponseInfo?.status &&
-              changePasswordResponseInfo.status === "200"
-            ) {
-              showToast(
-                "success",
-                t("CORE_COMMON_PROFILE_UPDATE_SUCCESS_WITH_PASSWORD"),
-                5000
-              );
+            if (changePasswordResponseInfo?.status && changePasswordResponseInfo.status === "200") {
+              showToast("success", t("CORE_COMMON_PROFILE_UPDATE_SUCCESS_WITH_PASSWORD"), 5000);
               setTimeout(() => Digit.UserService.logout(), 2000);
             } else {
               throw "";
@@ -415,9 +361,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
           } catch (error) {
             throw JSON.stringify({
               type: "error",
-              message: error.Errors?.at(0)?.description
-                ? error.Errors.at(0).description
-                : "CORE_COMMON_PROFILE_UPDATE_ERROR_WITH_PASSWORD",
+              message: error.Errors?.at(0)?.description ? error.Errors.at(0).description : "CORE_COMMON_PROFILE_UPDATE_ERROR_WITH_PASSWORD",
             });
           }
         } else {
@@ -438,11 +382,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   };
 
   let menu = [];
-  const { data: Menu } = Digit.Hooks.useGenderMDMS(
-    stateId,
-    "common-masters",
-    "GenderType"
-  );
+  const { data: Menu } = Digit.Hooks.useGenderMDMS(stateId, "common-masters", "GenderType");
   Menu &&
     Menu.map((genderDetails) => {
       menu.push({
@@ -455,9 +395,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const setFileStoreId = async (fileStoreId) => {
     setProfilePic(fileStoreId);
 
-    const thumbnails = fileStoreId
-      ? await getThumbnails([fileStoreId], stateId)
-      : null;
+    const thumbnails = fileStoreId ? await getThumbnails([fileStoreId], stateId) : null;
 
     setProfileImg(thumbnails?.thumbs[0]);
 
@@ -482,7 +420,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
     <div className="user-profile">
       <section style={{ margin: userType === "citizen" || isMobile ? "8px" : "24px" }}>
         {userType === "citizen" || isMobile ? (
-          <BackLink onClick={() => window.history.back()}/>
+          <BackLink onClick={() => window.history.back()} />
         ) : (
           <BreadCrumb
             crumbs={[
@@ -537,15 +475,17 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
               margin: "16px",
             }}
           >
-          
-                                            <ImageComponent   style={{
+            <ImageComponent
+              style={{
                 margin: "auto",
                 borderRadius: "300px",
                 justifyContent: "center",
                 height: "100%",
                 width: "100%",
               }}
-              src={!profileImg || profileImg === "" ? defaultImage : profileImg} alt="Profile Image" />
+              src={!profileImg || profileImg === "" ? defaultImage : profileImg}
+              alt="Profile Image"
+            />
 
             <button
               style={{
@@ -577,7 +517,9 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
           {userType === "citizen" ? (
             <React.Fragment>
               <LabelFieldPair>
-                <CardLabel className="user-profile" style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("CORE_COMMON_PROFILE_NAME")}`}*</CardLabel>
+                <CardLabel className="user-profile" style={editScreen ? { color: "#B1B4B6" } : {}}>
+                  {`${t("CORE_COMMON_PROFILE_NAME")}`}*
+                </CardLabel>
                 <div style={{ width: "40rem", maxWidth: "960px" }}>
                   <TextInput
                     t={t}
@@ -589,7 +531,8 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                     onChange={(e) => setUserName(e.target.value)}
                     {...(validation = {
                       isRequired: true,
-                      pattern:mdmsValidationData?.UserProfileValidationConfig?.[0]?.name || defaultValidationConfig?.UserProfileValidationConfig?.[0]?.name,
+                      pattern:
+                        mdmsValidationData?.UserProfileValidationConfig?.[0]?.name || defaultValidationConfig?.UserProfileValidationConfig?.[0]?.name,
                       type: "tel",
                       title: t("CORE_COMMON_PROFILE_NAME_ERROR_MESSAGE"),
                     })}
@@ -690,7 +633,8 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                     placeholder="Enter Your Name"
                     {...(validation = {
                       isRequired: true,
-                      pattern:mdmsValidationData?.UserProfileValidationConfig?.[0]?.name || defaultValidationConfig?.UserProfileValidationConfig?.[0]?.name,
+                      pattern:
+                        mdmsValidationData?.UserProfileValidationConfig?.[0]?.name || defaultValidationConfig?.UserProfileValidationConfig?.[0]?.name,
                       type: "text",
                       title: t("CORE_COMMON_PROFILE_NAME_ERROR_MESSAGE"),
                     })}
@@ -762,10 +706,12 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                     name="mobileNumber"
                     placeholder="Enter a valid Mobile No."
                     onChange={(value) => setUserMobileNumber(value)}
-                    disable={Digit.Utils.getMultiRootTenant()? false : true}
+                    disable={Digit.Utils.getMultiRootTenant() ? false : true}
                     {...{
                       required: true,
-                      pattern:mdmsValidationData?.UserProfileValidationConfig?.[0]?.mobileNumber || defaultValidationConfig?.UserProfileValidationConfig?.[0]?.mobileNumber,
+                      pattern:
+                        mdmsValidationData?.UserProfileValidationConfig?.[0]?.mobileNumber ||
+                        defaultValidationConfig?.UserProfileValidationConfig?.[0]?.mobileNumber,
                       type: "tel",
                       title: t("CORE_COMMON_PROFILE_MOBILE_NUMBER_INVALID"),
                     }}
@@ -797,7 +743,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                     name="email"
                     value={email}
                     onChange={(e) => setUserEmailAddress(e.target.value)}
-                    disabled={Digit.Utils.getMultiRootTenant()? true : editScreen}
+                    disabled={Digit.Utils.getMultiRootTenant() ? true : editScreen}
                   />
                   {errors?.emailAddress && (
                     <ErrorMessage
@@ -814,7 +760,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
               <LabelFieldPair>
                 <div style={{ width: "100%" }}>
-                  {changepassword == false && !Digit.Utils.getOTPBasedLogin()? (
+                  {changepassword == false && !Digit.Utils.getOTPBasedLogin() ? (
                     <Button
                       label={t("CORE_COMMON_CHANGE_PASSWORD")}
                       variation={"teritiary"}
@@ -835,7 +781,10 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                             type={"password"}
                             isMandatory={false}
                             name="name"
-                            pattern={mdmsValidationData?.UserProfileValidationConfig?.[0]?.password || defaultValidationConfig?.UserProfileValidationConfig?.[0]?.password}
+                            pattern={
+                              mdmsValidationData?.UserProfileValidationConfig?.[0]?.password ||
+                              defaultValidationConfig?.UserProfileValidationConfig?.[0]?.password
+                            }
                             onChange={(e) => setUserCurrentPassword(e.target.value)}
                             disabled={editScreen}
                           />
@@ -863,7 +812,10 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                             type={"password"}
                             isMandatory={false}
                             name="name"
-                            pattern={mdmsValidationData?.UserProfileValidationConfig?.[0]?.password || defaultValidationConfig?.UserProfileValidationConfig?.[0]?.password}
+                            pattern={
+                              mdmsValidationData?.UserProfileValidationConfig?.[0]?.password ||
+                              defaultValidationConfig?.UserProfileValidationConfig?.[0]?.password
+                            }
                             onChange={(e) => setUserNewPassword(e.target.value)}
                             disabled={editScreen}
                           />
@@ -891,7 +843,10 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                             type={"password"}
                             isMandatory={false}
                             name="name"
-                            pattern={mdmsValidationData?.UserProfileValidationConfig?.[0]?.password || defaultValidationConfig?.UserProfileValidationConfig?.[0]?.password}
+                            pattern={
+                              mdmsValidationData?.UserProfileValidationConfig?.[0]?.password ||
+                              defaultValidationConfig?.UserProfileValidationConfig?.[0]?.password
+                            }
                             onChange={(e) => setUserConfirmPassword(e.target.value)}
                             disabled={editScreen}
                           />

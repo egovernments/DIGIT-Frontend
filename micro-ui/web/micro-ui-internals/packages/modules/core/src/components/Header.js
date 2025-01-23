@@ -12,7 +12,7 @@ const Header = ({ showTenant = true }) => {
 
   return (
     <div className="bannerHeader">
-      <ImageComponent className="bannerLogo" src={stateInfo?.logoUrl} style={!showTenant ? { borderRight: "unset" } : {}} alt="Digit Banner"/>
+      <ImageComponent className="bannerLogo" src={stateInfo?.logoUrl} style={!showTenant ? { borderRight: "unset" } : {}} alt="Digit Banner" />
       {showTenant && stateInfo?.code && <p>{t(`TENANT_TENANTS_${stateInfo?.code?.toUpperCase()}`)}</p>}
     </div>
   );
