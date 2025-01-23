@@ -12,7 +12,7 @@ const Filters = ({
   isOpen,
   closeFilters,
   showDateRange = true,
-  showDDR = false,
+  showDDR = true,
   showUlb = false,
   showDenomination = false,
   showModuleFilter = true,
@@ -21,7 +21,7 @@ const Filters = ({
   const { value, setValue } = useContext(FilterContext);
 
   const [selected, setSelected] = useState(() =>
-    ulbTenants?.ulb.filter((tenant) => value?.filters?.tenantId?.find((selectedTenant) => selectedTenant === tenant?.code))
+  [{code: "pg.addisababa", ddrKey: "Ethiopia",ulbKey: "Addis Ababa"}]
   );
 
   useEffect(() => {
@@ -95,7 +95,7 @@ const Filters = ({
         </div>
       )}
       {showDDR && (
-        <div className="filters-input">
+        <div className="filters-input" style={{display:"none"}}>
           <div className="mbsm">{t(isNational ? "ES_DSS_STATE" : "ES_DSS_DDR")}</div>
           <MultiSelectDropdown
             options={ulbTenants?.ddr && ulbTenants.ddr?.sort((x, y) => x?.ddrKey?.localeCompare(y?.ddrKey))}
