@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.8.18]  [23-Jan-2025]
+- FIxed some of FEATURE/HCMPRE-1852 :: Fixed some console logs 
+
 ## [1.8.17]  [23-Jan-2025]
 - FIxed some of FEATURE/HCMPRE-1852 :: accessibility issues of dropdown & checkbox(#2120) 
 

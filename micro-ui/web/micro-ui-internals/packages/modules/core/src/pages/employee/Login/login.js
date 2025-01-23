@@ -166,7 +166,6 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     // Set disable based on the check
     setDisable(hasEmptyFields);
   };
-  console.log("something", process.env.NODE_ENV === "development", process.env.NODE_ENV);
   return isLoading || isStoreLoading ? (
     <Loader />
   ) : (
