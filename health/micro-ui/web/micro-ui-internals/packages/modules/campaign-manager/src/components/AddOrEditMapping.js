@@ -3,24 +3,37 @@ import { useTranslation } from "react-i18next";
 import { Dropdown, TextInput, LabelFieldPair, CardLabel } from "@egovernments/digit-ui-components";
 import MultiSelectDropdown from "./MultiSelectDropdown";
 
-const AddOrEditMapping = forwardRef(({ schema, dispatch,  boundaryHierarchy, allSelectedBoundary }, ref) =>  {
+const AddOrEditMapping = forwardRef(({ schema, dispatch,  boundaryHierarchy, allSelectedBoundary, typeOfOperation, curData }, ref) =>  {
 
     const { t } = useTranslation();
     const columns = schema.filter(item => !item.hideColumn);
 
-
-    const [newdata, setNewData] = useState([]);
     const [selectedLevel, setSelectedLevel] = useState(null);
     const [selectedBoundary, setSelectedBoundary] = useState(null);
 
+    const [newdata, setNewData] = useState(
+        typeOfOperation === 'edit' 
+            ? Object.fromEntries(
+                columns.map(column => [
+                    t(column.name), 
+                    curData[t(column.name)]
+                ])
+              )
+            : []
+    );
+
     // Expose a method to the parent component
     useImperativeHandle(ref, () => ({
-        getData: () => {
-        return newdata;
+        getData: () => {  
+        return typeOfOperation === "add" ? {...newdata, editable:true, id: crypto.randomUUID()} : {...newdata, editable:true, id: curData?.id} ;
         },
     }));
 
     const renderInput = (column) => {
+
+        if ((column?.description === "Boundary Code" || column?.description === "Boundary Code (Mandatory)") && typeOfOperation === 'edit') {
+            return null; // Hide boundary selection in edit mode
+        }
         if (column?.type === "number") {
             return (
                 <div key={column.name} style={{ marginBottom: "1rem" }}>
