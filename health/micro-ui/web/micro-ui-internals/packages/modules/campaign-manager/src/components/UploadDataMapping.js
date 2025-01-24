@@ -849,7 +849,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             ];
             return (
               <Dropdown
-                className="dataMappingDropdown"
+                className="roleTableCell"
                 selected={b?.find((item) => item?.code === row?.[t(Schemas?.find((i) => i.description === "Facility usage")?.name)]) || null}
                 isMandatory={true}
                 option={b}
