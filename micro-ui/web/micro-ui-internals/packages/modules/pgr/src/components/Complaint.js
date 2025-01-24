@@ -24,7 +24,7 @@ const Complaint = ({ data, path }) => {
       <Card onClick={handleClick}>
         <CardSubHeader>{t(`SERVICEDEFS.${serviceCode.toUpperCase()}`)}</CardSubHeader>
 
-        <DateWrap date={Digit.DateUtils.ConvertTimestampToDate(data.auditDetails.createdTime)} />
+        <DateWrap date={Digit.DateUtils.ConvertEpochToDate(data.auditDetails.createdTime)} />
 
         <KeyNote keyValue={t(`${LOCALIZATION_KEY.CS_COMMON}_COMPLAINT_NO`)} note={serviceRequestId} />
 
