@@ -236,7 +236,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   );
   // Checking for sheet is uploaded
   if (
-    (currentCategories === "HCM_UPLOAD_USER_MAPPING" &&
+    (currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" &&
       sessionData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.length === 0) ||
     (currentCategories === "HCM_UPLOAD_USER_MAPPING" && sessionData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser?.uploadedFile?.length === 0)
   ) {
@@ -618,6 +618,8 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           // onChangePage={handlePaginationChange}
           // onChangeRowsPerPage={handleRowsPerPageChange}
           // paginationPerPage={rowsPerPage}
+          paginationDefaultPage={state?.currentPage}
+          paginationResetDefaultPage={state?.currentPage}
           paginationTotalRows={state.totalRows}
           onChangePage={handlePageChange}
           onChangeRowsPerPage={handleRowsPerPageChange}
