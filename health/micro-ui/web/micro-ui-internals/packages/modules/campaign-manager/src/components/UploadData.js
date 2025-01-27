@@ -9,7 +9,6 @@ import { InfoCard, PopUp, Toast, Button} from "@egovernments/digit-ui-components
 import { downloadExcelWithCustomName } from "../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
-import { DataType } from "ajv/dist/compile/validate/dataType";
 
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
