@@ -147,7 +147,7 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
                 optionKey="displayName"
               />
             </LabelFieldPair>
-            {filteredDeliveryConfig?.projectType === "MR-DN" && (
+            {!filteredDeliveryConfig?.productCountHide && (
               <LabelFieldPair style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
                 <Label>{t(`CAMPAIGN_COUNT_LABEL`)}</Label>
                 <TextInput type="numeric" defaultValue={i?.quantity} value={i?.quantity} onChange={(d) => incrementC(i, d)} />

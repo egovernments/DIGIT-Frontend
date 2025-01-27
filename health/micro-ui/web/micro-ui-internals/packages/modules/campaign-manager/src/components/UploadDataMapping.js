@@ -13,6 +13,7 @@ const initialState = {
   data: [],
   currentPage: 1,
   currentData: [],
+  filteredData: [],
   totalRows: 0,
   rowsPerPage: 10,
 };
@@ -73,14 +74,14 @@ const reducer = (state, action) => {
       return {
         ...state,
         currentPage: action.payload,
-        currentData: getPageData(state?.filter ? state?.currentData : state.data, action.payload, state.rowsPerPage), // Update data for the new page
+        currentData: getPageData(state?.filter ? state.filteredData : state.data, action.payload, state.rowsPerPage), // Update data for the new page
       };
     case "SET_ROWS_PER_PAGE":
       return {
         ...state,
         rowsPerPage: action.payload,
         currentPage: 1, // Reset to the first page when rows per page changes
-        currentData: getPageData(state.data, 1, action.payload), // Update data for the first page with the new page size
+        currentData: getPageData(state?.filter ? state.filteredData : state.data, 1, action.payload), // Update data for the first page with the new page size
       };
     case "UPDATE_BOUNDARY":
       const temp =
@@ -183,20 +184,18 @@ const reducer = (state, action) => {
         updated: true,
       };
     case "FILTER_BY_ACTIVE":
-      const tempActive = action.payload?.filter
-        ? getPageData(
-          state.data?.filter((i) =>
+      const tempFilter = action.payload?.filter
+        ? state.data?.filter((i) =>
             action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
               ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
               : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
-          ),
-          1,
-          state.rowsPerPage
-        )
-        : getPageData(state.data, 1, state.rowsPerPage);
+          )
+        : state.data;
+      const tempActive = getPageData(tempFilter, 1, state.rowsPerPage);
       return {
         ...state,
         currentData: tempActive, // Update data for the new page
+        filteredData: tempFilter,
         totalRows: action.payload?.filter
           ? state.data?.filter((i) =>
             action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"

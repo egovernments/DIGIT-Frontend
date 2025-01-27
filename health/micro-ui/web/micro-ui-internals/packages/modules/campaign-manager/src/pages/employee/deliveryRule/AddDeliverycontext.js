@@ -512,8 +512,7 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
           )}
         </CardHeader>
         {filteredDeliveryConfig?.customAttribute &&
-          filteredDeliveryConfig?.projectType !== "LLIN-mz" &&
-          filteredDeliveryConfig?.projectType !== "IRS-mz" && (
+          !filteredDeliveryConfig?.IsCycleDisable && (
             <LabelFieldPair style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }} className="delivery-type-radio">
               <div className="deliveryType-labelfield">
                 <span className="bold">{`${t("HCM_DELIVERY_TYPE")}`}</span>
