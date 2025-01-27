@@ -8,7 +8,9 @@ export const useProductList = (tenantId,projectType) => {
     config: {
       enabled: true,
       select: (data) => {
-        
+        if (projectType === "DEFAULT") {
+          return data?.ProductVariant;
+        }
         const filteredData = data?.ProductVariant?.filter(item => 
           item.additionalFields?.fields?.some(field => field.key === "projectType" && field.value === projectType)
         );

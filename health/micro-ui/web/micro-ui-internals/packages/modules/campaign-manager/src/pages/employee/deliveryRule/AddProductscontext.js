@@ -60,121 +60,6 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
   const filteredData = data?.filter((item) => !selectedDelivery?.products?.some((entry) => entry?.value === item?.id));
   const temp = filteredData?.filter((item) => !products?.some((entry) => entry?.value?.id === item?.id));
 
-  // const onDeleteProduct = (i, c) => {
-  //   const updatedProducts = selectedDelivery.products.filter((product) => product.key !== i.key);
-  //   const updatedProductsSequentialKeys = updatedProducts.map((product, index) => ({ ...product, key: index + 1 }));
-  //   const updatedDelivery = { ...selectedDelivery, products: updatedProductsSequentialKeys };
-  //   const updatedCampaignData = campaignData.map((cycle) => {
-  //     if (cycle.active) {
-  //       cycle.deliveries.forEach((delivery) => {
-  //         if (delivery.active) {
-  //           const deliveryRule = delivery.deliveryRules.find((rule) => rule.ruleKey === updatedDelivery.ruleKey);
-  //           if (deliveryRule) {
-  //             // Update the delivery rule with the updated delivery
-  //             deliveryRule.products = updatedDelivery.products;
-  //           }
-  //         }
-  //       });
-  //     }
-  //     return cycle;
-  //   });
-  //   setCampaignData(updatedCampaignData);
-  // };
-
-  // const incrementCount = (item, d) => {
-  //   const updatedProducts = selectedDelivery.products.map((i) => {
-  //     if (i.key === item.key) {
-  //       return {
-  //         ...i,
-  //         count: d,
-  //       };
-  //     }
-  //     return i;
-  //   });
-  //   const updatedDelivery = { ...selectedDelivery, products: updatedProducts };
-  //   const updatedCampaignData = campaignData.map((cycle) => {
-  //     if (cycle.active) {
-  //       cycle.deliveries.forEach((delivery) => {
-  //         if (delivery.active) {
-  //           const deliveryRule = delivery.deliveryRules.find((rule) => rule.ruleKey === updatedDelivery.ruleKey);
-  //           if (deliveryRule) {
-  //             // Update the delivery rule with the updated delivery
-  //             deliveryRule.products = updatedDelivery.products;
-  //           }
-  //         }
-  //       });
-  //     }
-  //     return cycle;
-  //   });
-  //   setCampaignData(updatedCampaignData);
-  //   setProducts(updatedProducts);
-  // };
-
-  // const updatedProductValue = (item, d) => {
-  //   const updatedProducts = selectedDelivery.products.map((i) => {
-  //     if (i.key === item.key) {
-  //       return {
-  //         ...i,
-  //         value: d.id,
-  //       };
-  //     }
-  //     return i;
-  //   });
-  //   const updatedDelivery = { ...selectedDelivery, products: updatedProducts };
-  //   const updatedCampaignData = campaignData.map((cycle) => {
-  //     if (cycle.active) {
-  //       cycle.deliveries.forEach((delivery) => {
-  //         if (delivery.active) {
-  //           const deliveryRule = delivery.deliveryRules.find((rule) => rule.ruleKey === updatedDelivery.ruleKey);
-  //           if (deliveryRule) {
-  //             // Update the delivery rule with the updated delivery
-  //             deliveryRule.products = updatedDelivery.products;
-  //           }
-  //         }
-  //       });
-  //     }
-  //     return cycle;
-  //   });
-  //   setCampaignData(updatedCampaignData);
-  //   setProducts(updatedProducts);
-  // };
-
-  // const addMoreResource = () => {
-  //   const updatedState = campaignData.map((cycle) => {
-  //     if (cycle.active) {
-  //       const updatedDeliveries = cycle.deliveries.map((dd) => {
-  //         if (dd.active) {
-  //           const updatedRules = dd.deliveryRules.map((rule) => {
-  //             if (rule.ruleKey === selectedDelivery.ruleKey) {
-  //               const productToAdd = {
-  //                 key: rule.products.length + 1,
-  //                 value: null,
-  //                 count: 1, // You can set the initial count as per your requirement
-  //               };
-  //               return {
-  //                 ...rule,
-  //                 products: [...rule.products, productToAdd],
-  //               };
-  //             }
-  //             return rule;
-  //           });
-  //           return {
-  //             ...dd,
-  //             deliveryRules: updatedRules,
-  //           };
-  //         }
-  //         return dd;
-  //       });
-  //       return {
-  //         ...cycle,
-  //         deliveries: updatedDeliveries,
-  //       };
-  //     }
-  //     return cycle;
-  //   });
-  //   setCampaignData(updatedState);
-  // };
-
   const add = () => {
     setProducts((prevState) => [
       ...prevState,
@@ -262,7 +147,7 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
                 optionKey="displayName"
               />
             </LabelFieldPair>
-            {filteredDeliveryConfig?.projectType === "MR-DN" && (
+            {!filteredDeliveryConfig?.productCountHide && (
               <LabelFieldPair style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
                 <Label>{t(`CAMPAIGN_COUNT_LABEL`)}</Label>
                 <TextInput type="numeric" defaultValue={i?.quantity} value={i?.quantity} onChange={(d) => incrementC(i, d)} />

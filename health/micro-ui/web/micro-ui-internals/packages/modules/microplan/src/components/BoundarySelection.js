@@ -18,6 +18,7 @@ const BoundarySelection = ({ onSelect, props: customProps, ...props }) => {
   const [statusMap, setStatusMap] = useState({});
   const [executionCount, setExecutionCount] = useState(0);
   const [updateBoundary, setUpdateBoundary] = useState(true);
+  const [isStatusMapLoading, setIsStatusMapLoading] = useState(false); 
   const handleBoundaryChange = (value) => {
     setBoundaryOptions(value?.boundaryOptions);
     setSelectedData(value?.selectedData);
@@ -58,10 +59,19 @@ const BoundarySelection = ({ onSelect, props: customProps, ...props }) => {
 
 
   useEffect(() => {
+    // Show loader before updating statusMap
+    setIsStatusMapLoading(true);
     if (selectedData && selectedData.length >= 0) {
-      setStatusMap(() => Digit.Utils.microplanv1.createStatusMap(selectedData, boundaryHierarchy))
+      const newStatusMap = Digit.Utils.microplanv1.createStatusMap(selectedData, boundaryHierarchy);
+      setStatusMap(newStatusMap);
+      // Hide loader after updating statusMap
+      setIsStatusMapLoading(false);
     }
-  }, [selectedData, boundaryHierarchy])
+    return () => {
+      // Cleanup function to prevent state updates if component unmounts during loading
+      setIsStatusMapLoading(false);
+    };
+  }, [selectedData, boundaryHierarchy]);
 
 
   useEffect(() => {
@@ -94,7 +104,7 @@ const BoundarySelection = ({ onSelect, props: customProps, ...props }) => {
 
   return (
     <>
-      <BoundaryKpi data={statusMap} />
+      {isStatusMapLoading ? <Loader /> : <BoundaryKpi data={statusMap} />}
       <CardNew className={"selecting-boundary-card"}>
         <Header styles={{ margin: "0rem" }}>{t(`MICROPLAN_SELECT_BOUNDARY`)}</Header>
         <p className="boundary-selection-description">{t(`MICROPLAN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>

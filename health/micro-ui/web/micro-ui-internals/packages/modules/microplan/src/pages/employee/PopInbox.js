@@ -26,7 +26,7 @@ const PopInbox = () => {
   const [boundaries, setBoundaries] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [workFlowPopUp, setworkFlowPopUp] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState(null);
+  const [selectedFilter, setSelectedFilter] = useState({status:"PENDING_FOR_VALIDATION"});
   const [actionBarPopUp, setactionBarPopUp] = useState(false);
   const [activeFilter, setActiveFilter] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
@@ -269,7 +269,7 @@ const PopInbox = () => {
       businessServices: "CENSUS",
     },
     config: {
-      enabled: selectedFilter ? true : false,
+      enabled: selectedFilter?.status ? true : false,
       select: (data) => {
         return data.BusinessServices?.[0];
       },
@@ -281,7 +281,7 @@ const PopInbox = () => {
 
       // Assume selectedFilter maps to applicationStatus or state
       const selectedState = workflowData?.states?.find(
-        (state) => state.state === selectedFilter
+        (state) => state.state === selectedFilter?.status
       );
 
       // Filter actions based on the selected state
@@ -293,7 +293,7 @@ const PopInbox = () => {
       setAvailableActionsForUser(availableActions || []);
 
     }
-  }, [workflowData, selectedFilter]);
+  }, [workflowData, selectedFilter?.status]);
 
 
   // if availableActionsForUser is defined and is an array
@@ -313,7 +313,7 @@ const PopInbox = () => {
       CensusSearchCriteria: {
         tenantId: tenantId,
         source: microplanId,
-        status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
+        status: selectedFilter?.status !== null && selectedFilter?.status !== undefined ? selectedFilter?.status : "",
         assignee: user.info.uuid,
         jurisdiction: censusJurisdiction,
         limit: limitAndOffset?.limit,
@@ -344,8 +344,8 @@ const PopInbox = () => {
       CensusSearchCriteria: {
         tenantId: tenantId,
         source: microplanId,
-        status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
-        ...(activeLink.code == "ASSIGNED_TO_ALL" || selectedFilter == "VALIDATED"
+        status: selectedFilter?.status !== null && selectedFilter?.status !== undefined ? selectedFilter?.status : "",
+        ...(activeLink.code == "ASSIGNED_TO_ALL" || selectedFilter?.status == "VALIDATED"
           ? {}
           : { assignee: user.info.uuid }),
         jurisdiction: censusJurisdiction,
@@ -422,17 +422,18 @@ const PopInbox = () => {
       const activeFilterKeys = Object.keys(reorderedStatusCount || {});
 
       if (
-        (selectedFilter === null || selectedFilter === undefined || selectedFilter === "") ||
-        !activeFilterKeys.includes(selectedFilter)
+        (selectedFilter?.status === null || selectedFilter?.status === undefined || selectedFilter?.status === "")
       ) {
-        setSelectedFilter(activeFilterKeys[0]);
+        setSelectedFilter((prev) => ({
+          ...prev, // Spread the previous state to retain other attributes
+        }));
       }
       setVillagesSelected(0);
       setSelectedRows([]);
 
       if (activeLink.code === "ASSIGNED_TO_ME") {
         setAssignedToMeCount(data?.TotalCount);
-        setAssignedToAllCount(data?.StatusCount[selectedFilter] || 0)
+        setAssignedToAllCount(data?.StatusCount[selectedFilter?.status] || 0)
       } else {
         setAssignedToAllCount(data?.TotalCount);
       }
@@ -443,10 +444,10 @@ const PopInbox = () => {
     if (censusJurisdiction?.length > 0) {
       refetchCensus(); // Trigger the API call again after activeFilter changes
     }
-  }, [selectedFilter, censusJurisdiction, limitAndOffset, activeLink]);
+  }, [selectedFilter?.status, censusJurisdiction, limitAndOffset, activeLink]);
 
   useEffect(() => {
-    if (selectedFilter === "VALIDATED") {
+    if (selectedFilter?.status === "VALIDATED") {
       setActiveLink({ code: "", name: "" });
       setShowTab(false);
     } else {
@@ -458,9 +459,9 @@ const PopInbox = () => {
         setShowTab(true);
       }
     }
-  }, [selectedFilter]);
+  }, [selectedFilter?.status]);
 
-  const onFilter = (selectedStatus) => {
+  const onFilter = (filterValue) => {
     setLimitAndOffset((prev)=>{
       return {
         limit: prev.limit,
@@ -468,7 +469,12 @@ const PopInbox = () => {
       }
     });
     setCurrentPage(1);
-    setSelectedFilter(selectedStatus?.code);
+    setSelectedFilter((prev)=>(
+      {
+        ...prev,
+        ...filterValue
+      }
+    ));
     setActiveLink({
       code: "ASSIGNED_TO_ME",
       name: "ASSIGNED_TO_ME"
@@ -487,9 +493,9 @@ const PopInbox = () => {
   }
 
   const clearFilters = () => {
-    if (selectedFilter !== Object.entries(activeFilter)?.[0]?.[0]) {
-      setSelectedFilter(Object.entries(activeFilter)?.[0]?.[0]);
-    }
+    setSelectedFilter((prev)=>({
+      status:Object.entries(activeFilter)?.[0]?.[0]
+    }));
     setLimitAndOffset((prev)=>{
       return {
         limit: prev.limit,
@@ -558,13 +564,13 @@ const PopInbox = () => {
 
   const getButtonState = (action) => {
 
-    if (selectedFilter === "PENDING_FOR_VALIDATION" && action === "VALIDATE") {
+    if (selectedFilter?.status === "PENDING_FOR_VALIDATION" && action === "VALIDATE") {
       return true;
     }
-    if (selectedFilter === "PENDING_FOR_APPROVAL" && (action === "APPROVE" || action === "ROOT_APPROVE")) {
+    if (selectedFilter?.status === "PENDING_FOR_APPROVAL" && (action === "APPROVE" || action === "ROOT_APPROVE")) {
       return true;
     }
-    if (selectedFilter === "VALIDATED" && action === "SEND_BACK_FOR_CORRECTION") {
+    if (selectedFilter?.status === "VALIDATED" && action === "SEND_BACK_FOR_CORRECTION") {
       return true;
     }
     return false;
@@ -611,12 +617,15 @@ const PopInbox = () => {
           {`${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${planObject?.name || t("NO_NAME_AVAILABLE")}`}
           </div>
           <div>
-          {`${t("LOGGED_IN_AS")} ${userName} - ${t(userRole)}`}
+          {`${t("LOGGED_IN_AS")} ${userName} - ${t(userRole)}${planEmployee?.planData 
+            ? ` (${t(planEmployee.planData[0].hierarchyLevel.toUpperCase())})` : ""}`
+          }
+
           </div>
           
         </div>
       </div>
-      <GenericKpiFromDSS module="CENSUS" status={selectedFilter} planId={microplanId} refetchTrigger={refetchTrigger} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
+      <GenericKpiFromDSS module="CENSUS" status={selectedFilter?.status} planId={microplanId} refetchTrigger={refetchTrigger} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
       <SearchJurisdiction
         boundaries={boundaries}
         defaultHierarchy={defaultHierarchy}
@@ -631,11 +640,11 @@ const PopInbox = () => {
 
         <div className="pop-inbox-wrapper-filter-table-wrapper" style={{ marginBottom: (isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "CENSUS_DATA_APPROVAL_IN_PROGRESS") || (!isRootApprover && totalcount===0) || disabledAction ? "2.5rem" : "0rem" }}>
           <InboxFilterWrapper
+            isPlanInbox={false}
             options={activeFilter}
             onApplyFilters={onFilter}
             clearFilters={clearFilters}
-            defaultValue={ { [selectedFilter]: activeFilter[selectedFilter]} 
-      }
+            defaultValue={selectedFilter} 
           ></InboxFilterWrapper>
 
           <div className={"pop-inbox-table-wrapper"}>
@@ -760,7 +769,7 @@ const PopInbox = () => {
                 )}
               </div>
             )}
-            {isLoading || isFetching ? <Loader /> : censusData.length === 0 ? <NoResultsFound style={{ height: selectedFilter === "VALIDATED" ? "472px" : "408px" }} text={t(`HCM_MICROPLAN_NO_DATA_FOUND_FOR_CENSUS`)} /> : <PopInboxTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap}
+            {isLoading || isFetching ? <Loader /> : censusData.length === 0 ? <NoResultsFound style={{ height: selectedFilter?.status === "VALIDATED" ? "472px" : "408px" }} text={t(`HCM_MICROPLAN_NO_DATA_FOUND_FOR_CENSUS`)} /> : <PopInboxTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap}
               onSuccessEdit={(data) => {
                 setUpdatedCensus(data);
                 setShowComment(true); 

@@ -1,5 +1,5 @@
 import { Button, CardLabel, CardText, Chip, Dropdown, LabelFieldPair, Loader, PopUp, Switch } from "@egovernments/digit-ui-components";
-import React, { act, createContext, Fragment, useContext, useEffect, useReducer, useState } from "react";
+import React, { Fragment, useEffect, useReducer, useState } from "react";
 import DataTable from "react-data-table-component";
 import { useTranslation } from "react-i18next";
 import { tableCustomStyle } from "./tableCustomStyle";
@@ -10,6 +10,7 @@ const initialState = {
   data: [],
   currentPage: 1,
   currentData: [],
+  filteredData: [],
   totalRows: 0,
   rowsPerPage: 10,
 };
@@ -34,14 +35,14 @@ const reducer = (state, action) => {
       return {
         ...state,
         currentPage: action.payload,
-        currentData: getPageData(state.data, action.payload, state.rowsPerPage), // Update data for the new page
+        currentData: getPageData(state?.filter ? state.filteredData : state.data, action.payload, state.rowsPerPage), // Update data for the new page
       };
     case "SET_ROWS_PER_PAGE":
       return {
         ...state,
         rowsPerPage: action.payload,
         currentPage: 1, // Reset to the first page when rows per page changes
-        currentData: getPageData(state.data, 1, action.payload), // Update data for the first page with the new page size
+        currentData: getPageData(state?.filter ? state.filteredData : state.data, 1, action.payload), // Update data for the first page with the new page size
       };
     case "UPDATE_BOUNDARY":
       const temp =
@@ -124,19 +125,18 @@ const reducer = (state, action) => {
         updated: true,
       };
     case "FILTER_BY_ACTIVE":
+      const tempFilter = action.payload?.filter
+        ? state.data?.filter((i) =>
+            action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
+              ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
+              : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
+          )
+        : state.data;
+      const tempActive = getPageData(tempFilter, 1, state.rowsPerPage);
       return {
         ...state,
-        currentData: action.payload?.filter
-          ? getPageData(
-              state.data?.filter((i) =>
-                action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
-                  ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
-                  : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
-              ),
-              state.currentPage,
-              state.rowsPerPage
-            )
-          : getPageData(state.data, state.currentPage, state.rowsPerPage), // Update data for the new page
+        currentData: tempActive, // Update data for the new page
+        filteredData: tempFilter,
         totalRows: action.payload?.filter
           ? state.data?.filter((i) =>
               action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
@@ -152,10 +152,10 @@ const reducer = (state, action) => {
 };
 
 function flattenHierarchyIterative(data) {
-  const stack = data.map((node) => ({ ...node, parentCode: null })); // Initialize stack with parentCode as null
+  const stack = (data || [])?.map((node) => ({ ...node, parentCode: null })); // Initialize stack with parentCode as null
   const result = [];
 
-  while (stack.length > 0) {
+  while (stack?.length > 0) {
     const { id, code, boundaryType, children, parentCode } = stack.pop();
 
     // Add the current node to the result with the parent code
@@ -175,7 +175,7 @@ function flattenHierarchyIterative(data) {
   return result;
 }
 
-const Wrapper = ({ setShowPopUp, alreadyQueuedSelectedState }) => {
+const Wrapper = ({ currentCategories, setShowPopUp, alreadyQueuedSelectedState }) => {
   const { t } = useTranslation();
   return (
     <PopUp
@@ -184,7 +184,7 @@ const Wrapper = ({ setShowPopUp, alreadyQueuedSelectedState }) => {
         maxWidth: "40%",
       }}
       type={"default"}
-      heading={t("MICROPLAN_ADMINISTRATIVE_AREA")}
+      heading={t(Digit.Utils.locale.getTransformedLocale(`POP_ADMINISTRATIVE_AREA_${currentCategories}`))}
       children={[]}
       onOverlayClick={() => {
         setShowPopUp(false);
@@ -218,6 +218,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   const schemaFilter = currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" ? "facility" : "user";
   const [state, dispatch] = useReducer(reducer, initialState);
   const boundaryHierarchy = paramsData?.hierarchy?.boundaryHierarchy;
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const { data: Schemas, isLoading: isThisLoading, refetch: refetchSchema } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
@@ -297,14 +298,23 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   const { isLoading: childrenDataLoading, data: childrenData, isFetching, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
 
   useEffect(() => {
-    if (allLowestHierarchyCodes?.length > 0 && childrenData?.length > 0) {
+    if (allLowestHierarchyCodes?.length > 0) {
       const allLowestBoundaryData = flattenHierarchyIterative(childrenData);
       const sessionSelectedData = sessionData?.["HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"]?.boundaryType?.selectedData;
-      setAllSelectedBoundary([...allLowestBoundaryData, ...sessionSelectedData]);
+      const uniqueLowestBoundaryData = allLowestBoundaryData?.filter((data) => !sessionSelectedData?.some((selected) => selected.code === data.code));
+      setAllSelectedBoundary([...sessionSelectedData, ...uniqueLowestBoundaryData]);
     }
   }, [allLowestHierarchyCodes, childrenData]);
   useEffect(() => {
-    if (lowestHierarchy && sessionData?.["HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"]?.boundaryType?.selectedData?.length > 0) {
+    const lowestBoundary = boundaryHierarchy.reduce((prev, current) => {
+      return prev.parentBoundaryType && !current.parentBoundaryType ? current : prev;
+    });
+
+    if (
+      lowestHierarchy &&
+      lowestHierarchy !== lowestBoundary.boundaryType &&
+      sessionData?.["HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"]?.boundaryType?.selectedData?.length > 0
+    ) {
       const lowestHierarchyCodes = sessionData?.["HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"]?.boundaryType?.selectedData
         ?.filter((i) => i.type === lowestHierarchy)
         ?.map((j) => j.code);
@@ -346,6 +356,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
     dispatch({ type: "SET_PAGE", payload: page, schemas: Schemas, t: t });
   };
   const handleRowsPerPageChange = (newPerPage) => {
+    setRowsPerPage(newPerPage); // Update the rows per page state
     dispatch({ type: "SET_ROWS_PER_PAGE", payload: newPerPage, schemas: Schemas, t: t });
   };
 
@@ -413,20 +424,48 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           {
             name: t("BOUNDARY"),
             cell: (row) => {
+              const listOfBoundaries = row?.[t(Schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)]?.split(",") || [];
               return (
-                <>
-                  {row?.[t(Schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)] || t("NA")}
+                <div>
+                  <div>
+                    {listOfBoundaries.slice(0, 2).map((item, index) => (
+                      <Chip className="" error="" extraStyles={{}} iconReq="" hideClose={true} text={t(item)} />
+                    ))}
+                    {listOfBoundaries?.length > 2 && (
+                      <Button
+                        label={`+${listOfBoundaries?.length - 2} ${t("ES_MORE")}`}
+                        onClick={() => setChipPopUpRowId(listOfBoundaries)}
+                        variation="link"
+                        style={{
+                          height: "2rem",
+                          minWidth: "4.188rem",
+                          minHeight: "2rem",
+                          padding: "0.5rem",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                        textStyles={{
+                          height: "auto",
+                          fontSize: "0.875rem",
+                          fontWeight: "400",
+                          width: "100%",
+                          lineHeight: "16px",
+                          color: "#C84C0E",
+                        }}
+                      />
+                    )}
+                  </div>
                   <Button
                     type={"button"}
                     size={"small"}
                     isDisabled={row?.[t(Schemas?.find((i) => i.description === "User Usage")?.name)] === "Inactive" ? true : false}
                     variation={"teritiary"}
-                    label={t("CHANGE_BOUNDARY")}
+                    label={listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
                     onClick={() => {
                       setShowPopUp(row);
                     }}
                   />
-                </>
+                </div>
               );
             },
           },
@@ -518,14 +557,13 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                         }}
                       />
                     )}
-                    {chipPopUpRowId && <Wrapper setShowPopUp={setChipPopUpRowId} alreadyQueuedSelectedState={listOfBoundaries} />}
                   </div>
                   <Button
                     type={"button"}
                     size={"small"}
                     isDisabled={row?.[t(Schemas?.find((i) => i.description === "Facility usage")?.name)] === "Inactive" ? true : false}
                     variation={"teritiary"}
-                    label={t("CHANGE_BOUNDARY")}
+                    label={listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
                     onClick={() => {
                       setShowPopUp(row);
                     }}
@@ -560,7 +598,11 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
       />
       {state?.currentData?.length === 0 ? (
         <Fragment>
-          <NoResultsFound text={Digit.Utils.locale.getTransformedLocale(state?.filter ? `NO_RESULTS_FOR_ACTIVE_FILTER_${currentCategories}` : `NO_RESULTS_FOR_MAPPING_${currentCategories}`)} />
+          <NoResultsFound
+            text={Digit.Utils.locale.getTransformedLocale(
+              state?.filter ? `NO_RESULTS_FOR_ACTIVE_FILTER_${currentCategories}` : `NO_RESULTS_FOR_MAPPING_${currentCategories}`
+            )}
+          />
         </Fragment>
       ) : (
         <DataTable
@@ -582,15 +624,20 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           paginationRowsPerPageOptions={[5, 10, 15, 20]}
         />
       )}
+      {chipPopUpRowId && (
+        <Wrapper currentCategories={currentCategories} setShowPopUp={setChipPopUpRowId} alreadyQueuedSelectedState={chipPopUpRowId} />
+      )}
       {showPopUp && (
         <PopUp
           className={"dataMapping"}
           type={"default"}
-          heading={t("FACILITY_MAPPING_POP_HEADER")}
+          heading={currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" ? t("FACILITY_MAPPING_POP_HEADER") : t("USER_MAPPING_POP_HEADER")}
           equalWidthButtons={true}
           children={[
             <div>
-              <CardText>{t("FACILITY_MAPPING_POP_HEADER")}</CardText>
+              <CardText>
+                {currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" ? t("FACILITY_MAPPING_POP_HEADER_TITLE") : t("USER_MAPPING_POP_HEADER_TITLE")}
+              </CardText>
               <LabelFieldPair key={1}>
                 <CardLabel style={{ marginBottom: "0.4rem" }}>{t("CHOOSE_BOUNDARY_LEVEL")}</CardLabel>
                 <Dropdown
@@ -608,7 +655,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                 />
               </LabelFieldPair>
               <LabelFieldPair className={"multiselect-label-field"} key={1}>
-                <CardLabel style={{ marginBottom: "0.4rem" }}>{t("CHOOSE_BOUNDARY_LEVEL")}</CardLabel>
+                <CardLabel style={{ marginBottom: "0.4rem" }}>{t("CHOOSE_BOUNDARY")}</CardLabel>
                 <MultiSelectDropdown
                   variant="nestedmultiselect"
                   props={{ className: "data-mapping-dropdown" }}

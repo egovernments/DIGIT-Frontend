@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import data_hook from "../../hooks/data_hook";
 import MobileChecklist from "../../components/MobileChecklist";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
+import TagComponent from "../../components/TagComponent";
 
 let temp_data = []
 
@@ -526,7 +527,7 @@ const CreateChecklist = () => {
       {!loading_new && submitting && <Loader />}
       {!submitting && !loading_new &&
         <div>
-         <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} style={{border: '0.5px solid #0B4B66'}} />
+          <TagComponent campaignName={campaignName} />  
           <div style={{ display: "flex", justifyContent: "space-between", height:"5.8rem", marginTop: "-1.2rem"}}>
             <div>
               <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>
