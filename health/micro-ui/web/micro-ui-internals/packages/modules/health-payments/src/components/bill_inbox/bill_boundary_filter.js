@@ -23,6 +23,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
         onFilterChange(boundary.code);
     };
     const onBoundaryChange = (boundary) => {
+
         if (boundary) {
             setBoundary(boundary);
             Digit.SessionStorage.set("boundary", boundary);
@@ -99,7 +100,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
                 </div>
                 {selectedProject?.address?.boundary && selectedLevel && (
                     <BoundaryComponent
-                        key={boundaryKey} // Add the key to force re-render
+                        // key={boundaryKey} // Add the key to force re-render
                         isRequired={isRequired}
                         reset={resetFilters}
                         makeReset={() => {

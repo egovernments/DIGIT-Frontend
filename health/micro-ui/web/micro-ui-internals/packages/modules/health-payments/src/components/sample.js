@@ -112,7 +112,7 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
 
       const formattedData = createFormattedData(childrenData[0]?.boundary[0].boundaryType);
       setBoundaryData(formattedData);
-      handleButtonClick(childrenData[0]?.boundary[0]);
+      // handleButtonClick(childrenData[0]?.boundary[0]);
     }
   }, [childrenData]);
 

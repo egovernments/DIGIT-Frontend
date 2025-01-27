@@ -49,11 +49,20 @@ const CustomBillInbox = () => {
         },
         config: {
             enabled: selectedBoundaryCode && selectedProject ? true : false,
+            onError: (error) => {
+                setApprovalCount(0);
+                setPendingApprovalCount(0);
+                setTotalCount(0);
+                setTableData([]);
+                setShowGenerateBillAction(false);
+                setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_REGISTER_FETCH_FAILED"), transitionTime: 3000 });
+            },
         },
     };
     const { isLoading: isAttendanceLoading, data: AttendanceData, refetch: refetchAttendance, isFetching } = Digit.Hooks.useCustomAPIHook(
         registerSearchCri
     );
+
     const BillSearchCri = {
         url: `/health-expense/bill/v1/_search`,
         body: {
@@ -97,6 +106,8 @@ const CustomBillInbox = () => {
                 setInfoDescription("HCM_AM_PENDING_REGISTER_AND_APPROVAL_REGISTER_VALIDATION_FAILED_INFO_MESSAGE")
                 setShowGenerateBillAction(false);
             }
+        } else {
+
         }
     }, [AttendanceData]);
     useEffect(() => {
