@@ -68,6 +68,14 @@ const BillInboxComponent = () => {
         },
         config: {
             enabled: selectedBoundaryCode && selectedProject ? true : false,
+            onError: (error) => {
+                setApprovalCount(0);
+                setPendingApprovalCount(0);
+                setTotalCount(0);
+                setTableData([]);
+                setShowGenerateBillAction(false);
+                setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_REGISTER_FETCH_FAILED"), transitionTime: 3000 });
+            },
         },
     };
     // Fetch attendance data

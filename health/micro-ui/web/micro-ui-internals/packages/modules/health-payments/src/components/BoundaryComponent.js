@@ -88,7 +88,9 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSessionStorag
 
       const formattedData = createFormattedData(childrenData[0]?.boundary[0].boundaryType);
       setBoundaryData(formattedData);
-      handleButtonClick(childrenData[0]?.boundary[0]);
+      if (!initialValue) {
+        handleButtonClick(childrenData[0]?.boundary[0]);
+      }
     }
   }, [childrenData]);
 

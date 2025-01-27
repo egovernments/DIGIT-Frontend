@@ -12,6 +12,8 @@ const MyBills = () => {
     const { t } = useTranslation();
     const location = useLocation();
     const tenantId = Digit.ULBService.getCurrentTenantId();
+
+    // State Variables
     const [tableData, setTableData] = useState([]);
     const [billID, setBillID] = useState(null);
     const [dateRange, setDateRange] = useState({
@@ -47,15 +49,6 @@ const MyBills = () => {
             },
         },
     };
-
-    useEffect(() => {
-        window.Digit.SessionStorage.del("selectedLevel");
-        window.Digit.SessionStorage.del("selectedProject");
-        window.Digit.SessionStorage.del("selectedBoundaryCode");
-        window.Digit.SessionStorage.del("boundary");
-        window.Digit.SessionStorage.del("selectedValues");
-    }, []);
-
 
     const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
 
