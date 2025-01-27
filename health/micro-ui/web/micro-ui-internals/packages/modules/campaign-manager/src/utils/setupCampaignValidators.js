@@ -33,7 +33,7 @@
     cycle.deliveries.forEach((delivery) => {
       delivery.deliveryRules.forEach((rule) => {
         // Validate attributes and products length
-        if (projectType === "MR-DN" && !rule?.deliveryType) {
+        if (!rule?.deliveryType) {
           isValid = false;
           deliveryRulesError?.push({
             name: `CYCLE_${cycle?.cycleIndex}`,
