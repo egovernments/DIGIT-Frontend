@@ -37,7 +37,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
 
   useEffect(() => {
     if (project.length == 0) {
-      let projectData =
+      const projectData =
         Digit?.SessionStorage.get("staffProjects") ||
         [].map((target) => ({
           code: target.id,
@@ -110,7 +110,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
             }}
             isRequired={isRequired}
             initialValue={Digit.SessionStorage.get("selectedValues")}
-            updateSeeeionStorage={(newSelectedValues) => {
+            updateSessionStorage={(newSelectedValues) => {
               Digit.SessionStorage.set("selectedValues", newSelectedValues);
             }}
             onChange={onChangeId}

@@ -8,7 +8,6 @@ const InboxSearchLinkHeader = ({ headerText, links, businessService, customClass
 
     const { t } = useTranslation();
     const history = useHistory();
-    const { roles: userRoles } = Digit.UserService.getUser().info;
     const [linksToShow, setLinksToShow] = useState([]);
 
     useEffect(() => {

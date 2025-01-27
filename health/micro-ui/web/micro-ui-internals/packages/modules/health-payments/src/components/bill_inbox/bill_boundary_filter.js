@@ -105,7 +105,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
                             setResetFilters(false);
                         }}
                         initialValue={Digit.SessionStorage.get("selectedValues")}
-                        updateSeeeionStorage={(newSelectedValues) => {
+                        updateSessionStorage={(newSelectedValues) => {
                             Digit.SessionStorage.set("selectedValues", newSelectedValues);
                         }}
                         onChange={onBoundaryChange}

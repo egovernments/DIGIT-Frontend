@@ -10,7 +10,7 @@ import { ScreenTypeEnum } from "../utils/constants";
  * @param {object} props - Component props.
  */
 
-const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorage, selectedProject, onChange, lowestLevel, isRequired }) => {
+const BoundaryComponent = ({ reset, makeReset, initialValue, updateSessionStorage, selectedProject, onChange, lowestLevel, isRequired }) => {
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "MICROPLAN";
@@ -140,8 +140,8 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSeeeionStorag
 
       setSelectedValues((prev) => {
         const newSelectedValues = { ...prev, [value?.boundaryType]: value };
-        if (updateSeeeionStorage) {
-          updateSeeeionStorage(newSelectedValues);
+        if (updateSessionStorage) {
+          updateSessionStorage(newSelectedValues);
         }
         return newSelectedValues;
       });

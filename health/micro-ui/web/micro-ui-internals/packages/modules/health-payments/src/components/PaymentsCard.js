@@ -8,13 +8,12 @@ const ROLES = {
 };
 
 const PaymentsCard = () => {
-  Digit.SessionStorage.set("AttendandeData");
   Digit.SessionStorage.del("paymentInbox");
   Digit.SessionStorage.del("selectedValues");
-  window.Digit.SessionStorage.del("selectedLevel");
-  window.Digit.SessionStorage.del("selectedProject");
-  window.Digit.SessionStorage.del("selectedBoundaryCode");
-  window.Digit.SessionStorage.del("boundary");
+  Digit.SessionStorage.del("selectedLevel");
+  Digit.SessionStorage.del("selectedProject");
+  Digit.SessionStorage.del("selectedBoundaryCode");
+  Digit.SessionStorage.del("boundary");
 
   const { t } = useTranslation();
   const userInfo = Digit.UserService.getUser();
