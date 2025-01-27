@@ -22,7 +22,7 @@ const PaymentsCard = () => {
   const generateLink = (labelKey, pathSuffix, roles = ROLES.ATTENDANCE) => {
     return {
       label: t(labelKey),
-      link: `/payments-ui/employee/payments/${pathSuffix}`,
+      link: `/${window?.contextPath}/employee/payments/${pathSuffix}`,
       roles: roles,
     };
   };
