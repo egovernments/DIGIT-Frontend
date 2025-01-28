@@ -194,6 +194,7 @@ const reducer = (state, action) => {
       const tempActive = getPageData(tempFilter, 1, state.rowsPerPage);
       return {
         ...state,
+        currentPage: 1,
         currentData: tempActive, // Update data for the new page
         filteredData: tempFilter,
         totalRows: action.payload?.filter
