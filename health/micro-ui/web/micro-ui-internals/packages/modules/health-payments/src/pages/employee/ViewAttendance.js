@@ -46,7 +46,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [triggerEstimate, setTriggerEstimate] = useState(false);
   const [comment, setComment] = useState(null);
   const [showToast, setShowToast] = useState(null);
-  const [loding, setLoding] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const project = Digit?.SessionStorage.get("staffProjects");
 
@@ -134,9 +134,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
             setDisabledAction(true);
           } else {
             setSearchCount((prevKey) => prevKey + 1);
-            setLoding(true);
+            setLoading(true);
             setTimeout(() => {
-              setLoding(false);
+              setLoading(false);
               refetchMusterRoll();
             }, 2000);
           }
@@ -279,9 +279,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
         },
         {
           onSuccess: (data) => {
-            setLoding(true);
+            setLoading(true);
             setTimeout(() => {
-              setLoding(false);
+              setLoading(false);
               refetchMusterRoll();
             }, 2000);
           },
@@ -427,7 +427,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     return <LoaderComponent variant={"OverlayLoader"} />
   }
 
-  if (loding || isAttendanceLoading || isEstimateMusterRollLoading || isIndividualsLoading || isMusterRollLoading || isAllIndividualsLoading || mutation.isLoading || isrefetching) {
+  if (loading || isAttendanceLoading || isEstimateMusterRollLoading || isIndividualsLoading || isMusterRollLoading || isAllIndividualsLoading || mutation.isLoading || isrefetching) {
     return <LoaderScreen />
   }
 
