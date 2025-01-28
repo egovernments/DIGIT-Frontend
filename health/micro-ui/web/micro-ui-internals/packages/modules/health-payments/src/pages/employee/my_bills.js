@@ -13,6 +13,9 @@ const MyBills = () => {
     const location = useLocation();
     const tenantId = Digit.ULBService.getCurrentTenantId();
 
+    // context path variables
+    const expenseContextPath = window?.globalConfigs?.getConfig("EXPENSE_CONTEXT_PATH") || "health-expense";
+
     // State Variables
     const [tableData, setTableData] = useState([]);
     const [billID, setBillID] = useState(null);
@@ -29,7 +32,7 @@ const MyBills = () => {
     const project = Digit?.SessionStorage.get("staffProjects");
 
     const BillSearchCri = {
-        url: `/health-expense/bill/v1/_search`,
+        url: `/${expenseContextPath}/bill/v1/_search`,
         body: {
             billCriteria: {
                 tenantId: tenantId,

@@ -25,6 +25,11 @@ const BillInboxComponent = () => {
     const { t } = useTranslation();
     const tenantId = Digit.ULBService.getCurrentTenantId();
 
+    // context path variables
+    const attendanceContextPath = window?.globalConfigs?.getConfig("ATTENDANCE_CONTEXT_PATH") || "health-attendance";
+    const expenseContextPath = window?.globalConfigs?.getConfig("EXPENSE_CONTEXT_PATH") || "health-expense";
+    const expenseCalculatorContextPath = window?.globalConfigs?.getConfig("EXPENSE_CALCULATOR_CONTEXT_PATH") || "health-expense-calculator";
+
     // State Variables
     const [showToast, setShowToast] = useState(null);
     const [tableData, setTableData] = useState(null);
@@ -55,7 +60,7 @@ const BillInboxComponent = () => {
      * Query to fetch the attendance register data
      */
     const registerSearchCri = {
-        url: `/health-attendance/v1/_search`,
+        url: `/${attendanceContextPath}/v1/_search`,
         params: {
             tenantId: Digit.ULBService.getStateId(),
             limit: limitAndOffset?.limit,
@@ -85,7 +90,7 @@ const BillInboxComponent = () => {
      * Query to fetch the bill data
      */
     const BillSearchCri = {
-        url: `/health-expense/bill/v1/_search`,
+        url: `/${expenseContextPath}/bill/v1/_search`,
         body: {
             billCriteria: {
                 tenantId: tenantId,
@@ -204,7 +209,7 @@ const BillInboxComponent = () => {
         setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * rowsPerPage });
     };
     const generateBillMutation = Digit.Hooks.useCustomAPIMutationHook({
-        url: "/health-expense-calculator/v1/_calculate",
+        url: `/${expenseCalculatorContextPath}/v1/_calculate`,
     });
 
     /// Triggers the bill generation process.

@@ -14,6 +14,9 @@ import SearchResultsPlaceholder from "../SearchResultsPlaceholder";
 const AttendanceInboxComponent = () => {
   const { t } = useTranslation();
 
+  // Context path for the attendance service
+  const attendanceContextPath = window?.globalConfigs?.getConfig("ATTENDANCE_CONTEXT_PATH") || "health-attendance";
+
   // State variables for managing filters, pagination, and data
   const [showToast, setShowToast] = useState(null);
   const [filterCriteria, setFilterCriteria] = useState(null);
@@ -27,7 +30,7 @@ const AttendanceInboxComponent = () => {
 
   // API hook for fetching attendance registers
   const fetchRegisters = Digit.Hooks.useCustomAPIMutationHook({
-    url: "/health-attendance/v1/_search",
+    url: `/${attendanceContextPath}/v1/_search`,
   });
 
   /**

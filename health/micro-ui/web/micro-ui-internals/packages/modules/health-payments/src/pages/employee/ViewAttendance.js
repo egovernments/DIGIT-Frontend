@@ -20,6 +20,11 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const { t } = useTranslation();
   const history = useHistory();
 
+  // context path variables
+  const attendanceContextPath = window?.globalConfigs?.getConfig("ATTENDANCE_CONTEXT_PATH") || "health-attendance";
+  const musterRollContextPath = window?.globalConfigs?.getConfig("MUSTER_ROLL_CONTEXT_PATH") || "health-muster-roll";
+  const individualContextPath = window?.globalConfigs?.getConfig("INDIVIDUAL_CONTEXT_PATH") || "health-individual";
+
   // State variables
   const { registerNumber, boundaryCode } = Digit.Hooks.useQueryParams();
   const { fromCampaignSupervisor } = location.state || false;
@@ -47,7 +52,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
 
   const AttendancereqCri = {
-    url: `/health-attendance/v1/_search`,
+    url: `/${attendanceContextPath}/v1/_search`,
     params: {
       tenantId: tenantId,
       registerNumber: registerNumber
@@ -79,7 +84,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   }, [AttendanceData])
 
   const reqCri = {
-    url: `/health-muster-roll/v1/_estimate`,
+    url: `/${musterRollContextPath}/v1/_estimate`,
     body: {
       musterRoll: {
         tenantId: tenantId,
@@ -102,7 +107,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   /// SEARCH MUSTERROLL TO CHECK IF WE NEED TO SHOW ESTIMATE OR MUSTERROLL SEARCH DATA
 
   const searchReqCri = {
-    url: `/health-muster-roll/v1/_search`,
+    url: `/${musterRollContextPath}/v1/_search`,
     params: {
       tenantId: tenantId,
       registerId: AttendanceData?.attendanceRegister?.[0]?.id
@@ -163,15 +168,15 @@ const ViewAttendance = ({ editAttendance = false }) => {
   }, [data]);
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook({
-    url: "/health-muster-roll/v1/_create",
+    url: `/${musterRollContextPath}/v1/_create`,
   });
 
   const updateMutation = Digit.Hooks.useCustomAPIMutationHook({
-    url: "/health-muster-roll/v1/_update",
+    url: `/${musterRollContextPath}/v1/_update`,
   });
 
   const approveMutation = Digit.Hooks.useCustomAPIMutationHook({
-    url: "/health-muster-roll/v1/_update",
+    url: `/${musterRollContextPath}/v1/_update`,
   });
 
   const triggerMusterRollApprove = async () => {
@@ -292,7 +297,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   };
 
   const allIndividualReqCriteria = {
-    url: `/health-individual/v1/_search`,
+    url: `/${individualContextPath}/v1/_search`,
     params: {
       tenantId: tenantId,
       limit: data?.[0]?.individualEntries?.length + 1,
@@ -315,7 +320,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const { isLoading: isAllIndividualsLoading, data: AllIndividualsData } = Digit.Hooks.useCustomAPIHook(allIndividualReqCriteria);
 
   const individualReqCriteria = {
-    url: `/health-individual/v1/_search`,
+    url: `/${individualContextPath}/v1/_search`,
     params: {
       tenantId: tenantId,
       limit: 100,
