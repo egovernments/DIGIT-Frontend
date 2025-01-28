@@ -283,6 +283,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
                 sessionData: totalFormData,
                 hierarchyData: hierarchyData,
                 type: "facilityWithBoundaryMapping",
+                validationType: "facilityWithBoundary"
               },
               populators: {
                 name: "uploadFacilityMapping",
@@ -335,6 +336,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
                 sessionData: totalFormData,
                 hierarchyData: hierarchyData,
                 type: "userMapping",
+                validationType: "userWithBoundary"
               },
               populators: {
                 name: "uploadUserMapping",
