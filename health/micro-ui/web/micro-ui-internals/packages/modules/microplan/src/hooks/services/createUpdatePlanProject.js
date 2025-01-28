@@ -356,14 +356,16 @@ const createUpdatePlanProject = async (req) => {
 
     const triggeredFrom = config.name;
     switch (triggeredFrom) {
-      case "CAMPAIGN_DETAILS":
+      case "CAMPAIGN_DETAILS":{
         setCurrentKey((prev) => prev + 1);
         setCurrentStep((prev) => prev + 1);
         return {
           triggeredFrom,
         };
+      }
 
       case "MICROPLAN_DETAILS":
+        {
         //here just check if microplanId and campaignId is already there then if microplan name is same as old one no need to do anything
         if (microplanId && campaignId && planObject?.name === totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName) {
           setCurrentKey((prev) => prev + 1);
@@ -412,8 +414,10 @@ const createUpdatePlanProject = async (req) => {
             triggeredFrom,
           };
         }
+      }
 
       case "BOUNDARY":
+      {
         // call an update to plan
         // also write logic to invalidate
 
@@ -526,8 +530,9 @@ const createUpdatePlanProject = async (req) => {
         } else {
           setShowToast({ key: "error", label: "ERR_BOUNDARY_UPDATE" });
         }
+      }
 
-      case "ASSUMPTIONS_FORM":
+      case "ASSUMPTIONS_FORM":{
         // here we have to invalidate the existing assumptions in update call if there is a change in assumptionsForm
         // check whether the currentAssumptionsForm is equal to prev assumptionsForm (if so then skip this update call)
 
@@ -598,8 +603,8 @@ const createUpdatePlanProject = async (req) => {
         } else {
           setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
         }
-
-      case "HYPOTHESIS":
+      }
+      case "HYPOTHESIS":{
         //fetch current plan
         const fetchedPlanForHypothesis = await searchPlanConfig({
           PlanConfigurationSearchCriteria: {
@@ -637,8 +642,8 @@ const createUpdatePlanProject = async (req) => {
         } else {
           setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
         }
-
-      case "SUB_HYPOTHESIS":
+      }
+      case "SUB_HYPOTHESIS":{
         //first fetch current plan object
         const fetchedPlanForSubHypothesis = await searchPlanConfig({
           PlanConfigurationSearchCriteria: {
@@ -668,8 +673,8 @@ const createUpdatePlanProject = async (req) => {
 
         await updatePlan(upatedPlanObjSubHypothesis);
         return;
-
-      case "FORMULA_CONFIGURATION":
+      }
+      case "FORMULA_CONFIGURATION":{
         if (
           !totalFormData?.FORMULA_CONFIGURATION?.formulaConfiguration?.formulaConfigValues.every(
             (row) => row.category && row.output && row.input && row.operatorName && row.assumptionValue
@@ -726,8 +731,8 @@ const createUpdatePlanProject = async (req) => {
         } else {
           setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
         }
-
-      case "SUB_FORMULA":
+      }
+      case "SUB_FORMULA":{
         //first fetch current plan object
         const fetchedPlanForSubFormula = await searchPlanConfig({
           PlanConfigurationSearchCriteria: {
@@ -767,8 +772,9 @@ const createUpdatePlanProject = async (req) => {
         };
         await updatePlan(upatedPlanObjSubFormula);
         return;
+      }
 
-      case "UPLOADBOUNDARYDATA":
+      case "UPLOADBOUNDARYDATA":{
         const fetchedPlanForBoundary = await searchPlanConfig({
           PlanConfigurationSearchCriteria: {
             tenantId,
@@ -807,8 +813,9 @@ const createUpdatePlanProject = async (req) => {
         } else {
           setShowToast({ key: "error", label: "ERR_BOUNDARY_FORM_UPDATE" });
         }
+      }
 
-      case "UPLOADFACILITYDATA":
+      case "UPLOADFACILITYDATA":{
         const fetchedPlanForFacility = await searchPlanConfig({
           PlanConfigurationSearchCriteria: {
             tenantId,
@@ -851,8 +858,9 @@ const createUpdatePlanProject = async (req) => {
         } else {
           setShowToast({ key: "error", label: "ERR_FACILITY_FORM_UPDATE" });
         }
+      }
 
-      case "SUMMARY_SCREEN":
+      case "SUMMARY_SCREEN":{
         //here we need to take complete setup action
         //update plan-config with workflow action
         const fetchedPlanForSummary = await searchPlanConfig({
@@ -914,6 +922,7 @@ const createUpdatePlanProject = async (req) => {
         } else {
           setShowToast({ key: "error", label: "ERR_FAILED_TO_COMPLETE_SETUP" });
         }
+      }
 
       case "ROLE_ACCESS_CONFIGURATION": {
         const fetchedPlan = await searchPlanConfig({
@@ -941,6 +950,7 @@ const createUpdatePlanProject = async (req) => {
           setShowToast({ key: "error", label: "ERR_FAILED_TO_UPDATE_PLAN" });
         }
       }
+      break;
 
       default:
         setShowToast({ key: "error", label: "ERROR_UNHANDLED_NEXT_OPERATION" });

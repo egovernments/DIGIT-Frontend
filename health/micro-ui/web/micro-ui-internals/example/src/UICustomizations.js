@@ -767,12 +767,18 @@ export const UICustomizations = {
   },
    MicroplanSearchConfig: {
       preProcess: (data, additionalDetails) => {
-        const { name, status } = data?.state?.searchForm || {};
+        const MICROPLAN_STATUS_MAP = {
+          0: null,
+          1: ["DRAFT"],
+          2: ["EXECUTION_TO_BE_DONE"],
+          3: ["CENSUS_DATA_APPROVAL_IN_PROGRESS", "CENSUS_DATA_APPROVED", "RESOURCE_ESTIMATION_IN_PROGRESS"],
+          4: ["RESOURCE_ESTIMATIONS_APPROVED"],
+        };
+        const { status } = data?.state?.searchForm || {};
         data.body.PlanConfigurationSearchCriteria = {};
         data.body.PlanConfigurationSearchCriteria.limit = data?.state?.tableForm?.limit;
         // data.body.PlanConfigurationSearchCriteria.limit = 10
         data.body.PlanConfigurationSearchCriteria.offset = data?.state?.tableForm?.offset;
-        data.body.PlanConfigurationSearchCriteria.name = name;
         data.body.PlanConfigurationSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
         data.body.PlanConfigurationSearchCriteria.userUuid = Digit.UserService.getUser().info.uuid;
         // delete data.body.PlanConfigurationSearchCriteria.pagination
@@ -780,17 +786,11 @@ export const UICustomizations = {
         data.body.PlanConfigurationSearchCriteria.name = data?.state?.searchForm?.microplanName;
         cleanObject(data.body.PlanConfigurationSearchCriteria);
   
-        const dic = {
-          0: null,
-          1: ["DRAFT"],
-          2: ["EXECUTION_TO_BE_DONE"],
-          3: ["CENSUS_DATA_APPROVAL_IN_PROGRESS", "CENSUS_DATA_APPROVED", "RESOURCE_ESTIMATION_IN_PROGRESS"],
-          4: ["RESOURCE_ESTIMATIONS_APPROVED"],
-        };
+       
         const url = Digit.Hooks.useQueryParams();
   
         const tabId = url.tabId || "0"; // Default to '0' if tabId is undefined
-        data.body.PlanConfigurationSearchCriteria.status = dic[String(tabId)];
+        data.body.PlanConfigurationSearchCriteria.status = MICROPLAN_STATUS_MAP[String(tabId)];
         cleanObject(data.body.PlanConfigurationSearchCriteria);
         return data;
       },

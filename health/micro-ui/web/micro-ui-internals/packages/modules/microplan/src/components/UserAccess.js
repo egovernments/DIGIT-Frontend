@@ -301,6 +301,7 @@ function UserAccess({ category, setData, nationalRoles }) {
 
   useEffect(()=>{
     setShowToast(null);
+     // Reset search when category changes to prevent filtering with previous search terms
     setSearchQuery("");
   },[category])
 
