@@ -79,12 +79,6 @@ const BoundarySummary = (props) => {
                     cardHeader: { value: `${t(( hierarchyType + "_" + item?.type).toUpperCase())}` , inlineStyles: { color : "#0B4B66" } },
                     // cardHeader: { value: t("item?.boundaries?.type") },
                     component: "BoundaryDetailsSummary",
-                    // cardSecondaryAction: noAction !== "false" && (
-                    //   <div className="campaign-preview-edit-container" onClick={() => handleRedirect(5)}>
-                    //     <span>{t(`CAMPAIGN_EDIT`)}</span>
-                    //     <EditIcon />
-                    //   </div>
-                    // ),
                     props: {
                       boundaries: item,
                       hierarchyType: hierarchyType

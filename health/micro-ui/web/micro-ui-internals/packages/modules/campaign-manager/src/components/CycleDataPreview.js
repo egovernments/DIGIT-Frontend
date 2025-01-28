@@ -64,7 +64,6 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
           additionalElements={[<Button className={"error"} label={i?.button} onClick={i.onClick} />]}
         />
       ))}
-      {/* {i.error ? i.error : i.message)}</div> */}
       <div className="employee-data-table ">
         {data?.startDate && (
           <Row
@@ -137,47 +136,6 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
             </Card>
           );
         })}
-
-      {/* <Card className="delivery-preview-card">
-        {item?.conditions?.length > 0 && (
-          <DetailsTable
-            className="campaign-attribute-table"
-            cardHeader={{ value: "Condition" }}
-            columnsData={[
-              {
-                Header: t("Attribute"),
-                accessor: "attribute",
-              },
-              {
-                Header: t("Operator"),
-                accessor: "operator",
-              },
-              {
-                Header: t("Value"),
-                accessor: "value",
-              },
-            ]}
-            rowsData={item?.conditions}
-          />
-        )}
-        {item?.products?.length > 0 && (
-          <DetailsTable
-            className="campaign-product-table"
-            // cardHeader={{ value: "Product Details" }}
-            columnsData={[
-              {
-                Header: t("Product"),
-                accessor: "name",
-              },
-              {
-                Header: t("Count"),
-                accessor: "count",
-              },
-            ]}
-            rowsData={item?.products}
-          />
-        )}
-      </Card> */}
     </>
   );
 };

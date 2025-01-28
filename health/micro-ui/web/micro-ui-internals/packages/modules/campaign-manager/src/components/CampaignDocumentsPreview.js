@@ -79,7 +79,6 @@ function CampaignDocumentsPreview({ documents = [], svgStyles = {}, isUserGenera
                 variant="error"
                 text={t(i?.error ? i?.error : i?.message)}
                 hasAdditionalElements={true}
-                // additionalElements={[<Button label={i?.button} onClick={i.onClick} />]}
               />
             ))}
           </div>
