@@ -1,6 +1,5 @@
 import { AddIcon, CardText, Label, LabelFieldPair } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useContext, useEffect, useState } from "react";
-import PlusMinusInput from "../../../components/PlusMinusInput";
 import { useTranslation } from "react-i18next";
 import { Dropdown, TextInput, Toast ,Button } from "@egovernments/digit-ui-components";
 import { Link } from "react-router-dom";
