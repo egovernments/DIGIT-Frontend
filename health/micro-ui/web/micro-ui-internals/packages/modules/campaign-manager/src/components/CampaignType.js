@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect, Fragment } from "react";
-import { UploadIcon, FileIcon, DeleteIconv2, Toast,  Header } from "@egovernments/digit-ui-react-components";
+import { Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { LabelFieldPair } from "@egovernments/digit-ui-components";
 import { Button, CardText, Dropdown, ErrorMessage, PopUp, Stepper, TextBlock , Card} from "@egovernments/digit-ui-components";
