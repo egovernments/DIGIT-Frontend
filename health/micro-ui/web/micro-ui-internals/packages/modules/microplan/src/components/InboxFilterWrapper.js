@@ -108,7 +108,6 @@ const InboxFilterWrapper = (props) => {
           id: item?.[1]?.id,
         }))
       : [];
-    console.log(transformedValue, "transformedValue");
     setFilterValues((prev) => ({
       ...prev,
       [key]: transformedValue,
