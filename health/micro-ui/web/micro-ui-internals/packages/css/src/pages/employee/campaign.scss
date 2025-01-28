@@ -266,3 +266,31 @@
 .app-config-actionBar {
   z-index: 9999;
 }
+
+.digit-popup-wrapper.custom-pop-up-mapping {
+  width: fit-content !important;
+
+  .digit-popup-footer {
+
+      padding-top: 0 !important;
+
+      .digit-popup-footer-buttons {
+          width: 100% !important;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+
+          .digit-button-secondary {
+              width: 100%;
+          }
+
+          .digit-button-primary {
+              width: 100%;
+          }
+      }
+  }
+
+  .digit-popup-children-wrap {
+      padding-top: 0 !important;
+      overflow: visible;
+  }
+}
