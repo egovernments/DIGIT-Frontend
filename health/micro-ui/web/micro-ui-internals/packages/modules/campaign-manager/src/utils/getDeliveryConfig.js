@@ -116,6 +116,7 @@ const generateConfig = (data) => {
       dashboardUrls: data?.dashboardUrls,
       taskProcedure: data?.taskProcedure,
       resources: data?.resources,
+      IsCycleDisable: data?.IsCycleDisable,
       cycleConfig: {
         cycle: data?.cycles?.length || 1,
         deliveries: data?.cycles?.[0]?.deliveries?.length || 1,
