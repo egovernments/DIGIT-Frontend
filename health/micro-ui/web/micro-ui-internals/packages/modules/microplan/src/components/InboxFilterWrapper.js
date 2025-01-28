@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { FilterCard, Dropdown, LabelFieldPair, RadioButtons, TextBlock, Loader } from "@egovernments/digit-ui-components";
+import { FilterCard, Dropdown, LabelFieldPair, RadioButtons, TextBlock, Loader,MultiSelectDropdown } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../utils/context";
 
 
@@ -71,7 +71,7 @@ const InboxFilterWrapper = (props) => {
     if (props.onApplyFilters) {
       const filtersToApply = {};
       for (let key in filterValues) {
-        if(filterValues[key] && typeof filterValues[key] === 'object' && String(key)==='facilityId' &&filterValues[key].hasOwnProperty('code') ){
+        if(filterValues[key] && typeof filterValues[key] === 'object' && String(key)==='facilityId' && filterValues[key].hasOwnProperty('code') ){
           filtersToApply[key] = filterValues[key]
         }
         else if (filterValues[key] && typeof filterValues[key] === 'object' && filterValues[key].hasOwnProperty('code')) {
@@ -100,6 +100,21 @@ const InboxFilterWrapper = (props) => {
       [key]: value
     }));
   };
+
+  const handleMultiSelectDropdownChange = (key, value) => {
+    const transformedValue = Array.isArray(value)
+      ? value.map((item) => ({
+          code: item?.[1]?.code,
+          id: item?.[1]?.id,
+        }))
+      : [];
+    console.log(transformedValue, "transformedValue");
+    setFilterValues((prev) => ({
+      ...prev,
+      [key]: transformedValue,
+    }));
+  };
+  
 
   const planFacilitySearchConfig = {
     url: "/plan-service/plan/facility/_search",
@@ -193,15 +208,14 @@ const InboxFilterWrapper = (props) => {
     
         <LabelFieldPair vertical>
         <div className="custom-filter-names">{t("MP_FILTER_FACILITY")}</div>           
-          <Dropdown
-            option={planFacility}
-            optionKey={"code"}
-            selected={filterValues["facilityId"] || defaultSelectedOptions?.facilityId  }
-            select={(value) => handleDropdownChange("facilityId", value)}
+          <div style={{width:"100%"}}>
+          <MultiSelectDropdown
+            options={planFacility}
+            optionsKey={"code"}
+            onSelect={(value) => handleMultiSelectDropdownChange("facilityId", value)}
             t={t}
-            disabled={false}
-            showToolTip={true}
           />
+          </div>
         </LabelFieldPair>   
 
 

@@ -176,7 +176,9 @@ const PlanInbox = () => {
         ...(selectedFilter?.terrain != null && { terrain: selectedFilter.terrain }),
         ...(selectedFilter?.securityQ1 != null && { securityQ1: selectedFilter.securityQ1 }),
         ...(selectedFilter?.securityQ2 != null && { securityQ2: selectedFilter.securityQ2 }),
-        ...(selectedFilter?.facilityId?.id != null && { facilityId: selectedFilter.facilityId.id }),
+        ...(selectedFilter?.facilityId && {
+          facilityIds: selectedFilter.facilityId.map((item) => item.id),
+        }),
         assignee: user.info.uuid,
         planConfigurationId: microplanId, 
         limit: limitAndOffset?.limit,
@@ -212,8 +214,9 @@ const PlanInbox = () => {
         ...(selectedFilter?.onRoadCondition != null && { onRoadCondition: selectedFilter.onRoadCondition }),
         ...(selectedFilter?.securityQ1 != null && { securityQ1: selectedFilter.securityQ1 }),
         ...(selectedFilter?.securityQ2 != null && { securityQ2: selectedFilter.securityQ2 }),
-        ...(selectedFilter?.facilityId?.id != null && { facilityId: selectedFilter.facilityId.id }),
-        
+        ...(selectedFilter?.facilityId && {
+          facilityIds: selectedFilter.facilityId.map((item) => item.id),
+        }),
         planConfigurationId: microplanId, //list of plan ids
         limit: limitAndOffset?.limit,
         offset: limitAndOffset?.offset,
