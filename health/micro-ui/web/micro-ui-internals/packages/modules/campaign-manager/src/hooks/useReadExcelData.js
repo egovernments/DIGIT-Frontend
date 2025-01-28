@@ -10,7 +10,20 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
     const targetSheet = workbook.getWorksheet(t(sheetNameToUpdate));
     let boundaryCodeColumnIndex = null;
     let statusColumnIndex = null;
+    let facilityTypeColumnIndex = null;
+    let facilityNameColumnIndex = null;
+    let facilityStatusColumnIndex = null;
+    let capacityColumnIndex = null;
+
+    // Column index tracking variables
+    let userRoleColumnIndex = null;
+    let employmentTypeColumnIndex = null;
+    let phoneNumberColumnIndex = null;
+    let userNameColumnIndex = null;
+
+
     targetSheet.getRow(1).eachCell((cell, colIndex) => {
+
       //for boundary cell
       if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_FACILITIES" && cell.value === t(schemas?.find((i) => i.description === "Boundary Code")?.name)) {
         boundaryCodeColumnIndex = colIndex;
@@ -29,6 +42,38 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
       ) {
         statusColumnIndex = colIndex;
       }
+
+      if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_USER_LIST") {
+        if (cell.value === t(schemas?.find((i) => i.description === "User Role")?.name)) {
+          userRoleColumnIndex = colIndex;
+        }
+        if (cell.value === t(schemas?.find((i) => i.description === "Employement Type")?.name)) {
+          employmentTypeColumnIndex = colIndex;
+        }
+        if (cell.value === t(schemas?.find((i) => i.description === "Phone Number")?.name)) {
+          phoneNumberColumnIndex = colIndex;
+        }
+        if (cell.value === t(schemas?.find((i) => i.description === "User Name")?.name)) {
+          userNameColumnIndex = colIndex;
+        }
+      }
+
+      // Facility-specific columns (keeping existing facility related code)
+      if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_FACILITIES") {
+        if (cell.value === t(schemas?.find((i) => i.description === "Facility type")?.name)) {
+          facilityTypeColumnIndex = colIndex;
+        }
+        if (cell.value === t(schemas?.find((i) => i.description === "Facility Name")?.name)) {
+          facilityNameColumnIndex = colIndex;
+        }
+        if (cell.value === t(schemas?.find((i) => i.description === "Capacity")?.name)) {
+          capacityColumnIndex = colIndex;
+        }
+        if (cell.value === t(schemas?.find((i) => i.description === "Facility status")?.name)) {
+          facilityStatusColumnIndex = colIndex;
+        }
+      }
+
     });
 
     if (boundaryCodeColumnIndex === null) {
@@ -48,22 +93,44 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
       });
     });
 
-    // Directly update the cells in the "Boundary Code (Mandatory)" column
-    updatedData.forEach((newBoundaryCode, rowIndex) => {
-      const cell = targetSheet.getCell(rowIndex + 2, boundaryCodeColumnIndex); // Row 2 onwards
-      const statusCell = targetSheet.getCell(rowIndex + 2, statusColumnIndex); // Row 2 onwards
-      cell.value =
-        newBoundaryCode?.[
-          sheetNameToUpdate === "HCM_ADMIN_CONSOLE_FACILITIES"
-            ? t(schemas?.find((i) => i.description === "Boundary Code")?.name)
-            : t(schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)
-        ];
-      statusCell.value =
-        sheetNameToUpdate === "HCM_ADMIN_CONSOLE_FACILITIES"
-          ? newBoundaryCode?.[t(schemas?.find((i) => i.description === "Facility usage")?.name)]
-          : newBoundaryCode?.[t(schemas?.find((i) => i.description === "User Usage")?.name)];
-    });
 
+    // Update the cells based on sheet type
+    updatedData.forEach((newData, rowIndex) => {
+      const cell = targetSheet.getCell(rowIndex + 2, boundaryCodeColumnIndex);
+      const statusCell = targetSheet.getCell(rowIndex + 2, statusColumnIndex);
+
+      if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_USER_LIST") {
+        // Update user-specific fields
+        const userRoleCell = targetSheet.getCell(rowIndex + 2, userRoleColumnIndex);
+        const employmentTypeCell = targetSheet.getCell(rowIndex + 2, employmentTypeColumnIndex);
+        const phoneNumberCell = targetSheet.getCell(rowIndex + 2, phoneNumberColumnIndex);
+        const userNameCell = targetSheet.getCell(rowIndex + 2, userNameColumnIndex);
+
+        // Update boundary code and status
+        cell.value = newData?.[t(schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)];
+        statusCell.value = newData?.[t(schemas?.find((i) => i.description === "User Usage")?.name)];
+
+        // Update user-specific fields
+        userRoleCell.value = newData?.[t(schemas?.find((i) => i.description === "User Role")?.name)];
+        employmentTypeCell.value = newData?.[t(schemas?.find((i) => i.description === "Employement Type")?.name)];
+        phoneNumberCell.value = Number(newData?.[t(schemas?.find((i) => i.description === "Phone Number")?.name)] || 0);
+        userNameCell.value = newData?.[t(schemas?.find((i) => i.description === "User Name")?.name)];
+
+      } else if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_FACILITIES") {
+        // Keep existing facility update logic
+        const facilityTypeCell = targetSheet.getCell(rowIndex + 2, facilityTypeColumnIndex);
+        const facilityNameCell = targetSheet.getCell(rowIndex + 2, facilityNameColumnIndex);
+        const capacityCell = targetSheet.getCell(rowIndex + 2, capacityColumnIndex);
+        const facilityStatusCell = targetSheet.getCell(rowIndex + 2, facilityStatusColumnIndex);
+
+        cell.value = newData?.[t(schemas?.find((i) => i.description === "Boundary Code")?.name)];
+        statusCell.value = newData?.[t(schemas?.find((i) => i.description === "Facility usage")?.name)];
+        facilityTypeCell.value = newData?.[t(schemas?.find((i) => i.description === "Facility type")?.name)];
+        facilityNameCell.value = newData?.[t(schemas?.find((i) => i.description === "Facility Name")?.name)];
+        capacityCell.value = Number(newData?.[t(schemas?.find((i) => i.description === "Capacity")?.name)] || 0);
+        facilityStatusCell.value = newData?.[t(schemas?.find((i) => i.description === "Facility status")?.name)];
+      }
+    });
     // Reapply the protection settings for the updated cells
     protectionSettings.forEach((setting) => {
       const cell = targetSheet.getCell(setting.rowIndex + 2, setting.colIndex);

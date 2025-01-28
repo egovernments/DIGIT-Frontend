@@ -37,9 +37,7 @@ const initDigitUI = () => {
     commonUiConfig: UICustomizations,
   };
   // initHRMSComponents();
-  initUtilitiesComponents();
-  initWorkbenchComponents();
-  initWorkbenchHCMComponents();
+
   initCampaignComponents();
 
 };
