@@ -344,7 +344,7 @@ const PopInbox = () => {
       CensusSearchCriteria: {
         tenantId: tenantId,
         source: microplanId,
-        status: selectedFilter?.status !== null && selectedFilter?.status !== undefined ? selectedFilter?.status : "",
+        status: selectedFilter?.status || "",
         ...(activeLink.code == "ASSIGNED_TO_ALL" || selectedFilter?.status == "VALIDATED"
           ? {}
           : { assignee: user.info.uuid }),
