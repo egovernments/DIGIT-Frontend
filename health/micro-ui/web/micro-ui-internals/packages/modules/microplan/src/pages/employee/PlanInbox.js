@@ -33,7 +33,7 @@ const PlanInbox = () => {
   const [hierarchyLevel, setHierarchyLevel] = useState("");
   const [censusData, setCensusData] = useState([]);
   const [boundaries, setBoundaries] = useState([]);
-  const [selectedFilter, setSelectedFilter] = useState({status:"PENDING_FOR_VALIDATION",onRoadCondition:null,terrain:null,securityQ1:null,securityQ2:null,facilityId:null});
+  const [selectedFilter, setSelectedFilter] = useState({status:"PENDING_FOR_VALIDATION",onRoadCondition:null,terrain:null,securityQ1:null,securityQ2:null,facilityId:[]});
   const [activeFilter, setActiveFilter] = useState({});
   const [actionBarPopUp, setactionBarPopUp] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -177,7 +177,7 @@ const PlanInbox = () => {
         ...(selectedFilter?.securityQ1 != null && { securityQ1: selectedFilter.securityQ1 }),
         ...(selectedFilter?.securityQ2 != null && { securityQ2: selectedFilter.securityQ2 }),
         ...(selectedFilter?.facilityId && {
-          facilityIds: selectedFilter.facilityId.map((item) => item.id),
+          facilityIds: selectedFilter?.facilityId?.map((item) => item.id),
         }),
         assignee: user.info.uuid,
         planConfigurationId: microplanId, 
@@ -215,7 +215,7 @@ const PlanInbox = () => {
         ...(selectedFilter?.securityQ1 != null && { securityQ1: selectedFilter.securityQ1 }),
         ...(selectedFilter?.securityQ2 != null && { securityQ2: selectedFilter.securityQ2 }),
         ...(selectedFilter?.facilityId && {
-          facilityIds: selectedFilter.facilityId.map((item) => item.id),
+          facilityIds: selectedFilter?.facilityId?.map((item) => item.id),
         }),
         planConfigurationId: microplanId, //list of plan ids
         limit: limitAndOffset?.limit,

@@ -11,7 +11,7 @@ const InboxFilterWrapper = (props) => {
   const {microplanId,...rest} = Digit.Hooks.useQueryParams()
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [filterValues, setFilterValues] = useState(
-    { status: null, onRoadCondition: null, terrain: null, securityQ1: null, securityQ2: null,facilityID:null }
+    { status: null, onRoadCondition: null, terrain: null, securityQ1: null, securityQ2: null, facilityId:null }
   );
 
   // Default selected option
@@ -131,7 +131,8 @@ const InboxFilterWrapper = (props) => {
     
         // Extract facilityName and facilityId for each object
         const facilityOptions = data.PlanFacility.map((facility) => ({
-          code: facility.facilityName,
+          name: facility.facilityName,
+          code: facility.facilityId,
           id: facility.facilityId
         }));
     
@@ -211,7 +212,8 @@ const InboxFilterWrapper = (props) => {
           <div style={{width:"100%"}}>
           <MultiSelectDropdown
             options={planFacility}
-            optionsKey={"code"}
+            selected={defaultSelectedOptions?.facilityId}
+            optionsKey={"name"}
             onSelect={(value) => handleMultiSelectDropdownChange("facilityId", value)}
             t={t}
           />
