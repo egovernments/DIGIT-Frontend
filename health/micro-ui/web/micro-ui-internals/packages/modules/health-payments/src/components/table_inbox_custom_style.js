@@ -1,28 +1,23 @@
 export const tableCustomStyle = {
   tableWrapper: {
     style: {
-      overflow: "visible",
-
-      // overflow: "scroll",
+      minHeight: "fit-content",
+      // Remove padding and border styles here if necessary
     },
   },
   table: {
     style: {
-      overflow: "visible",
-      width: "95%",
-      // overflow: "scroll",
+      // Remove any outer border styling here
     },
   },
   responsiveWrapper: {
     style: {
-      overflow: "visible",
-      // overflow: "scroll",
+      // Remove overflow or border styling if needed
     },
   },
   contextMenu: {
     style: {
-      overflow: "visible",
-      // overflow: "scroll",
+      // Remove border styling if needed
     },
   },
   header: {
@@ -55,13 +50,13 @@ export const tableCustomStyle = {
         borderTopLeftRadius: "0.25rem",
       },
       "&:last-of-type": {
-        borderLeftStyle: "solid",
-        borderLeftWidth: "1px",
-        borderLeftColor: "#D6D5D4",
+        borderRightStyle: "solid",
+        borderRightWidth: "1px",
+        borderRightColor: "#D6D5D4",
         borderTopRightRadius: "0.25rem",
       },
       borderRightStyle: "solid",
-      borderRightWidth: "1px",
+      borderRightWidth: "0px",
       borderRightColor: "#D6D5D4",
       fontFamily: "Roboto",
       fontWeight: "700",
@@ -80,8 +75,14 @@ export const tableCustomStyle = {
         borderLeftWidth: "1px",
         borderLeftColor: "#D6D5D4",
       },
+      "&:last-of-type": {
+        borderRightStyle: "solid",
+        borderRightWidth: "1px",
+        borderRightColor: "#D6D5D4",
+        borderTopRightRadius: "0rem",
+      },
       borderRightStyle: "solid",
-      borderRightWidth: "1px",
+      borderRightWidth: "0px",
       borderRightColor: "#D6D5D4",
       color: "#363636",
       fontFamily: "Roboto",
@@ -96,31 +97,16 @@ export const tableCustomStyle = {
       style: {
         marginTop: "-60px",
         borderStyle: "solid",
-        borderWidth: "1px",
+        borderWidth: "0px",
         borderColor: "#D6D5D4",
         borderTopWidth: "0px",
+        padding: "10px",
+        // Ensure there's no outer border for pagination
       },
     },
   },
-  pagination: {
-    style: {
-      width: "95%",
-      borderStyle: "solid",
-      borderWidth: "1px",
-      borderColor: "#D6D5D4",
-      borderTopWidth: "0px",
-    },
-  },
-  paginationWrapper: {
-    style: {
-      width: "95%", // Set pagination wrapper width to 80%
-      marginLeft: "auto", // Center pagination wrapper horizontally
-      marginRight: "auto", // Center pagination wrapper horizontally
-      display: "flex", // Use flexbox to make sure pagination aligns properly
-      justifyContent: "center", // Center the pagination bar horizontally
-    },
-  },
 };
+
 
 export const getTableCustomStyle = (freezeFirstColumn = false) => ({
   tableWrapper: {
