@@ -97,7 +97,13 @@ module.exports = function (app) {
     "/plan-service",
     "/health-project",
     "/service-request",
-    "/census-service"
+    "/census-service",
+    "/health-attendance/v1/_search",
+    "/health-individual/v1/_search",
+    "/health-muster-roll",
+    "/health-expense/bill/v1/_search",
+    "/health-expense-calculator/v1/_calculate",
+    "/filestore/v1/files/id"
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));
