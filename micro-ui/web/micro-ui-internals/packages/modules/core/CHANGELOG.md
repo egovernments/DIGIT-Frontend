@@ -1,5 +1,17 @@
 # Changelog 
 
+## [1.8.19]  [23-Jan-2025]
+- Fixed import issues of new ui-components
+
+## [1.8.18]  [23-Jan-2025]
+- FIxed some of FEATURE/HCMPRE-1852 :: Fixed some console logs 
+
+## [1.8.17]  [23-Jan-2025]
+- FIxed some of FEATURE/HCMPRE-1852 :: accessibility issues of dropdown & checkbox(#2120) 
+
+## [1.8.16]  [23-Jan-2025]
+- FIxed some of FEATURE/HCMPRE-1852 :: accessibility issues of image(#2120) 
+
 ## [1.8.15]  [21-Jan-2025]
 - Removed support for any new context path to have employee linked in the url.To use this,the new context path should be linked with employee. 
 

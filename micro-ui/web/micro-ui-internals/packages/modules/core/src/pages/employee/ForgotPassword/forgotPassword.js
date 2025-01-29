@@ -1,11 +1,11 @@
 // import { FormComposer } from "@egovernments/digit-ui-react-components";
-import { BackLink, Dropdown, Loader,Toast,FormComposerV2 } from "@egovernments/digit-ui-components";
+import { BackLink, Dropdown, Loader, Toast, FormComposerV2 } from "@egovernments/digit-ui-components";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
-
+import ImageComponent from "../../../components/ImageComponent";
 
 const ForgotPassword = ({ config: propsConfig, t }) => {
   const { data: cities, isLoading } = Digit.Hooks.useTenants();
@@ -88,7 +88,7 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
   return (
     <Background>
       <div className="employeeBackbuttonAlign">
-      <BackLink onClick={() => window.history.back()}/>
+        <BackLink onClick={() => window.history.back()} />
       </div>
       <FormComposerV2
         onSubmit={onForgotPassword}
@@ -101,8 +101,8 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
         onSecondayActionClick={navigateToLogin}
         heading={propsConfig.texts.header}
         description={propsConfig.texts.description}
-        headingStyle={{ textAlign: "center",fontWeight:"bold",color:"#363636" }}
-        descriptionStyles={{color:"#787878",textAlign: "center"}}
+        headingStyle={{ textAlign: "center", fontWeight: "bold", color: "#363636" }}
+        descriptionStyles={{ color: "#787878", textAlign: "center" }}
         cardStyle={{ maxWidth: "408px", margin: "auto" }}
         className="employeeForgotPassword"
       >
@@ -110,7 +110,7 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
       </FormComposerV2>
       {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
       <div className="EmployeeLoginFooter">
-        <img
+        <ImageComponent
           alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
           style={{ cursor: "pointer" }}

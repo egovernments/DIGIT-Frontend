@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { CardLabel, LabelFieldPair, Uploader } from "@egovernments/digit-ui-components";
+import { CardLabel, LabelFieldPair, FileUpload } from "@egovernments/digit-ui-components";
 import {Toast} from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react";
@@ -55,9 +55,9 @@ const ConfigUploaderComponent = ({ onSelect, ...props }) => {
 
       <LabelFieldPair className={"uploader-label-field"}>
         <CardLabel>{`${t("BANNER_UPLOAD")}`}</CardLabel>
-        <Uploader
+        <FileUpload
           uploadedFiles={[]}
-          variant="uploadFile"
+          variant="uploadField"
           onUpload={(files) => selectFile(files)}
           iserror={uploadErrorMessage}
           accept=".jpg, .png, .jpeg"

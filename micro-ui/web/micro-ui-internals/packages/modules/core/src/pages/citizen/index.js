@@ -16,6 +16,7 @@ import HowItWorks from "./HowItWorks/howItWorks";
 import Login from "./Login";
 import Search from "./SearchApp";
 import StaticDynamicCard from "./StaticDynamicComponent/StaticDynamicCard";
+import ImageComponent from "../../components/ImageComponent";
 
 const sidebarHiddenFor = [
   `${window?.contextPath}/citizen/register/name`,
@@ -97,7 +98,8 @@ const Home = ({
       <React.Fragment>
         <Route key={index} path={`${path}/${code.toLowerCase()}-home`}>
           <div className="moduleLinkHomePage">
-            <img src={bannerImage || stateInfo?.bannerUrl} alt="noimagefound" />
+            <ImageComponent src={bannerImage || stateInfo?.bannerUrl} alt="noimagefound" />
+
             <BackLink className="moduleLinkHomePageBackButton" onClick={() => window.history.back()} />
             <h1>{t("MODULE_" + code.toUpperCase())}</h1>
             <div className="moduleLinkHomePageModuleLinks">
@@ -210,7 +212,7 @@ const Home = ({
         </Switch>
       </div>
       <div className="citizen-home-footer" style={window.location.href.includes("citizen/obps") ? { zIndex: "-1" } : {}}>
-        <img
+        <ImageComponent
           alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER")}
           style={{ height: "1.2em", cursor: "pointer" }}
