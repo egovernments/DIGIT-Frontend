@@ -62,7 +62,10 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch,  boundaryHierarchy, all
             {
                 return (
                     <div style={{ marginBottom: "1rem" }}>
-                        <label>{t("CHOOSE_BOUNDARY_LEVEL")}</label>
+                        <div style={{display:"flex"}}>
+                            <label>{t("CHOOSE_BOUNDARY_LEVEL")}</label>
+                            <span className="mandatory-span">*</span>
+                        </div>
                         <Dropdown
                             className="mappingPopUp"
                             selected={selectedLevel}
@@ -77,7 +80,10 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch,  boundaryHierarchy, all
                             t={t}
                         />
                         <div style={{height:"1rem"}}></div>
-                        <label>{t("CHOOSE_BOUNDARY")}</label>
+                        <div style={{display:"flex"}}>
+                            <label>{t("CHOOSE_BOUNDARY")}</label>
+                            <span className="mandatory-span">*</span>
+                         </div>
                         <MultiSelectDropdown
                             variant="nestedmultiselect"
                             props={{ className: "data-mapping-dropdown" }}
