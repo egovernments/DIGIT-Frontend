@@ -119,7 +119,7 @@ export const UICustomizations = {
               />):(<>{t("CHECKLIST_TOBE_CONFIGURED")}</>)
             );
         case "CHECKLIST_LAST_UPDATE":
-          const lastModDate = row?.ServiceRequest.length !== 0 ? row?.ServiceRequest?.[0]?.auditDetails?.lastModifiedTime : row?.auditDetails?.lastModifiedTime;
+          const lastModDate = row?.ServiceRequest?.length !== 0 ? row?.ServiceRequest?.[0]?.auditDetails?.lastModifiedTime : row?.auditDetails?.lastModifiedTime;
           return Digit.DateUtils.ConvertEpochToDate(lastModDate);
         case "HCM_CHECKLIST_ACTION":
           const role_code = row?.data?.role;
