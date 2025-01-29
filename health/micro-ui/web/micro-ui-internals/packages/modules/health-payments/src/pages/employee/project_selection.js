@@ -101,7 +101,7 @@ const ProjectSelect = () => {
     return (
         <React.Fragment>
             <div style={{ marginBottom: "2.5rem" }}>
-                <Card type="primary" className="middle-child" style={{ gap: "1.5rem" }}>
+                <Card type="primary" className="bottom-gap-card-payment" style={{ gap: "1.5rem" }}>
                     <Header className="pop-inbox-header">
                         {billScreen ? t("HCM_AM_PROJECT_AND_BILL_AGGREGATION_HEADING") : t("HCM_AM_CHOOSE_PROJECT_TO_VIEW_REGISTERS")}
                     </Header>

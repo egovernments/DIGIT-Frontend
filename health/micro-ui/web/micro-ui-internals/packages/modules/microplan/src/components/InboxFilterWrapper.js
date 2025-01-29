@@ -18,7 +18,7 @@ const InboxFilterWrapper = (props) => {
   let defaultSelectedOptions = props.defaultValue
   ? Object.entries(props.defaultValue).reduce((acc, [key, value]) => {
       if (key === "facilityId") {
-        acc[key] = { code: value?.code, name: `${t(key)} (${value})` };
+        acc[key] = value.map(item => ({ code: item?.code, id: item?.id, name: item?.name }));
       } else if (value !== null) {
         acc[key] = { code: value, name: `${t(key)} (${value})` };
       } else {
@@ -32,10 +32,10 @@ const InboxFilterWrapper = (props) => {
   // Initialize state with the default selected option
   useEffect(() => {
     if (props.defaultValue && Object.keys(props.defaultValue).length > 0) {
-      const newDefault = Object.entries(props.defaultValue).reduce((acc, [key, value]) => {
+      const newDefault = Object.entries(props.defaultValue)?.reduce((acc, [key, value]) => {
         acc[key] = value !== null
           ? key === 'facilityId'
-            ? { code: value?.code }
+            ? value.map(item => ({ code: item?.code, id: item?.id, name: item?.name }))
             : { code: value, name: `${t(key)} (${value})` }
           : null;
         return acc;
@@ -106,6 +106,7 @@ const InboxFilterWrapper = (props) => {
       ? value.map((item) => ({
           code: item?.[1]?.code,
           id: item?.[1]?.id,
+          name: item?.[1]?.name
         }))
       : [];
     setFilterValues((prev) => ({
@@ -211,7 +212,7 @@ const InboxFilterWrapper = (props) => {
           <div style={{width:"100%"}}>
           <MultiSelectDropdown
             options={planFacility}
-            selected={defaultSelectedOptions?.facilityId}
+            selected={filterValues["facilityId"] || defaultSelectedOptions?.facilityId || []}
             optionsKey={"name"}
             onSelect={(value) => handleMultiSelectDropdownChange("facilityId", value)}
             t={t}
