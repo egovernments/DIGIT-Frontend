@@ -437,7 +437,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
         <Header styles={{ marginBottom: "1rem" }} className="pop-inbox-header">
           {editAttendance ? t('HCM_AM_EDIT_ATTENDANCE') : t('HCM_AM_VIEW_ATTENDANCE')}
         </Header>
-        <Card type="primary" className="middle-child">
+        <Card type="primary" className="bottom-gap-card-payment">
           {renderLabelPair('HCM_AM_ATTENDANCE_ID', t(registerNumber))}
           {renderLabelPair('HCM_AM_CAMPAIGN_NAME', t(project?.[0]?.name || 'NA'))}
           {renderLabelPair('HCM_AM_PROJECT_TYPE', t(project?.[0]?.projectType || 'NA'))}
