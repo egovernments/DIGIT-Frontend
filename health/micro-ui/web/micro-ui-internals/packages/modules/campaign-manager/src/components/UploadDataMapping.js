@@ -47,7 +47,7 @@ const reducer = (state, action) => {
         updated: true,
       };
     case "EDIT_DATA":
-      const editedData = state.data.map(item => 
+      const editedData = state.data.map(item =>
         item.id === action.payload.id ? { ...item, ...action.payload } : item
       );
       return {
@@ -108,8 +108,8 @@ const reducer = (state, action) => {
             //   };
             // }
             // Check facility code first, if not present then check facility name
-            if ((facilityCode && facilityCode === action?.payload?.row?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) || 
-                (!facilityCode && facilityName === action?.payload?.row?.[action.t(action?.schemas?.find((i) => i.description === "Facility Name")?.name)])) {
+            if ((facilityCode && facilityCode === action?.payload?.row?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) ||
+              (!facilityCode && facilityName === action?.payload?.row?.[action.t(action?.schemas?.find((i) => i.description === "Facility Name")?.name)])) {
               return {
                 ...item,
                 [BoundaryLoc]: action?.payload?.selectedBoundary?.map((i) => i?.code)?.join(","),
@@ -158,8 +158,8 @@ const reducer = (state, action) => {
             //   };
             // }
             // return item;
-            if ((facilityCode && facilityCode === action?.payload?.row?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) || 
-                (!facilityCode && facilityName === action?.payload?.row?.[action.t(action?.schemas?.find((i) => i.description === "Facility Name")?.name)])) {
+            if ((facilityCode && facilityCode === action?.payload?.row?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) ||
+              (!facilityCode && facilityName === action?.payload?.row?.[action.t(action?.schemas?.find((i) => i.description === "Facility Name")?.name)])) {
               return {
                 ...item,
                 [ActiveLoc]: action?.payload?.selectedStatus?.code,
@@ -186,10 +186,10 @@ const reducer = (state, action) => {
     case "FILTER_BY_ACTIVE":
       const tempFilter = action.payload?.filter
         ? state.data?.filter((i) =>
-            action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
-              ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
-              : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
-          )
+          action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
+            ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
+            : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
+        )
         : state.data;
       const tempActive = getPageData(tempFilter, 1, state.rowsPerPage);
       return {
@@ -539,23 +539,36 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
       setConvertedSchema(schema);
     }
   }, [SchemasAJV, type]);
-  
+
   const validateData = (data) => {
     // Phone Number conversion
     const phoneNumberKey = t(Schemas?.find((i) => i.description === "Phone Number")?.name);
     if (data[phoneNumberKey] !== undefined) {
-        data[phoneNumberKey] = Number(data[phoneNumberKey]);
+      data[phoneNumberKey] = Number(data[phoneNumberKey]);
     }
 
     // Capacity conversion
     const capacityKey = t(Schemas?.find((i) => i.description === "Capacity")?.name);
     if (data[capacityKey] !== undefined) {
-        data[capacityKey] = Number(data[capacityKey]);
+      data[capacityKey] = Number(data[capacityKey]);
     }
     const ajv = new Ajv({ strict: false }); // Initialize Ajv
     let validate = ajv.compile(translatedSchema[type]);
     const errors = []; // Array to hold validation errors
-    
+
+    const boundaryCodeFac = t(Schemas?.find((i) => i.description === "Boundary Code")?.name);
+    if (data[boundaryCodeFac]?.trim()?.length === 0) {
+      setShowToast({ label: t("HCM_MAPPING_NO_BOUNDARY_ERROR"), isError: "error" });
+      return
+    }
+
+    const boundaryCode = t(Schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name);
+    if (data[boundaryCode]?.trim()?.length === 0) {
+      setShowToast({ label: t("HCM_MAPPING_NO_BOUNDARY_ERROR"), isError: "error" });
+      return
+    }
+
+
     data = [data]
     data.forEach((item, index) => {
       if (!validate(item)) {
@@ -613,27 +626,26 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
         const childData = childRef.current.getData();
         // Convert data types first
         const validationResult = validateData(childData);
-        
+
         if (validationResult.isValid) {
-          if(typeOfOperation === "add")
-          {
-            dispatch({ 
-              type: "ADD_DATA", 
-              payload: childData, 
-              schemas: Schemas, 
-              t: t 
+          if (typeOfOperation === "add") {
+            dispatch({
+              type: "ADD_DATA",
+              payload: childData,
+              schemas: Schemas,
+              t: t
             });
           }
-          else{
-            dispatch({ 
-              type: "EDIT_DATA", 
-              payload: childData, 
-              schemas: Schemas, 
-              t: t 
+          else {
+            dispatch({
+              type: "EDIT_DATA",
+              payload: childData,
+              schemas: Schemas,
+              t: t
             });
 
           }
-          
+
           setShowToast({ label: t("HCM_MAPPING_ADDED"), isError: "success" });
           return true;
         } else {
@@ -765,7 +777,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   size={"small"}
                   isDisabled={row?.[t(Schemas?.find((i) => i.description === "User Usage")?.name)] === "Inactive" ? true : false}
                   variation={"teritiary"}
-                  label={listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
+                  label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
                   onClick={() => {
                     setShowPopUp(row);
                   }}
@@ -779,17 +791,17 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           cell: (row) => {
             return (
               <Button
-                  type={"button"}
-                  size={"small"}
-                  isDisabled={row?.editable ? false: true}
-                  variation={"teritiary"}
-                  // label={listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
-                  label={t("MAPPING_EDIT")}
-                  onClick={() => {
-                    setShowEditPopUp(row);
-                  }}
-                />
-              
+                type={"button"}
+                size={"small"}
+                isDisabled={row?.editable ? false : true}
+                variation={"teritiary"}
+                // label={listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
+                label={t("MAPPING_EDIT")}
+                onClick={() => {
+                  setShowEditPopUp(row);
+                }}
+              />
+
             );
           },
         },
@@ -798,21 +810,21 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           cell: (row) => {
             return (
               <Button
-                  type={"button"}
-                  size={"small"}
-                  isDisabled={row?.editable ? false: true}
-                  variation={"teritiary"}
-                  label={t("MAPPING_DELETE")}
-                  onClick={() => {
-                    dispatch({ 
-                      type: "DELETE_DATA", 
-                      payload: row, 
-                      schemas: Schemas, 
-                      t: t 
-                    });
-                  }}
-                />
-              
+                type={"button"}
+                size={"small"}
+                isDisabled={row?.editable ? false : true}
+                variation={"teritiary"}
+                label={t("MAPPING_DELETE")}
+                onClick={() => {
+                  dispatch({
+                    type: "DELETE_DATA",
+                    payload: row,
+                    schemas: Schemas,
+                    t: t
+                  });
+                }}
+              />
+
             );
           },
         },
@@ -910,7 +922,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   size={"small"}
                   isDisabled={row?.[t(Schemas?.find((i) => i.description === "Facility usage")?.name)] === "Inactive" ? true : false}
                   variation={"teritiary"}
-                  label={listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
+                  label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
                   onClick={() => {
                     setShowPopUp(row);
                   }}
@@ -924,17 +936,17 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           cell: (row) => {
             return (
               <Button
-                  type={"button"}
-                  size={"small"}
-                  isDisabled={row?.editable ? false: true}
-                  variation={"teritiary"}
-                  // label={listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
-                  label={t("MAPPING_EDIT")}
-                  onClick={() => {
-                    setShowEditPopUp(row);
-                  }}
-                />
-              
+                type={"button"}
+                size={"small"}
+                isDisabled={row?.editable ? false : true}
+                variation={"teritiary"}
+                // label={listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
+                label={t("MAPPING_EDIT")}
+                onClick={() => {
+                  setShowEditPopUp(row);
+                }}
+              />
+
             );
           },
         },
@@ -943,28 +955,28 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           cell: (row) => {
             return (
               <Button
-                  type={"button"}
-                  size={"small"}
-                  isDisabled={row?.editable ? false: true}
-                  variation={"teritiary"}
-                  label={t("MAPPING_DELETE")}
-                  onClick={() => {
-                    dispatch({ 
-                      type: "DELETE_DATA", 
-                      payload: row, 
-                      schemas: Schemas, 
-                      t: t 
-                    });
-                  }}
-                />
-              
+                type={"button"}
+                size={"small"}
+                isDisabled={row?.editable ? false : true}
+                variation={"teritiary"}
+                label={t("MAPPING_DELETE")}
+                onClick={() => {
+                  dispatch({
+                    type: "DELETE_DATA",
+                    payload: row,
+                    schemas: Schemas,
+                    t: t
+                  });
+                }}
+              />
+
             );
           },
         },
       ];
   return (
     <Fragment>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
         <Button
           className="custom-class"
           icon=""
@@ -1019,7 +1031,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             <Button
               type={"button"}
               size={"large"}
-              variation={"primary"}
+              variation={"secondary"}
               label={t("CLOSE")}
               onClick={() => {
                 setShowAddPopup(false);
@@ -1028,18 +1040,18 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             <Button
               type={"button"}
               size={"large"}
-              variation={"secondary"}
+              variation={"primary"}
               label={t("ADD_DATA_MAPPING")}
               onClick={async () => {
                 const result = await handleButtonAddClick("add");
-                if(result) setShowAddPopup(false)
+                if (result) setShowAddPopup(false)
               }
               } // Trigger child method when button is clicked
             />
           ]}
           sortFooterChildren={true}
         >
-          <AddOrEditMapping ref={childRef} schema={Schemas} dispatch={dispatch}  boundaryHierarchy={boundaryHierarchy} allSelectedBoundary={allSelectedBoundary} typeOfOperation="add" curData={showAddPopup}/>
+          <AddOrEditMapping ref={childRef} schema={Schemas} dispatch={dispatch} boundaryHierarchy={boundaryHierarchy} allSelectedBoundary={allSelectedBoundary} typeOfOperation="add" curData={showAddPopup} />
         </PopUp>
       )}
       {showEditPopup && (
@@ -1060,7 +1072,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             <Button
               type={"button"}
               size={"large"}
-              variation={"primary"}
+              variation={"secondary"}
               label={t("CLOSE")}
               onClick={() => {
                 setShowEditPopUp(false);
@@ -1069,21 +1081,21 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             <Button
               type={"button"}
               size={"large"}
-              variation={"secondary"}
+              variation={"primary"}
               label={t("EDIT_DATA_MAPPING")}
               onClick={async () => {
                 const result = await handleButtonAddClick("edit");
-                if(result) setShowEditPopUp(false)
+                if (result) setShowEditPopUp(false)
               }
               } // Trigger child method when button is clicked
             />
           ]}
           sortFooterChildren={true}
         >
-          <AddOrEditMapping ref={childRef} schema={Schemas} dispatch={dispatch}  boundaryHierarchy={boundaryHierarchy} allSelectedBoundary={allSelectedBoundary} typeOfOperation="edit" curData={showEditPopup}/>
+          <AddOrEditMapping ref={childRef} schema={Schemas} dispatch={dispatch} boundaryHierarchy={boundaryHierarchy} allSelectedBoundary={allSelectedBoundary} typeOfOperation="edit" curData={showEditPopup} />
         </PopUp>
       )}
-      {showToast && <Toast style={{zIndex: 999999 }} label={showToast.label} type={showToast.isError} onClose={() => setShowToast(false)} />}
+      {showToast && <Toast style={{ zIndex: 999999 }} label={showToast.label} type={showToast.isError} onClose={() => setShowToast(false)} />}
 
       {state?.currentData?.length === 0 ? (
         <Fragment>
