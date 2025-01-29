@@ -44,6 +44,7 @@ const CreateChecklist = () => {
   const history = useHistory();
   const [serviceCode, setServiceCode] = useState(null);
   const [def_data, setDef_Data] = useState(null);
+  const [helpText, setHelpText] = useState("");
 
 
   module = "hcm-checklist";
@@ -429,7 +430,8 @@ const CreateChecklist = () => {
             value: {
               name: checklistName,
               type: checklistType,
-              role: role
+              role: role,
+              helpText: helpText
             }
           }
         ]
@@ -448,28 +450,38 @@ const CreateChecklist = () => {
     }
     setSubmitting(true);
     try {
-      const data = await mutateAsync(payload); // Use mutateAsync for await support
-      // Handle successful checklist creation  
-      // Proceed with localization if needed
+      // Prepare localization data
       let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
       if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
       let roleTemp = role.toUpperCase().replace(/ /g, "_");
+      let helpTextCode = helpText.toUpperCase().replace(/ /g, "_");
       uniqueLocal.push({
         code: `${campaignName}.${checklistTypeTemp}.${roleTemp}`,
         locale: locale,
         message: `${t(checklistTypeLocal)} ${t(roleLocal)}`,
         module: "hcm-checklist"
       });
+      uniqueLocal.push({
+        code: `${campaignName}.${checklistTypeTemp}.${roleTemp}.${helpTextCode}`,
+        locale: locale,
+        message: helpText,
+        module: "hcm-checklist"
+      });
+  
+      // Call upsert first
+      const localisations = uniqueLocal;
+      const localisationResult = await localisationMutateAsync(localisations);
+  
+      if (!localisationResult.success) {
+        // Exit if upsert (localisation) fails
+        setShowToast({ label: "LOCALIZATION_FAILED_PLEASE_TRY_AGAIN", isError: "true" });
+        return;
+      }
+  
+      // Proceed to create checklist
+      const data = await mutateAsync(payload);
+  
       if (data.success) { // Replace with your actual condition
-        const localisations = uniqueLocal;
-        const localisationResult = await localisationMutateAsync(localisations);
-        // Check if localization succeeded
-        if (!localisationResult.success) {
-          setShowToast({ label: "CHECKLIST_CREATED_LOCALISATION_ERROR", isError: "true" });
-          return; // Exit if localization fails
-        }
-
-        // setShowToast({ label: "CHECKLIST_AND_LOCALISATION_CREATED_SUCCESSFULLY"});
         history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
           message: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE",
           preText: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE_PRE_TEXT",
@@ -609,6 +621,19 @@ const CreateChecklist = () => {
                 value={`${clTranslated} ${rlTranslated}`}
                 // onChange={(event) => addChecklistName(event.target.value)}
                 placeholder={"Checklist Name"}
+              />
+            </div>
+            <div style={{ display: "flex" }}>
+              <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t("CHECKLIST_HELP_TEXT")}</div>
+              <TextInput
+                disabled={false}
+                className="tetxinput-example"
+                type={"text"}
+                name={t("CHECKLIST_HELP_TEXT")}
+                value={helpText}
+                // value={`${clTranslated} ${rlTranslated}`}
+                onChange={(event) => setHelpText(event.target.value)}
+                placeholder={t("CHECKLIST_HELP_TEXT_PALCEHOLDER")}
               />
             </div>
           </Card>
