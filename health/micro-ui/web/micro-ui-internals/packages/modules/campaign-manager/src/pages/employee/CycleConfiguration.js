@@ -279,7 +279,6 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
             <span className="mandatory-span">*</span>
           </CardLabel>
           <TextInput type="numeric" value={cycleConfgureDate?.cycle} onChange={(d) => updateCycle(d)} disabled={cycleConfgureDate?.isDisable} />
-          {/* <PlusMinusInput defaultValues={cycleConfgureDate?.cycle} onSelect={(d) => updateCycle(d)} /> */}
         </LabelFieldPair>
         <LabelFieldPair>
           <CardLabel>
@@ -287,7 +286,6 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
             <span className="mandatory-span">*</span>
           </CardLabel>
           <TextInput type="numeric" value={cycleConfgureDate?.deliveries} onChange={(d) => updateDelivery(d)} disabled={cycleConfgureDate?.isDisable} />
-          {/* <PlusMinusInput defaultValues={cycleConfgureDate?.deliveries} onSelect={(d) => updateDelivery(d)} /> */}
         </LabelFieldPair>
       </Card>
       {/* </Card> */}

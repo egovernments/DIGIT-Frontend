@@ -195,7 +195,12 @@ export const cycleDataRemap=(data)=> {
         const roundedToValue = Math.round(attr.toValue);
         const roundedFromValue = Math.round(attr.fromValue);
 
-        return `${roundedToValue} <= ${attr.attribute.code} < ${roundedFromValue}`;
+        // return `${roundedToValue} <= ${attr.attribute.code} < ${roundedFromValue}`;
+        if (type === "create") {
+          return `${roundedToValue}<=${attributeCode.toLowerCase()}and${attributeCode.toLowerCase()}<${roundedFromValue}`;
+        } else {
+          return `${roundedToValue} <= ${attr.attribute.code} < ${roundedFromValue}`;
+        }
         
       } else {
         if (typeof attr.value === "string" && /^\d+(\.\d+)?$/.test(attr.value)) {
