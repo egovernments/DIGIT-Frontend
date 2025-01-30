@@ -21,7 +21,7 @@ const searchLocalisationService = async ({ tenantId, module, locale, params = {}
             item = { code, module, en_IN: "", pt_IN: "", fr_IN: "" };
             result.push(item);
           }
-          item[locale.split("_")[0]] = message; // Use "en", "pt", etc.
+          item[locale] = message; // Use "en", "pt", etc.
         });
       });
       // Merge data from all responses

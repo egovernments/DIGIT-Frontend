@@ -30,7 +30,7 @@ export const AppLocalisationTable = ({ data }) => {
   const columns = [
     {
       name: "Code",
-      selector: (row) => row.code,
+      selector: (row) => row?.[currentLocale],
       sortable: true,
     },
     {
