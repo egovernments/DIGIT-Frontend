@@ -88,7 +88,7 @@ const SuccessPage = () => {
       return;
     }
 
-    const url = `http://localhost:8081/realms/SDFG/protocol/openid-connect/token`;
+    const url = `https://digit-lts.digit.org/keycloak-test/realms/SDFG/protocol/openid-connect/token`;
     try {
       const response = await fetch(url, {
         method: "POST",
@@ -123,7 +123,7 @@ const SuccessPage = () => {
       return;
     }
 
-    const url = `http://localhost:8081/admin/realms/SDFG/users?username=${username}`;
+    const url = `https://digit-lts.digit.org/keycloak-test/admin/realms/SDFG/users?username=${username}`;
     try {
       const response = await fetch(url, {
         method: "GET",
