@@ -8,6 +8,9 @@ export const TenantConfigSearch = {
       url: Urls.TenantConfigSearch,
       data: {},
       useCache: true,
-      params: { code: stateCode },
+      params: { code: stateCode,
+        tenantId : "SDFG"
+
+       },
     }),
 };

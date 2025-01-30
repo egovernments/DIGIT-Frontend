@@ -28,14 +28,35 @@ const SuccessPage = () => {
   const [user, setUser] = useState(null);
   const [userDetails, setUserDetails] = useState(null); // To store user API response
   const isLogin =false;
+  const [newToken, setNewToken] = useState(null);
 
   // Extract username from the token
+  // useEffect(() => {
+  //   if (keycloak.token) {
+  //     const decodedToken = jwt_decode(keycloak.token);
+  //     setUsername(decodedToken?.preferred_username || "Unknown User");
+  //     fetchUserDetails();
+  //   }
+  // }, [keycloak.token]);
+
   useEffect(() => {
     if (keycloak.token) {
       const decodedToken = jwt_decode(keycloak.token);
       setUsername(decodedToken?.preferred_username || "Unknown User");
     }
-  }, [keycloak.token]);
+  }, [keycloak.token]); 
+  
+  useEffect(() => {
+    if (keycloak.token) {
+      fetchnewttoken();
+    }
+  }, [keycloak.token]);// This depends on keycloak.token
+  
+  useEffect(() => {
+    if (username !== "Unknown User") {
+      fetchUserDetails(); // This depends on the username being set
+    }
+  }, [username]); 
 
   useEffect(() => {
     if (!user) {
@@ -49,28 +70,6 @@ const SuccessPage = () => {
     // let redirectPath = `/${window?.globalPath}/user/setup`;
     let redirectPath = `/${window?.contextPath}/employee`;
 
-
-  //   const getRedirectPathOtpLogin = (locationPathname, user, MdmsRes, RoleLandingUrl) => {
-  //     const userRole = user?.info?.roles?.[0]?.code;
-  //     const isSuperUser = userRole === "SUPERUSER";
-  //     const contextPath = window?.contextPath;
-  
-  //     switch (true) {
-  //         case locationPathname === "/sandbox-ui/user/otp" && isSuperUser:
-  //             return `/${contextPath}/employee/user/landing`;
-  
-  //         case isSuperUser && MdmsRes?.[0]?.rolesForLandingPage?.includes("SUPERUSER"):
-  //             return `/${contextPath}${RoleLandingUrl}`;
-  
-  //         default:
-  //             return `/${contextPath}/employee`;
-  //     }
-  // };
-  
-  // // Usage
-  // const redirectPathOtpLogin = getRedirectPathOtpLogin(location.pathname, user, MdmsRes, RoleLandingUrl);
-
-
     if (isLogin) {
       history.push(redirectPathOtpLogin);
       return;
@@ -83,6 +82,40 @@ const SuccessPage = () => {
     }
   }, [user]);
 
+  const fetchnewttoken = async () => {
+    if ( !keycloak.token) {
+      console.error("Username or access token not available!");
+      return;
+    }
+
+    const url = `http://localhost:8081/realms/SDFG/protocol/openid-connect/token`;
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${keycloak.token}`, // Pass the token in the Authorization header
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          grant_type: "urn:ietf:params:oauth:grant-type:uma-ticket",
+          audience: "auth-server",
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log("API Response of new token :", data);
+      setNewToken(data); // Set the new access token from the response
+      localStorage.setItem("newAccessToken", data?.access_token); // Store the new token in localStorage
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+    }
+  };
+
+
   // Fetch user details using the username and token
   const fetchUserDetails = async () => {
     if (!username || !keycloak.token) {
@@ -90,7 +123,7 @@ const SuccessPage = () => {
       return;
     }
 
-    const url = `http://localhost:8081/admin/realms/2fa/users?username=${username}`;
+    const url = `http://localhost:8081/admin/realms/SDFG/users?username=${username}`;
     try {
       const response = await fetch(url, {
         method: "GET",
@@ -110,63 +143,6 @@ const SuccessPage = () => {
       console.error("Error fetching user details:", error);
     }
   };
-
-  // const redirectToHome = () => {
-  //    console.log("token",keycloak.token)
-  //    try {
-  //     // const { UserRequest: info, ...tokens } = await Digit.UserService.authenticate(requestData);
-  //     // // console.log("UserRequest", info);
-  //     // console.log("info",info);
-  //     // console.log("tokens",tokens)
-  //     let info = {
-  //       "id": 39509,
-  //       "uuid": "fafdb4f8-4aa0-4325-9283-3299e35d4910",
-  //       "userName": "tenant123@gmail.com",
-  //       "name": "sdfg",
-  //       "mobileNumber": "9999999999",
-  //       "emailId": "tenant123@gmail.com",
-  //       "locale": null,
-  //       "type": "EMPLOYEE",
-  //       "roles": [
-  //           {
-  //               "name": "Super User",
-  //               "code": "SUPERUSER",
-  //               "tenantId": "SDFG"
-  //           }
-  //       ],
-  //       "active": true,
-  //       "tenantId": "SDFG",
-  //       "permanentCity": null
-  //   }
-
-    
-  //   let tokens = {
-  //     "access_token": "af2d65de-0b24-44b5-8f97-fbdbb3656e35",
-  //     "token_type": "bearer",
-  //     "refresh_token": "70584cad-b3a7-4fe8-b091-c1f322f570c8",
-  //     "expires_in": 596251,
-  //     "scope": "read",
-  //     "ResponseInfo": {
-  //         "api_id": "",
-  //         "ver": "",
-  //         "ts": "",
-  //         "res_msg_id": "",
-  //         "msg_id": "",
-  //         "status": "Access Token generated successfully"
-  //     }
-  // }
-
-  //     Digit.SessionStorage.set("Employee.tenantId", info?.tenantId);
-  //     setUser({ info, ...tokens });
-  //   } catch (err) {
-  //     setShowToast(
-  //       err?.response?.data?.error_description ||
-  //         (err?.message == "ES_ERROR_USER_NOT_PERMITTED" && t("ES_ERROR_USER_NOT_PERMITTED")) ||
-  //         t("INVALID_LOGIN_CREDENTIALS")
-  //     );
-  //     setTimeout(closeToast, 5000);
-  //   }
-  // };
 
   const redirectToHome = () => {
   if (!userDetails || userDetails.length === 0 || !keycloak.token || !keycloak.refreshToken) {
@@ -196,11 +172,11 @@ const SuccessPage = () => {
       tenantId: "SDFG",
       permanentCity: null,
     };
-
+    console.log("token check",newToken.expires_in)
     const tokens = {
-      access_token: keycloak.token, // Get access token from Keycloak
-      refresh_token: keycloak.refreshToken, // Get refresh token from Keycloak
-      expires_in: keycloak.tokenParsed.exp - Math.floor(Date.now() / 1000), // Calculate remaining expiry time in seconds
+      access_token: newToken.access_token, // Get access token from Keycloak
+      refresh_token: newToken.refresh_token, // Get refresh token from Keycloak
+      expires_in: newToken.expires_in, // Calculate remaining expiry time in seconds
       scope: "read",
       ResponseInfo: {
         api_id: "",
@@ -228,7 +204,7 @@ const SuccessPage = () => {
       <Card>
         <p style={{ wordBreak: "break-all" }}>{keycloak.token || "No token available"}</p>
       </Card>
-      <div style={{ marginTop: "16px" }}>
+      {/* <div style={{ marginTop: "16px" }}>
         <Button
           label="Fetch User Details"
           onClick={fetchUserDetails} // Fetch user details on click
@@ -240,7 +216,7 @@ const SuccessPage = () => {
           <h2>User Details:</h2>
           <pre>{JSON.stringify(userDetails, null, 2)}</pre>
         </Card>
-      )}
+      )} */}
       <div style={{ marginTop: "16px" }}>
         <Button
           label="Go to Homepage"

@@ -4,8 +4,8 @@ import Keycloak from '../keycloak/keycloak';
 
 // Create a single instance of Keycloak
 const keycloak = new Keycloak({
-  url: 'http://localhost:8081/',
-  realm: '2fa',
+  url: 'https://digit-lts.digit.org/keycloak-test/',
+  realm: 'SDFG',
   clientId: 'sandbox-ui-client',
 });
 

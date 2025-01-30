@@ -6,6 +6,7 @@ const tenantConfigSearchService = async ({ tenantId, filter, pagination }) => {
     body: {},
     params: {
       code: tenantId,
+      tenantId : "SDFG"
     },
   });
   return response?.tenantConfigs;
