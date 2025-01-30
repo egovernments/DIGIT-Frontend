@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect, Fragment } from "react";
 import { Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { LabelFieldPair } from "@egovernments/digit-ui-components";
+import { InfoCard, LabelFieldPair } from "@egovernments/digit-ui-components";
 import { Button, CardText, Dropdown, ErrorMessage, PopUp, Stepper, TextBlock , Card} from "@egovernments/digit-ui-components";
 
 const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
@@ -157,6 +157,14 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
               </LabelFieldPair>
             )}
           </Card>
+           <InfoCard
+                        populators={{
+                          name: "infocard",
+                        }}
+                        variant="info"
+                        text={t("HCM_UPDATE_CAMPAIGN_TYPE_INFO")}
+                        style={{ marginTop: "1rem", maxWidth: "100%" }}
+                      />
         </div>
         {showPopUp && (
           <PopUp
