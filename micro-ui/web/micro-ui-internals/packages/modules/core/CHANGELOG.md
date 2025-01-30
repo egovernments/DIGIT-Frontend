@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.8.23]  [3-Feb-2025]
+- Fixed core issues and related found in PGR ethopia demo
+
 ## [1.8.22]  [3-Feb-2025]
 - FEATURE/HCMPRE-2208  : Fixed some loader component issue 
 - added new prop called allowedUserTypes to restrict any user type if needed
