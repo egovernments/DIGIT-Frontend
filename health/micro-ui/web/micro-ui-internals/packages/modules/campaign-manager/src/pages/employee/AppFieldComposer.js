@@ -41,7 +41,21 @@ const Field = ({
         //     onSelectField();
         //   }}
         // >
-        <LabelFieldPair className={!headerFields ? `appConfiglabelField ${config?.id === state?.drawerField?.id ? "selected" : ""}` : ""}>
+        <LabelFieldPair
+          className={
+            !headerFields
+              ? `appConfiglabelField ${
+                  config?.id
+                    ? config?.id === state?.drawerField?.id
+                      ? "selected"
+                      : ""
+                    : config?.jsonPath === state?.drawerField?.jsonPath
+                    ? "selected"
+                    : ""
+                }`
+              : ""
+          }
+        >
           <div className="appConfiglabelField-label">
             <span>{`${t(label)}`}</span>
             {required && <span className="mandatory-span">*</span>}
@@ -269,7 +283,7 @@ function AppFieldComposer({
       ref={componentRef}
       onClick={(e) => {
         // if (config?.id !== state?.drawerField?.id) {
-          onSelectField();
+        onSelectField();
         // }
         // e.stopPropagation();
         // onSelectField();
