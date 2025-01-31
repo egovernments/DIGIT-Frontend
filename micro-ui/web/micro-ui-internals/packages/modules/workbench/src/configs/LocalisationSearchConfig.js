@@ -127,7 +127,7 @@ export const Config = {
             svg:"EditIcon",
           },
         ],
-        enableGlobalSearch: false,
+        enableGlobalSearch: true,
         enableColumnSort: true,
         resultsJsonPath: "messages",
         manualPagination:false
