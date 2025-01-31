@@ -293,7 +293,7 @@ const DigitJSONForm = ({
   const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
   const { moduleName, masterName } = Digit.Hooks.useQueryParams();
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const enableBulkUpload = window?.globalConfigs?.getConfig("ENABLE_BULK_UPLOAD");
+  const enableBulkUpload = window?.globalConfigs?.getConfig("ENABLE_BULK_UPLOAD") || false;
 
   const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(
     tenantId,

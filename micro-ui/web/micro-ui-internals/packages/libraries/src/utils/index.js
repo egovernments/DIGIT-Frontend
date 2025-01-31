@@ -200,6 +200,12 @@ const didEmployeeHasRole = (role = "") => {
   return rolearray?.length > 0;
 };
 
+/* for customization wether the user will have access for add button */
+const didEmployeeisAllowed = (master, module) => {
+  if (master === "WORKS-SOR" && module === "Composition") return false;
+  return true;
+};
+
 /* to check the employee (loggedin user ) has given roles  */
 const didEmployeeHasAtleastOneRole = (roles = []) => {
   return roles.some((role) => didEmployeeHasRole(role));
@@ -413,6 +419,7 @@ export default {
   mCollectAccess,
   receiptsAccess,
   didEmployeeHasRole,
+  didEmployeeisAllowed,
   didEmployeeHasAtleastOneRole,
   hrmsAccess,
   getPattern,

@@ -122,9 +122,14 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
 
   const schemaCodeToValidate = `${moduleName}.${masterName}`;
   const onSubmit = async (data, additionalProperties) => {
-    const validation = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.validateForm(data, { tenantId: tenantId });
+    const validationConfig = Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate];
+    if (!validationConfig?.validateForm){
+      console.warn(`No validation configuration found for schema: ${schemaCodeToValidate}`);
+      return true;
+    }
+    const validation = await validationConfig.validateForm(data, { tenantId: tenantId });
     if (validation && !validation?.isValid) {
-      setShowToast(t(validation.message));
+      setShowToast(t(validation.message) || t('VALIDATION_ERROR_DEFAULT'));
       setShowErrorToast(true);
       toggleSpinner(false);
       return;

@@ -924,7 +924,7 @@ export const UICustomizations = {
   },
   AddMdmsConfig: {
     "WORKS-SOR.Rates": {
-      getTrasformedData: async (formData, data) => {
+      getTransformedData: async (formData, data) => {
         return { ...formData, validFrom: data?.data?.validFrom };
       },
       validateForm: async (data, props) => {
@@ -960,7 +960,7 @@ export const UICustomizations = {
       },
     },
     "WORKS-SOR.Composition": {
-      getTrasformedData: async (formData, data) => {
+      getTransformedData: async (formData, data) => {
         return { ...formData, effectiveFrom: data?.data?.effectiveFrom };
       },
     },

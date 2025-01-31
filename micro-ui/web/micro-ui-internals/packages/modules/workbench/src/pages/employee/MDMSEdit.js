@@ -132,7 +132,7 @@ const MDMSEdit = ({ ...props }) => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaUpdate);
   const handleUpdate = async (formData, additionalProperties) => {
     const schemaCodeToValidate = `${moduleName}.${masterName}`;
-    let transformedData = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.getTrasformedData(formData, data) ;
+    let transformedData = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.getTransformedData(formData, data) ;
     transformedData = transformedData && transformedData !== undefined && transformedData !== "undefined" ? transformedData : formData;
     const validation = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.validateForm(transformedData, { tenantId: stateId });
 
