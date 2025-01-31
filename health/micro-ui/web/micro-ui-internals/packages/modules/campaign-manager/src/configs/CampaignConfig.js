@@ -1,84 +1,4 @@
-// import React from "react";
-
-// // Fetch hierarchies from MDMS
-// const fetchHierarchies = async () => {
-//   // Return early if data already exists
-//   if (window.hierarchyData) {
-//     return window.hierarchyData;
-//   }
-
-//   const tenantId = Digit.ULBService.getStateId();
-  
-//   try {
-//     const response = await Digit.CustomService.getResponse({
-//       url: '/mdms-v2/v1/_search',
-//       params: {},
-//       body: {
-//         MdmsCriteria: {
-//           tenantId,
-//           moduleDetails: [{
-//             moduleName: "HCM-ADMIN-CONSOLE",
-//             masterDetails: [{
-//               name: "HierarchySchema"
-//             }]
-//           }]
-//         }
-//       }
-//     });
-//     window.hierarchyData = response?.MdmsRes?.["HCM-ADMIN-CONSOLE"]?.HierarchySchema || [];
-//     return window.hierarchyData;
-//   } catch (error) {
-//     console.error("Error fetching hierarchies:", error);
-//     window.hierarchyData = [];
-//     return [];
-//   }
-// };
-
-// const fetchEmployeeDetails = async () => {
-//   // Return early if data already exists
-//   if (window.employeeDetails) {
-//     return window.employeeDetails;
-//   }
-
-//   const HRMS_CONTEXT_PATH = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || "egov-hrms";
-//   const tenantId = Digit.ULBService.getStateId();
-//   try {
-//     const userName = Digit.UserService.getUser()?.info?.userName;
-//     const res = await Digit.CustomService.getResponse({
-//       url: `/${HRMS_CONTEXT_PATH}/employees/_search`,
-//       params: {
-//         tenantId: tenantId,
-//         codes: userName,
-//         sortOrder: "ASC",
-//       },
-//       body: {},
-//     });
-//     window.employeeDetails = res?.Employees?.[0];
-//     return res?.Employees?.[0];
-//   } catch (error) {
-//     console.error("Error fetching employee details:", error);
-//     return null;
-//   }
-// };
-
-// // Initialize data once
-// const initializeData = () => {
-//   if (!window.dataInitialized) {
-//     Promise.all([
-//       fetchEmployeeDetails(),
-//       fetchHierarchies()
-//     ]).then(() => {
-//       window.dataInitialized = true;
-//     });
-//   }
-// };
-
 export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryErrors, hierarchyData, allHierarchy, employeeDetails) => {
-  
-  // initializeData();
-  console.log("hierachy dta from setup", allHierarchy);
-  console.log("employee det frmo setup", employeeDetails);
-
 
   return [
     {
@@ -103,8 +23,6 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
                 isSubmitting: isSubmitting,
                 employeeDetails: employeeDetails,
                 allHierarchy: allHierarchy
-                // getEmployeeDetails: () => window.employeeDetails, // Function to get employee details
-                // getHierarchies: () => window.hierarchyData // Function to get hierarchies
               },
               populators: {
                 name: "projectType",
@@ -212,7 +130,6 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
                 hierarchyData: hierarchyData,
                 employeeDetails: employeeDetails,
                 allHierarchy: allHierarchy
-                // getEmployeeDetails: () => window.employeeDetails // Function to get employee details
               },
               populators: {
                 name: "boundaryType",

@@ -44,7 +44,6 @@ const fetchBoundaryHierarchy = async (hierarchyType, tenantId) => {
 };
 
 const fetchEmployeeDetails = async (userName, tenantId) => {
-  console.log("inside");
   try {
     // Second API Call: Fetch Service Definitions
     const res = await Digit.CustomService.getResponse({
@@ -56,7 +55,6 @@ const fetchEmployeeDetails = async (userName, tenantId) => {
       },
       body: {},
     });
-    console.log("Res is", res);
     return res?.Employees?.[0];
   } catch (error) {
     console.error("Error fetching service definition:", error);
@@ -114,7 +112,6 @@ const useBoundaryHome = ({ screenType = "campaign", defaultHierarchyType = "", h
           hierarchyName,
           defaultHierarchyName
         };
-        console.log("merged data", mergedData);
         resolve(mergedData);
       });
     } catch (error) {
