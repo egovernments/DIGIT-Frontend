@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useState,useMemo } from "react";
-import Toast from "../atoms/Toast";
+import { Toast } from "@egovernments/digit-ui-components";
 import ResultsTable from "./ResultsTable"
 import reducer, { initialInboxState } from "./InboxSearchComposerReducer";
 import InboxSearchLinks from "../atoms/InboxSearchLinks";
@@ -131,7 +131,7 @@ const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueCh
 
     useEffect(() => {
         if(error){
-            setShowToast({ label:error?.message, isError: true });
+            setShowToast({ label:error?.message, type: "error" });
             closeToast()
         }
     }, [error])
@@ -327,7 +327,7 @@ const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueCh
                 {/* One can use this Parent to add additional sub parents to render more sections */}
             </div>
             </div>   
-            {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={()=>setShowToast(null)}></Toast>}
+            {showToast && <Toast label={showToast.label} type={showToast?.type} isDleteBtn={true} onClose={()=>setShowToast(null)}></Toast>}
         </InboxContext.Provider>
     )
 }

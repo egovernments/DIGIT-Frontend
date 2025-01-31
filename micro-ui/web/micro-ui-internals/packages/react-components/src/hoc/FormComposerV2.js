@@ -22,7 +22,7 @@ import _ from "lodash";
 import CustomDropdown from "../molecules/CustomDropdown";
 import MultiUploadWrapper from "../molecules/MultiUploadWrapper";
 import HorizontalNav  from "../atoms/HorizontalNav"
-import Toast from "../atoms/Toast";
+import { Toast } from "@egovernments/digit-ui-components";
 import UploadFileComposer from "./UploadFileComposer";
 import CheckBox from "../atoms/CheckBox";
 import MultiSelectDropdown from '../atoms/MultiSelectDropdown';
@@ -886,8 +886,8 @@ export const FormComposer = (props) => {
           {props.onSkip && props.showSkip && <LinkButton style={props?.skipStyle} label={props?.skiplabel || t(`CS_SKIP_CONTINUE`)} onClick={props.onSkip} />}
         </ActionBar>
       )}
-      {showErrorToast && <Toast error={true} label={t("ES_COMMON_PLEASE_ENTER_ALL_MANDATORY_FIELDS")} isDleteBtn={true} onClose={closeToast} />}
-      {customToast && <Toast error={customToast?.error} label={t(customToast?.label)} isDleteBtn={true} onClose={closeToast} />}
+      {showErrorToast && <Toast type={"error"} label={t("ES_COMMON_PLEASE_ENTER_ALL_MANDATORY_FIELDS")} isDleteBtn={true} onClose={closeToast} />}
+      {customToast && <Toast type={customToast?.type} label={t(customToast?.label)} isDleteBtn={true} onClose={closeToast} />}
 
     </form>
   );
