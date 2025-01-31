@@ -140,3 +140,30 @@
         }
     }
 }
+
+.global-serach-results-table-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.global-serach-results-table{
+  margin-bottom: 1.5rem;
+
+
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4)  {
+    /* Media query for tablets */
+    min-width: 27.5rem;
+  }
+
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    min-width: 100%;
+    width: 100%;
+  }
+
+  @media (min-aspect-ratio: 3/4) {
+    /* Media query for desktop */
+    min-width: 37.5rem;
+  }
+}

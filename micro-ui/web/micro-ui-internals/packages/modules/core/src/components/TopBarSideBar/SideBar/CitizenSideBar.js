@@ -6,7 +6,7 @@ import { useHistory } from "react-router-dom";
 import ChangeCity from "../../ChangeCity";
 import { defaultImage } from "../../utils";
 import StaticCitizenSideBar from "./StaticCitizenSideBar";
-import { MobileSideNav } from "@egovernments/digit-ui-components";
+import { Hamburger } from "@egovernments/digit-ui-components";
 import { LogoutIcon } from "@egovernments/digit-ui-react-components";
 import ImageComponent from "../../ImageComponent";
 
@@ -405,7 +405,7 @@ export const CitizenSideBar = ({
     },
   ];
   return isMobile ? (
-    <MobileSideNav
+    <Hamburger
       items={hamburgerItems}
       profileName={user?.info?.name}
       profileNumber={user?.info?.mobileNumber}

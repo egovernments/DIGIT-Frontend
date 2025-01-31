@@ -4,7 +4,7 @@ import React, { Fragment } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import ChangeCity from "../ChangeCity";
 import ChangeLanguage from "../ChangeLanguage";
-import { TopBar as TopBarComponentMain } from "@egovernments/digit-ui-components";
+import { Header as TopBarComponentMain } from "@egovernments/digit-ui-components";
 import ImageComponent from "../ImageComponent";
 
 const TopBar = ({

@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Header, Card, CardText, CardHeader, Button } from "@egovernments/digit-ui-components"; // Importing the required DIGIT UI components
+import { HeaderComponent, Card, CardText, CardHeader, Button } from "@egovernments/digit-ui-components"; // Importing the required DIGIT UI components
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
@@ -15,9 +15,9 @@ const LandingComponent = ({ config }) => {
     <div className="custom-landing-container">
       <Card className="custom-landing-card">
         {/* Main Heading */}
-        <Header className="custom-landing-header">
+        <HeaderComponent className="custom-landing-header">
           {t(heading)}
-        </Header>
+        </HeaderComponent>
 
         {/* Video Section */}
         <div className="custom-video-section">
