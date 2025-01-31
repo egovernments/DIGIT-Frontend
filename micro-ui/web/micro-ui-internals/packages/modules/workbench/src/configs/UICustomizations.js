@@ -16,6 +16,28 @@ const inboxModuleNameMap = {
   "muster-roll-approval": "muster-roll-service",
 };
 
+const convertDateToEpoch = (dateString) => {
+  if (!dateString) {
+    return "NA";
+  }
+  const [day, month, year] = dateString.split('/');
+  const dateObject = new Date(`${year}-${month}-${day}T00:00:00`);
+  const options = { timeZone: 'Asia/Kolkata' };
+  const istDateObject = new Date(dateObject.toLocaleString('en-US', options));
+  return istDateObject.getTime();
+};
+
+const convertEpochToDate = (dateEpoch) => {
+  if (!dateEpoch || dateEpoch == null || dateEpoch == undefined || dateEpoch == "") {
+    return "NA";
+  }
+  const dateObject = new Date(dateEpoch);
+  const day = String(dateObject.getDate()).padStart(2, '0');
+  const month = String(dateObject.getMonth() + 1).padStart(2, '0');
+  const year = dateObject.getFullYear();
+  return `${day}/${month}/${year}`;
+};
+
 export const UICustomizations = {
   businessServiceMap,
   updatePayload: (applicationDetails, data, action, businessService) => {
@@ -321,7 +343,7 @@ export const UICustomizations = {
       //checking both to and from date are present
       const { createdFrom, createdTo } = data;
       if ((createdFrom === "" && createdTo !== "") || (createdFrom !== "" && createdTo === ""))
-        return { warning: true, label: "ES_COMMON_ENTER_DATE_RANGE" };
+        return { type:"warning", label: "ES_COMMON_ENTER_DATE_RANGE" };
 
       return false;
     },
@@ -423,10 +445,10 @@ export const UICustomizations = {
       //checking both to and from date are present
       const { createdFrom, createdTo, field, value } = data;
       if ((createdFrom === "" && createdTo !== "") || (createdFrom !== "" && createdTo === ""))
-        return { warning: true, label: "ES_COMMON_ENTER_DATE_RANGE" };
+        return { type:"warning", label: "ES_COMMON_ENTER_DATE_RANGE" };
 
       if ((field && !value) || (!field && value)) {
-        return { warning: true, label: "WBH_MDMS_SEARCH_VALIDATION_FIELD_VALUE_PAIR" };
+        return { type:"warning", label: "WBH_MDMS_SEARCH_VALIDATION_FIELD_VALUE_PAIR" };
       }
 
       return false;
@@ -505,6 +527,11 @@ export const UICustomizations = {
       //like if a cell is link then we return link
       //first we can identify which column it belongs to then we can return relevant result
       switch (key) {
+        case "WORKS_SOR_RATES_VALIDFROM":
+        case "WORKS_SOR_COMPOSITION_EFFECTIVEFROM":
+        case "WORKS_SOR_RATES_VALIDTO":
+        case "WORKS_SOR_COMPOSITION_EFFECTIVETO":
+          return value ? convertEpochToDate(Number(value)) : t("ES_COMMON_NA");
         case "WBH_UNIQUE_IDENTIFIER":
           const [moduleName, masterName] = row.schemaCode.split(".")
           return (
@@ -559,10 +586,10 @@ export const UICustomizations = {
       //checking both to and from date are present
       const { createdFrom, createdTo, field, value } = data;
       if ((createdFrom === "" && createdTo !== "") || (createdFrom !== "" && createdTo === ""))
-        return { warning: true, label: "ES_COMMON_ENTER_DATE_RANGE" };
+        return { type:"warning", label: "ES_COMMON_ENTER_DATE_RANGE" };
 
       if ((field && !value) || (!field && value)) {
-        return { warning: true, label: "WBH_MDMS_SEARCH_VALIDATION_FIELD_VALUE_PAIR" };
+        return { type:"warning", label: "WBH_MDMS_SEARCH_VALIDATION_FIELD_VALUE_PAIR" };
       }
 
       return false;
@@ -705,7 +732,7 @@ export const UICustomizations = {
       //checking locale must be present 
       const { locale } = data;
       if (locale === "")
-        return { warning: true, label: "WBH_LOC_WARNING_LOCALE_MUST_BE_PRESENT" };
+        return { type:"warning", label: "WBH_LOC_WARNING_LOCALE_MUST_BE_PRESENT" };
 
       return false;
     },
@@ -809,5 +836,171 @@ export const UICustomizations = {
       return defaultData
 
     }
-  }
+  },
+  ViewMdmsConfig: {
+    fetchActionItems: (data, props) => {
+      let hostname = window.location.hostname;
+
+      let roleActions = {
+        ADD_SOR_COMPOSITION: ["MDMS_STATE_ADMIN"],
+        VIEW_RATE_ANALYSIS: ["MDMS_STATE_ADMIN", "MDMS_CITY_ADMIN"],
+      };
+      const getUserRoles = Digit.SessionStorage.get("User")?.info?.roles;
+
+      const roles = getUserRoles?.map((role) => {
+        return role.code;
+      });
+      const hasRoleAccess = (action) => {
+        const allowedRoles = roleActions[action] || [];
+        return roles.some((role) => allowedRoles.includes(role));
+      };
+
+      let actionItems = [
+        {
+          action: "EDIT",
+          label: "Edit Master",
+        },
+      ];
+
+      const isActive = data?.isActive;
+      if (isActive)
+        actionItems.push({
+          action: "DISABLE",
+          label: "Disable Master",
+        });
+      else
+        actionItems.push({
+          action: "ENABLE",
+          label: "Enable Master",
+        });
+
+      switch (true) {
+        case hostname.includes("mukta-uat") || hostname.includes("localhost") || hostname.includes("mukta.odisha"): {
+          if (data?.data?.sorType?.includes("W")) {
+            if (isActive && hasRoleAccess("ADD_SOR_COMPOSITION"))
+              actionItems?.push({
+                action: "ADD_SOR_COMPOSITION",
+                label: "Add SOR Composition",
+              });
+            if (hasRoleAccess("VIEW_RATE_ANALYSIS")) {
+              actionItems.push({
+                action: "VIEW_RATE_ANALYSIS",
+                label: "View Rate Analysis",
+              });
+            }
+          }
+          if (props?.masterName === "Rates") {
+            actionItems = actionItems.filter((ac) => ac?.action !== "DISABLE");
+          }
+
+          if (props?.masterName === "Rates" && props?.sorData?.data?.sorType === "W") {
+            actionItems = actionItems.filter((ac) => ac?.action !== "EDIT");
+          }
+        }
+      }
+      return actionItems;
+    },
+    onActionSelect: (action, props) => {
+      const { action: actionSelected } = action;
+      //to ADD SOR Composition
+      if (actionSelected === "ADD_SOR_COMPOSITION") {
+        window.location.href = `/works-ui/employee/rateanalysis/create-rate-analysis?sorid=${props?.uniqueIdentifier}`;
+      } else if (actionSelected === "VIEW_RATE_ANALYSIS") {
+        window.location.href = `/works-ui/employee/rateanalysis/view-rate-analysis?sorId=${
+          props?.masterName === "Composition" ? props?.data?.data?.sorId : props?.uniqueIdentifier
+        }&fromeffective=${props?.masterName === "Composition" ? props?.data?.data?.effectiveFrom : Date.now()}`;
+      }
+      //action===EDIT go to edit screen
+      else if (actionSelected === "EDIT") {
+        const additionalParamString = new URLSearchParams(props?.additionalParams).toString();
+        props?.history.push(`/${window?.contextPath}/employee/workbench/mdms-edit?moduleName=${props?.moduleName}&masterName=${props?.masterName}&uniqueIdentifier=${props?.uniqueIdentifier}${additionalParamString ? "&" + additionalParamString : ""}`)
+      }
+      //action===DISABLE || ENABLE call update api and show toast respectively
+      else {
+        //call update mutation
+        props?.handleEnableDisable(actionSelected);
+      }
+    },
+  },
+  AddMdmsConfig: {
+    "WORKS-SOR.Rates": {
+      getTrasformedData: async (formData, data) => {
+        return { ...formData, validFrom: data?.data?.validFrom };
+      },
+      validateForm: async (data, props) => {
+        try {
+          const result = await Digit.CustomService.getResponse({
+            url: `/mdms-v2/v2/_search`,
+            body: JSON.stringify({
+              MdmsCriteria: {
+                tenantId : props?.tenantId?.split(".")[0],
+                schemaCode: "WORKS-SOR.SOR",
+                uniqueIdentifiers: [data.sorId],
+              },
+            }),
+            params: {},
+          });
+          const response = await result.json();
+
+          const validFrom = data?.validFrom;
+          const validTo = data?.validTo;
+
+          if (validFrom > validTo) {
+            return { isValid: false, message: "RA_DATE_RANGE_ERROR" };
+          }
+
+          if (response?.data?.mdms?.[0]?.data?.sorType !== "W") {
+            return { isValid: true };
+          } else {
+            return { isValid: false, message: "RATE_NOT_ALLOWED_FOR_W_TYPE" };
+          }
+        } catch (error) {
+          return { isValid: false, message: "VALIDATION_ERROR" };
+        }
+      },
+    },
+    "WORKS-SOR.Composition": {
+      getTrasformedData: async (formData, data) => {
+        return { ...formData, effectiveFrom: data?.data?.effectiveFrom };
+      },
+    },
+  },
+  SearchMDMSv2Config: {
+    "WORKS-SOR.Rates": {
+      sortValidDatesFirst: (arr) => {
+        const validFrom = arr.find((item) => item.name === "validFrom");
+        const validTo = arr.find((item) => item.name === "validTo");
+
+        if (validFrom && validTo) {
+          const validFromIndex = arr.indexOf(validFrom);
+          const validToIndex = arr.indexOf(validTo);
+
+          if (validFromIndex > validToIndex) {
+            arr.splice(validFromIndex, 1);
+            arr.splice(validToIndex, 0, validFrom);
+          }
+        }
+
+        return arr;
+      },
+    },
+    "WORKS-SOR.Composition": {
+      sortValidDatesFirst: (arr) => {
+        const validFrom = arr.find((item) => item.name === "effectiveFrom");
+        const validTo = arr.find((item) => item.name === "effectiveTo");
+
+        if (validFrom && validTo) {
+          const validFromIndex = arr.indexOf(validFrom);
+          const validToIndex = arr.indexOf(validTo);
+
+          if (validFromIndex > validToIndex) {
+            arr.splice(validFromIndex, 1);
+            arr.splice(validToIndex, 0, validFrom);
+          }
+        }
+
+        return arr;
+      },
+    },
+  },
 };

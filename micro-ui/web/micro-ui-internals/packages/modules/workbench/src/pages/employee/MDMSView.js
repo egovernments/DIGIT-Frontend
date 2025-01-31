@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import MDMSAdd from './MDMSAddV2'
-import { Loader, Toast } from '@egovernments/digit-ui-react-components';
+import { Loader } from '@egovernments/digit-ui-react-components';
+import { Toast } from "@egovernments/digit-ui-components";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button } from '@egovernments/digit-ui-components';
@@ -30,22 +31,13 @@ const MDMSView = ({ ...props }) => {
     }
   });
 
+  let propsToSendButtons = {
+    moduleName,
+    masterName,
+  };
 
-  const fetchActionItems = (data) => {
-    let actionItems = [{
-      action: "EDIT",
-      label: "Edit Master"
-    }]
+  const fetchActionItems = (data) => Digit?.Customizations?.["commonUiConfig"]?.["ViewMdmsConfig"]?.fetchActionItems(data, propsToSendButtons);
 
-    const isActive = data?.isActive
-    if (isActive) {
-      actionItems.push({ action: "DISABLE", label: "Disable Master" })
-    } else {
-      actionItems.push({ action: "ENABLE", label: "Enable Master" })
-    }
-
-    return actionItems
-  }
 
   const reqCriteria = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
@@ -92,7 +84,7 @@ const MDMSView = ({ ...props }) => {
     const onError = (resp) => {
       setShowToast({
         label: `${t("WBH_ERROR_MDMS_DATA")} ${t(resp?.response?.data?.Errors?.[0]?.code)}`,
-        isError: true
+        type:"error"
       });
       closeToast()
       refetch()
@@ -116,15 +108,18 @@ const MDMSView = ({ ...props }) => {
     );
   }
 
-  const onActionSelect = (action) => {
-    const { action: actionSelected } = action
-    if (actionSelected === "EDIT") {
-      const additionalParamString = new URLSearchParams(additionalParams).toString();
-      history.push(`/${window?.contextPath}/employee/workbench/mdms-edit?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}${additionalParamString ? "&" + additionalParamString : ""}`)
-    } else {
-      handleEnableDisable(actionSelected)
-    }
-  }
+  let propsToSend = {
+    moduleName,
+    masterName,
+    tenantId,
+    uniqueIdentifier,
+    data,
+    history,
+    handleEnableDisable,
+    additionalParams
+  };
+
+  const onActionSelect = (action) => Digit?.Customizations?.["commonUiConfig"]?.["ViewMdmsConfig"]?.onActionSelect(action, propsToSend);
 
   let localisableFields = [];
   if (MdmsRes && Array.isArray(MdmsRes)) {
@@ -205,7 +200,7 @@ const MDMSView = ({ ...props }) => {
           history.push(`../utilities/audit-log?id=${finalData?.id}&tenantId=${tenantId}`);
         }}
       />
-      {showToast && <Toast label={t(showToast.label)} error={showToast?.isError} onClose={() => setShowToast(null)} />}
+      {showToast && <Toast label={showToast?.label} type={showToast?.type} isDleteBtn={true} onClose={()=> setShowToast(null)}></Toast>}
     </React.Fragment>
   )
 }

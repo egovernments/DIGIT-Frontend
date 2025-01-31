@@ -108,11 +108,11 @@ const MDMSSearchv2 = () => {
   
   useEffect(() => {
     if (currentSchema) {
-      const dropDownOptions = [];
+      let dropDownOptions = [];
       const {
         definition: { properties },
       } = currentSchema;
-      
+      const schemaCodeToValidate = `${master}.${modulee}`;
       Object.keys(properties)?.forEach((key) => {
         if (properties[key].type === "string" && !properties[key].format) {
           dropDownOptions.push({
@@ -123,7 +123,11 @@ const MDMSSearchv2 = () => {
           });
         }
       });
-
+      dropDownOptions =
+      dropDownOptions?.length > 0 &&
+      Digit?.Customizations?.["commonUiConfig"]?.["SearchMDMSv2Config"]?.[schemaCodeToValidate]?.sortValidDatesFirst(dropDownOptions)
+        ? Digit?.Customizations?.["commonUiConfig"]?.["SearchMDMSv2Config"]?.[schemaCodeToValidate]?.sortValidDatesFirst(dropDownOptions)
+        : dropDownOptions;
       Config.sections.search.uiConfig.fields[0].populators.options = dropDownOptions;
       Config.actionLink=Config.actionLink+`?moduleName=${masterName?.name}&masterName=${moduleName?.name}`;
       // Config.apiDetails.serviceName = `/mdms-v2/v2/_search/${currentSchema.code}`
@@ -152,7 +156,8 @@ const MDMSSearchv2 = () => {
           label:option.i18nKey,
           i18nKey:option.i18nKey,
           jsonPath:`data.${option.code}`,
-          dontShowNA:true
+          dontShowNA:true,
+          additionalCustomization: currentSchema?.definition?.["x-ui-schema"]?.[option?.name]?.formatType === "EPOC" ? true : false // To show EPOC values in DATE format added customizations, so making additionalCustomization as true
         }
       }),{
         label:"WBH_ISACTIVE",
@@ -186,7 +191,7 @@ const MDMSSearchv2 = () => {
     <React.Fragment>
       <Header className="digit-form-composer-sub-header">{t(Digit.Utils.workbench.getMDMSLabel(`SCHEMA_` + currentSchema?.code))}</Header>
       {
-        updatedConfig && Digit.Utils.didEmployeeHasAtleastOneRole(updatedConfig?.actionRoles) &&
+        updatedConfig && Digit.Utils.didEmployeeHasAtleastOneRole(updatedConfig?.actionRoles) && Digit.Utils.didEmployeeisAllowed(master,modulee) &&
         <ActionBar >
           <SubmitBar disabled={false} className="mdms-add-btn" onSubmit={handleAddMasterData} label={t("WBH_ADD_MDMS")} />
         </ActionBar>

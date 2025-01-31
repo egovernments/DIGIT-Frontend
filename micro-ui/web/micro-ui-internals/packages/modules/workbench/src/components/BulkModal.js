@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { onConfirm, generateJsonTemplate, downloadTemplate } from "../utils/BulkUploadUtils";
 import Ajv from "ajv";
 import { useTranslation } from "react-i18next";
-import { FileUploadModal, Toast, Loader, Card, SVG } from "@egovernments/digit-ui-react-components";
+import { FileUploadModal, Loader, Card, SVG } from "@egovernments/digit-ui-react-components";
+import { Toast } from "@egovernments/digit-ui-components";
 import { CloseSvg } from "@egovernments/digit-ui-react-components";
 
 const ProgressBar = ({ progress, onClose, results }) => {
@@ -243,7 +244,7 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
             {showToast && (
                 <Toast
                     label={showToast}
-                    error={showErrorToast}
+                    type={showErrorToast ? "error" : ""} 
                     onClose={() => {
                         setShowToast(null);
                     }}

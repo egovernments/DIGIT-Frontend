@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Card, Button, TextInput, SVG, LabelFieldPair, Close, Toast, CardLabel, DeleteIconv2 , AddFilled } from "@egovernments/digit-ui-react-components";
+import { Card, Button, TextInput, SVG, LabelFieldPair, Close, CardLabel, DeleteIconv2 , AddFilled } from "@egovernments/digit-ui-react-components";
 import { COLOR_FILL } from "../utils/contants";
+import { Toast } from "@egovernments/digit-ui-components";
 
 const LevelCards = ({ onSelect, formData, props }) => {
   const { t } = useTranslation();
@@ -92,8 +93,8 @@ const LevelCards = ({ onSelect, formData, props }) => {
       </LabelFieldPair>
       {showToast && (
         <Toast
-          warning={showToast.isWarning}
-          label={showToast.label}
+          type={showToast?.type}
+          label={showToast?.label}
           isDleteBtn={"true"}
           onClose={() => setShowToast(false)}
           style={{ bottom: "8%" }}

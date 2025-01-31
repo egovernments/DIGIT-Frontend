@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { Switch, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
+import { PrivateRoute, AppContainer } from "@egovernments/digit-ui-react-components";
+import { BreadCrumb } from "@egovernments/digit-ui-components";
 import LocalisationSearch from "./LocalisationSearch";
 import MDMSSearch from "./MDMSSearch";
 import MDMSAdd from "./MDMSAdd";
@@ -26,18 +27,18 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
 
   const crumbs = [
     {
-      path: `/${window?.contextPath}/employee`,
+      internalLink: `/${window?.contextPath}/employee`,
       content: t("WORKBENCH_HOME"),
       show: true,
     },
     {
-      path: `/${window.contextPath}/employee/workbench/manage-master-data`,
+      internalLink: `/${window.contextPath}/employee/workbench/manage-master-data`,
       content: t(`WBH_MANAGE_MASTER_DATA`),
       show: from ? false : pathVar.includes("mdms-") ? true : false,
       // query:`moduleName=${moduleName}&masterName=${masterName}`
     },
     {
-      path: `/${window.contextPath}/employee/workbench/localisation-search`,
+      internalLink: `/${window.contextPath}/employee/workbench/localisation-search`,
       content: t(`LOCALISATION_SEARCH`),
       show: from ? false : pathVar.includes("localisation-") ? true : false,
       isBack: pathVar.includes("localisation-search") ? true : false,
@@ -45,7 +46,7 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
     },
 
     {
-      path: pathVar !== "mdms-search-v2" ? `/${window.contextPath}/employee/workbench/mdms-search-v2` : null,
+      internalLink: pathVar !== "mdms-search-v2" ? `/${window.contextPath}/employee/workbench/mdms-search-v2` : null,
       query: from
         ? `moduleName=${moduleName}&masterName=${masterName}&from=${from}`
         : `moduleName=${moduleName}&masterName=${masterName}`,
@@ -54,7 +55,7 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
       isBack: pathVar.includes("mdms-search-v2") ? true : false,
     },
     {
-      path: `/${window.contextPath}/employee/workbench/mdms-view`,
+      internalLink: `/${window.contextPath}/employee/workbench/mdms-view`,
       content: t(`MDMS_VIEW`),
       show: pathVar.includes("mdms-edit") ? true : false,
       query: from
@@ -62,12 +63,12 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
         : `moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}`,
     },
     {
-      path: `/${window.contextPath}/employee/masters/response`,
+      internalLink: `/${window.contextPath}/employee/masters/response`,
       content: t(`${Digit.Utils.workbench.getMDMSLabel(pathVar, "", "")}`),
       show: Digit.Utils.workbench.getMDMSLabel(pathVar, "", "", ["mdms-search-v2", "localisation-search"]) ? true : false,
     },
   ];
-  return <BreadCrumb className="workbench-bredcrumb" crumbs={crumbs} spanStyle={{ maxWidth: "min-content" }} />;
+  return <BreadCrumb crumbs={crumbs} />;
 };
 
 const App = ({ path }) => {

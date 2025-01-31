@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { FormComposerV2, TextInput, Button, Card, CardLabel, CardSubHeader } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { Toast } from "@egovernments/digit-ui-react-components";
+import { Toast } from "@egovernments/digit-ui-components";
 import { addBoundaryHierarchyConfig } from "../../configs/BoundaryHierarchyConfig";
 import { useHistory } from "react-router-dom";
 
@@ -49,7 +49,7 @@ const BoundaryHierarchyTypeAdd = () => {
       });
 
       if (!allLevelsValid) {
-        setShowToast({ label: `${t("HCM_LEVEL_IS_MANDATORY")}`, isError: true });
+        setShowToast({ label: `${t("HCM_LEVEL_IS_MANDATORY")}`, type: "error" });
         closeToast();
         return;
       }
@@ -91,7 +91,7 @@ const BoundaryHierarchyTypeAdd = () => {
                 label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ", ";
               }
             });
-            setShowToast({ label, isError: true });
+            setShowToast({ label, type:"error" });
             closeToast();
           },
           onSuccess: () => {
@@ -124,7 +124,7 @@ const BoundaryHierarchyTypeAdd = () => {
         headingStyle={{ marginBottom: "1rem" }}
         descriptionStyle={{ color: "#0B0C0C" }}
       ></FormComposerV2>
-      {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
+      {showToast && <Toast label={showToast?.label} type={showToast?.type} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
     </React.Fragment>
   );
 };

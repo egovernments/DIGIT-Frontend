@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import MDMSAdd from "./MDMSAddV2";
-import { Loader, Toast } from "@egovernments/digit-ui-react-components";
+import { Loader } from "@egovernments/digit-ui-react-components";
+import { Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { buildLocalizationMessages } from "./localizationUtility";
@@ -130,7 +131,20 @@ const MDMSEdit = ({ ...props }) => {
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaUpdate);
   const handleUpdate = async (formData, additionalProperties) => {
-    const transformedFormData = { ...formData };
+    const schemaCodeToValidate = `${moduleName}.${masterName}`;
+    let transformedData = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.getTrasformedData(formData, data) ;
+    transformedData = transformedData && transformedData !== undefined && transformedData !== "undefined" ? transformedData : formData;
+    const validation = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.validateForm(transformedData, { tenantId: stateId });
+
+    if (validation && !validation?.isValid) {
+      setShowToast({
+        label: t(validation?.message),
+        type: "error"
+      });
+      return;
+    }
+
+    const transformedFormData = { ...transformedData };
     const locale = Digit.StoreData.getCurrentLanguage();
   
     // Prepare Localization Messages using the utility function
@@ -144,7 +158,7 @@ const MDMSEdit = ({ ...props }) => {
       }
     } catch (err) {
       console.error("Localization Upsert Failed:", err);
-      setShowToast({ label: t("WBH_ERROR_LOCALIZATION"), isError: true });
+      setShowToast({ label: t("WBH_ERROR_LOCALIZATION"), type:"error" });
       closeToast();
       return;
     }
@@ -152,13 +166,13 @@ const MDMSEdit = ({ ...props }) => {
     // Perform MDMS Update
     mutation.mutate(
       {
-        url: reqCriteriaUpdate.url,
+        url: reqCriteriaUpdate?.url,
         params: {},
         body: { Mdms: { ...data, data: transformedFormData } },
       },
       {
         onError: (resp) => {
-          setShowToast({ label: t("WBH_ERROR_MDMS_DATA"), isError: true });
+          setShowToast({ label: t("WBH_ERROR_MDMS_DATA"), type:"error" });
           closeToast();
         },
         onSuccess: () => {
@@ -179,7 +193,7 @@ const MDMSEdit = ({ ...props }) => {
         onSubmitEditAction={handleUpdate}
         updatesToUISchema={schemaData?.updatesToUiSchema}
       />
-      {showToast && <Toast label={t(showToast.label)} error={showToast?.isError} onClose={() => setShowToast(null)} />}
+      {showToast && <Toast label={t(showToast?.label)} type={showToast?.type} onClose={() => setShowToast(null)} />}
     </React.Fragment>
   );
 };

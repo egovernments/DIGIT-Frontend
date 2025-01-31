@@ -1,4 +1,5 @@
-import { Loader, FormComposerV2, Toast } from "@egovernments/digit-ui-react-components";
+import { Loader, FormComposerV2 } from "@egovernments/digit-ui-react-components";
+import { Toast } from "@egovernments/digit-ui-components";
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { mdmsSchema } from "../../configs/sampleschema";

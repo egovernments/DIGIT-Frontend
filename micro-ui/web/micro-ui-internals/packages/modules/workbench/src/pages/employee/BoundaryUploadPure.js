@@ -374,7 +374,7 @@ const UploadBoundaryPure = () => {
           <GenerateXlsx inputRef={inputRef} jsonData={filteredXlsxData} />
         </div>
         <BulkUpload onSubmit={onBulkUploadSubmit} />
-        {showToast && <Toast label={showToast.label} type={showToast.type} isDleteBtn={true} onClose={() => setShowToast(null)} />}
+        {showToast && <Toast label={showToast?.label} type={showToast?.type} isDleteBtn={true} onClose={() => setShowToast(null)} />}
       </Card>
     </React.Fragment>
   );

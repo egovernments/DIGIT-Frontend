@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useReducer, useMemo, useRef, useCallback } from "react";
-import { CardLabel, Header, Card, LabelFieldPair, DownloadIcon, Toast, Button, CustomDropdown } from "@egovernments/digit-ui-react-components";
+import { CardLabel, Header, Card, LabelFieldPair, DownloadIcon, Button, CustomDropdown } from "@egovernments/digit-ui-react-components";
+import { Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import BulkUpload from "../../components/BulkUpload";
 import GenerateXlsx from "../../components/GenerateXlsx";
@@ -126,7 +127,7 @@ const UploadBoundary = () => {
             resolve(true);
           } else {
             const label = "HCM_FILE_VALIDATION_ERROR";
-            setShowToast({ isError: true, label });
+            setShowToast({ type: "error", label });
             closeToast();
           }
         } catch (error) {
@@ -178,14 +179,14 @@ const UploadBoundary = () => {
                 label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ", ";
               }
             });
-            setShowToast({ label, isError: true });
+            setShowToast({ label, type: "error" });
             closeToast();
           },
         }
       );
     } catch (error) {
       let label = `${t("WBH_BOUNDARY_UPSERT_FAIL")}: `;
-      setShowToast({ label, isError: true });
+      setShowToast({ label, type: "error" });
       closeToast();
     }
   };
@@ -235,7 +236,7 @@ const UploadBoundary = () => {
           <GenerateXlsx inputRef={inputRef} jsonData={[modifiedHierarchy]} skipHeader={true} sheetName="Boundary Data"/>
         </div>
         <BulkUpload onSubmit={onBulkUploadSubmit} onSuccess={success} />
-        {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
+        {showToast && <Toast label={showToast?.label} type={showToast?.type} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
       </Card>
     </React.Fragment>
   );

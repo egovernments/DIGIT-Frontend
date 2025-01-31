@@ -120,7 +120,15 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
       return localModuleName.replace(/[^a-zA-Z0-9]/g, "-").toUpperCase();
   };
 
-  const onSubmit = (data, additionalProperties) => {
+  const schemaCodeToValidate = `${moduleName}.${masterName}`;
+  const onSubmit = async (data, additionalProperties) => {
+    const validation = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.validateForm(data, { tenantId: tenantId });
+    if (validation && !validation?.isValid) {
+      setShowToast(t(validation.message));
+      setShowErrorToast(true);
+      toggleSpinner(false);
+      return;
+    }
     let locale = Digit.StoreData.getCurrentLanguage();
     toggleSpinner(true);
   
