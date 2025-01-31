@@ -8,7 +8,7 @@ import { lowerBoundaryDefaultSet } from "../../utils/constants";
 const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
 
   const { t } = useTranslation();
-  const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentConfig")?.lowestLevelBoundary || "DISTRICT";
+  const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentsConfig")?.lowestLevelBoundary || "DISTRICT";
 
   // State variables
   const [reset, setReset] = useState(false);
@@ -115,7 +115,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
             }}
             onChange={onChangeId}
             selectedProject={projectSelected}
-            lowestLevel={Digit.SessionStorage.get("paymentConfig")?.lowestLevelBoundary || lowerBoundaryDefaultSet}
+            lowestLevel={Digit.SessionStorage.get("paymentsConfig")?.lowestLevelBoundary || lowerBoundaryDefaultSet}
           ></BoundaryComponent>
         )}
       </div>

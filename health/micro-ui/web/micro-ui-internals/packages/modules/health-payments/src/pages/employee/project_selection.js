@@ -27,7 +27,7 @@ const ProjectSelect = () => {
 
     // Fetch configuration from session storage
     const boundaryHierarchyOrder = Digit.SessionStorage.get("boundaryHierarchyOrder");
-    const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentConfig")?.lowestLevelBoundary || "DISTRICT";
+    const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentsConfig")?.lowestLevelBoundary || "DISTRICT";
 
     // Generate aggregation level options based on boundary hierarchy
     const AGGREGATION_LEVEL_OPTIONS = boundaryHierarchyOrder
