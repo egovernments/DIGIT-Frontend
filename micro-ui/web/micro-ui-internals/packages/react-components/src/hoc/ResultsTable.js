@@ -1,13 +1,31 @@
 import React, { useMemo, useCallback, useState, useEffect, Fragment,useContext } from 'react'
 import { useTranslation } from 'react-i18next';
 import Table from '../atoms/Table'
-import TextInput from '../atoms/TextInput'
+import { TextInput } from '@egovernments/digit-ui-components';
 import { useForm, Controller } from "react-hook-form";
 import _ from "lodash";
 import { InboxContext } from './InboxSearchComposerContext';
 import { Loader } from '../atoms/Loader';
 import NoResultsFound from '../atoms/NoResultsFound';
 import { InfoIcon,EditIcon } from "../atoms/svgindex";
+import CardLabel from '../atoms/CardLabel';
+
+const useDebounce = (value, delay) => {
+    const [debouncedValue, setDebouncedValue] = useState(value);
+    useEffect(
+      () => {
+        const handler = setTimeout(() => {
+          setDebouncedValue(value);
+        }, delay);
+        
+        return () => {
+          clearTimeout(handler);
+        };
+      },
+      [value, delay]
+    );
+    return debouncedValue;
+}
 
 const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fullConfig,revalidate,type,activeLink,browserSession,additionalConfig }) => {
     const {apiDetails} = fullConfig
@@ -122,6 +140,8 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
 
     const isMobile = window.Digit.Utils.browser.isMobile();
     const [searchQuery, onSearch] = useState("");
+    const debouncedValue = config?.debouncedValue || 1000;
+    const debouncedSearchQuery = useDebounce(searchQuery,debouncedValue);
 
     const filterValue = useCallback((rows, id, filterValue = "") => {
 
@@ -190,10 +210,17 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
     if (searchResult?.length === 0) return <NoResultsFound/>
     return (
         <div style={{width : "100%"}}>
-            {config?.enableGlobalSearch && <div className='card' style={{ "padding": "0px", marginTop: "1rem" }}>
-            <TextInput className="searchInput"  onChange={(e) => onSearch(e.target.value)} style={{ border: "none", borderRadius: "200px" }} />
-             </div>}
-            {
+        <div className='global-serach-results-table-wrapper'>
+          {config?.enableGlobalSearch && (
+            <CardLabel className="global-serach-results-table-header">{t(config.serachHeader) || t("Filter Table Records")}</CardLabel>
+          )}
+          {config?.enableGlobalSearch && (
+            <div className="global-serach-results-table">
+              <TextInput type="search" onChange={(e) => onSearch(e.target.value)}></TextInput>{" "}
+            </div>
+          )}
+        </div>
+        {
                 config?.showTableInstruction && ( 
                 <div className='table-instruction-wrapper'>
                     <InfoIcon /><p className='table-instruction-header'>{t(config?.showTableInstruction)}</p>
@@ -207,7 +234,7 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
                 disableSort={config?.enableColumnSort ? false : true}
                 autoSort={config?.enableColumnSort ? true : false}
                 globalSearch={config?.enableGlobalSearch ? filterValue : undefined}
-                onSearch={config?.enableGlobalSearch ? searchQuery : undefined}
+                onSearch={config?.enableGlobalSearch ? debouncedSearchQuery : undefined}
                 data={searchResult}
                 totalRecords={data?.count || data?.TotalCount || data?.totalCount || searchResult?.length}
                 columns={tableColumns}
