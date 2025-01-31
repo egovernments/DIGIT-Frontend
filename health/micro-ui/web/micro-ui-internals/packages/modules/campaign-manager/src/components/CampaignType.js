@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect, Fragment } from "react";
 import { Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { LabelFieldPair } from "@egovernments/digit-ui-components";
+import { InfoCard, LabelFieldPair } from "@egovernments/digit-ui-components";
 import { Button, CardText, Dropdown, ErrorMessage, PopUp, Stepper, TextBlock , Card, Loader} from "@egovernments/digit-ui-components";
 
 const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
@@ -158,16 +158,20 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
   return (
     <>
       {loading && <Loader />}
-      {!loading && 
+      {!loading && (
         <div className="container">
-          <div className="card-container" >
-            <Card className="card-header-timeline" >
-              <TextBlock subHeader={t("HCM_CAMPAIGN_DETAILS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+          <div className="card-container">
+            <Card className="card-header-timeline">
+              <TextBlock 
+                subHeader={t("HCM_CAMPAIGN_DETAILS")} 
+                subHeaderClassName={"stepper-subheader"} 
+                wrapperClassName={"stepper-wrapper"} 
+              />
             </Card>
             <Card className="stepper-card">
               <Stepper
-                customSteps={["HCM_CAMPAIGN_TYPE","HCM_CAMPAIGN_NAME",  "HCM_CAMPAIGN_DATE" , "HCM_SUMMARY"]}
-                currentStep={currentStep }
+                customSteps={["HCM_CAMPAIGN_TYPE", "HCM_CAMPAIGN_NAME", "HCM_CAMPAIGN_DATE", "HCM_SUMMARY"]}
+                currentStep={currentStep}
                 onStepClick={onStepClick}
                 direction={"vertical"}
               />
@@ -175,10 +179,10 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
           </div>
 
           <div className="card-container2">
-            <Card className = "setup-campaign-card">
+            <Card className="setup-campaign-card">
               <Header styles={{ margin: '0px' }}>{t(`HCM_CAMPAIGN_TYPE_HEADER`)}</Header>
               <p className="description-type">{t(`HCM_CAMPAIGN_TYPE_DESCRIPTION`)}</p>
-              <LabelFieldPair style={{ display: "flex", marginBottom:"-0.8rem" }}>
+              <LabelFieldPair style={{ display: "flex", marginBottom: "-0.8rem" }}>
                 <div className="campaign-type">
                   <span>{`${t("HCM_CAMPAIGN_TYPE")}`}</span>
                   <span className="mandatory-span">*</span>
@@ -186,7 +190,7 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
                 <div
                   className="campaign-type-wrapper"
                   onClick={(e) => {
-                    if (props?.props?.sessionData?.HCM_CAMPAIGN_TYPE?.projectType && !canUpdate && source!=="microplan") {
+                    if (props?.props?.sessionData?.HCM_CAMPAIGN_TYPE?.projectType && !canUpdate && source !== "microplan") {
                       setShowPopUp(true);
                       return;
                     }
@@ -204,7 +208,6 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
                     style={!showBeneficiary ? { width: "40rem", paddingBottom: 0, marginBottom: 0 } : { width: "40rem", paddingBottom: "1rem" }}
                     variant={error ? "error" : ""}
                     t={t}
-                    // option={projectType?.["HCM-PROJECT-TYPES"]?.projectTypes}
                     option={filteredProjectTypes}
                     optionKey={"code"}
                     selected={type}
@@ -212,20 +215,28 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
                       setStartValidation(true);
                       handleChange(value);
                     }}
-                    disabled = {source === "microplan"}
-                    
+                    disabled={source === "microplan"}
                   />
                   {error?.message && <ErrorMessage message={t(error?.message)} showIcon={true} />}
                 </div>
               </LabelFieldPair>
               {showBeneficiary && (
-                <LabelFieldPair style={{ alignItems: "center" , display: "flex" , marginBottom: "0rem" }} >
+                <LabelFieldPair style={{ alignItems: "center", display: "flex", marginBottom: "0rem" }}>
                   <div className="beneficiary-type">{`${t("HCM_BENEFICIARY_TYPE")}`}</div>
                   <div>{t(`CAMPAIGN_TYPE_${beneficiaryType}`)}</div>
                 </LabelFieldPair>
               )}
             </Card>
+            <InfoCard
+              populators={{
+                name: "infocard",
+              }}
+              variant="info"
+              text={t("HCM_UPDATE_CAMPAIGN_TYPE_INFO")}
+              style={{ marginTop: "1rem", maxWidth: "100%" }}
+            />
           </div>
+
           {showPopUp && (
             <PopUp
               className={"boundaries-pop-module"}
@@ -267,12 +278,11 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
                 />,
               ]}
               sortFooterChildren={true}
-            ></PopUp>
+            />
           )}
         </div>
-      }
+      )}
     </>
-
   );
 };
 
