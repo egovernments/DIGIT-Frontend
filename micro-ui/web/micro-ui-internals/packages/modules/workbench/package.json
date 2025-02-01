@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-workbench",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Workbench",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
@@ -18,8 +18,8 @@
     "react-router-dom": "5.3.0"
   },
   "dependencies": {
-    "@egovernments/digit-ui-components":"0.0.2-beta.64",
-    "@egovernments/digit-ui-react-components": "1.8.14",
+    "@egovernments/digit-ui-components":"0.0.2-beta.65",
+    "@egovernments/digit-ui-react-components": "1.8.15",
     "@rjsf/core": "5.10.0",
     "@rjsf/utils": "5.10.0",
     "@rjsf/validator-ajv8": "5.10.0",

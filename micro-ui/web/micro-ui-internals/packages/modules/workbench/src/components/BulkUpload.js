@@ -1,5 +1,6 @@
 import React, { useState, useMemo , useEffect } from "react";
-import { UploadIcon, FileIcon, DeleteIconv2 , ActionBar , SubmitBar ,Toast } from "@egovernments/digit-ui-react-components";
+import { UploadIcon, FileIcon, DeleteIconv2 , ActionBar , SubmitBar  } from "@egovernments/digit-ui-react-components";
+import { Toast } from "@egovernments/digit-ui-components";
 import { FileUploader } from "react-drag-drop-files";
 import { useTranslation } from "react-i18next";
 
@@ -53,7 +54,7 @@ const BulkUpload = ({ multiple = true, onSubmit , onSuccess }) => {
 
   const handleChange = (newFiles) => {
     if (newFiles.length > 1) {
-      setShowToast({ key: "error", label: t("WBH_ERROR_MORE_THAN_ONE_FILE") , isError: true });
+      setShowToast({ key: "error", label: t("WBH_ERROR_MORE_THAN_ONE_FILE") , type: "error" });
       closeToast();
       return;
     }
@@ -68,7 +69,7 @@ const BulkUpload = ({ multiple = true, onSubmit , onSuccess }) => {
       )}
       {/* <FileUploader multiple={multiple} handleChange={handleChange} name="file" types={fileTypes} children={dragDropJSX} /> */}
       {files.length > 0 && renderFileCards}
-      {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
+      {showToast && <Toast label={showToast?.label} type={showToast?.type} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
       <ActionBar>
         <SubmitBar label={t("WBH_CONFIRM_UPLOAD")} onSubmit={() => onSubmit(files)} disabled={files.length === 0} />
       </ActionBar>

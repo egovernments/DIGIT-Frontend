@@ -1,6 +1,5 @@
 import {
   Header,
-  Toast,
   Card,
   Button,
   ActionBar,
@@ -11,6 +10,7 @@ import {
   Menu,
   CollapseAndExpandGroups,
 } from "@egovernments/digit-ui-react-components";
+import { Toast } from "@egovernments/digit-ui-components";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import _ from "lodash";
@@ -249,7 +249,7 @@ function CustomFieldTemplate(props) {
         <label htmlFor={id} className="control-label" id={"label_" + id}>
           <span className="tooltip">
             {t(titleCode)} {additionalCode}
-            <span className="tooltiptext">
+            <span className="tooltiptext" style={{maxWidth:"540px"}}>
               <span className="tooltiptextvalue">{t(`TIP_${titleCode}`)}</span>
             </span>
           </span>
@@ -293,6 +293,7 @@ const DigitJSONForm = ({
   const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
   const { moduleName, masterName } = Digit.Hooks.useQueryParams();
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const enableBulkUpload = window?.globalConfigs?.getConfig("ENABLE_MDMS_BULK_UPLOAD") ?? false;
 
   const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -399,6 +400,7 @@ const onSubmitV2 = async ({ formData }, e) => {
   const onError = (errors) => {
     onFormError && onFormError(errors);
   };
+  const formDisabled = screenType === "view" ? true : disabled;
 
   return (
     <AdditionalPropertiesContext.Provider value={{ additionalProperties, updateAdditionalProperties: () => {} }}>
@@ -446,11 +448,11 @@ const onSubmitV2 = async ({ formData }, e) => {
             widgets={customWidgets}
             uiSchema={{ ...uiSchema, ...inputUiSchema }}
             onError={onError}
-            disabled={disabled}
+            disabled={formDisabled}
           >
             {(screenType === "add" || screenType === "edit") && (
               <ActionBar className="action-bar">
-                {screenType === "add" && (
+                {screenType === "add" && enableBulkUpload && (
                   <Button
                     className="action-bar-button"
                     variation="secondary"
@@ -464,7 +466,7 @@ const onSubmitV2 = async ({ formData }, e) => {
                 />
               </ActionBar>
             )}
-            {screenType === "view" && (
+            {screenType === "view" && viewActions && viewActions.length > 0 && (
               <ActionBar>
                 {displayMenu ? (
                   <Menu
@@ -484,7 +486,7 @@ const onSubmitV2 = async ({ formData }, e) => {
         {showToast && (
           <Toast
             label={t(showToast)}
-            error={showErrorToast}
+            type={showErrorToast ? "error" : ""}
             onClose={() => {
               setShowToast(null);
             }}

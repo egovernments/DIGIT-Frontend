@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardText, CardHeader, Button, Header } from "@egovernments/digit-ui-components";
+import { Card, CardText, CardHeader, Button, HeaderComponent } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { externalConfig } from "./RoleLandingConfig";
@@ -21,7 +21,7 @@ const RoleLandingComponent = () => {
           .filter((config) => config.type === "link")
           .map((config, index) => (
             <div key={index} className="header-video-section">
-              <Header className="role-header">{t("ROLE_BASED_LANDING_HEADER")}</Header>
+              <HeaderComponent className="role-header">{t("ROLE_BASED_LANDING_HEADER")}</HeaderComponent>
               <YoutubeVideo link={config.url} overlay={true} className="role-video" />
             </div>
           ))}

@@ -11,7 +11,6 @@ import {
   LabelFieldPair,
   CardLabel,
   Header,
-  Toast,
   InfoBannerIcon,
   UploadFile,
   DeleteIconv2,
@@ -20,6 +19,7 @@ import {
   InfoIconOutline,
   UploadIcon
 } from "@egovernments/digit-ui-react-components";
+import { Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import reducer, { intialState } from "../../utils/LocAddReducer";
 // import sampleFile from "../../utils/file.xlsx"
@@ -344,7 +344,7 @@ const LocalisationAdd = () => {
     if (hasDuplicateKeycode) {
       setShowToast({
         label: t("WBH_LOC_SAME_KEY_VALIDATION_ERR"),
-        isError: true,
+        type :"error",
       });
       closeToast()
       return;
@@ -352,7 +352,7 @@ const LocalisationAdd = () => {
     if (hasEmptyMessageOrCode) {
       setShowToast({
         label: t("WBH_LOC_EMPTY_KEY_VALUE_VALIDATION_ERR"),
-        isError: true,
+        type :"error",
       });
       closeToast()
       return;
@@ -394,7 +394,7 @@ const LocalisationAdd = () => {
         }
       })
 
-      setShowToast({ label, isError: true });
+      setShowToast({ label,type :"error"});
       closeToast();
       // dispatch({
       //   type:"CLEAR_STATE",
@@ -454,7 +454,7 @@ const LocalisationAdd = () => {
     if (hasDuplicateKeycode) {
       setShowToast({
         label: "WBH_LOC_SAME_KEY_VALIDATION_ERR",
-        isError: true,
+        type :"error",
       });
       return;
     }
@@ -502,7 +502,7 @@ const LocalisationAdd = () => {
           label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ', '
         }
       })
-      setShowToast({ label, isError: true });
+      setShowToast({ label, type:"error" });
       closeToast();
     };
 
@@ -547,7 +547,7 @@ const LocalisationAdd = () => {
     } catch (error) {
       setShowToast({
         label: error.message || "Invalid file type. Please upload an Excel file.",
-        isError: true,
+        type :"error",
       });
 
     }
@@ -580,7 +580,7 @@ const LocalisationAdd = () => {
     } catch (error) {
       setShowToast({
         label: error.message || "Invalid file type. Please upload an Excel file.",
-        isError: true,
+        type :"error",
       });
 
     }
@@ -612,7 +612,7 @@ const LocalisationAdd = () => {
   }, [jsonResult, jsonResultDefault])
 
   const fileValidator = (errMsg) => {
-    setShowToast({ isError: true, label: t("WBH_BULK_UPLOAD_DOC_VALIDATION_MSG") })
+    setShowToast({ type: "error", label: t("WBH_BULK_UPLOAD_DOC_VALIDATION_MSG") })
     closeToast()
     setShowBulkUploadModal(false)
   }
@@ -687,7 +687,7 @@ const LocalisationAdd = () => {
           />
         </LabelFieldPair>
       </Card>
-      {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
+      {showToast && <Toast label={showToast?.label} type={showToast?.type} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
       {selectedLang && selectedModule && (
         <Card>
           {/* {selectedLang && selectedModule && (

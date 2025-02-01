@@ -6,7 +6,7 @@ import {
   BackButton,
   Loader,
   SearchForm,
-  Header
+  HeaderComponent
 } from "@egovernments/digit-ui-components";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -201,7 +201,7 @@ const SearchApplication = ({ tenantId, t, onSubmit, data, count }) => {
       </div>
       <div style={{ marginTop: "30px", marginLeft: "30px" }}>
         {" "}
-        <Header>{t("PRIVACY_AUDIT_REPORT")}</Header>{" "}
+        <HeaderComponent>{t("PRIVACY_AUDIT_REPORT")}</HeaderComponent>{" "}
       </div>
       <SearchForm
         className="audit-card"

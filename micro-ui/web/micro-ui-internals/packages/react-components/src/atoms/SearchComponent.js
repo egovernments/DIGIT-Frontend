@@ -6,7 +6,7 @@ import RenderFormFields from "../molecules/RenderFormFields";
 import Header from "../atoms/Header";
 import LinkLabel from '../atoms/LinkLabel';
 import SubmitBar from "../atoms/SubmitBar";
-import Toast from "../atoms/Toast";
+import { Toast } from "@egovernments/digit-ui-components";
 import { FilterIcon, RefreshIcon } from "./svgindex";
 import HorizontalNavV2 from "./HorizontalNavV2";
 
@@ -99,7 +99,7 @@ const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullCon
         state: { limit:10,offset:0 }
       })
     } else {
-      setShowToast({ warning: true, label: t("ES_COMMON_MIN_SEARCH_CRITERIA_MSG") })
+      setShowToast({ type:"warning", label: t("ES_COMMON_MIN_SEARCH_CRITERIA_MSG") })
       setTimeout(closeToast, 3000);
     }
   }
@@ -210,8 +210,7 @@ const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullCon
         </div>
       </form>
       {showToast && <Toast
-        error={showToast.error}
-        warning={showToast.warning}
+        type={showToast?.type}
         label={t(showToast.label)}
         isDleteBtn={true}
         onClose={closeToast} />
@@ -254,8 +253,7 @@ const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullCon
           </div> 
         </form>
         { showToast && <Toast 
-          error={showToast.error}
-          warning={showToast.warning}
+          type={showToast?.type}
           label={t(showToast.label)}
           isDleteBtn={true}
           onClose={closeToast} />

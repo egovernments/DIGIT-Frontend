@@ -4,6 +4,7 @@ import utils from "../utils";
 import useLocalisationSearch from "./useLocalisationSearch";
 import {useWorkbenchFormContext} from "./useWorkbenchFormContext";
 import usePureSchemaDefinition from "./fetchPureSchemaDefinition";
+import useMDMSPopupSearch from "./inbox";
 
 const UserService = {
   logoutV1,
@@ -27,6 +28,9 @@ const Hooks = {
   },
   workbench,
   contracts,
+  inbox:{
+    useMDMSPopupSearch,
+  }
 };
 
 const Utils = {

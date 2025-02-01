@@ -18,7 +18,7 @@ import OtpComponent from "./pages/employee/Otp/OtpCustomComponent";
 const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLanding }) => {
   const { isLoading, data: initData={} } = Digit.Hooks.useInitStore(stateCode, enabledModules);
   if (isLoading) {
-    return <Loader page={true} />;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
   const data=getStore(initData, moduleReducers(initData)) || {};
   const i18n = getI18n();

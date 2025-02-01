@@ -1,4 +1,5 @@
-import { AddFilled, Button, Header, InboxSearchComposer, Loader, Dropdown,Toast,WorkflowModal,ActionBar,SubmitBar, InfoBanner } from "@egovernments/digit-ui-react-components";
+import { AddFilled, Button, Header, InboxSearchComposer, Loader, Dropdown,WorkflowModal,ActionBar,SubmitBar, InfoBanner } from "@egovernments/digit-ui-react-components";
+import { Toast } from "@egovernments/digit-ui-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
@@ -6,6 +7,7 @@ import _, { drop } from "lodash";
 import { Config } from "../../configs/LocalisationSearchConfig";
 import getEditModalConfig from "../../configs/EditModalConfig";
 import { useQueryClient } from "react-query";
+import { AlertCard } from "@egovernments/digit-ui-components";
 
 const LocalisationSearch = () => {
   const { t } = useTranslation();
@@ -43,7 +45,7 @@ const LocalisationSearch = () => {
 
   const onModalSubmit = async (payload) => {
     if(!payload?.message){
-      setShowToast({ label: `${t("WBH_LOC_ENTER_VALID_MESSAGE")}`,isError: true,style:{
+      setShowToast({ label: `${t("WBH_LOC_ENTER_VALID_MESSAGE")}`,type:"error",style:{
         zIndex:"10000"
       } });
       closeToast()
@@ -70,7 +72,7 @@ const LocalisationSearch = () => {
         label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ', '
         }
       })
-      setShowToast({ label, isError: true });
+      setShowToast({ label, type:"error" });
       setShowModal(null)
       setEditRow(null)
       closeToast();
@@ -135,9 +137,7 @@ const LocalisationSearch = () => {
         </ActionBar>
       }
       </div>
-      <div className="localisation-info">
-        <InfoBanner label={t("WBH_INFO")} text={t("WBH_INFO_MESSAGE")} />
-      </div>
+      <AlertCard additionalElements={[]} label={t("WBH_INFO")} text={t("WBH_INFO_MESSAGE")} variant="default" style={{marginBottom:"1.5rem",maxWidth:"100%"}}/>
       {Config && <div className="inbox-search-wrapper">
         <InboxSearchComposer onFormValueChange={formUpdate} configs={Config} additionalConfig = {{
           resultsTable:{
@@ -150,7 +150,7 @@ const LocalisationSearch = () => {
         }}></InboxSearchComposer>
       </div>}
       {showModal && modalConfig && <WorkflowModal closeModal={() => setShowModal(false)} onSubmit={onModalSubmit} config={modalConfig} popupModuleActionBarStyles={{marginTop:"-1rem"}} popupModuleMianStyles={{marginTop:"-2rem"}} />}
-      {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={()=>setShowToast(null)} style={showToast?.style}></Toast>}
+      {showToast && <Toast label={showToast?.label} type={showToast?.type} isDleteBtn={true} onClose={() => setShowToast(null)} style={showToast?.style}></Toast>}
     </React.Fragment>
   );
 };

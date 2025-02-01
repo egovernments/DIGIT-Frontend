@@ -1,6 +1,6 @@
 import {
   BackButton,
-  Header,
+  HeaderComponent,
   Loader,
   CloseSvg,
   DownloadImgIcon,
@@ -77,13 +77,13 @@ const HowItWorks = ({ module }) => {
       <div className="how-it-works-page">
         <BackButton></BackButton>
         <div className="how-it-works-page-header">
-          <Header>
+          <HeaderComponent>
             {t(
               mdmsConfigResult.screenHeader
                 ? mdmsConfigResult.screenHeader
                 : "HOW_IT_WORKS"
             )}
-          </Header>
+          </HeaderComponent>
         </div>
         <div className="language-selector" style={{ margin: "10px" }}>
           {languages.map((language, index) => (

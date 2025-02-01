@@ -1,4 +1,4 @@
-import { Header, Loader } from "@egovernments/digit-ui-components";
+import { HeaderComponent, Loader } from "@egovernments/digit-ui-components";
 import React, { Fragment } from "react";
 import ModuleCard from "../../../components/ModuleCard";
 import { useHistory } from "react-router-dom";
@@ -27,7 +27,7 @@ const ApplicationHome = () => {
 
   return (
     <>
-      <Header className="sandbox-header">{t("SANDBOX_APPLICATION_HOME_HEADER")}</Header>
+      <HeaderComponent className="sandbox-header">{t("SANDBOX_APPLICATION_HOME_HEADER")}</HeaderComponent>
       <div className="sandbox-module-container">
         {moduleMasterData?.map((item) => (
           <ModuleCard
