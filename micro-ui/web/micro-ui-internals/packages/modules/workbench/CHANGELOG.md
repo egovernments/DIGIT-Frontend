@@ -1,4 +1,11 @@
 
+## [1.0.13]  [1-Feb-2025]
+- FEATURE/HCMPRE-1425 : Added the workbench module patches and Updated localisation search screen, and core module #2181
+- Upgraded with new Components in core, workbench screens
+- Introduced new Globalvariable to enable bulk upload of master dataa 'ENABLE_MDMS_BULK_UPLOAD'
+- Localisation search introduced a search bar for better usablility
+- Enhanced support for Customisations
+
 ## [1.0.11]
 - added support for dynamic locale in workbench module with key CORE_UI_MODULE_LOCALE_PREFIX
 

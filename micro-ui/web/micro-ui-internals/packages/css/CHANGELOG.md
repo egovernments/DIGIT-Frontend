@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.8.13]  [1-Feb-2025]
+- FEATURE/HCMPRE-1425 : Added the workbench module patches and Updated localisation search screen, and core module #2181
+- Upgraded with new Components in core, workbench screens
+
 ## [1.8.10]  [19-Nov-2024]
 - Republihsing the same due to component version issue, 
 
