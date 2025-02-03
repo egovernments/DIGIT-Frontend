@@ -49,7 +49,7 @@ const EmployeeSideBar = () => {
 
   const configEmployeeSideBar = {};
   data?.actions
-    .filter((e) => e.url === "url")
+    .filter((e) => e.url === "link")
     .forEach((item) => {
       let index = item?.path?.split(".")?.[0] || "";
       if (item?.path !== "") {
