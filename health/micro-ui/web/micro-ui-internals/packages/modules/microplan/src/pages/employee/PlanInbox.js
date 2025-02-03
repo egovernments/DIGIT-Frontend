@@ -33,7 +33,7 @@ const PlanInbox = () => {
   const [hierarchyLevel, setHierarchyLevel] = useState("");
   const [censusData, setCensusData] = useState([]);
   const [boundaries, setBoundaries] = useState([]);
-  const [selectedFilter, setSelectedFilter] = useState({status:"PENDING_FOR_VALIDATION",onRoadCondition:null,terrain:null,securityQ1:null,securityQ2:null,facilityId:null});
+  const [selectedFilter, setSelectedFilter] = useState({status:"PENDING_FOR_VALIDATION",onRoadCondition:null,terrain:null,securityQ1:null,securityQ2:null,facilityId:[]});
   const [activeFilter, setActiveFilter] = useState({});
   const [actionBarPopUp, setactionBarPopUp] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -176,7 +176,9 @@ const PlanInbox = () => {
         ...(selectedFilter?.terrain != null && { terrain: selectedFilter.terrain }),
         ...(selectedFilter?.securityQ1 != null && { securityQ1: selectedFilter.securityQ1 }),
         ...(selectedFilter?.securityQ2 != null && { securityQ2: selectedFilter.securityQ2 }),
-        ...(selectedFilter?.facilityId?.id != null && { facilityId: selectedFilter.facilityId.id }),
+        ...(selectedFilter?.facilityId && {
+          facilityIds: selectedFilter?.facilityId?.map((item) => item.id),
+        }),
         assignee: user.info.uuid,
         planConfigurationId: microplanId, 
         limit: limitAndOffset?.limit,
@@ -188,15 +190,10 @@ const PlanInbox = () => {
     },
     changeQueryName:"count"
   });
-
-  useEffect(() => {
-    if (planWithCensusCount) {
-      setAssignedToMeCount(planWithCensusCount?.TotalCount);
-    }
-  }, [planWithCensusCount]);
-
-
-
+ 
+ 
+  
+  
   const {
     isLoading: isPlanWithCensusLoading,
     data: planWithCensus,
@@ -217,8 +214,9 @@ const PlanInbox = () => {
         ...(selectedFilter?.onRoadCondition != null && { onRoadCondition: selectedFilter.onRoadCondition }),
         ...(selectedFilter?.securityQ1 != null && { securityQ1: selectedFilter.securityQ1 }),
         ...(selectedFilter?.securityQ2 != null && { securityQ2: selectedFilter.securityQ2 }),
-        ...(selectedFilter?.facilityId?.id != null && { facilityId: selectedFilter.facilityId.id }),
-        
+        ...(selectedFilter?.facilityId && {
+          facilityIds: selectedFilter?.facilityId?.map((item) => item.id),
+        }),
         planConfigurationId: microplanId, //list of plan ids
         limit: limitAndOffset?.limit,
         offset: limitAndOffset?.offset,
@@ -248,7 +246,7 @@ const PlanInbox = () => {
               acc[field.key] = field.value; // Set `key` as property name and `value` as property value
               return acc;
             }, {});
-
+            
           return {
             original: item,
             censusOriginal: filteredCensus,
@@ -295,7 +293,7 @@ const PlanInbox = () => {
       setDefaultBoundaries(selectedBoundaries);
       // Extract the list of codes from the selectedBoundaries array
       const boundaryCodes = selectedBoundaries.map((boundary) => boundary.code);
-
+      
       // Set census jurisdiction with the list of boundary codes
       setCensusJurisdiction(boundaryCodes);
     }
@@ -388,7 +386,7 @@ const PlanInbox = () => {
     if (workflowData) {
       // Assume selectedFilter.filterValue maps to applicationStatus or state
       const selectedState = workflowData?.states?.find((state) => state.state === selectedFilter?.status);
-
+      
       // Filter actions based on the selected state
       const availableActions = selectedState?.actions?.filter((action) => action.roles.some((role) => userRoles.includes(role)));
 
@@ -439,14 +437,14 @@ const PlanInbox = () => {
       const uniqueAssignees = [...new Set(planWithCensus?.planData?.flatMap((item) => item.assignee || []))];
       setAssigneeUuids(uniqueAssignees.join(","));
     }
-  }, [planWithCensus, selectedFilter?.status, activeLink]);
+  }, [planWithCensus, selectedFilter, activeLink]);
 
   useEffect(() => {
     if (censusJurisdiction?.length > 0) {
       refetchPlanWithCensus(); // Trigger the API call again after activeFilter changes
     }
-  }, [selectedFilter?.status, activeLink, censusJurisdiction, limitAndOffset]);
-
+  }, [selectedFilter, activeLink, censusJurisdiction, limitAndOffset]);
+  
   const reqCri = {
     url: `/${hrms_context_path}/employees/_search`,
     params: {
@@ -457,6 +455,13 @@ const PlanInbox = () => {
       enabled: assigneeUuids?.length > 0 ? true : false,
     },
   };
+  
+  useEffect(() => {
+    if (planWithCensusCount) {
+      setAssignedToMeCount(planWithCensusCount?.TotalCount);
+      setAssignedToAllCount(planWithCensusCount?.TotalCount);
+    }
+  }, [planWithCensusCount]);
 
   const { isLoading: isEmployeeLoading, data: employeeData, refetch: refetchHrms } = Digit.Hooks.useCustomAPIHook(reqCri);
 

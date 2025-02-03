@@ -30,6 +30,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const [executionCount, setExecutionCount] = useState(0);
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [notValid, setNotValid] = useState(0);
   const [apiError, setApiError] = useState(null);
   const [isValidation, setIsValidation] = useState(false);
   const [fileName, setFileName] = useState(null);
@@ -707,17 +708,17 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           });
 
           jsonData = jsonData.filter((element) => element !== undefined);
-          // if (type === "boundary") {
-          //   if (workbook?.SheetNames.filter(sheetName => sheetName !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")).length == 0) {
-          //     const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
-          //     setErrorsType((prevErrors) => ({
-          //       ...prevErrors,
-          //       [type]: errorMessage,
-          //     }));
-          //     setIsError(true);
-          //     return;
-          //   }
-          // } else
+          if (type === "boundary") {
+            if (workbook?.SheetNames.filter(sheetName => sheetName !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")).length == 0) {
+              const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
+              setErrorsType((prevErrors) => ({
+                ...prevErrors,
+                [type]: errorMessage,
+              }));
+              setIsError(true);
+              return;
+            }
+          } else
           if (type === "facilityWithBoundary") {
             if (workbook?.SheetNames.filter((sheetName) => sheetName == t("HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES")).length == 0) {
               const errorMessage = t("HCM_INVALID_FACILITY_SHEET");
@@ -734,15 +735,15 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               if (activeColumnName && uniqueIdentifierColumnName) {
                 jsonData = jsonData.filter((item) => item[activeColumnName] !== "Inactive" || !item[uniqueIdentifierColumnName]);
               }
-              if (jsonData.length == 0) {
-                const errorMessage = t("HCM_FACILITY_USAGE_VALIDATION");
-                setErrorsType((prevErrors) => ({
-                  ...prevErrors,
-                  [type]: errorMessage,
-                }));
-                setIsError(true);
-                return;
-              }
+              // if (jsonData.length == 0) {
+              //   const errorMessage = t("HCM_FACILITY_USAGE_VALIDATION");
+              //   setErrorsType((prevErrors) => ({
+              //     ...prevErrors,
+              //     [type]: errorMessage,
+              //   }));
+              //   setIsError(true);
+              //   return;
+              // }
             }
           } else if (type === "userWithBoundary") {
             if (workbook?.SheetNames.filter((sheetName) => sheetName == t("HCM_ADMIN_CONSOLE_USER_LIST")).length == 0) {
@@ -779,15 +780,15 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             }
           }
 
-          if (jsonData.length == 0) {
-            const errorMessage = t("HCM_EMPTY_SHEET");
-            setErrorsType((prevErrors) => ({
-              ...prevErrors,
-              [type]: errorMessage,
-            }));
-            setIsError(true);
-            return;
-          }
+          // if (jsonData.length == 0) {
+          //   const errorMessage = t("HCM_EMPTY_SHEET");
+          //   setErrorsType((prevErrors) => ({
+          //     ...prevErrors,
+          //     [type]: errorMessage,
+          //   }));
+          //   setIsError(true);
+          //   return;
+          // }
           if (type !== "boundary") {
             if (validateData(jsonData, SheetNames)) {
               resolve(true);
@@ -796,7 +797,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             }
           }
         } catch (error) {
-          console.log(error);
           reject("HCM_FILE_UNAVAILABLE");
         }
       };
@@ -804,6 +804,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       reader.readAsArrayBuffer(selectedFile);
     });
   };
+  
 
   const onBulkUploadSubmit = async (file) => {
     if (file.length > 1) {
@@ -853,10 +854,21 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       downloadExcelWithCustomName({ fileStoreId: file?.filestoreId, customName: fileNameWithoutExtension });
     }
   };
+  useEffect(() =>{
+    if(totalData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.resourceId == "not-validated" ||
+      totalData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]?.resourceId == "not-validated" || 
+      totalData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.resourceId == "not-validated"
+    ){
+      setNotValid(1);
+  }
+  },[totalData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.resourceId ,
+  totalData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]?.resourceId,
+  totalData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.resourceId
+])
+
   useEffect(() => {
     const fetchData = async () => {
-      if (!errorsType[type] && uploadedFile?.length > 0 && !isSuccess) {
-        // setShowToast({ key: "info", label: t("HCM_VALIDATION_IN_PROGRESS") });
+      if ((!errorsType[type] && uploadedFile?.length > 0 && !isSuccess) || notValid==1) {
         setIsValidation(true);
         setIsError(true);
         setLoader(true);
@@ -877,7 +889,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             setShowToast({ key: "error", label: errorMessage, transitionTime: 5000000 });
             setIsError(true);
             setApiError(errorMessage);
-
+            setNotValid(2);
             return;
           }
           if (temp?.status === "completed") {
@@ -975,7 +987,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     };
 
     fetchData();
-  }, [errorsType]);
+  }, [errorsType , notValid]);
 
   const Template = {
     url: "/project-factory/v1/data/_download",

@@ -7,7 +7,6 @@ import { UICustomizations } from "./configs/UICustomizations";
 import CampaignCard from "./components/CampaignCard";
 import CycleConfiguration from "./pages/employee/CycleConfiguration";
 import DeliverySetup from "./pages/employee/deliveryRule";
-import TimelineCampaign from "./components/TimelineCampaign";
 import CampaignDates from "./components/CampaignDates";
 import CampaignType from "./components/CampaignType";
 import CampaignName from "./components/CampaignName";
@@ -25,8 +24,6 @@ import CycleDataPreview from "./components/CycleDataPreview";
 import { ErrorBoundary } from "@egovernments/digit-ui-components";
 import CampaignResourceDocuments from "./components/CampaignResourceDocuments";
 import ConfigureApp from "./pages/employee/ConfigureApp";
-import SideEffects from "./components/ConfigureApp/SideEffect";
-import SideEffectType from "./components/ConfigureApp/SideEffectType";
 import TimelineComponent from "./components/TimelineComponent";
 import { DSSCard } from "./components/DSSCard";
 import UpdateDatesWithBoundaries from "./pages/employee/UpdateDatesWithBoundaries";
@@ -53,7 +50,6 @@ import GeoPode from "./pages/employee/BoundaryRelationCreate";
 import ViewBoundary from "./pages/employee/ViewBoundary";
 import ViewHierarchy from "./pages/employee/ViewHierarchy";
 import MultiSelectDropdown from "./components/MultiSelectDropdown";
-import MapView from "./components/MapView";
 import NoResultsFound from "./components/NoResultsFound";
 import UploadDataMappingWrapper from "./components/UploadDataMappingWrapper";
 import DataUploadWrapper from "./components/DataUploadWrapper";
@@ -132,7 +128,6 @@ const componentsToRegister = {
   UploadData,
   DeliveryRule: DeliverySetup,
   CycleConfiguration: CycleConfiguration,
-  TimelineCampaign,
   CampaignDates,
   CampaignType,
   CampaignName,
@@ -148,8 +143,6 @@ const componentsToRegister = {
   CycleDataPreview,
   CampaignResourceDocuments,
   ConfigureApp,
-  SideEffects,
-  SideEffectType,
   DSSCard,
   UpdateDatesWithBoundaries,
   DateWithBoundary,
@@ -175,7 +168,6 @@ const componentsToRegister = {
   ViewBoundary,
   ViewHierarchy,
   BoundarySummary,
-  MapView,
   NoResultsFound,
   UploadDataMappingWrapper,
   DataUploadWrapper,

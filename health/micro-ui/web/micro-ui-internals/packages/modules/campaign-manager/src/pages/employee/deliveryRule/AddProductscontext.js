@@ -1,6 +1,5 @@
 import { AddIcon, CardText, Label, LabelFieldPair } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useContext, useEffect, useState } from "react";
-import PlusMinusInput from "../../../components/PlusMinusInput";
 import { useTranslation } from "react-i18next";
 import { Dropdown, TextInput, Toast ,Button } from "@egovernments/digit-ui-components";
 import { Link } from "react-router-dom";
@@ -147,7 +146,7 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
                 optionKey="displayName"
               />
             </LabelFieldPair>
-            {filteredDeliveryConfig?.projectType === "MR-DN" && (
+            {!filteredDeliveryConfig?.productCountHide && (
               <LabelFieldPair style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
                 <Label>{t(`CAMPAIGN_COUNT_LABEL`)}</Label>
                 <TextInput type="numeric" defaultValue={i?.quantity} value={i?.quantity} onChange={(d) => incrementC(i, d)} />
