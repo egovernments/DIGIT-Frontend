@@ -51,13 +51,9 @@ const isValidResourceName = async (name) => {
 
 function updateFormulasSource(formulasToUpdate, assumptions) {
   // Extract keys of assumptions with source "CUSTOM"
-  let customKeys = assumptions
-  .filter((assumption) => assumption.source === "CUSTOM")
-  .map((assumption) => assumption.key);
+  let customKeys = assumptions.filter((assumption) => assumption.source === "CUSTOM").map((assumption) => assumption.key);
 
-  const customKeysFromFormula = formulasToUpdate
-  ?.filter((formula) => formula.source === "CUSTOM")
-  ?.map((formula) => formula.output);
+  const customKeysFromFormula = formulasToUpdate?.filter((formula) => formula.source === "CUSTOM")?.map((formula) => formula.output);
 
   customKeys = [...customKeys, ...customKeysFromFormula];
   // Update the source of formulas based on the conditions
@@ -66,8 +62,8 @@ function updateFormulasSource(formulasToUpdate, assumptions) {
       formula.source === "MDMS" && // Check if the formula's source is "MDMS"
       (customKeys.includes(formula.input) || customKeys.includes(formula.assumptionValue)) // Check if input or assumptionValue belongs to "CUSTOM"
     ) {
-       // Dynamically add this formula's output to customKeys
-      customKeys.push(formula.output)
+      // Dynamically add this formula's output to customKeys
+      customKeys.push(formula.output);
       return { ...formula, source: "CUSTOM" }; // Update the source to "CUSTOM"
     }
     return formula; // Return unchanged formula otherwise
@@ -181,7 +177,6 @@ const UpdateResource = async (req, currentPlanObject, currentCampaignObject) => 
   //creating a microplan and campaign instance here
   const { totalFormData, state, setShowToast, setCurrentKey, setCurrentStep, config, campaignObject, planObject } = req;
   try {
-
     // Update the campaign object by keeping existing properties and only changing the name
     const updatedCampaignObject = {
       ...currentCampaignObject,
@@ -199,6 +194,7 @@ const UpdateResource = async (req, currentPlanObject, currentCampaignObject) => 
     const updatedPlanObject = {
       ...currentPlanObject,
       name: totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName,
+      additionalDetails: { ...currentPlanObject.additionalDetails, key: req?.config?.key || "2" },
     };
 
     const planRes = await Digit.CustomService.getResponse({
@@ -207,7 +203,7 @@ const UpdateResource = async (req, currentPlanObject, currentCampaignObject) => 
       method: "POST",
       userService: true,
       body: {
-        PlanConfiguration: updatedPlanObject
+        PlanConfiguration: updatedPlanObject,
       },
     });
 
@@ -234,6 +230,17 @@ const searchPlanConfig = async (body) => {
     body,
   });
   return response?.PlanConfiguration?.[0];
+};
+
+const searchPlanEmployeeConfig = async (body) => {
+  const response = await Digit.CustomService.getResponse({
+    url: "/plan-service/employee/_search",
+    useCache: false,
+    method: "POST",
+    userService: false,
+    body,
+  });
+  return response;
 };
 
 const searchCampaignConfig = async (body) => {
@@ -269,12 +276,63 @@ const updatePlan = async (req) => {
   return planRes;
 };
 
+const updatePlanEmployee = async (req) => {
+  const planEmployeeRes = await Digit.CustomService.getResponse({
+    url: "/plan-service/employee/_update",
+    body: req,
+  });
+  return planEmployeeRes;
+};
+
+/**
+ * Documentation for the createUpdatePlanProject function
+ *
+ * This function handles creation and updates of plan and project based on different triggers(Triggers are screens' next button).
+ *
+ * Flow:
+ * 1. Function takes a request object containing:
+ *    - totalFormData: Form data from different screens
+ *    - state: Application state
+ *    - setShowToast: Toast notification setter
+ *    - setCurrentKey: Current key setter
+ *    - setCurrentStep: Current step setter
+ *    - config: Configuration object
+ *    - invalidateConfig: Config for data invalidation
+ *
+ * 2. Gets microplanId, campaignId and key from URL query params
+ *
+ * 3. Gets current tenant ID
+ *
+ * 4. If microplanId exists:
+ *    - Fetches existing plan configuration using searchPlanConfig
+ *
+ * 5. If campaignId exists:
+ *    - Fetches campaign details using searchCampaignConfig
+ *
+ * 6. Based on triggeredFrom config name:
+ *    - CAMPAIGN_DETAILS: Increments key and step
+ *    - MICROPLAN_DETAILS: Checks if update needed based on name change
+ *    - HYPOTHESIS: Handles assumptions updates
+ *    - SUB_HYPOTHESIS: Updates sub-hypothesis assumptions
+ *    - FORMULA_CONFIGURATION: Validates and updates formula configurations
+ *
+ * 7. Returns appropriate response based on the trigger
+ *
+ * Key APIs Used:
+ * - searchPlanConfig: Fetches plan configuration
+ * - searchCampaignConfig: Fetches campaign details
+ * - updatePlan: Updates plan configuration
+ * - updateProject: Updates project details
+ * - updatePlanEmployee: Updates plan employee details
+ */
+
 const createUpdatePlanProject = async (req) => {
   try {
     //later this object must have an invalidation config which can be used to invalidate data such as files uploaded,assumptions,formulas etc...
 
     const { totalFormData, state, setShowToast, setCurrentKey, setCurrentStep, config, invalidateConfig } = req;
-    const { microplanId, campaignId } = Digit.Hooks.useQueryParams();
+    const { microplanId, campaignId, key } = Digit.Hooks.useQueryParams();
+    // const key=config?.key;
     const tenantId = Digit.ULBService.getCurrentTenantId();
     //now basically we need to decide from which screen this hook was triggered and take action accordingly
     let planObject = {};
@@ -306,7 +364,6 @@ const createUpdatePlanProject = async (req) => {
         };
 
       case "MICROPLAN_DETAILS":
-    
         //here just check if microplanId and campaignId is already there then if microplan name is same as old one no need to do anything
         if (microplanId && campaignId && planObject?.name === totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName) {
           setCurrentKey((prev) => prev + 1);
@@ -316,7 +373,6 @@ const createUpdatePlanProject = async (req) => {
 
         /// now check if microplan and campaign id is there but name need to be updated
         if (microplanId && campaignId && planObject?.name !== totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName) {
-
           // check if the name is valid
           const isResourceNameValid = await isValidResourceName(totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName);
           if (!isResourceNameValid) {
@@ -335,10 +391,9 @@ const createUpdatePlanProject = async (req) => {
           return {
             triggeredFrom,
           };
-
-        }else{
-        //if we reach here then we need to create a plan and project instance
-        // validate campaign and microplan name feasible or not -> search campaign + search plan
+        } else {
+          //if we reach here then we need to create a plan and project instance
+          // validate campaign and microplan name feasible or not -> search campaign + search plan
           const isResourceNameValid = await isValidResourceName(totalFormData?.MICROPLAN_DETAILS?.microplanDetails?.microplanName);
           if (!isResourceNameValid) {
             setShowToast({ key: "error", label: "ERROR_MICROPLAN_NAME_ALREADY_EXISTS" });
@@ -357,7 +412,6 @@ const createUpdatePlanProject = async (req) => {
             triggeredFrom,
           };
         }
-        
 
       case "BOUNDARY":
         // call an update to plan
@@ -399,6 +453,7 @@ const createUpdatePlanProject = async (req) => {
         //invalidate files
         const updatedPlanObjectForBoundaryInvalidate = {
           ...fetchedPlanForBoundaryInvalidate,
+          additionalDetails: { ...fetchedPlanForBoundaryInvalidate.additionalDetails, key: key },
           files:
             fetchedPlanForBoundaryInvalidate?.files?.length > 0
               ? fetchedPlanForBoundaryInvalidate?.files?.map((file) => {
@@ -409,17 +464,65 @@ const createUpdatePlanProject = async (req) => {
                 })
               : [],
         };
-        
+
+        const fetchedPlanEmployeeForBoundaryInvalidate = await searchPlanEmployeeConfig({
+          PlanEmployeeAssignmentSearchCriteria: {
+            tenantId: tenantId,
+            planConfigurationId: microplanId,
+            active: true,
+          },
+        });
+
+        const updatedPlanEmployeeObjectForBoundaryInvalidate = {
+          ...fetchedPlanEmployeeForBoundaryInvalidate,
+          PlanEmployeeAssignment:
+            fetchedPlanEmployeeForBoundaryInvalidate?.PlanEmployeeAssignment?.length > 0
+              ? fetchedPlanEmployeeForBoundaryInvalidate.PlanEmployeeAssignment.map((employee) => ({
+                  ...employee,
+                  active: false,
+                }))
+              : [],
+        };
+
         // update plan object
         const planUpdateForBoundaryInvalidation = await updatePlan(updatedPlanObjectForBoundaryInvalidate);
-        if (planUpdateForBoundaryInvalidation) {
+        // Call updatePlanEmployee for each item
+        const planEmployeeAssignments = updatedPlanEmployeeObjectForBoundaryInvalidate.PlanEmployeeAssignment;
+        let allEmployeesUpdated = true; // Flag to track employee update status
+
+        if (planEmployeeAssignments.length > 0) {
+          try {
+            // Use Promise.all to update all employees concurrently
+            await Promise.all(
+              planEmployeeAssignments.map(async (employee) => {
+                const employeeUpdateObject = {
+                  ...fetchedPlanEmployeeForBoundaryInvalidate,
+                  PlanEmployeeAssignment: employee, // Only update this specific employee
+                };
+                try {
+                  const planEmployeeUpdateResponse = await updatePlanEmployee(employeeUpdateObject);
+                } catch (error) {
+                  allEmployeesUpdated = false; // Mark as false if any employee update fails
+                }
+              })
+            );
+          } catch (error) {
+            allEmployeesUpdated = false;
+          }
+        }
+
+        if (planUpdateForBoundaryInvalidation && allEmployeesUpdated) {
           // doing this after invalidating the session
           // setCurrentKey((prev) => prev + 1);
-          // setCurrentStep((prev) => prev + 1); 
+          // setCurrentStep((prev) => prev + 1);
           return {
             triggeredFrom,
-            invalidateSession:true
+            invalidateSession: true,
           };
+        } else if (!planUpdateForBoundaryInvalidation) {
+          setShowToast({ key: "error", label: "ERR_PLAN_UPDATE_FAILED" });
+        } else if (!allEmployeesUpdated) {
+          setShowToast({ key: "error", label: "ERR_EMPLOYEE_UPDATE_FAILED" });
         } else {
           setShowToast({ key: "error", label: "ERR_BOUNDARY_UPDATE" });
         }
@@ -427,8 +530,11 @@ const createUpdatePlanProject = async (req) => {
       case "ASSUMPTIONS_FORM":
         // here we have to invalidate the existing assumptions in update call if there is a change in assumptionsForm
         // check whether the currentAssumptionsForm is equal to prev assumptionsForm (if so then skip this update call)
-        
-        if (_.isEqual(planObject?.additionalDetails?.assumptionsForm, totalFormData?.ASSUMPTIONS_FORM?.assumptionsForm) && Object.keys(planObject?.additionalDetails?.assumptionsForm).length>0) {
+
+        if (
+          _.isEqual(planObject?.additionalDetails?.assumptionsForm, totalFormData?.ASSUMPTIONS_FORM?.assumptionsForm) &&
+          Object.keys(planObject?.additionalDetails?.assumptionsForm).length > 0
+        ) {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
           return {
@@ -478,6 +584,7 @@ const createUpdatePlanProject = async (req) => {
               totalFormData.CAMPAIGN_DETAILS.campaignDetails.distributionStrat.resourceDistributionStrategyCode === "MIXED"
                 ? "SEPARATELY"
                 : totalFormData.ASSUMPTIONS_FORM.assumptionsForm.selectedRegistrationDistributionMode?.code,
+            key: key,
           },
         };
         const planResAssumptionsForm = await updatePlan(updatedPlanObjAssumptionsForm);
@@ -486,7 +593,7 @@ const createUpdatePlanProject = async (req) => {
           // setCurrentStep((prev) => prev + 1);
           return {
             triggeredFrom,
-            invalidateSession:true
+            invalidateSession: true,
           };
         } else {
           setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
@@ -514,6 +621,7 @@ const createUpdatePlanProject = async (req) => {
         const upatedPlanObjHypothesis = {
           ...fetchedPlanForHypothesis,
           assumptions: [...prevAssumptions, ...assumptionsToUpdate],
+          additionalDetails: { ...fetchedPlanForHypothesis.additionalDetails, key: key },
         };
 
         const planResHypothesis = await updatePlan(upatedPlanObjHypothesis);
@@ -555,6 +663,7 @@ const createUpdatePlanProject = async (req) => {
         const upatedPlanObjSubHypothesis = {
           ...fetchedPlanForSubHypothesis,
           assumptions: [...prevAssumptionsForSubHypothesis, ...assumptionsToUpdateFromUI],
+          additionalDetails: { ...fetchedPlanForSubHypothesis.additionalDetails, key: key },
         };
 
         await updatePlan(upatedPlanObjSubHypothesis);
@@ -596,10 +705,11 @@ const createUpdatePlanProject = async (req) => {
             updatedRow.operator = state?.RuleConfigureOperators?.find((operation) => operation.operatorName === operatorName)?.operatorCode;
             return updatedRow;
           });
-        const formulasToUpdateWithUpdatedSource = updateFormulasSource(formulasToUpdate,fetchedPlanForFormula?.assumptions)
-          //here we need to update the source of operations
+        const formulasToUpdateWithUpdatedSource = updateFormulasSource(formulasToUpdate, fetchedPlanForFormula?.assumptions);
+        //here we need to update the source of operations
         const updatedPlanObjFormula = {
           ...fetchedPlanForFormula,
+          additionalDetails: { ...fetchedPlanForFormula.additionalDetails, key: key },
           operations: [...prevFormulas, ...formulasToUpdateWithUpdatedSource],
         };
 
@@ -617,7 +727,7 @@ const createUpdatePlanProject = async (req) => {
           setShowToast({ key: "error", label: "ERR_ASSUMPTIONS_FORM_UPDATE" });
         }
 
-        case "SUB_FORMULA":
+      case "SUB_FORMULA":
         //first fetch current plan object
         const fetchedPlanForSubFormula = await searchPlanConfig({
           PlanConfigurationSearchCriteria: {
@@ -625,7 +735,7 @@ const createUpdatePlanProject = async (req) => {
             id: microplanId,
           },
         });
-        // const currentCategory = 
+        // const currentCategory =
         const prevFormulaValues =
           fetchedPlanForSubFormula?.operations.length > 0
             ? fetchedPlanForSubFormula?.operations?.map((row) => {
@@ -638,26 +748,26 @@ const createUpdatePlanProject = async (req) => {
             : [];
 
         //get the list of assumptions from UI
-        const formulasToUpdateFromUIForSubFormula = req?.formulasToUpdate?.filter((row) => {
-          return row.category && row.output && row.input && row.operatorName && row.assumptionValue;
-        })
-        ?.map((row) => {
-          const updatedRow = { ...row };
-          const operatorName = row?.operatorName;
-          delete updatedRow?.operatorName;
-          updatedRow.operator = state?.RuleConfigureOperators?.find((operation) => operation.operatorName === operatorName)?.operatorCode;
-          return updatedRow;
-        });
+        const formulasToUpdateFromUIForSubFormula = req?.formulasToUpdate
+          ?.filter((row) => {
+            return row.category && row.output && row.input && row.operatorName && row.assumptionValue;
+          })
+          ?.map((row) => {
+            const updatedRow = { ...row };
+            const operatorName = row?.operatorName;
+            delete updatedRow?.operatorName;
+            updatedRow.operator = state?.RuleConfigureOperators?.find((operation) => operation.operatorName === operatorName)?.operatorCode;
+            return updatedRow;
+          });
         //mix the current + api res
         const upatedPlanObjSubFormula = {
           ...fetchedPlanForSubFormula,
           operations: [...prevFormulaValues, ...formulasToUpdateFromUIForSubFormula],
+          additionalDetails: { ...fetchedPlanForSubFormula.additionalDetails, key: key },
         };
-
         await updatePlan(upatedPlanObjSubFormula);
         return;
 
-        
       case "UPLOADBOUNDARYDATA":
         const fetchedPlanForBoundary = await searchPlanConfig({
           PlanConfigurationSearchCriteria: {
@@ -684,6 +794,7 @@ const createUpdatePlanProject = async (req) => {
         const updatedPlanObjForBoundary = {
           ...fetchedPlanForBoundary,
           files,
+          additionalDetails: { ...fetchedPlanForBoundary.additionalDetails, key: key },
         };
 
         const planResBoundary = await updatePlan(updatedPlanObjForBoundary);
@@ -726,6 +837,7 @@ const createUpdatePlanProject = async (req) => {
         const updatedPlanObjForFacility = {
           ...fetchedPlanForFacility,
           files: filesForFacility,
+          additionalDetails: { ...fetchedPlanForFacility.additionalDetails, key: key },
         };
 
         const planResFacility = await updatePlan(updatedPlanObjForFacility);
@@ -803,16 +915,33 @@ const createUpdatePlanProject = async (req) => {
           setShowToast({ key: "error", label: "ERR_FAILED_TO_COMPLETE_SETUP" });
         }
 
-      case "ROLE_ACCESS_CONFIGURATION":
-        //run any api validations if any/
-        setCurrentKey((prev) => prev + 1);
-        setCurrentStep((prev) => prev + 1);
-        window.dispatchEvent(new Event("isLastStep"));
-        Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
-        Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
-        return {
-          triggeredFrom,
+      case "ROLE_ACCESS_CONFIGURATION": {
+        const fetchedPlan = await searchPlanConfig({
+          PlanConfigurationSearchCriteria: {
+            tenantId,
+            id: microplanId,
+          },
+        });
+        const updatedPlanObject = {
+          ...fetchedPlan,
+          additionalDetails: { ...fetchedPlan.additionalDetails, key: key },
         };
+        const response = await updatePlan(updatedPlanObject);
+        // Return as expected
+        if (response) {
+          setCurrentKey((prev) => prev + 1);
+          setCurrentStep((prev) => prev + 1);
+          window.dispatchEvent(new Event("isLastStep"));
+          Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
+          Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
+          return {
+            triggeredFrom,
+          };
+        } else {
+          setShowToast({ key: "error", label: "ERR_FAILED_TO_UPDATE_PLAN" });
+        }
+      }
+
       default:
         setShowToast({ key: "error", label: "ERROR_UNHANDLED_NEXT_OPERATION" });
         return {

@@ -260,6 +260,11 @@
   gap: 1.5rem;
 }
 
+.inbox-search-wrapper .inbox-search-component-wrapper .sections-parent.search .checkbox-wrap input, .checkbox-wrap .input-emp {
+  top:13px;
+  left:-3px;
+}
+
 .horizontal-nav {
   overflow: auto;
   display: -webkit-box;
@@ -526,4 +531,20 @@ tbody tr:last-child td:last-child .digit-dropdown-employee-select-wrap .digit-dr
       }
     }
   }
+}
+
+.gap-between-dropdowns{
+  display:flex;
+  flex-direction: column;
+  gap: 1rem;
+
+}
+
+.custom-filter-names {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.37rem;
+  color: #363636;
+  font-size: 1.1rem;
 }
