@@ -57,6 +57,8 @@ const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
     { schemaCode: "ProjectType" }
   );
 
+  const campaignTypeOptions = state?.MicroplanCampaignTypes?.map(item => item.code) || [];
+
   useEffect(() => {
     onSelect(customProps.name, {
       distributionStrat,
@@ -112,7 +114,7 @@ const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
           // variant={error ? "error" : ""}
           t={t}
           option={data?.campaignTypes?.filter(
-            (campaign) => campaign.code !== "IRS-mz"
+            (campaign) => campaignTypeOptions?.includes(campaign.code)
           )}
           optionKey={"i18nKey"}
           selected={campaignType}
