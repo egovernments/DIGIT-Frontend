@@ -1,4 +1,4 @@
-import { Loader,TourProvider } from "@egovernments/digit-ui-react-components";
+import { TourProvider } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
 import EmployeeApp from "./pages/employee";
@@ -8,6 +8,8 @@ import HRMSCard from "./components/HRMSCard";
 import WorkbenchCard from "./components/WorkbenchCard";
 import DigitJSONForm from "./components/DigitJSONForm";
 import LevelCards from "./components/LevelCards";
+import { Loader } from "@egovernments/digit-ui-components";
+
 import * as parsingUtils from "../src/utils/ParsingUtils"
 
 const WorkbenchModule = ({ stateCode, userType, tenants }) => {
@@ -23,7 +25,7 @@ const WorkbenchModule = ({ stateCode, userType, tenants }) => {
     modulePrefix
   });
   if (isLoading) {
-    return <Loader />;
+    return  <Loader page={true} variant={"PageLoader"} />;
   }
 
   return <TourProvider>

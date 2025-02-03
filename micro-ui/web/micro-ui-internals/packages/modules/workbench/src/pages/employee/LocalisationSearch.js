@@ -1,4 +1,4 @@
-import { AddFilled, Button, Header, InboxSearchComposer, Loader, Dropdown,WorkflowModal,ActionBar,SubmitBar, InfoBanner } from "@egovernments/digit-ui-react-components";
+import { AddFilled, Button, Header, InboxSearchComposer, WorkflowModal,ActionBar,SubmitBar, InfoBanner } from "@egovernments/digit-ui-react-components";
 import { Toast } from "@egovernments/digit-ui-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";

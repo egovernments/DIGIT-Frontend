@@ -1,9 +1,10 @@
-import { AddFilled, Button, Header, InboxSearchComposer, Loader, Dropdown, Card } from "@egovernments/digit-ui-react-components";
+import { AddFilled, Button, Header, InboxSearchComposer,  Dropdown, Card } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import { Config as Configg } from "../../configs/searchMDMSConfig";
 import _, { drop } from "lodash";
+import { Loader } from "@egovernments/digit-ui-components";
 
 
 
@@ -158,7 +159,7 @@ const MDMSManageMaster = () => {
   //   }
   // }, [currentSchema]);
 
-  if (isLoading) return <Loader />;
+  if (isLoading) return <Loader page={true} variant={"PageLoader"} />;
   return (
     <React.Fragment>
         <Header className="works-header-search">{t(Config?.label)}</Header>

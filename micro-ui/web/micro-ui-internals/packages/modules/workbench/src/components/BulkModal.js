@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { onConfirm, generateJsonTemplate, downloadTemplate } from "../utils/BulkUploadUtils";
 import Ajv from "ajv";
 import { useTranslation } from "react-i18next";
-import { FileUploadModal, Loader, Card, SVG } from "@egovernments/digit-ui-react-components";
+import { FileUploadModal, Card, SVG } from "@egovernments/digit-ui-react-components";
 import { Toast } from "@egovernments/digit-ui-components";
 import { CloseSvg } from "@egovernments/digit-ui-react-components";
+import { Loader } from "@egovernments/digit-ui-components";
+
 
 const ProgressBar = ({ progress, onClose, results }) => {
     const [selectedErrorIndex, setSelectedErrorIndex] = useState(null);
@@ -219,7 +221,7 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
     }
 
     if (loading || isSchemaLoading) {
-        return <Loader />
+        return <Loader page={true} variant={"PageLoader"} />
     }
 
     return (

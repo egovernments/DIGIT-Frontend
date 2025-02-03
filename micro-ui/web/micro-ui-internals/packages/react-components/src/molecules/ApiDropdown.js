@@ -1,9 +1,10 @@
 import React, { Fragment, useState, useEffect } from "react";
 import MultiSelectDropdown from "../atoms/MultiSelectDropdown";
 import Dropdown from "../atoms/Dropdown";
-import { Loader } from "../atoms/Loader";
 import { useTranslation } from "react-i18next";
 import _ from "lodash";
+import { Loader } from "@egovernments/digit-ui-components";
+
 const ApiDropdown = ({ populators, formData, props, inputRef, errors }) => {
   //based on type (ward/locality) we will render dropdowns respectively
   //here we will render two types of dropdown based on allowMultiSelect boolean
@@ -21,7 +22,8 @@ const ApiDropdown = ({ populators, formData, props, inputRef, errors }) => {
     setOptions(apiData);
   }, [apiData]);
 
-  if (isApiLoading) return <Loader />;
+  if (isApiLoading) return <Loader page={false} variant={"Basic"} />;
+
 
   return (
     <>

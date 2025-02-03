@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { useTranslation } from "react-i18next";
-import { Loader } from "@egovernments/digit-ui-react-components";
 import _ from "lodash";
+import { Loader } from "@egovernments/digit-ui-components";
+
 
 const customStyles = {
   control: (provided, state) => ({
@@ -53,7 +54,7 @@ useEffect(()=>{
   );
   const selectedOption = formattedOptions?.filter((obj) => (multiple ? value?.includes(obj.value) : obj.value == value));
   if (isLoading) {
-    return <Loader />;
+    return <Loader page={false} variant={"Basic"} />;
   }
   return (
     <Select

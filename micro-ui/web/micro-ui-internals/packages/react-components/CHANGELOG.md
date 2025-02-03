@@ -3,7 +3,8 @@ Here's the `CHANGELOG` file for the specified versions:
 ```markdown
 # Changelog
 
-
+## [1.8.22]  [3-Feb-2025]
+- FEATURE/HCMPRE-2208 : Fixed some loader component issue in inbox & form composers
 
 ## [1.8.15]  [1-Feb-2025]
 - FEATURE/HCMPRE-1425 : Added the workbench module patches and Updated localisation search screen, and core module #2181

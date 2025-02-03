@@ -15,7 +15,7 @@ import getStore from "./redux/store";
 import PrivacyComponent from "./components/PrivacyComponent";
 import OtpComponent from "./pages/employee/Otp/OtpCustomComponent";
 
-const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLanding }) => {
+const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLanding,allowedUserTypes }) => {
   const { isLoading, data: initData={} } = Digit.Hooks.useInitStore(stateCode, enabledModules);
   if (isLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
@@ -38,6 +38,7 @@ const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLand
               logoUrl={initData?.stateInfo?.logoUrl}
               logoUrlWhite={initData?.stateInfo?.logoUrlWhite}
               defaultLanding={defaultLanding}
+              allowedUserTypes={allowedUserTypes}
             />
           ) : (
             <DigitApp
@@ -47,6 +48,7 @@ const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLand
               appTenants={initData.tenants}
               logoUrl={initData?.stateInfo?.logoUrl}
               defaultLanding={defaultLanding}
+              allowedUserTypes={allowedUserTypes}
             />
           )}
         </BodyContainer>
@@ -55,7 +57,30 @@ const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLand
   );
 };
 
-export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, defaultLanding }) => {
+/**
+ * DigitUI Component - The main entry point for the UI.
+ *
+ * @param {Object} props - The properties passed to the component.
+ * @param {string} props.stateCode - The state code for the application.
+ * @param {Object} props.registry - The registry object containing components registrations.
+ * @param {Array<string>} props.enabledModules - A list of enabled modules, if any modules to be disabled due to some condition.
+ * @param {Object} props.moduleReducers - Reducers associated with enabled modules.
+ * @param {string} props.defaultLanding - The default landing page (e.g., "employee", "citizen"), default is citizen.
+ * @param {Array<string>} props.allowedUserTypes - A list of allowed user types (e.g., ["employee", "citizen"]) if any restriction to be applied, and default is both employee & citizen.
+ * 
+ * @author jagankumar-egov
+ *
+ * @example
+ * <DigitUI
+ *   stateCode="pg"
+ *   registry={registry}
+ *   enabledModules={["Workbench", "PGR"]}
+ *   defaultLanding="employee"
+ *   allowedUserTypes={["employee", "citizen"]}
+ *   moduleReducers={moduleReducers}
+ * />
+ */
+export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, defaultLanding,allowedUserTypes }) => {
   const [privacy, setPrivacy] = useState(Digit.Utils.getPrivacyObject() || {});
   const userType = Digit.UserService.getType();
   const queryClient = new QueryClient({
@@ -117,7 +142,7 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, d
                 },
               }}
             >
-              <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding} />
+              <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding}  allowedUserTypes={allowedUserTypes} />
             </PrivacyProvider.Provider>
           </ComponentProvider.Provider>
         </QueryClientProvider>

@@ -4,17 +4,17 @@ import ImageComponent from "./ImageComponent";
 
 const ErrorConfig = {
   error: {
-    imgUrl: `https://s3.ap-south-1.amazonaws.com/egov-qa-assets/error-image.png`,
+    imgUrl: `https://digit-ui-assets.s3.ap-south-1.amazonaws.com/error-image.png`,
     infoMessage: "CORE_SOMETHING_WENT_WRONG",
     buttonInfo: "ACTION_TEST_HOME",
   },
   maintenance: {
-    imgUrl: `https://s3.ap-south-1.amazonaws.com/egov-qa-assets/maintainence-image.png`,
+    imgUrl: `https://digit-ui-assets.s3.ap-south-1.amazonaws.com/maintainence-image.png`,
     infoMessage: "CORE_UNDER_MAINTENANCE",
     buttonInfo: "ACTION_TEST_HOME",
   },
   notfound: {
-    imgUrl: `https://s3.ap-south-1.amazonaws.com/egov-qa-assets/PageNotFound.png`,
+    imgUrl: `https://digit-ui-assets.s3.ap-south-1.amazonaws.com/PageNotFound.png`,
     infoMessage: "MODULE_NOT_FOUND",
     buttonInfo: "ACTION_TEST_HOME",
   },
@@ -22,7 +22,7 @@ const ErrorConfig = {
 
 const ModuleBasedErrorConfig = {
   sandbox: {
-    imgUrl: `https://s3.ap-south-1.amazonaws.com/egov-qa-assets/error-image.png`,
+    imgUrl: `https://digit-ui-assets.s3.ap-south-1.amazonaws.com/error-image.png`,
     infoMessage: "WRONG_TENANT_SIGN_UP",
     buttonInfo: "CREATE_TENANT_ERROR_BUTTON",
   },

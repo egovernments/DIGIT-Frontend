@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import MDMSAdd from './MDMSAddV2'
-import { Loader } from '@egovernments/digit-ui-react-components';
 import { Toast } from "@egovernments/digit-ui-components";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button } from '@egovernments/digit-ui-components';
 import _ from "lodash";
+import { Loader } from "@egovernments/digit-ui-components";
+
 
 const MDMSView = ({ ...props }) => {
   const history = useHistory()
@@ -180,7 +181,7 @@ const MDMSView = ({ ...props }) => {
     finalData = updatedData;
   }
 
-  if (isLoading || isFetching || isLocalizationLoading) return <Loader />
+  if (isLoading || isFetching || isLocalizationLoading)     return <Loader page={true} variant={"PageLoader"} />;
 
   return (
     <React.Fragment>

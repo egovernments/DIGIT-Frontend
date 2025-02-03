@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import MDMSAdd from "./MDMSAddV2";
-import { Loader } from "@egovernments/digit-ui-react-components";
 import { Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { buildLocalizationMessages } from "./localizationUtility";
 import _ from "lodash";
+import { Loader } from "@egovernments/digit-ui-components";
+
 
 const MDMSEdit = ({ ...props }) => {
   const history = useHistory();
@@ -183,7 +184,8 @@ const MDMSEdit = ({ ...props }) => {
     );
   };
 
-  if (isLoading || isFetching || isSchemaLoading || isLocalizationLoading || renderLoader) return <Loader />;
+  if (isLoading || isFetching || isSchemaLoading || isLocalizationLoading || renderLoader) return  <Loader page={true} variant={"PageLoader"} />;
+  
 
   return (
     <React.Fragment>

@@ -8,7 +8,7 @@ import ViewUrl from "./pages/employee/ViewUrl";
 import CustomErrorComponent from "./components/CustomErrorComponent";
 import DummyLoaderScreen from "./components/DummyLoader";
 
-export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen" }) => {
+export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen",allowedUserTypes=["citizen","employee"] }) => {
   const history = useHistory();
   const { pathname } = useLocation();
   const innerWidth = window.innerWidth;
@@ -73,12 +73,12 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite
 
   return (
     <Switch>
-      <Route path={`/${window?.contextPath}/employee`}>
+     {allowedUserTypes?.some(userType=>userType=="employee")&& <Route path={`/${window?.contextPath}/employee`}>
         <EmployeeApp {...commonProps} />
-      </Route>
-      <Route path={`/${window?.contextPath}/citizen`}>
+      </Route>}
+      {allowedUserTypes?.some(userType=>userType=="citizen")&& <Route path={`/${window?.contextPath}/citizen`}>
         <CitizenApp {...commonProps} />
-      </Route>
+      </Route>}
       <Route>
         <Redirect to={`/${window?.contextPath}/${defaultLanding}`} />
       </Route>
@@ -86,7 +86,7 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite
   );
 };
 
-export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen" }) => {
+export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen" ,allowedUserTypes}) => {
   // const globalPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
   const { data: storeData } = Digit.Hooks.useStore.getInitData();
   const { stateInfo } = storeData || {};
@@ -130,6 +130,7 @@ export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, logoU
               logoUrlWhite={logoUrlWhite}
               initData={initData}
               defaultLanding={defaultLanding}
+              allowedUserTypes={allowedUserTypes}
             />
           </Route>
         )}

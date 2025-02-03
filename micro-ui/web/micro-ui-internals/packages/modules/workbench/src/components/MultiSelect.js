@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import Select, { components } from "react-select";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Loader, InfoBannerIcon, Button, Close } from "@egovernments/digit-ui-react-components";
+import {  InfoBannerIcon, Button, Close } from "@egovernments/digit-ui-react-components";
 import MDMSSearchv2Popup from "../pages/employee/MDMSSearchv2Popup";
 import { COLOR_FILL } from "../utils/contants";
+import { Loader } from "@egovernments/digit-ui-components";
+
 
 const customStyles = {
   control: (provided, state) => ({
@@ -202,7 +204,7 @@ const CustomSelectWidget = (props) => {
   };
 
   if (isLoading) {
-    return <Loader />;
+    return <Loader page={false} variant={"Basic"} />;
   }
   return (
     <div className="multiselect">

@@ -1,11 +1,11 @@
-import { Card, Loader, SVG } from "@egovernments/digit-ui-react-components";
+import { Card,  SVG } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { DigitJSONForm } from "../../Module";
 import _ from "lodash";
-import { DigitLoader } from "../../components/DigitLoader";
 import { buildLocalizationMessages } from "./localizationUtility";
+import { Loader } from "@egovernments/digit-ui-components";
 
 /*
 
@@ -125,8 +125,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
     const validationConfig = Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate];
     if (!validationConfig?.validateForm){
       console.warn(`No validation configuration found for schema: ${schemaCodeToValidate}`);
-      return true;
-    }
+    }else{
     const validation = await validationConfig.validateForm(data, { tenantId: tenantId });
     if (validation && !validation?.isValid) {
       setShowToast(t(validation.message) || t('VALIDATION_ERROR_DEFAULT'));
@@ -134,6 +133,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
       toggleSpinner(false);
       return;
     }
+  }
     let locale = Digit.StoreData.getCurrentLanguage();
     toggleSpinner(true);
   
@@ -266,13 +266,13 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   }
 
   if (isLoading || !formSchema || Object.keys(formSchema) == 0) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
 
   const uiJSONSchema = formSchema?.["definition"]?.["x-ui-schema"];
   return (
     <React.Fragment>
-      {spinner && <DigitLoader />}
+      {spinner &&  <Loader page={true} variant={"OverlayLoader"} />}
       {formSchema && (
         <DigitJSONForm
           schema={formSchema}

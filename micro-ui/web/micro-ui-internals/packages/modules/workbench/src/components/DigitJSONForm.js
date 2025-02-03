@@ -293,7 +293,7 @@ const DigitJSONForm = ({
   const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
   const { moduleName, masterName } = Digit.Hooks.useQueryParams();
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const enableBulkUpload = window?.globalConfigs?.getConfig("ENABLE_MDMS_BULK_UPLOAD") ?? false;
+  const enableBulkUpload =  window?.globalConfigs?.getConfig?.("ENABLE_MDMS_BULK_UPLOAD") ? window.globalConfigs.getConfig("ENABLE_MDMS_BULK_UPLOAD") : false;
 
   const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -408,13 +408,13 @@ const onSubmitV2 = async ({ formData }, e) => {
         <Header className="digit-form-composer-header">
           {screenType === "add" ? t("WBH_ADD_MDMS") : screenType === "view" ? t("WBH_VIEW_MDMS") : t("WBH_EDIT_MDMS")}
         </Header>
-        <BulkModal
+       {screenType === "add" && enableBulkUpload&& <BulkModal
           showBulkUploadModal={showBulkUploadModal}
           setShowBulkUploadModal={setShowBulkUploadModal}
           moduleName={moduleName}
           masterName={masterName}
           uploadFileTypeXlsx={false}
-        />
+        />}
         <Card className="workbench-create-form">
           <Header className="digit-form-composer-sub-header">
             {typeof Digit?.Utils?.workbench?.getMDMSLabel === "function"

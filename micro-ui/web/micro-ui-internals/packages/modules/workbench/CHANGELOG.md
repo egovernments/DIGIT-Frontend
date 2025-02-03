@@ -1,4 +1,8 @@
 
+## [1.0.13]  [3-Feb-2025]
+- Updated some of the loader component
+- fixed the add master data issue
+
 ## [1.0.13]  [1-Feb-2025]
 - FEATURE/HCMPRE-1425 : Added the workbench module patches and Updated localisation search screen, and core module #2181
 - Upgraded with new Components in core, workbench screens

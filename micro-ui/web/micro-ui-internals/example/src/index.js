@@ -110,8 +110,8 @@ const initDigitUI = () => {
       stateCode={stateCode}
       enabledModules={enabledModules}
       defaultLanding="employee"
+      allowedUserTypes={["employee","citizen"]}
       moduleReducers={moduleReducers}
-      sandboxRedirect={true}
     />,
     document.getElementById("root")
   );

@@ -5,7 +5,7 @@ import { TextInput } from '@egovernments/digit-ui-components';
 import { useForm, Controller } from "react-hook-form";
 import _ from "lodash";
 import { InboxContext } from './InboxSearchComposerContext';
-import { Loader } from '../atoms/Loader';
+import { Loader } from "@egovernments/digit-ui-components";
 import NoResultsFound from '../atoms/NoResultsFound';
 import { InfoIcon,EditIcon } from "../atoms/svgindex";
 import CardLabel from '../atoms/CardLabel';
@@ -204,7 +204,7 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
     }
 
     
-    if (isLoading || isFetching ) return <Loader />
+    if (isLoading || isFetching ) return  <Loader page={true} variant={"OverlayLoader"} />;
     if(!data) return <></>
     if(!showResultsTable) return <></>
     if (searchResult?.length === 0) return <NoResultsFound/>
