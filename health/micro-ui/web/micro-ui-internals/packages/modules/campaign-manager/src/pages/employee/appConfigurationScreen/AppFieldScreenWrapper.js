@@ -222,15 +222,13 @@ function AppFieldScreenWrapper() {
               onClick={() => setCurrentStep((prev) => prev - 1)}
             />
           )}
-          {!stepper?.find((i) => i.active)?.isLast && (
-            <Button
-              className="previous-button"
-              variation="primary"
-              label={t("NEXT")}
-              title={t("NEXT")}
-              onClick={() => setCurrentStep((prev) => prev + 1)}
-            />
-          )}
+          <Button
+            className="previous-button"
+            variation="primary"
+            label={t("NEXT")}
+            title={t("NEXT")}
+            onClick={() => (!stepper?.find((i) => i.active)?.isLast ? setCurrentStep((prev) => prev + 1) : onSubmit())}
+          />
         </ActionBar>
       )}
     </React.Fragment>
