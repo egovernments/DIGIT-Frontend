@@ -27,6 +27,7 @@ const Tabs = ({ numberTabs, onTabChange }) => {
 
 function AppFieldScreenWrapper() {
   const { state, dispatch } = useAppConfigContext();
+  const projectType = "MR_DN";
   const { t } = useTranslation();
   // const appTemplate = state?.["MASTER_DATA"]?.AppScreenConfigTemplateSchema;
   const appTemplate = state?.screenData;
@@ -116,7 +117,7 @@ function AppFieldScreenWrapper() {
                 label={label}
                 active={active}
                 required={required}
-                value={useCustomT(`MR_DN_${currentCard.parent}_${currentCard.name}_${label}`)}
+                value={useCustomT(`${projectType}_${currentCard.parent}_${currentCard.name}_${label}`)}
                 headerFields={true}
                 onChange={(event) => {
                   dispatch({
@@ -125,7 +126,7 @@ function AppFieldScreenWrapper() {
                       currentField: card[index],
                       currentScreen: currentCard,
                       field: cx[indx],
-                      localisedCode: `MR_DN_${currentCard.parent}_${currentCard.name}_${label}`,
+                      localisedCode: `${projectType}_${currentCard.parent}_${currentCard.name}_${label}`,
                       value: event.target.value,
                     },
                   });
@@ -133,7 +134,7 @@ function AppFieldScreenWrapper() {
               />
             ))}
             <Divider />
-            {fields?.map(({ type, label, active, required, dropDownOptions, deleteFlag }, i, c) => (
+            {fields?.map(({ type, label, active, required, Mandatory, helpText, infoText, innerLabel, dropDownOptions, deleteFlag }, i, c) => (
               <AppFieldComposer
                 type={type}
                 label={useCustomT(label)}
@@ -164,6 +165,10 @@ function AppFieldScreenWrapper() {
                   // return;
                 }}
                 config={c[i]}
+                Mandatory={Mandatory}
+                helpText={useCustomT(helpText)}
+                infoText={useCustomT(infoText)}
+                innerLabel={useCustomT(innerLabel)}
               />
             ))}
             {currentCard?.config?.enableFieldAddition && (

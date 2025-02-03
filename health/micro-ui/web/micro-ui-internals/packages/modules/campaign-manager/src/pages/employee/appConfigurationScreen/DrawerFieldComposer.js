@@ -1,12 +1,89 @@
 import { Button, Dropdown, LabelFieldPair, TextInput } from "@egovernments/digit-ui-components";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PRIMARY_COLOR } from "../../utils";
-import { DustbinIcon } from "../../components/icons/DustbinIcon";
+import { PRIMARY_COLOR } from "../../../utils";
+import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 import { useAppConfigContext } from "./AppConfigurationWrapper";
-import Switch from "../../components/Switch";
+import Switch from "../../../components/Switch";
 import { useCustomT } from "./useCustomT";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
+
+const whenToShow = (panelItem, drawerState) => {
+  switch (panelItem?.label) {
+    case "infoText":
+    case "label":
+    case "helpText":
+    case "innerLabel":
+      return drawerState?.[panelItem?.label];
+      break;
+    default:
+      return false;
+      break;
+  }
+};
+
+const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLocalization }) => {
+  const { t } = useTranslation();
+  const projectType = "MR_DN";
+  switch (panelItem?.fieldType) {
+    case "toggle":
+      return (
+        <>
+          <Switch
+            label={t(panelItem?.label)}
+            onToggle={(value) =>
+              setDrawerState((prev) => ({
+                ...prev,
+                [panelItem.label]: value,
+              }))
+            }
+            isCheckedInitially={drawerState?.[panelItem.label] ? true : false}
+            shapeOnOff
+          />
+          {whenToShow(panelItem, drawerState) && (
+            <TextInput
+              isRequired={true}
+              className=""
+              type={"text"}
+              name="title"
+              value={useCustomT(drawerState?.[panelItem.label])}
+              onChange={(event) => {
+                updateLocalization(
+                  `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${drawerState?.id}`,
+                  Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
+                  event.target.value
+                );
+                setDrawerState((prev) => ({
+                  ...prev,
+                  [panelItem.label]: `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${drawerState?.id}`,
+                }));
+              }}
+              placeholder={""}
+            />
+          )}
+        </>
+      );
+    case "dropdown":
+      return (
+        <Dropdown
+          // style={}
+          variant={""}
+          t={t}
+          option={state?.MASTER_DATA?.AppFieldType}
+          optionKey={"type"}
+          selected={state?.MASTER_DATA?.AppFieldType?.find((i) => i.type === drawerState?.type)}
+          select={(value) => {
+            setDrawerState((prev) => ({
+              ...prev,
+              type: value?.type,
+            }));
+          }}
+        />
+      );
+    default:
+      break;
+  }
+};
 
 function DrawerFieldComposer() {
   const { t } = useTranslation();
@@ -30,9 +107,30 @@ function DrawerFieldComposer() {
     });
   }, [drawerState]);
 
+  const isFieldVisible = (field) => {
+    // If visibilityEnabledFor is empty, the field is always visible
+    if (field?.visibilityEnabledFor?.length === 0) return true;
+    return field?.visibilityEnabledFor?.includes(drawerState?.type); // Check if current drawerState type matches
+  };
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
-      <Dropdown
+      {state?.MASTER_DATA?.DrawerPanelConfig?.map((panelItem, index) => {
+        if (isFieldVisible(panelItem)) {
+          return (
+            <div>
+              <RenderField
+                panelItem={panelItem}
+                drawerState={drawerState}
+                setDrawerState={setDrawerState}
+                state={state}
+                updateLocalization={updateLocalization}
+              />
+            </div>
+          );
+        }
+      })}
+      {/* <Dropdown
         // style={}
         variant={""}
         t={t}
@@ -45,8 +143,8 @@ function DrawerFieldComposer() {
             type: value?.type,
           }));
         }}
-      />
-      <Switch
+      /> */}
+      {/* <Switch
         label={t("MANDATORY")}
         onToggle={(value) =>
           setDrawerState((prev) => ({
@@ -56,9 +154,9 @@ function DrawerFieldComposer() {
         }
         isCheckedInitially={drawerState?.required ? true : false}
         shapeOnOff
-      />
+      /> */}
 
-      <Switch
+      {/* <Switch
         label={t("LABEL")}
         onToggle={(value) => {
           setDrawerState((prev) => ({
@@ -68,8 +166,8 @@ function DrawerFieldComposer() {
         }}
         isCheckedInitially={drawerState?.isLabel ? true : false}
         shapeOnOff
-      />
-      {drawerState?.isLabel && (
+      /> */}
+      {/* {drawerState?.label && (
         <TextInput
           isRequired={true}
           className=""
@@ -89,7 +187,7 @@ function DrawerFieldComposer() {
           }}
           placeholder={""}
         />
-      )}
+      )} */}
 
       {(drawerState?.type === "dropDown" || drawerState?.type === "checkbox") && (
         <div

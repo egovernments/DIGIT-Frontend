@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useReducer, useState } from "react";
 import AppFieldScreenWrapper from "./AppFieldScreenWrapper";
 import { Button, Divider, Loader, PopUp } from "@egovernments/digit-ui-components";
-import SidePanel from "./SidePanel";
 import { useTranslation } from "react-i18next";
 import DrawerFieldComposer from "./DrawerFieldComposer";
-// import { dummyMaster } from "../../configs/dummyMaster";
+import SidePanel from "./SidePanel";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
 import AppLocalisationTable from "./AppLocalisationTable";
+// import { dummyMaster } from "../../configs/dummyMaster";
 
 const AppConfigContext = createContext();
 
@@ -192,7 +192,6 @@ const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
 function AppConfigurationWrapper() {
   const { locState, addMissingKey, updateLocalization } = useAppLocalisationContext();
   const [state, dispatch] = useReducer((state, action) => reducer(state, action, updateLocalization), initialState);
-  console.log("state", state)
   const { t } = useTranslation();
   const [showPopUp, setShowPopUp] = useState(false);
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(

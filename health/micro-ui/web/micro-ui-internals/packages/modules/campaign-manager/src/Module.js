@@ -57,8 +57,8 @@ import MapView from "./components/MapView";
 import NoResultsFound from "./components/NoResultsFound";
 import UploadDataMappingWrapper from "./components/UploadDataMappingWrapper";
 import DataUploadWrapper from "./components/DataUploadWrapper";
-import AppConfigurationWrapper from "./pages/employee/AppConfigurationWrapper";
-import AppLocalisationWrapper from "./pages/employee/AppLocalisationWrapper";
+import AppConfigurationWrapper from "./pages/employee/appConfigurationScreen/AppConfigurationWrapper";
+import AppLocalisationWrapper from "./pages/employee/appConfigurationScreen/AppLocalisationWrapper";
 
 /**
  * MDMS Module name

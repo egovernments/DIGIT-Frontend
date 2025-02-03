@@ -58,7 +58,6 @@ export const AppLocalisationTable = ({ data }) => {
           setActiveLocale={setActiveLocale}
           activeLocale={activeLocale}
           onTabChange={(tab, index) => {
-            console.log("DKLJDLKJ", tab, index);
             setActiveLocale(tab);
           }}
         />

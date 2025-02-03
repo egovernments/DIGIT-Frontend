@@ -41,8 +41,6 @@ function AppLocalisationWrapper() {
     });
   };
 
-  console.log("locStatelocStatelocState", locState);
-
   const enabledModules = ["en_IN", "pt_IN", "fr_IN"];
   const currentLocale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
