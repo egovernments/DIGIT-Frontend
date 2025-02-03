@@ -63,8 +63,8 @@ const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
     [{ name: "MicroplanCamplignTypes" }],
     {
       select: (microplanCampignTypes) => {
-        let campaignTypeOptions = microplanCampignTypes?.["HCM-MICROPLANNING-CAMPAIGN-TYPES"]?.MicroplanCamplignTypes;
-        return campaignTypeOptions.map((item) => item.code);
+        const campaignTypeOptions = microplanCampignTypes?.["HCM-MICROPLANNING-CAMPAIGN-TYPES"]?.MicroplanCamplignTypes;
+        return campaignTypeOptions.map((item) => item.code) || [];
       },
     },
   );
