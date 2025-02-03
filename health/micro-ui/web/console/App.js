@@ -12,6 +12,7 @@ import { DigitUI } from "@egovernments/digit-ui-module-core";
 // import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
+import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
 
@@ -37,7 +38,7 @@ const initDigitUI = () => {
     commonUiConfig: UICustomizations,
   };
   // initHRMSComponents();
-
+  initWorkbenchComponents();
   initCampaignComponents();
 
 };
