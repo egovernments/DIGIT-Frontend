@@ -57,7 +57,7 @@ const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
     { schemaCode: "ProjectType" }
   );
 
-  const campaignTypeOptions = state?.MicroplanCamplignTypes?.map(item => item.code) || [];
+  const campaignTypeOptions = state?.MicroplanCampaignTypes?.map(item => item.code) || [];
 
   useEffect(() => {
     onSelect(customProps.name, {
