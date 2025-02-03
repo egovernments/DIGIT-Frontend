@@ -23,6 +23,7 @@ const initializePaymentsModule = async ({ tenantId }) => {
 
   const projectContextPath = window?.globalConfigs?.getConfig("PROJECT_CONTEXT_PATH") || "health-project";
   const individualContextPath = window?.globalConfigs?.getConfig("INDIVIDUAL_CONTEXT_PATH") || "health-individual";
+  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "MICROPLAN";
 
   let user = Digit?.SessionStorage.get("User");
 
@@ -114,7 +115,7 @@ const initializePaymentsModule = async ({ tenantId }) => {
       userService: false,
       params: {
         tenantId: tenantId,
-        hierarchyType: nationalLevelProject?.address?.boundary.split("_")[0],
+        hierarchyType: hierarchyType,
         includeChildren: true,
         codes: nationalLevelProject?.address?.boundary,
         boundaryType: nationalLevelProject?.address?.boundaryType,
