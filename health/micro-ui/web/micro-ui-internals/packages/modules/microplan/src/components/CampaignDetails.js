@@ -57,6 +57,18 @@ const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
     { schemaCode: "ProjectType" }
   );
 
+  const { isMicroplanCampignTypesLoading, data : microplanCampignTypes } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    "HCM-MICROPLANNING-CAMPAIGN-TYPES",
+    [{ name: "MicroplanCamplignTypes" }],
+    {
+      select: (microplanCampignTypes) => {
+        let campaignTypeOptions = microplanCampignTypes?.["HCM-MICROPLANNING-CAMPAIGN-TYPES"]?.MicroplanCamplignTypes;
+        return campaignTypeOptions.map((item) => item.code);
+      },
+    },
+  );
+
   useEffect(() => {
     onSelect(customProps.name, {
       distributionStrat,
@@ -76,7 +88,7 @@ const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
     }
   });
 
-  if (isLoading) {
+  if (isLoading || isMicroplanCampignTypesLoading) {
     return <Loader />;
   }
 
@@ -112,7 +124,7 @@ const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
           // variant={error ? "error" : ""}
           t={t}
           option={data?.campaignTypes?.filter(
-            (campaign) => campaign.code !== "IRS-mz"
+            (campaign) => microplanCampignTypes?.includes(campaign.code)
           )}
           optionKey={"i18nKey"}
           selected={campaignType}
