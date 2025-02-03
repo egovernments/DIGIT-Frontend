@@ -1,5 +1,7 @@
 # Changelog 
 
+## [1.8.22]  [3-Feb-2025]
+- Fixed core issues and related found in PGR ethopia demo
 
 ## [1.8.21]  [1-Feb-2025]
 - FEATURE/HCMPRE-1425 : Added the workbench module patches and Updated localisation search screen, and core module #2181
