@@ -232,7 +232,7 @@ export const UICustomizations = {
           return value ? <span>{value?.[0]?.name}</span> : <span>{t("NA")}</span>;
 
         case "WF_INBOX_HEADER_SLA_DAYS_REMAINING":
-          return value > 0 ? <Tag label={value} showIcon={false} type="success" /> : <Tag label={value} showIcon={false} type="error" />;
+          return value;
 
         default:
           return t("ES_COMMON_NA");
