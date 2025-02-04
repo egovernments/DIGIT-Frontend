@@ -16,7 +16,7 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSessionStorag
   const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "MICROPLAN";
   // Get the hierarchy and boundary configurations from session storage
   const boundaryHierarchy = Digit.SessionStorage.get("boundaryHierarchyOrder").map((item) => item.code);
-  const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentConfig")?.lowestLevelBoundary || "DISTRICT";
+  const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentsConfig")?.lowestLevelBoundary || "DISTRICT";
 
   // State to manage boundary data visibility, values, and selected boundaries
   const defaultBoundaryData = boundaryHierarchy.reduce((acc, curr) => {
