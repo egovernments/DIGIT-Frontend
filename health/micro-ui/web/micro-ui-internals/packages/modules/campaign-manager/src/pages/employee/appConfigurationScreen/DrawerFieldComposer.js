@@ -81,6 +81,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
         />
       );
     default:
+      return null;
       break;
   }
 };
