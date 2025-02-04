@@ -70,7 +70,6 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite
     pathname,
     initData,
   };
-
   return (
     <Switch>
      {allowedUserTypes?.some(userType=>userType=="employee")&& <Route path={`/${window?.contextPath}/employee`}>
@@ -78,6 +77,9 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite
       </Route>}
       {allowedUserTypes?.some(userType=>userType=="citizen")&& <Route path={`/${window?.contextPath}/citizen`}>
         <CitizenApp {...commonProps} />
+      </Route>}
+      {allowedUserTypes?.some(userType=>userType=="employee")&& <Route path={`/${window?.contextPath}/no-top-bar/employee`}>
+        <EmployeeApp  {...commonProps} noTopBar={true} />
       </Route>}
       <Route>
         <Redirect to={`/${window?.contextPath}/${defaultLanding}`} />

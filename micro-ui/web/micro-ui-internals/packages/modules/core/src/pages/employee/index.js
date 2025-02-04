@@ -36,7 +36,10 @@ const EmployeeApp = ({
   sourceUrl,
   pathname,
   initData,
+  noTopBar=false
 }) => {
+  
+
   const history = useHistory();
   const { t } = useTranslation();
   const { path } = useRouteMatch();
@@ -119,9 +122,9 @@ const EmployeeApp = ({
               </Route>
             </Switch>
           </div>
-        </Route>
-        <Route>
-          <TopBarSideBar
+        </Route> 
+       <Route>
+          {!noTopBar&&<TopBarSideBar
             t={t}
             stateInfo={stateInfo}
             userDetails={userDetails}
@@ -132,8 +135,8 @@ const EmployeeApp = ({
             logoUrl={logoUrl}
             logoUrlWhite={logoUrlWhite}
             modules={modules}
-          />
-          <div className={`main ${DSO ? "m-auto" : ""} digit-home-main`}>
+          />}
+          <div className={!noTopBar?`main ${DSO ? "m-auto" : ""} digit-home-main`:""}>
             <div className="employee-app-wrapper digit-home-app-wrapper">
               <ErrorBoundary initData={initData}>
                 <AppModules

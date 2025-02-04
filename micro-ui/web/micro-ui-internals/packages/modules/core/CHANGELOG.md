@@ -1,7 +1,10 @@
 # Changelog 
 
-## [1.8.23]  [3-Feb-2025]
+## [1.8.24]  [3-Feb-2025]
 - Fixed core issues and related found in PGR ethopia demo
+
+## [1.8.23]  [3-Feb-2025]
+- FEATURE/HCMPRE-1852 : POC for single landing ui for users added extra route for no-top-bar/employee
 
 ## [1.8.22]  [3-Feb-2025]
 - FEATURE/HCMPRE-2208  : Fixed some loader component issue 
