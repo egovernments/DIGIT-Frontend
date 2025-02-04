@@ -47,11 +47,17 @@ const BoundaryHome = () => {
   const [showPopUp, setShowPopUp] = useState(false);
   const [authorized, setAuthorized] = useState(false);
   const [geoPodeData, setGeoPodeData] = useState(false);
+  const [disButton, setDisButton] = useState(true);
   const history = useHistory();
+  const user = Digit.UserService.getUser();
   
   const type=searchParams.get("type")|| config?.type;
 
   const {isLoading,data,error}=Digit.Hooks.campaign.useBoundaryHome({ screenType: type,defaultHierarchyType:searchParams?.get("defaultHierarchyType"),hierarchyType:searchParams?.get("hierarchyType"),userName:Digit.UserService.getUser()?.info?.userName,tenantId });
+  useEffect(()=>{
+    if(user?.info?.roles?.some(role => role.code === "BOUNDARY_MANAGER")) setAuthorized(true);
+    setDisButton(!data?.boundaryData || !data?.hierarchyName);
+  }, [data]);
 
   if (isLoading) return <Loader />;
 
@@ -72,7 +78,7 @@ const BoundaryHome = () => {
             size={"large"}
             variation={"secondary"}
             label={t(key)}
-            isDisabled={isEditDisabled || isCreateDisabled}
+            isDisabled={isEditDisabled || isCreateDisabled || disButton || !authorized}
             onClick={()=>navigate(history,key,data,setShowPopUp)}
             style={{ width: "35rem", height: "5rem" }}
             textStyles={{ fontSize: "1.5rem" }}
@@ -80,7 +86,7 @@ const BoundaryHome = () => {
         })}
         </div>
       </Card>
-      <InfoCard
+      {!disButton && authorized && <InfoCard
         label="Info"
         variant="default"
         style={{maxWidth:"200rem", marginTop:"1rem"}}
@@ -88,7 +94,19 @@ const BoundaryHome = () => {
           <span style={{ color: "#505A5F", fontWeight: 600 }}>{t(`HIERARCHY_CREATED_ON`)} {": "} {new Date(data?.boundaryData?.auditDetails?.createdTime).toLocaleDateString()}</span>,
           <span style={{ color: "#505A5F", fontWeight: 600 }}>{t(`HIERARCHY_LAST_MODIFIED_ON`)} {": "} {new Date(data?.boundaryData?.auditDetails?.lastModifiedTime).toLocaleDateString()}</span>,
         ]}
-      /> 
+      /> }
+      {disButton && 
+        <Toast
+          type="error"
+          label={t("BOUNDARY_USER_NOT_ASSIGNED_TO_ANY_BOUNDARY_WITH_HIS_DEPARTMENT")}
+        />
+      }
+      {!authorized && 
+        <Toast
+          type="error"
+          label={t("BOUNDARY_USER_NOT_AUTHORIZED_FOR_BOUNDARY_MANAGEMENT")}
+        />
+      }
     </React.Fragment>
   );
 };

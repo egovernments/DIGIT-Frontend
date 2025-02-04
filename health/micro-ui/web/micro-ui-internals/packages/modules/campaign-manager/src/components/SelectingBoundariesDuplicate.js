@@ -19,44 +19,33 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   //   "filter": `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`
   //  }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` });
   
+  const { 
+    data: BOUNDARY_HIERARCHY_TYPE, 
+    isLoading: hierarchyLoading,
+    rawData: rawData
+  } = Digit.Hooks.campaign.useEmployeeHierarchyType(tenantId, {
+    select: (data) => data?.hierarchy
+  });
+  const lowestHierarchy = useMemo(() => {
+    return rawData?.matchingHierarchy?.lowestHierarchy;
+  }, [rawData]);
+  const hierarchyType = useMemo(()=>{
+    return BOUNDARY_HIERARCHY_TYPE;
+  }, [BOUNDARY_HIERARCHY_TYPE])
+
   
   const [boundaryHierarchyData, setBoundaryHierarchyData] = useState(null);
-  const [hierarchyType, setHierarchyType] = useState(null);
-  const [HierarchySchema, setHierarchySchema] = useState(null);
-  const [lowestHierarchy, setLowestHierarchy] = useState(null);
   const [loading, setLoading] = useState(true);
 
-
   useEffect(() => {
-    const fetchBoundaryHierarchy = async () => {
-      const employeeDepartments = employee?.assignments?.map((assignment) => assignment.department) || [];
-      
-      // Find first hierarchy where any group matches any employee department
-      const firstMatchingSchema = hierarchies.find(
-        schema => (schema.department || []).some(dept => employeeDepartments.includes(dept))
-      );
-      
-      const hierarchyType = firstMatchingSchema ? [firstMatchingSchema] : [];
-      
-      const hierschema = {
-        "HCM-ADMIN-CONSOLE": {
-          "HierarchySchema": hierarchyType
-        }
-      };
-      
-      setHierarchySchema(hierschema);
-      setLowestHierarchy(hierschema?.["HCM-ADMIN-CONSOLE"]?.HierarchySchema?.[0]?.lowestHierarchy);
-      setHierarchyType(hierarchyType?.[0]?.hierarchy);
-      
-      if (!hierarchyType?.[0]?.hierarchy) return;
-  
+    if(!hierarchyType) return null;
+    const fetchBoundaryHierarchy = async () => { 
       try {
-        // Using regular fetch instead of hook
         const response = await Digit.CustomService.getResponse({
           url: '/boundary-service/boundary-relationships/_search',
           params: {
             tenantId: tenantId,
-            hierarchyType: hierarchyType?.[0]?.hierarchy,
+            hierarchyType: hierarchyType,
             includeChildren: true
           },
           body: {},
@@ -65,7 +54,6 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
         const boundaryData = response?.TenantBoundary?.[0]?.boundary;
         setBoundaryHierarchyData(boundaryData);
         setLoading(false);
-  
 
       } catch (error) {
         console.error("Error fetching boundary hierarchy:", error);
@@ -73,13 +61,9 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     };
   
     fetchBoundaryHierarchy();
-  }, [employee, tenantId]);
+  }, [hierarchyType]);
   
   const { data: mailConfig } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "mailConfig" }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.mailConfig` });
-  // const lowestHierarchy = useMemo(() => {
-  //   console.log("lowest",HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.lowestHierarchy );
-  //   return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.lowestHierarchy;
-  // }, [HierarchySchema]);
 
   const [selectedData, setSelectedData] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData || []);
   const [boundaryOptions, setBoundaryOptions] = useState(
@@ -108,7 +92,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   };
 
   useEffect(() => {
-    onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions ,  updateBoundary: !restrictSelection});
+    onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions ,  updateBoundary: !restrictSelection });
   }, [selectedData, boundaryOptions , restrictSelection]);
 
   useEffect(() => {
@@ -181,26 +165,16 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
               <Header>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</Header>
               <p className="description-type">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
               <Wrapper
-                // hierarchyType={hierarchyType}
-                // lowest={lowestHierarchy}
-                // selectedData={selectedData}
-                // boundaryOptions={boundaryOptions}
-                // hierarchyData={props?.props?.hierarchyData}
-                // isMultiSelect={"true"}
-                // restrictSelection = {restrictSelection}
-                // onSelect={(value) => {
-                //   handleBoundaryChange(value);
-                // }}
-                  hierarchyType={hierarchyType}
-                  lowest={lowestHierarchy}
-                  selectedData={selectedData}
-                  boundaryOptions={boundaryOptions}
-                  hierarchyData={boundaryHierarchyData} // Pass the fetched boundary hierarchy data
-                  isMultiSelect={"true"}
-                  restrictSelection={restrictSelection}
-                  onSelect={(value) => {
-                    handleBoundaryChange(value);
-                  }}
+                hierarchyType={hierarchyType}
+                lowest={lowestHierarchy}
+                selectedData={selectedData}
+                boundaryOptions={boundaryOptions}
+                hierarchyData={boundaryHierarchyData}
+                isMultiSelect={"true"}
+                restrictSelection = {restrictSelection}
+                onSelect={(value) => {
+                  handleBoundaryChange(value);
+                }}
               ></Wrapper>
             </Card>
             <InfoCard

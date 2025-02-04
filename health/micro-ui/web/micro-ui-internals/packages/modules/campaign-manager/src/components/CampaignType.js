@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect, Fragment } from "react";
 import { Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { InfoCard, LabelFieldPair } from "@egovernments/digit-ui-components";
+import { InfoCard, LabelFieldPair, Toast } from "@egovernments/digit-ui-components";
 import { Button, CardText, Dropdown, ErrorMessage, PopUp, Stepper, TextBlock , Card, Loader} from "@egovernments/digit-ui-components";
 
 const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
@@ -20,14 +20,27 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
   const [currentStep , setCurrentStep] = useState(1);
   const currentKey = searchParams.get("key");
   const source = searchParams.get("source");
+  const [showToast, setShowToast] = useState(false);
   const [key, setKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
   const [loading, setLoading] = useState(true);
 
-  const employeeDetails = props?.props?.employeeDetails?.Employees?.[0];
-  const hierarchies = props?.props?.allHierarchy?.MdmsRes?.["HCM-ADMIN-CONSOLE"]?.HierarchySchema || [];
+  const { 
+    data: BOUNDARY_HIERARCHY_TYPE, 
+    isLoading: hierarchyLoading,
+    rawData: rawData
+  } = Digit.Hooks.campaign.useEmployeeHierarchyType(tenantId, {
+    select: (data) => data?.hierarchy
+  });
+
+  const employeeDetails = useMemo(() => {
+    return rawData?.employee;
+  }, [rawData]);
+  const hierarchies = useMemo(()=>{
+    return rawData?.allHierarchies;
+  }, [rawData])
 
   function updateUrlParams(params) {
     const url = new URL(window.location.href);
@@ -95,6 +108,7 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
       const filtered = filterProjectTypesByHierarchy(employeeDetails, hierarchies, projectType);
       setLoading(false);
       setFilteredProjectTypes(filtered);
+      if(!filtered) setShowToast(true);
     }
   }, [employeeDetails, projectType, hierarchies]);
 
@@ -282,6 +296,12 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
           )}
         </div>
       )}
+      {!loading && showToast && 
+        <Toast
+        type="error"
+        label={t("BOUNDARY_USER_NOT ASSIGNED_TO_ANY_BOUNDARY_WITH_HIS_DEPARTMENT")}
+      />
+      }
     </>
   );
 };

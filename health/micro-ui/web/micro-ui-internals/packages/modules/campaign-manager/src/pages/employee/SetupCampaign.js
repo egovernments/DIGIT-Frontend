@@ -66,21 +66,31 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const [fetchUpload, setFetchUpload] = useState(false);
   const [active, setActive] = useState(0);
   const HRMS_CONTEXT_PATH = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || "egov-hrms";
-  const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    CONSOLE_MDMS_MODULENAME,
-    [
-      {
-        name: "HierarchySchema",
-        filter: `[?(@.type=='${window?.Digit?.Utils?.campaign?.getModuleName()}')]`,
-      },
-    ],
-    { select: (MdmsRes) => MdmsRes },
-    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
-  );
+  // const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(
+  //   tenantId,
+  //   CONSOLE_MDMS_MODULENAME,
+  //   [
+  //     {
+  //       name: "HierarchySchema",
+  //       filter: `[?(@.type=='${window?.Digit?.Utils?.campaign?.getModuleName()}')]`,
+  //     },
+  //   ],
+  //   { select: (MdmsRes) => MdmsRes },
+  //   { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
+  // );
+
+  const { 
+    data: BOUNDARY_HIERARCHY_TYPE, 
+    isLoading: hierarchyLoading,
+    rawData: rawData
+  } = Digit.Hooks.campaign.useEmployeeHierarchyType(tenantId, {
+    select: (data) => data?.hierarchy
+  });
+
+
   const lowestHierarchy = useMemo(() => {
-    return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.lowestHierarchy;
-  }, [HierarchySchema]);
+    return rawData?.matchingHierarchy?.lowestHierarchy;
+  }, [rawData]);
 
   const { data: DeliveryConfig } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -124,22 +134,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
           }
         }
     }
-
-  const { data: allHierarchy } = Digit.Hooks.useCustomAPIHook(reqAllHierarchy);
-
-  const reqEmployeeDetails = {
-    url: `/${HRMS_CONTEXT_PATH}/employees/_search`,
-        params: {
-          tenantId: tenantId,
-          codes: Digit.UserService.getUser()?.info?.userName,
-          sortOrder: "ASC",
-        },
-        body: {},
-
-  }
-
-  const { data: employeeDetails } = Digit.Hooks.useCustomAPIHook(reqEmployeeDetails);
-
+  
   const { isLoading: draftLoading, data: draftData, error: draftError, refetch: draftRefetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
@@ -243,8 +238,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     }
   }, [hierarchyDefinition?.BoundaryHierarchy?.[0], draftData]);
   useEffect(() => {
-    setCampaignConfig(CampaignConfig(totalFormData, dataParams, isSubmitting, summaryErrors, hierarchyData, allHierarchy, employeeDetails));
-  }, [totalFormData, dataParams, isSubmitting, summaryErrors, hierarchyData, allHierarchy, employeeDetails]);
+    setCampaignConfig(CampaignConfig(totalFormData, dataParams, isSubmitting, summaryErrors, hierarchyData));
+  }, [totalFormData, dataParams, isSubmitting, summaryErrors, hierarchyData]);
 
   useEffect(() => {
     setIsSubmitting(false);

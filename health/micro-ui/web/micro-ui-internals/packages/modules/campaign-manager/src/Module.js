@@ -1,5 +1,5 @@
-import { Loader, TourProvider } from "@egovernments/digit-ui-react-components";
-import React from "react";
+import { Body, Loader, TourProvider } from "@egovernments/digit-ui-react-components";
+import React, { useState, useEffect } from "react";
 import { useRouteMatch } from "react-router-dom";
 import EmployeeApp from "./pages/employee";
 import { CustomisedHooks } from "./hooks";
@@ -68,27 +68,30 @@ export const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
  */
 const CampaignModule = ({ stateCode, userType, tenants }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const { data: BOUNDARY_HIERARCHY_TYPE, isLoading: hierarchyLoading } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    CONSOLE_MDMS_MODULENAME,
-    [
-      {
-        name: "HierarchySchema",
-        filter: `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`,
-      },
-    ],
-    {
-      select: (data) => {
-        return data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy;
-      },
-    },
-    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
-  );
+  const [filteredHierarchyType, setFilteredHierarchyType] = useState(null);
+  const [employeeData, setEmployeeData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const HRMS_CONTEXT_PATH = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || "egov-hrms";
 
-  const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE, tenantId });
+  // Using the new custom hook
+  const { 
+    data: BOUNDARY_HIERARCHY_TYPE, 
+    isLoading: hierarchyLoading,
+    rawData: hierarchyData 
+  } = Digit.Hooks.campaign.useEmployeeHierarchyType(tenantId, {
+    select: (data) => data?.hierarchy
+  });
+
+  const hierarchyRelationData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ 
+    BOUNDARY_HIERARCHY_TYPE, 
+    tenantId 
+  });
+
   const modulePrefix = "hcm";
+  const moduleCode = BOUNDARY_HIERARCHY_TYPE 
+    ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`] 
+    : ["campaignmanager", "schema", "admin-schemas", "checklist", "appconfiguration"];
 
-  const moduleCode = BOUNDARY_HIERARCHY_TYPE ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`] : ["campaignmanager", "schema", "admin-schemas", "checklist", "appconfiguration"];
 
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
@@ -112,7 +115,13 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
           stateCode={stateCode}
           url={url}
           userType={userType}
-          hierarchyData={hierarchyData}
+          hierarchyData={hierarchyRelationData}
+          employeeDetails={hierarchyData?.employee}
+          allHierarchy={{
+            [CONSOLE_MDMS_MODULENAME]: {
+              HierarchySchema: hierarchyData?.allHierarchies
+            }
+          }}
         />
       </TourProvider>
     </ErrorBoundary>

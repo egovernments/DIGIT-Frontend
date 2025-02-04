@@ -55,17 +55,29 @@ const UpdateCampaign = ({hierarchyData }) => {
   const [fetchBoundary, setFetchBoundary] = useState(() => Boolean(searchParams.get("fetchBoundary")));
   const [fetchUpload, setFetchUpload] = useState(false);
   const [active, setActive] = useState(0);
-  const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ 
-    name: "HierarchySchema",
-    "filter": `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`
-   }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` });
+  // const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ 
+  //   name: "HierarchySchema",
+  //   "filter": `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`
+  //  }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` });
+  // const [hierarchyType, setHierarchyType] = useState();
+  // const lowestHierarchy = useMemo(() => {
+  //   return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
+  // }, [HierarchySchema, hierarchyType]);
+
+  const { 
+    data: BOUNDARY_HIERARCHY_TYPE, 
+    isLoading: hierarchyLoading,
+    rawData: rawData
+  } = Digit.Hooks.campaign.useEmployeeHierarchyType(tenantId, {
+    select: (data) => data?.hierarchy
+  });
   const [hierarchyType, setHierarchyType] = useState();
   const lowestHierarchy = useMemo(() => {
-    return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
-  }, [HierarchySchema, hierarchyType]);
+    return rawData?.matchingHierarchy?.lowestHierarchy;
+  }, [rawData]);
+
   const { isLoading, data: projectType } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }],{select:(MdmsRes)=>MdmsRes}, { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` });
   
-
   const reqCriteriaCampaign = {
     url: `/project-factory/v1/project-type/search`,
     body: {
