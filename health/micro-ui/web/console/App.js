@@ -12,7 +12,10 @@ import { Loader } from "@egovernments/digit-ui-components";
 import { DigitUI } from "@egovernments/digit-ui-module-core";
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
-import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
+import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager";
+import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
+import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
+
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
 
@@ -26,7 +29,7 @@ const enabledModules = [
   "HCMWORKBENCH",
   "Campaign"
 ];
-const HCM_MODULE_NAME = "console";
+const HCM_MODULE_NAME = "campaign";
 export const OverrideUICustomizations = {
   HCM_MODULE_NAME,
 }
@@ -54,7 +57,9 @@ const initDigitUI = () => {
       commonUiConfig: UICustomizations,
     };
     // initHRMSComponents();
+    initUtilitiesComponents();
     initWorkbenchComponents();
+    initWorkbenchHCMComponents();
     initCampaignComponents();
     updateCustomConfigs();
   } catch (error) {
