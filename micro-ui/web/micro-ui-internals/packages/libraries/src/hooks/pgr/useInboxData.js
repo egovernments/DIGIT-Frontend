@@ -47,7 +47,7 @@ const mapWfBybusinessId = (wfs) => {
 
 const combineResponses = (complaintDetailsResponse, workflowInstances) => {
   let wfMap = mapWfBybusinessId(workflowInstances.ProcessInstances);
-  let filtered=complaintDetailsResponse?.ServiceWrappers?.filter((complaint) => wfMap?.[complaint?.service?.serviceRequestId])
+  const filtered=complaintDetailsResponse?.ServiceWrappers?.filter((complaint) => wfMap?.[complaint?.service?.serviceRequestId])
   if(filtered){
     return filtered?.map((complaint) => ({
       serviceRequestId: complaint.service.serviceRequestId,
