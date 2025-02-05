@@ -87,7 +87,6 @@ const setupLibraries = (Library, service, method) => {
 
 const updateCustomConfigs = () => {
   setupLibraries("Customizations", "commonUiConfig", { ...window?.Digit?.Customizations?.commonUiConfig, ...UICustomizations });
-  //setupLibraries("Utils","parsingUtils",{...window?.Digit?.Utils?.parsingUtils,...parsingUtils})
 };
 
 export const initPGRComponents = () => {

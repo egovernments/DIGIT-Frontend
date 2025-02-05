@@ -147,7 +147,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     name: Digit.Utils.locale.getTransformedLocale(`TENANT_TENANTS_${defaultTenant}`),
   };
 
-  let config = [{ body: propsConfig?.inputs }];
+  const config = [{ body: propsConfig?.inputs }];
 
   const { mode } = Digit.Hooks.useQueryParams();
   if (
@@ -156,12 +156,11 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     config[0].body[2].isMandatory = false;
     config[0].body[2].populators.defaultValue = defaultValue;
   }
-  const defaultValues = config[0].body.reduce((acc, curr) => {
-    if (curr?.populators?.defaultValue) {
-      acc = { ...acc, [curr?.populators?.name]: curr?.populators?.defaultValue };
-    }
-    return acc;
-  }, {});
+  const defaultValues = Object.fromEntries(
+    config[0].body
+      .filter(field => field?.populators?.defaultValue && field?.populators?.name)
+      .map(field => [field.populators.name, field.populators.defaultValue])
+  );
   const onFormValueChange = (setValue, formData, formState) => {
     // Extract keys from the config
     const keys = config[0].body.filter(field=>field?.isMandatory).map((field) => field.key);

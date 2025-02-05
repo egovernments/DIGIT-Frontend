@@ -57,8 +57,8 @@ const useCustomAPIHook = ({
   };
 
   const { isLoading, data, isFetching, refetch } = useQuery(queryKey, fetchData, {
-    cacheTime: 1000, 
-    staleTime: 5000,
+    cacheTime: options?.cacheTime || 1000, 
+    staleTime: options?.staleTime || 5000,
     keepPreviousData: true, 
     retry: 2,
     refetchOnWindowFocus: false,

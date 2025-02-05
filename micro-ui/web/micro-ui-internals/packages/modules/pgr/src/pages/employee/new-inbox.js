@@ -3,11 +3,11 @@ import { useTranslation } from "react-i18next";
 import { Header, InboxSearchComposer , Loader } from "@egovernments/digit-ui-react-components";
 import inboxConfigPGR from "../inboxConfigPGR"
 import { useLocation } from "react-router-dom";
-const Inbox_v2 = () => {
+const InboxV2 = () => {
   const { t } = useTranslation()
   //fetch this config from mdms and pass it to the preProcess fn
   const location = useLocation()
-   let configs = inboxConfigPGR();
+  const configs = inboxConfigPGR();
   const [pageConfig, setPageConfig] = useState(null)
   const moduleName = Digit.Utils.getConfigModuleName()
   const tenant = Digit.ULBService.getStateId();
@@ -19,7 +19,7 @@ const Inbox_v2 = () => {
         select: (data) => {
             const localities = []
             data?.TenantBoundary[0]?.boundary.forEach((item) => {
-                localities.push({ code: item.code, name: item.name, i18nKey: `${"PG_AMHARA"}_ADMIN_${item?.code}` })
+                localities.push({ code: item.code, name: item.name, i18nKey: `${tenantId?.replaceAll(".","_").toUpperCase()}_ADMIN_${item?.code}` })
             });
             return (localities);
             
@@ -28,7 +28,7 @@ const Inbox_v2 = () => {
 
   
 
-    let serviceDefs = Digit.Hooks.pgr.useServiceDefs(tenantId, "PGR");
+    const serviceDefs = Digit.Hooks.pgr.useServiceDefs(tenantId, "PGR");
 
 
   const updatedConfig = useMemo(
@@ -58,10 +58,10 @@ const Inbox_v2 = () => {
     <React.Fragment>
       <Header styles={{ fontSize: "32px" }}>{t(updatedConfig?.label)}{location?.state?.count ? <span className="inbox-count">{location?.state?.count}</span> : null}</Header>
       <div className="inbox-search-wrapper">
-        <InboxSearchComposer configs={updatedConfig}></InboxSearchComposer>
+        <InboxSearchComposer configs={updatedConfig} />
       </div>
     </React.Fragment>
   )
 }
 
-export default Inbox_v2
+export default InboxV2

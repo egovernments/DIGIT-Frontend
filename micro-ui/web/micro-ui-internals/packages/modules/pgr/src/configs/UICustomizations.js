@@ -129,6 +129,10 @@ export const UICustomizations = {
     }
   },
   enableModalSubmit: (businessService, action, setModalSubmit, data) => {
+    if (!businessService || !action?.action) {
+         console.error('Invalid business service or action');
+         return;
+       }
     if (businessService === businessServiceMap?.["muster roll"] && action.action === "APPROVE") {
       setModalSubmit(data?.acceptTerms);
     }
@@ -181,7 +185,6 @@ export const UICustomizations = {
     preProcess: (data) => {
       data.body.inbox.tenantId = Digit.ULBService.getCurrentTenantId();
       data.body.inbox.processSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId().split(".")[0];
-      //data.body.inbox.moduleSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
 
       if(data?.body?.inbox?.moduleSearchCriteria?.mobileNumber) delete data.body.inbox.moduleSearchCriteria.mobileNumber
 
@@ -256,21 +259,6 @@ export const UICustomizations = {
         config: {
           enabled: true,
           select: (data) => {
-            // const states = data?.TenantBoundary?.[0]?.boundary?.map((loc) => 
-            // {
-            //   return{
-            //     i18nKey: `${Digit.Utils.locale.getTransformedLocale(row?.ProcessInstance?.tenantId)}_ADMIN_${loc?.code}`,
-            //     ...loc
-            //   }
-            // })
-            // const states = data?.BusinessServices?.[0]?.states
-            //   ?.filter((state) => state.state)
-            //   ?.map((state) => {
-            //     return {
-            //       i18nKey: `WF_${Digit?.Customizations?.["commonUiConfig"]?.getBusinessService("muster roll")}_STATUS_${state?.state}`,
-            //       wfStatus: state?.state,
-            //     };
-            //   });
             return data;
           },
         },
