@@ -161,6 +161,7 @@ const InboxFilterWrapper = (props) => {
       primaryActionLabel={resultArray.length > 0 && t(props?.primaryActionLabel)}
       secondaryActionLabel={resultArray.length > 0 && t(props?.secondaryActionLabel)}
       title={t(props?.title)}
+      className="filterCardCustom"
     >
       <div className="gap-between-dropdowns" style={{ height: "18rem" }}>
         {/* Only render LabelFieldPair if resultArray has items */}
