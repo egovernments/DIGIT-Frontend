@@ -9,8 +9,7 @@ import { FormComposer } from "../../../components/FormComposer";
 import { createComplaint } from "../../../redux/actions/index";
 
 export const CreateComplaint = ({ parentUrl }) => {
-  const { data: cities, isLoading } = Digit.Utils.getMultiRootTenant()? Digit.Hooks.useTenants() :Digit.Hooks.pgr.useTenants();
-  const stateId = Digit.ULBService.getStateId();
+  const cities = Digit.Utils.getMultiRootTenant()? Digit.Hooks.useTenants() :Digit.Hooks.pgr.useTenants();
   const [showToast, setShowToast] = useState(null);
   const { t } = useTranslation();
 
@@ -91,9 +90,10 @@ export const CreateComplaint = ({ parentUrl }) => {
     };
   }, [showToast]);
 
+
   useEffect(() => {
     if (!Digit.Utils.getMultiRootTenant()) {
-      const city = cities.find((obj) => obj.pincode?.find((item) => item == pincode));
+      const city = cities?.find((obj) => obj.pincode?.find((item) => item == pincode));
       if (city?.code && city?.code === getCities()?.[0]?.code) {
         setPincodeNotValid(false);
         setSelectedCity(city);
@@ -233,7 +233,7 @@ export const CreateComplaint = ({ parentUrl }) => {
           label: t("CS_COMPLAINT_DETAILS_COMPLAINT_TYPE"),
           isMandatory: true,
           type: "dropdown",
-          populators: <Dropdown option={menu} optionKey="name" id="complaintType" selected={complaintType} select={selectedType} />,
+          populators: <Dropdown option={menu || []} optionKey="name" id="complaintType" selected={complaintType} select={selectedType} />,
         },
         {
           label: t("CS_COMPLAINT_DETAILS_COMPLAINT_SUBTYPE"),

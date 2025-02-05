@@ -11,7 +11,7 @@ const useComplaintSubType = (complaintType, t) => {
         setSubTypeMenu(menu);
       }
     })();
-  }, [complaintType]);
+  }, [complaintType,t]);
 
   return subTypeMenu;
 };

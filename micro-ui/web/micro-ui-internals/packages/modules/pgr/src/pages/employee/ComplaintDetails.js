@@ -92,11 +92,14 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [comments, setComments] = useState("");
   const [file, setFile] = useState(null);
+  const [fileUploading, setFileUploading] = useState(false);
+
   const [uploadedFile, setUploadedFile] = useState(null);
   const [error, setError] = useState(null);
   const cityDetails = Digit.ULBService.getCurrentUlb();
   const [selectedReopenReason, setSelectedReopenReason] = useState(null);
 
+  
   useEffect(() => {
     (async () => {
       setError(null);
@@ -105,6 +108,7 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
           setError(t("CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED"));
         } else {
           try {
+            setFileUploading(true);
             // TODO: change module in file storage
             const stateId = Digit.Utils.getMultiRootTenant() ? Digit.ULBService.getStateId() : cityDetails.code ;
             const response = await Digit.UploadServices.Filestorage("property-upload", file, stateId);
@@ -113,6 +117,8 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
             } else {
               setError(t("CS_FILE_UPLOAD_ERROR"));
             }
+            setFileUploading(false);
+
           } catch (err) {
             setError(t("CS_FILE_UPLOAD_ERROR"));
           }
@@ -329,7 +335,7 @@ export const ComplaintDetails = (props) => {
   }
 
   async function onAssign(selectedEmployee, comments, uploadedFile) {
-    setPopup(false);
+    setPopup(false);    
     const response = await Digit.Complaint.assign(complaintDetails, selectedAction, selectedEmployee, comments, uploadedFile, tenantId);
     setAssignResponse(response);
     setToast(true);
@@ -495,7 +501,7 @@ export const ComplaintDetails = (props) => {
       {!workflowDetails?.isLoading && workflowDetails?.data?.nextActions?.length > 0 && (
         <ActionBar>
           {displayMenu && workflowDetails?.data?.nextActions ? (
-            <Menu options={workflowDetails?.data?.nextActions.map((action) => action.action)} t={t} onSelect={onActionSelect} />
+            <Menu options={workflowDetails?.data?.nextActions.map((action) => action.action)} textStyles={{marginTop:"-2px"}} t={t} onSelect={onActionSelect} />
           ) : null}
           <SubmitBar label={t("WF_TAKE_ACTION")} onSubmit={() => setDisplayMenu(!displayMenu)} />
         </ActionBar>

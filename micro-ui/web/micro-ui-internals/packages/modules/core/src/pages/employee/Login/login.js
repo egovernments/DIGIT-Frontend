@@ -71,9 +71,10 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
 
     const requestData = {
       ...data,
+      ...defaultValues,
       userType: "EMPLOYEE",
     };
-    requestData.tenantId = data?.city?.code || Digit.ULBService.getStateId();
+    requestData.tenantId = requestData?.city?.code || Digit.ULBService.getStateId();
     delete requestData.city;
     try {
       const { UserRequest: info, ...tokens } = await Digit.UserService.authenticate(requestData);
@@ -140,23 +141,29 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   const onForgotPassword = () => {
     history.push(`/${window?.contextPath}/employee/user/forgot-password`);
   };
+  const defaultTenant = Digit.ULBService.getStateId();
   const defaultValue = {
-    code: Digit.ULBService.getStateId(),
-    name: Digit.Utils.locale.getTransformedLocale(`TENANT_TENANTS_${Digit.ULBService.getStateId()}`),
+    code: defaultTenant,
+    name: Digit.Utils.locale.getTransformedLocale(`TENANT_TENANTS_${defaultTenant}`),
   };
 
-  let config = [{ body: propsConfig?.inputs }];
+  const config = [{ body: propsConfig?.inputs }];
 
   const { mode } = Digit.Hooks.useQueryParams();
-  if (mode === "admin" && config?.[0]?.body?.[2]?.disable == false && config?.[0]?.body?.[2]?.populators?.defaultValue == undefined) {
+  if (
+    mode === "admin" && config?.[0]?.body?.[2]?.disable == false && config?.[0]?.body?.[2]?.populators?.defaultValue == undefined ) {
     config[0].body[2].disable = true;
     config[0].body[2].isMandatory = false;
     config[0].body[2].populators.defaultValue = defaultValue;
   }
-
+  const defaultValues = Object.fromEntries(
+    config[0].body
+      .filter(field => field?.populators?.defaultValue && field?.populators?.name)
+      .map(field => [field.populators.name, field.populators.defaultValue])
+  );
   const onFormValueChange = (setValue, formData, formState) => {
     // Extract keys from the config
-    const keys = config[0].body.map((field) => field.key);
+    const keys = config[0].body.filter(field=>field?.isMandatory).map((field) => field.key);
 
     const hasEmptyFields = keys.some((key) => {
       const value = formData[key];
@@ -189,6 +196,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
         cardSubHeaderClassName="loginCardSubHeaderClassName"
         cardClassName="loginCardClassName"
         buttonClassName="buttonClassName"
+        defaultValues={defaultValues}
       >
         {stateInfo?.code ? <Header /> : <Header showTenant={false} />}
       </FormComposerV2>

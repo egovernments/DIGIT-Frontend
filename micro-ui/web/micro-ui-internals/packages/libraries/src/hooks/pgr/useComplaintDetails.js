@@ -20,7 +20,7 @@ const getDetailsRow = ({ id, service, complaintType }) => ({
   ES_CREATECOMPLAINT_ADDRESS: [
     service.address.landmark,
     Digit.Utils.getMultiRootTenant() ? `ADMIN_${service.address.locality.code}` : Digit.Utils.locale.getLocalityCode(service.address.locality, service.tenantId),
-    service.address.city,
+    `TENANT_TENANTS_${service?.tenantId?.toUpperCase?.()?.replace(".", "_")}`,
     service.address.pincode,
   ],
 });

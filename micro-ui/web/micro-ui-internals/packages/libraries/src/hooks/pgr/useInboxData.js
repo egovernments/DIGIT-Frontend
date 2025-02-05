@@ -47,15 +47,21 @@ const mapWfBybusinessId = (wfs) => {
 
 const combineResponses = (complaintDetailsResponse, workflowInstances) => {
   let wfMap = mapWfBybusinessId(workflowInstances.ProcessInstances);
-  return complaintDetailsResponse.ServiceWrappers.map((complaint) => ({
-    serviceRequestId: complaint.service.serviceRequestId,
-    complaintSubType: complaint.service.serviceCode,
-    locality: complaint.service.address.locality.code,
-    status: complaint.service.applicationStatus,
-    taskOwner: wfMap[complaint.service.serviceRequestId]?.assignes?.[0]?.name || "-",
-    sla: wfMap[complaint.service.serviceRequestId]?.businesssServiceSla,
-    tenantId: complaint.service.tenantId,
-  }));
+  const wrappers = complaintDetailsResponse?.ServiceWrappers || [];
+  const filtered = wrappers.filter(
+    (complaint) => complaint?.service?.serviceRequestId && wfMap?.[complaint.service.serviceRequestId]
+  );
+  const complaints = filtered.length ? filtered : wrappers;
+  
+  return complaints.map((complaint) => ({
+     serviceRequestId: complaint.service.serviceRequestId,
+     complaintSubType: complaint.service.serviceCode,
+     locality: complaint.service.address.locality.code,
+     status: complaint.service.applicationStatus,
+     taskOwner: wfMap[complaint.service.serviceRequestId]?.assignes?.[0]?.name || "-",
+     sla: wfMap[complaint.service.serviceRequestId]?.businesssServiceSla,
+     tenantId: complaint.service.tenantId,
+   }));
 };
 
 export default useInboxData;
