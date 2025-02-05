@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ViewCardFieldPair, Toast, Card, Button, PopUp, TextInput, Loader ,Tag } from "@egovernments/digit-ui-components";
+import { ViewCardFieldPair, Toast, Card, Button, PopUp, TextInput, Loader ,Tag , Sidebar } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useHistory } from "react-router-dom";
 import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
@@ -8,6 +8,7 @@ import data_hook from "../../hooks/data_hook";
 import MobileChecklist from "../../components/MobileChecklist";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import TagComponent from "../../components/TagComponent";
+import SidePanel from "./SidePanel";
 
 let temp_data = []
 
@@ -45,6 +46,7 @@ const CreateChecklist = () => {
   const [serviceCode, setServiceCode] = useState(null);
   const [def_data, setDef_Data] = useState(null);
   const [helpText, setHelpText] = useState("");
+  const [showLocalisationPopUp, setShowLocalisationPopUp] = useState(false);
 
 
   module = "hcm-checklist";
@@ -525,14 +527,12 @@ const CreateChecklist = () => {
     <div>
       {loading_new && <Loader />}
       {!loading_new && submitting && <Loader />}
-      {!submitting && !loading_new &&
+      {!submitting && !loading_new && (
         <div>
-          <TagComponent campaignName={campaignName} />  
-          <div style={{ display: "flex", justifyContent: "space-between", height:"5.8rem", marginTop: "-1.2rem"}}>
+          <TagComponent campaignName={campaignName} />
+          <div style={{ display: "flex", justifyContent: "space-between", height: "5.8rem", marginTop: "-1.2rem" }}>
             <div>
-              <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>
-                {t("CREATE_NEW_CHECKLIST")}
-              </h2>
+              <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>{t("CREATE_NEW_CHECKLIST")}</h2>
             </div>
             <div style={{ display: "flex", gap: "1rem" }}>
               <Button
@@ -542,7 +542,7 @@ const CreateChecklist = () => {
                 style={{ marginTop: "2rem", marginBottom: "2rem" }}
                 // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
                 onClick={clearData}
-              // onClick={useTemplateData}
+                // onClick={useTemplateData}
               />
               <Button
                 icon="Preview"
@@ -553,6 +553,40 @@ const CreateChecklist = () => {
                 // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
                 onClick={popShow}
               />
+              <div>
+              <SidePanel
+          bgActive
+          className=""
+          closedContents={[]}
+          closedFooter={[<en />]}
+          closedHeader={[]}
+          closedSections={[]}
+          defaultClosedWidth=""
+          defaultOpenWidth=""
+          footer={[]}
+          header={[
+            <div className="typography heading-m" style={{ color: "#0B4B66" }}>
+              Header
+            </div>,
+          ]}
+          hideScrollIcon
+          isDraggable={false}
+          position="right"
+          sections={[]}
+          styles={{}}
+          type="static"
+        >
+          <Button
+            type={"button"}
+            size={"large"}
+            variation={"primary"}
+            label={t("ADD_LOCALISATION")}
+            onClick={() => {
+              setShowLocalisationPopUp(true);
+            }}
+          />
+        </SidePanel>
+              </div>
             </div>
           </div>
           {showPopUp && (
@@ -560,8 +594,7 @@ const CreateChecklist = () => {
               className={"custom-pop-up"}
               type={"default"}
               heading={t("CHECKLIST_PREVIEW")}
-              children={[
-              ]}
+              children={[]}
               onOverlayClick={() => {
                 setShowPopUp(false);
               }}
@@ -590,9 +623,61 @@ const CreateChecklist = () => {
               ]}
               sortFooterChildren={true}
             >
-              <MobileChecklist questions={previewData} campaignName={campaignName} checklistRole={t(`${roleLocal}`)} typeOfChecklist={t(`${checklistTypeLocal}`)}></MobileChecklist>
+              <MobileChecklist
+                questions={previewData}
+                campaignName={campaignName}
+                checklistRole={t(`${roleLocal}`)}
+                typeOfChecklist={t(`${checklistTypeLocal}`)}
+              ></MobileChecklist>
             </PopUp>
           )}
+           {showLocalisationPopUp && (
+        <PopUp
+          type={"default"}
+          heading={t("ADD_LOCALISATION")}
+          children={[
+            // <div>
+            //   HELLO
+            //   {state?.screenData
+            //     ?.find((i) => i.name === state?.currentScreen?.name)
+            //     ?.cards?.map((card) => [
+            //       ...card?.fields?.map((field) => ({ message: field?.label })), // Extract label for fields
+            //       ...card?.headerFields?.map((headerField) => ({ message: headerField?.value })), // Extract value for header fields
+            //     ])
+            //     ?.flat()}
+            // </div>,
+          ]}
+          onOverlayClick={() => {
+            setShowLocalisationPopUp(false);
+          }}
+          onClose={() => {
+            setShowLocalisationPopUp(false);
+          }}
+          equalWidthButtons={"false"}
+          footerChildren={[
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("CLOSE")}
+              onClick={() => {
+                setShowLocalisationPopUp(false);
+              }}
+            />,
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("SUBMIT")}
+              onClick={() => {
+                setShowLocalisationPopUp(false);
+              }}
+            />,
+          ]}
+        >
+          {/* <AppLocalisationTable /> */}
+        </PopUp>
+      )}
           <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
             {fieldPairs.map((pair, index) => (
               <div>
@@ -602,14 +687,12 @@ const CreateChecklist = () => {
                   inline
                   label={t(pair.label)} // Dynamically set the label
                   value={t(pair.value)} // Dynamically set the value
-                // style={{ fontSize: "16px", fontWeight: "bold" }} // Optional: customize styles
+                  // style={{ fontSize: "16px", fontWeight: "bold" }} // Optional: customize styles
                 />
-                {(index !== (fieldPairs.length - 1)) && <div style={{ height: "1rem" }}></div>}
+                {index !== fieldPairs.length - 1 && <div style={{ height: "1rem" }}></div>}
               </div>
             ))}
-            {
-              <hr style={{ width: "100%", borderTop: "1px solid #ccc" }} />
-            }
+            {<hr style={{ width: "100%", borderTop: "1px solid #ccc" }} />}
             <div style={{ display: "flex" }}>
               <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t("NAME_OF_CHECKLIST")}</div>
               <TextInput
@@ -652,7 +735,7 @@ const CreateChecklist = () => {
             showSecondaryLabel={true}
             secondaryLabel={t("HCM_BACK")}
             onSecondayActionClick={onSecondayActionClick}
-          // showWrapperContainers={false}
+            // showWrapperContainers={false}
           />
 
           {showToast && (
@@ -665,7 +748,7 @@ const CreateChecklist = () => {
             />
           )}
         </div>
-      }
+      )}
       <div style={{ height: "2rem" }}></div>
     </div>
   );

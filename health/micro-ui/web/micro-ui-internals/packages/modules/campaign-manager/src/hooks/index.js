@@ -19,6 +19,7 @@ import useMDMSServiceSearch from "./useMDMSServiceSearch";
 import useBoundaryHome from "./useBoundaryHome";
 import useFetchFromMicroplan from "./useFetchFromMicroplan";
 import { useReadExcelData, useUpdateAndUploadExcel } from "./useReadExcelData";
+import { useSearchLocalisation } from "./useSearchLocalisation";
 
 const UserService = {};
 
@@ -48,6 +49,7 @@ const campaign = {
   useFetchFromMicroplan,
   useReadExcelData,
   useUpdateAndUploadExcel,
+  useSearchLocalisation
 };
 
 const Hooks = {

@@ -16,6 +16,7 @@ import UpdateChecklist from "./UpdateChecklist";
 import BoundaryHome from "./BoundaryHome";
 import ApprovedMicroplans from "./ApprovedMicroplans";
 import FetchFromMicroplan from "../../components/fetchFromMicroplan";
+import ChecklistLocalisationWrapper from "./LocalisationWrapper";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -145,7 +146,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
           <PrivateRoute path={`${path}/add-product`} component={() => <AddProduct />} />
           <PrivateRoute path={`${path}/configure-app`} component={() => <ConfigureApp />} />
           <PrivateRoute path={`${path}/update-dates-boundary`} component={() => <UpdateDatesWithBoundaries />} />
-          <PrivateRoute path={`${path}/checklist/create`} component={() => <CreateChecklist />} />
+          <PrivateRoute path={`${path}/checklist/create`} component={() => <ChecklistLocalisationWrapper />} />
           <PrivateRoute path={`${path}/checklist/search`} component={() => <SearchChecklist />} />
           <PrivateRoute path={`${path}/checklist/view`} component={() => <ViewChecklist />} />
           <PrivateRoute path={`${path}/checklist/update`} component={() => <UpdateChecklist />} />
