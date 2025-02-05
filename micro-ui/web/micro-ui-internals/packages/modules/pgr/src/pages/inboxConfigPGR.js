@@ -28,8 +28,8 @@ const inboxConfigPGR = () => {
           search: {
               uiConfig: {
                   headerStyle: null,
-                  primaryLabel: 'Search',
-                  secondaryLabel: 'Clear Search',
+                  primaryLabel: 'ES_SEARCH_BOTTON',
+                  secondaryLabel: 'CS_COMMON_CLEAR_SEARCH',
                   minReqFields: 1,
                   defaultValues: {
                     complaintNumber: "",
@@ -126,7 +126,7 @@ const inboxConfigPGR = () => {
               uiConfig: {
                   type: 'filter',
                   headerStyle: null,
-                  primaryLabel: 'Filter',
+                  primaryLabel: 'CS_COMMON_FILTER',
                   formClassName:"filter",
                   secondaryLabel: '',
                   minReqFields: 0,
@@ -134,7 +134,7 @@ const inboxConfigPGR = () => {
                       state: "",
                       serviceCode: [],
                       locality: [],
-                      assignee: { code: "ASSIGNED_TO_ME", name: "ES_INBOX_ASSIGNED_TO_ME" }
+                      assignee: { code: "ASSIGNED_TO_ME", name: "ASSIGNED_TO_ME" }
                   },
                   fields: [
                       {
@@ -145,8 +145,8 @@ const inboxConfigPGR = () => {
                           populators: {
                               name: "assignee",
                               options: [
-                                  { code: "ASSIGNED_TO_ME", name: "ES_INBOX_ASSIGNED_TO_ME" },
-                                  { code: "ASSIGNED_TO_ALL", name: "ES_INBOX_ASSIGNED_TO_ALL" },
+                                  { code: "ASSIGNED_TO_ME", name: "ASSIGNED_TO_ME" },
+                                  { code: "ASSIGNED_TO_ALL", name: "ASSIGNED_TO_ALL" },
                               ],
                               optionsKey: "name",
                               styles: {
@@ -181,7 +181,7 @@ const inboxConfigPGR = () => {
                   },
                       {
             
-                            label: "CS_INBOX_LOCALITY_FILTER",
+                            label: "CS_PGR_LOCALITY",
                             isMandatory: false,
                             key: "locality",
                             type: "multiselectdropdown",
@@ -201,7 +201,7 @@ const inboxConfigPGR = () => {
                             }
                       },
                       {
-                          label: "WORKFLOW_STATES",
+                          label: "ES_PGR_FILTER_STATUS",
                           type: "workflowstatesfilter",
                           labelClassName: "checkbox-status-filter-label",
                           isMandatory: false,
@@ -215,7 +215,7 @@ const inboxConfigPGR = () => {
                       },
                   ]
               },
-              label: "Filter",
+              label: "ES_COMMON_FILTER_BY",
               show: true
           },
       },
