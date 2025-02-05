@@ -549,8 +549,7 @@ tbody tr:last-child td:last-child .digit-dropdown-employee-select-wrap .digit-dr
   font-size: 1.1rem;
 }
 
-@media (min-aspect-ratio: 3/4) {
-  .filterCardCustom .content-container {
-      height: 49.2rem;
-  }
+.pop-inbox-wrapper-filter-table-wrapper.planInbox-filtercard-table-wrapper {
+    align-items: stretch;
+  
 }
