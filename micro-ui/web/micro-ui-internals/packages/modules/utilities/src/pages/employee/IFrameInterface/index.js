@@ -1,9 +1,11 @@
-import { Header, Loader } from "@egovernments/digit-ui-react-components";
+import { Header } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { Toast } from "@egovernments/digit-ui-components";
 import axios from "axios";
+import { Loader } from "@egovernments/digit-ui-components";
+
 
 // moduleName, pageName will be passed as props as defined in the uiCommonConstants to fetch URL.
 const IFrameInterface = (props) => {
@@ -239,7 +241,7 @@ const IFrameInterface = (props) => {
   }, []);
 
   if (isLoading || isAxiosLoading) {
-    return <Loader />;
+    return  <Loader page={true} variant={"PageLoader"} />;
   }
 
   if (!url) {

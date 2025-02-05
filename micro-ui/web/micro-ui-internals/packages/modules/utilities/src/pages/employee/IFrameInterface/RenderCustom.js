@@ -1,8 +1,10 @@
-import { Header, Loader } from "@egovernments/digit-ui-react-components";
+import { Header } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { Toast } from "@egovernments/digit-ui-components";
+import { Loader } from "@egovernments/digit-ui-components";
+
 
 const NonIFrameInterface = (props) => {
   const { stateCode } = props;
@@ -112,7 +114,7 @@ const NonIFrameInterface = (props) => {
   };
   
   if (isLoading) {
-    return <Loader />;
+    return  <Loader page={true} variant={"PageLoader"} />;
   }
 
   if (!url) {

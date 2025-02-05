@@ -1,10 +1,12 @@
-import { Card, Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
+import { Card, Header } from "@egovernments/digit-ui-react-components";
 import React, { useState } from "react";
 import { diffAsText } from "unidiff";
 import { parseDiff, Diff, Hunk } from "react-diff-view";
 import _ from "lodash";
 import { useTranslation } from "react-i18next";
 import { TextBlock } from "@egovernments/digit-ui-components";
+import { Loader } from "@egovernments/digit-ui-components";
+
 
 const formatString = (value) => {
   const updatedValue = typeof value == "string" ? value : JSON.stringify(value);
@@ -67,7 +69,8 @@ const AuditHistory = (props) => {
   const { isLoading, data, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
   return (
     <React.Fragment>
-      {isLoading || (isFetching && <LoaderWithGap text={"Loading"} />)}
+      {isLoading || (isFetching &&   <Loader page={false} variant={"Basic"} />
+)}
 
       <Header>{t("AUDIT_HISTORY")}</Header>
 

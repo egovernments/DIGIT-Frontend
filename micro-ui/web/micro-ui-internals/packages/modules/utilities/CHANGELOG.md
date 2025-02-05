@@ -1,6 +1,9 @@
 # Changelog
 
 ## [1.0.3]
+- Intergrated with new component library & updated toast , loaders
+
+## [1.0.3]
 - Fixed the module stablity & new components integrated
 
 ## [1.0.1-beta.30]
