@@ -1,8 +1,10 @@
-import { Button, Header, SVG, Toast } from "@egovernments/digit-ui-react-components";
+import { Button, Header, SVG } from "@egovernments/digit-ui-react-components";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import AssignTarget from "./AssignTarget";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
+import { Toast } from "@egovernments/digit-ui-components";
+
 
 const TargetComponent = (props) => {
   const { t } = useTranslation();
@@ -135,7 +137,8 @@ const TargetComponent = (props) => {
         />
       )}
 
-      {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
+              {showToast && <Toast label={showToast.label} type={showToast?.isError?"error":"info"}  onClose={() => setShowToast(null)}></Toast>}
+      
       {props?.targets?.length === 0 ? (
         <h1>{t("WBH_NO_TARGETS_FOUND")}</h1>
       ) : (
