@@ -1,4 +1,4 @@
-import { Body, Loader, TourProvider } from "@egovernments/digit-ui-react-components";
+import { Loader, TourProvider } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect } from "react";
 import { useRouteMatch } from "react-router-dom";
 import EmployeeApp from "./pages/employee";
