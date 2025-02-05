@@ -64,7 +64,7 @@ const PlanInbox = () => {
   const [defaultBoundaries, setDefaultBoundaries] = useState([]);
   const userRoles = user?.info?.roles?.map((roleData) => roleData?.code);
   const hrms_context_path = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || 'health-hrms';
-
+ 
   // Check if the user has the 'rootapprover' role
   const isRootApprover = userRoles?.includes("ROOT_PLAN_ESTIMATION_APPROVER");
 
@@ -849,6 +849,7 @@ const PlanInbox = () => {
       userRole = "PLAN_ESTIMATION_APPROVER";
     }
   });
+  
 
   return (
     <div className="pop-inbox-wrapper">
@@ -879,7 +880,7 @@ const PlanInbox = () => {
       />
 
       <div
-        className="pop-inbox-wrapper-filter-table-wrapper"
+        className="pop-inbox-wrapper-filter-table-wrapper planInbox-filtercard-table-wrapper"
         style={{
           marginBottom:
             (isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "RESOURCE_ESTIMATION_IN_PROGRESS") ||

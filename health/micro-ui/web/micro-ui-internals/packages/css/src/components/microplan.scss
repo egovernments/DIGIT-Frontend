@@ -548,3 +548,15 @@ tbody tr:last-child td:last-child .digit-dropdown-employee-select-wrap .digit-dr
   color: #363636;
   font-size: 1.1rem;
 }
+
+.pop-inbox-wrapper-filter-table-wrapper.planInbox-filtercard-table-wrapper {
+    align-items: stretch;
+}
+
+.filter-card{
+  &.plan-inbox-filtercard{
+    .content-container{
+      flex:1;
+    }
+  }
+}
