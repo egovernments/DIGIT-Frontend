@@ -1,7 +1,10 @@
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 const useCreateEvent = () => {
-  return useMutation(eventData => Digit.EventsServices.Create(eventData))
+  return useMutation({
+    mutationFn: (eventData) => Digit.EventsServices.Create(eventData),
+    ...config, // Spread any additional configuration passed to the hook
+  });
 }
 
 export default useCreateEvent; 

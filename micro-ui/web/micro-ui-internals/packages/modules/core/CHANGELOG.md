@@ -1,5 +1,14 @@
 # Changelog 
 
+## [1.9.1-beta.8] [20-Jan-2024]
+- Updated the react and dependecies to latest version and changed react-query to tanstack/react-query
+
+## [1.8.13]  [16-Dec-2024]
+- Made validations for name, mobile number, and password fields in user profile update screen configurable through MDMS data
+  - Implemented dynamic regex validation for profile updates based on MDMS data
+  - Added support for custom regex patterns through `UserProfileValidationConfig`
+  - Example MDMS data: https://github.com/egovernments/egov-mdms-data/blob/UNIFIED-QA/data/mz/commonUIConfig/UserProfileValidationConfig.json
+
 ## [1.8.11]  [26-Nov-2024]
 - Republished with new component version incremented 
 

@@ -1,8 +1,11 @@
 import { Engagement } from "../../services/elements/Engagement";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 const useUpdateDocument = (filters, config) => {
-  return useMutation((filters) => Engagement.update(filters));
+  return useMutation({
+    mutationFn: (filters) => Engagement.update(filters),
+    ...config,
+  });
 };
 
 export default useUpdateDocument;

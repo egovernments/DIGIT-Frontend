@@ -1,7 +1,10 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const useGetDSSAboutJSON = (tenantId) => {
-    return useQuery(["About", tenantId], () => Digit.MDMSService.getDSSAboutJSONData(tenantId));
-  };
+  return useQuery({
+    queryKey: ["About", tenantId],
+    queryFn: () => Digit.MDMSService.getDSSAboutJSONData(tenantId),
+  });
+};
 
 export default useGetDSSAboutJSON;

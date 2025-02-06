@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import PropTypes from "prop-types";
 
 
@@ -7,19 +7,25 @@ const useDocumentSearch = (documents=[], config = {}) => {
   const tenant = Digit.ULBService.getStateId();
   const filesArray = documents?.map((value) => value?.fileStoreId);
 
-  const { isLoading, error, data } = useQuery([filesArray.join('')], () => Digit.UploadServices.Filefetch(filesArray, tenant),{enabled:filesArray&&filesArray.length>0,
-  /* It will return back the same document object with fileUrl link and response */
+  const { isLoading, error, data } = useQuery({
+    queryKey: [filesArray.join('')],
+    queryFn: () => Digit.UploadServices.Filefetch(filesArray, tenant),
+    enabled: filesArray && filesArray.length > 0,
     select: (data) => {
-      return documents.map(document=>{
+      return documents.map(document => {
+        const fileUrl = data?.data?.[document?.fileStoreId] 
+          ? Digit.Utils.getFileUrl(data.data[document?.fileStoreId]) 
+          : "";
         return {
           ...document,
-          fileURL:data?.data?.[document?.fileStoreId]&&Digit.Utils.getFileUrl(data.data[document?.fileStoreId]),
-          url:data?.data?.[document?.fileStoreId]&&Digit.Utils.getFileUrl(data.data[document?.fileStoreId]),
-          fileResponse:data?.data?.[document?.fileStoreId]||""
-        }
-      })
-    }, 
-  ...config});
+          fileURL: fileUrl,
+          url: fileUrl,
+          fileResponse: data?.data?.[document?.fileStoreId] || "",
+        };
+      });
+    },
+    ...config,
+  });
   return { isLoading, error, data: { pdfFiles: data }, revalidate: () => client.invalidateQueries([filesArray.join('')]) };
 };
 

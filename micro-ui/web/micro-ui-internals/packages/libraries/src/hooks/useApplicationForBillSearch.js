@@ -1,5 +1,5 @@
 
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 
 
@@ -29,7 +29,9 @@ export const useApplicationsForBusinessServiceSearch = ({ tenantId, businessServ
 
   /* key from application ie being used as consumer code in bill */
   const { searchFn, key, label } = refObj(tenantId, filters)[_key];
-  const applications = useQuery(["applicationsForBillDetails", { tenantId, businessService, filters, searchFn }], searchFn, {
+  const applications = useQuery({
+    queryKey: ["applicationsForBillDetails", { tenantId, businessService, filters, searchFn }],
+    queryFn: searchFn,
     ...config,
   });
 

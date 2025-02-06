@@ -1,12 +1,21 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { MdmsService } from "../../services/elements/MDMS";
 
-const useDssMDMS = (tenantId, moduleCode, type, config) => {
+const useDssMDMS = (tenantId, moduleCode, type, config = {}) => {
   const useDssDashboard = () => {
-    return useQuery("DSS_DASHBOARD", () => MdmsService.getDssDashboard(tenantId, moduleCode), config);
+    return useQuery({
+      queryKey: ["DSS_DASHBOARD", tenantId, moduleCode],
+      queryFn: () => MdmsService.getDssDashboard(tenantId, moduleCode),
+      ...config,
+    });
   };
+
   const _default = () => {
-    return useQuery([tenantId, moduleCode, type], () => MdmsService.getMultipleTypes(tenantId, moduleCode, type), config);
+    return useQuery({
+      queryKey: [tenantId, moduleCode, type],
+      queryFn: () => MdmsService.getMultipleTypes(tenantId, moduleCode, type),
+      ...config,
+    });
   };
 
   switch (type) {

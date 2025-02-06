@@ -1,5 +1,5 @@
 
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const tenantManagementSearchService = async ({ stateId, includeSubTenants = true, filter, pagination }) => {
   const response = await Digit.CustomService.getResponse({
@@ -26,10 +26,10 @@ const tenantManagementSearchService = async ({ stateId, includeSubTenants = true
 };
 
 export const useTenantManagementSearch = ({ stateId, includeSubTenants = true, filter, pagination, config = {} }) => {
-  return useQuery(
-    ["SEARCH_TENANT_MANAGEMENT", stateId, filter, includeSubTenants, pagination],
-    () => tenantManagementSearchService({ stateId, includeSubTenants, filter, pagination }),
-    config
-  );
+  return useQuery({
+    queryKey: ["SEARCH_TENANT_MANAGEMENT", stateId, filter, includeSubTenants, pagination],
+    queryFn: () => tenantManagementSearchService({ stateId, includeSubTenants, filter, pagination }),
+    ...config,
+  });
 };
 

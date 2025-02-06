@@ -45,7 +45,7 @@ const Otp = ({ isLogin = false }) => {
     {
       enabled: true,
       staleTime:0,
-      cacheTime:0,
+      gcTime:0,
       select: (data) => {
         return data?.["SandBoxLanding"]?.["LandingPageRoles"];
       },

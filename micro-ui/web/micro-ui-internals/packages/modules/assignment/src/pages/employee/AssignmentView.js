@@ -1,6 +1,6 @@
 import React from 'react'
 import { Loader, FormComposerV2 as FormComposer, Toast } from "@egovernments/digit-ui-react-components";
-import { useLocation } from 'react-router-dom/cjs/react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const AssignmentView = () => {
   const newConfig = [

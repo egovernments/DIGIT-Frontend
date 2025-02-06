@@ -1,5 +1,5 @@
 import { Surveys } from "../../services/elements/Surveys";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 /* import { isObject, isObjectLike } from "lodash"; */
 
 const useSearch = (filters, config) => {
@@ -27,7 +27,20 @@ const useSearch = (filters, config) => {
     });
 
 
-    return useQuery(["search_surveys", title, tenantIds, postedBy, status, offset, limit], () => Surveys.search(finalFilters), { ...config, refetchInterval: 6000 });
-};
+    return useQuery({
+        queryKey: [
+          "search_surveys",
+          title,
+          tenantIds,
+          postedBy,
+          status,
+          offset,
+          limit,
+        ],
+        queryFn: () => Surveys.search(finalFilters),
+        refetchInterval: 6000, // 6 seconds
+        ...config,
+      });
+    };
 
 export default useSearch;

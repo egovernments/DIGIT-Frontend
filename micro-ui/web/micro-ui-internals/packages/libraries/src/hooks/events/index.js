@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 
 const tsToDate = (ts) => {
     const plus0 = num => `0${num.toString()}`.slice(-2)
@@ -166,20 +166,25 @@ const getEventsData = async (variant, tenantId) => {
     return allEventsData
 }
 
-const useEvents = ({tenantId, variant, config={}}) => useQuery(
-    ["EVENTS_SEARCH", tenantId, variant],
-    () => getEventsData(variant, tenantId),
-    { 
-        ...config
-    } )
+const useEvents = ({ tenantId, variant, config = {} }) => {
+  return useQuery({
+    queryKey: ["EVENTS_SEARCH", tenantId, variant],
+    queryFn: () => getEventsData(variant, tenantId),
+    ...config,
+  });
+};
 
-const useClearNotifications = () => useMutation(({tenantId}) => Digit.EventsServices.ClearNotification({tenantId}))
+const useClearNotifications = () => useMutation({
+  mutationFn: ({ tenantId }) => Digit.EventsServices.ClearNotification({ tenantId }),
+  ...config,
+})
 
-const useNotificationCount = ({tenantId, config={}}) => useQuery(
-    ["NOTIFICATION_COUNT", tenantId],
-    () => Digit.EventsServices.NotificationCount({tenantId}),
-    {
-        ...config
-    })
+const useNotificationCount = ({ tenantId, config = {} }) => {
+  return useQuery({
+    queryKey: ["NOTIFICATION_COUNT", tenantId],
+    queryFn: () => Digit.EventsServices.NotificationCount({ tenantId }),
+    ...config,
+  });
+};
 
 export { useEvents, useClearNotifications, useNotificationCount }

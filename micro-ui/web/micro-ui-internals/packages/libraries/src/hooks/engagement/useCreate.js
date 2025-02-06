@@ -1,8 +1,11 @@
 import { Engagement } from "../../services/elements/Engagement";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 const useCreateDocument = (filters, config) => {
-  return useMutation((filters) => Engagement.create(filters));
+  return useMutation({
+    mutationFn: (filters) => Engagement.create(filters),
+    ...config,
+  });
 };
 
 export default useCreateDocument;

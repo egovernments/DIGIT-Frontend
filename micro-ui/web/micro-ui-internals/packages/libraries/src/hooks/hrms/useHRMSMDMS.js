@@ -1,16 +1,29 @@
 import { MdmsService } from "../../services/elements/MDMS";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const useHrmsMDMS = (tenantId, moduleCode, type, config = {}) => {
   const useHrmsRolesandDesignations = () => {
-    return useQuery(["HRMS_EMP_RD", tenantId], () => MdmsService.getHrmsEmployeeRolesandDesignation(tenantId), config);
+    return useQuery({
+      queryKey: ["HRMS_EMP_RD", tenantId],
+      queryFn: () => MdmsService.getHrmsEmployeeRolesandDesignation(tenantId),
+      ...config
+    });
   };
+
   const useHrmsEmployeeTypes = () => {
-    return useQuery(["HRMS_EMP_TYPE", tenantId], () => MdmsService.getHrmsEmployeeTypes(tenantId, moduleCode, type), config);
+    return useQuery({
+      queryKey: ["HRMS_EMP_TYPE", tenantId],
+      queryFn: () => MdmsService.getHrmsEmployeeTypes(tenantId, moduleCode, type),
+      ...config
+    });
   };
 
   const useHrmsEmployeeReasons = () => {
-    return useQuery(["HRMS_EMP_REASON", tenantId], () => MdmsService.getHrmsEmployeeReason(tenantId, moduleCode, type), config);
+    return useQuery({
+      queryKey: ["HRMS_EMP_REASON", tenantId],
+      queryFn: () => MdmsService.getHrmsEmployeeReason(tenantId, moduleCode, type),
+      ...config
+    });
   };
 
   switch (type) {
@@ -20,6 +33,8 @@ const useHrmsMDMS = (tenantId, moduleCode, type, config = {}) => {
       return useHrmsEmployeeTypes();
     case "DeactivationReason":
       return useHrmsEmployeeReasons();
+    default:
+      return null; // return null for unmatched types to avoid returning nothing
   }
 };
 export default useHrmsMDMS;

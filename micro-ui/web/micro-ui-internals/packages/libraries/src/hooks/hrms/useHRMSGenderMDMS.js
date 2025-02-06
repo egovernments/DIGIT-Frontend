@@ -1,10 +1,14 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { MdmsService } from "../../services/elements/MDMS";
 
 const useHRMSGenderMDMS = (tenantId, moduleCode, type, config = {}) => {
   const useHRGenders = () => {
-    return useQuery("HR_GENDER_DETAILS", () => MdmsService.HRGenderType(tenantId, moduleCode ,type), config);
-  };
+    return useQuery({
+      queryKey: ['HR_GENDER_DETAILS'],
+      queryFn: () => MdmsService.HRGenderType(tenantId, moduleCode, type),
+      ...config,
+    });
+};
   
 
   switch (type) {

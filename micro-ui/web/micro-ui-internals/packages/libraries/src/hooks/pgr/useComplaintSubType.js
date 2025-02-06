@@ -6,7 +6,8 @@ const useComplaintSubType = (complaintType, t) => {
   useEffect(() => {
     (async () => {
       if (complaintType) {
-        const menu = await Digit.GetServiceDefinitions.getSubMenu(Digit.ULBService.getCurrentTenantId(), complaintType, t);
+        const stateId = Digit.Utils.getMultiRootTenant() ? Digit.ULBService.getStateId() : Digit.ULBService.getCurrentTenantId()
+        const menu = await Digit.GetServiceDefinitions.getSubMenu(stateId, complaintType, t);
         setSubTypeMenu(menu);
       }
     })();

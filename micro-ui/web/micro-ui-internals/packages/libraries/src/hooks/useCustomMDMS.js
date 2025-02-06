@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { MdmsService } from "../services/elements/MDMS";
 import useCustomAPIHook from "./useCustomAPIHook";
 import Urls from "../services/atoms/urls";
@@ -59,7 +59,11 @@ const useCustomMDMS = (tenantId, moduleName, masterDetails = [], config = {}, md
       },
     });
   }
-  return useQuery([tenantId, moduleName, masterDetails], () => MdmsService.getMultipleTypesWithFilter(tenantId, moduleName, masterDetails), config);
+  return useQuery({
+    queryKey: [tenantId, moduleName, masterDetails],
+    queryFn: () => MdmsService.getMultipleTypesWithFilter(tenantId, moduleName, masterDetails),
+    ...config,
+  });
 };
 
 export default useCustomMDMS;

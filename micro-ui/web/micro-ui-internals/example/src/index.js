@@ -1,36 +1,36 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { PGRReducers } from "@egovernments/digit-ui-module-pgr";
+//import { PGRReducers } from "@egovernments/digit-ui-module-pgr";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 // import { paymentConfigs, PaymentLinks, PaymentModule } from "@egovernments/digit-ui-module-common";
 import { DigitUI, initCoreComponents } from "@egovernments/digit-ui-module-core";
 //import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
-import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
-import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
-import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
-import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
-import { initPGRComponents } from "@egovernments/digit-ui-module-pgr";
-import { initOpenPaymentComponents } from "@egovernments/digit-ui-module-open-payment";
-import { initSandboxComponents } from "@egovernments/digit-ui-module-sandbox";
+//import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
+//import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
+//import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
+//import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
+//import { initPGRComponents } from "@egovernments/digit-ui-module-pgr";
+//import { initOpenPaymentComponents } from "@egovernments/digit-ui-module-open-payment";
+//import { initSandboxComponents } from "@egovernments/digit-ui-module-sandbox";
 
-import "@egovernments/digit-ui-css/example/index.css";
+//import "@egovernments/digit-ui-css/example/index.css";
 
-import { pgrCustomizations, overrideComponents } from "./pgr";
-import { UICustomizations } from "./UICustomizations";
+// import { pgrCustomizations, overrideComponents } from "./pgr";
+// import { UICustomizations } from "./UICustomizations";
 
 var Digit = window.Digit || {};
 
 const enabledModules = [
   //"DSS",
-  "HRMS",
-  "Workbench",
+  //"HRMS",
+  //"Workbench",
   //  "Engagement", "NDSS","QuickPayLinks", "Payment",
-  "Utilities",
-  "PGR",
+  //"Utilities",
+  //"PGR",
   //added to check fsm
   // "FSM"
-  "Sandbox",
-  "OpenPayment",
+  //"Sandbox",
+  //"OpenPayment",
   "assignment"
 ];
 
@@ -77,41 +77,40 @@ const initDigitUI = () => {
     window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
   }
 
-  window.Digit.Customizations = {
-    PGR: pgrCustomizations,
-    commonUiConfig: UICustomizations,
-  };
-  initEngagementComponents();
+  // window.Digit.Customizations = {
+  //   PGR: pgrCustomizations,
+  //   commonUiConfig: UICustomizations,
+  // };
+  //initEngagementComponents();
 
-  window?.Digit.ComponentRegistryService.setupRegistry({
-    ...overrideComponents,
+ // window?.Digit.ComponentRegistryService.setupRegistry({
+    //...overrideComponents,
     // PaymentModule,
     // ...paymentConfigs,
     // PaymentLinks,
-  });
+//  });
   initCoreComponents();
   //initDSSComponents();
-  initHRMSComponents();
-  initUtilitiesComponents();
-  initWorkbenchComponents();
-  initPGRComponents();
-  initOpenPaymentComponents();
-  initSandboxComponents();
+  //initHRMSComponents();
+  //initUtilitiesComponents();
+  //initWorkbenchComponents();
+  //initPGRComponents();
+  //initOpenPaymentComponents();
+  //initSandboxComponents();
 
-  const moduleReducers = (initData) => ({
-    pgr: PGRReducers(initData),
-  });
+  // const moduleReducers = (initData) => ({
+  //   pgr: PGRReducers(initData),
+  // });
 
   // const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
   const stateCode = Digit.ULBService.getStateId();
   initTokens(stateCode);
-
   ReactDOM.render(
     <DigitUI
       stateCode={stateCode}
       enabledModules={enabledModules}
       defaultLanding="employee"
-      moduleReducers={moduleReducers}
+      //moduleReducers={moduleReducers}
       sandboxRedirect={true}
     />,
     document.getElementById("root")

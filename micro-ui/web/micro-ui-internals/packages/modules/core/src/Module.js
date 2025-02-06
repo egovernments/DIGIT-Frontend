@@ -2,7 +2,7 @@ import { BodyContainer } from "@egovernments/digit-ui-components";
 import { Loader } from "@egovernments/digit-ui-components";
 import React from "react";
 import { getI18n } from "react-i18next";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
 import { DigitApp, DigitAppWrapper } from "./App";
@@ -62,7 +62,7 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, d
     defaultOptions: {
       queries: {
         staleTime: 15 * 60 * 1000,
-        cacheTime: 50 * 60 * 1000,
+        gcTime: 50 * 60 * 1000,
         retry: false,
         retryDelay: (attemptIndex) => Infinity,
         /*

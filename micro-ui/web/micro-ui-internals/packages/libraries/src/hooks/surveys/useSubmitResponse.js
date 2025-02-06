@@ -1,8 +1,11 @@
 import { Surveys } from "../../services/elements/Surveys";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 const useSubmitResponse = (filters, config) => {
-    return useMutation((filters) => Surveys.submitResponse(filters));
-};
+    return useMutation({
+        mutationFn: (filters) => Surveys.submitResponse(filters),
+        ...config, // Spread any additional configuration passed to the hook
+      });
+    };
 
 export default useSubmitResponse;

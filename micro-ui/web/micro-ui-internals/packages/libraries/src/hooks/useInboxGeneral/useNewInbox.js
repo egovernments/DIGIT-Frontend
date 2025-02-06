@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { filterFunctions } from "./newFilterFn";
 import { getSearchFields } from "./searchFields";
@@ -32,37 +32,40 @@ const useNewInboxGeneral = ({ tenantId, ModuleCode, filters, middleware = [], co
   const { fetchFilters, searchResponseKey, businessIdAliasForSearch, businessIdsParamForSearch } = inboxConfig()[ModuleCode];
   let { workflowFilters, searchFilters, limit, offset, sortBy, sortOrder } = fetchFilters(filters);
 
-  const query = useQuery(
-    ["INBOX", workflowFilters, searchFilters, ModuleCode, limit, offset, sortBy, sortOrder],
-    () =>
+  const query = useQuery({
+    queryKey: ["INBOX", workflowFilters, searchFilters, ModuleCode, limit, offset, sortBy, sortOrder],
+    queryFn: () =>
       InboxGeneral.Search({
-        inbox: { tenantId, processSearchCriteria: workflowFilters, moduleSearchCriteria: { ...searchFilters, sortBy, sortOrder }, limit, offset },
+        inbox: {
+          tenantId,
+          processSearchCriteria: workflowFilters,
+          moduleSearchCriteria: { ...searchFilters, sortBy, sortOrder },
+          limit,
+          offset,
+        },
       }),
-    {
-      select: (data) => {
-        const { statusMap, totalCount } = data;
-        // client.setQueryData(`INBOX_STATUS_MAP_${ModuleCode}`, (oldStatusMap) => {
-        //   if (!oldStatusMap) return statusMap;
-        //   else return [...oldStatusMap.filter((e) => statusMap.some((f) => f.stateId === e.stateId))];
-        // });
-
-        client.setQueryData(`INBOX_STATUS_MAP_${ModuleCode}`, statusMap);
-
-        if (data.items.length) {
-          return data.items?.map((obj) => ({
-            searchData: obj.businessObject,
-            workflowData: obj.ProcessInstance,
-            statusMap,
-            totalCount,
-          }));
-        } else {
-          return [{ statusMap, totalCount, dataEmpty: true }];
-        }
-      },
-      retry: false,
-      ...config,
-    }
-  );
+    select: (data) => {
+      const { statusMap, totalCount } = data;
+      const queryClient = useQueryClient();
+  
+      // Update the status map in the query cache
+      queryClient.setQueryData(`INBOX_STATUS_MAP_${ModuleCode}`, statusMap);
+  
+      // Format the response data
+      if (data.items.length) {
+        return data.items.map((obj) => ({
+          searchData: obj.businessObject,
+          workflowData: obj.ProcessInstance,
+          statusMap,
+          totalCount,
+        }));
+      } else {
+        return [{ statusMap, totalCount, dataEmpty: true }];
+      }
+    },
+    retry: false,
+    ...config,
+  });
 
   return {
     ...query,

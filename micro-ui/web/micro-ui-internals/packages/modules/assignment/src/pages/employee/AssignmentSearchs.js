@@ -1,6 +1,6 @@
 import React from 'react'
 import { AddFilled, Button, Header, InboxSearchComposer, Loader } from "@egovernments/digit-ui-react-components";
-import { useHistory } from 'react-router-dom/cjs/react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const config = {
     label: "WBH_SEARCH_MDMS",
@@ -129,7 +129,7 @@ const config = {
 
 const AssignmentSearchs = () => {
   console.log("Assignment Searchs");
-  const history = useHistory();
+  const history = useNavigate();
 
   const onClickRow = ({original:row}) => {
     console.log(row);

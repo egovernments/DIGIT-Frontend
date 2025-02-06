@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 // TODO: move to service
 const getThumbnails = async (ids, tenantId) => {
@@ -69,7 +69,10 @@ const fetchComplaintDetails = async (tenantId, id) => {
 
 const useComplaintDetails = ({ tenantId, id }) => {
   const queryClient = useQueryClient();
-  const { isLoading, error, data } = useQuery(["complaintDetails", tenantId, id], () => fetchComplaintDetails(tenantId, id));
+  const { isLoading, error, data } = useQuery({
+    queryKey: ["complaintDetails", tenantId, id],
+    queryFn: () => fetchComplaintDetails(tenantId, id),
+  });
   return { isLoading, error, complaintDetails: data, revalidate: () => queryClient.invalidateQueries(["complaintDetails", tenantId, id]) };
 };
 

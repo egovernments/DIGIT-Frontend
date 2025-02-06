@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { filterFunctions } from "./filterFn";
 import { getSearchFields } from "./searchFields";
@@ -73,20 +73,24 @@ const useInboxGeneral = ({
 
   let { workflowFilters, searchFilters } = fetchFilters(filters);
 
-  const { data: processInstances, isFetching: wfFetching, isFetched, isSuccess: wfSuccess } = useQuery(
-    ["WORKFLOW_INBOX", businessService, workflowFilters],
-    () =>
-      Digit.WorkflowService.getAllApplication(tenantId, { businessServices: services.join(), ...workflowFilters })
+  const { 
+    data: processInstances, 
+    isFetching: wfFetching, 
+    isFetched, 
+    isSuccess: wfSuccess 
+  } = useQuery({
+    queryKey: ["WORKFLOW_INBOX", businessService, workflowFilters],
+    queryFn: () =>
+      Digit.WorkflowService.getAllApplication(tenantId, { 
+        businessServices: services.join(), 
+        ...workflowFilters 
+      })
         .then(rawWfHandler)
         .then((data) => callMiddlewares(data.ProcessInstances, middlewaresWf)),
-    {
-      enabled: isInbox,
-      select: (d) => {
-        return d;
-      },
-      ...wfConfig,
-    }
-  );
+    enabled: isInbox,
+    select: (d) => d,
+    ...wfConfig,
+  });
 
   const applicationNoFromWF = processInstances?.map((e) => e.businessId).join() || "";
 
@@ -105,26 +109,25 @@ const useInboxGeneral = ({
 
   const allowSearch = isInbox ? isFetched && wfSuccess && !!searchFilters[businessIdsParamForSearch] : true;
 
-  const searchResult = useQuery(
-    ["SEARCH_INBOX", businessService, searchFilters, workflowFilters, isInbox],
-    () => {
-      if (allowSearch)
+  const searchResult = useQuery({
+    queryKey: ["SEARCH_INBOX", businessService, searchFilters, workflowFilters, isInbox],
+    queryFn: () => {
+      if (allowSearch) {
         return _searchFn()
           .then((d) => rawSearchHandler(d, searchResponseKey, businessIdAliasForSearch))
           .then((data) => callMiddlewares(data[searchResponseKey], middlewareSearch))
           .catch(catchSearch);
+      }
     },
-    {
-      enabled: allowSearch,
-      select: (d) => {
-        return d.map((searchResult) => ({
-          totalCount: d.totalCount,
-          ...combineResponse(searchResult, processInstanceBuisnessIdMap?.[searchResult?.[businessIdAliasForSearch]]),
-        }));
-      },
-      ...searchConfig,
-    }
-  );
+    enabled: allowSearch,
+    select: (d) => {
+      return d.map((searchResult) => ({
+        totalCount: d.totalCount,
+        ...combineResponse(searchResult, processInstanceBuisnessIdMap?.[searchResult?.[businessIdAliasForSearch]]),
+      }));
+    },
+    ...searchConfig,
+  });
 
   const revalidate = () => {
     client.refetchQueries(["WORKFLOW_INBOX"]);

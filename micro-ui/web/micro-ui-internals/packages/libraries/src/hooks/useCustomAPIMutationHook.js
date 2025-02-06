@@ -1,4 +1,4 @@
-import { useQueryClient, useMutation } from "react-query";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { CustomService } from "../services/elements/CustomService";
 
 /**
@@ -16,7 +16,7 @@ import { CustomService } from "../services/elements/CustomService";
     {} ,                           // privacy value 
     {                              // other configs
       enabled: privacyState,
-      cacheTime: 100,
+      gcTime: 100,
       select: (data) => {
                                     // format data
         return  _.get(data, loadData?.jsonPath, value);
@@ -47,13 +47,18 @@ mutation.mutate({
 const useCustomAPIMutationHook = ({ url, params, body, config = {}, plainAccessRequest, changeQueryName = "Random" }) => {
   const client = useQueryClient();
 
-  const { isLoading, data, isFetching, ...rest } = useMutation(
-    (data) => CustomService.getResponse({ url, params: { ...params, ...data?.params }, body: { ...body, ...data?.body }, plainAccessRequest }),
-    {
-      cacheTime: 0,
-      ...config,
-    }
-  );
+  const { isLoading, data, isFetching, ...rest } = useMutation({
+    mutationFn: (data) =>
+      CustomService.getResponse({
+        url,
+        params: { ...params, ...data?.params },
+        body: { ...body, ...data?.body },
+        plainAccessRequest,
+      }),
+    gcTime: 0,
+    ...config,
+  });
+
   return {
     ...rest,
     isLoading,
