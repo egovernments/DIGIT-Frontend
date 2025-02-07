@@ -117,6 +117,9 @@ const initDigitUI = () => {
   );
 };
 
+console.log("coming here")
+debugger;
+
 initLibraries().then(() => {
   initDigitUI();
 });

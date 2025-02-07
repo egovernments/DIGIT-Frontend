@@ -66,7 +66,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
   mode: "development", // Set mode to development
-  entry: path.resolve(__dirname, "../example/src/index.js"),
+  entry: path.resolve(__dirname, "example/src/index.js"),
   devtool: "source-map", // Enable source maps for easier debugging in development
   module: {
     rules: [
@@ -90,7 +90,7 @@ module.exports = {
   output: {
     filename: "[name].bundle.js",
     path: path.resolve(__dirname, "build"),
-    publicPath: "/digit-ui/",
+    publicPath: "/",
   },
   optimization: {
     splitChunks: {

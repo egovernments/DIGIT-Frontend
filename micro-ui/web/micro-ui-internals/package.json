@@ -36,6 +36,7 @@
     "devD:openpayment": "cd packages/modules/open-payment && yarn start",
     "devD:engagement": "cd packages/modules/engagement && yarn start",
     "devD:sandbox": "cd packages/modules/sandbox && yarn start",
+    "dev:web": "webpack serve --config webpack.config.js --mode development --open",
     "build": "run-p build:**",
     "build:libraries": "cd packages/libraries && yarn build",
     "buildD:components": "cd packages/react-components && yarn build",
@@ -62,12 +63,15 @@
     "fast-uri": "2.1.0"
   },
   "devDependencies": {
+    "clean-webpack-plugin": "^4.0.0",
     "eslint-config-react-app": "^7.0.1",
     "husky": "7.0.4",
     "lint-staged": "12.3.7",
     "npm-run-all": "4.1.5",
     "prettier": "2.1.2",
-    "webpack-dev-server": "^4.6.0"
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.0"
   },
   "husky": {},
   "lint-staged": {
@@ -85,10 +89,11 @@
     "lodash": "4.17.21",
     "microbundle-crl": "0.13.11",
     "process": "^0.11.10",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-hook-form": "7.52.2",
     "react-i18next": "15.0.0",
+    "react-redux": "^9.2.0",
     "react-router-dom": "6.25.1"
   }
 }
