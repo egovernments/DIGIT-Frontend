@@ -717,7 +717,7 @@ const ViewHierarchy = () => {
                 {dataCreationGoing && <Loader />}
               </Card>
             )}
-            {activeLink.code == "BOUNDARY_GEOJSON" && <ViewMap filterOptions={filterOptions} />}
+            {activeLink.code == "BOUNDARY_GEOJSON" && <ViewMap filterOptions={filterOptions || {}} />}
 
             <ActionBar
               actionFields={[
