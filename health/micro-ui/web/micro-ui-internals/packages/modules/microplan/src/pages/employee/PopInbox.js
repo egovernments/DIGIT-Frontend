@@ -789,6 +789,7 @@ const PopInbox = () => {
                 onCommentLogClose();
                 refetchCount();
                 refetchCensus();
+                fetchStatusCount();
                 // wait for 5 seconds
                 await new Promise((resolve) => setTimeout(resolve, 5000));
                 setRefetchTrigger(prev => prev + 1);
