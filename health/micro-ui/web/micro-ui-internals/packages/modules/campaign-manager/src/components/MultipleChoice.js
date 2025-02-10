@@ -241,7 +241,7 @@ export const RadioButtonOption = ({
           )}
         </div>
         <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-          {!dis && (
+          {false && !dis && (
             <>
               <CheckBox
                 key={field.key}

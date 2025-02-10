@@ -63,7 +63,7 @@ const UpdateChecklist = () => {
     }, [showToast]);
 
     const res = {
-        url: `/service-request/service/definition/v1/_search`,
+        url: `/health-service-request/service/definition/v1/_search`,
         body: {
             ServiceDefinitionCriteria: {
                 "tenantId": tenantId,

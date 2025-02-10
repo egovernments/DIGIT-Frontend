@@ -1,7 +1,7 @@
 const updateChecklistService = async (req, tenantId) => {
     try {
       const response = await Digit.CustomService.getResponse({
-        url: "/service-request/service/definition/v1/_update",
+        url: "/health-service-request/service/definition/v1/_update",
         body: {
           ServiceDefinition: req,
         },

@@ -21,7 +21,7 @@ const HCM_MODULE_NAME = "console";
 const updateServiceDefinition = async (tenantId, newStatus, sdcode) => {
   try {
     const res = await Digit.CustomService.getResponse({
-      url: "/service-request/service/definition/v1/_update",
+      url: "/health-service-request/service/definition/v1/_update",
       body: {
         ServiceDefinition: {
           "tenantId": tenantId,

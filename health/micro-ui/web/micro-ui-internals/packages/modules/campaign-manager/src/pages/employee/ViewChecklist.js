@@ -33,7 +33,7 @@ const ViewChecklist = () => {
     const [updateDisable, setUpdateDisable] = useState(false);
 
     const res = {
-        url: `/service-request/service/definition/v1/_search`,
+        url: `/health-service-request/service/definition/v1/_search`,
         body: {
             ServiceDefinitionCriteria: {
                 "tenantId": tenantId,
@@ -79,7 +79,7 @@ const ViewChecklist = () => {
         // Only set API params when serviceDefId is available
         if (serviceDefId) {
             setServiceResponseParam({
-                url: `/service-request/service/v1/_search`,
+                url: `/health-service-request/service/v1/_search`,
                 body: {
                     ServiceCriteria: {
                         "tenantId": tenantId,

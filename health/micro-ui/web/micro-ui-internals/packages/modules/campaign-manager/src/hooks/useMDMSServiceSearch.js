@@ -4,7 +4,7 @@ const fetchServiceDefinition = async (serviceCodes, tenantId) => {
   try {
     // Second API Call: Fetch Service Definitions
     const res = await Digit.CustomService.getResponse({
-      url: "/service-request/service/definition/v1/_search",
+      url: "/health-service-request/service/definition/v1/_search",
       params: {},
       body: {
         ServiceDefinitionCriteria: {
