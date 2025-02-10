@@ -71,7 +71,6 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
   const [filteredHierarchyType, setFilteredHierarchyType] = useState(null);
   const [employeeData, setEmployeeData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const HRMS_CONTEXT_PATH = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || "egov-hrms";
 
   // Using the new custom hook
   const { 

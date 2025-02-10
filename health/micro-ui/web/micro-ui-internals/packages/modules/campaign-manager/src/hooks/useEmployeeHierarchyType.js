@@ -7,6 +7,8 @@ const useEmployeeHierarchyType = (tenantId, options = {}) => {
 
   const HRMS_CONTEXT_PATH = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || "egov-hrms";
   const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
+  const MDMS_V2_CONTEXT_PATH = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "egov-mdms-service";
+
 
   const fetchEmployeeAndHierarchy = useCallback(async () => {
     try {
@@ -28,7 +30,7 @@ const useEmployeeHierarchyType = (tenantId, options = {}) => {
       // Fetch hierarchies using MDMS
       const mdmsResponse = await Digit.CustomService.getResponse(
         {
-            url: '/egov-mdms-service/v1/_search',
+            url: `/${MDMS_V2_CONTEXT_PATH}/v1/_search`,
             params: {},
                 body: {
                   MdmsCriteria: {
