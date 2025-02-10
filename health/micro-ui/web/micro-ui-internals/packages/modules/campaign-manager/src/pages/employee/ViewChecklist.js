@@ -32,8 +32,10 @@ const ViewChecklist = () => {
     const [serviceDefId, setServiceDefId] = useState(null);
     const [updateDisable, setUpdateDisable] = useState(false);
 
+    const SERVICE_REQUEST_CONTEXT_PATH = window?.globalConfigs?.getConfig("SERVICE_REQUEST_CONTEXT_PATH") || "health-service-request";
+
     const res = {
-        url: `/health-service-request/service/definition/v1/_search`,
+        url: `/${SERVICE_REQUEST_CONTEXT_PATH}/service/definition/v1/_search`,
         body: {
             ServiceDefinitionCriteria: {
                 "tenantId": tenantId,
@@ -79,7 +81,7 @@ const ViewChecklist = () => {
         // Only set API params when serviceDefId is available
         if (serviceDefId) {
             setServiceResponseParam({
-                url: `/health-service-request/service/v1/_search`,
+                url: `/${SERVICE_REQUEST_CONTEXT_PATH}/service/v1/_search`,
                 body: {
                     ServiceCriteria: {
                         "tenantId": tenantId,
