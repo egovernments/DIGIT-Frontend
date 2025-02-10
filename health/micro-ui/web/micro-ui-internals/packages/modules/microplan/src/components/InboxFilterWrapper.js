@@ -13,7 +13,7 @@ const InboxFilterWrapper = (props) => {
   const [filterValues, setFilterValues] = useState(
     { status: null, onRoadCondition: null, terrain: null, securityQ1: null, securityQ2: null, facilityId:null }
   );
-  const [tableHeight,setTableHeight]=useState(props?.tableHeight || "33rem");
+  const [tableHeight,setTableHeight]=useState(props?.tableHeight || "33");
 
   
 
