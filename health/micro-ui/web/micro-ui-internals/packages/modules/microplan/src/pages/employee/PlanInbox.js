@@ -282,9 +282,9 @@ const PlanInbox = () => {
       // Get full rendered height including borders/padding
       const height = tableRef.current.offsetHeight;
        
-      setTableHeight(`${height / 16 + 7.25}rem`);
+      setTableHeight(height / 16 + 7.25);
     }
-  }, [planWithCensus]); 
+  }, [planWithCensus?.tableData?.length]); 
 
   const onSearch = (selectedBoundaries, selectedHierarchy) => {
     if (selectedBoundaries.length === 0) {

@@ -15,21 +15,11 @@ const InboxFilterWrapper = (props) => {
   );
   const [tableHeight,setTableHeight]=useState(props?.tableHeight || "33rem");
 
-  const parseRem = (remString) => {
-    // Remove 'rem' from the string and convert it to a number
-    return parseFloat(remString.replace('rem', ''));
-  };
-
-  const maximum = (height1, height2) => {
-    // Convert both heights to numbers and compare
-    const height1Value = parseRem(height1);
-    const height2Value = parseRem(height2);
-    return height1Value > height2Value ? `${height1Value}rem` : `${height2Value}rem`;
-  };
+  
 
   useEffect(() => {
-    setTableHeight(maximum(props?.tableHeight || '0rem', '33rem')); // Compare props.tableHeight with '33rem'
-  }, [props]);
+    setTableHeight(Math.max(props?.tableHeight,33)); // Compare props.tableHeight with '33rem'
+  }, [props?.tableHeight]);
 
   
   // Default selected option
@@ -172,7 +162,7 @@ const InboxFilterWrapper = (props) => {
   return (
 
     <FilterCard
-      style={{ flexGrow: 1, display: "flex", flexDirection: "column", width: "22vw",height:tableHeight}}
+      style={{ flexGrow: 1, display: "flex", flexDirection: "column", width: "22vw",height:`${tableHeight}rem`}}
       layoutType={"vertical"}
       onClose={props?.onClose}
       onPrimaryPressed={handleApplyFilters} // Apply filters

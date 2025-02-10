@@ -367,7 +367,7 @@ const PopInbox = () => {
         // Get full rendered height including borders/padding
         const height = tableRef.current.offsetHeight;
          
-        setTableHeight(`${height / 16 + 7.5}rem`);
+        setTableHeight(height / 16 + 7.5);
       }
     }, [data]); 
 
