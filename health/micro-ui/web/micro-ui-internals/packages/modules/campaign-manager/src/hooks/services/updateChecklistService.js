@@ -1,7 +1,8 @@
+const SERVICE_REQUEST_CONTEXT_PATH = window?.globalConfigs?.getConfig("SERVICE_REQUEST_CONTEXT_PATH") || "health-service-request";
 const updateChecklistService = async (req, tenantId) => {
     try {
       const response = await Digit.CustomService.getResponse({
-        url: "/service-request/service/definition/v1/_update",
+        url: `/${SERVICE_REQUEST_CONTEXT_PATH}/service/definition/v1/_update`,
         body: {
           ServiceDefinition: req,
         },
