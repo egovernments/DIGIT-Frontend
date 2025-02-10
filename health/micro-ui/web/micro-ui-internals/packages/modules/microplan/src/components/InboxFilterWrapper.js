@@ -13,6 +13,25 @@ const InboxFilterWrapper = (props) => {
   const [filterValues, setFilterValues] = useState(
     { status: null, onRoadCondition: null, terrain: null, securityQ1: null, securityQ2: null, facilityId:null }
   );
+  const [tableHeight,setTableHeight]=useState(props?.tableHeight || "33rem");
+
+  const parseRem = (remString) => {
+    // Remove 'rem' from the string and convert it to a number
+    return parseFloat(remString.replace('rem', ''));
+  };
+
+  const maximum = (height1, height2) => {
+    // Convert both heights to numbers and compare
+    const height1Value = parseRem(height1);
+    const height2Value = parseRem(height2);
+    return height1Value > height2Value ? `${height1Value}rem` : `${height2Value}rem`;
+  };
+
+  useEffect(() => {
+    setTableHeight(maximum(props?.tableHeight || '0rem', '33rem')); // Compare props.tableHeight with '33rem'
+  }, [props]);
+
+  console.log("table height master",props?.tableHeight,tableHeight);
   
   // Default selected option
   let defaultSelectedOptions = props.defaultValue
@@ -150,10 +169,11 @@ const InboxFilterWrapper = (props) => {
     return <Loader/>
   }
 
+
   return (
 
     <FilterCard
-      style={{ flexGrow: 1, display: "flex", flexDirection: "column", width: "22vw" }}
+      style={{ flexGrow: 1, display: "flex", flexDirection: "column", width: "22vw",height:tableHeight}}
       layoutType={"vertical"}
       onClose={props?.onClose}
       onPrimaryPressed={handleApplyFilters} // Apply filters
