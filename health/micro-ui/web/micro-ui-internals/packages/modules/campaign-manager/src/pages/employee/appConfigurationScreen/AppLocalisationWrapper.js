@@ -29,7 +29,7 @@ const locReducer = (state = initialState, action) => {
 };
 const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
 
-function AppLocalisationWrapper() {
+function AppLocalisationWrapper({ onSubmit, ...props }) {
   const [locState, locDispatch] = useReducer(locReducer, initialState);
   const addMissingKey = (code) => {
     locDispatch({ type: "ADD_MISSING_KEY", payload: { code } });
@@ -84,7 +84,7 @@ function AppLocalisationWrapper() {
   }, [localisationData, isLoading]);
 
   return (
-    <AppLocalisationContext.Provider value={{ locState, locDispatch, addMissingKey, updateLocalization }}>
+    <AppLocalisationContext.Provider value={{ locState, locDispatch, addMissingKey, updateLocalization, onSubmit }}>
       <AppConfigurationWrapper />
     </AppLocalisationContext.Provider>
   );

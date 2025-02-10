@@ -25,7 +25,7 @@ const Tabs = ({ numberTabs, onTabChange }) => {
   );
 };
 
-function AppFieldScreenWrapper() {
+function AppFieldScreenWrapper({ onSubmit }) {
   const { state, dispatch } = useAppConfigContext();
   const projectType = "MR_DN";
   const { t } = useTranslation();
@@ -227,7 +227,7 @@ function AppFieldScreenWrapper() {
             variation="primary"
             label={t("NEXT")}
             title={t("NEXT")}
-            onClick={() => (!stepper?.find((i) => i.active)?.isLast ? setCurrentStep((prev) => prev + 1) : onSubmit())}
+            onClick={() => (!stepper?.find((i) => i.active)?.isLast ? setCurrentStep((prev) => prev + 1) : onSubmit(state))}
           />
         </ActionBar>
       )}

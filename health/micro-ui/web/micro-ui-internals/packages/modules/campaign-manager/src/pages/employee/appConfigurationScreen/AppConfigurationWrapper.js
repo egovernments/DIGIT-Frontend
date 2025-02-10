@@ -190,7 +190,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
 const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
 
 function AppConfigurationWrapper() {
-  const { locState, addMissingKey, updateLocalization } = useAppLocalisationContext();
+  const { locState, addMissingKey, updateLocalization, onSubmit } = useAppLocalisationContext();
   const [state, dispatch] = useReducer((state, action) => reducer(state, action, updateLocalization), initialState);
   const { t } = useTranslation();
   const [showPopUp, setShowPopUp] = useState(false);
@@ -220,7 +220,7 @@ function AppConfigurationWrapper() {
 
   return (
     <AppConfigContext.Provider value={{ state, dispatch }}>
-      <AppFieldScreenWrapper />
+      <AppFieldScreenWrapper onSubmit={onSubmit} />
       {state?.drawerField && (
         <SidePanel
           bgActive
