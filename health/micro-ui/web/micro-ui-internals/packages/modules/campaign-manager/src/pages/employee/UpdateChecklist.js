@@ -62,8 +62,10 @@ const UpdateChecklist = () => {
         }
     }, [showToast]);
 
+    const SERVICE_REQUEST_CONTEXT_PATH = window?.globalConfigs?.getConfig("SERVICE_REQUEST_CONTEXT_PATH") || "health-service-request";
+
     const res = {
-        url: `/service-request/service/definition/v1/_search`,
+        url: `/${SERVICE_REQUEST_CONTEXT_PATH}/service/definition/v1/_search`,
         body: {
             ServiceDefinitionCriteria: {
                 "tenantId": tenantId,

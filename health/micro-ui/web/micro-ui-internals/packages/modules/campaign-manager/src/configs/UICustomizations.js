@@ -17,11 +17,12 @@ const businessServiceMap = {};
 const inboxModuleNameMap = {};
 
 const HCM_MODULE_NAME = "console";
+const SERVICE_REQUEST_CONTEXT_PATH = window?.globalConfigs?.getConfig("SERVICE_REQUEST_CONTEXT_PATH") || "health-service-request";
 
 const updateServiceDefinition = async (tenantId, newStatus, sdcode) => {
   try {
     const res = await Digit.CustomService.getResponse({
-      url: "/service-request/service/definition/v1/_update",
+      url: `/${SERVICE_REQUEST_CONTEXT_PATH}/service/definition/v1/_update`,
       body: {
         ServiceDefinition: {
           "tenantId": tenantId,

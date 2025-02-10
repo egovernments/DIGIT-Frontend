@@ -1,10 +1,11 @@
 import { useQuery } from "react-query";
+const SERVICE_REQUEST_CONTEXT_PATH = window?.globalConfigs?.getConfig("SERVICE_REQUEST_CONTEXT_PATH") || "health-service-request";
 
 const fetchServiceDefinition = async (serviceCodes, tenantId) => {
   try {
     // Second API Call: Fetch Service Definitions
     const res = await Digit.CustomService.getResponse({
-      url: "/service-request/service/definition/v1/_search",
+      url: `/${SERVICE_REQUEST_CONTEXT_PATH}/service/definition/v1/_search`,
       params: {},
       body: {
         ServiceDefinitionCriteria: {
