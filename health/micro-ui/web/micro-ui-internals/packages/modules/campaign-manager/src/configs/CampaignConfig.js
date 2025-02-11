@@ -1,4 +1,5 @@
-export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryErrors, hierarchyData) => {
+export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryErrors, hierarchyData, allHierarchy, employeeDetails) => {
+
   return [
     {
       form: [
@@ -20,6 +21,8 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
                 module: "HCM",
                 sessionData: totalFormData,
                 isSubmitting: isSubmitting,
+                employeeDetails: employeeDetails,
+                allHierarchy: allHierarchy
               },
               populators: {
                 name: "projectType",
@@ -125,6 +128,8 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
                 sessionData: totalFormData,
                 dataParams: dataParams,
                 hierarchyData: hierarchyData,
+                employeeDetails: employeeDetails,
+                allHierarchy: allHierarchy
               },
               populators: {
                 name: "boundaryType",

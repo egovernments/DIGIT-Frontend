@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useRef, useMemo } from "react";
+import React, { useState, useEffect, Fragment, useRef, useMemo, use } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardHeader, Header, CardText } from "@egovernments/digit-ui-react-components";
 import { LabelFieldPair, CardLabel } from "@egovernments/digit-ui-components";
@@ -128,7 +128,6 @@ const SelectingBoundaryComponent = ({
   const timerRef = useRef(null);
   const [parentRoot, setParentRoot] = useState(selectedData?.find((item) => item?.isRoot === true)?.type || {});
   const [restrictSelection, setRestrictSelection] = useState(restrictSelectionPage);
-
 
   useEffect(() => {
     setBoundaryOptions(boundaryOptionsPage);

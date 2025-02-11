@@ -65,21 +65,32 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const [fetchBoundary, setFetchBoundary] = useState(() => Boolean(searchParams.get("fetchBoundary")));
   const [fetchUpload, setFetchUpload] = useState(false);
   const [active, setActive] = useState(0);
-  const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    CONSOLE_MDMS_MODULENAME,
-    [
-      {
-        name: "HierarchySchema",
-        filter: `[?(@.type=='${window?.Digit?.Utils?.campaign?.getModuleName()}')]`,
-      },
-    ],
-    { select: (MdmsRes) => MdmsRes },
-    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
-  );
+  const HRMS_CONTEXT_PATH = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || "egov-hrms";
+  // const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(
+  //   tenantId,
+  //   CONSOLE_MDMS_MODULENAME,
+  //   [
+  //     {
+  //       name: "HierarchySchema",
+  //       filter: `[?(@.type=='${window?.Digit?.Utils?.campaign?.getModuleName()}')]`,
+  //     },
+  //   ],
+  //   { select: (MdmsRes) => MdmsRes },
+  //   { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
+  // );
+
+  const { 
+    data: BOUNDARY_HIERARCHY_TYPE, 
+    isLoading: hierarchyLoading,
+    rawData: rawData
+  } = Digit.Hooks.campaign.useEmployeeHierarchyType(tenantId, {
+    select: (data) => data?.hierarchy
+  });
+
+
   const lowestHierarchy = useMemo(() => {
-    return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.lowestHierarchy;
-  }, [HierarchySchema]);
+    return rawData?.matchingHierarchy?.lowestHierarchy;
+  }, [rawData]);
 
   const { data: DeliveryConfig } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -108,6 +119,22 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
 
   const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
+  const reqAllHierarchy = {
+    url: '/egov-mdms-service/v1/_search',
+    params: {},
+        body: {
+          MdmsCriteria: {
+            tenantId,
+            moduleDetails: [{
+              moduleName: "HCM-ADMIN-CONSOLE",
+              masterDetails: [{
+                name: "HierarchySchema"
+              }]
+            }]
+          }
+        }
+    }
+  
   const { isLoading: draftLoading, data: draftData, error: draftError, refetch: draftRefetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {

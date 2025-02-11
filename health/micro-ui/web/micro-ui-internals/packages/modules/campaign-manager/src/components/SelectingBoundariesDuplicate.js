@@ -3,7 +3,7 @@ import { CardText,  Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { useLocation, useHistory } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
-import { InfoCard, PopUp, Stepper, TextBlock,Tag , Card} from "@egovernments/digit-ui-components";
+import { InfoCard, PopUp, Stepper, TextBlock,Tag , Card, Loader} from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
 
@@ -11,15 +11,60 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getStateId();
   const searchParams = new URLSearchParams(location.search);
-  const hierarchyType = props?.props?.dataParams?.hierarchyType;
-  const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ 
-    name: "HierarchySchema",
-    "filter": `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`
-   }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` });
-  const { data: mailConfig } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "mailConfig" }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.mailConfig` });
+  // const hierarchyType = props?.props?.dataParams?.hierarchyType;
+  const employee = props?.props?.employeeDetails?.Employees?.[0];
+  const hierarchies = props?.props?.allHierarchy?.MdmsRes?.["HCM-ADMIN-CONSOLE"]?.HierarchySchema || [];
+  // const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ 
+  //   name: "HierarchySchema",
+  //   "filter": `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`
+  //  }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` });
+  
+  const { 
+    data: BOUNDARY_HIERARCHY_TYPE, 
+    isLoading: hierarchyLoading,
+    rawData: rawData
+  } = Digit.Hooks.campaign.useEmployeeHierarchyType(tenantId, {
+    select: (data) => data?.hierarchy
+  });
   const lowestHierarchy = useMemo(() => {
-    return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.lowestHierarchy;
-  }, [HierarchySchema]);
+    return rawData?.matchingHierarchy?.lowestHierarchy;
+  }, [rawData]);
+  const hierarchyType = useMemo(()=>{
+    return BOUNDARY_HIERARCHY_TYPE;
+  }, [BOUNDARY_HIERARCHY_TYPE])
+
+  
+  const [boundaryHierarchyData, setBoundaryHierarchyData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if(!hierarchyType) return null;
+    const fetchBoundaryHierarchy = async () => { 
+      try {
+        const response = await Digit.CustomService.getResponse({
+          url: '/boundary-service/boundary-relationships/_search',
+          params: {
+            tenantId: tenantId,
+            hierarchyType: hierarchyType,
+            includeChildren: true
+          },
+          body: {},
+        });
+  
+        const boundaryData = response?.TenantBoundary?.[0]?.boundary;
+        setBoundaryHierarchyData(boundaryData);
+        setLoading(false);
+
+      } catch (error) {
+        console.error("Error fetching boundary hierarchy:", error);
+      }
+    };
+  
+    fetchBoundaryHierarchy();
+  }, [hierarchyType]);
+  
+  const { data: mailConfig } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "mailConfig" }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.mailConfig` });
+
   const [selectedData, setSelectedData] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData || []);
   const [boundaryOptions, setBoundaryOptions] = useState(
     props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData || {}
@@ -47,7 +92,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   };
 
   useEffect(() => {
-    onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions ,  updateBoundary: !restrictSelection});
+    onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions ,  updateBoundary: !restrictSelection });
   }, [selectedData, boundaryOptions , restrictSelection]);
 
   useEffect(() => {
@@ -102,53 +147,56 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
 
   return (
     <>
-      <div className="container-full">
-        <div className="card-container">
-          <Card className="card-header-timeline">
-            <TextBlock subHeader={t("HCM_BOUNDARY_DETAILS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
-          </Card>
-          <Card className="stepper-card">
-            <Stepper customSteps={["HCM_BOUNDARY_DETAILS_VERTICAL", "HCM_SUMMARY"]} currentStep={1} onStepClick={onStepClick} direction={"vertical"} />
-          </Card>
-        </div>
+      {loading && <Loader />}
+      {!loading && 
+        <div className="container-full">
+          <div className="card-container">
+            <Card className="card-header-timeline">
+              <TextBlock subHeader={t("HCM_BOUNDARY_DETAILS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+            </Card>
+            <Card className="stepper-card">
+              <Stepper customSteps={["HCM_BOUNDARY_DETAILS_VERTICAL", "HCM_SUMMARY"]} currentStep={1} onStepClick={onStepClick} direction={"vertical"} />
+            </Card>
+          </div>
 
-        <div className="card-container-delivery">
-        <TagComponent campaignName={campaignName} />  
-          <Card>
-            <Header>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</Header>
-            <p className="description-type">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
-            <Wrapper
-              hierarchyType={hierarchyType}
-              lowest={lowestHierarchy}
-              selectedData={selectedData}
-              boundaryOptions={boundaryOptions}
-              hierarchyData={props?.props?.hierarchyData}
-              isMultiSelect={"true"}
-              restrictSelection = {restrictSelection}
-              onSelect={(value) => {
-                handleBoundaryChange(value);
+          <div className="card-container-delivery">
+          <TagComponent campaignName={campaignName} />  
+            <Card>
+              <Header>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</Header>
+              <p className="description-type">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
+              <Wrapper
+                hierarchyType={hierarchyType}
+                lowest={lowestHierarchy}
+                selectedData={selectedData}
+                boundaryOptions={boundaryOptions}
+                hierarchyData={boundaryHierarchyData}
+                isMultiSelect={"true"}
+                restrictSelection = {restrictSelection}
+                onSelect={(value) => {
+                  handleBoundaryChange(value);
+                }}
+              ></Wrapper>
+            </Card>
+            <InfoCard
+              populators={{
+                name: "infocard",
               }}
-            ></Wrapper>
-          </Card>
-          <InfoCard
-            populators={{
-              name: "infocard",
-            }}
-            variant="default"
-            style={{ margin: "0rem", maxWidth: "100%" , marginTop: "1.5rem" , marginBottom: "2rem"}}
-            additionalElements={[
-              <span style={{ color: "#505A5F" }}>
-                {t("HCM_BOUNDARY_INFO")}
-                &nbsp;
-                <a href={`mailto:${mailConfig?.[CONSOLE_MDMS_MODULENAME]?.mailConfig?.[0]?.mailId}`} style={{ color: "black" }}>
-                  {mailConfig?.[CONSOLE_MDMS_MODULENAME]?.mailConfig?.[0]?.mailId}
-                </a>
-              </span>,
-            ]}
-            label={"Info"}
-          />
+              variant="default"
+              style={{ margin: "0rem", maxWidth: "100%" , marginTop: "1.5rem" , marginBottom: "2rem"}}
+              additionalElements={[
+                <span style={{ color: "#505A5F" }}>
+                  {t("HCM_BOUNDARY_INFO")}
+                  &nbsp;
+                  <a href={`mailto:${mailConfig?.[CONSOLE_MDMS_MODULENAME]?.mailConfig?.[0]?.mailId}`} style={{ color: "black" }}>
+                    {mailConfig?.[CONSOLE_MDMS_MODULENAME]?.mailConfig?.[0]?.mailId}
+                  </a>
+                </span>,
+              ]}
+              label={"Info"}
+            />
+          </div>
         </div>
-      </div>
+      }
     </>
   );
 };
