@@ -55,10 +55,10 @@ module.exports = {
     },
   },
   devServer: {
-    static: path.join(__dirname, "build"), // Directory to serve
-    compress: true, // Enable compression for better performance
-    port: 3000, // Port number for dev server
-    hot: true, // Enable Hot Module Replacement (HMR)
-    historyApiFallback: true, // Fix for single-page applications using React Router
-  }
+    static: path.join(__dirname, "build"), // Change this to "dist"
+    compress: true,
+    port: 3000,
+    hot: true,
+    historyApiFallback: true,
+},
 };
