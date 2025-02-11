@@ -65,7 +65,7 @@ const PlanInbox = () => {
   const userRoles = user?.info?.roles?.map((roleData) => roleData?.code);
   const hrms_context_path = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || 'health-hrms';
   const tableRef = useRef(null);
-  const [tableHeight, setTableHeight] = useState(0);
+  const [tableHeight, setTableHeight] = useState(33);
  
   // Check if the user has the 'rootapprover' role
   const isRootApprover = userRoles?.includes("ROOT_PLAN_ESTIMATION_APPROVER");

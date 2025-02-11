@@ -13,7 +13,6 @@ const InboxFilterWrapper = (props) => {
   const [filterValues, setFilterValues] = useState(
     { status: null, onRoadCondition: null, terrain: null, securityQ1: null, securityQ2: null, facilityId:null }
   );
-  const [tableHeight,setTableHeight]=useState(props?.tableHeight || "33");
 
   
 
@@ -162,7 +161,7 @@ const InboxFilterWrapper = (props) => {
   return (
 
     <FilterCard
-      style={{ flexGrow: 1, display: "flex", flexDirection: "column", width: "22vw",height:`${tableHeight}rem`}}
+      style={{ flexGrow: 1, display: "flex", flexDirection: "column", width: "22vw",height:`${props.tableHeight}rem`}}
       layoutType={"vertical"}
       onClose={props?.onClose}
       onPrimaryPressed={handleApplyFilters} // Apply filters

@@ -56,7 +56,7 @@ const PopInbox = () => {
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
   const tableRef = useRef(null);
-  const [tableHeight, setTableHeight] = useState(0);
+  const [tableHeight, setTableHeight] = useState(33);
 
   // Check if the user has the 'rootapprover' role
   const isRootApprover = userRoles?.includes("ROOT_POPULATION_DATA_APPROVER");
