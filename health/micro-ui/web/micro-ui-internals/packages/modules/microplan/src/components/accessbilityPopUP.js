@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { PopUp, Button, Dropdown, LabelFieldPair, Card, Toast } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../utils/context"; // Ensure that the translation function `t` is handled here
+import useThrottle from "../hooks/useThrottle";
 
 
 const AccessibilityPopUp = ({ onClose, census, onSuccess, disableEditing=false }) => {
@@ -84,9 +85,10 @@ const AccessibilityPopUp = ({ onClose, census, onSuccess, disableEditing=false }
   const mutation = Digit.Hooks.useCustomAPIMutationHook({
     url: "/census-service/_update",
   });
+  const throttledMutation = useThrottle(mutation.mutate,2000)
 
   const handleSave = async () => {
-    await mutation.mutate(
+    await throttledMutation(
       {
         body: reqPayload,
       },

@@ -9,6 +9,7 @@ import _ from "lodash";
 import { useMyContext } from "../../utils/context";
 import { useLocation } from "react-router-dom/cjs/react-router-dom";
 import { fetchDataAndSetParams } from "../../utils/fetchDataAndSetParams";
+import useThrottle from "../../hooks/useThrottle";
 
 const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const { dispatch, state } = useMyContext();
@@ -107,6 +108,9 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
 
   //Generic mutation to handle creation and updation of resources(plan/project)
   const { mutate: updateResources, ...rest } = Digit.Hooks.microplanv1.useCreateUpdatePlanProject();
+
+  const throttledUpdateResources = useThrottle(updateResources,2000)
+
   const filterMicroplanConfig = (microplanConfig, currentKey) => {
     return microplanConfig
       .map((config) => {
@@ -183,7 +187,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
 
   const handleUpdates = (propsForMutate) => {
     setLoader(true);
-    updateResources(propsForMutate, {
+    throttledUpdateResources(propsForMutate, {
       onSuccess: (data) => {
         // Check if there is a redirectTo property in the response
         if (data?.redirectTo) {
