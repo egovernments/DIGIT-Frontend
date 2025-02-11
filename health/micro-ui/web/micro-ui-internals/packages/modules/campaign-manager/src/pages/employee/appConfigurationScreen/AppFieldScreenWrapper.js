@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Button, Card, CardHeader, Divider, Stepper, Tab, ActionBar } from "@egovernments/digit-ui-components";
 import AppFieldComposer from "./AppFieldComposer";
 import _ from "lodash";
+import { useCustomT } from "./useCustomT";
 
 const Tabs = ({ numberTabs, onTabChange }) => {
   const { state, dispatch } = useAppConfigContext();
@@ -24,8 +25,9 @@ const Tabs = ({ numberTabs, onTabChange }) => {
   );
 };
 
-function AppFieldScreenWrapper() {
+function AppFieldScreenWrapper({ onSubmit }) {
   const { state, dispatch } = useAppConfigContext();
+  const projectType = "MR_DN";
   const { t } = useTranslation();
   // const appTemplate = state?.["MASTER_DATA"]?.AppScreenConfigTemplateSchema;
   const appTemplate = state?.screenData;
@@ -109,14 +111,33 @@ function AppFieldScreenWrapper() {
       {currentCard?.cards?.map(({ fields, description, header, headerFields }, index, card) => {
         return (
           <Card className="appConfigScreenCard">
-            {headerFields?.map(({ type, label, active, required }) => (
-              <AppFieldComposer type={type} label={label} active={active} required={required} headerFields={true} />
-            ))}
-            <Divider />
-            {fields?.map(({ type, label, active, required, dropDownOptions, deleteFlag }, i, c) => (
+            {headerFields?.map(({ type, label, active, required, value }, indx, cx) => (
               <AppFieldComposer
                 type={type}
                 label={label}
+                active={active}
+                required={required}
+                value={useCustomT(`${projectType}_${currentCard.parent}_${currentCard.name}_${label}`)}
+                headerFields={true}
+                onChange={(event) => {
+                  dispatch({
+                    type: "UPDATE_HEADER_FIELD",
+                    payload: {
+                      currentField: card[index],
+                      currentScreen: currentCard,
+                      field: cx[indx],
+                      localisedCode: `${projectType}_${currentCard.parent}_${currentCard.name}_${label}`,
+                      value: event.target.value,
+                    },
+                  });
+                }}
+              />
+            ))}
+            <Divider />
+            {fields?.map(({ type, label, active, required, Mandatory, helpText, infoText, innerLabel, dropDownOptions, deleteFlag }, i, c) => (
+              <AppFieldComposer
+                type={type}
+                label={useCustomT(label)}
                 active={active}
                 required={required}
                 isDelete={deleteFlag === false ? false : true}
@@ -144,6 +165,10 @@ function AppFieldScreenWrapper() {
                   // return;
                 }}
                 config={c[i]}
+                Mandatory={Mandatory}
+                helpText={useCustomT(helpText)}
+                infoText={useCustomT(infoText)}
+                innerLabel={useCustomT(innerLabel)}
               />
             ))}
             {currentCard?.config?.enableFieldAddition && (
@@ -197,15 +222,13 @@ function AppFieldScreenWrapper() {
               onClick={() => setCurrentStep((prev) => prev - 1)}
             />
           )}
-          {!stepper?.find((i) => i.active)?.isLast && (
-            <Button
-              className="previous-button"
-              variation="primary"
-              label={t("NEXT")}
-              title={t("NEXT")}
-              onClick={() => setCurrentStep((prev) => prev + 1)}
-            />
-          )}
+          <Button
+            className="previous-button"
+            variation="primary"
+            label={t("NEXT")}
+            title={t("NEXT")}
+            onClick={() => (!stepper?.find((i) => i.active)?.isLast ? setCurrentStep((prev) => prev + 1) : onSubmit(state))}
+          />
         </ActionBar>
       )}
     </React.Fragment>

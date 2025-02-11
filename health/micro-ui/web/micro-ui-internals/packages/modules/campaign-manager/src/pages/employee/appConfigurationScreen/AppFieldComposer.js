@@ -1,9 +1,10 @@
-import { LabelFieldPair, TextInput, Dropdown, CheckBox } from "@egovernments/digit-ui-components";
+import { LabelFieldPair, TextInput, Dropdown, CheckBox, InfoCard, TooltipWrapper } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PRIMARY_COLOR } from "../../utils";
-import { DustbinIcon } from "../../components/icons/DustbinIcon";
+import { PRIMARY_COLOR } from "../../../utils";
+import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 import { useAppConfigContext } from "./AppConfigurationWrapper";
+import { InfoOutline } from "@egovernments/digit-ui-svg-components";
 
 const CheckBoxes = ({ t, option, optionKey, isLabelFirst }) => {
   return (
@@ -15,43 +16,69 @@ const CheckBoxes = ({ t, option, optionKey, isLabelFirst }) => {
   );
 };
 
-function AppFieldComposer({
-  headerFields = false,
+const Field = ({
+  t,
+  headerFields,
   type,
   label,
   value,
   required,
-  isDelete = false,
+  isDelete,
   onDelete,
-  onSelectField = () => {},
-  dropDownOptions = [],
+  onSelectField,
+  dropDownOptions,
   config,
-}) {
-  const { t } = useTranslation();
-  const { state, dispatch } = useAppConfigContext();
-  const componentRef = useRef(null);
-
-  const Field = () => {
-    switch (type) {
-      case "text":
-      case "textInput":
-        return (
-          // <div
-          //   ref={componentRef}
-          //   onClick={() => {
-          //     onSelectField();
-          //   }}
-          // >
-          <LabelFieldPair className={!headerFields ? `appConfiglabelField ${config?.id === state?.drawerField?.id ? "selected" : ""}` : ""}>
+  onChange,
+  state,
+  dispatch,
+  Mandatory,
+  helpText,
+  infoText,
+  innerLabel,
+  ...props
+}) => {
+  switch (type) {
+    case "text":
+    case "textInput":
+      return (
+        <>
+          {infoText && (
+            <InfoCard
+              populators={{
+                name: "infocard",
+              }}
+              variant="default"
+              text={t(infoText)}
+            />
+          )}
+          <LabelFieldPair
+            className={
+              !headerFields
+                ? `appConfiglabelField ${
+                    config?.id
+                      ? config?.id === state?.drawerField?.id
+                        ? "selected"
+                        : ""
+                      : config?.jsonPath === state?.drawerField?.jsonPath
+                      ? "selected"
+                      : ""
+                  }`
+                : ""
+            }
+          >
             <div className="appConfiglabelField-label">
               <span>{`${t(label)}`}</span>
-              {required && <span className="mandatory-span">*</span>}
+              {Mandatory && <span className="mandatory-span">*</span>}
+              {helpText && (
+                <span className="icon-wrapper">
+                  <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
+                </span>
+              )}
             </div>
-            <TextInput className="appConfiglabelField-Input" name={""} value={value} onChange={() => {}} />
+            <TextInput className="appConfiglabelField-Input" name={""} value={value} onChange={(event) => onChange(event)} />
             {isDelete && (
               <div
                 onClick={(e) => {
-                  // e.stopPropagation();
                   onDelete();
                 }}
                 style={{
@@ -70,20 +97,30 @@ function AppFieldComposer({
               </div>
             )}
           </LabelFieldPair>
-          // </div>
-        );
-        break;
-      case "dropDown":
-        return (
-          // <div
-          //   onClick={() => {
-          //     onSelectField();
-          //   }}
-          // >
+        </>
+      );
+      break;
+    case "dropDown":
+      return (
+        <>
+          {infoText && (
+            <InfoCard
+              populators={{
+                name: "infocard",
+              }}
+              variant="default"
+              text={t(infoText)}
+            />
+          )}
           <LabelFieldPair className={!headerFields ? `appConfiglabelField ${config?.id === state?.drawerField?.id ? "selected" : ""}` : ""}>
             <div className="appConfiglabelField-label">
               <span>{`${t(label)}`}</span>
               {required && <span className="mandatory-span">*</span>}
+              {helpText && (
+                <span className="icon-wrapper">
+                  <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
+                </span>
+              )}
             </div>
             <Dropdown
               className="appConfiglabelField-Input"
@@ -117,16 +154,31 @@ function AppFieldComposer({
               </div>
             )}
           </LabelFieldPair>
-          // </div>
-        );
-        break;
-      case "dobPicker":
-      case "datePicker":
-        return (
+        </>
+      );
+      break;
+    case "dobPicker":
+    case "datePicker":
+      return (
+        <>
+          {infoText && (
+            <InfoCard
+              populators={{
+                name: "infocard",
+              }}
+              variant="default"
+              text={t(infoText)}
+            />
+          )}
           <LabelFieldPair className={!headerFields ? `appConfiglabelField ${config?.id === state?.drawerField?.id ? "selected" : ""}` : ""}>
             <div className="appConfiglabelField-label">
               <span>{`${t(label)}`}</span>
               {required && <span className="mandatory-span">*</span>}
+              {helpText && (
+                <span className="icon-wrapper">
+                  <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
+                </span>
+              )}
             </div>
             <TextInput type="date" className="appConfiglabelField-Input" name={""} value={value} onChange={() => {}} />
             {isDelete && (
@@ -151,14 +203,30 @@ function AppFieldComposer({
               </div>
             )}
           </LabelFieldPair>
-        );
-        break;
-      case "counter":
-        return (
+        </>
+      );
+      break;
+    case "counter":
+      return (
+        <>
+          {infoText && (
+            <InfoCard
+              populators={{
+                name: "infocard",
+              }}
+              variant="default"
+              text={t(infoText)}
+            />
+          )}
           <LabelFieldPair className={!headerFields ? `appConfiglabelField ${config?.id === state?.drawerField?.id ? "selected" : ""}` : ""}>
             <div className="appConfiglabelField-label">
               <span>{`${t(label)}`}</span>
               {required && <span className="mandatory-span">*</span>}
+              {helpText && (
+                <span className="icon-wrapper">
+                  <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
+                </span>
+              )}
             </div>
             <TextInput type="numeric" className="appConfiglabelField-Input" name={""} value={value} onChange={() => {}} />
             {isDelete && (
@@ -183,14 +251,30 @@ function AppFieldComposer({
               </div>
             )}
           </LabelFieldPair>
-        );
-        break;
-      case "number":
-        return (
+        </>
+      );
+      break;
+    case "number":
+      return (
+        <>
+          {infoText && (
+            <InfoCard
+              populators={{
+                name: "infocard",
+              }}
+              variant="default"
+              text={t(infoText)}
+            />
+          )}
           <LabelFieldPair className={!headerFields ? `appConfiglabelField ${config?.id === state?.drawerField?.id ? "selected" : ""}` : ""}>
             <div className="appConfiglabelField-label">
               <span>{`${t(label)}`}</span>
               {required && <span className="mandatory-span">*</span>}
+              {helpText && (
+                <span className="icon-wrapper">
+                  <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
+                </span>
+              )}
             </div>
             <TextInput type="number" className="appConfiglabelField-Input" name={""} value={value} onChange={() => {}} />
             {isDelete && (
@@ -215,13 +299,29 @@ function AppFieldComposer({
               </div>
             )}
           </LabelFieldPair>
-        );
-      case "checkbox":
-        return (
+        </>
+      );
+    case "checkbox":
+      return (
+        <>
+          {infoText && (
+            <InfoCard
+              populators={{
+                name: "infocard",
+              }}
+              variant="default"
+              text={t(infoText)}
+            />
+          )}
           <LabelFieldPair className={!headerFields ? `appConfiglabelField ${config?.id === state?.drawerField?.id ? "selected" : ""}` : ""}>
             <div className="appConfiglabelField-label">
               <span>{`${t(label)}`}</span>
               {required && <span className="mandatory-span">*</span>}
+              {helpText && (
+                <span className="icon-wrapper">
+                  <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
+                </span>
+              )}
             </div>
             <CheckBoxes isLabelFirst={false} t={t} option={dropDownOptions} optionKey={"name"} />
             {isDelete && (
@@ -246,27 +346,64 @@ function AppFieldComposer({
               </div>
             )}
           </LabelFieldPair>
-        );
-      default:
-        return null;
-        break;
-    }
-  };
+        </>
+      );
+    default:
+      return null;
+      break;
+  }
+};
+
+function AppFieldComposer({
+  headerFields = false,
+  type,
+  label,
+  value,
+  required,
+  isDelete = false,
+  onDelete,
+  onSelectField = () => {},
+  dropDownOptions = [],
+  config,
+  onChange = () => {},
+  Mandatory,
+  helpText,
+  infoText,
+  innerLabel,
+}) {
+  const { t } = useTranslation();
+  const { state, dispatch } = useAppConfigContext();
+  const componentRef = useRef(null);
 
   return (
     <div
       ref={componentRef}
       onClick={(e) => {
-        if (config?.id !== state?.drawerField?.id) {
-          onSelectField();
-        }
-        // e.stopPropagation();
-        // onSelectField();
+        onSelectField();
       }}
       className="app-config-field-wrapper"
       style={{ width: "50%" }}
     >
-      <Field />
+      <Field
+        t={t}
+        headerFields={headerFields}
+        type={type}
+        label={label}
+        value={value}
+        required={required}
+        isDelete={isDelete}
+        onDelete={onDelete}
+        onSelectField={onSelectField}
+        dropDownOptions={dropDownOptions}
+        config={config}
+        onChange={onChange}
+        state={state}
+        dispatch={dispatch}
+        Mandatory={Mandatory}
+        helpText={helpText}
+        infoText={infoText}
+        innerLabel={innerLabel}
+      />
     </div>
   );
 }

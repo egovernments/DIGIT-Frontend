@@ -53,7 +53,9 @@ import MultiSelectDropdown from "./components/MultiSelectDropdown";
 import NoResultsFound from "./components/NoResultsFound";
 import UploadDataMappingWrapper from "./components/UploadDataMappingWrapper";
 import DataUploadWrapper from "./components/DataUploadWrapper";
-import AppConfigurationWrapper from "./pages/employee/AppConfigurationWrapper";
+import AppConfigurationWrapper from "./pages/employee/appConfigurationScreen/AppConfigurationWrapper";
+import AppLocalisationWrapper from "./pages/employee/appConfigurationScreen/AppLocalisationWrapper";
+import ImpelComponentWrapper from "./pages/employee/appConfigurationScreen/ImpelComponentWrapper";
 
 /**
  * MDMS Module name
@@ -88,7 +90,9 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
   const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE, tenantId });
   const modulePrefix = "hcm";
 
-  const moduleCode = BOUNDARY_HIERARCHY_TYPE ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`] : ["campaignmanager", "schema", "admin-schemas", "checklist", "appconfiguration"];
+  const moduleCode = BOUNDARY_HIERARCHY_TYPE
+    ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`]
+    : ["campaignmanager", "schema", "admin-schemas", "checklist", "appconfiguration"];
 
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
@@ -168,7 +172,8 @@ const componentsToRegister = {
   NoResultsFound,
   UploadDataMappingWrapper,
   DataUploadWrapper,
-  AppConfigurationWrapper,
+  // AppConfigurationWrapper: AppLocalisationWrapper,
+  AppConfigurationWrapper: ImpelComponentWrapper,
 };
 
 const overrideHooks = () => {
