@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router-dom";
 import { dateChangeBoundaryConfig, dateChangeConfig } from "../../configs/dateChangeBoundaryConfig";
-import { Button, InfoCard, PopUp, Toast, Tag } from "@egovernments/digit-ui-components";
+import { Button, AlertCard, PopUp, Toast, Tag } from "@egovernments/digit-ui-components";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import TagComponent from "../../components/TagComponent";
@@ -187,7 +187,7 @@ function UpdateDatesWithBoundaries() {
         actionClassName={"dateUpdateAction"}
         noCardStyle={true}
       />
-      <InfoCard
+      <AlertCard
         className={"infoClass"}
         populators={{
           name: "infocard",

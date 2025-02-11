@@ -1,7 +1,7 @@
 import React, { useEffect, useState, createContext, useContext } from "react";
 import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
 import { useTranslation } from "react-i18next";
-import { ViewCardFieldPair, Toast, Card, TextBlock, Button, PopUp, CardText, TextInput, BreadCrumb, Loader, ActionBar, Tag } from "@egovernments/digit-ui-components";
+import { SummaryCardFieldPair, Toast, Card, TextBlock, Button, PopUp, CardText, TextInput, BreadCrumb, Loader, Footer, Tag } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useHistory, useLocation } from "react-router-dom";
 import MobileChecklist from "../../components/MobileChecklist";
@@ -535,7 +535,7 @@ const UpdateChecklist = () => {
                     <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
                         {fieldPairs.map((pair, index) => (
                             <div>
-                                <ViewCardFieldPair
+                                <SummaryCardFieldPair
                                     key={index} // Provide a unique key for each item
                                     className=""
                                     inline

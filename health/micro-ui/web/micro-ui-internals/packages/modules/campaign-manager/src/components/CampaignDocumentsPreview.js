@@ -4,7 +4,7 @@ import { DocumentIcon } from "./DocumentIcon";
 import XlsPreview from "./XlsPreview";
 import { XlsxFile } from "./icons/XlsxFile";
 import { downloadExcelWithCustomName } from "../utils";
-import { InfoCard } from "@egovernments/digit-ui-components";
+import { AlertCard } from "@egovernments/digit-ui-components";
 
 function CampaignDocumentsPreview({ documents = [], svgStyles = {}, isUserGenerate = false, cardErrors }) {
   const { t } = useTranslation();
@@ -72,7 +72,7 @@ function CampaignDocumentsPreview({ documents = [], svgStyles = {}, isUserGenera
           <div className="summary-doc-error" style={{ width: "100%" }}>
             <p>{t("ES_CAMPAIGN_NO_DOCUMENTS_AVAILABLE")}</p>
             {cardErrors?.map((i) => (
-              <InfoCard
+              <AlertCard
                 populators={{
                   name: "infocard",
                 }}
