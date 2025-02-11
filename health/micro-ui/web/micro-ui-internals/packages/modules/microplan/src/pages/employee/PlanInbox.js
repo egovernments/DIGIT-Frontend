@@ -278,7 +278,6 @@ const PlanInbox = () => {
   });
 
     useEffect(() => {
-      debugger;
       if (tableRef.current) {
         // Get full rendered height including borders/padding
         const height = tableRef.current.offsetHeight;
