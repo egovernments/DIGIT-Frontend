@@ -185,7 +185,7 @@ const PlanInbox = () => {
         }),
         assignee: user.info.uuid,
         planConfigurationId: microplanId, 
-        limit: 100,
+        limit: limitAndOffset?.limit,
         offset: limitAndOffset?.offset,
       },
     },
@@ -222,7 +222,7 @@ const PlanInbox = () => {
           facilityIds: selectedFilter?.facilityId?.map((item) => item.id),
         }),
         planConfigurationId: microplanId, //list of plan ids
-        limit: 100,
+        limit: limitAndOffset?.limit,
         offset: limitAndOffset?.offset,
       },
     },

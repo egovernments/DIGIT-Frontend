@@ -122,6 +122,7 @@ const InboxFilterWrapper = (props) => {
       PlanFacilitySearchCriteria: {
         tenantId: tenantId,
         planConfigurationId: microplanId,
+        limit:100
       }
     },
     config: {
