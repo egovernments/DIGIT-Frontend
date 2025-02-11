@@ -366,7 +366,6 @@ const PopInbox = () => {
 
   const { isLoading, data, isFetching, refetch:refetchCensus } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
 
-
   // // Extract assignee IDs in order, including null values
   // useEffect(() => {
   //   if (data?.Census) {
