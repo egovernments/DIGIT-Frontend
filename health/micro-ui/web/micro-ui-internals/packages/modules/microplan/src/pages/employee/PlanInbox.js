@@ -282,10 +282,11 @@ const PlanInbox = () => {
       if (tableRef.current) {
         // Get full rendered height including borders/padding
         const height = tableRef.current.offsetHeight;
-        console.log("props1 ",height / 16 + 7.25);
         setTableHeight(height / 16 + 7.25);
+      }else{
+        setTableHeight(33);
       }
-    }, [planWithCensus]); 
+    }, [planWithCensus, tableRef, tableRef?.current]); 
 
   const onSearch = (selectedBoundaries, selectedHierarchy) => {
     if (selectedBoundaries.length === 0) {
@@ -864,7 +865,6 @@ const PlanInbox = () => {
     }
   });
 
-  console.log("props ref",tableRef?.offsetHeight);
   
 
   return (
