@@ -368,6 +368,8 @@ const PopInbox = () => {
         const height = tableRef.current.offsetHeight;
          
         setTableHeight(height / 16 + 7.5);
+      }else{
+        setTableHeight(33);
       }
     }, [data]); 
 
