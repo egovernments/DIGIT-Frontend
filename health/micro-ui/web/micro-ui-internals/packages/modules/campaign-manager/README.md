@@ -69,6 +69,8 @@ const initDigitUI = () => {
 
 7. Manage Boundaries
 
+8. Boundary Assignment through UI for Users and Facilities
+
 
 
 ### Contributors
