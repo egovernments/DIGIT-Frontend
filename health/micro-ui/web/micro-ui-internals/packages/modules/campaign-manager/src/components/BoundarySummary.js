@@ -44,7 +44,6 @@ const BoundarySummary = (props) => {
     return keyParam ? parseInt(keyParam) : 1;
   });
 
-  console.log("pppppppppppp");
 
   function updateUrlParams(params) {
     const url = new URL(window.location.href);

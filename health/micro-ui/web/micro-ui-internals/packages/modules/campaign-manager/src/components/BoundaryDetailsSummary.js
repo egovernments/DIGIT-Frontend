@@ -41,7 +41,7 @@ const BoundaryDetailsSummary = (props) => {
     acc[parent].push(boundary);
     return acc;
   }, {});
-  console.log("pp");
+
 
   return (
     <div>
