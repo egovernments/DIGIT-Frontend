@@ -277,14 +277,15 @@ const PlanInbox = () => {
     },
   });
 
-  useEffect(() => {
-    if (tableRef.current) {
-      // Get full rendered height including borders/padding
-      const height = tableRef.current.offsetHeight;
-       
-      setTableHeight(height / 16 + 7.25);
-    }
-  }, [planWithCensus?.tableData?.length]); 
+    useEffect(() => {
+      debugger;
+      if (tableRef.current) {
+        // Get full rendered height including borders/padding
+        const height = tableRef.current.offsetHeight;
+        console.log("props1 ",height / 16 + 7.25);
+        setTableHeight(height / 16 + 7.25);
+      }
+    }, [planWithCensus]); 
 
   const onSearch = (selectedBoundaries, selectedHierarchy) => {
     if (selectedBoundaries.length === 0) {
@@ -862,6 +863,8 @@ const PlanInbox = () => {
       userRole = "PLAN_ESTIMATION_APPROVER";
     }
   });
+
+  console.log("props ref",tableRef?.offsetHeight);
   
 
   return (
