@@ -16,9 +16,6 @@ const InboxFilterWrapper = (props) => {
 
   
 
-  useEffect(() => {
-    setTableHeight(Math.max(props?.tableHeight,33)); // Compare props.tableHeight with '33rem'
-  }, [props?.tableHeight]);
 
   
   // Default selected option
