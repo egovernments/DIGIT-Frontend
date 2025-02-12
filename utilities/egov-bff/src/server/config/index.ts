@@ -18,8 +18,7 @@ const config = {
   },
   stateTenantId: process.env.EGOV_STATE_TENANT_ID || "pg",
   auth_token: process.env.AUTH_TOKEN,
-  KAFKA_BROKER_HOST:
-    process.env.KAFKA_BROKER_HOST || "kafka-v2.kafka-cluster:9092",
+
   DB_USER: process.env.DB_USER || "postgres",
   DB_PASSWORD: process.env.DB_PASSWORD || "postgres",
   DB_HOST: process.env.DB_HOST || "localhost",
@@ -30,6 +29,9 @@ const config = {
     host: HOST,
     contextPath: process.env.CONTEXT_PATH || "/egov-bff",
     apiSpecPath: "/api-docs",
+    debugLogCharLimit: process.env.APP_MAX_DEBUG_CHAR
+      ? Number(process.env.APP_MAX_DEBUG_CHAR)
+      : 1000,
   },
   configs: {
     DATA_CONFIG_URLS:
@@ -38,9 +40,12 @@ const config = {
   },
   host: {
     serverHost: HOST,
+    KAFKA_BROKER_HOST:
+      process.env.KAFKA_BROKER_HOST || "kafka-v2.kafka-cluster:9092",
+
     localization: process.env.EGOV_LOCALIZATION_HOST || HOST,
-    mdms: process.env.EGOV_MDMS_HOST|| HOST || "http://localhost:8094/",
-    mdmsV2: process.env.EGOV_MDMS_V2_HOST|| HOST || "http://localhost:8082/",
+    mdms: process.env.EGOV_MDMS_HOST || HOST || "http://localhost:8094/",
+    mdmsV2: process.env.EGOV_MDMS_V2_HOST || HOST || "http://localhost:8082/",
     pdf: process.env.EGOV_PDF_HOST || HOST || "http://localhost:8087/",
     user: process.env.EGOV_USER_HOST || HOST || "http://localhost:8081/",
     workflow:
@@ -55,6 +60,14 @@ const config = {
       process.env.EGOV_ESTIMATE_HOST || HOST || "http://localhost:8073/",
     measurement:
       process.env.EGOV_MEASUREMENT_HOST || HOST || "http://localhost:8074/",
+  },
+  kafka: {
+    KAFKA_CREATE_SESSION_TOPIC:
+      process.env.KAFKA_CREATE_SESSION_TOPIC || "create-analytics-session",
+    KAFKA_UPDATE_SESSION_TOPIC:
+      process.env.KAFKA_UPDATE_SESSION_TOPIC || "update-analytics-session",
+    KAFKA_EVENT_SESSION_TOPIC:
+      process.env.KAFKA_EVENT_SESSION_TOPIC || "create-analytics-event",
   },
   paths: {
     user_search: "/user/_search",

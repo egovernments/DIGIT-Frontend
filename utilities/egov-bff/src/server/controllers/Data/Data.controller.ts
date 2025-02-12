@@ -24,7 +24,10 @@ class DataController {
     this.router.post(`${this.path}/_get`, this.getData);
   }
 
-  saveDataThroughGet = async (request: express.Request, response: express.Response) => {
+  saveDataThroughGet = async (
+    request: express.Request,
+    response: express.Response
+  ) => {
     try {
       // const { DataSync } = request.body;
       // const respo = await create_mdms_v2("hrms.EmployeeType", DataSync);
@@ -40,11 +43,14 @@ class DataController {
   // This function handles the HTTP request for retrieving all measurements.
   saveData = async (request: express.Request, response: express.Response) => {
     try {
-      const respo = await create_mdms_v2(config.client.schemaCode, request.body);
+      const respo = await create_mdms_v2(
+        config.client.schemaCode,
+        request.body
+      );
       if (respo) {
-        const newResponse={...respo};
-        if(newResponse?.mdms){
-          newResponse["DataSync"]=[...newResponse?.mdms];
+        const newResponse = { ...respo };
+        if (newResponse?.mdms) {
+          newResponse["DataSync"] = [...newResponse?.mdms];
           delete newResponse?.mdms;
         }
         return sendResponse(response, { ...newResponse }, request);
@@ -58,15 +64,15 @@ class DataController {
   // This function handles the HTTP request for retrieving all measurements.
   getData = async (request: express.Request, response: express.Response) => {
     try {
-      const {DataSync={} }=request.body;
-      const {key="",type="",id=""}=DataSync;
-      const filters={
+      const { DataSync = {} } = request.body;
+      const { key = "", type = "", id = "" } = DataSync;
+      const filters = {
         ...(key && { key }),
         ...(type && { type }),
-      }      
-      const respo = await search_mdms_v2(config.client.schemaCode, filters,id);
+      };
+      const respo = await search_mdms_v2(config.client.schemaCode, filters, id);
       if (respo) {
-        return sendResponse(response, { "DataSync": [...respo?.mdms] }, request);
+        return sendResponse(response, { DataSync: [...respo?.mdms] }, request);
       }
 
       throw new Error("Error fetching or processing data");
