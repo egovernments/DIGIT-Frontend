@@ -371,7 +371,7 @@ const PopInbox = () => {
       }else{
         setTableHeight(33);
       }
-    }, [data,tableRef,tableRef?.current]); 
+    }, [data,activeLink]); 
 
   // // Extract assignee IDs in order, including null values
   // useEffect(() => {

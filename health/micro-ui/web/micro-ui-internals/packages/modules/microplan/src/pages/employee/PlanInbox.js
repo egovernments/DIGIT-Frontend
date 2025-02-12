@@ -285,7 +285,7 @@ const PlanInbox = () => {
       }else{
         setTableHeight(33);
       }
-    }, [planWithCensus, tableRef, tableRef?.current]); 
+    }, [planWithCensus, activeLink]); 
 
   const onSearch = (selectedBoundaries, selectedHierarchy) => {
     if (selectedBoundaries.length === 0) {
@@ -865,7 +865,6 @@ const PlanInbox = () => {
   });
 
   
-
   return (
     <div className="pop-inbox-wrapper">
       <div>
