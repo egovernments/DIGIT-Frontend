@@ -6,7 +6,10 @@ import { Dropdown, LabelFieldPair, CardLabel, TextInput, CardLabelError, FieldV1
 const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userType, register, errors }) => {
   const { pathname: url } = useLocation();
   const [iserror, setError] = useState(false);
-  const [selectedCountryCode, setSelectedCountryCode] = useState(HRMS_CONSTANTS.INDIA_COUNTRY_CODE);
+  const [selectedCountryCode, setSelectedCountryCode] = useState({
+    code: HRMS_CONSTANTS.INDIA_COUNTRY_CODE,
+    name: HRMS_CONSTANTS.INDIA_COUNTRY_CODE,
+  });
   const [selectedCountry, setSelectedCountry] = useState("ind");
   let isMobile = window.Digit.Utils.browser.isMobile();
   const inputs = [
@@ -37,7 +40,7 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
   ];
 
   function setValue(value, input) {
-    onSelect(config.key, { ...formData[config.key], [input]: selectedCountryCode + value });
+    onSelect(config.key, { ...formData[config.key], [input]: selectedCountryCode.code + value });
   }
   function validate(value, input) {
     if (value) {
@@ -45,7 +48,7 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
     }
   }
   function handleCountryCodeChange(e) {
-    setSelectedCountryCode(e.code);
+    setSelectedCountryCode(e);
     e.code === HRMS_CONSTANTS.MOZ_COUNTRY_CODE ? setSelectedCountry("moz") : setSelectedCountry("ind");
     let mobNumber = formData["SelectEmployeePhoneNumber"]?.mobileNumber;
     if (mobNumber) {
@@ -71,7 +74,7 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
                   <Dropdown
                     t={t}
                     style={{ width: "12%" }}
-                    defaultValue={selectedCountryCode}
+                    selected={selectedCountryCode}
                     option={[
                       {
                         code: HRMS_CONSTANTS.INDIA_COUNTRY_CODE,

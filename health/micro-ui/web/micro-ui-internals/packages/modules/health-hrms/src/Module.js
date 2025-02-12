@@ -8,7 +8,7 @@ import { useRouteMatch } from "react-router-dom";
 // import SelectDateofBirthEmployment from "./components/pageComponents/EmployeeDOB";
 // import SelectEmployeePhoneNumber from "./components/pageComponents/EmployeePhoneNumber";
 // import Jurisdictions from "./components/pageComponents/jurisdiction";
- import SelectDateofEmployment from "./components/pageComponents/SelectDateofEmployment";
+import SelectDateofEmployment from "./components/pageComponents/SelectDateofEmployment";
 // import SelectEmployeeEmailId from "./components/pageComponents/SelectEmailId";
 // import SelectEmployeeCorrespondenceAddress from "./components/pageComponents/SelectEmployeeCorrespondenceAddress";
 // import SelectEmployeeGender from "./components/pageComponents/SelectEmployeeGender";
@@ -19,6 +19,7 @@ import SelectEmployeeName from "./components/pageComponents/SelectEmployeeName";
 import CreateEmployeePage from "./pages/employee/createEmployee";
 import SelectEmployeeId from "./components/pageComponents/SelectEmployeeId";
 import SelectEmployeePassword from "./components/pageComponents/SelectEmployeePassword";
+import SelectEmployeeDepartment from "./components/pageComponents/SelectEmployeeDepartment";
 // import EditEmployee from "./pages/EditEmployee/index";
 // import Details from "./pages/EmployeeDetails";
 // import Inbox from "./pages/Inbox";
@@ -31,6 +32,11 @@ import SelectEmployeeEmailId from "./components/pageComponents/SelectEmailId";
 import SelectEmployeeCorrespondenceAddress from "./components/pageComponents/SelectEmployeeCorrespondenceAddress";
 import SelectEmployeeType from "./components/pageComponents/SelectEmployeeType";
 import EmployeeApp from "./pages/employee";
+import SelectEmployeeDesignation from "./components/pageComponents/SelectEmployeeDesignation";
+import Jurisdictions from "./components/pageComponents/jurisdiction";
+import { overrideHooks, updateCustomConfigs } from "./hooks/hook_setup";
+import RolesAssigned from "./components/pageComponents/SelectRolesAssigned";
+import BoundaryComponent from "./components/pageComponents/SelectEmployeeBoundary";
 
 export const HRMSModule = ({ stateCode, userType, tenants }) => {
   //   const moduleCode = "HR";
@@ -66,11 +72,16 @@ const componentsToRegister = {
   // HRMSCard,
   // HRMSDetails: Details,
   // SelectEmployeeEmailId,
+  BoundaryComponent,
   SelectEmployeeName,
   SelectEmployeeEmailId,
   SelectEmployeeCorrespondenceAddress,
   SelectEmployeeType,
   SelectDateofEmployment,
+  SelectEmployeeDepartment,
+  SelectEmployeeDesignation,
+  Jurisdictions,
+  RolesAssigned,
   // SelectEmployeeId,
   // Jurisdictions,
   // Assignments,
@@ -96,6 +107,9 @@ const componentsToRegister = {
 };
 
 export const initHRMSComponents = () => {
+  overrideHooks();
+  updateCustomConfigs();
+
   Object.entries(componentsToRegister).forEach(([key, value]) => {
     Digit.ComponentRegistryService.setComponent(key, value);
   });

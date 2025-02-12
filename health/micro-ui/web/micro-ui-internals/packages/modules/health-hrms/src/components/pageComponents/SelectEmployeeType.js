@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Loader } from "@egovernments/digit-ui-react-components";
-import { Dropdown, LabelFieldPair, CardLabel } from "@egovernments/digit-ui-components";
+//import { Loader } from "@egovernments/digit-ui-react-components";
+import { Dropdown, LabelFieldPair, CardLabel ,Loader} from "@egovernments/digit-ui-components";
 import { useLocation } from "react-router-dom";
 
 const SelectEmployeeType = ({ t, config, onSelect, formData = {}, userType }) => {

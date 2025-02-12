@@ -66,34 +66,40 @@ export const newConfig = [
         component: "SelectEmployeeType",
         key: "SelectEmployeeType",
         withoutLabel: true,
-      }
-      ,
+      },
       {
         type: "component",
         component: "SelectDateofEmployment",
         key: "SelectDateofEmployment",
         withoutLabel: true,
-      }
-      // ,
-      // {
-      //   type: "component",
-      //   component: "SelectEmployeeDepartment",
-      //   key: "SelectEmployeeDepartment",
-      //   withoutLabel: true,
-      // },
-      // {
-      //   type: "component",
-      //   component: "SelectEmployeeDesignation",
-      //   key: "SelectEmployeeDesignation",
-      //   withoutLabel: true,
-      // },
-      // {
-      //   type: "component",
-      //   isMandatory: true,
-      //   component: "Jurisdictions",
-      //   key: "Jurisdictions",
-      //   withoutLabel: true,
-      // }
+      },
+      {
+        type: "component",
+        component: "SelectEmployeeDepartment",
+        key: "SelectEmployeeDepartment",
+        withoutLabel: true,
+      },
+
+      {
+        type: "component",
+        component: "SelectEmployeeDesignation",
+        key: "SelectEmployeeDesignation",
+        withoutLabel: true,
+      },
+      {
+        type: "component",
+        isMandatory: true,
+        component: "RolesAssigned",
+        key: "RolesAssigned",
+        withoutLabel: true,
+      },
+      {
+        type: "component",
+        isMandatory: true,
+        component: "BoundaryComponent",
+        key: "BoundaryComponent",
+        withoutLabel: true,
+      },
     ],
   },
 ];

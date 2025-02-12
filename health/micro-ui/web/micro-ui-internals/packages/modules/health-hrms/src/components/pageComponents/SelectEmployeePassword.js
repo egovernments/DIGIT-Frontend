@@ -27,9 +27,8 @@ const SelectEmployeePassword = ({ t, config, onSelect, formData = {}, errors }) 
   ];
 
   const setValue = (e, input) => {
-    debugger
-    if(e==undefined){
-        return
+    if (e == undefined || e.target == undefined || e.target.value == undefined) {
+      return;
     }
     onSelect(config.key, { ...formData[config.key], [input]: e.target.value });
   };

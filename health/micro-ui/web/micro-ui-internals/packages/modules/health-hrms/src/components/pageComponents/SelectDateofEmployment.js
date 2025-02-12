@@ -8,7 +8,7 @@ const SelectDateofEmployment = ({ t, config, onSelect, formData = {}, userType, 
   const [date, setDate] = useState("");
   const inputs = [
     {
-      label: "HR_BIRTH_DATE_LABEL",
+      label: "Date of employment",
       type: "date",
       name: "dateOfAppointment",
       validation: {
