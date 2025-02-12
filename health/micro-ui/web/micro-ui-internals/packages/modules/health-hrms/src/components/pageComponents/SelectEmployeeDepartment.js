@@ -49,7 +49,7 @@ const SelectEmployeeDepartment = ({ t, config, onSelect, formData = {}, userType
           {input.isMandatory ? " * " : null}
         </CardLabel>
         <Dropdown
-          className="form-field"
+          className="digit-field"
           selected={employeeDepartment}
           option={getdepartmentdata() || []}
           select={SelectEmployeeDepartment}

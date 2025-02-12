@@ -1,4 +1,4 @@
-import { FormComposer, Toast, Loader, Header } from "@egovernments/digit-ui-react-components";
+import { FormComposerV2, Toast, Loader, Header } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router-dom";
@@ -124,7 +124,7 @@ const CreateEmployee = () => {
   };
 
   const onFormValueChange = (setValue = true, formData) => {
-    debugger
+    debugger;
     if (assignCampaigns) {
       for (let i = 0; i < formData?.CampaignsAssignment?.length; i++) {
         if (!formData?.CampaignsAssignment?.[i].selectedProject) {
@@ -296,8 +296,6 @@ const CreateEmployee = () => {
         navigateToAcknowledgement(Employees);
       }
     } else {
-
-    
       const assignedCampaignData = data?.CampaignsAssignment?.filter((c, i) => c?.selectedProject != null);
       let ProjectStaffCreatePayload = [];
       let selectedCampaignBoundary = [];
@@ -342,15 +340,17 @@ const CreateEmployee = () => {
         {!assignCampaigns && <Header>{t("HR_COMMON_CREATE_EMPLOYEE_HEADER")}</Header>}
         {assignCampaigns && <Header>{t("HR_COMMON_ASSIGN_CAMPAIGN_HEADER")}</Header>}
       </div>
-      <FormComposer
-        defaultValues={defaultValues}
+      <FormComposerV2
+        // defaultValues={defaultValues}
         heading={t("")}
-        config={!assignCampaigns ? config : campaignAssignConfig}
-        onSubmit={!assignCampaigns ? openModal : onSubmit}
+        config={config}
+        onSubmit={onSubmit}
+        className={"custom-form"}
         onFormValueChange={onFormValueChange}
         isDisabled={!canSubmit}
         label={t("HR_COMMON_BUTTON_SUBMIT")}
       />
+
       {showToast && (
         <Toast
           error={showToast.key}

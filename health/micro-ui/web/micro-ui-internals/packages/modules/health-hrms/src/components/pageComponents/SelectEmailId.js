@@ -33,7 +33,7 @@ const SelectEmployeeEmailId = ({ t, config, onSelect, formData = {}, userType, r
                 {t(input.label)}
                 {input.isMandatory ? " * " : null}
               </CardLabel>
-              <div className="field">
+              <div className="digit-field">
                 <TextInput
                   type={input.type}
                   key={input.name}

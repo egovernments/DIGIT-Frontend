@@ -32,7 +32,7 @@ const SelectEmployeeName = ({ t, config, onSelect, formData = {}, userType, regi
               {t(input.label)}
               {input.isMandatory ? <span className="required"> *</span> : null}
             </CardLabel>
-            <div className="field">
+            <div className="digit-field">
               <TextInput
                 key={input.name}
                 value={formData && formData[config.key] ? formData[config.key][input.name] : undefined}

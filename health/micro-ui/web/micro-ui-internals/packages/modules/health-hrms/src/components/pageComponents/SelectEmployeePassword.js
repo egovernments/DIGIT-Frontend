@@ -46,7 +46,7 @@ const SelectEmployeePassword = ({ t, config, onSelect, formData = {}, errors }) 
                 {t(input.label)}
                 {input.isMandatory ? " * " : null}
               </CardLabel>
-              <div className="field">
+              <div className="digit-field">
                 <TextInput
                   type="password"
                   key={input.password}

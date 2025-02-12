@@ -32,7 +32,7 @@ const SelectDateofBirthEmployment = ({ t, config, onSelect, formData = {}, userT
               {t(input.label)}
               {input.isMandatory ? " * " : null}
             </CardLabel>
-            <div className="field">
+            <div className="digit-field">
               <TextInput
                 // populators={{
                 //   validation: { ...input.validation },

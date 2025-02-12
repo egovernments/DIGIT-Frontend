@@ -27,12 +27,12 @@ const SelectEmployeeId = ({ t, config, onSelect, formData = {}, userType, regist
       {inputs?.map((input, index) => (
         <React.Fragment key={index}>
           {errors[input.name] && <CardLabelError>{t(input.error)}</CardLabelError>}
-          <LabelFieldPair>
+          <LabelFieldPair className="custom-label-pair">
             <CardLabel className="card-label-smaller">
               {t(input.label)}
               {input.isMandatory ? <span className="required"> *</span> : null}
             </CardLabel>
-            <div className="field">
+            <div className="digit-field">
               <TextInput
                 key={input.name}
                 value={formData && formData[config.key] ? formData[config.key][input.name] : undefined}

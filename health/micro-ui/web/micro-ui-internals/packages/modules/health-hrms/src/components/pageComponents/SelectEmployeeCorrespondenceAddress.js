@@ -33,7 +33,7 @@ const SelectEmployeeCorrespondenceAddress = ({ t, config, onSelect, formData = {
                                 {t(input.label)}
                                 {input.isMandatory ? " * " : null}
                             </CardLabel>
-                            <div className="field">
+                            <div className="digit-field">
                                 <TextInput
                                     key={input.name}
                                     value={formData && formData[config.key] ? formData[config.key][input.name] : undefined}

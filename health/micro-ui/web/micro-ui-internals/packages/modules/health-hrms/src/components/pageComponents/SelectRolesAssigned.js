@@ -36,6 +36,7 @@ const RolesAssigned = ({ t, config, onSelect, userType, formData }) => {
   };
 
   const handleBoundarySelect = (selectBoundariesEvent) => {
+    console.log(selectBoundariesEvent, "selectBoundariesEvent");
     if (!selectBoundariesEvent) return;
     if (selectBoundariesEvent.length === 0) {
       setSelectedRole([]);
@@ -61,7 +62,7 @@ const RolesAssigned = ({ t, config, onSelect, userType, formData }) => {
       </CardLabel>
 
       <div style={{ width: "100%" }}>
-        <MultiSelectWrapper
+        {/* <MultiSelectWrapper
           props={{ className: "form-field" }}
           t={t}
           addCategorySelectAllCheck={true}
@@ -69,17 +70,52 @@ const RolesAssigned = ({ t, config, onSelect, userType, formData }) => {
           options={getroledata() || []}
           // variant="nestedmultiselect"
 
-          selected={selectedRole}
+          //selected={selectedRole}
           onSelect={(e) => {
-            debugger;
-            handleBoundarySelect(e);
+            console.log(e, "event-onselect");
           }}
           onClose={(e) => {
+            console.log(e, "event-close");
             // debugger
             // handleBoundarySelect(e);
           }}
           isSearchable={true}
-          optionsKey={"name"}
+          optionsKey={"code"}
+        />*/}
+
+        <MultiSelectDropdown
+          additionalWrapperClass=""
+          categorySelectAllLabel=""
+          chipsKey=""
+          clearLabel="Clear All"
+          config={{
+            isDropdownWithChip: true,
+          }}
+          defaultValue="FEMALE"
+          description=""
+          error=""
+          errorStyle={null}
+          inputRef={null}
+          isSearchable
+          label="Select Option"
+          name="genders"
+          onChange={(e)=>{
+            console.log("role-onchnage", e);
+          }}
+          onSelect={(e) => {
+            console.log("role", e);
+            handleBoundarySelect(e);
+          }}
+          onClose={(e) => {
+            console.log("role-close", e);
+            handleBoundarySelect(e);
+          }}
+          options={getroledata() || []}
+          optionsCustomStyle={{}}
+          optionsKey="code"
+          selectAllLabel=""
+          t={t}
+          type="multiselectdropdown"
         />
       </div>
     </LabelFieldPair>

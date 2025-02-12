@@ -45,7 +45,7 @@ const SelectEmployeeGender = ({ t, config, onSelect, formData = {}, userType, re
               {t(input.label)}
               {input.isMandatory ? " * " : null}
             </CardLabel>
-            <div className="field" style={{ width: "50%", display: "block" }}>
+            <div className="digit-field" style={{ width: "50%", display: "block" }}>
               <RadioButtons
                 style={{ display: "flex", justifyContent: "flex-start" }}
                 options={HRMenu}
