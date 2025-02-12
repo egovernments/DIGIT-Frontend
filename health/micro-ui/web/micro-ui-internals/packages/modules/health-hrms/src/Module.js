@@ -37,6 +37,7 @@ import Jurisdictions from "./components/pageComponents/jurisdiction";
 import { overrideHooks, updateCustomConfigs } from "./hooks/hook_setup";
 import RolesAssigned from "./components/pageComponents/SelectRolesAssigned";
 import BoundaryComponent from "./components/pageComponents/SelectEmployeeBoundary";
+import Response from "./pages/employee/response";
 
 export const HRMSModule = ({ stateCode, userType, tenants }) => {
   //   const moduleCode = "HR";
@@ -99,7 +100,7 @@ const componentsToRegister = {
   SelectEmployeePassword,
   SelectEmployeePhoneNumber,
   SelectEmployeeGender,
-  // HRMSResponse: Response,
+   HRMSResponse: Response,
   // HREditEmpolyee: EditEmployee,
   HRCreateEmployee: CreateEmployeePage,
   // HRInbox: Inbox,

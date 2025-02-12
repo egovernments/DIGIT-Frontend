@@ -14,7 +14,7 @@ const EmployeeApp = ({ path, url, userType }) => {
     },
   };
 
-  // const HRMSResponse = Digit?.ComponentRegistryService?.getComponent("HRMSResponse");
+   const HRMSResponse = Digit?.ComponentRegistryService?.getComponent("HRMSResponse");
   // const HRMSDetails = Digit?.ComponentRegistryService?.getComponent("HRMSDetails");
   // const Inbox = Digit?.ComponentRegistryService?.getComponent("HRInbox");
   const CreateEmployee = Digit?.ComponentRegistryService?.getComponent("HRCreateEmployee");
@@ -31,6 +31,7 @@ const EmployeeApp = ({ path, url, userType }) => {
             / <span>{location.pathname === `/${window.contextPath}/employee/hrms/inbox` ? t("HR_COMMON_HEADER") : t("HR_COMMON_HEADER")}</span>
           </p>
           <PrivateRoute path={`${path}/create`} component={() => <CreateEmployee />} />
+          <PrivateRoute path={`${path}/response`} component={(props) => <HRMSResponse {...props} parentRoute={path} />} />
         </div>
       </React.Fragment>
     </Switch>

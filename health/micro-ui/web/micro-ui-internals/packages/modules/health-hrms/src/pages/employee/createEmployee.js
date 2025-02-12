@@ -52,24 +52,6 @@ const CreateEmployee = () => {
   const [errorInfo, setErrorInfo, clearError] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_ERROR_DATA", false);
   const [successData, setsuccessData, clearSuccessData] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_SUCCESS_DATA", false);
 
-  useEffect(() => {
-    if (hrmsUserId && employmentDate) {
-      setAssignCampaigns(!!new URLSearchParams(location.search).get("assignCampaigns"));
-    } else {
-      const queryParams = new URLSearchParams(location.search);
-
-      if (queryParams.has("assignCampaigns")) {
-        queryParams.delete("assignCampaigns");
-        history.replace({
-          search: queryParams.toString(),
-        });
-      }
-    }
-    setMutationHappened(false);
-    clearSuccessData();
-    clearError();
-  }, []);
-
   const checkMailNameNum = (formData) => {
     const email = formData?.SelectEmployeeEmailId?.emailId || "";
     const name = formData?.SelectEmployeeName?.employeeName || "";
@@ -110,33 +92,22 @@ const CreateEmployee = () => {
     }
   }, [mobileNumber]);
 
-  const defaultValues = {
-    Jurisdictions: [
-      {
-        id: undefined,
-        key: 1,
-        hierarchy: hierarchyType,
-        boundaryType: userProjectDetails?.[0]?.address?.boundaryType, //TODO: if national level boundary data label is changed in mdms, this must be changed
-        boundary: userProjectDetails?.[0]?.address?.boundary,
-        roles: [],
-      },
-    ],
-  };
+  // const defaultValues = {
+  //   Jurisdictions: [
+  //     {
+  //       id: undefined,
+  //       key: 1,
+  //       hierarchy: hierarchyType,
+  //       boundaryType: userProjectDetails?.[0]?.address?.boundaryType, //TODO: if national level boundary data label is changed in mdms, this must be changed
+  //       boundary: userProjectDetails?.[0]?.address?.boundary,
+  //       roles: [],
+  //     },
+  //   ],
+  // };
 
   const onFormValueChange = (setValue = true, formData) => {
     debugger;
-    if (assignCampaigns) {
-      for (let i = 0; i < formData?.CampaignsAssignment?.length; i++) {
-        if (!formData?.CampaignsAssignment?.[i].selectedProject) {
-          setCampaignAssignCheck(false);
-          setSubmitValve(false);
-          break;
-        }
-        setCampaignAssignCheck(true);
-        setSubmitValve(true);
-      }
-      return;
-    }
+
     if (formData?.SelectEmployeePhoneNumber?.mobileNumber) {
       setMobileNumber(
         formData?.SelectEmployeePhoneNumber?.mobileNumber?.startsWith(HRMS_CONSTANTS.INDIA_COUNTRY_CODE)
@@ -189,10 +160,12 @@ const CreateEmployee = () => {
   };
 
   const navigateToAcknowledgement = (Employees) => {
+    debugger
     history.replace(`/${window?.contextPath}/employee/hrms/response`, { Employees, key: "CREATE", action: "CREATE" });
   };
 
   const navigateToCampaignAssignmentAcknowledgement = (ProjectStaffPayload, selectedCampaignBoundary) => {
+    debugger
     Digit.HRMSService.search(tenantId, null, { codes: hrmsUserName })
       .then((res) => {
         let UpdateAssignmentPayload = {};
@@ -210,26 +183,28 @@ const CreateEmployee = () => {
   };
 
   const onSubmit = (data) => {
+    debugger;
     if (!assignCampaigns) {
-      if (data.Jurisdictions.filter((juris) => juris.tenantId == tenantId).length == 0) {
-        setShowToast({ key: true, label: "ERR_BASE_TENANT_MANDATORY" });
-        setShowModal(false);
-        return;
-      }
-      if (
-        !Object.values(
-          data.Jurisdictions.reduce((acc, sum) => {
-            if (sum && sum?.tenantId) {
-              acc[sum.tenantId] = acc[sum.tenantId] ? acc[sum.tenantId] + 1 : 1;
-            }
-            return acc;
-          }, {})
-        ).every((s) => s == 1)
-      ) {
-        setShowToast({ key: true, label: "ERR_INVALID_JURISDICTION" });
-        setShowModal(false);
-        return;
-      }
+      debugger;
+      // if (data.Jurisdictions.filter((juris) => juris.tenantId == tenantId).length == 0) {
+      //   setShowToast({ key: true, label: "ERR_BASE_TENANT_MANDATORY" });
+      //   setShowModal(false);
+      //   return;
+      // }
+      // if (
+      //   !Object.values(
+      //     data.Jurisdictions.reduce((acc, sum) => {
+      //       if (sum && sum?.tenantId) {
+      //         acc[sum.tenantId] = acc[sum.tenantId] ? acc[sum.tenantId] + 1 : 1;
+      //       }
+      //       return acc;
+      //     }, {})
+      //   ).every((s) => s == 1)
+      // ) {
+      //   setShowToast({ key: true, label: "ERR_INVALID_JURISDICTION" });
+      //   setShowModal(false);
+      //   return;
+      // }
       let roles = data?.Jurisdictions?.map((ele) => {
         return ele.roles?.map((item) => {
           item["tenantId"] = tenantId;
@@ -296,6 +271,7 @@ const CreateEmployee = () => {
         navigateToAcknowledgement(Employees);
       }
     } else {
+      debugger;
       const assignedCampaignData = data?.CampaignsAssignment?.filter((c, i) => c?.selectedProject != null);
       let ProjectStaffCreatePayload = [];
       let selectedCampaignBoundary = [];
@@ -347,7 +323,7 @@ const CreateEmployee = () => {
         onSubmit={onSubmit}
         className={"custom-form"}
         onFormValueChange={onFormValueChange}
-        isDisabled={!canSubmit}
+        isDisabled={canSubmit}
         label={t("HR_COMMON_BUTTON_SUBMIT")}
       />
 

@@ -26,7 +26,9 @@ const RolesAssigned = ({ t, config, onSelect, userType, formData }) => {
       return {
         code: role.code,
         name: role?.name ? role?.name : " ",
-        // , labelKey: "ACCESSCONTROL_ROLES_ROLES_" + role.code, tenantId: tenantId
+
+        labelKey: "ACCESSCONTROL_ROLES_ROLES_" + role.code,
+        tenantId: tenantId,
       };
     });
 
@@ -36,7 +38,6 @@ const RolesAssigned = ({ t, config, onSelect, userType, formData }) => {
   };
 
   const handleBoundarySelect = (selectBoundariesEvent) => {
-    console.log(selectBoundariesEvent, "selectBoundariesEvent");
     if (!selectBoundariesEvent) return;
     if (selectBoundariesEvent.length === 0) {
       setSelectedRole([]);
@@ -48,7 +49,8 @@ const RolesAssigned = ({ t, config, onSelect, userType, formData }) => {
       return event?.[1];
     });
 
-    setSelectedRole(boundariesInEvent);
+    onSelect(config.key, boundariesInEvent);
+    // setSelectedRole(boundariesInEvent);
   };
 
   if (isLoading) {
@@ -62,27 +64,6 @@ const RolesAssigned = ({ t, config, onSelect, userType, formData }) => {
       </CardLabel>
 
       <div style={{ width: "100%" }}>
-        {/* <MultiSelectWrapper
-          props={{ className: "form-field" }}
-          t={t}
-          addCategorySelectAllCheck={true}
-          addSelectAllCheck={true}
-          options={getroledata() || []}
-          // variant="nestedmultiselect"
-
-          //selected={selectedRole}
-          onSelect={(e) => {
-            console.log(e, "event-onselect");
-          }}
-          onClose={(e) => {
-            console.log(e, "event-close");
-            // debugger
-            // handleBoundarySelect(e);
-          }}
-          isSearchable={true}
-          optionsKey={"code"}
-        />*/}
-
         <MultiSelectDropdown
           additionalWrapperClass=""
           categorySelectAllLabel=""
@@ -99,15 +80,11 @@ const RolesAssigned = ({ t, config, onSelect, userType, formData }) => {
           isSearchable
           label="Select Option"
           name="genders"
-          onChange={(e)=>{
-            console.log("role-onchnage", e);
-          }}
+          onChange={(e) => {}}
           onSelect={(e) => {
-            console.log("role", e);
             handleBoundarySelect(e);
           }}
           onClose={(e) => {
-            console.log("role-close", e);
             handleBoundarySelect(e);
           }}
           options={getroledata() || []}
