@@ -88,6 +88,20 @@ const CustomInboxTable = ({
         );
       },
     },
+    {
+      name: (
+        <div className="custom-inbox-table-row">
+          {t("HCM_AM_ATTENDANCE_BOUNDARY_TYPE")}
+        </div>
+      ),
+      selector: (row) => {
+        return (
+          <div className="ellipsis-cell" title={t(row?.boundary) || t("NA")}>
+            {t(row.boundaryType) || t("NA")}
+          </div>
+        );
+      },
+    },
 
     {
       name: t("HCM_AM_ATTENDANCE_ATTENDEES"),

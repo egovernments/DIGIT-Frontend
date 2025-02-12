@@ -58,12 +58,21 @@ const ProjectSelect = () => {
         if (project == null || project?.length === 0) {
             const projectData = Digit?.SessionStorage.get("staffProjects") || [];
             setProject(projectData);
-            handleProjectSelect(projectData?.[0]); // Default to the first project
+            if(selectedProject == null){
+                handleProjectSelect(projectData?.[0]); // Default to the first project
+            } 
         }
     }, []);
 
     // Handle project selection
     const handleProjectSelect = (value) => {
+        if (value !== Digit.SessionStorage.get("selectedProject")) {
+            Digit.SessionStorage.del("selectedBoundaryCode");
+            Digit.SessionStorage.del("boundary");
+            Digit.SessionStorage.del("selectedValues");
+            Digit.SessionStorage.del("boundary");
+            Digit.SessionStorage.del("paymentInbox");
+        }
         Digit.SessionStorage.set("selectedProject", value);
         setSelectedProject(value);
     };
@@ -74,6 +83,8 @@ const ProjectSelect = () => {
             Digit.SessionStorage.del("selectedBoundaryCode");
             Digit.SessionStorage.del("boundary");
             Digit.SessionStorage.del("selectedValues");
+            Digit.SessionStorage.del("boundary");
+            Digit.SessionStorage.del("paymentInbox");
         }
         setSelectedLevel(value);
         Digit.SessionStorage.set("selectedLevel", value);

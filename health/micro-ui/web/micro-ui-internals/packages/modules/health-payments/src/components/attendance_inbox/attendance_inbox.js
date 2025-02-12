@@ -77,6 +77,7 @@ const AttendanceInboxComponent = () => {
                     id: item?.registerNumber,
                     name: selectedProject?.name,
                     boundary: item?.localityCode,
+                    boundaryType: item?.additionalDetails?.boundaryType,
                     status: item?.attendees == null ? 0 : item?.attendees.length || 0,
                     markby: item?.staff?.[0].additionalDetails?.ownerName || "NA",
                     approvedBy: item?.staff?.[0].additionalDetails?.staffName || "NA",

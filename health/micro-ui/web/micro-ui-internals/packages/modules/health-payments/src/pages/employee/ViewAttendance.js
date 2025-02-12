@@ -354,13 +354,17 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
       if (matchingIndividual) {
         const userName = matchingIndividual.name?.givenName || t("NA");
+        const uniqueId = matchingIndividual?.name?.familyName || t("NA");
         const userId = matchingIndividual?.userDetails?.username || t("NA");
         const userRole =
           t(matchingIndividual.skills?.[0]?.type) || t("NA");
         const noOfDaysWorked = individualEntry?.modifiedTotalAttendance || individualEntry.actualTotalAttendance || 0;
         const id = individualEntry.individualId || 0;
+        const gender = matchingIndividual?.gender;
+        const dob = matchingIndividual?.dateOfBirth;
+        const mobileNumber = matchingIndividual?.mobileNumber;
 
-        return [id, userName, userId, userRole, noOfDaysWorked];
+        return [id, userName, userId, userRole, noOfDaysWorked, gender, dob, mobileNumber, uniqueId];
       } else {
         // Handle cases where no match is found in individualsData
         return ["N/A", "Unknown", "N/A", "Unassigned", individualEntry?.modifiedTotalAttendance || individualEntry.actualTotalAttendance || 0];

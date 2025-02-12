@@ -6,6 +6,7 @@ import { CustomSVG } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./table_inbox_custom_style";
 import { defaultPaginationValues, defaultRowsPerPage } from "../utils/constants";
+import {parse, format} from "date-fns";
 
 /**
  * A React component for displaying a paginated table of frontline workers
@@ -67,6 +68,76 @@ const AttendanceManagementTable = ({ ...props }) => {
             {row?.[2] || t("NA")}
           </div>
         );
+      },
+    },
+    {
+      name: (
+        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+          {t(`HCM_AM_UNIQUE_ID`)}
+        </div>
+      ),
+      selector: (row) => {
+        return (
+          <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
+            {String(row?.[8] ? row?.[8] : t("ES_COMMON_NA"))}
+          </span>
+        );
+      },
+    },
+    {
+      name: (
+        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+          {t(`HCM_AM_GENDER`)}
+        </div>
+      ),
+      selector: (row) => {
+        return (
+          <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
+            {String(row?.[5] ? row?.[5] : t("ES_COMMON_NA"))}
+          </span>
+        );
+      },
+    },
+    {
+      name: (
+        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+          {t(`HCM_AM_DOB`)}
+        </div>
+      ),
+      selector: (row) => {
+        const rowData = row?.[6];
+        let formattedDate = t("ES_COMMON_NA");
+        if(rowData){
+          try {
+            const parseData = parse(rowData, "dd/MM/yyyy", new Date());
+            formattedDate = format(parseData, "MMM dd, yyyy");
+          }
+          catch (error) {
+            console.error("Date parsing error:", error);
+          }
+        }
+        return (
+          <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
+            {formattedDate}
+          </span>
+        );
+      },
+    },
+    {
+      name: (
+        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+          {t(`HCM_AM_MOBILE_NUMBER`)}
+        </div>
+      ),
+      selector: (row) => {
+        return (
+          <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
+            {String(row?.[7] ? row?.[7] : t("ES_COMMON_NA"))}
+          </span>
+        );
+      },
+      style: {
+        justifyContent: "flex-end",
       },
     },
     {
@@ -145,7 +216,7 @@ const AttendanceManagementTable = ({ ...props }) => {
     // Update the data directly using the parent's setState
     const updatedData = props.data.map((worker) => {
       if (worker[2] === workerId) {
-        return [worker[0], worker[1], worker[2], worker[3], value || 0]; // Update the daysWorked value
+        return [worker[0], worker[1], worker[2], worker[3], value || 0, worker[5], worker[6], worker[7], worker[8]]; // Update the daysWorked value
       }
       return worker; // Keep other rows unchanged
     });
