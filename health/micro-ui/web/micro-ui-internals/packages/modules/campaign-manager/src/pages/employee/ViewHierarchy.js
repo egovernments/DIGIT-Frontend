@@ -1,4 +1,4 @@
-import { Card, Uploader, Button, ActionBar, Toast, Loader, PopUp, InfoCard } from "@egovernments/digit-ui-components";
+import { Card, Uploader, Button, Footer, Toast, Loader, PopUp, AlertCard } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import XlsPreviewNew from "../../components/XlsPreviewNew";
@@ -538,11 +538,11 @@ const ViewHierarchy = () => {
                 )}
                 <div style={{ height: "1rem" }}></div>
               </div>
-              {uiValError && <InfoCard label="Info" text={uiErrorMsg} variant="error" style={{ maxWidth: "200rem" }} />}
+              {uiValError && <AlertCard label="Info" text={uiErrorMsg} variant="error" style={{ maxWidth: "200rem" }} />}
               <div style={{ marginBottom: "0.5rem" }}></div>
             </Card>
             <div style={{ height: "3rem" }}></div>
-            <ActionBar
+            <Footer
               actionFields={[
                 <Button
                   icon="ArrowBack"
@@ -633,7 +633,7 @@ const ViewHierarchy = () => {
               />
             )}
             {dataCreationGoing && <Loader />}
-            <ActionBar
+            <Footer
               actionFields={[
                 <Button
                   icon="ArrowBack"

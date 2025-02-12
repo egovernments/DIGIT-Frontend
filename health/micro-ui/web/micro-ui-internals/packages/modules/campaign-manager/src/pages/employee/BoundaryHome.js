@@ -1,4 +1,4 @@
-import { Card, InfoCard, Loader } from "@egovernments/digit-ui-components";
+import { Card, AlertCard, Loader } from "@egovernments/digit-ui-components";
 import { Button, Toast } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -79,7 +79,7 @@ const BoundaryHome = () => {
         })}
         </div>
       </Card>
-      <InfoCard
+      <AlertCard
         label="Info"
         variant="default"
         style={{maxWidth:"200rem", marginTop:"1rem"}}

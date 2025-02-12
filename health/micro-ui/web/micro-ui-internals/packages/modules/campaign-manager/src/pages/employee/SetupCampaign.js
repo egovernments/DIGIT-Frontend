@@ -1,9 +1,9 @@
-import { Loader, FormComposerV2, LoaderWithGap } from "@egovernments/digit-ui-react-components";
+import { FormComposerV2, LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { CampaignConfig } from "../../configs/CampaignConfig";
-import { Stepper, Toast, Button, ActionBar } from "@egovernments/digit-ui-components";
+import { Stepper, Toast, Button, Footer , Loader} from "@egovernments/digit-ui-components";
 import {
   updateUrlParams,
   transformDraftDataToFormData,
@@ -1062,7 +1062,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         }
       />
       {actionBar === "true" && (
-        <ActionBar
+        <Footer
           actionFields={[
             <Button
               type={"button"}

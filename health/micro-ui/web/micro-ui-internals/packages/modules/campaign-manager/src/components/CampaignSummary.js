@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { EditIcon, Header, Loader, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Button, InfoBannerIcon, Toast, PopUp } from "@egovernments/digit-ui-components";
+import { EditIcon, Header, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Button, InfoBannerIcon, Toast, PopUp, Loader } from "@egovernments/digit-ui-components";
 import { DownloadIcon } from "@egovernments/digit-ui-react-components";
 import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
