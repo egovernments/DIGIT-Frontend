@@ -16,7 +16,7 @@ const createKafkaClientAndProducer = () => {
     kafkaClient.on('error', (err: any) => {
         logger.error('Kafka client is in error state'); // Log message indicating client is in error state
         console.error(err.stack || err); // Log the error stack or message
-        // shutdownGracefully();
+        shutdownGracefully();
     });
 
     producer = new Producer(kafkaClient, { partitionerType: 2 });
@@ -29,7 +29,7 @@ const createKafkaClientAndProducer = () => {
     producer.on('error', (err: any) => {
         logger.error('Producer is in error state');
         console.error(err);
-        // shutdownGracefully();
+        shutdownGracefully();
     });
 };
 

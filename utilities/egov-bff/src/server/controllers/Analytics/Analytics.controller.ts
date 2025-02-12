@@ -2,7 +2,7 @@ import * as express from "express";
 // import { Blob } from 'buffer';
 // Import necessary modules and libraries
 
-import { errorResponder, sendResponse } from "../../utils/index";
+import { errorResponder, logger, sendResponse } from "../../utils/index";
 import { createSession, endSession } from "../../services/Session.services";
 import { createEvent } from "../../services/Event.services";
 
@@ -20,7 +20,7 @@ class AnalyticsController {
   // Initialize routes for MeasurementController
   public intializeRoutes() {
     this.router.post(`${this.path}/session/create`, this.create);
-    this.router.get(`${this.path}/session/end`, this.end);
+    this.router.post(`${this.path}/session/end`, this.end);
     this.router.post(`${this.path}/event/create`, this.event);
   }
 
@@ -43,7 +43,11 @@ class AnalyticsController {
   // This function handles the HTTP request for retrieving all measurements.
   create = async (request: express.Request, response: express.Response) => {
     try {
+      logger.info("RECEIVED:: SESSION CREATE REQUEST");
+
       const respo = await createSession(request.body);
+      logger.info("PROCESSED:: SESSION CREATE REQUEST");
+
       return sendResponse(response, { ...respo }, request);
     } catch (error: any) {
       return errorResponder(error, request, response);
@@ -52,7 +56,11 @@ class AnalyticsController {
   // This function handles the HTTP request for retrieving all measurements.
   end = async (request: express.Request, response: express.Response) => {
     try {
+      logger.info("RECEIVED:: SESSION END REQUEST");
+
       const respo = await endSession(request.body);
+      logger.info("PROCESSED:: SESSION END REQUEST");
+
       return sendResponse(response, { ...respo }, request);
     } catch (error: any) {
       return errorResponder(error, request, response);
@@ -60,7 +68,11 @@ class AnalyticsController {
   };
   event = async (request: express.Request, response: express.Response) => {
     try {
+      logger.info("RECEIVED:: EVENT CREATE REQUEST");
+
       const respo = await createEvent(request.body);
+      logger.info("PROCESSED:: EVENT CREATE REQUEST");
+
       return sendResponse(response, { ...respo }, request);
     } catch (error: any) {
       return errorResponder(error, request, response);

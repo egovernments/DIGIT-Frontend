@@ -7,7 +7,7 @@ import  { getErrorCodes } from "../config/index";
 function shutdownGracefully() {
     logger.info('Shutting down gracefully...');
     // Perform any cleanup tasks here, like closing database connections
-    process.exit(1); // Exit with a non-zero code to indicate an error
+    // process.exit(1); // Exit with a non-zero code to indicate an error
   }
 
   function capitalizeFirstLetter(str: string | undefined) {

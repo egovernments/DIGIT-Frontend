@@ -25,7 +25,7 @@ const enrichRequestMiddleware = async (
 ) => {
   try {
     //* added client secret check since we can add data without auth and user for MFORM */
-
+logger.info("received request in middlewares");
         await checkForClientSecret(req, next);
       
   } catch (error) {

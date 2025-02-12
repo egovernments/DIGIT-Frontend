@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { errorResponder, skipEnrichmentandChecks } from "..";
+import { errorResponder, logger } from "..";
 // import config from "../../config";
 
 const { object, string } = require("yup");
@@ -15,7 +15,9 @@ const requestSchema = object({
 
 const requestMiddleware = (req: Request, res: Response, next: NextFunction) => {
   try {
-    !skipEnrichmentandChecks(req) && requestSchema.validateSync(req.body.RequestInfo);
+    logger.info("received request in middlewares");
+    requestSchema.validateSync(req.body.RequestInfo);
+    next();
   } catch (error) {
     errorResponder(error, req, res);
   }

@@ -41,7 +41,7 @@ const config = {
   host: {
     serverHost: HOST,
     KAFKA_BROKER_HOST:
-      process.env.KAFKA_BROKER_HOST || "kafka-v2.kafka-cluster:9092",
+      process.env.KAFKA_BROKER_HOST || "localhost:9092",
 
     localization: process.env.EGOV_LOCALIZATION_HOST || HOST,
     mdms: process.env.EGOV_MDMS_HOST || HOST || "http://localhost:8094/",
