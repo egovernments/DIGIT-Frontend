@@ -3,7 +3,7 @@ import { UploadIcon, FileIcon, DeleteIconv2, Toast, Card, Header } from "@egover
 import { useTranslation } from "react-i18next";
 import { useLocation , useHistory } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
-import { Loader, InfoCard ,Tag } from "@egovernments/digit-ui-components";
+import { Loader, AlertCard ,Tag } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
 
@@ -98,7 +98,7 @@ const UpdateBoundaryWrapper = ({ onSelect,...props }) => {
       )}
       </Card>
       <div style={{marginTop:"1rem"}}>
-        <InfoCard
+        <AlertCard
           label="Info"
           text={t("CAMPAIGN_CANNOT_REMOVE_PREVIOUS_BOUNDARIES")}
           variant="default"

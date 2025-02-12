@@ -1,7 +1,7 @@
 import React, { useEffect, useState,Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { Header, Loader, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Toast, Stepper, TextBlock, Card ,Tag } from "@egovernments/digit-ui-components";
+import { Header, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Toast, Stepper, TextBlock, Card ,Tag ,Loader } from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
 
 
@@ -43,6 +43,7 @@ const BoundarySummary = (props) => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
+
 
   function updateUrlParams(params) {
     const url = new URL(window.location.href);

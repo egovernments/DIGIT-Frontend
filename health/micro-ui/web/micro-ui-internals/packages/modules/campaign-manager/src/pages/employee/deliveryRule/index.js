@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useReducer, useState } from "react";
 import MultiTab from "./MultiTabcontext";
-import { Loader } from "@egovernments/digit-ui-react-components";
+import { Loader } from "@egovernments/digit-ui-components";
 // import { deliveryConfig } from "../../../configs/deliveryConfig";
 import getDeliveryConfig from "../../../utils/getDeliveryConfig";
 

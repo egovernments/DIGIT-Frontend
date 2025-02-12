@@ -69,6 +69,9 @@ const initDigitUI = () => {
 
 7. Manage Boundaries
 
+8. Boundary Assignment through UI
+    > -Provides interface for assigning boundaries to Users and Facilities
+    > -Supports bulk assignment and management of boundary mappings
 
 
 ### Contributors

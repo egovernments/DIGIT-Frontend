@@ -1,8 +1,7 @@
 import React, { useState, Fragment  , useEffect} from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {  } from "@egovernments/digit-ui-react-components";
-import { PanelCard ,ActionBar,Button} from "@egovernments/digit-ui-components";
+import { PanelCard ,Footer,Button} from "@egovernments/digit-ui-components";
 
 const Response = () => {
   const { t } = useTranslation();
@@ -65,7 +64,7 @@ const Response = () => {
           </Link>
         </ActionBar>
       )} */}
-      <ActionBar
+      <Footer
   actionFields={[
      <Button  label={state?.secondaryActionLabel ? t(state?.secondaryActionLabel) : t("ES_CAMPAIGN_RESPONSE_ACTION")} onClick={()=>navigate(state?.secondaryActionLink)} type="button" variation="secondary"/>,
       <Button icon="ArrowForward" isSuffix label={state?.actionLabel ? t(state?.actionLabel) : t("ES_CAMPAIGN_RESPONSE_ACTION")} onClick={()=>navigate(state?.actionLink)} type="button"/>

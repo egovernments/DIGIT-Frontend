@@ -1,8 +1,8 @@
-import { Loader, FormComposerV2 } from "@egovernments/digit-ui-react-components";
+import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
-import { Toast , Stepper} from "@egovernments/digit-ui-components";
+import { Toast , Stepper, Loader} from "@egovernments/digit-ui-components";
 import _ from "lodash";
 import { UpdateBoundaryConfig } from "../../configs/UpdateBoundaryConfig";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";

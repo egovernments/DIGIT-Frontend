@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import {  EditIcon, Header, Loader, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
-import {  Toast, Card, Stepper, TextBlock ,Tag } from "@egovernments/digit-ui-components";
+import {  EditIcon, Header,  LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
+import {  Toast, Card, Stepper, TextBlock , Loader } from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
 
 function mergeObjects(item) {

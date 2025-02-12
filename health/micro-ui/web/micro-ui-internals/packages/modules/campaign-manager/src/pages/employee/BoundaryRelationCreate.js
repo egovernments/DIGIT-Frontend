@@ -1,5 +1,5 @@
 import { Card, Loader } from "@egovernments/digit-ui-components";
-import { Button, ActionBar, TextInput, Toast } from "@egovernments/digit-ui-components";
+import { Button, Footer, TextInput, Toast } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DustbinIcon } from "../../components/icons/DustbinIcon";
@@ -542,7 +542,7 @@ const onConfirmClick=()=>{
                     )
                     }
                     <FinalPopup showFinalPopUp={showFinalPopup} setShowFinalPopup={setShowFinalPopup}  onConfirmClick={onConfirmClick} />
-                    <ActionBar
+                    <Footer
                         actionFields={[
                             <Button
                                 icon="ArrowBack"
@@ -642,7 +642,7 @@ const onConfirmClick=()=>{
                   </div>
                 )}
                 <FinalPopup showFinalPopUp={showFinalPopup} setShowFinalPopup={setShowFinalPopup} onConfirmClick={onConfirmClick} />
-                <ActionBar
+                <Footer
                   actionFields={[
                     <Button
                       icon="ArrowBack"

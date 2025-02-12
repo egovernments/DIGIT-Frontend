@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Fragment, useMemo } from "react";
 import { CardText, LabelFieldPair, Card, Header, CardLabel, LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { InfoCard, PopUp, Button, Toast } from "@egovernments/digit-ui-components";
+import { AlertCard, PopUp, Button, Toast } from "@egovernments/digit-ui-components";
 import { mailConfig } from "../configs/mailConfig";
 import MultiSelectDropdown from "./MultiSelectDropdown";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
@@ -533,7 +533,7 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
             )}
         </div>
       </Card>
-      <InfoCard
+      <AlertCard
         populators={{
           name: "infocard",
         }}
