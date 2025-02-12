@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "start": "microbundle-crl watch --no-compress --format modern,cjs",
+    "start": "webpack serve --mode=development --open --hot",
     "prepublish": "yarn build",
     "example": "cd example && npm run start",
     "build": "webpack  --mode=production --node-env=production --config webpack.config.js",

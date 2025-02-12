@@ -6,8 +6,7 @@
     "packages/libraries",
     "example",
     "packages/css",
-    "packages/react-components",
-    "packages/svg-components",
+ 
     "packages/modules/*"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
@@ -23,10 +22,10 @@
     "start:script": "./scripts/create.sh",
     "devD:css": "cd packages/css && yarn start",
     "publish:css": "cd packages/css && yarn publish --access public",
-    "dev:libraries": "cd packages/libraries && yarn start",
+    "dev:libraries": "cd packages/libraries && yarn build",
     "devD:components": "cd packages/react-components && yarn start",
     "dev:example": "cd example && yarn start",
-    "dev:core": "cd packages/modules/core && yarn start",
+    "dev:core": "cd packages/modules/core && yarn build",
     "devD:dss": "cd packages/modules/dss && yarn start",
     "devD:hrms": "cd packages/modules/hrms && yarn start",
     "devD:common": "cd packages/modules/common && yarn start",
@@ -53,7 +52,7 @@
     "buildD:sandbox": "cd packages/modules/sandbox && yarn build",
     "deploy:jenkins": "./scripts/jenkins.sh",
     "clean": "rm -rf node_modules",
-    "dev:assignment": "cd packages/modules/assignment && yarn start",
+    "dev:assignment": "cd packages/modules/assignment && yarn build",
     "build:assignment": "cd packages/modules/assignment && yarn build"
   },
   "resolutions": {
@@ -70,6 +69,7 @@
     "lint-staged": "12.3.7",
     "npm-run-all": "4.1.5",
     "prettier": "2.1.2",
+    "vite": "^6.1.0",
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0"

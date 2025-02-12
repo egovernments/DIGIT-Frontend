@@ -1,12 +1,13 @@
 {
   "name": "@egovernments/digit-ui-example",
   "version": "1.0.0",
-  "main": "src/index.js",
   "license": "MIT",
   "private": true,
   "homepage": "digit-ui",
   "scripts": {
-    "start": "react-scripts start"
+    "start:Web": "webpack --mode development",
+    "start": "vite",
+    "start:old": "react-scripts start"
   },
   "devDependencies": {
     "@egovernments/digit-ui-libraries": "1.8.1-upgrade.6",
