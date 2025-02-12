@@ -3,13 +3,7 @@ import * as bodyParser from 'body-parser';
 import config from './config';
 import { requestMiddleware, enrichRequestMiddleware } from './utils/middlewares';
 import { errorLogger, errorResponder, invalidPathHandler } from './utils';
-import swaggerUi from 'swagger-ui-express';
-import * as YAML from 'yamljs';
-import path from 'path';
 
-
-
-const swaggerDocument = YAML.load(path.resolve(__dirname, './config/egov-bff-data.yaml'));
 
 
 
@@ -31,9 +25,6 @@ class App {
     this.app.use(requestMiddleware);
     this.app.use(enrichRequestMiddleware);
 
-    this.app.use(config.app?.contextPath+config.app.apiSpecPath, swaggerUi.serve);
-    this.app.get(config.app?.contextPath+config.app.apiSpecPath, swaggerUi.setup(swaggerDocument));
-    
     // this.app.use(cacheMiddleware);
     // Attach the first Error handling Middleware
     // function defined above (which logs the error)

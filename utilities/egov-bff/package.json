@@ -12,10 +12,9 @@
     "clean": "rm -rf ./dist",
     "serve": "node dist/index.js",
     "start": "yarn run dev && yarn run watch-ts",
-    "copy-config": "cp server/config/egov-bff-data.yaml dist/config/",
     "test": "jest",
     "dev": "ts-node-dev --respawn src/server/index.ts",
-    "prod": "yarn build && yarn copy-config && yarn serve",
+    "prod": "yarn build  && yarn serve",
     "watch-ts": "tsc --watch"
   },
   "repository": {
