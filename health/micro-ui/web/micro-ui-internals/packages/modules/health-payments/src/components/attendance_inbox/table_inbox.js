@@ -6,6 +6,7 @@ import DataTable from "react-data-table-component";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { tableCustomStyle } from "../table_inbox_custom_style";
 import { defaultPaginationValues } from "../../utils/constants";
+import { getCustomPaginationOptions } from "../../utils";
 
 const CustomInboxTable = ({
   handleTabChange,
@@ -159,6 +160,7 @@ const CustomInboxTable = ({
                   paginationRowsPerPageOptions={defaultPaginationValues}
                   fixedHeader={true}
                   fixedHeaderScrollHeight={"60vh"}
+                  paginationComponentOptions={getCustomPaginationOptions(t)}
                 />
               )}
             </Card>
