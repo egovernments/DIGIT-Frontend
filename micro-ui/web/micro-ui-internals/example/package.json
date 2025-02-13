@@ -19,7 +19,7 @@
     "@egovernments/digit-ui-module-utilities": "1.0.11",
     "@egovernments/digit-ui-module-open-payment":"0.0.1",
     "@egovernments/digit-ui-module-engagement": "1.5.20",
-    "@egovernments/digit-ui-components":"0.0.2-beta.65",
+    "@egovernments/digit-ui-components":"0.0.2-beta.66",
     "@egovernments/digit-ui-react-components": "1.8.16",
     "@egovernments/digit-ui-module-sandbox": "0.0.1",
     "http-proxy-middleware": "^1.0.5",
