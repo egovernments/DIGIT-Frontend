@@ -10,7 +10,7 @@ const SelectEmployeeName = ({ t, config, onSelect, formData = {}, userType, regi
     {
       label: "HR_EMP_ID_LABEL",
       type: "text",
-      name: "code",
+      name: "employeeName",
       isMandatory: true,
       validation: {
         title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),

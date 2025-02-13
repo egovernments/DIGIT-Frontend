@@ -7,7 +7,7 @@ import { campaignAssignmentConfig } from "../../components/config/campaignAssign
 //import ActionModal from "../../components/Modal";
 import { HRMS_CONSTANTS } from "../../constants/constants";
 
-import { convertDateToEpoch } from "../../components/Utils/index";
+import { checkIfUserExist ,formPayloadToCreateUser} from "../../services/service";
 
 const CreateEmployee = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -21,17 +21,11 @@ const CreateEmployee = () => {
   const history = useHistory();
   const location = useLocation();
   const isMobile = window.Digit.Utils.browser.isMobile();
-  const hrmsUserId = Digit.SessionStorage.get("HRMSUserId");
-  const employmentDate = Digit.SessionStorage.get("employmentDate");
-  const [createEmployeeData, setCreateEmployeeData] = useState({});
-  const [assignCampaigns, setAssignCampaigns] = useState(false);
-  const hrmsUserName = Digit.SessionStorage.get("HRMSUserName");
-  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "ADMIN";
+
   const [showModal, setShowModal] = useState(false);
   const closeModal = () => {
     setShowModal(false);
   };
-  const userProjectDetails = Digit.SessionStorage.get("currentProject");
 
   const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(
     Digit.ULBService.getStateId(),
@@ -48,9 +42,6 @@ const CreateEmployee = () => {
       enable: false,
     }
   );
-  const [mutationHappened, setMutationHappened, clear] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_HAPPENED", false);
-  const [errorInfo, setErrorInfo, clearError] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_ERROR_DATA", false);
-  const [successData, setsuccessData, clearSuccessData] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_SUCCESS_DATA", false);
 
   const checkMailNameNum = (formData) => {
     const email = formData?.SelectEmployeeEmailId?.emailId || "";
@@ -71,43 +62,28 @@ const CreateEmployee = () => {
       password === confirmPassword
     );
   };
-  useEffect(() => {
-    if (
-      mobileNumber &&
-      (mobileNumber.length === 9 || mobileNumber.length === 10) &&
-      (mobileNumber.match(Digit.Utils.getPattern("MobileNo")) || mobileNumber.match(Digit.Utils.getPattern("MozMobileNo")))
-    ) {
-      setShowToast(null);
-      setPhonecheck(true);
-      // Digit.HRMSService.search(tenantId, null, { phone: mobileNumber }).then((result, err) => {
-      //   if (result.Employees.length > 0) {
-      //     setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_MOB" });
-      //     setPhonecheck(false);
-      //   } else {
-      //     setPhonecheck(true);
-      //   }
-      // });
-    } else {
-      setPhonecheck(true);
-    }
-  }, [mobileNumber]);
-
-  // const defaultValues = {
-  //   Jurisdictions: [
-  //     {
-  //       id: undefined,
-  //       key: 1,
-  //       hierarchy: hierarchyType,
-  //       boundaryType: userProjectDetails?.[0]?.address?.boundaryType, //TODO: if national level boundary data label is changed in mdms, this must be changed
-  //       boundary: userProjectDetails?.[0]?.address?.boundary,
-  //       roles: [],
-  //     },
-  //   ],
-  // };
+  // useEffect(() => {
+  //   if (
+  //     mobileNumber &&
+  //     (mobileNumber.length === 9 || mobileNumber.length === 10) &&
+  //     (mobileNumber.match(Digit.Utils.getPattern("MobileNo")) || mobileNumber.match(Digit.Utils.getPattern("MozMobileNo")))
+  //   ) {
+  //     setShowToast(null);
+  //     setPhonecheck(true);
+  //     // Digit.HRMSService.search(tenantId, null, { phone: mobileNumber }).then((result, err) => {
+  //     //   if (result.Employees.length > 0) {
+  //     //     setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_MOB" });
+  //     //     setPhonecheck(false);
+  //     //   } else {
+  //     //     setPhonecheck(true);
+  //     //   }
+  //     // });
+  //   } else {
+  //     setPhonecheck(true);
+  //   }
+  // }, [mobileNumber]);
 
   const onFormValueChange = (setValue = true, formData) => {
-    debugger;
-
     if (formData?.SelectEmployeePhoneNumber?.mobileNumber) {
       setMobileNumber(
         formData?.SelectEmployeePhoneNumber?.mobileNumber?.startsWith(HRMS_CONSTANTS.INDIA_COUNTRY_CODE)
@@ -127,31 +103,7 @@ const CreateEmployee = () => {
         )
       );
     }
-    for (let i = 0; i < formData?.Jurisdictions?.length; i++) {
-      let key = formData?.Jurisdictions[i];
-      if (!(key?.boundary && key?.boundaryType && key?.hierarchy && key?.tenantId && key?.roles?.length > 0)) {
-        setcheck(false);
-        break;
-      } else {
-        setcheck(true);
-      }
-    }
 
-    let setassigncheck = true;
-    for (let i = 0; i < formData?.Assignments?.length; i++) {
-      let key = formData?.Assignments[i];
-      if (
-        !(key.department && key.designation && key.fromDate && (formData?.Assignments[i].toDate || formData?.Assignments[i]?.isCurrentAssignment))
-      ) {
-        setassigncheck = false;
-        break;
-      } else if (formData?.Assignments[i].toDate == null && formData?.Assignments[i]?.isCurrentAssignment == false) {
-        setassigncheck = false;
-        break;
-      } else {
-        setassigncheck = true;
-      }
-    }
     if (formData?.SelectEmployeeName?.employeeName && formData?.SelectEmployeeType?.code && formData?.SelectEmployeeId?.code) {
       setSubmitValve(true);
     } else {
@@ -160,12 +112,10 @@ const CreateEmployee = () => {
   };
 
   const navigateToAcknowledgement = (Employees) => {
-    debugger
     history.replace(`/${window?.contextPath}/employee/hrms/response`, { Employees, key: "CREATE", action: "CREATE" });
   };
 
   const navigateToCampaignAssignmentAcknowledgement = (ProjectStaffPayload, selectedCampaignBoundary) => {
-    debugger
     Digit.HRMSService.search(tenantId, null, { codes: hrmsUserName })
       .then((res) => {
         let UpdateAssignmentPayload = {};
@@ -182,117 +132,77 @@ const CreateEmployee = () => {
       .catch((err) => console.log(err));
   };
 
-  const onSubmit = (data) => {
-    debugger;
-    if (!assignCampaigns) {
-      debugger;
-      // if (data.Jurisdictions.filter((juris) => juris.tenantId == tenantId).length == 0) {
-      //   setShowToast({ key: true, label: "ERR_BASE_TENANT_MANDATORY" });
-      //   setShowModal(false);
-      //   return;
-      // }
-      // if (
-      //   !Object.values(
-      //     data.Jurisdictions.reduce((acc, sum) => {
-      //       if (sum && sum?.tenantId) {
-      //         acc[sum.tenantId] = acc[sum.tenantId] ? acc[sum.tenantId] + 1 : 1;
-      //       }
-      //       return acc;
-      //     }, {})
-      //   ).every((s) => s == 1)
-      // ) {
-      //   setShowToast({ key: true, label: "ERR_INVALID_JURISDICTION" });
-      //   setShowModal(false);
-      //   return;
-      // }
-      let roles = data?.Jurisdictions?.map((ele) => {
-        return ele.roles?.map((item) => {
-          item["tenantId"] = tenantId;
-          return item;
-        });
-      });
-
-      const mappedroles = [].concat.apply([], roles);
-      let createdAssignments = [
-        {
-          fromDate: new Date(data?.SelectDateofEmployment?.dateOfAppointment).getTime(),
-          toDate: undefined,
-          isCurrentAssignment: true,
-          department: data?.SelectEmployeeDepartment?.code || HRMS_CONSTANTS.DEFAULT_DEPARTMENT,
-          designation: data?.SelectEmployeeDesignation?.code || "undefined",
-        },
-      ];
-      let Employees = [
-        {
+  const onSubmit = async (data) => {
+    setShowToast(null);
+    const mappedroles = [].concat.apply([], data?.RolesAssigned);
+    let createdAssignments = [
+      {
+        fromDate: new Date(data?.SelectDateofEmployment?.dateOfAppointment).getTime(),
+        toDate: undefined,
+        isCurrentAssignment: true,
+        department: data?.SelectEmployeeDepartment?.code || HRMS_CONSTANTS.DEFAULT_DEPARTMENT,
+        designation: data?.SelectEmployeeDesignation?.code || "undefined",
+      },
+    ];
+    let Employees = [
+      {
+        tenantId: tenantId,
+        employeeStatus: "EMPLOYED",
+        assignments: createdAssignments,
+        code: data?.SelectEmployeeId?.code,
+        dateOfAppointment: new Date(data?.SelectDateofEmployment?.dateOfAppointment).getTime(),
+        employeeType: data?.SelectEmployeeType?.code,
+        jurisdictions: data?.Jurisdictions,
+        user: {
+          mobileNumber: data?.SelectEmployeePhoneNumber?.mobileNumber?.startsWith(HRMS_CONSTANTS.INDIA_COUNTRY_CODE)
+            ? data?.SelectEmployeePhoneNumber?.mobileNumber?.substring(HRMS_CONSTANTS.INDIA_COUNTRY_CODE.length)
+            : (data?.SelectEmployeePhoneNumber?.mobileNumber?.startsWith(HRMS_CONSTANTS.MOZ_COUNTRY_CODE)
+                ? data?.SelectEmployeePhoneNumber?.mobileNumber?.substring(HRMS_CONSTANTS.MOZ_COUNTRY_CODE.length)
+                : data?.SelectEmployeePhoneNumber?.mobileNumber) || null,
+          name: data?.SelectEmployeeName?.employeeName,
+          correspondenceAddress: data?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress || null,
+          emailId: data?.SelectEmployeeEmailId?.emailId ? data?.SelectEmployeeEmailId?.emailId : null,
+          gender: data?.SelectEmployeeGender?.gender.code,
+          dob: new Date(data?.SelectDateofBirthEmployment?.dob || HRMS_CONSTANTS.DEFAULT_DOB).getTime(),
+          roles: mappedroles,
           tenantId: tenantId,
-          employeeStatus: "EMPLOYED",
-          assignments: createdAssignments,
-          code: data?.SelectEmployeeId?.code,
-          dateOfAppointment: new Date(data?.SelectDateofEmployment?.dateOfAppointment).getTime(),
-          employeeType: data?.SelectEmployeeType?.code,
-          jurisdictions: data?.Jurisdictions,
-          user: {
-            mobileNumber: data?.SelectEmployeePhoneNumber?.mobileNumber?.startsWith(HRMS_CONSTANTS.INDIA_COUNTRY_CODE)
-              ? data?.SelectEmployeePhoneNumber?.mobileNumber?.substring(HRMS_CONSTANTS.INDIA_COUNTRY_CODE.length)
-              : (data?.SelectEmployeePhoneNumber?.mobileNumber?.startsWith(HRMS_CONSTANTS.MOZ_COUNTRY_CODE)
-                  ? data?.SelectEmployeePhoneNumber?.mobileNumber?.substring(HRMS_CONSTANTS.MOZ_COUNTRY_CODE.length)
-                  : data?.SelectEmployeePhoneNumber?.mobileNumber) || null,
-            name: data?.SelectEmployeeName?.employeeName,
-            correspondenceAddress: data?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress || null,
-            emailId: data?.SelectEmployeeEmailId?.emailId ? data?.SelectEmployeeEmailId?.emailId : null,
-            gender: data?.SelectEmployeeGender?.gender.code,
-            dob: new Date(data?.SelectDateofBirthEmployment?.dob || HRMS_CONSTANTS.DEFAULT_DOB).getTime(),
-            roles: mappedroles,
-            tenantId: tenantId,
-            userName: data?.SelectEmployeeId?.code,
-            password: data?.SelectEmployeePassword?.employeePassword,
-          },
-          serviceHistory: [],
-          education: [],
-          tests: [],
+          userName: data?.SelectEmployeeId?.code,
+          password: data?.SelectEmployeePassword?.employeePassword,
         },
-      ];
-      /* use customiseCreateFormData hook to make some chnages to the Employee object */
-      Employees = Digit?.Customizations?.HRMS?.customiseCreateFormData
-        ? Digit.Customizations.HRMS.customiseCreateFormData(data, Employees)
-        : Employees;
+        serviceHistory: [],
+        education: [],
+        tests: [],
+      },
+    ];
 
-      if (data?.SelectEmployeeId?.code && data?.SelectEmployeeId?.code?.trim().length > 0) {
-        Digit.HRMSService.search(tenantId, null, { codes: data?.SelectEmployeeId?.code }).then((result, err) => {
-          if (result.Employees.length > 0) {
-            setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID" });
-            setShowModal(false);
-            return;
-          } else {
-            navigateToAcknowledgement(Employees);
-          }
-        });
+    // if (data?.SelectEmployeeId?.code && data?.SelectEmployeeId?.code?.trim().length > 0) {
+    //   Digit.HRMSService.search(tenantId, null, { codes: data?.SelectEmployeeId?.code }).then((result, err) => {
+    //     if (result.Employees.length > 0) {
+    //       setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID" });
+    //       setShowModal(false);
+    //       return;
+    //     } else {
+    //       navigateToAcknowledgement(Employees);
+    //     }
+    //   });
+    // } else {
+    //   navigateToAcknowledgement(Employees);
+    // }
+    try {
+      const type = await checkIfUserExist(data,tenantId);
+      debugger;
+      if (type == true) {
+        setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID" });
+        setShowModal(false);
       } else {
-        navigateToAcknowledgement(Employees);
+      const payload= formPayloadToCreateUser(data,tenantId)
+    debugger
+        navigateToAcknowledgement(payload);
       }
-    } else {
+    } catch (err) {
       debugger;
-      const assignedCampaignData = data?.CampaignsAssignment?.filter((c, i) => c?.selectedProject != null);
-      let ProjectStaffCreatePayload = [];
-      let selectedCampaignBoundary = [];
-      for (let i = 0; i < assignedCampaignData?.length; i++) {
-        ProjectStaffCreatePayload.push({
-          tenantId: tenantId,
-          userId: hrmsUserId,
-          projectId: assignedCampaignData?.[i].selectedProject?.id,
-          startDate: assignedCampaignData?.[i]?.fromDate
-            ? convertDateToEpoch(assignedCampaignData?.[i]?.fromDate)
-            : assignedCampaignData?.[i].selectedProject?.startDate,
-          endDate:
-            assignedCampaignData?.[i]?.toDate != null
-              ? convertDateToEpoch(assignedCampaignData?.[i]?.toDate) > assignedCampaignData?.[i].selectedProject?.endDate
-                ? assignedCampaignData?.[i].selectedProject?.endDate
-                : convertDateToEpoch(assignedCampaignData?.[i]?.toDate)
-              : assignedCampaignData?.[i].selectedProject?.endDate,
-        });
-        selectedCampaignBoundary.push(assignedCampaignData?.[i]?.selectedProject?.address?.boundary);
-      }
-      navigateToCampaignAssignmentAcknowledgement(ProjectStaffCreatePayload, selectedCampaignBoundary);
+      setShowToast({ key: true, label: "Some error happened" });
+      setShowModal(false);
     }
   };
   const openModal = (e) => {
@@ -302,8 +212,8 @@ const CreateEmployee = () => {
   if (isLoading) {
     return <Loader />;
   }
-  const config = mdmsData?.config ? mdmsData.config : newConfig;
-  const campaignAssignConfig = mdmsData?.campaignAssignConfig ? mdmsData.campaignAssignConfig : campaignAssignmentConfig;
+  const config = newConfig;
+
   return (
     <div style={{ marginBottom: "80px" }}>
       <div
@@ -313,8 +223,7 @@ const CreateEmployee = () => {
             : { marginLeft: "15px", fontFamily: "calibri", color: "#FF0000" }
         }
       >
-        {!assignCampaigns && <Header>{t("HR_COMMON_CREATE_EMPLOYEE_HEADER")}</Header>}
-        {assignCampaigns && <Header>{t("HR_COMMON_ASSIGN_CAMPAIGN_HEADER")}</Header>}
+        <Header>{t("HR_COMMON_CREATE_EMPLOYEE_HEADER")}</Header>
       </div>
       <FormComposerV2
         // defaultValues={defaultValues}
@@ -323,7 +232,7 @@ const CreateEmployee = () => {
         onSubmit={onSubmit}
         className={"custom-form"}
         onFormValueChange={onFormValueChange}
-        isDisabled={canSubmit}
+        isDisabled={!canSubmit}
         label={t("HR_COMMON_BUTTON_SUBMIT")}
       />
 

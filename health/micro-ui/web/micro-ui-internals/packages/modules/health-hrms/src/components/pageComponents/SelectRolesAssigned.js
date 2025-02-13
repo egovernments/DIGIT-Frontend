@@ -1,10 +1,8 @@
 import { CardLabel, Dropdown, LabelFieldPair, Loader, RemoveableTag, MultiSelectDropdown } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState, useMemo } from "react";
 
-const RolesAssigned = ({ t, config, onSelect, userType, formData }) => {
-  const MultiSelectWrapper = Digit.ComponentRegistryService.getComponent("MultiSelectDropdownBoundary");
+const RolesAssigned = ({ t, config, onSelect }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "ADMIN";
 
   const [roleList, setRoleList] = useState([]);
   const [selectedRole, setSelectedRole] = useState([]);
@@ -80,7 +78,7 @@ const RolesAssigned = ({ t, config, onSelect, userType, formData }) => {
           isSearchable
           label="Select Option"
           name="genders"
-          onChange={(e) => {}}
+          onChange={() => {}}
           onSelect={(e) => {
             handleBoundarySelect(e);
           }}

@@ -21,7 +21,6 @@ const getBoundaryTypeOrder = (tenantBoundary) => {
 
 const fetchBoundaries = async ({ tenantId }) => {
   const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "MICROPLAN";
-  debugger;
   try {
     const fetchBoundaryData = await Digit.CustomService.getResponse({
       url: `/boundary-service/boundary-relationships/_search`,

@@ -48,7 +48,7 @@ const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
     // always sending the last selected boundary code
     const lastSelectedCode = selectedBoundary.code;
 
-    onSelect(config.key, lastSelectedCode);
+    onSelect(config.key, selectedBoundary);
 
     // Load child boundaries
     if (selectedBoundary.children && selectedBoundary.children.length > 0) {
