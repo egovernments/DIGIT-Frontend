@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.8.25]  [13-Feb-2025]
+- Added id prop for Privacy Component Checkbox
+
 ## [1.8.24]  [3-Feb-2025]
 - Fixed core issues and related found in PGR Ethopia demo
 
