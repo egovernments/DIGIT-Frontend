@@ -399,7 +399,7 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
   });
 
   if (deliveryConfigLoading) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
   return (
     <CycleContext.Provider
