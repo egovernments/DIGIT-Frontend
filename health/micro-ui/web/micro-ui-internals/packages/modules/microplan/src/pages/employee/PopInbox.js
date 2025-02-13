@@ -366,16 +366,6 @@ const PopInbox = () => {
 
   const { isLoading, data, isFetching, refetch:refetchCensus } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
 
-    useEffect(() => {
-      if (tableRef.current) {
-        // Get full rendered height including borders/padding
-        const height = tableRef.current.offsetHeight;
-         
-        setTableHeight(height / 16 + 7.5);
-      }else{
-        setTableHeight(33);
-      }
-    }, [data,activeLink]); 
 
   // // Extract assignee IDs in order, including null values
   // useEffect(() => {
