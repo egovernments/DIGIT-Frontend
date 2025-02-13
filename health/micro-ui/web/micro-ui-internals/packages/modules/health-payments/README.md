@@ -1,4 +1,4 @@
-# egovernments/digit-ui-module-microplan
+# egovernments/digit-ui-module-health-payments
 
 ## Install
 
