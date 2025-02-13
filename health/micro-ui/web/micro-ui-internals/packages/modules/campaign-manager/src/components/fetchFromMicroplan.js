@@ -223,7 +223,7 @@ const FetchFromMicroplanScreen = () => {
       />
 
       <div className="sandbox-loader-screen ">
-        {showToast?.key != "error" && <LoaderWithGap text={t(" ")} />}
+        {showToast?.key != "error" && <Loader page={true} variant={"PageLoader"} loaderText={t(" ")}/>}
         <ul className="sandbox-installation-steps">
           {steps.map((step, index) => (
             <li key={index} className={`sandbox-step ${index < currentStep ? "sandbox-visible" : ""}`}>

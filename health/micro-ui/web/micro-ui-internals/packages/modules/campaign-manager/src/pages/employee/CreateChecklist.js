@@ -523,8 +523,8 @@ const CreateChecklist = () => {
   ];
   return (
     <div>
-      {loading_new && <Loader />}
-      {!loading_new && submitting && <Loader />}
+      {loading_new && <Loader page={true} variant={"PageLoader"}/>}
+      {!loading_new && submitting && <Loader page={true} variant={"PageLoader"}/>}
       {!submitting && !loading_new &&
         <div>
           <TagComponent campaignName={campaignName} />  

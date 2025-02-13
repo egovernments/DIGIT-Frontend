@@ -453,7 +453,7 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
 
   return (
     <>
-      {loaderEnabled && <LoaderWithGap text={"CAMPAIGN_BOUNDARY_PLEASE_WAIT"}></LoaderWithGap>}
+      {loaderEnabled &&  <Loader page={true} variant={"PageLoader"} loaderText={t("CAMPAIGN_BOUNDARY_PLEASE_WAIT")}/>}
       <Card>
         <div className="selecting-boundary-div">
           <Header>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</Header>

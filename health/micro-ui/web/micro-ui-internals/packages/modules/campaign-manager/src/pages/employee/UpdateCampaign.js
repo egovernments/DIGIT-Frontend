@@ -810,11 +810,11 @@ const UpdateCampaign = ({hierarchyData }) => {
   };
 
   if (isPreview === "true" && !draftData) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
 
   if (isDraft === "true" && !draftData) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
 
 

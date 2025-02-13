@@ -1173,7 +1173,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           columns={columns}
           data={state?.currentData}
           progressPending={isLoading || state?.currentData?.length === 0}
-          progressComponent={<Loader />}
+          progressComponent={<Loader page={true} variant={"PageLoader"}/>}
           pagination
           paginationServer
           customStyles={tableCustomStyle}

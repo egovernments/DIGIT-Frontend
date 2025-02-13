@@ -390,7 +390,7 @@ const ViewHierarchy = () => {
   const [showPopUp, setShowPopUp] = useState(false);
 
   if (!viewState || isLoading) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   } else {
     return (
       <React.Fragment>
@@ -632,7 +632,7 @@ const ViewHierarchy = () => {
                 }}
               />
             )}
-            {dataCreationGoing && <Loader />}
+            {dataCreationGoing &&<Loader page={true} variant={"PageLoader"}/>}
             <Footer
               actionFields={[
                 <Button
