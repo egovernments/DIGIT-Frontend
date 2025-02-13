@@ -1,8 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
-import { Header, Loader } from "@egovernments/digit-ui-react-components";
+import { Header } from "@egovernments/digit-ui-react-components";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
+import {  Loader} from "@egovernments/digit-ui-components";
+
 
 const ProjectBeneficiaryComponent = (props) => {
   const { t } = useTranslation();
@@ -155,7 +157,7 @@ const ProjectBeneficiaryComponent = (props) => {
   };
 
   if (isLoading) {
-    return <Loader></Loader>;
+    return  <Loader page={true} variant={"PageLoader"}/>;
   }
 
   return (

@@ -51,10 +51,12 @@ function App() {
   }
   return (
     <DigitUI
-      stateCode={stateCode}
-      enabledModules={enabledModules}
-      moduleReducers={moduleReducers}
-    />
+    stateCode={stateCode}
+    enabledModules={enabledModules}
+    moduleReducers={moduleReducers}
+    defaultLanding="employee"
+    allowedUserTypes={["employee"]}
+  />
   );
 }
 

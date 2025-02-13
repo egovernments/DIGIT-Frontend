@@ -4,7 +4,7 @@ import { CustomisedHooks } from "./hooks";
 import { UICustomizations } from "./configs/UICustomizations";
 import HCMWORKBENCHCard from "./components/HCMWORKBENCHCard";
 import App from "./pages/employee";
-import { Loader } from "@egovernments/digit-ui-react-components";
+import {  Loader} from "@egovernments/digit-ui-components";
 import ProjectBeneficiaryComponent from "./components/ProjectBeneficiaryComponent";
 import ProjectChildrenComponent from "./components/ProjectChildrenComponent";
 import ProjectStaffComponent from "./components/ProjectStaffComponent";
@@ -26,7 +26,7 @@ const HCMWORKBENCHModule = ({ stateCode, userType, tenants }) => {
   });
 
   if (isLoading) {
-    return <Loader />;
+    return   <Loader page={true} variant={"PageLoader"}/>;
   }
   if (userType === "employee") {
     return <App path={path} url={url} />;
