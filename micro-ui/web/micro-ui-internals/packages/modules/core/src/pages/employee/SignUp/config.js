@@ -15,6 +15,7 @@ export const SignUpConfig = [
           validation: {
             required: true,
             pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+            maxLength: 64,
           },
           error: "ERR_EMAIL_REQUIRED",
         },
@@ -29,7 +30,7 @@ export const SignUpConfig = [
           validation: {
             required: true,
             pattern: /^[A-Za-z]+( [A-Za-z]+)*$/,
-            maxLength: 60,
+            maxLength: 50,
           },
           error: "ERR_ACCOUNT_NAME_REQUIRED",
         },
