@@ -12,9 +12,10 @@ const tenantConfigSearchService = async ({ tenantId, filter, pagination }) => {
 };
 
 export const useTenantConfigSearch = ({ tenantId, filter, pagination, config = {} }) => {
-  return useQuery(
-    ['SEARCH_TENANT_CONFIG', tenantId, filter, pagination], // Ensure the query key uses the new format
-    () => tenantConfigSearchService({ tenantId, filter, pagination }),
+  return useQuery({
+    queryKey : ["SEARCH_TENANT_CONFIG", tenantId, filter, pagination],
+    queryFn : () => tenantConfigSearchService({ tenantId, filter, pagination }),
     config
+  } 
   );
 };

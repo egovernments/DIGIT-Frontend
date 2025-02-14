@@ -2,6 +2,7 @@ import React, { useEffect, useState, lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client"; // Use createRoot from React 18
 import { initGlobalConfigs } from "./globalConfig";
 
+
 const DigitUILazy = lazy(() =>
   import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI }))
 );import { initLibraries } from "@egovernments/digit-ui-libraries";
