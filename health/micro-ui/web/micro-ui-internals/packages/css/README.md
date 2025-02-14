@@ -56,6 +56,9 @@ frontend/micro-ui/web/public/index.html
 - [nipunarora-eGov](https://github.com/nipunarora-eGov)
 - [Swathi-egov](https://github.com/Swathi-egov)
 - [suryansh-egov](https://github.com/suryansh-egov)
+- [ramkrishna-egov](https://github.com/ramkrishna-egov)
+- [rachna-egov](https://github.com/rachna-egov)
+- [pitabash-eGov](https://github.com/pitabash-eGov)
 
 ### Published from DIGIT Frontend 
 DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/console)
