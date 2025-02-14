@@ -17,11 +17,12 @@ const businessServiceMap = {};
 const inboxModuleNameMap = {};
 
 const HCM_MODULE_NAME = "console";
+const SERVICE_REQUEST_CONTEXT_PATH = window?.globalConfigs?.getConfig("SERVICE_REQUEST_CONTEXT_PATH") || "health-service-request";
 
 const updateServiceDefinition = async (tenantId, newStatus, sdcode) => {
   try {
     const res = await Digit.CustomService.getResponse({
-      url: "/service-request/service/definition/v1/_update",
+      url: `/${SERVICE_REQUEST_CONTEXT_PATH}/service/definition/v1/_update`,
       body: {
         ServiceDefinition: {
           "tenantId": tenantId,
@@ -118,6 +119,9 @@ export const UICustomizations = {
                 onToggle={toggle}
               />):(<>{t("CHECKLIST_TOBE_CONFIGURED")}</>)
             );
+        case "CHECKLIST_LAST_UPDATE":
+          const lastModDate = row?.ServiceRequest?.length !== 0 ? row?.ServiceRequest?.[0]?.auditDetails?.lastModifiedTime : row?.auditDetails?.lastModifiedTime;
+          return Digit.DateUtils.ConvertEpochToDate(lastModDate);
         case "HCM_CHECKLIST_ACTION":
           const role_code = row?.data?.role;
           const cl_code = row?.data?.checklistType;
@@ -488,7 +492,8 @@ export const UICustomizations = {
               </Link>
             </span>
           );
-
+        case "CAMPAIGN_LAST_UPDATE":
+          return Digit.DateUtils.ConvertEpochToDate(row?.auditDetails?.lastModifiedTime);
         case "CAMPAIGN_START_DATE":
           return Digit.DateUtils.ConvertEpochToDate(value);
         case "CAMPAIGN_END_DATE":
@@ -629,7 +634,8 @@ export const UICustomizations = {
               </Link>
             </span>
           );
-
+        case "CAMPAIGN_LAST_UPDATE":
+          return Digit.DateUtils.ConvertEpochToDate(row?.auditDetails?.lastModifiedTime);
         case "CAMPAIGN_START_DATE":
           return Digit.DateUtils.ConvertEpochToDate(value);
         case "CAMPAIGN_END_DATE":
@@ -808,7 +814,8 @@ export const UICustomizations = {
               </Link>
             </span>
           );
-
+        case "CAMPAIGN_LAST_UPDATE":
+          return Digit.DateUtils.ConvertEpochToDate(row?.auditDetails?.lastModifiedTime);
         case "CAMPAIGN_START_DATE":
           return Digit.DateUtils.ConvertEpochToDate(value);
         case "CAMPAIGN_END_DATE":
@@ -934,6 +941,8 @@ export const UICustomizations = {
           );
         case "CM_DRAFT_TYPE":
           return value ? t("CM_UPDATE_REQUEST") : t("CM_CREATE_REQUEST");
+        case "CAMPAIGN_LAST_UPDATE":
+          return Digit.DateUtils.ConvertEpochToDate(row?.auditDetails?.lastModifiedTime);
         case "CAMPAIGN_START_DATE":
           return Digit.DateUtils.ConvertEpochToDate(value);
         case "LAST_MODIFIED_TIME":
@@ -1045,6 +1054,8 @@ export const UICustomizations = {
           );
         case "CM_DRAFT_TYPE":
           return value ? t("CM_UPDATE_REQUEST") : t("CM_CREATE_REQUEST");
+        case "CAMPAIGN_LAST_UPDATE":
+          return Digit.DateUtils.ConvertEpochToDate(row?.auditDetails?.lastModifiedTime);
         case "CAMPAIGN_START_DATE":
           return Digit.DateUtils.ConvertEpochToDate(value);
         case "CAMPAIGN_END_DATE":

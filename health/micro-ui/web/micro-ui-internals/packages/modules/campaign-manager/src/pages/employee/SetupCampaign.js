@@ -1,14 +1,17 @@
-import { Loader, FormComposerV2, Menu,  SubmitBar } from "@egovernments/digit-ui-react-components";
+import { FormComposerV2, LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { CampaignConfig } from "../../configs/CampaignConfig";
-import { Stepper, Toast,Button ,ActionBar } from "@egovernments/digit-ui-components";
+import { Stepper, Toast, Button, Footer , Loader} from "@egovernments/digit-ui-components";
 import {
   updateUrlParams,
   transformDraftDataToFormData,
   compareIdentical,
-  resourceData, restructureData, filterCampaignConfig, findHighestStepCount
+  resourceData,
+  restructureData,
+  filterCampaignConfig,
+  findHighestStepCount,
 } from "../../utils/setupCampaignHelpers";
 import { handleValidate } from "../../utils/setupCampaignValidators";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
@@ -39,6 +42,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const { mutate } = Digit.Hooks.campaign.useCreateCampaign(tenantId);
   const [isDataCreating, setIsDataCreating] = useState(false);
   const { mutate: updateCampaign } = Digit.Hooks.campaign.useUpdateCampaign(tenantId);
+  const { mutate: updateMapping } = Digit.Hooks.campaign.useUpdateAndUploadExcel(tenantId);
+  const [loader, setLoader] = useState(null);
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
   const isPreview = searchParams.get("preview");
@@ -60,22 +65,33 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const [fetchBoundary, setFetchBoundary] = useState(() => Boolean(searchParams.get("fetchBoundary")));
   const [fetchUpload, setFetchUpload] = useState(false);
   const [active, setActive] = useState(0);
-  const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ 
-    name: "HierarchySchema",
-    "filter": `[?(@.type=='${window?.Digit?.Utils?.campaign?.getModuleName()}')]`
-   }],{select:(MdmsRes)=>MdmsRes},
-   { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` });
+  const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    CONSOLE_MDMS_MODULENAME,
+    [
+      {
+        name: "HierarchySchema",
+        filter: `[?(@.type=='${window?.Digit?.Utils?.campaign?.getModuleName()}')]`,
+      },
+    ],
+    { select: (MdmsRes) => MdmsRes },
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
+  );
   const lowestHierarchy = useMemo(() => {
     return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.lowestHierarchy;
   }, [HierarchySchema]);
-  
 
-  const { data: DeliveryConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }], {
-    select: (data) => {
-      return data?.["HCM-PROJECT-TYPES"]?.projectTypes;
+  const { data: DeliveryConfig } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    "HCM-PROJECT-TYPES",
+    [{ name: "projectTypes" }],
+    {
+      select: (data) => {
+        return data?.["HCM-PROJECT-TYPES"]?.projectTypes;
+      },
     },
-  },    { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` }
-);
+    { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` }
+  );
 
   const reqCriteria = {
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
@@ -107,35 +123,31 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
 
   useEffect(() => {
     if (isPreview === "true") {
-        setIsDraftCreated(true);
-        setCurrentKey(14);
-    }
-     else if (isDraft === "true") {
-        setIsDraftCreated(true);
-        if (isSkip === "false") {
-            if (currentKey === 1) setCurrentKey(1);
-            //if user comes from set up microplan
-        } else if (source === "microplan") {
-            setCurrentKey(2);
-            //if the campaign is in draft and the start date is passed
-        }else if (isDateRestricted === "true") {
-          setCurrentKey(3);
-      }
-         else {
-          if(draftData?.additionalDetails?.key === 7 || draftData?.additionalDetails?.key === 8){
-            setCurrentKey(6);
-          }
-          else{
-            setCurrentKey(draftData?.additionalDetails?.key);
-          }  
+      setIsDraftCreated(true);
+      setCurrentKey(16);
+    } else if (isDraft === "true") {
+      setIsDraftCreated(true);
+      if (isSkip === "false") {
+        if (currentKey === 1) setCurrentKey(1);
+        //if user comes from set up microplan
+      } else if (source === "microplan") {
+        setCurrentKey(2);
+        //if the campaign is in draft and the start date is passed
+      } else if (isDateRestricted === "true") {
+        setCurrentKey(3);
+      } else {
+        if (draftData?.additionalDetails?.key === 7 || draftData?.additionalDetails?.key === 8) {
+          setCurrentKey(6);
+        } else {
+          setCurrentKey(draftData?.additionalDetails?.key);
         }
+      }
     }
-}, [isPreview, isDraft, draftData]);
-
+  }, [isPreview, isDraft, draftData]);
 
   const getCurrentKey = () => {
     const key = Number((/key=([^&]+)/.exec(location.search) || [])[1]);
-      setCurrentKey(key);
+    setCurrentKey(key);
   };
 
   useEffect(() => {
@@ -146,7 +158,13 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     };
   }, []);
 
-  const { isLoading, data: projectType } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }],{select:(MdmsRes)=>MdmsRes}, { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` });
+  const { isLoading, data: projectType } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    "HCM-PROJECT-TYPES",
+    [{ name: "projectTypes" }],
+    { select: (MdmsRes) => MdmsRes },
+    { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` }
+  );
 
   useEffect(() => {
     if (fetchUpload) {
@@ -156,9 +174,6 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       setFetchBoundary(false);
     }
   }, [fetchUpload, fetchBoundary]);
-
-  
-
 
   useEffect(() => {
     setTotalFormData(params);
@@ -201,9 +216,9 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
 
   useEffect(() => {
     setIsSubmitting(false);
-    if (currentKey === 14 && isSummary !== "true") {
+    if (currentKey === 16 && isSummary !== "true") {
       updateUrlParams({ key: currentKey, summary: true });
-    } else if (currentKey !== 14) {
+    } else if (currentKey !== 16) {
       updateUrlParams({ key: currentKey, summary: false });
       // setSummaryErrors(null);
     }
@@ -251,7 +266,6 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
           if (compareIdentical(draftData, payloadData) === false) {
             await updateCampaign(payloadData, {
               onError: (error, variables) => {
-                console.log(error);
                 if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
                   setShowToast({ key: "error", label: error?.message ? error?.message : error });
                 }
@@ -260,7 +274,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
                 updateUrlParams({ id: data?.CampaignDetails?.id });
                 draftRefetch();
                 if (currentKey == 6) {
-                  setCurrentKey(14);
+                  setCurrentKey(16);
                 } else {
                   setCurrentKey(currentKey + 1);
                 }
@@ -268,7 +282,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             });
           } else {
             if (currentKey == 6) {
-              setCurrentKey(14);
+              setCurrentKey(16);
             } else {
               setCurrentKey(currentKey + 1);
             }
@@ -330,7 +344,6 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
 
             await updateCampaign(payloadData, {
               onError: (error, variables) => {
-                console.log(error);
                 setShowToast({ key: "error", label: error?.message ? error?.message : error });
               },
               onSuccess: async (data) => {
@@ -497,7 +510,6 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
           if (compareIdentical(draftData, payloadData) === false) {
             await updateCampaign(payloadData, {
               onError: (error, variables) => {
-                console.log(error);
                 if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
                   setShowToast({ key: "error", label: error?.message ? error?.message : error });
                 }
@@ -527,7 +539,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     }
   }, [showToast]);
 
-  const onSubmit = (formData, cc) => {
+  const onSubmit = async (formData, cc) => {
     setIsSubmitting(true);
     // validating the screen data on clicking next button
     const checkValid = handleValidate({
@@ -571,6 +583,287 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {},
         ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {},
       });
+    } else if (name === "HCM_CAMPAIGN_UPLOAD_FACILITY_DATA_MAPPING" && formData?.uploadFacilityMapping?.data?.length > 0) {
+      setLoader(true);
+      const schemas = formData?.uploadFacilityMapping?.schemas;
+      const checkValid = formData?.uploadFacilityMapping?.data?.some(
+        (item) =>
+          item?.[t(schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active" &&
+          (!item?.[t(schemas?.find((i) => i.description === "Boundary Code")?.name)] ||
+            item?.[t(schemas?.find((i) => i.description === "Boundary Code")?.name)]?.length === 0)
+      );
+
+      if (checkValid) {
+        setLoader(false);
+        setShowToast({ key: "error", label: "NO_BOUNDARY_SELECTED_FOR_ACTIVE_FACILITY" });
+        return;
+      }
+      await updateMapping(
+        {
+          arrayBuffer: formData?.uploadFacilityMapping?.arrayBuffer,
+          updatedData: formData?.uploadFacilityMapping?.data,
+          tenantId: tenantId,
+          sheetNameToUpdate: "HCM_ADMIN_CONSOLE_FACILITIES",
+          schemas: schemas,
+          t: t,
+        },
+        {
+          onError: (error, variables) => {
+            setLoader(false);
+            setShowToast({ key: "error", label: error });
+          },
+          onSuccess: async (data) => {
+            try {
+              const responseTemp = await Digit.CustomService.getResponse({
+                url: "/project-factory/v1/data/_create",
+                body: {
+                  ResourceDetails: {
+                    type: "facility",
+                    hierarchyType: hierarchyType,
+                    tenantId: Digit.ULBService.getCurrentTenantId(),
+                    fileStoreId: data,
+                    action: "validate",
+                    campaignId: id,
+                    additionalDetails: {},
+                  },
+                },
+              });
+
+              const callSecondApiUntilComplete = async () => {
+                let secondApiResponse;
+                let isCompleted = false;
+                let isError = false;
+                while (!isCompleted && !isError) {
+                  secondApiResponse = await Digit.CustomService.getResponse({
+                    url: `/project-factory/v1/data/_search`,
+                    body: {
+                      SearchCriteria: {
+                        tenantId: tenantId,
+                        id: [responseTemp?.ResourceDetails?.id],
+                      },
+                    },
+                  });
+
+                  // Check if the response has the expected data to continue
+                  if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "completed") {
+                    // Replace `someCondition` with your own condition to determine if it's complete
+                    isCompleted = true;
+                  } else if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "failed") {
+                    // Replace `someCondition` with your own condition to determine if it's complete
+                    isError = true;
+                  } else {
+                    // Optionally, add a delay before retrying
+                    await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second before retrying
+                  }
+                }
+
+                return secondApiResponse;
+              };
+              const reqCriteriaResource = await callSecondApiUntilComplete();
+              if (reqCriteriaResource?.ResourceDetails?.[0]?.status === "failed") {
+                setLoader(false);
+                setShowToast({ key: "error", label: JSON.parse(reqCriteriaResource?.ResourceDetails?.[0]?.additionalDetails?.error)?.description });
+                return;
+              }
+              const temp = totalFormData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.[0];
+              const restructureTemp = {
+                ...temp,
+                resourceId: reqCriteriaResource?.ResourceDetails?.[0]?.id,
+                filestoreId: data,
+              };
+              setTotalFormData((prevData) => ({
+                ...prevData,
+                ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {
+                  uploadFacility: {
+                    ...prevData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility,
+                    uploadedFile: [restructureTemp],
+                  },
+                },
+              }));
+              //to set the data in the local storage
+              setParams({
+                ...params,
+                ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {
+                  uploadFacility: {
+                    ...params?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility,
+                    uploadedFile: [restructureTemp],
+                  },
+                },
+              });
+              setLoader(false);
+              if (
+                filteredConfig?.[0]?.form?.[0]?.isLast ||
+                !filteredConfig[0].form[0].body[0].skipAPICall ||
+                (filteredConfig[0].form[0].body[0].skipAPICall && id)
+              ) {
+                setShouldUpdate(true);
+              }
+              if (isChangeDates === "true" && currentKey == 6) {
+                setCurrentKey(16);
+              }
+              if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].mandatoryOnAPI) {
+                setCurrentKey(currentKey + 1);
+              }
+              if (isDraft === "true" && isSkip !== "false") {
+                updateUrlParams({ skip: "false" });
+              }
+              return;
+            } catch (error) {
+              if (error?.response?.data?.Errors?.[0]?.description) {
+                setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.description });
+                setLoader(false);
+                return;
+              } else {
+                setShowToast({ key: "error", label: `UPLOAD_MAPPING_ERROR` });
+                setLoader(false);
+                return;
+              }
+            }
+          },
+        }
+      );
+      return;
+    } else if (name === "HCM_CAMPAIGN_UPLOAD_USER_DATA_MAPPING" && formData?.uploadUserMapping?.data?.length > 0) {
+      setLoader(true);
+      const schemas = formData?.uploadUserMapping?.schemas;
+      const checkValid = formData?.uploadUserMapping?.data?.some(
+        (item) =>
+          item?.[t(schemas?.find((i) => i.description === "User Usage")?.name)] === "Active" &&
+          (!item?.[t(schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)] ||
+            item?.[t(schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)]?.length === 0)
+      );
+
+      if (checkValid) {
+        setLoader(false);
+        setShowToast({ key: "error", label: "NO_BOUNDARY_SELECTED_FOR_ACTIVE_USER" });
+        return;
+      }
+      await updateMapping(
+        {
+          arrayBuffer: formData?.uploadUserMapping?.arrayBuffer,
+          updatedData: formData?.uploadUserMapping?.data,
+          tenantId: tenantId,
+          sheetNameToUpdate: "HCM_ADMIN_CONSOLE_USER_LIST",
+          schemas,
+          t: t,
+        },
+        {
+          onError: (error, variables) => {
+            setLoader(false);
+            setShowToast({ key: "error", label: error });
+          },
+          onSuccess: async (data) => {
+            try {
+              const responseTemp = await Digit.CustomService.getResponse({
+                url: "/project-factory/v1/data/_create",
+                body: {
+                  ResourceDetails: {
+                    type: "user",
+                    hierarchyType: hierarchyType,
+                    tenantId: Digit.ULBService.getCurrentTenantId(),
+                    fileStoreId: data,
+                    action: "validate",
+                    campaignId: id,
+                    additionalDetails: {},
+                  },
+                },
+              });
+
+              const callSecondApiUntilComplete = async () => {
+                let secondApiResponse;
+                let isCompleted = false;
+                let isError = false;
+                while (!isCompleted && !isError) {
+                  secondApiResponse = await Digit.CustomService.getResponse({
+                    url: `/project-factory/v1/data/_search`,
+                    body: {
+                      SearchCriteria: {
+                        tenantId: tenantId,
+                        id: [responseTemp?.ResourceDetails?.id],
+                      },
+                    },
+                  });
+
+                  // Check if the response has the expected data to continue
+                  if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "completed") {
+                    // Replace `someCondition` with your own condition to determine if it's complete
+                    isCompleted = true;
+                  } else if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "failed") {
+                    // Replace `someCondition` with your own condition to determine if it's complete
+                    isError = true;
+                  } else {
+                    // Optionally, add a delay before retrying
+                    await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second before retrying
+                  }
+                }
+
+                return secondApiResponse;
+              };
+              const reqCriteriaResource = await callSecondApiUntilComplete();
+              if (reqCriteriaResource?.ResourceDetails?.[0]?.status === "failed") {
+                setLoader(false);
+                setShowToast({ key: "error", label: JSON.parse(reqCriteriaResource?.ResourceDetails?.[0]?.additionalDetails?.error)?.description });
+                return;
+              }
+              const temp = totalFormData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser?.uploadedFile?.[0];
+              const restructureTemp = {
+                ...temp,
+                resourceId: reqCriteriaResource?.ResourceDetails?.[0]?.id,
+                filestoreId: data,
+              };
+              setTotalFormData((prevData) => ({
+                ...prevData,
+                ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {
+                  uploadUser: {
+                    ...prevData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser,
+                    uploadedFile: [restructureTemp],
+                  },
+                },
+              }));
+              //to set the data in the local storage
+              setParams({
+                ...params,
+                ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {
+                  uploadUser: {
+                    ...params?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser,
+                    uploadedFile: [restructureTemp],
+                  },
+                },
+              });
+              setLoader(false);
+              if (
+                filteredConfig?.[0]?.form?.[0]?.isLast ||
+                !filteredConfig[0].form[0].body[0].skipAPICall ||
+                (filteredConfig[0].form[0].body[0].skipAPICall && id)
+              ) {
+                setShouldUpdate(true);
+              }
+              if (isChangeDates === "true" && currentKey == 6) {
+                setCurrentKey(16);
+              }
+
+              if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].mandatoryOnAPI) {
+                setCurrentKey(currentKey + 1);
+              }
+              if (isDraft === "true" && isSkip !== "false") {
+                updateUrlParams({ skip: "false" });
+              }
+              return;
+            } catch (error) {
+              if (error?.response?.data?.Errors?.[0]?.description) {
+                setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.description });
+                setLoader(false);
+                return;
+              } else {
+                setShowToast({ key: "error", label: `UPLOAD_MAPPING_ERROR` });
+                setLoader(false);
+                return;
+              }
+            }
+          },
+        }
+      );
+      return;
     } else {
       setTotalFormData((prevData) => ({
         ...prevData,
@@ -591,7 +884,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       setShouldUpdate(true);
     }
     if (isChangeDates === "true" && currentKey == 6) {
-      setCurrentKey(14);
+      setCurrentKey(16);
     }
 
     if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].mandatoryOnAPI) {
@@ -613,7 +906,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     const key = parseInt(filteredSteps[0].key);
     const name = filteredSteps[0].name;
     if (step === 6 && Object.keys(totalFormData).includes("HCM_CAMPAIGN_UPLOAD_USER_DATA")) {
-      setCurrentKey(14);
+      setCurrentKey(16);
       setCurrentStep(5);
     } else if (step === 0 && totalFormData["HCM_CAMPAIGN_NAME"] && totalFormData["HCM_CAMPAIGN_TYPE"] && totalFormData["HCM_CAMPAIGN_DATE"]) {
       setCurrentKey(4);
@@ -629,7 +922,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
 
   useEffect(() => {
     const isMicroplanScreen = source === "microplan";
-    const urlKey=currentKey;
+    const urlKey = currentKey;
     findHighestStepCount({ totalFormData, campaignConfig, isDraft, setActive, isMicroplanScreen, urlKey });
   }, [totalFormData, campaignConfig]);
 
@@ -675,11 +968,11 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   };
 
   if (isPreview === "true" && !draftData) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
 
   if (isDraft === "true" && !draftData) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
 
   function onActionSelect(action) {
@@ -692,31 +985,36 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
           data: draftData,
         });
         break;
-        case "HCM_CONFIGURE_APP":
-          history.push(`/${window.contextPath}/employee/campaign/checklist/search?name=${draftData?.campaignName}&campaignId=${draftData?.id}&projectType=${draftData?.projectType}`, {
+      case "HCM_CONFIGURE_APP":
+        history.push(
+          `/${window.contextPath}/employee/campaign/checklist/search?name=${draftData?.campaignName}&campaignId=${draftData?.id}&projectType=${draftData?.projectType}`,
+          {
             name: draftData?.campaignName,
             projectId: draftData?.projectId,
             data: draftData,
-          });
-          break;
+          }
+        );
+        break;
       case "HCM_UPDATE_CAMPAIGN":
-        history.push(`/${window.contextPath}/employee/campaign/update-campaign?key=1&parentId=${draftData?.id}&campaignName=${draftData?.campaignName}`, {
-          name: draftData?.campaignName,
-          projectId: draftData?.projectId,
-          data: draftData,
-        });
+        history.push(
+          `/${window.contextPath}/employee/campaign/update-campaign?key=1&parentId=${draftData?.id}&campaignName=${draftData?.campaignName}`,
+          {
+            name: draftData?.campaignName,
+            projectId: draftData?.projectId,
+            data: draftData,
+          }
+        );
         break;
       default:
         break;
     }
-
   }
 
   const actionbarOptions = [
-    {code:"HCM_UPDATE_DATES",name:"CS_ACTION_HCM_UPDATE_DATES"},
-    {code:"HCM_CONFIGURE_APP",name:"CS_ACTION_HCM_CONFIGURE_APP"},
-    {code:"HCM_UPDATE_CAMPAIGN",name:"CS_ACTION_HCM_UPDATE_CAMPAIGN"}
-  ]
+    { code: "HCM_UPDATE_DATES", name: "CS_ACTION_HCM_UPDATE_DATES" },
+    { code: "HCM_CONFIGURE_APP", name: "CS_ACTION_HCM_CONFIGURE_APP" },
+    { code: "HCM_UPDATE_CAMPAIGN", name: "CS_ACTION_HCM_UPDATE_CAMPAIGN" },
+  ];
 
   const onActionClick = () => {
     history.push(`/${window?.contextPath}/employee/campaign/my-campaign`);
@@ -724,19 +1022,14 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
 
   return (
     <React.Fragment>
+      {loader && <Loader page={true} variant={"PageLoader"} loaderText={t("PLEASE_WAIT_WHILE_UPDATING")}/> }
       {noAction !== "false" && (
         <Stepper
-          customSteps={[
-            "HCM_CAMPAIGN_SETUP_DETAILS",
-            "HCM_BOUNDARY_DETAILS",
-            "HCM_DELIVERY_DETAILS",
-            "HCM_UPLOAD_DATA",
-            "HCM_REVIEW_DETAILS",
-          ]}
+          customSteps={["HCM_CAMPAIGN_SETUP_DETAILS", "HCM_BOUNDARY_DETAILS", "HCM_DELIVERY_DETAILS", "HCM_UPLOAD_DATA", "HCM_REVIEW_DETAILS"]}
           currentStep={currentStep + 1}
           onStepClick={onStepClick}
           activeSteps={active}
-          // className={"campaign-flow-stepper"}
+        // className={"campaign-flow-stepper"}
         />
       )}
       <FormComposerV2
@@ -757,46 +1050,46 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         // noCardStyle={currentStep === 7 ? false : true}
         onSecondayActionClick={onSecondayActionClick}
         label={
-          isChangeDates === "true" && currentKey == 14
+          isChangeDates === "true" && currentKey == 16
             ? t("HCM_UPDATE_DATE")
             : isChangeDates === "true"
-            ? null
-            : noAction === "false"
-            ? null
-            : filteredConfig?.[0]?.form?.[0]?.isLast === true
-            ? t("HCM_SUBMIT")
-            : t("HCM_NEXT")
+              ? null
+              : noAction === "false"
+                ? null
+                : filteredConfig?.[0]?.form?.[0]?.isLast === true
+                  ? t("HCM_SUBMIT")
+                  : t("HCM_NEXT")
         }
       />
       {actionBar === "true" && (
-         <ActionBar
-         actionFields={[
-           <Button
-             type={"button"}
-             style={{ marginLeft: "2.5rem"  , width : "14rem"}}
-             label={t("HCM_BACK")}
-             variation={"secondary"}
-             t={t}
-             onClick={() => {
-              onActionClick();
-             }}
-           ></Button>,
-           <Button
-             type={"actionButton"}
-             options={actionbarOptions}
-             label={t("ES_COMMON_TAKE_ACTION")}
-             variation={"primary"}
-             style={{ width : "14rem"}}
-             optionsKey={"name"}
-             isSearchable={false}
-             t={t}
-             onOptionSelect={(option) => {
-                 onActionSelect(option?.code)
-             }}
-           ></Button>
-         ]}
-         className={"new-actionbar"}
-       />
+        <Footer
+          actionFields={[
+            <Button
+              type={"button"}
+              style={{ marginLeft: "2.5rem", width: "14rem" }}
+              label={t("HCM_BACK")}
+              variation={"secondary"}
+              t={t}
+              onClick={() => {
+                onActionClick();
+              }}
+            ></Button>,
+            <Button
+              type={"actionButton"}
+              options={actionbarOptions}
+              label={t("ES_COMMON_TAKE_ACTION")}
+              variation={"primary"}
+              style={{ width: "14rem" }}
+              optionsKey={"name"}
+              isSearchable={false}
+              t={t}
+              onOptionSelect={(option) => {
+                onActionSelect(option?.code);
+              }}
+            ></Button>,
+          ]}
+          className={"new-actionbar"}
+        />
       )}
       {showToast && (
         <Toast

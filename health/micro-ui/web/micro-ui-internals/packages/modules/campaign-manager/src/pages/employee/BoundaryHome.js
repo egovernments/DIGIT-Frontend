@@ -1,4 +1,4 @@
-import { Card, Loader } from "@egovernments/digit-ui-components";
+import { Card, AlertCard, Loader } from "@egovernments/digit-ui-components";
 import { Button, Toast } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -49,10 +49,10 @@ const BoundaryHome = () => {
   const [geoPodeData, setGeoPodeData] = useState(false);
   const history = useHistory();
   
-const type=searchParams.get("type")|| config?.type;
+  const type=searchParams.get("type")|| config?.type;
 
   const {isLoading,data,error}=Digit.Hooks.campaign.useBoundaryHome({ screenType: type,defaultHierarchyType:searchParams?.get("defaultHierarchyType"),hierarchyType:searchParams?.get("hierarchyType"),userName:Digit.UserService.getUser()?.info?.userName,tenantId });
-  if (isLoading) return <Loader />;
+  if (isLoading) return <Loader page={true} variant={"PageLoader"}/>;
 
   return (
     <React.Fragment>
@@ -79,6 +79,15 @@ const type=searchParams.get("type")|| config?.type;
         })}
         </div>
       </Card>
+      <AlertCard
+        label="Info"
+        variant="default"
+        style={{maxWidth:"200rem", marginTop:"1rem"}}
+        additionalElements={[<span style={{ color: "#505A5F", fontWeight:600 }}>{t(`CURRENT_HIERARCHY_TYPE_IS`)} {": "} {t(data?.hierarchyName)}</span>,
+          <span style={{ color: "#505A5F", fontWeight: 600 }}>{t(`HIERARCHY_CREATED_ON`)} {": "} {new Date(data?.boundaryData?.auditDetails?.createdTime).toLocaleDateString()}</span>,
+          <span style={{ color: "#505A5F", fontWeight: 600 }}>{t(`HIERARCHY_LAST_MODIFIED_ON`)} {": "} {new Date(data?.boundaryData?.auditDetails?.lastModifiedTime).toLocaleDateString()}</span>,
+        ]}
+      /> 
     </React.Fragment>
   );
 };

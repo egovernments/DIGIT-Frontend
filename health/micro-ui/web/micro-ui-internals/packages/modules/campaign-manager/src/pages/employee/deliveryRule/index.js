@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useReducer, useState } from "react";
 import MultiTab from "./MultiTabcontext";
-import { Loader } from "@egovernments/digit-ui-react-components";
+import { Loader } from "@egovernments/digit-ui-components";
 // import { deliveryConfig } from "../../../configs/deliveryConfig";
 import getDeliveryConfig from "../../../utils/getDeliveryConfig";
 
@@ -50,62 +50,7 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
           deliveryIndex: `${subTabIndex + 1}`,
           active: subTabIndex === 0 ? true : false,
           deliveryRules:
-            filteredDeliveryConfig?.projectType === "LLIN-mz"
-              ? filteredDeliveryConfig?.deliveryConfig?.map((item, index) => {
-                  return {
-                    ruleKey: index + 1,
-                    delivery: {},
-                    attributes: item?.attributeConfig
-                      ? item?.attributeConfig?.map((i, c) => {
-                          if (i?.operatorValue === "IN_BETWEEN") {
-                            return {
-                              key: c + 1,
-                              attribute: { code: i?.attrValue },
-                              operator: { code: i?.operatorValue },
-                              toValue: i?.fromValue,
-                              fromValue: i?.toValue,
-                            };
-                          }
-                          return {
-                            key: c + 1,
-                            attribute: { code: i?.attrValue },
-                            operator: { code: i?.operatorValue },
-                            value: i?.value,
-                          };
-                        })
-                      : [{ key: 1, attribute: null, operator: null, value: "" }],
-                    // products: [],
-                    products: item?.productConfig
-                      ? item?.productConfig?.map((i, c) => ({
-                          ...i,
-                        }))
-                      : [],
-                  };
-                })
-              : filteredDeliveryConfig?.projectType === "IRS-mz"
-              ? filteredDeliveryConfig?.deliveryConfig?.map((item, index) => {
-                  return {
-                    ruleKey: index + 1,
-                    delivery: {},
-                    attributes: item?.attributeConfig
-                      ? item?.attributeConfig?.map((i, c) => {
-                          return {
-                            key: c + 1,
-                            attribute: { code: i?.attrValue },
-                            operator: { code: i?.operatorValue },
-                            value: i?.value,
-                          };
-                        })
-                      : [{ key: 1, attribute: null, operator: null, value: "" }],
-                    // products: [],
-                    products: item?.productConfig
-                      ? item?.productConfig?.map((i, c) => ({
-                          ...i,
-                        }))
-                      : [],
-                  };
-                })
-              : filteredDeliveryConfig && filteredDeliveryConfig?.deliveryConfig?.[subTabIndex]
+            filteredDeliveryConfig && filteredDeliveryConfig?.deliveryConfig?.[subTabIndex]
               ? filteredDeliveryConfig?.deliveryConfig?.[subTabIndex]?.conditionConfig?.map((item, index) => {
                   if (item) {
                     return {
@@ -160,9 +105,7 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
                             operator: { code: i?.operatorValue },
                             value: i?.value,
                           }))
-                        : // : filteredDeliveryConfig?.projectType === "LLIN-mz"
-                          // ? filteredDeliveryConfig?.attributeConfig?.map((i, c) => ({ key: c + 1, attribute: i.attrValue, operator: null, value: "" }))
-                          [{ key: 1, attribute: null, operator: null, value: "" }],
+                        : [{ key: 1, attribute: null, operator: null, value: "" }],
                     products: [],
                   },
                 ],
@@ -196,39 +139,7 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
             deliveryIndex: `${subTabIndex + 1}`,
             active: subTabIndex === 0,
             deliveryRules:
-              filteredDeliveryConfig?.projectType === "LLIN-mz"
-                ? filteredDeliveryConfig?.deliveryConfig?.map((item, index) => {
-                    return {
-                      ruleKey: index + 1,
-                      delivery: {},
-                      attributes: item?.attributeConfig
-                        ? item?.attributeConfig?.map((i, c) => {
-                            if (i?.operatorValue === "IN_BETWEEN") {
-                              return {
-                                key: c + 1,
-                                attribute: { code: i?.attrValue },
-                                operator: { code: i?.operatorValue },
-                                toValue: i?.fromValue,
-                                fromValue: i?.toValue,
-                              };
-                            }
-                            return {
-                              key: c + 1,
-                              attribute: { code: i?.attrValue },
-                              operator: { code: i?.operatorValue },
-                              value: i?.value,
-                            };
-                          })
-                        : [{ key: 1, attribute: null, operator: null, value: "" }],
-                      // products: [],
-                      products: item?.productConfig
-                        ? item?.productConfig?.map((i, c) => ({
-                            ...i,
-                          }))
-                        : [],
-                    };
-                  })
-                : filteredDeliveryConfig && filteredDeliveryConfig?.deliveryConfig?.[subTabIndex]?.conditionConfig
+              filteredDeliveryConfig && filteredDeliveryConfig?.deliveryConfig?.[subTabIndex]?.conditionConfig
                 ? filteredDeliveryConfig?.deliveryConfig?.[subTabIndex]?.conditionConfig?.map((item, index) => {
                     if (item) {
                       return {
@@ -277,30 +188,13 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
                       delivery: {},
                       deliveryType: null,
                       attributes:
-                        // filteredDeliveryConfig?.projectType === "MR-DN"
-                        //   ? filteredDeliveryConfig?.attributeConfig?.map((i, c) => ({
-                        //       key: c + 1,
-                        //       attribute: { code: i?.attrValue },
-                        //       operator: { code: i?.operatorValue },
-                        //       value: i?.value,
-                        //     }))
-                        //   : filteredDeliveryConfig?.projectType === "LLIN-mz"
-                        //   ? filteredDeliveryConfig?.attributeConfig?.map((i, c) => ({
-                        //       key: c + 1,
-                        //       attribute: i.attrValue,
-                        //       operator: null,
-                        //       value: "",
-                        //     }))
-                        // :
                         [{ key: 1, attribute: null, operator: null, value: "" }],
-                      // products: [],
                       products: [],
                     },
                   ],
           })),
         });
       }
-      // return temp;
     }
     // if delivery number decrease
 
@@ -318,39 +212,7 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
             deliveryIndex: newIndex,
             active: false,
             deliveryRules:
-              filteredDeliveryConfig?.projectType === "LLIN-mz"
-                ? filteredDeliveryConfig?.deliveryConfig?.map((item, index) => {
-                    return {
-                      ruleKey: index + 1,
-                      delivery: {},
-                      attributes: item?.attributeConfig
-                        ? item?.attributeConfig?.map((i, c) => {
-                            if (i?.operatorValue === "IN_BETWEEN") {
-                              return {
-                                key: c + 1,
-                                attribute: { code: i?.attrValue },
-                                operator: { code: i?.operatorValue },
-                                toValue: i?.fromValue,
-                                fromValue: i?.toValue,
-                              };
-                            }
-                            return {
-                              key: c + 1,
-                              attribute: { code: i?.attrValue },
-                              operator: { code: i?.operatorValue },
-                              value: i?.value,
-                            };
-                          })
-                        : [{ key: 1, attribute: null, operator: null, value: "" }],
-                      // products: [],
-                      products: item?.productConfig
-                        ? item?.productConfig?.map((i, c) => ({
-                            ...i,
-                          }))
-                        : [],
-                    };
-                  })
-                : [
+              [
                     {
                       ruleKey: 1,
                       delivery: {},
@@ -537,7 +399,7 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
   });
 
   if (deliveryConfigLoading) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
   return (
     <CycleContext.Provider

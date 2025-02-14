@@ -11,9 +11,6 @@ import { initLibraries } from "@egovernments/digit-ui-libraries";
 import { DigitUI } from "@egovernments/digit-ui-module-core";
 // import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 import { UICustomizations } from "./Customisations/UICustomizations";
-import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
-import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
-import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
 import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
@@ -56,9 +53,6 @@ const initDigitUI = () => {
       commonUiConfig: UICustomizations,
     };
     // initHRMSComponents();
-    initUtilitiesComponents();
-    initWorkbenchComponents();
-    initWorkbenchHCMComponents();
     initCampaignComponents();
   } catch (error) {
     console.error('Failed to initialize DigitUI:', error);
@@ -110,11 +104,12 @@ if (initializationError) {
     }
   return (
     <DigitUI
-      stateCode={stateCode}
-      enabledModules={enabledModules}
-      moduleReducers={moduleReducers}
-      defaultLanding="employee"
-    />
+    stateCode={stateCode}
+    enabledModules={enabledModules}
+    moduleReducers={moduleReducers}
+    defaultLanding="employee"
+    allowedUserTypes={["employee"]}
+  />
   );
 }
 

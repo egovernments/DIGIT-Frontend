@@ -5,7 +5,7 @@ import { Card, Modal, CardText } from "@egovernments/digit-ui-react-components";
 import BulkUpload from "./BulkUpload";
 import Ajv from "ajv";
 import XLSX from "xlsx";
-import { InfoCard, PopUp, Toast, Button, DownloadIcon, Stepper, TextBlock ,Tag } from "@egovernments/digit-ui-components";
+import { AlertCard, PopUp, Toast, Button ,Loader} from "@egovernments/digit-ui-components";
 import { downloadExcelWithCustomName } from "../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
@@ -30,6 +30,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const [executionCount, setExecutionCount] = useState(0);
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [notValid, setNotValid] = useState(0);
   const [apiError, setApiError] = useState(null);
   const [isValidation, setIsValidation] = useState(false);
   const [fileName, setFileName] = useState(null);
@@ -39,7 +40,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const id = searchParams.get("id");
   const parentId = searchParams.get("parentId");
   const [showExitWarning, setShowExitWarning] = useState(false);
-  const campaignName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName || searchParams.get("campaignName") ;
+  const campaignName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName || searchParams.get("campaignName");
   const { data: Schemas, isLoading: isThisLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
@@ -48,11 +49,19 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.adminSchema` }
   );
 
-  const { data: readMe } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "ReadMeConfig" }] 
-    ,{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.ReadMeConfig` }
+  const { data: readMe } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    CONSOLE_MDMS_MODULENAME,
+    [{ name: "ReadMeConfig" }],
+    { select: (MdmsRes) => MdmsRes },
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.ReadMeConfig` }
   );
-  const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "baseTimeout" }] ,
-    {select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.baseTimeout` }
+  const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    CONSOLE_MDMS_MODULENAME,
+    [{ name: "baseTimeout" }],
+    { select: (MdmsRes) => MdmsRes },
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.baseTimeout` }
   );
   const [sheetHeaders, setSheetHeaders] = useState({});
   const [translatedSchema, setTranslatedSchema] = useState({});
@@ -66,9 +75,9 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const totalData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
   const [convertedSchema, setConvertedSchema] = useState({});
   const [loader, setLoader] = useState(false);
-  const [currentStep , setCurrentStep] = useState(1);
-  const [projectType , setprojectType] = useState(props?.props?.projectType)
-  const baseKey = 10; 
+  const [currentStep, setCurrentStep] = useState(1);
+  const [projectType, setprojectType] = useState(props?.props?.projectType);
+  const baseKey = 10;
   // const projectType = props?.props?.projectType;
 
   useEffect(() => {
@@ -78,11 +87,11 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         e.returnValue = ""; // Required for most browsers
       }
     };
-  
+
     if (showExitWarning) {
       window.addEventListener("beforeunload", handleBeforeUnload);
     }
-  
+
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
@@ -92,7 +101,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     // User performs an action that completes their workflow
     setShowExitWarning(false);
   };
-  
 
   function updateUrlParams(params) {
     const url = new URL(window.location.href);
@@ -102,15 +110,13 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     window.history.replaceState({}, "", url);
   }
 
-  useEffect(() =>{
+  useEffect(() => {
     setKey(currentKey);
-    setCurrentStep(currentKey - baseKey + 1);
-  }, [currentKey])
+  }, [currentKey]);
 
-  useEffect(() =>{
+  useEffect(() => {
     setprojectType(props?.props?.projectType);
-  }, [props?.props?.projectType])
-
+  }, [props?.props?.projectType]);
 
   useEffect(() => {
     if (type === "facilityWithBoundary") {
@@ -157,21 +163,22 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   };
 
   var translateReadMeInfo = (schema) => {
-    const translatedSchema = schema.map((item) => {
-      return {
-        header: t(item.header),
-        isHeaderBold: item.isHeaderBold,
-        inSheet: item.inSheet,
-        inUiInfo: item.inUiInfo,
-        descriptions: item.descriptions.map((desc) => {
-          return {
-            text: t(desc.text),
-            isStepRequired: desc.isStepRequired,
-            isBold: desc.isBold,
-          };
-        }),
-      };
-    });
+    const translatedSchema =
+      schema?.map((item) => {
+        return {
+          header: t(item.header),
+          isHeaderBold: item.isHeaderBold,
+          inSheet: item.inSheet,
+          inUiInfo: item.inUiInfo,
+          descriptions: item.descriptions.map((desc) => {
+            return {
+              text: t(desc.text),
+              isStepRequired: desc.isStepRequired,
+              isBold: desc.isBold,
+            };
+          }),
+        };
+      }) || [];
     return translatedSchema;
   };
 
@@ -200,7 +207,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     var required = [];
     var columns = [];
     for (const propType of ["enumProperties", "numberProperties", "stringProperties"]) {
-      if (convertData?.properties[propType] && Array.isArray(convertData?.properties[propType]) && convertData?.properties[propType]?.length > 0) {
+      if (convertData?.properties?.[propType] && Array.isArray(convertData?.properties?.[propType]) && convertData?.properties?.[propType]?.length > 0) {
         for (const property of convertData?.properties[propType]) {
           properties[property?.name] = {
             ...property,
@@ -235,8 +242,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       );
       const boundary = await convertIntoSchema(
         Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter(
-          (item) => item.title === "boundaryWithTarget" &&
-           item.campaignType === (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)
+          (item) => item.title === "boundaryWithTarget" && item.campaignType === (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)
         )?.[0]
       );
       const user = await convertIntoSchema(
@@ -259,15 +265,13 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       const newUserSchema = await translateSchema(convertedSchema?.userWithBoundary);
 
       const filterByUpdateFlag = (schemaProperties) => {
-        return Object.keys(schemaProperties).filter(
-          (key) => {
-            // if (parentId) {
-            //   return schemaProperties[key].isUpdate === true;
-            // }
-            return schemaProperties[key].isUpdate !== true;
-          }
-        );
-    };
+        return Object.keys(schemaProperties).filter((key) => {
+          // if (parentId) {
+          //   return schemaProperties[key].isUpdate === true;
+          // }
+          return schemaProperties[key].isUpdate !== true;
+        });
+      };
 
       const headers = {
         boundary: filterByUpdateFlag(newBoundarySchema?.properties),
@@ -291,7 +295,9 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       const newReadMeFacility = await translateReadMeInfo(
         readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
       );
-      const newReadMeUser = await translateReadMeInfo(readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts);
+      const newReadMeUser = await translateReadMeInfo(
+        readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
+      );
       const newReadMeboundary = await translateReadMeInfo(
         readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
       );
@@ -328,7 +334,9 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         setDownloadError(false);
         setIsError(false);
         setIsSuccess(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.isSuccess || null);
-        setShowPopUp(!downloadedTemplates[type] && !props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile.length);
+        setShowPopUp(
+          !downloadedTemplates[type] && !props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile.length
+        );
         break;
       case "facilityWithBoundary":
         setUploadedFile(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile || []);
@@ -337,7 +345,9 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         setDownloadError(false);
         setIsError(false);
         setIsSuccess(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.isSuccess || null);
-        setShowPopUp(!downloadedTemplates[type] && !props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile.length);
+        setShowPopUp(
+          !downloadedTemplates[type] && !props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile.length
+        );
         break;
       default:
         setUploadedFile(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile || []);
@@ -604,8 +614,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       for (const row of jsonData) {
         for (let j = boundaryCodeIndex + 1; j < headersToValidate.length; j++) {
           const value = row[headersToValidate[j]];
-          if(!requiredProperties.includes(headersToValidate[j])) continue;
-          
+          if (!requiredProperties.includes(headersToValidate[j])) continue;
+
           if (value === undefined || value === null) {
             targetError.push(
               `${t("HCM_DATA_AT_ROW")} ${jsonData.indexOf(row) + 2} ${t("HCM_IN_COLUMN")} "${headersToValidate[j]}" ${t(
@@ -698,17 +708,17 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           });
 
           jsonData = jsonData.filter((element) => element !== undefined);
-          // if (type === "boundary") {
-          //   if (workbook?.SheetNames.filter(sheetName => sheetName !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")).length == 0) {
-          //     const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
-          //     setErrorsType((prevErrors) => ({
-          //       ...prevErrors,
-          //       [type]: errorMessage,
-          //     }));
-          //     setIsError(true);
-          //     return;
-          //   }
-          // } else
+          if (type === "boundary") {
+            if (workbook?.SheetNames.filter(sheetName => sheetName !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")).length == 0) {
+              const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
+              setErrorsType((prevErrors) => ({
+                ...prevErrors,
+                [type]: errorMessage,
+              }));
+              setIsError(true);
+              return;
+            }
+          } else
           if (type === "facilityWithBoundary") {
             if (workbook?.SheetNames.filter((sheetName) => sheetName == t("HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES")).length == 0) {
               const errorMessage = t("HCM_INVALID_FACILITY_SHEET");
@@ -725,15 +735,15 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               if (activeColumnName && uniqueIdentifierColumnName) {
                 jsonData = jsonData.filter((item) => item[activeColumnName] !== "Inactive" || !item[uniqueIdentifierColumnName]);
               }
-              if (jsonData.length == 0) {
-                const errorMessage = t("HCM_FACILITY_USAGE_VALIDATION");
-                setErrorsType((prevErrors) => ({
-                  ...prevErrors,
-                  [type]: errorMessage,
-                }));
-                setIsError(true);
-                return;
-              }
+              // if (jsonData.length == 0) {
+              //   const errorMessage = t("HCM_FACILITY_USAGE_VALIDATION");
+              //   setErrorsType((prevErrors) => ({
+              //     ...prevErrors,
+              //     [type]: errorMessage,
+              //   }));
+              //   setIsError(true);
+              //   return;
+              // }
             }
           } else if (type === "userWithBoundary") {
             if (workbook?.SheetNames.filter((sheetName) => sheetName == t("HCM_ADMIN_CONSOLE_USER_LIST")).length == 0) {
@@ -770,15 +780,15 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             }
           }
 
-          if (jsonData.length == 0) {
-            const errorMessage = t("HCM_EMPTY_SHEET");
-            setErrorsType((prevErrors) => ({
-              ...prevErrors,
-              [type]: errorMessage,
-            }));
-            setIsError(true);
-            return;
-          }
+          // if (jsonData.length == 0) {
+          //   const errorMessage = t("HCM_EMPTY_SHEET");
+          //   setErrorsType((prevErrors) => ({
+          //     ...prevErrors,
+          //     [type]: errorMessage,
+          //   }));
+          //   setIsError(true);
+          //   return;
+          // }
           if (type !== "boundary") {
             if (validateData(jsonData, SheetNames)) {
               resolve(true);
@@ -787,7 +797,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             }
           }
         } catch (error) {
-          console.log(error);
           reject("HCM_FILE_UNAVAILABLE");
         }
       };
@@ -795,6 +804,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       reader.readAsArrayBuffer(selectedFile);
     });
   };
+  
 
   const onBulkUploadSubmit = async (file) => {
     if (file.length > 1) {
@@ -844,10 +854,21 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       downloadExcelWithCustomName({ fileStoreId: file?.filestoreId, customName: fileNameWithoutExtension });
     }
   };
+  useEffect(() =>{
+    if(totalData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.resourceId == "not-validated" ||
+      totalData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]?.resourceId == "not-validated" || 
+      totalData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.resourceId == "not-validated"
+    ){
+      setNotValid(1);
+  }
+  },[totalData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.resourceId ,
+  totalData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]?.resourceId,
+  totalData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.resourceId
+])
+
   useEffect(() => {
     const fetchData = async () => {
-      if (!errorsType[type] && uploadedFile?.length > 0 && !isSuccess) {
-        // setShowToast({ key: "info", label: t("HCM_VALIDATION_IN_PROGRESS") });
+      if ((!errorsType[type] && uploadedFile?.length > 0 && !isSuccess) || notValid==1) {
         setIsValidation(true);
         setIsError(true);
         setLoader(true);
@@ -868,7 +889,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             setShowToast({ key: "error", label: errorMessage, transitionTime: 5000000 });
             setIsError(true);
             setApiError(errorMessage);
-
+            setNotValid(2);
             return;
           }
           if (temp?.status === "completed") {
@@ -966,7 +987,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     };
 
     fetchData();
-  }, [errorsType]);
+  }, [errorsType , notValid]);
 
   const Template = {
     url: "/project-factory/v1/data/_download",
@@ -983,7 +1004,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const [downloadedTemplates, setDownloadedTemplates] = useState({
     boundary: false,
     facilityWithBoundary: false,
-    user: false
+    user: false,
   });
 
   const downloadTemplate = async () => {
@@ -1028,10 +1049,11 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           if (fileData && fileData?.[0]?.url) {
             setDownloadError(false);
             if (fileData?.[0]?.id) {
-              downloadExcelWithCustomName({ fileStoreId: fileData?.[0]?.id, customName: fileData?.[0]?.filename });
-              setDownloadedTemplates(prev => ({
+              const customFileName = parentId ? `${campaignName}_${t("HCM_FILLED")}_${fileData[0].filename}` : `${campaignName}_${fileData[0].filename}`;
+              downloadExcelWithCustomName({ fileStoreId: fileData?.[0]?.id, customName: customFileName });
+              setDownloadedTemplates((prev) => ({
                 ...prev,
-                [type]: true
+                [type]: true,
               }));
             }
           } else {
@@ -1044,8 +1066,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           if (errorCode == "NativeIoException") {
             setDownloadError(true);
             setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-          }
-          else {
+          } else {
             setDownloadError(true);
             setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
           }
@@ -1053,7 +1074,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       }
     );
   };
-    // Modify the condition for showing the popup
+  // Modify the condition for showing the popup
   useEffect(() => {
     // Only show popup if the template for this type hasn't been downloaded yet
     if (downloadedTemplates[type]) {
@@ -1080,20 +1101,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     window.dispatchEvent(new Event("checking"));
   }, [key]);
 
-  const onStepClick = (currentStep) => {
-    setCurrentStep(currentStep+1);
-    if(currentStep === 0){
-      setKey(10);
-    }
-    else if(currentStep === 1){
-      setKey(11);
-    }
-    else if(currentStep === 3){
-      setKey(13);
-    }
-    else setKey(12);
-  };
-
   const getDownloadLabel = () => {
     if (parentId) {
       if (type === "boundary") {
@@ -1111,97 +1118,82 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   return (
     <>
       <div className="container-full">
-        {!parentId && (
-      <div className="card-container">
-        <Card className="card-header-timeline">
-        <TextBlock
-            subHeader={t("HCM_UPLOAD_DATA")}
-            subHeaderClassName={"stepper-subheader"}
-            wrapperClassName={"stepper-wrapper"}
-          />
-        </Card>
-        <Card className="stepper-card">
-          <Stepper
-            customSteps={["HCM_UPLOAD_FACILITY", "HCM_UPLOAD_USER" , "HCM_UPLOAD_TARGET" , "HCM_SUMMARY"]}
-            currentStep={currentStep}
-            onStepClick={onStepClick}
-            direction={"vertical"}
-          />
-        </Card>
-        </div>
-        )}
-        {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
-
+        {loader && 
+        <Loader page={true} variant={"PageLoader"} loaderText={t("CAMPAIGN_VALIDATION_INPROGRESS")}/>}
         <div className={parentId ? "card-container2" : "card-container1"}>
-        <TagComponent campaignName={campaignName} /> 
-        <Card>
-          <div className="campaign-bulk-upload">
-            <Header className="digit-form-composer-sub-header">
-              {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
-            </Header>
-            <Button
-              label={getDownloadLabel()}
-              variation="secondary"
-              icon={"FileDownload"}
-              type="button"
-              className="campaign-download-template-btn"
-              onClick={downloadTemplate}
-            />
-          </div>
-          {uploadedFile.length === 0 && (
-            <div className="info-text">
-              {type === "boundary" ? t("HCM_BOUNDARY_MESSAGE") : type === "facilityWithBoundary" ? t("HCM_FACILITY_MESSAGE") : t("HCM_USER_MESSAGE")}
+        <TagComponent campaignName={campaignName} />  
+          <Card>
+            <div className="campaign-bulk-upload">
+              <Header className="digit-form-composer-sub-header">
+                {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
+              </Header>
+              <Button
+                label={getDownloadLabel()}
+                variation="secondary"
+                icon={"FileDownload"}
+                type="button"
+                className="campaign-download-template-btn"
+                onClick={downloadTemplate}
+              />
             </div>
-          )}
-          <BulkUpload onSubmit={onBulkUploadSubmit} fileData={uploadedFile} onFileDelete={onFileDelete} onFileDownload={onFileDownload} />
-          {showInfoCard && (
-            <InfoCard
-              populators={{
-                name: "infocard",
-              }}
-              variant="error"
-              style={{ marginLeft: "0rem", maxWidth: "100%" }}
-              label={t("HCM_ERROR")}
-              additionalElements={[
-                <React.Fragment key={type}>
-                  {errorsType[type] && (
-                    <React.Fragment>
-                      {errorsType[type]
-                        .split(",")
-                        .slice(0, 50)
-                        .map((error, index) => (
-                          <React.Fragment key={index}>
-                            {index > 0 && <br />}
-                            {error.trim()}
-                          </React.Fragment>
-                        ))}
-                    </React.Fragment>
-                  )}
-                </React.Fragment>,
-              ]}
-            />
-          )}
-        </Card>
-        <InfoCard
-          populators={{
-            name: "infocard",
-          }}
-          variant="default"
-          style={{ margin: "0rem", maxWidth: "100%" }}
-          additionalElements={readMeInfo[type]?.map((info, index) => (
-            <div key={index} style={{ display: "flex", flexDirection: "column" }}>
-              <h2>{info?.header}</h2>
-              <ul style={{ paddingLeft: 0 , marginBottom: "0px" }}>
-                {info?.descriptions.map((desc, i) => (
-                  <li key={i} className="info-points">
-                    {desc.isBold ? <h2>{desc.text}</h2> : <p>{desc.text}</p>}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-          label={"Info"}
-        />
+            {uploadedFile.length === 0 && (
+              <div className="info-text">
+                {type === "boundary"
+                  ? t("HCM_BOUNDARY_MESSAGE")
+                  : type === "facilityWithBoundary"
+                  ? t("HCM_FACILITY_MESSAGE")
+                  : t("HCM_USER_MESSAGE")}
+              </div>
+            )}
+            <BulkUpload onSubmit={onBulkUploadSubmit} fileData={uploadedFile} onFileDelete={onFileDelete} onFileDownload={onFileDownload} />
+            {showInfoCard && (
+              <AlertCard
+                populators={{
+                  name: "infocard",
+                }}
+                variant="error"
+                style={{ marginLeft: "0rem", maxWidth: "100%" }}
+                label={t("HCM_ERROR")}
+                additionalElements={[
+                  <React.Fragment key={type}>
+                    {errorsType[type] && (
+                      <React.Fragment>
+                        {errorsType[type]
+                          .split(",")
+                          .slice(0, 50)
+                          .map((error, index) => (
+                            <React.Fragment key={index}>
+                              {index > 0 && <br />}
+                              {error.trim()}
+                            </React.Fragment>
+                          ))}
+                      </React.Fragment>
+                    )}
+                  </React.Fragment>,
+                ]}
+              />
+            )}
+          </Card>
+          <AlertCard
+            populators={{
+              name: "infocard",
+            }}
+            variant="default"
+            style={{ margin: "0rem", maxWidth: "100%" }}
+            additionalElements={readMeInfo[type]?.map((info, index) => (
+              <div key={index} style={{ display: "flex", flexDirection: "column" }}>
+                <h2>{info?.header}</h2>
+                <ul style={{ paddingLeft: 0, marginBottom: "0px" }}>
+                  {info?.descriptions.map((desc, i) => (
+                    <li key={i} className="info-points">
+                      {desc.isBold ? <h2>{desc.text}</h2> : <p>{desc.text}</p>}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+            label={"Info"}
+          />
         </div>
         {showPopUp && (
           <PopUp

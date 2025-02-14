@@ -69,7 +69,7 @@ jobs:
 
           # Validate the PR title length
           if [[ ${#pr_title} -lt $MIN_TITLE_LENGTH ]]; then
-            echo "PR title '$pr_title' is too short. It must be at least $MIN_TITLE_LENGTH characters long."
+            echo "PR title '$pr_title' is too short. It must be at least $MIN_TITLE_LENGTH characters long, excluding the default pattern or ticket number."
             exit 1
           fi
       

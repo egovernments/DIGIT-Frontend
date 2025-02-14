@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect,useRef } from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { useHistory } from "react-router-dom";
 import PopInboxTable from "../../components/PopInboxTable";
@@ -55,6 +55,8 @@ const PopInbox = () => {
   const hrms_context_path = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || 'health-hrms';
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
+  const tableRef = useRef(null);
+  const [tableHeight, setTableHeight] = useState(33);
 
   // Check if the user has the 'rootapprover' role
   const isRootApprover = userRoles?.includes("ROOT_POPULATION_DATA_APPROVER");
@@ -360,6 +362,7 @@ const PopInbox = () => {
 
   const { isLoading, data, isFetching, refetch:refetchCensus } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
 
+
   // // Extract assignee IDs in order, including null values
   // useEffect(() => {
   //   if (data?.Census) {
@@ -645,6 +648,7 @@ const PopInbox = () => {
             onApplyFilters={onFilter}
             clearFilters={clearFilters}
             defaultValue={selectedFilter} 
+            tableHeight={tableHeight}
           ></InboxFilterWrapper>
 
           <div className={"pop-inbox-table-wrapper"}>
@@ -769,12 +773,15 @@ const PopInbox = () => {
                 )}
               </div>
             )}
-            {isLoading || isFetching ? <Loader /> : censusData.length === 0 ? <NoResultsFound style={{ height: selectedFilter?.status === "VALIDATED" ? "472px" : "408px" }} text={t(`HCM_MICROPLAN_NO_DATA_FOUND_FOR_CENSUS`)} /> : <PopInboxTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap}
+            {isLoading || isFetching ? <Loader /> : censusData.length === 0 ? <NoResultsFound style={{ height: selectedFilter?.status === "VALIDATED" ? "472px" : "408px" }} text={t(`HCM_MICROPLAN_NO_DATA_FOUND_FOR_CENSUS`)} /> : 
+            <div ref={tableRef}>
+              <PopInboxTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap}
               onSuccessEdit={(data) => {
                 setUpdatedCensus(data);
                 setShowComment(true); 
               }}
-              conditionalRowStyles={conditionalRowStyles} disabledAction={disabledAction} />}
+              conditionalRowStyles={conditionalRowStyles} disabledAction={disabledAction} />
+              </div>}
           </Card>
           {showComment && (
             <WorkflowCommentPopUp

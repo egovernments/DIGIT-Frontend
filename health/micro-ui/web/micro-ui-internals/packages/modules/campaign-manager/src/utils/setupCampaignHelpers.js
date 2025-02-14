@@ -188,29 +188,28 @@ export const cycleDataRemap=(data)=> {
     });
   
     const conditions = rule.attributes.map(attr => {
-      const attributeCode = projectType === "IRS-mz" 
-        ? "TYPE_OF_STRUCTURE" 
-        : projectType === "LLIN-mz" 
-        ? "memberCount" 
-        : attr?.attribute?.code;
+      const attributeCode = attr?.attribute?.code;
     
       if (attr?.operator?.code === "IN_BETWEEN") {
         // Round toValue and fromValue to the nearest integer
         const roundedToValue = Math.round(attr.toValue);
         const roundedFromValue = Math.round(attr.fromValue);
-        
+
+        // return `${roundedToValue} <= ${attr.attribute.code} < ${roundedFromValue}`;
         if (type === "create") {
           return `${roundedToValue}<=${attributeCode.toLowerCase()}and${attributeCode.toLowerCase()}<${roundedFromValue}`;
         } else {
           return `${roundedToValue} <= ${attr.attribute.code} < ${roundedFromValue}`;
         }
+        
       } else {
-        // Round attr.value to the nearest integer
-        const roundedValue = typeof attr.value === "number" ? Math.round(attr.value) : attr.value;
-        if (type === "create") {
-          return `${projectType === "LLIN-mz" ? attributeCode : attributeCode.toLowerCase()}${getOperatorSymbol(attr?.operator?.code)}${roundedValue}`;
-        } else {
+        if (typeof attr.value === "string" && /^\d+(\.\d+)?$/.test(attr.value)) {
+          // Round attr.value to the nearest integer
+          const roundedValue = Math.round(Number(attr.value));
           return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${roundedValue}`;
+        } else {
+          // Return the value as it is if it doesn't contain only numbers
+          return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${attr.value}`;
         }
       }
     });    
@@ -304,9 +303,13 @@ export const cycleDataRemap=(data)=> {
           cycleConfgureDate: draftData?.additionalDetails?.cycleData?.cycleConfgureDate
             ? draftData?.additionalDetails?.cycleData?.cycleConfgureDate
             : {
-                cycle: delivery?.map((obj) => obj?.cycleNumber)?.length > 0 ? Math.max(...delivery?.map((obj) => obj?.cycleNumber)) : 1,
-                deliveries: delivery?.map((obj) => obj?.deliveryNumber)?.length > 0 ? Math.max(...delivery?.map((obj) => obj?.deliveryNumber)) : 1,
-                refetch: true,
+              cycle: delivery?.length > 0
+              ? Math.max(...delivery.flatMap(d => d?.cycles?.map(cycle => cycle.id)))
+              : 1,
+              deliveries: delivery?.length > 0
+              ? Math.max(...delivery.flatMap(d => d?.cycles?.flatMap(cycle => cycle?.deliveries?.map(del => del.id))))
+              : 1,
+              refetch: true,
               },
           cycleData: draftData?.additionalDetails?.cycleData?.cycleData
             ? draftData?.additionalDetails?.cycleData?.cycleData
@@ -395,7 +398,7 @@ export const cycleDataRemap=(data)=> {
   export const draftFilterStep = (totalFormData,campaignConfig) => {
     const stepFind = (name) => {
       const step = campaignConfig?.[0]?.form.find((step) => step.name === name);
-      return step ? parseInt(step.stepCount, 14) : null;
+      return step ? parseInt(step.stepCount, 16) : null;
     };
     let v = [];
     if (totalFormData?.HCM_CAMPAIGN_NAME?.campaignName) v.push(stepFind("HCM_CAMPAIGN_NAME"));

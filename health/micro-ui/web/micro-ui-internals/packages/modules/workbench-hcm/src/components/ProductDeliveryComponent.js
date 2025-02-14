@@ -1,7 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Card, Header, Button, Loader } from "@egovernments/digit-ui-react-components";
+import { Card, Header, Button } from "@egovernments/digit-ui-react-components";
 import { data } from "../configs/ViewProjectConfig";
+import {  Loader} from "@egovernments/digit-ui-components";
+
+
 
 const ProductDeliveryComponent = (props) => {
     const { t } = useTranslation();
@@ -36,7 +39,7 @@ const ProductDeliveryComponent = (props) => {
 
 
     if (isLoading) {
-        return <Loader></Loader>;
+        return  <Loader page={true} variant={"PageLoader"}/>;
     }
 
     return (

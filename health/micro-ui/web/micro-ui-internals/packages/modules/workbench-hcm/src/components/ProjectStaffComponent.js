@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Header, Button, Loader, Toast, SVG } from "@egovernments/digit-ui-react-components";
+import { Header, Button, Loader,  SVG } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import ProjectStaffModal from "./ProjectStaffModal";
 import ConfirmationDialog from "./ConfirmationDialog";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
+import { Toast } from "@egovernments/digit-ui-components";
+
 const healthProjecturl = getProjectServiceUrl();
 const HRMS_CONTEXT_PATH = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || "egov-hrms";
 
@@ -257,7 +259,7 @@ const ProjectStaffComponent = (props) => {
   };
 
   if (isLoading && isUserSearchLoading) {
-    return <Loader></Loader>;
+    return  <Loader page={true} variant={"PageLoader"}/>;
   }
 
   return (
@@ -288,7 +290,7 @@ const ProjectStaffComponent = (props) => {
           />
         )}
 
-        {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
+        {showToast && <Toast label={showToast.label} type={showToast?.isError?"error":"success"}  onClose={() => setShowToast(null)}></Toast>}
 
         {mappedProjectStaff?.length > 0 ? (
           <table className="table reports-table sub-work-table">

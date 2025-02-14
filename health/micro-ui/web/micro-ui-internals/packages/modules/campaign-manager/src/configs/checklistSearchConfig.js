@@ -94,6 +94,11 @@
                 additionalCustomization: true
               },
               {
+                label: "CHECKLIST_LAST_UPDATE",
+                jsonpath: "auditDetails",
+                additionalCustomization: true
+              },
+              {
                 label: "HCM_CHECKLIST_ACTION",
                 jsonpath: "",
                 additionalCustomization: true

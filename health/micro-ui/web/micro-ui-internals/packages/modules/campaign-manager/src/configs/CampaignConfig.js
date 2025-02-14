@@ -1,4 +1,4 @@
-export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryErrors , hierarchyData) => {
+export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryErrors, hierarchyData) => {
   return [
     {
       form: [
@@ -95,7 +95,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
               customProps: {
                 module: "HCM",
                 sessionData: totalFormData,
-                summaryErrors: summaryErrors
+                summaryErrors: summaryErrors,
               },
               populators: {
                 name: "CampaignDetailsSummary",
@@ -115,7 +115,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
               isMandatory: false,
               key: "boundaryType",
               type: "component",
-              component : "SelectingBoundariesDuplicate",
+              component: "SelectingBoundariesDuplicate",
               // component: "SelectingBoundaries",
               withoutLabelFieldPair: true,
               withoutLabel: true,
@@ -124,7 +124,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
                 module: "HCM",
                 sessionData: totalFormData,
                 dataParams: dataParams,
-                hierarchyData: hierarchyData
+                hierarchyData: hierarchyData,
               },
               populators: {
                 name: "boundaryType",
@@ -150,7 +150,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
               customProps: {
                 module: "HCM",
                 sessionData: totalFormData,
-                summaryErrors: summaryErrors
+                summaryErrors: summaryErrors,
               },
               populators: {
                 name: "BoundarySummary",
@@ -228,7 +228,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
               customProps: {
                 module: "HCM",
                 sessionData: totalFormData,
-                summaryErrors: summaryErrors
+                summaryErrors: summaryErrors,
               },
               populators: {
                 name: "DeliveryDetailsSummary",
@@ -248,7 +248,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
               isMandatory: false,
               key: "uploadFacility",
               type: "component",
-              component: "UploadData",
+              component: "DataUploadWrapper",
               withoutLabel: true,
               withoutLabelFieldPair: true,
               disable: false,
@@ -267,13 +267,41 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
         {
           stepCount: "4",
           key: "11",
+          name: "HCM_CAMPAIGN_UPLOAD_FACILITY_DATA_MAPPING",
+          body: [
+            {
+              isMandatory: false,
+              key: "uploadFacilityMapping",
+              type: "component",
+              component: "DataUploadWrapper",
+              withoutLabel: true,
+              withoutLabelFieldPair: true,
+              disable: false,
+              customProps: {
+                module: "HCM",
+                dataParams: dataParams,
+                sessionData: totalFormData,
+                hierarchyData: hierarchyData,
+                type: "facilityWithBoundaryMapping",
+                validationType: "facilityWithBoundary"
+              },
+              populators: {
+                name: "uploadFacilityMapping",
+                required: true,
+              },
+            },
+          ],
+        },
+        {
+          stepCount: "4",
+          key: "12",
           name: "HCM_CAMPAIGN_UPLOAD_USER_DATA",
           body: [
             {
               isMandatory: false,
               key: "uploadUser",
               type: "component",
-              component: "UploadData",
+              component: "DataUploadWrapper",
               withoutLabel: true,
               withoutLabelFieldPair: true,
               disable: false,
@@ -291,14 +319,42 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
         },
         {
           stepCount: "4",
-          key: "12",
+          key: "13",
+          name: "HCM_CAMPAIGN_UPLOAD_USER_DATA_MAPPING",
+          body: [
+            {
+              isMandatory: false,
+              key: "uploadUserMapping",
+              type: "component",
+              component: "DataUploadWrapper",
+              withoutLabel: true,
+              withoutLabelFieldPair: true,
+              disable: false,
+              customProps: {
+                module: "HCM",
+                dataParams: dataParams,
+                sessionData: totalFormData,
+                hierarchyData: hierarchyData,
+                type: "userMapping",
+                validationType: "userWithBoundary"
+              },
+              populators: {
+                name: "uploadUserMapping",
+                required: true,
+              },
+            },
+          ],
+        },
+        {
+          stepCount: "4",
+          key: "14",
           name: "HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA",
           body: [
             {
               isMandatory: false,
               key: "uploadBoundary",
               type: "component",
-              component: "UploadData",
+              component: "DataUploadWrapper",
               withoutLabel: true,
               withoutLabelFieldPair: true,
               disable: false,
@@ -318,7 +374,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
         },
         {
           stepCount: "4",
-          key: "13",
+          key: "15",
           body: [
             {
               isMandatory: false,
@@ -331,7 +387,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
               customProps: {
                 module: "HCM",
                 sessionData: totalFormData,
-                summaryErrors: summaryErrors
+                summaryErrors: summaryErrors,
               },
               populators: {
                 name: "DataUploadSummary",
@@ -344,7 +400,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
         },
         {
           stepCount: "5",
-          key: "14",
+          key: "16",
           isLast: true,
           body: [
             {
@@ -358,7 +414,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
               customProps: {
                 module: "HCM",
                 sessionData: totalFormData,
-                summaryErrors: summaryErrors
+                summaryErrors: summaryErrors,
               },
               populators: {
                 name: "summary",
