@@ -3,7 +3,6 @@ All notable changes to this module will be documented in this file.
 
  
 ## 0.3.1 - 2025-2-11
- 
 ### Base Admin console web
  
   1. Boundary Assignment through UI for Users and Facilities
