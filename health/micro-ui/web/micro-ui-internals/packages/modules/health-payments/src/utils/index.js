@@ -115,6 +115,11 @@ export function formatTimestampToDate(timestamp) {
   // Return the formatted date string
   return `${day} ${month} ${year}`;
 }
+// pagination options for table
+export const getCustomPaginationOptions = (t) => ({
+  rowsPerPageText: t("HCM_AM_ROWS_PER_PAGE"),
+  rangeSeparatorText: t("HCM_AM_OF"),
+});
 
 
 
