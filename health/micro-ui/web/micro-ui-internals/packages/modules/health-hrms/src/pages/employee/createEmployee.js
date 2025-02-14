@@ -7,9 +7,10 @@ import { campaignAssignmentConfig } from "../../components/config/campaignAssign
 //import ActionModal from "../../components/Modal";
 import { HRMS_CONSTANTS } from "../../constants/constants";
 
-import { checkIfUserExist ,formPayloadToCreateUser} from "../../services/service";
+import { checkIfUserExist, formPayloadToCreateUser, editDefaultUserValue } from "../../services/service";
 
-const CreateEmployee = () => {
+const CreateEmployee = ({ editUser = false }) => {
+  const [editEmpolyee, setEditEmployee] = useState(null);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [canSubmit, setSubmitValve] = useState(false);
   const [mobileNumber, setMobileNumber] = useState(null);
@@ -26,6 +27,12 @@ const CreateEmployee = () => {
   const closeModal = () => {
     setShowModal(false);
   };
+  const { isLoadings, isError, error, data } = Digit.Hooks.hrms.useHRMSSearch({ codes: "A07497961" }, tenantId);
+  useEffect(() => {
+    if (!editUser && data?.Employees) {
+      setEditEmployee(editDefaultUserValue(data.Employees, tenantId));
+    }
+  }, [data]);
 
   const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(
     Digit.ULBService.getStateId(),
@@ -62,26 +69,6 @@ const CreateEmployee = () => {
       password === confirmPassword
     );
   };
-  // useEffect(() => {
-  //   if (
-  //     mobileNumber &&
-  //     (mobileNumber.length === 9 || mobileNumber.length === 10) &&
-  //     (mobileNumber.match(Digit.Utils.getPattern("MobileNo")) || mobileNumber.match(Digit.Utils.getPattern("MozMobileNo")))
-  //   ) {
-  //     setShowToast(null);
-  //     setPhonecheck(true);
-  //     // Digit.HRMSService.search(tenantId, null, { phone: mobileNumber }).then((result, err) => {
-  //     //   if (result.Employees.length > 0) {
-  //     //     setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_MOB" });
-  //     //     setPhonecheck(false);
-  //     //   } else {
-  //     //     setPhonecheck(true);
-  //     //   }
-  //     // });
-  //   } else {
-  //     setPhonecheck(true);
-  //   }
-  // }, [mobileNumber]);
 
   const onFormValueChange = (setValue = true, formData) => {
     if (formData?.SelectEmployeePhoneNumber?.mobileNumber) {
@@ -132,71 +119,22 @@ const CreateEmployee = () => {
       .catch((err) => console.log(err));
   };
 
+  const defaultValues = {
+    SelectEmployeeId: { code: "1234" },
+  };
+
   const onSubmit = async (data) => {
     setShowToast(null);
-    const mappedroles = [].concat.apply([], data?.RolesAssigned);
-    let createdAssignments = [
-      {
-        fromDate: new Date(data?.SelectDateofEmployment?.dateOfAppointment).getTime(),
-        toDate: undefined,
-        isCurrentAssignment: true,
-        department: data?.SelectEmployeeDepartment?.code || HRMS_CONSTANTS.DEFAULT_DEPARTMENT,
-        designation: data?.SelectEmployeeDesignation?.code || "undefined",
-      },
-    ];
-    let Employees = [
-      {
-        tenantId: tenantId,
-        employeeStatus: "EMPLOYED",
-        assignments: createdAssignments,
-        code: data?.SelectEmployeeId?.code,
-        dateOfAppointment: new Date(data?.SelectDateofEmployment?.dateOfAppointment).getTime(),
-        employeeType: data?.SelectEmployeeType?.code,
-        jurisdictions: data?.Jurisdictions,
-        user: {
-          mobileNumber: data?.SelectEmployeePhoneNumber?.mobileNumber?.startsWith(HRMS_CONSTANTS.INDIA_COUNTRY_CODE)
-            ? data?.SelectEmployeePhoneNumber?.mobileNumber?.substring(HRMS_CONSTANTS.INDIA_COUNTRY_CODE.length)
-            : (data?.SelectEmployeePhoneNumber?.mobileNumber?.startsWith(HRMS_CONSTANTS.MOZ_COUNTRY_CODE)
-                ? data?.SelectEmployeePhoneNumber?.mobileNumber?.substring(HRMS_CONSTANTS.MOZ_COUNTRY_CODE.length)
-                : data?.SelectEmployeePhoneNumber?.mobileNumber) || null,
-          name: data?.SelectEmployeeName?.employeeName,
-          correspondenceAddress: data?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress || null,
-          emailId: data?.SelectEmployeeEmailId?.emailId ? data?.SelectEmployeeEmailId?.emailId : null,
-          gender: data?.SelectEmployeeGender?.gender.code,
-          dob: new Date(data?.SelectDateofBirthEmployment?.dob || HRMS_CONSTANTS.DEFAULT_DOB).getTime(),
-          roles: mappedroles,
-          tenantId: tenantId,
-          userName: data?.SelectEmployeeId?.code,
-          password: data?.SelectEmployeePassword?.employeePassword,
-        },
-        serviceHistory: [],
-        education: [],
-        tests: [],
-      },
-    ];
 
-    // if (data?.SelectEmployeeId?.code && data?.SelectEmployeeId?.code?.trim().length > 0) {
-    //   Digit.HRMSService.search(tenantId, null, { codes: data?.SelectEmployeeId?.code }).then((result, err) => {
-    //     if (result.Employees.length > 0) {
-    //       setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID" });
-    //       setShowModal(false);
-    //       return;
-    //     } else {
-    //       navigateToAcknowledgement(Employees);
-    //     }
-    //   });
-    // } else {
-    //   navigateToAcknowledgement(Employees);
-    // }
     try {
-      const type = await checkIfUserExist(data,tenantId);
+      const type = await checkIfUserExist(data, tenantId);
       debugger;
       if (type == true) {
         setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID" });
         setShowModal(false);
       } else {
-      const payload= formPayloadToCreateUser(data,tenantId)
-    debugger
+        const payload = formPayloadToCreateUser(data, tenantId);
+        debugger;
         navigateToAcknowledgement(payload);
       }
     } catch (err) {
@@ -209,10 +147,12 @@ const CreateEmployee = () => {
     setCreateEmployeeData(e);
     setShowModal(true);
   };
-  if (isLoading) {
+  if (isLoading || isLoadings) {
     return <Loader />;
   }
   const config = newConfig;
+
+  console.log(data?.Employees, "data?.Employees");
 
   return (
     <div style={{ marginBottom: "80px" }}>
@@ -226,7 +166,7 @@ const CreateEmployee = () => {
         <Header>{t("HR_COMMON_CREATE_EMPLOYEE_HEADER")}</Header>
       </div>
       <FormComposerV2
-        // defaultValues={defaultValues}
+        defaultValues={!editUser && data?.Employees  ? editDefaultUserValue(data?.Employees, tenantId) : ""}
         heading={t("")}
         config={config}
         onSubmit={onSubmit}
