@@ -312,7 +312,7 @@ const BillInboxComponent = () => {
                             <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name)}</div>
 
                             <SearchResultsPlaceholder placeholderText={t("HCM_AM_BILL_INBOX_PLACEHOLDER_IMAGE_TEXT")} /> </Card>}
-                        {tableData && <Card style={{ width: "100%", }}>
+                        {tableData && <Card style={{ width: "100%", gap: "1.5rem" }}>
                             {tableData != null && <div className="summary-sub-heading">{t(selectedProject?.name)}</div>}
                             {tableData != null && <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name)}</div>}
                             <div>
