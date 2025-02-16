@@ -1,12 +1,14 @@
 import React from "react"
 import { useTranslation } from "react-i18next"
 
-const WhatsNewCard = ({header, actions, eventNotificationText, timePastAfterEventCreation, timeApproxiamationInUnits}) => {
+const WhatsNewCard = ({ header, actions, eventNotificationText, timePastAfterEventCreation, timeApproxiamationInUnits }) => {
     const { t } = useTranslation();
 
     const getTransformedLocale = label => {
         if (typeof label === "number") return label;
-        return label && label.toUpperCase().replace(/[.:-\s\/]/g, "_");
+        if (typeof label != "string") return "NA";
+        label = label.trim();
+        return label.toUpperCase().replace(/[.:-\s\/]/g, "_");
     };
 
     return <div className="WhatsNewCard">
