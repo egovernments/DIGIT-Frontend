@@ -19,6 +19,8 @@ const WorkbenchBreadCrumb = ({ location, defaultPath,initialContextPath }) => {
   const pathVar = location.pathname.replace(defaultPath + '/', "").split("?")?.[0];
   const { masterName, moduleName, uniqueIdentifier } = Digit.Hooks.useQueryParams()
 
+  console.log(initialContextPath,"initialContextPath inside the breadcrumbs")
+
   const getHomePath = () => {
     console.log(window.location.href);
     console.log(window.location.href.includes("mukta"))
@@ -28,6 +30,9 @@ const WorkbenchBreadCrumb = ({ location, defaultPath,initialContextPath }) => {
     }
     return `/${window.contextPath}/employee`;
   };
+
+  const resPath = getHomePath();
+  console.log(resPath,"resPath");
 
   const crumbs = [
     {
@@ -112,6 +117,8 @@ const App = ({ path }) => {
       clearSessionFormDataView();
     }
   }, [location]);
+
+  console.log(initialContextPath.current,"initialContextPath inside the App")
 
   return (
     <React.Fragment>
