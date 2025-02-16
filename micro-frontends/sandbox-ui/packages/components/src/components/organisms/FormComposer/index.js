@@ -3,75 +3,14 @@ import { useForm, Controller, useFieldArray, useWatch } from "react-hook-form";
 import "react-tabs/style/react-tabs.css";
 import { getUpdatedUISchema } from "./formTabUtils";
 import Stepper from "react-stepper-horizontal";
-import useLastUpdatedField from "../../../hooks/useLastUpdatedField";
-import DigitUIComponents from "../../../DigitUIComponents";
+import useLastUpdatedField from "../../hooks/useLastUpdatedField";
+import DigitUIComponents from "../../DigitUIComponents";
+import { EnumBasedDropdown } from "./EnumBasedDropdown";
+import { CheckBox } from "./CheckBox";
 
 const { TextInput, Button } = DigitUIComponents;
 
-/**
- * @author jagankumar-egov
- * @date 2024-08-01
- * @description  This file contains the FormComposer component and related subcomponents for building dynamic forms using React Hook Form and custom widgets.
- */
 
-
-
-/**
- * dropdown component 
- */
-const EnumBasedDropdown = ({ options, value, onChange }) => {
-  const handleChange = (event) => {
-    onChange(event.target.value);
-  };
-
-  return (
-    <div style={{ marginBottom: '10px' }}>
-      <select
-        className='digit-citizenCard-input'
-        value={value}
-        onChange={handleChange}
-      >
-        {options.map((option, index) => (
-          <option key={index} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-};
-
-/**
- * CheckBox 
-*/
-const CheckBox = ({ checked, onChange, label }) => {
-  return (
-    <label style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
-      {label}
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={onChange}
-        style={{ width: '2vh', height: '2vw' }}
-      />
-    </label>
-  );
-};
-
-/**
- * RenderIndividualField - Renders an individual field based on its configuration.
- *
- * @param {Object} props - The component props.
- * @param {string} props.name - The name of the field.
- * @param {Object} props.property - The property configuration for the field.
- * @param {string} props.uiWidget - The custom widget type for rendering.
- * @param {Object} props.control - The control object from react-hook-form.
- * @param {Object} props.errors - The form errors object from react-hook-form.
- * @param {Object} props.customWidgets - A dictionary of custom widgets.
- * 
- *
- * @returns {React.ReactNode} The rendered field component.
- */
 const RenderIndividualField = React.memo(
   ({ name, property, uiWidget, control, errors, customWidgets }) => {
     const CustomWidget = customWidgets[uiWidget];
@@ -311,7 +250,6 @@ const RenderField = ({
     }
     return null;
   }
-  console.log(property, " pppppppppppppppppp")
   if (property.type === "array") {
     return (
       <RenderArrayField
@@ -375,7 +313,7 @@ const RenderField = ({
  * @author jagankumar-egov
  * @returns {React.ReactNode} The rendered form component.
  */
-const FormComposer = ({ schema, uiSchema, customWidgets,onSubmit,onError,submitHandler=false }) => {
+const FormComposer = ({ schema, uiSchema, customWidgets, onSubmit, onError, submitHandler = false }) => {
   const [currentTab, setCurrentTab] = useState(0);
 
   const buttonStyles = {
@@ -531,28 +469,28 @@ const FormComposer = ({ schema, uiSchema, customWidgets,onSubmit,onError,submitH
                     )}
                     {submitHandler && submitHandler}
                     <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', flexWrap: 'wrap' }}>
-                    {!(uiLayout?.hideTabNavigateButtons)&& <>
-                      {currentTab > 0 && (
-                        <Button
-                          label="Previous"
-                          onClick={() => setCurrentTab((prev) => prev - 1)}
-                          style={buttonStyles}
-                        />
-                      )}
-                      {currentTab < uiLayout?.layouts.length - 1 && (
-                        <Button
-                          label="Next"
-                          onClick={() => setCurrentTab((prev) => prev + 1)}
-                          style={buttonStyles}
-                        />
-                      )}
-                      {currentTab === uiLayout?.layouts.length - 1 && (
-                        <Button
-                          label="Submit"
-                          type="submit"
-                          style={buttonStyles}
-                        />
-                      )}
+                      {!(uiLayout?.hideTabNavigateButtons) && <>
+                        {currentTab > 0 && (
+                          <Button
+                            label="Previous"
+                            onClick={() => setCurrentTab((prev) => prev - 1)}
+                            style={buttonStyles}
+                          />
+                        )}
+                        {currentTab < uiLayout?.layouts.length - 1 && (
+                          <Button
+                            label="Next"
+                            onClick={() => setCurrentTab((prev) => prev + 1)}
+                            style={buttonStyles}
+                          />
+                        )}
+                        {currentTab === uiLayout?.layouts.length - 1 && (
+                          <Button
+                            label="Submit"
+                            type="submit"
+                            style={buttonStyles}
+                          />
+                        )}
                       </>}
                     </div>
                   </div>
@@ -603,28 +541,28 @@ const FormComposer = ({ schema, uiSchema, customWidgets,onSubmit,onError,submitH
                     )}
                     {submitHandler && submitHandler}
                     <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', flexWrap: 'wrap' }}>
-                    {!(uiLayout?.hideTabNavigateButtons)&& <>
-                      {currentTab > 0 && (
-                        <Button
-                          label="Previous"
-                          onClick={() => setCurrentTab((prev) => prev - 1)}
-                          style={buttonStyles}
-                        />
-                      )}
-                      {currentTab < uiLayout?.layouts.length - 1 && (
-                        <Button
-                          label="Next"
-                          onClick={() => setCurrentTab((prev) => prev + 1)}
-                          style={buttonStyles}
-                        />
-                      )}
-                      {currentTab === uiLayout?.layouts.length - 1 && (
-                        <Button
-                          label="Submit"
-                          type="submit"
-                          style={buttonStyles}
-                        />
-                      )}
+                      {!(uiLayout?.hideTabNavigateButtons) && <>
+                        {currentTab > 0 && (
+                          <Button
+                            label="Previous"
+                            onClick={() => setCurrentTab((prev) => prev - 1)}
+                            style={buttonStyles}
+                          />
+                        )}
+                        {currentTab < uiLayout?.layouts.length - 1 && (
+                          <Button
+                            label="Next"
+                            onClick={() => setCurrentTab((prev) => prev + 1)}
+                            style={buttonStyles}
+                          />
+                        )}
+                        {currentTab === uiLayout?.layouts.length - 1 && (
+                          <Button
+                            label="Submit"
+                            type="submit"
+                            style={buttonStyles}
+                          />
+                        )}
                       </>}
                     </div>
                   </div>
@@ -642,8 +580,8 @@ const FormComposer = ({ schema, uiSchema, customWidgets,onSubmit,onError,submitH
             control,
             errors
           )}
-         {!submitHandler&& <button type="submit">Submit</button>}
-         {submitHandler && submitHandler}
+          {!submitHandler && <button type="submit">Submit</button>}
+          {submitHandler && submitHandler}
         </>
       )}
     </form>
