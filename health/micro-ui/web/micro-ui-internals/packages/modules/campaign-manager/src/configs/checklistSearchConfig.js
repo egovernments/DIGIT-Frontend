@@ -13,7 +13,7 @@
           MdmsCriteria: {
             tenantId: tenantId,
             // schemaCode: "HCMadminconsole.checklisttemplates"
-            schemaCode: "HCM-ADMIN-CONSOLE.Checklist-Templates",
+            schemaCode: "HCM-ADMIN-CONSOLE.ChecklistTemplates_DEMO2",
             filters : {}
           }
         },
@@ -99,13 +99,14 @@
             ],
   
             enableColumnSort: true,
-            resultsJsonPath: "mdms"
+            resultsJsonPath: "mdmsData"
           },
           show: true,
         },
       },
       additionalDetails: {
-      }
+      },
+      customHookName:"campaign.useMDMSServiceSearch"
     },
   ];
 
