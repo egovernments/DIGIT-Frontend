@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, CustomSVG, Tag, Toast } from "@egovernments/digit-ui-components";
-import { downloadFileWithName, formatTimestampToDate } from "../utils";
+import { downloadFileWithName, formatTimestampToDate, getCustomPaginationOptions } from "../utils";
 import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./table_inbox_custom_style";
 import { defaultPaginationValues } from "../utils/constants";
@@ -209,6 +209,7 @@ const MyBillsTable = ({ ...props }) => {
                 paginationRowsPerPageOptions={defaultPaginationValues}
                 fixedHeader={true}
                 fixedHeaderScrollHeight={"70vh"}
+                paginationComponentOptions={getCustomPaginationOptions(t)}
             />
             {showToast && (
                 <Toast

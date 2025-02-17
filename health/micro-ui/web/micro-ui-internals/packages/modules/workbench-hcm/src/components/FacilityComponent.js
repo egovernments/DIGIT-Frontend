@@ -1,7 +1,9 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Header, Loader } from "@egovernments/digit-ui-react-components";
+import { Header } from "@egovernments/digit-ui-react-components";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
+import {  Loader} from "@egovernments/digit-ui-components";
+
 
 const FacilityComponent = (props) => {
   const { t } = useTranslation();
@@ -67,7 +69,7 @@ const FacilityComponent = (props) => {
   ];
 
   if (isLoading) {
-    return <Loader></Loader>;
+    return  <Loader page={true} variant={"PageLoader"}/>;
   }
 
   return (

@@ -671,7 +671,7 @@ const CampaignSummary = (props) => {
   });
 
   if (isLoading) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
   const closeToast = () => {
     setShowToast(null);

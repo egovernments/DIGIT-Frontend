@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import BulkUpload from "./BulkUpload";
 import Ajv from "ajv";
 import XLSX from "xlsx";
-import { AlertCard, PopUp, Toast, Button , Card , HeaderComponent} from "@egovernments/digit-ui-components";
+import { AlertCard, PopUp, Toast, Button , Card , HeaderComponent ,Loader} from "@egovernments/digit-ui-components";
 import { downloadExcelWithCustomName } from "../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
@@ -1117,8 +1117,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   return (
     <>
       <div className="container-full">
-        {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
-
+        {loader && 
+        <Loader page={true} variant={"PageLoader"} loaderText={t("CAMPAIGN_VALIDATION_INPROGRESS")}/>}
         <div className={parentId ? "card-container2" : "card-container1"}>
         <TagComponent campaignName={campaignName} />  
           <Card>

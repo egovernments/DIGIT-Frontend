@@ -113,7 +113,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
       registerId: AttendanceData?.attendanceRegister?.[0]?.id
     },
     config: {
-      enabled: (AttendanceData ? true : false),
+      enabled: (AttendanceData?.attendanceRegister.length === 1 ? true : false),
       select: (data) => {
         return data;
       },
@@ -334,7 +334,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
       }
     },
     config: {
-      enabled: AttendanceData?.attendanceRegister[0]?.staff?.find(
+      enabled: AttendanceData?.attendanceRegister.length === 1 && AttendanceData?.attendanceRegister[0]?.staff?.find(
         (staff) => staff?.staffType?.includes("OWNER")
       )?.userId ? true : false,
       select: (data) => {

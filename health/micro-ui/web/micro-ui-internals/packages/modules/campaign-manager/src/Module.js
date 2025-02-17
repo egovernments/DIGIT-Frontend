@@ -1,4 +1,5 @@
-import { Loader, TourProvider } from "@egovernments/digit-ui-react-components";
+import {  TourProvider } from "@egovernments/digit-ui-react-components";
+import { Loader } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
 import EmployeeApp from "./pages/employee";
@@ -99,7 +100,7 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
   });
 
   if (isLoading) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
 
   return (

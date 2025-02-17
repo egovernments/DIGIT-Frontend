@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-microplan",
-  "version": "0.0.1",
+  "version": "0.2.0",
   "description": "Microplan Module UI",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",

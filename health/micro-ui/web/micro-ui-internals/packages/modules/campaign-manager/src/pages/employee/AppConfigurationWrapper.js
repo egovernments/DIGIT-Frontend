@@ -178,7 +178,7 @@ function AppConfigurationWrapper() {
   );
 
   if (isLoadingAppConfigMdmsData) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
 
   return (

@@ -283,12 +283,12 @@ const DataUploadSummary = (props) => {
     } else setKey(13);
   };
   if (isLoading) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
 
   return (
     <>
-      {(isLoading || (!data && !error) || isFetching) && <LoaderWithGap text={t("DATA_SYNC_WITH_SERVER")} />}
+      {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")}/>}
       <div className="container-full">
         <div className="card-container">
           <Card className="card-header-timeline">

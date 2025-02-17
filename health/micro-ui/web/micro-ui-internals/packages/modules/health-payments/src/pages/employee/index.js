@@ -56,17 +56,6 @@ const ProjectBreadCrumb = ({ location }) => {
 
 const App = ({ path, stateCode, userType, tenants }) => {
 
-
-  useEffect(() => {
-    if (window.location.pathname !== `/${window.contextPath}/employee/`) {
-      window.Digit.SessionStorage.del("selectedLevel");
-      window.Digit.SessionStorage.del("selectedProject");
-      window.Digit.SessionStorage.del("selectedBoundaryCode");
-      window.Digit.SessionStorage.del("boundary");
-      window.Digit.SessionStorage.del("selectedValues");
-    }
-  }, []);
-
   return (
     <Switch>
       <AppContainer className="ground-container">

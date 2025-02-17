@@ -81,6 +81,7 @@ const BillInboxComponent = () => {
                 setShowGenerateBillAction(false);
                 setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_REGISTER_FETCH_FAILED"), transitionTime: 3000 });
             },
+            changeQueryName: "inbox",
         },
     };
     // Fetch attendance data

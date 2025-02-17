@@ -7,6 +7,7 @@ import { useQueryClient } from "react-query";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { tableCustomStyle } from "../table_inbox_custom_style";
 import { defaultPaginationValues } from "../../utils/constants";
+import { getCustomPaginationOptions } from "../../utils";
 
 /**
  * BillInboxTable component is used to render the table for the employee's payment inbox.
@@ -115,6 +116,7 @@ const BillInboxTable = ({
                     paginationRowsPerPageOptions={defaultPaginationValues}
                     fixedHeader={true}
                     fixedHeaderScrollHeight={props.infoDescription ? "32vh" : "47vh"}
+                    paginationComponentOptions={getCustomPaginationOptions(t)}
                 />
             }
         </React.Fragment>
