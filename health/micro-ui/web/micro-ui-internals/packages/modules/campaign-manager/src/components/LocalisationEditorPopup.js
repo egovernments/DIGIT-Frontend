@@ -107,7 +107,6 @@ const LocalisationEditorPopup = ({ locales, currentLocale, localisationData, onS
                 locale
               }))
             ).filter(entry => entry.message !== ""); // Filter out empty translations
-            console.log("formatted", formatted);
             onSave(formatted);
           }}
         />
