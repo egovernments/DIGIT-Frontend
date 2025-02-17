@@ -17,14 +17,10 @@ const EmployeeViewDetails = (props) => {
     },
     body: {
       apiOperation: "SEARCH",
-      // Individual: {
-      //   tenantId,
-      //   id: ["1e909b34-17cf-448b-a64d-65abd07bc7d0"],
-      // },
     },
     config: {
       select: (data) => {
-        const response = data?.Employees?.[0]||{};
+        const response = data?.Employees?.[0] || {};
         return {
           cards: [
             {
@@ -69,15 +65,19 @@ const EmployeeViewDetails = (props) => {
                   name: "address",
                   type: "DATA",
                   values: [
-                  
                     {
                       key: "City",
-                      value: response?.user?.correspondenceAddress ? response?.user?.correspondenceAddress  : t("NA"),
+                      value: response?.user?.correspondenceAddress ? response?.user?.correspondenceAddress : t("NA"),
                     },
                     {
                       key: "Mobile Number",
                       value: response?.user?.mobileNumber ? response?.user?.mobileNumber : t("NA"),
-                    },  {
+                    },
+                    {
+                      key: "Email Id",
+                      value: response?.user?.emailId ? response?.user?.emailId : t("NA"),
+                    },
+                    {
                       key: "Role",
                       value: response?.user?.roles?.[0]?.name ? response?.user?.roles?.[0]?.name : t("NA"),
                     },

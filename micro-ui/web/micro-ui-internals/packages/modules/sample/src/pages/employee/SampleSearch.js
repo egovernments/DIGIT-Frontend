@@ -6,11 +6,9 @@ import { useHistory, useLocation } from "react-router-dom";
 // not working todo
 const SearchWageSeeker = () => {
   const { t } = useTranslation();
-  const history = useHistory()
-
+  const history = useHistory();
 
   const configs = searchWageSeekerConfig();
-  
 
   return (
     <React.Fragment>
@@ -22,7 +20,7 @@ const SearchWageSeeker = () => {
             variation="secondary"
             icon={<AddFilled />}
             onButtonClick={() => {
-              history.push(`/${window?.contextPath}/employee/${configs?.actionLink}`)
+              history.push(`/${window?.contextPath}/employee/${configs?.actionLink}`);
             }}
             type="button"
           />
