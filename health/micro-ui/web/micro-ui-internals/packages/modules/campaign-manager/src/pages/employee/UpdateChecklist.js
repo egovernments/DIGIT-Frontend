@@ -481,7 +481,7 @@ const UpdateChecklist = () => {
     ];
 
     if (isLoading) {
-        return <Loader />;
+        return <Loader page={true} variant={"PageLoader"}/>;
     }
     return (
         <div>

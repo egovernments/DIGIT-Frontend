@@ -272,7 +272,6 @@ useEffect(() => {
           </div>
         </Card>
       </Card>
-      {/* {loader && <LoaderWithGap text={t(loader)} />} */}
       {showToast && <Toast label={showToast.label} type={showToast.isError} onClose={() => setShowToast(null)} />}
     </>
   );
