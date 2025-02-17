@@ -14,7 +14,6 @@ import MyCampaign from "./pages/employee/MyCampaign";
 import CampaignSummary from "./components/CampaignSummary";
 import CycleDetaisPreview from "./components/CycleDetaisPreview";
 import Response from "./pages/employee/Response";
-import SelectingBoundaries from "./components/SelectingBoundaries";
 import UploadData from "./components/UploadData";
 import CampaignSelection from "./components/CampaignType";
 import CampaignDocumentsPreview from "./components/CampaignDocumentsPreview";
@@ -132,7 +131,6 @@ const componentsToRegister = {
   CampaignSummary,
   CycleDetaisPreview,
   Response,
-  SelectingBoundaries,
   CampaignSelection,
   CampaignDocumentsPreview: CampaignDocumentsPreview,
   AddProduct,

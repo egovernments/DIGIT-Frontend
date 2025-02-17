@@ -17,13 +17,13 @@
     padding: 1rem;
     margin-right: 1rem;
     margin-bottom: 1.5rem;
-    .card-text {
+    .digit-card-text {
       margin: 0;
       font-weight: 700;
     }
     .header-container {
       display: flex;
-      align-items: flex-end;
+      align-items: baseline;
       justify-content: space-between;
     }
   }
@@ -229,8 +229,18 @@
   margin-bottom: 1.5rem !important;
 }
 
+.card-header-delivery{
+  display: flex;
+  justify-content: space-between;
+}
+
+.deliveryType-labelfield{
+  margin-top: 0.565rem;
+}
+
 .delivery-rule-container {
   padding-top: 0;
+  margin-top: 1.5rem;
   .card-header {
     .title {
       margin: 0 !important;
@@ -260,14 +270,15 @@
   }
 }
 .attribute-field-wrapper {
+  margin-top: 0rem;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   align-items: center;
   gap: 2.5rem;
-  .label-field-pair {
+  .digit-label-field-pair {
     flex-direction: column;
     align-items: flex-start !important;
-    .card-label.card-label-smaller {
+    .digit-card-label.card-label-smaller {
       font-weight: 700;
     }
     .employee-select-wrap.form-field {
@@ -287,6 +298,7 @@
 .add-rule-btn {
   margin: auto;
   margin-bottom: 1rem;
+  margin-top: 1.5rem;
   h2 {
     font-family: Roboto;
     font-size: 1rem;

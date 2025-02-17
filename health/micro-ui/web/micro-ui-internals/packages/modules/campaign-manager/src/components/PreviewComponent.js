@@ -1,5 +1,5 @@
 import React from 'react';
-import { LabelFieldPair, AddIcon, Button, Card, TextInput, Dropdown } from "@egovernments/digit-ui-react-components";
+import { Card } from "@egovernments/digit-ui-components";
 
 const Preview = ({ question, level = 1 }) => {
   return (

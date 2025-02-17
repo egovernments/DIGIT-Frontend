@@ -1,5 +1,4 @@
-import { Card, AlertCard, Loader } from "@egovernments/digit-ui-components";
-import { Button, Toast } from "@egovernments/digit-ui-components";
+import { Card, AlertCard, Loader , Button } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
