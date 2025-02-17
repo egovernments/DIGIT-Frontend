@@ -5,50 +5,13 @@ import searchWageSeekerConfig from "../../configs/searchWageSeekerConfig";
 import { useHistory, useLocation } from "react-router-dom";
 // not working todo
 const SearchWageSeeker = () => {
-  console.log('sssssssssssssssssssssssssssssss')
   const { t } = useTranslation();
   const history = useHistory()
-  const location = useLocation()
 
-  const wageSeekerSession = Digit.Hooks.useSessionStorage("WAGE_SEEKER_CREATE", {});
-  const [sesionFormData, clearSessionFormData] = wageSeekerSession;
 
-  //const indConfigs = searchWageSeekerConfig();
-  const configModuleName = Digit.Utils.getConfigModuleName()
-  const tenant = Digit.ULBService.getStateId();
-  const { isLoading, data } = Digit.Hooks.useCustomMDMS(
-      tenant,
-      configModuleName,
-   [
-    {
-      name: "SearchIndividualConfig",
-    },
-  ]);
+  const configs = searchWageSeekerConfig();
+  
 
-  const indConfigs = data?.[configModuleName]?.SearchIndividualConfig?.[0]
-
-  let configs = useMemo(
-    () => Digit.Utils.preProcessMDMSConfigInboxSearch(t, indConfigs, "sections.search.uiConfig.fields",{
-      updateDependent : [
-        {
-          key : "createdFrom",
-          value : [new Date().toISOString().split("T")[0]]
-        },
-        {
-          key : "createdTo",
-          value : [new Date().toISOString().split("T")[0]]
-        }
-      ]
-    }
-    ),[indConfigs]);
-
-  useEffect(() => {
-    if (!window.location.href.includes("modify-wageseeker") && sesionFormData && Object.keys(sesionFormData) != 0) {
-      clearSessionFormData();
-    }
-  }, [location])
-
-  if (isLoading) return <Loader />;
   return (
     <React.Fragment>
       <div className="jk-header-btn-wrapper">

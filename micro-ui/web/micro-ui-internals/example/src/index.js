@@ -8,7 +8,7 @@ import "@egovernments/digit-ui-sample-css/example/index.css";
 
 import { pgrCustomizations } from "./pgr";
 import { UICustomizations } from "./UICustomizations";
-import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
+//import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
 import {initSampleComponents} from "@egovernments/digit-ui-module-sample";
 
 var Digit = window.Digit || {};
@@ -64,7 +64,7 @@ const initDigitUI = () => {
     // PaymentLinks,
   });
 
-  initUtilitiesComponents();
+  //initUtilitiesComponents();
   initSampleComponents();
 
   const moduleReducers = (initData) => initData;
