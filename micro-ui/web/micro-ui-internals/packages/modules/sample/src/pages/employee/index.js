@@ -15,6 +15,7 @@ import SampleComponents from "./SampleComponents";
 import PanelCardResponse from "./PanelCardResponse";
 import TabIndividualSearch from "./TabIndividualSearch";
 import IndividualViewDetails from "./IndividualViewDetails";
+import EmployeeViewDetails from "./EmployeeViewDetails";
 
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
@@ -52,7 +53,8 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/sample-components`} component={() => <SampleComponents />} />
         <PrivateRoute path={`${path}/sample-success`} component={() => <PanelCardResponse />} />
         <PrivateRoute path={`${path}/tab-search-individual`} component={() => <TabIndividualSearch />} />
-        <PrivateRoute path={`${path}/individual-details-view`} component={() => <IndividualViewDetails />} />
+        {/* <PrivateRoute path={`${path}/individual-details-view`} component={() => <IndividualViewDetails />} /> */}
+        <PrivateRoute path={`${path}/individual-details-view`} component={() => <EmployeeViewDetails />} />
       </AppContainer>
     </Switch>
   );
