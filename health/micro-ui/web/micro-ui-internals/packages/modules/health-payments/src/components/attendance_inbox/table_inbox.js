@@ -115,7 +115,6 @@ const CustomInboxTable = ({
     <Card style={{ gap: "1.5rem" }}>
       <div className="summary-sub-heading">{t(selectedProject?.name)}</div>
       {
-        /*(!planEmployee?.data || planEmployee?.data?.length === 0) */
         !tableData ? (
           <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />
         ) : (

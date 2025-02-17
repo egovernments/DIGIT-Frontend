@@ -266,9 +266,8 @@ const BillInboxComponent = () => {
 
     return (
         <React.Fragment>
-            <div style={{ display: "flex", flexDirection: "row", gap: "24px", marginBottom: showGenerateBillAction && BillData?.bills?.length === 0 && !isBillLoading && !isFetchingBill && billGenerationStatus == null ? "2.5rem" : "0px" }}>
-                <div style={{ width: "30%", display: "flex", flexDirection: "column", gap: "24px" }}>
-                    <div style={{ display: "flex", flexDirection: "row" }}>
+            {/* <div style={{ display: "flex", flexDirection: "row", gap: "24px", marginBottom: showGenerateBillAction && BillData?.bills?.length === 0 && !isBillLoading && !isFetchingBill && billGenerationStatus == null ? "2.5rem" : "0px" }}> */}
+                <div style={{ width: "100%", display: "flex", flexDirection: "row", marginBottom: "32px", gap:"18px" }}><div className="custom-inbox-filter-section" style={{ width: "30%"}}>
                         <InboxSearchLinkHeader
                             headerText={"HCM_AM_BILL_INBOX"}
                             links={[
@@ -278,41 +277,39 @@ const BillInboxComponent = () => {
                                 },
                             ]}
                         ></InboxSearchLinkHeader>
+                </div>
+                <div className="custom-inbox-outer-table-section" style={{width: "69%"}}>
+                    {infoDescription &&
+                        <InfoCard
+                            variant="default"
+                            style={{ width: "100%", maxWidth: "unset", height: "124px",}}
+                            label={t(`HCM_AM_INFO`)}
+                            text={t(infoDescription)}
+                        />}
                     </div>
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            height: "60vh",
-                            overflowY: "auto",
-                        }}
-                    >
-                        <BillBoundaryFilter
+                    </div>
+        <div className="custom-register-inbox-screen">
+        <div className="inner-div-row-section">
+          <div className="custom-inbox-filter-section">
+            <div className="custom-inbox-inner-filter-section" >
+            <BillBoundaryFilter
                             isRequired={ScreenTypeEnum.BILL}
                             selectedProject={selectedProject}
                             selectedLevel={selectedLevel}
                             onFilterChange={handleFilterUpdate}
                             resetBoundaryFilter={resetBoundaryFilter}
                         ></BillBoundaryFilter>
-                    </div>
+            </div>
+          </div>
 
-                </div>
-                <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "24px" }}>
-                    {infoDescription && <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
-                        <InfoCard
-                            variant="default"
-                            style={{ margin: "0rem", width: "100%", maxWidth: "unset", height: "124px" }}
-                            label={t(`HCM_AM_INFO`)}
-                            text={t(infoDescription)}
-                        />
-                    </div>}
-                    <div style={{ width: "100%", display: "flex", flexDirection: "row", height: infoDescription ? "60vh" : "74vh", minHeight: "60vh" }}>
-                        {tableData == null && <Card style={{ height: infoDescription ? "60vh" : "74vh" }}>
+          <div className="custom-inbox-outer-table-section">
+            <div className="inner-table-section">
+              {tableData == null && <Card style={{ height: infoDescription ? "60vh" : "74vh" }}>
                             <div className="summary-sub-heading">{t(selectedProject?.name)}</div>
                             <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name)}</div>
 
                             <SearchResultsPlaceholder placeholderText={t("HCM_AM_BILL_INBOX_PLACEHOLDER_IMAGE_TEXT")} /> </Card>}
-                        {tableData && <Card style={{ width: "100%", gap: "1.5rem" }}>
+                            {tableData && <Card style={{ width: "100%", gap: "1.5rem" }}>
                             {tableData != null && <div className="summary-sub-heading">{t(selectedProject?.name)}</div>}
                             {tableData != null && <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name)}</div>}
                             <div>
@@ -363,9 +360,10 @@ const BillInboxComponent = () => {
                                 </Card></div>}
                             </div>
                         </Card>}
-                    </div>
-                </div>
             </div>
+          </div>
+        </div>
+      </div>
 
             {/* Alert Pop-Up for Bill Generation */}
             {openAlertPopUp && <AlertPopUp
