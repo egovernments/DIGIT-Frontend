@@ -970,196 +970,196 @@ export const UICustomizations = {
       data.body.PlanConfigurationSearchCriteria.status = dic[String(tabId)];
       return data;
     },
-   additionalCustomizations: (row, key, column, value, t, searchResult) => {
-         const rolesCodes = Digit.Hooks.useSessionStorage("User", {})[0]?.info?.roles;
-         const roles = rolesCodes.map((item) => item.code);
-         const hasRequiredRole = roles.some((role) => role === "ROOT_POPULATION_DATA_APPROVER" || role === "POPULATION_DATA_APPROVER");
-         const EstimationsfileId = row?.files.find((item) => item.templateIdentifier === "Estimations")?.filestoreId;
-         const handleFileDownload=()=>{
-           const fileId = row?.files.find((item) => item.templateIdentifier === "Estimations")?.filestoreId;
-           if (!fileId) {
-                 console.error("Estimation template file not found");
-                 return;
-               }
-           const campaignName = row?.name || "";
-           Digit.Utils.campaign.downloadExcelWithCustomName({
-             fileStoreId: fileId,
-             customName: campaignName
-           });
-   
-         }
-         switch (key) {
-           case "ACTIONS":
-             const onActionSelect = (key, row) => {
-               switch (key) {
-                 case "START":
-                   window.history.pushState(
-                     {
-                       microplanId: row?.id,
-                       campaignId: row?.campaignId,
-                     },
-                     "",
-                     `/${window.contextPath}/employee/microplan/select-activity?microplanId=${row?.id}&campaignId=${row?.campaignId}`
-                   );
-                   const navEvent = new PopStateEvent("popstate");
-                   window.dispatchEvent(navEvent);
-                   break;
-                 case "EDIT":
-                   window.history.pushState(
-                     {
-                       microplanId: row?.id,
-                       campaignId: row?.campaignId,
-                     },
-                     "",
-                     `/${window.contextPath}/employee/microplan/select-activity?microplanId=${row?.id}&campaignId=${row?.campaignId}`
-                   );
-                   const navEvent2 = new PopStateEvent("popstate");
-                   window.dispatchEvent(navEvent2);
-                   break;
-                 case "DOWNLOAD":
-                   handleFileDownload();
-                   break;
-   
-                 default:
-                   console.log(value);
-                   break;
-               }
-             };
-             return row.status === "EXECUTION_TO_BE_DONE" ? (
-               <ButtonNew
-                 label={t("START")}
-                 title={t("START")}
-                 variation="primary"
-                 icon={"ArrowForward"}
-                 type="button"
-                 style={{ width: "290px" }}
-                 isSuffix={true}
-                 isDisabled={!hasRequiredRole}
-                 // className="dm-workbench-download-template-btn dm-hover"
-                 onClick={(e) => onActionSelect("START", row)}
-               />
-             ) : row.status === "RESOURCE_ESTIMATIONS_APPROVED" ? (
-               <ButtonNew
-                 label={t("WBH_DOWNLOAD_MICROPLAN")}
-                 title={t("WBH_DOWNLOAD_MICROPLAN")}
-                 variation="primary"
-                 icon={"FileDownload"}
-                 style={{ width: "290px" }}
-                 type="button"
-                 isDisabled={!EstimationsfileId}
-                 // className="dm-workbench-download-template-btn dm-hover"
-                 onClick={(e) => onActionSelect("DOWNLOAD", row)}
-               />
-             ) : (
-               <ButtonNew
-                 label={t("WBH_EDIT")}
-                 title={t("WBH_EDIT")}
-                 variation="primary"
-                 icon={"Edit"}
-                 style={{ width: "290px" }}
-                 type="button"
-                 // className="dm-workbench-download-template-btn dm-hover"
-                 onClick={(e) => onActionSelect("EDIT", row)}
-               />
-             );
-           case "NAME_OF_MICROPLAN":
-             if (value && value !== "NA") {
-               return (
-                 <div
-                   style={{
-                     maxWidth: "15rem", // Set the desired maximum width
-                     wordWrap: "break-word", // Allows breaking within words
-                     whiteSpace: "normal", // Ensures text wraps normally
-                     overflowWrap: "break-word", // Break long words at the edge
-                   }}
-                 >
-                   <p>{t(value)}</p>
-                 </div>
-               );
-             } else {
-               return (
-                 <div>
-                   <p>{t("ES_COMMON_NA")}</p>
-                 </div>
-               );
-             }
-           case "CAMPAIGN_DISEASE":
-             if (value && value !== "NA") {
-               return (
-                 <div
-                   style={{
-                     maxWidth: "15rem", // Set the desired maximum width
-                     wordWrap: "break-word", // Allows breaking within words
-                     whiteSpace: "normal", // Ensures text wraps normally
-                     overflowWrap: "break-word", // Break long words at the edge
-                   }}
-                 >
-                   <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_DISEASE_" + value))}</p>
-                 </div>
-               );
-             } else {
-               return (
-                 <div>
-                   <p>{t("ES_COMMON_NA")}</p>
-                 </div>
-               );
-             }
-           case "CAMPAIGN_TYPE":
-             if (value && value !== "NA") {
-               return (
-                 <div
-                   style={{
-                     maxWidth: "15rem", // Set the desired maximum width
-                     wordWrap: "break-word", // Allows breaking within words
-                     whiteSpace: "normal", // Ensures text wraps normally
-                     overflowWrap: "break-word", // Break long words at the edge
-                   }}
-                 >
-                   <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_TYPE_" + value))}</p>
-                 </div>
-               );
-             } else {
-               return (
-                 <div>
-                   <p>{t("ES_COMMON_NA")}</p>
-                 </div>
-               );
-             }
-           case "DISTIRBUTION_STRATEGY":
-             if (value && value !== "NA") {
-               return (
-                 <div
-                   style={{
-                     maxWidth: "15rem", // Set the desired maximum width
-                     wordWrap: "break-word", // Allows breaking within words
-                     whiteSpace: "normal", // Ensures text wraps normally
-                     overflowWrap: "break-word", // Break long words at the edge
-                   }}
-                 >
-                   <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_DISTRIBUTION_" + value))}</p>
-                 </div>
-               );
-             } else {
-               return (
-                 <div>
-                   <p>{t("ES_COMMON_NA")}</p>
-                 </div>
-               );
-             }
-           case "MICROPLAN_STATUS":
-             if (value && value != "NA") {
-               return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_STATUS_" + value))}</p>;
-             } else {
-               return (
-                 <div>
-                   <p>{t("NA")}</p>
-                 </div>
-               );
-             }
-           default:
-             return t("ES_COMMON_NA");
-         }
-       },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      const rolesCodes = Digit.Hooks.useSessionStorage("User", {})[0]?.info?.roles;
+      const roles = rolesCodes.map((item) => item.code);
+      const hasRequiredRole = roles.some((role) => role === "ROOT_POPULATION_DATA_APPROVER" || role === "POPULATION_DATA_APPROVER");
+      const EstimationsfileId = row?.files.find((item) => item.templateIdentifier === "Estimations")?.filestoreId;
+      const handleFileDownload=()=>{
+        const fileId = row?.files.find((item) => item.templateIdentifier === "Estimations")?.filestoreId;
+        if (!fileId) {
+          console.error("Estimation template file not found");
+              return;
+            }
+        const campaignName = row?.name || "";
+        Digit.Utils.campaign.downloadExcelWithCustomName({
+          fileStoreId: fileId,
+          customName: campaignName
+        });
+
+      }
+      switch (key) {
+        case "ACTIONS":
+          const onActionSelect = (key, row) => {
+            switch (key) {
+              case "START":
+                window.history.pushState(
+                  {
+                    microplanId: row?.id,
+                    campaignId: row?.campaignId,
+                  },
+                  "",
+                  `/${window.contextPath}/employee/microplan/select-activity?microplanId=${row?.id}&campaignId=${row?.campaignId}`
+                );
+                const navEvent = new PopStateEvent("popstate");
+                window.dispatchEvent(navEvent);
+                break;
+              case "EDIT":
+                window.history.pushState(
+                  {
+                    microplanId: row?.id,
+                    campaignId: row?.campaignId,
+                  },
+                  "",
+                  `/${window.contextPath}/employee/microplan/select-activity?microplanId=${row?.id}&campaignId=${row?.campaignId}`
+                );
+                const navEvent2 = new PopStateEvent("popstate");
+                window.dispatchEvent(navEvent2);
+                break;
+                case "DOWNLOAD":
+                  handleFileDownload();
+                  break;
+                
+              default:
+                console.log(value);
+                break;
+            }
+          };
+          return row.status === "EXECUTION_TO_BE_DONE" ? (
+            <ButtonNew
+              label={t("START")}
+              title={t("START")}
+              variation="primary"
+              icon={"ArrowForward"}
+              type="button"
+              isSuffix={true}
+              style={{width:"290px"}}
+              isDisabled={!hasRequiredRole}
+              // className="dm-workbench-download-template-btn dm-hover"
+              onClick={(e) => onActionSelect("START", row)}
+            />
+          ) : row.status === "RESOURCE_ESTIMATIONS_APPROVED" ? (
+            <ButtonNew
+              label={t("WBH_DOWNLOAD_MICROPLAN")}
+              title={t("WBH_DOWNLOAD_MICROPLAN")}
+              variation="primary"
+              icon={"FileDownload"}
+              style={{width:"290px"}}
+              type="button"
+              isDisabled={!EstimationsfileId}
+              // className="dm-workbench-download-template-btn dm-hover"
+              onClick={(e) => onActionSelect("DOWNLOAD", row)}
+            />
+          ) : (
+            <ButtonNew
+              label={t("WBH_EDIT")}
+              title={t("WBH_EDIT")}
+              variation="primary"
+              icon={"Edit"}
+              style={{width:"290px"}}
+              type="button"
+              // className="dm-workbench-download-template-btn dm-hover"
+              onClick={(e) => onActionSelect("EDIT", row)}
+            />
+          );
+        case "NAME_OF_MICROPLAN":
+          if (value && value !== "NA") {
+            return (
+              <div
+                style={{
+                  maxWidth: "15rem", // Set the desired maximum width
+                  wordWrap: "break-word", // Allows breaking within words
+                  whiteSpace: "normal", // Ensures text wraps normally
+                  overflowWrap: "break-word", // Break long words at the edge
+                }}
+              >
+                <p>{t(value)}</p>
+              </div>
+            );
+          } else {
+            return (
+              <div>
+                <p>{t("ES_COMMON_NA")}</p>
+              </div>
+            );
+          }
+        case "CAMPAIGN_DISEASE":
+          if (value && value !== "NA") {
+            return (
+              <div
+                style={{
+                  maxWidth: "15rem", // Set the desired maximum width
+                  wordWrap: "break-word", // Allows breaking within words
+                  whiteSpace: "normal", // Ensures text wraps normally
+                  overflowWrap: "break-word", // Break long words at the edge
+                }}
+              >
+                <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_DISEASE_" + value))}</p>
+              </div>
+            );
+          } else {
+            return (
+              <div>
+                <p>{t("ES_COMMON_NA")}</p>
+              </div>
+            );
+          }
+        case "CAMPAIGN_TYPE":
+          if (value && value !== "NA") {
+            return (
+              <div
+                style={{
+                  maxWidth: "15rem", // Set the desired maximum width
+                  wordWrap: "break-word", // Allows breaking within words
+                  whiteSpace: "normal", // Ensures text wraps normally
+                  overflowWrap: "break-word", // Break long words at the edge
+                }}
+              >
+                <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_TYPE_" + value))}</p>
+              </div>
+            );
+          } else {
+            return (
+              <div>
+                <p>{t("ES_COMMON_NA")}</p>
+              </div>
+            );
+          }
+        case "DISTIRBUTION_STRATEGY":
+          if (value && value !== "NA") {
+            return (
+              <div
+                style={{
+                  maxWidth: "15rem", // Set the desired maximum width
+                  wordWrap: "break-word", // Allows breaking within words
+                  whiteSpace: "normal", // Ensures text wraps normally
+                  overflowWrap: "break-word", // Break long words at the edge
+                }}
+              >
+                <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_DISTRIBUTION_" + value))}</p>
+              </div>
+            );
+          } else {
+            return (
+              <div>
+                <p>{t("ES_COMMON_NA")}</p>
+              </div>
+            );
+          }
+        case "MICROPLAN_STATUS":
+          if (value && value != "NA") {
+            return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_STATUS_" + value))}</p>;
+          } else {
+            return (
+              <div>
+                <p>{t("NA")}</p>
+              </div>
+            );
+          }
+        default:
+          return t("ES_COMMON_NA");
+      }
+    },
   },
 
   UserManagementConfig: {
