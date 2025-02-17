@@ -1,5 +1,5 @@
 import { Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
-import { Dropdown, SummaryCardFieldPair, Toast, Card, TextBlock, Button, PopUp, CardText, Stepper ,Tag} from "@egovernments/digit-ui-components";
+import { Dropdown, Toast, Card, TextBlock, Button, PopUp, CardText, Stepper ,Tag} from "@egovernments/digit-ui-components";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
