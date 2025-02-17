@@ -117,8 +117,8 @@ const initializePaymentsModule = async ({ tenantId }) => {
         tenantId: tenantId,
         hierarchyType: hierarchyType,
         includeChildren: true,
-        codes: nationalLevelProject?.address?.boundary,
-        boundaryType: nationalLevelProject?.address?.boundaryType,
+        codes: "ADMIN_BU",
+        boundaryType: "COUNTRY",
       }
     });
 
