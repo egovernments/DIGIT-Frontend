@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router-dom";
 import { newConfig } from "../../components/config/config";
 import { campaignAssignmentConfig } from "../../components/config/campaignAssignmentConfig";
-//import ActionModal from "../../components/Modal";
+
 import { HRMS_CONSTANTS } from "../../constants/constants";
 
 import { checkIfUserExist, formPayloadToCreateUser, editDefaultUserValue } from "../../services/service";
@@ -27,7 +27,9 @@ const CreateEmployee = ({ editUser = false }) => {
   const closeModal = () => {
     setShowModal(false);
   };
-  const { isLoadings, isError, error, data } = Digit.Hooks.hrms.useHRMSSearch({ codes: "A07497961" }, tenantId);
+
+  const mutation = Digit.Hooks.hrms.useHRMSCreate(tenantId);
+  const { isLoadings, isError, error, data } = Digit.Hooks.hrms.useHRMSSearch({ codes: location.codes }, tenantId);
   useEffect(() => {
     if (!editUser && data?.Employees) {
       setEditEmployee(editDefaultUserValue(data.Employees, tenantId));
@@ -123,19 +125,62 @@ const CreateEmployee = ({ editUser = false }) => {
     SelectEmployeeId: { code: "1234" },
   };
 
+  const createEmployeeService = async (payload) => {
+    try {
+      await mutation.mutateAsync(
+        {
+          Employees: payload,
+
+          key: "CREATE",
+          action: "CREATE",
+        },
+        {
+          onSuccess: (res) => {
+            history.push(`/${window?.contextPath}/employee/hrms/response`, {
+              isCampaign: false,
+              state: "success",
+              info: t("HR_EMPLOYEE_ID_LABEL"),
+              fileName: res?.Employees?.[0],
+              description: t(`EMPLOYEE_RESPONSE_CREATE_ACTION`),
+              message: t(`EMPLOYEE_RESPONSE_CREATE`),
+              back: t(`GO_BACK_TO_HOME`),
+              backlink: `/${window.contextPath}/employee`,
+            });
+          },
+          onError: (error) => {
+            history.push(`/${window?.contextPath}/employee/hrms/response`, {
+              isCampaign: false,
+              state: "error",
+              info: t("Testing"),
+              fileName: error?.Employees?.[0],
+              description: t(`EMPLOYEE_RESPONSE_CREATE`),
+              message: t(`EMPLOYEE_RESPONSE_CREATE`),
+              back: t(`GO_BACK_TO_HOME`),
+              backlink: `/${window.contextPath}/employee`,
+            });
+            // setTriggerEstimate(true);
+          },
+        }
+      );
+    } catch (error) {
+      debugger;
+      // setTriggerEstimate(true);
+    }
+  };
+
   const onSubmit = async (data) => {
     setShowToast(null);
 
     try {
       const type = await checkIfUserExist(data, tenantId);
-      debugger;
       if (type == true) {
         setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID" });
         setShowModal(false);
       } else {
         const payload = formPayloadToCreateUser(data, tenantId);
-        debugger;
-        navigateToAcknowledgement(payload);
+        await createEmployeeService(payload);
+
+        //  navigateToAcknowledgement(payload);
       }
     } catch (err) {
       debugger;
@@ -166,7 +211,7 @@ const CreateEmployee = ({ editUser = false }) => {
         <Header>{t("HR_COMMON_CREATE_EMPLOYEE_HEADER")}</Header>
       </div>
       <FormComposerV2
-        defaultValues={!editUser && data?.Employees  ? editDefaultUserValue(data?.Employees, tenantId) : ""}
+        defaultValues={!editUser && data?.Employees ? editDefaultUserValue(data?.Employees, tenantId) : ""}
         heading={t("")}
         config={config}
         onSubmit={onSubmit}

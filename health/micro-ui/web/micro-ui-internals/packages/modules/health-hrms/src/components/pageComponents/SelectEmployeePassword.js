@@ -1,6 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { LabelFieldPair, CardLabel, TextInput, CardLabelError } from "@egovernments/digit-ui-components";
+import { getPattern } from "../../utils/utlis";
 
 const SelectEmployeePassword = ({ t, config, onSelect, formData = {}, errors }) => {
   const { pathname: url } = useLocation();
@@ -58,13 +59,13 @@ const SelectEmployeePassword = ({ t, config, onSelect, formData = {}, errors }) 
                   //  defaultValue={undefined}
                   {...input.validation}
                 />
-                {input.password === "employeePassword" && password && password.length > 0 && !password.match(Digit.Utils.getPattern("Password")) && (
-                  <CardLabelError style={{ width: "100%", marginTop: "-15px", fontSize: "16px", marginBottom: "12px" }}>
+                {input.password === "employeePassword" && password && password.length > 0 && !password.match(getPattern("Password")) && (
+                  <CardLabelError style={{ width: "100%", marginTop: "0px", fontSize: "16px", marginBottom: "12px" }}>
                     {t("CORE_COMMON_APPLICANT_PASSWORD_INVALID")}
                   </CardLabelError>
                 )}
                 {input.password === "employeeConfirmPassword" && confirmPassword && confirmPassword.length > 0 && confirmPassword !== password && (
-                  <CardLabelError style={{ width: "100%", marginTop: "-15px", fontSize: "16px", marginBottom: "12px" }}>
+                  <CardLabelError style={{ width: "100%", marginTop: "0px", fontSize: "16px", marginBottom: "12px" }}>
                     {t("CORE_COMMON_APPLICANT_CONFIRM_PASSWORD_INVALID")}
                   </CardLabelError>
                 )}

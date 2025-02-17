@@ -18,8 +18,10 @@ const EmployeeApp = ({ path, url, userType }) => {
   // const HRMSDetails = Digit?.ComponentRegistryService?.getComponent("HRMSDetails");
   // const Inbox = Digit?.ComponentRegistryService?.getComponent("HRInbox");
   const CreateEmployee = Digit?.ComponentRegistryService?.getComponent("HRCreateEmployee");
-  // const EditEmpolyee = Digit?.ComponentRegistryService?.getComponent("HREditEmpolyee");
-
+  //const EditEmpolyee = Digit?.ComponentRegistryService?.getComponent("HREditEmpolyee");
+  const AssignCampaign = Digit?.ComponentRegistryService?.getComponent("AssignCampaign");
+  const ResponseScreen = Digit?.ComponentRegistryService?.getComponent("ResponseScreen");
+  
   return (
     <Switch>
       <React.Fragment>
@@ -31,8 +33,9 @@ const EmployeeApp = ({ path, url, userType }) => {
             / <span>{location.pathname === `/${window.contextPath}/employee/hrms/inbox` ? t("HR_COMMON_HEADER") : t("HR_COMMON_HEADER")}</span>
           </p>
           <PrivateRoute path={`${path}/create`} component={() => <CreateEmployee />} />
-          <PrivateRoute path={`${path}/response`} component={(props) => <HRMSResponse {...props} parentRoute={path} />} />
+          <PrivateRoute path={`${path}/response`} component={(props) => <ResponseScreen />} />
           <PrivateRoute path={`${path}/edit/:tenantId/:id`} component={() => <CreateEmployee editUser={true} />} />
+          <PrivateRoute path={`${path}/assign-campaign/:id`} component={() => <AssignCampaign />} />
         </div>
       </React.Fragment>
     </Switch>

@@ -38,6 +38,11 @@ import { overrideHooks, updateCustomConfigs } from "./hooks/hook_setup";
 import RolesAssigned from "./components/pageComponents/SelectRolesAssigned";
 import BoundaryComponent from "./components/pageComponents/SelectEmployeeBoundary";
 import Response from "./pages/employee/response";
+import AssignCampaign from "./pages/employee/createAssignments";
+
+import ResponseScreen from "./pages/employee/service_response";
+import CampaignsAssignment from "./components/pageComponents/CampaignAssignment";
+
 
 export const HRMSModule = ({ stateCode, userType, tenants }) => {
   //   const moduleCode = "HR";
@@ -58,8 +63,13 @@ export const HRMSModule = ({ stateCode, userType, tenants }) => {
   const moduleCode = ["HR", `boundary-${hierarchyType?.toString().toLowerCase()}`];
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
-
+ const tenantId = Digit.ULBService.getCurrentTenantId();
   Digit.SessionStorage.set("HRMS_TENANTS", tenants);
+
+    const { isLoading: isPaymentsModuleInitializing } = Digit.Hooks.hrms.useHrmsInitialization({
+    tenantId: tenantId,
+  });
+
   const { path, url } = useRouteMatch();
   if (!Digit.Utils.hrmsAccess()) {
     return null;
@@ -73,6 +83,8 @@ const componentsToRegister = {
   // HRMSCard,
   // HRMSDetails: Details,
   // SelectEmployeeEmailId,
+  
+  CampaignsAssignment,
   BoundaryComponent,
   SelectEmployeeName,
   SelectEmployeeEmailId,
@@ -83,6 +95,8 @@ const componentsToRegister = {
   SelectEmployeeDesignation,
   Jurisdictions,
   RolesAssigned,
+  AssignCampaign,
+  ResponseScreen,
   // SelectEmployeeId,
   // Jurisdictions,
   // Assignments,

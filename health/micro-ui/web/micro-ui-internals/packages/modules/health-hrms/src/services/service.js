@@ -7,10 +7,10 @@ import { convertEpochToDate } from "../utils/utlis";
 
 export const checkIfUserExist = async (data, tenantId) => {
   try {
-    debugger;
+   
     if (data?.SelectEmployeeId?.code && data?.SelectEmployeeId?.code?.trim().length > 0) {
       const result = await Digit.HRMSService.search(tenantId, null, { codes: data?.SelectEmployeeId?.code });
-      debugger;
+     
       if (result?.Employees?.length > 0) {
         return true; // User exists, return false
       } else {
@@ -23,6 +23,13 @@ export const checkIfUserExist = async (data, tenantId) => {
     throw error; // throw on error
   }
 };
+
+
+
+
+
+
+
 
 export const formPayloadToCreateUser = (data, tenantId) => {
   const mappedroles = [].concat.apply([], data?.RolesAssigned);
