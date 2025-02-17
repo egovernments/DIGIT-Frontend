@@ -175,7 +175,7 @@ const UpdateChecklist = () => {
             {
                 code: `${campaignName}.${checklistTypeTemp}.${roleTemp}.${helpTextCode}`,
                 locale: locale,
-                message: helpText ,
+                message: helpText || "." ,
                 module: "hcm-checklist"
             }
         );
@@ -446,7 +446,7 @@ const UpdateChecklist = () => {
                 history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
                     message: "ES_CHECKLIST_UPDATE_SUCCESS_RESPONSE",
                     preText: "ES_CHECKLIST_UPDATE_SUCCESS_RESPONSE_PRE_TEXT",
-                    actionLabel: "CS_CHECKLIST_NEW_RESPONSE_ACTION",
+                    actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
                     actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${campaignName}&campaignId=${campaignId}&projectType=${projectType}`,
                     secondaryActionLabel: "MY_CAMPAIGN",
                     secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign`,
