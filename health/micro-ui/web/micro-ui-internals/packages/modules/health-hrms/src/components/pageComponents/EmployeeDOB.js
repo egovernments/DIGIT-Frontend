@@ -6,6 +6,7 @@ import { convertEpochToDate } from "../Utils/index";
 const SelectDateofBirthEmployment = ({ t, config, onSelect, formData = {}, userType, register, errors }) => {
   const { pathname: url } = useLocation();
   const [date, setDate] = useState("");
+  //const isEdit = window.location.pathname.includes("/edit/");
   const inputs = [
     {
       label: "HR_BIRTH_DATE_LABEL",
@@ -22,6 +23,7 @@ const SelectDateofBirthEmployment = ({ t, config, onSelect, formData = {}, userT
   const setValue = (e, input) => {
     onSelect(config.key, { ...formData[config.key], [input]: e });
   };
+  
   return (
     <div>
       {inputs?.map((input, index) => (
@@ -40,7 +42,7 @@ const SelectDateofBirthEmployment = ({ t, config, onSelect, formData = {}, userT
                 type="date"
                 populators={{ name: "date" }}
                 onChange={(e) => {
-                  setDate(e || "");
+                 // setDate(e || "");
                   setValue(e || "", input.name);
                 }}
                 // value={date}

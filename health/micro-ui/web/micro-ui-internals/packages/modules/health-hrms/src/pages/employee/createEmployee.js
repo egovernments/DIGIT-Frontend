@@ -1,13 +1,12 @@
 import { FormComposerV2, Toast, Loader, Header } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import { newConfig } from "../../components/config/config";
-import { campaignAssignmentConfig } from "../../components/config/campaignAssignmentConfig";
 
 import { HRMS_CONSTANTS } from "../../constants/constants";
 
-import { checkIfUserExist, formPayloadToCreateUser, editDefaultUserValue } from "../../services/service";
+import { checkIfUserExist, formPayloadToCreateUser, editDefaultUserValue, formPayloadToUpdateUser } from "../../services/service";
 
 const CreateEmployee = ({ editUser = false }) => {
   const [editEmpolyee, setEditEmployee] = useState(null);
@@ -17,10 +16,12 @@ const CreateEmployee = ({ editUser = false }) => {
   const [showToast, setShowToast] = useState(null);
   const [phonecheck, setPhonecheck] = useState(false);
   const [checkfield, setcheck] = useState(false);
-  const [campaignAssignCheck, setCampaignAssignCheck] = useState(false);
+
   const { t } = useTranslation();
   const history = useHistory();
   const location = useLocation();
+
+  const { id } = useParams();
   const isMobile = window.Digit.Utils.browser.isMobile();
 
   const [showModal, setShowModal] = useState(false);
@@ -29,12 +30,8 @@ const CreateEmployee = ({ editUser = false }) => {
   };
 
   const mutation = Digit.Hooks.hrms.useHRMSCreate(tenantId);
-  const { isLoadings, isError, error, data } = Digit.Hooks.hrms.useHRMSSearch({ codes: location.codes }, tenantId);
-  useEffect(() => {
-    if (!editUser && data?.Employees) {
-      setEditEmployee(editDefaultUserValue(data.Employees, tenantId));
-    }
-  }, [data]);
+  const mutationUpdate = Digit.Hooks.hrms.useHRMSUpdate(tenantId);
+  const { isLoadings, isError, error, data } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);
 
   const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(
     Digit.ULBService.getStateId(),
@@ -93,36 +90,18 @@ const CreateEmployee = ({ editUser = false }) => {
       );
     }
 
-    if (formData?.SelectEmployeeName?.employeeName && formData?.SelectEmployeeType?.code && formData?.SelectEmployeeId?.code) {
+    if (
+      formData?.SelectEmployeeName?.employeeName &&
+      formData?.SelectEmployeeType?.code &&
+      formData?.SelectEmployeeId?.code
+      //  &&
+      // validatePassword(formData) &&
+      // checkMailNameNum(formData)
+    ) {
       setSubmitValve(true);
     } else {
       setSubmitValve(false);
     }
-  };
-
-  const navigateToAcknowledgement = (Employees) => {
-    history.replace(`/${window?.contextPath}/employee/hrms/response`, { Employees, key: "CREATE", action: "CREATE" });
-  };
-
-  const navigateToCampaignAssignmentAcknowledgement = (ProjectStaffPayload, selectedCampaignBoundary) => {
-    Digit.HRMSService.search(tenantId, null, { codes: hrmsUserName })
-      .then((res) => {
-        let UpdateAssignmentPayload = {};
-        if (res?.Employees?.length > 0) {
-          UpdateAssignmentPayload["Employees"] = res.Employees;
-        }
-        history.replace(`/${window?.contextPath}/employee/hrms/response`, {
-          payload: { ProjectStaffPayload, UpdateAssignmentPayload },
-          action: "CREATE",
-          campaignAssignment: true,
-          key: "CREATE",
-        });
-      })
-      .catch((err) => console.log(err));
-  };
-
-  const defaultValues = {
-    SelectEmployeeId: { code: "1234" },
   };
 
   const createEmployeeService = async (payload) => {
@@ -168,19 +147,74 @@ const CreateEmployee = ({ editUser = false }) => {
     }
   };
 
-  const onSubmit = async (data) => {
+  const updateEmployeeService = async (payload) => {
+    debugger;
+    try {
+      await mutationUpdate.mutateAsync(
+        {
+          Employees: payload,
+        },
+        {
+          onSuccess: (res) => {
+            debugger;
+            history.push(`/${window?.contextPath}/employee/hrms/response`, {
+              isCampaign: false,
+              state: "success",
+              info: t("HR_EMPLOYEE_ID_LABEL"),
+              fileName: res?.Employees?.[0],
+              description: t(`EMPLOYEE_RESPONSE_CREATE_ACTION`),
+              message: t(`EMPLOYEE_RESPONSE_CREATE`),
+              back: t(`GO_BACK_TO_HOME`),
+              backlink: `/${window.contextPath}/employee`,
+            });
+          },
+          onError: (error) => {
+            history.push(`/${window?.contextPath}/employee/hrms/response`, {
+              isCampaign: false,
+              state: "error",
+              info: t("Testing"),
+              fileName: error?.Employees?.[0],
+              description: t(`EMPLOYEE_RESPONSE_CREATE`),
+              message: t(`EMPLOYEE_RESPONSE_CREATE`),
+              back: t(`GO_BACK_TO_HOME`),
+              backlink: `/${window.contextPath}/employee`,
+            });
+            // setTriggerEstimate(true);
+          },
+        }
+      );
+    } catch (error) {
+      debugger;
+      // setTriggerEstimate(true);
+    }
+  };
+
+  const onSubmit = async (formData) => {
     setShowToast(null);
 
     try {
-      const type = await checkIfUserExist(data, tenantId);
-      if (type == true) {
-        setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID" });
-        setShowModal(false);
-      } else {
-        const payload = formPayloadToCreateUser(data, tenantId);
-        await createEmployeeService(payload);
+      if (editUser == false) {
+        const type = await checkIfUserExist(formData, tenantId);
+        if (type == true) {
+          setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID" });
+          setShowModal(false);
+        } else {
+          const payload = formPayloadToCreateUser(formData, tenantId);
+          await createEmployeeService(payload);
 
-        //  navigateToAcknowledgement(payload);
+          //  navigateToAcknowledgement(payload);
+        }
+      } else {
+        const type = await checkIfUserExist(formData, tenantId);
+        if (type == false) {
+          setShowToast({ key: true, label: "USer does not exits" });
+          setShowModal(false);
+        } else {
+          const payload = formPayloadToUpdateUser(formData, data?.Employees, tenantId);
+          await updateEmployeeService(payload);
+
+          //  navigateToAcknowledgement(payload);
+        }
       }
     } catch (err) {
       debugger;
@@ -188,6 +222,7 @@ const CreateEmployee = ({ editUser = false }) => {
       setShowModal(false);
     }
   };
+
   const openModal = (e) => {
     setCreateEmployeeData(e);
     setShowModal(true);
@@ -196,8 +231,6 @@ const CreateEmployee = ({ editUser = false }) => {
     return <Loader />;
   }
   const config = newConfig;
-
-  console.log(data?.Employees, "data?.Employees");
 
   return (
     <div style={{ marginBottom: "80px" }}>
@@ -211,7 +244,7 @@ const CreateEmployee = ({ editUser = false }) => {
         <Header>{t("HR_COMMON_CREATE_EMPLOYEE_HEADER")}</Header>
       </div>
       <FormComposerV2
-        defaultValues={!editUser && data?.Employees ? editDefaultUserValue(data?.Employees, tenantId) : ""}
+        defaultValues={editUser == true && data?.Employees ? editDefaultUserValue(data?.Employees, tenantId) : ""}
         heading={t("")}
         config={config}
         onSubmit={onSubmit}

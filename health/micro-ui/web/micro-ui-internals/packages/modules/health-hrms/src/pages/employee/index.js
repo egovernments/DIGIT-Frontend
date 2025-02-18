@@ -34,7 +34,7 @@ const EmployeeApp = ({ path, url, userType }) => {
           </p>
           <PrivateRoute path={`${path}/create`} component={() => <CreateEmployee />} />
           <PrivateRoute path={`${path}/response`} component={(props) => <ResponseScreen />} />
-          <PrivateRoute path={`${path}/edit/:tenantId/:id`} component={() => <CreateEmployee editUser={true} />} />
+          <PrivateRoute path={`${path}/edit/:id`} component={() => <CreateEmployee editUser={true} />} />
           <PrivateRoute path={`${path}/assign-campaign/:id`} component={() => <AssignCampaign />} />
         </div>
       </React.Fragment>

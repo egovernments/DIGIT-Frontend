@@ -1,9 +1,9 @@
 import { CardLabel, Dropdown, LabelFieldPair, Loader, RemoveableTag, MultiSelectDropdown } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState, useMemo } from "react";
 
-const RolesAssigned = ({ t, config, onSelect }) => {
+const RolesAssigned = ({ t, config, onSelect ,formData}) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
-
+const [roleAssigned, setroleAssigned] = useState(formData?.RolesAssigned);
   const [roleList, setRoleList] = useState([]);
   const [selectedRole, setSelectedRole] = useState([]);
   const { data: data, isLoading } = Digit.Hooks.hrms.useHrmsMDMS(tenantId, "egov-hrms", "HRMSRolesandDesignation") || {};
@@ -63,6 +63,7 @@ const RolesAssigned = ({ t, config, onSelect }) => {
 
       <div style={{ width: "100%" }}>
         <MultiSelectDropdown
+        selected={roleAssigned}
           additionalWrapperClass=""
           categorySelectAllLabel=""
           chipsKey=""
@@ -77,7 +78,7 @@ const RolesAssigned = ({ t, config, onSelect }) => {
           inputRef={null}
           isSearchable
           label="Select Option"
-          name="genders"
+          name="roleAssigned"
           onChange={() => {}}
           onSelect={(e) => {
             handleBoundarySelect(e);
