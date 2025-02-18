@@ -156,7 +156,7 @@ const CustomInboxTable = ({
                   progressComponent={<Loader />}
                   pagination
                   paginationServer
-                  customStyles={tableCustomStyle}
+                  customStyles={tableCustomStyle(true)}
                   onRowClicked={handleRowClick}
                   pointerOnHover
                   paginationTotalRows={totalCount}

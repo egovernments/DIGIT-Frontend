@@ -418,8 +418,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   const renderLabelPair = (heading, text) => (
     <div className="label-pair">
-      <span className="label-heading">{t(heading)}</span>
-      <span className="label-text">{text}</span>
+      <span className="view-label-heading">{t(heading)}</span>
+      <span className="view-label-text">{text}</span>
     </div>
   );
 
