@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { ActionBar, SubmitBar, ArrowLeft, ArrowForward } from "@egovernments/digit-ui-react-components";
 import { Button } from "@egovernments/digit-ui-components";
 import { PanelCard } from "@egovernments/digit-ui-components";
+import { ReposeScreenType } from "../../constants/enums";
 
 const ResponseScreen = () => {
   const { t } = useTranslation();
@@ -24,17 +25,21 @@ const ResponseScreen = () => {
         className=""
         customIcon=""
         description={t(state?.description)}
-        footerChildren={[
-          <Button
-            label={t(`HCM_AM_VIEW_ANOTHER_REGISTER`)}
-            onClick={() => {
-              history.push(`/${window.contextPath}/employee/`);
-            }}
-            variation="teritiary"
-            icon="ArrowForward"
-            isSuffix
-          />,
-        ]}
+        footerChildren={
+          state.isCampaign == ReposeScreenType.EDIT_USER || state.isCampaign == ReposeScreenType.EDIT_USER_ERROR
+            ? []
+            : [
+                <Button
+                  label={t(back)}
+                  onClick={() => {
+                    history.push(`/${window.contextPath}/employee/`);
+                  }}
+                  variation="teritiary"
+                  icon="ArrowForward"
+                  isSuffix
+                />,
+              ]
+        }
         footerStyles={{}}
         iconFill=""
         info={t(state?.info)}
@@ -51,12 +56,13 @@ const ResponseScreen = () => {
         <Button
           style={{ margin: "0.5rem", marginLeft: "6rem", minWidth: "16rem" }}
           variation="primary"
-          label={t(back)}
+          label={state.isCampaign == ReposeScreenType.CREAT_EUSER ? t("CORE_COMMON_CONTINUE_CAMPAIGN_ASSIGNMENTS") : t(back)}
           icon={"ArrowBack"}
           onClick={() => {
-
-           const backlink = state.isCampaign?`/${window.contextPath}/employee/` :`/${window.contextPath}/employee/hrms/assign-campaign/${state?.fileName?.code}`;
-
+            const backlink =
+              state.isCampaign == ReposeScreenType.CREAT_EUSER
+                ? `/${window.contextPath}/employee/hrms/assign-campaign/${state?.fileName?.code}`
+                : `/${window.contextPath}/employee/`;
             history.push(backlink);
           }}
         />

@@ -1,7 +1,7 @@
 import { CardLabel, Dropdown, LabelFieldPair, Loader, RemoveableTag, MultiSelectDropdown } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState, useMemo } from "react";
 import cleanup from "../Utils/cleanup";
-import BoundaryTypes from "../../constants/enums";
+import { BoundaryTypes } from "../../constants/enums";
 // import MultiSelectDropdown from "./Multiselect";
 
 const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
@@ -10,7 +10,7 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
   const [inactiveJurisdictions, setInactiveJurisdictions] = useState([]);
   const userProjectDetails = Digit.SessionStorage.get("currentProject");
   const { data: data = {}, isLoading } = Digit.Hooks.hrms.useHrmsMDMS(tenantId, "egov-hrms", "HRMSRolesandDesignation") || {};
-  debugger;
+  
   const { datak: boundaryData = {}, isBoundaryLoading } = Digit.Hooks.hrms.useBoundriesFetch(tenantId);
 
   const [jurisdictions, setjurisdictions] = useState(

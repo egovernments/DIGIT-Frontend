@@ -8,7 +8,7 @@ const SelectEmployeeName = ({ t, config, onSelect, formData = {}, userType, regi
   const isEdit = window.location.pathname.includes("/edit/");
   const inputs = [
     {
-      label: "HR_EMP_ID_LABEL",
+      label: "HR_EMP_NAME_LABEL",
       type: "text",
       name: "employeeName",
       isMandatory: true,
@@ -24,27 +24,35 @@ const SelectEmployeeName = ({ t, config, onSelect, formData = {}, userType, regi
 
   return (
     <div>
-      {inputs?.map((input, index) => (
-        <React.Fragment key={index}>
-          {errors[input.name] && <CardLabelError>{t(input.error)}</CardLabelError>}
-          <LabelFieldPair>
-            <CardLabel className="card-label-smaller">
-              {t(input.label)}
-              {input.isMandatory ? <span className="required"> *</span> : null}
-            </CardLabel>
-            <div className="digit-field">
-              <TextInput
-                key={input.name}
-                value={formData && formData[config.key] ? formData[config.key][input.name] : undefined}
-                onChange={(e) => setValue(e.target.value, input.name)}
-                disable={true}
-                defaultValue={undefined}
-                {...input.validation}
-              />
-            </div>
-          </LabelFieldPair>
-        </React.Fragment>
-      ))}
+      {inputs?.map((input, index) => {
+        let currentValue = (formData && formData[config.key] && formData[config.key][input.name]) || "";
+
+        return (
+          <React.Fragment key={index}>
+            <LabelFieldPair>
+              <CardLabel className="card-label-smaller">
+                {t(input.label)}
+                {input.isMandatory ? <span className="required"> *</span> : null}
+              </CardLabel>
+              <div className="digit-field">
+                <TextInput
+                  key={input.name}
+                  value={formData && formData[config.key] ? formData[config.key][input.name] : undefined}
+                  onChange={(e) => setValue(e.target.value, input.name)}
+                  disable={true}
+                  defaultValue={undefined}
+                  {...input.validation}
+                />
+                {currentValue && currentValue.length > 0 && !currentValue.match(Digit.Utils.getPattern("Name")) && (
+                  <CardLabelError style={{ width: "100%", marginTop: "0px", fontSize: "16px", marginBottom: "12px" }}>
+                    {t("CORE_COMMON_APPLICANT_NAME_INVALID")}
+                  </CardLabelError>
+                )}
+              </div>
+            </LabelFieldPair>
+          </React.Fragment>
+        );
+      })}
     </div>
   );
 };

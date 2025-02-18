@@ -1,15 +1,14 @@
 import { FormComposerV2, Toast, Loader, Header } from "@egovernments/digit-ui-components";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory, useLocation, useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
 import { campaignAssignmentConfig } from "../../components/config/campaignAssignmentConfig";
 
-import { HRMS_CONSTANTS } from "../../constants/constants";
 
 import { convertDateToEpoch } from "../../utils/utlis";
 
-const AssignCampaign = () => {
+const AssignCampaign = ({ editCampaign = false }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [canSubmit, setSubmitValve] = useState(false);
 
@@ -55,7 +54,7 @@ const AssignCampaign = () => {
           onError: (error) => {
             debugger;
             history.push(`/${window?.contextPath}/employee/hrms/response`, {
-            isCampaign: true,
+              isCampaign: true,
               state: "error",
               info: t("Testing"),
               fileName: error?.Employees?.[0],

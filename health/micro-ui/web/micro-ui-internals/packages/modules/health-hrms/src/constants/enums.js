@@ -1,4 +1,4 @@
-const BoundaryTypes = Object.freeze({
+export const BoundaryTypes = Object.freeze({
     NATIONAL: "COUNTRY",
     PROVINCE: "PROVINCE",
     DISTRICT: "DISTRICT",
@@ -7,4 +7,16 @@ const BoundaryTypes = Object.freeze({
     VILLAGE: "VILLAGE"
 });
 
-export default BoundaryTypes;
+ 
+
+export const ReposeScreenType = Object.freeze({
+    CREAT_EUSER: "CREATEUSER",
+    EDIT_USER: "EDITUSER",
+    CREATE_USER_ERROR: "CREATEUSERERROR",
+    EDIT_USER_ERROR: "EDITUSERERROR",
+    ASSIGN_CAMPAIGN: "ASSIGNCAMPAIGN",
+    EDIT_ASSIGNED_CAMPAIGN: "EDITASSIGNEDCAMPAIGN",
+    EDIT_ASSIGNED_CAMPAIGN_ERROR: "EDITASSIGNEDCAMPAIGNERROR"
+});
+
+

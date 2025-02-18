@@ -5,6 +5,7 @@ import { useHistory, useLocation, useParams } from "react-router-dom";
 import { newConfig } from "../../components/config/config";
 
 import { HRMS_CONSTANTS } from "../../constants/constants";
+import { ReposeScreenType } from "../../constants/enums";
 
 import { checkIfUserExist, formPayloadToCreateUser, editDefaultUserValue, formPayloadToUpdateUser } from "../../services/service";
 
@@ -116,27 +117,29 @@ const CreateEmployee = ({ editUser = false }) => {
         {
           onSuccess: (res) => {
             history.push(`/${window?.contextPath}/employee/hrms/response`, {
-              isCampaign: false,
+              isCampaign: ReposeScreenType.CREAT_EUSER,
               state: "success",
               info: t("HR_EMPLOYEE_ID_LABEL"),
               fileName: res?.Employees?.[0],
-              description: t(`EMPLOYEE_RESPONSE_CREATE_ACTION`),
+              description: t(`HRMS_CREATE_EMPLOYEE_INFO`),
               message: t(`EMPLOYEE_RESPONSE_CREATE`),
-              back: t(`GO_BACK_TO_HOME`),
+              back: t(`CORE_COMMON_GO_TO_HOME`),
               backlink: `/${window.contextPath}/employee`,
             });
           },
           onError: (error) => {
             history.push(`/${window?.contextPath}/employee/hrms/response`, {
-              isCampaign: false,
+              isCampaign: ReposeScreenType.CREATE_USER_ERROR,
               state: "error",
-              info: t("Testing"),
+              info: null,
               fileName: error?.Employees?.[0],
-              description: t(`EMPLOYEE_RESPONSE_CREATE`),
-              message: t(`EMPLOYEE_RESPONSE_CREATE`),
-              back: t(`GO_BACK_TO_HOME`),
+              description: null,
+              message: t(`EMPLOYEE_RESPONSE_CREATE_ACTION_ERROR`),
+              back: t(`CORE_COMMON_GO_TO_HOME`),
               backlink: `/${window.contextPath}/employee`,
             });
+
+            //t(`ERR_PLAN_UPDATE_FAILED`)
             // setTriggerEstimate(true);
           },
         }
@@ -158,25 +161,25 @@ const CreateEmployee = ({ editUser = false }) => {
           onSuccess: (res) => {
             debugger;
             history.push(`/${window?.contextPath}/employee/hrms/response`, {
-              isCampaign: false,
+              isCampaign: ReposeScreenType.EDIT_USER,
               state: "success",
               info: t("HR_EMPLOYEE_ID_LABEL"),
               fileName: res?.Employees?.[0],
-              description: t(`EMPLOYEE_RESPONSE_CREATE_ACTION`),
-              message: t(`EMPLOYEE_RESPONSE_CREATE`),
-              back: t(`GO_BACK_TO_HOME`),
+              description: null,
+              message: t(`EMPLOYEE_RESPONSE_UPDATE_ACTION`),
+              back: t(`CORE_COMMON_GO_TO_HOME`),
               backlink: `/${window.contextPath}/employee`,
             });
           },
           onError: (error) => {
             history.push(`/${window?.contextPath}/employee/hrms/response`, {
-              isCampaign: false,
+              isCampaign: ReposeScreenType.EDIT_USER_ERROR,
               state: "error",
               info: t("Testing"),
               fileName: error?.Employees?.[0],
-              description: t(`EMPLOYEE_RESPONSE_CREATE`),
-              message: t(`EMPLOYEE_RESPONSE_CREATE`),
-              back: t(`GO_BACK_TO_HOME`),
+              description: null,
+              message: t(`EMPLOYEE_RESPONSE_UPDATE_ACTION`),
+              back: t(`CORE_COMMON_GO_TO_HOME`),
               backlink: `/${window.contextPath}/employee`,
             });
             // setTriggerEstimate(true);

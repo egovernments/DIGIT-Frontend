@@ -36,11 +36,12 @@ const SelectDateofBirthEmployment = ({ t, config, onSelect, formData = {}, userT
             </CardLabel>
             <div className="digit-field">
               <TextInput
-                // populators={{
-                //   validation: { ...input.validation },
-                // }}
+                populators={{
+                  name: "date" ,
+                  validation: { ...input.validation },
+                }}
                 type="date"
-                populators={{ name: "date" }}
+                //populators={{ name: "date" }}
                 onChange={(e) => {
                  // setDate(e || "");
                   setValue(e || "", input.name);
@@ -52,8 +53,7 @@ const SelectDateofBirthEmployment = ({ t, config, onSelect, formData = {}, userT
                 //   setValue(e, input.name);
                 // }}
                 disable={false}
-                // defaultValue={undefined}
-                // value=""
+                max={convertEpochToDate(new Date().setFullYear(new Date().getFullYear() - 18))}
               />
             </div>
           </LabelFieldPair>

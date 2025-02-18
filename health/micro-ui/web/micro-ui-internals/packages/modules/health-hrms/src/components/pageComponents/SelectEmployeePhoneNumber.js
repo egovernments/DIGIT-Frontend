@@ -15,7 +15,7 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
   const inputs = [
     {
       label: t("HR_MOB_NO_LABEL"),
-      isMandatory: false,
+      isMandatory: true,
       type: "text",
       name: "mobileNumber",
       populators: {
