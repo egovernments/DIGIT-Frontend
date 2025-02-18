@@ -974,10 +974,11 @@ export const UICustomizations = {
       const rolesCodes = Digit.Hooks.useSessionStorage("User", {})[0]?.info?.roles;
       const roles = rolesCodes.map((item) => item.code);
       const hasRequiredRole = roles.some((role) => role === "ROOT_POPULATION_DATA_APPROVER" || role === "POPULATION_DATA_APPROVER");
+      const EstimationsfileId = row?.files.find((item) => item.templateIdentifier === "Estimations")?.filestoreId;
       const handleFileDownload=()=>{
-        const fileId = row?.files.find((item) => item.templateIdentifier === "Population")?.filestoreId;
+        const fileId = row?.files.find((item) => item.templateIdentifier === "Estimations")?.filestoreId;
         if (!fileId) {
-              console.error("Population template file not found");
+          console.error("Estimation template file not found");
               return;
             }
         const campaignName = row?.name || "";
@@ -1045,6 +1046,7 @@ export const UICustomizations = {
               icon={"FileDownload"}
               style={{width:"290px"}}
               type="button"
+              isDisabled={!EstimationsfileId}
               // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("DOWNLOAD", row)}
             />
