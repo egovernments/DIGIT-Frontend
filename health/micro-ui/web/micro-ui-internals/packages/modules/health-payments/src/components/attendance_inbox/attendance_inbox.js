@@ -154,7 +154,7 @@ const AttendanceInboxComponent = () => {
     Digit.SessionStorage.set("paymentInbox", existingData);
 
     // Trigger the approval action
-    triggerAttendanceSearch(newFilter, StatusEnum.PENDING_FOR_APPROVAL);
+    triggerAttendanceSearch(newFilter, selectedStatus);
   };
 
   const handlePaginationChange = (page) => {

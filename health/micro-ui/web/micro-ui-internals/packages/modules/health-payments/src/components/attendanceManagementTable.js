@@ -162,7 +162,7 @@ const AttendanceManagementTable = ({ ...props }) => {
         progressComponent={<Loader />}
         pagination
         paginationServer
-        customStyles={tableCustomStyle}
+        customStyles={tableCustomStyle(false)}
         paginationDefaultPage={currentPage}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handlePerRowsChange}

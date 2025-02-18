@@ -112,7 +112,7 @@ const BillInboxTable = ({
                     data={props.tableData}
                     pagination
                     paginationServer
-                    customStyles={tableCustomStyle}
+                    customStyles={tableCustomStyle(true)}
                     paginationDefaultPage={props?.currentPage}
                     onRowClicked={handleRowClick}
                     pointerOnHover
