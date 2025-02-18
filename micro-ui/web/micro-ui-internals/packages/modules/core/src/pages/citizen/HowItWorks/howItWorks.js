@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 const HowItWorks = ({ module }) => {
   const user = Digit.UserService.getUser();
   const tenantId =
-    user?.info?.tenantId || Digit.ULBService.getCurrentTenantId();
+    user?.info?.tenantId || Digit?.ULBService?.getCurrentTenantId();
   const { t } = useTranslation();
   const storeData = Digit.SessionStorage.get("initData");
   const stateInfo = storeData.stateInfo;
@@ -53,7 +53,7 @@ const HowItWorks = ({ module }) => {
   };
 
   const { isLoading, data } = Digit.Hooks.useGetHowItWorksJSON(
-    Digit.ULBService.getStateId()
+    Digit?.ULBService?.getStateId()
   );
 
   const mdmsConfigResult =

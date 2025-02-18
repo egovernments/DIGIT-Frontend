@@ -74,7 +74,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     Digit.UserService.setUser(user);
     setCitizenDetail(user?.info, user?.access_token, stateCode);
     const redirectPath = location.state?.from || DEFAULT_REDIRECT_URL;
-    if (!Digit.ULBService.getCitizenCurrentTenant(true)) {
+    if (!Digit?.ULBService?.getCitizenCurrentTenant(true)) {
       history.replace(`/${window?.contextPath}/citizen/select-location`, {
         redirectBackTo: redirectPath,
       });
@@ -183,7 +183,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
           }
         }
         if (window?.globalConfigs?.getConfig("ENABLE_SINGLEINSTANCE")) {
-          info.tenantId = Digit.ULBService.getStateId();
+          info.tenantId = Digit?.ULBService?.getStateId();
         }
 
         setUser({ info, ...tokens });
@@ -198,7 +198,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
         const { ResponseInfo, UserRequest: info, ...tokens } = await Digit.UserService.registerUser(requestData, stateCode);
 
         if (window?.globalConfigs?.getConfig("ENABLE_SINGLEINSTANCE")) {
-          info.tenantId = Digit.ULBService.getStateId();
+          info.tenantId = Digit?.ULBService?.getStateId();
         }
 
         setUser({ info, ...tokens });
@@ -241,7 +241,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
             <SelectMobileNumber
               onSelect={selectMobileNumber}
               config={stepItems[0]}
-              mobileNumber={params.mobileNumber || ""}
+              mobileNumber={params?.mobileNumber || ""}
               onMobileChange={handleMobileChange}
               canSubmit={canSubmitNo}
               showRegisterLink={isUserRegistered && !location.state?.role}
@@ -250,7 +250,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
           </Route>
           <Route path={`${path}/otp`}>
             <SelectOtp
-              config={{ ...stepItems[1], texts: { ...stepItems[1].texts, cardText: `${stepItems[1].texts.cardText} ${params.mobileNumber || ""}` } }}
+              config={{ ...stepItems[1], texts: { ...stepItems[1].texts, cardText: `${stepItems[1].texts.cardText} ${params?.mobileNumber || ""}` } }}
               onOtpChange={handleOtpChange}
               onResend={resendOtp}
               onSelect={selectOtp}

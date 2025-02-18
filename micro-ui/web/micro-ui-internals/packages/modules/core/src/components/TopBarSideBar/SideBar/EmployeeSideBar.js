@@ -12,7 +12,7 @@ const EmployeeSideBar = () => {
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
   const { t } = useTranslation();
   const history = useHistory();
-  const tenantId = Digit.ULBService.getStateId();
+  const tenantId = Digit?.ULBService?.getStateId();
 
   function extractLeftIcon(data = {}) {
     for (const key in data) {

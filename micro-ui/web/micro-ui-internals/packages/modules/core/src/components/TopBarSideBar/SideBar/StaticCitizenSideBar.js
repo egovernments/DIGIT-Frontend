@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import useStore from "../../../../libraries/src/hooks/useStore"
 import {
   HomeIcon,
   EditPencilIcon,
@@ -80,7 +81,7 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
   const history = useHistory();
   const location = useLocation();
   const { pathname } = location;
-  const { data: storeData, isFetched } = Digit.Hooks.useStore.getInitData();
+  const { data: storeData, isFetched } = useStore.getInitData();
   const { stateInfo } = storeData || {};
   const user = Digit.UserService.getUser();
   let isMobile = window.Digit.Utils.browser.isMobile();
@@ -132,7 +133,7 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
 
   menuItems = menuItems.filter((item) => item.element !== "LANGUAGE");
 
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const MenuItem = ({ item }) => {
     const leftIconArray = item?.icon || item.icon?.type?.name;
     const leftIcon = leftIconArray
@@ -233,7 +234,7 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
       },
     ];
   }
-  Object.keys(linkData)
+  Object.keys(linkData || {})
     ?.sort((x, y) => y.localeCompare(x))
     ?.map((key) => {
       if (linkData[key][0]?.sidebar === `${window.contextPath}-links`) {

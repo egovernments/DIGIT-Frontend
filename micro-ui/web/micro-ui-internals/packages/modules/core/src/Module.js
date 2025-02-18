@@ -14,13 +14,18 @@ import ErrorBoundary from "./components/ErrorBoundaries";
 import getStore from "./redux/store";
 import PrivacyComponent from "./components/PrivacyComponent";
 import OtpComponent from "./pages/employee/Otp/OtpCustomComponent";
+import {useInitStore} from "../libraries/src/hooks/store"
 
-const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLanding }) => {
-  const { isLoading, data: initData={} } = Digit.Hooks.useInitStore(stateCode, enabledModules);
+console.log("inside module.js of core")
+console.log(Digit.Hooks);
+
+const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding }) => {
+  console.log("inside DigitUIWrapper of core");
+  const { isLoading, data: initData={} } = useInitStore(stateCode, enabledModules);
   if (isLoading) {
     return <Loader page={true} />;
   }
-  const data=getStore(initData, moduleReducers(initData)) || {};
+  const data=getStore(initData) || {};
   const i18n = getI18n();
   if(!Digit.ComponentRegistryService.getComponent("PrivacyComponent")){
     Digit.ComponentRegistryService.setComponent("PrivacyComponent", PrivacyComponent);
@@ -56,6 +61,8 @@ const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLand
 };
 
 export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, defaultLanding }) => {
+  console.log("inside digitui of core");
+  var Digit = window.Digit || {};
   const [privacy, setPrivacy] = useState(Digit.Utils.getPrivacyObject() || {});
   const userType = Digit.UserService.getType();
   const queryClient = new QueryClient({
@@ -79,7 +86,6 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, d
   const DSO = Digit.UserService.hasAccess(["FSM_DSO"]);
 
   return (
-    <div>
       <ErrorBoundary>
         <QueryClientProvider client={queryClient}>
           <ComponentProvider.Provider value={registry}>
@@ -117,12 +123,11 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, d
                 },
               }}
             >
-              <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding} />
+              <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} defaultLanding={defaultLanding} />
             </PrivacyProvider.Provider>
           </ComponentProvider.Provider>
         </QueryClientProvider>
       </ErrorBoundary>
-    </div>
   );
 };
 

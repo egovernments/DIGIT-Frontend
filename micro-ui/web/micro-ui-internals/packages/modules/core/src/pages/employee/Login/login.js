@@ -4,6 +4,9 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
+import {useTenants} from "../../../../libraries/src/hooks/useTenants";
+import useStore from "../../../../libraries/src/hooks/useStore";
+import useCustomAPIMutationHook from "../../../../libraries/src/hooks/useCustomAPIMutationHook"
 
 /* set employee details to enable backward compatiable */
 const setEmployeeDetail = (userObject, token) => {
@@ -23,8 +26,8 @@ const setEmployeeDetail = (userObject, token) => {
 };
 
 const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
-  const { data: cities, isLoading } = Digit.Hooks.useTenants();
-  const { data: storeData, isLoading: isStoreLoading } = Digit.Hooks.useStore.getInitData();
+  const { data: cities, isLoading } = useTenants();
+  const { data: storeData, isLoading: isStoreLoading } = useStore.getInitData();
   const { stateInfo } = storeData || {};
   const [user, setUser] = useState(null);
   const [showToast, setShowToast] = useState(null);
@@ -72,7 +75,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       ...data,
       userType: "EMPLOYEE",
     };
-    requestData.tenantId = data?.city?.code || Digit.ULBService.getStateId();
+    requestData.tenantId = data?.city?.code || Digit?.ULBService?.getStateId();
     delete requestData.city;
     try {
       const { UserRequest: info, ...tokens } = await Digit.UserService.authenticate(requestData);
@@ -91,13 +94,13 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
 
   const reqCreate = {
     url: `/user-otp/v1/_send`,
-    params: { tenantId: Digit.ULBService.getStateId() },
+    params: { tenantId: Digit?.ULBService?.getStateId() },
     body: {},
     config: {
       enable: false,
     },
   };
-  const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
+  const mutation = useCustomAPIMutationHook(reqCreate);
 
   const onOtpLogin = async (data) => {
     const inputEmail = data.email;
@@ -107,7 +110,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
           otp: {
             userName: data.email,
             type: "login",
-            tenantId: Digit.ULBService.getStateId(),
+            tenantId: Digit?.ULBService?.getStateId(),
             userType: "EMPLOYEE",
           },
         },
@@ -125,7 +128,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
         onSuccess: async (data) => {
           history.push({
             pathname: `/${window?.contextPath}/employee/user/login/otp`,
-            state: { email: inputEmail, tenant: Digit.ULBService.getStateId() },
+            state: { email: inputEmail, tenant: Digit?.ULBService?.getStateId() },
           });
         },
       }
@@ -140,8 +143,8 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     history.push(`/${window?.contextPath}/employee/user/forgot-password`);
   };
   const defaultValue = {
-    code: Digit.ULBService.getStateId(),
-    name: Digit.Utils.locale.getTransformedLocale(`TENANT_TENANTS_${Digit.ULBService.getStateId()}`),
+    code: Digit?.ULBService?.getStateId(),
+    name: Digit.Utils.locale.getTransformedLocale(`TENANT_TENANTS_${Digit?.ULBService?.getStateId()}`),
   };
 
   let config = [{ body: propsConfig?.inputs }];

@@ -5,6 +5,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import ChangeCity from "../ChangeCity";
 import ChangeLanguage from "../ChangeLanguage";
 import {TopBar as TopBarComponentMain } from "@egovernments/digit-ui-components";
+import {useNotificationCount} from "../../../libraries/src/hooks/events"
 
 const TopBar = ({
   t,
@@ -24,21 +25,48 @@ const TopBar = ({
 }) => {
   const [profilePic, setProfilePic] = React.useState(null);
 
-  React.useEffect(async () => {
+  // React.useEffect(async () => {
 
-    const tenant = Digit.Utils.getMultiRootTenant() ? Digit.ULBService.getStateId(): Digit.ULBService.getCurrentTenantId();
-    const uuid = userDetails?.info?.uuid;
-    if (uuid) {
-      const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
-      if (usersResponse && usersResponse.user && usersResponse.user.length) {
-        const userDetails = usersResponse.user[0];
-        const thumbs = userDetails?.photo?.split(",");
-        setProfilePic(thumbs?.at(0));
+  //   const tenant = Digit.Utils.getMultiRootTenant() ? Digit?.ULBService?.getStateId(): Digit?.ULBService?.getCurrentTenantId();
+  //   const uuid = userDetails?.info?.uuid;
+  //   if (uuid) {
+  //     const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
+  //     if (usersResponse && usersResponse.user && usersResponse.user.length) {
+  //       const userDetails = usersResponse.user[0];
+  //       const thumbs = userDetails?.photo?.split(",");
+  //       setProfilePic(thumbs?.at(0));
+  //     }
+  //   }
+  // }, [profilePic !== null, userDetails?.info?.uuid]);
+
+  React.useEffect(() => {
+    const fetchProfilePic = async () => {
+      const tenant = Digit.Utils.getMultiRootTenant()
+        ? Digit?.ULBService?.getStateId()
+        : Digit?.ULBService?.getCurrentTenantId();
+      const uuid = userDetails?.info?.uuid;
+      if (uuid) {
+        try {
+          const usersResponse = await Digit.UserService.userSearch(
+            tenant,
+            { uuid: [uuid] },
+            {}
+          );
+          if (usersResponse?.user?.length) {
+            const userDetails = usersResponse.user[0];
+            const thumbs = userDetails?.photo?.split(",");
+            setProfilePic(thumbs?.at(0));
+          }
+        } catch (error) {
+          console.error("Error fetching profile picture:", error);
+        }
       }
-    }
-  }, [profilePic !== null, userDetails?.info?.uuid]);
-
-  const CitizenHomePageTenantId = Digit.ULBService.getCitizenCurrentTenant(true);
+    };
+  
+    fetchProfilePic();
+  }, [userDetails?.info?.uuid]); // ✅ Correct dependency array
+  
+  const CitizenHomePageTenantId = Digit?.ULBService?.getCitizenCurrentTenant(true);
 
   let history = useHistory();
   const { pathname } = useLocation();
@@ -52,7 +80,7 @@ const TopBar = ({
     return false;
   };
 
-  const { data: { unreadCount: unreadNotificationCount } = {}, isSuccess: notificationCountLoaded } = Digit.Hooks.useNotificationCount({
+  const { data: { unreadCount: unreadNotificationCount } = {}, isSuccess: notificationCountLoaded } = useNotificationCount({
     tenantId: CitizenHomePageTenantId,
     config: {
       enabled: conditionsToDisableNotificationCountTrigger(),

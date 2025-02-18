@@ -16,6 +16,7 @@ import HowItWorks from "./HowItWorks/howItWorks";
 import Login from "./Login";
 import Search from "./SearchApp";
 import StaticDynamicCard from "./StaticDynamicComponent/StaticDynamicCard";
+import useCustomMDMS from "../../../libraries/src/hooks/useCustomMDMS"
 
 const sidebarHiddenFor = [
   `${window?.contextPath}/citizen/register/name`,
@@ -26,7 +27,7 @@ const sidebarHiddenFor = [
 ];
 
 const getTenants = (codes, tenants) => {
-  return tenants.filter((tenant) => codes.map((item) => item.code).includes(tenant.code));
+  return tenants.filter((tenant) => codes?.map((item) => item.code).includes(tenant.code));
 };
 
 const Home = ({
@@ -45,8 +46,8 @@ const Home = ({
   pathname,
   initData,
 }) => {
-  const { isLoading: islinkDataLoading, data: linkData, isFetched: isLinkDataFetched } = Digit.Hooks.useCustomMDMS(
-    Digit.ULBService.getStateId(),
+  const { isLoading: islinkDataLoading, data: linkData, isFetched: isLinkDataFetched } = useCustomMDMS(
+    Digit?.ULBService?.getStateId(),
     "ACCESSCONTROL-ACTIONS-TEST",
     [
       {
@@ -75,7 +76,7 @@ const Home = ({
   };
 
   const hideSidebar = sidebarHiddenFor.some((e) => window.location.href.includes(e));
-  const appRoutes = modules.map(({ code, tenants }, index) => {
+  const appRoutes = modules?.map(({ code, tenants }, index) => {
     const Module = Digit.ComponentRegistryService.getComponent(`${code}Module`);
     return Module ? (
       <Route key={index} path={`${path}/${code.toLowerCase()}`}>
@@ -84,7 +85,7 @@ const Home = ({
     ) : null;
   });
 
-  const ModuleLevelLinkHomePages = modules.map(({ code, bannerImage }, index) => {
+  const ModuleLevelLinkHomePages = modules?.map(({ code, bannerImage }, index) => {
     let Links = Digit.ComponentRegistryService.getComponent(`${code}Links`) || (() => <React.Fragment />);
     let mdmsDataObj = isLinkDataFetched ? processLinkData(linkData, code, t) : undefined;
 

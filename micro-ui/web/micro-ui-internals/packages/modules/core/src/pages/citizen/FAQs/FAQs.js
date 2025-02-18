@@ -5,14 +5,14 @@ import FaqComponent from "./FaqComponent";
 
 const FAQsSection = ({ module }) => {
   const user = Digit.UserService.getUser();
-  const tenantId = user?.info?.tenantId || Digit.ULBService.getCurrentTenantId();
+  const tenantId = user?.info?.tenantId || Digit?.ULBService?.getCurrentTenantId();
   const { t } = useTranslation();
 
   const SearchImg = () => {
     return <SearchIconSvg className="signature-img" />;
   };
 
-  const { isLoading, data } = Digit.Hooks.useGetFAQsJSON(Digit.ULBService.getStateId());
+  const { isLoading, data } = Digit.Hooks.useGetFAQsJSON(Digit?.ULBService?.getStateId());
 
   const moduleFaqs = data?.MdmsRes["common-masters"]?.faqs[0]?.[`${module}`].faqs;
 

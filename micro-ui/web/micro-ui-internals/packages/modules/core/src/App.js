@@ -7,14 +7,16 @@ import Otp from "./pages/employee/Otp";
 import ViewUrl from "./pages/employee/ViewUrl";
 import CustomErrorComponent from "./components/CustomErrorComponent";
 import DummyLoaderScreen from "./components/DummyLoader";
+import useStore from "../libraries/src/hooks/useStore"
 
 export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen" }) => {
+  console.log("inside core App")
   const history = useHistory();
   const { pathname } = useLocation();
   const innerWidth = window.innerWidth;
-  const cityDetails = Digit.ULBService.getCurrentUlb();
+  const cityDetails = Digit?.ULBService?.getCurrentUlb();
   const userDetails = Digit.UserService.getUser();
-  const { data: storeData } = Digit.Hooks.useStore.getInitData();
+  const { data: storeData } = useStore.getInitData();
   const { stateInfo } = storeData || {};
 
   const DSO = Digit.UserService.hasAccess(["FSM_DSO"]);
@@ -88,7 +90,8 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite
 
 export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen" }) => {
   // const globalPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
-  const { data: storeData } = Digit.Hooks.useStore.getInitData();
+  console.log("inside digitapp wrapper")
+  const { data: storeData } = useStore.getInitData();
   const { stateInfo } = storeData || {};
   const userScreensExempted = ["user/profile", "user/error"];
   const isUserProfile = userScreensExempted.some((url) => location?.pathname?.includes(url));

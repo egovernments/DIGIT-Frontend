@@ -1,9 +1,10 @@
 import { Loader } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import useStore from "../../libraries/src/hooks/useStore";
 
 const Header = ({ showTenant = true }) => {
-  const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
+  const { data: storeData, isLoading } = useStore.getInitData();
   const { stateInfo } = storeData || {};
   const { t } = useTranslation();
 

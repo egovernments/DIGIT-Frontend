@@ -47,7 +47,7 @@ const defaultImage =
   "L+RGKCddCGmatiPyPB/+ekO/M/q/7uvbt22kTt3zEnXPzCV13T3Gel4/6NduDu66xRvlPNkM1RjjxUdv+4WhGx6TftD19Q/dfzpwcHO+rE3fAAAAAElFTkSuQmCC";
 
 const defaultValidationConfig = {
-  "tenantId": `${Digit.ULBService.getStateId()}`,
+  "tenantId": `${Digit?.ULBService?.getStateId()}`,
   "UserProfileValidationConfig": [
     {
       "name": "/^[a-zA-Z ]+$/i",
@@ -61,8 +61,8 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const history = useHistory();
   const { t } = useTranslation();
   const url = window.location.href;
-  const stateId = Digit.ULBService.getStateId();
-  const tenant = Digit.ULBService.getCurrentTenantId();
+  const stateId = Digit?.ULBService?.getStateId();
+  const tenant = Digit?.ULBService?.getCurrentTenantId();
   const userInfo = Digit.UserService.getUser()?.info || {};
   const [userDetails, setUserDetails] = useState(null);
   const [name, setName] = useState(userInfo?.name ? userInfo.name : "");

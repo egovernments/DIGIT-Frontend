@@ -8,7 +8,7 @@ const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...
   const { t } = useTranslation();
   const { isLoading, data } = Digit.Hooks.useAccessControl();
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
-  const tenantId = Digit.ULBService.getStateId();
+  const tenantId = Digit?.ULBService?.getStateId();
 
   // const transformURL = (url = "") => {
   //   if (url == "/") {

@@ -18,7 +18,7 @@ const redirectURL = uiHomePage?.redirectURL;
 const { data: cities, isLoading } = Digit.Hooks.useTenants();
 
 
-  const [selectedCity, setSelectedCity] = useState(() => ({ code: Digit.ULBService.getCitizenCurrentTenant(true) }));
+  const [selectedCity, setSelectedCity] = useState(() => ({ code: Digit?.ULBService?.getCitizenCurrentTenant(true) }));
   const [showError, setShowError] = useState(false);
 
   const texts = useMemo(

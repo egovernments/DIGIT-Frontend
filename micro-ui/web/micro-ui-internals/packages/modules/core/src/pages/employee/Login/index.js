@@ -4,6 +4,7 @@ import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { loginConfig as defaultLoginConfig } from "./config";
 import { LoginOtpConfig as defaultLoginOtpConfig } from "./ConfigOtp";
 import LoginComponent from "./login";
+import useCommonMDMS from "../../../../libraries/src/hooks/useMDMS"
 
 const EmployeeLogin = ({ stateCode }) => {
   const { t } = useTranslation();
@@ -14,14 +15,14 @@ const EmployeeLogin = ({ stateCode }) => {
   const language = Digit.StoreData.getCurrentLanguage();
   const modulePrefix = "digit";
   const loginType = window?.globalConfigs?.getConfig("OTP_BASED_LOGIN") || false;
-  const { data: store } = Digit.Services.useStore({
-    stateCode,
-    moduleCode,
-    language,
-    modulePrefix,
-  });
+  // const { data: store } = Digit.Services.useStore({
+  //   stateCode,
+  //   moduleCode,
+  //   language,
+  //   modulePrefix,
+  // });
 
-  const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(stateCode, "commonUiConfig", ["LoginConfig"], {
+  const { data: mdmsData, isLoading } = useCommonMDMS(stateCode, "commonUiConfig", ["LoginConfig"], {
     select: (data) => {
       return {
         config: data?.commonUiConfig?.LoginConfig,

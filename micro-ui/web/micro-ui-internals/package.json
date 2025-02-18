@@ -3,10 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "workspaces": [
-    "packages/libraries",
+    "packages/modules/core/libraries",
     "example",
-    "packages/css",
- 
     "packages/modules/*"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
@@ -22,7 +20,7 @@
     "start:script": "./scripts/create.sh",
     "devD:css": "cd packages/css && yarn start",
     "publish:css": "cd packages/css && yarn publish --access public",
-    "dev:libraries": "cd packages/libraries && yarn build",
+    "dev:libraries": "cd packages/modules/core/libraries && yarn build",
     "devD:components": "cd packages/react-components && yarn start",
     "dev:example": "cd example && yarn start",
     "dev:core": "cd packages/modules/core && yarn build",
@@ -37,7 +35,7 @@
     "devD:sandbox": "cd packages/modules/sandbox && yarn start",
     "dev:web": "webpack serve --config webpack.config.js --mode development --open",
     "build": "run-p build:**",
-    "build:libraries": "cd packages/libraries && yarn build",
+    "build:libraries": "cd packages/modules/core/libraries && yarn build",
     "buildD:components": "cd packages/react-components && yarn build",
     "buildD:svgcomponents": "cd packages/svg-components && yarn build",
     "buildD:dss": "cd packages/modules/dss && yarn build",

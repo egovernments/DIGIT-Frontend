@@ -10,7 +10,7 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
   const { t } = useTranslation();
   const history = useHistory();
-  const tenantId = Digit.ULBService.getStateId();
+  const tenantId = Digit?.ULBService?.getStateId();
   let sortedConfigEmployeesSidebar = null;
   const [mdmsOrderData, setMdmsOrderData] = useState([{}]);
 

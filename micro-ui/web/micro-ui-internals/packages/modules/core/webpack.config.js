@@ -1,5 +1,4 @@
 const path = require("path");
-const webpack = require("webpack");
 
 module.exports = {
   mode: "development",
@@ -36,7 +35,7 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        //exclude: /node_modules/,
+        exclude: /node_modules/,
         use: {
           loader: "babel-loader",
           options: {
@@ -45,18 +44,5 @@ module.exports = {
         },
       },
     ],
-  },
-  plugins: [
-    new webpack.ProvidePlugin({
-      process: "process/browser",
-    }),
-    // new CleanWebpackPlugin(),
-    // new BundleAnalyzerPlugin(),
-    // new HtmlWebpackPlugin({ inject: true, template: "public/index.html" }),
-  ],
-  resolve: {
-    fallback: {
-      process: require.resolve("process/browser"),
-    },
   },
 };
