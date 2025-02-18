@@ -5,7 +5,7 @@ export const newConfig = [
       {
         inline: true,
         label: "Applicant Name",
-        isMandatory: true,
+        isMandatory: false,
         key: "applicantname",
         type: "text",
         disable: false,
@@ -44,7 +44,7 @@ export const newConfig = [
         key: "phno",
         type: "number",
         disable: false,
-        populators: { name: "phno", error: "Phone no is invalid", validation: {minLength:10, min: 0, max: 9999999999 } },
+        populators: { name: "phno", error: "Required", validation: { min: 0, max: 9999999999 } },
       },
     ],
   },

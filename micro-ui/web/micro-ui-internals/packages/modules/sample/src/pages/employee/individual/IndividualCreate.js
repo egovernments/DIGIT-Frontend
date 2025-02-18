@@ -1,23 +1,24 @@
-import React,{useState} from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { FormComposerV2, Header,Toast } from "@egovernments/digit-ui-react-components";
-import { newConfig } from "../../configs/IndividualCreateConfig";
-import { transformCreateData } from "../../utils/createUtils";
+import { FormComposerV2, Header } from "@egovernments/digit-ui-react-components";
+import { newConfig } from "../../../configs/IndividualCreateConfig";
+import { transformIndividualCreateData } from "../../../utils/createUtils";
+// import { newConfig } from "../../configs/IndividualCreateConfig";
+// import { transformIndividualCreateData } from "../../utils/createUtils";
 
 
 
 const IndividualCreate = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const [showToast, setShowToast] = useState(null);
   const { t } = useTranslation();
   const history = useHistory();
   const reqCreate = {
-    url: `/egov-hrms/employees/_create`,
+    url: `/individual/v1/_create`,
     params: {},
     body: {},
     config: {
-      enable: true,
+      enable: false,
     },
   };
 
@@ -27,20 +28,13 @@ const IndividualCreate = () => {
     console.log(data, "data");
     await mutation.mutate(
       {
-        url: `/egov-hrms/employees/_create`,
+        url: `/individual/v1/_create`,
         params: { tenantId },
-        body: transformCreateData(data),
+        body: transformIndividualCreateData(data),
         config: {
           enable: true,
         },
-      },{
-        onSuccess:(data)=>{
-          setShowToast({ key: "success", label: "Individual Created Successfully" });
-        },
-        onError:(error) => {
-          setShowToast({ key: "error", label: "Individual Creation Failed"});
-        }
-      }
+      },
     );
   };
   return (
@@ -60,14 +54,7 @@ const IndividualCreate = () => {
         onSubmit={(data,) => onSubmit(data, )}
         fieldStyle={{ marginRight: 0 }}
       />
-       {showToast && (
-                <Toast style={{ zIndex: 10001 }}
-                    label={showToast.label}
-                    type={showToast.key}
-                    error={showToast.key === "error"}
-                    onClose={() => setShowToast(null)}
-                />
-            )}
+       
     </div>
   );
 }

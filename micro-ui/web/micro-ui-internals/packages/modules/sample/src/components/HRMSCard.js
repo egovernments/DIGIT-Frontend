@@ -14,16 +14,16 @@ const HRMSCard = () => {
     ],
     links: [
       {
-        label: t("Individual Create"),
-        link: `/${window?.contextPath}/employee/sample/create-individual`,
+        label: t("HRMS Create"),
+        link: `/${window?.contextPath}/employee/sample/hrms-create`,
       },
       {
-        label: t("Individual Search"),
-        link: `/${window?.contextPath}/employee/sample/sample-search`,
+        label: t("HRMS Search"),
+        link: `/${window?.contextPath}/employee/sample/hrms-search`,
       },
       {
-        label: t("Individual View Details"),
-        link: `/${window?.contextPath}/employee/sample/individual-details-view`,
+        label: t("HRMS View Details"),
+        link: `/${window?.contextPath}/employee/sample/hrms-view`,
       },
       
     ],

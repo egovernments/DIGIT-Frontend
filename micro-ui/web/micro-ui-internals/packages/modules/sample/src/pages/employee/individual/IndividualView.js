@@ -1,15 +1,16 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Button, Header, Loader, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Button, Header, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Loader } from "@egovernments/digit-ui-components";
 
-const EmployeeViewDetails = (props) => {
+const IndividualViewDetails = (props) => {
   const { t } = useTranslation();
   const history = useHistory();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
   const reqCriteria = {
-    url: "/egov-hrms/employees/_search",
+    url: "/individual/v1/_search",
     params: {
       tenantId: tenantId,
       limit: 10,
@@ -17,10 +18,14 @@ const EmployeeViewDetails = (props) => {
     },
     body: {
       apiOperation: "SEARCH",
+      Individual: {
+        tenantId,
+        id: ["1e909b34-17cf-448b-a64d-65abd07bc7d0"],
+      },
     },
     config: {
       select: (data) => {
-        const response = data?.Employees?.[0] || {};
+        const response = data?.Individual?.[0] || {};
         return {
           cards: [
             {
@@ -31,27 +36,27 @@ const EmployeeViewDetails = (props) => {
                   values: [
                     {
                       key: "Id",
-                      value: response?.code ? response?.code : t("NA"),
+                      value: response?.id ? response?.id : t("NA"),
                     },
                     {
                       key: "Name",
-                      value: response?.user?.name ? response?.user?.name : t("NA"),
+                      value: response?.name?.givenName ? response?.name?.givenName : t("NA"),
                     },
                     {
                       key: "Family name",
-                      value: response?.user?.familyName ? response?.user?.familyName : t("NA"),
+                      value: response?.name?.familyName ? response?.name?.familyName : t("NA"),
                     },
                     {
                       key: "Other name",
-                      value: response?.user?.otherNames ? response?.user?.otherNames : t("NA"),
+                      value: response?.name?.otherNames ? response?.name?.otherNames : t("NA"),
                     },
                     {
                       key: "DOB",
-                      value: response?.user?.dob ? response?.user?.dob : t("NA"),
+                      value: response?.dateOfBirth ? response?.dateOfBirth : t("NA"),
                     },
                     {
                       key: "Gender",
-                      value: response?.user?.gender ? response?.user?.gender : t("NA"),
+                      value: response?.gender ? response?.gender : t("NA"),
                     },
                   ],
                 },
@@ -66,20 +71,28 @@ const EmployeeViewDetails = (props) => {
                   type: "DATA",
                   values: [
                     {
+                      key: "Door Number",
+                      value: response?.address?.doorNo ? response?.address?.doorNo : t("NA"),
+                    },
+                    {
+                      key: "Address 1",
+                      value: response?.address?.addressLine1 ? response?.address?.addressLine1 : t("NA"),
+                    },
+                    {
+                      key: "Address 2",
+                      value: response?.address?.addressLine2 ? response?.address?.addressLine2 : t("NA"),
+                    },
+                    {
+                      key: "Landmark",
+                      value: response?.address?.landmark ? response?.address?.landmark : t("NA"),
+                    },
+                    {
                       key: "City",
-                      value: response?.user?.correspondenceAddress ? response?.user?.correspondenceAddress : t("NA"),
+                      value: response?.address?.city ? response?.address?.city : t("NA"),
                     },
                     {
-                      key: "Mobile Number",
-                      value: response?.user?.mobileNumber ? response?.user?.mobileNumber : t("NA"),
-                    },
-                    {
-                      key: "Email Id",
-                      value: response?.user?.emailId ? response?.user?.emailId : t("NA"),
-                    },
-                    {
-                      key: "Role",
-                      value: response?.user?.roles?.[0]?.name ? response?.user?.roles?.[0]?.name : t("NA"),
+                      key: "Pincode",
+                      value: response?.address?.pincode ? response?.address?.pincode : t("NA"),
                     },
                   ],
                 },
@@ -93,18 +106,16 @@ const EmployeeViewDetails = (props) => {
   const { isLoading, data } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   if (isLoading) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
   return (
     <>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Header className="summary-header">{t("INDIVIDUAL DETAILS")}</Header>
       </div>
-      <div className="campaign-summary-container">
-        <ViewComposer data={data} />
-      </div>
+      <div className="campaign-summary-container">{data && <ViewComposer data={data} />}</div>
     </>
   );
 };
 
-export default EmployeeViewDetails;
+export default IndividualViewDetails;
