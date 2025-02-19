@@ -15,13 +15,15 @@ import getStore from "./redux/store";
 import PrivacyComponent from "./components/PrivacyComponent";
 import OtpComponent from "./pages/employee/Otp/OtpCustomComponent";
 import {useInitStore} from "../libraries/src/hooks/store"
+import  Hooks  from "../libraries/src/hooks";
 
 console.log("inside module.js of core")
 console.log(Digit.Hooks);
 
 const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding }) => {
   console.log("inside DigitUIWrapper of core");
-  const { isLoading, data: initData={} } = useInitStore(stateCode, enabledModules);
+  window.Digit["Hooks"] = Hooks || {};
+  const { isLoading, data: initData={} } = Digit.Hooks.useInitStore(stateCode, enabledModules);
   if (isLoading) {
     return <Loader page={true} />;
   }
@@ -86,8 +88,8 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, d
   const DSO = Digit.UserService.hasAccess(["FSM_DSO"]);
 
   return (
+    <QueryClientProvider client={queryClient}>
       <ErrorBoundary>
-        <QueryClientProvider client={queryClient}>
           <ComponentProvider.Provider value={registry}>
             <PrivacyProvider.Provider
               value={{
@@ -126,8 +128,8 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, d
               <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} defaultLanding={defaultLanding} />
             </PrivacyProvider.Provider>
           </ComponentProvider.Provider>
-        </QueryClientProvider>
       </ErrorBoundary>
+      </QueryClientProvider>
   );
 };
 

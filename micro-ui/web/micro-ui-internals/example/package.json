@@ -5,16 +5,15 @@
   "private": true,
   "homepage": "digit-ui",
   "scripts": {
-    "start:Web": "webpack --mode development",
-    "start": "vite",
+    "start": "webpack --mode development",
     "start:old": "react-scripts start"
   },
   "devDependencies": {
     "@egovernments/digit-ui-libraries": "1.8.1-upgrade.6",
     "@egovernments/digit-ui-module-core": "1.9.1-test.100",
-    "@egovernments/digit-ui-components":"0.0.2-beta.4-webpack.2",
+    "@egovernments/digit-ui-components": "0.0.2-beta.4-webpack.2",
     "@egovernments/digit-ui-react-components": "1.8.16-upgrade.2",
-    "@egovernments/digit-ui-module-assignment":"0.0.1",
+    "@egovernments/digit-ui-module-assignment": "0.0.1",
     "http-proxy-middleware": "^1.0.5",
     "react": "19.0.0",
     "react-dom": "19.0.0",
@@ -23,7 +22,8 @@
     "react-scripts": "4.0.1",
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.0"
+    "webpack-dev-server": "^5.2.0",
+    "dotenv-webpack": "^8.0.0"
   },
   "browserslist": {
     "production": [
