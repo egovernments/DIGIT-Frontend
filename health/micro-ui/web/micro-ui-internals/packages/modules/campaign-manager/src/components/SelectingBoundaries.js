@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Fragment, useMemo } from "react";
 import { CardText, LabelFieldPair, Card, Header, CardLabel, LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { InfoCard, PopUp, Button, Toast } from "@egovernments/digit-ui-components";
+import { AlertCard, PopUp, Button, Toast } from "@egovernments/digit-ui-components";
 import { mailConfig } from "../configs/mailConfig";
 import MultiSelectDropdown from "./MultiSelectDropdown";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
@@ -453,7 +453,7 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
 
   return (
     <>
-      {loaderEnabled && <LoaderWithGap text={"CAMPAIGN_BOUNDARY_PLEASE_WAIT"}></LoaderWithGap>}
+      {loaderEnabled &&  <Loader page={true} variant={"PageLoader"} loaderText={t("CAMPAIGN_BOUNDARY_PLEASE_WAIT")}/>}
       <Card>
         <div className="selecting-boundary-div">
           <Header>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</Header>
@@ -533,7 +533,7 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
             )}
         </div>
       </Card>
-      <InfoCard
+      <AlertCard
         populators={{
           name: "infocard",
         }}

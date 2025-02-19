@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useAppConfigContext } from "./AppConfigurationWrapper";
 import { useTranslation } from "react-i18next";
-import { Button, Card, CardHeader, Divider, Stepper, Tab, ActionBar } from "@egovernments/digit-ui-components";
+import { Button, Card, CardHeader, Divider, Stepper, Tab, Footer } from "@egovernments/digit-ui-components";
 import AppFieldComposer from "./AppFieldComposer";
 import _ from "lodash";
 
@@ -187,7 +187,7 @@ function AppFieldScreenWrapper() {
         />
       )}
       {stepper && (
-        <ActionBar className="app-config-actionBar">
+        <Footer className="app-config-actionBar">
           {!stepper?.find((i) => i.active)?.isFirst && (
             <Button
               className="previous-button"
@@ -206,7 +206,7 @@ function AppFieldScreenWrapper() {
               onClick={() => setCurrentStep((prev) => prev + 1)}
             />
           )}
-        </ActionBar>
+        </Footer>
       )}
     </React.Fragment>
   );

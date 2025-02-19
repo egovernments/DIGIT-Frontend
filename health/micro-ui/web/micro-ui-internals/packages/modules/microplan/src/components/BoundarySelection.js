@@ -131,6 +131,7 @@ const BoundarySelection = ({ onSelect, props: customProps, ...props }) => {
           onClose={() => {
             setShowPopup(false);
           }}
+          showAlertAsSvg={true}
           footerChildren={[
             <Button
               className={"campaign-type-alert-button"}

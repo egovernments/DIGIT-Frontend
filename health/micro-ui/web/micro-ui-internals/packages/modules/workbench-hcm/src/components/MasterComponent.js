@@ -1,7 +1,9 @@
-import { Card, Header, Loader, SVG } from "@egovernments/digit-ui-react-components";
+import { Card, Header,  SVG } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
+import {  Loader} from "@egovernments/digit-ui-components";
+
 
 const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui","microplan-ui", "health-ui", "sanitation-ui", "core-ui"];
 
@@ -36,7 +38,7 @@ const MasterComponent = () => {
   });
 
   if (isLoading) {
-    return <Loader />;
+    return  <Loader page={true} variant={"PageLoader"}/>;
   }
 
   const RenderCard = () => {

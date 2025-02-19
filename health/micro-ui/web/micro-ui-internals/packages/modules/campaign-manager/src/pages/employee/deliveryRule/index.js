@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useReducer, useState } from "react";
 import MultiTab from "./MultiTabcontext";
-import { Loader } from "@egovernments/digit-ui-react-components";
+import { Loader } from "@egovernments/digit-ui-components";
 // import { deliveryConfig } from "../../../configs/deliveryConfig";
 import getDeliveryConfig from "../../../utils/getDeliveryConfig";
 
@@ -399,7 +399,7 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
   });
 
   if (deliveryConfigLoading) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
   return (
     <CycleContext.Provider

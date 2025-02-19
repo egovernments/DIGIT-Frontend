@@ -1,7 +1,7 @@
 import React, { useEffect, useState, createContext, useContext, useCallback } from "react";
 import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
 import { useTranslation } from "react-i18next";
-import { ViewCardFieldPair, Toast, Card, TextBlock, Button, PopUp, CardText, TextInput, BreadCrumb, Loader, ActionBar, Tag} from "@egovernments/digit-ui-components";
+import { SummaryCardFieldPair, Toast, Card, TextBlock, Button, PopUp, CardText, TextInput, BreadCrumb, Loader, Footer, Tag} from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useHistory, useLocation } from "react-router-dom";
 import MobileChecklist from "../../components/MobileChecklist";
@@ -32,8 +32,10 @@ const ViewChecklist = () => {
     const [serviceDefId, setServiceDefId] = useState(null);
     const [updateDisable, setUpdateDisable] = useState(false);
 
+    const SERVICE_REQUEST_CONTEXT_PATH = window?.globalConfigs?.getConfig("SERVICE_REQUEST_CONTEXT_PATH") || "health-service-request";
+
     const res = {
-        url: `/service-request/service/definition/v1/_search`,
+        url: `/${SERVICE_REQUEST_CONTEXT_PATH}/service/definition/v1/_search`,
         body: {
             ServiceDefinitionCriteria: {
                 "tenantId": tenantId,
@@ -79,7 +81,7 @@ const ViewChecklist = () => {
         // Only set API params when serviceDefId is available
         if (serviceDefId) {
             setServiceResponseParam({
-                url: `/service-request/service/v1/_search`,
+                url: `/${SERVICE_REQUEST_CONTEXT_PATH}/service/v1/_search`,
                 body: {
                     ServiceCriteria: {
                         "tenantId": tenantId,
@@ -182,7 +184,7 @@ const ViewChecklist = () => {
     ];
 
     if (isLoading) {
-        return <Loader />;
+        return <Loader page={true} variant={"PageLoader"}/>;
     }
 
 
@@ -246,7 +248,7 @@ const ViewChecklist = () => {
             <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
                 {fieldPairs.map((pair, index) => (
                     <div>
-                        <ViewCardFieldPair
+                        <SummaryCardFieldPair
                             key={index} // Provide a unique key for each item
                             className=""
                             inline

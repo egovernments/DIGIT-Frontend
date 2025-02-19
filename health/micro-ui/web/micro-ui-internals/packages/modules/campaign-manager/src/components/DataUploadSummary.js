@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import {  EditIcon, Header, Loader, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Toast, Stepper, TextBlock, Card , Tag} from "@egovernments/digit-ui-components";
+import {  EditIcon, Header, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Toast, Stepper, TextBlock, Card , Loader} from "@egovernments/digit-ui-components";
 import {  downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import TagComponent from "./TagComponent";
@@ -283,12 +283,12 @@ const DataUploadSummary = (props) => {
     } else setKey(13);
   };
   if (isLoading) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
 
   return (
     <>
-      {(isLoading || (!data && !error) || isFetching) && <LoaderWithGap text={t("DATA_SYNC_WITH_SERVER")} />}
+      {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")}/>}
       <div className="container-full">
         <div className="card-container">
           <Card className="card-header-timeline">

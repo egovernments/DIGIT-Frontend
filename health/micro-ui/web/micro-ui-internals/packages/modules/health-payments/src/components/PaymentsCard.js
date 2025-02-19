@@ -1,5 +1,5 @@
 import { EmployeeModuleCard, SVG } from "@egovernments/digit-ui-react-components";
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 const ROLES = {
@@ -8,12 +8,16 @@ const ROLES = {
 };
 
 const PaymentsCard = () => {
-  Digit.SessionStorage.del("paymentInbox");
-  Digit.SessionStorage.del("selectedValues");
-  Digit.SessionStorage.del("selectedLevel");
-  Digit.SessionStorage.del("selectedProject");
-  Digit.SessionStorage.del("selectedBoundaryCode");
-  Digit.SessionStorage.del("boundary");
+
+  // Reset session storage
+  useEffect(() => {
+    Digit.SessionStorage.del("paymentInbox");
+    Digit.SessionStorage.del("selectedValues");
+    Digit.SessionStorage.del("selectedLevel");
+    Digit.SessionStorage.del("selectedProject");
+    Digit.SessionStorage.del("selectedBoundaryCode");
+    Digit.SessionStorage.del("boundary");
+  }, []);
 
   const { t } = useTranslation();
   const userInfo = Digit.UserService.getUser();

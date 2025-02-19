@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import {  EditIcon, Header, Loader, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
-import {  Toast, Card, Stepper, TextBlock ,Tag } from "@egovernments/digit-ui-components";
+import {  EditIcon, Header,  LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
+import {  Toast, Card, Stepper, TextBlock , Loader } from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
 
 function mergeObjects(item) {
@@ -331,12 +331,12 @@ const DeliveryDetailsSummary = (props) => {
     else setKey(8);
   };
   if (isLoading) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
 
   return (
     <>
-      {(isLoading || (!data && !error) || isFetching) &&<LoaderWithGap text={t("DATA_SYNC_WITH_SERVER")} />}
+      {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")}/>}
       <div className="container-full">
         <div className="card-container">
           <Card className="card-header-timeline">

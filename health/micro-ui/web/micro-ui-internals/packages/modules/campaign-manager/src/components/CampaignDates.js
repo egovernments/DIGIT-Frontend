@@ -1,7 +1,7 @@
 import React, { useState, useEffect , Fragment } from "react";
 import { DatePicker, LabelFieldPair, Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { ErrorMessage, FieldV1, TextInput ,Stepper , TextBlock , Card , InfoCard ,Tag  } from "@egovernments/digit-ui-components";
+import { ErrorMessage, FieldV1, TextInput ,Stepper , TextBlock , Card , AlertCard ,Tag  } from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
 
 const CampaignDates = ({ onSelect, formData, ...props }) => {
@@ -180,7 +180,7 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
             </LabelFieldPair>
           </Card>
           {showDateUpdateInfo && (
-            <InfoCard
+            <AlertCard
               populators={{
                 name: "infocard",
               }}

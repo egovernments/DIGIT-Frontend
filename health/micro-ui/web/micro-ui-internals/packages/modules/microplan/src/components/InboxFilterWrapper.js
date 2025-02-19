@@ -13,7 +13,7 @@ const InboxFilterWrapper = (props) => {
   const [filterValues, setFilterValues] = useState(
     { status: null, onRoadCondition: null, terrain: null, securityQ1: null, securityQ2: null, facilityId:null }
   );
-
+  
   // Default selected option
   let defaultSelectedOptions = props.defaultValue
   ? Object.entries(props.defaultValue).reduce((acc, [key, value]) => {
@@ -122,6 +122,7 @@ const InboxFilterWrapper = (props) => {
       PlanFacilitySearchCriteria: {
         tenantId: tenantId,
         planConfigurationId: microplanId,
+        limit:100
       }
     },
     config: {
@@ -150,10 +151,11 @@ const InboxFilterWrapper = (props) => {
     return <Loader/>
   }
 
+
   return (
 
     <FilterCard
-      style={{ flexGrow: 1, display: "flex", flexDirection: "column", width: "22vw" }}
+      style={{ flexGrow: 1, display: "flex", flexDirection: "column", width: "22vw",height:`${Math.max(props.tableHeight,33)}rem`}}
       layoutType={"vertical"}
       onClose={props?.onClose}
       onPrimaryPressed={handleApplyFilters} // Apply filters
@@ -161,8 +163,9 @@ const InboxFilterWrapper = (props) => {
       primaryActionLabel={resultArray.length > 0 && t(props?.primaryActionLabel)}
       secondaryActionLabel={resultArray.length > 0 && t(props?.secondaryActionLabel)}
       title={t(props?.title)}
+      className={props?.isPlanInbox ? "plan-inbox-filtercard" : ""}
     >
-      <div className="gap-between-dropdowns" style={{ height: "18rem" }}>
+      <div className="gap-between-dropdowns">
         {/* Only render LabelFieldPair if resultArray has items */}
         {resultArray.length > 0 && (
           <LabelFieldPair vertical style={{ marginBottom: "1rem" }} >

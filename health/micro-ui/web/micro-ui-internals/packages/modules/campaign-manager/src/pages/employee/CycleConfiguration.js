@@ -1,7 +1,7 @@
 import React, { useReducer, Fragment, useEffect, useState } from "react";
-import { CardText, LabelFieldPair, CardLabel, CardSubHeader, Paragraph, Header ,Card, Loader } from "@egovernments/digit-ui-react-components";
+import { CardText, LabelFieldPair, CardLabel, CardSubHeader, Paragraph, Header ,Card } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { TextInput, InfoCard , Stepper , TextBlock , Tag } from "@egovernments/digit-ui-components";
+import { TextInput, InfoCard , Stepper , TextBlock , Loader } from "@egovernments/digit-ui-components";
 import { deliveryConfig } from "../../configs/deliveryConfig";
 import getDeliveryConfig from "../../utils/getDeliveryConfig";
 import TagComponent from "../../components/TagComponent";
@@ -196,7 +196,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   };
 
   if(isLoading){
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
 
   return (

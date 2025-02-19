@@ -437,7 +437,7 @@ const SelectingBoundaryComponent = ({
     }
   };
 
-  if (hierarchyLoading) return <Loader />;
+  if (hierarchyLoading) return <Loader page={true} variant={"PageLoader"}/>;
 
   return (
     <>

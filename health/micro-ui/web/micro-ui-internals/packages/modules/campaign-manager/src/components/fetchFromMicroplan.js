@@ -3,7 +3,7 @@ import { CheckCircle } from "@egovernments/digit-ui-svg-components";
 import { useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
-import { InfoCard, Toast } from "@egovernments/digit-ui-components";
+import { AlertCard, Toast } from "@egovernments/digit-ui-components";
 import { callTemplateDownloadByUntilCompleted } from "../utils/pollUtils";
 import { fetchFromMicroplan, searchCampaign, waitForSomeTime } from "../hooks/useFetchFromMicroplan";
 
@@ -214,7 +214,7 @@ const FetchFromMicroplanScreen = () => {
   return (
     <span className="fetch-from-microplan">
       <Header>{t("MY_FETCH_FROM_MICROPLAN_HEADING")}</Header>
-      <InfoCard
+      <AlertCard
         populators={{
           name: "infocard",
         }}
@@ -223,7 +223,7 @@ const FetchFromMicroplanScreen = () => {
       />
 
       <div className="sandbox-loader-screen ">
-        {showToast?.key != "error" && <LoaderWithGap text={t(" ")} />}
+        {showToast?.key != "error" && <Loader page={true} variant={"PageLoader"} loaderText={t(" ")}/>}
         <ul className="sandbox-installation-steps">
           {steps.map((step, index) => (
             <li key={index} className={`sandbox-step ${index < currentStep ? "sandbox-visible" : ""}`}>

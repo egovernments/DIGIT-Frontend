@@ -1,9 +1,9 @@
-# egovernments/digit-ui-module-health-payments
+# egovernments/digit-ui-module-microplan
 
 ## Install
 
 ```bash
-npm install --save egovernments/digit-ui-module-health-payments
+npm install --save egovernments/digit-ui-module-microplan
 ```
 
 ## Limitation
@@ -21,7 +21,7 @@ frontend/micro-ui/web/package.json
 ```
 
 ```json
-"@egovernments/digit-ui-module-health-payments" :"0.0.1",
+"@egovernments/digit-ui-module-microplan" :"0.2.0",
 ```
 
 then navigate to App.js
@@ -33,33 +33,45 @@ then navigate to App.js
 ```jsx
 /** add this import **/
 
-import { initPaymentComponents } from "egovernments/digit-ui-module-health-payments"
+import { initMicroplanComponents } from "egovernments/digit-ui-module-microplan"
 
 /** inside enabledModules add this new module key **/
 
-const enabledModules = ["payments"];
+const enabledModules = ["Microplan"];
 
 /** inside init Function call this function **/
 
 const initDigitUI = () => {
-  initPaymentComponents();
+  initMicroplanComponents();
 };
 
 ```
 
 ## List of features available in this package were as follows
 
-1. Implement attendance data edit and approval functionality.
-2. Introduce bill generation feature.
-3. Enable bill download in PDF format.
-4. Enable bill download in Excel format.
+1. Capturing campaign Details
+2. Capture microplan name
+3. Selection of campaign boundary
+4. Population upload
+5. Facility upload
+6. Microplan assumption and formula configuration
+7. User Access management
+8. Summary page
+9. Supervisors Landing page
+10. Population Data approver flow
+11. Facility catchment assigner flow
+12. Microplan estimation approver flow
 
 
 ### Contributors
 
+- [nipunarora-egov](https://github.com/nipunarora-egov) 
+- [swathi-egov](https://github.com/swathi-egov)
+- [nabeel-egov](https://github.com/nabeel-egov)
+- [abishek-egov](https://github.com/abhishek-egov)
 - [ramkrishna-egov](https://github.com/ramkrishna-egov)
+- [ashish-egov](https://github.com/ashish-egov)
 - [rachna-egov](https://github.com/rachna-egov)
-- [pitabash-eGov](https://github.com/pitabash-eGov)
 
 ## License
 
@@ -69,11 +81,11 @@ const initDigitUI = () => {
 
 Documentation Site (https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui)
 
-[Microplan Module Documentation](https://docs.digit.org/public-health/v1.7/setup/configuration/ui-configuration)
+[Microplan Module Documentation](https://docs.digit.org/public-health/microplanning/setup/configuration)
 
 ## Maintainer
 
-- [ramkrishna-egov](https://www.github.com/ramkrishna-egov)
+- [nipunarora-egov](https://www.github.com/nipunarora-egov)
 
 
 ### Published from DIGIT Frontend 

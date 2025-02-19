@@ -1,11 +1,10 @@
-import { Card, Uploader, Button, ActionBar, Toast, Loader, PopUp, InfoCard, Tab } from "@egovernments/digit-ui-components";
+import { Card, Uploader, Button, Footer, Toast, Loader, PopUp, AlertCard } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import XlsPreviewNew from "../../components/XlsPreviewNew";
 import { Svgicon } from "../../utils/Svgicon";
 import { useHistory } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import ViewMap from "../../components/ViewMap";
 import { DustbinIcon } from "../../components/icons/DustbinIcon";
 import * as XLSX from "xlsx";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
@@ -20,12 +19,9 @@ const ViewHierarchy = () => {
   const defaultHierarchyType = searchParams.get("defaultHierarchyType");
   const hierarchyType = searchParams.get("hierarchyType");
   const locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
-
   const inputRef = useRef(null); // Ref to trigger file input
-
   const [defData, setDefData] = useState([]);
   const [hierData, setHierData] = useState([]);
-
   const [previewPage, setPreviewPage] = useState(false);
   const [firstPage, setFirstPage] = useState(true);
   const [fileUrl, setFileUrl] = useState("");
@@ -38,16 +34,7 @@ const ViewHierarchy = () => {
   const [disableFile, setDisableFile] = useState(true);
   const [dataCreationGoing, setDataCreationGoing] = useState(false);
   const [noOfRows, setNoOfRows] = useState(100);
-  const [showPopUp, setShowPopUp] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = React.useState([]);
-  const [activeLink, setActiveLink] = useState({
-    code: "BOUNDARY_GEOJSON",
-    name: "BOUNDARY_GEOJSON",
-  });
-  const [filterOptions, setFilterOptions] = useState({});
-
   const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ name: "baseTimeOut" }]);
-
   const callSearch = async (hierarchy) => {
     const res = await Digit.CustomService.getResponse({
       url: `/boundary-service/boundary-hierarchy-definition/_search`,
@@ -74,7 +61,6 @@ const ViewHierarchy = () => {
   });
 
   const [viewState, setViewState] = useState(false);
-
   const fetchData = async () => {
     try {
       const res = await callSearch(defaultHierarchyType);
@@ -88,7 +74,6 @@ const ViewHierarchy = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
   const generateTemplate = async () => {
     const res = await Digit.CustomService.getResponse({
       url: `/project-factory/v1/data/_download`,
@@ -134,7 +119,7 @@ const ViewHierarchy = () => {
     if (file) {
       setFileName(file.name);
       // Check file extension
-      const validExtensions = ["xls", "xlsx", "json"];
+      const validExtensions = ["xls", "xlsx"];
       const fileExtension = file.name.split(".").pop().toLowerCase(); // Get the file extension
 
       if (!validExtensions.includes(fileExtension)) {
@@ -181,14 +166,11 @@ const ViewHierarchy = () => {
     reader.onload = async (event) => {
       const data = new Uint8Array(event.target.result);
       const workbook = XLSX.read(data, { type: "array" });
-
       // Assume the first sheet
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
-
       // Convert sheet to JSON and count rows
       const rows = XLSX.utils.sheet_to_json(sheet);
-
       // After parsing locally, upload to API
       const response = await Digit.UploadServices.Filestorage(module, file, tenantId);
       fileDataTemp.fileStoreId = response?.data?.[0]?.fileStoreId;
@@ -196,11 +178,9 @@ const ViewHierarchy = () => {
       setFileStoreId(response?.data?.files?.[0]?.fileStoreId);
       const { data: { fileStoreIds: fileUrlTemp } = {} } = await Digit.UploadServices.Filefetch([fileStoreIdTemp], tenantId);
       fileDataTemp.url = fileUrlTemp?.[0]?.url;
-
       setFileUrl(fileDataTemp?.url);
       setFileData(fileDataTemp);
     };
-
     reader.readAsArrayBuffer(file); // Read the file as an array buffer
   };
 
@@ -243,7 +223,6 @@ const ViewHierarchy = () => {
             secondaryActionLabel: "CS_HOME",
             secondaryActionLink: `/${window?.contextPath}/employee`,
           });
-
           // setShowToast({ label: `${t("WBH_HIERARCHY_CREATED")}`, isError: "success" });
         } catch (pollError) {
           throw pollError; // Propagate polling errors to the outer catch block
@@ -270,31 +249,64 @@ const ViewHierarchy = () => {
     }
   };
 
-  const reqCriteriaResource = {
-    url: `/project-factory/v1/data/_search`,
-    body: {
-      SearchCriteria: {
-        tenantId: tenantId,
-        status: "completed",
-        type: "boundaryGeometryManagement",
-      },
-    },
-    config: {
-      enabled: true,
-      select: (data) => {
-        return data?.ResourceDetails;
-      },
-    },
-  };
+  // const pollForStatusCompletion = async (id, typeOfData) => {
+  //   const pollInterval = 1000; // Poll every 1 second
+  //   const maxRetries = 100; // Maximum number of retries
+  //   let retries = 0;
 
-  const { data: resourceData } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
+  //   return new Promise((resolve, reject) => {
+  //     const poll = async () => {
+  //       try {
 
-  useEffect(() => {
-    if (resourceData) {
-      setFilterOptions(resourceData?.[0]?.additionalDetails);
-    }
-  }, [resourceData]);
+  //         if (retries >= maxRetries) {
+  //           setDataCreationGoing(false);
+  //           reject(new Error("Max retries reached"));
+  //           return;
+  //         }
 
+  //         const searchResponse = await Digit.CustomService.getResponse({
+  //           url: "/project-factory/v1/data/_search",
+  //           params: {},
+  //           body: {
+  //             SearchCriteria: {
+  //               id: [id],
+  //               tenantId: tenantId,
+  //               type: typeOfData
+  //             }
+  //           },
+  //         });
+
+  //         const status = searchResponse?.ResourceDetails?.status;
+
+  //         if (status === "completed") {
+  //           setShowToast({ label: `${t("WBH_HIERARCHY_STATUS_COMPLETED")}`, isError: "success" });
+  //           setDataCreationGoing(false);
+  //           resolve(true);
+  //         } else if (status === "failed") {
+  //           reject(new Error("Operation failed"));
+  //         } else {
+  //           retries++;
+  //           setTimeout(poll, pollInterval);
+  //         }
+  //       } catch (error) {
+  //         setDataCreationGoing(false);
+  //         reject(error);
+  //       }
+  //     };
+
+  //     // Start the polling
+  //     poll().catch(reject);
+
+  //     // Set a timeout for the entire polling operation
+  //     const timeoutDuration = (maxRetries + 1) * pollInterval;
+  //     setTimeout(() => {
+  //       if (retries < maxRetries) {  // Only reject if not already resolved
+  //         setDataCreationGoing(false);
+  //         reject(new Error("Polling timeout"));
+  //       }
+  //     }, timeoutDuration);
+  //   });
+  // };
   const pollForStatusCompletion = async (id, typeOfData) => {
     // const pollInterval = 2000; // Poll every 1 second
     const maxRetries = 20; // Maximum number of retries
@@ -306,6 +318,11 @@ const ViewHierarchy = () => {
     return new Promise((resolve, reject) => {
       const poll = async () => {
         try {
+          // if (retries >= maxRetries) {
+          //   setDataCreationGoing(false);
+          //   reject(new Error("Max retries reached"));
+          //   return;
+          // }
 
           const searchResponse = await Digit.CustomService.getResponse({
             url: "/project-factory/v1/data/_search",
@@ -337,6 +354,7 @@ const ViewHierarchy = () => {
             setTimeout(poll, pollInterval);
           }
         } catch (error) {
+          // console.error("Error while polling:", error);
           retries++;
           setTimeout(poll, pollInterval);
         }
@@ -344,13 +362,22 @@ const ViewHierarchy = () => {
 
       // Start the polling
       poll().catch(reject);
+
+      // Set a timeout for the entire polling operation
+      // const timeoutDuration = (maxRetries + 1) * pollInterval;
+      // setTimeout(() => {
+      //   if (retries < maxRetries) {
+      //     // Only reject if not already resolved
+      //     setDataCreationGoing(false);
+      //     reject(new Error("Polling timeout"));
+      //   }
+      // }, timeoutDuration);
     });
   };
 
   const createData = async () => {
     const res = await callCreateDataApi();
   };
-
   const trimming = (val) => {
     return `${t((hierarchyType + "_" + val.trim().replace(/[\s_]+/g, "")).toUpperCase())}`;
   };
@@ -360,72 +387,10 @@ const ViewHierarchy = () => {
     setDisableFile(true);
   };
 
-  const handleFileUploadGeo = async (event, index, boundaryType) => {
-    const file = event.target.files[0];
-    const module = "HCM";
-    let fileDataTemp = {};
-    fileDataTemp.fileName = file?.name;
-    const maxFileSize = 5 * 1024 * 1024; // 5 MB in bytes
-    if (file.size > maxFileSize) {
-      setShowToast({ label: t("FILE_TOO_LARGE"), isError: "error" });
-      setDisableFile(true);
-      return; // Exit the function if the file is too large
-    }
-    if (file) {
-      // Simulate file upload and retrieve fileStoreId
-      // const fileStoreId = await uploadFile(file); // Replace with actual API call
-      const response = await Digit.UploadServices.Filestorage(module, file, tenantId);
-      const curFileStoreId = response?.data?.files?.[0]?.fileStoreId;
-      fileDataTemp.fileStoreId = curFileStoreId;
-      const { data: { fileStoreIds: fileUrlTemp } = {} } = await Digit.UploadServices.Filefetch([curFileStoreId], tenantId);
-      fileDataTemp.url = fileUrlTemp?.[0]?.url;
-      // Update state with the uploaded file details
-      setUploadedFiles((prevFiles) => {
-        const updatedFiles = [...prevFiles];
-        updatedFiles[index] = { boundaryType, fileName: file.name, fileStoreId: curFileStoreId };
-        return updatedFiles;
-      });
-    }
-  };
+  const [showPopUp, setShowPopUp] = useState(false);
 
-
-  useEffect(() => {
-    if (uploadedFiles && uploadedFiles.length > 0) {
-      const formattedFilterOptions = uploadedFiles.reduce((acc, file) => {
-        const boundaryKey = `boundary_${file.boundaryType.toLowerCase()}_default`;
-        if (!acc[boundaryKey]) {
-          acc[boundaryKey] = [];
-        }
-        acc[boundaryKey].push(file.fileStoreId);
-        return acc;
-      }, {});
-  
-      // Merge the new data into the existing filterOptions object
-      setFilterOptions((prevOptions) => ({
-        ...prevOptions,
-        ...formattedFilterOptions,
-      }));
-    }
-  }, [uploadedFiles]);
-
-  useEffect(() => {
-    if (disableFile == false) {
-      setActiveLink({
-        code: "BOUNDARY_EXCEL",
-        name: "BOUNDARY_EXCEL",
-      });
-    }
-  }, [disableFile]);
-
-  const processUploadedFiles = () => {
-    const processedData = uploadedFiles.map((file) => ({
-      boundaryType: file.boundaryType,
-      fileStoreId: file.fileStoreId,
-    }));
-    // Make an API call or save the data
-  };
   if (!viewState || isLoading) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   } else {
     return (
       <React.Fragment>
@@ -442,19 +407,18 @@ const ViewHierarchy = () => {
 
                 if (isLessThanDefData) {
                   if (hierItem?.boundaryType === defData[index]?.boundaryType) {
-                    hierData[index].isProcessed = true; // Add this flag to mark it processed
                     return (
                       <div>
                         <div className="hierarchy-boundary-sub-heading2">{trimming(hierItem?.boundaryType)}</div>
                         <div style={{ height: "1rem" }}></div>
-                        <Card type={"primary"} variant={"form"} className={"question-card-container"}>
-                          <div style={{ display: "flex", gap: "2rem" }}>
-                            <Svgicon />
-                            <div style={{ display: "flex", alignItems: "center", fontWeight: "600", fontFamily: "Roboto" }}>
-                              {`${t((hierarchyType + "_" + hierItem?.boundaryType).toUpperCase())}-geojson.json`}
-                            </div>
-                          </div>
-                        </Card>
+                        {/* <Card type={"primary"} variant={"form"} className={"question-card-container"} >
+                                                    <div style={{display:"flex", gap:"2rem"}}>
+                                                    <Svgicon />
+                                                    <div style={{display:"flex", alignItems:"center", fontWeight:"600", fontFamily:"Roboto"}}>
+                                                    {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toUpperCase())}-geojson.json`}
+                                                    </div>
+                                                    </div>
+                                                </Card> */}
                         <hr style={{ borderTop: "1px solid #ccc", margin: "1rem 0" }} />
                       </div>
                     );
@@ -467,19 +431,7 @@ const ViewHierarchy = () => {
                                                 ref={inputRef}
                                                 type="file"
                                                 style={{ display: "none" }}
-                                                onChange={handleFileChange} // Trigger file upload when a file is selected
-                                              />
-                                              <Button
-                                                className="custom-class"
-                                                icon="Upload"
-                                                iconFill=""
-                                                label={t("UPLOAD_GEOJSONS")}
-                                                onClick={handleUpload}
-                                                options={[]}
-                                                optionsKey=""
-                                                isDisabled={true}
-                                                size="large"
-                                                style={{}}
+@@ -485,232 +483,280 @@ const ViewHierarchy = () => {
                                                 title=""
                                                 variation="secondary"
                                               /> */}
@@ -489,107 +441,108 @@ const ViewHierarchy = () => {
                       </div>
                     );
                   }
+                } else {
+                  return (
+                    <div>
+                      <div style={{ display: "flex", justifyContent: "space-between" }} key={index}>
+                        <div className="hierarchy-boundary-sub-heading2">{trimming(hierItem?.boundaryType)}</div>
+                        {/* <Uploader
+                                                        onUpload={() => {}}
+                                                        showAsTags
+                                                        uploadedFiles={[]}
+                                                        variant="uploadFile"
+                                                        style={{width:"50rem"}}
+                                                    /> */}
+                        {/* <input
+                                            ref={inputRef}
+                                            type="file"
+                                            style={{ display: "none" }}
+                                            onChange={handleFileChange} // Trigger file upload when a file is selected
+                                          />
+                                          <Button
+                                            className="custom-class"
+                                            icon="Upload"
+                                            iconFill=""
+                                            label={t("UPLOAD_GEOJSONS")}
+                                            onClick={handleUpload}
+                                            options={[]}
+                                            optionsKey=""
+                                            size="large"
+                                            style={{}}
+                                            title=""
+                                            isDisabled={true}
+                                            variation="secondary"
+                                          /> */}
+                      </div>
+                      <div style={{ height: "1rem" }}></div>
+                      <hr style={{ borderTop: "1px solid #ccc", margin: "1rem 0" }} />
+                    </div>
+                  );
                 }
               })}
             </Card>
             <div style={{ height: "1rem" }}></div>
             <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <div className="hierarchy-boundary-heading">{t("NEWLY_ADDED_BOUNDARY_DATA")}</div>
-                <div style={{ display: "flex", justifyContent: "space-between", gap: "2rem", alignItems: "center" }}>
-                  <Button
-                    className="custom-class"
-                    icon="DownloadIcon"
-                    iconFill=""
-                    label={t("DOWNLOAD_EXCEL_TEMPLATE")}
-                    onClick={() => {
-                      setShowPopUp(true);
-                    }}
-                    options={[]}
-                    optionsKey=""
-                    size="small"
-                    style={{}}
-                    title=""
-                    variation="link"
-                  />
-                  {/* <Uploader
-                                      onUpload={() => {}}
-                                      showAsTags
-                                      uploadedFiles={[]}
-                                      variant="uploadFile"
-                                      style={{width:"50rem"}}
-                                  /> */}
-                  <input
-                    ref={inputRef}
-                    type="file"
-                    style={{ display: "none" }}
-                    onChange={handleFileChange} // Trigger file upload when a file is selected
-                  />
-                  <Button
-                    className="custom-class"
-                    icon="Upload"
-                    iconFill=""
-                    label={t("UPLOAD_EXCEL")}
-                    onClick={handleUpload}
-                    options={[]}
-                    optionsKey=""
-                    size="large"
-                    style={{}}
-                    title=""
-                    variation="secondary"
-                  />
-                </div>
+                <div className="hierarchy-boundary-heading">{t("UPLOAD_EXCEL")}</div>
+                <Button
+                  className="custom-class"
+                  icon="DownloadIcon"
+                  iconFill=""
+                  label={t("DOWNLOAD_EXCEL_TEMPLATE")}
+                  onClick={() => {
+                    setShowPopUp(true);
+                  }}
+                  options={[]}
+                  optionsKey=""
+                  size="small"
+                  style={{}}
+                  title=""
+                  variation="link"
+                />
               </div>
-              {/* <div style={{marginTop:"1rem"}}>
-                              {hierData.filter(item => !item.isProcessed).map((unprocessedItem, index) => (
-                                  <div key={index}>
-                                    <div className="hierarchy-boundary-sub-heading2">
-                                      {trimming(unprocessedItem?.boundaryType)}
-                                    </div>
-                                    <div style={{ height: "1rem" }}></div>
-                                    <hr style={{ borderTop: "1px solid #ccc", margin: "1rem 0" }} />
-                                  </div>
-                                ))}
-                            </div>  */}
-              <div style={{ marginTop: "1rem" }}>
-                {hierData
-                  .filter((item) => !item.isProcessed)
-                  .map((unprocessedItem, index) => (
-                    <div key={index}>
-                      <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <div className="hierarchy-boundary-sub-heading2">{trimming(unprocessedItem?.boundaryType)}</div>
-                        <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginTop: "0.5rem" }}>
-                          {/* File input for the specific boundary */}
-                          <input
-                            type="file"
-                            id={`file-upload-${index}`}
-                            style={{ display: "none" }}
-                            onChange={(e) => handleFileUploadGeo(e, index, unprocessedItem.boundaryType)}
-                          />
-                          <Button
-                            className="custom-class"
-                            icon="Upload"
-                            isDisabled = {
-                              !(index === 0 || uploadedFiles[index - 1]?.fileStoreId)
-                            }
-                            label={t("UPLOAD_FILE")}
-                            onClick={() => document.getElementById(`file-upload-${index}`).click()}
-                            size="small"
-                            variation="secondary"
-                          />
-                          {/* Display uploaded file status */}
-                          {uploadedFiles[index]?.fileName && <span>{uploadedFiles[index]?.fileName}</span>}
-                        </div>
+              <div>
+                {disableFile && (
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <div style={{ fontWeight: "600", fontSize: "1.2rem" }}>{t("UPLOAD_EXCEL_FOR_ALL_BOUNDARIES")}</div>
+                    <input
+                      ref={inputRef}
+                      type="file"
+                      style={{ display: "none" }}
+                      onChange={handleFileChange} // Trigger file upload when a file is selected
+                    />
+                    <Button
+                      className="custom-class"
+                      icon="Upload"
+                      iconFill=""
+                      label={t("UPLOAD_EXCEL")}
+                      onClick={handleUpload}
+                      options={[]}
+                      optionsKey=""
+                      size="large"
+                      style={{}}
+                      title=""
+                      variation="secondary"
+                    />
+                  </div>
+                )}
+                {!disableFile && (
+                  <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", width: "100%" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", maxWidth: "20rem", gap: "1rem" }}>
+                      <div style={{ marginRight: "10px" }}>{fileName}</div>
+                      <div className="dustbin-icon" onClick={() => removeFile()} style={{ cursor: "pointer", marginTop: "1.15rem" }}>
+                        <DustbinIcon />
                       </div>
-                      <hr style={{ borderTop: "1px solid #ccc", margin: "1rem 0" }} />
                     </div>
-                  ))}
+                  </div>
+                )}
+                <div style={{ height: "1rem" }}></div>
               </div>
-              {uiValError && <InfoCard label="Info" text={uiErrorMsg} variant="error" style={{ maxWidth: "200rem" }} />}
+              {uiValError && <AlertCard label="Info" text={uiErrorMsg} variant="error" style={{ maxWidth: "200rem" }} />}
               <div style={{ marginBottom: "0.5rem" }}></div>
             </Card>
             <div style={{ height: "3rem" }}></div>
-            <ActionBar
+            <Footer
               actionFields={[
                 <Button
                   icon="ArrowBack"
@@ -605,7 +558,7 @@ const ViewHierarchy = () => {
                 />,
                 <Button
                   icon="ArrowForward"
-                  // isDisabled={disableFile }
+                  isDisabled={disableFile}
                   style={{ marginLeft: "auto" }}
                   isSuffix
                   label={t("CMN_BOUNDARY_REL_DATA_CREATE_PREVIEW")}
@@ -667,59 +620,20 @@ const ViewHierarchy = () => {
         )}
         {showToast && <Toast label={showToast.label} type={showToast.isError} onClose={() => setShowToast(null)} />}
         {previewPage && (
-          <div>
-            <Tab
-              activeLink={activeLink?.code}
-              configItemKey="code"
-              configDisplayKey="name"
-              itemStyle={{ width: "290px" }}
-              configNavItems={
-                disableFile
-                  ? [
-                      {
-                        code: "BOUNDARY_GEOJSON",
-                        name: `BOUNDARY_GEOJSON`,
-                      },
-                    ]
-                  : [
-                      {
-                        code: "BOUNDARY_EXCEL",
-                        name: `BOUNDARY_EXCEL`,
-                      },
-                      {
-                        code: "BOUNDARY_GEOJSON",
-                        name: `BOUNDARY_GEOJSON`,
-                      },
-                    ]
-              }
-              navStyles={{}}
-              onTabClick={(e) => {
-                setActiveLink(e);
-              }}
-              setActiveLink={setActiveLink}
-              // showNav={showTab}
-              showNav={true}
-              style={{}}
-            />
-            {activeLink.code == "BOUNDARY_EXCEL" && (
-              <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
-                <div className="hierarchy-boundary-heading">{t("CONFIRM_BOUNDARY_DATA")}</div>
-                {!dataCreationGoing && (
-                  <XlsPreviewNew
-                    file={fileData}
-                    onDownload={() => {}}
-                    onBack={() => {
-                      setShowPreview(false);
-                      setUploadPage(true);
-                    }}
-                  />
-                )}
-                {dataCreationGoing && <Loader />}
-              </Card>
+          <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
+            <div className="hierarchy-boundary-heading">{t("CONFIRM_BOUNDARY_DATA")}</div>
+            {!dataCreationGoing && (
+              <XlsPreviewNew
+                file={fileData}
+                onDownload={() => {}}
+                onBack={() => {
+                  setShowPreview(false);
+                  setUploadPage(true);
+                }}
+              />
             )}
-            {activeLink.code == "BOUNDARY_GEOJSON" && <ViewMap filterOptions={filterOptions} />}
-
-            <ActionBar
+            {dataCreationGoing &&<Loader page={true} variant={"PageLoader"}/>}
+            <Footer
               actionFields={[
                 <Button
                   icon="ArrowBack"
@@ -753,7 +667,7 @@ const ViewHierarchy = () => {
               sortActionFields
               style={{}}
             />
-          </div>
+          </Card>
         )}
       </React.Fragment>
     );

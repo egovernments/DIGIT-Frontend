@@ -155,6 +155,7 @@ export const RadioButtonOption = ({
   const inputContainerRef = useRef(null);
   const tooltipRef = useRef(null);
 
+  const commentsEnabled = window?.globalConfigs?.getConfig("CHECKLIST_COMMENT_ENABLED") || false;
 
   let dis = typeOfCall === "view" ? true : false;
 
@@ -241,7 +242,7 @@ export const RadioButtonOption = ({
           )}
         </div>
         <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-          {!dis && (
+          {commentsEnabled && !dis && (
             <>
               <CheckBox
                 key={field.key}

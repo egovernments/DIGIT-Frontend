@@ -6,6 +6,7 @@ import { CustomSVG } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./table_inbox_custom_style";
 import { defaultPaginationValues, defaultRowsPerPage } from "../utils/constants";
+import { getCustomPaginationOptions } from "../utils";
 
 /**
  * A React component for displaying a paginated table of frontline workers
@@ -171,6 +172,7 @@ const AttendanceManagementTable = ({ ...props }) => {
         paginationRowsPerPageOptions={defaultPaginationValues}
         fixedHeader={true}
         fixedHeaderScrollHeight={"70vh"}
+        paginationComponentOptions={getCustomPaginationOptions(t)}
       />
       {showToast && (
         <Toast
