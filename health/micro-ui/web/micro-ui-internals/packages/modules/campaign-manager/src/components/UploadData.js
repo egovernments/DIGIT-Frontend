@@ -1118,7 +1118,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     <>
       <div className="container-full">
         {loader && 
-        <Loader page={true} variant={"PageLoader"} loaderText={t("CAMPAIGN_VALIDATION_INPROGRESS")}/>}
+        <Loader page={true} variant={"OverlayLoader"} loaderText={t("CAMPAIGN_VALIDATION_INPROGRESS")}/>}
         <div className={parentId ? "card-container2" : "card-container1"}>
         <TagComponent campaignName={campaignName} />  
           <Card>
@@ -1178,7 +1178,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               name: "infocard",
             }}
             variant="default"
-            style={{ marginTop: "1.5rem", maxWidth: "100%" }}
+            style={{ marginTop: "1.5rem", maxWidth: "100%" , marginBottom: "1.5rem" }}
             additionalElements={readMeInfo[type]?.map((info, index) => (
               <div key={index} style={{ display: "flex", flexDirection: "column" }}>
                 <h2>{info?.header}</h2>

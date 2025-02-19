@@ -239,9 +239,8 @@
 }
 
 .delivery-rule-container {
-  padding-top: 0;
   margin-top: 1.5rem;
-  .card-header {
+  .digit-card-header {
     .title {
       margin: 0 !important;
     }
@@ -280,6 +279,7 @@
     align-items: flex-start !important;
     .digit-card-label.card-label-smaller {
       font-weight: 700;
+      margin-bottom: 0rem;
     }
     .employee-select-wrap.form-field {
       width: 100%;

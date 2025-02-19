@@ -184,7 +184,7 @@ const AddAttributeField = ({
 
   return (
     <div key={attribute?.key} className="attribute-field-wrapper">
-      <LabelFieldPair>
+      <LabelFieldPair style={{marginBottom: "0rem"}}>
         <CardLabel isMandatory={true} className="card-label-smaller">
           {t(`CAMPAIGN_ATTRIBUTE_LABEL`)}
         </CardLabel>
@@ -199,7 +199,7 @@ const AddAttributeField = ({
           t={t}
         />
       </LabelFieldPair>
-      <LabelFieldPair>
+      <LabelFieldPair style={{marginBottom: "0rem"}}>
         <CardLabel isMandatory={true} className="card-label-smaller">
           {t(`CAMPAIGN_OPERATOR_LABEL`)}
         </CardLabel>
@@ -217,7 +217,7 @@ const AddAttributeField = ({
 
       {attribute?.operator?.code === "IN_BETWEEN" ? (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-          <LabelFieldPair>
+          <LabelFieldPair style={{marginBottom: "0rem"}}>
             <CardLabel className="card-label-smaller">{t(`CAMPAIGN_FROM_LABEL`)}</CardLabel>
             <div className="field" style={{ display: "flex", width: "100%" }}>
               <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
@@ -231,7 +231,7 @@ const AddAttributeField = ({
               </div>
             </div>
           </LabelFieldPair>
-          <LabelFieldPair>
+          <LabelFieldPair style={{marginBottom: "0rem"}}>
             <CardLabel className="card-label-smaller">{t(`CAMPAIGN_TO_LABEL`)}</CardLabel>
             <div className="field" style={{ display: "flex", width: "100%" }}>
               <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
@@ -247,7 +247,7 @@ const AddAttributeField = ({
           </LabelFieldPair>
         </div>
       ) : (
-        <LabelFieldPair>
+        <LabelFieldPair style={{marginBottom: "0rem"}}>
           <CardLabel className="card-label-smaller">{t(`CAMPAIGN_VALUE_LABEL`)}</CardLabel>
           <div
             className="field"
@@ -276,23 +276,13 @@ const AddAttributeField = ({
         </LabelFieldPair>
       )}
       {delivery.attributes.length !== 1 && (
-        <div
+        <Button
+          variation="link"
+          style={{marginTop: "3rem"}}
+          label={t(`CAMPAIGN_DELETE_ROW_TEXT`)}
+          icon="Delete"
           onClick={() => onDelete()}
-          style={{
-            cursor: "pointer",
-            fontWeight: "600",
-            marginLeft: "1rem",
-            fontSize: "1rem",
-            color: PRIMARY_COLOR,
-            display: "flex",
-            gap: "0.5rem",
-            alignItems: "center",
-            marginTop: "1rem",
-          }}
-        >
-          <DustbinIcon />
-          {t(`CAMPAIGN_DELETE_ROW_TEXT`)}
-        </div>
+        />
       )}
     </div>
   );
@@ -504,6 +494,7 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
               options={deliveryTypeConfig}
               selectedOption={deliveryTypeConfig?.find((i) => i?.code === delivery?.deliveryType)}
               optionsKey="code"
+              value={deliveryTypeConfig?.find((i) => i?.code === delivery?.deliveryType)?.code}
               onSelect={(value) => updateDeliveryType(value)}
               t={t}
               disabled={
