@@ -22,7 +22,7 @@ const DummyTry = () => {
 
     const { isLoading, data: mdmsData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
     const config = useMemo(()=>{
-        if(!mdmsData) return mdmsData;
+        if(!mdmsData) return mdmsData?.mdms?.[0];
         const formConfig = [
             {
                 navLink: "HOUSEHOLD_LOCATION",
