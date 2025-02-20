@@ -23,6 +23,8 @@ import CustomDropdownV2 from "./MultiSelectV2";
 import CustomCheckbox from "./Checbox";
 import { BulkModal } from "./BulkModal";
 import { tranformLocModuleName } from "../pages/employee/localizationUtility";
+import { JsonEditor } from "json-edit-react";
+import { PopUp } from "@egovernments/digit-ui-components";
 
 /*created the form using rjfs json form 
 https://rjsf-team.github.io/react-jsonschema-form/docs/
@@ -102,13 +104,11 @@ function ArrayFieldItemTemplate(props) {
               isDisabled={disabled}
             />
           </div>
-
         )
       )}
-    </div >
+    </div>
   );
 }
-
 
 function TitleFieldTemplate(props) {
   const { id, required, title } = props;
@@ -170,38 +170,30 @@ function ObjectFieldTemplate(props) {
       const fieldProps = additionalProperties?.[fieldName];
       const mdmsCode = fieldProps?.mdmsCode;
       const localizationCode = fieldProps?.localizationCode;
-      const transformedLocCode= tranformLocModuleName(localizationCode);
-        return (
-          <div key={fieldName} style={{ marginBottom: "1rem" }}>
-            <div className="field-wrapper object-wrapper" id={`${idSchema["$id"]}_${fieldName}`}>
-              {element.content}
-            </div>
-        
-            {/* MDMS and Localization Codes */}
-            <div className="code-details">
-              <div className="code-row">
-                <label className="code-key">
-                {t("MDMS_CODE_WORKBENCH")}:
-                </label>
-                <div className="code-value-container" >
-                  <span className="code-value" >
-                    {mdmsCode || ""}
-                  </span>
-                </div>
+      const transformedLocCode = tranformLocModuleName(localizationCode);
+      return (
+        <div key={fieldName} style={{ marginBottom: "1rem" }}>
+          <div className="field-wrapper object-wrapper" id={`${idSchema["$id"]}_${fieldName}`}>
+            {element.content}
+          </div>
+
+          {/* MDMS and Localization Codes */}
+          <div className="code-details">
+            <div className="code-row">
+              <label className="code-key">{t("MDMS_CODE_WORKBENCH")}:</label>
+              <div className="code-value-container">
+                <span className="code-value">{mdmsCode || ""}</span>
               </div>
-              <div className="code-row">
-                <label className="code-key">
-                  {t("LOCALIZATION_CODE_WORKBENCH")}:
-                </label>
-                <div className="code-value-container" >
-                  <span className="code-value">
-                    {transformedLocCode || ""}
-                  </span>
-                </div>
+            </div>
+            <div className="code-row">
+              <label className="code-key">{t("LOCALIZATION_CODE_WORKBENCH")}:</label>
+              <div className="code-value-container">
+                <span className="code-value">{transformedLocCode || ""}</span>
               </div>
             </div>
           </div>
-        );
+        </div>
+      );
     }
 
     return (
@@ -249,7 +241,7 @@ function CustomFieldTemplate(props) {
         <label htmlFor={id} className="control-label" id={"label_" + id}>
           <span className="tooltip">
             {t(titleCode)} {additionalCode}
-            <span className="tooltiptext" style={{maxWidth:"540px"}}>
+            <span className="tooltiptext" style={{ maxWidth: "540px" }}>
               <span className="tooltiptextvalue">{t(`TIP_${titleCode}`)}</span>
             </span>
           </span>
@@ -266,8 +258,7 @@ function CustomFieldTemplate(props) {
   );
 }
 
-const FieldErrorTemplate = ({ errors }) =>
-  errors && errors.length > 0 && errors[0] ? <CardLabelError>{errors[0]}</CardLabelError> : null;
+const FieldErrorTemplate = ({ errors }) => (errors && errors.length > 0 && errors[0] ? <CardLabelError>{errors[0]}</CardLabelError> : null);
 
 const DigitJSONForm = ({
   schema,
@@ -290,20 +281,17 @@ const DigitJSONForm = ({
 
   const [additionalProperties, setAdditionalProperties] = useState({});
   const [displayMenu, setDisplayMenu] = useState(false);
+  const [showPopUp, setShowPopUp] = useState(false);
   const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
   const { moduleName, masterName } = Digit.Hooks.useQueryParams();
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const enableBulkUpload =  window?.globalConfigs?.getConfig?.("ENABLE_MDMS_BULK_UPLOAD") ? window.globalConfigs.getConfig("ENABLE_MDMS_BULK_UPLOAD") : false;
+  const enableBulkUpload = window?.globalConfigs?.getConfig?.("ENABLE_MDMS_BULK_UPLOAD")
+    ? window.globalConfigs.getConfig("ENABLE_MDMS_BULK_UPLOAD")
+    : false;
 
-  const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    "Workbench",
-    [{ name: "UISchema" }],
-    {
-      select: (data) => data?.["Workbench"]?.["UISchema"],
-    }
-  );
-
+  const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(tenantId, "Workbench", [{ name: "UISchema" }], {
+    select: (data) => data?.["Workbench"]?.["UISchema"],
+  });
 
   useEffect(() => {
     if (schema?.code && MdmsRes && formData) {
@@ -324,76 +312,74 @@ const DigitJSONForm = ({
       }
       setAdditionalProperties(newAdditionalProps);
     }
-  }, [formData, MdmsRes,schema]);
+  }, [formData, MdmsRes, schema]);
 
   const reqCriteriaSecondUpsert = {
     url: `/localization/messages/v1/_upsert`,
     params: {},
     body: {},
     config: {
-      enabled: false, 
+      enabled: false,
     },
   };
   const secondFormatLocalizationMutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaSecondUpsert);
 
-const transformFormDataWithProperties = (formData, additionalProperties) => {
-  const transformedFormData = { ...formData };
-  for (const fieldName in additionalProperties) {
-    if (Object.hasOwn(additionalProperties, fieldName)) {
-      const fieldProps = additionalProperties[fieldName];
-      if (fieldProps?.localizationCode) {
-        transformedFormData[fieldName] = fieldProps.mdmsCode;
+  const transformFormDataWithProperties = (formData, additionalProperties) => {
+    const transformedFormData = { ...formData };
+    for (const fieldName in additionalProperties) {
+      if (Object.hasOwn(additionalProperties, fieldName)) {
+        const fieldProps = additionalProperties[fieldName];
+        if (fieldProps?.localizationCode) {
+          transformedFormData[fieldName] = fieldProps.mdmsCode;
+        }
       }
     }
-  }
-  return transformedFormData;
-};
+    return transformedFormData;
+  };
 
+  const buildSecondFormatMessages = (additionalProperties, schemaCode, locale) => {
+    const schemaCodeParts = schemaCode?.split(".") || [];
+    const firstPart = schemaCodeParts[0]?.toLowerCase() || "default";
+    const secondPart = schemaCodeParts[1]?.toUpperCase() || "";
 
-const buildSecondFormatMessages = (additionalProperties, schemaCode, locale) => {
-  const schemaCodeParts = schemaCode?.split(".") || [];
-  const firstPart = schemaCodeParts[0]?.toLowerCase() || "default";
-  const secondPart = schemaCodeParts[1]?.toUpperCase() || "";
+    const messages = [];
+    for (const fieldName in additionalProperties) {
+      if (Object.hasOwn(additionalProperties, fieldName)) {
+        const fieldProps = additionalProperties[fieldName];
+        const { mdmsCode, localizationMessage } = fieldProps;
+        if (mdmsCode && localizationMessage) {
+          const code = `${secondPart}.${mdmsCode}`;
+          messages.push({
+            code: code,
+            message: localizationMessage,
+            module: firstPart,
+            locale: locale,
+          });
+        }
+      }
+    }
+    return messages;
+  };
 
-  const messages = [];
-  for (const fieldName in additionalProperties) {
-    if (Object.hasOwn(additionalProperties, fieldName)) {
-      const fieldProps = additionalProperties[fieldName];
-      const { mdmsCode, localizationMessage } = fieldProps;
-      if (mdmsCode && localizationMessage) {
-        const code = `${secondPart}.${mdmsCode}`;
-        messages.push({
-          code: code,
-          message: localizationMessage,
-          module: firstPart,
-          locale: locale,
+  const onSubmitV2 = async ({ formData }, e) => {
+    const locale = Digit.StoreData.getCurrentLanguage();
+    const transformedFormData = transformFormDataWithProperties(formData, additionalProperties);
+    const secondFormatMessages = buildSecondFormatMessages(additionalProperties, schema?.code, locale);
+    if (secondFormatMessages.length > 0) {
+      try {
+        await secondFormatLocalizationMutation.mutateAsync({
+          params: {},
+          body: {
+            tenantId: tenantId,
+            messages: secondFormatMessages,
+          },
         });
+      } catch (err) {
+        console.error("Second format localization upsert failed:", err);
       }
     }
-  }
-  return messages;
-};
-
-const onSubmitV2 = async ({ formData }, e) => {
-  const locale = Digit.StoreData.getCurrentLanguage();
-  const transformedFormData = transformFormDataWithProperties(formData, additionalProperties);
-  const secondFormatMessages = buildSecondFormatMessages(additionalProperties, schema?.code, locale);
-  if (secondFormatMessages.length > 0) {
-    try {
-      await secondFormatLocalizationMutation.mutateAsync({
-        params: {},
-        body: {
-          tenantId: tenantId,
-          messages: secondFormatMessages,
-        },
-      });
-    } catch (err) {
-      console.error("Second format localization upsert failed:", err);
-    }
-  }
-  onSubmit && onSubmit(transformedFormData, additionalProperties);
-};
-
+    onSubmit && onSubmit(transformedFormData, additionalProperties);
+  };
 
   const customWidgets = { SelectWidget: v2 ? CustomDropdown : CustomDropdownV2, CheckboxWidget: CustomCheckbox };
 
@@ -402,32 +388,39 @@ const onSubmitV2 = async ({ formData }, e) => {
   };
   const formDisabled = screenType === "view" ? true : disabled;
 
+  console.log("formData", formData);
+
   return (
     <AdditionalPropertiesContext.Provider value={{ additionalProperties, updateAdditionalProperties: () => {} }}>
       <React.Fragment>
         <Header className="digit-form-composer-header">
           {screenType === "add" ? t("WBH_ADD_MDMS") : screenType === "view" ? t("WBH_VIEW_MDMS") : t("WBH_EDIT_MDMS")}
         </Header>
-       {screenType === "add" && enableBulkUpload&& <BulkModal
-          showBulkUploadModal={showBulkUploadModal}
-          setShowBulkUploadModal={setShowBulkUploadModal}
-          moduleName={moduleName}
-          masterName={masterName}
-          uploadFileTypeXlsx={false}
-        />}
+        {screenType === "add" && enableBulkUpload && (
+          <BulkModal
+            showBulkUploadModal={showBulkUploadModal}
+            setShowBulkUploadModal={setShowBulkUploadModal}
+            moduleName={moduleName}
+            masterName={masterName}
+            uploadFileTypeXlsx={false}
+          />
+        )}
         <Card className="workbench-create-form">
           <Header className="digit-form-composer-sub-header">
             {typeof Digit?.Utils?.workbench?.getMDMSLabel === "function"
               ? t(Digit.Utils.workbench.getMDMSLabel(`SCHEMA_` + schema?.code))
               : `SCHEMA_${schema?.code}`}
           </Header>
+          <div>
+            <Button className="action-bar-button" variation="secondary" label={t("WBH_SHOW_JSON")} onButtonClick={() => setShowPopUp(true)} />
+          </div>
           <Form
             schema={schema?.definition}
             validator={validator}
             showErrorList={false}
             formData={formData}
             noHtml5Validate={true}
-            onChange={onFormChange}  
+            onChange={onFormChange}
             formContext={{
               schemaCode: schema?.code,
               MdmsRes,
@@ -460,10 +453,7 @@ const onSubmitV2 = async ({ formData }, e) => {
                     onButtonClick={() => setShowBulkUploadModal(true)}
                   />
                 )}
-                <SubmitBar
-                  label={screenType === "edit" ? t("WBH_ADD_MDMS_UPDATE_ACTION") : t("WBH_ADD_MDMS_ADD_ACTION")}
-                  submit="submit"
-                />
+                <SubmitBar label={screenType === "edit" ? t("WBH_ADD_MDMS_UPDATE_ACTION") : t("WBH_ADD_MDMS_ADD_ACTION")} submit="submit" />
               </ActionBar>
             )}
             {screenType === "view" && viewActions && viewActions.length > 0 && (
@@ -483,6 +473,39 @@ const onSubmitV2 = async ({ formData }, e) => {
             )}
           </Form>
         </Card>
+        {showPopUp && (
+          <PopUp
+            type={"default"}
+            children={[]}
+            onOverlayClick={() => {
+              setShowPopUp(false);
+            }}
+            onClose={() => {
+              setShowPopUp(false);
+            }}
+            equalWidthButtons={"false"}
+            footerChildren={[
+              <Button
+                className={"campaign-type-alert-button"}
+                type={"button"}
+                size={"large"}
+                variation={"primary"}
+                label={t("HCM_CLOSE")}
+                onButtonClick={() => {
+                  setShowPopUp(false);
+                }}
+              />,
+            ]}
+          >
+            <JsonEditor
+              data={formData}
+              onChange={formData}
+              restrictEdit={screenType === "view"}
+              restrictDelete={screenType === "view"}
+              restrictAdd={screenType === "view"}
+            />
+          </PopUp>
+        )}
         {showToast && (
           <Toast
             label={t(showToast)}
