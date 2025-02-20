@@ -156,6 +156,7 @@ const AttendanceManagementTable = ({ ...props }) => {
   return (
     <>
       <DataTable
+        className="search-component-table"
         columns={columns}
         data={paginatedData}
         progressPending={false}
