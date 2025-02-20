@@ -39,73 +39,69 @@
     text-align: start;
 }
 
+/* Main Wrapper */
 .custom-register-inbox-screen {
-
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
-
+/* Row Section - Ensures Both Sections Have the Same Height */
 .custom-register-inbox-screen .inner-div-row-section {
-
     width: 100%;
     display: flex;
     flex-direction: row;
     gap: 1.5rem;
+    min-height: 80vh;
+    height: auto;
+    align-items: stretch;
+    /* Forces both sections to stay equal in height */
 }
 
+/* Filter Section - Fixed to 30% Width */
 .custom-register-inbox-screen .custom-inbox-filter-section {
-
-    width: 30%;
+    flex: 0 0 30%;
+    /* Fixes width to 30%, prevents unwanted expansion */
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    height: 80vh;
-}
-
-
-.custom-register-inbox-screen .custom-inbox-inner-filter-section {
-
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    height: 75vh;
+    height: 100%;
+    /* Ensures it stretches with table */
+    min-height: 100%;
     overflow-y: auto;
 }
 
-
-
-
+/* Table Section - Takes Remaining 70% */
 .custom-register-inbox-screen .custom-inbox-outer-table-section {
-
-    width: 100%;
+    flex: 1;
+    /* Takes remaining width (70%) */
     display: flex;
-    flex-direction: row;
-    gap: 1.5rem;
+    flex-direction: column;
+    height: 100%;
+    /* Matches filter height */
+    min-height: 100%;
+    overflow-y: auto;
 }
 
+/* Inner Table Section */
 .custom-inbox-outer-table-section .inner-table-section {
-
     width: 100%;
     display: flex;
     flex-direction: column;
-    height: 75vh;
-    min-height: 75vh;
+    flex-grow: 1;
+    /* Makes sure table stretches */
 }
 
+/* Table Card Override */
 .custom-inbox-outer-table-section .card-overide {
     max-width: 100%;
     overflow: auto;
     margin: 0px;
-    height: 75vh;
+    flex-grow: 1;
+    /* Makes sure the table always fills height */
 }
 
-
-
-
-
+/* Reset Proximity Icon */
 .on-icon-reset-proximity {
     border: 1px solid #e0e0e0;
     padding: 6px;
@@ -113,14 +109,12 @@
     cursor: pointer;
 }
 
-
+/* Bill Inbox */
 .custom-bill-inbox {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
     margin-bottom: 2.5rem;
-
-
 }
 
 .bill-container {
@@ -141,7 +135,7 @@
 }
 
 .right-section {
-    width: 100%;
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -152,4 +146,19 @@
     flex-direction: row;
     height: 60vh;
     overflow-y: auto;
+}
+
+.view-label-heading {
+    @extend .typography.heading-s;
+    color: theme(digitv2.lightTheme.text-primary);
+    width: 20%;
+    text-align: left;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.view-label-text {
+    @extend .typography.body-s;
+    color: theme(digitv2.lightTheme.text-primary);
+    width: 80%;
 }
