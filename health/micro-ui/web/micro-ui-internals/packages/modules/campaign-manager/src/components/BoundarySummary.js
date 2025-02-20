@@ -1,7 +1,7 @@
 import React, { useEffect, useState,Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { Header, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Toast, Stepper, TextBlock, Card ,Tag ,Loader } from "@egovernments/digit-ui-components";
+import {LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Toast, Stepper, TextBlock, Card , Loader ,HeaderComponent } from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
 
 
@@ -148,7 +148,7 @@ const BoundarySummary = (props) => {
         <div className="card-container-delivery">
         <TagComponent campaignName={campaignName} />
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Header className="summary-header">{t("ES_BOUNDARY_SUMMARY_HEADING")}</Header>
+        <HeaderComponent className="summary-header">{t("ES_BOUNDARY_SUMMARY_HEADING")}</HeaderComponent>
       </div>
       <div className="campaign-summary-container">
         <ViewComposer data={updatedObject} />
