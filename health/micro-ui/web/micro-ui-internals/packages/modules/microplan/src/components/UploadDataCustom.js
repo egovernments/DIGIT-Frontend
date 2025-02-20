@@ -588,7 +588,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
           },
           onError: (error, result) => {
             const errorCode = error?.response?.data?.Errors?.[0]?.code;
-            if (errorCode !== "NativeIoException" || errorCode !== "ZuulRuntimeException") {
+            if (errorCode !== "NativeIoException" && errorCode !== "ZuulRuntimeException") {
               setDownloadTemplateLoader(false);
               setDownloadError(true);
               setIsPolling(false);
