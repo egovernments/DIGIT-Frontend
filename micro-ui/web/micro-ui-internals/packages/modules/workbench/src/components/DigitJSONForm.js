@@ -388,8 +388,6 @@ const DigitJSONForm = ({
   };
   const formDisabled = screenType === "view" ? true : disabled;
 
-  console.log("formData", formData);
-
   return (
     <AdditionalPropertiesContext.Provider value={{ additionalProperties, updateAdditionalProperties: () => {} }}>
       <React.Fragment>
