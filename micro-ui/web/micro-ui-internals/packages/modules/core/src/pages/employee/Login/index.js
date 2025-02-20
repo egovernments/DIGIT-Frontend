@@ -22,23 +22,26 @@ const EmployeeLogin = ({ stateCode }) => {
   //   modulePrefix,
   // });
 
-  const { data: mdmsData, isLoading } = useCommonMDMS(stateCode, "commonUiConfig", ["LoginConfig"], {
-    select: (data) => {
-      return {
-        config: data?.commonUiConfig?.LoginConfig,
-      };
-    },
-    retry: false,
-  });
+  // const { data: mdmsData, isLoading } = useCommonMDMS(stateCode, "commonUiConfig", ["LoginConfig"], {
+  //   select: (data) => {
+  //     return {
+  //       config: data?.commonUiConfig?.LoginConfig,
+  //     };
+  //   },
+  //   retry: false,
+  // });
 
-  //let loginConfig = mdmsData?.config ? mdmsData?.config : defaultLoginConfig;
-  useEffect(() => {
-    if (isLoading == false && mdmsData?.config) {
-      setloginConfig(mdmsData?.config);
-    } else {
-      setloginConfig(defaultLoginConfig);
-    }
-  }, [mdmsData, isLoading]);
+  // let loginConfig = mdmsData?.config ? mdmsData?.config : defaultLoginConfig;
+
+  // let loginConfig = defaultLoginConfig;
+
+  // useEffect(() => {
+  //   if (isLoading == false && mdmsData?.config) {
+  //     setloginConfig(mdmsData?.config);
+  //   } else {
+  //     setloginConfig(defaultLoginConfig);
+  //   }
+  // }, [mdmsData, isLoading]);
 
   const loginParams = useMemo(() =>
     loginConfig.map(

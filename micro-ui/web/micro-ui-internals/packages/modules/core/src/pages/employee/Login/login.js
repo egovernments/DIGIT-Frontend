@@ -28,6 +28,9 @@ const setEmployeeDetail = (userObject, token) => {
 const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   const { data: cities, isLoading } = useTenants();
   const { data: storeData, isLoading: isStoreLoading } = useStore.getInitData();
+  console.log("useStore getInitData", useStore.getInitData)
+  console.log("cities", cities)
+  console.log("data", storeData)
   const { stateInfo } = storeData || {};
   const [user, setUser] = useState(null);
   const [showToast, setShowToast] = useState(null);
@@ -157,7 +160,10 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   }
 
   const onFormValueChange = (setValue, formData, formState) => {
+
     // Extract keys from the config
+    console.log("config of form", config)
+    console.log("my formcomposer")
     const keys = config[0].body.map((field) => field.key);
 
     const hasEmptyFields = keys.some((key) => {

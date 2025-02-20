@@ -135,6 +135,7 @@ export const StoreService = {
         uiHomePage: uiHomePage,
       };
     };
+
     const initData = tenantConfigFetch
       ? await fetchTenantConfig()
       : {
@@ -156,6 +157,7 @@ export const StoreService = {
           uiHomePage: uiHomePage,
         };
     initData.selectedLanguage = Digit.SessionStorage.get("locale") || initData.languages[0].value;
+    console.log("initdata", initData)
 
     ApiCacheService.saveSetting(MdmsRes["DIGIT-UI"]?.ApiCachingSettings);
 
@@ -176,12 +178,11 @@ export const StoreService = {
     }
     // .filter((item) => !!moduleTenants.find((mt) => mt.code === item.code))
     // .map((tenant) => ({ i18nKey: `TENANT_TENANTS_${tenant.code.replace(".", "_").toUpperCase()}`, ...tenant }));
-
-    await LocalizationService.getLocale({
-      modules: [`${modulePrefix}-common`, `digit-ui`, `digit-tenants`, `${modulePrefix}-${stateCode.toLowerCase()}`],
-      locale: initData.selectedLanguage,
-      tenantId: stateCode,
-    });
+    // await LocalizationService.getLocale({
+    //   modules: [`${modulePrefix}-common`, `digit-ui`, `digit-tenants`, `${modulePrefix}-${stateCode.toLowerCase()}`],
+    //   locale: initData.selectedLanguage,
+    //   tenantId: stateCode,
+    // });
     Storage.set("initData", initData);
     initData.revenue_localities = revenue_localities;
     initData.localities = localities;

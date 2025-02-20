@@ -20,7 +20,7 @@ export const loginConfig = [
         },
       },
       {
-        label: "CORE_LOGIN_PASSWORD",
+        label: "CORE_LOGIN_PASSW",
         type: "password",
         key: "password",
         isMandatory: true,
