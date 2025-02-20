@@ -1,6 +1,9 @@
 # Changelog
 
-## [1.0.3]
+## [1.0.12]
+- FEATURE/DUCE-244 : - Intergrated with react json editor and provided a playground for create and search
+
+## [1.0.11]
 - Intergrated with new component library & updated toast , loaders
 
 ## [1.0.3]
