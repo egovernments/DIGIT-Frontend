@@ -128,11 +128,12 @@ const MyBillsTable = ({ ...props }) => {
                         reportDetails?.status === "COMPLETED" ? <Button
                             className="custom-class"
                             iconFill=""
+                            size="medium"
                             icon="FileDownload"
                             isSuffix
                             label={t(`HCM_AM_DOWNLOAD_BILLS`)}
                             title={t(`HCM_AM_DOWNLOAD_BILLS`)}
-                            showBottom={isLastRow ? false : true}
+                            showBottom={isLastRow && props.data.length !== 1 ? false : true}
                             onOptionSelect={(value) => {
                                 if (value.code === "HCM_AM_PDF") {
                                     if (reportDetails?.pdfReportId) {
@@ -160,7 +161,6 @@ const MyBillsTable = ({ ...props }) => {
                                 },
                             ]}
                             optionsKey="name"
-                            size=""
                             style={{ minWidth: "14rem" }}
                             type="actionButton"
                             variation="secondary"
@@ -199,7 +199,7 @@ const MyBillsTable = ({ ...props }) => {
                 data={props.data}
                 pagination
                 paginationServer
-                customStyles={tableCustomStyle}
+                customStyles={tableCustomStyle(false)}
                 paginationDefaultPage={props?.currentPage}
                 onChangePage={handlePageChange}
                 onChangeRowsPerPage={handlePerRowsChange}

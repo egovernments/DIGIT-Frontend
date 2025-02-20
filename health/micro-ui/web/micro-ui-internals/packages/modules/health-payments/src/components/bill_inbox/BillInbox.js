@@ -44,6 +44,7 @@ const BillInboxComponent = () => {
     const [totalCount, setTotalCount] = useState(0);
     const [infoDescription, setInfoDescription] = useState(null);
     const [pendingApprovalCount, setPendingApprovalCount] = useState(null);
+
     const [limitAndOffset, setLimitAndOffset] = useState({
         limit: rowsPerPage,
         offset: (currentPage - 1) * rowsPerPage,
@@ -315,7 +316,7 @@ const BillInboxComponent = () => {
                         {tableData && <Card style={{ width: "100%", }}>
                             {tableData != null && <div className="summary-sub-heading">{t(selectedProject?.name)}</div>}
                             {tableData != null && <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name)}</div>}
-                            <div>
+                            <div style={{overflowY: "auto"}}>
                                 {(approvalCount !== null && pendingApprovalCount !== null) && (
                                     <Tab
                                         activeLink={activeLink?.code}
