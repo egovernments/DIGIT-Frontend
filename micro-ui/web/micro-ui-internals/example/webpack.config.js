@@ -66,7 +66,7 @@ module.exports = {
     proxy: [
       {
         context: ["/egov-mdms-service"], // Add all endpoints that need to be proxied
-        target: "https://works-dev.digit.org",
+        target: "https://unified-qa.digit.org",
         changeOrigin: true,
         secure: false,
       },
