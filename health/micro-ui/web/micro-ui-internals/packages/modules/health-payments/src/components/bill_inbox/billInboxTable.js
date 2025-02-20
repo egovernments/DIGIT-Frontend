@@ -109,6 +109,7 @@ const BillInboxTable = ({
             {
                 props.isFetching || props.tableData.length === 0 ? <div style={{ height: props.infoDescription ? "38vh" : "52vh" }}> {props.isFetching ? <Loader /> : <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />} </div> : <DataTable
                     columns={columns}
+                    className="search-component-table"
                     data={props.tableData}
                     pagination
                     paginationServer
