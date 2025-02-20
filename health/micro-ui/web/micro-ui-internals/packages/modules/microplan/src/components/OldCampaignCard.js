@@ -61,6 +61,12 @@ const CampaignCard = () => {
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
     },  
+    {
+      label: t("ACTION_TEST_APP_CONFIGURATION_DUMMY"),
+      link: `/workbench-ui/employee/campaign/app-configuration-dummy?module=HCM-ADMIN-CONSOLE&master=AppScreenConfigTemplateSchema`,
+      roles: ROLES.CAMPAIGN_MANAGER,
+      // count: isLoading?"-":data
+    },  
   ];
 
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));
