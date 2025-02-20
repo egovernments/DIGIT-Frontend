@@ -60,7 +60,19 @@ const CampaignCard = () => {
       link: `/workbench-ui/employee/campaign/app-configuration`,
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
-    },  
+    },
+    {
+      label: t("ACTION_TEST_APP_CONFIGURATION_PARENT_MOBILE"),
+      link: `/workbench-ui/employee/campaign/app-configuration-parent?variant=app&masterName=AppScreenConfigTemplateSchema`,
+      roles: ROLES.CAMPAIGN_MANAGER,
+      // count: isLoading?"-":data
+    },
+    {
+      label: t("ACTION_TEST_APP_CONFIGURATION_PARENT_WEB"),
+      link: `/workbench-ui/employee/campaign/app-configuration-parent?variant=web&masterName=FormBuilderConfig`,
+      roles: ROLES.CAMPAIGN_MANAGER,
+      // count: isLoading?"-":data
+    },
   ];
 
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));

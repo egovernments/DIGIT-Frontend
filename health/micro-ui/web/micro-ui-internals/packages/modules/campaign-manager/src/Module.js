@@ -56,7 +56,7 @@ import DataUploadWrapper from "./components/DataUploadWrapper";
 import AppConfigurationWrapper from "./pages/employee/appConfigurationScreen/AppConfigurationWrapper";
 import AppLocalisationWrapper from "./pages/employee/appConfigurationScreen/AppLocalisationWrapper";
 import ImpelComponentWrapper from "./pages/employee/appConfigurationScreen/ImpelComponentWrapper";
-
+import AppConfigurationParentLayer from "./pages/employee/appConfigurationScreenParent/AppConfigurationParentLayer";
 /**
  * MDMS Module name
  */
@@ -174,6 +174,7 @@ const componentsToRegister = {
   DataUploadWrapper,
   // AppConfigurationWrapper: AppLocalisationWrapper,
   AppConfigurationWrapper: ImpelComponentWrapper,
+  AppConfigurationParentLayer: AppConfigurationParentLayer,
 };
 
 const overrideHooks = () => {
