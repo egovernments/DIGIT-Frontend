@@ -3,39 +3,38 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 const ROLES = {
-  CAMPAIGN_MANAGER:["CAMPAIGN_MANAGER","MICROPLAN_CAMPAIGN_INTEGRATOR"],
-  BOUNDARY_MANAGER:["BOUNDARY_MANAGER"],
-  CAMPAIGN_MANAGER_ONLY:["CAMPAIGN_MANAGER"],
-  NATIONAL_SUPERVISOR:["NATIONAL_SUPERVISOR"]
+  CAMPAIGN_MANAGER: ["CAMPAIGN_MANAGER", "MICROPLAN_CAMPAIGN_INTEGRATOR"],
+  BOUNDARY_MANAGER: ["BOUNDARY_MANAGER"],
+  CAMPAIGN_MANAGER_ONLY: ["CAMPAIGN_MANAGER"],
+  NATIONAL_SUPERVISOR: ["NATIONAL_SUPERVISOR"],
 };
 
 /* @nipun delete this card once migrated  */
 const CampaignCard = () => {
   if (!Digit.Utils.didEmployeeHasAtleastOneRole(Object.values(ROLES).flatMap((e) => e))) {
-  return null;
+    return null;
   }
 
   const { t } = useTranslation();
   const userId = Digit.UserService.getUser().info.uuid;
-  const microplanStatus =  "RESOURCE_ESTIMATIONS_APPROVED"
- 
-  let links = [
+  const microplanStatus = "RESOURCE_ESTIMATIONS_APPROVED";
 
+  let links = [
     {
       label: t("ACTION_TEST_SETUP_CAMPAIGN"),
       link: `/workbench-ui/employee/campaign/setup-campaign`,
-      roles: ROLES.CAMPAIGN_MANAGER_ONLY
+      roles: ROLES.CAMPAIGN_MANAGER_ONLY,
     },
     {
       label: t("ACTION_TEST_MY_CAMPAIGN"),
       link: `/workbench-ui/employee/campaign/my-campaign`,
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
-    },  
-    { 
+    },
+    {
       label: t("ACTION_TEST_SETUP_CAMPAIGN_FROM_MICROPLAN"),
       link: `/${window?.contextPath}/employee/campaign/setup-from-microplan?userId=${userId}&status=${microplanStatus}`,
-      roles: ROLES.CAMPAIGN_MANAGER
+      roles: ROLES.CAMPAIGN_MANAGER,
     },
     {
       label: t("NATIONAL_DASHBOARD"),
@@ -73,6 +72,12 @@ const CampaignCard = () => {
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
     },
+    {
+      label: t("ACTION_TEST_FORM_BUILDER"),
+      link: `/workbench-ui/employee/campaign/form-builder-configuration`,
+      roles: ROLES.CAMPAIGN_MANAGER,
+      // count: isLoading?"-":data
+    },
   ];
 
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));
@@ -85,6 +90,5 @@ const CampaignCard = () => {
   };
   return <EmployeeModuleCard {...propsForModuleCard} />;
 };
-
 
 export default CampaignCard;

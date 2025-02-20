@@ -57,6 +57,8 @@ import AppConfigurationWrapper from "./pages/employee/appConfigurationScreen/App
 import AppLocalisationWrapper from "./pages/employee/appConfigurationScreen/AppLocalisationWrapper";
 import ImpelComponentWrapper from "./pages/employee/appConfigurationScreen/ImpelComponentWrapper";
 import AppConfigurationParentLayer from "./pages/employee/appConfigurationScreenParent/AppConfigurationParentLayer";
+import FormBuilder from "./pages/employee/appConfigurationScreen/FormBuilder";
+
 /**
  * MDMS Module name
  */
@@ -175,6 +177,7 @@ const componentsToRegister = {
   // AppConfigurationWrapper: AppLocalisationWrapper,
   AppConfigurationWrapper: ImpelComponentWrapper,
   AppConfigurationParentLayer: AppConfigurationParentLayer,
+  FormBuilder
 };
 
 const overrideHooks = () => {
