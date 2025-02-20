@@ -182,6 +182,7 @@ const AttendanceInboxComponent = () => {
 
   // Reset the table and clear filters.
   const resetTable = () => {
+    setSelectedStatus(StatusEnum.PENDING_FOR_APPROVAL);
     setchildrenData([]);
     setFilterCriteria(null);
     setCard(false);
