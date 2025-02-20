@@ -1,7 +1,6 @@
 import React, { useState, useEffect , Fragment } from "react";
-import { DatePicker, LabelFieldPair, Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { ErrorMessage, FieldV1, TextInput ,Stepper , TextBlock , Card , AlertCard ,Tag  } from "@egovernments/digit-ui-components";
+import { FieldV1 ,Stepper , TextBlock , Card , AlertCard ,LabelFieldPair ,HeaderComponent  } from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
 
 const CampaignDates = ({ onSelect, formData, ...props }) => {
@@ -134,7 +133,7 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
         <div className="card-container2">
         <TagComponent campaignName={campaignName} />  
           <Card className="setup-campaign-card">
-            <Header>{t(`HCM_CAMPAIGN_DATES_HEADER`)}</Header>
+            <HeaderComponent>{t(`HCM_CAMPAIGN_DATES_HEADER`)}</HeaderComponent>
             <p className="dates-description">{t(`HCM_CAMPAIGN_DATES_DESCRIPTION`)}</p>
             <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "13rem 2fr", alignItems: "start" }}>
               <div className="campaign-dates">
