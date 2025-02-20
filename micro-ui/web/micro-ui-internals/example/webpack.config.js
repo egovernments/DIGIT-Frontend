@@ -63,5 +63,13 @@ module.exports = {
     port: 3000,
     hot: true,
     historyApiFallback: true,
+    proxy: [
+      {
+        context: ["/egov-mdms-service"], // Add all endpoints that need to be proxied
+        target: "https://works-dev.digit.org",
+        changeOrigin: true,
+        secure: false,
+      },
+    ],
 }
 };
