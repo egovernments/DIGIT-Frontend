@@ -15,7 +15,7 @@ const InboxFilterWrapper = (props) => {
   );
 
   // Default selected option
-  let defaultSelectedOptions = props.defaultValue
+  let defaultSelectedOptions = props?.defaultValue
     ? Object.entries(props.defaultValue).reduce((acc, [key, value]) => {
       if (key === "facilityId") {
         acc[key] = value.map(item => ({ code: item?.code, id: item?.id, name: item?.name }));
@@ -156,7 +156,7 @@ const InboxFilterWrapper = (props) => {
   return (
 
     <FilterCard
-      style={{ flexGrow: 1, display: "flex", flexDirection: "column", width: "22vw", height: `${Math.max(props.tableHeight, 33)}rem` }}
+      style={{ flexGrow: 1, display: "flex", flexDirection: "column", width: "22vw", height: `${Math.max(props?.tableHeight, 33)}rem` }}
       layoutType={"vertical"}
       onClose={props?.onClose}
       onPrimaryPressed={handleApplyFilters} // Apply filters
@@ -184,7 +184,7 @@ const InboxFilterWrapper = (props) => {
           </LabelFieldPair>
         )}
         <Fragment>
-          {props.filterConfig?.enableAccessibilityFilter &&
+          {props?.filterConfig?.enableAccessibilityFilter &&
 
             <Fragment>
 
@@ -217,7 +217,7 @@ const InboxFilterWrapper = (props) => {
             </Fragment>
 
           }
-          {props.filterConfig?.enableFacilityFilter &&
+          {props?.filterConfig?.enableFacilityFilter &&
 
 
             <LabelFieldPair vertical>
@@ -235,7 +235,7 @@ const InboxFilterWrapper = (props) => {
           }
 
 
-          {props.filterConfig.enableSecurityFilter &&
+          {props?.filterConfig?.enableSecurityFilter &&
             state.securityQuestions.map((item, index) => {
               // Transform item.values into an array of objects
               const options = item.values.map((value) => ({
