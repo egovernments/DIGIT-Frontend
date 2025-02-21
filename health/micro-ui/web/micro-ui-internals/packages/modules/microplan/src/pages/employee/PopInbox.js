@@ -112,7 +112,7 @@ const PopInbox = () => {
   
   const hrms_context_path = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || 'health-hrms';
   const userInfo = Digit.UserService.getUser();
-  const userRoles = config?.roles;
+  const userRoles = Digit.UserService.getUser().info.roles;
   const tableRef = useRef(null);
   const [tableHeight, setTableHeight] = useState(33);
 
@@ -285,7 +285,7 @@ const PopInbox = () => {
         tenantId: tenantId,
         active: true,
         planConfigurationId: url?.microplanId,
-        role: ["POPULATION_DATA_APPROVER", "ROOT_POPULATION_DATA_APPROVER"],
+        role:config?.roles,
         employeeId: [user?.info?.uuid],
       },
     },
@@ -708,11 +708,11 @@ const PopInbox = () => {
                 configNavItems={[          
                   {
                     code: `${config?.tabConfig?.tabOptions[0]?.code}`,
-                    name: `${t(config?.tabConfig?.tabOptions[0]?.code)} (${assignedToMeCount})`,
+                    name: `${t(config?.tabConfig?.tabOptions[0]?.name)} (${assignedToMeCount})`,
                   },
                   {
                     code: `${config?.tabConfig?.tabOptions[1]?.code}`,
-                    name: `${t(config?.tabConfig?.tabOptions[1]?.code)} (${assignedToAllCount})`,
+                    name: `${t(config?.tabConfig?.tabOptions[1]?.name)} (${assignedToAllCount})`,
                   }
                 ]}
                 navStyles={{}}
