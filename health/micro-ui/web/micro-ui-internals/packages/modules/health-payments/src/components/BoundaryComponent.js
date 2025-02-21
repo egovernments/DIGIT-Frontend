@@ -199,8 +199,11 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSessionStorag
   return (
     <React.Fragment>
       <div>
-        {boundaryHierarchy.map((key) => {
+        {boundaryHierarchy.map((key, index) => {
           if (boundaryData[key] && isBoundaryAllowed(key)) {
+            const parentBoundary = index > 0 ? boundaryHierarchy[index - 1] : null;
+            const isDisabled = parentBoundary ? !selectedValues[parentBoundary] : false;
+
             return (
               <BoundaryDropdown
                 isRequired={isRequired == ScreenTypeEnum.BILL ? true : key == lowestLevelBoundaryType ? true : false}
@@ -220,6 +223,7 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSessionStorag
                     handleDeletion(key, selectedValues[key]);
                   }
                 }}
+                disabled={isDisabled}
               />
             );
           }
@@ -235,7 +239,7 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSessionStorag
  *
  * @param {object} props - Component props
  */
-const BoundaryDropdown = ({ label, data, onChange, selected, setSelected, isRequired }) => {
+const BoundaryDropdown = ({ label, data, onChange, selected, setSelected, isRequired, disabled }) => {
   const { t } = useTranslation();
 
   return (
@@ -253,6 +257,7 @@ const BoundaryDropdown = ({ label, data, onChange, selected, setSelected, isRequ
           setSelected(value);
           onChange(value);
         }}
+        disabled={disabled}
       />
     </div>
   );
