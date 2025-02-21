@@ -707,12 +707,12 @@ const PopInbox = () => {
                 itemStyle={{ width: "290px" }}
                 configNavItems={[          
                   {
-                    code: "ASSIGNED_TO_ME",
-                    name: `MP_${t(config?.tabConfig?.tabOptions[0])} (${assignedToMeCount})`,
+                    code: `${config?.tabConfig?.tabOptions[0]?.code}`,
+                    name: `${t(config?.tabConfig?.tabOptions[0]?.code)} (${assignedToMeCount})`,
                   },
                   {
-                    code: "ASSIGNED_TO_ALL",
-                    name: `${t(`MP_${t(config?.tabConfig?.tabOptions[1])}`)} (${assignedToAllCount})`,
+                    code: `${config?.tabConfig?.tabOptions[1]?.code}`,
+                    name: `${t(config?.tabConfig?.tabOptions[1]?.code)} (${assignedToAllCount})`,
                   }
                 ]}
                 navStyles={{}}
