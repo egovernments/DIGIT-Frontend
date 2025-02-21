@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.0.13]  [21-Feb-2025]
+- Publishing a new version for more stability & as part of Components Release
+
 ## [1.0.12]
 - FEATURE/DUCE-244 : - Intergrated with react json editor and provided a playground for create and search
 

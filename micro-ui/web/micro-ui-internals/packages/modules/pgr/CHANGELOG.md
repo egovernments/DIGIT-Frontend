@@ -1,4 +1,7 @@
 
+## [1.8.12]  [21-Feb-2025]
+- Publishing a new version for more stability & as part of Components Release
+
 ## [1.8.11]  [3-Feb-2025]
 - Fixed PGR issues and related found in PGR Ethopia demo
 
