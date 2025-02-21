@@ -111,8 +111,7 @@ const PopInbox = () => {
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   
   const hrms_context_path = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || 'health-hrms';
-  const userInfo = Digit.UserService.getUser();
-  const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
+  const userRoles = user?.info?.roles?.map((roleData) => roleData?.code);
   const tableRef = useRef(null);
   const [tableHeight, setTableHeight] = useState(33);
 

@@ -122,8 +122,7 @@ const PlanInbox = () => {
   const [employeeNameMap, setEmployeeNameMap] = useState({});
   const [defaultHierarchy, setDefaultSelectedHierarchy] = useState(null);
   const [defaultBoundaries, setDefaultBoundaries] = useState([]);
-  const userInfo = Digit.UserService.getUser();
-  const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
+  const userRoles =  user?.info?.roles?.map((roleData) => roleData?.code);
   const hrms_context_path = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || 'health-hrms';
   const tableRef = useRef(null);
   const [tableHeight, setTableHeight] = useState(33);
