@@ -1172,6 +1172,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           paginationTotalRows={state.totalRows}
           onChangePage={handlePageChange}
           onChangeRowsPerPage={handleRowsPerPageChange}
+          style={{ width: "100%" }}
           paginationRowsPerPageOptions={[5, 10, 15, 20]}
           paginationComponent={() => {
             const totalPages = Math.ceil(state.totalRows / state.rowsPerPage);
@@ -1179,11 +1180,10 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             const endRow = Math.min(state.currentPage * state.rowsPerPage, state.totalRows);
 
             return (
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" , paddingTop:"1rem" }}>
                 <Button
                   className="custom-class"
-                  icon=""
-                  iconFill=""
+                  variation={"secondary"}
                   label={t("MAPPING_ADD_DATA")}
                   onClick={() => {
                     setShowAddPopup(true);
