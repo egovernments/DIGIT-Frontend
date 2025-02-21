@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-pgr",
-  "version": "1.8.11",
+  "version": "1.8.12",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
@@ -18,7 +18,7 @@
     "react-router-dom": "5.3.0"
   },
   "dependencies": {
-    "@egovernments/digit-ui-react-components": "1.8.10",
+    "@egovernments/digit-ui-react-components": "1.8.17",
     "lodash.merge": "^4.6.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
