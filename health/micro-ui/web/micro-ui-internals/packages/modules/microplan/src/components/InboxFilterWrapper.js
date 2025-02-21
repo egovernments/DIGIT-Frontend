@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { FilterCard, Dropdown, LabelFieldPair, RadioButtons, TextBlock, Loader,MultiSelectDropdown } from "@egovernments/digit-ui-components";
+import { FilterCard, Dropdown, LabelFieldPair, RadioButtons, TextBlock, Loader, MultiSelectDropdown } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../utils/context";
 
 
@@ -8,15 +8,15 @@ import { useMyContext } from "../utils/context";
 const InboxFilterWrapper = (props) => {
   const { state } = useMyContext();
   const { t } = useTranslation();
-  const {microplanId,...rest} = Digit.Hooks.useQueryParams()
+  const { microplanId, ...rest } = Digit.Hooks.useQueryParams()
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [filterValues, setFilterValues] = useState(
-    { status: null, onRoadCondition: null, terrain: null, securityQ1: null, securityQ2: null, facilityId:null }
+    { status: null, onRoadCondition: null, terrain: null, securityQ1: null, securityQ2: null, facilityId: null }
   );
-  
+
   // Default selected option
   let defaultSelectedOptions = props.defaultValue
-  ? Object.entries(props.defaultValue).reduce((acc, [key, value]) => {
+    ? Object.entries(props.defaultValue).reduce((acc, [key, value]) => {
       if (key === "facilityId") {
         acc[key] = value.map(item => ({ code: item?.code, id: item?.id, name: item?.name }));
       } else if (value !== null) {
@@ -26,7 +26,7 @@ const InboxFilterWrapper = (props) => {
       }
       return acc;
     }, {})
-  : null;
+    : null;
 
 
   // Initialize state with the default selected option
@@ -43,7 +43,7 @@ const InboxFilterWrapper = (props) => {
       setFilterValues(newDefault);
     }
   }, [props.defaultValue, t]);
-  
+
 
 
 
@@ -56,7 +56,7 @@ const InboxFilterWrapper = (props) => {
       name: `${t(key)} (${value})`,
     }));
   };
-  
+
 
   // Generate options from props.options
   const resultArray = createArrayFromObject(props?.options, t);
@@ -71,7 +71,7 @@ const InboxFilterWrapper = (props) => {
     if (props.onApplyFilters) {
       const filtersToApply = {};
       for (let key in filterValues) {
-        if(filterValues[key] && typeof filterValues[key] === 'object' && String(key)==='facilityId' && filterValues[key].hasOwnProperty('code') ){
+        if (filterValues[key] && typeof filterValues[key] === 'object' && String(key) === 'facilityId' && filterValues[key].hasOwnProperty('code')) {
           filtersToApply[key] = filterValues[key]
         }
         else if (filterValues[key] && typeof filterValues[key] === 'object' && filterValues[key].hasOwnProperty('code')) {
@@ -104,17 +104,17 @@ const InboxFilterWrapper = (props) => {
   const handleMultiSelectDropdownChange = (key, value) => {
     const transformedValue = Array.isArray(value)
       ? value.map((item) => ({
-          code: item?.[1]?.code,
-          id: item?.[1]?.id,
-          name: item?.[1]?.name
-        }))
+        code: item?.[1]?.code,
+        id: item?.[1]?.id,
+        name: item?.[1]?.name
+      }))
       : [];
     setFilterValues((prev) => ({
       ...prev,
       [key]: transformedValue,
     }));
   };
-  
+
 
   const planFacilitySearchConfig = {
     url: "/plan-service/plan/facility/_search",
@@ -122,40 +122,41 @@ const InboxFilterWrapper = (props) => {
       PlanFacilitySearchCriteria: {
         tenantId: tenantId,
         planConfigurationId: microplanId,
-        limit:100
+        limit: 100
       }
     },
     config: {
-      enabled: props?.isPlanInbox ? props?.isPlanInbox: false,
+      enabled: props?.isPlanInbox ? props?.isPlanInbox : false,
       select: (data) => {
         if (!data?.PlanFacility || !Array.isArray(data.PlanFacility)) return [];
-    
+
         // Extract facilityName and facilityId for each object
         const facilityOptions = data.PlanFacility.map((facility) => ({
           name: facility.facilityName,
           code: facility.facilityId,
           id: facility.facilityId
         }));
-    
+
         return facilityOptions;
       },
-      cacheTime:Infinity
-    }  
+      cacheTime: Infinity
+    }
   };
 
   const { isLoading: isPlanFacilityLoading, error: planFacilityError, data: planFacility } = Digit.Hooks.useCustomAPIHook(planFacilitySearchConfig);
 
 
 
-  if(isPlanFacilityLoading){
-    return <Loader/>
+  if (isPlanFacilityLoading) {
+    return <Loader />
   }
+
 
 
   return (
 
     <FilterCard
-      style={{ flexGrow: 1, display: "flex", flexDirection: "column", width: "22vw",height:`${Math.max(props.tableHeight,33)}rem`}}
+      style={{ flexGrow: 1, display: "flex", flexDirection: "column", width: "22vw", height: `${Math.max(props.tableHeight, 33)}rem` }}
       layoutType={"vertical"}
       onClose={props?.onClose}
       onPrimaryPressed={handleApplyFilters} // Apply filters
@@ -182,79 +183,93 @@ const InboxFilterWrapper = (props) => {
             />
           </LabelFieldPair>
         )}
-        {props.isPlanInbox &&
         <Fragment>
-        <LabelFieldPair vertical>
-        <div className="custom-filter-names">{t("MP_VILLAGE_ROAD_CONDITION")}</div> 
-          <Dropdown
-            option={state.villageRoadCondition}
-            optionKey={"code"}
-            selected={filterValues["onRoadCondition"] || defaultSelectedOptions?.onRoadCondition}
-            select={(value) => handleDropdownChange("onRoadCondition", value)}
-            t={t}
-            disabled={false}
-            showToolTip={true}
-          />
-        </LabelFieldPair>
+          {props.filterConfig?.enableAccessibilityFilter &&
 
-        <LabelFieldPair vertical>
-        <div className="custom-filter-names">{t("MP_VILLAGE_TERRAIN")}</div>           
-        <Dropdown
-            option={state.villageTerrain}
-            optionKey={"code"}
-            selected={filterValues["terrain"] || defaultSelectedOptions?.terrain}
-            select={(value) => handleDropdownChange("terrain", value)}
-            t={t}
-            disabled={false}
-            showToolTip={true}
-          />
-        </LabelFieldPair>
-    
-        <LabelFieldPair vertical>
-        <div className="custom-filter-names">{t("MP_FILTER_FACILITY")}</div>           
-          <div style={{width:"100%"}}>
-          <MultiSelectDropdown
-            options={planFacility}
-            selected={filterValues["facilityId"] || defaultSelectedOptions?.facilityId || []}
-            optionsKey={"name"}
-            onSelect={(value) => handleMultiSelectDropdownChange("facilityId", value)}
-            t={t}
-          />
-          </div>
-        </LabelFieldPair>   
+            <Fragment>
+
+              <LabelFieldPair vertical>
+                <div className="custom-filter-names">{t("MP_VILLAGE_ROAD_CONDITION")}</div>
+                <Dropdown
+                  option={state.villageRoadCondition}
+                  optionKey={"code"}
+                  selected={filterValues["onRoadCondition"] || defaultSelectedOptions?.onRoadCondition}
+                  select={(value) => handleDropdownChange("onRoadCondition", value)}
+                  t={t}
+                  disabled={false}
+                  showToolTip={true}
+                />
+              </LabelFieldPair>
 
 
-        {state.securityQuestions.map((item, index) => {
-          // Transform item.values into an array of objects
-          const options = item.values.map((value) => ({
-            code: value,
-            name: value,
-            active: true,
-          }));
+              <LabelFieldPair vertical>
+                <div className="custom-filter-names">{t("MP_VILLAGE_TERRAIN")}</div>
+                <Dropdown
+                  option={state.villageTerrain}
+                  optionKey={"code"}
+                  selected={filterValues["terrain"] || defaultSelectedOptions?.terrain}
+                  select={(value) => handleDropdownChange("terrain", value)}
+                  t={t}
+                  disabled={false}
+                  showToolTip={true}
+                />
+              </LabelFieldPair>
+            </Fragment>
 
-          const isLastElement = index === state.securityQuestions.length - 1;
-          const questionNumber = parseInt(item.id, 10); 
+          }
+          {props.filterConfig?.enableFacilityFilter &&
 
-          return (
-            <LabelFieldPair
-              vertical
-              style={{ paddingBottom: isLastElement ? "1rem" : "0" }} 
-            >
-              <div className="custom-filter-names">{t(`MP_SECURITY_QUESTION ${index + 1}`)}</div>             
-              <Dropdown
-                option={options}
-                optionKey={"code"}
-                selected={filterValues[`securityQ${questionNumber}`]} 
-                select={(value) => handleDropdownChange(`securityQ${questionNumber}`, value)}
-                t={t}
-                disabled={false}
-                showToolTip={true}
-              />
+
+            <LabelFieldPair vertical>
+              <div className="custom-filter-names">{t("MP_FILTER_FACILITY")}</div>
+              <div style={{ width: "100%" }}>
+                <MultiSelectDropdown
+                  options={planFacility}
+                  selected={filterValues["facilityId"] || defaultSelectedOptions?.facilityId || []}
+                  optionsKey={"name"}
+                  onSelect={(value) => handleMultiSelectDropdownChange("facilityId", value)}
+                  t={t}
+                />
+              </div>
             </LabelFieldPair>
-          );
-        })}
-      </Fragment>
-      }
+          }
+
+
+          {props.filterConfig.enableSecurityFilter &&
+            state.securityQuestions.map((item, index) => {
+              // Transform item.values into an array of objects
+              const options = item.values.map((value) => ({
+                code: value,
+                name: value,
+                active: true,
+              }));
+
+              const isLastElement = index === state.securityQuestions.length - 1;
+              const questionNumber = parseInt(item.id, 10);
+
+              return (
+                <LabelFieldPair
+                  key={index} // Adding a key prop for React list rendering optimization
+                  vertical
+                  style={{ paddingBottom: isLastElement ? "1rem" : "0" }}
+                >
+                  <div className="custom-filter-names">{t(`MP_SECURITY_QUESTION ${index + 1}`)}</div>
+                  <Dropdown
+                    option={options}
+                    optionKey={"code"}
+                    selected={filterValues[`securityQ${questionNumber}`]}
+                    select={(value) => handleDropdownChange(`securityQ${questionNumber}`, value)}
+                    t={t}
+                    disabled={false}
+                    showToolTip={true}
+                  />
+                </LabelFieldPair>
+              );
+            })}
+
+
+        </Fragment>
+
 
 
       </div>
