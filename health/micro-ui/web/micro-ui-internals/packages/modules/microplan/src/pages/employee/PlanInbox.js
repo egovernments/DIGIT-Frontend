@@ -122,7 +122,7 @@ const PlanInbox = () => {
   const [employeeNameMap, setEmployeeNameMap] = useState({});
   const [defaultHierarchy, setDefaultSelectedHierarchy] = useState(null);
   const [defaultBoundaries, setDefaultBoundaries] = useState([]);
-  const userRoles = config?.roles;
+  const userRoles = Digit.UserService.getUser().info.roles;
   const hrms_context_path = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || 'health-hrms';
   const tableRef = useRef(null);
   const [tableHeight, setTableHeight] = useState(33);
@@ -492,7 +492,7 @@ const PlanInbox = () => {
         tenantId: tenantId,
         active: true,
         planConfigurationId: url?.microplanId,
-        role: ["PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"],
+        role: config?.roles,
         employeeId: [user?.info?.uuid],
       },
     },
@@ -573,6 +573,7 @@ const PlanInbox = () => {
             return (statusOrderMap[keyA] || Infinity) - (statusOrderMap[keyB] || Infinity);
           })
       );
+
       
       setActiveFilter(reorderedStatusCount);
       const activeFilterKeys = Object.keys(reorderedStatusCount || {});
@@ -996,7 +997,6 @@ const PlanInbox = () => {
     }
   });
 
-
   
   return (
     <div className="pop-inbox-wrapper">
@@ -1057,11 +1057,11 @@ const PlanInbox = () => {
               configNavItems={[
                 {
                   code: `${config?.tabConfig?.tabOptions[0]?.code}`,
-                  name: `${t(config?.tabConfig?.tabOptions[0]?.code)} (${assignedToMeCount})`,
+                  name: `${t(config?.tabConfig?.tabOptions[0]?.name)} (${assignedToMeCount})`,
                 },
                 {
                   code: `${config?.tabConfig?.tabOptions[1]?.code}`,
-                  name: `${t(config?.tabConfig?.tabOptions[1]?.code)} (${assignedToAllCount})`,
+                  name: `${t(config?.tabConfig?.tabOptions[1]?.name)} (${assignedToAllCount})`,
                 }
                 
               ]}
