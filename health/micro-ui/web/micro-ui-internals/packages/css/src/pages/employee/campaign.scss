@@ -232,6 +232,7 @@
 .data-mapping-filter-switch {
   float: right;
   margin-right: 5rem;
+  margin-bottom: 0rem;
 }
 .digit-label-field-pair.multiselect-label-field {
   > div:nth-of-type(1) {
@@ -293,4 +294,11 @@
       padding-top: 0 !important;
       overflow: visible;
   }
+}
+.rdt_TableBody {
+  border: 1px solid #ccc !important; 
+  width: 100% !important;
+}
+.rdt_Table{
+  width: 100% !important;
 }
