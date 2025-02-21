@@ -425,7 +425,7 @@ const PlanInbox = () => {
         }else{
           setTableHeight(33);
         }
-      }, [planWithCensus, activeLink]); 
+      }, [planWithCensus,planWithCensusToAll, activeLink]); 
 
   const onSearch = (selectedBoundaries, selectedHierarchy) => {
     if (selectedBoundaries.length === 0) {
