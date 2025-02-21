@@ -277,6 +277,86 @@ const PlanInbox = () => {
     },
   });
 
+
+  const {
+    isLoading: isPlanWithToAllCensusLoading,
+    data: planWithCensusToAll,
+    error: planWithCensusToAllError,
+    refetch: refetchPlanWithCensusToAll,
+    isFetchingToALL,
+  } = Digit.Hooks.microplanv1.usePlanSearchWithCensus({
+    tenantId: tenantId,
+    microplanId: microplanId,
+    body: {
+      PlanSearchCriteria: {
+        tenantId: tenantId,
+        active: true,
+        jurisdiction: censusJurisdiction,
+        status: selectedFilter?.status !== null && selectedFilter?.status !== undefined ? selectedFilter?.status : "",
+        ...(selectedFilter?.terrain != null && { terrain: selectedFilter.terrain }),
+        ...(selectedFilter?.onRoadCondition != null && { onRoadCondition: selectedFilter.onRoadCondition }),
+        ...(selectedFilter?.securityQ1 != null && { securityQ1: selectedFilter.securityQ1 }),
+        ...(selectedFilter?.securityQ2 != null && { securityQ2: selectedFilter.securityQ2 }),
+        ...(selectedFilter?.facilityId && {
+          facilityIds: selectedFilter?.facilityId?.map((item) => item.id),
+        }),
+        planConfigurationId: microplanId, //list of plan ids
+        limit: limitAndOffset?.limit,
+        offset: limitAndOffset?.offset,
+      },
+    },
+    config: {
+      enabled: censusJurisdiction?.length > 0 ? true : false,
+      select: (data) => {
+        const tableData = data?.planData?.map((item, index) => {
+          const filteredCensus = data?.censusData?.find((d) => d?.boundaryCode === item?.locality);
+          const dynamicSecurityData = Object.keys(filteredCensus?.additionalDetails?.securityDetails || {}).reduce((acc, key) => {
+            acc[`securityDetail_SECURITY_LEVEL_Q${key}`] = filteredCensus?.additionalDetails?.securityDetails[key]?.code || "NA"; // Correctly referencing securityDetails
+            return acc;
+          }, {});
+
+          const dynamicResource = item?.resources?.reduce((acc, item) => {
+            if (item?.resourceType && item?.estimatedNumber !== undefined) {
+              acc[item?.resourceType] = item?.estimatedNumber;
+            }
+            return acc;
+          }, {});
+
+          const dynamicAdditionalFields = filteredCensus?.additionalFields
+            ?.filter((field) => field?.editable === true) // Filter fields where `editable` is `false`
+            ?.sort((a, b) => a.order - b.order) // Sort by `order`
+            ?.reduce((acc, field) => {
+              acc[field.key] = field.value; // Set `key` as property name and `value` as property value
+              return acc;
+            }, {});
+            
+          return {
+            original: item,
+            censusOriginal: filteredCensus,
+            village: filteredCensus?.boundaryCode || "NA",
+            villageRoadCondition: filteredCensus?.additionalDetails?.accessibilityDetails?.roadCondition?.code || "NA",
+            villageTerrain: filteredCensus?.additionalDetails?.accessibilityDetails?.terrain?.code || "NA",
+            // villageTransportMode: filteredCensus?.additionalDetails?.accessibilityDetails?.transportationMode?.code || "NA",
+            totalPop: filteredCensus?.additionalDetails?.totalPopulation || "NA",
+            targetPop: filteredCensus?.additionalDetails?.targetPopulation || "NA",
+            servingFacility: filteredCensus?.additionalDetails?.facilityName || "NA",
+            ...dynamicSecurityData,
+            ...dynamicResource,
+            ...dynamicAdditionalFields,
+          };
+        });
+        return {
+          planData: data?.planData,
+          censusData: data?.censusData,
+          StatusCount: data?.StatusCount,
+          TotalCount: data?.TotalCount,
+          tableData,
+        };
+      },
+    },
+  });
+
+
       useEffect(() => {
         if (tableRef.current) {
           // Get full rendered height including borders/padding
@@ -443,19 +523,20 @@ const PlanInbox = () => {
       setSelectedRows([]);
       if (activeLink.code === "ASSIGNED_TO_ME") {
         setAssignedToMeCount(planWithCensus?.TotalCount);
-        setAssignedToAllCount(planWithCensus?.StatusCount[selectedFilter?.status] || 0);
+        setAssignedToAllCount(planWithCensusToAll?.TotalCount || 0);
       } else {
-        setAssignedToAllCount(planWithCensus?.TotalCount);
+        setAssignedToAllCount(planWithCensusToAll?.TotalCount);
       }
 
       const uniqueAssignees = [...new Set(planWithCensus?.planData?.flatMap((item) => item.assignee || []))];
       setAssigneeUuids(uniqueAssignees.join(","));
     }
-  }, [planWithCensus, selectedFilter, activeLink]);
+  }, [planWithCensus, selectedFilter, activeLink,planWithCensusToAll]);
 
   useEffect(() => {
     if (censusJurisdiction?.length > 0) {
       refetchPlanWithCensus(); // Trigger the API call again after activeFilter changes
+      refetchPlanWithCensusToAll();
     }
   }, [selectedFilter, activeLink, censusJurisdiction, limitAndOffset]);
   
@@ -864,6 +945,7 @@ const PlanInbox = () => {
     }
   });
 
+
   
   return (
     <div className="pop-inbox-wrapper">
@@ -1018,6 +1100,7 @@ const PlanInbox = () => {
                         }
                       });
                       refetchPlanWithCensusCount();
+                      refetchPlanWithCensusToAll();
                       refetchPlanWithCensus();
                       fetchStatusCount();
                       // wait for 5 seconds
