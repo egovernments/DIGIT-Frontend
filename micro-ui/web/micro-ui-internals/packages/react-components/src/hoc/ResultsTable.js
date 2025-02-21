@@ -212,7 +212,7 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
         <div style={{width : "100%"}}>
         <div className='global-serach-results-table-wrapper'>
           {config?.enableGlobalSearch && (
-            <CardLabel className="global-serach-results-table-header">{t(config.serachHeader) || t("Filter Table Records")}</CardLabel>
+            <CardLabel className="global-serach-results-table-header">{t(config.searchHeader) || t("CS_FILTER")}</CardLabel>
           )}
           {config?.enableGlobalSearch && (
             <div className="global-serach-results-table">
