@@ -112,7 +112,7 @@ const PopInbox = () => {
   
   const hrms_context_path = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || 'health-hrms';
   const userInfo = Digit.UserService.getUser();
-  const userRoles = Digit.UserService.getUser().info.roles;
+  const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);;
   const tableRef = useRef(null);
   const [tableHeight, setTableHeight] = useState(33);
 
@@ -644,7 +644,7 @@ const PopInbox = () => {
     return <Loader />;
   }
 
-  const roles = config?.roles;
+  const roles = Digit.UserService.getUser().info.roles;
   const userName = Digit.UserService.getUser().info.name;
   let userRole = "";
 
