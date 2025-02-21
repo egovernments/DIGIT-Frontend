@@ -210,12 +210,12 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
     if (searchResult?.length === 0) return <NoResultsFound/>
     return (
         <div style={{width : "100%"}}>
-        <div className='global-serach-results-table-wrapper'>
+        <div className='global-search-results-table-wrapper'>
           {config?.enableGlobalSearch && (
-            <CardLabel className="global-serach-results-table-header">{t(config.serachHeader) || t("Filter Table Records")}</CardLabel>
+            <CardLabel className="global-search-results-table-header">{t(config.searchHeader) || t("CS_FILTER")}</CardLabel>
           )}
           {config?.enableGlobalSearch && (
-            <div className="global-serach-results-table">
+            <div className="global-search-results-table">
               <TextInput type="search" onChange={(e) => onSearch(e.target.value)}></TextInput>{" "}
             </div>
           )}
