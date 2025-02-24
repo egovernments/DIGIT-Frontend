@@ -1,20 +1,19 @@
-import {
-  LabelFieldPair,
-  AddIcon,
-  CardLabel,
-  Dropdown,
-  Button,
-  Card,
-  CardHeader,
-  Modal,
-  CloseSvg,
-} from "@egovernments/digit-ui-react-components";
-import { SVG } from "@egovernments/digit-ui-react-components";
-import React, { Fragment, useContext, useEffect, useRef, useState , useMemo} from "react";
+import React, { Fragment, useContext, useEffect, useRef, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import AddProducts from "./AddProductscontext";
 import { CycleContext } from ".";
-import { RadioButtons, TextInput , Chip } from "@egovernments/digit-ui-components";
+import {
+  RadioButtons,
+  TextInput,
+  Chip,
+  Button,
+  LabelFieldPair,
+  Dropdown,
+  CardLabel,
+  Card,
+  CardHeader,
+  PopUp
+} from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR } from "../../../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 
@@ -46,7 +45,7 @@ const AddAttributeField = ({
   onDelete,
   attributeConfig,
   operatorConfig,
-  tenantId
+  tenantId,
 }) => {
   const [val, setVal] = useState("");
   const [showAttribute, setShowAttribute] = useState(null);
@@ -60,33 +59,31 @@ const AddAttributeField = ({
   }, [delivery, deliveryRules]);
 
   const schemaCode = useMemo(() => {
-    const code = showAttribute?.valuesSchema; 
+    const code = showAttribute?.valuesSchema;
     return code;
   }, [showAttribute]);
-
 
   const { data: structureConfig } = Digit.Hooks.useCustomMDMS(
     tenantId,
     schemaCode?.split(".")[0] || "", // Provide a fallback to avoid errors
     schemaCode ? [{ name: schemaCode.split(".")[1] }] : [], // Run only if schemaCode is defined
     schemaCode
-        ? {
-            select: (data) => {
-                const moduleName = schemaCode.split(".")[0];
-                const schemaName = schemaCode.split(".")[1];
-                return data?.[moduleName]?.[schemaName];
-            },
+      ? {
+          select: (data) => {
+            const moduleName = schemaCode.split(".")[0];
+            const schemaName = schemaCode.split(".")[1];
+            return data?.[moduleName]?.[schemaName];
+          },
         }
-        : null, // Pass null if schemaCode is undefined
+      : null, // Pass null if schemaCode is undefined
     schemaCode ? { schemaCode } : null // Include schemaCode only if it's defined
-);
-  
+  );
+
   useEffect(() => {
     if (showAttribute) {
       setDropdownOption(structureConfig);
     }
   }, [showAttribute, structureConfig, attributeConfig]);
-  
 
   const selectValue = (e) => {
     let val = e.target.value;
@@ -187,7 +184,7 @@ const AddAttributeField = ({
 
   return (
     <div key={attribute?.key} className="attribute-field-wrapper">
-      <LabelFieldPair>
+      <LabelFieldPair style={{marginBottom: "0rem"}}>
         <CardLabel isMandatory={true} className="card-label-smaller">
           {t(`CAMPAIGN_ATTRIBUTE_LABEL`)}
         </CardLabel>
@@ -202,7 +199,7 @@ const AddAttributeField = ({
           t={t}
         />
       </LabelFieldPair>
-      <LabelFieldPair>
+      <LabelFieldPair style={{marginBottom: "0rem"}}>
         <CardLabel isMandatory={true} className="card-label-smaller">
           {t(`CAMPAIGN_OPERATOR_LABEL`)}
         </CardLabel>
@@ -219,8 +216,8 @@ const AddAttributeField = ({
       </LabelFieldPair>
 
       {attribute?.operator?.code === "IN_BETWEEN" ? (
-        <div style={{ marginBottom: "24px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-          <LabelFieldPair>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+          <LabelFieldPair style={{marginBottom: "0rem"}}>
             <CardLabel className="card-label-smaller">{t(`CAMPAIGN_FROM_LABEL`)}</CardLabel>
             <div className="field" style={{ display: "flex", width: "100%" }}>
               <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
@@ -234,7 +231,7 @@ const AddAttributeField = ({
               </div>
             </div>
           </LabelFieldPair>
-          <LabelFieldPair>
+          <LabelFieldPair style={{marginBottom: "0rem"}}>
             <CardLabel className="card-label-smaller">{t(`CAMPAIGN_TO_LABEL`)}</CardLabel>
             <div className="field" style={{ display: "flex", width: "100%" }}>
               <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
@@ -250,19 +247,13 @@ const AddAttributeField = ({
           </LabelFieldPair>
         </div>
       ) : (
-        <LabelFieldPair>
+        <LabelFieldPair style={{marginBottom: "0rem"}}>
           <CardLabel className="card-label-smaller">{t(`CAMPAIGN_VALUE_LABEL`)}</CardLabel>
           <div
             className="field"
             style={{
               display: "flex",
-              width: "100%",
-              marginBottom:
-                (typeof attribute?.value === "string" && /^[a-zA-Z]+$/.test(attribute?.value)) ||
-                attribute?.attribute?.valuesSchema ||
-                isNaN(attribute?.value)
-                  ? null
-                  : "1.5rem",
+              width: "100%"
             }}
           >
             {(typeof attribute?.value === "string" && /^[a-zA-Z]+$/.test(attribute?.value)) ||
@@ -285,23 +276,13 @@ const AddAttributeField = ({
         </LabelFieldPair>
       )}
       {delivery.attributes.length !== 1 && (
-        <div
+        <Button
+          variation="link"
+          style={{marginTop: "3rem"}}
+          label={t(`CAMPAIGN_DELETE_ROW_TEXT`)}
+          icon="Delete"
           onClick={() => onDelete()}
-          style={{
-            cursor: "pointer",
-            fontWeight: "600",
-            marginLeft: "1rem",
-            fontSize: "1rem",
-            color: PRIMARY_COLOR,
-            display: "flex",
-            gap: "0.5rem",
-            alignItems: "center",
-            marginTop: "1rem",
-          }}
-        >
-          <DustbinIcon />
-          {t(`CAMPAIGN_DELETE_ROW_TEXT`)}
-        </div>
+        />
       )}
     </div>
   );
@@ -319,9 +300,7 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
       select: (data) => {
         const attributeConfig = data?.[CONSOLE_MDMS_MODULENAME]?.allAttributes;
         const projectType = filteredDeliveryConfig?.projectType;
-        return attributeConfig.filter((attribute) =>
-          attribute.projectTypes?.includes(projectType)
-        );
+        return attributeConfig.filter((attribute) => attribute.projectTypes?.includes(projectType));
       },
     },
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.allAttributes` }
@@ -336,8 +315,6 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
       },
     },
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.operatorConfig` }
-
-
   );
 
   const [attributes, setAttributes] = useState([{ key: 1, deliveryRuleIndex, attribute: "", operator: "", value: "" }]);
@@ -378,38 +355,36 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
     setDeliveryRules(newData);
   };
 
-
   const selectedStructureCodes = campaignData?.flatMap((cycle) =>
     cycle?.deliveries?.flatMap((delivery) => delivery?.deliveryRules?.flatMap((rule) => rule?.attributes?.map((attribute) => attribute?.value)))
   );
   return (
     <Card className="attribute-container">
-          {
-            delivery.attributes.map((item, index) => (
-              <AddAttributeField
-                config={filteredDeliveryConfig?.attributeConfig?.[index]}
-                deliveryRuleIndex={deliveryRuleIndex}
-                delivery={delivery}
-                deliveryRules={deliveryRules}
-                setDeliveryRules={setDeliveryRules}
-                attribute={item}
-                setAttributes={setAttributes}
-                key={index}
-                index={index}
-                onDelete={() => deleteAttribute(item, deliveryRuleIndex)}
-                attributeConfig={attributeConfig}
-                operatorConfig={operatorConfig}
-                tenantId = {tenantId}
-              />
-            ))
-          }
+      {delivery.attributes.map((item, index) => (
+        <AddAttributeField
+          config={filteredDeliveryConfig?.attributeConfig?.[index]}
+          deliveryRuleIndex={deliveryRuleIndex}
+          delivery={delivery}
+          deliveryRules={deliveryRules}
+          setDeliveryRules={setDeliveryRules}
+          attribute={item}
+          setAttributes={setAttributes}
+          key={index}
+          index={index}
+          onDelete={() => deleteAttribute(item, deliveryRuleIndex)}
+          attributeConfig={attributeConfig}
+          operatorConfig={operatorConfig}
+          tenantId={tenantId}
+        />
+      ))}
       {!filteredDeliveryConfig?.attrAddDisable && delivery.attributes.length !== attributeConfig?.length && (
         <Button
           variation="secondary"
           label={t(`CAMPAIGN_ADD_MORE_ATTRIBUTE_TEXT`)}
           className="add-attribute hover"
-          icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} width="20" height="20" />}
-          onButtonClick={addMoreAttribute}
+          icon="AddIcon"
+          // icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} width="20" height="20" />}
+          onClick={addMoreAttribute}
         />
       )}
     </Card>
@@ -434,7 +409,6 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
       },
     },
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.deliveryTypeConfig` }
-
   );
   useEffect(() => {
     if (showToast) {
@@ -489,7 +463,7 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
   return (
     <>
       <Card className="delivery-rule-container">
-        <CardHeader>
+        <CardHeader styles={{ display: "flex", justifyContent: "space-between" }} className="card-header-delivery">
           <p className="title">
             {t(`CAMPAIGN_DELIVERY_RULE_LABEL`)} {delivery.ruleKey}
           </p>
@@ -511,28 +485,28 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
             </div>
           )}
         </CardHeader>
-        {filteredDeliveryConfig?.customAttribute &&
-          !filteredDeliveryConfig?.IsCycleDisable && (
-            <LabelFieldPair style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }} className="delivery-type-radio">
-              <div className="deliveryType-labelfield">
-                <span className="bold">{`${t("HCM_DELIVERY_TYPE")}`}</span>
-              </div>
-              <RadioButtons
-                options={deliveryTypeConfig}
-                selectedOption={deliveryTypeConfig?.find((i) => i?.code === delivery?.deliveryType)}
-                optionsKey="code"
-                onSelect={(value) => updateDeliveryType(value)}
-                t={t}
-                disabled={
-                  filteredDeliveryConfig?.deliveryConfig?.find((i, n) => n === targetedData?.deliveryIndex - 1)?.conditionConfig?.[
-                    delivery?.ruleKey - 1
-                  ]?.disableDeliveryType
-                    ? true
-                    : false
-                }
-              />
-            </LabelFieldPair>
-          )}
+        {filteredDeliveryConfig?.customAttribute && !filteredDeliveryConfig?.IsCycleDisable && (
+          <LabelFieldPair style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }} className="delivery-type-radio">
+            <div className="deliveryType-labelfield">
+              <span className="bold">{`${t("HCM_DELIVERY_TYPE")}`}</span>
+            </div>
+            <RadioButtons
+              options={deliveryTypeConfig}
+              selectedOption={deliveryTypeConfig?.find((i) => i?.code === delivery?.deliveryType)}
+              optionsKey="code"
+              value={deliveryTypeConfig?.find((i) => i?.code === delivery?.deliveryType)?.code}
+              onSelect={(value) => updateDeliveryType(value)}
+              t={t}
+              disabled={
+                filteredDeliveryConfig?.deliveryConfig?.find((i, n) => n === targetedData?.deliveryIndex - 1)?.conditionConfig?.[
+                  delivery?.ruleKey - 1
+                ]?.disableDeliveryType
+                  ? true
+                  : false
+              }
+            />
+          </LabelFieldPair>
+        )}
         <AddAttributeWrapper
           targetedData={targetedData}
           deliveryRuleIndex={delivery.ruleKey}
@@ -545,7 +519,7 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
         <div className="product-tag-container digit-tag-container">
           {delivery?.products?.length > 0 &&
             delivery?.products?.map((i) => {
-              return i?.value && i?.quantity? (
+              return i?.value && i?.quantity ? (
                 <Chip key={i.key} text={i?.name} onClick={() => removeProduct(i)} className="multiselectdropdown-tag" hideClose={false} />
               ) : null;
             })}
@@ -554,36 +528,41 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
           variation="secondary"
           className={"add-product-btn hover"}
           label={t(`CAMPAIGN_ADD_PRODUCTS_BUTTON_TEXT`)}
-          icon={<SVG.AppRegistration fill="#c84c0e" />}
-          onButtonClick={() => setShowModal(true)}
+          icon="AppRegistration"
+          onClick={() => setShowModal(true)}
         />
       </Card>
       {showModal && (
-        <Modal
-          formId="product-action"
-          customClass={"campaign-product-wrapper"}
-          popupStyles={{ width: "70%", paddingLeft: "1.5rem", borderRadius: "4px" }}
-          headerBarMainStyle={{ fontWeight: 700, fontSize: "1.5rem", alignItems: "baseline" }}
-          hideSubmit={false}
-          actionSaveLabel={t(`CAMPAIGN_PRODUCTS_MODAL_SUBMIT_TEXT`)}
-          actionSaveOnSubmit={confirmResources}
-          headerBarMain={t(`CAMPAIGN_PRODUCTS_MODAL_HEADER_TEXT`)}
-          headerBarEnd={
-            <div onClick={() => setShowModal(false)}>
-              <CloseSvg />
-            </div>
-          }
-          children={
-            <AddProducts
-              stref={prodRef}
-              selectedDelivery={delivery}
-              confirmResources={confirmResources}
-              showToast={showToast}
-              closeToast={closeToast}
-              selectedProducts={delivery?.products}
+        <PopUp
+          className={"campaign-product-wrapper"}
+          type={"default"}
+          heading={t(`CAMPAIGN_PRODUCTS_MODAL_HEADER_TEXT`)}
+          onOverlayClick={() => {
+            setShowModal(false);
+          }}
+          onClose={() => {
+            setShowModal(false);
+          }}
+          footerChildren={[
+            <Button
+              // className={"campaign-type-alert-button"}
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("CAMPAIGN_PRODUCTS_MODAL_SUBMIT_TEXT")}
+              onClick={confirmResources}
             />
-          }
-        />
+          ]}
+        >
+          <AddProducts
+            stref={prodRef}
+            selectedDelivery={delivery}
+            confirmResources={confirmResources}
+            showToast={showToast}
+            closeToast={closeToast}
+            selectedProducts={delivery?.products}
+          />
+        </PopUp>
       )}
     </>
   );
@@ -651,8 +630,8 @@ const AddDeliveryRuleWrapper = ({}) => {
               variation="secondary"
               label={t(`CAMPAIGN_ADD_MORE_DELIVERY_BUTTON`)}
               className={"add-rule-btn hover"}
-              icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
-              onButtonClick={addMoreDelivery}
+              icon="AddIcon"
+              onClick={addMoreDelivery}
             />
           )
         : !filteredDeliveryConfig?.deliveryAddDisable &&
@@ -661,8 +640,8 @@ const AddDeliveryRuleWrapper = ({}) => {
               variation="secondary"
               label={t(`CAMPAIGN_ADD_MORE_DELIVERY_BUTTON`)}
               className={"add-rule-btn hover"}
-              icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
-              onButtonClick={addMoreDelivery}
+              icon="AddIcon"
+              onClick={addMoreDelivery}
             />
           )}
     </>
