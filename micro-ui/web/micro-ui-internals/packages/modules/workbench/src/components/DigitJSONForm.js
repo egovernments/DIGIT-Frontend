@@ -25,6 +25,7 @@ import { BulkModal } from "./BulkModal";
 import { tranformLocModuleName } from "../pages/employee/localizationUtility";
 import { JsonEditor } from "json-edit-react";
 import { PopUp } from "@egovernments/digit-ui-components";
+import JSONViewer from "./JSONViewer";
 
 /*created the form using rjfs json form 
 https://rjsf-team.github.io/react-jsonschema-form/docs/
@@ -284,6 +285,7 @@ const DigitJSONForm = ({
   const [showPopUp, setShowPopUp] = useState(false);
   const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
   const { moduleName, masterName } = Digit.Hooks.useQueryParams();
+  const [updatedData, setUpdatedData] = useState(formData);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const enableBulkUpload = window?.globalConfigs?.getConfig?.("ENABLE_MDMS_BULK_UPLOAD")
     ? window.globalConfigs.getConfig("ENABLE_MDMS_BULK_UPLOAD")
@@ -388,6 +390,11 @@ const DigitJSONForm = ({
   };
   const formDisabled = screenType === "view" ? true : disabled;
 
+  const handleConfirm = () => {
+    Object.assign(formData, updatedData); 
+    setShowPopUp(false); 
+  };
+
   return (
     <AdditionalPropertiesContext.Provider value={{ additionalProperties, updateAdditionalProperties: () => {} }}>
       <React.Fragment>
@@ -410,7 +417,11 @@ const DigitJSONForm = ({
               : `SCHEMA_${schema?.code}`}
           </Header>
           <div>
-            <Button className="action-bar-button" variation="secondary" label={t("WBH_SHOW_JSON")} onButtonClick={() => setShowPopUp(true)} />
+            <Button
+            className="action-bar-button" 
+            variation="secondary" 
+            label={t("WBH_SHOW_JSON")} 
+            onButtonClick={() => setShowPopUp(true)} />
           </div>
           <Form
             schema={schema?.definition}
@@ -487,20 +498,24 @@ const DigitJSONForm = ({
                 className={"campaign-type-alert-button"}
                 type={"button"}
                 size={"large"}
-                variation={"primary"}
-                label={t("HCM_CLOSE")}
-                onButtonClick={() => {
-                  setShowPopUp(false);
-                }}
+                variation={"secondary"}
+                label={t("WBH_CANCEL")}
+                onButtonClick = {() => setShowPopUp(false)}
               />,
+              <Button
+                className={"campaign-type-alert-button"}
+                type={"button"}
+                size={"large"}
+                variation={"primary"}
+                label={t("WBH_CONFIRM")}
+                onButtonClick={handleConfirm}
+              />
             ]}
           >
-            <JsonEditor
-              data={formData}
-              onChange={formData}
-              restrictEdit={screenType === "view"}
-              restrictDelete={screenType === "view"}
-              restrictAdd={screenType === "view"}
+            <JSONViewer 
+            formData={formData} 
+            screenType={screenType} 
+            onDataUpdate={setUpdatedData}
             />
           </PopUp>
         )}
