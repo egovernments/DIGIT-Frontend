@@ -17,8 +17,9 @@ const CampaignsAssignment = ({ t, config, onSelect, formData }) => {
   const [campaigns, setCampaigns] = useState(
     formData?.CampaignsAssignment?.length > 0 ? formData?.CampaignsAssignment : [{ selectedProject: null, fromDate: null, toDate: null }]
   );
-  debugger;
+  
   useEffect(() => {
+    debugger
     if (formData?.CampaignsAssignment?.length > 0) {
       setCampaigns(formData.CampaignsAssignment);
     }
@@ -59,6 +60,7 @@ const CampaignsAssignment = ({ t, config, onSelect, formData }) => {
     <div>
       {campaigns.map((campaign, index) => {
         const availableProjects = getAvailableProjects(index);
+        
         return (
           <div
             key={index}
@@ -124,9 +126,7 @@ const CampaignsAssignment = ({ t, config, onSelect, formData }) => {
                 />*/}
 
                 <TextInput
-                  // populators={{
-                  //   validation: { ...input.validation },
-                  // }}
+                  
                   type="date"
                   populators={{ name: "date" }}
                   onChange={(e) => {
@@ -134,7 +134,7 @@ const CampaignsAssignment = ({ t, config, onSelect, formData }) => {
                     handleDateChange(index, "fromDate", e);
                   }}
                   // value={date}
-                  value={formData && formData[config.key] ? formData[config.key][index].fromDate : undefined}
+                  value={campaign?.fromDate}
                   key={"fromDate"}
                   disable={false}
                 />

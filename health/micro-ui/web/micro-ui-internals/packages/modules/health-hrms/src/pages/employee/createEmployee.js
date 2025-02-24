@@ -1,4 +1,5 @@
-import { FormComposerV2, Toast, Loader, Header } from "@egovernments/digit-ui-components";
+import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
+import { Toast, Loader, Header } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation, useParams } from "react-router-dom";
@@ -8,8 +9,10 @@ import { HRMS_CONSTANTS } from "../../constants/constants";
 import { ReposeScreenType } from "../../constants/enums";
 
 import { checkIfUserExist, formPayloadToCreateUser, editDefaultUserValue, formPayloadToUpdateUser } from "../../services/service";
+import { getPattern } from "../../utils/utlis";
 
 const CreateEmployee = ({ editUser = false }) => {
+  const isEdit = window.location.pathname.includes("/edit/");
   const [editEmpolyee, setEditEmployee] = useState(null);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [canSubmit, setSubmitValve] = useState(false);
@@ -70,31 +73,74 @@ const CreateEmployee = ({ editUser = false }) => {
     );
   };
 
-  const onFormValueChange = (setValue = true, formData) => {
-    if (formData?.SelectEmployeePhoneNumber?.mobileNumber) {
-      setMobileNumber(
-        formData?.SelectEmployeePhoneNumber?.mobileNumber?.startsWith(HRMS_CONSTANTS.INDIA_COUNTRY_CODE)
-          ? formData?.SelectEmployeePhoneNumber?.mobileNumber?.substring(HRMS_CONSTANTS.INDIA_COUNTRY_CODE.length)
-          : formData?.SelectEmployeePhoneNumber?.mobileNumber?.startsWith(HRMS_CONSTANTS.MOZ_COUNTRY_CODE)
-          ? formData?.SelectEmployeePhoneNumber?.mobileNumber?.substring(HRMS_CONSTANTS.MOZ_COUNTRY_CODE.length)
-          : formData?.SelectEmployeePhoneNumber?.mobileNumber
-      );
+  const onFormValueChange = (setValue = true, formData, formState, reset, setError, clearErrors) => {
+    debugger;
+
+    const SelectEmployeeName = formData?.SelectEmployeeName;
+
+    if (SelectEmployeeName && !SelectEmployeeName.match(Digit.Utils.getPattern("Name"))) {
+      if (!formState.errors.SelectEmployeeName) {
+        setError("SelectEmployeeName", { type: "custom", message: t("CORE_COMMON_APPLICANT_NAME_INVALID") }, { shouldFocus: false });
+      }
     } else {
-      setMobileNumber(
-        formData?.SelectEmployeePhoneNumber?.mobileNumber?.startsWith(
-          HRMS_CONSTANTS.INDIA_COUNTRY_CODE
-            ? formData?.SelectEmployeePhoneNumber?.mobileNumber?.substring(HRMS_CONSTANTS.INDIA_COUNTRY_CODE.length)
-            : formData?.SelectEmployeePhoneNumber?.mobileNumber?.startsWith(HRMS_CONSTANTS.MOZ_COUNTRY_CODE)
-            ? formData?.SelectEmployeePhoneNumber?.mobileNumber?.substring(HRMS_CONSTANTS.MOZ_COUNTRY_CODE.length)
-            : formData?.SelectEmployeePhoneNumber?.mobileNumber
-        )
-      );
+      if (formState.errors.SelectEmployeeName) {
+        clearErrors("SelectEmployeeName");
+      }
+    }
+
+    const password = formData?.employeePassword;
+    const confirmPassword = formData?.employeeConfirmPassword;
+    const passwordPattern = getPattern("Password");
+
+    if (password && !password.match(passwordPattern)) {
+      if (!formState.errors.employeePassword) {
+        setError("employeePassword", {
+          type: "custom",
+          message: t("CORE_COMMON_APPLICANT_PASSWORD_INVALID"),
+        });
+      }
+    } else {
+      if (formState.errors.employeePassword) {
+        clearErrors("employeePassword");
+      }
+    }
+
+    if (confirmPassword && password !== confirmPassword) {
+      if (!formState.errors.employeeConfirmPassword) {
+        setError("employeeConfirmPassword", {
+          type: "custom",
+          message: t("CORE_COMMON_APPLICANT_CONFIRM_PASSWORD_INVALID"),
+        });
+      }
+    } else {
+      if (formState.errors.employeeConfirmPassword) {
+        clearErrors("employeeConfirmPassword");
+      }
+    }
+
+    // validate email
+
+    const SelectEmployeeEmailId = formData?.SelectEmployeeEmailId;
+
+    const emailPattern = getPattern("Email");
+
+    if (SelectEmployeeEmailId && !SelectEmployeeEmailId.match(emailPattern)) {
+      if (!formState.errors.SelectEmployeeEmailId) {
+        setError("SelectEmployeeEmailId", {
+          type: "custom",
+          message: t("CS_PROFILE_EMAIL_ERRORMSG"),
+        });
+      }
+    } else {
+      if (formState.errors.SelectEmployeeEmailId) {
+        clearErrors("SelectEmployeeEmailId");
+      }
     }
 
     if (
-      formData?.SelectEmployeeName?.employeeName &&
+      formData?.SelectEmployeeName &&
       formData?.SelectEmployeeType?.code &&
-      formData?.SelectEmployeeId?.code
+      formData?.SelectEmployeeId
       //  &&
       // validatePassword(formData) &&
       // checkMailNameNum(formData)
@@ -116,6 +162,7 @@ const CreateEmployee = ({ editUser = false }) => {
         },
         {
           onSuccess: (res) => {
+            debugger;
             history.push(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.CREAT_EUSER,
               state: "success",
@@ -175,7 +222,7 @@ const CreateEmployee = ({ editUser = false }) => {
             history.push(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.EDIT_USER_ERROR,
               state: "error",
-              info: t("Testing"),
+              info: t("HR_EMPLOYEE_ID_LABEL"),
               fileName: error?.Employees?.[0],
               description: null,
               message: t(`EMPLOYEE_RESPONSE_UPDATE_ACTION`),
@@ -197,6 +244,7 @@ const CreateEmployee = ({ editUser = false }) => {
 
     try {
       if (editUser == false) {
+        debugger;
         const type = await checkIfUserExist(formData, tenantId);
         if (type == true) {
           setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID" });
@@ -233,7 +281,13 @@ const CreateEmployee = ({ editUser = false }) => {
   if (isLoading || isLoadings) {
     return <Loader />;
   }
-  const config = newConfig;
+  //const config = newConfig;
+  const config = isEdit
+    ? newConfig.map((section) => ({
+        ...section,
+        body: section.body.filter((field) => field.key !== "employeePassword" && field.key !== "employeeConfirmPassword"),
+      }))
+    : newConfig;
 
   return (
     <div style={{ marginBottom: "80px" }}>
@@ -246,6 +300,7 @@ const CreateEmployee = ({ editUser = false }) => {
       >
         <Header>{t("HR_COMMON_CREATE_EMPLOYEE_HEADER")}</Header>
       </div>
+
       <FormComposerV2
         defaultValues={editUser == true && data?.Employees ? editDefaultUserValue(data?.Employees, tenantId) : ""}
         heading={t("")}

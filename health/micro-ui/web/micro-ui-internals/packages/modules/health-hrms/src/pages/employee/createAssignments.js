@@ -1,12 +1,11 @@
 import { FormComposerV2, Toast, Loader, Header } from "@egovernments/digit-ui-components";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
-
 import { campaignAssignmentConfig } from "../../components/config/campaignAssignmentConfig";
-
-
 import { convertDateToEpoch } from "../../utils/utlis";
+import { editDefaultAssignmentValue } from "../../services/service";
+import Urls from "../../services/urls";
 
 const AssignCampaign = ({ editCampaign = false }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -18,14 +17,126 @@ const AssignCampaign = ({ editCampaign = false }) => {
   const history = useHistory();
   // const location = useLocation();
   const mutation = Digit.Hooks.hrms.useHRMSStaffCreate(tenantId);
+  const deleteMutation = Digit.Hooks.hrms.useHRMSStaffDelete(tenantId);
+  //const fetchMutation = Digit.Hooks.hrms.useHRMSStaffSearch(tenantId);
+
   const isMobile = window.Digit.Utils.browser.isMobile();
   //"A07497961"
+
+  ////
+  // const { isLoadings, isError, error, data:data } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);
+
+  // const reqCri = {
+  //   url: Urls.hcm.searchStaff,
+  //   params: {
+  //     tenantId: tenantId,
+  //     limit: 100,
+  //     offset:0
+  //   },
+  //   body: {
+  //    ProjectStaff: {
+  //       staffId: ["6b337c01-2c00-4f14-8895-f73ca875e8a3"],
+  //     },
+  //   },
+  //   config: {
+  //     enabled: true,
+  //     select: (data) => {
+  //       debugger
+  //       return data.ProjectStaff;
+  //     },
+  //   },
+  //   changeQueryName: "tenantId",
+  // };
+
+  // const { isLoading: isEstimateMusterRollLoading, data: projectStaff } = Digit.Hooks.useCustomAPIHook(reqCri);
+  ////
+
   const { isLoadings, isError, error, data } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);
-  //   useEffect(() => {
-  //     if (!editUser && data?.Employees) {
-  //       setEditEmployee(editDefaultUserValue(data.Employees, tenantId));
-  //     }
-  //   }, [data]);
+
+  const [staffId, setStaffId] = useState(null);
+
+  useEffect(() => {
+    if (data?.Employees?.length > 0) {
+      setStaffId(data.Employees[0]?.user?.userServiceUuid);
+    }
+  }, [data]);
+
+  const reqCri = {
+    url: Urls.hcm.searchStaff,
+    params: {
+      tenantId: tenantId,
+      limit: 100,
+      offset: 0,
+    },
+    body: {
+      ProjectStaff: {
+        staffId: staffId ? [staffId] : [],
+      },
+    },
+    config: {
+      enabled: !!staffId,
+      select: (data) => {
+        debugger;
+        return data.ProjectStaff;
+      },
+    },
+  };
+
+  const { isLoading: isEstimateMusterRollLoading, data: projectStaff } = Digit.Hooks.useCustomAPIHook(reqCri);
+
+  console.log("projectStaff", projectStaff);
+  // const fetchAssignMentDetails = async (payload) => {
+  //   if (!payload) return;
+  //   debugger
+  //   try {
+  //     await fetchMutation.mutateAsync(
+  //       {
+  //         ProjectStaff: {
+  //           staffId: payload,
+  //         },
+  //       },
+  //       {
+  //         onSuccess: (res) => {
+  //           debugger;
+  //           history.push(`/${window?.contextPath}/employee/hrms/response`, {
+  //             isCampaign: true,
+  //             state: "success",
+  //             info: t("HR_EMPLOYEE_ID_LABEL"),
+  //             fileName: res?.Employees?.[0],
+  //             description: t(`EMPLOYEE_RESPONSE_CREATE_ACTION`),
+  //             message: t(`EMPLOYEE_RESPONSE_CREATE`),
+  //             back: t(`GO_BACK_TO_HOME`),
+  //             backlink: `/${window.contextPath}/employee`,
+  //           });
+  //         },
+  //         onError: (error) => {
+  //           debugger;
+  //           history.push(`/${window?.contextPath}/employee/hrms/response`, {
+  //             isCampaign: true,
+  //             state: "error",
+  //             info: t("Testing"),
+  //             fileName: error?.Employees?.[0],
+  //             description: t(`EMPLOYEE_RESPONSE_CREATE`),
+  //             message: t(`EMPLOYEE_RESPONSE_CREATE`),
+  //             back: t(`GO_BACK_TO_HOME`),
+  //             backlink: `/${window.contextPath}/employee`,
+  //           });
+  //           // setTriggerEstimate(true);
+  //         },
+  //       }
+  //     );
+  //   } catch (error) {
+  //     debugger;
+  //     // setTriggerEstimate(true);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (editCampaign == true && id) {
+  //   debugger
+  //     fetchAssignMentDetails(id);
+  //   }
+  // },[id]);
 
   console.log("data", data);
   const onFormValueChange = (setValue = true, formData) => {};
@@ -45,8 +156,8 @@ const AssignCampaign = ({ editCampaign = false }) => {
               state: "success",
               info: t("HR_EMPLOYEE_ID_LABEL"),
               fileName: res?.Employees?.[0],
-              description: t(`EMPLOYEE_RESPONSE_CREATE_ACTION`),
-              message: t(`EMPLOYEE_RESPONSE_CREATE`),
+              message: t(`HRMS_CAMPAIGN_ASSIGNED_INFO`),
+              description: editCampaign ? t("CAMPAIGN_RESPONSE_UPDATE_ACTION") : t(`CAMPAIGN_RESPONSE_CREATE_ACTION`),
               back: t(`GO_BACK_TO_HOME`),
               backlink: `/${window.contextPath}/employee`,
             });
@@ -58,12 +169,51 @@ const AssignCampaign = ({ editCampaign = false }) => {
               state: "error",
               info: t("Testing"),
               fileName: error?.Employees?.[0],
-              description: t(`EMPLOYEE_RESPONSE_CREATE`),
-              message: t(`EMPLOYEE_RESPONSE_CREATE`),
+              message: editCampaign ? t("CAMPAIGN_RESPONSE_UPDATE_ACTION") : t(`CAMPAIGN_RESPONSE_CREATE_ACTION`),
+              description: t(`HRMS_CAMPAIGN_ASSIGNED_INFO`),
               back: t(`GO_BACK_TO_HOME`),
               backlink: `/${window.contextPath}/employee`,
             });
             // setTriggerEstimate(true);
+          },
+        }
+      );
+    } catch (error) {
+      debugger;
+      // setTriggerEstimate(true);
+    }
+  };
+
+  const deleteStaffService = async (payload) => {
+    try {
+      await mutation.mutateAsync(
+        {
+          staffCreateData: payload,
+        },
+        {
+          onSuccess: (res) => {
+            // history.push(`/${window?.contextPath}/employee/hrms/response`, {
+            //   isCampaign: true,
+            //   state: "success",
+            //   info: t("HR_EMPLOYEE_ID_LABEL"),
+            //   fileName: res?.Employees?.[0],
+            //   description: t(`EMPLOYEE_RESPONSE_CREATE_ACTION`),
+            //   message: t(`EMPLOYEE_RESPONSE_CREATE`),
+            //   back: t(`GO_BACK_TO_HOME`),
+            //   backlink: `/${window.contextPath}/employee`,
+            // });
+          },
+          onError: (error) => {
+            // history.push(`/${window?.contextPath}/employee/hrms/response`, {
+            //   isCampaign: true,
+            //   state: "error",
+            //   info: t("Testing"),
+            //   fileName: error?.Employees?.[0],
+            //   description: t(`EMPLOYEE_RESPONSE_CREATE`),
+            //   message: t(`EMPLOYEE_RESPONSE_CREATE`),
+            //   back: t(`GO_BACK_TO_HOME`),
+            //   backlink: `/${window.contextPath}/employee`,
+            // });
           },
         }
       );
@@ -107,6 +257,10 @@ const AssignCampaign = ({ editCampaign = false }) => {
   if (isLoadings) {
     return <Loader />;
   }
+  const config = campaignAssignmentConfig;
+
+  console.log("data", data);
+  debugger;
 
   return (
     <div style={{ marginBottom: "80px" }}>
@@ -120,9 +274,9 @@ const AssignCampaign = ({ editCampaign = false }) => {
         <Header>{t("HR_COMMON_ASSIGN_CAMPAIGN_HEADER")}</Header>
       </div>
       <FormComposerV2
-        // defaultValues={editUser && data?.Employees ? editDefaultUserValue(data?.Employees, tenantId) : ""}
+        defaultValues={editCampaign && projectStaff ? editDefaultAssignmentValue(projectStaff, tenantId) : ""}
         heading={t("")}
-        config={campaignAssignmentConfig}
+        config={config}
         onSubmit={onSubmit}
         className={"custom-form"}
         onFormValueChange={onFormValueChange}

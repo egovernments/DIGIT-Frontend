@@ -3,16 +3,12 @@ import Urls from "../urls";
 //import HRMS from "./HRMS";
 
 export const StaffService = {
-    search_staff: ({ userId, tenantId }) =>
+    search_staff: (data, tenantId ) =>
         Request({
             url: `${Urls.hcm.searchStaff}`,
             useCache: false,
             method: "POST",
-            data: {
-                ProjectStaff: {
-                    staffId: [userId]
-                }
-            },
+            data: data,
             params: {
                 tenantId: tenantId,
                 limit: 100,

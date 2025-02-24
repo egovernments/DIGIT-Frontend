@@ -5,6 +5,8 @@ import useHRMSSearch from "./hrms/hrms_search_emp";
 import useHrmsInitialization from "./project/project_search";
 import useHRMSStaffCreate from "./hrms/hrms_create_staff";
 import useHRMSUpdate from "./hrms/hrms_update_emp";
+import useHRMSStaffDelete from "./hrms/hrms_delete_staff";
+import useHRMSStaffSearch from "./hrms/hrms_search_staff";
 
 const hrms = {
   useBoundriesFetch,
@@ -13,6 +15,8 @@ const hrms = {
   useHrmsInitialization,
   useHRMSStaffCreate,
   useHRMSUpdate,
+  useHRMSStaffDelete,
+  useHRMSStaffSearch,
 };
 
 const Hooks = {

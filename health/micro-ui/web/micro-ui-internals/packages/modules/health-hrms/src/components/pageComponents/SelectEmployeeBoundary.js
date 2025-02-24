@@ -1,4 +1,5 @@
-import { Dropdown, LabelFieldPair, CardLabel, Loader } from "@egovernments/digit-ui-components";
+import {  LabelFieldPair, CardLabel, Loader } from "@egovernments/digit-ui-components";
+import { Dropdown } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -71,7 +72,7 @@ const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
 
   return (
     <LabelFieldPair>
-      <CardLabel style={{ width: "43.8%" }} className="card-label-smaller">
+      <CardLabel style={{ width: "40.8%" }} className="card-label-smaller">
         {t("Boundary")} *{/*input.isMandatory ? " * " : null*/}
       </CardLabel>
 

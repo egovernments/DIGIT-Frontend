@@ -20,6 +20,7 @@ const ResponseScreen = () => {
           loop: false,
           noAutoplay: false,
         }}
+        children={[]}
         cardClassName=""
         cardStyles={{}}
         className=""
