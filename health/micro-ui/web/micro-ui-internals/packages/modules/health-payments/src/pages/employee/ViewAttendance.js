@@ -8,6 +8,7 @@ import AlertPopUp from "../../components/alertPopUp";
 import ApproveCommentPopUp from "../../components/approveCommentPopUp";
 import _ from "lodash";
 import { formatTimestampToDate } from "../../utils";
+import CommentPopUp from "../../components/commentPopUp";
 
 /**
  * @function ViewAttendance
@@ -47,6 +48,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [comment, setComment] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showLogs, setShowLogs] = useState(false);
+  const [showCommentLogPopup, setShowCommentLogPopup] = useState(false);
 
   const project = Digit?.SessionStorage.get("staffProjects");
 
@@ -150,6 +153,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     }
 
     if (MusterRollData?.count > 0) {
+      console.log(MusterRollData?.musterRolls, "MusterRollData?.musterRolls");
       setData(MusterRollData?.musterRolls);
     } else if (estimateMusterRollData) {
       setData(estimateMusterRollData?.musterRolls);
@@ -159,6 +163,13 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   useEffect(() => {
     if (data) {
+
+      console.log(data, 'ddddddddddddddddddddd');
+      if (data?.[0]?.musterRollStatus === "APPROVED") {
+        setShowLogs(true);
+      } else {
+        setShowLogs(false);
+      }
       // Extract individual IDs
       const ids = data.flatMap((muster) =>
         muster.individualEntries.map((entry) => entry.individualId)
@@ -416,6 +427,14 @@ const ViewAttendance = ({ editAttendance = false }) => {
     setOpenEditAlertPopUp(false);
   };
 
+  const handleCommentLogClick = () => {
+    setShowCommentLogPopup(true);
+  };
+
+  const onCommentLogClose = () => {
+    setShowCommentLogPopup(false);
+  };
+
   const renderLabelPair = (heading, text) => (
     <div className="label-pair">
       <span className="view-label-heading">{t(heading)}</span>
@@ -450,9 +469,35 @@ const ViewAttendance = ({ editAttendance = false }) => {
           {renderLabelPair('HCM_AM_EVENT_DURATION', attendanceDuration || 0)}
           {renderLabelPair('HCM_AM_STATUS', t(data?.[0]?.musterRollStatus) || t('APPROVAL_PENDING'))}
         </Card>
-        <Card>
+        <Card className="bottom-gap-card-payment">
           <AttendanceManagementTable data={attendanceSummary} setAttendanceSummary={setAttendanceSummary} duration={attendanceDuration} editAttendance={editAttendance} />
         </Card>
+        {showLogs && <Card >
+          <div className="card-heading">
+            <h2 className="card-heading-title">{t(`HCM_AM_COMMENT_LOG_HEADING`)}</h2>
+            <Button
+              className="custom-class"
+              icon="Visibility"
+              iconFill=""
+              label={t(`HCM_AM_COMMENT_LOG_VIEW_LINK_LABEL`)}
+              onClick={handleCommentLogClick}
+              options={[]}
+              optionsKey=""
+              size=""
+              style={{}}
+              title={t(`HCM_AM_COMMENT_LOG_VIEW_LINK_LABEL`)}
+              variation="secondary"
+            />
+          </div>
+        </Card>}
+
+        {showCommentLogPopup && (
+          <CommentPopUp
+            onClose={onCommentLogClose}
+            businessId={data?.[0]?.musterRollNumber}
+            heading={`${t("HCM_AM_STATUS_LOG_FOR_LABEL")}`}
+          />
+        )}
       </div>
 
       {/* Alert Pop-Up for edit */}
