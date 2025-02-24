@@ -121,6 +121,7 @@ const BillInboxComponent = () => {
                 const owner = item?.staff?.find((staff) => staff?.staffType?.includes("OWNER"));
                 return {
                     id: item?.registerNumber,
+                    registerId: item?.id,
                     name: selectedProject?.name,
                     boundary: item?.localityCode,
                     noOfAttendees: item?.attendees == null ? 0 : item?.attendees.length || 0,
