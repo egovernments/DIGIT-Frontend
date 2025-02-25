@@ -302,7 +302,7 @@ function RoleTableComposer({ nationalRoles }) {
   };
 
   const handleAssignEmployeeThrottled = useThrottleUnique(handleAssignEmployee,5000)
-  // const setUnassignPopupThrottled = useThrottleUnique((row)=>setUnassignPopup(row),5000)
+
   const handleUpdateAssignEmployee = (row, updateAssignee) => {
     setIsLoading(true);
     const payload = {
