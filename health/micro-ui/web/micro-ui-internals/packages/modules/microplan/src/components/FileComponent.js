@@ -7,6 +7,7 @@ import { CustomSVG } from "@egovernments/digit-ui-components";
 
 
 const FileComponent = ({ title, fileName, status, auditDetails, editHandler, deleteHandler, downloadHandler, rowDetails }) => {
+    console.log("file",rowDetails);
     const { t } = useTranslation();
     const { XlsxFile } = CustomSVG;
     const tenantId = Digit.ULBService.getCurrentTenantId();
