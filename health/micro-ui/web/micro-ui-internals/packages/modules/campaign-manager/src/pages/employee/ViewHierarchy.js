@@ -1,4 +1,4 @@
-import { Card, Uploader, Button, ActionBar, Toast, Loader, PopUp, InfoCard } from "@egovernments/digit-ui-components";
+import { Card, Uploader, Button, Footer, Toast, Loader, PopUp, AlertCard } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import XlsPreviewNew from "../../components/XlsPreviewNew";
@@ -390,7 +390,7 @@ const ViewHierarchy = () => {
   const [showPopUp, setShowPopUp] = useState(false);
 
   if (!viewState || isLoading) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   } else {
     return (
       <React.Fragment>
@@ -538,11 +538,11 @@ const ViewHierarchy = () => {
                 )}
                 <div style={{ height: "1rem" }}></div>
               </div>
-              {uiValError && <InfoCard label="Info" text={uiErrorMsg} variant="error" style={{ maxWidth: "200rem" }} />}
+              {uiValError && <AlertCard label="Info" text={uiErrorMsg} variant="error" style={{ maxWidth: "200rem" }} />}
               <div style={{ marginBottom: "0.5rem" }}></div>
             </Card>
             <div style={{ height: "3rem" }}></div>
-            <ActionBar
+            <Footer
               actionFields={[
                 <Button
                   icon="ArrowBack"
@@ -632,8 +632,8 @@ const ViewHierarchy = () => {
                 }}
               />
             )}
-            {dataCreationGoing && <Loader />}
-            <ActionBar
+            {dataCreationGoing &&<Loader page={true} variant={"PageLoader"}/>}
+            <Footer
               actionFields={[
                 <Button
                   icon="ArrowBack"

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ViewCardFieldPair, Toast, Card, Button, PopUp, TextInput, Loader ,Tag } from "@egovernments/digit-ui-components";
+import { SummaryCardFieldPair, Toast, Card, Button, PopUp, TextInput, Loader } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useHistory } from "react-router-dom";
 import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
@@ -523,8 +523,8 @@ const CreateChecklist = () => {
   ];
   return (
     <div>
-      {loading_new && <Loader />}
-      {!loading_new && submitting && <Loader />}
+      {loading_new && <Loader page={true} variant={"PageLoader"}/>}
+      {!loading_new && submitting && <Loader page={true} variant={"PageLoader"}/>}
       {!submitting && !loading_new &&
         <div>
           <TagComponent campaignName={campaignName} />  
@@ -596,7 +596,7 @@ const CreateChecklist = () => {
           <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
             {fieldPairs.map((pair, index) => (
               <div>
-                <ViewCardFieldPair
+                <SummaryCardFieldPair
                   key={index} // Provide a unique key for each item
                   className=""
                   inline

@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-campaign-manager",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Campaign",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
@@ -19,8 +19,8 @@
   },
   "dependencies": {
     "@cyntler/react-doc-viewer": "1.10.3",
-    "@egovernments/digit-ui-components": "0.0.2-beta.58",
-    "@egovernments/digit-ui-react-components": "1.8.14",
+    "@egovernments/digit-ui-react-components": "1.8.16",
+    "@egovernments/digit-ui-components":"0.0.2-beta.66",
     "react-data-table-component": "7.6.2",
     "styled-components": "5.0.0",
     "@rjsf/core": "5.10.0",

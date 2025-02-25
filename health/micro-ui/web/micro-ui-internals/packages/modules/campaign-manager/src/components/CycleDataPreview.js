@@ -1,8 +1,8 @@
-import { Card, LabelFieldPair, Row } from "@egovernments/digit-ui-react-components";
+import { Row } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DetailsTable from "./DetailsTable";
-import { Button, InfoCard } from "@egovernments/digit-ui-components";
+import { Button, AlertCard , Card } from "@egovernments/digit-ui-components";
 
 const Tabs = ({ deliveryData, onTabChange }) => {
   // const { campaignData, dispatchCampaignData } = useContext(CycleContext);
@@ -54,7 +54,7 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
   return (
     <>
       {cardErrors?.map((i) => (
-        <InfoCard
+        <AlertCard
           populators={{
             name: "infocard",
           }}

@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { EditIcon, Header, Loader, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Button, InfoBannerIcon, Toast, PopUp } from "@egovernments/digit-ui-components";
+import { EditIcon, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Button, InfoBannerIcon, Toast, PopUp, Loader,HeaderComponent } from "@egovernments/digit-ui-components";
 import { DownloadIcon } from "@egovernments/digit-ui-react-components";
 import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
@@ -387,6 +387,13 @@ const CampaignSummary = (props) => {
 
         const target = data?.[0]?.deliveryRules;
         const boundaryData = boundaryDataGrp(data?.[0]?.boundaries);
+        const delivery = Array.isArray(data?.deliveryRules) ? data?.deliveryRules : [];
+        const cycles = {
+          cycle: delivery?.length > 0 ? Math.max(...delivery.flatMap((d) => d?.cycles?.map((cycle) => cycle.id))) : 1,
+          deliveries:
+            delivery?.length > 0 ? Math.max(...delivery.flatMap((d) => d?.cycles?.flatMap((cycle) => cycle?.deliveries?.map((del) => del.id)))) : 1,
+          refetch: true,
+        };
         const cycleData = reverseDeliveryRemap(target, t);
         const hierarchyType = data?.[0]?.hierarchyType;
         return {
@@ -498,13 +505,13 @@ const CampaignSummary = (props) => {
                     {
                       key: "CAMPAIGN_NO_OF_CYCLES",
                       value: data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle
-                        ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle
+                        ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle : cycles?.cycle ? cycles?.cycle
                         : t("CAMPAIGN_SUMMARY_NA"),
                     },
                     {
                       key: "CAMPAIGN_NO_OF_DELIVERIES",
                       value: data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries
-                        ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries
+                        ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries : cycles?.deliveries ? cycles?.deliveries
                         : t("CAMPAIGN_SUMMARY_NA"),
                     },
                   ],
@@ -664,7 +671,7 @@ const CampaignSummary = (props) => {
   });
 
   if (isLoading) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
   const closeToast = () => {
     setShowToast(null);
@@ -746,7 +753,7 @@ const CampaignSummary = (props) => {
   return (
     <>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "-1.5rem" }}>
-        <Header className="summary-header">{t("ES_TQM_SUMMARY_HEADING")}</Header>
+        <HeaderComponent className="summary-header">{t("ES_TQM_SUMMARY_HEADING")}</HeaderComponent>
         {timeLine && (
           <PopUp type={"default"} heading={t("ES_CAMPAIGN_TIMELINE")} onOverlayClick={() => setTimeline(false)} onClose={() => setTimeline(false)}>
             <TimelineComponent campaignId={campaignId} resourceId={resource} />

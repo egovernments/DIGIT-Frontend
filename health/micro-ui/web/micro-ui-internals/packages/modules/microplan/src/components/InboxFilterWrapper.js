@@ -122,6 +122,7 @@ const InboxFilterWrapper = (props) => {
       PlanFacilitySearchCriteria: {
         tenantId: tenantId,
         planConfigurationId: microplanId,
+        limit:100
       }
     },
     config: {
@@ -150,10 +151,11 @@ const InboxFilterWrapper = (props) => {
     return <Loader/>
   }
 
+
   return (
 
     <FilterCard
-      style={{ flexGrow: 1, display: "flex", flexDirection: "column", width: "22vw" }}
+      style={{ flexGrow: 1, display: "flex", flexDirection: "column", width: "22vw",height:`${Math.max(props.tableHeight,33)}rem`}}
       layoutType={"vertical"}
       onClose={props?.onClose}
       onPrimaryPressed={handleApplyFilters} // Apply filters

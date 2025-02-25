@@ -259,7 +259,7 @@ const ProjectStaffComponent = (props) => {
   };
 
   if (isLoading && isUserSearchLoading) {
-    return <Loader></Loader>;
+    return  <Loader page={true} variant={"PageLoader"}/>;
   }
 
   return (

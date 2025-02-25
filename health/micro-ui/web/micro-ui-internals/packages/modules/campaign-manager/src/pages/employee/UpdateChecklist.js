@@ -1,7 +1,7 @@
 import React, { useEffect, useState, createContext, useContext } from "react";
 import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
 import { useTranslation } from "react-i18next";
-import { ViewCardFieldPair, Toast, Card, TextBlock, Button, PopUp, CardText, TextInput, BreadCrumb, Loader, ActionBar, Tag } from "@egovernments/digit-ui-components";
+import { SummaryCardFieldPair, Toast, Card, Button, PopUp, TextInput, Loader } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useHistory, useLocation } from "react-router-dom";
 import MobileChecklist from "../../components/MobileChecklist";
@@ -62,8 +62,10 @@ const UpdateChecklist = () => {
         }
     }, [showToast]);
 
+    const SERVICE_REQUEST_CONTEXT_PATH = window?.globalConfigs?.getConfig("SERVICE_REQUEST_CONTEXT_PATH") || "health-service-request";
+
     const res = {
-        url: `/service-request/service/definition/v1/_search`,
+        url: `/${SERVICE_REQUEST_CONTEXT_PATH}/service/definition/v1/_search`,
         body: {
             ServiceDefinitionCriteria: {
                 "tenantId": tenantId,
@@ -470,7 +472,7 @@ const UpdateChecklist = () => {
     ];
 
     if (isLoading) {
-        return <Loader />;
+        return <Loader page={true} variant={"PageLoader"}/>;
     }
     return (
         <div>
@@ -533,7 +535,7 @@ const UpdateChecklist = () => {
                     <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
                         {fieldPairs.map((pair, index) => (
                             <div>
-                                <ViewCardFieldPair
+                                <SummaryCardFieldPair
                                     key={index} // Provide a unique key for each item
                                     className=""
                                     inline

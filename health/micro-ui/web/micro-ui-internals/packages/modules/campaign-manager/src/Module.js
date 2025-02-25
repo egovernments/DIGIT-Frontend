@@ -1,4 +1,5 @@
-import { Loader, TourProvider } from "@egovernments/digit-ui-react-components";
+import {  TourProvider } from "@egovernments/digit-ui-react-components";
+import { Loader } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
 import EmployeeApp from "./pages/employee";
@@ -14,7 +15,6 @@ import MyCampaign from "./pages/employee/MyCampaign";
 import CampaignSummary from "./components/CampaignSummary";
 import CycleDetaisPreview from "./components/CycleDetaisPreview";
 import Response from "./pages/employee/Response";
-import SelectingBoundaries from "./components/SelectingBoundaries";
 import UploadData from "./components/UploadData";
 import CampaignSelection from "./components/CampaignType";
 import CampaignDocumentsPreview from "./components/CampaignDocumentsPreview";
@@ -106,7 +106,7 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
   });
 
   if (isLoading) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
 
   return (
@@ -138,7 +138,6 @@ const componentsToRegister = {
   CampaignSummary,
   CycleDetaisPreview,
   Response,
-  SelectingBoundaries,
   CampaignSelection,
   CampaignDocumentsPreview: CampaignDocumentsPreview,
   AddProduct,

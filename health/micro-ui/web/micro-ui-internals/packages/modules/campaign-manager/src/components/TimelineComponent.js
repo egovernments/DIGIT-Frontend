@@ -1,8 +1,6 @@
-import { Timeline, TimelineMolecule, InfoCard } from "@egovernments/digit-ui-components";
+import { Timeline, TimelineMolecule, AlertCard , Button } from "@egovernments/digit-ui-components";
 import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { Button } from "@egovernments/digit-ui-components";
-import { LabelFieldPair } from "@egovernments/digit-ui-components";
 import { downloadExcelWithCustomName } from "../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 
@@ -304,7 +302,7 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
         )} */}
       </div>
       {lastCompletedProcess?.type !== "campaign-creation" && 
-        <InfoCard
+        <AlertCard
         label="Info"
         text={t("CAMPAIGN_CREATION_TAKES_SOME_TIME_PLEASE_WAIT")}
         variant="default"

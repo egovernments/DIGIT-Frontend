@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, useMemo } from "react";
+import React, { Fragment, useState, useEffect, useMemo ,useRef} from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { useHistory } from "react-router-dom";
 import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonGroup, NoResultsFound } from "@egovernments/digit-ui-components";
@@ -64,9 +64,13 @@ const PlanInbox = () => {
   const [defaultBoundaries, setDefaultBoundaries] = useState([]);
   const userRoles = user?.info?.roles?.map((roleData) => roleData?.code);
   const hrms_context_path = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || 'health-hrms';
+  const tableRef = useRef(null);
+  const [tableHeight, setTableHeight] = useState(33);
  
   // Check if the user has the 'rootapprover' role
   const isRootApprover = userRoles?.includes("ROOT_PLAN_ESTIMATION_APPROVER");
+
+
 
   const { isLoading: isLoadingPlanObject, data: planObject, error: errorPlan, refetch: refetchPlan } = Digit.Hooks.microplanv1.useSearchPlanConfig(
     {
@@ -273,6 +277,16 @@ const PlanInbox = () => {
     },
   });
 
+      useEffect(() => {
+        if (tableRef.current) {
+          // Get full rendered height including borders/padding
+          const height = tableRef.current.offsetHeight;
+          setTableHeight(height / 16 + 7.25);
+        }else{
+          setTableHeight(33);
+        }
+      }, [planWithCensus, activeLink]); 
+
   const onSearch = (selectedBoundaries, selectedHierarchy) => {
     if (selectedBoundaries.length === 0) {
       setShowToast({ key: "warning", label: t("MICROPLAN_BOUNDARY_IS_EMPTY_WARNING"), transitionTime: 5000 });
@@ -459,7 +473,6 @@ const PlanInbox = () => {
   useEffect(() => {
     if (planWithCensusCount) {
       setAssignedToMeCount(planWithCensusCount?.TotalCount);
-      setAssignedToAllCount(planWithCensusCount?.TotalCount);
     }
   }, [planWithCensusCount]);
 
@@ -849,8 +862,8 @@ const PlanInbox = () => {
       userRole = "PLAN_ESTIMATION_APPROVER";
     }
   });
-  
 
+  
   return (
     <div className="pop-inbox-wrapper">
       <div>
@@ -896,6 +909,7 @@ const PlanInbox = () => {
           onApplyFilters={onFilter}
           clearFilters={clearFilters}
           defaultValue={selectedFilter}
+          tableHeight={tableHeight}
         ></InboxFilterWrapper>
 
         <div className={"pop-inbox-table-wrapper"}>
@@ -1024,7 +1038,7 @@ const PlanInbox = () => {
                 style={{ height: selectedFilter?.status === "VALIDATED" ? "472px" : "408px" }}
                 text={t(`HCM_MICROPLAN_NO_DATA_FOUND_FOR_PLAN_INBOX_PLAN`)}
               />
-            ) : (
+            ) : (<div ref={tableRef}>
               <DataTable
                 columns={columns}
                 data={planWithCensus?.tableData}
@@ -1049,6 +1063,7 @@ const PlanInbox = () => {
                 fixedHeader={true}
                 fixedHeaderScrollHeight={"100vh"}
               />
+              </div>
             )}
           </Card>
         </div>
