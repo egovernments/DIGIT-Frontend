@@ -380,7 +380,6 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
     setLoading(false);
   };
-  console.log(window?.contextPath);
 
   let menu = [];
   const { data: Menu } = Digit.Hooks.useGenderMDMS(stateId, "common-masters", "GenderType");
