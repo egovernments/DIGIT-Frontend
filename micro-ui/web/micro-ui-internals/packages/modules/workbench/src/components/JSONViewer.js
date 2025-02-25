@@ -12,11 +12,12 @@ JSONViewer.propTypes = {
 
 const JSONViewer = ({ formData, screenType, onDataUpdate }) => {
   const { t } = useTranslation();
-  const [updatedData, setUpdatedData] = useState(_.cloneDeep(formData));
+  const [updatedData, setUpdatedData] = useState(() => _.cloneDeep(formData));
 
+  const memoizedData = useMemo(() => _.cloneDeep(formData), [formData]);
   useEffect(() => {
-    setUpdatedData(_.cloneDeep(formData));
-  }, [formData]);
+    setUpdatedData(memoizedData);
+  }, [memoizedData]);
 
   const handleEditorUpdate = ({ newData }) => {
     setUpdatedData(newData);
