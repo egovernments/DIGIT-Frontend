@@ -153,7 +153,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
     }
 
     if (MusterRollData?.count > 0) {
-      console.log(MusterRollData?.musterRolls, "MusterRollData?.musterRolls");
       setData(MusterRollData?.musterRolls);
     } else if (estimateMusterRollData) {
       setData(estimateMusterRollData?.musterRolls);
@@ -163,8 +162,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   useEffect(() => {
     if (data) {
-
-      console.log(data, 'ddddddddddddddddddddd');
       if (data?.[0]?.musterRollStatus === "APPROVED") {
         setShowLogs(true);
       } else {
