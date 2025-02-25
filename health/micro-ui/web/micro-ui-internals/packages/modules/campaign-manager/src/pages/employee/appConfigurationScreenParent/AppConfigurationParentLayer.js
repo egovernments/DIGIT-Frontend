@@ -1,4 +1,4 @@
-import { ActionBar, Button, Loader, Stepper, Toast } from "@egovernments/digit-ui-components";
+import { Loader, Stepper, Toast } from "@egovernments/digit-ui-components";
 import React, { useEffect, useReducer, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ImpelComponentWrapper from "./ImpelComponentWrapper";
@@ -54,7 +54,7 @@ const AppConfigurationParentLayer = () => {
   const [stepper, setStepper] = useState([]);
   const [showToast, setShowToast] = useState(null);
   const [currentScreen, setCurrentScreen] = useState({});
-  console.log("PARENT DATA", parentState)
+  console.log("PARENT DATA", parentState);
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     MODULE_CONSTANTS,

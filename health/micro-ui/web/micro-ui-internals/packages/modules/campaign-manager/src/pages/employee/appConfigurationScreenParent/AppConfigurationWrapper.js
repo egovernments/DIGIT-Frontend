@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useReducer, useState } from "react";
 import AppFieldScreenWrapper from "./AppFieldScreenWrapper";
-import { ActionBar, Button, Divider, Loader, PopUp } from "@egovernments/digit-ui-components";
+import { Footer, Button, Divider, Loader, PopUp } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import DrawerFieldComposer from "./DrawerFieldComposer";
 import SidePanel from "./SidePanel";
@@ -327,10 +327,21 @@ function AppConfigurationWrapper({ screenConfig }) {
           <AppLocalisationTable />
         </PopUp>
       )}
-      <ActionBar className="app-config-actionBar">
+      <Footer
+        actionFields={[
+          <Button className="previous-button" variation="secondary" label={t("BACK")} title={t("BACK")} onClick={() => back()} />,
+          <Button className="previous-button" variation="primary" label={t("NEXT")} title={t("NEXT")} onClick={() => onSubmit(state)} />,
+        ]}
+        className=""
+        maxActionFieldsAllowed={5}
+        setactionFieldsToRight
+        sortActionFields
+        style={{}}
+      />
+      {/* <ActionBar className="app-config-actionBar">
         {showBack && <Button className="previous-button" variation="secondary" label={t("BACK")} title={t("BACK")} onClick={() => back()} />}
         <Button className="previous-button" variation="primary" label={t("NEXT")} title={t("NEXT")} onClick={() => onSubmit(state)} />
-      </ActionBar>
+      </ActionBar> */}
     </AppConfigContext.Provider>
   );
 }
