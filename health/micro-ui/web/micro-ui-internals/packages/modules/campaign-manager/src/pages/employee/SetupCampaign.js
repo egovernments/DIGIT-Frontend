@@ -968,11 +968,11 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   };
 
   if (isPreview === "true" && !draftData) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
 
   if (isDraft === "true" && !draftData) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
 
   function onActionSelect(action) {
@@ -1022,7 +1022,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
 
   return (
     <React.Fragment>
-      {loader && <LoaderWithGap text={"PLEASE_WAIT_WHILE_UPDATING"} />}
+      {loader && <Loader page={true} variant={"PageLoader"} loaderText={t("PLEASE_WAIT_WHILE_UPDATING")}/> }
       {noAction !== "false" && (
         <Stepper
           customSteps={["HCM_CAMPAIGN_SETUP_DETAILS", "HCM_BOUNDARY_DETAILS", "HCM_DELIVERY_DETAILS", "HCM_UPLOAD_DATA", "HCM_REVIEW_DETAILS"]}

@@ -155,7 +155,7 @@ const InboxFilterWrapper = (props) => {
   return (
 
     <FilterCard
-      style={{ flexGrow: 1, display: "flex", flexDirection: "column", width: "22vw",height:`${props.tableHeight}rem`}}
+      style={{ flexGrow: 1, display: "flex", flexDirection: "column", width: "22vw",height:`${Math.max(props.tableHeight,33)}rem`}}
       layoutType={"vertical"}
       onClose={props?.onClose}
       onPrimaryPressed={handleApplyFilters} // Apply filters

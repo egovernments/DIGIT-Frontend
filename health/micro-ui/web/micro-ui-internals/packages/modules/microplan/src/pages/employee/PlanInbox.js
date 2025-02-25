@@ -277,15 +277,15 @@ const PlanInbox = () => {
     },
   });
 
-    useEffect(() => {
-      if (tableRef.current) {
-        // Get full rendered height including borders/padding
-        const height = tableRef.current.offsetHeight;
-        setTableHeight(height / 16 + 7.25);
-      }else{
-        setTableHeight(33);
-      }
-    }, [planWithCensus, activeLink]); 
+      useEffect(() => {
+        if (tableRef.current) {
+          // Get full rendered height including borders/padding
+          const height = tableRef.current.offsetHeight;
+          setTableHeight(height / 16 + 7.25);
+        }else{
+          setTableHeight(33);
+        }
+      }, [planWithCensus, activeLink]); 
 
   const onSearch = (selectedBoundaries, selectedHierarchy) => {
     if (selectedBoundaries.length === 0) {
@@ -473,7 +473,6 @@ const PlanInbox = () => {
   useEffect(() => {
     if (planWithCensusCount) {
       setAssignedToMeCount(planWithCensusCount?.TotalCount);
-      setAssignedToAllCount(planWithCensusCount?.TotalCount);
     }
   }, [planWithCensusCount]);
 

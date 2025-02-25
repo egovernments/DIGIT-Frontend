@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Button, EditIcon, Header, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Toast , Loader} from "@egovernments/digit-ui-components";
+import { EditIcon, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Toast , Loader,HeaderComponent ,Button} from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import NoResultsFound from "./NoResultsFound";
@@ -366,7 +366,7 @@ const CampaignUpdateSummary = (props) => {
   });
 
   if (isLoading) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
   const closeToast = () => {
     setShowToast(null);
@@ -422,7 +422,7 @@ const CampaignUpdateSummary = (props) => {
     <>
       <TagComponent campaignName={campaignName} />        
       <div style={{ display: "flex", justifyContent: "space-between" , marginBottom:"-1.5rem" }}>
-        <Header className="summary-header">{t("ES_TQM_SUMMARY_HEADING")}</Header>
+        <HeaderComponent className="summary-header">{t("ES_TQM_SUMMARY_HEADING")}</HeaderComponent>
       </div>
       <div className="campaign-summary-container">
         <ViewComposer data={updatedObject} cardErrors={summaryErrors} />

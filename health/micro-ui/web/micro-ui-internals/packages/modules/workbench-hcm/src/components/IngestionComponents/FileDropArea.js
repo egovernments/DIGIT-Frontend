@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ActionBar, Button, Header, Loader, SubmitBar, Toast} from "@egovernments/digit-ui-react-components";
+import { ActionBar, Button, Header, SubmitBar, Toast} from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import GenerateXlsx from '../GenerateXlsx';
 import { useHistory } from "react-router-dom";
 import { facilityJsonData } from '../../constants/facilityJsonData';
 import { oujsonData } from '../../constants/ouJsonData';
 import { userJsonData } from '../../constants/userJsonData';
+import {  Loader} from "@egovernments/digit-ui-components";
+
 
 
 function FileDropArea ({ingestionType}) {
@@ -195,7 +197,7 @@ function FileDropArea ({ingestionType}) {
         onChange={handleFileInput} />
           </div>
         )}
-         {isLoading && <Loader message="Fetching data, please wait..." />} 
+         {isLoading &&  <Loader page={true} variant={"PageLoader"}/>} 
       {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={() => setShowToast(null)} />}
         {/* {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>} */}
       </div>

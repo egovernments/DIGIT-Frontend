@@ -1,5 +1,4 @@
-import { Card, AlertCard, Loader } from "@egovernments/digit-ui-components";
-import { Button, Toast } from "@egovernments/digit-ui-components";
+import { Card, AlertCard, Loader , Button } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -52,7 +51,7 @@ const BoundaryHome = () => {
   const type=searchParams.get("type")|| config?.type;
 
   const {isLoading,data,error}=Digit.Hooks.campaign.useBoundaryHome({ screenType: type,defaultHierarchyType:searchParams?.get("defaultHierarchyType"),hierarchyType:searchParams?.get("hierarchyType"),userName:Digit.UserService.getUser()?.info?.userName,tenantId });
-  if (isLoading) return <Loader />;
+  if (isLoading) return <Loader page={true} variant={"PageLoader"}/>;
 
   return (
     <React.Fragment>
