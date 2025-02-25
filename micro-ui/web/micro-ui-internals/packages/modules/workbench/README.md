@@ -79,6 +79,8 @@ _Add this configuration to enable this module [MDMS Enabling Workbench Module](h
 
 6 . Data push for any API based on schema
 
+7 . Json-edit-react to view and edit schema 
+
 ### Mandatory changes to use Workbench module
 
 1 . Assuming core module is already updated with 1.5.38+ and related changes were taken

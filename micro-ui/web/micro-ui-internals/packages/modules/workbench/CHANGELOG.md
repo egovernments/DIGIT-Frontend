@@ -1,3 +1,5 @@
+## [1.0.15]  [25-Feb-2025]
+- Added json-edit-react to view and edit schema data
 
 ## [1.0.15]  [21-Feb-2025]
 - Publishing a new version for more stability & as part of Components Release
