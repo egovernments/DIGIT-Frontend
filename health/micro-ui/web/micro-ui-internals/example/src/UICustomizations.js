@@ -845,6 +845,7 @@ export const UICustomizations = {
             // TODO : Replace dummy file id with real file id when API is ready
             const dummyFile = "c22a7676-d5d7-49b6-bcdb-83e9519f58df"
             const microplanFileId = row?.campaignDetails?.additionalDetails?.microplanFileId || dummyFile;
+            const EstimationsfileId = row?.files.find((item) => item.templateIdentifier === "Estimations")?.filestoreId;
             let options = [];
   
             if (row?.status == "DRAFT") {
