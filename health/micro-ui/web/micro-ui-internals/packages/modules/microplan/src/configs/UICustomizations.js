@@ -83,6 +83,7 @@ export const UICustomizations = {
           // TODO : Replace dummy file id with real file id when API is ready
           const dummyFile = "c22a7676-d5d7-49b6-bcdb-83e9519f58df"
           const microplanFileId = row?.campaignDetails?.additionalDetails?.microplanFileId || dummyFile;
+          const EstimationsfileId = row?.files.find((item) => item.templateIdentifier === "Estimations")?.filestoreId;
           let options = [];
 
           if (row?.status == "DRAFT") {
@@ -92,9 +93,7 @@ export const UICustomizations = {
           }
 
           const handleDownload = () => {
-            const files = row?.files;
-            const file = files.find((item) => item.templateIdentifier === "Population");
-            const fileId = file?.filestoreId;
+            const fileId = row?.files.find((item) => item.templateIdentifier === "Estimations")?.filestoreId;
             if (!fileId) {
                   console.error("Population template file not found");
                   return;
@@ -124,7 +123,7 @@ export const UICustomizations = {
             <div>
               {microplanFileId && row?.status == "RESOURCE_ESTIMATIONS_APPROVED" ? (
                 <div>
-                  <ButtonNew style={{ width: "20rem" }} icon="DownloadIcon" onClick={handleDownload} label={t("WBH_DOWNLOAD_MICROPLAN")} title={t("WBH_DOWNLOAD_MICROPLAN")}  />
+                  <ButtonNew style={{ width: "20rem" }} icon="DownloadIcon" onClick={handleDownload} label={t("WBH_DOWNLOAD_MICROPLAN")} title={t("WBH_DOWNLOAD_MICROPLAN")} isDisabled={!EstimationsfileId}  />
                 </div>
               ) : (
                 <div className={"action-button-open-microplan"}>
