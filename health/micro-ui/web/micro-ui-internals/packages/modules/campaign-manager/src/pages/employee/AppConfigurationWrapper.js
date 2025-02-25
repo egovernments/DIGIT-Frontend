@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer } from "react";
 import AppFieldScreenWrapper from "./AppFieldScreenWrapper";
-import { Dropdown, Loader, Switch, TextInput } from "@egovernments/digit-ui-components";
+import { Loader } from "@egovernments/digit-ui-components";
 import SidePanel from "./SidePanel";
 import { useTranslation } from "react-i18next";
 import DrawerFieldComposer from "./DrawerFieldComposer";
@@ -178,7 +178,7 @@ function AppConfigurationWrapper() {
   );
 
   if (isLoadingAppConfigMdmsData) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
 
   return (

@@ -1,13 +1,8 @@
 import React, { useState, useEffect, Fragment, useRef, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Card, CardHeader, Header, CardText } from "@egovernments/digit-ui-react-components";
-import { LabelFieldPair, CardLabel } from "@egovernments/digit-ui-components";
-// import { MultiSelectDropdown } from "@egovernments/digit-ui-components";
+import { LabelFieldPair, CardLabel ,CardText ,Loader, PopUp, Button} from "@egovernments/digit-ui-components";
 import MultiSelectDropdown from "./MultiSelectDropdown";
-import { value } from "jsonpath";
 import { Dropdown } from "@egovernments/digit-ui-components";
-import { Loader, PopUp, Button } from "@egovernments/digit-ui-components";
-import { merge } from "lodash";
 
 // const frozenData = [
 //   {
@@ -437,7 +432,7 @@ const SelectingBoundaryComponent = ({
     }
   };
 
-  if (hierarchyLoading) return <Loader />;
+  if (hierarchyLoading) return <Loader page={true} variant={"PageLoader"}/>;
 
   return (
     <>

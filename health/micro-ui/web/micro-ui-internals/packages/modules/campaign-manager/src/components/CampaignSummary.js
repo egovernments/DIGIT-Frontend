@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { EditIcon, Header, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Button, InfoBannerIcon, Toast, PopUp, Loader } from "@egovernments/digit-ui-components";
+import { EditIcon, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Button, InfoBannerIcon, Toast, PopUp, Loader,HeaderComponent } from "@egovernments/digit-ui-components";
 import { DownloadIcon } from "@egovernments/digit-ui-react-components";
 import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
@@ -671,7 +671,7 @@ const CampaignSummary = (props) => {
   });
 
   if (isLoading) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
   const closeToast = () => {
     setShowToast(null);
@@ -753,7 +753,7 @@ const CampaignSummary = (props) => {
   return (
     <>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "-1.5rem" }}>
-        <Header className="summary-header">{t("ES_TQM_SUMMARY_HEADING")}</Header>
+        <HeaderComponent className="summary-header">{t("ES_TQM_SUMMARY_HEADING")}</HeaderComponent>
         {timeLine && (
           <PopUp type={"default"} heading={t("ES_CAMPAIGN_TIMELINE")} onOverlayClick={() => setTimeline(false)} onClose={() => setTimeline(false)}>
             <TimelineComponent campaignId={campaignId} resourceId={resource} />

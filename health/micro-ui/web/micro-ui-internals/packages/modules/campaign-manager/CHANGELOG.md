@@ -8,6 +8,7 @@ All notable changes to this module will be documented in this file.
  
   1. Boundary Assignment through UI for Users and Facilities
   2. Implementation of Co-Delivery
+  3. Integrated with new components 
  
 ## 0.3.0 - 2024-12-03
 #### Base Admin console web

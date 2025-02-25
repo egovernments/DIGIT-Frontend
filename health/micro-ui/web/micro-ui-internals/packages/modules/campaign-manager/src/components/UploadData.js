@@ -1,11 +1,10 @@
-import { Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
+import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import React, { useRef, useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { Card, Modal, CardText } from "@egovernments/digit-ui-react-components";
 import BulkUpload from "./BulkUpload";
 import Ajv from "ajv";
 import XLSX from "xlsx";
-import { AlertCard, PopUp, Toast, Button} from "@egovernments/digit-ui-components";
+import { AlertCard, PopUp, Toast, Button , Card , HeaderComponent ,Loader} from "@egovernments/digit-ui-components";
 import { downloadExcelWithCustomName } from "../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
@@ -14,7 +13,7 @@ import TagComponent from "./TagComponent";
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
  * for different types of data in a web application.
  * @returns The `UploadData` component is returning a JSX structure that includes a div with class
- * names, a Header component, a Button component for downloading a template, an info-text div, a
+ * names, a HeaderComponent component, a Button component for downloading a template, an info-text div, a
  * BulkUpload component for handling file uploads, and an InfoCard component for displaying error
  * messages if any validation errors occur during file upload.
  */
@@ -1118,15 +1117,15 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   return (
     <>
       <div className="container-full">
-        {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
-
+        {loader && 
+        <Loader page={true} variant={"OverlayLoader"} loaderText={t("CAMPAIGN_VALIDATION_INPROGRESS")}/>}
         <div className={parentId ? "card-container2" : "card-container1"}>
         <TagComponent campaignName={campaignName} />  
           <Card>
             <div className="campaign-bulk-upload">
-              <Header className="digit-form-composer-sub-header">
+              <HeaderComponent className="digit-form-composer-sub-header">
                 {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
-              </Header>
+              </HeaderComponent>
               <Button
                 label={getDownloadLabel()}
                 variation="secondary"
@@ -1179,7 +1178,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               name: "infocard",
             }}
             variant="default"
-            style={{ margin: "0rem", maxWidth: "100%" }}
+            style={{ marginTop: "1.5rem", maxWidth: "100%" , marginBottom: "1.5rem" }}
             additionalElements={readMeInfo[type]?.map((info, index) => (
               <div key={index} style={{ display: "flex", flexDirection: "column" }}>
                 <h2>{info?.header}</h2>
