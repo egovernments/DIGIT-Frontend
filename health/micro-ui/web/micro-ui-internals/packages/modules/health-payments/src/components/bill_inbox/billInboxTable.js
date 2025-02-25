@@ -44,7 +44,6 @@ const BillInboxTable = ({ ...props }) => {
                 {
                     onSuccess: (data) => {
                         setData(data?.musterRolls?.[0]);
-                        console.log(data);
                     },
                     onError: (error) => {
                         setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
@@ -52,7 +51,7 @@ const BillInboxTable = ({ ...props }) => {
                 }
             );
         } catch (error) {
-            /// will show estimate data only
+            setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
         }
     };
 
