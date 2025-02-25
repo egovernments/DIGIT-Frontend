@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { JsonEditor } from "json-edit-react";
 import _ from "lodash";
