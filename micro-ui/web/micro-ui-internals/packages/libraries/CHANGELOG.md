@@ -1,5 +1,7 @@
 # Changelog
 
+## [1.8.10]  [21-Feb-2025]
+- Publishing a new version for more stability & as part of Components Release
 
 ## [1.8.9]  [1-Feb-2025]
 - FEATURE/HCMPRE-1425 : Added the workbench module patches and Updated localisation search screen, and core module #2181

@@ -20,7 +20,7 @@ export const LoginOtpConfig = [
         },
       },
       {
-        isMandatory: false,
+        isMandatory: true,
         key: "check",
         type: "component",
         component: "PrivacyComponent",

@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.8.26]  [21-Feb-2025]
+- Publishing a new version for more stability & as part of Components Release
+
 ## [1.8.25]  [13-Feb-2025]
 - Added id prop for Privacy Component Checkbox
 

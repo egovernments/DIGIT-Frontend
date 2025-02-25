@@ -11,7 +11,6 @@ import {
   SubmitBar,
   Footer,
   CardLabel,
-  BreadCrumb,
   Toast,
   ErrorMessage,
 } from "@egovernments/digit-ui-components";
@@ -21,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import UploadDrawer from "./ImageUpload/UploadDrawer";
 import ImageComponent from "../../../components/ImageComponent";
+import { BreadCrumb } from "@egovernments/digit-ui-react-components";
 
 const defaultImage =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAO4AAADUCAMAAACs0e/bAAAAM1BMVEXK0eL" +

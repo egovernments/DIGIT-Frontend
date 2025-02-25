@@ -1,4 +1,6 @@
 
+## [1.8.12]  [21-Feb-2025]
+- Publishing a new version for more stability & as part of Components Release
 
 ## [1.8.11]  [3-Feb-2025]
 - Fixed DSS issues and related found in PGR ethopia demo, and enhanced a few keys related to localisations issue.
