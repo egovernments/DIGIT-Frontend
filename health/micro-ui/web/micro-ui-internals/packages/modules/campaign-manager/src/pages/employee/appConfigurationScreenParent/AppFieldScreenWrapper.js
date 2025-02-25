@@ -6,109 +6,21 @@ import AppFieldComposer from "./AppFieldComposer";
 import _ from "lodash";
 import { useCustomT } from "./useCustomT";
 
-const Tabs = ({ numberTabs, onTabChange }) => {
-  const { state, dispatch } = useAppConfigContext();
-  const { t } = useTranslation();
-  return (
-    <div className="campaign-tabs">
-      {numberTabs.map((_, index) => (
-        <button
-          key={index}
-          type="button"
-          className={`campaign-tab-head ${_.active === true ? "active" : ""} hover`}
-          onClick={() => onTabChange(_, index)}
-        >
-          <p style={{ margin: 0, position: "relative", top: "-0 .1rem" }}>{t(_.parent)}</p>
-        </button>
-      ))}
-    </div>
-  );
-};
-
 function AppFieldScreenWrapper({ onSubmit }) {
   const { state, dispatch } = useAppConfigContext();
   const searchParams = new URLSearchParams(location.search);
   const projectType = searchParams.get("prefix");
   const { t } = useTranslation();
-  // const appTemplate = state?.["MASTER_DATA"]?.AppScreenConfigTemplateSchema;
-  const appTemplate = state?.screenData;
-  const [numberTabs, setNumberTabs] = useState(
-    [...new Set(appTemplate?.map((i) => i?.parent))].map((i, index) => {
-      return { parent: i, active: index === 0 ? true : false, code: index + 1 };
-    })
-  );
-
-  const [stepper, setStepper] = useState(
-    appTemplate
-      ?.filter((i) => i.parent === numberTabs.find((j) => j.active)?.parent)
-      .sort((a, b) => a.order - b.order)
-      ?.map((k, j, t) => ({
-        name: k.name,
-        isLast: j === t.length - 1 ? true : false,
-        isFirst: j === 0 ? true : false,
-        active: j === 0 ? true : false,
-      }))
-  );
-
-  const [currentStep, setCurrentStep] = useState(1);
-
-  useEffect(() => {
-    // if (currentStep) {
-    setStepper((prev) => {
-      return prev.map((i, c) => {
-        if (c === currentStep - 1) {
-          return {
-            ...i,
-            active: true,
-          };
-        }
-        return {
-          ...i,
-          active: false,
-        };
-      });
-    });
-    dispatch({
-      type: "UNSELECT_DRAWER_FIELD",
-    });
-    // }
-  }, [currentStep]);
 
   const currentCard = useMemo(() => {
-    return state?.screenData
-      ?.filter((i) => i.parent === numberTabs.find((j) => j.active)?.parent)
-      ?.sort((a, b) => a.order - b.order)
-      ?.filter((k) => k.name === stepper.find((l) => l.active)?.name)?.[0];
-  }, [state?.screenData, numberTabs, stepper, currentStep]);
+    return state?.screenData?.[0];
+  }, [
+    state?.screenData,
+    // , numberTabs, stepper, currentStep
+  ]);
 
   return (
     <React.Fragment>
-      <Tabs
-        numberTabs={numberTabs}
-        onTabChange={(tab, index) => {
-          setNumberTabs((prev) => {
-            return prev.map((j) => {
-              if (j.parent === tab.parent) {
-                return {
-                  ...j,
-                  active: true,
-                };
-              }
-              return {
-                ...j,
-                active: false,
-              };
-            });
-          });
-        }}
-      />
-      <Stepper
-        customSteps={[...stepper?.map((i) => i.name)]}
-        currentStep={currentStep}
-        onStepClick={() => {}}
-        activeSteps={0}
-        className={"appConfig-flow-stepper"}
-      />
       {currentCard?.cards?.map(({ fields, description, header, headerFields }, index, card) => {
         return (
           <Card className="appConfigScreenCard">
@@ -118,7 +30,7 @@ function AppFieldScreenWrapper({ onSubmit }) {
                 label={label}
                 active={active}
                 required={required}
-                value={useCustomT(`${projectType}_${currentCard.parent}_${currentCard.name}_${label}`)}
+                value={useCustomT(`${projectType}_${currentCard.parent}_${currentCard.name}_${label}_DKJDKDJ`)}
                 headerFields={true}
                 onChange={(event) => {
                   dispatch({
@@ -127,7 +39,7 @@ function AppFieldScreenWrapper({ onSubmit }) {
                       currentField: card[index],
                       currentScreen: currentCard,
                       field: cx[indx],
-                      localisedCode: `${projectType}_${currentCard.parent}_${currentCard.name}_${label}`,
+                      localisedCode: `${projectType}_${currentCard.parent}_${currentCard.name}_${label}_DKJDKDJ`,
                       value: event.target.value,
                     },
                   });
@@ -211,26 +123,6 @@ function AppFieldScreenWrapper({ onSubmit }) {
             return;
           }}
         />
-      )}
-      {stepper && (
-        <ActionBar className="app-config-actionBar">
-          {!stepper?.find((i) => i.active)?.isFirst && (
-            <Button
-              className="previous-button"
-              variation="secondary"
-              label={t("BACK")}
-              title={t("BACK")}
-              onClick={() => setCurrentStep((prev) => prev - 1)}
-            />
-          )}
-          <Button
-            className="previous-button"
-            variation="primary"
-            label={t("NEXT")}
-            title={t("NEXT")}
-            onClick={() => (!stepper?.find((i) => i.active)?.isLast ? setCurrentStep((prev) => prev + 1) : onSubmit(state))}
-          />
-        </ActionBar>
       )}
     </React.Fragment>
   );

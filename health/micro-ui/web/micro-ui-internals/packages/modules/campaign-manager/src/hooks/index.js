@@ -20,6 +20,8 @@ import useBoundaryHome from "./useBoundaryHome";
 import useFetchFromMicroplan from "./useFetchFromMicroplan";
 import { useReadExcelData, useUpdateAndUploadExcel } from "./useReadExcelData";
 import { useSearchLocalisation } from "./useSearchLocalisation";
+import useUpsertFormBuilderConfig from "./useUpsertFormBuilderConfig";
+import { useMDMSV2Search } from "./useMDMSV2Search";
 
 const UserService = {};
 
@@ -50,6 +52,8 @@ const campaign = {
   useReadExcelData,
   useUpdateAndUploadExcel,
   useSearchLocalisation,
+  useUpsertFormBuilderConfig,
+  useMDMSV2Search,
 };
 
 const Hooks = {

@@ -26,7 +26,6 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
   const { t } = useTranslation();
   const searchParams = new URLSearchParams(location.search);
   const projectType = searchParams.get("prefix");
-
   switch (panelItem?.fieldType) {
     case "toggle":
       return (
@@ -51,13 +50,17 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
               value={useCustomT(drawerState?.[panelItem.label])}
               onChange={(event) => {
                 updateLocalization(
-                  `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${drawerState?.id}`,
+                  `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${
+                    drawerState?.jsonPath || drawerState?.id
+                  }`,
                   Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
                   event.target.value
                 );
                 setDrawerState((prev) => ({
                   ...prev,
-                  [panelItem.label]: `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${drawerState?.id}`,
+                  [panelItem.label]: `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${
+                    drawerState?.jsonPath || drawerState?.id
+                  }`,
                 }));
               }}
               placeholder={""}
@@ -192,7 +195,7 @@ function DrawerFieldComposer() {
         />
       )} */}
 
-      {(drawerState?.type === "dropDown" || drawerState?.type === "checkbox") && (
+      {(drawerState?.type === "dropdown" || drawerState?.type === "dropDown" || drawerState?.type === "checkbox") && (
         <div
           style={{ padding: "1.5rem", border: "1px solid #c84c0e", borderRadius: "1rem", display: "flex", flexDirection: "column", gap: "1.5rem" }}
         >
@@ -265,6 +268,7 @@ function DrawerFieldComposer() {
               () =>
                 setDrawerState((prev) => ({
                   ...prev,
+                  optionsKey: "name",
                   dropDownOptions: prev?.dropDownOptions
                     ? [
                         ...prev?.dropDownOptions,
