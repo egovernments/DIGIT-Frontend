@@ -1035,8 +1035,8 @@ digit-card-text.center {
 
 .user-profile {
   @media (min-width: 780px) {
-    width: calc(100% - 219px);
-    margin-left: 16px;
-    margin-right: 16px;
+    width: calc(100% - 219px) !important;
+    margin-left: 16px !important;
+    margin-right: 16px !important;
   }
 }
