@@ -1,3 +1,5 @@
+## [1.0.15]  [25-Feb-2025]
+- Added json-edit-react to view and edit schema data
 
 ## [1.0.13]  [3-Feb-2025]
 - Updated some of the loader component

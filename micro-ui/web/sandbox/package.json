@@ -20,7 +20,7 @@
   "homepage": "/sandbox-ui",
   "dependencies": {
     "@egovernments/digit-ui-libraries": "1.8.9",
-    "@egovernments/digit-ui-module-workbench": "1.0.14",
+    "@egovernments/digit-ui-module-workbench": "1.0.15",
     "@egovernments/digit-ui-module-pgr": "1.8.10",
     "@egovernments/digit-ui-module-dss": "1.8.10",
     "@egovernments/digit-ui-module-core": "1.8.25",
