@@ -4,7 +4,6 @@ import { Loader } from "@egovernments/digit-ui-components";
 import SidePanel from "./SidePanel";
 import { useTranslation } from "react-i18next";
 import DrawerFieldComposer from "./DrawerFieldComposer";
-import SidePanel from "./SidePanel";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
 import AppLocalisationTable from "./AppLocalisationTable";
 // import { dummyMaster } from "../../configs/dummyMaster";
