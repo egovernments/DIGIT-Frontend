@@ -64,10 +64,7 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
                                     });
                                 }} // Passing the download function
                                 status="completed"
-
-
-
-
+                                rowDetails={item}
                             />
                         )
 
@@ -114,6 +111,7 @@ export const DataMgmtComponent = ({ customProps, setupCompleted }) => {
                                     });
                                 }} // Passing the download function
                                 status="completed"
+                                rowDetails={item}
 
                             />
                         )

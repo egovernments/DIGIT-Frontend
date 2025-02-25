@@ -75,6 +75,7 @@ const AttendanceInboxComponent = () => {
                 ? data?.attendanceRegister?.map((item, index) => {
                   return {
                     id: item?.registerNumber,
+                    registerId: item?.id,
                     name: selectedProject?.name,
                     boundary: item?.localityCode,
                     status: item?.attendees == null ? 0 : item?.attendees.length || 0,
