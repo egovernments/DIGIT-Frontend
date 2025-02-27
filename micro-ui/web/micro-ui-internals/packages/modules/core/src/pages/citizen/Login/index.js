@@ -96,7 +96,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     )
   );
 
-  const getUserType = () => Digit.UserService.getType();
+  const getUserType = () => "citizen" || Digit.UserService.getType();
 
   const handleOtpChange = (otp) => {
     setParmas({ ...params, otp });
@@ -170,7 +170,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
           username: mobileNumber,
           password: otp,
           tenantId: stateCode,
-          userType: "citizen",
+          userType: getUserType(),
         };
         const { ResponseInfo, UserRequest: info, ...tokens } = await Digit.UserService.authenticate(requestData);
 
@@ -214,7 +214,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     const data = {
       mobileNumber,
       tenantId: stateCode,
-      userType: "citizen",
+      userType: getUserType(),
     };
     if (!isUserRegistered) {
       const [res, err] = await sendOtp({ otp: { ...data, ...TYPE_REGISTER } });
