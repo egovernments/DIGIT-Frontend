@@ -8,30 +8,33 @@ import { newConfig } from "../../components/config/config";
 import { HRMS_CONSTANTS } from "../../constants/constants";
 import { ReposeScreenType } from "../../constants/enums";
 
-import { checkIfUserExist, formPayloadToCreateUser, editDefaultUserValue, formPayloadToUpdateUser } from "../../services/service";
+import {
+  checkIfUserExistWithPhoneNumber,
+  checkIfUserExist,
+  formPayloadToCreateUser,
+  editDefaultUserValue,
+  formPayloadToUpdateUser,
+} from "../../services/service";
 import { getPattern } from "../../utils/utlis";
+import ActionPopUp from "../../components/pageComponents/popup";
 
 const CreateEmployee = ({ editUser = false }) => {
   const isEdit = window.location.pathname.includes("/edit/");
-  const [editEmpolyee, setEditEmployee] = useState(null);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [canSubmit, setSubmitValve] = useState(false);
-  const [mobileNumber, setMobileNumber] = useState(null);
+
   const [showToast, setShowToast] = useState(null);
-  const [phonecheck, setPhonecheck] = useState(false);
-  const [checkfield, setcheck] = useState(false);
 
   const { t } = useTranslation();
   const history = useHistory();
   const location = useLocation();
 
+  const [createEmployeeData, setCreateEmployeeData] = useState({});
+
   const { id } = useParams();
   const isMobile = window.Digit.Utils.browser.isMobile();
 
   const [showModal, setShowModal] = useState(false);
-  const closeModal = () => {
-    setShowModal(false);
-  };
 
   const mutation = Digit.Hooks.hrms.useHRMSCreate(tenantId);
   const mutationUpdate = Digit.Hooks.hrms.useHRMSUpdate(tenantId);
@@ -274,9 +277,20 @@ const CreateEmployee = ({ editUser = false }) => {
     }
   };
 
-  const openModal = (e) => {
-    setCreateEmployeeData(e);
-    setShowModal(true);
+  const openModal = async (e) => {
+    debugger;
+    const type = await checkIfUserExistWithPhoneNumber(e, tenantId);
+    if (type == true) {
+      setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID" });
+      setShowModal(false);
+    } else {
+      setCreateEmployeeData(e);
+      setShowModal(true);
+    }
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
   };
   if (isLoading || isLoadings) {
     return <Loader />;
@@ -305,7 +319,7 @@ const CreateEmployee = ({ editUser = false }) => {
         defaultValues={editUser == true && data?.Employees ? editDefaultUserValue(data?.Employees, tenantId) : ""}
         heading={t("")}
         config={config}
-        onSubmit={onSubmit}
+        onSubmit={openModal}
         className={"custom-form"}
         onFormValueChange={onFormValueChange}
         isDisabled={!canSubmit}
@@ -322,9 +336,7 @@ const CreateEmployee = ({ editUser = false }) => {
           }}
         />
       )}
-      {/*showModal && (
-        <ActionModal t={t} action={"CREATE_EMPLOYEE"} tenantId={tenantId} closeModal={closeModal} submitAction={() => onSubmit(createEmployeeData)} />
-      )*/}
+      {showModal && <ActionPopUp headingMsg={"READY_TO_SUBMIT"} onClose={closeModal} onSubmit={() => onSubmit(createEmployeeData)} />}
     </div>
   );
 };

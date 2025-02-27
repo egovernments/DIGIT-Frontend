@@ -2,6 +2,30 @@ import { HRMS_CONSTANTS } from "../constants/constants";
 const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "MICROPLAN";
 import { convertEpochToDate } from "../utils/utlis";
 
+
+//  Do the search employee API call
+//  to check the existance of the user with given the employeeId
+
+export const checkIfUserExistWithPhoneNumber = async (data, tenantId) => {
+  try {
+    if (data?.SelectEmployeeId && data?.SelectEmployeeId?.trim().length > 0) {
+      const result = await Digit.HRMSService.search(tenantId, null, { phone: data?.SelectEmployeePhoneNumber });
+      debugger;
+      if (result?.Employees?.length > 0) {
+        return true; // User exists, return false
+      } else {
+        return false; // Success
+      }
+    } else {
+      debugger;
+      return true; // Success
+    }
+  } catch (error) {
+    debugger;
+    throw error; // throw on error
+  }
+};
+
 //  Do the search employee API call
 //  to check the existance of the user with given the employeeId
 
