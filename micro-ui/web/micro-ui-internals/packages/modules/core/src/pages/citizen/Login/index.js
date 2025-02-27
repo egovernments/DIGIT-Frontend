@@ -170,7 +170,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
           username: mobileNumber,
           password: otp,
           tenantId: stateCode,
-          userType: getUserType(),
+          userType: "citizen",
         };
         const { ResponseInfo, UserRequest: info, ...tokens } = await Digit.UserService.authenticate(requestData);
 
@@ -214,7 +214,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     const data = {
       mobileNumber,
       tenantId: stateCode,
-      userType: getUserType(),
+      userType: "citizen",
     };
     if (!isUserRegistered) {
       const [res, err] = await sendOtp({ otp: { ...data, ...TYPE_REGISTER } });

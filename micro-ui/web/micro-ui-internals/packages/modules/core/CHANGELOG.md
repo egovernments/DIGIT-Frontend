@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.8.28]  [27-Feb-2025]
+- BUGFIX/SN-162 : Citizen otp fix in the Login page.
+
 ## [1.8.26]  [21-Feb-2025]
 - Publishing a new version for more stability & as part of Components Release
 
