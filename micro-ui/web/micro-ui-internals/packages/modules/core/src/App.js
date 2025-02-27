@@ -92,7 +92,7 @@ export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, logoU
   // const globalPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
   const { data: storeData } = Digit.Hooks.useStore.getInitData();
   const { stateInfo } = storeData || {};
-  const userScreensExempted = ["user/profile", "user/error"];
+  const userScreensExempted = ["user/error"];
   const isUserProfile = userScreensExempted.some((url) => location?.pathname?.includes(url));
   const userDetails = Digit.UserService.getUser();
   let CITIZEN = userDetails?.info?.type === "CITIZEN" || !window.location.pathname.split("/").includes("employee") ? true : false;
