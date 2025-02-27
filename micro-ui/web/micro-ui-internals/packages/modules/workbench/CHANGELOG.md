@@ -1,4 +1,7 @@
-## [1.0.15]  [25-Feb-2025]
+## [1.0.18]  [25-Feb-2025]
+- Compilation issue fix
+
+## [1.0.17]  [25-Feb-2025]
 - Added json-edit-react to view and edit schema data
 
 ## [1.0.15]  [21-Feb-2025]

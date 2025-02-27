@@ -4,11 +4,6 @@ import { JsonEditor } from "json-edit-react";
 import _ from "lodash";
 import PropTypes from "prop-types";
 
-JSONViewer.propTypes = {
-  formData: PropTypes.object.isRequired,
-  screenType: PropTypes.oneOf(["view", "add", "edit"]).isRequired,
-  onDataUpdate: PropTypes.func
-};
 
 const JSONViewer = ({ formData, screenType, onDataUpdate }) => {
   const { t } = useTranslation();
@@ -38,3 +33,10 @@ const JSONViewer = ({ formData, screenType, onDataUpdate }) => {
 };
 
 export default JSONViewer;
+
+
+JSONViewer.propTypes = {
+  formData: PropTypes.object.isRequired,
+  screenType: PropTypes.oneOf(["view", "add", "edit"]).isRequired,
+  onDataUpdate: PropTypes.func
+};
