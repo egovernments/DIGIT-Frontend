@@ -1,8 +1,9 @@
-import React, { Fragment, useState, useEffect,useRef } from "react";
+import React, { Fragment, useState, useEffect,useRef, useContext } from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { useHistory } from "react-router-dom";
 import PopInboxTable from "../../components/PopInboxTable";
 import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonGroup, NoResultsFound } from "@egovernments/digit-ui-components";
+import { useMyContext } from "../../utils/context";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
@@ -70,7 +71,9 @@ const PopInbox = () => {
       ],
     },
   };
-
+  const {state}=useMyContext();
+  // console.log("state pop",state?.PopConfig);
+  // const config=state?.PopConfig[0];
   const [activeLink, setActiveLink] = useState(config?.tabConfig?.defaultActiveTab);
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
