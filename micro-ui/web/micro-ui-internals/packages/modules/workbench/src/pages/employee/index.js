@@ -17,6 +17,8 @@ import WorkbenchHeader from "../../components/WorkbenchHeader";
 import BoundaryHierarchyTypeAdd from "./BoundaryHierarchyTypeAdd";
 import UploadBoundary from "./UploadBoundary";
 import UploadBoundaryPure from "./BoundaryUploadPure";
+import SidebarConfig from "./SidebarConfig";
+import SidebarAddContent from "./SidebarAddContent";
 
 const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
@@ -134,6 +136,8 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/create-boundary-hierarchy-type`} component={() => <BoundaryHierarchyTypeAdd />} />
           <PrivateRoute path={`${path}/upload-boundary`} component={() => <UploadBoundary />} />
           <PrivateRoute path={`${path}/upload-boundary-pure`} component={() => <UploadBoundaryPure />} />
+          <PrivateRoute path={`${path}/sidebar-config`} component={() => <SidebarConfig />} />
+          <PrivateRoute path={`${path}/sidebar-add-content`} component={() => <SidebarAddContent />} />
         </AppContainer>
       </Switch>
     </React.Fragment>
