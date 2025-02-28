@@ -8,6 +8,8 @@ import DocViewer from "./DocViewer.js";
 import NonIFrameInterface from "./IFrameInterface/RenderCustom";
 import AuditHistory from "./AuditHistory.js";
 import KibanaChart from "./KibanaChart.js";
+import FormExplorer from "./FormExplorer.js";
+import InboxExplorer from "./InboxExplorer.js";
 
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
@@ -45,6 +47,12 @@ const App = ({ path, stateCode, userType, tenants }) => {
         </Route>
         <Route path={`${path}/doc-viewer`}>
           <DocViewer {...commonProps} />
+        </Route>
+        <Route path={`${path}/playground/form-composer`}>
+        <FormExplorer></FormExplorer>
+        </Route>
+        <Route path={`${path}/playground/inbox-composer`}>
+            <InboxExplorer></InboxExplorer>
         </Route>
         <Route path={`${path}/audit-log`}>
           <AuditHistory {...commonProps} />

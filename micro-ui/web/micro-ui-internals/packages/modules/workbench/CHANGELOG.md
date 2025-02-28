@@ -1,3 +1,11 @@
+## [1.0.18]  [25-Feb-2025]
+- Compilation issue fix
+
+## [1.0.17]  [25-Feb-2025]
+- Added json-edit-react to view and edit schema data
+
+## [1.0.15]  [21-Feb-2025]
+- Publishing a new version for more stability & as part of Components Release
 
 ## [1.0.13]  [3-Feb-2025]
 - Updated some of the loader component

@@ -14,12 +14,12 @@
   ],
   "homepage": "/workbench-ui",
   "dependencies": {
-    "@egovernments/digit-ui-libraries": "1.8.2-beta.8",
-    "@egovernments/digit-ui-module-workbench": "1.0.2-beta.10",
-    "@egovernments/digit-ui-components":"0.0.2-beta.66",
-    "@egovernments/digit-ui-module-core": "1.8.25",
-    "@egovernments/digit-ui-module-utilities": "1.0.1-beta.41",
-    "@egovernments/digit-ui-react-components": "1.8.16",
+    "@egovernments/digit-ui-libraries": "1.8.10",
+    "@egovernments/digit-ui-module-workbench": "1.0.18",
+    "@egovernments/digit-ui-components":"0.2.0",
+    "@egovernments/digit-ui-module-core": "1.8.29",
+    "@egovernments/digit-ui-module-utilities": "1.0.13",
+    "@egovernments/digit-ui-react-components": "1.8.18",
     "babel-loader": "8.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -49,10 +49,14 @@
   "resolutions": {
     "**/babel-loader": "8.2.2",
     "**/@babel/core": "7.14.0",
+    "**/@babel/traverse": "7.25.9",
     "**/@babel/preset-env": "7.14.0",
+    "**/styled-components": "5.0.0",
     "**/@babel/plugin-transform-modules-commonjs": "7.14.0",
-    "**/polished":"4.2.2",
-    "fast-uri":"2.1.0"
+    "**/@jridgewell/gen-mapping": "0.3.5",
+    "**/polished": "4.2.2",
+    "**/ajv-formats": "2.1.1",
+    "fast-uri": "2.1.0"
   },
   "scripts": {
     "start": "react-scripts start",

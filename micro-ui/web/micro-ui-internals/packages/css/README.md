@@ -24,7 +24,7 @@ frontend/micro-ui/web/package.json
 ```
 
 ```json
-"@egovernments/digit-ui-css":"^1.5.0",
+"@egovernments/digit-ui-css":"1.8.14",
 ```
 
 then navigate to App.js

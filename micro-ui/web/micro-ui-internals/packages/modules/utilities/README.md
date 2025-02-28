@@ -73,15 +73,15 @@ _Add this configuration to enable this module [MDMS Enabling Utilities Module](h
    Example Routes as follows
 
    ```bash
-   works-ui/employee/utilities/search/commonMuktaUiConfig/SearchIndividualConfig
+   workbench-ui/employee/utilities/search/commonMuktaUiConfig/SearchIndividualConfig
    
-   works-ui/employee/utilities/search/commonMuktaUiConfig/InboxMusterConfig
+   workbench-ui/employee/utilities/search/commonMuktaUiConfig/InboxMusterConfig
    ```
 
 2. Iframe
 
    ```bash
-   works-ui/employee/utilities/iframe/shg/home
+   workbench-ui/employee/utilities/iframe/shg/home
    ```
 
 3. Workflow Test for any module
@@ -91,25 +91,25 @@ Sample URL
 _Contract Module
 
 ```bash
-  works-ui/employee/utilities/workflow?tenantId=pg.citya&applicationNo=WO/2023-24/000721&businessService=CONTRACT&moduleCode=contract
+  workbench-ui/employee/utilities/workflow?tenantId=pg.citya&applicationNo=WO/2023-24/000721&businessService=CONTRACT&moduleCode=contract
 ```
 
 _Estimate Module
 
 ```bash
-  works-ui/employee/utilities/workflow?tenantId=pg.citya&applicationNo=ES/2023-24/001606&businessService=ESTIMATE&moduleCode=estimate
+  workbench-ui/employee/utilities/workflow?tenantId=pg.citya&applicationNo=ES/2023-24/001606&businessService=ESTIMATE&moduleCode=estimate
 ```
 
 _Attendance Module
 
 ```bash
-  works-ui/employee/utilities/workflow?tenantId=pg.citya&applicationNo=MR/2023-24/05/31/000778&businessService=MR&moduleCode=muster%20roll
+  workbench-ui/employee/utilities/workflow?tenantId=pg.citya&applicationNo=MR/2023-24/05/31/000778&businessService=MR&moduleCode=muster%20roll
 ```
 
 _Bill Module
 
 ```bash
-  works-ui/employee/utilities/workflow?tenantId=pg.citya&applicationNo=PB/2023-24/000379&businessService=EXPENSE.PURCHASE&moduleCode=wages.purchase
+  workbench-ui/employee/utilities/workflow?tenantId=pg.citya&applicationNo=PB/2023-24/000379&businessService=EXPENSE.PURCHASE&moduleCode=wages.purchase
 ```
 
 4. View Document
@@ -117,13 +117,13 @@ _Bill Module
    Upload and view
 
    ```bash
-   works-ui/employee/utilities/doc-viewer
+   workbench-ui/employee/utilities/doc-viewer
    ```
 
    view from url
 
    ```bash
-   works-ui/employee/utilities/doc-viewer?fileUrl=https://egov-uat-assets.s3.ap-south-1.amazonaws.com/hcm/logo-image.jpeg&fileName=logo-image.jpeg
+   workbench-ui/employee/utilities/doc-viewer?fileUrl=https://egov-uat-assets.s3.ap-south-1.amazonaws.com/hcm/logo-image.jpeg&fileName=logo-image.jpeg
    ```
 5. View Audit history 
 
@@ -131,6 +131,17 @@ _Bill Module
    workbench-ui/employee/utilities/audit-log?id=dfeca4e2-4478-472d-939b-9dfe3ebaeb64&tenantId=mz
    ```
 
+6. Playground for Create & Inbox Screen
+
+### Form Composer
+```bash
+workbench-ui/employee/utilities/playground/form-composer
+```
+
+### Inbox  Composer
+```bash
+workbench-ui/employee/utilities/playground/inbox-composer
+```
 
 ## Coming Soon
 

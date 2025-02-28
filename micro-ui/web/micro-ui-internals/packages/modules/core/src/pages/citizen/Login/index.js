@@ -96,7 +96,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     )
   );
 
-  const getUserType = () => Digit.UserService.getType();
+  const getUserType = () => "citizen" || Digit.UserService.getType();
 
   const handleOtpChange = (otp) => {
     setParmas({ ...params, otp });

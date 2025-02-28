@@ -28,6 +28,9 @@ cd "$BASEDIR/packages/modules/open-payment" &&   rm -rf dist && yarn&& npm publi
 cd "$BASEDIR/packages/modules/workbench" &&   rm -rf dist && yarn&& npm publish --tag workbench-1.1
 
 
+# msg "Building and publishing Utilities module"
+cd "$BASEDIR/packages/modules/sandbox" &&   rm -rf dist && yarn&& npm publish --tag sandbox-0.1
+
 # msg "Building and publishing svg components"
 cd "$BASEDIR/packages/svg-components" && rm -rf dist && yarn && npm publish --tag workbench-1.1
 

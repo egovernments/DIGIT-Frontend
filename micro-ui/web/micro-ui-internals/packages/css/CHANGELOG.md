@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.8.15]  [21-Feb-2025]
+- Publishing a new version for more stability & as part of Components Release
+
+## [1.8.14]  [19-Feb-2025]
+FEATURE/DUCE-244 : - Intergrated with react json editor and provided a p…
+
 ## [1.8.13]  [1-Feb-2025]
 - FEATURE/HCMPRE-1425 : Added the workbench module patches and Updated localisation search screen, and core module #2181
 - Upgraded with new Components in core, workbench screens
