@@ -84,6 +84,7 @@ const PlanInbox = () => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { state } = useMyContext();
+  console.log("config",state?.Plan2Config);
   const url = Digit.Hooks.useQueryParams();
   const microplanId = url?.microplanId;
   const campaignId = url?.campaignId;
