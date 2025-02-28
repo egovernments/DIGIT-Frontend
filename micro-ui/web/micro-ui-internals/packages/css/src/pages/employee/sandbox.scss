@@ -1033,11 +1033,10 @@ digit-card-text.center {
   width: 30rem !important;
 }
 
-.user-profile {
-  @media (min-width: 780px) {
-    width: calc(100% - 219px) !important;
-    margin-left: 16px !important;
-    margin-right: 16px !important;
-    padding:5rem !important;
+.employee{
+  .grounded-container{
+    .user-profile{
+      padding: 5rem !important;
+    }
   }
 }
