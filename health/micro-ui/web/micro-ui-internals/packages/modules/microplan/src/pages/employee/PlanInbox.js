@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect, useMemo ,useRef} from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { useHistory } from "react-router-dom";
-import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonGroup, NoResultsFound } from "@egovernments/digit-ui-components";
+import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonGroup, NoResultsFound, Tooltip, TooltipWrapper } from "@egovernments/digit-ui-components";
 import { Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
@@ -12,6 +12,7 @@ import { getTableCustomStyle, tableCustomStyle } from "../../components/tableCus
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../../utils/context";
 import ConfirmationPopUp from "../../components/ConfirmationPopUp";
+import DetailsPopUp from "../../components/DetailsPopUp";
 import VillageHierarchyTooltipWrapper from "../../components/VillageHierarchyTooltipWrapper";
 import TimelinePopUpWrapper from "../../components/timelinePopUpWrapper";
 import AssigneeChips from "../../components/AssigneeChips";
@@ -46,6 +47,7 @@ const PlanInbox = () => {
   const [assignedToMeCount, setAssignedToMeCount] = useState(0);
   const [assignedToAllCount, setAssignedToAllCount] = useState(0);
   const [showToast, setShowToast] = useState(null);
+  const [toast, setToast] = useState(null);
   const [disabledAction, setDisabledAction] = useState(false);
   const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
@@ -63,6 +65,8 @@ const PlanInbox = () => {
   const [defaultHierarchy, setDefaultSelectedHierarchy] = useState(null);
   const [defaultBoundaries, setDefaultBoundaries] = useState([]);
   const userRoles = user?.info?.roles?.map((roleData) => roleData?.code);
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [editRowData, setEditRowData] = useState(null);
   const hrms_context_path = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || 'health-hrms';
   const tableRef = useRef(null);
   const [tableHeight, setTableHeight] = useState(33);
@@ -692,6 +696,194 @@ const PlanInbox = () => {
       }));
   };
 
+  const handleSave = async (newValue) => {
+    if (editRowData) {
+    const updatedPayload = setAdditionalDetails(editRowData, newValue)
+      await mutationForAdditionalColumn.mutate(
+        {
+            body: updatedPayload
+        },
+        {
+            onSuccess: (data) => {
+              const { row, field } = editRowData;
+              if (!row?.original?.additionalDetails) {
+                row.original.additionalDetails = {};
+              }
+              row.original.additionalDetails[field] = newValue;
+              setToast({ label: `${field} updated successfully!`, type: "success" });
+            },
+            onError: (error) => {
+              setToast({ type: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+              ; 
+            }
+        }
+    );
+    }
+    setPopupVisible(false);
+  };
+
+  const handleEditClick = (row, field) => {
+    setEditRowData({ row, field });
+    setPopupVisible(true);
+  };
+
+  const truncateText = (text, maxLength = 20) => {
+    if (!text) return "";
+    return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
+  };
+
+  const getTableColumns = () => {
+    const columns = [
+      {
+        name: t(`IS_COMMUNITY_HARD_TO_REACH_AREA`),
+        cell: (row) => {
+          const value = row?.original?.additionalDetails?.IS_COMMUNITY_HARD_TO_REACH_AREA || "NA";
+          const truncatedValue = value.length > 8 ? `${value.substring(0, 8)}...` : value;
+  
+          return (
+            <div style={{ display: "flex", alignItems: "center", gap: ".5rem" , height:"64px" , width: "180px",justifyContent:"flex-end"}}>
+              <TooltipWrapper description={value || ""}>{truncatedValue}</TooltipWrapper>
+              <Button
+                label={""}
+                onClick={() => handleEditClick(row, "IS_COMMUNITY_HARD_TO_REACH_AREA")}
+                variation="secondary"
+                style={{minWidth: "42px",padding:"0px"}}
+                icon="Edit"
+                size={"small"}
+              />
+            </div>
+          );
+        },
+        sortable: false,
+        width: "180px",
+        height:"64px"
+      },
+      {
+        name: t(`REASONS_FOR_HARD_TO_REACH`),
+        cell: (row) => {
+          const value = row?.original?.additionalDetails?.REASONS_FOR_HARD_TO_REACH || "NA";
+          const truncatedValue = value.length > 8 ? `${value.substring(0, 8)}...` : value;
+  
+          return (
+            <div style={{ display: "flex", alignItems: "center", gap: ".5rem" , height:"64px" , width: "180px",justifyContent:"flex-end"}}>
+              <TooltipWrapper description={value || ""}>{truncatedValue}</TooltipWrapper>
+              <Button
+                label={""}
+                onClick={() => handleEditClick(row, "REASONS_FOR_HARD_TO_REACH")}
+                variation="secondary"
+                style={{minWidth: "42px",padding:"0px"}}
+                icon="Edit"
+                size={"small"}
+              />
+            </div>
+          );
+        },
+        sortable: false,
+        width: "180px",
+        height:"64px"
+      },
+      {
+        name: t(`SUGGESTED_MEANS_OF_TRANSPORT`),
+        cell: (row) => {
+          const value = row?.original?.additionalDetails?.SUGGESTED_MEANS_OF_TRANSPORT || "NA";
+          const truncatedValue = value.length > 8 ? `${value.substring(0, 8)}...` : value;
+  
+          return (
+            <div style={{ display: "flex", alignItems: "center", gap: ".5rem" , height:"64px" , width: "180px",justifyContent:"flex-end"}}>
+              <TooltipWrapper description={value || ""}>{truncatedValue}</TooltipWrapper>
+              <Button
+                label={""}
+                onClick={() => handleEditClick(row, "SUGGESTED_MEANS_OF_TRANSPORT")}
+                variation="secondary"
+                style={{minWidth: "42px",padding:"0px"}}
+                icon="Edit"
+                size={"small"}
+              />
+            </div>
+          );
+        },
+        sortable: false,
+        width: "180px",
+        height:"64px"
+      },
+      {
+        name: t(`NEED_FOR_SATELLITE_DP`),
+        cell: (row) => {
+          const value = row?.original?.additionalDetails?.NEED_FOR_SATELLITE_DP || "NA";
+          const truncatedValue = value.length > 8 ? `${value.substring(0, 8)}...` : value;
+  
+          return (
+            <div style={{ display: "flex", alignItems: "center", gap: ".5rem" , height:"64px",width: "180px",justifyContent:"flex-end"}}>
+            <TooltipWrapper description={value || ""}>{truncatedValue}</TooltipWrapper>
+              <Button
+                label={""}
+                onClick={() => handleEditClick(row, "NEED_FOR_SATELLITE_DP")}
+                variation="secondary"
+                style={{minWidth: "42px",padding:"0px"}}
+                icon="Edit"
+                size={"small"}
+              />
+            </div>
+          );
+        },
+        sortable: false,
+        width: "180px",
+        height:"64px"
+      },
+      {
+        name: t(`COMMENTS`),
+        cell: (row) => {
+          const value = row?.original?.additionalDetails?.COMMENTS || "NA";
+          const truncatedValue = value.length > 8 ? `${value.substring(0, 8)}...` : value;
+  
+          return (
+            <div style={{ display: "flex", alignItems: "center", gap: ".5rem" , height:"64px", width: "180px",justifyContent:"flex-end"}}>
+          <TooltipWrapper description={value || ""}>{truncatedValue}</TooltipWrapper>
+              <Button
+                label={""}
+                onClick={() => handleEditClick(row, "COMMENTS")}
+                variation="secondary"
+                style={{minWidth: "42px",padding:"0px"}}
+                icon="Edit"
+                size={"small"}
+              />
+            </div>
+          );
+        },
+        sortable: false,
+        width: "180px",
+        height:"64px"
+      },
+      {
+        name: t(`NAME_OF_SATELLITE_DP`),
+        cell: (row) => {
+          const value = row?.original?.additionalDetails?.NAME_OF_SATELLITE_DP || "NA";
+          const truncatedValue = value.length > 8 ? `${value.substring(0, 8)}...` : value;
+  
+          return (
+            <div style={{ display: "flex", alignItems: "center", gap: ".5rem" , height:"64px", width: "180px",justifyContent:"flex-end"}}>
+          <TooltipWrapper description={value || ""}>{truncatedValue}</TooltipWrapper>
+              <Button
+                label={""}
+                onClick={() => handleEditClick(row, "NAME_OF_SATELLITE_DP")}
+                variation="secondary"
+                style={{minWidth: "42px",padding:"0px"}}
+                icon="Edit"
+                size={"small"}
+              />
+            </div>
+          );
+        },
+        sortable: false,
+        width: "180px",
+        height:"64px"
+      }
+    ];
+  
+    return columns;
+  };
+  
+
   const getSecurityDetailsColumns = () => {
     // const sampleSecurityData = planWithCensus?.censusData?.[0]?.additionalDetails?.securityDetails || {};
     const securityColumns = state?.securityQuestions?.map((i) => {
@@ -820,6 +1012,7 @@ const PlanInbox = () => {
     ...getSecurityDetailsColumns(),
     ...getAdditionalFieldsColumns(),
     ...getResourceColumns(),
+    ...getTableColumns(),
     // {
     //   name: t(`TOTAL_POPULATION`),
     //   cell: (row) => t(row?.totalPop) || "NA",
@@ -1207,6 +1400,23 @@ labelPrefix={"PLAN_ACTIONS_"}
             style={{}}
           />
         )}
+        {popupVisible && (
+        <DetailsPopUp
+          isVisible={popupVisible}
+          onClose={() => setPopupVisible(false)}
+          onSubmit={handleSave}
+          initialValue={editRowData?.row?.original?.additionalDetails?.[editRowData?.field] || ""}
+          alertHeading="Edit Value"
+          alertMessage={`ENTER_DETAILS_${editRowData?.field || ""}`}
+        />
+          )}
+        {toast && (
+        <Toast
+          label={toast.label}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
 
       {actionBarPopUp && (
         <ConfirmationPopUp
