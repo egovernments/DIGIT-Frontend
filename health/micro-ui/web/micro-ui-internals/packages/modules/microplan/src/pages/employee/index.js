@@ -141,7 +141,7 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
       { name: "DssKpiConfigs" },
       { name: "MicroplanCampaignTypes" },
       {name: "PopConfig"},
-      {name:"Plan2Config"}
+      {name:"PlanInboxConfiguration"}
     ],
     {
       cacheTime: Infinity,
