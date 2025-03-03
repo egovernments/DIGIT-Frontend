@@ -21,6 +21,7 @@ const PlanInbox = () => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { state } = useMyContext();
+  const config=state?.PlanInboxConfiguration[0];
   const url = Digit.Hooks.useQueryParams();
   const microplanId = url?.microplanId;
   const campaignId = url?.campaignId;
@@ -33,13 +34,13 @@ const PlanInbox = () => {
   const [hierarchyLevel, setHierarchyLevel] = useState("");
   const [censusData, setCensusData] = useState([]);
   const [boundaries, setBoundaries] = useState([]);
-  const [selectedFilter, setSelectedFilter] = useState({status:"PENDING_FOR_VALIDATION",onRoadCondition:null,terrain:null,securityQ1:null,securityQ2:null,facilityId:[]});
+  const [selectedFilter, setSelectedFilter] = useState(config?.filterConfig?.defaultActiveFilter);
   const [activeFilter, setActiveFilter] = useState({});
   const [actionBarPopUp, setactionBarPopUp] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [workFlowPopUp, setworkFlowPopUp] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(50);
+  const [currentPage, setCurrentPage] = useState(config?.tableConfig?.currentPage);
+  const [rowsPerPage, setRowsPerPage] = useState(config?.tableConfig?.initialRowsPerPage);
   const [totalRows, setTotalRows] = useState(0);
   const [refetchTrigger, setRefetchTrigger] = useState(0);
   const [perPage, setPerPage] = useState(10);
@@ -49,10 +50,7 @@ const PlanInbox = () => {
   const [disabledAction, setDisabledAction] = useState(false);
   const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
-  const [activeLink, setActiveLink] = useState({
-    code: "ASSIGNED_TO_ME",
-    name: "ASSIGNED_TO_ME",
-  });
+  const [activeLink, setActiveLink] = useState(config?.tabConfig?.defaultActiveTab);
   const [showTimelinePopup, setShowTimelinePopup] = useState(false);
   const [selectedBoundaryCode, setSelectedBoundaryCode] = useState(null);
   const [selectedBusinessId, setSelectedBusinessId] = useState(null);
@@ -62,7 +60,7 @@ const PlanInbox = () => {
   const [employeeNameMap, setEmployeeNameMap] = useState({});
   const [defaultHierarchy, setDefaultSelectedHierarchy] = useState(null);
   const [defaultBoundaries, setDefaultBoundaries] = useState([]);
-  const userRoles = user?.info?.roles?.map((roleData) => roleData?.code);
+  const userRoles =  user?.info?.roles?.map((roleData) => roleData?.code);
   const hrms_context_path = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || 'health-hrms';
   const tableRef = useRef(null);
   const [tableHeight, setTableHeight] = useState(33);
@@ -124,7 +122,7 @@ const PlanInbox = () => {
   };
 
   useEffect(() => {
-    if (selectedFilter?.status === "VALIDATED") {
+    if (selectedFilter?.status === config?.tabConfig?.disabledTabStatus) {
       setActiveLink({ code: "", name: "" });
       setShowTab(false);
     } else {
@@ -365,7 +363,7 @@ const PlanInbox = () => {
         }else{
           setTableHeight(33);
         }
-      }, [planWithCensus, activeLink]); 
+      }, [planWithCensus,planWithCensusToAll, activeLink]); 
 
   const onSearch = (selectedBoundaries, selectedHierarchy) => {
     if (selectedBoundaries.length === 0) {
@@ -432,7 +430,7 @@ const PlanInbox = () => {
         tenantId: tenantId,
         active: true,
         planConfigurationId: url?.microplanId,
-        role: ["PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"],
+        role: config?.roles,
         employeeId: [user?.info?.uuid],
       },
     },
@@ -493,23 +491,28 @@ const PlanInbox = () => {
   const actionsMain = availableActionsForUser?.length > 0 ? availableActionsForUser : [];
 
   // actionsToHide array by checking for "EDIT" in the actionMap
-  const actionsToHide = actionsMain?.filter((action) => action?.action?.includes("EDIT"))?.map((action) => action?.action);
+  const actionsToHide = config?.actionsConfig?.actionsToHide;
 
   useEffect(() => {
     if (planWithCensus) {
       setCensusData(planWithCensus?.censusData);
       setTotalRows(planWithCensus?.TotalCount);
+      const statusOrderMap = config?.filterConfig.filterOptions.reduce((acc, { status, order }) => {
+        acc[status] = order;
+        return acc;
+      }, {});
+      
       const reorderedStatusCount = Object.fromEntries(
         Object.entries(planWithCensus?.StatusCount || {})
-          // Filter out the PENDING_FOR_APPROVAL status /// need to revisit as this is hardcoded to remove from workflow ///
+          // Filter out PENDING_FOR_APPROVAL (if needed, can be removed later)
           .filter(([key]) => key !== "PENDING_FOR_APPROVAL")
-          // Sort the statuses, prioritizing PENDING_FOR_VALIDATION
+          // Sort based on the order defined in filterConfig
           .sort(([keyA], [keyB]) => {
-            if (keyA === "PENDING_FOR_VALIDATION") return -1;
-            if (keyB === "PENDING_FOR_VALIDATION") return 1;
-            return 0;
+            return (statusOrderMap[keyA] || Infinity) - (statusOrderMap[keyB] || Infinity);
           })
       );
+
+      
       setActiveFilter(reorderedStatusCount);
       const activeFilterKeys = Object.keys(reorderedStatusCount || {});
       if (selectedFilter?.filterValue === null || selectedFilter?.status=== undefined || selectedFilter?.status === "") {
@@ -591,13 +594,13 @@ const PlanInbox = () => {
   });
 
   useEffect(() => {
-    if (processData && processData.some((instance) => instance.action === "APPROVE_ESTIMATIONS")) {
+    if (processData && processData.some((instance) => instance.action === config?.disableInstanceAction)) {
       setDisabledAction(true);
     }
   }, [processData]);
 
   useEffect(() => {
-    if (selectedFilter?.status === "VALIDATED") {
+    if (selectedFilter?.status === config?.tabConfig?.disabledTabStatus) {
       setActiveLink({ code: "", name: "" });
       setShowTab(false);
     } else {
@@ -896,26 +899,14 @@ const PlanInbox = () => {
     },
   ];
 
-  const actionIconMap = {
-    VALIDATE: { isSuffix: false, icon: "CheckCircle" },
-    EDIT_AND_SEND_FOR_APPROVAL: { isSuffix: false, icon: "Edit" },
-    APPROVE: { isSuffix: false, icon: "CheckCircle" },
-    ROOT_APPROVE: { isSuffix: false, icon: "CheckCircle" },
-    SEND_BACK_FOR_CORRECTION: { isSuffix: true, icon: "ArrowForward" },
-  };
+  const actionIconMap = config.actionsConfig?.actionIconMap;
 
   const getButtonState = (action) => {
-    if (selectedFilter?.status === "PENDING_FOR_VALIDATION" && action === "VALIDATE") {
-      return true;
-    }
-    if (selectedFilter?.status === "PENDING_FOR_APPROVAL" && (action === "APPROVE" || action === "ROOT_APPROVE")) {
-      return true;
-    }
-    if (selectedFilter?.status === "VALIDATED" && action === "SEND_BACK_FOR_CORRECTION") {
-      return true;
-    }
-    return false;
-  };
+  return config?.actionsConfig?.primaryButtonStates.some(
+    (item) => item.status === selectedFilter?.status && item.actions.includes(action)
+  );
+};
+
 
   if (
     isLoadingPlanObject ||
@@ -992,6 +983,7 @@ const PlanInbox = () => {
           clearFilters={clearFilters}
           defaultValue={selectedFilter}
           tableHeight={tableHeight}
+          filterConfig={config?.filterConfig}
         ></InboxFilterWrapper>
 
         <div className={"pop-inbox-table-wrapper"}>
@@ -1003,13 +995,14 @@ const PlanInbox = () => {
               itemStyle={{ width: "290px" }}
               configNavItems={[
                 {
-                  code: "ASSIGNED_TO_ME",
-                  name: `${`${t(`ASSIGNED_TO_ME`)} (${assignedToMeCount})`}`,
+                  code: `${config?.tabConfig?.tabOptions[0]?.code}`,
+                  name: `${t(config?.tabConfig?.tabOptions[0]?.name)} (${assignedToMeCount})`,
                 },
                 {
-                  code: "ASSIGNED_TO_ALL",
-                  name: `${`${t(`MP_PLAN_ASSIGNED_TO_ALL`)} (${assignedToAllCount})`}`,
-                },
+                  code: `${config?.tabConfig?.tabOptions[1]?.code}`,
+                  name: `${t(config?.tabConfig?.tabOptions[1]?.name)} (${assignedToAllCount})`,
+                }
+                
               ]}
               navStyles={{}}
               onTabClick={(e) => {
@@ -1118,7 +1111,7 @@ const PlanInbox = () => {
               <Loader />
             ) : planWithCensus?.tableData?.length === 0 ? (
               <NoResultsFound
-                style={{ height: selectedFilter?.status === "VALIDATED" ? "472px" : "408px" }}
+                style={{ height: selectedFilter?.status === config?.tabConfig?.disabledTabStatus ? "472px" : "408px" }}
                 text={t(`HCM_MICROPLAN_NO_DATA_FOUND_FOR_PLAN_INBOX_PLAN`)}
               />
             ) : (<div ref={tableRef}>
@@ -1141,7 +1134,7 @@ const PlanInbox = () => {
                 paginationTotalRows={totalRows}
                 conditionalRowStyles={conditionalRowStyles}
                 paginationPerPage={rowsPerPage}
-                paginationRowsPerPageOptions={[10, 20, 50, 100]}
+                paginationRowsPerPageOptions={config?.tableConfig?.paginationRowsPerPageOptions}
                 sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
                 fixedHeader={true}
                 fixedHeaderScrollHeight={"100vh"}

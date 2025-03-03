@@ -1,8 +1,9 @@
-import React, { Fragment, useState, useEffect,useRef } from "react";
+import React, { Fragment, useState, useEffect,useRef, useContext } from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { useHistory } from "react-router-dom";
 import PopInboxTable from "../../components/PopInboxTable";
 import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonGroup, NoResultsFound } from "@egovernments/digit-ui-components";
+import { useMyContext } from "../../utils/context";
 import { useTranslation } from "react-i18next";
 import InboxFilterWrapper from "../../components/InboxFilterWrapper";
 import WorkflowCommentPopUp from "../../components/WorkflowCommentPopUp";
@@ -11,6 +12,9 @@ import ConfirmationPopUp from "../../components/ConfirmationPopUp";
 import GenericKpiFromDSS from "../../components/GenericKpiFromDSS";
 
 const PopInbox = () => {
+  const {state}=useMyContext();
+  const config=state?.PopConfig[0];
+  const [activeLink, setActiveLink] = useState(config?.tabConfig?.defaultActiveTab);
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const history = useHistory();
@@ -26,11 +30,11 @@ const PopInbox = () => {
   const [boundaries, setBoundaries] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [workFlowPopUp, setworkFlowPopUp] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState({status:"PENDING_FOR_VALIDATION"});
+  const [selectedFilter, setSelectedFilter] = useState(config?.filterConfig?.defaultActiveFilter);
   const [actionBarPopUp, setactionBarPopUp] = useState(false);
   const [activeFilter, setActiveFilter] = useState({});
-  const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(50);
+  const [currentPage, setCurrentPage] = useState(config?.tableConfig?.initialCurrentPage);
+  const [rowsPerPage, setRowsPerPage] = useState(config?.tableConfig?.initialRowsPerPage);
   const [assigneeUuids, setAssigneeUuids] = useState([]);
   const [totalRows, setTotalRows] = useState(0);
   const [showToast, setShowToast] = useState(null);
@@ -48,13 +52,9 @@ const PopInbox = () => {
   const [defaultHierarchy, setDefaultSelectedHierarchy] = useState(null);
   const [defaultBoundaries, setDefaultBoundaries] = useState([]);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
-  const [activeLink, setActiveLink] = useState({
-    code: "ASSIGNED_TO_ME",
-    name: "ASSIGNED_TO_ME",
-  });
+  
   const hrms_context_path = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || 'health-hrms';
-  const userInfo = Digit.UserService.getUser();
-  const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
+  const userRoles = user?.info?.roles?.map((roleData) => roleData?.code);
   const tableRef = useRef(null);
   const [tableHeight, setTableHeight] = useState(33);
 
@@ -155,7 +155,7 @@ const PopInbox = () => {
 
 
   useEffect(() => {
-    if (processData && processData.some((instance) => instance.action === "APPROVE_CENSUS_DATA")) {
+    if (processData && processData.some((instance) => instance.action === config?.disableInstanceAction)) {
       setDisabledAction(true);
     }
   }, [processData]);
@@ -232,7 +232,7 @@ const PopInbox = () => {
         tenantId: tenantId,
         active: true,
         planConfigurationId: url?.microplanId,
-        role: ["POPULATION_DATA_APPROVER", "ROOT_POPULATION_DATA_APPROVER"],
+        role:config?.roles,
         employeeId: [user?.info?.uuid],
       },
     },
@@ -310,7 +310,7 @@ const PopInbox = () => {
 
 
   // actionsToHide array by checking for "EDIT" in the actionMap
-  const actionsToHide = actionsMain?.filter(action => action?.action?.includes("EDIT"))?.map(action => action?.action);
+  const actionsToHide = config?.actionsConfig?.actionsToHide;
 
 
    // Custom hook to fetch assign to me count when workflow data is updated in assign to all case
@@ -410,17 +410,18 @@ const PopInbox = () => {
       setCensusData(data?.Census);
       setTotalRows(data?.TotalCount)
       // reorder the status count to show pending for validation on top
+      const statusOrderMap = Object.fromEntries(
+        config.filterConfig.filterOptions.map(option => [option.status, option.order])
+      );
+  
+      // Reorder the status count based on `order` from filterConfig
       const reorderedStatusCount = Object.fromEntries(
         Object.entries(data?.StatusCount || {}).sort(([keyA], [keyB]) => {
-          if (keyA === "PENDING_FOR_VALIDATION") return -1;
-          if (keyB === "PENDING_FOR_VALIDATION") return 1;
-          return 0;
+          return (statusOrderMap[keyA] || Infinity) - (statusOrderMap[keyB] || Infinity);
         })
       );
 
-
-      // Set reordered data to active filter
-    setActiveFilter(reorderedStatusCount);
+      setActiveFilter(reorderedStatusCount);
 
       const uniqueAssignees = [...new Set(data?.Census?.flatMap(item => item.assignee || []))];
 
@@ -562,27 +563,14 @@ const PopInbox = () => {
   };
 
 
-  const actionIconMap = {
-    "VALIDATE": { isSuffix: false, icon: "CheckCircle" },
-    "EDIT_AND_SEND_FOR_APPROVAL": { isSuffix: false, icon: "Edit" },
-    "APPROVE": { isSuffix: false, icon: "CheckCircle" },
-    "ROOT_APPROVE": { isSuffix: false, icon: "CheckCircle" },
-    "SEND_BACK_FOR_CORRECTION": { isSuffix: true, icon: "ArrowForward" },
-  }
+  const actionIconMap =  config?.actionsConfig?.actionIconMap;
 
   const getButtonState = (action) => {
+  return config.actionsConfig.primaryButtonStates.some(
+    (state) => state.status === selectedFilter?.status && state.actions.includes(action)
+  );
+};
 
-    if (selectedFilter?.status === "PENDING_FOR_VALIDATION" && action === "VALIDATE") {
-      return true;
-    }
-    if (selectedFilter?.status === "PENDING_FOR_APPROVAL" && (action === "APPROVE" || action === "ROOT_APPROVE")) {
-      return true;
-    }
-    if (selectedFilter?.status === "VALIDATED" && action === "SEND_BACK_FOR_CORRECTION") {
-      return true;
-    }
-    return false;
-  };
 
 
   const onCommentLogClose = () => {
@@ -615,6 +603,7 @@ const PopInbox = () => {
 
     }
   });
+
   
   return (
     <div className="pop-inbox-wrapper">
@@ -663,15 +652,15 @@ const PopInbox = () => {
                 configItemKey="code"
                 configDisplayKey="name"
                 itemStyle={{ width: "290px" }}
-                configNavItems={[
+                configNavItems={[          
                   {
-                    code: "ASSIGNED_TO_ME",
-                    name: `${`${t(`ASSIGNED_TO_ME`)} (${assignedToMeCount})`}`,
+                    code: `${config?.tabConfig?.tabOptions[0]?.code}`,
+                    name: `${t(config?.tabConfig?.tabOptions[0]?.name)} (${assignedToMeCount})`,
                   },
                   {
-                    code: "ASSIGNED_TO_ALL",
-                    name: `${`${t(`MP_POP_ASSIGNED_TO_ALL`)} (${assignedToAllCount})`}`,
-                  },
+                    code: `${config?.tabConfig?.tabOptions[1]?.code}`,
+                    name: `${t(config?.tabConfig?.tabOptions[1]?.name)} (${assignedToAllCount})`,
+                  }
                 ]}
                 navStyles={{}}
                 onTabClick={(e) => {
@@ -781,6 +770,7 @@ const PopInbox = () => {
             {isLoading || isFetching ? <Loader /> : censusData.length === 0 ? <NoResultsFound style={{ height: selectedFilter?.status === "VALIDATED" ? "472px" : "408px" }} text={t(`HCM_MICROPLAN_NO_DATA_FOUND_FOR_CENSUS`)} /> : 
             <div ref={tableRef}>
               <PopInboxTable currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={totalRows} handlePageChange={handlePageChange} handlePerRowsChange={handlePerRowsChange} onRowSelect={onRowSelect} censusData={censusData} showEditColumn={actionsToHide?.length > 0} employeeNameData={employeeNameMap}
+              paginationRowsPerPageOptions={config?.tableConfig?.paginationRowsPerPageOptions}
               onSuccessEdit={(data) => {
                 setUpdatedCensus(data);
                 setShowComment(true); 
