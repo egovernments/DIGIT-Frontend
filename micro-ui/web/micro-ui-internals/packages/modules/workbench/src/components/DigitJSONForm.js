@@ -23,7 +23,6 @@ import CustomDropdownV2 from "./MultiSelectV2";
 import CustomCheckbox from "./Checbox";
 import { BulkModal } from "./BulkModal";
 import { tranformLocModuleName } from "../pages/employee/localizationUtility";
-import { JsonEditor } from "json-edit-react";
 import { PopUp } from "@egovernments/digit-ui-components";
 import JSONViewer from "./JSONViewer";
 
@@ -416,13 +415,13 @@ const DigitJSONForm = ({
               ? t(Digit.Utils.workbench.getMDMSLabel(`SCHEMA_` + schema?.code))
               : `SCHEMA_${schema?.code}`}
           </Header>
-          <div>
+          {window?.globalConfigs?.getConfig?.("ENABLE_JSON_EDIT")&&  <div className="workbench-mdms-json-container">
             <Button
             className="action-bar-button" 
             variation="secondary" 
             label={t("WBH_SHOW_JSON")} 
             onButtonClick={() => setShowPopUp(true)} />
-          </div>
+          </div>}
           <Form
             schema={schema?.definition}
             validator={validator}
