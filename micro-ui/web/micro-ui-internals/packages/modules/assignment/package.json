@@ -18,8 +18,8 @@
     "react-router-dom": "6.25.1"
   },
   "dependencies": {
-    "@egovernments/digit-ui-react-components": "1.8.16-upgrade.2",
-    "react": "19.0.0",
+    "@egovernments/digit-ui-react-components": "1.8.16-upgrade.3",
+    "react": "18.3.1",
     "react-i18next": "15.0.0",
     "react-router-dom": "6.25.1"
   },
@@ -30,7 +30,7 @@
     "babel-loader": "8.0.0",
     "cross-env": "7.0.3",
     "lint-staged": "12.3.7",
-    "react": "19.0.0",
+    "react": "18.3.1",
     "webpack": "^5.97.1",
     "webpack-cli": "^4.10.0",
     "webpack-dev-server": "^4.6.0"

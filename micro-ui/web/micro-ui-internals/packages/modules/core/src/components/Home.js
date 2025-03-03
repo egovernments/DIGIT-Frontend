@@ -4,7 +4,8 @@ import {
   Loader,
 } from "@egovernments/digit-ui-react-components";
 
-import { BackLink, CustomSVG ,LandingPageWrapper } from "@egovernments/digit-ui-components";
+//import { BackLink, CustomSVG ,LandingPageWrapper } from "@egovernments/digit-ui-components";
+import { BackLink, CustomSVG, LandingPageWrapper } from "../../../../ui-components/src/atoms";
 
 import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
@@ -144,6 +145,7 @@ const CitizenHome = ({
 };
 
 const EmployeeHome = ({ modules, additionalComponent }) => {
+  console.log("coming herr");
   return (
     <>
       <div className="employee-app-container digit-home-employee-app">
@@ -153,6 +155,7 @@ const EmployeeHome = ({ modules, additionalComponent }) => {
             const Card =
               Digit.ComponentRegistryService.getComponent(`${code}Card`) ||
               (() => <React.Fragment />);
+              console.log(Card,"craddd")
             return <Card key={index} />;
           })}
           </LandingPageWrapper>
@@ -195,6 +198,7 @@ export const AppHome = ({
     );
   }
   const isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant()
+  console.log(Digit.Utils.getRoleBasedHomeCard(),"kkk")
   return Digit.Utils.getRoleBasedHomeCard() ? (
     <div className={isSuperUserWithMultipleRootTenant ? "homeWrapper" : ""}>
       <RoleBasedEmployeeHome modules={modules} additionalComponent={additionalComponent} />

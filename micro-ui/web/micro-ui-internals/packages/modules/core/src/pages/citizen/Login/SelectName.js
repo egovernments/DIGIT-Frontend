@@ -1,4 +1,4 @@
-import { FormStep } from "@egovernments/digit-ui-components";
+import { FormStep } from "../../../../../../ui-components/dist/main";
 import React from "react";
 
 const SelectName = ({ config, onSelect, t, isDisabled }) => {

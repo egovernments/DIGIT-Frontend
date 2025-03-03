@@ -5,7 +5,6 @@ import { initLibraries } from "@egovernments/digit-ui-libraries";
 import App from './App';
 import { TLCustomisations } from './Customisations/tl/TLCustomisation';
 
-debugger;
 initLibraries();
 
 

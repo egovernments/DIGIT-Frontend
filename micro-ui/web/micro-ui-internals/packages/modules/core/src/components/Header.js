@@ -1,4 +1,4 @@
-import { Loader } from "@egovernments/digit-ui-components";
+import { Loader } from "../../../../ui-components/dist/main";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import useStore from "../../libraries/src/hooks/useStore";

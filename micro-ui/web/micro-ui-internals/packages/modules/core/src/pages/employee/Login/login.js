@@ -1,4 +1,5 @@
-import { BackLink, Loader, FormComposerV2, Toast } from "@egovernments/digit-ui-components";
+import { BackLink, Loader, Toast } from "../../../../../../ui-components/src/atoms";
+import { FormComposer as FormComposerV2 } from "../../../../../../ui-components/src/hoc/FormComposerV2";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -63,7 +64,6 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     if (user?.info?.roles && user?.info?.roles?.length > 0 && user?.info?.roles?.every((e) => e.code === "STADMIN")) {
       redirectPath = `/${window?.contextPath}/employee/dss/landing/home`;
     }
-
     history.replace(redirectPath);
   }, [user]);
 
@@ -160,7 +160,6 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   }
 
   const onFormValueChange = (setValue, formData, formState) => {
-
     // Extract keys from the config
     console.log("config of form", config)
     console.log("my formcomposer")

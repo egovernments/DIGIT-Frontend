@@ -18,12 +18,12 @@
     "deploy": "gh-pages -d example/build"
   },
   "peerDependencies": {
-    "react": "19.0.0"
+    "react": "18.3.1"
   },
   "devDependencies": {
     "gh-pages": "2.2.0",
     "microbundle-crl": "0.13.11",
-    "react-dom": "19.0.0",
+    "react-dom": "18.3.1",
     "react-scripts": "^4.0.1",
     "sass": "^1.83.4",
     "sass-loader": "^16.0.4",
@@ -33,7 +33,7 @@
     "babel-loader": "8.0.0",
     "cross-env": "7.0.3",
     "lint-staged": "12.3.7",
-    "react": "19.0.0",
+    "react": "18.3.1",
     "webpack": "^5.97.1",
     "webpack-cli": "^4.10.0"
   },
@@ -47,7 +47,7 @@
     "i18next": "23.2.3",
     "i18next-react-postprocessor": "3.0.7",
     "pdfmake": "0.1.72",
-    "react": "19.0.0",
+    "react": "18.3.1",
     "react-i18next": "15.0.0",
     "react-redux": "9.2.0",
     "react-router-dom": "5.3.0",

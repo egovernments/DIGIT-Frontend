@@ -1,4 +1,4 @@
-import { CardText, CardLabelError, FormStep } from "@egovernments/digit-ui-components";
+import { CardText, CardLabelError, FormStep } from "../../../../../../ui-components/dist/main";
 import React, { Fragment, useState } from "react";
 import useInterval from "../../../hooks/useInterval";
 import { OTPInput } from "@egovernments/digit-ui-react-components";

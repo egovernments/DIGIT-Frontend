@@ -66,7 +66,7 @@
   "dependencies": {
     "lodash": "4.17.21",
     "microbundle-crl": "0.13.11",
-    "@egovernments/digit-ui-react-components": "1.8.1-beta.11",
+    "@egovernments/digit-ui-react-components": "1.8.16-upgrade.3",
     "@egovernments/digit-ui-components":"0.0.2-beta.56",
     "@egovernments/digit-ui-libraries": "1.8.1-upgrade.6",
     "react": "17.0.2",

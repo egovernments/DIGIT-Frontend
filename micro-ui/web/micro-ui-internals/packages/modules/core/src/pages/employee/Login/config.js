@@ -17,6 +17,7 @@ export const loginConfig = [
             required: true,
           },
           error: "ERR_USERNAME_REQUIRED",
+          onChange: (e) => console.log("Typing:", e.target.value)
         },
       },
       {
@@ -30,6 +31,7 @@ export const loginConfig = [
             required: true,
           },
           error: "ERR_PASSWORD_REQUIRED",
+          onChange: (e) => console.log("Typing:", e.target.value)
         },
       },
       {

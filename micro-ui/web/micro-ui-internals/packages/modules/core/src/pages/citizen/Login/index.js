@@ -1,4 +1,4 @@
-import { AppContainer, BackLink, Toast } from "@egovernments/digit-ui-components";
+import { AppContainer, BackLink, Toast } from "../../../../../../ui-components/dist/main";
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router-dom";
