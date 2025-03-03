@@ -118,7 +118,7 @@ const SidebarAdd = (props) => {
             );
     };
 
-
+// this should be made dynamic
     const FILE_URL = "https://raw.githubusercontent.com/egovernments/DIGIT-Frontend/refs/heads/develop/micro-ui/web/micro-ui-internals/packages/svg-components/src/index.js";
     useEffect(() => {
         fetch(FILE_URL)

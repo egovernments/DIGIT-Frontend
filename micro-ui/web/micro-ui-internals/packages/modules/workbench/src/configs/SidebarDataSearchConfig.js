@@ -3,6 +3,7 @@ const tenantId = Digit.ULBService.getCurrentTenantId();
 const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 const moduleName = "ACCESSCONTROL-ACTIONS-TEST"
 const masterName = "actions-test"
+
 export const SidebarDataSearchConfig = [
     {
         label: "Sidebar Data Search",
@@ -28,8 +29,8 @@ export const SidebarDataSearchConfig = [
             moduleName: "MySidebarDataSearchConfig",
             minParametersForSearchForm: 0,
             tableFormJsonPath: "requestBody.MdmsCriteria",
-            filterFormJsonPath: "requestBody",
-            searchFormJsonPath: "requestBody",
+            filterFormJsonPath: "requestBody.MdmsCriteria",
+            searchFormJsonPath: "requestBody.MdmsCriteria.filters",
         },
         sections: {
             search: {
@@ -46,6 +47,16 @@ export const SidebarDataSearchConfig = [
                             disable: false,
                             populators: {
                                 name: "displayName"
+                            }
+
+                        },
+                        {
+                            label: "SIDEBAR_NAVIGATIONURL",
+                            type: "text",
+                            isMandatory: false,
+                            disable: false,
+                            populators: {
+                                name: "navigationURL"
                             }
 
                         },
@@ -71,6 +82,13 @@ export const SidebarDataSearchConfig = [
                             jsonPath: "data.displayName",
                             translate: true
                         },
+                        {
+                            label: "SIDEBAR_NAVIGATIONURL",
+                            // prefix: "ACCESSCONTROL_ROLES_ROLES_",
+                            jsonPath: "data.navigationURL",
+                            translate: false
+                        },
+                       
                     ],
 
                     enableColumnSort: true,

@@ -18,6 +18,7 @@ const SidebarAddContent = () => {
             head: "Add_Content",
             body: [
                 {
+                    //why one custom component use proper predefined componnets instead of custom
                     isMandatory: false,
                     key: "projectType",
                     type: "component",
