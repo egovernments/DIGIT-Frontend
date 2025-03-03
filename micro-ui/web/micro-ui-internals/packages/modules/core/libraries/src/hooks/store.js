@@ -14,11 +14,13 @@ export const useStore = ({ stateCode, moduleCode, language ,modulePrefix = "rain
 };
 
 export const useInitStore = (stateCode, enabledModules,modulePrefix = "rainmaker" ) => {
+  debugger;
   const { isLoading, error, isError, data } = useQuery({
     queryKey: ["initStore", stateCode, enabledModules, modulePrefix],
     queryFn: () => StoreService.digitInitData(stateCode, enabledModules, modulePrefix),
     staleTime: Infinity,
   });
+  debugger;
   return { isLoading, error, isError, data };
 };
 

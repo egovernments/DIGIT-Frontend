@@ -38,41 +38,55 @@ function FieldController(args) {
 
   return (
     <Controller
-      defaultValue={formData?.[populators?.name]}
-      render={({ onChange, ref, value, onBlur }) => (
-        <FieldV1
-          error= {error}
-          label={config.label}
-          nonEditable = {config.nonEditable}
-          placeholder={config.placeholder}
-          inline={props.inline}
-          description={config.description}
-          charCount = {config.charCount}
-          infoMessage={config.infoMessage}
-          withoutLabel = {config.withoutLabel}
-          variant={config.variant}
-          type={type}
-          populators={populators}
-          required={isMandatory}
-          disabled={disable}
-          component={component}
-          config={config}
-          sectionFormCategory={sectionFormCategory}
-          formData={formData}
-          selectedFormCategory={selectedFormCategory}
-          onChange={onChange}
-          ref={ref}
-          value={value}
-          props={props}
-          errors={errors}
-          onBlur={onBlur}
-          controllerProps={controllerProps}
-        />
-      )}
-      name={populators?.name}
-      rules={!disableFormValidation ? { required: isMandatory, ...populators?.validation, ...customRules } : {}}
-      control={control}
-    />
+    defaultValue={formData?.[populators?.name] ?? ""}
+    control={control}
+    render={(contoprops) => {
+      const onChange = contoprops?.field?.onChange;
+      const ref = contoprops?.field?.ref;
+      const value = contoprops?.field?.value;
+      const onBlur = contoprops?.field?.onBlur;
+      console.log(contoprops,"propssst")
+      console.log("FieldController - onChange:", onChange);
+      console.log("FieldController - value:", value);
+      console.log("populators name", populators?.name);
+      console.log("Controller Render - onChange:", onChange);
+      return <FieldV1
+        error= {error}
+        label={config.label}
+        nonEditable = {config.nonEditable}
+        placeholder={config.placeholder}
+        inline={props.inline}
+        description={config.description}
+        charCount = {config.charCount}
+        infoMessage={config.infoMessage}
+        withoutLabel = {config.withoutLabel}
+        variant={config.variant}
+        type={type}
+        populators={populators}
+        required={isMandatory}
+        disabled={disable}
+        component={component}
+        config={config}
+        sectionFormCategory={sectionFormCategory}
+        formData={formData}
+        selectedFormCategory={selectedFormCategory}
+        onChange={(val) => {
+      console.log("FieldController - New Value:", val);
+      console.log(onChange,"onchange");
+      onChange?.(val); // Ensure it updates form state
+    }}
+        ref={ref}
+        value={value}
+        props={props}
+        errors={errors}
+        onBlur={onBlur}
+        controllerProps={controllerProps}
+      />
+    }}
+    key={populators?.name}
+    name={populators?.name}
+    rules={!disableFormValidation ? { required: isMandatory, ...populators?.validation, ...customRules } : {}}
+  />
   );
 }
 

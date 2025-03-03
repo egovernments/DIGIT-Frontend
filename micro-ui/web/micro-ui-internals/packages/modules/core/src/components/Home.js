@@ -23,7 +23,6 @@ export const processLinkData = (newData, code, t) => {
       }
       link.link = link["navigationURL"];
       link.i18nKey = t(link["name"]);
-
     });
   }
   const newObj = {
@@ -144,6 +143,7 @@ const CitizenHome = ({
 };
 
 const EmployeeHome = ({ modules, additionalComponent }) => {
+  console.log("I'm modules", modules)
   return (
     <>
       <div className="employee-app-container digit-home-employee-app">
@@ -153,6 +153,8 @@ const EmployeeHome = ({ modules, additionalComponent }) => {
             const Card =
               Digit.ComponentRegistryService.getComponent(`${code}Card`) ||
               (() => <React.Fragment />);
+
+              console.log("I'm card", Card)
             return <Card key={index} />;
           })}
           </LandingPageWrapper>
