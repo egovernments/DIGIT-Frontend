@@ -71,9 +71,14 @@ const PopInbox = () => {
     },
     {
       enabled: true,
+      changeQueryName: "planObject",
       //   queryKey: currentKey,
     }
   );
+
+  useEffect(() => {
+    refetchPlan();
+  }, []);
 
   useEffect(() => {
     fetchStatusCount();
