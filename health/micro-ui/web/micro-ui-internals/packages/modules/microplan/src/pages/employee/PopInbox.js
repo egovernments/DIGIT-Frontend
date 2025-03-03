@@ -12,68 +12,8 @@ import ConfirmationPopUp from "../../components/ConfirmationPopUp";
 import GenericKpiFromDSS from "../../components/GenericKpiFromDSS";
 
 const PopInbox = () => {
-  const config = {
-    roles: ["POPULATION_DATA_APPROVER", "ROOT_POPULATION_DATA_APPROVER"],
-    disableInstanceAction: "APPROVE_CENSUS_DATA",
-    tabConfig: {
-      tabOptions: [
-        {
-          code: "ASSIGNED_TO_ME",
-          name: "ASSIGNED_TO_ME",
-        },
-        {
-          code: "ASSIGNED_TO_ALL",
-          name: "MP_POP_ASSIGNED_TO_ALL",
-        },
-      ],
-      defaultActiveTab: {
-        code: "ASSIGNED_TO_ME",
-        name: "ASSIGNED_TO_ME",
-      },
-      disabledTabStatus: "VALIDATED",
-    },
-    filterConfig: {
-      filterOptions: [
-        { status: "PENDING_FOR_VALIDATION", order: 1 },
-        { status: "PENDING_FOR_APPROVAL", order: 2 },
-        { status: "VALIDATED", order: 3 },
-      ],
-      defaultActiveFilter: { status: "PENDING_FOR_VALIDATION", order: 1 },
-    },
-    tableConfig: {
-      initialCurrentPage: 1,
-      initialRowsPerPage: 50,
-      paginationRowsPerPageOptions: [10, 20, 50, 100],
-    },
-  
-    actionsConfig: {
-      actionsToHide: ["EDIT_AND_SEND_FOR_APPROVAL", "EDIT_AND_VALIDATE"],
-      actionIconMap: {
-        VALIDATE: { isSuffix: false, icon: "CheckCircle" },
-        EDIT_AND_SEND_FOR_APPROVAL: { isSuffix: false, icon: "Edit" },
-        APPROVE: { isSuffix: false, icon: "CheckCircle" },
-        ROOT_APPROVE: { isSuffix: false, icon: "CheckCircle" },
-        SEND_BACK_FOR_CORRECTION: { isSuffix: true, icon: "ArrowForward" },
-      },
-      primaryButtonStates: [
-        {
-          status: "PENDING_FOR_VALIDATION",
-          actions: ["VALIDATE"],
-        },
-        {
-          status: "PENDING_FOR_APPROVAL",
-          actions: ["APPROVE", "ROOT_APPROVE"],
-        },
-        {
-          status: "VALIDATED",
-          actions: ["SEND_BACK_FOR_CORRECTION"],
-        },
-      ],
-    },
-  };
   const {state}=useMyContext();
-  // console.log("state pop",state?.PopConfig);
-  // const config=state?.PopConfig[0];
+  const config=state?.PopConfig[0];
   const [activeLink, setActiveLink] = useState(config?.tabConfig?.defaultActiveTab);
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
