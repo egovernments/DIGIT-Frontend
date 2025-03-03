@@ -21,35 +21,6 @@ const AssignCampaign = ({ editCampaign = false }) => {
   //const fetchMutation = Digit.Hooks.hrms.useHRMSStaffSearch(tenantId);
 
   const isMobile = window.Digit.Utils.browser.isMobile();
-  //"A07497961"
-
-  ////
-  // const { isLoadings, isError, error, data:data } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);
-
-  // const reqCri = {
-  //   url: Urls.hcm.searchStaff,
-  //   params: {
-  //     tenantId: tenantId,
-  //     limit: 100,
-  //     offset:0
-  //   },
-  //   body: {
-  //    ProjectStaff: {
-  //       staffId: ["6b337c01-2c00-4f14-8895-f73ca875e8a3"],
-  //     },
-  //   },
-  //   config: {
-  //     enabled: true,
-  //     select: (data) => {
-  //       debugger
-  //       return data.ProjectStaff;
-  //     },
-  //   },
-  //   changeQueryName: "tenantId",
-  // };
-
-  // const { isLoading: isEstimateMusterRollLoading, data: projectStaff } = Digit.Hooks.useCustomAPIHook(reqCri);
-  ////
 
   const { isLoadings, isError, error, data } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);
 
@@ -76,7 +47,6 @@ const AssignCampaign = ({ editCampaign = false }) => {
     config: {
       enabled: !!staffId,
       select: (data) => {
-        debugger;
         return data.ProjectStaff;
       },
     },
@@ -138,7 +108,6 @@ const AssignCampaign = ({ editCampaign = false }) => {
   //   }
   // },[id]);
 
-  console.log("data", data);
   const onFormValueChange = (setValue = true, formData) => {};
 
   const createStaffService = async (payload) => {
@@ -186,40 +155,16 @@ const AssignCampaign = ({ editCampaign = false }) => {
 
   const deleteStaffService = async (payload) => {
     try {
-      await mutation.mutateAsync(
-        {
-          staffCreateData: payload,
+      return await deleteMutation.mutateAsync(payload, {
+        onSuccess: (res) => {
+          return true;
         },
-        {
-          onSuccess: (res) => {
-            // history.push(`/${window?.contextPath}/employee/hrms/response`, {
-            //   isCampaign: true,
-            //   state: "success",
-            //   info: t("HR_EMPLOYEE_ID_LABEL"),
-            //   fileName: res?.Employees?.[0],
-            //   description: t(`EMPLOYEE_RESPONSE_CREATE_ACTION`),
-            //   message: t(`EMPLOYEE_RESPONSE_CREATE`),
-            //   back: t(`GO_BACK_TO_HOME`),
-            //   backlink: `/${window.contextPath}/employee`,
-            // });
-          },
-          onError: (error) => {
-            // history.push(`/${window?.contextPath}/employee/hrms/response`, {
-            //   isCampaign: true,
-            //   state: "error",
-            //   info: t("Testing"),
-            //   fileName: error?.Employees?.[0],
-            //   description: t(`EMPLOYEE_RESPONSE_CREATE`),
-            //   message: t(`EMPLOYEE_RESPONSE_CREATE`),
-            //   back: t(`GO_BACK_TO_HOME`),
-            //   backlink: `/${window.contextPath}/employee`,
-            // });
-          },
-        }
-      );
+        onError: (error) => {
+          return true;
+        },
+      });
     } catch (error) {
-      debugger;
-      // setTriggerEstimate(true);
+      return true;
     }
   };
 
@@ -247,7 +192,7 @@ const AssignCampaign = ({ editCampaign = false }) => {
         });
         //selectedCampaignBoundary.push(assignedCampaignData?.[i]?.selectedProject?.address?.boundary);
       }
-      debugger;
+      let s = await deleteStaffService(projectStaff);
       await createStaffService(ProjectStaffCreatePayload);
     } catch (err) {
       debugger;
@@ -258,9 +203,6 @@ const AssignCampaign = ({ editCampaign = false }) => {
     return <Loader />;
   }
   const config = campaignAssignmentConfig;
-
-  console.log("data", data);
-  debugger;
 
   return (
     <div style={{ marginBottom: "80px" }}>

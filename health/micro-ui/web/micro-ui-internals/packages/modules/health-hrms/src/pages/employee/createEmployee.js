@@ -82,11 +82,13 @@ const CreateEmployee = ({ editUser = false }) => {
   const onFormValueChange = (setValue = true, formData, formState, reset, setError, clearErrors) => {
     debugger;
 
-    if (phoneNumber !== formData?.SelectEmployeePhoneNumber) {
-      setPhoneNumber(formData?.SelectEmployeePhoneNumber);
-      setMobile(true);
-    } else {
-      setMobile(false);
+    if (isEdit) {
+      if (phoneNumber !== formData?.SelectEmployeePhoneNumber) {
+        setPhoneNumber(formData?.SelectEmployeePhoneNumber);
+        setMobile(true);
+      } else {
+        setMobile(false);
+      }
     }
 
     const SelectEmployeeName = formData?.SelectEmployeeName;
@@ -290,7 +292,10 @@ const CreateEmployee = ({ editUser = false }) => {
         setCreateEmployeeData(e);
         setShowModal(true);
       }
-    } else if (mobile) {
+    } else if (isEdit) {
+      setCreateEmployeeData(e);
+      setShowModal(true);
+    } else {
       const type = await checkIfUserExistWithPhoneNumber(e, tenantId);
       if (type == true) {
         setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID" });
@@ -299,9 +304,6 @@ const CreateEmployee = ({ editUser = false }) => {
         setCreateEmployeeData(e);
         setShowModal(true);
       }
-    } else {
-      setCreateEmployeeData(e);
-      setShowModal(true);
     }
   };
 

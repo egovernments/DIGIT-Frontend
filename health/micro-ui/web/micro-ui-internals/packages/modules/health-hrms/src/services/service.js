@@ -8,15 +8,15 @@ import employeeDetailsFetch from "./emp_details";
 
 export const checkIfUserExistWithPhoneNumber = async (data, tenantId) => {
   try {
-  //  if (data?.SelectEmployeePhoneNumber && data?.SelectEmployeePhoneNumber?.trim().length > 0) {
-      const result = await Digit.HRMSService.search(tenantId, null, { phone: data?.SelectEmployeePhoneNumber });
-      debugger;
-      if (result?.Employees?.length > 0) {
-        return true; // User exists, return false
-      } else {
-        return false; // Success
-      }
-   // } 
+    //  if (data?.SelectEmployeePhoneNumber && data?.SelectEmployeePhoneNumber?.trim().length > 0) {
+    const result = await Digit.HRMSService.search(tenantId, null, { phone: data?.SelectEmployeePhoneNumber });
+    debugger;
+    if (result?.Employees?.length > 0) {
+      return true; // User exists, return false
+    } else {
+      return false; // Success
+    }
+    // }
     // else {
     //   debugger;
     //   return true; // Success

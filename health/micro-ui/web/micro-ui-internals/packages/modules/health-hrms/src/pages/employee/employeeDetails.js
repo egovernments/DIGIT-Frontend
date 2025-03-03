@@ -9,6 +9,7 @@ import { Button, Card, Footer, ActionBar, SummaryCard, Tag } from "@egovernments
 import Urls from "../../services/urls";
 import { Loader } from "@egovernments/digit-ui-react-components";
 import DeactivatePopUp from "../../components/pageComponents/DeactivatePopUp";
+import { ReposeScreenType } from "../../constants/enums";
 
 const EmployeeDetailScreen = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -20,10 +21,12 @@ const EmployeeDetailScreen = () => {
   ];
   const deactiveworkflowActions = [{ code: "ACTIVATE_EMPLOYEE_HEAD", name: "ACTIVATE_EMPLOYEE_HEAD" }];
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const mutationUpdate = Digit.Hooks.hrms.useHRMSUpdate(tenantId);
 
   const history = useHistory();
   const { id } = useParams();
   const [campaign, setcampaign] = useState([]);
+
   const { isLoading, isError, error, data } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);
 
   const campaignFetch = async (fetchedEmployeeId) => {
@@ -46,6 +49,60 @@ const EmployeeDetailScreen = () => {
       return activeworkflowActions.filter((action) => action?.code !== "DEACTIVATE_EMPLOYEE_HEAD");
     }
     return activeworkflowActions;
+  };
+
+  const deActivateUser = async (comment, date, reason, order) => {
+    let datak = {
+      ...data?.Employees[0], // Keep existing data
+      isActive: false, // Update isActive to false
+      deactivationDetails: [
+        {
+          effectiveFrom: Date.now(), // Use the current timestamp
+          reasonForDeactivation: reason,
+          remarks: order,
+          orderNo: comment,
+        },
+      ],
+    };
+
+    try {
+      await mutationUpdate.mutateAsync(
+        {
+          Employees: [datak],
+        },
+        {
+          onSuccess: (res) => {
+            debugger;
+            history.push(`/${window?.contextPath}/employee/hrms/response`, {
+              isCampaign: ReposeScreenType.EDIT_USER,
+              state: "success",
+              info: t("HR_EMPLOYEE_ID_LABEL"),
+              fileName: res?.Employees?.[0],
+              description: null,
+              message: t(`EMPLOYEE_RESPONSE_UPDATE_ACTION`),
+              back: t(`CORE_COMMON_GO_TO_HOME`),
+              backlink: `/${window.contextPath}/employee`,
+            });
+          },
+          onError: (error) => {
+            history.push(`/${window?.contextPath}/employee/hrms/response`, {
+              isCampaign: ReposeScreenType.EDIT_USER_ERROR,
+              state: "error",
+              info: t("HR_EMPLOYEE_ID_LABEL"),
+              fileName: error?.Employees?.[0],
+              description: null,
+              message: t(`EMPLOYEE_RESPONSE_UPDATE_ACTION`),
+              back: t(`CORE_COMMON_GO_TO_HOME`),
+              backlink: `/${window.contextPath}/employee`,
+            });
+            // setTriggerEstimate(true);
+          },
+        }
+      );
+    } catch (error) {
+      debugger;
+      // setTriggerEstimate(true);
+    }
   };
 
   if (isLoading) {
@@ -76,7 +133,7 @@ const EmployeeDetailScreen = () => {
                     inline: true,
                     label: t("HR_EMP_STATUS_LABEL"),
                     type: "text",
-                    value: t("ACTIVE"),
+                    value: data?.Employees ? (data?.Employees[0].isActive ? t("ACTIVE") : t("IN_ACTIVE")) : t("IN_ACTIVE"),
                   },
                   {
                     inline: true,
@@ -342,7 +399,10 @@ const EmployeeDetailScreen = () => {
           onClose={() => {
             setOpenModal(false);
           }}
-          onSubmit={() => {}}
+          onSubmit={(comment, date, reason, order) => {
+            deActivateUser(comment, date, reason, order);
+            debugger;
+          }}
         />
       )}
     </React.Fragment>

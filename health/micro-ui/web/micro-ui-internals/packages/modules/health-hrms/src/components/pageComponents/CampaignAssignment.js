@@ -55,7 +55,7 @@ const CampaignsAssignment = ({ t, config, onSelect, formData }) => {
 
     return userProjectDetails.filter((project) => !selectedProjects.includes(project.id));
   };
-
+console.log("campaign",campaigns);
   return (
     <div>
       {campaigns.map((campaign, index) => {
