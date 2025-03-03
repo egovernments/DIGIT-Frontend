@@ -201,11 +201,13 @@ const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
 function AppConfigurationWrapper({ screenConfig }) {
   const { locState, addMissingKey, updateLocalization, onSubmit, back, showBack, parentDispatch } = useAppLocalisationContext();
   const [state, dispatch] = useReducer((state, action) => reducer(state, action, updateLocalization), initialState);
-
+  const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const [showPopUp, setShowPopUp] = useState(false);
   const searchParams = new URLSearchParams(location.search);
   const fieldMasterName = searchParams.get("fieldType");
+  module = "dummy-localisation";
+  const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, "en_IN");
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     MODULE_CONSTANTS,
@@ -241,6 +243,40 @@ function AppConfigurationWrapper({ screenConfig }) {
     return <Loader />;
   }
 
+
+  function createLocaleArrays() {
+    const result = {};
+  
+    // Dynamically determine locales
+    const locales = Object.keys(locState[0]).filter(key => key.includes('_IN') && key !== 'en_IN');
+    locales.unshift('en_IN');
+    locales.forEach(locale => {
+      result[locale] = locState.map(item => ({
+        code: item.code,
+        message: item[locale] || '',
+        module: item.module || "hcm-dummy-module",
+        locale: locale
+      })).filter(item => item.message !== '');
+    });
+  
+    return result;
+  }
+
+  const handleSubmit = async () => {
+    const localeArrays = createLocaleArrays();    
+    for (const locale of Object.keys(localeArrays)) {
+      if (localeArrays[locale].length > 0) {
+        try {
+          const result = await localisationMutate(localeArrays[locale]);
+          console.log(`${locale} localisation data sent successfully`);
+        } catch (error) {
+          console.error(`Error sending ${locale} localisation data:`, error);
+        }
+      }
+    }
+
+    setShowPopUp(false);
+  };
   return (
     <AppConfigContext.Provider value={{ state, dispatch }}>
       <AppFieldScreenWrapper onSubmit={onSubmit} />
@@ -286,7 +322,6 @@ function AppConfigurationWrapper({ screenConfig }) {
           heading={t("ADD_LOCALISATION")}
           children={[
             <div>
-              HELLO
               {state?.screenData
                 ?.find((i) => i.name === state?.currentScreen?.name)
                 ?.cards?.map((card) => [
@@ -318,10 +353,8 @@ function AppConfigurationWrapper({ screenConfig }) {
               size={"large"}
               variation={"primary"}
               label={t("SUBMIT")}
-              onClick={() => {
-                setShowPopUp(false);
-              }}
-            />,
+              onClick={handleSubmit}
+            />
           ]}
         >
           <AppLocalisationTable />
