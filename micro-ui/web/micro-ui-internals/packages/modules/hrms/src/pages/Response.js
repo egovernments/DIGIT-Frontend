@@ -160,7 +160,7 @@ const Response = () => {
         message={t(state?.message || "SUCCESS")}
         response={`${state?.showID ? state?.id : ""}`}
         footerChildren={[]}
-        children={state?.showChildren ? children : null}
+        children={state?.showChildren ? children : []}
       />
       <ActionBar>
         <Link to={`/${window.contextPath}/employee`}>
