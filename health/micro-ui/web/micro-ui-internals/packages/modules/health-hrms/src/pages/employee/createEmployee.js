@@ -25,6 +25,9 @@ const CreateEmployee = ({ editUser = false }) => {
 
   const [showToast, setShowToast] = useState(null);
 
+  const [mobile, setMobile] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
+
   const { t } = useTranslation();
   const history = useHistory();
   const location = useLocation();
@@ -78,6 +81,13 @@ const CreateEmployee = ({ editUser = false }) => {
 
   const onFormValueChange = (setValue = true, formData, formState, reset, setError, clearErrors) => {
     debugger;
+
+    if (phoneNumber !== formData?.SelectEmployeePhoneNumber) {
+      setPhoneNumber(formData?.SelectEmployeePhoneNumber);
+      setMobile(true);
+    } else {
+      setMobile(false);
+    }
 
     const SelectEmployeeName = formData?.SelectEmployeeName;
 
@@ -259,16 +269,8 @@ const CreateEmployee = ({ editUser = false }) => {
           //  navigateToAcknowledgement(payload);
         }
       } else {
-        const type = await checkIfUserExist(formData, tenantId);
-        if (type == false) {
-          setShowToast({ key: true, label: "USer does not exits" });
-          setShowModal(false);
-        } else {
-          const payload = formPayloadToUpdateUser(formData, data?.Employees, tenantId);
-          await updateEmployeeService(payload);
-
-          //  navigateToAcknowledgement(payload);
-        }
+        const payload = formPayloadToUpdateUser(formData, data?.Employees, tenantId);
+        await updateEmployeeService(payload);
       }
     } catch (err) {
       debugger;
@@ -279,10 +281,24 @@ const CreateEmployee = ({ editUser = false }) => {
 
   const openModal = async (e) => {
     debugger;
-    const type = await checkIfUserExistWithPhoneNumber(e, tenantId);
-    if (type == true) {
-      setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID" });
-      setShowModal(false);
+    if (isEdit && mobile) {
+      const type = await checkIfUserExistWithPhoneNumber(e, tenantId);
+      if (type == true) {
+        setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID" });
+        setShowModal(false);
+      } else {
+        setCreateEmployeeData(e);
+        setShowModal(true);
+      }
+    } else if (mobile) {
+      const type = await checkIfUserExistWithPhoneNumber(e, tenantId);
+      if (type == true) {
+        setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID" });
+        setShowModal(false);
+      } else {
+        setCreateEmployeeData(e);
+        setShowModal(true);
+      }
     } else {
       setCreateEmployeeData(e);
       setShowModal(true);

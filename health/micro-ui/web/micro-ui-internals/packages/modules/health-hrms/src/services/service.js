@@ -1,14 +1,14 @@
 import { HRMS_CONSTANTS } from "../constants/constants";
 const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "MICROPLAN";
 import { convertEpochToDate } from "../utils/utlis";
-
+import employeeDetailsFetch from "./emp_details";
 
 //  Do the search employee API call
 //  to check the existance of the user with given the employeeId
 
 export const checkIfUserExistWithPhoneNumber = async (data, tenantId) => {
   try {
-    if (data?.SelectEmployeeId && data?.SelectEmployeeId?.trim().length > 0) {
+  //  if (data?.SelectEmployeePhoneNumber && data?.SelectEmployeePhoneNumber?.trim().length > 0) {
       const result = await Digit.HRMSService.search(tenantId, null, { phone: data?.SelectEmployeePhoneNumber });
       debugger;
       if (result?.Employees?.length > 0) {
@@ -16,10 +16,11 @@ export const checkIfUserExistWithPhoneNumber = async (data, tenantId) => {
       } else {
         return false; // Success
       }
-    } else {
-      debugger;
-      return true; // Success
-    }
+   // } 
+    // else {
+    //   debugger;
+    //   return true; // Success
+    // }
   } catch (error) {
     debugger;
     throw error; // throw on error
@@ -359,4 +360,17 @@ export const editDefaultAssignmentValue = (data, tenantId) => {
   };
 
   return defaultValues;
+};
+
+//  Do the search staff API call
+//  then based on the projectids call the Projects
+
+export const searchStaff = async (data, tenantId) => {
+  try {
+    const result = await employeeDetailsFetch(data, tenantId);
+
+    return result?.Project;
+  } catch (error) {
+    throw error; // throw on error
+  }
 };

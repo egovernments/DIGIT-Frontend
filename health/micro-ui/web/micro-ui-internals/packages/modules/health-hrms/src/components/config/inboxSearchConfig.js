@@ -119,35 +119,8 @@ const inboxSearchConfig = () => {
           enableGlobalSearch: false, // Disables global search
         },
       },
-    },
 
-    apiDetails: {
-      masterName: "commonUiConfig", // Master data module for UI config
-      moduleName: "SearchDefaultConfigMain", // Configuration module name
-      requestBody: {}, // Request body (empty for now)
-      serviceName: "/egov-hrms/employees/_search", // API endpoint for search
-      requestParam: {
-        // Default request parameters for API call
-        limit: 10,
-        names: "",
-        roles: "",
-        offset: 0,
-        sortBy: "lastModifiedTime",
-        tenantId: "mz",
-        sortOrder: "DESC",
-      },
-      tableFormJsonPath: "requestParam", // JSON path for table form data
-      filterFormJsonPath: "requestParam", // JSON path for filter form data
-      searchFormJsonPath: "requestParam", // JSON path for search form data
-      minParametersForFilterForm: 0, // No minimum required fields for filter
-      minParametersForSearchForm: 0, // No minimum required fields for search
-    },
-
-    persistFormData: true, // Keeps form data persisted between searches
-    additionalSections: {}, // No additional sections
-    showAsRemovableTagsInMobile: true, // Enables removable search tags in mobile UI
-
-    links: {
+      links: {
       uiConfig: {
         links: [
           {
@@ -165,6 +138,36 @@ const inboxSearchConfig = () => {
       children: {},
       show: true,
     },
+    },
+
+    apiDetails: {
+      masterName: "commonUiConfig", // Master data module for UI config
+      moduleName: "SearchDefaultConfigMain", // Configuration module name
+      requestBody: {}, // Request body (empty for now)
+      serviceName: "/egov-hrms/employees/_search", // API endpoint for search
+      requestParam: {
+        // Default request parameters for API call
+        limit: 10,
+        names: "",
+        roles: "",
+        offset: 0,
+        sortBy: "lastModifiedTime",
+        tenantId: "mz",
+        sortOrder: "DESC",
+       // includeUnassigned:true
+      },
+      tableFormJsonPath: "requestParam", // JSON path for table form data
+      filterFormJsonPath: "requestParam", // JSON path for filter form data
+      searchFormJsonPath: "requestParam", // JSON path for search form data
+      minParametersForFilterForm: 0, // No minimum required fields for filter
+      minParametersForSearchForm: 0, // No minimum required fields for search
+    },
+
+    persistFormData: true, // Keeps form data persisted between searches
+    additionalSections: {}, // No additional sections
+    showAsRemovableTagsInMobile: true, // Enables removable search tags in mobile UI
+
+    
   };
 };
 
