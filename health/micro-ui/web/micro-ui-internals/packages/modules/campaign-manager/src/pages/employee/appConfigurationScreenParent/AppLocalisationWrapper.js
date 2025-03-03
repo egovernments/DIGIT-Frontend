@@ -59,7 +59,7 @@ function AppLocalisationWrapper({ onSubmit, screenConfig, back, showBack, parent
   const { data: localisationData, isLoading } = Digit.Hooks.campaign.useSearchLocalisation({
     tenantId: "dev",
     locale: enabledModules,
-    module: "hcm-appconfiguration",
+    module: "hcm-dummy-module",
     isMultipleLocale: enabledModules?.length > 1 ? true : false,
     config: {
       staleTime: 0,
