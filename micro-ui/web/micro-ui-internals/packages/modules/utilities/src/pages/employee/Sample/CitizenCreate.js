@@ -1,9 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Redirect, Route, Switch, useHistory, useRouteMatch, useLocation } from "react-router-dom";
-import { FormComposerV2, Header } from "@egovernments/digit-ui-react-components";
-import { newConfig as baseConfig } from "./PGRCreate";
-import FormComposerCitizen from "./FormComposerCitizen";
+import { FormComposerV2, Header ,FormComposerCitizen} from "@egovernments/digit-ui-react-components";
+import { newConfig as baseConfig } from "./CreateCommonConfig";
 
 // import { newConfig } from "../../configs/IndividualCreateConfig";
 // import { transformIndividualCreateData } from "../../utils/createUtils";
