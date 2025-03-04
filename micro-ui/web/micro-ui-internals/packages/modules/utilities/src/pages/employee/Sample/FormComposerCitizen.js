@@ -1,13 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Redirect, Route, Switch, useHistory, useRouteMatch, useLocation } from "react-router-dom";
-import { FormComposerV2, Header } from "@egovernments/digit-ui-react-components";
-import { newConfig as baseConfig } from "./PGRCreate";
+import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 
-// import { newConfig } from "../../configs/IndividualCreateConfig";
-// import { transformIndividualCreateData } from "../../utils/createUtils";
-
-const FormComposerCitizen = ({config : baseConfig,}) => {
+const FormComposerCitizen = ({config : baseConfig,onSubmit:onFinalSubmit,onFormValueChange,nextStepLabel,submitLabel,baseRoute="",sessionKey="DEFAULT_CITIZEN_CREATE"}) => {
   const { pathname } = useLocation();
   const match = useRouteMatch();
   const { t } = useTranslation();
@@ -23,27 +19,19 @@ const FormComposerCitizen = ({config : baseConfig,}) => {
     [baseConfig]
   );
 
-  const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("PGRCITIZE", {});
-  const [paramState, setParamState] = useState(params);
-  const [nextStep, setNextStep] = useState("name");
-  const [canSubmit, setCanSubmit] = useState(false);
+  const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage(sessionKey, {});
+  const [nextStep, setNextStep] = useState(baseRoute);
 
 
   const onSubmit = async (data) => {
-    console.log(data, "data");
-
     setParams({ ...params, ...data });
     if (nextStep !== null) {
       history.push(`${match.path}/${nextStep}`);
     } else {
-      onFormSubmit({ ...params, ...data });
+        onFinalSubmit({ ...params, ...data });
     }
   };
 
-  const onFormSubmit = async (data) => {
-    console.log(data, "data");
-
-  };
   const currentPath = useMemo(() => pathname.split("/").pop(), [pathname]);
 
   const currentRunningConfig = useMemo(
@@ -73,23 +61,26 @@ return clearParams();
       <Switch>
         <Route path={`${match.path}/${currentPath}`} key={""}>
           <FormComposerV2
-            label={t("SUBMIT_BUTTON")}
+            label={nextStep==null?t(submitLabel):t(nextStepLabel)}
             config={currentRunningConfig.map((config) => {
               return {
                 ...config,
               };
             })}
             defaultValues={{ ...params }}
-            onFormValueChange={(setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
-              console.log(formData, "formData");
-            }}
+            // onFormValueChange={(setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
+            //   console.log(formData, "formData");
+            // }}
+            // description="dynmaic text"
+            submitInForm={true}
+            onFormValueChange={onFormValueChange}
             onSubmit={(data) => onSubmit(data)}
             fieldStyle={{ marginRight: 0 }}
           />
         </Route>
 
         <Route>
-          <Redirect to={`${match.path}/${"name"}`} />
+          <Redirect to={`${match.path}/${baseRoute}`} />
         </Route>
       </Switch>
     </div>
