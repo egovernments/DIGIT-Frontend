@@ -238,6 +238,14 @@ export const formPayloadToUpdateUser = (data, userExisting, tenantId) => {
 
     return jurisdiction;
   });
+  requestdata.assignments = userExisting[0].assignments.map((j) => {
+    let assigment = { ...j };
+    assigment.department = data?.SelectEmployeeDepartment?.code || j.department;
+    assigment.designation = data?.SelectEmployeeDesignation?.code || j.designation;
+
+    return assigment;
+  });
+
   requestdata.employeeType = data?.SelectEmployeeType?.code;
 
   requestdata.user = requestdata.user || {};

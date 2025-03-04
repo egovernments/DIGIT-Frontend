@@ -240,7 +240,7 @@ const CreateEmployee = ({ editUser = false }) => {
               info: t("HR_EMPLOYEE_ID_LABEL"),
               fileName: error?.Employees?.[0],
               description: null,
-              message: t(`EMPLOYEE_RESPONSE_UPDATE_ACTION`),
+              message: t(`EMPLOYEE_RESPONSE_UPDATE_ACTION_ERROR`),
               back: t(`CORE_COMMON_GO_TO_HOME`),
               backlink: `/${window.contextPath}/employee`,
             });
@@ -249,7 +249,6 @@ const CreateEmployee = ({ editUser = false }) => {
         }
       );
     } catch (error) {
-      debugger;
       // setTriggerEstimate(true);
     }
   };

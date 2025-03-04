@@ -1,9 +1,30 @@
+import Urls from "../../services/urls";
+
 const inboxSearchConfig = () => {
   return {
     type: "search", // Defines the type of configuration (search functionality)
     label: "Search Employee", // Label for the search functionality
 
     sections: {
+      links: {
+        uiConfig: {
+          links: [
+            {
+              text: "ATM_SEARCH_ATTENDANCE",
+              url: "/employee/attendencemgmt/search-attendance",
+              roles: ["HRMS_ADMIN"],
+            },
+          ],
+          label: "ES_COMMON_ATTENDENCEMGMT",
+          logoIcon: {
+            component: "MuktaIcon",
+            customClass: "search-icon--projects",
+          },
+        },
+        children: {},
+        show: false,
+      },
+
       search: {
         show: true, // Determines whether the search section is displayed
         label: "", // No specific label assigned
@@ -89,7 +110,7 @@ const inboxSearchConfig = () => {
             {
               label: "HR_EMP_ID_LABEL",
               jsonPath: "code", // Maps data from API response
-               additionalCustomization: true,
+              additionalCustomization: true,
             },
             {
               label: "HR_EMP_NAME_LABEL",
@@ -99,7 +120,7 @@ const inboxSearchConfig = () => {
             {
               label: "HR_ROLE_NO_LABEL",
               jsonPath: "user.roles",
-               additionalCustomization: true,
+              additionalCustomization: true,
             },
             {
               label: "HR_DESG_LABEL",
@@ -119,32 +140,13 @@ const inboxSearchConfig = () => {
           enableGlobalSearch: false, // Disables global search
         },
       },
-
-      links: {
-      uiConfig: {
-        links: [
-          {
-            text: "MB_CREATE_MB",
-            url: "/employee/contracts/search-contract?status=ACCEPTED",
-            roles: ["MB_CREATOR"],
-          },
-        ],
-        label: "ACTION_TEST_MEASUREMENT_HEADER",
-        // logoIcon: {
-        //   component: "MeasurementInboxIcon",
-        //   customClass: "inbox-search-icon--projects",
-        // },
-      },
-      children: {},
-      show: true,
-    },
     },
 
     apiDetails: {
       masterName: "commonUiConfig", // Master data module for UI config
       moduleName: "SearchDefaultConfigMain", // Configuration module name
       requestBody: {}, // Request body (empty for now)
-      serviceName: "/egov-hrms/employees/_search", // API endpoint for search
+      serviceName: Urls.hrms.search, // API endpoint for search
       requestParam: {
         // Default request parameters for API call
         limit: 10,
@@ -154,7 +156,7 @@ const inboxSearchConfig = () => {
         sortBy: "lastModifiedTime",
         tenantId: "mz",
         sortOrder: "DESC",
-       // includeUnassigned:true
+        //   includeUnassigned:true
       },
       tableFormJsonPath: "requestParam", // JSON path for table form data
       filterFormJsonPath: "requestParam", // JSON path for filter form data
@@ -166,8 +168,6 @@ const inboxSearchConfig = () => {
     persistFormData: true, // Keeps form data persisted between searches
     additionalSections: {}, // No additional sections
     showAsRemovableTagsInMobile: true, // Enables removable search tags in mobile UI
-
-    
   };
 };
 

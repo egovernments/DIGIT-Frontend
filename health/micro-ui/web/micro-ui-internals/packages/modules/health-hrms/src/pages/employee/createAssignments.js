@@ -11,6 +11,8 @@ const AssignCampaign = ({ editCampaign = false }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [canSubmit, setSubmitValve] = useState(false);
 
+  const [formKey, setFormKey] = useState(0); // Force re-render
+
   const [showToast, setShowToast] = useState(null);
   const { id } = useParams();
   const { t } = useTranslation();
@@ -55,6 +57,11 @@ const AssignCampaign = ({ editCampaign = false }) => {
   const { isLoading: isEstimateMusterRollLoading, data: projectStaff } = Digit.Hooks.useCustomAPIHook(reqCri);
 
   console.log("projectStaff", projectStaff);
+
+  useEffect(() => {
+    setFormKey((prevKey) => prevKey + 1);
+  }, [editCampaign, projectStaff, tenantId]);
+
   // const fetchAssignMentDetails = async (payload) => {
   //   if (!payload) return;
   //   debugger
@@ -111,7 +118,6 @@ const AssignCampaign = ({ editCampaign = false }) => {
   const onFormValueChange = (setValue = true, formData) => {};
 
   const createStaffService = async (payload) => {
-    debugger;
     try {
       await mutation.mutateAsync(
         {
@@ -119,20 +125,18 @@ const AssignCampaign = ({ editCampaign = false }) => {
         },
         {
           onSuccess: (res) => {
-            debugger;
             history.push(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: true,
               state: "success",
               info: t("HR_EMPLOYEE_ID_LABEL"),
               fileName: res?.Employees?.[0],
-              message: t(`HRMS_CAMPAIGN_ASSIGNED_INFO`),
-              description: editCampaign ? t("CAMPAIGN_RESPONSE_UPDATE_ACTION") : t(`CAMPAIGN_RESPONSE_CREATE_ACTION`),
+              message: t(`CAMPAIGN_RESPONSE_UPDATE_ACTION`),
+              description: editCampaign ? t("HRMS_CAMPAIGN_ASSIGNED_INFO") : t(`CAMPAIGN_RESPONSE_CREATE_ACTION`),
               back: t(`GO_BACK_TO_HOME`),
               backlink: `/${window.contextPath}/employee`,
             });
           },
           onError: (error) => {
-            debugger;
             history.push(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: true,
               state: "error",
@@ -148,7 +152,6 @@ const AssignCampaign = ({ editCampaign = false }) => {
         }
       );
     } catch (error) {
-      debugger;
       // setTriggerEstimate(true);
     }
   };
@@ -170,11 +173,9 @@ const AssignCampaign = ({ editCampaign = false }) => {
 
   const onSubmit = async (formData) => {
     try {
-      debugger;
       const assignedCampaignData = formData?.CampaignsAssignment?.filter((c, i) => c?.selectedProject != null);
       let ProjectStaffCreatePayload = [];
       let selectedCampaignBoundary = [];
-      debugger;
       for (let i = 0; i < assignedCampaignData?.length; i++) {
         ProjectStaffCreatePayload.push({
           tenantId: tenantId,
@@ -216,6 +217,7 @@ const AssignCampaign = ({ editCampaign = false }) => {
         <Header>{t("HR_COMMON_ASSIGN_CAMPAIGN_HEADER")}</Header>
       </div>
       <FormComposerV2
+        key={formKey}
         defaultValues={editCampaign && projectStaff ? editDefaultAssignmentValue(projectStaff, tenantId) : ""}
         heading={t("")}
         config={config}
