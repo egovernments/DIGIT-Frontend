@@ -116,6 +116,39 @@ export function formatTimestampToDate(timestamp) {
   return `${day} ${month} ${year}`;
 }
 
+export function formatTimestampToDateTime(timestamp) {
+  // Check if the timestamp is valid
+  if (!timestamp || typeof timestamp !== "number") {
+    return "Invalid timestamp";
+  }
+
+  // Convert timestamp to a JavaScript Date object
+  const date = new Date(timestamp);
+
+  // Define an array of month abbreviations
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  // Extract day, month, and year
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = monthNames[date.getMonth()]; // getMonth() returns 0-11
+  const year = date.getFullYear();
+
+  // Extract hours and minutes
+  let hours = date.getHours();
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+
+  // Determine AM or PM
+  const amPm = hours >= 12 ? "PM" : "AM";
+
+  // Convert hours to 12-hour format
+  hours = hours % 12 || 12;
+
+  // Return the formatted date and time string
+  return `${day} ${month} ${year}  ${hours}:${minutes} ${amPm}`;
+}
+
+
 // pagination options for table
 export const getCustomPaginationOptions = (t) => ({
   rowsPerPageText: t("HCM_AM_ROWS_PER_PAGE"),

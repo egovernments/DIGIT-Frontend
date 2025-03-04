@@ -1,11 +1,13 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
 import { Loader, SVG } from "@egovernments/digit-ui-react-components";
 import ActivityHomeCard from "../../components/ActivityCard";
 
 
 const ChooseActivity = () => {
     const { t } = useTranslation();
+    const history = useHistory();
     const { campaignId, microplanId,  } = Digit.Hooks.useQueryParams();
     const tenantId = Digit.ULBService.getStateId();
     const userInfo = Digit.UserService.getUser();
@@ -147,6 +149,11 @@ const isProcessDone = (ProcessInstances, process) => {
               action:"START_DATA_APPROVAL"
             }
           });
+          setTimeout(() => {
+            card.link ? history.push(card.link) : location.assign(card.locate);
+          }, 3000);
+        } else {
+          card.link ? history.push(card.link) : location.assign(card.locate);
         }  
       } catch (error) {
         console.error("ERROR_OCCURED_WHILE_UPDATING_PLAN");

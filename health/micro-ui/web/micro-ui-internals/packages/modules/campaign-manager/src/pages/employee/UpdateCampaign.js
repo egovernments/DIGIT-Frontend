@@ -234,7 +234,6 @@ const UpdateCampaign = ({hierarchyData }) => {
   }
 
 
-
   //API CALL
   useEffect(async () => {
     if (shouldUpdate === true) {
@@ -268,10 +267,11 @@ const UpdateCampaign = ({hierarchyData }) => {
             facilityId: dataParams?.facilityId,
             userId: dataParams?.userId,
           };
-          // if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-          //   const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
-          //   payloadData.deliveryRules = temp;
-          // }
+          if (CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData) {
+            payloadData.additionalDetails.cycleData = CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData;
+          } else {
+            payloadData.additionalDetails.cycleData = {};
+          }
           payloadData.deliveryRules = CampaignData?.CampaignDetails?.[0]?.deliveryRules;
           if (compareIdentical(draftData, payloadData) === false) {
             setIsDataCreating(true);
@@ -333,10 +333,11 @@ const UpdateCampaign = ({hierarchyData }) => {
             facilityId: dataParams?.facilityId,
             userId: dataParams?.userId,
           };
-          // if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-          //   const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
-          //   payloadData.deliveryRules = temp;
-          // }
+          if (CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData) {
+            payloadData.additionalDetails.cycleData = CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData;
+          } else {
+            payloadData.additionalDetails.cycleData = {};
+          }
           payloadData.deliveryRules = CampaignData?.CampaignDetails?.[0]?.deliveryRules;
           setIsDataCreating(true);
 
@@ -391,8 +392,8 @@ const UpdateCampaign = ({hierarchyData }) => {
             facilityId: dataParams?.facilityId,
             userId: dataParams?.userId,
           };
-          if (totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure) {
-            payloadData.additionalDetails.cycleData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
+          if (CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData) {
+            payloadData.additionalDetails.cycleData = CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData;
           } else {
             payloadData.additionalDetails.cycleData = {};
           }
