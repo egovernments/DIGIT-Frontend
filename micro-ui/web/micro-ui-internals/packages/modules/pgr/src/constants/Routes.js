@@ -31,6 +31,7 @@ export const Employee = {
   ComplaintDetails: PGR_EMPLOYEE_COMPLAINT_DETAILS,
   CreateComplaint: PGR_EMPLOYEE_CREATE_COMPLAINT,
   Response: "/response",
+  Test: "/test",
   Home: `/${window?.contextPath}/employee`,
   InboxV2 : "/inbox-v2"
 };

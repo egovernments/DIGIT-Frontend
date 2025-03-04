@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 // import Inbox from "./Inbox";
 import { Employee } from "../../constants/Routes";
 import InboxV2 from "./new-inbox";
+import IndividualCreate from "./Create";
 // import Response from "./Response";
 
 const PGRBreadCrumb = ({ location, defaultPath }) => {
@@ -90,6 +91,7 @@ const Complaint = () => {
           <Route path={match.url + Employee.Inbox} component={Inbox} />
           <Route path={match.url + Employee.Response} component={Response} />
           <Route path={match.url + Employee.InboxV2} component={InboxV2} />
+          <Route path={match.url + Employee.Test} component={IndividualCreate} />
         </Switch>
       </div>
       {/* <ActionBar>

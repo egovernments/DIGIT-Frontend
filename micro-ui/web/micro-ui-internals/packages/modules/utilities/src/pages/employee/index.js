@@ -10,6 +10,8 @@ import AuditHistory from "./AuditHistory.js";
 import KibanaChart from "./KibanaChart.js";
 import FormExplorer from "./FormExplorer.js";
 import InboxExplorer from "./InboxExplorer.js";
+import IndividualCreate from "./Sample/Create.js";
+import IndividualCreateCitizen from "./Sample/CitizenCreate.js";
 
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
@@ -56,6 +58,12 @@ const App = ({ path, stateCode, userType, tenants }) => {
         </Route>
         <Route path={`${path}/audit-log`}>
           <AuditHistory {...commonProps} />
+        </Route>
+        <Route path={`${path}/create`}>
+          <IndividualCreate />
+        </Route>
+        <Route path={`${path}/create-citizen`}>
+          <IndividualCreateCitizen />
         </Route>
         <Route path={`${path}/workflow`} component={() => <WorkflowCompTest parentRoute={path} />} />
       </AppContainer>
