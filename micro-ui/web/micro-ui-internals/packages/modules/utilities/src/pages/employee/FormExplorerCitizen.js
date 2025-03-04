@@ -328,6 +328,7 @@ const FormExplorerCitizen = ({ stateCode }) => {
         <FormComposerCitizen
           className="form-component"
           label={"Sample"}
+          baseRoute="name"
           config={jsonData?.configs?.map((config) => ({
             ...config,
           }))}

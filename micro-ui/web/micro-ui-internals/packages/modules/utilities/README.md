@@ -143,6 +143,11 @@ workbench-ui/employee/utilities/playground/form-composer
 workbench-ui/employee/utilities/playground/inbox-composer
 ```
 
+### Citizen Form  Composer
+```bash
+workbench-ui/employee/utilities/playground/form-composer-citizen
+```
+
 ## Coming Soon
 
 1. Create Screen

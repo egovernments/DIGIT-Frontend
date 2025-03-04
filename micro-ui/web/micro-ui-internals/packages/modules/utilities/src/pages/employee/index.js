@@ -11,8 +11,8 @@ import KibanaChart from "./KibanaChart.js";
 import FormExplorer from "./FormExplorer.js";
 import FormExplorerCitizen from "./FormExplorerCitizen.js";
 import InboxExplorer from "./InboxExplorer.js";
-import IndividualCreate from "./Sample/Create.js";
-import IndividualCreateCitizen from "./Sample/CitizenCreate.js";
+import IndividualCreate from "./Sample/Create";
+import IndividualCreateCitizen from "./Sample/CitizenCreate";
 
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
@@ -54,7 +54,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <Route path={`${path}/playground/form-composer`}>
         <FormExplorer></FormExplorer>
         </Route>
-        <Route path={`${path}/playground/form-composer`}>
+        <Route path={`${path}/playground/form-composer-citizen`}>
         <FormExplorerCitizen></FormExplorerCitizen>
         </Route>
         <Route path={`${path}/playground/inbox-composer`}>
