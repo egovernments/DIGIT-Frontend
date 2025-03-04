@@ -1,11 +1,12 @@
 import utils from "../utils";
+import useDashboardConfig from "./useDashboardConfig";
 import useDssInitialization from "./useDssInitialization";
-// import useAttendanceBoundarySearch from "./attendance/attendance_boundary";
-// import useProjectSearch from "./project/useProjectSearch";
-// import usePaymentsInitialization from "./project/usePaymentsInitialization";
-// import useAttendanceBoundaryRegisterSearch from "./attendance/attendance_register_search";
+import useGetChart from "./useGetChart";
+
 const DSS = {
   useDssInitialization,
+  useDashboardConfig,
+  useGetChart,
 };
 
 const Hooks = {

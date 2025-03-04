@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Switch } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import BreadCrumbs from "../../components/BreadCrumbs";
+import NationalDashboard from "./NationalDashboard";
 
 
 const ProjectBreadCrumb = ({ location }) => {
@@ -56,8 +57,8 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <React.Fragment>
           <ProjectBreadCrumb location={location} />
         </React.Fragment>
-        {/* <PrivateRoute path={`${path}/view-attendance`} component={() => <ViewAttendance />} />
-        <PrivateRoute path={`${path}/edit-attendance`} component={() => <ViewAttendance editAttendance={true} />} />
+        <PrivateRoute path={`${path}/landing`} component={() => <NationalDashboard />} />
+        {/* <PrivateRoute path={`${path}/edit-attendance`} component={() => <ViewAttendance editAttendance={true} />} />
         <PrivateRoute path={`${path}/attendance-approve-success`} component={() => <Response />} />
         <PrivateRoute path={`${path}/attendance-approve-failed`} component={() => <Response />} />
         <PrivateRoute path={`${path}/registers-inbox`} component={() => <AttendanceInbox />} />

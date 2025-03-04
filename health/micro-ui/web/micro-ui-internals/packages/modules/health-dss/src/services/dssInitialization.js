@@ -1,116 +1,129 @@
 const initializeDssModule = async ({ tenantId }) => {
-
     const projectContextPath = window?.globalConfigs?.getConfig("PROJECT_CONTEXT_PATH") || "health-project";
     const individualContextPath = window?.globalConfigs?.getConfig("INDIVIDUAL_CONTEXT_PATH") || "health-individual";
 
     let user = Digit?.SessionStorage.get("User");
 
+    const getProjectTypes = (projectTypesDetails, projectList) => {
+        let keys = ["code", "dashboardUrls", "id"];
+        const validProjectTypeIds = new Set(projectList.map((p) => p.projectTypeId));
+
+        return projectTypesDetails
+            .filter((projectType) => validProjectTypeIds.has(projectType.id))
+            .map((projectType) =>
+                Object.keys(projectType)
+                    .filter((i) => keys.includes(i))
+                    .reduce((acc, key) => {
+                        acc[key] = projectType[key];
+                        return acc;
+                    }, {})
+            );
+    };
+
     try {
-        const response = await Digit.CustomService.getResponse({
+        // Fetch Staff Data
+        const staffResponse = await Digit.CustomService.getResponse({
             url: `/${projectContextPath}/staff/v1/_search`,
             useCache: false,
             method: "POST",
             userService: false,
-            params: {
-                "tenantId": tenantId,
-                "offset": 0,
-                "limit": 100
-            },
-            body: {
-                "ProjectStaff": {
-                    "staffId": [user?.info?.uuid]
-                }
-            },
+            params: { tenantId, offset: 0, limit: 100 },
+            body: { ProjectStaff: { staffId: [user?.info?.uuid] } },
         });
-        if (!response) {
+
+        if (!staffResponse || !staffResponse.ProjectStaff?.length) {
             throw new Error("No Staff found");
         }
-        const staffs = response?.ProjectStaff;
-        if (!staffs || staffs?.length === 0) {
-            throw new Error("No Staff found");
-        }
-        const fetchProjectData = await Digit.CustomService.getResponse({
+
+        const staffs = staffResponse.ProjectStaff;
+        const projectIds = staffs.map((staff) => staff.projectId);
+
+        // Fetch Projects Data
+        const projectResponse = await Digit.CustomService.getResponse({
             url: `/${projectContextPath}/v1/_search`,
             useCache: false,
             method: "POST",
             userService: false,
-            params: {
-                "tenantId": tenantId,
-                "offset": 0,
-                "limit": 100
-            },
-            body: {
-                Projects: staffs?.map((staff) => {
-                    return {
-                        "id": staff?.projectId,
-                        "tenantId": tenantId,
-                    };
-                })
-            }
+            params: { tenantId, offset: 0, limit: 100 },
+            body: { Projects: projectIds.map((id) => ({ id, tenantId })) },
         });
-        if (!fetchProjectData) {
-            throw new Error("Projects not found");
-        }
-        const projects = fetchProjectData?.Project;
-        if (!projects || projects?.length === 0) {
+
+        if (!projectResponse || !projectResponse.Project?.length) {
             throw new Error("No linked projects found");
         }
 
-        const fetchBoundaryData = await Digit.CustomService.getResponse({
-            url: `/boundary-service/boundary-relationships/_search`,
-            useCache: false,
-            method: "POST",
-            userService: false,
-            params: {
-                tenantId: tenantId,
-                hierarchyType: nationalLevelProject?.address?.boundary.split("_")[0],
-                includeChildren: true,
-                codes: nationalLevelProject?.address?.boundary,
-                boundaryType: nationalLevelProject?.address?.boundaryType,
-            }
-        });
+        const projects = projectResponse.Project;
 
-        if (!fetchBoundaryData) {
-            throw new Error("Couldn't fetch boundary data");
+        // Fetch Boundary Data
+        const nationalLevelProject = projects.find((p) => p.address?.boundary);
+        if (!nationalLevelProject) {
+            throw new Error("No valid project with boundary data found");
         }
 
-        const boundaryHierarchyOrder = getBoundaryTypeOrder(fetchBoundaryData?.TenantBoundary?.[0]?.boundary);
-        Digit.SessionStorage.set("boundaryHierarchyOrder", boundaryHierarchyOrder);
-
-
-        const fetchIndividualData = await Digit.CustomService.getResponse({
-            url: `/${individualContextPath}/v1/_search`,
+        // Fetch Project Type from MDMS Data
+        const projectTypeResponse = await Digit.CustomService.getResponse({
+            url: `/mdms-v2/v1/_search`,
             useCache: false,
             method: "POST",
             userService: false,
-            params: {
-                "tenantId": tenantId,
-                "offset": 0,
-                "limit": 100
-            },
+            params: { tenantId, offset: 0, limit: 100 },
             body: {
-                Individual: {
-                    userUuid: staffs?.map((s) => {
-                        return s.userId;
-                    })
-                }
-            }
+                MdmsCriteria: {
+                    tenantId,
+                    moduleDetails: [
+                        {
+                            moduleName: "HCM-PROJECT-TYPES",
+                            masterDetails: [{ name: "projectTypes" }],
+                        },
+                    ],
+                },
+            },
         });
 
-        if (!fetchIndividualData) {
-            throw new Error("Individuals not found");
+        console.log(projectTypeResponse, "projectTypeResponse");
+
+        const projectTypes = getProjectTypes(projectTypeResponse?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes || [], projects);
+
+        if (!projectTypes || !projectTypes.length) {
+            throw new Error("Project types not found");
         }
-        const individual = fetchIndividualData?.Individual;
 
-        Digit.SessionStorage.set("staffProjects", projects);
-        Digit.SessionStorage.set("UserIndividual", individual);
+        console.log(projects, projectTypeResponse, "values");
 
+        let projectInfo = [];
+
+        for (let i = 0; i < projects.length; i++) {
+            let project = projects[i];
+            console.log(project, "ppppppppppppppppp");
+
+            let projectType = projectTypes.find((type) => type.id === project.projectTypeId);
+            if (!projectType) continue;
+
+            let beneficiaryType = project.additionalDetails?.projectType?.beneficiaryType || "HOUSEHOLD";
+            let cycles = project.additionalDetails?.projectType?.cycles || [];
+            let boundaryType = project?.address?.boundaryType;
+
+            if (projectType && boundaryType) {
+                projectInfo.push({
+                    projectType, // Storing the entire projectType object
+                    cycles,
+                    beneficiaryType,
+                    startDate: project?.startDate,
+                    endDate: project?.endDate,
+                    boundaries: {
+                        boundary: project?.address?.boundary,
+                        boundaryType: project?.address?.boundaryType,
+                    },
+                });
+            }
+        }
+
+        // Save to session storage
+        Digit.SessionStorage.set("projectInfo", projectInfo);
 
     } catch (error) {
-        if (error?.response?.data?.Errors) {
-            throw new Error(error.response.data.Errors[0].message);
-        }
-        throw new Error("An unknown error occurred");
+        console.error("Error in initializeDssModule:", error);
+        throw new Error(error?.response?.data?.Errors?.[0]?.message || "An unknown error occurred");
     }
 };
 

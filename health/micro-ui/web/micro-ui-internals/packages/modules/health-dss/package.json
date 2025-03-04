@@ -27,7 +27,11 @@
     "react-i18next": "11.16.2",
     "react-query": "3.6.1",
     "react-router-dom": "5.3.0",
-    "react-data-table-component": "7.6.2"
+    "react-data-table-component": "7.6.2",
+    "highcharts": "^8.0.2",
+    "highcharts-react-official": "^3.0.0",
+    "recharts": "^2.0.9",
+    "leaflet": "^1.9.4"
   },
   "author": "Ramkrishna <ramkrishna.sahoo@egovernments.org>",
   "license": "MIT"

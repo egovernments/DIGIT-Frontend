@@ -77,9 +77,6 @@ const initDigitUI = () => {
 
   const moduleReducers = (initData) => initData;
 
-  console.log(enabledModules, "enabledModules");
-  console.log(moduleReducers, "moduleReducers");
-
 
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
   initTokens(stateCode);

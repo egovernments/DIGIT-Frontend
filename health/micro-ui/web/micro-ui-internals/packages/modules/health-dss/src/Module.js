@@ -11,7 +11,8 @@ export const DSSModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
-  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "ADMIN";
+  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
+
   const moduleCode = ["dss", `boundary-${hierarchyType}`];
   const modulePrefix = "hcm";
   const language = Digit.StoreData.getCurrentLanguage();
@@ -23,31 +24,9 @@ export const DSSModule = ({ stateCode, userType, tenants }) => {
     modulePrefix,
   });
   let user = Digit?.SessionStorage.get("User");
-  const { isLoading: isDSSInitializing } = Digit.Hooks.DSS.useDssInitialization({
-    tenantId: tenantId,
-  });
 
-  const { isLoading: isMDMSLoading, data: mdmsData } = Digit.Hooks.useCustomMDMS(
-    Digit.ULBService.getCurrentTenantId(),
-    "HCM-PROJECT-TYPES",
-    [{ name: "projectTypes" }],
-    {
-      cacheTime: Infinity,
-    },
-    { schemaCode: "HCM-PROJECT-TYPES" } //mdmsv2
-  );
 
-  useEffect(() => {
-
-    if (mdmsData) {
-      const projectTypes = mdmsData?.Mdms?.["HCM-PROJECT-TYPES"]?.projectTypes;
-      console.log(mdmsData?.Mdms?.["HCM-PROJECT-TYPES"], 'ttttttttttttttttttttttttttt');
-      Digit.SessionStorage.set("projectTypes", projectTypes);
-    }
-
-  }, [mdmsData])
-
-  if (isLoading || isDSSInitializing || isMDMSLoading) {
+  if (isLoading) {
     return <Loader />;
   } else {
     return (
