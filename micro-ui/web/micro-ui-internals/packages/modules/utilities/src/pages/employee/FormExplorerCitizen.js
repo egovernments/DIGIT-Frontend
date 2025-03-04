@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { JsonEditor, githubDarkTheme } from "json-edit-react";
 import { Card } from "@egovernments/digit-ui-components";
-import { FormComposerV2, Toast, Header } from "@egovernments/digit-ui-react-components";
+import { FormComposerCitizen, Toast, Header } from "@egovernments/digit-ui-react-components";
 
 const defaultConfig = [
   {
@@ -283,7 +283,7 @@ const defaultConfig = [
  
 ];
 
-const FormExplorer = ({ stateCode }) => {
+const FormExplorerCitizen = ({ stateCode }) => {
   const [jsonData, setJsonData] = useState({ configs: defaultConfig });
   const [showToast, setShowToast] = useState(null);
 
@@ -325,7 +325,7 @@ const FormExplorer = ({ stateCode }) => {
           theme={githubDarkTheme}
           setData={setJsonData} // optional
         />
-        <FormComposerV2
+        <FormComposerCitizen
           className="form-component"
           label={"Sample"}
           config={jsonData?.configs?.map((config) => ({
@@ -352,4 +352,4 @@ const FormExplorer = ({ stateCode }) => {
   );
 };
 
-export default FormExplorer;
+export default FormExplorerCitizen;
