@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.0.14]  [21-Feb-2025]
+- DUCE-254 : Intergrated with react json editor for citizen form composer
+
 ## [1.0.13]  [21-Feb-2025]
 - Publishing a new version for more stability & as part of Components Release
 
