@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { UploadIcon, FileIcon, DeleteIconv2, Button, DownloadIcon, PopUp, SVG } from "@egovernments/digit-ui-react-components";
+import { UploadIcon } from "@egovernments/digit-ui-react-components";
 import { FileUploader } from "react-drag-drop-files";
 import { useTranslation } from "react-i18next";
 import XLSX from "xlsx";

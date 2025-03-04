@@ -213,7 +213,7 @@ const PopInboxTable = ({ ...props }) => {
       onChangeRowsPerPage={handlePerRowsChange}
       paginationTotalRows={props?.totalRows}
       paginationPerPage={props?.rowsPerPage}
-      paginationRowsPerPageOptions={[10, 20, 50, 100]}
+      paginationRowsPerPageOptions={props?.paginationRowsPerPageOptions}
       conditionalRowStyles={props?.conditionalRowStyles}
       fixedHeader={true}
       fixedHeaderScrollHeight={"100vh"}

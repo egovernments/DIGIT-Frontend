@@ -801,6 +801,7 @@ export const UICustomizations = {
             // TODO : Replace dummy file id with real file id when API is ready
             const dummyFile = "c22a7676-d5d7-49b6-bcdb-83e9519f58df"
             const microplanFileId = row?.campaignDetails?.additionalDetails?.microplanFileId || dummyFile;
+            const EstimationsfileId = row?.files.find((item) => item.templateIdentifier === "Estimations")?.filestoreId;
             let options = [];
   
             if (row?.status == "DRAFT") {
@@ -810,9 +811,8 @@ export const UICustomizations = {
             }
   
             const handleDownload = () => {
-              const files = row?.files;
-              const file = files.find((item) => item.templateIdentifier === "Population");
-              const fileId = file?.filestoreId;
+              
+              const fileId = row?.files.find((item) => item.templateIdentifier === "Estimations")?.filestoreId;
               if (!fileId) {
                     console.error("Population template file not found");
                     return;
@@ -842,7 +842,7 @@ export const UICustomizations = {
               <div>
                 {microplanFileId && row?.status == "RESOURCE_ESTIMATIONS_APPROVED" ? (
                   <div>
-                    <ButtonNew style={{ width: "20rem" }} icon="DownloadIcon" onClick={handleDownload} label={t("WBH_DOWNLOAD_MICROPLAN")} title={t("WBH_DOWNLOAD_MICROPLAN")}  />
+                    <ButtonNew style={{ width: "20rem" }} icon="DownloadIcon" onClick={handleDownload} label={t("WBH_DOWNLOAD_MICROPLAN")} title={t("WBH_DOWNLOAD_MICROPLAN")} isDisabled={!EstimationsfileId} />
                   </div>
                 ) : (
                   <div className={"action-button-open-microplan"}>
@@ -974,10 +974,11 @@ export const UICustomizations = {
       const rolesCodes = Digit.Hooks.useSessionStorage("User", {})[0]?.info?.roles;
       const roles = rolesCodes.map((item) => item.code);
       const hasRequiredRole = roles.some((role) => role === "ROOT_POPULATION_DATA_APPROVER" || role === "POPULATION_DATA_APPROVER");
+      const EstimationsfileId = row?.files.find((item) => item.templateIdentifier === "Estimations")?.filestoreId;
       const handleFileDownload=()=>{
-        const fileId = row?.files.find((item) => item.templateIdentifier === "Population")?.filestoreId;
+        const fileId = row?.files.find((item) => item.templateIdentifier === "Estimations")?.filestoreId;
         if (!fileId) {
-              console.error("Population template file not found");
+          console.error("Estimation template file not found");
               return;
             }
         const campaignName = row?.name || "";
@@ -1045,6 +1046,7 @@ export const UICustomizations = {
               icon={"FileDownload"}
               style={{width:"290px"}}
               type="button"
+              isDisabled={!EstimationsfileId}
               // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("DOWNLOAD", row)}
             />

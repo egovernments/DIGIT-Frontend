@@ -111,6 +111,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
                         onChange={onBoundaryChange}
                         selectedProject={selectedProject}
                         lowestLevel={selectedLevel.code}>
+                        disableChildOptions={true}
                     </BoundaryComponent>
                 )}
             </div>

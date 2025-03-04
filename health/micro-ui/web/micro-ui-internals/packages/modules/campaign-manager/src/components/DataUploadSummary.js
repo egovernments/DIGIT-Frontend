@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import {  EditIcon, Header, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Toast, Stepper, TextBlock, Card , Loader} from "@egovernments/digit-ui-components";
+import {  EditIcon, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Toast, Stepper, TextBlock, Card , Loader , HeaderComponent} from "@egovernments/digit-ui-components";
 import {  downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import TagComponent from "./TagComponent";
@@ -307,7 +307,7 @@ const DataUploadSummary = (props) => {
         <div className="card-container-delivery">
         <TagComponent campaignName={campaignName} />  
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Header className="summary-header">{t("HCM_DATA_UPLOAD_SUMMARY")}</Header>
+            <HeaderComponent className="summary-header">{t("HCM_DATA_UPLOAD_SUMMARY")}</HeaderComponent>
             {/* {userCredential && (
           <Button
             label={t("CAMPAIGN_DOWNLOAD_USER_CRED")}

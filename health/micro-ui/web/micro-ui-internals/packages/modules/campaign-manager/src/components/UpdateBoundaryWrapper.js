@@ -1,9 +1,8 @@
 import React, { useState, useMemo, useRef, useEffect ,Fragment} from "react";
-import { UploadIcon, FileIcon, DeleteIconv2, Toast, Card, Header } from "@egovernments/digit-ui-react-components";
+import { Card, HeaderComponent ,AlertCard } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useLocation , useHistory } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
-import { Loader, AlertCard ,Tag } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
 
@@ -79,7 +78,7 @@ const UpdateBoundaryWrapper = ({ onSelect,...props }) => {
     <>
        <TagComponent campaignName={campaignName} />  
       <Card>
-      <Header>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</Header>
+      <HeaderComponent>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</HeaderComponent>
       <p className="description-type">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
       {hierarchyData && (
         <Wrapper

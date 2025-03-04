@@ -1,7 +1,7 @@
-import { AddIcon, CardText, Label, LabelFieldPair } from "@egovernments/digit-ui-react-components";
+import { AddIcon , Label } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Dropdown, TextInput, Toast ,Button } from "@egovernments/digit-ui-components";
+import { Dropdown, TextInput, Toast ,Button ,CardText, LabelFieldPair } from "@egovernments/digit-ui-components";
 import { Link } from "react-router-dom";
 import { CycleContext } from ".";
 import { PRIMARY_COLOR } from "../../../utils";
@@ -115,9 +115,6 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
               {t(`CAMPAIGN_RESOURCE`)} {c + 1}
             </CardText>
             {products?.length > 1 ? (
-              // <div className="delete-resource-icon" onClick={() => deleteItem(i, c)}>
-              //   <DustbinIcon />
-              // </div>
               <Button
               // className="custom-class"
               icon="Delete"
@@ -132,7 +129,7 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
             ) : null}
           </div>
           <div className="add-resource-label-field-container">
-            <LabelFieldPair>
+            <LabelFieldPair style={{display: "grid"}}>
               <Label>{t(`CAMPAIGN_ADD_PRODUCTS_LABEL`)}</Label>
               <Dropdown
                 t={t}

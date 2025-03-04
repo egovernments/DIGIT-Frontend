@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useAppConfigContext } from "./AppConfigurationWrapper";
 import { useTranslation } from "react-i18next";
-import { Button, Card, CardHeader, Divider, Stepper, Tab, Footer } from "@egovernments/digit-ui-components";
+import { Button, Card, Divider, Stepper, Footer } from "@egovernments/digit-ui-components";
 import AppFieldComposer from "./AppFieldComposer";
 import _ from "lodash";
 

@@ -3,7 +3,6 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Card, Button, MultiSelectDropdown, TooltipWrapper, Tooltip , Dropdown } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { InfoIconOutline, CardLabel } from "@egovernments/digit-ui-react-components";
 
 const BoundaryFilter = ({t,filterOptions , onSelectBoundary}) => {
   const  [boundaryType , setBoundaryType] = useState(); 

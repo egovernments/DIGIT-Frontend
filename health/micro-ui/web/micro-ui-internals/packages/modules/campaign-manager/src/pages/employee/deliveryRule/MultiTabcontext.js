@@ -1,9 +1,8 @@
 import React, { Fragment, useContext, useState , useEffect } from "react";
-import { Card, Header, Paragraph, CardHeader, CardSubHeader, CardText } from "@egovernments/digit-ui-react-components";
 import AddDeliveryRuleWrapper from "./AddDeliverycontext";
 import { CycleContext } from ".";
 import { useTranslation } from "react-i18next";
-import { InfoCard  , Stepper ,TextBlock , Tag} from "@egovernments/digit-ui-components";
+import { Stepper ,TextBlock , Tag , Card, HeaderComponent, Paragraph, CardText } from "@egovernments/digit-ui-components";
 
 const Tabs = ({ onTabChange }) => {
   const { campaignData, dispatchCampaignData } = useContext(CycleContext);
@@ -161,7 +160,7 @@ const MultiTab = ({ tabCount = 3, subTabCount = 2 }) => {
         </div>
         <div className="card-container-delivery">
         <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
-      <Header>
+      <HeaderComponent>
         {t(
           `CAMPAIGN_PROJECT_${
             tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code
@@ -169,7 +168,7 @@ const MultiTab = ({ tabCount = 3, subTabCount = 2 }) => {
               : tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.toUpperCase()
           }`
         )}
-      </Header>
+      </HeaderComponent>
       <Paragraph
         customClassName="cycle-paragraph"
         value={`(${tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate

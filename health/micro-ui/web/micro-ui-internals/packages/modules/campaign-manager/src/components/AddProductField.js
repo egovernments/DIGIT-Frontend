@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { AddIcon, Button, Card, CardText, Header, TextInput, Dropdown } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
+import { LabelFieldPair , Dropdown ,TextInput , Button ,Card ,CardText , HeaderComponent} from "@egovernments/digit-ui-components";
 import { DustbinIcon } from "./icons/DustbinIcon";
 // import { productType } from "../configs/productType";
 import { PRIMARY_COLOR } from "../utils";
@@ -58,7 +57,7 @@ const AddProductField = ({ onSelect }) => {
 
   return (
     <React.Fragment>
-      <Header>{t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_HEADER`)}</Header>
+      <HeaderComponent>{t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_HEADER`)}</HeaderComponent>
       <p className="name-description">
         {t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_DESCRIPTION_PRE_TEXT`)} <b> {t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_DESCRIPTION_BOLD_TEXT`)} </b>
         {t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_DESCRIPTION_POST_TEXT`)}
@@ -102,7 +101,7 @@ const AddProductField = ({ onSelect }) => {
               />
             </LabelFieldPair>
             <LabelFieldPair>
-              <div className="product-label-field" style={{position: "relative", top: "-1rem"}}>
+              <div className="product-label-field">
                 <span>{`${t("HCM_PRODUCT_TYPE")}`}</span>
                 <span className="mandatory-span">*</span>
               </div>
@@ -135,9 +134,12 @@ const AddProductField = ({ onSelect }) => {
       <Button
         variation="secondary"
         label={t(`CAMPAIGN_ADD_MORE_PRODUCT_BUTTON`)}
-        className={"hover"}
-        icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
-        onButtonClick={addMoreField}
+        size={"large"}
+        // className={"hover"}
+        icon={"AddIcon"}
+        textStyles={{ width: "fit-content" }}
+        styles={{marginTop: "1.5rem"}}
+        onClick={addMoreField}
       />
     </React.Fragment>
   );
