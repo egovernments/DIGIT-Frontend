@@ -210,6 +210,7 @@ function AppConfigurationWrapper({ screenConfig }) {
   const fieldMasterName = searchParams.get("fieldType");
   const module = "dummy-localisation";
   const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, "en_IN");
+  console.log("statestatestate" , state , screenConfig)
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     MODULE_CONSTANTS,
