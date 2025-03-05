@@ -20,7 +20,7 @@
   "dependencies": {
     "@cyntler/react-doc-viewer": "1.10.3",
     "@egovernments/digit-ui-react-components": "1.8.16",
-    "@egovernments/digit-ui-components":"0.0.2-beta.66",
+    "@egovernments/digit-ui-components": "0.0.2-beta.66",
     "react-data-table-component": "7.6.2",
     "styled-components": "5.0.0",
     "@rjsf/core": "5.10.0",
@@ -41,7 +41,9 @@
     "react-select": "5.7.4",
     "react-table": "7.7.0",
     "exceljs": "^4.4.0",
-    "xlsx": "0.17.5"
+    "xlsx": "0.17.5",
+    "react-dnd-html5-backend": "16.0.1",
+    "react-dnd": "16.0.1"
   },
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",

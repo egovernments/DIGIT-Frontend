@@ -14,8 +14,17 @@ const whenToShow = (panelItem, drawerState) => {
     case "label":
     case "helpText":
     case "innerLabel":
-      return drawerState?.[panelItem?.label];
+      return "text";
       break;
+    case "min":
+    case "max":
+    case "numberLength":
+      return "number";
+    case "startDate":
+    case "endDate":
+      return "date";
+    case "countryPrefix":
+      return "prefix";
     default:
       return false;
       break;
@@ -41,7 +50,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
             isCheckedInitially={drawerState?.[panelItem.label] ? true : false}
             shapeOnOff
           />
-          {whenToShow(panelItem, drawerState) && (
+          {whenToShow(panelItem, drawerState) === "text" && (
             <TextInput
               isRequired={true}
               className=""
@@ -61,6 +70,61 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
                   [panelItem.label]: `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${
                     drawerState?.jsonPath || drawerState?.id
                   }`,
+                }));
+              }}
+              placeholder={""}
+            />
+          )}
+
+          {whenToShow(panelItem, drawerState) === "number" && (
+            <TextInput
+              isRequired={true}
+              className=""
+              type={"number"}
+              name="title"
+              value={drawerState?.[panelItem.label]}
+              onChange={(event) => {
+                setDrawerState((prev) => ({
+                  ...prev,
+                  [panelItem.label]: event.target.value,
+                }));
+              }}
+              placeholder={""}
+            >
+              {console.log("panelItem", panelItem, drawerState)}
+            </TextInput>
+          )}
+
+          {whenToShow(panelItem, drawerState) === "date" && (
+            <TextInput
+              isRequired={true}
+              className=""
+              type={"date"}
+              name="title"
+              value={drawerState?.[panelItem.label]}
+              onChange={(event) => {
+                if (event.target.value) {
+                  setDrawerState((prev) => ({
+                    ...prev,
+                    [panelItem.label]: event.target.value,
+                  }));
+                }
+              }}
+              placeholder={""}
+            />
+          )}
+
+          {whenToShow(panelItem, drawerState) === "prefix" && (
+            <TextInput
+              isRequired={true}
+              className=""
+              type={"text"}
+              name="title"
+              value={drawerState?.[panelItem.label]}
+              onChange={(event) => {
+                setDrawerState((prev) => ({
+                  ...prev,
+                  [panelItem.label]: event.target.value,
                 }));
               }}
               placeholder={""}
@@ -136,64 +200,6 @@ function DrawerFieldComposer() {
           );
         }
       })}
-      {/* <Dropdown
-        // style={}
-        variant={""}
-        t={t}
-        option={state?.MASTER_DATA?.AppFieldType}
-        optionKey={"type"}
-        selected={state?.MASTER_DATA?.AppFieldType?.find((i) => i.type === drawerState?.type)}
-        select={(value) => {
-          setDrawerState((prev) => ({
-            ...prev,
-            type: value?.type,
-          }));
-        }}
-      /> */}
-      {/* <Switch
-        label={t("MANDATORY")}
-        onToggle={(value) =>
-          setDrawerState((prev) => ({
-            ...prev,
-            required: value,
-          }))
-        }
-        isCheckedInitially={drawerState?.required ? true : false}
-        shapeOnOff
-      /> */}
-
-      {/* <Switch
-        label={t("LABEL")}
-        onToggle={(value) => {
-          setDrawerState((prev) => ({
-            ...prev,
-            isLabel: value,
-          }));
-        }}
-        isCheckedInitially={drawerState?.isLabel ? true : false}
-        shapeOnOff
-      /> */}
-      {/* {drawerState?.label && (
-        <TextInput
-          isRequired={true}
-          className=""
-          type={"text"}
-          name="title"
-          value={useCustomT(drawerState?.label)}
-          onChange={(event) => {
-            updateLocalization(
-              `MR_DN_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${drawerState?.id}`,
-              Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
-              event.target.value
-            );
-            setDrawerState((prev) => ({
-              ...prev,
-              label: `MR_DN_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${drawerState?.id}`,
-            }));
-          }}
-          placeholder={""}
-        />
-      )} */}
 
       {(drawerState?.type === "dropdown" || drawerState?.type === "dropDown" || drawerState?.type === "checkbox") && (
         <div
@@ -220,22 +226,10 @@ function DrawerFieldComposer() {
                       return i;
                     }),
                   }));
-                  //   setDropDownOptions((prev) => {
-                  //     return prev.map((i) => {
-                  //       if (i.id === item.id) {
-                  //         return {
-                  //           ...i,
-                  //           name: event.target.value,
-                  //         };
-                  //       }
-                  //       return i;
-                  //     });
-                  //   });
                 }}
                 placeholder={""}
               />
               <div
-                // onClick={() => setDropDownOptions((prev) => prev.filter((i) => i.id !== item.id))}
                 onClick={() =>
                   setDrawerState((prev) => ({
                     ...prev,
@@ -264,33 +258,25 @@ function DrawerFieldComposer() {
             size={"small"}
             variation={"teritiary"}
             label={t("ADD_OPTIONS_FOR_DROPDOWN_APP")}
-            onClick={
-              () =>
-                setDrawerState((prev) => ({
-                  ...prev,
-                  optionsKey: "name",
-                  dropDownOptions: prev?.dropDownOptions
-                    ? [
-                        ...prev?.dropDownOptions,
-                        {
-                          id: crypto.randomUUID(),
-                          name: "",
-                        },
-                      ]
-                    : [
-                        {
-                          id: crypto.randomUUID(),
-                          name: "",
-                        },
-                      ],
-                }))
-              //   setDropDownOptions((prev) => [
-              //     ...prev,
-              //     {
-              //       id: crypto.randomUUID(),
-              //       name: "",
-              //     },
-              //   ])
+            onClick={() =>
+              setDrawerState((prev) => ({
+                ...prev,
+                optionsKey: "name",
+                dropDownOptions: prev?.dropDownOptions
+                  ? [
+                      ...prev?.dropDownOptions,
+                      {
+                        id: crypto.randomUUID(),
+                        name: "",
+                      },
+                    ]
+                  : [
+                      {
+                        id: crypto.randomUUID(),
+                        name: "",
+                      },
+                    ],
+              }))
             }
           />
         </div>

@@ -68,6 +68,7 @@ const SidePanel = ({
   defaultOpenWidth,
   defaultClosedWidth,
   addClose,
+  onClose = null,
   closedContents,
   closedSections,
   closedHeader,
@@ -96,7 +97,7 @@ const SidePanel = ({
   };
 
   const handleClose = () => {
-    setIsOpen(false);
+    onClose ? onClose() : setIsOpen(false);
   };
 
   const handleMouseDown = (e) => {
@@ -139,6 +140,7 @@ const SidePanel = ({
           ...styles,
           transition: `width ${transitionDuration || 0.5}s`,
           width: isOpen ? sliderWidth : type === "dynamic" ? defaultClosedWidth || 64 : 0,
+          zIndex: "1000000",
         }}
       >
         {type === "dynamic" && (

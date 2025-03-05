@@ -43,19 +43,6 @@ function AppLocalisationWrapper({ onSubmit, screenConfig, back, showBack, parent
 
   const enabledModules = ["en_IN", "pt_IN", "fr_IN"];
   const currentLocale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
-  const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
-    Digit.ULBService.getCurrentTenantId(),
-    MODULE_CONSTANTS,
-    [{ name: "AppScreenLocalisationConfig" }],
-    {
-      cacheTime: Infinity,
-      staleTime: Infinity,
-      select: (data) => {
-        return data?.["HCM-ADMIN-CONSOLE"]?.AppScreenLocalisationConfig;
-      },
-    },
-    { schemaCode: "LOC_APP_MASTER_DATA" } //mdmsv2
-  );
   const { data: localisationData, isLoading } = Digit.Hooks.campaign.useSearchLocalisation({
     tenantId: "dev",
     locale: enabledModules,

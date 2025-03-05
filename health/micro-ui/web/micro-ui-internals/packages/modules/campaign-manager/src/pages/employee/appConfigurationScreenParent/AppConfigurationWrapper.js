@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useReducer, useState } from "react";
+import React, { createContext, useContext, useEffect, useReducer, useRef, useState } from "react";
 import AppFieldScreenWrapper from "./AppFieldScreenWrapper";
 import { Footer, Button, Divider, Loader, PopUp } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
@@ -6,6 +6,8 @@ import DrawerFieldComposer from "./DrawerFieldComposer";
 import SidePanel from "./SidePanel";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
 import AppLocalisationTable from "./AppLocalisationTable";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 // import { dummyMaster } from "../../configs/dummyMaster";
 
 const AppConfigContext = createContext();
@@ -175,7 +177,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
                   return {
                     ...j,
                     fields: j.fields.map((k) => {
-                      if (k.id ? k.id === state.drawerField.id : k.jsonPath === state.drawerField.jsonPath) {
+                      if (k.id ? k.id === state?.drawerField?.id : k.jsonPath === state?.drawerField?.jsonPath) {
                         return {
                           ...action.payload.updatedState,
                         };
@@ -230,6 +232,7 @@ function AppConfigurationWrapper({ screenConfig }) {
     { schemaCode: "BASE_APP_MASTER_DATA" } //mdmsv2
   );
 
+  console.log("AppConfigMdmsData", state);
   useEffect(() => {
     dispatch({
       type: "SET_SCREEN_DATA",
@@ -279,7 +282,9 @@ function AppConfigurationWrapper({ screenConfig }) {
   };
   return (
     <AppConfigContext.Provider value={{ state, dispatch }}>
-      <AppFieldScreenWrapper onSubmit={onSubmit} />
+      <DndProvider backend={HTML5Backend}>
+        <AppFieldScreenWrapper onSubmit={onSubmit} />
+      </DndProvider>
       {state?.drawerField && (
         <SidePanel
           bgActive
@@ -302,6 +307,12 @@ function AppConfigurationWrapper({ screenConfig }) {
           sections={[]}
           styles={{}}
           type="static"
+          addClose={true}
+          onClose={() =>
+            dispatch({
+              type: "UNSELECT_DRAWER_FIELD",
+            })
+          }
         >
           <DrawerFieldComposer />
           <Divider />

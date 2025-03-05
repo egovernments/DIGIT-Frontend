@@ -71,6 +71,7 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
             isMandatory: field.required || false,
             jsonPath: field.jsonPath,
             populators: {
+              isMandatory: field.required || false,
               name: field.id || field.jsonPath,
               options: field?.dropDownOptions || [],
               optionsKey: field?.optionsKey || "name",
@@ -85,6 +86,7 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
   };
   const onSubmit = (state) => {
     const restructuredData = variant === "web" ? formBuilderRestructure(state?.screenData) : restructure(state?.screenData);
+    console.log("restructuredData", restructuredData);
     submit(restructuredData);
   };
 

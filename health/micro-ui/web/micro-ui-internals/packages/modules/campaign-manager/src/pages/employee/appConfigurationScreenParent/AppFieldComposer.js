@@ -35,6 +35,7 @@ const Field = ({
   helpText,
   infoText,
   innerLabel,
+  rest,
   ...props
 }) => {
   switch (type) {
@@ -512,7 +513,7 @@ const Field = ({
               name={""}
               value={value}
               onChange={(event) => onChange(event)}
-              populators={{ prefix: "+91" }}
+              populators={{ prefix: rest?.countryPrefix }}
             />
             {isDelete && (
               <div
@@ -559,6 +560,7 @@ function AppFieldComposer({
   helpText,
   infoText,
   innerLabel,
+  rest,
 }) {
   const { t } = useTranslation();
   const { state, dispatch } = useAppConfigContext();
@@ -592,6 +594,7 @@ function AppFieldComposer({
         helpText={helpText}
         infoText={infoText}
         innerLabel={innerLabel}
+        rest={rest}
       />
     </div>
   );
