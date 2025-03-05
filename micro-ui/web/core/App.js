@@ -8,7 +8,6 @@ import { UICustomizations } from "./Customisations/UICustomizations";
 //import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
 //import { initPGRComponents,PGRReducers } from "@egovernments/digit-ui-module-pgr";
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
-debugger;
 const enabledModules = [
   //"DSS",
   //"NDSS",

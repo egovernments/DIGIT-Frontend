@@ -13,8 +13,8 @@ import {
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import useStore from "../../../../libraries/src/hooks/useStore"
-import {useEvents} from "../../../../libraries/src/hooks/events"
+// import useStore from "../../../../libraries/src/hooks/useStore"
+// import {useEvents} from "../../../../libraries/src/hooks/events"
 
 const Home = () => {
   const { t } = useTranslation();
@@ -23,7 +23,7 @@ const Home = () => {
   const {
     data: { stateInfo, uiHomePage } = {},
     isLoading,
-  } = useStore.getInitData();
+  } = Digit.Hooks.useStore.getInitData();
   let isMobile = window.Digit.Utils.browser.isMobile();
 
   const conditionsToDisableNotificationCountTrigger = () => {
@@ -35,7 +35,7 @@ const Home = () => {
   const {
     data: EventsData,
     isLoading: EventsDataLoading,
-  } = useEvents({
+  } = Digit.Hooks.useEvents({
     tenantId,
     variant: "whats-new",
     config: {

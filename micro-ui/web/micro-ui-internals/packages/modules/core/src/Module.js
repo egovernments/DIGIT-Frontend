@@ -14,8 +14,8 @@ import ErrorBoundary from "./components/ErrorBoundaries";
 import getStore from "./redux/store";
 import PrivacyComponent from "./components/PrivacyComponent";
 import OtpComponent from "./pages/employee/Otp/OtpCustomComponent";
-import {useInitStore} from "../libraries/src/hooks/store"
-import  Hooks  from "../libraries/src/hooks";
+// import {useInitStore} from "../libraries/src/hooks/store"
+import Hooks from "../../../libraries/src/hooks";
 
 console.log("inside module.js of core")
 console.log(Digit.Hooks);

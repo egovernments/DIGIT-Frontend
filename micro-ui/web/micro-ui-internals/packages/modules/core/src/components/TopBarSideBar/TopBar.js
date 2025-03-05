@@ -5,7 +5,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import ChangeCity from "../ChangeCity";
 import ChangeLanguage from "../ChangeLanguage";
 import {TopBar as TopBarComponentMain } from "@egovernments/digit-ui-components";
-import {useNotificationCount} from "../../../libraries/src/hooks/events"
+// import {useNotificationCount} from "../../../libraries/src/hooks/events"
 
 const TopBar = ({
   t,
@@ -80,7 +80,7 @@ const TopBar = ({
     return false;
   };
 
-  const { data: { unreadCount: unreadNotificationCount } = {}, isSuccess: notificationCountLoaded } = useNotificationCount({
+  const { data: { unreadCount: unreadNotificationCount } = {}, isSuccess: notificationCountLoaded } = Digit.Hooks.useNotificationCount({
     tenantId: CitizenHomePageTenantId,
     config: {
       enabled: conditionsToDisableNotificationCountTrigger(),

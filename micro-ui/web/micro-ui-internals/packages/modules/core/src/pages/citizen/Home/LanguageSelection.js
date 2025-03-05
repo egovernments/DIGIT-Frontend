@@ -2,13 +2,13 @@ import { PageBasedInput, Loader, RadioButtons, CardHeader } from "@egovernments/
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import useStore from "../../../../libraries/src/hooks/useStore"
+// import useStore from "../../../../libraries/src/hooks/useStore"
 
 const LanguageSelection = () => {
   const { t } = useTranslation();
   const history = useHistory();
 
-  const { data: { languages, stateInfo } = {}, isLoading } = useStore.getInitData();
+  const { data: { languages, stateInfo } = {}, isLoading } = Digit.Hooks.useStore.getInitData();
   const selectedLanguage = Digit.StoreData.getCurrentLanguage();
 
   const texts = useMemo(

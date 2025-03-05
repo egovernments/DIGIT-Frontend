@@ -4,7 +4,7 @@ import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { loginConfig as defaultLoginConfig } from "./config";
 import { LoginOtpConfig as defaultLoginOtpConfig } from "./ConfigOtp";
 import LoginComponent from "./login";
-import useCommonMDMS from "../../../../libraries/src/hooks/useMDMS"
+// import useCommonMDMS from "../../../../libraries/src/hooks/useMDMS"
 
 const EmployeeLogin = ({ stateCode }) => {
   const { t } = useTranslation();

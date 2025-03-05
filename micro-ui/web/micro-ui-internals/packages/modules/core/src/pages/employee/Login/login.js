@@ -4,9 +4,9 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
-import {useTenants} from "../../../../libraries/src/hooks/useTenants";
-import useStore from "../../../../libraries/src/hooks/useStore";
-import useCustomAPIMutationHook from "../../../../libraries/src/hooks/useCustomAPIMutationHook"
+// import {useTenants} from "../../../../libraries/src/hooks/useTenants";
+// import useStore from "../../../../libraries/src/hooks/useStore";
+// import useCustomAPIMutationHook from "../../../../libraries/src/hooks/useCustomAPIMutationHook"
 
 /* set employee details to enable backward compatiable */
 const setEmployeeDetail = (userObject, token) => {
@@ -26,9 +26,9 @@ const setEmployeeDetail = (userObject, token) => {
 };
 
 const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
-  const { data: cities, isLoading } = useTenants();
-  const { data: storeData, isLoading: isStoreLoading } = useStore.getInitData();
-  console.log("useStore getInitData", useStore.getInitData)
+  const { data: cities, isLoading } = Digit.Hooks.useTenants();
+  const { data: storeData, isLoading: isStoreLoading } = Digit.Hooks.useStore.getInitData();
+  // console.log("useStore getInitData", useStore.getInitData)
   console.log("cities", cities)
   console.log("data", storeData)
   const { stateInfo } = storeData || {};
@@ -103,7 +103,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       enable: false,
     },
   };
-  const mutation = useCustomAPIMutationHook(reqCreate);
+  const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
   const onOtpLogin = async (data) => {
     const inputEmail = data.email;

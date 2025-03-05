@@ -7,7 +7,7 @@ import Otp from "./pages/employee/Otp";
 import ViewUrl from "./pages/employee/ViewUrl";
 import CustomErrorComponent from "./components/CustomErrorComponent";
 import DummyLoaderScreen from "./components/DummyLoader";
-import useStore from "../libraries/src/hooks/useStore"
+// import useStore from "../libraries/src/hooks/useStore"
 
 export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen" }) => {
   console.log("inside core App")
@@ -16,7 +16,7 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite
   const innerWidth = window.innerWidth;
   const cityDetails = Digit?.ULBService?.getCurrentUlb();
   const userDetails = Digit.UserService.getUser();
-  const { data: storeData } = useStore.getInitData();
+  const { data: storeData } = Digit.Hooks.useStore.getInitData();
   const { stateInfo } = storeData || {};
 
   const DSO = Digit.UserService.hasAccess(["FSM_DSO"]);

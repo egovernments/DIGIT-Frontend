@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "start": "webpack serve --mode=development --open --hot",
-    "build": "webpack  --mode=development --node-env=development --config webpack.config.js",
+    "build": "webpack  --mode=development --node-env=production --config webpack.config.js",
     "prepublish": "yarn build"
   },
   "peerDependencies": {

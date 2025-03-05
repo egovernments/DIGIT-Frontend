@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import useStore from "../../../../libraries/src/hooks/useStore"
+// import useStore from "../../../../libraries/src/hooks/useStore"
 import {
   HomeIcon,
   EditPencilIcon,
@@ -81,7 +81,7 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
   const history = useHistory();
   const location = useLocation();
   const { pathname } = location;
-  const { data: storeData, isFetched } = useStore.getInitData();
+  const { data: storeData, isFetched } = Digit.Hooks.useStore.getInitData();
   const { stateInfo } = storeData || {};
   const user = Digit.UserService.getUser();
   let isMobile = window.Digit.Utils.browser.isMobile();

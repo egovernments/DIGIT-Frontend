@@ -8,8 +8,8 @@ import { defaultImage } from "../../utils";
 import StaticCitizenSideBar from "./StaticCitizenSideBar";
 import { MobileSidebar } from "@egovernments/digit-ui-components";
 import { LogoutIcon } from "@egovernments/digit-ui-react-components";
-import useStore from "../../../../libraries/src/hooks/useStore";
-import useAccessControl from "../../../../libraries/src/hooks/useAccessControl";
+// import useStore from "../../../../libraries/src/hooks/useStore";
+// import useAccessControl from "../../../../libraries/src/hooks/useAccessControl";
 
 
 const Profile = ({ info, stateName, t }) => {
@@ -79,7 +79,7 @@ export const CitizenSideBar = ({
   userProfile,
 }) => {
   const isMultiRootTenant=Digit.Utils.getMultiRootTenant()
-  const { data: storeData, isFetched } = useStore.getInitData();
+  const { data: storeData, isFetched } = Digit.Hooks.useStore.getInitData();
   const selectedLanguage = Digit.StoreData.getCurrentLanguage();
   const [profilePic, setProfilePic] = useState(null);
   const {languages, stateInfo } = storeData || {};
@@ -90,7 +90,7 @@ export const CitizenSideBar = ({
   const [selectedCity, setSelectedCity] = useState([]); //selectedCities?.[0]?.value
   const [selected, setselected] = useState(selectedLanguage);
   let selectedCities = [];
-  const { isLoading, data } = useAccessControl();
+  const { isLoading, data } = Digit.Hooks.useAccessControl();
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { t } = useTranslation();
   const history = useHistory();

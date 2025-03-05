@@ -16,7 +16,7 @@ import HowItWorks from "./HowItWorks/howItWorks";
 import Login from "./Login";
 import Search from "./SearchApp";
 import StaticDynamicCard from "./StaticDynamicComponent/StaticDynamicCard";
-import useCustomMDMS from "../../../libraries/src/hooks/useCustomMDMS"
+// import useCustomMDMS from "../../../libraries/src/hooks/useCustomMDMS"
 
 const sidebarHiddenFor = [
   `${window?.contextPath}/citizen/register/name`,
@@ -46,7 +46,7 @@ const Home = ({
   pathname,
   initData,
 }) => {
-  const { isLoading: islinkDataLoading, data: linkData, isFetched: isLinkDataFetched } = useCustomMDMS(
+  const { isLoading: islinkDataLoading, data: linkData, isFetched: isLinkDataFetched } = Digit.Hooks.useCustomMDMS(
     Digit?.ULBService?.getStateId(),
     "ACCESSCONTROL-ACTIONS-TEST",
     [
