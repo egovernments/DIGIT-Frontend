@@ -23,6 +23,7 @@ const Tabs = ({ numberTabs, onTabChange }) => {
 };
 
 const dispatcher = (state, action) => {
+  console.log("state" , state , action);
   switch (action.key) {
     case "SET":
       return {
@@ -34,6 +35,11 @@ const dispatcher = (state, action) => {
         ...state,
         appData: state.appData ? [...state.appData, ...action.data] : [...action.data],
       };
+      case "SETFORM":
+        return {
+          appTemplate: action.data,
+          currentTemplate: action.data,
+        };
     default:
       return state;
   }
@@ -47,6 +53,7 @@ const AppConfigurationParentLayer = () => {
   const searchParams = new URLSearchParams(location.search);
   const masterName = searchParams.get("masterName");
   const variant = searchParams.get("variant");
+  const formId = searchParams.get("formId");
   const [parentState, parentDispatch] = useReducer(dispatcher, {});
   const [appTemplate, setAppTemplate] = useState([]);
   const [numberTabs, setNumberTabs] = useState([]);
@@ -68,6 +75,83 @@ const AppConfigurationParentLayer = () => {
     },
     { schemaCode: "BASE_APP_MASTER_DATA3" } //mdmsv2
   );
+
+  const reqCriteriaForm = {
+    url: `/egov-mdms-service/v2/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId: Digit.ULBService.getCurrentTenantId(),
+        moduleDetails: [
+          {
+            moduleName: "FormBuilderFormComposerConfig",
+            masterDetails: MODULE_CONSTANTS,
+          },
+        ],
+      },
+    },
+    config: {
+      enabled: formId ? true: false,
+      select: (data) => {
+        return data?.mdms.filter(item => item.id === formId);
+      },
+    },
+  };
+
+  const { isLoading, data: formData } = Digit.Hooks.useCustomAPIHook(reqCriteriaForm);
+
+  console.log("formData" , formData , AppConfigMdmsData);
+
+  function convertDataFormat(inputData) {
+    console.log("input" , inputData?.[0]?.data);
+    const formData = inputData?.[0]?.data;
+    if(formData == 'undefined') return null;
+    
+    return [
+      {
+        cards: [
+          {
+            fields: formData?.body.map(field => ({
+              type: field.type === "textarea" ? "text" : field.type,
+              label: field.label,
+              active: true,
+              jsonPath: field.jsonPath || field.key,
+              metaData: {},
+              required: field.isMandatory,
+              deleteFlag: false
+            })),
+            header: "Header",
+            description: "Desc",
+            headerFields: [
+              {
+                type: "text",
+                label: formData?.head,
+                active: true,
+                jsonPath: "ScreenHeading",
+                metaData: {},
+                required: true
+              },
+              {
+                type: "text",
+                label: formData?.description,
+                active: true,
+                jsonPath: "Description",
+                metaData: {},
+                required: true
+              }
+            ]
+          }
+        ],
+        config: {
+          enableComment: false,
+          enableFieldAddition: true,
+          allowFieldsAdditionAt: ["body"],
+          enableSectionAddition: false,
+          allowCommentsAdditionAt: ["body"]
+        }
+      }
+    ];
+  }  
+
   const { mutate } = Digit.Hooks.campaign.useUpsertFormBuilderConfig(tenantId);
   useEffect(() => {
     if (showToast) {
@@ -75,14 +159,20 @@ const AppConfigurationParentLayer = () => {
     }
   }, [showToast]);
   useEffect(() => {
-    if (!isLoadingAppConfigMdmsData && AppConfigMdmsData?.[masterName]) {
+    if(formData || formId){
+      parentDispatch({
+        key: "SETFORM",
+        data: convertDataFormat(formData)
+      });
+    }
+    else if (!isLoadingAppConfigMdmsData && AppConfigMdmsData?.[masterName]) {
       setAppTemplate([...AppConfigMdmsData?.[masterName]]);
       parentDispatch({
         key: "SET",
         data: [...AppConfigMdmsData?.[masterName]],
       });
     }
-  }, [isLoadingAppConfigMdmsData, AppConfigMdmsData]);
+  }, [isLoadingAppConfigMdmsData, AppConfigMdmsData , formData]);
 
   useEffect(() => {
     setNumberTabs(
@@ -124,17 +214,20 @@ const AppConfigurationParentLayer = () => {
   }, [currentStep]);
 
   useEffect(() => {
-    if (parentState?.currentTemplate?.length > 0 && currentStep && numberTabs?.length > 0) {
+    if (variant === "app" && parentState?.currentTemplate?.length > 0 && currentStep && numberTabs?.length > 0) {
       const findActiveParent = numberTabs?.find((i) => i?.active)?.parent;
       setCurrentScreen(parentState?.currentTemplate.filter((i) => i?.parent === findActiveParent)?.filter((i) => i?.order === currentStep));
+    }
+    else{
+      setCurrentScreen(parentState?.currentTemplate);
     }
   }, [parentState?.currentTemplate, currentStep, numberTabs]);
 
   if (isLoadingAppConfigMdmsData || !parentState?.currentTemplate || parentState?.currentTemplate?.length === 0) {
     return <Loader />;
   }
-
   const submit = async (screenData) => {
+  console.log("pp" , screenData);
     if (variant === "web") {
       await mutate(
         {
@@ -161,21 +254,39 @@ const AppConfigurationParentLayer = () => {
     });
     if (stepper?.find((i) => i.active)?.isLast) {
       const nextTabAvailable = numberTabs.some((tab) => tab.code > currentStep.code && tab.active);
-      if (nextTabAvailable) {
-        setNumberTabs((prev) => {
-          return prev.map((tab) => {
-            // Activate only the next tab (currentStep.code + 1)
-            if (tab.code === prev.find((j) => j.active).code + 1) {
-              return { ...tab, active: true }; // Activate the next tab
-            }
-            return { ...tab, active: false }; // Deactivate all others
-          });
-        });
-        return;
-      } else {
-        setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
-        return;
-      }
+      await mutate(
+        {
+          moduleName: "HCM-ADMIN-CONSOLE",
+          masterName: "DummyAppConfig",
+          data: { ...screenData?.[0] },
+        },
+        {
+          onError: (error, variables) => {
+            setShowToast({ key: "error", label: error?.message ? error?.message : error });
+          },
+          onSuccess: async (data) => {
+            setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
+            history.push(
+              `/${window.contextPath}/employee/campaign/form-builder-configuration?moduleName=HCM-ADMIN-CONSOLE&masterName=DummyAppConfig&formId=${data?.mdms?.[0]?.id}`
+            );
+          },
+        }
+      );
+      // if (nextTabAvailable) {
+      //   setNumberTabs((prev) => {
+      //     return prev.map((tab) => {
+      //       // Activate only the next tab (currentStep.code + 1)
+      //       if (tab.code === prev.find((j) => j.active).code + 1) {
+      //         return { ...tab, active: true }; // Activate the next tab
+      //       }
+      //       return { ...tab, active: false }; // Deactivate all others
+      //     });
+      //   });
+      //   return;
+      // } else {
+      //   setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
+      //   return;
+      // }
     } else {
       setCurrentStep((prev) => prev + 1);
     }

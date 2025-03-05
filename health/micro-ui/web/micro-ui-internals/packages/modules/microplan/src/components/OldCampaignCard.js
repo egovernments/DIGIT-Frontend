@@ -73,6 +73,12 @@ const CampaignCard = () => {
       // count: isLoading?"-":data
     },
     {
+      label: t("ACTION_TEST_APP_CONFIGURATION_PARENT_WEB_EDIT"),
+      link: `/workbench-ui/employee/campaign/app-configuration-parent?variant=web&masterName=FormBuilderConfig&formComposerMasterName=FormBuilderFormComposerConfig&fieldType=FormBuilderFieldType&prefix=FORMONE&formId=b2cd4285-1735-49da-85fd-a5f4ea219e3b`,
+      roles: ROLES.CAMPAIGN_MANAGER,
+      // count: isLoading?"-":data
+    },
+    {
       label: t("ACTION_TEST_FORM_BUILDER"),
       link: `/workbench-ui/employee/campaign/form-builder-configuration`,
       roles: ROLES.CAMPAIGN_MANAGER,
