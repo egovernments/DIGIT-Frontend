@@ -332,7 +332,7 @@ function AppConfigurationWrapper({ screenConfig }) {
           footer={[]}
           header={[
             <div className="typography heading-m" style={{ color: "#0B4B66" }}>
-              Header
+              {t("FIELD_CONFIGURATION")}
             </div>,
           ]}
           hideScrollIcon

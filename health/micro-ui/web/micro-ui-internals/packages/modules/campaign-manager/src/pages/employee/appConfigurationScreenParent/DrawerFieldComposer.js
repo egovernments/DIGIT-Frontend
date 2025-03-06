@@ -46,7 +46,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
       return (
         <>
           <Switch
-            label={t(panelItem?.label)}
+            label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}
             onToggle={(value) =>
               setDrawerState((prev) => ({
                 ...prev,
@@ -192,7 +192,7 @@ function DrawerFieldComposer() {
       {state?.MASTER_DATA?.DrawerPanelConfig?.map((panelItem, index) => {
         if (isFieldVisible(panelItem)) {
           return (
-            <div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
               <RenderField
                 panelItem={panelItem}
                 drawerState={drawerState}
@@ -261,7 +261,7 @@ function DrawerFieldComposer() {
             type={"button"}
             size={"small"}
             variation={"teritiary"}
-            label={t("ADD_OPTIONS_FOR_DROPDOWN_APP")}
+            label={t("ADD_OPTIONS")}
             onClick={() =>
               setDrawerState((prev) => ({
                 ...prev,
