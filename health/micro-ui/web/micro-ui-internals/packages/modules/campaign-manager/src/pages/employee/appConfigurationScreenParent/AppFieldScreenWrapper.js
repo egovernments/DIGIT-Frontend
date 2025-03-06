@@ -5,44 +5,13 @@ import { Button, Card, CardHeader, Divider, Stepper, Tab, ActionBar } from "@ego
 import AppFieldComposer from "./AppFieldComposer";
 import _ from "lodash";
 import { useCustomT } from "./useCustomT";
-import { useDrag, useDrop, DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-const FIELD_TYPE = "FIELD";
+import DraggableField from "./DraggableField";
 
 function AppFieldScreenWrapper({}) {
   const { state, dispatch } = useAppConfigContext();
   const searchParams = new URLSearchParams(location.search);
   const projectType = searchParams.get("prefix");
   const { t } = useTranslation();
-  const ref = useRef(null);
-  const dragRef = useRef(null);
-  const [isDraggingField, setIsDraggingField] = useState(false);
-
-  const [{ isDragging }, drag] = useDrag({
-    type: FIELD_TYPE,
-    item: () => {
-      setIsDraggingField(true);
-      return field;
-    },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-    end: () => setTimeout(() => setIsDraggingField(false), 200),
-  });
-
-  const [, drop] = useDrop({
-    accept: FIELD_TYPE,
-    hover: (draggedItem) => {
-      console.log("kfjdk", draggedItem);
-      // if (draggedItem.index !== index) {
-      //   moveField(draggedItem.index, index);
-      //   draggedItem.index = index;
-      // }
-    },
-  });
-
-  drop(ref);
-  drag(dragRef);
 
   const currentCard = useMemo(() => {
     return state?.screenData?.[0];
@@ -52,10 +21,10 @@ function AppFieldScreenWrapper({}) {
   ]);
 
   const moveField = useCallback(
-    (fromIndex, toIndex) => {
+    (field, targetedField, fromIndex, toIndex, currentCard, cardIndex) => {
       dispatch({
         type: "REORDER_FIELDS",
-        payload: { currentScreen: currentCard, fromIndex, toIndex },
+        payload: { field, targetedField, fromIndex, toIndex, currentCard, cardIndex },
       });
     },
     [dispatch, currentCard]
@@ -90,12 +59,73 @@ function AppFieldScreenWrapper({}) {
             ))}
             <Divider />
             {fields?.map(
-              ({ type, label, active, required, Mandatory, helpText, infoText, innerLabel, dropDownOptions, deleteFlag, ...rest }, i, c) => (
-                <div ref={ref} style={{ opacity: isDragging ? 0.5 : 1, display: "flex", alignItems: "center" }}>
-                  <span ref={dragRef} style={{ cursor: "grab", marginRight: "8px" }}>
-                    ☰
-                  </span>
-                  <AppFieldComposer
+              ({ type, label, active, required, Mandatory, helpText, infoText, innerLabel, dropDownOptions, deleteFlag, ...rest }, i, c) => {
+                // const ref = useRef(null);
+                // const [{ isDragging }, drag] = useDrag({
+                //   type: FIELD_TYPE,
+                //   item: { index: i, data: c[i] },
+                //   collect: (monitor) => ({
+                //     isDragging: monitor.isDragging(),
+                //   }),
+                // });
+
+                // const [, drop] = useDrop({
+                //   accept: FIELD_TYPE,
+                //   hover: (draggedItem) => {
+                //     if (draggedItem.index !== i) {
+                //       moveField(fields, c[i], draggedItem.index, i, card[index], index);
+                //       draggedItem.index = i;
+                //     }
+                //   },
+                // });
+
+                // drop(ref);
+                // drag(dragRef);
+                // return (
+                //   <div ref={ref} style={{ opacity: true  ? 0.5 : 1, display: "flex", alignItems: "center" }}>
+                //     <span ref={dragRef} style={{ cursor: "grab", marginRight: "8px" }}>
+                //       ☰
+                //     </span>
+                //     <AppFieldComposer
+                //       type={type}
+                //       label={useCustomT(label)}
+                //       active={active}
+                //       required={required}
+                //       isDelete={deleteFlag === false ? false : true}
+                //       dropDownOptions={dropDownOptions}
+                //       onDelete={() => {
+                //         dispatch({
+                //           type: "DELETE_FIELD",
+                //           payload: {
+                //             currentScreen: currentCard,
+                //             currentCard: card[index],
+                //             currentField: c[i],
+                //           },
+                //         });
+                //         // return;
+                //       }}
+                //       onSelectField={() => {
+                //         dispatch({
+                //           type: "SELECT_DRAWER_FIELD",
+                //           payload: {
+                //             currentScreen: currentCard,
+                //             currentCard: card[index],
+                //             drawerField: c[i],
+                //           },
+                //         });
+                //         // return;
+                //       }}
+                //       config={c[i]}
+                //       Mandatory={Mandatory}
+                //       helpText={useCustomT(helpText)}
+                //       infoText={useCustomT(infoText)}
+                //       innerLabel={useCustomT(innerLabel)}
+                //       rest={rest}
+                //     />
+                //   </div>
+                // );
+                return (
+                  <DraggableField
                     type={type}
                     label={useCustomT(label)}
                     active={active}
@@ -130,9 +160,15 @@ function AppFieldScreenWrapper({}) {
                     infoText={useCustomT(infoText)}
                     innerLabel={useCustomT(innerLabel)}
                     rest={rest}
+                    index={i}
+                    fieldIndex={i}
+                    cardIndex={card[index]}
+                    indexOfCard={index}
+                    moveField={moveField}
+                    fields={c}
                   />
-                </div>
-              )
+                );
+              }
             )}
             {currentCard?.config?.enableFieldAddition && (
               <Button

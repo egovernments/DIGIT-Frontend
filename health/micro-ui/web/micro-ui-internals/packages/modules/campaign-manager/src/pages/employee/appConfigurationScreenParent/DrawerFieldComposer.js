@@ -9,6 +9,9 @@ import { useCustomT } from "./useCustomT";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
 
 const whenToShow = (panelItem, drawerState) => {
+  if (!panelItem?.label || !drawerState?.[panelItem.label]) {
+    return false;
+  }
   switch (panelItem?.label) {
     case "infoText":
     case "label":
@@ -20,11 +23,14 @@ const whenToShow = (panelItem, drawerState) => {
     case "max":
     case "numberLength":
       return "number";
+      break;
     case "startDate":
     case "endDate":
       return "date";
+      break;
     case "countryPrefix":
       return "prefix";
+      break;
     default:
       return false;
       break;
@@ -90,9 +96,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
                 }));
               }}
               placeholder={""}
-            >
-              {console.log("panelItem", panelItem, drawerState)}
-            </TextInput>
+            />
           )}
 
           {whenToShow(panelItem, drawerState) === "date" && (
@@ -103,7 +107,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
               name="title"
               value={drawerState?.[panelItem.label]}
               onChange={(event) => {
-                if (event.target.value) {
+                if (event?.target?.value) {
                   setDrawerState((prev) => ({
                     ...prev,
                     [panelItem.label]: event.target.value,

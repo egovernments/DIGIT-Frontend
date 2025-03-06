@@ -114,7 +114,21 @@ const Field = ({
               text={t(infoText)}
             />
           )}
-          <LabelFieldPair className={!headerFields ? `appConfiglabelField ${config?.id === state?.drawerField?.id ? "selected" : ""}` : ""}>
+          <LabelFieldPair
+            className={
+              !headerFields
+                ? `appConfiglabelField ${
+                    config?.id
+                      ? config?.id === state?.drawerField?.id
+                        ? "selected"
+                        : ""
+                      : config?.jsonPath === state?.drawerField?.jsonPath
+                      ? "selected"
+                      : ""
+                  }`
+                : ""
+            }
+          >
             <div className="appConfiglabelField-label">
               <span>{`${t(label)}`}</span>
               {required && <span className="mandatory-span">*</span>}
@@ -172,7 +186,21 @@ const Field = ({
               text={t(infoText)}
             />
           )}
-          <LabelFieldPair className={!headerFields ? `appConfiglabelField ${config?.id === state?.drawerField?.id ? "selected" : ""}` : ""}>
+          <LabelFieldPair
+            className={
+              !headerFields
+                ? `appConfiglabelField ${
+                    config?.id
+                      ? config?.id === state?.drawerField?.id
+                        ? "selected"
+                        : ""
+                      : config?.jsonPath === state?.drawerField?.jsonPath
+                      ? "selected"
+                      : ""
+                  }`
+                : ""
+            }
+          >
             <div className="appConfiglabelField-label">
               <span>{`${t(label)}`}</span>
               {required && <span className="mandatory-span">*</span>}
@@ -220,7 +248,21 @@ const Field = ({
               text={t(infoText)}
             />
           )}
-          <LabelFieldPair className={!headerFields ? `appConfiglabelField ${config?.id === state?.drawerField?.id ? "selected" : ""}` : ""}>
+          <LabelFieldPair
+            className={
+              !headerFields
+                ? `appConfiglabelField ${
+                    config?.id
+                      ? config?.id === state?.drawerField?.id
+                        ? "selected"
+                        : ""
+                      : config?.jsonPath === state?.drawerField?.jsonPath
+                      ? "selected"
+                      : ""
+                  }`
+                : ""
+            }
+          >
             <div className="appConfiglabelField-label">
               <span>{`${t(label)}`}</span>
               {required && <span className="mandatory-span">*</span>}
@@ -268,7 +310,21 @@ const Field = ({
               text={t(infoText)}
             />
           )}
-          <LabelFieldPair className={!headerFields ? `appConfiglabelField ${config?.id === state?.drawerField?.id ? "selected" : ""}` : ""}>
+          <LabelFieldPair
+            className={
+              !headerFields
+                ? `appConfiglabelField ${
+                    config?.id
+                      ? config?.id === state?.drawerField?.id
+                        ? "selected"
+                        : ""
+                      : config?.jsonPath === state?.drawerField?.jsonPath
+                      ? "selected"
+                      : ""
+                  }`
+                : ""
+            }
+          >
             <div className="appConfiglabelField-label">
               <span>{`${t(label)}`}</span>
               {required && <span className="mandatory-span">*</span>}
@@ -315,7 +371,21 @@ const Field = ({
               text={t(infoText)}
             />
           )}
-          <LabelFieldPair className={!headerFields ? `appConfiglabelField ${config?.id === state?.drawerField?.id ? "selected" : ""}` : ""}>
+          <LabelFieldPair
+            className={
+              !headerFields
+                ? `appConfiglabelField ${
+                    config?.id
+                      ? config?.id === state?.drawerField?.id
+                        ? "selected"
+                        : ""
+                      : config?.jsonPath === state?.drawerField?.jsonPath
+                      ? "selected"
+                      : ""
+                  }`
+                : ""
+            }
+          >
             <div className="appConfiglabelField-label">
               <span>{`${t(label)}`}</span>
               {required && <span className="mandatory-span">*</span>}

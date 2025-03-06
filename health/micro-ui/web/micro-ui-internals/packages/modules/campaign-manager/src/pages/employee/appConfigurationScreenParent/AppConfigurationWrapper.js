@@ -17,7 +17,23 @@ const initialState = {};
 export const useAppConfigContext = () => {
   return useContext(AppConfigContext);
 };
+const reorderConfig = (config, fromIndex, toIndex) => {
+  if (
+    fromIndex === toIndex || // No change needed
+    fromIndex < 0 ||
+    toIndex < 0 || // Prevent negative indexes
+    fromIndex >= config?.length ||
+    toIndex >= config?.length // Prevent out-of-bounds access
+  ) {
+    return [...config]; // Return a copy to ensure immutability
+  }
 
+  const updatedConfig = [...config]; // Copy array to avoid mutation
+  const [movedItem] = updatedConfig.splice(fromIndex, 1); // Remove item
+  updatedConfig.splice(toIndex, 0, movedItem); // Insert item at new index
+
+  return updatedConfig;
+};
 const reducer = (state = initialState, action, updateLocalization) => {
   switch (action.type) {
     case "MASTER_DATA":
@@ -193,6 +209,24 @@ const reducer = (state = initialState, action, updateLocalization) => {
           return item;
         }),
       };
+    case "REORDER_FIELDS":
+      return {
+        ...state,
+        screenData: [
+          {
+            ...state?.screenData[0],
+            cards: state?.screenData[0]?.cards.map((card, index) => {
+              if (index === action.payload.cardIndex) {
+                return {
+                  ...card,
+                  fields: reorderConfig(card.fields, action.payload.fromIndex, action.payload.toIndex),
+                };
+              }
+              return card;
+            }),
+          },
+        ],
+      };
     default:
       return state;
   }
@@ -210,7 +244,6 @@ function AppConfigurationWrapper({ screenConfig }) {
   const fieldMasterName = searchParams.get("fieldType");
   const module = "dummy-localisation";
   const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, "en_IN");
-  console.log("statestatestate" , state , screenConfig)
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     MODULE_CONSTANTS,
@@ -233,7 +266,6 @@ function AppConfigurationWrapper({ screenConfig }) {
     { schemaCode: "BASE_APP_MASTER_DATA" } //mdmsv2
   );
 
-  console.log("AppConfigMdmsData", state);
   useEffect(() => {
     dispatch({
       type: "SET_SCREEN_DATA",
@@ -247,27 +279,28 @@ function AppConfigurationWrapper({ screenConfig }) {
     return <Loader />;
   }
 
-
   function createLocaleArrays() {
     const result = {};
-  
+
     // Dynamically determine locales
-    const locales = Object.keys(locState[0]).filter(key => key.includes('_IN') && key !== 'en_IN');
-    locales.unshift('en_IN');
-    locales.forEach(locale => {
-      result[locale] = locState.map(item => ({
-        code: item.code,
-        message: item[locale] || '',
-        module: item.module || "hcm-dummy-module",
-        locale: locale
-      })).filter(item => item.message !== '');
+    const locales = Object.keys(locState[0]).filter((key) => key.includes("_IN") && key !== "en_IN");
+    locales.unshift("en_IN");
+    locales.forEach((locale) => {
+      result[locale] = locState
+        .map((item) => ({
+          code: item.code,
+          message: item[locale] || "",
+          module: item.module || "hcm-dummy-module",
+          locale: locale,
+        }))
+        .filter((item) => item.message !== "");
     });
-  
+
     return result;
   }
 
   const handleSubmit = async () => {
-    const localeArrays = createLocaleArrays();    
+    const localeArrays = createLocaleArrays();
     for (const locale of Object.keys(localeArrays)) {
       if (localeArrays[locale].length > 0) {
         try {
@@ -360,13 +393,7 @@ function AppConfigurationWrapper({ screenConfig }) {
                 setShowPopUp(false);
               }}
             />,
-            <Button
-              type={"button"}
-              size={"large"}
-              variation={"primary"}
-              label={t("SUBMIT")}
-              onClick={handleSubmit}
-            />
+            <Button type={"button"} size={"large"} variation={"primary"} label={t("SUBMIT")} onClick={handleSubmit} />,
           ]}
         >
           <AppLocalisationTable />

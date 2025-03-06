@@ -59,6 +59,29 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
       }
     };
 
+    const addingValidations = (field) => {
+      switch (field.type) {
+        case "number":
+          if (!field.min && !field.max) return {};
+          return {
+            validation: {
+              min: field.min,
+              max: field.max,
+            },
+          };
+          break;
+        case "datePicker":
+          if (!field.endDate && !field.startDate) return {};
+          return {
+            min: Digit.Utils.date.convertEpochToDate(field.startDate),
+            max: Digit.Utils.date.convertEpochToDate(field.endDate),
+          };
+          break;
+
+        default:
+          break;
+      }
+    };
     const formConfig = data?.[0]?.cards?.map((item) => {
       return {
         head: item?.headerFields?.find((i) => i.jsonPath === "ScreenHeading")?.value,
@@ -75,6 +98,7 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
               name: field.id || field.jsonPath,
               options: field?.dropDownOptions || [],
               optionsKey: field?.optionsKey || "name",
+              ...addingValidations(field),
               ...field.metaData,
             },
             inline: field?.inline || true,
@@ -86,7 +110,6 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
   };
   const onSubmit = (state) => {
     const restructuredData = variant === "web" ? formBuilderRestructure(state?.screenData) : restructure(state?.screenData);
-    console.log("restructuredData", restructuredData);
     submit(restructuredData);
   };
 
