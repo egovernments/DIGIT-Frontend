@@ -95,6 +95,17 @@ const AppConfigurationParentLayer = () => {
     },
   };
 
+    const correctField = (key) => {
+      switch (key) {
+        case "text":
+          return "textInput";
+        case "date":
+          return "datePicker";
+        default:
+          return key;
+      }
+    };
+
   const { isLoading, data: formData } = Digit.Hooks.useCustomAPIHook(reqCriteriaForm);
 
   function convertDataFormat(inputData) {
@@ -106,7 +117,8 @@ const AppConfigurationParentLayer = () => {
         cards: [
           {
             fields: formData?.body.map((field) => ({
-              type: field.type === "textarea" ? "text" : field.type,
+              // type: field.type === "textarea" ? "text" : field.type,
+              type: correctField(field.type),
               label: field.label,
               active: true,
               jsonPath: field.jsonPath || field.key,

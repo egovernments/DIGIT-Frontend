@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useReducer, useRef, useState } from "react";
 import AppFieldScreenWrapper from "./AppFieldScreenWrapper";
-import { Footer, Button, Divider, Loader, PopUp } from "@egovernments/digit-ui-components";
+import { Footer, Button, Divider, Loader, PopUp , Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import DrawerFieldComposer from "./DrawerFieldComposer";
 import SidePanel from "./SidePanel";
@@ -244,6 +244,7 @@ function AppConfigurationWrapper({ screenConfig }) {
   const fieldMasterName = searchParams.get("fieldType");
   const module = "dummy-localisation";
   const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, "en_IN");
+   const [showToast, setShowToast] = useState(null);
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     MODULE_CONSTANTS,
@@ -278,6 +279,9 @@ function AppConfigurationWrapper({ screenConfig }) {
   if (isLoadingAppConfigMdmsData) {
     return <Loader />;
   }
+  const closeToast = () => {
+    setShowToast(null);
+  };
 
   function createLocaleArrays() {
     const result = {};
@@ -313,6 +317,7 @@ function AppConfigurationWrapper({ screenConfig }) {
     }
 
     setShowPopUp(false);
+    setShowToast({ key: "success", label: "LOCALISATION_SUCCESS" });
   };
   return (
     <AppConfigContext.Provider value={{ state, dispatch }}>
@@ -399,6 +404,14 @@ function AppConfigurationWrapper({ screenConfig }) {
           <AppLocalisationTable />
         </PopUp>
       )}
+      {showToast && (
+              <Toast
+                type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
+                label={t(showToast?.label)}
+                transitionTime={showToast.transitionTime}
+                onClose={closeToast}
+              />
+            )}
       <Footer
         actionFields={[
           <Button className="previous-button" variation="secondary" label={t("BACK")} title={t("BACK")} onClick={() => back()} />,
