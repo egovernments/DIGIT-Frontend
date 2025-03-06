@@ -97,7 +97,7 @@ const AppConfigurationParentLayer = () => {
 
   const { isLoading, data: formData } = Digit.Hooks.useCustomAPIHook(reqCriteriaForm);
 
-  function convertDataFormat(inputData) {
+  function convertDataFormat(inputData, template) {
     const formData = inputData?.[0]?.data;
     if (formData == "undefined") return null;
 
@@ -119,7 +119,8 @@ const AppConfigurationParentLayer = () => {
             headerFields: [
               {
                 type: "text",
-                label: formData?.head,
+                label: "SCREEN_HEADING",
+                value: formData?.head,
                 active: true,
                 jsonPath: "ScreenHeading",
                 metaData: {},
@@ -127,7 +128,8 @@ const AppConfigurationParentLayer = () => {
               },
               {
                 type: "text",
-                label: formData?.description,
+                value: formData?.description,
+                label: "SCREEN_DESCRIPTION",
                 active: true,
                 jsonPath: "Description",
                 metaData: {},
@@ -158,7 +160,7 @@ const AppConfigurationParentLayer = () => {
     if (formData || formId) {
       parentDispatch({
         key: "SETFORM",
-        data: convertDataFormat(formData),
+        data: convertDataFormat(formData, AppConfigMdmsData?.[masterName]),
       });
     } else if (!isLoadingAppConfigMdmsData && AppConfigMdmsData?.[masterName]) {
       setAppTemplate([...AppConfigMdmsData?.[masterName]]);
@@ -223,7 +225,6 @@ const AppConfigurationParentLayer = () => {
   const submit = async (screenData) => {
     if (variant === "web") {
       if (formId && formData) {
-
         const updatedFormData = formData[0];
 
         const newFormContent = screenData?.[0];
