@@ -1005,8 +1005,9 @@ export const UICustomizations = {
   },
   MySidebarDataSearchConfig: {
     preProcess: (data, additionalDetails) => {
-      data.body.MdmsCriteria.filters.displayName = data?.state?.searchForm?.displayName;
-      delete data.displayName;      
+      console.log("search params", data?.state);
+      // data.body.MdmsCriteria.filters.displayName = data?.state?.searchForm?.displayName;
+      // delete data.displayName;      
       return data;
     },
   }

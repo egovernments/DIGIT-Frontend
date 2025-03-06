@@ -1,10 +1,5 @@
-
-const tenantId = Digit.ULBService.getCurrentTenantId();
-const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
-const moduleName = "ACCESSCONTROL-ACTIONS-TEST"
-const masterName = "actions-test"
-
-export const SidebarDataSearchConfig = [
+export const SidebarDataSearchConfig  = (tenantId, mdms_context_path, moduleName, masterName) => {
+    return [
     {
         label: "Sidebar Data Search",
         type: "search",
@@ -39,6 +34,10 @@ export const SidebarDataSearchConfig = [
                     primaryLabel: "ES_COMMON_SEARCH",
                     secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
                     minReqFields: 0,
+                    defaultValues: {
+                        displayName: "",
+                        navigationURL: "",
+                      },
                     fields: [
                         {
                             label: "SIDEBAR_DISPLAY_NAME",
@@ -102,4 +101,5 @@ export const SidebarDataSearchConfig = [
         // customHookName: "workbench.useCustomMDMS"
     },
 ];
+}
 

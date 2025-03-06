@@ -15,6 +15,14 @@
     display: inherit;
     padding-top: 1.5rem;
 
+  .workbench-mdms-json-container{
+    position: relative;
+    .jk-digit-secondary-btn.action-bar-button {
+      position: absolute;
+      right: 0%;
+    }
+  }
+
     .digit-form-composer-sub-header {
       @extend .typography.text-heading-m;
       padding-left: 1rem;

@@ -1,3 +1,8 @@
+## [1.0.19]  [3-Mar-2025]
+- Disabled json-edit-react & enable based on flag
+- Introduced new Globalvariable to enable bulk upload of master dataa 'ENABLE_JSON_EDIT'
+
+
 ## [1.0.18]  [25-Feb-2025]
 - Compilation issue fix
 

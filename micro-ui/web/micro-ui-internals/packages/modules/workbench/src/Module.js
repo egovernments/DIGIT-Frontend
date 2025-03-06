@@ -11,7 +11,7 @@ import LevelCards from "./components/LevelCards";
 import { Loader } from "@egovernments/digit-ui-components";
 
 import * as parsingUtils from "../src/utils/ParsingUtils"
-import SidebarAdd from "./components/SidebarAdd";
+import CustomSwitch from "./components/CustomSwitch";
 
 const WorkbenchModule = ({ stateCode, userType, tenants }) => {
   const moduleCode = ["workbench","mdms","schema","hcm-admin-schemas"];
@@ -41,7 +41,7 @@ const componentsToRegister = {
   LevelCards,
   DSSCard: null, // TO HIDE THE DSS CARD IN HOME SCREEN as per workbench
   HRMSCard ,// Overridden the HRMS card as per workbench
-  SidebarAdd
+  CustomSwitch
 };
 
 const overrideHooks = () => {
