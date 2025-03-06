@@ -29,6 +29,7 @@ function AppFieldScreenWrapper({ onSubmit }) {
   const { state, dispatch } = useAppConfigContext();
   const searchParams = new URLSearchParams(location.search);
   const projectType = searchParams.get("prefix");
+  const formId = searchParams.get("formId");
   const { t } = useTranslation();
   // const appTemplate = state?.["MASTER_DATA"]?.AppScreenConfigTemplateSchema;
   const appTemplate = state?.screenData;
@@ -118,7 +119,7 @@ function AppFieldScreenWrapper({ onSubmit }) {
                 label={label}
                 active={active}
                 required={required}
-                value={useCustomT(`${projectType}_${currentCard.parent}_${currentCard.name}_${label}`)}
+                value={useCustomT(formId ? label : `${projectType}_${currentCard.parent}_${currentCard.name}_${label}`)}
                 headerFields={true}
                 onChange={(event) => {
                   dispatch({
@@ -127,7 +128,7 @@ function AppFieldScreenWrapper({ onSubmit }) {
                       currentField: card[index],
                       currentScreen: currentCard,
                       field: cx[indx],
-                      localisedCode: `${projectType}_${currentCard.parent}_${currentCard.name}_${label}`,
+                      localisedCode: formId ? label : `${projectType}_${currentCard.parent}_${currentCard.name}_${label}`,
                       value: event.target.value,
                     },
                   });

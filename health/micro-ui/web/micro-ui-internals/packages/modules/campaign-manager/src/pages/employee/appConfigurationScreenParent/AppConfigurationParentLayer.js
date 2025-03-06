@@ -97,10 +97,10 @@ const AppConfigurationParentLayer = () => {
 
   const { isLoading, data: formData } = Digit.Hooks.useCustomAPIHook(reqCriteriaForm);
 
-
   function convertDataFormat(inputData) {
     const formData = inputData?.[0]?.data;
     if (formData == "undefined") return null;
+
     return [
       {
         cards: [

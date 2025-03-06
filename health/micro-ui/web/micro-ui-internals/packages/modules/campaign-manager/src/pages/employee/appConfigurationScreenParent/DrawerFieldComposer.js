@@ -9,6 +9,9 @@ import { useCustomT } from "./useCustomT";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
 
 const whenToShow = (panelItem, drawerState) => {
+  if (!panelItem?.label || !drawerState?.[panelItem.label]) {
+    return false;
+  }
   switch (panelItem?.label) {
     case "infoText":
     case "label":
@@ -20,11 +23,14 @@ const whenToShow = (panelItem, drawerState) => {
     case "max":
     case "numberLength":
       return "number";
+      break;
     case "startDate":
     case "endDate":
       return "date";
+      break;
     case "countryPrefix":
       return "prefix";
+      break;
     default:
       return false;
       break;
@@ -40,7 +46,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
       return (
         <>
           <Switch
-            label={t(panelItem?.label)}
+            label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}
             onToggle={(value) =>
               setDrawerState((prev) => ({
                 ...prev,
@@ -90,8 +96,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
                 }));
               }}
               placeholder={""}
-            >
-            </TextInput>
+            />
           )}
 
           {whenToShow(panelItem, drawerState) === "date" && (
@@ -102,7 +107,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
               name="title"
               value={drawerState?.[panelItem.label]}
               onChange={(event) => {
-                if (event.target.value) {
+                if (event?.target?.value) {
                   setDrawerState((prev) => ({
                     ...prev,
                     [panelItem.label]: event.target.value,
@@ -187,7 +192,7 @@ function DrawerFieldComposer() {
       {state?.MASTER_DATA?.DrawerPanelConfig?.map((panelItem, index) => {
         if (isFieldVisible(panelItem)) {
           return (
-            <div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
               <RenderField
                 panelItem={panelItem}
                 drawerState={drawerState}
@@ -256,7 +261,7 @@ function DrawerFieldComposer() {
             type={"button"}
             size={"small"}
             variation={"teritiary"}
-            label={t("ADD_OPTIONS_FOR_DROPDOWN_APP")}
+            label={t("ADD_OPTIONS")}
             onClick={() =>
               setDrawerState((prev) => ({
                 ...prev,
