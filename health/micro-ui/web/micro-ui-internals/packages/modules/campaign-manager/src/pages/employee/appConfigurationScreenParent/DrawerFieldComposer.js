@@ -91,7 +91,6 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
               }}
               placeholder={""}
             >
-              {console.log("panelItem", panelItem, drawerState)}
             </TextInput>
           )}
 

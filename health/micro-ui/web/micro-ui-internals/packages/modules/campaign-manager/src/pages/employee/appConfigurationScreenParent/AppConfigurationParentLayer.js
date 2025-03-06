@@ -23,7 +23,6 @@ const Tabs = ({ numberTabs, onTabChange }) => {
 };
 
 const dispatcher = (state, action) => {
-  console.log("state" , state , action);
   switch (action.key) {
     case "SET":
       return {
@@ -35,11 +34,11 @@ const dispatcher = (state, action) => {
         ...state,
         appData: state.appData ? [...state.appData, ...action.data] : [...action.data],
       };
-      case "SETFORM":
-        return {
-          appTemplate: action.data,
-          currentTemplate: action.data,
-        };
+    case "SETFORM":
+      return {
+        appTemplate: action.data,
+        currentTemplate: action.data,
+      };
     default:
       return state;
   }
@@ -61,7 +60,6 @@ const AppConfigurationParentLayer = () => {
   const [stepper, setStepper] = useState([]);
   const [showToast, setShowToast] = useState(null);
   const [currentScreen, setCurrentScreen] = useState({});
-  console.log("PARENT DATA", parentState);
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     MODULE_CONSTANTS,
@@ -90,37 +88,34 @@ const AppConfigurationParentLayer = () => {
       },
     },
     config: {
-      enabled: formId ? true: false,
+      enabled: formId ? true : false,
       select: (data) => {
-        return data?.mdms.filter(item => item.id === formId);
+        return data?.mdms.filter((item) => item.id === formId);
       },
     },
   };
 
   const { isLoading, data: formData } = Digit.Hooks.useCustomAPIHook(reqCriteriaForm);
 
-  console.log("formData" , formData , AppConfigMdmsData);
 
   function convertDataFormat(inputData) {
-    console.log("input" , inputData?.[0]?.data);
     const formData = inputData?.[0]?.data;
-    if(formData == 'undefined') return null;
-    
+    if (formData == "undefined") return null;
     return [
       {
         cards: [
           {
-            fields: formData?.body.map(field => ({
+            fields: formData?.body.map((field) => ({
               type: field.type === "textarea" ? "text" : field.type,
               label: field.label,
               active: true,
               jsonPath: field.jsonPath || field.key,
               metaData: {},
               required: field.isMandatory,
-              deleteFlag: false
+              deleteFlag: false,
             })),
-            header: "Header",
-            description: "Desc",
+            header: formData?.head,
+            description: formData?.description,
             headerFields: [
               {
                 type: "text",
@@ -128,7 +123,7 @@ const AppConfigurationParentLayer = () => {
                 active: true,
                 jsonPath: "ScreenHeading",
                 metaData: {},
-                required: true
+                required: true,
               },
               {
                 type: "text",
@@ -136,43 +131,43 @@ const AppConfigurationParentLayer = () => {
                 active: true,
                 jsonPath: "Description",
                 metaData: {},
-                required: true
-              }
-            ]
-          }
+                required: true,
+              },
+            ],
+          },
         ],
         config: {
           enableComment: false,
           enableFieldAddition: true,
           allowFieldsAdditionAt: ["body"],
           enableSectionAddition: false,
-          allowCommentsAdditionAt: ["body"]
-        }
-      }
+          allowCommentsAdditionAt: ["body"],
+        },
+      },
     ];
-  }  
+  }
 
   const { mutate } = Digit.Hooks.campaign.useUpsertFormBuilderConfig(tenantId);
+  const { mutate: updateMutate } = Digit.Hooks.campaign.useUpdateFormBuilderConfig(tenantId);
   useEffect(() => {
     if (showToast) {
       setTimeout(closeToast, 10000);
     }
   }, [showToast]);
   useEffect(() => {
-    if(formData || formId){
+    if (formData || formId) {
       parentDispatch({
         key: "SETFORM",
-        data: convertDataFormat(formData)
+        data: convertDataFormat(formData),
       });
-    }
-    else if (!isLoadingAppConfigMdmsData && AppConfigMdmsData?.[masterName]) {
+    } else if (!isLoadingAppConfigMdmsData && AppConfigMdmsData?.[masterName]) {
       setAppTemplate([...AppConfigMdmsData?.[masterName]]);
       parentDispatch({
         key: "SET",
         data: [...AppConfigMdmsData?.[masterName]],
       });
     }
-  }, [isLoadingAppConfigMdmsData, AppConfigMdmsData , formData]);
+  }, [isLoadingAppConfigMdmsData, AppConfigMdmsData, formData]);
 
   useEffect(() => {
     setNumberTabs(
@@ -217,8 +212,7 @@ const AppConfigurationParentLayer = () => {
     if (variant === "app" && parentState?.currentTemplate?.length > 0 && currentStep && numberTabs?.length > 0) {
       const findActiveParent = numberTabs?.find((i) => i?.active)?.parent;
       setCurrentScreen(parentState?.currentTemplate.filter((i) => i?.parent === findActiveParent)?.filter((i) => i?.order === currentStep));
-    }
-    else{
+    } else {
       setCurrentScreen(parentState?.currentTemplate);
     }
   }, [parentState?.currentTemplate, currentStep, numberTabs]);
@@ -227,68 +221,100 @@ const AppConfigurationParentLayer = () => {
     return <Loader />;
   }
   const submit = async (screenData) => {
-  console.log("pp" , screenData);
     if (variant === "web") {
-      await mutate(
-        {
-          moduleName: "HCM-ADMIN-CONSOLE",
-          masterName: "FormBuilderFormComposerConfig",
-          data: { ...screenData?.[0] },
-        },
-        {
-          onError: (error, variables) => {
-            setShowToast({ key: "error", label: error?.message ? error?.message : error });
+      if (formId && formData) {
+
+        const updatedFormData = formData[0];
+
+        const newFormContent = screenData?.[0];
+
+        // Update the data property while maintaining the required structure
+        updatedFormData.data = {
+          head: newFormContent.head,
+          description: newFormContent.description,
+          body: newFormContent.body,
+        };
+        await updateMutate(
+          {
+            moduleName: "HCM-ADMIN-CONSOLE",
+            masterName: "FormBuilderFormComposerConfig",
+            data: updatedFormData,
           },
-          onSuccess: async (data) => {
-            setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
-            history.push(
-              `/${window.contextPath}/employee/campaign/form-builder-configuration?moduleName=HCM-ADMIN-CONSOLE&masterName=FormBuilderFormComposerConfig&formId=${data?.mdms?.[0]?.id}`
-            );
+          {
+            onError: (error, variables) => {
+              setShowToast({ key: "error", label: error?.message ? error?.message : error });
+            },
+            onSuccess: async (data) => {
+              setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
+              history.push(
+                `/${window.contextPath}/employee/campaign/form-builder-configuration?moduleName=HCM-ADMIN-CONSOLE&masterName=FormBuilderFormComposerConfig&formId=${data?.mdms?.[0]?.id}`
+              );
+            },
+          }
+        );
+      } else {
+        await mutate(
+          {
+            moduleName: "HCM-ADMIN-CONSOLE",
+            masterName: "FormBuilderFormComposerConfig",
+            data: { ...screenData?.[0] },
           },
-        }
-      );
-    }
-    parentDispatch({
-      key: "SETBACK",
-      data: screenData,
-    });
-    if (stepper?.find((i) => i.active)?.isLast) {
-      const nextTabAvailable = numberTabs.some((tab) => tab.code > currentStep.code && tab.active);
-      await mutate(
-        {
-          moduleName: "HCM-ADMIN-CONSOLE",
-          masterName: "DummyAppConfig",
-          data: { ...screenData?.[0] },
-        },
-        {
-          onError: (error, variables) => {
-            setShowToast({ key: "error", label: error?.message ? error?.message : error });
-          },
-          onSuccess: async (data) => {
-            setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
-            history.push(
-              `/${window.contextPath}/employee/campaign/form-builder-configuration?moduleName=HCM-ADMIN-CONSOLE&masterName=DummyAppConfig&formId=${data?.mdms?.[0]?.id}`
-            );
-          },
-        }
-      );
-      // if (nextTabAvailable) {
-      //   setNumberTabs((prev) => {
-      //     return prev.map((tab) => {
-      //       // Activate only the next tab (currentStep.code + 1)
-      //       if (tab.code === prev.find((j) => j.active).code + 1) {
-      //         return { ...tab, active: true }; // Activate the next tab
-      //       }
-      //       return { ...tab, active: false }; // Deactivate all others
-      //     });
-      //   });
-      //   return;
-      // } else {
-      //   setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
-      //   return;
-      // }
+          {
+            onError: (error, variables) => {
+              setShowToast({ key: "error", label: error?.message ? error?.message : error });
+            },
+            onSuccess: async (data) => {
+              setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
+              history.push(
+                `/${window.contextPath}/employee/campaign/form-builder-configuration?moduleName=HCM-ADMIN-CONSOLE&masterName=FormBuilderFormComposerConfig&formId=${data?.mdms?.[0]?.id}`
+              );
+            },
+          }
+        );
+      }
     } else {
-      setCurrentStep((prev) => prev + 1);
+      parentDispatch({
+        key: "SETBACK",
+        data: screenData,
+      });
+      if (stepper?.find((i) => i.active)?.isLast) {
+        const nextTabAvailable = numberTabs.some((tab) => tab.code > currentStep.code && tab.active);
+        await mutate(
+          {
+            moduleName: "HCM-ADMIN-CONSOLE",
+            masterName: "DummyAppConfig",
+            data: { ...screenData?.[0] },
+          },
+          {
+            onError: (error, variables) => {
+              setShowToast({ key: "error", label: error?.message ? error?.message : error });
+            },
+            onSuccess: async (data) => {
+              setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
+              history.push(
+                `/${window.contextPath}/employee/campaign/form-builder-configuration?moduleName=HCM-ADMIN-CONSOLE&masterName=DummyAppConfig&formId=${data?.mdms?.[0]?.id}`
+              );
+            },
+          }
+        );
+        // if (nextTabAvailable) {
+        //   setNumberTabs((prev) => {
+        //     return prev.map((tab) => {
+        //       // Activate only the next tab (currentStep.code + 1)
+        //       if (tab.code === prev.find((j) => j.active).code + 1) {
+        //         return { ...tab, active: true }; // Activate the next tab
+        //       }
+        //       return { ...tab, active: false }; // Deactivate all others
+        //     });
+        //   });
+        //   return;
+        // } else {
+        //   setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
+        //   return;
+        // }
+      } else {
+        setCurrentStep((prev) => prev + 1);
+      }
     }
   };
   const closeToast = () => {

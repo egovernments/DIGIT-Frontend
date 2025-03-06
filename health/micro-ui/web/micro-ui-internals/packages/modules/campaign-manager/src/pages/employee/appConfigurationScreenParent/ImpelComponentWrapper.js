@@ -61,8 +61,8 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
 
     const formConfig = data?.[0]?.cards?.map((item) => {
       return {
-        head: item?.headerFields?.find((i) => i.jsonPath === "ScreenHeading")?.value,
-        description: item?.headerFields?.find((i) => i.jsonPath === "Description")?.value,
+        head: item?.headerFields?.find((i) => i.jsonPath === "ScreenHeading")?.value || item?.headerFields?.find((i) => i.jsonPath === "ScreenHeading")?.label,
+        description: item?.headerFields?.find((i) => i.jsonPath === "Description")?.value || item?.headerFields?.find((i) => i.jsonPath === "Description")?.label,
         body: item.fields.map((field) => {
           return {
             key: field.id || field.jsonPath,
@@ -86,7 +86,6 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
   };
   const onSubmit = (state) => {
     const restructuredData = variant === "web" ? formBuilderRestructure(state?.screenData) : restructure(state?.screenData);
-    console.log("restructuredData", restructuredData);
     submit(restructuredData);
   };
 
