@@ -11,6 +11,7 @@ import {
   SubmitBar,
   Footer,
   CardLabel,
+  BreadCrumb,
   Toast,
   ErrorMessage,
 } from "@egovernments/digit-ui-components";
@@ -20,7 +21,6 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import UploadDrawer from "./ImageUpload/UploadDrawer";
 import ImageComponent from "../../../components/ImageComponent";
-import { BreadCrumb } from "@egovernments/digit-ui-react-components";
 
 const defaultImage =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAO4AAADUCAMAAACs0e/bAAAAM1BMVEXK0eL" +
@@ -86,7 +86,25 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
     return (
       config?.UserProfileValidationConfig?.[0] &&
       Object.entries(config?.UserProfileValidationConfig[0]).reduce((acc, [key, value]) => {
-        acc[key] = new RegExp(value);
+        if (typeof value === "string") {
+          try {
+            // Checking if value looks like a regex (starts with "/" and ends with "/flags")
+            if (value.startsWith("/") && value.lastIndexOf("/") > 0) {
+              const lastSlashIndex = value.lastIndexOf("/");
+              const pattern = value.slice(1, lastSlashIndex); // Extracting regex pattern
+              const flags = value.slice(lastSlashIndex + 1); // Extracting regex flags
+  
+              acc[key] = new RegExp(pattern, flags); // Converting properly
+            } else {
+              acc[key] = new RegExp(value); // Treating it as a normal regex pattern (no flags)
+            }
+          } catch (error) {
+            console.error(`Error parsing regex for key "${key}":`, error);
+            acc[key] = value; // Keeping as string if invalid regex
+          }
+        } else {
+          acc[key] = value; // Keeping non-string values as it is
+        }
         return acc;
       }, {})
     );
@@ -417,20 +435,21 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   if (loading || isValidationConfigLoading) return <Loader></Loader>;
 
   return (
-    <div className="user-profile">
-      <section style={{ margin: userType === "citizen" || isMobile ? "8px" : "24px" }}>
+    <div className={`user-profile ${userType === "citizen" ? "citizen" : "employee"}`}>
+      <section style={{ margin: userType === "citizen" || isMobile ? "8px" : "0px" }}>
         {userType === "citizen" || isMobile ? (
           <BackLink onClick={() => window.history.back()} />
         ) : (
           <BreadCrumb
+            style={{ marginTop: "0rem", marginBottom: "1.5rem" }}
             crumbs={[
               {
-                path: `/${window?.contextPath}/employee`,
+                internalLink: `/${window?.contextPath}/employee`,
                 content: t("ES_COMMON_HOME"),
                 show: true,
               },
               {
-                path: `/${window?.contextPath}/employee/user/profile`,
+                internalLink: `/${window?.contextPath}/employee/user/profile`,
                 content: t("ES_COMMON_PAGE_1"),
                 show: url.includes("/user/profile"),
               },
@@ -443,7 +462,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
           display: "flex",
           flex: 1,
           flexDirection: windowWidth < 768 || userType === "citizen" ? "column" : "row",
-          margin: userType === "citizen" ? "8px" : "16px",
+          margin: userType === "citizen" ? "8px" : "0px",
           gap: userType === "citizen" ? "" : "0 24px",
           boxShadow: userType === "citizen" ? "1px 1px 4px 0px rgba(0,0,0,0.2)" : "",
           background: userType === "citizen" ? "white" : "",
@@ -785,7 +804,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                               mdmsValidationData?.UserProfileValidationConfig?.[0]?.password ||
                               defaultValidationConfig?.UserProfileValidationConfig?.[0]?.password
                             }
-                            onChange={(e) => setUserCurrentPassword(e.target.value)}
+                            onChange={(e) => setUserCurrentPassword(e?.target?.value)}
                             disabled={editScreen}
                           />
                           {errors?.currentPassword && (
@@ -816,7 +835,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                               mdmsValidationData?.UserProfileValidationConfig?.[0]?.password ||
                               defaultValidationConfig?.UserProfileValidationConfig?.[0]?.password
                             }
-                            onChange={(e) => setUserNewPassword(e.target.value)}
+                            onChange={(e) => setUserNewPassword(e?.target?.value)}
                             disabled={editScreen}
                           />
                           {errors?.newPassword && (
@@ -847,7 +866,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                               mdmsValidationData?.UserProfileValidationConfig?.[0]?.password ||
                               defaultValidationConfig?.UserProfileValidationConfig?.[0]?.password
                             }
-                            onChange={(e) => setUserConfirmPassword(e.target.value)}
+                            onChange={(e) => setUserConfirmPassword(e?.target?.value)}
                             disabled={editScreen}
                           />
                           {errors?.confirmPassword && (
