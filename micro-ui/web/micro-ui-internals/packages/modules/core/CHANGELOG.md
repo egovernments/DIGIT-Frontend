@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.8.30]  [07-Mar-2025]
+- BUGFIX/DUCE-243 : Updated breadcrumb and regex validation mapping in user profile
+
 ## [1.8.28]  [27-Feb-2025]
 - BUGFIX/SN-162 : Citizen sms otp fix
 
