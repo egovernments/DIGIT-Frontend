@@ -67,6 +67,9 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     //   alert("Please Select City!");
     //   return;
     // }
+    if(data?.username){
+      data.username=data.username.trim();
+    }
     setDisable(true);
 
     const requestData = {
@@ -164,12 +167,10 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   const onFormValueChange = (setValue, formData, formState) => {
     // Extract keys from the config
     const keys = config[0].body.filter(field=>field?.isMandatory).map((field) => field.key);
-
     const hasEmptyFields = keys.some((key) => {
       const value = formData[key];
       return value == null || value === "" || (key === "check" && value === false) || (key === "captcha" && value === false);
     });
-
     // Set disable based on the check
     setDisable(hasEmptyFields);
   };
