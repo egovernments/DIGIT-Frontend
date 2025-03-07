@@ -50,8 +50,22 @@ const SampleCard = () => {
         label: t("Individual Tab Search"),
         link: `/${window?.contextPath}/employee/sample/tab-search-individual`,
       },
-      
-      
+      {
+        label: t("New UI Components"),
+        link: `/${window?.contextPath}/employee/sample/components`,
+      },
+      {
+        label: t("Create"),
+        link: `/${window?.contextPath}/employee/sample/create`,
+      },
+      {
+        label: t("Search"),
+        link: `/${window?.contextPath}/employee/sample/search`,
+      },
+      {
+        label: t("Inbox"),
+        link: `/${window?.contextPath}/employee/sample/inbox`,
+      },
     ],
   };
 

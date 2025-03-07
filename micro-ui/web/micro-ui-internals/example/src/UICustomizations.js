@@ -2,12 +2,34 @@ import { Link } from "react-router-dom";
 import _ from "lodash";
 import { useLocation, useHistory } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import React from "react";
+import {Button,Tag} from "@egovernments/digit-ui-components";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
 var Digit = window.Digit || {};
 
+function cleanObject(obj) {
+  for (const key in obj) {
+    if (Object.hasOwn(obj, key)) {
+      if (Array.isArray(obj[key])) {
+        if (obj[key].length === 0) {
+          delete obj[key];
+        }
+      } else if (
+        obj[key] === undefined ||
+        obj[key] === null ||
+        obj[key] === false ||
+        obj[key] === "" || // Check for empty string
+        (typeof obj[key] === "object" && Object.keys(obj[key]).length === 0)
+      ) {
+        delete obj[key];
+      }
+    }
+  }
+  return obj;
+}
 
 const businessServiceMap = {
  
@@ -666,5 +688,167 @@ export const UICustomizations = {
         return data[keys.start] && data[keys.end] ? () => new Date(data[keys.start]).getTime() <= new Date(data[keys.end]).getTime() : true;
       }
     },
-  }
+  },
+  SearchMDMSConfig: {
+    customValidationCheck: (data) => {
+      //checking both to and from date are present
+      const { createdFrom, createdTo, field, value } = data;
+      if (
+        (createdFrom === "" && createdTo !== "") ||
+        (createdFrom !== "" && createdTo === "")
+      )
+        return { type: "warning", label: "ES_COMMON_ENTER_DATE_RANGE" };
+
+      if ((field && !value) || (!field && value)) {
+        return {
+          type: "warning",
+          label: "WBH_MDMS_SEARCH_VALIDATION_FIELD_VALUE_PAIR",
+        };
+      }
+
+      return false;
+    },
+    preProcess: (data, additionalDetails) => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      data.body.MdmsCriteria.tenantId = tenantId;
+      const filters = {};
+      const custom = data.body.MdmsCriteria.custom;
+      const { field, value, isActive } = custom || {};
+      filters[field?.code] = value;
+      if (isActive) {
+        if (isActive.value === "all") delete data.body.MdmsCriteria.isActive;
+        else data.body.MdmsCriteria.isActive = isActive?.value;
+      } else {
+        delete data.body.MdmsCriteria.isActive;
+      }
+      data.body.MdmsCriteria.filters = filters;
+      // data.body.MdmsCriteria.limit = 100
+      data.body.MdmsCriteria.limit = data.state.tableForm.limit;
+      data.body.MdmsCriteria.offset = data.state.tableForm.offset;
+      data.body.MdmsCriteria.schemaCode =
+        // additionalDetails?.currentSchemaCode
+        "ACCESSCONTROL-ACTIONS-TEST.actions-test";
+      delete data.body.MdmsCriteria.custom;
+      return data;
+    },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      switch (key) {
+        case "Active":
+          return (
+            <Tag
+              icon=""
+              label={value ? "Active" : "InActive"}
+              labelStyle={{}}
+              showIcon={false}
+              style={{}}
+              type="success"
+            />
+          );
+        default:
+          return t("ES_COMMON_NA");
+      }
+    },
+    MobileDetailsOnClick: (row, tenantId) => {
+      let link;
+      Object.keys(row).map((key) => {
+        if (key === "MASTERS_WAGESEEKER_ID")
+          link = `/${window.contextPath}/employee/masters/view-wageseeker?tenantId=${tenantId}&wageseekerId=${row[key]}`;
+      });
+      return link;
+    },
+    additionalValidations: (type, data, keys) => {
+      if (type === "date") {
+        return data[keys.start] && data[keys.end]
+          ? () =>
+              new Date(data[keys.start]).getTime() <=
+              new Date(data[keys.end]).getTime()
+          : true;
+      }
+    },
+  },
+  SampleInboxConfig: {
+    getSearchRequest: ( prop) => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      return {
+        url: `/plan-service/config/_search`,
+        params: {  },
+        body: {
+          CampaignDetails: {
+            "tenantId": tenantId,
+        }
+        },
+        changeQueryName: `boundarySearchForPlanFacility`,
+        config: {
+          enabled: true,
+          select: (data) => {
+            const result = data?.CampaignDetails?.[0]?.boundaries?.filter((item) => item.type == prop.lowestHierarchy) || [];
+            return result
+          },
+        },
+      };
+    },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      if (key === "Facility name") {
+        return (
+          <Button
+            variation="link"
+            label={
+              value
+                ? column.translate
+                  ? t(value)
+                  : value
+                : t("ES_COMMON_NA")
+            }
+            type="button"
+            icon="Edit"
+            size={"medium"}
+          />
+        );
+      }
+      //added this in case we change the key and not updated here , it'll throw that nothing was returned from cell error if that case is not handled here. To prevent that error putting this default
+      return <span>{t(`CASE_NOT_HANDLED`)}</span>;
+    },
+    selectionHandler: (event) => {
+      console.log(event, "selection handler event");
+    },
+    actionSelectHandler: (index, label, selectedRows) => {
+      console.log(index, label, selectedRows, "action handler");
+    },
+    preProcess: (data, additionalDetails) => {
+      const { name, status } = data?.state?.searchForm || {};
+
+      data.body.PlanConfigurationSearchCriteria = {};
+      data.body.PlanConfigurationSearchCriteria.limit = data?.state?.tableForm?.limit;
+      // data.body.PlanConfigurationSearchCriteria.limit = 10
+      data.body.PlanConfigurationSearchCriteria.offset = data?.state?.tableForm?.offset;
+      data.body.PlanConfigurationSearchCriteria.name = name;
+      data.body.PlanConfigurationSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
+      data.body.PlanConfigurationSearchCriteria.userUuid = Digit.UserService.getUser().info.uuid;
+      // delete data.body.PlanConfigurationSearchCriteria.pagination
+      data.body.PlanConfigurationSearchCriteria.status = status?.status;
+      data.body.PlanConfigurationSearchCriteria.name = data?.state?.searchForm?.microplanName;
+      cleanObject(data.body.PlanConfigurationSearchCriteria);
+
+      const dic = {
+        0: [
+          "EXECUTION_TO_BE_DONE",
+          "CENSUS_DATA_APPROVAL_IN_PROGRESS",
+          "CENSUS_DATA_APPROVED",
+          "RESOURCE_ESTIMATION_IN_PROGRESS",
+          "RESOURCE_ESTIMATIONS_APPROVED",
+        ],
+        1: ["EXECUTION_TO_BE_DONE"],
+        2: ["CENSUS_DATA_APPROVAL_IN_PROGRESS", "CENSUS_DATA_APPROVED", "RESOURCE_ESTIMATION_IN_PROGRESS"],
+        3: ["RESOURCE_ESTIMATIONS_APPROVED"],
+      };
+      const url = Digit.Hooks.useQueryParams();
+
+      const tabId = url.tabId || "0"; // Default to '0' if tabId is undefined
+      data.body.PlanConfigurationSearchCriteria.status = dic[String(tabId)];
+      return data;
+    },
+    postProcess: (responseArray, uiConfig) => {
+      return responseArray;
+    },
+  },
 };
