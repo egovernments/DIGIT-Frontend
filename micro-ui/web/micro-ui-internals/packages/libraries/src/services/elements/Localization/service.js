@@ -58,19 +58,25 @@ const LocalizationStore = {
   },
 
   updateResources: (locale, messages) => {
+    console.log("im i18next", i18next)
     let locales = TransformArrayToObj(messages);
-    i18next.addResources(locale, "translations", locales);
+    window.i18next.addResources(locale, "translations", locales);
   },
 };
 
 export const LocalizationService = {
   getLocale: async ({ modules = [], locale = Digit.Utils.getDefaultLanguage(), tenantId }) => {
+    console.log("I'm inside getLocale")
+    console.log("modules inside getLocale", modules)
     if (locale.indexOf(Digit.Utils.getLocaleRegion()) === -1) {
       locale += Digit.Utils.getLocaleRegion();
     }
+    console.log("locale inside getLocale", locale)
     const [newModules, messages] = LocalizationStore.get(locale, modules);
+    console.log("I'm newModules", newModules)
     if (newModules.length > 0) {
       const data = await Request({ url: Urls.localization, params: { module: newModules.join(","), locale, tenantId }, useCache: false });
+      console.log("api data", data)
       messages.push(...data.messages);
       setTimeout(() => LocalizationStore.store(locale, newModules, data.messages), 100);
     }

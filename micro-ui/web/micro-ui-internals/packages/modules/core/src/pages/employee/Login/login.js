@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
+// import { useTranslation } from "react-i18next";
 // import {useTenants} from "../../../../libraries/src/hooks/useTenants";
 // import useStore from "../../../../libraries/src/hooks/useStore";
 // import useCustomAPIMutationHook from "../../../../libraries/src/hooks/useCustomAPIMutationHook"
@@ -35,6 +36,8 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   const [user, setUser] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [disable, setDisable] = useState(false);
+  // const {t} = useTranslation();
+  console.log(t("CORE_LOGIN_USERNAME"),"translate")
 
   const history = useHistory();
   // const getUserType = () => "EMPLOYEE" || Digit.UserService.getType();

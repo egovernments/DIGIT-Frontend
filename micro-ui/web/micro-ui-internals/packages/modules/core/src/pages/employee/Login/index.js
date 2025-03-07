@@ -8,6 +8,8 @@ import LoginComponent from "./login";
 
 const EmployeeLogin = ({ stateCode }) => {
   const { t } = useTranslation();
+  console.log(t("CORE_LOGIN_USERNAME"));
+
   const { path } = useRouteMatch();
   const [loginConfig, setloginConfig] = useState(defaultLoginConfig);
   const [loginOtpConfig, setloginOtpConfig] = useState(defaultLoginOtpConfig);
