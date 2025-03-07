@@ -80,8 +80,6 @@ const CreateEmployee = ({ editUser = false }) => {
   };
 
   const onFormValueChange = (setValue = true, formData, formState, reset, setError, clearErrors) => {
-    debugger;
-
     if (isEdit) {
       if (phoneNumber !== formData?.SelectEmployeePhoneNumber) {
         setPhoneNumber(formData?.SelectEmployeePhoneNumber);
@@ -177,7 +175,6 @@ const CreateEmployee = ({ editUser = false }) => {
         },
         {
           onSuccess: (res) => {
-            debugger;
             history.push(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.CREAT_EUSER,
               state: "success",
@@ -207,13 +204,11 @@ const CreateEmployee = ({ editUser = false }) => {
         }
       );
     } catch (error) {
-      debugger;
       // setTriggerEstimate(true);
     }
   };
 
   const updateEmployeeService = async (payload) => {
-    debugger;
     try {
       await mutationUpdate.mutateAsync(
         {
@@ -221,7 +216,6 @@ const CreateEmployee = ({ editUser = false }) => {
         },
         {
           onSuccess: (res) => {
-            debugger;
             history.push(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.EDIT_USER,
               state: "success",
@@ -258,7 +252,6 @@ const CreateEmployee = ({ editUser = false }) => {
 
     try {
       if (editUser == false) {
-        debugger;
         const type = await checkIfUserExist(formData, tenantId);
         if (type == true) {
           setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID" });
@@ -274,14 +267,12 @@ const CreateEmployee = ({ editUser = false }) => {
         await updateEmployeeService(payload);
       }
     } catch (err) {
-      debugger;
       setShowToast({ key: true, label: "Some error happened" });
       setShowModal(false);
     }
   };
 
   const openModal = async (e) => {
-    debugger;
     if (isEdit && mobile) {
       const type = await checkIfUserExistWithPhoneNumber(e, tenantId);
       if (type == true) {
@@ -321,40 +312,42 @@ const CreateEmployee = ({ editUser = false }) => {
     : newConfig;
 
   return (
-    <div style={{ marginBottom: "80px" }}>
-      <div
-        style={
-          isMobile
-            ? { marginLeft: "-12px", fontFamily: "calibri", color: "#FF0000" }
-            : { marginLeft: "15px", fontFamily: "calibri", color: "#FF0000" }
-        }
-      >
-        <Header>{t("HR_COMMON_CREATE_EMPLOYEE_HEADER")}</Header>
-      </div>
+    <React.Fragment>
+      <div style={{ marginBottom: "80px" }}>
+        <div
+          style={
+            isMobile
+              ? { marginLeft: "-12px", fontFamily: "calibri", color: "#FF0000" }
+              : { marginLeft: "15px", fontFamily: "calibri", color: "#FF0000" }
+          }
+        >
+          <Header>{t("HR_COMMON_CREATE_EMPLOYEE_HEADER")}</Header>
+        </div>
 
-      <FormComposerV2
-        defaultValues={editUser == true && data?.Employees ? editDefaultUserValue(data?.Employees, tenantId) : ""}
-        heading={t("")}
-        config={config}
-        onSubmit={openModal}
-        className={"custom-form"}
-        onFormValueChange={onFormValueChange}
-        isDisabled={!canSubmit}
-        label={t("HR_COMMON_BUTTON_SUBMIT")}
-      />
-
-      {showToast && (
-        <Toast
-          error={showToast.key}
-          isDleteBtn="true"
-          label={t(showToast.label)}
-          onClose={() => {
-            setShowToast(null);
-          }}
+        <FormComposerV2
+          defaultValues={editUser == true && data?.Employees ? editDefaultUserValue(data?.Employees, tenantId) : ""}
+          heading={t("")}
+          config={config}
+          onSubmit={openModal}
+          className={"custom-form"}
+          onFormValueChange={onFormValueChange}
+          isDisabled={!canSubmit}
+          label={t("HR_COMMON_BUTTON_SUBMIT")}
         />
-      )}
-      {showModal && <ActionPopUp headingMsg={"READY_TO_SUBMIT"} onClose={closeModal} onSubmit={() => onSubmit(createEmployeeData)} />}
-    </div>
+
+        {showToast && (
+          <Toast
+            error={showToast.key}
+            isDleteBtn="true"
+            label={t(showToast.label)}
+            onClose={() => {
+              setShowToast(null);
+            }}
+          />
+        )}
+        {showModal && <ActionPopUp headingMsg={"READY_TO_SUBMIT"} onClose={closeModal} onSubmit={() => onSubmit(createEmployeeData)} />}
+      </div>
+    </React.Fragment>
   );
 };
 export default CreateEmployee;

@@ -230,14 +230,25 @@ export const formPayloadToUpdateUser = (data, userExisting, tenantId) => {
 
   requestdata.dateOfAppointment = new Date(data?.SelectDateofEmployment).getTime();
   requestdata.code = data?.SelectEmployeeId ? data?.SelectEmployeeId : undefined;
-  requestdata.jurisdictions = userExisting[0].jurisdictions.map((j) => {
-    let jurisdiction = Object.assign({}, j);
-    jurisdiction.roles = roles;
-    jurisdiction.boundaryType = data?.BoundaryComponent?.boundaryType;
-    jurisdiction.boundary = data?.BoundaryComponent?.code;
+  requestdata.jurisdictions = userExisting[0].jurisdictions
+    ? userExisting[0].jurisdictions.map((j) => {
+        let jurisdiction = Object.assign({}, j);
+        jurisdiction.roles = roles;
+        jurisdiction.boundaryType = data?.BoundaryComponent?.boundaryType;
+        jurisdiction.boundary = data?.BoundaryComponent?.code;
 
-    return jurisdiction;
-  });
+        return jurisdiction;
+      })
+    : [
+        {
+          fromDate: new Date(data?.SelectDateofEmployment).getTime(),
+          toDate: undefined,
+          isCurrentAssignment: true,
+          department: data?.SelectEmployeeDepartment?.code || HRMS_CONSTANTS.DEFAULT_DEPARTMENT,
+          designation: data?.SelectEmployeeDesignation?.code || "undefined",
+        },
+      ];
+
   requestdata.assignments = userExisting[0].assignments.map((j) => {
     let assigment = { ...j };
     assigment.department = data?.SelectEmployeeDepartment?.code || j.department;

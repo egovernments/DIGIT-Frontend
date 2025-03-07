@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
-// /import { CardSubHeader, Header, Row, StatusTable } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { convertEpochToDate } from "../../utils/utlis";
 import { searchStaff } from "../../services/service";
 
 import { Button, Card, Footer, ActionBar, SummaryCard, Tag } from "@egovernments/digit-ui-components";
-import Urls from "../../services/urls";
 import { Loader } from "@egovernments/digit-ui-react-components";
 import DeactivatePopUp from "../../components/pageComponents/DeactivatePopUp";
 import { ReposeScreenType } from "../../constants/enums";

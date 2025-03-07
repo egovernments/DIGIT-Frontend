@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { PopUp, Button, TextArea, Toast, Dropdown, TextInput, FileUpload } from "@egovernments/digit-ui-components";
+import { PopUp, Button, TextArea, Toast, Dropdown, TextInput, FileUpload, FieldV1 } from "@egovernments/digit-ui-components";
+import { convertEpochToDate } from "../../utils/utlis";
 
 const DeactivatePopUp = ({ onClose, onSubmit }) => {
   const { t } = useTranslation();
@@ -10,7 +11,7 @@ const DeactivatePopUp = ({ onClose, onSubmit }) => {
   // state variables
   const [comment, setComment] = useState("");
   const [showToast, setShowToast] = useState(null);
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(convertEpochToDate(Date.now()));
   const [reason, setReason] = useState(null);
   const [order, setOrder] = useState(null);
 
@@ -46,7 +47,9 @@ const DeactivatePopUp = ({ onClose, onSubmit }) => {
     <>
       <PopUp
         style={{ width: "700px" }}
-       // onClose={onClose}
+        onClose={() => {
+          onClose();
+        }}
         heading={t(`HR_COMMON_DEACTIVATED_EMPLOYEE_HEADER`)}
         children={[
           <div className="comment-section">
@@ -54,7 +57,7 @@ const DeactivatePopUp = ({ onClose, onSubmit }) => {
               {t(`HR_DEACTIVATION_REASON`)}
               <span className="required"> *</span>
             </div>
-            {/* <TextArea style={{ maxWidth: "100%" }} value={comment} onChange={handleTextAreaChange} onKeyPress={handleKeyPress} /> */}
+
             <Dropdown
               additionalWrapperClass=""
               defaultValue="FEMALE"
@@ -72,7 +75,6 @@ const DeactivatePopUp = ({ onClose, onSubmit }) => {
               optionKey="code"
               optionsCustomStyle={{}}
               select={(e) => {
-                debugger;
                 setReason(e.code);
               }}
               t={t}
@@ -80,9 +82,8 @@ const DeactivatePopUp = ({ onClose, onSubmit }) => {
             />
           </div>,
 
-          <TextInput
-            label={t("HR_DEACTIVATION_REASON")}
-            showLabel
+          <FieldV1
+            label={t("HR_ENTER_ORDER_NO")}
             onChange={(e) => {
               setComment(e.target.value);
             }}
@@ -90,23 +91,21 @@ const DeactivatePopUp = ({ onClose, onSubmit }) => {
             value={comment || ""}
           />,
 
-          <TextInput
-            showLabel
+          <FieldV1
             label={t("HR_EFFECTIVE_DATE")}
             type="date"
-            populators={{ name: "date" }}
+            populators={{ name: "date", disableTextField: true }}
             key="effective"
             onChange={(e) => {
               setDate(e);
             }}
-            disable={false}
+            disable={true}
             value={date}
           />,
 
           <FileUpload label={t("TL_APPROVAL_UPLOAD_SUBHEAD")} showLabel uploadedFiles={[]} variant="uploadField" />,
-          <TextInput
-            label={t("HR_DEACTIVATION_REASON")}
-            showLabel
+          <FieldV1
+            label={t("HR_ENTER_REMARKS")}
             onChange={(e) => {
               setOrder(e.target.value);
             }}
@@ -124,19 +123,20 @@ const DeactivatePopUp = ({ onClose, onSubmit }) => {
             size="large"
             style={{ minWidth: "270px" }}
             variation="secondary"
-            label={t(`HCM_AM_CLOSE`)}
-            title={t(`HCM_AM_CLOSE`)}
+            label={t(`CORE_COMMON_CLOSE`)}
+            title={t(`CORE_COMMON_CLOSE`)}
             onClick={onClose}
           />,
           <Button
+          isDisabled={!reason}
             key="submit-button"
             className="campaign-type-alert-button"
             type="button"
             size="large"
             variation="primary"
             style={{ minWidth: "270px" }}
-            label={t(`HCM_AM_APPROVE`)}
-            title={t(`HCM_AM_APPROVE`)}
+            label={t(`HR_DEACTIVATE_EMPLOYEE_BUTTON_TEXT`)}
+            title={t(`HR_DEACTIVATE_EMPLOYEE_BUTTON_TEXT`)}
             onClick={() => {
               handleSave();
             }}
