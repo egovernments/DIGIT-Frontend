@@ -1,4 +1,5 @@
-import { AppContainer, BreadCrumb, PrivateRoute } from "@egovernments/digit-ui-react-components";
+import { AppContainer, PrivateRoute } from "@egovernments/digit-ui-react-components";
+import { BreadCrumb } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Switch } from "react-router-dom";
@@ -18,22 +19,25 @@ import HRMSViewDetails from "./hrms/HrmsView";
 import IndividualCreate from "./individual/IndividualCreate";
 import IndividualSearch from "./individual/IndividualSearch";
 import IndividualViewDetails from "./individual/IndividualView";
+import SampleComponentsNew from "./uiComponentsSample/SampleComponentsNew";
+import SampleCreate from "./uiComponentsSample/SampleCreate";
+import SampleSearch from "./uiComponentsSample/SampleSearch";
+import SampleInbox from "./uiComponentsSample/SampleInbox";
 
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
   const crumbs = [
     {
-      path: `/${window?.contextPath}/employee`,
+      internalLink: `/${window?.contextPath}/employee`,
       content: t("HOME"),
       show: true,
     },
     {
-      path: `/${window?.contextPath}/employee`,
       content: t(location.pathname.split("/").pop()),
       show: true,
     },
   ];
-  return <BreadCrumb crumbs={crumbs} spanStyle={{ maxWidth: "min-content" }} />;
+  return <BreadCrumb crumbs={crumbs} />;
 };
 
 const App = ({ path, stateCode, userType, tenants }) => {
@@ -64,6 +68,10 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/inbox`} component={() => <Inbox></Inbox>} />
         <PrivateRoute path={`${path}/view`} component={() => <View />} />
 
+        <PrivateRoute path={`${path}/components`} component={() => <SampleComponentsNew />} />
+        <PrivateRoute path={`${path}/create`} component={() => <SampleCreate />} />
+        <PrivateRoute path={`${path}/search`} component={() => <SampleSearch />} />
+        <PrivateRoute path={`${path}/inbox`} component={() => <SampleInbox />} />
       </AppContainer>
     </Switch>
   );
