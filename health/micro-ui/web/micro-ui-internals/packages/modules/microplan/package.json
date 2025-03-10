@@ -38,7 +38,8 @@
     "exceljs": "^4.4.0",
     "focus-trap-react": "^10.2.3",
     "geojson-validation": "^1.0.2",
-    "jszip": "^3.10.1"
+    "jszip": "^3.10.1",
+    "proj4": "^2.15.0"
   },
   "author": "Jagankumar <jagan.kumar@egov.org.in>",
   "license": "MIT"

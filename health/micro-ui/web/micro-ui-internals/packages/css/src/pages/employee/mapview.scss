@@ -41,6 +41,38 @@
         align-items: flex-end !important;
     }
 
+    .bottom-right-map-subcomponents{
+      position: absolute;
+      top: 80%;
+      right: 1rem;
+      z-index: 550;
+      gap:1.5rem;
+      display: flex;
+      align-items: flex-end !important;
+
+      .map-view-element-wrapper{
+        display: flex;
+        width: fit-content;
+        gap: 0.5rem;
+        align-items: center;
+        background-color: #FFFFFF;
+        padding: 0.5rem;
+
+        .map-view-element-label{
+          color: #363636;
+          font-family: theme(digitv2.fontFamily.sans);
+          font-style: theme(digitv2.fontStyle.normal);
+          font-weight: theme(digitv2.fontWeight.regular);
+          font-size: theme(digitv2.fontSize.body-s.mobile);
+        }
+
+        .map-view-element-icon{
+          width: 1.5rem;
+          height: 1.5rem;
+        }
+      }
+    }
+
     .bottom-left-map-subcomponents {
         position: absolute;
         bottom: 1.5rem;
