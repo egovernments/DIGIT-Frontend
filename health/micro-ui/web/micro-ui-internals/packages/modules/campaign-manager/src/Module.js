@@ -1,4 +1,4 @@
-import {  TourProvider } from "@egovernments/digit-ui-react-components";
+import { TourProvider } from "@egovernments/digit-ui-react-components";
 import { Loader } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
@@ -53,7 +53,9 @@ import MultiSelectDropdown from "./components/MultiSelectDropdown";
 import NoResultsFound from "./components/NoResultsFound";
 import UploadDataMappingWrapper from "./components/UploadDataMappingWrapper";
 import DataUploadWrapper from "./components/DataUploadWrapper";
-import AppConfigurationWrapper from "./pages/employee/AppConfigurationWrapper";
+import AppPreview from "./components/AppPreview";
+import AppConfigurationParentLayer from "./pages/employee/appConfigurationScreenParent/AppConfigurationParentLayer";
+import FormBuilder from "./pages/employee/appConfigurationScreenParent/FormBuilder";
 
 /**
  * MDMS Module name
@@ -88,7 +90,9 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
   const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE, tenantId });
   const modulePrefix = "hcm";
 
-  const moduleCode = BOUNDARY_HIERARCHY_TYPE ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`] : ["campaignmanager", "schema", "admin-schemas", "checklist", "appconfiguration"];
+  const moduleCode = BOUNDARY_HIERARCHY_TYPE
+    ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`]
+    : ["campaignmanager", "schema", "admin-schemas", "checklist", "appconfiguration", "dummy-module"];
 
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
@@ -100,7 +104,7 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
   });
 
   if (isLoading) {
-    return <Loader page={true} variant={"PageLoader"}/>;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
 
   return (
@@ -167,7 +171,9 @@ const componentsToRegister = {
   NoResultsFound,
   UploadDataMappingWrapper,
   DataUploadWrapper,
-  AppConfigurationWrapper,
+  AppPreview,
+  AppConfigurationParentLayer: AppConfigurationParentLayer,
+  FormBuilder,
 };
 
 const overrideHooks = () => {

@@ -1,7 +1,9 @@
 import React, { useState, useMemo, useRef, useEffect, Fragment } from "react";
+import { UploadIcon, FileIcon, DeleteIconv2, Toast, Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { AlertCard, LabelFieldPair } from "@egovernments/digit-ui-components";
-import { Button, CardText, Dropdown, ErrorMessage, PopUp, Stepper, TextBlock , Card , HeaderComponent} from "@egovernments/digit-ui-components";
+import { LabelFieldPair } from "@egovernments/digit-ui-components";
+import { AlertCard, LabelFieldPair, Button, CardText, Dropdown, ErrorMessage, PopUp, Stepper,HeaderComponent, TextBlock, Card } from "@egovernments/digit-ui-components";
+import AppPreview from "./AppPreview";
 
 const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
   const { t } = useTranslation();
@@ -14,9 +16,10 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
   const [error, setError] = useState(null);
   const [startValidation, setStartValidation] = useState(null);
   const [showPopUp, setShowPopUp] = useState(null);
+  const [showPopUp1, setShowPopUp1] = useState(null);
   const [canUpdate, setCanUpdate] = useState(null);
   const searchParams = new URLSearchParams(location.search);
-  const [currentStep , setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(1);
   const currentKey = searchParams.get("key");
   const source = searchParams.get("source");
   const [key, setKey] = useState(() => {
@@ -155,7 +158,44 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
                 <div>{t(`CAMPAIGN_TYPE_${beneficiaryType}`)}</div>
               </LabelFieldPair>
             )}
+            {/* <Button
+              type={"button"}
+              size={"large"}
+              variation={"secondary"}
+              label={t("PREVIEW")}
+              onClick={() => {
+                setShowPopUp1(true);
+              }}
+            /> */}
           </Card>
+          {showPopUp1 && (
+            <PopUp
+              className={"custom-pop-up"}
+              type={"default"}
+              heading={t("CHECKLIST_PREVIEW")}
+              children={[]}
+              onOverlayClick={() => {
+                setShowPopUp1(false);
+              }}
+              onClose={() => {
+                setShowPopUp1(false);
+              }}
+              footerChildren={[
+                <Button
+                  type={"button"}
+                  size={"large"}
+                  variation={"primary"}
+                  label={t("CLOSE")}
+                  onClick={() => {
+                    setShowPopUp1(false);
+                  }}
+                />,
+              ]}
+              sortFooterChildren={true}
+            >
+              <AppPreview />
+            </PopUp>
+          )}
            <AlertCard
                         populators={{
                           name: "infocard",
@@ -210,7 +250,6 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
         )}
       </div>
     </>
-
   );
 };
 
