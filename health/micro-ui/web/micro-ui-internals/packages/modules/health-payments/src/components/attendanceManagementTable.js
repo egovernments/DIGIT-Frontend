@@ -50,7 +50,7 @@ const AttendanceManagementTable = ({ ...props }) => {
       ),
       selector: (row) => {
         return (
-          <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
+          <span className="ellipsis-cell" >
             {String(row?.[1] ? row?.[1] : t("ES_COMMON_NA"))}
           </span>
         );
@@ -65,7 +65,7 @@ const AttendanceManagementTable = ({ ...props }) => {
       ),
       selector: (row) => {
         return (
-          <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={row?.[2] || t("NA")}>
+          <div  className="ellipsis-cell" title={row?.[2] || t("NA")}>
             {row?.[2] || t("NA")}
           </div>
         );
@@ -149,7 +149,7 @@ const AttendanceManagementTable = ({ ...props }) => {
       ),
       selector: (row) => {
         return (
-          <div style={{ fontSize: "14px" }} className="ellipsis-cell" title={t(row?.[3]) || t("NA")}>
+          <div className="ellipsis-cell" title={t(row?.[3]) || t("NA")}>
             {t(row?.[3]) || t("NA")}
           </div>
         );
@@ -233,7 +233,7 @@ const AttendanceManagementTable = ({ ...props }) => {
         progressComponent={<Loader />}
         pagination
         paginationServer
-        customStyles={tableCustomStyle}
+        customStyles={tableCustomStyle(false)}
         paginationDefaultPage={currentPage}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handlePerRowsChange}

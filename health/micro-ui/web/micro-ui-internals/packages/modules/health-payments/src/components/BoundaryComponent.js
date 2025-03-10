@@ -239,7 +239,7 @@ const BoundaryDropdown = ({ label, data, onChange, selected, setSelected, isRequ
   const { t } = useTranslation();
 
   return (
-    <div style={{ width: "100%", marginTop: "14px" }}>
+    <div style={{ width: "100%", marginTop: "1.5rem" }}>
       <div className="comment-label">
         {t(label)}
         {isRequired && <span className="required"> *</span>}

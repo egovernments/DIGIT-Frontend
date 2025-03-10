@@ -22,6 +22,7 @@ const MyBillsTable = ({ ...props }) => {
     const { t } = useTranslation();
     const [showToast, setShowToast] = useState(null);
     const project = Digit?.SessionStorage.get("staffProjects");
+    const selectedProject = Digit?.SessionStorage.get("selectedProject");
 
     const columns = useMemo(() => {
         const baseColumns = [
@@ -111,8 +112,8 @@ const MyBillsTable = ({ ...props }) => {
                 ),
                 selector: (row) => {
                     return (
-                        <div className="ellipsis-cell" title={t(project?.[0]?.name || "0")}>
-                            {t(project?.[0]?.name || `NA`)}
+                        <div className="ellipsis-cell" title={t(row?.additionalDetails?.reportDetails?.eventName || "0")}>
+                            {t(row?.additionalDetails?.reportDetails?.eventName || `NA`)}
                         </div>
                     );
                 },
@@ -129,10 +130,11 @@ const MyBillsTable = ({ ...props }) => {
                             className="custom-class"
                             iconFill=""
                             icon="FileDownload"
+                            size="medium"
                             isSuffix
                             label={t(`HCM_AM_DOWNLOAD_BILLS`)}
                             title={t(`HCM_AM_DOWNLOAD_BILLS`)}
-                            showBottom={isLastRow ? false : true}
+                            showBottom={isLastRow && props.data.length !== 1? false : true}
                             onOptionSelect={(value) => {
                                 if (value.code === "HCM_AM_PDF") {
                                     if (reportDetails?.pdfReportId) {
@@ -160,7 +162,7 @@ const MyBillsTable = ({ ...props }) => {
                                 },
                             ]}
                             optionsKey="name"
-                            size=""
+                        
                             style={{ minWidth: "14rem" }}
                             type="actionButton"
                             variation="secondary"
@@ -199,7 +201,7 @@ const MyBillsTable = ({ ...props }) => {
                 data={props.data}
                 pagination
                 paginationServer
-                customStyles={tableCustomStyle}
+                customStyles={tableCustomStyle(false)}
                 paginationDefaultPage={props?.currentPage}
                 onChangePage={handlePageChange}
                 onChangeRowsPerPage={handlePerRowsChange}
