@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
 import SetupCampaign from "./SetupCampaign";
 import ConfigureApp from "./ConfigureApp";
-import { CreateChecklist} from "./CreateChecklist";
+import { CreateChecklist } from "./CreateChecklist";
 import SearchChecklist from "./SearchChecklist";
 import UpdateCampaign from "./UpdateCampaign";
 import BoundaryRelationCreate from "./BoundaryRelationCreate";
@@ -15,7 +15,7 @@ import UpdateChecklist from "./UpdateChecklist";
 import BoundaryHome from "./BoundaryHome";
 import ApprovedMicroplans from "./ApprovedMicroplans";
 import FetchFromMicroplan from "../../components/fetchFromMicroplan";
-import FormBuilder from "./appConfigurationScreen/FormBuilder";
+import FormBuilder from "./appConfigurationScreenParent/FormBuilder";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -25,7 +25,7 @@ import FormBuilder from "./appConfigurationScreen/FormBuilder";
  */
 const CampaignBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
-  
+
   const search = useLocation().search;
   const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
   const crumbs = [
@@ -37,22 +37,30 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     {
       path: pathVar === "my-campaign" ? "" : `/${window?.contextPath}/employee/campaign/my-campaign`,
       content: t("MY_CAMPAIGN"),
-      show: pathVar === "my-campaign" || pathVar === "checklist/search" || pathVar === "checklist/create" || pathVar === "checklist/view" || pathVar === "checklist/update"  || pathVar === "update-dates-boundary" ? true : false,
+      show:
+        pathVar === "my-campaign" ||
+        pathVar === "checklist/search" ||
+        pathVar === "checklist/create" ||
+        pathVar === "checklist/view" ||
+        pathVar === "checklist/update" ||
+        pathVar === "update-dates-boundary"
+          ? true
+          : false,
     },
     {
       path: pathVar === "setup-campaign" ? "" : `/${window?.contextPath}/employee/campaign/setup-campaign`,
       content: t("CREATE_NEW_CAMPAIGN"),
-      show: pathVar === "setup-campaign"  ? true : false,
+      show: pathVar === "setup-campaign" ? true : false,
     },
     {
       path: pathVar === "update-dates-boundary" ? "" : `/${window?.contextPath}/employee/campaign/my-campaign`,
       content: t("UPDATE_DATE_CHANGE"),
-      show: pathVar === "update-dates-boundary" ? true: false,
+      show: pathVar === "update-dates-boundary" ? true : false,
     },
     {
       path: "",
       content: t("ACTION_LABEL_CONFIGURE_APP"),
-      show:pathVar === "checklist/search" ? true : false,
+      show: pathVar === "checklist/search" ? true : false,
     },
     {
       path: "",
@@ -78,7 +86,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       path: pathVar === "update-campaign" ? "" : `/${window?.contextPath}/employee/campaign/update-campaign`,
       content: t("UPDATE_CAMPAIGN"),
       show: pathVar.match("update-campaign") ? true : false,
-    }
+    },
   ];
 
   return <BreadCrumb className="campaign-breadcrumb" crumbs={crumbs} spanStyle={{ maxWidth: "min-content" }} />;
@@ -95,7 +103,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
 const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
   const location = useLocation();
   const userId = Digit.UserService.getUser().info.uuid;
-  const microplanStatus =  "RESOURCE_ESTIMATIONS_APPROVED"
+  const microplanStatus = "RESOURCE_ESTIMATIONS_APPROVED";
   const UploadBoundaryData = Digit?.ComponentRegistryService?.getComponent("UploadBoundaryData");
   const CycleConfiguration = Digit?.ComponentRegistryService?.getComponent("CycleConfiguration");
   const DeliveryRule = Digit?.ComponentRegistryService?.getComponent("DeliveryRule");
@@ -104,9 +112,8 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
   const Response = Digit?.ComponentRegistryService?.getComponent("Response");
   const AddProduct = Digit?.ComponentRegistryService?.getComponent("AddProduct");
   const UpdateDatesWithBoundaries = Digit?.ComponentRegistryService?.getComponent("UpdateDatesWithBoundaries");
-  const AppConfigurationWrapper = Digit?.ComponentRegistryService?.getComponent("AppConfigurationWrapper");
   const AppConfigurationParentLayer = Digit?.ComponentRegistryService?.getComponent("AppConfigurationParentLayer");
-  
+
   useEffect(() => {
     if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
       window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
@@ -137,7 +144,10 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
           <PrivateRoute path={`${path}/create-campaign/upload-boundary-data`} component={() => <UploadBoundaryData />} />
           <PrivateRoute path={`${path}/create-campaign/cycle-configure`} component={() => <CycleConfiguration />} />
           <PrivateRoute path={`${path}/create-campaign/delivery-details`} component={() => <DeliveryRule />} />
-          <PrivateRoute path={`${path}/setup-campaign`} component={() => <SetupCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData}/>} />
+          <PrivateRoute
+            path={`${path}/setup-campaign`}
+            component={() => <SetupCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />}
+          />
           <PrivateRoute path={`${path}/my-campaign`} component={() => <MyCampaign />} />
           <PrivateRoute path={`${path}/fetch-from-microplan`} component={() => <FetchFromMicroplan />} />
           <PrivateRoute path={`${path}/preview`} component={() => <CampaignSummary />} />
@@ -149,13 +159,12 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
           <PrivateRoute path={`${path}/checklist/search`} component={() => <SearchChecklist />} />
           <PrivateRoute path={`${path}/checklist/view`} component={() => <ViewChecklist />} />
           <PrivateRoute path={`${path}/checklist/update`} component={() => <UpdateChecklist />} />
-          <PrivateRoute path={`${path}/boundary/home`} component={()=> <BoundaryHome />} />
-          <PrivateRoute path={`${path}/boundary/create`} component={()=> <BoundaryRelationCreate />} />
-          <PrivateRoute path={`${path}/boundary/view-all-hierarchy`} component={()=> <ViewBoundary />} />
-          <PrivateRoute path={`${path}/boundary/data`} component={()=> <ViewHierarchy />} />
+          <PrivateRoute path={`${path}/boundary/home`} component={() => <BoundaryHome />} />
+          <PrivateRoute path={`${path}/boundary/create`} component={() => <BoundaryRelationCreate />} />
+          <PrivateRoute path={`${path}/boundary/view-all-hierarchy`} component={() => <ViewBoundary />} />
+          <PrivateRoute path={`${path}/boundary/data`} component={() => <ViewHierarchy />} />
           <PrivateRoute path={`${path}/update-campaign`} component={() => <UpdateCampaign />} />
           <PrivateRoute path={`${path}/setup-from-microplan`} component={() => <ApprovedMicroplans />} />
-          <PrivateRoute path={`${path}/app-configuration`} component={() => <AppConfigurationWrapper />} />
           <PrivateRoute path={`${path}/app-configuration-parent`} component={() => <AppConfigurationParentLayer />} />
           <PrivateRoute path={`${path}/form-builder-configuration`} component={() => <FormBuilder />} />
         </AppContainer>

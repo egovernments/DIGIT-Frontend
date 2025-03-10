@@ -53,11 +53,8 @@ import MultiSelectDropdown from "./components/MultiSelectDropdown";
 import NoResultsFound from "./components/NoResultsFound";
 import UploadDataMappingWrapper from "./components/UploadDataMappingWrapper";
 import DataUploadWrapper from "./components/DataUploadWrapper";
-import AppConfigurationWrapper from "./pages/employee/appConfigurationScreen/AppConfigurationWrapper";
-import AppLocalisationWrapper from "./pages/employee/appConfigurationScreen/AppLocalisationWrapper";
-import ImpelComponentWrapper from "./pages/employee/appConfigurationScreen/ImpelComponentWrapper";
 import AppConfigurationParentLayer from "./pages/employee/appConfigurationScreenParent/AppConfigurationParentLayer";
-import FormBuilder from "./pages/employee/appConfigurationScreen/FormBuilder";
+import FormBuilder from "./pages/employee/appConfigurationScreenParent/FormBuilder";
 
 /**
  * MDMS Module name
@@ -173,8 +170,6 @@ const componentsToRegister = {
   NoResultsFound,
   UploadDataMappingWrapper,
   DataUploadWrapper,
-  // AppConfigurationWrapper: AppLocalisationWrapper,
-  AppConfigurationWrapper: ImpelComponentWrapper,
   AppConfigurationParentLayer: AppConfigurationParentLayer,
   FormBuilder
 };
