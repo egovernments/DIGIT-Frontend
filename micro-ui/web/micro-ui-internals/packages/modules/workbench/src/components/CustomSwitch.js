@@ -2,7 +2,6 @@ import { Switch } from "@egovernments/digit-ui-components"; // Added Switch impo
 import React from "react";
 
 const CustomSwitch = ({onSelect, props, formData}) => {
-    console.log("props are", props);
 
     return (
         <Switch

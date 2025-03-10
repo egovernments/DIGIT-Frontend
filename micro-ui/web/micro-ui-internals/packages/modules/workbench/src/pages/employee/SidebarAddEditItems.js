@@ -47,7 +47,6 @@ const SidebarAddEditItems = () => {
         }
     }
     const { isLoading, data, isFetching } = Digit.Hooks.useCustomAPIHook(res);
-    console.log("def data", data);
 
     const [iconNames, setIconNames] = useState(null);
     const extractExports = (text) => {
@@ -67,8 +66,6 @@ const SidebarAddEditItems = () => {
             .then(text => {
                 const icons = extractExports(text);
                 const iconObjects = icons.map(icon => ({ code: icon }));
-                console.log("icon", iconObjects);
-                console.log("SIdebarconfig", SidebarAddEditConfig);
                 // SidebarAddEditConfig({ t, typeOfAction: typeOfAction })[0].body.forEach((field) => {
                 //     if (field.populators?.name === "leftIcon") {
                 //         field.populators.options = iconObjects; 
@@ -90,7 +87,6 @@ const SidebarAddEditItems = () => {
             ;
         },
     });
-    console.log("user roles mdms", USER_ROLE);
 
     const res1 = {
         url: `/${mdms_context_path}/v2/_search`,
@@ -119,7 +115,6 @@ const SidebarAddEditItems = () => {
     const [defUsers, setDefUsers] = useState(null);
 
     useEffect(() => {
-        console.log("bhai yrr data1", data1);
     
         if (!data1) return; // If data1 is undefined, exit early
     
@@ -129,7 +124,6 @@ const SidebarAddEditItems = () => {
                 id: item?.id, 
                 auditDetails: item?.auditDetails
             }));
-            console.log("set users", users);
             setDefUsers(users);
         } else {
             setDefUsers([]);
@@ -138,7 +132,6 @@ const SidebarAddEditItems = () => {
     
 
     const generateDataObject = (formData, nId, type) => {
-        console.log("formmmm dat", formData);
         if (type === "add" || type === "update") {
             return {
                 leftIcon: formData?.leftIcon?.code,
@@ -164,13 +157,6 @@ const SidebarAddEditItems = () => {
         users: defUsers && defUsers.length > 0 ? defUsers : []
     }), [data, defUsers, id]); // Recalculates when dependencies change
 
-    useEffect(() => {
-        console.log("defaultValues updated:", defaultValues);
-    }, [defaultValues]);
-    const onSubmit = async (formData) => {
-        console.log("hehe", formData);
-    }
-    console.log("the data is", data);
 
     const onSubmitUpdate = async () => {
 
@@ -270,7 +256,6 @@ const SidebarAddEditItems = () => {
             // Combine and execute all requests
             const results = await Promise.all([...newAddRequests, ...oldDelRequests]);
 
-            console.log("succes", results);
             history.push(`/${window.contextPath}/employee/workbench/sidebar-items?id=${id}`, {
             });
 
@@ -283,7 +268,6 @@ const SidebarAddEditItems = () => {
     const [newId, setNewId] = useState(null);
 
     const onSubmitAdd = async () => {
-        console.log("form data add", formData);
         const res = await Digit.CustomService.getResponse({
             url: `/${mdms_context_path}/v2/_search`,
             params: {
@@ -338,7 +322,6 @@ const SidebarAddEditItems = () => {
         try {
             // Assuming formData?.user is an array of objects with a 'code' field
             const userCodes = formData?.users || [];
-            console.log("inside final call", userCodes);
 
             // Call the API for each 'code' in the array
             const apiRequests = userCodes.map(async (user) => {
@@ -368,7 +351,6 @@ const SidebarAddEditItems = () => {
 
             // Wait for all API calls to finish
             const results = await Promise.all(apiRequests);
-            console.log("results", results);
             history.push(`/${window.contextPath}/employee/workbench/sidebar-items?id=${nId}`, {
             });
         } catch (error) {
@@ -407,7 +389,6 @@ const SidebarAddEditItems = () => {
 
 
     const beginLocalisation = async (data) => {
-        console.log("form data", data);
         setFormData(data);
         setShowPopup(true);
     }

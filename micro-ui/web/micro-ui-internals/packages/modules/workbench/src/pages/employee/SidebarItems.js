@@ -49,11 +49,9 @@ const SidebarItems = () => {
         navigationURL: data?.data?.navigationURL,
     });
     const onSubmit = async(data) => {
-        console.log("hehe", data);
         history.push(`/${window.contextPath}/employee/workbench/sidebar-update?type=update&id=${id}`, {
         });
     }
-    console.log("the data is", data);
 
     return (
         <div>

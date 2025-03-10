@@ -1,7 +1,5 @@
-import { components } from "react-select";
 
 const SidebarAddEditConfig = ({ t, typeOfAction, icon, users }) => {
-    console.log("da", typeOfAction);
     return [
         {
             head: t("SIDEBAR_CONTENT"),

@@ -1,5 +1,4 @@
 const SidebarItemsConfig = ({ t, data }) => {
-    console.log("da", data);
     return [
         {
             head: t("SIDEBAR_CONTENT"),
