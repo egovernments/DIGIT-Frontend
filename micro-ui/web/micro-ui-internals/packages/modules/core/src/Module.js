@@ -16,6 +16,7 @@ import PrivacyComponent from "./components/PrivacyComponent";
 import OtpComponent from "./pages/employee/Otp/OtpCustomComponent";
 // import {useInitStore} from "../libraries/src/hooks/store"
 import Hooks from "../../../libraries/src/hooks";
+import { initI18n } from "@egovernments/digit-ui-libraries/src/translations";
 
 console.log("inside module.js of core")
 console.log(Digit.Hooks);
@@ -88,6 +89,7 @@ const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding }) => {
 export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, defaultLanding }) => {
   console.log("inside digitui of core");
   var Digit = window.Digit || {};
+  initI18n();
   const [privacy, setPrivacy] = useState(Digit.Utils.getPrivacyObject() || {});
   const userType = Digit.UserService.getType();
   const queryClient = new QueryClient({
