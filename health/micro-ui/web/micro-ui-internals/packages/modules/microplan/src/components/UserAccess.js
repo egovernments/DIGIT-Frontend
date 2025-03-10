@@ -301,6 +301,7 @@ function UserAccess({ category, setData, nationalRoles }) {
 
   useEffect(()=>{
     setShowToast(null);
+    setSearchQuery("");
   },[category])
 
   return (

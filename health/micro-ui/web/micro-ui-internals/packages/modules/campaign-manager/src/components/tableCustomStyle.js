@@ -9,6 +9,7 @@ export const tableCustomStyle = {
   table: {
     style: {
       overflow: "visible",
+      width: "95%",
       // overflow: "scroll",
     },
   },
@@ -99,6 +100,24 @@ export const tableCustomStyle = {
         borderColor: "#D6D5D4",
         borderTopWidth: "0px",
       },
+    },
+  },
+  pagination: {
+    style: {
+      width: "95%",
+      borderStyle: "solid",
+      borderWidth: "1px",
+      borderColor: "#D6D5D4",
+      borderTopWidth: "0px",
+    },
+  },
+  paginationWrapper: {
+    style: {
+      width: "95%", // Set pagination wrapper width to 80%
+      marginLeft: "auto", // Center pagination wrapper horizontally
+      marginRight: "auto", // Center pagination wrapper horizontally
+      display: "flex", // Use flexbox to make sure pagination aligns properly
+      justifyContent: "center", // Center the pagination bar horizontally
     },
   },
 };

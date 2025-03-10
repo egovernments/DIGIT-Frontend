@@ -34,22 +34,28 @@ frontend/micro-ui/web/public/index.html
 ```jsx
 /** add this import **/
 
-  <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-health-css@0.1.0/dist/index.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-health-css@0.3.0/dist/index.css" />
 
 ```
-### Changelog
 
-```bash
-## 0.3.0 - 2024-12-03
-#### Base Admin console & microplan web
 
-## 0.1.0 
-#### Base version
+## List of features available in this package were as follows
 
-```
-## Contributors
+1. Campaign Management
+2. Checklist Management
+3. Boundary Management
+4. Microplanning
+5. Campaign Settings 
 
-[jagankumar-egov] [nipunarora-eGov]  [nabeelmd-eGov] [Bhavya-eGov] 
+
+### Contributors
+
+- [jagankumar-egov](https://github.com/jagankumar-egov) 
+- [nabeelmd-egov](https://github.com/nabeelmd-egov)
+- [Bhavya-egov](https://github.com/Bhavya-egov)
+- [nipunarora-eGov](https://github.com/nipunarora-eGov)
+- [Swathi-egov](https://github.com/Swathi-egov)
+- [suryansh-egov](https://github.com/suryansh-egov)
 
 ### Published from DIGIT Frontend 
 DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/console)

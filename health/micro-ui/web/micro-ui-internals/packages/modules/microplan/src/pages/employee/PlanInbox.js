@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, useMemo } from "react";
+import React, { Fragment, useState, useEffect, useMemo ,useRef} from "react";
 import SearchJurisdiction from "../../components/SearchJurisdiction";
 import { useHistory } from "react-router-dom";
 import { Card, Tab, Button, SVG, Loader, ActionBar, Toast, ButtonGroup, NoResultsFound } from "@egovernments/digit-ui-components";
@@ -33,7 +33,7 @@ const PlanInbox = () => {
   const [hierarchyLevel, setHierarchyLevel] = useState("");
   const [censusData, setCensusData] = useState([]);
   const [boundaries, setBoundaries] = useState([]);
-  const [selectedFilter, setSelectedFilter] = useState(null);
+  const [selectedFilter, setSelectedFilter] = useState({status:"PENDING_FOR_VALIDATION",onRoadCondition:null,terrain:null,securityQ1:null,securityQ2:null,facilityId:[]});
   const [activeFilter, setActiveFilter] = useState({});
   const [actionBarPopUp, setactionBarPopUp] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -64,9 +64,13 @@ const PlanInbox = () => {
   const [defaultBoundaries, setDefaultBoundaries] = useState([]);
   const userRoles = user?.info?.roles?.map((roleData) => roleData?.code);
   const hrms_context_path = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || 'health-hrms';
-
+  const tableRef = useRef(null);
+  const [tableHeight, setTableHeight] = useState(33);
+ 
   // Check if the user has the 'rootapprover' role
   const isRootApprover = userRoles?.includes("ROOT_PLAN_ESTIMATION_APPROVER");
+
+
 
   const { isLoading: isLoadingPlanObject, data: planObject, error: errorPlan, refetch: refetchPlan } = Digit.Hooks.microplanv1.useSearchPlanConfig(
     {
@@ -120,7 +124,7 @@ const PlanInbox = () => {
   };
 
   useEffect(() => {
-    if (selectedFilter === "VALIDATED") {
+    if (selectedFilter?.status === "VALIDATED") {
       setActiveLink({ code: "", name: "" });
       setShowTab(false);
     } else {
@@ -132,7 +136,7 @@ const PlanInbox = () => {
         setShowTab(true);
       }
     }
-  }, [selectedFilter]);
+  }, [selectedFilter?.status]);
 
   const selectProps = {
     hideLabel: true,
@@ -171,7 +175,14 @@ const PlanInbox = () => {
         tenantId: tenantId,
         active: true,
         jurisdiction: censusJurisdiction,
-        status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
+        status: selectedFilter?.status !== null && selectedFilter?.status !== undefined ? selectedFilter?.status : null,
+        ...(selectedFilter?.onRoadCondition != null && { onRoadCondition: selectedFilter.onRoadCondition }),
+        ...(selectedFilter?.terrain != null && { terrain: selectedFilter.terrain }),
+        ...(selectedFilter?.securityQ1 != null && { securityQ1: selectedFilter.securityQ1 }),
+        ...(selectedFilter?.securityQ2 != null && { securityQ2: selectedFilter.securityQ2 }),
+        ...(selectedFilter?.facilityId && {
+          facilityIds: selectedFilter?.facilityId?.map((item) => item.id),
+        }),
         assignee: user.info.uuid,
         planConfigurationId: microplanId, 
         limit: limitAndOffset?.limit,
@@ -183,15 +194,10 @@ const PlanInbox = () => {
     },
     changeQueryName:"count"
   });
-
-  useEffect(() => {
-    if (planWithCensusCount) {
-      setAssignedToMeCount(planWithCensusCount?.TotalCount);
-    }
-  }, [planWithCensusCount]);
-
-
-
+ 
+ 
+  
+  
   const {
     isLoading: isPlanWithCensusLoading,
     data: planWithCensus,
@@ -206,8 +212,15 @@ const PlanInbox = () => {
         tenantId: tenantId,
         active: true,
         jurisdiction: censusJurisdiction,
-        status: selectedFilter !== null && selectedFilter !== undefined ? selectedFilter : "",
-        ...(activeLink.code == "ASSIGNED_TO_ALL" || selectedFilter == "VALIDATED" ? {} : { assignee: user.info.uuid }),
+        status: selectedFilter?.status !== null && selectedFilter?.status !== undefined ? selectedFilter?.status : "",
+        ...(activeLink.code == "ASSIGNED_TO_ALL" || selectedFilter?.status == "VALIDATED" ? {} : { assignee: user.info.uuid }),
+        ...(selectedFilter?.terrain != null && { terrain: selectedFilter.terrain }),
+        ...(selectedFilter?.onRoadCondition != null && { onRoadCondition: selectedFilter.onRoadCondition }),
+        ...(selectedFilter?.securityQ1 != null && { securityQ1: selectedFilter.securityQ1 }),
+        ...(selectedFilter?.securityQ2 != null && { securityQ2: selectedFilter.securityQ2 }),
+        ...(selectedFilter?.facilityId && {
+          facilityIds: selectedFilter?.facilityId?.map((item) => item.id),
+        }),
         planConfigurationId: microplanId, //list of plan ids
         limit: limitAndOffset?.limit,
         offset: limitAndOffset?.offset,
@@ -237,7 +250,7 @@ const PlanInbox = () => {
               acc[field.key] = field.value; // Set `key` as property name and `value` as property value
               return acc;
             }, {});
-
+            
           return {
             original: item,
             censusOriginal: filteredCensus,
@@ -264,6 +277,16 @@ const PlanInbox = () => {
     },
   });
 
+      useEffect(() => {
+        if (tableRef.current) {
+          // Get full rendered height including borders/padding
+          const height = tableRef.current.offsetHeight;
+          setTableHeight(height / 16 + 7.25);
+        }else{
+          setTableHeight(33);
+        }
+      }, [planWithCensus, activeLink]); 
+
   const onSearch = (selectedBoundaries, selectedHierarchy) => {
     if (selectedBoundaries.length === 0) {
       setShowToast({ key: "warning", label: t("MICROPLAN_BOUNDARY_IS_EMPTY_WARNING"), transitionTime: 5000 });
@@ -284,7 +307,7 @@ const PlanInbox = () => {
       setDefaultBoundaries(selectedBoundaries);
       // Extract the list of codes from the selectedBoundaries array
       const boundaryCodes = selectedBoundaries.map((boundary) => boundary.code);
-
+      
       // Set census jurisdiction with the list of boundary codes
       setCensusJurisdiction(boundaryCodes);
     }
@@ -366,7 +389,7 @@ const PlanInbox = () => {
       businessServices: "PLAN_ESTIMATION",
     },
     config: {
-      enabled: selectedFilter ? true : false,
+      enabled: selectedFilter?.status ? true : false,
       select: (data) => {
         return data.BusinessServices?.[0];
       },
@@ -375,16 +398,16 @@ const PlanInbox = () => {
 
   useEffect(() => {
     if (workflowData) {
-      // Assume selectedFilter maps to applicationStatus or state
-      const selectedState = workflowData?.states?.find((state) => state.state === selectedFilter);
-
+      // Assume selectedFilter.filterValue maps to applicationStatus or state
+      const selectedState = workflowData?.states?.find((state) => state.state === selectedFilter?.status);
+      
       // Filter actions based on the selected state
       const availableActions = selectedState?.actions?.filter((action) => action.roles.some((role) => userRoles.includes(role)));
 
       // Update the available actions state
       setAvailableActionsForUser(availableActions || []);
     }
-  }, [workflowData, selectedFilter]);
+  }, [workflowData, selectedFilter?.status]);
 
   // if availableActionsForUser is defined and is an array
   const actionsMain = availableActionsForUser?.length > 0 ? availableActionsForUser : [];
@@ -409,15 +432,18 @@ const PlanInbox = () => {
       );
       setActiveFilter(reorderedStatusCount);
       const activeFilterKeys = Object.keys(reorderedStatusCount || {});
-      if (selectedFilter === null || selectedFilter === undefined || selectedFilter === "" || !activeFilterKeys.includes(selectedFilter)) {
-        setSelectedFilter(activeFilterKeys[0]);
+      if (selectedFilter?.filterValue === null || selectedFilter?.status=== undefined || selectedFilter?.status === "") {
+        setSelectedFilter((prev) => ({
+          ...prev, // Spread the previous state to retain other attributes
+        }));
+        
       }
       setVillagesSelected(0);
 
       setSelectedRows([]);
       if (activeLink.code === "ASSIGNED_TO_ME") {
         setAssignedToMeCount(planWithCensus?.TotalCount);
-        setAssignedToAllCount(planWithCensus?.StatusCount[selectedFilter] || 0);
+        setAssignedToAllCount(planWithCensus?.StatusCount[selectedFilter?.status] || 0);
       } else {
         setAssignedToAllCount(planWithCensus?.TotalCount);
       }
@@ -432,7 +458,7 @@ const PlanInbox = () => {
       refetchPlanWithCensus(); // Trigger the API call again after activeFilter changes
     }
   }, [selectedFilter, activeLink, censusJurisdiction, limitAndOffset]);
-
+  
   const reqCri = {
     url: `/${hrms_context_path}/employees/_search`,
     params: {
@@ -443,6 +469,12 @@ const PlanInbox = () => {
       enabled: assigneeUuids?.length > 0 ? true : false,
     },
   };
+  
+  useEffect(() => {
+    if (planWithCensusCount) {
+      setAssignedToMeCount(planWithCensusCount?.TotalCount);
+    }
+  }, [planWithCensusCount]);
 
   const { isLoading: isEmployeeLoading, data: employeeData, refetch: refetchHrms } = Digit.Hooks.useCustomAPIHook(reqCri);
 
@@ -484,7 +516,7 @@ const PlanInbox = () => {
   }, [processData]);
 
   useEffect(() => {
-    if (selectedFilter === "VALIDATED") {
+    if (selectedFilter?.status === "VALIDATED") {
       setActiveLink({ code: "", name: "" });
       setShowTab(false);
     } else {
@@ -496,10 +528,15 @@ const PlanInbox = () => {
         setShowTab(true);
       }
     }
-  }, [selectedFilter]);
+  }, [selectedFilter?.status]);
 
-  const onFilter = (selectedStatus) => {
-    setSelectedFilter(selectedStatus?.code);
+  const onFilter = (filterValue) => {
+    setSelectedFilter((prev)=>(
+      {
+        ...prev,
+        ...filterValue
+      }
+    ));
     setCurrentPage(1);
     setLimitAndOffset((prev)=>{
       return {
@@ -513,10 +550,10 @@ const PlanInbox = () => {
     });
   };
 
-  const clearFilters = () => {
-    if (selectedFilter !== Object.entries(activeFilter)?.[0]?.[0]) {
-      setSelectedFilter(Object.entries(activeFilter)?.[0]?.[0]);
-    }
+  const clearFilters = () => {    
+      setSelectedFilter((prev)=>({
+        status:Object.entries(activeFilter)?.[0]?.[0]
+      }));
     setCurrentPage(1);
     setLimitAndOffset((prev)=>{
       return {
@@ -537,7 +574,7 @@ const PlanInbox = () => {
     const resourceArr = (resources || []).map((resource) => ({
       name: t(resource.resourceType), // Dynamic column name for each resourceType
       cell: (row) => {
-        return row?.[resource?.resourceType]; // Return estimatedNumber if exists
+        return row?.[resource?.resourceType] === null ? t("NA") : row?.[resource?.resourceType]; // Return NA only if null, not for 0 or falsy values
       },
       sortable: true,
       width: "180px",
@@ -787,13 +824,13 @@ const PlanInbox = () => {
   };
 
   const getButtonState = (action) => {
-    if (selectedFilter === "PENDING_FOR_VALIDATION" && action === "VALIDATE") {
+    if (selectedFilter?.status === "PENDING_FOR_VALIDATION" && action === "VALIDATE") {
       return true;
     }
-    if (selectedFilter === "PENDING_FOR_APPROVAL" && (action === "APPROVE" || action === "ROOT_APPROVE")) {
+    if (selectedFilter?.status === "PENDING_FOR_APPROVAL" && (action === "APPROVE" || action === "ROOT_APPROVE")) {
       return true;
     }
-    if (selectedFilter === "VALIDATED" && action === "SEND_BACK_FOR_CORRECTION") {
+    if (selectedFilter?.status === "VALIDATED" && action === "SEND_BACK_FOR_CORRECTION") {
       return true;
     }
     return false;
@@ -826,6 +863,7 @@ const PlanInbox = () => {
     }
   });
 
+  
   return (
     <div className="pop-inbox-wrapper">
       <div>
@@ -836,10 +874,12 @@ const PlanInbox = () => {
           <div className="mp-heading-bold">
             {`${t("HCM_MICROPLAN_MICROPLAN_NAME_LABEL")}: ${campaignObject?.campaignName || t("NO_NAME_AVAILABLE")}`}
           </div>
-          <div>{`${t("LOGGED_IN_AS")} ${userName} - ${t(userRole)}`}</div>
+          <div>{`${t("LOGGED_IN_AS")} ${userName} - ${t(userRole)}${planEmployee?.planData?.[0]?.hierarchyLevel ? 
+            ` (${t(planEmployee.planData[0].hierarchyLevel.toUpperCase())})` : ""}`}
+          </div>
         </div>
       </div>
-      <GenericKpiFromDSS module="MICROPLAN" status={selectedFilter} planId={microplanId} refetchTrigger={refetchTrigger} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
+      <GenericKpiFromDSS module="MICROPLAN" status={selectedFilter?.status} planId={microplanId} refetchTrigger={refetchTrigger} campaignType={campaignObject?.projectType} planEmployee={planEmployee} boundariesForKpi={defaultBoundaries}/>
       <SearchJurisdiction
         boundaries={boundaries}
         defaultHierarchy={defaultHierarchy}
@@ -853,7 +893,7 @@ const PlanInbox = () => {
       />
 
       <div
-        className="pop-inbox-wrapper-filter-table-wrapper"
+        className="pop-inbox-wrapper-filter-table-wrapper planInbox-filtercard-table-wrapper"
         style={{
           marginBottom:
             (isRootApprover && isStatusConditionMet(totalStatusCount) && planObject?.status === "RESOURCE_ESTIMATION_IN_PROGRESS") ||
@@ -864,10 +904,12 @@ const PlanInbox = () => {
         }}
       >
         <InboxFilterWrapper
+          isPlanInbox={true}
           options={activeFilter}
           onApplyFilters={onFilter}
           clearFilters={clearFilters}
-          defaultValue={{ [selectedFilter]: activeFilter[selectedFilter] }}
+          defaultValue={selectedFilter}
+          tableHeight={tableHeight}
         ></InboxFilterWrapper>
 
         <div className={"pop-inbox-table-wrapper"}>
@@ -993,10 +1035,10 @@ const PlanInbox = () => {
               <Loader />
             ) : planWithCensus?.tableData?.length === 0 ? (
               <NoResultsFound
-                style={{ height: selectedFilter === "VALIDATED" ? "472px" : "408px" }}
+                style={{ height: selectedFilter?.status === "VALIDATED" ? "472px" : "408px" }}
                 text={t(`HCM_MICROPLAN_NO_DATA_FOUND_FOR_PLAN_INBOX_PLAN`)}
               />
-            ) : (
+            ) : (<div ref={tableRef}>
               <DataTable
                 columns={columns}
                 data={planWithCensus?.tableData}
@@ -1021,6 +1063,7 @@ const PlanInbox = () => {
                 fixedHeader={true}
                 fixedHeaderScrollHeight={"100vh"}
               />
+              </div>
             )}
           </Card>
         </div>

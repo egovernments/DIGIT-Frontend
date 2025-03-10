@@ -1,10 +1,11 @@
 import React, { useEffect, useState, createContext, useContext, useCallback } from "react";
 import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
 import { useTranslation } from "react-i18next";
-import { ViewCardFieldPair, Toast, Card, TextBlock, Button, PopUp, CardText, TextInput, BreadCrumb, Loader, ActionBar, Tag} from "@egovernments/digit-ui-components";
+import { SummaryCardFieldPair, Card, Button, PopUp,  TextInput,  Loader} from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useHistory, useLocation } from "react-router-dom";
 import MobileChecklist from "../../components/MobileChecklist";
+import TagComponent from "../../components/TagComponent";
 
 const ViewChecklist = () => {
     const { t } = useTranslation();
@@ -24,14 +25,17 @@ const ViewChecklist = () => {
     const [config, setConfig] = useState(null);
     const [showPopUp, setShowPopUp] = useState(false);
     const [previewData, setPreviewData] = useState([]);
+    const [helpText, setHelpText] = useState("");
 
     const [viewData, setViewData] = useState(null);
 
     const [serviceDefId, setServiceDefId] = useState(null);
     const [updateDisable, setUpdateDisable] = useState(false);
 
+    const SERVICE_REQUEST_CONTEXT_PATH = window?.globalConfigs?.getConfig("SERVICE_REQUEST_CONTEXT_PATH") || "health-service-request";
+
     const res = {
-        url: `/service-request/service/definition/v1/_search`,
+        url: `/${SERVICE_REQUEST_CONTEXT_PATH}/service/definition/v1/_search`,
         body: {
             ServiceDefinitionCriteria: {
                 "tenantId": tenantId,
@@ -43,6 +47,7 @@ const ViewChecklist = () => {
             select: (res) => {
                 if (res?.ServiceDefinitions?.[0]?.attributes) {
                     setServiceDefId(res?.ServiceDefinitions?.[0]?.id);
+                    setHelpText(res?.ServiceDefinitions?.[0]?.additionalFields?.fields?.[0]?.value?.helpText);
                     const temp_data = res?.ServiceDefinitions?.[0]?.attributes
                     const formatted_data = temp_data.map((item) => item.additionalFields?.fields?.[0]?.value);
                     const nvd = formatted_data.filter((value, index, self) =>
@@ -76,7 +81,7 @@ const ViewChecklist = () => {
         // Only set API params when serviceDefId is available
         if (serviceDefId) {
             setServiceResponseParam({
-                url: `/service-request/service/v1/_search`,
+                url: `/${SERVICE_REQUEST_CONTEXT_PATH}/service/v1/_search`,
                 body: {
                     ServiceCriteria: {
                         "tenantId": tenantId,
@@ -179,13 +184,13 @@ const ViewChecklist = () => {
     ];
 
     if (isLoading) {
-        return <Loader />;
+        return <Loader page={true} variant={"PageLoader"}/>;
     }
 
 
     return (
         <div style={{marginBottom: "2rem"}}>
-            <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} style={{border: '0.5px solid #0B4B66'}} />
+             <TagComponent campaignName={campaignName} />  
             <div style={{ display: "flex", justifyContent: "space-between", height:"5.8rem", marginTop:"-1.2rem" }}>
                 <div>
                     <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed"}}>
@@ -243,7 +248,7 @@ const ViewChecklist = () => {
             <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
                 {fieldPairs.map((pair, index) => (
                     <div>
-                        <ViewCardFieldPair
+                        <SummaryCardFieldPair
                             key={index} // Provide a unique key for each item
                             className=""
                             inline
@@ -253,6 +258,21 @@ const ViewChecklist = () => {
                         {index !== fieldPairs.length - 1 && <div style={{ height: "1rem" }}></div>}
                     </div>
                 ))}
+                {
+                    <div style={{ display: "flex" }}>
+                    <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t("CHECKLIST_HELP_TEXT")}</div>
+                    <TextInput
+                      disabled={true}
+                      className="tetxinput-example"
+                      type={"text"}
+                      name={t("CHECKLIST_HELP_TEXT")}
+                      value={helpText}
+                      // value={`${clTranslated} ${rlTranslated}`}
+                    //   onChange={(event) => setHelpText(event.target.value)}
+                      placeholder={t("CHECKLIST_HELP_TEXT_PALCEHOLDER")}
+                    />
+                  </div>
+                }
             </Card>
             <div style={{ height: "1rem" }} />
 

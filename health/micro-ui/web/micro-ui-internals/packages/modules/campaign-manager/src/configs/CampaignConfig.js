@@ -116,7 +116,6 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
               key: "boundaryType",
               type: "component",
               component: "SelectingBoundariesDuplicate",
-              // component: "SelectingBoundaries",
               withoutLabelFieldPair: true,
               withoutLabel: true,
               disable: false,
@@ -283,6 +282,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
                 sessionData: totalFormData,
                 hierarchyData: hierarchyData,
                 type: "facilityWithBoundaryMapping",
+                validationType: "facilityWithBoundary"
               },
               populators: {
                 name: "uploadFacilityMapping",
@@ -335,6 +335,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
                 sessionData: totalFormData,
                 hierarchyData: hierarchyData,
                 type: "userMapping",
+                validationType: "userWithBoundary"
               },
               populators: {
                 name: "uploadUserMapping",

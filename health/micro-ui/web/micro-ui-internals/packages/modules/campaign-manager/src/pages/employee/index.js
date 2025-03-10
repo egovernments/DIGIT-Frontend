@@ -3,7 +3,6 @@ import { Switch, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
 import SetupCampaign from "./SetupCampaign";
-import SelectingBoundaries from "../../components/SelectingBoundaries";
 import ConfigureApp from "./ConfigureApp";
 import { CreateChecklist} from "./CreateChecklist";
 import SearchChecklist from "./SearchChecklist";
@@ -16,6 +15,7 @@ import UpdateChecklist from "./UpdateChecklist";
 import BoundaryHome from "./BoundaryHome";
 import ApprovedMicroplans from "./ApprovedMicroplans";
 import FetchFromMicroplan from "../../components/fetchFromMicroplan";
+import FormBuilder from "./appConfigurationScreen/FormBuilder";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -104,7 +104,9 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
   const Response = Digit?.ComponentRegistryService?.getComponent("Response");
   const AddProduct = Digit?.ComponentRegistryService?.getComponent("AddProduct");
   const UpdateDatesWithBoundaries = Digit?.ComponentRegistryService?.getComponent("UpdateDatesWithBoundaries");
-
+  const AppConfigurationWrapper = Digit?.ComponentRegistryService?.getComponent("AppConfigurationWrapper");
+  const AppConfigurationParentLayer = Digit?.ComponentRegistryService?.getComponent("AppConfigurationParentLayer");
+  
   useEffect(() => {
     if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
       window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
@@ -140,7 +142,6 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
           <PrivateRoute path={`${path}/fetch-from-microplan`} component={() => <FetchFromMicroplan />} />
           <PrivateRoute path={`${path}/preview`} component={() => <CampaignSummary />} />
           <PrivateRoute path={`${path}/response`} component={() => <Response />} />
-          <PrivateRoute path={`${path}/selecting-boundary`} component={() => <SelectingBoundaries />} />
           <PrivateRoute path={`${path}/add-product`} component={() => <AddProduct />} />
           <PrivateRoute path={`${path}/configure-app`} component={() => <ConfigureApp />} />
           <PrivateRoute path={`${path}/update-dates-boundary`} component={() => <UpdateDatesWithBoundaries />} />
@@ -154,6 +155,9 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
           <PrivateRoute path={`${path}/boundary/data`} component={()=> <ViewHierarchy />} />
           <PrivateRoute path={`${path}/update-campaign`} component={() => <UpdateCampaign />} />
           <PrivateRoute path={`${path}/setup-from-microplan`} component={() => <ApprovedMicroplans />} />
+          <PrivateRoute path={`${path}/app-configuration`} component={() => <AppConfigurationWrapper />} />
+          <PrivateRoute path={`${path}/app-configuration-parent`} component={() => <AppConfigurationParentLayer />} />
+          <PrivateRoute path={`${path}/form-builder-configuration`} component={() => <FormBuilder />} />
         </AppContainer>
       </Switch>
     </React.Fragment>

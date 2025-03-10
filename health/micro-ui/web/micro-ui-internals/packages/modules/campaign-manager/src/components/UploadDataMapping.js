@@ -1,19 +1,29 @@
-import { Button, CardLabel, CardText, Chip, Dropdown, LabelFieldPair, Loader, PopUp, Switch } from "@egovernments/digit-ui-components";
-import React, { act, createContext, Fragment, useContext, useEffect, useReducer, useState } from "react";
+import { Button, CardLabel, CardText, Chip, Dropdown, LabelFieldPair, Loader, PopUp, Switch, Toast , CardHeader } from "@egovernments/digit-ui-components";
+import React, { Fragment, useEffect, useReducer, useState, useRef } from "react";
 import DataTable from "react-data-table-component";
 import { useTranslation } from "react-i18next";
 import { tableCustomStyle } from "./tableCustomStyle";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import MultiSelectDropdown from "./MultiSelectDropdown";
 import NoResultsFound from "./NoResultsFound";
+import AddOrEditMapping from "./AddOrEditMapping";
+import {CustomSVG} from "@egovernments/digit-ui-components";
+import Ajv from "ajv";
+
 const initialState = {
   data: [],
   currentPage: 1,
   currentData: [],
+  filteredData: [],
   totalRows: 0,
   rowsPerPage: 10,
 };
 const getPageData = (data, currentPage, rowsPerPage) => {
+  const totalPages = Math.ceil(data.length / rowsPerPage);
+  // Ensure currentPage is within valid range
+  if (currentPage > totalPages) {
+    currentPage = totalPages; // Shift down to the last available page
+  }
   const startIdx = (currentPage - 1) * rowsPerPage;
   const endIdx = startIdx + rowsPerPage;
   return data.slice(startIdx, endIdx);
@@ -30,18 +40,98 @@ const reducer = (state, action) => {
         arrayBuffer: action.payload?.arrayBuffer,
         schemas: action?.schemas,
       };
+    case "ADD_DATA":
+      const updatedData = [...state.data, action.payload];
+      return {
+        ...state,
+        data: updatedData,
+        filteredData: state?.filter
+          ? updatedData?.filter((i) =>
+              action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
+                ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
+                : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
+            )
+          : updatedData,
+        currentData: getPageData(
+          state?.filter
+            ? updatedData?.filter((i) =>
+                action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
+                  ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
+                  : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
+              )
+            : updatedData,
+          state.currentPage,
+          state.rowsPerPage
+        ), // Using updated data array
+        schemas: action?.schemas,
+        workbook: state.workbook, // Keep existing workbook
+        // arrayBuffer: state.arrayBuffer, // Keep existing arrayBuffer
+        totalRows: state?.filter
+          ? updatedData?.filter((i) =>
+              action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
+                ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
+                : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
+            )?.length
+          : updatedData.length, // Use the new array length directly
+        updated: true,
+      };
+    case "EDIT_DATA":
+      const editedData = state.data.map((item) => (item.id === action.payload.id ? { ...item, ...action.payload } : item));
+      return {
+        ...state,
+        data: editedData,
+        filteredData: state?.filter
+          ? editedData?.filter((i) =>
+              action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
+                ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
+                : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
+            )
+          : editedData,
+        currentData: getPageData(
+          state?.filter
+            ? editedData?.filter((i) =>
+                action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
+                  ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
+                  : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
+              )
+            : editedData,
+          state.currentPage,
+          state.rowsPerPage
+        ),
+        schemas: action?.schemas,
+        workbook: state.workbook,
+        totalRows: state?.filter
+          ? editedData?.filter((i) =>
+              action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
+                ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
+                : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
+            )?.length
+          : editedData.length,
+        updated: true,
+      };
+    case "DELETE_DATA":
+      const filteredData = state.data.filter((item) => item.id !== action.payload.id);
+      return {
+        ...state,
+        data: filteredData,
+        currentData: getPageData(filteredData, state.currentPage, state.rowsPerPage),
+        schemas: state.schemas, // Retaining existing schemas
+        workbook: state.workbook, // Retaining existing workbook
+        totalRows: filteredData.length,
+        updated: true,
+      };
     case "SET_PAGE":
       return {
         ...state,
         currentPage: action.payload,
-        currentData: getPageData(state?.filter ? state?.currentData : state.data, action.payload, state.rowsPerPage), // Update data for the new page
+        currentData: getPageData(state?.filter ? state.filteredData : state.data, action.payload, state.rowsPerPage), // Update data for the new page
       };
     case "SET_ROWS_PER_PAGE":
       return {
         ...state,
         rowsPerPage: action.payload,
         currentPage: 1, // Reset to the first page when rows per page changes
-        currentData: getPageData(state.data, 1, action.payload), // Update data for the first page with the new page size
+        currentData: getPageData(state?.filter ? state.filteredData : state.data, 1, action.payload), // Update data for the first page with the new page size
       };
     case "UPDATE_BOUNDARY":
       const temp =
@@ -59,7 +149,20 @@ const reducer = (state, action) => {
             })
           : state?.data?.map((item) => {
               const BoundaryLoc = action.t(action?.schemas?.find((i) => i.description === "Boundary Code")?.name);
-              if (item?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")] === action?.payload?.row?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) {
+              const facilityCode = item?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")];
+              const facilityName = item?.[action.t(action?.schemas?.find((i) => i.description === "Facility Name")?.name)];
+              // if (item?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")] === action?.payload?.row?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) {
+              //   return {
+              //     ...item,
+              //     [BoundaryLoc]: action?.payload?.selectedBoundary?.map((i) => i?.code)?.join(","),
+              //   };
+              // }
+              // Check facility code first, if not present then check facility name
+              if (
+                (facilityCode && facilityCode === action?.payload?.row?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) ||
+                (!facilityCode &&
+                  facilityName === action?.payload?.row?.[action.t(action?.schemas?.find((i) => i.description === "Facility Name")?.name)])
+              ) {
                 return {
                   ...item,
                   [BoundaryLoc]: action?.payload?.selectedBoundary?.map((i) => i?.code)?.join(","),
@@ -99,7 +202,20 @@ const reducer = (state, action) => {
             })
           : state?.data?.map((item) => {
               const ActiveLoc = action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name);
-              if (item?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")] === action?.payload?.row?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) {
+              const facilityCode = item?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")];
+              const facilityName = item?.[action.t(action?.schemas?.find((i) => i.description === "Facility Name")?.name)];
+              // if (item?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")] === action?.payload?.row?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) {
+              //   return {
+              //     ...item,
+              //     [ActiveLoc]: action?.payload?.selectedStatus?.code,
+              //   };
+              // }
+              // return item;
+              if (
+                (facilityCode && facilityCode === action?.payload?.row?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) ||
+                (!facilityCode &&
+                  facilityName === action?.payload?.row?.[action.t(action?.schemas?.find((i) => i.description === "Facility Name")?.name)])
+              ) {
                 return {
                   ...item,
                   [ActiveLoc]: action?.payload?.selectedStatus?.code,
@@ -124,20 +240,19 @@ const reducer = (state, action) => {
         updated: true,
       };
     case "FILTER_BY_ACTIVE":
-      const tempActive = action.payload?.filter
-        ? getPageData(
-            state.data?.filter((i) =>
-              action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
-                ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
-                : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
-            ),
-            1,
-            state.rowsPerPage,
+      const tempFilter = action.payload?.filter
+        ? state.data?.filter((i) =>
+            action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
+              ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
+              : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
           )
-        : getPageData(state.data, 1, state.rowsPerPage);
+        : state.data;
+      const tempActive = getPageData(tempFilter, 1, state.rowsPerPage);
       return {
         ...state,
+        currentPage: 1,
         currentData: tempActive, // Update data for the new page
+        filteredData: tempFilter,
         totalRows: action.payload?.filter
           ? state.data?.filter((i) =>
               action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
@@ -153,10 +268,10 @@ const reducer = (state, action) => {
 };
 
 function flattenHierarchyIterative(data) {
-  const stack = data.map((node) => ({ ...node, parentCode: null })); // Initialize stack with parentCode as null
+  const stack = (data || [])?.map((node) => ({ ...node, parentCode: null })); // Initialize stack with parentCode as null
   const result = [];
 
-  while (stack.length > 0) {
+  while (stack?.length > 0) {
     const { id, code, boundaryType, children, parentCode } = stack.pop();
 
     // Add the current node to the result with the parent code
@@ -176,7 +291,7 @@ function flattenHierarchyIterative(data) {
   return result;
 }
 
-const Wrapper = ({ setShowPopUp, alreadyQueuedSelectedState }) => {
+const Wrapper = ({ currentCategories, setShowPopUp, alreadyQueuedSelectedState }) => {
   const { t } = useTranslation();
   return (
     <PopUp
@@ -185,7 +300,7 @@ const Wrapper = ({ setShowPopUp, alreadyQueuedSelectedState }) => {
         maxWidth: "40%",
       }}
       type={"default"}
-      heading={t("MICROPLAN_ADMINISTRATIVE_AREA")}
+      heading={t(Digit.Utils.locale.getTransformedLocale(`POP_ADMINISTRATIVE_AREA_${currentCategories}`))}
       children={[]}
       onOverlayClick={() => {
         setShowPopUp(false);
@@ -209,6 +324,8 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   const { id, ...queryParams } = Digit.Hooks.useQueryParams();
   const [showPopUp, setShowPopUp] = useState(null);
   const [selectedLevel, setSelectedLevel] = useState(null);
+  const [showAddPopup, setShowAddPopup] = useState(false);
+  const [showEditPopup, setShowEditPopUp] = useState(false);
   const [selectedBoundary, setSelectedBoundary] = useState(null);
   const [chipPopUpRowId, setChipPopUpRowId] = useState(null);
   const [allLowestHierarchyCodes, setAllLowestHierarchyCodes] = useState(null);
@@ -220,6 +337,12 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const boundaryHierarchy = paramsData?.hierarchy?.boundaryHierarchy;
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [translatedSchema, setTranslatedSchema] = useState({});
+  const [convertedSchema, setConvertedSchema] = useState({});
+  const totalData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+  const [showToast, setShowToast] = useState(false);
+  const type = formData?.validationType;
+
   const { data: Schemas, isLoading: isThisLoading, refetch: refetchSchema } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
@@ -235,9 +358,18 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
     },
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.adminSchema` }
   );
+
+  const { data: SchemasAJV, isLoading: isThisLoadingAJV } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    CONSOLE_MDMS_MODULENAME,
+    [{ name: "adminSchema" }],
+    {},
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.adminSchema` }
+  );
+
   // Checking for sheet is uploaded
   if (
-    (currentCategories === "HCM_UPLOAD_USER_MAPPING" &&
+    (currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" &&
       sessionData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.length === 0) ||
     (currentCategories === "HCM_UPLOAD_USER_MAPPING" && sessionData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser?.uploadedFile?.length === 0)
   ) {
@@ -299,14 +431,23 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   const { isLoading: childrenDataLoading, data: childrenData, isFetching, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
 
   useEffect(() => {
-    if (allLowestHierarchyCodes?.length > 0 && childrenData?.length > 0) {
+    if (allLowestHierarchyCodes?.length > 0) {
       const allLowestBoundaryData = flattenHierarchyIterative(childrenData);
       const sessionSelectedData = sessionData?.["HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"]?.boundaryType?.selectedData;
-      setAllSelectedBoundary([...allLowestBoundaryData, ...sessionSelectedData]);
+      const uniqueLowestBoundaryData = allLowestBoundaryData?.filter((data) => !sessionSelectedData?.some((selected) => selected.code === data.code));
+      setAllSelectedBoundary([...sessionSelectedData, ...uniqueLowestBoundaryData]);
     }
   }, [allLowestHierarchyCodes, childrenData]);
   useEffect(() => {
-    if (lowestHierarchy && sessionData?.["HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"]?.boundaryType?.selectedData?.length > 0) {
+    const lowestBoundary = boundaryHierarchy.reduce((prev, current) => {
+      return prev.parentBoundaryType && !current.parentBoundaryType ? current : prev;
+    });
+
+    if (
+      lowestHierarchy &&
+      lowestHierarchy !== lowestBoundary.boundaryType &&
+      sessionData?.["HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"]?.boundaryType?.selectedData?.length > 0
+    ) {
       const lowestHierarchyCodes = sessionData?.["HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"]?.boundaryType?.selectedData
         ?.filter((i) => i.type === lowestHierarchy)
         ?.map((j) => j.code);
@@ -338,6 +479,243 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
       enabled: true,
     },
   });
+
+  function enrichSchema(data, properties, required, columns) {
+    // Sort columns based on orderNumber, using name as tie-breaker if orderNumbers are equal
+    columns.sort((a, b) => {
+      if (a?.orderNumber === b?.orderNumber) {
+        return a.name.localeCompare(b.name);
+      }
+      return a.orderNumber - b.orderNumber;
+    });
+
+    // Extract sorted property names
+    const sortedPropertyNames = columns.map((column) => column.name);
+
+    // Update data with new properties and required fields
+    data.properties = properties;
+    data.required = required;
+  }
+
+  function convertIntoSchema(data) {
+    var convertData = { ...data };
+    var properties = {};
+    var required = [];
+    var columns = [];
+    for (const propType of ["enumProperties", "numberProperties", "stringProperties"]) {
+      if (
+        convertData?.properties?.[propType] &&
+        Array.isArray(convertData?.properties?.[propType]) &&
+        convertData?.properties?.[propType]?.length > 0
+      ) {
+        for (const property of convertData?.properties[propType]) {
+          properties[property?.name] = {
+            ...property,
+            type: propType === "stringProperties" ? "string" : propType === "numberProperties" ? "number" : undefined,
+          };
+
+          if (property?.isRequired && required.indexOf(property?.name) === -1) {
+            required.push(property?.name);
+          }
+
+          // If orderNumber is missing, default to a very high number
+          columns.push({ name: property?.name, orderNumber: property?.orderNumber || 9999999999 });
+        }
+      }
+    }
+    enrichSchema(convertData, properties, required, columns);
+    const newData = JSON.parse(JSON.stringify(convertData));
+    delete newData.campaignType;
+    return newData;
+  }
+
+  var translateSchema = (schema) => {
+    var newSchema = { ...schema };
+    var newProp = {};
+
+    // Translate properties keys and their 'name' fields
+    Object.keys(schema?.properties).forEach((key) => {
+      const translatedKey = t(key);
+      const translatedProperty = { ...schema.properties[key], name: t(schema.properties[key].name) };
+      newProp[translatedKey] = translatedProperty;
+    });
+    const newRequired = schema?.required.map((e) => t(e));
+
+    newSchema.properties = newProp;
+    newSchema.required = newRequired;
+    delete newSchema.unique;
+    return { ...newSchema };
+  };
+
+  useEffect(async () => {
+    if (convertedSchema && Object.keys(convertedSchema).length > 0) {
+      const newFacilitySchema = await translateSchema(convertedSchema?.facilityWithBoundary);
+      const newBoundarySchema = await translateSchema(convertedSchema?.boundary);
+      const newUserSchema = await translateSchema(convertedSchema?.userWithBoundary);
+
+      const filterByUpdateFlag = (schemaProperties) => {
+        return Object.keys(schemaProperties).filter((key) => {
+          return schemaProperties[key].isUpdate !== true;
+        });
+      };
+
+      const headers = {
+        boundary: filterByUpdateFlag(newBoundarySchema?.properties),
+        facilityWithBoundary: filterByUpdateFlag(newFacilitySchema?.properties),
+        userWithBoundary: filterByUpdateFlag(newUserSchema?.properties),
+      };
+
+      const schema = {
+        boundary: newBoundarySchema,
+        facilityWithBoundary: newFacilitySchema,
+        userWithBoundary: newUserSchema,
+      };
+
+      setTranslatedSchema(schema);
+    }
+  }, [convertedSchema]);
+
+  useEffect(async () => {
+    if (SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema && (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)) {
+      const facility = await convertIntoSchema(
+        SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter((item) => item.title === "facility" && item.campaignType === "all")?.[0]
+      );
+      const boundary = await convertIntoSchema(
+        SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter(
+          (item) => item.title === "boundaryWithTarget" && item.campaignType === (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)
+        )?.[0]
+      );
+      const user = await convertIntoSchema(
+        SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter((item) => item.title === "user" && item.campaignType === "all")?.[0]
+      );
+      const schema = {
+        boundary: boundary,
+        facilityWithBoundary: facility,
+        userWithBoundary: user,
+      };
+
+      setConvertedSchema(schema);
+    }
+  }, [SchemasAJV, type]);
+
+  const validateData = (data) => {
+    // Phone Number conversion
+    const phoneNumberKey = t(Schemas?.find((i) => i.description === "Phone Number")?.name);
+    if (data[phoneNumberKey] !== undefined) {
+      data[phoneNumberKey] = Number(data[phoneNumberKey]);
+    }
+
+    // Capacity conversion
+    const capacityKey = t(Schemas?.find((i) => i.description === "Capacity")?.name);
+    if (data[capacityKey] !== undefined) {
+      data[capacityKey] = Number(data[capacityKey]);
+    }
+    const ajv = new Ajv({ strict: false }); // Initialize Ajv
+    let validate = ajv.compile(translatedSchema[type]);
+    const errors = []; // Array to hold validation errors
+
+    const boundaryCodeFac = t(Schemas?.find((i) => i.description === "Boundary Code")?.name);
+    if (data[boundaryCodeFac]?.trim()?.length === 0) {
+      setShowToast({ label: t("HCM_MAPPING_NO_BOUNDARY_ERROR"), isError: "error" });
+      return;
+    }
+
+    const boundaryCode = t(Schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name);
+    if (data[boundaryCode]?.trim()?.length === 0) {
+      setShowToast({ label: t("HCM_MAPPING_NO_BOUNDARY_ERROR"), isError: "error" });
+      return;
+    }
+
+    data = [data];
+    data.forEach((item, index) => {
+      if (!validate(item)) {
+        errors.push({ index: (item?.["!row#number!"] || item?.["__rowNum__"]) + 1, errors: validate.errors });
+      }
+    });
+
+    if (errors.length > 0) {
+      const errorMessage = errors
+        .map(({ index, errors }) => {
+          const formattedErrors = errors
+            .map((error) => {
+              let instancePath = error.instancePath || ""; // Assign an empty string if dataPath is not available
+              if (error.instancePath === "/Phone Number (Mandatory)") {
+                return `${t("HCM_DATA_AT_ROW")} ${t("HCM_IN_COLUMN")}  ${t("HCM_DATA_SHOULD_BE_10_DIGIT")}`;
+              }
+              if (instancePath.startsWith("/")) {
+                instancePath = instancePath.slice(1);
+              }
+              if (error.keyword === "required") {
+                const missingProperty = error.params?.missingProperty || "";
+                return `${t("HCM_DATA_AT_ROW")} ${t("HCM_IN_COLUMN")} '${missingProperty}' ${t("HCM_DATA_SHOULD_NOT_BE_EMPTY")}`;
+              }
+              if (error.keyword === "type" && error.message === "must be string") {
+                return `${t("HCM_DATA_AT_ROW")} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_INVALID")}`;
+              }
+              let formattedError = `${t("HCM_IN_COLUMN")} '${instancePath}' ${error.message}`;
+              if (error.keyword === "enum" && error.params && error.params.allowedValues) {
+                formattedError += `${t("HCM_DATA_ALLOWED_VALUES_ARE")} ${error.params.allowedValues.join("/ ")}`;
+              }
+              return `${t("HCM_DATA_AT_ROW")} ${formattedError}`;
+            })
+            .join(", ");
+          return formattedErrors;
+        })
+        .join(", ");
+      return {
+        isValid: false,
+        message: errorMessage,
+      };
+    } else {
+      // return true;
+      return {
+        isValid: true,
+        message: t("NA"),
+      };
+    }
+  };
+
+  const childRef = useRef(null);
+
+  const handleButtonAddClick = async (typeOfOperation) => {
+    if (childRef.current) {
+      try {
+        const childData = childRef.current.getData();
+        // Convert data types first
+        const validationResult = validateData(childData);
+
+        if (validationResult.isValid) {
+          if (typeOfOperation === "add") {
+            dispatch({
+              type: "ADD_DATA",
+              payload: childData,
+              schemas: Schemas,
+              t: t,
+            });
+          } else {
+            dispatch({
+              type: "EDIT_DATA",
+              payload: childData,
+              schemas: Schemas,
+              t: t,
+            });
+          }
+
+          setShowToast({ label: t("HCM_MAPPING_ADDED"), isError: "success" });
+          return true;
+        } else {
+          setShowToast({ label: validationResult?.message, isError: "error" });
+          return false;
+        }
+      } catch (error) {
+        console.error("Validation error:", error);
+        return false;
+      }
+    } else {
+      console.error("Child component ref is not accessible");
+      return false;
+    }
+  };
 
   useEffect(() => {
     if (data) {
@@ -446,19 +824,60 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                         }}
                       />
                     )}
-                    {chipPopUpRowId && <Wrapper setShowPopUp={setChipPopUpRowId} alreadyQueuedSelectedState={listOfBoundaries} />}
                   </div>
                   <Button
                     type={"button"}
                     size={"small"}
                     isDisabled={row?.[t(Schemas?.find((i) => i.description === "User Usage")?.name)] === "Inactive" ? true : false}
-                    variation={"teritiary"}
-                    label={listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
+                    variation="link"
+                    label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
                     onClick={() => {
                       setShowPopUp(row);
                     }}
                   />
                 </div>
+              );
+            },
+          },
+          {
+            name: t("MAPPING_EDIT"),
+            cell: (row) => {
+              return (
+                <Button
+                  type={"button"}
+                  size={"small"}
+                  isDisabled={row?.editable ? false : true}
+                  variation={"primary"}
+                  icon={"Edit"}
+                  // label={listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
+                  label={t("MAPPING_EDIT")}
+                  onClick={() => {
+                    setShowEditPopUp(row);
+                  }}
+                />
+              );
+            },
+          },
+          {
+            name: t("MAPPING_DELETE"),
+            cell: (row) => {
+              return (
+                <Button
+                  type={"button"}
+                  size={"small"}
+                  isDisabled={row?.editable ? false : true}
+                  variation={"primary"}
+                  icon={"Delete"}
+                  label={t("MAPPING_DELETE")}
+                  onClick={() => {
+                    dispatch({
+                      type: "DELETE_DATA",
+                      payload: row,
+                      schemas: Schemas,
+                      t: t,
+                    });
+                  }}
+                />
               );
             },
           },
@@ -495,7 +914,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
               ];
               return (
                 <Dropdown
-                  className="dataMappingDropdown"
+                  className="roleTableCell"
                   selected={b?.find((item) => item?.code === row?.[t(Schemas?.find((i) => i.description === "Facility usage")?.name)]) || null}
                   isMandatory={true}
                   option={b}
@@ -550,14 +969,13 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                         }}
                       />
                     )}
-                    {chipPopUpRowId && <Wrapper setShowPopUp={setChipPopUpRowId} alreadyQueuedSelectedState={listOfBoundaries} />}
                   </div>
                   <Button
                     type={"button"}
                     size={"small"}
                     isDisabled={row?.[t(Schemas?.find((i) => i.description === "Facility usage")?.name)] === "Inactive" ? true : false}
-                    variation={"teritiary"}
-                    label={listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
+                    variation={"link"}
+                    label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
                     onClick={() => {
                       setShowPopUp(row);
                     }}
@@ -566,30 +984,171 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
               );
             },
           },
+          {
+            name: t("MAPPING_EDIT"),
+            cell: (row) => {
+              return (
+                <Button
+                  type={"button"}
+                  size={"small"}
+                  isDisabled={row?.editable ? false : true}
+                  variation={"primary"}
+                  label={t("MAPPING_EDIT")}
+                  icon={"Edit"}
+                  onClick={() => {
+                    setShowEditPopUp(row);
+                  }}
+                />
+              );
+            },
+          },
+          {
+            name: t("MAPPING_DELETE"),
+            cell: (row) => {
+              return (
+                <Button
+                  type={"button"}
+                  size={"small"}
+                  isDisabled={row?.editable ? false : true}
+                  variation={"primary"}
+                  label={t("MAPPING_DELETE")}
+                  icon={"Delete"}
+                  onClick={() => {
+                    dispatch({
+                      type: "DELETE_DATA",
+                      payload: row,
+                      schemas: Schemas,
+                      t: t,
+                    });
+                  }}
+                />
+              );
+            },
+          },
         ];
   return (
     <Fragment>
-      <Switch
-        className={"data-mapping-filter-switch"}
-        isLabelFirst
-        label={t("FILTER_BY_ACTIVE_STATUS")}
-        style={{
-          position: "relative",
-          zIndex: "1",
-        }}
-        onToggle={(value) => {
-          dispatch({
-            type: "FILTER_BY_ACTIVE",
-            t: t,
-            schemas: Schemas,
-            currentCategories: currentCategories,
-            payload: {
-              filter: value,
-            },
-          });
-        }}
-        shapeOnOff={true}
-      />
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+        <CardHeader>{t(`UPLOAD_DATA_MAPPING`)}</CardHeader>
+        <Switch
+          className={"data-mapping-filter-switch"}
+          isLabelFirst
+          label={t("FILTER_BY_ACTIVE_STATUS")}
+          style={{
+            position: "relative",
+            zIndex: "1",
+            alignSelf: "center",
+          }}
+          onToggle={(value) => {
+            dispatch({
+              type: "FILTER_BY_ACTIVE",
+              t: t,
+              schemas: Schemas,
+              currentCategories: currentCategories,
+              payload: {
+                filter: value,
+              },
+            });
+          }}
+          shapeOnOff={true}
+        />
+      </div>
+      {showAddPopup && (
+        <PopUp
+          className={"custom-pop-up-mapping"}
+          // className={"dataMapping"}
+          type={"default"}
+          heading={t("MAPPING_ADD_DATA")}
+          children={[]}
+          onOverlayClick={() => {
+            setShowAddPopup(false);
+          }}
+          onClose={() => {
+            setShowAddPopup(false);
+          }}
+          footerChildren={[
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"secondary"}
+              label={t("CLOSE")}
+              onClick={() => {
+                setShowAddPopup(false);
+              }}
+            />,
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("ADD_DATA_MAPPING")}
+              onClick={async () => {
+                const result = await handleButtonAddClick("add");
+                if (result) setShowAddPopup(false);
+              }} // Trigger child method when button is clicked
+            />,
+          ]}
+          sortFooterChildren={true}
+        >
+          <AddOrEditMapping
+            ref={childRef}
+            schema={Schemas}
+            dispatch={dispatch}
+            boundaryHierarchy={boundaryHierarchy}
+            allSelectedBoundary={allSelectedBoundary}
+            typeOfOperation="add"
+            curData={showAddPopup}
+          />
+        </PopUp>
+      )}
+      {showEditPopup && (
+        <PopUp
+          className={"custom-pop-up-mapping"}
+          // className={"dataMapping"}
+          type={"default"}
+          heading={t("MAPPING_EDIT_DATA")}
+          children={[]}
+          onOverlayClick={() => {
+            setShowEditPopUp(false);
+          }}
+          onClose={() => {
+            setShowEditPopUp(false);
+          }}
+          footerChildren={[
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"secondary"}
+              label={t("CLOSE")}
+              onClick={() => {
+                setShowEditPopUp(false);
+              }}
+            />,
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("EDIT_DATA_MAPPING")}
+              onClick={async () => {
+                const result = await handleButtonAddClick("edit");
+                if (result) setShowEditPopUp(false);
+              }} // Trigger child method when button is clicked
+            />,
+          ]}
+          sortFooterChildren={true}
+        >
+          <AddOrEditMapping
+            ref={childRef}
+            schema={Schemas}
+            dispatch={dispatch}
+            boundaryHierarchy={boundaryHierarchy}
+            allSelectedBoundary={allSelectedBoundary}
+            typeOfOperation="edit"
+            curData={showEditPopup}
+          />
+        </PopUp>
+      )}
+      {showToast && <Toast style={{ zIndex: 999999 }} label={showToast.label} type={showToast.isError} onClose={() => setShowToast(false)} />}
+
       {state?.currentData?.length === 0 ? (
         <Fragment>
           <NoResultsFound
@@ -604,19 +1163,120 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           columns={columns}
           data={state?.currentData}
           progressPending={isLoading || state?.currentData?.length === 0}
-          progressComponent={<Loader />}
+          progressComponent={<Loader page={true} variant={"PageLoader"} />}
           pagination
           paginationServer
           customStyles={tableCustomStyle}
-          // paginationTotalRows={totalRows}
-          // onChangePage={handlePaginationChange}
-          // onChangeRowsPerPage={handleRowsPerPageChange}
-          // paginationPerPage={rowsPerPage}
+          paginationDefaultPage={state?.currentPage}
+          paginationResetDefaultPage={state?.currentPage}
           paginationTotalRows={state.totalRows}
           onChangePage={handlePageChange}
           onChangeRowsPerPage={handleRowsPerPageChange}
+          style={{ width: "100%" }}
           paginationRowsPerPageOptions={[5, 10, 15, 20]}
+          paginationComponent={() => {
+            const totalPages = Math.ceil(state.totalRows / state.rowsPerPage);
+            const startRow = (state.currentPage - 1) * state.rowsPerPage + 1;
+            const endRow = Math.min(state.currentPage * state.rowsPerPage, state.totalRows);
+
+            return (
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" , paddingTop:"1rem" }}>
+                <Button
+                  className="custom-class"
+                  variation={"secondary"}
+                  label={t("MAPPING_ADD_DATA")}
+                  onClick={() => {
+                    setShowAddPopup(true);
+                  }}
+                  showBottom
+                  style={{
+                    whiteSpace: "nowrap",
+                    width: "auto",
+                  }}
+                  title=""
+                />
+
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
+                  <div>
+                    <label style={{ marginRight: "5px" }}>Rows per page:</label>
+                    <select value={state.rowsPerPage} onChange={(e) => handleRowsPerPageChange(Number(e.target.value))}>
+                      {[5, 10, 15, 20].map((size) => (
+                        <option key={size} value={size}>
+                          {size}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <span>
+                      {startRow}-{endRow} of {state.totalRows}
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                    {/* First Page Button */}
+                    <button
+                      onClick={() => handlePageChange(1)}
+                      disabled={state.currentPage === 1}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: state.currentPage === 1 ? "not-allowed" : "pointer",
+                        opacity: state.currentPage === 1 ? 0.5 : 1,
+                      }}
+                    >
+                      <CustomSVG.ArrowToFirst />
+                    </button>
+
+                    {/* Previous Page Button */}
+                    <button
+                      onClick={() => handlePageChange(state.currentPage - 1)}
+                      disabled={state.currentPage === 1}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: state.currentPage === 1 ? "not-allowed" : "pointer",
+                        opacity: state.currentPage === 1 ? 0.5 : 1,
+                      }}
+                    >
+                      <CustomSVG.ArrowBack />
+                    </button>
+
+                    {/* Next Page Button */}
+                    <button
+                      onClick={() => handlePageChange(state.currentPage + 1)}
+                      disabled={state.currentPage >= totalPages}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: state.currentPage >= totalPages ? "not-allowed" : "pointer",
+                        opacity: state.currentPage >= totalPages ? 0.5 : 1,
+                      }}
+                    >
+                      <CustomSVG.ArrowForward />
+                    </button>
+
+                    {/* Last Page Button */}
+                    <button
+                      onClick={() => handlePageChange(totalPages)}
+                      disabled={state.currentPage >= totalPages}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: state.currentPage >= totalPages ? "not-allowed" : "pointer",
+                        opacity: state.currentPage >= totalPages ? 0.5 : 1,
+                      }}
+                    >
+                      <CustomSVG.ArrowToLast />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          }}
         />
+      )}
+      {chipPopUpRowId && (
+        <Wrapper currentCategories={currentCategories} setShowPopUp={setChipPopUpRowId} alreadyQueuedSelectedState={chipPopUpRowId} />
       )}
       {showPopUp && (
         <PopUp
@@ -687,22 +1347,6 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   addCategorySelectAllCheck={true}
                   addSelectAllCheck={true}
                 />
-                {/* <Dropdown
-                  className="mappingPopUp"
-                  selected={selectedBoundary}
-                  disabled={false}
-                  isMandatory={true}
-                  option={
-                    sessionData?.["HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"]?.boundaryType?.selectedData?.filter(
-                      (i) => i.type === selectedLevel?.boundaryType
-                    ) || []
-                  }
-                  select={(value) => {
-                    setSelectedBoundary(value);
-                  }}
-                  optionKey="code"
-                  t={t}
-                /> */}
               </LabelFieldPair>
             </div>,
           ]}
@@ -712,6 +1356,17 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             setSelectedBoundary(null);
           }}
           footerChildren={[
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"secondary"}
+              label={t("NO")}
+              onClick={() => {
+                setShowPopUp(false);
+                setSelectedLevel(null);
+                setSelectedBoundary(null);
+              }}
+            />,
             <Button
               type={"button"}
               size={"large"}
@@ -729,17 +1384,6 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                     selectedLevel: selectedLevel,
                   },
                 });
-                setShowPopUp(false);
-                setSelectedLevel(null);
-                setSelectedBoundary(null);
-              }}
-            />,
-            <Button
-              type={"button"}
-              size={"large"}
-              variation={"secondary"}
-              label={t("NO")}
-              onClick={() => {
                 setShowPopUp(false);
                 setSelectedLevel(null);
                 setSelectedBoundary(null);

@@ -1,19 +1,19 @@
-import { Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
+import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import React, { useRef, useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { Card, Modal, CardText } from "@egovernments/digit-ui-react-components";
 import BulkUpload from "./BulkUpload";
 import Ajv from "ajv";
 import XLSX from "xlsx";
-import { InfoCard, PopUp, Toast, Button, DownloadIcon, Stepper, TextBlock, Tag } from "@egovernments/digit-ui-components";
+import { AlertCard, PopUp, Toast, Button , Card , HeaderComponent ,Loader} from "@egovernments/digit-ui-components";
 import { downloadExcelWithCustomName } from "../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
+import TagComponent from "./TagComponent";
 
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
  * for different types of data in a web application.
  * @returns The `UploadData` component is returning a JSX structure that includes a div with class
- * names, a Header component, a Button component for downloading a template, an info-text div, a
+ * names, a HeaderComponent component, a Button component for downloading a template, an info-text div, a
  * BulkUpload component for handling file uploads, and an InfoCard component for displaying error
  * messages if any validation errors occur during file upload.
  */
@@ -29,6 +29,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const [executionCount, setExecutionCount] = useState(0);
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [notValid, setNotValid] = useState(0);
   const [apiError, setApiError] = useState(null);
   const [isValidation, setIsValidation] = useState(false);
   const [fileName, setFileName] = useState(null);
@@ -205,7 +206,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     var required = [];
     var columns = [];
     for (const propType of ["enumProperties", "numberProperties", "stringProperties"]) {
-      if (convertData?.properties[propType] && Array.isArray(convertData?.properties[propType]) && convertData?.properties[propType]?.length > 0) {
+      if (convertData?.properties?.[propType] && Array.isArray(convertData?.properties?.[propType]) && convertData?.properties?.[propType]?.length > 0) {
         for (const property of convertData?.properties[propType]) {
           properties[property?.name] = {
             ...property,
@@ -706,17 +707,17 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           });
 
           jsonData = jsonData.filter((element) => element !== undefined);
-          // if (type === "boundary") {
-          //   if (workbook?.SheetNames.filter(sheetName => sheetName !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")).length == 0) {
-          //     const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
-          //     setErrorsType((prevErrors) => ({
-          //       ...prevErrors,
-          //       [type]: errorMessage,
-          //     }));
-          //     setIsError(true);
-          //     return;
-          //   }
-          // } else
+          if (type === "boundary") {
+            if (workbook?.SheetNames.filter(sheetName => sheetName !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")).length == 0) {
+              const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
+              setErrorsType((prevErrors) => ({
+                ...prevErrors,
+                [type]: errorMessage,
+              }));
+              setIsError(true);
+              return;
+            }
+          } else
           if (type === "facilityWithBoundary") {
             if (workbook?.SheetNames.filter((sheetName) => sheetName == t("HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES")).length == 0) {
               const errorMessage = t("HCM_INVALID_FACILITY_SHEET");
@@ -733,15 +734,15 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               if (activeColumnName && uniqueIdentifierColumnName) {
                 jsonData = jsonData.filter((item) => item[activeColumnName] !== "Inactive" || !item[uniqueIdentifierColumnName]);
               }
-              if (jsonData.length == 0) {
-                const errorMessage = t("HCM_FACILITY_USAGE_VALIDATION");
-                setErrorsType((prevErrors) => ({
-                  ...prevErrors,
-                  [type]: errorMessage,
-                }));
-                setIsError(true);
-                return;
-              }
+              // if (jsonData.length == 0) {
+              //   const errorMessage = t("HCM_FACILITY_USAGE_VALIDATION");
+              //   setErrorsType((prevErrors) => ({
+              //     ...prevErrors,
+              //     [type]: errorMessage,
+              //   }));
+              //   setIsError(true);
+              //   return;
+              // }
             }
           } else if (type === "userWithBoundary") {
             if (workbook?.SheetNames.filter((sheetName) => sheetName == t("HCM_ADMIN_CONSOLE_USER_LIST")).length == 0) {
@@ -778,15 +779,15 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             }
           }
 
-          if (jsonData.length == 0) {
-            const errorMessage = t("HCM_EMPTY_SHEET");
-            setErrorsType((prevErrors) => ({
-              ...prevErrors,
-              [type]: errorMessage,
-            }));
-            setIsError(true);
-            return;
-          }
+          // if (jsonData.length == 0) {
+          //   const errorMessage = t("HCM_EMPTY_SHEET");
+          //   setErrorsType((prevErrors) => ({
+          //     ...prevErrors,
+          //     [type]: errorMessage,
+          //   }));
+          //   setIsError(true);
+          //   return;
+          // }
           if (type !== "boundary") {
             if (validateData(jsonData, SheetNames)) {
               resolve(true);
@@ -795,7 +796,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             }
           }
         } catch (error) {
-          console.log(error);
           reject("HCM_FILE_UNAVAILABLE");
         }
       };
@@ -803,6 +803,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       reader.readAsArrayBuffer(selectedFile);
     });
   };
+  
 
   const onBulkUploadSubmit = async (file) => {
     if (file.length > 1) {
@@ -852,10 +853,21 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       downloadExcelWithCustomName({ fileStoreId: file?.filestoreId, customName: fileNameWithoutExtension });
     }
   };
+  useEffect(() =>{
+    if(totalData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.resourceId == "not-validated" ||
+      totalData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]?.resourceId == "not-validated" || 
+      totalData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.resourceId == "not-validated"
+    ){
+      setNotValid(1);
+  }
+  },[totalData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.resourceId ,
+  totalData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]?.resourceId,
+  totalData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.resourceId
+])
+
   useEffect(() => {
     const fetchData = async () => {
-      if (!errorsType[type] && uploadedFile?.length > 0 && !isSuccess) {
-        // setShowToast({ key: "info", label: t("HCM_VALIDATION_IN_PROGRESS") });
+      if ((!errorsType[type] && uploadedFile?.length > 0 && !isSuccess) || notValid==1) {
         setIsValidation(true);
         setIsError(true);
         setLoader(true);
@@ -876,7 +888,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             setShowToast({ key: "error", label: errorMessage, transitionTime: 5000000 });
             setIsError(true);
             setApiError(errorMessage);
-
+            setNotValid(2);
             return;
           }
           if (temp?.status === "completed") {
@@ -974,7 +986,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     };
 
     fetchData();
-  }, [errorsType]);
+  }, [errorsType , notValid]);
 
   const Template = {
     url: "/project-factory/v1/data/_download",
@@ -1105,15 +1117,15 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   return (
     <>
       <div className="container-full">
-        {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
-
+        {loader && 
+        <Loader page={true} variant={"OverlayLoader"} loaderText={t("CAMPAIGN_VALIDATION_INPROGRESS")}/>}
         <div className={parentId ? "card-container2" : "card-container1"}>
-          <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
+        <TagComponent campaignName={campaignName} />  
           <Card>
             <div className="campaign-bulk-upload">
-              <Header className="digit-form-composer-sub-header">
+              <HeaderComponent className="digit-form-composer-sub-header">
                 {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
-              </Header>
+              </HeaderComponent>
               <Button
                 label={getDownloadLabel()}
                 variation="secondary"
@@ -1134,7 +1146,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             )}
             <BulkUpload onSubmit={onBulkUploadSubmit} fileData={uploadedFile} onFileDelete={onFileDelete} onFileDownload={onFileDownload} />
             {showInfoCard && (
-              <InfoCard
+              <AlertCard
                 populators={{
                   name: "infocard",
                 }}
@@ -1161,12 +1173,12 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               />
             )}
           </Card>
-          <InfoCard
+          <AlertCard
             populators={{
               name: "infocard",
             }}
             variant="default"
-            style={{ margin: "0rem", maxWidth: "100%" }}
+            style={{ marginTop: "1.5rem", maxWidth: "100%" , marginBottom: "1.5rem" }}
             additionalElements={readMeInfo[type]?.map((info, index) => (
               <div key={index} style={{ display: "flex", flexDirection: "column" }}>
                 <h2>{info?.header}</h2>

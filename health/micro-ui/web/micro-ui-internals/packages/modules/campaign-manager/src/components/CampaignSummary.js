@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { EditIcon, Header, Loader, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Button, InfoBannerIcon, Toast , PopUp } from "@egovernments/digit-ui-components";
+import { EditIcon, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Button, InfoBannerIcon, Toast, PopUp, Loader,HeaderComponent } from "@egovernments/digit-ui-components";
 import { DownloadIcon } from "@egovernments/digit-ui-react-components";
 import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
@@ -136,9 +136,9 @@ const fetchcd = async (tenantId, projectId) => {
         },
       ],
     },
-    config:{
-      enabled: projectId ? true: false
-    }
+    config: {
+      enabled: projectId ? true : false,
+    },
   };
   try {
     const res = await Digit.CustomService.getResponse(reqCriteriaResource);
@@ -201,7 +201,7 @@ const CampaignSummary = (props) => {
     const reversedData = [];
     let currentCycleIndex = null;
     let currentCycle = null;
-  
+
     const operatorMapping = {
       "<=": "LESS_THAN_EQUAL_TO",
       ">=": "GREATER_THAN_EQUAL_TO",
@@ -211,7 +211,7 @@ const CampaignSummary = (props) => {
       "!=": "NOT_EQUAL_TO",
       IN_BETWEEN: "IN_BETWEEN",
     };
-  
+
     const cycles = data?.[0]?.cycles || [];
     const mapProductVariants = (productVariants) => {
       return productVariants.map((variant, key) => ({
@@ -221,62 +221,56 @@ const CampaignSummary = (props) => {
         name: variant.name,
       }));
     };
-  
+
     const parseConditionAndCreateRules = (condition, ruleKey, products) => {
-      // const conditionParts = condition.split("and").map((part) => part.trim());
-      // let attributes = [];
       let attributes = [];
-  
       if (isPreview) {
-        // Handle preview condition `3<=ageandage<11` or `3 <= Age < 11` in "IN_BETWEEN" style
-        const inBetweenMatch = condition.match(/(\d+)(<=|<|>=|>)(\w+)and(\w+)(<=|<|>=|>)(\d+)/);
-        if (inBetweenMatch) {
-          const toValue = inBetweenMatch[1].trim();
-          const fromValue = inBetweenMatch[6].trim();
-          const attributeCode = inBetweenMatch[3].trim();
-    
-          attributes.push({
-            key: attributes.length + 1,
-            operator: { code: "IN_BETWEEN" },
-            attribute: { code: attributeCode },
-            fromValue,
-            toValue,
-          });
-        } else {
-          // Handle regular conditions in preview mode
-          const conditionParts = condition.split("and").map((part) => part.trim());
-          conditionParts.forEach((part) => {
-            const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
-            if (match) {
-              const attributeCode = match[1].trim();
-              const operatorSymbol = match[2].trim();
-              const value = match[3].trim();
-              attributes.push({
-                key: attributes.length + 1,
-                value,
-                operator: { code: operatorMapping[operatorSymbol] },
-                attribute: { code: attributeCode },
-              });
+        const parts = [];
+        let remainingCondition = condition;
+
+        // Process IN_BETWEEN patterns first
+        while (remainingCondition) {
+          const inBetweenMatch = remainingCondition.match(/(\d+)(<=|<|>=|>)(\w+)and\3(<=|<|>=|>)(\d+)/);
+
+          if (inBetweenMatch) {
+            // Get the full matched text
+            const fullMatch = inBetweenMatch[0];
+            const toValue = inBetweenMatch[1];
+            const fromValue = inBetweenMatch[5];
+            const attributeCode = inBetweenMatch[3];
+
+            // Add IN_BETWEEN condition
+            attributes.push({
+              key: attributes.length + 1,
+              operator: { code: "IN_BETWEEN" },
+              attribute: { code: attributeCode },
+              fromValue,
+              toValue,
+            });
+
+            // Remove the processed part and the following 'and' if it exists
+            const matchIndex = remainingCondition.indexOf(fullMatch);
+            remainingCondition = remainingCondition.slice(matchIndex + fullMatch.length);
+            if (remainingCondition.startsWith("and")) {
+              remainingCondition = remainingCondition.slice(3);
             }
-          });
+          } else {
+            // Process the next regular condition
+            const nextAndIndex = remainingCondition.indexOf("and");
+            if (nextAndIndex === -1) {
+              if (remainingCondition.trim()) {
+                parts.push(remainingCondition.trim());
+              }
+              break;
+            } else {
+              parts.push(remainingCondition.slice(0, nextAndIndex).trim());
+              remainingCondition = remainingCondition.slice(nextAndIndex + 3);
+            }
+          }
         }
-      }  else {
-        const conditionParts = condition.split("and").map((part) => part.trim());
-      conditionParts.forEach((part) => {
-        const parts = part.split(" ").filter(Boolean);
-    
-        // Handle "IN_BETWEEN" operator
-        if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
-          const toValue = parts[0];
-          const fromValue = parts[4];
-          attributes.push({
-            key: attributes.length + 1,
-            operator: { code: operatorMapping["IN_BETWEEN"] },
-            attribute: { code: parts[2] },
-            fromValue,
-            toValue,
-          });
-        } else {
+
+        // Process remaining regular conditions
+        parts.forEach((part) => {
           const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
           if (match) {
             const attributeCode = match[1].trim();
@@ -289,15 +283,47 @@ const CampaignSummary = (props) => {
               attribute: { code: attributeCode },
             });
           }
-        }
-      });
-    }
-      return [{
-        ruleKey: ruleKey + 1,
-        delivery: {},
-        products,
-        attributes,
-      }];
+        });
+      } else {
+        const conditionParts = condition.split("and").map((part) => part.trim());
+        conditionParts.forEach((part) => {
+          const parts = part.split(" ").filter(Boolean);
+
+          // Handle "IN_BETWEEN" operator
+          if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
+            const toValue = parts[0];
+            const fromValue = parts[4];
+            attributes.push({
+              key: attributes.length + 1,
+              operator: { code: operatorMapping["IN_BETWEEN"] },
+              attribute: { code: parts[2] },
+              fromValue,
+              toValue,
+            });
+          } else {
+            const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
+            if (match) {
+              const attributeCode = match[1].trim();
+              const operatorSymbol = match[2].trim();
+              const value = match[3].trim();
+              attributes.push({
+                key: attributes.length + 1,
+                value,
+                operator: { code: operatorMapping[operatorSymbol] },
+                attribute: { code: attributeCode },
+              });
+            }
+          }
+        });
+      }
+      return [
+        {
+          ruleKey: ruleKey + 1,
+          delivery: {},
+          products,
+          attributes,
+        },
+      ];
     };
     const mapDoseCriteriaToDeliveryRules = (doseCriteria) => {
       return doseCriteria?.flatMap((criteria, ruleKey) => {
@@ -305,7 +331,7 @@ const CampaignSummary = (props) => {
         return parseConditionAndCreateRules(criteria.condition, ruleKey, products);
       });
     };
-  
+
     const mapDeliveries = (deliveries) => {
       return deliveries?.map((delivery, deliveryIndex) => ({
         active: deliveryIndex === 0,
@@ -313,13 +339,12 @@ const CampaignSummary = (props) => {
         deliveryRules: mapDoseCriteriaToDeliveryRules(delivery.doseCriteria),
       }));
     };
-  
+
     const transformedCycles = cycles.map((cycle) => ({
       active: true,
       cycleIndex: String(cycle.id),
       deliveries: mapDeliveries(cycle.deliveries),
     }));
-  
     return transformedCycles;
   }
 
@@ -340,7 +365,6 @@ const CampaignSummary = (props) => {
       fetchData();
     }
   }, [projectId]);
-
 
   const { isLoading, data, error, refetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
@@ -363,6 +387,13 @@ const CampaignSummary = (props) => {
 
         const target = data?.[0]?.deliveryRules;
         const boundaryData = boundaryDataGrp(data?.[0]?.boundaries);
+        const delivery = Array.isArray(data?.deliveryRules) ? data?.deliveryRules : [];
+        const cycles = {
+          cycle: delivery?.length > 0 ? Math.max(...delivery.flatMap((d) => d?.cycles?.map((cycle) => cycle.id))) : 1,
+          deliveries:
+            delivery?.length > 0 ? Math.max(...delivery.flatMap((d) => d?.cycles?.flatMap((cycle) => cycle?.deliveries?.map((del) => del.id)))) : 1,
+          refetch: true,
+        };
         const cycleData = reverseDeliveryRemap(target, t);
         const hierarchyType = data?.[0]?.hierarchyType;
         return {
@@ -373,21 +404,41 @@ const CampaignSummary = (props) => {
                 {
                   type: "DATA",
                   cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                  cardSecondaryAction: isPreview === "true" && (
-                    <Button
-                      className={"campaign-type-alert-button"}
-                      type={"button"}
-                      size={"large"}
-                      variation={"primary"}
-                      label={t("ES_CAMPAIGN_DOWNLOAD_USER_DETAILS")}
-                      onClick={() => {
-                        setTimeline(true);
-                        setResource(resourceIdArr);
-                        setCampaignId(data?.[0]?.id);
+                  // cardSecondaryAction: isPreview === "true" && (
+                  //   <Button
+                  //     className={"campaign-type-alert-button"}
+                  //     type={"button"}
+                  //     size={"large"}
+                  //     variation={"primary"}
+                  //     label={t("ES_CAMPAIGN_DOWNLOAD_USER_DETAILS")}
+                  //     onClick={() => {
+                  //       setTimeline(true);
+                  //       setResource(resourceIdArr);
+                  //       setCampaignId(data?.[0]?.id);
 
-                      }}
-                    />
-                  ),
+                  //     }}
+                  //   />
+                  // ),
+                  cardSecondaryAction:
+                    isPreview === "true" ? (
+                      <Button
+                        className={"campaign-type-alert-button"}
+                        type={"button"}
+                        size={"large"}
+                        variation={"primary"}
+                        label={t("ES_CAMPAIGN_DOWNLOAD_USER_DETAILS")}
+                        onClick={() => {
+                          setTimeline(true);
+                          setResource(resourceIdArr);
+                          setCampaignId(data?.[0]?.id);
+                        }}
+                      />
+                    ) : (
+                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(4)}>
+                        <span>{t("CAMPAIGN_EDIT")}</span>
+                        <EditIcon />
+                      </div>
+                    ),
                   values: [
                     {
                       key: "CAMPAIGN_TYPE",
@@ -454,13 +505,13 @@ const CampaignSummary = (props) => {
                     {
                       key: "CAMPAIGN_NO_OF_CYCLES",
                       value: data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle
-                        ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle
+                        ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle : cycles?.cycle ? cycles?.cycle
                         : t("CAMPAIGN_SUMMARY_NA"),
                     },
                     {
                       key: "CAMPAIGN_NO_OF_DELIVERIES",
                       value: data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries
-                        ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries
+                        ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries : cycles?.deliveries ? cycles?.deliveries
                         : t("CAMPAIGN_SUMMARY_NA"),
                     },
                   ],
@@ -620,7 +671,7 @@ const CampaignSummary = (props) => {
   });
 
   if (isLoading) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
   const closeToast = () => {
     setShowToast(null);
@@ -702,7 +753,7 @@ const CampaignSummary = (props) => {
   return (
     <>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "-1.5rem" }}>
-        <Header className="summary-header">{t("ES_TQM_SUMMARY_HEADING")}</Header>
+        <HeaderComponent className="summary-header">{t("ES_TQM_SUMMARY_HEADING")}</HeaderComponent>
         {timeLine && (
           <PopUp type={"default"} heading={t("ES_CAMPAIGN_TIMELINE")} onOverlayClick={() => setTimeline(false)} onClose={() => setTimeline(false)}>
             <TimelineComponent campaignId={campaignId} resourceId={resource} />

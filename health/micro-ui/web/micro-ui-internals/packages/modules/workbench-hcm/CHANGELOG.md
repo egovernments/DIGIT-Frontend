@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this module will be documented in this file.
 
+## 0.1.2
+#### Integrated the new component library 
+
+## 0.1.1 
+#### Integrated the new component library & suggested to be used with Utilities of version 1.0.11
+#### Cleanedup few code clean up related codes
+
 ## 0.1.0 
 #### Shipped as Settings module for campaign manager
 

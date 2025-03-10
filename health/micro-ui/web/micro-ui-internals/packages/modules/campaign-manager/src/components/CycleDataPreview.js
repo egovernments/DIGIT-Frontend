@@ -1,8 +1,8 @@
-import { Card, LabelFieldPair, Row } from "@egovernments/digit-ui-react-components";
+import { Row } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DetailsTable from "./DetailsTable";
-import { Button, InfoCard } from "@egovernments/digit-ui-components";
+import { Button, AlertCard , Card } from "@egovernments/digit-ui-components";
 
 const Tabs = ({ deliveryData, onTabChange }) => {
   // const { campaignData, dispatchCampaignData } = useContext(CycleContext);
@@ -54,7 +54,7 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
   return (
     <>
       {cardErrors?.map((i) => (
-        <InfoCard
+        <AlertCard
           populators={{
             name: "infocard",
           }}
@@ -64,7 +64,6 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
           additionalElements={[<Button className={"error"} label={i?.button} onClick={i.onClick} />]}
         />
       ))}
-      {/* {i.error ? i.error : i.message)}</div> */}
       <div className="employee-data-table ">
         {data?.startDate && (
           <Row
@@ -137,47 +136,6 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
             </Card>
           );
         })}
-
-      {/* <Card className="delivery-preview-card">
-        {item?.conditions?.length > 0 && (
-          <DetailsTable
-            className="campaign-attribute-table"
-            cardHeader={{ value: "Condition" }}
-            columnsData={[
-              {
-                Header: t("Attribute"),
-                accessor: "attribute",
-              },
-              {
-                Header: t("Operator"),
-                accessor: "operator",
-              },
-              {
-                Header: t("Value"),
-                accessor: "value",
-              },
-            ]}
-            rowsData={item?.conditions}
-          />
-        )}
-        {item?.products?.length > 0 && (
-          <DetailsTable
-            className="campaign-product-table"
-            // cardHeader={{ value: "Product Details" }}
-            columnsData={[
-              {
-                Header: t("Product"),
-                accessor: "name",
-              },
-              {
-                Header: t("Count"),
-                accessor: "count",
-              },
-            ]}
-            rowsData={item?.products}
-          />
-        )}
-      </Card> */}
     </>
   );
 };

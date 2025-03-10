@@ -1,37 +1,13 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Button, EditIcon, Header, Loader, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Toast , Tag } from "@egovernments/digit-ui-components";
+import { EditIcon, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Toast , Loader,HeaderComponent ,Button} from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import NoResultsFound from "./NoResultsFound";
+import TagComponent from "./TagComponent";
 
-// function boundaryDataGrp(boundaryData) {
-//   // Create an empty object to hold grouped data by type
-//   const groupedData = {};
-
-//   // Iterate through each boundary item in the data
-//   boundaryData.forEach((item) => {
-//     const { type } = item; // Extract the type
-
-//     // If the type doesn't exist in the groupedData, create an array for it
-//     if (!groupedData[type]) {
-//       groupedData[type] = [];
-//     }
-
-//     // Add the current item to its corresponding type array
-//     groupedData[type].push(item);
-//   });
-
-//   // Convert the grouped object into an array of objects
-//   const result = Object.keys(groupedData).map((type) => ({
-//     type,
-//     boundaries: groupedData[type], 
-//   }));
-
-//   return result;
-// }
 
 // Define the function that groups boundary data based on hierarchy
 function boundaryDataGrp(boundaryData, hierarchyDefinition) {
@@ -390,7 +366,7 @@ const CampaignUpdateSummary = (props) => {
   });
 
   if (isLoading) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
   const closeToast = () => {
     setShowToast(null);
@@ -444,9 +420,9 @@ const CampaignUpdateSummary = (props) => {
 
   return (
     <>
-          <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
+      <TagComponent campaignName={campaignName} />        
       <div style={{ display: "flex", justifyContent: "space-between" , marginBottom:"-1.5rem" }}>
-        <Header className="summary-header">{t("ES_TQM_SUMMARY_HEADING")}</Header>
+        <HeaderComponent className="summary-header">{t("ES_TQM_SUMMARY_HEADING")}</HeaderComponent>
       </div>
       <div className="campaign-summary-container">
         <ViewComposer data={updatedObject} cardErrors={summaryErrors} />

@@ -56,7 +56,7 @@ const ProjectStaffModal = ({
           <TextInput name={"name"} placeholder={`${t("WBH_SEARCH_BY_NAME")}`} value={userName} onChange={onChange} />
         </LabelFieldPair>
         <Button label={`${t("WBH_ACTION_SEARCH")}`} type="button" onButtonClick={onSearch} />
-        <ViewComposer data={projectStaffData(searchResult, showDepartment, showUserName)} />
+        {searchResult&&<ViewComposer data={projectStaffData(searchResult, showDepartment, showUserName)} />}
       </Card>
     </Modal>
   );

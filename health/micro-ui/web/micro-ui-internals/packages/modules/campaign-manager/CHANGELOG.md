@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this module will be documented in this file.
 
+ 
+## 0.3.1 - 2025-2-11
+ 
+### Base Admin console web
+ 
+  1. Boundary Assignment through UI for Users and Facilities
+  2. Implementation of Co-Delivery
+  3. Integrated with new components 
+ 
 ## 0.3.0 - 2024-12-03
 #### Base Admin console web
   1. Updating the campaign details

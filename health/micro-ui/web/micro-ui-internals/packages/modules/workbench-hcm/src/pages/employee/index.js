@@ -2,12 +2,7 @@ import React, { useEffect } from "react";
 import { Switch, useLocation, useParams, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
-import DataIngestionComponent from "../../components/IngestionComponents/DataIngestionComponent";
-import IngestionResponse from "../employee/ResponsePage";
-import ErrorViewPage from "./ErrorViewPage";
-import IngestionInbox from "./IngestionInbox";
 import ViewProject from "./ViewProject";
-import CreateCampaign from "./CreateCampaign";
 import MasterComponent from "../../components/MasterComponent";
 import HelpScreen from "../../components/HelpScreen";
 
@@ -133,21 +128,6 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
 
 const App = ({ path }) => {
   const location = useLocation();
-  const MDMSCreateSession = Digit.Hooks.useSessionStorage("MDMS_add", {});
-  const [sessionFormData, setSessionFormData, clearSessionFormData] = MDMSCreateSession;
-
-  const MDMSViewSession = Digit.Hooks.useSessionStorage("MDMS_view", {});
-  const [sessionFormDataView, setSessionFormDataView, clearSessionFormDataView] = MDMSViewSession;
-
-  useEffect(() => {
-    if (!window.location.href.includes("mdms-add-v2") && sessionFormData && Object.keys(sessionFormData) != 0) {
-      clearSessionFormData();
-    }
-    if (!window.location.href.includes("mdms-view") && sessionFormDataView) {
-      clearSessionFormDataView();
-    }
-  }, [location]);
-
   return (
     <React.Fragment>
       <div className="wbh-header-container">
@@ -155,17 +135,7 @@ const App = ({ path }) => {
       </div>
       <Switch>
         <AppContainer className="workbench">
-          <PrivateRoute path={`${path}/sample`} component={() => <div>Sample Screen loaded</div>} />
-          <PrivateRoute path={`${path}/facility`} component={() => <DataIngestionComponent ingestionType={"facility"} />} />
-          <PrivateRoute path={`${path}/user`} component={() => <DataIngestionComponent ingestionType={"user"} />} />
-          <PrivateRoute path={`${path}/view`} component={() => <ErrorViewPage />} />
-          <PrivateRoute path={`${path}/inbox`} component={() => <IngestionInbox />} />
-          <PrivateRoute path={`${path}/boundary`} component={() => <DataIngestionComponent ingestionType={"boundary"} />} />
-          <PrivateRoute path={`${path}/project`} component={() => <DataIngestionComponent ingestionType={"project"} />} />
           <PrivateRoute path={`${path}/campaign-view`} component={() => <ViewProject />} />
-          <PrivateRoute path={`${path}/microplan`} component={() => <DataIngestionComponent ingestionType={"microplan"} />} />
-          <PrivateRoute path={`${path}/response`} component={() => <IngestionResponse />} />
-          <PrivateRoute path={`${path}/campaign`} component={() => <CreateCampaign />} />
           <PrivateRoute path={`${path}/master/:screen`} component={() => <MasterComponent />} />
           <PrivateRoute path={`${path}/help-screen/:screen`} component={() => <HelpScreen />} />
         </AppContainer>

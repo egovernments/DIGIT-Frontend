@@ -1,5 +1,6 @@
 import { useMyContext } from "../utils/context";
 
+//ProjectType will be ["LLIN-mz","MR-DN"] for microplan
 const facilityMappingConfig = (projectType, disabledAction) => {
 
   const { state, dispatch } = useMyContext();
@@ -124,6 +125,8 @@ const facilityMappingConfig = (projectType, disabledAction) => {
             {
               label: `MICROPLAN_FACILITY_${projectType}_CAPACITY`,
               jsonPath: "additionalDetails.capacity",
+              additionalCustomization: true,
+              projectType: projectType,
             },
             {
               label: "MICROPLAN_FACILITY_ASSIGNED_VILLAGES",

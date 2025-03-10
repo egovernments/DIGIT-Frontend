@@ -1,9 +1,8 @@
 import React, { useEffect, useState,Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { Header, Loader, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Toast, Stepper, TextBlock, Card ,Tag } from "@egovernments/digit-ui-components";
-
-
+import {LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Toast, Stepper, TextBlock, Card , Loader ,HeaderComponent } from "@egovernments/digit-ui-components";
+import TagComponent from "./TagComponent";
 
 
 function boundaryDataGrp(boundaryData) {
@@ -45,6 +44,7 @@ const BoundarySummary = (props) => {
     return keyParam ? parseInt(keyParam) : 1;
   });
 
+
   function updateUrlParams(params) {
     const url = new URL(window.location.href);
     Object.entries(params).forEach(([key, value]) => {
@@ -80,12 +80,6 @@ const BoundarySummary = (props) => {
                     cardHeader: { value: `${t(( hierarchyType + "_" + item?.type).toUpperCase())}` , inlineStyles: { color : "#0B4B66" } },
                     // cardHeader: { value: t("item?.boundaries?.type") },
                     component: "BoundaryDetailsSummary",
-                    // cardSecondaryAction: noAction !== "false" && (
-                    //   <div className="campaign-preview-edit-container" onClick={() => handleRedirect(5)}>
-                    //     <span>{t(`CAMPAIGN_EDIT`)}</span>
-                    //     <EditIcon />
-                    //   </div>
-                    // ),
                     props: {
                       boundaries: item,
                       hierarchyType: hierarchyType
@@ -135,12 +129,12 @@ const BoundarySummary = (props) => {
   const updatedObject = { ...data };
 
   if (isLoading) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
 
   return (
     <>
-    {(isLoading || (!data && !error) || isFetching) &&<LoaderWithGap text={t("DATA_SYNC_WITH_SERVER")} />}
+    {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")}/>}
      <div className="container-full">
         <div className="card-container">
           <Card className="card-header-timeline">
@@ -152,9 +146,9 @@ const BoundarySummary = (props) => {
         </div>
 
         <div className="card-container-delivery">
-        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
+        <TagComponent campaignName={campaignName} />
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Header className="summary-header">{t("ES_BOUNDARY_SUMMARY_HEADING")}</Header>
+        <HeaderComponent className="summary-header">{t("ES_BOUNDARY_SUMMARY_HEADING")}</HeaderComponent>
       </div>
       <div className="campaign-summary-container">
         <ViewComposer data={updatedObject} />

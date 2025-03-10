@@ -532,3 +532,31 @@ tbody tr:last-child td:last-child .digit-dropdown-employee-select-wrap .digit-dr
     }
   }
 }
+
+.gap-between-dropdowns{
+  display:flex;
+  flex-direction: column;
+  gap: 1rem;
+
+}
+
+.custom-filter-names {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.37rem;
+  color: #363636;
+  font-size: 1.1rem;
+}
+
+.pop-inbox-wrapper-filter-table-wrapper.planInbox-filtercard-table-wrapper {
+    align-items: stretch;
+}
+
+.filter-card{
+  &.plan-inbox-filtercard{
+    .content-container{
+      flex:1;
+    }
+  }
+}

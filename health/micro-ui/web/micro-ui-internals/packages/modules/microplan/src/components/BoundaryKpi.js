@@ -1,11 +1,17 @@
 import React from 'react';
 import { Card } from '@egovernments/digit-ui-components';
+import { Loader } from '@egovernments/digit-ui-components';
 import { useMyContext } from '../utils/context';
 import { useTranslation } from 'react-i18next';
 import { Fragment } from 'react';
 const BoundaryKpi = ({ data, heading }) => {
   const { state: { boundaryHierarchy } } = useMyContext()
   const { t } = useTranslation();
+  
+  if (!data || Object.keys(data).length === 0) {
+    return <Card className="middle-child"> {<Loader />}</Card>;
+  }
+
   return (
 
     <Card className="middle-child">

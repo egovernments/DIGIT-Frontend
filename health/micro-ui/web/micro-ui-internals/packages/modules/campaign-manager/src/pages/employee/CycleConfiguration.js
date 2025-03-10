@@ -1,9 +1,10 @@
 import React, { useReducer, Fragment, useEffect, useState } from "react";
-import { CardText, LabelFieldPair, CardLabel, CardSubHeader, Paragraph, Header ,Card, Loader } from "@egovernments/digit-ui-react-components";
+import { CardText, LabelFieldPair, CardLabel, CardSubHeader, Paragraph, Header ,Card } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { TextInput, InfoCard , Stepper , TextBlock , Tag } from "@egovernments/digit-ui-components";
+import { TextInput, InfoCard , Stepper , TextBlock , Loader } from "@egovernments/digit-ui-components";
 import { deliveryConfig } from "../../configs/deliveryConfig";
 import getDeliveryConfig from "../../utils/getDeliveryConfig";
+import TagComponent from "../../components/TagComponent";
 
 const initialState = (saved, filteredDeliveryConfig, refetch) => {
   const data = {
@@ -195,7 +196,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   };
 
   if(isLoading){
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
 
   return (
@@ -215,7 +216,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
           </Card>
         </div>
         <div className="card-container2">
-        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
+        <TagComponent campaignName={campaignName} />  
         <Card>
       <Header>
         {t(
@@ -278,7 +279,6 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
             <span className="mandatory-span">*</span>
           </CardLabel>
           <TextInput type="numeric" value={cycleConfgureDate?.cycle} onChange={(d) => updateCycle(d)} disabled={cycleConfgureDate?.isDisable} />
-          {/* <PlusMinusInput defaultValues={cycleConfgureDate?.cycle} onSelect={(d) => updateCycle(d)} /> */}
         </LabelFieldPair>
         <LabelFieldPair>
           <CardLabel>
@@ -286,7 +286,6 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
             <span className="mandatory-span">*</span>
           </CardLabel>
           <TextInput type="numeric" value={cycleConfgureDate?.deliveries} onChange={(d) => updateDelivery(d)} disabled={cycleConfgureDate?.isDisable} />
-          {/* <PlusMinusInput defaultValues={cycleConfgureDate?.deliveries} onSelect={(d) => updateDelivery(d)} /> */}
         </LabelFieldPair>
       </Card>
       {/* </Card> */}

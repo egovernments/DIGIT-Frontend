@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Card, Button, TextInput, SVG, LabelFieldPair, Close, Toast } from "@egovernments/digit-ui-react-components";
+import { Card, Button, TextInput, SVG, LabelFieldPair, Close } from "@egovernments/digit-ui-react-components";
+import { Toast } from "@egovernments/digit-ui-components";
 
 const RowDetails = ({ onSelect, formData, props }) => {
   const { t } = useTranslation();
@@ -90,7 +91,7 @@ const RowDetails = ({ onSelect, formData, props }) => {
           style={{ fontSize: "1rem" }}
         />
       </LabelFieldPair>
-      {showToast && <Toast warning={showToast.isWarning} label={showToast.label} isDleteBtn={"true"} onClose={() => setShowToast(false)} style={{ bottom: "8%" }} />}
+              {showToast && <Toast label={showToast.label} type={showToast?.isWarning?"warn":"info"}  onClose={() => setShowToast(null)}  style={{ bottom: "8%" }}></Toast>}
     </React.Fragment>
     
   );

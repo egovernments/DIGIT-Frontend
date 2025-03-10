@@ -1,4 +1,5 @@
-import { Loader, TourProvider } from "@egovernments/digit-ui-react-components";
+import {  TourProvider } from "@egovernments/digit-ui-react-components";
+import { Loader } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
 import EmployeeApp from "./pages/employee";
@@ -7,7 +8,6 @@ import { UICustomizations } from "./configs/UICustomizations";
 import CampaignCard from "./components/CampaignCard";
 import CycleConfiguration from "./pages/employee/CycleConfiguration";
 import DeliverySetup from "./pages/employee/deliveryRule";
-import TimelineCampaign from "./components/TimelineCampaign";
 import CampaignDates from "./components/CampaignDates";
 import CampaignType from "./components/CampaignType";
 import CampaignName from "./components/CampaignName";
@@ -15,7 +15,6 @@ import MyCampaign from "./pages/employee/MyCampaign";
 import CampaignSummary from "./components/CampaignSummary";
 import CycleDetaisPreview from "./components/CycleDetaisPreview";
 import Response from "./pages/employee/Response";
-import SelectingBoundaries from "./components/SelectingBoundaries";
 import UploadData from "./components/UploadData";
 import CampaignSelection from "./components/CampaignType";
 import CampaignDocumentsPreview from "./components/CampaignDocumentsPreview";
@@ -25,8 +24,6 @@ import CycleDataPreview from "./components/CycleDataPreview";
 import { ErrorBoundary } from "@egovernments/digit-ui-components";
 import CampaignResourceDocuments from "./components/CampaignResourceDocuments";
 import ConfigureApp from "./pages/employee/ConfigureApp";
-import SideEffects from "./components/ConfigureApp/SideEffect";
-import SideEffectType from "./components/ConfigureApp/SideEffectType";
 import TimelineComponent from "./components/TimelineComponent";
 import { DSSCard } from "./components/DSSCard";
 import UpdateDatesWithBoundaries from "./pages/employee/UpdateDatesWithBoundaries";
@@ -53,11 +50,15 @@ import GeoPode from "./pages/employee/BoundaryRelationCreate";
 import ViewBoundary from "./pages/employee/ViewBoundary";
 import ViewHierarchy from "./pages/employee/ViewHierarchy";
 import MultiSelectDropdown from "./components/MultiSelectDropdown";
-import MapView from "./components/MapView";
 import NoResultsFound from "./components/NoResultsFound";
 import UploadDataMappingWrapper from "./components/UploadDataMappingWrapper";
 import DataUploadWrapper from "./components/DataUploadWrapper";
 import AppPreview from "./components/AppPreview";
+import AppConfigurationWrapper from "./pages/employee/appConfigurationScreen/AppConfigurationWrapper";
+import AppLocalisationWrapper from "./pages/employee/appConfigurationScreen/AppLocalisationWrapper";
+import ImpelComponentWrapper from "./pages/employee/appConfigurationScreen/ImpelComponentWrapper";
+import AppConfigurationParentLayer from "./pages/employee/appConfigurationScreenParent/AppConfigurationParentLayer";
+import FormBuilder from "./pages/employee/appConfigurationScreen/FormBuilder";
 
 /**
  * MDMS Module name
@@ -92,7 +93,9 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
   const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE, tenantId });
   const modulePrefix = "hcm";
 
-  const moduleCode = BOUNDARY_HIERARCHY_TYPE ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`] : ["campaignmanager", "schema", "admin-schemas", "checklist"];
+  const moduleCode = BOUNDARY_HIERARCHY_TYPE
+    ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`]
+    : ["campaignmanager", "schema", "admin-schemas", "checklist", "appconfiguration" , "dummy-module"];
 
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
@@ -104,7 +107,7 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
   });
 
   if (isLoading) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
 
   return (
@@ -129,7 +132,6 @@ const componentsToRegister = {
   UploadData,
   DeliveryRule: DeliverySetup,
   CycleConfiguration: CycleConfiguration,
-  TimelineCampaign,
   CampaignDates,
   CampaignType,
   CampaignName,
@@ -137,7 +139,6 @@ const componentsToRegister = {
   CampaignSummary,
   CycleDetaisPreview,
   Response,
-  SelectingBoundaries,
   CampaignSelection,
   CampaignDocumentsPreview: CampaignDocumentsPreview,
   AddProduct,
@@ -145,8 +146,6 @@ const componentsToRegister = {
   CycleDataPreview,
   CampaignResourceDocuments,
   ConfigureApp,
-  SideEffects,
-  SideEffectType,
   DSSCard,
   UpdateDatesWithBoundaries,
   DateWithBoundary,
@@ -172,11 +171,14 @@ const componentsToRegister = {
   ViewBoundary,
   ViewHierarchy,
   BoundarySummary,
-  MapView,
   NoResultsFound,
   UploadDataMappingWrapper,
   DataUploadWrapper,
-  AppPreview
+  AppPreview,
+  // AppConfigurationWrapper: AppLocalisationWrapper,
+  AppConfigurationWrapper: ImpelComponentWrapper,
+  AppConfigurationParentLayer: AppConfigurationParentLayer,
+  FormBuilder
 };
 
 const overrideHooks = () => {

@@ -149,9 +149,9 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     const isValidValue = (value) => {
       const numericValue = parseFloat(value);
       return (
-        numericValue > 0 &&
+        numericValue >= 0 &&
         numericValue <= 1000 &&
-        /^[0-9]+(\.[0-9]{1,2})?$/.test(value) // Check for at most 2 decimals
+        /^([0-9]*\.?[0-9]{1,2})$/.test(value) // Check for at most 2 decimals
       );
     };
   
@@ -561,7 +561,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
 
       {showToast && (
         <Toast
-          type={showToast.key === "error" ? "error" : "success"} // Adjust based on your needs
+          type={showToast.key} // Adjust based on your needs
           label={t(showToast.label)}
           transitionTime={showToast.transitionTime}
           onClose={() => {

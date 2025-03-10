@@ -8,6 +8,7 @@ import { useMyContext } from "../utils/context";
 import { useQueryClient } from "react-query";
 import { tableCustomStyle } from "./tableCustomStyle";
 import styled, { keyframes } from "styled-components";
+import useThrottleUnique from "../hooks/useThrottleUnique"
 // import _ from "lodash";
 
 const rotate360 = keyframes`
@@ -78,7 +79,8 @@ function RoleTableComposer({ nationalRoles }) {
     config: {
       enabled: true,
       select: (data) => {
-        const resp = data?.Employees?.map((item, index) => {
+        const resp = data?.Employees
+        ?.map((item, index) => {
           return {
             rowIndex: index + 1,
             name: item?.user?.name,
@@ -299,6 +301,8 @@ function RoleTableComposer({ nationalRoles }) {
     });
   };
 
+  const handleAssignEmployeeThrottled = useThrottleUnique(handleAssignEmployee,5000)
+
   const handleUpdateAssignEmployee = (row, updateAssignee) => {
     setIsLoading(true);
     const payload = {
@@ -454,7 +458,7 @@ function RoleTableComposer({ nationalRoles }) {
             label={isUserAlreadyAssignedActive ? t(`UNASSIGN`) : t(`ASSIGN`)}
             icon={isUserAlreadyAssignedActive ? "Close" : "DoubleArrow"}
             isSuffix={isUserAlreadyAssignedActive ? false : true}
-            onClick={(value) => (isUserAlreadyAssignedActive ? setUnassignPopup(row) : handleAssignEmployee(row))}
+            onClick={(value) => (isUserAlreadyAssignedActive ? setUnassignPopup(row) : handleAssignEmployeeThrottled(row.userServiceUuid,row))}
           />
         );
       },

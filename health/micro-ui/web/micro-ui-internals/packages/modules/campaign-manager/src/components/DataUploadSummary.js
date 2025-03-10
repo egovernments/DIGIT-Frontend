@@ -1,10 +1,11 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import {  EditIcon, Header, Loader, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Toast, Stepper, TextBlock, Card , Tag} from "@egovernments/digit-ui-components";
+import {  EditIcon, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Toast, Stepper, TextBlock, Card , Loader , HeaderComponent} from "@egovernments/digit-ui-components";
 import {  downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
+import TagComponent from "./TagComponent";
 
 function mergeObjects(item) {
   const arr = item;
@@ -282,12 +283,12 @@ const DataUploadSummary = (props) => {
     } else setKey(13);
   };
   if (isLoading) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
 
   return (
     <>
-      {(isLoading || (!data && !error) || isFetching) && <LoaderWithGap text={t("DATA_SYNC_WITH_SERVER")} />}
+      {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")}/>}
       <div className="container-full">
         <div className="card-container">
           <Card className="card-header-timeline">
@@ -304,9 +305,9 @@ const DataUploadSummary = (props) => {
         </div>
 
         <div className="card-container-delivery">
-        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
+        <TagComponent campaignName={campaignName} />  
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Header className="summary-header">{t("HCM_DATA_UPLOAD_SUMMARY")}</Header>
+            <HeaderComponent className="summary-header">{t("HCM_DATA_UPLOAD_SUMMARY")}</HeaderComponent>
             {/* {userCredential && (
           <Button
             label={t("CAMPAIGN_DOWNLOAD_USER_CRED")}

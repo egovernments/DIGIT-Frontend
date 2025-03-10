@@ -195,7 +195,12 @@ export const cycleDataRemap=(data)=> {
         const roundedToValue = Math.round(attr.toValue);
         const roundedFromValue = Math.round(attr.fromValue);
 
-        return `${roundedToValue} <= ${attr.attribute.code} < ${roundedFromValue}`;
+        // return `${roundedToValue} <= ${attr.attribute.code} < ${roundedFromValue}`;
+        if (type === "create") {
+          return `${roundedToValue}<=${attributeCode.toLowerCase()}and${attributeCode.toLowerCase()}<${roundedFromValue}`;
+        } else {
+          return `${roundedToValue} <= ${attr.attribute.code} < ${roundedFromValue}`;
+        }
         
       } else {
         if (typeof attr.value === "string" && /^\d+(\.\d+)?$/.test(attr.value)) {
@@ -298,9 +303,13 @@ export const cycleDataRemap=(data)=> {
           cycleConfgureDate: draftData?.additionalDetails?.cycleData?.cycleConfgureDate
             ? draftData?.additionalDetails?.cycleData?.cycleConfgureDate
             : {
-                cycle: delivery?.map((obj) => obj?.cycleNumber)?.length > 0 ? Math.max(...delivery?.map((obj) => obj?.cycleNumber)) : 1,
-                deliveries: delivery?.map((obj) => obj?.deliveryNumber)?.length > 0 ? Math.max(...delivery?.map((obj) => obj?.deliveryNumber)) : 1,
-                refetch: true,
+              cycle: delivery?.length > 0
+              ? Math.max(...delivery.flatMap(d => d?.cycles?.map(cycle => cycle.id)))
+              : 1,
+              deliveries: delivery?.length > 0
+              ? Math.max(...delivery.flatMap(d => d?.cycles?.flatMap(cycle => cycle?.deliveries?.map(del => del.id))))
+              : 1,
+              refetch: true,
               },
           cycleData: draftData?.additionalDetails?.cycleData?.cycleData
             ? draftData?.additionalDetails?.cycleData?.cycleData

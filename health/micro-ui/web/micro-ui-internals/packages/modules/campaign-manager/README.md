@@ -1,4 +1,4 @@
-# digit-ui-module-workbench
+# digit-ui-module-campaign-manager
 
 ## Install
 
@@ -21,7 +21,7 @@ frontend/micro-ui/web/package.json
 ```
 
 ```json
-"@egovernments/digit-ui-module-campaign-manager" :"0.2.0",
+"@egovernments/digit-ui-module-campaign-manager" :"0.3.0",
 ```
 
 then navigate to App.js
@@ -46,33 +46,40 @@ const initDigitUI = () => {
 };
 
 ```
-## List of features available in this versions were as follows
 
-1 . Update Date change
-    > -Provides a screen to change the campaign and cycle start date and end date.
-    > -Date can be change within boundary level or project level based on the MDMS config 
+## List of features available in this package were as follows
+
+1. Helps in creating the Campaign and configure delivery rules 
+    Supported Campaigns Bednet, SMC, IRS & Codelivery
+
+2. Create Data: Validates and creates resource details of type facility,user and boundary.
+
+3. Update Date
+    > -Provides a screen to change the campaign and cycle start and end dates.
+    > -Dates can be changed within boundary level or project level based on the MDMS config 
 
 
-2 . View Timeline
+4. View Timeline
     > -Provides a feature to show the campaign current status in summary screen
     > -Provides a Dropdown if it has any referenced master 
 
-3 . Action column.
-    > - Added Action column in my campaign screen to perform actions
+5. Updating the campaign details
 
+6. Configure Checklist
 
-### Changelog
+7. Manage Boundaries
 
-```bash
-0.2.0 Feature added for Campaign Date change, View timeline 
-0.0.1 base version
-```
+8. Boundary Assignment through UI
+    > -Provides interface for assigning boundaries to Users and Facilities
+    > -Supports bulk assignment and management of boundary mappings
+
 
 ### Contributors
 
 - [jagankumar-egov](https://github.com/jagankumar-egov) 
 - [nabeelmd-egov](https://github.com/nabeelmd-egov)
-
+- [Bhavya-egov](https://github.com/Bhavya-egov)
+- [suryansh-egov](https://github.com/suryansh-egov)
 
 ## License
 
@@ -81,7 +88,8 @@ const initDigitUI = () => {
 ## Documentation
 
 Documentation Site (https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui)
-Workbench Documentation(https://workbench.digit.org/platform/functional-specifications/workbench-ui)
+
+[Campaign Module Documentation](https://docs.digit.org/health/0.3/setup/configuration)
 
 ## Maintainer
 

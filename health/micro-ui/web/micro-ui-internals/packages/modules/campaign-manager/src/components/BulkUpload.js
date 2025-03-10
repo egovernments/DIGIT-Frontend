@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { UploadIcon, FileIcon, DeleteIconv2, Button, DownloadIcon, PopUp, SVG } from "@egovernments/digit-ui-react-components";
+import { UploadIcon } from "@egovernments/digit-ui-react-components";
 import { FileUploader } from "react-drag-drop-files";
 import { useTranslation } from "react-i18next";
 import XLSX from "xlsx";
@@ -116,7 +116,6 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
 
   const handleChange = async (newFiles) => {
     try {
-      // await validateExcel(newFiles[0]);
       onSubmit([...newFiles]);
     } catch (error) {
       // Handle the validation error, you can display a message or take appropriate actions.
@@ -153,11 +152,9 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
           <ButtonNew
             label={t("WBH_DOWNLOAD")}
             variation="secondary"
-            // icon={<DownloadIcon styles={{ height: "1.25rem", width: "1.25rem" }} fill={PRIMARY_COLOR} />}
             type="button"
             size={"medium"}
             icon={"DownloadIcon"}
-            // className="workbench-download-template-btn hover"
             onClick={(e) => {
               e.stopPropagation();
               handleFileDownload(e, fileUrl);
@@ -167,10 +164,8 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
             label={t("WBH_DELETE")}
             variation="secondary"
             size={"medium"}
-            // icon={<DeleteIconv2 styles={{ height: "1.25rem", width: "2.5rem" }} fill={PRIMARY_COLOR} />}
             type="button"
             icon={"Delete"}
-            // className="workbench-download-template-btn hover"
             onClick={(e) => {
               e.stopPropagation();
               handleFileDelete(file, index);
@@ -200,7 +195,6 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
         <Toast
           label={showToast?.label}
           type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : "success"}
-          // error={showToast?.key === "error" ? true : false}
           isDleteBtn={true}
           onClose={() => setShowToast(null)}
         ></Toast>

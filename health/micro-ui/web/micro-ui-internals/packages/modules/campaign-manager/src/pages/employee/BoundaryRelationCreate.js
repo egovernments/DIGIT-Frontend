@@ -1,5 +1,4 @@
-import { Card, Loader } from "@egovernments/digit-ui-components";
-import { Button, ActionBar, TextInput, Toast } from "@egovernments/digit-ui-components";
+import { Button, Footer, TextInput, Toast ,  Card, Loader} from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DustbinIcon } from "../../components/icons/DustbinIcon";
@@ -442,7 +441,7 @@ const onConfirmClick=()=>{
 
     if (isLoading || showLoader) {
         return (
-            <Loader />
+            <Loader page={true} variant={"PageLoader"}/>
         )
     }
     else {
@@ -542,7 +541,7 @@ const onConfirmClick=()=>{
                     )
                     }
                     <FinalPopup showFinalPopUp={showFinalPopup} setShowFinalPopup={setShowFinalPopup}  onConfirmClick={onConfirmClick} />
-                    <ActionBar
+                    <Footer
                         actionFields={[
                             <Button
                                 icon="ArrowBack"
@@ -578,7 +577,7 @@ const onConfirmClick=()=>{
                         sortActionFields
                         style={{}}
                     />
-                    {creatingData&&<LoaderWithGap text={t("DATA_SYNC_WITH_SERVER")} />}
+                    {creatingData&& <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")}/>}
 
                     {showToast && <Toast label={showToast.label} type={showToast.isError} transitionTime={showToast?.transitionTime} onClose={() => setShowToast(null)} />}
                 </React.Fragment>
@@ -642,7 +641,7 @@ const onConfirmClick=()=>{
                   </div>
                 )}
                 <FinalPopup showFinalPopUp={showFinalPopup} setShowFinalPopup={setShowFinalPopup} onConfirmClick={onConfirmClick} />
-                <ActionBar
+                <Footer
                   actionFields={[
                     <Button
                       icon="ArrowBack"
@@ -688,7 +687,7 @@ const onConfirmClick=()=>{
                     onClose={() => setShowToast(null)}
                   />
                 )}
-                {creatingData && <LoaderWithGap text={t("DATA_SYNC_WITH_SERVER")} />}
+                {creatingData && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")}/>}
               </React.Fragment>
             );
         }

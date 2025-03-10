@@ -18,12 +18,12 @@ const BoundarySelection = ({ onSelect, props: customProps, ...props }) => {
   const [statusMap, setStatusMap] = useState({});
   const [executionCount, setExecutionCount] = useState(0);
   const [updateBoundary, setUpdateBoundary] = useState(true);
+  const [showPopup, setShowPopup] = useState(false);
   const handleBoundaryChange = (value) => {
     setBoundaryOptions(value?.boundaryOptions);
     setSelectedData(value?.selectedData);
   };
 
-  const [showPopup, setShowPopup] = useState(false)
 
 
   const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
@@ -51,17 +51,19 @@ const BoundarySelection = ({ onSelect, props: customProps, ...props }) => {
   //to show alert
   useEffect(() => {
     //if there are any assumptions filled show this popup by default
-    if (campaignObject?.boundaries?.length > 0) {
+    if (campaignObject?.boundaries?.length > 0 && !showPopup) {
       setShowPopup(true)
     }
   }, [campaignObject, isLoadingCampaignObject])
 
 
   useEffect(() => {
+    setStatusMap(null);
     if (selectedData && selectedData.length >= 0) {
-      setStatusMap(() => Digit.Utils.microplanv1.createStatusMap(selectedData, boundaryHierarchy))
+      const newStatusMap = Digit.Utils.microplanv1.createStatusMap(selectedData, boundaryHierarchy);
+      setStatusMap(newStatusMap);
     }
-  }, [selectedData, boundaryHierarchy])
+  }, [selectedData, boundaryHierarchy]);
 
 
   useEffect(() => {
@@ -111,39 +113,42 @@ const BoundarySelection = ({ onSelect, props: customProps, ...props }) => {
           }}
         ></BoundaryWrapper>
       </CardNew>
-      {showPopup && <PopUp
-        className={"boundaries-pop-module"}
-        type={"alert"}
-        alertHeading={t("MP_WARNING_BOUNDARIES_FORM")}
-        alertMessage={t("MP_FILES_INVALIDATION_MESSAGE")}
-        // heading={t("MP_ASSUMTI")}
-        // children={[
-        //   <div>
-        //     <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_TYPE_MODAL_TEXT") + " "}</CardText>
-        //   </div>,
-        // ]}
-        onOverlayClick={() => {
-          setShowPopup(false);
-        }}
-        onClose={() => {
-          setShowPopup(false);
-        }}
-        footerChildren={[
-          <Button
-            className={"campaign-type-alert-button"}
-            type={"button"}
-            size={"large"}
-            variation={"secondary"}
-            label={t("MP_ACK")}
-            title={t("MP_ACK")}
-            onClick={() => {
-              setShowPopup(false);
-              //   setCanUpdate(true);
-            }}
-          />
-        ]}
-      // sortFooterChildren={true}
-      ></PopUp>}
+      {showPopup && (
+        <PopUp
+          className={"boundaries-pop-module"}
+          type={"alert"}
+          alertHeading={t("MP_WARNING_BOUNDARIES_FORM")}
+          alertMessage={t("MP_FILES_INVALIDATION_MESSAGE")}
+          // heading={t("MP_ASSUMTI")}
+          // children={[
+          //   <div>
+          //     <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_TYPE_MODAL_TEXT") + " "}</CardText>
+          //   </div>,
+          // ]}
+          onOverlayClick={() => {
+            setShowPopup(false);
+          }}
+          onClose={() => {
+            setShowPopup(false);
+          }}
+          showAlertAsSvg={true}
+          footerChildren={[
+            <Button
+              className={"campaign-type-alert-button"}
+              type={"button"}
+              size={"large"}
+              variation={"secondary"}
+              label={t("MP_ACK")}
+              title={t("MP_ACK")}
+              onClick={() => {
+                setShowPopup(false);
+                //   setCanUpdate(true);
+              }}
+            />,
+          ]}
+          // sortFooterChildren={true}
+        ></PopUp>
+      )}
     </>
   );
 };

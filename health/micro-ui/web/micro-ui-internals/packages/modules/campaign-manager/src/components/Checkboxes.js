@@ -142,6 +142,8 @@ const CheckBoxOption = ({
   const tooltipRef = useRef(null);
   let dis = typeOfCall === "view" ? true : false;
 
+  const commentsEnabled = window?.globalConfigs?.getConfig("CHECKLIST_COMMENT_ENABLED") || false;
+
   useEffect(() => {
     if (optionInputRef.current) {
       setIsOverflowing(
@@ -217,7 +219,7 @@ const CheckBoxOption = ({
           )}
         </div>
         <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-          {!dis &&
+          {commentsEnabled && !dis &&
             <>
               <CheckBox
                 key={field.key}

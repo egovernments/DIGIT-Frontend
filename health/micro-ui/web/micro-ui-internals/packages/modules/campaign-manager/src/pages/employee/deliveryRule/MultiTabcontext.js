@@ -1,128 +1,8 @@
 import React, { Fragment, useContext, useState , useEffect } from "react";
-import { Card, Header, Paragraph, CardHeader, CardSubHeader, CardText } from "@egovernments/digit-ui-react-components";
 import AddDeliveryRuleWrapper from "./AddDeliverycontext";
 import { CycleContext } from ".";
 import { useTranslation } from "react-i18next";
-import { InfoCard  , Stepper ,TextBlock , Tag} from "@egovernments/digit-ui-components";
-//just pass campaign data here
-// function restructureData(data) {
-//   const restructuredData = [];
-
-//   data.forEach((cycle) => {
-//     cycle.deliveries.forEach((delivery) => {
-//       delivery.deliveryRules.forEach((rule) => {
-//         const restructuredRule = {
-//           startDate: 1665497225000, // Hardcoded for now
-//           endDate: 1665497225000, // Hardcoded for now
-//           cycleNumber: parseInt(cycle.cycleIndex),
-//           deliveryNumber: parseInt(delivery.deliveryIndex),
-//           deliveryRuleNumber: parseInt(rule.ruleKey), // New key added
-//           products: [],
-//           conditions: [],
-//         };
-
-//         rule.attributes.forEach((attribute) => {
-//           restructuredRule.conditions.push({
-//             attribute: attribute.attribute ? attribute.attribute.code : null,
-//             operator: attribute.operator ? attribute.operator.code : null,
-//             value: parseInt(attribute.value),
-//           });
-//         });
-
-//         restructuredData.push(restructuredRule);
-//       });
-//     });
-//   });
-
-//   return restructuredData;
-// }
-
-//with between logic
-// function restructureData(data) {
-//   const restructuredData = [];
-
-//   data.forEach((cycle) => {
-//     cycle.deliveries.forEach((delivery) => {
-//       delivery.deliveryRules.forEach((rule) => {
-//         const restructuredRule = {
-//           startDate: 1665497225000, // Hardcoded for now
-//           endDate: 1665497225000, // Hardcoded for now
-//           cycleNumber: parseInt(cycle.cycleIndex),
-//           deliveryNumber: parseInt(delivery.deliveryIndex),
-//           deliveryRuleNumber: parseInt(rule.ruleKey),
-//           products: [],
-//           conditions: [],
-//         };
-
-//         rule.attributes.forEach((attribute) => {
-//           if (attribute.operator && attribute.operator.code === "IN_BETWEEN") {
-//             // Replace "IN_BETWEEN" with "LESS_THAN" and "GREATER_THAN"
-//             restructuredRule.conditions.push({
-//               attribute: attribute.attribute ? attribute.attribute.code : null,
-//               operator: "LESS_THAN",
-//               value: parseInt(attribute.fromValue),
-//             });
-//             restructuredRule.conditions.push({
-//               attribute: attribute.attribute ? attribute.attribute.code : null,
-//               operator: "GREATER_THAN",
-//               value: parseInt(attribute.toValue),
-//             });
-//           } else {
-//             restructuredRule.conditions.push({
-//               attribute: attribute.attribute ? attribute.attribute.code : null,
-//               operator: attribute.operator ? attribute.operator.code : null,
-//               value: parseInt(attribute.value),
-//             });
-//           }
-//         });
-
-//         restructuredData.push(restructuredRule);
-//       });
-//     });
-//   });
-
-//   return restructuredData;
-// }
-
-// for retransform just pass the deliveries
-// function bbb(data) {
-//   const reversedData = [];
-//   let currentCycleIndex = null;
-//   let currentDeliveryIndex = null;
-//   let currentCycle = null;
-//   let currentDelivery = null;
-
-//   data.forEach((item, index) => {
-//     if (currentCycleIndex !== item.cycleNumber) {
-//       currentCycleIndex = item.cycleNumber;
-//       currentCycle = {
-//         cycleIndex: currentCycleIndex.toString(),
-//         active: index === 0, // Set active to true only for the first index
-//         deliveries: [],
-//       };
-//       reversedData.push(currentCycle);
-//     }
-
-//     if (currentDeliveryIndex !== item.deliveryNumber) {
-//       currentDeliveryIndex = item.deliveryNumber;
-//       currentDelivery = {
-//         deliveryIndex: currentDeliveryIndex.toString(),
-//         active: index === 0, // Set active to true only for the first index
-//         deliveryRules: [],
-//       };
-//       currentCycle.deliveries.push(currentDelivery);
-//     }
-
-//     currentDelivery.deliveryRules.push({
-//       ruleKey: currentDelivery.deliveryRules.length + 1,
-//       delivery: {},
-//       attributes: item.conditions.map((i, c) => ({ key: c + 1, ...i })),
-//       products: [...item.products],
-//     });
-//   });
-
-//   return reversedData;
-// }
+import { Stepper ,TextBlock , Tag , Card, HeaderComponent, Paragraph, CardText } from "@egovernments/digit-ui-components";
 
 const Tabs = ({ onTabChange }) => {
   const { campaignData, dispatchCampaignData } = useContext(CycleContext);
@@ -280,7 +160,7 @@ const MultiTab = ({ tabCount = 3, subTabCount = 2 }) => {
         </div>
         <div className="card-container-delivery">
         <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
-      <Header>
+      <HeaderComponent>
         {t(
           `CAMPAIGN_PROJECT_${
             tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code
@@ -288,7 +168,7 @@ const MultiTab = ({ tabCount = 3, subTabCount = 2 }) => {
               : tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.toUpperCase()
           }`
         )}
-      </Header>
+      </HeaderComponent>
       <Paragraph
         customClassName="cycle-paragraph"
         value={`(${tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate

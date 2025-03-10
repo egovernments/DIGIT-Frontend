@@ -7,7 +7,6 @@ import { useGenerateIdCampaign } from "./useGenerateIdCampaign";
 import { useResourceData } from "./useResourceData";
 import useCreateProductVariant from "./useCreateProductVariant";
 import useCreateProduct from "./useCreateProduct";
-import useParallelSearch from "./useParallelSearch";
 import useProjectSearchWithBoundary from "./useProjectSearchWithBoundary";
 import useProjectUpdateWithBoundary from "./useProjectUpdateWithBoundary";
 import useCreateChecklist from "./useCreateChecklist";
@@ -19,6 +18,10 @@ import useMDMSServiceSearch from "./useMDMSServiceSearch";
 import useBoundaryHome from "./useBoundaryHome";
 import useFetchFromMicroplan from "./useFetchFromMicroplan";
 import { useReadExcelData, useUpdateAndUploadExcel } from "./useReadExcelData";
+import { useSearchLocalisation } from "./useSearchLocalisation";
+import useUpsertFormBuilderConfig from "./useUpsertFormBuilderConfig";
+import { useMDMSV2Search } from "./useMDMSV2Search";
+import useUpdateFormBuilderConfig from "./useUpdateFormBuilderConfig";
 
 const UserService = {};
 
@@ -35,7 +38,6 @@ const campaign = {
   useResourceData,
   useCreateProduct,
   useCreateProductVariant,
-  useParallelSearch,
   useProjectSearchWithBoundary,
   useProjectUpdateWithBoundary,
   useCreateChecklist,
@@ -48,6 +50,10 @@ const campaign = {
   useFetchFromMicroplan,
   useReadExcelData,
   useUpdateAndUploadExcel,
+  useSearchLocalisation,
+  useUpsertFormBuilderConfig,
+  useMDMSV2Search,
+  useUpdateFormBuilderConfig
 };
 
 const Hooks = {

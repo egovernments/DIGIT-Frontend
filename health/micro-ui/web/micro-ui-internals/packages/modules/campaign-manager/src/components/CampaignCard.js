@@ -48,13 +48,7 @@ const CampaignCard = () => {
     },
     {
       label: t("NATIONAL_DASHBOARD"),
-      link: "/digit-ui/employee/utilities/iframe/elastic/national",
-      roles: ROLES.NATIONAL_SUPERVISOR,
-      // count: isLoading?"-":data
-    },
-    {
-      label: t("NDSS_DASHBOARD"),
-      link: "/digit-ui/employee/dss/landing/national-health-dashboard",
+      link: "/digit-ui/employee",
       roles: ROLES.NATIONAL_SUPERVISOR,
       // count: isLoading?"-":data
     },
@@ -63,7 +57,25 @@ const CampaignCard = () => {
       link: `/${window?.contextPath}/employee/campaign/boundary/home`,
       roles: ROLES.BOUNDARY_MANAGER,
       // count: isLoading?"-":data
-    }
+    },
+    {
+      label: t("ACTION_TEST_APP_CONFIGURATION_PARENT_MOBILE"),
+      link: `/workbench-ui/employee/campaign/app-configuration-parent?variant=app&masterName=AppScreenConfigTemplateSchema&fieldType=AppFieldType&prefix=APPONE`,
+      roles: ROLES.CAMPAIGN_MANAGER,
+      // count: isLoading?"-":data
+    },
+    {
+      label: t("ACTION_TEST_APP_CONFIGURATION_PARENT_WEB"),
+      link: `/workbench-ui/employee/campaign/app-configuration-parent?variant=web&masterName=FormBuilderConfig&fieldType=FormBuilderFieldType&prefix=FORMONE`,
+      roles: ROLES.CAMPAIGN_MANAGER,
+      // count: isLoading?"-":data
+    },
+    // {
+    //   label: t("ACTION_TEST_APP_CONFIGURATION"),
+    //   link: `/workbench-ui/employee/campaign/app-configuration`,
+    //   roles: ROLES.CAMPAIGN_MANAGER,
+    //   // count: isLoading?"-":data
+    // },  WILLBEDISABLEDINPATCHRELEASE
   ];
 
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));

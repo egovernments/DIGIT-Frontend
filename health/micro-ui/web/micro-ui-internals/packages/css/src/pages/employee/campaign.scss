@@ -4,6 +4,7 @@
 .summary-header {
   @extend .typography.text-heading-l;
   font-size: 2.25rem;
+  margin-bottom: 1.5rem !important;
 }
 .date-field-container {
   display: grid;
@@ -67,9 +68,9 @@
   border-width: 0rem 1.5rem;
   tbody {
     tr:hover {
-      td{
+      td {
         background: rgba(#f47738, 0.12);
-          cursor: pointer;
+        cursor: pointer;
       }
     }
   }
@@ -111,45 +112,45 @@
   justify-content: space-between;
   align-items: center;
 }
-.setup-campaign{
-  .digit-success{
-  z-index: 1000;
+.setup-campaign {
+  .digit-success {
+    z-index: 1000;
   }
 }
-.digit-error{
+.digit-error {
   z-index: 900;
 }
-.timeline-user{
+.timeline-user {
   display: flex;
   justify-content: space-between;
 }
-.upcoming-timeline{
-  .timeline-label{
+.upcoming-timeline {
+  .timeline-label {
     color: #b1b4b6;
   }
 }
-.container{
+.container {
   display: flex;
   flex-direction: row;
   gap: 1.5rem;
   align-items: stretch;
 }
-.stepper-card{
-  height: 39rem;
-  margin-bottom: 1.5rem !important;
+.stepper-card {
+  height: 37rem;
+  padding-top: 0rem;
 }
-.stepper-subheader{
+.stepper-subheader {
   color: theme(digitv2.lightTheme.header-sidenav);
 }
-.container-full{
+.container-full {
   display: flex;
   flex-direction: row;
   gap: 1.5rem;
   align-items: stretch;
   height: 100%;
 }
-.name-container-label{
-  .label-field-wrapper{
+.name-container-label {
+  .label-field-wrapper {
     width: -webkit-fill-available;
   }
 }
@@ -185,36 +186,36 @@
 .hierarchy-boundary-heading {
   font-size: 2.5rem;
   font-weight: 700;
-  font-family: 'Roboto Condensed', sans-serif;
+  font-family: "Roboto Condensed", sans-serif;
 }
 
 .hierarchy-boundary-sub-heading {
   width: 20rem;
   margin-top: 0.6rem;
   font-weight: 600;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 .hierarchy-boundary-sub-heading2 {
-  font-size: 1.2rem; 
+  font-size: 1.2rem;
   font-weight: 600;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
-.campaign-preview{
+.campaign-preview {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
-.card-container1{
+.card-container1 {
   width: 100%;
 }
-.campaign-tag{
-  border: 0.5px solid #0B4B66;
+.campaign-tag {
+  border: 0.5px solid #0b4b66;
   margin-bottom: 1rem;
   height: 3.3rem;
- .digit-tag-text{
-  font-size: 1.5rem;
-  font-weight: 700;
+  .digit-tag-text {
+    font-size: 1.5rem;
+    font-weight: 700;
   }
 }
 .digit-popup-wrapper.dataMapping {
@@ -230,13 +231,15 @@
 }
 .data-mapping-filter-switch {
   float: right;
-  margin-bottom: 1.5rem;
+  margin-right: 5rem;
+  margin-bottom: 0rem;
 }
 .digit-label-field-pair.multiselect-label-field {
   > div:nth-of-type(1) {
     width: 69%;
   }
 }
+
 .date-style{
   max-width: 37.5rem;
   display: flex;
@@ -265,4 +268,67 @@
   box-sizing: border-box;
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
+}
+
+.appConfiglabelField {
+  padding: 3rem 1rem;
+  background-color: #eee;
+  border: 1px solid #d6d5d4;
+  border-radius: 0.5rem;
+}
+.appConfiglabelField.selected {
+  background-color: #f477381a;
+  border: 1px solid #c84c0e;
+}
+.appConfig-flow-stepper {
+  margin-top: 2rem;
+}
+.app-config-add-section {
+  margin-inline: auto;
+  margin-top: 2rem;
+  margin-bottom: 5rem;
+}
+.appConfigScreenCard {
+  margin-bottom: 2rem;
+}
+.appConfiglabelField-label {
+  width: 25rem;
+}
+.app-config-actionBar {
+  z-index: 9999;
+}
+
+.digit-popup-wrapper.custom-pop-up-mapping {
+  max-width: 35rem;
+
+  .digit-popup-footer {
+
+      padding-top: 0 !important;
+
+      .digit-popup-footer-buttons {
+          width: 100% !important;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+
+          .digit-button-secondary {
+              width: 100%;
+          }
+
+          .digit-button-primary {
+              width: 100%;
+          }
+      }
+  }
+
+  .digit-popup-children-wrap {
+      padding-top: 0 !important;
+      overflow: visible;
+  }
+}
+.rdt_TableBody {
+  border: 1px solid #ccc !important; 
+  width: 100% !important;
+}
+.rdt_Table{
+  width: 100% !important;
 }

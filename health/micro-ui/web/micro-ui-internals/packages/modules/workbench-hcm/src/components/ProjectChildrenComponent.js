@@ -1,8 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Header, Loader } from "@egovernments/digit-ui-react-components";
+import { Header } from "@egovernments/digit-ui-react-components";
 import { Link } from "react-router-dom";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
+import {  Loader} from "@egovernments/digit-ui-components";
+
 
 const ProjectChildrenComponent = (props) => {
   const { t } = useTranslation();
@@ -61,7 +63,7 @@ const ProjectChildrenComponent = (props) => {
   ];
 
   if (isLoading) {
-    return <Loader></Loader>;
+    return  <Loader page={true} variant={"PageLoader"}/>;
   }
   if (!projectChildren?.Project[0]?.descendants) {
     return (

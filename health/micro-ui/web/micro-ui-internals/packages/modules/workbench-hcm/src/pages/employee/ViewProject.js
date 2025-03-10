@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
-import { Header, ViewComposer, ActionBar, SubmitBar, Toast, Menu } from "@egovernments/digit-ui-react-components";
+import { Header, ViewComposer, ActionBar, SubmitBar, Menu } from "@egovernments/digit-ui-react-components";
 import { data } from "../../configs/ViewProjectConfig";
 import AssignCampaign from "../../components/AssignCampaign";
 import AssignTarget from "../../components/AssignTarget";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
+import { Toast } from "@egovernments/digit-ui-components";
 const projectUrl = getProjectServiceUrl();
 
 const ViewProject = () => {
@@ -235,7 +236,7 @@ const ViewProject = () => {
 
         <SubmitBar label={t("ES_COMMON_TAKE_ACTION")} onSubmit={() => setDisplayMenu(!displayMenu)} />
       </ActionBar>
-      {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
+                    {showToast && <Toast label={showToast.label} type={showToast?.isError?"error":"info"}  onClose={() => setShowToast(null)}></Toast>}
     </React.Fragment>
   );
 };

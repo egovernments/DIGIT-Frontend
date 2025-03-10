@@ -5,6 +5,14 @@
 @import "./villageView.scss";
 @import "./facility.scss";
 
+.results-table-wrapper{
+  margin-bottom: 2rem;
+
+  .pagination{
+    margin-bottom: 2rem;
+  }
+}
+
 .digit-topbar-container {
   width: 100%;
 }
@@ -31,6 +39,7 @@
     margin-right: 0rem;
     padding-right: 0;
     margin-bottom: 0rem;
+    min-height: calc(100vh - 10em);
 
 
     .ground-container.digit-home-ground {
@@ -494,6 +503,7 @@ tbody {
 .loginFormStyleEmployee {
   .loginCardClassName {
     .digit-header-content {
+      margin-bottom: "1.5rem";
       &:not(label) {
         display: flex;
         justify-content: center;
@@ -622,7 +632,10 @@ tbody {
   border: 1px solid #d4351c;
 }
 
-.label-field-pair.delivery-type-radio {
+.digit-label-field-pair.delivery-type-radio {
+  margin: 0rem;
+  margin-bottom: 0 !important;
+  margin-top: 0 !important;
   gap: 5rem;
 
   .digit-radio-options-wrap {
@@ -792,6 +805,17 @@ tbody {
   border-color: #D4D5D6;
   border-radius: 0.25rem;
   padding: 1rem;
+}
+
+.summary-group {
+  border-width: 0.063rem;
+  background: theme(digitv2.lightTheme.paper-secondary);
+  border-color: #D4D5D6;
+  border-radius: 0.25rem;
+  padding: 1rem;
+}
+.summary-group:not(:last-child) {
+  margin-bottom: 1.5rem;
 }
 
 .card-container {
