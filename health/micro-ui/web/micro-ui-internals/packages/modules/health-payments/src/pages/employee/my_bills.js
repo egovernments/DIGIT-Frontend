@@ -36,7 +36,7 @@ const MyBills = () => {
         body: {
             billCriteria: {
                 tenantId: tenantId,
-                referenceIds: [project?.[0]?.id],
+                referenceIds: project?.map(p => p?.id) || [], 
                 ...(billID ? { billNumbers: [billID] } : {}),
                 ...(dateRange.startDate && dateRange.endDate ? { fromDate: new Date(dateRange.startDate).getTime(), toDate: new Date(dateRange.endDate).getTime() } : {}),
                 pagination: {

@@ -121,7 +121,7 @@ const AttendanceInboxComponent = () => {
   /// Update filter criteria and fetch new data.
   const handleFilterUpdate = (newFilter, isSelectedData) => {
     setFilterCriteria(newFilter);
-    setSelectedStatus(StatusEnum.PENDING_FOR_APPROVAL);
+    setSelectedStatus(selectedStatus);
 
     const existingPaymentInbox = Digit.SessionStorage.get("paymentInbox");
 
@@ -155,7 +155,7 @@ const AttendanceInboxComponent = () => {
     Digit.SessionStorage.set("paymentInbox", existingData);
 
     // Trigger the approval action
-    triggerAttendanceSearch(newFilter, StatusEnum.PENDING_FOR_APPROVAL);
+    triggerAttendanceSearch(newFilter, selectedStatus);
   };
 
   const handlePaginationChange = (page) => {

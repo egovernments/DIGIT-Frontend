@@ -96,7 +96,7 @@ const BillInboxComponent = () => {
             billCriteria: {
                 tenantId: tenantId,
                 localityCode: selectedBoundaryCode,
-                referenceIds: [project?.[0]?.id],
+                referenceIds: [selectedProject?.id],
             },
         },
         config: {
@@ -315,7 +315,7 @@ const BillInboxComponent = () => {
                         {tableData && <Card style={{ width: "100%", }}>
                             {tableData != null && <div className="summary-sub-heading">{t(selectedProject?.name)}</div>}
                             {tableData != null && <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name)}</div>}
-                            <div>
+                            <div style={{overflowY: "auto"}}>
                                 {(approvalCount !== null && pendingApprovalCount !== null) && (
                                     <Tab
                                         activeLink={activeLink?.code}

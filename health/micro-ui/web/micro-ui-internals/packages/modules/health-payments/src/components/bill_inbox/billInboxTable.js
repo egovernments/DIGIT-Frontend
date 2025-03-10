@@ -97,7 +97,11 @@ const BillInboxTable = ({
             },
         },
     ];
-
+    const handleRowClick = (row) => {
+        history.push(
+            `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`, { fromCampaignSupervisor: true }
+        )
+    };
     return (
         <React.Fragment>
             {
@@ -106,8 +110,10 @@ const BillInboxTable = ({
                     data={props.tableData}
                     pagination
                     paginationServer
-                    customStyles={tableCustomStyle}
+                    customStyles={tableCustomStyle(true)}
                     paginationDefaultPage={props?.currentPage}
+                    onRowClicked={handleRowClick}
+                    pointerOnHover
                     onChangePage={handlePageChange}
                     onChangeRowsPerPage={handlePerRowsChange}
                     paginationTotalRows={props?.totalCount}

@@ -49,6 +49,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [loading, setLoading] = useState(false);
 
   const project = Digit?.SessionStorage.get("staffProjects");
+  const selectedProject = Digit?.SessionStorage.get("selectedProject");
 
 
   const AttendancereqCri = {
@@ -422,8 +423,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   const renderLabelPair = (heading, text) => (
     <div className="label-pair">
-      <span className="label-heading">{t(heading)}</span>
-      <span className="label-text">{text}</span>
+      <span className="view-label-heading">{t(heading)}</span>
+      <span className="view-label-text">{text}</span>
     </div>
   );
 
@@ -443,14 +444,14 @@ const ViewAttendance = ({ editAttendance = false }) => {
         </Header>
         <Card type="primary" className="bottom-gap-card-payment">
           {renderLabelPair('HCM_AM_ATTENDANCE_ID', t(registerNumber))}
-          {renderLabelPair('HCM_AM_CAMPAIGN_NAME', t(project?.[0]?.name || 'NA'))}
-          {renderLabelPair('HCM_AM_PROJECT_TYPE', t(project?.[0]?.projectType || 'NA'))}
+          {renderLabelPair('HCM_AM_CAMPAIGN_NAME', t(selectedProject?.name || 'NA'))}
+          {renderLabelPair('HCM_AM_PROJECT_TYPE', t(selectedProject?.projectType || 'NA'))}
           {renderLabelPair('HCM_AM_BOUNDARY_CODE', t(boundaryCode || 'NA'))}
           {renderLabelPair('HCM_AM_ATTENDANCE_OFFICER', individualsData?.Individual?.[0]?.name?.givenName)}
           {renderLabelPair('HCM_AM_ATTENDANCE_OFFICER_CONTACT_NUMBER', individualsData?.Individual?.[0]?.mobileNumber)}
           {renderLabelPair('HCM_AM_NO_OF_ATTENDEE', AttendanceData?.attendanceRegister[0]?.attendees?.length || 0)}
-          {renderLabelPair('HCM_AM_CAMPAIGN_START_DATE', formatTimestampToDate(project?.[0]?.startDate))}
-          {renderLabelPair('HCM_AM_CAMPAIGN_END_DATE', formatTimestampToDate(project?.[0]?.endDate))}
+          {renderLabelPair('HCM_AM_CAMPAIGN_START_DATE', formatTimestampToDate(selectedProject?.startDate))}
+          {renderLabelPair('HCM_AM_CAMPAIGN_END_DATE', formatTimestampToDate(selectedProject?.endDate))}
           {renderLabelPair('HCM_AM_EVENT_DURATION', attendanceDuration || 0)}
           {renderLabelPair('HCM_AM_STATUS', t(data?.[0]?.musterRollStatus) || t('APPROVAL_PENDING'))}
         </Card>

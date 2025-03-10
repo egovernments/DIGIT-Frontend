@@ -118,9 +118,14 @@ const CustomInboxTable = ({
       },
     },
   ];
+  const handleRowClick = (row) => {
+    history.push(
+      `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+    )
+  };
 
   return (
-    <Card>
+    <Card style={{ gap: "1.5rem" }}>
       <div className="summary-sub-heading">{t(selectedProject?.name)}</div>
       {
         /*(!planEmployee?.data || planEmployee?.data?.length === 0) */
@@ -165,7 +170,9 @@ const CustomInboxTable = ({
                   progressComponent={<Loader />}
                   pagination
                   paginationServer
-                  customStyles={tableCustomStyle}
+                  customStyles={tableCustomStyle(true)}
+                  onRowClicked={handleRowClick}
+                  pointerOnHover
                   paginationTotalRows={totalCount}
                   onChangePage={handlePaginationChange}
                   onChangeRowsPerPage={handleRowsPerPageChange}

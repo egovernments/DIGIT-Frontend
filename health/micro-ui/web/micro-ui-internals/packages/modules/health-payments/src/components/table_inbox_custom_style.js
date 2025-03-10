@@ -1,4 +1,4 @@
-export const tableCustomStyle = {
+export const tableCustomStyle = (isInbox = false) => ({
   tableWrapper: {
     style: {
       minHeight: "fit-content",
@@ -45,7 +45,7 @@ export const tableCustomStyle = {
     style: {
       "&:first-of-type": {
         borderLeftStyle: "solid",
-        borderLeftWidth: "1px",
+        borderLeftWidth: isInbox ? "0px" : "1px",
         borderLeftColor: "#D6D5D4",
         borderTopLeftRadius: "0.25rem",
       },
@@ -63,7 +63,7 @@ export const tableCustomStyle = {
       fontStyle: "normal",
       fontSize: "16px",
       color: "#0B4B66",
-      padding: "16px",
+      padding: "16px 0px 16px 16px",
       lineHeight: "1.14rem",
       zIndex: 10,
     },
@@ -72,12 +72,12 @@ export const tableCustomStyle = {
     style: {
       "&:first-of-type": {
         borderLeftStyle: "solid",
-        borderLeftWidth: "1px",
+        borderLeftWidth: isInbox ? "0px" : "1px",
         borderLeftColor: "#D6D5D4",
       },
       "&:last-of-type": {
         borderRightStyle: "solid",
-        borderRightWidth: "1px",
+        borderRightWidth: isInbox ? "0px" : "1px",
         borderRightColor: "#D6D5D4",
         borderTopRightRadius: "0rem",
       },
@@ -105,7 +105,7 @@ export const tableCustomStyle = {
       },
     },
   },
-};
+});
 
 
 export const getTableCustomStyle = (freezeFirstColumn = false) => ({

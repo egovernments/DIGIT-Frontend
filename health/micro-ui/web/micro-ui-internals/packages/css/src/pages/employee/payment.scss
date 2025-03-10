@@ -54,36 +54,33 @@
     display: flex;
     flex-direction: row;
     gap: 1.5rem;
+    min-height: 80vh;
+    height: auto;
+    align-items: stretch;
+    /* Forces both sections to stay equal in height */
 }
 
 .custom-register-inbox-screen .custom-inbox-filter-section {
 
-    width: 30%;
+    flex: 0 0 30%;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    height: 80vh;
-}
-
-
-.custom-register-inbox-screen .custom-inbox-inner-filter-section {
-
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    height: 75vh;
+    height: 100%;
+    /* Ensures it stretches with table */
+    min-height: 100%;
     overflow-y: auto;
 }
 
-
-
-
 .custom-register-inbox-screen .custom-inbox-outer-table-section {
 
-    width: 100%;
+    flex: 1;
+    /* Takes remaining width (70%) */
     display: flex;
-    flex-direction: row;
-    gap: 1.5rem;
+    flex-direction: column;
+    height: 100%;
+    /* Matches filter height */
+    min-height: 100%;
+    overflow-y: auto;
 }
 
 .custom-inbox-outer-table-section .inner-table-section {
@@ -91,20 +88,16 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    height: 75vh;
-    min-height: 75vh;
+    flex-grow: 1;
+    /* Makes sure table stretches */
 }
 
 .custom-inbox-outer-table-section .card-overide {
     max-width: 100%;
     overflow: auto;
     margin: 0px;
-    height: 75vh;
+    flex-grow: 1;
 }
-
-
-
-
 
 .on-icon-reset-proximity {
     border: 1px solid #e0e0e0;
@@ -119,8 +112,6 @@
     flex-direction: column;
     gap: 1.5rem;
     margin-bottom: 2.5rem;
-
-
 }
 
 .bill-container {
@@ -152,4 +143,18 @@
     flex-direction: row;
     height: 60vh;
     overflow-y: auto;
+}
+.view-label-heading {
+    @extend .typography.heading-s;
+    color: theme(digitv2.lightTheme.text-primary);
+    width: 20%;
+    text-align: left;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.view-label-text {
+    @extend .typography.body-s;
+    color: theme(digitv2.lightTheme.text-primary);
+    width: 80%;
 }
