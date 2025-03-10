@@ -1,10 +1,9 @@
-import { Button, Dropdown, LabelFieldPair, TextInput } from "@egovernments/digit-ui-components";
+import { Button, Dropdown, LabelFieldPair, Switch, TextInput } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PRIMARY_COLOR } from "../../../utils";
 import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 import { useAppConfigContext } from "./AppConfigurationWrapper";
-import Switch from "../../../components/Switch";
 import { useCustomT } from "./useCustomT";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
 

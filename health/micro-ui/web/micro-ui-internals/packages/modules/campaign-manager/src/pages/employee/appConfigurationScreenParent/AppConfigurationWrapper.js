@@ -1,9 +1,8 @@
 import React, { createContext, useContext, useEffect, useReducer, useRef, useState } from "react";
 import AppFieldScreenWrapper from "./AppFieldScreenWrapper";
-import { Footer, Button, Divider, Loader, PopUp } from "@egovernments/digit-ui-components";
+import { Footer, Button, Divider, Loader, PopUp, SidePanel } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import DrawerFieldComposer from "./DrawerFieldComposer";
-import SidePanel from "./SidePanel";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
 import AppLocalisationTable from "./AppLocalisationTable";
 import { DndProvider } from "react-dnd";

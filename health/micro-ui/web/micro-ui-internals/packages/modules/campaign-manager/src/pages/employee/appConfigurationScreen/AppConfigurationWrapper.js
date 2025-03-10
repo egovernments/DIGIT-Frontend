@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useReducer, useState } from "react";
 import AppFieldScreenWrapper from "./AppFieldScreenWrapper";
-import { Loader } from "@egovernments/digit-ui-components";
-import SidePanel from "./SidePanel";
+import { Loader, SidePanel } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import DrawerFieldComposer from "./DrawerFieldComposer";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
