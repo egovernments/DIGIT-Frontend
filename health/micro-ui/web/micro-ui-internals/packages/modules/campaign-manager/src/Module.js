@@ -53,6 +53,7 @@ import MultiSelectDropdown from "./components/MultiSelectDropdown";
 import NoResultsFound from "./components/NoResultsFound";
 import UploadDataMappingWrapper from "./components/UploadDataMappingWrapper";
 import DataUploadWrapper from "./components/DataUploadWrapper";
+import AppPreview from "./components/AppPreview";
 import AppConfigurationWrapper from "./pages/employee/appConfigurationScreen/AppConfigurationWrapper";
 import AppLocalisationWrapper from "./pages/employee/appConfigurationScreen/AppLocalisationWrapper";
 import ImpelComponentWrapper from "./pages/employee/appConfigurationScreen/ImpelComponentWrapper";
@@ -173,6 +174,7 @@ const componentsToRegister = {
   NoResultsFound,
   UploadDataMappingWrapper,
   DataUploadWrapper,
+  AppPreview,
   // AppConfigurationWrapper: AppLocalisationWrapper,
   AppConfigurationWrapper: ImpelComponentWrapper,
   AppConfigurationParentLayer: AppConfigurationParentLayer,
