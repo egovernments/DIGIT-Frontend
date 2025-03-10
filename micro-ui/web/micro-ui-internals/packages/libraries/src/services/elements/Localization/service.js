@@ -64,7 +64,6 @@ const LocalizationStore = {
 };
 
 function getUniqueData(data1, data2) {
-  console.log("dataaaaaaaa" , data1 , data2);
   const data1Codes = new Set(data1.map(item => item.code));
   return data2.filter(item => !data1Codes.has(item.code));
 }
