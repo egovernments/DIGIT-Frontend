@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { PopUp, Button, TextArea, Toast, Dropdown, TextInput, FileUpload, FieldV1 } from "@egovernments/digit-ui-components";
 import { convertEpochToDate } from "../../utils/utlis";
 
-const DeactivatePopUp = ({ onClose, onSubmit }) => {
+const DeactivatePopUp = ({bussnessBtnLabel, label, onClose, onSubmit }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
@@ -50,7 +50,7 @@ const DeactivatePopUp = ({ onClose, onSubmit }) => {
         onClose={() => {
           onClose();
         }}
-        heading={t(`HR_COMMON_DEACTIVATED_EMPLOYEE_HEADER`)}
+        heading={t(label ? label : `HR_COMMON_DEACTIVATED_EMPLOYEE_HEADER`)}
         children={[
           <div className="comment-section">
             <div className="comment-label">
@@ -128,15 +128,15 @@ const DeactivatePopUp = ({ onClose, onSubmit }) => {
             onClick={onClose}
           />,
           <Button
-          isDisabled={!reason}
+            isDisabled={!reason}
             key="submit-button"
             className="campaign-type-alert-button"
             type="button"
             size="large"
             variation="primary"
             style={{ minWidth: "270px" }}
-            label={t(`HR_DEACTIVATE_EMPLOYEE_BUTTON_TEXT`)}
-            title={t(`HR_DEACTIVATE_EMPLOYEE_BUTTON_TEXT`)}
+            label={t( bussnessBtnLabel)}
+            title={t(bussnessBtnLabel)}
             onClick={() => {
               handleSave();
             }}

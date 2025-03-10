@@ -10,6 +10,7 @@ import DeactivatePopUp from "../../components/pageComponents/DeactivatePopUp";
 import { ReposeScreenType } from "../../constants/enums";
 
 const EmployeeDetailScreen = () => {
+  const [openActivate, setOpenActivate] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const { t } = useTranslation();
   const activeworkflowActions = [
@@ -17,7 +18,7 @@ const EmployeeDetailScreen = () => {
     { code: "DEACTIVATE_EMPLOYEE_HEAD", name: t("HR_DEACTIVATE_EMPLOYEE_HEAD") },
     { code: "COMMON_EDIT_EMPLOYEE_HEADER", name: t("HR_COMMON_EDIT_EMPLOYEE_HEADER") },
   ];
-  const deactiveworkflowActions = [{ code: "ACTIVATE_EMPLOYEE_HEAD", name: t("ACTIVATE_EMPLOYEE_HEAD") }];
+  const deactiveworkflowActions = [{ code: "ACTIVATE_EMPLOYEE_HEAD", name: t("HR_ACTIVATE_EMPLOYEE_HEAD") }];
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const mutationUpdate = Digit.Hooks.hrms.useHRMSUpdate(tenantId);
 
@@ -70,14 +71,13 @@ const EmployeeDetailScreen = () => {
         },
         {
           onSuccess: (res) => {
-            debugger;
             history.push(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.EDIT_USER,
               state: "success",
               info: t("HR_EMPLOYEE_ID_LABEL"),
               fileName: res?.Employees?.[0],
               description: null,
-              message: t(`EMPLOYEE_RESPONSE_UPDATE_ACTION`),
+              message: t(`EMPLOYEE_RESPONSE_DEACTIVATION_ACTION`),
               back: t(`CORE_COMMON_GO_TO_HOME`),
               backlink: `/${window.contextPath}/employee`,
             });
@@ -98,7 +98,58 @@ const EmployeeDetailScreen = () => {
         }
       );
     } catch (error) {
-      debugger;
+      // setTriggerEstimate(true);
+    }
+  };
+
+  const activateUser = async (comment, date, reason, order) => {
+    let datak = {
+      ...data?.Employees[0], // Keep existing data
+      isActive: true, // Update isActive to false
+      // deactivationDetails: [
+      //   {
+      //     effectiveFrom: Date.now(), // Use the current timestamp
+      //     reasonForDeactivation: reason,
+      //     remarks: order,
+      //     orderNo: comment,
+      //   },
+      // ],
+    };
+
+    try {
+      await mutationUpdate.mutateAsync(
+        {
+          Employees: [datak],
+        },
+        {
+          onSuccess: (res) => {
+            history.push(`/${window?.contextPath}/employee/hrms/response`, {
+              isCampaign: ReposeScreenType.EDIT_USER,
+              state: "success",
+              info: t("HR_EMPLOYEE_ID_LABEL"),
+              fileName: res?.Employees?.[0],
+              description: null,
+              message: t(`HR_RACTIVATE_SUCCESS_MESSAGE`),
+              back: t(`CORE_COMMON_GO_TO_HOME`),
+              backlink: `/${window.contextPath}/employee`,
+            });
+          },
+          onError: (error) => {
+            history.push(`/${window?.contextPath}/employee/hrms/response`, {
+              isCampaign: ReposeScreenType.EDIT_USER_ERROR,
+              state: "error",
+              info: t("HR_EMPLOYEE_ID_LABEL"),
+              fileName: error?.Employees?.[0],
+              description: null,
+              message: t(`EMPLOYEE_RESPONSE_UPDATE_ACTION`),
+              back: t(`CORE_COMMON_GO_TO_HOME`),
+              backlink: `/${window.contextPath}/employee`,
+            });
+            // setTriggerEstimate(true);
+          },
+        }
+      );
+    } catch (error) {
       // setTriggerEstimate(true);
     }
   };
@@ -135,7 +186,7 @@ const EmployeeDetailScreen = () => {
                     inline: true,
                     label: t("HR_EMP_STATUS_LABEL"),
                     type: "text",
-                    value: data?.Employees ? (data?.Employees[0].isActive ? t("ACTIVE") : t("IN_ACTIVE")) : t("IN_ACTIVE"),
+                    value: data?.Employees ? (data?.Employees[0].isActive ? t("ACTIVE") : t("INACTIVE")) : t("INACTIVE"),
                   },
                   {
                     inline: true,
@@ -303,7 +354,6 @@ const EmployeeDetailScreen = () => {
                           sections={
                             campaign
                               ? campaign?.map((element, index) => {
-                                  debugger;
                                   return {
                                     cardType: "primary",
                                     fieldPairs: [
@@ -349,7 +399,7 @@ const EmployeeDetailScreen = () => {
         </div>
       }
 
-      {/* action bar for bill generation*/}
+      {/* action bar */}
       {
         <Footer
           actionFields={[
@@ -376,6 +426,10 @@ const EmployeeDetailScreen = () => {
                     history.push(`/${window.contextPath}/employee/hrms/update/assign-campaign/${id}`);
                     break;
 
+                  case "ACTIVATE_EMPLOYEE_HEAD":
+                    setOpenActivate(true);
+                    break;
+
                   default:
                     break;
                 }
@@ -398,11 +452,26 @@ const EmployeeDetailScreen = () => {
 
       {openModal && (
         <DeactivatePopUp
+          bussnessBtnLabel="HR_DEACTIVATE_EMPLOYEE_BUTTON_TEXT"
+          label="HR_COMMON_DEACTIVATED_EMPLOYEE_HEADER"
           onClose={() => {
             setOpenModal(false);
           }}
           onSubmit={(comment, date, reason, order) => {
             deActivateUser(comment, date, reason, order);
+          }}
+        />
+      )}
+
+      {openActivate && (
+        <DeactivatePopUp
+          bussnessBtnLabel="HR_ACTIVATE_EMPLOYEE_HEAD"
+          label="HR_ACTIVATE_EMPLOYEE_HEAD"
+          onClose={() => {
+            setOpenActivate(false);
+          }}
+          onSubmit={(comment, date, reason, order) => {
+            activateUser(comment, date, reason, order);
           }}
         />
       )}
