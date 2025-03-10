@@ -22,6 +22,7 @@ import Response from "../../components/Response";
 import FacilityCatchmentMapping from "./FacilityCatchmentMapping";
 import PlanInbox from "./PlanInbox";
 import MapViewComponent from "../../components/MapViewComponent";
+import MapViewPopupWrapper from "../../components/MapViewPopup";
 
 // const bredCrumbStyle = { maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
@@ -263,7 +264,7 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
         <PrivateRoute path={`${path}/assign-facilities-to-villages`} component={() => <FacilityCatchmentMapping />} />
         <PrivateRoute path={`${path}/village-finalise-success`} component={() => <Response />} />
         <PrivateRoute path={`${path}/microplan-success`} component={() => <Response />} />
-        <PrivateRoute path={`${path}/map-view`} component={() => <MapViewComponent />} />
+        <PrivateRoute path={`${path}/map-view`} component={() => <MapViewPopupWrapper />} />
       </AppContainer>
     </Switch>
   );
