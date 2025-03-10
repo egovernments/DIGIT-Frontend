@@ -240,6 +240,36 @@
   }
 }
 
+.date-style{
+  max-width: 37.5rem;
+  display: flex;
+  gap: 1rem;
+}
+.app-preview{
+  width: 25rem;
+  border: 0.000rem solid #ccc;
+  border-radius: 1rem;
+  background-color: white;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+}
+.mobile-top {
+  background-color: theme(digitv2.lightTheme.header-sidenav);
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  color: theme(digitv2.lightTheme.paper);
+  font-size: 1.5rem;
+  font-weight: theme(digitv2.fontWeight.bold);
+  width: 100%;
+  /* Full width */
+  box-sizing: border-box;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+
 .appConfiglabelField {
   padding: 3rem 1rem;
   background-color: #eee;
