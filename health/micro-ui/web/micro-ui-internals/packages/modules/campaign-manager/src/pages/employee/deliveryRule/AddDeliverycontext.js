@@ -69,7 +69,7 @@ const { data: structureConfig } = Digit.Hooks.useCustomMDMS(
   schemaCode ? schemaCode.split(".")[0] : "",
   schemaCode ? [{ name: schemaCode.split(".")[1] }] : [],
   {
-    enabled: false, 
+    enabled: !!schemaCode, 
     select: data => {
       const moduleName = schemaCode.split(".")[0];
       const schemaName = schemaCode.split(".")[1];
