@@ -1,4 +1,4 @@
-import {  LabelFieldPair, CardLabel, Loader } from "@egovernments/digit-ui-components";
+import { LabelFieldPair, CardLabel, Loader } from "@egovernments/digit-ui-components";
 import { Dropdown } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -101,7 +101,6 @@ const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
  */
 const BoundaryDropdown = ({ label, data, onChange, selected }) => {
   const { t } = useTranslation();
-
   return (
     <div style={{ width: "100%", marginTop: "14px" }}>
       <div className="comment-label">{t(label)}</div>

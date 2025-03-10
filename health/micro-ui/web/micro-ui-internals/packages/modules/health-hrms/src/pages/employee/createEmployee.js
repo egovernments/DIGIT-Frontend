@@ -1,11 +1,10 @@
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
-import { Toast, Loader, Header } from "@egovernments/digit-ui-components";
-import React, { useEffect, useState } from "react";
+import { HeaderComponent, Toast, Loader } from "@egovernments/digit-ui-components";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { newConfig } from "../../components/config/config";
 
-import { HRMS_CONSTANTS } from "../../constants/constants";
 import { ReposeScreenType } from "../../constants/enums";
 
 import {
@@ -321,7 +320,11 @@ const CreateEmployee = ({ editUser = false }) => {
               : { marginLeft: "15px", fontFamily: "calibri", color: "#FF0000" }
           }
         >
-          <Header>{t("HR_COMMON_CREATE_EMPLOYEE_HEADER")}</Header>
+          {
+            <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
+              {t("HR_COMMON_CREATE_EMPLOYEE_HEADER")}
+            </HeaderComponent>
+          }
         </div>
 
         <FormComposerV2

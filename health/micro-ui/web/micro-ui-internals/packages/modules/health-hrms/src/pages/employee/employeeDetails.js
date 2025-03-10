@@ -4,7 +4,7 @@ import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min
 import { convertEpochToDate } from "../../utils/utlis";
 import { searchStaff } from "../../services/service";
 
-import { Button, Card, Footer, ActionBar, SummaryCard, Tag } from "@egovernments/digit-ui-components";
+import { HeaderComponent, Button, Card, Footer, ActionBar, SummaryCard, Tag } from "@egovernments/digit-ui-components";
 import { Loader } from "@egovernments/digit-ui-react-components";
 import DeactivatePopUp from "../../components/pageComponents/DeactivatePopUp";
 import { ReposeScreenType } from "../../constants/enums";
@@ -17,7 +17,7 @@ const EmployeeDetailScreen = () => {
     { code: "DEACTIVATE_EMPLOYEE_HEAD", name: t("HR_DEACTIVATE_EMPLOYEE_HEAD") },
     { code: "COMMON_EDIT_EMPLOYEE_HEADER", name: t("HR_COMMON_EDIT_EMPLOYEE_HEADER") },
   ];
-  const deactiveworkflowActions = [{ code: "ACTIVATE_EMPLOYEE_HEAD", name: "ACTIVATE_EMPLOYEE_HEAD" }];
+  const deactiveworkflowActions = [{ code: "ACTIVATE_EMPLOYEE_HEAD", name: t("ACTIVATE_EMPLOYEE_HEAD") }];
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const mutationUpdate = Digit.Hooks.hrms.useHRMSUpdate(tenantId);
 
@@ -114,9 +114,13 @@ const EmployeeDetailScreen = () => {
           false ? { marginLeft: "-12px", fontFamily: "calibri", color: "#FF0000" } : { marginLeft: "15px", fontFamily: "calibri", color: "#FF0000" }
         }
       >
-        {/* <Header>{t("HR_NEW_EMPLOYEE_FORM_HEADER")}</Header>*/}
+        {
+          <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
+            {t("HR_NEW_EMPLOYEE_FORM_HEADER")}
+          </HeaderComponent>
+        }
       </div>
-      {true ? (
+      {
         <div>
           <SummaryCard
             asSeperateCards
@@ -343,7 +347,7 @@ const EmployeeDetailScreen = () => {
             type="primary"
           />
         </div>
-      ) : null}
+      }
 
       {/* action bar for bill generation*/}
       {
@@ -376,7 +380,7 @@ const EmployeeDetailScreen = () => {
                     break;
                 }
               }}
-              options={data?.Employees[0].isActive ? getActiveWorkFlowActions(data?.Employees?.[0]) : []}
+              options={data?.Employees[0].isActive ? getActiveWorkFlowActions(data?.Employees?.[0]) : deactiveworkflowActions}
               optionsKey="name"
               style={{}}
               title=""
@@ -399,7 +403,6 @@ const EmployeeDetailScreen = () => {
           }}
           onSubmit={(comment, date, reason, order) => {
             deActivateUser(comment, date, reason, order);
-            debugger;
           }}
         />
       )}

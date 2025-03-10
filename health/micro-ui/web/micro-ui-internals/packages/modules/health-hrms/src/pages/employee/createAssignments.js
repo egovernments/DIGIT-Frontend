@@ -1,4 +1,4 @@
-import { FormComposerV2, Toast, Loader, Header } from "@egovernments/digit-ui-components";
+import {HeaderComponent, FormComposerV2, Toast, Loader, Header } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
@@ -196,7 +196,6 @@ const AssignCampaign = ({ editCampaign = false }) => {
       let s = await deleteStaffService(projectStaff);
       await createStaffService(ProjectStaffCreatePayload);
     } catch (err) {
-      debugger;
     }
   };
 
@@ -214,7 +213,7 @@ const AssignCampaign = ({ editCampaign = false }) => {
             : { marginLeft: "15px", fontFamily: "calibri", color: "#FF0000" }
         }
       >
-        <Header>{t("HR_COMMON_ASSIGN_CAMPAIGN_HEADER")}</Header>
+        {<HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>{t("HR_COMMON_ASSIGN_CAMPAIGN_HEADER")}</HeaderComponent>}
       </div>
       <FormComposerV2
         key={formKey}
