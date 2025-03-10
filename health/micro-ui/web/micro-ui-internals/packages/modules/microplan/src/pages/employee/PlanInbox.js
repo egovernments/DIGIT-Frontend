@@ -696,44 +696,142 @@ const PlanInbox = () => {
       }));
   };
 
-  const handleSave = async (newValue) => {
-    if (editRowData) {
-    const updatedPayload = setAdditionalDetails(editRowData, newValue)
-      await mutationForAdditionalColumn.mutate(
-        {
-            body: updatedPayload
-        },
-        {
-            onSuccess: (data) => {
-              const { row, field } = editRowData;
-              if (!row?.original?.additionalDetails) {
-                row.original.additionalDetails = {};
+  const mutationForAdditionalColumn = Digit.Hooks.useCustomAPIMutationHook({
+    url: "/plan-service/plan/_update",
+    body: {},
+    params: {}
+});
+
+  const setAdditionalDetails = (rowData, newValue) => {
+    let additionalDetails = rowData?.row?.original?.additionalDetails || {};
+    const field = rowData?.field;
+    if(additionalDetails)
+    additionalDetails[field] = newValue;
+    const Plan = {
+      ...rowData?.row?.original,
+      additionalDetails, // Update the additionalDetails field
+    };
+    return {
+      Plan
+    };
+  };
+    const handleSave = async (newValue) => {
+      if (editRowData) {
+      const updatedPayload = setAdditionalDetails(editRowData, newValue)
+        await mutationForAdditionalColumn.mutate(
+          {
+              body: updatedPayload
+          },
+          {
+              onSuccess: (data) => {
+                const { row, field } = editRowData;
+                if (!row?.original?.additionalDetails) {
+                  row.original.additionalDetails = {};
+                }
+                row.original.additionalDetails[field] = newValue;
+                setToast({ label: `${field} updated successfully!`, type: "success" });
+              },
+              onError: (error) => {
+                setToast({ type: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+                ; 
               }
-              row.original.additionalDetails[field] = newValue;
-              setToast({ label: `${field} updated successfully!`, type: "success" });
-            },
-            onError: (error) => {
-              setToast({ type: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
-              ; 
-            }
-        }
-    );
-    }
-    setPopupVisible(false);
-  };
+          }
+      );
+      }
+      setPopupVisible(false);
+    };
+    const handleEditClick = (row, field) => {
+      setEditRowData({ row, field });
+      setPopupVisible(true);
+    };
+  
+    const truncateText = (text, maxLength = 20) => {
+      if (!text) return "";
+      return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
+    };
 
-  const handleEditClick = (row, field) => {
-    setEditRowData({ row, field });
-    setPopupVisible(true);
+  const getExtraPopulationColumns = () => {
+    const columns = [
+      {
+        name: t(`IS_COMMUNITY_DE_PRIORITIZED_FOR_ITN`),
+        cell: (row) => {
+          const value = row?.original?.additionalDetails?.IS_COMMUNITY_DE_PRIORITIZED_FOR_ITN || "NA";
+          const truncatedValue = value.length > 8 ? `${value.substring(0, 8)}...` : value;
+  
+          return (
+            <div style={{ display: "flex", alignItems: "center", gap: ".5rem" , height:"64px" , width: "180px",justifyContent:"flex-end"}}>
+              <TooltipWrapper description={value || ""}>{truncatedValue}</TooltipWrapper>
+              <Button
+                label={""}
+                onClick={() => handleEditClick(row, "IS_COMMUNITY_DE_PRIORITIZED_FOR_ITN")}
+                variation="secondary"
+                style={{minWidth: "42px",padding:"0px"}}
+                icon="Edit"
+                size={"small"}
+              />
+            </div>
+          );
+        },
+        sortable: false,
+        width: "180px",
+        height:"64px"
+      },
+      {
+        name: t(`NON_DE_PRIORITIZED_FOR_ITN`),
+        cell: (row) => {
+          const value = row?.original?.additionalDetails?.NON_DE_PRIORITIZED_FOR_ITN || "NA";
+          const truncatedValue = value.length > 8 ? `${value.substring(0, 8)}...` : value;
+  
+          return (
+            <div style={{ display: "flex", alignItems: "center", gap: ".5rem" , height:"64px" , width: "180px",justifyContent:"flex-end"}}>
+              <TooltipWrapper description={value || ""}>{truncatedValue}</TooltipWrapper>
+              <Button
+                label={""}
+                onClick={() => handleEditClick(row, "NON_DE_PRIORITIZED_FOR_ITN")}
+                variation="secondary"
+                style={{minWidth: "42px",padding:"0px"}}
+                icon="Edit"
+                size={"small"}
+              />
+            </div>
+          );
+        },
+        sortable: false,
+        width: "180px",
+        height:"64px"
+      }
+    ];
+  
+    return columns;
   };
-
-  const truncateText = (text, maxLength = 20) => {
-    if (!text) return "";
-    return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
-  };
+  
 
   const getTableColumns = () => {
     const columns = [
+      {
+        name: t(`DISTANCE_FROM_LGA_STORE_TO_DP`),
+        cell: (row) => {
+          const value = row?.original?.additionalDetails?.DISTANCE_FROM_LGA_STORE_TO_DP || "NA";
+          const truncatedValue = value.length > 8 ? `${value.substring(0, 8)}...` : value;
+  
+          return (
+            <div style={{ display: "flex", alignItems: "center", gap: ".5rem" , height:"64px" , width: "180px",justifyContent:"flex-end"}}>
+              <TooltipWrapper description={value || ""}>{truncatedValue}</TooltipWrapper>
+              <Button
+                label={""}
+                onClick={() => handleEditClick(row, "DISTANCE_FROM_LGA_STORE_TO_DP")}
+                variation="secondary"
+                style={{minWidth: "42px",padding:"0px"}}
+                icon="Edit"
+                size={"small"}
+              />
+            </div>
+          );
+        },
+        sortable: false,
+        width: "180px",
+        height:"64px"
+      },
       {
         name: t(`IS_COMMUNITY_HARD_TO_REACH_AREA`),
         cell: (row) => {
@@ -882,7 +980,6 @@ const PlanInbox = () => {
   
     return columns;
   };
-  
 
   const getSecurityDetailsColumns = () => {
     // const sampleSecurityData = planWithCensus?.censusData?.[0]?.additionalDetails?.securityDetails || {};
@@ -1011,6 +1108,7 @@ const PlanInbox = () => {
     // },
     ...getSecurityDetailsColumns(),
     ...getAdditionalFieldsColumns(),
+    ...getExtraPopulationColumns(),
     ...getResourceColumns(),
     ...getTableColumns(),
     // {
