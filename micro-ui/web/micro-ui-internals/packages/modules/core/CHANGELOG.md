@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.8.32]  [10-Mar-2025]
+- FEATURE/DUCE-0246 :Userprofile password trimming
+
 ## [1.8.31]  [10-Mar-2025]
 - FEATURE/DUCE-246 :Login page username and password trimming 
 
