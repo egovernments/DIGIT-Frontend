@@ -64,21 +64,19 @@ const AddAttributeField = ({
     return code;
   }, [showAttribute]);
 
-
-  const { data: structureConfig } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    schemaCode?.split(".")[0] || "", // Provide a fallback to avoid errors
-    schemaCode ? [{ name: schemaCode.split(".")[1] }] : [], // Run only if schemaCode is defined
-    schemaCode
-        ? {
-            select: (data) => {
-                const moduleName = schemaCode.split(".")[0];
-                const schemaName = schemaCode.split(".")[1];
-                return data?.[moduleName]?.[schemaName];
-            },
-        }
-        : null, // Pass null if schemaCode is undefined
-    schemaCode ? { schemaCode } : null // Include schemaCode only if it's defined
+const { data: structureConfig } = Digit.Hooks.useCustomMDMS(
+  tenantId,
+  schemaCode ? schemaCode.split(".")[0] : "",
+  schemaCode ? [{ name: schemaCode.split(".")[1] }] : [],
+  {
+    enabled: !!schemaCode, 
+    select: data => {
+      const moduleName = schemaCode.split(".")[0];
+      const schemaName = schemaCode.split(".")[1];
+      return data?.[moduleName]?.[schemaName];
+    }
+  },
+  schemaCode
 );
   
   useEffect(() => {
