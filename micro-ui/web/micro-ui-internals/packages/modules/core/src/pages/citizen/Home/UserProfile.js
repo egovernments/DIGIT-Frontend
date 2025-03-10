@@ -292,6 +292,10 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         photo: profilePic,
       };
 
+      if(name){
+        setName((prev)=>prev.trim());
+      }
+
       if (!validationConfig?.name.test(name) || name === "" || name.length > 50 || name.length < 1) {
         throw JSON.stringify({
           type: "error",
