@@ -254,7 +254,7 @@ const ViewMap = ({ lat, long, type }) => {
               <CustomScaleControl map={map} t={t} />
             </div>
             <div className="bottom-right-map-subcomponents">
-              <ViewElement label={type} type={type}></ViewElement>
+              <ViewElement label={type} type={type} />
             </div>
           </div>
         </Card>
@@ -264,13 +264,13 @@ const ViewMap = ({ lat, long, type }) => {
   );
 };
 
-const MapViewPopup = ({ setShowPopup, type, bounds }) => {
+const MapViewPopup = ({ setShowPopup, type, bounds,heading }) => {
   const { t } = useTranslation();
   return (
     <PopUp
       className={"custom-popup-boundary"}
       type={"default"}
-      heading={t("Village A")}
+      heading={heading} 
       onClose={() => {
         setShowPopup(false);
       }}
@@ -291,32 +291,40 @@ const MapViewPopup = ({ setShowPopup, type, bounds }) => {
       ]}
       sortFooterChildren={true}
     >
-      <ViewMap lat={bounds?.latitude} long={bounds?.longitude} type={type}></ViewMap>
+      <ViewMap lat={bounds?.latitude} long={bounds?.longitude} type={type} />
     </PopUp>
   );
 };
 
-const MapViewPopupWrapper = () => {
+const MapViewPopupWrapper = (
+  {
+    type = "Village",
+    bounds = { latitude: -25.953724, longitude: 32.588711 },
+    buttonLabel = "ViewMap",
+    buttonTitle = "ViewMap",
+    popupHeading = "Village A" 
+    // remove hardcoded default values after implementation
+  }
+) => {
   const [showPopup, setShowPopup] = useState(false);
 
   return (
     <>
       <Button
-        label={"click"}
+        label={buttonLabel}
         onClick={() => {
           setShowPopup(true);
         }}
         type="button"
-      ></Button>
+        title={buttonTitle}
+      />
       {showPopup && (
         <MapViewPopup
           setShowPopup={setShowPopup}
-          type={"Village"}
-          bounds={{
-            latitude: -25.953724,
-            longitude: 32.588711,
-          }}
-        ></MapViewPopup>
+          type={type}
+          bounds={bounds}
+          heading={popupHeading}
+        />
       )}
     </>
   );
