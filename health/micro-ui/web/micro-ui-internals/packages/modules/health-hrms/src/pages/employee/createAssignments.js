@@ -125,7 +125,7 @@ const AssignCampaign = ({ editCampaign = false }) => {
         },
         {
           onSuccess: (res) => {
-            history.push(`/${window?.contextPath}/employee/hrms/response`, {
+            history.replace(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: true,
               state: "success",
               info: t("HR_EMPLOYEE_ID_LABEL"),
@@ -137,7 +137,7 @@ const AssignCampaign = ({ editCampaign = false }) => {
             });
           },
           onError: (error) => {
-            history.push(`/${window?.contextPath}/employee/hrms/response`, {
+            history.replace(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: true,
               state: "error",
               info: t("Testing"),

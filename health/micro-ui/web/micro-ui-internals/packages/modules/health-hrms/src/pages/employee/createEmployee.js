@@ -174,7 +174,7 @@ const CreateEmployee = ({ editUser = false }) => {
         },
         {
           onSuccess: (res) => {
-            history.push(`/${window?.contextPath}/employee/hrms/response`, {
+            history.replace(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.CREAT_EUSER,
               state: "success",
               info: t("HR_EMPLOYEE_ID_LABEL"),
@@ -186,7 +186,7 @@ const CreateEmployee = ({ editUser = false }) => {
             });
           },
           onError: (error) => {
-            history.push(`/${window?.contextPath}/employee/hrms/response`, {
+            history.replace(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.CREATE_USER_ERROR,
               state: "error",
               info: null,
@@ -215,7 +215,7 @@ const CreateEmployee = ({ editUser = false }) => {
         },
         {
           onSuccess: (res) => {
-            history.push(`/${window?.contextPath}/employee/hrms/response`, {
+            history.replace(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.EDIT_USER,
               state: "success",
               info: t("HR_EMPLOYEE_ID_LABEL"),
@@ -227,7 +227,7 @@ const CreateEmployee = ({ editUser = false }) => {
             });
           },
           onError: (error) => {
-            history.push(`/${window?.contextPath}/employee/hrms/response`, {
+            history.replace(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.EDIT_USER_ERROR,
               state: "error",
               info: t("HR_EMPLOYEE_ID_LABEL"),
