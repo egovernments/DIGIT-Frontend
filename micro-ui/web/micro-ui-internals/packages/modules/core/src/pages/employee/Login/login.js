@@ -70,6 +70,9 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     if(data?.username){
       data.username=data.username.trim();
     }
+    if(data?.password){
+      data.password=data.password.trim();
+    }
     setDisable(true);
 
     const requestData = {
