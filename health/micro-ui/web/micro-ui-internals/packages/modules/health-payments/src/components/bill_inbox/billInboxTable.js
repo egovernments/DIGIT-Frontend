@@ -8,6 +8,7 @@ import { CustomSVG } from "@egovernments/digit-ui-components";
 import { tableCustomStyle } from "../table_inbox_custom_style";
 import { defaultPaginationValues } from "../../utils/constants";
 import { getCustomPaginationOptions } from "../../utils";
+import CommentPopUp from "../commentPopUp";
 
 /**
  * BillInboxTable component is used to render the table for the employee's payment inbox.
@@ -16,12 +17,42 @@ import { getCustomPaginationOptions } from "../../utils";
  * @param {object} props The props object contains the data and the pagination information.
  * @returns {JSX.Element} The JSX element for the table.
  */
-const BillInboxTable = ({
-    ...props
-}) => {
+const BillInboxTable = ({ ...props }) => {
     const { t } = useTranslation();
     const history = useHistory();
+    const tenantId = Digit.ULBService.getCurrentTenantId();
+    const [commentLogs, setCommentLogs] = useState(false);
+    const [showToast, setShowToast] = useState(null);
+    const [data, setData] = useState(null);
+    // context path variables
+    const musterRollContextPath = window?.globalConfigs?.getConfig("MUSTER_ROLL_CONTEXT_PATH") || "health-muster-roll";
 
+    const searchMutation = Digit.Hooks.useCustomAPIMutationHook({
+        url: `/${musterRollContextPath}/v1/_search`,
+    });
+
+    const triggerMusterRollSearch = async (attendanceId) => {
+        try {
+            await searchMutation.mutateAsync(
+                {
+                    params: {
+                        tenantId: tenantId,
+                        registerId: attendanceId
+                    },
+                },
+                {
+                    onSuccess: (data) => {
+                        setData(data?.musterRolls?.[0]);
+                    },
+                    onError: (error) => {
+                        setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
+                    }
+                }
+            );
+        } catch (error) {
+            setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
+        }
+    };
     const handlePageChange = (page, totalRows) => {
         props?.handlePageChange(page, totalRows);
     };
@@ -29,7 +60,9 @@ const BillInboxTable = ({
     const handlePerRowsChange = async (currentRowsPerPage, currentPage) => {
         props?.handlePerRowsChange(currentRowsPerPage, currentPage);
     };
-
+    const onCommentLogClose = () => {
+        setCommentLogs(false);
+    };
     const columns = [
         {
             name: (
@@ -84,7 +117,11 @@ const BillInboxTable = ({
         },
 
         {
-            name: t("HCM_AM_ATTENDANCE_ATTENDEES"),
+            name: props.status === "APPROVED" ? (
+                <div className="custom-inbox-table-row">
+                    {t("HCM_AM_ATTENDANCE_ATTENDEES")}
+                </div>
+            ) : t("HCM_AM_ATTENDANCE_ATTENDEES"),
             selector: (row) => {
                 return (
                     <div className="ellipsis-cell" title={t(row?.status || "0")}>
@@ -97,16 +134,39 @@ const BillInboxTable = ({
             },
         },
     ];
+
+    if (props.status === "APPROVED") {
+        columns.push({
+            name: t("HCM_AM_COMMENT_LOGS"),
+            selector: (row) => (
+                <Button
+                    label={t("HCM_AM_VIEW_COMMENT_LOGS")}
+                    onClick={() => {
+                        triggerMusterRollSearch(row?.registerId);
+                    }
+                    }
+                    variation="link"
+                    size={"medium"}
+                />
+            ),
+        });
+    }
     const handleRowClick = (row) => {
         history.push(
             `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`, { fromCampaignSupervisor: true }
         )
     };
+    useEffect(() => {
+        if (data) {
+            setCommentLogs(true);
+        }
+    }, [data]);
     return (
         <React.Fragment>
             {
                 props.isFetching || props.tableData.length === 0 ? <div style={{ height: props.infoDescription ? "38vh" : "52vh" }}> {props.isFetching ? <Loader /> : <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />} </div> : <DataTable
                     columns={columns}
+                    className="search-component-table"
                     data={props.tableData}
                     pagination
                     paginationServer
@@ -125,6 +185,23 @@ const BillInboxTable = ({
                     paginationComponentOptions={getCustomPaginationOptions(t)}
                 />
             }
+             {commentLogs && (
+                <CommentPopUp
+                    onClose={onCommentLogClose}
+                    businessId={data?.musterRollNumber}
+                    heading={`${t("HCM_AM_STATUS_LOG_FOR_LABEL")}`}
+                />
+            )}
+            {showToast && (
+                <Toast
+                    style={{ zIndex: 10001 }}
+                    label={showToast.label}
+                    type={showToast.key}
+                    // error={showToast.key === "error"}
+                    transitionTime={showToast.transitionTime}
+                    onClose={() => setShowToast(null)}
+                />
+            )}
         </React.Fragment>
     );
 };
