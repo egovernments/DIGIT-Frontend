@@ -13,7 +13,7 @@
   "homepage": "/workbench-ui",
   "dependencies": {
     "@egovernments/digit-ui-libraries": "1.8.9",
-    "@egovernments/digit-ui-module-core": "1.8.25",
+    "@egovernments/digit-ui-module-core": "1.8.30",
     "@egovernments/digit-ui-react-components": "1.8.16",
     "@egovernments/digit-ui-components":"0.0.2-beta.66",
     "@egovernments/digit-ui-svg-components":"1.0.14",
