@@ -200,7 +200,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
     const hasExceededUpperBound = assumptionValues.some((item) => {
       // const value = assumptionValues.find((assumption) => assumption.key === item)?.value;
       const value = item?.value;
-      if(value>1000){
+      if(value>100000){
         return true
       }
     });
@@ -340,7 +340,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
           const value = Number(item?.value); // Parse the value into a number
     
           // Check if the value is invalid
-          if (isNaN(value) || value < 0 || value > 1000) {
+          if (isNaN(value) || value < 0 || value > 100000) {
             return true; // Invalid if not a number or out of range
           }
     
