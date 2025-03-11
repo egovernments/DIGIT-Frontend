@@ -461,7 +461,7 @@ const CreateChecklist = () => {
         message: `${t(checklistTypeLocal)} ${t(roleLocal)}`,
         module: "hcm-checklist"
       });
-      if(helpText != ""){
+      if(helpText.trim() !== ""){
         uniqueLocal.push({
           code: `${campaignName}.${checklistTypeTemp}.${roleTemp}.${helpTextCode}`,
           locale: locale,
