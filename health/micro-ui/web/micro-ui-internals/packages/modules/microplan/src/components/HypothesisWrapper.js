@@ -150,7 +150,7 @@ const HypothesisWrapper = ({ onSelect, props: customProps }) => {
       const numericValue = parseFloat(value);
       return (
         numericValue >= 0 &&
-        numericValue <= 1000 &&
+        numericValue <= 100000 &&
         /^([0-9]*\.?[0-9]{1,2})$/.test(value) // Check for at most 2 decimals
       );
     };

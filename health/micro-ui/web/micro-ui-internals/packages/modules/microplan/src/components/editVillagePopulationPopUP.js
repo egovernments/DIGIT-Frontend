@@ -87,7 +87,7 @@ const EditVillagePopulationPopUp = ({ onClose, census, onSuccess }) => {
     let newErrors = { ...errors }; 
   
     // Basic validation for positive integers within the range
-    const isValueValid = value && Number(value) > 0 && Number(value) <= 100000 && Number.isInteger(Number(value));
+    const isValueValid = value && Number(value) >= 0 && Number(value) <= 100000 && Number.isInteger(Number(value));
     if (!isValueValid) {
       newErrors[fieldKey] = "HCM_MICROPLAN_ONLY_POSITIVE_NUMBERS_MAX_LIMIT_VALIDATION_ERROR";
     } else {
