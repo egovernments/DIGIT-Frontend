@@ -47,6 +47,7 @@ const SidebarItems = () => {
         path: data?.data?.path,
         leftIcon: data?.data?.leftIcon,
         navigationURL: data?.data?.navigationURL,
+        orderNumber: data?.data?.orderNumber
     });
     const onSubmit = async(data) => {
         history.push(`/${window.contextPath}/employee/workbench/sidebar-update?type=update&id=${id}`, {

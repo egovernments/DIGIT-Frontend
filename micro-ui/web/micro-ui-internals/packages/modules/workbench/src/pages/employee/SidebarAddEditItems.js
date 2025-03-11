@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 // import { ActionBar } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { FormComposerV2, Button, PopUp, TextInput } from "@egovernments/digit-ui-components";
+import { FormComposerV2, Button, PopUp, TextInput, Toast } from "@egovernments/digit-ui-components";
 import SidebarItemsConfig from "../../configs/SidebarItemsConfig";
 import SidebarAddEditConfig from "../../configs/SidebarAddEditConfig";
 
@@ -19,7 +19,7 @@ const SidebarAddEditItems = () => {
     const locales = ["en_IN", "pt_IN", "fr_IN"].filter(local => local !== curLocale);
     const module = "digit-ui-menu-items";
     const { mutateAsync: localisationMutateAsync } = Digit.Hooks.workbench.useUpsertLocalisation(tenantId, module, curLocale);
-
+    const [showToast, setShowToast]=useState(null);
     const [formData, setFormData] = useState(null);
 
     const res = {
@@ -84,7 +84,6 @@ const SidebarAddEditItems = () => {
         },
         select: (data) => {
             return data;
-            ;
         },
     });
 
@@ -154,6 +153,7 @@ const SidebarAddEditItems = () => {
         path: data?.data?.path,
         leftIcon: { code: data?.data?.leftIcon },
         navigationURL: data?.data?.navigationURL,
+        orderNumber: data?.data?.orderNumber,
         users: defUsers && defUsers.length > 0 ? defUsers : []
     }), [data, defUsers, id]); // Recalculates when dependencies change
 
@@ -162,36 +162,37 @@ const SidebarAddEditItems = () => {
 
         const dataObject = generateDataObject(formData, id, "update");
 
-        const res1 = await Digit.CustomService.getResponse({
-            url: `/${mdms_context_path}/v2/_update/ACCESSCONTROL-ACTIONS-TEST.actions-test`,
-            params: {
-                tenantId: tenantId
-            },
-            body: {
-                Mdms: {
-                    tenantId: tenantId,
-                    schemaCode: `ACCESSCONTROL-ACTIONS-TEST.actions-test`,
-                    uniqueIdentifier: Number(id),
-                    id: data?.id,
-                    // data: {
-                    //     leftIcon: formData?.leftIcon?.code,
-                    //     id: Number(id),
-                    //     path: formData?.path,
-                    //     enabled: formData?.enabled,
-                    //     displayName: formData?.displayName,
-                    //     orderNumber: Number(formData?.orderNumber) || 1,
-                    //     navigationURL: formData?.navigationURL,
-                    //     url: "url"
-
-                    // },
-                    data: dataObject,
-                    isActive: true,
-                    auditDetails: data?.auditDetails
-                }
-            }
-        });
-
         try {
+
+            const res1 = await Digit.CustomService.getResponse({
+                url: `/${mdms_context_path}/v2/_update/ACCESSCONTROL-ACTIONS-TEST.actions-test`,
+                params: {
+                    tenantId: tenantId
+                },
+                body: {
+                    Mdms: {
+                        tenantId: tenantId,
+                        schemaCode: `ACCESSCONTROL-ACTIONS-TEST.actions-test`,
+                        uniqueIdentifier: Number(id),
+                        id: data?.id,
+                        // data: {
+                        //     leftIcon: formData?.leftIcon?.code,
+                        //     id: Number(id),
+                        //     path: formData?.path,
+                        //     enabled: formData?.enabled,
+                        //     displayName: formData?.displayName,
+                        //     orderNumber: Number(formData?.orderNumber) || 1,
+                        //     navigationURL: formData?.navigationURL,
+                        //     url: "url"
+    
+                        // },
+                        data: dataObject,
+                        isActive: true,
+                        auditDetails: data?.auditDetails
+                    }
+                }
+            });
+
             // Extract user data
             const userCodes = formData?.users || [];
 
@@ -261,6 +262,8 @@ const SidebarAddEditItems = () => {
 
         } catch (error) {
             console.error("Error during API calls:", error);
+            setShowPopup(false);
+            setShowToast({type:"error", label:error?.response?.data?.Errors?.[0]?.message});
         }
 
     }
@@ -268,58 +271,59 @@ const SidebarAddEditItems = () => {
     const [newId, setNewId] = useState(null);
 
     const onSubmitAdd = async () => {
-        const res = await Digit.CustomService.getResponse({
-            url: `/${mdms_context_path}/v2/_search`,
-            params: {
-                tenantId: tenantId
-            },
-            body: {
-                MdmsCriteria: {
-                    tenantId: tenantId,
-                    schemaCode: `ACCESSCONTROL-ACTIONS-TEST.actions-test`,
-                    filters: {
-                        url: "url"
-                    },
-                    limit: 1,
-                    offset: 0,
-                    isActive: true
-                }
-            },
-        });
-        setNewId(res?.mdms?.[0]?.data?.id + 1);
-        const nId = res?.mdms?.[0]?.data?.id + 1;
-
-        const dataObject = generateDataObject(formData, nId, "update");
-
-
-        const res1 = await Digit.CustomService.getResponse({
-            url: `/${mdms_context_path}/v2/_create/ACCESSCONTROL-ACTIONS-TEST.actions-test`,
-            params: {
-                tenantId: tenantId
-            },
-            body: {
-                Mdms: {
-                    tenantId: tenantId,
-                    schemaCode: `ACCESSCONTROL-ACTIONS-TEST.actions-test`,
-                    uniqueIdentifier: nId,
-                    // data: {
-                    //     leftIcon: formData?.leftIcon?.code,
-                    //     id: nId,
-                    //     path: formData?.path,
-                    //     enabled: formData?.enabled || true,
-                    //     displayName: formData?.displayName,
-                    //     orderNumber: Number(formData?.orderNumber) || 1,
-                    //     navigationURL: formData?.navigationURL,
-                    //     url: "url"
-
-                    // },
-                    data: dataObject,
-                    isActive: formData?.enabled,
-                }
-            }
-        });
 
         try {
+
+            const res = await Digit.CustomService.getResponse({
+                url: `/${mdms_context_path}/v2/_search`,
+                params: {
+                    tenantId: tenantId
+                },
+                body: {
+                    MdmsCriteria: {
+                        tenantId: tenantId,
+                        schemaCode: `ACCESSCONTROL-ACTIONS-TEST.actions-test`,
+                        filters: {
+                            url: "url"
+                        },
+                        limit: 1,
+                        offset: 0,
+                        isActive: true
+                    }
+                },
+            });
+            setNewId(res?.mdms?.[0]?.data?.id + 1);
+            const nId = res?.mdms?.[0]?.data?.id + 1;
+    
+            const dataObject = generateDataObject(formData, nId, "update");
+    
+    
+            const res1 = await Digit.CustomService.getResponse({
+                url: `/${mdms_context_path}/v2/_create/ACCESSCONTROL-ACTIONS-TEST.actions-test`,
+                params: {
+                    tenantId: tenantId
+                },
+                body: {
+                    Mdms: {
+                        tenantId: tenantId,
+                        schemaCode: `ACCESSCONTROL-ACTIONS-TEST.actions-test`,
+                        uniqueIdentifier: nId,
+                        // data: {
+                        //     leftIcon: formData?.leftIcon?.code,
+                        //     id: nId,
+                        //     path: formData?.path,
+                        //     enabled: formData?.enabled || true,
+                        //     displayName: formData?.displayName,
+                        //     orderNumber: Number(formData?.orderNumber) || 1,
+                        //     navigationURL: formData?.navigationURL,
+                        //     url: "url"
+    
+                        // },
+                        data: dataObject,
+                        isActive: formData?.enabled,
+                    }
+                }
+            });
             // Assuming formData?.user is an array of objects with a 'code' field
             const userCodes = formData?.users || [];
 
@@ -355,13 +359,15 @@ const SidebarAddEditItems = () => {
             });
         } catch (error) {
             console.error("Error during API calls:", error);
+            setShowPopup(false);
+            setShowToast({type:"error", label:error?.response?.data?.Errors?.[0]?.message});
         }
 
     }
 
     const [showPopup, setShowPopup] = useState(false);
     const [translations, setTranslations] = useState(
-        locales.map(locale => ({ locale, message: "", module: module }))
+        locales.map(locale => ({ locale, message: " ", module: module }))
     );
     const [finalCall, setFinalCall] = useState(false);
 
@@ -503,6 +509,12 @@ const SidebarAddEditItems = () => {
                     />}
                 </div>
             </PopUp>}
+            {
+                showToast && <Toast
+                                label={showToast?.label}
+                                type={showToast?.type}
+                />
+            }
             {/* {
                 <Button
                     className=""

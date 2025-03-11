@@ -67,7 +67,7 @@ const wrapperStyles = {
  * @example
  *
  * refer this implementation of sample file
- * frontend/micro-ui/web/micro-ui-internals/packages/modules/AttendenceMgmt/src/pages/citizen/Sample.js
+ * micro-ui/web/micro-ui-internals/packages/modules/utilities/src/pages/employee/Sample/Create.js
  *
  */
 
