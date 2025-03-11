@@ -120,6 +120,7 @@ const BillInboxComponent = () => {
                 const owner = item?.staff?.find((staff) => staff?.staffType?.includes("OWNER"));
                 return {
                     id: item?.registerNumber,
+                    registerId: item?.id,
                     name: selectedProject?.name,
                     boundary: item?.localityCode,
                     noOfAttendees: item?.attendees == null ? 0 : item?.attendees.length || 0,
@@ -315,7 +316,7 @@ const BillInboxComponent = () => {
                         {tableData && <Card style={{ width: "100%", }}>
                             {tableData != null && <div className="summary-sub-heading">{t(selectedProject?.name)}</div>}
                             {tableData != null && <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name)}</div>}
-                            <div style={{overflowY: "auto"}}>
+                            <div>
                                 {(approvalCount !== null && pendingApprovalCount !== null) && (
                                     <Tab
                                         activeLink={activeLink?.code}

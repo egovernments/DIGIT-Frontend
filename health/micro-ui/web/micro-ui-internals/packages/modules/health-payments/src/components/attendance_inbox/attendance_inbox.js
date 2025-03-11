@@ -75,6 +75,7 @@ const AttendanceInboxComponent = () => {
                 ? data?.attendanceRegister?.map((item, index) => {
                   return {
                     id: item?.registerNumber,
+                    registerId: item?.id,
                     name: selectedProject?.name,
                     boundary: item?.localityCode,
                     boundaryType: item?.additionalDetails?.boundaryType,
@@ -121,7 +122,7 @@ const AttendanceInboxComponent = () => {
   /// Update filter criteria and fetch new data.
   const handleFilterUpdate = (newFilter, isSelectedData) => {
     setFilterCriteria(newFilter);
-    setSelectedStatus(selectedStatus);
+   
 
     const existingPaymentInbox = Digit.SessionStorage.get("paymentInbox");
 
@@ -184,6 +185,7 @@ const AttendanceInboxComponent = () => {
 
   // Reset the table and clear filters.
   const resetTable = () => {
+    setSelectedStatus(StatusEnum.PENDING_FOR_APPROVAL);
     setchildrenData([]);
     setFilterCriteria(null);
     setCard(false);
@@ -194,7 +196,7 @@ const AttendanceInboxComponent = () => {
       <div className="custom-register-inbox-screen">
         <div className="inner-div-row-section">
           <div className="custom-inbox-filter-section">
-            <div className="custom-inbox-inner-filter-section" >
+            <div className="custom-inbox-inner-filter-section" style={{ height: "80vh" }}>
               <CustomFilter
                 resetTable={resetTable}
                 isRequired={ScreenTypeEnum.REGISTER}
@@ -204,7 +206,7 @@ const AttendanceInboxComponent = () => {
           </div>
 
           <div className="custom-inbox-outer-table-section">
-            <div className="inner-table-section">
+            <div className="inner-table-section" style={{ height: "80vh" }}>
               {card == false ? (
                 <Card className="card-overide">
                   <div className="summary-sub-heading">{t(selectedProject?.name)}</div>
