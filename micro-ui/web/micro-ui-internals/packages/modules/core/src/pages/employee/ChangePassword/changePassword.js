@@ -1,5 +1,6 @@
 import { CardSubHeader, FormComposer,CardText} from "@egovernments/digit-ui-react-components";
-import { BackLink,Toast} from "@egovernments/digit-ui-components";
+//import { BackLink,Toast} from "@egovernments/digit-ui-components";
+import { BackLink, Toast } from "../../../../../../ui-components/src";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";

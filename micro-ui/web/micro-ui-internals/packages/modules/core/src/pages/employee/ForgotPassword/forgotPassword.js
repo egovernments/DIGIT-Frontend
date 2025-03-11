@@ -1,5 +1,6 @@
 // import { FormComposer } from "@egovernments/digit-ui-react-components";
-import { BackLink, Dropdown, Loader,Toast,FormComposerV2 } from "@egovernments/digit-ui-components";
+//import { BackLink, Dropdown, Loader,Toast,FormComposerV2 } from "@egovernments/digit-ui-components";
+import { BackLink,Loader,Toast,FormComposerV2 } from "../../../../../../ui-components/src";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";

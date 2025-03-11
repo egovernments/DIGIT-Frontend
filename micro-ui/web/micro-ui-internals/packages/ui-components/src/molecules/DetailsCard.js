@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import CitizenInfoLabel from "../atoms/CitizenInfoLabel";
 import Button from "../atoms/Button";
-import ActionBar from "../atoms/ActionBar";
+import Footer from "../atoms/Footer";
 
 export const Details = ({ label, name, onClick }) => {
   return (
@@ -83,9 +83,9 @@ const DetailsCard = ({
               <CitizenInfoLabel className={"digit-core-variant"} info={t("ATM_INFO_LABEL")} text={t(`ATM_INFO_TEXT`)} fill={"#CC7B2F"} />
             ) : null}
             {showActionBar ? (
-              <ActionBar>
+              <Footer>
                 <Button onClick={() => handleDetailCardClick(object)} label={submitButtonLabel} />
-              </ActionBar>
+              </Footer>
             ) : null}
           </div>
         );

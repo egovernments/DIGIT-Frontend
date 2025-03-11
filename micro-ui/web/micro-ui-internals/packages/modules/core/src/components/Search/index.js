@@ -1,13 +1,15 @@
-import {
-  DownloadBtnCommon,
-  Table,
-} from "@egovernments/digit-ui-react-components";
-import {
-  BackButton,
-  Loader,
-  SearchForm,
-  Header
-} from "@egovernments/digit-ui-components";
+// import {
+//   DownloadBtnCommon,
+//   Table,
+// } from "@egovernments/digit-ui-react-components";
+//import { DownloadBtnCommon } from "../../../../../ui-components/src/atoms";
+// import {
+// BackButton,
+//   Loader,
+//   SearchForm,
+//   Header
+// } from "@egovernments/digit-ui-components";
+import { Loader, SearchForm, Header } from "../../../../../ui-components/src";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import MobileSearchApplication from "./MobileSearchApplication";
@@ -60,7 +62,7 @@ const SearchApplication = ({ tenantId, t, onSubmit, data, count }) => {
   const DownloadBtn = (props) => {
     return (
       <div onClick={props.onClick}>
-        <DownloadBtnCommon />
+        {/* <DownloadBtnCommon /> */}
       </div>
     );
   };
@@ -197,7 +199,7 @@ const SearchApplication = ({ tenantId, t, onSubmit, data, count }) => {
     <React.Fragment>
       <div style={{ marginRight: "-70px" }}>
         {" "}
-        <BackButton />{" "}
+        {/* <BackButton />{" "} */}
       </div>
       <div style={{ marginTop: "30px", marginLeft: "30px" }}>
         {" "}
@@ -255,7 +257,7 @@ const SearchApplication = ({ tenantId, t, onSubmit, data, count }) => {
                 onClick={() => handleExcelDownload(tabledata)}
               />
             </div>
-            <Table
+            {/* <Table
               t={t}
               data={data}
               totalRecords={count}
@@ -286,7 +288,7 @@ const SearchApplication = ({ tenantId, t, onSubmit, data, count }) => {
                   desc: getValues("sortOrder") === "DESC" ? true : false,
                 },
               ]}
-            />
+            /> */}
           </div>
         ) : (
           <Loader />

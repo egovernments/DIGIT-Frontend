@@ -22,8 +22,6 @@ const Card = ({
       className={`${
         props?.noCardStyle
           ? ""
-          : userType === "EMPLOYEE"
-          ? "digit-employee-card"
           : "digit-card-component"
       } ${type ? type : ""} ${variant ? variant : ""} ${
         className ? className : ""

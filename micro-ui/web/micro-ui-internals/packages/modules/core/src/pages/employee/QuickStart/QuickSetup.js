@@ -1,7 +1,8 @@
 import React from "react";
 import{ useState } from "react";
 import { useTranslation } from "react-i18next";
-import { CardText, CardHeader, LinkLabel, Card, Button } from "@egovernments/digit-ui-components";
+//import { CardText, CardHeader, LinkLabel, Card, Button } from "@egovernments/digit-ui-components";
+import { CardHeader, Card, Button } from "../../../../../../ui-components/src";
 import { ArrowForward } from "@egovernments/digit-ui-svg-components";
 import { CardSubHeader, CardSectionHeader, BreakLine, CardSectionSubText } from "@egovernments/digit-ui-react-components";
 

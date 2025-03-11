@@ -1,13 +1,13 @@
 import _ from "lodash";
 import React from "react";
 import PropTypes from "prop-types";
-import { Loader } from "../atoms/Loader";
+import { Loader } from "../atoms";
 import RadioButtons from "../atoms/RadioButtons";
 import Dropdown from "../atoms/Dropdown";
 import Toggle from "../atoms/Toggle";
 import { createFunction } from "./techMolecules/createFunction";
 
-const CustomDropdown = ({ t, config, inputRef, label, onChange, value, errorStyle, disabled, type, additionalWrapperClass = "",variant }) => {
+const CustomDropdown = ({ t, config, inputRef, label, onChange,id, value, errorStyle, disabled, type, additionalWrapperClass = "",variant,mdmsv2}) => {
   const master = { name: config?.mdmsConfig?.masterName };
   if (config?.mdmsConfig?.filter) {
     master["filter"] = config?.mdmsConfig?.filter;
@@ -15,15 +15,15 @@ const CustomDropdown = ({ t, config, inputRef, label, onChange, value, errorStyl
 
   const { isLoading, data } = window?.Digit?.Hooks.useCustomMDMS(Digit?.ULBService?.getStateId(), config?.mdmsConfig?.moduleName, [master], {
     select: config?.mdmsConfig?.select
-      ? createFunction(config?.mdmsConfig?.select)
-      : (data) => {
+    ? createFunction(config?.mdmsConfig?.select)
+    : (data) => {
         const optionsData = _.get(data, `${config?.mdmsConfig?.moduleName}.${config?.mdmsConfig?.masterName}`, []);
         return optionsData
           .filter((opt) => (opt?.hasOwnProperty("active") ? opt.active : true))
           .map((opt) => ({ ...opt, name: `${config?.mdmsConfig?.localePrefix}_${Digit.Utils.locale.getTransformedLocale(opt.code)}` }));
       },
-    enabled: config?.mdmsConfig ? true : false,
-  });
+    enabled: (config?.mdmsConfig || config?.mdmsv2) ? true : false,
+  },mdmsv2);
 
   if (isLoading) {
     return <Loader />;
@@ -43,6 +43,7 @@ const CustomDropdown = ({ t, config, inputRef, label, onChange, value, errorStyl
             onSelect={(e) => {
               onChange(e, config.name);
             }}
+            id={id}
             disabled={disabled}
             selectedOption={value}
             defaultValue={value}
@@ -50,6 +51,8 @@ const CustomDropdown = ({ t, config, inputRef, label, onChange, value, errorStyl
             errorStyle={errorStyle}
             additionalWrapperClass={additionalWrapperClass}
             innerStyles={config?.innerStyles}
+            alignVertical={config?.alignVertical}
+            isLabelFirst={config?.isLabelFirst}
           />
         );
       case "dropdown":
@@ -63,6 +66,7 @@ const CustomDropdown = ({ t, config, inputRef, label, onChange, value, errorStyl
             key={config.name}
             optionKey={config?.optionsKey}
             value={value}
+            id={id}
             select={(e) => {
               onChange(e, config.name);
             }}
@@ -83,8 +87,10 @@ const CustomDropdown = ({ t, config, inputRef, label, onChange, value, errorStyl
             inputRef={inputRef}
             options={data || config?.options || []}
             key={config.name}
+            style={config?.style || {}}
             optionsKey={config?.optionsKey}
             value={value}
+            id={id}
             onSelect={(e) => {
               onChange(e, config.name);
             }}

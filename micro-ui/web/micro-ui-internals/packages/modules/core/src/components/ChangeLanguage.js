@@ -1,4 +1,5 @@
-import { Button, Dropdown } from "@egovernments/digit-ui-components";
+// import { Button, Dropdown } from "@egovernments/digit-ui-components";
+import { Button,Dropdown } from "../../../../ui-components/src";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import useStore from "../../libraries/src/hooks/useStore"

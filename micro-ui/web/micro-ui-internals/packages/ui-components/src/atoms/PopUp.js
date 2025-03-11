@@ -4,13 +4,14 @@ import { SVG } from "./SVG";
 import StringManipulator from "./StringManipulator";
 import warningOutlineAnimation from "../constants/animations/warningOutline.json";
 import Animation from "./Animation";
-import { Colors} from "../constants/colors/colorconstants";
+import { Colors } from "../constants/colors/colorconstants";
 import { iconRender } from "../utils/iconRender";
 
 const PopUp = (props) => {
   const [isOverflowing, setIsOverflowing] = useState(false);
   const childrenWrapRef = useRef(null);
   const overlayRef = useRef(null);
+  const [isClosing, setIsClosing] = useState(false);
 
   const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 480);
 
@@ -108,9 +109,16 @@ const PopUp = (props) => {
       : sortedFooterButtons
     : allowedFooter;
 
+  const handleClose = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      props?.onClose();
+    }, 300);
+  };
+
   const handleKeyDown = (event) => {
     if (event.key === "Escape") {
-      props?.onClose();
+      handleClose();
     }
     if (event.key === "Enter") {
       const submitButton = props?.footerChildren?.find(
@@ -122,16 +130,23 @@ const PopUp = (props) => {
     }
   };
 
+  const handleOverlayClick = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      props?.onOverlayClick();
+    }, 300);
+  };
+
   return (
     <div
       className={`digit-popup-overlay ${props?.overlayClassName || ""}`}
-      onClick={() => props?.onOverlayClick()}
+      onClick={() => handleOverlayClick()}
       ref={overlayRef}
       onKeyDown={handleKeyDown}
       tabIndex={0}
     >
       <div
-        className={`digit-popup-wrapper ${
+        className={`digit-popup-wrapper ${isClosing ? 'closing' : ''} ${
           props?.className ? props?.className : ""
         } ${props?.type ? props?.type : ""}`}
         style={props?.style}
@@ -226,7 +241,7 @@ const PopUp = (props) => {
                 <span
                   className="digit-popup-close"
                   style={{ display: "flex" }}
-                  onClick={() => props?.onClose()}
+                  onClick={() => handleClose()}
                 >
                   <SVG.Close
                     fill={"#363636"}
@@ -259,7 +274,9 @@ const PopUp = (props) => {
             } ${isOverflowing ? "with-shadow" : ""}`}
           >
             <div
-              className={`digit-popup-footer-buttons ${props?.equalWidthButtons ? "equal-buttons" : ""}`}
+              className={`digit-popup-footer-buttons ${
+                props?.equalWidthButtons ? "equal-buttons" : ""
+              }`}
               style={{ ...props?.footerStyles }}
             >
               {finalFooterArray}

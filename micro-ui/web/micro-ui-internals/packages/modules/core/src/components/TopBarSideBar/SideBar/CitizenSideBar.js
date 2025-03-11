@@ -1,12 +1,15 @@
 // import { NavBar } from "@egovernments/digit-ui-react-components";
-import { Loader } from "@egovernments/digit-ui-components";
+//import { Loader } from "@egovernments/digit-ui-components";
+import { Loader } from "../../../../../../ui-components/src";
 import React, { useState, Fragment,useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import ChangeCity from "../../ChangeCity";
 import { defaultImage } from "../../utils";
 import StaticCitizenSideBar from "./StaticCitizenSideBar";
-import { MobileSidebar } from "@egovernments/digit-ui-components";
+//import { MobileSidebar } from "@egovernments/digit-ui-components";
+import { MobileSidebar } from "../../../../../../ui-components/src/atoms";
+//import { MobileSidebar } from "../../../../../../ui-components/src/atoms";
 import { LogoutIcon } from "@egovernments/digit-ui-react-components";
 import useStore from "../../../../libraries/src/hooks/useStore";
 import useAccessControl from "../../../../libraries/src/hooks/useAccessControl";
@@ -442,19 +445,20 @@ export const CitizenSideBar = ({
     }
   ];
   return isMobile ? (
-    <MobileSidebar
-      items={hamburgerItems}
-      profileName={user?.info?.name}
-      profileNumber={user?.info?.mobileNumber}
-      theme="dark"
-      transitionDuration={0.3}
-      styles={{ marginTop: "64px", height: "93%" }}
-      onLogout={onLogout}
-      hideUserManuals={true}
-      profile={profilePic ? profilePic : undefined}
-      isSearchable={true}
-      onSelect={({item,index,parentIndex})=>onItemSelect({item,index,parentIndex})}
-    />
+    <></>
+    // <MobileSidebar
+    //   items={hamburgerItems}
+    //   profileName={user?.info?.name}
+    //   profileNumber={user?.info?.mobileNumber}
+    //   theme="dark"
+    //   transitionDuration={0.3}
+    //   styles={{ marginTop: "64px", height: "93%" }}
+    //   onLogout={onLogout}
+    //   hideUserManuals={true}
+    //   profile={profilePic ? profilePic : undefined}
+    //   isSearchable={true}
+    //   onSelect={({item,index,parentIndex})=>onItemSelect({item,index,parentIndex})}
+    // />
   ) : (
     <StaticCitizenSideBar logout={onLogout} />
   );

@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import {
   CardText,
   ErrorMessage,
-  Header,
+  HeaderComponent,
   TextArea,
   TextInput,
   CheckBox,
@@ -11,6 +11,7 @@ import {
   MobileNumber,
   InputTextAmount,
   StringManipulator,
+  LabelFieldPair
 } from "../atoms";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
@@ -59,6 +60,7 @@ const FieldV1 = ({
   const customValidation = config?.populators?.validation?.customValidation;
   const customRules = customValidation ? { validate: customValidation } : {};
   const customProps = config?.customProps;
+  const fieldId=Digit?.Utils.getFieldIdName?.(label)||"NA";
 
   const [currentCharCount, setCurrentCharCount] = useState(0);
 
@@ -132,12 +134,10 @@ const FieldV1 = ({
           <TextInput
             type={type}
             value={value}
-            name={populators.name}
-            onChange={(e) => {
-              console.log("FieldV1 - onChange Triggered:", e.target.value);
-              onChange(e.target.value); // Ensure `onChange` is called
-            }}
+            name={populators?.name}
+            onChange={onChange}
             error={error}
+            allowNegativeValues={populators?.allowNegativeValues}
             disabled={disabled}
             nonEditable={nonEditable}
             placeholder={placeholder}
@@ -146,7 +146,7 @@ const FieldV1 = ({
             populators={populators}
             inputRef={ref}
             step={config?.step}
-            errorStyle={errors?.[populators.name]}
+            errorStyle={errors?.[populators?.name]}
             max={populators?.validation?.max}
             min={populators?.validation?.min}
             maxlength={populators?.validation?.maxlength}
@@ -154,6 +154,7 @@ const FieldV1 = ({
             customIcon={populators?.customIcon}
             customClass={populators?.customClass}
             onIconSelection={populators?.onIconSelection}
+            id={fieldId}
           />
         );
       case "textarea":
@@ -162,7 +163,7 @@ const FieldV1 = ({
             <TextArea
               type={type}
               value={value}
-              name={populators.name}
+              name={populators?.name}
               onChange={onChange}
               error={error}
               disabled={disabled}
@@ -172,9 +173,10 @@ const FieldV1 = ({
               required={required}
               populators={populators}
               inputRef={ref}
-              errorStyle={errors?.[populators.name]}
+              errorStyle={errors?.[populators?.name]}
               maxlength={populators?.validation?.maxlength}
               minlength={populators?.validation?.minlength}
+              id={fieldId}
             />
           </div>
         );
@@ -194,11 +196,12 @@ const FieldV1 = ({
             onChange={onChange}
             config={populators}
             disabled={disabled}
-            errorStyle={errors?.[populators.name]}
+            id={fieldId}
+            errorStyle={errors?.[populators?.name]}
             variant={
               variant
                 ? variant
-                : errors?.[populators.name]
+                : errors?.[populators?.name]
                 ? "digit-field-error"
                 : ""
             }
@@ -212,13 +215,14 @@ const FieldV1 = ({
                 onChange(e.target.checked);
               }}
               value={value}
-              checked={formData?.[populators.name]}
+              checked={formData?.[populators?.name]}
+              isIntermediate={populators?.isIntermediate}
               label={t(`${populators?.title}`)}
               styles={populators?.styles}
               style={populators?.labelStyles}
-              customLabelMarkup={populators?.customLabelMarkup}
               disabled={disabled}
               isLabelFirst={populators?.isLabelFirst}
+              id={fieldId}
             />
           </div>
         );
@@ -228,7 +232,9 @@ const FieldV1 = ({
             <MultiSelectDropdown
               options={populators?.options}
               optionsKey={populators?.optionsKey}
+              chipsKey={populators?.chipsKey}
               props={props}
+              id={fieldId}
               isPropsNeeded={true}
               onSelect={(e) => {
                 onChange(
@@ -250,6 +256,7 @@ const FieldV1 = ({
               selectAllLabel={populators?.selectAllLabel}
               categorySelectAllLabel={populators?.categorySelectAllLabel}
               restrictSelection={populators?.restrictSelection}
+              isSearchable={populators?.isSearchable}
             />
           </div>
         );
@@ -261,7 +268,8 @@ const FieldV1 = ({
               onChange={onChange}
               value={value}
               disable={disabled}
-              errorStyle={errors?.[populators.name]}
+              id={fieldId}
+              errorStyle={errors?.[populators?.name]}
             />
           </div>
         );
@@ -274,6 +282,7 @@ const FieldV1 = ({
             onSelect={controllerProps?.setValue}
             config={config}
             data={formData}
+            id={fieldId}
             formData={formData}
             register={controllerProps?.register}
             errors={errors}
@@ -300,6 +309,7 @@ const FieldV1 = ({
             register={controllerProps?.register}
             formData={formData}
             errors={errors}
+            id={fieldId}
             control={controllerProps?.control}
             customClass={config?.customClass}
             customErrorMsg={config?.error}
@@ -307,7 +317,7 @@ const FieldV1 = ({
             variant={
               variant
                 ? variant
-                : errors?.[populators.name]
+                : errors?.[populators?.name]
                 ? "digit-field-error"
                 : ""
             }
@@ -318,12 +328,13 @@ const FieldV1 = ({
       case "amount":
         return (
           <InputTextAmount
-            value={formData?.[populators.name]}
+            value={formData?.[populators?.name]}
             type={"text"}
-            name={populators.name}
+            name={populators?.name}
             onChange={onChange}
             inputRef={ref}
-            errorStyle={errors?.[populators.name]}
+            id={fieldId}
+            errorStyle={errors?.[populators?.name]}
             max={populators?.validation?.max}
             min={populators?.validation?.min}
             disable={disabled}
@@ -337,7 +348,7 @@ const FieldV1 = ({
             variant={
               variant
                 ? variant
-                : errors?.[populators.name]
+                : errors?.[populators?.name]
                 ? "digit-field-error"
                 : ""
             }
@@ -348,10 +359,12 @@ const FieldV1 = ({
     }
   };
 
+
+
   return (
-    <>
+    <LabelFieldPair removeMargin={true} vertical={populators?.alignFieldPairVerically} className={`digit-formcomposer-fieldpair ${populators?.fieldPairClassName}`}>
       {!withoutLabel && (
-        <Header
+        <HeaderComponent
           className={`label ${disabled ? "disabled" : ""} ${
             nonEditable ? "noneditable" : ""
           } ${populators?.wrapLabel ? "wraplabel" : ""}`}
@@ -361,7 +374,8 @@ const FieldV1 = ({
               populators?.wrapLabel ? "wraplabel" : ""
             }`}
           >
-            <div
+            <label
+              for={fieldId}
               className={`label-styles ${
                 populators?.wrapLabel ? "wraplabel" : ""
               }`}
@@ -372,7 +386,7 @@ const FieldV1 = ({
                   maxLength: 64,
                 })
               )}
-            </div>
+            </label>
             <div style={{ color: "#B91900" }}>{required ? " * " : null}</div>
             {infoMessage ? (
               <div className="info-icon">
@@ -381,17 +395,17 @@ const FieldV1 = ({
                   height="1.1875rem"
                   fill="#505A5F"
                 />
-                <span class="infotext">{infoMessage}</span>
+                <span class="infotext">{t(infoMessage)}</span>
               </div>
             ) : null}
           </div>
-        </Header>
+        </HeaderComponent>
       )}
       <div
         style={
           withoutLabel
-            ? { width: "100%", ...props?.fieldStyle, marginBottom: "24px" }
-            : { ...props?.fieldStyle, marginBottom: "24px" }
+            ? { width: "100%", ...props?.fieldStyle}
+            : { ...props?.fieldStyle}
         }
         className="digit-field"
       >
@@ -407,7 +421,7 @@ const FieldV1 = ({
           {renderCharCount()}
         </div>
       </div>
-    </>
+    </LabelFieldPair>
   );
 };
 

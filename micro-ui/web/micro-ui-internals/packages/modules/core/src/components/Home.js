@@ -4,8 +4,10 @@ import {
   Loader,
 } from "@egovernments/digit-ui-react-components";
 
-//import { BackLink, CustomSVG ,LandingPageWrapper } from "@egovernments/digit-ui-components";
-import { BackLink, CustomSVG, LandingPageWrapper } from "../../../../ui-components/src/atoms";
+// import { CustomSVG ,LandingPageWrapper } from "@egovernments/digit-ui-components";
+//import {  CustomSVG ,LandingPageWrapper } from "@egovernments/digit-ui-react-components";
+import { CustomSVG,LandingPageWrapper } from "../../../../ui-components/src";
+import { BackLink } from "../../../../ui-components/src/atoms";
 
 import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
@@ -146,6 +148,7 @@ const CitizenHome = ({
 
 const EmployeeHome = ({ modules, additionalComponent }) => {
   console.log("coming herr");
+  console.log(LandingPageWrapper,"lamdingdjd");
   return (
     <>
       <div className="employee-app-container digit-home-employee-app">
@@ -197,6 +200,7 @@ export const AppHome = ({
       />
     );
   }
+  console.log(RoleBasedEmployeeHome,EmployeeHome,"role and employee");
   const isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant()
   console.log(Digit.Utils.getRoleBasedHomeCard(),"kkk")
   return Digit.Utils.getRoleBasedHomeCard() ? (

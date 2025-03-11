@@ -22,7 +22,7 @@ const Toggle = (props) => {
   const finalWidth = maxWidth < 40 ? "40" : maxWidth;
 
   function toggleOption(option) {
-    props.onSelect(option);
+    props?.onSelect(option);
   }
   return (
     <div
@@ -51,10 +51,10 @@ const Toggle = (props) => {
             <input
               className="digit-toggle-input"
               type="radio"
-              name={props.name}
-              value={option.code}
-              checked={selected === option.code}
-              onChange={() => toggleOption(option.code)}
+              name={props?.name}
+              value={option?.code}
+              checked={selected === option?.code}
+              onChange={() => toggleOption(option?.code)}
               disabled={props?.disabled}
               ref={props.inputRef}
             />
@@ -62,7 +62,7 @@ const Toggle = (props) => {
               {t(
                 StringManipulator(
                   "CAPITALIZEFIRSTLETTER",
-                  option[props.optionsKey]
+                  option[props?.optionsKey]
                 )
               )}
             </span>

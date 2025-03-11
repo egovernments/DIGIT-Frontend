@@ -11,7 +11,7 @@ const Animation = (props) => {
   };
 
   return (
-    <div>
+    <div className='digit-animation'>
       <Lottie options={defaultOptions} height={props?.height} width={props?.width} />
     </div>
   );

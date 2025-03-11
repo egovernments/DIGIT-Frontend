@@ -1,11 +1,11 @@
 import {
-  BackButton,
   Header,
   Loader,
-  CloseSvg,
-  DownloadImgIcon,
-  PDFSvg,
-} from "@egovernments/digit-ui-components";
+ // CloseSvg,
+ // DownloadImgIcon,
+  //PDFSvg,
+} from "../../../../../../ui-components/src";
+import { DownloadImgIcon } from "@egovernments/digit-ui-react-components/src/atoms/svgindex";
 import { CustomButton } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -75,7 +75,7 @@ const HowItWorks = ({ module }) => {
   return (
     <Fragment>
       <div className="how-it-works-page">
-        <BackButton></BackButton>
+        {/* <BackButton></BackButton> */}
         <div className="how-it-works-page-header">
           <Header>
             {t(
@@ -132,7 +132,7 @@ const HowItWorks = ({ module }) => {
             <div className="how-it-works-pdf-section">
               <div className="pdf-icon-header-desc">
                 <div className="pdf-icon">
-                  <PDFSvg></PDFSvg>
+                  {/* <PDFSvg></PDFSvg> */}
                 </div>
                 <div className="pdf-header-desc">
                   <h2>{t(mdmsConfigResult.pdfHeader)}</h2>
@@ -148,7 +148,7 @@ const HowItWorks = ({ module }) => {
         {videoPlay && (
           <div className="how-it-works-video-play">
             <div className="close-button">
-              <CloseSvg onClick={onClose}></CloseSvg>
+              {/* <CloseSvg onClick={onClose}></CloseSvg> */}
             </div>
             <video width={500} height={500} controls autoPlay>
               <source src={vidSrc} type="video/mp4"></source>

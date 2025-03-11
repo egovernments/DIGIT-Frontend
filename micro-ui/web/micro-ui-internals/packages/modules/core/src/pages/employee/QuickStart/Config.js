@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { CardText, CardLabelError, Toast, CardLabel, Card, CardHeader, LinkLabel, Loader } from "@egovernments/digit-ui-components";
+//import { CardText, CardLabelError, Toast, CardLabel, Card, CardHeader, LinkLabel, Loader } from "@egovernments/digit-ui-components";
 import QuickSetupComponent from ".";
 import QuickSetup from "./QuickSetup";
 

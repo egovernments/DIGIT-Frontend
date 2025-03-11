@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { CardText, Card, CardHeader, LinkLabel } from "@egovernments/digit-ui-components";
+//import { CardText, Card, CardHeader, LinkLabel } from "@egovernments/digit-ui-components";
+import { CardText, Card, CardHeader } from "../../../../../../ui-components/src";
 import { Link } from "react-router-dom";
 
 const QuickSetupComponent = ({ config }) => {

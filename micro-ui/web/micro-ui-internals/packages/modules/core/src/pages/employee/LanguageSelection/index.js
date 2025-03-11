@@ -1,4 +1,5 @@
-import { Button, Card ,SubmitBar, Loader} from "@egovernments/digit-ui-components";
+//import { Button, Card ,SubmitBar, Loader} from "@egovernments/digit-ui-components";
+import { Card, SubmitBar, Loader } from "../../../../../../ui-components/src";
 import {CustomButton} from "@egovernments/digit-ui-react-components";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";

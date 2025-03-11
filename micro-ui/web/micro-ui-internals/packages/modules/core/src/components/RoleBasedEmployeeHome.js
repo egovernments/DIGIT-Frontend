@@ -1,5 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { Button, LandingPageCard, LandingPageWrapper, Loader } from "@egovernments/digit-ui-components";
+//import { Button, LandingPageCard, LandingPageWrapper, Loader } from "@egovernments/digit-ui-components";
+import { Button, LandingPageCard, LandingPageWrapper, Loader } from "../../../../ui-components/src";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 

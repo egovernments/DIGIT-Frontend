@@ -2,11 +2,12 @@ import PropTypes from "prop-types";
 import React, { useEffect, useRef, useState } from "react";
 import { SVG } from "./SVG";
 import TreeSelect from "./TreeSelect";
-import { ProfileIcon } from "./svgindex";
+import { CustomSVG } from "./CustomSVG";
 import Menu from "./Menu";
 import { Colors } from "../constants/colors/colorconstants";
 import { iconRender } from "../utils/iconRender";
 import { getUserType } from "../utils/digitUtils";
+import StringManipulator from "./StringManipulator";
 
 const TextField = (props) => {
   const [value, setValue] = useState(
@@ -109,6 +110,7 @@ const TextField = (props) => {
       onChange={inputChange}
       onClick={props.onClick}
       onFocus={broadcastToOpen}
+      id={props?.id}
       onBlur={(e) => {
         broadcastToClose();
         props?.onBlur?.(e);
@@ -145,10 +147,38 @@ const Dropdown = (props) => {
   const [forceSet, setforceSet] = useState(0);
   const [optionIndex, setOptionIndex] = useState(-1);
   const optionRef = useRef(null);
+  const dropdownComponentRef = useRef(null);
   const menuRef = useRef(null); 
   const selectorRef = useRef(null);
   const hasCustomSelector = props.customSelector ? true : false;
   const t = props.t || translateDummy;
+
+
+  const scrollIntoViewIfNeeded = () => {
+    if (dropdownComponentRef.current) {
+      const rect = dropdownComponentRef.current.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      // Check if the component is outside the viewport
+      const isOutsideViewport =
+        rect.top < 0 || rect.left < 0 || rect.bottom > viewportHeight || rect.right > viewportWidth;
+
+      if (isOutsideViewport) {
+        // Scroll to make the component visible
+        dropdownComponentRef.current.scrollIntoView({
+          behavior: "smooth", // Optional: smooth scrolling
+          block: "center",    // Scroll to the center vertically
+          inline: "center",   // Scroll to the center horizontally
+        });
+      }
+    }
+  };
+
+  useEffect(() => {
+    scrollIntoViewIfNeeded();
+  }, []); // Runs on mount
+
 
   useEffect(() => {
     setSelectedOption(props.selected);
@@ -223,7 +253,7 @@ const Dropdown = (props) => {
     (props.option &&
       props.option?.filter(
         (option) =>
-          t(option[props.optionKey])
+          t(option[props?.optionKey])
             ?.toUpperCase()
             ?.indexOf(filterVal?.toUpperCase()) > -1
       )) ||
@@ -331,7 +361,7 @@ const Dropdown = (props) => {
             }}
           >
             {!option?.profileIcon && (
-              <ProfileIcon
+              <CustomSVG.ProfileIcon
                 width={
                   props?.variant === "profiledropdown"
                     ? "2rem"
@@ -346,7 +376,7 @@ const Dropdown = (props) => {
                     ? "2.935rem"
                     : ""
                 }
-              ></ProfileIcon>
+              ></CustomSVG.ProfileIcon>
             )}
           </div>
         ) : null}
@@ -372,16 +402,16 @@ const Dropdown = (props) => {
                     : undefined
                 }
               >
-                {props.t
+                {StringManipulator("TOSENTENCECASE", props.t
                   ? props.t(option[props?.optionKey])
-                  : option[props?.optionKey]}
+                  : option[props?.optionKey])}
               </span>
             )}
           </div>
           {(props.variant === "nestedtextdropdown" ||
             props.variant === "profilenestedtext") &&
             option.description && (
-              <div className="option-description">{option.description}</div>
+              <div className="option-description">{StringManipulator("TOSENTENCECASE", option.description)}</div>
             )}
         </div>
       </div>
@@ -412,7 +442,7 @@ const Dropdown = (props) => {
                     fill={inputBorderColor}
                   />
                 )}
-              {t(option[props?.optionKey])}
+              {StringManipulator("TOSENTENCECASE",t(option[props?.optionKey]))}
             </div>
           </div>
         );
@@ -429,6 +459,7 @@ const Dropdown = (props) => {
           : "digit-dropdown-select-wrap"
       } ${props?.className ? props?.className : ""}`}
       style={props?.style || {}}
+      ref={dropdownComponentRef}
     >
       {(hasCustomSelector || props?.profilePic) && (
         <div
@@ -487,6 +518,7 @@ const Dropdown = (props) => {
             setFilter={setFilter}
             forceSet={forceSet}
             setforceSet={setforceSet}
+            id={props?.id}
             setOptionIndex={setOptionIndex}
             keepNull={props.keepNull}
             selectedVal={
@@ -555,6 +587,7 @@ const Dropdown = (props) => {
             onSelect={onSelect}
             showBottom={props?.showBottom}
             style={props?.menuStyles}
+            className={props?.profilePic ? "underProfile" : ""}
           />
         </div>
       )}
@@ -591,7 +624,7 @@ const Dropdown = (props) => {
                   key={"-1"}
                   onClick={() => {}}
                 >
-                  {<span> {"NO RESULTS FOUND"}</span>}
+                  {<span> {t("NO_RESULTS_FOUND")}</span>}
                 </div>
               )}
           </div>

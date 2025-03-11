@@ -12,7 +12,8 @@ const BackLink = ({
   hideIcon,
   hideLabel,
   disabled,
-  iconFill
+  iconFill,
+  label
 }) => {
   const { t } = useTranslation();
 
@@ -42,12 +43,11 @@ const BackLink = ({
 
   const icon =
     variant === "primary" ? (
-      <SVG.DoubleArrow
+      <SVG.ArrowLeft
         width={isMobileView ? "1.25rem" : "1.5rem"}
         height={isMobileView ? "1.25rem" : "1.5rem"}
         fill={iconFill ? iconFill : disabled ? diabledIconColor : iconColor}
-        style={{ transform: "rotate(180deg)" }}
-      ></SVG.DoubleArrow>
+      ></SVG.ArrowLeft>
     ) : variant === "secondary" ? (
       <SVG.ArrowCircleDown
         width={isMobileView ? "1.25rem" : "1.5rem"}
@@ -56,11 +56,12 @@ const BackLink = ({
         style={{ transform: "rotate(90deg)" }}
       ></SVG.ArrowCircleDown>
     ) : (
-      <SVG.ArrowLeft
+      <SVG.DoubleArrow
         width={isMobileView ? "1.25rem" : "1.5rem"}
         height={isMobileView ? "1.25rem" : "1.5rem"}
         fill={iconFill ? iconFill : disabled ? diabledIconColor : iconColor}
-      ></SVG.ArrowLeft>
+        style={{ transform: "rotate(180deg)" }}
+      ></SVG.DoubleArrow>
     );
   return (
     <div
@@ -71,7 +72,7 @@ const BackLink = ({
       {!hideIcon && <div className={`digit-back-link-icon`}>{icon}</div>}
       {!hideLabel && (
         <div className={`digit-back-link-label`}>
-          {t("CS_COMMON_BACK")}
+          {label || t("CS_COMMON_BACK")}
         </div>
       )}
     </div>

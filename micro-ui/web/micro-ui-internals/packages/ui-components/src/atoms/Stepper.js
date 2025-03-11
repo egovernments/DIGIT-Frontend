@@ -1,9 +1,10 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect,useRef} from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { SVG } from "./SVG";
 import StringManipulator from "./StringManipulator";
 import { Colors} from "../constants/colors/colorconstants";
+import Divider from "./Divider";
 
 const Stepper = ({
   currentStep = 1,
@@ -14,9 +15,11 @@ const Stepper = ({
   style,
   props,
   className,
-  activeSteps
+  activeSteps,
+  hideDivider
 }) => {
   const { t } = useTranslation();
+  const stepRefs = useRef([]);
 
   const [isMobileView, setIsMobileView] = useState(
     (window.innerWidth / window.innerHeight <= 9/16)
@@ -44,6 +47,17 @@ const Stepper = ({
   });
 
   useEffect(() => {
+    // Scroll the current step into view when currentStep changes
+    if (stepRefs.current[currentStep]) {
+      stepRefs.current[currentStep].scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center",
+      });
+    }
+  }, [currentStep]);
+
+  useEffect(() => {
     // This useEffect will trigger a re-render when number of activeSteps changes
   }, [activeSteps]);
 
@@ -69,6 +83,7 @@ const Stepper = ({
     >
       {actions.map((action, index, arr) => (
         <div
+          ref={(el) => (stepRefs.current[index] = el)}
           className={`digit-stepper-checkpoint ${direction ? direction : ""}`}
           style={{ cursor: "pointer" }}
           key={index}
@@ -110,8 +125,11 @@ const Stepper = ({
             <span
               className={`stepper-connect ${
                 ((index < currentStep - 1) || (index < activeSteps && index < activeSteps - 1 ) ) && "active"
-              } ${direction ? direction : ""}`}
+              } ${direction ? direction : ""} ${(index === arr.length-2 && direction !=="vertical") ? "lastbutone" : ""}`}
             ></span>
+          )}
+          {index < arr.length - 1 && direction === "vertical" && !hideDivider &&  (
+            <Divider className="stepper-vertical-divider"></Divider>
           )}
         </div>
       ))}

@@ -1,6 +1,7 @@
-import React, {useState,Fragment, useEffect} from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import Toast from "../Toast";
 import Button from "../Button";
+import Iframe from "../Iframe";
 
 export default {
   title: "Atoms/Toast",
@@ -15,8 +16,20 @@ export default {
   },
 };
 
-
-const Template = (args) => <Toast {...args} />;
+const Template = (args) => (
+  <div
+    style={{
+      position: "absolute",
+      width: "100%",
+      height: "100%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    }}
+  >
+    <Toast {...args} />
+  </div>
+);
 
 const commonArgs = {
   populators: {
@@ -24,7 +37,18 @@ const commonArgs = {
   },
   label: "",
   type: "success",
+  style: { left: "25%" },
 };
+
+export const Documentation = () => (
+  <Iframe
+    //Todo:Update the url
+    src="https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui/ui-components-standardisation/digit-ui-components0.2.0"
+    title="Toast Documentation"
+  />
+);
+
+Documentation.storyName = "Docs";
 
 export const SuccessToast = Template.bind({});
 SuccessToast.args = {

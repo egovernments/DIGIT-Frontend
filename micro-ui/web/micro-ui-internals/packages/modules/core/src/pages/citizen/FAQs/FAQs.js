@@ -1,5 +1,6 @@
-import { BackButton, Header, Loader ,SearchIconSvg} from "@egovernments/digit-ui-components";
+//import { BackButton, Header, Loader ,SearchIconSvg} from "@egovernments/digit-ui-components";
 import React, { Fragment } from "react";
+import { Header, Loader } from "../../../../../../ui-components/src";
 import { useTranslation } from "react-i18next";
 import FaqComponent from "./FaqComponent";
 
@@ -9,7 +10,8 @@ const FAQsSection = ({ module }) => {
   const { t } = useTranslation();
 
   const SearchImg = () => {
-    return <SearchIconSvg className="signature-img" />;
+    return <></>
+   // return <SearchIconSvg className="signature-img" />;
   };
 
   const { isLoading, data } = Digit.Hooks.useGetFAQsJSON(Digit?.ULBService?.getStateId());
@@ -22,7 +24,7 @@ const FAQsSection = ({ module }) => {
   return (
     <Fragment>
       <div className="faq-page">
-        <BackButton style={{ marginLeft: "unset" }}></BackButton>
+        {/* <BackButton style={{ marginLeft: "unset" }}></BackButton> */}
         <div style={{ marginBottom: "15px" }}>
           <Header styles={{ marginLeft: "0px", paddingTop: "10px", fontSize: "32px" }}>{t("FAQ_S")}</Header>
         </div>

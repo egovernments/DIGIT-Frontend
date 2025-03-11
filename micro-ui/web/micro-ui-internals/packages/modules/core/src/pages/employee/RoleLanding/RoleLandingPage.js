@@ -1,5 +1,6 @@
 import React from "react";
-import { Card, CardText, CardHeader, Button, Header } from "@egovernments/digit-ui-components";
+//import { Card, CardText, CardHeader, Button, Header } from "@egovernments/digit-ui-components";
+import { Card, CardText, CardHeader, Button, Header } from "../../../../../../ui-components/src";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { externalConfig } from "./RoleLandingConfig";

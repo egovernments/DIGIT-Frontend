@@ -35,6 +35,9 @@
   ],
   "dependencies": {
     "@egovernments/digit-ui-svg-components": "1.0.0-webpack.6",
+    "react-data-table-component": "7.6.2",
+    "react-webcam":"7.2.0",
+    "react-drag-drop-files": "2.3.10",
     "autoprefixer": "^10.4.15",
     "date-fns": "3.6.0",
     "lodash": "^4.17.21",

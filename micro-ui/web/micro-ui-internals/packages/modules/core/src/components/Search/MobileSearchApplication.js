@@ -1,14 +1,18 @@
-import {
-  BackButton,
-  DetailsCard,
-  Header,
-  Loader,
-  PopUp,
-  SearchAction,
-  SearchForm,
-  CloseSvg,
-  DownloadBtnCommon,
-} from "@egovernments/digit-ui-components";
+// import {
+//   BackButton,
+//   DetailsCard,
+//   Header,
+//   Loader,
+//   PopUp,
+//   SearchAction,
+//   SearchForm,
+//   CloseSvg,
+//   DownloadBtnCommon,
+// } from "@egovernments/digit-ui-components";
+import { DetailsCard,Header,Loader,PopUp,SearchAction,SearchForm} from "../../../../../ui-components/src";
+//import { DownloadBtnCommon } from "../../../../../ui-components/src/atoms";
+//import { CloseSvg } from "../../../../../ui-components/src/atoms";
+
 import React, {
   useCallback,
   useEffect,
@@ -46,7 +50,7 @@ const MobileSearchApplication = ({
   const DownloadBtn = (props) => {
     return (
       <div onClick={props.onClick}>
-        <DownloadBtnCommon />
+        {/* <DownloadBtnCommon /> */}
       </div>
     );
   };
@@ -118,7 +122,7 @@ const MobileSearchApplication = ({
       className="InboxMobilePopupCloseButtonWrapper"
       onClick={closeMobilePopupModal}
     >
-      <CloseSvg />
+      {/* <CloseSvg /> */}
     </div>
   );
   const searchFormFieldsComponentProps = {
@@ -199,7 +203,7 @@ const MobileSearchApplication = ({
 
   return (
     <React.Fragment>
-      <BackButton />
+      {/* <BackButton /> */}
       <div
         className="sideContent"
         style={{ marginLeft: "70%", marginTop: "-12%" }}

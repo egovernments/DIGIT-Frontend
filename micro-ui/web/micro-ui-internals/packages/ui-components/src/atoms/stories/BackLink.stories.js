@@ -1,34 +1,27 @@
 import React from "react";
 import BackLink from "../BackLink";
+import Iframe from "../Iframe";
 
 export default {
   title: "Atoms/BackLink",
   component: BackLink,
   argTypes: {
-    variant: {
-      control: "select",
-      options: ["primary", "secondary", "teritiary"],
-    },
-    className: {
-      control: "text",
-    },
-    style: {
-      control: { type: "object" },
-    },
-    onClick: {
-      control: "function",
-    },
+    variant: { table: { disable: true } },
+    className: { table: { disable: true } },
+    style: { table: { disable: true } },
+    label: { table: { disable: true } },
+    onClick: { table: { disable: true } },
+    hideIcon: { table: { disable: true } },
+    hideLabel: { table: { disable: true } },
+    iconFill: { table: { disable: true } },
     disabled: {
-      control: "boolean",
-    },
-    hideLabel:{
-        control:"boolean"
-    },
-    hideIcon:{
-        control:"boolean"
-    },
-    iconFill: {
-      control: "text",
+      control: "select",
+      options: ["Default", "Disabled"],
+      name:"State",
+      mapping: {
+        Default: false, 
+        Disabled: true, 
+      },
     },
   },
 };
@@ -36,37 +29,43 @@ export default {
 const Template = (args) => <BackLink {...args} />;
 
 const commonArgs = {
-  className: "",
   style: {},
   onClick: () => console.log("clicked"),
-  disabled: false,
+  disabled: "Default",
   variant: "",
-  hideIcon:false,
-  hideLabel:false,
-  iconFill:""
+  hideIcon: false,
+  hideLabel: false,
+  iconFill: "",
+  label: "Back",
 };
 
-export const Primary = Template.bind({});
-Primary.args = {
+export const Documentation = () => (
+  <Iframe
+    //Todo:Update the url
+    src="https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui/ui-components-standardisation/digit-ui-components0.2.0"
+    title="BackLink Documentation"
+  />
+);
+
+Documentation.storyName = "Docs";
+Documentation.argTypes = {
+  disabled: { table: { disable: true } },
+};
+
+export const Backlink1 = Template.bind({});
+Backlink1.args = {
   ...commonArgs,
   variant: "primary",
 };
 
-export const Secondary = Template.bind({});
-Secondary.args = {
+export const Backlink2 = Template.bind({});
+Backlink2.args = {
   ...commonArgs,
   variant: "secondary",
 };
 
-export const Teritiary = Template.bind({});
-Teritiary.args = {
+export const Backlink3 = Template.bind({});
+Backlink3.args = {
   ...commonArgs,
   variant: "teritiary",
-};
-
-export const Disabled = Template.bind({});
-Disabled.args = {
-  ...commonArgs,
-  variant: "primary",
-  disabled:true
 };

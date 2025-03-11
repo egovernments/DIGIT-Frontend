@@ -1,17 +1,19 @@
 import {
   Card,
   Loader,
-  CaseIcon,
-  ComplaintIcon,
-  HelpLineIcon,
-  MCollectIcon,
-  PTIcon,
-  RupeeSymbol,
-  ServiceCenterIcon,
-  TimerIcon,
-  ValidityTimeIcon,
-  WhatsappIconGreen,
-} from "@egovernments/digit-ui-components";
+  //CaseIcon,
+  //ComplaintIcon,
+ // HelpLineIcon,
+  //MCollectIcon,
+  //PTIcon,
+  // RupeeSymbol,
+  //ServiceCenterIcon,
+  //TimerIcon,
+ // ValidityTimeIcon,
+ // WhatsappIconGreen,
+} from "../../../../../../ui-components/src";
+import { PTIcon,ComplaintIcon, MCollectIcon } from "@egovernments/digit-ui-react-components/src/atoms/svgindex";
+//import { Card } from "../../../../../../ui-components/src";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
@@ -40,7 +42,7 @@ const StaticDynamicCard = ({ moduleCode }) => {
   const IconComponent = ({ module, styles }) => {
     switch (module) {
       case "TL":
-        return <CaseIcon className="fill-path-primary-main" styles={styles} />;
+        return <PTIcon className="fill-path-primary-main" styles={styles} />;
       case "PT":
         return <PTIcon className="fill-path-primary-main" styles={styles} />;
       case "MCOLLECT":
@@ -52,7 +54,7 @@ const StaticDynamicCard = ({ moduleCode }) => {
           <ComplaintIcon className="fill-path-primary-main" styles={styles} />
         );
       default:
-        return <CaseIcon className="fill-path-primary-main" styles={styles} />;
+        return <PTIcon className="fill-path-primary-main" styles={styles} />;
     }
   };
   const mdmsConfigResult =
@@ -64,7 +66,7 @@ const StaticDynamicCard = ({ moduleCode }) => {
       case "WS":
         return (
           <span className="timerIcon">
-            <TimerIcon />
+            {/* <TimerIcon /> */}
           </span>
         );
       default:
@@ -76,13 +78,13 @@ const StaticDynamicCard = ({ moduleCode }) => {
       case "PT":
         return (
           <span className="rupeeSymbol">
-            <RupeeSymbol />
+            {/* <RupeeSymbol /> */}
           </span>
         );
       case "WS":
         return (
           <span className="timerIcon">
-            <TimerIcon />
+            {/* <TimerIcon /> */}
           </span>
         );
       default:
@@ -168,7 +170,7 @@ const StaticDynamicCard = ({ moduleCode }) => {
           >
             <div className="pay-whatsapp-text">{t("PAY_VIA_WHATSAPP")}</div>
             <div className="whatsAppIconG">
-              <WhatsappIconGreen />
+              {/* <WhatsappIconGreen /> */}
             </div>
           </div>
         </Card>
@@ -180,7 +182,7 @@ const StaticDynamicCard = ({ moduleCode }) => {
               {t("CALL_CENTER_HELPLINE")}
             </div>
             <div className="helplineIcon">
-              <HelpLineIcon />
+              {/* <HelpLineIcon /> */}
             </div>
           </div>
           <div className="call-center-card-text">
@@ -208,7 +210,7 @@ const StaticDynamicCard = ({ moduleCode }) => {
               {t("CITIZEN_SERVICE_CENTER")}
             </div>
             <div className="serviceCentrIcon">
-              <ServiceCenterIcon />
+              {/* <ServiceCenterIcon /> */}
             </div>
           </div>
           <div className="service-center-details-card">
@@ -306,7 +308,7 @@ const StaticDynamicCard = ({ moduleCode }) => {
           <div className="staticDataCard">
             <div className="staticData">
               <span className="validityIcon">
-                <ValidityTimeIcon />
+                {/* <ValidityTimeIcon /> */}
               </span>
               <span className="static-data-content">
                 <span className="static-data-content-first">
@@ -341,7 +343,7 @@ const StaticDynamicCard = ({ moduleCode }) => {
                 />
               ) : (
                 <span className="validityIcon">
-                  <ValidityTimeIcon />
+                  {/* <ValidityTimeIcon /> */}
                 </span>
               )}
               <span className="static-data-content">

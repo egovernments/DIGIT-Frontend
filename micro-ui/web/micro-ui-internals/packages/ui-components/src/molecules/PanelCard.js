@@ -91,26 +91,33 @@ const PanelCard = (props) => {
           <Panels {...props}></Panels>
         </div>
       }
-      <div
-        ref={childrenWrapRef}
-        className={`digit-panelcard-children-wrap ${
-          props?.showChildrenInline ? "inline" : ""
-        } ${isOverflowing ? "with-shadow" : ""} ${!hasFooterChildren ? "without-footer" : ""}`}
-      >
-        {props?.description && (
-          <div className="digit-panelcard-description">
-            {props?.description}
-          </div>
-        )}
-        {props?.children}
-      </div>
+      {(props?.children?.length>0 || props?.description!=="") && (
+        <div
+          ref={childrenWrapRef}
+          className={`digit-panelcard-children-wrap ${
+            props?.showChildrenInline ? "inline" : ""
+          } ${isOverflowing ? "with-shadow" : ""} ${
+            !hasFooterChildren ? "without-footer" : ""
+          }`}
+        >
+          {props?.description && (
+            <div className="digit-panelcard-description">
+              {props?.description}
+            </div>
+          )}
+          {props?.children}
+        </div>
+      )}
       {hasFooterChildren && (
         <div
           className={`digit-panelcard-footer ${
             props?.footerclassName ? props?.footerclassName : ""
           } ${isOverflowing ? "with-shadow" : ""}`}
         >
-          <div className="digit-panelcard-footer-buttons" style={{...props?.footerStyles}} >
+          <div
+            className="digit-panelcard-footer-buttons"
+            style={{ ...props?.footerStyles }}
+          >
             {finalFooterArray}
           </div>
         </div>

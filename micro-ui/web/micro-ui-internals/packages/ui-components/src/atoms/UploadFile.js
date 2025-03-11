@@ -69,6 +69,7 @@ const UploadFile = (props) => {
               <div className="digit-tag-container">
                 <Chip
                   key={index}
+                  hideClose={false}
                   text={file[0].length > 64 ? `${file[0].slice(0, 64)} ...` : file[0]}
                   onClick={(e) => props?.removeTargetedFile(fileDetailsData, e)}
                 />

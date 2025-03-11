@@ -1,5 +1,6 @@
 import React, { useRef ,useState, useEffect} from "react";
-import { BackLink, Button, Card, CardHeader, CardLabel, CardText, FieldV1, SVG, TextInput } from "@egovernments/digit-ui-components";
+//import { BackLink, Button, Card, CardHeader, CardLabel, CardText, FieldV1, SVG, TextInput } from "@egovernments/digit-ui-components";
+import { BackLink, Button, Card, CardHeader, CardLabel,CardText,SVG,TextInput } from "../../../../../../ui-components/src";
 import { useTranslation } from "react-i18next";
 import { useRouteMatch, useHistory, useLocation } from "react-router-dom";
 import Background from "../../../components/Background";

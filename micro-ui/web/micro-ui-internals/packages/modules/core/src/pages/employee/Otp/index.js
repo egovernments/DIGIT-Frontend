@@ -1,5 +1,6 @@
 import React, { useState ,useEffect} from "react";
-import { BackLink, CardLabel, Loader, Toast } from "@egovernments/digit-ui-components";
+//import { BackLink, CardLabel, Loader, Toast } from "@egovernments/digit-ui-components";
+import { BackLink, Toast } from "../../../../../../ui-components/src";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { Route, Switch, useRouteMatch, useHistory, useLocation } from "react-router-dom";

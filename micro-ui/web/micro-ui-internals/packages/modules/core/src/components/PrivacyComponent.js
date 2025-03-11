@@ -1,7 +1,8 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { CheckBox, PopUp, Button, Header } from "@egovernments/digit-ui-components";
-import { LinkButton } from "@egovernments/digit-ui-react-components";
+//import { CheckBox, PopUp, Button, Header } from "@egovernments/digit-ui-components";
+import { CheckBox, PopUp, Button } from "../../../../ui-components/src";
+//import { LinkButton } from "@egovernments/digit-ui-react-components";
 
 const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) => {
   const { t } = useTranslation();

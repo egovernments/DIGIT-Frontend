@@ -208,7 +208,6 @@ const Fields = (
                   label={t(`${populators?.title}`)}
                   styles={populators?.styles}
                   style={populators?.labelStyles}
-                  customLabelMarkup={populators?.customLabelMarkup}
                 />
               </div>
             );

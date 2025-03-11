@@ -24,7 +24,7 @@
     "@egovernments/digit-ui-module-utilities": "1.0.10",
     "@egovernments/digit-ui-module-open-payment": "0.0.1",
     "@egovernments/digit-ui-module-engagement": "1.5.20",
-    "@egovernments/digit-ui-components": "0.0.2-beta.56",
+    "@egovernments/digit-ui-components": "0.0.2-beta.4-webpack.2",
     "@egovernments/digit-ui-react-components": "1.8.16-upgarde.3",
     "@egovernments/digit-ui-module-assignment": "0.0.1",
     "babel-loader": "8.1.0",

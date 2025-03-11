@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Details } from "../../molecules/DetailsCard";
 import { Link } from "react-router-dom";
 import NoResultsFound from "../../atoms/NoResultsFound";
-import { Loader } from "../../atoms/Loader";
+import { Loader } from "../../atoms";
 import _ from "lodash";
 import { InboxContext } from '../InboxSearchComposerContext';
 import Table from "../../atoms/Table";

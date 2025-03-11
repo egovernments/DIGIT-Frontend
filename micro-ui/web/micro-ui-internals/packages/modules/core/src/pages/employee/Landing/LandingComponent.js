@@ -1,5 +1,6 @@
 import React, { Fragment } from "react";
-import { Header, Card, CardText, CardHeader, Button } from "@egovernments/digit-ui-components"; // Importing the required DIGIT UI components
+//import { Header, Card, CardText, CardHeader, Button } from "@egovernments/digit-ui-components"; // Importing the required DIGIT UI components
+import { Header, Card, CardText, CardHeader, Button } from "../../../../../../ui-components/src";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 

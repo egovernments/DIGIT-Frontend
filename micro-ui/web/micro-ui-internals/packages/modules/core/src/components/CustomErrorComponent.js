@@ -2,7 +2,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useHistory } from "react-router-dom";
 import Background from "./Background";
-import { Button, Card, CardHeader, CardText } from "@egovernments/digit-ui-components";
+//import { Button, Card, CardHeader, CardText } from "@egovernments/digit-ui-components";
+import { Button, Card, CardHeader, CardText } from "../../../../ui-components/src";
 import Header from "./Header";
 
 const CustomErrorComponent = (props) => {

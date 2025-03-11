@@ -3,7 +3,7 @@ import {
   CardText,
   CheckBox,
   ErrorMessage,
-  Header,
+  HeaderComponent,
   InputTextAmount,
   MobileNumber,
   MultiSelectDropdown,
@@ -42,7 +42,6 @@ const FieldComposer = ({
 }) => {
   const { t } = useTranslation();
   let disableFormValidation = false;
-  console.log("inside field composer")
   if (sectionFormCategory && selectedFormCategory) {
     disableFormValidation = sectionFormCategory !== selectedFormCategory ? true : false;
   }
@@ -184,7 +183,6 @@ const FieldComposer = ({
               label={t(`${populators?.title}`)}
               styles={populators?.styles}
               style={populators?.labelStyles}
-              customLabelMarkup={populators?.customLabelMarkup}
               variant={variant ? variant : errors?.[populators.name] ? "digit-field-error" : ""}
             />
           </div>
@@ -363,7 +361,7 @@ const FieldComposer = ({
   return (
     <>
       {!config.withoutLabel && (
-        <Header
+        <HeaderComponent
           style={{
             color: config?.isSectionText ? "#505A5F" : "",
             marginBottom: props?.inline ? "8px" : "revert",
@@ -375,7 +373,7 @@ const FieldComposer = ({
           {config?.appendColon ? " : " : null}
           {config.isMandatory ? " * " : null}
           {config.withoutInfo ? null : <label > ⓘ</label>}
-        </Header>
+        </HeaderComponent>
       )}
       <div style={config.withoutLabel ? { width: "100%", ...props?.fieldStyle } : { ...props?.fieldStyle }} className="digit-field">
         {renderField()}

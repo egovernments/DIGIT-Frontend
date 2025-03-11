@@ -27,8 +27,8 @@ const StringManipulator = (functionName, key, props) => {
   };
 
   const toSentenceCase = (str) => {
-    return str.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, (c) => {
-      return c.toUpperCase();
+    return str.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, (match) => {
+      return match.toUpperCase();
     });
   };
 

@@ -18,8 +18,8 @@ const CheckBox = ({
   style,
   index,
   isLabelFirst,
-  customLabelMarkup,
   hideLabel,
+  isIntermediate,
   ...props
 }) => {
   const { t } = useTranslation();
@@ -37,56 +37,64 @@ const CheckBox = ({
         !isLabelFirst ? "checkboxFirst" : "labelFirst"
       } ${disabled ? "disabled" : " "} ${props?.mainClassName}`}
     >
-      {(isLabelFirst && !hideLabel) ? (
-        <p className={`label ${props?.labelClassName} `} style={{ maxWidth: "100%", width: "auto" ,marginRight:"0rem"}} onClick={props?.onLabelClick}>
-          {customLabelMarkup ? (
-            <>
-              <span>{t("COMMON_CERTIFY_ONE")}</span>
-              <br />
-              <span>
-                <b> {t("ES_COMMON_NOTE")}</b>
-                {t("COMMON_CERTIFY_TWO")}
-              </span>
-            </>
-          ) : (
-            sentenceCaseLabel
-          )}
-        </p>
+      {isLabelFirst && !hideLabel ? (
+        <label
+          htmlFor={props.id || `checkbox-${value}`}
+          className={`label ${props?.labelClassName} `}
+          style={{ maxWidth: "100%", width: "auto", marginRight: "0rem" }}
+          onClick={props?.onLabelClick}
+        >
+          {sentenceCaseLabel}
+        </label>
       ) : null}
-      <div style={{ cursor: "pointer", display: "flex", position: "relative" }} className={props?.inputWrapperClassName}>
+      <div
+        style={{ cursor: "pointer", display: "flex", position: "relative" }}
+        className={props?.inputWrapperClassName}
+      >
         <input
           type="checkbox"
-          className={`input ${userType === "employee" ? "input-emp" : ""} ${props?.inputClassName} `}
+          className={`input ${userType === "employee" ? "input-emp" : ""} ${
+            props?.inputClassName
+          } `}
           onChange={onChange}
           value={value || label}
           {...props}
           ref={inputRef}
           disabled={disabled}
           checked={checked}
-          />
+          id={props?.id}
+        />
         <p
           className={`digit-custom-checkbox ${
             userType === "employee" ? "digit-custom-checkbox-emp" : ""
-          } ${props?.inputIconClassname} `}
+          } ${isIntermediate ? "intermediate" : ""} ${
+            props?.inputIconClassname
+          } `}
         >
-          <SVG.Check fill={props?.iconFill || (disabled ? diabledIconColor : iconColor)} />
-        </p>
-      </div>
-      {(!isLabelFirst && !hideLabel) ? (
-        <p className={`label ${props?.labelClassName} `} style={{ maxWidth: "100%", width: "100%",marginRight:"0rem" }} onClick={props?.onLabelClick}>
-          {customLabelMarkup ? (
-            <>
-              <span>{t("COMMON_CERTIFY_ONE")}</span>
-              <br />
-              <span>
-                <b> {t("ES_COMMON_NOTE")}</b>
-                {t("COMMON_CERTIFY_TWO")}
-              </span>
-            </>
+          {isIntermediate && !checked ? (
+            <span
+              className={`intermediate-square ${
+                disabled ? "squaredisabled" : ""
+              }`}
+            />
           ) : (
-            sentenceCaseLabel
+            <SVG.Check
+              fill={
+                props?.iconFill || (disabled ? diabledIconColor : iconColor)
+              }
+            />
           )}
         </p>
+      </div>
+      {!isLabelFirst && !hideLabel ? (
+        <label
+          htmlFor={props.id || `checkbox-${value}`}
+          className={`label ${props?.labelClassName} `}
+          style={{ maxWidth: "100%", width: "100%", marginRight: "0rem" }}
+          onClick={props?.onLabelClick}
+        >
+          {sentenceCaseLabel}
+        </label>
       ) : null}
     </div>
   );
@@ -106,7 +114,8 @@ CheckBox.propTypes = {
    */
   ref: PropTypes.func,
   userType: PropTypes.string,
-  hideLabel:PropTypes.bool
+  hideLabel:PropTypes.bool,
+  isIntermediate: PropTypes.bool,
 };
 
 CheckBox.defaultProps = {
@@ -118,6 +127,7 @@ CheckBox.defaultProps = {
   ref: "ww",
   // pageType: "EMPLOYEE",
   index: 0,
+  isIntermediate: false,
 };
 
 export default CheckBox;

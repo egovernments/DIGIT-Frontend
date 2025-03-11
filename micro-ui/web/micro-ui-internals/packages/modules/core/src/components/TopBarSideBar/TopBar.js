@@ -1,10 +1,14 @@
-import { Hamburger, TopBar as TopBarComponent } from "@egovernments/digit-ui-react-components";
-import { Dropdown } from "@egovernments/digit-ui-components";
+//import { Hamburger, TopBar as TopBarComponent } from "@egovernments/digit-ui-react-components";
+//import { TopBar as TopBarComponent } from "../../../../../react-components/src/atoms";
+//import {TopBar as TopBarComponent} from "../../../../../react-components/src/atoms/TopBar"
+//import { Dropdown } from "@egovernments/digit-ui-components";
+import { Dropdown } from "../../../../../ui-components/src";
 import React,{Fragment} from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import ChangeCity from "../ChangeCity";
 import ChangeLanguage from "../ChangeLanguage";
 import {TopBar as TopBarComponentMain } from "@egovernments/digit-ui-components";
+//import { TopBar as TopBarComponentMain } from "../../../../../react-components/src/atoms";
 import {useNotificationCount} from "../../../libraries/src/hooks/events"
 
 const TopBar = ({
@@ -107,7 +111,8 @@ const TopBar = ({
   if (CITIZEN) {
     return (
       <div>
-        <TopBarComponent
+        <>top bar</>
+        {/* <TopBarComponent
           img={stateInfo?.logoUrlWhite}
           isMobile={true}
           toggleSidebar={updateSidebar}
@@ -120,7 +125,7 @@ const TopBar = ({
           onNotificationIconClick={onNotificationIconClick}
           hideNotificationIconOnSomeUrlsWhenNotLoggedIn={urlsToDisableNotificationIcon(pathname)}
           changeLanguage={!mobileView ? <ChangeLanguage dropdown={true} /> : null}
-        />
+        /> */}
       </div>
     );
   }
@@ -193,6 +198,7 @@ const TopBar = ({
         )
       }
     />
+    // <>topbarmain</>
   );
 };
 

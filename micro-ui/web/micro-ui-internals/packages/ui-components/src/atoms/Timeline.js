@@ -18,7 +18,8 @@ const Timeline = ({
   isLastStep,
   isNextActiveStep,
   showDefaultValueForDate,
-  isError
+  isError,
+  initialVisibleAdditionalElementsCount = 0
 }) => {
   const [showDetails, setShowDetails] = useState(false);
 
@@ -118,7 +119,7 @@ const Timeline = ({
           )}
           <div className="timeline-divider"></div>
         </div>
-        {hasAdditionalElements && showDetails && (
+        {hasAdditionalElements && (
           <div
             className={
               inline
@@ -128,7 +129,11 @@ const Timeline = ({
           >
             {additionalElements.map((element, index) => (
               <div
-                className="timeline-individual-element"
+              className={`timeline-individual-element ${
+                index >= initialVisibleAdditionalElementsCount && !showDetails
+                  ? "hidden"
+                  : ""
+              }`}
                 key={index}
                 style={individualElementStyles}
               >
@@ -137,7 +142,7 @@ const Timeline = ({
             ))}
           </div>
         )}
-        {hasAdditionalElements && (
+        {hasAdditionalElements && additionalElements.length > initialVisibleAdditionalElementsCount && (
           <div className="timeline-toggle-details" onClick={toggleDetails}>
             <Button
               label={

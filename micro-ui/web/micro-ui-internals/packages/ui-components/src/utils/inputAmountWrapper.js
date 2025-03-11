@@ -50,7 +50,7 @@ export const InputAmountWrapper = ({ ref, ...props }) => {
 
   return (
     <CurrencyInput
-      id="validationCustom01"
+      id={props?.id}
       name="input-1"
       customInput={TextInput}
       className={`form-control ${className} ${props?.variant}`}

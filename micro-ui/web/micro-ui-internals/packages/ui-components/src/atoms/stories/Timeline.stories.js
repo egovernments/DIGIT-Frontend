@@ -1,49 +1,61 @@
 import React from "react";
 import Timeline from "../Timeline";
 import Button from "../Button";
+import Iframe from "../Iframe";
 
 export default {
   title: "Atoms/Timeline",
   component: Timeline,
   argTypes: {
-    label: { control: "text" },
-    className: { control: "text" },
-    viewDetailsLabel: { control: "text" },
-    hideDetailsLabel: { control: "text" },
+    label: { control: "text", name: "Label" },
+    className: { control: "text", table: { disable: true } },
+    viewDetailsLabel: { control: "text", table: { disable: true } },
+    hideDetailsLabel: { control: "text", table: { disable: true } },
     subElements: {
-      control: {
-        type: "array",
-        separator: ",",
-      },
+      control: "boolean",
+      name: "With Subelements",
     },
     variant: {
       control: {
         type: "select",
         options: ["upcoming", "inprogress", "completed"],
       },
+      table: { disable: true },
     },
     additionalElements: {
-      control: {
-        type: "array",
-        separator: ",",
+      control: "boolean",
+      name: "With Additional Widgets",
+    },
+    inline: {
+      control: "select",
+      name: "Elements Alignment",
+      options: ["vertical", "inline"],
+      mapping: {
+        inline: true,
+        vertical: false,
       },
     },
-    inline: { control: "boolean" },
     individualElementStyles: {
       control: { type: "object" },
+      table: { disable: true },
     },
-    showConnector:{
-      control:{type:"boolean"}
+    showConnector: {
+      control: "boolean",
+      name: "With Connector",
     },
-    showDefaultValueForDate:{
-      control:{type:"boolean"}
-    }
+    showDefaultValueForDate: {
+      control: { type: "boolean" },
+      table: { disable: true },
+    },
+    initialVisibleAdditionalElementsCount: {
+      control: { type: "number" },
+      table: { disable: true },
+    },
+    isError:{control:"select",name:"State",options:["Default","Failed"],mapping:{"Default":false,"Failed":true}}
   },
 };
 
-const Template = (args) => <Timeline {...args} />;
-
-const additionalElements = [
+const additionalElementsToShow = [
   <div key="1">
     Lorem Ipsum is simply dummy text of the printing and typesetting industry.
     Lorem Ipsum has been the industry's
@@ -96,132 +108,72 @@ const additionalElements = [
     type="button"
     icon="MyLocation"
     isSuffix={true}
-  />
+  />,
 ];
 
-const subElements = [
+const subElementsToShow = [
   "26 / 03 / 2024",
   "11:00 PM",
   "26 / 03 / 2024 11:00 PM",
   "26 / 03 / 2024 11:00 PM Mon",
-  "+91 **********"
+  "+91 **********",
 ];
 
-const subElementWithDate = [ "26 / 03 / 2024" ];
-
-// Upcoming Timeline Without subElements
-export const Upcoming = Template.bind({});
-Upcoming.args = {
-  label: "Upcoming",
-  subElements: [],
-  variant: "upcoming"
+const Template = (args) => {
+  const { subElements, additionalElements, ...rest } = args;
+  return (
+    <Timeline
+      {...rest}
+      subElements={subElements ? subElementsToShow : []}
+      additionalElements={additionalElements ? additionalElementsToShow : []}
+    />
+  );
 };
 
-// Upcoming Timeline Without AdditionalElements
-export const UpcomingDefault = Template.bind({});
-UpcomingDefault.args = {
-  label: "Upcoming",
-  subElements: subElementWithDate,
-  variant: "upcoming"
+export const Documentation = () => (
+  <Iframe
+    //Todo:Update the url
+    src="https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui/ui-components-standardisation/digit-ui-components0.2.0"
+    title="Timeline Documentation"
+  />
+);
+
+Documentation.storyName = "Docs";
+Documentation.argTypes = {
+  label: { table: { disable: true } },
+  subElements: { table: { disable: true }},
+  inline: {table:{disable:true}},
+  showConnector: {table:{disable:true}},
+  isError: {table:{disable:true}},
+  additionalElements: {table:{disable:true}},
 };
 
-// Upcoming Timeline
-export const UpcomingWithAdditionalElements = Template.bind({});
-UpcomingWithAdditionalElements.args = {
-  label: "Upcoming",
-  variant: "upcoming",
-  subElements: subElements,
-  additionalElements: additionalElements,
+const commonArgs = {
+  label: "Inprogress",
+  subElements: false,
+  variant: "inprogress",
+  inline: "vertical",
+  showConnector: false,
+  additionalElements: false,
+  isError:"Default",
+  initialVisibleAdditionalElementsCount: additionalElementsToShow.length - 3,
 };
 
-// Upcoming Timeline
-export const UpcomingWithConnector = Template.bind({});
-UpcomingWithConnector.args = {
-  label: "Upcoming",
-  variant: "upcoming",
-  subElements: subElements,
-  additionalElements: additionalElements,
-  showConnector:true
-};
-
-// InProgress Timeline Without subElements
 export const InProgress = Template.bind({});
 InProgress.args = {
-  label: "Inprogress",
-  subElements: [],
-  variant: "inprogress"
+  ...commonArgs,
 };
 
-// InProgress Timeline Without AdditionalElements
-export const InProgressDefault = Template.bind({});
-InProgressDefault.args = {
-  label: "Inprogress",
-  subElements: subElementWithDate,
-  variant: "inprogress"
-};
-
-// InProgress Timeline
-export const InProgressWithAdditionalElements = Template.bind({});
-InProgressWithAdditionalElements.args = {
-  label: "Inprogress",
-  subElements: subElements,
-  variant: "inprogress",
-  additionalElements: additionalElements,
-};
-
-// InProgress Timeline
-export const InProgressWithConnector = Template.bind({});
-InProgressWithConnector.args = {
-  label: "Inprogress",
-  subElements: subElements,
-  variant: "inprogress",
-  additionalElements: additionalElements,
-  showConnector:true
-};
-
-// Completed Timeline Without subElements
 export const Completed = Template.bind({});
 Completed.args = {
+  ...commonArgs,
   label: "Completed",
-  subElements: [],
-  variant: "completed"
-};
-
-// Completed Timeline Without AdditionalElements
-export const CompletedDefault = Template.bind({});
-CompletedDefault.args = {
-  label: "Completed",
-  subElements: subElementWithDate,
-  variant: "completed"
-};
-
-// Completed Timeline
-export const CompletedWithAdditionalElements = Template.bind({});
-CompletedWithAdditionalElements.args = {
-  label: "Completed",
-  subElements: subElements,
   variant: "completed",
-  additionalElements: additionalElements,
 };
 
-// Completed Timeline
-export const CompletedWithConnector = Template.bind({});
-CompletedWithConnector.args = {
-  label: "Completed",
-  subElements: subElements,
-  variant: "completed",
-  additionalElements: additionalElements,
-  showConnector:true
-};
-
-
-// Error Timeline
-export const ErrorTimeline = Template.bind({});
-ErrorTimeline.args = {
-  label: "",
-  subElements: [],
-  variant: "completed",
-  isError:true,
-  showDefaultValueForDate	:true,
-  additionalElements: additionalElements,
+export const Upcoming = Template.bind({});
+Upcoming.args = {
+  ...commonArgs,
+  label: "Upcoming",
+  variant: "upcoming",
 };

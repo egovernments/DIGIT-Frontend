@@ -1,4 +1,4 @@
-import { CustomSVG } from "@egovernments/digit-ui-components";
+import { CustomSVG } from "@egovernments/digit-ui-react-components";
 
 export const iconRender = (iconReq, iconFill, width, height, className) => {
   try {

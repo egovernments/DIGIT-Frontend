@@ -90,15 +90,16 @@ const Button = (props) => {
 
   const icon = IconRender();
 
-  const formattedLabel =
-    props?.variation === "link"
+  const formattedLabel = props?.label
+    ? props?.variation === "link"
       ? props?.label
       : StringManipulator(
           "CAPITALIZEFIRSTLETTER",
           StringManipulator("TRUNCATESTRING", props?.label, {
             maxLength: 64,
           })
-        );
+        )
+    : "";
 
   const handleActionButtonClick = (e) => {
     e.stopPropagation();
@@ -206,7 +207,7 @@ Button.propTypes = {
 };
 
 Button.defaultProps = {
-  label: "TEST",
+  label: "",
   variation: "primary",
   onClick: () => {},
   size: "large",

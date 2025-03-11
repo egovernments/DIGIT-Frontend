@@ -14,7 +14,8 @@ import Otp from "./Otp";
 import ViewUrl from "./ViewUrl";
 import UserProfile from "../citizen/Home/UserProfile";
 import ErrorComponent from "../../components/ErrorComponent";
-import { PrivateRoute } from "@egovernments/digit-ui-components";
+//import { PrivateRoute } from "@egovernments/digit-ui-components";
+import { PrivateRoute } from "../../../../../ui-components/src";
 import RoleLanding from "./RoleLanding";
 
 const userScreensExempted = ["user/landing", "user/profile", "user/error"];

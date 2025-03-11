@@ -54,6 +54,7 @@ const LocalizationStore = {
     storedModules.forEach((module) => {
       messages.push(...LocalizationStore.getCaheData(LOCALE_MODULE(locale, module)));
     });
+    debugger;
     return [newModules, messages];
   },
 
@@ -65,16 +66,33 @@ const LocalizationStore = {
 
 export const LocalizationService = {
   getLocale: async ({ modules = [], locale = Digit.Utils.getDefaultLanguage(), tenantId }) => {
+    debugger;
     if (locale.indexOf(Digit.Utils.getLocaleRegion()) === -1) {
+      debugger;
       locale += Digit.Utils.getLocaleRegion();
     }
     const [newModules, messages] = LocalizationStore.get(locale, modules);
     if (newModules.length > 0) {
-      const data = await Request({ url: Urls.localization, params: { module: newModules.join(","), locale, tenantId }, useCache: false });
-      messages.push(...data.messages);
-      setTimeout(() => LocalizationStore.store(locale, newModules, data.messages), 100);
+      try {
+        console.log("Fetching localization data from:", Urls.localization);
+        console.log("Params:", { module: newModules.join(","), locale, tenantId });
+      
+        const data = await Request({ 
+          url: Urls.localization, 
+          params: { module: newModules.join(","), locale, tenantId }, 
+          useCache: false 
+        });
+      
+        console.log("Localization data fetched:", data);
+        messages.push(...data.messages);
+        setTimeout(() => LocalizationStore.store(locale, newModules, data.messages), 100);
+      } catch (error) {
+        console.error("Error fetching localization data:", error);
+      }
     }
     LocalizationStore.updateResources(locale, messages);
+    console.log(messages,"messasfe");
+    debugger;
     return messages;
   },
   changeLanguage: (locale, tenantId) => {

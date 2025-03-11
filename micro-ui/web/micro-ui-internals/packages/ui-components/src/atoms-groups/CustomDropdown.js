@@ -1,6 +1,6 @@
 import _ from "lodash";
 import React from "react";
-import { Loader } from "../atoms/Loader";
+import { Loader } from "../atoms";
 import RadioButtons from "../atoms/RadioButtons";
 import Dropdown from "../atoms/Dropdown";
 

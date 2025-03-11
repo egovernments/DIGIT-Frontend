@@ -17,11 +17,6 @@ const MobileNumber = (props) => {
   return (
     <React.Fragment>
       <div className={`digit-mobile-number-container ${props?.className ? props?.className : ""}`} style={props?.style}>
-        {!props.hideSpan ? (
-          <span style={props?.style} className="digit-citizenCard-input digit-citizenCard-input--front">
-            +91
-          </span>
-        ) : null}
         <div
           className={`digit-text-input-field ${user_type === "employee" ? "" : "digit-text-mobile-input-width"} ${props.className ? props.className : ""}`}
         >
@@ -33,6 +28,7 @@ const MobileNumber = (props) => {
             onChange={onChange}
             inputRef={props.inputRef}
             value={props.value}
+            id={props?.id}
             className={props.className}
             style={{ ...props.style }}
             maxLength={props.maxLength}
@@ -47,6 +43,9 @@ const MobileNumber = (props) => {
             autoFocus={props.autoFocus}
             onBlur={props.onBlur}
             variant={props?.variant}
+            populators={
+              !props.hideSpan ? {prefix:"+91"} :{}
+            }
           />
         </div>
       </div>

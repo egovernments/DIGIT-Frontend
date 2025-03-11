@@ -1,23 +1,20 @@
 import React, { useEffect, useMemo, useState, Fragment, useCallback } from "react";
-import { useForm, Controller, useWatch } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import _ from "lodash";
 
 // atoms need for initial setup
 import BreakLine from "../atoms/BreakLine";
 import Card from "../atoms/Card";
-import Header from "../atoms/Header";
-import Button from "../atoms/Button";
+import HeaderComponent from "../atoms/HeaderComponent";
 import ActionLinks from "../atoms/ActionLinks";
-import ActionBar from "../atoms/ActionBar";
+import Footer from "../atoms/Footer";
 import LabelFieldPair from "../atoms/LabelFieldPair";
-import ErrorMessage from "../atoms/ErrorMessage";
 import HorizontalNav from "../atoms/HorizontalNav";
-import { CardText, SubmitBar, Toast } from "../atoms";
+import { SubmitBar, Toast } from "../atoms";
 
 // import Fields from "./Fields";    //This is a field selector pickup from formcomposer
 import FieldController from "./FieldController";
-import { de } from "date-fns/locale";
 
 const wrapperStyles = {
   display: "flex",
@@ -61,21 +58,13 @@ export const FormComposer = (props) => {
     clearErrors,
     unregister,
   } = useForm({
-    defaultValues: {
-      username: "",
-      password: "",
-      city: "",
-    },
+    defaultValues: props.defaultValues,
   });
-  console.log(props,"props in form")
-  console.log("Form Values:", watch("username"), watch("password"));
   const { t } = useTranslation();
-  const formData =useWatch({ control });
-  const username = useWatch({ control, name: "username" });
-const password = useWatch({ control, name: "password" });
-  console.log(formData,username,password,"formmmm")
+  const formData = watch();
   const selectedFormCategory = props?.currentFormCategory;
   const [showErrorToast, setShowErrorToast] = useState(false);
+  const [customToast, setCustomToast] = useState(false); 
   //clear all errors if user has changed the form category.
   //This is done in case user first click on submit and have errors in cat 1, switches to cat 2 and hit submit with errors
   //So, he should not get error prompts from previous cat 1 on cat 2 submit.
@@ -103,6 +92,9 @@ const password = useWatch({ control, name: "password" });
     props.getFormAccessors && props.getFormAccessors({ setValue, getValues });
   }, []);
 
+  useEffect(()=>{
+    setCustomToast(props?.customToast);
+  },[props?.customToast])
   function onSubmit(data) {
     props.onSubmit(data);
   }
@@ -112,13 +104,8 @@ const password = useWatch({ control, name: "password" });
   }
 
   useEffect(() => {
-    trigger(); // Force validation and update state
-  }, [formData]);
-
-  useEffect(() => {
-    console.log("Form Values Updated:", formData);
     props.onFormValueChange && props.onFormValueChange(setValue, formData, formState, reset, setError, clearErrors, trigger, getValues);
-  }, [formData,formState]);
+  }, [formData]);
 
   const fieldSelector = (type, populators, isMandatory, disable = false, component, config, sectionFormCategory) =>
     // Calling field controller to render all label and fields
@@ -198,24 +185,24 @@ const password = useWatch({ control, name: "password" });
     if (section.head && section.subHead) {
       return (
         <>
-          <Header
+          <HeaderComponent
             className={`digit-card-section-header`}
             style={props?.sectionHeadStyle ? props?.sectionHeadStyle : { margin: "5px 0px" }}
             id={section.headId}
           >
             {t(section.head)}
-          </Header>
-          <Header style={titleStyle} id={`${section.headId}_DES`}>
+          </HeaderComponent>
+          <HeaderComponent style={titleStyle} id={`${section.headId}_DES`}>
             {t(section.subHead)}
-          </Header>
+          </HeaderComponent>
         </>
       );
     } else if (section.head) {
       return (
         <>
-          <Header className={`digit-card-section-header`} style={props?.sectionHeadStyle ? props?.sectionHeadStyle : {}} id={section.headId}>
+          <HeaderComponent className={`digit-card-section-header`} style={props?.sectionHeadStyle ? props?.sectionHeadStyle : {}} id={section.headId}>
             {t(section.head)}
-          </Header>
+          </HeaderComponent>
         </>
       );
     } else {
@@ -225,13 +212,14 @@ const password = useWatch({ control, name: "password" });
 
   const closeToast = () => {
     setShowErrorToast(false);
+    setCustomToast(false);
+    props?.updateCustomToast&&props?.updateCustomToast(false);
   };
 
 
   const formFields = useCallback(
-    (section, index, array, sectionFormCategory) => {
-      console.log("inside form fields");
-      return <React.Fragment key={index}>
+    (section, index, array, sectionFormCategory) => (
+      <React.Fragment key={index}>
         {section && getCombinedComponent(section)}
         {section.body.map((field, index) => {
           if (field?.populators?.hideInForm) return null;
@@ -240,14 +228,14 @@ const password = useWatch({ control, name: "password" });
               <React.Fragment key={index}>
                 <div style={field.isInsideBox ? getCombinedStyle(field?.placementinbox) : field.inline ? { display: "flex" } : {}}>
                   {/* {!field.withoutLabel && (
-                    <Header
+                    <HeaderComponent
                       style={{ color: field.isSectionText ? "#505A5F" : "", marginBottom: props.inline ? "8px" : "revert" }}
                       className={` ${field?.disable ? `disabled ${props?.labelBold ? "bolder" : ""}` : `${props?.labelBold ? "bolder" : ""}`}`}
                     >
                       {t(field.label)}
                       {field.isMandatory ? " * " : null}
                       {field.labelChildren && field.labelChildren}
-                    </Header>
+                    </HeaderComponent>
                   )} */}
                   {/* {errors && errors[field.populators?.name] && Object.keys(errors[field.populators?.name]).length ? (
                     <ErrorMessage>{t(field.populators.error || errors[field.populators?.name]?.message)}</ErrorMessage>
@@ -255,7 +243,7 @@ const password = useWatch({ control, name: "password" });
                   <div style={field.withoutLabel ? { width: "100%" } : {}} className="digit-field">
                     {fieldSelector(field.type, field.populators, field.isMandatory, field?.disable, field?.component, field, sectionFormCategory)}
                     {field?.description && (
-                      <Header
+                      <HeaderComponent
                         style={{
                           marginTop: "-24px",
                           fontSize: "16px",
@@ -266,7 +254,7 @@ const password = useWatch({ control, name: "password" });
                         className="bolder"
                       >
                         {t(field.description)}
-                      </Header>
+                      </HeaderComponent>
                     )}
                   </div>
                 </div>
@@ -287,7 +275,7 @@ const password = useWatch({ control, name: "password" });
 
                 {/* Commenting to initialize & check Field Controller and composer which render label and field Should remove later*/}
                 {/*{!field.withoutLabel && (
-                  <Header
+                  <HeaderComponent
                     style={{
                       color: field.isSectionText ? "#505A5F" : "",
                       marginBottom: props.inline ? "8px" : "revert",
@@ -298,7 +286,7 @@ const password = useWatch({ control, name: "password" });
                     {t(field.label)}
                     {field?.appendColon ? " : " : null}
                     {field.isMandatory ? " * " : null}
-                  </Header>
+                  </HeaderComponent>
                 )}
                 <div style={field.withoutLabel ? { width: "100%", ...props?.fieldStyle } : { ...props?.fieldStyle }} className="digit-field">
                   {fieldSelector(field.type, field.populators, field.isMandatory, field?.disable, field?.component, field, sectionFormCategory)}
@@ -317,7 +305,7 @@ const password = useWatch({ control, name: "password" });
         })}
         {!props.noBreakLine && (array.length - 1 === index ? null : <BreakLine style={props?.breaklineStyle ? props?.breaklineStyle : {}} />)}
       </React.Fragment>
-    },
+    ),
     [props.config, formData]
   );
 
@@ -360,8 +348,8 @@ const password = useWatch({ control, name: "password" });
   const renderFormFields = (props, section, index, array, sectionFormCategory) => (
     <React.Fragment key={index}>
       {!props.childrenAtTheBottom && props.children}
-      {props.heading && <Header style={{ ...props.headingStyle }}> {props.heading} </Header>}
-      {props.description && <Header> {props.description} </Header>}
+      {props.heading && <HeaderComponent styles={{ ...props.headingStyle }}> {props.heading} </HeaderComponent>}
+      {props.description && <HeaderComponent styles={{ ...props.descriptionStyles }}> {props.description} </HeaderComponent>}
       {props.text && <p>{props.text}</p>}
       {formFields(section, index, array, sectionFormCategory)}
       {props.childrenAtTheBottom && props.children}
@@ -426,12 +414,13 @@ const password = useWatch({ control, name: "password" });
         </HorizontalNav>
       )}
       {!props.submitInForm && props.label && (
-        <ActionBar>
-          <SubmitBar label={t(props.label)} submit="submit" disabled={isDisabled} />
+        <Footer>
+          <SubmitBar label={t(props.label)} className="digit-formcomposer-submitbar" submit="submit" disabled={isDisabled} />
           {props.onSkip && props.showSkip && <ActionLinks style={props?.skipStyle} label={t(`CS_SKIP_CONTINUE`)} onClick={props.onSkip} />}
-        </ActionBar>
+        </Footer>
       )}
       {showErrorToast && <Toast type={"error"} label={t("ES_COMMON_PLEASE_ENTER_ALL_MANDATORY_FIELDS")} isDleteBtn={true} onClose={closeToast} />}
+      {customToast && <Toast type={customToast?.type} label={t(customToast?.label)} isDleteBtn={true} onClose={closeToast} />}
     </form>
   );
 };

@@ -1,4 +1,5 @@
-import { CardText, PopUp, Button } from "@egovernments/digit-ui-components";
+//import { CardText, PopUp, Button } from "@egovernments/digit-ui-components";
+import { CardText, PopUp, Button } from "../../../../../ui-components/src";
 import React from "react";
 import { useTranslation } from "react-i18next";
 

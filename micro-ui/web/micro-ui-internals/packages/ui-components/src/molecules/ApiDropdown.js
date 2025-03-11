@@ -2,11 +2,11 @@ import React, { Fragment, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import MultiSelectDropdown from "../atoms/MultiSelectDropdown";
 import Dropdown from "../atoms/Dropdown";
-import { Loader } from "../atoms/Loader";
+import { Loader } from "../atoms";
 import { useTranslation } from "react-i18next";
 import _ from "lodash";
 
-const ApiDropdown = ({ populators, formData, props, inputRef, errors }) => {
+const ApiDropdown = ({ populators, formData, props, inputRef, errors ,disabled}) => {
   const [options, setOptions] = useState([]);
 
   const { t } = useTranslation();
@@ -24,9 +24,9 @@ const ApiDropdown = ({ populators, formData, props, inputRef, errors }) => {
   return (
     <>
       {populators.allowMultiSelect && (
-        <div style={{ display: "grid", gridAutoFlow: "row" }}>
+        <div style={{ display: "grid", gridAutoFlow: "row",width:"100%"}}>
           <MultiSelectDropdown
-            options={options}
+            options={options || []}
             optionsKey={populators?.optionsKey}
             props={props} //these are props from Controller
             isPropsNeeded={true}
@@ -43,14 +43,22 @@ const ApiDropdown = ({ populators, formData, props, inputRef, errors }) => {
             defaultLabel={t(populators?.defaultText)}
             defaultUnit={t(populators?.selectedText)}
             config={populators}
+            chipsKey={populators?.chipsKey}
+            disabled={disabled}
+            variant={populators?.variant}
+            addSelectAllCheck={populators?.addSelectAllCheck}
+            addCategorySelectAllCheck={populators?.addCategorySelectAllCheck}
+            selectAllLabel={populators?.selectAllLabel}
+            categorySelectAllLabel={populators?.categorySelectAllLabel}
+            restrictSelection={populators?.restrictSelection}
+            isSearchable={populators?.isSearchable}
           />
         </div>
       )}
       {!populators.allowMultiSelect && (
         <Dropdown
           inputRef={inputRef}
-          style={{ display: "flex", justifyContent: "space-between" }}
-          option={options}
+          option={options || []}
           key={populators.name}
           optionKey={populators?.optionsKey}
           value={props.value?.[0]}
@@ -62,6 +70,11 @@ const ApiDropdown = ({ populators, formData, props, inputRef, errors }) => {
           t={t}
           errorStyle={errors?.[populators.name]}
           optionCardStyles={populators?.optionsCustomStyle}
+          style={{...populators.styles }}
+          disabled={disabled}
+          showIcon={populators?.showIcon}
+          variant={populators?.variant}
+          isSearchable={populators?.isSearchable}
         />
       )}
     </>

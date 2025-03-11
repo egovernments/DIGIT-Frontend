@@ -1,5 +1,6 @@
-import { BodyContainer } from "@egovernments/digit-ui-components";
-import { Loader } from "@egovernments/digit-ui-components";
+// import { BodyContainer } from "@egovernments/digit-ui-components";
+// import { Loader } from "@egovernments/digit-ui-components";
+import { BodyContainer, Loader } from "../../../ui-components/src";
 import React from "react";
 import { getI18n } from "react-i18next";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

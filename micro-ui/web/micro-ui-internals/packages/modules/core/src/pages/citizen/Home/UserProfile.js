@@ -9,12 +9,13 @@ import {
   Loader,
   Button,
   SubmitBar,
-  ActionBar,
+  // ActionBar,
   CardLabel,
   BreadCrumb,
   Toast,
   ErrorMessage
-} from "@egovernments/digit-ui-components";
+} from "../../../../../../ui-components/src";
+//import { ActionBar } from "../../../../../../ui-components/src/atoms";
 import {
   CameraIcon,
 } from "@egovernments/digit-ui-react-components";
@@ -935,9 +936,9 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         </section>
       </div>
 
-      {userType === "employee" && !isMobile ? (
+      {/* {userType === "employee" && !isMobile ? (
         <ActionBar actionFields={[<SubmitBar t={t} label={t("CORE_COMMON_SAVE")} onSubmit={updateProfile} />]} className="" setactionFieldsToRight />
-      ) : null}
+      ) : null} */}
       {toast && (
         <Toast
           type={toast.key}

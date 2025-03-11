@@ -1,20 +1,20 @@
 import React, { useMemo, useCallback, useState, useEffect, Fragment,useContext } from 'react'
 import { useTranslation } from 'react-i18next';
-import Table from '../atoms/Table';
+import Table from '../atoms/Table'
 import TextInput from '../atoms/TextInput'
 import { useForm, Controller } from "react-hook-form";
 import _ from "lodash";
 import { InboxContext } from './InboxSearchComposerContext';
-import { Loader } from '../atoms/Loader';
+import { Loader } from '../atoms';
 import NoResultsFound from '../atoms/NoResultsFound';
-import { InfoIcon,EditIcon } from "../atoms/svgindex";
+import { CustomSVG } from '../atoms';
 
-
-const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fullConfig,revalidate,additionalConfig }) => {
+const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fullConfig,revalidate,type,activeLink,browserSession,additionalConfig }) => {
     const {apiDetails} = fullConfig
     const { t } = useTranslation();
     const resultsKey = config.resultsJsonPath
-    
+    const [showResultsTable,setShowResultsTable] = useState(true)
+    const [session,setSession,clearSession] = browserSession || []
     // let searchResult = data?.[resultsKey]?.length>0 ? data?.[resultsKey] : []
     let searchResult = _.get(data,resultsKey,[])
     searchResult = searchResult?.length>0 ? searchResult : []
@@ -39,27 +39,40 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
    
 
     const {state,dispatch} = useContext(InboxContext)
+    //here I am just checking state.searchForm has all empty keys or not(when clicked on clear search)
+    useEffect(() => {
+        if(apiDetails?.minParametersForSearchForm !== 0 && Object.keys(state.searchForm).length > 0 && !Object.keys(state.searchForm).some(key => state.searchForm[key]!=="") && type==="search" && activeLink?.minParametersForSearchForm !== 0){
+            setShowResultsTable(false)
+        }
+        // else{
+        //     setShowResultsTable(true)
+        // }
+        return ()=>{
+            setShowResultsTable(true)
+        }
+    }, [state])
+   
     
+
     const tableColumns = useMemo(() => {
         //test if accessor can take jsonPath value only and then check sort and global search work properly
         return config?.columns?.map(column => {
-            
             if(column?.svg) {
                 // const icon = Digit.ComponentRegistryService.getComponent(column.svg);
                 return {
                     Header: t(column?.label) || t("ES_COMMON_NA"),
                     accessor:column.jsonPath,
                     Cell: ({ value, col, row }) => {
-                        return <div className='cursorPointer' style={{marginLeft:"1rem"}} onClick={()=>additionalConfig?.resultsTable?.onClickSvg(row)}> <EditIcon /></div>
+                        return <div className='cursorPointer' style={{marginLeft:"1rem"}} onClick={()=>additionalConfig?.resultsTable?.onClickSvg(row)}> <CustomSVG.EditIcon /></div>
                     }
                 }
             }
-
             if (column.additionalCustomization){
                 return {
                     Header: t(column?.label) || t("ES_COMMON_NA"),
                     accessor:column.jsonPath,
                     headerAlign: column?.headerAlign,
+                    disableSortBy:column?.disableSortBy ? column?.disableSortBy :false,
                     Cell: ({ value, col, row }) => {
                         return  Digit?.Customizations?.[apiDetails?.masterName]?.[apiDetails?.moduleName]?.additionalCustomizations(row.original,column?.label,column, value,t, searchResult);
                     }
@@ -69,13 +82,16 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
                 Header: t(column?.label) || t("ES_COMMON_NA"),
                 accessor: column.jsonPath,
                 headerAlign: column?.headerAlign,
+                disableSortBy:column?.disableSortBy ? column?.disableSortBy :false,
                 Cell: ({ value, col, row }) => {
-                    return String(value ? column.translate? t(column.prefix?`${column.prefix}${value}`:value) : value : column?.dontShowNA ? " " : t("ES_COMMON_NA"));
+                    return String(value ? column.translate? t(Digit.Utils.locale.getTransformedLocale(column.prefix?`${column.prefix}${value}`:value)) : value : t("ES_COMMON_NA"));
                 }
             }
         })
     }, [config, searchResult])
 
+    const defaultValuesFromSession = config?.customDefaultPagination ? config?.customDefaultPagination : (session?.tableForm ? {...session?.tableForm} : {limit:10,offset:0})
+    
     const {
         register,
         handleSubmit,
@@ -91,12 +107,19 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
         clearErrors,
         unregister,
     } = useForm({
-        defaultValues: {
-            offset: 0,
-            limit: 10, 
-        },
+        defaultValues: defaultValuesFromSession
     });
     
+     //call this fn whenever session gets updated
+  const setDefaultValues = () => {
+    reset(defaultValuesFromSession)
+  }
+
+  //adding this effect because simply setting session to default values is not working
+  useEffect(() => {
+    setDefaultValues()
+  }, [session])
+
     const isMobile = window.Digit.Utils.browser.isMobile();
     const [searchQuery, onSearch] = useState("");
 
@@ -122,17 +145,16 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
             return res;
         });
     }, []);
-
+   
     useEffect(() => {
-        register("offset", 0);
-        register("limit", 10);
-    }, [register]);
+        register("offset",session?.tableForm?.offset ||state.tableForm.offset|| config?.customDefaultPagination?.offset|| 0);
+        register("limit",session?.tableForm?.limit ||state.tableForm.limit|| config?.customDefaultPagination?.limit || 10);
+    });
 
-    useEffect(() => {
-      setValue("offset",state.tableForm.offset)
-      setValue("limit",state.tableForm.limit)
-    })
-    
+    // useEffect(() => {
+    //     setValue("offset",state.tableForm.offset)
+    //     setValue("limit",state.tableForm.limit)
+    //   })
 
     function onPageSizeChange(e) {
         setValue("limit", Number(e.target.value));
@@ -164,6 +186,7 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
     
     if (isLoading || isFetching ) return <Loader />
     if(!data) return <></>
+    if(!showResultsTable) return <></>
     if (searchResult?.length === 0) return <NoResultsFound/>
     return (
         <div style={{width : "100%"}}>
@@ -173,30 +196,30 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
             {
                 config?.showTableInstruction && ( 
                 <div className='table-instruction-wrapper'>
-                    <InfoIcon /><p className='table-instruction-header'>{t(config?.showTableInstruction)}</p>
+                    <CustomSVG.InfoIcon /><p className='table-instruction-header'>{t(config?.showTableInstruction)}</p>
                 </div> )
             }
             {searchResult?.length > 0 && <Table
+                rowClassName={config.rowClassName}
                 className={config?.tableClassName ? config?.tableClassName: "table"}
                 t={t}
-                customTableWrapperClassName={"dss-table-wrapper"}
+                customTableWrapperClassName={"search-component-table"}
                 disableSort={config?.enableColumnSort ? false : true}
                 autoSort={config?.enableColumnSort ? true : false}
                 globalSearch={config?.enableGlobalSearch ? filterValue : undefined}
                 onSearch={config?.enableGlobalSearch ? searchQuery : undefined}
                 data={searchResult}
-                totalRecords={data?.count || data?.TotalCount || data?.totalCount}
+                totalRecords={data?.count || data?.TotalCount || data?.totalCount || searchResult?.length}
                 columns={tableColumns}
                 isPaginationRequired={true}
                 onPageSizeChange={onPageSizeChange}
-                currentPage={getValues("offset") / getValues("limit")}
+                currentPage={parseInt(getValues("offset") / getValues("limit"))}
                 onNextPage={nextPage}
                 onPrevPage={previousPage}
                 pageSizeLimit={getValues("limit")}
                 showCheckBox={config?.showCheckBox ? true : false}
                 actionLabel={config?.checkBoxActionLabel}
                 tableSelectionHandler={Digit?.Customizations?.[apiDetails?.masterName]?.[apiDetails?.moduleName]?.selectionHandler}
-                manualPagination={config.manualPagination}
                 getCellProps={(cellInfo) => {
                     return {
                         style: {
@@ -207,7 +230,7 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
                     };
                 }}
                 onClickRow={additionalConfig?.resultsTable?.onClickRow}
-                rowClassName={config.rowClassName}
+                manualPagination={config.manualPagination}
                 noColumnBorder={config?.noColumnBorder}
             />}
         </div>

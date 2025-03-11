@@ -7,11 +7,11 @@ const TextBlock = ({
   caption,
   captionClassName,
   header,
-  headerClasName,
+  headerClassName,
   subHeader,
-  subHeaderClasName,
+  subHeaderClassName,
   body,
-  bodyClasName,
+  bodyClassName,
   style
 }) => {
   return (
@@ -26,19 +26,19 @@ const TextBlock = ({
             </div>
           )}
           {header && (
-            <div className={`digit-text-block-header ${headerClasName}`}>
+            <div className={`digit-text-block-header ${headerClassName}`}>
               {header}
             </div>
           )}
           {subHeader && (
-            <div className={`digit-text-block-subheader ${subHeaderClasName}`}>
+            <div className={`digit-text-block-subheader ${subHeaderClassName}`}>
               {subHeader}
             </div>
           )}
         </div>
       )}
       {body && (
-        <div className={`digit-text-block-body ${bodyClasName}`}>{body}</div>
+        <div className={`digit-text-block-body ${bodyClassName}`}>{body}</div>
       )}
     </div>
   );
@@ -50,11 +50,11 @@ TextBlock.propTypes = {
   caption: PropTypes.string,
   captionClassName: PropTypes.string,
   header: PropTypes.string,
-  headerClasName: PropTypes.string,
+  headerClassName: PropTypes.string,
   subHeader: PropTypes.string,
-  subHeaderClasName: PropTypes.string,
+  subHeaderClassName: PropTypes.string,
   body: PropTypes.string,
-  bodyClasName: PropTypes.string,
+  bodyClassName: PropTypes.string,
 };
 
 TextBlock.defaultProps = {
@@ -63,11 +63,11 @@ TextBlock.defaultProps = {
   caption: "",
   captionClassName: "",
   header: "",
-  headerClasName: "",
+  headerClassName: "",
   subHeader: "",
-  subHeaderClasName: "",
+  subHeaderClassName: "",
   body: "",
-  bodyClasName: "",
+  bodyClassName: "",
 };
 
 export default TextBlock;

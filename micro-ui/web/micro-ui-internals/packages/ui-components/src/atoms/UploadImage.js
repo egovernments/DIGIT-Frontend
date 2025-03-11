@@ -1,14 +1,10 @@
 import React, { useState, useEffect, useRef, Fragment } from "react";
 import { SVG } from "./SVG";
+import Webcam from "react-webcam";
 import Button from "./Button";
 import ErrorMessage from "./ErrorMessage";
 import { Colors} from "../constants/colors/colorconstants";
-import {
-  DocUpload,
-  DocPdfUpload,
-  DocXlsxUpload,
-  DocdocUpload,
-} from "./svgindex";
+import { CustomSVG } from "./CustomSVG";
 
 const UploadImage = ({
   multiple,
@@ -125,7 +121,7 @@ const UploadImage = ({
     switch (fileType) {
       case "application/pdf":
         return (
-          <DocPdfUpload
+          <CustomSVG.DocPdfUpload
             className={`digit-docupload-icon ${isError ? "error" : ""}`}
             styles={isError ? { border: "1px solid #B91900" } : {}}
             fill={isError ? errorColor : ""}
@@ -137,7 +133,7 @@ const UploadImage = ({
       case "application/x-excel":
       case "application/x-msexcel":
         return (
-          <DocXlsxUpload
+          <CustomSVG.DocXlsxUpload
             className={`digit-docupload-icon ${isError ? "error" : ""}`}
             styles={isError ? { border: "1px solid #B91900" } : {}}
             fill={isError ? errorColor : ""}
@@ -146,7 +142,7 @@ const UploadImage = ({
       case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
       case "application/msword":
         return (
-          <DocdocUpload
+          <CustomSVG.DocdocUpload
             className={`digit-docupload-icon ${isError ? "error" : ""}`}
             styles={isError ? { border: "1px solid #B91900" } : {}}
             fill={isError ? errorColor : ""}
@@ -154,7 +150,7 @@ const UploadImage = ({
         );
       default:
         return (
-          <DocUpload
+          <CustomSVG.DocUpload
             className={`digit-docupload-icon ${isError ? "error" : ""}`}
             styles={isError ? { border: "1px solid #B91900" } : {}}
             fill={isError ? errorColor : ""}
@@ -296,7 +292,8 @@ const UploadImage = ({
               <div className="upload-options" style={{ display: "flex" }}>
                 <label
                   onClick={() => toggleWebcam()}
-                  style={{ cursor: "pointer" }}
+                  // style={{ cursor: "pointer" }}
+                  className="upload-options-svg-wrap"
                 >
                   <SVG.CameraEnhance
                     fill="#C84C0E"
@@ -358,7 +355,7 @@ const UploadImage = ({
               ></SVG.Close>
             </div>
             <div className="video-stream" style={{ height: "100%" }}>
-              {/* <Webcam
+              <Webcam
                 audio={false}
                 imageSmoothing={true}
                 videoConstraints={videoConstraints}
@@ -367,8 +364,7 @@ const UploadImage = ({
                 width={"100%"}
                 height={"100%"}
                 style={{ objectFit: "cover" }}
-              /> */}
-              Webcamp added later
+              />
             </div>
             <div
               style={{

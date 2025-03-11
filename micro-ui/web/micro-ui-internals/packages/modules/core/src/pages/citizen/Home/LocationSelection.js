@@ -1,4 +1,5 @@
-import { BackLink } from "@egovernments/digit-ui-components";
+//import { BackLink } from "@egovernments/digit-ui-components";
+import { BackLink } from "../../../../../../ui-components/src";
 import { CardHeader, CardLabelError, PageBasedInput, SearchOnRadioButtons } from "@egovernments/digit-ui-react-components";
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";

@@ -2,13 +2,18 @@ import React from "react";
 import TimelineMolecule from "../TimelineMolecule";
 import { Button } from "../../atoms";
 import Timeline from "../../atoms";
+import { Iframe } from "../../atoms";
 
 export default {
-  title: "Molecules/TimelineMolecule",
+  title: "Molecules/Timeline Molecule",
   component: TimelineMolecule,
   argTypes: {
-    initialVisibleCount: { control: "number" },
-    viewMoreLabel: { control: "text" },
+    initialVisibleCount: { table: { disable: true } },
+    additionalWidgets: {
+      control: "boolean",
+      name: "Additional Widgets",
+      defaultValue: false,
+    },
   },
 };
 
@@ -76,277 +81,103 @@ const additionalElements = [
   />,
 ];
 
-export const Default = () => (
-  <TimelineMolecule>
-    <Timeline
-      label="Upcoming Timeline Step2"
-      subElements={subElements}
-      variant="upcoming"
-      showConnector={true}
-    />
-    <Timeline
-      label="Upcoming Timeline Step"
-      subElements={subElements}
-      variant="upcoming"
-      showConnector={true}
-    />
-    <Timeline
-      label="Inprogress Timeline Step"
-      subElements={subElements}
-      variant="inprogress"
-      showConnector={true}
-    />
-    <Timeline
-      label="Completed Timeline Step2"
-      subElements={subElements}
-      variant="completed"
-      showConnector={true}
-    />
-    <Timeline
-      label="Completed Timeline Step"
-      subElements={subElements}
-      variant="completed"
-      showConnector={true}
-    />
-  </TimelineMolecule>
+export const Documentation = () => (
+  <Iframe
+    //Todo:Update the url
+    src="https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui/ui-components-standardisation/digit-ui-components0.2.0"
+    title="TimelineMolecule Documentation"
+  />
 );
 
-export const WithAdditionalElements = () => (
-  <TimelineMolecule>
-    <Timeline
-      label="Upcoming Timeline Step2"
-      subElements={subElements}
-      variant="upcoming"
-      showConnector={true}
-      additionalElements={additionalElements}
-    />
-    <Timeline
-      label="Upcoming Timeline Step"
-      subElements={subElements}
-      variant="upcoming"
-      showConnector={true}
-      additionalElements={additionalElements}
-    />
-    <Timeline
-      label="Inprogress Timeline Step"
-      subElements={subElements}
-      variant="inprogress"
-      showConnector={true}
-      additionalElements={additionalElements}
-    />
-    <Timeline
-      label="Completed Timeline Step2"
-      subElements={subElements}
-      variant="completed"
-      showConnector={true}
-      additionalElements={additionalElements}
-    />
-    <Timeline
-      label="Completed Timeline Step"
-      subElements={subElements}
-      variant="completed"
-      showConnector={true}
-      additionalElements={additionalElements}
-    />
-  </TimelineMolecule>
-);
+Documentation.storyName = "Docs";
+Documentation.argTypes = {
+  additionalWidgets:{table:{disable:true}}
+}
 
-export const WithVisbileCount = () => (
-  <TimelineMolecule initialVisibleCount={3}>
-    <Timeline
-      label="Upcoming Timeline Step3"
-      subElements={subElements}
-      variant="upcoming"
-      showConnector={true}
-    />
-    <Timeline
-      label="Upcoming Timeline Step2"
-      subElements={subElements}
-      variant="upcoming"
-      showConnector={true}
-    />
-    <Timeline
-      label="Upcoming Timeline Step1"
-      subElements={subElements}
-      variant="upcoming"
-      showConnector={true}
-    />
-    <Timeline
-      label="Upcoming Timeline Step"
-      subElements={subElements}
-      variant="upcoming"
-      showConnector={true}
-    />
-    <Timeline
-      label="Inprogress Timeline Step"
-      subElements={subElements}
-      variant="inprogress"
-      showConnector={true}
-    />
-    <Timeline
-      label="Completed Timeline Step3"
-      subElements={subElements}
-      variant="completed"
-      showConnector={true}
-    />
-    <Timeline
-      label="Completed Timeline Step2"
-      subElements={subElements}
-      variant="completed"
-      showConnector={true}
-    />
-    <Timeline
-      label="Completed Timeline Step"
-      subElements={subElements}
-      variant="completed"
-      showConnector={true}
-    />
-  </TimelineMolecule>
-);
+const Wrapper = (args) => {
+  const { additionalWidgets, ...rest } = args;
+  const updatedChildren = additionalWidgets
+    ? [
+        <Timeline
+          label="Upcoming Timeline Step2"
+          subElements={subElements}
+          variant="upcoming"
+          showConnector={true}
+          additionalElements={additionalElements}
+        />,
+        <Timeline
+          label="Upcoming Timeline Step"
+          subElements={subElements}
+          variant="upcoming"
+          showConnector={true}
+          additionalElements={additionalElements}
+        />,
+        <Timeline
+          label="Inprogress Timeline Step"
+          subElements={subElements}
+          variant="inprogress"
+          showConnector={true}
+          additionalElements={additionalElements}
+        />,
+        <Timeline
+          label="Completed Timeline Step2"
+          subElements={subElements}
+          variant="completed"
+          showConnector={true}
+          additionalElements={additionalElements}
+        />,
+        <Timeline
+          label="Completed Timeline Step"
+          subElements={subElements}
+          variant="completed"
+          showConnector={true}
+          additionalElements={additionalElements}
+        />,
+      ]
+    : [
+        <Timeline
+          label="Upcoming Timeline Step2"
+          subElements={subElements}
+          variant="upcoming"
+          showConnector={true}
+        />,
+        <Timeline
+          label="Upcoming Timeline Step"
+          subElements={subElements}
+          variant="upcoming"
+          showConnector={true}
+        />,
+        <Timeline
+          label="Inprogress Timeline Step"
+          subElements={subElements}
+          variant="inprogress"
+          showConnector={true}
+        />,
+        <Timeline
+          label="Completed Timeline Step2"
+          subElements={subElements}
+          variant="completed"
+          showConnector={true}
+        />,
+        <Timeline
+          label="Completed Timeline Step"
+          subElements={subElements}
+          variant="completed"
+          showConnector={true}
+        />,
+      ];
 
-export const WithCustomValues = () => (
-  <TimelineMolecule
-    initialVisibleCount={3}
-    viewMoreLabelForFuture={"Show More Future Timelines"}
-    viewLessLabelForFuture={"Show Less Future Timelines"}
-    viewLessLabelForPast={"Show Less Past Timelines"}
-    viewMoreLabelForPast={"Show More Past Timelines "}
-    pastIcon={"ArrowDownward"}
-    FutureIcon={"ArrowDownward"}
-  >
-    <Timeline
-      label="Upcoming Timeline Step3"
-      subElements={subElements}
-      variant="upcoming"
-      showConnector={true}
-    />
-    <Timeline
-      label="Upcoming Timeline Step2"
-      subElements={subElements}
-      variant="upcoming"
-      showConnector={true}
-    />
-    <Timeline
-      label="Upcoming Timeline Step1"
-      subElements={subElements}
-      variant="upcoming"
-      showConnector={true}
-    />
-    <Timeline
-      label="Upcoming Timeline Step"
-      subElements={subElements}
-      variant="upcoming"
-      showConnector={true}
-    />
-    <Timeline
-      label="Inprogress Timeline Step"
-      subElements={subElements}
-      variant="inprogress"
-      showConnector={true}
-    />
-    <Timeline
-      label="Completed Timeline Step1"
-      subElements={subElements}
-      variant="completed"
-      showConnector={true}
-    />
-    <Timeline
-      label="Completed Timeline Step2"
-      subElements={subElements}
-      variant="completed"
-      showConnector={true}
-    />
-  </TimelineMolecule>
-);
+  return <TimelineMolecule {...rest} children={updatedChildren} />;
+};
 
-export const WithFutureLabelHidden = () => (
-  <TimelineMolecule
-    initialVisibleCount={2}
-    hideFutureLabel={true}
-  >
-    <Timeline
-      label="Upcoming Timeline Step3"
-      subElements={subElements}
-      variant="upcoming"
-      showConnector={true}
-    />
-    <Timeline
-      label="Upcoming Timeline Step2"
-      subElements={subElements}
-      variant="upcoming"
-      showConnector={true}
-    />
-    <Timeline
-      label="Upcoming Timeline Step1"
-      subElements={subElements}
-      variant="upcoming"
-      showConnector={true}
-    />
-    <Timeline
-      label="Upcoming Timeline Step"
-      subElements={subElements}
-      variant="upcoming"
-      showConnector={true}
-    />
-    <Timeline
-      label="Inprogress Timeline Step"
-      subElements={subElements}
-      variant="inprogress"
-      showConnector={true}
-    />
-    <Timeline
-      label="Completed Timeline Step3"
-      subElements={subElements}
-      variant="completed"
-      showConnector={true}
-    />
-    <Timeline
-      label="Completed Timeline Step2"
-      subElements={subElements}
-      variant="completed"
-      showConnector={true}
-    />
-    <Timeline
-      label="Completed Timeline Step"
-      subElements={subElements}
-      variant="completed"
-      showConnector={true}
-    />
-  </TimelineMolecule>
-);
+const Template = (args) => {
+  return <Wrapper {...args} />;
+};
 
-export const WithError = () => (
-  <TimelineMolecule>
-    <Timeline
-      label="Upcoming Timeline Step2"
-      subElements={subElements}
-      variant="upcoming"
-      showConnector={true}
-    />
-    <Timeline
-      label="Upcoming Timeline Step"
-      subElements={subElements}
-      variant="upcoming"
-      showConnector={true}
-      isError={true}
-    />
-    <Timeline
-      label="Inprogress Timeline Step"
-      subElements={subElements}
-      variant="inprogress"
-      showConnector={true}
-    />
-    <Timeline
-      label="Completed Timeline Step2"
-      subElements={subElements}
-      variant="completed"
-      showConnector={true}
-    />
-    <Timeline
-      label="Completed Timeline Step"
-      subElements={subElements}
-      variant="completed"
-      showConnector={true}
-    />
-  </TimelineMolecule>
-);
+export const Basic = Template.bind({});
+Basic.args = {};
+
+export const Collapsible = Template.bind({});
+Collapsible.args = {
+  initialVisibleCount: 3,
+};

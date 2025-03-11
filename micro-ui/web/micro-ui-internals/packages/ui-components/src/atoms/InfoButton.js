@@ -109,7 +109,7 @@ InfoButton.propTypes = {
 };
 
 InfoButton.defaultProps = {
-  label: "TEST",
+  label: "",
   onClick: () => {},
   infobuttontype:"info"
 };

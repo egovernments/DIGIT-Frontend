@@ -24,17 +24,14 @@ const TextInput = (props) => {
     props?.onChange(value);
   };
   const incrementCount = () => {
-    const newValue =
-      Number(props.value) + (Number(props?.step) ? Number(props?.step) : 1);
+    const newValue = Number(props.value) + (Number(props?.step) ? Number(props?.step) : 1);
     props.onChange(newValue);
   };
 
   const decrementCount = () => {
-    const newValue = Math.max(
-      Number(props.value) - (Number(props?.step) ? Number(props?.step) : 1),
-      0
-    );
-    props.onChange(newValue);
+    const newValue = Number(props.value) - (Number(props?.step) ? Number(props?.step) : 1);
+    const finalValue = props?.allowNegativeValues ? newValue : Math.max(newValue, 0);
+    props.onChange(finalValue);
   };
 
   const renderPrefix = () => {
@@ -184,11 +181,11 @@ const TextInput = (props) => {
             });
             return svgElement;
           } else {
-            console.log("Icon not found");
+            console.warn("Icon not found");
             return null;
           }
         } catch (error) {
-          console.error("Icon not found");
+          console.warn("Icon not found");
           return null;
         }
       }
@@ -210,7 +207,7 @@ const TextInput = (props) => {
     props.errorStyle ? "digit-employeeCard-inputError" : ""
   } ${props.nonEditable ? "noneditable" : ""} ${
     props.type === "numeric" ? "numeric" : ""
-  }`;
+  } ${props.customClass || ""}`;
 
   const defaultType =
     props.type === "password" && inputType === "text"
@@ -245,7 +242,7 @@ const TextInput = (props) => {
                   : defaultType || "text"
               }
               name={props.name}
-              id={props.id}
+              id={props?.id}
               className={inputClassNameForMandatory}
               placeholder={StringManipulator(
                 "TOSENTENCECASE",
@@ -437,6 +434,7 @@ TextInput.propTypes = {
   min: PropTypes.number,
   disabled: PropTypes.bool,
   nonEditable: PropTypes.bool,
+  allowNegativeValues:PropTypes.bool,
   errorStyle: PropTypes.bool,
   hideSpan: PropTypes.bool,
   title: PropTypes.string,
