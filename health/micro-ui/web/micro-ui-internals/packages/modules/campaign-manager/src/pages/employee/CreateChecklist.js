@@ -461,13 +461,15 @@ const CreateChecklist = () => {
         message: `${t(checklistTypeLocal)} ${t(roleLocal)}`,
         module: "hcm-checklist"
       });
-      uniqueLocal.push({
-        code: `${campaignName}.${checklistTypeTemp}.${roleTemp}.${helpTextCode}`,
-        locale: locale,
-        message: helpText,
-        module: "hcm-checklist"
-      });
-  
+      if(helpText != ""){
+        uniqueLocal.push({
+          code: `${campaignName}.${checklistTypeTemp}.${roleTemp}.${helpTextCode}`,
+          locale: locale,
+          message: helpText,
+          module: "hcm-checklist"
+        });
+      }
+        
       // Call upsert first
       const localisations = uniqueLocal;
       const localisationResult = await localisationMutateAsync(localisations);
