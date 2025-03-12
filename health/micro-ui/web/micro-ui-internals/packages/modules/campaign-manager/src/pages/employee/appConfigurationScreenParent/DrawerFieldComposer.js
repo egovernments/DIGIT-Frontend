@@ -288,4 +288,4 @@ function DrawerFieldComposer() {
   );
 }
 
-export default DrawerFieldComposer;
+export default React.memo(DrawerFieldComposer);

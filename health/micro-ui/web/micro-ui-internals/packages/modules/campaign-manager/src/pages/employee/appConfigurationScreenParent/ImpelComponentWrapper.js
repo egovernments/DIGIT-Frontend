@@ -113,8 +113,7 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
     submit(restructuredData);
   };
 
-  // onSubmit();
   return <AppLocalisationWrapper onSubmit={onSubmit} back={back} showBack={showBack} screenConfig={screenConfig} parentDispatch={parentDispatch} />;
 }
 
-export default ImpelComponentWrapper;
+export default React.memo(ImpelComponentWrapper);

@@ -77,4 +77,4 @@ function AppLocalisationWrapper({ onSubmit, screenConfig, back, showBack, parent
   );
 }
 
-export default AppLocalisationWrapper;
+export default React.memo(AppLocalisationWrapper);

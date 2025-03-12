@@ -68,4 +68,4 @@ function DraggableField({
   );
 }
 
-export default DraggableField;
+export default React.memo(DraggableField);

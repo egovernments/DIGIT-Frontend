@@ -240,14 +240,14 @@
   }
 }
 
-.date-style{
+.date-style {
   max-width: 37.5rem;
   display: flex;
   gap: 1rem;
 }
-.app-preview{
+.app-preview {
   width: 25rem;
-  border: 0.000rem solid #ccc;
+  border: 0rem solid #ccc;
   border-radius: 1rem;
   background-color: white;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
@@ -302,33 +302,35 @@
   max-width: 35rem;
 
   .digit-popup-footer {
+    padding-top: 0 !important;
 
-      padding-top: 0 !important;
+    .digit-popup-footer-buttons {
+      width: 100% !important;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
 
-      .digit-popup-footer-buttons {
-          width: 100% !important;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-
-          .digit-button-secondary {
-              width: 100%;
-          }
-
-          .digit-button-primary {
-              width: 100%;
-          }
+      .digit-button-secondary {
+        width: 100%;
       }
+
+      .digit-button-primary {
+        width: 100%;
+      }
+    }
   }
 
   .digit-popup-children-wrap {
-      padding-top: 0 !important;
-      overflow: visible;
+    padding-top: 0 !important;
+    overflow: visible;
   }
 }
 .rdt_TableBody {
-  border: 1px solid #ccc !important; 
+  border: 1px solid #ccc !important;
   width: 100% !important;
 }
-.rdt_Table{
+.rdt_Table {
   width: 100% !important;
+}
+.digit-slider-container.static.right.open {
+  z-index: 9999;
 }

@@ -7,7 +7,7 @@ import _ from "lodash";
 import { useCustomT } from "./useCustomT";
 import DraggableField from "./DraggableField";
 
-function AppFieldScreenWrapper({}) {
+function AppFieldScreenWrapper() {
   const { state, dispatch } = useAppConfigContext();
   const searchParams = new URLSearchParams(location.search);
   const projectType = searchParams.get("prefix");
@@ -58,7 +58,7 @@ function AppFieldScreenWrapper({}) {
                 }}
               />
             ))}
-            {console.log("fileddd" , fields)}
+            {console.log("fileddd", fields)}
             <Divider />
             {fields?.map(
               ({ type, label, active, required, Mandatory, helpText, infoText, innerLabel, dropDownOptions, deleteFlag, ...rest }, i, c) => {
@@ -152,4 +152,4 @@ function AppFieldScreenWrapper({}) {
   );
 }
 
-export default AppFieldScreenWrapper;
+export default React.memo(AppFieldScreenWrapper);

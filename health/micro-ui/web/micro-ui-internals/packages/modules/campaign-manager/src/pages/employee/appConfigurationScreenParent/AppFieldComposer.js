@@ -670,4 +670,4 @@ function AppFieldComposer({
   );
 }
 
-export default AppFieldComposer;
+export default React.memo(AppFieldComposer);

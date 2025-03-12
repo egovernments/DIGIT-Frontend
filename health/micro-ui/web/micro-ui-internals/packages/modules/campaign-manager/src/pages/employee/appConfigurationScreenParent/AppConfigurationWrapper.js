@@ -469,4 +469,4 @@ function AppConfigurationWrapper({ screenConfig }) {
   );
 }
 
-export default AppConfigurationWrapper;
+export default React.memo(AppConfigurationWrapper);

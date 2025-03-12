@@ -54,7 +54,6 @@ const AppConfigurationParentLayer = () => {
   const variant = searchParams.get("variant");
   const formId = searchParams.get("formId");
   const [parentState, parentDispatch] = useReducer(dispatcher, {});
-  const [appTemplate, setAppTemplate] = useState([]);
   const [numberTabs, setNumberTabs] = useState([]);
   const [currentStep, setCurrentStep] = useState(1);
   const [stepper, setStepper] = useState([]);
@@ -95,16 +94,16 @@ const AppConfigurationParentLayer = () => {
     },
   };
 
-    const correctField = (key) => {
-      switch (key) {
-        case "text":
-          return "textInput";
-        case "date":
-          return "datePicker";
-        default:
-          return key;
-      }
-    };
+  const correctField = (key) => {
+    switch (key) {
+      case "text":
+        return "textInput";
+      case "date":
+        return "datePicker";
+      default:
+        return key;
+    }
+  };
 
   const { isLoading, data: formData } = Digit.Hooks.useCustomAPIHook(reqCriteriaForm);
 
@@ -163,11 +162,13 @@ const AppConfigurationParentLayer = () => {
 
   const { mutate } = Digit.Hooks.campaign.useUpsertFormBuilderConfig(tenantId);
   const { mutate: updateMutate } = Digit.Hooks.campaign.useUpdateFormBuilderConfig(tenantId);
+  
   useEffect(() => {
     if (showToast) {
       setTimeout(closeToast, 10000);
     }
   }, [showToast]);
+  
   useEffect(() => {
     if (formData || formId) {
       parentDispatch({
@@ -175,7 +176,6 @@ const AppConfigurationParentLayer = () => {
         data: convertDataFormat(formData, AppConfigMdmsData?.[masterName]),
       });
     } else if (!isLoadingAppConfigMdmsData && AppConfigMdmsData?.[masterName]) {
-      setAppTemplate([...AppConfigMdmsData?.[masterName]]);
       parentDispatch({
         key: "SET",
         data: [...AppConfigMdmsData?.[masterName]],
