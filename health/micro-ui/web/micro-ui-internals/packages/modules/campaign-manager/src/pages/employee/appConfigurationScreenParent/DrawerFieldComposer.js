@@ -165,6 +165,12 @@ function DrawerFieldComposer() {
   const [drawerState, setDrawerState] = useState({
     ...state?.drawerField,
   });
+  const MdmsMasterList = [
+    {
+      moduleName: "common-masters",
+      masterName: "GenderType",
+    },
+  ];
 
   useEffect(() => {
     if (state?.drawerField) {
@@ -203,6 +209,35 @@ function DrawerFieldComposer() {
           );
         }
       })}
+      {drawerState?.type === "dropdown" || drawerState?.type === "MdmsDropdown" ? (
+        <Switch
+          label={"MDMS Dropdown"}
+          onToggle={(value) =>
+            setDrawerState((prev) => ({
+              ...prev,
+              type: value ? "MdmsDropdown" : "dropdown",
+              isMdms: value,
+            }))
+          }
+          isCheckedInitially={drawerState?.isMdms ? true : false}
+          shapeOnOff
+        />
+      ) : null}
+      {drawerState?.isMdms ? (
+        <Dropdown
+          variant={""}
+          t={t}
+          option={MdmsMasterList.map((i) => ({ ...i, code: `${i.moduleName}.${i.masterName}` }))}
+          optionKey={"code"}
+          selected={drawerState?.moduleMaster || {}}
+          select={(value) => {
+            setDrawerState((prev) => ({
+              ...prev,
+              moduleMaster: value,
+            }));
+          }}
+        />
+      ) : null}
 
       {(drawerState?.type === "dropdown" || drawerState?.type === "dropDown" || drawerState?.type === "checkbox") && (
         <div

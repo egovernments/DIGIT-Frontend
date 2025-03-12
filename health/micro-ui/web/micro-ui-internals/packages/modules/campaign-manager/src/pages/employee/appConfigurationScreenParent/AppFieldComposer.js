@@ -16,6 +16,48 @@ const CheckBoxes = ({ t, option, optionKey, isLabelFirst }) => {
   );
 };
 
+const MdmsDropdown = ({
+  t,
+  moduleMaster,
+  optionKey = "code",
+  moduleName,
+  masterName,
+  className,
+  style = {},
+  variant = "",
+  selected,
+  select = () => {},
+  rest,
+}) => {
+  if (!moduleName || !masterName) return null;
+  const { isLoading, data } = Digit.Hooks.useCustomMDMS(
+    Digit.ULBService.getCurrentTenantId(),
+    moduleName,
+    [{ name: masterName }],
+    {
+      enabled: moduleName && masterName,
+      select: (data) => {
+        return data?.[moduleName]?.[masterName]?.filter((item) => item.active);
+      },
+    },
+    { schemaCode: "MDMSDROPDOWNLIST" } //mdmsv2
+  );
+
+  if (isLoading) return <div>Loading...</div>;
+  return (
+    <Dropdown
+      className={className}
+      style={style}
+      variant={variant}
+      t={t}
+      option={data}
+      optionKey={optionKey}
+      selected={selected}
+      select={() => select()}
+    />
+  );
+};
+
 const Field = ({
   t,
   headerFields,
@@ -173,6 +215,82 @@ const Field = ({
         </>
       );
       break;
+
+    case "MdmsDropdown":
+      return (
+        <>
+          {infoText && (
+            <InfoCard
+              populators={{
+                name: "infocard",
+              }}
+              variant="default"
+              text={t(infoText)}
+            />
+          )}
+          <LabelFieldPair
+            className={
+              !headerFields
+                ? `appConfiglabelField ${
+                    config?.id
+                      ? config?.id === state?.drawerField?.id
+                        ? "selected"
+                        : ""
+                      : config?.jsonPath === state?.drawerField?.jsonPath
+                      ? "selected"
+                      : ""
+                  }`
+                : ""
+            }
+          >
+            <div className="appConfiglabelField-label">
+              <span>{`${t(label)}`}</span>
+              {required && <span className="mandatory-span">*</span>}
+              {helpText && (
+                <span className="icon-wrapper">
+                  <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
+                </span>
+              )}
+            </div>
+            <MdmsDropdown
+              className="appConfiglabelField-Input"
+              variant={""}
+              t={t}
+              option={dropDownOptions}
+              optionKey={"code"}
+              selected={null}
+              select={() => {}}
+              props={props}
+              moduleName={rest?.moduleMaster?.moduleName}
+              masterName={rest?.moduleMaster?.masterName}
+              rest={rest}
+            />
+            {isDelete && (
+              <div
+                onClick={(e) => {
+                  // e.stopPropagation();
+                  onDelete();
+                }}
+                style={{
+                  cursor: "pointer",
+                  fontWeight: "600",
+                  marginLeft: "1rem",
+                  fontSize: "1rem",
+                  color: PRIMARY_COLOR,
+                  display: "flex",
+                  gap: "0.5rem",
+                  alignItems: "center",
+                  marginTop: "1rem",
+                }}
+              >
+                <DustbinIcon />
+              </div>
+            )}
+          </LabelFieldPair>
+        </>
+      );
+      break;
+
     case "dobPicker":
     case "datePicker":
       return (
