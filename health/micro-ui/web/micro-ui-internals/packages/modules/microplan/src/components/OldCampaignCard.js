@@ -55,12 +55,6 @@ const CampaignCard = () => {
       // count: isLoading?"-":data
     },
     {
-      label: t("ACTION_TEST_APP_CONFIGURATION"),
-      link: `/workbench-ui/employee/campaign/app-configuration`,
-      roles: ROLES.CAMPAIGN_MANAGER,
-      // count: isLoading?"-":data
-    },
-    {
       label: t("ACTION_TEST_APP_CONFIGURATION_PARENT_MOBILE"),
       link: `/workbench-ui/employee/campaign/app-configuration-parent?variant=app&masterName=AppScreenConfigTemplateSchema&fieldType=AppFieldType&prefix=APPONE`,
       roles: ROLES.CAMPAIGN_MANAGER,

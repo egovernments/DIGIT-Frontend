@@ -7,6 +7,7 @@ import { useAppLocalisationContext } from "./AppLocalisationWrapper";
 import AppLocalisationTable from "./AppLocalisationTable";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import AppPreview from "../../../components/AppPreview";
 // import { dummyMaster } from "../../configs/dummyMaster";
 
 const AppConfigContext = createContext();
@@ -242,6 +243,7 @@ function AppConfigurationWrapper({ screenConfig }) {
   const searchParams = new URLSearchParams(location.search);
   const fieldMasterName = searchParams.get("fieldType");
   const module = "dummy-localisation";
+  const [showPreview, setShowPreview] = useState(null);
   const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, "en_IN");
   const [showToast, setShowToast] = useState(null);
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
@@ -363,7 +365,44 @@ function AppConfigurationWrapper({ screenConfig }) {
               setShowPopUp(true);
             }}
           />
+          <Button
+            type={"button"}
+            size={"large"}
+            variation={"secondary"}
+            label={t("PREVIEW")}
+            onClick={() => {
+              setShowPreview(true);
+            }}
+          />
         </SidePanel>
+      )}
+      {showPreview && (
+        <PopUp
+          className={"custom-pop-up"}
+          type={"default"}
+          heading={t("CHECKLIST_PREVIEW")}
+          children={[]}
+          onOverlayClick={() => {
+            setShowPreview(false);
+          }}
+          onClose={() => {
+            setShowPreview(false);
+          }}
+          footerChildren={[
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("CLOSE")}
+              onClick={() => {
+                setShowPreview(false);
+              }}
+            />,
+          ]}
+          sortFooterChildren={true}
+        >
+          <AppPreview data={state?.screenData?.[0]} />
+        </PopUp>
       )}
       {showPopUp && (
         <PopUp
