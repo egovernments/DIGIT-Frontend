@@ -846,3 +846,16 @@ input[type="number"] {
     margin-bottom: 2rem;
   }
 }
+
+.user-profile {
+
+  &.employee {
+    margin-top: 6rem;
+    margin-left: 4.5rem;
+  }
+
+  &.citizen {
+    margin-top: 1.5rem;
+    margin-left: 1.5rem;
+  }
+}
