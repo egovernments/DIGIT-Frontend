@@ -222,6 +222,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   };
 
   const setUserCurrentPassword = (value) => {
+    setCurrentPassword(value);
     if (!validationConfig?.password.test(value)) {
       setErrors({
         ...errors,
@@ -280,20 +281,19 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
   const updateProfile = async () => {
     setLoading(true);
+    const trimmedName=name.trim();
+
     try {
       const requestData = {
         ...userInfo,
-        name,
+        name:trimmedName,
         gender: gender?.value,
         emailId: email,
         photo: profilePic,
       };
+      
 
-      if(name){
-        setName((prev)=>prev.trim());
-      }
-
-      if (!validationConfig?.name.test(name) || name === "" || name.length > 50 || name.length < 1) {
+      if (!validationConfig?.name.test(trimmedName) || trimmedName === "" || trimmedName.length > 50 || trimmedName.length < 1) {
         throw JSON.stringify({
           type: "error",
           message: t("CORE_COMMON_PROFILE_NAME_INVALID"),
@@ -356,7 +356,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
             ...user,
             info: {
               ...user.info,
-              name,
+              name:trimmedName,
               mobileNumber,
               emailId: email,
               permanentCity: city,
@@ -365,17 +365,17 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         }
       }
 
-      if (currentPassword.length && newPassword.length && confirmPassword.length) {
+      if (trimmedCurrentPassword.length && trimmedNewPassword.length && trimmedConfirmPassword.length) {
         const requestData = {
-          existingPassword: currentPassword,
-          newPassword: newPassword,
+          existingPassword: trimmedCurrentPassword,
+          newPassword: trimmedNewPassword,
           tenantId: tenant,
           type: "EMPLOYEE",
           username: userInfo?.userName,
-          confirmPassword: confirmPassword,
+          confirmPassword: trimmedConfirmPassword,
         };
 
-        if (newPassword === confirmPassword) {
+        if (trimmedNewPassword === trimmedConfirmPassword) {
           try {
             const res = await Digit.UserService.changePassword(requestData, tenant);
 
