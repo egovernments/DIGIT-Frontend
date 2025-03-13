@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useKeycloak } from "../../../context/Keycloakprovider";
 import {
   HomeIcon,
   EditPencilIcon,
@@ -84,11 +85,11 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
   const { stateInfo } = storeData || {};
   const user = Digit.UserService.getUser();
   let isMobile = window.Digit.Utils.browser.isMobile();
-
+   const { keycloak } = useKeycloak();
   const [isEmployee, setisEmployee] = useState(false);
   const [isSidebarOpen, toggleSidebar] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
-
+  console.log("aaiahjahk")
   const handleLogout = () => {
     toggleSidebar(false);
     setShowDialog(true);
@@ -97,6 +98,7 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
     if (Digit.Utils.getMultiRootTenant()) {
       Digit.UserService.logout();
       setShowDialog(false);
+      console.log("dddddd");
       window.location.href=`/${window?.contextPath}/citizen/login`;
     }
     else{
@@ -116,7 +118,10 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
   const redirectToLoginPage = () => {
     // localStorage.clear();
     // sessionStorage.clear();
-    history.push(`/${window?.contextPath}/citizen/login`);
+    keycloak.login({
+      redirectUri: window.location.origin + "/sandbox-ui/SDFG/citizen/success", // Redirect after login
+    });
+    // history.push(`/${window?.contextPath}/citizen/login`);
   };
   const showProfilePage = () => {
     history.push(`/${window?.contextPath}/citizen/user/profile`);

@@ -8,9 +8,9 @@ import Header from "../../../components/Header";
 
 /* set employee details to enable backward compatiable */
 const setEmployeeDetail = (userObject, token) => {
-  if (Digit.Utils.getMultiRootTenant()) {
-    return;
-  }
+  // if (Digit.Utils.getMultiRootTenant()) {
+  //   return;
+  // }
   let locale = JSON.parse(sessionStorage.getItem("Digit.locale"))?.value || Digit.Utils.getDefaultLanguage();
   localStorage.setItem("Employee.tenant-id", userObject?.tenantId);
   localStorage.setItem("tenant-id", userObject?.tenantId);

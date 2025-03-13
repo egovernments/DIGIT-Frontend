@@ -8,6 +8,7 @@ import { defaultImage } from "../../utils";
 import StaticCitizenSideBar from "./StaticCitizenSideBar";
 import { MobileSidebar } from "@egovernments/digit-ui-components";
 import { LogoutIcon } from "@egovernments/digit-ui-react-components";
+import { useKeycloak } from "../../../context/Keycloakprovider";
 
 
 const Profile = ({ info, stateName, t }) => {
@@ -92,6 +93,9 @@ export const CitizenSideBar = ({
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const history = useHistory();
+   const { keycloak } = useKeycloak();
+
+  //  console.log("aaiahjahk")
 
   const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
     if (searcher == "") return str;

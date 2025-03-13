@@ -5,23 +5,39 @@ import jwt_decode from "jwt-decode"; // Ensure this is installed: npm install jw
 import { useKeycloak } from "../../../context/Keycloakprovider";
 import { useHistory } from "react-router-dom";
 
-const setEmployeeDetail = (userObject, token) => {
+// const setEmployeeDetail = (userObject, token) => {
+//   if (Digit.Utils.getMultiRootTenant()) {
+//     return;
+//   }
+//   let locale = JSON.parse(sessionStorage.getItem("Digit.locale"))?.value || Digit.Utils.getDefaultLanguage();
+//   localStorage.setItem("Employee.tenant-id", userObject?.tenantId);
+//   localStorage.setItem("tenant-id", userObject?.tenantId);
+//   localStorage.setItem("citizen.userRequestObject", JSON.stringify(userObject));
+//   localStorage.setItem("locale", locale);
+//   localStorage.setItem("Employee.locale", locale);
+//   localStorage.setItem("token", token);
+//   localStorage.setItem("Employee.token", token);
+//   localStorage.setItem("user-info", JSON.stringify(userObject));
+//   localStorage.setItem("Employee.user-info", JSON.stringify(userObject));
+// };
+
+const setCitizenDetail = (userObject, token, tenantId) => {
   // if (Digit.Utils.getMultiRootTenant()) {
   //   return;
   // }
-  let locale = JSON.parse(sessionStorage.getItem("Digit.locale"))?.value || Digit.Utils.getDefaultLanguage();
-  localStorage.setItem("Employee.tenant-id", userObject?.tenantId);
-  localStorage.setItem("tenant-id", userObject?.tenantId);
+  let locale = JSON.parse(sessionStorage.getItem("Digit.initData"))?.value?.selectedLanguage;
+  localStorage.setItem("Citizen.tenant-id", tenantId);
+  localStorage.setItem("tenant-id", tenantId);
   localStorage.setItem("citizen.userRequestObject", JSON.stringify(userObject));
   localStorage.setItem("locale", locale);
-  localStorage.setItem("Employee.locale", locale);
+  localStorage.setItem("Citizen.locale", locale);
   localStorage.setItem("token", token);
-  localStorage.setItem("Employee.token", token);
+  localStorage.setItem("Citizen.token", token);
   localStorage.setItem("user-info", JSON.stringify(userObject));
-  localStorage.setItem("Employee.user-info", JSON.stringify(userObject));
+  localStorage.setItem("Citizen.user-info", JSON.stringify(userObject));
 };
 
-const SuccessPage = () => {
+const CuccessPage = () => {
   const { keycloak } = useKeycloak();
   const history = useHistory();
   const [username, setUsername] = useState(null);
@@ -66,9 +82,10 @@ const SuccessPage = () => {
     const filteredRoles = user?.info?.roles?.filter((role) => role.tenantId === Digit.SessionStorage.get("Employee.tenantId"));
     if (user?.info?.roles?.length > 0) user.info.roles = filteredRoles;
     Digit.UserService.setUser(user);
-    setEmployeeDetail(user?.info, user?.access_token);
+    setCitizenDetail(user?.info, user?.access_token, "SDFG");
+    // setEmployeeDetail(user?.info, user?.access_token);
     // let redirectPath = `/${window?.globalPath}/user/setup`;
-    let redirectPath = `/${window?.contextPath}/employee`;
+    let redirectPath = `/${window?.contextPath}/citizen/select-location`;
 
     if (isLogin) {
       history.push(redirectPathOtpLogin);
@@ -242,4 +259,4 @@ const SuccessPage = () => {
   );
 };
 
-export default SuccessPage;
+export default CuccessPage;

@@ -16,6 +16,7 @@ import HowItWorks from "./HowItWorks/howItWorks";
 import Login from "./Login";
 import Search from "./SearchApp";
 import StaticDynamicCard from "./StaticDynamicComponent/StaticDynamicCard";
+import CuccessPage from "./CitizenSuccess";
 
 const sidebarHiddenFor = [
   `${window?.contextPath}/citizen/register/name`,
@@ -194,6 +195,10 @@ const Home = ({
 
           <Route path={`${path}/register`}>
             <Login stateCode={stateCode} isUserRegistered={false} />
+          </Route>
+
+          <Route path={`${path}/success`}>
+           <CuccessPage></CuccessPage>
           </Route>
 
           <Route path={`${path}/user/profile`}>
