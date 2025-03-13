@@ -372,8 +372,10 @@ const ViewAttendance = ({ editAttendance = false }) => {
         const gender = matchingIndividual?.gender;
         const dob = matchingIndividual?.dateOfBirth;
         const mobileNumber = matchingIndividual?.mobileNumber;
-
-        return [id, userName, userId, userRole, noOfDaysWorked, gender, dob, mobileNumber, uniqueId];
+        const userType = matchingIndividual?.additionalFields?.fields?.find(
+          (detail) => detail.key === "userType"
+      )?.value || "N/A";
+        return [id, userName, userId, userRole, noOfDaysWorked, gender, dob, mobileNumber, uniqueId, userType];
       } else {
         // Handle cases where no match is found in individualsData
         return ["N/A", "Unknown", "N/A", "Unassigned", individualEntry?.modifiedTotalAttendance || individualEntry.actualTotalAttendance || 0];

@@ -155,7 +155,20 @@ const AttendanceManagementTable = ({ ...props }) => {
         );
       },
     },
-
+    {
+      name: (
+        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+          {t(`HCM_AM_USERTYPE`)}
+        </div>
+      ),
+      selector: (row) => {
+        return (
+          <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
+            {String(row?.[9] ? row?.[9] : t("ES_COMMON_NA"))}
+          </span>
+        );
+      },
+    },
     {
       name: t("HCM_AM_NO_OF_DAYS_WORKED"),
       selector: (row) => {
