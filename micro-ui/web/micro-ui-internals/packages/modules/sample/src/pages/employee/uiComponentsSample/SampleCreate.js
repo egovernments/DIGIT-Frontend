@@ -74,9 +74,16 @@ const SampleCreate = () => {
 
   const configs = createConfig;
 
+  const textStyles ={
+    color:"#0B4B66",
+    fontWeight:"700",
+    fontSize:"32px",
+    marginBottom:"1.5rem"
+  }
+
   return (
     <React.Fragment>
-      <HeaderComponent className="digit-inbox-search-composer-header" styles={{marginBottom:"1.5rem"}}>{"New Components"}</HeaderComponent>
+      <HeaderComponent styles={textStyles}>{"Create"}</HeaderComponent>
       <FormComposerV2
         label={t("Submit")}
         config={configs.map((config) => {

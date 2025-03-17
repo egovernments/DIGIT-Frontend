@@ -765,6 +765,21 @@ export const UICustomizations = {
           : true;
       }
     },
+    selectionHandler: (event) => {
+      console.log(event, "selection handler event");
+    }, // selectionHandler : Is used to handle row selections. gets on object which containes 3 key value pairs:  allSelected(whether all rows are selected or not), selectedCount (no, of rows selected),selectedRows( an array of selected rows)
+    actionSelectHandler: (index, label, selectedRows) => {
+      console.log(index, label, selectedRows, "action handler");
+    }, // actionSelectHandler : Is used to handle onClick functions of table action button on row selections, gets index,label and selectedRows as props
+    footerActionHandler: (index, event) => {
+      console.log(index, "index");
+      console.log(event, "event");
+    }, // footerActionHandler : Is used to handle onclick functions of footer action buttons, gets index and event as props
+    linkColumnHandler: (row) => {
+      console.log(row, "row");
+      const url = `/${window.contextPath}/employee/microplan/view-main?tenantId=${row?.tenantId}&uniqueIdentifier=${row?.uniqueIdentifier}`;
+      window.location.href = url;
+    }, 
   },
   SampleInboxConfig: {
     getSearchRequest: ( prop) => {

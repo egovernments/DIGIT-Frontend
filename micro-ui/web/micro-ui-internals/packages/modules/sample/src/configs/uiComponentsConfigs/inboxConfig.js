@@ -1,18 +1,22 @@
 import React from "react";
 
-const ExpandedComponent = ({ data }) => <pre>{JSON.stringify(data, null, 2)}</pre>;
+const ExpandedComponent = ({ data }) => (
+  <pre>{JSON.stringify(data, null, 2)}</pre>
+);
 
 export const inboxConfig = {
   headerLabel: "ES_COMMON_INBOX", // label is changed to headerLabel (Screen Header Label)
   postProcessResult: true,
-  type: "inbox",
+  type: "inbox", // type of the screen ("inbox","serach")
   apiDetails: {
-    serviceName: "/egov-mdms-service/v2/_search",
+    serviceName: "/mdms-v2/v2/_search",
     requestParam: {},
     requestBody: {
-      inbox: {
-        SearchCriteria: {},
-      },
+      inbox:{
+        "SearchCriteria":{
+
+        }
+      }
     },
     minParametersForSearchForm: 0,
     minParametersForFilterForm: 0,
@@ -258,7 +262,7 @@ export const inboxConfig = {
             isMandatory: false,
             disable: false,
             populators: {
-              isDropdownWithChip: true,
+              isDropdownWithChip:true,
               name: "multiselectdropdownfilter",
               optionsKey: "name",
               error: "Error!",
@@ -311,8 +315,7 @@ export const inboxConfig = {
       label: "ES_COMMON_FILTERS",
       show: true,
     },
-    sort: {
-      // Introduced SOrt action to show in the mobile view
+    sort: { // Introduced Sort action to show in the mobile view
       show: true,
     },
     searchResult: {
@@ -326,7 +329,7 @@ export const inboxConfig = {
           },
           {
             label: "Facility id",
-            jsonPath: "additionalDetails.facilityId",
+            jsonPath:"additionalDetails.facilityId",
           },
           {
             label: "Hierarchy type",
@@ -341,35 +344,43 @@ export const inboxConfig = {
             jsonPath: "boundaryCode",
           },
         ],
+        selectionProps: {
+          showCheckBox: true,
+          showSelectedState: true,
+          selectableRowsNoSelectAll: false,
+          // showSelectedStatePosition:"bottom", can also be sent like this
+        },
+        expandableProps: {
+          expandableRows: true,
+          expandableRowsComponent: ExpandedComponent,
+        },
+        tableProps: {
+          showTableDescription: "This is the search table description",
+          showTableTitle: "Search table title",
+        },
+        actionProps: {
+          actions: [
+            {
+              label: "Action1",
+              variation: "secondary",
+              icon: "Edit",
+            },
+            {
+              label: "Action2",
+              variation: "primary",
+              icon: "CheckCircle",
+            },
+          ],
+        },
         enableGlobalSearch: true,
         enableColumnSort: true,
         resultsJsonPath: "items",
-        showTableDescription: "This is the table description",
-        showTableTitle: "Table Title",
-        showCheckBox: true,
-        showSelectedState: true,
-        actionButtonLabel: "Customized ActionButton",
-        expandableRows: true,
         defaultSortAsc: true,
-        expandableRowsComponent: ExpandedComponent,
-        selectableRowsNoSelectAll: false,
-        actions: [
-          {
-            label: "Action1",
-            variation: "secondary",
-            icon: "Edit",
-          },
-          {
-            label: "Action2",
-            variation: "primary",
-            icon: "CheckCircle",
-          },
-        ],
         isPaginationRequired: true,
       },
       children: {},
       show: true,
     },
   },
-  additionalSections: {},
+  // additionalSections: {}, // no more additional sections will be supported
 };

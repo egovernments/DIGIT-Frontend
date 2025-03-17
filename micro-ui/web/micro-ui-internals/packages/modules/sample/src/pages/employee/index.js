@@ -23,8 +23,9 @@ import SampleComponentsNew from "./uiComponentsSample/SampleComponentsNew";
 import SampleCreate from "./uiComponentsSample/SampleCreate";
 import SampleSearch from "./uiComponentsSample/SampleSearch";
 import SampleInbox from "./uiComponentsSample/SampleInbox";
+import SampleView from "./uiComponentsSample/SampleView";
 
-const ProjectBreadCrumb = ({ location }) => {
+const SampleBreadCrumbs = ({ location }) => {
   const { t } = useTranslation();
   const crumbs = [
     {
@@ -45,7 +46,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
     <Switch>
       <AppContainer className="ground-container">
         <React.Fragment>
-          <ProjectBreadCrumb location={location} />
+          <SampleBreadCrumbs location={location} />
         </React.Fragment>
 
         <PrivateRoute path={`${path}/hrms-create`} component={() => <HRMSCreate></HRMSCreate>} />
@@ -72,6 +73,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/create`} component={() => <SampleCreate />} />
         <PrivateRoute path={`${path}/search`} component={() => <SampleSearch />} />
         <PrivateRoute path={`${path}/inbox`} component={() => <SampleInbox />} />
+        <PrivateRoute path={`${path}/view-main`} component={() => <SampleView />} />
       </AppContainer>
     </Switch>
   );
