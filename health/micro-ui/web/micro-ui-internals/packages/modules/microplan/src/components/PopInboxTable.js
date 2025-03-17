@@ -217,6 +217,7 @@ const PopInboxTable = ({ ...props }) => {
       conditionalRowStyles={props?.conditionalRowStyles}
       fixedHeader={true}
       fixedHeaderScrollHeight={"100vh"}
+      paginationComponentOptions={{ rowsPerPageText:t("ROWS_PER_PAGE") }}
     />
   );
 };
