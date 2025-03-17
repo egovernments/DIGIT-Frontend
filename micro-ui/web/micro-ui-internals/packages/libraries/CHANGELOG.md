@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.8.11]  [11-Mar-2025]
+- Added new function to remove localisation cache
+
 ## [1.8.10]  [21-Feb-2025]
 - Publishing a new version for more stability & as part of Components Release
 
