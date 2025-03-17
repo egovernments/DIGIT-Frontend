@@ -62,58 +62,7 @@ const AssignCampaign = ({ editCampaign = false }) => {
     setFormKey((prevKey) => prevKey + 1);
   }, [editCampaign, projectStaff, tenantId]);
 
-  // const fetchAssignMentDetails = async (payload) => {
-  //   if (!payload) return;
-  //   debugger
-  //   try {
-  //     await fetchMutation.mutateAsync(
-  //       {
-  //         ProjectStaff: {
-  //           staffId: payload,
-  //         },
-  //       },
-  //       {
-  //         onSuccess: (res) => {
-  //           debugger;
-  //           history.push(`/${window?.contextPath}/employee/hrms/response`, {
-  //             isCampaign: true,
-  //             state: "success",
-  //             info: t("HR_EMPLOYEE_ID_LABEL"),
-  //             fileName: res?.Employees?.[0],
-  //             description: t(`EMPLOYEE_RESPONSE_CREATE_ACTION`),
-  //             message: t(`EMPLOYEE_RESPONSE_CREATE`),
-  //             back: t(`GO_BACK_TO_HOME`),
-  //             backlink: `/${window.contextPath}/employee`,
-  //           });
-  //         },
-  //         onError: (error) => {
-  //           debugger;
-  //           history.push(`/${window?.contextPath}/employee/hrms/response`, {
-  //             isCampaign: true,
-  //             state: "error",
-  //             info: t("Testing"),
-  //             fileName: error?.Employees?.[0],
-  //             description: t(`EMPLOYEE_RESPONSE_CREATE`),
-  //             message: t(`EMPLOYEE_RESPONSE_CREATE`),
-  //             back: t(`GO_BACK_TO_HOME`),
-  //             backlink: `/${window.contextPath}/employee`,
-  //           });
-  //           // setTriggerEstimate(true);
-  //         },
-  //       }
-  //     );
-  //   } catch (error) {
-  //     debugger;
-  //     // setTriggerEstimate(true);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (editCampaign == true && id) {
-  //   debugger
-  //     fetchAssignMentDetails(id);
-  //   }
-  // },[id]);
+  
 
   const onFormValueChange = (setValue = true, formData) => {};
 
@@ -140,7 +89,7 @@ const AssignCampaign = ({ editCampaign = false }) => {
             history.replace(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: true,
               state: "error",
-              info: t("Testing"),
+              info: t(""),
               fileName: error?.Employees?.[0],
               message: editCampaign ? t("CAMPAIGN_RESPONSE_UPDATE_ACTION") : t(`CAMPAIGN_RESPONSE_CREATE_ACTION`),
               description: t(`HRMS_CAMPAIGN_ASSIGNED_INFO`),

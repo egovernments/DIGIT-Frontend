@@ -2,27 +2,98 @@ import Urls from "../../services/urls";
 
 const inboxSearchConfig = () => {
   return {
-    type: "search", // Defines the type of configuration (search functionality)
+    type: "inbox", // Defines the type of configuration (search functionality)
     label: "Search Employee", // Label for the search functionality
 
     sections: {
+      filter: {
+        uiConfig: {
+          type: "filter",
+          headerStyle: null,
+          primaryLabel: "Apply Filters",
+          secondaryLabel: "Clear Filters",
+          minReqFields: 1,
+          defaultValues: {
+            //dropdown: "",
+            roles: [],
+            //status: "",
+            // radio: {
+            //   code: "ASSIGNED_TO_ME",
+            //   name: "Assigned to me",
+            // },
+            // isActive: {
+            //   code: false,
+            //   name: "HR_DEACTIVATE_HEAD",
+            // },
+            // isActive: false,
+          },
+          fields: [
+            {
+              label: "HR_COMMON_TABLE_COL_ROLE",
+              type: "dropdown",
+              // type: "multiselectdropdown",
+              isMandatory: false,
+              disable: false,
+              populators: {
+                isDropdownWithChip: true,
+                name: "roles",
+                optionsKey: "name",
+                error: "Error!",
+                required: false,
+
+                mdmsConfig: {
+                  masterName: "roles",
+                  moduleName: "ACCESSCONTROL-ROLES",
+                  localePrefix: "ACCESSCONTROL_ROLES_ROLES",
+                },
+              },
+            },
+            {
+              label: "HR_EMP_STATUS_LABEL",
+              type: "radio",
+              isMandatory: false,
+              disable: false,
+              addDivider: true,
+              populators: {
+                alignVertical: true,
+                name: "isActive",
+                options: [
+                  {
+                    code: false,
+                    name: "HR_DEACTIVATE_HEAD",
+                  },
+                  {
+                    code: true,
+                    name: "HR_ACTIVATE_HEAD",
+                  },
+                ],
+                optionsKey: "name",
+              },
+            },
+          ],
+        },
+        label: "ES_COMMON_FILTERS",
+        show: true,
+      },
+
       links: {
         uiConfig: {
           links: [
             {
-              text: "ATM_SEARCH_ATTENDANCE",
-              url: "/employee/attendencemgmt/search-attendance",
-              roles: ["HRMS_ADMIN"],
+              text: "HR_COMMON_CREATE_EMPLOYEE_HEADER",
+              url: "/employee/hrms/create",
+              roles: ["SYSTEM_ADMINISTRATOR", "MICROPLAN_ADMIN"],
+              hyperlink: true,
             },
           ],
-          label: "ES_COMMON_ATTENDENCEMGMT",
+          label: "HRMS",
           logoIcon: {
-            component: "MuktaIcon",
+            component: "Opacity",
             customClass: "search-icon--projects",
           },
         },
         children: {},
-        show: false,
+        show: true,
       },
 
       search: {
@@ -57,7 +128,7 @@ const inboxSearchConfig = () => {
             },
             {
               type: "number",
-              label: "CONTACT_NUMBER",
+              label: "HR_MOB_NO_LABEL",
               disable: false,
               populators: {
                 name: "phone",
@@ -88,14 +159,7 @@ const inboxSearchConfig = () => {
           },
 
           secondaryLabel: "ES_COMMON_CLEAR_SEARCH", // Label for clear search button
-          searchWrapperStyles: {
-            // Custom styles for search UI
-            marginTop: "1.4rem",
-            alignItems: "center",
-            gridColumn: "3",
-            flexDirection: "column-reverse",
-            justifyContent: "end",
-          },
+          searchWrapperStyles: {},
         },
         labelMobile: "ES_COMMON_SEARCH", // Label for mobile view
       },
@@ -134,7 +198,7 @@ const inboxSearchConfig = () => {
             },
           ],
           rowClassName: "table-row-mdms table-row-mdms-hover", // Table row styles
-          tableClassName: "table pqm-table", // Table styles
+          tableClassName: "pqm-table", // Table styles
           resultsJsonPath: "Employees", // API response path for results
           enableColumnSort: false, // Enables sorting on columns
           enableGlobalSearch: false, // Disables global search

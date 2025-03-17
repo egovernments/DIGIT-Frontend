@@ -102,7 +102,7 @@ const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
 const BoundaryDropdown = ({ label, data, onChange, selected }) => {
   const { t } = useTranslation();
   return (
-    <div style={{ width: "100%", marginTop: "14px" }}>
+    <div style={{ width: "100%", marginTop: "14px", paddingLeft:"7%"}}>
       <div className="comment-label">{t(label)}</div>
       <Dropdown selected={selected} t={t} option={data} optionKey={"code"} select={(value) => onChange(value)} />
     </div>

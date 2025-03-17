@@ -10,7 +10,7 @@ export const checkIfUserExistWithPhoneNumber = async (data, tenantId) => {
   try {
     //  if (data?.SelectEmployeePhoneNumber && data?.SelectEmployeePhoneNumber?.trim().length > 0) {
     const result = await Digit.HRMSService.search(tenantId, null, { phone: data?.SelectEmployeePhoneNumber });
-    debugger;
+
     if (result?.Employees?.length > 0) {
       return true; // User exists, return false
     } else {
@@ -22,7 +22,6 @@ export const checkIfUserExistWithPhoneNumber = async (data, tenantId) => {
     //   return true; // Success
     // }
   } catch (error) {
-    debugger;
     throw error; // throw on error
   }
 };
@@ -34,18 +33,16 @@ export const checkIfUserExist = async (data, tenantId) => {
   try {
     if (data?.SelectEmployeeId && data?.SelectEmployeeId?.trim().length > 0) {
       const result = await Digit.HRMSService.search(tenantId, null, { codes: data?.SelectEmployeeId });
-      debugger;
+
       if (result?.Employees?.length > 0) {
         return true; // User exists, return false
       } else {
         return false; // Success
       }
     } else {
-      debugger;
       return true; // Success
     }
   } catch (error) {
-    debugger;
     throw error; // throw on error
   }
 };
@@ -63,7 +60,6 @@ export const formPayloadToCreateUser = (data, tenantId) => {
     },
   ];
 
-  debugger;
   let Employees = [
     {
       tenantId: tenantId,
@@ -101,7 +97,6 @@ export const formPayloadToCreateUser = (data, tenantId) => {
     },
   ];
 
-  debugger;
   return Employees;
 };
 
@@ -224,7 +219,6 @@ export const formPayloadToCreateUser = (data, tenantId) => {
 // };
 
 export const formPayloadToUpdateUser = (data, userExisting, tenantId) => {
-  debugger;
   let requestdata = Object.assign({}, userExisting[0]);
   let roles = [].concat.apply([], data?.RolesAssigned);
 
@@ -279,12 +273,10 @@ export const formPayloadToUpdateUser = (data, userExisting, tenantId) => {
     requestdata.uuid = userExisting[0]?.uuid || null;
   }
 
-  debugger;
   return [requestdata];
 };
 
 function formJuridiction(data, tenantId) {
-  debugger;
   let jurisdictions = {
     hierarchy: hierarchyType,
     boundaryType: data?.BoundaryComponent?.boundaryType,
@@ -361,6 +353,7 @@ export const editDefaultUserValue = (data, tenantId) => {
     fromDate: null,
     toDate: null,
   };
+
   debugger;
   return defaultValues;
 };

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { InboxSearchComposer } from "@egovernments/digit-ui-react-components";
-import inboxSearchConfig from "../../components/config/inboxSearchConfig";
-import { HeaderComponent, Toast, Loader } from "@egovernments/digit-ui-components";
+//  import { InboxSearchComposer } from "@egovernments/digit-ui-react-components";
+//import inboxSearchConfig from "../../components/config/inboxSearchConfig";
+import { InboxSearchComposer, HeaderComponent, Toast, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { QueryClient, QueryClientProvider } from "react-query";
+import inboxSearchConfig from "../../components/config/inboxSearchConfig";
 
 const InboxSearch = () => {
   const { t } = useTranslation();
@@ -12,7 +13,6 @@ const InboxSearch = () => {
   // const queryClient = new QueryClient({});
 
   return (
-    // <QueryClientProvider client={queryClient}>
     <div style={{ marginBottom: "80px" }}>
       <div
         style={
@@ -27,7 +27,7 @@ const InboxSearch = () => {
           </HeaderComponent>
         }
       </div>
-      <div className="inbox-search-wrapper">
+      <div className="digit-inbox-search-wrapper">
         <InboxSearchComposer
           configs={config}
           //   browserSession={SelectCampaignSession}
@@ -39,7 +39,6 @@ const InboxSearch = () => {
         />
       </div>
     </div>
-    // </QueryClientProvider>
   );
 };
 

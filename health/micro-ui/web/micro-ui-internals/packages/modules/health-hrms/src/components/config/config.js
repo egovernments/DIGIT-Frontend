@@ -1,161 +1,3 @@
-// export const newConfig = [
-//   {
-//     head: "HR_LOGIN_DETAILS_HEADER",
-//     body: [
-//       {
-//         inline: true,
-//         label: "SelectEmployeeId",
-//         isMandatory: true,
-//         type: "text",
-//         disable: false,
-//         populators: { name: "SelectEmployeeId", error: "Required", validation: { pattern: /^[A-Za-z]+$/i } },
-//       },
-//       // {
-//       //   type: "component",
-//       //   component: "SelectEmployeeId",
-//       //   key: "SelectEmployeeId",
-//       //   withoutLabel: true,
-//       //   populators:{
-//       //     name:"SelectEmployeeId"
-//       //   }
-//       // },
-//       {
-//         type: "component",
-//         component: "SelectEmployeePassword",
-//         key: "SelectEmployeePassword",
-//         withoutLabel: true,
-//         populators:{
-//           name:"SelectEmployeePassword"
-//         }
-//       },
-//     ],
-//   },
-//   {
-//     head: "HR_PERSONAL_DETAILS_HEADER",
-//     body: [
-//       {
-//         type: "component",
-//         component: "SelectEmployeeName",
-//         key: "SelectEmployeeName",
-//         withoutLabel: true,
-//         populators:{
-//           name:"SelectEmployeeName"
-//         }
-//       },
-//       {
-//         type: "component",
-//         component: "SelectEmployeePhoneNumber",
-//         key: "SelectEmployeePhoneNumber",
-//         withoutLabel: true,
-//         populators:{
-//           name:"SelectEmployeePhoneNumber"
-//         }
-//       },
-//       {
-//         type: "component",
-//         component: "SelectEmployeeGender",
-//         key: "SelectEmployeeGender",
-//         withoutLabel: true,
-//         populators:{
-//           name:"SelectEmployeeGender"
-//         }
-//       },
-//       {
-//         type: "component",
-//         component: "SelectDateofBirthEmployment",
-//         key: "SelectDateofBirthEmployment",
-//         withoutLabel: true,
-//         populators:{
-//           name:"SelectDateofBirthEmployment"
-//         }
-//       },
-//       {
-//         type: "component",
-//         component: "SelectEmployeeEmailId",
-//         key: "SelectEmployeeEmailId",
-//         withoutLabel: true,
-//         populators:{
-//           name:"SelectEmployeeEmailId"
-//         }
-//       },
-//       {
-//         type: "component",
-//         component: "SelectEmployeeCorrespondenceAddress",
-//         key: "SelectEmployeeCorrespondenceAddress",
-//         withoutLabel: true,
-//         populators:{
-//           name:"SelectEmployeeCorrespondenceAddress"
-//         }
-//       },
-//     ],
-//   },
-
-//   {
-//     head: "HR_NEW_EMPLOYEE_FORM_HEADER",
-//     body: [
-//       {
-//         type: "component",
-//         component: "SelectEmployeeType",
-//         key: "SelectEmployeeType",
-//         withoutLabel: true,
-//         populators:{
-//           name:"SelectEmployeeType"
-//         }
-//       },
-//       {
-//         type: "component",
-//         component: "SelectDateofEmployment",
-//         key: "SelectDateofEmployment",
-//         withoutLabel: true,
-//         populators:{
-//           name:"SelectDateofEmployment"
-//         }
-//       },
-//       {
-//         type: "component",
-//         component: "SelectEmployeeDepartment",
-//         key: "SelectEmployeeDepartment",
-//         withoutLabel: true,
-//         populators:{
-//           name:"SelectEmployeeDepartment"
-//         }
-//       },
-
-//       {
-//         type: "component",
-//         component: "SelectEmployeeDesignation",
-//         key: "SelectEmployeeDesignation",
-//         withoutLabel: true,
-//         populators:{
-//           name:"SelectEmployeeDesignation"
-//         }
-//       },
-//       {
-//         type: "component",
-//         isMandatory: true,
-//         component: "RolesAssigned",
-//         key: "RolesAssigned",
-//         withoutLabel: true,
-//         populators:{
-//           name:"RolesAssigned"
-//         }
-//       },
-//       {
-//         type: "component",
-//         isMandatory: true,
-//         component: "BoundaryComponent",
-//         key: "BoundaryComponent",
-//         withoutLabel: true,
-//         populators:{
-//           name:"BoundaryComponent"
-//         }
-//       },
-//     ],
-//   },
-// ];
-
-////
-
 export const newConfig = [
   {
     head: "HR_LOGIN_DETAILS_HEADER",
@@ -189,7 +31,7 @@ export const newConfig = [
 
         populators: {
           name: "employeePassword",
-          error: "Required",
+          error: "CORE_COMMON_APPLICANT_PASSWORD_INVALID",
           validation: {
             pattern: "/^[A-Za-z]+$/",
             type: "password",
@@ -208,7 +50,7 @@ export const newConfig = [
 
         populators: {
           name: "employeeConfirmPassword",
-          error: "Required",
+          error: "CORE_COMMON_APPLICANT_CONFIRM_PASSWORD_INVALID",
           validation: {
             pattern: "/^[A-Za-z]+$/",
             type: "password",
@@ -288,7 +130,7 @@ export const newConfig = [
         isMandatory: false,
         type: "text",
         disable: false,
-        key:"SelectEmployeeEmailId",
+        key: "SelectEmployeeEmailId",
         populators: {
           required: false,
           name: "SelectEmployeeEmailId",
@@ -320,16 +162,6 @@ export const newConfig = [
   {
     head: "HR_NEW_EMPLOYEE_FORM_HEADER",
     body: [
-      // {
-      //   type: "component",
-      //   component: "SelectEmployeeType",
-      //   key: "SelectEmployeeType",
-      //   withoutLabel: true,
-      //   populators: {
-      //     name: "SelectEmployeeType",
-      //   },
-      // },
-
       {
         isMandatory: true,
         key: "SelectEmployeeType",
@@ -348,16 +180,6 @@ export const newConfig = [
         },
       },
 
-      // {
-      //   type: "component",
-      //   component: "SelectDateofEmployment",
-      //   key: "SelectDateofEmployment",
-      //   withoutLabel: true,
-      //   populators: {
-      //     name: "SelectDateofEmployment",
-      //   },
-      // },
-
       {
         inline: true,
         label: "Date of appointment",
@@ -368,15 +190,6 @@ export const newConfig = [
         populators: { name: "SelectDateofEmployment", required: true, error: "Required" },
       },
 
-      // {
-      //   type: "component",
-      //   component: "SelectEmployeeDepartment",
-      //   key: "SelectEmployeeDepartment",
-      //   withoutLabel: true,
-      //   populators: {
-      //     name: "SelectEmployeeDepartment",
-      //   },
-      // },
       {
         isMandatory: true,
         key: "SelectEmployeeDepartment",
@@ -394,16 +207,6 @@ export const newConfig = [
           },
         },
       },
-
-      // {
-      //   type: "component",
-      //   component: "SelectEmployeeDesignation",
-      //   key: "SelectEmployeeDesignation",
-      //   withoutLabel: true,
-      //   populators: {
-      //     name: "SelectEmployeeDesignation",
-      //   },
-      // },
 
       {
         isMandatory: true,
@@ -423,22 +226,11 @@ export const newConfig = [
         },
       },
 
-      // {
-      //   type: "component",
-      //   isMandatory: true,
-      //   component: "RolesAssigned",
-      //   key: "RolesAssigned",
-      //   withoutLabel: true,
-      //   populators: {
-      //     name: "RolesAssigned",
-      //   },
-      // },
-
       {
         isMandatory: true,
         key: "RolesAssigned",
         type: "dropdown",
-        label: "Role Assigned",
+        label: "HR_COMMON_TABLE_COL_ROLE",
         disable: false,
         populators: {
           allowMultiSelect: true,
@@ -448,7 +240,7 @@ export const newConfig = [
           mdmsConfig: {
             masterName: "roles",
             moduleName: "ACCESSCONTROL-ROLES",
-            localePrefix: "ACCESSCONTROL_ROLE",
+            localePrefix: "ACCESSCONTROL_ROLES_ROLES",
           },
         },
       },
@@ -466,4 +258,3 @@ export const newConfig = [
     ],
   },
 ];
-
