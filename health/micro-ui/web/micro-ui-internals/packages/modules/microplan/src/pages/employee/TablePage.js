@@ -107,6 +107,7 @@ const TableNew = () => {
       onSelectedRowsChange={handleRowSelect}
 	  customStyles={tableCustomStyle}
       // selectableRowsComponent={SimpleCheckbox}
+	  paginationComponentOptions={{ rowsPerPageText:t("ROWS_PER_PAGE") }}
 		/>
 	);
 };

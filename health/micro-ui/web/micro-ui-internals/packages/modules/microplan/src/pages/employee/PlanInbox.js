@@ -21,7 +21,7 @@ const PlanInbox = () => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { state } = useMyContext();
-  const config=state?.PlanInboxConfiguration[0];
+  const config=state?.PlanInboxConfiguration?.[0];
   const url = Digit.Hooks.useQueryParams();
   const microplanId = url?.microplanId;
   const campaignId = url?.campaignId;
@@ -1138,6 +1138,7 @@ const PlanInbox = () => {
                 sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
                 fixedHeader={true}
                 fixedHeaderScrollHeight={"100vh"}
+                paginationComponentOptions={{ rowsPerPageText:t("ROWS_PER_PAGE") }}
               />
               </div>
             )}

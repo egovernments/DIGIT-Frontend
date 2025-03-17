@@ -13,7 +13,7 @@ import GenericKpiFromDSS from "../../components/GenericKpiFromDSS";
 
 const PopInbox = () => {
   const {state}=useMyContext();
-  const config=state?.PopConfig[0];
+  const config=state?.PopConfig?.[0];
   const [activeLink, setActiveLink] = useState(config?.tabConfig?.defaultActiveTab);
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
