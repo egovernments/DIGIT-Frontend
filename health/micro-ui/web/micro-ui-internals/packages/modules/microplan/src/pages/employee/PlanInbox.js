@@ -554,7 +554,7 @@ const PlanInbox = () => {
   useEffect(() => {
     if (planWithCensusCount) {
       setAssignedToMeCount(planWithCensusCount?.TotalCount);
-      setAssignedToAllCount(planWithCensusCount?.TotalCount);
+      setAssignedToAllCount(planWithCensusToAll?.TotalCount);
     }
   }, [planWithCensusCount]);
 
