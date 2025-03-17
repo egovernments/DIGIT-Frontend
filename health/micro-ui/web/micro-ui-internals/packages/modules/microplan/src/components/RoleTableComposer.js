@@ -575,6 +575,7 @@ function RoleTableComposer({ nationalRoles }) {
           paginationRowsPerPageOptions={[5, 10, 15, 20]}
           fixedHeader={true}
           fixedHeaderScrollHeight={"100vh"}
+          paginationComponentOptions={{ rowsPerPageText:t("ROWS_PER_PAGE") }}
         />
       </Card>
       {showToast && (
