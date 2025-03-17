@@ -11,6 +11,9 @@ import ConfirmationPopUp from "../../components/ConfirmationPopUp";
 import GenericKpiFromDSS from "../../components/GenericKpiFromDSS";
 
 const PopInbox = () => {
+  const {state}=useMyContext();
+  const config=state?.PopConfig?.[0];
+  const [activeLink, setActiveLink] = useState(config?.tabConfig?.defaultActiveTab);
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const history = useHistory();
@@ -48,10 +51,6 @@ const PopInbox = () => {
   const [defaultHierarchy, setDefaultSelectedHierarchy] = useState(null);
   const [defaultBoundaries, setDefaultBoundaries] = useState([]);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
-  const [activeLink, setActiveLink] = useState({
-    code: "ASSIGNED_TO_ME",
-    name: "ASSIGNED_TO_ME",
-  });
   const hrms_context_path = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || 'health-hrms';
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
