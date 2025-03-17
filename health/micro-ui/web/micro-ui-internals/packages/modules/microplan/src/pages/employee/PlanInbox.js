@@ -557,8 +557,9 @@ const PlanInbox = () => {
   useEffect(() => {
     if (planWithCensusCount) {
       setAssignedToMeCount(planWithCensusCount?.TotalCount);
+      setAssignedToAllCount(planWithCensusToAll?.TotalCount);
     }
-  }, [planWithCensusCount]);
+  }, [planWithCensusCount,planWithCensusToAll]);
 
   const { isLoading: isEmployeeLoading, data: employeeData, refetch: refetchHrms } = Digit.Hooks.useCustomAPIHook(reqCri);
 
