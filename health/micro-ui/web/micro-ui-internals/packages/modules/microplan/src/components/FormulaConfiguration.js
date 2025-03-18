@@ -318,6 +318,7 @@ const FormulaConfiguration = ({ onSelect, category, customProps, formulas: initi
                   <LabelFieldPair className="formula-label-field">
                     <span className="assumption-label-icon-wrapper">
                       <span className="assumption-label-icon-wrapper-label">{`${t(formula.output)}`}</span>
+                      <span className="mandatory-span">*</span>
                       {category === "CAMPAIGN_VEHICLES" || formula?.source === "CUSTOM" ? null : (
                         <span className="icon-wrapper">
                           <TooltipWrapper

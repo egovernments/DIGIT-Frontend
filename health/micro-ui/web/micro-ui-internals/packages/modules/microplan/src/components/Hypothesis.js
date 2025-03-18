@@ -162,7 +162,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
               <div className="assumption-label">
                 <span className="assumption-label-icon-wrapper">
                  <span className="assumption-label-icon-wrapper-label">{`${t(item)}`}</span>
-                  {/* {category === "CAMPAIGN_VEHICLES" || sourceCheck === "CUSTOM" ? null : <span className="mandatory-span">*</span>} */}
+                  {category === "CAMPAIGN_VEHICLES" || sourceCheck === "CUSTOM" ? null : <span className="mandatory-span">*</span>}
                   {category === "CAMPAIGN_VEHICLES" || sourceCheck === "CUSTOM" ? null : (
                     <span className="icon-wrapper">
                       <TooltipWrapper
@@ -172,7 +172,7 @@ const Hypothesis = ({ category, assumptions: initialAssumptions, setShowToast, a
                     </span>
                   )}
                 </span>
-              </div>
+              </div>  
 
               <div className="fieldv1-deleteIcon-container">
                 <FieldV1
