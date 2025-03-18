@@ -116,7 +116,6 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
               key: "boundaryType",
               type: "component",
               component: "SelectingBoundariesDuplicate",
-              // component: "SelectingBoundaries",
               withoutLabelFieldPair: true,
               withoutLabel: true,
               disable: false,

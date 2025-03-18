@@ -33,8 +33,7 @@ const ActivityHomeCard = ({onClickCard=()=>{},...props}) => {
               }} // Adding margin to each card
             onClick={() => {
                 if (!i.disable) { // Check if disabled
-                  onClickCard(i)
-                  i.link ? history.push(i.link) : location.assign(i.locate);
+                  onClickCard(i);
                 }
               }}
             children={

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { CheckBox, Divider, SubmitBar } from "@egovernments/digit-ui-components";
 import BoundaryComponent from "../BoundaryComponent";
-import { Card, SVG, Button, ButtonGroup, TextBlock, Dropdown, Toast } from "@egovernments/digit-ui-components";
+import { Card, SVG, SubmitBar } from "@egovernments/digit-ui-components";
 import { lowerBoundaryDefaultSet } from "../../utils/constants";
 
 const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
@@ -12,13 +11,14 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
 
   // State variables
   const [reset, setReset] = useState(false);
-  const [boundary, setBoundary] = useState("");
+  const [boundary, setBoundary] = useState(Digit.SessionStorage.get("selectedBoundary") || '');
   const [project, setProject] = useState([]);
   const [isDistrictSelected, setIsDistrictSelected] = useState(false);
   const [projectSelected, setProjectSelected] = useState(() => Digit.SessionStorage.get("selectedProject") || {});
 
   const onChangeId = (value) => {
     setBoundary(value);
+    Digit.SessionStorage.set("selectedBoundary", value);
     if (value?.boundaryType === lowestLevelBoundaryType) {
       setIsDistrictSelected(true); // Set flag if district is selected
     }

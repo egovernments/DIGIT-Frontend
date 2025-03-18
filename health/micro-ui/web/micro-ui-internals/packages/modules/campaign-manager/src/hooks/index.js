@@ -7,7 +7,6 @@ import { useGenerateIdCampaign } from "./useGenerateIdCampaign";
 import { useResourceData } from "./useResourceData";
 import useCreateProductVariant from "./useCreateProductVariant";
 import useCreateProduct from "./useCreateProduct";
-import useParallelSearch from "./useParallelSearch";
 import useProjectSearchWithBoundary from "./useProjectSearchWithBoundary";
 import useProjectUpdateWithBoundary from "./useProjectUpdateWithBoundary";
 import useCreateChecklist from "./useCreateChecklist";
@@ -35,7 +34,6 @@ const campaign = {
   useResourceData,
   useCreateProduct,
   useCreateProductVariant,
-  useParallelSearch,
   useProjectSearchWithBoundary,
   useProjectUpdateWithBoundary,
   useCreateChecklist,
