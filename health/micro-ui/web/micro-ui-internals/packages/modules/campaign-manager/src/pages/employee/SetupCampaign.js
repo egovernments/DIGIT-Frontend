@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { CampaignConfig } from "../../configs/CampaignConfig";
-import { Stepper, Toast, Button, Footer , Loader} from "@egovernments/digit-ui-components";
+import { Stepper, Toast, Button, Footer, Loader } from "@egovernments/digit-ui-components";
 import {
   updateUrlParams,
   transformDraftDataToFormData,
@@ -26,7 +26,7 @@ import { CONSOLE_MDMS_MODULENAME } from "../../Module";
  * triggers API calls to create or update the campaign
  */
 
-const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
+const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const history = useHistory();
@@ -93,18 +93,20 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` }
   );
 
-  const reqCriteria = {
-    url: `/boundary-service/boundary-hierarchy-definition/_search`,
-    changeQueryName: `${hierarchyType}`,
-    body: {
-      BoundaryTypeHierarchySearchCriteria: {
-        tenantId: tenantId,
-        limit: 2,
-        offset: 0,
-        hierarchyType: hierarchyType,
+  const reqCriteria = useMemo(() => {
+    return {
+      url: `/boundary-service/boundary-hierarchy-definition/_search`,
+      changeQueryName: `${hierarchyType}`,
+      body: {
+        BoundaryTypeHierarchySearchCriteria: {
+          tenantId: tenantId,
+          limit: 2,
+          offset: 0,
+          hierarchyType: hierarchyType,
+        },
       },
-    },
-  };
+    };
+  }, [tenantId, hierarchyType]);
 
   const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
@@ -952,27 +954,16 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     setShowToast(null);
   }, [currentKey]);
 
-  useEffect(async () => {
-    if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-      // const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
-      const temp = restructureData(
-        totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
-        totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
-        DeliveryConfig
-      );
-    }
-  }, [shouldUpdate]);
-
   const closeToast = () => {
     setShowToast(null);
   };
 
   if (isPreview === "true" && !draftData) {
-    return <Loader page={true} variant={"PageLoader"}/>;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
 
   if (isDraft === "true" && !draftData) {
-    return <Loader page={true} variant={"PageLoader"}/>;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
 
   function onActionSelect(action) {
@@ -1022,14 +1013,14 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
 
   return (
     <React.Fragment>
-      {loader && <Loader page={true} variant={"PageLoader"} loaderText={t("PLEASE_WAIT_WHILE_UPDATING")}/> }
+      {loader && <Loader page={true} variant={"PageLoader"} loaderText={t("PLEASE_WAIT_WHILE_UPDATING")} />}
       {noAction !== "false" && (
         <Stepper
           customSteps={["HCM_CAMPAIGN_SETUP_DETAILS", "HCM_BOUNDARY_DETAILS", "HCM_DELIVERY_DETAILS", "HCM_UPLOAD_DATA", "HCM_REVIEW_DETAILS"]}
           currentStep={currentStep + 1}
           onStepClick={onStepClick}
           activeSteps={active}
-        // className={"campaign-flow-stepper"}
+          // className={"campaign-flow-stepper"}
         />
       )}
       <FormComposerV2
@@ -1053,12 +1044,12 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
           isChangeDates === "true" && currentKey == 16
             ? t("HCM_UPDATE_DATE")
             : isChangeDates === "true"
-              ? null
-              : noAction === "false"
-                ? null
-                : filteredConfig?.[0]?.form?.[0]?.isLast === true
-                  ? t("HCM_SUBMIT")
-                  : t("HCM_NEXT")
+            ? null
+            : noAction === "false"
+            ? null
+            : filteredConfig?.[0]?.form?.[0]?.isLast === true
+            ? t("HCM_SUBMIT")
+            : t("HCM_NEXT")
         }
       />
       {actionBar === "true" && (
@@ -1101,6 +1092,6 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       )}
     </React.Fragment>
   );
-};
+});
 
 export default SetupCampaign;
