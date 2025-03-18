@@ -44,7 +44,6 @@ const FileComponent = ({ title, fileName, status, auditDetails, editHandler, del
             Digit.Utils.campaign.downloadExcelWithCustomName({ fileStoreId: file?.filestoreId, customName: fileNameWithoutExtension });
         }
     };
-
     return (
         <Card type="secondary">
             <div className="dm-parent-container" style={{ background: "#FAFAFA", margin: "0" }}>
@@ -52,7 +51,7 @@ const FileComponent = ({ title, fileName, status, auditDetails, editHandler, del
                     className="dm-uploaded-file-container-sub"
                     style={{ marginLeft: "-1rem" }}
                 >
-                    <div onClick={async () => await handleFilePreview(rowDetails?.fileStoreId)}>
+                    <div onClick={async () => await handleFilePreview(rowDetails?.fileStoreId || rowDetails?.filestoreId)}>
                         <XlsxFile styles={{ width: "6rem", height: "6rem" }} />
                     </div>
                     <div style={{ marginLeft: "0.5rem", marginTop: "0.5rem" }}>{fileName}</div>
