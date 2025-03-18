@@ -229,7 +229,7 @@ export const newConfig = [
       {
         isMandatory: true,
         key: "RolesAssigned",
-        type: "dropdown",
+        type: "multiselectdropdown",
         label: "HR_COMMON_TABLE_COL_ROLE",
         disable: false,
         populators: {

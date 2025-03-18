@@ -12,10 +12,11 @@ const inboxSearchConfig = () => {
           headerStyle: null,
           primaryLabel: "Apply Filters",
           secondaryLabel: "Clear Filters",
-          minReqFields: 1,
+          minReqFields: 0,
           defaultValues: {
             //dropdown: "",
-            roles: [],
+            // roles: [],
+            // radio:undefined,
             //status: "",
             // radio: {
             //   code: "ASSIGNED_TO_ME",

@@ -1376,6 +1376,15 @@ export const UICustomizations = {
   },
 
   SearchDefaultConfigMain: {
+    preProcess: (data) => {
+      //set tenantId
+      // data.body.inbox.tenantId = Digit.ULBService.getCurrentTenantId();
+      // data.body.inbox.processSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
+      debugger;
+
+      return data;
+    },
+
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       console.log("additional customization");
       switch (key) {
@@ -1390,12 +1399,10 @@ export const UICustomizations = {
           return value ? `${value.length}` : t("ES_COMMON_NA");
 
         case "HR_DESG_LABEL":
-          return value.length>0 ? t(`${value[0].designation}`) : t("ES_COMMON_NA");
+          return value.length > 0 ? t(`${value[0].designation}`) : t("ES_COMMON_NA");
 
         case "HR_EMPLOYMENT_DEPARTMENT_LABEL":
-          return value ? t(`${value.department}`) : (
-            t("ES_COMMON_NA")
-          );
+          return value ? t(`${value.department}`) : t("ES_COMMON_NA");
 
         case "MASTERS_LOCALITY":
           return value ? (
