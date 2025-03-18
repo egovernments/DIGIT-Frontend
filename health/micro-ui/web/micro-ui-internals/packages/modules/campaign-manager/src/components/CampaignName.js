@@ -1,8 +1,7 @@
 import React, { useState, useEffect ,Fragment} from "react";
-import { Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
-import { ErrorMessage, FieldV1 , Stepper , TextBlock ,Card } from "@egovernments/digit-ui-components";
+import { ErrorMessage, FieldV1 , Stepper , TextBlock ,Card , HeaderComponent } from "@egovernments/digit-ui-components";
 
 const CampaignName = ({ onSelect, formData, control, formState, ...props }) => {
   const { t } = useTranslation();
@@ -111,7 +110,7 @@ const CampaignName = ({ onSelect, formData, control, formState, ...props }) => {
       
       <div className="card-container2">
         <Card className = "setup-campaign-card">
-      <Header styles={{ margin: '0px' }}>{t(`HCM_CAMPAIGN_NAME_HEADER`)}</Header>
+      <HeaderComponent styles={{ margin: '0px' }}>{t(`HCM_CAMPAIGN_NAME_HEADER`)}</HeaderComponent>
       <p className="name-description">{t(`HCM_CAMPAIGN_NAME_DESCRIPTION`)}</p>
       <LabelFieldPair className="name-container-label" style={{ display: "flex" }}>
         <div className="name-container">

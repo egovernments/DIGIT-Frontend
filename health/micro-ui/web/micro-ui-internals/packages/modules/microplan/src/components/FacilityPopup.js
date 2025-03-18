@@ -549,6 +549,7 @@ const FacilityPopUp = ({ detail, onClose }) => {
                       className={"facility-popup-table-no-frozen-columns"}
                       fixedHeaderScrollHeight={"100vh"}
                       sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
+                      paginationComponentOptions={{ rowsPerPageText:t("ROWS_PER_PAGE") }}
                     />
                   )
                 )}

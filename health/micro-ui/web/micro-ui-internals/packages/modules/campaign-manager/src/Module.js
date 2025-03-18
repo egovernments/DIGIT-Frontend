@@ -1,4 +1,4 @@
-import {  TourProvider } from "@egovernments/digit-ui-react-components";
+import { TourProvider } from "@egovernments/digit-ui-react-components";
 import { Loader } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
@@ -15,7 +15,6 @@ import MyCampaign from "./pages/employee/MyCampaign";
 import CampaignSummary from "./components/CampaignSummary";
 import CycleDetaisPreview from "./components/CycleDetaisPreview";
 import Response from "./pages/employee/Response";
-import SelectingBoundaries from "./components/SelectingBoundaries";
 import UploadData from "./components/UploadData";
 import CampaignSelection from "./components/CampaignType";
 import CampaignDocumentsPreview from "./components/CampaignDocumentsPreview";
@@ -69,13 +68,14 @@ export const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
  */
 const CampaignModule = ({ stateCode, userType, tenants }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const moduleName = Digit.Utils.campaign.getModuleName();
   const { data: BOUNDARY_HIERARCHY_TYPE, isLoading: hierarchyLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
     [
       {
         name: "HierarchySchema",
-        filter: `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`,
+        filter: `[?(@.type=='${moduleName}')]`,
       },
     ],
     {
@@ -83,13 +83,15 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
         return data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy;
       },
     },
-    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
+    { schemaCode: "HierarchySchema" }
   );
 
   const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE, tenantId });
   const modulePrefix = "hcm";
 
-  const moduleCode = BOUNDARY_HIERARCHY_TYPE ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`] : ["campaignmanager", "schema", "admin-schemas", "checklist", "appconfiguration"];
+  const moduleCode = BOUNDARY_HIERARCHY_TYPE
+    ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`]
+    : ["campaignmanager", "schema", "admin-schemas", "checklist", "appconfiguration"];
 
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
@@ -101,7 +103,7 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
   });
 
   if (isLoading) {
-    return <Loader page={true} variant={"PageLoader"}/>;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
 
   return (
@@ -133,7 +135,6 @@ const componentsToRegister = {
   CampaignSummary,
   CycleDetaisPreview,
   Response,
-  SelectingBoundaries,
   CampaignSelection,
   CampaignDocumentsPreview: CampaignDocumentsPreview,
   AddProduct,

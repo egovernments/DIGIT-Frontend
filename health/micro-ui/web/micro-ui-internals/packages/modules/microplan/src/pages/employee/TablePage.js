@@ -3,6 +3,7 @@ import axios from 'axios';
 import DataTable from 'react-data-table-component';
 import { tableCustomStyle } from '../../components/tableCustomStyle';
 // import React, { useState } from 'react';
+import { useTranslation } from "react-i18next";
 
 const SimpleCheckbox = () => {
   // State to keep track of whether the checkbox is checked or not
@@ -56,6 +57,7 @@ const TableNew = () => {
 	const [loading, setLoading] = useState(false);
 	const [totalRows, setTotalRows] = useState(0);
 	const [perPage, setPerPage] = useState(10);
+	const { t } = useTranslation();
 
 	const fetchUsers = async page => {
 		setLoading(true);
@@ -107,6 +109,7 @@ const TableNew = () => {
       onSelectedRowsChange={handleRowSelect}
 	  customStyles={tableCustomStyle}
       // selectableRowsComponent={SimpleCheckbox}
+	  paginationComponentOptions={{ rowsPerPageText:t("ROWS_PER_PAGE") }}
 		/>
 	);
 };

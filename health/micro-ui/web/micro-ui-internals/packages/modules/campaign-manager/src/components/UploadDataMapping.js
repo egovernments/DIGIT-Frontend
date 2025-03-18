@@ -1,4 +1,16 @@
-import { Button, CardLabel, CardText, Chip, Dropdown, LabelFieldPair, Loader, PopUp, Switch, Toast } from "@egovernments/digit-ui-components";
+import {
+  Button,
+  CardLabel,
+  CardText,
+  Chip,
+  Dropdown,
+  LabelFieldPair,
+  Loader,
+  PopUp,
+  Switch,
+  Toast,
+  CardHeader,
+} from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useReducer, useState, useRef } from "react";
 import DataTable from "react-data-table-component";
 import { useTranslation } from "react-i18next";
@@ -7,6 +19,7 @@ import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import MultiSelectDropdown from "./MultiSelectDropdown";
 import NoResultsFound from "./NoResultsFound";
 import AddOrEditMapping from "./AddOrEditMapping";
+import { CustomSVG } from "@egovernments/digit-ui-components";
 import Ajv from "ajv";
 
 const initialState = {
@@ -690,6 +703,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
               payload: childData,
               schemas: Schemas,
               t: t,
+              currentCategories: currentCategories,
             });
           } else {
             dispatch({
@@ -697,6 +711,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
               payload: childData,
               schemas: Schemas,
               t: t,
+              currentCategories: currentCategories,
             });
           }
 
@@ -828,7 +843,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                     type={"button"}
                     size={"small"}
                     isDisabled={row?.[t(Schemas?.find((i) => i.description === "User Usage")?.name)] === "Inactive" ? true : false}
-                    variation={"teritiary"}
+                    variation="link"
                     label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
                     onClick={() => {
                       setShowPopUp(row);
@@ -846,7 +861,8 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   type={"button"}
                   size={"small"}
                   isDisabled={row?.editable ? false : true}
-                  variation={"teritiary"}
+                  variation={"primary"}
+                  icon={"Edit"}
                   // label={listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
                   label={t("MAPPING_EDIT")}
                   onClick={() => {
@@ -864,7 +880,8 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   type={"button"}
                   size={"small"}
                   isDisabled={row?.editable ? false : true}
-                  variation={"teritiary"}
+                  variation={"primary"}
+                  icon={"Delete"}
                   label={t("MAPPING_DELETE")}
                   onClick={() => {
                     dispatch({
@@ -971,7 +988,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                     type={"button"}
                     size={"small"}
                     isDisabled={row?.[t(Schemas?.find((i) => i.description === "Facility usage")?.name)] === "Inactive" ? true : false}
-                    variation={"teritiary"}
+                    variation={"link"}
                     label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
                     onClick={() => {
                       setShowPopUp(row);
@@ -989,9 +1006,9 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   type={"button"}
                   size={"small"}
                   isDisabled={row?.editable ? false : true}
-                  variation={"teritiary"}
-                  // label={listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
+                  variation={"primary"}
                   label={t("MAPPING_EDIT")}
+                  icon={"Edit"}
                   onClick={() => {
                     setShowEditPopUp(row);
                   }}
@@ -1007,8 +1024,9 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   type={"button"}
                   size={"small"}
                   isDisabled={row?.editable ? false : true}
-                  variation={"teritiary"}
+                  variation={"primary"}
                   label={t("MAPPING_DELETE")}
+                  icon={"Delete"}
                   onClick={() => {
                     dispatch({
                       type: "DELETE_DATA",
@@ -1025,21 +1043,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   return (
     <Fragment>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
-        <Button
-          className="custom-class"
-          icon=""
-          iconFill=""
-          label={t("MAPPING_ADD_DATA")}
-          onClick={() => {
-            setShowAddPopup(true);
-          }}
-          showBottom
-          style={{
-            whiteSpace: "nowrap",
-            width: "auto",
-          }}
-          title=""
-        />
+        <CardHeader>{t(`UPLOAD_DATA_MAPPING`)}</CardHeader>
         <Switch
           className={"data-mapping-filter-switch"}
           isLabelFirst
@@ -1173,20 +1177,116 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           columns={columns}
           data={state?.currentData}
           progressPending={isLoading || state?.currentData?.length === 0}
-          progressComponent={<Loader page={true} variant={"PageLoader"}/>}
+          progressComponent={<Loader page={true} variant={"PageLoader"} />}
           pagination
           paginationServer
           customStyles={tableCustomStyle}
-          // paginationTotalRows={totalRows}
-          // onChangePage={handlePaginationChange}
-          // onChangeRowsPerPage={handleRowsPerPageChange}
-          // paginationPerPage={rowsPerPage}
           paginationDefaultPage={state?.currentPage}
           paginationResetDefaultPage={state?.currentPage}
           paginationTotalRows={state.totalRows}
           onChangePage={handlePageChange}
           onChangeRowsPerPage={handleRowsPerPageChange}
+          style={{ width: "100%" }}
           paginationRowsPerPageOptions={[5, 10, 15, 20]}
+          paginationComponent={() => {
+            const totalPages = Math.ceil(state.totalRows / state.rowsPerPage);
+            const startRow = (state.currentPage - 1) * state.rowsPerPage + 1;
+            const endRow = Math.min(state.currentPage * state.rowsPerPage, state.totalRows);
+
+            return (
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "1rem" }}>
+                <Button
+                  className="custom-class"
+                  variation={"secondary"}
+                  label={t("MAPPING_ADD_DATA")}
+                  onClick={() => {
+                    setShowAddPopup(true);
+                  }}
+                  showBottom
+                  style={{
+                    whiteSpace: "nowrap",
+                    width: "auto",
+                  }}
+                  title=""
+                />
+
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
+                  <div>
+                    <label style={{ marginRight: "5px" }}>Rows per page:</label>
+                    <select value={state.rowsPerPage} onChange={(e) => handleRowsPerPageChange(Number(e.target.value))}>
+                      {[5, 10, 15, 20].map((size) => (
+                        <option key={size} value={size}>
+                          {size}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <span>
+                      {startRow}-{endRow} of {state.totalRows}
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                    {/* First Page Button */}
+                    <button
+                      onClick={() => handlePageChange(1)}
+                      disabled={state.currentPage === 1}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: state.currentPage === 1 ? "not-allowed" : "pointer",
+                        opacity: state.currentPage === 1 ? 0.5 : 1,
+                      }}
+                    >
+                      <CustomSVG.ArrowToFirst />
+                    </button>
+
+                    {/* Previous Page Button */}
+                    <button
+                      onClick={() => handlePageChange(state.currentPage - 1)}
+                      disabled={state.currentPage === 1}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: state.currentPage === 1 ? "not-allowed" : "pointer",
+                        opacity: state.currentPage === 1 ? 0.5 : 1,
+                      }}
+                    >
+                      <CustomSVG.ArrowBack />
+                    </button>
+
+                    {/* Next Page Button */}
+                    <button
+                      onClick={() => handlePageChange(state.currentPage + 1)}
+                      disabled={state.currentPage >= totalPages}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: state.currentPage >= totalPages ? "not-allowed" : "pointer",
+                        opacity: state.currentPage >= totalPages ? 0.5 : 1,
+                      }}
+                    >
+                      <CustomSVG.ArrowForward />
+                    </button>
+
+                    {/* Last Page Button */}
+                    <button
+                      onClick={() => handlePageChange(totalPages)}
+                      disabled={state.currentPage >= totalPages}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: state.currentPage >= totalPages ? "not-allowed" : "pointer",
+                        opacity: state.currentPage >= totalPages ? 0.5 : 1,
+                      }}
+                    >
+                      <CustomSVG.ArrowToLast />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          }}
         />
       )}
       {chipPopUpRowId && (
@@ -1261,22 +1361,6 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   addCategorySelectAllCheck={true}
                   addSelectAllCheck={true}
                 />
-                {/* <Dropdown
-                  className="mappingPopUp"
-                  selected={selectedBoundary}
-                  disabled={false}
-                  isMandatory={true}
-                  option={
-                    sessionData?.["HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"]?.boundaryType?.selectedData?.filter(
-                      (i) => i.type === selectedLevel?.boundaryType
-                    ) || []
-                  }
-                  select={(value) => {
-                    setSelectedBoundary(value);
-                  }}
-                  optionKey="code"
-                  t={t}
-                /> */}
               </LabelFieldPair>
             </div>,
           ]}
@@ -1286,6 +1370,17 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             setSelectedBoundary(null);
           }}
           footerChildren={[
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"secondary"}
+              label={t("NO")}
+              onClick={() => {
+                setShowPopUp(false);
+                setSelectedLevel(null);
+                setSelectedBoundary(null);
+              }}
+            />,
             <Button
               type={"button"}
               size={"large"}
@@ -1303,17 +1398,6 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                     selectedLevel: selectedLevel,
                   },
                 });
-                setShowPopUp(false);
-                setSelectedLevel(null);
-                setSelectedBoundary(null);
-              }}
-            />,
-            <Button
-              type={"button"}
-              size={"large"}
-              variation={"secondary"}
-              label={t("NO")}
-              onClick={() => {
                 setShowPopUp(false);
                 setSelectedLevel(null);
                 setSelectedBoundary(null);

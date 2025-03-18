@@ -4,6 +4,7 @@
 .summary-header {
   @extend .typography.text-heading-l;
   font-size: 2.25rem;
+  margin-bottom: 1.5rem !important;
 }
 .date-field-container {
   display: grid;
@@ -135,8 +136,7 @@
   align-items: stretch;
 }
 .stepper-card {
-  height: 39rem;
-  margin-bottom: 1.5rem !important;
+  height: 37rem;
   padding-top: 0rem;
 }
 .stepper-subheader {
@@ -231,8 +231,8 @@
 }
 .data-mapping-filter-switch {
   float: right;
-  margin-bottom: 1.5rem;
   margin-right: 5rem;
+  margin-bottom: 0rem;
 }
 .digit-label-field-pair.multiselect-label-field {
   > div:nth-of-type(1) {
@@ -294,4 +294,11 @@
       padding-top: 0 !important;
       overflow: visible;
   }
+}
+.rdt_TableBody {
+  border: 1px solid #ccc !important; 
+  width: 100% !important;
+}
+.rdt_Table{
+  width: 100% !important;
 }

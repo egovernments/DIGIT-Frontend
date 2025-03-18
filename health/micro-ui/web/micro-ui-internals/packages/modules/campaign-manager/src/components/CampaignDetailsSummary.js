@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import {  EditIcon, Header, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Toast , Stepper , TextBlock ,Card , Loader} from "@egovernments/digit-ui-components";
+import {  EditIcon, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Toast , Stepper , TextBlock ,Card , Loader ,HeaderComponent} from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
 
 const CampaignDetailsSummary = (props) => {
@@ -161,7 +161,7 @@ const CampaignDetailsSummary = (props) => {
         <div className="card-container-delivery">
         <TagComponent campaignName={campaignName} />        
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Header className="summary-header">{t("HCM_CAMPAIGN_DETAILS_SUMMARY")}</Header>
+        <HeaderComponent className="summary-header">{t("HCM_CAMPAIGN_DETAILS_SUMMARY")}</HeaderComponent>
       </div>
       <div className="campaign-summary-container">
         <ViewComposer data={updatedObject}  />
