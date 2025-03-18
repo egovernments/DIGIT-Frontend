@@ -44,7 +44,6 @@ export const PGRModule = ({ stateCode, userType, tenants }) => {
 const componentsToRegister = {
   PGRModule,
   PGRCard,
-  SelectCampaign,
   PGRBoundaryComponent: BoundaryComponent,
 };
 
