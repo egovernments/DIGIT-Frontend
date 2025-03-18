@@ -352,6 +352,7 @@ function UserAccess({ category, setData, nationalRoles }) {
             paginationPerPage={rowsPerPage}
             sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
             paginationRowsPerPageOptions={[5, 10, 15, 20]}
+            paginationComponentOptions={{ rowsPerPageText:t("ROWS_PER_PAGE") }}
           />
         )}
       </Card>
