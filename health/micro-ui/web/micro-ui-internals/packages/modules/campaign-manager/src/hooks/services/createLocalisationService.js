@@ -6,7 +6,7 @@ const createLocalisationService = async (req, tenantId, module, locale) => {
         tenantId: tenantId,
         messages: req,
         module: module,
-        locale: locale
+        // locale: locale
       },
     });
     return { success: true, data: response }; // Indicate success
