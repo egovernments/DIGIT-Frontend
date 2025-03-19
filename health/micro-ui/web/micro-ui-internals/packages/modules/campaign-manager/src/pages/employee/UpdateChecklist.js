@@ -1,7 +1,7 @@
 import React, { useEffect, useState, createContext, useContext } from "react";
 import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
 import { useTranslation } from "react-i18next";
-import { SummaryCardFieldPair, Toast, Card, Button, PopUp, TextInput, Loader, ViewCardFieldPair } from "@egovernments/digit-ui-components";
+import { SummaryCardFieldPair, Toast, Card, Button, PopUp, TextInput, Loader } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useHistory, useLocation } from "react-router-dom";
 import MobileChecklist from "../../components/MobileChecklist";
@@ -43,6 +43,9 @@ const UpdateChecklist = () => {
     const [helpText, setHelpText] = useState("");
     const [showLocalisationPopup, setShowLocalisationPopup] = useState(false);
     const [localisationData, setLocalisationData] = useState([]);
+    const { data: storeData } = Digit.Hooks.useStore.getInitData();
+    const { languages, stateInfo } = storeData || {};
+    const currentLocales = languages.map(locale => locale.value);
 
 
     const popShow = () => {
@@ -556,13 +559,12 @@ const UpdateChecklist = () => {
                     <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
                         {fieldPairs.map((pair, index) => (
                             <div>
-                                <ViewCardFieldPair
+                                <SummaryCardFieldPair
                                     key={index} // Provide a unique key for each item
                                     className=""
                                     inline
                                     label={t(pair.label)} // Dynamically set the label
                                     value={t(pair.value)} // Dynamically set the value
-                                // style={{ fontSize: "16px", fontWeight: "bold" }} // Optional: customize styles
                                 />
                                 {index !== fieldPairs.length - 1 && <div style={{ height: "1rem" }}></div>}
                             </div>
@@ -576,7 +578,6 @@ const UpdateChecklist = () => {
                                     type={"text"}
                                     name={t("CHECKLIST_HELP_TEXT")}
                                     value={helpText}
-                                    // value={`${clTranslated} ${rlTranslated}`}
                                     onChange={(event) => setHelpText(event.target.value)}
                                     placeholder={t("CHECKLIST_HELP_TEXT_PALCEHOLDER")}
                                 />
@@ -591,17 +592,13 @@ const UpdateChecklist = () => {
                         onSubmit={popShow}
                         fieldStyle={{ marginRight: 0 }}
                         noBreakLine={true}
-                        // cardClassName={"page-padding-fix"}
                         onFormValueChange={onFormValueChange}
                         actionClassName={"checklistCreate"}
-                        // noCardStyle={currentKey === 4 || currentStep === 7 || currentStep === 0 ? false : true}
                         noCardStyle={true}
-                    // showWrapperContainers={false}
                     />}
                     {showToast && (
                         <Toast
                             type={showToast?.isError ? "error" : "success"}
-                            // error={showToast?.isError}
                             label={t(showToast?.label)}
                             isDleteBtn={"true"}
                             onClose={() => closeToast()}
@@ -614,7 +611,7 @@ const UpdateChecklist = () => {
                             onClose={() => setShowLocalisationPopup(false)}
                         >
                             <LocalisationEditorPopup
-                                locales={["en_IN", "pt_IN", "fr_IN"].filter(local => local !== locale)}
+                                locales={currentLocales.filter(local => local !== locale)}
                                 currentLocale={locale}
                                 localisationData={localisationData}
                                 onSave={(translations) => {

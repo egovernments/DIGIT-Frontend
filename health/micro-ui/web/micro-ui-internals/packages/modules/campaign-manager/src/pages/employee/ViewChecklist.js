@@ -1,7 +1,7 @@
 import React, { useEffect, useState, createContext, useContext, useCallback } from "react";
 import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
 import { useTranslation } from "react-i18next";
-import { SummaryCardFieldPair, Card, Button, PopUp,  TextInput,  Loader , ViewCardFieldPair} from "@egovernments/digit-ui-components";
+import { SummaryCardFieldPair, Card, Button, PopUp,  TextInput,  Loader } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useHistory, useLocation } from "react-router-dom";
 import MobileChecklist from "../../components/MobileChecklist";
@@ -238,9 +238,6 @@ const ViewChecklist = () => {
                     ]}
                     sortFooterChildren={true}
                 >
-                    {/* <PreviewComponent
-              questionsArray={previewData}></PreviewComponent> */}
-
                     <MobileChecklist questions={previewData} campaignName={campaignName} checklistRole={t(`${roleLocal}`)} typeOfChecklist={t(`${checklistTypeLocal}`)}></MobileChecklist>
                 </PopUp>
             )}
@@ -248,7 +245,7 @@ const ViewChecklist = () => {
             <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
                 {fieldPairs.map((pair, index) => (
                     <div>
-                        <ViewCardFieldPair
+                        <SummaryCardFieldPair
                             key={index} // Provide a unique key for each item
                             className=""
                             inline
@@ -267,8 +264,6 @@ const ViewChecklist = () => {
                       type={"text"}
                       name={t("CHECKLIST_HELP_TEXT")}
                       value={helpText}
-                      // value={`${clTranslated} ${rlTranslated}`}
-                    //   onChange={(event) => setHelpText(event.target.value)}
                       placeholder={t("CHECKLIST_HELP_TEXT_PALCEHOLDER")}
                     />
                   </div>
@@ -286,12 +281,8 @@ const ViewChecklist = () => {
                 fieldStyle={{ marginRight: 0 }}
                 noBreakLine={true}
                 isDisabled={updateDisable}
-                // cardClassName={"page-padding-fix"}
-                // onFormValueChange={onFormValueChange}
                 actionClassName={"checklistCreate"}
-                // noCardStyle={currentKey === 4 || currentStep === 7 || currentStep === 0 ? false : true}
                 noCardStyle={true}
-            // showWrapperContainers={false}
             />}
 
         </div>

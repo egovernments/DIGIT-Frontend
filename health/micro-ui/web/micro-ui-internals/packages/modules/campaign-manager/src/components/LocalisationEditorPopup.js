@@ -36,12 +36,6 @@ const LocalisationEditorPopup = ({ locales, currentLocale, localisationData, onS
   const [translations, setTranslations] = useState({});
 
   const columns = [
-    // {
-    //   name: t("CODE"),
-    //   selector: row => row.code,
-    //   sortable: true,
-    //   width: "30%"
-    // },
     {
       name: t(currentLocale),
       selector: row => row.message,
@@ -71,7 +65,6 @@ const LocalisationEditorPopup = ({ locales, currentLocale, localisationData, onS
   return (
     <div style={{ minWidth: "min-content" }}>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1rem" }}>
-        {/* <h2>{t("ADD_TRANSLATIONS")}</h2> */}
       </div>
 
       <CustomTabs 

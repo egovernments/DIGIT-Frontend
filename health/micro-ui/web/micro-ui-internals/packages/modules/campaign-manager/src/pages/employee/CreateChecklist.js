@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { SummaryCardFieldPair, Toast, Card, Button, PopUp, TextInput, Loader ,Tag , ViewCardFieldPair } from "@egovernments/digit-ui-components";
+import { SummaryCardFieldPair, Toast, Card, Button, PopUp, TextInput, Loader } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useHistory } from "react-router-dom";
 import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
@@ -49,8 +49,9 @@ const CreateChecklist = () => {
 
   const [showLocalisationPopup, setShowLocalisationPopup] = useState(false);
   const [localisationData, setLocalisationData] = useState([]);
-
-
+  const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
+  const { languages, stateInfo } = storeData || {};
+  const currentLocales = languages.map(locale => locale.value);
 
   module = "hcm-checklist";
   const { mutateAsync: localisationMutateAsync } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, locale);
@@ -488,7 +489,6 @@ const CreateChecklist = () => {
         acc[entry.locale].push(entry);
         return acc;
       }, {});
-
       // Process each locale group
       for (const [localeCode, entries] of Object.entries(groupedByLocale)) {
         const result = await localisationMutateAsync(entries);
@@ -617,7 +617,7 @@ const CreateChecklist = () => {
           <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
             {fieldPairs.map((pair, index) => (
               <div>
-                <ViewCardFieldPair
+                <SummaryCardFieldPair
                   key={index} // Provide a unique key for each item
                   className=""
                   inline
@@ -666,14 +666,12 @@ const CreateChecklist = () => {
             onSubmit={popShow}
             fieldStyle={{ marginRight: 0 }}
             noBreakLine={true}
-            // cardClassName={"page-padding-fix"}
             onFormValueChange={onFormValueChange}
             actionClassName={"actionBarClass"}
             noCardStyle={true}
             showSecondaryLabel={true}
             secondaryLabel={t("HCM_BACK")}
             onSecondayActionClick={onSecondayActionClick}
-          // showWrapperContainers={false}
           />
 
           {showToast && (
@@ -692,7 +690,7 @@ const CreateChecklist = () => {
               onClose={() => setShowLocalisationPopup(false)}
             >
               <LocalisationEditorPopup
-                locales={["en_IN", "pt_IN", "fr_IN"].filter(local => local !== locale)}
+                locales={currentLocales.filter(local => local !== locale)}
                 currentLocale={locale}
                 localisationData={localisationData}
                 onSave={(translations) => {
