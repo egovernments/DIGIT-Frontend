@@ -44,7 +44,6 @@ const FileComponent = ({ title, fileName, status, auditDetails, editHandler, del
             Digit.Utils.campaign.downloadExcelWithCustomName({ fileStoreId: file?.filestoreId, customName: fileNameWithoutExtension });
         }
     };
-
     return (
         <Card type="secondary">
             <div className="dm-parent-container" style={{ background: "#FAFAFA", margin: "0" }}>
