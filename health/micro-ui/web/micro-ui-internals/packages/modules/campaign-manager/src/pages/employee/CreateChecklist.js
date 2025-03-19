@@ -483,7 +483,8 @@ const CreateChecklist = () => {
 
     setSubmitting(true);
     try {
-      // Group localizations by locale
+      
+       // Group localizations by locale
       const groupedByLocale = allLocalisations.reduce((acc, entry) => {
         acc[entry.locale] = acc[entry.locale] || [];
         acc[entry.locale].push(entry);

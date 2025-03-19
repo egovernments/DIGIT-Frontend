@@ -9,8 +9,7 @@ import {
   PopUp,
   Switch,
   Toast,
-  CardHeader,
-} from "@egovernments/digit-ui-components";
+  CardHeader } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useReducer, useState, useRef } from "react";
 import DataTable from "react-data-table-component";
 import { useTranslation } from "react-i18next";
@@ -1194,7 +1193,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             const endRow = Math.min(state.currentPage * state.rowsPerPage, state.totalRows);
 
             return (
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "1rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" , paddingTop:"1rem" }}>
                 <Button
                   className="custom-class"
                   variation={"secondary"}
