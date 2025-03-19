@@ -692,6 +692,7 @@ const CreateChecklist = () => {
             >
               <LocalisationEditorPopup
                 locales={currentLocales.filter(local => local !== locale)}
+                languages = {languages.filter(item => item.value !== locale)}
                 currentLocale={locale}
                 localisationData={localisationData}
                 onSave={(translations) => {

@@ -613,6 +613,7 @@ const UpdateChecklist = () => {
                             <LocalisationEditorPopup
                                 locales={currentLocales.filter(local => local !== locale)}
                                 currentLocale={locale}
+                                languages = {languages.filter(item => item.value !== locale)}
                                 localisationData={localisationData}
                                 onSave={(translations) => {
                                     onSubmit(null, 1, tempFormData, translations);

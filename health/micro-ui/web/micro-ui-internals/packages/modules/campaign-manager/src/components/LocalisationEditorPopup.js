@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextInput, Button } from "@egovernments/digit-ui-components";
+import { TextInput, Button, Tab } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import { useTranslation } from "react-i18next";
 import { wrap } from "lodash";
@@ -20,7 +20,7 @@ const CustomTabs = ({ locales, activeLocale, onTabChange }) => {
             borderRadius: "4px",
             background: locale === activeLocale ? "#0075d2" : "#f0f0f0",
             color: locale === activeLocale ? "white" : "#666",
-            cursor: "pointer"
+            cursor: "pointer",
           }}
         >
           {t(locale)}
@@ -30,7 +30,7 @@ const CustomTabs = ({ locales, activeLocale, onTabChange }) => {
   );
 };
 
-const LocalisationEditorPopup = ({ locales, currentLocale, localisationData, onSave, onClose }) => {
+const LocalisationEditorPopup = ({ locales,languages, currentLocale, localisationData, onSave, onClose  }) => {
   const { t } = useTranslation();
   const [activeLocale, setActiveLocale] = useState(locales[0]);
   const [translations, setTranslations] = useState({});
@@ -38,68 +38,64 @@ const LocalisationEditorPopup = ({ locales, currentLocale, localisationData, onS
   const columns = [
     {
       name: t(currentLocale),
-      selector: row => row.message,
+      selector: (row) => row.message,
       wrap: true,
       style: {
-        whiteSpace: 'normal',
-        overflowWrap: 'break-word'
+        whiteSpace: "normal",
+        overflowWrap: "break-word",
       },
-      width: "45%"
+      width: "45%",
     },
     {
       name: t(activeLocale),
-      cell: row => (
+      cell: (row) => (
         <TextInput
           value={translations[row.code]?.[activeLocale] || ""}
-          onChange={e => setTranslations(prev => ({
-            ...prev,
-            [row.code]: { ...prev[row.code], [activeLocale]: e.target.value }
-          }))}
+          onChange={(e) =>
+            setTranslations((prev) => ({
+              ...prev,
+              [row.code]: { ...prev[row.code], [activeLocale]: e.target.value },
+            }))
+          }
           placeholder={t("ENTER_TRANSLATION")}
         />
       ),
-      width: "55%"
-    }
+      width: "55%",
+    },
   ];
-
+  
   return (
     <div style={{ minWidth: "min-content" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1rem" }}>
-      </div>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1rem" }}></div>
 
-      <CustomTabs 
-        locales={locales}
-        activeLocale={activeLocale}
-        onTabChange={setActiveLocale}
+      <Tab
+        activeLink = {activeLocale}
+        configItemKey="value"
+        configNavItems={languages}
+        onTabClick={(v)=>{}}
+        setActiveLink={setActiveLocale}
+        showNav
+        style={{}}
       />
 
-      <DataTable
-        columns={columns}
-        data={localisationData}
-        pagination
-        highlightOnHover
-        noHeader
-        persistTableHead
-      />
+      <DataTable columns={columns} data={localisationData} pagination highlightOnHover noHeader persistTableHead />
 
       <div style={{ display: "flex", gap: "1rem", justifyContent: "flex-end", marginTop: "2rem" }}>
-        <Button
-          label={t("CANCEL")}
-          variation="secondary"
-          onClick={onClose}
-        />
+        <Button label={t("CANCEL")} variation="secondary" onClick={onClose} />
         <Button
           label={t("SAVE_TRANSLATIONS")}
           variation="primary"
           onClick={() => {
-            const formatted = Object.entries(translations).flatMap(([code, localesMap]) =>
-              Object.entries(localesMap).map(([locale, message]) => ({
-                code,
-                message: message.trim(), // Remove whitespace
-                module: "hcm-checklist",
-                locale
-              }))
-            ).filter(entry => entry.message !== ""); // Filter out empty translations
+            const formatted = Object.entries(translations)
+              .flatMap(([code, localesMap]) =>
+                Object.entries(localesMap).map(([locale, message]) => ({
+                  code,
+                  message: message.trim(), // Remove whitespace
+                  module: "hcm-checklist",
+                  locale,
+                }))
+              )
+              .filter((entry) => entry.message !== ""); // Filter out empty translations
             onSave(formatted);
           }}
         />
