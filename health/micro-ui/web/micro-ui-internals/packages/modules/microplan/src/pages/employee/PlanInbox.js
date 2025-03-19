@@ -857,9 +857,9 @@ const PlanInbox = () => {
         height:"64px"
       },
       {
-        name: t(`REASONS_FOR_HARD_TO_REACH`),
+        name: t(`NOMADIC_SETTLEMENT`),
         cell: (row) => {
-          const value = row?.original?.additionalDetails?.REASONS_FOR_HARD_TO_REACH || "NA";
+          const value = row?.original?.additionalDetails?.NOMADIC_SETTLEMENT || "NA";
           const truncatedValue = value.length > 8 ? `${value.substring(0, 8)}...` : value;
   
           return (
@@ -867,7 +867,103 @@ const PlanInbox = () => {
               <TooltipWrapper description={value || ""}>{truncatedValue}</TooltipWrapper>
               <Button
                 label={""}
-                onClick={() => handleEditClick(row, "REASONS_FOR_HARD_TO_REACH")}
+                onClick={() => handleEditClick(row, "NOMADIC_SETTLEMENT")}
+                variation="secondary"
+                style={{minWidth: "42px",padding:"0px"}}
+                icon="Edit"
+                size={"small"}
+              />
+            </div>
+          );
+        },
+        sortable: false,
+        width: "180px",
+        height:"64px"
+      },
+      {
+        name: t(`RIVERRINE`),
+        cell: (row) => {
+          const value = row?.original?.additionalDetails?.RIVERRINE || "NA";
+          const truncatedValue = value.length > 8 ? `${value.substring(0, 8)}...` : value;
+  
+          return (
+            <div style={{ display: "flex", alignItems: "center", gap: ".5rem" , height:"64px" , width: "180px",justifyContent:"flex-end"}}>
+              <TooltipWrapper description={value || ""}>{truncatedValue}</TooltipWrapper>
+              <Button
+                label={""}
+                onClick={() => handleEditClick(row, "RIVERRINE")}
+                variation="secondary"
+                style={{minWidth: "42px",padding:"0px"}}
+                icon="Edit"
+                size={"small"}
+              />
+            </div>
+          );
+        },
+        sortable: false,
+        width: "180px",
+        height:"64px"
+      },
+      {
+        name: t(`HILLY_MOUNTAINOUS_SANDY_DESERT`),
+        cell: (row) => {
+          const value = row?.original?.additionalDetails?.HILLY_MOUNTAINOUS_SANDY_DESERT || "NA";
+          const truncatedValue = value.length > 8 ? `${value.substring(0, 8)}...` : value;
+  
+          return (
+            <div style={{ display: "flex", alignItems: "center", gap: ".5rem" , height:"64px" , width: "180px",justifyContent:"flex-end"}}>
+              <TooltipWrapper description={value || ""}>{truncatedValue}</TooltipWrapper>
+              <Button
+                label={""}
+                onClick={() => handleEditClick(row, "HILLY_MOUNTAINOUS_SANDY_DESERT")}
+                variation="secondary"
+                style={{minWidth: "42px",padding:"0px"}}
+                icon="Edit"
+                size={"small"}
+              />
+            </div>
+          );
+        },
+        sortable: false,
+        width: "180px",
+        height:"64px"
+      },
+      {
+        name: t(`NUMBER_OF_IDP_CAMPS`),
+        cell: (row) => {
+          const value = row?.original?.additionalDetails?.NUMBER_OF_IDP_CAMPS || "NA";
+          const truncatedValue = value.length > 8 ? `${value.substring(0, 8)}...` : value;
+  
+          return (
+            <div style={{ display: "flex", alignItems: "center", gap: ".5rem" , height:"64px" , width: "180px",justifyContent:"flex-end"}}>
+              <TooltipWrapper description={value || ""}>{truncatedValue}</TooltipWrapper>
+              <Button
+                label={""}
+                onClick={() => handleEditClick(row, "NUMBER_OF_IDP_CAMPS")}
+                variation="secondary"
+                style={{minWidth: "42px",padding:"0px"}}
+                icon="Edit"
+                size={"small"}
+              />
+            </div>
+          );
+        },
+        sortable: false,
+        width: "180px",
+        height:"64px"
+      },
+      {
+        name: t(`POPULATION_OF_IDP_CAMPS`),
+        cell: (row) => {
+          const value = row?.original?.additionalDetails?.POPULATION_OF_IDP_CAMPS || "NA";
+          const truncatedValue = value.length > 8 ? `${value.substring(0, 8)}...` : value;
+  
+          return (
+            <div style={{ display: "flex", alignItems: "center", gap: ".5rem" , height:"64px" , width: "180px",justifyContent:"flex-end"}}>
+              <TooltipWrapper description={value || ""}>{truncatedValue}</TooltipWrapper>
+              <Button
+                label={""}
+                onClick={() => handleEditClick(row, "POPULATION_OF_IDP_CAMPS")}
                 variation="secondary"
                 style={{minWidth: "42px",padding:"0px"}}
                 icon="Edit"
