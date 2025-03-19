@@ -18,7 +18,7 @@
     "@egovernments/digit-ui-module-hcmworkbench": "0.1.2",
     "@egovernments/digit-ui-module-campaign-manager": "0.3.1",
     "@egovernments/digit-ui-module-microplan": "0.2.0",
-    "@egovernments/digit-ui-module-health-payments": "0.0.1",
+    "@egovernments/digit-ui-module-health-payments": "0.1.0",
     "http-proxy-middleware": "^1.0.5",
     "react": "17.0.2",
     "react-dom": "17.0.2",

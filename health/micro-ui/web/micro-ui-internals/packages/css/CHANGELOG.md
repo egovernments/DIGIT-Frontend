@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.2 - 2025-3-19
+#### Admin console , Microplan & Payments
+  1. Updated Payment module CSS
+
 ## 0.3.1 - 2025-2-11
 #### Admin console , Microplan & Payments
   1. Campaign Manager Module CSS
