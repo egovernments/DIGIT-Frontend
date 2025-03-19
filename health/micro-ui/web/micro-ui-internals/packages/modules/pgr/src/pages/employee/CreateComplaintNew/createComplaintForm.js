@@ -1,4 +1,4 @@
-import { FormComposer, FormComposerV2, Header } from "@egovernments/digit-ui-react-components";
+import { FormComposer, FormComposerV2, Header } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import _ from "lodash";
@@ -30,7 +30,6 @@ const CreateComplaintForm = ({createComplaintConfig, sessionFormData, setSession
 
     const onFormValueChange = (setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
         if (!_.isEqual(sessionFormData, formData)) {
-            const difference = _.pickBy(sessionFormData, (v, k) => !_.isEqual(formData[k], v));
 
             const ComplainantName = formData?.ComplainantName;
             const ComplaintDescription = formData?.description;
@@ -87,7 +86,7 @@ const CreateComplaintForm = ({createComplaintConfig, sessionFormData, setSession
                         setToast(()=>({show : true, label : t("FAILED_TO_CREATE_COMPLAINT"), type : "error"}));
                     }else{
                         setIsButtonDisabled(false);
-                        sendDataToResponsePage("COMPLAINT_SUCCESSFULLY_CREATED", );
+                        sendDataToResponsePage("CS_COMMON_COMPLAINT_SUBMITTED", "CS_COMMON_TRACK_COMPLAINT_TEXT", "CS_PGR_COMPLAINT_NUMBER", responseData?.ServiceWrappers?.[0]?.service?.serviceRequestId );
                         clearSessionFormData();
                     }
             },
@@ -116,11 +115,14 @@ const CreateComplaintForm = ({createComplaintConfig, sessionFormData, setSession
         // debouncedOnModalSubmit(_data);
       };
 
-    const sendDataToResponsePage = (message, ) => {
+    const sendDataToResponsePage = (message, description, info, responseId) => {
         history.push({
           pathname: `/${window?.contextPath}/employee/pgr/complaint-success`,
           state : {
             message : message,
+            description: description,
+            info: info,
+            responseId: responseId,
           }
         }); 
       }

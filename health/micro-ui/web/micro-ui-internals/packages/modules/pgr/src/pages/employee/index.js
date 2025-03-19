@@ -31,6 +31,8 @@ const ProjectBreadCrumb = ({ location }) => {
 const EmployeeApp = ({ path, stateCode, userType, tenants }) => {
   console.log("PATH:", path);
 
+  const PGRComplaintDetails = Digit?.ComponentRegistryService?.getComponent("PGRComplaintDetails");
+
   return (
     <Switch>
       <AppContainer className="ground-container">
@@ -40,6 +42,7 @@ const EmployeeApp = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/create-complaint`} component={() => <CreateComplaintNew />} />
         <PrivateRoute path={`${path}/complaint-success`} component={() => <Response />} />
         <PrivateRoute path={`${path}/complaint-failed`} component={() => <Response />} />
+        <PrivateRoute path={`${path}/complaint-details/:id`} component={() => <PGRComplaintDetails />} />
       </AppContainer>
     </Switch>
   );

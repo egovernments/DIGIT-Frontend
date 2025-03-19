@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const { data: childrenData, isBoundaryLoading } = Digit.Hooks.pgr.useFetchBoundaries(tenantId);
+  const { data: childrenData, isLoading: isBoundaryLoading } = Digit.Hooks.pgr.useFetchBoundaries(tenantId);
 
   const boundaryHierarchy = Digit.SessionStorage.get("boundaryHierarchyOrder")?.map((item) => item.code) || [];
 
@@ -66,12 +66,8 @@ const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
   }
 
   return (
-    <LabelFieldPair>
-      <CardLabel style={{ width: "40.8%" }} className="card-label-smaller">
-        {t("Boundary")} *{/*input.isMandatory ? " * " : null*/}
-      </CardLabel>
+    <React.Fragment>
 
-      <div style={{ width: "100%" }}>
         {boundaryHierarchy.map((key) => {
           if (value[key]?.length > 0) {
             return (
@@ -86,8 +82,7 @@ const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
           }
           return null;
         })}
-      </div>
-    </LabelFieldPair>
+    </React.Fragment>
   );
 };
 
@@ -98,10 +93,12 @@ const BoundaryDropdown = ({ label, data, onChange, selected }) => {
   const { t } = useTranslation();
 
   return (
-    <div style={{ width: "100%", marginTop: "14px" }}>
+    <React.Fragment>
       <div className="comment-label">{t(label)}</div>
-      <Dropdown selected={selected} t={t} option={data} optionKey={"code"} select={(value) => onChange(value)} />
+      <div className='digit-text-input-field'>
+      <Dropdown style={{width: "100%", maxWidth : "37.5rem"}} selected={selected} t={t} option={data} optionKey={"code"} select={(value) => onChange(value)} />
     </div>
+    </React.Fragment>
   );
 };
 

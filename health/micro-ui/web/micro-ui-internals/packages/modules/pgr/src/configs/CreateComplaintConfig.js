@@ -2,21 +2,6 @@ export const CreateComplaintConfig =  [
     {
       head: "CS_COMPLAINT_DETAILS_COMPLAINT_DETAILS",
       body: [
-        // {
-        //   label: "PGR_CAMPAIGN_NAME",
-        //   type: "component",
-        //   component: "SelectCampaign",
-        //   key: "SelectCampaign",
-        //   withoutLabel: true,
-        //   inline: true,
-        //   isMandatory: true,
-        //   validation: {
-        //     isRequired: true,
-        //   },
-        //   populators: {
-        //     name: "SelectCampaign",
-        //   },
-        // },
         {
           isMandatory: true,
           key: "SelectComplaintType",
@@ -52,7 +37,7 @@ export const CreateComplaintConfig =  [
           isMandatory: true,
           component: "PGRBoundaryComponent",
           key: "SelectedBoundary",
-          withoutLabel: true,
+          label: "Boundary",
           populators: {
             name: "SelectedBoundary",
           },

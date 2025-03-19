@@ -31,17 +31,12 @@ const getBoundaryTypeOrder = (tenantBoundary) => {
           tenantId: tenantId,
           hierarchyType: hierarchyType,
           includeChildren: true,
-          // codes: nationalLevelProject?.address?.boundary,
-          // boundaryType: nationalLevelProject?.address?.boundaryType,
         },
       });
   
       if (!fetchBoundaryData) {
         throw new Error("Couldn't fetch boundary data");
       }
-  
-      const boundaryHierarchyOrder = getBoundaryTypeOrder(fetchBoundaryData?.TenantBoundary?.[0]?.boundary);
-      Digit.SessionStorage.set("boundaryHierarchyOrder", boundaryHierarchyOrder);
   
       return fetchBoundaryData?.TenantBoundary;
     } catch (error) {

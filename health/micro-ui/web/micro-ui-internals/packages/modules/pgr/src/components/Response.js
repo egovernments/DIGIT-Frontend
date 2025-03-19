@@ -25,9 +25,9 @@ const Response = () => {
         customIcon=""
         description={t(state?.description)}
         footerChildren={[
-          <Button label={t(`HCM_AM_VIEW_ANOTHER_REGISTER`)} onClick={
+          <Button label={t(`PGR_CREATE_ANOTHER_COMPLAIN`)} onClick={
             () => {
-              history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
+              history.push(`/${window.contextPath}/employee/pgr/create-complaint`);
             }
           } variation="teritiary" icon="ArrowForward" isSuffix />
         ]}

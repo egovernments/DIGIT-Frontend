@@ -122,6 +122,36 @@ export const getCustomPaginationOptions = (t) => ({
   rangeSeparatorText: t("HCM_AM_OF"),
 });
 
+export const convertEpochToDate = (dateEpoch) => {
+  // Returning null in else case because new Date(null) returns initial date from calender
+  if (dateEpoch) {
+    const dateFromApi = new Date(dateEpoch);
+    let month = dateFromApi.getMonth() + 1;
+    let day = dateFromApi.getDate();
+    let year = dateFromApi.getFullYear();
+    month = (month > 9 ? "" : "0") + month;
+    day = (day > 9 ? "" : "0") + day;
+    return `${year}-${month}-${day}`;
+  } else {
+    return null;
+  }
+};
+
+export const convertEpochFormateToDate = (dateEpoch) => {
+  // Returning null in else case because new Date(null) returns initial date from calender
+  if (dateEpoch) {
+    const dateFromApi = new Date(dateEpoch);
+    let month = dateFromApi.getMonth() + 1;
+    let day = dateFromApi.getDate();
+    let year = dateFromApi.getFullYear();
+    month = (month > 9 ? "" : "0") + month;
+    day = (day > 9 ? "" : "0") + day;
+    return `${day}/${month}/${year}`;
+  } else {
+    return null;
+  }
+};
+
 
 export const formPayloadToCreateComplaint = (formData, tenantId, user) => {
   const additionalDetail = { supervisorName : formData?.SupervisorName?.trim()?.length > 0 ? formData?.SupervisorName?.trim() : null, supervisorContactNumber : formData?.SupervisorContactNumber?.trim()?.length > 0 ? formData?.SupervisorContactNumber?.trim() : null };
