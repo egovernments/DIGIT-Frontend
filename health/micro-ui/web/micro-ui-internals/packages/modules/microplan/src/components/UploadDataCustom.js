@@ -563,7 +563,6 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
 
   const fetchTemplate = async () => {
-    setDownloadTemplateLoader(true);
     return new Promise((resolve) => {
       mutation.mutate(
         {
@@ -596,7 +595,6 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
               setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
             }
             else{
-              setDownloadTemplateLoader(true);
               resolve(null);// Continuing polling on error
             }
           }, 
