@@ -625,7 +625,10 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   }, []);
 
   const downloadTemplate = async () => {
-    if (!fileData) return;
+    if (!fileData){
+      setDownloadTemplateLoader(true);
+      return;
+    }
 
     setDownloadTemplateLoader(true);
     const filesArray = [fileData?.GeneratedResource?.[0]?.fileStoreid];
@@ -718,7 +721,6 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
                 type="button"
                 className="campaign-download-template-btn"
                 onClick={downloadTemplate}
-                isDisabled={isDownloadDisabled}
               />
             </div>
             {uploadedFile.length === 0 && (
