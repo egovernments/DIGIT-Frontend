@@ -90,6 +90,20 @@ const BillInboxTable = ({ ...props }) => {
         {
             name: (
                 <div className="custom-inbox-table-row">
+                    {props.status === "APPROVED" ? t("HCM_AM_ATTENDANCE_APPROVED_BY") : t("HCM_AM_ATTENDANCE_MARKED_BY")}
+                </div>
+            ),
+            selector: (row) => {
+                return (
+                    <div className="ellipsis-cell" title={row?.markby || t("NA")}>
+                        {props.status === "APPROVED" ? row?.approvedBy : row?.markedBy || t("NA")}
+                    </div>
+                );
+            },
+        },
+        {
+            name: (
+                <div className="custom-inbox-table-row">
                     {t("HCM_AM_ATTENDANCE_BOUNDARY")}
                 </div>
             ),
@@ -103,18 +117,19 @@ const BillInboxTable = ({ ...props }) => {
         },
         {
             name: (
-                <div className="custom-inbox-table-row">
-                    {props.status === "APPROVED" ? t("HCM_AM_ATTENDANCE_APPROVED_BY") : t("HCM_AM_ATTENDANCE_MARKED_BY")}
-                </div>
+              <div className="custom-inbox-table-row">
+                {t("HCM_AM_ATTENDANCE_BOUNDARY_TYPE")}
+              </div>
             ),
             selector: (row) => {
-                return (
-                    <div className="ellipsis-cell" title={row?.markby || t("NA")}>
-                        {props.status === "APPROVED" ? row?.approvedBy : row?.markedBy || t("NA")}
-                    </div>
-                );
+              return (
+                <div className="ellipsis-cell" title={t(row?.boundary) || t("NA")}>
+                  {t(row.boundaryType) || t("NA")}
+                </div>
+              );
             },
-        },
+          },
+
 
         {
             name: props.status === "APPROVED" ? (

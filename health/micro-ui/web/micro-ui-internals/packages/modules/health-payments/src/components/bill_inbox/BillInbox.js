@@ -123,6 +123,7 @@ const BillInboxComponent = () => {
                     registerId: item?.id,
                     name: selectedProject?.name,
                     boundary: item?.localityCode,
+                    boundaryType: item?.additionalDetails?.boundaryType,
                     noOfAttendees: item?.attendees == null ? 0 : item?.attendees.length || 0,
                     approvedBy: approver?.additionalDetails?.staffName || "NA",
                     markedBy: owner?.additionalDetails?.ownerName || "NA",
