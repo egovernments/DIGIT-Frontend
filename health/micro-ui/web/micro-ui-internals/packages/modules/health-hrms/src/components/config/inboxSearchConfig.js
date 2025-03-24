@@ -12,21 +12,14 @@ const inboxSearchConfig = () => {
           headerStyle: null,
           primaryLabel: "Apply Filters",
           secondaryLabel: "Clear Filters",
-          minReqFields: 0,
+          minReqFields: 1,
           defaultValues: {
-            //dropdown: "",
-            // roles: [],
-            // radio:undefined,
-            //status: "",
-            // radio: {
-            //   code: "ASSIGNED_TO_ME",
-            //   name: "Assigned to me",
-            // },
-            // isActive: {
-            //   code: false,
-            //   name: "HR_DEACTIVATE_HEAD",
-            // },
-            // isActive: false,
+            roles: [],
+
+            isActive: {
+              code: true,
+              name: "HR_ACTIVATE_HEAD",
+            },
           },
           fields: [
             {
@@ -203,6 +196,7 @@ const inboxSearchConfig = () => {
           resultsJsonPath: "Employees", // API response path for results
           enableColumnSort: false, // Enables sorting on columns
           enableGlobalSearch: false, // Disables global search
+          isPaginationRequired: true, // enables pagination
         },
       },
     },

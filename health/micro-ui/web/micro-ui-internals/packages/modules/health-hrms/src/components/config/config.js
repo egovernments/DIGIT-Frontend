@@ -226,24 +226,59 @@ export const newConfig = [
         },
       },
 
+      // {
+      //   isMandatory: true,
+      //   key: "RolesAssigned",
+      //   type: "dropdown",
+      //   label: "HR_COMMON_TABLE_COL_ROLE",
+      //   disable: false,
+      //   populators: {
+      //     allowMultiSelect: true,
+      //     name: "RolesAssigned",
+      //     optionsKey: "code",
+      //     error: "Required",
+      //    // options:[]
+      //     mdmsConfig: {
+      //       masterName: "roles",
+      //       moduleName: "ACCESSCONTROL-ROLES",
+      //       localePrefix: "ACCESSCONTROL_ROLES_ROLES",
+      //     },
+      //   },
+      // },
+
       {
+        type: "component",
         isMandatory: true,
+        component: "RolesAssigned",
         key: "RolesAssigned",
-        type: "multiselectdropdown",
-        label: "HR_COMMON_TABLE_COL_ROLE",
-        disable: false,
+        withoutLabel: true,
         populators: {
-          allowMultiSelect: true,
           name: "RolesAssigned",
-          optionsKey: "name",
-          error: "Required",
-          mdmsConfig: {
-            masterName: "roles",
-            moduleName: "ACCESSCONTROL-ROLES",
-            localePrefix: "ACCESSCONTROL_ROLES_ROLES",
-          },
         },
+        customProps:{
+          
+        }
       },
+
+      // {
+      //   isMandatory: true,
+      //   key: "multiselectdropdown",
+      //   type: "multiselectdropdown",
+      //   label: "HR_COMMON_TABLE_COL_ROLE",
+      //   disable: false,
+      //   populators: {
+      //     allowMultiSelect: true,
+      //     name: "RolesAssigned",
+      //     optionsKey: "name",
+      //     error: "Required",
+      //    // options:[]
+      //     mdmsConfig: {
+      //       masterName: "roles",
+      //       moduleName: "ACCESSCONTROL-ROLES",
+      //       localePrefix: "ACCESSCONTROL_ROLES_ROLES",
+      //     },
+      //   },
+      // },
 
       {
         type: "component",

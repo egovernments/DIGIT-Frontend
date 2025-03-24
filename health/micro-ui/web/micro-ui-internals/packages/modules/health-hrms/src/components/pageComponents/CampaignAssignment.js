@@ -15,18 +15,18 @@ const CampaignsAssignment = ({ t, config, onSelect, formData }) => {
     i18text: `${project?.name}_${project?.address?.boundary}`,
   }));
   const [campaigns, setCampaigns] = useState(
-    formData?.CampaignsAssignment?.length > 0 ? formData?.CampaignsAssignment : [{ selectedProject: null, fromDate: null, toDate: null }]
+    formData?.CampaignsAssignment?.length > 0 ? formData?.CampaignsAssignment : [{ selectedProject: "", fromDate: "", toDate: "" }]
   );
   
   useEffect(() => {
-    debugger
+   
     if (formData?.CampaignsAssignment?.length > 0) {
       setCampaigns(formData.CampaignsAssignment);
     }
   }, [formData?.CampaignsAssignment]);
 
   const handleAddUnit = () => {
-    const newCampaign = { selectedProject: null, fromDate: null, toDate: null };
+    const newCampaign = { selectedProject: "", fromDate: "", toDate: "" };
     const updatedCampaigns = [...campaigns, newCampaign];
     setCampaigns(updatedCampaigns);
     onSelect(config.key, updatedCampaigns);

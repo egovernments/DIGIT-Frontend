@@ -1377,10 +1377,25 @@ export const UICustomizations = {
 
   SearchDefaultConfigMain: {
     preProcess: (data) => {
-      //set tenantId
-      // data.body.inbox.tenantId = Digit.ULBService.getCurrentTenantId();
-      // data.body.inbox.processSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
-      debugger;
+      // filterForm
+      // params
+
+      if (data.state.filterForm && Object.keys(data.state.filterForm).length > 0) {
+        const updatedParams = {}; // Temporary object to store updates
+
+        if (data.state.filterForm.roles?.code) {
+          updatedParams.roles = data.state.filterForm.roles.code;
+        }
+
+        if (typeof data.state.filterForm.isActive === "object" && "code" in data.state.filterForm.isActive) {
+          updatedParams.isActive = data.state.filterForm.isActive.code;
+        }
+
+        // Update `data.params` only if `updatedParams` has values
+        if (Object.keys(updatedParams).length > 0) {
+          data.params = { ...data.params, ...updatedParams };
+        }
+      }
 
       return data;
     },

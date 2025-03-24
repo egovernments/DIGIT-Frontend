@@ -16,11 +16,7 @@ export const checkIfUserExistWithPhoneNumber = async (data, tenantId) => {
     } else {
       return false; // Success
     }
-    // }
-    // else {
-    //   debugger;
-    //   return true; // Success
-    // }
+   
   } catch (error) {
     throw error; // throw on error
   }
@@ -84,7 +80,8 @@ export const formPayloadToCreateUser = (data, tenantId) => {
         correspondenceAddress: data?.SelectEmployeeCorrespondenceAddress || null,
         emailId: data?.SelectEmployeeEmailId ? data?.SelectEmployeeEmailId : null,
         // gender: data?.SelectEmployeeGender?.gender.code,
-        gender: data?.genders.code,
+
+        gender: data?.gender.code,
         dob: new Date(data?.SelectDateofBirthEmployment || HRMS_CONSTANTS.DEFAULT_DOB).getTime(),
         roles: mappedroles,
         tenantId: tenantId,
@@ -289,36 +286,37 @@ function formJuridiction(data, tenantId) {
 }
 
 export const editDefaultUserValue = (data, tenantId) => {
+  
   const defaultValues = {
-    tenantId: tenantId,
+    tenantId: tenantId||"",
     employeeStatus: "EMPLOYED",
-    employeeType: data[0]?.code,
-    SelectEmployeePhoneNumber: data[0]?.user?.mobileNumber,
-    SelectEmployeeId: data[0]?.code,
-    SelectEmployeeName: data[0]?.user?.name,
-    SelectEmployeeEmailId: data[0]?.user?.emailId,
-    SelectEmployeeCorrespondenceAddress: data[0]?.user?.correspondenceAddress,
-    SelectDateofEmployment: convertEpochToDate(data[0]?.dateOfAppointment),
-    SelectEmployeeType: { name: `EGOV_HRMS_EMPLOYEETYPE_${data[0]?.employeeType}`, code: data[0]?.employeeType, active: true },
+    employeeType: data[0]?.code||"",
+    SelectEmployeePhoneNumber: data[0]?.user?.mobileNumber||"",
+    SelectEmployeeId: data[0]?.code ||"",
+    SelectEmployeeName: data[0]?.user?.name||"",
+    SelectEmployeeEmailId: data[0]?.user?.emailId||"",
+    SelectEmployeeCorrespondenceAddress: data[0]?.user?.correspondenceAddress||"",
+    SelectDateofEmployment: convertEpochToDate(data[0]?.dateOfAppointment)||"",
+    SelectEmployeeType: { name: `EGOV_HRMS_EMPLOYEETYPE_${data[0]?.employeeType}`, code: data[0]?.employeeType ||"", active: true },
     SelectEmployeeDepartment: {
       name: `COMMON_MASTERS_DEPARTMENT_${data[0]?.assignments?.[0]?.department}`,
-      code: data[0]?.assignments?.[0]?.department,
+      code: data[0]?.assignments?.[0]?.department || "",
       active: true,
     },
     SelectEmployeeDesignation: {
       name: `COMMON_MASTERS_DESIGNATION_${data[0]?.assignments?.[0]?.designation}`,
-      code: data[0]?.assignments?.[0]?.designation,
+      code: data[0]?.assignments?.[0]?.designation||"",
       active: true,
     },
 
-    genders: {
+    gender: {
       active: true,
-      code: data[0]?.user?.gender,
-      name: `COMMON_GENDER_${data[0]?.user?.gender}`,
+      code: data[0]?.user?.gender || "FEMALE",
+      name: `COMMON_GENDER_${data[0]?.user?.gender}`||"",
     },
 
-    RolesAssigned: data[0]?.user.roles.map((e) => e),
-
+     RolesAssigned: data[0]?.user.roles.map((e) => e),
+    //RolesAssigned: [],
     SelectDateofBirthEmployment: convertEpochToDate(data[0]?.user?.dob),
     Jurisdictions: data[0]?.jurisdictions.map((ele, index) => {
       console.log("ele", ele);
@@ -353,24 +351,29 @@ export const editDefaultUserValue = (data, tenantId) => {
     fromDate: null,
     toDate: null,
   };
-
-  debugger;
+  
   return defaultValues;
 };
 
 // edit assignment
 
 export const editDefaultAssignmentValue = (data, tenantId) => {
+  debugger
   const defaultValues = {
     CampaignsAssignment:
-      data?.map((ele, index) => ({
+     data.length>0? data?.map((ele, index) => ({
         key: index,
         fromDate: ele.startDate ? convertEpochToDate(ele.startDate) : "",
         toDate: ele.endDate ? convertEpochToDate(ele.endDate) : "",
         selectedProject: { id: ele.projectId },
-      })) || [],
+      })) : [{
+        key: 0,
+        fromDate:  "",
+        toDate:  "",
+        selectedProject: { id: "" },
+      }],
   };
-
+debugger
   return defaultValues;
 };
 

@@ -111,7 +111,7 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
     const p = data?.MdmsRes?.["ACCESSCONTROL-ROLES"].roles.map((role) => {
       return { code: role.code, name: role?.name ? role?.name : " ", labelKey: "ACCESSCONTROL_ROLES_ROLES_" + role.code, tenantId: tenantId };
     });
-    debugger;
+   
     return p;
   }
 
@@ -160,7 +160,7 @@ function Jurisdiction({
 }) {
   const [BoundaryType, selectBoundaryType] = useState([]);
   const [Boundary, selectboundary] = useState([]);
-  debugger;
+ 
   useEffect(() => {
     selectBoundaryType(
       data?.MdmsRes?.["egov-location"]?.["TenantBoundary"]
@@ -200,7 +200,7 @@ function Jurisdiction({
   };
 
   const selectrole = (e, data) => {
-    debugger;
+   
     // const index = jurisdiction?.roles.filter((ele) => ele.code == data.code);
     // let res = null;
     // if (index.length) {
@@ -218,7 +218,7 @@ function Jurisdiction({
     res?.forEach((resData) => {
       resData.labelKey = "ACCESSCONTROL_ROLES_ROLES_" + resData.code;
     });
-    debugger;
+   
     setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, roles: res } : item)));
   };
 

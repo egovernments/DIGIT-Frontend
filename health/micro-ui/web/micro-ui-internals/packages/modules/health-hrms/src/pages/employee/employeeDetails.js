@@ -29,8 +29,12 @@ const EmployeeDetailScreen = () => {
   const { isLoading, isError, error, data } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);
 
   const campaignFetch = async (fetchedEmployeeId) => {
-    const camData = await searchStaff(fetchedEmployeeId, tenantId);
-    setcampaign(camData);
+    try {
+      const camData = await searchStaff(fetchedEmployeeId, tenantId);
+      setcampaign(camData);
+    } catch (error) {
+      setcampaign([]);
+    }
   };
 
   useEffect(() => {

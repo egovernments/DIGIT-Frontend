@@ -72,7 +72,7 @@ const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
 
   return (
     <LabelFieldPair>
-      <CardLabel style={{ width: "40.8%" }} className="card-label-smaller">
+      <CardLabel style={{ width: "50.1%" }} className="digit-card-label-smaller">
         {t("Boundary")} *{/*input.isMandatory ? " * " : null*/}
       </CardLabel>
 
@@ -82,7 +82,10 @@ const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
             return (
               <BoundaryDropdown
                 key={key}
-                label={`ATTENDANCE_${key}`}
+                label={
+                  `${t(key)}`
+                  // `ATTENDANCE_${key}`
+                }
                 data={value[key]}
                 onChange={(selectedValue) => handleSelection(selectedValue)}
                 selected={selectedValues[key] || null}
@@ -102,9 +105,16 @@ const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
 const BoundaryDropdown = ({ label, data, onChange, selected }) => {
   const { t } = useTranslation();
   return (
-    <div style={{ width: "100%", marginTop: "14px", paddingLeft:"7%"}}>
+    <div style={{ width: "100%", marginTop: "0px", paddingLeft: "0%" }}>
       <div className="comment-label">{t(label)}</div>
-      <Dropdown selected={selected} t={t} option={data} optionKey={"code"} select={(value) => onChange(value)} />
+      <Dropdown
+        style={{ width: "100%", maxWidth: "37.5rem" }}
+        selected={selected}
+        t={t}
+        option={data}
+        optionKey={"code"}
+        select={(value) => onChange(value)}
+      />
     </div>
   );
 };

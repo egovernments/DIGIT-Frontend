@@ -1,9 +1,11 @@
 import { CardLabel, Dropdown, LabelFieldPair, Loader, RemoveableTag, MultiSelectDropdown } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
-const RolesAssigned = ({ t, config, onSelect, formData }) => {
+const RolesAssigned = ({ config, onSelect, formData }) => {
+  const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const [roleAssigned, setroleAssigned] = useState(formData?.RolesAssigned);
+  const [roleAssigned, setroleAssigned] = useState(formData?.RolesAssigned||[]);
   const [roleList, setRoleList] = useState([]);
   const [selectedRole, setSelectedRole] = useState([]);
   const { data: data, isLoading } = Digit.Hooks.hrms.useHrmsMDMS(tenantId, "egov-hrms", "HRMSRolesandDesignation") || {};
@@ -56,8 +58,8 @@ const RolesAssigned = ({ t, config, onSelect, formData }) => {
 
   return (
     <LabelFieldPair>
-      <CardLabel style={{ width: "40.8%" }} className="card-label-smaller">
-        {t("Role Assigned")} *{/*input.isMandatory ? " * " : null*/}
+      <CardLabel style={{ width: "50.1%" }} className="digit-card-label-smaller">
+        {t("HR_COMMON_TABLE_COL_ROLE")} *{/*input.isMandatory ? " * " : null*/}
       </CardLabel>
 
       <div style={{ width: "100%" }}>
@@ -70,7 +72,7 @@ const RolesAssigned = ({ t, config, onSelect, formData }) => {
           config={{
             isDropdownWithChip: true,
           }}
-          defaultValue="FEMALE"
+          defaultValue=""
           description=""
           error=""
           errorStyle={null}
@@ -87,7 +89,7 @@ const RolesAssigned = ({ t, config, onSelect, formData }) => {
           }}
           options={getroledata() || []}
           optionsCustomStyle={{}}
-          optionsKey="code"
+          optionsKey="labelKey"
           selectAllLabel=""
           t={t}
           type="multiselectdropdown"

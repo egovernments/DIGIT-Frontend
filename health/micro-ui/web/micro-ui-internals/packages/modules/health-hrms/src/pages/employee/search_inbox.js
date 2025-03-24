@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-//  import { InboxSearchComposer } from "@egovernments/digit-ui-react-components";
+  //import { InboxSearchComposer } from "@egovernments/digit-ui-react-components";
 //import inboxSearchConfig from "../../components/config/inboxSearchConfig";
 import { InboxSearchComposer, HeaderComponent, Toast, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";

@@ -1,5 +1,5 @@
-//  import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
-import {FormComposerV2, HeaderComponent, Toast, Loader } from "@egovernments/digit-ui-components";
+//import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
+import { FormComposerV2, HeaderComponent, Toast, Loader } from "@egovernments/digit-ui-components";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation, useParams } from "react-router-dom";
@@ -227,12 +227,13 @@ const CreateEmployee = ({ editUser = false }) => {
             });
           },
           onError: (error) => {
+            console.log("error",error)
             history.replace(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.EDIT_USER_ERROR,
               state: "error",
               info: t("HR_EMPLOYEE_ID_LABEL"),
               fileName: error?.Employees?.[0],
-              description: null,
+              description: t(error?`${error[0]?.code}`:""),
               message: t(`EMPLOYEE_RESPONSE_UPDATE_ACTION_ERROR`),
               back: t(`CORE_COMMON_GO_TO_HOME`),
               backlink: `/${window.contextPath}/employee`,
@@ -242,6 +243,7 @@ const CreateEmployee = ({ editUser = false }) => {
         }
       );
     } catch (error) {
+     console.log(error)
       // setTriggerEstimate(true);
     }
   };
@@ -266,7 +268,8 @@ const CreateEmployee = ({ editUser = false }) => {
         await updateEmployeeService(payload);
       }
     } catch (err) {
-      setShowToast({ key: true, label: "Some error happened" });
+     
+      setShowToast({ key: true, label: t(err?`${err?.code}`:"BAD_REQUEST") });
       setShowModal(false);
     }
   };
@@ -328,7 +331,7 @@ const CreateEmployee = ({ editUser = false }) => {
         </div>
 
         <FormComposerV2
-          defaultValues={editUser == true && data?.Employees ? editDefaultUserValue(data?.Employees, tenantId) : ""}
+          defaultValues={editUser == true && data?.Employees ? editDefaultUserValue(data?.Employees, tenantId) : {}}
           heading={t("")}
           config={config}
           onSubmit={openModal}
