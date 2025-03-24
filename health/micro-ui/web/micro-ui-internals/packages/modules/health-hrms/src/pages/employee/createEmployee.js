@@ -227,7 +227,7 @@ const CreateEmployee = ({ editUser = false }) => {
             });
           },
           onError: (error) => {
-            console.log("error",error)
+           
             history.replace(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.EDIT_USER_ERROR,
               state: "error",
@@ -243,7 +243,7 @@ const CreateEmployee = ({ editUser = false }) => {
         }
       );
     } catch (error) {
-     console.log(error)
+    
       // setTriggerEstimate(true);
     }
   };

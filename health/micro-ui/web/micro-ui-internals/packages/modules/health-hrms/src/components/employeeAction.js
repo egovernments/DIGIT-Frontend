@@ -208,7 +208,7 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
                     };
 
                     Digit.UserService.changePassword(requestData, tenantId).then((response) => {
-                        console.log(error);
+                        
                         setToast({key: "success", action: t("PASSWORD_RESET_SUCCESS")});
                         closeModal();
                     }).catch((err) => {

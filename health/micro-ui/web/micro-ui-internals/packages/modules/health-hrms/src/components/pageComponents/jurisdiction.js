@@ -115,7 +115,7 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
     return p;
   }
 
-  console.log("Jurisdictions: ", jurisdictions);
+ 
   if (isLoading || isBoundaryLoading) {
     return <Loader />;
   }

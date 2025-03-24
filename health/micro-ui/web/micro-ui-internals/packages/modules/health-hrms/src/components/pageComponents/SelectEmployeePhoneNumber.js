@@ -87,7 +87,6 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
                     ]}
                     optionKey="name"
                     select={(value) => {
-                      console.log(value);
                       handleCountryCodeChange(value);
                     }}
                   />

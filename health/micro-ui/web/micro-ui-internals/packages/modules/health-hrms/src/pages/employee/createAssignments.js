@@ -1,4 +1,4 @@
-import {HeaderComponent, FormComposerV2, Toast, Loader, Header } from "@egovernments/digit-ui-components";
+import { HeaderComponent, FormComposerV2, Toast, Loader, Header } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
@@ -56,13 +56,9 @@ const AssignCampaign = ({ editCampaign = false }) => {
 
   const { isLoading: isEstimateMusterRollLoading, data: projectStaff } = Digit.Hooks.useCustomAPIHook(reqCri);
 
-  console.log("projectStaff", projectStaff);
-
   useEffect(() => {
     setFormKey((prevKey) => prevKey + 1);
   }, [editCampaign, projectStaff, tenantId]);
-
-  
 
   const onFormValueChange = (setValue = true, formData) => {};
 
@@ -144,8 +140,7 @@ const AssignCampaign = ({ editCampaign = false }) => {
       }
       let s = await deleteStaffService(projectStaff);
       await createStaffService(ProjectStaffCreatePayload);
-    } catch (err) {
-    }
+    } catch (err) {}
   };
 
   if (isLoadings) {
@@ -162,7 +157,11 @@ const AssignCampaign = ({ editCampaign = false }) => {
             : { marginLeft: "15px", fontFamily: "calibri", color: "#FF0000" }
         }
       >
-        {<HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>{t("HR_COMMON_ASSIGN_CAMPAIGN_HEADER")}</HeaderComponent>}
+        {
+          <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
+            {t("HR_COMMON_ASSIGN_CAMPAIGN_HEADER")}
+          </HeaderComponent>
+        }
       </div>
       <FormComposerV2
         key={formKey}
