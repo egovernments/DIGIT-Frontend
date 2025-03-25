@@ -65,6 +65,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const XlsPreview = Digit.ComponentRegistryService.getComponent("XlsPreview");
   const BulkUpload = Digit.ComponentRegistryService.getComponent("BulkUpload");
   const baseKey = 4;
+  const [isDowloadClicked,setIsDownloadClicked]=useState(false);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -576,10 +577,13 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
         {
           onSuccess: async (result) => {
             if (result?.GeneratedResource?.[0]?.status === "completed") {
-              setDownloadTemplateLoader(false);
               setIsDownloadDisabled(false); // Enabling button
               setIsPolling(false); // Stop polling
               setFileData(result);
+              setDownloadTemplateLoader(false);
+              if(isDowloadClicked){
+                downloadTemplate();
+              }
               resolve(result);
             } else {
               resolve(null); // Keep polling
@@ -619,13 +623,19 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
     return () => clearTimeout(timeoutId);
   }, [isPolling]);
 
+  useEffect(()=>{
+    if(isDowloadClicked && fileData){
+    downloadTemplate()
+    }
+  },[isDowloadClicked,fileData])
+
   // Restarting polling whenever the page refreshes
   useEffect(() => {
     setIsPolling(true);
   }, []);
 
   const downloadTemplate = async () => {
-    if (!fileData){
+    if (!fileData || !isDowloadClicked){
       setDownloadTemplateLoader(true);
       return;
     }
@@ -650,6 +660,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
         setDownloadError(true);
         setShowToast({ key: "info", label: t("ERROR_WHILE_DOWNLOADING_FROM_FILESTORE") });
       }
+      setIsDownloadClicked(false);
     } catch (error) {
       setDownloadError(true);
       setShowToast({ key: "info", label: t("ERROR_WHILE_DOWNLOADING") });
@@ -720,7 +731,11 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
                 icon={"FileDownload"}
                 type="button"
                 className="campaign-download-template-btn"
-                onClick={downloadTemplate}
+                onClick={() => {
+                  setIsDownloadClicked(true);
+                  downloadTemplate(); 
+                }}
+                
               />
             </div>
             {uploadedFile.length === 0 && (
