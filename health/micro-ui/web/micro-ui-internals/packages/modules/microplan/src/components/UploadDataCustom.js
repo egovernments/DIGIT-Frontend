@@ -65,7 +65,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const XlsPreview = Digit.ComponentRegistryService.getComponent("XlsPreview");
   const BulkUpload = Digit.ComponentRegistryService.getComponent("BulkUpload");
   const baseKey = 4;
-  const [isDowloadClicked,setIsDownloadClicked]=useState(false);
+  const [isDownloadClicked,setIsDownloadClicked]=useState(false);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -581,7 +581,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
               setIsPolling(false); // Stop polling
               setFileData(result);
               setDownloadTemplateLoader(false);
-              if(isDowloadClicked){
+              if(isDownloadClicked){
                 downloadTemplate();
               }
               resolve(result);
@@ -624,10 +624,10 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   }, [isPolling]);
 
   useEffect(()=>{
-    if(isDowloadClicked && fileData){
+    if(isDownloadClicked && fileData){
     downloadTemplate()
     }
-  },[isDowloadClicked,fileData])
+  },[isDownloadClicked,fileData])
 
   // Restarting polling whenever the page refreshes
   useEffect(() => {
@@ -635,7 +635,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   }, []);
 
   const downloadTemplate = async () => {
-    if (!fileData || !isDowloadClicked){
+    if (!fileData || !isDownloadClicked){
       setDownloadTemplateLoader(true);
       return;
     }
