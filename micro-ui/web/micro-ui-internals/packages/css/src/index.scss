@@ -859,3 +859,9 @@ input[type="number"] {
     margin-left: 1.5rem;
   }
 }
+
+.workbench-localization-add-popup{
+  .digit-popup-children-wrap{
+    overflow: visible !important;
+  }
+}

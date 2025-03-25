@@ -1,3 +1,6 @@
+## [1.0.20]  [25-Mar-2025]
+- Enhancements in Localization Add Screen - Bulk Upload
+
 ## [1.0.19]  [3-Mar-2025]
 - Disabled json-edit-react & enable based on flag
 - Introduced new Globalvariable to enable bulk upload of master dataa 'ENABLE_JSON_EDIT'
