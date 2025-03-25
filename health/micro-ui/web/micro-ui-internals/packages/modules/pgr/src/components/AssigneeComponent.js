@@ -1,81 +1,117 @@
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
-import { Dropdown,  } from "@egovernments/digit-ui-components";
-import { CardLabel, Loader } from "@egovernments/digit-ui-components";
+import { Dropdown, Loader } from "@egovernments/digit-ui-components";
 
-const AssigneeComponent = ({ config, roles=[] }) => {
+const AssigneeComponent = ({ config, onSelect, formState, defaultValues }) => {
+  console.log("AssigneeComponent -> config", config);
+  console.log("AssigneeComponent -> onSelect", onSelect);
+  console.log("AssigneeComponent -> formState", formState);
+  const { t } = useTranslation();
+  const [assignees, setAssignees] = useState([]);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  
+  // Get roles from config populators
+  const { roles = [], department } = config?.populators || {};
 
-    const { t } = useTranslation();
-    const [assignees, setAssignees] = useState([]);
-    const [selectedEmployee, setSelectedEmployee] = useState(null);
-    const tenantId = Digit.ULBService.getCurrentTenantId();
-    const { isLoading: isEmployeeDataLoading, data: employeeData, } = Digit.Hooks.useCustomAPIHook({
-        url: "/egov-hrms/employees/_search",
-        params: {
-            tenantId: tenantId,
-            roles: roles.join(","),
-        },
-        config: {
-            enabled: roles.length > 0,
-        },
-    }
-    );
+  // Fetch employee data based on roles
+  const { 
+    isLoading: isEmployeeDataLoading, 
+    data: employeeData, 
+    error 
+  } = Digit.Hooks.useCustomAPIHook({
+    url: "/egov-hrms/employees/_search",
+    params: {
+      tenantId: tenantId,
+      roles: roles.join(","),
+    },
+    config: {
+      enabled: roles.length > 0,
+    },
+  });
 
-    function transformData(data) {
-        return Object.values(
-          data.reduce((acc, item) => {
-            const employee = item;
-            
-            if (!acc[item?.assignments?.[0]?.department]) {
-              acc[item?.assignments?.[0]?.department] = {
-                code: item?.assignments?.[0]?.department,
-                name: `DEPARTMENT_${item?.assignments?.[0]?.department}`,
-                options: []
-              };
-            }
-            
-            acc[item?.assignments?.[0]?.department].options.push({...item, name: item?.user?.name, mobileNumber: item?.user?.mobileNumber, code: `${item?.user?.name} - ${item?.assignments?.[0]?.department}`});
-      
-            return acc;
-          }, {})
-        );
-      }
-
-
-    useEffect(() => {
-        if(employeeData?.Employees?.length > 0){
-            let filteredAssignees = employeeData?.Employees.filter((employee) => employee?.assignments && employee?.assignments?.length > 0 && employee?.assignments?.[0]?.department);
-            setAssignees(transformData(filteredAssignees));
+  // Transform employee data for dropdown
+  function transformData(data) {
+    return Object.values(
+      data?.reduce((acc, employee) => {
+        const department = employee?.assignments?.[0]?.department;
+        const uuid = employee?.user?.uuid;
+        const userServiceUUID = employee?.user?.userServiceUuid;
+        if (!department) return acc;
+  
+        if (!acc[department]) {
+          acc[department] = {
+            code: department,
+            name: t(`DEPARTMENT_${department}`),
+            options: []
+          };
         }
-    }, [employeeData]);
-
-    return (
-        <React.Fragment>
-            {/* {assignees && <SectionalDropdown selected={selectedEmployee} menuData={employeeData?.Employees} displayKey="name" select={(e) => {
-                setSelectedEmployee(e);
-            }} />} */}
-            {isEmployeeDataLoading && <Loader></Loader>}
-            {
-                employeeData && <Dropdown
-                additionalWrapperClass=""
-                description=""
-                error=""
-                errorStyle={null}
-                inputRef={null}
-                name="nestedoptions"
-                option={assignees}
-                optionKey="name"
-                optionsCustomStyle={{}}
-                select={(emp) => {
-                    setSelectedEmployee(emp);
-                }}
-                t={t}
-                type="dropdown"
-                variant="nesteddropdown"
-              />
-            }
-          </React.Fragment>
+  
+        acc[department].options.push({
+          code: `${employee.user?.name} (${department})`,
+          name: `${employee.user?.name} (${department})`,
+          uuid: uuid,
+          userServiceUUID: userServiceUUID,
+          mobileNumber: employee.user?.mobileNumber,
+          department: department
+        });
+  
+        return acc;
+      }, {}) || {}
     );
-}
+  }
+  
+  
+
+  // Update assignees when employee data changes
+  useEffect(() => {
+    if (employeeData?.Employees?.length > 0) {
+      const filtered = employeeData.Employees.filter(
+        e => e?.assignments?.[0]?.department === department && e?.user?.uuid && e?.user?.userServiceUuid
+      );
+      setAssignees(transformData(filtered));
+    }
+  }, [employeeData]);
+
+  // Handle employee selection
+  const handleEmployeeSelect = (employee) => {
+    console.log("AssigneeComponent -> handleEmployeeSelect -> employee", employee);
+    setSelectedEmployee(employee);
+    if (employee && config?.key) {
+      console.log("Selecting Empluee", employee);
+      onSelect(config.key, employee);
+    }
+  };
+  
+
+  if (error) return <div>{t("CS_COMMON_EMPLOYEE_FETCH_ERROR")}</div>;
+  if (isEmployeeDataLoading) return <Loader />;
+
+  return (
+    <div className="assignee-dropdown-container">
+      <Dropdown
+        t={t}
+        option={assignees}
+        optionKey="name"
+        selected={selectedEmployee}
+        select={(value) => {
+          console.log("AssigneeComponent -> value", value);
+          handleEmployeeSelect(value);
+        }}
+        placeholder={t("CS_COMMON_SELECT_EMPLOYEE")}
+        label={t(config.label)}
+        variant="nesteddropdown"
+      />
+
+      
+      {/* {selectedEmployee && (
+        <div className="employee-details">
+          <p>{t("CS_COMMON_MOBILE_NUMBER")}: {selectedEmployee.mobileNumber}</p>
+          <p>{t("CS_COMMON_DEPARTMENT")}: {t(`DEPARTMENT_${selectedEmployee.department}`)}</p>
+        </div>
+      )} */}
+    </div>
+  );
+};
 
 export default AssigneeComponent;

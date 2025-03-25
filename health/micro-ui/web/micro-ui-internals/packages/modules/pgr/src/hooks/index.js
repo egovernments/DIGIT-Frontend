@@ -5,7 +5,6 @@ import useFetchBoundaries from "./boundary/useFetchBoundaries";
 import useCreateComplaint from "./pgr/useCreateComplaint";
 import usePGRSearch from "./pgr/usePGRSearch";
 import usePGRUpdate from "./pgr/usePGRUpdate";
-import { use } from "react";
 
 const pgr = {
   useProjectSearch,
@@ -17,8 +16,10 @@ const pgr = {
 };
 
 
+
+
 const Hooks = {
-  pgr
+  pgr,
 };
 
 const Utils = {
