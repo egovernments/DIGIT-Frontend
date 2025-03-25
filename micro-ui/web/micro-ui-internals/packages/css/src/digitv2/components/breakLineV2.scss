@@ -2,5 +2,6 @@
 
 .digit-break-line {
   @apply border-solid border-2;
+  color: cadetblue;
   @extend .light-input-border;
 }

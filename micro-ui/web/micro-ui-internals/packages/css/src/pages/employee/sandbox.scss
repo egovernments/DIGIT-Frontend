@@ -945,7 +945,7 @@ digit-card-text.center {
 
 /* Custom card styling for the landing page */
 .custom-landing-card {
-  max-width: 60rem; /* 800px to rem */
+  max-width: 75rem; /* 800px to rem */
   width: 100%;
   background-color: #fff;
   padding: 2rem;
@@ -962,7 +962,36 @@ digit-card-text.center {
   font-size: 2rem;
   margin-bottom: 1.25rem;
   color: #0b4b66;
+  text-align: left;
+}
+
+.custom-landing-header-grey {
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 1.25rem;
+  color: #0b4b66;
+  text-align: left;
+  max-width: 70%;
+}
+
+.custom-landing-header-button {
+  font-weight: 700;
+  font-size: 2rem;
+  color: #0b4b66;
   text-align: center;
+  max-width: 25%;
+}
+
+.highlight-sandbox {
+  color: orange; /* or your specific orange color code */
+}
+
+.custom-landing-sub-header {
+  font-weight: 100;
+  font-size: 2rem;
+  margin-bottom: 1.25rem;
+  color: #0b4b66;
+  text-align: left;
 }
 
 /* Custom video section */
@@ -1005,13 +1034,12 @@ digit-card-text.center {
 /* Custom button container */
 .custom-continue-button-container {
   display: flex;
-  justify-content: flex-end; /* Align the button to the right */
+  justify-content: center; /* Align the button to the right */
   margin-top: 2rem;
 }
 
 /* Custom button styling */
 .custom-continue-button {
-  margin-top: 1rem;
   align-self: flex-end; /* Ensure the button aligns to the right */
 }
 
@@ -1032,3 +1060,57 @@ digit-card-text.center {
 .tooltiptext{
   width: 30rem !important;
 }
+
+.flexSpaceAround {
+  display: flex;
+  justify-content: space-around;
+};
+
+.left-section {
+  text-align: left;
+  padding: 1rem;
+  width: 40%;
+}
+
+.middle-section {
+  display: flex;
+  justify-content: space-around;
+  background-color: whitesmoke;
+  margin-left: -2rem;
+  margin-right: -2rem;
+}
+
+.middle-header {
+  width: 40%;
+  margin-top: 2.3rem;
+  margin-left: 9rem;
+}
+
+.steps-list {
+  max-width: 50%;
+  color: #0b4b66;
+}
+
+
+.step-item {
+  max-width: 95%;
+}
+
+.step-break {
+  max-width: 80%;
+  border-color: #b6b5b4;
+  margin-left: 0;
+}
+
+.bottom-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2.25rem;
+}
+
+.header-span {
+  font-weight: 100;
+  font-size: 20px;
+}
+

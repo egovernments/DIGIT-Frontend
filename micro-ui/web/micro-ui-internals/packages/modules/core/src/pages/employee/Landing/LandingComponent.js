@@ -1,96 +1,119 @@
-import React, { Fragment } from "react";
-import { HeaderComponent, Card, CardText, CardHeader, Button } from "@egovernments/digit-ui-components"; // Importing the required DIGIT UI components
+import React from "react";
+import {
+  HeaderComponent,
+  Card,
+  CardText,
+  Button,
+  BreakLine,
+} from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-
+import { config as defaultconfig } from "../../../config/LandingPageConfig";
 import YoutubeVideo from "./YoutubeVideo";
 
-const LandingComponent = ({ config }) => {
-  const { t } = useTranslation(); // To handle translations (if needed)
-  const { heading, subsections, url } = config;
-  let redirectPathOtpLogin = `/${window?.contextPath}/employee/user/landing/select-role`;
-  const history = useHistory();
+/**
+ * LandingComponent
+ * @param {Object} config - Optional prop to override default config
+ */
+const LandingComponent = ({ config = {} }) => {
+  const { t } = useTranslation(); 
+  const history = useHistory();  
+
+  // Use the default config, overriding any external config passed
+  //config = defaultconfig;
+
+  // Destructure key config fields with fallback defaults
+  const {
+    heading = "Sandbox",
+    url = "https://www.youtube.com/watch?v=0wcuD67MVt8",
+    subsections = [],
+  } = config;
+
+  // Define the redirect path for button click - will upate after the product page is ready
+  const redirectPathOtpLogin = `/${window?.contextPath}/employee/user/landing/select-role`;
+
+  const [introSection = {}, stepsSection = {}, buttonSection = {}] = subsections;
+
+  const handleContinue = (e) => {
+    e.preventDefault();
+    history.push(redirectPathOtpLogin);
+  };
 
   return (
     <div className="custom-landing-container">
       <Card className="custom-landing-card">
-        {/* Main Heading */}
-        <HeaderComponent className="custom-landing-header">
-          {t(heading)}
-        </HeaderComponent>
 
-        {/* Video Section */}
-        <div className="custom-video-section">
-          <YoutubeVideo link={url} overlay={true} />
-        </div>
+        {/* ---------- TOP SECTION ---------- */}
+        <div className="custom-landing-top flexSpaceAround">
 
-        {/* Subsections */}
-        {subsections.map((section, index) => (
-          <div key={index} className="custom-section-container">
-            {/* Subsection Title */}
-            <CardHeader className="custom-section-header">{t(section.title)}</CardHeader>
+          {/* Left section: Heading and intro paragraph */}
+          <div className="left-section">
+            <HeaderComponent className="custom-landing-header">
+              {t(heading)}
+            </HeaderComponent>
+            <HeaderComponent className="custom-landing-sub-header">
+              {t(introSection.title)}
+            </HeaderComponent>
 
-            {/* Render Content for "paragraph" type */}
-            {section.type === "paragraph" && section.content && (
-              <Fragment>
-                {section.content.map((paragraph, paraIndex) => (
-                  <CardText className="custom-section-paragraph" key={paraIndex}>
-                    <p>{t(paragraph.text)}</p>
-                  </CardText>
-                ))}
-              </Fragment>
-            )}
+            <BreakLine />
 
-            {/* Render Content for "steps" type */}
-            {section.type === "steps" && section.content && (
-              <ul className="custom-steps-list">  {/* Updated list with bullets */}
-                {section.content.map((step, stepIndex) => (
-                  <li key={stepIndex} className="custom-step-item">  {/* Only bullets, no step.id */}
-                    {t(step.text)}
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            {/* Render Content for "both" type */}
-            {section.type === "both" && section.content && (
-              <Fragment>
-                {section.content.map((item, itemIndex) => {
-                  if (item.type === "paragraph") {
-                    return (
-                      <CardText className="custom-section-paragraph" key={itemIndex}>
-                        <p>{t(item.text)}</p>
-                      </CardText>
-                    );
-                  } else if (item.type === "step") {
-                    return (
-                      <li key={itemIndex} className="custom-step-item">  {/* Only bullets, no step.id */}
-                        {t(item.text)}
-                      </li>
-                    );
-                  } else {
-                    return null;
-                  }
-                })}
-              </Fragment>
-            )}
+            {/* Intro paragraph text */}
+            <CardText className="custom-section-paragraph">
+              <p>{t(introSection?.content?.[0]?.text)}</p>
+            </CardText>
           </div>
-        ))}
 
-        {/* Continue Button */}
-        <div className="custom-continue-button-container">
-          <Button
-            className="custom-continue-button"
-            label={t("CONTINUE_LANDING")}
-            variation={"primary"}
-            icon="ArrowForward"
-            isSuffix={true}
-            onClick={(e) => {
-              e.preventDefault();
-              history.push(redirectPathOtpLogin);
-            }}
-          />
+          {/* Right section: Video display */}
+          <div className="custom-video-section">
+            <YoutubeVideo link={url} overlay={true} />
+          </div>
         </div>
+
+        {/* ---------- MIDDLE SECTION ---------- */}
+        <div className="custom-landing-middle middle-section">
+
+          <div className="middle-header">
+            <HeaderComponent className="custom-landing-header-grey">
+              {t(stepsSection.title)}
+            </HeaderComponent>
+          </div>
+
+          {/* Steps list */}
+          <ul className="custom-steps-list steps-list">
+            {stepsSection?.content?.map((item, index) => (
+              <div key={index}>
+                <p className="step-item">{t(item?.text)}</p>
+                
+                {index !== stepsSection?.content?.length - 1 && (
+                  <BreakLine style={{maxWidth:"80%",borderColor:"#B6B5B4",marginLeft:"0px"}}/>
+                )}
+              </div>
+            ))}
+          </ul>
+        </div>
+
+        {/* ---------- BOTTOM SECTION ---------- */}
+        <div className="bottom-section">
+
+          {/* Bottom header with title and subtitle */}
+          <HeaderComponent className="custom-landing-header-button">
+            <span className="header-span">{t(buttonSection?.title)}</span>{" "}
+            {t(buttonSection?.subtitle)}
+          </HeaderComponent>
+
+          {/* Continue button */}
+          <div className="custom-continue-button-container">
+            <Button
+              className="custom-continue-button"
+              label={t("CONTINUE_LANDING")}  
+              variation="primary"             
+              icon="ArrowForward"             
+              isSuffix
+              onClick={handleContinue}        
+            />
+          </div>
+        </div>
+
       </Card>
     </div>
   );
