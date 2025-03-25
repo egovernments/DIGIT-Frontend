@@ -79,7 +79,6 @@ const AddAttributeField = ({
     schemaCode ? { schemaCode } : null // Include schemaCode only if it's defined
   );
 
-  console.log("DeliveryRule1", structureConfig, schemaCode);
   useEffect(() => {
     if (showAttribute) {
       setDropdownOption(structureConfig);
