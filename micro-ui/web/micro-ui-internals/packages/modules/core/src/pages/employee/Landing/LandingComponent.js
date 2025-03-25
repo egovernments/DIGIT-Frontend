@@ -58,9 +58,11 @@ const LandingComponent = ({ config = {} }) => {
             <BreakLine />
 
             {/* Intro paragraph text */}
-            <CardText className="custom-section-paragraph">
-              <p>{t(introSection?.content?.[0]?.text)}</p>
-            </CardText>
+            {introSection?.content?.[0]?.text && (
+              <CardText className="custom-section-paragraph">
+                <p>{t(introSection.content[0].text)}</p>
+              </CardText>
+            )}
           </div>
 
           {/* Right section: Video display */}

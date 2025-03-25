@@ -1,4 +1,4 @@
-export  let config = {
+export const config = {
     "heading": "Sandbox",
     "url": "https://www.youtube.com/watch?v=0wcuD67MVt8",
     "subsections": [
@@ -43,7 +43,7 @@ export  let config = {
         },
         {
             "title": "Get Started on your",
-            "subtitle": "Sandbox Journery",
+            "subtitle": "Sandbox Journey",
             "type": "ButtonWrapper"
         }
     ]
