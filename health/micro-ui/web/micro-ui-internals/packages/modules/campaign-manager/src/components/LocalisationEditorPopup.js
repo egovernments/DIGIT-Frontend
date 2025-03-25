@@ -4,31 +4,6 @@ import DataTable from "react-data-table-component";
 import { useTranslation } from "react-i18next";
 import { wrap } from "lodash";
 
-const CustomTabs = ({ locales, activeLocale, onTabChange }) => {
-  const { t } = useTranslation();
-  return (
-    <div className="localization-tabs" style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
-      {locales.map((locale) => (
-        <button
-          key={locale}
-          type="button"
-          className={`tab-button ${locale === activeLocale ? "active" : ""}`}
-          onClick={() => onTabChange(locale)}
-          style={{
-            padding: "0.5rem 1rem",
-            border: "none",
-            borderRadius: "4px",
-            background: locale === activeLocale ? "#0075d2" : "#f0f0f0",
-            color: locale === activeLocale ? "white" : "#666",
-            cursor: "pointer",
-          }}
-        >
-          {t(locale)}
-        </button>
-      ))}
-    </div>
-  );
-};
 
 const LocalisationEditorPopup = ({ locales,languages, currentLocale, localisationData, onSave, onClose  }) => {
   const { t } = useTranslation();
@@ -38,7 +13,7 @@ const LocalisationEditorPopup = ({ locales,languages, currentLocale, localisatio
   const columns = [
     {
       name: t(currentLocale),
-      selector: (row) => row.message,
+      selector: (row) => row?.[currentLocale],
       wrap: true,
       style: {
         whiteSpace: "normal",
@@ -50,7 +25,11 @@ const LocalisationEditorPopup = ({ locales,languages, currentLocale, localisatio
       name: t(activeLocale),
       cell: (row) => (
         <TextInput
-          value={translations[row.code]?.[activeLocale] || ""}
+          value={translations[row.code]?.[activeLocale] !== undefined && translations[row.code]?.[activeLocale] !== null
+            ? translations[row.code]?.[activeLocale]
+            : row?.[activeLocale] !== undefined && row?.[activeLocale] !== null
+            ? row?.[activeLocale]
+            : ""}
           onChange={(e) =>
             setTranslations((prev) => ({
               ...prev,
@@ -63,6 +42,7 @@ const LocalisationEditorPopup = ({ locales,languages, currentLocale, localisatio
       width: "55%",
     },
   ];
+
   
   return (
     <div style={{ minWidth: "min-content" }}>

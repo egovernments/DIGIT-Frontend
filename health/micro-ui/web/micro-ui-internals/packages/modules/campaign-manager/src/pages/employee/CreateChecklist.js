@@ -51,7 +51,7 @@ const CreateChecklist = () => {
   const [localisationData, setLocalisationData] = useState([]);
   const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
   const { languages, stateInfo } = storeData || {};
-  const currentLocales = languages.map(locale => locale.value);
+  const currentLocales = languages?.map(locale => locale.value);
 
   module = "hcm-checklist";
   const { mutateAsync: localisationMutateAsync } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, locale);
@@ -211,16 +211,20 @@ const CreateChecklist = () => {
     return organizedQuestions;
   }
 
+  const LocalisationCodeUpdate =(temp)=>{
+    return temp.toUpperCase().replace(/ /g, "_");
+  }
+
   const generateCodes = (questions) => {
     const codes = {};
     const local = [];
     let activeCounters = { top: 0 }; // Track active question counts at each level
 
     // Precompute common values once
-    let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
+    let checklistTypeTemp = LocalisationCodeUpdate(checklistType);
     if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
-    let roleTemp = role.toUpperCase().replace(/ /g, "_");
-    let helpTextCode = helpText.toUpperCase().replace(/ /g, "_");
+    let roleTemp =  LocalisationCodeUpdate(role);
+    let helpTextCode =  LocalisationCodeUpdate(helpText);
 
     // Add the new static entries to localization data
     local.push(
@@ -269,8 +273,8 @@ const CreateChecklist = () => {
       codes[question.id] = code;
 
       let moduleChecklist = "hcm-checklist";
-      let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
-      let roleTemp = role.toUpperCase().replace(/ /g, "_");
+      let checklistTypeTemp =  LocalisationCodeUpdate(checklistType)
+      let roleTemp =  LocalisationCodeUpdate(role)
       if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
 
       // Format the final string with the code (generate for all questions)
@@ -439,8 +443,8 @@ const CreateChecklist = () => {
     let fp = final_payload.filter((value, index, self) =>
       index === self.findIndex((t) => JSON.stringify(t) === JSON.stringify(value))
     );
-    let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
-    let roleTemp = role.toUpperCase().replace(/ /g, "_");
+    let checklistTypeTemp =  LocalisationCodeUpdate(checklistType)
+    let roleTemp =  LocalisationCodeUpdate(role)
     if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
     let code_of_checklist = `${campaignName}.${checklistTypeTemp}.${roleTemp}`;
     return {

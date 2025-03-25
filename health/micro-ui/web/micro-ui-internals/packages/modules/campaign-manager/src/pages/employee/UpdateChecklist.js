@@ -156,16 +156,48 @@ const UpdateChecklist = () => {
         return organizedQuestions;
     }
 
+  const { data: searchLocalisationData } = Digit.Hooks.campaign.useSearchLocalisation({
+    tenantId: tenantId,
+    locale: currentLocales,
+    module: module,
+    isMultipleLocale: currentLocales?.length > 1 ? true : false,
+    config: {
+      staleTime: Infinity,
+      cacheTime: Infinity,
+      select: (data) => {
+        return data;
+      },
+    },
+  });
+
+
+  function enrichLocalizationData(localArray, searchLocalizationData) {
+    const existingCodeLocales = localArray.map(item => `${item.code}|${item.locale}`);
+    
+    const entriesToAdd = searchLocalizationData.filter(searchItem => {
+      const codeLocaleKey = `${searchItem.code}|${searchItem.locale}`;
+      
+      return existingCodeLocales.includes(codeLocaleKey) === false && 
+             localArray.some(localItem => localItem.code === searchItem.code);
+    });
+        return [...entriesToAdd];
+  }
+  
+  const LocalisationCodeUpdate =(temp)=>{
+    return temp.toUpperCase().replace(/ /g, "_");
+  }
+
+
     const generateCodes = (questions) => {
         const codes = {};
         const local = [];
         let activeCounters = { top: 0 }; // Track active question counts at each level
 
         // Precompute common values once
-        let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
+        let checklistTypeTemp = LocalisationCodeUpdate(checklistType);
         if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
-        let roleTemp = role.toUpperCase().replace(/ /g, "_");
-        let helpTextCode = helpText.toUpperCase().replace(/ /g, "_");
+        let roleTemp = LocalisationCodeUpdate(role);
+        let helpTextCode =  LocalisationCodeUpdate(helpText);
 
         // Add the new static entries to localization data
         local.push(
@@ -213,8 +245,8 @@ const UpdateChecklist = () => {
             codes[question.id] = code;
 
             let moduleChecklist = "hcm-checklist";
-            let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
-            let roleTemp = role.toUpperCase().replace(/ /g, "_");
+            let checklistTypeTemp =  LocalisationCodeUpdate(checklistType);
+            let roleTemp = LocalisationCodeUpdate(role);
             if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
 
             // Format the final string with the code (generate for all questions)
@@ -290,6 +322,10 @@ const UpdateChecklist = () => {
                 generateCode(question, '', index);
             }
         });
+        if(searchLocalisationData){
+        const enrichedArray = enrichLocalizationData(local, searchLocalisationData);
+        setLocalisationData(enrichedArray);
+        }
 
         return { codes: codes, local: local };
     };
@@ -516,9 +552,6 @@ const UpdateChecklist = () => {
                             type={"default"}
                             heading={t("CHECKLIST_PREVIEW")}
                             children={[
-                                // <div>
-                                //   <CardText style={{ margin: 0 }}>{"testing" + " "}</CardText>
-                                // </div>, 
                             ]}
                             onOverlayClick={() => {
                                 setShowPopUp(false);
@@ -544,9 +577,9 @@ const UpdateChecklist = () => {
                                     onClick={() => {
                                         const processed = organizeQuestions(tempFormData);
                                         const { local: generatedLocal } = generateCodes(processed);
-                                        setLocalisationData(generatedLocal);
-                                        setShowPopUp(false);
+                                        // setLocalisationData(generatedLocal);
                                         setShowLocalisationPopup(true);
+                                        setShowPopUp(false);
                                     }}
                                 />,
                             ]}
