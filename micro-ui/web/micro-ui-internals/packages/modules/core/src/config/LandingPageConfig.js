@@ -4,7 +4,7 @@ export const config = {
     "subsections": [
         {
             "title": "Your Gateway to Digit",
-            "type": "paragraph",
+            "type": "introSection",
             "content": [
                 {
                     "text": "Sandbox provides you a self-serve environment to configure, explore, and utilize DIGIT products. With product pre-configuration, you can now start using DIGIT products immediately. You can also configure DIGIT products yourself through an intuitive GUI to modify default product behavior."
@@ -13,7 +13,7 @@ export const config = {
         },
         {
             "title": "What can you do on Sandbox?",
-            "type": "both",
+            "type": "stepsSection",
             "content": [
                 {
                     "type": "paragraph",

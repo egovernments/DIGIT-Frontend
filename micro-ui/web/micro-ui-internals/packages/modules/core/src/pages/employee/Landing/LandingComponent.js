@@ -32,7 +32,9 @@ const LandingComponent = ({ config = {} }) => {
   // Define the redirect path for button click - will upate after the product page is ready
   const redirectPathOtpLogin = `/${window?.contextPath}/employee/user/landing/select-role`;
 
-  const [introSection = {}, stepsSection = {}, buttonSection = {}] = subsections;
+   const introSection = subsections.find(s => s.type === "introSection") || {};
+   const stepsSection = subsections.find(s => s.type === "stepsSection") || {}; 
+   const buttonSection = subsections.find(s => s.type === "ButtonWrapper") || {};
 
   const handleContinue = (e) => {
     e.preventDefault();
