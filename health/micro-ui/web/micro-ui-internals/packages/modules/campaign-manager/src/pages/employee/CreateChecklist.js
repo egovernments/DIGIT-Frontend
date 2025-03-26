@@ -609,8 +609,8 @@ const CreateChecklist = () => {
                     const processed = organizeQuestions(tempFormData);
                     const { local: generatedLocal } = generateCodes(processed);
                     setLocalisationData(generatedLocal);
-                    setShowPopUp(false);
                     setShowLocalisationPopup(true);
+                    setShowPopUp(false);
                   }}
                 />,
               ]}
