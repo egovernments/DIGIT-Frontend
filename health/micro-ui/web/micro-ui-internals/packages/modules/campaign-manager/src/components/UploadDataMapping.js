@@ -1,16 +1,4 @@
-import {
-  Button,
-  CardLabel,
-  CardText,
-  Chip,
-  Dropdown,
-  LabelFieldPair,
-  Loader,
-  PopUp,
-  Switch,
-  Toast,
-  CardHeader,
-} from "@egovernments/digit-ui-components";
+import { Button, CardLabel, CardText, Chip, Dropdown, LabelFieldPair, Loader, PopUp, Switch, Toast , CardHeader } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useReducer, useState, useRef } from "react";
 import DataTable from "react-data-table-component";
 import { useTranslation } from "react-i18next";
@@ -19,7 +7,7 @@ import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import MultiSelectDropdown from "./MultiSelectDropdown";
 import NoResultsFound from "./NoResultsFound";
 import AddOrEditMapping from "./AddOrEditMapping";
-import { CustomSVG } from "@egovernments/digit-ui-components";
+import {CustomSVG} from "@egovernments/digit-ui-components";
 import Ajv from "ajv";
 
 const initialState = {
@@ -1194,7 +1182,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             const endRow = Math.min(state.currentPage * state.rowsPerPage, state.totalRows);
 
             return (
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "1rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" , paddingTop:"1rem" }}>
                 <Button
                   className="custom-class"
                   variation={"secondary"}
