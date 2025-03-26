@@ -24,7 +24,7 @@ const i18nextConfig = () => ({
   resources: {
     [Digit.Utils.getDefaultLanguage()]: {
       translations: {
-        welcomes: "Welcome",
+        welcome: "Welcome",
       },
     },
   },

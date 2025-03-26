@@ -40,27 +40,27 @@ const componentsToRegister = {
   AssignmentModule
 };
 
-const overrideHooks = () => {
-  Object.keys(CustomisedHooks).map((ele) => {
-    if (ele === "Hooks") {
-      Object.keys(CustomisedHooks[ele]).map((hook) => {
-        Object.keys(CustomisedHooks[ele][hook]).map((method) => {
-          setupHooks(hook, method, CustomisedHooks[ele][hook][method]);
-        });
-      });
-    } else if (ele === "Utils") {
-      Object.keys(CustomisedHooks[ele]).map((hook) => {
-        Object.keys(CustomisedHooks[ele][hook]).map((method) => {
-          setupHooks(hook, method, CustomisedHooks[ele][hook][method], false);
-        });
-      });
-    } else {
-      Object.keys(CustomisedHooks[ele]).map((method) => {
-        setupLibraries(ele, method, CustomisedHooks[ele][method]);
-      });
-    }
-  });
-};
+// const overrideHooks = () => {
+//   Object.keys(CustomisedHooks).map((ele) => {
+//     if (ele === "Hooks") {
+//       Object.keys(CustomisedHooks[ele]).map((hook) => {
+//         Object.keys(CustomisedHooks[ele][hook]).map((method) => {
+//           setupHooks(hook, method, CustomisedHooks[ele][hook][method]);
+//         });
+//       });
+//     } else if (ele === "Utils") {
+//       Object.keys(CustomisedHooks[ele]).map((hook) => {
+//         Object.keys(CustomisedHooks[ele][hook]).map((method) => {
+//           setupHooks(hook, method, CustomisedHooks[ele][hook][method], false);
+//         });
+//       });
+//     } else {
+//       Object.keys(CustomisedHooks[ele]).map((method) => {
+//         setupLibraries(ele, method, CustomisedHooks[ele][method]);
+//       });
+//     }
+//   });
+// };
 
 /* To Overide any existing hook we need to use similar method */
 const setupHooks = (HookName, HookFunction, method, isHook = true) => {
@@ -84,8 +84,8 @@ const updateCustomConfigs = () => {
 
 
  const initAssignmentComponents = () => {
-  overrideHooks();
-  updateCustomConfigs();
+  // overrideHooks();
+  // updateCustomConfigs();
   Object.entries(componentsToRegister).forEach(([key, value]) => {
     Digit.ComponentRegistryService.setComponent(key, value);
   });
