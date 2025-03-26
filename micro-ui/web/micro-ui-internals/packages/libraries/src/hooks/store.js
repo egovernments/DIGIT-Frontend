@@ -4,12 +4,13 @@ import { useQuery } from "@tanstack/react-query";
 import { StoreService } from "../services/molecules/Store/service";
 
 export const useStore = ({ stateCode, moduleCode, language ,modulePrefix = "rainmaker" }) => {
-  return useQuery(
-    ['store', stateCode, moduleCode, language, modulePrefix], // queryKey
-    () => StoreService.defaultData(stateCode, moduleCode, language, modulePrefix), // query function
-    {
-      // You can add other options here if needed, such as `enabled`, `staleTime`, etc.
-    }
+  return useQuery({
+    queryKey : ['store', stateCode, moduleCode, language, modulePrefix], // queryKey
+    queryFn : () => StoreService.defaultData(stateCode, moduleCode, language, modulePrefix), // query function
+    // {
+    //   // You can add other options here if needed, such as `enabled`, `staleTime`, etc.
+    // }
+  }
   );
 };
 

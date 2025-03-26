@@ -15,6 +15,8 @@ import getStore from "./redux/store";
 import PrivacyComponent from "./components/PrivacyComponent";
 import OtpComponent from "./pages/employee/Otp/OtpCustomComponent";
 // import {useInitStore} from "../libraries/src/hooks/store"
+// import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench"
+import { initWorkbenchComponents } from "../../workbench/src/Module";
 import Hooks from "../../../libraries/src/hooks";
 import { initI18n } from "@egovernments/digit-ui-libraries/src/translations";
 
@@ -30,6 +32,7 @@ const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding }) => {
   }
   const data=getStore(initData) || {};
   const i18n = getI18n();
+  initWorkbenchComponents();
   if(!Digit.ComponentRegistryService.getComponent("PrivacyComponent")){
     Digit.ComponentRegistryService.setComponent("PrivacyComponent", PrivacyComponent);
   }
