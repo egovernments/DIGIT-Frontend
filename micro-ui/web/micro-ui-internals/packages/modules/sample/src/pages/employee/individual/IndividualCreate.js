@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { FormComposerV2, Header } from "@egovernments/digit-ui-react-components";
+import { FormComposerV2, HeaderComponent } from "@egovernments/digit-ui-components";
 import { newConfig } from "../../../configs/IndividualCreateConfig";
 import { transformIndividualCreateData } from "../../../utils/createUtils";
 // import { newConfig } from "../../configs/IndividualCreateConfig";
@@ -39,7 +39,9 @@ const IndividualCreate = () => {
   };
   return (
     <div>
-      <Header> {t("CREATE_INDIVIDUAL")}</Header>
+        <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
+          {t("CREATE_INDIVIDUAL")}
+        </HeaderComponent>
       <FormComposerV2
         label={t("SUBMIT_BUTTON")}
         config={newConfig.map((config) => {
@@ -48,13 +50,12 @@ const IndividualCreate = () => {
           };
         })}
         defaultValues={{}}
-        onFormValueChange ={ (setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
+        onFormValueChange={(setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
           console.log(formData, "formData");
         }}
-        onSubmit={(data,) => onSubmit(data, )}
+        onSubmit={(data) => onSubmit(data)}
         fieldStyle={{ marginRight: 0 }}
       />
-       
     </div>
   );
 }

@@ -1,7 +1,7 @@
-import { Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
+import {  InboxSearchComposer } from "@egovernments/digit-ui-components";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { TabSearchconfig } from "../../configs/TabIndividualSearchCOnfig";
+import { TabSearchconfig } from "../../configs/TabIndividualSearchConfig";
 
 const defaultSearchValues = {
   individualName: "",
@@ -27,8 +27,7 @@ const TabIndividualSearch = () => {
   };
   return (
     <React.Fragment>
-      <Header styles={{ fontSize: "32px" }}>{t(config?.label)}</Header>
-      <div className="inbox-search-wrapper">
+      <div className="digit-inbox-search-wrapper">
         {/* Pass defaultValues as props to InboxSearchComposer */}
         <InboxSearchComposer
           configs={config}

@@ -1,8 +1,7 @@
 const searchHRMSConfig = () => {
   return {
     type: "search", // Defines the type of configuration (search functionality)
-    label: "Search Employee", // Label for the search functionality
-    
+    headerLabel: "Search Employee", // Label for the search functionality
     sections: {
       search: {
         show: true, // Determines whether the search section is displayed
@@ -77,13 +76,6 @@ const searchHRMSConfig = () => {
           },
           
           secondaryLabel: "ES_COMMON_CLEAR_SEARCH", // Label for clear search button
-          searchWrapperStyles: { // Custom styles for search UI
-            marginTop: "1.4rem",
-            alignItems: "center",
-            gridColumn: "3",
-            flexDirection: "column-reverse",
-            justifyContent: "end",
-          },
         },
         labelMobile: "ES_COMMON_SEARCH", // Label for mobile view
       },

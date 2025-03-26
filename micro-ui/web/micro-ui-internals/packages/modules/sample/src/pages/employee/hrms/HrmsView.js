@@ -2,7 +2,7 @@ import React ,{Fragment} from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import {  Header,  ViewComposer } from "@egovernments/digit-ui-react-components";
-import {  Loader} from "@egovernments/digit-ui-components";
+import {  Loader,HeaderComponent} from "@egovernments/digit-ui-components";
 
 const HRMSViewDetails = (props) => {
   const { t } = useTranslation();
@@ -98,9 +98,9 @@ const HRMSViewDetails = (props) => {
   }
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Header className="summary-header">{t("Employee Details")}</Header>
-      </div>
+        <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
+          {t("Employee Details")}
+        </HeaderComponent>
       <div className="campaign-summary-container">
         <ViewComposer data={data} />
       </div>

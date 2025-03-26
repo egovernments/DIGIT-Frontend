@@ -44,7 +44,7 @@ const SampleCard = () => {
       },
       {
         label: t("Sample Search"),
-        link: `/${window?.contextPath}/employee/sample/search-individual`,
+        link: `/${window?.contextPath}/employee/sample/sample-search`,
       },
       {
         label: t("Individual Tab Search"),

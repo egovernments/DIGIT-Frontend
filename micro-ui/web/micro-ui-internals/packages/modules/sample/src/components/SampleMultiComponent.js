@@ -1,7 +1,6 @@
-import { AddNewIcon } from "@egovernments/digit-ui-components";
-import { AddIcon, Button, Dropdown, DustbinIcon, LabelFieldPair, TextInput } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Dropdown, LabelFieldPair, HeaderComponent } from "@egovernments/digit-ui-components";
 
 const SampleMultiComponent = ({ onSelect, ...props }) => {
   const { t } = useTranslation();
@@ -59,9 +58,11 @@ const SampleMultiComponent = ({ onSelect, ...props }) => {
   return (
     <>
       <LabelFieldPair>
-        <div style={{ width: "30%" }}>
-          <span>{`${t("Select Type")}`}</span>
-        </div>
+        <HeaderComponent className={`label`}>
+          <div className={`label-container`}>
+            <label className={`label-styles`}>{`${t("Select Type")}`}</label>
+          </div>
+        </HeaderComponent>
         <Dropdown
           style={{ width: "100%" }}
           t={t}
@@ -72,9 +73,11 @@ const SampleMultiComponent = ({ onSelect, ...props }) => {
         />
       </LabelFieldPair>
       <LabelFieldPair>
-        <div style={{ width: "30%" }}>
-          <span>{`${t("Select Sub-Type")}`}</span>
-        </div>
+        <HeaderComponent className={`label`}>
+          <div className={`label-container`}>
+            <label className={`label-styles`}>{`${t("Select Sub-Type")}`}</label>
+          </div>
+        </HeaderComponent>
         <Dropdown
           style={{ width: "100%" }}
           t={t}
@@ -86,9 +89,11 @@ const SampleMultiComponent = ({ onSelect, ...props }) => {
       </LabelFieldPair>
       {selectedType?.category && (
         <LabelFieldPair>
-          <div style={{ width: "30%" }}>
-            <span>{`${t("Select Catogory")}`}</span>
-          </div>
+          <HeaderComponent className={`label`}>
+            <div className={`label-container`}>
+              <label className={`label-styles`}>{`${t("Select Catogory")}`}</label>
+            </div>
+          </HeaderComponent>
           <Dropdown
             style={{ width: "100%" }}
             t={t}
@@ -101,9 +106,11 @@ const SampleMultiComponent = ({ onSelect, ...props }) => {
       )}
       {selectedType?.role && (
         <LabelFieldPair>
-          <div style={{ width: "30%" }}>
-            <span>{`${t("Select Role")}`}</span>
-          </div>
+          <HeaderComponent className={`label`}>
+            <div className={`label-container`}>
+              <label className={`label-styles`}>{`${t("Select Role")}`}</label>
+            </div>
+          </HeaderComponent>
           <Dropdown
             style={{ width: "100%" }}
             t={t}

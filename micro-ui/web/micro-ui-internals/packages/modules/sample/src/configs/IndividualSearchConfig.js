@@ -1,12 +1,7 @@
-const defaultSearchValues = {
-  individualName: "",
-  mobileNumber: "",
-  IndividualID: ""
-};
 export const searchconfig = () => 
 {
 return {
-  label: "Individual Search",
+  headerLabel: "Individual Search",
   type: "search",
   apiDetails: {
     serviceName: "/individual/v1/_search",
@@ -33,7 +28,11 @@ return {
         primaryLabel: "ES_COMMON_SEARCH",
         secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
         minReqFields: 0,
-        defaultValues: defaultSearchValues, // Set default values for search fields
+        defaultValues: {
+          individualName: "",
+          mobileNumber: "",
+          individualID: ""
+        }, // Set default values for search fields
         fields: [
           {
             label: "Applicant name ",
@@ -58,6 +57,7 @@ return {
             label: "Individual Id ",
             isMandatory: false,
             type: "text",
+            key:"individualId",
             disable: false,
             populators: { 
               name: "individualId",

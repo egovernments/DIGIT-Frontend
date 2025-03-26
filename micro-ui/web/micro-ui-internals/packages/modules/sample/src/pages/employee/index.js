@@ -67,13 +67,13 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/tab-search-individual`} component={() => <TabIndividualSearch />} />
         <PrivateRoute path={`${path}/advanced`} component={() => <AdvancedCreate></AdvancedCreate>} />
         <PrivateRoute path={`${path}/inbox`} component={() => <Inbox></Inbox>} />
-        <PrivateRoute path={`${path}/view`} component={() => <View />} />
+        {/* <PrivateRoute path={`${path}/view`} component={() => <View />} /> */}
 
         <PrivateRoute path={`${path}/components`} component={() => <SampleComponentsNew />} />
         <PrivateRoute path={`${path}/create`} component={() => <SampleCreate />} />
         <PrivateRoute path={`${path}/search`} component={() => <SampleSearch />} />
         <PrivateRoute path={`${path}/inbox`} component={() => <SampleInbox />} />
-        <PrivateRoute path={`${path}/view-main`} component={() => <SampleView />} />
+        <PrivateRoute path={`${path}/view`} component={() => <SampleView />} />
       </AppContainer>
     </Switch>
   );

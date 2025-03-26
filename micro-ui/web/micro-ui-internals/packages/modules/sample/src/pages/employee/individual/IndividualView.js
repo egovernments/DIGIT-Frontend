@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Button, Header, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Loader } from "@egovernments/digit-ui-components";
+import { ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Loader, HeaderComponent } from "@egovernments/digit-ui-components";
 
 const IndividualViewDetails = (props) => {
   const { t } = useTranslation();
@@ -110,9 +110,9 @@ const IndividualViewDetails = (props) => {
   }
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Header className="summary-header">{t("INDIVIDUAL DETAILS")}</Header>
-      </div>
+      <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
+        {t("INDIVIDUAL DETAILS")}
+      </HeaderComponent>
       <div className="campaign-summary-container">{data && <ViewComposer data={data} />}</div>
     </>
   );

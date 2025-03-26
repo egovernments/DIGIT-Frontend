@@ -1,5 +1,4 @@
-import { AddNewIcon } from "@egovernments/digit-ui-components";
-import { AddIcon, Button, Dropdown, DustbinIcon, LabelFieldPair, TextInput } from "@egovernments/digit-ui-react-components";
+import { Button, Dropdown, LabelFieldPair, TextInput, CustomSVG, Card,HeaderComponent } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -90,23 +89,18 @@ const AdditionalComponent = ({ onSelect, ...props }) => {
   return (
     <>
       {documentData?.map((item, index) => (
-        <div
-          style={{
-            backgroundColor: "#eee",
-            border: "1px solid #d6d5d4",
-            padding: "1.5rem",
-            marginBottom: "1.5rem",
-          }}
-        >
+        <Card type="secondary" style={{ marginBottom: "1.5rem",gap:"1.5rem"}}>
           {documentData?.length > 1 ? (
             <div className="delete-resource-icon" style={{ textAlign: "right" }} onClick={() => deleteItem(item, index)}>
-              <DustbinIcon />
+              <CustomSVG.DustbinIcon />
             </div>
           ) : null}
-          <LabelFieldPair>
-            <div style={{ width: "30%" }}>
-              <span>{`${t("Document Type")}`}</span>
-            </div>
+          <LabelFieldPair removeMargin={true}>
+            <HeaderComponent className={`label`}>
+              <div className={`label-container`}>
+                <label className={`label-styles`}>{`${t("Document Type")}`}</label>
+              </div>
+            </HeaderComponent>
             <Dropdown
               style={{ width: "100%" }}
               t={t}
@@ -118,26 +112,23 @@ const AdditionalComponent = ({ onSelect, ...props }) => {
               }}
             />
           </LabelFieldPair>
-          <LabelFieldPair>
-            <div style={{ width: "30%" }}>
-              <span>{`${t("Document ID")}`}</span>
-            </div>
+          <LabelFieldPair removeMargin={true}>
+            <HeaderComponent className={`label`}>
+              <div className={`label-container`}>
+                <label className={`label-styles`}>{`${t("Document ID")}`}</label>
+              </div>
+            </HeaderComponent>
+            <div className="digit-field">
             <TextInput
               name="name"
               value={item?.value || ""}
               onChange={(event) => handleUpdateField({ type: "VALUE", value: event.target.value, item: item, index: index })}
             />
+            </div>
           </LabelFieldPair>
-        </div>
+        </Card>
       ))}
-      <Button
-        variation="secondary"
-        label={t(`Add more`)}
-        className={"add-rule-btn hover"}
-        icon={<AddIcon fill="#c84c0e" styles={{ height: "1.5rem", width: "1.5rem" }} />}
-        onButtonClick={add}
-        style={{ marginLeft: "auto" }}
-      />
+      <Button variation="secondary" label={t(`Add more`)} className={""} icon={"AddIconNew"} onClick={add} style={{ marginLeft: "auto" }} />
     </>
   );
 };
