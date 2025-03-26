@@ -1,8 +1,6 @@
 import { CardLabel, Dropdown, LabelFieldPair, Loader, DatePicker, TextInput } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
-//import { DeleteIcon } from "../../../../../../../../..";
 import { SVG } from "@egovernments/digit-ui-components";
-import { convertEpochToDate } from "../Utils";
 
 const CampaignsAssignment = ({ t, config, onSelect, formData }) => {
   const assignedProjects = Digit.SessionStorage.get("staffProjects");

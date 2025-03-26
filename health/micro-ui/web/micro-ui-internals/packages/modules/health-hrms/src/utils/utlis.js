@@ -1,4 +1,4 @@
-/* methid to get date from epoch */
+/* method to get date from epoch */
 export const convertEpochToDate = (dateEpoch) => {
     // Returning null in else case because new Date(null) returns initial date from calender
     if (dateEpoch) {

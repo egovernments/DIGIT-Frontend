@@ -27,7 +27,7 @@ const ResponseScreen = () => {
         customIcon=""
         description={t(state?.description)}
         footerChildren={
-          state.isCampaign == ReposeScreenType.EDIT_USER || state.isCampaign == ReposeScreenType.EDIT_USER_ERROR
+          state.isCampaign == ReposeScreenType.EDIT_USER || state.isCampaign == ReposeScreenType.EDIT_USER_ERROR || state.isCampaign == ReposeScreenType.EDIT_ASSIGNED_CAMPAIGN_ERROR 
             ? []
             : [
                 <Button

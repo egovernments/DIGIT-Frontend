@@ -1,6 +1,21 @@
 import Urls from "../urls";
 import { Request } from "@egovernments/digit-ui-libraries";
 
+/**
+ * ProjectService provides API request functions to handle staff and project-related operations.
+ * This service includes functionalities for searching, deleting, and retrieving project details.
+ * It interacts with HRMS and HCM services using Digit's request utilities.
+ *
+ * Available methods:
+ * - `search_staff(data, tenantId)`: Searches for staff based on provided criteria.
+ * - `delete_staff(staffDetails)`: Deletes staff members from the project.
+ * - `searchStaffByProject({ projectId, tenantId })`: Searches staff within a specific project.
+ * - `search_project({ tenantId, projects, includeDescendants, includeImmediateChildren })`: Fetches project details based on filters.
+ * - `getProjectDetails({ userId, tenantId, includeDescendants, includeImmediateChildren })`: Retrieves project details for a given user.
+ * - `createStaffAndUpdateAssignments({ staffCreateData, assignmentUpdateData, tenantId })`: Creates new staff and updates existing assignments.
+ */
+
+
 export const ProjectService = {
   search_staff: (data, tenantId) =>
     Request({

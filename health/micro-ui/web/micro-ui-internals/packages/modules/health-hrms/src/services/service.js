@@ -3,9 +3,13 @@ const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "MIC
 import { convertEpochToDate } from "../utils/utlis";
 import employeeDetailsFetch from "./emp_details";
 
-//  Do the search employee API call
-//  to check the existance of the user with given the employeeId
-
+/**
+* Checks if a user exists with the given phone number.
+* Calls the HRMS service to search for employees based on phone number.
+* @param {Object} data - The form data containing phone number.
+* @param {string} tenantId - The tenant ID.
+* @returns {boolean} - True if user exists, false otherwise.
+*/
 export const checkIfUserExistWithPhoneNumber = async (data, tenantId) => {
   try {
     //  if (data?.SelectEmployeePhoneNumber && data?.SelectEmployeePhoneNumber?.trim().length > 0) {
@@ -21,8 +25,15 @@ export const checkIfUserExistWithPhoneNumber = async (data, tenantId) => {
   }
 };
 
-//  Do the search employee API call
-//  to check the existance of the user with given the employeeId
+/**
+ * Checks if a user exists with the given employee ID.
+ * Calls the HRMS service to search for employees based on the provided employee ID.
+ * 
+ * @param {Object} data - The form data containing the employee ID.
+ * @param {string} tenantId - The tenant ID.
+ * @returns {boolean} - Returns true if the user exists, otherwise false.
+ * @throws {Error} - Throws an error if the API request fails.
+ */
 
 export const checkIfUserExist = async (data, tenantId) => {
   try {
@@ -42,7 +53,14 @@ export const checkIfUserExist = async (data, tenantId) => {
   }
 };
 
-// function to create payload for creating the new user
+/**
+ * Creates a payload for adding a new employee/user.
+ * This function formats the given data into a structure that the HRMS system expects.
+ * 
+ * @param {Object} data - The form data containing employee details.
+ * @param {string} tenantId - The tenant ID.
+ * @returns {Array} - Returns an array containing the new employee data payload.
+ */
 export const formPayloadToCreateUser = (data, tenantId) => {
   const mappedroles = [].concat.apply([], data?.RolesAssigned);
   let createdAssignments = [
@@ -65,11 +83,6 @@ export const formPayloadToCreateUser = (data, tenantId) => {
       employeeType: data?.SelectEmployeeType?.code,
       jurisdictions: formJuridiction(data, tenantId),
       user: {
-        // mobileNumber: data?.SelectEmployeePhoneNumber?.mobileNumber?.startsWith(HRMS_CONSTANTS.INDIA_COUNTRY_CODE)
-        //   ? data?.SelectEmployeePhoneNumber?.mobileNumber?.substring(HRMS_CONSTANTS.INDIA_COUNTRY_CODE.length)
-        //   : (data?.SelectEmployeePhoneNumber?.mobileNumber?.startsWith(HRMS_CONSTANTS.MOZ_COUNTRY_CODE)
-        //       ? data?.SelectEmployeePhoneNumber?.mobileNumber?.substring(HRMS_CONSTANTS.MOZ_COUNTRY_CODE.length)
-        //       : data?.SelectEmployeePhoneNumber?.mobileNumber) || null,
         mobileNumber: data?.SelectEmployeePhoneNumber?.startsWith(HRMS_CONSTANTS.INDIA_COUNTRY_CODE)
           ? data?.SelectEmployeePhoneNumber?.substring(HRMS_CONSTANTS.INDIA_COUNTRY_CODE.length)
           : (data?.SelectEmployeePhoneNumber?.startsWith(HRMS_CONSTANTS.MOZ_COUNTRY_CODE)
@@ -78,7 +91,6 @@ export const formPayloadToCreateUser = (data, tenantId) => {
         name: data?.SelectEmployeeName,
         correspondenceAddress: data?.SelectEmployeeCorrespondenceAddress || null,
         emailId: data?.SelectEmployeeEmailId ? data?.SelectEmployeeEmailId : null,
-        // gender: data?.SelectEmployeeGender?.gender.code,
 
         gender: data?.gender.code,
         dob: new Date(data?.SelectDateofBirthEmployment || HRMS_CONSTANTS.DEFAULT_DOB).getTime(),
@@ -95,6 +107,16 @@ export const formPayloadToCreateUser = (data, tenantId) => {
 
   return Employees;
 };
+
+/**
+ * Creates a payload for updating an existing employee/user.
+ * This function formats the given data and merges it with existing user data.
+ * 
+ * @param {Object} data - The form data containing updated employee details.
+ * @param {Array} userExisting - The existing user data.
+ * @param {string} tenantId - The tenant ID.
+ * @returns {Array} - Returns an array containing the updated employee data payload.
+ */
 
 export const formPayloadToUpdateUser = (data, userExisting, tenantId) => {
   let requestdata = Object.assign({}, userExisting[0]);
@@ -154,6 +176,15 @@ export const formPayloadToUpdateUser = (data, userExisting, tenantId) => {
   return [requestdata];
 };
 
+/**
+ * Creates jurisdiction data for an employee based on the given form data.
+ * This function formats the jurisdiction details required for the employee record.
+ *
+ * @param {Object} data - The form data containing jurisdiction-related information.
+ * @param {string} tenantId - The tenant ID.
+ * @returns {Array} - Returns an array containing the jurisdiction details.
+ */
+
 function formJuridiction(data, tenantId) {
   let jurisdictions = {
     hierarchy: hierarchyType,
@@ -165,6 +196,16 @@ function formJuridiction(data, tenantId) {
 
   return [jurisdictions];
 }
+
+/**
+ * Edits and formats the default values for an employee/user.
+ * This function extracts necessary details from the given data and prepares an object 
+ * with structured default values, making it suitable for pre-filling forms.
+ *
+ * @param {Array} data - The user data containing employee details.
+ * @param {string} tenantId - The tenant ID.
+ * @returns {Object} - An object containing formatted default values.
+ */
 
 export const editDefaultUserValue = (data, tenantId) => {
   const defaultValues = {
@@ -234,7 +275,15 @@ export const editDefaultUserValue = (data, tenantId) => {
   return defaultValues;
 };
 
-// edit assignment
+/**
+ * Edits and formats the default values for assignment data.
+ * This function processes assignment-related data, extracting necessary details and 
+ * returning an object suitable for pre-filling forms.
+ *
+ * @param {Array} data - The assignment data array.
+ * @param {string} tenantId - The tenant ID.
+ * @returns {Object} - An object containing formatted default assignment values.
+ */
 
 export const editDefaultAssignmentValue = (data, tenantId) => {
   const defaultValues = {
@@ -259,9 +308,16 @@ export const editDefaultAssignmentValue = (data, tenantId) => {
   return defaultValues;
 };
 
-//  Do the search staff API call
-//  then based on the projectids call the Projects
-
+/**
+ * Searches for staff members based on the provided criteria.
+ * This function calls `employeeDetailsFetch` to retrieve staff details 
+ * related to a specific project or criteria.
+ *
+ * @param {Object} data - The search criteria, including filters.
+ * @param {string} tenantId - The tenant ID for scoping the search.
+ * @returns {Array|undefined} - Returns an array of staff under the project, or undefined if not found.
+ * @throws {Error} - Throws an error if the request fails.
+ */
 export const searchStaff = async (data, tenantId) => {
   try {
     const result = await employeeDetailsFetch(data, tenantId);

@@ -2,6 +2,19 @@ import { roundToNearestMinutes } from "date-fns/esm";
 import Urls from "../urls";
 import { Request } from "@egovernments/digit-ui-libraries";
 
+/**
+ * HrmsService provides API request functions to manage HRMS (Human Resource Management System) operations.
+ * This service includes functionalities for searching, creating, updating, and counting employees.
+ * It interacts with the HRMS service using Digit's request utilities.
+ *
+ * Available methods:
+ * - `search(tenantId, filters, searchParams)`: Searches for employees based on provided filters.
+ * - `create(data, tenantId)`: Creates a new employee record.
+ * - `update(data, tenantId)`: Updates an existing employee record.
+ * - `count(tenantId)`: Retrieves the total count of employees.
+ */
+
+
 const HrmsService = {
   search: (tenantId, filters, searchParams) =>
     Request({

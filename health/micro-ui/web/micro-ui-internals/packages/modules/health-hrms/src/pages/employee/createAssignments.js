@@ -6,6 +6,7 @@ import { campaignAssignmentConfig } from "../../components/config/campaignAssign
 import { convertDateToEpoch } from "../../utils/utlis";
 import { editDefaultAssignmentValue } from "../../services/service";
 import Urls from "../../services/urls";
+import { ReposeScreenType } from "../../constants/enums";
 
 const AssignCampaign = ({ editCampaign = false }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -23,17 +24,19 @@ const AssignCampaign = ({ editCampaign = false }) => {
   //const fetchMutation = Digit.Hooks.hrms.useHRMSStaffSearch(tenantId);
 
   const isMobile = window.Digit.Utils.browser.isMobile();
-
+  // Fetch employee details using HRMS search
   const { isLoadings, isError, error, data } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);
 
   const [staffId, setStaffId] = useState(null);
 
+  // Update staffId once data is fetched
   useEffect(() => {
     if (data?.Employees?.length > 0) {
       setStaffId(data.Employees[0]?.user?.userServiceUuid);
     }
   }, [data]);
 
+  // API request criteria for fetching project staff details
   const reqCri = {
     url: Urls.hcm.searchStaff,
     params: {
@@ -53,15 +56,17 @@ const AssignCampaign = ({ editCampaign = false }) => {
       },
     },
   };
-
+  // Fetch project staff details using custom API hook
   const { isLoading: isEstimateMusterRollLoading, data: projectStaff } = Digit.Hooks.useCustomAPIHook(reqCri);
 
+  // Re-render form when relevant data changes
   useEffect(() => {
     setFormKey((prevKey) => prevKey + 1);
   }, [editCampaign, projectStaff, tenantId]);
 
   const onFormValueChange = (setValue = true, formData) => {};
 
+  // Function to create staff assignment
   const createStaffService = async (payload) => {
     try {
       await mutation.mutateAsync(
@@ -71,11 +76,11 @@ const AssignCampaign = ({ editCampaign = false }) => {
         {
           onSuccess: (res) => {
             history.replace(`/${window?.contextPath}/employee/hrms/response`, {
-              isCampaign: true,
+              isCampaign: editCampaign ? ReposeScreenType.EDIT_ASSIGNED_CAMPAIGN : ReposeScreenType.ASSIGN_CAMPAIGN,
               state: "success",
               info: t("HR_EMPLOYEE_ID_LABEL"),
               fileName: res?.Employees?.[0],
-              message: t(`CAMPAIGN_RESPONSE_UPDATE_ACTION`),
+              message: editCampaign ? t(`CAMPAIGN_RESPONSE_UPDATE_ACTION`) : t(`CAMPAIGN_RESPONSE_CREATE_ACTION`),
               description: editCampaign ? t("HRMS_CAMPAIGN_ASSIGNED_INFO") : t(`CAMPAIGN_RESPONSE_CREATE_ACTION`),
               back: t(`GO_BACK_TO_HOME`),
               backlink: `/${window.contextPath}/employee`,
@@ -83,13 +88,13 @@ const AssignCampaign = ({ editCampaign = false }) => {
           },
           onError: (error) => {
             history.replace(`/${window?.contextPath}/employee/hrms/response`, {
-              isCampaign: true,
+              isCampaign: editCampaign ? ReposeScreenType.EDIT_ASSIGNED_CAMPAIGN_ERROR : ReposeScreenType.EDIT_ASSIGNED_CAMPAIGN_ERROR,
               state: "error",
               info: t(""),
               fileName: error?.Employees?.[0],
-              message: editCampaign ? t("CAMPAIGN_RESPONSE_UPDATE_ACTION") : t(`CAMPAIGN_RESPONSE_CREATE_ACTION`),
-              description: t(`HRMS_CAMPAIGN_ASSIGNED_INFO`),
-              back: t(`GO_BACK_TO_HOME`),
+              message: editCampaign ? t("CAMPAIGN_RESPONSE_UPDATE_ACTION_ERROR") : t(`CAMPAIGN_RESPONSE_CREATE_ACTION_ERROR`),
+              description: t(``),
+              back: t("GO_BACK_TO_HOME"),
               backlink: `/${window.contextPath}/employee`,
             });
             // setTriggerEstimate(true);
@@ -101,6 +106,7 @@ const AssignCampaign = ({ editCampaign = false }) => {
     }
   };
 
+  // Function to delete staff assignment
   const deleteStaffService = async (payload) => {
     try {
       return await deleteMutation.mutateAsync(payload, {
@@ -116,6 +122,7 @@ const AssignCampaign = ({ editCampaign = false }) => {
     }
   };
 
+  // Function to handle form submission
   const onSubmit = async (formData) => {
     try {
       const assignedCampaignData = formData?.CampaignsAssignment?.filter((c, i) => c?.selectedProject != null);
@@ -143,6 +150,7 @@ const AssignCampaign = ({ editCampaign = false }) => {
     } catch (err) {}
   };
 
+  // Show loader while data is being fetched
   if (isLoadings) {
     return <Loader />;
   }

@@ -1,5 +1,13 @@
 import Urls from "../../services/urls";
 
+/**
+ * config for HRMS Inbox screen:
+ * @Initial Data Load: On screen load, the system automatically fetches a list of HRMS users.
+ * @filter section: Allows users to filter the list based on active/inactive status and assigned roles.
+ * @search section: Enables users to search for specific HRMS users using username, user code, or phone number.
+ * @link section: Provides navigation to the Create User screen.
+ */
+
 const inboxSearchConfig = () => {
   return {
     type: "inbox", // Defines the type of configuration (search functionality)
@@ -25,7 +33,6 @@ const inboxSearchConfig = () => {
             {
               label: "HR_COMMON_TABLE_COL_ROLE",
               type: "dropdown",
-              // type: "multiselectdropdown",
               isMandatory: false,
               disable: false,
               populators: {
@@ -173,7 +180,6 @@ const inboxSearchConfig = () => {
             {
               label: "HR_EMP_NAME_LABEL",
               jsonPath: "user.name",
-              // additionalCustomization: true,
             },
             {
               label: "HR_ROLE_NO_LABEL",

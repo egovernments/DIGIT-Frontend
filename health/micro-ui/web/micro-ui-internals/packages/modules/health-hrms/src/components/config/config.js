@@ -1,3 +1,9 @@
+/**
+ * config for create/edit user screen: it is used to in the screen to take input about of the new  usern and existing user as well.
+ * digit components used:all digit components used except the boundarycomponent and the Roles assigned component.
+ *
+ */
+
 export const newConfig = [
   {
     head: "HR_LOGIN_DETAILS_HEADER",
@@ -255,9 +261,7 @@ export const newConfig = [
         populators: {
           name: "RolesAssigned",
         },
-        customProps:{
-          
-        }
+        customProps: {},
       },
 
       // {

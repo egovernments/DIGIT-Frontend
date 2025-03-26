@@ -1,16 +1,12 @@
 import React, { useState } from "react";
-  //import { InboxSearchComposer } from "@egovernments/digit-ui-react-components";
-//import inboxSearchConfig from "../../components/config/inboxSearchConfig";
 import { InboxSearchComposer, HeaderComponent, Toast, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { QueryClient, QueryClientProvider } from "react-query";
 import inboxSearchConfig from "../../components/config/inboxSearchConfig";
 
 const InboxSearch = () => {
   const { t } = useTranslation();
   const config = inboxSearchConfig();
   const isMobile = window.Digit.Utils.browser.isMobile();
-  // const queryClient = new QueryClient({});
 
   return (
     <div style={{ marginBottom: "80px" }}>

@@ -58,26 +58,7 @@ const CreateEmployee = ({ editUser = false }) => {
     }
   );
 
-  const checkMailNameNum = (formData) => {
-    const email = formData?.SelectEmployeeEmailId?.emailId || "";
-    const name = formData?.SelectEmployeeName?.employeeName || "";
-    const address = formData?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress || "";
-    const validEmail = email.length == 0 ? true : email.match(Digit.Utils.getPattern("Email"));
-    const validAddress = address.length === 0 ? true : address.match(Digit.Utils.getPattern("Address"));
-    return validEmail && name.match(Digit.Utils.getPattern("Name")) && validAddress;
-  };
-  const validatePassword = (formData) => {
-    const password = formData?.SelectEmployeePassword?.employeePassword;
-    const confirmPassword = formData?.SelectEmployeePassword?.employeeConfirmPassword;
-    return (
-      password &&
-      confirmPassword &&
-      password.match(Digit.Utils.getPattern("Password")) &&
-      confirmPassword.match(Digit.Utils.getPattern("Password")) &&
-      password === confirmPassword
-    );
-  };
-
+  
   const onFormValueChange = (setValue = true, formData, formState, reset, setError, clearErrors) => {
     if (isEdit) {
       if (phoneNumber !== formData?.SelectEmployeePhoneNumber) {

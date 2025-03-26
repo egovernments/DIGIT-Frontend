@@ -2,6 +2,21 @@ import { Request } from "@egovernments/digit-ui-libraries";
 import Urls from "../urls";
 //import HRMS from "./HRMS";
 
+/**
+ * StaffService provides API request functions to manage staff-related operations.
+ * This service includes functionalities for searching, deleting, and creating staff records.
+ * It interacts with the HCM (Human Capital Management) system using Digit's request utilities.
+ *
+ * Available methods:
+ * - `search_staff(data, tenantId)`: Searches for staff members based on provided criteria.
+ * - `delete_staff(staffDetails)`: Deletes staff records based on given details.
+ * - `searchStaffByProject({ projectId, tenantId })`: Searches staff members associated with a specific project.
+ * - `search_project({ tenantId, projects, includeDescendants, includeImmediateChildren })`: Searches project details based on given filters.
+ * - `getProjectDetails({ userId, tenantId, includeDescendants, includeImmediateChildren })`: Fetches project details for a user.
+ * - `createStaff({ staffCreateData })`: Creates new staff records.
+ */
+
+
 export const StaffService = {
   search_staff: (data, tenantId) =>
     Request({

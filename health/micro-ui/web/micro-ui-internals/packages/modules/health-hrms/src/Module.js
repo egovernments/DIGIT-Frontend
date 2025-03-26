@@ -1,25 +1,15 @@
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
 
-import SelectDateofEmployment from "./components/pageComponents/SelectDateofEmployment";
-import SelectEmployeeName from "./components/pageComponents/SelectEmployeeName";
 import CreateEmployeePage from "./pages/employee/createEmployee";
-import SelectEmployeeId from "./components/pageComponents/SelectEmployeeId";
-import SelectEmployeePassword from "./components/pageComponents/SelectEmployeePassword";
-import SelectEmployeeDepartment from "./components/pageComponents/SelectEmployeeDepartment";
-import SelectEmployeePhoneNumber from "./components/pageComponents/SelectEmployeePhoneNumber";
-import SelectEmployeeGender from "./components/pageComponents/SelectEmployeeGender";
-import SelectDateofBirthEmployment from "./components/pageComponents/EmployeeDOB";
-import SelectEmployeeEmailId from "./components/pageComponents/SelectEmailId";
-import SelectEmployeeCorrespondenceAddress from "./components/pageComponents/SelectEmployeeCorrespondenceAddress";
-import SelectEmployeeType from "./components/pageComponents/SelectEmployeeType";
+
 import EmployeeApp from "./pages/employee";
-import SelectEmployeeDesignation from "./components/pageComponents/SelectEmployeeDesignation";
+
 import Jurisdictions from "./components/pageComponents/jurisdiction";
 import { overrideHooks, updateCustomConfigs } from "./hooks/hook_setup";
 import RolesAssigned from "./components/pageComponents/SelectRolesAssigned";
 import BoundaryComponent from "./components/pageComponents/SelectEmployeeBoundary";
-import Response from "./pages/employee/response";
+
 import AssignCampaign from "./pages/employee/createAssignments";
 
 import ResponseScreen from "./pages/employee/service_response";
@@ -27,6 +17,8 @@ import CampaignsAssignment from "./components/pageComponents/CampaignAssignment"
 import InboxSearch from "./pages/employee/search_inbox";
 import ActionPopUp from "./components/pageComponents/popup";
 import EmployeeDetailScreen from "./pages/employee/employeeDetails";
+
+import BreadCrumbs from "./components/pageComponents/BreadCrumb";
 
 export const HRMSModule = ({ stateCode, userType, tenants }) => {
   const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "ADMIN";
@@ -57,27 +49,19 @@ const componentsToRegister = {
   ActionPopUp,
   CampaignsAssignment,
   BoundaryComponent,
-  SelectEmployeeName,
-  SelectEmployeeEmailId,
-  SelectEmployeeCorrespondenceAddress,
-  SelectEmployeeType,
-  SelectDateofEmployment,
-  SelectEmployeeDepartment,
-  SelectEmployeeDesignation,
+
   Jurisdictions,
   RolesAssigned,
   AssignCampaign,
   ResponseScreen,
 
-  SelectDateofBirthEmployment,
   HRMSModule,
-  SelectEmployeeId,
-  SelectEmployeePassword,
-  SelectEmployeePhoneNumber,
-  SelectEmployeeGender,
-  HRMSResponse: Response,
+
+  
 
   HRCreateEmployee: CreateEmployeePage,
+
+  BreadCrumbs,
 };
 
 export const initHRMSComponents = () => {

@@ -26,10 +26,16 @@ const EmployeeDetailScreen = () => {
   const { id } = useParams();
   const [campaign, setcampaign] = useState([]);
 
+  // Fetches employee details based on the provided employee ID (`id`) and tenant ID (`tenantId`)
+  // `isLoading`: Indicates if the data is still being fetched
+  // `isError`: Indicates if there was an error during the fetch
+  // `error`: Contains error details if the request fails
+  // `data`: Contains the fetched employee data
   const { isLoading, isError, error, data } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);
 
   const campaignFetch = async (fetchedEmployeeId) => {
     try {
+      // Fetch campaign data for the given employee ID
       const camData = await searchStaff(fetchedEmployeeId, tenantId);
       setcampaign(camData);
     } catch (error) {
@@ -69,12 +75,14 @@ const EmployeeDetailScreen = () => {
     };
 
     try {
+      // Call the mutation function to update the employee status
       await mutationUpdate.mutateAsync(
         {
           Employees: [datak],
         },
         {
           onSuccess: (res) => {
+            // Redirect to response page on successful deactivation
             history.push(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.EDIT_USER,
               state: "success",
@@ -87,6 +95,7 @@ const EmployeeDetailScreen = () => {
             });
           },
           onError: (error) => {
+            // Handle errors and redirect to error response page
             history.push(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.EDIT_USER_ERROR,
               state: "error",
@@ -110,14 +119,6 @@ const EmployeeDetailScreen = () => {
     let datak = {
       ...data?.Employees[0], // Keep existing data
       isActive: true, // Update isActive to false
-      // deactivationDetails: [
-      //   {
-      //     effectiveFrom: Date.now(), // Use the current timestamp
-      //     reasonForDeactivation: reason,
-      //     remarks: order,
-      //     orderNo: comment,
-      //   },
-      // ],
     };
 
     try {
@@ -127,6 +128,7 @@ const EmployeeDetailScreen = () => {
         },
         {
           onSuccess: (res) => {
+            // Redirect to response page on successful deactivation
             history.push(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.EDIT_USER,
               state: "success",
@@ -139,6 +141,7 @@ const EmployeeDetailScreen = () => {
             });
           },
           onError: (error) => {
+            // Handle errors and redirect to error response page
             history.push(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.EDIT_USER_ERROR,
               state: "error",
