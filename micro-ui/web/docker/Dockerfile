@@ -24,4 +24,4 @@ RUN mkdir -p ${WORK_DIR}
 COPY --from=build /app/web/build ${WORK_DIR}/
 
 # Copy the nginx configuration file.
-COPY ${WORK_DIR}/micro-ui/web/docker/docker/nginx.conf /etc/nginx/conf.d/default.conf
+COPY ${WORK_DIR}/micro-ui/web/docker/nginx.conf /etc/nginx/conf.d/default.conf
