@@ -763,11 +763,25 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             name: t("ROLE"),
             selector: (row) => row?.[t(Schemas?.find((i) => i.description === "User Role")?.name)] || t("NA"),
             sortable: true,
+            cell: (row) => (
+              <div
+                title={row?.[t(Schemas?.find((i) => i.description === "User Role")?.name)] || t("NA")}
+                style={{
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  maxWidth: "150px",
+                }}
+              >
+                {row?.[t(Schemas?.find((i) => i.description === "User Role")?.name)] || t("NA")}
+              </div>
+            )
           },
           {
             name: t("EMPLOYEMENT_TYPE"),
             selector: (row) => row?.[t(Schemas?.find((i) => i.description === "Employement Type")?.name)] || t("NA"),
             sortable: true,
+            
           },
           {
             name: t("ACTIVE_STATUS"),
