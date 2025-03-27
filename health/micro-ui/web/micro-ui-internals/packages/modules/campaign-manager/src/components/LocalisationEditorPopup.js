@@ -13,7 +13,7 @@ const LocalisationEditorPopup = ({ locales,languages, currentLocale, localisatio
   const columns = [
     {
       name: t(currentLocale),
-      selector: (row) => row?.[currentLocale],
+      selector: (row) => row?.[currentLocale] || row?.message,
       wrap: true,
       style: {
         whiteSpace: "normal",
