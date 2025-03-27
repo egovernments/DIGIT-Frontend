@@ -10,10 +10,12 @@ COPY ${WORK_DIR} .
 RUN ls -lah
 
 #RUN node web/envs.js
-RUN cd web/ \
-    &&  ./install-deps.sh \
+WORKDIR /web
+RUN chmod +x install-deps.sh \
+    && ./install-deps.sh \
     && yarn install \
-    && yarn build:webpack 
+    && yarn build:webpack
+
 
 FROM nginx:mainline-alpine
 #FROM ghcr.io/egovernments/nginx:mainline-alpine
