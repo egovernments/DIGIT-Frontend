@@ -118,7 +118,7 @@ jobs:
 
     - name: Build the service Docker image
       id: docker_build
-      working-directory: micro-ui/web
+      working-directory: micro-ui/web/docker
       run: |
         IMAGE_TAG=egovio/project-factory:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
         docker build . \
@@ -128,7 +128,7 @@ jobs:
 
 
     - name: Login to Docker Hub and Push Docker Image
-      working-directory: ./utilities/project-factory
+      working-directory: micro-ui/web/docker
       env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
