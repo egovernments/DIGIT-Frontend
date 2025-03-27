@@ -10,10 +10,8 @@ COPY ${WORK_DIR} .
 RUN ls -lah
 
 #RUN node web/envs.js
-RUN pwd
-RUN echo "Current directory: $(pwd)"
 
-RUN cd web/ \
+RUN cd ../ \
     &&  ./install-deps.sh \
     && yarn install \
     && yarn build:webpack 
