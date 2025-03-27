@@ -23,8 +23,6 @@ import { initI18n } from "@egovernments/digit-ui-libraries/src/translations";
 console.log("inside module.js of core")
 console.log(Digit.Hooks);
 
-//Adding in this comment to trigger workflow
-
 const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding }) => {
   console.log("inside DigitUIWrapper of core");
   window.Digit["Hooks"] = Hooks || {};
