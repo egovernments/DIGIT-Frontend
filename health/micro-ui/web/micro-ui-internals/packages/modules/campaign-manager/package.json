@@ -20,7 +20,7 @@
   "dependencies": {
     "@cyntler/react-doc-viewer": "1.10.3",
     "@egovernments/digit-ui-react-components": "1.8.19",
-    "@egovernments/digit-ui-components":"0.0.2-beta.66",
+    "@egovernments/digit-ui-components":"0.2.0",
     "react-data-table-component": "7.6.2",
     "styled-components": "5.0.0",
     "@rjsf/core": "5.10.0",
