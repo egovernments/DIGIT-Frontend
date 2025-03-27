@@ -34,11 +34,11 @@ ARG WORK_DIR
 WORKDIR /app
 ENV NODE_OPTIONS "--max-old-space-size=8168"
 
-COPY ${WORK_DIR} .
+COPY ${WORK_DIR}/micro-ui .
 RUN ls -lah
 
 #RUN node web/envs.js
-RUN cd micro-ui/web/ \
+RUN cd web \
     &&  ./install-deps.sh \
     && yarn install \
     && yarn build:webpack 
