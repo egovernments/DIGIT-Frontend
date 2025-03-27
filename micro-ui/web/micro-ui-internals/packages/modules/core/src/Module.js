@@ -20,6 +20,8 @@ import { initWorkbenchComponents } from "../../workbench/src/Module";
 import Hooks from "../../../libraries/src/hooks";
 import { initI18n } from "@egovernments/digit-ui-libraries/src/translations";
 
+//Adding in comment to trigger the workflow file
+
 console.log("inside module.js of core")
 console.log(Digit.Hooks);
 
