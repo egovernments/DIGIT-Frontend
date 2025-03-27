@@ -94,7 +94,7 @@ name: upgraded digit docker Image
 
 on:
   push:
-    branches: [ "VersionUPgrade-test2" ]
+    branches: [ "VersionUpgrade-test2" ]
     paths:
       - 'micro-ui/web/micro-ui-internals/**'
 
