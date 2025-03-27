@@ -11,7 +11,7 @@ RUN ls -lah
 
 #RUN node web/envs.js
 
-RUN cd ../ \
+RUN cd . \
     &&  ./install-deps.sh \
     && yarn install \
     && yarn build:webpack 
