@@ -9,7 +9,7 @@ import { Hooks } from "@egovernments/digit-ui-libraries";
 
 // Ensure Digit is defined before using it
 
-//Adding in comment to trigger workflows
+//Adding in comment to trigger workflow
 
 window.Digit = window.Digit || {};
 window.Digit.Hooks = Hooks; 
@@ -19,6 +19,7 @@ const DigitUILazy = lazy(() =>
 );import { initLibraries } from "@egovernments/digit-ui-libraries";
 
 const enabledModules = ["assignment", "HRMS", "Workbench"];
+
 
 const initTokens = (stateCode) => {
   console.log(window.globalConfigs, "window.globalConfigs");
