@@ -5,6 +5,7 @@
   "workspaces": [
     "packages/libraries",
     "packages/react-components",
+    "packages/svg-components",
     "packages/ui-components",
     "example",
     "packages/modules/*"
