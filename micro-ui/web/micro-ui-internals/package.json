@@ -20,7 +20,7 @@
     "sprint": "SKIP_PREFLIGHT_CHECK=true run-s start:script",
     "start:dev": "run-p dev:**",
     "start:script": "./scripts/create.sh",
-    "build": "run-S build:**",
+    "build": "run-s build:**",
     "buildD:svg-components": "cd packages/svg-components && yarn build",
     "build:ui-components": "cd packages/ui-components && yarn build",
     "build:react-components": "cd packages/react-components && yarn build",

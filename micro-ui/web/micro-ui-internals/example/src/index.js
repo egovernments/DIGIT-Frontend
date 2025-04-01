@@ -9,7 +9,7 @@ import { Hooks } from "@egovernments/digit-ui-libraries";
 
 // Ensure Digit is defined before using it
 
-//Adding in comment to trigger workflow
+//Adding in comment to trigger workflows
 
 
 window.Digit = window.Digit || {};
