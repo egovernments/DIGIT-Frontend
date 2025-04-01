@@ -13,9 +13,9 @@ import { DigitUI,initCoreComponents } from "@egovernments/digit-ui-module-core";
 import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
 import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
 import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
-import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
+// import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
 import { UICustomizations } from "./Customisations/UICustomizations";
-import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
+// import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
 
@@ -44,8 +44,8 @@ const initDigitUI = () => {
   initDSSComponents();
   initHRMSComponents();
   initEngagementComponents();
-  initUtilitiesComponents();
-  initWorkbenchComponents();
+  // initUtilitiesComponents();
+  // initWorkbenchComponents();
 
   window.Digit.Customizations = {
     PGR: {},
