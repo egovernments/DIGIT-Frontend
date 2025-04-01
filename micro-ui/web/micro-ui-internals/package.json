@@ -22,7 +22,7 @@
     "start:dev": "run-p dev:**",
     "start:script": "./scripts/create.sh",
     "build": "run-s build:**",
-    "buildD:svg-components": "cd packages/svg-components && yarn build",
+    "build:svg-components": "cd packages/svg-components && yarn build",
     "build:ui-components": "cd packages/ui-components && yarn build",
     "build:react-components": "cd packages/react-components && yarn build",
     "build:libraries": "cd packages/libraries && yarn build",
