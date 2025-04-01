@@ -62,7 +62,7 @@ function DataUploadWrapper({ formData, props, onSelect }) {
               <TextBlock subHeader={t("HCM_UPLOAD_DATA")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
             </Card>
             <Card className="stepper-card">
-              <Stepper customSteps={categories} currentStep={currentStep} onStepClick={onStepClick} direction={"vertical"} />
+              <Stepper customSteps={categories} currentStep={currentStep} onStepClick={() => {}} direction={"vertical"} />
             </Card>
           </div>
         )}

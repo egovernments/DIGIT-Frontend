@@ -1029,6 +1029,28 @@ export const UICustomizations = {
                 break;
             }
           };
+          const onOptionSelect = (option) => {
+            const key = option.code;
+            switch (key) {
+              case t("VIEW_AUDIT_LOGS"):
+                window.history.pushState(
+                  {
+                    microplanId: row?.id,
+                    campaignId: row?.campaignId,
+                  },
+                  "",
+                  `/${window.contextPath}/employee/microplan/select-activity?microplanId=${row?.id}&campaignId=${row?.campaignId}`
+                );
+                const navEvent2 = new PopStateEvent("popstate");
+                window.dispatchEvent(navEvent2);
+                break;
+              case t("WBH_DOWNLOAD_MICROPLAN"):
+                handleFileDownload();
+                break;
+              default:
+                break;
+            }
+          };
           return row.status === "EXECUTION_TO_BE_DONE" ? (
             <ButtonNew
               label={t("START")}
@@ -1044,16 +1066,30 @@ export const UICustomizations = {
             />
           ) : row.status === "RESOURCE_ESTIMATIONS_APPROVED" ? (
             <ButtonNew
-              label={t("WBH_DOWNLOAD_MICROPLAN")}
-              title={t("WBH_DOWNLOAD_MICROPLAN")}
-              variation="primary"
-              icon={"FileDownload"}
-              style={{ width: "290px" }}
-              type="button"
-              isDisabled={!EstimationsfileId}
-              // className="dm-workbench-download-template-btn dm-hover"
-              onClick={(e) => onActionSelect("DOWNLOAD", row)}
-            />
+            isSearchable={false}
+            title={t("MP_ACTIONS_FOR_MICROPLANS")}
+            label={t("MP_ACTIONS_FOR_MICROPLANS")}
+            isDisabled={!EstimationsfileId}
+            onClick={() => {}}
+            variation="primary"
+            onOptionSelect={(option) => onOptionSelect(option)} 
+            options={[
+              {
+                code: t("WBH_DOWNLOAD_MICROPLAN"),
+                name: t("WBH_DOWNLOAD_MICROPLAN"),
+                icon: "FileDownload"
+              },
+              {
+                code: t("VIEW_AUDIT_LOGS"),
+                name: t("VIEW_AUDIT_LOGS")
+              },
+            ]}
+            optionsKey="name"
+            showBottom={true}
+            style={{ width: "290px" }}
+            type="actionButton"
+            className="my-microplans-action-button"
+          />
           ) : (
             <ButtonNew
               label={t("WBH_EDIT")}
