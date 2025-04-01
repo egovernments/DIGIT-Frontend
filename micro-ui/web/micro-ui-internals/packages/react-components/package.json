@@ -10,7 +10,7 @@
   },
   "scripts": {
     "example": "cd example && npm run start",
-    "build": "webpack  --mode=development --node-env=production --config webpack.config.js",
+    "build": "webpack  --mode=production --node-env=production --config webpack.config.js",
     "start": "microbundle-crl watch --no-compress --format modern,cjs",
     "prepare": "yarn build",
     "predeploy": "cd example && yarn install && yarn run build",
