@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { FormComposerV2, Header, Toast } from "@egovernments/digit-ui-react-components";
-
+import { FormComposerV2, HeaderComponent, Toast } from "@egovernments/digit-ui-components";
 import { newConfig } from "../../../configs/HRMSCreateConfig";
 import { transformHRMSCreateData } from "../../../utils/createUtils";
 
@@ -61,8 +60,9 @@ const HRMSCreate = () => {
   return (
     <div>
       {/* Header component with translation support */}
-      <Header>{t("CREATE_INDIVIDUAL")}</Header>
-
+      <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
+          {t("CREATE_INDIVIDUAL")}
+        </HeaderComponent>
       {/* Form component to create an individual */}
       <FormComposerV2
         label={t("SUBMIT_BUTTON")}
@@ -70,16 +70,7 @@ const HRMSCreate = () => {
           ...config,
         }))}
         defaultValues={{}} // Default values for form fields
-        onFormValueChange={(
-          setValue,
-          formData,
-          formState,
-          reset,
-          setError,
-          clearErrors,
-          trigger,
-          getValues
-        ) => {
+        onFormValueChange={(setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
           console.log(formData, "formData"); // Debug log when form values change
         }}
         onSubmit={(data) => onSubmit(data)} // Handle form submission

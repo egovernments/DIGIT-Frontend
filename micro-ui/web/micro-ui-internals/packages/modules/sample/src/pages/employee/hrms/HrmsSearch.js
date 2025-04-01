@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Header, InboxSearchComposer,  Button, AddFilled } from "@egovernments/digit-ui-react-components";
+import { Header, InboxSearchComposer,  Button, AddFilled } from "@egovernments/digit-ui-components";
 import { useHistory, useLocation } from "react-router-dom";
 import searchHRMSConfig from "../../../configs/HRMSSearchConfig";
 
@@ -13,7 +13,6 @@ const HRMSSearch = () => {
   return (
     <React.Fragment>
       <div className="jk-header-btn-wrapper">
-        <Header className="works-header-search">{t(configs?.label)}</Header>
         {Digit.Utils.didEmployeeHasRole(configs?.actionRole) && (
           <Button
             label={t(configs?.actionLabel)}
@@ -26,7 +25,7 @@ const HRMSSearch = () => {
           />
         )}
       </div>
-      <div className="inbox-search-wrapper">
+      <div className="digit-inbox-search-wrapper">
         <InboxSearchComposer configs={configs}></InboxSearchComposer>
       </div>
     </React.Fragment>

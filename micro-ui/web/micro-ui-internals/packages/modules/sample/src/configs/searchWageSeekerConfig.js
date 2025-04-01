@@ -1,6 +1,6 @@
 const searchWageSeekerConfig = () => {
   return {
-    label: "WORKS_SEARCH_WAGESEEKERS",
+    headerLabel: "WORKS_SEARCH_WAGESEEKERS",
     type: "search",
     actionLabel: "WORKS_ADD_WAGESEEKER",
     actionRole: "INDIVIDUAL_CREATOR",
@@ -89,7 +89,6 @@ const searchWageSeekerConfig = () => {
                 name: "socialCategory",
                 optionsKey: "code",
                 optionsCustomStyle: {
-                  top: "2.3rem",
                 },
                 mdmsConfig: {
                   masterName: "SocialCategory",
