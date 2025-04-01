@@ -8,9 +8,8 @@
     "node": ">=14"
   },
   "workspaces": [
-    "micro-ui-internals/packages/react-components",
     "micro-ui-internals/packages/modules/*",
-    "micro-ui-internals/packages/modules/core/libraries"
+    "micro-ui-internals/packages/*"
   ],
   "homepage": "/digit-ui",
   "dependencies": {
