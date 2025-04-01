@@ -26,6 +26,15 @@ const AssignCampaign = ({ editCampaign = false }) => {
   const isMobile = window.Digit.Utils.browser.isMobile();
   // Fetch employee details using HRMS search
   const { isLoadings, isError, error, data } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);
+  const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["CampaignAssignmentFieldsConfig"], {
+    select: (data) => {
+      console.log(data?.["egov-hrms"].CampaignAssignmentFieldsConfig);
+      debugger;
+      return data?.["egov-hrms"]?.CampaignAssignmentFieldsConfig;
+    },
+    retry: false,
+    enable: false,
+  });
 
   const [staffId, setStaffId] = useState(null);
 
@@ -151,10 +160,11 @@ const AssignCampaign = ({ editCampaign = false }) => {
   };
 
   // Show loader while data is being fetched
-  if (isLoadings) {
+  if (isLoadings || isLoading) {
     return <Loader />;
   }
-  const config = campaignAssignmentConfig;
+
+  const config = mdmsData ? mdmsData : campaignAssignmentConfig;
 
   return (
     <div style={{ marginBottom: "80px" }}>

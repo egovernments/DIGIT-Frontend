@@ -26,11 +26,13 @@ const EmployeeDetailScreen = () => {
   const { id } = useParams();
   const [campaign, setcampaign] = useState([]);
 
-  // Fetches employee details based on the provided employee ID (`id`) and tenant ID (`tenantId`)
-  // `isLoading`: Indicates if the data is still being fetched
-  // `isError`: Indicates if there was an error during the fetch
-  // `error`: Contains error details if the request fails
-  // `data`: Contains the fetched employee data
+  /**
+  * Fetches employee details based on the provided employee ID (`id`) and tenant ID (`tenantId`)
+  * `isLoading`: Indicates if the data is still being fetched
+  * `isError`: Indicates if there was an error during the fetch
+  * `error`: Contains error details if the request fails
+  * `data`: Contains the fetched employee data
+   */
   const { isLoading, isError, error, data } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);
 
   const campaignFetch = async (fetchedEmployeeId) => {

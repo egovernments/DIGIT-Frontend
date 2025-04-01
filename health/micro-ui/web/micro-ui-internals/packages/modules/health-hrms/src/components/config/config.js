@@ -120,10 +120,10 @@ export const newConfig = [
         label: "HR_BIRTH_DATE_LABEL",
         isMandatory: true,
         key: "SelectDateofBirthEmployment",
-        type: "date", // Input type is date picker
+        type: "date", 
         disable: false,
         populators: {
-          // max:convertEpochToDate(new Date().setFullYear(new Date().getFullYear() - 18)),
+         
           name: "SelectDateofBirthEmployment",
           required: true,
           error: "Required",
@@ -191,7 +191,7 @@ export const newConfig = [
         label: "Date of appointment",
         isMandatory: true,
         key: "SelectDateofEmployment",
-        type: "date", // Input type is date picker
+        type: "date", 
         disable: false,
         populators: { name: "SelectDateofEmployment", required: true, error: "Required" },
       },
@@ -232,26 +232,6 @@ export const newConfig = [
         },
       },
 
-      // {
-      //   isMandatory: true,
-      //   key: "RolesAssigned",
-      //   type: "dropdown",
-      //   label: "HR_COMMON_TABLE_COL_ROLE",
-      //   disable: false,
-      //   populators: {
-      //     allowMultiSelect: true,
-      //     name: "RolesAssigned",
-      //     optionsKey: "code",
-      //     error: "Required",
-      //    // options:[]
-      //     mdmsConfig: {
-      //       masterName: "roles",
-      //       moduleName: "ACCESSCONTROL-ROLES",
-      //       localePrefix: "ACCESSCONTROL_ROLES_ROLES",
-      //     },
-      //   },
-      // },
-
       {
         type: "component",
         isMandatory: true,
@@ -263,26 +243,6 @@ export const newConfig = [
         },
         customProps: {},
       },
-
-      // {
-      //   isMandatory: true,
-      //   key: "multiselectdropdown",
-      //   type: "multiselectdropdown",
-      //   label: "HR_COMMON_TABLE_COL_ROLE",
-      //   disable: false,
-      //   populators: {
-      //     allowMultiSelect: true,
-      //     name: "RolesAssigned",
-      //     optionsKey: "name",
-      //     error: "Required",
-      //    // options:[]
-      //     mdmsConfig: {
-      //       masterName: "roles",
-      //       moduleName: "ACCESSCONTROL-ROLES",
-      //       localePrefix: "ACCESSCONTROL_ROLES_ROLES",
-      //     },
-      //   },
-      // },
 
       {
         type: "component",

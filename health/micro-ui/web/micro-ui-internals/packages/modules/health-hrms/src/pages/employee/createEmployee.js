@@ -42,23 +42,14 @@ const CreateEmployee = ({ editUser = false }) => {
   const mutationUpdate = Digit.Hooks.hrms.useHRMSUpdate(tenantId);
   const { isLoadings, isError, error, data } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);
 
-  const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(
-    Digit.ULBService.getStateId(),
-    "egov-hrms",
-    ["CommonFieldsConfig", "CampaignAssignmentFieldsConfig"],
-    {
-      select: (data) => {
-        return {
-          config: data?.MdmsRes?.["egov-hrms"]?.CommonFieldsConfig,
-          campaignAssignConfig: data?.MdmsRes?.["egov-hrms"]?.CampaignAssignmentFieldsConfig,
-        };
-      },
-      retry: false,
-      enable: false,
-    }
-  );
+  const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["CommonFieldsConfig"], {
+    select: (data) => {
+      return data?.["egov-hrms"]?.CommonFieldsConfig;
+    },
+    retry: false,
+    enable: false,
+  });
 
-  
   const onFormValueChange = (setValue = true, formData, formState, reset, setError, clearErrors) => {
     if (isEdit) {
       if (phoneNumber !== formData?.SelectEmployeePhoneNumber) {
@@ -208,13 +199,12 @@ const CreateEmployee = ({ editUser = false }) => {
             });
           },
           onError: (error) => {
-           
             history.replace(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.EDIT_USER_ERROR,
               state: "error",
               info: t("HR_EMPLOYEE_ID_LABEL"),
               fileName: error?.Employees?.[0],
-              description: t(error?`${error[0]?.code}`:""),
+              description: t(error ? `${error[0]?.code}` : ""),
               message: t(`EMPLOYEE_RESPONSE_UPDATE_ACTION_ERROR`),
               back: t(`CORE_COMMON_GO_TO_HOME`),
               backlink: `/${window.contextPath}/employee`,
@@ -224,7 +214,6 @@ const CreateEmployee = ({ editUser = false }) => {
         }
       );
     } catch (error) {
-    
       // setTriggerEstimate(true);
     }
   };
@@ -249,8 +238,7 @@ const CreateEmployee = ({ editUser = false }) => {
         await updateEmployeeService(payload);
       }
     } catch (err) {
-     
-      setShowToast({ key: true, label: t(err?`${err?.code}`:"BAD_REQUEST") });
+      setShowToast({ key: true, label: t(err ? `${err?.code}` : "BAD_REQUEST") });
       setShowModal(false);
     }
   };
@@ -286,13 +274,15 @@ const CreateEmployee = ({ editUser = false }) => {
   if (isLoading || isLoadings) {
     return <Loader />;
   }
-  //const config = newConfig;
+
+  const fConfig = mdmsData ? mdmsData : newConfig;
+
   const config = isEdit
-    ? newConfig.map((section) => ({
+    ? fConfig.map((section) => ({
         ...section,
         body: section.body.filter((field) => field.key !== "employeePassword" && field.key !== "employeeConfirmPassword"),
       }))
-    : newConfig;
+    : fConfig;
 
   return (
     <React.Fragment>

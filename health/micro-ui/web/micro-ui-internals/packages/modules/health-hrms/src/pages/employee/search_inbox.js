@@ -5,8 +5,22 @@ import inboxSearchConfig from "../../components/config/inboxSearchConfig";
 
 const InboxSearch = () => {
   const { t } = useTranslation();
-  const config = inboxSearchConfig();
+
   const isMobile = window.Digit.Utils.browser.isMobile();
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+
+  const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["InboxConfig"], {
+    select: (data) => {
+      return data?.["egov-hrms"]?.InboxConfig?.[0];
+    },
+    retry: false,
+    enable: false,
+  });
+
+  if (isLoading) {
+    return <Loader />;
+  }
+  const config = mdmsData ? mdmsData : inboxSearchConfig();
 
   return (
     <div style={{ marginBottom: "80px" }}>
