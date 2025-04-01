@@ -29,7 +29,7 @@ const AssignCampaign = ({ editCampaign = false }) => {
   const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["CampaignAssignmentFieldsConfig"], {
     select: (data) => {
       console.log(data?.["egov-hrms"].CampaignAssignmentFieldsConfig);
-      debugger;
+      
       return data?.["egov-hrms"]?.CampaignAssignmentFieldsConfig;
     },
     retry: false,
