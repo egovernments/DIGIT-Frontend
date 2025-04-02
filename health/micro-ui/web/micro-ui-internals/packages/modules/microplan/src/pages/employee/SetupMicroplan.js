@@ -372,7 +372,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   }
 
   const getNextActionLabel = () => {
-    if ((currentKey === 7 || currentKey === 9) && isLastVerticalStep && isLastVerticalStep === "false") {
+    if ((currentKey === 7 || currentKey === 10) && isLastVerticalStep && isLastVerticalStep === "false") {
       return null;
     } else if (currentKey === 8 && isFormulaLastVerticalStep && isFormulaLastVerticalStep === "false") {
       return null;
@@ -396,6 +396,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
           "MP_MANAGING_DATA",
           "MICROPLAN_ASSUMPTIONS",
           "FORMULA_CONFIGURATION",
+          "DATA_VALIDATION",
           "ROLE_ACCESS_CONFIGURATION",
           "SUMMARY",
         ]}
