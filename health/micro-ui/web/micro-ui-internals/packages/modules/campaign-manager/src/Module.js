@@ -66,7 +66,7 @@ export const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
  * @returns The CampaignModule component returns either a Loader component if data is still loading, or
  * a TourProvider component wrapping an EmployeeApp component with specific props passed to it.
  */
-const CampaignModule = ({ stateCode, userType, tenants }) => {
+const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const moduleName = Digit.Utils.campaign.getModuleName();
   const { data: BOUNDARY_HIERARCHY_TYPE, isLoading: hierarchyLoading } = Digit.Hooks.useCustomMDMS(
@@ -83,7 +83,7 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
         return data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy;
       },
     },
-    { schemaCode: "HierarchySchema" }
+    { schemaCode: "HierarchySchemaSecond" }
   );
 
   const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE, tenantId });
@@ -120,7 +120,7 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
       </TourProvider>
     </ErrorBoundary>
   );
-};
+});
 
 const componentsToRegister = {
   CampaignModule: CampaignModule,
