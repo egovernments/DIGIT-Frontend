@@ -255,7 +255,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
       setConvertedSchema(schema);
     }
-  }, [Schemas, type]);
+  }, [Schemas, type ,uploadedFile]);
+
 
   useEffect(async () => {
     if (convertedSchema && Object.keys(convertedSchema).length > 0) {
@@ -691,6 +692,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           })[0];
 
           const expectedHeaders = sheetHeaders[type];
+          console.log("exx" , expectedHeaders , sheetHeaders , type);
 
           const SheetNames = sheetTypeMap[type];
 
@@ -699,22 +701,30 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             let rowData = {};
             if (Object.keys(row).length > 0) {
               let allNull = true;
+          
               Object.keys(row).forEach((key) => {
                 if (row[key] !== undefined && row[key] !== "") {
                   allNull = false;
                 }            
-                rowData[key] = row[key] === undefined || row[key] == "" ? null : row[key];
+                rowData[key] = row[key] === undefined || row[key] === "" ? null : row[key];
               });
-           
+          
               if (!allNull) {
                 rowData["!row#number!"] = index + 1;
-              }
-              else{
+          
+                // Remove keys with null values
+                rowData = Object.fromEntries(
+                  Object.entries(rowData).filter(([_, value]) => value !== null)
+                );
+                
+              } else {
                 rowData = null;
               }
+          
               return rowData;
             }
           });
+          
           jsonData = jsonData.filter((element) => element);
           if (type === "boundary") {
             if (workbook?.SheetNames.filter(sheetName => sheetName !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")).length == 0) {

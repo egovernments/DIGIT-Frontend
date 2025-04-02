@@ -54,7 +54,7 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
           <div style={{ marginBottom: "1rem" }}>
             <div style={{ display: "flex" }}>
               <label>{t("CHOOSE_BOUNDARY_LEVEL")}</label>
-              <span className="mandatory-span">*</span>
+              {column?.isRequired && <span className="mandatory-span">*</span>}
             </div>
             <Dropdown
               className="mappingPopUp"
@@ -129,7 +129,7 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
           <div key={column.name} style={{ marginBottom: "1rem" }}>
             <div style={{ display: "flex" }}>
               <label>{column.description}</label>
-              <span className="mandatory-span">*</span>
+              {column?.isRequired && <span className="mandatory-span">*</span>}
             </div>
             <TextInput
               isRequired={true}
@@ -154,7 +154,7 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
         <div key={column.name} style={{ marginBottom: "1rem" }}>
           <div style={{ display: "flex" }}>
             <label>{column.description}</label>
-            <span className="mandatory-span">*</span>
+            {column?.isRequired && <span className="mandatory-span">*</span>}
           </div>
           <Dropdown
             className="roleTableCell"
