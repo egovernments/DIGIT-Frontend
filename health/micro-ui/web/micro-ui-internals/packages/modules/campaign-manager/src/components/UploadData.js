@@ -692,7 +692,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           })[0];
 
           const expectedHeaders = sheetHeaders[type];
-          console.log("exx" , expectedHeaders , sheetHeaders , type);
 
           const SheetNames = sheetTypeMap[type];
 
