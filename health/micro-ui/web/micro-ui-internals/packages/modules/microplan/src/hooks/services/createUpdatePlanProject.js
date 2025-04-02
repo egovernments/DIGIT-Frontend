@@ -354,6 +354,7 @@ const createUpdatePlanProject = async (req) => {
       });
     }
 
+
     const triggeredFrom = config.name;
     switch (triggeredFrom) {
       case "CAMPAIGN_DETAILS":
@@ -914,6 +915,36 @@ const createUpdatePlanProject = async (req) => {
         } else {
           setShowToast({ key: "error", label: "ERR_FAILED_TO_COMPLETE_SETUP" });
         }
+
+      case "DATA_VALIDATION":{
+        const fetchedPlan = await searchPlanConfig({
+          PlanConfigurationSearchCriteria: {
+            tenantId,
+            id: microplanId,
+          },
+        });
+        const updatedPlanObject = {
+          ...fetchedPlan,
+          additionalDetails: { ...fetchedPlan.additionalDetails, key: key,dataValidation:totalFormData?.DATA_VALIDATION?.dataValidation,keyer:'111' },
+        };
+
+        const response = await updatePlan(updatedPlanObject);
+        // Return as expected
+        if (response) {
+          setCurrentKey((prev) => prev + 1);
+          setCurrentStep((prev) => prev + 1);
+          window.dispatchEvent(new Event("isLastStep"));
+          Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
+          Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
+          return {
+            triggeredFrom,
+          };
+        } else {
+          setShowToast({ key: "error", label: "ERR_FAILED_TO_UPDATE_PLAN" });
+        }
+
+        
+      }
 
       case "ROLE_ACCESS_CONFIGURATION": {
         const fetchedPlan = await searchPlanConfig({

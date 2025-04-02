@@ -110,8 +110,6 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
                 type: "boundary",
                 sessionData: totalFormData,
                 isSubmitting: isSubmitting
-
-
               },
               populators: {
                 name: "boundary"
@@ -230,6 +228,32 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
       {
         stepCount: "6",
         key: "9",
+        name: "DATA_VALIDATION",
+        body: [
+          {
+            isMandatory: false,
+            key: "dataValidation",
+            type: "component",
+            skipAPICall: false,
+            component: "AddingColumnsWrapper",
+            withoutLabel: true,
+            withoutLabelFieldPair: true,
+            disable: false,
+            customProps: {
+              module: "HCM",
+              sessionData: totalFormData,
+              isSubmitting: isSubmitting,
+            },
+            populators: {
+              name: "dataValidation", 
+              required: true,
+            },
+          },
+        ],
+      },
+      {
+        stepCount: "7",
+        key: "10",
         name: "ROLE_ACCESS_CONFIGURATION",
         body: [
           {
@@ -255,8 +279,8 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
         ],
       },
         {
-          stepCount: "7",
-          key: "10",
+          stepCount: "8",
+          key: "11",
           name: "SUMMARY_SCREEN",
           body: [
             {
