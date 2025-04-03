@@ -65,6 +65,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const XlsPreview = Digit.ComponentRegistryService.getComponent("XlsPreview");
   const BulkUpload = Digit.ComponentRegistryService.getComponent("BulkUpload");
   const baseKey = 4;
+  const [isDownloadClicked,setIsDownloadClicked]=useState(false);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -563,7 +564,6 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
 
   const fetchTemplate = async () => {
-    setDownloadTemplateLoader(true);
     return new Promise((resolve) => {
       mutation.mutate(
         {
@@ -577,10 +577,13 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
         {
           onSuccess: async (result) => {
             if (result?.GeneratedResource?.[0]?.status === "completed") {
-              setDownloadTemplateLoader(false);
               setIsDownloadDisabled(false); // Enabling button
               setIsPolling(false); // Stop polling
               setFileData(result);
+              setDownloadTemplateLoader(false);
+              if(isDownloadClicked){
+                downloadTemplate();
+              }
               resolve(result);
             } else {
               resolve(null); // Keep polling
@@ -596,7 +599,6 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
               setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
             }
             else{
-              setDownloadTemplateLoader(true);
               resolve(null);// Continuing polling on error
             }
           }, 
@@ -621,13 +623,22 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
     return () => clearTimeout(timeoutId);
   }, [isPolling]);
 
+  useEffect(()=>{
+    if(isDownloadClicked && fileData){
+    downloadTemplate()
+    }
+  },[isDownloadClicked,fileData])
+
   // Restarting polling whenever the page refreshes
   useEffect(() => {
     setIsPolling(true);
   }, []);
 
   const downloadTemplate = async () => {
-    if (!fileData) return;
+    if (!fileData || !isDownloadClicked){
+      setDownloadTemplateLoader(true);
+      return;
+    }
 
     setDownloadTemplateLoader(true);
     const filesArray = [fileData?.GeneratedResource?.[0]?.fileStoreid];
@@ -649,6 +660,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
         setDownloadError(true);
         setShowToast({ key: "info", label: t("ERROR_WHILE_DOWNLOADING_FROM_FILESTORE") });
       }
+      setIsDownloadClicked(false);
     } catch (error) {
       setDownloadError(true);
       setShowToast({ key: "info", label: t("ERROR_WHILE_DOWNLOADING") });
@@ -719,8 +731,11 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
                 icon={"FileDownload"}
                 type="button"
                 className="campaign-download-template-btn"
-                onClick={downloadTemplate}
-                isDisabled={isDownloadDisabled}
+                onClick={() => {
+                  setIsDownloadClicked(true);
+                  downloadTemplate(); 
+                }}
+                
               />
             </div>
             {uploadedFile.length === 0 && (

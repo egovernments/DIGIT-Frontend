@@ -231,6 +231,7 @@ const UserAccessMgmtTableWrapper = ({ role, internalKey, setupCompleted }) => {
           paginationDefaultPage={currentPage}
           paginationRowsPerPageOptions={[5, 10, 15, 20]}
           onChangeRowsPerPage={handleRowsPerPageChange}
+          paginationComponentOptions={{ rowsPerPageText:t("ROWS_PER_PAGE") }}
         />
         {/* </Card> */}
       </Card>

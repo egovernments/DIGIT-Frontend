@@ -21,6 +21,7 @@ const PlanInbox = () => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { state } = useMyContext();
+  const config=state?.PlanInboxConfiguration?.[0];
   const url = Digit.Hooks.useQueryParams();
   const microplanId = url?.microplanId;
   const campaignId = url?.campaignId;
@@ -33,13 +34,13 @@ const PlanInbox = () => {
   const [hierarchyLevel, setHierarchyLevel] = useState("");
   const [censusData, setCensusData] = useState([]);
   const [boundaries, setBoundaries] = useState([]);
-  const [selectedFilter, setSelectedFilter] = useState({status:"PENDING_FOR_VALIDATION",onRoadCondition:null,terrain:null,securityQ1:null,securityQ2:null,facilityId:[]});
+  const [selectedFilter, setSelectedFilter] = useState(config?.filterConfig?.defaultActiveFilter);
   const [activeFilter, setActiveFilter] = useState({});
   const [actionBarPopUp, setactionBarPopUp] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [workFlowPopUp, setworkFlowPopUp] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(50);
+  const [currentPage, setCurrentPage] = useState(config?.tableConfig?.currentPage);
+  const [rowsPerPage, setRowsPerPage] = useState(config?.tableConfig?.initialRowsPerPage);
   const [totalRows, setTotalRows] = useState(0);
   const [refetchTrigger, setRefetchTrigger] = useState(0);
   const [perPage, setPerPage] = useState(10);
@@ -49,10 +50,7 @@ const PlanInbox = () => {
   const [disabledAction, setDisabledAction] = useState(false);
   const [availableActionsForUser, setAvailableActionsForUser] = useState([]);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
-  const [activeLink, setActiveLink] = useState({
-    code: "ASSIGNED_TO_ME",
-    name: "ASSIGNED_TO_ME",
-  });
+  const [activeLink, setActiveLink] = useState(config?.tabConfig?.defaultActiveTab);
   const [showTimelinePopup, setShowTimelinePopup] = useState(false);
   const [selectedBoundaryCode, setSelectedBoundaryCode] = useState(null);
   const [selectedBusinessId, setSelectedBusinessId] = useState(null);
@@ -62,7 +60,7 @@ const PlanInbox = () => {
   const [employeeNameMap, setEmployeeNameMap] = useState({});
   const [defaultHierarchy, setDefaultSelectedHierarchy] = useState(null);
   const [defaultBoundaries, setDefaultBoundaries] = useState([]);
-  const userRoles = user?.info?.roles?.map((roleData) => roleData?.code);
+  const userRoles =  user?.info?.roles?.map((roleData) => roleData?.code);
   const hrms_context_path = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || 'health-hrms';
   const tableRef = useRef(null);
   const [tableHeight, setTableHeight] = useState(33);
@@ -124,7 +122,7 @@ const PlanInbox = () => {
   };
 
   useEffect(() => {
-    if (selectedFilter?.status === "VALIDATED") {
+    if (selectedFilter?.status === config?.tabConfig?.disabledTabStatus) {
       setActiveLink({ code: "", name: "" });
       setShowTab(false);
     } else {
@@ -277,6 +275,86 @@ const PlanInbox = () => {
     },
   });
 
+
+  const {
+    isLoading: isPlanWithToAllCensusLoading,
+    data: planWithCensusToAll,
+    error: planWithCensusToAllError,
+    refetch: refetchPlanWithCensusToAll,
+    isFetchingToALL,
+  } = Digit.Hooks.microplanv1.usePlanSearchWithCensus({
+    tenantId: tenantId,
+    microplanId: microplanId,
+    body: {
+      PlanSearchCriteria: {
+        tenantId: tenantId,
+        active: true,
+        jurisdiction: censusJurisdiction,
+        status: selectedFilter?.status !== null && selectedFilter?.status !== undefined ? selectedFilter?.status : "",
+        ...(selectedFilter?.terrain != null && { terrain: selectedFilter.terrain }),
+        ...(selectedFilter?.onRoadCondition != null && { onRoadCondition: selectedFilter.onRoadCondition }),
+        ...(selectedFilter?.securityQ1 != null && { securityQ1: selectedFilter.securityQ1 }),
+        ...(selectedFilter?.securityQ2 != null && { securityQ2: selectedFilter.securityQ2 }),
+        ...(selectedFilter?.facilityId && {
+          facilityIds: selectedFilter?.facilityId?.map((item) => item.id),
+        }),
+        planConfigurationId: microplanId, //list of plan ids
+        limit: limitAndOffset?.limit,
+        offset: limitAndOffset?.offset,
+      },
+    },
+    config: {
+      enabled: censusJurisdiction?.length > 0 ? true : false,
+      select: (data) => {
+        const tableData = data?.planData?.map((item, index) => {
+          const filteredCensus = data?.censusData?.find((d) => d?.boundaryCode === item?.locality);
+          const dynamicSecurityData = Object.keys(filteredCensus?.additionalDetails?.securityDetails || {}).reduce((acc, key) => {
+            acc[`securityDetail_SECURITY_LEVEL_Q${key}`] = filteredCensus?.additionalDetails?.securityDetails[key]?.code || "NA"; // Correctly referencing securityDetails
+            return acc;
+          }, {});
+
+          const dynamicResource = item?.resources?.reduce((acc, item) => {
+            if (item?.resourceType && item?.estimatedNumber !== undefined) {
+              acc[item?.resourceType] = item?.estimatedNumber;
+            }
+            return acc;
+          }, {});
+
+          const dynamicAdditionalFields = filteredCensus?.additionalFields
+            ?.filter((field) => field?.editable === true) // Filter fields where `editable` is `false`
+            ?.sort((a, b) => a.order - b.order) // Sort by `order`
+            ?.reduce((acc, field) => {
+              acc[field.key] = field.value; // Set `key` as property name and `value` as property value
+              return acc;
+            }, {});
+            
+          return {
+            original: item,
+            censusOriginal: filteredCensus,
+            village: filteredCensus?.boundaryCode || "NA",
+            villageRoadCondition: filteredCensus?.additionalDetails?.accessibilityDetails?.roadCondition?.code || "NA",
+            villageTerrain: filteredCensus?.additionalDetails?.accessibilityDetails?.terrain?.code || "NA",
+            // villageTransportMode: filteredCensus?.additionalDetails?.accessibilityDetails?.transportationMode?.code || "NA",
+            totalPop: filteredCensus?.additionalDetails?.totalPopulation || "NA",
+            targetPop: filteredCensus?.additionalDetails?.targetPopulation || "NA",
+            servingFacility: filteredCensus?.additionalDetails?.facilityName || "NA",
+            ...dynamicSecurityData,
+            ...dynamicResource,
+            ...dynamicAdditionalFields,
+          };
+        });
+        return {
+          planData: data?.planData,
+          censusData: data?.censusData,
+          StatusCount: data?.StatusCount,
+          TotalCount: data?.TotalCount,
+          tableData,
+        };
+      },
+    },
+  });
+
+
       useEffect(() => {
         if (tableRef.current) {
           // Get full rendered height including borders/padding
@@ -285,7 +363,7 @@ const PlanInbox = () => {
         }else{
           setTableHeight(33);
         }
-      }, [planWithCensus, activeLink]); 
+      }, [planWithCensus,planWithCensusToAll, activeLink]); 
 
   const onSearch = (selectedBoundaries, selectedHierarchy) => {
     if (selectedBoundaries.length === 0) {
@@ -352,7 +430,7 @@ const PlanInbox = () => {
         tenantId: tenantId,
         active: true,
         planConfigurationId: url?.microplanId,
-        role: ["PLAN_ESTIMATION_APPROVER", "ROOT_PLAN_ESTIMATION_APPROVER"],
+        role: config?.roles,
         employeeId: [user?.info?.uuid],
       },
     },
@@ -413,23 +491,28 @@ const PlanInbox = () => {
   const actionsMain = availableActionsForUser?.length > 0 ? availableActionsForUser : [];
 
   // actionsToHide array by checking for "EDIT" in the actionMap
-  const actionsToHide = actionsMain?.filter((action) => action?.action?.includes("EDIT"))?.map((action) => action?.action);
+  const actionsToHide = config?.actionsConfig?.actionsToHide;
 
   useEffect(() => {
     if (planWithCensus) {
       setCensusData(planWithCensus?.censusData);
       setTotalRows(planWithCensus?.TotalCount);
+      const statusOrderMap = config?.filterConfig.filterOptions.reduce((acc, { status, order }) => {
+        acc[status] = order;
+        return acc;
+      }, {});
+      
       const reorderedStatusCount = Object.fromEntries(
         Object.entries(planWithCensus?.StatusCount || {})
-          // Filter out the PENDING_FOR_APPROVAL status /// need to revisit as this is hardcoded to remove from workflow ///
+          // Filter out PENDING_FOR_APPROVAL (if needed, can be removed later)
           .filter(([key]) => key !== "PENDING_FOR_APPROVAL")
-          // Sort the statuses, prioritizing PENDING_FOR_VALIDATION
+          // Sort based on the order defined in filterConfig
           .sort(([keyA], [keyB]) => {
-            if (keyA === "PENDING_FOR_VALIDATION") return -1;
-            if (keyB === "PENDING_FOR_VALIDATION") return 1;
-            return 0;
+            return (statusOrderMap[keyA] || Infinity) - (statusOrderMap[keyB] || Infinity);
           })
       );
+
+      
       setActiveFilter(reorderedStatusCount);
       const activeFilterKeys = Object.keys(reorderedStatusCount || {});
       if (selectedFilter?.filterValue === null || selectedFilter?.status=== undefined || selectedFilter?.status === "") {
@@ -443,19 +526,20 @@ const PlanInbox = () => {
       setSelectedRows([]);
       if (activeLink.code === "ASSIGNED_TO_ME") {
         setAssignedToMeCount(planWithCensus?.TotalCount);
-        setAssignedToAllCount(planWithCensus?.StatusCount[selectedFilter?.status] || 0);
+        setAssignedToAllCount(planWithCensusToAll?.TotalCount || 0);
       } else {
-        setAssignedToAllCount(planWithCensus?.TotalCount);
+        setAssignedToAllCount(planWithCensusToAll?.TotalCount);
       }
 
       const uniqueAssignees = [...new Set(planWithCensus?.planData?.flatMap((item) => item.assignee || []))];
       setAssigneeUuids(uniqueAssignees.join(","));
     }
-  }, [planWithCensus, selectedFilter, activeLink]);
+  }, [planWithCensus, selectedFilter, activeLink,planWithCensusToAll]);
 
   useEffect(() => {
     if (censusJurisdiction?.length > 0) {
       refetchPlanWithCensus(); // Trigger the API call again after activeFilter changes
+      refetchPlanWithCensusToAll();
     }
   }, [selectedFilter, activeLink, censusJurisdiction, limitAndOffset]);
   
@@ -473,8 +557,9 @@ const PlanInbox = () => {
   useEffect(() => {
     if (planWithCensusCount) {
       setAssignedToMeCount(planWithCensusCount?.TotalCount);
+      setAssignedToAllCount(planWithCensusToAll?.TotalCount);
     }
-  }, [planWithCensusCount]);
+  }, [planWithCensusCount,planWithCensusToAll]);
 
   const { isLoading: isEmployeeLoading, data: employeeData, refetch: refetchHrms } = Digit.Hooks.useCustomAPIHook(reqCri);
 
@@ -510,13 +595,13 @@ const PlanInbox = () => {
   });
 
   useEffect(() => {
-    if (processData && processData.some((instance) => instance.action === "APPROVE_ESTIMATIONS")) {
+    if (processData && processData.some((instance) => instance.action === config?.disableInstanceAction)) {
       setDisabledAction(true);
     }
   }, [processData]);
 
   useEffect(() => {
-    if (selectedFilter?.status === "VALIDATED") {
+    if (selectedFilter?.status === config?.tabConfig?.disabledTabStatus) {
       setActiveLink({ code: "", name: "" });
       setShowTab(false);
     } else {
@@ -815,26 +900,14 @@ const PlanInbox = () => {
     },
   ];
 
-  const actionIconMap = {
-    VALIDATE: { isSuffix: false, icon: "CheckCircle" },
-    EDIT_AND_SEND_FOR_APPROVAL: { isSuffix: false, icon: "Edit" },
-    APPROVE: { isSuffix: false, icon: "CheckCircle" },
-    ROOT_APPROVE: { isSuffix: false, icon: "CheckCircle" },
-    SEND_BACK_FOR_CORRECTION: { isSuffix: true, icon: "ArrowForward" },
-  };
+  const actionIconMap = config.actionsConfig?.actionIconMap;
 
   const getButtonState = (action) => {
-    if (selectedFilter?.status === "PENDING_FOR_VALIDATION" && action === "VALIDATE") {
-      return true;
-    }
-    if (selectedFilter?.status === "PENDING_FOR_APPROVAL" && (action === "APPROVE" || action === "ROOT_APPROVE")) {
-      return true;
-    }
-    if (selectedFilter?.status === "VALIDATED" && action === "SEND_BACK_FOR_CORRECTION") {
-      return true;
-    }
-    return false;
-  };
+  return config?.actionsConfig?.primaryButtonStates.some(
+    (item) => item.status === selectedFilter?.status && item.actions.includes(action)
+  );
+};
+
 
   if (
     isLoadingPlanObject ||
@@ -862,6 +935,7 @@ const PlanInbox = () => {
       userRole = "PLAN_ESTIMATION_APPROVER";
     }
   });
+
 
   
   return (
@@ -910,6 +984,7 @@ const PlanInbox = () => {
           clearFilters={clearFilters}
           defaultValue={selectedFilter}
           tableHeight={tableHeight}
+          filterConfig={config?.filterConfig}
         ></InboxFilterWrapper>
 
         <div className={"pop-inbox-table-wrapper"}>
@@ -921,13 +996,14 @@ const PlanInbox = () => {
               itemStyle={{ width: "290px" }}
               configNavItems={[
                 {
-                  code: "ASSIGNED_TO_ME",
-                  name: `${`${t(`ASSIGNED_TO_ME`)} (${assignedToMeCount})`}`,
+                  code: `${config?.tabConfig?.tabOptions[0]?.code}`,
+                  name: `${t(config?.tabConfig?.tabOptions[0]?.name)} (${assignedToMeCount})`,
                 },
                 {
-                  code: "ASSIGNED_TO_ALL",
-                  name: `${`${t(`MP_PLAN_ASSIGNED_TO_ALL`)} (${assignedToAllCount})`}`,
-                },
+                  code: `${config?.tabConfig?.tabOptions[1]?.code}`,
+                  name: `${t(config?.tabConfig?.tabOptions[1]?.name)} (${assignedToAllCount})`,
+                }
+                
               ]}
               navStyles={{}}
               onTabClick={(e) => {
@@ -1017,6 +1093,7 @@ const PlanInbox = () => {
                         }
                       });
                       refetchPlanWithCensusCount();
+                      refetchPlanWithCensusToAll();
                       refetchPlanWithCensus();
                       fetchStatusCount();
                       // wait for 5 seconds
@@ -1035,7 +1112,7 @@ const PlanInbox = () => {
               <Loader />
             ) : planWithCensus?.tableData?.length === 0 ? (
               <NoResultsFound
-                style={{ height: selectedFilter?.status === "VALIDATED" ? "472px" : "408px" }}
+                style={{ height: selectedFilter?.status === config?.tabConfig?.disabledTabStatus ? "472px" : "408px" }}
                 text={t(`HCM_MICROPLAN_NO_DATA_FOUND_FOR_PLAN_INBOX_PLAN`)}
               />
             ) : (<div ref={tableRef}>
@@ -1058,10 +1135,11 @@ const PlanInbox = () => {
                 paginationTotalRows={totalRows}
                 conditionalRowStyles={conditionalRowStyles}
                 paginationPerPage={rowsPerPage}
-                paginationRowsPerPageOptions={[10, 20, 50, 100]}
+                paginationRowsPerPageOptions={config?.tableConfig?.paginationRowsPerPageOptions}
                 sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
                 fixedHeader={true}
                 fixedHeaderScrollHeight={"100vh"}
+                paginationComponentOptions={{ rowsPerPageText:t("ROWS_PER_PAGE") }}
               />
               </div>
             )}

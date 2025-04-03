@@ -691,6 +691,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
               payload: childData,
               schemas: Schemas,
               t: t,
+              currentCategories: currentCategories,
             });
           } else {
             dispatch({
@@ -698,6 +699,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
               payload: childData,
               schemas: Schemas,
               t: t,
+              currentCategories: currentCategories,
             });
           }
 

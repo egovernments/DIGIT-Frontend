@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Switch, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
@@ -101,9 +101,11 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
  * the `Switch` component, there are several `PrivateRoute` components with different paths and
  * corresponding components such as `UploadBoundaryData`, `CycleConfiguration`, `DeliveryRule`, `
  */
-const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
+const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: propsHierarchyData }) => {
   const location = useLocation();
   const userId = Digit.UserService.getUser().info.uuid;
+  const BOUNDARY_HIERARCHY_TYPE = useMemo(() => BoundaryHierarchy, [BoundaryHierarchy]);
+  const hierarchyData = useMemo(() => propsHierarchyData, [propsHierarchyData]);
   const microplanStatus = "RESOURCE_ESTIMATIONS_APPROVED";
   const UploadBoundaryData = Digit?.ComponentRegistryService?.getComponent("UploadBoundaryData");
   const CycleConfiguration = Digit?.ComponentRegistryService?.getComponent("CycleConfiguration");

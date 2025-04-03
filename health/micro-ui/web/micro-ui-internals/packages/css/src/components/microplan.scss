@@ -560,3 +560,9 @@ tbody tr:last-child td:last-child .digit-dropdown-employee-select-wrap .digit-dr
     }
   }
 }
+
+.my-microplans-action-button+.header-dropdown-container {
+  .header-dropdown-menu {
+    width: 18.125rem !important;
+  }
+}
