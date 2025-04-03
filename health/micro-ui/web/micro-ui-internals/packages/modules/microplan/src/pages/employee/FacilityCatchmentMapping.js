@@ -22,6 +22,7 @@ const FacilityCatchmentMapping = () => {
   const [projectType, setProjectType] = useState('');
   const [disabledAction, setDisabledAction] = useState(false);
   const [censusQueryName, setCensusQueryName] = useState("censusData");
+  const [refreshKey, setRefreshKey] = useState(0);
   // Check if the user has the 'rootfacilitycatchmentmapper' role
   const isRootApprover = userRoles?.includes("ROOT_FACILITY_CATCHMENT_MAPPER");
 
@@ -129,6 +130,10 @@ const FacilityCatchmentMapping = () => {
     }
   }, [processData]);
 
+  useEffect(() => {
+    // refreshing the screen to get the updated assigned villages count
+  }, [refreshKey]);
+
 
   const handleActionBarClick = () => {
     setactionBarPopUp(true);
@@ -184,7 +189,7 @@ const FacilityCatchmentMapping = () => {
 
 
   return (
-    <div style={{ marginBottom: (isRootApprover && data?.TotalCount === 0 && planObject?.status === "CENSUS_DATA_APPROVED") || ((!isRootApprover && data?.TotalCount === 0) || disabledAction) ? "2.5rem" : "0rem" }}>
+    <div key={refreshKey} style={{ marginBottom: (isRootApprover && data?.TotalCount === 0 && planObject?.status === "CENSUS_DATA_APPROVED") || ((!isRootApprover && data?.TotalCount === 0) || disabledAction) ? "2.5rem" : "0rem" }}>
       <Header styles={{ marginBottom: "1rem" }}>{t("MICROPLAN_ASSIGN_CATCHMENT_VILLAGES")}</Header>
       <div className="role-summary-sub-heading" style={{ marginBottom: "1.5rem" }}>
         <div className="mp-heading-bold">
@@ -238,6 +243,7 @@ const FacilityCatchmentMapping = () => {
             setShowPopup(false);
             setCurrentRow(null);
             setCensusQueryName(`censusData${Date.now()}`);
+            setRefreshKey((prev) => prev+1); 
           }}
           // updateDetails={setCurrentRow}
         />
