@@ -310,7 +310,6 @@ function AppConfigurationWrapper({ screenConfig }) {
       if (localeArrays[locale].length > 0) {
         try {
           const result = await localisationMutate(localeArrays[locale]);
-          console.log(`${locale} localisation data sent successfully`);
         } catch (error) {
           console.error(`Error sending ${locale} localisation data:`, error);
         }

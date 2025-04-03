@@ -58,7 +58,6 @@ function AppFieldScreenWrapper() {
                 }}
               />
             ))}
-            {console.log("fileddd", fields)}
             <Divider />
             {fields?.map(
               ({ type, label, active, required, Mandatory, helpText, infoText, innerLabel, dropDownOptions, deleteFlag, ...rest }, i, c) => {

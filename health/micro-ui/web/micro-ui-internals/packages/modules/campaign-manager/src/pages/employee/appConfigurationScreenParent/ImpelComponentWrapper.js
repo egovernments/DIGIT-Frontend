@@ -47,13 +47,17 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
     return xx;
   }
 
-  const formBuilderRestructure = (data) => {
+  const formBuilderRestructure = (data, api, mdms) => {
     const correctField = (key) => {
       switch (key) {
         case "textInput":
           return "text";
         case "datePicker":
           return "date";
+        case "dropdown":
+          if (api) return "APIDropdown";
+          if (mdms) return "MDMSDropdown";
+          return "dropdown";
         default:
           return key;
       }
@@ -90,7 +94,7 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
           return {
             key: field.id || field.jsonPath,
             label: field.label,
-            type: correctField(field.type),
+            type: correctField(field.type, field.isApi, field.isMdms),
             isMandatory: field.required || false,
             jsonPath: field.jsonPath,
             populators: {
@@ -98,6 +102,7 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
               name: field.id || field.jsonPath,
               options: field?.dropDownOptions || [],
               optionsKey: field?.optionsKey || "name",
+              reqCriteria: field.isApi ? field?.reqCriteria : null,
               ...addingValidations(field),
               ...field.metaData,
             },
@@ -108,8 +113,58 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
     });
     return formConfig;
   };
+
+  function convertToJSONSchema(input) {
+    const schema = {
+      $schema: "http://json-schema.org/draft-07/schema#",
+      title: "Generated schema for Root",
+      type: "object",
+      properties: {},
+      required: [],
+    };
+
+    // Extract schema label
+    if (input.cards && input.cards.length > 0) {
+      const headerFields = input.cards[0].headerFields || [];
+      const schemaLabelField = headerFields.find((field) => field.jsonPath === "ScreenHeading");
+      if (schemaLabelField) {
+        schema.title = schemaLabelField.value || "Generated schema for Root";
+      }
+    }
+
+    // Extract fields
+    if (input.cards && input.cards.length > 0) {
+      input.cards.forEach((card) => {
+        card.fields.forEach((field) => {
+          const key = field.label;
+          const typeMapping = {
+            boolean: "boolean",
+            array: "array",
+            text: "string",
+            number: "number",
+          };
+
+          schema.properties[key] = {
+            type: typeMapping[field.type] || "string",
+          };
+
+          if (field.required || field.Mandatory) {
+            schema.required.push(key);
+          }
+        });
+      });
+    }
+
+    return JSON.stringify(schema, null, 2);
+  }
+
   const onSubmit = (state) => {
-    const restructuredData = variant === "web" ? formBuilderRestructure(state?.screenData) : restructure(state?.screenData);
+    const restructuredData =
+      variant === "web"
+        ? formBuilderRestructure(state?.screenData)
+        : variant === "schema"
+        ? convertToJSONSchema(state?.screenData?.[0])
+        : restructure(state?.screenData);
     submit(restructuredData);
   };
 

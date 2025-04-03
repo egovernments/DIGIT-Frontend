@@ -727,7 +727,51 @@ const Field = ({
         </>
       );
     default:
-      return null;
+      return (
+        <>
+          <LabelFieldPair
+            className={
+              !headerFields
+                ? `appConfiglabelField ${
+                    config?.id
+                      ? config?.id === state?.drawerField?.id
+                        ? "selected"
+                        : ""
+                      : config?.jsonPath === state?.drawerField?.jsonPath
+                      ? "selected"
+                      : ""
+                  }`
+                : ""
+            }
+          >
+            <div className="appConfiglabelField-label">
+              <span>{`${t(label)}`}</span>
+              {Mandatory && <span className="mandatory-span">*</span>}
+            </div>
+            <TextInput className="appConfiglabelField-Input" name={""} value={value} onChange={(event) => onChange(event)} />
+            {isDelete && (
+              <div
+                onClick={(e) => {
+                  onDelete();
+                }}
+                style={{
+                  cursor: "pointer",
+                  fontWeight: "600",
+                  marginLeft: "1rem",
+                  fontSize: "1rem",
+                  color: PRIMARY_COLOR,
+                  display: "flex",
+                  gap: "0.5rem",
+                  alignItems: "center",
+                  marginTop: "1rem",
+                }}
+              >
+                <DustbinIcon />
+              </div>
+            )}
+          </LabelFieldPair>
+        </>
+      );
       break;
   }
 };

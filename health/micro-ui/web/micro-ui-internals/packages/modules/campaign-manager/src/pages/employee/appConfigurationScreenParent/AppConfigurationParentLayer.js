@@ -161,14 +161,15 @@ const AppConfigurationParentLayer = () => {
   }
 
   const { mutate } = Digit.Hooks.campaign.useUpsertFormBuilderConfig(tenantId);
+  const { mutate: schemaMutate } = Digit.Hooks.campaign.useUpsertSchemaConfig(tenantId);
   const { mutate: updateMutate } = Digit.Hooks.campaign.useUpdateFormBuilderConfig(tenantId);
-  
+
   useEffect(() => {
     if (showToast) {
       setTimeout(closeToast, 10000);
     }
   }, [showToast]);
-  
+
   useEffect(() => {
     if (formData || formId) {
       parentDispatch({
@@ -285,6 +286,25 @@ const AppConfigurationParentLayer = () => {
           }
         );
       }
+    } else if (variant === "schema") {
+      await schemaMutate(
+        {
+          moduleName: "HCM-ADMIN-CONSOLE",
+          masterName: "SchemaConfigSubmit",
+          data: JSON.parse(screenData),
+        },
+        {
+          onError: (error, variables) => {
+            setShowToast({ key: "error", label: error?.message ? error?.message : error });
+          },
+          onSuccess: async (data) => {
+            setShowToast({ key: "success", label: "SCHEMA_CONFIGURATION_SUCCESS" });
+            history.push(
+              `/${window.contextPath}/employee/campaign/schema-builder-configuration?moduleName=HCM-ADMIN-CONSOLE&masterName=SchemaConfigSubmit&formId=${data?.mdms?.[0]?.id}`
+            );
+          },
+        }
+      );
     } else {
       parentDispatch({
         key: "SETBACK",

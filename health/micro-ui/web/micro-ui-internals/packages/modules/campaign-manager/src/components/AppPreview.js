@@ -193,7 +193,6 @@ const renderField = (field, t) => {
 };
 
 const AppPreview = ({ data = dummydata }) => {
-  console.log("dataDummy", data);
   const { t } = useTranslation();
   return (
     <div className="app-preview">
@@ -204,7 +203,6 @@ const AppPreview = ({ data = dummydata }) => {
         <Card key={index}>
           {card.headerFields.map((headerField, headerIndex) => (
             <div key={headerIndex}>
-              {console.log("NABEEL", headerField)}
               {headerField.jsonPath === "ScreenHeading" ? <CardHeader>{headerField.label}</CardHeader> : <CardText>{headerField.label}</CardText>}
             </div>
           ))}

@@ -22,6 +22,7 @@ import { useSearchLocalisation } from "./useSearchLocalisation";
 import useUpsertFormBuilderConfig from "./useUpsertFormBuilderConfig";
 import { useMDMSV2Search } from "./useMDMSV2Search";
 import useUpdateFormBuilderConfig from "./useUpdateFormBuilderConfig";
+import useUpsertSchemaConfig from "./useUpsertSchemaConfig";
 
 const UserService = {};
 
@@ -53,7 +54,8 @@ const campaign = {
   useSearchLocalisation,
   useUpsertFormBuilderConfig,
   useMDMSV2Search,
-  useUpdateFormBuilderConfig
+  useUpdateFormBuilderConfig,
+  useUpsertSchemaConfig,
 };
 
 const Hooks = {

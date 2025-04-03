@@ -16,6 +16,7 @@ import BoundaryHome from "./BoundaryHome";
 import ApprovedMicroplans from "./ApprovedMicroplans";
 import FetchFromMicroplan from "../../components/fetchFromMicroplan";
 import FormBuilder from "./appConfigurationScreenParent/FormBuilder";
+import SchemaBuilder from "./appConfigurationScreenParent/SchemaBuilder";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -167,6 +168,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE, hierarchyData }) => {
           <PrivateRoute path={`${path}/setup-from-microplan`} component={() => <ApprovedMicroplans />} />
           <PrivateRoute path={`${path}/app-configuration-parent`} component={() => <AppConfigurationParentLayer />} />
           <PrivateRoute path={`${path}/form-builder-configuration`} component={() => <FormBuilder />} />
+          <PrivateRoute path={`${path}/schema-builder-configuration`} component={() => <SchemaBuilder />} />
         </AppContainer>
       </Switch>
     </React.Fragment>

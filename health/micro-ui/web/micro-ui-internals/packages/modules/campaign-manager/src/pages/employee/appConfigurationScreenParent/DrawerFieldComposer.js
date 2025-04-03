@@ -1,4 +1,4 @@
-import { Button, Dropdown, LabelFieldPair, Switch, TextInput } from "@egovernments/digit-ui-components";
+import { Button, Dropdown, LabelFieldPair, PopUp, Switch, TextArea, TextInput } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PRIMARY_COLOR } from "../../../utils";
@@ -162,6 +162,7 @@ function DrawerFieldComposer() {
   const { t } = useTranslation();
   const { locState, updateLocalization } = useAppLocalisationContext();
   const { state, dispatch } = useAppConfigContext();
+  const [showPopup, setShowPopup] = useState(null);
   const [drawerState, setDrawerState] = useState({
     ...state?.drawerField,
   });
@@ -192,6 +193,60 @@ function DrawerFieldComposer() {
     return field?.visibilityEnabledFor?.includes(drawerState?.type); // Check if current drawerState type matches
   };
 
+  const parseCurl = (curl) => {
+    const urlMatch = curl.match(/(https?:\/\/[^\s']+)/);
+    const url = urlMatch ? urlMatch[0] : "";
+
+    // Extract headers
+    const headers = {};
+    const headerMatches = curl.match(/--header\s+['"]([^'"]+)['"]/g);
+    if (headerMatches) {
+      headerMatches.forEach((h) => {
+        const [key, value] = h
+          .replace(/--header\s+['"]/, "")
+          .replace(/['"]$/, "")
+          .split(/:\s(.+)/);
+        if (key && value) headers[key.trim()] = value.trim();
+      });
+    }
+
+    // Extract payload (supports multi-line JSON)
+    let payload = {};
+    const dataMatch = curl.match(/--data(?:-raw)?\s+(['"])([\s\S]+?)\1/);
+    if (dataMatch) {
+      const rawData = dataMatch[2]; // Extract JSON body
+      try {
+        payload = JSON.parse(rawData);
+
+        // Remove RequestInfo if present
+        if (payload.RequestInfo) {
+          delete payload.RequestInfo;
+        }
+      } catch (error) {
+        console.warn("Invalid JSON in payload");
+      }
+    }
+
+    // Extract query parameters
+    const urlObj = new URL(url);
+    const queryParams = Object.fromEntries(urlObj.searchParams.entries());
+
+    return {
+      url: urlObj.pathname, // Extract path only
+      params: queryParams, // Store extracted query parameters
+      headers,
+      body: payload,
+    };
+  };
+
+  const handleSubmit = () => {
+    const reqCriteria = parseCurl(drawerState?.curl);
+    setDrawerState((prev) => ({
+      ...prev,
+      reqCriteria: reqCriteria,
+    }));
+    setShowPopup(false);
+  };
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
       {state?.MASTER_DATA?.DrawerPanelConfig?.map((panelItem, index) => {
@@ -209,18 +264,45 @@ function DrawerFieldComposer() {
           );
         }
       })}
-      {drawerState?.type === "dropdown" || drawerState?.type === "MdmsDropdown" ? (
+      {drawerState?.type === "dropdown" ? (
         <Switch
           label={"MDMS Dropdown"}
           onToggle={(value) =>
             setDrawerState((prev) => ({
               ...prev,
-              type: value ? "MdmsDropdown" : "dropdown",
+              type: "dropdown",
               isMdms: value,
+              isApi: false,
             }))
           }
           isCheckedInitially={drawerState?.isMdms ? true : false}
           shapeOnOff
+        />
+      ) : null}
+      {drawerState?.type === "dropdown" ? (
+        <Switch
+          label={"API Dropdown"}
+          onToggle={(value) =>
+            setDrawerState((prev) => ({
+              ...prev,
+              type: "dropdown",
+              isApi: value,
+              isMdms: false,
+            }))
+          }
+          isCheckedInitially={drawerState?.isApi ? true : false}
+          shapeOnOff
+        />
+      ) : null}
+      {drawerState?.type === "dropdown" && drawerState?.isApi ? (
+        <Button
+          type={"button"}
+          size={"small"}
+          variation={"primary"}
+          label={t("ADD_API_DETAILS")}
+          onClick={() => {
+            setShowPopup(true);
+          }}
         />
       ) : null}
       {drawerState?.isMdms ? (
@@ -318,6 +400,57 @@ function DrawerFieldComposer() {
             }
           />
         </div>
+      )}
+      {showPopup && (
+        <PopUp
+          className={"app-config-pop"}
+          type={"default"}
+          heading={`${t("ADD_API_DETAILS")}`}
+          children={[]}
+          onOverlayClick={() => {
+            setShowPopup(false);
+          }}
+          footerChildren={[
+            <Button
+              className={"app-config-pop-button"}
+              type={"button"}
+              size={"large"}
+              variation={"secondary"}
+              label={t("DIGIT_CLOSE")}
+              onClick={() => {
+                setShowPopup(false);
+              }}
+            />,
+            <Button
+              className={"app-config-pop-button"}
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("CONFIRM_BUTTON")}
+              onClick={() => {
+                handleSubmit();
+                // setShowPopup(false);
+              }}
+            />,
+          ]}
+          onClose={() => {
+            setShowPopup(false);
+          }}
+          sortFooterChildren={true}
+        >
+          <TextArea
+            type="textarea"
+            name={""}
+            className="appConfiglabelField-Input"
+            value={drawerState?.curl || ""}
+            onChange={(e) => {
+              setDrawerState((prev) => ({
+                ...prev,
+                curl: e.target.value,
+              }));
+            }}
+          />
+        </PopUp>
       )}
     </div>
   );
