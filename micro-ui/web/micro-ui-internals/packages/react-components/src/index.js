@@ -297,6 +297,7 @@ import FormComposerCitizen from "./hoc/FormComposerCitizen";
 //View Composer
 import ViewComposer from "./hoc/ViewComposer";
 import XlsPreview from "./atoms/XlsPreview";
+import { MdmsDropdown } from "./atoms/MdmsDropdown";
 export {
   XlsPreview,
   ViewComposer,
@@ -598,7 +599,7 @@ export {
   HistoryIcon,
   WarningIcon,
   AttentionListIcon,
-
+  MdmsDropdown,
 
   // Exported all svgs from svg-component library
   SVG
