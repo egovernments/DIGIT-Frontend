@@ -888,7 +888,7 @@ export const SampleConfig = () => {
                   description: "",
                   type: "search",
                   disable: false,
-                  infoMessage: "serach field",
+                  infoMessage: "search field",
                   populators: { name: "search-With Info", error: "Error!" },
                 },
               ],
