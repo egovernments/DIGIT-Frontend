@@ -52,7 +52,7 @@
 #         if: ${{ steps.check_files.outputs.run_job_digit_ui == 'true' }}
 #         run: |
 #           # workbench ui Docker build
-#           IMAGE_NAME_1=workbench-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
+#           IMAGE_NAME_1=digit-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
 #           docker build -t $IMAGE_NAME_1 -f web/workbench/Dockerfile . &
 
 #           # microplan ui Docker build
@@ -145,12 +145,12 @@ name: Digit Admin Console Build workflow
 on:
   push:
     branches:
-      - VersionUpgrade-test2
+      - UIVersionUpgrade
     paths:
       - 'micro-ui/web/micro-ui-internals/**'
   pull_request:
     branches:
-      - VersionUpgrade-test2
+      - UIVersionUpgrade
   workflow_dispatch:
 jobs:
   docker_image-build:
@@ -202,7 +202,7 @@ jobs:
         if: ${{ steps.check_files.outputs.run_job_digit_ui == 'true' }}
         run: |
           cd ../../../
-          docker build -t workbench-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }} -f micro-ui/web/docker/Dockerfile .
-          docker tag workbench-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }} egovio/workbench-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
-          docker push egovio/workbench-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
+          docker build -t digit-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }} -f micro-ui/web/docker/Dockerfile .
+          docker tag digit-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }} egovio/digit-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
+          docker push egovio/digit-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
         working-directory: micro-ui/web/docker

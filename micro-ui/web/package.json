@@ -15,18 +15,10 @@
   "homepage": "/digit-ui",
   "dependencies": {
     "@egovernments/digit-ui-libraries": "1.8.1-upgrade.6",
-    "@egovernments/digit-ui-module-workbench": "1.0.19-test.1",
-    "@egovernments/digit-ui-module-pgr": "1.8.10",
-    "@egovernments/digit-ui-module-dss": "1.8.10",
     "@egovernments/digit-ui-module-core": "1.9.1-test.100",
-    "@egovernments/digit-ui-module-common": "1.8.10",
-    "@egovernments/digit-ui-module-hrms": "1.8.10",
-    "@egovernments/digit-ui-module-utilities": "1.0.10",
 
-    "@egovernments/digit-ui-module-engagement": "1.5.20",
     "@egovernments/digit-ui-components": "0.0.2-beta.4-webpack.2",
     "@egovernments/digit-ui-react-components": "1.8.16-upgrade.2",
-    "@egovernments/digit-ui-module-assignment": "0.0.1",
     "babel-loader": "8.1.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",

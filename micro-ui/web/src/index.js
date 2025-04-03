@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from "react-dom/client"; // Use createRoot from React 18
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 //import "./index.css";
 import App from './App';
@@ -52,7 +52,8 @@ if (!user || !user.access_token || !user.info) {
   // end
 }
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(document.getElementById("root")); // ✅ React 18 uses createRoot()
+root.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
