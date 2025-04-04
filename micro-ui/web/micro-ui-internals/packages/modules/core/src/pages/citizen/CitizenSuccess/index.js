@@ -248,7 +248,7 @@ const CuccessPage = () => {
   };
   return (
     <div>
-      <Header>{t("CREATE_INDIVIDUAL")}</Header>
+      <Header>{t("User Profile")}</Header>
       {individualExists ? (
         <button onClick={onSubmit}>{t("PROFILE_ALREADY_SET")}</button>
       ) : (

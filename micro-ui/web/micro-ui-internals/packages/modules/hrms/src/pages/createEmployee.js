@@ -7,7 +7,7 @@ import _ from "lodash";
 import { Toast } from "@egovernments/digit-ui-components";
 
 const CreateEmployee = () => {
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit.ULBService.getStateId();
   const [canSubmit, setSubmitValve] = useState(false);
   const [mobileNumber, setMobileNumber] = useState(null);
   const [showToast, setShowToast] = useState(null);
@@ -130,7 +130,7 @@ const CreateEmployee = () => {
       formData?.SelectEmployeePhoneNumber?.mobileNumber &&
       checkfield &&
       setassigncheck &&
-      phonecheck &&
+      // phonecheck &&
       checkMailNameNum(formData)
     ) {
       setSubmitValve(true);
@@ -139,8 +139,8 @@ const CreateEmployee = () => {
     }
   };
 
-  const navigateToAcknowledgement = ({ id, message }) => {
-    history.replace(`/${window?.contextPath}/employee/hrms/response?isSuccess=true`, { id, message, showID: true, showChildren: false });
+  const navigateToAcknowledgement = ({ id, message, email,name}) => {
+    history.replace(`/${window?.contextPath}/employee/hrms/response?isSuccess=true`, { id, message,email,name, showID: true, showChildren: false });
   };
 
 
@@ -235,7 +235,8 @@ const CreateEmployee = () => {
                 });
               },
               onSuccess: async (data) => {
-                navigateToAcknowledgement({ id: data?.Employees?.[0]?.code, message: "HRMS_CREATE_EMPLOYEE_RESPONSE_MESSAGE" });
+                const ema =  data?.Employees?.[0]?.user.emailId
+                navigateToAcknowledgement({ id: data?.Employees?.[0]?.uuid,email: data?.Employees?.[0]?.user?.emailId,name: data?.Employees?.[0]?.user?.name, message: "Employee created successfullly add username and password for user setup" });
               },
             }
           );
@@ -255,7 +256,8 @@ const CreateEmployee = () => {
             });
           },
           onSuccess: async (data) => {
-            navigateToAcknowledgement({ id: data?.Employees?.[0]?.code, message: "HRMS_CREATE_EMPLOYEE_RESPONSE_MESSAGE" });
+            const ema =  data?.Employees?.[0]?.user.emailId
+            navigateToAcknowledgement({ id: data?.Employees?.[0]?.code,email: data?.Employees?.[0]?.user?.emailId, message: "HRMS_CREATE_EMPLOYEE_RESPONSE_MESSAGE" });
             // navigateToAcknowledgement(Employees);
           },
         }

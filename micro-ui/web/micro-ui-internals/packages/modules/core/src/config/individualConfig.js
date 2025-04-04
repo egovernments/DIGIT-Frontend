@@ -1,6 +1,6 @@
 export const newConfig = [
     {
-      head: "Create Individual",
+      head: "Profile Creation",
       body: [
         {
           inline: true,

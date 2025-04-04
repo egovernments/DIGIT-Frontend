@@ -115,56 +115,185 @@
 
 // export default Response;
 
+// import React, { useState, Fragment } from "react";
+// import { Link, useHistory, useLocation } from "react-router-dom";
+// import { useTranslation } from "react-i18next";
+// import { Banner, Card, LinkLabel, AddFileFilled, ArrowLeftWhite, ActionBar, SubmitBar } from "@egovernments/digit-ui-react-components";
+// import { PanelCard } from "@egovernments/digit-ui-components";
+
+// const buttonStyle = {
+//   wrapper: { display: "flex" },
+//   linkLabel: { display: "flex", marginRight: "3rem" },
+//   arrow: { marginRight: "8px", marginTop: "3px" },
+// };
+
+// const Response = () => {
+//   const { t } = useTranslation();
+//   const history = useHistory();
+//   const queryStrings = Digit.Hooks.useQueryParams();
+//   const [isResponseSuccess, setIsResponseSuccess] = useState(
+//     queryStrings?.isSuccess === "true" ? true : queryStrings?.isSuccess === "false" ? false : true
+//   );
+//   const { state } = useLocation();
+
+//   const navigate = (page) => {
+//     switch (page) {
+//       case "home": {
+//         history.push(`/${window.contextPath}/employee`);
+//       }
+//     }
+//   };
+
+//   const children = (
+//     <div style={buttonStyle?.wrapper}>
+//       <LinkLabel style={buttonStyle?.linkLabel} onClick={() => navigate("home")}>
+//         <ArrowLeftWhite fill="#c84c0e" style={buttonStyle?.arrow} />
+//         {t("CORE_COMMON_GO_TO_HOME")}
+//       </LinkLabel>
+//     </div>
+//   );
+
+//   console.log("response")
+
+//   return (
+//     <>
+//       <PanelCard
+//         type={isResponseSuccess ? "success" : "error"}
+//         message={t(state?.message || "SUCCESS")}
+//         response={`${state?.showID ? state?.id : ""}`}
+//         footerChildren={[]}
+//         children={state?.showChildren ? children : null}
+//       />
+//       <ActionBar>
+//         <Link to={`/${window.contextPath}/employee`}>
+//           <SubmitBar label={t("CORE_COMMON_GO_TO_HOME")} />
+//         </Link>
+//       </ActionBar>
+//     </>
+//   );
+// };
+
+// export default Response;
+
 import React, { useState, Fragment } from "react";
+
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Banner, Card, LinkLabel, AddFileFilled, ArrowLeftWhite, ActionBar, SubmitBar } from "@egovernments/digit-ui-react-components";
-import { PanelCard } from "@egovernments/digit-ui-components";
-
-const buttonStyle = {
-  wrapper: { display: "flex" },
-  linkLabel: { display: "flex", marginRight: "3rem" },
-  arrow: { marginRight: "8px", marginTop: "3px" },
-};
+import { 
+  Banner, 
+  Card, 
+  ActionBar, 
+  SubmitBar, 
+  Toast 
+} from "@egovernments/digit-ui-react-components";
 
 const Response = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const queryStrings = Digit.Hooks.useQueryParams();
-  const [isResponseSuccess, setIsResponseSuccess] = useState(
-    queryStrings?.isSuccess === "true" ? true : queryStrings?.isSuccess === "false" ? false : true
-  );
   const { state } = useLocation();
+  const { email} = location.state || {};
+
+  const [isResponseSuccess, setIsResponseSuccess] = useState(
+    queryStrings?.isSuccess === "true"
+  );
+
+  // Input States
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [toast, setToast] = useState({ show: false, message: "", error: false });
 
   const navigate = (page) => {
-    switch (page) {
-      case "home": {
-        history.push(`/${window.contextPath}/employee`);
+    if (page === "home") {
+      history.push(`/${window.contextPath}/employee`);
+    }
+  };
+  console.log("em",state?.id,state?.email)
+  const handleSubmit = async () => {
+    const accessToken = localStorage.getItem("token");
+    if (!username || !password) {
+      setToast({ show: true, message: "Username and Password are required", error: true });
+      return;
+    }
+
+    console.log("em",state?.email)
+
+    const requestBody = {
+      username,
+      email:  state?.email, 
+      enabled: true,
+      firstName: state?.name,
+      lastName:  "User",
+      attributes: {
+        mobileNumber:  "7898765432",
+      },
+      credentials: [
+        {
+          type: "password",
+          value: password,
+        },
+      ],
+    };
+    console.log("after submit")
+
+    try {
+      const url = 'http://localhost:8081/admin/realms/SDFG/users'
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (response.ok) {
+        setToast({ show: true, message: "User created successfully!", error: false });
+      } else {
+        const errorData = await response.json();
+        setToast({ show: true, message: errorData?.error || "Failed to create user", error: true });
       }
+    } catch (error) {
+      setToast({ show: true, message: "An error occurred while creating user", error: true });
     }
   };
 
-  const children = (
-    <div style={buttonStyle?.wrapper}>
-      <LinkLabel style={buttonStyle?.linkLabel} onClick={() => navigate("home")}>
-        <ArrowLeftWhite fill="#c84c0e" style={buttonStyle?.arrow} />
-        {t("CORE_COMMON_GO_TO_HOME")}
-      </LinkLabel>
-    </div>
-  );
-
   return (
     <>
-      <PanelCard
-        type={isResponseSuccess ? "success" : "error"}
-        message={t(state?.message || "SUCCESS")}
-        response={`${state?.showID ? state?.id : ""}`}
-        footerChildren={[]}
-        children={state?.showChildren ? children : null}
+      {toast.show && <Toast label={toast.message} error={toast.error} onClose={() => setToast({ show: false })} />}
+      
+      <Banner
+        message={isResponseSuccess ? "Employee created fill below info for user!" : "User creation failed"}
+        info={state?.id || ""}
+        successful={isResponseSuccess}
       />
+
+      {/* Input Fields */}
+      <Card style={{ padding: "1rem", marginTop: "1rem" }}>
+        <label>Username</label>
+        <input 
+          type="text" 
+          value={username} 
+          onChange={(e) => setUsername(e.target.value)} 
+          required 
+          style={{ width: "100%", padding: "8px", marginBottom: "10px", border: "1px solid #ccc", borderRadius: "4px" }}
+        />
+        
+        <label>Password</label>
+        <input 
+          type="password" 
+          value={password} 
+          onChange={(e) => setPassword(e.target.value)} 
+          required 
+          style={{ width: "100%", padding: "8px", marginBottom: "10px", border: "1px solid #ccc", borderRadius: "4px" }}
+        />
+          {/* <SubmitBar disabled={!bill.totalAmount?.toFixed(2)} onSubmit={onSubmit} label={t("CS_MY_APPLICATION_VIEW_DETAILS")} /> */}
+        <SubmitBar label={t("Submit")} onSubmit={handleSubmit} />
+      </Card>
+
       <ActionBar>
         <Link to={`/${window.contextPath}/employee`}>
-          <SubmitBar label={t("CORE_COMMON_GO_TO_HOME")} />
+          <SubmitBar label={t("Go to Home")} />
         </Link>
       </ActionBar>
     </>
