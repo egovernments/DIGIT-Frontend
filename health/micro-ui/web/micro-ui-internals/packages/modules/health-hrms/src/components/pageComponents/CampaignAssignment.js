@@ -15,9 +15,8 @@ const CampaignsAssignment = ({ t, config, onSelect, formData }) => {
   const [campaigns, setCampaigns] = useState(
     formData?.CampaignsAssignment?.length > 0 ? formData?.CampaignsAssignment : [{ selectedProject: "", fromDate: "", toDate: "" }]
   );
-  
+
   useEffect(() => {
-   
     if (formData?.CampaignsAssignment?.length > 0) {
       setCampaigns(formData.CampaignsAssignment);
     }
@@ -58,7 +57,7 @@ const CampaignsAssignment = ({ t, config, onSelect, formData }) => {
     <div>
       {campaigns.map((campaign, index) => {
         const availableProjects = getAvailableProjects(index);
-        
+
         return (
           <div
             key={index}
@@ -115,23 +114,12 @@ const CampaignsAssignment = ({ t, config, onSelect, formData }) => {
             <LabelFieldPair>
               <CardLabel className="card-label-smaller">{t("HR_CAMPAIGN_FROM_DATE_LABEL")}</CardLabel>
               <div className="digit-field">
-                {/* <DatePicker
-                  type="date"
-                  name="fromDate"
-                  min={convertEpochToDate(campaign?.selectedProject?.startDate)}
-                  date={campaign?.fromDate}
-                  onChange={(e) => handleDateChange(index, "fromDate", e)}
-                />*/}
-
                 <TextInput
-                  
                   type="date"
                   populators={{ name: "date" }}
                   onChange={(e) => {
-                    // setDate(e || "");
                     handleDateChange(index, "fromDate", e);
                   }}
-                  // value={date}
                   value={campaign?.fromDate}
                   key={"fromDate"}
                   disable={false}
@@ -143,25 +131,12 @@ const CampaignsAssignment = ({ t, config, onSelect, formData }) => {
             <LabelFieldPair>
               <CardLabel className="card-label-smaller">{t("HR_CAMPAIGN_TO_DATE_LABEL")}</CardLabel>
               <div className="digit-field">
-                {/*<DatePicker
-                  type="date"
-                  name="toDate"
-                  disabled={!campaign?.fromDate}
-                  max={convertEpochToDate(campaign?.selectedProject?.endDate)}
-                  date={campaign?.toDate}
-                  onChange={(e) => handleDateChange(index, "toDate", e)}
-                />*/}
                 <TextInput
-                  // populators={{
-                  //   validation: { ...input.validation },
-                  // }}
                   type="date"
                   populators={{ name: "date" }}
                   onChange={(e) => {
-                    // setDate(e || "");
                     handleDateChange(index, "toDate", e);
                   }}
-                  // value={date}
                   value={formData && formData[config.key] ? formData[config.key][index].toDate : undefined}
                   key={"toDate"}
                   disable={false}

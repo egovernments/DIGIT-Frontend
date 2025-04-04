@@ -10,8 +10,8 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
   const [inactiveJurisdictions, setInactiveJurisdictions] = useState([]);
   const userProjectDetails = Digit.SessionStorage.get("currentProject");
   const { data: data = {}, isLoading } = Digit.Hooks.hrms.useHrmsMDMS(tenantId, "egov-hrms", "HRMSRolesandDesignation") || {};
-  
-  const { datak: boundaryData = {}, isBoundaryLoading } = Digit.Hooks.hrms.useBoundriesFetch(tenantId);
+
+  const { boundaryData: boundaryData = {}, isBoundaryLoading } = Digit.Hooks.hrms.useBoundriesFetch(tenantId);
 
   const [jurisdictions, setjurisdictions] = useState(
     formData?.Jurisdictions || [
@@ -31,7 +31,7 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
       let res = {
         id: jurisdiction?.id,
         hierarchy: jurisdiction?.hierarchy?.code || hierarchyType,
-        boundaryType: jurisdiction?.boundaryType || BoundaryTypes.NATIONAL,
+        boundaryType: jurisdiction?.boundaryType || Digit.SessionStorage.get("boundaryHierarchyOrder")[0].code,
         boundary: jurisdiction?.boundary || userProjectDetails?.[0]?.address?.boundary || tenantId,
         tenantId: tenantId,
         auditDetails: jurisdiction?.auditDetails,
@@ -111,11 +111,10 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
     const p = data?.MdmsRes?.["ACCESSCONTROL-ROLES"].roles.map((role) => {
       return { code: role.code, name: role?.name ? role?.name : " ", labelKey: "ACCESSCONTROL_ROLES_ROLES_" + role.code, tenantId: tenantId };
     });
-   
+
     return p;
   }
 
- 
   if (isLoading || isBoundaryLoading) {
     return <Loader />;
   }
@@ -160,7 +159,7 @@ function Jurisdiction({
 }) {
   const [BoundaryType, selectBoundaryType] = useState([]);
   const [Boundary, selectboundary] = useState([]);
- 
+
   useEffect(() => {
     selectBoundaryType(
       data?.MdmsRes?.["egov-location"]?.["TenantBoundary"]
@@ -181,12 +180,6 @@ function Jurisdiction({
     );
   }, [jurisdiction?.boundaryType, data?.MdmsRes]);
 
-  // useEffect(() => {
-  //   if (Boundary?.length > 0) {
-  //     selectedboundary(Boundary?.filter((ele) => ele.code == jurisdiction?.boundary?.code)[0]);
-  //   }
-  // }, [Boundary]);
-
   const selectHierarchy = (value) => {
     setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, hierarchy: value } : item)));
   };
@@ -200,15 +193,6 @@ function Jurisdiction({
   };
 
   const selectrole = (e, data) => {
-   
-    // const index = jurisdiction?.roles.filter((ele) => ele.code == data.code);
-    // let res = null;
-    // if (index.length) {
-    //   jurisdiction?.roles.splice(jurisdiction?.roles.indexOf(index[0]), 1);
-    //   res = jurisdiction.roles;
-    // } else {
-    //   res = [{ ...data }, ...jurisdiction?.roles];
-    // }
     let res = [];
     e &&
       e?.map((ob) => {
@@ -218,7 +202,7 @@ function Jurisdiction({
     res?.forEach((resData) => {
       resData.labelKey = "ACCESSCONTROL_ROLES_ROLES_" + resData.code;
     });
-   
+
     setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, roles: res } : item)));
   };
 
@@ -245,7 +229,7 @@ function Jurisdiction({
           <MultiSelectDropdown
             className="form-field"
             isMandatory={true}
-            defaultUnit="Selected"
+            defaultUnit={t(`HRMS_SELECTED`)}
             selected={getJurisdictionRoles}
             options={getroledata(roleoption)}
             onSelect={selectrole}

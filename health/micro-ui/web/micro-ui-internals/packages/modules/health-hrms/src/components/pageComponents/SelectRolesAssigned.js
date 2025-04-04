@@ -78,7 +78,7 @@ const RolesAssigned = ({ config, onSelect, formData }) => {
           errorStyle={null}
           inputRef={null}
           isSearchable
-          label="Select Option"
+          label={t(`HRMS_SELECT_OPTION`)}
           name="roleAssigned"
           onChange={() => {}}
           onSelect={(e) => {

@@ -15,18 +15,6 @@ const DeactivatePopUp = ({bussnessBtnLabel, label, onClose, onSubmit }) => {
   const [reason, setReason] = useState(null);
   const [order, setOrder] = useState(null);
 
-  useEffect(() => {
-    // data?.["egov-hrms"]?.DeactivationReason.map((ele) => {
-    //     ele["i18key"] = "EGOV_HRMS_DEACTIVATIONREASON_" + ele.code;
-    //     return ele;
-    // })
-  }, [data]);
-
-  const handleTextAreaChange = (e) => {
-    const inputValue = e.target.value;
-    setComment(inputValue);
-  };
-
   const handleSave = () => {
     if (!reason || reason.trim() === "") {
       // Show toast if comment is empty
@@ -65,7 +53,7 @@ const DeactivatePopUp = ({bussnessBtnLabel, label, onClose, onSubmit }) => {
               error=""
               errorStyle={null}
               inputRef={null}
-              label="Select Option"
+              label={t(`HRMS_SELECT_OPTION`)}
               name="genders"
               onChange={(e) => {}}
               option={data?.["egov-hrms"]?.DeactivationReason.map((ele) => {

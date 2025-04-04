@@ -15,6 +15,7 @@ import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
 import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
 import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
+import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
 
@@ -22,7 +23,7 @@ const enabledModules = [
   "DSS",
   "NDSS",
   "Utilities",
-  // "HRMS",
+  "HRMS",
   "Engagement",
   "Workbench",
   "HCMWORKBENCH",
@@ -39,7 +40,8 @@ const initDigitUI = () => {
     PGR: {},
     commonUiConfig: UICustomizations,
   };
-  // initHRMSComponents();
+  
+  initHRMSComponents();
   initUtilitiesComponents();
   initWorkbenchComponents();
   initWorkbenchHCMComponents();

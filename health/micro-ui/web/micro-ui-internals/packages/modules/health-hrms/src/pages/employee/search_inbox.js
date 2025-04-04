@@ -20,6 +20,8 @@ const InboxSearch = () => {
   if (isLoading) {
     return <Loader />;
   }
+
+  console.log(Digit.SessionStorage.get("boundaryHierarchyOrder")[0].code);
   const config = mdmsData ? mdmsData : inboxSearchConfig();
 
   return (

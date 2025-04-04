@@ -50,17 +50,7 @@ const Urls = {
 
   Shortener: "/egov-url-shortening/shortener",
 
-  works: {
-    create:"/loi-service/v1/_create",
-    estimateSearch:"/estimate-service/estimate/v1/_search",
-    loiSearch:"/loi-service/v1/_search",
-    createEstimate:"/estimate-service/estimate/v1/_create",
-    approvedEstimateSearch:"/estimate-service/estimate/v1/_search",
-    searchEstimate:"/estimate-service/estimate/v1/_search",
-    updateLOI:"/loi-service/v1/_update",
-    updateEstimate:"/estimate-service/estimate/v1/_update",
-    download_pdf:"/egov-pdf/download/WORKSESTIMATE/estimatepdf"
-  },
+  
 
   fsm: {
     search: "/fsm/v1/_search",

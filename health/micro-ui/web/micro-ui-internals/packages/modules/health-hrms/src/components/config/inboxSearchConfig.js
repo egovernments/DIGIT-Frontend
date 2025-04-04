@@ -83,7 +83,7 @@ const inboxSearchConfig = () => {
             {
               text: "HR_COMMON_CREATE_EMPLOYEE_HEADER",
               url: "/employee/hrms/create",
-              roles: ["SYSTEM_ADMINISTRATOR", "MICROPLAN_ADMIN"],
+              roles: ["SYSTEM_ADMINISTRATOR", "HRMS_ADMIN"],
               hyperlink: true,
             },
           ],
