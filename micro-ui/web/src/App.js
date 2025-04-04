@@ -80,7 +80,7 @@ const initDigitUI = () => {
 };
 
 // Initialize libraries and start the app
-initLibraries().then(() => {
+// initLibraries().then(() => {
   initDigitUI();
   const root = ReactDOM.createRoot(document.getElementById("root"));
   root.render(
@@ -90,34 +90,17 @@ initLibraries().then(() => {
       </QueryClientProvider>
     </BrowserRouter>
   );
-});
+// });
 
 const MainApp = () => {
-  const [isReady, setIsReady] = useState(false);
-  const [loaded, setLoaded] = useState(false);
   const stateCode =
     window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") ||
     process.env.REACT_APP_STATE_LEVEL_TENANT_ID;
 
-  useEffect(() => {
-    if (!stateCode) return;
-
-    initTokens(stateCode);
-    setLoaded(true);
-  }, [stateCode]);
-
-  useEffect(() => {
-    initLibraries().then(() => {
-      setIsReady(true);
-    });
-  }, []);
+ 
 
   if (!stateCode) {
     return <h1>StateCode is not defined</h1>;
-  }
-
-  if (!loaded || !isReady) {
-    return <div>Loading...</div>;
   }
 
   return (
