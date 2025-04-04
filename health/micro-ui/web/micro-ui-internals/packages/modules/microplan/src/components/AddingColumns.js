@@ -4,17 +4,20 @@ import { useTranslation } from "react-i18next";
 import { useAddColContext } from "./AddingColumnsWrapper";
 
 const AddingColumns = ({ colValues:initialColValues, setShowToast }) => {
-  console.log("initial",initialColValues);
   const { t } = useTranslation();
   const { addNewCol, deleteCol, setColValues:setColValuesWrapper } = useAddColContext();
   const [newColValue, setNewColValue] = useState("");
   const [showPopUp, setShowPopUp] = useState(false);
   const [colValues,setColValues]=useState(initialColValues);
-
+  
   useEffect(()=>{
     setColValues(initialColValues);
   },[initialColValues]);
 
+  useEffect(()=>{
+    setColValuesWrapper(colValues)
+  },[colValues]);
+  
   return (
     <Card>
       {colValues?.map((item, index) => (
@@ -100,6 +103,7 @@ const AddingColumns = ({ colValues:initialColValues, setShowToast }) => {
               title={t("ADD")}
               onClick={() => {
                 addNewCol(`MP_COL_NAME_${colValues.length+1}`,newColValue)
+                setShowPopUp(false);
               }}
             />,
           ]}

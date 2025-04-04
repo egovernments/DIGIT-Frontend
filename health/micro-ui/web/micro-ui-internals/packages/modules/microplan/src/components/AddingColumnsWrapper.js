@@ -9,9 +9,11 @@ export const useAddColContext = () => useContext(AddColContext);
 
 const AddingColumnsWrapper = ({ formData, onSelect, props:customProps }) => {
     const { t } = useTranslation();
-    const [colValues, setColValues] = useState([
+    const [colValues, setColValues] = useState(
+        Digit.SessionStorage.get("MICROPLAN_DATA")?.DATA_VALIDATION?.newColumns ||
+        [
         { key: "MP_COLUMN_1", value: "SOME_VALUE" },
-        { key: "MP_COLUMN_2", value: "SOME_VALUE" },
+        { key: "MP_COLUMN_2", value: "SOME_VALUE1" }
     ]);
     const [executionCount, setExecutionCount] = useState(0);
 
@@ -40,7 +42,6 @@ const AddingColumnsWrapper = ({ formData, onSelect, props:customProps }) => {
             setExecutionCount((prevCount) => prevCount + 1);
         }
     });
-
     return (
         <div>
             <AddColContext.Provider value={{ addNewCol, deleteCol, setColValues }}>

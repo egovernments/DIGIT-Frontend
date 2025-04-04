@@ -228,11 +228,11 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
       {
         stepCount: "6",
         key: "9",
-        name: "DATA_VALIDATION",
+        name: "NEW_COLUMNS",
         body: [
           {
             isMandatory: false,
-            key: "dataValidation",
+            key: "newColumns",
             type: "component",
             skipAPICall: false,
             component: "AddingColumnsWrapper",
@@ -245,7 +245,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               isSubmitting: isSubmitting,
             },
             populators: {
-              name: "dataValidation", 
+              name: "NEW_COLUMNS", 
               required: true,
             },
           },
