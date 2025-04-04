@@ -1,7 +1,7 @@
 # name: Digit Admin Console Build workflow
 # on:
 #   push:
-#     branches: [ 'VersionUpgrade-test2' ]
+#     branches: [ 'Fix' ]
 #     paths:
 #       - 'micro-ui/web/micro-ui-internals/**'
 #   workflow_dispatch:
@@ -94,7 +94,7 @@
 
 # on:
 #   push:
-#     branches: [ "VersionUpgrade-test2" ]
+#     branches: [ "Fix" ]
 #     paths:
 #       - 'micro-ui/web/micro-ui-internals/**'
 
