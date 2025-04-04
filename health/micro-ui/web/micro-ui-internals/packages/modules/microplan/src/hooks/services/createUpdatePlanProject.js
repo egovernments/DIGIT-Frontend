@@ -916,7 +916,7 @@ const createUpdatePlanProject = async (req) => {
           setShowToast({ key: "error", label: "ERR_FAILED_TO_COMPLETE_SETUP" });
         }
 
-      case "DATA_VALIDATION":{
+      case "NEW_COLUMNS":{
         const fetchedPlan = await searchPlanConfig({
           PlanConfigurationSearchCriteria: {
             tenantId,
@@ -925,7 +925,7 @@ const createUpdatePlanProject = async (req) => {
         });
         const updatedPlanObject = {
           ...fetchedPlan,
-          additionalDetails: { ...fetchedPlan.additionalDetails, key: key,dataValidation:totalFormData?.DATA_VALIDATION?.dataValidation,keyer:'111' },
+          additionalDetails: { ...fetchedPlan.additionalDetails, key: key,addColumns:totalFormData?.NEW_COLUMNS?.newColumns }
         };
 
         const response = await updatePlan(updatedPlanObject);

@@ -10,7 +10,7 @@ export const useAddColContext = () => useContext(AddColContext);
 const AddingColumnsWrapper = ({ formData, onSelect, props:customProps }) => {
     const { t } = useTranslation();
     const [colValues, setColValues] = useState(
-        Digit.SessionStorage.get("MICROPLAN_DATA")?.DATA_VALIDATION?.newColumns ||
+        Digit.SessionStorage.get("MICROPLAN_DATA")?.NEW_COLUMNS?.newColumns ||
         [
         { key: "MP_COLUMN_1", value: "SOME_VALUE" },
         { key: "MP_COLUMN_2", value: "SOME_VALUE1" }
