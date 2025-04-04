@@ -1,16 +1,16 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client"; // Use createRoot from React 18
 import { initGlobalConfigs } from "./globalConfig";
-import {initAssignmentComponents} from "@egovernments/digit-ui-module-assignment"
+// import {initAssignmentComponents} from "@egovernments/digit-ui-module-assignment"
 // import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench"
-import { BrowserRouter } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+// import { BrowserRouter } from "react-router-dom";
+// import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Hooks } from "@egovernments/digit-ui-libraries";
 
 // Ensure Digit is defined before using it
 window.Digit = window.Digit || {};
 window.Digit.Hooks = Hooks; 
-const queryClient = new QueryClient();
+// const queryClient = new QueryClient();
 const DigitUILazy = lazy(() =>
   import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI }))
 );import { initLibraries } from "@egovernments/digit-ui-libraries";
@@ -64,9 +64,7 @@ const initDigitUI = () => {
   
   const root = ReactDOM.createRoot(document.getElementById("root")); // ✅ React 18 uses createRoot()
   root.render(
-    <BrowserRouter><QueryClientProvider client={queryClient
-      
-    }><MainApp stateCode={stateCode} enabledModules={enabledModules} /></QueryClientProvider></BrowserRouter>);
+    <MainApp stateCode={stateCode} enabledModules={enabledModules} />);
 };
 
 const MainApp = ({ stateCode, enabledModules }) => {
