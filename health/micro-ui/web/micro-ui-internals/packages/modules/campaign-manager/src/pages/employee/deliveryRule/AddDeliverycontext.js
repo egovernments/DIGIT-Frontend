@@ -12,7 +12,7 @@ import {
   CardLabel,
   Card,
   CardHeader,
-  PopUp
+  PopUp,
 } from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR } from "../../../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
@@ -67,15 +67,15 @@ const AddAttributeField = ({
     tenantId,
     schemaCode?.split(".")[0] || "", // Provide a fallback to avoid errors
     schemaCode ? [{ name: schemaCode.split(".")[1] }] : [], // Run only if schemaCode is defined
-    schemaCode
-      ? {
-          select: (data) => {
-            const moduleName = schemaCode.split(".")[0];
-            const schemaName = schemaCode.split(".")[1];
-            return data?.[moduleName]?.[schemaName];
-          },
-        }
-      : null, // Pass null if schemaCode is undefined
+    {
+      enabled: !!schemaCode, // Enable the hook only if schemaCode is defined
+      select: (data) => {
+        if (!schemaCode) return null;
+        const moduleName = schemaCode.split(".")[0];
+        const schemaName = schemaCode.split(".")[1];
+        return data?.[moduleName]?.[schemaName];
+      },
+    }, // Pass null if schemaCode is undefined
     schemaCode ? { schemaCode } : null // Include schemaCode only if it's defined
   );
 
@@ -184,7 +184,7 @@ const AddAttributeField = ({
 
   return (
     <div key={attribute?.key} className="attribute-field-wrapper">
-      <LabelFieldPair style={{marginBottom: "0rem"}}>
+      <LabelFieldPair style={{ marginBottom: "0rem" }}>
         <CardLabel isMandatory={true} className="card-label-smaller">
           {t(`CAMPAIGN_ATTRIBUTE_LABEL`)}
         </CardLabel>
@@ -199,7 +199,7 @@ const AddAttributeField = ({
           t={t}
         />
       </LabelFieldPair>
-      <LabelFieldPair style={{marginBottom: "0rem"}}>
+      <LabelFieldPair style={{ marginBottom: "0rem" }}>
         <CardLabel isMandatory={true} className="card-label-smaller">
           {t(`CAMPAIGN_OPERATOR_LABEL`)}
         </CardLabel>
@@ -217,7 +217,7 @@ const AddAttributeField = ({
 
       {attribute?.operator?.code === "IN_BETWEEN" ? (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-          <LabelFieldPair style={{marginBottom: "0rem"}}>
+          <LabelFieldPair style={{ marginBottom: "0rem" }}>
             <CardLabel className="card-label-smaller">{t(`CAMPAIGN_FROM_LABEL`)}</CardLabel>
             <div className="field" style={{ display: "flex", width: "100%" }}>
               <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
@@ -231,7 +231,7 @@ const AddAttributeField = ({
               </div>
             </div>
           </LabelFieldPair>
-          <LabelFieldPair style={{marginBottom: "0rem"}}>
+          <LabelFieldPair style={{ marginBottom: "0rem" }}>
             <CardLabel className="card-label-smaller">{t(`CAMPAIGN_TO_LABEL`)}</CardLabel>
             <div className="field" style={{ display: "flex", width: "100%" }}>
               <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
@@ -247,13 +247,13 @@ const AddAttributeField = ({
           </LabelFieldPair>
         </div>
       ) : (
-        <LabelFieldPair style={{marginBottom: "0rem"}}>
+        <LabelFieldPair style={{ marginBottom: "0rem" }}>
           <CardLabel className="card-label-smaller">{t(`CAMPAIGN_VALUE_LABEL`)}</CardLabel>
           <div
             className="field"
             style={{
               display: "flex",
-              width: "100%"
+              width: "100%",
             }}
           >
             {(typeof attribute?.value === "string" && /^[a-zA-Z]+$/.test(attribute?.value)) ||
@@ -264,7 +264,7 @@ const AddAttributeField = ({
                 selected={attribute?.value?.code ? attribute?.value : { code: attribute?.value }}
                 disable={false}
                 isMandatory={true}
-                option={dropdownOption}
+                option={dropdownOption ? dropdownOption : []}
                 select={(value) => selectDropdownValue(value)}
                 optionKey="code"
                 t={t}
@@ -276,13 +276,7 @@ const AddAttributeField = ({
         </LabelFieldPair>
       )}
       {delivery.attributes.length !== 1 && (
-        <Button
-          variation="link"
-          style={{marginTop: "3rem"}}
-          label={t(`CAMPAIGN_DELETE_ROW_TEXT`)}
-          icon="Delete"
-          onClick={() => onDelete()}
-        />
+        <Button variation="link" style={{ marginTop: "3rem" }} label={t(`CAMPAIGN_DELETE_ROW_TEXT`)} icon="Delete" onClick={() => onDelete()} />
       )}
     </div>
   );
@@ -551,7 +545,7 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
               variation={"primary"}
               label={t("CAMPAIGN_PRODUCTS_MODAL_SUBMIT_TEXT")}
               onClick={confirmResources}
-            />
+            />,
           ]}
         >
           <AddProducts
