@@ -9,6 +9,7 @@ import ForgotPassword from "./ForgotPassword";
 import LanguageSelection from "./LanguageSelection";
 import EmployeeLogin from "./Login";
 import Landing from "./Landing";
+import ProductPage from "./ProductPage";
 import SignUp from "./SignUp";
 import Otp from "./Otp";
 import ViewUrl from "./ViewUrl";
@@ -17,8 +18,8 @@ import ErrorComponent from "../../components/ErrorComponent";
 import { PrivateRoute } from "@egovernments/digit-ui-components";
 import RoleLanding from "./RoleLanding";
 import ImageComponent from "../../components/ImageComponent";
-
-const userScreensExempted = ["user/landing", "user/profile", "user/error"];
+import ProductDetails from "./ProductDetails";
+const userScreensExempted = ["user/landing", "user/profile", "user/error","user/productPage"];
 
 const EmployeeApp = ({
   stateInfo,
@@ -103,6 +104,16 @@ const EmployeeApp = ({
               <PrivateRoute path={`${path}/user/landing`}>
                 <div className="employee-app-wrapper sandbox-landing-wrapper">
                   <Landing />
+                </div>
+              </PrivateRoute>
+              <PrivateRoute path={`${path}/user/productPage`}>
+                <div className="employee-app-wrapper sandbox-landing-wrapper">
+                  <ProductPage />
+                </div>
+              </PrivateRoute>
+              <PrivateRoute path={`${path}/user/productDetailsPage/:module`}>
+                <div className="employee-app-wrapper sandbox-landing-wrapper">
+                  <ProductDetails />
                 </div>
               </PrivateRoute>
 

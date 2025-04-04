@@ -20,7 +20,7 @@ const LandingComponent = ({ config = {} }) => {
   const history = useHistory();  
 
   // Use the default config, overriding any external config passed
-  //config = defaultconfig;
+  config = defaultconfig;
 
   // Destructure key config fields with fallback defaults
   const {
@@ -30,7 +30,7 @@ const LandingComponent = ({ config = {} }) => {
   } = config;
 
   // Define the redirect path for button click - will upate after the product page is ready
-  const redirectPathOtpLogin = `/${window?.contextPath}/employee/user/landing/select-role`;
+  const redirectPathOtpLogin = `/${window?.contextPath}/employee/user/productPage`;
 
    const introSection = subsections.find(s => s.type === "introSection") || {};
    const stepsSection = subsections.find(s => s.type === "stepsSection") || {}; 
