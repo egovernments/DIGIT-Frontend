@@ -23,7 +23,7 @@ const AddingColumnsWrapper = ({ formData, onSelect, props: customProps }) => {
 
 
     const deleteCol = () => {
-        setColValues((prev) => prev.filter((item) => item.key !== columnsToDelete)); // ✅ Removes column correctly
+        setColValues((prev) => prev.filter((item) => item.key !== columnsToDelete)); // Removes column correctly
         setColumnsToDelete(null);
         setShowDeletePopup(false);
     };
@@ -33,7 +33,7 @@ const AddingColumnsWrapper = ({ formData, onSelect, props: customProps }) => {
             setShowToast({ message: "Column already exists!", type: "error" });
             return;
         }
-        setColValues((prev) => [...prev, { key: key, value: newColName }]); // ✅ Adds new column
+        setColValues((prev) => [...prev, { key: key, value: newColName }]); // Adds new column
     };
 
     useEffect(() => {
