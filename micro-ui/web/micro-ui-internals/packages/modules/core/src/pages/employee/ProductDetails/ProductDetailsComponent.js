@@ -2,7 +2,6 @@ import React, { Fragment } from "react";
 import { HeaderComponent, Card, CardText, CardHeader, Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
-import IconsObject from "./icons"; 
 
 const ProductDetailsComponent = ({ config }) => {
   const { t } = useTranslation();
@@ -10,7 +9,7 @@ const ProductDetailsComponent = ({ config }) => {
   const history = useHistory();
 
   const moduleConfig = config.find((item) => item.module === module) || {};
-  const IconComponent = moduleConfig.icon ? IconsObject[moduleConfig.icon] : null;
+  const IconComponent = moduleConfig.icon ? Digit.Utils.iconRender(moduleConfig.icon,"#c84c0e"): null;
 
   const handleButtonClick = (action) => {
     const url = '/' + window.contextPath + action;
@@ -21,8 +20,11 @@ const ProductDetailsComponent = ({ config }) => {
     <div className="custom-landing-container">
       <Card className="custom-landing-card">
         <div className="icon-header-container">
-          {IconComponent && <IconComponent className="product-icon" />}
-          <HeaderComponent className="custom-landing-header">
+        <div className="product-icon">
+            {IconComponent}
+        </div>
+          <HeaderComponent className="custom-landing-header"
+          >
             {t(moduleConfig.heading)}
           </HeaderComponent>
         </div>
@@ -52,6 +54,11 @@ const ProductDetailsComponent = ({ config }) => {
                       <CardText className="custom-section-paragraph" key={itemIndex}>
                         <p>{t(item.text)}</p>
                       </CardText>
+                    ) 
+                    : item.type === "step-heading" ? (
+                      <CardText key={itemIndex} className="custom-step-header">
+                        {t(item.text)}
+                      </CardText>
                     ) : item.type === "step" ? (
                       <li key={itemIndex} className="custom-step-item">
                         {t(item.text)}
@@ -71,11 +78,11 @@ const ProductDetailsComponent = ({ config }) => {
           {moduleConfig?.subsections
             .filter((config) => config.type === "card")
             .map((config, index) => {
-              const CardIconComponent = IconsObject[config.icon]; 
+              const CardIconComponent = Digit.Utils.iconRender(config?.icon,"#c84c0e");
               return (
                 <div key={index} className="role-card">
                   <div className="icon-container">
-                    {CardIconComponent && <CardIconComponent className="product-icon" />}
+                    {CardIconComponent }
                   </div>
                   <CardHeader className="role-section-header">{t(config.heading)}</CardHeader>
                   <Button

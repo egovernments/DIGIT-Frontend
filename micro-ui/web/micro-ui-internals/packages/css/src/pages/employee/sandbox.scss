@@ -41,6 +41,7 @@
       }
     }
   }
+
   tbody {
     tr:hover {
       background: rgba(theme(colors.primary.main), 0.12);
@@ -109,6 +110,7 @@
   width: 408px !important;
   display: flex;
   justify-content: space-between;
+
   .employee-card-sub-header {
     font-size: 1.5rem;
   }
@@ -123,12 +125,14 @@
     .bannerHeader {
       margin-top: -1.5rem;
       margin-bottom: -0.5rem !important;
+
       .bannerLogo {
         width: 10rem;
         height: 2rem;
       }
     }
   }
+
   .employeeCard {
     height: 500px !important;
     width: 408px !important;
@@ -155,6 +159,7 @@
       }
     }
   }
+
   .digit-description {
     margin-bottom: -1rem;
   }
@@ -271,6 +276,7 @@
       height: 2rem;
     }
   }
+
   .digit-button-primary {
     width: 100%;
   }
@@ -315,8 +321,7 @@
   display: flex;
   width: 100%;
 
-  .digit-text-input-field.urlInputText {
-  }
+  .digit-text-input-field.urlInputText {}
 
   .digit-button-secondary.large.copyButton {
     width: 30%;
@@ -349,18 +354,21 @@
     color: unset !important;
   }
 }
+
 .digit-card-component.sandboxSetupMasterInfo {
   .h1.headerFlex {
     display: flex;
     gap: 1rem;
     align-items: center;
   }
+
   .digit-card-header.subHeader {
     font-size: 1.5rem;
     font-weight: 700;
     color: unset !important;
   }
 }
+
 .digit-card-header.setupMaster-subheading {
   font-size: 1.5rem;
   color: unset !important;
@@ -390,6 +398,7 @@
     height: 19px;
   }
 }
+
 .digit-popup-footer.masterHandlerPopUpFooter {
   .digit-popup-footer-buttons {
     margin-left: unset;
@@ -414,10 +423,12 @@
   .citizen-card-input.citizen-card-input--front {
     margin-bottom: 0;
   }
+
   .digit-app-container {
     .digit-back-link {
       margin-bottom: 1rem !important;
     }
+
     .digit-card-component {
       .digit-card-header {
         font-size: 2rem !important;
@@ -426,6 +437,7 @@
     }
   }
 }
+
 .selection-card-wrapper {
   .digit-page-based-input-wrapper {
     .digit-card-component {
@@ -436,6 +448,7 @@
     }
   }
 }
+
 .action-bar-wrap {
   .menu-wrap {
     p {
@@ -459,19 +472,24 @@
     }
   }
 }
+
 .digit-employee-card.customError {
   width: 35rem;
 }
+
 .customErrorButton {
   margin: auto;
 }
+
 .digit-employee-card.digit-landing-page-card {
   display: flex;
   flex-direction: column;
 }
+
 .digit-card-header.center {
   text-align: center;
 }
+
 digit-card-text.center {
   text-align: center;
 }
@@ -501,19 +519,25 @@ digit-card-text.center {
 
 .homeWrapper {
   display: flex;
-  justify-content: space-between; /* Ensure spacing between the two components */
+  justify-content: space-between;
+  /* Ensure spacing between the two components */
   align-items: flex-start;
 }
 
-.homeWrapper > :first-child {
-  flex-grow: 1; /* Makes the first child (RoleBasedEmployeeHome) take up remaining space */
-  margin-right: 1rem; /* Optional: Add some spacing between the components */
+.homeWrapper> :first-child {
+  flex-grow: 1;
+  /* Makes the first child (RoleBasedEmployeeHome) take up remaining space */
+  margin-right: 1rem;
+  /* Optional: Add some spacing between the components */
 }
 
-.homeWrapper > :last-child {
-  width: 20.688rem; /* Fixed width for QuickSetupConfigComponent */
-  flex-shrink: 0; /* Prevents it from shrinking */
-  margin-left: auto; /* Aligns the component to the right end */
+.homeWrapper> :last-child {
+  width: 20.688rem;
+  /* Fixed width for QuickSetupConfigComponent */
+  flex-shrink: 0;
+  /* Prevents it from shrinking */
+  margin-left: auto;
+  /* Aligns the component to the right end */
 }
 
 .homeWrapper {
@@ -526,6 +550,7 @@ digit-card-text.center {
     }
   }
 }
+
 .homeWrapper {
   .digit-card-component {
     .digit-card-header {
@@ -545,6 +570,7 @@ digit-card-text.center {
     }
   }
 }
+
 .homeWrapper {
   .digit-employee-card {
     .digit-card-text {
@@ -553,6 +579,7 @@ digit-card-text.center {
     }
   }
 }
+
 .quickLink {
   color: theme(colors.primary.main);
   text-decoration: none;
@@ -572,17 +599,20 @@ digit-card-text.center {
   align-items: center;
   z-index: 1000;
 }
+
 .player-wrapper {
   position: relative;
   display: inline-block;
   cursor: pointer;
 }
+
 .player-click-area {
   position: absolute;
   width: 100%;
   height: 100%;
   z-index: 1;
 }
+
 .player-iframe {
   position: relative;
   z-index: 0;
@@ -591,6 +621,7 @@ digit-card-text.center {
 
 .label-field-pair.pgr-field-pair {
   align-items: flex-start;
+
   .card-label-error {
     margin-top: -1rem;
   }
@@ -612,9 +643,11 @@ digit-card-text.center {
     max-width: fit-content;
   }
 }
+
 .employee-app-wrapper.sandbox-landing-wrapper {
   margin: 6rem 2rem 2rem 5rem;
 }
+
 @media (max-width: 768px) {
   .employee-app-wrapper.sandbox-landing-wrapper {
     margin: 4rem 1rem 1rem 1rem;
@@ -634,11 +667,13 @@ digit-card-text.center {
 .digit-card-label.user-profile {
   width: 3rem;
 }
+
 .sidebar-list {
   a {
     text-decoration: none;
   }
 }
+
 .profileDropdown {
   input {
     font-size: 1rem !important;
@@ -663,12 +698,15 @@ digit-card-text.center {
     }
   }
 }
+
 .infotext {
   width: 20rem !important;
 }
+
 .mrsm.divToBeHidden.icon-label-download {
   align-items: center !important;
 }
+
 .chart-metric-wrapper {
   .row {
     align-items: baseline !important;
@@ -685,6 +723,7 @@ digit-card-text.center {
   background-repeat: no-repeat;
   animation: l23 1s infinite steps(12);
 }
+
 .sandbox-loader::before,
 .sandbox-loader::after {
   content: "";
@@ -694,10 +733,12 @@ digit-card-text.center {
   opacity: 0.915;
   transform: rotate(30deg);
 }
+
 .sandbox-loader::after {
   opacity: 0.83;
   transform: rotate(60deg);
 }
+
 @keyframes l23 {
   100% {
     transform: rotate(1turn);
@@ -735,44 +776,53 @@ digit-card-text.center {
   color: #2ecc71;
   margin-right: 8px;
 }
+
 .sandbox-step {
   display: flex;
   align-items: center;
   opacity: 0;
-  transform: translateX(-100px); /* Slide in from left */
+  transform: translateX(-100px);
+  /* Slide in from left */
   transition: opacity 0.5s ease, transform 0.5s ease;
   margin-bottom: 10px;
 }
 
 .sandbox-step.sandbox-visible {
   opacity: 1;
-  transform: translateX(0); /* Slide to normal position */
+  transform: translateX(0);
+  /* Slide to normal position */
 }
 
 .sandbox-step .sandbox-step-text {
-  margin-right: 10px; /* Space between text and tick */
+  margin-right: 10px;
+  /* Space between text and tick */
   width: 25rem;
 }
 
 .sandbox-step svg {
   opacity: 0;
-  transition: opacity 0.3s ease 0.3s; /* Fade in tick mark after a short delay */
+  transition: opacity 0.3s ease 0.3s;
+  /* Fade in tick mark after a short delay */
 }
 
 .sandbox-step.sandbox-visible svg {
   opacity: 1;
 }
+
 .digit-card-component.digit-landing-page-card {
   max-width: 30rem !important;
 }
+
 .digit-msb-sidebar-children.expanded {
   margin-left: 1.5rem !important;
   border-left: 0.031rem solid #c5c5c5 !important;
 }
+
 @media (max-width: 768px) {
-  .homeWrapper > :last-child {
+  .homeWrapper> :last-child {
     margin-left: 1rem !important;
   }
+
   .digit-landing-page-wrapper {
     margin-left: 1rem !important;
   }
@@ -784,18 +834,22 @@ digit-card-text.center {
       .cp {
         color: #fff !important;
       }
+
       .header-dropdown-arrow {
         path {
           fill: #fff !important;
         }
       }
     }
+
     .header-dropdown-menu {
       right: 1rem !important;
     }
   }
+
   .select-wrap {
     margin-bottom: unset !important;
+
     svg {
       fill: theme(colors.white) !important;
     }
@@ -805,19 +859,19 @@ digit-card-text.center {
 
 @media (max-width: 768px) {
   .role-action-container {
-      flex-direction: column;
-      align-items: center;
+    flex-direction: column;
+    align-items: center;
   }
 
   .role-card {
-      width: 100%;
-      margin-bottom: 0.625rem; 
+    width: 100%;
+    margin-bottom: 0.625rem;
   }
 }
 
 
-.faq-answer{
-  .card-section-sub-text{
+.faq-answer {
+  .card-section-sub-text {
     margin-left: 0.5rem;
   }
 }
@@ -835,8 +889,10 @@ digit-card-text.center {
   width: 100%;
   background-color: #fff;
   padding: 2rem;
-  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); /* 4px 8px to rem */
-  border-radius: 0.5rem; /* 8px to rem */
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+  /* 4px 8px to rem */
+  border-radius: 0.5rem;
+  /* 8px to rem */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -903,9 +959,11 @@ digit-card-text.center {
   min-width: 0;
   padding: 1.5rem;
   background-color: #f9f9f9;
-  border-radius: 0.5rem; /* 8px to rem */
+  border-radius: 0.5rem;
+  /* 8px to rem */
   text-align: center;
-  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); /* 4px 8px to rem */
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+  /* 4px 8px to rem */
 }
 
 .icon-container {
@@ -944,12 +1002,15 @@ digit-card-text.center {
 
 /* Custom card styling for the landing page */
 .custom-landing-card {
-  max-width: 75rem; /* 800px to rem */
+  max-width: 75rem;
+  /* 800px to rem */
   width: 100%;
   background-color: #fff;
   padding: 2rem;
-  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); /* 4px 8px to rem */
-  border-radius: 0.5rem; /* 8px to rem */
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+  /* 4px 8px to rem */
+  border-radius: 0.5rem;
+  /* 8px to rem */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -982,7 +1043,8 @@ digit-card-text.center {
 }
 
 .highlight-sandbox {
-  color: orange; /* or your specific orange color code */
+  color: orange;
+  /* or your specific orange color code */
 }
 
 .custom-landing-sub-header {
@@ -1030,16 +1092,27 @@ digit-card-text.center {
   list-style-type: disc;
 }
 
+.custom-step-header {
+  padding-top: 0.5rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #505A5F;
+  ;
+
+}
+
 /* Custom button container */
 .custom-continue-button-container {
   display: flex;
-  justify-content: center; /* Align the button to the right */
+  justify-content: center;
+  /* Align the button to the right */
   margin-top: 2rem;
 }
 
 /* Custom button styling */
 .custom-continue-button {
-  align-self: flex-end; /* Ensure the button aligns to the right */
+  align-self: flex-end;
+  /* Ensure the button aligns to the right */
 }
 
 .custom-steps-list {
@@ -1056,7 +1129,7 @@ digit-card-text.center {
   line-height: 1.6;
 }
 
-.tooltiptext{
+.tooltiptext {
   width: 30rem !important;
 }
 
@@ -1157,13 +1230,16 @@ digit-card-text.center {
 .product-title {
   font-size: 24px;
   font-weight: bold;
-  color : #0B4B66;
+  color: #0B4B66;
 }
 
 .product-icon {
   fill: #c84c0e;
   width: 2.5rem;
   margin-right: 0.5rem;
+  display: flex;
+  align-items: center;
+
 }
 
 .product-description {
@@ -1182,20 +1258,22 @@ digit-card-text.center {
 
 .icon-header-container {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 8px;
-  margin-bottom: 1.25rem;
 }
 
 .custom-image-container {
   display: flex;
-  justify-content: center; /* Centers image */
-  margin: 10px 0; /* Adds spacing */
+  justify-content: center;
+  /* Centers image */
+  margin: 10px 0;
+  /* Adds spacing */
 }
 
 .custom-image {
-  max-width: 100%; /* Prevents overflow */
-  width: 70%; /* Adjust width */
+  max-width: 100%;
+  /* Adjust width */
   height: auto;
-  border-radius: 8px; /* Optional styling */
+  border-radius: 8px;
+  /* Optional styling */
 }

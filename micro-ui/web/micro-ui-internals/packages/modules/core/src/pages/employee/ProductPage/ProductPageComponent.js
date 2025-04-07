@@ -9,19 +9,19 @@ const ProductsPageComponent = () => {
   const history = useHistory();
 
   const ProductsConfig = {
-    header : "Products",
-    headerDescription : "The DIGIT suite of products help in public service delivery. It is designed to work across countries at varying levels of capacity and complexity. Please select the product you would like to explore. Currently, two of our products are available on Sandbox. We are working on bringing the rest to you soon!",
+    header : "SANDBOX_PRODUCT_HEADER",
+    headerDescription : "SANDBOX_PRODUCT_HEADER_DESC",
     products : [
       {
-        title: "Complaints Management",
-        description: "Users can file and track complaints, which can be assigned and resolved by a higher authority.",
-        icon: <ComplaintIcon className="product-icon"/>,
+        title: "SANDBOX_PGR_TITLE",
+        description: "SANDBOX_PGR_DESC",
+        icon: "ComplaintIcon",
         link: "productDetailsPage/TL",
       },
       {
-        title: "License Management",
-        description: "Users can apply for licenses and make payment which can be tracked, paid, verified and renewed.",
-        icon: <ComplaintIcon className="product-icon" />,
+        title: "SANDBOX_TL_TITLE",
+        description: "SANDBOX_TL_DESC",
+        icon: "ComplaintIcon",
         link: "productDetailsPage/TL",
       },
     ]
@@ -44,7 +44,7 @@ const ProductsPageComponent = () => {
         {ProductsConfig?.products.map((product, index) => (
           <Card key={index} className="product-card">
             <div className="product-header">
-              {product.icon}
+              {Digit.Utils.iconRender(product.icon,"#c84c0e")}
               <h2 className="product-title">{t(product.title)}</h2>
               {/* <HeaderComponent>{t(product.title)}</HeaderComponent> */}
             </div>
