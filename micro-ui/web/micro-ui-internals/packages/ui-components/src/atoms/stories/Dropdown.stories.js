@@ -33,12 +33,10 @@ export default {
     },
   },
 };
-const queryClient = new QueryClient();
+// const queryClient = new QueryClient();
 
 const Template = (args) => (
-  <QueryClientProvider client={queryClient}>
     <FieldV1 {...args} />
-  </QueryClientProvider>
 );
 
 const t = (key) => key;

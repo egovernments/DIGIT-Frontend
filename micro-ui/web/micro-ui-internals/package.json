@@ -68,6 +68,9 @@
     "webpack-dev-server": "^5.2.0",
     "dotenv-webpack": "^8.0.0"
   },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.62.16"
+  },
   "husky": {},
   "lint-staged": {
     "*.{js,css,md}": "prettier --write"
@@ -80,12 +83,9 @@
   "dependencies": {
     "@egovernments/digit-ui-components": "0.0.2-beta.4-webpack.2",
     "@egovernments/digit-ui-react-components": "1.8.16-upgrade.2",
-    "@tanstack/react-query": "^5.62.16",
     "lodash": "4.17.21",
     "microbundle-crl": "0.13.11",
     "process": "^0.11.10",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
     "react-hook-form": "7.52.2",
     "react-i18next": "15.0.0",
     "react-redux": "^9.2.0",

@@ -27,6 +27,7 @@ const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding }) => {
   console.log("inside DigitUIWrapper of core");
   window.Digit["Hooks"] = Hooks || {};
   const { isLoading, data: initData={} } = Digit.Hooks.useInitStore(stateCode, enabledModules);
+  console.log("seeeeeeee")
   if (isLoading) {
     return <Loader page={true} />;
   }

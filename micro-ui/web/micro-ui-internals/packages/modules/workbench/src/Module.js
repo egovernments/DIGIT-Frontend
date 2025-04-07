@@ -22,7 +22,7 @@ const WorkbenchModule = ({ stateCode, userType, tenants }) => {
   // console.log("I'm location from wb module.js", location)
   const language = Digit.StoreData.getCurrentLanguage();
   const modulePrefix = window?.globalConfigs?.getConfig("CORE_UI_MODULE_LOCALE_PREFIX") || "rainmaker";
-  const queryClient  = new QueryClient();
+  // const queryClient  = new QueryClient();
   console.log("I'm digit from wb", Digit)
   Digit.Services = window.Digit.Services;
   const { isLoading, data: store } = useStore({
@@ -37,12 +37,8 @@ const WorkbenchModule = ({ stateCode, userType, tenants }) => {
   }
 
   return <TourProvider>
-    <QueryClientProvider client={
-      queryClient 
-    }>
     <EmployeeApp path={path} stateCode={stateCode} />
     {/* <div>TEST</div> */}
-    </QueryClientProvider>
   </TourProvider>
   // return <div>TEST</div>
 };

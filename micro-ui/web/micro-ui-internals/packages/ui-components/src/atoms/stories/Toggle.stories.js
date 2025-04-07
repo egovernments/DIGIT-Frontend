@@ -20,7 +20,7 @@ export default {
     props: { control: "object" },
   },
 };
-const queryClient = new QueryClient();
+// const queryClient = new QueryClient();
 
 const Template = (args) => {
   const [selectedOption, setSelectedOption] = useState(args.value);
@@ -34,9 +34,7 @@ const Template = (args) => {
   };
 
   return (
-    <QueryClientProvider client={queryClient}>
       <FieldV1 {...args} value={selectedOption} onChange={handleSelectOption} />
-    </QueryClientProvider>
   );
 };
 

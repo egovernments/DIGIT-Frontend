@@ -123,6 +123,9 @@ export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, logoU
         <Route exact path={`/${window?.globalPath}/user/url`}>
           <ViewUrl />
         </Route>
+        <Route exact path={`/${window?.globalPath}/home`}>
+         <>Hi</>
+        </Route>
         {window?.globalPath !== window?.contextPath && (
           <Route path={`/${window?.contextPath}`}>
             <DigitApp
