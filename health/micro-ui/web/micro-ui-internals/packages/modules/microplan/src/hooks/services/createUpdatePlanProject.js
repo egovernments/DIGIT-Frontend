@@ -862,21 +862,24 @@ const createUpdatePlanProject = async (req) => {
           },
         });
 
-        const updatedReqForCompleteSetup = {
-          ...fetchedPlanForSummary,
-          workflow: {
-            action: "INITIATE",
-            // "assignes": null,
-            // "comments": null,
-            // "verificationDocuments": null,
-            // "rating": null
-          },
-          additionalDetails: {
-            ...fetchedPlanForSummary.additionalDetails,
-            setupCompleted: true, //we can put this in url when we come from microplan search screen to disable routing to other screens -> Only summary screen should show, or only allowed screens should show
-          },
-        };
-        const planResForCompleteSetup = await updatePlan(updatedReqForCompleteSetup);
+        //Commenting update logic since setup completed is converting to draft complete
+        //TODO: @Abishek do this upon freezing microplan
+        // const updatedReqForCompleteSetup = {
+        //   ...fetchedPlanForSummary,
+        //   workflow: {
+        //     action: "INITIATE",
+        //     // "assignes": null,
+        //     // "comments": null,
+        //     // "verificationDocuments": null,
+        //     // "rating": null
+        //   },
+        //   additionalDetails: {
+        //     ...fetchedPlanForSummary.additionalDetails,
+        //     setupCompleted: true, //we can put this in url when we come from microplan search screen to disable routing to other screens -> Only summary screen should show, or only allowed screens should show
+        //   },
+        // };
+        //omitting the update call
+        // const planResForCompleteSetup = await updatePlan(updatedReqForCompleteSetup);
         // const updatedReqForCompleteSetupNextAction = {
         //   ...fetchedPlanForSummary,
         //   workflow: {
@@ -895,24 +898,26 @@ const createUpdatePlanProject = async (req) => {
 
         //here do cleanup activity and go to next screen
 
-        if (planResForCompleteSetup?.PlanConfiguration?.[0]?.id) {
+        if (fetchedPlanForSummary?.id && Digit.Utils.microplanv1.validatePlanConfigForDraftDownload(fetchedPlanForSummary)) {
           // setCurrentKey((prev) => prev + 1);
           // setCurrentStep((prev) => prev + 1);
           return {
             triggeredFrom,
-            redirectTo: `/${window.contextPath}/employee/microplan/setup-completed-response`,
+            redirectTo: `/${window.contextPath}/employee/microplan/draft-completed-response`,
             isState: true,
             state: {
-              message: "SETUP_COMPLETED",
+              message: "DRAFT_COMPLETED",
               back: "BACK_TO_HOME",
               backlink: `/${window.contextPath}/employee`,
-              responseId: planResForCompleteSetup?.PlanConfiguration?.[0]?.name,
-              info: "SETUP_MICROPLAN_SUCCESS_NAME",
+              responseId: fetchedPlanForSummary?.name,
+              info: "DRAFT_MICROPLAN_SUCCESS_NAME",
+              showDraftDownload:true,
+              actionLabel: "DOWNLOAD_DRAFT_MICROPLAN",
               // description: "SETUP_MICROPLAN_SUCCESS_RESPONSE_DESC",
             },
           };
         } else {
-          setShowToast({ key: "error", label: "ERR_FAILED_TO_COMPLETE_SETUP" });
+          setShowToast({ key: "error", label: "ERR_FAILED_TO_COMPLETE_DRAFT" });
         }
 
       case "ROLE_ACCESS_CONFIGURATION": {
