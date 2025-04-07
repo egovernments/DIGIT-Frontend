@@ -42,23 +42,32 @@ const UpdateBoundaryWrapper = ({ onSelect,...props }) => {
   const { data: CampaignData } = Digit.Hooks.useCustomAPIHook(reqCriteriaCampaign);
 
 
-  useEffect (() => {
-    if(!id || isDraft) setSelectedData(CampaignData?.CampaignDetails?.[0]?.boundaries);
+  useEffect(() => {
+    if (!id || isDraft) {
+  
+      const sessionBoundaries = props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
+      
+      if (sessionBoundaries) {
+        setSelectedData(sessionBoundaries);
+      } else {
+        setSelectedData(CampaignData?.CampaignDetails?.[0]?.boundaries);
+      }
+    }
+  
     SetHierarchyType(CampaignData?.CampaignDetails?.[0]?.hierarchyType);
-  },[CampaignData])
+  }, [CampaignData, props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA]);
 
   useEffect(() => {
-    setSelectedData(
-      props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData
-        ? props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData
-        : []
-    );
-    setBoundaryOptions(
-      props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData
-        ? props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData
-        : {}
-    );
+    if (props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType) {
+      setSelectedData(
+        props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData
+      );
+      setBoundaryOptions(
+        props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData
+      );
+    }
   }, [props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType]);
+  
 
 
   const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({BOUNDARY_HIERARCHY_TYPE: hierarchyType,tenantId});
