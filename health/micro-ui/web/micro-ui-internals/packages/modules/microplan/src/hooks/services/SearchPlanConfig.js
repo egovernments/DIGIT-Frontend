@@ -1,5 +1,20 @@
+const stopApiCall = (obj) => {
+  let count = 0;
+
+  for (const key in obj) {
+    if (obj[key]) count++; // Count only truthy values
+    if (count > 1) return false; // Early exit if more than one defined key
+  }
+
+  return true;
+};
+
 const SearchPlanConfig = async (body) => {
   try {
+    //added this to prevent unneccesary api calls being made to plan service with just tenantId in the request body
+    if(stopApiCall(body.PlanConfigurationSearchCriteria)) {
+      return []
+     }
     const response = await Digit.CustomService.getResponse({
       url: "/plan-service/config/_search",
       useCache: false,
