@@ -509,6 +509,73 @@ function filterUniqueByKey(arr, key) {
 }
 export const PRIMARY_COLOR = "#C84C0E";
 
+function validatePlanConfigForDraftDownload(planConfig) {
+  const validationFunctions = [
+    validateTenantId,
+    validateStatus,
+    // validateResourceMapping,
+    validateOperations,
+    validateAssumptions,
+    validateCampaignId,
+    validateId,
+    validateName,
+    validateFiles
+  ];
+
+  for (const validationFunction of validationFunctions) {
+    if (!validationFunction(planConfig)) {
+      return false; // Early return if any validation fails
+    }
+  }
+
+  return true; // All validations passed
+}
+
+// Validation Functions
+
+function validateTenantId(planConfig) {
+  return typeof planConfig.tenantId === 'string' && planConfig.tenantId.trim() !== '';
+}
+
+function validateStatus(planConfig) {
+  return typeof planConfig.status === 'string' && planConfig.status.trim() !== '';
+}
+
+function validateResourceMapping(planConfig) {
+  return Array.isArray(planConfig.resourceMapping) && planConfig.resourceMapping.length >= 1;
+}
+
+function validateOperations(planConfig) {
+  return Array.isArray(planConfig.operations) && planConfig.operations.length >= 1;
+}
+
+function validateAssumptions(planConfig) {
+  return Array.isArray(planConfig.assumptions) && planConfig.assumptions.length >= 1;
+}
+
+function validateCampaignId(planConfig) {
+  return typeof planConfig.campaignId === 'string' && planConfig.campaignId.trim() !== '';
+}
+
+function validateId(planConfig) {
+  return typeof planConfig.id === 'string' && planConfig.id.trim() !== '';
+}
+
+function validateName(planConfig) {
+  return typeof planConfig.name === 'string' && planConfig.name.trim() !== '';
+}
+
+function validateFiles(planConfig) {
+  if (!Array.isArray(planConfig.files) || planConfig.files.length < 1) {
+    return false;
+  }
+
+  const hasPopulationTemplate = planConfig.files.some(file => file.templateIdentifier === 'Population');
+  const hasFacilitiesTemplate = planConfig.files.some(file => file.templateIdentifier === 'Facilities');
+
+  return hasPopulationTemplate && hasFacilitiesTemplate;
+}
+
 
 export default {
   destroySessionHelper,
@@ -522,6 +589,7 @@ export default {
   createBoundaryDataByHierarchy,
   groupByParent,
   epochToDateTime,
-  filterUniqueByKey
+  filterUniqueByKey,
+  validatePlanConfigForDraftDownload
   // constructBoundaryOptions
 }
