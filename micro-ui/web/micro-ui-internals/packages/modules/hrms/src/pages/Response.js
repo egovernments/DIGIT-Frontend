@@ -175,16 +175,142 @@
 
 // export default Response;
 
-import React, { useState, Fragment } from "react";
+// import React, { useState, Fragment } from "react";
 
+// import { Link, useHistory, useLocation } from "react-router-dom";
+// import { useTranslation } from "react-i18next";
+// import { 
+//   Banner, 
+//   Card, 
+//   ActionBar, 
+//   SubmitBar, 
+//   Toast 
+// } from "@egovernments/digit-ui-react-components";
+
+// const Response = () => {
+//   const { t } = useTranslation();
+//   const history = useHistory();
+//   const queryStrings = Digit.Hooks.useQueryParams();
+//   const { state } = useLocation();
+//   const { email} = location.state || {};
+
+//   const [isResponseSuccess, setIsResponseSuccess] = useState(
+//     queryStrings?.isSuccess === "true"
+//   );
+
+//   // Input States
+//   const [username, setUsername] = useState("");
+//   const [password, setPassword] = useState("");
+//   const [toast, setToast] = useState({ show: false, message: "", error: false });
+
+//   const navigate = (page) => {
+//     if (page === "home") {
+//       history.push(`/${window.contextPath}/employee`);
+//     }
+//   };
+//   console.log("em",state?.id,state?.email)
+//   const handleSubmit = async () => {
+//     const accessToken = localStorage.getItem("token");
+//     if (!username || !password) {
+//       setToast({ show: true, message: "Username and Password are required", error: true });
+//       return;
+//     }
+
+//     console.log("em",state?.email)
+
+//     const requestBody = {
+//       username,
+//       email:  state?.email, 
+//       enabled: true,
+//       firstName: state?.name,
+//       lastName:  "User",
+//       attributes: {
+//         mobileNumber:  "7898765432",
+//       },
+//       credentials: [
+//         {
+//           type: "password",
+//           value: password,
+//         },
+//       ],
+//     };
+//     console.log("after submit")
+
+//     try {
+//       const url = 'http://localhost:8081/admin/realms/SDFG/users'
+//       const response = await fetch(url, {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${accessToken}`,
+//         },
+//         body: JSON.stringify(requestBody),
+//       });
+
+//       if (response.ok) {
+//         setToast({ show: true, message: "User created successfully!", error: false });
+//       } else {
+//         const errorData = await response.json();
+//         setToast({ show: true, message: errorData?.error || "Failed to create user", error: true });
+//       }
+//     } catch (error) {
+//       setToast({ show: true, message: "An error occurred while creating user", error: true });
+//     }
+//   };
+
+//   return (
+//     <>
+//       {toast.show && <Toast label={toast.message} error={toast.error} onClose={() => setToast({ show: false })} />}
+      
+//       <Banner
+//         message={isResponseSuccess ? "Employee created fill below info for user!" : "User creation failed"}
+//         info={state?.id || ""}
+//         successful={isResponseSuccess}
+//       />
+
+//       {/* Input Fields */}
+//       <Card style={{ padding: "1rem", marginTop: "1rem" }}>
+//         <label>Username</label>
+//         <input 
+//           type="text" 
+//           value={username} 
+//           onChange={(e) => setUsername(e.target.value)} 
+//           required 
+//           style={{ width: "100%", padding: "8px", marginBottom: "10px", border: "1px solid #ccc", borderRadius: "4px" }}
+//         />
+        
+//         <label>Password</label>
+//         <input 
+//           type="password" 
+//           value={password} 
+//           onChange={(e) => setPassword(e.target.value)} 
+//           required 
+//           style={{ width: "100%", padding: "8px", marginBottom: "10px", border: "1px solid #ccc", borderRadius: "4px" }}
+//         />
+//           {/* <SubmitBar disabled={!bill.totalAmount?.toFixed(2)} onSubmit={onSubmit} label={t("CS_MY_APPLICATION_VIEW_DETAILS")} /> */}
+//         <SubmitBar label={t("Submit")} onSubmit={handleSubmit} />
+//       </Card>
+
+//       <ActionBar>
+//         <Link to={`/${window.contextPath}/employee`}>
+//           <SubmitBar label={t("Go to Home")} />
+//         </Link>
+//       </ActionBar>
+//     </>
+//   );
+// };
+
+// export default Response;
+
+import React, { useState, Fragment } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { 
-  Banner, 
-  Card, 
-  ActionBar, 
-  SubmitBar, 
-  Toast 
+import {
+  Banner,
+  Card,
+  ActionBar,
+  SubmitBar,
+  Toast,
 } from "@egovernments/digit-ui-react-components";
 
 const Response = () => {
@@ -192,13 +318,9 @@ const Response = () => {
   const history = useHistory();
   const queryStrings = Digit.Hooks.useQueryParams();
   const { state } = useLocation();
-  const { email} = location.state || {};
+  const { email } = location.state || {};
 
-  const [isResponseSuccess, setIsResponseSuccess] = useState(
-    queryStrings?.isSuccess === "true"
-  );
-
-  // Input States
+  const [isResponseSuccess, setIsResponseSuccess] = useState(queryStrings?.isSuccess === "true");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [toast, setToast] = useState({ show: false, message: "", error: false });
@@ -208,7 +330,7 @@ const Response = () => {
       history.push(`/${window.contextPath}/employee`);
     }
   };
-  console.log("em",state?.id,state?.email)
+
   const handleSubmit = async () => {
     const accessToken = localStorage.getItem("token");
     if (!username || !password) {
@@ -216,16 +338,14 @@ const Response = () => {
       return;
     }
 
-    console.log("em",state?.email)
-
     const requestBody = {
       username,
-      email:  state?.email, 
+      email: state?.email,
       enabled: true,
       firstName: state?.name,
-      lastName:  "User",
+      lastName: "User",
       attributes: {
-        mobileNumber:  "7898765432",
+        mobileNumber: "7898765432",
       },
       credentials: [
         {
@@ -234,11 +354,10 @@ const Response = () => {
         },
       ],
     };
-    console.log("after submit")
 
     try {
-      const url = 'http://localhost:8081/admin/realms/SDFG/users'
-      const response = await fetch(url, {
+      // Create user
+      const createUserResponse = await fetch("http://localhost:5000/keycloak/admin/realms/SDFG/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -247,47 +366,114 @@ const Response = () => {
         body: JSON.stringify(requestBody),
       });
 
-      if (response.ok) {
-        setToast({ show: true, message: "User created successfully!", error: false });
-      } else {
-        const errorData = await response.json();
+      if (!createUserResponse.ok) {
+        const errorData = await createUserResponse.json();
         setToast({ show: true, message: errorData?.error || "Failed to create user", error: true });
+        return;
+      }
+
+      // Search for the user to get UUID
+      const searchUserResponse = await fetch(
+        `http://localhost:5000/keycloak/admin/realms/SDFG/users?username=${username}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      if (!searchUserResponse.ok) {
+        setToast({ show: true, message: "Failed to fetch user after creation", error: true });
+        return;
+      }
+
+      const users = await searchUserResponse.json();
+      const foundUser = users?.find((u) => u.username === username);
+
+      if (!foundUser) {
+        setToast({ show: true, message: "User not found after creation", error: true });
+        return;
+      }
+
+      // Call the mapIndividualToUser API
+      const mapResponse = await fetch("http://localhost:3000/individual/v1/_mapIndividualToUser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          Individual: {
+            id: state?.id,
+            tenantId: "SDFG",
+            userUuid: foundUser.id,
+          },
+          RequestInfo: {
+            apiId: "Rainmaker",
+            authToken: accessToken,
+          },
+        }),
+      });
+
+      if (mapResponse.ok) {
+        setToast({ show: true, message: "User created and mapped successfully!", error: false });
+      } else {
+        const errorData = await mapResponse.json();
+        setToast({ show: true, message: errorData?.error || "Failed to map user", error: true });
       }
     } catch (error) {
-      setToast({ show: true, message: "An error occurred while creating user", error: true });
+      setToast({ show: true, message: "An error occurred during user creation", error: true });
     }
   };
 
   return (
     <>
       {toast.show && <Toast label={toast.message} error={toast.error} onClose={() => setToast({ show: false })} />}
-      
-      <Banner
-        message={isResponseSuccess ? "Employee created fill below info for user!" : "User creation failed"}
+
+      {/* <Banner
+        message={
+          isResponseSuccess
+            ? "Employee created fill below info for user!"
+            : "User creation failed"
+        }
         info={state?.id || ""}
         successful={isResponseSuccess}
-      />
+      /> */}
 
-      {/* Input Fields */}
+    <h2 style={{ marginTop: "1rem", fontWeight: "bold" }}>User Creation</h2>
+
       <Card style={{ padding: "1rem", marginTop: "1rem" }}>
         <label>Username</label>
-        <input 
-          type="text" 
-          value={username} 
-          onChange={(e) => setUsername(e.target.value)} 
-          required 
-          style={{ width: "100%", padding: "8px", marginBottom: "10px", border: "1px solid #ccc", borderRadius: "4px" }}
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+          style={{
+            width: "100%",
+            padding: "8px",
+            marginBottom: "10px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
         />
-        
+
         <label>Password</label>
-        <input 
-          type="password" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
-          required 
-          style={{ width: "100%", padding: "8px", marginBottom: "10px", border: "1px solid #ccc", borderRadius: "4px" }}
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          style={{
+            width: "100%",
+            padding: "8px",
+            marginBottom: "10px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
         />
-          {/* <SubmitBar disabled={!bill.totalAmount?.toFixed(2)} onSubmit={onSubmit} label={t("CS_MY_APPLICATION_VIEW_DETAILS")} /> */}
+
         <SubmitBar label={t("Submit")} onSubmit={handleSubmit} />
       </Card>
 
@@ -301,3 +487,4 @@ const Response = () => {
 };
 
 export default Response;
+
