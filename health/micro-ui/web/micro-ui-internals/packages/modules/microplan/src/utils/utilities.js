@@ -167,10 +167,9 @@ const formValidator = (formData, key, state, t) => {
   const checkValueInvalid = (data) => {
     return data.some(item => {
       const value = item.value;
-      
       // Check if the value is null, 0, or less than 0
       return value === null || value <= 0 || value > 1000;
-  });
+    });
   }
 
   const microplanAssumptionsValidator = (formData) => {
@@ -213,6 +212,22 @@ const formValidator = (formData, key, state, t) => {
     return { key: "error", label: "ERROR_VALID_MANDATORY_FILES" };
   }
 
+  function isValidValue(val) {
+    const noSpecialChars = /^[A-Za-z_][A-Za-z0-9_]*$/; // Rule 1 & 2
+    const allNumbers = /^\d+$/;                        // Rule 3
+
+    return noSpecialChars.test(val) && !allNumbers.test(val);
+  }
+
+  const newColumnsValidator = () => {
+    const invalidEntries = formData.colValues.filter(col => !isValidValue(col.value));
+
+    if (invalidEntries.length > 0) {
+      return { key: "error", label: "ERROR_INVALID_COL_NAME" }
+    }
+    return null;
+  };
+
   //here we'll validate formData based on the config
   switch (key) {
     case "campaignDetails":
@@ -231,6 +246,8 @@ const formValidator = (formData, key, state, t) => {
       return uploadDataValidator(formData);
     case "facilityWithBoundary":
       return uploadDataValidator(formData);
+    case "newColumns":
+      return newColumnsValidator(formData);
 
     default:
       return null;
@@ -276,11 +293,11 @@ function generateCampaignString(sessionData, t) {
   const campaignTypeCode = sessionData?.CAMPAIGN_DETAILS?.campaignDetails.campaignType.i18nKey;
   const resourceDistributionStrategy = sessionData?.CAMPAIGN_DETAILS?.campaignDetails.distributionStrat.resourceDistributionStrategyCode;
 
-   // Get current date details
-   const currentDate = new Date();
-   const day = String(currentDate.getDate()).padStart(2, '0'); // Two-digit day
-   const monthAbbr = currentDate.toLocaleString('en-US', { month: 'short' }); // Three-letter month abbreviation
-   const yearLastTwoDigits = currentDate.getFullYear().toString().slice(-2); // Last two digits of the year
+  // Get current date details
+  const currentDate = new Date();
+  const day = String(currentDate.getDate()).padStart(2, '0'); // Two-digit day
+  const monthAbbr = currentDate.toLocaleString('en-US', { month: 'short' }); // Three-letter month abbreviation
+  const yearLastTwoDigits = currentDate.getFullYear().toString().slice(-2); // Last two digits of the year
 
   // Construct the final string
   const result = `${t(diseaseCode)}-${t(campaignTypeCode)}-${t(resourceDistributionStrategy)}-${day} ${monthAbbr} ${yearLastTwoDigits}`;

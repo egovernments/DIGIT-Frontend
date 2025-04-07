@@ -5,7 +5,7 @@ import { useAddColContext } from "./AddingColumnsWrapper";
 
 const AddingColumns = ({ colValues:initialColValues, setShowToast }) => {
   const { t } = useTranslation();
-  const { addNewCol, deleteCol, setColValues:setColValuesWrapper } = useAddColContext();
+  const { addNewCol, deleteCol, setColValues:setColValuesWrapper,setColumnsToDelete, setShowDeletePopup } = useAddColContext();
   const [newColValue, setNewColValue] = useState("");
   const [showPopUp, setShowPopUp] = useState(false);
   const [colValues,setColValues]=useState(initialColValues);
@@ -46,7 +46,7 @@ const AddingColumns = ({ colValues:initialColValues, setShowToast }) => {
                 icon="Delete"
                 label={t("DELETE")}
                 title={t("DELETE")}
-                onClick={() => deleteCol(item.key)}
+                onClick={() => {setColumnsToDelete(item.key); setShowDeletePopup(true)}}
                 variation="link"
                 isDisabled={!colValues || colValues.length <= 1}
               />

@@ -245,7 +245,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               isSubmitting: isSubmitting,
             },
             populators: {
-              name: "NEW_COLUMNS", 
+              name: "newColumns", 
               required: true,
             },
           },
