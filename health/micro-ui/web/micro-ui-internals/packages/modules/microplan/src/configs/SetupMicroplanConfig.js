@@ -235,7 +235,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
             key: "newColumns",
             type: "component",
             skipAPICall: false,
-            component: "AddingColumnsWrapper",
+            component: "AddColumnsWrapper",
             withoutLabel: true,
             withoutLabelFieldPair: true,
             disable: false,

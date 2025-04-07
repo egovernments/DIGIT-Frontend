@@ -212,16 +212,19 @@ const formValidator = (formData, key, state, t) => {
     return { key: "error", label: "ERROR_VALID_MANDATORY_FILES" };
   }
 
-  function isValidValue(val) {
-    const noSpecialChars = /^[A-Za-z_][A-Za-z0-9_]*$/; // Rule 1 & 2
-    const allNumbers = /^\d+$/;                        // Rule 3
-
+  function isValidColumnValue(val) {
+    // Allow empty string
+    if (val === "") return true;
+  
+    const noSpecialChars = /^[A-Za-z_][A-Za-z0-9_]*$/; // Must start with letter/underscore, no special chars
+    const allNumbers = /^\d+$/;                        // Should not be all digits
+  
     return noSpecialChars.test(val) && !allNumbers.test(val);
   }
+  
 
   const newColumnsValidator = () => {
-    const invalidEntries = formData.colValues.filter(col => !isValidValue(col.value));
-
+    const invalidEntries = formData.colValues.filter(col => !isValidColumnValue(col.value));
     if (invalidEntries.length > 0) {
       return { key: "error", label: "ERROR_INVALID_COL_NAME" }
     }

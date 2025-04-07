@@ -276,6 +276,18 @@ const updatePlan = async (req) => {
   return planRes;
 };
 
+const addColumnsForPlan=async (req)=>{
+  const draftResponse=await Digit.CustomService.getResponse({
+    url: "/resource-generator/drafts",
+    body: {
+      req
+    },
+  });
+  return draftResponse;
+}
+
+
+
 const updatePlanEmployee = async (req) => {
   const planEmployeeRes = await Digit.CustomService.getResponse({
     url: "/plan-service/employee/_update",
@@ -928,9 +940,23 @@ const createUpdatePlanProject = async (req) => {
             id: microplanId,
           },
         });
+
+        const draftRequestBody={
+          planConfigurationId:microplanId,
+          tenantId
+        }
+
+        const draftResponse= await addColumnsForPlan(draftRequestBody);
+        if (!draftResponse) {
+          setShowToast({ key: "error", label: "ERR_FAILED_TO_UPDATE_DRAFT_PLAN" });
+          return;
+        } 
+
         const updatedPlanObject = {
           ...fetchedPlan,
-          additionalDetails: { ...fetchedPlan.additionalDetails, key: key,addColumns:totalFormData?.NEW_COLUMNS?.newColumns }
+          additionalDetails: { ...fetchedPlan.additionalDetails, key: key,
+            addColumns:totalFormData?.NEW_COLUMNS?.newColumns?.filter((item)=>item?.value !=="")
+          }
         };
 
         const response = await updatePlan(updatedPlanObject);
@@ -947,8 +973,8 @@ const createUpdatePlanProject = async (req) => {
         } else {
           setShowToast({ key: "error", label: "ERR_FAILED_TO_UPDATE_PLAN" });
         }
-
         
+
       }
 
       case "ROLE_ACCESS_CONFIGURATION": {

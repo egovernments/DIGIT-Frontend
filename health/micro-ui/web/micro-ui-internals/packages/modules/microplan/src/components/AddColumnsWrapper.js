@@ -1,0 +1,112 @@
+import React, { useState, useEffect, createContext, useContext } from "react";
+import AddColumns from "./AddColumns";
+import { TextBlock, Card, PopUp ,CardText,Button} from "@egovernments/digit-ui-components";
+import { useTranslation } from "react-i18next";
+import { useMyContext } from "../utils/context";
+
+const AddColContext = createContext("addColContext");
+export const useAddColContext = () => useContext(AddColContext);
+
+const AddColumnsWrapper = ({ formData, onSelect, props: customProps }) => {
+    const { t } = useTranslation();
+    const [colValues, setColValues] = useState(
+        Digit.SessionStorage.get("MICROPLAN_DATA")?.NEW_COLUMNS?.newColumns.colValues ||
+        [
+            { key: "MP_COLUMN_0", value: "" },
+            { key: "MP_COLUMN_1", value: "" }
+        ]);
+    const [executionCount, setExecutionCount] = useState(0);
+
+    const [showToast, setShowToast] = useState({});
+    const [showDeletePopup, setShowDeletePopup] = useState(false);
+    const [columnsToDelete, setColumnsToDelete] = useState(null);
+
+
+    const deleteCol = () => {
+        setColValues((prev) => prev.filter((item) => item.key !== columnsToDelete)); // Removes column correctly
+        setColumnsToDelete(null);
+        setShowDeletePopup(false);
+    };
+
+    const addNewCol = (key, newColName) => {
+        if (colValues.some((item) => item.value === newColName)) {
+            setShowToast({ message: "Column already exists!", type: "error" });
+            return;
+        }
+        setColValues((prev) => [...prev, { key: key, value: newColName }]); // Adds new column
+    };
+
+    useEffect(() => {
+        onSelect(customProps.name, {colValues:colValues});
+    }, [colValues]);
+
+
+    useEffect(() => {
+        if (executionCount < 5) {
+            onSelect(customProps.name, {colValues:colValues});
+            setExecutionCount((prevCount) => prevCount + 1);
+        }
+    });
+    return (
+        <div>
+            <AddColContext.Provider value={{ addNewCol, deleteCol, setColValues, setColumnsToDelete, setShowDeletePopup }}>
+                <div>
+                    {colValues && Array.isArray(colValues) && colValues.length > 0 && (
+                        <AddColumns colValues={colValues} setShowToast={setShowToast} />
+                    )}
+                </div>
+            </AddColContext.Provider>
+            {showDeletePopup && (
+                <PopUp
+                    className={"popUpClass"}
+                    type={"default"}
+                    heading={t("ADD_NEW_COL_CONFIRM_TO_DELETE")}
+                    equalWidthButtons={true}
+                    children={[
+                        <div>
+                            <CardText style={{ margin: 0 }}>
+                                {
+                                    t(`CONFIRM_DELETE_ADD_COLUMN`)
+                                }
+                            </CardText>
+                        </div>,
+                    ]}
+                    onOverlayClick={() => {
+                        setShowDeletePopup(false);
+                    }}
+                    footerChildren={[
+                        <Button
+                            type={"button"}
+                            size={"large"}
+                            variation={"secondary"}
+                            label={t("YES")}
+                            title={t("YES")}
+                            onClick={() => {
+                                deleteCol();
+                            }}
+                        />,
+                        <Button
+                        type="button"
+                        size="large"
+                        variation="primary"
+                        label={t("NO")}
+                        title={t("NO")}
+                        onClick={() => {
+                          setShowDeletePopup(false);    // Hide the delete confirmation popup
+                          setColumnsToDelete(null);     // Clear the selected columns
+                        }}
+                      />
+                      
+                    ]}
+                    sortFooterChildren={true}
+                    onClose={() => {
+                        setShowDeletePopup(false);
+                    }}
+                ></PopUp>
+            )}
+
+        </div>
+    );
+};
+
+export default AddColumnsWrapper;
