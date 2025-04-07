@@ -12,8 +12,8 @@ const AddingColumnsWrapper = ({ formData, onSelect, props: customProps }) => {
     const [colValues, setColValues] = useState(
         Digit.SessionStorage.get("MICROPLAN_DATA")?.NEW_COLUMNS?.newColumns.colValues ||
         [
-            { key: "MP_COLUMN_1", value: "" },
-            { key: "MP_COLUMN_2", value: "" }
+            { key: "MP_COLUMN_0", value: "" },
+            { key: "MP_COLUMN_1", value: "" }
         ]);
     const [executionCount, setExecutionCount] = useState(0);
 

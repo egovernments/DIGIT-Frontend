@@ -1,23 +1,29 @@
-import React,{useState,useEffect} from "react";
-import { LabelFieldPair, FieldV1, Button, Card, TextInput,PopUp } from "@egovernments/digit-ui-components";
+import React, { useState, useEffect } from "react";
+import { LabelFieldPair, FieldV1, Button, Card, TextInput, PopUp } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useAddColContext } from "./AddingColumnsWrapper";
 
-const AddingColumns = ({ colValues:initialColValues, setShowToast }) => {
+const AddingColumns = ({ colValues: initialColValues, setShowToast }) => {
   const { t } = useTranslation();
-  const { addNewCol, deleteCol, setColValues:setColValuesWrapper,setColumnsToDelete, setShowDeletePopup } = useAddColContext();
+  const { addNewCol, deleteCol, setColValues: setColValuesWrapper, setColumnsToDelete, setShowDeletePopup } = useAddColContext();
   const [newColValue, setNewColValue] = useState("");
   const [showPopUp, setShowPopUp] = useState(false);
-  const [colValues,setColValues]=useState(initialColValues);
-  
-  useEffect(()=>{
-    setColValues(initialColValues);
-  },[initialColValues]);
+  const [colValues, setColValues] = useState(initialColValues);
 
-  useEffect(()=>{
+  useEffect(() => {
+    setColValues(initialColValues);
+  }, [initialColValues]);
+
+  useEffect(() => {
     setColValuesWrapper(colValues)
-  },[colValues]);
-  
+  }, [colValues]);
+
+  // Reset the newColValue when popup is closed
+  useEffect(() => {
+    setNewColValue(null)
+  }, [showPopUp]);
+
+
   return (
     <Card>
       {colValues?.map((item, index) => (
@@ -35,7 +41,7 @@ const AddingColumns = ({ colValues:initialColValues, setShowToast }) => {
               value={item.value || ""}
               placeholder="Enter value"
               onChange={(e) => setColValues((prev) =>
-                prev.map((col) => col.key === item.key ? { ...col,value:e.target.value } : col)
+                prev.map((col) => col.key === item.key ? { ...col, value: e.target.value } : col)
               )}
               onKeyDown={(event) => {
                 if (event.key === "Enter") event.preventDefault();
@@ -46,7 +52,7 @@ const AddingColumns = ({ colValues:initialColValues, setShowToast }) => {
                 icon="Delete"
                 label={t("DELETE")}
                 title={t("DELETE")}
-                onClick={() => {setColumnsToDelete(item.key); setShowDeletePopup(true)}}
+                onClick={() => { setColumnsToDelete(item.key); setShowDeletePopup(true) }}
                 variation="link"
                 isDisabled={!colValues || colValues.length <= 1}
               />
@@ -102,7 +108,7 @@ const AddingColumns = ({ colValues:initialColValues, setShowToast }) => {
               label={t("ADD")}
               title={t("ADD")}
               onClick={() => {
-                addNewCol(`MP_COL_NAME_${colValues.length+1}`,newColValue)
+                addNewCol(`MP_COL_NAME_${colValues.length + 1}`, newColValue)
                 setShowPopUp(false);
               }}
             />,
