@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import { ActionBar, SubmitBar, ArrowLeft, ArrowForward } from "@egovernments/digit-ui-react-components";
 import { Button } from "@egovernments/digit-ui-components";
 import { PanelCard } from "@egovernments/digit-ui-components";
+import { Toast } from "@egovernments/digit-ui-components";
+
 const Response = () => {
   const { t } = useTranslation();
   const history = useHistory();
@@ -12,8 +14,29 @@ const Response = () => {
   const [isResponseSuccess, setIsResponseSuccess] = useState(
     queryStrings?.isSuccess === "true" ? true : queryStrings?.isSuccess === "false" ? false : true
   );
+  const [showToast, setShowToast] = useState(false);
   const { state } = useLocation();
   const back = state?.back ? state?.back : "BACK";
+
+  const downloadDraftFile = () => {
+    if (state?.planObject) {
+      const toastObject = Digit.Utils.microplanv1.validatePlanConfigForDraftDownload(state?.planObject);
+      if (!toastObject) {
+        setShowToast({ label: t("Draft_Validations_Failed"), type: "error" });
+        return;
+      } else {
+        if (state?.planObject?.files?.length > 0) {
+          // Find the file with templateIdentifier === "DraftComplete"
+          const draftFile = state?.planObject.files.find((file) => file.templateIdentifier === "DraftComplete");
+          if (draftFile) {
+            Digit.Utils.campaign.downloadExcelWithCustomName({ fileStoreId: draftFile?.filestoreId, customName: `${state?.responseId}_Draft` });
+          } else {
+            setShowToast({ label: t("No file with templateIdentifier 'DraftComplete' found"), type: "error" });
+          }
+        }
+      }
+    }
+  };
 
   return (
     <>
@@ -27,9 +50,7 @@ const Response = () => {
         className=""
         customIcon=""
         description={t(state?.description || "")}
-        // footerChildren={[
-        //     <Button label="OK" onClick={function noRefCheck() { }} type="button" />
-        // ]}
+        footerChildren={[]}
         footerStyles={{}}
         iconFill=""
         info={t(state?.info || "")}
@@ -41,7 +62,20 @@ const Response = () => {
         sortFooterButtons
         style={{}}
         type="success"
-      ></PanelCard>
+      >{
+        state?.showDraftDownload ? 
+          <Button
+            key="download-draft-button"
+            style={{marginLeft: "auto" }}
+            variation="secondary"
+            label={t(state?.actionLabel)}
+            icon={"FileDownload"}
+            onClick={() => {
+              downloadDraftFile();
+            }}
+        />
+        : null
+      }</PanelCard>
       <ActionBar className="mc_back">
         <Button
           style={{ margin: "0.5rem", marginLeft: "6rem" }}
@@ -55,6 +89,16 @@ const Response = () => {
           }}
         />
       </ActionBar>
+      {showToast && (
+        <Toast
+          type={showToast?.type}
+          label={showToast?.label}
+          transitionTime={showToast?.transitionTime}
+          onClose={() => {
+            setShowToast(false);
+          }}
+        />
+      )}
     </>
   );
 };
