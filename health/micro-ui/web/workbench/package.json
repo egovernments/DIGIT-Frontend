@@ -12,6 +12,7 @@
   ],
   "homepage": "/workbench-ui",
   "dependencies": {
+    "@egovernments/digit-ui-module-hrms":"0.0.1",
     "@egovernments/digit-ui-libraries": "1.8.10",
     "@egovernments/digit-ui-module-core": "1.8.30",
     "@egovernments/digit-ui-react-components": "1.8.19",
