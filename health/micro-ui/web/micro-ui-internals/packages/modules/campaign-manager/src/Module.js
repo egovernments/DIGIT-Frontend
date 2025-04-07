@@ -83,7 +83,7 @@ const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
         return data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy;
       },
     },
-    { schemaCode: "HierarchySchemaSecond" }
+    { schemaCode: "HierarchySchema" }
   );
 
   const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE, tenantId });
