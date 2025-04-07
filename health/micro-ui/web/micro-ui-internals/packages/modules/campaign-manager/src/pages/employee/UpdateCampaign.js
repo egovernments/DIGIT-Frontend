@@ -21,7 +21,7 @@ import { compareIdentical, groupByTypeRemap, resourceData, updateUrlParams } fro
 
 
 
-const UpdateCampaign = ({hierarchyData }) => {
+const UpdateCampaign = React.memo(({hierarchyData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const history = useHistory();
@@ -29,10 +29,9 @@ const UpdateCampaign = ({hierarchyData }) => {
   const [totalFormData, setTotalFormData] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDataCreating, setIsDataCreating] = useState(false);
-
   const [campaignConfig, setCampaignConfig] = useState(UpdateBoundaryConfig(totalFormData, null, isSubmitting ));
   const [shouldUpdate, setShouldUpdate] = useState(false);
-  const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_UPDATE_FORM_DATA", {});
+  const [params, setParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_UPDATE_FORM_DATA", {});
   const [dataParams, setDataParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", {});
   const [showToast, setShowToast] = useState(null);
   const [summaryErrors, setSummaryErrors] = useState({});
@@ -85,7 +84,8 @@ const UpdateCampaign = ({hierarchyData }) => {
     setHierarchyType( CampaignData?.CampaignDetails?.[0]?.hierarchyType);
   },[CampaignData])
 
-  const reqCriteria = {
+  const reqCriteria = useMemo(() =>{
+    return {
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
     changeQueryName: `${hierarchyType}`,
     body: {
@@ -99,8 +99,9 @@ const UpdateCampaign = ({hierarchyData }) => {
     config: {
       enabled: hierarchyType? true: false,
       cacheTime: 1000000,
-    },
-  };
+    }
+    }
+  },[tenantId, hierarchyType]);
 
   const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
@@ -858,7 +859,8 @@ const UpdateCampaign = ({hierarchyData }) => {
       )}
     </React.Fragment>
   );
-};
+}
+);
 
 export default UpdateCampaign;
 
