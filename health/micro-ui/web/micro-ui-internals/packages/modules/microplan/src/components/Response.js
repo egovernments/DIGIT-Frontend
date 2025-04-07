@@ -27,9 +27,19 @@ const Response = () => {
         className=""
         customIcon=""
         description={t(state?.description || "")}
-        // footerChildren={[
-        //     <Button label="OK" onClick={function noRefCheck() { }} type="button" />
-        // ]}
+        footerChildren={state?.showDraftDownload ? [
+          <Button
+            key="download-draft-button"
+            style={{ margin: "0.5rem", marginLeft: "6rem" }}
+            className="microplan-response-button"
+            variation="secondary"
+            label={t(state?.actionLabel)}
+            icon={"FileDownload"}
+            onClick={() => {
+              // TODO: Replace with actual download logic (e.g., downloadDraftFile())
+            }}
+        />
+        ]:[]}
         footerStyles={{}}
         iconFill=""
         info={t(state?.info || "")}

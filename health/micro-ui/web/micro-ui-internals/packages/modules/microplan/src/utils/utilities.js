@@ -513,7 +513,7 @@ function validatePlanConfigForDraftDownload(planConfig) {
   const validationFunctions = [
     validateTenantId,
     validateStatus,
-    validateResourceMapping,
+    // validateResourceMapping,
     validateOperations,
     validateAssumptions,
     validateCampaignId,
