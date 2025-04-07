@@ -85,7 +85,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
       },
     },
     {
-      enabled: (!!microplanId) ? true : false,
+      enabled: !!microplanId ,
       // enabled:false
       // queryKey: currentKey,
     }
@@ -377,7 +377,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     } else if (currentKey === 8 && isFormulaLastVerticalStep && isFormulaLastVerticalStep === "false") {
       return null;
     } else if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.isLast) {
-      return t("MP_COMPLETE_SETUP");
+      return t("MP_COMPLETE_DRAFT");
     } else {
       return t("MP_SAVE_PROCEED");
     }

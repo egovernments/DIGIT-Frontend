@@ -1,4 +1,4 @@
-const stopApiCall = (obj) => {
+const shouldSkipApiCall = (obj) => {
   let count = 0;
 
   for (const key in obj) {
@@ -12,7 +12,7 @@ const stopApiCall = (obj) => {
 const SearchPlanConfig = async (body) => {
   try {
     //added this to prevent unneccesary api calls being made to plan service with just tenantId in the request body
-    if(stopApiCall(body.PlanConfigurationSearchCriteria)) {
+    if(shouldSkipApiCall(body.PlanConfigurationSearchCriteria)) {
       return []
      }
     const response = await Digit.CustomService.getResponse({

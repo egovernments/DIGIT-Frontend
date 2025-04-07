@@ -29,13 +29,14 @@ const Response = () => {
         description={t(state?.description || "")}
         footerChildren={state?.showDraftDownload ? [
           <Button
+            key="download-draft-button"
             style={{ margin: "0.5rem", marginLeft: "6rem" }}
             className="microplan-response-button"
             variation="secondary"
             label={t(state?.actionLabel)}
             icon={"FileDownload"}
             onClick={() => {
-              console.log("download draft")
+              // TODO: Replace with actual download logic (e.g., downloadDraftFile())
             }}
         />
         ]:[]}
