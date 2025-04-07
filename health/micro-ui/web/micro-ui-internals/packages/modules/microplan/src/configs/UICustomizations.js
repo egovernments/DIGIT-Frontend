@@ -86,23 +86,23 @@ export const UICustomizations = {
           let options = [];
 
           if (row?.status == "DRAFT") {
-            options = [{ code: "1", name: "MP_ACTIONS_EDIT_SETUP" }];
+            options = [{ code: "1", name: "MP_ACTIONS_EDIT_SETUP" },{ code: "2", name: "MP_ACTIONS_DOWNLOAD_DRAFT" }];
           } else {
             options = [{ code: "1", name: "MP_ACTIONS_VIEW_SUMMARY" }];
           }
 
-          const handleDownload = () => {
-            const files = row?.files;
-            const file = files.find((item) => item.templateIdentifier === "Population");
-            const fileId = file?.filestoreId;
+          const handleDownload = ({ type }) => {
+            const template = type === "Estimations" ? "Estimations" : "DraftComplete";
+            const fileId = row?.files.find((item) => item.templateIdentifier === template)?.filestoreId;
             if (!fileId) {
-                  console.error("Population template file not found");
-                  return;
-                }
+              console.error(`No file with templateIdentifier '${template}' found`);
+              return;
+            }
             const campaignName = row?.name || "";
+            const customName = type === "Estimations" ? campaignName : `${campaignName}_DRAFT`;
             Digit.Utils.campaign.downloadExcelWithCustomName({
               fileStoreId: fileId,
-              customName: campaignName
+              customName: customName,
             });
           };
 
@@ -112,6 +112,9 @@ export const UICustomizations = {
               const resolvedKey = key === 8 ? 7 : key === 9 ? 10 : key || 2;
               const url = `/${window.contextPath}/employee/microplan/setup-microplan?key=${resolvedKey}&microplanId=${row.id}&campaignId=${row.campaignDetails.id}`;
               window.location.href = url;
+            }
+            if (e.name === "MP_ACTIONS_DOWNLOAD_DRAFT") {
+              handleDownload({type:"Draft"});
             }
             if (e.name == "MP_ACTIONS_VIEW_SUMMARY") {
               window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${
@@ -124,7 +127,7 @@ export const UICustomizations = {
             <div>
               {microplanFileId && row?.status == "RESOURCE_ESTIMATIONS_APPROVED" ? (
                 <div>
-                  <ButtonNew style={{ width: "20rem" }} icon="DownloadIcon" onClick={handleDownload} label={t("WBH_DOWNLOAD_MICROPLAN")} title={t("WBH_DOWNLOAD_MICROPLAN")}  />
+                  <ButtonNew style={{ width: "20rem" }} icon="DownloadIcon" onClick={handleDownload} label={t("WBH_DOWNLOAD_MICROPLAN")} title={t("WBH_DOWNLOAD_MICROPLAN")} isDisabled={!EstimationsfileId}  />
                 </div>
               ) : (
                 <div className={"action-button-open-microplan"}>
