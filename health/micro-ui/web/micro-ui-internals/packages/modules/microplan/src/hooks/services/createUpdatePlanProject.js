@@ -932,50 +932,75 @@ const createUpdatePlanProject = async (req) => {
           setShowToast({ key: "error", label: "ERR_FAILED_TO_COMPLETE_DRAFT" });
         }
 
-      case "NEW_COLUMNS":{
-        const fetchedPlan = await searchPlanConfig({
-          PlanConfigurationSearchCriteria: {
-            tenantId,
-            id: microplanId,
-          },
-        });
-
-        const draftRequestBody={
-          DraftDetails:{
-          planConfigurationId:microplanId,
-          tenantId
+        case "NEW_COLUMNS": {
+          // Fetch the current plan configuration
+          const fetchedPlan = await searchPlanConfig({
+            PlanConfigurationSearchCriteria: {
+              tenantId,
+              id: microplanId,
+            },
+          });
+        
+          const draftResponse = await addColumnsForPlan({
+            DraftDetails: { planConfigurationId: microplanId, tenantId }
+          });
+          if (!draftResponse) {
+            setShowToast({ key: "error", label: "ERR_FAILED_TO_UPDATE_DRAFT_PLAN" });
+            return;
           }
-        }
-
-        const draftResponse= await addColumnsForPlan(draftRequestBody);
-        if (!draftResponse) {
-          setShowToast({ key: "error", label: "ERR_FAILED_TO_UPDATE_DRAFT_PLAN" });
-          return;
-        } 
-
-        const updatedPlanObject = {
-          ...fetchedPlan,
-          additionalDetails: { ...fetchedPlan.additionalDetails, key: key,
-            addColumns:totalFormData?.NEW_COLUMNS?.newColumns?.filter((item)=>item?.value !=="")
-          }
-        };
-
-        const response = await updatePlan(updatedPlanObject);
-        // Return as expected
-        if (response?.PlanConfiguration[0]?.id) {
-          setCurrentKey((prev) => prev + 1);
-          setCurrentStep((prev) => prev + 1);
-          Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
-          Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
-          return {
-            triggeredFrom,
+        
+          // Safely extract existing plan columns (default to empty array)
+          const existingColumns = fetchedPlan?.additionalDetails?.addColumns || [];
+        
+          // Safely extract new column values from form data
+          const newColumnValues = Array.isArray(totalFormData?.NEW_COLUMNS?.newColumns?.colValues)
+            ? totalFormData.NEW_COLUMNS.newColumns.colValues.filter(item => item?.value !== "")
+            : [];
+        
+          // Function to compare existing and new columns based on 'value'
+          const areColumnsSame = () => {
+            if (existingColumns.length !== newColumnValues.length) return false;
+        
+            return existingColumns.every((existingItem, index) => {
+              const newItem = newColumnValues[index];
+              return existingItem?.value === newItem?.value;
+            });
           };
-        } else {
-          setShowToast({ key: "error", label: "ERR_FAILED_TO_UPDATE_PLAN" });
+        
+          // Skip updatePlan if both sets of columns are the same
+          if (areColumnsSame()) {
+            setCurrentKey(prev => prev + 1);
+            setCurrentStep(prev => prev + 1);
+            Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
+            Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
+            return { triggeredFrom };
+          }
+        
+          // Otherwise, prepare updated plan object
+          const updatedPlanObject = {
+            ...fetchedPlan,
+            additionalDetails: {
+              ...fetchedPlan.additionalDetails,
+              key: key,
+              addColumns: newColumnValues,
+            },
+          };
+        
+          // Update the plan only if there's a difference
+          const response = await updatePlan(updatedPlanObject);
+        
+          if (response?.PlanConfiguration?.[0]?.id) {
+            setCurrentKey(prev => prev + 1);
+            setCurrentStep(prev => prev + 1);
+            Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
+            Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
+            return { triggeredFrom };
+          } else {
+            setShowToast({ key: "error", label: "ERR_FAILED_TO_UPDATE_PLAN" });
+          }
+        
         }
         
-
-      }
 
       case "ROLE_ACCESS_CONFIGURATION": {
         const fetchedPlan = await searchPlanConfig({
