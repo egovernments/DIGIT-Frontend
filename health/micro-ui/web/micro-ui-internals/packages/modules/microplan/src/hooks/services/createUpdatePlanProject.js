@@ -639,6 +639,7 @@ const createUpdatePlanProject = async (req) => {
         if (planResHypothesis?.PlanConfiguration?.[0]?.id) {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
+          window.dispatchEvent(new Event("isLastStep"));
           Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
           Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
           return {
