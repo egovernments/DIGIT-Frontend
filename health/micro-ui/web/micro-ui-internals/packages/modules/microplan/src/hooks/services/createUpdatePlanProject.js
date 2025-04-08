@@ -639,7 +639,6 @@ const createUpdatePlanProject = async (req) => {
         if (planResHypothesis?.PlanConfiguration?.[0]?.id) {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
-          window.dispatchEvent(new Event("isLastStep"));
           Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
           Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
           return {
@@ -962,10 +961,9 @@ const createUpdatePlanProject = async (req) => {
 
         const response = await updatePlan(updatedPlanObject);
         // Return as expected
-        if (response) {
+        if (response?.PlanConfiguration[0]?.id) {
           setCurrentKey((prev) => prev + 1);
           setCurrentStep((prev) => prev + 1);
-          window.dispatchEvent(new Event("isLastStep"));
           Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
           Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
           return {
@@ -989,6 +987,7 @@ const createUpdatePlanProject = async (req) => {
           ...fetchedPlan,
           additionalDetails: { ...fetchedPlan.additionalDetails, key: key },
         };
+
         const response = await updatePlan(updatedPlanObject);
         // Return as expected
         if (response) {

@@ -1,8 +1,7 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
 import AddColumns from "./AddColumns";
-import { TextBlock, Card, PopUp ,CardText,Button} from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { useMyContext } from "../utils/context";
+import { PopUp ,CardText,Button} from "@egovernments/digit-ui-components";
 
 const AddColContext = createContext("addColContext");
 export const useAddColContext = () => useContext(AddColContext);
@@ -30,7 +29,7 @@ const AddColumnsWrapper = ({ formData, onSelect, props: customProps }) => {
 
     const addNewCol = (key, newColName) => {
         if (colValues.some((item) => item.value === newColName)) {
-            setShowToast({ message: "Column already exists!", type: "error" });
+            setShowToast({ message: t("COLUMN_ALREADY_EXISTS"), type: "error" });
             return;
         }
         setColValues((prev) => [...prev, { key: key, value: newColName }]); // Adds new column
