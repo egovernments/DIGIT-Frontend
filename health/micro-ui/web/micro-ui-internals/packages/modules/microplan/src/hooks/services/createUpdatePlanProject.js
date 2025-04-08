@@ -924,6 +924,7 @@ const createUpdatePlanProject = async (req) => {
               info: "DRAFT_MICROPLAN_SUCCESS_NAME",
               showDraftDownload:true,
               actionLabel: "DOWNLOAD_DRAFT_MICROPLAN",
+              planObject : fetchedPlanForSummary
               // description: "SETUP_MICROPLAN_SUCCESS_RESPONSE_DESC",
             },
           };
