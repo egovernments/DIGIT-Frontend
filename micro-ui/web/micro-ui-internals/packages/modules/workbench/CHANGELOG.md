@@ -1,3 +1,6 @@
+## [1.0.21]  [8-Apr-2025]
+- Manage Sidebars
+
 ## [1.0.20]  [25-Mar-2025]
 - Enhancements in Localization Add Screen - Bulk Upload
 
