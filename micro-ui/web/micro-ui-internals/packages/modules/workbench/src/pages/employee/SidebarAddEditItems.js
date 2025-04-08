@@ -3,7 +3,6 @@ import { useHistory } from "react-router-dom";
 // import { ActionBar } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { FormComposerV2, Button, PopUp, TextInput, Toast } from "@egovernments/digit-ui-components";
-import SidebarItemsConfig from "../../configs/SidebarItemsConfig";
 import SidebarAddEditConfig from "../../configs/SidebarAddEditConfig";
 
 const SidebarAddEditItems = () => {

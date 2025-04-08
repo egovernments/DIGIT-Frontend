@@ -137,9 +137,9 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/create-boundary-hierarchy-type`} component={() => <BoundaryHierarchyTypeAdd />} />
           <PrivateRoute path={`${path}/upload-boundary`} component={() => <UploadBoundary />} />
           <PrivateRoute path={`${path}/upload-boundary-pure`} component={() => <UploadBoundaryPure />} />
-          <PrivateRoute path={`${path}/sidebar-config`} component={() => <SidebarConfig />} />
+          <PrivateRoute path={`${path}/sidebar-search`} component={() => <SidebarConfig />} />
           <PrivateRoute path={`${path}/sidebar-items`} component={() => <SidebarItems />} />
-          <PrivateRoute path={`${path}/sidebar-update`} component={() => <SidebarAddEditItems />} />
+          <PrivateRoute path={`${path}/sidebar-manage`} component={() => <SidebarAddEditItems />} />
         </AppContainer>
       </Switch>
     </React.Fragment>

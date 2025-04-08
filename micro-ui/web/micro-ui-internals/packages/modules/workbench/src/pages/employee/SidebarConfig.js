@@ -24,7 +24,7 @@ const SidebarConfig = () => {
     }
     const addContent = () => {
         history.push(
-            `/${window.contextPath}/employee/workbench/sidebar-update?type=add`
+            `/${window.contextPath}/employee/workbench/sidebar-manage?type=add`
         );
     }
     return (

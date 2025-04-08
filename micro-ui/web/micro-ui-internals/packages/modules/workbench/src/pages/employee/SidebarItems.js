@@ -50,7 +50,7 @@ const SidebarItems = () => {
         orderNumber: data?.data?.orderNumber
     });
     const onSubmit = async(data) => {
-        history.push(`/${window.contextPath}/employee/workbench/sidebar-update?type=update&id=${id}`, {
+        history.push(`/${window.contextPath}/employee/workbench/sidebar-manage?type=update&id=${id}`, {
         });
     }
 

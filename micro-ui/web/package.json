@@ -15,7 +15,7 @@
   "homepage": "/digit-ui",
   "dependencies": {
     "@egovernments/digit-ui-libraries": "1.8.11",
-    "@egovernments/digit-ui-module-workbench": "1.0.20",
+    "@egovernments/digit-ui-module-workbench": "1.0.21",
     "@egovernments/digit-ui-module-pgr": "1.8.12",
     "@egovernments/digit-ui-module-dss": "1.8.12",
     "@egovernments/digit-ui-module-core": "1.8.32",
