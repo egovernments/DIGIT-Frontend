@@ -15,6 +15,13 @@ import { configEmployeeApplication } from "./Modal/EmployeeAppliaction";
 import {configEmployeePasswordReset} from "./Modal/EmployeePasswordReset";
 import Header from "@egovernments/digit-ui-module-core/src/components/Header";
 
+/**
+ * handles multiple employee-related actions
+ * @param {*} param0 
+ * @returns 
+ * TODO:[need to configure the actions in the MDMS]
+ */
+
 const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applicationData, resendOtpFn, setToast}) => {
     const history = useHistory();
     const [config, setConfig] = useState({});

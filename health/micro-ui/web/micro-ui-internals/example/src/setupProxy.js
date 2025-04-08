@@ -106,7 +106,8 @@ module.exports = function (app) {
     "/filestore/v1/files/id",
     "/health-project/staff/v1/_search",
     "/health-project/v1/_search",
-    "/health-individual"
+    "/health-individual",
+    "/health-hrms/employees"
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));

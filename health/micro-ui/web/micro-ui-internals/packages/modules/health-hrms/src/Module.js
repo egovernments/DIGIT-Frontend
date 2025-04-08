@@ -21,10 +21,11 @@ import EmployeeDetailScreen from "./pages/employee/employeeDetails";
 import BreadCrumbs from "./components/pageComponents/BreadCrumb";
 
 export const HRMSModule = ({ stateCode, userType, tenants }) => {
+  const modulePrefix= "hcm";
   const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "ADMIN";
   const moduleCode = ["HR", `boundary-${hierarchyType?.toString().toLowerCase()}`];
   const language = Digit.StoreData.getCurrentLanguage();
-  const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
+  const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language,modulePrefix });
   const tenantId = Digit.ULBService.getCurrentTenantId();
   Digit.SessionStorage.set("HRMS_TENANTS", tenants);
 
