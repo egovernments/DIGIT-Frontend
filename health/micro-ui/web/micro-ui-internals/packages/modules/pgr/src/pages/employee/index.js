@@ -4,8 +4,6 @@ import { useTranslation } from "react-i18next";
 import { Switch } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import BreadCrumbs from "../../components/BreadCrumbs";
-import Response from "../../components/Response";
-import CreateComplaintNew from "../employee/CreateComplaintNew";
 
 
 const ProjectBreadCrumb = ({ location }) => {
@@ -31,7 +29,10 @@ const ProjectBreadCrumb = ({ location }) => {
 const EmployeeApp = ({ path, stateCode, userType, tenants }) => {
   console.log("PATH:", path);
 
+  const PGRCreateComplaint = Digit?.ComponentRegistryService?.getComponent("PGRCreateComplaint");
   const PGRComplaintDetails = Digit?.ComponentRegistryService?.getComponent("PGRComplaintDetails");
+  const PGRSearchInbox = Digit?.ComponentRegistryService?.getComponent("PGRSearchInbox");
+  const PGRResponse = Digit?.ComponentRegistryService?.getComponent("PGRResponse");
 
   return (
     <Switch>
@@ -39,10 +40,11 @@ const EmployeeApp = ({ path, stateCode, userType, tenants }) => {
         <React.Fragment>
           <ProjectBreadCrumb location={location} />
         </React.Fragment>
-        <PrivateRoute path={`${path}/create-complaint`} component={() => <CreateComplaintNew />} />
-        <PrivateRoute path={`${path}/complaint-success`} component={() => <Response />} />
-        <PrivateRoute path={`${path}/complaint-failed`} component={() => <Response />} />
+        <PrivateRoute path={`${path}/create-complaint`} component={() => <PGRCreateComplaint />} />
+        <PrivateRoute path={`${path}/complaint-success`} component={() => <PGRResponse />} />
+        <PrivateRoute path={`${path}/complaint-failed`} component={() => <PGRResponse />} />
         <PrivateRoute path={`${path}/complaint-details/:id`} component={() => <PGRComplaintDetails />} />
+        <PrivateRoute path={`${path}/inbox-v2`} component={() => <PGRSearchInbox />} />
       </AppContainer>
     </Switch>
   );

@@ -23,7 +23,7 @@ const initializePGRModule = async ({ tenantId }) => {
 
   const projectContextPath = window?.globalConfigs?.getConfig("PROJECT_SERVICE_PATH") || "health-project";
   const individualContextPath = window?.globalConfigs?.getConfig("INDIVIDUAL_CONTEXT_PATH") || "health-individual";
-  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "MICROPLAN";
+  const hierarchyType = "HIERARCHYTEST";
 
   let user = Digit?.SessionStorage.get("User");
 

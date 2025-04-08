@@ -9,12 +9,15 @@ import BoundaryComponent from "./components/BoundaryComponent";
 import PGRDetails from "./pages/employee/PGRDetails";
 import TimelineWrapper from "./components/TimeLineWrapper";
 import AssigneeComponent from "./components/AssigneeComponent";
+import PGRSearchInbox from "./pages/employee/PGRInbox";
+import CreateComplaint from "./pages/employee/CreateComplaintNew";
+import Response from "./components/Response";
 
 export const PGRModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
-  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "MICROPLAN";
+  const hierarchyType =  "HIERARCHYTEST";
   const moduleCode = ["pgr", `boundary-${hierarchyType}`];
   const modulePrefix = "hcm";
   const language = Digit.StoreData.getCurrentLanguage();
@@ -50,6 +53,9 @@ const componentsToRegister = {
   PGRComplaintDetails: PGRDetails,
   PGRTimeLineWrapper: TimelineWrapper,
   PGRAssigneeComponent: AssigneeComponent,
+  PGRSearchInbox,
+  PGRCreateComplaint: CreateComplaint,
+  PGRResponse: Response,
 };
 
 export const initPGRComponents = () => {

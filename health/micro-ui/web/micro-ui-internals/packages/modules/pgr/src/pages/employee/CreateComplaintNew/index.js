@@ -6,7 +6,7 @@ import { Loader } from "@egovernments/digit-ui-react-components";
 import CreateComplaintForm from "./createComplaintForm";
 import { CreateComplaintConfig } from "../../../configs/CreateComplaintConfig";
 
-const CreateComplaintNew = () => {
+const CreateComplaint = () => {
     const {t} = useTranslation();
     const queryStrings = Digit.Hooks.useQueryParams();
     const isModify = queryStrings?.workOrderNumber ? true : false;
@@ -125,4 +125,4 @@ const CreateComplaintNew = () => {
     )
 }
 
-export default CreateComplaintNew;
+export default CreateComplaint;

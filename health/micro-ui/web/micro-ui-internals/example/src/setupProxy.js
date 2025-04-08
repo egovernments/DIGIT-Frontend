@@ -104,7 +104,8 @@ module.exports = function (app) {
     "/health-muster-roll",
     "/health-expense/bill/v1/_search",
     "/health-expense-calculator/v1/_calculate",
-    "/filestore/v1/files/id"
+    "/filestore/v1/files/id",
+    "/inbox/v2/_search",
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));
