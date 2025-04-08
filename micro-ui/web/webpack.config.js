@@ -55,7 +55,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
-  mode: "development", // Set mode to development
+  mode: "production", // Set mode to development
   entry: path.resolve(__dirname, 'src/index.js'),
   devtool: "source-map", // Enable source maps for easier debugging in development
   module: {
@@ -83,15 +83,15 @@ module.exports = {
     publicPath: "/digit-ui/",
   },
   optimization: {
-    splitChunks: {
-      chunks: 'all',
-      minSize: 20000,
-      maxSize: 50000,
-      enforceSizeThreshold: 50000,
-      minChunks: 1,
-      maxAsyncRequests: 30,
-      maxInitialRequests: 30
-    },
+    // splitChunks: {
+    //   chunks: 'all',
+    //   minSize: 20000,
+    //   maxSize: 50000,
+    //   enforceSizeThreshold: 50000,
+    //   minChunks: 1,
+    //   maxAsyncRequests: 30,
+    //   maxInitialRequests: 30
+    // },
   },
   plugins: [
     new webpack.ProvidePlugin({
