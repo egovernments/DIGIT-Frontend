@@ -4,28 +4,28 @@ export const detailsConfig = [{
     module:"TL",
     subsections: [
       {
-        title: "TL_S1_TITLE",
+        title: "TL_SECTION1_TITLE",
         type: "both",
         content: [
           {
             type: "paragraph",
             id: 1,
-            text: "TL_S1_PARA1",
+            text: "TL_SECTION1_PARA1",
           },
           
         ],
       },
       {
-        title: "TL_S2_TITLE",
+        title: "TL_SECTION2_TITLE",
         type: "both",
         content: [
           {
             type: "paragraph",
-            text: "TL_S2_PARA1",
+            text: "TL_SECTION2_PARA1",
           },
           {
             type: "paragraph",
-            text: "TL_S2_PARA2",
+            text: "TL_SECTION2_PARA2",
           },
           {
             type: "image",
@@ -35,16 +35,16 @@ export const detailsConfig = [{
         ],
       },
       {
-        title: "TL_S3_TITLE",
+        title: "TL_SECTION3_TITLE",
         type: "both",
         content: [
           {
             type: "paragraph",
-            text: "TL_S3_PARA1",
+            text: "TL_SECTION3_PARA1",
           },
           {
             type: "paragraph",
-            text: "TL_S3_PARA2",
+            text: "TL_SECTION3_PARA2",
           },
           {
             type: "step-heading",

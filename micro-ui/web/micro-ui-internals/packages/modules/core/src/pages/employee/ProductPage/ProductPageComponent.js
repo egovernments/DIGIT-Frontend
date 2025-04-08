@@ -1,8 +1,7 @@
 import React from "react";
-import { Card, Button, CardHeader, HeaderComponent } from "@egovernments/digit-ui-components";
+import { Card, Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { ComplaintIcon } from "@egovernments/digit-ui-react-components";
 
 const ProductsPageComponent = () => {
   const { t } = useTranslation();
@@ -46,13 +45,12 @@ const ProductsPageComponent = () => {
             <div className="product-header">
               {Digit.Utils.iconRender(product.icon,"#c84c0e")}
               <h2 className="product-title">{t(product.title)}</h2>
-              {/* <HeaderComponent>{t(product.title)}</HeaderComponent> */}
             </div>
             <p className="product-description">{t(product.description)}</p>
             <Button
               className="explore-button"
               variation="secondary"
-              label={t("Explore →")}
+              label={t("COMMON_EXPLORE") + " →"}
               onClick={() => handleNavigate(`/${window?.contextPath}/employee/user/${product?.link}`)}
             />
           </Card>

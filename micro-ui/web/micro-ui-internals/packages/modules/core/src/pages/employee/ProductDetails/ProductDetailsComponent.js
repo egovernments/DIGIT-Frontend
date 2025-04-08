@@ -78,19 +78,28 @@ const ProductDetailsComponent = ({ config }) => {
           {moduleConfig?.subsections
             .filter((config) => config.type === "card")
             .map((config, index) => {
-              const CardIconComponent = Digit.Utils.iconRender(config?.icon,"#c84c0e");
+              const CardIconComponent = config?.icon ? Digit.Utils.iconRender(config.icon,"#c84c0e") : null;
               return (
                 <div key={index} className="role-card">
                   <div className="icon-container">
-                    {CardIconComponent }
+                  {CardIconComponent && CardIconComponent}
                   </div>
                   <CardHeader className="role-section-header">{t(config.heading)}</CardHeader>
                   <Button
                     className="role-button"
                     label={t(config.buttonName)}
                     variation={"primary"}
-                    onClick={() => config.isExternal ? window.open(config.action, "_blank") : handleButtonClick(config.action)}
-                  />
+                    onClick={() => {
+                      try {
+                        if (config.isExternal) {
+                          window.open(config?.action, "_blank");
+                        } else {
+                          handleButtonClick(config?.action);
+                        }
+                      } catch (error) {
+                        console.error("Error navigating to URL:", error);
+                      }
+                    }}                  />
                   <CardText className="role-paragraph">{t(config.description)}</CardText>
                 </div>
               );
