@@ -15,6 +15,7 @@ import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
 import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
 import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
+import { initPGRComponents } from "@egovernments/digit-ui-module-pgr";
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
 
@@ -26,7 +27,8 @@ const enabledModules = [
   "Engagement",
   "Workbench",
   "HCMWORKBENCH",
-  "Campaign"
+  "Campaign",
+  "PGR",
 ];
 
 const moduleReducers = (initData) => ({
@@ -44,7 +46,7 @@ const initDigitUI = () => {
   initWorkbenchComponents();
   initWorkbenchHCMComponents();
   initCampaignComponents();
-
+  initPGRComponents();
 };
 
 initLibraries().then(() => {

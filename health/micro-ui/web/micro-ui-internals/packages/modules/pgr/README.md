@@ -3,7 +3,7 @@
 ## Install
 
 ```bash
-npm install --save egovernments/digit-ui-module-health-payments
+npm install --save egovernments/digit-ui-module-pgr
 ```
 
 ## Limitation
@@ -21,7 +21,7 @@ frontend/micro-ui/web/package.json
 ```
 
 ```json
-"@egovernments/digit-ui-module-health-payments" :"0.0.1",
+"@egovernments/digit-ui-module-pgr" :"0.0.1",
 ```
 
 then navigate to App.js
@@ -33,32 +33,30 @@ then navigate to App.js
 ```jsx
 /** add this import **/
 
-import { initPaymentComponents } from "egovernments/digit-ui-module-health-payments"
+import { initPGRComponents } from "egovernments/digit-ui-module-pgr"
 
 /** inside enabledModules add this new module key **/
 
-const enabledModules = ["payments"];
+const enabledModules = ["PGR"];
 
 /** inside init Function call this function **/
 
 const initDigitUI = () => {
-  initPaymentComponents();
+  initPGRComponents();
 };
 
 ```
 
 ## List of features available in this package were as follows
 
-1. Implement attendance data edit and approval functionality.
-2. Introduce bill generation feature.
-3. Enable bill download in PDF format.
-4. Enable bill download in Excel format.
+1. Create Complaint
+2. Search Complaint Inbox.
+3. View/Update Complaint.
 
 
 ### Contributors
 
-- [ramkrishna-egov](https://github.com/ramkrishna-egov)
-- [rachna-egov](https://github.com/rachna-egov)
+- [ramkrishna-egov](https://github.com/Ramkrishna-egov)
 - [pitabash-eGov](https://github.com/pitabash-eGov)
 
 ## License
