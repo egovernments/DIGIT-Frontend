@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.8.25]  [8-April-2025]
+- Publishing a new version for Sandbox change
+
 ## [1.8.21]  [3-Mar-2025]
 - Publishing a new version for json edit button alignment
 
