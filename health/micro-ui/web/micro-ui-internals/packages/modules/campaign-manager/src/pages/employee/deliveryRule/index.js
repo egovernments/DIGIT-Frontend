@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useReducer, useState } from "react";
+import React, { createContext, useContext, useEffect, useReducer, useState , useMemo } from "react";
 import MultiTab from "./MultiTabcontext";
 import { Loader } from "@egovernments/digit-ui-components";
 // import { deliveryConfig } from "../../../configs/deliveryConfig";
@@ -15,7 +15,11 @@ function makeSequential(jsonArray, keyName) {
 
 function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subTabCount = 3, ...props }) {
   // Campaign Tab Skeleton function
-  const [cycleData, setCycleData] = useState(config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure);
+  // const [cycleData, setCycleData] = useState(config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure);
+  const cycleData = useMemo(() => {
+    return config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure;
+  }, [config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure]);
+  
   const saved = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
   const selectedProjectType = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_TYPE?.projectType?.code;
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -26,8 +30,8 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
     "HCM-PROJECT-TYPES",
     [{ name: "projectTypes" }],
     {
-      staleTime: 0,
-      cacheTime: 0,
+      staleTime: Infinity,
+      cacheTime: Infinity,
       enabled: true,
       select: (data) => {
         
@@ -37,9 +41,9 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
     },
     { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` }
   );
-  useEffect(() => {
-    setCycleData(config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure);
-  }, [config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure]);
+  // useEffect(() => {
+  //   setCycleData(config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure);
+  // }, [config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure]);
 
   const generateTabsData = (tabs, subTabs) => {
     if (!saved || saved?.length === 0) {
