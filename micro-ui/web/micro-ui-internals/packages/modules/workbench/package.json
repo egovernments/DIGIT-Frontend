@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-workbench",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "Workbench",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
@@ -35,7 +35,8 @@
     "react-query": "3.6.1",
     "react-router-dom": "5.3.0",
     "react-select": "5.7.4",
-    "xlsx": "0.17.5"
+    "xlsx": "0.17.5",
+    "exceljs": "^4.4.0"
   },
   "resolutions": {
     "**/styled-components": "5.0.0"
