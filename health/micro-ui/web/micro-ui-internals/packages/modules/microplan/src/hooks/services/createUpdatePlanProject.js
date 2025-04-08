@@ -279,9 +279,7 @@ const updatePlan = async (req) => {
 const addColumnsForPlan=async (req)=>{
   const draftResponse=await Digit.CustomService.getResponse({
     url: "/resource-generator/drafts",
-    body: {
-      req
-    },
+    body: req,
   });
   return draftResponse;
 }
@@ -942,8 +940,10 @@ const createUpdatePlanProject = async (req) => {
         });
 
         const draftRequestBody={
+          DraftDetails:{
           planConfigurationId:microplanId,
           tenantId
+          }
         }
 
         const draftResponse= await addColumnsForPlan(draftRequestBody);
