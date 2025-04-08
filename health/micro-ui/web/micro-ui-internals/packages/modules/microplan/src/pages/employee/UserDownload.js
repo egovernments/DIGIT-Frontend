@@ -85,7 +85,7 @@ const UserDownload = () => {
                 {/* Pagination Controls */}
                 <div className="pagination-controls">
                     <label>
-                        {t("Rows per page")}:
+                        {t("MP_UD_ROWS_PER_PAGE")}:
                         <select value={rowsPerPage} onChange={handleRowsPerPageChange}>
                             {[5, 10, 15, 20].map(size => (
                                 <option key={size} value={size}>{size}</option>
@@ -93,7 +93,7 @@ const UserDownload = () => {
                         </select>
                     </label>
                     <div>
-                        {t("Page")}: {currentPage} / {totalPages}
+                        {t("MP_USER_DOWNLOAD_PAGE")}: {currentPage} / {totalPages}
                         <Button
                             onClick={() => handlePageChange(currentPage - 1)}
                             isDisabled={currentPage === 1}
