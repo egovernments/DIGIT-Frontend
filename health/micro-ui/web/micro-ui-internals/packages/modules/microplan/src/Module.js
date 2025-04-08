@@ -110,6 +110,8 @@ const componentsToRegister = {
   UploadDataCustom,
   DataMgmtTable,
   FileComponent,
+  AddColumns,
+  AddColumnsWrapper,
   HeaderComp,
   FormulaView,
   FormulaSection,

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { LabelFieldPair, FieldV1, Button, Card, TextInput, PopUp } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useAddColContext } from "./AddColumnsWrapper";
-import { Header } from "@egovernments/digit-ui-components";
 
 const AddColumns = ({ colValues: initialColValues, setShowToast }) => {
   const { t } = useTranslation();
@@ -27,16 +26,15 @@ const AddColumns = ({ colValues: initialColValues, setShowToast }) => {
 
   return (
     <Card>
-      <Header className="summary-main-heading">{t("MP_ADD_NEW_COLUMNS_HEADER")} </Header>
       {colValues?.map((item, index) => (
-        <LabelFieldPair key={index} className="mp-hypothesis-label-field addColumnsScreen" style={{ alignItems: "center" }}>
+        <LabelFieldPair key={index} className="mp-hypothesis-label-field" style={{ alignItems: "center" }}>
           <div className="assumption-label">
             <span className="assumption-label-icon-wrapper">
-              <span className="assumption-label-icon-wrapper-label">{`${t(`MP_COLUMN_ADDITION`)} ${index+1}`}</span>
+              <span className="assumption-label-icon-wrapper-label">{t(`MP_COLUMN_${index}`)}</span>
             </span>
           </div>
 
-          <div className="fieldv1-deleteIcon-container addColumnsScreen">
+          <div className="fieldv1-deleteIcon-container">
             <FieldV1
               type="text"
               name={`field-${index}`}
@@ -64,8 +62,8 @@ const AddColumns = ({ colValues: initialColValues, setShowToast }) => {
       ))}
       <Button
         icon="Add"
-        title={t("MP_ADD_NEW_COL_BUTTON")}
-        label={t("MP_ADD_NEW_COL_BUTTON")}
+        title={t("MP_ADD_NEW_COL")}
+        label={t("MP_ADD_NEW_COL")}
         onClick={() => setShowPopUp(true)}
         variation="secondary"
         isDisabled={false}
@@ -79,7 +77,7 @@ const AddColumns = ({ colValues: initialColValues, setShowToast }) => {
           children={
             [(
               <LabelFieldPair className="new-assumption-pop">
-                <span className="bold-column">{t(`MP_COL_NAME`)}</span>
+                <span className="bold">{t(`MP_COL_NAME`)}</span>
                 <TextInput
                   name="name"
                   value={newColValue}
