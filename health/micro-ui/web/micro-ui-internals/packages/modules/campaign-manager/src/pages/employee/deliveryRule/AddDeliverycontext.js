@@ -33,7 +33,7 @@ const makeSequential = (jsonArray, keyName) => {
   }));
 };
 
-const AddAttributeField = ({
+const AddAttributeField = React.memo(({
   config,
   deliveryRuleIndex,
   delivery,
@@ -58,32 +58,77 @@ const AddAttributeField = ({
     setAddedOption(delivery?.attributes?.map((i) => i?.attribute?.code)?.filter((i) => i));
   }, [delivery, deliveryRules]);
 
+  // const schemaCode = useMemo(() => 
+  //   showAttribute?.valuesSchema, [showAttribute?.valuesSchema]);
+
   const schemaCode = useMemo(() => {
     const code = showAttribute?.valuesSchema;
+    // fetchStructureConfig(code);
     return code;
   }, [showAttribute]);
 
-  const { data: structureConfig } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    schemaCode?.split(".")[0] || "", // Provide a fallback to avoid errors
-    schemaCode ? [{ name: schemaCode.split(".")[1] }] : [], // Run only if schemaCode is defined
-    {
-      enabled: !!schemaCode, // Enable the hook only if schemaCode is defined
-      select: (data) => {
-        if (!schemaCode) return null;
-        const moduleName = schemaCode.split(".")[0];
-        const schemaName = schemaCode.split(".")[1];
-        return data?.[moduleName]?.[schemaName];
-      },
-    }, // Pass null if schemaCode is undefined
-    schemaCode ? { schemaCode } : null // Include schemaCode only if it's defined
-  );
-
   useEffect(() => {
-    if (showAttribute) {
-      setDropdownOption(structureConfig);
+    if (schemaCode) {
+      const fetchData = async () => {
+        const fetch = await fetchStructureConfig(schemaCode);
+        if (fetch?.length > 0) {
+                setDropdownOption(fetch);
+              } else setDropdownOption([]);
+      };
+  
+      fetchData();
     }
-  }, [showAttribute, structureConfig, attributeConfig]);
+  }, [schemaCode, tenantId]);
+  
+  // const { data: structureConfig } = Digit.Hooks.useCustomMDMS(
+  //   tenantId,
+  //   schemaCode?.split(".")?.[0] || "", // Provide a fallback to avoid errors
+  //   schemaCode ? [{ name: schemaCode?.split(".")?.[1] }] : [], // Run only if schemaCode is defined
+  //   {
+  //     enabled: !!schemaCode, // Enable the hook only if schemaCode is defined
+  //     select: (data) => {
+  //       console.log("data" , data);
+  //       if (!schemaCode) return null;
+  //       const moduleName = schemaCode?.split(".")?.[0];
+  //       const schemaName = schemaCode?.split(".")?.[1];
+  //       return data?.[moduleName]?.[schemaName];
+  //     },
+  //   }, // Pass null if schemaCode is undefined
+  //   schemaCode ? { schemaCode } : null // Include schemaCode only if it's defined
+  // );
+
+  const fetchStructureConfig = async (schemaCode) => {
+    const data = await Digit.CustomService.getResponse({
+      url: `/egov-mdms-service/v1/_search`,
+      body: {
+        MdmsCriteria: {
+          tenantId: tenantId,
+          // schemaCodes: [schemaCode],
+          "moduleDetails": [
+            {
+                "moduleName": schemaCode?.split(".")?.[0],
+                "masterDetails": [
+                    {
+                        "name": schemaCode?.split(".")?.[1]
+                    }
+                ]
+            }
+        ]
+        },
+      },
+    });
+    const moduleName = schemaCode?.split(".")?.[0];
+      const schemaName = schemaCode?.split(".")?.[1];
+      return data?.MdmsRes?.[moduleName]?.[schemaName];
+  }
+
+  // useEffect(() => {
+  //   if (showAttribute) {
+  //     if (structureConfig?.length > 0) {
+  //       setDropdownOption(structureConfig);
+  //     } else setDropdownOption([]);
+  //   }
+  // }, [showAttribute, structureConfig, attributeConfig]);
 
   const selectValue = (e) => {
     let val = e.target.value;
@@ -280,9 +325,9 @@ const AddAttributeField = ({
       )}
     </div>
   );
-};
+});
 
-const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, deliveryRules, setDeliveryRules, index, key }) => {
+const AddAttributeWrapper = React.memo(({ targetedData, deliveryRuleIndex, delivery, deliveryRules, setDeliveryRules, index, key }) => {
   const { campaignData, dispatchCampaignData, filteredDeliveryConfig } = useContext(CycleContext);
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -383,9 +428,9 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
       )}
     </Card>
   );
-};
+});
 
-const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index, key, delivery, onDelete }) => {
+const AddDeliveryRule = React.memo(({ targetedData, deliveryRules, setDeliveryRules, index, key, delivery, onDelete }) => {
   const { campaignData, dispatchCampaignData, filteredDeliveryConfig } = useContext(CycleContext);
   const [showModal, setShowModal] = useState(false);
   const [showToast, setShowToast] = useState(null);
@@ -560,9 +605,9 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
       )}
     </>
   );
-};
+});
 
-const AddDeliveryRuleWrapper = ({}) => {
+const AddDeliveryRuleWrapper = React.memo(({}) => {
   const { campaignData, dispatchCampaignData, filteredDeliveryConfig } = useContext(CycleContext);
   const [targetedData, setTargetedData] = useState(campaignData?.find((i) => i?.active === true)?.deliveries?.find((d) => d?.active === true));
   const [deliveryRules, setDeliveryRules] = useState(targetedData?.deliveryRules);
@@ -640,6 +685,6 @@ const AddDeliveryRuleWrapper = ({}) => {
           )}
     </>
   );
-};
+});
 
 export default AddDeliveryRuleWrapper;
