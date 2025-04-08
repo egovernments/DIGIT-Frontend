@@ -84,6 +84,12 @@ const CampaignCard = () => {
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
     },
+    {
+      label: t("ACTION_TEST_APP_CONFIGURATION_2.0"),
+      link: `/workbench-ui/employee/campaign/app-configuration-redesign?variant=app&masterName=AppScreenConfigTemplateSchema&fieldType=AppFieldType&prefix=APPONE`,
+      roles: ROLES.CAMPAIGN_MANAGER,
+      // count: isLoading?"-":data
+    },
   ];
 
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));

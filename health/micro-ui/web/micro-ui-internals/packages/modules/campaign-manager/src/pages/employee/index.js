@@ -116,7 +116,8 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
   const AddProduct = Digit?.ComponentRegistryService?.getComponent("AddProduct");
   const UpdateDatesWithBoundaries = Digit?.ComponentRegistryService?.getComponent("UpdateDatesWithBoundaries");
   const AppConfigurationParentLayer = Digit?.ComponentRegistryService?.getComponent("AppConfigurationParentLayer");
-
+  const AppConfigurationParentRedesign = Digit?.ComponentRegistryService?.getComponent("AppConfigurationParentRedesign");
+  
   useEffect(() => {
     if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
       window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
@@ -169,6 +170,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <PrivateRoute path={`${path}/update-campaign`} component={() => <UpdateCampaign />} />
           <PrivateRoute path={`${path}/setup-from-microplan`} component={() => <ApprovedMicroplans />} />
           <PrivateRoute path={`${path}/app-configuration-parent`} component={() => <AppConfigurationParentLayer />} />
+          <PrivateRoute path={`${path}/app-configuration-redesign`} component={() => <AppConfigurationParentRedesign />} />
           <PrivateRoute path={`${path}/form-builder-configuration`} component={() => <FormBuilder />} />
           <PrivateRoute path={`${path}/schema-builder-configuration`} component={() => <SchemaBuilder />} />
         </AppContainer>

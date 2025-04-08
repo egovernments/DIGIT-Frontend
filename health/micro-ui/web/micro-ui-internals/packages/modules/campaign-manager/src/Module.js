@@ -56,6 +56,7 @@ import DataUploadWrapper from "./components/DataUploadWrapper";
 import AppPreview from "./components/AppPreview";
 import AppConfigurationParentLayer from "./pages/employee/appConfigurationScreenParent/AppConfigurationParentLayer";
 import FormBuilder from "./pages/employee/appConfigurationScreenParent/FormBuilder";
+import AppConfigurationParentRedesign from "./pages/employee/appConfigurationRedesign/AppConfigurationParentLayer";
 
 /**
  * MDMS Module name
@@ -175,6 +176,7 @@ const componentsToRegister = {
   AppPreview,
   AppConfigurationParentLayer: AppConfigurationParentLayer,
   FormBuilder,
+  AppConfigurationParentRedesign
 };
 
 const overrideHooks = () => {
