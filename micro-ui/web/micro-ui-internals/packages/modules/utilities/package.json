@@ -19,8 +19,8 @@
   },
   "dependencies": {
     "@cyntler/react-doc-viewer": "1.10.3",
-    "@egovernments/digit-ui-components":"0.0.2-beta.56",
-    "@egovernments/digit-ui-react-components": "1.8.10",
+    "@egovernments/digit-ui-components":"0.0.2-beta.4-webpack.2",
+    "@egovernments/digit-ui-react-components": "1.8.16-upgrade.2",
     "axios": "^1.7.2",
     "react-date-range": "^1.4.0",
     "react-diff-view": "3.2.1",
