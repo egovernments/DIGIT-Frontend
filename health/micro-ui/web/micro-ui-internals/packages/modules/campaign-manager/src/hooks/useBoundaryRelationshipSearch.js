@@ -1,5 +1,5 @@
 export const useBoundaryRelationshipSearch = ({BOUNDARY_HIERARCHY_TYPE , tenantId}) => {
-    const reqCriteria = {
+  const reqCriteria = {
         url: `/boundary-service/boundary-relationships/_search`,
         changeQueryName: `${BOUNDARY_HIERARCHY_TYPE}`,
         params: {

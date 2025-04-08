@@ -99,7 +99,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
  * the `Switch` component, there are several `PrivateRoute` components with different paths and
  * corresponding components such as `UploadBoundaryData`, `CycleConfiguration`, `DeliveryRule`, `
  */
-const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: propsHierarchyData }) => {
+const App = React.memo(({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: propsHierarchyData }) => {
   const location = useLocation();
   const userId = Digit.UserService.getUser().info.uuid;
   const BOUNDARY_HIERARCHY_TYPE = useMemo(() => BoundaryHierarchy, [BoundaryHierarchy]);
@@ -164,13 +164,13 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <PrivateRoute path={`${path}/boundary/create`} component={() => <BoundaryRelationCreate />} />
           <PrivateRoute path={`${path}/boundary/view-all-hierarchy`} component={() => <ViewBoundary />} />
           <PrivateRoute path={`${path}/boundary/data`} component={() => <ViewHierarchy />} />
-          <PrivateRoute path={`${path}/update-campaign`} component={() => <UpdateCampaign />} />
+          <PrivateRoute path={`${path}/update-campaign`} component={() => <UpdateCampaign hierarchyData={hierarchyData} />} />
           <PrivateRoute path={`${path}/setup-from-microplan`} component={() => <ApprovedMicroplans />} />
           <PrivateRoute path={`${path}/app-configuration`} component={() => <AppConfigurationWrapper />} />
         </AppContainer>
       </Switch>
     </React.Fragment>
   );
-};
+});
 
 export default App;

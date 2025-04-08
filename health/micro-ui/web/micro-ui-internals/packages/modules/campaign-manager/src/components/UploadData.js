@@ -255,7 +255,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
       setConvertedSchema(schema);
     }
-  }, [Schemas, type]);
+  }, [Schemas, type ,uploadedFile]);
+
 
   useEffect(async () => {
     if (convertedSchema && Object.keys(convertedSchema).length > 0) {
@@ -696,17 +697,34 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
           const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[SheetNames], { blankrows: true });
           var jsonData = sheetData.map((row, index) => {
-            const rowData = {};
+            let rowData = {};
             if (Object.keys(row).length > 0) {
+              let allNull = true;
+          
               Object.keys(row).forEach((key) => {
-                rowData[key] = row[key] === undefined || row[key] === "" ? "" : row[key];
+                if (row[key] !== undefined && row[key] !== "") {
+                  allNull = false;
+                }            
+                rowData[key] = row[key] === undefined || row[key] === "" ? null : row[key];
               });
-              rowData["!row#number!"] = index + 1; // Adding row number
+          
+              if (!allNull) {
+                rowData["!row#number!"] = index + 1;
+          
+                // Remove keys with null values
+                rowData = Object.fromEntries(
+                  Object.entries(rowData).filter(([_, value]) => value !== null)
+                );
+                
+              } else {
+                rowData = null;
+              }
+          
               return rowData;
             }
           });
-
-          jsonData = jsonData.filter((element) => element !== undefined);
+          
+          jsonData = jsonData.filter((element) => element);
           if (type === "boundary") {
             if (workbook?.SheetNames.filter(sheetName => sheetName !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")).length == 0) {
               const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
@@ -796,6 +814,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             }
           }
         } catch (error) {
+          console.log("error" , error);
           reject("HCM_FILE_UNAVAILABLE");
         }
       };
