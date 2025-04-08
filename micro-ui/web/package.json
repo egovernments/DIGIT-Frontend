@@ -7,7 +7,7 @@
   "engines": {
     "node": ">=14"
   },
-  "homepage": "/workbench-ui",
+  "homepage": "/digit-ui",
   "workspaces": [
     "micro-ui-internals",
     "micro-ui-internals/packages/modules/*",
