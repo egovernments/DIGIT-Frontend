@@ -13,7 +13,7 @@
   ],
   "homepage": "/microplan-ui",
   "dependencies": {
-    "@egovernments/digit-ui-libraries": "1.8.10",
+    "@egovernments/digit-ui-libraries": "1.8.11",
     "@egovernments/digit-ui-module-core": "1.8.30",
     "@egovernments/digit-ui-react-components": "1.8.19",
     "@egovernments/digit-ui-module-hcmmicroplanning": "0.0.2",
