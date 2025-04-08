@@ -198,8 +198,29 @@ const fetchExcelData = async ({ tenantId, fileStoreId, currentCategories, sheetN
     const arrayBuffer = response.data;
     const workbook = XLSX.read(arrayBuffer, { type: "array" });
     const sheetName = workbook?.SheetNames?.find((i) => i === sheetNameToFetch);
-    const sheetData = workbook?.Sheets?.[sheetName];
-    return { sheetData: XLSX.utils.sheet_to_json(sheetData), workbook: workbook, arrayBuffer: arrayBuffer }; // Return as array of objects
+    const sheetData = XLSX.utils.sheet_to_json(workbook?.Sheets?.[sheetName]);
+    var jsonData = sheetData.map((row, index) => {
+      let rowData = {};
+      if (Object.keys(row).length > 0) {
+        let allNull = true;
+        Object.keys(row).forEach((key) => {
+          if (row[key] !== undefined && row[key] !== "") {
+            allNull = false;
+          }            
+          rowData[key] = row[key] === undefined || row[key] == "" ? null : row[key];
+        });
+     
+        if (!allNull) {
+          rowData["!row#number!"] = index + 1;
+        }
+        else{
+          rowData = null;
+        }
+        return rowData;
+      }
+    });
+    jsonData = jsonData.filter((element) => element);
+    return { sheetData: jsonData, workbook: workbook, arrayBuffer: arrayBuffer }; // Return as array of objects
   } catch (error) {
     throw new Error(error);
   }
