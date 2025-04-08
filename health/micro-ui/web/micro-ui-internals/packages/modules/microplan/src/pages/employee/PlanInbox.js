@@ -485,7 +485,7 @@ const PlanInbox = () => {
       // Update the available actions state
       setAvailableActionsForUser(availableActions || []);
     }
-  }, [workflowData, selectedFilter?.status]);
+  }, [workflowData, selectedFilter?.status,selectedRows,villagesSlected]);
 
   // if availableActionsForUser is defined and is an array
   const actionsMain = availableActionsForUser?.length > 0 ? availableActionsForUser : [];

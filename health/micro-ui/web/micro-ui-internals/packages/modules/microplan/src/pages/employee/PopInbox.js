@@ -300,7 +300,7 @@ const PopInbox = () => {
       setAvailableActionsForUser(availableActions || []);
 
     }
-  }, [workflowData, selectedFilter?.status]);
+  }, [workflowData, selectedFilter?.status,villagesSlected,selectedRows]);
 
 
   // if availableActionsForUser is defined and is an array

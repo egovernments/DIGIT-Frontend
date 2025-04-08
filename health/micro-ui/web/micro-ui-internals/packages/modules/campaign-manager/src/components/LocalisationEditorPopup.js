@@ -4,8 +4,7 @@ import DataTable from "react-data-table-component";
 import { useTranslation } from "react-i18next";
 import { wrap } from "lodash";
 
-
-const LocalisationEditorPopup = ({ locales,languages, currentLocale, localisationData, onSave, onClose  }) => {
+const LocalisationEditorPopup = ({ locales, languages, currentLocale, localisationData, onSave, onClose }) => {
   const { t } = useTranslation();
   const [activeLocale, setActiveLocale] = useState(locales[0]);
   const [translations, setTranslations] = useState({});
@@ -25,11 +24,13 @@ const LocalisationEditorPopup = ({ locales,languages, currentLocale, localisatio
       name: t(activeLocale),
       cell: (row) => (
         <TextInput
-          value={translations[row.code]?.[activeLocale] !== undefined && translations[row.code]?.[activeLocale] !== null
-            ? translations[row.code]?.[activeLocale]
-            : row?.[activeLocale] !== undefined && row?.[activeLocale] !== null
-            ? row?.[activeLocale]
-            : ""}
+          value={
+            translations[row.code]?.[activeLocale] !== undefined && translations[row.code]?.[activeLocale] !== null
+              ? translations[row.code]?.[activeLocale]
+              : row?.[activeLocale] !== undefined && row?.[activeLocale] !== null
+              ? row?.[activeLocale]
+              : ""
+          }
           onChange={(e) =>
             setTranslations((prev) => ({
               ...prev,
@@ -37,28 +38,35 @@ const LocalisationEditorPopup = ({ locales,languages, currentLocale, localisatio
             }))
           }
           placeholder={t("ENTER_TRANSLATION")}
-        />
+        >
+        </TextInput>
       ),
       width: "55%",
     },
   ];
 
-  
   return (
     <div style={{ minWidth: "min-content" }}>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1rem" }}></div>
 
       <Tab
-        activeLink = {activeLocale}
+        activeLink={activeLocale}
         configItemKey="value"
         configNavItems={languages}
-        onTabClick={(v)=>{}}
+        onTabClick={(v) => {}}
         setActiveLink={setActiveLocale}
         showNav
         style={{}}
       />
 
-      <DataTable columns={columns} data={localisationData} pagination highlightOnHover noHeader persistTableHead />
+      <DataTable
+        columns={columns}
+        data={localisationData.filter((row) => row.message?.trim() !== "")}
+        pagination
+        highlightOnHover
+        noHeader
+        persistTableHead
+      />
 
       <div style={{ display: "flex", gap: "1rem", justifyContent: "flex-end", marginTop: "2rem" }}>
         <Button label={t("CANCEL")} variation="secondary" onClick={onClose} />
