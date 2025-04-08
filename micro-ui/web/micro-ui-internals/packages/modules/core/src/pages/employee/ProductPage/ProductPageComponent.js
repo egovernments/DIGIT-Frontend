@@ -3,29 +3,9 @@ import { Card, Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
-const ProductsPageComponent = () => {
+const ProductsPageComponent = ({ProductsConfig}) => {
   const { t } = useTranslation();
   const history = useHistory();
-
-  const ProductsConfig = {
-    header : "SANDBOX_PRODUCT_HEADER",
-    headerDescription : "SANDBOX_PRODUCT_HEADER_DESC",
-    products : [
-      {
-        title: "SANDBOX_PGR_TITLE",
-        description: "SANDBOX_PGR_DESC",
-        icon: "ComplaintIcon",
-        link: "productDetailsPage/TL",
-      },
-      {
-        title: "SANDBOX_TL_TITLE",
-        description: "SANDBOX_TL_DESC",
-        icon: "ComplaintIcon",
-        link: "productDetailsPage/TL",
-      },
-    ]
-  }
-
   const handleNavigate = (path) => {
     history.push(path);
   };

@@ -7,14 +7,15 @@ const ProductDetailsComponent = ({ config }) => {
   const { t } = useTranslation();
   const { module } = useParams();
   const history = useHistory();
-
-  const moduleConfig = config.find((item) => item.module === module) || {};
+  const moduleConfig = config?.find((item) => item.module === module) || {};
   const IconComponent = moduleConfig.icon ? Digit.Utils.iconRender(moduleConfig.icon,"#c84c0e"): null;
 
   const handleButtonClick = (action) => {
     const url = '/' + window.contextPath + action;
     window.open(url, "_blank");
   };
+
+
 
   return (
     <div className="custom-landing-container">
@@ -29,7 +30,7 @@ const ProductDetailsComponent = ({ config }) => {
           </HeaderComponent>
         </div>
         {moduleConfig?.subsections
-          .filter(ob => ob?.type !== "card")
+          ?.filter(ob => ob?.type !== "card")
           .map((section, index) => (
             <div key={index} className="custom-section-container">
               <CardHeader className="custom-section-header">{t(section.title)}</CardHeader>
@@ -76,7 +77,7 @@ const ProductDetailsComponent = ({ config }) => {
 
         <div className="role-action-container">
           {moduleConfig?.subsections
-            .filter((config) => config.type === "card")
+            ?.filter((config) => config.type === "card")
             .map((config, index) => {
               const CardIconComponent = config?.icon ? Digit.Utils.iconRender(config.icon,"#c84c0e") : null;
               return (
