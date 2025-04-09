@@ -15,7 +15,7 @@ const Response = () => {
     queryStrings?.isSuccess === "true" ? true : queryStrings?.isSuccess === "false" ? false : true
   );
   const [showToast, setShowToast] = useState(false);
-  const { state } = useLocation();
+  const state = window.history.state;
   const back = state?.back ? state?.back : "BACK";
 
   const downloadDraftFile = () => {
