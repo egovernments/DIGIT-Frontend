@@ -17,7 +17,7 @@ const EmployeeApp = ({ path }) => {
   const ResponseScreen = Digit?.ComponentRegistryService?.getComponent("ResponseScreen");
 
   const BreadCrumbs = Digit?.ComponentRegistryService?.getComponent("BreadCrumbs");
-  console.log("location", location);
+  
   return (
     <Switch>
       <React.Fragment>
