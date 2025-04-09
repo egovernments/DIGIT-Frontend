@@ -16,6 +16,7 @@ import {
 } from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR } from "../../../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
+import getMDMSUrl from "../../../utils/getMDMSUrl";
 
 const DustbinIcon = () => (
   <svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -58,32 +59,81 @@ const AddAttributeField = ({
     setAddedOption(delivery?.attributes?.map((i) => i?.attribute?.code)?.filter((i) => i));
   }, [delivery, deliveryRules]);
 
+  // const schemaCode = useMemo(() => {
+  //   const code = showAttribute?.valuesSchema;
+  //   return code;
+  // }, [showAttribute]);
+
   const schemaCode = useMemo(() => {
     const code = showAttribute?.valuesSchema;
+    // fetchStructureConfig(code);
     return code;
   }, [showAttribute]);
 
-  const { data: structureConfig } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    schemaCode?.split(".")[0] || "", // Provide a fallback to avoid errors
-    schemaCode ? [{ name: schemaCode.split(".")[1] }] : [], // Run only if schemaCode is defined
-    {
-      enabled: !!schemaCode, // Enable the hook only if schemaCode is defined
-      select: (data) => {
-        if (!schemaCode) return null;
-        const moduleName = schemaCode.split(".")[0];
-        const schemaName = schemaCode.split(".")[1];
-        return data?.[moduleName]?.[schemaName];
-      },
-    }, // Pass null if schemaCode is undefined
-    schemaCode ? { schemaCode } : null // Include schemaCode only if it's defined
-  );
+  // const { data: structureConfig } = Digit.Hooks.useCustomMDMS(
+  //   tenantId,
+  //   schemaCode?.split(".")[0] || "", // Provide a fallback to avoid errors
+  //   schemaCode ? [{ name: schemaCode.split(".")[1] }] : [], // Run only if schemaCode is defined
+  //   {
+  //     enabled: !!schemaCode, // Enable the hook only if schemaCode is defined
+  //     select: (data) => {
+  //       if (!schemaCode) return null;
+  //       const moduleName = schemaCode.split(".")[0];
+  //       const schemaName = schemaCode.split(".")[1];
+  //       return data?.[moduleName]?.[schemaName];
+  //     },
+  //   }, // Pass null if schemaCode is undefined
+  //   schemaCode ? { schemaCode } : null // Include schemaCode only if it's defined
+  // );
+
+  // useEffect(() => {
+  //   if (showAttribute) {
+  //     setDropdownOption(structureConfig);
+  //   }
+  // }, [showAttribute, structureConfig, attributeConfig]);
 
   useEffect(() => {
-    if (showAttribute) {
-      setDropdownOption(structureConfig);
+    if (schemaCode) {
+      const fetchData = async () => {
+        try {
+          const fetch = await fetchStructureConfig(schemaCode);
+          if (fetch?.length > 0) {
+            setDropdownOption(fetch);
+          } else setDropdownOption([]);
+        } catch (error) {
+          console.error("Error fetching structure config:", error);
+          setDropdownOption([]);
+        }
+      };
+
+      fetchData();
     }
-  }, [showAttribute, structureConfig, attributeConfig]);
+  }, [schemaCode, tenantId]);
+
+  const fetchStructureConfig = async (schemaCode) => {
+    const url = getMDMSUrl(true);
+    const data = await Digit.CustomService.getResponse({
+      url: `${url}/v1/_search`,
+      body: {
+        MdmsCriteria: {
+          tenantId: tenantId,
+          moduleDetails: [
+            {
+              moduleName: schemaCode?.split(".")?.[0],
+              masterDetails: [
+                {
+                  name: schemaCode?.split(".")?.[1],
+                },
+              ],
+            },
+          ],
+        },
+      },
+    });
+    const moduleName = schemaCode?.split(".")?.[0];
+    const schemaName = schemaCode?.split(".")?.[1];
+    return data?.MdmsRes?.[moduleName]?.[schemaName];
+  };
 
   const selectValue = (e) => {
     let val = e.target.value;
