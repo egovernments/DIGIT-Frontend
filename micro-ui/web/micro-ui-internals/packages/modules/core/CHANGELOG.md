@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.8.33]  [9-April-2025]
+- FEATURE/CCSD-57 :Sandbox Changes
+
 ## [1.8.32]  [10-Mar-2025]
 - FEATURE/DUCE-0246 :Userprofile password trimming
 
