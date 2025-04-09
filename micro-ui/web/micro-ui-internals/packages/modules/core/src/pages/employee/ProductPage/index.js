@@ -7,7 +7,7 @@ const ProductPage = () => {
 
  
   const { data: detailsConfig , isLoading} = Digit.Hooks.useCustomMDMS(
-    Digit.ULBService.getCitizenCurrentTenant(),
+    Digit.ULBService.getCurrentTenantId(),
     "sandbox",
     [
       {

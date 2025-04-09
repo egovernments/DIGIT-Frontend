@@ -4,7 +4,7 @@ import { Loader } from "@egovernments/digit-ui-components";
 
 const Landing = () => {
   const { data: sandboxConfig , isLoading} = Digit.Hooks.useCustomMDMS(
-    Digit.ULBService.getCitizenCurrentTenant(),
+    Digit.ULBService.getCurrentTenantId(),
     "sandbox",
     [
       {
