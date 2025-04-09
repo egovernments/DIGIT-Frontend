@@ -78,6 +78,9 @@ export const UICustomizations = {
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
 
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const microplanId = row?.id;
+
       switch (key) {
         case "ACTIONS":
           // TODO : Replace dummy file id with real file id when API is ready
@@ -87,7 +90,7 @@ export const UICustomizations = {
           let options = [];
 
           if (row?.status == "DRAFT") {
-            options = [{ code: "1", name: "MP_ACTIONS_EDIT_SETUP" },{ code: "2", name: "MP_ACTIONS_DOWNLOAD_DRAFT" }];
+            options = [{ code: "1", name: "MP_ACTIONS_EDIT_SETUP" },{ code: "2", name: "MP_ACTIONS_DOWNLOAD_DRAFT" },{ code: "3", name: "MP_ACTIONS_FREEZE_MICROPLAN" }];
           } else {
             options = [{ code: "1", name: "MP_ACTIONS_VIEW_SUMMARY" }];
           }
@@ -107,7 +110,7 @@ export const UICustomizations = {
             });
           };
 
-          const onActionSelect = (e) => {
+          const onActionSelect = async (e) => {
             if (e.name === "MP_ACTIONS_EDIT_SETUP") {
               const key = parseInt(row?.additionalDetails?.key);
               const resolvedKey = key === 8 ? 7 : key === 9 ? 10 : key || 2;
@@ -116,6 +119,21 @@ export const UICustomizations = {
             }
             if (e.name === "MP_ACTIONS_DOWNLOAD_DRAFT") {
               handleDownload({type:"Draft"});
+            }
+            if (e.name === "MP_ACTIONS_FREEZE_MICROPLAN") {
+              const triggeredFromMain = "OPEN_MICROPLANS"
+              const response = await Digit.Hooks.microplanv1.useCompleteSetUpFlow({
+                tenantId,
+                microplanId,
+                triggeredFrom:triggeredFromMain,
+              });
+              if (response && !response?.isError) {
+                window.history.pushState(response?.state, "", response?.redirectTo);
+                window.dispatchEvent(new PopStateEvent('popstate', { state: response?.state }));
+              }
+              if(response && response?.isError){
+                console.error(`ERR_FAILED_TO_COMPLETE_SETUP`);
+              }
             }
             if (e.name == "MP_ACTIONS_VIEW_SUMMARY") {
               window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${

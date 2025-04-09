@@ -192,7 +192,8 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
       onSuccess: (data) => {
         // Check if there is a redirectTo property in the response
         if (data?.redirectTo) {
-          history.push(data?.redirectTo, data?.state);
+          window.history.pushState(data?.state, "", data?.redirectTo);
+          window.dispatchEvent(new PopStateEvent('popstate', { state: data?.state }));
           return; // Navigate to the specified route
         }
 
