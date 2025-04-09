@@ -2,25 +2,30 @@ import React from "react";
 import ProductsPageComponent from "./ProductPageComponent";
 import { Loader } from "@egovernments/digit-ui-components";
 
+
 const ProductPage = () => {
-  const { data: ProductsConfig , isLoading} = Digit.Hooks.useCustomMDMS(
+
+
+  const { data: detailsConfig , isLoading} = Digit.Hooks.useCustomMDMS(
     "default",
     "sandbox",
     [
       {
-        name: "products",
+        name: "ProductDetails",
       },
     ],
     {
       select: (data) => {
-        return data?.["sandbox"]?.["products"]?.[0];
+        return data?.["sandbox"]?.["ProductDetails"];
       },
     }
   );
 
+
+
   if(isLoading) return <Loader />  
   return (
-    <ProductsPageComponent ProductsConfig={ProductsConfig} />
+    <ProductsPageComponent detailsConfig = {detailsConfig} />
   );  
 };
 

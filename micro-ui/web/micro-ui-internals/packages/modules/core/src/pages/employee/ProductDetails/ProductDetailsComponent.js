@@ -1,12 +1,14 @@
 import React, { Fragment } from "react";
 import { HeaderComponent, Card, CardText, CardHeader, Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams, useLocation } from "react-router-dom";
 
-const ProductDetailsComponent = ({ config }) => {
+const ProductDetailsComponent = () => {
+  const location = useLocation();
   const { t } = useTranslation();
   const { module } = useParams();
-  const history = useHistory();
+  const { detailsConfig :config} = location.state || {};
+
   const moduleConfig = config?.find((item) => item.module === module) || {};
   const IconComponent = moduleConfig.icon ? Digit.Utils.iconRender(moduleConfig.icon,"#c84c0e"): null;
 
@@ -14,8 +16,6 @@ const ProductDetailsComponent = ({ config }) => {
     const url = '/' + window.contextPath + action;
     window.open(url, "_blank");
   };
-
-
 
   return (
     <div className="custom-landing-container">
@@ -31,7 +31,7 @@ const ProductDetailsComponent = ({ config }) => {
         </div>
         {moduleConfig?.subsections
           ?.filter(ob => ob?.type !== "card")
-          .map((section, index) => (
+          ?.map((section, index) => (
             <div key={index} className="custom-section-container">
               <CardHeader className="custom-section-header">{t(section.title)}</CardHeader>
               {section.type === "paragraph" && section.content?.map((paragraph, paraIndex) => (
@@ -66,7 +66,7 @@ const ProductDetailsComponent = ({ config }) => {
                       </li>
                     ) : item.type === "image" ? (
                       <div key={itemIndex} className="custom-image-container">
-                        <img src={item.src} alt={item.alt} className="custom-image" />
+                        <img src={item.text} alt={module + "Image"} className="custom-image" />
                       </div>
                     ): null
                     ))}
@@ -76,16 +76,15 @@ const ProductDetailsComponent = ({ config }) => {
           ))}
 
         <div className="role-action-container">
-          {moduleConfig?.subsections
-            ?.filter((config) => config.type === "card")
-            .map((config, index) => {
+          {moduleConfig?.cards
+            ?.map((config, index) => {
               const CardIconComponent = config?.icon ? Digit.Utils.iconRender(config.icon,"#c84c0e") : null;
               return (
                 <div key={index} className="role-card">
                   <div className="icon-container">
                   {CardIconComponent && CardIconComponent}
                   </div>
-                  <CardHeader className="role-section-header">{t(config.heading)}</CardHeader>
+                  <CardHeader className="role-section-header">{t(config.title)}</CardHeader>
                   <Button
                     className="role-button"
                     label={t(config.buttonName)}
