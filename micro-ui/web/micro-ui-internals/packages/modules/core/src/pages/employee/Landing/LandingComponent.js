@@ -8,19 +8,17 @@ import {
 } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { config as defaultconfig } from "../../../config/LandingPageConfig";
 import YoutubeVideo from "./YoutubeVideo";
 
 /**
  * LandingComponent
  * @param {Object} config - Optional prop to override default config
  */
-const LandingComponent = ({ config = {} }) => {
+const LandingComponent = ({ config ={}}) => {
   const { t } = useTranslation(); 
   const history = useHistory();  
 
-  // Use the default config, overriding any external config passed
-  //config = defaultconfig;
+
 
   // Destructure key config fields with fallback defaults
   const {
@@ -30,7 +28,7 @@ const LandingComponent = ({ config = {} }) => {
   } = config;
 
   // Define the redirect path for button click - will upate after the product page is ready
-  const redirectPathOtpLogin = `/${window?.contextPath}/employee/user/landing/select-role`;
+  const redirectPathOtpLogin = `/${window?.contextPath}/employee/user/productPage`;
 
    const introSection = subsections.find(s => s.type === "introSection") || {};
    const stepsSection = subsections.find(s => s.type === "stepsSection") || {}; 
