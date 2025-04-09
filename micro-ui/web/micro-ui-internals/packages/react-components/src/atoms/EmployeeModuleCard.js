@@ -1,6 +1,6 @@
 
 
-import { Button, LandingPageCard,  } from "@egovernments/digit-ui-components";
+import { Button, LandingPageCard  } from "@egovernments/digit-ui-components";
 import React, { Fragment } from "react";
 import { ArrowRightInbox } from "./svgindex";
 import { useHistory, useLocation, Link } from "react-router-dom";
@@ -27,6 +27,7 @@ const EmployeeModuleCard = ({
   otherLinks = [],
   buttonSize = "medium",
 }) => {
+  console.log("I'm landingpagecard", LandingPageCard);
   // Hook for navigation
   const history = useHistory();
 
@@ -84,6 +85,7 @@ const EmployeeModuleCard = ({
 
   // Render the card with the generated configuration
   return <LandingPageCard className={className} buttonSize={buttonSize} {...propsForModuleCard} />;
+  // return <>Hi there</>
 };
 
 

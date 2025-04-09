@@ -18,6 +18,8 @@ import PanelCard from "./PanelCard";
 import TimelineMolecule from "./TimelineMolecule";
 import TooltipWrapper from "./TooltipWrapper";
 import LandingPageWrapper from "./LandingPageWrapper";
+import LandingPageCard from "./LandingPageCard";
+
 
 
 export {
@@ -40,5 +42,6 @@ export {
   PanelCard,
   TimelineMolecule,
   TooltipWrapper,
-  LandingPageWrapper
+  LandingPageWrapper,
+  LandingPageCard
 };

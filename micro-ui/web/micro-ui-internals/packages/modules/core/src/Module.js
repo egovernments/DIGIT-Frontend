@@ -45,30 +45,31 @@ const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding }) => {
             <DigitAppWrapper
               initData={initData}
               stateCode={stateCode}
-              modules={[
-                {
-                  "module": "assignment",
-                  "code": "assignment",
-                  "active": true,
-                  "order": 13,
-                  "tenants": [
-                    {
-                      "code": "mz"
-                    }
-                  ]
-                },
-                {
-                  "module": "HRMS",
-                  "code": "HRMS",
-                  "active": true,
-                  "order": 4,
-                  "tenants": [
-                    {
-                      "code": "mz"
-                    }
-                  ]
-                }
-              ]}
+              // modules={[
+              //   {
+              //     "module": "assignment",
+              //     "code": "assignment",
+              //     "active": true,
+              //     "order": 13,
+              //     "tenants": [
+              //       {
+              //         "code": "mz"
+              //       }
+              //     ]
+              //   },
+              //   {
+              //     "module": "HRMS",
+              //     "code": "HRMS",
+              //     "active": true,
+              //     "order": 4,
+              //     "tenants": [
+              //       {
+              //         "code": "mz"
+              //       }
+              //     ]
+              //   }
+              // ]}
+              modules={initData?.modules}
               appTenants={initData.tenants}
               logoUrl={initData?.stateInfo?.logoUrl}
               logoUrlWhite={initData?.stateInfo?.logoUrlWhite}

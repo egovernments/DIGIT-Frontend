@@ -6,12 +6,12 @@ import { useHistory, useParams } from "react-router-dom";
 import _, { drop } from "lodash";
 import { Config } from "../../configs/LocalisationSearchConfig";
 import getEditModalConfig from "../../configs/EditModalConfig";
-import { useQueryClient } from "react-query";
+// import { useQueryClient } from "react-query";
 import { AlertCard } from "@egovernments/digit-ui-components";
 
 const LocalisationSearch = () => {
   const { t } = useTranslation();
-  const queryClient = useQueryClient()
+  // const queryClient = useQueryClient()
   const history = useHistory();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [showToast, setShowToast] = useState(false);

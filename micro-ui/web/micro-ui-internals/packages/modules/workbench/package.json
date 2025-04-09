@@ -9,15 +9,14 @@
     "dist"
   ],
   "scripts": {
-    "start": "webpack serve --mode=production --open --hot",
-    "build": "webpack  --mode=production --node-env=production --config webpack.config.js",
+    "start": "webpack serve --mode=development --open --hot",
+    "build": "webpack  --mode=development --node-env=production --config webpack.config.js",
     "prepublish": "yarn build"
   },
   "peerDependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "@tanstack/react-query": "^5.62.16"
-
   },
   "dependencies": {
     "@cyntler/react-doc-viewer": "1.10.3",
