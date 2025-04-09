@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Button } from "@egovernments/digit-ui-components";
+import { Card, Button, HeaderComponent, CardText } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
@@ -8,17 +8,16 @@ const ProductsPageComponent = ({detailsConfig}) => {
   const history = useHistory();
   
   const handleNavigate = (path) => {
-    history.push(path,{ detailsConfig },
-    );
+    history.push(path);
   };
 
   return (
     <div className="products-container">
       {/* Header Section */}
-      <h1 className="products-title">{t("SANDBOX_PRODUCT_HEADER")}</h1>
-      <p className="products-description">
+      <HeaderComponent className="products-title">{t("SANDBOX_PRODUCT_HEADER")}</HeaderComponent>
+      <CardText className="products-description">
         {t("SANDBOX_PRODUCT_HEADER_DESC")}
-      </p>
+      </CardText>
 
       {/* Product Cards Section */}
       <div className="products-list">
@@ -26,9 +25,9 @@ const ProductsPageComponent = ({detailsConfig}) => {
           <Card key={index} className="product-card">
             <div className="product-header">
               {Digit.Utils.iconRender(product.icon,"#c84c0e")}
-              <h2 className="product-title">{t(product.heading)}</h2>
+              <HeaderComponent className="product-title">{t(product.heading)}</HeaderComponent>
             </div>
-            <p className="product-description">{t(product?.cardDescription)}</p>
+            <CardText className="product-description">{t(product?.cardDescription)}</CardText>
             <Button
               className="explore-button"
               variation="secondary"

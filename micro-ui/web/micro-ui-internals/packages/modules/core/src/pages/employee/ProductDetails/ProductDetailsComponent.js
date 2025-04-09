@@ -1,13 +1,43 @@
 import React, { Fragment } from "react";
 import { HeaderComponent, Card, CardText, CardHeader, Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { useHistory, useParams, useLocation } from "react-router-dom";
+import {  useLocation } from "react-router-dom";
 
-const ProductDetailsComponent = () => {
-  const location = useLocation();
+
+const renderContentItem = (item, itemIndex, module, t) => {
+  switch (item.type) {
+    case "paragraph":
+      return (
+        <CardText className="custom-section-paragraph" key={itemIndex}>
+          <p>{t(item.text)}</p>
+        </CardText>
+      );
+    case "step-heading":
+      return (
+        <CardText key={itemIndex} className="custom-step-header">
+          {t(item.text)}
+        </CardText>
+      );
+    case "step":
+      return (
+        <li key={itemIndex} className="custom-step-item">
+          {t(item.text)}
+        </li>
+      );
+    case "image":
+      return (
+        <div key={itemIndex} className="custom-image-container">
+          <img src={item.text} alt={`${module}Image`} className="custom-image" />
+        </div>
+      );
+    default:
+      return null;
+  }
+};
+
+
+const ProductDetailsComponent = ({config,module}) => {
   const { t } = useTranslation();
-  const { module } = useParams();
-  const { detailsConfig :config} = location.state || {};
 
   const moduleConfig = config?.find((item) => item.module === module) || {};
   const IconComponent = moduleConfig.icon ? Digit.Utils.iconRender(moduleConfig.icon,"#c84c0e"): null;
@@ -30,7 +60,6 @@ const ProductDetailsComponent = () => {
           </HeaderComponent>
         </div>
         {moduleConfig?.subsections
-          ?.filter(ob => ob?.type !== "card")
           ?.map((section, index) => (
             <div key={index} className="custom-section-container">
               <CardHeader className="custom-section-header">{t(section.title)}</CardHeader>
@@ -50,27 +79,10 @@ const ProductDetailsComponent = () => {
               )}
               {section.type === "both" && section.content && (
                 <Fragment>
-                  {section.content.map((item, itemIndex) => (
-                    item.type === "paragraph" ? (
-                      <CardText className="custom-section-paragraph" key={itemIndex}>
-                        <p>{t(item.text)}</p>
-                      </CardText>
-                    ) 
-                    : item.type === "step-heading" ? (
-                      <CardText key={itemIndex} className="custom-step-header">
-                        {t(item.text)}
-                      </CardText>
-                    ) : item.type === "step" ? (
-                      <li key={itemIndex} className="custom-step-item">
-                        {t(item.text)}
-                      </li>
-                    ) : item.type === "image" ? (
-                      <div key={itemIndex} className="custom-image-container">
-                        <img src={item.text} alt={module + "Image"} className="custom-image" />
-                      </div>
-                    ): null
-                    ))}
-                </Fragment>
+                {section.content.map((item, itemIndex) => 
+                  renderContentItem(item, itemIndex, module, t)
+                )}
+              </Fragment>
               )}
             </div>
           ))}
