@@ -331,6 +331,10 @@ const UpdateChecklist = () => {
         const messages = new Set();
       
         let activeCount = 0;
+
+        if (helpText?.trim()) {
+            messages.add(helpText.trim());
+          }
       
         // Collect all active question titles, options, helpTexts, and sub-question titles
         quesArray.forEach((question) => {
