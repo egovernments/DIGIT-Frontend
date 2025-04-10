@@ -24,7 +24,7 @@ const callMiddlewares = () => {
     if (!applyBreak && ++itr < middleWares.length) middleWares[itr](data, _break, _next);
     else return;
   };
-  _next({});
+  _next({}); 
 };
 
 callMiddlewares();
