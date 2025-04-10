@@ -53,8 +53,7 @@ const CreateChecklist = () => {
   const { languages, stateInfo } = storeData || {};
   const currentLocales = languages?.map(locale => locale.value);
 
-  const presentLocale = Digit?.SessionStorage.get("locale");
-
+  const presentLocale = Digit?.SessionStorage.get("locale") || "en_IN";
   module = "hcm-checklist";
   const { mutateAsync: localisationMutateAsync } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, locale);
 
@@ -360,6 +359,10 @@ const CreateChecklist = () => {
   const messages = new Set();
 
   let activeCount = 0;
+
+  if (helpText?.trim()) {
+    messages.add(helpText.trim());
+  }
 
   // Collect all active question titles, options, helpTexts, and sub-question titles
   quesArray.forEach((question) => {

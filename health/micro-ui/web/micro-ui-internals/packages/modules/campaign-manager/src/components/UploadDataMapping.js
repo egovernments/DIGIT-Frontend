@@ -599,6 +599,14 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   }, [SchemasAJV, type]);
 
   const validateData = (data) => {
+
+    const roleKey = "Role (Mandatory)"
+    const roles = data[roleKey];
+    // Role max limit validation (if it's an array)
+    if (typeof roles === "string" && roles.split(",").length > 5) {
+      setShowToast({ label: t("HCM_MORE_USER"), isError: "error" });
+      return ;
+    }
     // Phone Number conversion
     const phoneNumberKey = t(Schemas?.find((i) => i.description === "Phone Number")?.name);
     if (data[phoneNumberKey] !== undefined) {
