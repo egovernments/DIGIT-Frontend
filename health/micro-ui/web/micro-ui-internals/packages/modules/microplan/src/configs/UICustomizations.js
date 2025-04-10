@@ -89,8 +89,19 @@ export const UICustomizations = {
           const EstimationsfileId = row?.files.find((item) => item.templateIdentifier === "Estimations")?.filestoreId;
           let options = [];
 
-          if (row?.status == "DRAFT") {
-            options = [{ code: "1", name: "MP_ACTIONS_EDIT_SETUP" },{ code: "2", name: "MP_ACTIONS_DOWNLOAD_DRAFT" },{ code: "3", name: "MP_ACTIONS_FREEZE_MICROPLAN" }];
+          if (row?.status == "DRAFT" && row?.assumptions.length > 0 && row?.operations.length > 0 && row?.resourceMapping?.length > 0) {
+            options = [
+              { code: "1", name: "MP_ACTIONS_EDIT_SETUP" },
+              { code: "2", name: "MP_ACTIONS_DOWNLOAD_DRAFT" },
+              { code: "3", name: "MP_ACTIONS_FREEZE_MICROPLAN" },
+            ];
+          } else if (row?.status == "DRAFT" && row?.assumptions.length > 0 && row?.operations.length > 0 && !row?.resourceMapping?.length > 0) {
+            options = [
+              { code: "1", name: "MP_ACTIONS_EDIT_SETUP" },
+              { code: "2", name: "MP_ACTIONS_DOWNLOAD_DRAFT" },
+            ];
+          } else if (row?.status == "DRAFT") {
+            options = [{ code: "1", name: "MP_ACTIONS_EDIT_SETUP" }];
           } else {
             options = [{ code: "1", name: "MP_ACTIONS_VIEW_SUMMARY" }];
           }
