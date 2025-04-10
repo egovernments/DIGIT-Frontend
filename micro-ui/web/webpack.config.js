@@ -208,24 +208,19 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
-  mode: "production",
+  mode: "development", // Set mode to development
   entry: path.resolve(__dirname, 'src/index.js'),
-  devtool: "source-map",
+  devtool: "source-map", // Enable source maps for easier debugging in development
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(js)$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
           options: {
-            presets: [
-              "@babel/preset-env",
-              ["@babel/preset-react", { runtime: "automatic" }]
-            ],
-            plugins: [
-              "@babel/plugin-proposal-optional-chaining"
-            ]
+            presets: ["@babel/preset-env", "@babel/preset-react"],
+            plugins: ["@babel/plugin-proposal-optional-chaining"]
           }
         },
       },
@@ -238,7 +233,18 @@ module.exports = {
   output: {
     filename: "[name].bundle.js",
     path: path.resolve(__dirname, "build"),
-    publicPath: "/digit-ui/",
+    publicPath: "/",
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      minSize: 20000,
+      maxSize: 50000,
+      enforceSizeThreshold: 50000,
+      minChunks: 1,
+      maxAsyncRequests: 30,
+      maxInitialRequests: 30
+    },
   },
   plugins: [
     new webpack.ProvidePlugin({
@@ -250,21 +256,20 @@ module.exports = {
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
-    preferRelative: true,
+    preferRelative: true, // Try resolving relatively if needed
     fallback: {
       process: require.resolve("process/browser"),
     },
   },
   devServer: {
-    static: path.join(__dirname, "dist"),
+    static: path.join(__dirname, "dist"), // Change this to "dist"
     compress: true,
     port: 3000,
     hot: true,
     historyApiFallback: true,
     proxy: [
       {
-        context: [
-          "/egov-mdms-service",
+        context: ["/egov-mdms-service",
           "/access/v1/actions/mdms",
           "/tenant-management",
           "/user-otp",
@@ -340,11 +345,11 @@ module.exports = {
           "/tenant-management",
           "/default-data-handler",
           "/facility/v1/_create"
-        ],
+        ], // Add all endpoints that need to be proxied
         target: "https://unified-qa.digit.org",
         changeOrigin: true,
         secure: false,
       },
     ],
-  }
+}
 };
