@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export const CancelScheduleSend = ({ className, height = "24", width = "24", style = {}, fill = "#F47738", onClick = null }) => {
   return (
     <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_105_193)">
+      <g clipPath="url(#clip0_105_193)">
         <path
           d="M16.5 9C16.08 9 15.67 9.04 15.26 9.11L1.01 3L1 10L10 12L1 14L1.01 21L9.08 17.54C9.59 21.19 12.71 24 16.5 24C20.64 24 24 20.64 24 16.5C24 12.36 20.64 9 16.5 9ZM16.5 22C13.47 22 11 19.53 11 16.5C11 13.47 13.47 11 16.5 11C19.53 11 22 13.47 22 16.5C22 19.53 19.53 22 16.5 22Z"
           fill={fill}

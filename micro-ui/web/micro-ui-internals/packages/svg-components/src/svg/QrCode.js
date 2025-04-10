@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export const QrCode = ({ className, height = "24", width = "24", style = {}, fill = "#F47738", onClick = null }) => {
   return (
     <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_105_2208)">
+      <g clipPath="url(#clip0_105_2208)">
         <path d="M3 11H11V3H3V11ZM5 5H9V9H5V5Z" fill={fill} />
         <path d="M3 21H11V13H3V21ZM5 15H9V19H5V15Z" fill={fill} />
         <path d="M13 3V11H21V3H13ZM19 9H15V5H19V9Z" fill={fill} />

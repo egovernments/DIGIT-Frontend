@@ -13,7 +13,7 @@ export const NoResultsFoundIcon = ({ className, height = "24", width = "24", sty
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_7426_33765)">
+      <g clipPath="url(#clip0_7426_33765)">
         <path
           opacity="0.1"
           d="M117.863 256.926C150.233 256.926 176.474 251.972 176.474 245.862C176.474 239.751 150.233 234.797 117.863 234.797C85.4937 234.797 59.2529 239.751 59.2529 245.862C59.2529 251.972 85.4937 256.926 117.863 256.926Z"

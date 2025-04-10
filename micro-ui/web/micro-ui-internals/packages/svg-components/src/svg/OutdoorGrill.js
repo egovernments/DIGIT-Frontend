@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export const OutdoorGrill = ({ className, height = "24", width = "24", style = {}, fill = "#F47738", onClick = null }) => {
   return (
     <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_176_784)">
+      <g clipPath="url(#clip0_176_784)">
         <path
           d="M17 22C18.66 22 20 20.66 20 19C20 17.34 18.66 16 17 16C15.7 16 14.6 16.84 14.18 18H9.14L11.13 14.94C11.42 14.98 11.71 15 12 15C12.29 15 12.58 14.98 12.87 14.94L13.89 16.51C14.31 15.98 14.85 15.56 15.49 15.3L14.89 14.37C17.31 13.27 19 10.84 19 8H5C5 10.84 6.69 13.27 9.12 14.37L5.17 20.45C4.87 20.91 5 21.53 5.46 21.83C5.92 22.13 6.54 22 6.84 21.54L7.84 19.99H14.18C14.6 21.16 15.7 22 17 22ZM17 18C17.55 18 18 18.45 18 19C18 19.55 17.55 20 17 20C16.45 20 16 19.55 16 19C16 18.45 16.45 18 17 18Z"
           fill={fill}

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export const Agriculture = ({ className, height = "24", width = "24", style = {}, fill = "#F47738", onClick = null }) => {
   return (
     <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_1974_10812)">
+      <g clipPath="url(#clip0_1974_10812)">
         <path
           d="M19.5003 11.9998C20.4303 11.9998 21.2803 12.2798 22.0003 12.7598V7.99982C22.0003 6.89982 21.1003 5.99982 20.0003 5.99982H13.7103L12.6503 4.93982L14.0603 3.52982L13.3503 2.81982L9.82031 6.34982L10.5303 7.05982L11.9403 5.64982L13.0003 6.70982V8.99982C13.0003 10.0998 12.1003 10.9998 11.0003 10.9998H10.4603C11.4103 12.0598 12.0003 13.4598 12.0003 14.9998C12.0003 15.3398 11.9603 15.6698 11.9103 15.9998H15.0503C15.3003 13.7498 17.1903 11.9998 19.5003 11.9998Z"
           fill={fill}

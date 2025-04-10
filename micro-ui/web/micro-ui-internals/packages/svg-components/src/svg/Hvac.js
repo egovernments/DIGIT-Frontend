@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export const Hvac = ({ className, height = "24", width = "24", style = {}, fill = "#F47738", onClick = null }) => {
   return (
     <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_1974_11068)">
+      <g clipPath="url(#clip0_1974_11068)">
         <path d="M11.9999 16C13.0099 16 13.9099 15.61 14.6199 15H9.37988C10.0899 15.61 10.9899 16 11.9999 16Z" fill={fill} />
         <path d="M8.55957 14H15.4496C15.7096 13.55 15.8896 13.04 15.9596 12.5H8.05957C8.11957 13.04 8.28957 13.55 8.55957 14Z" fill={fill} />
         <path d="M11.9999 8C10.9899 8 10.0899 8.39 9.37988 9H14.6199C13.9099 8.39 13.0099 8 11.9999 8Z" fill={fill} />

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export const NightsStay = ({ className, height = "24", width = "24", style = {}, fill = "#F47738", onClick = null }) => {
   return (
     <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_176_759)">
+      <g clipPath="url(#clip0_176_759)">
         <path
           d="M11.1005 12.08C8.77047 7.57001 10.6005 3.60001 11.6305 2.01001C6.27047 2.20001 1.98047 6.59001 1.98047 12C1.98047 12.14 2.00047 12.28 2.00047 12.42C2.62047 12.15 3.29047 12 4.00047 12C5.66047 12 7.18047 12.83 8.10047 14.15C9.77047 14.63 11.0005 16.17 11.0005 18C11.0005 19.52 10.1305 20.83 8.88047 21.51C9.86047 21.83 10.9105 22.01 11.9905 22.01C15.4905 22.01 18.5705 20.21 20.3605 17.49C18.0005 17.72 13.3805 16.52 11.1005 12.08Z"
           fill={fill}

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export const LocalSee = ({ className, height = "24", width = "24", style = {}, fill = "#F47738", onClick = null }) => {
   return (
     <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_1974_11190)">
+      <g clipPath="url(#clip0_1974_11190)">
         <path
           d="M11.9998 15.1998C13.7671 15.1998 15.1998 13.7671 15.1998 11.9998C15.1998 10.2325 13.7671 8.7998 11.9998 8.7998C10.2325 8.7998 8.7998 10.2325 8.7998 11.9998C8.7998 13.7671 10.2325 15.1998 11.9998 15.1998Z"
           fill={fill}

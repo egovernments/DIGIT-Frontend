@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export const SportsBasketball = ({ className, height = "24", width = "24", style = {}, fill = "#F47738", onClick = null }) => {
   return (
     <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_176_951)">
+      <g clipPath="url(#clip0_176_951)">
         <path d="M17.0898 11.0001H21.9498C21.7898 9.3901 21.2398 7.8901 20.4098 6.6001C18.6798 7.4301 17.4198 9.0501 17.0898 11.0001Z" fill={fill} />
         <path d="M6.9098 11.0001C6.5798 9.0501 5.3198 7.4301 3.5898 6.6001C2.7598 7.8901 2.2098 9.3901 2.0498 11.0001H6.9098Z" fill={fill} />
         <path d="M15.07 11C15.39 8.41005 16.95 6.21005 19.13 5.00005C17.53 3.37005 15.39 2.29005 13 2.05005V11H15.07Z" fill={fill} />

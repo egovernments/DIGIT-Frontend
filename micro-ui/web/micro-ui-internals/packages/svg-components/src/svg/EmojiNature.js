@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export const EmojiNature = ({ className, height = "24", width = "24", style = {}, fill = "#F47738", onClick = null }) => {
   return (
     <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_176_648)">
+      <g clipPath="url(#clip0_176_648)">
         <path
           d="M21.94 4.88C21.76 4.35 21.25 4 20.68 4C20.65 4 20.62 4 20.59 4H19.6L19.29 3.03C19.15 2.43 18.61 2 18 2C17.39 2 16.85 2.43 16.71 3.04L16.4 4H15.42C15.39 4 15.36 4 15.33 4C14.76 4 14.25 4.35 14.07 4.88C13.88 5.44 14.11 6.05 14.63 6.36L15.5 6.88L15.1 8.12C14.87 8.7 15.06 9.37 15.55 9.74C15.78 9.91 16.06 10 16.33 10C16.64 10 16.94 9.89 17.19 9.68L18 8.98L18.81 9.68C19.06 9.89 19.36 10 19.67 10C19.94 10 20.22 9.91 20.45 9.74C20.95 9.37 21.13 8.7 20.9 8.12L20.51 6.88L21.38 6.36C21.89 6.05 22.12 5.44 21.94 4.88ZM18 7C17.45 7 17 6.55 17 6C17 5.45 17.45 5 18 5C18.55 5 19 5.45 19 6C19 6.55 18.55 7 18 7Z"
           fill={fill}

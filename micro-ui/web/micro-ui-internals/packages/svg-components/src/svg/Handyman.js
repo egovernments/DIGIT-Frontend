@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export const Handyman = ({ className, height = "24", width = "24", style = {}, fill = "#F47738", onClick = null }) => {
   return (
     <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_1974_11040)">
+      <g clipPath="url(#clip0_1974_11040)">
         <path
           d="M21.6698 18.1701L16.3698 12.8701H15.3798L12.8398 15.4101V16.4001L18.1398 21.7001C18.5298 22.0901 19.1598 22.0901 19.5498 21.7001L21.6698 19.5801C22.0598 19.2001 22.0598 18.5601 21.6698 18.1701Z"
           fill={fill}

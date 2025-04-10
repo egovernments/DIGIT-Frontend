@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export const Architecture = ({ className, height = "24", width = "24", style = {}, fill = "#F47738", onClick = null }) => {
   return (
     <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_176_586)">
+      <g clipPath="url(#clip0_176_586)">
         <path
           d="M6.36035 18.7799L6.61035 20.9999L8.23035 19.4599L11.0004 11.8599C10.3204 11.6899 9.72035 11.3499 9.23035 10.8799L6.36035 18.7799Z"
           fill={fill}

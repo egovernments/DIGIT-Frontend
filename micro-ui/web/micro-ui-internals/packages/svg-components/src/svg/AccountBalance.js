@@ -13,7 +13,7 @@ export const AccountBalance = ({ className, height = "24", width = "24", style =
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_105_20)">
+      <g clipPath="url(#clip0_105_20)">
         <path d="M7 10H4V17H7V10Z" fill={fill} />
         <path d="M13.5 10H10.5V17H13.5V10Z" fill={fill} />
         <path d="M22 19H2V22H22V19Z" fill={fill} />

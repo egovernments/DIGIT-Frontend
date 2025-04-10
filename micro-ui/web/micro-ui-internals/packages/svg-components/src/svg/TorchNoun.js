@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export const TorchNoun = ({ className, style = {}, height = "20", width = "25", fill = "#F47738", onClick = null }) => {
   return (
     <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 20 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_55046_131540)">
+      <g clipPath="url(#clip0_55046_131540)">
         <path d="M14.6 0H5.4C5.2 0 5 0.2 5 0.4V1.8C5 1.9 5.1 2 5.2 2H14.8C14.9 2 15 1.9 15 1.8V0.4C15 0.2 14.8 0 14.6 0Z" fill={fill} />
         <path d="M12.8 18H7.2C7.1 18 7 18.1 7 18.2V19C7 19.6 7.4 20 8 20H12C12.6 20 13 19.6 13 19V18.2C13 18.1 12.9 18 12.8 18Z" fill={fill} />
         <path

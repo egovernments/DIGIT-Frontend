@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export const RssFeed = ({ className, height = "24", width = "24", style = {}, fill = "#F47738", onClick = null }) => {
   return (
     <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_105_2239)">
+      <g clipPath="url(#clip0_105_2239)">
         <path
           d="M6.18 20.0001C7.38398 20.0001 8.36 19.0241 8.36 17.8201C8.36 16.6162 7.38398 15.6401 6.18 15.6401C4.97602 15.6401 4 16.6162 4 17.8201C4 19.0241 4.97602 20.0001 6.18 20.0001Z"
           fill={fill}

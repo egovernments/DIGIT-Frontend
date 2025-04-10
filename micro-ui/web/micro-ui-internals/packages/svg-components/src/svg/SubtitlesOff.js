@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export const SubtitlesOff = ({ className, height = "24", width = "24", style = {}, fill = "#F47738", onClick = null }) => {
   return (
     <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_105_1003)">
+      <g clipPath="url(#clip0_105_1003)">
         <path
           d="M20.0001 4H6.83008L14.8301 12H20.0001V14H16.8301L21.7601 18.93C21.9101 18.65 22.0001 18.34 22.0001 18V6C22.0001 4.9 21.1001 4 20.0001 4Z"
           fill={fill}

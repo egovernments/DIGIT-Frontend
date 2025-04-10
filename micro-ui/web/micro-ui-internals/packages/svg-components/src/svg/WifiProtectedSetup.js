@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export const WifiProtectedSetup = ({ className, height = "24", width = "24", style = {}, fill = "#F47738", onClick = null }) => {
   return (
     <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_105_1221)">
+      <g clipPath="url(#clip0_105_1221)">
         <path
           d="M16.71 5.29L19 3H11V11L13.3 8.7C15.27 10.16 16.55 12.48 16.55 15.12C16.55 16.43 16.23 17.66 15.67 18.75C18 17.23 19.55 14.61 19.55 11.62C19.55 9.1 18.44 6.85 16.71 5.29Z"
           fill={fill}

@@ -13,7 +13,7 @@ export const AccessibleForward = ({ className, height = "24", width = "24", styl
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_105_16)">
+      <g clipPath="url(#clip0_105_16)">
         <path
           d="M17 6.54004C18.1046 6.54004 19 5.64461 19 4.54004C19 3.43547 18.1046 2.54004 17 2.54004C15.8954 2.54004 15 3.43547 15 4.54004C15 5.64461 15.8954 6.54004 17 6.54004Z"
           fill={fill}

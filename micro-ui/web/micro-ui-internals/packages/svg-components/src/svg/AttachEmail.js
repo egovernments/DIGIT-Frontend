@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export const AttachEmail = ({ className, height = "24", width = "24", style = {}, fill = "#F47738", onClick = null }) => {
   return (
     <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_105_2402)">
+      <g clipPath="url(#clip0_105_2402)">
         <path
           d="M21 10V4C21 2.9 20.1 2 19 2H3C1.9 2 1.01 2.9 1.01 4L1 16C1 17.1 1.9 18 3 18H14V13C14 11.34 15.34 10 17 10H21ZM11 11L3 6V4L11 9L19 4V6L11 11Z"
           fill={fill}
