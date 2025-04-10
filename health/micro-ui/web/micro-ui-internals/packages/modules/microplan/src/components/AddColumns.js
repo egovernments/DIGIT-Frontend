@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { LabelFieldPair, FieldV1, Button, Card, TextInput, PopUp } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useAddColContext } from "./AddColumnsWrapper";
+import { Header } from "@egovernments/digit-ui-components";
 
 const AddColumns = ({ colValues: initialColValues, setShowToast }) => {
   const { t } = useTranslation();
@@ -26,11 +27,12 @@ const AddColumns = ({ colValues: initialColValues, setShowToast }) => {
 
   return (
     <Card>
+      <Header className="summary-main-heading">{t("MP_ADD_NEW_COLUMNS_HEADER")} </Header>
       {colValues?.map((item, index) => (
         <LabelFieldPair key={index} className="mp-hypothesis-label-field" style={{ alignItems: "center" }}>
           <div className="assumption-label">
             <span className="assumption-label-icon-wrapper">
-              <span className="assumption-label-icon-wrapper-label">{t(`MP_COLUMN_${index}`)}</span>
+              <span className="assumption-label-icon-wrapper-label">{`${t(`MP_COLUMN_ADDITION`)} ${index+1}`}</span>
             </span>
           </div>
 
@@ -62,8 +64,8 @@ const AddColumns = ({ colValues: initialColValues, setShowToast }) => {
       ))}
       <Button
         icon="Add"
-        title={t("MP_ADD_NEW_COL")}
-        label={t("MP_ADD_NEW_COL")}
+        title={t("MP_ADD_NEW_COL_BUTTON")}
+        label={t("MP_ADD_NEW_COL_BUTTON")}
         onClick={() => setShowPopUp(true)}
         variation="secondary"
         isDisabled={false}

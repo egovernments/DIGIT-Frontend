@@ -396,7 +396,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
           "MP_MANAGING_DATA",
           "MICROPLAN_ASSUMPTIONS",
           "FORMULA_CONFIGURATION",
-          "ADD_COLUMNS",
+          "MP_DATA_VALIDATION",
           "ROLE_ACCESS_CONFIGURATION",
           "SUMMARY",
         ]}
