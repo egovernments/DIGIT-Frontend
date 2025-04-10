@@ -53,7 +53,7 @@ const CreateChecklist = () => {
   const { languages, stateInfo } = storeData || {};
   const currentLocales = languages?.map(locale => locale.value);
 
-  const presentLocale = Digit?.SessionStorage.get("locale") || "en_IN";
+  const presentLocale = Digit?.SessionStorage.get("locale") || locale;
   module = "hcm-checklist";
   const { mutateAsync: localisationMutateAsync } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, locale);
 
