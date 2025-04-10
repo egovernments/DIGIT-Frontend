@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { LabelFieldPair, FieldV1, Button, Card, TextInput, PopUp,TextBlock } from "@egovernments/digit-ui-components";
+import { LabelFieldPair, FieldV1, Button, Card, TextInput, PopUp } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useAddColContext } from "./AddColumnsWrapper";
 import { Header } from "@egovernments/digit-ui-components";
