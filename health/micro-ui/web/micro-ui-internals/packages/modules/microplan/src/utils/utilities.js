@@ -216,15 +216,16 @@ const formValidator = (formData, key, state, t) => {
     // Allow empty string
     if (val === "") return true;
   
-    const noSpecialChars = /^[A-Za-z_][A-Za-z0-9_]*$/; // Must start with letter/underscore, no special chars
-    const allNumbers = /^\d+$/;                        // Should not be all digits
+    // Allow letters, numbers, and spaces only
+    const noSpecialCharsExceptSpace = /^[A-Za-z0-9 ]+$/;
   
-    return noSpecialChars.test(val) && !allNumbers.test(val);
+    return noSpecialCharsExceptSpace.test(val);
   }
+  
   
 
   const newColumnsValidator = () => {
-    const invalidEntries = formData.colValues.filter(col => !isValidColumnValue(col.value));
+    const invalidEntries = formData.filter(item => !isValidColumnValue(item));
     if (invalidEntries.length > 0) {
       return { key: "error", label: "ERROR_INVALID_COL_NAME" }
     }
