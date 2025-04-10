@@ -8,12 +8,24 @@ export const useAddColContext = () => useContext(AddColContext);
 
 const AddColumnsWrapper = ({ formData, onSelect, props: customProps }) => {
     const { t } = useTranslation();
-    const [colValues, setColValues] = useState(
-        Digit.SessionStorage.get("MICROPLAN_DATA")?.NEW_COLUMNS?.newColumns.colValues ||
-        [
-            { key: "MP_COLUMN_0", value: "" },
-            { key: "MP_COLUMN_1", value: "" }
-        ]);
+    const [colValues, setColValues] = useState(() => {
+        const storedCols = Digit.SessionStorage.get("MICROPLAN_DATA")?.NEW_COLUMNS?.newColumns;
+      
+        // If storedCols exists and is an array, map it to the desired format
+        if (Array.isArray(storedCols)) {
+          return storedCols.map((val, index) => ({
+            key: `MP_COLUMN_${index}`,
+            value: val,
+          }));
+        }
+      
+        // Fallback to default columns
+        return [
+          { key: "MP_COLUMN_0", value: "" },
+          { key: "MP_COLUMN_1", value: "" },
+        ];
+      });
+      
     const [executionCount, setExecutionCount] = useState(0);
 
     const [showToast, setShowToast] = useState({});
@@ -36,13 +48,13 @@ const AddColumnsWrapper = ({ formData, onSelect, props: customProps }) => {
     };
 
     useEffect(() => {
-        onSelect(customProps.name, {colValues:colValues});
+        onSelect(customProps.name, colValues.map((item)=>(item.value)));
     }, [colValues]);
 
 
     useEffect(() => {
         if (executionCount < 5) {
-            onSelect(customProps.name, {colValues:colValues});
+            onSelect(customProps.name, colValues.map((item)=>(item.value)));
             setExecutionCount((prevCount) => prevCount + 1);
         }
     });

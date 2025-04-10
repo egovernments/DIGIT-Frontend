@@ -953,8 +953,8 @@ const createUpdatePlanProject = async (req) => {
           const existingColumns = fetchedPlan?.additionalDetails?.addColumns || [];
         
           // Safely extract new column values from form data
-          const newColumnValues = Array.isArray(totalFormData?.NEW_COLUMNS?.newColumns?.colValues)
-            ? totalFormData.NEW_COLUMNS.newColumns.colValues.filter(item => item?.value !== "")
+          const newColumnValues = Array.isArray(totalFormData?.NEW_COLUMNS?.newColumns)
+            ? totalFormData.NEW_COLUMNS.newColumns.filter(item => item !== "")
             : [];
         
           // Function to compare existing and new columns based on 'value'
@@ -982,7 +982,7 @@ const createUpdatePlanProject = async (req) => {
             additionalDetails: {
               ...fetchedPlan.additionalDetails,
               key: key,
-              addColumns: newColumnValues,
+              newColumns: newColumnValues,
             },
           };
         
