@@ -214,7 +214,7 @@ module.exports = {
   output: {
     filename: "[name].bundle.js",
     path: path.resolve(__dirname, "dist"),
-    publicPath: "/", // Use root for dev
+    publicPath: "/digit-ui/", // Use root for dev
   },
 
   module: {
