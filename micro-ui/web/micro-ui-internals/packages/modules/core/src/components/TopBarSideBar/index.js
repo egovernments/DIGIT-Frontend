@@ -3,6 +3,7 @@ import TopBar from "./TopBar";
 import { useHistory } from "react-router-dom";
 import SideBar from "./SideBar";
 import LogoutDialog from "../Dialog/LogoutDialog";
+import { useKeycloak } from "../../context/Keycloakprovider";
 const TopBarSideBar = ({
   t,
   stateInfo,
@@ -20,13 +21,14 @@ const TopBarSideBar = ({
 }) => {
   const [isSidebarOpen, toggleSidebar] = useState(false);
   const history = useHistory();
+  const {keycloak} = useKeycloak();
   const [showDialog, setShowDialog] = useState(false);
   const handleLogout = () => {
     toggleSidebar(false);
     setShowDialog(true);
   };
   const handleOnSubmit = () => {
-    Digit.UserService.logout();
+    Digit.UserService.logout(keycloak);
     setShowDialog(false);
   };
   const handleOnCancel = () => {

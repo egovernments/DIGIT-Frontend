@@ -88,7 +88,7 @@ const SuccessPage = () => {
       return;
     }
 
-    const url = `http://localhost:8081/realms/SDFG/protocol/openid-connect/token`;
+    const url = `https://digit-lts.digit.org/keycloak-test/realms/SDFG/protocol/openid-connect/token`;
     try {
       const response = await fetch(url, {
         method: "POST",
@@ -157,11 +157,18 @@ const SuccessPage = () => {
         userName: decodedToken.preferred_username,
         name: decodedToken.name || "N/A",
         emailId: decodedToken.email || "N/A",
-        roles: decodedToken.realm_access?.roles.map((role) => ({
-          name: role,
-          code: role.toUpperCase(),
+          roles: [
+        {
+          name: "Super User", // Update role details if dynamic role mapping is needed
+          code: "SUPERUSER",
           tenantId: "SDFG",
-        })) || [],
+        },
+      ],
+        // roles: decodedToken.realm_access?.roles.map((role) => ({
+        //   name: role,
+        //   code: role.toUpperCase(),
+        //   tenantId: "SDFG",
+        // })) || [],
         active: true,
         tenantId: "SDFG",
       };

@@ -1,10 +1,15 @@
 import Urls from "../../atoms/urls";
 import { Request, ServiceRequest } from "../../atoms/Utils/Request";
 import { Storage } from "../../atoms/Utils/Storage";
-
+// import { useKeycloak } from "../../../../../modules/core/src/context/Keycloakprovider";
 export const UserService = {
+  
+  // const { keycloak } = useKeycloak();
+
   authenticate: async(details) => {
     const data = new URLSearchParams();
+    
+    // console.log("logout",keycloak);
     Object.entries(details).forEach(([key, value]) => data.append(key, value));
     data.append("scope", "read");
     data.append("grant_type", "password");
@@ -24,17 +29,20 @@ export const UserService = {
       }
       return authResponse;
   },
-  logoutUser: () => {
-    let user = UserService.getUser();
-    if (!user || !user.info || !user.access_token) return false;
-    const { type } = user.info;
-    return ServiceRequest({
-      serviceName: "logoutUser",
-      url: Urls.UserLogout,
-      data: { access_token: user?.access_token },
-      auth: true,
-      params: { tenantId: type === "CITIZEN" ? Digit.ULBService.getStateId() : Digit.ULBService.getCurrentTenantId() },
+  logoutUser: (keycloak) => {
+    keycloak.logout({
+      redirectUri: window.location.origin + "/sandbox-ui/SDFG/employee/user/language-selection", // where to go after logout
     });
+    // let user = UserService.getUser();
+    // if (!user || !user.info || !user.access_token) return false;
+    // const { type } = user.info;
+    // return ServiceRequest({
+    //   serviceName: "logoutUser",
+    //   url: Urls.UserLogout,
+    //   data: { access_token: user?.access_token },
+    //   auth: true,
+    //   params: { tenantId: type === "CITIZEN" ? Digit.ULBService.getStateId() : Digit.ULBService.getCurrentTenantId() },
+    // });
   },
   getType: () => {
     return Storage.get("userType") || "citizen";
@@ -48,10 +56,10 @@ export const UserService = {
     return Digit.SessionStorage.get("User");
 
   },
-  logout: async () => {
+  logout: async (keycloak) => {
     const userType = UserService.getType();
     try {
-      await UserService.logoutUser();
+      await UserService.logoutUser(keycloak);
     } catch (e) {
     }
     finally{

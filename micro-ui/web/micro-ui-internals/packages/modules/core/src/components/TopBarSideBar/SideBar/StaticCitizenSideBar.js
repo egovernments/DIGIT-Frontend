@@ -96,13 +96,13 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
   };
   const handleOnSubmit = () => {
     if (Digit.Utils.getMultiRootTenant()) {
-      Digit.UserService.logout();
+      Digit.UserService.logout(keycloak);
       setShowDialog(false);
       console.log("dddddd");
       window.location.href=`/${window?.contextPath}/citizen/login`;
     }
     else{
-      Digit.UserService.logout();
+      Digit.UserService.logout(keycloak);
       setShowDialog(false);
     }
 

@@ -357,7 +357,7 @@ const Response = () => {
 
     try {
       // Create user
-      const createUserResponse = await fetch("http://localhost:5000/keycloak/admin/realms/SDFG/users", {
+      const createUserResponse = await fetch("https://digit-lts.digit.org/keycloak-test/keycloak/admin/realms/SDFG/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -374,7 +374,7 @@ const Response = () => {
 
       // Search for the user to get UUID
       const searchUserResponse = await fetch(
-        `http://localhost:5000/keycloak/admin/realms/SDFG/users?username=${username}`,
+        `https://digit-lts.digit.org/keycloak-test/keycloak/admin/realms/SDFG/users?username=${username}`,
         {
           method: "GET",
           headers: {
@@ -397,7 +397,7 @@ const Response = () => {
       }
 
       // Call the mapIndividualToUser API
-      const mapResponse = await fetch("http://localhost:3000/individual/v1/_mapIndividualToUser", {
+      const mapResponse = await fetch("https://digit-lts.digit.org/individual/v1/_mapIndividualToUser", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -441,7 +441,7 @@ const Response = () => {
         successful={isResponseSuccess}
       /> */}
 
-    <h2 style={{ marginTop: "1rem", fontWeight: "bold" }}>User Creation</h2>
+    <h2 style={{ marginTop: "1rem", fontWeight: "bold" }}>User login setup</h2>
 
       <Card style={{ padding: "1rem", marginTop: "1rem" }}>
         <label>Username</label>

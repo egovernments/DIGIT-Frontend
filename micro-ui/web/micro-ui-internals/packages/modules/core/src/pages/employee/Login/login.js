@@ -120,7 +120,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased, loginType })
     const password = data?.password
   
     try {
-      const response = await fetch("http://localhost:8081/realms/2fa/protocol/openid-connect/token", {
+      const response = await fetch("https://digit-lts.digit.org/keycloak-test/realms/2fa/protocol/openid-connect/token", {
         method: "POST",
         headers: {
           "content-type": "application/x-www-form-urlencoded",
@@ -173,7 +173,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased, loginType })
     // const password = data?.password
   
     try {
-      const response = await fetch("http://localhost:8081/realms/2fa/protocol/openid-connect/token", {
+      const response = await fetch("https://digit-lts.digit.org/keycloak-test/realms/2fa/protocol/openid-connect/token", {
         method: "POST",
         headers: {
           "content-type": "application/x-www-form-urlencoded",
@@ -215,7 +215,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased, loginType })
     const password = data?.password
   
     try {
-      const response = await fetch("http://localhost:8081/realms/2fa/protocol/openid-connect/token", {
+      const response = await fetch("https://digit-lts.digit.org/keycloak-test/realms/2fa/protocol/openid-connect/token", {
         method: "POST",
         headers: {
           "content-type": "application/x-www-form-urlencoded",
