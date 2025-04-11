@@ -357,7 +357,7 @@ const Response = () => {
 
     try {
       // Create user
-      const createUserResponse = await fetch("https://digit-lts.digit.org/keycloak-test/keycloak/admin/realms/SDFG/users", {
+      const createUserResponse = await fetch("https://digit-lts.digit.org/keycloak-test/admin/realms/SDFG/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -374,7 +374,7 @@ const Response = () => {
 
       // Search for the user to get UUID
       const searchUserResponse = await fetch(
-        `https://digit-lts.digit.org/keycloak-test/keycloak/admin/realms/SDFG/users?username=${username}`,
+        `https://digit-lts.digit.org/keycloak-test/admin/realms/SDFG/users?username=${username}`,
         {
           method: "GET",
           headers: {
