@@ -156,10 +156,10 @@ const CuccessPage = () => {
 
   const reqCreate = {
     url: `/individual/v1/_create`,
-    params: {},
-    body: {},
+    params: {tenantId},
+    body: transformIndividualCreateData(data,de.sub),
     config: {
-      enable: false,
+      enable: true,
     },
   };
 
