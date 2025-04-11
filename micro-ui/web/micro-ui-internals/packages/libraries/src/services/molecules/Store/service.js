@@ -4,8 +4,6 @@ import { Storage } from "../../atoms/Utils/Storage";
 import { ApiCacheService } from "../../atoms/ApiCacheService";
 import { TenantConfigSearch } from "../../elements/TenantConfigService";
 
-console.log("i'm LocalizationService", LocalizationService);
-
 const getImgUrl = (url, fallbackUrl) => {
 
   if (!url && fallbackUrl) {
@@ -91,8 +89,7 @@ export const StoreService = {
       uiHomePage: uiHomePage,
     };
   },
-  digitInitData: async (stateCode="mz", enabledModules, modulePrefix) => {
-    console.log("I'm inside digitInitData");
+  digitInitData: async (stateCode, enabledModules, modulePrefix) => {
     const { MdmsRes } = await MdmsService.init(stateCode);
     const stateInfo = MdmsRes["common-masters"]?.StateInfo?.[0] || {};
     const uiHomePage = MdmsRes["common-masters"]?.uiHomePage?.[0] || {};
@@ -160,7 +157,6 @@ export const StoreService = {
           uiHomePage: uiHomePage,
         };
     initData.selectedLanguage = Digit.SessionStorage.get("locale") || initData.languages[0].value;
-    console.log("initdata", initData)
 
     ApiCacheService.saveSetting(MdmsRes["DIGIT-UI"]?.ApiCachingSettings);
 
@@ -181,7 +177,7 @@ export const StoreService = {
     }
     // .filter((item) => !!moduleTenants.find((mt) => mt.code === item.code))
     // .map((tenant) => ({ i18nKey: `TENANT_TENANTS_${tenant.code.replace(".", "_").toUpperCase()}`, ...tenant }));
-    console.log("loc before LocalizationService")
+
     try {
       await LocalizationService.getLocale({
         modules: [`${modulePrefix}-common`, `digit-ui`, `digit-tenants`, `${modulePrefix}-${stateCode.toLowerCase()}`],
@@ -191,7 +187,6 @@ export const StoreService = {
     } catch (error) {
       console.error("LocalizationService.getLocale failed:", error);
     }
-    console.log("loc after LocalizationService")
 
     Storage.set("initData", initData);
     initData.revenue_localities = revenue_localities;
@@ -199,7 +194,6 @@ export const StoreService = {
     setTimeout(() => {
       renderTenantLogos(stateInfo, initData.tenants);
     }, 0);
-    console.log("loc before return initdata")
     return initData;
   },
   defaultData: async (stateCode, moduleCode, language, modulePrefix) => {

@@ -64,7 +64,7 @@ const initRequestBody = (tenantId) => ({
   },
 });
 
-const getCriteria = (tenantId="mz", moduleDetails) => {
+const getCriteria = (tenantId, moduleDetails) => {
   return {
     MdmsCriteria: {
       tenantId,
@@ -1471,7 +1471,7 @@ const debouncedCall = ({ serviceName, url, data, useCache, params }, resolve, re
 };
 
 export const MdmsService = {
-  init: (stateCode="mz") =>
+  init: (stateCode) =>
     ServiceRequest({
       serviceName: "mdmsInit",
       url: Urls.MDMS,

@@ -56,7 +56,6 @@ export const initI18n = (callback) => {
     .use(initReactI18next)
     .init(i18nextConfig(), () => {
       window.i18next = i18next;
-      console.log("i18next initialized successfully!");
       if (callback) callback();
     });
 };
