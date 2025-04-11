@@ -157,18 +157,18 @@ const SuccessPage = () => {
         userName: decodedToken.preferred_username,
         name: decodedToken.name || "N/A",
         emailId: decodedToken.email || "N/A",
-          roles: [
-        {
-          name: "Super User", // Update role details if dynamic role mapping is needed
-          code: "SUPERUSER",
+      //     roles: [
+      //   {
+      //     name: "Super User", // Update role details if dynamic role mapping is needed
+      //     code: "SUPERUSER",
+      //     tenantId: "SDFG",
+      //   },
+      // ],
+        roles: decodedToken.realm_access?.roles.map((role) => ({
+          name: role,
+          code: role.toUpperCase(),
           tenantId: "SDFG",
-        },
-      ],
-        // roles: decodedToken.realm_access?.roles.map((role) => ({
-        //   name: role,
-        //   code: role.toUpperCase(),
-        //   tenantId: "SDFG",
-        // })) || [],
+        })) || [],
         active: true,
         tenantId: "SDFG",
       };
