@@ -22,9 +22,9 @@
     "start:dev": "run-p dev:**",
     "start:script": "./scripts/create.sh",
     "build": "run-s build:**",
-    "build:svg-components": "cd packages/svg-components && yarn build",
-    "build:ui-components": "cd packages/ui-components && yarn build",
-    "build:react-components": "cd packages/react-components && yarn build",
+    "buildD:svg-components": "cd packages/svg-components && yarn build",
+    "buildD:ui-components": "cd packages/ui-components && yarn build",
+    "buildD:react-components": "cd packages/react-components && yarn build",
     "build:libraries": "cd packages/libraries && yarn build",
     "build:workbench": "cd packages/modules/workbench && yarn build",
     "build:core": "cd packages/modules/core && yarn build",
@@ -81,8 +81,8 @@
     ]
   },
   "dependencies": {
-    "@egovernments/digit-ui-components": "0.0.2-beta.4-webpack.2",
-    "@egovernments/digit-ui-react-components": "1.8.16-upgrade.2",
+    "@egovernments/digit-ui-components": "0.0.2-webpack-20",
+    "@egovernments/digit-ui-react-components": "1.8.16-upgrade.11",
     "lodash": "4.17.21",
     "microbundle-crl": "0.13.11",
     "process": "^0.11.10",
