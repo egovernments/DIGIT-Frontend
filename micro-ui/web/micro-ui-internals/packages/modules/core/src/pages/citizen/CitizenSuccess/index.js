@@ -102,11 +102,11 @@ const CuccessPage = () => {
     setCitizenDetail(user?.info, user?.access_token, "SDFG");
     // setEmployeeDetail(user?.info, user?.access_token);
     // let redirectPath = `/${window?.globalPath}/user/setup`;
-    let redirectPath = `/${window?.contextPath}/citizen/select-location`;
-    history.push({
-      pathname: redirectPath,
-      state: { tenant: "SDFG" },
-    });
+    // let redirectPath = `/${window?.contextPath}/citizen/select-location`;
+    // history.push({
+    //   pathname: redirectPath,
+    //   state: { tenant: "SDFG" },
+    // });
     // if (isLogin) {
     //   // history.push(redirectPathOtpLogin);
     //   return;
@@ -173,19 +173,19 @@ const CuccessPage = () => {
     }
     const de = jwt_decode(newToken.access_token);
 
-    if(individualExists==false){
-    console.log(data, "data");
-    await mutation.mutate(
-      {
-        url: `/individual/v1/_create`,
-        params: { tenantId },
-        body: transformIndividualCreateData(data,de.sub),
-        config: {
-          enable: true,
-        },
-      },
-    );
-  }
+  //   if(individualExists==false){
+  //   console.log(data, "data");
+  //   await mutation.mutate(
+  //     {
+  //       url: `/individual/v1/_create`,
+  //       params: { tenantId },
+  //       body: transformIndividualCreateData(data,de.sub),
+  //       config: {
+  //         enable: true,
+  //       },
+  //     },
+  //   );
+  // }
    
   
     try {
@@ -223,6 +223,26 @@ const CuccessPage = () => {
   
       Digit.SessionStorage.set("Employee.tenantId", info?.tenantId);
       setUser({ info, ...tokens });
+
+    if(individualExists==false){
+      console.log(data, "data");
+      await mutation.mutate(
+        {
+          url: `/individual/v1/_create`,
+          params: { tenantId },
+          body: transformIndividualCreateData(data,de.sub),
+          config: {
+            enable: true,
+          },
+        },
+      );
+    }
+
+      let redirectPath = `/${window?.contextPath}/citizen/select-location`;
+    history.push({
+      pathname: redirectPath,
+      state: { tenant: "SDFG" },
+    });
     } catch (err) {
       console.error("Error setting user details:", err);
     }
