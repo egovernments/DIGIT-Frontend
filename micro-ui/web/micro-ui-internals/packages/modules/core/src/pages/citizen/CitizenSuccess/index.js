@@ -127,7 +127,7 @@ const CuccessPage = () => {
       return;
     }
 
-    const url = `https://digit-lts.digit.org/keycloak-test/realms/SDFG/protocol/openid-connect/token`;
+    const url = `http://localhost:8081/realms/SDFG/protocol/openid-connect/token`;
     try {
       const response = await fetch(url, {
         method: "POST",
@@ -156,10 +156,10 @@ const CuccessPage = () => {
 
   const reqCreate = {
     url: `/individual/v1/_create`,
-    params: {tenantId},
-    body: transformIndividualCreateData(data,de.sub),
+    params: {},
+    body: {},
     config: {
-      enable: true,
+      enable: false,
     },
   };
 
@@ -173,19 +173,19 @@ const CuccessPage = () => {
     }
     const de = jwt_decode(newToken.access_token);
 
-  //   if(individualExists==false){
-  //   console.log(data, "data");
-  //   await mutation.mutate(
-  //     {
-  //       url: `/individual/v1/_create`,
-  //       params: { tenantId },
-  //       body: transformIndividualCreateData(data,de.sub),
-  //       config: {
-  //         enable: true,
-  //       },
-  //     },
-  //   );
-  // }
+    if(individualExists==false){
+    console.log(data, "data");
+    await mutation.mutate(
+      {
+        url: `/individual/v1/_create`,
+        params: { tenantId },
+        body: transformIndividualCreateData(data,de.sub),
+        config: {
+          enable: true,
+        },
+      },
+    );
+  }
    
   
     try {
@@ -240,11 +240,11 @@ const CuccessPage = () => {
   //     },
   //   );
   // }
-    // let redirectPath = `/${window?.contextPath}/citizen/select-location`;
-    // history.push({
-    //   pathname: redirectPath,
-    //   state: { tenant: "SDFG" },
-    // });
+  //   let redirectPath = `/${window?.contextPath}/citizen/select-location`;
+  //   history.push({
+  //     pathname: redirectPath,
+  //     state: { tenant: "SDFG" },
+  //   });
   };
   return (
     <div>
