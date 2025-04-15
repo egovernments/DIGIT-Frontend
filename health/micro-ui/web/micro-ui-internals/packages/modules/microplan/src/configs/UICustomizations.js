@@ -158,7 +158,7 @@ export const UICustomizations = {
           const onActionSelect = async (e, row) => {
             if (e.name === "MP_ACTIONS_EDIT_SETUP") {
               const key = parseInt(row?.additionalDetails?.key);
-              const resolvedKey = key === 8 ? 7 : key === 9 ? 10 : key || 2;
+              const resolvedKey = key === 8 ? 7 : key === 10 ? 11 : key || 2;
               const url = `/${window.contextPath}/employee/microplan/setup-microplan?key=${resolvedKey}&microplanId=${row.id}&campaignId=${row.campaignDetails.id}`;
               window.location.href = url;
             }
