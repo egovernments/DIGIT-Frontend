@@ -36,6 +36,8 @@ import FilterSection from "./components/FilterSection";
 import ChoroplethSelection from "./components/ChoroplethSelection";
 import VillageHierarchyTooltipWrapper from "./components/VillageHierarchyTooltipWrapper";
 import CampaignCard from "./components/OldCampaignCard"; // @nipunarora-eGov remove this once migrated to new react component card implementation
+import AddColumns from "./components/AddColumns";
+import AddColumnsWrapper from "./components/AddColumnsWrapper";
 
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -89,6 +91,8 @@ const componentsToRegister = {
   UploadDataCustom,
   DataMgmtTable,
   FileComponent,
+  AddColumns,
+  AddColumnsWrapper,
   HeaderComp,
   FormulaView,
   FormulaSection,

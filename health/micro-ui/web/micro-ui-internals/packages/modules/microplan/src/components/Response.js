@@ -6,16 +6,17 @@ import { Button } from "@egovernments/digit-ui-components";
 import { PanelCard } from "@egovernments/digit-ui-components";
 import { Toast } from "@egovernments/digit-ui-components";
 
-const Response = () => {
+const Response = ({ useWindowState = false }) => {
   const { t } = useTranslation();
   const history = useHistory();
+  const location = useLocation();
   const queryStrings = Digit.Hooks.useQueryParams();
   const [campaignId, setCampaignId] = useState(queryStrings?.campaignId);
   const [isResponseSuccess, setIsResponseSuccess] = useState(
     queryStrings?.isSuccess === "true" ? true : queryStrings?.isSuccess === "false" ? false : true
   );
   const [showToast, setShowToast] = useState(false);
-  const { state } = useLocation();
+  const state = useWindowState ? window?.history?.state : location?.state;
   const back = state?.back ? state?.back : "BACK";
 
   const downloadDraftFile = () => {
