@@ -34,7 +34,7 @@ const ProductsPageComponent = ({detailsConfig}) => {
               className="explore-button"
               variation="secondary"
               label={t("COMMON_EXPLORE") + " →"}
-              onClick={() => handleNavigate(`/${window?.contextPath}/employee/user/productDetailsPage/${product?.module}`)}
+              onClick={() => handleNavigate(`/${window?.contextPath}/employee/sandbox/productDetailsPage/${product?.module}`)}
             />
           </Card>
         ))}
