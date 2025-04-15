@@ -79,7 +79,7 @@ const initLibraries = () => {
   setupLibraries("InboxGeneral", InboxGeneral);
   setupLibraries("ShareFiles", ShareFiles);
   setupLibraries("Contexts", Contexts);
-  // setupLibraries("Hooks", Hooks);
+  setupLibraries("Hooks", Hooks);
   setupLibraries("Customizations", {});
   setupLibraries("Utils", Utils);
   setupLibraries("Download", Download);
@@ -94,4 +94,4 @@ const initLibraries = () => {
   });
 };
 
-export { initLibraries, Enums, Hooks, subFormRegistry ,Request};
+export { initLibraries, Enums, Hooks, subFormRegistry ,Request, initI18n};

@@ -17,15 +17,16 @@ import OtpComponent from "./pages/employee/Otp/OtpCustomComponent";
 // import {useInitStore} from "../libraries/src/hooks/store" 
 // import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench"
 import { initWorkbenchComponents } from "../../workbench/src/Module";
-import Hooks from "../../../libraries/src/hooks";
-import { initI18n } from "@egovernments/digit-ui-libraries/src/translations";
+// import {Hooks} from "@egovernments/digit-ui-libraries"
+// import Hooks from "../../../libraries/src/hooks";
+import { initI18n } from "@egovernments/digit-ui-libraries";
 
 console.log("inside module.js of core")
 console.log(Digit.Hooks);
 
 const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding }) => {
   console.log("inside DigitUIWrapper of core");
-  window.Digit["Hooks"] = Hooks || {};
+  // window.Digit["Hooks"] = Hooks || {};
   const { isLoading, data: initData={} } = Digit.Hooks.useInitStore(stateCode, enabledModules);
   console.log("seeeeeeee")
   if (isLoading) {
