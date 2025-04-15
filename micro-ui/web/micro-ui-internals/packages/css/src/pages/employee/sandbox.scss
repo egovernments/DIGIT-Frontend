@@ -1187,6 +1187,19 @@ digit-card-text.center {
 
 .products-container {
   padding: 2rem;
+  margin-left: 1.5rem;
+}
+
+.icon-wrapper {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  justify-content: center;
+}
+
+.icon-wrapper svg {
+  width: 34px;
+  height: 34px;
 }
 
 .products-title {
@@ -1199,7 +1212,7 @@ digit-card-text.center {
   font-size: 1rem;
   color: #666;
   margin-bottom: 2rem;
-  max-width: 80%;
+  max-width: 100%;
 }
 
 .products-list {
@@ -1230,6 +1243,7 @@ digit-card-text.center {
   font-size: 24px;
   font-weight: bold;
   color: #0B4B66;
+  min-height: 3.2rem;
 }
 
 .product-icon {
@@ -1248,7 +1262,7 @@ digit-card-text.center {
 }
 
 .explore-button {
-  margin-top: 1rem;
+  margin-top: auto;
   border: 1px solid #d9534f;
   color: #d9534f;
   font-weight: bold;
