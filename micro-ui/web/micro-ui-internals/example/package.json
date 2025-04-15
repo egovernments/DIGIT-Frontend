@@ -16,6 +16,7 @@
     "@egovernments/digit-ui-libraries": "1.8.1-upgrade.6",
     "@egovernments/digit-ui-module-core": "1.9.1-test.100",
     "@egovernments/digit-ui-components": "0.0.2-webpack-20",
+    "@egovernments/digit-ui-module-sample": "0.0.1",
     "@egovernments/digit-ui-react-components": "1.8.16-upgrade.11",
     "@egovernments/digit-ui-module-assignment": "0.0.1",
     "@egovernments/digit-ui-module-workbench": "1.0.19-test.1",

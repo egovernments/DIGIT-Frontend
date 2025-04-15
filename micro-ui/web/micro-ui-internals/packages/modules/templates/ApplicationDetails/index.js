@@ -7,7 +7,7 @@ import { Loader } from "@egovernments/digit-ui-react-components";
 
 import ActionModal from "./Modal";
 
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ApplicationDetailsContent from "./components/ApplicationDetailsContent";
 import ApplicationDetailsToast from "./components/ApplicationDetailsToast";
 import ApplicationDetailsActionBar from "./components/ApplicationDetailsActionBar";
@@ -17,7 +17,7 @@ const ApplicationDetails = (props) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const state = Digit.ULBService.getStateId();
   const { t } = useTranslation();
-  const history = useHistory();
+  const history = useNavigate();
   let { id: applicationNumber } = useParams();
   const [displayMenu, setDisplayMenu] = useState(false);
   const [selectedAction, setSelectedAction] = useState(null);
@@ -25,7 +25,7 @@ const ApplicationDetails = (props) => {
   const [isEnableLoader, setIsEnableLoader] = useState(false);
   const [isWarningPop, setWarningPopUp] = useState(false);
   const [modify, setModify] = useState(false);
-  const [saveAttendanceState, setSaveAttendanceState] = useState({ displaySave : false, updatePayload: []})
+  const [saveAttendanceState, setSaveAttendanceState] = useState({ displaySave: false, updatePayload: [] })
 
   const {
     applicationDetails,
@@ -54,7 +54,7 @@ const ApplicationDetails = (props) => {
     sectionHeadStyle,
     showActionBar = true
   } = props;
-  
+
   useEffect(() => {
     if (showToast) {
       workflowDetails.revalidate();
@@ -63,7 +63,7 @@ const ApplicationDetails = (props) => {
 
   function onActionSelect(action) {
     if (action) {
-      if(action?.isToast){
+      if (action?.isToast) {
         setShowToast({ key: "error", error: { message: action?.toastMessage } });
         setTimeout(closeToast, 5000);
       }
@@ -75,11 +75,11 @@ const ApplicationDetails = (props) => {
           history.push(`${action?.redirectionUrll?.pathname}`, { data: action?.redirectionUrll?.state });
         }
         if (action?.redirectionUrll?.action === "EDIT_ESTIMATE_APPLICATION") {
-          history.push(`${action?.redirectionUrll?.pathname}`,{ data: action?.redirectionUrll?.state });
+          history.push(`${action?.redirectionUrll?.pathname}`, { data: action?.redirectionUrll?.state });
         }
-        
+
       } else if (!action?.redirectionUrl) {
-        if(action?.action === 'EDIT') setModify(true)
+        if (action?.action === 'EDIT') setModify(true)
         else setShowModal(true);
       } else {
         history.push({
@@ -105,19 +105,19 @@ const ApplicationDetails = (props) => {
 
   const getResponseHeader = (action) => {
 
-    if(action?.includes("CHECK")){
+    if (action?.includes("CHECK")) {
       return t("WORKS_LOI_RESPONSE_FORWARD_HEADER")
-    } else if (action?.includes("APPROVE")){
-     return  t("WORKS_LOI_RESPONSE_APPROVE_HEADER")
-    }else if(action?.includes("REJECT")){
+    } else if (action?.includes("APPROVE")) {
+      return t("WORKS_LOI_RESPONSE_APPROVE_HEADER")
+    } else if (action?.includes("REJECT")) {
       return t("WORKS_LOI_RESPONSE_REJECT_HEADER")
     }
   }
 
-  const getResponseMessage = (action,updatedLOI) => {
-  
+  const getResponseMessage = (action, updatedLOI) => {
+
     if (action?.includes("CHECK")) {
-      return t("WORKS_LOI_RESPONSE_MESSAGE_CHECK", { loiNumber: updatedLOI?.letterOfIndentNumber,name:"Nipun",designation:"SE" })
+      return t("WORKS_LOI_RESPONSE_MESSAGE_CHECK", { loiNumber: updatedLOI?.letterOfIndentNumber, name: "Nipun", designation: "SE" })
     } else if (action?.includes("APPROVE")) {
       return t("WORKS_LOI_RESPONSE_MESSAGE_APPROVE", { loiNumber: updatedLOI?.letterOfIndentNumber })
     } else if (action?.includes("REJECT")) {
@@ -127,23 +127,23 @@ const ApplicationDetails = (props) => {
 
   const getEstimateResponseHeader = (action) => {
 
-    if(action?.includes("CHECK")){
+    if (action?.includes("CHECK")) {
       return t("WORKS_ESTIMATE_RESPONSE_FORWARD_HEADER")
-    } else if (action?.includes("TECHNICALSANCATION")){
-     return  t("WORKS_ESTIMATE_RESPONSE_FORWARD_HEADER")
-    }else if (action?.includes("ADMINSANCTION")){
-      return  t("WORKS_ESTIMATE_RESPONSE_APPROVE_HEADER")
-    }else if(action?.includes("REJECT")){
+    } else if (action?.includes("TECHNICALSANCATION")) {
+      return t("WORKS_ESTIMATE_RESPONSE_FORWARD_HEADER")
+    } else if (action?.includes("ADMINSANCTION")) {
+      return t("WORKS_ESTIMATE_RESPONSE_APPROVE_HEADER")
+    } else if (action?.includes("REJECT")) {
       return t("WORKS_ESTIMATE_RESPONSE_REJECT_HEADER")
     }
   }
 
-  const getEstimateResponseMessage = (action,updatedEstimate) => {
-  
+  const getEstimateResponseMessage = (action, updatedEstimate) => {
+
     if (action?.includes("CHECK")) {
-      return t("WORKS_ESTIMATE_RESPONSE_MESSAGE_CHECK", { estimateNumber: updatedEstimate?.estimateNumber,Name:"Super",Designation:"SE",Department:"Health" })
+      return t("WORKS_ESTIMATE_RESPONSE_MESSAGE_CHECK", { estimateNumber: updatedEstimate?.estimateNumber, Name: "Super", Designation: "SE", Department: "Health" })
     } else if (action?.includes("TECHNICALSANCATION")) {
-      return t("WORKS_ESTIMATE_RESPONSE_MESSAGE_CHECK", { estimateNumber: updatedEstimate?.estimateNumber,Name:"Super",Designation:"SE",Department:"Health" })
+      return t("WORKS_ESTIMATE_RESPONSE_MESSAGE_CHECK", { estimateNumber: updatedEstimate?.estimateNumber, Name: "Super", Designation: "SE", Department: "Health" })
     } else if (action?.includes("ADMINSANCTION")) {
       return t("WORKS_ESTIMATE_RESPONSE_MESSAGE_APPROVE", { estimateNumber: updatedEstimate?.estimateNumber })
     } else if (action?.includes("REJECT")) {
@@ -162,7 +162,7 @@ const ApplicationDetails = (props) => {
     } else if (action?.includes("APPROVE")) {
       response.header = t("ATM_ATTENDANCE_APPROVED")
       response.message = t("ATM_ATTENDANCE_APPROVED_SUCCESS")
-    } 
+    }
     return response
   }
 
@@ -180,63 +180,63 @@ const ApplicationDetails = (props) => {
         onSuccess: (data, variables) => {
           setIsEnableLoader(false);
           //just history.push to the response component from here and show relevant details
-          if(data?.letterOfIndents?.[0]){
+          if (data?.letterOfIndents?.[0]) {
             const updatedLOI = data?.letterOfIndents?.[0]
             const state = {
-              header:getResponseHeader(performedAction,updatedLOI),
+              header: getResponseHeader(performedAction, updatedLOI),
               id: updatedLOI?.letterOfIndentNumber,
               info: t("WORKS_LOI_ID"),
-              message: getResponseMessage(performedAction,updatedLOI),
+              message: getResponseMessage(performedAction, updatedLOI),
               links: [
                 {
                   name: t("WORKS_CREATE_NEW_LOI"),
                   redirectUrl: `/${window.contextPath}/employee/works/create-loi`,
                   code: "",
                   svg: "CreateEstimateIcon",
-                  isVisible:false,
-                  type:"add"
+                  isVisible: false,
+                  type: "add"
                 },
                 {
                   name: t("WORKS_GOTO_LOI_INBOX"),
                   redirectUrl: `/${window.contextPath}/employee/works/LOIInbox`,
                   code: "",
                   svg: "CreateEstimateIcon",
-                  isVisible:true,
-                  type:"inbox"
+                  isVisible: true,
+                  type: "inbox"
                 },
               ],
-              responseData:data,
-              requestData:variables
+              responseData: data,
+              requestData: variables
             }
             history.push(`/${window.contextPath}/employee/works/response`, state)
           }
-          if(data?.estimates?.[0]){
+          if (data?.estimates?.[0]) {
             const updatedEstimate = data?.estimates?.[0]
             const state = {
-              header:getEstimateResponseHeader(performedAction,updatedEstimate),
+              header: getEstimateResponseHeader(performedAction, updatedEstimate),
               id: updatedEstimate?.estimateNumber,
               info: t("WORKS_ESTIMATE_ID"),
-              message: getEstimateResponseMessage(performedAction,updatedEstimate),
+              message: getEstimateResponseMessage(performedAction, updatedEstimate),
               links: [
                 {
                   name: t("WORKS_CREATE_ESTIMATE"),
                   redirectUrl: `/${window.contextPath}/employee/works/create-estimate`,
                   code: "",
                   svg: "CreateEstimateIcon",
-                  isVisible:false,
-                  type:"add"
+                  isVisible: false,
+                  type: "add"
                 },
                 {
                   name: t("WORKS_GOTO_ESTIMATE_INBOX"),
                   redirectUrl: `/${window.contextPath}/employee/works/inbox`,
                   code: "",
                   svg: "RefreshIcon",
-                  isVisible:true,
-                  type:"inbox"
+                  isVisible: true,
+                  type: "inbox"
                 },
               ],
-              responseData:data,
-              requestData:variables
+              responseData: data,
+              requestData: variables
             }
             history.push(`/${window.contextPath}/employee/works/response`, state)
           }
@@ -251,24 +251,24 @@ const ApplicationDetails = (props) => {
           if (isOBPS?.isNoc) {
             history.push(`/${window?.contextPath}/employee/noc/response`, { data: data });
           }
-          if (data?.Amendments?.length > 0 ){
+          if (data?.Amendments?.length > 0) {
             //RAIN-6981 instead just show a toast here with appropriate message
-          //show toast here and return 
+            //show toast here and return 
             //history.push("/${window?.contextPath}/employee/ws/response-bill-amend", { status: true, state: data?.Amendments?.[0] })
-            
-            if(variables?.AmendmentUpdate?.workflow?.action.includes("SEND_BACK")){
-              setShowToast({ key: "success", label: t("ES_MODIFYSWCONNECTION_SEND_BACK_UPDATE_SUCCESS")})
-            } else if (variables?.AmendmentUpdate?.workflow?.action.includes("RE-SUBMIT")){
+
+            if (variables?.AmendmentUpdate?.workflow?.action.includes("SEND_BACK")) {
+              setShowToast({ key: "success", label: t("ES_MODIFYSWCONNECTION_SEND_BACK_UPDATE_SUCCESS") })
+            } else if (variables?.AmendmentUpdate?.workflow?.action.includes("RE-SUBMIT")) {
               setShowToast({ key: "success", label: t("ES_MODIFYSWCONNECTION_RE_SUBMIT_UPDATE_SUCCESS") })
-            } else if (variables?.AmendmentUpdate?.workflow?.action.includes("APPROVE")){
+            } else if (variables?.AmendmentUpdate?.workflow?.action.includes("APPROVE")) {
               setShowToast({ key: "success", label: t("ES_MODIFYSWCONNECTION_APPROVE_UPDATE_SUCCESS") })
             }
-            else if (variables?.AmendmentUpdate?.workflow?.action.includes("REJECT")){
+            else if (variables?.AmendmentUpdate?.workflow?.action.includes("REJECT")) {
               setShowToast({ key: "success", label: t("ES_MODIFYWSCONNECTION_REJECT_UPDATE_SUCCESS") })
-            }            
+            }
             return
           }
-          if(data?.musterRolls?.[0]) {
+          if (data?.musterRolls?.[0]) {
             const musterRoll = data?.musterRolls?.[0]
             const response = getAttendanceResponseHeaderAndMessage(performedAction)
             const state = {
@@ -285,7 +285,7 @@ const ApplicationDetails = (props) => {
           queryClient.clear();
           queryClient.refetchQueries("APPLICATION_SEARCH");
           //push false status when reject
-          
+
         },
       });
     }

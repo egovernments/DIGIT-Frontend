@@ -9,8 +9,8 @@
     "dist"
   ],
   "scripts": {
-    "start": "webpack serve --mode=production --open --hot",
-    "build": "webpack  --mode=production --node-env=production --config webpack.config.js",
+    "start": "webpack serve --mode=development --open --hot",
+    "build": "webpack  --mode=development --node-env=production --config webpack.config.js",
     "prepublish": "yarn build"
   },
   "peerDependencies": {
