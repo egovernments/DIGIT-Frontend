@@ -1,5 +1,6 @@
 import { useQuery } from "react-query";
 import SearchSavedPlansWithCampaign from "./services/searchSavedPlansWithCampaign";
+import { useRef } from "react";
 
 const useSavedMicroplansWithCampaign = (reqCriteria) => {
   const { body, config, params, state, url } = reqCriteria;
@@ -42,9 +43,8 @@ const useSavedMicroplansWithCampaign = (reqCriteria) => {
     isFetching,
     data,
     refetch,
-    revalidate: () => {},
+    revalidate: () => {}, // placeholder, you can expand this later
   };
 };
 
-// () => SearchSavedPlans(data)
 export default useSavedMicroplansWithCampaign;
