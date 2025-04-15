@@ -863,7 +863,7 @@ export const UICustomizations = {
               const template = type === "Estimations" ? "Estimations" : "DraftComplete";
               const fileId = row?.files.find((item) => item.templateIdentifier === template)?.filestoreId;
               if (!fileId) {
-                console.error(`No file with templateIdentifier '${template}' found`);
+                setShowToast({ label: t("NO_DRAFT_FILE_FOUND") });
                 return;
               }
               const campaignName = row?.name || "";
@@ -874,7 +874,7 @@ export const UICustomizations = {
               });
             };
   
-            const onActionSelect = async (e) => {
+            const onActionSelect = async (e,row) => {
               if (e.name === "MP_ACTIONS_EDIT_SETUP") {
                 const key = parseInt(row?.additionalDetails?.key);
                 const resolvedKey = key === 8 ? 7 : key === 9 ? 10 : key || 2;
@@ -945,7 +945,7 @@ export const UICustomizations = {
                         optionsKey="name"
                         showBottom={true}
                         isSearchable={false}
-                        onOptionSelect={(item) => onActionSelect(item)}
+                        onOptionSelect={(item) => onActionSelect(item, row)}
                       />
                     </div>
                   </div>
