@@ -144,7 +144,7 @@ export const UICustomizations = {
             const template = type === "Estimations" ? "Estimations" : "DraftComplete";
             const fileId = row?.files.find((item) => item.templateIdentifier === template)?.filestoreId;
             if (!fileId) {
-              setShowToast({ label: `No file with templateIdentifier '${template}' found` });
+              setShowToast({ label: t("NO_DRAFT_FILE_FOUND") });
               return;
             }
             const campaignName = row?.name || "";
