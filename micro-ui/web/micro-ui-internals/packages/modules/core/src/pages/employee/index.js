@@ -19,7 +19,7 @@ import { PrivateRoute } from "@egovernments/digit-ui-components";
 import RoleLanding from "./RoleLanding";
 import ImageComponent from "../../components/ImageComponent";
 import ProductDetails from "./ProductDetails";
-const userScreensExempted = ["user/landing", "user/profile", "user/error","user/productPage"];
+const userScreensExempted = ["user/landing", "user/profile", "user/error","user/productPage","user/productDetailsPage"];
 
 const EmployeeApp = ({
   stateInfo,
