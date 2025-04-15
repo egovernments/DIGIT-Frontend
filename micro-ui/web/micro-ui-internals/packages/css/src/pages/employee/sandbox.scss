@@ -1009,7 +1009,6 @@ digit-card-text.center {
 .custom-landing-header {
   font-weight: 700;
   font-size: 2rem;
-  margin-bottom: 1.25rem;
   color: #0b4b66;
   text-align: left;
 }
@@ -1227,13 +1226,18 @@ digit-card-text.center {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  min-height: 3.2rem;
+
 }
 
+
+
 .product-title {
+  display: flex;
+  align-items: center;
   font-size: 24px;
   font-weight: bold;
   color: #0B4B66;
-  min-height: 3.2rem;
 }
 
 .product-icon {
@@ -1242,6 +1246,12 @@ digit-card-text.center {
   margin-right: 0.5rem;
   display: flex;
   align-items: center;
+
+}
+
+.product-icon svg {
+  height: 34px;
+  width: 34px;
 
 }
 
@@ -1261,8 +1271,9 @@ digit-card-text.center {
 
 .icon-header-container {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 8px;
+  margin-bottom: 2rem;
 }
 
 .custom-image-container {
