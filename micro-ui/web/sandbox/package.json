@@ -15,7 +15,8 @@
     "micro-ui-internals/packages/modules/sandbox",
     "micro-ui-internals/packages/modules/pgr",
     "micro-ui-internals/packages/modules/dss",
-    "micro-ui-internals/packages/modules/hrms"
+    "micro-ui-internals/packages/modules/hrms",
+    "micro-ui-internals/packages/css"
   ],
   "homepage": "/sandbox-ui",
   "dependencies": {
