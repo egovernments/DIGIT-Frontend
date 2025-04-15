@@ -55,7 +55,7 @@ const LandingComponent = ({ config ={}}) => {
               {t(introSection.title)}
             </HeaderComponent>
 
-            <BreakLine />
+            <BreakLine style={{"border-color":"#c84c0e"}} />
 
             {/* Intro paragraph text */}
             {introSection?.content?.[0]?.text && (
