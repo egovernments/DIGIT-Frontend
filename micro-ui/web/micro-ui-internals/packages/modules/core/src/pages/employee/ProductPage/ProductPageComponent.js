@@ -24,7 +24,7 @@ const ProductsPageComponent = ({detailsConfig}) => {
         {detailsConfig?.map((product, index) => (
           <Card key={index} className="product-card">
             <div className="product-header">
-            <div className="icon-wrapper">
+            <div className="icon-wrap">
               {Digit.Utils.iconRender(product.icon, "#c84c0e")}
             </div>
               <HeaderComponent className="product-title">{t(product.heading)}</HeaderComponent>
