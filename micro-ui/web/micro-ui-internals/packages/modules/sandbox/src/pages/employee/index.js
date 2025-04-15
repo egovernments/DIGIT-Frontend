@@ -12,20 +12,35 @@ import ModuleMasterTable from "./applicationMgmt/ModuleMasterTable";
 import TenantUpdate from "./tenantMgmt/TenantUpdate";
 import SetupMaster from "./applicationMgmt/SetupMaster";
 import TenantConfigUpload from "./tenantMgmt/TenantConfigUpload";
+import ProductPage from "./ProductPage";
+import ProductDetails from "./ProductDetails";
+import Landing from "./Landing";
+import RoleLanding from "./RoleLanding";
+
 
 const bredCrumbStyle = { maxWidth: "min-content" };
 
 const ProjectBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
   const searchParams = new URLSearchParams(location.search);
-  const module = searchParams.get("module")
+  const module =  location.pathname.split('/').pop();
   const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
 
   const crumbs = [
     {
-      path: `/${window?.contextPath}/employee`,
+      path: `/${window?.contextPath}/employee/sandbox/landing`,
       content: t("HOME"),
       show: true,
+    },
+    {
+      path: `/${window?.contextPath}/employee/sandbox/productPage`,
+      content: t("SANDBOX_PRODUCTS"),
+      show: location.pathname.includes("productDetailsPage")  || location.pathname.includes("productPage")? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/sandbox/productDetailsPage/${module}`,
+      content: t(`${module.toUpperCase()}_PRODUCT_DETAILS_HEADER`), 
+      show: location.pathname.includes("productDetailsPage")? true : false,
     },
     {
       path: pathVar === "application-management/home" ? "" : `/${window?.contextPath}/employee/sandbox/application-management/home`,
@@ -33,9 +48,9 @@ const ProjectBreadCrumb = ({ location, defaultPath }) => {
       show: false,
     },
     {
-      path: module ? "" : `/${window?.contextPath}/employee/sandbox/application-management/home`,
-      content: t(`APPLICATON_MODULE_CRUMB_${module}`),
-      show: module ? true : false,
+      path: searchParams.get("module") ? "" : `/${window?.contextPath}/employee/sandbox/application-management/home`,
+      content: t(`APPLICATON_MODULE_CRUMB_${searchParams.get("module")}`),
+      show: searchParams.get("module") ? true : false,
     },
   ];
 
@@ -60,6 +75,26 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/application-management/module-master`} component={() => <SandboxSearch />} />
         <PrivateRoute path={`${path}/application-management/setup-master`} component={() => <SetupMaster />} />
         <PrivateRoute path={`${path}/application-management/module`} component={() => <ModuleMasterTable />} />
+        <PrivateRoute path={`${path}/landing`}>
+                <div className="employee-app-wrapper sandbox-landing-wrapper">
+                  <Landing />
+                </div>
+              </PrivateRoute>
+              <PrivateRoute path={`${path}/productPage`}>
+                <div className="employee-app-wrapper sandbox-landing-wrapper">
+                  <ProductPage />
+                </div>
+              </PrivateRoute>
+              <PrivateRoute path={`${path}/productDetailsPage/:module`}>
+                <div className="employee-app-wrapper sandbox-landing-wrapper">
+                  <ProductDetails />
+                </div>
+              </PrivateRoute>
+              <PrivateRoute path={`${path}/user/landing/select-role`}>
+                <div className="employee-app-wrapper sandbox-landing-wrapper">
+                  <RoleLanding />
+                </div>
+              </PrivateRoute>
       </AppContainer>
     </Switch>
   );

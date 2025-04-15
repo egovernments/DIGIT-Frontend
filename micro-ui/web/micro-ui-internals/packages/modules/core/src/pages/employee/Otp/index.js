@@ -108,7 +108,7 @@ const Otp = ({ isLogin = false }) => {
 
       switch (true) {
         case locationPathname === "/sandbox-ui/user/otp" && isSuperUser:
-          return `/${contextPath}/employee/user/landing`;
+          return `/${contextPath}/employee/sandbox/landing`;
 
         case isSuperUser && MdmsRes?.[0]?.rolesForLandingPage?.includes("SUPERUSER"):
           return `/${contextPath}${RoleLandingUrl}`;

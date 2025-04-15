@@ -28,7 +28,7 @@ const LandingComponent = ({ config ={}}) => {
   } = config;
 
   // Define the redirect path for button click - will upate after the product page is ready
-  const redirectPathOtpLogin = `/${window?.contextPath}/employee/user/productPage`;
+  const redirectPathOtpLogin = `/${window?.contextPath}/employee/sandbox/productPage`;
 
    const introSection = subsections.find(s => s.type === "introSection") || {};
    const stepsSection = subsections.find(s => s.type === "stepsSection") || {}; 
