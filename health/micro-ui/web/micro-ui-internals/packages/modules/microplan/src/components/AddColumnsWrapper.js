@@ -49,7 +49,7 @@ const AddColumnsWrapper = ({ formData, onSelect, props: customProps }) => {
             return;
         }
         // Check if newColName exceeds the maximum allowed length of 235 characters
-        if (newColName.length > 235) {
+        if (newColName.length > 200) {
             setShowToast({ message: t("COLUMN_NAME_TOO_LONG"), type: "error" });
             return;
         }
