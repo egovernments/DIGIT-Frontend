@@ -15,6 +15,8 @@ import UpdateChecklist from "./UpdateChecklist";
 import BoundaryHome from "./BoundaryHome";
 import ApprovedMicroplans from "./ApprovedMicroplans";
 import FetchFromMicroplan from "../../components/fetchFromMicroplan";
+import CampaignHome from "./NewCampaignCreate/CampaignHome";
+import CreateCampaign from "./NewCampaignCreate/CreateCampaign";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -85,6 +87,16 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       path: pathVar === "update-campaign" ? "" : `/${window?.contextPath}/employee/campaign/update-campaign`,
       content: t("UPDATE_CAMPAIGN"),
       show: pathVar.match("update-campaign") ? true : false,
+    },
+    {
+      path: pathVar === "campaign-home" ? "" : `/${window?.contextPath}/employee/campaign/campaign-home`,
+      content: t("CREATE_CAMPAIGN_HOME"),
+      show: pathVar.match("campaign-home") ? true : false,
+    },
+    {
+      path: pathVar === "create-campaign" ? "" : `/${window?.contextPath}/employee/campaign/create-campaign`,
+      content: t("CREATE_CAMPAIGN"),
+      show: pathVar.match("create-campaign") ? true : false,
     },
   ];
 
@@ -167,6 +179,11 @@ const App = React.memo(({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hier
           <PrivateRoute path={`${path}/update-campaign`} component={() => <UpdateCampaign hierarchyData={hierarchyData} />} />
           <PrivateRoute path={`${path}/setup-from-microplan`} component={() => <ApprovedMicroplans />} />
           <PrivateRoute path={`${path}/app-configuration`} component={() => <AppConfigurationWrapper />} />
+          <PrivateRoute
+            path={`${path}/create-campaign`}
+            component={() => <CreateCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />}
+          />
+          <PrivateRoute path={`${path}/campaign-home`} component={() => <CampaignHome />} />
         </AppContainer>
       </Switch>
     </React.Fragment>
