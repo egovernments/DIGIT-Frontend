@@ -38,6 +38,7 @@ import VillageHierarchyTooltipWrapper from "./components/VillageHierarchyTooltip
 import CampaignCard from "./components/OldCampaignCard"; // @nipunarora-eGov remove this once migrated to new react component card implementation
 import AddColumns from "./components/AddColumns";
 import AddColumnsWrapper from "./components/AddColumnsWrapper";
+import MapViewPopup from "./components/MapViewPopup";
 
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -114,7 +115,8 @@ const componentsToRegister = {
   MapFilterIndex,
   FilterSection,
   ChoroplethSelection,
-  CampaignCard
+  CampaignCard,
+  MapViewPopup  
 };
 
 export const initMicroplanComponents = () => {
