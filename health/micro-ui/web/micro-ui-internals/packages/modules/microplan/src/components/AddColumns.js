@@ -79,7 +79,7 @@ const AddColumns = ({ colValues: initialColValues, setShowToast }) => {
           children={
             [(
               <LabelFieldPair className="new-assumption-pop">
-                <span className="bold">{t(`MP_COL_NAME`)}</span>
+                <span className="bold-column">{t(`MP_COL_NAME`)}</span>
                 <TextInput
                   name="name"
                   value={newColValue}

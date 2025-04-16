@@ -655,7 +655,7 @@ const PlanInbox = () => {
   });
 
   useEffect(() => {
-    if (workflowData) {
+    if (workflowData && workflowData.businessService==="PLAN_ESTIMATION") {
       // Assume selectedFilter.filterValue maps to applicationStatus or state
       const selectedState = workflowData?.states?.find((state) => state.state === selectedFilter?.status);
       
@@ -664,6 +664,8 @@ const PlanInbox = () => {
 
       // Update the available actions state
       setAvailableActionsForUser(availableActions || []);
+    }else{
+      refetchBussinessService();
     }
   }, [workflowData, selectedFilter?.status,selectedRows,villagesSlected]);
 

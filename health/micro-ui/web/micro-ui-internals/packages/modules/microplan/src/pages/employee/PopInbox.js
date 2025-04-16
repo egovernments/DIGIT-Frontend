@@ -284,7 +284,7 @@ const PopInbox = () => {
   });
 
   useEffect(() => {
-    if (workflowData) {
+    if (workflowData && workflowData.businessService==="CENSUS") {
 
       // Assume selectedFilter maps to applicationStatus or state
       const selectedState = workflowData?.states?.find(
@@ -299,6 +299,8 @@ const PopInbox = () => {
       // Update the available actions state
       setAvailableActionsForUser(availableActions || []);
 
+    }else{
+      refetchBussinessService();
     }
   }, [workflowData, selectedFilter?.status,villagesSlected,selectedRows]);
 
