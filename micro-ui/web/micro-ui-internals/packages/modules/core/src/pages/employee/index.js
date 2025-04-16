@@ -8,17 +8,13 @@ import ChangePassword from "./ChangePassword";
 import ForgotPassword from "./ForgotPassword";
 import LanguageSelection from "./LanguageSelection";
 import EmployeeLogin from "./Login";
-import Landing from "./Landing";
-import ProductPage from "./ProductPage";
 import SignUp from "./SignUp";
 import Otp from "./Otp";
 import ViewUrl from "./ViewUrl";
 import UserProfile from "../citizen/Home/UserProfile";
 import ErrorComponent from "../../components/ErrorComponent";
 import { PrivateRoute } from "@egovernments/digit-ui-components";
-import RoleLanding from "./RoleLanding";
 import ImageComponent from "../../components/ImageComponent";
-import ProductDetails from "./ProductDetails";
 const userScreensExempted = ["user/landing", "user/profile", "user/error","user/productPage"];
 
 const EmployeeApp = ({
@@ -95,26 +91,6 @@ const EmployeeApp = ({
               </Route>
               <PrivateRoute path={`${path}/user/profile`}>
                 <UserProfile stateCode={stateCode} userType={"employee"} cityDetails={cityDetails} />
-              </PrivateRoute>
-              <PrivateRoute path={`${path}/user/landing/select-role`}>
-                <div className="employee-app-wrapper sandbox-landing-wrapper">
-                  <RoleLanding />
-                </div>
-              </PrivateRoute>
-              <PrivateRoute path={`${path}/user/landing`}>
-                <div className="employee-app-wrapper sandbox-landing-wrapper">
-                  <Landing />
-                </div>
-              </PrivateRoute>
-              <PrivateRoute path={`${path}/user/productPage`}>
-                <div className="employee-app-wrapper sandbox-landing-wrapper">
-                  <ProductPage />
-                </div>
-              </PrivateRoute>
-              <PrivateRoute path={`${path}/user/productDetailsPage/:module`}>
-                <div className="employee-app-wrapper sandbox-landing-wrapper">
-                  <ProductDetails />
-                </div>
               </PrivateRoute>
 
               <Route path={`${path}/user/error`}>

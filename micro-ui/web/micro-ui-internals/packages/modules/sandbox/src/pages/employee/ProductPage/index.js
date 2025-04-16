@@ -23,7 +23,7 @@ const ProductPage = () => {
 
 
 
-  if(isLoading) return <Loader />  
+  if (isLoading) return <Loader variant="PageLoader" />;
   return (
     <ProductsPageComponent detailsConfig = {detailsConfig} />
   );  

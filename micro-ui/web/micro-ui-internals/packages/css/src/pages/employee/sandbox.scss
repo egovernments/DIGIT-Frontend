@@ -643,16 +643,6 @@ digit-card-text.center {
   }
 }
 
-.employee-app-wrapper.sandbox-landing-wrapper {
-  margin: 6rem 2rem 2rem 5rem;
-}
-
-@media (max-width: 768px) {
-  .employee-app-wrapper.sandbox-landing-wrapper {
-    margin: 4rem 1rem 1rem 1rem;
-  }
-}
-
 .digit-uploader-content {
   .digit-button-secondary.large {
     .icon-label-container.secondary.large {
@@ -1019,7 +1009,6 @@ digit-card-text.center {
 .custom-landing-header {
   font-weight: 700;
   font-size: 2rem;
-  margin-bottom: 1.25rem;
   color: #0b4b66;
   text-align: left;
 }
@@ -1187,6 +1176,19 @@ digit-card-text.center {
 
 .products-container {
   padding: 2rem;
+  margin-left: 1.5rem;
+}
+
+.icon-wrap {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  justify-content: center;
+}
+
+.icon-wrap svg {
+  width: 34px;
+  height: 34px;
 }
 
 .products-title {
@@ -1199,7 +1201,7 @@ digit-card-text.center {
   font-size: 1rem;
   color: #666;
   margin-bottom: 2rem;
-  max-width: 80%;
+  max-width: 100%;
 }
 
 .products-list {
@@ -1224,9 +1226,15 @@ digit-card-text.center {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  min-height: 3.2rem;
+
 }
 
+
+
 .product-title {
+  display: flex;
+  align-items: center;
   font-size: 24px;
   font-weight: bold;
   color: #0B4B66;
@@ -1241,6 +1249,12 @@ digit-card-text.center {
 
 }
 
+.product-icon svg {
+  height: 34px;
+  width: 34px;
+
+}
+
 .product-description {
   font-size: 0.9rem;
   color: #555;
@@ -1248,7 +1262,7 @@ digit-card-text.center {
 }
 
 .explore-button {
-  margin-top: 1rem;
+  margin-top: auto;
   border: 1px solid #d9534f;
   color: #d9534f;
   font-weight: bold;
@@ -1257,8 +1271,9 @@ digit-card-text.center {
 
 .icon-header-container {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 8px;
+  margin-bottom: 2rem;
 }
 
 .custom-image-container {

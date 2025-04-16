@@ -24,15 +24,17 @@ const ProductsPageComponent = ({detailsConfig}) => {
         {detailsConfig?.map((product, index) => (
           <Card key={index} className="product-card">
             <div className="product-header">
-              {Digit.Utils.iconRender(product.icon,"#c84c0e")}
+            <div className="icon-wrap">
+              {Digit.Utils.iconRender(product.icon, "#c84c0e")}
+            </div>
               <HeaderComponent className="product-title">{t(product.heading)}</HeaderComponent>
             </div>
             <CardText className="product-description">{t(product?.cardDescription)}</CardText>
             <Button
               className="explore-button"
               variation="secondary"
-              label={t("COMMON_EXPLORE") + " →"}
-              onClick={() => handleNavigate(`/${window?.contextPath}/employee/user/productDetailsPage/${product?.module}`)}
+              label={`${t("COMMON_EXPLORE")} →`}
+              onClick={() => handleNavigate(`/${window?.contextPath}/employee/sandbox/productDetailsPage/${product?.module}`)}
             />
           </Card>
         ))}
