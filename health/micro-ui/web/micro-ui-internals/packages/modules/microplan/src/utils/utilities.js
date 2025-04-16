@@ -215,19 +215,19 @@ const formValidator = (formData, key, state, t) => {
   function isValidColumnValue(val) {
     // Allow empty string
     if (val === "") return true;
-  
+
     // Allow letters, numbers, and spaces only
     const noSpecialCharsExceptSpace = /^[A-Za-z0-9 ]+$/;
-  
+
     return noSpecialCharsExceptSpace.test(val);
   }
-  
-  
+
+
 
   const newColumnsValidator = () => {
     const invalidEntries = Array.isArray(formData)
-  ? formData.filter(item => !isValidColumnValue(item))  // Keep items that are invalid
-  : [];
+      ? formData.filter(item => !isValidColumnValue(item))  // Keep items that are invalid
+      : [];
     if (invalidEntries.length > 0) {
       return { key: "error", label: "ERROR_INVALID_COL_NAME" }
     }
