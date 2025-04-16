@@ -709,8 +709,11 @@ export const UICustomizations = {
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       const [showPopup, setShowPopup] = useState(false);
+      const [showMapPopup, setShowMapPopup] = useState(false);
       const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
+      const MapViewPopup = Digit.ComponentRegistryService.getComponent("MapViewPopup");
       const VillageHierarchyTooltipWrapper = Digit.ComponentRegistryService.getComponent("VillageHierarchyTooltipWrapper");
+      const [refreshKey, setRefreshKey, clearRefreshKey] = Digit.Hooks.useSessionStorage("FACILITY_POPUP_KEY", 0);
 
       switch (key) {
         case `MICROPLAN_FACILITY_${column?.projectType}_CAPACITY`:
@@ -739,7 +742,7 @@ export const UICustomizations = {
                 isSuffix
                 title={t(key)}
                 label={t(key)}
-                onClick={() => setShowPopup(true)}
+                onClick={() => {setShowPopup(true);}}
                 // removed this because due to popup crashing on dev
                 // onClick={() => console.log("temp action")}
                 options={[]}
@@ -753,7 +756,38 @@ export const UICustomizations = {
                   detail={row}
                   onClose={() => {
                     setShowPopup(false);
+                    setRefreshKey(prev => prev + 1);
+                    window.dispatchEvent(new Event("refreshKeyUpdated"));
                   }}
+                />
+              )}
+            </>
+          );
+        case "VIEW_ON_MAP":
+          return (
+            <>
+              <ButtonNew
+                className=""
+                icon="MyLocation"
+                iconFill=""
+                isSuffix
+                title={t(key)}
+                label={t(key)}
+                onClick={() => {
+                  setShowMapPopup(true);
+                }}
+                options={[]}
+                optionsKey=""
+                size="medium"
+                style={{}}
+                variation="link"
+              />
+              {showMapPopup && (
+                <MapViewPopup
+                  type={"Facility"}
+                  bounds={{ latitude: row?.additionalDetails?.latitude, longitude: row?.additionalDetails?.longitude }}
+                  heading={row?.facilityName}
+                  setShowPopup={setShowMapPopup}
                 />
               )}
             </>

@@ -13,6 +13,7 @@ import { CustomLoader } from "./RoleTableComposer";
 import { min } from "lodash";
 import VillageHierarchyTooltipWrapper from "./VillageHierarchyTooltipWrapper";
 import AssigneeChips from "./AssigneeChips";
+import MapViewPopup from "./MapViewPopup";
 
 const PopInboxTable = ({ ...props }) => {
   const { t } = useTranslation();
@@ -24,6 +25,7 @@ const PopInboxTable = ({ ...props }) => {
   const url = Digit.Hooks.useQueryParams();
   const [isIntermediate, setIsIntermediate] = useState(false);
   const [selectedBoundaryCode, setSelectedBoundaryCode] = useState(null);
+  const [showMapPopup,setShowMapPopup] = useState({});
 
   const columns = useMemo(() => {
     return [
@@ -134,6 +136,24 @@ const PopInboxTable = ({ ...props }) => {
         sortable: false,
         width: "180px",
       },
+      {
+        name: t("VIEW_ON_MAP"),
+        cell: (row, index, column, id) => (
+          <Button
+            label={t(`VIEW_ON_MAP`)}
+            title={t(`VIEW_ON_MAP`)}
+            icon={"MyLocation"}
+            onClick={() => {
+              setShowMapPopup(row);
+            }}
+            variation="link"
+            style={{}}
+            size={"medium"}
+          />
+        ),
+        sortable: false,
+        width: "180px",
+      },
     ];
   }, [props.showEditColumn, props.employeeNameData, props.censusData, selectedBusinessId]);
 
@@ -170,6 +190,17 @@ const PopInboxTable = ({ ...props }) => {
         businessId={selectedBusinessId} // Pass selectedBusinessId as businessId
         heading={`${t("HCM_MICROPLAN_STATUS_LOG_FOR_LABEL")} ${t(selectedBoundaryCode)}`}
         labelPrefix={"POP_ACTIONS_"}
+      />
+    );
+  }
+
+  if (!(Object.keys(showMapPopup).length === 0)) {
+    return (
+      <MapViewPopup
+        setShowPopup={setShowMapPopup}
+        type={"Village"}
+        bounds={{ latitude: showMapPopup?.additionalDetails?.latitude, longitude: showMapPopup?.additionalDetails?.longitude }}
+        heading={t(`${showMapPopup?.boundaryCode}`)}
       />
     );
   }
